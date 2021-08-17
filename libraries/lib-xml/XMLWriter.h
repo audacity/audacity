@@ -20,7 +20,7 @@
 ///
 /// XMLWriter
 ///
-class AUDACITY_DLL_API XMLWriter /* not final */ {
+class XML_API XMLWriter /* not final */ {
 
  public:
 
@@ -78,7 +78,7 @@ class AUDACITY_DLL_API XMLWriter /* not final */ {
 /// If the construction and all operations are inside a GuardedCall or event
 /// handler, then the default delayed handler action in case of exceptions will
 /// notify the user of problems.
-class AUDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
+class XML_API XMLFileWriter final : private wxFFile, public XMLWriter {
 
  public:
 
@@ -133,7 +133,7 @@ class AUDACITY_DLL_API XMLFileWriter final : private wxFFile, public XMLWriter {
 ///
 /// XMLStringWriter
 ///
-class XMLStringWriter final : public wxString, public XMLWriter {
+class XML_API XMLStringWriter final : public wxString, public XMLWriter {
 
  public:
 

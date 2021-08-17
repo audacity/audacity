@@ -874,7 +874,7 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          {
             // This attribute is a sample format, normal int
             long fValue;
-            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&fValue) || (fValue < 0) || !XMLValueChecker::IsValidSampleFormat(fValue))
+            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&fValue) || (fValue < 0) || !IsValidSampleFormat(fValue))
             {
                mErrorOpening = true;
                return false;
@@ -1953,4 +1953,9 @@ void Sequence::SetMaxDiskBlockSize(size_t bytes)
 size_t Sequence::GetMaxDiskBlockSize()
 {
    return sMaxDiskBlockSize;
+}
+
+bool Sequence::IsValidSampleFormat(const int nValue)
+{
+   return (nValue == int16Sample) || (nValue == int24Sample) || (nValue == floatSample);
 }

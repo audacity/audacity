@@ -18,14 +18,8 @@
 #ifndef __AUDACITY_XML_TAG_HANDLER__
 #define __AUDACITY_XML_TAG_HANDLER__
 
-
-
-#include <stdio.h>
-
-#include "Identifier.h"
-
 #include "XMLWriter.h"
-class AUDACITY_DLL_API XMLValueChecker
+class XML_API XMLValueChecker
 {
 public:
    // "Good" means well-formed and for the file-related functions, names an existing file or folder.
@@ -62,22 +56,10 @@ public:
 	*/
    static bool IsGoodInt64(const wxString & strInt);
    static bool IsGoodIntForRange(const wxString & strInt, const wxString & strMAXABS);
-
-   enum ChannelType
-   {
-      LeftChannel = 0,
-      RightChannel = 1,
-      MonoChannel = 2
-   };
-   static bool IsValidChannel(const int nValue);
-#ifdef USE_MIDI
-   static bool IsValidVisibleChannels(const int nValue);
-#endif
-   static bool IsValidSampleFormat(const int nValue); // true if nValue is one sampleFormat enum values
 };
 
 
-class AUDACITY_DLL_API XMLTagHandler /* not final */ {
+class XML_API XMLTagHandler /* not final */ {
  public:
    XMLTagHandler(){};
    virtual ~XMLTagHandler(){};

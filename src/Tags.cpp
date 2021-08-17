@@ -47,13 +47,12 @@
 #include "FileNames.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectFileIORegistry.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "widgets/Grid.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/HelpSystem.h"
-#include "xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -226,7 +225,7 @@ static const wxChar *DefaultGenres[] =
    wxT("Synthpop")
 };
 
-static ProjectFileIORegistry::Entry registerFactory{
+static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    wxT( "tags" ),
    []( AudacityProject &project ){ return &Tags::Get( project ); }
 };
@@ -1535,3 +1534,9 @@ bool TagsEditorDialog::IsWindowRectValid(const wxRect *windowRect) const
 
    return true;
 }
+
+static ProjectFileIORegistry::WriterEntry entry {
+[](const AudacityProject &project, XMLWriter &xmlFile){
+   Tags::Get(project).WriteXML(xmlFile);
+}
+};

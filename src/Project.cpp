@@ -226,3 +226,6 @@ AUDACITY_DLL_API const wxWindow &GetProjectPanel(
       THROW_INCONSISTENCY_EXCEPTION;
    return *ptr;
 }
+
+// Generate the needed, linkable registry functions
+DEFINE_XML_METHOD_REGISTRY( ProjectFileIORegistry );

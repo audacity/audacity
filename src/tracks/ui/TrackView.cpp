@@ -13,8 +13,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "ClientData.h"
 #include "../../Project.h"
-#include "../../xml/XMLTagHandler.h"
-#include "../../xml/XMLWriter.h"
+#include "XMLTagHandler.h"
+#include "XMLWriter.h"
 
 TrackView::TrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackCell{ pTrack }

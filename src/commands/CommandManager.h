@@ -25,7 +25,7 @@
 
 #include <vector>
 
-#include "../xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #include <unordered_map>
 
