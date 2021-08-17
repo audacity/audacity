@@ -16,7 +16,7 @@ Paul Licameli split from AudacityProject.h
 
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
-#include "xml/XMLTagHandler.h" // to inherit
+#include "XMLTagHandler.h" // to inherit
 
 struct sqlite3;
 struct sqlite3_context;

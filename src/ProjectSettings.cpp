@@ -17,6 +17,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "prefs/QualitySettings.h"
 #include "widgets/NumericTextCtrl.h"
 #include "prefs/TracksBehaviorsPrefs.h"
+#include "XMLWriter.h"
 
 wxDEFINE_EVENT(EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 
@@ -207,3 +208,45 @@ void ProjectSettings::SetSyncLock(bool flag)
    }
 }
 
+static ProjectFileIORegistry::WriterEntry entry {
+[](const AudacityProject &project, XMLWriter &xmlFile){
+   auto &settings = ProjectSettings::Get(project);
+   xmlFile.WriteAttr(wxT("rate"), settings.GetRate());
+   xmlFile.WriteAttr(wxT("snapto"), settings.GetSnapTo() ? wxT("on") : wxT("off"));
+   xmlFile.WriteAttr(wxT("selectionformat"),
+                     settings.GetSelectionFormat().Internal());
+   xmlFile.WriteAttr(wxT("frequencyformat"),
+                     settings.GetFrequencySelectionFormatName().Internal());
+   xmlFile.WriteAttr(wxT("bandwidthformat"),
+                     settings.GetBandwidthSelectionFormatName().Internal());
+}
+};
+
+static ProjectFileIORegistry::AttributeReaderEntries entries {
+// Just a pointer to function, but needing overload resolution as non-const:
+(ProjectSettings& (*)(AudacityProject &)) &ProjectSettings::Get, {
+   { L"rate", [](auto &settings, auto value){
+      double rate;
+      Internat::CompatibleToDouble(value, &rate);
+      settings.SetRate( rate );
+   } },
+
+   // PRL:  The following have persisted as per-project settings for long.
+   // Maybe that should be abandoned.  Enough to save changes in the user
+   // preference file.
+   { L"snapto", [](auto &settings, auto value){
+      settings.SetSnapTo(wxString(value) == wxT("on") ? true : false);
+   } },
+   { L"selectionformat", [](auto &settings, auto value){
+      settings.SetSelectionFormat(
+         NumericConverter::LookupFormat( NumericConverter::TIME, value) );
+   } },
+   { L"frequencyformat", [](auto &settings, auto value){
+      settings.SetFrequencySelectionFormatName(
+         NumericConverter::LookupFormat( NumericConverter::FREQUENCY, value ) );
+   } },
+   { L"bandwidthformat", [](auto &settings, auto value){
+      settings.SetBandwidthSelectionFormatName(
+         NumericConverter::LookupFormat( NumericConverter::BANDWIDTH, value ) );
+   } },
+} };

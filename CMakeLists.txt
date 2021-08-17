@@ -11,6 +11,10 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
    message(FATAL_ERROR "Audacity requires at least GCC 4.9")
 endif ()
 
+if( EXISTS "${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules/Variables.cmake" )
+   include( "${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules/Variables.cmake" )
+endif()
+
 # We only do alpha builds, beta builds, and release versions.
 # Most of the time we're in development, so AUDACITY_BUILD_LEVEL should be
 # defined to 0.
@@ -19,7 +23,9 @@ endif ()
 # still link to the alpha manual online.
 
 # Set this value to 0 for alpha, 1 for beta, 2 for release builds
-set( AUDACITY_BUILD_LEVEL 0 CACHE STRING "0 for alpha, 1 for beta, 2 for release builds" )
+if( NOT DEFINED AUDACITY_BUILD_LEVEL )
+   set( AUDACITY_BUILD_LEVEL 0 CACHE STRING "0 for alpha, 1 for beta, 2 for release builds" )
+endif()
 
 # The Audacity version
 # Increment as appropriate after release of a new version, and set back
@@ -99,10 +105,10 @@ endif()
 # Add our module path
 # CMAKE_BINARY_DIR is required for Conan to work
 set( AUDACITY_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules")
-set( CMAKE_MODULE_PATH 
+set( CMAKE_MODULE_PATH
    ${AUDACITY_MODULE_PATH}
    ${CMAKE_BINARY_DIR}
-   ${CMAKE_MODULE_PATH} 
+   ${CMAKE_MODULE_PATH}
 )
 
 set( CMAKE_PREFIX_PATH
@@ -140,11 +146,11 @@ set_from_env(AUDACITY_ARCH_LABEL) # e.g. x86_64
 
 # Allow user to globally set the library preference
 cmd_option( ${_OPT}conan_enabled
-            "Use Conan package manager for 3d party dependencies" 
+            "Use Conan package manager for 3d party dependencies"
             On
 )
 
-cmd_option( ${_OPT}conan_allow_prebuilt_binaries 
+cmd_option( ${_OPT}conan_allow_prebuilt_binaries
             "Allow using the compiled dependencies from the cache or remotes"
             On
 )
@@ -162,7 +168,7 @@ cmd_option( ${_OPT}obey_system_dependencies
             Off
 )
 
-cmd_option( ${_OPT}has_networking 
+cmd_option( ${_OPT}has_networking
    "Build networking features into Audacity"
    Off)
 
@@ -240,7 +246,7 @@ message( STATUS )
 if( CMAKE_GENERATOR MATCHES "Visual Studio" )
    message( STATUS "  MSVC Version: ${MSVC_VERSION}" )
    message( STATUS "  MSVC Toolset: ${MSVC_TOOLSET_VERSION}" )
-   message( STATUS ) 
+   message( STATUS )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    if( CMAKE_GENERATOR MATCHES "Xcode" )
       message( STATUS "  Xcode Version: ${XCODE_VERSION}" )
@@ -275,6 +281,11 @@ if( GIT_FOUND )
       list( GET git_output 0 GIT_COMMIT_SHORT )
       list( GET git_output 1 GIT_COMMIT_LONG )
       list( GET git_output 2 GIT_COMMIT_TIME )
+
+      file(WRITE
+         "${CMAKE_BINARY_DIR}/Variables.cmake"
+         "set( AUDACITY_BUILD_LEVEL ${AUDACITY_BUILD_LEVEL} )\nset( AUDACITY_REV_LONG \"${GIT_COMMIT_LONG}\" )\nset( AUDACITY_REV_TIME \"${GIT_COMMIT_TIME}\" )\n"
+      )
    endif()
 endif()
 message( STATUS "  Current Commit: ${GIT_COMMIT_SHORT}" )

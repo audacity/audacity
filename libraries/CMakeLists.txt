@@ -14,6 +14,7 @@ set( LIBRARIES
    lib-math
    lib-files
    lib-registries
+   lib-xml
 )
 
 if ( ${_OPT}has_networking )

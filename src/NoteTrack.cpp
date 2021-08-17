@@ -34,7 +34,7 @@
 
 #include "AColor.h"
 #include "Prefs.h"
-#include "ProjectFileIORegistry.h"
+#include "Project.h"
 #include "prefs/ImportExportPrefs.h"
 
 #include "InconsistencyException.h"
@@ -47,7 +47,7 @@
 #include "Theme.h"
 
 #ifdef SONIFY
-#include "../lib-src/portmidi/pm_common/portmidi.h"
+#include <portmidi.h>
 
 #define SON_PROGRAM 0
 #define SON_AutoSave 67
@@ -109,7 +109,7 @@ SONFNS(AutoSave)
 
 
 
-static ProjectFileIORegistry::Entry registerFactory{
+static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    wxT( "notetrack" ),
    []( AudacityProject &project ){
       auto &tracks = TrackList::Get( project );
@@ -885,6 +885,13 @@ bool NoteTrack::ExportAllegro(const wxString &f) const
 }
 
 
+namespace {
+bool IsValidVisibleChannels(const int nValue)
+{
+    return (nValue >= 0 && nValue < (1 << 16));
+}
+}
+
 bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    if (!wxStrcmp(tag, wxT("notetrack"))) {
@@ -907,7 +914,7 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("visiblechannels"))) {
              if (!XMLValueChecker::IsGoodInt(strValue) ||
                  !strValue.ToLong(&nValue) ||
-                 !XMLValueChecker::IsValidVisibleChannels(nValue))
+                 !IsValidVisibleChannels(nValue))
                  return false;
              mVisibleChannels = nValue;
          }

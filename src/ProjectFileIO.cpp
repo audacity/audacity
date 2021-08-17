@@ -15,27 +15,22 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/app.h>
 #include <wx/crt.h>
 #include <wx/frame.h>
+#include <wx/log.h>
 #include <wx/sstream.h>
-#include <wx/xml/xml.h>
 
 #include "ActiveProjects.h"
 #include "CodeConversions.h"
 #include "DBConnection.h"
 #include "Project.h"
-#include "ProjectFileIORegistry.h"
 #include "ProjectSerializer.h"
-#include "ProjectSettings.h"
 #include "SampleBlock.h"
-#include "Tags.h"
 #include "TempDirectory.h"
-#include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/NumericTextCtrl.h"
 #include "BasicUI.h"
 #include "widgets/ProgressDialog.h"
 #include "wxFileNameWrapper.h"
-#include "xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 #include "SentryHelper.h"
 
 // Don't change this unless the file format changes
@@ -1520,13 +1515,10 @@ void ProjectFileIO::SetFileName(const FilePath &fileName)
 bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    auto &project = mProject;
-   auto &viewInfo = ViewInfo::Get(project);
-   auto &settings = ProjectSettings::Get(project);
 
    wxString fileVersion;
    wxString audacityVersion;
    int requiredTags = 0;
-   long longVpos = 0;
 
    // loop through attrs, which is a null-terminated list of
    // attribute-value pairs
@@ -1540,12 +1532,9 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          break;
       }
 
-      if (viewInfo.ReadXMLAttribute(attr, value))
-      {
-         // We need to save vpos now and restore it below
-         longVpos = std::max(longVpos, long(viewInfo.vpos));
+      if ( ProjectFileIORegistry::Get()
+          .CallAttributeHandler( attr, project, value ) )
          continue;
-      }
 
       else if (!wxStrcmp(attr, wxT("version")))
       {
@@ -1558,49 +1547,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          audacityVersion = value;
          requiredTags++;
       }
-
-      else if (!wxStrcmp(attr, wxT("rate")))
-      {
-         double rate;
-         Internat::CompatibleToDouble(value, &rate);
-         settings.SetRate( rate );
-      }
-
-      else if (!wxStrcmp(attr, wxT("snapto")))
-      {
-         settings.SetSnapTo(wxString(value) == wxT("on") ? true : false);
-      }
-
-      else if (!wxStrcmp(attr, wxT("selectionformat")))
-      {
-         settings.SetSelectionFormat(
-            NumericConverter::LookupFormat( NumericConverter::TIME, value) );
-      }
-
-      else if (!wxStrcmp(attr, wxT("audiotimeformat")))
-      {
-         settings.SetAudioTimeFormat(
-            NumericConverter::LookupFormat( NumericConverter::TIME, value) );
-      }
-
-      else if (!wxStrcmp(attr, wxT("frequencyformat")))
-      {
-         settings.SetFrequencySelectionFormatName(
-            NumericConverter::LookupFormat( NumericConverter::FREQUENCY, value ) );
-      }
-
-      else if (!wxStrcmp(attr, wxT("bandwidthformat")))
-      {
-         settings.SetBandwidthSelectionFormatName(
-            NumericConverter::LookupFormat( NumericConverter::BANDWIDTH, value ) );
-      }
    } // while
-
-   if (longVpos != 0)
-   {
-      // PRL: It seems this must happen after SetSnapTo
-      viewInfo.vpos = longVpos;
-   }
 
    if (requiredTags < 2)
    {
@@ -1652,13 +1599,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 XMLTagHandler *ProjectFileIO::HandleXMLChild(const wxChar *tag)
 {
    auto &project = mProject;
-   auto fn = ProjectFileIORegistry::Lookup(tag);
-   if (fn)
-   {
-      return fn(project);
-   }
-
-   return nullptr;
+   return ProjectFileIORegistry::Get().CallObjectAccessor(tag, project);
 }
 
 void ProjectFileIO::OnCheckpointFailure()
@@ -1689,9 +1630,6 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
 {
    auto &proj = mProject;
    auto &tracklist = tracks ? *tracks : TrackList::Get(proj);
-   auto &viewInfo = ViewInfo::Get(proj);
-   auto &tags = Tags::Get(proj);
-   const auto &settings = ProjectSettings::Get(proj);
 
    //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
 
@@ -1701,19 +1639,8 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
    xmlFile.WriteAttr(wxT("version"), wxT(AUDACITY_FILE_FORMAT_VERSION));
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
 
-   viewInfo.WriteXMLAttributes(xmlFile);
-   xmlFile.WriteAttr(wxT("rate"), settings.GetRate());
-   xmlFile.WriteAttr(wxT("snapto"), settings.GetSnapTo() ? wxT("on") : wxT("off"));
-   xmlFile.WriteAttr(wxT("selectionformat"),
-                     settings.GetSelectionFormat().Internal());
-   xmlFile.WriteAttr(wxT("frequencyformat"),
-                     settings.GetFrequencySelectionFormatName().Internal());
-   xmlFile.WriteAttr(wxT("bandwidthformat"),
-                     settings.GetBandwidthSelectionFormatName().Internal());
+   ProjectFileIORegistry::Get().CallWriters(proj, xmlFile);
 
-   tags.WriteXML(xmlFile);
-
-   unsigned int ndx = 0;
    tracklist.Any().Visit([&](const Track *t)
    {
       auto useTrack = t;

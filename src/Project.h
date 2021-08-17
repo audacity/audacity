@@ -188,4 +188,10 @@ AUDACITY_DLL_API wxWindow &GetProjectPanel( AudacityProject &project );
 AUDACITY_DLL_API const wxWindow &GetProjectPanel(
    const AudacityProject &project );
 
+// Generate a registry for serialized data attached to the project
+#include "XMLMethodRegistry.h"
+class AudacityProject;
+using ProjectFileIORegistry = XMLMethodRegistry<AudacityProject>;
+DECLARE_XML_METHOD_REGISTRY( AUDACITY_DLL_API, ProjectFileIORegistry );
+
 #endif

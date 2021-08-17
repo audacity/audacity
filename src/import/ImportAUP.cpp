@@ -46,7 +46,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/ProgressDialog.h"
-#include "../xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 #include "wxFileNameWrapper.h"
 
 #include <map>
@@ -820,11 +820,6 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
          set(selectionformat, strValue);
       }
 
-      else if (!wxStrcmp(attr, wxT("audiotimeformat")))
-      {
-         set(audiotimeformat, strValue);
-      }
-
       else if (!wxStrcmp(attr, wxT("frequencyformat")))
       {
          set(frequencyformat, strValue);
@@ -1142,7 +1137,7 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
       {
          // This attribute is a sample format, normal int
          long fValue;
-         if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&fValue) || (fValue < 0) || !XMLValueChecker::IsValidSampleFormat(fValue))
+         if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&fValue) || (fValue < 0) || !Sequence::IsValidSampleFormat(fValue))
          {
             return SetError(XO("Invalid sequence 'sampleformat' attribute."));
          }

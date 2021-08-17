@@ -9,7 +9,7 @@
 
 #include "UpdateDataParser.h"
 
-#include "xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 #include "MemoryX.h"
 #include <wx/platinfo.h>
 

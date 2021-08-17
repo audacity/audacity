@@ -10,9 +10,7 @@ Paul Licameli
 
 #include "SelectedRegion.h"
 
-
-
-#include "xml/XMLWriter.h"
+#include "XMLWriter.h"
 
 const wxChar *SelectedRegion::sDefaultT0Name = wxT("selStart");
 const wxChar *SelectedRegion::sDefaultT1Name = wxT("selEnd");
@@ -41,6 +39,7 @@ bool SelectedRegion::HandleXMLAttribute
 (const wxChar *attr, const wxChar *value,
  const wxChar *legacyT0Name, const wxChar *legacyT1Name)
 {
+   // Keep this function consistent with the table in the next!
    typedef bool (SelectedRegion::*Setter)(double, bool);
    Setter setter = 0;
    if (!wxStrcmp(attr, legacyT0Name))
@@ -64,3 +63,32 @@ bool SelectedRegion::HandleXMLAttribute
    (void)(this->*setter)(dblValue, false);
    return true;
 }
+
+XMLMethodRegistryBase::Mutators<SelectedRegion>
+SelectedRegion::Mutators(
+   const wxString &legacyT0Name, const wxString &legacyT1Name)
+{
+   // Keep this table consistent with the previous function!
+   return {
+      { legacyT0Name, [=](auto &selectedRegion, auto value){
+         selectedRegion
+            .HandleXMLAttribute(legacyT0Name, value,
+                                legacyT0Name, legacyT1Name);
+      } },
+      { legacyT1Name, [=](auto &selectedRegion, auto value){
+         selectedRegion
+            .HandleXMLAttribute(legacyT1Name, value,
+                                legacyT0Name, legacyT1Name);
+      } },
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+      { sDefaultF0Name, [=](auto &selectedRegion, auto value){
+         selectedRegion
+            .HandleXMLAttribute(sDefaultF0Name, value, L"", L"");
+      } },
+      { sDefaultF1Name, [=](auto &selectedRegion, auto value){
+         selectedRegion
+            .HandleXMLAttribute(sDefaultF1Name, value, L"", L"");
+      } },
+#endif
+   };
+};

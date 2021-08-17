@@ -16,9 +16,8 @@ Paul Licameli
 
 #include "Prefs.h"
 #include "Project.h"
-#include "xml/XMLWriter.h"
 #include "prefs/TracksBehaviorsPrefs.h"
-#include "xml/XMLWriter.h"
+#include "XMLWriter.h"
 
 wxDEFINE_EVENT( EVT_SELECTED_REGION_CHANGE, SelectedRegionEvent );
 
@@ -33,15 +32,22 @@ wxEvent *SelectedRegionEvent::Clone() const
    return safenew SelectedRegionEvent{ *this };
 }
 
-bool NotifyingSelectedRegion::HandleXMLAttribute
-   (const wxChar *attr, const wxChar *value,
-    const wxChar *legacyT0Name, const wxChar *legacyT1Name)
+XMLMethodRegistryBase::Mutators<NotifyingSelectedRegion>
+NotifyingSelectedRegion::Mutators(
+   const wxString &legacyT0Name, const wxString &legacyT1Name)
 {
-   auto result = mRegion.HandleXMLAttribute(
-      attr, value, legacyT0Name, legacyT1Name );
-   if ( result )
-      Notify( true );
-   return result;
+   XMLMethodRegistryBase::Mutators<NotifyingSelectedRegion> results;
+   // Get serialization methods of contained SelectedRegion, and wrap each
+   for (auto &delegate: SelectedRegion::Mutators(legacyT0Name, legacyT1Name)) {
+      results.emplace_back(
+         delegate.first,
+         [fn = std::move(delegate.second)](auto &region, auto value) {
+            fn( region.mRegion, value );
+            region.Notify( true );
+         }
+      );
+   }
+   return results;
 }
 
 NotifyingSelectedRegion& NotifyingSelectedRegion::operator =
@@ -216,33 +222,46 @@ void ViewInfo::WriteXMLAttributes(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("zoom"), zoom, 10);
 }
 
-bool ViewInfo::ReadXMLAttribute(const wxChar *attr, const wxChar *value)
-{
-   if (selectedRegion.HandleXMLAttribute(attr, value, wxT("sel0"), wxT("sel1")))
-      return true;
+//! Construct once at static intialization time to hook project file IO
+static struct ViewInfo::ProjectFileIORegistration {
 
-   if (!wxStrcmp(attr, wxT("vpos"))) {
+ProjectFileIORegistry::AttributeReaderEntries entries {
+[](AudacityProject &project) -> NotifyingSelectedRegion &
+{
+   return ViewInfo::Get(project).selectedRegion;
+},
+NotifyingSelectedRegion::Mutators(L"sel0", L"sel1")
+};
+
+ProjectFileIORegistry::AttributeReaderEntries entries2 {
+// Just a pointer to function, but needing overload resolution as non-const:
+(ViewInfo& (*)(AudacityProject &)) &ViewInfo::Get,
+{
+   { L"vpos", [](auto &viewInfo, auto value){
       long longVpos;
       wxString(value).ToLong(&longVpos);
-      vpos = (int)(longVpos);
-      return true;
-   }
+      viewInfo.vpos = (int)(longVpos);
+      // Note that (other than in import of old .aup files) there is no other
+      // reassignment of vpos, except in handling the vertical scroll.
+   } },
+   { L"h", [](auto &viewInfo, auto value){
+      Internat::CompatibleToDouble(value, &viewInfo.h);
+   } },
+   { L"zoom", [](auto &viewInfo, auto value){
+      Internat::CompatibleToDouble(value, &viewInfo.zoom);
+   } },
+} };
 
-   if (!wxStrcmp(attr, wxT("h"))) {
-      Internat::CompatibleToDouble(value, &h);
-      return true;
-   }
-
-   if (!wxStrcmp(attr, wxT("zoom"))) {
-      Internat::CompatibleToDouble(value, &zoom);
-      return true;
-   }
-
-   return false;
-}
+} projectFileIORegistration;
 
 int ViewInfo::UpdateScrollPrefsID()
 {
    static int value = wxNewId();
    return value;
 }
+
+static ProjectFileIORegistry::WriterEntry entry {
+[](const AudacityProject &project, XMLWriter &xmlFile){
+   ViewInfo::Get(project).WriteXMLAttributes(xmlFile);
+}
+};

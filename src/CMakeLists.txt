@@ -19,7 +19,11 @@ def_vars()
 # Add a target that will provide the git revision info
 # whenever it changes.  (Must be done at build time, not
 # configuration time.)
-if( GIT_FOUND )
+if( DEFINED AUDACITY_REV_LONG AND DEFINED AUDACITY_REV_TIME )
+   file( WRITE "${_PRVDIR}/RevisionIdent.h"
+      "#define REV_LONG \"${AUDACITY_REV_LONG}\"\n#define REV_TIME \"${AUDACITY_REV_TIME}\"\n"
+   )
+elseif( GIT_FOUND )
    add_custom_target(
       version
       COMMAND
@@ -31,6 +35,10 @@ if( GIT_FOUND )
    )
 
    add_dependencies( ${TARGET} version )
+else()
+   # No Git installed and no version data is available.
+   # Generate an empty file and let AboutDialog do the rest
+   file( TOUCH "${_PRVDIR}/RevisionIdent.h" )
 endif()
 
 # Handle Audio Units option
@@ -197,8 +205,6 @@ list( APPEND SOURCES
       ProjectAudioManager.h
       ProjectFileIO.cpp
       ProjectFileIO.h
-      ProjectFileIORegistry.cpp
-      ProjectFileIORegistry.h
       ProjectFileManager.cpp
       ProjectFileManager.h
       ProjectHistory.cpp
@@ -952,15 +958,6 @@ list( APPEND SOURCES
       widgets/wxWidgetsBasicUI.cpp
       widgets/wxWidgetsBasicUI.h
 
-      # XML handling
-      xml/XMLFileReader.cpp
-      xml/XMLFileReader.h
-      xml/XMLTagHandler.cpp
-      xml/XMLTagHandler.h
-      xml/XMLWriter.cpp
-      xml/XMLWriter.h
-      xml/audacityproject.dtd
-
       # Update version
       $<$<BOOL:${${_OPT}has_updates_check}>:
           update/VersionId.h
@@ -1059,7 +1056,6 @@ list( APPEND LIBRARIES
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
       wxwidgets::wxwidgets
-      expat::expat
       libmp3lame::libmp3lame
       SndFile::sndfile
       PortAudio::PortAudio
@@ -1077,7 +1073,7 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
       $<$<BOOL:${USE_LIBTWOLAME}>:twolame>
       $<$<BOOL:${USE_LV2}>:lv2>
-      $<$<BOOL:${USE_MIDI}>:portmidi>
+      $<$<BOOL:${USE_MIDI}>:PortMidi::PortMidi>
       $<$<BOOL:${USE_MIDI}>:portsmf>
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
       $<$<BOOL:${USE_PORTMIXER}>:portmixer>
