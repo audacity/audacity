@@ -29,6 +29,7 @@ struct SpectralDataManager::Setting{
    unsigned mStepsPerWindow = 4;
    bool mLeadingPadding = true;
    bool mTrailingPadding = true;
+   bool mNeedOutput = true;
 };
 
 int SpectralDataManager::ProcessTracks(TrackList &tracks){
@@ -64,13 +65,14 @@ wxInt64 SpectralDataManager::FindFrequencySnappingBin(WaveTrack *wt,
                                                       wxInt64 targetFreq)
 {
    Setting setting;
+   setting.mNeedOutput = false;
    Worker worker(setting);
 
    return worker.ProcessSnapping(wt, startSC, setting.mWindowSize, threshold, targetFreq);
 }
 
 SpectralDataManager::Worker::Worker(const Setting &setting)
-:TrackSpectrumTransformer{ true, setting.mInWindowType, setting.mOutWindowType,
+:TrackSpectrumTransformer{ setting.mNeedOutput, setting.mInWindowType, setting.mOutWindowType,
                            setting.mWindowSize, setting.mStepsPerWindow,
                            setting.mLeadingPadding, setting.mTrailingPadding}
 // Work members
@@ -199,10 +201,6 @@ bool SpectralDataManager::Worker::ApplyEffectToSelection() {
                int targetBin = static_cast<int>(dtargetBin);
                record.mRealFFTs[targetBin] = 0;
                record.mImagFFTs[targetBin] = 0;
-               record.mRealFFTs[targetBin - 1] = 0;
-               record.mImagFFTs[targetBin - 1] = 0;
-               record.mRealFFTs[targetBin + 1] = 0;
-               record.mImagFFTs[targetBin + 1] = 0;
             }
          }
       }
