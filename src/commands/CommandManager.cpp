@@ -1244,7 +1244,8 @@ Journal::RegisteredCommand sCommand{ JournalCode,
 ///with the command's flags.
 bool CommandManager::HandleCommandEntry(AudacityProject &project,
    const CommandListEntry * entry,
-   CommandFlag flags, bool alwaysEnabled, const wxEvent * evt)
+   CommandFlag flags, bool alwaysEnabled, const wxEvent * evt,
+   const CommandContext *pGivenContext)
 {
    if (!entry )
       return false;
@@ -1273,7 +1274,9 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
 
    Journal::Output({ JournalCode, entry->name.GET() });
 
-   const CommandContext context{ project, evt, entry->index, entry->parameter };
+   CommandContext context{ project, evt, entry->index, entry->parameter };
+   if (pGivenContext)
+      context.temporarySelection = pGivenContext->temporarySelection;
    auto &handler = entry->finder(project);
    (handler.*(entry->callback))(context);
    mLastProcessId = 0;
@@ -1355,7 +1358,8 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
             Str == entry->labelPrefix.Translation() )
          {
             return HandleCommandEntry(
-               context.project, entry.get(), flags, alwaysEnabled)
+               context.project, entry.get(), flags, alwaysEnabled,
+               nullptr, &context)
                ? CommandSuccess : CommandFailure;
          }
       }
@@ -1365,7 +1369,8 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
          if( Str == entry->name )
          {
             return HandleCommandEntry(
-               context.project, entry.get(), flags, alwaysEnabled)
+               context.project, entry.get(), flags, alwaysEnabled,
+               nullptr, &context)
                ? CommandSuccess : CommandFailure;
          }
       }

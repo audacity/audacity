@@ -312,7 +312,8 @@ private:
 
    bool HandleCommandEntry(AudacityProject &project,
       const CommandListEntry * entry, CommandFlag flags,
-      bool alwaysEnabled, const wxEvent * evt = NULL);
+      bool alwaysEnabled, const wxEvent * evt = nullptr,
+      const CommandContext *pGivenContext = nullptr );
 
    //
    // Modifying
