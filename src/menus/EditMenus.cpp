@@ -351,13 +351,31 @@ void OnCopy(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
+std::pair<double, double> FindSelection(const CommandContext &context)
+{
+   double sel0 = 0.0, sel1 = 0.0;
+   
+   // Use the overriding selection if any was given in the context
+   if (auto *pRegion = context.temporarySelection.pSelectedRegion) {
+      auto &selectedRegion = *pRegion;
+      sel0 = selectedRegion.t0();
+      sel1 = selectedRegion.t1();
+   }
+   else {
+      auto &selectedRegion = ViewInfo::Get(context.project).selectedRegion;
+      sel0 = selectedRegion.t0();
+      sel1 = selectedRegion.t1();
+   }
+   
+   return { sel0, sel1 };
+}
+
 void OnPaste(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    const auto &settings = ProjectSettings::Get( project );
    auto &window = ProjectWindow::Get( project );
 
@@ -377,8 +395,8 @@ void OnPaste(const CommandContext &context)
       return;
 
    // Otherwise, paste into the selected tracks.
-   double t0 = selectedRegion.t0();
-   double t1 = selectedRegion.t1();
+   double t0, t1;
+   std::tie(t0, t1) = FindSelection(context);
 
    auto pN = tracks.Any().begin();
 
@@ -601,7 +619,8 @@ void OnPaste(const CommandContext &context)
 
    if (bPastedSomething)
    {
-      selectedRegion.setT1( t0 + clipboard.Duration() );
+      ViewInfo::Get(project).selectedRegion
+         .setTimes( t0, t0 + clipboard.Duration() );
 
       ProjectHistory::Get( project )
          .PushState(XO("Pasted from the clipboard"), XO("Paste"));
@@ -756,13 +775,20 @@ void OnSplit(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
-   double sel0 = selectedRegion.t0();
-   double sel1 = selectedRegion.t1();
-
-   for (auto wt : tracks.Selected< WaveTrack >())
-      wt->Split( sel0, sel1 );
+   auto [sel0, sel1] = FindSelection(context);
+   
+   if (auto *pTrack = context.temporarySelection.pTrack) {
+      if (auto pWaveTrack = dynamic_cast<WaveTrack*>(pTrack))
+         pWaveTrack->Split( sel0, sel1 );
+      else
+         // Did nothing, don't push history
+         return;
+   }
+   else {
+      for (auto wt : tracks.Selected< WaveTrack >())
+         wt->Split( sel0, sel1 );
+   }
 
    ProjectHistory::Get( project ).PushState(XO("Split"), XO("Split"));
 #if 0
