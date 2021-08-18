@@ -18,6 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <memory>
 #include <functional>
 
+class ComponentInterfaceSymbol;
 class Track;
 class XMLWriter;
 
@@ -45,8 +46,23 @@ public:
    std::shared_ptr<const Track> FindTrack() const
       { return const_cast<CommonTrackPanelCell*>(this)->DoFindTrack(); }
 
+   //! Return a list of items for DoContextMenu() (empties for separators)
+   /*! If the vector is empty (as in the default), there is no context menu.
+
+    Commands are invoked with temporary selection fields of CommandContext
+    set to a point selected region at the mouse pick, and the cell's
+    track.
+    */
+   virtual std::vector<ComponentInterfaceSymbol> GetMenuItems(
+      const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject );
+
 protected:
    virtual std::shared_ptr<Track> DoFindTrack() = 0;
+
+   unsigned DoContextMenu(
+      const wxRect &rect,
+      wxWindow *pParent, const wxPoint *pPosition, AudacityProject *pProject)
+   override;
 
    unsigned HandleWheelRotation
       (const TrackPanelMouseEvent &event,
