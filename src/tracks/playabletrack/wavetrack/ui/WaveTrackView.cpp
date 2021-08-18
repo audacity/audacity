@@ -812,6 +812,32 @@ std::weak_ptr<WaveTrackView> WaveTrackSubView::GetWaveTrackView() const
    return mwWaveTrackView;
 }
 
+std::vector<ComponentInterfaceSymbol> WaveTrackSubView::GetMenuItems(
+   const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
+{
+   const WaveClip *pClip = nullptr;
+   auto pTrack = static_cast<WaveTrack*>(FindTrack().get());
+   if (pTrack && pPosition) {
+      auto &viewInfo = ViewInfo::Get(*pProject);
+      auto time = viewInfo.PositionToTime( pPosition->x, rect.x );
+      pClip = pTrack->GetClipAtTime( time );
+   }
+
+   if (pClip)
+      return {
+         { L"Cut", XO("Cut") },
+         { L"Copy", XO("Copy") },
+         { L"Paste", XO("Paste")  },
+         {},
+         { L"Split", XO("Split Clip") },
+         { L"TrackMute", XO("Mute/Unmute Track") },
+         // {},
+         // { L"", XO("Rename clip...") },
+      };
+   else
+      return {};
+}
+
 WaveTrackView &WaveTrackView::Get( WaveTrack &track )
 {
    return static_cast< WaveTrackView& >( TrackView::Get( track ) );
