@@ -65,11 +65,15 @@ public:
 
    // The double time points is quantized into long long
    void addTimeFreqData(long long ll_sc, wxInt64 freq){
+      // Update the start and end sampleCount of current selection
       if(ll_sc > mEndT)
          mEndT = ll_sc;
-
       if(ll_sc < mStartT)
          mStartT = ll_sc;
+
+      // Using int division to round the sampleCount to the hop size of FFT to save computation
+      int hopSize = 128;
+      ll_sc = ll_sc / hopSize * hopSize;
 
       if(dataBuffer.find(ll_sc) == dataBuffer.end())
          dataBuffer[ll_sc] = std::set<wxInt64>{ freq };
