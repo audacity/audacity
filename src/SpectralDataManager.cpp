@@ -196,11 +196,9 @@ bool SpectralDataManager::Worker::ApplyEffectToSelection() {
          // Check if the data's time sampleCount within this window
          if(sc >= mStartSample && sc < mEndSample){
             // For all added frequency
-            for(const wxInt64 &selectedFreq: data.second){
-               double dtargetBin = selectedFreq / nyquist * mSpectrumSize;
-               int targetBin = static_cast<int>(dtargetBin);
-               record.mRealFFTs[targetBin] = 0;
-               record.mImagFFTs[targetBin] = 0;
+            for(const int &selectedFreqBinNum: data.second){
+               record.mRealFFTs[selectedFreqBinNum] = 0;
+               record.mImagFFTs[selectedFreqBinNum] = 0;
             }
          }
       }

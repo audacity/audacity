@@ -571,13 +571,15 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    std::set<std::pair<int, int>> selectedCoords;
 
    mpSpectralData->dataHistory.push_back(mpSpectralData->dataBuffer);
+   int windowSize = mpSpectralData->GetWindowSize();
+   double sr = mpSpectralData->GetSR();
    for(const auto &spectralDataMap: mpSpectralData->dataHistory) {
       for(const auto &spectralData: spectralDataMap){
          double timePt = mpSpectralData->scToTimeDouble(spectralData.first);
          int convertedX = zoomInfo.TimeToPosition(timePt, 0);
          convertedX = std::min(convertedX, rect.width);
-         for(const wxInt64 &freqVal: spectralData.second){
-            const float p = numberScale.ValueToPosition(freqVal);
+         for(const int &freqBinNum: spectralData.second){
+            const float p = numberScale.ValueToPosition(freqBinNum * (sr / windowSize));
             int convertedY = mid.height - wxInt64((1.0 - p) * rect.height);
             convertedY = std::min(convertedY, rect.height);
             selectedCoords.insert(std::make_pair(convertedX, convertedY));
