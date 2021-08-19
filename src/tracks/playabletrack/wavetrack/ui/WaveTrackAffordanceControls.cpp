@@ -16,6 +16,7 @@
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
+#include "../../../../TrackPanelResizeHandle.h"
 #include "../../../../ViewInfo.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../WaveClip.h"
@@ -68,14 +69,29 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
 
     std::vector<UIHandlePtr> results;
 
-    const auto track = FindTrack();
-
-    const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
+    auto px = state.state.m_x;
+    auto py = state.state.m_y;
 
     const auto rect = state.rect;
 
-    auto px = state.state.m_x;
-    auto py = state.state.m_y;
+    const auto track = FindTrack();
+
+    auto trackList = track->GetOwner();
+    if ((std::abs(rect.GetTop() - py) <= WaveTrackView::kChannelSeparatorThickness / 2) 
+        && trackList
+        && !track->IsLeader())
+    {
+        //given that track is not a leader there always should be
+        //another track before this one
+        auto prev = --trackList->Find(track.get());
+        auto result = std::static_pointer_cast<UIHandle>(
+            std::make_shared<TrackPanelResizeHandle>((*prev)->shared_from_this(), py)
+        );
+        result = AssignUIHandlePtr(mResizeHandle, result);
+        results.push_back(result);
+    }
+
+    const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
 
     auto& zoomInfo = ViewInfo::Get(*pProject);
     for (const auto& clip : waveTrack->GetClips())
