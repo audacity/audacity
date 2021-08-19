@@ -18,11 +18,12 @@ Paul Licameli split from WaveTrackView.h
 
 class WaveTrack;
 class BrushHandle;
-using TimeFreqBinsMap = std::map<long long, std::set<wxInt64>>;
+using TimeFreqBinsMap = std::map<long long, std::set<int>>;
 
 class SpectralData{
 private:
    double mSampleRate;
+   int mWindowSize;
    long long mStartT;
    long long mEndT;
 
@@ -32,6 +33,7 @@ public:
     // Set start and end in reverse for comparison during data addition
     ,mStartT(std::numeric_limits<long long>::max())
     ,mEndT( 0 )
+    ,mWindowSize( 2048 )
     {}
     SpectralData(const SpectralData& src) = delete;
 
@@ -50,6 +52,10 @@ public:
       dataBuffer = src->dataBuffer;
       coordHistory = src->coordHistory;
    }
+
+   int GetWindowSize() const{
+      return mWindowSize;
+   };
 
    double GetSR() const{
       return mSampleRate;
@@ -71,20 +77,26 @@ public:
       if(ll_sc < mStartT)
          mStartT = ll_sc;
 
+      // "Time-axis rounding"
       // Using int division to round the sampleCount to the hop size of FFT to save computation
       int hopSize = 128;
-      ll_sc = ll_sc / hopSize * hopSize;
+//      ll_sc = ll_sc / hopSize * hopSize;
+
+      // "Frequency-bin rounding"
+      // Round the exact frequency to the nearest bin
+      int binNum = freq / (mSampleRate / mWindowSize);
 
       if(dataBuffer.find(ll_sc) == dataBuffer.end())
-         dataBuffer[ll_sc] = std::set<wxInt64>{ freq };
+         dataBuffer[ll_sc] = std::set<int>{ binNum };
       else
-         dataBuffer[ll_sc].insert(freq);
+         dataBuffer[ll_sc].insert(binNum);
    }
 
    void removeTimeFreqData(long long ll_sc, wxInt64 freq){
+      int binNum = freq / mWindowSize;
       for(auto &dataBuf: dataHistory){
          if(dataBuf.find(ll_sc) != dataBuf.end()){
-            dataBuf[ll_sc].erase(freq);
+            dataBuf[ll_sc].erase(binNum);
          }
       }
    }
