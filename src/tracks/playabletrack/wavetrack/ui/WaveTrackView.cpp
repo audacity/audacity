@@ -1087,7 +1087,12 @@ WaveTrackView::GetAllSubViews()
 
 std::shared_ptr<CommonTrackCell> WaveTrackView::GetAffordanceControls()
 {
-    return DoGetAffordance(FindTrack());
+    auto track = FindTrack();
+    if (!track->IsAlignedWithLeader())
+    {
+        return DoGetAffordance(track);
+    }
+    return {};
 }
 
 void WaveTrackView::DoSetMinimized( bool minimized )

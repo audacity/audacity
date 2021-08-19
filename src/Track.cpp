@@ -1313,3 +1313,13 @@ Track::LinkType Track::GetLinkType() const noexcept
 {
     return mLinkType;
 }
+
+bool Track::IsAlignedWithLeader() const
+{
+   if (auto owner = GetOwner())
+   {
+      auto leader = *owner->FindLeader(this);
+      return leader != this && leader->GetLinkType() == Track::LinkType::Aligned;
+   }
+   return false;
+}

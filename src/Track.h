@@ -379,6 +379,9 @@ public:
    std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
 
    LinkType GetLinkType() const noexcept;
+   //! Returns true if the leader track has link type LinkType::Aligned
+   bool IsAlignedWithLeader() const;
+
 protected:
    
    void SetLinkType(LinkType linkType);
