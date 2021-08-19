@@ -370,12 +370,14 @@ public:
    std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
 
 private:
-   Track *GetLink() const;
-   bool GetLinked  () const { return mLinked; }
+   
+   Track* GetLinkedTrack() const;
+   //! Returns true for leaders of multichannel groups
+   bool HasLinkedTrack() const noexcept;
 
    friend WaveTrack; // WaveTrack needs to call SetLinked when reloading project
    void SetLinked  (bool l);
-
+   
    void SetChannel(ChannelType c) { mChannel = c; }
 private:
    // No need yet to make this virtual

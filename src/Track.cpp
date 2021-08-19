@@ -196,14 +196,14 @@ void Track::DoSetLinked(bool l)
    mLinked = l;
 }
 
-Track *Track::GetLink() const
+Track *Track::GetLinkedTrack() const
 {
    auto pList = mList.lock();
    if (!pList)
       return nullptr;
 
    if (!pList->isNull(mNode)) {
-      if (mLinked) {
+      if (HasLinkedTrack()) {
          auto next = pList->getNext( mNode );
          if ( !pList->isNull( next ) )
             return next.first->get();
@@ -213,13 +213,18 @@ Track *Track::GetLink() const
          auto prev = pList->getPrev( mNode );
          if ( !pList->isNull( prev ) ) {
             auto track = prev.first->get();
-            if (track && track->GetLinked())
+            if (track && track->HasLinkedTrack())
                return track;
          }
       }
    }
 
    return nullptr;
+}
+
+bool Track::HasLinkedTrack() const noexcept
+{
+    return mLinked;
 }
 
 namespace {
@@ -368,7 +373,9 @@ bool Track::IsSelectedOrSyncLockSelected() const
    { return GetSelected() || IsSyncLockSelected(); }
 
 bool Track::IsLeader() const
-   { return !GetLink() || GetLinked(); }
+{
+    return !GetLinkedTrack() || HasLinkedTrack();
+}
 
 bool Track::IsSelectedLeader() const
    { return IsSelected() && IsLeader(); }
@@ -378,7 +385,7 @@ void Track::FinishCopy
 {
    if (dest) {
       dest->SetChannel(n->GetChannel());
-      dest->SetLinked(n->GetLinked());
+      dest->SetLinked(n->HasLinkedTrack());
       dest->SetName(n->GetName());
    }
 }
@@ -389,30 +396,30 @@ bool Track::LinkConsistencyCheck()
    // doesn't fix the problem, but it likely leaves us with orphaned
    // sample blocks instead of much worse problems.
    bool err = false;
-   if (GetLinked())
+   if (HasLinkedTrack())
    {
-      Track *l = GetLink();
-      if (l)
+      auto link = GetLinkedTrack();
+      if (link)
       {
          // A linked track's partner should never itself be linked
-         if (l->GetLinked())
+         if (link->HasLinkedTrack())
          {
             wxLogWarning(
                wxT("Left track %s had linked right track %s with extra right track link.\n   Removing extra link from right track."),
-               GetName(), l->GetName());
+               GetName(), link->GetName());
             err = true;
-            l->SetLinked(false);
+            link->SetLinked(false);
          }
 
          // Channels should be left and right
          if ( !(  (GetChannel() == Track::LeftChannel &&
-                     l->GetChannel() == Track::RightChannel) ||
+                     link->GetChannel() == Track::RightChannel) ||
                   (GetChannel() == Track::RightChannel &&
-                     l->GetChannel() == Track::LeftChannel) ) )
+                     link->GetChannel() == Track::LeftChannel) ) )
          {
             wxLogWarning(
                wxT("Track %s and %s had left/right track links out of order. Setting tracks to not be linked."),
-               GetName(), l->GetName());
+               GetName(), link->GetName());
             err = true;
             SetLinked(false);
          }
@@ -718,9 +725,9 @@ void TrackList::GroupChannels(
          ;
       if ( count == 0 ) {
          auto unlink = [&] ( Track &tr ) {
-            if ( tr.GetLinked() ) {
+            if ( tr.HasLinkedTrack() ) {
                if ( resetChannels ) {
-                  auto link = tr.GetLink();
+                  auto link = tr.GetLinkedTrack();
                   if ( link )
                      link->SetChannel( Track::MonoChannel );
                }
@@ -826,7 +833,7 @@ Track *TrackList::GetNext(Track * t, bool linked) const
    if (t) {
       auto node = t->GetNode();
       if ( !isNull( node ) ) {
-         if ( linked && t->GetLinked() )
+         if ( linked && t->HasLinkedTrack() )
             node = getNext( node );
 
          if ( !isNull( node ) )
@@ -850,7 +857,7 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
          if (linked) {
             prev = getPrev( node );
             if( !isNull( prev ) &&
-                !t->GetLinked() && t->GetLink() )
+                !t->HasLinkedTrack() && t->GetLinkedTrack() )
                // Make it the first
                node = prev;
          }
@@ -864,7 +871,7 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
             if (linked) {
                prev = getPrev( node );
                if( !isNull( prev ) &&
-                   !(*node.first)->GetLinked() && (*node.first)->GetLink() )
+                   !(*node.first)->HasLinkedTrack() && (*node.first)->GetLinkedTrack() )
                   node = prev;
             }
 
@@ -1068,7 +1075,7 @@ void TrackList::UpdatePendingTracks()
       if (pendingTrack && src) {
          if (updater)
             updater( *pendingTrack, *src );
-         pendingTrack->DoSetLinked(src->GetLinked());
+         pendingTrack->DoSetLinked(src->HasLinkedTrack());
       }
       ++pUpdater;
    }
