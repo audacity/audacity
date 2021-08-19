@@ -57,14 +57,24 @@ and get deterministic behaviour.
 //////////////////////////////////////////////////////////////////////////
 
 // Constants for the noise shaping buffer
-const int Dither::BUF_MASK = 7;
-const int Dither::BUF_SIZE = 8;
+constexpr int BUF_SIZE = 8;
+constexpr int BUF_MASK = 7;
 
 // Lipshitz's minimally audible FIR
-const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
+const float SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
+
+// Dither state
+struct State {
+    int mPhase;
+    float mTriangleState;
+    float mBuffer[8 /* = BUF_SIZE */];
+} mState;
 
 // This is supposed to produce white noise and no dc
-#define DITHER_NOISE (rand() / (float)RAND_MAX - 0.5f)
+static inline float DITHER_NOISE()
+{
+    return rand() / (float)RAND_MAX - 0.5f;
+}
 
 // Defines for sample conversion
 #define CONVERT_DIV16 float(1<<15)
@@ -99,8 +109,8 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
 #define STORE_INT24(ptr, sample) IMPLEMENT_STORE((ptr), (sample), int, -8388608, 8388607)
 
 // Dither single float 'sample' and store it in pointer 'dst', using 'dither' as algorithm
-#define DITHER_TO_INT16(dither, dst, sample) STORE_INT16((dst), dither(PROMOTE_TO_INT16(sample)))
-#define DITHER_TO_INT24(dither, dst, sample) STORE_INT24((dst), dither(PROMOTE_TO_INT24(sample)))
+#define DITHER_TO_INT16(dither, dst, sample) STORE_INT16((dst), dither(mState, PROMOTE_TO_INT16(sample)))
+#define DITHER_TO_INT24(dither, dst, sample) STORE_INT24((dst), dither(mState, PROMOTE_TO_INT24(sample)))
 
 // Implement one single dither step
 #define DITHER_STEP(dither, store, load, dst, src) \
@@ -141,6 +151,11 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
     } while (0)
 
 
+static inline float NoDither(State &, float sample);
+static inline float RectangleDither(State &, float sample);
+static inline float TriangleDither(State &state, float sample);
+static inline float ShapedDither(State &state, float sample);
+
 Dither::Dither()
 {
     // On startup, initialize dither by resetting values
@@ -149,9 +164,9 @@ Dither::Dither()
 
 void Dither::Reset()
 {
-    mTriangleState = 0;
-    mPhase = 0;
-    memset(mBuffer, 0, sizeof(float) * BUF_SIZE);
+    mState.mTriangleState = 0;
+    mState.mPhase = 0;
+    memset(mState.mBuffer, 0, sizeof(float) * BUF_SIZE);
 }
 
 // This only decides if we must dither at all, the dithers
@@ -285,48 +300,48 @@ void Dither::Apply(enum DitherType ditherType,
 // Dither implementations
 
 // No dither, just return sample
-inline float Dither::NoDither(float sample)
+inline float NoDither(State &, float sample)
 {
     return sample;
 }
 
 // Rectangle dithering, apply one-step noise
-inline float Dither::RectangleDither(float sample)
+inline float RectangleDither(State &, float sample)
 {
-    return sample - DITHER_NOISE;
+    return sample - DITHER_NOISE();
 }
 
 // Triangle dither - high pass filtered
-inline float Dither::TriangleDither(float sample)
+inline float TriangleDither(State &state, float sample)
 {
-    float r = DITHER_NOISE;
-    float result = sample + r - mTriangleState;
-    mTriangleState = r;
+    float r = DITHER_NOISE();
+    float result = sample + r - state.mTriangleState;
+    state.mTriangleState = r;
 
     return result;
 }
 
 // Shaped dither
-inline float Dither::ShapedDither(float sample)
+inline float ShapedDither(State &state, float sample)
 {
     // Generate triangular dither, +-1 LSB, flat psd
-    float r = DITHER_NOISE + DITHER_NOISE;
+    float r = DITHER_NOISE() + DITHER_NOISE();
     if(sample != sample)  // test for NaN
        sample = 0; // and do the best we can with it
 
     // Run FIR
-    float xe = sample + mBuffer[mPhase] * SHAPED_BS[0]
-        + mBuffer[(mPhase - 1) & BUF_MASK] * SHAPED_BS[1]
-        + mBuffer[(mPhase - 2) & BUF_MASK] * SHAPED_BS[2]
-        + mBuffer[(mPhase - 3) & BUF_MASK] * SHAPED_BS[3]
-        + mBuffer[(mPhase - 4) & BUF_MASK] * SHAPED_BS[4];
+    float xe = sample + state.mBuffer[state.mPhase] * SHAPED_BS[0]
+        + state.mBuffer[(state.mPhase - 1) & BUF_MASK] * SHAPED_BS[1]
+        + state.mBuffer[(state.mPhase - 2) & BUF_MASK] * SHAPED_BS[2]
+        + state.mBuffer[(state.mPhase - 3) & BUF_MASK] * SHAPED_BS[3]
+        + state.mBuffer[(state.mPhase - 4) & BUF_MASK] * SHAPED_BS[4];
 
     // Accumulate FIR and triangular noise
     float result = xe + r;
 
     // Roll buffer and store last error
-    mPhase = (mPhase + 1) & BUF_MASK;
-    mBuffer[mPhase] = xe - lrintf(result);
+    state.mPhase = (state.mPhase + 1) & BUF_MASK;
+    state.mBuffer[state.mPhase] = xe - lrintf(result);
 
     return result;
 }
