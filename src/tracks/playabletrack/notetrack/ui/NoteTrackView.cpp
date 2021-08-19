@@ -75,9 +75,13 @@ std::shared_ptr<TrackVRulerControls> NoteTrackView::DoGetVRulerControls()
 #define TIME_TO_X(t) (zoomInfo.TimeToPosition((t), rect.x))
 #define X_TO_TIME(xx) (zoomInfo.PositionToTime((xx), rect.x))
 
-std::shared_ptr<CommonTrackCell> NoteTrackView::DoGetAffordanceControls()
+std::shared_ptr<CommonTrackCell> NoteTrackView::GetAffordanceControls()
 {
-   return std::make_shared<NoteTrackAffordanceControls>(DoFindTrack());
+   if (mpAffordanceCellControl == nullptr)
+   {
+      mpAffordanceCellControl = std::make_shared<NoteTrackAffordanceControls>(DoFindTrack());
+   }
+   return mpAffordanceCellControl;
 }
 
 namespace {

@@ -141,13 +141,6 @@ std::shared_ptr<const TrackVRulerControls> TrackView::GetVRulerControls() const
    return const_cast< TrackView* >( this )->GetVRulerControls();
 }
 
-std::shared_ptr<CommonTrackCell> TrackView::GetAffordanceControls()
-{
-   if (!mpAffordanceCellControl)
-      mpAffordanceCellControl = DoGetAffordanceControls();
-   return mpAffordanceCellControl;
-}
-
 void TrackView::DoSetY(int y)
 {
    mY = y;
@@ -172,7 +165,7 @@ void TrackView::DoSetHeight(int h)
    mHeight = h;
 }
 
-std::shared_ptr<CommonTrackCell> TrackView::DoGetAffordanceControls()
+std::shared_ptr<CommonTrackCell> TrackView::GetAffordanceControls()
 {
    return {};
 }

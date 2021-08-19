@@ -160,7 +160,7 @@ private:
    Refinement GetSubViews(const wxRect& rect) override;
 
 protected:
-   std::shared_ptr<CommonTrackCell> DoGetAffordanceControls() override;
+   std::shared_ptr<CommonTrackCell> GetAffordanceControls() override;
 
    void DoSetMinimized( bool minimized ) override;
 
@@ -171,6 +171,11 @@ protected:
    mutable wxCoord mLastHeight{};
 
    bool mMultiView{ false };
+
+private:
+   std::shared_ptr<CommonTrackCell> DoGetAffordance(const std::shared_ptr<Track>& track);
+
+   std::shared_ptr<CommonTrackCell> mpAffordanceCellControl;
 };
 
 // Helper for drawing routines

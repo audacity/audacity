@@ -1085,9 +1085,9 @@ WaveTrackView::GetAllSubViews()
    return results;
 }
 
-std::shared_ptr<CommonTrackCell> WaveTrackView::DoGetAffordanceControls()
+std::shared_ptr<CommonTrackCell> WaveTrackView::GetAffordanceControls()
 {
-   return std::make_shared<WaveTrackAffordanceControls>(FindTrack());
+    return DoGetAffordance(FindTrack());
 }
 
 void WaveTrackView::DoSetMinimized( bool minimized )
@@ -1099,6 +1099,13 @@ void WaveTrackView::DoSetMinimized( bool minimized )
    WaveTrackSubViews::ForEach( [minimized](WaveTrackSubView &subView){
       subView.DoSetMinimized( minimized );
    } );
+}
+
+std::shared_ptr<CommonTrackCell> WaveTrackView::DoGetAffordance(const std::shared_ptr<Track>& track)
+{
+    if (mpAffordanceCellControl == nullptr)
+        mpAffordanceCellControl = std::make_shared<WaveTrackAffordanceControls>(track);
+    return mpAffordanceCellControl;
 }
 
 using DoGetWaveTrackView = DoGetView::Override< WaveTrack >;
