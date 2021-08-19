@@ -315,43 +315,55 @@ UIHandle::Result BrushHandle::Drag
          if (err2 * 2 >= dy) { err += dy; x0 += sx; }
          if (err2 * 2 <= dx) { err += dx; y0 += sy; }
 
-         // For each (x0, y0), draw circle based on Quadrant
-         int xm = x0, ym = y0;
-         int r = mBrushRadius;
-         int cx = -r, cy = 0, cerr = 2 - 2 * r;
+         // For each (x0, y0), draw circle
+         int x2 = mBrushRadius;
+         int y2 = 0;
+         int xChange = 1 - (mBrushRadius << 1);
+         int yChange = 0;
+         int radiusError = 0;
 
-         if(mIsSmartSelection){
-            // Correct the y coord (snap to highest energy freq. bin)
-            long long startSC = posToLongLong(xm);
-            wxInt64 targetFreq = PositionToFrequency(wt, 0, ym+cy, mRect.y, mRect.height);
-            if(auto *sView = dynamic_cast<SpectrumView*>(pView.get())){
-               wxInt64 resFreq = SpectralDataManager::FindFrequencySnappingBin(wt,
-                                                                               startSC,
-                                                                               mFreqSnappingRatio,
-                                                                               targetFreq);
-               ym = FrequencyToPosition(wt, resFreq, mRect.y, mRect.height);
+//         if(mIsSmartSelection){
+//            // Correct the y coord (snap to highest energy freq. bin)
+//            long long startSC = posToLongLong(x0);
+//            wxInt64 targetFreq = PositionToFrequency(wt, 0, y0, mRect.y, mRect.height);
+//            if(auto *sView = dynamic_cast<SpectrumView*>(pView.get())){
+//               wxInt64 resFreq = SpectralDataManager::FindFrequencySnappingBin(wt,
+//                                                                               startSC,
+//                                                                               mFreqSnappingRatio,
+//                                                                               targetFreq);
+//               if(resFreq != - 1)
+//                  y0 = FrequencyToPosition(wt, resFreq, mRect.y, mRect.height);
+//            }
+//         }
+
+         while (x2 >= y2) {
+            for (int i = x0 - x2; i <= x0 + x2; i++)
+            {
+               posFreq = PositionToFrequency(wt, 0, y0 + y2, mRect.y, mRect.height);
+               HandleTimeFreqData(posToLongLong(i), posFreq);
+
+               posFreq = PositionToFrequency(wt, 0, y0 - y2, mRect.y, mRect.height);
+               HandleTimeFreqData(posToLongLong(i), posFreq);
             }
-         }
+            for (int i = x0 - y2; i <= x0 + y2; i++)
+            {
+               posFreq = PositionToFrequency(wt, 0, y0 + x2, mRect.y, mRect.height);
+               HandleTimeFreqData(posToLongLong(i), posFreq);
 
-         do {
-            posFreq = PositionToFrequency(wt, 0, ym+cy, mRect.y, mRect.height);
-            HandleTimeFreqData(posToLongLong(xm-cx), posFreq);
+               posFreq = PositionToFrequency(wt, 0, y0 - x2, mRect.y, mRect.height);
+               HandleTimeFreqData(posToLongLong(i), posFreq);
+            }
 
-            posFreq = PositionToFrequency(wt, 0, ym-cx, mRect.y, mRect.height);
-            HandleTimeFreqData(posToLongLong(xm-cy), posFreq);
-
-            posFreq = PositionToFrequency(wt, 0, ym-cy, mRect.y, mRect.height);
-            HandleTimeFreqData(posToLongLong(xm+cx), posFreq);
-
-            posFreq = PositionToFrequency(wt, 0, ym+cx, mRect.y, mRect.height);
-            HandleTimeFreqData(posToLongLong(xm+cy), posFreq);
-
-            r = cerr;
-            if (r <= cy)
-               cerr += ++cy * 2 + 1;
-            if (r > cx || cerr > cy)
-               cerr += ++cx * 2 + 1;
-         } while (cx < 0); // End of circle drawing
+            y2++;
+            radiusError += yChange;
+            yChange += 2;
+            if (((radiusError << 1) + xChange) > 0)
+            {
+               x2--;
+               radiusError += xChange;
+               xChange += 2;
+            }
+         } // End of full circle drawing
       } // End of line connecting
    }
    mpSpectralData->coordHistory.push_back(std::make_pair(x, y));
