@@ -213,7 +213,7 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    double minStart = wxMin(left->GetStartTime(), right->GetStartTime());
    left->Clear(left->GetStartTime(), left->GetEndTime());
    left->Paste(minStart, outTrack.get());
-   mOutputTracks->GroupChannels(*left,  1);
+   mOutputTracks->UnlinkChannels(*left);
    mOutputTracks->Remove(right);
 
    return bResult;

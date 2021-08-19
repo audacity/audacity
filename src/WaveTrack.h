@@ -101,6 +101,8 @@ private:
    ChannelType GetChannel() const override;
    virtual void SetPanFromChannelType() override;
 
+   bool LinkConsistencyCheck() override;
+
    /** @brief Get the time at which the first clip in the track starts
     *
     * @return time in seconds, or zero if there are no clips in the track
