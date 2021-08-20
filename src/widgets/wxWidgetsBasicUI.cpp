@@ -146,15 +146,15 @@ wxWidgetsBasicUI::DoMessageBox(
    // see utilscmn.cpp in wxWidgets.
    // Remap to our toolkit-neutral enumeration.
    switch (wxResult) {
-   case wxID_YES:
+   case wxYES:
       return MessageBoxResult::Yes;
-   case wxID_NO:
+   case wxNO:
       return MessageBoxResult::No;
-   case wxID_OK:
+   case wxOK:
       return MessageBoxResult::Ok;
-   case wxID_CANCEL:
+   case wxCANCEL:
       return MessageBoxResult::Cancel;
-   case wxID_HELP:
+   case wxHELP:
       // should not happen, because we don't ever pass wxHELP
    default:
       wxASSERT(false);

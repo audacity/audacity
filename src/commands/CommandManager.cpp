@@ -93,6 +93,8 @@ CommandManager.  It holds the callback for one command.
 #include <wx/tokenzr.h>
 
 #include "../Journal.h"
+#include "../JournalOutput.h"
+#include "../JournalRegistry.h"
 #include "../Menus.h"
 
 #include "../Project.h"
@@ -1190,7 +1192,7 @@ constexpr auto JournalCode = wxT("CM");  // for CommandManager
 
 // Register a callback for the journal
 Journal::RegisteredCommand sCommand{ JournalCode,
-[]( const wxArrayString &fields )
+[]( const wxArrayStringEx &fields )
 {
    // Expect JournalCode and the command name.
    // To do, perhaps, is to include some parameters.

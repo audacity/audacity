@@ -11,8 +11,6 @@
 #ifndef __AUDACITY_JOURNAL__
 #define __AUDACITY_JOURNAL__
 
-#include <functional>
-#include <initializer_list>
 #include "Identifier.h"
 class wxArrayString;
 class wxArrayStringEx;
@@ -33,10 +31,6 @@ namespace Journal
    //\return whether successful
    bool SetRecordEnabled(bool value);
 
-   //\brief Whether actually recording.
-   // IsRecording() && IsReplaying() is possible
-   bool IsRecording();
-
    //\brief Whether actually replaying.
    // IsRecording() && IsReplaying() is possible
    bool IsReplaying();
@@ -46,6 +40,8 @@ namespace Journal
 
    //\brief Initialize playback if a file name has been set, and initialize
    // output if recording is enabled.
+   // Must be called after wxWidgets initializes.
+   // Application initialization is late enough.
    // @param dataDir the output journal.txt will be in this directory, and the
    // input file, if it was relative, is made absolute with respect to it
    // @return true if successful
@@ -56,34 +52,11 @@ namespace Journal
    // Throws SyncException if no next line or not replaying
    wxArrayStringEx GetTokens();
 
-   //\brief Type of a function that interprets a line of the input journal.
-   // It may indicate failure either by throwing SyncException or returning
-   // false (which will cause Journal::Dispatch to throw a SyncException)
-   using Dispatcher = std::function< bool(const wxArrayString &fields) >;
-
-   //\brief Associates a dispatcher with a keyword in the default dictionary.
-   // The keyword will also be the first field passed to the dispatcher.  This
-   // struct is meant for static construction
-   struct RegisteredCommand{
-      explicit RegisteredCommand(
-         const wxString &name, Dispatcher dispatcher );
-   };
-
    //\brief if playing back and commands remain, may execute one.
    // May throw SyncException if playing back but none remain, or if other error
    // conditions are encountered.
    // Returns true if any command was dispatched
    bool Dispatch();
-
-   //\brief write the strings to the output journal, if recording
-   // None of them may contain newlines
-   void Output( const wxString &string );
-   void Output( const wxArrayString &strings );
-   void Output( std::initializer_list< const wxString > strings );
-
-   //\brief if recording, emit a comment in the output journal that will have
-   // no effect on playback
-   void Comment( const wxString &string );
 
    //\brief If recording, output the strings; if playing back, require
    // identical strings.  None of them may contain newlines
