@@ -16,7 +16,7 @@
 // See big pictorial comment in TrackPanel.cpp for explanation of these numbers
 //! constants related to y coordinates in the track panel
 enum : int {
-   kAffordancesAreaHeight = 20,
+   kAffordancesAreaHeight = 18,
    kTopInset = 4,
    kTopMargin = kTopInset + kBorderThickness,
    kBottomMargin = kShadowThickness + kBorderThickness,
