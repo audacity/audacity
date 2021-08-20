@@ -37,6 +37,11 @@ void WaveformVZoomHandle::Enter( bool, AudacityProject* )
 #endif
 }
 
+bool WaveformVZoomHandle::HandlesRightClick()
+{
+   return true;
+}
+
 UIHandle::Result WaveformVZoomHandle::Click
 (const TrackPanelMouseEvent &, AudacityProject *)
 {
