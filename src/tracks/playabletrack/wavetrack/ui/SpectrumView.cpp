@@ -572,10 +572,11 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    mpSpectralData->dataHistory.push_back(mpSpectralData->dataBuffer);
    int windowSize = mpSpectralData->GetWindowSize();
+   int hopSize = mpSpectralData->GetHopSize();
    double sr = mpSpectralData->GetSR();
    for(const auto &spectralDataMap: mpSpectralData->dataHistory) {
       for(const auto &spectralData: spectralDataMap){
-         double timePt = mpSpectralData->scToTimeDouble(spectralData.first);
+         double timePt = mpSpectralData->scToTimeDouble(spectralData.first * hopSize);
          int convertedX = zoomInfo.TimeToPosition(timePt, 0);
          convertedX = std::min(convertedX, rect.width);
          for(const int &freqBinNum: spectralData.second){

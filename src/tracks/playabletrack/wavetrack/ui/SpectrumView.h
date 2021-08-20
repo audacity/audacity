@@ -18,12 +18,13 @@ Paul Licameli split from WaveTrackView.h
 
 class WaveTrack;
 class BrushHandle;
-using TimeFreqBinsMap = std::map<long long, std::set<int>>;
+using HopsAndBinsMap = std::map<long long, std::set<int>>;
 
 class SpectralData{
 private:
    double mSampleRate;
    int mWindowSize;
+   int mHopSize;
    long long mStartT;
    long long mEndT;
 
@@ -34,11 +35,12 @@ public:
     ,mStartT(std::numeric_limits<long long>::max())
     ,mEndT( 0 )
     ,mWindowSize( 2048 )
+    ,mHopSize ( 64 )
     {}
     SpectralData(const SpectralData& src) = delete;
 
-   TimeFreqBinsMap dataBuffer;
-   std::vector<TimeFreqBinsMap> dataHistory;
+    HopsAndBinsMap dataBuffer;
+    std::vector<HopsAndBinsMap> dataHistory;
    // TODO: replace with two pairs to save space
    std::vector<std::pair<int, int>> coordHistory;
 
@@ -51,6 +53,10 @@ public:
       dataHistory = src->dataHistory;
       dataBuffer = src->dataBuffer;
       coordHistory = src->coordHistory;
+   }
+
+   int GetHopSize() const {
+      return mHopSize;
    }
 
    int GetWindowSize() const{
@@ -70,33 +76,24 @@ public:
    }
 
    // The double time points is quantized into long long
-   void addTimeFreqData(long long ll_sc, wxInt64 freq){
+   void addHopBinData(int hopNum, int freqBin){
       // Update the start and end sampleCount of current selection
-      if(ll_sc > mEndT)
-         mEndT = ll_sc;
-      if(ll_sc < mStartT)
-         mStartT = ll_sc;
+      if(hopNum * mHopSize > mEndT)
+         mEndT = hopNum * mHopSize;
+      if(hopNum * mHopSize < mStartT)
+         mStartT = hopNum * mHopSize;
 
-      // "Time-axis rounding"
-      // Using int division to round the sampleCount to the hop size of FFT to save computation
-      int hopSize = 128;
-//      ll_sc = ll_sc / hopSize * hopSize;
-
-      // "Frequency-bin rounding"
-      // Round the exact frequency to the nearest bin
-      int binNum = freq / (mSampleRate / mWindowSize);
-
-      if(dataBuffer.find(ll_sc) == dataBuffer.end())
-         dataBuffer[ll_sc] = std::set<int>{ binNum };
+      if(dataBuffer.find(hopNum) == dataBuffer.end())
+         dataBuffer[hopNum] = std::set<int>{ freqBin };
       else
-         dataBuffer[ll_sc].insert(binNum);
+         dataBuffer[hopNum].insert(freqBin);
    }
 
-   void removeTimeFreqData(long long ll_sc, wxInt64 freq){
-      int binNum = freq / mWindowSize;
+   void removeHopBinData(int hopNum, int freqBin){
+      // TODO: Recalculate the start and end in case hop falls in 0 || end
       for(auto &dataBuf: dataHistory){
-         if(dataBuf.find(ll_sc) != dataBuf.end()){
-            dataBuf[ll_sc].erase(binNum);
+         if(dataBuf.find(hopNum) != dataBuf.end()){
+            dataBuf[hopNum].erase(freqBin);
          }
       }
    }
