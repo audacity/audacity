@@ -1175,7 +1175,11 @@ void OnTrackMute(const CommandContext &context)
 {
    auto &project = context.project;
 
-   const auto track = TrackFocus::Get( project ).Get();
+   // Use the temporary selection if it is specified, else the track focus
+   auto track = context.temporarySelection.pTrack;
+   if (!track)
+      track = TrackFocus::Get( project ).Get();
+
    if (track) track->TypeSwitch( [&](PlayableTrack *t) {
       TrackUtilities::DoTrackMute(project, t, false);
    });
