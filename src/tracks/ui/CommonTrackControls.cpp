@@ -276,7 +276,8 @@ void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
 }
 
 unsigned CommonTrackControls::DoContextMenu(
-   const wxRect &rect, wxWindow *pParent, wxPoint *, AudacityProject *pProject)
+   const wxRect &rect, wxWindow *pParent, const wxPoint *,
+   AudacityProject *pProject)
 {
    using namespace RefreshCode;
    wxRect buttonRect;
