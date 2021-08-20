@@ -820,13 +820,37 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    return entry;
 }
 
+wxString CommandManager::FormatLabelForMenu(
+   const CommandID &id, const TranslatableString *pLabel) const
+{
+   NormalizedKeyString keyStr;
+   if (auto iter = mCommandNameHash.find(id); iter != mCommandNameHash.end()) {
+      if (auto pEntry = iter->second) {
+         keyStr = pEntry->key;
+         if (!pLabel)
+            pLabel = &pEntry->label;
+      }
+   }
+   if (pLabel)
+      return FormatLabelForMenu(*pLabel, keyStr);
+   return {};
+}
+
 wxString CommandManager::FormatLabelForMenu(const CommandListEntry *entry) const
 {
-   auto label = entry->label.Translation();
-   if (!entry->key.empty())
+   return FormatLabelForMenu( entry->label, entry->key );
+}
+
+wxString CommandManager::FormatLabelForMenu(
+   const TranslatableString &translatableLabel,
+   const NormalizedKeyString &keyStr) const
+{
+   auto label = translatableLabel.Translation();
+   auto key = keyStr.GET();
+   if (!key.empty())
    {
       // using GET to compose menu item name for wxWidgets
-      label += wxT("\t") + entry->key.GET();
+      label += wxT("\t") + key;
    }
 
    return label;
