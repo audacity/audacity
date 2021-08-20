@@ -57,7 +57,7 @@ public:
 
    bool Escape(AudacityProject *pProject) override;
 
-   void HandleTimeFreqData(long long ll_sc, wxInt64 freq);
+   void HandleHopBinData(int hopNum, int freqBinNum);
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

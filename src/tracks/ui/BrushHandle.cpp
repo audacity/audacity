@@ -224,17 +224,20 @@ bool BrushHandle::Escape(AudacityProject *project)
 }
 
 // Add or remove data accroding to the ctrl key press
-void BrushHandle::HandleTimeFreqData(long long ll_sc, wxInt64 freq) {
+void BrushHandle::HandleHopBinData(int hopNum, int freqBinNum) {
    // Ignore the mouse dragging outside valid area
    // We should also check for the available freq. range that is visible to user
-   if(ll_sc < mSampleCountLowerBound || ll_sc > mSampleCountUpperBound ||
+   long long sampleCount = hopNum * mpSpectralData->GetHopSize();
+   wxInt64 freq = freqBinNum * mpSpectralData->GetSR() / mpSpectralData->GetWindowSize();
+
+   if(sampleCount < mSampleCountLowerBound || sampleCount > mSampleCountUpperBound ||
       freq < mFreqLowerBound || freq > mFreqUpperBound)
       return;
 
    if(mbCtrlDown)
-      mpSpectralData->removeTimeFreqData(ll_sc, freq);
+      mpSpectralData->removeHopBinData(hopNum, freqBinNum);
    else
-      mpSpectralData->addTimeFreqData(ll_sc, freq);
+      mpSpectralData->addHopBinData(hopNum, freqBinNum);
 }
 
 UIHandle::Result BrushHandle::Click
@@ -282,30 +285,43 @@ UIHandle::Result BrushHandle::Drag
    mMostRecentX = x;
    mMostRecentY = y;
 
+   double posTime;
+   wxInt64 posFreq;
+   auto posToLongLong = [&](int x0){
+      posTime = viewInfo.PositionToTime(x0, mRect.x);
+      sampleCount sc = wt->TimeToLongSamples(posTime);
+      return sc.as_long_long();
+   };
+
    // Clip the coordinates
    // TODO: Find ways to access the ClipParameters (for the mid)
-   int x1 = std::max(mRect.x + 10, std::min(x, mRect.x + mRect.width - 20));
-   int y1 = std::max(mRect.y + 10, std::min(y, mRect.y + mRect.height - 10));
+   int dest_xcoord = std::max(mRect.x + 10, std::min(x, mRect.x + mRect.width - 20));
+   int dest_ycoord = std::max(mRect.y + 10, std::min(y, mRect.y + mRect.height - 10));
+   int destFreq = PositionToFrequency(wt, 0, dest_ycoord, mRect.y, mRect.height);
+
+   int x1 = posToLongLong(dest_xcoord) / mpSpectralData->GetHopSize();
+   int y1 = destFreq / (mpSpectralData->GetSR() / mpSpectralData->GetWindowSize());
 
    mbCtrlDown = event.ControlDown();
 
+   // Use the hop and bin number to calculate the brush stroke, instead of the mouse coordinates
+   // For mouse coordinate:
+   // (src_xcoord, src_ycoord) -> (dest_xcoord, dest_ycoord)
+   //
+   // Variables for Bresenham's line algorithm:
+   // x0, x1, y0, y1... (already transformed in hops and bins space}
    if(!mpSpectralData->coordHistory.empty()){
-      int x0 = mpSpectralData->coordHistory.back().first;
-      int y0 = mpSpectralData->coordHistory.back().second;
+      int src_xcoord = mpSpectralData->coordHistory.back().first;
+      int src_ycoord = mpSpectralData->coordHistory.back().second;
+      int srcFreq = PositionToFrequency(wt, 0, src_ycoord, mRect.y, mRect.height);
+
+      int x0 = posToLongLong(src_xcoord) / mpSpectralData->GetHopSize();
+      int y0 = srcFreq / (mpSpectralData->GetSR() / mpSpectralData->GetWindowSize());
       int wd = mBrushRadius * 2;
 
       int dx =  abs(x1-x0), sx = x0<x1 ? 1 : -1;
       int dy = -abs(y1-y0), sy = y0<y1 ? 1 : -1;
       int err = dx+dy, err2;
-
-      double posTime;
-      wxInt64 posFreq;
-
-      auto posToLongLong = [&](int x0){
-         posTime = viewInfo.PositionToTime(x0, mRect.x);
-         sampleCount sc = wt->TimeToLongSamples(posTime);
-         return sc.as_long_long();
-      };
 
       // Line drawing (draw points until the start coordinate reaches the end)
       while(true){
@@ -322,36 +338,31 @@ UIHandle::Result BrushHandle::Drag
          int yChange = 0;
          int radiusError = 0;
 
-//         if(mIsSmartSelection){
-//            // Correct the y coord (snap to highest energy freq. bin)
-//            long long startSC = posToLongLong(x0);
-//            wxInt64 targetFreq = PositionToFrequency(wt, 0, y0, mRect.y, mRect.height);
-//            if(auto *sView = dynamic_cast<SpectrumView*>(pView.get())){
-//               wxInt64 resFreq = SpectralDataManager::FindFrequencySnappingBin(wt,
-//                                                                               startSC,
-//                                                                               mFreqSnappingRatio,
-//                                                                               targetFreq);
-//               if(resFreq != - 1)
-//                  y0 = FrequencyToPosition(wt, resFreq, mRect.y, mRect.height);
-//            }
-//         }
+         int ym = y0;
+         if(mIsSmartSelection){
+            // Correct the y coord (snap to highest energy freq. bin)
+            long long startSC = posToLongLong(x0);
+            wxInt64 targetFreq = PositionToFrequency(wt, 0, ym, mRect.y, mRect.height);
+            if(auto *sView = dynamic_cast<SpectrumView*>(pView.get())){
+               wxInt64 resFreq = SpectralDataManager::FindFrequencySnappingBin(wt,
+                                                                               startSC,
+                                                                               mFreqSnappingRatio,
+                                                                               targetFreq);
+               if(resFreq != - 1)
+                  ym = FrequencyToPosition(wt, resFreq, mRect.y, mRect.height);
+            }
+         }
 
          while (x2 >= y2) {
             for (int i = x0 - x2; i <= x0 + x2; i++)
             {
-               posFreq = PositionToFrequency(wt, 0, y0 + y2, mRect.y, mRect.height);
-               HandleTimeFreqData(posToLongLong(i), posFreq);
-
-               posFreq = PositionToFrequency(wt, 0, y0 - y2, mRect.y, mRect.height);
-               HandleTimeFreqData(posToLongLong(i), posFreq);
+               HandleHopBinData(i, ym+y2);
+               HandleHopBinData(i, ym-y2);
             }
             for (int i = x0 - y2; i <= x0 + y2; i++)
             {
-               posFreq = PositionToFrequency(wt, 0, y0 + x2, mRect.y, mRect.height);
-               HandleTimeFreqData(posToLongLong(i), posFreq);
-
-               posFreq = PositionToFrequency(wt, 0, y0 - x2, mRect.y, mRect.height);
-               HandleTimeFreqData(posToLongLong(i), posFreq);
+               HandleHopBinData(i, ym+x2);
+               HandleHopBinData(i, ym-x2);
             }
 
             y2++;
@@ -366,7 +377,7 @@ UIHandle::Result BrushHandle::Drag
          } // End of full circle drawing
       } // End of line connecting
    }
-   mpSpectralData->coordHistory.push_back(std::make_pair(x, y));
+   mpSpectralData->coordHistory.push_back(std::make_pair(dest_xcoord, dest_ycoord));
    return RefreshAll;
 }
 
