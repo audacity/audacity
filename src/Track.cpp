@@ -50,7 +50,6 @@ Track::Track()
 :  vrulerSize(36,0)
 {
    mSelected  = false;
-   mLinked    = false;
 
    mIndex = 0;
 
@@ -76,7 +75,7 @@ void Track::Init(const Track &orig)
    mName = orig.mName;
 
    mSelected = orig.mSelected;
-   mLinked = orig.mLinked;
+   mLinkType = orig.mLinkType;
    mChannel = orig.mChannel;
 }
 
@@ -172,18 +171,18 @@ void Track::SetIndex(int index)
    mIndex = index;
 }
 
-void Track::SetLinked(bool l)
+void Track::SetLinkType(LinkType linkType)
 {
    auto pList = mList.lock();
    if (pList && !pList->mPendingUpdates.empty()) {
       auto orig = pList->FindById( GetId() );
       if (orig && orig != this) {
-         orig->SetLinked(l);
+         orig->SetLinkType(linkType);
          return;
       }
    }
 
-   DoSetLinked(l);
+   DoSetLinkType(linkType);
 
    if (pList) {
       pList->RecalcPositions(mNode);
@@ -191,19 +190,24 @@ void Track::SetLinked(bool l)
    }
 }
 
-void Track::DoSetLinked(bool l)
+void Track::DoSetLinkType(LinkType linkType) noexcept
 {
-   mLinked = l;
+   mLinkType = linkType;
 }
 
-Track *Track::GetLink() const
+void Track::SetChannel(ChannelType c) noexcept
+{
+    mChannel = c;
+}
+
+Track *Track::GetLinkedTrack() const
 {
    auto pList = mList.lock();
    if (!pList)
       return nullptr;
 
    if (!pList->isNull(mNode)) {
-      if (mLinked) {
+      if (HasLinkedTrack()) {
          auto next = pList->getNext( mNode );
          if ( !pList->isNull( next ) )
             return next.first->get();
@@ -213,13 +217,18 @@ Track *Track::GetLink() const
          auto prev = pList->getPrev( mNode );
          if ( !pList->isNull( prev ) ) {
             auto track = prev.first->get();
-            if (track && track->GetLinked())
+            if (track && track->HasLinkedTrack())
                return track;
          }
       }
    }
 
    return nullptr;
+}
+
+bool Track::HasLinkedTrack() const noexcept
+{
+    return mLinkType != LinkType::None;
 }
 
 namespace {
@@ -368,7 +377,9 @@ bool Track::IsSelectedOrSyncLockSelected() const
    { return GetSelected() || IsSyncLockSelected(); }
 
 bool Track::IsLeader() const
-   { return !GetLink() || GetLinked(); }
+{
+    return !GetLinkedTrack() || HasLinkedTrack();
+}
 
 bool Track::IsSelectedLeader() const
    { return IsSelected() && IsLeader(); }
@@ -378,7 +389,7 @@ void Track::FinishCopy
 {
    if (dest) {
       dest->SetChannel(n->GetChannel());
-      dest->SetLinked(n->GetLinked());
+      dest->SetLinkType(n->GetLinkType());
       dest->SetName(n->GetName());
    }
 }
@@ -389,32 +400,32 @@ bool Track::LinkConsistencyCheck()
    // doesn't fix the problem, but it likely leaves us with orphaned
    // sample blocks instead of much worse problems.
    bool err = false;
-   if (GetLinked())
+   if (HasLinkedTrack())
    {
-      Track *l = GetLink();
-      if (l)
+      auto link = GetLinkedTrack();
+      if (link)
       {
          // A linked track's partner should never itself be linked
-         if (l->GetLinked())
+         if (link->HasLinkedTrack())
          {
             wxLogWarning(
                wxT("Left track %s had linked right track %s with extra right track link.\n   Removing extra link from right track."),
-               GetName(), l->GetName());
+               GetName(), link->GetName());
             err = true;
-            l->SetLinked(false);
+            link->SetLinkType(LinkType::None);
          }
 
          // Channels should be left and right
          if ( !(  (GetChannel() == Track::LeftChannel &&
-                     l->GetChannel() == Track::RightChannel) ||
+                     link->GetChannel() == Track::RightChannel) ||
                   (GetChannel() == Track::RightChannel &&
-                     l->GetChannel() == Track::LeftChannel) ) )
+                     link->GetChannel() == Track::LeftChannel) ) )
          {
             wxLogWarning(
                wxT("Track %s and %s had left/right track links out of order. Setting tracks to not be linked."),
-               GetName(), l->GetName());
+               GetName(), link->GetName());
             err = true;
-            SetLinked(false);
+            SetLinkType(LinkType::None);
          }
       }
       else
@@ -423,7 +434,7 @@ bool Track::LinkConsistencyCheck()
             wxT("Track %s had link to NULL track. Setting it to not be linked."),
             GetName());
          err = true;
-         SetLinked(false);
+         SetLinkType(LinkType::None);
       }
    }
 
@@ -704,57 +715,6 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t)
    return back().get();
 }
 
-void TrackList::GroupChannels(
-   Track &track, size_t groupSize, bool resetChannels )
-{
-   // If group size is exactly two, group as stereo, else mono (bug 2195).
-   auto list = track.mList.lock();
-   if ( groupSize > 0 && list.get() == this  ) {
-      auto iter = track.mNode.first;
-      auto after = iter;
-      auto end = this->ListOfTracks::end();
-      auto count = groupSize;
-      for ( ; after != end && count; ++after, --count )
-         ;
-      if ( count == 0 ) {
-         auto unlink = [&] ( Track &tr ) {
-            if ( tr.GetLinked() ) {
-               if ( resetChannels ) {
-                  auto link = tr.GetLink();
-                  if ( link )
-                     link->SetChannel( Track::MonoChannel );
-               }
-               tr.SetLinked( false );
-            }
-            if ( resetChannels )
-               tr.SetChannel( Track::MonoChannel );
-         };
-
-         // Disassociate previous tracks -- at most one
-         auto pLeader = this->FindLeader( &track );
-         if ( *pLeader && *pLeader != &track )
-            unlink( **pLeader );
-
-         // First disassociate given and later tracks, then reassociate them
-         for ( auto iter2 = iter; iter2 != after; ++iter2 )
-             unlink( **iter2 );
-
-         if ( groupSize > 1 ) {
-            const auto channel = *iter++;
-            channel->SetLinked( groupSize == 2 );
-            channel->SetChannel( groupSize == 2? Track::LeftChannel : Track::MonoChannel );
-            (*iter++)->SetChannel( groupSize == 2? Track::RightChannel : Track::MonoChannel );
-            while (iter != after)
-               (*iter++)->SetChannel( Track::MonoChannel );
-         }
-         return;
-      }
-   }
-   // *this does not contain the track or sufficient following channels
-   // or group size is zero
-   THROW_INCONSISTENCY_EXCEPTION;
-}
-
 auto TrackList::Replace(Track * t, const ListOfTracks::value_type &with) ->
    ListOfTracks::value_type
 {
@@ -775,6 +735,58 @@ auto TrackList::Replace(Track * t, const ListOfTracks::value_type &with) ->
       AdditionEvent(node);
    }
    return holder;
+}
+
+void TrackList::UnlinkChannels(Track& track)
+{
+   auto list = track.mList.lock();
+   if (list.get() == this)
+   {
+      auto channels = TrackList::Channels(&track);
+      for (auto c : channels)
+      {
+          c->SetLinkType(Track::LinkType::None);
+          c->SetChannel(Track::ChannelType::MonoChannel);
+      }
+   }
+   else
+      THROW_INCONSISTENCY_EXCEPTION;
+}
+
+bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels, bool aligned)
+{
+   if (nChannels != 2)
+      return false;
+
+   auto list = track.mList.lock();
+   if (list.get() == this)
+   {
+      if (*list->FindLeader(&track) != &track)
+         return false;
+
+      auto first = list->Find(&track);
+      auto canLink = [&]() -> bool {
+         int count = nChannels;
+         for (auto it = first, end = TrackList::end(); it != end && count; ++it)
+         {
+            if ((*it)->HasLinkedTrack())
+               return false;
+            --count;
+         }
+         return count == 0;
+      }();
+
+      if (!canLink)
+         return false;
+
+      (*first)->SetLinkType(aligned ? Track::LinkType::Aligned : Track::LinkType::Group);
+      (*first)->SetChannel(Track::LeftChannel);
+      auto second = std::next(first);
+      (*second)->SetChannel(Track::RightChannel);
+   }
+   else
+      THROW_INCONSISTENCY_EXCEPTION;
+   return true;
 }
 
 TrackNodePointer TrackList::Remove(Track *t)
@@ -826,7 +838,7 @@ Track *TrackList::GetNext(Track * t, bool linked) const
    if (t) {
       auto node = t->GetNode();
       if ( !isNull( node ) ) {
-         if ( linked && t->GetLinked() )
+         if ( linked && t->HasLinkedTrack() )
             node = getNext( node );
 
          if ( !isNull( node ) )
@@ -850,7 +862,7 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
          if (linked) {
             prev = getPrev( node );
             if( !isNull( prev ) &&
-                !t->GetLinked() && t->GetLink() )
+                !t->HasLinkedTrack() && t->GetLinkedTrack() )
                // Make it the first
                node = prev;
          }
@@ -864,7 +876,7 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
             if (linked) {
                prev = getPrev( node );
                if( !isNull( prev ) &&
-                   !(*node.first)->GetLinked() && (*node.first)->GetLink() )
+                   !(*node.first)->HasLinkedTrack() && (*node.first)->GetLinkedTrack() )
                   node = prev;
             }
 
@@ -1068,7 +1080,7 @@ void TrackList::UpdatePendingTracks()
       if (pendingTrack && src) {
          if (updater)
             updater( *pendingTrack, *src );
-         pendingTrack->DoSetLinked(src->GetLinked());
+         pendingTrack->DoSetLinkType(src->GetLinkType());
       }
       ++pUpdater;
    }
@@ -1294,5 +1306,20 @@ bool TrackList::HasPendingTracks() const
       return t->GetId() == TrackId{};
    }))
       return true;
+   return false;
+}
+
+Track::LinkType Track::GetLinkType() const noexcept
+{
+    return mLinkType;
+}
+
+bool Track::IsAlignedWithLeader() const
+{
+   if (auto owner = GetOwner())
+   {
+      auto leader = *owner->FindLeader(this);
+      return leader != this && leader->GetLinkType() == Track::LinkType::Aligned;
+   }
    return false;
 }

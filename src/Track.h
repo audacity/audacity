@@ -237,10 +237,22 @@ class AUDACITY_DLL_API Track /* not final */
    , public AttachedTrackObjects
    , public std::enable_shared_from_this<Track> // see SharedPointer()
 {
+public:
+
+   //! For two tracks describes the type of the linkage
+   enum class LinkType : int {
+       None = 0, //< No linkage
+       Group = 2, //< Tracks are grouped together
+       Aligned, //< Tracks are grouped and changes should be synchronized
+   };
+
+private:
+
    friend class TrackList;
 
  private:
    TrackId mId; //!< Identifies the track only in-session, not persistently
+   LinkType mLinkType{ LinkType::None };
 
  protected:
    std::weak_ptr<TrackList> mList; //!< Back pointer to owning TrackList
@@ -253,9 +265,6 @@ class AUDACITY_DLL_API Track /* not final */
 
  private:
    bool           mSelected;
-
- protected:
-   bool           mLinked;
 
  public:
 
@@ -363,23 +372,28 @@ public:
    static void FinishCopy (const Track *n, Track *dest);
 
    // For use when loading a file.  Return true if ok, else make repair
-   bool LinkConsistencyCheck();
+   virtual bool LinkConsistencyCheck();
 
    bool HasOwner() const { return static_cast<bool>(GetOwner());}
 
    std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
 
-private:
-   Track *GetLink() const;
-   bool GetLinked  () const { return mLinked; }
+   LinkType GetLinkType() const noexcept;
+   //! Returns true if the leader track has link type LinkType::Aligned
+   bool IsAlignedWithLeader() const;
 
-   friend WaveTrack; // WaveTrack needs to call SetLinked when reloading project
-   void SetLinked  (bool l);
-
-   void SetChannel(ChannelType c) { mChannel = c; }
+protected:
+   
+   void SetLinkType(LinkType linkType);
+   void DoSetLinkType(LinkType linkType) noexcept;
+   void SetChannel(ChannelType c) noexcept;
 private:
-   // No need yet to make this virtual
-   void DoSetLinked(bool l);
+   
+   Track* GetLinkedTrack() const;
+   //! Returns true for leaders of multichannel groups
+   bool HasLinkedTrack() const noexcept;
+
+   
 
    //! Retrieve mNode with debug checks
    TrackNodePointer GetNode() const;
@@ -1488,16 +1502,18 @@ public:
    template<typename TrackKind>
       TrackKind *Add( const std::shared_ptr< TrackKind > &t )
          { return static_cast< TrackKind* >( DoAdd( t ) ); }
-
-   /** \brief Define a group of channels starting at the given track
-   *
-   * @param track and (groupSize - 1) following tracks must be in this
-   * list.  They will be disassociated from any groups they already belong to.
-   * @param groupSize must be at least 1.
-   * @param resetChannels if true, disassociated channels will be marked Mono.
+   
+   //! Removes linkage if track belongs to a group
+   void UnlinkChannels(Track& track);
+   /** \brief Converts channels to a multichannel track. 
+   * @param first and the following must be in this list. Tracks should
+   * not be a part of another group (not linked)
+   * @param nChannels number of channels, for now only 2 channels supported
+   * @param aligned if true, the link type will be set to Track::LinkType::Aligned,
+   * or Track::LinkType::Group otherwise
+   * @returns true on success, false if some prerequisites do not met
    */
-   void GroupChannels(
-      Track &track, size_t groupSize, bool resetChannels = true );
+   bool MakeMultiChannelTrack(Track& first, int nChannels, bool aligned);
 
    /// Replace first track with second track, give back a holder
    /// Give the replacement the same id as the replaced
