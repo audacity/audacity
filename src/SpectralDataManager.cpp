@@ -192,7 +192,7 @@ bool SpectralDataManager::Worker::ApplyEffectToSelection() {
 
    for(const auto &spectralDataMap: mpSpectralData->dataHistory){
       for(const auto &data: spectralDataMap){
-         long long sc = data.first;
+         long long sc = data.first * mpSpectralData->GetHopSize();
          // Check if the data's time sampleCount within this window
          if(sc >= mStartSample && sc < mEndSample){
             // For all added frequency
