@@ -50,7 +50,8 @@ enum {
    ID_ON_APPLY = 10000,
    ID_CHECKBOX_SMART,
    ID_CHECKBOX_OVERTONES,
-   ID_SLIDER_BRUSH_SIZE
+   ID_SLIDER_BRUSH_SIZE,
+   ID_SLIDER_BRUSH_HOP
 };
 
 BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
@@ -60,6 +61,7 @@ BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
    EVT_SHOW(SpectralDataDialog::OnShow)
    EVT_CLOSE(SpectralDataDialog::OnCloseWindow)
    EVT_SLIDER(ID_SLIDER_BRUSH_SIZE, SpectralDataDialog::OnBrushSizeSlider)
+   EVT_SLIDER(ID_SLIDER_BRUSH_HOP, SpectralDataDialog::OnBrushHopSlider)
 END_EVENT_TABLE()
 
 #define Title XO("Spectral Data Control Panel")
@@ -126,6 +128,16 @@ void SpectralDataDialog::Populate(ShuttleGui & S)
                .Style(wxSL_HORIZONTAL)
                .Name(XO("Custom brush size"))
                .AddSlider( {}, 5, 10, 1);
+      }
+      S.EndStatic();
+
+      S.StartStatic(XO("Brush hop size"), 1);
+      {
+         S.Id(ID_SLIDER_BRUSH_HOP)
+         .Style(wxSL_HORIZONTAL)
+         .Name(XO("Custom brush hop size"))
+         // Currently, the hop size will the power of 2
+         .AddSlider( {}, 6, 12, 1);
       }
       S.EndStatic();
    }
@@ -251,6 +263,11 @@ void SpectralDataDialogWorker::OnToolChanged(wxCommandEvent &evt)
 void SpectralDataDialog::OnBrushSizeSlider(wxCommandEvent &event) {
    auto &projectSettings = ProjectSettings::Get( *mProject );
    projectSettings.SetBrushRadius(event.GetInt());
+}
+
+void SpectralDataDialog::OnBrushHopSlider(wxCommandEvent &event) {
+   auto &projectSettings = ProjectSettings::Get( *mProject );
+   projectSettings.SetBrushHop(event.GetInt());
 }
 
 void SpectralDataDialog::OnCheckSmartSelection(wxCommandEvent &event){
