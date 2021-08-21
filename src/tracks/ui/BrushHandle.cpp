@@ -331,14 +331,11 @@ UIHandle::Result BrushHandle::Drag
          int bm = b0;
          if(mIsSmartSelection){
             // Correct the y coord (snap to highest energy freq. bin)
-            wxInt64 targetFreq = PositionToFrequency(wt, 0, bm, mRect.y, mRect.height);
             if(auto *sView = dynamic_cast<SpectrumView*>(pView.get())){
-               wxInt64 resFreq = SpectralDataManager::FindFrequencySnappingBin(wt,
-                                                                               h0 * mpSpectralData->GetHopSize(),
-                                                                               mFreqSnappingRatio,
-                                                                               targetFreq);
-               if(resFreq != - 1)
-                  bm = FrequencyToPosition(wt, resFreq, mRect.y, mRect.height);
+               int resFreqBin = SpectralDataManager::FindFrequencySnappingBin(wt,
+                  h0 * mpSpectralData -> GetHopSize(), mFreqSnappingRatio, bm);
+               if(resFreqBin != - 1)
+                  bm = resFreqBin;
             }
          }
 
