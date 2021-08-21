@@ -80,8 +80,6 @@ public:
 private:
    std::weak_ptr<Track> FindTrack();
 
-   void Connect(AudacityProject *pProject);
-
    // TrackPanelDrawable implementation
    void Draw(
       TrackPanelDrawingContext &context,
@@ -99,15 +97,8 @@ private:
    wxInt64 mFreqUpperBound, mFreqLowerBound;
    int mMostRecentX{ -1 }, mMostRecentY{ -1 };
    int mBrushRadius;
-
    bool mbCtrlDown;
 
-   bool mAutoScrolling{};
-
    std::shared_ptr<SelectionStateChanger> mSelectionStateChanger;
-
-   class TimerHandler;
-   friend TimerHandler;
-   std::shared_ptr<TimerHandler> mTimerHandler;
 };
 #endif

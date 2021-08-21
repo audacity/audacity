@@ -257,9 +257,6 @@ UIHandle::Result BrushHandle::Click
    auto &trackPanel = TrackPanel::Get( *pProject );
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   mMostRecentX = event.m_x;
-   mMostRecentY = event.m_y;
-
    return RefreshAll;
 }
 
@@ -280,99 +277,91 @@ UIHandle::Result BrushHandle::Drag
    auto &trackPanel = TrackPanel::Get( *pProject );
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   int x = mAutoScrolling ? mMostRecentX : event.m_x;
-   int y = mAutoScrolling ? mMostRecentY : event.m_y;
-   mMostRecentX = x;
-   mMostRecentY = y;
-
-   double posTime;
-   wxInt64 posFreq;
-   auto posToLongLong = [&](int x0){
-      posTime = viewInfo.PositionToTime(x0, mRect.x);
+   auto posXToHopNum = [&](int x0){
+      double posTime = viewInfo.PositionToTime(x0, mRect.x);
       sampleCount sc = wt->TimeToLongSamples(posTime);
-      return sc.as_long_long();
+      return sc.as_long_long() / mpSpectralData->GetHopSize();
+   };
+
+   auto posYToFreqBin = [&](int y0){
+      int resFreq = PositionToFrequency(wt, 0, y0, mRect.y, mRect.height);
+      return resFreq / (mpSpectralData->GetSR() / mpSpectralData->GetWindowSize());
    };
 
    // Clip the coordinates
    // TODO: Find ways to access the ClipParameters (for the mid)
-   int dest_xcoord = std::max(mRect.x + 10, std::min(x, mRect.x + mRect.width - 20));
-   int dest_ycoord = std::max(mRect.y + 10, std::min(y, mRect.y + mRect.height - 10));
-   int destFreq = PositionToFrequency(wt, 0, dest_ycoord, mRect.y, mRect.height);
+   int dest_xcoord = std::clamp(event.m_x, mRect.x + 10, mRect.x + mRect.width);
+   int dest_ycoord = std::clamp(event.m_y, mRect.y + 10, mRect.y + mRect.height);
 
-   int x1 = posToLongLong(dest_xcoord) / mpSpectralData->GetHopSize();
-   int y1 = destFreq / (mpSpectralData->GetSR() / mpSpectralData->GetWindowSize());
+   int h1 = posXToHopNum(dest_xcoord);
+   int b1 = posYToFreqBin(dest_ycoord);
 
    mbCtrlDown = event.ControlDown();
 
    // Use the hop and bin number to calculate the brush stroke, instead of the mouse coordinates
    // For mouse coordinate:
    // (src_xcoord, src_ycoord) -> (dest_xcoord, dest_ycoord)
-   //
-   // Variables for Bresenham's line algorithm:
-   // x0, x1, y0, y1... (already transformed in hops and bins space}
    if(!mpSpectralData->coordHistory.empty()){
       int src_xcoord = mpSpectralData->coordHistory.back().first;
       int src_ycoord = mpSpectralData->coordHistory.back().second;
-      int srcFreq = PositionToFrequency(wt, 0, src_ycoord, mRect.y, mRect.height);
 
-      int x0 = posToLongLong(src_xcoord) / mpSpectralData->GetHopSize();
-      int y0 = srcFreq / (mpSpectralData->GetSR() / mpSpectralData->GetWindowSize());
+      int h0 = posXToHopNum(src_xcoord);
+      int b0 = posYToFreqBin(src_ycoord);
       int wd = mBrushRadius * 2;
 
-      int dx =  abs(x1-x0), sx = x0<x1 ? 1 : -1;
-      int dy = -abs(y1-y0), sy = y0<y1 ? 1 : -1;
-      int err = dx+dy, err2;
+      int db =  abs(h1-h0), sb = h0<h1 ? 1 : -1;
+      int dh = -abs(b1-b0), sh = b0<b1 ? 1 : -1;
+      int err = db+dh, err2;
 
       // Line drawing (draw points until the start coordinate reaches the end)
       while(true){
-         if (x0 == x1 && y0 == y1)
+         if (h0 == h1 && b0 == b1)
             break;
          err2 = err * 2;
-         if (err2 * 2 >= dy) { err += dy; x0 += sx; }
-         if (err2 * 2 <= dx) { err += dx; y0 += sy; }
+         if (err2 * 2 >= dh) { err += dh; h0 += sb; }
+         if (err2 * 2 <= db) { err += db; b0 += sh; }
 
-         // For each (x0, y0), draw circle
-         int x2 = mBrushRadius;
-         int y2 = 0;
-         int xChange = 1 - (mBrushRadius << 1);
-         int yChange = 0;
+         // For each (h0, b0), draw circle
+         int b2 = mBrushRadius;
+         int h2 = 0;
+         int hChange = 1 - (mBrushRadius << 1);
+         int bChange = 0;
          int radiusError = 0;
 
-         int ym = y0;
+         int bm = b0;
          if(mIsSmartSelection){
             // Correct the y coord (snap to highest energy freq. bin)
-            long long startSC = posToLongLong(x0);
-            wxInt64 targetFreq = PositionToFrequency(wt, 0, ym, mRect.y, mRect.height);
+            wxInt64 targetFreq = PositionToFrequency(wt, 0, bm, mRect.y, mRect.height);
             if(auto *sView = dynamic_cast<SpectrumView*>(pView.get())){
                wxInt64 resFreq = SpectralDataManager::FindFrequencySnappingBin(wt,
-                                                                               startSC,
+                                                                               h0 * mpSpectralData->GetHopSize(),
                                                                                mFreqSnappingRatio,
                                                                                targetFreq);
                if(resFreq != - 1)
-                  ym = FrequencyToPosition(wt, resFreq, mRect.y, mRect.height);
+                  bm = FrequencyToPosition(wt, resFreq, mRect.y, mRect.height);
             }
          }
 
-         while (x2 >= y2) {
-            for (int i = x0 - x2; i <= x0 + x2; i++)
+         while (b2 >= h2) {
+            for (int i = h0 - b2; i <= h0 + b2; i++)
             {
-               HandleHopBinData(i, ym+y2);
-               HandleHopBinData(i, ym-y2);
+               HandleHopBinData(i, bm + h2);
+               HandleHopBinData(i, bm - h2);
             }
-            for (int i = x0 - y2; i <= x0 + y2; i++)
+            for (int i = h0 - h2; i <= h0 + h2; i++)
             {
-               HandleHopBinData(i, ym+x2);
-               HandleHopBinData(i, ym-x2);
+               HandleHopBinData(i, bm + b2);
+               HandleHopBinData(i, bm - b2);
             }
 
-            y2++;
-            radiusError += yChange;
-            yChange += 2;
-            if (((radiusError << 1) + xChange) > 0)
+            h2++;
+            radiusError += bChange;
+            bChange += 2;
+            if (((radiusError << 1) + hChange) > 0)
             {
-               x2--;
-               radiusError += xChange;
-               xChange += 2;
+               b2--;
+               radiusError += hChange;
+               hChange += 2;
             }
          } // End of full circle drawing
       } // End of line connecting
@@ -413,7 +402,6 @@ UIHandle::Result BrushHandle::Release
 
 UIHandle::Result BrushHandle::Cancel(AudacityProject *pProject)
 {
-   mSelectionStateChanger.reset();
    mpSpectralData->dataBuffer.clear();
    mpSpectralData->coordHistory.clear();
 
@@ -442,103 +430,4 @@ std::weak_ptr<Track> BrushHandle::FindTrack()
       return {};
    else
       return pView->FindTrack();
-}
-
-void BrushHandle::Connect(AudacityProject *pProject)
-{
-   mTimerHandler = std::make_shared<TimerHandler>( this, pProject );
-}
-
-class BrushHandle::TimerHandler : public wxEvtHandler
-{
-public:
-   TimerHandler( BrushHandle *pParent, AudacityProject *pProject )
-         : mParent{ pParent }
-         , mConnectedProject{ pProject }
-   {
-      if (mConnectedProject)
-         mConnectedProject->Bind(EVT_TRACK_PANEL_TIMER,
-                                 &BrushHandle::TimerHandler::OnTimer,
-                                 this);
-   }
-
-   // Receives timer event notifications, to implement auto-scroll
-   void OnTimer(wxCommandEvent &event);
-
-private:
-   BrushHandle *mParent;
-   AudacityProject *mConnectedProject;
-};
-
-void BrushHandle::TimerHandler::OnTimer(wxCommandEvent &event)
-{
-   event.Skip();
-
-   // AS: If the user is dragging the mouse and there is a track that
-   //  has captured the mouse, then scroll the screen, as necessary.
-
-   ///  We check on each timer tick to see if we need to scroll.
-
-   // DM: If we're "autoscrolling" (which means that we're scrolling
-   //  because the user dragged from inside to outside the window,
-   //  not because the user clicked in the scroll bar), then
-   //  the selection code needs to be handled slightly differently.
-   //  We set this flag ("mAutoScrolling") to tell the selecting
-   //  code that we didn't get here as a result of a mouse event,
-   //  and therefore it should ignore the event,
-   //  and instead use the last known mouse position.  Setting
-   //  this flag also causes the Mac to redraw immediately rather
-   //  than waiting for the next update event; this makes scrolling
-   //  smoother on MacOS 9.
-
-   const auto project = mConnectedProject;
-   const auto &trackPanel = TrackPanel::Get( *project );
-   auto &window = ProjectWindow::Get( *project );
-   if (mParent->mMostRecentX >= mParent->mRect.x + mParent->mRect.width) {
-      mParent->mAutoScrolling = true;
-      window.TP_ScrollRight();
-   }
-   else if (mParent->mMostRecentX < mParent->mRect.x) {
-      mParent->mAutoScrolling = true;
-      window.TP_ScrollLeft();
-   }
-   else {
-      // Bug1387:  enable autoscroll during drag, if the pointer is at either
-      // extreme x coordinate of the screen, even if that is still within the
-      // track area.
-
-      int xx = mParent->mMostRecentX, yy = 0;
-      trackPanel.ClientToScreen(&xx, &yy);
-      if (xx == 0) {
-         mParent->mAutoScrolling = true;
-         window.TP_ScrollLeft();
-      }
-      else {
-         int width, height;
-         ::wxDisplaySize(&width, &height);
-         if (xx == width - 1) {
-            mParent->mAutoScrolling = true;
-            window.TP_ScrollRight();
-         }
-      }
-   }
-
-   auto pTrack = mParent->FindTrack().lock(); // TrackList::Lock() ?
-   if (mParent->mAutoScrolling && pTrack) {
-      // AS: To keep the selection working properly as we scroll,
-      //  we fake a mouse event (remember, this method is called
-      //  from a timer tick).
-
-      // AS: For some reason, GCC won't let us pass this directly.
-      wxMouseEvent evt(wxEVT_MOTION);
-      const auto size = trackPanel.GetSize();
-      mParent->Drag(
-            TrackPanelMouseEvent{
-                  evt, mParent->mRect, size,
-                  TrackView::Get( *pTrack ).shared_from_this() },
-            project
-      );
-      mParent->mAutoScrolling = false;
-      TrackPanel::Get( *mConnectedProject ).Refresh(false);
-   }
 }
