@@ -59,16 +59,16 @@ int SpectralDataManager::ProcessTracks(TrackList &tracks){
    return applyCount;
 }
 
-wxInt64 SpectralDataManager::FindFrequencySnappingBin(WaveTrack *wt,
+int SpectralDataManager::FindFrequencySnappingBin(WaveTrack *wt,
                                                       long long int startSC,
                                                       double threshold,
-                                                      wxInt64 targetFreq)
+                                                      int targetFreqBin)
 {
    Setting setting;
    setting.mNeedOutput = false;
    Worker worker(setting);
 
-   return worker.ProcessSnapping(wt, startSC, setting.mWindowSize, threshold, targetFreq);
+   return worker.ProcessSnapping(wt, startSC, setting.mWindowSize, threshold, targetFreqBin);
 }
 
 SpectralDataManager::Worker::Worker(const Setting &setting)
@@ -107,21 +107,21 @@ bool SpectralDataManager::Worker::Process(WaveTrack* wt,
    return true;
 }
 
-wxInt64 SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,
+int SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,
                                                   long long startSC,
                                                   size_t winSize,
                                                   double threshold,
-                                                  wxInt64 targetFreq)
+                                                  int targetFreqBin)
 {
    mSnapThreshold = threshold;
-   mSnapTargetFreq = targetFreq;
+   mSnapTargetFreqBin = targetFreqBin;
    mSnapSamplingRate = wt->GetRate();
    // The calculated frequency peak will be stored in mReturnFreq
    if (!TrackSpectrumTransformer::Process( SnappingProcessor, wt,
                                            1, startSC, winSize))
       return 0;
 
-   return mSnapReturnFreq;
+   return mSnapReturnFreqBin;
 }
 
 bool SpectralDataManager::Worker::SnappingProcessor(SpectrumTransformer &transformer) {
@@ -144,19 +144,18 @@ bool SpectralDataManager::Worker::SnappingProcessor(SpectrumTransformer &transfo
       const double nyquistRate = sr / 2;
       const double &threshold = worker.mSnapThreshold;
       const double &spectrumSize = worker.mSpectrumSize;
-      const wxInt64 &targetFreq = worker.mSnapTargetFreq;
+      const int &targetBin = worker.mSnapTargetFreqBin;
 
-      int targetBin = targetFreq / nyquistRate * spectrumSize;
       int binBound = spectrumSize * threshold;
       float maxValue = std::numeric_limits<float>::min();
 
       // Skip the first and last bin
       for(int i = -binBound; i < binBound; i++){
-         int idx = targetBin + i;
+         int idx = std::clamp(targetBin + i, 0, static_cast<int>(spectrumSize));
          if(record.mSpectrums[idx] > maxValue){
             maxValue = record.mSpectrums[idx];
             // Update the return frequency
-            worker.mSnapReturnFreq = idx / spectrumSize * nyquistRate;
+            worker.mSnapReturnFreqBin = idx;
          }
       }
    }

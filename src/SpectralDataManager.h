@@ -22,10 +22,10 @@ public:
    SpectralDataManager();
    ~SpectralDataManager();
    static int ProcessTracks(TrackList& tracks);
-   static wxInt64 FindFrequencySnappingBin(WaveTrack *wt,
-                                           long long startSC,
-                                           double threshold,
-                                           wxInt64 targetFreq);
+   static int FindFrequencySnappingBin(WaveTrack *wt,
+                                  long long startSC,
+                                  double threshold,
+                                  int targetFreqBin);
 private:
    class Worker;
    struct Setting;
@@ -53,8 +53,8 @@ public:
    };
 
    bool Process(WaveTrack* wt, const std::shared_ptr<SpectralData> &sDataPtr);
-   wxInt64 ProcessSnapping(WaveTrack *wt, long long int startSC, size_t winSize,
-                           double threshold, wxInt64 targetFreq);
+   int ProcessSnapping(WaveTrack *wt, long long int startSC, size_t winSize,
+                           double threshold, int targetFreqBin);
 
 protected:
    MyWindow &NthWindow(int nn) {
@@ -72,8 +72,8 @@ private:
    int mWindowCount;
    double mSnapSamplingRate;
    double mSnapThreshold;
-   wxInt64 mSnapTargetFreq;
-   wxInt64 mSnapReturnFreq { -1 };
+   int mSnapTargetFreqBin;
+   int mSnapReturnFreqBin { -1 };
    unsigned long mStartSample;
    unsigned long mEndSample;
 };
