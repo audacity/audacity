@@ -49,6 +49,7 @@ private:
    void OnCloseWindow(wxCloseEvent &event);
    void OnApply(wxCommandEvent &event);
    void OnBrushSizeSlider(wxCommandEvent &event);
+   void OnBrushHopSlider(wxCommandEvent &event);
    void OnCheckSmartSelection(wxCommandEvent &event);
    void OnCheckOvertones(wxCommandEvent &event);
 
