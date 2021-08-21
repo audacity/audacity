@@ -35,7 +35,7 @@ public:
     ,mStartT(std::numeric_limits<long long>::max())
     ,mEndT( 0 )
     ,mWindowSize( 2048 )
-    ,mHopSize ( 64 )
+    ,mHopSize ( mWindowSize / 4 )
     {}
     SpectralData(const SpectralData& src) = delete;
 
@@ -83,10 +83,7 @@ public:
       if(hopNum * mHopSize < mStartT)
          mStartT = hopNum * mHopSize;
 
-      if(dataBuffer.find(hopNum) == dataBuffer.end())
-         dataBuffer[hopNum] = std::set<int>{ freqBin };
-      else
-         dataBuffer[hopNum].insert(freqBin);
+      dataBuffer[hopNum].insert(freqBin);
    }
 
    void removeHopBinData(int hopNum, int freqBin){
