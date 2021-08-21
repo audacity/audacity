@@ -607,6 +607,7 @@ void OnPaste(const CommandContext &context)
       if (ff) {
          TrackFocus::Get(project).Set(ff);
          ff->EnsureVisible();
+         ff->LinkConsistencyCheck();
       }
    }
 }

@@ -2396,8 +2396,8 @@ void Effect::Preview(bool dryOnly)
          mixRight->Offset(-mixRight->GetStartTime());
          mixRight->SetSelected(true);
          pRight = mTracks->Add( mixRight );
+         mTracks->MakeMultiChannelTrack(*pLeft, 2, true);
       }
-      mTracks->GroupChannels(*pLeft, pRight ? 2 : 1);
    }
    else {
       for (auto src : saveTracks->Any< const WaveTrack >()) {

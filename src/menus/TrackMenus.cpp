@@ -87,10 +87,10 @@ void DoMixAndRender
       auto pNewLeft = tracks.Add( uNewLeft );
       decltype(pNewLeft) pNewRight{};
       if (uNewRight)
-         pNewRight = tracks.Add( uNewRight );
-
-      // Do this only after adding tracks to the list
-      tracks.GroupChannels(*pNewLeft, pNewRight ? 2 : 1);
+      {
+         pNewRight = tracks.Add(uNewRight);
+         tracks.MakeMultiChannelTrack(*pNewLeft, 2, true);
+      }
 
       // If we're just rendering (not mixing), keep the track name the same
       if (selectedCount==1) {
@@ -644,7 +644,7 @@ void OnNewStereoTrack(const CommandContext &context)
    auto right = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
    right->SetSelected(true);
 
-   tracks.GroupChannels(*left, 2);
+   tracks.MakeMultiChannelTrack(*left, 2, true);
 
    ProjectHistory::Get( project )
       .PushState(XO("Created new stereo audio track"), XO("New Track"));

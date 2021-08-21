@@ -14,20 +14,20 @@
 *//*******************************************************************/
 
 #include "Journal.h"
+#include "JournalEvents.h"
+#include "JournalOutput.h"
+#include "JournalRegistry.h"
 
 #include <algorithm>
-#include <unordered_map>
 #include <wx/app.h>
 #include <wx/filename.h>
-#include <wx/textfile.h>
 
 #include "MemoryX.h"
 #include "Prefs.h"
 
-namespace {
+namespace Journal {
 
-constexpr auto SeparatorCharacter = ',';
-constexpr auto CommentCharacter = '#';
+namespace {
 
 wxString sFileNameIn;
 wxTextFile sFileIn;
@@ -37,22 +37,7 @@ wxString sLine;
 // the number of lines consumed by the tokenizer
 int sLineNumber = -1;
 
-struct FlushingTextFile : wxTextFile {
-   // Flush output when the program quits, even if that makes an incomplete
-   // journal file without an exit
-   ~FlushingTextFile() { if ( IsOpened() ) { Write(); Close(); } }
-} sFileOut;
-
 BoolSetting JournalEnabled{ L"/Journal/Enabled", false };
-
-bool sError = false;
-
-using Dictionary = std::unordered_map< wxString, Journal::Dispatcher >;
-Dictionary &sDictionary()
-{
-   static Dictionary theDictionary;
-   return theDictionary;
-}
 
 inline void NextIn()
 {
@@ -70,7 +55,7 @@ wxArrayStringEx PeekTokens()
          if ( sLine.StartsWith( CommentCharacter ) )
             continue;
          
-         tokens = wxSplit( sLine, SeparatorCharacter );
+         tokens = wxSplit( sLine, SeparatorCharacter, EscapeCharacter );
          if ( tokens.empty() )
             // Ignore blank lines
             continue;
@@ -117,12 +102,10 @@ bool VersionCheck( const wxString &value )
 
 }
 
-namespace Journal {
-
 SyncException::SyncException()
 {
    // If the exception is ever constructed, cause nonzero program exit code
-   sError = true;
+   SetError();
 }
 
 SyncException::~SyncException() {}
@@ -146,11 +129,6 @@ bool SetRecordEnabled(bool value)
    return result;
 }
 
-bool IsRecording()
-{
-  return sFileOut.IsOpened();
-}
-
 bool IsReplaying()
 {
   return sFileIn.IsOpened();
@@ -163,39 +141,33 @@ void SetInputFileName(const wxString &path)
 
 bool Begin( const FilePath &dataDir )
 {
-   if ( !sError && !sFileNameIn.empty() ) {
+   if ( !GetError() && !sFileNameIn.empty() ) {
       wxFileName fName{ sFileNameIn };
       fName.MakeAbsolute( dataDir );
       const auto path = fName.GetFullPath();
       sFileIn.Open( path );
       if ( !sFileIn.IsOpened() )
-         sError = true;
+         SetError();
       else {
          sLine = sFileIn.GetFirstLine();
          sLineNumber = 0;
          
          auto tokens = PeekTokens();
          NextIn();
-         sError = !(
+         if( !(
             tokens.size() == 2 &&
             tokens[0] == VersionToken &&
             VersionCheck( tokens[1] )
-         );
+         ) )
+            SetError();
       }
    }
 
-   if ( !sError && RecordEnabled() ) {
+   if ( !GetError() && RecordEnabled() ) {
       wxFileName fName{ dataDir, "journal", "txt" };
       const auto path = fName.GetFullPath();
-      sFileOut.Open( path );
-      if ( sFileOut.IsOpened() )
-         sFileOut.Clear();
-      else {
-         sFileOut.Create();
-         sFileOut.Open( path );
-      }
-      if ( !sFileOut.IsOpened() )
-         sError = true;
+      if ( !OpenOut( path ) )
+         SetError();
       else {
          // Generate a header
          Comment( wxString::Format(
@@ -207,7 +179,15 @@ bool Begin( const FilePath &dataDir )
       }
    }
 
-   return !sError;
+   if ( !GetError() && IsRecording() )
+      // one time installation
+      Events::Watch();
+
+   if ( !GetError() && IsReplaying() )
+      // Be sure event types are registered for dispatch
+      Events::Initialize();
+
+   return !GetError();
 }
 
 wxArrayStringEx GetTokens()
@@ -220,22 +200,9 @@ wxArrayStringEx GetTokens()
    throw SyncException{};
 }
 
-RegisteredCommand::RegisteredCommand(
-   const wxString &name, Dispatcher dispatcher )
-{
-   if ( !sDictionary().insert( { name, dispatcher } ).second ) {
-      wxLogDebug( wxString::Format (
-         wxT("Duplicated registration of Journal command name %s"),
-         name
-      ) );
-      // Cause failure of startup of journalling and graceful exit
-      sError = true;
-   }
-}
-
 bool Dispatch()
 {
-   if ( sError )
+   if ( GetError() )
       // Don't repeatedly indicate error
       // Do nothing
       return false;
@@ -248,7 +215,7 @@ bool Dispatch()
    auto words = GetTokens();
 
    // Lookup dispatch function by the first field of the line
-   auto &table = sDictionary();
+   auto &table = GetDictionary();
    auto &name = words[0];
    auto iter = table.find( name );
    if ( iter == table.end() )
@@ -261,34 +228,11 @@ bool Dispatch()
    return true;
 }
 
-void Output( const wxString &string )
-{
-   if ( IsRecording() )
-      sFileOut.AddLine( string );
-}
-
-void Output( const wxArrayString &strings )
-{
-   if ( IsRecording() )
-      Output( ::wxJoin( strings, SeparatorCharacter ) );
-}
-
-void Output( std::initializer_list< const wxString > strings )
-{
-   return Output( wxArrayStringEx( strings ) );
-}
-
-void Comment( const wxString &string )
-{
-   if ( IsRecording() )
-      sFileOut.AddLine( CommentCharacter + string );
-}
-
 void Sync( const wxString &string )
 {
    if ( IsRecording() || IsReplaying() ) {
       if ( IsRecording() )
-         sFileOut.AddLine( string );
+         Output( string );
       if ( IsReplaying() ) {
          if ( sFileIn.Eof() || sLine != string )
             throw SyncException{};
@@ -300,7 +244,7 @@ void Sync( const wxString &string )
 void Sync( const wxArrayString &strings )
 {
    if ( IsRecording() || IsReplaying() ) {
-      auto string = ::wxJoin( strings, SeparatorCharacter );
+      auto string = ::wxJoin( strings, SeparatorCharacter, EscapeCharacter );
       Sync( string );
    }
 }
@@ -309,15 +253,14 @@ void Sync( std::initializer_list< const wxString > strings )
 {
    return Sync( wxArrayStringEx( strings ) );
 }
-
 int GetExitCode()
 {
    // Unconsumed commands remaining in the input file is also an error condition.
-   if( !sError && !PeekTokens().empty() ) {
+   if( !GetError() && !PeekTokens().empty() ) {
       NextIn();
-      sError = true;
+      SetError();
    }
-   if ( sError ) {
+   if ( GetError() ) {
       // Return nonzero
       // Returning the (1-based) line number at which the script failed is a
       // simple way to communicate that information to the test driver script.
