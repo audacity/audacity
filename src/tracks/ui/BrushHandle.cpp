@@ -309,21 +309,21 @@ UIHandle::Result BrushHandle::Drag
       int b0 = posYToFreqBin(src_ycoord);
       int wd = mBrushRadius * 2;
 
-      int db =  abs(h1-h0), sb = h0<h1 ? 1 : -1;
-      int dh = -abs(b1-b0), sh = b0<b1 ? 1 : -1;
-      int err = db+dh, err2;
+      int dh =  abs(h1-h0), sh = h0<h1 ? 1 : -1;
+      int db = -abs(b1-b0), sb = b0<b1 ? 1 : -1;
+      int err = dh+db, err2;
 
       // Line drawing (draw points until the start coordinate reaches the end)
       while(true){
          if (h0 == h1 && b0 == b1)
             break;
          err2 = err * 2;
-         if (err2 * 2 >= dh) { err += dh; h0 += sb; }
-         if (err2 * 2 <= db) { err += db; b0 += sh; }
+         if (err2 * 2 >= db) { err += db; h0 += sh; }
+         if (err2 * 2 <= dh) { err += dh; b0 += sb; }
 
          // For each (h0, b0), draw circle
-         int b2 = mBrushRadius;
-         int h2 = 0;
+         int h2 = mBrushRadius;
+         int b2 = 0;
          int hChange = 1 - (mBrushRadius << 1);
          int bChange = 0;
          int radiusError = 0;
@@ -339,24 +339,24 @@ UIHandle::Result BrushHandle::Drag
             }
          }
 
-         while (b2 >= h2) {
-            for (int i = h0 - b2; i <= h0 + b2; i++)
-            {
-               HandleHopBinData(i, bm + h2);
-               HandleHopBinData(i, bm - h2);
-            }
+         while (h2 >= b2) {
             for (int i = h0 - h2; i <= h0 + h2; i++)
             {
                HandleHopBinData(i, bm + b2);
                HandleHopBinData(i, bm - b2);
             }
+            for (int i = h0 - b2; i <= h0 + b2; i++)
+            {
+               HandleHopBinData(i, bm + h2);
+               HandleHopBinData(i, bm - h2);
+            }
 
-            h2++;
+            b2++;
             radiusError += bChange;
             bChange += 2;
             if (((radiusError << 1) + hChange) > 0)
             {
-               b2--;
+               h2--;
                radiusError += hChange;
                hChange += 2;
             }
