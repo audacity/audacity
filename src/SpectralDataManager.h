@@ -26,6 +26,11 @@ public:
                                   long long startSC,
                                   double threshold,
                                   int targetFreqBin);
+
+   static std::vector<int> FindHighestFrequencyBins(WaveTrack *wt,
+                                          long long int startSC,
+                                          double threshold,
+                                          int targetFreqBin);
 private:
    class Worker;
    struct Setting;
@@ -55,6 +60,8 @@ public:
    bool Process(WaveTrack* wt, const std::shared_ptr<SpectralData> &sDataPtr);
    int ProcessSnapping(WaveTrack *wt, long long int startSC, size_t winSize,
                            double threshold, int targetFreqBin);
+   std::vector<int> ProcessOvertones(WaveTrack *wt, long long int startSC, size_t winSize,
+                       double threshold, int targetFreqBin);
 
 protected:
    MyWindow &NthWindow(int nn) {
@@ -63,6 +70,7 @@ protected:
    std::unique_ptr<Window> NewWindow(size_t windowSize) override;
    bool DoStart() override;
    static bool Processor(SpectrumTransformer &transformer);
+   static bool OvertonesProcessor(SpectrumTransformer &transformer);
    static bool SnappingProcessor(SpectrumTransformer &transformer);
    bool DoFinish() override;
 
@@ -72,6 +80,8 @@ private:
    int mWindowCount;
    double mSnapSamplingRate;
    double mSnapThreshold;
+   double mOvertonesThreshold;
+   std::vector<int> mOvertonesTargetFreqBin;
    int mSnapTargetFreqBin;
    int mSnapReturnFreqBin { -1 };
    unsigned long mStartSample;

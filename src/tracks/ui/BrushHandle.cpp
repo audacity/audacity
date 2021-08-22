@@ -285,7 +285,8 @@ UIHandle::Result BrushHandle::Drag
 
    auto posYToFreqBin = [&](int y0){
       int resFreq = PositionToFrequency(wt, 0, y0, mRect.y, mRect.height);
-      return resFreq / (mpSpectralData->GetSR() / mpSpectralData->GetWindowSize());
+      double resFreqBin = resFreq / (mpSpectralData->GetSR() / mpSpectralData->GetWindowSize());
+      return static_cast<int>(std::round(resFreqBin));
    };
 
    // Clip the coordinates
@@ -337,6 +338,14 @@ UIHandle::Result BrushHandle::Drag
                if(resFreqBin != - 1)
                   bm = resFreqBin;
             }
+         }
+
+         if(mIsOvertones){
+            // take bm and calculate the highest energy
+            std::vector<int> binsToWork = SpectralDataManager::FindHighestFrequencyBins(wt,
+                                        h0 * mpSpectralData->GetHopSize(), mOvertonesThreshold, bm);
+            for(auto & bins: binsToWork)
+               HandleHopBinData(h0, bins);
          }
 
          while (h2 >= b2) {
