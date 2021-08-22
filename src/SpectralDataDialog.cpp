@@ -15,8 +15,6 @@
 
 #ifdef EXPERIMENTAL_BRUSH_TOOL
 
-#include "SpectralDataDialog.h"
-
 #include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/button.h>
@@ -35,8 +33,10 @@
 #include "../images/Empty9x16.xpm"
 
 #include "AudioIO.h"
+#include "ClientData.h"
 #include "Clipboard.h"
 #include "UndoManager.h"
+#include "Prefs.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
@@ -44,13 +44,75 @@
 #include "ShuttleGui.h"
 #include "SpectralDataManager.h"
 #include "TrackPanel.h"
+
+#include "commands/CommandManagerWindowClasses.h"
 #include "widgets/AudacityMessageBox.h"
+#include "widgets/wxPanelWrapper.h" // to inherit
 
 enum {
    ID_ON_APPLY = 10000,
    ID_CHECKBOX_SMART,
    ID_CHECKBOX_OVERTONES,
    ID_SLIDER_BRUSH_SIZE
+};
+
+class wxButton;
+class wxCheckBox;
+class wxListCtrl;
+class wxListEvent;
+class wxSpinCtrl;
+class wxTextCtrl;
+class AudacityProject;
+class ShuttleGui;
+class UndoManager;
+
+class SpectralDataDialog final : public wxDialogWrapper,
+      public PrefsListener,
+      public ClientData::Base,
+      public TopLevelKeystrokeHandlingWindow
+      {
+
+      public:
+         explicit SpectralDataDialog(AudacityProject * parent);
+
+         void UpdateDisplay(wxEvent &e);
+
+         bool Show( bool show = true ) override;
+
+      private:
+         void Populate(ShuttleGui & S);
+
+         void OnAudioIO(wxCommandEvent & evt);
+         void DoUpdate();
+
+         void OnShow(wxShowEvent &event);
+         void OnCloseWindow(wxCloseEvent &event);
+         void OnApply(wxCommandEvent &event);
+         void OnBrushSizeSlider(wxCommandEvent &event);
+         void OnCheckSmartSelection(wxCommandEvent &event);
+         void OnCheckOvertones(wxCommandEvent &event);
+
+         // PrefsListener implementation
+         void UpdatePrefs() override;
+
+         AudacityProject   *mProject;
+         wxButton          *mApplyBtn;
+
+         int               mSelected;
+         bool              mAudioIOBusy;
+
+      public:
+         DECLARE_EVENT_TABLE()
+      };
+
+class AUDACITY_DLL_API SpectralDataDialogWorker final
+      : public ClientData::Base{
+public:
+   explicit SpectralDataDialogWorker( AudacityProject &project );
+
+   void OnToolChanged(wxCommandEvent &evt);
+private:
+   AudacityProject *mProject;
 };
 
 BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
