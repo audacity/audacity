@@ -251,7 +251,6 @@ list( APPEND SOURCES
       Snap.h
       SoundActivatedRecord.cpp
       SoundActivatedRecord.h
-      SpectralDataDialog.h
       SpectralDataDialog.cpp
       SpectralDataManager.h
       SpectralDataManager.cpp
