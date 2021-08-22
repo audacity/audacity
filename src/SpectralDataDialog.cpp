@@ -70,7 +70,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
       public PrefsListener,
       public ClientData::Base,
       public TopLevelKeystrokeHandlingWindow
-      {
+{
 
       public:
          explicit SpectralDataDialog(AudacityProject * parent);
@@ -94,12 +94,12 @@ class SpectralDataDialog final : public wxDialogWrapper,
          // PrefsListener implementation
          void UpdatePrefs() override;
 
-         AudacityProject   *mProject;
+         AudacityProject   *mProject { nullptr };
          bool              mAudioIOBusy { false };
 
       public:
          DECLARE_EVENT_TABLE()
-      };
+};
 
 class AUDACITY_DLL_API SpectralDataDialogWorker final
       : public ClientData::Base{
@@ -108,28 +108,27 @@ public:
 
    void OnToolChanged(wxCommandEvent &evt);
 private:
-   AudacityProject *mProject;
+   AudacityProject *mProject { nullptr };
 };
 
 BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
    EVT_BUTTON(ID_ON_APPLY, SpectralDataDialog::OnApply)
    EVT_CHECKBOX(ID_CHECKBOX_SMART, SpectralDataDialog::OnCheckSmartSelection)
    EVT_CHECKBOX(ID_CHECKBOX_OVERTONES, SpectralDataDialog::OnCheckOvertones)
-   EVT_SHOW(SpectralDataDialog::OnShow)
    EVT_CLOSE(SpectralDataDialog::OnCloseWindow)
    EVT_SLIDER(ID_SLIDER_BRUSH_SIZE, SpectralDataDialog::OnBrushSizeSlider)
 END_EVENT_TABLE()
 
 #define Title XO("Spectral Data Control Panel")
 
-SpectralDataDialog::SpectralDataDialog(AudacityProject *parent):
-      wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, Title,
-                      wxDefaultPosition, wxDefaultSize,
-                      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+SpectralDataDialog::SpectralDataDialog(AudacityProject *parent)
+   : mProject(parent)
+   , wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, Title,
+                         wxDefaultPosition, wxDefaultSize,
+                         wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+
 {
    SetName();
-
-   mProject = parent;
    //------------------------- Main section --------------------
    // Construct the GUI.
    ShuttleGui S(this, eIsCreating);
