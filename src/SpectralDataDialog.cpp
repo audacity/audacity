@@ -85,7 +85,6 @@ class SpectralDataDialog final : public wxDialogWrapper,
          void OnAudioIO(wxCommandEvent & evt);
          void DoUpdate();
 
-         void OnShow(wxShowEvent &event);
          void OnCloseWindow(wxCloseEvent &event);
          void OnApply(wxCommandEvent &event);
          void OnBrushSizeSlider(wxCommandEvent &event);
@@ -96,10 +95,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
          void UpdatePrefs() override;
 
          AudacityProject   *mProject;
-         wxButton          *mApplyBtn;
-
-         int               mSelected;
-         bool              mAudioIOBusy;
+         bool              mAudioIOBusy { false };
 
       public:
          DECLARE_EVENT_TABLE()
@@ -134,9 +130,6 @@ SpectralDataDialog::SpectralDataDialog(AudacityProject *parent):
    SetName();
 
    mProject = parent;
-   mSelected = 0;
-   mAudioIOBusy = false;
-
    //------------------------- Main section --------------------
    // Construct the GUI.
    ShuttleGui S(this, eIsCreating);
@@ -191,7 +184,7 @@ void SpectralDataDialog::Populate(ShuttleGui & S)
       }
       S.EndStatic();
    }
-   mApplyBtn = S.Id(ID_ON_APPLY)
+   S.Id(ID_ON_APPLY)
          .AddButton(XXO("Apply effect to selection."));
    S.EndVerticalLay();
    // ----------------------- End of main section --------------
@@ -232,14 +225,6 @@ void SpectralDataDialog::DoUpdate()
 void SpectralDataDialog::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
 {
    this->Show(false);
-}
-
-void SpectralDataDialog::OnShow(wxShowEvent & event)
-{
-   if (event.IsShown())
-   {
-//      mApplyBtn->SetFocus();
-   }
 }
 
 // PrefsListener implementation
