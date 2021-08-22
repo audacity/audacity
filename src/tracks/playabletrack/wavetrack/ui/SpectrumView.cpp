@@ -568,27 +568,30 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 #endif
 
    const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
-   std::set<std::pair<int, int>> selectedCoords;
-
-   mpSpectralData->dataHistory.push_back(mpSpectralData->dataBuffer);
    int windowSize = mpSpectralData->GetWindowSize();
    int hopSize = mpSpectralData->GetHopSize();
    double sr = mpSpectralData->GetSR();
-   for(const auto &spectralDataMap: mpSpectralData->dataHistory) {
-      for(const auto &spectralData: spectralDataMap){
-         double timePt = mpSpectralData->scToTimeDouble(spectralData.first * hopSize);
-         int convertedX = zoomInfo.TimeToPosition(timePt, 0);
-         convertedX = std::min(convertedX, rect.width);
-         for(const int &freqBinNum: spectralData.second){
-            const float p = numberScale.ValueToPosition(freqBinNum * (sr / windowSize));
-            int convertedY = mid.height - wxInt64((1.0 - p) * rect.height);
-            convertedY = std::min(convertedY, rect.height);
-            selectedCoords.insert(std::make_pair(convertedX, convertedY));
-         }
+   auto &dataHistory = mpSpectralData->dataHistory;
+
+   // Lazy way to add all hops and bins required for rendering
+   dataHistory.push_back(mpSpectralData->dataBuffer);
+
+   // Generate combined hops and bins map for rendering
+   std::map<long long, std::set<int>> hopBinMap;
+   for(auto vecIter = dataHistory.begin(); vecIter != dataHistory.end(); ++vecIter){
+      for(const auto &hopMap: *vecIter){
+         for(const auto &binNum: hopMap.second)
+            hopBinMap[hopMap.first].insert(binNum);
       }
    }
-   mpSpectralData->dataHistory.pop_back();
-   auto coordIter = selectedCoords.begin();
+
+   // Lambda for converting yy (not mouse coord!) to respective freq. bins
+   auto yyToFreqBin = [&](int yy){
+      const double p = double(yy) / hiddenMid.height;
+      float convertedFreq = numberScale.PositionToValue(p);
+      float convertedFreqBinNum = convertedFreq / (sr / windowSize);
+      return static_cast<int>(std::round(convertedFreqBinNum));
+   };
 
    for (int xx = 0; xx < mid.width; ++xx) {
       int correctedX = xx + leftOffset - hiddenLeftOffset;
@@ -613,18 +616,25 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       auto w1 = sampleCount(0.5 + rate *
                     (zoomInfo.PositionToTime(xx+1, -leftOffset) - tOffset));
 
+      // In case the xx matches the hop number, it will be used as iterator for frequency bins
+      std::set<int>::iterator freqBinIter;
+      int convertedHopNum = w0.as_long_long() / hopSize;
+      bool hitHopNum = (hopBinMap.find(convertedHopNum) != hopBinMap.end());
+      if(hitHopNum)
+         freqBinIter = hopBinMap[convertedHopNum].begin();
+
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
          bool maybeSelected = false;
          const float bin     = bins[yy];
          const float nextBin = bins[yy+1];
+         const int convertedFreqBin = yyToFreqBin(yy);
 
-         if(coordIter != selectedCoords.end()){
-            int strokeX = coordIter->first;
-            int strokeY = coordIter->second;
-            if(strokeX == xx && strokeY == yy){
-               maybeSelected = true;
-               coordIter++++;
-            }
+         if(hitHopNum
+            && convertedFreqBin == *freqBinIter
+            && freqBinIter != hopBinMap[convertedHopNum].end())
+         {
+            maybeSelected = true;
+            freqBinIter++;
          }
 
          // For spectral selection, determine what colour
@@ -665,6 +675,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       } // each yy
    } // each xx
 
+   dataHistory.pop_back();
    wxBitmap converted = wxBitmap(image);
 
    wxMemoryDC memDC;
