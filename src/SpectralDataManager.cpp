@@ -151,7 +151,7 @@ bool SpectralDataManager::Worker::SnappingProcessor(SpectrumTransformer &transfo
 
       // Skip the first and last bin
       for(int i = -binBound; i < binBound; i++){
-         int idx = std::clamp(targetBin + i, 0, static_cast<int>(spectrumSize));
+         int idx = std::clamp(targetBin + i, 0, static_cast<int>(spectrumSize - 1));
          if(record.mSpectrums[idx] > maxValue){
             maxValue = record.mSpectrums[idx];
             // Update the return frequency
