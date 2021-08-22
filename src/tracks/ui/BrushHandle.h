@@ -92,6 +92,9 @@ private:
    // It searches for (+-) 1024*0.01 = 10 bins
    double mFreqSnappingRatio { 0.01 };
 
+   // Overtones bin will be selected according to the 0.999x of the dragged area
+   double mOvertonesThreshold { 0.999 };
+
    bool mIsSmartSelection, mIsOvertones;
    long long mSampleCountUpperBound, mSampleCountLowerBound;
    wxInt64 mFreqUpperBound, mFreqLowerBound;

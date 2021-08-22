@@ -71,6 +71,18 @@ int SpectralDataManager::FindFrequencySnappingBin(WaveTrack *wt,
    return worker.ProcessSnapping(wt, startSC, setting.mWindowSize, threshold, targetFreqBin);
 }
 
+std::vector<int> SpectralDataManager::FindHighestFrequencyBins(WaveTrack *wt,
+                                                          long long int startSC,
+                                                          double threshold,
+                                                          int targetFreqBin)
+ {
+   Setting setting;
+   setting.mNeedOutput = false;
+   Worker worker(setting);
+
+   return worker.ProcessOvertones(wt, startSC, setting.mWindowSize, threshold, targetFreqBin);
+ }
+
 SpectralDataManager::Worker::Worker(const Setting &setting)
 :TrackSpectrumTransformer{ setting.mNeedOutput, setting.mInWindowType, setting.mOutWindowType,
                            setting.mWindowSize, setting.mStepsPerWindow,
@@ -124,6 +136,20 @@ int SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,
    return mSnapReturnFreqBin;
 }
 
+std::vector<int> SpectralDataManager::Worker::ProcessOvertones(WaveTrack *wt,
+                                                 long long startSC,
+                                                 size_t winSize,
+                                                 double threshold,
+                                                 int targetFreqBin)
+                                                 {
+   mOvertonesThreshold = threshold;
+   mSnapTargetFreqBin = targetFreqBin;
+   mSnapSamplingRate = wt->GetRate();
+   // The calculated multiple frequency peaks will be stored in mOvertonesTargetFreqBin
+   TrackSpectrumTransformer::Process( OvertonesProcessor, wt, 1, startSC, winSize);
+   return mOvertonesTargetFreqBin;
+ }
+
 bool SpectralDataManager::Worker::SnappingProcessor(SpectrumTransformer &transformer) {
    auto &worker = static_cast<Worker &>(transformer);
    // Compute power spectrum in the newest window
@@ -160,6 +186,34 @@ bool SpectralDataManager::Worker::SnappingProcessor(SpectrumTransformer &transfo
       }
    }
 
+   return true;
+}
+
+bool SpectralDataManager::Worker::OvertonesProcessor(SpectrumTransformer &transformer) {
+   auto &worker = static_cast<Worker &>(transformer);
+   // Compute power spectrum in the newest window
+   {
+      MyWindow &record = worker.NthWindow(0);
+      float *pSpectrum = &record.mSpectrums[0];
+      const double dc = record.mRealFFTs[0];
+      *pSpectrum++ = dc * dc;
+      float *pReal = &record.mRealFFTs[1], *pImag = &record.mImagFFTs[1];
+      for (size_t nn = worker.mSpectrumSize - 2; nn--;) {
+         const double re = *pReal++, im = *pImag++;
+         *pSpectrum++ = re * re + im * im;
+      }
+      const double nyquist = record.mImagFFTs[0];
+      *pSpectrum = nyquist * nyquist;
+
+      const double &spectrumSize = worker.mSpectrumSize;
+      const int &targetBin = worker.mSnapTargetFreqBin;
+      float maxValue = record.mSpectrums[targetBin];
+
+      for(int i = 0; i < spectrumSize - 2; ++i){
+         if(record.mSpectrums[i] > maxValue * worker.mOvertonesThreshold)
+            worker.mOvertonesTargetFreqBin.push_back(i);
+      }
+   }
    return true;
 }
 
