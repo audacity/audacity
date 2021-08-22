@@ -98,10 +98,6 @@ public:
    void SetBrushRadius(int brushRadius) { mCurrentBrushRadius = brushRadius; }
    int GetBrushRadius() const { return mCurrentBrushRadius; }
 
-   // Keep track of hopping size of the brush (for time rounding when adding spectral data)
-   void SetBrushHop(int brushHop) { mCurrentBrushHop = brushHop; }
-   int GetBrushHop() const { return mCurrentBrushHop; }
-
    void SetSmartSelection(bool isSelected) { mbSmartSelection = isSelected; }
    bool IsSmartSelection() const { return mbSmartSelection; }
 
