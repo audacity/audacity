@@ -86,7 +86,6 @@ class SpectralDataDialog final : public wxDialogWrapper,
          void OnAudioIO(wxCommandEvent & evt);
          void DoUpdate();
 
-         void OnShow(wxShowEvent &event);
          void OnCloseWindow(wxCloseEvent &event);
          void OnApply(wxCommandEvent &event);
          void OnBrushSizeSlider(wxCommandEvent &event);
@@ -97,10 +96,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
          void UpdatePrefs() override;
 
          AudacityProject   *mProject;
-         wxButton          *mApplyBtn;
-
-         int               mSelected;
-         bool              mAudioIOBusy;
+         bool              mAudioIOBusy { false };
 
       public:
          DECLARE_EVENT_TABLE()
@@ -120,7 +116,6 @@ BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
    EVT_BUTTON(ID_ON_APPLY, SpectralDataDialog::OnApply)
    EVT_CHECKBOX(ID_CHECKBOX_SMART, SpectralDataDialog::OnCheckSmartSelection)
    EVT_CHECKBOX(ID_CHECKBOX_OVERTONES, SpectralDataDialog::OnCheckOvertones)
-   EVT_SHOW(SpectralDataDialog::OnShow)
    EVT_CLOSE(SpectralDataDialog::OnCloseWindow)
    EVT_SLIDER(ID_SLIDER_BRUSH_SIZE, SpectralDataDialog::OnBrushSizeSlider)
 END_EVENT_TABLE()
@@ -135,9 +130,6 @@ SpectralDataDialog::SpectralDataDialog(AudacityProject *parent):
    SetName();
 
    mProject = parent;
-   mSelected = 0;
-   mAudioIOBusy = false;
-
    //------------------------- Main section --------------------
    // Construct the GUI.
    ShuttleGui S(this, eIsCreating);
@@ -192,7 +184,7 @@ void SpectralDataDialog::Populate(ShuttleGui & S)
       }
       S.EndStatic();
    }
-   mApplyBtn = S.Id(ID_ON_APPLY)
+   S.Id(ID_ON_APPLY)
          .AddButton(XXO("Apply effect to selection."));
    S.EndVerticalLay();
    // ----------------------- End of main section --------------
@@ -233,14 +225,6 @@ void SpectralDataDialog::DoUpdate()
 void SpectralDataDialog::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
 {
    this->Show(false);
-}
-
-void SpectralDataDialog::OnShow(wxShowEvent & event)
-{
-   if (event.IsShown())
-   {
-//      mApplyBtn->SetFocus();
-   }
 }
 
 // PrefsListener implementation
