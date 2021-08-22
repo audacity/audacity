@@ -71,7 +71,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
       public PrefsListener,
       public ClientData::Base,
       public TopLevelKeystrokeHandlingWindow
-      {
+{
 
       public:
          explicit SpectralDataDialog(AudacityProject * parent);
@@ -95,12 +95,12 @@ class SpectralDataDialog final : public wxDialogWrapper,
          // PrefsListener implementation
          void UpdatePrefs() override;
 
-         AudacityProject   *mProject;
+         AudacityProject   *mProject { nullptr };
          bool              mAudioIOBusy { false };
 
       public:
          DECLARE_EVENT_TABLE()
-      };
+};
 
 class AUDACITY_DLL_API SpectralDataDialogWorker final
       : public ClientData::Base{
@@ -109,7 +109,7 @@ public:
 
    void OnToolChanged(wxCommandEvent &evt);
 private:
-   AudacityProject *mProject;
+   AudacityProject *mProject { nullptr };
 };
 
 BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
@@ -122,14 +122,14 @@ END_EVENT_TABLE()
 
 #define Title XO("Spectral Data Control Panel")
 
-SpectralDataDialog::SpectralDataDialog(AudacityProject *parent):
-      wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, Title,
-                      wxDefaultPosition, wxDefaultSize,
-                      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+SpectralDataDialog::SpectralDataDialog(AudacityProject *parent)
+   : mProject(parent)
+   , wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, Title,
+                         wxDefaultPosition, wxDefaultSize,
+                         wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+
 {
    SetName();
-
-   mProject = parent;
    //------------------------- Main section --------------------
    // Construct the GUI.
    ShuttleGui S(this, eIsCreating);
