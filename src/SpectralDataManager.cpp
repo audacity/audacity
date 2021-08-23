@@ -111,9 +111,8 @@ bool SpectralDataManager::Worker::Process(WaveTrack* wt,
    mEndSample = mStartSample + mWindowSize;
    mWindowCount = 0;
 
-   if (!TrackSpectrumTransformer::Process( Processor, wt, 1,
-                                           mpSpectralData->GetStartT(),
-                                           mpSpectralData->GetEndT() - mpSpectralData->GetStartT()))
+   long long startSC = std::max(static_cast<long long>(0), mpSpectralData->GetStartT() - 2 * mpSpectralData->GetHopSize());
+   if (!TrackSpectrumTransformer::Process( Processor, wt, 1, startSC, mpSpectralData->GetEndT() - startSC))
       return false;
 
    return true;
@@ -128,6 +127,8 @@ int SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,
    mSnapThreshold = threshold;
    mSnapTargetFreqBin = targetFreqBin;
    mSnapSamplingRate = wt->GetRate();
+
+   startSC = std::max(static_cast<long long>(0), mpSpectralData->GetStartT() - 2 * mpSpectralData->GetHopSize());
    // The calculated frequency peak will be stored in mReturnFreq
    if (!TrackSpectrumTransformer::Process( SnappingProcessor, wt,
                                            1, startSC, winSize))
@@ -145,6 +146,8 @@ std::vector<int> SpectralDataManager::Worker::ProcessOvertones(WaveTrack *wt,
    mOvertonesThreshold = threshold;
    mSnapTargetFreqBin = targetFreqBin;
    mSnapSamplingRate = wt->GetRate();
+
+   startSC = std::max(static_cast<long long>(0), mpSpectralData->GetStartT() - 2 * mpSpectralData->GetHopSize());
    // The calculated multiple frequency peaks will be stored in mOvertonesTargetFreqBin
    TrackSpectrumTransformer::Process( OvertonesProcessor, wt, 1, startSC, winSize);
    return mOvertonesTargetFreqBin;
@@ -210,7 +213,8 @@ bool SpectralDataManager::Worker::OvertonesProcessor(SpectrumTransformer &transf
       float maxValue = record.mSpectrums[targetBin];
 
       for(int i = 0; i < spectrumSize - 2; ++i){
-         if(record.mSpectrums[i] > maxValue * worker.mOvertonesThreshold)
+         if(record.mSpectrums[i] > maxValue * worker.mOvertonesThreshold
+         && (i % targetBin == 0 && i > targetBin))
             worker.mOvertonesTargetFreqBin.push_back(i);
       }
    }
