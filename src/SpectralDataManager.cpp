@@ -218,7 +218,7 @@ bool SpectralDataManager::Worker::OvertonesProcessor(SpectrumTransformer &transf
 
       for(int i = 0; i < spectrumSize - 2; ++i){
          if(record.mSpectrums[i] > maxValue * worker.mOvertonesThreshold
-         && (i % targetBin == 0 && i > targetBin))
+         && (std::abs(targetBin - i % targetBin) % targetBin < 5 && i > targetBin))
             worker.mOvertonesTargetFreqBin.push_back(i);
       }
    }
