@@ -334,7 +334,7 @@ UIHandle::Result BrushHandle::Drag
             // Correct the y coord (snap to highest energy freq. bin)
             if(auto *sView = dynamic_cast<SpectrumView*>(pView.get())){
                int resFreqBin = SpectralDataManager::FindFrequencySnappingBin(wt,
-                  h0 * mpSpectralData -> GetHopSize(), mFreqSnappingRatio, bm);
+                                 std::max(h0 - 2, 0) * mpSpectralData -> GetHopSize(), mFreqSnappingRatio, bm);
                if(resFreqBin != - 1)
                   bm = resFreqBin;
             }
@@ -343,7 +343,7 @@ UIHandle::Result BrushHandle::Drag
          if(mIsOvertones){
             // take bm and calculate the highest energy
             std::vector<int> binsToWork = SpectralDataManager::FindHighestFrequencyBins(wt,
-                                        h0 * mpSpectralData->GetHopSize(), mOvertonesThreshold, bm);
+                                 std::max(h0 - 2, 0)  * mpSpectralData->GetHopSize(), mOvertonesThreshold, bm);
             for(auto & bins: binsToWork)
                HandleHopBinData(h0, bins);
          }
