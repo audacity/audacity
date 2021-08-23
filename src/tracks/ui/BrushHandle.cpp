@@ -289,6 +289,37 @@ UIHandle::Result BrushHandle::Drag
       return static_cast<int>(std::round(resFreqBin));
    };
 
+   auto drawCircle = [&](int h0, int bm){
+      // For each (h0, b0), draw circle
+      int h2 = mBrushRadius;
+      int b2 = 0;
+      int hChange = 1 - (mBrushRadius << 1);
+      int bChange = 0;
+      int radiusError = 0;
+      while (h2 >= b2) {
+         for (int i = h0 - h2; i <= h0 + h2; i++)
+         {
+            HandleHopBinData(i, bm + b2);
+            HandleHopBinData(i, bm - b2);
+         }
+         for (int i = h0 - b2; i <= h0 + b2; i++)
+         {
+            HandleHopBinData(i, bm + h2);
+            HandleHopBinData(i, bm - h2);
+         }
+
+         b2++;
+         radiusError += bChange;
+         bChange += 2;
+         if (((radiusError << 1) + hChange) > 0)
+         {
+            h2--;
+            radiusError += hChange;
+            hChange += 2;
+         }
+      } // End of full circle drawing
+   };
+
    // Clip the coordinates
    // TODO: Find ways to access the ClipParameters (for the mid)
    int dest_xcoord = std::clamp(event.m_x, mRect.x + 10, mRect.x + mRect.width);
@@ -302,6 +333,8 @@ UIHandle::Result BrushHandle::Drag
    // Use the hop and bin number to calculate the brush stroke, instead of the mouse coordinates
    // For mouse coordinate:
    // (src_xcoord, src_ycoord) -> (dest_xcoord, dest_ycoord)
+
+   const auto &hopSize = mpSpectralData->GetHopSize();
    if(!mpSpectralData->coordHistory.empty()){
       int src_xcoord = mpSpectralData->coordHistory.back().first;
       int src_ycoord = mpSpectralData->coordHistory.back().second;
@@ -322,19 +355,13 @@ UIHandle::Result BrushHandle::Drag
          if (err2 * 2 >= db) { err += db; h0 += sh; }
          if (err2 * 2 <= dh) { err += dh; b0 += sb; }
 
-         // For each (h0, b0), draw circle
-         int h2 = mBrushRadius;
-         int b2 = 0;
-         int hChange = 1 - (mBrushRadius << 1);
-         int bChange = 0;
-         int radiusError = 0;
 
          int bm = b0;
          if(mIsSmartSelection){
             // Correct the y coord (snap to highest energy freq. bin)
             if(auto *sView = dynamic_cast<SpectrumView*>(pView.get())){
                int resFreqBin = SpectralDataManager::FindFrequencySnappingBin(wt,
-                                 std::max(h0 - 2, 0) * mpSpectralData -> GetHopSize(), mFreqSnappingRatio, bm);
+                                 h0 * hopSize, hopSize, mFreqSnappingRatio, bm);
                if(resFreqBin != - 1)
                   bm = resFreqBin;
             }
@@ -343,33 +370,12 @@ UIHandle::Result BrushHandle::Drag
          if(mIsOvertones){
             // take bm and calculate the highest energy
             std::vector<int> binsToWork = SpectralDataManager::FindHighestFrequencyBins(wt,
-                                 std::max(h0 - 2, 0)  * mpSpectralData->GetHopSize(), mOvertonesThreshold, bm);
+                            h0 * hopSize, hopSize, mOvertonesThreshold, bm);
             for(auto & bins: binsToWork)
-               HandleHopBinData(h0, bins);
+               drawCircle(h0, bins);
          }
 
-         while (h2 >= b2) {
-            for (int i = h0 - h2; i <= h0 + h2; i++)
-            {
-               HandleHopBinData(i, bm + b2);
-               HandleHopBinData(i, bm - b2);
-            }
-            for (int i = h0 - b2; i <= h0 + b2; i++)
-            {
-               HandleHopBinData(i, bm + h2);
-               HandleHopBinData(i, bm - h2);
-            }
-
-            b2++;
-            radiusError += bChange;
-            bChange += 2;
-            if (((radiusError << 1) + hChange) > 0)
-            {
-               h2--;
-               radiusError += hChange;
-               hChange += 2;
-            }
-         } // End of full circle drawing
+         drawCircle(h0, bm);
       } // End of line connecting
    }
    mpSpectralData->coordHistory.push_back(std::make_pair(dest_xcoord, dest_ycoord));

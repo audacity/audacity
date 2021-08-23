@@ -61,6 +61,7 @@ int SpectralDataManager::ProcessTracks(TrackList &tracks){
 
 int SpectralDataManager::FindFrequencySnappingBin(WaveTrack *wt,
                                                       long long int startSC,
+                                                      int hopSize,
                                                       double threshold,
                                                       int targetFreqBin)
 {
@@ -68,11 +69,12 @@ int SpectralDataManager::FindFrequencySnappingBin(WaveTrack *wt,
    setting.mNeedOutput = false;
    Worker worker(setting);
 
-   return worker.ProcessSnapping(wt, startSC, setting.mWindowSize, threshold, targetFreqBin);
+   return worker.ProcessSnapping(wt, startSC, hopSize, setting.mWindowSize, threshold, targetFreqBin);
 }
 
 std::vector<int> SpectralDataManager::FindHighestFrequencyBins(WaveTrack *wt,
                                                           long long int startSC,
+                                                          int hopSize,
                                                           double threshold,
                                                           int targetFreqBin)
  {
@@ -80,7 +82,7 @@ std::vector<int> SpectralDataManager::FindHighestFrequencyBins(WaveTrack *wt,
    setting.mNeedOutput = false;
    Worker worker(setting);
 
-   return worker.ProcessOvertones(wt, startSC, setting.mWindowSize, threshold, targetFreqBin);
+   return worker.ProcessOvertones(wt, startSC, hopSize, setting.mWindowSize, threshold, targetFreqBin);
  }
 
 SpectralDataManager::Worker::Worker(const Setting &setting)
@@ -120,6 +122,7 @@ bool SpectralDataManager::Worker::Process(WaveTrack* wt,
 
 int SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,
                                                   long long startSC,
+                                                  int hopSize,
                                                   size_t winSize,
                                                   double threshold,
                                                   int targetFreqBin)
@@ -128,7 +131,7 @@ int SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,
    mSnapTargetFreqBin = targetFreqBin;
    mSnapSamplingRate = wt->GetRate();
 
-   startSC = std::max(static_cast<long long>(0), mpSpectralData->GetStartT() - 2 * mpSpectralData->GetHopSize());
+   startSC = std::max(static_cast<long long>(0), startSC - 2 * hopSize);
    // The calculated frequency peak will be stored in mReturnFreq
    if (!TrackSpectrumTransformer::Process( SnappingProcessor, wt,
                                            1, startSC, winSize))
@@ -139,6 +142,7 @@ int SpectralDataManager::Worker::ProcessSnapping(WaveTrack *wt,
 
 std::vector<int> SpectralDataManager::Worker::ProcessOvertones(WaveTrack *wt,
                                                  long long startSC,
+                                                 int hopSize,
                                                  size_t winSize,
                                                  double threshold,
                                                  int targetFreqBin)
@@ -147,7 +151,7 @@ std::vector<int> SpectralDataManager::Worker::ProcessOvertones(WaveTrack *wt,
    mSnapTargetFreqBin = targetFreqBin;
    mSnapSamplingRate = wt->GetRate();
 
-   startSC = std::max(static_cast<long long>(0), mpSpectralData->GetStartT() - 2 * mpSpectralData->GetHopSize());
+   startSC = std::max(static_cast<long long>(0), startSC - 2 * hopSize);
    // The calculated multiple frequency peaks will be stored in mOvertonesTargetFreqBin
    TrackSpectrumTransformer::Process( OvertonesProcessor, wt, 1, startSC, winSize);
    return mOvertonesTargetFreqBin;

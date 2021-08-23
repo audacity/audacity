@@ -24,11 +24,13 @@ public:
    static int ProcessTracks(TrackList& tracks);
    static int FindFrequencySnappingBin(WaveTrack *wt,
                                   long long startSC,
+                                  int hopSize,
                                   double threshold,
                                   int targetFreqBin);
 
    static std::vector<int> FindHighestFrequencyBins(WaveTrack *wt,
                                           long long int startSC,
+                                          int hopSize,
                                           double threshold,
                                           int targetFreqBin);
 private:
@@ -58,9 +60,9 @@ public:
    };
 
    bool Process(WaveTrack* wt, const std::shared_ptr<SpectralData> &sDataPtr);
-   int ProcessSnapping(WaveTrack *wt, long long int startSC, size_t winSize,
+   int ProcessSnapping(WaveTrack *wt, long long int startSC, int hopSize, size_t winSize,
                            double threshold, int targetFreqBin);
-   std::vector<int> ProcessOvertones(WaveTrack *wt, long long int startSC, size_t winSize,
+   std::vector<int> ProcessOvertones(WaveTrack *wt, long long int startSC, int hopSize, size_t winSize,
                        double threshold, int targetFreqBin);
 
 protected:
