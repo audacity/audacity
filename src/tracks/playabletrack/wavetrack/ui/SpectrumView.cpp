@@ -616,6 +616,9 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       auto w1 = sampleCount(0.5 + rate *
                     (zoomInfo.PositionToTime(xx+1, -leftOffset) - tOffset));
 
+      bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
+      maybeSelected = maybeSelected || (xx == selectedX);
+
       // In case the xx matches the hop number, it will be used as iterator for frequency bins
       std::set<int>::iterator freqBinIter;
       int convertedHopNum = w0.as_long_long() / hopSize;
@@ -624,7 +627,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
          freqBinIter = hopBinMap[convertedHopNum].begin();
 
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
-         bool maybeSelected = false;
+         if(onBrushTool)
+            maybeSelected = false;
          const float bin     = bins[yy];
          const float nextBin = bins[yy+1];
          const int convertedFreqBin = yyToFreqBin(yy);
