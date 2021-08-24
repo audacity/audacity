@@ -1384,8 +1384,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       output->Append((samplePtr)buffer.get(), floatSample, mM - 1);
       output->Flush();
 
-      std::vector<EnvPoint> envPoints;
-
       // now move the appropriate bit of the output back to the track
       // (this could be enhanced in the future to use the tails)
       double offsetT0 = t->LongSamplesToTime(offset);
@@ -1425,14 +1423,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
          //save them
          clipStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
-
-         // Save the envelope points
-         const auto &env = *clip->GetEnvelope();
-         for (size_t i = 0, numPoints = env.GetNumberOfPoints(); i < numPoints; ++i) {
-            envPoints.push_back(env[i]);
-         }
       }
-
       //now go thru and replace the old clips with NEW
       for(unsigned int i = 0; i < clipStartEndTimes.size(); i++)
       {
@@ -1448,12 +1439,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
             !(clipRealStartEndTimes[i].first <= startT &&
             clipRealStartEndTimes[i].second >= startT+lenT) )
             t->Join(clipRealStartEndTimes[i].first,clipRealStartEndTimes[i].second);
-      }
-
-      // Restore the envelope points
-      for (auto point : envPoints) {
-         WaveClip *clip = t->GetClipAtTime(point.GetT());
-         clip->GetEnvelope()->Insert(point.GetT(), point.GetVal());
       }
    }
 

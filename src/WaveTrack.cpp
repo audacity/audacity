@@ -822,7 +822,6 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       return;
    }
 
-   std::vector<EnvPoint> envPoints;
    std::vector<double> splits;
    WaveClipHolders cuts;
 
@@ -870,12 +869,6 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
          else
             ++it;
       }
-
-      // Save the envelope points
-      const auto &env = *clip->GetEnvelope();
-      for (size_t i = 0, numPoints = env.GetNumberOfPoints(); i < numPoints; ++i) {
-         envPoints.push_back(env[i]);
-      }
    }
 
    const auto tolerance = 2.0 / GetRate();
@@ -883,6 +876,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
    // Now, clear the selection
    HandleClear(t0, t1, false, false);
    {
+
       // And paste in the NEW data
       Paste(t0, src);
       {
@@ -969,13 +963,6 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
                   ++it;
             }
          }
-      }
-
-      // Restore the envelope points
-      for (auto point : envPoints) {
-         auto t = warper->Warp(point.GetT());
-         if (auto clip = GetClipAtTime(t))
-            clip->GetEnvelope()->Insert(t, point.GetVal());
       }
    }
 }
