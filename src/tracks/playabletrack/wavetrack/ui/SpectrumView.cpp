@@ -210,11 +210,11 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
                                    const WaveClip *clip,
                                    const wxRect &rect,
                                    const std::shared_ptr<SpectralData> &mpSpectralData,
-                                   bool onBrushTool,
                                    bool selected)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
+   bool onBrushTool = artist->onBrushTool;
    const auto &selectedRegion = *artist->pSelectedRegion;
    const auto &zoomInfo = *artist->pZoomInfo;
 
@@ -621,26 +621,40 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       maybeSelected = maybeSelected || (xx == selectedX);
 
       // In case the xx matches the hop number, it will be used as iterator for frequency bins
+      std::set<int> *pSelectedBins = nullptr;
       std::set<int>::iterator freqBinIter;
-      int convertedHopNum = w0.as_long_long() / hopSize;
-      bool hitHopNum = (hopBinMap.find(convertedHopNum) != hopBinMap.end());
-      if(hitHopNum)
-         freqBinIter = hopBinMap[convertedHopNum].begin();
+      auto advanceFreqBinIter = [&](int nextBinRounded){
+         while (freqBinIter != pSelectedBins->end() &&
+         *freqBinIter < nextBinRounded)
+            ++freqBinIter;
+      };
 
+      bool hitHopNum = false;
+      if (onBrushTool) {
+         int convertedHopNum = (w0.as_long_long() + hopSize / 2) / hopSize;
+         hitHopNum = (hopBinMap.find(convertedHopNum) != hopBinMap.end());
+         if(hitHopNum) {
+            pSelectedBins = &hopBinMap[convertedHopNum];
+            freqBinIter = pSelectedBins->begin();
+            advanceFreqBinIter(std::round(yyToFreqBin(0)));
+         }
+      }
+   
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
          if(onBrushTool)
             maybeSelected = false;
          const float bin     = bins[yy];
          const float nextBin = bins[yy+1];
-         const int convertedFreqBin = yyToFreqBin(yy);
+         auto binRounded = std::round(yyToFreqBin(yy));
+         auto nextBinRounded = std::round(yyToFreqBin(yy + 1));
 
          if(hitHopNum
-            && convertedFreqBin == *freqBinIter
-            && freqBinIter != hopBinMap[convertedHopNum].end())
-         {
+            && freqBinIter != pSelectedBins->end()
+            && binRounded == *freqBinIter)
             maybeSelected = true;
-            freqBinIter++;
-         }
+
+         if (hitHopNum)
+            advanceFreqBinIter(nextBinRounded);
 
          // For spectral selection, determine what colour
          // set to use.  We use a darker selection if
@@ -649,10 +663,14 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
          AColor::ColorGradientChoice selected = AColor::ColorGradientUnselected;
 
          // If we are in the time selected range, then we may use a different color set.
-         if (maybeSelected)
+         if (maybeSelected) {
             selected =
                ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
                   (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
+            if ( onBrushTool && selected != AColor::ColorGradientUnselected )
+               // use only two sets of colors
+               selected = AColor::ColorGradientTimeAndFrequencySelected;
+         }
 
          const float value = uncached
             ? findValue(uncached, bin, nextBin, nBins, autocorrelation, gain, range)
@@ -714,7 +732,7 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
    WaveTrackCache cache(track->SharedPointer<const WaveTrack>());
    for (const auto &clip: track->GetClips()){
       DrawClipSpectrum( context, cache, clip.get(), rect,
-                        mpSpectralData, mOnBrushTool, clip.get() == selectedClip);
+                        mpSpectralData, clip.get() == selectedClip);
    }
 
    DrawBoldBoundaries( context, track, rect );

@@ -846,6 +846,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
    bool bigPointsFlag  =
       bMultiToolDown || (ToolCodes::drawTool == settings.GetTool());
    bool sliderFlag     = bMultiToolDown;
+   bool brushFlag   = (ToolCodes::brushTool == settings.GetTool());
 
    const bool hasSolo = GetTracks()->Any< PlayableTrack >()
       .any_of( []( const PlayableTrack *pt ) {
@@ -857,6 +858,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
    mTrackArtist->drawEnvelope = envelopeFlag;
    mTrackArtist->bigPoints = bigPointsFlag;
    mTrackArtist->drawSliders = sliderFlag;
+   mTrackArtist->onBrushTool = brushFlag;
    mTrackArtist->hasSolo = hasSolo;
 
    this->CellularPanel::Draw( context, TrackArtist::NPasses );

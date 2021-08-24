@@ -155,6 +155,7 @@ public:
    bool drawEnvelope{ false };
    bool bigPoints{ false };
    bool drawSliders{ false };
+   bool onBrushTool{ false };
    bool hasSolo{ false };
 };
 
