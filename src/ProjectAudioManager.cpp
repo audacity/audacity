@@ -647,7 +647,16 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // Less than or equal, not just less than, to ensure a clip boundary.
             // when append recording.
             if (endTime <= t0) {
-               pending->CreateClip(t0);
+               auto newName = [&]() {
+                  for (auto i = 1;; ++i)
+                  {
+                     //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
+                     auto name = XC("%s #%d", "clip name template").Format(pending->GetName(), i).Translation();
+                     if (pending->FindClipByName(name) == nullptr)
+                        return name;
+                  }
+               }();
+               pending->CreateClip(t0, newName);
             }
             transportTracks.captureTracks.push_back(pending);
          }
