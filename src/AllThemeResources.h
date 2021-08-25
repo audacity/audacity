@@ -372,6 +372,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrSpectro5Sel,         wxColour(  191,  191,  191),  wxT("Spectro5Sel") );
 
    DEFINE_COLOUR( clrClipAffordanceOutlinePen,    wxColour(    0,    0,    0),  wxT("ClipAffordanceOutlinePen") );
-   DEFINE_COLOUR( clrClipAffordanceInactiveBrush, wxColour(  202,  202,  202),  wxT("ClipAffordanceUnselectedBrush") );
-   DEFINE_COLOUR( clrClipAffordanceActiveBrush,   wxColour(  219,  219,  219),  wxT("ClipAffordanceSelectedBrush") );
+   DEFINE_COLOUR( clrClipAffordanceInactiveBrush, wxColour(  219,  219,  219),  wxT("ClipAffordanceUnselectedBrush") );
+   DEFINE_COLOUR( clrClipAffordanceActiveBrush,   wxColour(  237,  237,  237),  wxT("ClipAffordanceSelectedBrush") );
    DEFINE_COLOUR( clrClipAffordanceStroke,        wxColour(  255,  255,  255),  wxT("ClipAffordanceStroke") );
