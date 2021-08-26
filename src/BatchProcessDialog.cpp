@@ -1303,9 +1303,12 @@ void MacrosWindow::OnDown(wxCommandEvent & WXUNUSED(event))
 
 void MacrosWindow::OnApplyToProject(wxCommandEvent & event)
 {
+   AudacityProject *project = &mProject;
+   project->mApplyToProject = true;
    if( !SaveChanges() )
       return;
    ApplyMacroDialog::OnApplyToProject( event );
+   project->mApplyToProject = false;
 }
 
 void MacrosWindow::OnApplyToFiles(wxCommandEvent & event)

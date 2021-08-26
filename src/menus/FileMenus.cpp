@@ -52,6 +52,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
 
    // Prompt for file name and/or extension?
    bool bPromptingRequired = !project.mBatchMode ||
+                             project.mApplyToProject||
                              projectName.empty() ||
                              format.empty();
 

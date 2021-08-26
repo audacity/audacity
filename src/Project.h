@@ -157,6 +157,7 @@ private:
  public:
    bool mbBusyImporting{ false }; // used to fix bug 584
    int mBatchMode{ 0 };// 0 means not, >0 means in batch mode.
+   bool mApplyToProject{ false };// turns true when enters body of OnApplyToProject and to false when it reaches the end.
 
  private:
    wxWeakRef< wxFrame > mFrame{};
