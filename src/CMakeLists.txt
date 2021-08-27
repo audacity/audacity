@@ -103,8 +103,6 @@ list( APPEND SOURCES
       AudacityHeaders.h
       AudioIO.cpp
       AudioIO.h
-      AudioIOBase.cpp
-      AudioIOBase.h
       AudioIOListener.h
       AutoRecoveryDialog.cpp
       AutoRecoveryDialog.h
@@ -128,10 +126,6 @@ list( APPEND SOURCES
       DarkThemeAsCeeCode.h
       DBConnection.cpp
       DBConnection.h
-      DeviceChange.cpp
-      DeviceChange.h
-      DeviceManager.cpp
-      DeviceManager.h
       Diags.cpp
       Diags.h
       Envelope.cpp
@@ -927,8 +921,8 @@ list( APPEND SOURCES
       widgets/ImageRoll.h
       widgets/KeyView.cpp
       widgets/KeyView.h
-      widgets/Meter.cpp
-      widgets/Meter.h
+      widgets/MeterPanel.cpp
+      widgets/MeterPanel.h
       widgets/MeterPanelBase.cpp
       widgets/MeterPanelBase.h
       widgets/MultiDialog.cpp

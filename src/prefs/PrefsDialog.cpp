@@ -34,7 +34,7 @@
 #include <wx/treebook.h>
 #include <wx/treectrl.h>
 
-#include "../AudioIOBase.h"
+#include "AudioIOBase.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 #include "../commands/CommandManager.h"

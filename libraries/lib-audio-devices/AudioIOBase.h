@@ -18,7 +18,6 @@ Paul Licameli split from AudioIO.h
 #include <functional>
 #include <vector>
 #include <wx/string.h>
-#include <wx/weakref.h> // member variable
 #include "MemoryX.h"
 
 struct PaDeviceInfo;
@@ -33,9 +32,7 @@ class AudioIOBase;
 class AudacityProject;
 class AudioIOListener;
 class BoundedEnvelope;
-// Windows build needs complete type for parameter of wxWeakRef
-// class MeterPanelBase;
-#include "widgets/MeterPanelBase.h"
+class Meter;
 using PRCrossfadeData = std::vector< std::vector < float > >;
 
 #define BAD_STREAM_TIME (-DBL_MAX)
@@ -88,7 +85,7 @@ struct AudioIOStartStreamOptions
    {}
 
    AudacityProject *pProject{};
-   MeterPanelBase *captureMeter{}, *playbackMeter{};
+   std::weak_ptr<Meter> captureMeter, playbackMeter;
    const BoundedEnvelope *envelope; // for time warping
    std::shared_ptr< AudioIOListener > listener;
    double rate;
@@ -116,7 +113,7 @@ struct AudioIOStartStreamOptions
 
 ///\brief A singleton object supporting queries of the state of any active
 /// audio streams, and audio device capabilities
-class AUDACITY_DLL_API AudioIOBase /* not final */
+class AUDIO_DEVICES_API AudioIOBase /* not final */
    : public NonInterferingBase
 {
 public:
@@ -124,8 +121,10 @@ public:
 
    virtual ~AudioIOBase();
 
-   void SetCaptureMeter(AudacityProject *project, MeterPanelBase *meter);
-   void SetPlaybackMeter(AudacityProject *project, MeterPanelBase *meter);
+   void SetCaptureMeter(
+      AudacityProject *project, const std::weak_ptr<Meter> &meter);
+   void SetPlaybackMeter(
+      AudacityProject *project, const std::weak_ptr<Meter> &meter);
 
    /** \brief update state after changing what audio devices are selected
     *
@@ -275,8 +274,8 @@ protected:
 
    PaStream           *mPortStreamV19;
 
-   wxWeakRef<MeterPanelBase> mInputMeter{};
-   wxWeakRef<MeterPanelBase> mOutputMeter{};
+   std::weak_ptr<Meter> mInputMeter{};
+   std::weak_ptr<Meter> mOutputMeter{};
 
    #if USE_PORTMIXER
    PxMixer            *mPortMixer;
@@ -342,11 +341,11 @@ protected:
 
 #include "Prefs.h"
 
-extern AUDACITY_DLL_API StringSetting AudioIOHost;
-extern AUDACITY_DLL_API DoubleSetting AudioIOLatencyCorrection;
-extern AUDACITY_DLL_API DoubleSetting AudioIOLatencyDuration;
-extern AUDACITY_DLL_API StringSetting AudioIOPlaybackDevice;
-extern AUDACITY_DLL_API IntSetting    AudioIORecordChannels;
-extern AUDACITY_DLL_API StringSetting AudioIORecordingDevice;
-extern AUDACITY_DLL_API StringSetting AudioIORecordingSource;
-extern AUDACITY_DLL_API IntSetting    AudioIORecordingSourceIndex;
+extern AUDIO_DEVICES_API StringSetting AudioIOHost;
+extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyCorrection;
+extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyDuration;
+extern AUDIO_DEVICES_API StringSetting AudioIOPlaybackDevice;
+extern AUDIO_DEVICES_API IntSetting    AudioIORecordChannels;
+extern AUDIO_DEVICES_API StringSetting AudioIORecordingDevice;
+extern AUDIO_DEVICES_API StringSetting AudioIORecordingSource;
+extern AUDIO_DEVICES_API IntSetting    AudioIORecordingSourceIndex;
