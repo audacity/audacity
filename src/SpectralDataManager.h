@@ -79,13 +79,12 @@ protected:
 private:
    bool ApplyEffectToSelection();
    std::shared_ptr<SpectralData> mpSpectralData;
-   int mWindowCount;
+   int mWindowCount { 0 };
    double mSnapSamplingRate;
    double mSnapThreshold;
    double mOvertonesThreshold;
    std::vector<int> mOvertonesTargetFreqBin;
    int mSnapTargetFreqBin;
    int mSnapReturnFreqBin { -1 };
-   unsigned long mStartSample;
-   unsigned long mEndSample;
+   long long mStartHopNum { 0 };
 };
