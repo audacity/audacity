@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/cursor.h>
 #include <wx/event.h>
-#include <wx/menu.h>
 
 #include "../../widgets/BasicMenu.h"
 #include "BasicUI.h"
@@ -62,21 +61,8 @@ unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
    auto &commandManager = CommandManager::Get(*pProject);
    auto flags = MenuManager::Get( *pProject ).GetUpdateFlags();
 
-   // Common dispatcher for the menu items
-   auto dispatcher = [&]( wxCommandEvent &evt ){
-      auto idx = evt.GetId() - 1;
-      if (idx >= 0 && idx < items.size()) {
-         if (auto &action = items[idx].action)
-            action( context );
-         else
-            commandManager.HandleTextualCommand(
-               items[idx].symbol.Internal(), context, flags, false);
-      }
-   };
+   BasicMenu::Handle menu{ BasicMenu::FreshMenu };
 
-   BasicMenu::Handle handle{ BasicMenu::FreshMenu };
-   auto &menu = *handle.GetWxMenu();
-   int ii = 1;
    for (const auto &item: items) {
       if ( const auto &commandID = item.symbol.Internal();
            commandID.empty() )
@@ -86,19 +72,22 @@ unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
          // menu, and as determined by keyboard preferences
          auto label =
             commandManager.FormatLabelForMenu( commandID, &item.symbol.Msgid() );
-         menu.Append( ii, label.Full().Translation() );
-         menu.Bind( wxEVT_COMMAND_MENU_SELECTED, dispatcher );
-         bool enabled = item.enabled &&
-            (item.action || commandManager.GetEnabled( commandID ));
-         menu.Enable( ii, enabled );
+         menu.Append( label,
+            // This lambda will be destroyed with menu
+            [&]{
+               if (auto &action = item.action)
+                  action( context );
+               else
+                  commandManager.HandleTextualCommand(
+                     commandID, context, flags, false); },
+            item.action || commandManager.GetEnabled( commandID ) );
       }
-      ++ii;
    }
-   
-   BasicUI::Point point;
+
+   BasicMenu::Point point;
    if (pPoint)
       point = { pPoint->x, pPoint->y };
-   handle.Popup(
+   menu.Popup(
       wxWidgetsWindowPlacement{ pParent },
       point
    );
