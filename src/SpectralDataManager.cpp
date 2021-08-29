@@ -90,9 +90,6 @@ SpectralDataManager::Worker::Worker(const Setting &setting)
                            setting.mWindowSize, setting.mStepsPerWindow,
                            setting.mLeadingPadding, setting.mTrailingPadding}
 // Work members
-, mWindowCount { 0 }
-, mStartSample { 0 }
-, mEndSample { 0 }
 {
 }
 
@@ -109,12 +106,14 @@ bool SpectralDataManager::Worker::Process(WaveTrack* wt,
                                           const std::shared_ptr<SpectralData>& pSpectralData)
 {
    mpSpectralData = pSpectralData;
-   mStartSample = mpSpectralData->GetStartT();
-   mEndSample = mStartSample + mWindowSize;
+   const auto &hopSize = mpSpectralData->GetHopSize();
+   auto startSample =  mpSpectralData->GetStartSample();
+   const auto &endSample = mpSpectralData->GetEndSample();
+   mStartHopNum = startSample / hopSize;
    mWindowCount = 0;
 
-   long long startSC = std::max(static_cast<long long>(0), mpSpectralData->GetStartT() - 2 * mpSpectralData->GetHopSize());
-   if (!TrackSpectrumTransformer::Process( Processor, wt, 1, startSC, mpSpectralData->GetEndT() - startSC))
+   startSample = std::max(static_cast<long long>(0), startSample - 2 * hopSize);
+if (!TrackSpectrumTransformer::Process( Processor, wt, 1, startSample, endSample - startSample))
       return false;
 
    return true;
@@ -249,30 +248,17 @@ bool SpectralDataManager::Worker::Processor(SpectrumTransformer &transformer)
 
 bool SpectralDataManager::Worker::ApplyEffectToSelection() {
    auto &record = NthWindow(0);
-   auto nyquist = mpSpectralData->GetSR() / 2;
 
-   for(const auto &spectralDataMap: mpSpectralData->dataHistory){
-      for(const auto &data: spectralDataMap){
-         long long sc = data.first * mpSpectralData->GetHopSize();
-         // Check if the data's time sampleCount within this window
-         if(sc >= mStartSample && sc < mEndSample){
-            // For all added frequency
-            for(const int &selectedFreqBinNum: data.second){
-               record.mRealFFTs[selectedFreqBinNum] = 0;
-               record.mImagFFTs[selectedFreqBinNum] = 0;
-            }
-         }
+   for(auto &spectralDataMap: mpSpectralData->dataHistory){
+      // For all added frequency
+      for(const int &freqBin: spectralDataMap[mStartHopNum]){
+         record.mRealFFTs[freqBin] = 0;
+         record.mImagFFTs[freqBin] = 0;
       }
    }
 
-//   record.mRealFFTs[0] *= (record.mGains[0] - 1.0);
-//   // The Fs/2 component is stored as the imaginary part of the DC component
-//   record.mImagFFTs[0] *= (record.mGains[last] - 1.0);
-
-   // Slide for next window
    mWindowCount++;
-   mStartSample += mStepSize;
-   mEndSample += mStepSize;
+   mStartHopNum ++;
    return true;
 }
 
