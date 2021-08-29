@@ -213,12 +213,20 @@ bool SpectralDataManager::Worker::OvertonesProcessor(SpectrumTransformer &transf
 
       const double &spectrumSize = worker.mSpectrumSize;
       const int &targetBin = worker.mSnapTargetFreqBin;
-      float maxValue = record.mSpectrums[targetBin];
+      float targetValue = record.mSpectrums[targetBin];
+      float minEnergyThrehold = targetValue * 0.03;
+      int localBinsToExamine = 3;
 
-      for(int i = 0; i < spectrumSize - 2; ++i){
-         if(record.mSpectrums[i] > maxValue * worker.mOvertonesThreshold
-         && (std::abs(targetBin - i % targetBin) % targetBin < 5 && i > targetBin))
-            worker.mOvertonesTargetFreqBin.push_back(i);
+      for(int binNum = targetBin; binNum < spectrumSize - 1; binNum += targetBin){
+         bool binIsLocalMax = true;
+         for(int offset = -localBinsToExamine; offset < localBinsToExamine; offset++){
+            if(record.mSpectrums[binNum] < record.mSpectrums[binNum + offset])
+               binIsLocalMax = false;
+         }
+
+         // Checking against minimal energy threshold
+         if(binIsLocalMax && record.mSpectrums[binNum] > minEnergyThrehold)
+            worker.mOvertonesTargetFreqBin.push_back(binNum);
       }
    }
    return true;
