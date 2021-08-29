@@ -56,7 +56,7 @@ class DeviceToolBar final : public ToolBar {
    void ShowChannelsDialog();
 
  private:
-   void OnRescannedDevices( wxCommandEvent& );
+   void OnRescannedDevices( wxEvent& );
 
    int  ChangeHost();
    void ChangeDevice(bool isInput);

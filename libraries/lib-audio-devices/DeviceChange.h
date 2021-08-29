@@ -11,10 +11,6 @@
 #ifndef __AUDACITY_DEVICECHANGE_H__
 #define __AUDACITY_DEVICECHANGE_H__
 
-
-
-
-
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 
 #include <memory>

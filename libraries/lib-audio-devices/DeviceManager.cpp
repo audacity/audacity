@@ -9,8 +9,8 @@
 
 #include "DeviceManager.h"
 
-// For compilers that support precompilation, includes "wx/wx.h".
-#include <wx/wxprec.h>
+#include <wx/log.h>
+#include <thread>
 
 
 
@@ -23,25 +23,11 @@
 #include "portmixer.h"
 #endif
 
-#ifndef WX_PRECOMP
-#include <wx/app.h>
-#include <wx/choice.h>
-#include <wx/event.h>
-#include <wx/intl.h>
-#include <wx/log.h>
-#include <wx/settings.h>
-#include <wx/sizer.h>
-#include <wx/statbmp.h>
-#include <wx/tooltip.h>
-#endif
-
-#include "Project.h"
-
 #include "AudioIOBase.h"
 
 #include "DeviceChange.h" // for HAVE_DEVICE_CHANGE
 
-wxDEFINE_EVENT(EVT_RESCANNED_DEVICES, wxCommandEvent);
+wxDEFINE_EVENT(EVT_RESCANNED_DEVICES, wxEvent);
 
 DeviceManager DeviceManager::dm;
 
@@ -249,6 +235,12 @@ static void AddSources(int deviceIndex, int rate, std::vector<DeviceSourceMap> *
    }
 }
 
+namespace {
+struct MyEvent : wxEvent {
+   using wxEvent::wxEvent;
+   wxEvent *Clone() const override { return new MyEvent{*this}; }
+};
+}
 
 /// Gets a NEW list of devices by terminating and restarting portaudio
 /// Assumes that DeviceManager is only used on the main thread.
@@ -266,9 +258,10 @@ void DeviceManager::Rescan()
       if (gAudioIO) {
          if (gAudioIO->IsMonitoring())
          {
+            using namespace std::chrono;
             gAudioIO->StopStream();
             while (gAudioIO->IsBusy())
-               wxMilliSleep(100);
+               std::this_thread::sleep_for(100ms);
          }
       }
 
@@ -303,8 +296,8 @@ void DeviceManager::Rescan()
 
    // If this was not an initial scan update each device toolbar.
    if ( m_inited ) {
-      wxCommandEvent e{ EVT_RESCANNED_DEVICES };
-      wxTheApp->ProcessEvent( e );
+      MyEvent e{ 0, EVT_RESCANNED_DEVICES };
+      this->ProcessEvent( e );
    }
 
    m_inited = true;

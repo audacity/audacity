@@ -23,7 +23,7 @@
 #include <wx/defs.h>
 #include <wx/textctrl.h>
 
-#include "../AudioIOBase.h"
+#include "AudioIOBase.h"
 #include "Dither.h"
 #include "Prefs.h"
 #include "Resample.h"

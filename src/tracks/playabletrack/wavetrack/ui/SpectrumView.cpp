@@ -684,7 +684,7 @@ static const WaveTrackSubViews::RegisteredFactory key{
 // menu.  It is appropriate only to spectrum view and so is kept in this
 // source file with the rest of the spectrum view implementation.
 #include "WaveTrackControls.h"
-#include "../../../../AudioIOBase.h"
+#include "AudioIOBase.h"
 #include "../../../../Menus.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
