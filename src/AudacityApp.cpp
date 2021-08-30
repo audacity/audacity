@@ -958,8 +958,8 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
 #endif
 
    // Recent file event handlers.
-   EVT_MENU(FileHistory::ID_RECENT_CLEAR, AudacityApp::OnMRUClear)
-   EVT_MENU_RANGE(FileHistory::ID_RECENT_FIRST, FileHistory::ID_RECENT_LAST,
+   EVT_MENU(FileHistoryMenus::ID_RECENT_CLEAR, AudacityApp::OnMRUClear)
+   EVT_MENU_RANGE(FileHistoryMenus::ID_RECENT_FIRST, FileHistoryMenus::ID_RECENT_LAST,
       AudacityApp::OnMRUFile)
 
    // Handle AppCommandEvents (usually from a script)
@@ -1024,7 +1024,7 @@ void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
 // then it tries to Import(). Very questionable handling, imo.
 // Better, for example, to check the file type early on.
 void AudacityApp::OnMRUFile(wxCommandEvent& event) {
-   int n = event.GetId() - FileHistory::ID_RECENT_FIRST;
+   int n = event.GetId() - FileHistoryMenus::ID_RECENT_FIRST;
    auto &history = FileHistory::Global();
    const auto &fullPathStr = history[ n ];
 
@@ -1517,8 +1517,7 @@ bool AudacityApp::InitPart2()
          wxMenuBar::MacSetCommonMenuBar(menuBar.release());
       }
 
-      auto &recentFiles = FileHistory::Global();
-      recentFiles.UseMenu(recentMenu);
+      FileHistoryMenus::Instance().UseMenu(recentMenu);
 
 #endif //__WXMAC__
       temporarywindow.Show(false);
