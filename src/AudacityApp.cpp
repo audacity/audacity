@@ -958,9 +958,9 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
 #endif
 
    // Recent file event handlers.
-   EVT_MENU(FileHistoryMenus::ID_RECENT_CLEAR, AudacityApp::OnMRUClear)
-   EVT_MENU_RANGE(FileHistoryMenus::ID_RECENT_FIRST, FileHistoryMenus::ID_RECENT_LAST,
-      AudacityApp::OnMRUFile)
+   EVT_MENU(ProjectManager::FileHistoryMenus::ID_RECENT_CLEAR, AudacityApp::OnMRUClear)
+   EVT_MENU_RANGE(ProjectManager::FileHistoryMenus::ID_RECENT_FIRST,
+      ProjectManager::FileHistoryMenus::ID_RECENT_LAST, AudacityApp::OnMRUFile)
 
    // Handle AppCommandEvents (usually from a script)
    EVT_APP_COMMAND(wxID_ANY, AudacityApp::OnReceiveCommand)
@@ -1024,7 +1024,7 @@ void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
 // then it tries to Import(). Very questionable handling, imo.
 // Better, for example, to check the file type early on.
 void AudacityApp::OnMRUFile(wxCommandEvent& event) {
-   int n = event.GetId() - FileHistoryMenus::ID_RECENT_FIRST;
+   int n = event.GetId() - ProjectManager::FileHistoryMenus::ID_RECENT_FIRST;
    auto &history = FileHistory::Global();
    const auto &fullPathStr = history[ n ];
 
@@ -1517,7 +1517,7 @@ bool AudacityApp::InitPart2()
          wxMenuBar::MacSetCommonMenuBar(menuBar.release());
       }
 
-      FileHistoryMenus::Instance().UseMenu(recentMenu);
+      ProjectManager::UseMenu(recentMenu);
 
 #endif //__WXMAC__
       temporarywindow.Show(false);
