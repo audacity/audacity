@@ -24,10 +24,9 @@
 
 #include <mutex>
 
-FileHistory::FileHistory(size_t maxfiles, wxWindowID base)
+FileHistory::FileHistory(size_t maxfiles)
 {
    mMaxFiles = maxfiles;
-   mIDBase = base;
 }
 
 FileHistory::~FileHistory()
@@ -37,8 +36,7 @@ FileHistory::~FileHistory()
 FileHistory &FileHistory::Global()
 {
    // TODO - read the number of files to store in history from preferences
-   static FileHistory history{
-      ID_RECENT_LAST - ID_RECENT_FIRST + 1, ID_RECENT_CLEAR };
+   static FileHistory history;
    static std::once_flag flag;
    std::call_once( flag, [&]{
       history.Load(*gPrefs, wxT("RecentFiles"));
@@ -94,7 +92,7 @@ void FileHistory::Clear()
    NotifyMenus();
 }
 
-void FileHistory::UseMenu(wxMenu *menu)
+void FileHistoryMenus::UseMenu(wxMenu *menu)
 {
    Compress();
 
@@ -152,33 +150,52 @@ void FileHistory::Save(wxConfigBase & config)
 
 void FileHistory::NotifyMenus()
 {
+   Publish({});
+   Save(*gPrefs);
+}
+
+FileHistoryMenus::FileHistoryMenus()
+{
+   mSubscription = FileHistory::Global()
+      .Subscribe(*this, &FileHistoryMenus::OnChangedHistory);
+}
+
+FileHistoryMenus &FileHistoryMenus::Instance()
+{
+   static FileHistoryMenus instance;
+   return instance;
+}
+
+void FileHistoryMenus::OnChangedHistory(Observer::Message)
+{
    Compress();
    for (auto pMenu : mMenus)
       if (pMenu)
          NotifyMenu(pMenu);
-   Save(*gPrefs);
 }
 
-void FileHistory::NotifyMenu(wxMenu *menu)
+void FileHistoryMenus::NotifyMenu(wxMenu *menu)
 {
    wxMenuItemList items = menu->GetMenuItems();
    for (auto end = items.end(), iter = items.begin(); iter != end;)
       menu->Destroy(*iter++);
 
-   for (size_t i = 0; i < mHistory.size(); i++) {
-      wxString item =  mHistory[i];
+   const auto &history = FileHistory::Global();
+   int mIDBase = ID_RECENT_CLEAR;
+   int i = 0;
+   for (auto item : history) {
       item.Replace( "&", "&&" );
-      menu->Append(mIDBase + 1 + i,item);
+      menu->Append(mIDBase + 1 + i++, item);
    }
 
-   if (mHistory.size() > 0) {
+   if (history.size() > 0) {
       menu->AppendSeparator();
    }
    menu->Append(mIDBase, _("&Clear"));
-   menu->Enable(mIDBase, mHistory.size() > 0);
+   menu->Enable(mIDBase, history.size() > 0);
 }
 
-void FileHistory::Compress()
+void FileHistoryMenus::Compress()
 {
    // Clear up expired weak pointers
    auto end = mMenus.end();
