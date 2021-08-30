@@ -593,8 +593,7 @@ BaseItemSharedPtr FileMenu()
             Special( wxT("PopulateRecentFilesStep"),
             [](AudacityProject &, wxMenu &theMenu){
                // Recent Files and Recent Projects menus
-               auto &history = FileHistoryMenus::Instance();
-               history.UseMenu( &theMenu );
+               ProjectManager::UseMenu( &theMenu );
             } )
          ),
 
