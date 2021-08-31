@@ -957,88 +957,12 @@ BEGIN_EVENT_TABLE(AudacityApp, wxApp)
    EVT_SOCKET(ID_IPC_SOCKET, AudacityApp::OnSocketEvent)
 #endif
 
-   // Recent file event handlers.
-   EVT_MENU(ProjectManager::FileHistoryMenus::ID_RECENT_CLEAR, AudacityApp::OnMRUClear)
-   EVT_MENU_RANGE(ProjectManager::FileHistoryMenus::ID_RECENT_FIRST,
-      ProjectManager::FileHistoryMenus::ID_RECENT_LAST, AudacityApp::OnMRUFile)
-
    // Handle AppCommandEvents (usually from a script)
    EVT_APP_COMMAND(wxID_ANY, AudacityApp::OnReceiveCommand)
 
    // Global ESC key handling
    EVT_KEY_DOWN(AudacityApp::OnKeyDown)
 END_EVENT_TABLE()
-
-// backend for OnMRUFile
-// TODO: Would be nice to make this handle not opening a file with more panache.
-//  - Inform the user if DefaultOpenPath not set.
-//  - Switch focus to correct instance of project window, if already open.
-bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
-   // Most of the checks below are copied from ProjectManager::OpenFiles.
-   // - some rationalisation might be possible.
-
-   auto pProj = GetActiveProject().lock();
-   auto proj = pProj.get();
-
-   if (!fullPathStr.empty())
-   {
-      // verify that the file exists
-      if (wxFile::Exists(fullPathStr))
-      {
-         FileNames::UpdateDefaultPath(FileNames::Operation::Open, ::wxPathOnly(fullPathStr));
-
-         // Make sure it isn't already open.
-         // Test here even though AudacityProject::OpenFile() also now checks, because
-         // that method does not return the bad result.
-         // That itself may be a FIXME.
-         if (ProjectFileManager::IsAlreadyOpen(fullPathStr))
-            return false;
-
-         //! proj may be null
-         ( void ) ProjectManager::OpenProject( proj, fullPathStr,
-               true /* addtohistory */, false /* reuseNonemptyProject */ );
-      }
-      else {
-         // File doesn't exist - remove file from history
-         AudacityMessageBox(
-            XO(
-"%s could not be found.\n\nIt has been removed from the list of recent files.")
-               .Format(fullPathStr) );
-         return(false);
-      }
-   }
-   return(true);
-}
-
-bool AudacityApp::SafeMRUOpen(const wxString &fullPathStr)
-{
-   return GuardedCall< bool >( [&]{ return MRUOpen( fullPathStr ); } );
-}
-
-void AudacityApp::OnMRUClear(wxCommandEvent& WXUNUSED(event))
-{
-   FileHistory::Global().Clear();
-}
-
-//vvv Basically, anything from Recent Files is treated as a .aup3, until proven otherwise,
-// then it tries to Import(). Very questionable handling, imo.
-// Better, for example, to check the file type early on.
-void AudacityApp::OnMRUFile(wxCommandEvent& event) {
-   int n = event.GetId() - ProjectManager::FileHistoryMenus::ID_RECENT_FIRST;
-   auto &history = FileHistory::Global();
-   const auto &fullPathStr = history[ n ];
-
-   // Try to open only if not already open.
-   // Test IsAlreadyOpen() here even though AudacityProject::MRUOpen() also now checks,
-   // because we don't want to Remove() just because it already exists,
-   // and AudacityApp::OnMacOpenFile() calls MRUOpen() directly.
-   // that method does not return the bad result.
-   // PRL: Don't call SafeMRUOpen
-   // -- if open fails for some exceptional reason of resource exhaustion that
-   // the user can correct, leave the file in history.
-   if (!ProjectFileManager::IsAlreadyOpen(fullPathStr) && !MRUOpen(fullPathStr))
-      history.Remove(n);
-}
 
 void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
@@ -1088,7 +1012,7 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
             //      to the config file has occurred.
             // PRL: Catch any exceptions, don't try this file again, continue to
             // other files.
-            if (!SafeMRUOpen(name)) {
+            if (!ProjectManager::SafeMRUOpen(name)) {
                // Just log it.  Assertion failure is not appropriate on valid
                // defensive path against bad file data.
                wxLogMessage(wxT("MRUOpen failed"));
@@ -1609,7 +1533,7 @@ bool AudacityApp::InitPart2()
          {
             // PRL: Catch any exceptions, don't try this file again, continue to
             // other files.
-            SafeMRUOpen(parser->GetParam(i));
+            ProjectManager::SafeMRUOpen(parser->GetParam(i));
          }
 
          if(!failedPlugins.empty())
