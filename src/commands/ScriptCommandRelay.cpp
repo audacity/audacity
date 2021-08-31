@@ -33,8 +33,8 @@ code out of ModuleManager.
 /// This is the function which actually obeys one command.
 static int ExecCommand(wxString *pIn, wxString *pOut, bool fromMain)
 {
-   {
-      CommandBuilder builder(::GetActiveProject(), *pIn);
+   if (auto pProject = ::GetActiveProject()) {
+      CommandBuilder builder(*pProject, *pIn);
       if (builder.WasValid())
       {
          OldStyleCommandPointer cmd = builder.GetCommand();
@@ -58,6 +58,8 @@ static int ExecCommand(wxString *pIn, wxString *pOut, bool fromMain)
       // Wait for and retrieve the response
       *pOut = builder.GetResponse();
    }
+   else
+      *pOut = wxString{};
 
    return 0;
 }
