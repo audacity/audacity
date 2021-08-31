@@ -878,7 +878,7 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
 
    // Make sure it isn't already open.
    // Vaughan, 2011-03-25: This was done previously in AudacityProject::OpenFiles()
-   //    and AudacityApp::MRUOpen(), but if you open an aup file by double-clicking it
+   //    and ProjectManager::MRUOpen(), but if you open an aup file by double-clicking it
    //    from, e.g., Win Explorer, it would bypass those, get to here with no check,
    //    then open a NEW project from the same data with no warning.
    //    This was reported in http://bugzilla.audacityteam.org/show_bug.cgi?id=137#c17,
