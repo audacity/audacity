@@ -26,10 +26,6 @@ namespace BasicUI { class WindowPlacement; }
 
 class AudacityProject;
 
-AUDACITY_DLL_API AudacityProject *GetActiveProject();
-// For use by ProjectManager only:
-AUDACITY_DLL_API void SetActiveProject(AudacityProject * project);
-
 /// \brief an object of class AllProjects acts like a standard library
 /// container, but refers to a global array of open projects.  So you can
 /// iterate easily over shared pointers to them with range-for :
@@ -93,11 +89,6 @@ using AttachedProjectWindows = ClientData::Site<
 
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_TRACK_PANEL_TIMER, wxCommandEvent);
-
-// This event is emitted by the application object when there is a change
-// in the activated project
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_PROJECT_ACTIVATION, wxCommandEvent);
 
 ///\brief The top-level handle to an Audacity project.  It serves as a source
 /// of events that other objects can bind to, and a container of associated

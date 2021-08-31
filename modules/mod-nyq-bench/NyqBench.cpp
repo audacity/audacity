@@ -23,6 +23,7 @@
 #include <wx/textctrl.h>
 #include <wx/toolbar.h>
 
+#include "ActiveProject.h"
 #include "AudioIOBase.h"
 #include "CommonCommandFlags.h"
 #include "ModuleConstants.h"

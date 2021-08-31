@@ -16,8 +16,7 @@
 
 #include "TimeTrack.h"
 
-
-
+#include "ActiveProject.h"
 #include <cfloat>
 #include <wx/wxcrtvararg.h>
 #include <wx/dc.h>

@@ -12,6 +12,7 @@ Paul Licameli split from AudacityProject.cpp
 
 
 
+#include "ActiveProject.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
 #include "Menus.h"

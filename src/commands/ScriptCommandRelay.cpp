@@ -23,6 +23,7 @@ code out of ModuleManager.
 
 #include "CommandTargets.h"
 #include "CommandBuilder.h"
+#include "ActiveProject.h"
 #include "AppCommandEvent.h"
 #include "../Project.h"
 #include <wx/app.h>

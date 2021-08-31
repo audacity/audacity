@@ -72,6 +72,7 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "AudacityLogger.h"
 #include "AboutDialog.h"
+#include "ActiveProject.h"
 #include "AColor.h"
 #include "AudacityFileConfig.h"
 #include "AudioIO.h"

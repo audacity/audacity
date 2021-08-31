@@ -34,6 +34,7 @@ KeyConfigPrefs and MousePrefs use.
 #include <wx/statbox.h>
 #include <wx/textctrl.h>
 
+#include "ActiveProject.h"
 #include "Prefs.h"
 #include "../Project.h"
 #include "../commands/CommandManager.h"

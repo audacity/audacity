@@ -86,6 +86,8 @@ list( APPEND SOURCES
       AColor.cpp
       AColor.h
       AColorResources.h
+      ActiveProject.cpp
+      ActiveProject.h
       ActiveProjects.cpp
       ActiveProjects.h
       AboutDialog.cpp
