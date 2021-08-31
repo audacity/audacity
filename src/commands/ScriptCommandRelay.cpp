@@ -33,7 +33,7 @@ code out of ModuleManager.
 /// This is the function which actually obeys one command.
 static int ExecCommand(wxString *pIn, wxString *pOut, bool fromMain)
 {
-   if (auto pProject = ::GetActiveProject()) {
+   if (auto pProject = ::GetActiveProject().lock()) {
       CommandBuilder builder(*pProject, *pIn);
       if (builder.WasValid())
       {

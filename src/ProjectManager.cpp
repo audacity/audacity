@@ -792,13 +792,13 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    auto pSelf = AllProjects{}.Remove( project );
    wxASSERT( pSelf );
 
-   if (GetActiveProject() == &project) {
+   if (GetActiveProject().lock().get() == &project) {
       // Find a NEW active project
       if ( !AllProjects{}.empty() ) {
          SetActiveProject(AllProjects{}.begin()->get());
       }
       else {
-         SetActiveProject(NULL);
+         SetActiveProject(nullptr);
       }
    }
 
@@ -807,7 +807,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // PRL:  Maybe all this is unnecessary now that the listener is managed
    // by a weak pointer.
    if ( gAudioIO->GetListener().get() == &ProjectAudioManager::Get( project ) ) {
-      auto active = GetActiveProject();
+      auto active = GetActiveProject().lock();
       gAudioIO->SetListener(
          active
             ? ProjectAudioManager::Get( *active ).shared_from_this()

@@ -13,10 +13,11 @@
 #define __AUDACITY_ACTIVE_PROJECT__
 
 #include <wx/event.h> // to declare custom event type
+#include <memory>
 
 class AudacityProject;
 
-AUDACITY_DLL_API AudacityProject *GetActiveProject();
+AUDACITY_DLL_API std::weak_ptr<AudacityProject> GetActiveProject();
 // For use by ProjectManager only:
 AUDACITY_DLL_API void SetActiveProject(AudacityProject * project);
 

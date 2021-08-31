@@ -68,9 +68,11 @@ void Generate(wxDebugReport::Context ctx)
 #ifdef EXPERIMENTAL_MIDI_OUT
             rpt.AddText(wxT("mididev.txt"), gAudioIO->GetMidiDeviceInfo(), wxT("MIDI Device Info"));
 #endif
-            auto project = GetActiveProject();
-            auto &projectFileIO = ProjectFileIO::Get( *project );
-            rpt.AddText(wxT("project.txt"), projectFileIO.GenerateDoc(), wxT("Active project doc"));
+            auto project = GetActiveProject().lock();
+            if (project) {
+               auto &projectFileIO = ProjectFileIO::Get( *project );
+               rpt.AddText(wxT("project.txt"), projectFileIO.GenerateDoc(), wxT("Active project doc"));
+            }
          }
    
          auto logger = AudacityLogger::Get();

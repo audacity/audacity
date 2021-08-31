@@ -40,7 +40,7 @@ void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
    // First retrieve the actual command from the event 'envelope'.
    OldStyleCommandPointer cmd = event.GetCommand();
 
-   if (const auto pProject = GetActiveProject()) {
+   if (const auto pProject = GetActiveProject().lock()) {
       // Then apply it to current application & project.  Note that the
       // command may change the context - for example, switching to a
       // different project.
