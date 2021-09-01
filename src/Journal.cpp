@@ -253,6 +253,39 @@ void Sync( std::initializer_list< const wxString > strings )
 {
    return Sync( wxArrayStringEx( strings ) );
 }
+
+int IfNotPlaying(
+   const wxString &string, const InteractiveAction &action )
+{
+   // Special journal word
+   Sync(string);
+
+   // Then read or write the return value on another journal line
+   if ( IsReplaying() ) {
+      auto tokens = GetTokens();
+      if ( tokens.size() == 1 ) {
+         try {
+            std::wstring str{ tokens[0].wc_str() };
+            size_t length = 0;
+            auto result = std::stoi(str, &length);
+            if (length == str.length()) {
+               if (IsRecording())
+                  Journal::Output( std::to_wstring(result) );
+               return result;
+            }
+         }
+         catch ( const std::exception& ) {}
+      }
+      throw SyncException{};
+   }
+    else {
+      auto result = action ? action() : 0;
+      if ( IsRecording() )
+         Output( std::to_wstring( result ) );
+      return result;
+   }
+}
+
 int GetExitCode()
 {
    // Unconsumed commands remaining in the input file is also an error condition.

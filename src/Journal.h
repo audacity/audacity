@@ -64,6 +64,22 @@ namespace Journal
    void Sync( const wxArrayString &strings );
    void Sync( std::initializer_list< const wxString > strings );
 
+   //! Function that returns a value which will be written to the journal
+   /*! In future, might generalize to more return values and of other types */
+   using InteractiveAction = std::function< int() >;
+
+   //! Call action only if not replaying; synchronize on string and int values
+   /*!
+    If not replaying, call the function, and if recording, output the string
+    and the return value.
+
+    If replaying, skip the action; Sync on the string; parse a value from
+    the journal; throw SyncException if the value is ill-formed; otherwise
+    output the value (if also recording), and return it
+    */
+   int IfNotPlaying(
+      const wxString &string, const InteractiveAction &action );
+
    //\brief Get the value that the application will return to the command line
    int GetExitCode();
 
