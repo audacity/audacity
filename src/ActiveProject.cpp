@@ -28,7 +28,7 @@ AUDACITY_DLL_API std::weak_ptr<AudacityProject> GetActiveProject()
 
 void SetActiveProject(AudacityProject * project)
 {
-   auto pProject = project ? nullptr : project->shared_from_this();
+   auto pProject = project ? project->shared_from_this() : nullptr;
    if ( gActiveProject.lock() != pProject ) {
       gActiveProject = pProject;
       KeyboardCapture::Capture( nullptr );
