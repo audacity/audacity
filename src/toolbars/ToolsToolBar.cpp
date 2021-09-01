@@ -50,7 +50,7 @@
 #include "Prefs.h"
 #include "../AllThemeResources.h"
 #include "../ImageManipulation.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "../tracks/ui/Scrubbing.h"

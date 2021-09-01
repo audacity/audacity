@@ -12,6 +12,7 @@ Paul Licameli split from AudacityProject.cpp
 
 
 
+#include "ActiveProject.h"
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
 #include "Clipboard.h"
@@ -25,6 +26,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "ProjectSelectionManager.h"
+#include "ProjectWindows.h"
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"
@@ -605,6 +607,13 @@ void ProjectManager::OnReconnectionFailure(wxCommandEvent & event)
    });
 }
 
+static bool sbClosingAll = false;
+
+void ProjectManager::SetClosingAll(bool closing)
+{
+   sbClosingAll = closing;
+}
+
 void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 {
    auto &project = mProject;
@@ -723,7 +732,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // DanH: If we're definitely about to quit, clear the clipboard.
    auto &clipboard = Clipboard::Get();
    if ((AllProjects{}.size() == 1) &&
-      (quitOnClose || AllProjects::Closing()))
+      (quitOnClose || sbClosingAll))
       clipboard.Clear();
    else {
       auto clipboardProject = clipboard.Project().lock();
@@ -791,13 +800,13 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    auto pSelf = AllProjects{}.Remove( project );
    wxASSERT( pSelf );
 
-   if (GetActiveProject() == &project) {
+   if (GetActiveProject().lock().get() == &project) {
       // Find a NEW active project
       if ( !AllProjects{}.empty() ) {
          SetActiveProject(AllProjects{}.begin()->get());
       }
       else {
-         SetActiveProject(NULL);
+         SetActiveProject(nullptr);
       }
    }
 
@@ -806,7 +815,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // PRL:  Maybe all this is unnecessary now that the listener is managed
    // by a weak pointer.
    if ( gAudioIO->GetListener().get() == &ProjectAudioManager::Get( project ) ) {
-      auto active = GetActiveProject();
+      auto active = GetActiveProject().lock();
       gAudioIO->SetListener(
          active
             ? ProjectAudioManager::Get( *active ).shared_from_this()
@@ -814,7 +823,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
       );
    }
 
-   if (AllProjects{}.empty() && !AllProjects::Closing()) {
+   if (AllProjects{}.empty() && !sbClosingAll) {
 
 #if !defined(__WXMAC__)
       if (quitOnClose) {
@@ -1015,7 +1024,7 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
    RestartTimer();
 }
 
-void ProjectManager::OnStatusChange( wxCommandEvent &evt )
+void ProjectManager::OnStatusChange( ProjectStatusEvent &evt )
 {
    evt.Skip();
 
@@ -1031,7 +1040,7 @@ void ProjectManager::OnStatusChange( wxCommandEvent &evt )
 
    window.UpdateStatusWidths();
 
-   auto field = static_cast<StatusBarField>( evt.GetInt() );
+   auto field = evt.mField;
    const auto &msg = ProjectStatus::Get( project ).Get( field );
    SetStatusText( msg, field );
    

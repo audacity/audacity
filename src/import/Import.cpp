@@ -52,7 +52,7 @@ ImportLOF.cpp, and ImportAUP.cpp.
 #include "../FFmpeg.h"
 #include "FileNames.h"
 #include "../ShuttleGui.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../WaveTrack.h"
 
 #include "Prefs.h"

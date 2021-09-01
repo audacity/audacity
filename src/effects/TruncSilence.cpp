@@ -29,7 +29,7 @@
 #include <wx/valgen.h>
 
 #include "Prefs.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectSettings.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"

@@ -16,6 +16,7 @@
 #include "Menus.h"
 #include "Project.h"
 #include "ProjectHistory.h"
+#include "ProjectWindows.h"
 #include "ProjectSettings.h"
 #include "SelectionState.h"
 #include "TrackPanelAx.h"

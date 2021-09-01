@@ -54,7 +54,7 @@ with changes in the SpectralSelectionBar.
 #include <wx/statline.h>
 
 #include "Prefs.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../AllThemeResources.h"
 #include "../SelectedRegion.h"
 #include "../ViewInfo.h"

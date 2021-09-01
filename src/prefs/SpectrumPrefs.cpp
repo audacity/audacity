@@ -24,7 +24,7 @@
 #include <wx/textctrl.h>
 
 #include "FFT.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ShuttleGui.h"
 
 #include "../TrackPanel.h"

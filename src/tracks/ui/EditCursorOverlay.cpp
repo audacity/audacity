@@ -14,7 +14,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackView.h"
 #include "../../AColor.h"
 #include "../../AdornedRulerPanel.h"
-#include "../../Project.h"
+#include "Project.h"
+#include "../../ProjectWindows.h"
 #include "../../Track.h" //
 #include "../../TrackPanelAx.h"
 #include "../../TrackPanel.h"

@@ -23,6 +23,7 @@ Paul Licameli split from Menus.cpp
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
+#include "ProjectWindows.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"

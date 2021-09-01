@@ -43,6 +43,7 @@
 #include "ProjectFileIO.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "SelectUtilities.h"
 #include "Theme.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
@@ -1515,7 +1516,7 @@ void MixerBoardFrame::SetWindowTitle()
 namespace {
 
 // Mixer board window attached to each project is built on demand by:
-AudacityProject::AttachedWindows::RegisteredFactory sMixerBoardKey{
+AttachedWindows::RegisteredFactory sMixerBoardKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       return safenew MixerBoardFrame( &parent );
    }
@@ -1527,7 +1528,7 @@ struct Handler : CommandHandlerObject {
    {
       auto &project = context.project;
 
-      auto mixerBoardFrame = &project.AttachedWindows::Get( sMixerBoardKey );
+      auto mixerBoardFrame = &GetAttachedWindows(project).Get(sMixerBoardKey);
       mixerBoardFrame->Show();
       mixerBoardFrame->Raise();
       mixerBoardFrame->SetFocus();

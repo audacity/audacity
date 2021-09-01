@@ -35,8 +35,8 @@
 #include <wx/timer.h>
 
 //This is needed for tooltips
-#include "../Project.h"
-#include "../ProjectStatus.h"
+#include "Project.h"
+#include "ProjectStatus.h"
 #include "../ProjectWindowBase.h"
 #include <wx/tooltip.h>
 

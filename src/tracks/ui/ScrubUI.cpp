@@ -14,8 +14,9 @@
 #include "../../widgets/Overlay.h"
 #include "ClientData.h"
 #include "../../AdornedRulerPanel.h"
-#include "../../Project.h"
+#include "Project.h"
 #include "../../ProjectWindow.h"
+#include "../../ProjectWindows.h"
 #include "../../TrackPanel.h"
 
 #include <wx/dcclient.h>
