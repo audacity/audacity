@@ -355,13 +355,16 @@ std::pair<double, double> FindSelection(const CommandContext &context)
 {
    double sel0 = 0.0, sel1 = 0.0;
    
+#if 0
    // Use the overriding selection if any was given in the context
    if (auto *pRegion = context.temporarySelection.pSelectedRegion) {
       auto &selectedRegion = *pRegion;
       sel0 = selectedRegion.t0();
       sel1 = selectedRegion.t1();
    }
-   else {
+   else
+#endif
+   {
       auto &selectedRegion = ViewInfo::Get(context.project).selectedRegion;
       sel0 = selectedRegion.t0();
       sel1 = selectedRegion.t1();
@@ -780,7 +783,8 @@ void OnSplit(const CommandContext &context)
    
    if (auto *pTrack = context.temporarySelection.pTrack) {
       if (auto pWaveTrack = dynamic_cast<WaveTrack*>(pTrack))
-         pWaveTrack->Split( sel0, sel1 );
+         for (auto pChannel : TrackList::Channels(pWaveTrack))
+            pChannel->Split( sel0, sel1 );
       else
          // Did nothing, don't push history
          return;
