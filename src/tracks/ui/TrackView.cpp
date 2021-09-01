@@ -12,7 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../Track.h"
 
 #include "ClientData.h"
-#include "../../Project.h"
+#include "Project.h"
 #include "XMLTagHandler.h"
 #include "XMLWriter.h"
 

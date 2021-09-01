@@ -22,7 +22,7 @@ Paul Licameli
 #include <wx/checkbox.h>
 #include <wx/choice.h>
 
-#include "../Project.h"
+#include "Project.h"
 
 #include "../TrackPanel.h"
 #include "../ShuttleGui.h"

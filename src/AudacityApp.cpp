@@ -72,6 +72,7 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "AudacityLogger.h"
 #include "AboutDialog.h"
+#include "ActiveProject.h"
 #include "AColor.h"
 #include "AudacityFileConfig.h"
 #include "AudioIO.h"
@@ -96,6 +97,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "ProjectManager.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "Screenshot.h"
 #include "Sequence.h"
 #include "SelectFile.h"
@@ -418,6 +420,27 @@ void InitBreakpad()
 static bool gInited = false;
 static bool gIsQuitting = false;
 
+static bool CloseAllProjects( bool force )
+{
+   ProjectManager::SetClosingAll(true);
+   auto cleanup = finally([]{ ProjectManager::SetClosingAll(false); });
+   while (AllProjects{}.size())
+   {
+      // Closing the project has global side-effect
+      // of deletion from gAudacityProjects
+      if ( force )
+      {
+         GetProjectFrame( **AllProjects{}.begin() ).Close(true);
+      }
+      else
+      {
+         if (! GetProjectFrame( **AllProjects{}.begin() ).Close())
+            return false;
+      }
+   }
+   return true;
+}
+
 static void QuitAudacity(bool bForce)
 {
    // guard against recursion
@@ -448,7 +471,7 @@ static void QuitAudacity(bool bForce)
          // PRL:  Always did at least once before close might be vetoed
          // though I don't know why that is important
          ProjectManager::SaveWindowSize();
-      bool closedAll = AllProjects::Close( bForce );
+      bool closedAll = CloseAllProjects( bForce );
       if ( !closedAll )
       {
          gIsQuitting = false;
@@ -839,7 +862,8 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
    // Most of the checks below are copied from ProjectManager::OpenFiles.
    // - some rationalisation might be possible.
 
-   AudacityProject *proj = GetActiveProject();
+   auto pProj = GetActiveProject().lock();
+   auto proj = pProj.get();
 
    if (!fullPathStr.empty())
    {
@@ -855,6 +879,7 @@ bool AudacityApp::MRUOpen(const FilePath &fullPathStr) {
          if (ProjectFileManager::IsAlreadyOpen(fullPathStr))
             return false;
 
+         //! proj may be null
          ( void ) ProjectManager::OpenProject( proj, fullPathStr,
                true /* addtohistory */, false /* reuseNonemptyProject */ );
       }
@@ -916,8 +941,7 @@ void AudacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
             // Get the user's attention if no file name was specified
             if (name.empty()) {
                // Get the users attention
-               AudacityProject *project = GetActiveProject();
-               if (project) {
+               if (auto project = GetActiveProject().lock()) {
                   auto &window = GetProjectFrame( *project );
                   window.Maximize();
                   window.Raise();
@@ -989,7 +1013,7 @@ bool AudacityApp::OnExceptionInMainLoop()
 
       // Use CallAfter to delay this to the next pass of the event loop,
       // rather than risk doing it inside stack unwinding.
-      auto pProject = ::GetActiveProject()->shared_from_this();
+      auto pProject = ::GetActiveProject().lock();
       auto pException = std::current_exception();
       CallAfter( [pException, pProject] {
 
@@ -1561,9 +1585,10 @@ bool AudacityApp::InitPart2()
          // Only want one page of the preferences
          PrefsPanel::Factories factories;
          factories.push_back(KeyConfigPrefsFactory( id ));
-         const auto pProject = GetActiveProject();
-         auto pWindow = FindProjectFrame( pProject );
-         GlobalPrefsDialog dialog( pWindow, pProject, factories );
+         const auto pProject = GetActiveProject().lock();
+         auto pWindow = FindProjectFrame( pProject.get() );
+         // pProject may be null
+         GlobalPrefsDialog dialog( pWindow, pProject.get(), factories );
          dialog.ShowModal();
          MenuCreator::RebuildAllMenuBars();
          return true;
@@ -1650,8 +1675,7 @@ void AudacityApp::OnKeyDown(wxKeyEvent &event)
 {
    if(event.GetKeyCode() == WXK_ESCAPE) {
       // Stop play, including scrub, but not record
-      auto project = ::GetActiveProject();
-      if ( project ) {
+      if ( auto project = ::GetActiveProject().lock() ) {
          auto token = ProjectAudioIO::Get( *project ).GetAudioIOToken();
          auto &scrubber = Scrubber::Get( *project );
          auto scrubbing = scrubber.HasMark();
@@ -2239,7 +2263,7 @@ void AudacityApp::OnEndSession(wxCloseEvent & event)
       // PRL:  Always did at least once before close might be vetoed
       // though I don't know why that is important
       ProjectManager::SaveWindowSize();
-   bool closedAll = AllProjects::Close( force );
+   bool closedAll = CloseAllProjects( force );
    if ( !closedAll )
    {
       gIsQuitting = false;

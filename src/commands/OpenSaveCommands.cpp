@@ -19,7 +19,7 @@
 
 #include "LoadCommands.h"
 #include "AudacityLogger.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectFileManager.h"
 #include "../ProjectManager.h"

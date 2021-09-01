@@ -6,8 +6,8 @@ $manpage "Sample_Data_Export"
 $debugbutton false
 $action (_ "Analyzing...")
 $author (_ "Steve Daulton")
-$release 2.3.0
-$copyright (_ "Released under terms of the GNU General Public License version 2")
+$release 3.0.4
+$copyright (_ "GNU General Public License v2.0 or later")
 
 
 $control number (_ "Limit output to first") int-text (_ "samples") 100 1 1000000
@@ -35,7 +35,7 @@ $control messages (_ "Show messages") choice ((_ "Yes")
 
 
 
-;; Released under terms of the GNU General Public License version 2:
+;; Released under terms of the GNU General Public License v2.0 or later:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:

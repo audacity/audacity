@@ -57,6 +57,7 @@ is time to refresh some aspect of the screen.
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
+#include "ProjectWindows.h"
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"
@@ -199,7 +200,7 @@ std::unique_ptr<wxCursor> MakeCursor( int WXUNUSED(CursorId), const char * const
 
 namespace{
 
-AudacityProject::AttachedWindows::RegisteredFactory sKey{
+AttachedWindows::RegisteredFactory sKey{
    []( AudacityProject &project ) -> wxWeakRef< wxWindow > {
       auto &ruler = AdornedRulerPanel::Get( project );
       auto &viewInfo = ViewInfo::Get( project );
@@ -216,7 +217,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sKey{
          &viewInfo,
          &project,
          &ruler);
-      project.SetPanel( result );
+      SetProjectPanel( project, *result );
       return result;
    }
 };
@@ -225,7 +226,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sKey{
 
 TrackPanel &TrackPanel::Get( AudacityProject &project )
 {
-   return project.AttachedWindows::Get< TrackPanel >( sKey );
+   return GetAttachedWindows(project).Get< TrackPanel >( sKey );
 }
 
 const TrackPanel &TrackPanel::Get( const AudacityProject &project )
@@ -235,10 +236,10 @@ const TrackPanel &TrackPanel::Get( const AudacityProject &project )
 
 void TrackPanel::Destroy( AudacityProject &project )
 {
-   auto *pPanel = project.AttachedWindows::Find( sKey );
+   auto *pPanel = GetAttachedWindows(project).Find<TrackPanel>( sKey );
    if (pPanel) {
       pPanel->wxWindow::Destroy();
-      project.AttachedWindows::Assign( sKey, nullptr );
+      GetAttachedWindows(project).Assign(sKey, nullptr);
    }
 }
 

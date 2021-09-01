@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "TrackView.h"
 #include "../../HitTestResult.h"
-#include "../../Project.h"
+#include "Project.h"
 #include "../../ProjectAudioIO.h"
 #include "../../ProjectHistory.h"
 #include "../../RefreshCode.h"

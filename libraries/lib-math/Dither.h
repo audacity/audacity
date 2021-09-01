@@ -44,23 +44,6 @@ public:
                unsigned int len,
                unsigned int sourceStride = 1,
                unsigned int destStride = 1);
-
-private:
-    // Dither methods
-    float NoDither(float sample);
-    float RectangleDither(float sample);
-    float TriangleDither(float sample);
-    float ShapedDither(float sample);
-
-    // Dither constants
-    static const int BUF_SIZE; /* = 8 */
-    static const int BUF_MASK; /* = 7 */
-    static const float SHAPED_BS[];
-
-    // Dither state
-    int mPhase;
-    float mTriangleState;
-    float mBuffer[8 /* = BUF_SIZE */];
 };
 
 #endif /* __AUDACITY_DITHER_H__ */

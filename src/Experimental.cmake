@@ -196,7 +196,10 @@ set( EXPERIMENTAL_OPTIONS_LIST
 
    # PRL 5 Jan 2018
    # Easy change of keystroke bindings for menu items
-   EASY_CHANGE_KEY_BINDINGS
+   #
+   # PRL disabled 31 Aug 2021 because, at least on Mac, it misfires the
+   # preference dialog whenever any keystroke shortcuts with Shift+ are used
+   # EASY_CHANGE_KEY_BINDINGS
 
    # PRL 1 Jun 2018
    PUNCH_AND_ROLL

@@ -19,8 +19,8 @@
 
 #include "CommandHandler.h"
 
-#include <wx/event.h>
-#include "../Project.h"
+#include "../ActiveProject.h"
+#include "Project.h"
 #include "../ProjectWindow.h"
 #include "AppCommandEvent.h"
 #include "ScriptCommandRelay.h"
@@ -40,7 +40,7 @@ void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
    // First retrieve the actual command from the event 'envelope'.
    OldStyleCommandPointer cmd = event.GetCommand();
 
-   if (const auto pProject = GetActiveProject()) {
+   if (const auto pProject = GetActiveProject().lock()) {
       // Then apply it to current application & project.  Note that the
       // command may change the context - for example, switching to a
       // different project.

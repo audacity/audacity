@@ -24,6 +24,7 @@
 #include <wx/printdlg.h>
 
 #include "AColor.h"
+#include "ProjectWindows.h"
 #include "TrackArtist.h"
 #include "ViewInfo.h"
 #include "Track.h"

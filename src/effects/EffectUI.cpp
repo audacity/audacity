@@ -651,7 +651,7 @@ private:
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
 #include "../prefs/GUISettings.h" // for RTL_WORKAROUND
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectAudioManager.h"
 #include "../ShuttleGui.h"
 #include "../ViewInfo.h"
