@@ -17,6 +17,7 @@ set( LIBRARIES
    lib-xml
    lib-audio-devices
    lib-project
+   lib-screen-geometry
 )
 
 if ( ${_OPT}has_networking )

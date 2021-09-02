@@ -980,7 +980,7 @@ WaveTrackPopupMenuTable &GetWaveTrackMenuTable()
 #include "../../../../widgets/ASlider.h"
 #include "../../../../TrackInfo.h"
 #include "../../../../TrackPanelDrawingContext.h"
-#include "../../../../ViewInfo.h"
+#include "ViewInfo.h"
 
 namespace {
 

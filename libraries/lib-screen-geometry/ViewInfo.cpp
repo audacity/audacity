@@ -16,7 +16,6 @@ Paul Licameli
 
 #include "Prefs.h"
 #include "Project.h"
-#include "prefs/TracksBehaviorsPrefs.h"
 #include "XMLWriter.h"
 
 wxDEFINE_EVENT( EVT_SELECTED_REGION_CHANGE, SelectedRegionEvent );
@@ -196,8 +195,7 @@ void ViewInfo::UpdatePrefs()
 {
    ZoomInfo::UpdatePrefs();
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
-   gPrefs->Read(TracksBehaviorsPrefs::ScrollingPreferenceKey(), &bScrollBeyondZero,
-                TracksBehaviorsPrefs::ScrollingPreferenceDefault());
+   bScrollBeyondZero = ScrollingPreference.Read();
 #endif
    gPrefs->Read(wxT("/GUI/AdjustSelectionEdges"), &bAdjustSelectionEdges,
       true);
@@ -256,8 +254,7 @@ ProjectFileIORegistry::AttributeReaderEntries entries2 {
 
 int ViewInfo::UpdateScrollPrefsID()
 {
-   static int value = wxNewId();
-   return value;
+   return 10000;
 }
 
 static ProjectFileIORegistry::WriterEntry entry {
@@ -265,3 +262,5 @@ static ProjectFileIORegistry::WriterEntry entry {
    ViewInfo::Get(project).WriteXMLAttributes(xmlFile);
 }
 };
+
+BoolSetting ScrollingPreference{ L"/GUI/ScrollBeyondZero", false };

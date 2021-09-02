@@ -24,7 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
-#include "../../../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../../ui/SelectHandle.h"
 #include "StretchHandle.h"
 #include "NoteTrackAffordanceControls.h"

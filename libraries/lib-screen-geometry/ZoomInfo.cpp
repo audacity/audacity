@@ -8,12 +8,8 @@
 
 **********************************************************************/
 
-
 #include "ZoomInfo.h"
-
-
-
-#include "prefs/GUISettings.h"
+#include "Decibels.h"
 
 namespace {
 static const double gMaxZoom = 6000000;
@@ -34,7 +30,7 @@ ZoomInfo::~ZoomInfo()
 
 void ZoomInfo::UpdatePrefs()
 {
-   dBr = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
+   dBr = DecibelScaleCutoff.Read();
 }
 
 /// Converts a position (mouse X coordinate) to

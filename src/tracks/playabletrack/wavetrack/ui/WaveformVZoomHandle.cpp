@@ -14,7 +14,7 @@ Paul Licameli split from WaveTrackVZoomHandle.cpp
 #include "WaveTrackVZoomHandle.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../NumberScale.h"
+#include "NumberScale.h"
 #include "Prefs.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"

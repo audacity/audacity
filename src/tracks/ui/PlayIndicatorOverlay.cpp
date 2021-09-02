@@ -20,7 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectWindow.h"
 #include "../../Track.h"
 #include "../../TrackPanel.h"
-#include "../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "Scrubbing.h"
 #include "TrackView.h"
 

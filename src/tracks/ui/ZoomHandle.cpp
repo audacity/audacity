@@ -22,7 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackArtist.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../../images/Cursors.h"
 
 ///  This class takes care of our different zoom

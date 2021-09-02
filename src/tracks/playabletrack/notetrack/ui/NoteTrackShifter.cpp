@@ -5,7 +5,7 @@
 
 #include "../../../ui/TimeShiftHandle.h"
 #include "../../../../NoteTrack.h"
-#include "../../../../ViewInfo.h"
+#include "ViewInfo.h"
 
 class NoteTrackShifter final : public TrackShifter {
 public:
