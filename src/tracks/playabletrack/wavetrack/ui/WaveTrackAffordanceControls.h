@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <wx/font.h>
 #include "../../../ui/CommonTrackPanelCell.h"
 
 class AffordanceHandle;
@@ -20,6 +21,8 @@ class AUDACITY_DLL_API WaveTrackAffordanceControls : public CommonTrackCell
     std::weak_ptr<WaveClip> mFocusClip;
     std::weak_ptr<AffordanceHandle> mAffordanceHandle;
     std::weak_ptr<UIHandle> mResizeHandle;
+    wxFont mClipNameFont;
+
 public:
     WaveTrackAffordanceControls(const std::shared_ptr<Track>& pTrack);
 

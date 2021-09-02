@@ -28,6 +28,7 @@
 #include "../../../../SelectionState.h"
 #include "../../../../ProjectSettings.h"
 #include "../../../../RefreshCode.h"
+#include "../../../../Theme.h"
 
 class NoteTrackAffordanceHandle final : public AffordanceHandle
 {
@@ -109,6 +110,9 @@ void NoteTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                 py >= clipRect.GetTop() && py <= clipRect.GetBottom());
 
         context.dc.SetClippingRegion(rect);
+        context.dc.SetTextBackground(wxTransparentColor);
+        context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
+        context.dc.SetFont(wxFont(wxFontInfo()));
         TrackArt::DrawClipAffordance(context.dc, clipRect, nt->GetName(), highlight, selected);
         context.dc.DestroyClippingRegion();
     }

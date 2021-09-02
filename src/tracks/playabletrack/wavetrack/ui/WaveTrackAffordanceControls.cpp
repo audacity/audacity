@@ -26,6 +26,7 @@
 #include "../../../../ProjectHistory.h"
 #include "../../../../SelectionState.h"
 #include "../../../../RefreshCode.h"
+#include "../../../../Theme.h"
 
 class WaveTrackAffordanceHandle final : public AffordanceHandle
 {
@@ -59,7 +60,7 @@ public:
 };
 
 WaveTrackAffordanceControls::WaveTrackAffordanceControls(const std::shared_ptr<Track>& pTrack)
-    : CommonTrackCell(pTrack)
+    : CommonTrackCell(pTrack), mClipNameFont(wxFont(wxFontInfo()))
 {
 }
 
@@ -121,6 +122,10 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
         const auto& zoomInfo = *artist->pZoomInfo;
 
         context.dc.SetClippingRegion(rect);
+
+        context.dc.SetTextBackground(wxTransparentColor);
+        context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
+        context.dc.SetFont(mClipNameFont);
 
         auto px = context.lastState.m_x;
         auto py = context.lastState.m_y;
