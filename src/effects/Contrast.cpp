@@ -17,7 +17,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "../ProjectFileIO.h"
-#include "../ProjectSettings.h"
+#include "ProjectRate.h"
 #include "../ProjectWindow.h"
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
@@ -213,8 +213,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    wxString number;
 
    auto p = FindProjectFromWindow( this );
-   const auto &settings = ProjectSettings::Get( *p );
-   mProjectRate = settings.GetRate();
+   mProjectRate = ProjectRate::Get(*p).GetRate();
 
       const auto options = NumericTextCtrl::Options{}
          .AutoPos(true)

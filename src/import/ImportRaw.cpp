@@ -29,7 +29,7 @@ and sample size to help you importing data of an unknown format.
 #include "AudioIOBase.h"
 #include "../FileFormats.h"
 #include "Prefs.h"
-#include "../ProjectSettings.h"
+#include "ProjectRate.h"
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "UserException.h"
@@ -118,7 +118,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
    {
       // On first run, set default sample rate from project rate
       if (ImportRawDialog::mRate < 100.)
-         ImportRawDialog::mRate = ProjectSettings::Get(project).GetRate();
+         ImportRawDialog::mRate = ProjectRate::Get(project).GetRate();
 
       ImportRawDialog dlog(parent, fileName);
       dlog.ShowModal();
