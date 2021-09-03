@@ -21,6 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "ViewInfo.h"
 #include "../../../SelectionState.h"
 #include "../../../ProjectAudioIO.h"
+#include "../../../images/Cursors.h"
 #include "../../../tracks/ui/TimeShiftHandle.h"
 
 #include <wx/cursor.h>
@@ -84,17 +85,6 @@ UIHandle::Result LabelGlyphHandle::NeedChangeHighlight
       // pointer moves between the circle and the chevron
       return RefreshCode::RefreshCell;
    return 0;
-}
-
-HitTestPreview LabelGlyphHandle::HitPreview(bool hitCenter)
-{
-   static wxCursor arrowCursor{ wxCURSOR_ARROW };
-   return {
-      (hitCenter
-         ? XO("Drag one or more label boundaries.")
-         : XO("Drag label boundary.")),
-      &arrowCursor
-   };
 }
 
 UIHandlePtr LabelGlyphHandle::HitTest
@@ -432,7 +422,23 @@ UIHandle::Result LabelGlyphHandle::Drag
 HitTestPreview LabelGlyphHandle::Preview
 (const TrackPanelMouseState &, AudacityProject *)
 {
-   return HitPreview( (mpHit->mEdge & 4 )!=0);
+   static wxCursor arrowCursor{ wxCURSOR_ARROW };
+   static auto handOpenCursor =
+      MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
+   static auto handClosedCursor =
+      MakeCursor(wxCURSOR_HAND, RearrangingCursorXpm, 16, 16);
+
+   if (mpHit->mMouseOverLabel != -1)
+   {
+      return {
+         XO("Drag label."),
+         mpHit->mIsAdjustingLabel ? &*handClosedCursor : &*handOpenCursor
+      };
+   }
+   else if ((mpHit->mEdge & 4) != 0)
+      return { XO("Drag one or more label boundaries."), &arrowCursor };
+   else
+      return { XO("Drag label boundary."), &arrowCursor };
 }
 
 UIHandle::Result LabelGlyphHandle::Release

@@ -48,8 +48,6 @@ struct LabelTrackHit
 
 class LabelGlyphHandle final : public LabelDefaultClickHandle
 {
-   static HitTestPreview HitPreview(bool hitCenter);
-
 public:
    explicit LabelGlyphHandle
       (const std::shared_ptr<LabelTrack> &pLT,
