@@ -365,10 +365,17 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
       int x = Constrain( evt.m_x + mxMouseDisplacement - r.x, 0, r.width);
 
       double fNewX = zoomInfo.PositionToTime(x, 0);
-      // Moving the whole ranged label
+      // Moving the whole ranged label(s)
       if (hit.mMouseOverLabel != -1)
       {
-         MayMoveLabel(hit.mMouseOverLabel, -1, fNewX);
+         if (evt.ShiftDown())
+         {
+            auto dt = fNewX - mLabels[hit.mMouseOverLabel].getT0();
+            for (auto i = 0, count = static_cast<int>(mLabels.size()); i < count; ++i)
+               MayMoveLabel(i, -1, mLabels[i].getT0() + dt);
+         }
+         else
+            MayMoveLabel(hit.mMouseOverLabel, -1, fNewX);
       }
       // If we're on the 'dot' and nowe're moving,
       // Though shift-down inverts that.
@@ -431,7 +438,7 @@ HitTestPreview LabelGlyphHandle::Preview
    if (mpHit->mMouseOverLabel != -1)
    {
       return {
-         XO("Drag label."),
+         XO("Drag label. Hold shift and drag to move all labels on the same track."),
          mpHit->mIsAdjustingLabel ? &*handClosedCursor : &*handOpenCursor
       };
    }
