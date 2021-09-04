@@ -26,13 +26,17 @@ PopupSubMenu::PopupSubMenu( const Identifier &stringId,
 {
 }
 
+PopupMenu::~PopupMenu() = default;
+
 namespace {
-struct PopupMenu : public wxMenu
+struct PopupMenuImpl : PopupMenu, wxMenu
 {
-   PopupMenu(wxEvtHandler *pParent_, void *pUserData_)
+   PopupMenuImpl(wxEvtHandler *pParent_, void *pUserData_)
       : pParent{ pParent_ }, tables{}, pUserData{ pUserData_ } {}
 
-   ~PopupMenu() override;
+   ~PopupMenuImpl() override;
+
+   void Popup( wxWindow &window, const wxPoint &pos ) override;
 
    void Extend(PopupMenuTable *pTable);
    void DisconnectTable(PopupMenuTable *pTable);
@@ -46,7 +50,7 @@ struct PopupMenu : public wxMenu
 class PopupMenuBuilder : public PopupMenuVisitor {
 public:
    explicit
-   PopupMenuBuilder( PopupMenuTable &table, PopupMenu &menu, void *pUserData )
+   PopupMenuBuilder( PopupMenuTable &table, PopupMenuImpl &menu, void *pUserData )
       : PopupMenuVisitor{ table }
       , mMenu{ &menu }
       , mRoot{ mMenu }
@@ -58,8 +62,8 @@ public:
    void DoVisit( Registry::SingleItem &item, const Path &path ) override;
    void DoSeparator() override;
 
-   std::vector< std::unique_ptr<PopupMenu> > mMenus;
-   PopupMenu *mMenu, *mRoot;
+   std::vector< std::unique_ptr<PopupMenuImpl> > mMenus;
+   PopupMenuImpl *mMenu, *mRoot;
    void *const mpUserData;
 };
 
@@ -68,7 +72,7 @@ void PopupMenuBuilder::DoBeginGroup( Registry::GroupItem &item, const Path &path
    if ( auto pItem = dynamic_cast<PopupSubMenu*>(&item) ) {
       if ( !pItem->caption.empty() ) {
          auto newMenu =
-            std::make_unique<PopupMenu>( mMenu->pParent, mMenu->pUserData );
+            std::make_unique<PopupMenuImpl>( mMenu->pParent, mMenu->pUserData );
          newMenu->tables.push_back( &pItem->table );
          mMenu = newMenu.get();
          mMenus.push_back( std::move( newMenu ) );
@@ -128,17 +132,22 @@ void PopupMenuBuilder::DoSeparator()
    mMenu->AppendSeparator();
 }
 
-PopupMenu::~PopupMenu()
+PopupMenuImpl::~PopupMenuImpl()
 {
    // Event connections between the parent window and the singleton table
    // object must be broken when this menu is destroyed.
    Disconnect();
 }
+
+void PopupMenuImpl::Popup( wxWindow &window, const wxPoint &pos )
+{
+   window.PopupMenu( this, pos );
+}
 }
 
-void PopupMenuTable::ExtendMenu( wxMenu &menu, PopupMenuTable &table )
+void PopupMenuTable::ExtendMenu( PopupMenu &menu, PopupMenuTable &table )
 {
-   auto &theMenu = dynamic_cast<PopupMenu&>(menu);
+   auto &theMenu = dynamic_cast<PopupMenuImpl&>(menu);
    theMenu.tables.push_back( &table );
 
    PopupMenuBuilder visitor{ table, theMenu, theMenu.pUserData };
@@ -180,12 +189,12 @@ void PopupMenuTable::EndSection()
 }
 
 namespace{
-void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
+void PopupMenuImpl::DisconnectTable(PopupMenuTable *pTable)
 {
    class PopupMenuDestroyer : public PopupMenuVisitor {
    public:
       explicit
-      PopupMenuDestroyer( PopupMenuTable &table, PopupMenu &menu )
+      PopupMenuDestroyer( PopupMenuTable &table, PopupMenuImpl &menu )
          : PopupMenuVisitor{ table }
          , mMenu{ menu }
       {}
@@ -198,7 +207,7 @@ void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
          pEntry->handler.DestroyMenu();
       }
 
-      PopupMenu &mMenu;
+      PopupMenuImpl &mMenu;
    };
 
    PopupMenuDestroyer visitor{ *pTable, *this };
@@ -206,7 +215,7 @@ void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
       pTable->GetRegistry() );
 }
 
-void PopupMenu::Disconnect()
+void PopupMenuImpl::Disconnect()
 {
    for ( auto pTable : tables )
       DisconnectTable(pTable);
@@ -214,11 +223,11 @@ void PopupMenu::Disconnect()
 }
 
 // static
-std::unique_ptr<wxMenu> PopupMenuTable::BuildMenu
+std::unique_ptr< PopupMenu > PopupMenuTable::BuildMenu
 ( wxEvtHandler *pParent, PopupMenuTable *pTable, void *pUserData )
 {
    // Rebuild as needed each time.  That makes it safe in case of language change.
-   auto theMenu = std::make_unique<PopupMenu>( pParent, pUserData );
+   auto theMenu = std::make_unique<PopupMenuImpl>( pParent, pUserData );
    ExtendMenu( *theMenu, *pTable );
    return theMenu;
 }

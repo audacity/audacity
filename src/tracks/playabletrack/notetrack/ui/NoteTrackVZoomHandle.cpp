@@ -319,7 +319,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
           (PopupMenuTable *) &NoteTrackVRulerMenuTable::Instance();
       auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);
 
-      pParent->PopupMenu(pMenu.get(), event.m_x, event.m_y);
+      pMenu->Popup( *pParent, { event.m_x, event.m_y } );
 
       return data.result;
    }

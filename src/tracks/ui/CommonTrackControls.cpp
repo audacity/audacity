@@ -296,8 +296,8 @@ unsigned CommonTrackControls::DoContextMenu(
    if (pExtension)
       PopupMenuTable::ExtendMenu( *pMenu, *pExtension );
 
-   pParent->PopupMenu
-      (pMenu.get(), buttonRect.x + 1, buttonRect.y + buttonRect.height + 1);
+   pMenu->Popup( *pParent,
+      { buttonRect.x + 1, buttonRect.y + buttonRect.height + 1 } );
 
    return data.result;
 }

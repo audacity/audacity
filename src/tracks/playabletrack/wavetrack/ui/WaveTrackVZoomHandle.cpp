@@ -120,7 +120,7 @@ UIHandle::Result WaveTrackVZoomHandle::DoRelease(
          pTrack, rect, RefreshCode::RefreshNone, event.m_y, doZoom };
 
       auto pMenu = PopupMenuTable::BuildMenu(pParent, &table, &data);
-      pParent->PopupMenu(pMenu.get(), event.m_x, event.m_y);
+      pMenu->Popup( *pParent, { event.m_x, event.m_y } );
 
       return data.result;
    }
