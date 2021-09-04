@@ -16,6 +16,10 @@ namespace Journal
 {
 namespace Events
 {
-   // Nothing to export yet
+   //\brief Whether events are being recorded to the journal
+   bool IsWatching();
+
+   //\brief Stop watching events, and give the user an error message
+   void FailedEventSerialization();
 }
 }
