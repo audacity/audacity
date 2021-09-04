@@ -10,6 +10,8 @@ Paul Licameli split from TrackPanel.cpp
 
 
 #include "PopupMenuTable.h"
+#include "widgets/BasicMenu.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 
 PopupMenuTableEntry::~PopupMenuTableEntry()
 {}
@@ -136,7 +138,9 @@ PopupMenuImpl::~PopupMenuImpl()
 
 void PopupMenuImpl::Popup( wxWindow &window, const wxPoint &pos )
 {
-   window.PopupMenu( this, pos );
+   BasicMenu::Handle{ this }.Popup(
+      wxWidgetsWindowPlacement{ &window }, { pos.x, pos.y }
+   );
 }
 }
 

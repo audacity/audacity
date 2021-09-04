@@ -18,6 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../LabelTrack.h"
 
 #include "../../../AColor.h"
+#include "../../../widgets/BasicMenu.h"
 #include "../../../AllThemeResources.h"
 #include "../../../HitTestResult.h"
 #include "Project.h"
@@ -35,6 +36,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../UndoManager.h"
 #include "ViewInfo.h"
 #include "../../../widgets/AudacityTextEntryDialog.h"
+#include "../../../widgets/wxWidgetsWindowPlacement.h"
 
 #include <wx/clipbrd.h>
 #include <wx/dcclient.h>
@@ -1904,7 +1906,10 @@ void LabelTrackView::ShowContextMenu( AudacityProject &project )
       // So, workaround it by editing the label AFTER the popup menu is
       // closed. It's really ugly, but it works.  :-(
       mEditIndex = -1;
-      parent->PopupMenu(&menu, x, ls->y + (mIconHeight / 2) - 1);
+      BasicMenu::Handle{ &menu }.Popup(
+         wxWidgetsWindowPlacement{ parent },
+         { x, ls->y + (mIconHeight / 2) - 1 }
+      );
       if (mEditIndex >= 0)
       {
          DoEditLabels( project, FindLabelTrack().get(), mEditIndex );

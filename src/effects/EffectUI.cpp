@@ -14,12 +14,14 @@
 
 #include "EffectUI.h"
 
+#include "widgets/BasicMenu.h"
 #include "Effect.h"
 #include "EffectManager.h"
 #include "../ProjectHistory.h"
 #include "../ProjectWindowBase.h"
 #include "../TrackPanelAx.h"
 #include "RealtimeEffectManager.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
@@ -1337,7 +1339,10 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    
    wxWindow *btn = FindWindow(kMenuID);
    wxRect r = btn->GetRect();
-   btn->PopupMenu(&menu, r.GetLeft(), r.GetBottom());
+   BasicMenu::Handle{ &menu }.Popup(
+      wxWidgetsWindowPlacement{ btn },
+      { r.GetLeft(), r.GetBottom() }
+   );
 }
 
 void EffectUIHost::Resume()
