@@ -140,9 +140,6 @@ void LogWindow::Show(bool show)
    // Hook into the frame events
    frame->Bind(wxEVT_CLOSE_WINDOW, OnCloseWindow );
 
-   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED, OnSave, LoggerID_Save);
-   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED, OnClear, LoggerID_Clear);
-   frame->Bind(   wxEVT_COMMAND_MENU_SELECTED, OnClose, LoggerID_Close);
    frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED, OnSave, LoggerID_Save);
    frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED, OnClear, LoggerID_Clear);
    frame->Bind(   wxEVT_COMMAND_BUTTON_CLICKED, OnClose, LoggerID_Close);
