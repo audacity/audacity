@@ -1076,11 +1076,6 @@ struct WaveColorMenuTable : PopupMenuTable
 
    void InitUserData(void *pUserData) override;
 
-   void DestroyMenu() override
-   {
-      mpData = NULL;
-   }
-
    PlayableTrackControls::InitMenuData *mpData{};
 
    int IdOfWaveColor(int WaveColor);

@@ -85,14 +85,14 @@ public:
    PopupMenuHandler( const PopupMenuHandler& ) = delete;
    PopupMenuHandler& operator=( const PopupMenuHandler& ) = delete;
 
-   // Called before the menu items are appended.
-   // Store context data, if needed.
-   // May be called more than once before the menu opens.
+   //! Called before the menu items are appended.
+   /*! Store context data, if needed.
+      May be called more than once before the menu opens.
+      Pointer remains valid for the duration of any callback, if
+      PopupMenuTable::BuildMenu() is called and the result's Popup() is called
+      before any other menus are built.
+    */
    virtual void InitUserData(void *pUserData) = 0;
-
-   // Called when menu is destroyed.
-   // May be called more than once.
-   virtual void DestroyMenu() = 0;
 };
 
 struct PopupMenuVisitor : public MenuVisitor {
@@ -123,7 +123,7 @@ public:
    // Optional pUserData gets passed to the InitUserData routines of tables.
    // No memory management responsibility is assumed by this function.
    static std::unique_ptr<PopupMenu> BuildMenu(
-      wxEvtHandler *pParent, PopupMenuTable *pTable, void *pUserData = NULL);
+      PopupMenuTable *pTable, void *pUserData = NULL);
 
    const Identifier &Id() const { return mId; }
    const TranslatableString &Caption() const { return mCaption; }

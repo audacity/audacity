@@ -91,7 +91,8 @@ UIHandle::Result TimeTrackVZoomHandle::Release
          *pProject, pTrack.get(), pParent, RefreshNone
       };
 
-      auto pMenu = PopupMenuTable::BuildMenu(pParent, &TimeTrackMenuTable::Instance(), &data);
+      auto pMenu = PopupMenuTable::BuildMenu(
+         &TimeTrackMenuTable::Instance(), &data);
       pMenu->Popup( *pParent, { event.m_x, event.m_y } );
    }
 

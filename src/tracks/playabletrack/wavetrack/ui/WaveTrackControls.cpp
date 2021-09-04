@@ -167,11 +167,6 @@ struct FormatMenuTable :  PopupMenuTable
 
    void InitUserData(void *pUserData) override;
 
-   void DestroyMenu() override
-   {
-      mpData = NULL;
-   }
-
    PlayableTrackControls::InitMenuData *mpData{};
 
    static int IdOfFormat(int format);
@@ -309,11 +304,6 @@ struct RateMenuTable : PopupMenuTable
    static RateMenuTable &Instance();
 
    void InitUserData(void *pUserData) override;
-
-   void DestroyMenu() override
-   {
-      mpData = NULL;
-   }
 
    PlayableTrackControls::InitMenuData *mpData{};
 
@@ -506,11 +496,6 @@ struct WaveTrackMenuTable
    }
 
    void InitUserData(void *pUserData) override;
-
-   void DestroyMenu() override
-   {
-      //mpData = nullptr;
-   }
 
    DECLARE_POPUP_MENU(WaveTrackMenuTable);
 

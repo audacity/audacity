@@ -92,11 +92,6 @@ private:
       mpData = static_cast<NoteTrackControlsBase::InitMenuData*>(pUserData);
    }
 
-   void DestroyMenu() override
-   {
-      mpData = nullptr;
-   }
-
    NoteTrackControlsBase::InitMenuData *mpData{};
 
    void OnChangeOctave(wxCommandEvent &);
