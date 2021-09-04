@@ -10,7 +10,7 @@
 
 #include "ProjectWindows.h"
 #include "Project.h"
-#include "widgets/wxWidgetsBasicUI.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 
 #include <wx/frame.h>
 
