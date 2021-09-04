@@ -17,7 +17,7 @@
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelResizeHandle.h"
-#include "../../../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../WaveClip.h"
 #include "../../../ui/AffordanceHandle.h"

@@ -35,7 +35,7 @@ function.
 #include <wx/combobox.h>
 
 #include "../Mix.h"
-#include "../ProjectSettings.h"
+#include "ProjectRate.h"
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -416,7 +416,6 @@ static int set_dict_int(AVDictionary **dict, const char *key, int val)
 
 bool ExportFFmpeg::InitCodecs(AudacityProject *project)
 {
-   const auto &settings = ProjectSettings::Get( *project );
    AVCodec *codec = NULL;
    AVDictionary *options = NULL;
    AVDictionaryCleanup cleanup{ &options };
@@ -427,7 +426,7 @@ bool ExportFFmpeg::InitCodecs(AudacityProject *project)
    // dialogs in the event the codec can't support the specified rate.
    if (!mSampleRate)
    {
-      mSampleRate = (int)settings.GetRate();
+      mSampleRate = (int)ProjectRate::Get(*project).GetRate();
    }
 
    // Configure the audio stream's codec context.

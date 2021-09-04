@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "../../Track.h"
-#include "../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../WaveTrack.h"
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../prefs/TracksPrefs.h"

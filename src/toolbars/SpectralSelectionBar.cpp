@@ -56,8 +56,8 @@ with changes in the SpectralSelectionBar.
 #include "Prefs.h"
 #include "Project.h"
 #include "../AllThemeResources.h"
-#include "../SelectedRegion.h"
-#include "../ViewInfo.h"
+#include "SelectedRegion.h"
+#include "ViewInfo.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"

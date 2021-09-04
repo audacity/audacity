@@ -13,7 +13,7 @@
 #include "../../HitTestResult.h"
 #include "../../ProjectAudioIO.h"
 #include "../../RefreshCode.h"
-#include "../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../SelectionState.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../WaveClip.h"

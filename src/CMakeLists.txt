@@ -188,7 +188,6 @@ list( APPEND SOURCES
       ModuleSettings.h
       NoteTrack.cpp
       NoteTrack.h
-      NumberScale.h
       PitchName.cpp
       PitchName.h
       PlaybackSchedule.cpp
@@ -236,8 +235,6 @@ list( APPEND SOURCES
       SelectUtilities.h
       SelectFile.cpp
       SelectFile.h
-      SelectedRegion.cpp
-      SelectedRegion.h
       SelectionState.cpp
       SelectionState.h
       Sequence.cpp
@@ -300,8 +297,6 @@ list( APPEND SOURCES
       UIHandle.h
       UndoManager.cpp
       UndoManager.h
-      ViewInfo.cpp
-      ViewInfo.h
       VoiceKey.cpp
       VoiceKey.h
       WaveClip.cpp
@@ -311,8 +306,6 @@ list( APPEND SOURCES
       WaveTrackLocation.h
       WrappedType.cpp
       WrappedType.h
-      ZoomInfo.cpp
-      ZoomInfo.h
 
       # Commands
 
@@ -698,8 +691,6 @@ list( APPEND SOURCES
       prefs/PrefsPanel.h
       prefs/QualityPrefs.cpp
       prefs/QualityPrefs.h
-      prefs/QualitySettings.cpp
-      prefs/QualitySettings.h
       prefs/RecordingPrefs.cpp
       prefs/RecordingPrefs.h
       prefs/SpectrogramSettings.cpp

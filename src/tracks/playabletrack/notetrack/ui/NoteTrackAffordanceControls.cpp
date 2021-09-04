@@ -16,7 +16,7 @@
 #include "../../../../AllThemeResources.h"
 #include "../../../../AColor.h"
 #include "../../../../NoteTrack.h"
-#include "../../../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackPanelDrawingContext.h"

@@ -26,7 +26,7 @@
 #include <wx/textctrl.h>
 #include <algorithm>
 
-#include "../prefs/GUISettings.h"
+#include "Decibels.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 
@@ -137,7 +137,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                      {wxT("/AudioIO/SilenceLevel"),
                       -50},
                      0,
-                     -gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE));
+                     -DecibelScaleCutoff.Read());
       }
       S.EndMultiColumn();
    }

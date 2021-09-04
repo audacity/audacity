@@ -698,6 +698,8 @@ void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
 void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
    SampleBlockIDSet *pIDs = nullptr);
 
+class ProjectRate;
+
 class AUDACITY_DLL_API WaveTrackFactory final
    : public ClientData::Base
 {
@@ -707,9 +709,9 @@ class AUDACITY_DLL_API WaveTrackFactory final
    static WaveTrackFactory &Reset( AudacityProject &project );
    static void Destroy( AudacityProject &project );
 
-   WaveTrackFactory( const ProjectSettings &settings,
+   WaveTrackFactory( const ProjectRate &rate,
       const SampleBlockFactoryPtr &pFactory)
-      : mSettings{ settings }
+      : mRate{ rate }
       , mpFactory(pFactory)
    {
    }
@@ -720,7 +722,7 @@ class AUDACITY_DLL_API WaveTrackFactory final
    { return mpFactory; }
 
  private:
-   const ProjectSettings &mSettings;
+   const ProjectRate &mRate;
    SampleBlockFactoryPtr mpFactory;
  public:
    std::shared_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);

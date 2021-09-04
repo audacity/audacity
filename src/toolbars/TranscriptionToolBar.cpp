@@ -39,7 +39,7 @@
 #include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
 #include "../Envelope.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"

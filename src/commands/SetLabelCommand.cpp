@@ -20,7 +20,7 @@
 #include "SetLabelCommand.h"
 
 #include "LoadCommands.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../ProjectHistory.h"

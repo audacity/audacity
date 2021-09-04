@@ -12,7 +12,7 @@
 #define __AUDACITY_RULER__
 
 #include "wxPanelWrapper.h" // to inherit
-#include "../NumberScale.h" // member variable
+#include "NumberScale.h" // member variable
 
 #include <wx/colour.h> // member variable
 #include <wx/pen.h> // member variable

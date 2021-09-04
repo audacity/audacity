@@ -17,7 +17,7 @@ Paul Licameli
 #include "SpectrogramSettings.h"
 
 #include "../AColor.h"
-#include "../NumberScale.h"
+#include "NumberScale.h"
 
 #include <algorithm>
 

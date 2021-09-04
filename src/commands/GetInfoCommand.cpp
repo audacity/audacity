@@ -33,7 +33,7 @@ This class now lists
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../WaveClip.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../Envelope.h"

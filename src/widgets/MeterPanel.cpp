@@ -62,7 +62,7 @@
 #include "../AudioIO.h"
 #include "../AColor.h"
 #include "../ImageManipulation.h"
-#include "../prefs/GUISettings.h"
+#include "Decibels.h"
 #include "Project.h"
 #include "../ProjectAudioManager.h"
 #include "ProjectStatus.h"
@@ -300,7 +300,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mDesiredStyle(style),
    mGradient(true),
    mDB(true),
-   mDBRange(ENV_DB_RANGE),
+   mDBRange(DecibelScaleCutoff.GetDefault()),
    mDecay(true),
    mDecayRate(fDecayRate),
    mClip(true),
@@ -410,7 +410,7 @@ void MeterPanel::Clear()
 
 void MeterPanel::UpdatePrefs()
 {
-   mDBRange = gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE);
+   mDBRange = DecibelScaleCutoff.Read();
 
    mMeterRefreshRate =
       std::max(MIN_REFRESH_RATE, std::min(MAX_REFRESH_RATE,

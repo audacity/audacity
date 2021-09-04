@@ -4,7 +4,7 @@
  */
 
 #include "../../../ui/TimeShiftHandle.h"
-#include "../../../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
 

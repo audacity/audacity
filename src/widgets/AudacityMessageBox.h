@@ -17,14 +17,10 @@
 extern AUDACITY_DLL_API TranslatableString AudacityMessageBoxCaptionStr();
 
 // Do not use wxMessageBox!!  Its default window title does not translate!
-inline int AudacityMessageBox(const TranslatableString& message,
+AUDACITY_DLL_API int AudacityMessageBox(const TranslatableString& message,
    const TranslatableString& caption = XO("Message"),
    long style = wxOK | wxCENTRE,
    wxWindow *parent = NULL,
-   int x = wxDefaultCoord, int y = wxDefaultCoord)
-{
-   return ::wxMessageBox(message.Translation(), caption.Translation(),
-      style, parent, x, y);
-}
+   int x = wxDefaultCoord, int y = wxDefaultCoord);
 
 #endif
