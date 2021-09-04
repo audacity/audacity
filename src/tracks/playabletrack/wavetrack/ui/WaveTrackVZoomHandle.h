@@ -86,19 +86,19 @@ protected:
    InitMenuData *mpData {};
 
    void OnZoom( WaveTrackViewConstants::ZoomActions iZoomCode );
-   void OnZoomFitVertical(wxCommandEvent&)
+   void OnZoomFitVertical()
       { OnZoom( WaveTrackViewConstants::kZoom1to1 );};
-   void OnZoomReset(wxCommandEvent&)
+   void OnZoomReset()
       { OnZoom( WaveTrackViewConstants::kZoomReset );};
-   void OnZoomDiv2Vertical(wxCommandEvent&)
+   void OnZoomDiv2Vertical()
       { OnZoom( WaveTrackViewConstants::kZoomDiv2 );};
-   void OnZoomTimes2Vertical(wxCommandEvent&)
+   void OnZoomTimes2Vertical()
       { OnZoom( WaveTrackViewConstants::kZoomTimes2 );};
-   void OnZoomHalfWave(wxCommandEvent&)
+   void OnZoomHalfWave()
       { OnZoom( WaveTrackViewConstants::kZoomHalfWave );};
-   void OnZoomInVertical(wxCommandEvent&)
+   void OnZoomInVertical()
       { OnZoom( WaveTrackViewConstants::kZoomIn );};
-   void OnZoomOutVertical(wxCommandEvent&)
+   void OnZoomOutVertical()
       { OnZoom( WaveTrackViewConstants::kZoomOut );};
 
    void UpdatePrefs() override;

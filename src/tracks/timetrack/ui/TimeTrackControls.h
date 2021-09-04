@@ -53,10 +53,10 @@ protected:
 private:
    CommonTrackControls::InitMenuData *mpData{};
 
-   void OnSetTimeTrackRange(wxCommandEvent & /*event*/);
-   void OnTimeTrackLin(wxCommandEvent & /*event*/);
-   void OnTimeTrackLog(wxCommandEvent & /*event*/);
-   void OnTimeTrackLogInt(wxCommandEvent & /*event*/);
+   void OnSetTimeTrackRange();
+   void OnTimeTrackLin();
+   void OnTimeTrackLog();
+   void OnTimeTrackLogInt();
 };
 
 #endif

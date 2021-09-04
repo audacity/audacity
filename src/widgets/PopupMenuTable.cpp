@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "PopupMenuTable.h"
 #include "BasicMenu.h"
 #include "wxWidgetsWindowPlacement.h"
-#include <wx/menu.h>
 
 PopupMenuTableEntry::~PopupMenuTableEntry()
 {}
@@ -100,19 +99,19 @@ void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
       case PopupMenuTable::Entry::Item:
       {
          mMenu->mHandle.Append(
-            caption, {}, {}, pEntry->id );
+            caption, pEntry->callback, {}, pEntry->id );
          break;
       }
       case PopupMenuTable::Entry::RadioItem:
       {
          mMenu->mHandle.AppendRadioItem(
-            caption, {}, {}, pEntry->id );
+            caption, pEntry->callback, {}, pEntry->id );
          break;
       }
       case PopupMenuTable::Entry::CheckItem:
       {
          mMenu->mHandle.AppendCheckItem(
-            caption, {}, {}, pEntry->id );
+            caption, pEntry->callback, {}, pEntry->id );
          break;
       }
       default:
@@ -126,9 +125,6 @@ void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
 
    if ( pEntry->stateFn )
       mMenu->mHandle.SetState( pEntry->id, pEntry->stateFn() );
-
-   mMenu->mHandle.GetWxMenu()->Bind(
-      wxEVT_COMMAND_MENU_SELECTED, pEntry->func, &pEntry->handler, pEntry->id);
 }
 
 void PopupMenuBuilder::DoSeparator()
@@ -171,11 +167,11 @@ void PopupMenuTable::Append( Registry::BaseItemPtr pItem )
 
 void PopupMenuTable::Append(
    const Identifier &stringId, PopupMenuTableEntry::Type type, int id,
-   const BasicMenu::Item::Label &string, wxCommandEventFunction memFn,
+   const BasicMenu::Item::Label &string, Callback callback,
    const PopupMenuTableEntry::StateFunction &stateFn )
 {
    Append( std::make_unique<Entry>(
-      stringId, type, id, string, memFn, *this, stateFn ) );
+      stringId, type, id, string, move(callback), *this, stateFn ) );
 }
 
 void PopupMenuTable::BeginSection( const Identifier &name )

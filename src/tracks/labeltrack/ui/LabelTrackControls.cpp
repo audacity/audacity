@@ -52,7 +52,7 @@ public:
 
    CommonTrackControls::InitMenuData *mpData{};
 
-   void OnSetFont(wxCommandEvent &);
+   void OnSetFont();
 };
 
 LabelTrackMenuTable &LabelTrackMenuTable::Instance()
@@ -72,7 +72,7 @@ BEGIN_POPUP_MENU(LabelTrackMenuTable)
    EndSection();
 END_POPUP_MENU()
 
-void LabelTrackMenuTable::OnSetFont(wxCommandEvent &)
+void LabelTrackMenuTable::OnSetFont()
 {
    // Small helper class to enumerate all fonts in the system
    // We use this because the default implementation of

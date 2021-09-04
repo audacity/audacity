@@ -87,7 +87,7 @@ public:
    static PopupMenuTable &Instance();
 
 private:
-   void OnSpectrumScaleType(wxCommandEvent &evt);
+   void OnSpectrumScaleType(int type);
 };
 
 #endif

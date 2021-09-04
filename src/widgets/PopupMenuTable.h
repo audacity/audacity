@@ -18,8 +18,6 @@ tables, and automatically attaches and detaches the event handlers.
 #ifndef __AUDACITY_POPUP_MENU_TABLE__
 #define __AUDACITY_POPUP_MENU_TABLE__
 
-class wxCommandEvent;
-
 class wxPoint;
 class wxWindow;
 
@@ -43,20 +41,20 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
    Type type;
    int id;
    BasicMenu::Item::Label caption;
-   wxCommandEventFunction func;
+   std::function< void() > callback;
    PopupMenuHandler &handler;
    StateFunction stateFn;
 
    //! @pre func is not null
    PopupMenuTableEntry( const Identifier &stringId,
       Type type_, int id_, const BasicMenu::Item::Label &caption_,
-      wxCommandEventFunction func_, PopupMenuHandler &handler_,
+      std::function< void() > callback, PopupMenuHandler &handler_,
       StateFunction stateFn = {} )
       : SingleItem{ stringId }
       , type(type_)
       , id(id_)
       , caption(caption_)
-      , func(func_)
+      , callback(move(callback))
       , handler( handler_ )
       , stateFn( move(stateFn) )
    {
@@ -194,26 +192,31 @@ protected:
 
    // To be used in implementations of Populate():
    void Append( Registry::BaseItemPtr pItem );
+
+   using Callback = std::function<void()>;
    
    void Append(
       const Identifier &stringId, PopupMenuTableEntry::Type type, int id,
-      const BasicMenu::Item::Label &string, wxCommandEventFunction memFn,
+      const BasicMenu::Item::Label &string, Callback callback,
       const PopupMenuTableEntry::StateFunction &stateFn );
 
    void AppendItem( const Identifier &stringId, int id,
-      const BasicMenu::Item::Label &string, wxCommandEventFunction memFn,
+      const BasicMenu::Item::Label &string, Callback callback,
       const PopupMenuTableEntry::StateFunction &stateFn = {} )
-   { Append( stringId, PopupMenuTableEntry::Item, id, string, memFn, stateFn ); }
+   { Append( stringId, PopupMenuTableEntry::Item, id, string,
+      move(callback), stateFn ); }
 
    void AppendRadioItem( const Identifier &stringId, int id,
-      const BasicMenu::Item::Label &string, wxCommandEventFunction memFn,
+      const BasicMenu::Item::Label &string, Callback callback,
       const PopupMenuTableEntry::StateFunction &stateFn = {} )
-   { Append( stringId, PopupMenuTableEntry::RadioItem, id, string, memFn, stateFn ); }
+   { Append( stringId, PopupMenuTableEntry::RadioItem, id, string,
+      move(callback), stateFn ); }
 
     void AppendCheckItem( const Identifier &stringId, int id,
-      const BasicMenu::Item::Label &string, wxCommandEventFunction memFn,
+      const BasicMenu::Item::Label &string, Callback callback,
       const PopupMenuTableEntry::StateFunction &stateFn = {} )
-   { Append( stringId, PopupMenuTableEntry::CheckItem, id, string, memFn, stateFn ); }
+   { Append( stringId, PopupMenuTableEntry::CheckItem, id, string,
+      move(callback), stateFn ); }
 
    void BeginSection( const Identifier &name );
    void EndSection();
@@ -320,7 +323,7 @@ void HandlerClass::Populate() { \
    mStack.clear(); \
    mStack.push_back( mTop.get() );
 
-#define POPUP_MENU_FN( memFn ) ( (wxCommandEventFunction) (&My::memFn) )
+#define POPUP_MENU_FN( memFn ) ( [this]{ memFn(); } )
 
 #define POPUP_MENU_SUB_MENU(stringId, classname, pUserData ) \
    mStack.back()->items.push_back( \

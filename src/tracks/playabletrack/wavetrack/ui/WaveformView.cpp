@@ -1096,7 +1096,7 @@ struct WaveColorMenuTable : PopupMenuTable
 
    PlayableTrackControls::InitMenuData *mpData{};
 
-   void OnWaveColorChange(wxCommandEvent & event);
+   void OnWaveColorChange(int newWaveColor);
 
    int OnInstrument1ID, OnInstrument2ID, OnInstrument3ID, OnInstrument4ID;
 };
@@ -1137,7 +1137,7 @@ BEGIN_POPUP_MENU(WaveColorMenuTable)
          wxString::Format("Instrument%d", ii),
          OnInstrument1ID + ii,
          GetWaveColorStr(ii),
-         POPUP_MENU_FN( OnWaveColorChange ),
+         [this, ii]{ OnWaveColorChange( ii ); },
          [this, ii]() -> BasicMenu::Item::State {
             const auto &track = *static_cast<WaveTrack*>(mpData->pTrack);
             auto &project = mpData->project;
@@ -1152,13 +1152,9 @@ END_POPUP_MENU()
 
 /// Handles the selection from the WaveColor submenu of the
 /// track menu.
-void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
+void WaveColorMenuTable::OnWaveColorChange(int newWaveColor)
 {
-   int id = event.GetId();
-   wxASSERT(id >= OnInstrument1ID && id <= OnInstrument4ID);
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-
-   int newWaveColor = id - OnInstrument1ID;
 
    AudacityProject *const project = &mpData->project;
 

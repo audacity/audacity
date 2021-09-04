@@ -87,7 +87,7 @@ public:
    static PopupMenuTable &Instance();
 
 private:
-   void OnWaveformScaleType(wxCommandEvent &evt);
+   void OnWaveformScaleType(int type);
 };
 
 #endif

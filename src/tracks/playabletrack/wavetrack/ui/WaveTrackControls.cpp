@@ -176,7 +176,7 @@ struct FormatMenuTable :  PopupMenuTable
 
    PlayableTrackControls::InitMenuData *mpData{};
 
-   void OnFormatChange(wxCommandEvent & event);
+   void OnFormatChange(sampleFormat newFormat);
 };
 
 FormatMenuTable &FormatMenuTable::Instance()
@@ -200,41 +200,25 @@ BEGIN_POPUP_MENU(FormatMenuTable)
 
    AppendRadioItem( "16Bit", On16BitID,
       GetSampleFormatStr(int16Sample),
-      POPUP_MENU_FN( OnFormatChange ), fn( int16Sample ) );
+      [this]{ OnFormatChange(int16Sample); },
+      fn( int16Sample ) );
    AppendRadioItem("24Bit", On24BitID,
       GetSampleFormatStr(int24Sample),
-      POPUP_MENU_FN( OnFormatChange ), fn( int24Sample ) );
+      [this]{ OnFormatChange(int24Sample); },
+      fn( int24Sample ) );
    AppendRadioItem( "Float", OnFloatID,
       GetSampleFormatStr(floatSample),
-      POPUP_MENU_FN( OnFormatChange ), fn( floatSample ) );
+      [this]{ OnFormatChange(floatSample); },
+      fn( floatSample ) );
 
 END_POPUP_MENU()
 
 /// Handles the selection from the Format submenu of the
 /// track menu.
-void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
+void FormatMenuTable::OnFormatChange(sampleFormat newFormat)
 {
-   int id = event.GetId();
-   wxASSERT(id >= On16BitID && id <= OnFloatID);
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
-   sampleFormat newFormat = int16Sample;
-
-   switch (id) {
-   case On16BitID:
-      newFormat = int16Sample;
-      break;
-   case On24BitID:
-      newFormat = int24Sample;
-      break;
-   case OnFloatID:
-      newFormat = floatSample;
-      break;
-   default:
-      // ERROR -- should not happen
-      wxASSERT(false);
-      break;
-   }
    if (newFormat == pTrack->GetSampleFormat())
       return; // Nothing to do.
 
@@ -300,8 +284,8 @@ struct RateMenuTable : PopupMenuTable
 
    void SetRate(WaveTrack * pTrack, double rate);
 
-   void OnRateChange(wxCommandEvent & event);
-   void OnRateOther(wxCommandEvent & event);
+   void OnRateChange(int ii);
+   void OnRateOther();
 };
 
 RateMenuTable &RateMenuTable::Instance()
@@ -332,7 +316,8 @@ BEGIN_POPUP_MENU(RateMenuTable)
    int ii = 0;
    for ( auto rate : gRates ) {
       AppendCheckItem( wxString::Format( "%d", rate ), OnRate8ID + ii,
-         XXO("%d Hz").Format( rate ), POPUP_MENU_FN( OnRateChange ),
+        XXO("%d Hz").Format( rate ),
+        [this, ii]{ OnRateChange(ii); },
          fn( rate ) );
       ++ii;
    }
@@ -370,19 +355,17 @@ void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
 
 /// This method handles the selection from the Rate
 /// submenu of the track menu, except for "Other" (/see OnRateOther).
-void RateMenuTable::OnRateChange(wxCommandEvent & event)
+void RateMenuTable::OnRateChange(int ii)
 {
-   int id = event.GetId();
-   wxASSERT(id >= OnRate8ID && id <= OnRate384ID);
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
-   SetRate(pTrack, gRates[id - OnRate8ID]);
+   SetRate(pTrack, gRates[ii]);
 
    using namespace RefreshCode;
    mpData->result = RefreshAll | FixScrollbars;
 }
 
-void RateMenuTable::OnRateOther(wxCommandEvent &)
+void RateMenuTable::OnRateOther()
 {
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
 
@@ -482,19 +465,19 @@ struct WaveTrackMenuTable
 
    DECLARE_POPUP_MENU(WaveTrackMenuTable);
 
-   void OnMultiView(wxCommandEvent & event);
-   void OnSetDisplay(wxCommandEvent & event);
+   void OnMultiView();
+   void OnSetDisplay(int id);
 
    void OnChannelChange(wxCommandEvent & event);
-   void OnMergeStereo(wxCommandEvent & event);
+   void OnMergeStereo();
 
    // TODO: more-than-two-channels
    // How should we define generalized channel manipulation operations?
    void SplitStereo(bool stereo);
 
-   void OnSwapChannels(wxCommandEvent & event);
-   void OnSplitStereo(wxCommandEvent & event);
-   void OnSplitStereoMono(wxCommandEvent & event);
+   void OnSwapChannels();
+   void OnSplitStereo();
+   void OnSplitStereoMono();
 };
 
 WaveTrackMenuTable &WaveTrackMenuTable::Instance()
@@ -594,7 +577,8 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                view.GetMultiView() ? Entry::CheckItem : Entry::RadioItem;
             return std::make_unique<Entry>( type.name.Internal(), itemType,
                OnSetDisplayId + index, type.name.Msgid(),
-               POPUP_MENU_FN( OnSetDisplay ), table,
+               [index]{ WaveTrackMenuTable::Instance().OnSetDisplay(index); },
+               table,
                stateFn( !view.GetMultiView(), index ) );
          } );
          ++index;
@@ -678,7 +662,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
 END_POPUP_MENU()
 
 
-void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
+void WaveTrackMenuTable::OnMultiView()
 {
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
    const auto &view = WaveTrackView::Get( *pTrack );
@@ -698,14 +682,9 @@ void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
 }
 
 ///  Set the Display mode based on the menu choice in the Track Menu.
-void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
+void WaveTrackMenuTable::OnSetDisplay(int id)
 {
-   int idInt = event.GetId();
-   wxASSERT(idInt >= OnSetDisplayId &&
-            idInt <= lastDisplayId);
    const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-
-   auto id = AllTypes()[ idInt - OnSetDisplayId ].id;
 
    auto &view = WaveTrackView::Get( *pTrack );
    if ( view.GetMultiView() ) {
@@ -775,7 +754,7 @@ void WaveTrackMenuTable::OnChannelChange(wxCommandEvent & event)
 #endif
 
 /// Merge two tracks into one stereo track ??
-void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
+void WaveTrackMenuTable::OnMergeStereo()
 {
    AudacityProject *const project = &mpData->project;
    auto &tracks = TrackList::Get( *project );
@@ -855,7 +834,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 }
 
 /// Swap the left and right channels of a stero track...
-void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
+void WaveTrackMenuTable::OnSwapChannels()
 {
    AudacityProject *const project = &mpData->project;
 
@@ -885,7 +864,7 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 }
 
 /// Split a stereo track into two tracks...
-void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
+void WaveTrackMenuTable::OnSplitStereo()
 {
    SplitStereo(true);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
@@ -900,7 +879,7 @@ void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
 }
 
 /// Split a stereo track into two mono tracks...
-void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
+void WaveTrackMenuTable::OnSplitStereoMono()
 {
    SplitStereo(false);
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);

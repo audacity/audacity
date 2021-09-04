@@ -278,7 +278,7 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
       for (int ii = 0, nn = names.size(); ii < nn; ++ii) {
          AppendRadioItem( names[ii].Internal(),
             OnFirstWaveformScaleID + ii, names[ii].Msgid(),
-            POPUP_MENU_FN( OnWaveformScaleType ),
+            [this, ii]{ OnWaveformScaleType(ii); },
             [this, ii]() -> BasicMenu::Item::State {
                WaveTrack *const wt = mpData->pTrack;
                return { true,
@@ -316,7 +316,7 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
 
 END_POPUP_MENU()
 
-void WaveformVRulerMenuTable::OnWaveformScaleType(wxCommandEvent &evt)
+void WaveformVRulerMenuTable::OnWaveformScaleType(int type)
 {
    WaveTrack *const wt = mpData->pTrack;
    // Assume linked track is wave or null
@@ -324,7 +324,7 @@ void WaveformVRulerMenuTable::OnWaveformScaleType(wxCommandEvent &evt)
       WaveformSettings::ScaleType(
          std::max(0,
             std::min((int)(WaveformSettings::stNumScaleTypes) - 1,
-               evt.GetId() - OnFirstWaveformScaleID
+               type
       )));
 
    if (wt->GetWaveformSettings().scaleType != newScaleType) {

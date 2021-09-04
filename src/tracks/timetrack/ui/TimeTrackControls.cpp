@@ -49,7 +49,7 @@ void TimeTrackMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
 }
 
-void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
+void TimeTrackMenuTable::OnSetTimeTrackRange()
 {
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
    if (pTrack) {
@@ -87,7 +87,7 @@ void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
    }
 }
 
-void TimeTrackMenuTable::OnTimeTrackLin(wxCommandEvent & /*event*/)
+void TimeTrackMenuTable::OnTimeTrackLin()
 {
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
    pTrack->SetDisplayLog(false);
@@ -99,7 +99,7 @@ void TimeTrackMenuTable::OnTimeTrackLin(wxCommandEvent & /*event*/)
    mpData->result = RefreshAll | UpdateVRuler;
 }
 
-void TimeTrackMenuTable::OnTimeTrackLog(wxCommandEvent & /*event*/)
+void TimeTrackMenuTable::OnTimeTrackLog()
 {
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
    pTrack->SetDisplayLog(true);
@@ -111,7 +111,7 @@ void TimeTrackMenuTable::OnTimeTrackLog(wxCommandEvent & /*event*/)
    mpData->result = RefreshAll | UpdateVRuler;
 }
 
-void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
+void TimeTrackMenuTable::OnTimeTrackLogInt()
 {
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
    AudacityProject *const project = &mpData->project;

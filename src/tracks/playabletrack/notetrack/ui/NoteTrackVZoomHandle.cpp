@@ -192,16 +192,16 @@ protected:
 
    InitMenuData *mpData {};
    void OnZoom( int iZoomCode );
-// void OnZoomFitVertical(wxCommandEvent&){ OnZoom( kZoom1to1 );};
-   void OnZoomReset(wxCommandEvent&){ OnZoom( kZoomReset );};
-// void OnZoomDiv2Vertical(wxCommandEvent&){ OnZoom( kZoomDiv2 );};
-// void OnZoomTimes2Vertical(wxCommandEvent&){ OnZoom( kZoomTimes2 );};
-// void OnZoomHalfWave(wxCommandEvent&){ OnZoom( kZoomHalfWave );};
-   void OnZoomInVertical(wxCommandEvent&){ OnZoom( kZoomIn );};
-   void OnZoomOutVertical(wxCommandEvent&){ OnZoom( kZoomOut );};
-   void OnZoomMax(wxCommandEvent&){ OnZoom( kZoomMax );};
-   void OnUpOctave(wxCommandEvent&){ OnZoom( kUpOctave );};
-   void OnDownOctave(wxCommandEvent&){ OnZoom( kDownOctave );};
+// void OnZoomFitVertical(){ OnZoom( kZoom1to1 );};
+   void OnZoomReset(){ OnZoom( kZoomReset );};
+// void OnZoomDiv2Vertical(){ OnZoom( kZoomDiv2 );};
+// void OnZoomTimes2Vertical(){ OnZoom( kZoomTimes2 );};
+// void OnZoomHalfWave(){ OnZoom( kZoomHalfWave );};
+   void OnZoomInVertical(){ OnZoom( kZoomIn );};
+   void OnZoomOutVertical(){ OnZoom( kZoomOut );};
+   void OnZoomMax(){ OnZoom( kZoomMax );};
+   void OnUpOctave(){ OnZoom( kUpOctave );};
+   void OnDownOctave(){ OnZoom( kDownOctave );};
 
 private:
    void InitUserData(void *pUserData) override;

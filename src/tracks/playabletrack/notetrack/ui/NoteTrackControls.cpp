@@ -96,7 +96,7 @@ private:
 
    NoteTrackControlsBase::InitMenuData *mpData{};
 
-   void OnChangeOctave(wxCommandEvent &);
+   void OnChangeOctave(bool bDown);
 };
 
 NoteTrackMenuTable &NoteTrackMenuTable::Instance()
@@ -111,14 +111,10 @@ enum {
 };
 
 /// Scrolls the note track up or down by an octave
-void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
+void NoteTrackMenuTable::OnChangeOctave(bool bDown)
 {
    NoteTrack *const pTrack = static_cast<NoteTrack*>(mpData->pTrack);
 
-   wxASSERT(event.GetId() == OnUpOctaveID
-      || event.GetId() == OnDownOctaveID);
-
-   const bool bDown = (OnDownOctaveID == event.GetId());
    pTrack->ShiftNoteRange((bDown) ? -12 : 12);
 
    AudacityProject *const project = &mpData->project;
@@ -129,8 +125,10 @@ void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
 
 BEGIN_POPUP_MENU(NoteTrackMenuTable)
    BeginSection( "Basic" );
-      AppendItem( "Up", OnUpOctaveID, XXO("Up &Octave"), POPUP_MENU_FN( OnChangeOctave ) );
-      AppendItem( "Down", OnDownOctaveID, XXO("Down Octa&ve"), POPUP_MENU_FN( OnChangeOctave ) );
+      AppendItem( "Up", OnUpOctaveID, XXO("Up &Octave"),
+         [this]{ OnChangeOctave(false); } );
+      AppendItem( "Down", OnDownOctaveID, XXO("Down Octa&ve"),
+         [this]{ OnChangeOctave(true); } );
    EndSection();
 END_POPUP_MENU()
 
