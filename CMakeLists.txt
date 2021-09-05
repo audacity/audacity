@@ -524,6 +524,16 @@ endif()
 # Do this before consistency checks for added third-party libraries
 include( "src/Experimental.cmake" )
 
+cmd_option( ${_OPT}use_ffmpeg
+   "Use ffmpeg library [loaded, off]"
+   "loaded"
+   STRINGS "loaded" "off"
+)
+
+if( ${_OPT}use_ffmpeg )
+   set(USE_FFMPEG Yes)
+endif()
+
 # Add our children
 add_subdirectory( "cmake-proxies" )
 
