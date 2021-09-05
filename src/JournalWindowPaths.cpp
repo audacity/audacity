@@ -12,6 +12,7 @@
 
 #include <wx/stattext.h>
 #include <wx/toplevel.h>
+#include "BasicUI.h"
 #include "Identifier.h"
 #include "Theme.h"
 #include "wxArrayStringEx.h"
@@ -80,36 +81,50 @@ wxWindow *FindByNameAmongPeers(
 }
 
 // Find array of window names, starting with a top-level window and ending
-// with the given window, or an empty array if the conditions fail for
-// uniqueness of names.
-void PathComponents( const wxWindow &window, wxArrayStringEx &components )
+// with the given window.  Also find out whether the window for that path is
+// unique
+void FindPathComponents(
+   const wxWindow &window, std::pair<wxArrayStringEx, bool> &results )
 {
-   if ( dynamic_cast<const wxTopLevelWindow*>( &window ) ) {
-      if ( HasUniqueNameAmongPeers( window, wxTopLevelWindows ) ) {
-         components.push_back( window.GetName() );
-         return;
-      }
-   }
+   bool unique = false;
+   if ( dynamic_cast<const wxTopLevelWindow*>( &window ) )
+      unique = HasUniqueNameAmongPeers( window, wxTopLevelWindows );
    else if ( auto pParent = window.GetParent() ) {
       // Recur
-      PathComponents( *pParent, components );
-      if ( !components.empty() &&
-          HasUniqueNameAmongPeers( window, pParent->GetChildren() ) ) {
-         components.push_back( window.GetName() );
-         return;
-      }
+      FindPathComponents( *pParent, results );
+      unique = HasUniqueNameAmongPeers( window, pParent->GetChildren() );
    }
 
-   // Failure
-   components.clear();
+   auto &components = results.first;
+   components.push_back( window.GetName() );
+
+   if (!unique)
+      results.second = false;
+}
+
+// Find a path; second member of result tells whether window's path is unique
+std::pair<wxArrayStringEx, bool> PathComponents( const wxWindow &window )
+{
+   std::pair<wxArrayStringEx, bool> results{ {}, true };
+   FindPathComponents( window, results );
+   return results;
 }
 
 }
 
 Path FindPath( const wxWindow &window )
 {
-   wxArrayStringEx components;
-   PathComponents( window, components );
+   auto [components, complete] = PathComponents( window );
+   if (!complete) {
+#ifdef IS_ALPHA
+      BasicUI::CallAfter( [components = std::move(components)]{
+         BasicUI::ShowMessageBox(
+            Verbatim("Non-unique window at path %s")
+               .Format( wxJoin(components, PathSeparator) ) );
+      } );
+#endif
+      components.clear();
+   }
    return wxJoin( components, PathSeparator, EscapeCharacter );
 }
 
