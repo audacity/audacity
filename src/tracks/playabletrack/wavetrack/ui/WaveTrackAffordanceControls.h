@@ -46,5 +46,7 @@ public:
         AudacityProject* project) override;
 
 private:
+
+    bool SelectNextClip(ViewInfo& viewInfo, AudacityProject* project, bool forward);
     bool StartEditSelectedClipName(ViewInfo& viewInfo, AudacityProject* project);
 };

@@ -210,7 +210,7 @@ std::weak_ptr<WaveClip> WaveTrackAffordanceControls::GetSelectedClip() const
 unsigned WaveTrackAffordanceControls::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
 {
     const auto keyCode = event.GetKeyCode();
-    if (!(keyCode == WXK_RETURN || keyCode == WXK_NUMPAD_ENTER))
+    if (!(keyCode == WXK_RETURN || keyCode == WXK_NUMPAD_ENTER || keyCode == WXK_TAB))
         event.Skip();
     return RefreshCode::RefreshNone;
 }
@@ -220,6 +220,9 @@ unsigned WaveTrackAffordanceControls::KeyDown(wxKeyEvent& event, ViewInfo& viewI
     auto keyCode = event.GetKeyCode();
     switch (keyCode)
     {
+    case WXK_TAB:
+        SelectNextClip(viewInfo, project, event.GetModifiers() != wxMOD_SHIFT);
+        break;
     case WXK_NUMPAD_ENTER:
     case WXK_RETURN:
         StartEditSelectedClipName(viewInfo, project);
@@ -228,6 +231,54 @@ unsigned WaveTrackAffordanceControls::KeyDown(wxKeyEvent& event, ViewInfo& viewI
     return RefreshCode::RefreshCell;
 }
 
+namespace {
+    template<typename Iter, typename Comp>
+    WaveClip* NextClipLooped(ViewInfo& viewInfo, Iter begin, Iter end, Comp comp)
+    {
+        auto it = std::find_if(begin, end, [&](WaveClip* clip) {
+            return clip->GetStartTime() == viewInfo.selectedRegion.t0() &&
+                clip->GetEndTime() == viewInfo.selectedRegion.t1();
+        });
+        if (it == end)
+            it = std::find_if(begin, end, comp);
+        else
+            it = std::next(it);
+        
+        if (it == end)
+            return *begin;
+        return *it;
+    }
+}
+
+
+bool WaveTrackAffordanceControls::SelectNextClip(ViewInfo& viewInfo, AudacityProject* project, bool forward)
+{
+    //Iterates through clips in a looped manner
+    auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(FindTrack());
+    if (!waveTrack)
+        return false;
+    auto clips = waveTrack->SortedClipArray();
+    if (clips.empty())
+        return false;
+
+    WaveClip* clip{ };
+    if (forward)
+    {
+        clip = NextClipLooped(viewInfo, clips.begin(), clips.end(), [&](const WaveClip* other) {
+            return other->GetStartTime() >= viewInfo.selectedRegion.t1();
+        });
+    }
+    else
+    {
+        clip = NextClipLooped(viewInfo, clips.rbegin(), clips.rend(), [&](const WaveClip* other) {
+            return other->GetStartTime() <= viewInfo.selectedRegion.t0();
+        });
+    }
+
+    viewInfo.selectedRegion.setTimes(clip->GetOffset(), clip->GetEndTime());
+    ProjectHistory::Get(*project).ModifyState(false);
+    return true;
+}
 
 bool WaveTrackAffordanceControls::StartEditSelectedClipName(ViewInfo& viewInfo, AudacityProject* project)
 {
