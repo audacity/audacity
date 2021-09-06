@@ -11,6 +11,7 @@
 #include "WaveTrackAffordanceControls.h"
 
 #include <wx/dc.h>
+#include <wx/frame.h>
 
 #include "../../../../AllThemeResources.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -20,6 +21,10 @@
 #include "ViewInfo.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../WaveClip.h"
+#include "../../../../UndoManager.h"
+#include "../../../../ShuttleGui.h"
+#include "../../../../ProjectWindows.h"
+#include "../../../../commands/AudacityCommand.h"
 #include "../../../ui/AffordanceHandle.h"
 #include "WaveTrackView.h"//need only ClipParameters
 
@@ -51,6 +56,32 @@ public:
         return RefreshCode::RefreshAll | RefreshCode::Cancelled;
     }
 };
+
+class SetWaveClipNameCommand : public AudacityCommand
+{
+public:
+    static const ComponentInterfaceSymbol Symbol;
+
+    ComponentInterfaceSymbol GetSymbol() override
+    {
+        return Symbol;
+    }
+    void PopulateOrExchange(ShuttleGui& S) override
+    {
+        S.AddSpace(0, 5);
+
+        S.StartMultiColumn(2, wxALIGN_CENTER);
+        {
+            S.TieTextBox(XXO("Name:"), mName, 60);
+        }
+        S.EndMultiColumn();
+    }
+public:
+    wxString mName;
+};
+
+const ComponentInterfaceSymbol SetWaveClipNameCommand::Symbol
+{ XO("Set Wave Clip Name") };
 
 WaveTrackAffordanceControls::WaveTrackAffordanceControls(const std::shared_ptr<Track>& pTrack)
     : CommonTrackCell(pTrack), mClipNameFont(wxFont(wxFontInfo()))
@@ -145,6 +176,28 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
     }
 }
 
+bool WaveTrackAffordanceControls::StartEditClipName(AudacityProject* project)
+{
+    if (auto lock = mFocusClip.lock())
+    {
+        auto clip = lock.get();
+
+        SetWaveClipNameCommand Command;
+        auto oldName = clip->GetName();
+        Command.mName = oldName;
+        auto result = Command.PromptUser(&GetProjectFrame(*project));
+        if (result && Command.mName != oldName)
+        {
+            clip->SetName(Command.mName);
+            ProjectHistory::Get(*project).PushState(XO("Modified Clip Name"),
+                XO("Clip Name Edit"), UndoPush::CONSOLIDATE);
+
+            return true;
+        }
+    }
+    return false;
+}
+
 std::weak_ptr<WaveClip> WaveTrackAffordanceControls::GetSelectedClip() const
 {
     if (auto handle = mAffordanceHandle.lock())
@@ -152,4 +205,46 @@ std::weak_ptr<WaveClip> WaveTrackAffordanceControls::GetSelectedClip() const
         return handle->Clicked() ? mFocusClip : std::weak_ptr<WaveClip>();
     }
     return {};
+}
+
+unsigned WaveTrackAffordanceControls::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
+{
+    const auto keyCode = event.GetKeyCode();
+    if (!(keyCode == WXK_RETURN || keyCode == WXK_NUMPAD_ENTER))
+        event.Skip();
+    return RefreshCode::RefreshNone;
+}
+
+unsigned WaveTrackAffordanceControls::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow*, AudacityProject* project)
+{
+    auto keyCode = event.GetKeyCode();
+    switch (keyCode)
+    {
+    case WXK_NUMPAD_ENTER:
+    case WXK_RETURN:
+        StartEditSelectedClipName(viewInfo, project);
+        break;
+    }
+    return RefreshCode::RefreshCell;
+}
+
+
+bool WaveTrackAffordanceControls::StartEditSelectedClipName(ViewInfo& viewInfo, AudacityProject* project)
+{
+    //Attempts to invoke name editing if there is a selected clip
+    auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(FindTrack());
+    if (!waveTrack)
+        return false;
+    auto clips = waveTrack->GetClips();
+
+    auto it = std::find_if(clips.begin(), clips.end(), [&](const std::shared_ptr<WaveClip>& clip) {
+        return clip->GetStartTime() == viewInfo.selectedRegion.t0() &&
+            clip->GetEndTime() == viewInfo.selectedRegion.t1();
+        });
+    if (it != clips.end())
+    {
+        mFocusClip = *it;
+        return StartEditClipName(project);
+    }
+    return false;
 }

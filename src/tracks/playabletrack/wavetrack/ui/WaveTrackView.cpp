@@ -1110,6 +1110,42 @@ auto WaveTrackView::GetSubViews(const wxRect* rect) -> Refinement
    return results;
 }
 
+unsigned WaveTrackView::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
+{
+   unsigned result{ RefreshCode::RefreshNone };
+   if (auto affordance = GetAffordanceControls())
+      result |= affordance->CaptureKey(event, viewInfo, pParent, project);
+    
+   if(event.GetSkipped())
+      result |= CommonTrackView::CaptureKey(event, viewInfo, pParent, project);
+
+   return result;
+}
+
+unsigned WaveTrackView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
+{
+   unsigned result{ RefreshCode::RefreshNone };
+   if (auto affordance = GetAffordanceControls())
+      result |= affordance->KeyDown(event, viewInfo, pParent, project);
+    
+   if(event.GetSkipped())
+      result |= CommonTrackView::KeyDown(event, viewInfo, pParent, project);
+
+   return result;
+}
+
+unsigned WaveTrackView::Char(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
+{
+   unsigned result{ RefreshCode::RefreshNone };
+   if (auto affordance = GetAffordanceControls())
+      result |= affordance->Char(event, viewInfo, pParent, project);
+    
+   if(event.GetSkipped())
+      result |= CommonTrackView::Char(event, viewInfo, pParent, project);
+
+   return result;
+}
+
 std::vector< std::shared_ptr< WaveTrackSubView > >
 WaveTrackView::GetAllSubViews()
 {

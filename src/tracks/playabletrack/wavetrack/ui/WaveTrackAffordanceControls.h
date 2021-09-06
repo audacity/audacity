@@ -32,5 +32,19 @@ public:
 
     void Draw(TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override;
 
+    //Invokes name editing for a clip that currently is
+    //in focus(as a result of hit testing), returns true on success
+    //false if there is no focus
+    bool StartEditClipName(AudacityProject* project);
+
     std::weak_ptr<WaveClip> GetSelectedClip() const;
+    unsigned CaptureKey
+    (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
+        AudacityProject* project) override;
+    
+    unsigned KeyDown (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
+        AudacityProject* project) override;
+
+private:
+    bool StartEditSelectedClipName(ViewInfo& viewInfo, AudacityProject* project);
 };
