@@ -109,7 +109,7 @@ void NoteTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                 py >= clipRect.GetTop() && py <= clipRect.GetBottom());
 
         context.dc.SetClippingRegion(rect);
-        TrackArt::DrawClipAffordance(context.dc, clipRect, highlight, selected);
+        TrackArt::DrawClipAffordance(context.dc, clipRect, nt->GetName(), highlight, selected);
         context.dc.DestroyClippingRegion();
     }
 }

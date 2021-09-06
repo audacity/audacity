@@ -127,18 +127,14 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
 
         for (const auto& clip : waveTrack->GetClips())
         {
-            auto affordanceRect = ClipParameters::GetClipRect(
-                *clip.get(), 
-                zoomInfo, 
-                rect.Inflate(TrackArt::ClipFrameRadius, 0),
-                TrackArt::ClipFrameRadius
-            );
+            auto affordanceRect 
+                = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
             if (affordanceRect.IsEmpty())
                 continue;
             
             auto selected = GetSelectedClip().lock() == clip;
             auto highlight = selected || affordanceRect.Contains(px, py);
-            TrackArt::DrawClipAffordance(context.dc, affordanceRect, highlight, selected);
+            TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);
 
         }
         context.dc.DestroyClippingRegion();
