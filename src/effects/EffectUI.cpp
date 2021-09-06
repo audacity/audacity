@@ -1258,6 +1258,8 @@ void EffectUIHost::OnDebug(wxCommandEvent & evt)
 void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 {
    wxMenu menu;
+   menu.Bind(wxEVT_MENU, [](auto&){}, kUserPresetsDummyID);
+   menu.Bind(wxEVT_MENU, [](auto&){}, kDeletePresetDummyID);
    if( !mEffect )
       return;
    
@@ -1333,7 +1335,8 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
       sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().Translation()));
       sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().Translation()));
-      
+      sub->Bind(wxEVT_MENU, [](auto&){}, kDummyID);
+
       menu.Append(0, _("About"), sub.release());
    }
    

@@ -1773,6 +1773,7 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
       }
    }
 
+   menu.Bind(wxEVT_MENU, [](auto&){});
    BasicMenu::Handle{ &menu }.Popup(
       wxWidgetsWindowPlacement{ this },
       { 0, 0 }

@@ -44,6 +44,7 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
    PopupMenuHandler &handler;
    InitFunction init;
 
+   //! @pre func is not null
    PopupMenuTableEntry( const Identifier &stringId,
       Type type_, int id_, const TranslatableString &caption_,
       wxCommandEventFunction func_, PopupMenuHandler &handler_,
@@ -55,7 +56,9 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
       , func(func_)
       , handler( handler_ )
       , init( init_ )
-   {}
+   {
+      wxASSERT(func);
+   }
 
    ~PopupMenuTableEntry() override;
 };
