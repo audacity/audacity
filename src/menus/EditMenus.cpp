@@ -59,12 +59,6 @@ bool DoPasteText(AudacityProject &project)
             ProjectHistory::Get( project )
                .PushState(XO("Pasted text from the clipboard"), XO("Paste"));
 
-            // Make sure caret is in view
-            int x;
-            if (view.CalcCursorX( project, &x )) {
-               window.ScrollIntoView(x);
-            }
-
             return true;
          }
       }

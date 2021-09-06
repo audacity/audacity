@@ -18,6 +18,7 @@ class wxMouseState;
 class LabelTrack;
 class SelectionStateChanger;
 class ZoomInfo;
+class TextEditHelper;
 
 class LabelTextHandle final : public LabelDefaultClickHandle
 {
@@ -60,8 +61,6 @@ public:
 private:
    void HandleTextClick
       (AudacityProject &project, const wxMouseEvent & evt);
-   void HandleTextDragRelease(
-      AudacityProject &project, const wxMouseEvent & evt);
 
    std::weak_ptr<LabelTrack> mpLT {};
    int mLabelNum{ -1 };
@@ -70,6 +69,8 @@ private:
 
    /// flag to tell if it's a valid dragging
    bool mRightDragging{ false };
+
+   std::shared_ptr<TextEditHelper> mTextEditHelper;
 };
 
 #endif
