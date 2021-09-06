@@ -239,7 +239,7 @@ public:
 public:
    // This function executes in a thread spawned by the PortAudio library
    int AudioCallback(
-      const void *inputBuffer, void *outputBuffer,
+      constSamplePtr inputBuffer, float *outputBuffer,
       unsigned long framesPerBuffer,
       const PaStreamCallbackTimeInfo *timeInfo,
       const PaStreamCallbackFlags statusFlags, void *userData);
@@ -310,17 +310,18 @@ public:
    void AddToOutputChannel( unsigned int chan,
       float * outputMeterFloats,
       float * outputFloats,
-      float * tempBuf,
+      const float * tempBuf,
       bool drop,
       unsigned long len,
       WaveTrack *vt
       );
    bool FillOutputBuffers(
-      void *outputBuffer,
-      unsigned long framesPerBuffer, float *outputMeterFloats
+      float *outputBuffer,
+      unsigned long framesPerBuffer,
+      float *outputMeterFloats
    );
-   void FillInputBuffers(
-      const void *inputBuffer, 
+   void DrainInputBuffers(
+      constSamplePtr inputBuffer, 
       unsigned long framesPerBuffer,
       const PaStreamCallbackFlags statusFlags,
       float * tempFloats
@@ -329,17 +330,17 @@ public:
       unsigned long framesPerBuffer
    );
    void DoPlaythrough(
-      const void *inputBuffer, 
-      void *outputBuffer,
+      constSamplePtr inputBuffer, 
+      float *outputBuffer,
       unsigned long framesPerBuffer,
       float *outputMeterFloats
    );
    void SendVuInputMeterData(
-      float *inputSamples,
+      const float *inputSamples,
       unsigned long framesPerBuffer
    );
    void SendVuOutputMeterData(
-      float *outputMeterFloats,
+      const float *outputMeterFloats,
       unsigned long framesPerBuffer
    );
 
@@ -482,9 +483,11 @@ public:
    unsigned int        mNumPlaybackChannels;
    sampleFormat        mCaptureFormat;
    unsigned long long  mLostSamples{ 0 };
-   volatile bool       mAudioThreadShouldCallFillBuffersOnce;
-   volatile bool       mAudioThreadFillBuffersLoopRunning;
-   volatile bool       mAudioThreadFillBuffersLoopActive;
+   volatile bool       mAudioThreadShouldCallTrackBufferExchangeOnce;
+   volatile bool       mAudioThreadTrackBufferExchangeLoopRunning;
+   volatile bool       mAudioThreadTrackBufferExchangeLoopActive;
+
+   std::atomic<bool>   mForceFadeOut{ false };
 
    wxLongLong          mLastPlaybackTimeMillis;
 
@@ -579,6 +582,23 @@ protected:
    } mTimeQueue;
 
    PlaybackSchedule mPlaybackSchedule;
+};
+
+//! Describes an amount of contiguous (but maybe time-warped) data to be extracted from tracks to play
+struct PlaybackSlice {
+   const size_t frames; //!< Total number frames to be buffered
+   const size_t toProduce; //!< Not more than `frames`; the difference will be trailing silence
+   const bool progress; //!< To be removed
+
+   //! Constructor enforces some invariants
+   /*! @invariant `result.toProduce <= result.frames && result.frames <= available`
+    */
+   PlaybackSlice(
+      size_t available, size_t frames_, size_t toProduce_, bool progress_)
+      : frames{ std::min(available, frames_) }
+      , toProduce{ std::min(toProduce_, frames) }
+      , progress{ progress_ }
+   {}
 };
 
 class AUDACITY_DLL_API AudioIO final
@@ -766,7 +786,30 @@ private:
                              unsigned int numPlaybackChannels,
                              unsigned int numCaptureChannels,
                              sampleFormat captureFormat);
-   void FillBuffers();
+
+   /*!
+    Called in a loop from another worker thread that does not have the low-latency constraints
+    of the PortAudio callback thread.  Does less frequent and larger batches of work that may
+    include memory allocations and database operations.  RingBuffer objects mediate the transfer
+    between threads, to overcome the mismatch of their batch sizes.
+    */
+   void TrackBufferExchange();
+
+   //! First part of TrackBufferExchange
+   void FillPlayBuffers();
+   //! Called one or more times by FillPlayBuffers
+   PlaybackSlice GetPlaybackSlice(
+      size_t available //!< how many more samples may be buffered
+   );
+   //! FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
+   bool RepositionPlayback(
+      size_t frames, //!< how many samples were just now buffered for play
+      size_t available, //!< how many more samples may be buffered
+      bool progress
+   );
+
+   //! Second part of TrackBufferExchange
+   void DrainRecordBuffers();
 
    /** \brief Get the number of audio samples free in all of the playback
    * buffers.

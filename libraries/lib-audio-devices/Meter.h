@@ -20,7 +20,7 @@ public:
    virtual void Clear() = 0;
    virtual void Reset(double sampleRate, bool resetClipping) = 0;
    virtual void UpdateDisplay(unsigned numChannels,
-                      int numFrames, float *sampleData) = 0;
+                      unsigned long numFrames, const float *sampleData) = 0;
    virtual bool IsMeterDisabled() const = 0;
    virtual float GetMaxPeak() const = 0;
    virtual bool IsClipping() const = 0;
