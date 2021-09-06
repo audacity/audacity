@@ -13,6 +13,7 @@ Paul Licameli
 
 #include <utility>
 #include <memory>
+#include <typeinfo>
 #include "TrackPanelDrawable.h" // to inherit
 
 class wxDC;
@@ -159,6 +160,9 @@ std::shared_ptr<Subclass> AssignUIHandlePtr
       return pNew;
    }
    else {
+      //type slicing check
+      wxASSERT(typeid(*ptr) == typeid(*pNew));
+
       auto code = Subclass::NeedChangeHighlight( *ptr, *pNew );
       *ptr = std::move(*pNew);
       ptr->SetChangeHighlight( code );

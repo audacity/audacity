@@ -35,11 +35,9 @@ class NoteTrackAffordanceHandle final : public AffordanceHandle
 public:
     NoteTrackAffordanceHandle(const std::shared_ptr<Track>& track) : AffordanceHandle(track) { }
 
-    static UIHandlePtr HitAnywhere(std::weak_ptr<AffordanceHandle>& holder, const std::shared_ptr<Track>& pTrack)
+    static UIHandlePtr HitAnywhere(std::weak_ptr<NoteTrackAffordanceHandle>& holder, const std::shared_ptr<Track>& pTrack)
     {
-        auto result = std::static_pointer_cast<AffordanceHandle>(std::make_shared<NoteTrackAffordanceHandle>(pTrack));
-        result = AssignUIHandlePtr(holder, result);
-        return result;
+        return AssignUIHandlePtr(holder, std::make_shared<NoteTrackAffordanceHandle>(pTrack));
     }
 
     UIHandle::Result SelectAt(const TrackPanelMouseEvent& event, AudacityProject* pProject) override

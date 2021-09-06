@@ -15,12 +15,14 @@
 
 class AffordanceHandle;
 class WaveClip;
+class TrackPanelResizeHandle;
+class WaveTrackAffordanceHandle;
 
 class AUDACITY_DLL_API WaveTrackAffordanceControls : public CommonTrackCell
 {
     std::weak_ptr<WaveClip> mFocusClip;
-    std::weak_ptr<AffordanceHandle> mAffordanceHandle;
-    std::weak_ptr<UIHandle> mResizeHandle;
+    std::weak_ptr<WaveTrackAffordanceHandle> mAffordanceHandle;
+    std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
     wxFont mClipNameFont;
 
 public:

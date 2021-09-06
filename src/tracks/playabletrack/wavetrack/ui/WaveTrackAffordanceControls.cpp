@@ -33,13 +33,6 @@ class WaveTrackAffordanceHandle final : public AffordanceHandle
 public:
     WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track) : AffordanceHandle(track) { }
 
-    static UIHandlePtr HitAnywhere(std::weak_ptr<AffordanceHandle>& holder, const std::shared_ptr<Track>& pTrack)
-    {
-        auto result = std::static_pointer_cast<AffordanceHandle>(std::make_shared<WaveTrackAffordanceHandle>(pTrack));
-        result = AssignUIHandlePtr(holder, result);
-        return result;
-    }
-
     UIHandle::Result SelectAt(const TrackPanelMouseEvent& event, AudacityProject* pProject) override
     {
         const auto track = std::dynamic_pointer_cast<WaveTrack>(TrackList::Get(*pProject).Lock<Track>(GetTrack()));
@@ -85,11 +78,12 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         //given that track is not a leader there always should be
         //another track before this one
         auto prev = --trackList->Find(track.get());
-        auto result = std::static_pointer_cast<UIHandle>(
-            std::make_shared<TrackPanelResizeHandle>((*prev)->shared_from_this(), py)
+        results.push_back(
+            AssignUIHandlePtr(
+                mResizeHandle, 
+                std::make_shared<TrackPanelResizeHandle>((*prev)->shared_from_this(), py)
+            )
         );
-        result = AssignUIHandlePtr(mResizeHandle, result);
-        results.push_back(result);
     }
 
     const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
@@ -101,7 +95,12 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
 
         if (affordanceRect.Contains(px, py))
         {
-            results.push_back(WaveTrackAffordanceHandle::HitAnywhere(mAffordanceHandle, track));
+            results.push_back(
+                AssignUIHandlePtr(
+                    mAffordanceHandle,
+                    std::make_shared<WaveTrackAffordanceHandle>(track)
+                )
+            );
             mFocusClip = clip;
             break;
         }
