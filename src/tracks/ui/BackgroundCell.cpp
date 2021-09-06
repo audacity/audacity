@@ -149,3 +149,20 @@ wxRect BackgroundCell::DrawingArea(
    else
       return rect;
 }
+
+std::vector<ComponentInterfaceSymbol> BackgroundCell::GetMenuItems(
+   const wxRect &, const wxPoint *, AudacityProject * )
+{
+   // These commands exist in toolbar menus too, but maybe with other labels
+   // TODO: devise a system of registration so that BackgroundCell has no
+   // special knowledge about track sub-types
+   return {
+      { L"NewMonoTrack", XO("Add Mono Track")},
+      { L"NewStereoTrack", XO("Add Stereo Track") },
+      { L"NewLabelTrack", XO("Add Label Track"),  },
+      {},
+      { L"Export", XO("Export Audio..."),  },
+      {},
+      { L"SelectAll", XO("Select All") },
+   };
+}

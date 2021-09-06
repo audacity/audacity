@@ -116,6 +116,11 @@ CutlineHandle::~CutlineHandle()
 {
 }
 
+bool CutlineHandle::HandlesRightClick()
+{
+   return true;
+}
+
 UIHandle::Result CutlineHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {

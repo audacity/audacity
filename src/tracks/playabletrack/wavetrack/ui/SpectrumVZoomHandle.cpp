@@ -37,6 +37,11 @@ void SpectrumVZoomHandle::Enter( bool, AudacityProject* )
 #endif
 }
 
+bool SpectrumVZoomHandle::HandlesRightClick()
+{
+   return true;
+}
+
 UIHandle::Result SpectrumVZoomHandle::Click
 (const TrackPanelMouseEvent &, AudacityProject *)
 {

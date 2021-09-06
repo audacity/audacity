@@ -65,6 +65,11 @@ public:
    // Default does nothing and returns false
    virtual bool Escape(AudacityProject *pProject);
 
+   //! Whether the handle has any special right-button handling
+   /*! If not, then Click() will not be called for right click.
+       Default is always false */
+   virtual bool HandlesRightClick();
+
    // Assume hit test (implemented in other classes) was positive.
    // May return Cancelled, overriding the hit test decision and stopping drag.
    // Otherwise the framework will later call Release or Cancel after

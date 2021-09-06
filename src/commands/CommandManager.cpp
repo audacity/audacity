@@ -820,13 +820,37 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    return entry;
 }
 
+wxString CommandManager::FormatLabelForMenu(
+   const CommandID &id, const TranslatableString *pLabel) const
+{
+   NormalizedKeyString keyStr;
+   if (auto iter = mCommandNameHash.find(id); iter != mCommandNameHash.end()) {
+      if (auto pEntry = iter->second) {
+         keyStr = pEntry->key;
+         if (!pLabel)
+            pLabel = &pEntry->label;
+      }
+   }
+   if (pLabel)
+      return FormatLabelForMenu(*pLabel, keyStr);
+   return {};
+}
+
 wxString CommandManager::FormatLabelForMenu(const CommandListEntry *entry) const
 {
-   auto label = entry->label.Translation();
-   if (!entry->key.empty())
+   return FormatLabelForMenu( entry->label, entry->key );
+}
+
+wxString CommandManager::FormatLabelForMenu(
+   const TranslatableString &translatableLabel,
+   const NormalizedKeyString &keyStr) const
+{
+   auto label = translatableLabel.Translation();
+   auto key = keyStr.GET();
+   if (!key.empty())
    {
       // using GET to compose menu item name for wxWidgets
-      label += wxT("\t") + entry->key.GET();
+      label += wxT("\t") + key;
    }
 
    return label;
@@ -1220,7 +1244,8 @@ Journal::RegisteredCommand sCommand{ JournalCode,
 ///with the command's flags.
 bool CommandManager::HandleCommandEntry(AudacityProject &project,
    const CommandListEntry * entry,
-   CommandFlag flags, bool alwaysEnabled, const wxEvent * evt)
+   CommandFlag flags, bool alwaysEnabled, const wxEvent * evt,
+   const CommandContext *pGivenContext)
 {
    if (!entry )
       return false;
@@ -1249,7 +1274,9 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
 
    Journal::Output({ JournalCode, entry->name.GET() });
 
-   const CommandContext context{ project, evt, entry->index, entry->parameter };
+   CommandContext context{ project, evt, entry->index, entry->parameter };
+   if (pGivenContext)
+      context.temporarySelection = pGivenContext->temporarySelection;
    auto &handler = entry->finder(project);
    (handler.*(entry->callback))(context);
    mLastProcessId = 0;
@@ -1331,7 +1358,8 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
             Str == entry->labelPrefix.Translation() )
          {
             return HandleCommandEntry(
-               context.project, entry.get(), flags, alwaysEnabled)
+               context.project, entry.get(), flags, alwaysEnabled,
+               nullptr, &context)
                ? CommandSuccess : CommandFailure;
          }
       }
@@ -1341,7 +1369,8 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
          if( Str == entry->name )
          {
             return HandleCommandEntry(
-               context.project, entry.get(), flags, alwaysEnabled)
+               context.project, entry.get(), flags, alwaysEnabled,
+               nullptr, &context)
                ? CommandSuccess : CommandFailure;
          }
       }
