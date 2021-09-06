@@ -12,6 +12,7 @@ Paul Licameli split from class LabelTrack
 #define __AUDACITY_LABEL_TRACK_VIEW__
 
 #include "../../ui/CommonTrackView.h"
+#include "../../ui/TextEditHelper.h"
 #include "Observer.h"
 
 class LabelGlyphHandle;
@@ -37,7 +38,11 @@ constexpr int MAX_NUM_ROWS =80;
 
 class wxKeyEvent;
 
-class AUDACITY_DLL_API LabelTrackView final : public CommonTrackView
+class TextEditHandle;
+
+class AUDACITY_DLL_API LabelTrackView final : 
+    public CommonTrackView,
+    public TextEditDelegate
 {
    LabelTrackView( const LabelTrackView& ) = delete;
    LabelTrackView &operator=( const LabelTrackView& ) = delete;
@@ -58,15 +63,22 @@ public:
    static const LabelTrackView &Get( const LabelTrack& );
 
    bool DoCaptureKey( AudacityProject &project, wxKeyEvent &event );
-   bool DoKeyDown(
+   void DoKeyDown(
       AudacityProject &project, NotifyingSelectedRegion &sel, wxKeyEvent & event);
-   bool DoChar(
+   void DoChar(
       AudacityProject &project, NotifyingSelectedRegion &sel, wxKeyEvent & event);
 
    //This returns the index of the label we just added.
    int AddLabel(const SelectedRegion &region,
       const wxString &title = {},
       int restoreFocus = -1);
+
+   virtual void OnTextEditFinished(AudacityProject* project, const wxString& text);
+   virtual void OnTextEditCancelled(AudacityProject* project);
+   virtual void OnTextModified(AudacityProject* project, const wxString& text);
+   virtual void OnTextContextMenu(AudacityProject* project, const wxPoint& position);
+
+   std::shared_ptr<TextEditHelper> StartLabelTextEdit(int labelIndex, AudacityProject* project);
 
 private:
    void BindTo( LabelTrack *pParent );
@@ -93,6 +105,9 @@ private:
    // Preserve some view state too for undo/redo purposes
    void CopyTo( Track &track ) const override;
 
+   std::shared_ptr<TextEditHelper> MakeTextEditHelper(const LabelStruct& label);
+   static wxRect MakeTextEditHelperRect(const LabelStruct& label);
+
 public:
    static void DoEditLabels(
       AudacityProject &project, LabelTrack *lt = nullptr, int index = -1);
@@ -105,6 +120,9 @@ public:
 
 private:
    void CreateCustomGlyphs();
+
+   void SetTextSelection(int labelIndex, const std::pair<int, int>& selection);
+   void SetTextSelection(int labelIndex, int start, int end);
 
 public:
    static wxFont GetFont(const wxString &faceName, int size = DefaultFontSize);
@@ -170,15 +188,7 @@ private:
    int GetLabelIndex(double t, double t1);
 
 public:
-   //get current cursor position,
-   // relative to the left edge of the track panel
-   bool CalcCursorX( AudacityProject &project, int * x ) const;
-
-private:
-   void CalcHighlightXs(int *x1, int *x2) const;
-
-public:
-   void ShowContextMenu( AudacityProject &project );
+   void ShowContextMenu( AudacityProject &project, const wxPoint& position );
 
 private:
    void OnContextMenu( AudacityProject &project, wxCommandEvent & evt);
@@ -199,9 +209,6 @@ private:
    static wxBitmap mBoundaryGlyphs[NUM_GLYPH_CONFIGS * NUM_GLYPH_HIGHLIGHTS];
 
    static int mFontHeight;
-   mutable int mCurrentCursorPos;                  /// current cursor position
-   mutable int mInitialCursorPos;                  /// initial cursor position
-
    
    int mRestoreFocus{-2};                          /// Restore focus to this track
                                                    /// when done editing
@@ -215,19 +222,11 @@ private:
    static void DrawText( wxDC & dc, const LabelStruct &ls, const wxRect & r);
    static void DrawTextBox( wxDC & dc, const LabelStruct &ls, const wxRect & r);
    static void DrawBar(wxDC& dc, const LabelStruct& ls, const wxRect& r);
-   static void DrawHighlight(
-      wxDC & dc, const LabelStruct &ls, int xPos1, int xPos2, int charHeight);
 
 public:
-   /// convert pixel coordinate to character position in text box
-   int FindCursorPosition(int labelIndex, wxCoord xPos);
-   int GetCurrentCursorPosition() const { return mCurrentCursorPos; }
-   void SetCurrentCursorPosition(int pos);
-   int GetInitialCursorPosition() const { return mInitialCursorPos; }
-
    /// Sets the label with specified index for editing,
    /// optionally selection may be specified with [start, end]
-   void SetTextSelection(int labelIndex, int start = 1, int end = 1);
+   //void SetTextSelection(int labelIndex, int start = 1, int end = 1);
    int GetTextEditIndex(AudacityProject& project) const;
    void ResetTextSelection();
 
@@ -246,8 +245,6 @@ private:
    bool IsValidIndex(const Index& index, AudacityProject& project) const;
 
 private:
-   void RemoveSelectedText();
-
    void OnLabelAdded( const LabelTrackEvent& );
    void OnLabelDeleted( const LabelTrackEvent& );
    void OnLabelPermuted( const LabelTrackEvent& );
@@ -260,6 +257,9 @@ private:
 
    std::weak_ptr<LabelGlyphHandle> mGlyphHandle;
    std::weak_ptr<LabelTextHandle> mTextHandle;
+   std::weak_ptr<TextEditHandle> mTextEditHandle;
+
+   std::shared_ptr<TextEditHelper> mTextEditHelper;
 
    static wxFont msFont;
 
