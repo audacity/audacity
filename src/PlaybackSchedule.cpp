@@ -275,3 +275,60 @@ double RecordingSchedule::ToDiscard() const
 {
    return std::max(0.0, -( mPosition + TotalCorrection() ) );
 }
+
+void PlaybackSchedule::TimeQueue::Producer(
+   const PlaybackSchedule &schedule, double rate, double scrubSpeed,
+   size_t nSamples )
+{
+   if ( ! mData )
+      // Recording only.  Don't fill the queue.
+      return;
+
+   // Don't check available space:  assume it is enough because of coordination
+   // with RingBuffer.
+   auto index = mTail.mIndex;
+   auto time = mLastTime;
+   auto remainder = mTail.mRemainder;
+   auto space = TimeQueueGrainSize - remainder;
+
+   while ( nSamples >= space ) {
+      time = schedule.AdvancedTrackTime( time, space / rate, scrubSpeed );
+      index = (index + 1) % mSize;
+      mData[ index ] = time;
+      nSamples -= space;
+      remainder = 0;
+      space = TimeQueueGrainSize;
+   }
+
+   // Last odd lot
+   if ( nSamples > 0 )
+      time = schedule.AdvancedTrackTime( time, nSamples / rate, scrubSpeed );
+
+   mLastTime = time;
+   mTail.mRemainder = remainder + nSamples;
+   mTail.mIndex = index;
+}
+
+double PlaybackSchedule::TimeQueue::Consumer( size_t nSamples, double rate )
+{
+   if ( ! mData ) {
+      // Recording only.  No scrub or playback time warp.  Don't use the queue.
+      return ( mLastTime += nSamples / rate );
+   }
+
+   // Don't check available space:  assume it is enough because of coordination
+   // with RingBuffer.
+   auto remainder = mHead.mRemainder;
+   auto space = TimeQueueGrainSize - remainder;
+   if ( nSamples >= space ) {
+      remainder = 0,
+      mHead.mIndex = (mHead.mIndex + 1) % mSize,
+      nSamples -= space;
+      if ( nSamples >= TimeQueueGrainSize )
+         mHead.mIndex =
+            (mHead.mIndex + ( nSamples / TimeQueueGrainSize ) ) % mSize,
+         nSamples %= TimeQueueGrainSize;
+   }
+   mHead.mRemainder = remainder + nSamples;
+   return mData[ mHead.mIndex ];
+}

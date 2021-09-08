@@ -11,12 +11,15 @@
 #ifndef __AUDACITY_PLAYBACK_SCHEDULE__
 #define __AUDACITY_PLAYBACK_SCHEDULE__
 
+#include "MemoryX.h"
 #include <atomic>
 #include <vector>
 
 struct AudioIOStartStreamOptions;
 class BoundedEnvelope;
 using PRCrossfadeData = std::vector< std::vector < float > >;
+
+constexpr size_t TimeQueueGrainSize = 2000;
 
 struct RecordingSchedule {
    double mPreRoll{};
@@ -66,7 +69,42 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    // (ignoring accumulated rounding errors during playback) which fixes the 'missing sound at the end' bug
    
    const BoundedEnvelope *mEnvelope;
-   
+
+   //! A circular buffer
+   /*
+    Holds track time values corresponding to every nth sample in the
+    playback buffers, for the large n == TimeQueueGrainSize.
+
+    The "producer" is the Audio thread that fetches samples from tracks and
+    fills the playback RingBuffers.  The "consumer" is the high-latency
+    PortAudio thread that drains the RingBuffers.  The atomics in the
+    RingBuffer implement lock-free synchronization.
+
+    This other structure relies on the RingBuffer's synchronization, and adds
+    other information to the stream of samples:  which track times they
+    correspond to.
+
+    The consumer thread uses that information, and also makes known to the main
+    thread, what the last consumed track time is.  The main thread can use that
+    for other purposes such as refreshing the display of the play head position.
+    */
+   struct TimeQueue {
+      ArrayOf<double> mData;
+      size_t mSize{ 0 };
+      double mLastTime {};
+      struct Cursor {
+         size_t mIndex {};
+         size_t mRemainder {};
+      };
+      //! Aligned to avoid false sharing
+      NonInterfering<Cursor> mHead, mTail;
+
+      void Producer(
+         const PlaybackSchedule &schedule, double rate, double scrubSpeed,
+         size_t nSamples );
+      double Consumer( size_t nSamples, double rate );
+   } mTimeQueue;
+
    volatile enum {
       PLAY_STRAIGHT,
       PLAY_LOOPED,

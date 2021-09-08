@@ -150,7 +150,6 @@ double AudioIoCallback::mCachedBestRateOut;
 bool AudioIoCallback::mCachedBestRatePlaying;
 bool AudioIoCallback::mCachedBestRateCapturing;
 
-constexpr size_t TimeQueueGrainSize = 2000;
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
 
@@ -1100,7 +1099,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mPlaybackMixers.reset();
    mCaptureBuffers.reset();
    mResample.reset();
-   mTimeQueue.mData.reset();
+   mPlaybackSchedule.mTimeQueue.mData.reset();
 
    mPlaybackSchedule.Init(
       t0, t1, options, mCaptureTracks.empty() ? nullptr : &mRecordingSchedule );
@@ -1209,9 +1208,10 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    }
    
    // Now that we are done with SetTrackTime():
-   mTimeQueue.mLastTime = mPlaybackSchedule.GetTrackTime();
-   if (mTimeQueue.mData)
-      mTimeQueue.mData[0] = mTimeQueue.mLastTime;
+   mPlaybackSchedule.mTimeQueue.mLastTime = mPlaybackSchedule.GetTrackTime();
+   if (mPlaybackSchedule.mTimeQueue.mData)
+      mPlaybackSchedule.mTimeQueue.mData[0] =
+         mPlaybackSchedule.mTimeQueue.mLastTime;
    // else recording only without overdub
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
@@ -1409,8 +1409,8 @@ bool AudioIO::AllocateBuffers(
    mMinCaptureSecsToCopy =
       0.2 + 0.2 * std::min(size_t(16), mCaptureTracks.size());
 
-   mTimeQueue.mHead = {};
-   mTimeQueue.mTail = {};
+   mPlaybackSchedule.mTimeQueue.mHead = {};
+   mPlaybackSchedule.mTimeQueue.mTail = {};
    bool bDone;
    do
    {
@@ -1458,8 +1458,8 @@ bool AudioIO::AllocateBuffers(
                const auto timeQueueSize = 1 +
                   (playbackBufferSize + TimeQueueGrainSize - 1)
                      / TimeQueueGrainSize;
-               mTimeQueue.mData.reinit( timeQueueSize );
-               mTimeQueue.mSize = timeQueueSize;
+               mPlaybackSchedule.mTimeQueue.mData.reinit( timeQueueSize );
+               mPlaybackSchedule.mTimeQueue.mSize = timeQueueSize;
 
                // use track time for the end time, not real time!
                WaveTrackConstArray mixTracks;
@@ -1561,7 +1561,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mPlaybackMixers.reset();
    mCaptureBuffers.reset();
    mResample.reset();
-   mTimeQueue.mData.reset();
+   mPlaybackSchedule.mTimeQueue.mData.reset();
 
    if(!bOnlyBuffers)
    {
@@ -1736,7 +1736,7 @@ void AudioIO::StopStream()
       {
          mPlaybackBuffers.reset();
          mPlaybackMixers.reset();
-         mTimeQueue.mData.reset();
+         mPlaybackSchedule.mTimeQueue.mData.reset();
       }
 
       //
@@ -2136,7 +2136,7 @@ void AudioIO::FillPlayBuffers()
       // consumer side in the PortAudio thread, which reads the time
       // queue after reading the sample queues.  The sample queues use
       // atomic variables, the time queue doesn't.
-      mTimeQueue.Producer( mPlaybackSchedule, mRate,
+      mPlaybackSchedule.mTimeQueue.Producer( mPlaybackSchedule, mRate,
          (mPlaybackSchedule.Interactive() ? mScrubSpeed : 1.0),
          frames);
 
@@ -2259,7 +2259,7 @@ bool AudioIO::RepositionPlayback(size_t frames, size_t available, bool progress)
                         startTime, endTime, fabs( mScrubSpeed ));
                }
             }
-            mTimeQueue.mLastTime = startTime;
+            mPlaybackSchedule.mTimeQueue.mLastTime = startTime;
          }
       }
    }
@@ -2989,7 +2989,8 @@ void AudioIoCallback::UpdateTimePosition(unsigned long framesPerBuffer)
    // Update the position seen by drawing code
    if (mPlaybackSchedule.Interactive())
       // To do: do this in all cases and remove TrackTimeUpdate
-      mPlaybackSchedule.SetTrackTime( mTimeQueue.Consumer( mMaxFramesOutput, mRate ) );
+      mPlaybackSchedule.SetTrackTime(
+         mPlaybackSchedule.mTimeQueue.Consumer( mMaxFramesOutput, mRate ) );
    else
       mPlaybackSchedule.TrackTimeUpdate( framesPerBuffer / mRate );
 }
@@ -3527,63 +3528,6 @@ auto AudioIoCallback::AudioIOExtIterator::operator *() const -> AudioIOExt &
    // Down-cast and dereference are safe because only AudioIOCallback
    // populates the array
    return *static_cast<AudioIOExt*>(mIterator->get());
-}
-
-void AudioIO::TimeQueue::Producer(
-   const PlaybackSchedule &schedule, double rate, double scrubSpeed,
-   size_t nSamples )
-{
-   if ( ! mData )
-      // Recording only.  Don't fill the queue.
-      return;
-
-   // Don't check available space:  assume it is enough because of coordination
-   // with RingBuffer.
-   auto index = mTail.mIndex;
-   auto time = mLastTime;
-   auto remainder = mTail.mRemainder;
-   auto space = TimeQueueGrainSize - remainder;
-
-   while ( nSamples >= space ) {
-      time = schedule.AdvancedTrackTime( time, space / rate, scrubSpeed );
-      index = (index + 1) % mSize;
-      mData[ index ] = time;
-      nSamples -= space;
-      remainder = 0;
-      space = TimeQueueGrainSize;
-   }
-
-   // Last odd lot
-   if ( nSamples > 0 )
-      time = schedule.AdvancedTrackTime( time, nSamples / rate, scrubSpeed );
-
-   mLastTime = time;
-   mTail.mRemainder = remainder + nSamples;
-   mTail.mIndex = index;
-}
-
-double AudioIO::TimeQueue::Consumer( size_t nSamples, double rate )
-{
-   if ( ! mData ) {
-      // Recording only.  No scrub or playback time warp.  Don't use the queue.
-      return ( mLastTime += nSamples / rate );
-   }
-
-   // Don't check available space:  assume it is enough because of coordination
-   // with RingBuffer.
-   auto remainder = mHead.mRemainder;
-   auto space = TimeQueueGrainSize - remainder;
-   if ( nSamples >= space ) {
-      remainder = 0,
-      mHead.mIndex = (mHead.mIndex + 1) % mSize,
-      nSamples -= space;
-      if ( nSamples >= TimeQueueGrainSize )
-         mHead.mIndex =
-            (mHead.mIndex + ( nSamples / TimeQueueGrainSize ) ) % mSize,
-         nSamples %= TimeQueueGrainSize;
-   }
-   mHead.mRemainder = remainder + nSamples;
-   return mData[ mHead.mIndex ];
 }
 
 bool AudioIO::IsCapturing() const
