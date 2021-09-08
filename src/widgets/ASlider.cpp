@@ -1360,6 +1360,7 @@ void LWSlider::SendUpdate( float newValue )
    int intValue = (int)( ( mCurrentValue - mMinValue ) * 1000.0f /
                          ( mMaxValue - mMinValue ) );
    e.SetInt( intValue );
+   e.SetEventObject( mParent );
    mParent->GetEventHandler()->ProcessEvent(e);
 }
 
