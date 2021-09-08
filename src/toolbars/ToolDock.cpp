@@ -375,11 +375,15 @@ END_EVENT_TABLE()
 //
 // Constructor
 //
-ToolDock::ToolDock( wxEvtHandler *manager, wxWindow *parent, int dockid ):
+ToolDock::ToolDock( const TranslatableString &name,
+   wxEvtHandler *manager, wxWindow *parent, int dockid ):
    wxPanelWrapper( parent, dockid, wxDefaultPosition, parent->GetSize() )
 {
-   SetLabel( XO( "ToolDock" ) );
-   SetName( XO( "ToolDock" ) );
+   // I doubt the label is ever shown.  Do we really need it to translate?
+   SetLabel( name );
+   // Do we need to translate the name too?  Maybe, if the screen reader might
+   // pronounce it.
+   SetName( name );
 
    // Init
    mManager = manager;

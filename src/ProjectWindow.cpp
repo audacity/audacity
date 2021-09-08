@@ -588,7 +588,10 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
       this, wxID_ANY, wxDefaultPosition,
       wxSize{ this->GetSize().GetWidth(), -1 }
    };
-   mTopPanel->SetLabel( "Top Panel" );// Not localised
+   // i18n-hint an area of a graphical window that can contain other windows
+   const auto topPanelName = XO("Top Panel");
+   mTopPanel->SetLabel( topPanelName );
+   mTopPanel->SetName( topPanelName );
    mTopPanel->SetLayoutDirection(wxLayout_LeftToRight);
    mTopPanel->SetAutoLayout(true);
 #ifdef EXPERIMENTAL_DA2
@@ -617,7 +620,10 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
       wxDefaultSize,
       wxNO_BORDER);
    mMainPanel->SetSizer( safenew wxBoxSizer(wxVERTICAL) );
-   mMainPanel->SetLabel("Main Panel");// Not localised.
+   // i18n-hint an area of a graphical window that can contain other windows
+   const auto mainPanelName = XO("Main Panel");
+   mMainPanel->SetLabel( mainPanelName );
+   mMainPanel->SetName( mainPanelName );
    pPage = mMainPanel;
    // Set the colour here to the track panel background to avoid
    // flicker when Audacity starts up.
@@ -1216,6 +1222,16 @@ void ProjectWindow::HandleResize()
 bool ProjectWindow::IsIconized() const
 {
    return mIconized;
+}
+
+wxPanel *ProjectWindow::GetMainPanel()
+{
+   return mMainPanel;
+}
+
+wxPanel *ProjectWindow::GetTopPanel()
+{
+   return mTopPanel;
 }
 
 void ProjectWindow::UpdateStatusWidths()

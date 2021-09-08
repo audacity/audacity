@@ -290,7 +290,8 @@ class ToolDock final : public wxPanelWrapper
 {
 public:
 
-   ToolDock( wxEvtHandler *manager, wxWindow *parent, int dockid );
+   ToolDock( const TranslatableString &name,
+      wxEvtHandler *manager, wxWindow *parent, int dockid );
    ~ToolDock();
 
    bool AcceptsFocus() const override { return false; };
