@@ -105,6 +105,11 @@ NoteTrackVZoomHandle::~NoteTrackVZoomHandle()
 {
 }
 
+bool NoteTrackVZoomHandle::HandlesRightClick()
+{
+   return true;
+}
+
 UIHandle::Result NoteTrackVZoomHandle::Click
 (const TrackPanelMouseEvent &, AudacityProject *)
 {

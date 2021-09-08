@@ -156,7 +156,7 @@ class AUDACITY_DLL_API MeterPanel final
     * The second overload is for ease of use in MixerBoard.
     */
    void UpdateDisplay(unsigned numChannels,
-                      int numFrames, float *sampleData) override;
+                      int numFrames, const float *sampleData) override;
 
    // Vaughan, 2010-11-29: This not currently used. See comments in MixerTrackCluster::UpdateMeter().
    //void UpdateDisplay(int numChannels, int numFrames,

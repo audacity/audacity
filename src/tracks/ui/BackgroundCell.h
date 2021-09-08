@@ -53,6 +53,10 @@ private:
    wxRect DrawingArea(
       TrackPanelDrawingContext &,
       const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
+
+   std::vector<ComponentInterfaceSymbol> GetMenuItems(
+      const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
+   override;
    
    AudacityProject *mpProject;
 

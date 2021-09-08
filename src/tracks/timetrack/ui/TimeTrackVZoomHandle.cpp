@@ -36,6 +36,11 @@ void TimeTrackVZoomHandle::Enter( bool, AudacityProject* )
 #endif
 }
 
+bool TimeTrackVZoomHandle::HandlesRightClick()
+{
+   return true;
+}
+
 UIHandle::Result TimeTrackVZoomHandle::Click
 (const TrackPanelMouseEvent &, AudacityProject *)
 {

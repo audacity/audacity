@@ -1436,7 +1436,7 @@ size_t VSTEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLe
       callProcessReplacing(inBlock, outBlock, blockLen);
 
       // And track the position
-      mTimeInfo.samplePos += ((double) blockLen / mTimeInfo.sampleRate);
+      mTimeInfo.samplePos += (double) blockLen;
    }
 
    return blockLen;

@@ -41,6 +41,11 @@ bool UIHandle::Escape(AudacityProject *)
    return false;
 }
 
+bool UIHandle::HandlesRightClick()
+{
+   return false;
+}
+
 bool UIHandle::StopsOnKeystroke()
 {
    return false;

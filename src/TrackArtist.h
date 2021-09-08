@@ -41,7 +41,7 @@ namespace TrackArt {
    static constexpr int ClipFrameRadius{ 6 };
 
    AUDACITY_DLL_API
-   void DrawClipAffordance(wxDC& dc, const wxRect& affordanceRect, bool highlight = false, bool selected = false);
+   void DrawClipAffordance(wxDC& dc, const wxRect& affordanceRect, const wxString& title, bool highlight = false, bool selected = false);
 
    AUDACITY_DLL_API
    void DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected = false);
@@ -65,6 +65,9 @@ namespace TrackArt {
    AUDACITY_DLL_API
    void DrawNegativeOffsetTrackArrows( TrackPanelDrawingContext &context,
                                        const wxRect & rect );
+
+   AUDACITY_DLL_API
+   wxString TruncateText(wxDC& dc, const wxString& text, const int maxWidth);
 }
 
 class AUDACITY_DLL_API TrackArtist final : private PrefsListener {

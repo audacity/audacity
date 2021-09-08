@@ -902,8 +902,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
       TrackArt::DrawNegativeOffsetTrackArrows( context, rect );
    }
    {
-      //increase virtual view size by px to hide edges that should not be visible
-      auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect.Inflate(1, 0), 1);
+      auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
       if (!clipRect.IsEmpty())
           TrackArt::DrawClipEdges(dc, clipRect, selected);
    }

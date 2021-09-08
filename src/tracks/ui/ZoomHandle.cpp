@@ -83,6 +83,11 @@ ZoomHandle::~ZoomHandle()
 {
 }
 
+bool ZoomHandle::HandlesRightClick()
+{
+   return true;
+}
+
 UIHandle::Result ZoomHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *)
 {

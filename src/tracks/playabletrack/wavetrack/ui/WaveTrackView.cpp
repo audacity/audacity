@@ -812,6 +812,32 @@ std::weak_ptr<WaveTrackView> WaveTrackSubView::GetWaveTrackView() const
    return mwWaveTrackView;
 }
 
+std::vector<ComponentInterfaceSymbol> WaveTrackSubView::GetMenuItems(
+   const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
+{
+   const WaveClip *pClip = nullptr;
+   auto pTrack = static_cast<WaveTrack*>(FindTrack().get());
+   if (pTrack && pPosition) {
+      auto &viewInfo = ViewInfo::Get(*pProject);
+      auto time = viewInfo.PositionToTime( pPosition->x, rect.x );
+      pClip = pTrack->GetClipAtTime( time );
+   }
+
+   if (pClip)
+      return {
+         { L"Cut", XO("Cut") },
+         { L"Copy", XO("Copy") },
+         { L"Paste", XO("Paste")  },
+         {},
+         { L"Split", XO("Split Clip") },
+         { L"TrackMute", XO("Mute/Unmute Track") },
+         // {},
+         // { L"", XO("Rename clip...") },
+      };
+   else
+      return {};
+}
+
 WaveTrackView &WaveTrackView::Get( WaveTrack &track )
 {
    return static_cast< WaveTrackView& >( TrackView::Get( track ) );
@@ -1312,16 +1338,16 @@ ClipParameters::ClipParameters
    }
 }
 
-wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, int clipOffsetX)
+wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect)
 {
     auto srs = 1. / static_cast<double>(clip.GetRate());
     //to prevent overlap left and right most samples with frame border
     auto margin = .25 * srs;
-    auto edgeLeft = static_cast<wxInt64>(viewRect.GetLeft());
-    auto edgeRight = static_cast<wxInt64>(viewRect.GetRight());
-    auto left = std::clamp(zoomInfo.TimeToPosition(clip.GetOffset() - margin, viewRect.x + clipOffsetX, true), edgeLeft, edgeRight);
-    auto right = std::clamp(zoomInfo.TimeToPosition(clip.GetEndTime() - srs + margin, viewRect.x + clipOffsetX, true), edgeLeft, edgeRight);
-    if (right - left > 0)
+    constexpr auto edgeLeft = static_cast<wxInt64>(std::numeric_limits<int>::min());
+    constexpr auto edgeRight = static_cast<wxInt64>(std::numeric_limits<int>::max());
+    auto left = std::clamp(zoomInfo.TimeToPosition(clip.GetOffset() - margin, viewRect.x, true), edgeLeft, edgeRight);
+    auto right = std::clamp(zoomInfo.TimeToPosition(clip.GetEndTime() - srs + margin, viewRect.x, true), edgeLeft, edgeRight);
+    if (right > left)
     {
         //after clamping we can expect that left and right 
         //are small enough to be put into int

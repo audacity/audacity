@@ -36,7 +36,7 @@ struct MeterPanelBase::Forwarder : Meter
          mOwner->Reset( sampleRate, resetClipping );
    }
    void UpdateDisplay(unsigned numChannels,
-                      int numFrames, float *sampleData) override
+                      unsigned long numFrames, const float *sampleData) override
    {
       if (mOwner)
          mOwner->UpdateDisplay( numChannels, numFrames, sampleData );

@@ -52,6 +52,10 @@ protected:
 
    std::weak_ptr<WaveTrackView> GetWaveTrackView() const;
 
+   std::vector<ComponentInterfaceSymbol> GetMenuItems(
+      const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
+   override;
+
 private:
    std::weak_ptr<UIHandle> mCloseHandle;
    std::weak_ptr<UIHandle> mResizeHandle;
@@ -216,7 +220,7 @@ struct AUDACITY_DLL_API ClipParameters
 
    // returns a clip rectangle restricted by viewRect, 
    // and with clipOffsetX - clip horizontal origin offset within view rect
-   static wxRect GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, int clipOffsetX = 0);
+   static wxRect GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect);
 };
 
 #endif

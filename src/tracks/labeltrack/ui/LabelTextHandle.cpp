@@ -141,6 +141,11 @@ void LabelTextHandle::HandleTextClick(AudacityProject &project, const wxMouseEve
    }
 }
 
+bool LabelTextHandle::HandlesRightClick()
+{
+   return true;
+}
+
 UIHandle::Result LabelTextHandle::Click
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {

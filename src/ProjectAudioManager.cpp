@@ -647,7 +647,16 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // Less than or equal, not just less than, to ensure a clip boundary.
             // when append recording.
             if (endTime <= t0) {
-               pending->CreateClip(t0);
+               auto newName = [&]() {
+                  for (auto i = 1;; ++i)
+                  {
+                     //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
+                     auto name = XC("%s #%d", "clip name template").Format(pending->GetName(), i).Translation();
+                     if (pending->FindClipByName(name) == nullptr)
+                        return name;
+                  }
+               }();
+               pending->CreateClip(t0, newName);
             }
             transportTracks.captureTracks.push_back(pending);
          }
@@ -1016,20 +1025,15 @@ DefaultPlayOptions( AudacityProject &project )
 AudioIOStartStreamOptions
 DefaultSpeedPlayOptions( AudacityProject &project )
 {
-   auto &projectAudioIO = ProjectAudioIO::Get( project );
+   auto result = DefaultPlayOptions( project );
    auto gAudioIO = AudioIO::Get();
    auto PlayAtSpeedRate = gAudioIO->GetBestRate(
       false,     //not capturing
       true,      //is playing
       ProjectRate::Get( project ).GetRate()  //suggested rate
    );
-   AudioIOStartStreamOptions options{ &project, PlayAtSpeedRate };
-   options.captureMeter = projectAudioIO.GetCaptureMeter();
-   options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   auto timeTrack = *TrackList::Get( project ).Any<TimeTrack>().begin();
-   options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
-   options.listener = ProjectAudioManager::Get( project ).shared_from_this();
-   return options;
+   result.rate = PlayAtSpeedRate;
+   return result;
 }
 
 #ifdef EXPERIMENTAL_MIDI_OUT

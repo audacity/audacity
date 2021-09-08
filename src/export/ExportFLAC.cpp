@@ -390,15 +390,15 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
       }
       else {
          for (size_t i = 0; i < numChannels; i++) {
-            samplePtr mixed = mixer->GetBuffer(i);
+            auto mixed = mixer->GetBuffer(i);
             if (format == int24Sample) {
                for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-                  tmpsmplbuf[i][j] = ((int *)mixed)[j];
+                  tmpsmplbuf[i][j] = ((const int *)mixed)[j];
                }
             }
             else {
                for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-                  tmpsmplbuf[i][j] = ((short *)mixed)[j];
+                  tmpsmplbuf[i][j] = ((const short *)mixed)[j];
                }
             }
          }
