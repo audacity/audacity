@@ -21,10 +21,12 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <utility>
 #include <wx/atomic.h> // member variable
 
 #ifdef EXPERIMENTAL_MIDI_OUT
+#include "../lib-src/header-substitutes/allegro.h" // to be removed
 typedef void PmStream;
 typedef int32_t PmTimestamp;
 
@@ -410,7 +412,7 @@ public:
    volatile double mSystemMinusAudioTimePlusLatency;
 
    Alg_seq      *mSeq;
-   std::unique_ptr<Alg_iterator> mIterator;
+   std::optional<Alg_iterator> mIterator;
    /// The next event to play (or null)
    Alg_event    *mNextEvent;
 

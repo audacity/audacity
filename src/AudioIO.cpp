@@ -1081,7 +1081,6 @@ AudioIO::AudioIO()
    mMidiThreadFillBuffersLoopActive = false;
    mMidiStreamActive = false;
    mSendMidiState = false;
-   mIterator = NULL;
 
    mNumFrames = 0;
    mNumPauseFrames = 0;
@@ -2198,7 +2197,7 @@ void AudioIoCallback::PrepareMidiIterator(bool send, double offset)
    int nTracks = mMidiPlaybackTracks.size();
    // instead of initializing with an Alg_seq, we use begin_seq()
    // below to add ALL Alg_seq's.
-   mIterator = std::make_unique<Alg_iterator>(nullptr, false);
+   mIterator.emplace(nullptr, false);
    // Iterator not yet initialized, must add each track...
    for (i = 0; i < nTracks; i++) {
       const auto t = mMidiPlaybackTracks[i].get();
@@ -4546,6 +4545,11 @@ bool AudioIoCallback::AllTracksAlreadySilent()
 
 AudioIoCallback::AudioIoCallback()
 {
+#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
+   // Pre-allocate with a likely sufficient size, exceeding probable number of
+   // channels
+   mPendingNotesOff.reserve(64);
+#endif
 }
 
 
