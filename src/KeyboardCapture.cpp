@@ -213,6 +213,7 @@ public:
                   if ( auto button =
                      dynamic_cast<wxButton*>( top->GetDefaultItem() ) ) {
                      wxCommandEvent newEvent{ wxEVT_BUTTON, button->GetId() };
+                     newEvent.SetEventObject( button );
                      button->GetEventHandler()->AddPendingEvent( newEvent );
                      return Event_Processed;
                   }
