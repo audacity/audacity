@@ -86,6 +86,8 @@ ToolFrame::ToolFrame
           wxFRAME_FLOAT_ON_PARENT )
    , mParent{ parent }
 {
+   SetName( bar->GetName() ); // For journalling
+   
    int width = bar->GetSize().x;
    int border = 1;
 

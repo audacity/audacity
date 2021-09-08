@@ -19,7 +19,7 @@
   window containing interfaces to commonly-used edit
   functions that are otherwise only available through
   menus. The window can be embedded within a normal project
-  window, or within a ToolBarFrame.
+  window, or within a ToolFrame.
 
   All of the controls in this window were custom-written for
   Audacity - they are not native controls on any platform -
