@@ -1380,7 +1380,7 @@ void AdornedRulerPanel::ReCreateButtons()
    size.y = std::min(size.y, GetRulerHeight(false));
 
    auto buttonMaker = [&]
-   (wxWindowID id, teBmps bitmap, bool toggle)
+   (wxWindowID id, teBmps bitmap, const TranslatableString &name, bool toggle)
    {
       const auto button =
       ToolBar::MakeButton(
@@ -1388,14 +1388,16 @@ void AdornedRulerPanel::ReCreateButtons()
          bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
          bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
          bitmap, bitmap, bitmap,
-         id, position, toggle, size
+         id, position, name, toggle, size
       );
 
       position.x += size.GetWidth();
       mButtons[iButton++] = button;
       return button;
    };
-   auto button = buttonMaker(OnTogglePinnedStateID, bmpPlayPointerPinned, true);
+   auto button = buttonMaker(OnTogglePinnedStateID, bmpPlayPointerPinned,
+      // i18n-hint "to pin" meaning fix in place
+      XO("Pin Play Head"), true);
    ToolBar::MakeAlternateImages(
 	   *button, 3,
 	   bmpRecoloredUpSmall, bmpRecoloredDownSmall,

@@ -195,6 +195,7 @@ AButton::AButton(wxWindow * parent,
                  wxWindowID id,
                  const wxPoint & pos,
                  const wxSize & size,
+                 const TranslatableString &name,
                  ImageRoll up,
                  ImageRoll over,
                  ImageRoll down,
@@ -203,7 +204,7 @@ AButton::AButton(wxWindow * parent,
                  bool toggle):
    wxWindow()
 {
-   Init(parent, id, pos, size,
+   Init(parent, id, pos, size, name,
         up, over, down, overDown, dis,
         toggle);
 }
@@ -218,6 +219,7 @@ void AButton::Init(wxWindow * parent,
                    wxWindowID id,
                    const wxPoint & pos,
                    const wxSize & size,
+                   const TranslatableString &name,
                    ImageRoll up,
                    ImageRoll over,
                    ImageRoll down,
@@ -230,6 +232,9 @@ void AButton::Init(wxWindow * parent,
    // results in all characters being available in the OnKeyDown function below. Note
    // that OnKeyDown now has to handle navigation.
    Create(parent, id, pos, size, wxWANTS_CHARS);
+   const auto translated = name.Translation();
+   wxWindow::SetLabel( translated );
+   SetName( translated );
 
    mWasShiftDown = false;
    mWasControlDown = false;
@@ -256,7 +261,6 @@ void AButton::Init(wxWindow * parent,
    SetMaxSize(mImages[0].mArr[0].GetMaxSize());
 
 #if wxUSE_ACCESSIBILITY
-   SetName( wxT("") );
    SetAccessible(safenew AButtonAx(this));
 #endif
 }

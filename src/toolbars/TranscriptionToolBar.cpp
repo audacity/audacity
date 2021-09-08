@@ -175,11 +175,10 @@ AButton *TranscriptionToolBar::AddButton(
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredUpHiliteSmall,bmpRecoloredHiliteSmall,
       eFore, eFore, eDisabled,
       wxWindowID(id),
-      wxDefaultPosition,
+      wxDefaultPosition, label,
       false,
       theTheme.ImageSize( bmpRecoloredUpSmall ));
 
-   r->SetLabel(label);
 // JKC: Unlike ControlToolBar, does not have a focus rect.  Shouldn't it?
 // r->SetFocusRect( r->GetRect().Deflate( 4, 4 ) );
 

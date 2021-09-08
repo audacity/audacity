@@ -273,7 +273,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    ctrlSize.Set(mMixerBoard->mMuteSoloWidth, MUTE_SOLO_HEIGHT);
    mToggleButton_Mute =
       safenew AButton(this, ID_TOGGLEBUTTON_MUTE,
-                  ctrlPos, ctrlSize,
+                  ctrlPos, ctrlSize, XO("Mute"),
                   *(mMixerBoard->mImageMuteUp), *(mMixerBoard->mImageMuteOver),
                   *(mMixerBoard->mImageMuteDown), *(mMixerBoard->mImageMuteDown),
                   *(mMixerBoard->mImageMuteDisabled),
@@ -288,7 +288,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    ctrlPos.y += MUTE_SOLO_HEIGHT;
    mToggleButton_Solo =
       safenew AButton(this, ID_TOGGLEBUTTON_SOLO,
-                  ctrlPos, ctrlSize,
+                  ctrlPos, ctrlSize, XO("Solo"),
                   *(mMixerBoard->mImageSoloUp), *(mMixerBoard->mImageSoloOver),
                   *(mMixerBoard->mImageSoloDown), *(mMixerBoard->mImageSoloDown), 
                   *(mMixerBoard->mImageSoloDisabled),

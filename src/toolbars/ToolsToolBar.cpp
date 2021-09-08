@@ -183,9 +183,8 @@ AButton * ToolsToolBar::MakeTool(
       bmpRecoloredDownSmall, // Not bmpRecoloredHiliteSmall as down is inactive.
       eTool, eTool, eTool,
       wxWindowID(id + FirstToolID),
-      wxDefaultPosition, true,
+      wxDefaultPosition, label, true,
       theTheme.ImageSize( bmpRecoloredUpSmall ));
-   button->SetLabel( label );
    pBar->mToolSizer->Add( button );
    return button;
 }

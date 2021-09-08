@@ -160,6 +160,7 @@ public:
                        teBmps eDisabled,
                        wxWindowID id,
                        wxPoint placement,
+                       const TranslatableString &name,
                        bool processdownevents,
                        wxSize size);
 

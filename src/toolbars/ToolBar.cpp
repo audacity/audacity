@@ -847,6 +847,7 @@ AButton * ToolBar::MakeButton(wxWindow *parent,
                               teBmps eDisabled,
                               wxWindowID id,
                               wxPoint placement,
+                              const TranslatableString &name,
                               bool processdownevents,
                               wxSize size)
 {
@@ -863,8 +864,8 @@ AButton * ToolBar::MakeButton(wxWindow *parent,
 
    wxASSERT(parent); // to justify safenew
    AButton * button =
-      safenew AButton(parent, id, placement, size, *up2, *hilite2, *down2, *downHi2,
-            *disable2, processdownevents);
+      safenew AButton(parent, id, placement, size, name,
+         *up2, *hilite2, *down2, *downHi2, *disable2, processdownevents);
 
    return button;
 }

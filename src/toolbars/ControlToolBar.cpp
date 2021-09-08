@@ -162,9 +162,8 @@ AButton *ControlToolBar::MakeButton(ControlToolBar *pBar,
       bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,
       eEnabledUp, eEnabledDown, eDisabled,
       wxWindowID(id),
-      wxDefaultPosition, processdownevents,
+      wxDefaultPosition, label, processdownevents,
       theTheme.ImageSize( bmpRecoloredUpLarge ));
-   r->SetLabel(label);
    enum { deflation =
 #ifdef __WXMAC__
       6

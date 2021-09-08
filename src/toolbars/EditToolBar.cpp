@@ -112,11 +112,10 @@ AButton *EditToolBar::AddButton(
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
       eEnabledUp, eEnabledDown, eDisabled,
       wxWindowID(id+first_ETB_ID),
-      wxDefaultPosition,
+      wxDefaultPosition, label,
       toggle,
       theTheme.ImageSize( bmpRecoloredUpSmall ));
 
-   r->SetLabel(label);
 // JKC: Unlike ControlToolBar, does not have a focus rect.  Shouldn't it?
 // r->SetFocusRect( r->GetRect().Deflate( 4, 4 ) );
 

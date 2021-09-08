@@ -34,6 +34,7 @@ class AUDACITY_DLL_API AButton final : public wxWindow {
            wxWindowID id,
            const wxPoint & pos,
            const wxSize & size,
+           const TranslatableString &name, // for journalling and screen reader
            ImageRoll up,
            ImageRoll over,
            ImageRoll down,
@@ -153,6 +154,7 @@ class AUDACITY_DLL_API AButton final : public wxWindow {
              wxWindowID id,
              const wxPoint & pos,
              const wxSize & size,
+             const TranslatableString &name,
              ImageRoll up,
              ImageRoll over,
              ImageRoll down,
