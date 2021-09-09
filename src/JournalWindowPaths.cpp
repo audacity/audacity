@@ -87,13 +87,13 @@ void FindPathComponents(
    const wxWindow &window, std::pair<wxArrayStringEx, bool> &results )
 {
    bool unique = false;
-   if ( dynamic_cast<const wxTopLevelWindow*>( &window ) )
-      unique = HasUniqueNameAmongPeers( window, wxTopLevelWindows );
-   else if ( auto pParent = window.GetParent() ) {
+   if ( auto pParent = window.GetParent() ) {
       // Recur
       FindPathComponents( *pParent, results );
       unique = HasUniqueNameAmongPeers( window, pParent->GetChildren() );
    }
+   else if ( dynamic_cast<const wxTopLevelWindow*>( &window ) )
+      unique = HasUniqueNameAmongPeers( window, wxTopLevelWindows );
 
    auto &components = results.first;
    components.push_back( window.GetName() );

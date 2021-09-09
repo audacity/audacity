@@ -307,7 +307,8 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
                   for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                   {
                      // Name of simple book page is not displayed
-                     S.StartNotebookPage( {} );
+                     // But needs to be distinct from other pages for journalling
+                     S.StartNotebookPage( pPlugin->GetDescription(j) );
                      pPlugin->OptionsCreate(S, j);
                      S.EndNotebookPage();
                   }

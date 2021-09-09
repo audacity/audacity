@@ -956,9 +956,17 @@ bool Exporter::ExportTracks()
    return success;
 }
 
+static const auto formatOptionsName = XO("Format Options");
+
 void Exporter::CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata)
 {
-   Exporter *self = (Exporter *) userdata;
+   // Rename the parent and grandparent panels for journalling purposes.
+   const auto name = formatOptionsName.Translation();
+   parent->SetName(name);
+   parent->GetParent()->SetName(name);
+
+   Exporter *self =
+      static_cast<Exporter *>( reinterpret_cast<void*>( userdata ) );
    if (self)
    {
       self->CreateUserPane(parent);
@@ -969,18 +977,22 @@ void Exporter::CreateUserPane(wxWindow *parent)
 {
    ShuttleGui S(parent, eIsCreating);
 
-   S.StartStatic(XO("Format Options"), 1);
+   S.StartStatic(formatOptionsName, 1);
    {
       S.StartHorizontalLay(wxEXPAND);
       {
-         mBook = S.Position(wxEXPAND).StartSimplebook();
+         mBook = S
+            .Position(wxEXPAND)
+            .Name(XO("Export Plugins"))
+            .StartSimplebook();
          {
             for (const auto &pPlugin : mPlugins)
             {
                for (int j = 0; j < pPlugin->GetFormatCount(); j++)
                {
                   // Name of simple book page is not displayed
-                  S.StartNotebookPage( {} );
+                  // But needs to be distinct from other pages for journalling
+                  S.StartNotebookPage( pPlugin->GetDescription(j) );
                   {
                      pPlugin->OptionsCreate(S, j);
                   }

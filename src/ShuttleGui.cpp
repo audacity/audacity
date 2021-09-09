@@ -324,6 +324,7 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const TranslatableString &Prompt, bool
    miProp=0;
    mpWind = pCheckBox = safenew wxCheckBox(GetParent(), miId, realPrompt, wxDefaultPosition, wxDefaultSize,
       GetStyle( 0 ));
+   pCheckBox->SetName( wxStripMenuCodes(realPrompt) );
    pCheckBox->SetValue(Selected);
    if (realPrompt.empty()) {
       // NVDA 2018.3 does not read controls which are buttons, check boxes or radio buttons which have
@@ -332,7 +333,7 @@ wxCheckBox * ShuttleGuiBase::AddCheckBox( const TranslatableString &Prompt, bool
       // so that name can be set on a standard control
       pCheckBox->SetAccessible(safenew WindowAccessible(pCheckBox));
 #endif
-      pCheckBox->SetName(wxT("\a"));      // non-empty string which screen readers do not read
+      pCheckBox->SetName(wxT("\a"));
    }
    UpdateSizers();
    return pCheckBox;
