@@ -123,6 +123,8 @@ const std::vector< int > BitRateValues {
 
 }
 
+static const auto description = XO("MP2 Files");
+
 class ExportMP2Options final : public wxPanelWrapper
 {
 public:
@@ -139,6 +141,8 @@ public:
 ExportMP2Options::ExportMP2Options(wxWindow *parent, int WXUNUSED(format))
 :  wxPanelWrapper(parent, wxID_ANY)
 {
+   SetName(description);
+
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
 
@@ -237,7 +241,7 @@ ExportMP2::ExportMP2()
    AddExtension(wxT("mp2"),0);
    SetMaxChannels(2,0);
    SetCanMetaData(true,0);
-   SetDescription(XO("MP2 Files"),0);
+   SetDescription(description,0);
 }
 
 ProgressResult ExportMP2::Export(AudacityProject *project,

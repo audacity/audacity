@@ -72,7 +72,8 @@ class ExportFFmpegAC3Options final : public wxPanelWrapper
 {
 public:
 
-   ExportFFmpegAC3Options(wxWindow *parent, int format);
+   ExportFFmpegAC3Options(
+      wxWindow *parent, int format, const TranslatableString &description);
    virtual ~ExportFFmpegAC3Options();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -93,7 +94,8 @@ class ExportFFmpegAACOptions final : public wxPanelWrapper
 {
 public:
 
-   ExportFFmpegAACOptions(wxWindow *parent, int format);
+   ExportFFmpegAACOptions(
+      wxWindow *parent, int format, const TranslatableString &description);
    virtual ~ExportFFmpegAACOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -105,7 +107,8 @@ class ExportFFmpegAMRNBOptions final : public wxPanelWrapper
 {
 public:
 
-   ExportFFmpegAMRNBOptions(wxWindow *parent, int format);
+   ExportFFmpegAMRNBOptions(
+      wxWindow *parent, int format, const TranslatableString &description);
    virtual ~ExportFFmpegAMRNBOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -122,7 +125,8 @@ class ExportFFmpegOPUSOptions final : public wxPanelWrapper
 {
 public:
 
-   ExportFFmpegOPUSOptions(wxWindow *parent, int format);
+   ExportFFmpegOPUSOptions(
+      wxWindow *parent, int format, const TranslatableString &description);
    ~ExportFFmpegOPUSOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -156,7 +160,8 @@ class ExportFFmpegWMAOptions final : public wxPanelWrapper
 {
 public:
 
-   ExportFFmpegWMAOptions(wxWindow *parent, int format);
+   ExportFFmpegWMAOptions(
+      wxWindow *parent, int format, const TranslatableString &description);
    ~ExportFFmpegWMAOptions();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -175,7 +180,8 @@ class ExportFFmpegCustomOptions final : public wxPanelWrapper
 {
 public:
 
-   ExportFFmpegCustomOptions(wxWindow *parent, int format);
+   ExportFFmpegCustomOptions(
+      wxWindow *parent, int format, const TranslatableString &description);
    ~ExportFFmpegCustomOptions();
 
    void PopulateOrExchange(ShuttleGui & S);

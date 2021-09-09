@@ -273,11 +273,15 @@ BEGIN_EVENT_TABLE(ExportMP3Options, wxPanelWrapper)
    EVT_CHECKBOX(ID_MONO,      ExportMP3Options::OnMono)
 END_EVENT_TABLE()
 
+static const auto description = XO("MP3 Files");
+
 ///
 ///
 ExportMP3Options::ExportMP3Options(wxWindow *parent, int WXUNUSED(format))
 :  wxPanelWrapper(parent, wxID_ANY)
 {
+   SetName(description);
+
    mSetRate = gPrefs->Read(wxT("/FileFormats/MP3SetRate"), PRESET_STANDARD);
    mVbrRate = gPrefs->Read(wxT("/FileFormats/MP3VbrRate"), QUALITY_2);
    mAbrRate = gPrefs->Read(wxT("/FileFormats/MP3AbrRate"), 192);
@@ -1730,7 +1734,7 @@ ExportMP3::ExportMP3()
    AddExtension(wxT("mp3"),0);
    SetMaxChannels(2,0);
    SetCanMetaData(true,0);
-   SetDescription(XO("MP3 Files"),0);
+   SetDescription(description,0);
 }
 
 bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(format))

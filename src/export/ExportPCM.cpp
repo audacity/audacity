@@ -152,9 +152,13 @@ BEGIN_EVENT_TABLE(ExportPCMOptions, wxPanelWrapper)
    EVT_CHOICE(ID_ENCODING_CHOICE, ExportPCMOptions::OnEncodingChoice)
 END_EVENT_TABLE()
 
+static const auto description = XO("Other uncompressed files");
+
 ExportPCMOptions::ExportPCMOptions(wxWindow *parent, int selformat)
 :  wxPanelWrapper(parent, wxID_ANY)
 {
+   SetName(description);
+
    // Remember the selection format
    mSelFormat = selformat;
 
@@ -432,7 +436,7 @@ ExportPCM::ExportPCM()
    selformat = AddFormat() - 1;     // Matches FMT_OTHER
    SetExtensions(sf_get_all_extensions(), selformat);
    SetFormat(wxT("LIBSNDFILE"), selformat);
-   SetDescription(XO("Other uncompressed files"), selformat);
+   SetDescription(description, selformat);
    SetCanMetaData(true, selformat);
    SetMaxChannels(255, selformat);
 }

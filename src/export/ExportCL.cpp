@@ -50,6 +50,8 @@
    }
 #endif
 
+static const auto Description = XO("(external program)");
+
 //----------------------------------------------------------------------------
 // ExportCLOptions
 //----------------------------------------------------------------------------
@@ -84,6 +86,7 @@ END_EVENT_TABLE()
 ExportCLOptions::ExportCLOptions(wxWindow *parent, int WXUNUSED(format))
 :  wxPanelWrapper(parent, wxID_ANY)
 {
+   SetName(Description);
    mHistory.Load(*gPrefs, wxT("/FileFormats/ExternalProgramHistory"));
 
    if (mHistory.empty()) {
@@ -352,7 +355,7 @@ ExportCL::ExportCL()
    AddExtension(wxT(""),0);
    SetMaxChannels(255,0);
    SetCanMetaData(false,0);
-   SetDescription(XO("(external program)"),0);
+   SetDescription(Description,0);
 }
 
 ProgressResult ExportCL::Export(AudacityProject *project,

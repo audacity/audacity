@@ -38,6 +38,8 @@ Joshua Haberman
 #include "../widgets/ProgressDialog.h"
 #include "wxFileNameWrapper.h"
 
+static const auto description = XO("FLAC Files");
+
 //----------------------------------------------------------------------------
 // ExportFLACOptions Class
 //----------------------------------------------------------------------------
@@ -59,6 +61,8 @@ public:
 ExportFLACOptions::ExportFLACOptions(wxWindow *parent, int WXUNUSED(format))
 :  wxPanelWrapper(parent, wxID_ANY)
 {
+   SetName(description);
+
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
 
@@ -237,7 +241,7 @@ ExportFLAC::ExportFLAC()
    AddExtension(wxT("flac"),0);
    SetMaxChannels(FLAC__MAX_CHANNELS,0);
    SetCanMetaData(true,0);
-   SetDescription(XO("FLAC Files"),0);
+   SetDescription(description,0);
 }
 
 ProgressResult ExportFLAC::Export(AudacityProject *project,

@@ -1317,37 +1317,43 @@ void ExportFFmpeg::OptionsCreate(ShuttleGui &S, int format)
    if (mSubFormat == FMT_M4A)
    {
       S.AddWindow(
-         safenew ExportFFmpegAACOptions{ S.GetParent(), format } );
+         safenew ExportFFmpegAACOptions{
+            S.GetParent(), format, GetDescription(FMT_M4A) } );
       return;
    }
    else if (mSubFormat == FMT_AC3)
    {
       S.AddWindow(
-         safenew ExportFFmpegAC3Options{ S.GetParent(), format } );
+         safenew ExportFFmpegAC3Options{
+            S.GetParent(), format, GetDescription(FMT_AC3) } );
       return;
    }
    else if (mSubFormat == FMT_AMRNB)
    {
       S.AddWindow(
-         safenew ExportFFmpegAMRNBOptions{ S.GetParent(), format } );
+         safenew ExportFFmpegAMRNBOptions{
+            S.GetParent(), format, GetDescription(FMT_AMRNB) } );
       return;
    }
    else if (mSubFormat == FMT_OPUS)
    {
       S.AddWindow(
-         safenew ExportFFmpegOPUSOptions{ S.GetParent(), format });
+         safenew ExportFFmpegOPUSOptions{
+            S.GetParent(), format, GetDescription(FMT_OPUS) });
       return;
    }
    else if (mSubFormat == FMT_WMA2)
    {
       S.AddWindow(
-         safenew ExportFFmpegWMAOptions{ S.GetParent(), format } );
+         safenew ExportFFmpegWMAOptions{
+            S.GetParent(), format, GetDescription(FMT_WMA2) } );
       return;
    }
    else if (mSubFormat == FMT_OTHER)
    {
       S.AddWindow(
-         safenew ExportFFmpegCustomOptions{ S.GetParent(), format } );
+         safenew ExportFFmpegCustomOptions{
+            S.GetParent(), format, GetDescription(FMT_OTHER) } );
       return;
    }
 
