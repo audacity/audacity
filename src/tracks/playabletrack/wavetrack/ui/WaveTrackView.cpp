@@ -870,7 +870,11 @@ auto WaveTrackSubView::GetMenuItems(
             (pAffordance && pRenameClip) },
       };
    else
-      return {};
+      return {
+         { L"Paste", XO("Paste")  },
+         {},
+         { L"TrackMute", XO("Mute/Unmute Track") },
+      };
 }
 
 WaveTrackView &WaveTrackView::Get( WaveTrack &track )
