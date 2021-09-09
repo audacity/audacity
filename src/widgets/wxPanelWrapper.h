@@ -182,7 +182,9 @@ public:
       parent, message.Translation(), defaultDir, defaultFile,
       FileNames::FormatWildcard( fileTypes ),
       style, pos, sz, name.Translation() )
-   {}
+   {
+      SetName(name.Translation());
+   }
 
    // Pseudo ctor
    void Create(
@@ -202,6 +204,7 @@ public:
          FileNames::FormatWildcard( fileTypes ),
          style, pos, sz, name.Translation()
       );
+      SetName(name.Translation());
    }
 };
 
