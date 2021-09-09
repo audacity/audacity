@@ -85,7 +85,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
                      true});
       S.TieCheckBox(XXO("Editing a clip can &move other clips"),
                     {wxT("/GUI/EditClipCanMove"),
-                     true});
+                     false});
       S.TieCheckBox(XXO("\"Move track focus\" c&ycles repeatedly through tracks"),
                     {wxT("/GUI/CircularTrackNavigation"),
                      false});
@@ -147,6 +147,6 @@ bool GetEditClipsCanMove()
    if( mIsSyncLocked )
       return true;
    bool editClipsCanMove;
-   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipsCanMove, true);
+   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipsCanMove, false);
    return editClipsCanMove;
 }
