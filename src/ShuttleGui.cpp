@@ -2356,9 +2356,10 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       // Replace standard Help button with smaller icon button.
       // bs->AddButton(safenew wxButton(parent, wxID_HELP));
       b = safenew wxBitmapButton(parent, wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
-      b->SetToolTip( XO("Help").Translation() );
-      b->SetLabel(XO("Help").Translation());       // for screen readers
-      b->SetName( b->GetLabel() );
+      auto name = XO("Help").Translation();
+      b->SetToolTip( name );
+      b->SetLabel( name );       // for screen readers
+      b->SetName( name ); // for journalling
       bs->AddButton( b );
    }
 #endif
@@ -2427,9 +2428,10 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       // Replace standard Help button with smaller icon button.
       // bs->AddButton(safenew wxButton(parent, wxID_HELP));
       b = safenew wxBitmapButton(parent, wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
-      b->SetToolTip( XO("Help").Translation() );
-      b->SetLabel(XO("Help").Translation());       // for screen readers
-      b->SetName( b->GetLabel() );
+      auto name = XO("Help").Translation();
+      b->SetToolTip( name );
+      b->SetLabel( name );       // for screen readers
+      b->SetName( name ); // for journalling
       bs->Add( b, 0, wxALIGN_CENTER );
    }
 #endif

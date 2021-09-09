@@ -991,8 +991,10 @@ void Exporter::CreateUserPane(wxWindow *parent)
          S.EndSimplebook();
 
          auto b = safenew wxBitmapButton(S.GetParent(), wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
-         b->SetToolTip( XO("Help").Translation() );
-         b->SetLabel(XO("Help").Translation());       // for screen readers
+         auto name = XO("Help").Translation();
+         b->SetToolTip( name );
+         b->SetLabel( name );       // for screen readers
+         b->SetName( name ); // for journalling
          S.Position(wxALIGN_BOTTOM | wxRIGHT | wxBOTTOM).AddWindow(b);
       }
       S.EndHorizontalLay();

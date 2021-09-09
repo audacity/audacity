@@ -128,8 +128,10 @@ void QuickFixDialog::AddStuck( ShuttleGui & S, bool & bBool,
      // Replace standard Help button with smaller icon button.
       // bs->AddButton(safenew wxButton(parent, wxID_HELP));
       auto b = safenew wxBitmapButton(S.GetParent(), HelpButtonID+mItem, theTheme.Bitmap( bmpHelpIcon ));
-      b->SetToolTip( _("Help") );
-      b->SetLabel(_("Help"));       // for screen readers
+      auto name = XO("Help").Translation();
+      b->SetToolTip( name );
+      b->SetLabel( name );       // for screen readers
+      b->SetName( name ); // for journalling
       b->Bind( wxEVT_BUTTON, [this, Help](const wxCommandEvent&){
          OnHelp( Help );
       } );

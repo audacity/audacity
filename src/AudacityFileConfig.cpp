@@ -85,9 +85,11 @@ void AudacityFileConfig::Warn()
       {
          // Can't use themed bitmap since the theme manager might not be
          // initialized yet and it requires a configuration file.
-         wxButton *b = S.Id(wxID_HELP).AddBitmapButton(wxBitmap(Help_xpm));
-         b->SetToolTip( XO("Help").Translation() );
-         b->SetLabel(XO("Help").Translation());       // for screen readers
+         wxButton *b = S
+            .Id(wxID_HELP)
+            .Name( XO("Help") )
+            .ToolTip( XO("Help") )
+            .AddBitmapButton(wxBitmap(Help_xpm));
 
          b = S.Id(wxID_CANCEL).AddButton(XXO("&Quit Audacity"));
          b = S.Id(wxID_OK).AddButton(XXO("&Retry"));

@@ -146,9 +146,9 @@ MultiDialog::MultiDialog(wxWindow * pParent,
 
             if (!mHelpPage.empty()) {
                auto pHelpBtn = S.Id(wxID_HELP)
+                  .Name(XO("Help"))
+                  .ToolTip(XO("Help"))
                   .AddBitmapButton(theTheme.Bitmap(bmpHelpIcon), wxALIGN_CENTER, false);
-               pHelpBtn->SetToolTip(XO("Help").Translation());
-               pHelpBtn->SetLabel(XO("Help").Translation());       // for screen readers
             }
          }
          S.EndHorizontalLay();
