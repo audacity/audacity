@@ -537,9 +537,11 @@ wxComboBox * ShuttleGuiBase::AddCombo(
       Choices[i] = choices[i];
    }
 
+   auto name = wxStripMenuCodes(translated);
    mpWind = pCombo = safenew wxComboBox(GetParent(), miId, Selected, wxDefaultPosition, wxDefaultSize,
-      n, Choices, GetStyle( 0 ));
-   mpWind->SetName(wxStripMenuCodes(translated));
+      n, Choices, GetStyle( 0 ),
+      wxDefaultValidator,
+      name);
 
    UpdateSizers();
    return pCombo;
