@@ -5,7 +5,7 @@
 * **python3** >= 3.5
 * **conan** >= 1.32.0
 * **cmake** >= 3.16
-* A working C++ 14 compiler
+* A working C++ 17 compiler
 
 ### Conan
 
@@ -37,7 +37,7 @@ On Linux, `cmake` is usually available from the system package manager.
 
 We build Audacity using [Microsoft Visual Studio 2019](https://visualstudio.microsoft.com/vs/community/). In order to build Audacity **Desktop development with C++** workload is required.
 
-As we require only C++14 - MSVC 2017 should work just fine too.
+As we require only C++17 - MSVC 2017 should work just fine too.
 
 ### MacOS
 
@@ -45,7 +45,7 @@ We build Audacity using XCode 12. However, it is likely possible to build it wit
 
 ### Linux
 
-We use GCC 9, but any C++14 compliant compiler should work.
+We use GCC 9, but any C++17 compliant compiler should work.
 
 On Debian or Ubuntu, you can install everything required using the following commands:
 
@@ -113,7 +113,7 @@ Alternatively, you can use **CLion**. If you chose to do so, open the directory 
 At the moment we only support **x86_64** builds. It is possible to build using AppleSilicon hardware but **mad** and **id3tag** should be disabled:
 
 ```
-cmake -GXCode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=off ../audacity
+cmake -GXcode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=off ../audacity
 ```
 
 ## Linux & Other OS
