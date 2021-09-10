@@ -94,6 +94,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 #include "wxFileNameWrapper.h"
+#include "../../libraries/lib-project/Project.h"
 
 #include "Export.h"
 
@@ -1858,7 +1859,7 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    // Verify sample rate
    if (!make_iterator_range( sampRates ).contains( rate ) ||
       (rate < lowrate) || (rate > highrate)) {
-       if (project->mBatch) {
+       if (project->mBatchMode) {
            if (bitrate > 32) {
                rate = 48000;
            }
