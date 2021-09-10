@@ -1834,7 +1834,6 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       bitrate = fixRateValues[ brate ];
       exporter.SetMode(MODE_ABR);
       exporter.SetBitrate(bitrate);
-
       if (bitrate > 160) {
          lowrate = 32000;
       }
@@ -1859,13 +1858,17 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    // Verify sample rate
    if (!make_iterator_range( sampRates ).contains( rate ) ||
       (rate < lowrate) || (rate > highrate)) {
-       if (bitrate > 32) {
-           rate = 48000;
+       if (project->mBatch) {
+           if (bitrate > 32) {
+               rate = 48000;
+           }
+           else if (bitrate <= 32) {
+               rate = 240000;
+           }
        }
-       else if (bitrate <= 32) {
-           rate = 240000;
+       else {
+           rate = AskResample(bitrate, rate, lowrate, highrate);
        }
-      //rate = AskResample(bitrate, rate, lowrate, highrate);
       if (rate == 0) {
          return ProgressResult::Cancelled;
       }
