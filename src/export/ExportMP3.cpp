@@ -1859,7 +1859,13 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    // Verify sample rate
    if (!make_iterator_range( sampRates ).contains( rate ) ||
       (rate < lowrate) || (rate > highrate)) {
-      rate = AskResample(bitrate, rate, lowrate, highrate);
+       if (bitrate > 32) {
+           rate = 48000;
+       }
+       else if (bitrate <= 32) {
+           rate = 240000;
+       }
+      //rate = AskResample(bitrate, rate, lowrate, highrate);
       if (rate == 0) {
          return ProgressResult::Cancelled;
       }
