@@ -3,7 +3,7 @@
 Design notes: we will use the "absolute" interface of the cmupv library.
 "Absolute" means that rather than giving the phase vocoder a hop size
 with which to move through the input (thus input position is
-"relative"), a callback gives an exact input location. Thus, the input
+"relative"), a callback gives an exact output location. Thus, the input
 parameters to the phase vocoder will be the input sound and a mapping
 from output time to input time. For each frame of output, we'll get a 
 callback asking for input. In the callback, we'll evaluate the mapping
@@ -69,15 +69,18 @@ INTERFACE WTIH CMUPV
 f is the input sound
 g is the map from output to input
 
-Samples are computed by pv_fetch which has a state[] field
-available as well as an interface to get samples from input
-signals. The state[] is only accessible to pv_fetch because
-it is inside a pvshell_susp_node, which is local within 
-pvshell.c. (This may not be the best design.) Therefore, to
-create the phase vocoder object and save a pointer in the 
-state, we test for the first call to pv_fetch and do some
-initialization there instead of in snd_vocoder where the 
-suspension is created.
+Samples are computed by pv_fetch which has a state[] field available
+as well as an interface to get samples from input signals.
+
+The state[] information is partly initialized in snd_phasevocoder, and
+partly in the first call to snd_fetch(). Original comments imply that
+this had to do with state[] being hidden within the pvshell
+abstraction and revealed only to snd_fetch(), but it appears that
+state[] could be completely initialized in snd_phasevocoder and passed
+into snd_make_pvshell(). Finishing the initialization in snd_fetch()
+splits the initialization code and requires a conditional branch in
+every call to snd_fetch (an insignificant cost) but it defers calling
+pv_create2() until it is really needed.
 
 Output is taken from OUTPUT as needed until REMAINING is zero.
 Then, pv_get_output2() is called to generate more samples.
@@ -85,12 +88,16 @@ pv_get_output2() calls the callback, which does most of the complex work.
 (1) The callback must figure out the "time" of the next frame it will
     generate. This will be based on out_count provided to the callback.
 (2) Map this time via g to an input time for f and convert to samples.
-(3) Subtract framesize / 2 to get the first_sample we need from f.
+(3) Subtract framesize/2 to get the first_sample we need from f.
 (4) f_count is the total sample count for the end of input so the beginning
     of input is at f_count - fftsize.  first_sample is the place we want
     to start the next frame, so we need to skip over 
     first_sample - (f_count - fftsize) samples. 
 (5) fill the rest of input from f.
+
+When the input frame time is less than framesize/2, we need to fetch
+samples with a negative sample count. The callback should generate
+zeros until samplecount 0 is reached, then get samples from f.
 
 Logical Stop and Terminate Logic
 --------------------------------
@@ -98,16 +105,34 @@ The logical stop time should be the logical stop time of the input (f)
 mapped to the output. Since g is a map from output time to input time, we want
         g(output.lst) = f.lst, or output.lst = g-inverse(f.lst)
     In practice, we're not given g-inverse and would like not to compute
-it. We iterate through g to find g(t) for each fft frame center time. When
-we reach the logical stop time of the input, detected by PVSHELL_TEST_F
-returning PVSHELL_FLAG_LOGICAL_STOP, we can set the logical stop time of
-the output by linearly interpolation. We save previous time points in g as
-t0,g0 and t1,g1, where g0 = g(t0) and g1 = g(t1). We have the logical stop
-time of f that we'll call g2 and we want the corresponding t2:
-        (t1 - t0)/(t2 - t0) = (g1 - g0)/(g2 - g0), so
-        (t1 - t0) = (t2 - t0) * (g1 - g0)/(g2 - g0), so
-        t1 = t0 + (t2 - t0) * (g1 - g0)/(g2 - g0), where
-        t1 is the logical stop time.
+it. We iterate through g to find g(t) for each fft frame center
+time. When we reach the logical stop time of the input, detected by
+PVSHELL_TEST_F returning PVSHELL_FLAG_LOGICAL_STOP, we can set the
+logical stop time of the output by linear interpolation as a
+reasonable approximation.  We save previous time points in g as t0,g0
+and t1,g1, where g0 = g(t0) and g1 = g(t1). We have the logical stop
+time of f that we'll call g2. When g0 < g2 <= g1,
+        (t2 - t0)/(t1 - t0) = (g2 - g0)/(g1 - g0), so
+        (t2 - t0) = (t1 - t0) * (g2 - g0)/(g1 - g0), so
+        t2 = t0 + (t1 - t0) * (g2 - g0)/(g1 - g0), where
+        t2 is the logical stop time of the output.
+If g1 == g0, the function g(t) is not increasing. This should mean that
+we don't advance the input so we won't discover a logical stop time, but
+just in case, we can set t2 = t0 if g1 == g0.
+
+    Notice that we get t2 when g0 < g2 <= g1, so we have to test for that.
+g2 (the logical stop time of f) in general becomes known when we read that
+sample from f, but we are always reading fftsize/2 samples ahead in f to
+fill the analysis window, so we should learn g2 before the output reaches
+t2. (We won't output t2 until we've overlap-added a number of frames 
+centered beyond t2. These samples-in-progress are held in pvs->output[].)
+
+    Another complication is that when we are actually ready to output 
+sample t2, it must be at the beginning of output and the output is marked
+with the logical stop flag. This is handled by pv_fetch. pv_callback
+(which is not assembling output blocks for Nyquist is only responsible
+for calculating the logical stop time of the output.)
+
     The logical stop time can also be the terminate time of g -- if g 
 terminates, we must terminate the output (otherwise we'll be reading from
 time 0 of the input, but we're not allowed to go backward.)
@@ -122,11 +147,11 @@ Input becomes all zero when either we get a frame past the terminate time
 of the input f, or we reach beyond the terminate time of g. Either way, we
 should set a flag saying input has terminated and will be all zero.
 
-Output becomes all zero fftsize / 2 - hopsize beyond the time point of the
+Output becomes all zero (fftsize/2 - hopsize) beyond the time point of the
 first all-zero frame: Let's say we see the flag saying the input is all
 zero because we've terminated on the input side. The *previous* frame was
 therefore the last non-zero signal, and it extends for fftsize/2, but it was
-one hopsize ago, so the non-zero signal extends fftsize/2 - hopsize from the
+one hopsize ago, so the non-zero signal extends (fftsize/2-hopsize) from the
 time of the all-zero frame.
 
 Access to PV state
@@ -145,7 +170,7 @@ the phase vocoder computation is in a callback. However, the parameter to
 the callback is the susp pointer, so in the callback we can access the
 pvshell_type and the pvstate_type data.
 
-To return the flags, we have to stuff data into the
+To calculate the return flags, we have to stuff data into the
 pvstate_type struct and read it back out in pv_fetch after calling
 pv_get_output2(), which is the phase vocoder calculation that calls the
 callback.
@@ -154,6 +179,7 @@ TODO: if g0 and t0 are not initialized because of early logical stop,
 what do we do?
 */
 
+#include "assert.h"
 #include "stdio.h"
 #ifndef mips
 #include "stdlib.h"
@@ -187,23 +213,26 @@ typedef struct pvstate_struct {
     int fftsize;         /* the length of an fft frame */
     int hopsize;         /* the hopsize -- not used */
     int mode;            /* the mode -- see cmupv.h */
-    /* data to compute logical stop time */
+    /* data to compute logical stop time and termination */
+    long f_logical_stop_valid;  /* true when we know f_logical_stop_count */
+    long f_terminated;   /* set when f terminates */
+    long g_terminated;   /* set when g terminates */
+    int64_t f_logical_stop_count;  /* logical stop time of input (f) */
     int64_t t0; /* output sample count of previous frame */
     double g0; /* input time of previous frame center */
     /* data to detect termination */
-    long f_terminated;   /* set when f terminates */
     int64_t f_terminate_count; /* sample count of f when it terminates */
-    long g_terminated;   /* set when g terminates */
     int64_t g_terminate_count; /* sample count of g when it terminates */
     /* return values from pv_callback */
-    long flags; /* logical stop and terminate flags */
+    long logical_stop_valid;
+    long terminate_count_valid;
     int64_t logical_stop_count; /* sample count of output logical stop */
     int64_t terminate_count; /* sample count of output terminate time */
 } pvstate_node, *pvstate_type;
 
 #define OUTPUT_SIZE 256
 
-int pv_callback(long out_count, float *samples, int len, void *rock)
+int pv_callback(int64_t out_count, float *samples, int len, void *rock)
 {
     pvshell_type susp = (pvshell_type) rock;
     pvstate_type pvs = (pvstate_type) susp->state;
@@ -211,9 +240,8 @@ int pv_callback(long out_count, float *samples, int len, void *rock)
     /* (1) figure out the "time" of the start of next frame */
     double out_time = out_count / susp->f->sr;
     /* (2) Map this time via g to an input time for f. */
-    /* compute g count that is past the time; at 0th sample, 
-     * pvs->g_count is 1, so we add 1 to g_count to make the loop and 
-     * interpolation math work right */
+    /* compute sample position that we need; at 0th sample, 
+     * pvs->g_count is 1, so add 1 to 0-based position: */
     double g_count = out_time * susp->g->sr + 1.0;
     double g; /* the value of g at g_count which is at the time of out_count */
     int64_t f_start; /* the start sample of input f for the next frame */
@@ -223,19 +251,8 @@ int pv_callback(long out_count, float *samples, int len, void *rock)
     int needed_from_f; /* samples to get from f this time */
     sample_type *input = pvs->input;
     int i;
-    int f_logically_stopped = FALSE;
-    int64_t f_logical_stop_count;
-    pvs->flags = 0;
-    /* before loop: 
-     *    pvs->g_count <= g_count,
-     * loop invariant: 
-     *    pvs->g_prev == g(pvs->g_count - 2),
-     *    pvs->g_prev == g(pvs->g_count - 1)
-     * after loop:
-     *    pvs->g_count > g_count
-     *    pvs->g_count <= g_count + 1
-     */
-    while (pvs->g_count <= g_count) {
+
+    while (pvs->g_count < g_count) {
         long flags = PVSHELL_TEST_G(susp); /* prepare to get a sample */
         if (!pvs->g_terminated && (flags & PVSHELL_FLAG_TERMINATE)) {
             pvs->g_terminated = TRUE;
@@ -245,10 +262,15 @@ int pv_callback(long out_count, float *samples, int len, void *rock)
         pvs->g_next = PVSHELL_FETCH_G(susp);
         pvs->g_count++;
     }
+    /* numbering samples from 1,
+         pvs->g_prev corresponds to pvs->g_count - 1
+         pvs->g_next corresponds to pvs->g_count, and
+         pvs->g_count - 1 < g_count <= pvs->gcount
+    */
     /* fetch frame by mapping with g unless we've gone beyond g's
        termination time */
     if (!pvs->g_terminated) {
-        /* now interpolate to get the value of g at g_count */
+        /* now interpolate to get the value of g at out_count */
         g = pvs->g_prev + (pvs->g_next - pvs->g_prev) *
                           (g_count - (pvs->g_count - 1));
         /* (3) get the first sample we need from f. */
@@ -281,11 +303,13 @@ int pv_callback(long out_count, float *samples, int len, void *rock)
                 if (flags) { /* normal case is all flags zero, so I think it
                                 is faster to test for either and only if we
                                 know one is set do we test individual flags */
-                    if (flags | PVSHELL_FLAG_LOGICAL_STOP) {
-                        f_logically_stopped = TRUE;
-                        f_logical_stop_count = susp->f->current - susp->f_cnt;
+                    if (flags & PVSHELL_FLAG_LOGICAL_STOP) {
+                        pvs->f_logical_stop_valid = TRUE;
+                        pvs->f_logical_stop_count = 
+                                susp->f->current - susp->f_cnt;
                     }
-                    if (flags | PVSHELL_FLAG_TERMINATE && !pvs->f_terminated) {
+                    if ((flags & PVSHELL_FLAG_TERMINATE) &&
+                        !pvs->f_terminated) {
                         pvs->f_terminated = TRUE;
                         pvs->f_terminate_count = susp->f->current - susp->f_cnt;
                     }
@@ -295,26 +319,35 @@ int pv_callback(long out_count, float *samples, int len, void *rock)
         }
         pvs->input_count = f_start;
         /* (5) fill the rest of input from f */
+        /* (5A) any samples from negative f counts are zero: */
+        while (f_start < 0 && needed_from_f > 0) {
+            input[got_from_f++] = 0.0F;
+            f_start++;
+            needed_from_f--;
+        }
+        /* (5B) any samples for positive f counts use PVSHELL_FETCH_F: */
         for (i = 0; i < needed_from_f; i++) {
             long flags = PVSHELL_TEST_F(susp);
-            if (!f_logically_stopped && (flags | PVSHELL_FLAG_LOGICAL_STOP)) {
-                f_logically_stopped = TRUE;
-                pvs->logical_stop_count = susp->f->current - susp->f_cnt;
+            if (!pvs->f_logical_stop_valid && 
+                (flags & PVSHELL_FLAG_LOGICAL_STOP)) {
+                pvs->f_logical_stop_valid = TRUE;
+                pvs->f_logical_stop_count = susp->f->current - susp->f_cnt;
             }
             input[got_from_f++] = PVSHELL_FETCH_F(susp);
         }
+        /* now, input consists of previous samples that were shifted plus
+           need_from_f samples that were just fetched, giving us fftsize
+           samples to return by copying to samples: */
         memmove(samples, input, pvs->fftsize * sizeof(float));
         /* did we terminate? If window is all zeros, we can compute 
            terminate time */
-        if ((!(pvs->flags & PVSHELL_FLAG_TERMINATE)) && pvs->f_terminated && 
+        if ((!(pvs->terminate_count_valid)) && pvs->f_terminated && 
             pvs->f_terminate_count <= f_start) {
             /* new window is all zero, so output terminates soon ... */
-            pvs->flags |= PVSHELL_FLAG_TERMINATE;
+            pvs->terminate_count_valid = TRUE;
             pvs->terminate_count = out_count - hop + pvs->fftsize / 2;
             /* printf("pv_callback terminated by f at %ld\n", pvs->terminate_count); */
         }
-        pvs->t0 = out_count;
-        pvs->g0 = g;
     } else { /* g has terminated, so we just fill input with zeros */
              /* hopsize does not matter, so we'll set it to fftsize/8 */
         memset(samples, 0, pvs->fftsize * sizeof(*samples));
@@ -322,7 +355,7 @@ int pv_callback(long out_count, float *samples, int len, void *rock)
         /* printf("filled samples with 0, hop %d\n", hop); */
     }
     /* there are two sources of logical stop: f and g. If f, then
-       f_logically_stopped is TRUE, and we need to map using g-inverse.
+       pvs->f_logical_stop_valid is TRUE, and we need to map using g-inverse.
        We'll do that first to get a candidate logical stop time. (This
        is skipped if g has terminated, because the variable g would not
        be defined in that case.)
@@ -330,39 +363,53 @@ int pv_callback(long out_count, float *samples, int len, void *rock)
        candidate logical stop time. If not g_terminated, we do nothing
        (letting the mapped f logical stop time stand if applicable).
        Otherwise, if g_terminated then {
-           if f_logically_stopped, take the minimum of the two candidates,
+           if pvs->f_logical_stop_valid, take the minimum of the two candidates,
            else take the terminate time of g }
        (See comments at top of file for more about the computation here.)
     */
-    if (f_logically_stopped && !pvs->g_terminated) {
-        pvs->logical_stop_count = (int64_t) (pvs->t0 + (out_count - pvs->t0) *
-            ((f_logical_stop_count / susp->f->sr - pvs->g0) / (g - pvs->g0)));
+    /* see if we should determine the logical stop time */
+    if (pvs->f_logical_stop_valid && !pvs->g_terminated && 
+        !pvs->logical_stop_valid) {
+        /* g is valid because !pvs->g_terminated. Following the math at the
+           top of this file... */
+        int64_t t1 = out_count;
+        double g1 = g;
+        double g2 = pvs->f_logical_stop_count / susp->f->sr;
+        if (pvs->g0 < g2 && g2 <= g1) {
+            if (g1 == pvs->g0) {
+                assert(FALSE);  /* DEBUG - just to see if it happens */
+                pvs->logical_stop_valid = TRUE;
+                pvs->logical_stop_count = pvs->t0;
+            } else {
+                pvs->logical_stop_count = (int64_t) (pvs->t0 + 
+                    (t1 - pvs->t0) * ((g2 - pvs->g0) / (g1 - pvs->g0)));
+            }
+        } /* else, we wait until g catches up to logical stop of f */
     }
     if (pvs->g_terminated) {
-        int64_t term_cnt_from_g = 
-			    ROUNDBIG((pvs->g_terminate_count / susp->g->sr) * susp->f->sr);
-        if (f_logically_stopped) { /* take min of g and f log. stop cnt */
-            pvs->logical_stop_count = MIN(pvs->logical_stop_count, 
+        int64_t term_cnt_from_g = /* account for different sample rates */
+                ROUNDBIG((pvs->g_terminate_count / susp->g->sr) * susp->f->sr);
+        if (pvs->logical_stop_valid) { /* take min to be logical stop count */
+            pvs->logical_stop_count = MIN(pvs->logical_stop_count,
                                           term_cnt_from_g);
         } else {
-            f_logically_stopped = TRUE;
+            pvs->f_logical_stop_valid = TRUE;
             pvs->logical_stop_count = term_cnt_from_g;
         }
         /* maybe output has terminated */
         if (pvs->g_terminate_count < out_count + pvs->fftsize / 2) {
-            if (pvs->flags & PVSHELL_FLAG_TERMINATE) {
+            if (pvs->terminate_count_valid) {
                 pvs->terminate_count = MIN(pvs->terminate_count, 
                                            term_cnt_from_g);
             } else {
-                pvs->flags |= PVSHELL_FLAG_TERMINATE;
+                pvs->terminate_count_valid = TRUE;
                 pvs->terminate_count = term_cnt_from_g;
             }
             /* printf("pv_callback terminated by g at %ld\n", term_cnt_from_g); */
         }
     }
-    if (f_logically_stopped) {
-        pvs->flags |= PVSHELL_FLAG_LOGICAL_STOP;
-    }
+    pvs->t0 = out_count;
+    pvs->g0 = g;
 
     return hop;
 }
@@ -394,6 +441,10 @@ long pv_fetch(pvshell_type susp,
         pvs->pv = pv;
         pvs->input = (float *) malloc(pvs->fftsize * sizeof(float));
         pvs->input_count = -pvs->fftsize; /* no valid samples in input yet */
+        /* fill input with zero: we might actually want samples starting
+           near -pvs->fftsize and think that we should use what's already
+           in pvs->input: */
+        memset(pvs->input, 0, pvs->fftsize * sizeof(float));
     }
     while (count < *n) {
         int take = *n - count; /* how many to take from (pv) output */
@@ -406,39 +457,38 @@ long pv_fetch(pvshell_type susp,
         remaining = pvs->output_count;
         /* printf("pv_fetch take %ld remaining %ld\n", take, remaining); */
         if (take > remaining) take = remaining;
-        if (pvs->flags) {
-            if (pvs->flags & PVSHELL_FLAG_TERMINATE) {
-                int64_t to_term = pvs->terminate_count - sample_count;
-                if (to_term < take) take = (int) to_term;
-                if (take == 0) {
-                    /* we want to set the terminate flag at the beginning
-                       of the sample block, i.e. only if count == 0; if
-                       there are samples in the block already, we just
-                       return them and we'll set the terminate flag next time
-                    */
-                    if (count == 0) {
-                        flags |= PVSHELL_FLAG_TERMINATE;
-                    }
-                }
-            }
-            if (pvs->flags & PVSHELL_FLAG_LOGICAL_STOP) {
-                int64_t to_stop = pvs->logical_stop_count - sample_count;
-                /* if we're exactly at the logical stop block, then
-                   set the logical stop flag and compute the block as 
-                   normal. Otherwise, if we have not reached the logical
-                   stop sample yet (to_stop > 0) and we have room to go
-                   past it (to_stop < take), then take only up to logical
-                   stop sample.
+        if (pvs->terminate_count_valid) {
+            int64_t to_term = pvs->terminate_count - sample_count;
+            if (to_term < take) take = (int) to_term;
+            if (take == 0) {
+                /* we want to set the terminate flag at the beginning
+                   of the sample block, i.e. only if count == 0; if
+                   there are samples in the block already, we just
+                   return them and we'll set the terminate flag next time
                 */
-                if (to_stop == 0 && count == 0) {
-                    flags |= PVSHELL_FLAG_LOGICAL_STOP;
-                } else if (to_stop > 0 && to_stop < take) {
-                    take = (int) to_stop;
+                if (count == 0) {
+                    flags |= PVSHELL_FLAG_TERMINATE;
                 }
             }
         }
-        if (take == 0) break; /* no more samples; we now terminate */
-
+        if (pvs->logical_stop_valid) {
+            int64_t to_stop = pvs->logical_stop_count - sample_count;
+            /* if we're exactly at the logical stop block, then
+               set the logical stop flag and compute the block as 
+               normal. Otherwise, if we have not reached the logical
+               stop sample yet (to_stop > 0) and we have room to go
+               past it (to_stop < take), then take only up to logical
+               stop sample.
+            */
+            if (to_stop == 0 && count == 0) {
+                flags |= PVSHELL_FLAG_LOGICAL_STOP;
+            } else if (to_stop > 0 && to_stop < take) {
+                take = (int) to_stop;
+            }
+        }
+        if (take == 0) {
+            break; /* no more samples; we now terminate */
+        }
         index = OUTPUT_SIZE - pvs->output_count;
         for (i = 0; i < take; i++) {
             *out++ = pvs->output[index++];
@@ -463,7 +513,8 @@ void pv_free(struct pvshell_struct *susp)
 }
 
 
-sound_type snd_phasevocoder(sound_type f, sound_type g, long fftsize, long hopsize, long mode)
+sound_type snd_phasevocoder(sound_type f, sound_type g, long fftsize, 
+                            long hopsize, long mode)
 {
     /* we're using 5 doubles of state. The first is a parameter,
      * and the rest are initialized to zero except for state[2],
@@ -480,19 +531,32 @@ sound_type snd_phasevocoder(sound_type f, sound_type g, long fftsize, long hopsi
     if (hopsize == -1) 
         hopsize = fftsize / 8;
     pvstate_node state = {
-        0 /* f_count */,
-        0 /* g_count */,
-        0 /* g_prev */,
-        0 /* g_next */,
-        0 /* sample_count */,
-        NULL, /* pv */
-        NULL, /* input */
-        0, /* input_count */
-        NULL, /* output */
-        0, /* output_count */
+        0,       /* f_count */
+        0,       /* g_count */
+        0,       /* g_prev */
+        0,       /* g_next */
+        0,       /* sample_count */
+        NULL,    /* pv */
+        NULL,    /* input */
+        0,       /* input_count */
+        NULL,    /* output */
+        0,       /* output_count */
         fftsize, /* fftsize */
         hopsize, /* hopsize */
-        mode };
+        mode,    /* mode -- see cmupv.h */
+        FALSE,   /* f_logical_stop_valid */
+        FALSE,   /* f_terminated */
+        FALSE,   /* g_terminated */
+        0,       /* f_logical_stop_count */
+        0,       /* t0: output sample count of previous frame */
+        0,       /* g0: input time of previous frame center */
+        0,       /* f_terminate_count */
+        0,       /* g_terminate_count */
+        FALSE,   /* logical_stop_valid */
+        FALSE,   /* terminate_count_valid */
+        0,       /* logical_stop_count */
+        0        /* terminate_count */
+  };
 
     /* If f and g do not start at the same time, we should really
      * should do something about it, but we'll just throw an error.

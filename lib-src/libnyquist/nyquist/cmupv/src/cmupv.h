@@ -47,7 +47,7 @@ typedef void *Phase_vocoder; // a phase vocoder
 // len samples should be output at the given output sample count.
 // the hopsize should be returned.
 // Return value is the hopsize used (hop from previous input frame)
-typedef int (*Pv_callback)(long out_count, float *samples, int len, 
+typedef int (*Pv_callback)(int64_t out_count, float *samples, int len, 
                            void *rock);
 
 // create a phase vocoder. Pass in function pointers to allocate
