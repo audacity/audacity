@@ -2,13 +2,14 @@
 
   Audacity: A Digital Audio Editor
 
-  @file JournalWindowPaths.cpp
+  @file JournalEvents.cpp
 
   Paul Licameli
 
 *********************************************************************/
 
 #include "JournalEvents.h"
+#include "Journal.h"
 #include "JournalOutput.h"
 #include "JournalRegistry.h"
 #include "JournalWindowPaths.h"
@@ -198,7 +199,7 @@ static Type NullaryCommandType( EventType type, const wxString &code ){
    };
 
    return Type{ type, code, WindowEventSerialization, deserialize };
-};
+}
 
 template<typename Event = wxCommandEvent, typename EventType >
 static Type BooleanCommandType( EventType type, const wxString &code ){
@@ -237,7 +238,7 @@ static Type BooleanCommandType( EventType type, const wxString &code ){
    };
 
    return Type{ type, code, serialize, deserialize };
-};
+}
 
 template<typename Event = wxCommandEvent, typename EventType >
 static Type NumericalCommandType( EventType type, const wxString &code ){
@@ -277,7 +278,7 @@ static Type NumericalCommandType( EventType type, const wxString &code ){
    };
 
    return Type{ type, code, serialize, deserialize };
-};
+}
 
 template<typename Event = wxCommandEvent, typename EventType >
 static Type TextualCommandType( EventType type, const wxString &code ){
@@ -320,7 +321,7 @@ static Type TextualCommandType( EventType type, const wxString &code ){
    };
 
    return Type{ type, code, serialize, deserialize };
-};
+}
 
 const Types &TypeCatalog()
 {
@@ -418,6 +419,8 @@ struct Watcher : wxEventFilter
 
 }
 
+namespace {
+
 void Initialize()
 {
    (void) TypeCatalog();
@@ -426,6 +429,23 @@ void Initialize()
 void Watch()
 {
    static Watcher instance;
+}
+
+// Add a callback for startup of journalling
+RegisteredInitializer initializer{ [](){
+   // Register the event handler for recording
+   // and dictionary items for replaying
+   if ( !GetError() && IsRecording() )
+      // one time installation
+      Watch();
+
+   if ( !GetError() && IsReplaying() )
+      // Be sure event types are registered for dispatch
+      Initialize();
+
+   return true;
+} };
+
 }
 
 }
