@@ -45,6 +45,7 @@
 
 #include "../ShuttleGui.h"
 #include "../widgets/HelpSystem.h"
+#include "FFT.h"
 #include "Prefs.h"
 #include "RealFFTf.h"
 #include "../SpectrumTransformer.h"
@@ -121,7 +122,7 @@ enum WindowTypes : unsigned {
    WT_BLACKMAN_HANN,     // requires 1/4 step
    WT_HAMMING_RECTANGULAR, // requires 1/2 step
    WT_HAMMING_HANN, // requires 1/4 step
-   WT_HAMMING_INV_HAMMING, // requires 1/2 step
+   // WT_HAMMING_INV_HAMMING, // requires 1/2 step
 
    WT_N_WINDOW_TYPES,
    WT_DEFAULT_WINDOW_TYPES = WT_HANN_HANN
@@ -130,29 +131,22 @@ enum WindowTypes : unsigned {
 const struct WindowTypesInfo {
    const TranslatableString name;
    unsigned minSteps;
-   double inCoefficients[3];
-   double outCoefficients[3];
-   double productConstantTerm;
 } windowTypesInfo [WT_N_WINDOW_TYPES] = {
-   // In all of these cases (but the last), the constant term of the product of windows
-   // is the product of the windows' two constant terms,
-   // plus one half the product of the first cosine coefficients.
 
    // Experimental only, don't need translations
-   { Verbatim("none, Hann (2.0.6 behavior)"),
-      2, { 1, 0, 0 },            { 0.5, -0.5, 0 }, 0.5 },
-   { Verbatim("Hann, none"),
-      2, { 0.5, -0.5, 0 },       { 1, 0, 0 },      0.5 },
-   { Verbatim("Hann, Hann (default)"),
-      4, { 0.5, -0.5, 0 },       { 0.5, -0.5, 0 }, 0.375 },
-   { Verbatim("Blackman, Hann"),
-      4, { 0.42, -0.5, 0.08 },   { 0.5, -0.5, 0 }, 0.335 },
-   { Verbatim("Hamming, none"),
-      2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 },      0.54 },
-   { Verbatim("Hamming, Hann"),
-      4, { 0.54, -0.46, 0.0 },   { 0.5, -0.5, 0 }, 0.385 },
-   { Verbatim("Hamming, Reciprocal Hamming"),
-      2, { 0.54, -0.46, 0.0 },   { 1, 0, 0 }, 1.0 }, // output window is special
+   { Verbatim("none, Hann (2.0.6 behavior)"),    2 },
+   /* i18n-hint: Hann is a proper name */
+   { Verbatim("Hann, none"),                     2 },
+   /* i18n-hint: Hann is a proper name */
+   { Verbatim("Hann, Hann (default)"),           4 },
+   /* i18n-hint: Hann and Blackman are proper names */
+   { Verbatim("Blackman, Hann"),                 4 },
+   /* i18n-hint: Hamming is a proper name */
+   { Verbatim("Hamming, none"),                  2 },
+   /* i18n-hint: Hamming and Hann area proper names */
+   { Verbatim("Hamming, Hann"),                  4 },
+   /* i18n-hint: Hamming is a proper name */
+   // { XO("Hamming, Reciprocal Hamming"),    2, }, // output window is special
 };
 
 enum {
@@ -267,7 +261,7 @@ public:
    typedef EffectNoiseReduction::Settings Settings;
    typedef  EffectNoiseReduction::Statistics Statistics;
 
-   Worker(
+   Worker(eWindowFunctions inWindowType, eWindowFunctions outWindowType,
       EffectNoiseReduction &effect, const Settings &settings,
       Statistics &statistics
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -640,7 +634,36 @@ bool EffectNoiseReduction::Process()
          XO("Warning: window types are not the same as for profiling.") );
    }
 
-   Worker worker{
+   eWindowFunctions inWindowType, outWindowType;
+   switch (mSettings->mWindowTypes) {
+   case WT_RECTANGULAR_HANN:
+      inWindowType = eWinFuncRectangular;
+      outWindowType = eWinFuncHann;
+      break;
+   case WT_HANN_RECTANGULAR:
+      inWindowType = eWinFuncHann;
+      outWindowType = eWinFuncRectangular;
+      break;
+   case WT_BLACKMAN_HANN:
+      inWindowType = eWinFuncBlackman;
+      outWindowType = eWinFuncHann;
+      break;
+   case WT_HAMMING_RECTANGULAR:
+      inWindowType = eWinFuncHamming;
+      outWindowType = eWinFuncRectangular;
+      break;
+   case WT_HAMMING_HANN:
+      inWindowType = eWinFuncHamming;
+      outWindowType = eWinFuncHann;
+      break;
+   default:
+      wxASSERT(false);
+      [[fallthrough]] ;
+   case WT_HANN_HANN:
+      inWindowType = outWindowType = eWinFuncHann;
+      break;
+   }
+   Worker worker{ inWindowType, outWindowType,
       *this, *mSettings, *mStatistics
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       , mF0, mF1
@@ -734,7 +757,9 @@ void EffectNoiseReduction::Worker::ApplyFreqSmoothing(FloatVector &gains)
       gains[ii] = exp(mFreqSmoothingScratch[ii]);
 }
 
-SpectrumTransformer::SpectrumTransformer(
+SpectrumTransformer::SpectrumTransformer( bool needsOutput,
+   eWindowFunctions inWindowType,
+   eWindowFunctions outWindowType,
    size_t windowSize, unsigned stepsPerWindow )
 : mWindowSize{ windowSize }
 , mSpectrumSize{ 1 + mWindowSize / 2 }
@@ -744,6 +769,7 @@ SpectrumTransformer::SpectrumTransformer(
 , mFFTBuffer( mWindowSize )
 , mInWaveBuffer( mWindowSize )
 , mOutOverlapBuffer( mWindowSize )
+, mNeedsOutput{ needsOutput }
 {
    // Check preconditions
 
@@ -752,16 +778,61 @@ SpectrumTransformer::SpectrumTransformer(
       0 == (mWindowSize & (mWindowSize - 1)));
 
    wxASSERT(mWindowSize % mStepsPerWindow == 0);
+
+   wxASSERT(!(inWindowType == eWinFuncRectangular && outWindowType == eWinFuncRectangular));
+
+   // To do:  check that inWindowType, outWindowType, and mStepsPerWindow
+   // are compatible for correct overlap-add reconstruction.
+
+   // Create windows as needed
+   if (inWindowType != eWinFuncRectangular) {
+      mInWindow.resize(mWindowSize);
+      std::fill(mInWindow.begin(), mInWindow.end(), 1.0f);
+      NewWindowFunc(inWindowType, mWindowSize, false, mInWindow.data());
+   }
+   if (outWindowType != eWinFuncRectangular) {
+      mOutWindow.resize(mWindowSize);
+      std::fill(mOutWindow.begin(), mOutWindow.end(), 1.0f);
+      NewWindowFunc(outWindowType, mWindowSize, false, mOutWindow.data());
+   }
+
+   // Must scale one or the other window so overlap-add
+   // comes out right
+   double denom = 0;
+   for (size_t ii = 0; ii < mWindowSize; ii += mStepSize) {
+      denom +=
+         (mInWindow.empty() ? 1.0 : mInWindow[ii])
+         *
+         (mOutWindow.empty() ? 1.0 : mOutWindow[ii]);
+   }
+   // It is ASSUMED that you have chosen window types and
+   // steps per window, so that this sum denom would be the
+   // same, starting the march anywhere from 0 to mStepSize - 1.
+   // Else, your overlap-add won't be right, and the transformer
+   // might not be an identity even when you do nothing to the
+   // spectra.
+
+   float *pWindow = 0;
+   if (!mInWindow.empty())
+      pWindow = mInWindow.data();
+   else if (!mOutWindow.empty())
+      pWindow = mOutWindow.data();
+   else
+      // Can only happen if both window types were rectangular
+      wxASSERT(false);
+   for (size_t ii = 0; ii < mWindowSize; ++ii)
+      *pWindow++ /= denom;
 }
 
-EffectNoiseReduction::Worker::Worker(
+EffectNoiseReduction::Worker::Worker(eWindowFunctions inWindowType,
+   eWindowFunctions outWindowType,
    EffectNoiseReduction &effect,
    const Settings &settings, Statistics &statistics
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    , double f0, double f1
 #endif
 )
-: TrackSpectrumTransformer{
+: TrackSpectrumTransformer{ !settings.mDoProfile, inWindowType, outWindowType,
    settings.WindowSize(), settings.StepsPerWindow()
 }
 , mDoProfile{ settings.mDoProfile }
@@ -829,70 +900,6 @@ EffectNoiseReduction::Worker::Worker(
    mQueue.resize(mHistoryLen);
    for (unsigned ii = 0; ii < mHistoryLen; ++ii)
       mQueue[ii] = std::make_unique<Record>(mSpectrumSize);
-
-   // Create windows
-
-   const double constantTerm =
-      windowTypesInfo[settings.mWindowTypes].productConstantTerm;
-
-   // One or the other window must by multiplied by this to correct for
-   // overlap.  Must scale down as steps get smaller, and overlaps larger.
-   const double multiplier = 1.0 / (constantTerm * mStepsPerWindow);
-
-   // Create the analysis window
-   switch (settings.mWindowTypes) {
-   case WT_RECTANGULAR_HANN:
-      break;
-   default:
-      {
-         const bool rectangularOut =
-            settings.mWindowTypes == WT_HAMMING_RECTANGULAR ||
-            settings.mWindowTypes == WT_HANN_RECTANGULAR;
-         const double m =
-           rectangularOut ? multiplier : 1;
-         const double *const coefficients =
-            windowTypesInfo[settings.mWindowTypes].inCoefficients;
-         const double c0 = coefficients[0];
-         const double c1 = coefficients[1];
-         const double c2 = coefficients[2];
-         mInWindow.resize(mWindowSize);
-         for (size_t ii = 0; ii < mWindowSize; ++ii)
-            mInWindow[ii] = m *
-            (c0 + c1 * cos((2.0*M_PI*ii) / mWindowSize)
-                + c2 * cos((4.0*M_PI*ii) / mWindowSize));
-      }
-      break;
-   }
-
-   if (!mDoProfile) {
-      // Create the synthesis window
-      switch (settings.mWindowTypes) {
-      case WT_HANN_RECTANGULAR:
-      case WT_HAMMING_RECTANGULAR:
-         break;
-      case WT_HAMMING_INV_HAMMING:
-         {
-         mOutWindow.resize(mWindowSize);
-         for (size_t ii = 0; ii < mWindowSize; ++ii)
-               mOutWindow[ii] = multiplier / mInWindow[ii];
-         }
-         break;
-      default:
-         {
-            const double *const coefficients =
-               windowTypesInfo[settings.mWindowTypes].outCoefficients;
-            const double c0 = coefficients[0];
-            const double c1 = coefficients[1];
-            const double c2 = coefficients[2];
-            mOutWindow.resize(mWindowSize);
-            for (size_t ii = 0; ii < mWindowSize; ++ii)
-               mOutWindow[ii] = multiplier *
-               (c0 + c1 * cos((2.0 * M_PI * ii) / mWindowSize)
-               + c2 * cos((4.0 * M_PI * ii) / mWindowSize));
-         }
-         break;
-      }
-   }
 }
 
 void EffectNoiseReduction::Worker::StartNewTrack()

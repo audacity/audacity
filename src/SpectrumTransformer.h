@@ -11,6 +11,8 @@ Paul Licameli
 
 #ifndef __AUDACITY_SPECTRUM_TRANSFORMER__
 #define __AUDACITY_SPECTRUM_TRANSFORMER__
+ 
+enum eWindowFunctions : int;
 
 class SpectrumTransformer /* not final */
 {
@@ -19,10 +21,14 @@ public:
    using FloatVector = std::vector<float>;
 
    /*!
+    @pre `!(inWindowType == eWinFuncRectangular && outWindowType eWinFuncRectangular)`
     @pre `windowSize % stepsPerWindow == 0`
     @pre `windowSize` is a power of 2
     */
    SpectrumTransformer(
+      bool needsOutput, //!< Whether to do the inverse FFT
+      eWindowFunctions inWindowType, //!< Used in FFT transform
+      eWindowFunctions outWindowType, //!< Used in inverse FFT transform
       size_t windowSize,     //!< must be a power of 2
       unsigned stepsPerWindow //!< determines the overlap
    );
@@ -47,6 +53,8 @@ public:
    //! These have size mWindowSize, or 0 for rectangular window:
    FloatVector mInWindow;
    FloatVector mOutWindow;
+
+   const bool mNeedsOutput;
 };
 
 class WaveTrack;
