@@ -35,6 +35,31 @@ public:
 
    virtual ~SpectrumTransformer();
 
+   struct Window
+   {
+      explicit Window(size_t windowSize)
+         : mRealFFTs( windowSize / 2 )
+         , mImagFFTs( windowSize / 2 )
+      {
+      }
+
+      virtual ~Window();
+
+      void Zero()
+      {
+         const auto size = mRealFFTs.size();
+         auto pFill = mRealFFTs.data();
+         std::fill(pFill, pFill + size, 0.0f);
+         pFill = mImagFFTs.data();
+         std::fill(pFill, pFill + size, 0.0f);
+      }
+
+      //! index zero holds the dc coefficient, which has no imaginary part
+      FloatVector mRealFFTs;
+      //! index zero holds the nyquist frequency coefficient, actually real
+      FloatVector mImagFFTs;
+   };
+
    const size_t mWindowSize;
    const size_t mSpectrumSize;
 

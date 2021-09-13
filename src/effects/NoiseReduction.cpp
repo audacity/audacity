@@ -270,6 +270,19 @@ public:
       );
    ~Worker();
 
+   struct MyWindow : public Window
+   {
+      explicit MyWindow(size_t windowSize)
+         : Window{ windowSize }
+         , mSpectrums(windowSize / 2 + 1)
+         , mGains(windowSize / 2 + 1)
+      {}
+      ~MyWindow() override;
+
+      FloatVector mSpectrums;
+      FloatVector mGains;
+   };
+
    bool Process(TrackList &tracks, double mT0, double mT1);
 
 private:
@@ -313,24 +326,9 @@ private:
    unsigned  mCenter;
    unsigned  mHistoryLen;
 
-   struct Record
-   {
-      Record(size_t spectrumSize)
-         : mSpectrums(spectrumSize)
-         , mGains(spectrumSize)
-         , mRealFFTs(spectrumSize - 1)
-         , mImagFFTs(spectrumSize - 1)
-      {
-      }
+   std::vector<std::unique_ptr<MyWindow>> mQueue;
 
-      FloatVector mSpectrums;
-      FloatVector mGains;
-      FloatVector mRealFFTs;
-      FloatVector mImagFFTs;
-   };
-   std::vector<std::unique_ptr<Record>> mQueue;
-
-   Record &NthWindow(size_t nn) { return *mQueue[nn]; }
+   MyWindow &NthWindow(size_t nn) { return *mQueue[nn]; }
 };
 
 /****************************************************************//**
@@ -603,6 +601,10 @@ bool EffectNoiseReduction::Settings::Validate(EffectNoiseReduction *effect) cons
    }
 
    return true;
+}
+
+EffectNoiseReduction::Worker::MyWindow::~MyWindow()
+{
 }
 
 bool EffectNoiseReduction::Process()
@@ -899,14 +901,14 @@ EffectNoiseReduction::Worker::Worker(eWindowFunctions inWindowType,
 
    mQueue.resize(mHistoryLen);
    for (unsigned ii = 0; ii < mHistoryLen; ++ii)
-      mQueue[ii] = std::make_unique<Record>(mSpectrumSize);
+      mQueue[ii] = std::make_unique<MyWindow>(mSpectrumSize);
 }
 
 void EffectNoiseReduction::Worker::StartNewTrack()
 {
    float *pFill;
    for(unsigned ii = 0; ii < mHistoryLen; ++ii) {
-      Record &record = *mQueue[ii];
+      auto &record = *mQueue[ii];
 
       pFill = record.mSpectrums.data();
       std::fill(pFill, pFill + mSpectrumSize, 0.0f);
@@ -987,7 +989,7 @@ void EffectNoiseReduction::Worker::FillFirstHistoryWindow()
               mWindowSize * sizeof(float));
    RealFFTf(mFFTBuffer.data(), hFFT.get());
 
-   Record &record = *mQueue[0];
+   auto &record = *mQueue[0];
 
    // Store real and imaginary parts for later inverse FFT, and compute
    // power
@@ -1936,5 +1938,7 @@ void EffectNoiseReduction::Dialog::OnSlider(wxCommandEvent &event)
 }
 
 SpectrumTransformer::~SpectrumTransformer() = default;
+
+SpectrumTransformer::Window::~Window() = default;
 
 TrackSpectrumTransformer::~TrackSpectrumTransformer() = default;
