@@ -47,6 +47,7 @@
 #include "../widgets/HelpSystem.h"
 #include "Prefs.h"
 #include "RealFFTf.h"
+#include "../SpectrumTransformer.h"
 
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -259,7 +260,8 @@ EffectNoiseReduction::Settings::Settings()
 //----------------------------------------------------------------------------
 
 // This object holds information needed only during effect calculation
-class EffectNoiseReduction::Worker
+class EffectNoiseReduction::Worker final
+   : public TrackSpectrumTransformer
 {
 public:
    typedef EffectNoiseReduction::Settings Settings;
@@ -757,7 +759,9 @@ EffectNoiseReduction::Worker::Worker(
    , double f0, double f1
 #endif
 )
-: mDoProfile{ settings.mDoProfile }
+: TrackSpectrumTransformer{
+}
+, mDoProfile{ settings.mDoProfile }
 
 , mEffect{ effect }
 , mStatistics{ statistics }
@@ -1934,3 +1938,6 @@ void EffectNoiseReduction::Dialog::OnSlider(wxCommandEvent &event)
    text->SetValue(info.Text(field));
 }
 
+SpectrumTransformer::~SpectrumTransformer() = default;
+
+TrackSpectrumTransformer::~TrackSpectrumTransformer() = default;
