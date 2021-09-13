@@ -300,17 +300,6 @@ private:
    EffectNoiseReduction &mEffect;
    Statistics &mStatistics;
 
-   const size_t mWindowSize;
-   // These have that size:
-   HFFT     hFFT;
-   FloatVector mFFTBuffer;
-   FloatVector mInWaveBuffer;
-   FloatVector mOutOverlapBuffer;
-   // These have that size, or 0:
-   FloatVector mInWindow;
-   FloatVector mOutWindow;
-
-   const size_t mSpectrumSize;
    FloatVector mFreqSmoothingScratch;
    const size_t mFreqSmoothingBins;
    // When spectral selection limits the affected band:
@@ -318,15 +307,8 @@ private:
    size_t mBinHigh; // exclusive upper bound
 
    const int mNoiseReductionChoice;
-   const unsigned mStepsPerWindow;
-   const size_t mStepSize;
    const int mMethod;
    const double mNewSensitivity;
-
-
-   sampleCount       mInSampleCount;
-   sampleCount       mOutStepCount;
-   size_t            mInWavePos;
 
    float     mOneBlockAttack;
    float     mOneBlockRelease;
@@ -752,6 +734,26 @@ void EffectNoiseReduction::Worker::ApplyFreqSmoothing(FloatVector &gains)
       gains[ii] = exp(mFreqSmoothingScratch[ii]);
 }
 
+SpectrumTransformer::SpectrumTransformer(
+   size_t windowSize, unsigned stepsPerWindow )
+: mWindowSize{ windowSize }
+, mSpectrumSize{ 1 + mWindowSize / 2 }
+, mStepsPerWindow{ stepsPerWindow }
+, mStepSize{ mWindowSize / mStepsPerWindow }
+, hFFT{ GetFFT(mWindowSize) }
+, mFFTBuffer( mWindowSize )
+, mInWaveBuffer( mWindowSize )
+, mOutOverlapBuffer( mWindowSize )
+{
+   // Check preconditions
+
+   // Powers of 2 only!
+   wxASSERT(mWindowSize > 0 &&
+      0 == (mWindowSize & (mWindowSize - 1)));
+
+   wxASSERT(mWindowSize % mStepsPerWindow == 0);
+}
+
 EffectNoiseReduction::Worker::Worker(
    EffectNoiseReduction &effect,
    const Settings &settings, Statistics &statistics
@@ -760,35 +762,23 @@ EffectNoiseReduction::Worker::Worker(
 #endif
 )
 : TrackSpectrumTransformer{
+   settings.WindowSize(), settings.StepsPerWindow()
 }
 , mDoProfile{ settings.mDoProfile }
 
 , mEffect{ effect }
 , mStatistics{ statistics }
 
-, mWindowSize{ settings.WindowSize() }
-, hFFT{ GetFFT(mWindowSize) }
-, mFFTBuffer( mWindowSize )
-, mInWaveBuffer( mWindowSize )
-, mOutOverlapBuffer( mWindowSize )
-
-, mSpectrumSize{ 1 + mWindowSize / 2 }
 , mFreqSmoothingScratch( mSpectrumSize )
 , mFreqSmoothingBins{ size_t(std::max(0.0, settings.mFreqSmoothingBands)) }
 , mBinLow{ 0 }
 , mBinHigh{ mSpectrumSize }
 
 , mNoiseReductionChoice{ settings.mNoiseReductionChoice }
-, mStepsPerWindow{ settings.StepsPerWindow() }
-, mStepSize{ mWindowSize / mStepsPerWindow }
 , mMethod{ settings.mMethod }
 
 // Sensitivity setting is a base 10 log, turn it into a natural log
 , mNewSensitivity{ settings.mNewSensitivity * log(10.0) }
-
-, mInSampleCount{ 0 }
-, mOutStepCount{ 0 }
-, mInWavePos{ 0 }
 {
    const auto sampleRate = mStatistics.mRate;
 
