@@ -35,6 +35,10 @@ public:
 
    virtual ~SpectrumTransformer();
 
+   //! Invokes DoStart
+   /*! @return success */
+   bool Start(size_t queueLength);
+
    struct Window
    {
       explicit Window(size_t windowSize)
@@ -60,12 +64,32 @@ public:
       FloatVector mImagFFTs;
    };
 
+   //! Allocates a window to place in the queue.
+   /*! Only when initializing -- windows are recycled thereafter.
+      You can derive from Window to add fields, and then override this factory function. */
+   virtual std::unique_ptr<Window> NewWindow(size_t windowSize);
+
+  /*! More queue initializations can be done here.
+      @return false to abort processing. Default implementation just returns true. */
+   virtual bool DoStart();
+
+   //! How many windows in the queue have been allocated?
+   size_t TotalQueueSize() const { return mQueue.size(); }
+
+   Window &Nth(int n) { return *mQueue[n]; }
+
+   Window &Newest() { return **mQueue.begin(); }
+   Window &Latest() { return **mQueue.rbegin(); }
+
+   void ResizeQueue(size_t queueLength);
+
    const size_t mWindowSize;
    const size_t mSpectrumSize;
 
    const unsigned mStepsPerWindow;
    const size_t mStepSize;
 
+   std::vector<std::unique_ptr<Window>> mQueue;
    HFFT     hFFT;
    sampleCount mInSampleCount = 0;
    sampleCount mOutStepCount = 0; //!< sometimes negative
@@ -89,6 +113,9 @@ class TrackSpectrumTransformer /* not final */ : public SpectrumTransformer {
 public:
    using SpectrumTransformer::SpectrumTransformer;
    ~TrackSpectrumTransformer() override;
+
+protected:
+   bool DoStart() override;
 };
 
 #endif

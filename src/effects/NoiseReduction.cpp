@@ -285,6 +285,11 @@ public:
 
    bool Process(TrackList &tracks, double mT0, double mT1);
 
+protected:
+   MyWindow &NthWindow(int nn) { return static_cast<MyWindow&>(Nth(nn)); }
+   std::unique_ptr<Window> NewWindow(size_t windowSize) override;
+   bool DoStart() override;
+
 private:
    bool ProcessOne(int count, WaveTrack *track,
                    sampleCount start, sampleCount len);
@@ -325,10 +330,6 @@ private:
    unsigned  mNWindowsToExamine;
    unsigned  mCenter;
    unsigned  mHistoryLen;
-
-   std::vector<std::unique_ptr<MyWindow>> mQueue;
-
-   MyWindow &NthWindow(size_t nn) { return *mQueue[nn]; }
 };
 
 /****************************************************************//**
@@ -603,6 +604,12 @@ bool EffectNoiseReduction::Settings::Validate(EffectNoiseReduction *effect) cons
    return true;
 }
 
+auto EffectNoiseReduction::Worker::NewWindow(size_t windowSize)
+   -> std::unique_ptr<Window>
+{
+   return std::make_unique<MyWindow>(windowSize);
+}
+
 EffectNoiseReduction::Worker::MyWindow::~MyWindow()
 {
 }
@@ -712,6 +719,8 @@ bool EffectNoiseReduction::Worker::Process(
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
 
+         if (!Start(mHistoryLen))
+            return false;
          if (!ProcessOne(count, track, start, len))
             return false;
       }
@@ -898,37 +907,31 @@ EffectNoiseReduction::Worker::Worker(eWindowFunctions inWindowType,
       // See ReduceNoise()
       mHistoryLen = std::max(mNWindowsToExamine, mCenter + nAttackBlocks);
    }
+}
 
-   mQueue.resize(mHistoryLen);
-   for (unsigned ii = 0; ii < mHistoryLen; ++ii)
-      mQueue[ii] = std::make_unique<MyWindow>(mSpectrumSize);
+auto SpectrumTransformer::NewWindow(size_t windowSize)
+   -> std::unique_ptr<Window>
+{
+   return std::make_unique<Window>(windowSize);
+}
+
+bool SpectrumTransformer::DoStart()
+{
+   return true;
+}
+
+bool EffectNoiseReduction::Worker::DoStart()
+{
+   for (size_t ii = 0, nn = TotalQueueSize(); ii < nn; ++ii) {
+      MyWindow &record = NthWindow(ii);
+      std::fill(record.mSpectrums.begin(), record.mSpectrums.end(), 0.0);
+      std::fill(record.mGains.begin(), record.mGains.end(), mNoiseAttenFactor);
+   }
+   return TrackSpectrumTransformer::DoStart();
 }
 
 void EffectNoiseReduction::Worker::StartNewTrack()
 {
-   float *pFill;
-   for(unsigned ii = 0; ii < mHistoryLen; ++ii) {
-      auto &record = *mQueue[ii];
-
-      pFill = record.mSpectrums.data();
-      std::fill(pFill, pFill + mSpectrumSize, 0.0f);
-
-      pFill = record.mRealFFTs.data();
-      std::fill(pFill, pFill + mSpectrumSize - 1, 0.0f);
-
-      pFill = record.mImagFFTs.data();
-      std::fill(pFill, pFill + mSpectrumSize - 1, 0.0f);
-
-      pFill = record.mGains.data();
-      std::fill(pFill, pFill + mSpectrumSize, mNoiseAttenFactor);
-   }
-
-   pFill = mOutOverlapBuffer.data();
-   std::fill(pFill, pFill + mWindowSize, 0.0f);
-
-   pFill = mInWaveBuffer.data();
-   std::fill(pFill, pFill + mWindowSize, 0.0f);
-
    if (mDoProfile)
    {
       // We do not want leading zero padded windows
@@ -947,8 +950,31 @@ void EffectNoiseReduction::Worker::StartNewTrack()
          // before the first full window:
          - (int)(mStepsPerWindow - 1);
    }
+}
+
+bool SpectrumTransformer::Start(size_t queueLength)
+{
+   // Prepare clean queue
+   ResizeQueue(queueLength);
+   for (auto &pWindow : mQueue)
+      pWindow->Zero();
+
+   // invoke derived method
+   if (!DoStart())
+      return false;
+
+   // Clean input and output buffers
+   {
+      float *pFill;
+      pFill = mInWaveBuffer.data();
+      std::fill(pFill, pFill + mWindowSize, 0.0f);
+      pFill = mOutOverlapBuffer.data();
+      std::fill(pFill, pFill + mWindowSize, 0.0f);
+   }
 
    mInSampleCount = 0;
+
+   return true;
 }
 
 void EffectNoiseReduction::Worker::ProcessSamples(WaveTrack *outputTrack,
@@ -978,6 +1004,16 @@ void EffectNoiseReduction::Worker::ProcessSamples(WaveTrack *outputTrack,
    }
 }
 
+void SpectrumTransformer::ResizeQueue(size_t queueLength)
+{
+   int oldLen = mQueue.size();
+   mQueue.resize(queueLength);
+   for (size_t ii = oldLen; ii < queueLength; ++ii)
+      // invoke derived method to get a queue element
+      // with appropriate extra fields
+      mQueue[ii] = NewWindow(mWindowSize);
+}
+
 void EffectNoiseReduction::Worker::FillFirstHistoryWindow()
 {
    // Transform samples to frequency domain, windowed as needed
@@ -989,7 +1025,7 @@ void EffectNoiseReduction::Worker::FillFirstHistoryWindow()
               mWindowSize * sizeof(float));
    RealFFTf(mFFTBuffer.data(), hFFT.get());
 
-   auto &record = *mQueue[0];
+   auto &record = NthWindow(0);
 
    // Store real and imaginary parts for later inverse FFT, and compute
    // power
@@ -1942,3 +1978,8 @@ SpectrumTransformer::~SpectrumTransformer() = default;
 SpectrumTransformer::Window::~Window() = default;
 
 TrackSpectrumTransformer::~TrackSpectrumTransformer() = default;
+
+bool TrackSpectrumTransformer::DoStart()
+{
+   return SpectrumTransformer::DoStart();
+}
