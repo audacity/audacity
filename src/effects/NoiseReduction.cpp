@@ -289,6 +289,7 @@ protected:
    MyWindow &NthWindow(int nn) { return static_cast<MyWindow&>(Nth(nn)); }
    std::unique_ptr<Window> NewWindow(size_t windowSize) override;
    bool DoStart() override;
+   bool DoFinish() override;
 
 private:
    bool ProcessOne(int count, WaveTrack *track,
@@ -302,7 +303,7 @@ private:
    void ReduceNoise(WaveTrack *outputTrack);
    void RotateHistoryWindows();
    void FinishTrackStatistics();
-   void FinishTrack(WaveTrack *outputTrack);
+   bool Finish();
 
 private:
 
@@ -720,6 +721,7 @@ bool EffectNoiseReduction::Worker::Process(
 
          if (!Start(mHistoryLen))
             return false;
+         TrackSpectrumTransformer::Process( track, start, len );
          if (!ProcessOne(count, track, start, len))
             return false;
       }
@@ -771,12 +773,13 @@ SpectrumTransformer::SpectrumTransformer( bool needsOutput,
    eWindowFunctions inWindowType,
    eWindowFunctions outWindowType,
    size_t windowSize, unsigned stepsPerWindow,
-   bool leadingPadding )
+   bool leadingPadding, bool trailingPadding )
 : mWindowSize{ windowSize }
 , mSpectrumSize{ 1 + mWindowSize / 2 }
 , mStepsPerWindow{ stepsPerWindow }
 , mStepSize{ mWindowSize / mStepsPerWindow }
 , mLeadingPadding{ leadingPadding }
+, mTrailingPadding{ trailingPadding }
 , hFFT{ GetFFT(mWindowSize) }
 , mFFTBuffer( mWindowSize )
 , mInWaveBuffer( mWindowSize )
@@ -846,7 +849,7 @@ EffectNoiseReduction::Worker::Worker(eWindowFunctions inWindowType,
 )
 : TrackSpectrumTransformer{ !settings.mDoProfile, inWindowType, outWindowType,
    settings.WindowSize(), settings.StepsPerWindow(),
-   !settings.mDoProfile
+   !settings.mDoProfile, !settings.mDoProfile
 }
 , mDoProfile{ settings.mDoProfile }
 
@@ -919,6 +922,26 @@ auto SpectrumTransformer::NewWindow(size_t windowSize)
 
 bool SpectrumTransformer::DoStart()
 {
+   return true;
+}
+
+bool SpectrumTransformer::DoFinish()
+{
+   return true;
+}
+
+void
+TrackSpectrumTransformer::DoOutput(const float *outBuffer, size_t mStepSize)
+{
+   mOutputTrack->Append((constSamplePtr)outBuffer, floatSample, mStepSize);
+}
+
+bool TrackSpectrumTransformer::Process(
+   WaveTrack *track, sampleCount start, sampleCount len )
+{
+   mpTrack = track;
+   mStart = start;
+   mLen = len;
    return true;
 }
 
@@ -1085,20 +1108,27 @@ void EffectNoiseReduction::Worker::FinishTrackStatistics()
    }
 }
 
-void EffectNoiseReduction::Worker::FinishTrack(WaveTrack *outputTrack)
+bool EffectNoiseReduction::Worker::Finish()
 {
-   // Keep flushing empty input buffers through the history
-   // windows until we've output exactly as many samples as
-   // were input.
-   // Well, not exactly, but not more than one step-size of extra samples
-   // at the end.
-   // We'll DELETE them later in ProcessOne.
+   bool bLoopSuccess = true;
+   if (mTrailingPadding) {
+      // Keep flushing empty input buffers through the history
+      // windows until we've output exactly as many samples as
+      // were input.
+      // Well, not exactly, but not more than one step-size of extra samples
+      // at the end.
 
-   FloatVector empty(mStepSize);
-
-   while (mOutStepCount * mStepSize < mInSampleCount) {
-      ProcessSamples(outputTrack, mStepSize, empty.data());
+      FloatVector empty(mStepSize);
+      while (mOutStepCount * static_cast<int>(mStepSize) < mInSampleCount)
+         ProcessSamples(
+            mOutputTrack.get(), mStepSize, empty.data());
    }
+
+   if (bLoopSuccess)
+      // invoke derived method
+      bLoopSuccess = DoFinish();
+
+   return bLoopSuccess;
 }
 
 void EffectNoiseReduction::Worker::GatherStatistics()
@@ -1347,7 +1377,7 @@ void EffectNoiseReduction::Worker::ReduceNoise(WaveTrack *outputTrack)
       auto buffer = mOutOverlapBuffer.data();
       if (mOutStepCount >= 0) {
          // Output the first portion of the overlap buffer, they're done
-         outputTrack->Append((samplePtr)buffer, floatSample, mStepSize);
+         DoOutput(buffer, mStepSize);
       }
 
       // Shift the remainder over.
@@ -1361,10 +1391,6 @@ bool EffectNoiseReduction::Worker::ProcessOne(
 {
    if (track == NULL)
       return false;
-
-   WaveTrack::Holder outputTrack;
-   if(!mDoProfile)
-      outputTrack = track->EmptyCopy();
 
    auto bufferSize = track->GetMaxBlockSize();
    FloatVector buffer(bufferSize);
@@ -1383,7 +1409,7 @@ bool EffectNoiseReduction::Worker::ProcessOne(
       samplePos += blockSize;
 
       mInSampleCount += blockSize;
-      ProcessSamples(outputTrack.get(), blockSize, buffer.data());
+      ProcessSamples(mOutputTrack.get(), blockSize, buffer.data());
 
       // Update the Progress meter, let user cancel
       bLoopSuccess = 
@@ -1392,27 +1418,37 @@ bool EffectNoiseReduction::Worker::ProcessOne(
                                len.as_double() );
    }
 
-   if (bLoopSuccess) {
-      if (mDoProfile)
-         FinishTrackStatistics();
-      else
-         FinishTrack(&*outputTrack);
-   }
-
-   if (bLoopSuccess && !mDoProfile) {
-      // Flush the output WaveTrack (since it's buffered)
-      outputTrack->Flush();
-
-      // Take the output track and insert it in place of the original
-      // sample data (as operated on -- this may not match mT0/mT1)
-      double t0 = outputTrack->LongSamplesToTime(start);
-      double tLen = outputTrack->LongSamplesToTime(len);
-      // Filtering effects always end up with more data than they started with.  Delete this 'tail'.
-      outputTrack->HandleClear(tLen, outputTrack->GetEndTime(), false, false);
-      track->ClearAndPaste(t0, t0 + tLen, &*outputTrack, true, false);
-   }
+   if (bLoopSuccess)
+      bLoopSuccess = Finish();
 
    return bLoopSuccess;
+}
+
+bool EffectNoiseReduction::Worker::DoFinish()
+{
+   if (mDoProfile)
+      FinishTrackStatistics();
+   return TrackSpectrumTransformer::DoFinish();
+}
+
+bool TrackSpectrumTransformer::DoFinish()
+{
+   if (mOutputTrack) {
+      // Flush the output WaveTrack (since it's buffered)
+      mOutputTrack->Flush();
+
+      // Take the output track and insert it in place of the original
+      // sample data
+      auto t0 = mOutputTrack->LongSamplesToTime(mStart);
+      auto tLen = mOutputTrack->LongSamplesToTime(mLen);
+      // Filtering effects always end up with more data than they started with.
+      // Delete this 'tail'.
+      mOutputTrack->HandleClear(tLen, mOutputTrack->GetEndTime(), false, false);
+      mpTrack->ClearAndPaste(t0, t0 + tLen, &*mOutputTrack, true, false);
+   }
+
+   mOutputTrack.reset();
+   return true;
 }
 
 //----------------------------------------------------------------------------
@@ -1978,5 +2014,6 @@ TrackSpectrumTransformer::~TrackSpectrumTransformer() = default;
 
 bool TrackSpectrumTransformer::DoStart()
 {
+   mOutputTrack = NeedsOutput() && mpTrack ? mpTrack->EmptyCopy() : nullptr;
    return SpectrumTransformer::DoStart();
 }

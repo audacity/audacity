@@ -31,12 +31,17 @@ public:
       eWindowFunctions outWindowType, //!< Used in inverse FFT transform
       size_t windowSize,     //!< must be a power of 2
       unsigned stepsPerWindow, //!< determines the overlap
-      bool leadingPadding /*!<
+      bool leadingPadding, /*!<
          Whether to start the queue with windows that partially overlap
          the first full window of input samples */
+      bool trailingPadding /*!<
+         Whether to stop the procedure after the last complete window of input
+         is added to the queue */
    );
 
    virtual ~SpectrumTransformer();
+
+   bool NeedsOutput() const { return mNeedsOutput; }
 
    //! Invokes DoStart
    /*! @return success */
@@ -76,6 +81,11 @@ public:
       @return false to abort processing. Default implementation just returns true. */
    virtual bool DoStart();
 
+   //! Called only if `NeedsOutput()`
+   virtual void DoOutput(const float *outBuffer, size_t mStepSize) = 0;
+
+   virtual bool DoFinish();
+
    //! How many windows in the queue have been allocated?
    size_t TotalQueueSize() const { return mQueue.size(); }
 
@@ -93,6 +103,8 @@ public:
    const size_t mStepSize;
    
    const bool mLeadingPadding;
+
+   const bool mTrailingPadding;
 
    std::vector<std::unique_ptr<Window>> mQueue;
    HFFT     hFFT;
@@ -119,8 +131,16 @@ public:
    using SpectrumTransformer::SpectrumTransformer;
    ~TrackSpectrumTransformer() override;
 
+   bool Process( WaveTrack *track, sampleCount start, sampleCount len );
+
 protected:
    bool DoStart() override;
+   void DoOutput(const float *outBuffer, size_t mStepSize) override;
+   bool DoFinish() override;
+
+   WaveTrack *mpTrack = nullptr;
+   std::shared_ptr<WaveTrack> mOutputTrack;
+   sampleCount mStart = 0, mLen = 0;
 };
 
 #endif
