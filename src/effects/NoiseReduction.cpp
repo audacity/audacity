@@ -293,9 +293,6 @@ protected:
    bool DoFinish() override;
 
 private:
-   bool ProcessOne(int count, WaveTrack *track,
-                   sampleCount start, sampleCount len);
-
    void ApplyFreqSmoothing(FloatVector &gains);
    void GatherStatistics();
    inline bool Classify(unsigned nWindows, int band);
@@ -731,10 +728,8 @@ bool EffectNoiseReduction::Worker::Process(
          else
             mLen += extra;
 
-         if (!Start(mHistoryLen))
-            return false;
-         TrackSpectrumTransformer::Process( track, start, len );
-         if (!ProcessOne(mProgressTrackCount, track, start, len))
+         if (!TrackSpectrumTransformer::Process(
+            Processor, track, mHistoryLen, start, len ))
             return false;
       }
       ++mProgressTrackCount;
@@ -946,15 +941,6 @@ void
 TrackSpectrumTransformer::DoOutput(const float *outBuffer, size_t mStepSize)
 {
    mOutputTrack->Append((constSamplePtr)outBuffer, floatSample, mStepSize);
-}
-
-bool TrackSpectrumTransformer::Process(
-   WaveTrack *track, sampleCount start, sampleCount len )
-{
-   mpTrack = track;
-   mStart = start;
-   mLen = len;
-   return true;
 }
 
 bool EffectNoiseReduction::Worker::DoStart()
@@ -1482,12 +1468,19 @@ bool SpectrumTransformer::QueueIsFull() const
       return (mOutStepCount >= 0);
 }
 
-bool EffectNoiseReduction::Worker::ProcessOne(
- int count, WaveTrack * track, sampleCount start, sampleCount len)
+bool TrackSpectrumTransformer::Process( const WindowProcessor &processor,
+   WaveTrack *track, size_t queueLength, sampleCount start, sampleCount len)
 {
-   if (track == NULL)
+   if (!track)
       return false;
 
+   mpTrack = track;
+
+   if (!Start(queueLength))
+      return false;
+
+   mStart = start;
+   mLen = len;
    auto bufferSize = track->GetMaxBlockSize();
    FloatVector buffer(bufferSize);
 
@@ -1496,19 +1489,18 @@ bool EffectNoiseReduction::Worker::ProcessOne(
    while (bLoopSuccess && samplePos < start + len) {
       //Get a blockSize of samples (smaller than the size of the buffer)
       const auto blockSize = limitSampleBufferSize(
-         track->GetBestBlockSize(samplePos),
-         start + len - samplePos
-      );
+         std::min(bufferSize, track->GetBestBlockSize(samplePos)),
+         start + len - samplePos);
 
       //Get the samples from the track and put them in the buffer
       track->GetFloats(buffer.data(), samplePos, blockSize);
       samplePos += blockSize;
 
-      ProcessSamples(Processor, buffer.data(), blockSize);
+      bLoopSuccess = ProcessSamples(processor, buffer.data(), blockSize);
    }
 
-   if (bLoopSuccess)
-      bLoopSuccess = Finish(Processor);
+   if (!Finish(processor))
+      return false;
 
    return bLoopSuccess;
 }

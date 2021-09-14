@@ -178,7 +178,9 @@ public:
    using SpectrumTransformer::SpectrumTransformer;
    ~TrackSpectrumTransformer() override;
 
-   bool Process( WaveTrack *track, sampleCount start, sampleCount len );
+   //! Invokes Start(), ProcessSamples(), and Finish()
+   bool Process( const WindowProcessor &processor, WaveTrack *track,
+      size_t queueLength, sampleCount start, sampleCount len);
 
 protected:
    bool DoStart() override;
