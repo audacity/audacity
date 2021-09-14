@@ -4,7 +4,7 @@ Audacity: A Digital Audio Editor
 
 SpectrumTransformer.cpp
 
-Paul Licameli
+Edward Hui
 
 **********************************************************************/
 

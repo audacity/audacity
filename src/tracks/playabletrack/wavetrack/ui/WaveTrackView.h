@@ -37,6 +37,10 @@ public:
    
    virtual const Type &SubViewType() const = 0;
 
+   // For undo and redo purpose
+   // Empty abstract method to be inherited, for copying the spectral data in SpectrumSubView
+   virtual void CopyToSubView(WaveTrackSubView *destSubView) const;
+
    std::pair<
       bool, // if true, hit-testing is finished
       std::vector<UIHandlePtr>
