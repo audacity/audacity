@@ -294,7 +294,6 @@ private:
    bool ProcessOne(int count, WaveTrack *track,
                    sampleCount start, sampleCount len);
 
-   void StartNewTrack();
    void ProcessSamples(WaveTrack *outputTrack, size_t len, float *buffer);
    void FillFirstHistoryWindow();
    void ApplyFreqSmoothing(FloatVector &gains);
@@ -771,11 +770,13 @@ void EffectNoiseReduction::Worker::ApplyFreqSmoothing(FloatVector &gains)
 SpectrumTransformer::SpectrumTransformer( bool needsOutput,
    eWindowFunctions inWindowType,
    eWindowFunctions outWindowType,
-   size_t windowSize, unsigned stepsPerWindow )
+   size_t windowSize, unsigned stepsPerWindow,
+   bool leadingPadding )
 : mWindowSize{ windowSize }
 , mSpectrumSize{ 1 + mWindowSize / 2 }
 , mStepsPerWindow{ stepsPerWindow }
 , mStepSize{ mWindowSize / mStepsPerWindow }
+, mLeadingPadding{ leadingPadding }
 , hFFT{ GetFFT(mWindowSize) }
 , mFFTBuffer( mWindowSize )
 , mInWaveBuffer( mWindowSize )
@@ -844,7 +845,8 @@ EffectNoiseReduction::Worker::Worker(eWindowFunctions inWindowType,
 #endif
 )
 : TrackSpectrumTransformer{ !settings.mDoProfile, inWindowType, outWindowType,
-   settings.WindowSize(), settings.StepsPerWindow()
+   settings.WindowSize(), settings.StepsPerWindow(),
+   !settings.mDoProfile
 }
 , mDoProfile{ settings.mDoProfile }
 
@@ -930,28 +932,6 @@ bool EffectNoiseReduction::Worker::DoStart()
    return TrackSpectrumTransformer::DoStart();
 }
 
-void EffectNoiseReduction::Worker::StartNewTrack()
-{
-   if (mDoProfile)
-   {
-      // We do not want leading zero padded windows
-      mInWavePos = 0;
-      mOutStepCount = -(int)(mHistoryLen - 1);
-   }
-   else
-   {
-      // So that the queue gets primed with some windows,
-      // zero-padded in front, the first having mStepSize
-      // samples of wave data:
-      mInWavePos = mWindowSize - mStepSize;
-      // This starts negative, to count up until the queue fills:
-      mOutStepCount = -(int)(mHistoryLen - 1)
-         // ... and then must pass over the padded windows,
-         // before the first full window:
-         - (int)(mStepsPerWindow - 1);
-   }
-}
-
 bool SpectrumTransformer::Start(size_t queueLength)
 {
    // Prepare clean queue
@@ -970,6 +950,25 @@ bool SpectrumTransformer::Start(size_t queueLength)
       std::fill(pFill, pFill + mWindowSize, 0.0f);
       pFill = mOutOverlapBuffer.data();
       std::fill(pFill, pFill + mWindowSize, 0.0f);
+   }
+
+   if (!mLeadingPadding)
+   {
+      // We do not want leading zero padded windows
+      mInWavePos = 0;
+      mOutStepCount = -static_cast<int>(queueLength - 1);
+   }
+   else
+   {
+      // So that the queue gets primed with some windows,
+      // zero-padded in front, the first having mStepSize
+      // samples of wave data:
+      mInWavePos = mWindowSize - mStepSize;
+      // This starts negative, to count up until the queue fills:
+      mOutStepCount = -static_cast<int>(queueLength - 1)
+         // ... and then must pass over the padded windows,
+         // before the first full window:
+         - (int)(mStepsPerWindow - 1);
    }
 
    mInSampleCount = 0;
@@ -1362,8 +1361,6 @@ bool EffectNoiseReduction::Worker::ProcessOne(
 {
    if (track == NULL)
       return false;
-
-   StartNewTrack();
 
    WaveTrack::Holder outputTrack;
    if(!mDoProfile)

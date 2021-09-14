@@ -30,7 +30,10 @@ public:
       eWindowFunctions inWindowType, //!< Used in FFT transform
       eWindowFunctions outWindowType, //!< Used in inverse FFT transform
       size_t windowSize,     //!< must be a power of 2
-      unsigned stepsPerWindow //!< determines the overlap
+      unsigned stepsPerWindow, //!< determines the overlap
+      bool leadingPadding /*!<
+         Whether to start the queue with windows that partially overlap
+         the first full window of input samples */
    );
 
    virtual ~SpectrumTransformer();
@@ -88,6 +91,8 @@ public:
 
    const unsigned mStepsPerWindow;
    const size_t mStepSize;
+   
+   const bool mLeadingPadding;
 
    std::vector<std::unique_ptr<Window>> mQueue;
    HFFT     hFFT;
