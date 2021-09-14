@@ -289,21 +289,18 @@ protected:
    MyWindow &NthWindow(int nn) { return static_cast<MyWindow&>(Nth(nn)); }
    std::unique_ptr<Window> NewWindow(size_t windowSize) override;
    bool DoStart() override;
+   static bool Processor(SpectrumTransformer &transformer);
    bool DoFinish() override;
 
 private:
    bool ProcessOne(int count, WaveTrack *track,
                    sampleCount start, sampleCount len);
 
-   void ProcessSamples(WaveTrack *outputTrack, size_t len, float *buffer);
-   void FillFirstHistoryWindow();
    void ApplyFreqSmoothing(FloatVector &gains);
    void GatherStatistics();
-   inline bool Classify(int band);
-   void ReduceNoise(WaveTrack *outputTrack);
-   void RotateHistoryWindows();
+   inline bool Classify(unsigned nWindows, int band);
+   void ReduceNoise();
    void FinishTrackStatistics();
-   bool Finish();
 
 private:
 
@@ -330,6 +327,11 @@ private:
    unsigned  mNWindowsToExamine;
    unsigned  mCenter;
    unsigned  mHistoryLen;
+
+   // Following are for progress indicator only:
+   unsigned  mProgressTrackCount = 0;
+   sampleCount mLen = 0;
+   sampleCount mProgressWindowCount = 0;
 };
 
 /****************************************************************//**
@@ -696,8 +698,9 @@ EffectNoiseReduction::Worker::~Worker()
 bool EffectNoiseReduction::Worker::Process(
    TrackList &tracks, double inT0, double inT1)
 {
-   int count = 0;
+   mProgressTrackCount = 0;
    for ( auto track : tracks.Selected< WaveTrack >() ) {
+      mProgressWindowCount = 0;
       if (track->GetRate() != mStatistics.mRate) {
          if (mDoProfile)
             mEffect.Effect::MessageBox(
@@ -717,15 +720,24 @@ bool EffectNoiseReduction::Worker::Process(
       if (t1 > t0) {
          auto start = track->TimeToLongSamples(t0);
          auto end = track->TimeToLongSamples(t1);
-         auto len = end - start;
+         const auto len = end - start;
+         mLen = len;
+         const auto extra = (mStepsPerWindow - 1) * mStepSize;
+         // Adjust denominator for presence or absence of padding,
+         // which makes the number of windows visited either more or less
+         // than the number of window steps in the data.
+         if (mDoProfile)
+            mLen -= extra;
+         else
+            mLen += extra;
 
          if (!Start(mHistoryLen))
             return false;
          TrackSpectrumTransformer::Process( track, start, len );
-         if (!ProcessOne(count, track, start, len))
+         if (!ProcessOne(mProgressTrackCount, track, start, len))
             return false;
       }
-      ++count;
+      ++mProgressTrackCount;
    }
 
    if (mDoProfile) {
@@ -999,31 +1011,42 @@ bool SpectrumTransformer::Start(size_t queueLength)
    return true;
 }
 
-void EffectNoiseReduction::Worker::ProcessSamples(WaveTrack *outputTrack,
- size_t len, float *buffer)
+bool SpectrumTransformer::ProcessSamples( const WindowProcessor &processor,
+   const float *buffer, size_t len )
 {
-   while (len && mOutStepCount * mStepSize < mInSampleCount) {
+   if (buffer)
+      mInSampleCount += len;
+   bool success = true;
+   while (success && len &&
+          mOutStepCount * static_cast<int>(mStepSize) < mInSampleCount) {
       auto avail = std::min(len, mWindowSize - mInWavePos);
-      memmove(&mInWaveBuffer[mInWavePos], buffer, avail * sizeof(float));
-      buffer += avail;
+      if (buffer)
+         memmove(&mInWaveBuffer[mInWavePos], buffer, avail * sizeof(float));
+      else
+         memset(&mInWaveBuffer[mInWavePos], 0, avail * sizeof(float));
+      if (buffer)
+         buffer += avail;
       len -= avail;
       mInWavePos += avail;
 
-      if (mInWavePos == (int)mWindowSize) {
-         FillFirstHistoryWindow();
-         if (mDoProfile)
-            GatherStatistics();
-         else
-            ReduceNoise(outputTrack);
-         ++mOutStepCount;
-         RotateHistoryWindows();
+      if (mInWavePos == mWindowSize) {
+         FillFirstWindow();
 
-         // Rotate for overlap-add
-         memmove(&mInWaveBuffer[0], &mInWaveBuffer[mStepSize],
+         // invoke derived method
+         if ( (success = processor(*this)), success )
+            OutputStep();
+
+         ++mOutStepCount;
+         RotateWindows();
+
+         // Shift input.
+         memmove(mInWaveBuffer.data(), &mInWaveBuffer[mStepSize],
             (mWindowSize - mStepSize) * sizeof(float));
          mInWavePos -= mStepSize;
       }
    }
+
+   return success;
 }
 
 void SpectrumTransformer::ResizeQueue(size_t queueLength)
@@ -1036,53 +1059,74 @@ void SpectrumTransformer::ResizeQueue(size_t queueLength)
       mQueue[ii] = NewWindow(mWindowSize);
 }
 
-void EffectNoiseReduction::Worker::FillFirstHistoryWindow()
+void SpectrumTransformer::FillFirstWindow()
 {
    // Transform samples to frequency domain, windowed as needed
-   if (mInWindow.size() > 0)
-      for (size_t ii = 0; ii < mWindowSize; ++ii)
-         mFFTBuffer[ii] = mInWaveBuffer[ii] * mInWindow[ii];
-   else
-      memmove(mFFTBuffer.data(), mInWaveBuffer.data(),
-              mWindowSize * sizeof(float));
+   {
+      auto pFFTBuffer = mFFTBuffer.data(), pInWaveBuffer = mInWaveBuffer.data();
+      if (mInWindow.size() > 0) {
+         auto pInWindow = mInWindow.data();
+         for (size_t ii = 0; ii < mWindowSize; ++ii)
+            *pFFTBuffer++ = *pInWaveBuffer++ * *pInWindow++;
+      }
+      else
+         memmove(pFFTBuffer, pInWaveBuffer, mWindowSize * sizeof(float));
+   }
    RealFFTf(mFFTBuffer.data(), hFFT.get());
 
-   auto &record = NthWindow(0);
+   auto &record = Nth(0);
 
-   // Store real and imaginary parts for later inverse FFT, and compute
-   // power
+   // Store real and imaginary parts for later inverse FFT
    {
       float *pReal = &record.mRealFFTs[1];
       float *pImag = &record.mImagFFTs[1];
-      float *pPower = &record.mSpectrums[1];
       int *pBitReversed = &hFFT->BitReversed[1];
       const auto last = mSpectrumSize - 1;
-      for (unsigned int ii = 1; ii < last; ++ii) {
+      for (size_t ii = 1; ii < last; ++ii) {
          const int kk = *pBitReversed++;
-         const float realPart = *pReal++ = mFFTBuffer[kk];
-         const float imagPart = *pImag++ = mFFTBuffer[kk + 1];
-         *pPower++ = realPart * realPart + imagPart * imagPart;
+         *pReal++ = mFFTBuffer[kk];
+         *pImag++ = mFFTBuffer[kk + 1];
       }
       // DC and Fs/2 bins need to be handled specially
       const float dc = mFFTBuffer[0];
       record.mRealFFTs[0] = dc;
-      record.mSpectrums[0] = dc*dc;
 
       const float nyquist = mFFTBuffer[1];
       record.mImagFFTs[0] = nyquist; // For Fs/2, not really imaginary
-      record.mSpectrums[last] = nyquist * nyquist;
-   }
-
-   if (mNoiseReductionChoice != NRC_ISOLATE_NOISE)
-   {
-      // Default all gains to the reduction factor,
-      // until we decide to raise some of them later
-      auto pGain = record.mGains.data();
-      std::fill(pGain, pGain + mSpectrumSize, mNoiseAttenFactor);
    }
 }
 
-void EffectNoiseReduction::Worker::RotateHistoryWindows()
+bool EffectNoiseReduction::Worker::Processor(SpectrumTransformer &transformer)
+{
+   auto &worker = static_cast<Worker &>(transformer);
+   // Compute power spectrum in the newest window
+   {
+      MyWindow &record = worker.NthWindow(0);
+      float *pSpectrum = &record.mSpectrums[0];
+      const double dc = record.mRealFFTs[0];
+      *pSpectrum++ = dc * dc;
+      float *pReal = &record.mRealFFTs[1], *pImag = &record.mImagFFTs[1];
+      for (size_t nn = worker.mSpectrumSize - 2; nn--;) {
+         const double re = *pReal++, im = *pImag++;
+         *pSpectrum++ = re * re + im * im;
+      }
+      const double nyquist = record.mImagFFTs[0];
+      *pSpectrum = nyquist * nyquist;
+   }
+ 
+   if (worker.mDoProfile)
+      worker.GatherStatistics();
+   else
+      worker.ReduceNoise();
+ 
+   // Update the Progress meter, let user cancel
+   return !worker.mEffect.TrackProgress(worker.mProgressTrackCount,
+      std::min(1.0,
+         ((++worker.mProgressWindowCount).as_double() * worker.mStepSize)
+            / worker.mLen.as_double()));
+}
+   
+void SpectrumTransformer::RotateWindows()
 {
    std::rotate(mQueue.begin(), mQueue.end() - 1, mQueue.end());
 }
@@ -1108,7 +1152,7 @@ void EffectNoiseReduction::Worker::FinishTrackStatistics()
    }
 }
 
-bool EffectNoiseReduction::Worker::Finish()
+bool SpectrumTransformer::Finish(const WindowProcessor &processor)
 {
    bool bLoopSuccess = true;
    if (mTrailingPadding) {
@@ -1118,10 +1162,9 @@ bool EffectNoiseReduction::Worker::Finish()
       // Well, not exactly, but not more than one step-size of extra samples
       // at the end.
 
-      FloatVector empty(mStepSize);
-      while (mOutStepCount * static_cast<int>(mStepSize) < mInSampleCount)
-         ProcessSamples(
-            mOutputTrack.get(), mStepSize, empty.data());
+      while (bLoopSuccess &&
+            mOutStepCount * static_cast<int>(mStepSize) < mInSampleCount)
+         bLoopSuccess = ProcessSamples(processor, nullptr, mStepSize);
    }
 
    if (bLoopSuccess)
@@ -1169,14 +1212,14 @@ void EffectNoiseReduction::Worker::GatherStatistics()
 // Return true iff the given band of the "center" window looks like noise.
 // Examine the band in a few neighboring windows to decide.
 inline
-bool EffectNoiseReduction::Worker::Classify(int band)
+bool EffectNoiseReduction::Worker::Classify(unsigned nWindows, int band)
 {
    switch (mMethod) {
 #ifdef OLD_METHOD_AVAILABLE
    case DM_OLD_METHOD:
       {
          float min = NthWindow(0).mSpectrums[band];
-         for (unsigned ii = 1; ii < mNWindowsToExamine; ++ii)
+         for (unsigned ii = 1; ii < nWindows; ++ii)
             min = std::min(min, NthWindow(ii).mSpectrums[band]);
          return
             min <= mOldSensitivityFactor * mStatistics.mNoiseThreshold[band];
@@ -1196,13 +1239,13 @@ bool EffectNoiseReduction::Worker::Classify(int band)
       // either the mistake of classifying noise as not noise
       // (leaving a musical noise chime), or the opposite
       // (distorting the signal with a drop out). 
-      if (mNWindowsToExamine == 3)
+      if (nWindows <= 3)
          // No different from second greatest.
          goto secondGreatest;
-      else if (mNWindowsToExamine == 5)
+      else if (nWindows <= 5)
       {
          float greatest = 0.0, second = 0.0, third = 0.0;
-         for (unsigned ii = 0; ii < mNWindowsToExamine; ++ii) {
+         for (unsigned ii = 0; ii < nWindows; ++ii) {
             const float power = NthWindow(ii).mSpectrums[band];
             if (power >= greatest)
                third = second, second = greatest, greatest = power;
@@ -1225,7 +1268,7 @@ bool EffectNoiseReduction::Worker::Classify(int band)
          // should be less prone to distortions and more prone to
          // chimes.
          float greatest = 0.0, second = 0.0;
-         for (unsigned ii = 0; ii < mNWindowsToExamine; ++ii) {
+         for (unsigned ii = 0; ii < nWindows; ++ii) {
             const float power = NthWindow(ii).mSpectrums[band];
             if (power >= greatest)
                second = greatest, greatest = power;
@@ -1240,10 +1283,23 @@ bool EffectNoiseReduction::Worker::Classify(int band)
    }
 }
 
-void EffectNoiseReduction::Worker::ReduceNoise(WaveTrack *outputTrack)
+void EffectNoiseReduction::Worker::ReduceNoise()
 {
+   auto historyLen = CurrentQueueSize();
+   auto nWindows = std::min<unsigned>(mNWindowsToExamine, historyLen);
+
+   if (mNoiseReductionChoice != NRC_ISOLATE_NOISE)
+   {
+      MyWindow &record = NthWindow(0);
+      // Default all gains to the reduction factor,
+      // until we decide to raise some of them later
+      float *pGain = &record.mGains[0];
+      std::fill(pGain, pGain + mSpectrumSize, mNoiseAttenFactor);
+   }
+
    // Raise the gain for elements in the center of the sliding history
    // or, if isolating noise, zero out the non-noise
+   if (nWindows > mCenter)
    {
       auto pGain = NthWindow(mCenter).mGains.data();
       if (mNoiseReductionChoice == NRC_ISOLATE_NOISE) {
@@ -1252,7 +1308,7 @@ void EffectNoiseReduction::Worker::ReduceNoise(WaveTrack *outputTrack)
          std::fill(pGain + mBinHigh, pGain + mSpectrumSize, 0.0f);
          pGain += mBinLow;
          for (size_t jj = mBinLow; jj < mBinHigh; ++jj) {
-               const bool isNoise = Classify(jj);
+               const bool isNoise = Classify(nWindows, jj);
             *pGain++ = isNoise ? 1.0 : 0.0;
          }
       }
@@ -1262,7 +1318,7 @@ void EffectNoiseReduction::Worker::ReduceNoise(WaveTrack *outputTrack)
          std::fill(pGain + mBinHigh, pGain + mSpectrumSize, 1.0f);
          pGain += mBinLow;
          for (size_t jj = mBinLow; jj < mBinHigh; ++jj) {
-            const bool isNoise = Classify(jj);
+            const bool isNoise = Classify(nWindows, jj);
             if (!isNoise) 
                *pGain = 1.0;
             ++pGain;
@@ -1279,7 +1335,7 @@ void EffectNoiseReduction::Worker::ReduceNoise(WaveTrack *outputTrack)
       // First, the attack, which goes backward in time, which is,
       // toward higher indices in the queue.
       for (size_t jj = 0; jj < mSpectrumSize; ++jj) {
-         for (unsigned ii = mCenter + 1; ii < mHistoryLen; ++ii) {
+         for (unsigned ii = mCenter + 1; ii < historyLen; ++ii) {
             const float minimum =
                std::max(mNoiseAttenFactor,
                         NthWindow(ii - 1).mGains[jj] * mOneBlockAttack);
@@ -1309,46 +1365,80 @@ void EffectNoiseReduction::Worker::ReduceNoise(WaveTrack *outputTrack)
       }
    }
 
-
-   if (mOutStepCount >= -(int)(mStepsPerWindow - 1)) {
-      auto &record = NthWindow(mHistoryLen - 1);  // end of the queue
+   if (QueueIsFull()) {
+      auto &record = NthWindow(historyLen - 1);  // end of the queue
       const auto last = mSpectrumSize - 1;
 
       if (mNoiseReductionChoice != NRC_ISOLATE_NOISE)
          // Apply frequency smoothing to output gain
          // Gains are not less than mNoiseAttenFactor
          ApplyFreqSmoothing(record.mGains);
-
+ 
       // Apply gain to FFT
       {
          const float *pGain = &record.mGains[1];
-         const float *pReal = &record.mRealFFTs[1];
-         const float *pImag = &record.mImagFFTs[1];
-         float *pBuffer = &mFFTBuffer[2];
+         float *pReal = &record.mRealFFTs[1];
+         float *pImag = &record.mImagFFTs[1];
          auto nn = mSpectrumSize - 2;
          if (mNoiseReductionChoice == NRC_LEAVE_RESIDUE) {
             for (; nn--;) {
                // Subtract the gain we would otherwise apply from 1, and
                // negate that to flip the phase.
                const double gain = *pGain++ - 1.0;
-               *pBuffer++ = *pReal++ * gain;
-               *pBuffer++ = *pImag++ * gain;
+               *pReal++ *= gain;
+               *pImag++ *= gain;
             }
-            mFFTBuffer[0] = record.mRealFFTs[0] * (record.mGains[0] - 1.0);
+            record.mRealFFTs[0] *= (record.mGains[0] - 1.0);
             // The Fs/2 component is stored as the imaginary part of the DC component
-            mFFTBuffer[1] = record.mImagFFTs[0] * (record.mGains[last] - 1.0);
+            record.mImagFFTs[0] *= (record.mGains[last] - 1.0);
          }
          else {
             for (; nn--;) {
                const double gain = *pGain++;
-               *pBuffer++ = *pReal++ * gain;
-               *pBuffer++ = *pImag++ * gain;
+               *pReal++ *= gain;
+               *pImag++ *= gain;
             }
-            mFFTBuffer[0] = record.mRealFFTs[0] * record.mGains[0];
+            record.mRealFFTs[0] *= record.mGains[0];
             // The Fs/2 component is stored as the imaginary part of the DC component
-            mFFTBuffer[1] = record.mImagFFTs[0] * record.mGains[last];
+            record.mImagFFTs[0] *= record.mGains[last];
          }
       }
+   }
+}
+
+size_t SpectrumTransformer::CurrentQueueSize() const
+{
+   auto allocSize = mQueue.size();
+   auto size = mOutStepCount + allocSize;
+   if (mLeadingPadding)
+      size += mStepsPerWindow - 1;
+
+   if (size < allocSize)
+      return size.as_size_t();
+   else
+      return allocSize;
+}
+
+// Formerly part of EffectNoiseReduction::Worker::ReduceNoise()
+void SpectrumTransformer::OutputStep()
+{
+   if (!mNeedsOutput)
+      return;
+   if (QueueIsFull()) {
+      const auto last = mSpectrumSize - 1;
+      Window &record = **mQueue.rbegin();
+
+      const float *pReal = &record.mRealFFTs[1];
+      const float *pImag = &record.mImagFFTs[1];
+      float *pBuffer = &mFFTBuffer[2];
+      auto nn = mSpectrumSize - 2;
+      for (; nn--;) {
+         *pBuffer++ = *pReal++;
+         *pBuffer++ = *pImag++;
+      }
+      mFFTBuffer[0] = record.mRealFFTs[0];
+      // The Fs/2 component is stored as the imaginary part of the DC component
+      mFFTBuffer[1] = record.mImagFFTs[0];
 
       // Invert the FFT into the output buffer
       InverseRealFFTf(mFFTBuffer.data(), hFFT.get());
@@ -1357,33 +1447,39 @@ void EffectNoiseReduction::Worker::ReduceNoise(WaveTrack *outputTrack)
       if (mOutWindow.size() > 0) {
          auto pOut = mOutOverlapBuffer.data();
          auto pWindow = mOutWindow.data();
-         int *pBitReversed = &hFFT->BitReversed[0];
-         for (unsigned int jj = 0; jj < last; ++jj) {
-            int kk = *pBitReversed++;
+         auto pBitReversed = &hFFT->BitReversed[0];
+         for (size_t jj = 0; jj < last; ++jj) {
+            auto kk = *pBitReversed++;
             *pOut++ += mFFTBuffer[kk] * (*pWindow++);
             *pOut++ += mFFTBuffer[kk + 1] * (*pWindow++);
          }
       }
       else {
          auto pOut = mOutOverlapBuffer.data();
-         int *pBitReversed = &hFFT->BitReversed[0];
-         for (unsigned int jj = 0; jj < last; ++jj) {
-            int kk = *pBitReversed++;
+         auto pBitReversed = &hFFT->BitReversed[0];
+         for (size_t jj = 0; jj < last; ++jj) {
+            auto kk = *pBitReversed++;
             *pOut++ += mFFTBuffer[kk];
             *pOut++ += mFFTBuffer[kk + 1];
          }
       }
-
       auto buffer = mOutOverlapBuffer.data();
       if (mOutStepCount >= 0) {
          // Output the first portion of the overlap buffer, they're done
          DoOutput(buffer, mStepSize);
       }
-
       // Shift the remainder over.
-      memmove(buffer, buffer + mStepSize, sizeof(float) * (mWindowSize - mStepSize));
+      memmove(buffer, buffer + mStepSize, sizeof(float)*(mWindowSize - mStepSize));
       std::fill(buffer + mWindowSize - mStepSize, buffer + mWindowSize, 0.0f);
    }
+}
+
+bool SpectrumTransformer::QueueIsFull() const
+{
+   if (mLeadingPadding)
+      return (mOutStepCount >= -static_cast<int>(mStepsPerWindow - 1));
+   else
+      return (mOutStepCount >= 0);
 }
 
 bool EffectNoiseReduction::Worker::ProcessOne(
@@ -1408,18 +1504,11 @@ bool EffectNoiseReduction::Worker::ProcessOne(
       track->GetFloats(buffer.data(), samplePos, blockSize);
       samplePos += blockSize;
 
-      mInSampleCount += blockSize;
-      ProcessSamples(mOutputTrack.get(), blockSize, buffer.data());
-
-      // Update the Progress meter, let user cancel
-      bLoopSuccess = 
-         !mEffect.TrackProgress(count,
-                               ( samplePos - start ).as_double() /
-                               len.as_double() );
+      ProcessSamples(Processor, buffer.data(), blockSize);
    }
 
    if (bLoopSuccess)
-      bLoopSuccess = Finish();
+      bLoopSuccess = Finish(Processor);
 
    return bLoopSuccess;
 }

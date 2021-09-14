@@ -20,6 +20,12 @@ public:
    // Public interface
    using FloatVector = std::vector<float>;
 
+   //! Type of function that transforms windows in the queue
+   /*! Called repeatedly, with the newest window in the queue taken from
+      input, and the last window of the queue about to be inverse-transformed for output.
+      @return false to abort processing. */
+   using WindowProcessor = std::function< bool(SpectrumTransformer&) >;
+
    /*!
     @pre `!(inWindowType == eWinFuncRectangular && outWindowType eWinFuncRectangular)`
     @pre `windowSize % stepsPerWindow == 0`
@@ -46,6 +52,18 @@ public:
    //! Invokes DoStart
    /*! @return success */
    bool Start(size_t queueLength);
+
+   //! Call multiple times
+   /*!
+    @param buffer null if flushing the end
+    @return success */
+   bool ProcessSamples(const WindowProcessor &processor,
+      const float *buffer, size_t len);
+
+   //! Call once after a sequence of calls to ProcessSamples;
+   //! flushes the queue and Invokes DoFinish
+   /*! @return success */
+   bool Finish(const WindowProcessor &processor);
 
    struct Window
    {
@@ -89,12 +107,23 @@ public:
    //! How many windows in the queue have been allocated?
    size_t TotalQueueSize() const { return mQueue.size(); }
 
+   //! How many windows in the queue have been filled?
+   /*! (Not always the allocated size of the queue) */
+   size_t CurrentQueueSize() const;
+
+   /*! Whether the last window in the queue overlapped the input
+      at least partially and its coefficients will affect output. */
+   bool QueueIsFull() const;
+
    Window &Nth(int n) { return *mQueue[n]; }
 
    Window &Newest() { return **mQueue.begin(); }
    Window &Latest() { return **mQueue.rbegin(); }
 
    void ResizeQueue(size_t queueLength);
+   void FillFirstWindow();
+   void RotateWindows();
+   void OutputStep();
 
    const size_t mWindowSize;
    const size_t mSpectrumSize;
@@ -138,6 +167,7 @@ protected:
    void DoOutput(const float *outBuffer, size_t mStepSize) override;
    bool DoFinish() override;
 
+private:
    WaveTrack *mpTrack = nullptr;
    std::shared_ptr<WaveTrack> mOutputTrack;
    sampleCount mStart = 0, mLen = 0;
