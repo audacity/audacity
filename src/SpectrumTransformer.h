@@ -14,6 +14,15 @@ Paul Licameli
  
 enum eWindowFunctions : int;
 
+/*!
+ @brief A class that transforms a portion of a wave track (preserving duration)
+ by applying Fourier transform, then modifying coefficients, then inverse
+ Fourier transform and overlap-add to reconstruct.
+ 
+ @par The procedure that modifies coefficients can be varied, and can employ lookahead
+ and -behind to nearby windows.  May also be used just to gather information
+ without producing output.
+*/
 class SpectrumTransformer /* not final */
 {
 public:
@@ -44,12 +53,11 @@ public:
          Whether to stop the procedure after the last complete window of input
          is added to the queue */
    );
-
    virtual ~SpectrumTransformer();
 
    bool NeedsOutput() const { return mNeedsOutput; }
 
-   //! Invokes DoStart
+   //! Call once before a sequence of calls to ProcessSamples; Invokes DoStart
    /*! @return success */
    bool Start(size_t queueLength);
 
@@ -60,11 +68,11 @@ public:
    bool ProcessSamples(const WindowProcessor &processor,
       const float *buffer, size_t len);
 
-   //! Call once after a sequence of calls to ProcessSamples;
-   //! flushes the queue and Invokes DoFinish
+   //! Call once after a sequence of calls to ProcessSamples; flushes the queue and Invokes DoFinish
    /*! @return success */
    bool Finish(const WindowProcessor &processor);
 
+   //! Derive this class to add information to the queue.  @see NewWindow()
    struct Window
    {
       explicit Window(size_t windowSize)
@@ -95,14 +103,19 @@ public:
       You can derive from Window to add fields, and then override this factory function. */
    virtual std::unique_ptr<Window> NewWindow(size_t windowSize);
 
-  /*! More queue initializations can be done here.
+   //! Called before any calls to ProcessWindow.
+   /*! More queue initializations can be done here.
       @return false to abort processing. Default implementation just returns true. */
    virtual bool DoStart();
 
-   //! Called only if `NeedsOutput()`
+   //! Called within ProcessSamples if output was requested
    virtual void DoOutput(const float *outBuffer, size_t mStepSize) = 0;
 
+   //! Called after the last call to ProcessWindow().
+   /*! @return false to abort processing. Default implementation just returns true. */
    virtual bool DoFinish();
+
+   /// Useful functions to implement WindowProcesser:
 
    //! How many windows in the queue have been allocated?
    size_t TotalQueueSize() const { return mQueue.size(); }
@@ -115,16 +128,20 @@ public:
       at least partially and its coefficients will affect output. */
    bool QueueIsFull() const;
 
+   //! Access the queue, so you can inspect and modify any window in it
+   /*! Newer windows are at earlier indices.  You can't modify the length of it */
    Window &Nth(int n) { return *mQueue[n]; }
 
    Window &Newest() { return **mQueue.begin(); }
    Window &Latest() { return **mQueue.rbegin(); }
 
+private:
    void ResizeQueue(size_t queueLength);
    void FillFirstWindow();
    void RotateWindows();
    void OutputStep();
 
+protected:
    const size_t mWindowSize;
    const size_t mSpectrumSize;
 
@@ -135,6 +152,7 @@ public:
 
    const bool mTrailingPadding;
 
+private:
    std::vector<std::unique_ptr<Window>> mQueue;
    HFFT     hFFT;
    sampleCount mInSampleCount = 0;
