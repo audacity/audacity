@@ -854,6 +854,8 @@ list( APPEND SOURCES
       tracks/ui/SelectHandle.h
       tracks/ui/SliderHandle.cpp
       tracks/ui/SliderHandle.h
+      tracks/ui/TextEditHelper.cpp
+      tracks/ui/TextEditHelper.h
       tracks/ui/TimeShiftHandle.cpp
       tracks/ui/TimeShiftHandle.h
       tracks/ui/TrackButtonHandles.cpp

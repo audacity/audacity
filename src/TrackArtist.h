@@ -44,6 +44,9 @@ namespace TrackArt {
    void DrawClipAffordance(wxDC& dc, const wxRect& affordanceRect, const wxString& title, bool highlight = false, bool selected = false);
 
    AUDACITY_DLL_API
+   wxRect GetAffordanceTitleRect(const wxRect& affordanceRect);
+
+   AUDACITY_DLL_API
    void DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected = false);
 
    // Helper: draws the "sync-locked" watermark tiled to a rectangle
