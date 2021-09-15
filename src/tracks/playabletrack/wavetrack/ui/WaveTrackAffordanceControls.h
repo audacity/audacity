@@ -73,11 +73,15 @@ public:
     void OnTextModified(AudacityProject* project, const wxString& text) override;
     void OnTextContextMenu(AudacityProject* project, const wxPoint& position) override;
 
+    bool StartEditNameOfMatchingClip( AudacityProject &project,
+        std::function<bool(WaveClip&)> test /*!<
+            Edit the first clip in the track's list satisfying the test */
+    );
+
 private:
     void OnTrackChanged(TrackListEvent& evt);
 
     bool SelectNextClip(ViewInfo& viewInfo, AudacityProject* project, bool forward);
-    bool StartEditSelectedClipName(ViewInfo& viewInfo, AudacityProject* project);
 
     std::shared_ptr<TextEditHelper> MakeTextEditHelper(const wxString& text);
 };
