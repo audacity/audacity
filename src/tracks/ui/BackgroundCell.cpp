@@ -150,8 +150,9 @@ wxRect BackgroundCell::DrawingArea(
       return rect;
 }
 
-std::vector<ComponentInterfaceSymbol> BackgroundCell::GetMenuItems(
+auto BackgroundCell::GetMenuItems(
    const wxRect &, const wxPoint *, AudacityProject * )
+      -> std::vector<MenuItem>
 {
    // These commands exist in toolbar menus too, but maybe with other labels
    // TODO: devise a system of registration so that BackgroundCell has no
