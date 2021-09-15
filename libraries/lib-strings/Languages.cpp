@@ -42,6 +42,7 @@
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
+#include <wx/stdpaths.h>
 #include <wx/textfile.h>
 #include <wx/utils.h> // for wxSetEnv
 
@@ -216,7 +217,7 @@ void GetLanguages( FilePaths pathList,
 
 #if defined(__WXGTK__)
    {
-      wxFileName pathNorm{ wxString{INSTALL_PREFIX} + L"/share/locale" };
+      wxFileName pathNorm{ wxStandardPaths::Get().GetInstallPrefix() + L"/share/locale" };
       pathNorm.Normalize();
       const wxString newPath{ pathNorm.GetFullPath() };
       if (pathList.end() ==
