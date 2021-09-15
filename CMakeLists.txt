@@ -332,7 +332,7 @@ else()
 endif()
 
 set( _DEST "${_DESTDIR}" )
-set( _PREFIX "${CMAKE_INSTALL_PREFIX}" )
+set( INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" )
 set( _LIBDIR "${CMAKE_INSTALL_LIBDIR}" )
 set( _DATADIR "${CMAKE_INSTALL_DATADIR}" )
 set( _PKGLIB "${_LIBDIR}/audacity" )
