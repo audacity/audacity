@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-15 12:48-0400\n"
-"PO-Revision-Date: 2021-07-30 00:00+0000\n"
+"PO-Revision-Date: 2021-09-16 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "Language: pl\n"
@@ -17963,7 +17963,7 @@ msgstr "Nie można połączyć się z serwerem aktualizacji Audacity."
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Update data was corrupted."
-msgstr "Dane aktualizacji były uszkodzone."
+msgstr "Dane aktualizacji zostały uszkodzone."
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
@@ -18033,7 +18033,7 @@ msgstr "Dziennik zmian"
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "Read more on GitHub"
-msgstr "Czytaj więcej na GitHubie"
+msgstr "Przeczytaj więcej na GitHubie"
 
 #: src/widgets/AButton.cpp
 msgid "(disabled)"
