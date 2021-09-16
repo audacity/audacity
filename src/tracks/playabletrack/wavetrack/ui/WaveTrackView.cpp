@@ -1345,7 +1345,7 @@ ClipParameters::ClipParameters
    (bool spectrum, const WaveTrack *track, const WaveClip *clip, const wxRect &rect,
    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
 {
-   tOffset = clip->GetOffset();
+   tOffset = clip->GetPlayStartTime();
    rate = clip->GetRate();
 
    h = zoomInfo.PositionToTime(0, 0
@@ -1364,7 +1364,7 @@ ClipParameters::ClipParameters
       sel0 = sel1 = 0.0;
    }
 
-   const double trackLen = clip->GetEndTime() - clip->GetStartTime();
+   const double trackLen = clip->GetPlayEndTime() - clip->GetPlayStartTime();
 
    tpre = h - tOffset;                 // offset corrected time of
    //  left edge of display
@@ -1380,8 +1380,8 @@ ClipParameters::ClipParameters
 
    // Calculate actual selection bounds so that t0 > 0 and t1 < the
    // end of the track
-   t0 = (tpre >= 0.0 ? tpre : 0.0);
-   t1 = (tpost < trackLen - sps * .99 ? tpost : trackLen - sps * .99);
+   t0 = std::max(tpre, .0);
+   t1 = std::min(tpost, trackLen - sps * .99);
    if (showIndividualSamples) {
       // adjustment so that the last circular point doesn't appear
       // to be hanging off the end
@@ -1485,15 +1485,14 @@ wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInf
     auto margin = .25 * srs;
     constexpr auto edgeLeft = static_cast<wxInt64>(std::numeric_limits<int>::min());
     constexpr auto edgeRight = static_cast<wxInt64>(std::numeric_limits<int>::max());
-    auto left = std::clamp(zoomInfo.TimeToPosition(clip.GetOffset() - margin, viewRect.x, true), edgeLeft, edgeRight);
-    auto right = std::clamp(zoomInfo.TimeToPosition(clip.GetEndTime() - srs + margin, viewRect.x, true), edgeLeft, edgeRight);
+    auto left = std::clamp(zoomInfo.TimeToPosition(clip.GetPlayStartTime() - margin, viewRect.x, true), edgeLeft, edgeRight);
+    auto right = std::clamp(zoomInfo.TimeToPosition(clip.GetPlayEndTime() - srs + margin, viewRect.x, true), edgeLeft, edgeRight);
     if (right > left)
     {
         //after clamping we can expect that left and right 
         //are small enough to be put into int
         return wxRect(static_cast<int>(left), viewRect.y, static_cast<int>(right - left), viewRect.height);
     }
-    //off the screen
     return wxRect();
 }
 

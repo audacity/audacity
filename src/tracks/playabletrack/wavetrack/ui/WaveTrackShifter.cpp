@@ -26,8 +26,8 @@ public:
          
          for (auto clip : mpTrack->GetClips())
          {
-            const auto c0 = mpTrack->TimeToLongSamples(clip->GetStartTime());
-            const auto c1 = mpTrack->TimeToLongSamples(clip->GetEndTime());
+            const auto c0 = mpTrack->TimeToLongSamples(clip->GetPlayStartTime());
+            const auto c1 = mpTrack->TimeToLongSamples(clip->GetPlayEndTime());
             if (ts >= c0 && ts < c1)
                return clip;
          }
@@ -63,8 +63,8 @@ public:
          auto data =
             static_cast<WaveTrack::IntervalData*>( myInterval.Extra() );
          auto clip = data->GetClip().get();
-         const auto c0 = mpTrack->TimeToLongSamples(clip->GetStartTime());
-         const auto c1 = mpTrack->TimeToLongSamples(clip->GetEndTime());
+         const auto c0 = mpTrack->TimeToLongSamples(clip->GetPlayStartTime());
+         const auto c1 = mpTrack->TimeToLongSamples(clip->GetPlayEndTime());
          return 
              mpTrack->TimeToLongSamples(interval.Start()) < c1 && 
              mpTrack->TimeToLongSamples(interval.End()) >= c0;
@@ -186,10 +186,10 @@ public:
       else {
          auto data = static_cast<WaveTrack::IntervalData*>(MovingIntervals()[0].Extra());
          auto& clip = data->GetClip();
-         if (t0 < clip->GetStartTime())
-            t0 = clip->GetStartTime();
-         if (t0 > clip->GetEndTime())
-            t0 = clip->GetEndTime();
+         if (t0 < clip->GetPlayStartTime())
+            t0 = clip->GetPlayStartTime();
+         if (t0 > clip->GetPlayEndTime())
+            t0 = clip->GetPlayEndTime();
       }
       return t0;
    }

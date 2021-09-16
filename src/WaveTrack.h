@@ -148,7 +148,8 @@ private:
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);
 
-   sampleCount GetNumSamples() const;
+   sampleCount GetPlaySamplesCount() const;
+   sampleCount GetSequenceSamplesCount() const;
 
    sampleFormat GetSampleFormat() const { return mFormat; }
    void ConvertToSampleFormat(sampleFormat format,
@@ -610,6 +611,8 @@ private:
    //
 
 private:
+
+   void PasteWaveTrack(double t0, const WaveTrack* other);
 
    TrackKind GetKind() const override { return TrackKind::Wave; }
 

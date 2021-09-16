@@ -1239,8 +1239,8 @@ bool NyquistEffect::ProcessOne()
          for (size_t i=0; i<ca.size(); i++) {
             if (i < 1000) {
                clips += wxString::Format(wxT("(list (float %s) (float %s))"),
-                                         Internat::ToString(ca[i]->GetStartTime()),
-                                         Internat::ToString(ca[i]->GetEndTime()));
+                                         Internat::ToString(ca[i]->GetPlayStartTime()),
+                                         Internat::ToString(ca[i]->GetPlayEndTime()));
             } else if (i == 1000) {
                // If final clip is NIL, plug-in developer knows there are more than 1000 clips in channel.
                clips += "NIL";

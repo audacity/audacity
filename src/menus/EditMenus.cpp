@@ -761,7 +761,7 @@ void OnTrim(const CommandContext &context)
 
    tracks.Selected().Visit(
       [&](WaveTrack *wt) {
-         //Delete the section before the left selector
+         //Hide the section before the left selector
          wt->Trim(selectedRegion.t0(),
             selectedRegion.t1());
       }
