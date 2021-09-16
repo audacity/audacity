@@ -157,7 +157,7 @@ std::vector<int> SpectralDataManager::Worker::ProcessOvertones(WaveTrack *wt,
    startSC = std::max(static_cast<long long>(0), startSC - 2 * hopSize);
    // The calculated multiple frequency peaks will be stored in mOvertonesTargetFreqBin
    TrackSpectrumTransformer::Process( OvertonesProcessor, wt, 1, startSC, winSize);
-   return mOvertonesTargetFreqBin;
+   return move( mOvertonesTargetFreqBin );
  }
 
 bool SpectralDataManager::Worker::SnappingProcessor(SpectrumTransformer &transformer) {
@@ -217,20 +217,29 @@ bool SpectralDataManager::Worker::OvertonesProcessor(SpectrumTransformer &transf
 
       const double &spectrumSize = worker.mSpectrumSize;
       const int &targetBin = worker.mSnapTargetFreqBin;
+
       float targetValue = record.mSpectrums[targetBin];
-      float minEnergyThrehold = targetValue * 0.03;
-      int localBinsToExamine = 3;
 
-      for(int binNum = targetBin; binNum < spectrumSize - 1; binNum += targetBin){
-         bool binIsLocalMax = true;
-         for(int offset = -localBinsToExamine; offset < localBinsToExamine; offset++){
-            if(record.mSpectrums[binNum] < record.mSpectrums[binNum + offset])
-               binIsLocalMax = false;
-         }
+      double fundamental = targetBin;
+      int overtone = 2, binNum = 0;
+      pSpectrum = &record.mSpectrums[0];
+      while ( fundamental >= 1 &&
+         ( binNum = lrint( fundamental * overtone )  ) < spectrumSize) {
+         // Examine a few bins each way up and down
+         constexpr int tolerance = 3;
+         auto begin = pSpectrum + std::max( 0, binNum - (tolerance + 1) );
+         auto end = pSpectrum +
+            std::min<size_t>( spectrumSize, binNum + (tolerance + 1) + 1 );
+         auto peak = std::max_element( begin, end );
 
-         // Checking against minimal energy threshold
-         if(binIsLocalMax && record.mSpectrums[binNum] > minEnergyThrehold)
-            worker.mOvertonesTargetFreqBin.push_back(binNum);
+         // Abandon if the peak is too far up or down
+         if ( peak == begin || peak == end - 1 )
+            break;
+
+         int newBin = peak - pSpectrum;
+         worker.mOvertonesTargetFreqBin.push_back(newBin);
+         // Correct the estimate of the fundamental
+         fundamental = double(newBin) / overtone++;
       }
    }
    return true;
