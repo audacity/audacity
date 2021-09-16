@@ -49,8 +49,9 @@ HitTestPreview CommonTrackPanelCell::DefaultPreview
    return { {}, &defaultCursor, {} };
 }
 
-std::vector<ComponentInterfaceSymbol> CommonTrackPanelCell::GetMenuItems(
+auto CommonTrackPanelCell::GetMenuItems(
    const wxRect&, const wxPoint *, AudacityProject * )
+      -> std::vector<MenuItem>
 {
    return {};
 }
@@ -58,8 +59,8 @@ std::vector<ComponentInterfaceSymbol> CommonTrackPanelCell::GetMenuItems(
 unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
    wxWindow *pParent, const wxPoint *pPoint, AudacityProject *pProject)
 {
-   const auto symbols = GetMenuItems( rect, pPoint, pProject );
-   if (symbols.empty())
+   const auto items = GetMenuItems( rect, pPoint, pProject );
+   if (items.empty())
       return RefreshCode::RefreshNone;
 
    // Set up command context with extras
@@ -78,26 +79,31 @@ unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
    // Common dispatcher for the menu items
    auto dispatcher = [&]( wxCommandEvent &evt ){
       auto idx = evt.GetId() - 1;
-      if (idx >= 0 && idx < symbols.size()) {
-         commandManager.HandleTextualCommand(
-            symbols[idx].Internal(), context, flags, false);
+      if (idx >= 0 && idx < items.size()) {
+         if (auto &action = items[idx].action)
+            action( context );
+         else
+            commandManager.HandleTextualCommand(
+               items[idx].symbol.Internal(), context, flags, false);
       }
    };
 
    wxMenu menu;
    int ii = 1;
-   for (const auto &symbol: symbols) {
-      if ( symbol.Internal().empty() )
+   for (const auto &item: items) {
+      if ( const auto &commandID = item.symbol.Internal();
+           commandID.empty() )
          menu.AppendSeparator();
       else {
          // Generate a menu item with the same shortcut key as in the toolbar
          // menu, and as determined by keyboard preferences
-         const auto &commandID = symbol.Internal();
          auto label =
-            commandManager.FormatLabelForMenu( commandID, &symbol.Msgid() );
+            commandManager.FormatLabelForMenu( commandID, &item.symbol.Msgid() );
          menu.Append( ii, label );
          menu.Bind( wxEVT_COMMAND_MENU_SELECTED, dispatcher );
-         menu.Enable( ii, commandManager.GetEnabled( commandID ) );
+         bool enabled = item.enabled &&
+            (item.action || commandManager.GetEnabled( commandID ));
+         menu.Enable( ii, enabled );
       }
       ++ii;
    }

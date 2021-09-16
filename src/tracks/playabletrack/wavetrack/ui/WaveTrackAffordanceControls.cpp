@@ -338,9 +338,15 @@ unsigned WaveTrackAffordanceControls::KeyDown(wxKeyEvent& event, ViewInfo& viewI
             SelectNextClip(viewInfo, project, event.GetModifiers() != wxMOD_SHIFT);
         } break;
         case WXK_NUMPAD_ENTER:
-        case WXK_RETURN:
-            StartEditSelectedClipName(viewInfo, project);
+        case WXK_RETURN: {
+            const auto pred = [&viewInfo](const WaveClip& clip) {
+            return clip.GetStartTime() == viewInfo.selectedRegion.t0() &&
+                clip.GetEndTime() == viewInfo.selectedRegion.t1();
+            };
+            if (project)
+               StartEditNameOfMatchingClip(*project, pred);
             break;
+        }
         }
     }
     return RefreshCode::RefreshCell;
@@ -357,10 +363,12 @@ void WaveTrackAffordanceControls::OnTextEditFinished(AudacityProject* project, c
 {
     if (auto lock = mFocusClip.lock())
     {
-        lock->SetName(text);
+        if (text != lock->GetName()) {
+            lock->SetName(text);
 
-        ProjectHistory::Get(*project).PushState(XO("Modified Clip Name"),
-            XO("Clip Name Edit"), UndoPush::CONSOLIDATE);
+            ProjectHistory::Get(*project).PushState(XO("Modified Clip Name"),
+                XO("Clip Name Edit"), UndoPush::CONSOLIDATE);
+        }
     }
     mTextEditHelper.reset();
 }
@@ -443,7 +451,8 @@ bool WaveTrackAffordanceControls::SelectNextClip(ViewInfo& viewInfo, AudacityPro
     return true;
 }
 
-bool WaveTrackAffordanceControls::StartEditSelectedClipName(ViewInfo& viewInfo, AudacityProject* project)
+bool WaveTrackAffordanceControls::StartEditNameOfMatchingClip(
+    AudacityProject &project, std::function<bool(WaveClip&)> test )
 {
     //Attempts to invoke name editing if there is a selected clip
     auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(FindTrack());
@@ -451,14 +460,12 @@ bool WaveTrackAffordanceControls::StartEditSelectedClipName(ViewInfo& viewInfo, 
         return false;
     auto clips = waveTrack->GetClips();
 
-    auto it = std::find_if(clips.begin(), clips.end(), [&](const std::shared_ptr<WaveClip>& clip) {
-        return clip->GetStartTime() == viewInfo.selectedRegion.t0() &&
-            clip->GetEndTime() == viewInfo.selectedRegion.t1();
-        });
+    auto it = std::find_if(clips.begin(), clips.end(),
+      [&](auto pClip){ return pClip && test && test(*pClip); });
     if (it != clips.end())
     {
         mFocusClip = *it;
-        return StartEditClipName(project);
+        return StartEditClipName(&project);
     }
     return false;
 }
