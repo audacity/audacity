@@ -109,11 +109,15 @@ bool SpectralDataManager::Worker::Process(WaveTrack* wt,
    const auto &hopSize = mpSpectralData->GetHopSize();
    auto startSample =  mpSpectralData->GetStartSample();
    const auto &endSample = mpSpectralData->GetEndSample();
-   mStartHopNum = startSample / hopSize;
+   // Correct the first hop num, because SpectrumTransformer will send
+   // a few initial windows that overlay the range only partially
+   mStartHopNum = startSample / hopSize - (mStepsPerWindow - 1);
    mWindowCount = 0;
 
+   // Correct the start of range so that the first full window is
+   // centered at that position
    startSample = std::max(static_cast<long long>(0), startSample - 2 * hopSize);
-if (!TrackSpectrumTransformer::Process( Processor, wt, 1, startSample, endSample - startSample))
+   if (!TrackSpectrumTransformer::Process( Processor, wt, 1, startSample, endSample - startSample))
       return false;
 
    return true;

@@ -280,7 +280,8 @@ UIHandle::Result BrushHandle::Drag
    auto posXToHopNum = [&](int x0){
       double posTime = viewInfo.PositionToTime(x0, mRect.x);
       sampleCount sc = wt->TimeToLongSamples(posTime);
-      return sc.as_long_long() / mpSpectralData->GetHopSize();
+      auto hopSize = mpSpectralData->GetHopSize();
+      return (sc.as_long_long() + hopSize / 2) / hopSize;
    };
 
    auto posYToFreqBin = [&](int y0){
