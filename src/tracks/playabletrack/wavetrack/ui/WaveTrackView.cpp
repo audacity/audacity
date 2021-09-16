@@ -42,6 +42,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackInfo.h"
 
 #include "WaveTrackAffordanceControls.h"
+#include "WaveClipTrimHandle.h"
 
 namespace {
 
@@ -757,6 +758,10 @@ std::pair<
          mRearrangeHandle,
          *pWaveTrackView, *this, state ) )
          results.second.push_back( pHandle );
+      if (auto pHandle = WaveClipTrimHandle::HitTest(
+          mClipTrimHandle,
+          *pWaveTrackView, pProject, state))
+          results.second.push_back(pHandle);
    }
    if (auto result = CutlineHandle::HitTest(
       mCutlineHandle, state.state, state.rect,
