@@ -363,10 +363,12 @@ void WaveTrackAffordanceControls::OnTextEditFinished(AudacityProject* project, c
 {
     if (auto lock = mFocusClip.lock())
     {
-        lock->SetName(text);
+        if (text != lock->GetName()) {
+            lock->SetName(text);
 
-        ProjectHistory::Get(*project).PushState(XO("Modified Clip Name"),
-            XO("Clip Name Edit"), UndoPush::CONSOLIDATE);
+            ProjectHistory::Get(*project).PushState(XO("Modified Clip Name"),
+                XO("Clip Name Edit"), UndoPush::CONSOLIDATE);
+        }
     }
     mTextEditHelper.reset();
 }
