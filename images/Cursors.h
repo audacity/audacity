@@ -9,6 +9,7 @@
 
 
 
+#include "Cursors32/CrosshairCursor.xpm"
 #include "Cursors32/DisabledCursor.xpm"
 #include "Cursors32/RearrangeCursor.xpm"
 #include "Cursors32/RearrangingCursor.xpm"

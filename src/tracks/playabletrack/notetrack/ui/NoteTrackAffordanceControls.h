@@ -13,10 +13,11 @@
 #include "../../../ui/CommonTrackPanelCell.h"
 
 class AffordanceHandle;
+class NoteTrackAffordanceHandle;
 
 class AUDACITY_DLL_API NoteTrackAffordanceControls : public CommonTrackCell
 {
-    std::weak_ptr<AffordanceHandle> mAffordanceHandle;
+    std::weak_ptr<NoteTrackAffordanceHandle> mAffordanceHandle;
 public:
     NoteTrackAffordanceControls(const std::shared_ptr<Track>& pTrack);
 

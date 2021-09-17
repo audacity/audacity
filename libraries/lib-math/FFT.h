@@ -106,7 +106,7 @@ void FFT(size_t NumSamples,
  * All functions have 0 in data[0] except Rectangular, Hamming and Gaussians
  */
 
-enum eWindowFunctions
+enum eWindowFunctions : int
 {
    eWinFuncRectangular,
    eWinFuncBartlett,

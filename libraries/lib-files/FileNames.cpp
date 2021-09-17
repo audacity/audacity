@@ -649,7 +649,8 @@ void FileNames::FindFilesInPathList(const wxString & pattern,
    }
 }
 
-bool FileNames::WritableLocationCheck(const FilePath& path)
+bool FileNames::WritableLocationCheck(const FilePath& path,
+                                    const TranslatableString & message)
 {
     bool status = wxFileName::IsDirWritable(path);
 
@@ -657,7 +658,8 @@ bool FileNames::WritableLocationCheck(const FilePath& path)
     {
         using namespace BasicUI;
         ShowMessageBox(
-            XO("Directory %s does not have write permissions").Format(path),
+            message +
+            XO("\n%s does not have write permissions.").Format(path),
             MessageBoxOptions{}
                 .Caption(XO("Error"))
                 .IconStyle(Icon::Error)

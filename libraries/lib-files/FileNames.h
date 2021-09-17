@@ -204,7 +204,9 @@ namespace FileNames
 
 
    //! Check location on writable access and return true if checked successfully.
-   FILES_API bool WritableLocationCheck(const FilePath& path);
+   // message is the explanation that is to be displayed to the user if the location is unwritable.
+   FILES_API bool WritableLocationCheck(const FilePath& path,
+                                       const TranslatableString & message);
 
    // wxString compare function for sorting case, which is needed to load correctly.
    FILES_API int CompareNoCase(const wxString& first, const wxString& second);
