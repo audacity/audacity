@@ -309,7 +309,6 @@ AudioIO::AudioIO()
    mUpdateMeters = false;
    mUpdatingMeters = false;
 
-   mOwningProject = NULL;
    mOutputMeter.reset();
 
    PaError err = Pa_Initialize();
@@ -491,7 +490,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
 
    // PRL:  Protection from crash reported by David Bailes, involving starting
    // and stopping with frequent changes of active window, hard to reproduce
-   if (!mOwningProject)
+   if (mOwningProject.expired())
       return false;
 
    mInputMeter.reset();
@@ -590,7 +589,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       else
          captureParameters.suggestedLatency = latencyDuration/1000.0;
 
-      SetCaptureMeter( mOwningProject, options.captureMeter );
+      SetCaptureMeter( mOwningProject.lock(), options.captureMeter );
    }
 
    SetMeters();
@@ -694,18 +693,19 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
                                   (unsigned int)captureChannels,
                                   captureFormat);
 
+   auto pOwningProject = mOwningProject.lock();
    if (!success) {
       using namespace BasicUI;
       auto msg = XO("Error opening recording device.\nError code: %s")
          .Format( Get()->LastPaErrorString() );
-      ShowErrorDialog( *ProjectFramePlacement( mOwningProject ),
+      ShowErrorDialog( *ProjectFramePlacement( pOwningProject.get() ),
          XO("Error"), msg, wxT("Error_opening_sound_device"),
          ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
       return;
    }
 
    wxCommandEvent e(EVT_AUDIOIO_MONITOR);
-   e.SetEventObject(mOwningProject);
+   e.SetEventObject( pOwningProject.get() );
    e.SetInt(true);
    wxTheApp->ProcessEvent(e);
 
@@ -1012,10 +1012,11 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       pListener->OnAudioIORate((int)mRate);
    }
 
+   auto pOwningProject = mOwningProject.lock();
    if (mNumPlaybackChannels > 0)
    {
       wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
-      e.SetEventObject(mOwningProject);
+      e.SetEventObject( pOwningProject.get() );
       e.SetInt(true);
       wxTheApp->ProcessEvent(e);
    }
@@ -1023,7 +1024,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    if (mNumCaptureChannels > 0)
    {
       wxCommandEvent e(EVT_AUDIOIO_CAPTURE);
-      e.SetEventObject(mOwningProject);
+      e.SetEventObject( pOwningProject.get() );
       e.SetInt(true);
       wxTheApp->ProcessEvent(e);
    }
@@ -1273,9 +1274,10 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mPlaybackSchedule.GetPolicy().Finalize( mPlaybackSchedule );
 }
 
-bool AudioIO::IsAvailable(AudacityProject *project) const
+bool AudioIO::IsAvailable(AudacityProject &project) const
 {
-   return mOwningProject == NULL || mOwningProject == project;
+   auto pOwningProject = mOwningProject.lock();
+   return !pOwningProject || pOwningProject.get() == &project;
 }
 
 void AudioIO::SetMeters()
@@ -1480,8 +1482,9 @@ void AudioIO::StopStream()
             // This scope may combine many splittings of wave tracks
             // into one transaction, lessening the number of checkpoints
             Optional<TransactionScope> pScope;
-            if (mOwningProject) {
-               auto &pIO = ProjectFileIO::Get(*mOwningProject);
+            auto pOwningProject = mOwningProject.lock();
+            if (pOwningProject) {
+               auto &pIO = ProjectFileIO::Get(*pOwningProject);
                pScope.emplace(pIO.GetConnection(), "Dropouts");
             }
             for (auto &interval : mLostCaptureIntervals) {
@@ -1510,7 +1513,7 @@ void AudioIO::StopStream()
 
    mInputMeter.reset();
    mOutputMeter.reset();
-   mOwningProject = nullptr;
+   mOwningProject.reset();
 
    if (pListener && mNumCaptureChannels > 0)
       pListener->OnAudioIOStopRecording();
@@ -1539,7 +1542,8 @@ void AudioIO::StopStream()
    if (mNumPlaybackChannels > 0)
    {
       wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
-      e.SetEventObject(mOwningProject);
+      auto pOwningProject = mOwningProject.lock();
+      e.SetEventObject(pOwningProject.get());
       e.SetInt(false);
       wxTheApp->ProcessEvent(e);
    }
@@ -1547,7 +1551,8 @@ void AudioIO::StopStream()
    if (mNumCaptureChannels > 0)
    {
       wxCommandEvent e(wasMonitoring ? EVT_AUDIOIO_MONITOR : EVT_AUDIOIO_CAPTURE);
-      e.SetEventObject(mOwningProject);
+      auto pOwningProject = mOwningProject.lock();
+      e.SetEventObject(pOwningProject.get());
       e.SetInt(false);
       wxTheApp->ProcessEvent(e);
    }
@@ -1877,8 +1882,9 @@ void AudioIO::DrainRecordBuffers()
          // and also an autosave, into one transaction,
          // lessening the number of checkpoints
          Optional<TransactionScope> pScope;
-         if (mOwningProject) {
-            auto &pIO = ProjectFileIO::Get(*mOwningProject);
+         auto pOwningProject = mOwningProject.lock();
+         if (pOwningProject) {
+            auto &pIO = ProjectFileIO::Get( *pOwningProject );
             pScope.emplace(pIO.GetConnection(), "Recording");
          }
 
@@ -2088,7 +2094,7 @@ double AudioIO::AILAGetLastDecisionTime() {
 }
 
 void AudioIO::AILAProcess(double maxPeak) {
-   AudacityProject *const proj = mOwningProject;
+   const auto proj = mOwningProject.lock();
    if (proj && mAILAActive) {
       if (mInputMeter && mInputMeter->IsClipping()) {
          mAILAClipped = true;

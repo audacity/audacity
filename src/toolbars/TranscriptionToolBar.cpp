@@ -299,7 +299,7 @@ void TranscriptionToolBar::EnableDisableButtons()
    auto gAudioIO = AudioIO::Get();
    bool canStopAudioStream = (!gAudioIO->IsStreamActive() ||
            gAudioIO->IsMonitoring() ||
-           gAudioIO->GetOwningProject() == p );
+           gAudioIO->GetOwningProject().get() == p );
    bool recording = gAudioIO->GetNumCaptureChannels() > 0;
 
    // Only interested in audio type tracks

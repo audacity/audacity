@@ -1106,7 +1106,7 @@ void ProjectAudioManager::OnSoundActivationThreshold()
 {
    auto &project = mProject;
    auto gAudioIO = AudioIO::Get();
-   if ( gAudioIO && &project == gAudioIO->GetOwningProject() ) {
+   if ( gAudioIO && &project == gAudioIO->GetOwningProject().get() ) {
       wxTheApp->CallAfter( [this]{ Pause(); } );
    }
 }
@@ -1143,7 +1143,7 @@ bool ProjectAudioManager::CanStopAudioStream() const
    auto gAudioIO = AudioIO::Get();
    return (!gAudioIO->IsStreamActive() ||
            gAudioIO->IsMonitoring() ||
-           gAudioIO->GetOwningProject() == &mProject );
+           gAudioIO->GetOwningProject().get() == &mProject );
 }
 
 const ReservedCommandFlag&
@@ -1159,7 +1159,7 @@ AudioIOStartStreamOptions
 DefaultPlayOptions( AudacityProject &project, bool looped )
 {
    auto &projectAudioIO = ProjectAudioIO::Get( project );
-   AudioIOStartStreamOptions options { &project,
+   AudioIOStartStreamOptions options { project.shared_from_this(),
       ProjectRate::Get( project ).GetRate() };
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
