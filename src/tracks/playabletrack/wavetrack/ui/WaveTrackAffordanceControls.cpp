@@ -33,7 +33,7 @@
 #include "../../../../SelectionState.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../Theme.h"
-#include "../../../../images/Cursors.h"
+#include "../../../../../images/Cursors.h"
 #include "../../../../HitTestResult.h"
 
 class WaveTrackAffordanceHandle final : public AffordanceHandle
