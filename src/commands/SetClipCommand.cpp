@@ -71,6 +71,7 @@ void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasColour      ).TieChoice(          XXO("Color:"),         mColour,
          Msgids( kColourStrings, nColours ) );
       S.Optional( bHasT0          ).TieNumericTextBox(  XXO("Start:"),         mT0 );
+      S.Optional( bHasName        ).TieTextBox(         XXO("Name:"),          mName );
    }
    S.EndMultiColumn();
 }
@@ -97,6 +98,8 @@ bool SetClipCommand::ApplyInner( const CommandContext &, Track * t )
             if( bHasT0 )
                pClip->SetOffset(mT0);
             // \todo Use SetClip to move a clip between tracks too.
+            if( bHasName )
+               pClip->SetName(mName);
 
          }
       }

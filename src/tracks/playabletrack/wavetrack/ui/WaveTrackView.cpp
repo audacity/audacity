@@ -25,10 +25,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../../images/Cursors.h"
 #include "../../../../AllThemeResources.h"
 
+#include "../../../../commands/CommandContext.h"
 #include "../../../../HitTestResult.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackArtist.h"
+#include "../../../../TrackPanel.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackPanelResizeHandle.h"
@@ -812,16 +814,48 @@ std::weak_ptr<WaveTrackView> WaveTrackSubView::GetWaveTrackView() const
    return mwWaveTrackView;
 }
 
-std::vector<ComponentInterfaceSymbol> WaveTrackSubView::GetMenuItems(
+auto WaveTrackSubView::GetMenuItems(
    const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
+      -> std::vector<MenuItem>
 {
    const WaveClip *pClip = nullptr;
-   auto pTrack = static_cast<WaveTrack*>(FindTrack().get());
-   if (pTrack && pPosition) {
+   auto pTrack = static_cast<WaveTrack*>( FindTrack().get() );
+   double time = 0.0;
+   if ( pTrack && pPosition ) {
       auto &viewInfo = ViewInfo::Get(*pProject);
-      auto time = viewInfo.PositionToTime( pPosition->x, rect.x );
+      time = viewInfo.PositionToTime( pPosition->x, rect.x );
       pClip = pTrack->GetClipAtTime( time );
    }
+
+   static auto FindAffordance = [](WaveTrack &track){
+      auto &view = TrackView::Get( track );
+      auto pAffordance = view.GetAffordanceControls();
+      return std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
+         pAffordance );
+   };
+
+   auto pRenameTrack = pTrack;
+   auto pRenameClip = pClip;
+   auto pAffordance = FindAffordance( *pTrack );
+   if ( pTrack && pClip && !pAffordance ) {
+      // Maybe an aligned right clip.  Check the first of the channel
+      // group instead for a clip at the same time.
+      if ( ( pRenameTrack = *TrackList::Channels( pTrack ).begin() ) ) {
+         pAffordance = FindAffordance( *pRenameTrack );
+         pRenameClip = pRenameTrack->GetClipAtTime( time );
+      }
+   }
+
+   auto RenameClip =
+   [pRenameTrack, pRenameClip, pAffordance]( const CommandContext &context ) {
+      auto &project = context.project;
+      // Begin editing of the label, either with a dialog or directly
+      // in the track panel.
+      pAffordance->StartEditNameOfMatchingClip( project,
+         [pRenameClip](auto &clip){ return &clip == pRenameClip; } );
+      // Refresh so that the insertion cursor appears
+      TrackPanel::Get(project).RefreshTrack(pRenameTrack);
+   };
 
    if (pClip)
       return {
@@ -831,11 +865,16 @@ std::vector<ComponentInterfaceSymbol> WaveTrackSubView::GetMenuItems(
          {},
          { L"Split", XO("Split Clip") },
          { L"TrackMute", XO("Mute/Unmute Track") },
-         // {},
-         // { L"", XO("Rename clip...") },
+         {},
+         { L"RenameClip", XO("Rename clip..."), RenameClip,
+            (pAffordance && pRenameClip) },
       };
    else
-      return {};
+      return {
+         { L"Paste", XO("Paste")  },
+         {},
+         { L"TrackMute", XO("Mute/Unmute Track") },
+      };
 }
 
 WaveTrackView &WaveTrackView::Get( WaveTrack &track )
@@ -860,6 +899,10 @@ WaveTrackSubView::WaveTrackSubView( WaveTrackView &waveTrackView )
       waveTrackView.shared_from_this() );
 }
 
+void WaveTrackSubView::CopyToSubView(WaveTrackSubView *destSubView) const {
+
+}
+
 WaveTrackView::~WaveTrackView()
 {
 }
@@ -873,6 +916,14 @@ void WaveTrackView::CopyTo( Track &track ) const
       // only these fields are important to preserve in undo/redo history
       pOther->RestorePlacements( SavePlacements() );
       pOther->mMultiView = mMultiView;
+
+      auto srcSubViewsPtrs  = const_cast<WaveTrackView*>( this )->GetAllSubViews();
+      auto destSubViewsPtrs  = const_cast<WaveTrackView*>( pOther )->GetAllSubViews();
+      wxASSERT(srcSubViewsPtrs.size() == destSubViewsPtrs.size());
+
+      for(auto i = 0; i != srcSubViewsPtrs.size(); i++){
+         srcSubViewsPtrs[i]->CopyToSubView(destSubViewsPtrs[i].get());
+      }
    }
 }
 
@@ -1096,6 +1147,42 @@ auto WaveTrackView::GetSubViews(const wxRect* rect) -> Refinement
    }
 
    return results;
+}
+
+unsigned WaveTrackView::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
+{
+   unsigned result{ RefreshCode::RefreshNone };
+   if (auto affordance = GetAffordanceControls())
+      result |= affordance->CaptureKey(event, viewInfo, pParent, project);
+    
+   if(event.GetSkipped())
+      result |= CommonTrackView::CaptureKey(event, viewInfo, pParent, project);
+
+   return result;
+}
+
+unsigned WaveTrackView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
+{
+   unsigned result{ RefreshCode::RefreshNone };
+   if (auto affordance = GetAffordanceControls())
+      result |= affordance->KeyDown(event, viewInfo, pParent, project);
+    
+   if(event.GetSkipped())
+      result |= CommonTrackView::KeyDown(event, viewInfo, pParent, project);
+
+   return result;
+}
+
+unsigned WaveTrackView::Char(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
+{
+   unsigned result{ RefreshCode::RefreshNone };
+   if (auto affordance = GetAffordanceControls())
+      result |= affordance->Char(event, viewInfo, pParent, project);
+    
+   if(event.GetSkipped())
+      result |= CommonTrackView::Char(event, viewInfo, pParent, project);
+
+   return result;
 }
 
 std::vector< std::shared_ptr< WaveTrackSubView > >

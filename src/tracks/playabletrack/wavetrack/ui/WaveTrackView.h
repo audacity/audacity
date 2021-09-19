@@ -37,6 +37,10 @@ public:
    
    virtual const Type &SubViewType() const = 0;
 
+   // For undo and redo purpose
+   // Empty abstract method to be inherited, for copying the spectral data in SpectrumSubView
+   virtual void CopyToSubView(WaveTrackSubView *destSubView) const;
+
    std::pair<
       bool, // if true, hit-testing is finished
       std::vector<UIHandlePtr>
@@ -52,7 +56,7 @@ protected:
 
    std::weak_ptr<WaveTrackView> GetWaveTrackView() const;
 
-   std::vector<ComponentInterfaceSymbol> GetMenuItems(
+   std::vector<MenuItem> GetMenuItems(
       const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
    override;
 
@@ -145,6 +149,17 @@ public:
    // if rect is provided then result will contain
    // y coordinate for each subview within this rect
    Refinement GetSubViews(const wxRect* rect = nullptr);
+
+   unsigned CaptureKey
+   (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
+       AudacityProject* project) override;
+
+   unsigned KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
+       AudacityProject* project) override;
+
+   unsigned Char
+   (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
+       AudacityProject* project) override;
 
 private:
    void BuildSubViews() const;

@@ -38,11 +38,13 @@ public:
    double mContainsTime;
    int mColour;
    double mT0;
+   wxString mName;
 
 // For tracking optional parameters.
    bool bHasContainsTime;
    bool bHasColour;
    bool bHasT0;
+   bool bHasName;
 };
 
 

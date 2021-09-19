@@ -318,29 +318,25 @@ void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString& 
 
    if (!title.empty())
    {
-      dc.SetTextBackground(wxTransparentColor);
-      dc.SetTextForeground(theTheme.Colour(clrClipAffordanceOutlinePen));
-      
-      dc.SetFont(wxFont(wxFontInfo()));
-
-      auto fontHeight = dc.GetFontMetrics().ascent + dc.GetFontMetrics().descent;
-      wxRect titleRect = wxRect(
-         rect.GetLeft() + ClipFrameRadius,
-         rect.GetTop() + (rect.GetHeight() - fontHeight) / 2,
-         rect.GetWidth() - ClipFrameRadius * 2,
-         fontHeight);
+      auto titleRect = TrackArt::GetAffordanceTitleRect(rect); 
 
       auto truncatedTitle = TrackArt::TruncateText(dc, title, titleRect.GetWidth());
       if (!truncatedTitle.empty())
       {
-          if (wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft)
-              dc.DrawText(truncatedTitle,
-                  titleRect.GetRight() - dc.GetTextExtent(truncatedTitle).GetWidth(),
-                  titleRect.GetTop());
-          else
-              dc.DrawText(truncatedTitle, titleRect.GetLeft(), titleRect.GetTop());
+          auto hAlign = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft ? wxALIGN_RIGHT : wxALIGN_LEFT;
+          dc.DrawLabel(truncatedTitle, titleRect, hAlign | wxALIGN_CENTER_VERTICAL);
       }
    }
+}
+
+AUDACITY_DLL_API wxRect TrackArt::GetAffordanceTitleRect(const wxRect& rect)
+{
+    constexpr int FrameThickness{ 1 };
+    return wxRect(
+        rect.GetLeft() + ClipFrameRadius,
+        rect.GetTop() + ClipSelectionStrokeSize + FrameThickness,
+        rect.GetWidth() - ClipFrameRadius * 2,
+        rect.GetHeight() - ClipSelectionStrokeSize - FrameThickness);
 }
 
 void TrackArt::DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected)
