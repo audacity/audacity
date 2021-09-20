@@ -287,7 +287,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mTrackArtist = std::make_unique<TrackArtist>( this );
 
-   mTimeCount = 0;
    mTimer.parent = this;
    // Timer is started after the window is visible
    ProjectWindow::Get( *GetProject() ).Bind(wxEVT_IDLE,
@@ -397,8 +396,6 @@ void TrackPanel::OnIdle(wxIdleEvent& event)
 /// AS: This gets called on our wx timer events.
 void TrackPanel::OnTimer(wxTimerEvent& )
 {
-   mTimeCount++;
-
    AudacityProject *const p = GetProject();
    auto &window = ProjectWindow::Get( *p );
 
@@ -434,20 +431,6 @@ void TrackPanel::OnTimer(wxTimerEvent& )
 
    DrawOverlays(false);
    mRuler->DrawOverlays(false);
-
-   if(IsAudioActive() && gAudioIO->GetNumCaptureChannels()) {
-
-      // Periodically update the display while recording
-
-      if ((mTimeCount % 5) == 0) {
-         // Must tell OnPaint() to recreate the backing bitmap
-         // since we've not done a full refresh.
-         mRefreshBacking = true;
-         Refresh( false );
-      }
-   }
-   if(mTimeCount > 1000)
-      mTimeCount = 0;
 }
 
 void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )

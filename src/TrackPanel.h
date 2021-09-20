@@ -210,8 +210,6 @@ protected:
      TrackPanel *parent;
    } mTimer;
 
-   int mTimeCount;
-
    bool mRefreshBacking;
 
 
