@@ -2314,9 +2314,8 @@ int LabelTrackView::DialogForLabelName(
       trackPanel.FindTrackRect( trackFocus.Get() ).GetBottomLeft();
    // The start of the text in the text box will be roughly in line with the label's position
    // if it's a point label, or the start of its region if it's a region label.
-   position.x +=
-      + std::max(0, static_cast<int>(viewInfo.TimeToPosition(
-         viewInfo.GetLeftOffset(), region.t0())))
+   position.x += viewInfo.GetLeftOffset()
+      + std::max(0, static_cast<int>(viewInfo.TimeToPosition(region.t0())))
       - 39;
    position.y += 2;  // just below the bottom of the track
    position = trackPanel.ClientToScreen(position);
