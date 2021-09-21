@@ -22,7 +22,7 @@ class UpdatePopupDialog final : public wxDialogWrapper
 {
     DECLARE_DYNAMIC_CLASS (AboutDialog)
 public:
-    explicit UpdatePopupDialog (wxWindow* parent, const VersionPatch& versionPatch);
+    explicit UpdatePopupDialog (wxWindow* parent, const VersionPatch& versionPatch, bool configurableNotification);
     virtual ~UpdatePopupDialog();
 
     void OnUpdate (wxCommandEvent& event);

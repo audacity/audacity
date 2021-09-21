@@ -449,7 +449,7 @@ void OnMenuTree(const CommandContext &context)
 #if defined(HAVE_UPDATES_CHECK)
 void OnCheckForUpdates(const CommandContext &WXUNUSED(context))
 {
-    UpdateManager::GetInstance().GetUpdates(false);
+    UpdateManager::GetInstance().GetUpdates(false, false);
 }
 #endif
 

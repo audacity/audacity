@@ -90,12 +90,12 @@ VersionPatch UpdateManager::GetVersionPatch() const
     return mVersionPatch;
 }
 
-void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
+void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotification)
 {
     const audacity::network_manager::Request request("https://updates.audacityteam.org/feed/latest.xml");
     auto response = audacity::network_manager::NetworkManager::GetInstance().doGet(request);
 
-    response->setRequestFinishedCallback([response, ignoreNetworkErrors, this](audacity::network_manager::IResponse*) {
+    response->setRequestFinishedCallback([response, ignoreNetworkErrors, configurableNotification, this](audacity::network_manager::IResponse*) {
         
         // We don't' want to duplicate the updates checking if that already launched.
         {
@@ -146,8 +146,8 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
         if (mVersionPatch.version > CurrentBuildVersion())
 #endif
         {
-            gAudioIO->CallAfterRecording([this, ignoreNetworkErrors] {
-                UpdatePopupDialog dlg(nullptr, mVersionPatch);
+            gAudioIO->CallAfterRecording([this, ignoreNetworkErrors, configurableNotification] {
+                UpdatePopupDialog dlg(nullptr, mVersionPatch, configurableNotification);
                 const int code = dlg.ShowModal();
 
                 if (code == wxID_YES)
@@ -266,7 +266,7 @@ void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
     if (updatesCheckingEnabled && IsTimeForUpdatesChecking())
 #endif
     {
-        GetUpdates(true);
+        GetUpdates(true, true);
     }
 
     mTimer.StartOnce(std::chrono::duration_cast<std::chrono::milliseconds>(

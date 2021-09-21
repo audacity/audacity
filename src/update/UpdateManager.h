@@ -38,7 +38,7 @@ public:
     static UpdateManager& GetInstance();
     static void Start();
 
-    void GetUpdates(bool ignoreNetworkErrors);
+    void GetUpdates(bool ignoreNetworkErrors, bool configurableNotification);
 
     VersionPatch GetVersionPatch() const;
 
