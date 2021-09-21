@@ -194,6 +194,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Robert H\u00E4nggi"), developerFormat, roleContributor);
    AddCredit(wxT("Daniel Horgan"), developerFormat, roleContributor);
    AddCredit(wxT("David Hostetler"), developerFormat, roleContributor);
+   AddCredit(wxT("Edward Hui"), developerFormat, roleContributor);
    AddCredit(wxT("Steve Jolly"), developerFormat, roleContributor);
    AddCredit(wxT("Steven Jones"), developerFormat, roleContributor);
    AddCredit(wxT("Henric Jungheim"), developerFormat, roleContributor);
