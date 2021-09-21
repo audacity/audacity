@@ -28,6 +28,10 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
 
+#if defined(HAVE_UPDATES_CHECK)
+#include "update/UpdateManager.h"
+#endif
+
 // private helper classes and functions
 namespace {
 
@@ -445,7 +449,7 @@ void OnMenuTree(const CommandContext &context)
 #if defined(HAVE_UPDATES_CHECK)
 void OnCheckForUpdates(const CommandContext &WXUNUSED(context))
 {
-   ::OpenInDefaultBrowser( VerCheckUrl());
+    UpdateManager::GetInstance().GetUpdates(false);
 }
 #endif
 

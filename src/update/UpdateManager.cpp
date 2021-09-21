@@ -11,6 +11,7 @@
 
 #include "UpdatePopupDialog.h"
 #include "UpdateNoticeDialog.h"
+#include "NoUpdatesAvailableDialog.h"
 
 #include "AudioIO.h"
 #include "BasicUI.h"
@@ -247,6 +248,10 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
 #if UPDATE_LOCAL_TESTING == 0
         else // mVersionPatch.version > CurrentBuildVersion()
         {
+            gAudioIO->CallAfterRecording([] {
+                NoUpdatesAvailableDialog(nullptr).ShowModal();
+            });
+
             mOnProgress = false;
         }
 #endif
