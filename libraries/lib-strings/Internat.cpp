@@ -135,9 +135,9 @@ bool Internat::CompatibleToDouble(const wxString& stringToConvert, double* resul
 {
    // Regardless of the locale, always respect comma _and_ point
    wxString s = stringToConvert;
-   s.Replace(wxT(","), wxString(GetDecimalSeparator()));
-   s.Replace(wxT("."), wxString(GetDecimalSeparator()));
-   return s.ToDouble(result);
+   // Convert to C locale decimal point for stable parsing.
+   s.Replace(wxString(GetDecimalSeparator()), wxT("."));
+   return s.ToCDouble(result);
 }
 
 double Internat::CompatibleToDouble(const wxString& stringToConvert)
