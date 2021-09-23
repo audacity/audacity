@@ -21,8 +21,19 @@ public:
    HitTestResult HitTest(
       double time, const ViewInfo &viewInfo, HitTestParams* ) override
    {
-      auto pClip = mpTrack->GetClipAtTime( time );
-
+      auto pClip = [&]() {
+         auto ts = mpTrack->TimeToLongSamples(time);
+         
+         for (auto clip : mpTrack->GetClips())
+         {
+            const auto c0 = mpTrack->TimeToLongSamples(clip->GetStartTime());
+            const auto c1 = mpTrack->TimeToLongSamples(clip->GetEndTime());
+            if (ts >= c0 && ts < c1)
+               return clip;
+         }
+         return std::shared_ptr<WaveClip>{};
+      }();
+      
       if (!pClip)
          return HitTestResult::Miss;
 
@@ -38,7 +49,7 @@ public:
       UnfixIntervals( [&](const auto &interval){
          return
             static_cast<WaveTrack::IntervalData*>(interval.Extra())
-               ->GetClip().get() == pClip;
+               ->GetClip() == pClip;
       } );
       
       return HitTestResult::Intervals;
@@ -52,8 +63,11 @@ public:
          auto data =
             static_cast<WaveTrack::IntervalData*>( myInterval.Extra() );
          auto clip = data->GetClip().get();
-         return !(clip->IsClipStartAfterClip(interval.Start()) ||
-            clip->BeforeClip(interval.End()));
+         const auto c0 = mpTrack->TimeToLongSamples(clip->GetStartTime());
+         const auto c1 = mpTrack->TimeToLongSamples(clip->GetEndTime());
+         return 
+             mpTrack->TimeToLongSamples(interval.Start()) < c1 && 
+             mpTrack->TimeToLongSamples(interval.End()) >= c0;
       });
    }
 
