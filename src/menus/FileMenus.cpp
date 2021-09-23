@@ -554,6 +554,15 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 namespace {
 using namespace MenuTable;
 
+#ifdef USE_MIDI
+const ReservedCommandFlag&
+   NoteTracksExistFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject &project){
+         return !TrackList::Get( project ).Any<const NoteTrack>().empty();
+      }
+   }; return flag; }  //gsw
+#endif
+
 BaseItemSharedPtr FileMenu()
 {
    using Options = CommandManager::Options;

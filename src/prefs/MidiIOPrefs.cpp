@@ -36,11 +36,10 @@ other settings.
 
 #include <portmidi.h>
 
+#include "NoteTrack.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 #include "../widgets/AudacityMessageBox.h"
-
-#define DEFAULT_SYNTH_LATENCY 5
 
 enum {
    HostID = 10000,
@@ -86,9 +85,9 @@ void MidiIOPrefs::Populate()
    GetNamesAndLabels();
 
    // Get current setting for devices
-   mPlayDevice = gPrefs->Read(wxT("/MidiIO/PlaybackDevice"), wxT(""));
+   mPlayDevice = MIDIPlaybackDevice.Read();
 #ifdef EXPERIMENTAL_MIDI_IN
-   mRecordDevice = gPrefs->Read(wxT("/MidiIO/RecordingDevice"), wxT(""));
+   mRecordDevice = MIDIRecordingDevice.Read();
 #endif
 //   mRecordChannels = gPrefs->Read(wxT("/MidiIO/RecordChannels"), 2L);
 
@@ -164,8 +163,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
          mPlay = S.AddChoice(XXO("&Device:"),
                              {} );
          mLatency = S.TieIntegerTextBox(XXO("MIDI Synth L&atency (ms):"),
-                                        {wxT("/MidiIO/SynthLatency"),
-                                         DEFAULT_SYNTH_LATENCY}, 3);
+                                        MIDISynthLatency_ms, 3);
       }
       S.EndMultiColumn();
    }
@@ -271,18 +269,18 @@ bool MidiIOPrefs::Commit()
 
    info = (const PmDeviceInfo *) mPlay->GetClientData(mPlay->GetSelection());
    if (info) {
-      gPrefs->Write(wxT("/MidiIO/PlaybackDevice"),
-                    wxString::Format(wxT("%s: %s"),
-                                     wxString(wxSafeConvertMB2WX(info->interf)),
-                                     wxString(wxSafeConvertMB2WX(info->name))));
+      MIDIPlaybackDevice.Write(
+         wxString::Format(wxT("%s: %s"),
+            wxString(wxSafeConvertMB2WX(info->interf)),
+            wxString(wxSafeConvertMB2WX(info->name))));
    }
 #ifdef EXPERIMENTAL_MIDI_IN
    info = (const PmDeviceInfo *) mRecord->GetClientData(mRecord->GetSelection());
    if (info) {
-      gPrefs->Write(wxT("/MidiIO/RecordingDevice"),
-                    wxString::Format(wxT("%s: %s"),
-                                     wxString(wxSafeConvertMB2WX(info->interf)),
-                                     wxString(wxSafeConvertMB2WX(info->name))));
+      MidiRecordingDevice.Write(
+         wxString::Format(wxT("%s: %s"),
+            wxString(wxSafeConvertMB2WX(info->interf)),
+            wxString(wxSafeConvertMB2WX(info->name))));
    }
 #endif
    return gPrefs->Flush();
