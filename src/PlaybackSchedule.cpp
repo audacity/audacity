@@ -147,33 +147,20 @@ bool PlaybackSchedule::Overruns( double trackTime ) const
    return (ReversedTime() ? trackTime <= mT1 : trackTime >= mT1);
 }
 
-namespace
+double PlaybackSchedule::ComputeWarpedLength(double t0, double t1) const
 {
-/** @brief Compute the duration (in seconds at playback) of the specified region of the track.
- *
- * Takes a region of the time track (specified by the unwarped time points in the project), and
- * calculates how long it will actually take to play this region back, taking the time track's
- * warping effects into account.
- * @param t0 unwarped time to start calculation from
- * @param t1 unwarped time to stop calculation at
- * @return the warped duration in seconds
- */
-double ComputeWarpedLength(const Envelope &env, double t0, double t1)
-{
-   return env.IntegralOfInverse(t0, t1);
+   if (mEnvelope)
+      return mEnvelope->IntegralOfInverse(t0, t1);
+   else
+      return t1 - t0;
 }
 
-/** @brief Compute how much unwarped time must have elapsed if length seconds of warped time has
- * elapsed
- *
- * @param t0 The unwarped time (seconds from project start) at which to start
- * @param length How many seconds of warped time went past.
- * @return The end point (in seconds from project start) as unwarped time
- */
-double SolveWarpedLength(const Envelope &env, double t0, double length)
+double PlaybackSchedule::SolveWarpedLength(double t0, double length) const
 {
-   return env.SolveIntegralOfInverse(t0, length);
-}
+   if (mEnvelope)
+      return mEnvelope->SolveIntegralOfInverse(t0, length);
+   else
+      return t0 + length;
 }
 
 double PlaybackSchedule::AdvancedTrackTime(
@@ -197,7 +184,7 @@ double PlaybackSchedule::AdvancedTrackTime(
             // Avoid SolveWarpedLength
             time = mT1;
          else
-            time = SolveWarpedLength(*mEnvelope, time, realElapsed);
+            time = SolveWarpedLength(time, realElapsed);
 
          if (!Looping() || !Overruns( time ))
             break;
@@ -209,7 +196,7 @@ double PlaybackSchedule::AdvancedTrackTime(
             // Avoid integrating again
             delta = total;
          else {
-            delta = ComputeWarpedLength(*mEnvelope, oldTime, mT1);
+            delta = ComputeWarpedLength(oldTime, mT1);
             if (oldTime == mT0)
                foundTotal = true, total = delta;
          }
@@ -234,26 +221,9 @@ double PlaybackSchedule::AdvancedTrackTime(
    return time;
 }
 
-void PlaybackSchedule::TrackTimeUpdate(double realElapsed)
-{
-   // Update mTime within the PortAudio callback
-
-   if (Interactive())
-      return;
-
-   auto time = GetTrackTime();
-   auto newTime = AdvancedTrackTime( time, realElapsed, 1.0 );
-   SetTrackTime( newTime );
-}
-
 double PlaybackSchedule::RealDuration(double trackTime1) const
 {
-   double duration;
-   if (mEnvelope)
-      duration = ComputeWarpedLength(*mEnvelope, mT0, trackTime1);
-   else
-      duration = trackTime1 - mT0;
-   return fabs(duration);
+   return fabs(ComputeWarpedLength(mT0, trackTime1));
 }
 
 double PlaybackSchedule::RealTimeRemaining() const
@@ -292,4 +262,67 @@ double RecordingSchedule::Consumed() const
 double RecordingSchedule::ToDiscard() const
 {
    return std::max(0.0, -( mPosition + TotalCorrection() ) );
+}
+
+void PlaybackSchedule::TimeQueue::Producer(
+   const PlaybackSchedule &schedule, double rate, double scrubSpeed,
+   size_t nSamples )
+{
+   if ( ! mData )
+      // Recording only.  Don't fill the queue.
+      return;
+
+   // Don't check available space:  assume it is enough because of coordination
+   // with RingBuffer.
+   auto index = mTail.mIndex;
+   auto time = mLastTime;
+   auto remainder = mTail.mRemainder;
+   auto space = TimeQueueGrainSize - remainder;
+
+   while ( nSamples >= space ) {
+      time = schedule.AdvancedTrackTime( time, space / rate, scrubSpeed );
+      index = (index + 1) % mSize;
+      mData[ index ] = time;
+      nSamples -= space;
+      remainder = 0;
+      space = TimeQueueGrainSize;
+   }
+
+   // Last odd lot
+   if ( nSamples > 0 )
+      time = schedule.AdvancedTrackTime( time, nSamples / rate, scrubSpeed );
+
+   mLastTime = time;
+   mTail.mRemainder = remainder + nSamples;
+   mTail.mIndex = index;
+}
+
+double PlaybackSchedule::TimeQueue::Consumer( size_t nSamples, double rate )
+{
+   if ( ! mData ) {
+      // Recording only.  No scrub or playback time warp.  Don't use the queue.
+      return ( mLastTime += nSamples / rate );
+   }
+
+   // Don't check available space:  assume it is enough because of coordination
+   // with RingBuffer.
+   auto remainder = mHead.mRemainder;
+   auto space = TimeQueueGrainSize - remainder;
+   if ( nSamples >= space ) {
+      remainder = 0,
+      mHead.mIndex = (mHead.mIndex + 1) % mSize,
+      nSamples -= space;
+      if ( nSamples >= TimeQueueGrainSize )
+         mHead.mIndex =
+            (mHead.mIndex + ( nSamples / TimeQueueGrainSize ) ) % mSize,
+         nSamples %= TimeQueueGrainSize;
+   }
+   mHead.mRemainder = remainder + nSamples;
+   return mData[ mHead.mIndex ];
+}
+
+void PlaybackSchedule::TimeQueue::Prime(double time)
+{
+   mHead = mTail = {};
+   mLastTime = time;
 }
