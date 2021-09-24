@@ -979,6 +979,8 @@ list( APPEND SOURCES
           update/UpdatePopupDialog.cpp
           prefs/ApplicationPrefs.h
           prefs/ApplicationPrefs.cpp
+          update/NoUpdatesAvailableDialog.h
+          update/NoUpdatesAvailableDialog.cpp
       >
 
       Experimental.cmake
