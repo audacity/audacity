@@ -117,9 +117,6 @@ class AUDACITY_DLL_API ControlToolBar final : public ToolBar {
    AButton *mStop;
    AButton *mFF;
 
-   // Activate ergonomic order for transport buttons
-   bool mErgonomicTransportButtons;
-
    wxString mStrLocale; // standard locale abbreviation
 
    wxBoxSizer *mSizer;

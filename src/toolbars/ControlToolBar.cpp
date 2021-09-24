@@ -112,7 +112,6 @@ static const TranslatableString
 ControlToolBar::ControlToolBar( AudacityProject &project )
 : ToolBar(project, TransportBarID, XO("Transport"), wxT("Control"))
 {
-   gPrefs->Read(wxT("/GUI/ErgonomicTransportButtons"), &mErgonomicTransportButtons, true);
    mStrLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
 
    mSizer = NULL;
@@ -319,12 +318,6 @@ void ControlToolBar::UpdatePrefs()
    bool updated = false;
    bool active;
 
-   gPrefs->Read( wxT("/GUI/ErgonomicTransportButtons"), &active, true );
-   if( mErgonomicTransportButtons != active )
-   {
-      mErgonomicTransportButtons = active;
-      updated = true;
-   }
    wxString strLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
    if (mStrLocale != strLocale)
    {
@@ -367,37 +360,18 @@ void ControlToolBar::ArrangeButtons()
    // Start with a little extra space
    mSizer->Add( 5, 55 );
 
-   // Add the buttons in order based on ergonomic setting
-   if( mErgonomicTransportButtons )
-   {
-      mPause->MoveBeforeInTabOrder( mRecord );
-      mPlay->MoveBeforeInTabOrder( mRecord );
-      mStop->MoveBeforeInTabOrder( mRecord );
-      mRewind->MoveBeforeInTabOrder( mRecord );
-      mFF->MoveBeforeInTabOrder( mRecord );
+   mPause->MoveBeforeInTabOrder( mRecord );
+   mPlay->MoveBeforeInTabOrder( mRecord );
+   mStop->MoveBeforeInTabOrder( mRecord );
+   mRewind->MoveBeforeInTabOrder( mRecord );
+   mFF->MoveBeforeInTabOrder( mRecord );
 
-      mSizer->Add( mPause,  0, flags, 2 );
-      mSizer->Add( mPlay,   0, flags, 2 );
-      mSizer->Add( mStop,   0, flags, 2 );
-      mSizer->Add( mRewind, 0, flags, 2 );
-      mSizer->Add( mFF,     0, flags, 10 );
-      mSizer->Add( mRecord, 0, flags, 5 );
-   }
-   else
-   {
-      mRewind->MoveBeforeInTabOrder( mFF );
-      mPlay->MoveBeforeInTabOrder( mFF );
-      mRecord->MoveBeforeInTabOrder( mFF );
-      mPause->MoveBeforeInTabOrder( mFF );
-      mStop->MoveBeforeInTabOrder( mFF );
-
-      mSizer->Add( mRewind, 0, flags, 2 );
-      mSizer->Add( mPlay,   0, flags, 2 );
-      mSizer->Add( mRecord, 0, flags, 2 );
-      mSizer->Add( mPause,  0, flags, 2 );
-      mSizer->Add( mStop,   0, flags, 2 );
-      mSizer->Add( mFF,     0, flags, 5 );
-   }
+   mSizer->Add( mPause,  0, flags, 2 );
+   mSizer->Add( mPlay,   0, flags, 2 );
+   mSizer->Add( mStop,   0, flags, 2 );
+   mSizer->Add( mRewind, 0, flags, 2 );
+   mSizer->Add( mFF,     0, flags, 10 );
+   mSizer->Add( mRecord, 0, flags, 5 );
 
    // Layout the sizer
    mSizer->Layout();
