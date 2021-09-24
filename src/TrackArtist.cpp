@@ -301,20 +301,42 @@ void TrackArtist::UpdatePrefs()
 
 void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString& title, bool highlight, bool selected)
 {
+   wxRect clipRect;
+   //Fix #1689: visual glitches appear on attempt to draw a rectangle
+   //larger than 0x7FFFFFF pixels wide (value was discovered
+   //by manual testing, and maybe depends on OS being used), but
+   //it's very unlikely that such huge rectangle will be ever fully visible
+   //on the screen, so we can safely reduce its size to be slightly larger than
+   //clipping rectangle, and avoid that problem
+   auto drawingRect = rect;
+   if (dc.GetClippingBox(clipRect))
+   {
+       //to make sure that rounding happends outside the clipping rectangle
+       drawingRect.SetLeft(std::max(rect.GetLeft(), clipRect.GetLeft() - ClipFrameRadius - 1));
+       drawingRect.SetRight(std::min(rect.GetRight(), clipRect.GetRight() + ClipFrameRadius + 1));
+   }
+
    if (selected)
    {
       wxRect strokeRect{
-         rect.x - ClipSelectionStrokeSize,
-         rect.y,
-         rect.width + ClipSelectionStrokeSize * 2,
-         rect.height + ClipFrameRadius };
+         drawingRect.x - ClipSelectionStrokeSize,
+         drawingRect.y,
+         drawingRect.width + ClipSelectionStrokeSize * 2,
+         drawingRect.height + ClipFrameRadius };
       dc.SetBrush(*wxTRANSPARENT_BRUSH);
       AColor::UseThemeColour(&dc, clrClipAffordanceStroke, clrClipAffordanceStroke);
       dc.DrawRoundedRectangle(strokeRect, ClipFrameRadius);
    }
 
    AColor::UseThemeColour(&dc, highlight ? clrClipAffordanceActiveBrush : clrClipAffordanceInactiveBrush, clrClipAffordanceOutlinePen);
-   dc.DrawRoundedRectangle(wxRect(rect.x, rect.y + ClipSelectionStrokeSize, rect.width, rect.height + ClipFrameRadius), ClipFrameRadius);
+   dc.DrawRoundedRectangle(
+      wxRect(
+         drawingRect.x, 
+         drawingRect.y + ClipSelectionStrokeSize, 
+         drawingRect.width, 
+         drawingRect.height + ClipFrameRadius
+      ), ClipFrameRadius
+   );
 
    if (!title.empty())
    {
