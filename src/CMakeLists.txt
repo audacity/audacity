@@ -1067,7 +1067,6 @@ list( APPEND LIBRARIES
       PortAudio::PortAudio
       sqlite
       $<$<BOOL:${${_OPT}has_crashreports}>:crashreports>
-      $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC>
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC++>

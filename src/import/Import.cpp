@@ -142,7 +142,7 @@ bool Importer::Initialize()
       // QT and GStreamer are only conditionally compiled and would get
       // placed at the end if present
    };
-   
+
    static struct MyVisitor final : Visitor {
       MyVisitor()
       {
@@ -188,7 +188,7 @@ Importer::GetFileTypes( const FileNames::FileType &extraType )
 
    if ( !extraType.extensions.empty() )
       fileTypes.push_back( extraType );
- 
+
    FileNames::FileTypes l;
    for(const auto &importPlugin : sImportPluginList())
    {
@@ -804,7 +804,7 @@ bool Importer::Import( AudacityProject &project,
 "Audacity did not recognize the type of the file '%s'.\n\n%sFor uncompressed files, also try File > Import > Raw Data.")
          .Format( fName,
 #if defined(USE_FFMPEG)
-                  !FFmpegLibsInst()
+               !FFmpegFunctions::Load()
                   ? XO("Try installing FFmpeg.\n\n") :
 #endif
                   Verbatim("") );
@@ -893,3 +893,5 @@ void ImportStreamDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
    EndModal( wxID_CANCEL );
 }
+
+BoolSetting NewImportingSession{ L"/NewImportingSession", false };
