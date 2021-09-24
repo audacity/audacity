@@ -21,7 +21,7 @@
 
 static const auto title =
 /* i18n-hint: Title of the dialog no updates available. */
-XO("No updates available");
+XO("No Updates Available");
 
 BEGIN_EVENT_TABLE(NoUpdatesAvailableDialog, wxDialogWrapper)
     EVT_BUTTON(wxID_OK, NoUpdatesAvailableDialog::OnOk)
@@ -56,7 +56,7 @@ NoUpdatesAvailableDialog::NoUpdatesAvailableDialog(wxWindow* parent)
                XO("If you want to change your preference for automatic updates checking, you can find it in %s."));
 
             preferencesMessage.FormatLink(
-               /* i18n-hint: Hyperlink title that opens Preferences dialog on Application page and endian part of "... you can find it in %s" string. */
+               /* i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string. */
                wxT("%s"), XO("Preferences > Application"), [parent, this]() {
                   EndModal(wxID_OK);
 
