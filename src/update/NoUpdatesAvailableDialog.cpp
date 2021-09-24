@@ -2,7 +2,8 @@
 
   Audacity: A Digital Audio Editor
 
-  NoUpdatesAvailableDialog.cpp
+  @file NoUpdatesAvailableDialog.cpp
+  @brief Define a dialog with Information about no updates available.
 
   Anton Gerasimov
 
@@ -52,11 +53,11 @@ NoUpdatesAvailableDialog::NoUpdatesAvailableDialog(wxWindow* parent)
 
             AccessibleLinksFormatter preferencesMessage(
                /* i18n-hint: %s is replaced with 'Preferences > Application'. */
-               XO("You are on the latest version of Audacity. Consider turning %s on in Preferences, if you want to be informed automatically about new versions."));
+               XO("If you want to change your preference for automatic updates checking, you can find it in %s."));
 
             preferencesMessage.FormatLink(
-               /* i18n-hint: Hyperlink title that opens Preferences dialog on Directories page. */
-               wxT("%s"), XO("Update Notifications"), [parent, this]() {
+               /* i18n-hint: Hyperlink title that opens Preferences dialog on Application page and endian part of "... you can find it in %s" string. */
+               wxT("%s"), XO("Preferences > Application"), [parent, this]() {
                   EndModal(wxID_OK);
 
                   GlobalPrefsDialog dialog(parent, nullptr);

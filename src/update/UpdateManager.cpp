@@ -61,28 +61,27 @@ void UpdateManager::Start()
 {
     auto& instance = GetInstance();
 
-    static std::once_flag flag;
+    // Show the dialog only once. 
+    if (!prefUpdatesNoticeShown.Read())
+    {
+        // DefaultUpdatesCheckingFlag survives the "Reset Preferences"
+        // action, so check, if the updates were previously disabled as well.
+        if (DefaultUpdatesCheckingFlag.Read())
+        {
+            UpdateNoticeDialog notice(nullptr);
 
+            notice.ShowModal();
+        }
+
+        prefUpdatesNoticeShown.Write(true);
+        gPrefs->Flush();
+    }
+
+    static std::once_flag flag;
     std::call_once(flag, [&instance] {
         instance.mTimer.SetOwner(&instance, ID_TIMER);
         instance.mTimer.StartOnce(1);
         });
-
-    // Show the dialog only once. 
-    if (!prefUpdatesNoticeShown.Read())
-    {
-       // DefaultUpdatesCheckingFlag survives the "Reset Preferences"
-       // action, so check, if the updates were previously disabled as well.
-       if (DefaultUpdatesCheckingFlag.Read())
-       {
-          UpdateNoticeDialog notice(nullptr);
-
-          notice.ShowModal();
-       }
-
-       prefUpdatesNoticeShown.Write(true);
-       gPrefs->Flush();
-    }
 }
 
 VersionPatch UpdateManager::GetVersionPatch() const
@@ -248,10 +247,14 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotifi
 #if UPDATE_LOCAL_TESTING == 0
         else // mVersionPatch.version > CurrentBuildVersion()
         {
-            gAudioIO->CallAfterRecording([] {
-                NoUpdatesAvailableDialog(nullptr).ShowModal();
-            });
-
+            // That also shows, that updates checking was called manually from menu.
+            if (!configurableNotification)
+            {
+                gAudioIO->CallAfterRecording([] {
+                    NoUpdatesAvailableDialog(nullptr).ShowModal();
+                    });
+            }
+            
             mOnProgress = false;
         }
 #endif

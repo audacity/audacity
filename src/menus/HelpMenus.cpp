@@ -582,7 +582,7 @@ BaseItemSharedPtr HelpMenu()
       ,
 #endif
          // DA: Does not fully support update checking.
-   #if !EXPERIMENTAL_DA && defined(HAVE_UPDATES_CHECK)
+   #if !defined(EXPERIMENTAL_DA) && defined(HAVE_UPDATES_CHECK)
          Command( wxT("Updates"), XXO("&Check for Updates..."),
             FN(OnCheckForUpdates),
             AlwaysEnabledFlag ),
