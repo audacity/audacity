@@ -256,34 +256,36 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
         const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
         const auto& zoomInfo = *artist->pZoomInfo;
 
-        context.dc.SetClippingRegion(rect);
-
-        context.dc.SetTextBackground(wxTransparentColor);
-        context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
-        context.dc.SetFont(mClipNameFont);
-
-        auto px = context.lastState.m_x;
-        auto py = context.lastState.m_y;
-
-        for (const auto& clip : waveTrack->GetClips())
         {
-            auto affordanceRect 
-                = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
-            if (affordanceRect.IsEmpty())
-                continue;
-            
-            auto selected = GetSelectedClip().lock() == clip;
-            auto highlight = selected || affordanceRect.Contains(px, py);
-            if (mTextEditHelper && mFocusClip.lock() == clip)
-            {
-                TrackArt::DrawClipAffordance(context.dc, affordanceRect, wxEmptyString, highlight, selected);
-                mTextEditHelper->Draw(context.dc, TrackArt::GetAffordanceTitleRect(affordanceRect));
-            }
-            else
-               TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);
+            wxDCClipper dcClipper(context.dc, rect);
 
+            context.dc.SetTextBackground(wxTransparentColor);
+            context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
+            context.dc.SetFont(mClipNameFont);
+
+            auto px = context.lastState.m_x;
+            auto py = context.lastState.m_y;
+
+            for (const auto& clip : waveTrack->GetClips())
+            {
+                auto affordanceRect
+                    = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
+                if (affordanceRect.IsEmpty())
+                    continue;
+
+                auto selected = GetSelectedClip().lock() == clip;
+                auto highlight = selected || affordanceRect.Contains(px, py);
+                if (mTextEditHelper && mFocusClip.lock() == clip)
+                {
+                    TrackArt::DrawClipAffordance(context.dc, affordanceRect, wxEmptyString, highlight, selected);
+                    mTextEditHelper->Draw(context.dc, TrackArt::GetAffordanceTitleRect(affordanceRect));
+                }
+                else
+                    TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);
+
+            }
         }
-        context.dc.DestroyClippingRegion();
+
     }
 }
 
