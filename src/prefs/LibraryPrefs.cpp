@@ -179,15 +179,12 @@ void LibraryPrefs::SetFFmpegVersionText()
 void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
 {
 #ifdef USE_FFMPEG
-   FFmpegLibs* FFmpegLibsPtr = PickFFmpegLibs();
    bool showerrs =
 #if defined(_DEBUG)
       true;
 #else
       false;
 #endif
-
-   FFmpegLibsPtr->FreeLibs();
    // Load the libs ('true' means that all errors will be shown)
    bool locate = !LoadFFmpeg(showerrs);
 
@@ -205,13 +202,11 @@ void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
 
    if (locate) {
       // Show "Locate FFmpeg" dialog
-      FFmpegLibsPtr->FindLibs(this);
-      FFmpegLibsPtr->FreeLibs();
+      FindFFmpegLibs(this);
       LoadFFmpeg(showerrs);
    }
-   SetFFmpegVersionText();
 
-   DropFFmpegLibs();
+   SetFFmpegVersionText();
 #endif
 }
 

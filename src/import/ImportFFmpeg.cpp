@@ -25,7 +25,9 @@ Licensed under the GNU General Public License v2 or later
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
-#include "../FFmpeg.h"      // which brings in avcodec.h, avformat.h
+#include "../FFmpeg.h"
+#include "FFmpegFunctions.h"
+
 #ifndef WX_PRECOMP
 // Include your minimal set of headers here, or wx.h
 #include <wx/log.h>
@@ -177,6 +179,18 @@ public:
       const FilePath &Filename, AudacityProject*) override;
 };
 
+struct StreamContext final
+{
+   int StreamIndex { -1 };
+
+   std::unique_ptr<AVCodecContextWrapper> CodecContext;
+
+   int InitialChannels { 0 };
+   sampleFormat SampleFormat { floatSample };
+
+   bool Use { true };
+};
+
 ///! Does actual import, returned by FFmpegImportPlugin::Open
 class FFmpegImportFileHandle final : public ImportFileHandle
 {
@@ -201,19 +215,9 @@ public:
    ProgressResult Import(WaveTrackFactory *trackFactory, TrackHolders &outTracks,
       Tags *tags) override;
 
-   ///! Reads next audio frame
-   ///\return pointer to the stream context structure to which the frame belongs to or NULL on error, or 1 if stream is not to be imported.
-   streamContext* ReadNextFrame();
-
-   ///! Decodes the frame
-   ///\param sc - stream context (from ReadNextFrame)
-   ///\param flushing - true if flushing (no more frames left), false otherwise
-   ///\return 0 on success, -1 if it can't decode any further
-   int DecodeFrame(streamContext *sc, bool flushing);
-
-   ///! Writes decoded data into WaveTracks. Called by DecodeFrame
+   ///! Writes decoded data into WaveTracks.
    ///\param sc - stream context
-   ProgressResult WriteData(streamContext *sc);
+   ProgressResult WriteData(StreamContext* sc, const AVPacketWrapper* packet);
 
    ///! Writes extracted metadata to tags object
    ///\param avf - file context
@@ -231,7 +235,7 @@ public:
    ///\return number of readable streams in the file
    wxInt32 GetStreamCount() override
    {
-      return mNumStreams;
+      return static_cast<wxInt32>(mStreamContexts.size());
    }
 
    ///! Called by Import.cpp
@@ -242,32 +246,35 @@ public:
    }
 
    ///! Called by Import.cpp
-   ///\param StreamID - index of the stream in mStreamInfo and mScs arrays
+   ///\param StreamID - index of the stream in mStreamInfo and mStreamContexts
    ///\param Use - true if this stream should be imported, false otherwise
    void SetStreamUsage(wxInt32 StreamID, bool Use) override
    {
-      if (StreamID < mNumStreams)
-         mScs->get()[StreamID]->m_use = Use;
+      if (StreamID < static_cast<wxInt32>(mStreamContexts.size()))
+         mStreamContexts[StreamID].Use = Use;
    }
 
 private:
+   // Construct this member first, so it is destroyed last, so the functions
+   // remain loaded while other members are destroyed
+   const std::shared_ptr<FFmpegFunctions> mFFmpeg = FFmpegFunctions::Load();
 
-   std::shared_ptr<FFmpegContext> mContext; // An object that does proper IO shutdown in its destructor; may be shared with decoder task.
-   AVFormatContext      *mFormatContext; //!< Format description, also contains metadata and some useful info
-   int                   mNumStreams;    //!< mNumstreams is less or equal to mFormatContext->nb_streams
-   ScsPtr                mScs;           //!< Points to array of pointers to stream contexts, which may be shared with a decoder task.
-   TranslatableStrings   mStreamInfo;    //!< Array of stream descriptions. Length is mNumStreams
+   std::vector<StreamContext> mStreamContexts;
 
-   wxInt64               mProgressPos;   //!< Current timestamp, file position or whatever is used as first argument for Update()
-   wxInt64               mProgressLen;   //!< Duration, total length or whatever is used as second argument for Update()
+   std::unique_ptr<AVFormatContextWrapper> mAVFormatContext;
 
-   bool                  mCancelled;     //!< True if importing was canceled by user
-   bool                  mStopped;       //!< True if importing was stopped by user
-   FilePath              mName;
-   TrackHolders mChannels;               //!< 2-dimensional array of WaveTrack's.
+   TranslatableStrings   mStreamInfo;    //!< Array of stream descriptions. After Init() and before Import(), same size as mStreamContexts
+
+   wxInt64               mProgressPos = 0;   //!< Current timestamp, file position or whatever is used as first argument for Update()
+   wxInt64               mProgressLen = 1;   //!< Duration, total length or whatever is used as second argument for Update()
+
+   bool                  mCancelled = false;     //!< True if importing was canceled by user
+   bool                  mStopped = false;       //!< True if importing was stopped by user
+   const FilePath        mName;
+   TrackHolders mChannels;               //!< 2-dimensional array of WaveTracks.
                                          //!< First dimension - streams,
+                                         //!< After Import(), same size as mStreamContexts;
                                          //!< second - channels of a stream.
-                                         //!< Length is mNumStreams
 };
 
 
@@ -279,7 +286,7 @@ TranslatableString FFmpegImportPlugin::GetPluginFormatDescription()
 std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(
    const FilePath &filename, AudacityProject*)
 {
-   auto handle = std::make_unique<FFmpegImportFileHandle>(filename);
+   auto ffmpeg = FFmpegFunctions::Load();
 
    //Check if we're loading explicitly supported format
    wxString extension = filename.AfterLast(wxT('.'));
@@ -290,33 +297,36 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(
       //If we don't have FFmpeg configured - tell the user about it.
       //Since this will be happening often, use disableable "FFmpeg not found" dialog
       //insdead of usual AudacityMessageBox()
-      bool newsession = false;
-      gPrefs->Read(wxT("/NewImportingSession"), &newsession);
-      if (!FFmpegLibsInst()->ValidLibsLoaded())
+      bool newsession = NewImportingSession.Read();
+      if (!ffmpeg)
       {
-         int dontShowDlg;
-         gPrefs->Read(wxT("/FFmpeg/NotFoundDontShow"),&dontShowDlg,0);
+         auto dontShowDlg = FFmpegNotFoundDontShow.Read();
          if (dontShowDlg == 0 && newsession)
          {
-            gPrefs->Write(wxT("/NewImportingSession"), false);
+            NewImportingSession.Write(false);
             gPrefs->Flush();
             FFmpegNotFoundDialog{ nullptr }.ShowModal();
+
+            ffmpeg = FFmpegFunctions::Load();
          }
       }
    }
-   if (!FFmpegLibsInst()->ValidLibsLoaded())
+   if (!ffmpeg)
    {
       return nullptr;
    }
 
+   // Construct the handle only after any reloading of ffmpeg functions
+   auto handle = std::make_unique<FFmpegImportFileHandle>(filename);
+
    // Open the file for import
    bool success = handle->Init();
+
    if (!success) {
       return nullptr;
    }
 
-   // This std::move is needed to "upcast" the pointer type
-   return std::move(handle);
+   return handle;
 }
 
 static Importer::RegisteredImportPlugin registered{ "FFmpeg",
@@ -326,126 +336,101 @@ static Importer::RegisteredImportPlugin registered{ "FFmpeg",
 
 FFmpegImportFileHandle::FFmpegImportFileHandle(const FilePath & name)
 :  ImportFileHandle(name)
+,  mName{ name }
 {
-   PickFFmpegLibs();
-
-   mFormatContext = NULL;
-   mNumStreams = 0;
-   mCancelled = false;
-   mStopped = false;
-   mName = name;
-   mProgressPos = 0;
-   mProgressLen = 1;
 }
 
 bool FFmpegImportFileHandle::Init()
 {
-   //FFmpegLibsInst()->LoadLibs(NULL,false); //Loaded at startup or from Prefs now
-
-   if (!FFmpegLibsInst()->ValidLibsLoaded())
+   if (!mFFmpeg)
       return false;
 
-   av_log_set_callback(av_log_wx_callback);
+   mAVFormatContext = mFFmpeg->CreateAVFormatContext();
 
-   int err;
-   std::unique_ptr<FFmpegContext> tempContext;
-   err = ufile_fopen_input(tempContext, mName);
-   if (err < 0)
-   {
-      wxLogError(wxT("FFmpeg : av_open_input_file() failed for file %s"), mName);
-      return false;
-   }
-   wxASSERT(tempContext.get());
-   mFormatContext = tempContext->ic_ptr;
+   const auto err = mAVFormatContext->OpenInputContext(mName, nullptr, AVDictionaryWrapper(*mFFmpeg));
 
-   err = avformat_find_stream_info(mFormatContext, NULL);
-   if (err < 0)
+   if (err != AVIOContextWrapper::OpenResult::Success)
    {
-      wxLogError(wxT("FFmpeg: avformat_find_stream_info() failed for file %s"),mName);
+      wxLogError(wxT("FFmpeg : AVFormatContextWrapper::OpenInputContext() failed for file %s"), mName);
       return false;
    }
 
    if (!InitCodecs())
       return false;
 
-   // Only now do we postpone destroying the FFmpegContext.
-   // Move from unique to shared pointer
-   mContext.reset(tempContext.release());
-
    return true;
 }
 
 bool FFmpegImportFileHandle::InitCodecs()
 {
-   // Allocate the array of pointers to hold stream contexts pointers
-   // Some of the allocated space may be unused (corresponds to video, subtitle, or undecodeable audio streams)
-   mScs = std::make_shared<Scs>(size_t{mFormatContext->nb_streams});
-   // Fill the stream contexts
-   for (unsigned int i = 0; i < mFormatContext->nb_streams; i++)
+   for (unsigned int i = 0; i < mAVFormatContext->GetStreamsCount(); i++)
    {
-      if (mFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO)
+      const AVStreamWrapper* stream = mAVFormatContext->GetStream(i);
+
+      if (stream->IsAudio())
       {
-         //Create a context
-         auto sc = std::make_unique<streamContext>();
+         const AVCodecIDFwd id = mAVFormatContext->GetStream(i)->GetAVCodecID();
 
-         sc->m_stream = mFormatContext->streams[i];
-         sc->m_codecCtx = sc->m_stream->codec;
-
-         const AVCodecID id   = sc->m_codecCtx->codec_id;
-         const char*     name = avcodec_get_name(id);
-         const AVCodec *codec = avcodec_find_decoder(id);
+         auto codec = mFFmpeg->CreateDecoder(id);
+         auto name = mFFmpeg->avcodec_get_name(id);
 
          if (codec == NULL)
          {
-            wxLogError(wxT("FFmpeg : avcodec_find_decoder() failed. Index[%02d], Codec[%02x - %s]"),i,id,name);
+            wxLogError(
+               wxT("FFmpeg : CreateDecoder() failed. Index[%02d], Codec[%02x - %s]"),
+               i, id, name);
             //FFmpeg can't decode this stream, skip it
             continue;
          }
 
-         if (codec->type != sc->m_codecCtx->codec_type)
-         {
-            wxLogError(wxT("FFmpeg : Codec type mismatch, skipping. Index[%02d], Codec[%02x - %s]"),i,id,name);
-            //Non-audio codec reported as audio? Nevertheless, we don't need THIS.
-            continue;
-         }
+         auto codecContextPtr = stream->GetAVCodecContext();
 
-         if (avcodec_open2(sc->m_codecCtx, codec, NULL) < 0)
+         if ( codecContextPtr->Open( codecContextPtr->GetCodec() ) < 0 )
          {
-            wxLogError(wxT("FFmpeg : avcodec_open() failed. Index[%02d], Codec[%02x - %s]"),i,id,name);
+            wxLogError(wxT("FFmpeg : Open() failed. Index[%02d], Codec[%02x - %s]"),i,id,name);
             //Can't open decoder - skip this stream
             continue;
          }
 
+         const int channels = codecContextPtr->GetChannels();
+         const sampleFormat preferredFormat =
+            codecContextPtr->GetPreferredAudacitySampleFormat();
+
+         auto codecContext = codecContextPtr.get();
+
+         mStreamContexts.emplace_back(
+            StreamContext { stream->GetIndex(), std::move(codecContextPtr),
+                            channels, preferredFormat, true });
+
          // Stream is decodeable and it is audio. Add it and its description to the arrays
          int duration = 0;
-         if (sc->m_stream->duration > 0)
-            duration = sc->m_stream->duration * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
+         if (stream->GetDuration() > 0)
+            duration = stream->GetDuration() * stream->GetTimeBase().num / stream->GetTimeBase().den;
          else
-            duration = mFormatContext->duration / AV_TIME_BASE;
+            duration = mAVFormatContext->GetDuration() / AUDACITY_AV_TIME_BASE;
+
          wxString bitrate;
-         if (sc->m_codecCtx->bit_rate > 0)
-            bitrate.Printf(wxT("%d"),(int)sc->m_codecCtx->bit_rate);
+         if (codecContext->GetBitRate() > 0)
+            bitrate.Printf(wxT("%d"),(int)codecContext->GetBitRate());
          else
             bitrate.Printf(wxT("?"));
 
-         AVDictionaryEntry *tag = av_dict_get(sc->m_stream->metadata, "language", NULL, 0);
-         wxString lang;
-         if (tag)
-         {
-            lang.FromUTF8(tag->value);
-         }
+         AVDictionaryWrapper streamMetadata = stream->GetMetadata();
+
+         auto lang = std::string(streamMetadata.Get("language", {}));
+
          auto strinfo = XO(
 /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
 "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]")
             .Format(
-               sc->m_stream->id,
-               codec->name,
+               stream->GetIndex(),
+               name,
                lang,
                bitrate,
-               (int)sc->m_stream->codec->channels,
+               (int)codecContext->GetChannels(),
                (int)duration);
+
          mStreamInfo.push_back(strinfo);
-         mScs->get()[mNumStreams++] = std::move(sc);
       }
       //for video and unknown streams do nothing
    }
@@ -473,49 +458,24 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
 
    CreateProgress();
 
-   // Remove stream contexts which are not marked for importing and adjust mScs and mNumStreams accordingly
-   const auto scs = mScs->get();
-   for (int i = 0; i < mNumStreams;)
-   {
-      if (!scs[i]->m_use)
-      {
-         for (int j = i; j < mNumStreams - 1; j++)
-         {
-            scs[j] = std::move(scs[j+1]);
-         }
-         mNumStreams--;
-      }
-      else i++;
-   }
+   //! This may break the correspondence with mStreamInfo
+   mStreamContexts.erase (std::remove_if (mStreamContexts.begin (), mStreamContexts.end (), [](const StreamContext& ctx) {
+      return !ctx.Use;
+   }), mStreamContexts.end());
 
-   mChannels.resize(mNumStreams);
+   mChannels.resize(mStreamContexts.size());
 
    int s = -1;
    for (auto &stream : mChannels)
    {
       ++s;
 
-      auto sc = scs[s].get();
-      switch (sc->m_stream->codec->sample_fmt)
-      {
-         case AV_SAMPLE_FMT_U8:
-         case AV_SAMPLE_FMT_S16:
-         case AV_SAMPLE_FMT_U8P:
-         case AV_SAMPLE_FMT_S16P:
-            sc->m_osamplesize = sizeof(int16_t);
-            sc->m_osamplefmt = int16Sample;
-         break;
-         default:
-            sc->m_osamplesize = sizeof(float);
-            sc->m_osamplefmt = floatSample;
-         break;
-      }
+      const StreamContext& sc = mStreamContexts[s];
 
-      // There is a possibility that number of channels will change over time, but we do not have WaveTracks for NEW channels. Remember the number of channels and stick to it.
-      sc->m_initialchannels = sc->m_stream->codec->channels;
-      stream.resize(sc->m_stream->codec->channels);
+      stream.resize(sc.InitialChannels);
+
       for (auto &channel : stream)
-         channel = NewWaveTrack(*trackFactory, sc->m_osamplefmt, sc->m_stream->codec->sample_rate);
+         channel = NewWaveTrack(*trackFactory, sc.SampleFormat, sc.CodecContext->GetSampleRate());
    }
 
    // Handles the start_time by creating silence. This may or may not be correct.
@@ -527,12 +487,20 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
       ++s;
 
       int64_t stream_delay = 0;
-      auto sc = scs[s].get();
-      if (sc->m_stream->start_time != int64_t(AV_NOPTS_VALUE) && sc->m_stream->start_time > 0)
+      const auto& sc = mStreamContexts[s];
+
+      const int64_t streamStartTime =
+         mAVFormatContext->GetStream(sc.StreamIndex)->GetStartTime();
+
+      if (streamStartTime != int64_t(AUDACITY_AV_NOPTS_VALUE) && streamStartTime > 0)
       {
-         stream_delay = sc->m_stream->start_time;
-         wxLogDebug(wxT("Stream %d start_time = %lld, that would be %f milliseconds."), s, (long long) sc->m_stream->start_time, double(sc->m_stream->start_time)/AV_TIME_BASE*1000);
+         stream_delay = streamStartTime;
+
+         wxLogDebug(
+            wxT("Stream %d start_time = %lld, that would be %f milliseconds."),
+            s, (long long)streamStartTime, double(streamStartTime) / 1000);
       }
+
       if (stream_delay > 0)
       {
          int c = -1;
@@ -541,7 +509,7 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
             ++c;
 
             WaveTrack *t = channel.get();
-            t->InsertSilence(0,double(stream_delay)/AV_TIME_BASE);
+            t->InsertSilence(0,double(stream_delay)/AUDACITY_AV_TIME_BASE);
          }
       }
    }
@@ -549,42 +517,31 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
    // The result of Import() to be returned. It will be something other than zero if user canceled or some error appears.
    auto res = ProgressResult::Success;
 
-   // Read next frame.
-   for (streamContext *sc; (sc = ReadNextFrame()) != NULL && (res == ProgressResult::Success);)
+   // Read frames.
+   for (std::unique_ptr<AVPacketWrapper> packet;
+        (packet = mAVFormatContext->ReadNextPacket()) != nullptr &&
+        (res == ProgressResult::Success);)
    {
-      // ReadNextFrame returns 1 if stream is not to be imported
-      if (sc != (streamContext*)1)
-      {
-         // Decode frame until it is not possible to decode any further
-         while (sc->m_pktRemainingSiz > 0 && (res == ProgressResult::Success || res == ProgressResult::Stopped))
-         {
-            if (DecodeFrame(sc,false) < 0)
-               break;
+      // Find a matching StreamContext
+      auto streamContextIt = std::find_if(
+         mStreamContexts.begin(), mStreamContexts.end(),
+         [index = packet->GetStreamIndex()](const StreamContext& ctx)
+         { return ctx.StreamIndex == index;
+      });
 
-            // If something useable was decoded - write it to mChannels
-            if (sc->m_frameValid)
-               res = WriteData(sc);
-         }
+      if (streamContextIt == mStreamContexts.end())
+         continue;
 
-         // Cleanup after frame decoding
-         sc->m_pkt.reset();
-      }
+      res = WriteData(&(*streamContextIt), packet.get());
    }
 
    // Flush the decoders.
-   if ((mNumStreams != 0) && (res == ProgressResult::Success || res == ProgressResult::Stopped))
+   if (!mStreamContexts.empty() && (res == ProgressResult::Success || res == ProgressResult::Stopped))
    {
-      for (int i = 0; i < mNumStreams; i++)
-      {
-         auto sc = scs[i].get();
-         sc->m_pkt.emplace();
-         if (DecodeFrame(sc, true) == 0)
-         {
-            WriteData(sc);
+      auto emptyPacket = mFFmpeg->CreateAVPacketWrapper();
 
-            sc->m_pkt.reset();
-         }
-      }
+      for (StreamContext& sc : mStreamContexts)
+         WriteData(&sc, emptyPacket.get());
    }
 
    // Something bad happened - destroy everything!
@@ -605,29 +562,15 @@ ProgressResult FFmpegImportFileHandle::Import(WaveTrackFactory *trackFactory,
    return res;
 }
 
-streamContext *FFmpegImportFileHandle::ReadNextFrame()
+ProgressResult FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPacketWrapper* packet)
 {
-   // Get pointer to array of contiguous unique_ptrs
-   auto scs = mScs->get();
-   // This reinterpret_cast to array of plain pointers is innocent
-   return import_ffmpeg_read_next_frame
-      (mFormatContext, reinterpret_cast<streamContext**>(scs), mNumStreams);
-}
-
-int FFmpegImportFileHandle::DecodeFrame(streamContext *sc, bool flushing)
-{
-   return import_ffmpeg_decode_frame(sc, flushing);
-}
-
-ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
-{
-   // Find the stream index in mScs array
+   // Find the stream index in mStreamContexts array
    int streamid = -1;
    auto iter = mChannels.begin();
-   auto scs = mScs->get();
-   for (int i = 0; i < mNumStreams; ++iter, ++i)
+
+   for (int i = 0; i < static_cast<int>(mStreamContexts.size()); ++iter, ++i)
    {
-      if (scs[i].get() == sc)
+      if (&mStreamContexts[i] == sc)
       {
          streamid = i;
          break;
@@ -639,87 +582,75 @@ ProgressResult FFmpegImportFileHandle::WriteData(streamContext *sc)
       return ProgressResult::Success;
    }
 
-   // Allocate the buffer to store audio.
-   auto insamples = sc->m_decodedAudioSamplesValidSiz / sc->m_samplesize;
-   size_t nChannels = std::min(sc->m_stream->codec->channels, sc->m_initialchannels);
+   size_t nChannels = std::min(sc->CodecContext->GetChannels(), sc->InitialChannels);
 
-   ArraysOf<uint8_t> tmp{ nChannels, sc->m_osamplesize * (insamples / nChannels) };
-
-   // Separate the channels and convert input sample format to 16-bit
-   uint8_t *in = sc->m_decodedAudioSamples.get();
-   int index = 0;
-   unsigned int pos = 0;
-   while (pos < insamples)
+   if (sc->SampleFormat == int16Sample)
    {
-      for (size_t chn = 0; (int)chn < sc->m_stream->codec->channels; chn++)
+      auto data = sc->CodecContext->DecodeAudioPacketInt16(packet);
+
+      const int channelsCount = sc->CodecContext->GetChannels();
+      const int samplesPerChannel = data.size() / channelsCount;
+
+      // Write audio into WaveTracks
+      auto iter2 = iter->begin();
+      for (size_t chn = 0; chn < nChannels; ++iter2, ++chn)
       {
-         if (chn < nChannels)
-         {
-            switch (sc->m_samplefmt)
-            {
-               case AV_SAMPLE_FMT_U8:
-               case AV_SAMPLE_FMT_U8P:
-                  ((int16_t *)tmp[chn].get())[index] = (int16_t) (*(uint8_t *)in - 0x80) << 8;
-               break;
-
-               case AV_SAMPLE_FMT_S16:
-               case AV_SAMPLE_FMT_S16P:
-                  ((int16_t *)tmp[chn].get())[index] = (int16_t) *(int16_t *)in;
-               break;
-
-               case AV_SAMPLE_FMT_S32:
-               case AV_SAMPLE_FMT_S32P:
-                  ((float *)tmp[chn].get())[index] = (float) *(int32_t *)in * (1.0 / (1u << 31));
-               break;
-
-               case AV_SAMPLE_FMT_FLT:
-               case AV_SAMPLE_FMT_FLTP:
-                  ((float *)tmp[chn].get())[index] = (float) *(float *)in;
-               break;
-
-               case AV_SAMPLE_FMT_DBL:
-               case AV_SAMPLE_FMT_DBLP:
-                  ((float *)tmp[chn].get())[index] = (float) *(double *)in;
-               break;
-
-               default:
-                  wxLogError(wxT("Stream %d has unrecognized sample format %d."), streamid, sc->m_samplefmt);
-                  return ProgressResult::Success;
-               break;
-            }
-         }
-         in += sc->m_samplesize;
-         pos++;
+         iter2->get()->Append(
+            reinterpret_cast<samplePtr>(data.data()), sc->SampleFormat,
+            samplesPerChannel,
+            sc->CodecContext->GetChannels());
       }
-      index++;
+   }
+   else if (sc->SampleFormat == floatSample)
+   {
+      auto data = sc->CodecContext->DecodeAudioPacketFloat(packet);
+
+      const int channelsCount = sc->CodecContext->GetChannels();
+      const int samplesPerChannel = data.size() / channelsCount;
+
+      // Write audio into WaveTracks
+      auto iter2 = iter->begin();
+      for (size_t chn = 0; chn < nChannels; ++iter2, ++chn)
+      {
+         iter2->get()->Append(
+            reinterpret_cast<samplePtr>(data.data()), sc->SampleFormat,
+            samplesPerChannel, sc->CodecContext->GetChannels());
+      }
    }
 
-   // Write audio into WaveTracks
-   auto iter2 = iter->begin();
-   for (size_t chn=0; chn < nChannels; ++iter2, ++chn)
-   {
-      iter2->get()->Append((samplePtr)tmp[chn].get(), sc->m_osamplefmt, index);
-   }
+   const AVStreamWrapper* avStream = mAVFormatContext->GetStream(sc->StreamIndex);
 
    // Try to update the progress indicator (and see if user wants to cancel)
    auto updateResult = ProgressResult::Success;
-   int64_t filesize = avio_size(mFormatContext->pb);
+   int64_t filesize = mFFmpeg->avio_size(mAVFormatContext->GetAVIOContext()->GetWrappedValue());
    // PTS (presentation time) is the proper way of getting current position
-   if (sc->m_pkt->pts != int64_t(AV_NOPTS_VALUE) && mFormatContext->duration != int64_t(AV_NOPTS_VALUE))
+   if (
+      packet->GetPresentationTimestamp() != AUDACITY_AV_NOPTS_VALUE &&
+      mAVFormatContext->GetDuration() != AUDACITY_AV_NOPTS_VALUE)
    {
-      mProgressPos = sc->m_pkt->pts * sc->m_stream->time_base.num / sc->m_stream->time_base.den;
-      mProgressLen = (mFormatContext->duration > 0 ? mFormatContext->duration / AV_TIME_BASE: 1);
+      auto timeBase = avStream->GetTimeBase();
+
+      mProgressPos =
+         packet->GetPresentationTimestamp() * timeBase.num / timeBase.den;
+
+      mProgressLen =
+         (mAVFormatContext->GetDuration() > 0 ?
+             mAVFormatContext->GetDuration() / AUDACITY_AV_TIME_BASE :
+             1);
    }
    // When PTS is not set, use number of frames and number of current frame
-   else if (sc->m_stream->nb_frames > 0 && sc->m_codecCtx->frame_number > 0 && sc->m_codecCtx->frame_number <= sc->m_stream->nb_frames)
+   else if (
+      avStream->GetFramesCount() > 0 && sc->CodecContext->GetFrameNumber() > 0 &&
+      sc->CodecContext->GetFrameNumber() <= avStream->GetFramesCount())
    {
-      mProgressPos = sc->m_codecCtx->frame_number;
-      mProgressLen = sc->m_stream->nb_frames;
+      mProgressPos = sc->CodecContext->GetFrameNumber();
+      mProgressLen = avStream->GetFramesCount();
    }
    // When number of frames is unknown, use position in file
-   else if (filesize > 0 && sc->m_pkt->pos > 0 && sc->m_pkt->pos <= filesize)
+   else if (
+      filesize > 0 && packet->GetPos() > 0 && packet->GetPos() <= filesize)
    {
-      mProgressPos = sc->m_pkt->pos;
+      mProgressPos = packet->GetPos();
       mProgressLen = filesize;
    }
    updateResult = mProgress->Update(mProgressPos, mProgressLen != 0 ? mProgressLen : 1);
@@ -737,12 +668,12 @@ void FFmpegImportFileHandle::WriteMetadata(Tags *tags)
    GetMetadata(temp, TAG_TRACK, "track");
    GetMetadata(temp, TAG_GENRE, "genre");
 
-   if (wxString(mFormatContext->iformat->name).Contains("m4a"))
+   if (wxString(mAVFormatContext->GetInputFormat()->GetName()).Contains("m4a"))
    {
       GetMetadata(temp, TAG_ARTIST, "artist");
       GetMetadata(temp, TAG_YEAR, "date");
    }
-   else if (wxString(mFormatContext->iformat->name).Contains("asf")) /* wma */
+   else if (wxString(mAVFormatContext->GetInputFormat()->GetName()).Contains("asf")) /* wma */
    {
       GetMetadata(temp, TAG_ARTIST, "artist");
       GetMetadata(temp, TAG_YEAR, "year");
@@ -761,25 +692,16 @@ void FFmpegImportFileHandle::WriteMetadata(Tags *tags)
 
 void FFmpegImportFileHandle::GetMetadata(Tags &tags, const wxChar *tag, const char *name)
 {
-   AVDictionaryEntry *meta;
+   auto metadata = mAVFormatContext->GetMetadata();
 
-   meta = av_dict_get(mFormatContext->metadata, name, NULL, AV_DICT_IGNORE_SUFFIX);
-   if (meta)
-   {
-      tags.SetTag(tag, wxString::FromUTF8(meta->value));
-   }
+   if (metadata.HasValue(name, DICT_IGNORE_SUFFIX))
+      tags.SetTag(tag, wxString::FromUTF8(std::string(metadata.Get(name, {}, DICT_IGNORE_SUFFIX))));
 }
 
 
 FFmpegImportFileHandle::~FFmpegImportFileHandle()
 {
-   if (FFmpegLibsInst()->ValidLibsLoaded())
-      av_log_set_callback(av_log_default_callback);
 
-   // Do this before unloading the libraries
-   mContext.reset();
-
-   DropFFmpegLibs();
 }
 
 #endif //USE_FFMPEG

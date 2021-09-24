@@ -2299,12 +2299,8 @@ int AudacityApp::OnExit()
    }
 
    FileHistory::Global().Save(*gPrefs);
-
+   
    FinishPreferences();
-
-#ifdef USE_FFMPEG
-   DropFFmpegLibs();
-#endif
 
    DeinitFFT();
 

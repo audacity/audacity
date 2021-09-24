@@ -10,7 +10,7 @@
 
 #pragma once
 
-enum AudacityAVCodecID {
+enum AudacityAVCodecIDValue {
     AUDACITY_AV_CODEC_ID_NONE,
     AUDACITY_AV_CODEC_ID_MPEG1VIDEO,
     AUDACITY_AV_CODEC_ID_MPEG2VIDEO,
@@ -403,3 +403,19 @@ enum AudacityAVCodecID {
 
     AUDACITY_AV_CODEC_ID_LAST
 };
+
+using AVCodecIDFwd = int;
+
+//! Define a wrapper struct so that implicit conversion to and from int won't
+//! mistakenly happen
+struct AudacityAVCodecID {
+   AudacityAVCodecID(AVCodecIDFwd) = delete;
+   AudacityAVCodecID( AudacityAVCodecIDValue value ) : value{value} {}
+   AudacityAVCodecIDValue value;
+};
+
+inline bool operator == ( AudacityAVCodecID x, AudacityAVCodecID y )
+{ return x.value == y.value; }
+
+inline bool operator != ( AudacityAVCodecID x, AudacityAVCodecID y )
+{ return !(x == y); }

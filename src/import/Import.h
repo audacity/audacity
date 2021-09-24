@@ -211,4 +211,6 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
+extern AUDACITY_DLL_API BoolSetting NewImportingSession;
+
 #endif

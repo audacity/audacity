@@ -8,6 +8,10 @@
 
 **********************************************************************/
 
+//! A table of values, whose names correspond to the
+//! AUDACITY_AV_CODEC_ID_* names, but depending on the version of the ffmpeg
+//! headers, the values might not be sequential.  So use the table to convert
+//! version-indepdendent Audacity values to the version-specific ones.
 AVCodecIDFwd AVCodecIDLookup[AUDACITY_AV_CODEC_ID_LAST] = {
     AV_CODEC_ID_NONE,
 
@@ -409,11 +413,10 @@ AVCodecIDFwd AVCodecIDLookup[AUDACITY_AV_CODEC_ID_LAST] = {
     AV_CODEC_ID_FFMETADATA,
 };
 
-AVCodecIDFwd GetAVCodeID(AudacityAVCodecID codecID);
 AVCodecIDFwd GetAVCodeID(AudacityAVCodecID codecID)
 {
-   return codecID < AUDACITY_AV_CODEC_ID_LAST ?
-      AVCodecIDLookup[codecID] :
+   return codecID.value < AUDACITY_AV_CODEC_ID_LAST ?
+      AVCodecIDLookup[codecID.value] :
       AV_CODEC_ID_NONE;
 }
 
@@ -423,7 +426,7 @@ AudacityAVCodecID GetAudacityCodecID(AVCodecIDFwd codecID)
         id < AUDACITY_AV_CODEC_ID_LAST; ++id)
    {
       if (AVCodecIDLookup[id] == codecID)
-         return static_cast<AudacityAVCodecID>(id);
+         return static_cast<AudacityAVCodecIDValue>(id);
    }
 
    return AUDACITY_AV_CODEC_ID_NONE;
