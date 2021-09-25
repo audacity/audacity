@@ -106,8 +106,8 @@ public:
 public:
    virtual void EnsureInitialised()=0;
    void LoadTheme( teThemeType Theme );
-   void RegisterImage( int &iIndex,char const** pXpm, const wxString & Name);
-   void RegisterImage( int &iIndex, const wxImage &Image, const wxString & Name );
+   void RegisterImage( int &flags, int &iIndex,char const** pXpm, const wxString & Name);
+   void RegisterImage( int &flags, int &iIndex, const wxImage &Image, const wxString & Name );
    void RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name );
 
    teThemeType GetFallbackThemeType();
@@ -137,7 +137,6 @@ public:
 
    void SetBrushColour( wxBrush & Brush, int iIndex );
    void SetPenColour(   wxPen & Pen, int iIndex );
-   void SetFlags( int flags ){ mFlow.mFlags = flags;};
 
    // Utility function that combines a bitmap and a mask, both in XPM format.
    wxImage MaskedImage( char const ** pXpm, char const ** pMask );

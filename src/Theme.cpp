@@ -141,7 +141,8 @@ void Theme::RegisterImages()
    mbInitialised = true;
 
 // This initialises the variables e.g
-// RegisterImage( bmpRecordButton, some image, wxT("RecordButton"));
+// RegisterImage( myFlags, bmpRecordButton, some image, wxT("RecordButton"));
+   int myFlags = resFlagPaired;
 #define THEME_INITS
 #include "AllThemeResources.h"
 
@@ -322,7 +323,7 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 // Bit depth and mask needs review.
 // Note that XPMs don't offer translucency, so unsuitable for a round shape overlay, 
 // for example.
-void ThemeBase::RegisterImage( int &iIndex, char const ** pXpm, const wxString & Name )
+void ThemeBase::RegisterImage( int &flags, int &iIndex, char const ** pXpm, const wxString & Name )
 {
    wxASSERT( iIndex == -1 ); // Don't initialise same bitmap twice!
    wxBitmap Bmp( pXpm );
@@ -335,10 +336,10 @@ void ThemeBase::RegisterImage( int &iIndex, char const ** pXpm, const wxString &
    //wxBitmap Bmp2( Img, 32 );
    //wxBitmap Bmp2( Img );
 
-   RegisterImage( iIndex, Img, Name );
+   RegisterImage( flags, iIndex, Img, Name );
 }
 
-void ThemeBase::RegisterImage( int &iIndex, const wxImage &Image, const wxString & Name )
+void ThemeBase::RegisterImage( int &flags, int &iIndex, const wxImage &Image, const wxString & Name )
 {
    wxASSERT( iIndex == -1 ); // Don't initialise same bitmap twice!
    mImages.push_back( Image );
@@ -357,8 +358,8 @@ void ThemeBase::RegisterImage( int &iIndex, const wxImage &Image, const wxString
 #endif
 
    mBitmapNames.push_back( Name );
-   mBitmapFlags.push_back( mFlow.mFlags );
-   mFlow.mFlags &= ~resFlagSkip;
+   mBitmapFlags.push_back( flags );
+   flags &= ~resFlagSkip;
    iIndex = mBitmaps.size() - 1;
 }
 
