@@ -9,7 +9,7 @@
 *******************************************************************//**
 
 \class FrequencyPlotDialog
-\brief Displays a spectrum plot of the waveform.  Has options for
+\brief Displays a spectrum plot of the waveform. Has options for
 selecting parameters of the plot.
 
 Has a feature that finds peaks and reports their value as you move
@@ -18,7 +18,7 @@ the mouse around.
 *//****************************************************************//**
 
 \class FreqPlot
-\brief Works with FrequencyPlotDialog to dsplay a spectrum plot of the waveform.
+\brief Works with FrequencyPlotDialog to display a spectrum plot of the waveform.
 This class actually does the graph display.
 
 Has a feature that finds peaks and reports their value as you move
@@ -30,8 +30,6 @@ the mouse around.
   Salvo Ventura - November 2006
   Extended range check for additional FFT windows
 */
-
-
 
 #include "FreqWindow.h"
 
@@ -113,7 +111,6 @@ enum {
 #define FREQ_WINDOW_WIDTH 480
 #define FREQ_WINDOW_HEIGHT 330
 
-
 static const char * ZoomIn[] = {
 "16 16 6 1",
 " 	c None",
@@ -138,7 +135,6 @@ static const char * ZoomIn[] = {
 "+++@@           ",
 "@+@@            ",
 " @@             "};
-
 
 static const char * ZoomOut[] = {
 "16 16 6 1",
@@ -243,6 +239,7 @@ void FrequencyPlotDialog::Populate()
       Verbatim( "16384" ) ,
       Verbatim( "32768" ) ,
       Verbatim( "65536" ) ,
+      Verbatim( "131072" ) ,
    };
 
    TranslatableStrings funcChoices;
@@ -400,6 +397,7 @@ void FrequencyPlotDialog::Populate()
       // -------------------------------------------------------------------
       // ROW 3: Spacer
       // -------------------------------------------------------------------
+
       S.AddSpace(5);
       S.AddSpace(5);
       S.AddSpace(5);
@@ -469,7 +467,6 @@ void FrequencyPlotDialog::Populate()
       mExportButton = S.Id(FreqExportButtonID).AddButton(XXO("&Export..."));
 
       S.AddSpace(5);
-
 
       // ----------------------------------------------------------------
       // ROW 7: Function, Axix, Grids, Close
