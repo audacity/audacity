@@ -22,8 +22,6 @@ and in the spectrogram spectral selection.
   Extended range check for additional FFT windows
 */
 
-
-
 #include "SpectrumAnalyst.h"
 #include "FFT.h"
 
@@ -104,7 +102,7 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
    // Validate inputs
    int f = NumWindowFuncs();
 
-   if (!(windowSize >= 32 && windowSize <= 65536 &&
+   if (!(windowSize >= 32 && windowSize <= 131072 &&
          alg >= SpectrumAnalyst::Spectrum &&
          alg < SpectrumAnalyst::NumAlgorithms &&
          windowFunc >= 0 && windowFunc < f)) {
