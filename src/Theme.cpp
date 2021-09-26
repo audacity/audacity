@@ -64,6 +64,8 @@ can't be.
 
 
 
+#include <map>
+
 #include <wx/wxprec.h>
 #include <wx/dcclient.h>
 #include <wx/image.h>
@@ -80,21 +82,6 @@ can't be.
 #include "Internat.h"
 #include "MemoryX.h"
 #include "widgets/AudacityMessageBox.h"
-
-// Include the ImageCache...
-
-static const unsigned char DarkImageCacheAsData[] = {
-#include "DarkThemeAsCeeCode.h"
-};
-static const unsigned char LightImageCacheAsData[] = {
-#include "LightThemeAsCeeCode.h"
-};
-static const unsigned char ClassicImageCacheAsData[] = {
-#include "ClassicThemeAsCeeCode.h"
-};
-static const unsigned char HiContrastImageCacheAsData[] = {
-#include "HiContrastThemeAsCeeCode.h"
-};
 
 // theTheme is a global variable.
 AUDACITY_DLL_API Theme theTheme;
@@ -128,9 +115,9 @@ void Theme::EnsureInitialised()
 bool ThemeBase::LoadPreferredTheme()
 {
 // DA: Default themes differ.
-   auto theme = GUITheme.Read();
+   Identifier theme = GUITheme().Read();
 
-   theTheme.LoadTheme( theTheme.ThemeTypeOfTypeName( theme ) );
+   theTheme.LoadTheme( theme );
    return true;
 }
 
@@ -162,6 +149,27 @@ ThemeBase::ThemeBase(void)
 
 ThemeBase::~ThemeBase(void)
 {
+}
+
+using ThemeCacheLookup =
+   std::map< EnumValueSymbol, const std::vector<unsigned char>& >;
+
+static ThemeCacheLookup &GetThemeCacheLookup()
+{
+   static ThemeCacheLookup theMap;
+   return theMap;
+}
+
+ThemeBase::RegisteredTheme::RegisteredTheme(
+   EnumValueSymbol symbol, const std::vector<unsigned char> &data )
+   : symbol{ symbol }
+{
+   GetThemeCacheLookup().emplace(symbol, data);
+}
+
+ThemeBase::RegisteredTheme::~RegisteredTheme()
+{
+   GetThemeCacheLookup().erase(symbol);
 }
 
 /// This function is called to load the initial Theme images.
@@ -780,32 +788,15 @@ teThemeType ThemeBase::GetFallbackThemeType(){
 // Fallback must be an internally supported type,
 // to guarantee it is found.
 #ifdef EXPERIMENTAL_DA
-   return themeDark;
+   return "dark";
 #else
-   return themeLight;
+   return "light";
 #endif
 }
 
-teThemeType ThemeBase::ThemeTypeOfTypeName( const wxString & Name )
-{
-   static const wxArrayStringEx aThemes{
-      "classic" ,
-      "dark" ,
-      "light" ,
-      "high-contrast" ,
-      "custom" ,
-   };
-   int themeIx = make_iterator_range( aThemes ).index( Name );
-   if( themeIx < 0 )
-      return GetFallbackThemeType();
-   return (teThemeType)themeIx;
-}
-
-
-
 /// Reads an image cache including images, cursors and colours.
-/// @param bBinaryRead if true means read from an external binary file.
-///   otherwise the data is taken from a compiled in block of memory.
+/// @param type if empty means read from an external binary file.
+///   otherwise the data is taken from a block of memory.
 /// @param bOkIfNotFound if true means do not report absent file.
 /// @return true iff we loaded the images.
 bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
@@ -822,7 +813,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 
    bRecolourOnLoad = GUIBlendThemes.Read();
 
-   if(  type == themeFromFile )
+   if( type.empty() )
    {
       const auto &FileName = FileNames::ThemeCachePng();
       if( !wxFileExists( FileName ))
@@ -848,25 +839,14 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    {
       size_t ImageSize = 0;
       const unsigned char * pImage = nullptr;
-      switch( type ){
-         default: 
-         case themeClassic : 
-            ImageSize = sizeof(ClassicImageCacheAsData);
-            pImage = ClassicImageCacheAsData;
-            break;
-         case themeLight : 
-            ImageSize = sizeof(LightImageCacheAsData);
-            pImage = LightImageCacheAsData;
-            break;
-         case themeDark : 
-            ImageSize = sizeof(DarkImageCacheAsData);
-            pImage = DarkImageCacheAsData;
-            break;
-         case themeHiContrast : 
-            ImageSize = sizeof(HiContrastImageCacheAsData);
-            pImage = HiContrastImageCacheAsData;
-            break;
+      auto &lookup = GetThemeCacheLookup();
+      auto iter = lookup.find({type, {}});
+      if (const auto end = lookup.end(); iter == end) {
+         iter = lookup.find({"classic", {}});
+         wxASSERT(iter != end);
       }
+      ImageSize = iter->second.size();
+      pImage = iter->second.data();
       //wxLogDebug("Reading ImageCache %p size %i", pImage, ImageSize );
       wxMemoryInputStream InternalStream( pImage, ImageSize );
 
@@ -1169,41 +1149,50 @@ void auStaticText::OnPaint(wxPaintEvent & WXUNUSED(evt))
    dc.DrawText( GetLabel(), 0,0);
 }
 
-constexpr int defaultTheme =
-#ifdef EXPERIMENTAL_DA
-   2 // "dark"
-#else
-   1 // "light"
-#endif
-;
+ChoiceSetting &GUITheme()
+{
+   auto symbols = []{
+      std::vector<EnumValueSymbol> symbols;
 
-ChoiceSetting GUITheme{
-   wxT("/GUI/Theme"),
-   {
-      ByColumns,
-      {
-         /* i18n-hint: describing the "classic" or traditional
-            appearance of older versions of Audacity */
-         XO("Classic")  ,
-         /* i18n-hint: Light meaning opposite of dark */
-         XO("Light")  ,
-         XO("Dark")  ,
-         /* i18n-hint: greater difference between foreground and
-            background colors */
-         XO("High Contrast")  ,
+      // Gather registered themes
+      for (const auto &[symbol, data] : GetThemeCacheLookup())
+         symbols.emplace_back(symbol);
+
+      // Sort the names, with built-in themes to the front,
+      // conserving the ordering that was used in 3.1.0; otherwise
+      // sorting other registered themes alphabetically by identifier
+      static const Identifier names[] = {
+         "classic", "light", "dark", "high-contrast"
+      };
+      static auto index = [](const EnumValueSymbol &symbol){
+         auto begin = std::begin(names), end = std::end(names);
+         return std::find(begin, end, symbol.Internal()) - begin;
+      };
+      std::stable_sort( symbols.begin(), symbols.end(),
+         [](auto &a, auto &b){ return index(a) < index(b); } );
+
+      // Last, custom
+      symbols.emplace_back(
          /* i18n-hint: user defined */
-         XO("Custom")  ,
-      },
-      {
-         wxT("classic")  ,
-         wxT("light")  ,
-         wxT("dark")  ,
-         wxT("high-contrast")  ,
-         wxT("custom")  ,
-      }
-   },
-   defaultTheme
-};
+         "custom", XO("Custom")
+      );
+   
+      return symbols;
+   };
+
+   constexpr int defaultTheme =
+#ifdef EXPERIMENTAL_DA
+      2 // "dark"
+#else
+      1 // "light"
+#endif
+   ;
+
+   static ChoiceSetting setting {
+      wxT("/GUI/Theme"), symbols(), defaultTheme
+   };
+
+   return setting;
+}
 
 BoolSetting GUIBlendThemes{ wxT("/GUI/BlendThemes"), true };
-

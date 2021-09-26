@@ -242,6 +242,9 @@ public:
    EnumValueSymbols( std::initializer_list<EnumValueSymbol> symbols )
      : vector( symbols )
    {}
+   EnumValueSymbols( std::vector< EnumValueSymbol > symbols )
+     : vector( symbols )
+   {}
 
    // columnwise constructor; arguments must have same size
    // (Implicit constructor takes initial tag argument to avoid unintended

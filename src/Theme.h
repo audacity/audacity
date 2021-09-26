@@ -19,8 +19,12 @@
 #include <vector>
 #include <wx/defs.h>
 #include <wx/window.h> // to inherit
+#include "ComponentInterfaceSymbol.h"
 
 #include "Prefs.h"
+
+//! A choice of theme such as "Light", "Dark", ...
+using teThemeType = Identifier;
 
 class wxArrayString;
 class wxBitmap;
@@ -49,17 +53,6 @@ enum teResourceFlags
    resFlagInternal = 0x08,  // For image manipulation.  Don't save or load.
    resFlagSkip = 0x10
 };
-
-enum teThemeType
-{
-   themeClassic,
-   themeDark,
-   themeLight,
-   themeHiContrast,
-   themeFromFile,
-};
-
-
 
 //! A cursor for iterating the theme bitmap
 class AUDACITY_DLL_API FlowPacker
@@ -104,15 +97,25 @@ public:
 
 public:
    virtual void EnsureInitialised()=0;
+
+   // Typically statically constructed:
+   struct AUDACITY_DLL_API RegisteredTheme {
+      RegisteredTheme(EnumValueSymbol symbol,
+         const std::vector<unsigned char> &data /*!<
+            A reference to this vector is stored, not a copy of it! */
+      );
+      ~RegisteredTheme();
+      const EnumValueSymbol symbol;
+   };
+
    void LoadTheme( teThemeType Theme );
    void RegisterImage( int &flags, int &iIndex,char const** pXpm, const wxString & Name);
    void RegisterImage( int &flags, int &iIndex, const wxImage &Image, const wxString & Name );
    void RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name );
 
    teThemeType GetFallbackThemeType();
-   teThemeType ThemeTypeOfTypeName( const wxString & Name );
    void CreateImageCache(bool bBinarySave = true);
-   bool ReadImageCache( teThemeType type = themeFromFile, bool bOkIfNotFound=false);
+   bool ReadImageCache( teThemeType type = {}, bool bOkIfNotFound=false);
    void LoadComponents( bool bOkIfNotFound =false);
    void SaveComponents();
    void SaveThemeAsCode();
@@ -192,7 +195,7 @@ extern AUDACITY_DLL_API BoolSetting
 ;
 
 extern AUDACITY_DLL_API ChoiceSetting
-     GUITheme
+     &GUITheme()
 ;
 
 #endif // __AUDACITY_THEME__
