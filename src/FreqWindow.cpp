@@ -914,6 +914,7 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
    }
 
    float xPos = xMin;
+   float yPos;
 
    // Find the peak nearest the cursor and plot it
    if ( r.Contains(mMouseX, mMouseY) & (mMouseX!=0) & (mMouseX!=r.width-1) ) {
@@ -934,7 +935,7 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
       dc.SetPen(wxPen(wxColour(160,160,160), 1, wxPENSTYLE_SOLID));
       AColor::Line(dc, r.x + 1 + px, r.y, r.x + 1 + px, r.y + r.height);
 
-       // print out info about the cursor location
+      // Print out info about the cursor location
 
       float value;
 
@@ -950,14 +951,21 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
       TranslatableString peak;
 
       if (mAlg == SpectrumAnalyst::Spectrum) {
+         // Determine the position of the cursor in the plot window.
+         float yRange = mYMax - mYMin;
+         float yTotal = yRange * (float)mZoomSlider->GetValue() / 100.0f;
+         int sTotal = yTotal * 100;
+         int sRange = yRange * 100;
+         int sPos = mPanScroller->GetThumbPosition() + ((mPanScroller->GetThumbSize() - sTotal) / 2);
+         float yMax = mYMax - (float)sPos / 100.0f;
+         float yValue = yMax - float(mMouseY - (r.y + 1)) / (float)r.height * yTotal;
+         // Determine the note corresponding to each frequency.
          auto xp = PitchName_Absolute(FreqToMIDInote(xPos));
          auto pp = PitchName_Absolute(FreqToMIDInote(bestpeak));
-         /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#*/
-         cursor = XO("%d Hz (%s) = %d dB")
-            .Format( (int)(xPos + 0.5), xp, (int)(value + 0.5));
-         /* i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#*/
-         peak = XO("%d Hz (%s) = %.1f dB")
-            .Format( (int)(bestpeak + 0.5), pp, bestValue );
+         /* i18n-hint: The %f's are replaced by numbers, the %s by musical notes, e.g. A# */
+         cursor = XO("%.2f Hz (%s) = %.2f dB").Format(xPos, xp, yValue);
+         /* i18n-hint: The %f's are replaced by numbers, the %s by musical notes, e.g. A# */
+         peak = XO("%.2f Hz (%s) = %.2f dB").Format(bestpeak, pp, bestValue);
       } else if (xPos > 0.0 && bestpeak > 0.0) {
          auto xp = PitchName_Absolute(FreqToMIDInote(1.0 / xPos));
          auto pp = PitchName_Absolute(FreqToMIDInote(1.0 / bestpeak));
@@ -977,7 +985,6 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
       mCursorText->SetValue(wxT(""));
       mPeakText->SetValue(wxT(""));
    }
-
 
    // Outline the graph
    dc.SetPen(*wxBLACK_PEN);
