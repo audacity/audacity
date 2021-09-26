@@ -20,6 +20,7 @@
 struct TrackListEvent;
 
 class AffordanceHandle;
+class SelectHandle;
 class WaveClip;
 class TrackPanelResizeHandle;
 class WaveClipTitleEditHandle;
@@ -38,6 +39,7 @@ class AUDACITY_DLL_API WaveTrackAffordanceControls :
     std::weak_ptr<WaveTrackAffordanceHandle> mAffordanceHandle;
     std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
     std::weak_ptr<WaveClipTitleEditHandle> mTitleEditHandle;
+    std::weak_ptr<SelectHandle> mSelectHandle;
 
     std::shared_ptr<TextEditHelper> mTextEditHelper;
 

@@ -363,13 +363,15 @@ ValueRestorer< T > valueRestorer( T& var, const T& newValue )
   they cooperate correctly with stl algorithms and std::reverse_iterator
  */
 template< typename Value, typename Category = std::forward_iterator_tag >
-using ValueIterator = std::iterator<
-   Category, const Value, ptrdiff_t,
+struct ValueIterator{
+   using iterator_category = Category;
+   using value_type = Value;
+   using difference_type = ptrdiff_t;
    // void pointer type so that operator -> is disabled
-   void,
+   using pointer = void;
    // make "reference type" really the same as the value type
-   const Value
->;
+   using reference = const Value;
+};
 
 /**
   \brief A convenience for use with range-for

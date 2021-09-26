@@ -22,7 +22,6 @@ set( SOURCES
 )
 set( LIBRARIES
    PortAudio::PortAudio
-   PortMidi::PortMidi
    portmixer
    lib-preferences-interface
    PRIVATE

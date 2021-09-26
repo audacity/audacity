@@ -135,7 +135,7 @@ void DoImport(const CommandContext &context, bool isRaw)
    // PRL:  This affects FFmpegImportPlugin::Open which resets the preference
    // to false.  Should it also be set to true on other paths that reach
    // AudacityProject::Import ?
-   gPrefs->Write(wxT("/NewImportingSession"), true);
+   NewImportingSession.Write(false);
 
    selectedFiles.Sort(FileNames::CompareNoCase);
 
@@ -553,6 +553,15 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 namespace {
 using namespace MenuTable;
+
+#ifdef USE_MIDI
+const ReservedCommandFlag&
+   NoteTracksExistFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject &project){
+         return !TrackList::Get( project ).Any<const NoteTrack>().empty();
+      }
+   }; return flag; }  //gsw
+#endif
 
 BaseItemSharedPtr FileMenu()
 {

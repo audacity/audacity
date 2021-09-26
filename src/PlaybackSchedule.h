@@ -11,12 +11,119 @@
 #ifndef __AUDACITY_PLAYBACK_SCHEDULE__
 #define __AUDACITY_PLAYBACK_SCHEDULE__
 
+#include "MemoryX.h"
 #include <atomic>
 #include <vector>
 
 struct AudioIOStartStreamOptions;
 class BoundedEnvelope;
 using PRCrossfadeData = std::vector< std::vector < float > >;
+
+constexpr size_t TimeQueueGrainSize = 2000;
+
+//! Communicate data atomically from one writer thread to one reader.
+/*!
+ This is not a queue: it is not necessary for each write to be read.
+ Rather loss of a message is allowed:  writer may overwrite.
+ Data must be default-constructible and either copyable or movable.
+ */
+template<typename Data>
+class MessageBuffer {
+   struct UpdateSlot {
+      std::atomic<bool> mBusy{ false };
+      Data mData;
+   };
+   NonInterfering<UpdateSlot> mSlots[2];
+
+   std::atomic<unsigned char> mLastWrittenSlot{ 0 };
+
+public:
+   void Initialize();
+
+   //! Move data out (if available), or else copy it out
+   Data Read();
+   
+   //! Copy data in
+   void Write( const Data &data );
+   //! Move data in
+   void Write( Data &&data );
+};
+
+template<typename Data>
+void MessageBuffer<Data>::Initialize()
+{
+   for (auto &slot : mSlots)
+      // Lock both slots first, maybe spinning a little
+      while ( slot.mBusy.exchange( true, std::memory_order_acquire ) )
+         {}
+
+   mSlots[0].mData = {};
+   mSlots[1].mData = {};
+   mLastWrittenSlot.store( 0, std::memory_order_relaxed );
+
+   for (auto &slot : mSlots)
+      slot.mBusy.exchange( false, std::memory_order_release );
+}
+
+template<typename Data>
+Data MessageBuffer<Data>::Read()
+{
+   // Whichever slot was last written, prefer to read that.
+   auto idx = mLastWrittenSlot.load( std::memory_order_relaxed );
+   idx = 1 - idx;
+   bool wasBusy = false;
+   do {
+      // This loop is unlikely to execute twice, but it might because the
+      // producer thread is writing a slot.
+      idx = 1 - idx;
+      wasBusy = mSlots[idx].mBusy.exchange( true, std::memory_order_acquire );
+   } while ( wasBusy );
+
+   // Copy the slot
+   auto result = std::move( mSlots[idx].mData );
+
+   mSlots[idx].mBusy.store( false, std::memory_order_release );
+
+   return result;
+}
+
+template<typename Data>
+void MessageBuffer<Data>::Write( const Data &data )
+{
+   // Whichever slot was last written, prefer to write the other.
+   auto idx = mLastWrittenSlot.load( std::memory_order_relaxed );
+   bool wasBusy = false;
+   do {
+      // This loop is unlikely to execute twice, but it might because the
+      // consumer thread is reading a slot.
+      idx = 1 - idx;
+      wasBusy = mSlots[idx].mBusy.exchange( true, std::memory_order_acquire );
+   } while ( wasBusy );
+
+   mSlots[idx].mData = data;
+   mLastWrittenSlot.store( idx, std::memory_order_relaxed );
+
+   mSlots[idx].mBusy.store( false, std::memory_order_release );
+}
+
+template<typename Data>
+void MessageBuffer<Data>::Write( Data &&data )
+{
+   // Whichever slot was last written, prefer to write the other.
+   auto idx = mLastWrittenSlot.load( std::memory_order_relaxed );
+   bool wasBusy = false;
+   do {
+      // This loop is unlikely to execute twice, but it might because the
+      // consumer thread is reading a slot.
+      idx = 1 - idx;
+      wasBusy = mSlots[idx].mBusy.exchange( true, std::memory_order_acquire );
+   } while ( wasBusy );
+
+   mSlots[idx].mData = std::move( data );
+   mLastWrittenSlot.store( idx, std::memory_order_relaxed );
+
+   mSlots[idx].mBusy.store( false, std::memory_order_release );
+}
 
 struct RecordingSchedule {
    double mPreRoll{};
@@ -36,6 +143,7 @@ struct RecordingSchedule {
 };
 
 struct AUDACITY_DLL_API PlaybackSchedule {
+
    /// Playback starts at offset of mT0, which is measured in seconds.
    double              mT0;
    /// Playback ends at offset of mT1, which is measured in seconds.  Note that mT1 may be less than mT0 during scrubbing.
@@ -65,7 +173,46 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    // (ignoring accumulated rounding errors during playback) which fixes the 'missing sound at the end' bug
    
    const BoundedEnvelope *mEnvelope;
-   
+
+   //! A circular buffer
+   /*
+    Holds track time values corresponding to every nth sample in the
+    playback buffers, for the large n == TimeQueueGrainSize.
+
+    The "producer" is the Audio thread that fetches samples from tracks and
+    fills the playback RingBuffers.  The "consumer" is the high-latency
+    PortAudio thread that drains the RingBuffers.  The atomics in the
+    RingBuffer implement lock-free synchronization.
+
+    This other structure relies on the RingBuffer's synchronization, and adds
+    other information to the stream of samples:  which track times they
+    correspond to.
+
+    The consumer thread uses that information, and also makes known to the main
+    thread, what the last consumed track time is.  The main thread can use that
+    for other purposes such as refreshing the display of the play head position.
+    */
+   struct TimeQueue {
+      ArrayOf<double> mData;
+      size_t mSize{ 0 };
+      double mLastTime {};
+      struct Cursor {
+         size_t mIndex {};
+         size_t mRemainder {};
+      };
+      //! Aligned to avoid false sharing
+      NonInterfering<Cursor> mHead, mTail;
+
+      void Producer(
+         const PlaybackSchedule &schedule, double rate, double scrubSpeed,
+         size_t nSamples );
+      double Consumer( size_t nSamples, double rate );
+
+      //! Empty the queue and reassign the last produced time
+      /*! Assumes the producer and consumer are suspended */
+      void Prime(double time);
+   } mTimeQueue;
+
    volatile enum {
       PLAY_STRAIGHT,
       PLAY_LOOPED,
@@ -82,6 +229,26 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       double t0, double t1,
       const AudioIOStartStreamOptions &options,
       const RecordingSchedule *pRecordingSchedule );
+
+   /** @brief Compute signed duration (in seconds at playback) of the specified region of the track.
+    *
+    * Takes a region of the time track (specified by the unwarped time points in the project), and
+    * calculates how long it will actually take to play this region back, taking the time track's
+    * warping effects into account.
+    * @param t0 unwarped time to start calculation from
+    * @param t1 unwarped time to stop calculation at
+    * @return the warped duration in seconds, negated if `t0 > t1`
+    */
+   double ComputeWarpedLength(double t0, double t1) const;
+
+   /** @brief Compute how much unwarped time must have elapsed if length seconds of warped time has
+    * elapsed, and add to t0
+    *
+    * @param t0 The unwarped time (seconds from project start) at which to start
+    * @param length How many seconds of real time went past; signed
+    * @return The end point (in seconds from project start) as unwarped time
+    */
+   double SolveWarpedLength(double t0, double length) const;
 
    /** \brief True if the end time is before the start time */
    bool ReversedTime() const
@@ -141,10 +308,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    // taking into account whether the schedule is for looping
    double AdvancedTrackTime(
       double trackTime, double realElapsed, double speed) const;
-
-   // Use the function above in the callback after consuming samples from the
-   // playback ring buffers, during usual straight or looping play
-   void TrackTimeUpdate(double realElapsed);
 
    // Convert time between mT0 and argument to real duration, according to
    // time track if one is given; result is always nonnegative

@@ -27,7 +27,7 @@ END_EVENT_TABLE()
 
 IMPLEMENT_CLASS (UpdatePopupDialog, wxDialogWrapper)
 
-UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, const VersionPatch& versionPatch)
+UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, const VersionPatch& versionPatch, bool configurableNotification)
     : wxDialogWrapper (parent, -1, XC("Update Audacity", "update dialog"),
         wxDefaultPosition, wxDefaultSize,
         wxCAPTION),
@@ -43,9 +43,12 @@ UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, const VersionPatch& vers
         {
             S.SetBorder (5);
 
-            S.Id (DontShowID).AddCheckBox (
-                XO ("Don't show this again at start up"),
-                !DefaultUpdatesCheckingFlag.Read());
+            if (configurableNotification)
+            {
+                S.Id(DontShowID).AddCheckBox(
+                    XO("Don't show this again at start up"),
+                    !DefaultUpdatesCheckingFlag.Read());
+            }
 
             S.Prop(1).AddSpace(1, 0, 1);
 

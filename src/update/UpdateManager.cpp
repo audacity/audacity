@@ -11,6 +11,7 @@
 
 #include "UpdatePopupDialog.h"
 #include "UpdateNoticeDialog.h"
+#include "NoUpdatesAvailableDialog.h"
 
 #include "AudioIO.h"
 #include "BasicUI.h"
@@ -60,28 +61,27 @@ void UpdateManager::Start()
 {
     auto& instance = GetInstance();
 
-    static std::once_flag flag;
+    // Show the dialog only once. 
+    if (!prefUpdatesNoticeShown.Read())
+    {
+        // DefaultUpdatesCheckingFlag survives the "Reset Preferences"
+        // action, so check, if the updates were previously disabled as well.
+        if (DefaultUpdatesCheckingFlag.Read())
+        {
+            UpdateNoticeDialog notice(nullptr);
 
+            notice.ShowModal();
+        }
+
+        prefUpdatesNoticeShown.Write(true);
+        gPrefs->Flush();
+    }
+
+    static std::once_flag flag;
     std::call_once(flag, [&instance] {
         instance.mTimer.SetOwner(&instance, ID_TIMER);
         instance.mTimer.StartOnce(1);
         });
-
-    // Show the dialog only once. 
-    if (!prefUpdatesNoticeShown.Read())
-    {
-       // DefaultUpdatesCheckingFlag survives the "Reset Preferences"
-       // action, so check, if the updates were previously disabled as well.
-       if (DefaultUpdatesCheckingFlag.Read())
-       {
-          UpdateNoticeDialog notice(nullptr);
-
-          notice.ShowModal();
-       }
-
-       prefUpdatesNoticeShown.Write(true);
-       gPrefs->Flush();
-    }
 }
 
 VersionPatch UpdateManager::GetVersionPatch() const
@@ -89,12 +89,12 @@ VersionPatch UpdateManager::GetVersionPatch() const
     return mVersionPatch;
 }
 
-void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
+void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotification)
 {
     const audacity::network_manager::Request request("https://updates.audacityteam.org/feed/latest.xml");
     auto response = audacity::network_manager::NetworkManager::GetInstance().doGet(request);
 
-    response->setRequestFinishedCallback([response, ignoreNetworkErrors, this](audacity::network_manager::IResponse*) {
+    response->setRequestFinishedCallback([response, ignoreNetworkErrors, configurableNotification, this](audacity::network_manager::IResponse*) {
         
         // We don't' want to duplicate the updates checking if that already launched.
         {
@@ -145,8 +145,8 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
         if (mVersionPatch.version > CurrentBuildVersion())
 #endif
         {
-            gAudioIO->CallAfterRecording([this, ignoreNetworkErrors] {
-                UpdatePopupDialog dlg(nullptr, mVersionPatch);
+            gAudioIO->CallAfterRecording([this, ignoreNetworkErrors, configurableNotification] {
+                UpdatePopupDialog dlg(nullptr, mVersionPatch, configurableNotification);
                 const int code = dlg.ShowModal();
 
                 if (code == wxID_YES)
@@ -247,6 +247,14 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors)
 #if UPDATE_LOCAL_TESTING == 0
         else // mVersionPatch.version > CurrentBuildVersion()
         {
+            // That also shows, that updates checking was called manually from menu.
+            if (!configurableNotification)
+            {
+                gAudioIO->CallAfterRecording([] {
+                    NoUpdatesAvailableDialog(nullptr).ShowModal();
+                    });
+            }
+            
             mOnProgress = false;
         }
 #endif
@@ -261,7 +269,7 @@ void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
     if (updatesCheckingEnabled && IsTimeForUpdatesChecking())
 #endif
     {
-        GetUpdates(true);
+        GetUpdates(true, true);
     }
 
     mTimer.StartOnce(std::chrono::duration_cast<std::chrono::milliseconds>(

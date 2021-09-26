@@ -24,20 +24,6 @@
 #include <utility>
 #include <wx/atomic.h> // member variable
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-typedef void PmStream;
-typedef int32_t PmTimestamp;
-
-class Alg_seq;
-class Alg_event;
-class Alg_iterator;
-
-class NoteTrack;
-using NoteTrackArray = std::vector < std::shared_ptr< NoteTrack > >;
-using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
-
-#endif // EXPERIMENTAL_MIDI_OUT
-
 #include <wx/event.h> // to declare custom event types
 
 #include "SampleCount.h"
@@ -54,6 +40,10 @@ class SelectedRegion;
 
 class AudacityProject;
 
+class PlayableTrack;
+using PlayableTrackConstArray =
+   std::vector < std::shared_ptr < const PlayableTrack > >;
+
 class WaveTrack;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
@@ -64,9 +54,6 @@ typedef int PaError;
 
 bool ValidateDeviceNames();
 
-#define MAX_MIDI_BUFFER_SIZE 5000
-#define DEFAULT_SYNTH_LATENCY 5
-
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_AUDIOIO_PLAYBACK, wxCommandEvent);
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
@@ -74,30 +61,14 @@ wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
                          EVT_AUDIOIO_MONITOR, wxCommandEvent);
 
-// PRL:
-// If we always run a portaudio output stream (even just to produce silence)
-// whenever we play Midi, then we might use just one thread for both.
-// I thought this would improve MIDI synch problems on Linux/ALSA, but RBD
-// convinced me it was neither a necessary nor sufficient fix.  Perhaps too the
-// MIDI thread might block in some error situations but we should then not
-// also block the audio thread.
-// So leave the separate thread ENABLED.
-#define USE_MIDI_THREAD
-
 struct TransportTracks {
    WaveTrackArray playbackTracks;
    WaveTrackArray captureTracks;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   NoteTrackConstArray midiTracks;
-#endif
+   PlayableTrackConstArray otherPlayableTracks;
 
    // This is a subset of playbackTracks
    WaveTrackConstArray prerollTracks;
 };
-
-// This workaround makes pause and stop work when output is to GarageBand,
-// which seems not to implement the notes-off message correctly.
-#define AUDIO_IO_GB_MIDI_WORKAROUND
 
 /** brief The function which is called from PortAudio's callback thread
  * context to collect and deliver audio for / from the sound device.
@@ -127,107 +98,7 @@ int audacityAudioCallback(
    const PaStreamCallbackTimeInfo *timeInfo,
    PaStreamCallbackFlags statusFlags, void *userData );
 
-// Communicate data from one writer to one reader.
-// This is not a queue: it is not necessary for each write to be read.
-// Rather loss of a message is allowed:  writer may overwrite.
-// Data must be default-constructible and either copyable or movable.
-template<typename Data>
-class MessageBuffer {
-   struct UpdateSlot {
-      std::atomic<bool> mBusy{ false };
-      Data mData;
-   };
-   NonInterfering<UpdateSlot> mSlots[2];
-
-   std::atomic<unsigned char> mLastWrittenSlot{ 0 };
-
-public:
-   void Initialize();
-
-   // Move data out (if available), or else copy it out
-   Data Read();
-   
-   // Copy data in
-   void Write( const Data &data );
-   // Move data in
-   void Write( Data &&data );
-};
-
-template<typename Data>
-void MessageBuffer<Data>::Initialize()
-{
-   for (auto &slot : mSlots)
-      // Lock both slots first, maybe spinning a little
-      while ( slot.mBusy.exchange( true, std::memory_order_acquire ) )
-         {}
-
-   mSlots[0].mData = {};
-   mSlots[1].mData = {};
-   mLastWrittenSlot.store( 0, std::memory_order_relaxed );
-
-   for (auto &slot : mSlots)
-      slot.mBusy.exchange( false, std::memory_order_release );
-}
-
-template<typename Data>
-Data MessageBuffer<Data>::Read()
-{
-   // Whichever slot was last written, prefer to read that.
-   auto idx = mLastWrittenSlot.load( std::memory_order_relaxed );
-   idx = 1 - idx;
-   bool wasBusy = false;
-   do {
-      // This loop is unlikely to execute twice, but it might because the
-      // producer thread is writing a slot.
-      idx = 1 - idx;
-      wasBusy = mSlots[idx].mBusy.exchange( true, std::memory_order_acquire );
-   } while ( wasBusy );
-
-   // Copy the slot
-   auto result = std::move( mSlots[idx].mData );
-
-   mSlots[idx].mBusy.store( false, std::memory_order_release );
-
-   return result;
-}
-
-template<typename Data>
-void MessageBuffer<Data>::Write( const Data &data )
-{
-   // Whichever slot was last written, prefer to write the other.
-   auto idx = mLastWrittenSlot.load( std::memory_order_relaxed );
-   bool wasBusy = false;
-   do {
-      // This loop is unlikely to execute twice, but it might because the
-      // consumer thread is reading a slot.
-      idx = 1 - idx;
-      wasBusy = mSlots[idx].mBusy.exchange( true, std::memory_order_acquire );
-   } while ( wasBusy );
-
-   mSlots[idx].mData = data;
-   mLastWrittenSlot.store( idx, std::memory_order_relaxed );
-
-   mSlots[idx].mBusy.store( false, std::memory_order_release );
-}
-
-template<typename Data>
-void MessageBuffer<Data>::Write( Data &&data )
-{
-   // Whichever slot was last written, prefer to write the other.
-   auto idx = mLastWrittenSlot.load( std::memory_order_relaxed );
-   bool wasBusy = false;
-   do {
-      // This loop is unlikely to execute twice, but it might because the
-      // consumer thread is reading a slot.
-      idx = 1 - idx;
-      wasBusy = mSlots[idx].mBusy.exchange( true, std::memory_order_acquire );
-   } while ( wasBusy );
-
-   mSlots[idx].mData = std::move( data );
-   mLastWrittenSlot.store( idx, std::memory_order_relaxed );
-
-   mSlots[idx].mBusy.store( false, std::memory_order_release );
-}
+class AudioIOExt;
 
 class AUDACITY_DLL_API AudioIoCallback /* not final */
    : public AudioIOBase
@@ -244,41 +115,50 @@ public:
       const PaStreamCallbackTimeInfo *timeInfo,
       const PaStreamCallbackFlags statusFlags, void *userData);
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   void PrepareMidiIterator(bool send = true, double offset = 0);
-   bool StartPortMidiStream();
+   //! @name iteration over extensions, supporting range-for syntax
+   //! @{
+   class AUDACITY_DLL_API AudioIOExtIterator {
+   public:
+      using difference_type = ptrdiff_t;
+      using value_type = AudioIOExt &;
+      using pointer = AudioIOExt *;
+      using reference = AudioIOExt &;
+      using iterator_category = std::forward_iterator_tag;
 
-   // Compute nondecreasing real time stamps, accounting for pauses, but not the
-   // synth latency.
-   double UncorrectedMidiEventTime();
+      explicit AudioIOExtIterator( AudioIoCallback &audioIO, bool end )
+         : mIterator{ end
+            ? audioIO.mAudioIOExt.end()
+            : audioIO.mAudioIOExt.begin() }
+      {}
+      AudioIOExtIterator &operator ++ () { ++mIterator; return *this; }
+      auto operator *() const -> AudioIOExt &;
+      friend inline bool operator == (
+         const AudioIOExtIterator &xx, const AudioIOExtIterator &yy)
+      {
+         return xx.mIterator == yy.mIterator;
+      }
+      friend inline bool operator != (
+         const AudioIOExtIterator &xx, const AudioIOExtIterator &yy)
+      {
+         return !(xx == yy);
+      }
+   private:
+      std::vector<std::unique_ptr<AudioIOExtBase>>::const_iterator mIterator;
+   };
+   struct AudioIOExtRange {
+      AudioIOExtIterator first;
+      AudioIOExtIterator second;
+      AudioIOExtIterator begin() const { return first; }
+      AudioIOExtIterator end() const { return second; }
+   };
 
-   void OutputEvent();
-   void FillMidiBuffers();
-   void GetNextEvent();
-   double PauseTime();
-   void AllNotesOff(bool looping = false);
-
-   /** \brief Compute the current PortMidi timestamp time.
-    *
-    * This is used by PortMidi to synchronize midi time to audio samples
-    */
-   PmTimestamp MidiTime();
-
-   // Note: audio code solves the problem of soloing/muting tracks by scanning
-   // all playback tracks on every call to the audio buffer fill routine.
-   // We do the same for Midi, but it seems wasteful for at least two
-   // threads to be frequently polling to update status. This could be
-   // eliminated (also with a reduction in code I think) by updating mHasSolo
-   // each time a solo button is activated or deactivated. For now, I'm
-   // going to do this polling in the FillMidiBuffer routine to localize
-   // changes for midi to the midi code, but I'm declaring the variable
-   // here so possibly in the future, Audio code can use it too. -RBD
- private:
-   bool  mHasSolo; // is any playback solo button pressed?
- public:
-   bool SetHasSolo(bool hasSolo);
-   bool GetHasSolo() { return mHasSolo; }
-#endif
+   AudioIOExtRange Extensions() {
+      return {
+         AudioIOExtIterator{ *this, false },
+         AudioIOExtIterator{ *this, true }
+      };
+   }
+   //! @}
 
    std::shared_ptr< AudioIOListener > GetListener() const
       { return mListener.lock(); }
@@ -299,10 +179,6 @@ public:
    bool TrackHasBeenFadedOut( const WaveTrack &wt );
    bool AllTracksAlreadySilent();
 
-   // These eight functions do different parts of AudioCallback().
-   void ComputeMidiTimings(
-      const PaStreamCallbackTimeInfo *timeInfo,
-      unsigned long framesPerBuffer);
    void CheckSoundActivatedRecordingLevel(
       float *inputSamples,
       unsigned long framesPerBuffer
@@ -344,13 +220,6 @@ public:
       unsigned long framesPerBuffer
    );
 
-
-// Required by these functions...
-#ifdef EXPERIMENTAL_MIDI_OUT
-   double AudioTime() { return mPlaybackSchedule.mT0 + mNumFrames / mRate; }
-#endif
-
-
    /** \brief Get the number of audio samples ready in all of the playback
    * buffers.
    *
@@ -358,77 +227,8 @@ public:
    * they are different. */
    size_t GetCommonlyReadyPlayback();
 
-
-#ifdef EXPERIMENTAL_MIDI_OUT
-   //   MIDI_PLAYBACK:
-   PmStream        *mMidiStream;
-   int              mLastPmError;
-
-   /// Latency of MIDI synthesizer
-   long             mSynthLatency; // ms
-
-   // These fields are used to synchronize MIDI with audio:
-
-   /// Number of frames output, including pauses
-   volatile long    mNumFrames;
    /// How many frames of zeros were output due to pauses?
-   volatile long    mNumPauseFrames;
-   /// total of backward jumps
-   volatile int     mMidiLoopPasses;
-   inline double MidiLoopOffset() {
-      return mMidiLoopPasses * (mPlaybackSchedule.mT1 - mPlaybackSchedule.mT0);
-   }
-
-   volatile long    mAudioFramesPerBuffer;
-   /// Used by Midi process to record that pause has begun,
-   /// so that AllNotesOff() is only delivered once
-   volatile bool    mMidiPaused;
-   /// The largest timestamp written so far, used to delay
-   /// stream closing until last message has been delivered
-   PmTimestamp mMaxMidiTimestamp;
-
-   /// Offset from ideal sample computation time to system time,
-   /// where "ideal" means when we would get the callback if there
-   /// were no scheduling delays or computation time
-   double mSystemMinusAudioTime;
-   /// audio output latency reported by PortAudio
-   /// (initially; for Alsa, we adjust it to the largest "observed" value)
-   double mAudioOutLatency;
-
-   // Next two are used to adjust the previous two, if
-   // PortAudio does not provide the info (using ALSA):
-
-   /// time of first callback
-   /// used to find "observed" latency
-   double mStartTime;
-   /// number of callbacks since stream start
-   long mCallbackCount;
-
-   /// Make just one variable to communicate from audio to MIDI thread,
-   /// to avoid problems of atomicity of updates
-   volatile double mSystemMinusAudioTimePlusLatency;
-
-   Alg_seq      *mSeq;
-   std::unique_ptr<Alg_iterator> mIterator;
-   /// The next event to play (or null)
-   Alg_event    *mNextEvent;
-
-#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
-   std::vector< std::pair< int, int > > mPendingNotesOff;
-#endif
-
-   /// Real time at which the next event should be output, measured in seconds.
-   /// Note that this could be a note's time+duration for note offs.
-   double           mNextEventTime;
-   /// Track of next event
-   NoteTrack        *mNextEventTrack;
-   /// Is the next event a note-on?
-   bool             mNextIsNoteOn;
-   /// when true, mSendMidiState means send only updates, not note-on's,
-   /// used to send state changes that precede the selected notes
-   bool             mSendMidiState;
-   NoteTrackConstArray mMidiPlaybackTracks;
-#endif
+   long    mNumPauseFrames;
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    bool           mAILAActive;
@@ -448,11 +248,7 @@ public:
 #endif
 
    std::unique_ptr<AudioThread> mThread;
-#ifdef EXPERIMENTAL_MIDI_OUT
-#ifdef USE_MIDI_THREAD
-   std::unique_ptr<AudioThread> mMidiThread;
-#endif
-#endif
+
    ArrayOf<std::unique_ptr<Resample>> mResample;
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
    WaveTrackArray      mCaptureTracks;
@@ -491,11 +287,6 @@ public:
 
    wxLongLong          mLastPlaybackTimeMillis;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-   volatile bool       mMidiThreadFillBuffersLoopRunning;
-   volatile bool       mMidiThreadFillBuffersLoopActive;
-#endif
-
    volatile double     mLastRecordingOffset;
    PaError             mLastPaError;
 
@@ -507,9 +298,6 @@ protected:
    std::weak_ptr< AudioIOListener > mListener;
 
    friend class AudioThread;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   friend class MidiThread;
-#endif
 
    bool mUsingAlsa { false };
 
@@ -558,31 +346,18 @@ public:
 
 protected:
    RecordingSchedule mRecordingSchedule{};
-
-   // Another circular buffer
-   // Holds track time values corresponding to every nth sample in the playback
-   // buffers, for some large n
-   struct TimeQueue {
-      Doubles mData;
-      size_t mSize{ 0 };
-      double mLastTime {};
-      // These need not be updated atomically, because we rely on the atomics
-      // in the playback ring buffers to supply the synchronization.  Still,
-      // align them to avoid false sharing.
-      struct Cursor {
-         size_t mIndex {};
-         size_t mRemainder {};
-      };
-      NonInterfering<Cursor> mHead, mTail;
-
-      void Producer(
-         const PlaybackSchedule &schedule, double rate, double scrubSpeed,
-         size_t nSamples );
-      double Consumer( size_t nSamples, double rate );
-   } mTimeQueue;
-
    PlaybackSchedule mPlaybackSchedule;
+
+private:
+   /*!
+    Privatize the inherited array but give access by Extensions().
+    This class guarantees that this array is populated only with non-null
+    pointers to the subtype AudioIOExt
+    */
+   using AudioIOBase::mAudioIOExt;
 };
+
+struct PaStreamInfo;
 
 //! Describes an amount of contiguous (but maybe time-warped) data to be extracted from tracks to play
 struct PlaybackSlice {
@@ -753,9 +528,6 @@ public:
    double GetStreamTime();
 
    friend class AudioThread;
-#ifdef EXPERIMENTAL_MIDI_OUT
-   friend class MidiThread;
-#endif
 
    static void Init();
    static void Deinit();

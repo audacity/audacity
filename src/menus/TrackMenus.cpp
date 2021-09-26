@@ -335,6 +335,15 @@ void DoAlign
 
 #ifdef EXPERIMENTAL_SCOREALIGN
 
+#ifdef USE_MIDI
+static const ReservedCommandFlag&
+   NoteTracksSelectedFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject &project){
+         return !TrackList::Get( project ).Selected<const NoteTrack>().empty();
+      }
+   }; return flag; }  //gsw
+#endif
+
 // rough relative amount of time to compute one
 //    frame of audio or midi, or one cell of matrix, or one iteration
 //    of smoothing, measured on a 1.9GHz Core 2 Duo in 32-bit mode

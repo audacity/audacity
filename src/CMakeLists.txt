@@ -105,6 +105,8 @@ list( APPEND SOURCES
       AudacityHeaders.h
       AudioIO.cpp
       AudioIO.h
+      AudioIOExt.cpp
+      AudioIOExt.h
       AudioIOListener.h
       AutoRecoveryDialog.cpp
       AutoRecoveryDialog.h
@@ -178,6 +180,8 @@ list( APPEND SOURCES
       MacroMagic.h
       Menus.cpp
       Menus.h
+      MIDIPlay.cpp
+      MIDIPlay.h
       Mix.cpp
       Mix.h
       MixerBoard.cpp
@@ -975,6 +979,8 @@ list( APPEND SOURCES
           update/UpdatePopupDialog.cpp
           prefs/ApplicationPrefs.h
           prefs/ApplicationPrefs.cpp
+          update/NoUpdatesAvailableDialog.h
+          update/NoUpdatesAvailableDialog.cpp
       >
 
       Experimental.cmake
@@ -1063,7 +1069,6 @@ list( APPEND LIBRARIES
       PortAudio::PortAudio
       sqlite
       $<$<BOOL:${${_OPT}has_crashreports}>:crashreports>
-      $<$<BOOL:${USE_FFMPEG}>:ffmpeg>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC>
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC++>

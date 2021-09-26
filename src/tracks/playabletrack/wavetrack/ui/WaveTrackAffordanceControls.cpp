@@ -27,13 +27,15 @@
 #include "../../../../commands/AudacityCommand.h"
 #include "../../../ui/AffordanceHandle.h"
 #include "../../../ui/TextEditHelper.h"
+#include "../../../ui/SelectHandle.h"
 #include "WaveTrackView.h"//need only ClipParameters
 
 #include "../../../../ProjectHistory.h"
+#include "../../../../ProjectSettings.h"
 #include "../../../../SelectionState.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../Theme.h"
-#include "../../../../images/Cursors.h"
+#include "../../../../../images/Cursors.h"
 #include "../../../../HitTestResult.h"
 
 class WaveTrackAffordanceHandle final : public AffordanceHandle
@@ -191,6 +193,20 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         );
     }
 
+    const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
+    std::shared_ptr<WaveClip> focusClip;
+    auto& zoomInfo = ViewInfo::Get(*pProject);
+    for (const auto& clip : waveTrack->GetClips())
+    {
+        auto affordanceRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, state.rect);
+        if (affordanceRect.Contains(px, py))
+        {
+            focusClip = clip;
+            break;
+        }
+    }
+
+
     if (mTextEditHelper)
     {
         if(mTextEditHelper->GetBBox().Contains(px, py))
@@ -203,25 +219,27 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
     }
     else
     {
-        const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
-        std::shared_ptr<WaveClip> focusClip;
-        auto& zoomInfo = ViewInfo::Get(*pProject);
-        for (const auto& clip : waveTrack->GetClips())
+        if (focusClip)
         {
-            auto affordanceRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, state.rect);
-            if (affordanceRect.Contains(px, py))
-            {
-                results.push_back(
-                    AssignUIHandlePtr(
-                        mAffordanceHandle,
-                        std::make_shared<WaveTrackAffordanceHandle>(track, clip)
-                    )
-                );
-                focusClip = clip;
-                break;
-            }
+            results.push_back(
+                AssignUIHandlePtr(
+                    mAffordanceHandle,
+                    std::make_shared<WaveTrackAffordanceHandle>(track, focusClip)
+                )
+            );
         }
         mFocusClip = focusClip;
+    }
+
+    const auto& settings = ProjectSettings::Get(*pProject);
+    const auto currentTool = settings.GetTool();
+    if (currentTool == ToolCodes::multiTool || currentTool == ToolCodes::selectTool)
+    {
+        results.push_back(
+            SelectHandle::HitTest(
+                mSelectHandle, state, pProject, std::static_pointer_cast<TrackView>(track->GetTrackView())
+            )
+        );
     }
 
     return results;
