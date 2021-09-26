@@ -20,6 +20,8 @@
 #include <wx/defs.h>
 #include <wx/window.h> // to inherit
 
+#include "Prefs.h"
+
 class wxArrayString;
 class wxBitmap;
 class wxColour;
@@ -192,6 +194,10 @@ public:
 };
 
 extern AUDACITY_DLL_API Theme theTheme;
+
+extern AUDACITY_DLL_API BoolSetting
+     GUIBlendThemes
+;
 
 extern AUDACITY_DLL_API ChoiceSetting
      GUITheme
