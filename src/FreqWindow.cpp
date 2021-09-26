@@ -914,7 +914,6 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
    }
 
    float xPos = xMin;
-   float yPos;
 
    // Find the peak nearest the cursor and plot it
    if ( r.Contains(mMouseX, mMouseY) & (mMouseX!=0) & (mMouseX!=r.width-1) ) {
@@ -951,19 +950,11 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
       TranslatableString peak;
 
       if (mAlg == SpectrumAnalyst::Spectrum) {
-         // Determine the position of the cursor in the plot window.
-         float yRange = mYMax - mYMin;
-         float yTotal = yRange * (float)mZoomSlider->GetValue() / 100.0f;
-         int sTotal = yTotal * 100;
-         int sRange = yRange * 100;
-         int sPos = mPanScroller->GetThumbPosition() + ((mPanScroller->GetThumbSize() - sTotal) / 2);
-         float yMax = mYMax - (float)sPos / 100.0f;
-         float yValue = yMax - float(mMouseY - (r.y + 1)) / (float)r.height * yTotal;
          // Determine the note corresponding to each frequency.
          auto xp = PitchName_Absolute(FreqToMIDInote(xPos));
          auto pp = PitchName_Absolute(FreqToMIDInote(bestpeak));
          /* i18n-hint: The %f's are replaced by numbers, the %s by musical notes, e.g. A# */
-         cursor = XO("%.2f Hz (%s) = %.2f dB").Format(xPos, xp, yValue);
+         cursor = XO("%.2f Hz (%s) = %.2f dB").Format(xPos, xp, value);
          /* i18n-hint: The %f's are replaced by numbers, the %s by musical notes, e.g. A# */
          peak = XO("%.2f Hz (%s) = %.2f dB").Format(bestpeak, pp, bestValue);
       } else if (xPos > 0.0 && bestpeak > 0.0) {
