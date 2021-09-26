@@ -25,7 +25,6 @@
 class wxArrayString;
 class wxBitmap;
 class wxColour;
-class wxFont;
 class wxImage;
 class wxPen;
 
@@ -39,8 +38,6 @@ enum teResourceType
    resTypeColour,
    resTypeBitmap,
    resTypeImage = resTypeBitmap,
-   resTypeCursor,
-   resTypeFont
 };
 
 enum teResourceFlags
@@ -131,8 +128,6 @@ public:
    wxColour & Colour( int iIndex );
    wxBitmap & Bitmap( int iIndex );
    wxImage  & Image( int iIndex );
-   wxCursor & Cursor( int iIndex );
-   wxFont   & Font( int iIndex );
    wxSize ImageSize( int iIndex );
    bool bRecolourOnLoad;  // Request to recolour.
    bool bIsUsingSystemTextColour;

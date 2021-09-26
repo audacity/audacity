@@ -1131,27 +1131,6 @@ wxSize  ThemeBase::ImageSize( int iIndex )
    return wxSize( Image.GetWidth(), Image.GetHeight());
 }
 
-// The next two functions are for future use.
-#if 0
-wxCursor & ThemeBase::Cursor( int iIndex )
-{
-   wxASSERT( iIndex >= 0 );
-   EnsureInitialised();
-   // Purposeful null deref.  Function is for future use.
-   // If anyone tries to use it now they will get an error.
-   return *(wxCursor*)NULL;
-}
-
-wxFont   & ThemeBase::Font( int iIndex )
-{
-   wxASSERT( iIndex >= 0 );
-   EnsureInitialised();
-   // Purposeful null deref.  Function is for future use.
-   // If anyone tries to use it now they will get an error.
-   return *(wxFont*)NULL;
-}
-#endif
-
 /// Replaces both the image and the bitmap.
 void ThemeBase::ReplaceImage( int iIndex, wxImage * pImage )
 {

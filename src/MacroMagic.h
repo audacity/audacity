@@ -33,7 +33,6 @@ using teBmps = int; /// The index of a bitmap resource in Theme Resources.
 // undefine the macros.
 #undef DEFINE_IMAGE
 #undef DEFINE_COLOUR
-#undef DEFINE_FONT
 #undef SET_THEME_FLAGS
 
 
@@ -44,8 +43,6 @@ using teBmps = int; /// The index of a bitmap resource in Theme Resources.
    theTheme.RegisterImage( name, initialiser, textual_name );
 #define DEFINE_COLOUR( name, initialiser, textual_name )\
    theTheme.RegisterColour( name, initialiser, textual_name );
-#define DEFINE_FONT( name, initialiser, textual_name )  \
-   theTheme.RegisterFont( name, initialiser, textual_name );
 #define SET_THEME_FLAGS( flags ) theTheme.SetFlags(  flags );
 #undef THEME_DECLARATIONS
 #undef THEME_EXTERNS
@@ -54,7 +51,6 @@ using teBmps = int; /// The index of a bitmap resource in Theme Resources.
 #ifdef THEME_DECLARATIONS
 #define DEFINE_IMAGE( name, initialiser, textual_name )  AUDACITY_DLL_API teBmps name=-1;
 #define DEFINE_COLOUR( name, initialiser, textual_name ) AUDACITY_DLL_API int name=-1;
-#define DEFINE_FONT( name, initialiser, textual_name )  AUDACITY_DLL_API int name=-1;
 #define SET_THEME_FLAGS( flags )
 #undef THEME_INITS
 #undef THEME_EXTERNS
@@ -63,6 +59,5 @@ using teBmps = int; /// The index of a bitmap resource in Theme Resources.
 #ifdef THEME_EXTERNS
 #define DEFINE_IMAGE( name, initialiser, textual_name )  extern AUDACITY_DLL_API teBmps name;
 #define DEFINE_COLOUR( name, initialiser, textual_name ) extern AUDACITY_DLL_API int name;
-#define DEFINE_FONT( name, initialiser, textual_name ) extern AUDACITY_DLL_API int name;
 #define SET_THEME_FLAGS( flags )
 #endif
