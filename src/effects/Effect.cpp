@@ -26,6 +26,7 @@
 #include <wx/tokenzr.h>
 
 #include "../AudioIO.h"
+#include "widgets/wxWidgetsBasicUI.h"
 #include "../DBConnection.h"
 #include "../LabelTrack.h"
 #include "../Mix.h"
@@ -33,17 +34,18 @@
 #include "../ProjectAudioManager.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectSettings.h"
+#include "QualitySettings.h"
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
-#include "../wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
 
 #include <unordered_map>
 
@@ -112,9 +114,8 @@ Effect::Effect()
    // PRL:  I think this initialization of mProjectRate doesn't matter
    // because it is always reassigned in DoEffect before it is used
    // STF: but can't call AudioIOBase::GetOptimalSupportedSampleRate() here.
-   gPrefs->Read(wxT("/SamplingRate/DefaultProjectSampleRate"),
-                &mProjectRate,
-                44100);
+   // (Which is called to compute the default-default value.)  (Bug 2280)
+   mProjectRate = QualitySettings::DefaultSampleRate.ReadWithDefault(44100);
 
    mIsBatch = false;
 }
@@ -680,7 +681,7 @@ void Effect::ExportPresets()
    wxString commandId = GetSquashedName(GetSymbol().Internal()).GET();
    params =  commandId + ":" + params;
 
-   auto path = FileNames::SelectFile(FileNames::Operation::Presets,
+   auto path = SelectFile(FileNames::Operation::Presets,
                                      XO("Export Effect Parameters"),
                                      wxEmptyString,
                                      wxEmptyString,
@@ -725,7 +726,7 @@ void Effect::ImportPresets()
 {
    wxString params;
 
-   auto path = FileNames::SelectFile(FileNames::Operation::Presets,
+   auto path = SelectFile(FileNames::Operation::Presets,
                                      XO("Import Effect Parameters"),
                                      wxEmptyString,
                                      wxEmptyString,
@@ -1168,14 +1169,14 @@ bool Effect::HasFactoryDefaults()
    return HasPrivateConfigGroup(GetFactoryDefaultsGroup());
 }
 
-wxString Effect::ManualPage()
+ManualPageID Effect::ManualPage()
 {
-   return wxEmptyString;
+   return {};
 }
 
-wxString Effect::HelpPage()
+FilePath Effect::HelpPage()
 {
-   return wxEmptyString;
+   return {};
 }
 
 void Effect::SetUIFlags(unsigned flags) {
@@ -1637,10 +1638,10 @@ bool Effect::ProcessTrack(int count,
                limitSampleBufferSize( mBufferSize, inputRemaining );
 
             // Fill the input buffers
-            left->Get((samplePtr) inBuffer[0].get(), floatSample, inPos, inputBufferCnt);
+            left->GetFloats(inBuffer[0].get(), inPos, inputBufferCnt);
             if (right)
             {
-               right->Get((samplePtr) inBuffer[1].get(), floatSample, inPos, inputBufferCnt);
+               right->GetFloats(inBuffer[1].get(), inPos, inputBufferCnt);
             }
 
             // Reset the input buffer positions
@@ -2395,8 +2396,8 @@ void Effect::Preview(bool dryOnly)
          mixRight->Offset(-mixRight->GetStartTime());
          mixRight->SetSelected(true);
          pRight = mTracks->Add( mixRight );
+         mTracks->MakeMultiChannelTrack(*pLeft, 2, true);
       }
-      mTracks->GroupChannels(*pLeft, pRight ? 2 : 1);
    }
    else {
       for (auto src : saveTracks->Any< const WaveTrack >()) {
@@ -2468,9 +2469,12 @@ void Effect::Preview(bool dryOnly)
          }
       }
       else {
-         ShowErrorDialog(FocusDialog, XO("Error"),
-                         XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
-                         wxT("Error_opening_sound_device"));
+         using namespace BasicUI;
+         ShowErrorDialog(
+            wxWidgetsWindowPlacement{ FocusDialog }, XO("Error"),
+            XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
+            wxT("Error_opening_sound_device"),
+            ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
       }
    }
 }

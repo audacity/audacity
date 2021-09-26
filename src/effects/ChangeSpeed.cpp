@@ -24,8 +24,8 @@
 #include <wx/slider.h>
 
 #include "../LabelTrack.h"
-#include "../Prefs.h"
-#include "../Resample.h"
+#include "Prefs.h"
+#include "Resample.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -123,9 +123,9 @@ TranslatableString EffectChangeSpeed::GetDescription()
    return XO("Changes the speed of a track, also changing its pitch");
 }
 
-wxString EffectChangeSpeed::ManualPage()
+ManualPageID EffectChangeSpeed::ManualPage()
 {
-   return wxT("Change_Speed");
+   return L"Change_Speed";
 }
 
 
@@ -520,7 +520,7 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) inBuffer.get(), floatSample, samplePos, blockSize);
+      track->GetFloats(inBuffer.get(), samplePos, blockSize);
 
       const auto results = resample.Process(mFactor,
                                     inBuffer.get(),

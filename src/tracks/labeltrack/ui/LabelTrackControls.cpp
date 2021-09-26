@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../HitTestResult.h"
 #include "../../../LabelTrack.h"
 #include "../../../widgets/PopupMenuTable.h"
-#include "../../../Prefs.h"
+#include "Prefs.h"
 #include "../../../RefreshCode.h"
 #include "../../../ShuttleGui.h"
 #include "../../../widgets/wxPanelWrapper.h"
@@ -179,16 +179,14 @@ PopupMenuTable *LabelTrackControls::GetMenuExtension(Track *)
 }
 
 using DoGetLabelTrackControls = DoGetControls::Override< LabelTrack >;
-template<> template<> auto DoGetLabelTrackControls::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetLabelTrackControls) {
    return [](LabelTrack &track) {
       return std::make_shared<LabelTrackControls>( track.SharedPointer() );
    };
 }
-static DoGetLabelTrackControls registerDoGetLabelTrackControls;
 
 using GetDefaultLabelTrackHeight = GetDefaultTrackHeight::Override< LabelTrack >;
-template<> template<>
-auto GetDefaultLabelTrackHeight::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetDefaultLabelTrackHeight) {
    return [](LabelTrack &) {
       // Label tracks are narrow
       // Default is to allow two rows so that NEW users get the
@@ -196,4 +194,3 @@ auto GetDefaultLabelTrackHeight::Implementation() -> Function {
       return 73;
    };
 }
-static GetDefaultLabelTrackHeight registerGetDefaultLabelTrackHeight;

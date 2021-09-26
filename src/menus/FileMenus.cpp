@@ -1,21 +1,23 @@
 
 
 #include "../CommonCommandFlags.h"
-#include "../FileNames.h"
+#include "FileNames.h"
 #include "../LabelTrack.h"
 #include "../NoteTrack.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Printing.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectFileManager.h"
 #include "../ProjectHistory.h"
 #include "../ProjectManager.h"
+#include "../ProjectWindows.h"
 #include "../ProjectWindow.h"
+#include "../SelectFile.h"
 #include "../SelectUtilities.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -32,6 +34,7 @@
 #include "../import/ImportMIDI.h"
 #endif // USE_MIDI
 
+#include <wx/app.h>
 #include <wx/menu.h>
 
 // private helper classes and functions
@@ -63,6 +66,11 @@ void DoExport(AudacityProject &project, const FileExtension &format)
       // We either use a configured output path,
       // or we use the default documents folder - just as for exports.
       FilePath pathName = FileNames::FindDefaultPath(FileNames::Operation::MacrosOut);
+
+      if (!FileNames::WritableLocationCheck(pathName, XO("Cannot proceed to export.")))
+      {
+          return;
+      }
 /*
       // If we've gotten to this point, we are in batch mode, have a file format,
       // and the project has either been saved or a file has been imported. So, we
@@ -127,7 +135,7 @@ void DoImport(const CommandContext &context, bool isRaw)
    // PRL:  This affects FFmpegImportPlugin::Open which resets the preference
    // to false.  Should it also be set to true on other paths that reach
    // AudacityProject::Import ?
-   gPrefs->Write(wxT("/NewImportingSession"), true);
+   NewImportingSession.Write(false);
 
    selectedFiles.Sort(FileNames::CompareNoCase);
 
@@ -276,7 +284,7 @@ void OnExportLabels(const CommandContext &context)
    else
       fName = (*trackRange.rbegin())->GetName();
 
-   fName = FileNames::SelectFile(FileNames::Operation::Export,
+   fName = SelectFile(FileNames::Operation::Export,
       XO("Export Labels As:"),
       wxEmptyString,
       fName,
@@ -361,7 +369,7 @@ void OnExportMIDI(const CommandContext &context)
 
       wxString fName;
 
-      fName = FileNames::SelectFile(FileNames::Operation::Export,
+      fName = SelectFile(FileNames::Operation::Export,
          XO("Export MIDI As:"),
          wxEmptyString,
          fName,
@@ -429,7 +437,7 @@ void OnImportLabels(const CommandContext &context)
    auto &window = ProjectWindow::Get( project );
 
    wxString fileName =
-       FileNames::SelectFile(FileNames::Operation::Open,
+       SelectFile(FileNames::Operation::Open,
          XO("Select a text file containing labels"),
          wxEmptyString,     // Path
          wxT(""),       // Name
@@ -473,7 +481,7 @@ void OnImportMIDI(const CommandContext &context)
    auto &project = context.project;
    auto &window = GetProjectFrame( project );
 
-   wxString fileName = FileNames::SelectFile(FileNames::Operation::Open,
+   wxString fileName = SelectFile(FileNames::Operation::Open,
       XO("Select a MIDI file"),
       wxEmptyString,     // Path
       wxT(""),       // Name
@@ -520,7 +528,7 @@ void OnExit(const CommandContext &WXUNUSED(context) )
 {
    // Simulate the application Exit menu item
    wxCommandEvent evt{ wxEVT_MENU, wxID_EXIT };
-   wxTheApp->AddPendingEvent( evt );
+   wxTheApp->ProcessEvent( evt );
 }
 
 void OnExportFLAC(const CommandContext &context)
@@ -545,6 +553,15 @@ static CommandHandlerObject &findCommandHandler(AudacityProject &) {
 
 namespace {
 using namespace MenuTable;
+
+#ifdef USE_MIDI
+const ReservedCommandFlag&
+   NoteTracksExistFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject &project){
+         return !TrackList::Get( project ).Any<const NoteTrack>().empty();
+      }
+   }; return flag; }  //gsw
+#endif
 
 BaseItemSharedPtr FileMenu()
 {

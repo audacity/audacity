@@ -1,0 +1,56 @@
+name: Generate Source Tarball
+
+on:
+  push:
+  workflow_dispatch:
+    
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  Generate:
+    env:
+      CONAN_USER_HOME: "${{ github.workspace }}/conan-home/"
+      CONAN_USER_HOME_SHORT: "${{ github.workspace }}/conan-home/short"
+      AUDACITY_CMAKE_GENERATOR: "Unix Makefiles"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Dependencies
+        run: |
+          exec bash "scripts/ci/dependencies.sh"
+
+      - name: Environment
+        run: |
+          source "scripts/ci/environment.sh"
+
+      - name: Cache for .conan
+        id: cache-conan
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-conan-modules
+        with:
+          path: ${{ env.CONAN_USER_HOME }}
+          key: host-3-${{ matrix.config.name }}-${{ hashFiles('cmake-proxies/CMakeLists.txt') }}
+          restore-keys: |
+            host-3-${{ matrix.config.name }}-
+
+      - name: Configure
+        run: |
+          exec bash "scripts/ci/configure.sh"
+
+      - name: Package
+        run: |
+          cmake --build build --target package_source
+    
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Audacity_Sources_${{ github.run_id }}_${{ env.GIT_HASH_SHORT }}
+          path: |
+            build/package/*
+            !build/package/_CPack_Packages
+          if-no-files-found: error

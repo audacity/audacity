@@ -17,7 +17,7 @@
 #include <vector>
 #include <wx/defs.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Theme.h"
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include <wx/windowptr.h>
@@ -39,6 +39,10 @@ class Grabber;
 class ToolDock;
 
 class ToolBarResizer;
+
+#ifdef __WXMAC__
+#define USE_AQUA_THEME 1
+#endif
 
 ////////////////////////////////////////////////////////////
 /// class ToolBar

@@ -15,7 +15,7 @@
 
 
 #include "SampleFormat.h"
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #include <wx/longlong.h>
 
@@ -25,6 +25,7 @@
 class BlockArray;
 class Envelope;
 class ProgressDialog;
+class sampleCount;
 class SampleBlock;
 class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
@@ -353,6 +354,9 @@ public:
    // used by commands which interact with clips using the keyboard
    bool SharesBoundaryWithNextClip(const WaveClip* next) const;
 
+   void SetName(const wxString& name);
+   const wxString& GetName() const;
+
 public:
    // Cache of values to colour pixels of Spectrogram - used by TrackArtist
    mutable std::unique_ptr<SpecPxCache> mSpecPxCache;
@@ -377,6 +381,9 @@ protected:
 
    // AWD, Oct. 2009: for whitespace-at-end-of-selection pasting
    bool mIsPlaceholder { false };
+
+private:
+   wxString mName;
 };
 
 #endif

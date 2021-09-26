@@ -41,7 +41,7 @@ explicitly code all three.
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../effects/Effect.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "CommandContext.h"
 
 

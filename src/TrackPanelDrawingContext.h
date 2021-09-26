@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_TRACK_PANEL_DRAWING_CONTEXT__
 #define __AUDACITY_TRACK_PANEL_DRAWING_CONTEXT__
 
-#include "MemoryX.h"
+#include <memory>
 
 class UIHandle;
 using UIHandlePtr = std::shared_ptr<UIHandle>;

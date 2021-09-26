@@ -30,12 +30,14 @@
 #include <wx/html/htmlwin.h>
 #include <wx/settings.h>
 #include <wx/statusbr.h>
+#include <wx/textctrl.h>
 #include <wx/artprov.h>
 
 #include "../AllThemeResources.h"
+#include "CodeConversions.h"
 #include "../ShuttleGui.h"
 #include "../HelpText.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "HelpSystem.h"
 
 BEGIN_EVENT_TABLE(ErrorDialog, wxDialogWrapper)
@@ -48,8 +50,8 @@ ErrorDialog::ErrorDialog(
    wxWindow *parent,
    const TranslatableString & dlogTitle,
    const TranslatableString & message,
-   const wxString & helpPage,
-   const wxString & log,
+   const ManualPageID & helpPage,
+   const std::wstring & log,
    const bool Close, const bool modal)
 :  wxDialogWrapper(parent, wxID_ANY, dlogTitle,
                    wxDefaultPosition, wxDefaultSize,
@@ -129,12 +131,13 @@ void ErrorDialog::OnOk(wxCommandEvent & WXUNUSED(event))
 
 void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   if( dhelpPage.StartsWith(wxT("innerlink:")) )
+   const auto &str = dhelpPage.GET();
+   if( str.StartsWith(wxT("innerlink:")) )
    {
       HelpSystem::ShowHtmlText(
          this,
-         TitleText(dhelpPage.Mid( 10 ) ),
-         HelpText( dhelpPage.Mid( 10 )),
+         TitleText(str.Mid( 10 ) ),
+         HelpText( str.Mid( 10 )),
          false,
          true );
       return;
@@ -143,55 +146,4 @@ void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
    //OpenInDefaultBrowser( dhelpURL );
    if(dClose)
       EndModal(true);
-}
-
-void ShowErrorDialog(wxWindow *parent,
-                     const TranslatableString &dlogTitle,
-                     const TranslatableString &message,
-                     const wxString &helpPage,
-                     const bool Close,
-                     const wxString &log)
-{
-   ErrorDialog dlog(parent, dlogTitle, message, helpPage, log, Close);
-   dlog.CentreOnParent();
-   dlog.ShowModal();
-}
-
-
-// unused.
-void ShowModelessErrorDialog(wxWindow *parent,
-                             const TranslatableString &dlogTitle,
-                             const TranslatableString &message,
-                             const wxString &helpPage,
-                             const bool Close,
-                             const wxString &log)
-{
-   // ensure it has some parent.
-   if( !parent )
-      parent = wxTheApp->GetTopWindow();
-   wxASSERT(parent);
-   ErrorDialog *dlog = safenew ErrorDialog(parent, dlogTitle, message, helpPage, log, Close, false);
-   dlog->CentreOnParent();
-   dlog->Show();
-   // ANSWER-ME: Vigilant Sentry flagged this method as not deleting dlog, so 
-   // is this actually a mem leak.
-   // PRL: answer is that the parent window guarantees destruction of the dialog
-   // but in practice Destroy() in OnOK does that
-}
-
-void AudacityTextEntryDialog::SetInsertionPointEnd()
-{
-   mSetInsertionPointEnd = true;
-}
-
-bool AudacityTextEntryDialog::Show(bool show)
-{
-   bool ret = wxTabTraversalWrapper< wxTextEntryDialog >::Show(show);
-
-   if (show && mSetInsertionPointEnd) {
-      // m_textctrl is protected member of wxTextEntryDialog
-      m_textctrl->SetInsertionPointEnd();
-   }
-
-   return ret;
 }

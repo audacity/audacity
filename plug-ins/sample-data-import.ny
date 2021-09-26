@@ -5,8 +5,8 @@ $name (_ "Sample Data Import")
 $manpage "Sample_Data_Import"
 $action (_ "Reading and rendering samples...")
 $author (_ "Steve Daulton")
-$release 2.3.0
-$copyright (_ "Released under terms of the GNU General Public License version 2")
+$release 3.0.4
+$copyright (_ "GNU General Public License v2.0 or later")
 
 $control filename (_ "Select file") file "" "*default*/sample-data.txt" (((_ "Text file") (txt TXT))
                         ((_ "All files") (""))) "open,exists"
@@ -14,7 +14,7 @@ $control bad-data (_ "Invalid data handling") choice (("ThrowError" (_ "Throw Er
                                                       ("ReadAsZero" (_ "Read as Zero"))) 0
 
 
-;; Released under terms of the GNU General Public License version 2:
+;; Released under terms of the GNU General Public License v2.0 or later:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:

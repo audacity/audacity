@@ -15,14 +15,14 @@
 #define __AUDACITY_APP__
 
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 
 
 #include <wx/app.h> // to inherit
 #include <wx/timer.h> // member variable
 
-#include "MemoryX.h"
+#include <memory>
 
 class wxSingleInstanceChecker;
 class wxSocketEvent;
@@ -40,9 +40,12 @@ class AudacityApp final : public wxApp {
    ~AudacityApp();
    bool OnInit(void) override;
    bool InitPart2();
+   int OnRun() override;
    int OnExit(void) override;
    void OnFatalException() override;
    bool OnExceptionInMainLoop() override;
+
+   void OnIdle( wxIdleEvent & );
 
    // These are currently only used on Mac OS, where it's
    // possible to have a menu bar but no windows open.  It doesn't

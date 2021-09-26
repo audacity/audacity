@@ -11,8 +11,7 @@ Paul Licameli
 #ifndef __AUDACITY_WAVEFORM_SETTINGS__
 #define __AUDACITY_WAVEFORM_SETTINGS__
 
-#include "../Internat.h" // for TranslatableStrings
-#include "../Prefs.h"
+#include "Prefs.h"
 
 class EnumValueSymbols;
 

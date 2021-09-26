@@ -13,7 +13,7 @@ Paul Licameli
 
 
 
-#include "MemoryX.h"
+#include <memory>
 #include "TrackPanelDrawable.h" // to inherit
 
 class AudacityProject;
@@ -109,7 +109,7 @@ public:
    // Default implementation does nothing
    virtual unsigned DoContextMenu
       (const wxRect &rect,
-       wxWindow *pParent, wxPoint *pPosition, AudacityProject *pProject);
+       wxWindow *pParent, const wxPoint *pPosition, AudacityProject *pProject);
 
    // Return value is a bitwise OR of RefreshCode values
    // Default skips the event and does nothing

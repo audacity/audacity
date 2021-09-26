@@ -25,7 +25,7 @@ with names like mod-script-pipe that add NEW features.
 
 #include "../ShuttleGui.h"
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ModuleSettings.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ TranslatableString ModulePrefs::GetDescription()
    return XO("Preferences for Module");
 }
 
-wxString ModulePrefs::HelpPageName()
+ManualPageID ModulePrefs::HelpPageName()
 {
    return "Modules_Preferences";
 }

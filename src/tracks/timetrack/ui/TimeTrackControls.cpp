@@ -12,7 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TimeTrackControls.h"
 
 #include "../../../HitTestResult.h"
-#include "../../../Project.h"
+#include "Project.h"
 #include "../../../ProjectHistory.h"
 #include "../../../RefreshCode.h"
 #include "../../../TimeTrack.h"
@@ -170,20 +170,17 @@ PopupMenuTable *TimeTrackControls::GetMenuExtension(Track *)
 }
 
 using DoGetTimeTrackControls = DoGetControls::Override< TimeTrack >;
-template<> template<> auto DoGetTimeTrackControls::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetTimeTrackControls) {
    return [](TimeTrack &track) {
       return std::make_shared<TimeTrackControls>( track.SharedPointer() );
    };
 }
-static DoGetTimeTrackControls registerDoGetTimeTrackControls;
 
 #include "../../ui/TrackView.h"
 
 using GetDefaultTimeTrackHeight = GetDefaultTrackHeight::Override< TimeTrack >;
-template<> template<>
-auto GetDefaultTimeTrackHeight::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetDefaultTimeTrackHeight) {
    return [](TimeTrack &) {
       return 100;
    };
 }
-static GetDefaultTimeTrackHeight registerGetDefaultTimeTrackHeight;

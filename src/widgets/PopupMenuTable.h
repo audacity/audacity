@@ -23,9 +23,9 @@ class wxCommandEvent;
 #include <functional>
 #include <vector>
 #include <wx/menu.h> // to inherit wxMenu
-#include "../MemoryX.h"
+#include <memory>
 
-#include "../Internat.h"
+#include "Internat.h"
 #include "../commands/CommandManager.h"
 
 class PopupMenuHandler;

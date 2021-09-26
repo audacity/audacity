@@ -16,6 +16,7 @@ Paul Licameli split from ProjectManager.h
 
 #include "AudioIOListener.h" // to inherit
 #include "ClientData.h" // to inherit
+#include <wx/event.h> // to declare custom event type
 
 constexpr int RATE_NOT_SELECTED{ -1 };
 
@@ -55,7 +56,9 @@ public:
    static bool UseDuplex();
 
    static TransportTracks GetAllPlaybackTracks(
-      TrackList &trackList, bool selectedOnly, bool useMidi = false);
+      TrackList &trackList, bool selectedOnly,
+      bool nonWaveToo = false //!< if true, collect all PlayableTracks
+   );
 
    explicit ProjectAudioManager( AudacityProject &project );
    ProjectAudioManager( const ProjectAudioManager & ) PROHIBITED;

@@ -1,9 +1,7 @@
-
-
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
@@ -11,7 +9,7 @@
 #include "../TrackInfo.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../prefs/GUIPrefs.h"
@@ -22,6 +20,7 @@
 #include "../effects/EffectUI.h"
 #endif
 
+#include <wx/app.h>
 #include <wx/scrolbar.h>
 
 // private helper classes and functions
@@ -145,11 +144,16 @@ void DoZoomFitV(AudacityProject &project)
          - range.sum( TrackView::GetTrackHeight );
    
    // Give each resized track the average of the remaining height
-   height = height / count;
+   // Bug 2803: Cast count to int, because otherwise the result of 
+   // division will be unsigned too, and will be a very large number 
+   // if height was negative!
+   height = height / (int)count;
+   // Use max() so that we don't set a negative height when there is
+   // not enough room.
    height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
 
    for (auto t : range)
-      TrackView::Get( *t ).SetHeight(height);
+      TrackView::Get( *t ).SetExpandedHeight(height);
 }
 }
 
@@ -327,8 +331,7 @@ void OnShowClipping(const CommandContext &context)
    gPrefs->Flush();
    commandManager.Check(wxT("ShowClipping"), checked);
 
-   wxTheApp->AddPendingEvent(wxCommandEvent{
-      EVT_PREFS_UPDATE, ShowClippingPrefsID() });
+   PrefsListener::Broadcast(ShowClippingPrefsID());
 
    trackPanel.Refresh(false);
 }
@@ -344,8 +347,7 @@ void OnShowNameOverlay(const CommandContext &context)
    gPrefs->Flush();
    commandManager.Check(wxT("ShowTrackNameInWaveform"), checked);
 
-   wxTheApp->AddPendingEvent(wxCommandEvent{
-      EVT_PREFS_UPDATE, ShowTrackNameInWaveformPrefsID() });
+   PrefsListener::Broadcast(ShowTrackNameInWaveformPrefsID());
 
    trackPanel.Refresh(false);
 }

@@ -2,10 +2,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-04-04 01:33+0100\n"
+"POT-Creation-Date: 2021-07-15 12:48-0400\n"
+"PO-Revision-Date: 2021-07-17 03:10+0100\n"
 "Last-Translator: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language-Team: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language: pt_PT\n"
@@ -13,8 +13,105 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.0\n"
 "X-Poedit-SourceCharset: iso-8859-1\n"
+
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, c-format
+msgid "Exception code 0x%x"
+msgstr "Código de exceção 0x%x"
+
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Unknown exception"
+msgstr "Exceção desconhecida"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Unknown error"
+msgstr "Erro desconhecido"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Problem Report for Audacity"
+msgstr "Relatório de Problemas para o Audacity"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr ""
+"Clique em \"Enviar\" para submeter o relatório ao Audacity. Esta informação "
+"é recolhida anonimamente."
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Problem details"
+msgstr "Detalhes do problema"
+
+#: crashreports/crashreporter/CrashReportApp.cpp src/Tags.cpp
+#: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
+msgid "Comments"
+msgstr "Comentários"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr "&Não enviar"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr "&Enviar"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Failed to send crash report"
+msgstr "Falhou ao enviar o relatório do crash"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "Não foi possível determinar"
+
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s bytes"
+msgstr "%s bytes"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr "%s KB"
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr "%s MB"
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr "%s GB"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "Simplified"
+msgstr "Simplificado"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "System"
+msgstr "Sistema"
+
+#: modules/mod-null/ModNullCallback.cpp
+msgid "1st Experimental Command..."
+msgstr "1º Comando Experimental…"
+
+#: modules/mod-null/ModNullCallback.cpp
+msgid "2nd Experimental Command"
+msgstr "2º Comando Experimental"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -387,8 +484,20 @@ msgstr "%s, programador"
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
+msgid "%s, developer and support"
+msgstr "%s, programador e suporte"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, c-format
 msgid "%s, documentation and support"
 msgstr "%s, documentação e suporte"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, QA tester, documentation and support"
+msgstr "%s, QA tester, documentação e suporte"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -490,8 +599,8 @@ msgid ""
 "our %s. For help, view the tips and tricks on our %s or visit our %s."
 msgstr ""
 "Se você encontrar um bug ou tiver uma sugestão para nós, por favor escreva, "
-"em inglês, para o nosso %s. Para obter ajuda, veja os truques e dicas nos "
-"nossos %s ou visite os nossos %s."
+"em Inglês, para o nosso %s. Para obter ajuda, veja os truques e dicas no "
+"nosso %s ou visite o nosso %s."
 
 #. i18n-hint substitutes into "write to our %s"
 #: src/AboutDialog.cpp
@@ -603,8 +712,8 @@ msgstr "%s software is copyright %s 1999-2021 %s Team."
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
-msgstr "O nome %s é uma marca registada de Dominic Mazzoni."
+msgid "The name %s is a registered trademark."
+msgstr "O nome %s é uma marca registada."
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
@@ -747,8 +856,40 @@ msgid "Extreme Pitch and Tempo Change support"
 msgstr "Suporte a Mudança Extrema de Tom e Ritmo"
 
 #: src/AboutDialog.cpp
+msgctxt "about dialog"
+msgid "Legal"
+msgstr "Legal"
+
+#: src/AboutDialog.cpp
 msgid "GPL License"
 msgstr "Licença GPL"
+
+#. i18n-hint: For "About Audacity...": Title for Privacy Policy section
+#: src/AboutDialog.cpp
+msgctxt "about dialog"
+msgid "PRIVACY POLICY"
+msgstr "POLÍTICA DE PRIVACIDADE"
+
+#: src/AboutDialog.cpp
+msgid ""
+"App update checking and error reporting require network access. These "
+"features are optional."
+msgstr ""
+"A verificação de atualização de aplicações e o relato de erros requerem "
+"acesso à rede. Estas características são opcionais."
+
+#. i18n-hint: %s will be replaced with "our Privacy Policy"
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "See %s for more info."
+msgstr "Verifique %s para mais informação."
+
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+msgid "our Privacy Policy"
+msgstr "nossa Política de Privacidade"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -860,14 +1001,16 @@ msgstr ""
 "Impossível bloquear a região prescrita\n"
 "fim do projeto."
 
-#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/ProjectAudioManager.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/FileNames.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "Erro"
@@ -1171,7 +1314,7 @@ msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
-#: src/widgets/MultiDialog.cpp
+#: src/widgets/ErrorReportDialog.cpp src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "Ajuda"
 
@@ -1632,7 +1775,7 @@ msgstr "\"%s\" requer uma ou mais faixas a serem selecionadas."
 #: src/BatchCommands.cpp
 #, c-format
 msgid "Your batch command of %s was not recognized."
-msgstr "O seu comando para processar em lote de %s não foi reconhecido."
+msgstr "O seu comando de lote de %s não foi reconhecido."
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
@@ -2127,8 +2270,24 @@ msgid "Report generated to:"
 msgstr "Relato gerado para:"
 
 #: src/DBConnection.cpp
+#, c-format
+msgid "(%d): %s"
+msgstr "(%d): %s"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "Falhou na definição do modo de segurança na ligação primária à %s"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr ""
+"Não conseguiu definir o modo de segurança na ligação de controlo para %s"
+
+#: src/DBConnection.cpp
 msgid "Checkpointing project"
-msgstr "Checkpointing projeto"
+msgstr "Projeto de checkpoint"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2596,6 +2755,11 @@ msgstr ""
 msgid "Specify New Filename:"
 msgstr "Indique um novo nome para o ficheiro:"
 
+#: src/FileNames.cpp
+#, c-format
+msgid "Directory %s does not have write permissions"
+msgstr "O diretório %s não tem permissões de escrita"
+
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
 msgstr "Análise da Frequência"
@@ -2878,7 +3042,7 @@ msgstr "Como obter ajuda"
 
 #: src/HelpText.cpp
 msgid "These are our support methods:"
-msgstr "Estas são as nossas opções de suporte:"
+msgstr "Estes são os nossos métodos de apoio:"
 
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: src/HelpText.cpp
@@ -3044,33 +3208,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr "Erro Interno"
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "Não foi possível determinar"
-
-#: src/Internat.cpp
-#, c-format
-msgid "%s bytes"
-msgstr "%s bytes"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr "%s KB"
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr "%s MB"
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr "%s GB"
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr "Editar Rótulos"
@@ -3081,8 +3218,8 @@ msgid "Track"
 msgstr "Faixa"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "Rótulo"
@@ -3178,14 +3315,6 @@ msgstr ""
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Confirm"
 msgstr "Confirmar"
-
-#: src/Languages.cpp
-msgid "Simplified"
-msgstr "Simplificado"
-
-#: src/Languages.cpp
-msgid "System"
-msgstr "Sistema"
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -3681,6 +3810,10 @@ msgstr[1] "Ativar estes plug-ins?\n"
 msgid "Enable new plug-ins"
 msgstr "Ativar novos plug-ins"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "Linha de Comandos Nyquist"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Houve um problema ao imprimir."
@@ -4053,13 +4186,13 @@ msgstr "Isto não é um ficheiro de projeto Audacity"
 
 #: src/ProjectFileIO.cpp
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
-"Este projeto foi criado com uma nova versão do Audacity:\n"
+"Este projeto foi criado com uma nova versão do Audacity.\n"
 "\n"
-"Precisa de atualizá-lo para continuar"
+"Precisa de atualizar para o abrir."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4230,6 +4363,10 @@ msgstr "Não foi possível abrir o ficheiro do projeto"
 msgid "Failed to remove the autosave information from the project file."
 msgstr ""
 "Falha ao remover as informações de guardar automático do ficheiro do projeto."
+
+#: src/ProjectFileIO.cpp
+msgid "Unable to bind to blob"
+msgstr "Incapaz de se ligar à bolha"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4465,14 +4602,6 @@ msgstr "Erro ao Abrir o Projeto"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"Project resides on FAT formatted drive.\n"
-"Copy it to another drive to open it."
-msgstr ""
-"O projeto reside numa drive formatada em FAT.\n"
-"Copie para outra drive para o abrir."
-
-#: src/ProjectFileManager.cpp
-msgid ""
 "You are trying to open an automatically created backup file.\n"
 "Doing this may result in severe data loss.\n"
 "\n"
@@ -4507,6 +4636,14 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 msgid "Error Opening File or Project"
 msgstr "Erro ao Abrir Ficheiro ou Projeto"
+
+#: src/ProjectFileManager.cpp
+msgid ""
+"Project resides on FAT formatted drive.\n"
+"Copy it to another drive to open it."
+msgstr ""
+"O projeto reside numa drive formatada em FAT.\n"
+"Copie para outra drive para o abrir."
 
 #: src/ProjectFileManager.cpp
 msgid "Project was recovered"
@@ -4709,7 +4846,7 @@ msgid "24-bit PCM"
 msgstr "24 bit PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32-bit float"
 
@@ -4990,7 +5127,7 @@ msgstr "Nível de ativação (dB):"
 msgid "Welcome to Audacity!"
 msgstr "Bem-vindo ao Audacity!"
 
-#: src/SplashDialog.cpp
+#: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "Não mostrar novamente ao iniciar"
 
@@ -5021,10 +5158,6 @@ msgstr "Ano"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "Género"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "Comentários"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -5917,7 +6050,8 @@ msgstr "Arrastar"
 msgid "Panel"
 msgstr "Painel"
 
-#: src/commands/DragCommand.cpp
+#: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
 msgid "Application"
 msgstr "Aplicação"
 
@@ -6426,6 +6560,16 @@ msgstr "Tempo:"
 msgid "Delete"
 msgstr "Apagar"
 
+#: src/commands/SetEnvelopeCommand.cpp
+msgid "Edited Envelope"
+msgstr "Envelope Editado"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "Envelope"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr "Define uma posição do ponto do envelope."
@@ -6445,6 +6589,10 @@ msgstr "Fim:"
 #: src/commands/SetLabelCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Selected"
 msgstr "Selecionado"
+
+#: src/commands/SetLabelCommand.cpp
+msgid "Edited Label"
+msgstr "Rótulo Editado"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -6565,9 +6713,11 @@ msgstr "Utilizar Spectral Prefs"
 msgid "Spectral Select"
 msgstr "Seleção Espectral"
 
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Gray Scale"
-msgstr "Escala de Cinzentos"
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr "Esque&ma"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track"
@@ -6937,12 +7087,12 @@ msgstr "Alterar Ritmo sem alterar o Tom"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
-msgstr "Batidas por minuto"
+msgstr "Batimentos por minuto"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, from"
-msgstr "Batidas por Minuto, de"
+msgstr "Batimentos por minuto, de"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
@@ -6953,7 +7103,7 @@ msgstr "&de"
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, to"
-msgstr "Batidas por Minuto, para"
+msgstr "Batimentos por minuto, para"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
@@ -8079,10 +8229,6 @@ msgstr "Parar &Playback"
 #: src/effects/EffectUI.cpp src/toolbars/ControlToolBar.cpp
 msgid "Play"
 msgstr "Reproduzir"
-
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Linha de Comandos Nyquist"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
@@ -9241,7 +9387,7 @@ msgstr "Catedral"
 
 #: src/effects/Reverb.cpp
 msgid "Reverb"
-msgstr "Ressonância"
+msgstr "Reverb"
 
 #: src/effects/Reverb.cpp
 msgid "Adds ambience or a \"hall effect\""
@@ -9257,7 +9403,7 @@ msgstr "&Pré-atraso (ms):"
 
 #: src/effects/Reverb.cpp
 msgid "Rever&berance (%):"
-msgstr "Resso&nância (%):"
+msgstr "Rever&beração (%):"
 
 #: src/effects/Reverb.cpp
 msgid "Da&mping (%):"
@@ -9290,7 +9436,7 @@ msgstr "&Apenas Húmido"
 #: src/effects/Reverb.cpp
 #, c-format
 msgid "Reverb: %s"
-msgstr "Ressonância: %s"
+msgstr "Reverb: %s"
 
 #: src/effects/Reverse.cpp
 msgid "Reverse"
@@ -9560,7 +9706,7 @@ msgstr "Quadrado, sem gradações"
 
 #: src/effects/ToneGen.cpp
 msgid "Chirp"
-msgstr "Chilro"
+msgstr "Chirp"
 
 #: src/effects/ToneGen.cpp
 msgid "Tone"
@@ -10162,6 +10308,14 @@ msgstr "Cabeçalho Ill-formed Nyquist plug-in"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+"Ativar a vista de espectrograma de faixa antes\n"
+"de aplicar os efeitos \"Espectral\"."
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
@@ -10581,7 +10735,7 @@ msgstr "Exportando o áudio usando codificador linha de comando"
 msgid "Command Output"
 msgstr "Saída do Comando"
 
-#: src/export/ExportCL.cpp
+#: src/export/ExportCL.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&OK"
 
@@ -11512,15 +11666,6 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (Ficheiros Pequenos)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "Rápido"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "Padrão"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11546,6 +11691,11 @@ msgstr "Insano"
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
 msgstr "Extremo"
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "Padrão"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium"
@@ -11579,10 +11729,6 @@ msgstr "Modo da Taxa de Bits:"
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Qualidade"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "Pulsação Variável:"
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -13201,7 +13347,7 @@ msgstr "&Metadados…"
 
 #: src/menus/EditMenus.cpp
 msgid "Pre&ferences..."
-msgstr "&Preferências..."
+msgstr "Pre&ferências…"
 
 #: src/menus/EditMenus.cpp
 msgid "&Delete Key"
@@ -13501,10 +13647,6 @@ msgid "MIDI Device Info"
 msgstr "Informação Dispositivo MIDI"
 
 #: src/menus/HelpMenus.cpp
-msgid "Menu Tree"
-msgstr "Menu Árvore"
-
-#: src/menus/HelpMenus.cpp
 msgid "&Quick Fix..."
 msgstr "&Conserto Rápido…"
 
@@ -13536,17 +13678,13 @@ msgstr "Informações do &Dispositivo de Áudio…"
 msgid "&MIDI Device Info..."
 msgstr "Informação do Dispositivo &MIDI…"
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "Mostrar &Relatório..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
 msgstr "&Gerar Dados de Suporte…"
-
-#: src/menus/HelpMenus.cpp
-msgid "Menu Tree..."
-msgstr "Menu Árvore…"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
@@ -14572,7 +14710,7 @@ msgstr "Misturar e Processar para No&va Faixa"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Resample..."
-msgstr "&Resample..."
+msgstr "&Resample…"
 
 #: src/menus/TrackMenus.cpp
 msgid "Remo&ve Tracks"
@@ -14669,7 +14807,7 @@ msgstr "Fai&xa"
 
 #: src/menus/TrackMenus.cpp
 msgid "Change P&an on Focused Track..."
-msgstr "Alterar o Balanço n&a Faixa Focada…"
+msgstr "Alterar o B&alanço na Faixa Focada…"
 
 #: src/menus/TrackMenus.cpp
 msgid "Pan &Left on Focused Track"
@@ -14724,16 +14862,17 @@ msgid "Move Focused Track to &Bottom"
 msgstr "Mover a Faixa Focada para &Último"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
 msgid "Playing"
 msgstr "Reproduzindo"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
-#: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp
-#: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
-#: src/prefs/RecordingPrefs.h src/toolbars/ControlToolBar.cpp
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/menus/TransportMenus.cpp src/prefs/MidiIOPrefs.cpp
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "Gravação"
 
@@ -14960,7 +15099,7 @@ msgstr "Reproduzir C&ut Preview-at-Speed"
 
 #: src/menus/TransportMenus.cpp
 msgid "Ad&just Playback Speed..."
-msgstr "Ajustar a vel&ocidade de reprodução…"
+msgstr "A&justar a Velocidade de Reprodução…"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Increase Playback Speed"
@@ -15053,6 +15192,10 @@ msgid "&Extra Menus (on/off)"
 msgstr "&Extra Menus (ligado/desligado)"
 
 #: src/menus/ViewMenus.cpp
+msgid "Track &Name (on/off)"
+msgstr "&Nome da Faixa (ligado/desligado)"
+
+#: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
 msgstr "&Mostrar Clipping (ligado/desligado)"
 
@@ -15094,6 +15237,30 @@ msgstr "A Descodificar a Forma da Onda"
 #, c-format
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% completo.  Clique para mudar o ponto do foco da tarefa."
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "Preferences for Application"
+msgstr "Preferências para Aplicação"
+
+#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#: src/prefs/ApplicationPrefs.cpp
+msgid "Update notifications"
+msgstr "Notificações de atualização"
+
+#. i18n-hint: Check-box title that configures periodic updates checking.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Check for updates"
+msgstr "Verifi&car atualizações"
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid ""
+"App update checking requires network access. In order to protect your "
+"privacy, Audacity does not store any personal information."
+msgstr ""
+"A verificação de atualização da aplicação requer acesso à rede. Para "
+"proteger a sua privacidade, o Audacity não armazena nenhuma informação "
+"pessoal."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -15143,6 +15310,13 @@ msgstr "Reprodução"
 msgid "&Device:"
 msgstr "&Dispositivo:"
 
+#. i18n-hint: modifier as in "Recording preferences", not progressive verb
+#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/prefs/RecordingPrefs.h
+msgctxt "preference"
+msgid "Recording"
+msgstr "Gravando"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
 msgstr "Dispositi&vo:"
@@ -15186,6 +15360,7 @@ msgstr "2 (Estéreo)"
 
 #. i18n-hint:  Directories, also called directories, in computer file systems
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Directories"
 msgstr "Pastas"
 
@@ -15239,6 +15414,10 @@ msgid "Bro&wse..."
 msgstr "Pesqu&isar…"
 
 #: src/prefs/DirectoriesPrefs.cpp
+msgid "&Macro output:"
+msgstr "&Macro output:"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "Pasta de ficheiros temporários"
 
@@ -15258,10 +15437,6 @@ msgstr "Pesqui&sar…"
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "Espaço &Livre:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Free Space"
-msgstr "Espaço Livre"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -15600,10 +15775,6 @@ msgstr "Mostrar Régua de Percorrer"
 msgid "Language \"%s\" is unknown"
 msgstr "Idioma \"%s\" é desconhecido"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "Controlo do Volume Principal"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "GUI"
@@ -15638,7 +15809,7 @@ msgstr "&Segundos"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Beats"
-msgstr "&Batidas"
+msgstr "&Batimentos"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When exporting tracks to an audio file"
@@ -15866,24 +16037,8 @@ msgid "MP3 Library Version:"
 msgstr "Versão da Biblioteca MP3:"
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "Biblioteca MP3 LAME:"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr "&Localizar..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr "&Transferir"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "Biblioteca de Importação/Exportação FFmpeg"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "Versão da Biblioteca FFmpeg:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -15892,6 +16047,10 @@ msgstr "Não encontrada biblioteca FFmpeg compatível"
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
 msgstr "Suporte a FFmpeg não está compilado em"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "Versão da Biblioteca FFmpeg:"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -16153,11 +16312,6 @@ msgid "Move clip up/down between tracks"
 msgstr "Mover clipe para cima/baixo entre faixas"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "Envelope"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "Alterar o Envelope da Amplificação"
@@ -16292,14 +16446,6 @@ msgid "Preferences:"
 msgstr "Preferências:"
 
 #: src/prefs/QualityPrefs.cpp
-msgid "16-bit"
-msgstr "16-bit"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "24-bit"
-msgstr "24-bit"
-
-#: src/prefs/QualityPrefs.cpp
 msgid "Preferences for Quality"
 msgstr "Preferências para Qualidade"
 
@@ -16349,6 +16495,14 @@ msgstr "Conversor da &Taxa de Sample:"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Pon&tilhar:"
+
+#: src/prefs/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16-bit"
+
+#: src/prefs/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24-bit"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
@@ -16484,6 +16638,30 @@ msgstr "ERB"
 msgid "Period"
 msgstr "Período"
 
+#. i18n-hint: New color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "Cor (padrão)"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Cor (clássico)"
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Escala de Cinza"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "Escala de cinza inversa"
+
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Frequencies"
 msgstr "Frequências"
@@ -16566,10 +16744,6 @@ msgstr "&Intervalo (dB):"
 #: src/prefs/SpectrumPrefs.cpp
 msgid "High &boost (dB/dec):"
 msgstr "High &boost (dB/dec):"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "Gra&yscale"
-msgstr "Es&cala de Cinzentos"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Algorithm"
@@ -17007,7 +17181,8 @@ msgid "Waveform dB &range:"
 msgstr "&Alcance dB da forma de onda:"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/toolbars/ControlToolBar.cpp
 msgid "Stopped"
 msgstr "Parado"
@@ -18274,6 +18449,103 @@ msgstr "Arraste para Ampliar a Área, Prima o Botão Direito para Diminuir"
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Esquerdo=Ampliar, Direito=Diminuir, Meio=Normal"
 
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "Erro ao verificar por atualização"
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr "Não é possível ligar ao servidor de atualização do Audacity."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr "Os dados de atualização estavam corrompidos."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "Erro ao descarregar atualização."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr "Não pode abrir o link de atualização do Audacity."
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App update checking"
+msgstr "Verificação de atualização da aplicação"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid ""
+"To stay up to date, you will receive an in-app notification whenever there "
+"is a new version of Audacity available to download."
+msgstr ""
+"Para se manter atualizado, receberá uma notificação in-app sempre que houver "
+"uma nova versão do Audacity disponível para download."
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid ""
+"In order to protect your privacy, Audacity does not collect any personal "
+"information. However, app update checking does require network access."
+msgstr ""
+"Para proteger a sua privacidade, o Audacity não recolhe nenhuma informação "
+"pessoal. No entanto, a verificação de atualização da aplicação requer acesso "
+"à rede."
+
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can turn off app update checking at any time in %s."
+msgstr ""
+"Pode desativar a verificação de atualização da aplicação a qualquer momento "
+"em %s."
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App updates"
+msgstr "Atualizações da aplicação"
+
+#. i18n-hint: a page in the Preferences dialog; use same name
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Preferences > Application"
+msgstr "Preferências > Aplicação"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "Atualizar Audacity"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "&Saltar"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr "&Instalar atualização"
+
+# Diz assim 'barra de dispositivo do audacity' 'barra de transcrição do audacity'
+#. i18n-hint Substitution of version number for %s.
+#: src/update/UpdatePopupDialog.cpp
+#, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "Audacity %s está disponível!"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "Changelog"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr "Ler mais no GitHub"
+
 #: src/widgets/AButton.cpp
 msgid "(disabled)"
 msgstr "(desativado)"
@@ -18851,6 +19123,32 @@ msgstr "Tem certeza de que deseja fechar %s?"
 msgid "Confirm Close"
 msgstr "Confirmar Fecho"
 
+#. i18n-hint: %s is replaced with a directory path.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, c-format
+msgid "Unable to write files to directory: %s."
+msgstr "Impossível escrever ficheiros para o diretório: %s."
+
+#. i18n-hint: This message describes the error in the Error dialog.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+msgid ""
+"Please check that the directory exists, has the necessary permissions, and "
+"the drive isn't full."
+msgstr ""
+"Por favor, verifique se o diretório existe, tem as permissões necessárias, e "
+"se a unidade não está cheia."
+
+#. i18n-hint: %s is replaced with 'Preferences > Directories'.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, c-format
+msgid "You can change the directory in %s."
+msgstr "Pode mudar o diretório em %s."
+
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+msgid "Preferences > Directories"
+msgstr "Preferências > Diretórios"
+
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "Não mostrar este aviso novamente"
@@ -18994,7 +19292,7 @@ msgstr ""
 "                      ou reduzir o filtro 'Width'."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%"
 msgstr "Erro.~%"
@@ -19203,11 +19501,11 @@ msgstr ""
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
-msgstr "Localizador de Batidas"
+msgstr "Beat Finder"
 
 #: plug-ins/beat.ny
 msgid "Finding beats..."
-msgstr "Encontrando batidas…"
+msgstr "Encontrando batimentos…"
 
 #: plug-ins/beat.ny
 msgid "Threshold Percentage"
@@ -19403,12 +19701,12 @@ msgstr "Erro.~%Impossível abrir ficheiro~%~s"
 #: plug-ins/eq-xml-to-txt-converter.ny
 #, lisp-format
 msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-msgstr "Erro.~%Sobrescrita de ficheiro não permitida:~%\"~a.txt\""
+msgstr "Erro.~%Ficheiro não pode ser sobrescrito:~%\"~a.txt\""
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 #, lisp-format
 msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "Erro.~%O ficheiro não pode ser escrito:~%\"~a.txt\""
+msgstr "Erro.~%Ficheiro não pode ser escrito:~%\"~a.txt\""
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
@@ -19665,9 +19963,11 @@ msgid "~ah ~am ~as"
 msgstr "~ah ~am ~as"
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
+#, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr ""
-"Muitos silêncios detetados.nApenas os primeiros 10000 rótulos adicionados."
+"Demasiados silêncios detetados.~%Apenas os primeiros 10000 rótulos "
+"adicionados."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
@@ -19927,22 +20227,20 @@ msgid "Allow"
 msgstr "Permitir"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Error.n"
-msgstr "Erro.n"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr "Sucesso.~%Ficheiros escritos para:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
-msgstr "Atenção.nFalha ao copiar alguns ficheiros:n"
+#, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
+msgstr "Aviso.~%Falhou ao copiar alguns ficheiros:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
+#, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
 msgstr ""
-"Plug-ins instalados.n(Utilizar o Gestor de Plug-ins para ativar efeitos):"
+"Plug-ins instalados.~%(Utilize o Gestor plug-in para ativar os efeitos):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -20013,12 +20311,9 @@ msgstr "Duração (60s max)"
 msgid "Rhythm Track"
 msgstr "Faixa de Ritmo"
 
-# chirp=trilo
-# no audacity tom programavel
-# alterado para trilo
 #: plug-ins/rhythmtrack.ny
 msgid "Generating Rhythm..."
-msgstr "A gerar Ritmo…"
+msgstr "A Gerar Ritmo…"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
@@ -20026,15 +20321,15 @@ msgstr "Tempo (bpm)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "30 - 300 beats/minute"
-msgstr "30 - 300 batidas/minuto"
+msgstr "30 - 300 batimentos/minuto"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Beats per bar"
-msgstr "Batidas por barra"
+msgstr "Batimentos por compasso"
 
 #: plug-ins/rhythmtrack.ny
 msgid "1 - 20 beats/measure"
-msgstr "1 - 20 batidas/medida"
+msgstr "1 - 20 batimentos/medida"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Swing amount"
@@ -20528,7 +20823,7 @@ msgstr "Tremolo"
 
 #: plug-ins/tremolo.ny
 msgid "Applying Tremolo..."
-msgstr "Aplicar Trémolo…"
+msgstr "Aplicar Tremolo…"
 
 #: plug-ins/tremolo.ny
 msgid "Waveform type"
@@ -20669,8 +20964,8 @@ msgid ""
 "reverb."
 msgstr ""
 " - Um valor ideal para Estéreo.\n"
-"                Contudo, a extração do centro depende também da ressonância "
-"utilizada."
+"                Contudo, a extração do centro depende também do reverb "
+"utilizado."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20765,6 +21060,51 @@ msgstr "Frequência de Agulhas de Radar (Hz)"
 msgid "Error.~%Stereo track required."
 msgstr "Erro.~%Requer faixa estéreo."
 
+#~ msgid "Unknown assertion"
+#~ msgstr "Afirmação desconhecida"
+
+#~ msgid "Can't open new empty project"
+#~ msgstr "Não pode abrir novo projeto vazio"
+
+#~ msgid "Error opening a new empty project"
+#~ msgstr "Erro ao abrir um novo projeto vazio"
+
+#~ msgid "Gray Scale"
+#~ msgstr "Escala de Cinzentos"
+
+#~ msgid "Menu Tree"
+#~ msgstr "Menu Árvore"
+
+#~ msgid "Menu Tree..."
+#~ msgstr "Menu Árvore…"
+
+#~ msgid "Gra&yscale"
+#~ msgstr "Es&cala de Cinzentos"
+
+#~ msgid "Fast"
+#~ msgstr "Rápido"
+
+#~ msgid "Variable Speed:"
+#~ msgstr "Pulsação Variável:"
+
+#~ msgid "Free Space"
+#~ msgstr "Espaço Livre"
+
+#~ msgid "Master Gain Control"
+#~ msgstr "Controlo do Volume Principal"
+
+#~ msgid "LAME MP3 Library:"
+#~ msgstr "Biblioteca MP3 LAME:"
+
+#~ msgid "&Locate..."
+#~ msgstr "&Localizar..."
+
+#~ msgid "&Download"
+#~ msgstr "&Transferir"
+
+#~ msgid "Error.n"
+#~ msgstr "Erro.n"
+
 #~ msgid "Cleanup of orphan blocks failed"
 #~ msgstr "Limpeza de blocos órfãos falhou"
 
@@ -20845,9 +21185,6 @@ msgstr "Erro.~%Requer faixa estéreo."
 
 #~ msgid "Select to Ends"
 #~ msgstr "Selecionar para Fins"
-
-#~ msgid "Special Command"
-#~ msgstr "Comando Especial"
 
 #~ msgid ""
 #~ "Export recording to %s\n"
@@ -20969,9 +21306,6 @@ msgstr "Erro.~%Requer faixa estéreo."
 
 #~ msgid "Could not remove old autosave file: %s"
 #~ msgstr "Não pode remover antigo ficheiro autosave: %s"
-
-#~ msgid "Error decoding file"
-#~ msgstr "Erro ao descodificar ficheiro"
 
 #~ msgid ""
 #~ "Could not save project. Perhaps %s \n"
@@ -23368,9 +23702,6 @@ msgstr "Erro.~%Requer faixa estéreo."
 
 #~ msgid "Using block size of %ld\n"
 #~ msgstr "A usar blocos do tamanho de %ld\n"
-
-#~ msgid "Unknown command line option: %s\n"
-#~ msgstr "Opção da linha de comandos desconhecida: %s\n"
 
 #~ msgid "Command-line options supported:"
 #~ msgstr "Opções disponíveis na linha de comando:"

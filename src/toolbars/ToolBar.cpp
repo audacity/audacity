@@ -49,11 +49,11 @@ in which buttons can be placed.
 #include "../AllThemeResources.h"
 #include "../AColor.h"
 #include "../ImageManipulation.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../commands/CommandManager.h"
 #include "../widgets/AButton.h"
 #include "../widgets/Grabber.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 
 ////////////////////////////////////////////////////////////
 /// ToolBarResizer

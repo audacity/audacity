@@ -44,8 +44,11 @@ class AUDACITY_DLL_API LabelTrackView final : public CommonTrackView
    void Reparent( const std::shared_ptr<Track> &parent ) override;
 
 public:
-   enum : int { DefaultFontSize = 12 };
-   
+   enum : int { DefaultFontSize = 0 }; //system preferred
+   static constexpr int TextFramePadding { 2 };
+   static constexpr int TextFrameYOffset { -1 };
+   static constexpr int LabelBarHeight { 6 }; 
+
    explicit
    LabelTrackView( const std::shared_ptr<Track> &pTrack );
    ~LabelTrackView() override;
@@ -109,9 +112,6 @@ public:
 
    void Draw( TrackPanelDrawingContext &context, const wxRect & r ) const;
 
-   int GetSelectedIndex( AudacityProject &project ) const;
-   void SetSelectedIndex( int index );
-
    bool CutSelectedText( AudacityProject &project );
    bool CopySelectedText( AudacityProject &project );
    bool PasteSelectedText(
@@ -143,19 +143,13 @@ private:
 public:
    struct Flags {
       int mInitialCursorPos, mCurrentCursorPos;
-      Index mSelIndex{-1};
-      bool mDrawCursor;
+      Index mNavigationIndex;
+      Index mTextEditIndex;
       wxString mUndoLabel;
    };
 
    void ResetFlags();
-   Flags SaveFlags() const
-   {
-      return {
-         mInitialCursorPos, mCurrentCursorPos, mSelIndex,
-         mDrawCursor, mUndoLabel
-      };
-   }
+   Flags SaveFlags() const;
    void RestoreFlags( const Flags& flags );
 
    static int OverATextBox( const LabelTrack &track, int xx, int yy );
@@ -187,7 +181,11 @@ public:
 private:
    void OnContextMenu( AudacityProject &project, wxCommandEvent & evt);
 
-   mutable Index mSelIndex{-1};  /// Keeps track of the currently selected label
+   /// Keeps track of the currently selected label (not same as selection region)
+   /// used for navigation between labels
+   mutable Index mNavigationIndex{ -1 };
+   /// Index of the current label text beeing edited
+   mutable Index mTextEditIndex{ -1 };
 
    mutable wxString mUndoLabel;
 
@@ -202,8 +200,7 @@ private:
    mutable int mCurrentCursorPos;                  /// current cursor position
    mutable int mInitialCursorPos;                  /// initial cursor position
 
-   mutable bool mDrawCursor;                       /// flag to tell if drawing the
-                                                   /// cursor or not
+   
    int mRestoreFocus{-2};                          /// Restore focus to this track
                                                    /// when done editing
 
@@ -212,18 +209,28 @@ private:
    static void DrawLines( wxDC & dc, const LabelStruct &ls, const wxRect & r);
    static void DrawGlyphs( wxDC & dc, const LabelStruct &ls, const wxRect & r,
       int GlyphLeft, int GlyphRight);
+   static int GetTextFrameHeight();
    static void DrawText( wxDC & dc, const LabelStruct &ls, const wxRect & r);
    static void DrawTextBox( wxDC & dc, const LabelStruct &ls, const wxRect & r);
+   static void DrawBar(wxDC& dc, const LabelStruct& ls, const wxRect& r);
    static void DrawHighlight(
       wxDC & dc, const LabelStruct &ls, int xPos1, int xPos2, int charHeight);
 
 public:
    /// convert pixel coordinate to character position in text box
-   int FindCursorPosition(wxCoord xPos);
+   int FindCursorPosition(int labelIndex, wxCoord xPos);
    int GetCurrentCursorPosition() const { return mCurrentCursorPos; }
    void SetCurrentCursorPosition(int pos);
    int GetInitialCursorPosition() const { return mInitialCursorPos; }
-   void SetTextHighlight( int initialPosition, int currentPosition );
+
+   /// Sets the label with specified index for editing,
+   /// optionaly selection may be specified with [start, end]
+   void SetTextSelection(int labelIndex, int start = 1, int end = 1);
+   int GetTextEditIndex(AudacityProject& project) const;
+   void ResetTextSelection();
+
+   void SetNavigationIndex(int index);
+   int GetNavigationIndex(AudacityProject& project) const;
 
 private:
 
@@ -234,8 +241,7 @@ private:
 
    static void calculateFontHeight(wxDC & dc);
 
-public:
-   bool HasSelection( AudacityProject &project ) const;
+   bool IsValidIndex(const Index& index, AudacityProject& project) const;
 
 private:
    void RemoveSelectedText();

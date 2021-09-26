@@ -11,6 +11,10 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
    message(FATAL_ERROR "Audacity requires at least GCC 4.9")
 endif ()
 
+if( EXISTS "${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules/Variables.cmake" )
+   include( "${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules/Variables.cmake" )
+endif()
+
 # We only do alpha builds, beta builds, and release versions.
 # Most of the time we're in development, so AUDACITY_BUILD_LEVEL should be
 # defined to 0.
@@ -19,14 +23,16 @@ endif ()
 # still link to the alpha manual online.
 
 # Set this value to 0 for alpha, 1 for beta, 2 for release builds
-set( AUDACITY_BUILD_LEVEL 0 )
+if( NOT DEFINED AUDACITY_BUILD_LEVEL )
+   set( AUDACITY_BUILD_LEVEL 0 CACHE STRING "0 for alpha, 1 for beta, 2 for release builds" )
+endif()
 
 # The Audacity version
 # Increment as appropriate after release of a new version, and set back
 # AUDACITY_BUILD_LEVEL to 0
 set( AUDACITY_VERSION 3 )
-set( AUDACITY_RELEASE 0 )
-set( AUDACITY_REVISION 3 )
+set( AUDACITY_RELEASE 1 )
+set( AUDACITY_REVISION 0 )
 set( AUDACITY_MODLEVEL 0 )
 
 string( TIMESTAMP __TDATE__ "%Y%m%d" )
@@ -78,13 +84,14 @@ cmake_policy( SET CMP0075 NEW )
 
 # Definitions that must happen before the project() command
 if( APPLE )
-
+   set( MIN_MACOS_VERSION 10.9 )
+   set( TARGET_MACOS_VERSION 10.13 )
    # Generate schema files
    set( CMAKE_XCODE_GENERATE_SCHEME ON )
 
    # Define the OSX compatibility parameters
    set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
-   set( CMAKE_OSX_DEPLOYMENT_TARGET 10.7 CACHE INTERNAL "" )
+   set( CMAKE_OSX_DEPLOYMENT_TARGET ${MIN_MACOS_VERSION} CACHE INTERNAL "" )
    set( CMAKE_OSX_SYSROOT macosx CACHE INTERNAL "" )
    set( CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "" CACHE INTERNAL "" )
 
@@ -96,7 +103,18 @@ if( APPLE )
 endif()
 
 # Add our module path
-set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules)
+# CMAKE_BINARY_DIR is required for Conan to work
+set( AUDACITY_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules")
+set( CMAKE_MODULE_PATH
+   ${AUDACITY_MODULE_PATH}
+   ${CMAKE_BINARY_DIR}
+   ${CMAKE_MODULE_PATH}
+)
+
+set( CMAKE_PREFIX_PATH
+   ${CMAKE_BINARY_DIR}
+   ${CMAKE_PREFIX_PATH}
+)
 
 # This "is a good thing" but greatly increases link time on Linux
 #set( CMAKE_INTERPROCEDURAL_OPTIMIZATION ON )
@@ -104,7 +122,7 @@ set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules)
 #set( CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF )
 
 # Set the required C++ standard
-set( CMAKE_CXX_STANDARD 14 )
+set( CMAKE_CXX_STANDARD 17 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 
 # Use ccache if available
@@ -115,11 +133,46 @@ if( CCACHE_PROGRAM )
    set_property( GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}" )
 endif()
 
+# Define option() prefix
+set( _OPT "audacity_" )
+
 # Our very own project
 project( Audacity )
 
 # Load our functions/macros
 include( AudacityFunctions )
+
+set_from_env(AUDACITY_ARCH_LABEL) # e.g. x86_64
+
+# Allow user to globally set the library preference
+cmd_option( ${_OPT}conan_enabled
+            "Use Conan package manager for 3d party dependencies"
+            On
+)
+
+cmd_option( ${_OPT}conan_allow_prebuilt_binaries
+            "Allow using the compiled dependencies from the cache or remotes"
+            On
+)
+
+# Allow user to globally set the library preference
+cmd_option( ${_OPT}lib_preference
+            "Library preference [system (if available), local]"
+            "local"
+            STRINGS "system" "local"
+)
+
+# Special mode, that will force dependencies to the packages provided by system unless they were set to local explicitly.
+cmd_option( ${_OPT}obey_system_dependencies
+            "Use system packages to satisfy dependencies"
+            Off
+)
+
+cmd_option( ${_OPT}has_networking
+   "Build networking features into Audacity"
+   Off)
+
+include( AudacityDependencies )
 
 # Pull all the modules we'll need
 include( CheckCXXCompilerFlag )
@@ -133,6 +186,35 @@ include( CMakeDetermineASM_NASMCompiler )
 include( CMakePushCheckState )
 include( GNUInstallDirs )
 include( TestBigEndian )
+
+set_from_env(SENTRY_DSN_KEY)
+set_from_env(SENTRY_HOST)
+set_from_env(SENTRY_PROJECT)
+set_from_env(CRASH_REPORT_URL)
+
+cmake_dependent_option(
+   ${_OPT}has_sentry_reporting
+   "Build support for sending errors to Sentry"
+   On
+   "${_OPT}has_networking;DEFINED SENTRY_DSN_KEY;DEFINED SENTRY_HOST;DEFINED SENTRY_PROJECT"
+   Off
+)
+
+cmake_dependent_option(
+   ${_OPT}has_crashreports
+   "Enables crash reporting for Audacity"
+   On
+   "${_OPT}has_networking;DEFINED CRASH_REPORT_URL"
+   Off
+)
+
+cmake_dependent_option(
+   ${_OPT}has_updates_check
+   "Build updates checking features into Audacity"
+   On
+   "${_OPT}has_networking"
+   Off
+)
 
 # Determine 32-bit or 64-bit target
 if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
@@ -164,13 +246,18 @@ message( STATUS )
 if( CMAKE_GENERATOR MATCHES "Visual Studio" )
    message( STATUS "  MSVC Version: ${MSVC_VERSION}" )
    message( STATUS "  MSVC Toolset: ${MSVC_TOOLSET_VERSION}" )
-   message( STATUS ) 
+   message( STATUS )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    if( CMAKE_GENERATOR MATCHES "Xcode" )
       message( STATUS "  Xcode Version: ${XCODE_VERSION}" )
    endif()
    message( STATUS "  MacOS SDK: ${CMAKE_OSX_SYSROOT}" )
    message( STATUS )
+
+   if(${_OPT}has_crashreports)
+      set(CMAKE_XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym")
+   endif()
+
 endif()
 
 # Try to get the current commit information
@@ -194,13 +281,15 @@ if( GIT_FOUND )
       list( GET git_output 0 GIT_COMMIT_SHORT )
       list( GET git_output 1 GIT_COMMIT_LONG )
       list( GET git_output 2 GIT_COMMIT_TIME )
+
+      file(WRITE
+         "${CMAKE_BINARY_DIR}/Variables.cmake"
+         "set( AUDACITY_BUILD_LEVEL ${AUDACITY_BUILD_LEVEL} )\nset( AUDACITY_REV_LONG \"${GIT_COMMIT_LONG}\" )\nset( AUDACITY_REV_TIME \"${GIT_COMMIT_TIME}\" )\n"
+      )
    endif()
 endif()
 message( STATUS "  Current Commit: ${GIT_COMMIT_SHORT}" )
 message( STATUS )
-
-# Define option() prefix
-set( _OPT "audacity_" )
 
 # Organize subdirectories/targets into folders for the IDEs
 set_property( GLOBAL PROPERTY USE_FOLDERS ON )
@@ -230,15 +319,20 @@ endif()
 # Where the final product is stored
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin )
 
+set ( _SHARED_PROXY_BASE "shared" )
+set ( _SHARED_PROXY_BASE_PATH "${CMAKE_BINARY_DIR}/${_SHARED_PROXY_BASE}")
+
 # Define the non-install and executable paths
 if( CMAKE_CONFIGURATION_TYPES )
    set( _DESTDIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}" )
+   set( _SHARED_PROXY_PATH "${_SHARED_PROXY_BASE_PATH}/${CMAKE_CFG_INTDIR}")
 else()
    set( _DESTDIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}" )
+   set( _SHARED_PROXY_PATH "${_SHARED_PROXY_BASE_PATH}/${CMAKE_BUILD_TYPE}")
 endif()
 
 set( _DEST "${_DESTDIR}" )
-set( _PREFIX "${CMAKE_INSTALL_PREFIX}" )
+set( INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" )
 set( _LIBDIR "${CMAKE_INSTALL_LIBDIR}" )
 set( _DATADIR "${CMAKE_INSTALL_DATADIR}" )
 set( _PKGLIB "${_LIBDIR}/audacity" )
@@ -250,7 +344,7 @@ set( _EXEDIR "${_DEST}" )
 # Setup RPATH handling
 set( CMAKE_BUILD_RPATH "${_DEST}/${_PKGLIB}" )
 set( CMAKE_BUILD_WITH_INSTALL_RPATH FALSE )
-set( CMAKE_INSTALL_RPATH "${_PREFIX}/${_PKGLIB}" )
+set( CMAKE_INSTALL_RPATH "$ORIGIN/../${_PKGLIB}" )
 set( CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE )
 
 # Adjust them for the Mac
@@ -421,6 +515,7 @@ find_package( Python3 )
 if( Python3_FOUND )
    set( PYTHON "${Python3_EXECUTABLE}" )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   # This is an odd case now, as Conan requires Python as well
    nuget_package( pkgdir "python3" "3.7.7" )
    file( TO_NATIVE_PATH "${pkgdir}/tools/python.exe" PYTHON )
 endif()
@@ -429,10 +524,45 @@ endif()
 # Do this before consistency checks for added third-party libraries
 include( "src/Experimental.cmake" )
 
+cmd_option( ${_OPT}use_ffmpeg
+   "Use ffmpeg library [loaded, off]"
+   "loaded"
+   STRINGS "loaded" "off"
+)
+
+if( ${_OPT}use_ffmpeg )
+   set(USE_FFMPEG Yes)
+endif()
+
 # Add our children
 add_subdirectory( "cmake-proxies" )
+
+# Conan uses find_package and does not set GLOBAL flag
+resolve_conan_dependencies()
+
+# This libraries have 3d party dependencies.
+# Moreover, portmixer is only available as a part of
+# Audacity source tree now.
+cmd_option( ${_OPT}use_portmixer "Build PortMixer support into Audacity" On)
+if( ${_OPT}use_portmixer )
+   set(USE_PORTMIXER Yes)
+   add_subdirectory( "lib-src/portmixer" )
+endif()
+
+cmd_option( ${_OPT}use_nyquist "Build Nyquist support into Audacity" On)
+if( ${_OPT}use_nyquist )
+   set(USE_NYQUIST Yes)
+   add_subdirectory( "lib-src/libnyquist" )
+endif()
+
 add_subdirectory( "help" )
+
+if(${_OPT}has_crashreports)
+   add_subdirectory( "crashreports" )
+endif()
+
 add_subdirectory( "images" )
+add_subdirectory( "libraries" )
 add_subdirectory( "locale" )
 add_subdirectory( "src" )
 add_subdirectory( "modules" )
@@ -463,6 +593,42 @@ file( WRITE "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" "digraph {
 execute_process( COMMAND
    dot -O -Tsvg "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" )
 
+#
+# Code signing
+#
+
+cmd_option( ${_OPT}perform_codesign
+            "Perform code signing during the install step. This only works on Windows and macOS."
+            Off
+)
+
+cmake_dependent_option(
+   ${_OPT}perform_notarization
+   "Perform notarization during the install step. This only works on macOS."
+   Off
+   "${_OPT}perform_codesign;APPLE"
+   Off
+)
+
+if( ${_OPT}perform_codesign )
+   include( AudacityCodeSigning )
+endif()
+
+#
+# Packaging
+#
+
+cmd_option( ${_OPT}package_manual
+            "Package the manual along with the DMG and InnoSetup targets"
+            Off
+)
+
+# Variables, that are common for all package targets
+
+if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   include( AudacityInnoSetup )
+endif()
+
 # Uncomment what follows for symbol values.
 #[[
    get_cmake_property( _variableNames VARIABLES )
@@ -475,3 +641,4 @@ execute_process( COMMAND
    print_properties( TARGET "wxWidgets" )
 #]]
 
+include( Package ) # do this last

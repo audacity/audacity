@@ -35,7 +35,8 @@ Functions that find and load all LV2 plugins on the system.
 #include <wx/log.h>
 #include <wx/string.h>
 
-#include "../../Internat.h"
+#include "Internat.h"
+#include "wxArrayStringEx.h"
 
 #include "LV2Effect.h"
 #include "lv2/event/event.h"
@@ -301,24 +302,13 @@ bool LV2EffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return GetPlugin(path) != NULL;
 }
 
-ComponentInterface *LV2EffectsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+LV2EffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   const LilvPlugin *plug = GetPlugin(path);
-   if (!plug)
-   {
-      return NULL;
-   }
-
-   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-   return safenew LV2Effect(plug);
-}
-
-void LV2EffectsModule::DeleteInstance(ComponentInterface *instance)
-{
-   std::unique_ptr < LV2Effect > {
-      dynamic_cast<LV2Effect *>(instance)
-   };
+   if (auto plug = GetPlugin(path))
+      return std::make_unique<LV2Effect>(plug);
+   return nullptr;
 }
 
 // ============================================================================

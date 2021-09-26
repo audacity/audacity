@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_BACKGROUND_CELL__
 #define __AUDACITY_BACKGROUND_CELL__
 
-#include "../../ClientData.h"
+#include "ClientData.h"
 #include "CommonTrackPanelCell.h"
 
 class AudacityProject;
@@ -53,6 +53,10 @@ private:
    wxRect DrawingArea(
       TrackPanelDrawingContext &,
       const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
+
+   std::vector<MenuItem> GetMenuItems(
+      const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
+   override;
    
    AudacityProject *mpProject;
 

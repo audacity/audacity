@@ -27,7 +27,7 @@
 #include <wx/settings.h>
 #include <wx/toplevel.h>
 
-#include "../SelectedRegion.h"
+#include "SelectedRegion.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
@@ -723,6 +723,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
             if (def && def->IsEnabled()) {
                wxCommandEvent cevent(wxEVT_COMMAND_BUTTON_CLICKED,
                                      def->GetId());
+               cevent.SetEventObject( def );
                GetParent()->GetEventHandler()->ProcessEvent(cevent);
             }
          }

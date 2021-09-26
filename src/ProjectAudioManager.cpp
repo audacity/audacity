@@ -11,21 +11,24 @@ Paul Licameli split from ProjectManager.cpp
 
 #include "ProjectAudioManager.h"
 
-
-
+#include <wx/app.h>
 #include <wx/frame.h>
 #include <wx/statusbr.h>
 
 #include "AudioIO.h"
+#include "BasicUI.h"
 #include "CommonCommandFlags.h"
 #include "LabelTrack.h"
 #include "Menus.h"
+#include "Meter.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
+#include "ProjectRate.h"
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
+#include "ProjectWindows.h"
 #include "TimeTrack.h"
 #include "TrackPanelAx.h"
 #include "UndoManager.h"
@@ -35,7 +38,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "prefs/TracksPrefs.h"
 #include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/TrackView.h"
-#include "widgets/ErrorDialog.h"
 #include "widgets/MeterPanelBase.h"
 #include "widgets/Warning.h"
 #include "widgets/AudacityMessageBox.h"
@@ -109,11 +111,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if ( !canStop )
       return -1;
 
-   bool useMidi = true;
-
-   // Remove these lines to experiment with scrubbing/seeking of note tracks
-   if (options.pScrubbingOptions)
-      useMidi = false;
+   bool nonWaveToo = options.playNonWaveTracks;
 
    // Uncomment this for laughs!
    // backwards = true;
@@ -147,7 +145,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
    mLastPlayMode = mode;
 
    bool hasaudio;
-   if (useMidi)
+   if (nonWaveToo)
       hasaudio = ! tracks.Any<PlayableTrack>().empty();
    else
       hasaudio = ! tracks.Any<WaveTrack>().empty();
@@ -231,7 +229,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
             myOptions.cutPreviewGapStart = t0;
             myOptions.cutPreviewGapLen = t1 - t0;
             token = gAudioIO->StartStream(
-               GetAllPlaybackTracks(*mCutPreviewTracks, false, useMidi),
+               GetAllPlaybackTracks(*mCutPreviewTracks, false, nonWaveToo),
                tcp0, tcp1, myOptions);
          }
          else
@@ -240,7 +238,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
       }
       else {
          token = gAudioIO->StartStream(
-            GetAllPlaybackTracks( tracks, false, useMidi ),
+            GetAllPlaybackTracks( tracks, false, nonWaveToo ),
             t0, t1, options);
       }
       if (token != 0) {
@@ -263,10 +261,13 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          // handler!  Easy fix, just delay the user alert instead.
          auto &window = GetProjectFrame( mProject );
          window.CallAfter( [&]{
-         // Show error message if stream could not be opened
-         ShowErrorDialog(&window, XO("Error"),
-                         XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
-                         wxT("Error_opening_sound_device"));
+            using namespace BasicUI;
+            // Show error message if stream could not be opened
+            ShowErrorDialog( *ProjectFramePlacement(&mProject),
+               XO("Error"),
+               XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
+               wxT("Error_opening_sound_device"),
+               ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
          });
       }
    }
@@ -389,8 +390,7 @@ WaveTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
    AudacityProject &proj, bool selectedOnly, double targetRate)
 {
    auto p = &proj;
-   size_t recordingChannels =
-      std::max(0L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
+   size_t recordingChannels = std::max(0, AudioIORecordChannels.Read());
    bool strictRules = (recordingChannels <= 2);
 
    // Iterate over all wave tracks, or over selected wave tracks only.
@@ -521,9 +521,10 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
             }
 
             existingTracks = ChooseExistingRecordingTracks(*p, false, options.rate);
-            t0 = std::max( t0, trackRange.max( &Track::GetEndTime ) );
+            if(!existingTracks.empty())
+                t0 = std::max( t0, trackRange.max( &Track::GetEndTime ) );
             // If suitable tracks still not found, will record into NEW ones,
-            // but the choice of t0 does not depend on that.
+            // starting with t0
          }
          
          // Whether we decided on NEW tracks or not:
@@ -642,14 +643,16 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // Less than or equal, not just less than, to ensure a clip boundary.
             // when append recording.
             if (endTime <= t0) {
-
-               // Pad the recording track with silence, up to the
-               // maximum time.
-               auto newTrack = pending->EmptyCopy();
-               newTrack->InsertSilence(0.0, t0 - endTime);
-               newTrack->Flush();
-               pending->Clear(endTime, t0);
-               pending->Paste(endTime, newTrack.get());
+               auto newName = [&]() {
+                  for (auto i = 1;; ++i)
+                  {
+                     //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
+                     auto name = XC("%s #%d", "clip name template").Format(pending->GetName(), i).Translation();
+                     if (pending->FindClipByName(name) == nullptr)
+                        return name;
+                  }
+               }();
+               pending->CreateClip(t0, newName);
             }
             transportTracks.captureTracks.push_back(pending);
          }
@@ -665,7 +668,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          auto &trackList = TrackList::Get( *p );
          auto numTracks = trackList.Leaders< const WaveTrack >().size();
 
-         auto recordingChannels = std::max(1L, gPrefs->Read(wxT("/AudioIO/RecordChannels"), 2));
+         auto recordingChannels = std::max(1, AudioIORecordChannels.Read());
 
          gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &recordingNameCustom, false);
          gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
@@ -733,7 +736,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
             transportTracks.captureTracks.push_back(newTrack);
          }
-         TrackList::Get( *p ).GroupChannels(*first, recordingChannels);
+         TrackList::Get( *p ).MakeMultiChannelTrack(*first, recordingChannels, true);
          // Bug 1548.  First of new tracks needs the focus.
          TrackFocus::Get(*p).Set(first);
          if (TrackList::Get(*p).back())
@@ -758,8 +761,10 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          // Show error message if stream could not be opened
          auto msg = XO("Error opening recording device.\nError code: %s")
             .Format( gAudioIO->LastPaErrorString() );
-         ShowErrorDialog(&GetProjectFrame( mProject ),
-            XO("Error"), msg, wxT("Error_opening_sound_device"));
+         using namespace BasicUI;
+         ShowErrorDialog( *ProjectFramePlacement(&mProject),
+            XO("Error"), msg, wxT("Error_opening_sound_device"),
+            ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
       }
    }
 
@@ -1004,7 +1009,7 @@ DefaultPlayOptions( AudacityProject &project )
 {
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    AudioIOStartStreamOptions options { &project,
-      ProjectSettings::Get( project ).GetRate() };
+      ProjectRate::Get( project ).GetRate() };
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
    auto timeTrack = *TrackList::Get( project ).Any<TimeTrack>().begin();
@@ -1016,28 +1021,19 @@ DefaultPlayOptions( AudacityProject &project )
 AudioIOStartStreamOptions
 DefaultSpeedPlayOptions( AudacityProject &project )
 {
-   auto &projectAudioIO = ProjectAudioIO::Get( project );
+   auto result = DefaultPlayOptions( project );
    auto gAudioIO = AudioIO::Get();
    auto PlayAtSpeedRate = gAudioIO->GetBestRate(
       false,     //not capturing
       true,      //is playing
-      ProjectSettings::Get( project ).GetRate()  //suggested rate
+      ProjectRate::Get( project ).GetRate()  //suggested rate
    );
-   AudioIOStartStreamOptions options{ &project, PlayAtSpeedRate };
-   options.captureMeter = projectAudioIO.GetCaptureMeter();
-   options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   auto timeTrack = *TrackList::Get( project ).Any<TimeTrack>().begin();
-   options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
-   options.listener = ProjectAudioManager::Get( project ).shared_from_this();
-   return options;
+   result.rate = PlayAtSpeedRate;
+   return result;
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-#include "NoteTrack.h"
-#endif
-
 TransportTracks ProjectAudioManager::GetAllPlaybackTracks(
-   TrackList &trackList, bool selectedOnly, bool useMidi)
+   TrackList &trackList, bool selectedOnly, bool nonWaveToo)
 {
    TransportTracks result;
    {
@@ -1048,12 +1044,13 @@ TransportTracks ProjectAudioManager::GetAllPlaybackTracks(
             pTrack->SharedPointer< WaveTrack >() );
    }
 #ifdef EXPERIMENTAL_MIDI_OUT
-   if (useMidi) {
-      auto range = trackList.Any< const NoteTrack >() +
+   if (nonWaveToo) {
+      auto range = trackList.Any< const PlayableTrack >() +
          (selectedOnly ? &Track::IsSelected : &Track::Any );
       for (auto pTrack: range)
-         result.midiTracks.push_back(
-            pTrack->SharedPointer< const NoteTrack >() );
+         if (!track_cast<const WaveTrack *>(pTrack))
+            result.otherPlayableTracks.push_back(
+               pTrack->SharedPointer< const PlayableTrack >() );
    }
 #else
    WXUNUSED(useMidi);

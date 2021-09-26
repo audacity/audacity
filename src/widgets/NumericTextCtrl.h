@@ -17,14 +17,15 @@
 
 
 
-#include "../MemoryX.h"
-#include "../../include/audacity/ComponentInterface.h"
+#include "MemoryX.h"
+#include "ComponentInterface.h"
+#include "ComponentInterfaceSymbol.h"
 #include <vector>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
 #include <wx/control.h> // to inherit
 
-#include "../Internat.h"
+#include "Internat.h"
 
 // One event type for each type of control.  Event is raised when a control
 // changes its format.  Owners of controls of the same type can listen and

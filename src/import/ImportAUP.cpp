@@ -22,32 +22,33 @@
 #include "Import.h"
 #include "ImportPlugin.h"
 
-#include "../Envelope.h"
-#include "../FileFormats.h"
-#include "../FileNames.h"
-#include "../LabelTrack.h"
+#include "Envelope.h"
+#include "FileFormats.h"
+#include "FileNames.h"
+#include "LabelTrack.h"
 #if defined(USE_MIDI)
-#include "../NoteTrack.h"
+#include "NoteTrack.h"
 #endif
-#include "../Prefs.h"
-#include "../Project.h"
-#include "../ProjectFileIO.h"
-#include "../ProjectFileManager.h"
-#include "../ProjectHistory.h"
-#include "../ProjectSelectionManager.h"
-#include "../ProjectSettings.h"
-#include "../Sequence.h"
-#include "../Tags.h"
-#include "../TimeTrack.h"
-#include "../ViewInfo.h"
-#include "../WaveClip.h"
-#include "../WaveTrack.h"
-#include "../toolbars/SelectionBar.h"
-#include "../widgets/AudacityMessageBox.h"
-#include "../widgets/NumericTextCtrl.h"
-#include "../widgets/ProgressDialog.h"
-#include "../xml/XMLFileReader.h"
-#include "../wxFileNameWrapper.h"
+#include "Prefs.h"
+#include "Project.h"
+#include "ProjectFileIO.h"
+#include "ProjectFileManager.h"
+#include "ProjectHistory.h"
+#include "ProjectSelectionManager.h"
+#include "ProjectSettings.h"
+#include "ProjectWindows.h"
+#include "Sequence.h"
+#include "Tags.h"
+#include "TimeTrack.h"
+#include "ViewInfo.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+#include "toolbars/SelectionBar.h"
+#include "widgets/AudacityMessageBox.h"
+#include "widgets/NumericTextCtrl.h"
+#include "widgets/ProgressDialog.h"
+#include "XMLFileReader.h"
+#include "wxFileNameWrapper.h"
 
 #include <map>
 
@@ -59,6 +60,7 @@ static const auto exts = {wxT("aup")};
 #include <wx/ffile.h>
 #include <wx/file.h>
 #include <wx/frame.h>
+#include <wx/log.h>
 #include <wx/string.h>
 #include <wx/utils.h>
 
@@ -171,8 +173,8 @@ private:
       field(sel0, double);
       field(sel1, double);
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-      field(selLow, double);
-      field(selHigh, double);
+      field(selLow, double) = SelectedRegion::UndefinedFrequency;
+      field(selHigh, double) = SelectedRegion::UndefinedFrequency;
 #endif
       field(rate, double);
       field(snapto, bool);
@@ -221,6 +223,10 @@ private:
 AUPImportPlugin::AUPImportPlugin()
 :  ImportPlugin(FileExtensions(exts.begin(), exts.end()))
 {
+   static_assert(
+      sizeof(long long) >= sizeof(uint64_t) &&
+      sizeof(long) >= sizeof(uint32_t),
+      "Assumptions about sizes in XMLValueChecker calls are invalid!");
 }
 
 AUPImportPlugin::~AUPImportPlugin()
@@ -643,8 +649,6 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
    {
       const wxChar *attr = *mAttrs++;
       const wxChar *value = *mAttrs++;
-      long lValue;
-      long long llValue;
       double dValue;
 
       if (!value)
@@ -664,6 +668,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
       // ViewInfo
       if (!wxStrcmp(attr, wxT("vpos")))
       {
+         long lValue;
          if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&lValue) || (lValue < 0))
          {
             return SetError(XO("Invalid project 'vpos' attribute."));
@@ -814,11 +819,6 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
       else if (!wxStrcmp(attr, wxT("selectionformat")))
       {
          set(selectionformat, strValue);
-      }
-
-      else if (!wxStrcmp(attr, wxT("audiotimeformat")))
-      {
-         set(audiotimeformat, strValue);
       }
 
       else if (!wxStrcmp(attr, wxT("frequencyformat")))
@@ -1115,14 +1115,13 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
          break;
       }
 
-      long long nValue = 0;
-
       const wxString strValue = value;	// promote string, we need this for all
 
       if (!wxStrcmp(attr, wxT("maxsamples")))
       {
          // This attribute is a sample count, so can be 64bit
-         if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
+         long long llvalue;
+         if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&llvalue) || (llvalue < 0))
          {
             return SetError(XO("Invalid sequence 'maxsamples' attribute."));
          }
@@ -1130,7 +1129,7 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
          // Dominic, 12/10/2006:
          //    Let's check that maxsamples is >= 1024 and <= 64 * 1024 * 1024
          //    - that's a pretty wide range of reasonable values.
-         if ((nValue < 1024) || (nValue > 64 * 1024 * 1024))
+         if ((llvalue < 1024) || (llvalue > 64 * 1024 * 1024))
          {
             return SetError(XO("Invalid sequence 'maxsamples' attribute."));
          }
@@ -1139,7 +1138,7 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
       {
          // This attribute is a sample format, normal int
          long fValue;
-         if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&fValue) || (fValue < 0) || !XMLValueChecker::IsValidSampleFormat(fValue))
+         if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&fValue) || (fValue < 0) || !Sequence::IsValidSampleFormat(fValue))
          {
             return SetError(XO("Invalid sequence 'sampleformat' attribute."));
          }
@@ -1150,7 +1149,8 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
       else if (!wxStrcmp(attr, wxT("numsamples")))
       {
          // This attribute is a sample count, so can be 64bit
-         if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
+         long long llvalue;
+         if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&llvalue) || (llvalue < 0))
          {
             return SetError(XO("Invalid sequence 'numsamples' attribute."));
          }
@@ -1169,8 +1169,6 @@ bool AUPImportFileHandle::HandleWaveBlock(XMLTagHandler *&handler)
       const wxChar *attr = *mAttrs++;
       const wxChar *value = *mAttrs++;
 
-      long long nValue = 0;
-
       if (!value)
       {
          break;
@@ -1181,7 +1179,8 @@ bool AUPImportFileHandle::HandleWaveBlock(XMLTagHandler *&handler)
       if (!wxStrcmp(attr, wxT("start")))
       {
          // making sure that values > 2^31 are OK because long clips will need them.
-         if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
+         long long llvalue;
+         if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&llvalue) || (llvalue < 0))
          {
             return SetError(XO("Unable to parse the waveblock 'start' attribute"));
          }
@@ -1196,13 +1195,12 @@ bool AUPImportFileHandle::HandleWaveBlock(XMLTagHandler *&handler)
 bool AUPImportFileHandle::HandleSimpleBlockFile(XMLTagHandler *&handler)
 {
    FilePath filename;
-   sampleCount len = 0;
+   size_t len = 0;
    
    while (*mAttrs)
    {
       const wxChar *attr =  *mAttrs++;
       const wxChar *value = *mAttrs++;
-      long long nValue;
 
       if (!value)
       {
@@ -1229,12 +1227,13 @@ bool AUPImportFileHandle::HandleSimpleBlockFile(XMLTagHandler *&handler)
       }
       else if (!wxStrcmp(attr, wxT("len")))
       {
-         if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue <= 0))
+         long lValue;
+         if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&lValue) || (lValue <= 0))
          {
             return SetError(XO("Missing or invalid simpleblockfile 'len' attribute."));
          }
 
-         len = nValue;
+         len = lValue;
       }
    }
 
@@ -1248,13 +1247,12 @@ bool AUPImportFileHandle::HandleSimpleBlockFile(XMLTagHandler *&handler)
 bool AUPImportFileHandle::HandleSilentBlockFile(XMLTagHandler *&handler)
 {
    FilePath filename;
-   sampleCount len = 0;
+   size_t len = 0;
    
    while (*mAttrs)
    {
       const wxChar *attr =  *mAttrs++;
       const wxChar *value = *mAttrs++;
-      long long nValue;
 
       if (!value)
       {
@@ -1265,12 +1263,13 @@ bool AUPImportFileHandle::HandleSilentBlockFile(XMLTagHandler *&handler)
 
       if (!wxStrcmp(attr, wxT("len")))
       {
-         if (!XMLValueChecker::IsGoodInt64(value) || !strValue.ToLongLong(&nValue) || !(nValue > 0))
+         long lValue;
+         if (!XMLValueChecker::IsGoodInt(value) || !strValue.ToLong(&lValue) || !(lValue > 0))
          {
             return SetError(XO("Missing or invalid silentblockfile 'len' attribute."));
          }
 
-         len = nValue;
+         len = lValue;
       }
    }
 
@@ -1286,7 +1285,7 @@ bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
    wxString summaryFilename;
    wxFileName filename;
    sampleCount start = 0;
-   sampleCount len = 0;
+   size_t len = 0;
    int channel = 0;
    wxString name;
 
@@ -1294,7 +1293,6 @@ bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
    {
       const wxChar *attr =  *mAttrs++;
       const wxChar *value = *mAttrs++;
-      long long nValue;
 
       if (!value)
       {
@@ -1328,31 +1326,33 @@ bool AUPImportFileHandle::HandlePCMAliasBlockFile(XMLTagHandler *&handler)
       }
       else if (!wxStricmp(attr, wxT("aliasstart")))
       {
-         if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
+         long long llValue;
+         if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&llValue) || (llValue < 0))
          {
             return SetError(XO("Missing or invalid pcmaliasblockfile 'aliasstart' attribute."));
          }
 
-         start = nValue;
+         start = llValue;
       }
       else if (!wxStricmp(attr, wxT("aliaslen")))
       {
-         if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue <= 0))
+         long lValue;
+         if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&lValue) || (lValue <= 0))
          {
             return SetError(XO("Missing or invalid pcmaliasblockfile 'aliaslen' attribute."));
          }
 
-         len = nValue;
+         len = lValue;
       }
       else if (!wxStricmp(attr, wxT("aliaschannel")))
       {
-         long nValue;
-         if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) || (nValue < 0))
+         long lValue;
+         if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&lValue) || (lValue < 0))
          {
             return SetError(XO("Missing or invalid pcmaliasblockfile 'aliaslen' attribute."));
          }
 
-         channel = nValue;
+         channel = lValue;
       }
    }
 
@@ -1512,6 +1512,12 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
 
    auto cleanup = finally([&]
    {
+      // Do this before any throwing might happen
+      if (sf)
+      {
+         SFCall<int>(sf_close, sf);
+      }
+
       if (!success)
       {
          SetWarning(XO("Error while processing %s\n\nInserting silence.").Format(audioFilename));
@@ -1521,11 +1527,6 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
          if (!std::uncaught_exception())
             // If this does throw, let that propagate, don't guard the call
             AddSilence(len);
-      }
-
-      if (sf)
-      {
-         SFCall<int>(sf_close, sf);
       }
    });
 
@@ -1569,6 +1570,8 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
 
    size_t framesRead = 0;
    
+   // These cases preserve the logic formerly in BlockFile.cpp,
+   // which was deleted at commit 98d1468.
    if (channels == 1 && format == int16Sample && sf_subtype_is_integer(info.format))
    {
       // If both the src and dest formats are integer formats,
@@ -1620,6 +1623,18 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
    }
    else
    {
+      /*
+       Therefore none of the three cases above:
+      !(channels == 1 && format == int16Sample && sf_subtype_is_integer(info.format))
+       &&
+      !(channels == 1 && format == int24Sample && sf_subtype_is_integer(info.format))
+       &&
+      !(format == int16Sample && !sf_subtype_more_than_16_bits(info.format))
+
+       So format is not 16 bits with wider file format (third conjunct),
+       but still maybe it is 24 bits with float file format (second conjunct).
+       */
+
       // Otherwise, let libsndfile handle the conversion and
       // scaling, and pass us normalized data as floats.  We can
       // then convert to whatever format we want.
@@ -1635,12 +1650,25 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
          return true;
       }
 
+      /*
+       Dithering will happen in CopySamples if format is 24 bits.
+       Should that be done?
+
+       Either the file is an ordinary simple block file -- and presumably the
+       track was saved specifying a matching format, so format is float and
+       there is no dithering.
+
+       Or else this is the very unusual case of an .auf file, importing PCM data
+       on demand.  The destination format is narrower, requiring dither, only
+       if the user also specified a narrow format for the track.  In such a
+       case, dithering is right.
+       */
       CopySamples((samplePtr)(tmpptr + channel),
                   floatSample,
                   bufptr,
                   format,
                   framesRead,
-                  true /* high quality by default */,
+                  gHighQualityDither /* high quality by default */,
                   channels /* source stride */);
    }
 

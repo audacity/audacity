@@ -16,11 +16,12 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"
-#include "../../../../AudioIOBase.h"
+#include "AudioIOBase.h"
 #include "../../../../CellularPanel.h"
-#include "../../../../Project.h"
+#include "Project.h"
 #include "../../../../ProjectAudioIO.h"
 #include "../../../../ProjectHistory.h"
+#include "../../../../ProjectWindows.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../ShuttleGui.h"
 #include "../../../../TrackArtist.h"
@@ -34,8 +35,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../widgets/AudacityMessageBox.h"
 #include "widgets/ProgressDialog.h"
 #include "UserException.h"
-#include "audacity/Types.h"
+#include "Identifier.h"
 
+#include <wx/app.h>
 #include <wx/combobox.h>
 #include <wx/frame.h>
 #include <wx/sizer.h>
@@ -828,7 +830,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
       ((TrackView::Get( *pTrack ).GetMinimized()) &&
        (TrackView::Get( *partner ).GetMinimized()));
 
-   tracks.GroupChannels( *pTrack, 2 );
+   tracks.MakeMultiChannelTrack( *pTrack, 2, false );
 
    // Set partner's parameters to match target.
    partner->Merge(*pTrack);
@@ -843,8 +845,8 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    view.SetMinimized(false);
    partnerView.SetMinimized(false);
    int AverageHeight = (view.GetHeight() + partnerView.GetHeight()) / 2;
-   view.SetHeight(AverageHeight);
-   partnerView.SetHeight(AverageHeight);
+   view.SetExpandedHeight(AverageHeight);
+   partnerView.SetExpandedHeight(AverageHeight);
    view.SetMinimized(bBothMinimizedp);
    partnerView.SetMinimized(bBothMinimizedp);
 
@@ -879,17 +881,17 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
       //make sure no channel is smaller than its minimum height
       if (view.GetHeight() < view.GetMinimizedHeight())
-         view.SetHeight(view.GetMinimizedHeight());
+         view.SetExpandedHeight(view.GetMinimizedHeight());
       totalHeight += view.GetHeight();
       ++nChannels;
    }
 
-   TrackList::Get( *project ).GroupChannels( *pTrack, 1 );
+   TrackList::Get( *project ).UnlinkChannels( *pTrack );
    int averageHeight = totalHeight / nChannels;
 
    for (auto channel : channels)
       // Make tracks the same height
-      TrackView::Get( *channel ).SetHeight( averageHeight );
+      TrackView::Get( *channel ).SetExpandedHeight( averageHeight );
 }
 
 /// Swap the left and right channels of a stero track...
@@ -898,6 +900,7 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    AudacityProject *const project = &mpData->project;
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   const auto linkType = pTrack->GetLinkType();
    auto channels = TrackList::Channels( pTrack );
    if (channels.size() != 2)
       return;
@@ -911,9 +914,8 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    SplitStereo(false);
 
    auto &tracks = TrackList::Get( *project );
-   tracks.MoveUp( partner );
-   tracks.GroupChannels( *partner, 2 );
-
+   tracks.MoveUp(partner);
+   tracks.MakeMultiChannelTrack(*partner, 2, linkType == Track::LinkType::Aligned);
    if (hasFocus)
       trackFocus.Set(partner);
 
@@ -978,7 +980,7 @@ WaveTrackPopupMenuTable &GetWaveTrackMenuTable()
 #include "../../../../widgets/ASlider.h"
 #include "../../../../TrackInfo.h"
 #include "../../../../TrackPanelDrawingContext.h"
-#include "../../../../ViewInfo.h"
+#include "ViewInfo.h"
 
 namespace {
 
@@ -1252,19 +1254,16 @@ void WaveTrackControls::ReCreatePanSlider( wxEvent &event )
 }
 
 using DoGetWaveTrackControls = DoGetControls::Override< WaveTrack >;
-template<> template<> auto DoGetWaveTrackControls::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetWaveTrackControls) {
    return [](WaveTrack &track) {
       return std::make_shared<WaveTrackControls>( track.SharedPointer() );
    };
 }
-static DoGetWaveTrackControls registerDoGetWaveTrackControls;
 
 using GetDefaultWaveTrackHeight = GetDefaultTrackHeight::Override< WaveTrack >;
-template<> template<>
-auto GetDefaultWaveTrackHeight::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetDefaultWaveTrackHeight) {
    return [](WaveTrack &) {
       return WaveTrackControls::DefaultWaveTrackHeight();
    };
 }
-static GetDefaultWaveTrackHeight registerGetDefaultWaveTrackHeight;
 

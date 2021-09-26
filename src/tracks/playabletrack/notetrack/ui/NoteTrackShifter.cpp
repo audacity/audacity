@@ -5,7 +5,7 @@
 
 #include "../../../ui/TimeShiftHandle.h"
 #include "../../../../NoteTrack.h"
-#include "../../../../ViewInfo.h"
+#include "ViewInfo.h"
 
 class NoteTrackShifter final : public TrackShifter {
 public:
@@ -54,9 +54,8 @@ private:
 };
 
 using MakeNoteTrackShifter = MakeTrackShifter::Override<NoteTrack>;
-template<> template<> auto MakeNoteTrackShifter::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(MakeNoteTrackShifter) {
    return [](NoteTrack &track, AudacityProject&) {
       return std::make_unique<NoteTrackShifter>(track);
    };
 }
-static MakeNoteTrackShifter registerMakeNoteTrackShifter;

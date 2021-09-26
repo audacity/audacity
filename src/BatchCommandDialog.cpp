@@ -173,7 +173,7 @@ void MacroCommandDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 
 void MacroCommandDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   wxString page = GetHelpPageName();
+   const auto &page = GetHelpPageName();
    HelpSystem::ShowHelp(this, page, true);
 }
 

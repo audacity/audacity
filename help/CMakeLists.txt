@@ -34,6 +34,24 @@ add_custom_command(
 
 add_custom_target( ${TARGET} DEPENDS "${out}" )
 
+if( ${_OPT}package_manual )
+   install(CODE "                                     \
+      execute_process(                                \
+         COMMAND                                      \
+            ${CMAKE_COMMAND}                          \
+               --build ${CMAKE_BINARY_DIR}            \
+               --config \${CMAKE_INSTALL_CONFIG_NAME} \
+               --target manual                        \
+      )                                               \
+   ")
+
+   if( "${CMAKE_GENERATOR}" MATCHES "Xcode" )
+      install( DIRECTORY "${out_dir}/${host}/" DESTINATION "${_APPDIR}/help/manual" )
+   elseif( "${CMAKE_GENERATOR}" MATCHES "Visual Studio*" )
+      install( DIRECTORY "${out_dir}/${host}/" DESTINATION "help/manual" )
+   endif()
+endif()
+
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    if( NOT "${CMAKE_GENERATOR}" MATCHES "Visual Studio*")
       install( DIRECTORY "${dst}" OPTIONAL
@@ -41,7 +59,6 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       install( FILES "${_SRCDIR}/audacity.1"
                DESTINATION "${_MANDIR}/man1" )
       install( FILES "${_SRCDIR}/audacity.appdata.xml"
-               DESTINATION "${_DATADIR}/appdata" )
+               DESTINATION "${_DATADIR}/metainfo" )
    endif()
 endif()
-

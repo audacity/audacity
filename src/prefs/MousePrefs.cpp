@@ -39,7 +39,7 @@
 #include <wx/intl.h>
 #include <wx/listctrl.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 
 // The numbers of the columns of the mList.
@@ -82,7 +82,7 @@ TranslatableString MousePrefs::GetDescription()
    return XO("Preferences for Mouse");
 }
 
-wxString MousePrefs::HelpPageName()
+ManualPageID MousePrefs::HelpPageName()
 {
    return "Mouse_Preferences";
 }

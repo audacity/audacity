@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "PlayableTrackControls.h"
 #include "../../../commands/CommandManager.h"
-#include "../../../Project.h"
+#include "Project.h"
 #include "../../../ProjectSettings.h"
 #include "../../../RefreshCode.h"
 #include "../../../Track.h"

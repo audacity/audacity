@@ -14,16 +14,16 @@
 
 #if USE_AUDIO_UNITS
 
-#include "../../MemoryX.h"
+#include "MemoryX.h"
 #include <vector>
 
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <AudioUnit/AudioUnit.h>
 #include <AudioUnit/AudioUnitProperties.h>
 
-#include "audacity/EffectInterface.h"
-#include "audacity/ModuleInterface.h"
-#include "audacity/PluginInterface.h"
+#include "EffectInterface.h"
+#include "ModuleInterface.h"
+#include "PluginInterface.h"
 
 #include "AUControl.h"
 
@@ -261,8 +261,8 @@ public:
 
    bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
-   ComponentInterface *CreateInstance(const PluginPath & path) override;
-   void DeleteInstance(ComponentInterface *instance) override;
+   std::unique_ptr<ComponentInterface>
+      CreateInstance(const PluginPath & path) override;
 
    // AudioUnitEffectModule implementation
 

@@ -12,7 +12,8 @@ Paul Licameli
 #define __AUDACITY_UI_HANDLE__
 
 #include <utility>
-#include "MemoryX.h"
+#include <memory>
+#include <typeinfo>
 #include "TrackPanelDrawable.h" // to inherit
 
 class wxDC;
@@ -25,8 +26,6 @@ struct HitTestPreview;
 class TrackPanelCell;
 struct TrackPanelMouseEvent;
 struct TrackPanelMouseState;
-
-#include "MemoryX.h"
 
 /// \brief Short-lived drawing and event-handling object associated with a TrackPanelCell
 // A TrackPanelCell reports a handle object of some subclass, in response to a
@@ -66,6 +65,11 @@ public:
    // The handle may change state and mark itself for highlight change.
    // Default does nothing and returns false
    virtual bool Escape(AudacityProject *pProject);
+
+   //! Whether the handle has any special right-button handling
+   /*! If not, then Click() will not be called for right click.
+       Default is always false */
+   virtual bool HandlesRightClick();
 
    // Assume hit test (implemented in other classes) was positive.
    // May return Cancelled, overriding the hit test decision and stopping drag.
@@ -156,6 +160,9 @@ std::shared_ptr<Subclass> AssignUIHandlePtr
       return pNew;
    }
    else {
+      //type slicing check
+      wxASSERT(typeid(*ptr) == typeid(*pNew));
+
       auto code = Subclass::NeedChangeHighlight( *ptr, *pNew );
       *ptr = std::move(*pNew);
       ptr->SetChangeHighlight( code );

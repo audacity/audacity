@@ -1,10 +1,11 @@
 
 
 #include "../CommonCommandFlags.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../ProjectHistory.h"
 #include "../ProjectWindow.h"
+#include "../ProjectWindows.h"
 #include "../Track.h"
 #include "../SelectionState.h"
 #include "../TrackPanel.h"
@@ -14,7 +15,7 @@
 #include "../toolbars/ToolManager.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
-#include "../widgets/Meter.h"
+#include "../widgets/MeterPanel.h"
 
 // private helper classes and functions
 namespace {

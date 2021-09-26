@@ -18,7 +18,7 @@
 
 
 
-#include "../MemoryX.h"
+#include <memory>
 
 class wxString;
 

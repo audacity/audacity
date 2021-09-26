@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../TrackArtist.h"
 #include "../../../TrackPanelDrawingContext.h"
 #include "../../../TrackPanelMouseEvent.h"
-#include "../../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../../widgets/Ruler.h"
 
 #include "../../ui/EnvelopeHandle.h"
@@ -53,12 +53,11 @@ std::vector<UIHandlePtr> TimeTrackView::DetailedHitTest
 }
 
 using DoGetTimeTrackView = DoGetView::Override< TimeTrack >;
-template<> template<> auto DoGetTimeTrackView::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetTimeTrackView) {
    return [](TimeTrack &track) {
       return std::make_shared<TimeTrackView>( track.SharedPointer() );
    };
 }
-static DoGetTimeTrackView registerDoGetTimeTrackView;
 
 std::shared_ptr<TrackVRulerControls> TimeTrackView::DoGetVRulerControls()
 {

@@ -12,7 +12,7 @@
 #define __AUDACITY_SPECTRAL_SELECTION_BAR_LISTENER__
 
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 class AUDACITY_DLL_API SpectralSelectionBarListener /* not final */ {
 

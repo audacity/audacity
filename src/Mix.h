@@ -20,9 +20,11 @@
 #ifndef __AUDACITY_MIX__
 #define __AUDACITY_MIX__
 
+#include "audacity/Types.h"
 #include "SampleFormat.h"
 #include <vector>
 
+class sampleCount;
 class Resample;
 class BoundedEnvelope;
 class WaveTrackFactory;
@@ -48,10 +50,6 @@ void AUDACITY_DLL_API MixAndRender(TrackList * tracks, WaveTrackFactory *factory
                   double startTime, double endTime,
                   std::shared_ptr<WaveTrack> &uLeft,
                   std::shared_ptr<WaveTrack> &uRight);
-
-void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
-                samplePtr src,
-                samplePtr *dests, int len, bool interleaved);
 
 class AUDACITY_DLL_API MixerSpec
 {
@@ -139,10 +137,10 @@ class AUDACITY_DLL_API Mixer {
    double MixGetCurrentTime();
 
    /// Retrieve the main buffer or the interleaved buffer
-   samplePtr GetBuffer();
+   constSamplePtr GetBuffer();
 
    /// Retrieve one of the non-interleaved buffers
-   samplePtr GetBuffer(int channel);
+   constSamplePtr GetBuffer(int channel);
 
  private:
 
@@ -187,7 +185,8 @@ class AUDACITY_DLL_API Mixer {
    size_t              mInterleavedBufferSize;
    const sampleFormat mFormat;
    bool             mInterleaved;
-   ArrayOf<SampleBuffer> mBuffer, mTemp;
+   ArrayOf<SampleBuffer> mBuffer;
+   ArrayOf<Floats>  mTemp;
    Floats           mFloatBuffer;
    const double     mRate;
    double           mSpeed;

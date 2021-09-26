@@ -80,15 +80,16 @@
 #ifdef USE_MIDI
 #include "ImportMIDI.h"
 #endif // USE_MIDI
-#include "../FileNames.h"
+#include "FileNames.h"
 #include "../WaveTrack.h"
 #include "ImportPlugin.h"
 #include "Import.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindow.h"
-#include "../Prefs.h"
+#include "../ProjectWindows.h"
+#include "Prefs.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 
@@ -410,7 +411,8 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
           * audio file. TODO: Some sort of message here? */
 
 #endif // USE_MIDI
-         mProject = ProjectManager::OpenProject( mProject, targetfile );
+         mProject = ProjectManager::OpenProject( mProject, targetfile,
+            true /* addtohistory */, true /* reuseNonemptyProject */ );
 
       // Set tok to right after filename
       temptok2.SetString(targettoken);

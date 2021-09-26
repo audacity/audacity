@@ -20,7 +20,7 @@
 #include "SetLabelCommand.h"
 
 #include "LoadCommands.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../ProjectHistory.h"
@@ -114,13 +114,13 @@ bool SetLabelCommand::Apply(const CommandContext & context)
       auto &view = LabelTrackView::Get( *labelTrack );
       if( mbSelected )
       {
-         view.SetSelectedIndex( ii );
+         view.SetNavigationIndex( ii );
          double t0 = pLabel->selectedRegion.t0();
          double t1 = pLabel->selectedRegion.t1();
          selectedRegion.setTimes( t0, t1);
       }
-      else if( view.GetSelectedIndex( context.project ) == ii )
-         view.SetSelectedIndex( -1 );
+      else if( view.GetNavigationIndex( context.project ) == ii )
+         view.SetNavigationIndex( -1 );
    }
 
    labelTrack->SortLabels();

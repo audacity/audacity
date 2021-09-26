@@ -14,8 +14,8 @@ Paul Licameli split from TimeTrackVZoomHandle.cpp
 #include "TimeTrackControls.h"
 
 #include "../../../HitTestResult.h"
-#include "../../../NumberScale.h"
-#include "../../../Prefs.h"
+#include "NumberScale.h"
+#include "Prefs.h"
 #include "../../../ProjectHistory.h"
 #include "../../../RefreshCode.h"
 #include "../../../TrackPanelMouseEvent.h"
@@ -34,6 +34,11 @@ void TimeTrackVZoomHandle::Enter( bool, AudacityProject* )
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;
 #endif
+}
+
+bool TimeTrackVZoomHandle::HandlesRightClick()
+{
+   return true;
 }
 
 UIHandle::Result TimeTrackVZoomHandle::Click

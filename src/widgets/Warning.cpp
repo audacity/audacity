@@ -19,7 +19,6 @@ the ability to not see similar warnings again for this session.
 
 #include "Warning.h"
 
-#include "../Prefs.h"
 #include "../ShuttleGui.h"
 
 #include <wx/artprov.h>

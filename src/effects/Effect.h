@@ -25,10 +25,12 @@ class wxChoice;
 class wxListBox;
 class wxWindow;
 
-#include "audacity/ConfigInterface.h"
-#include "audacity/EffectInterface.h"
+#include "ConfigInterface.h"
+#include "EffectInterface.h"
+#include "PluginInterface.h"
 
-#include "../SelectedRegion.h"
+#include "SampleCount.h"
+#include "SelectedRegion.h"
 
 #include "../Track.h"
 
@@ -237,9 +239,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual bool HasFactoryDefaults();
 
    // Name of page in the Audacity alpha manual
-   virtual wxString ManualPage();
+   virtual ManualPageID ManualPage();
    // Fully qualified local help file name
-   virtual wxString HelpPage();
+   virtual FilePath HelpPage();
 
    virtual void SetUIFlags(unsigned flags);
    virtual unsigned TestUIFlags(unsigned mask);

@@ -14,6 +14,8 @@ Paul Licameli split from ProjectManager.cpp
 
 #include "Project.h"
 #include "ProjectHistory.h"
+#include "ProjectWindows.h"
+#include "ProjectRate.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "Snap.h"
@@ -61,7 +63,7 @@ bool ProjectSelectionManager::SnapSelection()
       auto &viewInfo = ViewInfo::Get( project );
       auto &selectedRegion = viewInfo.selectedRegion;
       NumericConverter nc(NumericConverter::TIME,
-         settings.GetSelectionFormat(), 0, settings.GetRate());
+         settings.GetSelectionFormat(), 0, ProjectRate::Get(project).GetRate());
       const bool nearest = (snapTo == SNAP_NEAREST);
 
       const double oldt0 = selectedRegion.t0();
@@ -86,17 +88,13 @@ bool ProjectSelectionManager::SnapSelection()
 
 double ProjectSelectionManager::AS_GetRate()
 {
-   auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   return settings.GetRate();
+   return ProjectRate::Get(mProject).GetRate();
 }
 
 void ProjectSelectionManager::AS_SetRate(double rate)
 {
    auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
-   settings.SetRate( rate );
-
+   ProjectRate::Get( project ).SetRate( rate );
    SelectionBar::Get( project ).SetRate(rate);
 }
 
@@ -187,10 +185,9 @@ void ProjectSelectionManager::AS_ModifySelection(
 double ProjectSelectionManager::SSBL_GetRate() const
 {
    auto &project = mProject;
-   auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    // Return maximum of project rate and all track rates.
-   return std::max( settings.GetRate(),
+   return std::max( ProjectRate::Get( project ).GetRate(),
       tracks.Any<const WaveTrack>().max( &WaveTrack::GetRate ) );
 }
 

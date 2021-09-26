@@ -19,7 +19,7 @@ SetPreferenceCommand classes
 #include "PreferenceCommands.h"
 
 #include "LoadCommands.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../commands/CommandContext.h"

@@ -23,12 +23,14 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../NoteTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
-#include "../../../../Project.h"
+#include "Project.h"
 #include "../../../../ProjectHistory.h"
+#include "../../../../ProjectWindows.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../prefs/ThemePrefs.h"
 
 #include <mutex>
+#include <wx/app.h>
 #include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -148,7 +150,7 @@ PopupMenuTable *NoteTrackControls::GetMenuExtension(Track *)
 #include "../../../../widgets/ASlider.h"
 #include "../../../../TrackInfo.h"
 #include "../../../../TrackPanelDrawingContext.h"
-#include "../../../../ViewInfo.h"
+#include "ViewInfo.h"
 
 using TCPLine = TrackInfo::TCPLine;
 
@@ -320,22 +322,19 @@ void NoteTrackControls::ReCreateVelocitySlider( wxEvent &evt )
 }
 
 using DoGetNoteTrackControls = DoGetControls::Override< NoteTrack >;
-template<> template<> auto DoGetNoteTrackControls::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetNoteTrackControls) {
    return [](NoteTrack &track) {
       return std::make_shared<NoteTrackControls>( track.SharedPointer() );
    };
 }
-static DoGetNoteTrackControls registerDoGetNoteTrackControls;
 
 #include "../../../ui/TrackView.h"
 
 using GetDefaultNoteTrackHeight = GetDefaultTrackHeight::Override< NoteTrack >;
-template<> template<>
-auto GetDefaultNoteTrackHeight::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetDefaultNoteTrackHeight) {
    return [](NoteTrack &) {
       return NoteTrackControls::DefaultNoteTrackHeight();
    };
 }
-static GetDefaultNoteTrackHeight registerGetDefaultNoteTrackHeight;
 
 #endif

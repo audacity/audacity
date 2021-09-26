@@ -37,7 +37,6 @@ const TrackControls &TrackControls::Get( const Track &track )
    return Get( const_cast< Track& >( track ) );
 }
 
-template<> auto DoGetControls::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL(DoGetControls) {
    return nullptr;
 }
-static DoGetControls registerDoGetControls;

@@ -66,7 +66,7 @@ TranslatableString LibraryPrefs::GetDescription()
    return XO("Preferences for Library");
 }
 
-wxString LibraryPrefs::HelpPageName()
+ManualPageID LibraryPrefs::HelpPageName()
 {
    return "Libraries_Preferences";
 }
@@ -168,7 +168,7 @@ void LibraryPrefs::OnMP3FindButton(wxCommandEvent & WXUNUSED(event))
 void LibraryPrefs::OnMP3DownButton(wxCommandEvent & WXUNUSED(event))
 {
    // Modal help dialogue required here
-   HelpSystem::ShowHelp(this, wxT("FAQ:Installing_the_LAME_MP3_Encoder"), true);
+   HelpSystem::ShowHelp(this, L"FAQ:Installing_the_LAME_MP3_Encoder", true);
 }
 
 void LibraryPrefs::SetFFmpegVersionText()
@@ -179,15 +179,12 @@ void LibraryPrefs::SetFFmpegVersionText()
 void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
 {
 #ifdef USE_FFMPEG
-   FFmpegLibs* FFmpegLibsPtr = PickFFmpegLibs();
    bool showerrs =
 #if defined(_DEBUG)
       true;
 #else
       false;
 #endif
-
-   FFmpegLibsPtr->FreeLibs();
    // Load the libs ('true' means that all errors will be shown)
    bool locate = !LoadFFmpeg(showerrs);
 
@@ -205,19 +202,17 @@ void LibraryPrefs::OnFFmpegFindButton(wxCommandEvent & WXUNUSED(event))
 
    if (locate) {
       // Show "Locate FFmpeg" dialog
-      FFmpegLibsPtr->FindLibs(this);
-      FFmpegLibsPtr->FreeLibs();
+      FindFFmpegLibs(this);
       LoadFFmpeg(showerrs);
    }
-   SetFFmpegVersionText();
 
-   DropFFmpegLibs();
+   SetFFmpegVersionText();
 #endif
 }
 
 void LibraryPrefs::OnFFmpegDownButton(wxCommandEvent & WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("FAQ:Installing_the_FFmpeg_Import_Export_Library"), true);
+   HelpSystem::ShowHelp(this, L"FAQ:Installing_the_FFmpeg_Import_Export_Library", true);
 }
 
 bool LibraryPrefs::Commit()

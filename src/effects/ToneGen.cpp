@@ -29,8 +29,8 @@ frequency changes smoothly during the tone.
 #include <wx/intl.h>
 #include <wx/valgen.h>
 
-#include "../Project.h"
-#include "../ProjectSettings.h"
+#include "Project.h"
+#include "ProjectRate.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
@@ -56,6 +56,7 @@ enum kWaveforms
    kSquare,
    kSawtooth,
    kSquareNoAlias,
+   kTriangle,
    nWaveforms
 };
 
@@ -64,7 +65,8 @@ static const EnumValueSymbol kWaveStrings[nWaveforms] =
    { XO("Sine") },
    { XO("Square") },
    { XO("Sawtooth") },
-   { XO("Square, no alias") }
+   { XO("Square, no alias") },
+   { XO("Triangle") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
@@ -139,11 +141,11 @@ TranslatableString EffectToneGen::GetDescription()
       : XO("Generates a constant frequency tone of one of four types");
 }
 
-wxString EffectToneGen::ManualPage()
+ManualPageID EffectToneGen::ManualPage()
 {
    return mChirp
-      ? wxT("Chirp")
-      : wxT("Tone");
+      ? L"Chirp"
+      : L"Tone";
 }
 
 // EffectDefinitionInterface implementation
@@ -224,6 +226,16 @@ size_t EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBlock, 
          break;
       case kSawtooth:
          f = (2.0 * modf(mPositionInCycles / mSampleRate + 0.5, &throwaway)) - 1.0;
+         break;
+      case kTriangle:
+         f = modf(mPositionInCycles / mSampleRate, &throwaway);
+         if(f < 0.25) {
+             f *= 4.0;
+         } else if(f > 0.75) {
+             f = (f - 1.0) * 4.0;
+         } else { /* f >= 0.25 || f <= 0.75 */
+             f = (0.5 - f) * 4.0;
+         }
          break;
       case kSquareNoAlias:    // Good down to 110Hz @ 44100Hz sampling.
          //do fundamental (k=1) outside loop
@@ -335,7 +347,7 @@ bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
 
    double freqMax =
       (FindProject()
-         ? ProjectSettings::Get( *FindProject() ).GetRate()
+         ? ProjectRate::Get( *FindProject() ).GetRate()
          : 44100.0)
       / 2.0;
    mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);

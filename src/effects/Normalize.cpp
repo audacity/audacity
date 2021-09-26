@@ -26,7 +26,7 @@
 #include <wx/stattext.h>
 #include <wx/valgen.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ProjectFileManager.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
@@ -78,9 +78,9 @@ TranslatableString EffectNormalize::GetDescription()
    return XO("Sets the peak amplitude of one or more tracks");
 }
 
-wxString EffectNormalize::ManualPage()
+ManualPageID EffectNormalize::ManualPage()
 {
-   return wxT("Normalize");
+   return L"Normalize";
 }
 
 // EffectDefinitionInterface implementation
@@ -435,7 +435,7 @@ bool EffectNormalize::AnalyseTrackData(const WaveTrack * track, const Translatab
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer.get(), floatSample, s, block, fillZero, true, &blockSamples);
+      track->GetFloats(buffer.get(), s, block, fillZero, true, &blockSamples);
       totalSamples += blockSamples;
 
       //Process the buffer.
@@ -495,7 +495,7 @@ bool EffectNormalize::ProcessOne(
       );
 
       //Get the samples from the track and put them in the buffer
-      track->Get((samplePtr) buffer.get(), floatSample, s, block);
+      track->GetFloats(buffer.get(), s, block);
 
       //Process the buffer.
       ProcessData(buffer.get(), block, offset);

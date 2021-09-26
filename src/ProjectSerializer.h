@@ -11,13 +11,13 @@
 #ifndef __AUDACITY_PROJECTSERIALIZER__
 #define __AUDACITY_PROJECTSERIALIZER__
 
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #include <wx/mstream.h> // member variables
 
 #include <unordered_set>
 #include <unordered_map>
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 // From SampleBlock.h
 using SampleBlockID = long long;

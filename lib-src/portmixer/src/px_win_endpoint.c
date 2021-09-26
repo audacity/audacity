@@ -90,7 +90,7 @@ int open_ep_mixers(px_mixer *Px, UINT deviceIn, UINT deviceOut)
    HRESULT hr;
    MMRESULT res;
    LPWSTR idStr;
-   size_t idLen;
+   DWORD idLen;
 
    if (!initialize(Px)) {
       goto fail;

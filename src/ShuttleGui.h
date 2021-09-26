@@ -15,14 +15,16 @@
 #define SHUTTLE_GUI
 
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 #include <vector>
 #include <wx/slider.h> // to inherit
 #include "MemoryX.h"
 #include <wx/listbase.h> // for wxLIST_FORMAT_LEFT
 
+#include "Prefs.h"
 #include "WrappedType.h"
+#include "ComponentInterfaceSymbol.h"
 
 class ChoiceSetting;
 
@@ -102,20 +104,6 @@ public:
 using wxStaticBoxWrapper = wxStaticBox;
 using wxSliderWrapper = wxSlider;
 #endif
-
-template< typename T > class SettingSpec {
-public:
-   SettingSpec( const RegistryPath &path, const T &defaultValue = {} )
-      : mPath{ path }, mDefaultValue{ defaultValue }
-   {}
-
-   const RegistryPath &GetPath() const { return mPath; }
-   const T &GetDefault() const { return mDefaultValue; }
-
-private:
-   RegistryPath mPath;
-   T mDefaultValue;
-};
 
 namespace DialogDefinition {
 
@@ -268,7 +256,7 @@ public:
    void AddPrompt(const TranslatableString &Prompt, int wrapWidth = 0);
    void AddUnits(const TranslatableString &Prompt, int wrapWidth = 0);
    void AddTitle(const TranslatableString &Prompt, int wrapWidth = 0);
-   wxWindow * AddWindow(wxWindow * pWindow);
+   wxWindow * AddWindow(wxWindow* pWindow, int PositionFlags = wxALIGN_CENTRE);
    wxSlider * AddSlider(
       const TranslatableString &Prompt, int pos, int Max, int Min = 0);
    wxSlider * AddVSlider(const TranslatableString &Prompt, int pos, int Max);
@@ -360,10 +348,14 @@ public:
 //   and create the appropriate widget.
    void StartHorizontalLay(int PositionFlags=wxALIGN_CENTRE, int iProp=1);
    void EndHorizontalLay();
+
    void StartVerticalLay(int iProp=1);
    void StartVerticalLay(int PositionFlags, int iProp);
-
    void EndVerticalLay();
+
+   void StartWrapLay(int PositionFlags=wxEXPAND, int iProp = 0);
+   void EndWrapLay();
+
    wxScrolledWindow * StartScroller(int iStyle=0);
    void EndScroller();
    wxPanel * StartPanel(int iStyle=0);
@@ -450,10 +442,10 @@ public:
 // so it doesn't need an argument that is writeable.
    virtual wxCheckBox * TieCheckBox(
       const TranslatableString &Prompt,
-      const SettingSpec< bool > &Setting);
+      const BoolSetting &Setting);
    virtual wxCheckBox * TieCheckBoxOnRight(
       const TranslatableString &Prompt,
-      const SettingSpec< bool > &Setting);
+      const BoolSetting &Setting);
 
    virtual wxChoice *TieChoice(
       const TranslatableString &Prompt,
@@ -466,35 +458,36 @@ public:
    // emitting scripting information about Preferences.
    virtual wxChoice * TieNumberAsChoice(
       const TranslatableString &Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const TranslatableStrings & Choices,
       const std::vector<int> * pInternalChoices = nullptr,
       int iNoMatchSelector = 0 );
 
    virtual wxTextCtrl * TieTextBox(
       const TranslatableString &Prompt,
-      const SettingSpec< wxString > &Setting,
+      const StringSetting &Setting,
       const int nChars);
    virtual wxTextCtrl * TieIntegerTextBox(
       const TranslatableString & Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const int nChars);
    virtual wxTextCtrl * TieNumericTextBox(
       const TranslatableString & Prompt,
-      const SettingSpec< double > &Setting,
+      const DoubleSetting &Setting,
       const int nChars);
    virtual wxSlider * TieSlider(
       const TranslatableString & Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const int max,
       const int min = 0);
    virtual wxSpinCtrl * TieSpinCtrl(
       const TranslatableString &Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const int max,
       const int min);
 //-- End of variants.
    void SetBorder( int Border ) {miBorder = Border;};
+   int GetBorder() const noexcept;
    void SetSizerProportion( int iProp ) {miSizerProp = iProp;};
    void SetStretchyCol( int i );
    void SetStretchyRow( int i );
@@ -758,5 +751,12 @@ public:
 
    teShuttleMode GetMode() { return  mShuttleMode; };
 };
+
+//! Convenience function often useful when adding choice controls
+AUDACITY_DLL_API TranslatableStrings Msgids(
+   const EnumValueSymbol strings[], size_t nStrings);
+
+//! Convenience function often useful when adding choice controls
+AUDACITY_DLL_API TranslatableStrings Msgids( const std::vector<EnumValueSymbol> &strings );
 
 #endif

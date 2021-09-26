@@ -12,6 +12,7 @@ Paul Licameli split from AudacityProject.cpp
 
 
 
+#include "ActiveProject.h"
 #include "AdornedRulerPanel.h"
 #include "AudioIO.h"
 #include "Clipboard.h"
@@ -25,6 +26,8 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "ProjectSelectionManager.h"
+#include "ProjectWindows.h"
+#include "ProjectRate.h"
 #include "ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"
@@ -36,7 +39,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "wxFileNameWrapper.h"
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
-#include "prefs/QualityPrefs.h"
+#include "QualitySettings.h"
 #include "toolbars/MixerToolBar.h"
 #include "toolbars/SelectionBar.h"
 #include "toolbars/SpectralSelectionBar.h"
@@ -44,9 +47,9 @@ Paul Licameli split from AudacityProject.cpp
 #include "toolbars/ToolManager.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/FileHistory.h"
-#include "widgets/ErrorDialog.h"
 #include "widgets/WindowAccessible.h"
 
+#include <wx/app.h>
 #include <wx/dataobj.h>
 #include <wx/dnd.h>
 #include <wx/scrolbar.h>
@@ -605,6 +608,13 @@ void ProjectManager::OnReconnectionFailure(wxCommandEvent & event)
    });
 }
 
+static bool sbClosingAll = false;
+
+void ProjectManager::SetClosingAll(bool closing)
+{
+   sbClosingAll = closing;
+}
+
 void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 {
    auto &project = mProject;
@@ -723,7 +733,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // DanH: If we're definitely about to quit, clear the clipboard.
    auto &clipboard = Clipboard::Get();
    if ((AllProjects{}.size() == 1) &&
-      (quitOnClose || AllProjects::Closing()))
+      (quitOnClose || sbClosingAll))
       clipboard.Clear();
    else {
       auto clipboardProject = clipboard.Project().lock();
@@ -791,13 +801,13 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    auto pSelf = AllProjects{}.Remove( project );
    wxASSERT( pSelf );
 
-   if (GetActiveProject() == &project) {
+   if (GetActiveProject().lock().get() == &project) {
       // Find a NEW active project
       if ( !AllProjects{}.empty() ) {
          SetActiveProject(AllProjects{}.begin()->get());
       }
       else {
-         SetActiveProject(NULL);
+         SetActiveProject(nullptr);
       }
    }
 
@@ -806,7 +816,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // PRL:  Maybe all this is unnecessary now that the listener is managed
    // by a weak pointer.
    if ( gAudioIO->GetListener().get() == &ProjectAudioManager::Get( project ) ) {
-      auto active = GetActiveProject();
+      auto active = GetActiveProject().lock();
       gAudioIO->SetListener(
          active
             ? ProjectAudioManager::Get( *active ).shared_from_this()
@@ -814,7 +824,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
       );
    }
 
-   if (AllProjects{}.empty() && !AllProjects::Closing()) {
+   if (AllProjects{}.empty() && !sbClosingAll) {
 
 #if !defined(__WXMAC__)
       if (quitOnClose) {
@@ -838,17 +848,18 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
 // PRL: I preserve this handler function for an event that was never sent, but
 // I don't know the intention.
-
 void ProjectManager::OnOpenAudioFile(wxCommandEvent & event)
 {
-   auto &project = mProject;
-   auto &window = GetProjectFrame( project );
    const wxString &cmd = event.GetString();
-
-   if (!cmd.empty())
-      ProjectFileManager::Get( mProject ).OpenFile(cmd);
-
-   window.RequestUserAttention();
+   if (!cmd.empty()) {
+      ProjectChooser chooser{ &mProject, true };
+      if (auto project = ProjectFileManager::OpenFile(
+            std::ref(chooser), cmd)) {
+         auto &window = GetProjectFrame( *project );
+         window.RequestUserAttention();
+         chooser.Commit();
+      }
+   }
 }
 
 // static method, can be called outside of a project
@@ -868,68 +879,93 @@ void ProjectManager::OpenFiles(AudacityProject *proj)
       Importer::SetLastOpenType({});
    } );
 
-   for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
-      const wxString &fileName = selectedFiles[ff];
-
+   for (const auto &fileName : selectedFiles) {
       // Make sure it isn't already open.
       if (ProjectFileManager::IsAlreadyOpen(fileName))
          continue; // Skip ones that are already open.
 
-      // DMM: If the project is dirty, that means it's been touched at
-      // all, and it's not safe to open a NEW project directly in its
-      // place.  Only if the project is brand-NEW clean and the user
-      // hasn't done any action at all is it safe for Open to take place
-      // inside the current project.
-      //
-      // If you try to Open a NEW project inside the current window when
-      // there are no tracks, but there's an Undo history, etc, then
-      // bad things can happen, including data files moving to the NEW
-      // project directory, etc.
-      if ( proj && (
-         ProjectHistory::Get( *proj ).GetDirty() ||
-         !TrackList::Get( *proj ).empty()
-      ) )
-         proj = nullptr;
-
-      // This project is clean; it's never been touched.  Therefore
-      // all relevant member variables are in their initial state,
-      // and it's okay to open a NEW project inside this window.
-      proj = OpenProject( proj, fileName );
+      proj = OpenProject( proj, fileName,
+         true /* addtohistory */, false /* reuseNonemptyProject */ );
    }
 }
 
-AudacityProject *ProjectManager::OpenProject(
-   AudacityProject *pProject, const FilePath &fileNameArg, bool addtohistory)
+bool ProjectManager::SafeToOpenProjectInto(AudacityProject &proj)
 {
-   bool success = false;
-   AudacityProject *pNewProject = nullptr;
-   if ( ! pProject )
-      pProject = pNewProject = New();
-   auto cleanup = finally( [&] {
-      if ( pNewProject )
-         GetProjectFrame( *pNewProject ).Close(true);
-      else if ( !success )
+   // DMM: If the project is dirty, that means it's been touched at
+   // all, and it's not safe to open a fresh project directly in its
+   // place.  Only if the project is brandnew clean and the user
+   // hasn't done any action at all is it safe for Open to take place
+   // inside the current project.
+   //
+   // If you try to Open a fresh project inside the current window when
+   // there are no tracks, but there's an Undo history, etc, then
+   // bad things can happen, including orphan blocks, or tracks
+   // referring to non-existent blocks
+   if (
+      ProjectHistory::Get( proj ).GetDirty() ||
+      !TrackList::Get( proj ).empty()
+   )
+      return false;
+   // This project is clean; it's never been touched.  Therefore
+   // all relevant member variables are in their initial state,
+   // and it's okay to open a NEW project inside its window.
+   return true;
+}
+
+ProjectManager::ProjectChooser::~ProjectChooser()
+{
+   if (mpUsedProject) {
+      if (mpUsedProject == mpGivenProject) {
          // Ensure that it happens here: don't wait for the application level
          // exception handler, because the exception may be intercepted
-         ProjectHistory::Get(*pProject).RollbackState();
-      // Any exception now continues propagating
-   } );
-   ProjectFileManager::Get( *pProject ).OpenFile( fileNameArg, addtohistory );
-
-   // The above didn't throw, so change what finally will do
-   success = true;
-   pNewProject = nullptr;
-
-   auto &projectFileIO = ProjectFileIO::Get( *pProject );
-   if( projectFileIO.IsRecovered() ) {
-      auto &window = ProjectWindow::Get( *pProject );
-      window.Zoom( window.GetZoomOfToFit() );
-      // "Project was recovered" replaces "Create new project" in Undo History.
-      auto &undoManager = UndoManager::Get( *pProject );
-      undoManager.RemoveStates(0, 1);
+         ProjectHistory::Get(*mpGivenProject).RollbackState();
+         // Any exception now continues propagating
+      }
+      else
+         GetProjectFrame( *mpUsedProject ).Close(true);
    }
+}
 
-   return pProject;
+AudacityProject &
+ProjectManager::ProjectChooser::operator() ( bool openingProjectFile )
+{
+   if (mpGivenProject) {
+      // Always check before opening a project file (for safety);
+      // May check even when opening other files
+      // (to preserve old behavior; as with the File > Open command specifying
+      // multiple files of whatever types, so that each gets its own window)
+      bool checkReuse = (openingProjectFile || !mReuseNonemptyProject);
+      if (!checkReuse || SafeToOpenProjectInto(*mpGivenProject))
+         return *(mpUsedProject = mpGivenProject);
+   }
+   return *(mpUsedProject = New());
+}
+
+void ProjectManager::ProjectChooser::Commit()
+{
+   mpUsedProject = nullptr;
+}
+
+AudacityProject *ProjectManager::OpenProject(
+   AudacityProject *pGivenProject, const FilePath &fileNameArg,
+   bool addtohistory, bool reuseNonemptyProject)
+{
+   ProjectManager::ProjectChooser chooser{ pGivenProject, reuseNonemptyProject };
+   if (auto pProject = ProjectFileManager::OpenFile(
+      std::ref(chooser), fileNameArg, addtohistory )) {
+      chooser.Commit();
+
+      auto &projectFileIO = ProjectFileIO::Get( *pProject );
+      if( projectFileIO.IsRecovered() ) {
+         auto &window = ProjectWindow::Get( *pProject );
+         window.Zoom( window.GetZoomOfToFit() );
+         // "Project was recovered" replaces "Create new project" in Undo History.
+         auto &undoManager = UndoManager::Get( *pProject );
+         undoManager.RemoveStates(0, 1);
+      }
+      return pProject;
+   }
+   return nullptr;
 }
 
 // This is done to empty out the tracks, but without creating a new project.
@@ -989,7 +1025,7 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
    RestartTimer();
 }
 
-void ProjectManager::OnStatusChange( wxCommandEvent &evt )
+void ProjectManager::OnStatusChange( ProjectStatusEvent &evt )
 {
    evt.Skip();
 
@@ -1005,7 +1041,7 @@ void ProjectManager::OnStatusChange( wxCommandEvent &evt )
 
    window.UpdateStatusWidths();
 
-   auto field = static_cast<StatusBarField>( evt.GetInt() );
+   auto field = evt.mField;
    const auto &msg = ProjectStatus::Get( project ).Get( field );
    SetStatusText( msg, field );
    
@@ -1052,10 +1088,9 @@ int ProjectManager::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) {
    auto &project = mProject;
 
    // Obtain the current settings
-   auto oCaptureFormat = QualityPrefs::SampleFormatChoice();
-   if (lCaptureChannels == 0) {
-      gPrefs->Read(wxT("/AudioIO/RecordChannels"), &lCaptureChannels, 2L);
-   }
+   auto oCaptureFormat = QualitySettings::SampleFormatChoice();
+   if (lCaptureChannels == 0)
+      lCaptureChannels = AudioIORecordChannels.Read();
 
    // Find out how much free space we have on disk
    wxLongLong lFreeSpace = ProjectFileIO::Get( project ).GetFreeDiskSpace();
@@ -1069,7 +1104,7 @@ int ProjectManager::GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels) {
    dRecTime = lFreeSpace.GetHi() * 4294967296.0 + lFreeSpace.GetLo();
    dRecTime /= bytesOnDiskPerSample;   
    dRecTime /= lCaptureChannels;
-   dRecTime /= ProjectSettings::Get( project ).GetRate();
+   dRecTime /= ProjectRate::Get( project ).GetRate();
 
    // Convert to minutes before returning
    int iRecMins = (int)round(dRecTime / 60.0);

@@ -14,8 +14,9 @@ Paul Licameli split from TrackControls.cpp
 #include "TrackSelectHandle.h"
 #include "../../AColor.h"
 #include "../../RefreshCode.h"
-#include "../../Project.h"
+#include "Project.h"
 #include "../../ProjectHistory.h"
+#include "../../ProjectWindows.h"
 #include "../../TrackArtist.h"
 #include "../../TrackInfo.h"
 #include "../../TrackPanelDrawingContext.h"
@@ -203,7 +204,7 @@ public:
    //bool Apply(const CommandContext & context) override;
 
    // Provide an override, if we want the help button.
-   // wxString ManualPage() override {return wxT("");};
+   // ManualPageID ManualPage() override {return {};}
 public:
    wxString mName;
 };
@@ -275,7 +276,8 @@ void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
 }
 
 unsigned CommonTrackControls::DoContextMenu(
-   const wxRect &rect, wxWindow *pParent, wxPoint *, AudacityProject *pProject)
+   const wxRect &rect, wxWindow *pParent, const wxPoint *,
+   AudacityProject *pProject)
 {
    using namespace RefreshCode;
    wxRect buttonRect;

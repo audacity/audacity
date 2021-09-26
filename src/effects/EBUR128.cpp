@@ -9,6 +9,7 @@ Max Maisel
 ***********************************************************************/
 
 #include "EBUR128.h"
+#include <cstring>
 
 EBUR128::EBUR128(double rate, size_t channels)
    : mChannelCount(channels)

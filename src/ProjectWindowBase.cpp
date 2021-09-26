@@ -11,6 +11,7 @@ Paul Licameli split from ProjectWindow.cpp
 #include "ProjectWindowBase.h"
 
 #include "Project.h"
+#include "ProjectWindows.h"
 
 ProjectWindowBase::ProjectWindowBase(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
@@ -18,7 +19,11 @@ ProjectWindowBase::ProjectWindowBase(wxWindow * parent, wxWindowID id,
    : wxFrame(parent, id, _TS("Audacity"), pos, size)
    , mProject{ project }
 {
-   project.SetFrame( this );
+   SetProjectFrame( project, *this );
+
+   // Ensure a unique name of this window for journalling purposes
+   SetName(
+      wxString::Format( L"AudacityProject %d", project.GetProjectNumber() ) );
 };
 
 ProjectWindowBase::~ProjectWindowBase()
@@ -46,4 +51,3 @@ const AudacityProject *FindProjectFromWindow( const wxWindow *pWindow )
 {
    return FindProjectFromWindow( const_cast< wxWindow* >( pWindow ) );
 }
-

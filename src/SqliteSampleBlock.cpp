@@ -14,9 +14,12 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include "DBConnection.h"
 #include "ProjectFileIO.h"
 #include "SampleFormat.h"
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #include "SampleBlock.h" // to inherit
+
+#include "SentryHelper.h"
+#include <wx/log.h>
 
 class SqliteSampleBlockFactory;
 
@@ -341,6 +344,7 @@ DBConnection *SqliteSampleBlock::Conn() const
    if (!pConnection) {
       throw SimpleMessageBoxException
       {
+         ExceptionType::Internal,
          XO("Connection to project file is null"),
          XO("Warning"),
          "Error:_Disk_full_or_not_writable"
@@ -556,6 +560,10 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int64(stmt, 1, mBlockID))
    {
+      ADD_EXCEPTION_CONTEXT(
+         "sqlite3.rc", std::to_string(sqlite3_errcode(Conn()->DB())));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::GetBlob::bind");
+
       wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
 
@@ -563,6 +571,9 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_ROW)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::GetBlob::step");
+
       wxLogDebug(wxT("SqliteSampleBlock::GetBlob - SQLITE error %s"), sqlite3_errmsg(db));
 
       // Clear statement bindings and rewind statement
@@ -592,6 +603,42 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
    {
       srcoffset += 0;
    }
+
+   /*
+    Will dithering happen in CopySamples?  Answering this as of 3.0.3 by
+    examining all uses.
+    
+    As this function is called from GetSummary, no, because destination format
+    is float.
+
+    There is only one other call to this function, in DoGetSamples.  At one
+    call to that function, in DoGetMinMaxRMS, again format is float always.
+    
+    There is only one other call to DoGetSamples, in SampleBlock::GetSamples().
+    In one call to that function, in WaveformView.cpp, again format is float.
+
+    That leaves two calls in Sequence.cpp.  One of those can be proved to be
+    used only in copy and paste operations, always supplying the same sample
+    format as the samples were stored in, therefore no dither.
+
+    That leaves uses of Sequence::Read().  There are uses of Read() in internal
+    operations also easily shown to use only the saved format, and
+    GetWaveDisplay() always reads as float.
+
+    The remaining use of Sequence::Read() is in Sequence::Get().  That is used
+    by WaveClip::Resample(), always fetching float.  It is also used in
+    WaveClip::GetSamples().
+
+    There is only one use of that function not always fetching float, in
+    WaveTrack::Get().
+
+    It can be shown that the only paths to WaveTrack::Get() not specifying
+    floatSample are in Benchmark, which is only a diagnostic test, and there
+    the sample format is the same as what the track was constructed with.
+
+    Therefore, no dithering even there!
+    */
+   wxASSERT(destformat == floatSample || destformat == srcformat);
 
    CopySamples(src + srcoffset,
                srcformat,
@@ -638,6 +685,10 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int64(stmt, 1, sbid))
    {
+
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(sqlite3_errcode(Conn()->DB())));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Load::bind");
+
       wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
 
@@ -645,6 +696,11 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_ROW)
    {
+
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Load::step");
+
+
       wxLogDebug(wxT("SqliteSampleBlock::Load - SQLITE error %s"), sqlite3_errmsg(db));
 
       // Clear statement bindings and rewind statement
@@ -697,6 +753,12 @@ void SqliteSampleBlock::Commit(Sizes sizes)
        sqlite3_bind_blob(stmt, 6, mSummary64k.get(), mSummary64kBytes, SQLITE_STATIC) ||
        sqlite3_bind_blob(stmt, 7, mSamples.get(), mSampleBytes, SQLITE_STATIC))
    {
+
+      ADD_EXCEPTION_CONTEXT(
+         "sqlite3.rc", std::to_string(sqlite3_errcode(Conn()->DB())));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Commit::bind");
+
+
       wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
  
@@ -704,6 +766,9 @@ void SqliteSampleBlock::Commit(Sizes sizes)
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Commit::step");
+
       wxLogDebug(wxT("SqliteSampleBlock::Commit - SQLITE error %s"), sqlite3_errmsg(db));
 
       // Clear statement bindings and rewind statement
@@ -746,6 +811,10 @@ void SqliteSampleBlock::Delete()
    // preconditions; should return SQL_OK which is 0
    if (sqlite3_bind_int64(stmt, 1, mBlockID))
    {
+      ADD_EXCEPTION_CONTEXT(
+         "sqlite3.rc", std::to_string(sqlite3_errcode(Conn()->DB())));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Delete::bind");
+
       wxASSERT_MSG(false, wxT("Binding failed...bug!!!"));
    }
 
@@ -753,6 +822,9 @@ void SqliteSampleBlock::Delete()
    rc = sqlite3_step(stmt);
    if (rc != SQLITE_DONE)
    {
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Delete::step");
+
       wxLogDebug(wxT("SqliteSampleBlock::Load - SQLITE error %s"), sqlite3_errmsg(db));
 
       // Clear statement bindings and rewind statement
@@ -806,11 +878,8 @@ void SqliteSampleBlock::CalcSummary(Sizes sizes)
    else
    {
       samplebuffer.reinit((unsigned) mSampleCount);
-      CopySamples(mSamples.get(),
-                  mSampleFormat,
-                  (samplePtr) samplebuffer.get(),
-                  floatSample,
-                  mSampleCount);
+      SamplesToFloats(mSamples.get(), mSampleFormat,
+         samplebuffer.get(), mSampleCount);
       samples = samplebuffer.get();
    }
    
@@ -961,3 +1030,4 @@ static struct Injector
       );
    }
 } injector;
+ 

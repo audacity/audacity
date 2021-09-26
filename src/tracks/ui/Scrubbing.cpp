@@ -15,14 +15,15 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../AudioIO.h"
 #include "../../CommonCommandFlags.h"
-#include "../../Project.h"
+#include "Project.h"
 #include "../../ProjectAudioIO.h"
 #include "../../ProjectAudioManager.h"
 #include "../../ProjectHistory.h"
+#include "../../ProjectWindows.h"
 #include "../../ProjectSettings.h"
-#include "../../ProjectStatus.h"
+#include "ProjectStatus.h"
 #include "../../Track.h"
-#include "../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../WaveTrack.h"
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../prefs/TracksPrefs.h"
@@ -33,6 +34,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <algorithm>
 
+#include <wx/app.h>
 #include <wx/menu.h>
 
 // Yet another experimental scrub would drag the track under a
@@ -407,6 +409,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
                return ScrubPollInterval_ms;
             };
 #endif
+            options.playNonWaveTracks = false;
             options.pScrubbingOptions = &mOptions;
             options.envelope = nullptr;
             mOptions.delay = (ScrubPollInterval_ms / 1000.0);
@@ -523,6 +526,7 @@ bool Scrubber::StartSpeedPlay(double speed, double time0, double time1)
             };
 #endif
 
+   options.playNonWaveTracks = false;
    options.pScrubbingOptions = &mOptions;
    options.envelope = nullptr;
    mOptions.delay = (ScrubPollInterval_ms / 1000.0);
@@ -598,6 +602,7 @@ bool Scrubber::StartKeyboardScrubbing(double time0, bool backwards)
    };
 #endif
 
+   options.playNonWaveTracks = false;
    options.pScrubbingOptions = &mOptions;
    options.envelope = nullptr;
 

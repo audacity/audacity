@@ -16,6 +16,7 @@
 
 
 #include <utility>
+#include "Prefs.h"
 #include "Track.h"
 
 #if defined(USE_MIDI)
@@ -269,6 +270,11 @@ public:
    // of the line separating B and C
    int GetWhitePos(int i) const { return 1 + (i * GetOctaveHeight()) / 7; }
 };
+
+extern AUDACITY_DLL_API StringSetting MIDIPlaybackDevice;
+extern AUDACITY_DLL_API StringSetting MIDIRecordingDevice;
+extern AUDACITY_DLL_API IntSetting MIDISynthLatency_ms;
+
 #endif // USE_MIDI
 
 #ifndef SONIFY
@@ -291,5 +297,7 @@ public:
 #define SonifyEndModifyState()
 #endif
 
+
+AUDACITY_DLL_API wxString GetMIDIDeviceInfo();
 
 #endif

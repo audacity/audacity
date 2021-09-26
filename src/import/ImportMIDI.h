@@ -19,7 +19,7 @@ into a NoteTrack.
 #define _IMPORT_MIDI_
 
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 #if defined(USE_MIDI)
 

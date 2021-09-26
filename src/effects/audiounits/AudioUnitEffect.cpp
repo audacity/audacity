@@ -19,6 +19,7 @@
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffect.h"
 #include "../../ModuleManager.h"
+#include "SampleCount.h"
 
 #include <wx/defs.h>
 #include <wx/base64.h>
@@ -42,6 +43,7 @@
 #include <wx/textctrl.h>
 #include <wx/tokenzr.h>
 
+#include "../../SelectFile.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/valnum.h"
@@ -377,25 +379,13 @@ bool AudioUnitEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return FindAudioUnit(path, name) != NULL;
 }
 
-ComponentInterface *AudioUnitEffectsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+AudioUnitEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   wxString name;
-   AudioComponent component = FindAudioUnit(path, name);
-   if (component == NULL)
-   {
-      return NULL;
-   }
-
-   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-   return safenew AudioUnitEffect(path, name, component);
-}
-
-void AudioUnitEffectsModule::DeleteInstance(ComponentInterface *instance)
-{
-   std::unique_ptr < AudioUnitEffect > {
-      dynamic_cast<AudioUnitEffect *>(instance)
-   };
+   if (wxString name; auto component = FindAudioUnit(path, name))
+      return std::make_unique<AudioUnitEffect>(path, name, component);
+   return nullptr;
 }
 
 // ============================================================================
@@ -1874,8 +1864,8 @@ void AudioUnitEffect::ExportPresets()
    // Ask the user for the name to use
    //
    // Passing a valid parent will cause some effects dialogs to malfunction
-   // upon returning from the FileNames::SelectFile().
-   path = FileNames::SelectFile(FileNames::Operation::_None,
+   // upon returning from the SelectFile().
+   path = SelectFile(FileNames::Operation::_None,
       XO("Export Audio Unit Preset As %s:").Format(fn.GetFullPath()),
       fn.GetFullPath(),
       wxEmptyString,
@@ -1916,8 +1906,8 @@ void AudioUnitEffect::ImportPresets()
    // Ask the user for the name to use
    //
    // Passing a valid parent will cause some effects dialogs to malfunction
-   // upon returning from the FileNames::SelectFile().
-   path = FileNames::SelectFile(FileNames::Operation::_None,
+   // upon returning from the SelectFile().
+   path = SelectFile(FileNames::Operation::_None,
       XO("Import Audio Unit Preset As %s:").Format(fn.GetFullPath()),
       fn.GetFullPath(),
       wxEmptyString,

@@ -168,7 +168,7 @@ different formats.
 
 #include "NumericTextCtrl.h"
 
-#include "audacity/Types.h"
+#include "SampleCount.h"
 #include "../AllThemeResources.h"
 #include "../AColor.h"
 #include "../KeyboardCapture.h"
@@ -2024,6 +2024,7 @@ void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
       if (def && def->IsEnabled()) {
          wxCommandEvent cevent(wxEVT_COMMAND_BUTTON_CLICKED,
                                def->GetId());
+         cevent.SetEventObject( def );
          GetParent()->GetEventHandler()->ProcessEvent(cevent);
       }
    }

@@ -12,6 +12,7 @@
 #define __AUDACITY_WAVETRACK__
 
 #include "Track.h"
+#include "SampleCount.h"
 
 #include <vector>
 #include <functional>
@@ -87,6 +88,8 @@ private:
 
    friend class WaveTrackFactory;
 
+   wxString MakeClipCopyName(const wxString& originalName) const;
+   wxString MakeNewClipName() const;
  public:
 
    typedef WaveTrackLocation Location;
@@ -99,6 +102,8 @@ private:
    virtual ChannelType GetChannelIgnoringPan() const;
    ChannelType GetChannel() const override;
    virtual void SetPanFromChannelType() override;
+
+   bool LinkConsistencyCheck() override;
 
    /** @brief Get the time at which the first clip in the track starts
     *
@@ -246,6 +251,31 @@ private:
    /// same value for "start" in both calls to "Set" and "Get" it is
    /// guaranteed that the same samples are affected.
    ///
+
+   //! Retrieve samples from a track in floating-point format, regardless of the storage format
+   /*!
+    @param buffer receives the samples
+    @param start starting sample, relative to absolute time zero (not to the track's offset value)
+    @param len how many samples to get.  buffer is assumed sufficiently large
+    @param fill how to assign values for sample positions between clips
+    @param mayThrow if false, fill buffer with zeros when there is failure to retrieve samples; else throw
+    @param[out] pNumWithinClips Report how many samples were copied from within clips, rather
+       than filled according to fillFormat; but these were not necessarily one contiguous range.
+    */
+   bool GetFloats(float *buffer, sampleCount start, size_t len,
+      fillFormat fill = fillZero, bool mayThrow = true,
+      sampleCount * pNumWithinClips = nullptr) const
+   {
+      //! Cast the pointer to pass it to Get() which handles multiple destination formats
+      return Get(reinterpret_cast<samplePtr>(buffer),
+         floatSample, start, len, fill, mayThrow, pNumWithinClips);
+   }
+
+   //! Retrieve samples from a track in a specified format
+   /*!
+    @copydetails WaveTrack::GetFloats()
+    @param format sample format of the destination buffer
+    */
    bool Get(samplePtr buffer, sampleFormat format,
       sampleCount start, size_t len,
       fillFormat fill = fillZero,
@@ -254,6 +284,7 @@ private:
       // filled according to fillFormat; but these were not necessarily one
       // contiguous range.
       sampleCount * pNumWithinClips = nullptr) const;
+
    void Set(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len);
 
@@ -429,8 +460,9 @@ private:
    }
    
    // Create NEW clip and add it to this track. Returns a pointer
-   // to the newly created clip.
-   WaveClip* CreateClip();
+   // to the newly created clip. Optionally initial offset and
+   // clip name may be provided
+   WaveClip* CreateClip(double offset = .0, const wxString& name = wxEmptyString);
 
    /** @brief Get access to the most recently added clip, or create a clip,
    *  if there is not already one.  THIS IS NOT NECESSARILY RIGHTMOST.
@@ -542,6 +574,9 @@ private:
    ConstIntervals GetIntervals() const override;
    Intervals GetIntervals() override;
 
+   //! Returns nullptr if clip with such name was not found
+   const WaveClip* FindClipByName(const wxString& name) const;
+
  protected:
    //
    // Protected variables
@@ -592,10 +627,9 @@ private:
    std::unique_ptr<WaveformSettings> mpWaveformSettings;
 };
 
-// This is meant to be a short-lived object, during whose lifetime,
-// the contents of the WaveTrack are known not to change.  It can replace
-// repeated calls to WaveTrack::Get() (each of which opens and closes at least
-// one block file).
+//! A short-lived object, during whose lifetime, the contents of the WaveTrack are assumed not to change.
+/*! It can replace repeated calls to WaveTrack::Get() (each of which opens and closes at least one block).
+ */
 class AUDACITY_DLL_API WaveTrackCache {
 public:
    WaveTrackCache()
@@ -617,12 +651,11 @@ public:
    const std::shared_ptr<const WaveTrack>& GetTrack() const { return mPTrack; }
    void SetTrack(const std::shared_ptr<const WaveTrack> &pTrack);
 
-   // Uses fillZero always
-   // Returns null on failure
-   // Returned pointer may be invalidated if Get is called again
-   // Do not DELETE[] the pointer
-   constSamplePtr Get(
-      sampleFormat format, sampleCount start, size_t len, bool mayThrow);
+   //! Retrieve samples as floats from the track or from the memory cache
+   /*! Uses fillZero always
+    @return null on failure; this object owns the memory; may be invalidated if GetFloats() is called again
+   */
+   const float *GetFloats(sampleCount start, size_t len, bool mayThrow);
 
 private:
    void Free();
@@ -670,6 +703,8 @@ void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
 void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
    SampleBlockIDSet *pIDs = nullptr);
 
+class ProjectRate;
+
 class AUDACITY_DLL_API WaveTrackFactory final
    : public ClientData::Base
 {
@@ -679,9 +714,9 @@ class AUDACITY_DLL_API WaveTrackFactory final
    static WaveTrackFactory &Reset( AudacityProject &project );
    static void Destroy( AudacityProject &project );
 
-   WaveTrackFactory( const ProjectSettings &settings,
+   WaveTrackFactory( const ProjectRate &rate,
       const SampleBlockFactoryPtr &pFactory)
-      : mSettings{ settings }
+      : mRate{ rate }
       , mpFactory(pFactory)
    {
    }
@@ -692,7 +727,7 @@ class AUDACITY_DLL_API WaveTrackFactory final
    { return mpFactory; }
 
  private:
-   const ProjectSettings &mSettings;
+   const ProjectRate &mRate;
    SampleBlockFactoryPtr mpFactory;
  public:
    std::shared_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);

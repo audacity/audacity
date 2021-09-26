@@ -15,6 +15,7 @@
 #include <cstdlib>
 
 #include "Project.h"
+#include "ProjectRate.h"
 #include "ProjectSettings.h"
 #include "Track.h"
 #include "ViewInfo.h"
@@ -75,7 +76,7 @@ void SnapManager::Reinit()
 {
    const auto &settings = ProjectSettings::Get( *mProject );
    int snapTo = settings.GetSnapTo();
-   double rate = settings.GetRate();
+   auto rate = ProjectRate::Get(*mProject).GetRate();
    auto format = settings.GetSelectionFormat();
 
    // No need to reinit if these are still the same

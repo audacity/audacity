@@ -25,7 +25,7 @@
 #include <wx/textctrl.h>
 
 #include "../ShuttleGui.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 
 PlaybackPrefs::PlaybackPrefs(wxWindow * parent, wxWindowID winid)
 :  PrefsPanel(parent, winid, XO("Playback"))
@@ -47,7 +47,7 @@ TranslatableString PlaybackPrefs::GetDescription()
    return XO("Preferences for Playback");
 }
 
-wxString PlaybackPrefs::HelpPageName()
+ManualPageID PlaybackPrefs::HelpPageName()
 {
    return "Playback_Preferences";
 }

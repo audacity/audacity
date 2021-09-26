@@ -16,8 +16,8 @@
 #include <vector>
 
 #include <unordered_map>
-#include "audacity/EffectInterface.h"
-#include "audacity/Types.h"
+#include "EffectInterface.h"
+#include "Identifier.h"
 
 class AudacityCommand;
 class AudacityProject;
@@ -75,10 +75,10 @@ public:
    EffectManager();
    virtual ~EffectManager();
 
-   /** (Un)Register an effect so it can be executed. */
-   // Here solely for the purpose of Nyquist Workbench until
-   // a better solution is devised.
-   const PluginID & RegisterEffect(Effect *f);
+   //! Here solely for the purpose of Nyquist Workbench until a better solution is devised.
+   /** Register an effect so it can be executed. */
+   const PluginID & RegisterEffect(std::unique_ptr<Effect> uEffect);
+   //! Used only by Nyquist Workbench module
    void UnregisterEffect(const PluginID & ID);
 
    TranslatableString GetEffectFamilyName(const PluginID & ID);
@@ -96,7 +96,7 @@ public:
    TranslatableString GetCommandName(const PluginID & ID);
    CommandID GetCommandIdentifier(const PluginID & ID);
    TranslatableString GetCommandDescription(const PluginID & ID);
-   wxString GetCommandUrl(const PluginID & ID);
+   ManualPageID GetCommandUrl(const PluginID & ID);
    TranslatableString GetCommandTip(const PluginID & ID);
    // flags control which commands are included.
    void GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags);

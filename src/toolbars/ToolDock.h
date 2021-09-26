@@ -17,6 +17,7 @@
 #include <wx/defs.h>
 
 #include "ToolBar.h"
+#include "MemoryX.h"
 
 class wxCommandEvent;
 class wxEraseEvent;

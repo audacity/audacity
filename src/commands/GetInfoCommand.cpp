@@ -24,7 +24,8 @@ This class now lists
 #include "GetInfoCommand.h"
 
 #include "LoadCommands.h"
-#include "../Project.h"
+#include "Project.h"
+#include "../ProjectWindows.h"
 #include "CommandManager.h"
 #include "CommandTargets.h"
 #include "../effects/EffectManager.h"
@@ -32,7 +33,7 @@ This class now lists
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../WaveClip.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
 #include "../Envelope.h"
@@ -48,6 +49,7 @@ This class now lists
 #include "../ShuttleGui.h"
 
 #include <wx/frame.h>
+#include <wx/log.h>
 #include <wx/menu.h>
 
 const ComponentInterfaceSymbol GetInfoCommand::Symbol
@@ -191,6 +193,8 @@ bool GetInfoCommand::SendMenus(const CommandContext &context)
    return true;
 }
 
+#include "Prefs.h"
+
 namespace {
 
 /**************************************************************************//**
@@ -204,10 +208,10 @@ public:
 
    wxCheckBox * TieCheckBox(
       const TranslatableString &Prompt,
-      const SettingSpec< bool > &Setting) override;
+      const BoolSetting &Setting) override;
    wxCheckBox * TieCheckBoxOnRight(
       const TranslatableString &Prompt,
-      const SettingSpec< bool > &Setting) override;
+      const BoolSetting &Setting) override;
 
    wxChoice *TieChoice(
       const TranslatableString &Prompt,
@@ -215,30 +219,30 @@ public:
 
    wxChoice * TieNumberAsChoice(
       const TranslatableString &Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const TranslatableStrings & Choices,
       const std::vector<int> * pInternalChoices, int iNoMatchSelector ) override;
 
    wxTextCtrl * TieTextBox(
       const TranslatableString &Prompt,
-      const SettingSpec< wxString > &Setting,
+      const StringSetting &Setting,
       const int nChars) override;
    wxTextCtrl * TieIntegerTextBox(
       const TranslatableString & Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const int nChars) override;
    wxTextCtrl * TieNumericTextBox(
       const TranslatableString & Prompt,
-      const SettingSpec< double > &Setting,
+      const DoubleSetting &Setting,
       const int nChars) override;
    wxSlider * TieSlider(
       const TranslatableString & Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const int max,
       const int min = 0) override;
    wxSpinCtrl * TieSpinCtrl(
       const TranslatableString &Prompt,
-      const SettingSpec< int > &Setting,
+      const IntSetting &Setting,
       const int max,
       const int min) override;
 };
@@ -256,7 +260,7 @@ ShuttleGuiGetDefinition::~ShuttleGuiGetDefinition(void)
 
 wxCheckBox * ShuttleGuiGetDefinition::TieCheckBox(
    const TranslatableString &Prompt,
-   const SettingSpec< bool > &Setting)
+   const BoolSetting &Setting)
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
@@ -269,7 +273,7 @@ wxCheckBox * ShuttleGuiGetDefinition::TieCheckBox(
 
 wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
    const TranslatableString &Prompt,
-   const SettingSpec< bool > &Setting)
+   const BoolSetting &Setting)
 {
    StartStruct();
    AddItem( Setting.GetPath(), "id" );
@@ -301,7 +305,7 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
 
 wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    const TranslatableString &Prompt,
-   const SettingSpec< int > &Setting,
+   const IntSetting &Setting,
    const TranslatableStrings & Choices,
    const std::vector<int> * pInternalChoices, int iNoMatchSelector)
 {
@@ -320,7 +324,7 @@ wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
 
 wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
    const TranslatableString &Prompt,
-   const SettingSpec< wxString > &Setting,
+   const StringSetting &Setting,
    const int nChars)
 {
    StartStruct();
@@ -334,7 +338,7 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieTextBox(
 
 wxTextCtrl * ShuttleGuiGetDefinition::TieIntegerTextBox(
    const TranslatableString & Prompt,
-   const SettingSpec< int > &Setting,
+   const IntSetting &Setting,
    const int nChars)
 {
    StartStruct();
@@ -348,7 +352,7 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieIntegerTextBox(
 
 wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
    const TranslatableString & Prompt,
-   const SettingSpec< double > &Setting,
+   const DoubleSetting &Setting,
    const int nChars)
 {
    StartStruct();
@@ -362,7 +366,7 @@ wxTextCtrl * ShuttleGuiGetDefinition::TieNumericTextBox(
 
 wxSlider * ShuttleGuiGetDefinition::TieSlider(
    const TranslatableString & Prompt,
-   const SettingSpec< int > &Setting,
+   const IntSetting &Setting,
    const int max,
    const int min) 
 {
@@ -377,7 +381,7 @@ wxSlider * ShuttleGuiGetDefinition::TieSlider(
 
 wxSpinCtrl * ShuttleGuiGetDefinition::TieSpinCtrl(
    const TranslatableString &Prompt,
-   const SettingSpec< int > &Setting,
+   const IntSetting &Setting,
    const int max,
    const int min) 
 {
@@ -414,14 +418,12 @@ bool GetInfoCommand::SendCommands(const CommandContext &context, int flags )
    PluginManager & pm = PluginManager::Get();
    EffectManager & em = EffectManager::Get();
    {
-      const PluginDescriptor *plug = pm.GetFirstPlugin(PluginTypeEffect | PluginTypeAudacityCommand);
-      while (plug)
-      {
-         auto command = em.GetCommandIdentifier(plug->GetID());
+      for (auto &plug
+           : pm.PluginsOfType(PluginTypeEffect | PluginTypeAudacityCommand)) {
+         auto command = em.GetCommandIdentifier(plug.GetID());
          if (!command.empty()){
-            em.GetCommandDefinition( plug->GetID(), context, flags );
+            em.GetCommandDefinition( plug.GetID(), context, flags );
          }
-         plug = pm.GetNextPlugin(PluginTypeEffect | PluginTypeAudacityCommand );
       }
    }
    context.EndArray();
@@ -694,80 +696,20 @@ void GetInfoCommand::ExploreAdornments( const CommandContext &context,
 }
 
 void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
-   wxPoint P, wxWindow * pWin, int WXUNUSED(Id), int depth )
+   wxPoint P, int depth )
 {
    AudacityProject * pProj = &context.project;
    auto &tp = TrackPanel::Get( *pProj );
-   auto &viewInfo = ViewInfo::Get( *pProj );
-
-   wxRect trackRect = pWin->GetRect();
-
-   for ( auto t : TrackList::Get( *pProj ).Any() + IsVisibleTrack{ pProj } ) {
-      auto &view = TrackView::Get( *t );
-      trackRect.y = view.GetY() - viewInfo.vpos;
-      trackRect.height = view.GetHeight();
-
-#if 0
-      // Work in progress on getting the TCP button positions and sizes.
-      wxRect rect = trackRect;
-      Track *l = t->GetLink();
-
-      if (t->GetLinked()) {
-         rect.height += l->GetHeight();
-      }
-
-      switch (t->GetKind()) {
-         case Track::Wave:
-         {
-            break;
-         }
-#ifdef USE_MIDI
-         case Track::Note:
-         {
-            break;
-         }
-#endif // USE_MIDI
-         case Track::Label:
-            break;
-         case Track::Time:
-            break;
-      }
-      {
-         // Start with whole track rect
-         wxRect R = trackRect;
-
-         // Now exclude left, right, and top insets
-         R.x += kLeftInset;
-         R.y += kTopInset;
-         R.width -= kLeftInset * 2;
-         R.height -= kTopInset;
-
-         int labelw = viewInfo.GetLabelWidth();
-         //int vrul = viewInfo.GetVRulerOffset();
-         bool bIsWave = true;
-         //mTrackInfo.DrawBackground(dc, R, t->GetSelected(), bIsWave, labelw, vrul);
-
-
-         for (Overlay * pOverlay : pTP->mOverlays) {
-            auto R2(pOverlay->GetRectangle(trackRect.GetSize()).first);
-            context.Status( wxString::Format("  [ %2i, %3i, %3i, %3i, %3i, \"%s\" ],", 
-               depth, R2.GetLeft(), R2.GetTop(), R2.GetRight(), R2.GetBottom(), "Otherthing" )); 
-         }
-      }
-#endif
-
-      // The VRuler.
-      {  
-         wxRect R = trackRect;
-         R.x += viewInfo.GetVRulerOffset();
-         R.y += kTopMargin;
-         R.width = viewInfo.GetVRulerWidth();
-         R.height -= (kTopMargin + kBottomMargin);
+   wxRect panelRect{ {}, tp.GetSize() };
+   for ( auto t : TrackList::Get( *pProj ).Any() ) {
+      auto rulers = tp.FindRulerRects(t);
+      for (auto &R : rulers) {
+         if (!R.Intersects(panelRect))
+            continue;
          R.SetPosition( R.GetPosition() + P );
-
          context.StartStruct();
          context.AddItem( depth, "depth" );
-         context.AddItem( "VRuler", "label" ); 
+         context.AddItem( "VRuler", "label" );
          context.StartField("box");
          context.StartArray();
          context.AddItem( R.GetLeft() );
@@ -790,7 +732,7 @@ void GetInfoCommand::ExploreWindows( const CommandContext &context,
    if( pWin->GetName() == "Track Panel" )
    {
       wxRect R = pWin->GetScreenRect();
-      ExploreTrackPanel(  context, R.GetPosition()-P, pWin, Id, depth );
+      ExploreTrackPanel(  context, R.GetPosition()-P, depth );
       return;
    }
    wxWindowList list = pWin->GetChildren();

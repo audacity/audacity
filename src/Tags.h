@@ -31,7 +31,7 @@
 
 
 
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #include "ClientData.h"
 #include <utility>
@@ -40,7 +40,7 @@
 
 #include <memory>
 #include <unordered_map>
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 class wxArrayString;
 class wxComboBox;

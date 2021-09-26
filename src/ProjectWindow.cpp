@@ -12,11 +12,13 @@ Paul Licameli split from AudacityProject.cpp
 
 
 
+#include "ActiveProject.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
 #include "Menus.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectWindows.h"
 #include "ProjectStatus.h"
 #include "RefreshCode.h"
 #include "TrackPanelMouseEvent.h"
@@ -33,6 +35,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/wxPanelWrapper.h"
 #include "widgets/WindowAccessible.h"
 
+#include <wx/app.h>
 #include <wx/display.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
@@ -496,7 +499,7 @@ unsigned operator()
 
 } sMouseWheelHandler;
 
-AudacityProject::AttachedWindows::RegisteredFactory sProjectWindowKey{
+AttachedWindows::RegisteredFactory sProjectWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       wxRect wndRect;
       bool bMaximized = false;
@@ -531,7 +534,7 @@ AudacityProject::AttachedWindows::RegisteredFactory sProjectWindowKey{
 
 ProjectWindow &ProjectWindow::Get( AudacityProject &project )
 {
-   return project.AttachedWindows::Get< ProjectWindow >( sProjectWindowKey );
+   return GetAttachedWindows(project).Get< ProjectWindow >(sProjectWindowKey);
 }
 
 const ProjectWindow &ProjectWindow::Get( const AudacityProject &project )
@@ -542,7 +545,7 @@ const ProjectWindow &ProjectWindow::Get( const AudacityProject &project )
 ProjectWindow *ProjectWindow::Find( AudacityProject *pProject )
 {
    return pProject
-      ? pProject->AttachedWindows::Find< ProjectWindow >( sProjectWindowKey )
+      ? GetAttachedWindows(*pProject).Find< ProjectWindow >(sProjectWindowKey)
       : nullptr;
 }
 

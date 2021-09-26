@@ -26,6 +26,7 @@
 
 
 #include "RingBuffer.h"
+#include "Dither.h"
 
 RingBuffer::RingBuffer(sampleFormat format, size_t size)
    : mFormat{ format }
@@ -68,7 +69,7 @@ size_t RingBuffer::AvailForPut()
    // never decrease it, so writer can safely assume this much at least
 }
 
-size_t RingBuffer::Put(samplePtr buffer, sampleFormat format,
+size_t RingBuffer::Put(constSamplePtr buffer, sampleFormat format,
                     size_t samplesToCopy, size_t padding)
 {
    auto start = mStart.load( std::memory_order_acquire );
@@ -85,7 +86,7 @@ size_t RingBuffer::Put(samplePtr buffer, sampleFormat format,
 
       CopySamples(src, format,
                   mBuffer.ptr() + pos * SAMPLE_SIZE(mFormat), mFormat,
-                  block);
+                  block, DitherType::none);
 
       src += block * SAMPLE_SIZE(format);
       pos = (pos + block) % mBufferSize;
@@ -167,7 +168,7 @@ size_t RingBuffer::Get(samplePtr buffer, sampleFormat format,
 
       CopySamples(mBuffer.ptr() + start * SAMPLE_SIZE(mFormat), mFormat,
                   dest, format,
-                  block);
+                  block, DitherType::none);
 
       dest += block * SAMPLE_SIZE(format);
       start = (start + block) % mBufferSize;

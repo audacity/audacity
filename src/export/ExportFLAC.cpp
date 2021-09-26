@@ -29,10 +29,10 @@ and libvorbis examples, Monty <monty@xiph.org>
 
 #include "FLAC++/encoder.h"
 
-#include "../float_cast.h"
-#include "../ProjectSettings.h"
+#include "float_cast.h"
+#include "ProjectRate.h"
 #include "../Mix.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 
 #include "../Tags.h"
@@ -40,7 +40,7 @@ and libvorbis examples, Monty <monty@xiph.org>
 
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
-#include "../wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h"
 
 //----------------------------------------------------------------------------
 // ExportFLACOptions Class
@@ -255,8 +255,7 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
                         const Tags *metadata,
                         int WXUNUSED(subformat))
 {
-   const auto &settings = ProjectSettings::Get( *project );
-   double    rate    = settings.GetRate();
+   double    rate    = ProjectRate::Get(*project).GetRate();
    const auto &tracks = TrackList::Get( *project );
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
@@ -391,15 +390,15 @@ ProgressResult ExportFLAC::Export(AudacityProject *project,
       }
       else {
          for (size_t i = 0; i < numChannels; i++) {
-            samplePtr mixed = mixer->GetBuffer(i);
+            auto mixed = mixer->GetBuffer(i);
             if (format == int24Sample) {
                for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-                  tmpsmplbuf[i][j] = ((int *)mixed)[j];
+                  tmpsmplbuf[i][j] = ((const int *)mixed)[j];
                }
             }
             else {
                for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-                  tmpsmplbuf[i][j] = ((short *)mixed)[j];
+                  tmpsmplbuf[i][j] = ((const short *)mixed)[j];
                }
             }
          }

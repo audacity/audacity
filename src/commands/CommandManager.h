@@ -12,28 +12,28 @@
 #ifndef __AUDACITY_COMMAND_MANAGER__
 #define __AUDACITY_COMMAND_MANAGER__
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
-#include "../ClientData.h"
+#include "ClientData.h"
 #include "CommandFunctors.h"
 #include "CommandFlag.h"
 
 #include "Keyboard.h"
 
-#include "../Prefs.h"
-#include "../Registry.h"
+#include "Prefs.h"
+#include "Registry.h"
 
 #include <vector>
 
-#include "../xml/XMLTagHandler.h"
-
-#include "audacity/Types.h"
+#include "XMLTagHandler.h"
 
 #include <unordered_map>
 
 class wxMenu;
 class wxMenuBar;
 using CommandParameter = CommandID;
+
+class BoolSetting;
 
 struct MenuBarListEntry;
 struct SubMenuListEntry;
@@ -139,6 +139,11 @@ class AUDACITY_DLL_API CommandManager final
          checker = MakeCheckFn( key, defaultValue );
          return std::move(*this);
       }
+      // Take a BoolSetting
+      Options &&CheckTest ( const BoolSetting &setting ) && {
+         checker = MakeCheckFn( setting );
+         return std::move(*this);
+      }
 
       const wxChar *accel{ wxT("") };
       CheckFn checker; // default value means it's not a check item
@@ -155,6 +160,8 @@ class AUDACITY_DLL_API CommandManager final
    private:
       static CheckFn
          MakeCheckFn( const wxString key, bool defaultValue );
+      static CheckFn
+         MakeCheckFn( const BoolSetting &setting );
    };
 
    void AddItemList(const CommandID & name,
@@ -305,7 +312,8 @@ private:
 
    bool HandleCommandEntry(AudacityProject &project,
       const CommandListEntry * entry, CommandFlag flags,
-      bool alwaysEnabled, const wxEvent * evt = NULL);
+      bool alwaysEnabled, const wxEvent * evt = nullptr,
+      const CommandContext *pGivenContext = nullptr );
 
    //
    // Modifying
@@ -328,8 +336,20 @@ public:
    wxMenu * CurrentMenu() const;
 
    void UpdateCheckmarks( AudacityProject &project );
+
+   //! Format a string appropriate for insertion in a menu
+   /*!
+    @param pLabel if not null, use this instead of the manager's
+    stored label
+    */
+   wxString FormatLabelForMenu(
+      const CommandID &id, const TranslatableString *pLabel) const;
+
 private:
    wxString FormatLabelForMenu(const CommandListEntry *entry) const;
+   wxString FormatLabelForMenu(
+      const TranslatableString &translatableLabel,
+      const NormalizedKeyString &keyStr) const;
    wxString FormatLabelWithDisabledAccel(const CommandListEntry *entry) const;
 
    //

@@ -39,7 +39,7 @@
 #include <wx/thread.h>
 #include <wx/tooltip.h>
 
-#include "audacity/Types.h"
+#include "Identifier.h"
 
 #include "AColor.h"
 #include "AudioIO.h"
@@ -52,7 +52,6 @@
 #include "Mix.h"
 #include "NoteTrack.h"
 #include "Prefs.h"
-#include "Project.h"
 #include "Sequence.h"
 #include "TimeTrack.h"
 #include "UndoManager.h"

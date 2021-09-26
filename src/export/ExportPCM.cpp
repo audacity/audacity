@@ -12,6 +12,7 @@
 
 #include <wx/defs.h>
 
+#include <wx/app.h>
 #include <wx/choice.h>
 #include <wx/dynlib.h>
 #include <wx/filename.h>
@@ -23,17 +24,18 @@
 
 #include "sndfile.h"
 
+#include "Dither.h"
 #include "../FileFormats.h"
 #include "../Mix.h"
-#include "../Prefs.h"
-#include "../ProjectSettings.h"
+#include "Prefs.h"
+#include "ProjectRate.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
 #include "../widgets/ProgressDialog.h"
-#include "../wxFileNameWrapper.h"
+#include "../widgets/wxWidgetsBasicUI.h"
+#include "wxFileNameWrapper.h"
 
 #include "Export.h"
 
@@ -442,13 +444,15 @@ void ExportPCM::ReportTooBigError(wxWindow * pParent)
       XO("You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
       "Audacity cannot do this, the Export was abandoned.");
 
-   ShowErrorDialog(pParent, XO("Error Exporting"), message,
-                  wxT("Size_limits_for_WAV_and_AIFF_files"));
+   BasicUI::ShowErrorDialog( wxWidgetsWindowPlacement{ pParent },
+      XO("Error Exporting"), message,
+      wxT("Size_limits_for_WAV_and_AIFF_files"));
 
 // This alternative error dialog was to cover the possibility we could not 
 // compute the size in advance.
 #if 0
-   ShowErrorDialog(pParent, XO("Error Exporting"),
+   BasicUI::ShowErrorDialog( wxWidgetsWindowPlacement{ pParent },
+                  XO("Error Exporting"),
                   XO("Your exported WAV file has been truncated as Audacity cannot export WAV\n"
                     "files bigger than 4GB."),
                   wxT("Size_limits_for_WAV_files"));
@@ -471,7 +475,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                                  const Tags *metadata,
                                  int subformat)
 {
-   double rate = ProjectSettings::Get( *project ).GetRate();
+   double rate = ProjectRate::Get( *project ).GetRate();
    const auto &tracks = TrackList::Get( *project );
 
    // Set a default in case the settings aren't found
@@ -635,7 +639,7 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
             if (numSamples == 0)
                break;
 
-            samplePtr mixed = mixer->GetBuffer();
+            auto mixed = mixer->GetBuffer();
 
             // Bug 1572: Not ideal, but it does add the desired dither
             if ((info.format & SF_FORMAT_SUBMASK) == SF_FORMAT_PCM_24) {
@@ -643,19 +647,21 @@ ProgressResult ExportPCM::Export(AudacityProject *project,
                   CopySamples(
                      mixed + (c * SAMPLE_SIZE(format)), format,
                      dither.data() + (c * SAMPLE_SIZE(int24Sample)), int24Sample,
-                     numSamples, true, info.channels, info.channels
+                     numSamples, gHighQualityDither, info.channels, info.channels
                   );
-                  CopySamplesNoDither(
+                  // Copy back without dither
+                  CopySamples(
                      dither.data() + (c * SAMPLE_SIZE(int24Sample)), int24Sample,
-                     mixed + (c * SAMPLE_SIZE(format)), format,
-                     numSamples, info.channels, info.channels);
+                     const_cast<samplePtr>(mixed) // PRL fix this!
+                        + (c * SAMPLE_SIZE(format)), format,
+                     numSamples, DitherType::none, info.channels, info.channels);
                }
             }
 
             if (format == int16Sample)
-               samplesWritten = SFCall<sf_count_t>(sf_writef_short, sf.get(), (short *)mixed, numSamples);
+               samplesWritten = SFCall<sf_count_t>(sf_writef_short, sf.get(), (const short *)mixed, numSamples);
             else
-               samplesWritten = SFCall<sf_count_t>(sf_writef_float, sf.get(), (float *)mixed, numSamples);
+               samplesWritten = SFCall<sf_count_t>(sf_writef_float, sf.get(), (const float *)mixed, numSamples);
 
             if (static_cast<size_t>(samplesWritten) != numSamples) {
                char buffer2[1000];

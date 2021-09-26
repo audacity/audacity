@@ -95,9 +95,9 @@ bool PrefsPanel::ShowsPreviewButton()
    return false;
 }
 
-wxString PrefsPanel::HelpPageName()
+ManualPageID PrefsPanel::HelpPageName()
 {
-   return wxEmptyString;
+   return {};
 }
 
 PrefsPanel::Factories

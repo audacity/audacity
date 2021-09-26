@@ -19,6 +19,7 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 
+#include <wx/app.h>
 #include <wx/bmpbuttn.h>
 #include <wx/dcclient.h>
 #include <wx/icon.h>
@@ -42,6 +43,7 @@
 #include "ProjectFileIO.h"
 #include "ProjectSettings.h"
 #include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "SelectUtilities.h"
 #include "Theme.h"
 #include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
@@ -50,7 +52,7 @@
 #include "WaveTrack.h"
 
 #include "widgets/AButton.h"
-#include "widgets/Meter.h"
+#include "widgets/MeterPanel.h"
 
 
 #include "../images/MusicalInstruments.h"
@@ -610,8 +612,8 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    Floats tempFloatsArray{ nFrames };
    decltype(tempFloatsArray) meterFloatsArray;
    // Don't throw on read error in this drawing update routine
-   bool bSuccess = pTrack->Get((samplePtr)tempFloatsArray.get(),
-      floatSample, startSample, nFrames, fillZero, false);
+   bool bSuccess = pTrack->GetFloats(tempFloatsArray.get(),
+      startSample, nFrames, fillZero, false);
    if (bSuccess)
    {
       // We always pass a stereo sample array to the meter, as it shows 2 channels.
@@ -625,8 +627,8 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
 
       if (GetRight())
          // Again, don't throw
-         bSuccess = GetRight()->Get((samplePtr)tempFloatsArray.get(),
-            floatSample, startSample, nFrames, fillZero, false);
+         bSuccess = GetRight()->GetFloats(tempFloatsArray.get(),
+            startSample, nFrames, fillZero, false);
 
       if (bSuccess)
          // Interleave right channel, or duplicate same signal for "right" channel in mono case.
@@ -1408,7 +1410,7 @@ const wxSize kDefaultSize =
    wxSize(MIXER_BOARD_MIN_WIDTH, MIXER_BOARD_MIN_HEIGHT);
 
 MixerBoardFrame::MixerBoardFrame(AudacityProject* parent)
-:  wxFrame( &GetProjectFrame( *parent ), -1, {},
+:  wxFrame( &GetProjectFrame( *parent ), -1, wxString{},
             wxDefaultPosition, kDefaultSize,
             wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT)
    , mProject(parent)
@@ -1513,8 +1515,22 @@ void MixerBoardFrame::SetWindowTitle()
 
 namespace {
 
+const ReservedCommandFlag&
+   PlayableTracksExistFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject &project){
+         auto &tracks = TrackList::Get( project );
+         return
+#ifdef EXPERIMENTAL_MIDI_OUT
+            !tracks.Any<const NoteTrack>().empty()
+         ||
+#endif
+            !tracks.Any<const WaveTrack>().empty()
+         ;
+      }
+   }; return flag; }
+
 // Mixer board window attached to each project is built on demand by:
-AudacityProject::AttachedWindows::RegisteredFactory sMixerBoardKey{
+AttachedWindows::RegisteredFactory sMixerBoardKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       return safenew MixerBoardFrame( &parent );
    }
@@ -1526,7 +1542,7 @@ struct Handler : CommandHandlerObject {
    {
       auto &project = context.project;
 
-      auto mixerBoardFrame = &project.AttachedWindows::Get( sMixerBoardKey );
+      auto mixerBoardFrame = &GetAttachedWindows(project).Get(sMixerBoardKey);
       mixerBoardFrame->Show();
       mixerBoardFrame->Raise();
       mixerBoardFrame->SetFocus();

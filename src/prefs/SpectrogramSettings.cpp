@@ -16,13 +16,13 @@ Paul Licameli
 
 #include "SpectrogramSettings.h"
 
-#include "../NumberScale.h"
+#include "../AColor.h"
+#include "NumberScale.h"
 
 #include <algorithm>
 
-#include "../FFT.h"
-#include "../Internat.h"
-#include "../Prefs.h"
+#include "FFT.h"
+#include "Prefs.h"
 
 #include <cmath>
 
@@ -71,7 +71,7 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    , zeroPaddingFactor(other.zeroPaddingFactor)
 #endif
-   , isGrayscale(other.isGrayscale)
+   , colorScheme(other.colorScheme)
    , scaleType(other.scaleType)
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
    , spectralSelection(other.spectralSelection)
@@ -108,7 +108,7 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
 #ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
       zeroPaddingFactor = other.zeroPaddingFactor;
 #endif
-      isGrayscale = other.isGrayscale;
+      colorScheme = other.colorScheme;
       scaleType = other.scaleType;
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
       spectralSelection = other.spectralSelection;
@@ -154,6 +154,47 @@ const EnumValueSymbols &SpectrogramSettings::GetScaleNames()
    };
    return result;
 }
+
+//static
+const EnumValueSymbols &SpectrogramSettings::GetColorSchemeNames()
+{
+   static const EnumValueSymbols result{
+      // Keep in correspondence with enum SpectrogramSettings::ColorScheme:
+      /* i18n-hint: New color scheme for spectrograms */
+      { wxT("SpecColorNew"),     XC("Color (default)",   "spectrum prefs") },
+      /* i18n-hint: Classic color scheme(from theme) for spectrograms */
+      { wxT("SpecColorTheme"),   XC("Color (classic)",   "spectrum prefs") },
+      /* i18n-hint: Grayscale color scheme for spectrograms */
+      { wxT("SpecGrayscale"),    XC("Grayscale",         "spectrum prefs") },
+      /* i18n-hint: Inverse grayscale color scheme for spectrograms */
+      { wxT("SpecInvGrayscale"), XC("Inverse grayscale", "spectrum prefs") },
+   };
+
+   wxASSERT(csNumColorScheme == result.size());
+   static_assert(csNumColorScheme == AColor::colorSchemes, "Broken correspondence");
+
+   return result;
+}
+
+
+void SpectrogramSettings::ColorSchemeEnumSetting::Migrate(wxString &value)
+{
+   // Migrate old grayscale option to Color scheme choice
+   bool isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
+   if (isGrayscale && !gPrefs->Read(wxT("/Spectrum/ColorScheme"), &value)) {
+      value = GetColorSchemeNames().at(csGrayscale).Internal();
+      Write(value);
+      gPrefs->Flush();
+   }
+}
+
+SpectrogramSettings::ColorSchemeEnumSetting SpectrogramSettings::colorSchemeSetting{
+   wxT("/Spectrum/ColorScheme"),
+   GetColorSchemeNames(),
+   csColorNew, // default to Color(New)
+   { csColorNew, csColorTheme, csGrayscale, csInvGrayscale },
+};
+
 
 //static
 const TranslatableStrings &SpectrogramSettings::GetAlgorithmNames()
@@ -228,6 +269,9 @@ bool SpectrogramSettings::Validate(bool quiet)
       ScaleType(std::max(0,
          std::min((int)(SpectrogramSettings::stNumScaleTypes) - 1,
             (int)(scaleType))));
+   colorScheme = ColorScheme(
+      std::max(0, std::min<int>(csNumColorScheme-1, colorScheme))
+   );
    algorithm = Algorithm(
       std::max(0, std::min((int)(algNumAlgorithms) - 1, (int)(algorithm)))
    );
@@ -255,7 +299,7 @@ void SpectrogramSettings::LoadPrefs()
 
    gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHann);
 
-   isGrayscale = (gPrefs->Read(wxT("/Spectrum/Grayscale"), 0L) != 0);
+   colorScheme = colorSchemeSetting.ReadEnum();
 
    scaleType = ScaleType(gPrefs->Read(wxT("/Spectrum/ScaleType"), 0L));
 
@@ -303,7 +347,7 @@ void SpectrogramSettings::SavePrefs()
 
    gPrefs->Write(wxT("/Spectrum/WindowType"), windowType);
 
-   gPrefs->Write(wxT("/Spectrum/Grayscale"), isGrayscale);
+   colorSchemeSetting.WriteEnum(colorScheme);
 
    gPrefs->Write(wxT("/Spectrum/ScaleType"), (int) scaleType);
 
@@ -362,10 +406,8 @@ void SpectrogramSettings::UpdatePrefs()
       gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHann);
    }
 
-   if (isGrayscale == defaults().isGrayscale) {
-      int temp;
-      gPrefs->Read(wxT("/Spectrum/Grayscale"), &temp, 0L);
-      isGrayscale = (temp != 0);
+   if (colorScheme == defaults().colorScheme) {
+      colorScheme = colorSchemeSetting.ReadEnum();
    }
 
    if (scaleType == defaults().scaleType) {

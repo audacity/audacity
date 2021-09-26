@@ -24,7 +24,7 @@
 #include <wx/textctrl.h>
 #include <wx/valgen.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
@@ -91,9 +91,9 @@ TranslatableString EffectNoise::GetDescription()
    return XO("Generates one of three different types of noise");
 }
 
-wxString EffectNoise::ManualPage()
+ManualPageID EffectNoise::ManualPage()
 {
-   return wxT("Noise");
+   return L"Noise";
 }
 
 // EffectDefinitionInterface implementation

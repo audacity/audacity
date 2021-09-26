@@ -453,12 +453,12 @@ bool VampEffect::Process()
 
          if (left)
          {
-            left->Get((samplePtr)data[0].get(), floatSample, pos, request);
+            left->GetFloats(data[0].get(), pos, request);
          }
 
          if (right)
          {
-            right->Get((samplePtr)data[1].get(), floatSample, pos, request);
+            right->GetFloats(data[1].get(), pos, request);
          }
 
          if (request < block)

@@ -34,10 +34,8 @@ class AUDACITY_DLL_API QualityPrefs final : public PrefsPanel
    TranslatableString GetDescription() override;
 
    bool Commit() override;
-   wxString HelpPageName() override;
+   ManualPageID HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
-
-   static sampleFormat SampleFormatChoice();
 
  private:
    void Populate();

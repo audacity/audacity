@@ -21,7 +21,7 @@
 #include <wx/listctrl.h>
 #include <wx/dnd.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 #include "../import/Import.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -84,7 +84,7 @@ TranslatableString ExtImportPrefs::GetDescription()
    return XO("Preferences for ExtImport");
 }
 
-wxString ExtImportPrefs::HelpPageName()
+ManualPageID ExtImportPrefs::HelpPageName()
 {
    return "Extended_Import_Preferences";
 }

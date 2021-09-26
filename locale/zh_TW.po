@@ -1,28 +1,126 @@
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Audacity Team
-# This file is distributed under the same license as the PACKAGE package.
-#
-# Tranlstors:
-# 風逸蘭 stchen0214
-# 傑西大叔, 2021
-# mkpoli <snowwolf1001@gmail.com>, 2017.
-# Walter Cheuk <wwycheuk@gmail.com>, 2019.
-# pan93412 <pan93412@gmail.com>, 2020.
+# This file is distributed under the same license as the audacity package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Hank Lu <hankbox@gmail.com>, 2021
+# Quence Lin <qqq89513@yahoo.com.tw>, 2021
+# Arith Hsu <arithmandar@gmail.com>, 2021
+# Walter Cheuk <wwycheuk@gmail.com>, 2021
+# Paval Shalamitski <yehekim@gmail.com>, 2021
+# Hiunn-hué <hiunnhue108@ymail.com>, 2021
+# Jesse Lin <jesselin.com@gmail.com>, 2021
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.1\n"
+"Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-03-31 12:57+0100\n"
-"PO-Revision-Date: 2021-04-07 22:00+0800\n"
-"Last-Translator: Yi-Jyun Pan <pan93412@gmail.com>\n"
-"Language-Team: Chinese <zh-l10n@lists.linux.org.tw>\n"
-"Language: zh_TW\n"
+"POT-Creation-Date: 2021-07-15 12:48-0400\n"
+"PO-Revision-Date: 2021-07-16 08:57+0000\n"
+"Last-Translator: Jesse Lin <jesselin.com@gmail.com>, 2021\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/klyok/teams/690/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
-"X-ZhConverter: 繁化姬 dict-7640c40e-r920 @ 2020/01/01 01:04:23 | https://"
-"zhconvert.org\n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, c-format
+msgid "Exception code 0x%x"
+msgstr "例外判斷碼： 0x%x"
+
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Unknown exception"
+msgstr "未知例外"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Unknown error"
+msgstr "未知錯誤"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Problem Report for Audacity"
+msgstr "將程式問題回報給 Audacity"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid ""
+"Click \"Send\" to submit the report to Audacity. This information is "
+"collected anonymously."
+msgstr "按下提交後將問題送出給 Audacity。此資訊以匿名方式被收集。"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Problem details"
+msgstr "問題細節"
+
+#: crashreports/crashreporter/CrashReportApp.cpp src/Tags.cpp
+#: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
+msgid "Comments"
+msgstr "備註意見"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr "不回報錯誤訊息 (&D)"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr "提交給Audacity  (&S)"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Failed to send crash report"
+msgstr "送出當機報告時候發生錯誤"
+
+#: libraries/lib-strings/Internat.cpp
+msgid "Unable to determine"
+msgstr "無法確定"
+
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s bytes"
+msgstr "%s bytes"
+
+#. i18n-hint: Abbreviation for Kilo bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s KB"
+msgstr "%s KB"
+
+#. i18n-hint: Abbreviation for Mega bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s MB"
+msgstr "%s MB"
+
+#. i18n-hint: Abbreviation for Giga bytes
+#: libraries/lib-strings/Internat.cpp
+#, c-format
+msgid "%s GB"
+msgstr "%s GB"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "Simplified"
+msgstr "簡易"
+
+#: libraries/lib-strings/Languages.cpp
+msgid "System"
+msgstr "系統"
+
+#: modules/mod-null/ModNullCallback.cpp
+msgid "1st Experimental Command..."
+msgstr "第一個實驗性指令..."
+
+#: modules/mod-null/ModNullCallback.cpp
+msgid "2nd Experimental Command"
+msgstr "第二個實驗性指令"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -86,7 +184,7 @@ msgstr "跳至(&G)"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Select &Font..."
-msgstr "選擇字型(&F)..."
+msgstr "字型選擇 (&F)..."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Split &Vertically"
@@ -116,7 +214,6 @@ msgstr "小圖示(&S)"
 msgid "Toolbar"
 msgstr "工具列"
 
-# 80% confident, may need review
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Go\tF5"
 msgstr "執行(&G)\tF5"
@@ -156,7 +253,8 @@ msgstr "腳本未儲存。"
 #: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
 #: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
 #: src/export/ExportMultiple.cpp src/import/RawAudioGuess.cpp
-#: src/menus/EditMenus.cpp src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
+#: src/menus/EditMenus.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "警告"
 
@@ -170,7 +268,7 @@ msgstr "「尋找」對話方塊"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Harvey Lubin (logo)"
-msgstr "Harvey Lubin（LOGO）"
+msgstr "Harvey Lubin (logo)"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Tango Icon Gallery (toolbar icons)"
@@ -195,7 +293,7 @@ msgstr "Nyquist 效果工作檯"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "No matches found"
-msgstr "未找到相符項"
+msgstr "找不到相符項目"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Code has been modified. Are you sure?"
@@ -374,79 +472,106 @@ msgstr "停止腳本"
 msgid "No revision identifier was provided"
 msgstr "未提供修訂版識別碼"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, system administration"
 msgstr "%s，系統管理"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, co-founder and developer"
 msgstr "%s，共同創辦人、開發者"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer"
 msgstr "%s，開發者"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, developer and support"
+msgstr "%s，開發人員和支援"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
 msgstr "%s，說明文件和支援"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
+#: src/AboutDialog.cpp
+#, c-format
+msgid "%s, QA tester, documentation and support"
+msgstr "%s，品質驗證測試人員，說明文件和支援"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support, French"
 msgstr "%s，說明文件和支援（法文）"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, quality assurance"
-msgstr "%s，品質保證"
+msgstr "%s，品質驗證"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, accessibility advisor"
 msgstr "%s，無障礙顧問"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphic artist"
 msgstr "%s，圖形設計"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, composer"
 msgstr "%s，作曲"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, tester"
-msgstr "%s，測試員"
+msgstr "%s，測試人員"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, Nyquist plug-ins"
 msgstr "%s，Nyquist 外掛程式"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, web developer"
 msgstr "%s，網頁開發者"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphics"
@@ -463,7 +588,8 @@ msgstr "%s（併入 %s、%s、%s、%s 及 %s）"
 msgid "About %s"
 msgstr "關於 %s"
 
-#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
+#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a
+#. button.
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp src/widgets/MultiDialog.cpp
 msgid "OK"
@@ -477,13 +603,12 @@ msgid ""
 "%s is a free program written by a worldwide team of %s. %s is %s for "
 "Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
-"%s 是款由來自世界各地的%s團隊建構而成的自由軟體。%s %sWindows、Mac 和 GNU/"
-"Linux（和其他類 Unix 系統）。"
+"%s 是一套由來自世界各地的%s團隊建構而成的自由軟體。%s 是%s Windows、Mac 和 GNU/Linux（和其他類 Unix 系統）。"
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
 msgid "volunteers"
-msgstr "志願者"
+msgstr "志工"
 
 #. i18n-hint: substitutes into "Audacity is %s"
 #: src/AboutDialog.cpp
@@ -496,9 +621,7 @@ msgstr "可用於"
 msgid ""
 "If you find a bug or have a suggestion for us, please write, in English, to "
 "our %s. For help, view the tips and tricks on our %s or visit our %s."
-msgstr ""
-"如果您發現臭蟲或是有建議，請在我們的%s用英文發表主題。如需協助，可以在我們"
-"的%s或是%s參閱提示或技巧。"
+msgstr "如果您發現臭蟲或是有建議，請在我們的%s用英文發表主題。如需協助，可以在我們的%s或是%s參閱提示或技巧。"
 
 #. i18n-hint substitutes into "write to our %s"
 #: src/AboutDialog.cpp
@@ -509,7 +632,7 @@ msgstr "討論區"
 #. i18n-hint substitutes into "view the tips and tricks on our %s"
 #: src/AboutDialog.cpp
 msgid "wiki"
-msgstr "維基"
+msgstr "維基百科"
 
 #. i18n-hint substitutes into "visit our %s"
 #: src/AboutDialog.cpp
@@ -533,7 +656,7 @@ msgstr ""
 "\"a>, 2019, 2020.</li>\n"
 "<li><a href=\\\"mailto:wwycheuk@gmail.com\\\">Walter Cheuk</\"\n"
 "\"a>, 2019.</li>\n"
-"<li>傑西大叔,  2021.</li>\n"
+"<li>傑西大叔 x 這裡胡說PODCAST,  2021.</li>\n"
 "\n"
 "</ul>"
 
@@ -547,15 +670,15 @@ msgstr "<h3>"
 msgid ""
 "%s the free, open source, cross-platform software for recording and editing "
 "sounds."
-msgstr "%s 是款免費、開源且跨平台的錄音及編輯音訊軟體。"
+msgstr "%s 是款免費、開源且跨平台的聲音編輯軟體。"
 
 #: src/AboutDialog.cpp
 msgid "Credits"
-msgstr "開發團隊"
+msgstr "版權所有"
 
 #: src/AboutDialog.cpp
 msgid "DarkAudacity Customisation"
-msgstr "DarkAudacity 自訂"
+msgstr "DarkAudacity 客製化"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -615,19 +738,19 @@ msgstr "%s 軟體的著作權歸屬於 %s 1999-2021 %s Team。"
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid "The name %s is a registered trademark of Dominic Mazzoni."
-msgstr "%s 是 Dominic Mazzoni 的註冊商標。"
+msgid "The name %s is a registered trademark."
+msgstr "%s 名稱是註冊商標。"
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
-msgstr "組建資訊"
+msgstr "程式組建資訊"
 
 #: src/AboutDialog.cpp src/PluginManager.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
 msgstr "已啟用"
 
-#: src/AboutDialog.cpp src/PluginManager.cpp src/export/ExportFFmpegDialogs.cpp
-#: src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginManager.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "未啟用"
 
@@ -642,7 +765,7 @@ msgstr "程式組建日期："
 
 #: src/AboutDialog.cpp
 msgid "Commit Id:"
-msgstr "Github 提交 ID："
+msgstr "提交 ID："
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -687,7 +810,7 @@ msgstr "跨平臺 GUI 函式庫"
 
 #: src/AboutDialog.cpp
 msgid "Audio playback and recording"
-msgstr "音訊播放和錄製"
+msgstr "聲音播放和錄製"
 
 #: src/AboutDialog.cpp
 msgid "Sample rate conversion"
@@ -759,8 +882,39 @@ msgid "Extreme Pitch and Tempo Change support"
 msgstr "極端音高和拍速變更支援"
 
 #: src/AboutDialog.cpp
+msgctxt "about dialog"
+msgid "Legal"
+msgstr "法律聲明"
+
+#: src/AboutDialog.cpp
 msgid "GPL License"
 msgstr "GPL 授權"
+
+#. i18n-hint: For "About Audacity...": Title for Privacy Policy section
+#: src/AboutDialog.cpp
+msgctxt "about dialog"
+msgid "PRIVACY POLICY"
+msgstr "隱私權政策"
+
+#: src/AboutDialog.cpp
+msgid ""
+"App update checking and error reporting require network access. These "
+"features are optional."
+msgstr "應用程式更新檢查以及錯誤回報機制需要網路的存取，這些功能都可以選擇性關閉。"
+
+#. i18n-hint: %s will be replaced with "our Privacy Policy"
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "See %s for more info."
+msgstr "更多資訊請參閱 %s"
+
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of
+#. "See".
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+msgid "our Privacy Policy"
+msgstr "我們的隱私權政策"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -783,7 +937,6 @@ msgstr "時間軸"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Seek"
 msgstr "點選並拖動以開始定位播放"
@@ -791,7 +944,6 @@ msgstr "點選並拖動以開始定位播放"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Scrub"
 msgstr "點選並拖動以開始跟隨播放"
@@ -799,7 +951,6 @@ msgstr "點選並拖動以開始跟隨播放"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
 msgstr "點選並移動以跟隨播放。點選並拖動以定位播放。"
@@ -807,7 +958,6 @@ msgstr "點選並移動以跟隨播放。點選並拖動以定位播放。"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Seek"
 msgstr "移動以定位播放"
@@ -815,7 +965,6 @@ msgstr "移動以定位播放"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub"
 msgstr "移動以跟隨播放"
@@ -872,14 +1021,16 @@ msgstr ""
 "不能鎖定超出\n"
 "專案終點的區域。"
 
-#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/ProjectAudioManager.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/FileNames.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "錯誤"
@@ -897,8 +1048,7 @@ msgstr "失敗！"
 msgid ""
 "Reset Preferences?\n"
 "\n"
-"This is a one-time question, after an 'install' where you asked to have the "
-"Preferences reset."
+"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
 msgstr ""
 "是否重設偏好設定？\n"
 "\n"
@@ -960,8 +1110,7 @@ msgstr "檔案(&F)"
 #: src/AudacityApp.cpp
 msgid ""
 "Audacity could not find a safe place to store temporary files.\n"
-"Audacity needs a place where automatic cleanup programs won't delete the "
-"temporary files.\n"
+"Audacity needs a place where automatic cleanup programs won't delete the temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "Audacity 找不到安全的位置來存放暫存檔案。\n"
@@ -1150,30 +1299,25 @@ msgid ""
 "\n"
 "\t%s\n"
 "\n"
-"This could be caused by many reasons, but the most likely are that the disk "
-"is full or you do not have write permissions to the file. More information "
-"can be obtained by clicking the help button below.\n"
+"This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. More information can be obtained by clicking the help button below.\n"
 "\n"
 "You can attempt to correct the issue and then click \"Retry\" to continue.\n"
 "\n"
-"If you choose to \"Quit Audacity\", your project may be left in an unsaved "
-"state which will be recovered the next time you open it."
+"If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
 "無法存取以下設定檔：\n"
 "\n"
 "\t%s\n"
 "\n"
-"這肇因於很多原因，但很有可能是磁碟用盡或是沒有檔案的寫入權限。點選下方的說明"
-"按鈕即可取得深入資訊。\n"
+"這肇因於很多原因，但很有可能是磁碟用盡或是沒有檔案的寫入權限。點選下方的說明按鈕即可取得深入資訊。\n"
 "\n"
 "您可以修正問題後按下「重試」繼續。\n"
 "\n"
-"如果選擇「結束 Audacity」，您的專案可能會處於未儲存狀態，但下次開啟後就會復"
-"原。"
+"如果選擇「結束 Audacity」，您的專案可能會處於未儲存狀態，但下次開啟後就會復原。"
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
-#: src/widgets/MultiDialog.cpp
+#: src/widgets/ErrorReportDialog.cpp src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "說明"
 
@@ -1296,17 +1440,13 @@ msgstr "輸入強度自動調整已將音量提高至 %.2f。"
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too high."
-msgstr ""
-"輸入強度自動調整已停止。分析的總次數已經達到極限，但仍找不到可接受的音量。音"
-"量還是太高。"
+msgstr "輸入強度自動調整已停止。分析的總次數已經達到極限，但仍找不到可接受的音量。音量還是太高。"
 
 #: src/AudioIO.cpp
 msgid ""
 "Automated Recording Level Adjustment stopped. The total number of analyses "
 "has been exceeded without finding an acceptable volume. Still too low."
-msgstr ""
-"輸入強度自動調整已停止。分析的總次數已經達到極限，但仍找不到可接受的音量。音"
-"量還是太低。"
+msgstr "輸入強度自動調整已停止。分析的總次數已經達到極限，但仍找不到可接受的音量。音量還是太低。"
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1497,8 +1637,7 @@ msgstr "當機自動復原"
 
 #: src/AutoRecoveryDialog.cpp
 msgid ""
-"The following projects were not saved properly the last time Audacity was "
-"run and can be automatically recovered.\n"
+"The following projects were not saved properly the last time Audacity was run and can be automatically recovered.\n"
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
@@ -1585,16 +1724,16 @@ msgstr "淡入淡出結束"
 
 #: src/BatchCommands.cpp
 msgid "Import Macro"
-msgstr "匯入巨集"
+msgstr "匯入連續指令"
 
 #: src/BatchCommands.cpp
 #, c-format
 msgid "Macro %s already exists. Would you like to replace it?"
-msgstr "%s 巨集已經存在。是否替換？"
+msgstr "%s 連續指令已經存在。是否取代？"
 
 #: src/BatchCommands.cpp
 msgid "Export Macro"
-msgstr "匯出巨集"
+msgstr "匯出連續指令"
 
 #: src/BatchCommands.cpp
 msgid "Effect"
@@ -1613,7 +1752,8 @@ msgstr "(%s)"
 msgid "Menu Command (No Parameters)"
 msgstr "選單指令 (無參數)"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove
+#. Tracks".
 #: src/BatchCommands.cpp src/CommonCommandFlags.cpp
 #, c-format
 msgid "\"%s\" requires one or more tracks to be selected."
@@ -1627,11 +1767,11 @@ msgstr "無法識別批次指令 %s 。"
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
 msgid "Applied Macro"
-msgstr "已套用連鎖指令"
+msgstr "已套用連續指令"
 
 #: src/BatchCommands.cpp
 msgid "Apply Macro"
-msgstr "套用連鎖指令"
+msgstr "套用連續指令"
 
 #. i18n-hint: active verb in past tense
 #: src/BatchCommands.cpp
@@ -1666,30 +1806,30 @@ msgstr "套用 %s"
 
 #: src/BatchProcessDialog.cpp
 msgid "Macros Palette"
-msgstr "連鎖指令調製板"
+msgstr "連續指令編輯器"
 
 #: src/BatchProcessDialog.cpp
 msgid "Manage Macros"
-msgstr "管理連鎖指令"
+msgstr "管理連續指令"
 
 #. i18n-hint: A macro is a sequence of commands that can be applied
 #. * to one or more audio files.
 #: src/BatchProcessDialog.cpp
 msgid "Select Macro"
-msgstr "選擇連鎖指令"
+msgstr "選擇連續指令"
 
 #. i18n-hint: This is the heading for a column in the edit macros dialog
 #: src/BatchProcessDialog.cpp
 msgid "Macro"
-msgstr "連鎖指令"
+msgstr "連續指令"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply Macro to:"
-msgstr "套用連鎖指令到："
+msgstr "套用連續指令到："
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply macro to project"
-msgstr "套用連鎖指令到目前專案"
+msgstr "套用連續指令到目前專案"
 
 #: src/BatchProcessDialog.cpp
 msgid "&Project"
@@ -1697,7 +1837,7 @@ msgstr "專案(&P)"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply macro to files..."
-msgstr "套用連鎖指令到檔案..."
+msgstr "套用連續指令到檔案..."
 
 #: src/BatchProcessDialog.cpp
 msgid "&Files..."
@@ -1710,7 +1850,7 @@ msgstr "展開(&E)"
 
 #: src/BatchProcessDialog.cpp
 msgid "No macro selected"
-msgstr "未選擇連鎖指令"
+msgstr "未選擇連續指令"
 
 #: src/BatchProcessDialog.cpp
 #, c-format
@@ -1821,17 +1961,18 @@ msgstr "要儲存變更嗎？"
 
 #: src/BatchProcessDialog.cpp
 msgid "Enter name of new macro"
-msgstr "輸入新連鎖指令的名稱"
+msgstr "輸入新連續指令的名稱"
 
 #: src/BatchProcessDialog.cpp
 msgid "Name of new macro"
-msgstr "新連鎖指令的名稱"
+msgstr "新連續指令的名稱"
 
 #: src/BatchProcessDialog.cpp
 msgid "Name must not be blank"
 msgstr "名稱不可空白"
 
-#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.
+#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/'
+#. and '\'.
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
@@ -2021,7 +2162,8 @@ msgstr "測試失敗！！！\n"
 msgid "Benchmark completed successfully.\n"
 msgstr "效能評測成功完成。\n"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
+#. Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
@@ -2033,15 +2175,17 @@ msgstr ""
 "\n"
 "Ctrl + A 以選擇全部音訊。"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
+#. Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
-"Select the audio for %s to use (for example, Cmd + A to Select All) then try "
-"again."
+"Select the audio for %s to use (for example, Cmd + A to Select All) then try"
+" again."
 msgstr "選擇音訊以用於「%s」（例如 Cmd + A 以全選）後重試。"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
+#. Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
@@ -2053,17 +2197,16 @@ msgstr "選擇音訊以用於「%s」（例如 Ctrl + A 以全選）後重試。
 msgid "No Audio Selected"
 msgstr "未選擇音訊"
 
-#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.
+#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise
+#. Reduction'.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
 "Select the audio for %s to use.\n"
 "\n"
-"1. Select audio that represents noise and use %s to get your 'noise "
-"profile'.\n"
+"1. Select audio that represents noise and use %s to get your 'noise profile'.\n"
 "\n"
-"2. When you have got your noise profile, select the audio you want to "
-"change\n"
+"2. When you have got your noise profile, select the audio you want to change\n"
 "and use %s to change that audio."
 msgstr ""
 "選擇「%s」要使用的音訊。\n"
@@ -2107,6 +2250,21 @@ msgstr "這需花費幾秒"
 #: src/CrashReport.cpp
 msgid "Report generated to:"
 msgstr "報告已生成至："
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "(%d): %s"
+msgstr "(%d): %s"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "Failed to set safe mode on primary connection to %s"
+msgstr "無法設定安全模式 - 主要連線 %s"
+
+#: src/DBConnection.cpp
+#, c-format
+msgid "Failed to set safe mode on checkpoint connection to %s"
+msgstr "無法設定安全模式 - 檢查點 %s"
 
 #: src/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2271,8 +2429,7 @@ msgstr "如果繼續，您的專案將不會儲存到磁碟上。要這樣做嗎
 
 #: src/Dependencies.cpp
 msgid ""
-"Your project is self-contained; it does not depend on any external audio "
-"files. \n"
+"Your project is self-contained; it does not depend on any external audio files. \n"
 "\n"
 "Some older Audacity projects may not be self-contained, and care \n"
 "is needed to keep their external dependencies in the right place.\n"
@@ -2313,48 +2470,47 @@ msgstr "矩形"
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Bartlett"
-msgstr ""
+msgstr "Bartlett"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Hamming"
-msgstr ""
+msgstr "Hamming"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Hann"
-msgstr ""
+msgstr "Hann"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
 msgid "Blackman"
-msgstr ""
+msgstr "Blackman"
 
 #. i18n-hint two proper names
 #: src/FFT.cpp
 msgid "Blackman-Harris"
-msgstr ""
+msgstr "Blackman-Harris"
 
 #. i18n-hint a proper name
 #: src/FFT.cpp
-#, fuzzy
 msgid "Welch"
 msgstr "Welch"
 
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: src/FFT.cpp
 msgid "Gaussian(a=2.5)"
-msgstr ""
+msgstr "Gaussian(a=2.5)"
 
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: src/FFT.cpp
 msgid "Gaussian(a=3.5)"
-msgstr ""
+msgstr "Gaussian(a=3.5)"
 
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: src/FFT.cpp
 msgid "Gaussian(a=4.5)"
-msgstr ""
+msgstr "Gaussian(a=4.5)"
 
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
@@ -2472,7 +2628,8 @@ msgstr ""
 
 #: src/FileException.cpp
 #, c-format
-msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgid ""
+"Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr "Audacity 成功寫入 %s 檔案，但未能將之重新命名為 %s。"
 
 #: src/FileException.cpp
@@ -2490,7 +2647,8 @@ msgstr ""
 msgid "File Error"
 msgstr "檔案錯誤"
 
-#. i18n-hint: %s will be the error message from the libsndfile software library
+#. i18n-hint: %s will be the error message from the libsndfile software
+#. library
 #: src/FileFormats.cpp
 #, c-format
 msgid "Error (file may not have been written): %s"
@@ -2563,6 +2721,11 @@ msgstr "由於使用 Unicode 字元，指定的檔案名稱無法轉換。"
 #: src/FileNames.cpp
 msgid "Specify New Filename:"
 msgstr "指定新的檔案名稱："
+
+#: src/FileNames.cpp
+#, c-format
+msgid "Directory %s does not have write permissions"
+msgstr "不具有寫入資料夾 %s的權限"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -2672,7 +2835,8 @@ msgid "&Replot..."
 msgstr "重新描繪(&R)..."
 
 #: src/FreqWindow.cpp
-msgid "To plot the spectrum, all selected tracks must be the same sample rate."
+msgid ""
+"To plot the spectrum, all selected tracks must be the same sample rate."
 msgstr "如要描繪頻譜，所有選擇的軌道必須具有相同的取樣頻率。"
 
 #: src/FreqWindow.cpp
@@ -2691,26 +2855,30 @@ msgstr "未選擇足夠的資料。"
 msgid "s"
 msgstr "秒"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %d dB"
 msgstr "%d Hz (%s) = %d 分貝"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %.1f dB"
 msgstr "%d Hz (%s) = %.1f 分貝"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %f"
 msgstr "%.4f 秒 (%d Hz) (%s) = %f"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
@@ -2803,8 +2971,8 @@ msgstr "無本機說明"
 
 #: src/HelpText.cpp
 msgid ""
-"<br><br>The version of Audacity you are using is an <b>Alpha test version</"
-"b>."
+"<br><br>The version of Audacity you are using is an <b>Alpha test "
+"version</b>."
 msgstr "<br><br>您所使用的 Audacity 版本為<b> Alpha 測試版</b>。"
 
 #: src/HelpText.cpp
@@ -2818,19 +2986,17 @@ msgstr "獲取 Audacity 的官方正式發佈版本"
 
 #: src/HelpText.cpp
 msgid ""
-"We strongly recommend that you use our latest stable released version, which "
-"has full documentation and support.<br><br>"
-msgstr ""
-"我們強烈建議您使用我們的最新穩定正式發佈版，它有完整的說明文件和支援。"
-"<br><br>"
+"We strongly recommend that you use our latest stable released version, which"
+" has full documentation and support.<br><br>"
+msgstr "我們強烈建議您使用我們的最新穩定正式發佈版，它有完整的說明文件和支援。<br><br>"
 
 #: src/HelpText.cpp
 msgid ""
-"You can help us get Audacity ready for release by joining our [[https://www."
-"audacityteam.org/community/|community]].<hr><br><br>"
+"You can help us get Audacity ready for release by joining our "
+"[[https://www.audacityteam.org/community/|community]].<hr><br><br>"
 msgstr ""
-"您可以加入我們的[[https://www.audacityteam.org/community/|社群]]，來幫助我們"
-"令 Audacity 變得更好。<hr><br><br>"
+"您可以加入我們的[[https://www.audacityteam.org/community/|社群]]，來幫助我們令 Audacity "
+"變得更好。<hr><br><br>"
 
 #: src/HelpText.cpp
 msgid "How to get help"
@@ -2843,20 +3009,20 @@ msgstr "以下是我們所提供的支援方式："
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: src/HelpText.cpp
 msgid ""
-"[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual."
-"audacityteam.org/quick_help.html|view online]]"
+"[[help:Quick_Help|Quick Help]] - if not installed locally, "
+"[[https://manual.audacityteam.org/quick_help.html|view online]]"
 msgstr ""
-"[[help:Quick_Help|快速說明]] - 如果沒有安裝至本機，請參閱[[https://manual."
-"audacityteam.org/quick_help.html|網路版本]]"
+"[[help:Quick_Help|快速說明]] - "
+"如果沒有安裝至本機，請參閱[[https://manual.audacityteam.org/quick_help.html|網路版本]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: src/HelpText.cpp
 msgid ""
-" [[help:Main_Page|Manual]] - if not installed locally, [[https://manual."
-"audacityteam.org/|view online]]"
+" [[help:Main_Page|Manual]] - if not installed locally, "
+"[[https://manual.audacityteam.org/|view online]]"
 msgstr ""
-" [[help:Main_Page|使用手冊]] - 如果沒有安裝至本機，請參閱[[https://manual."
-"audacityteam.org/|網路版本]]"
+" [[help:Main_Page|使用手冊]] - "
+"如果沒有安裝至本機，請參閱[[https://manual.audacityteam.org/|網路版本]]"
 
 #: src/HelpText.cpp
 msgid ""
@@ -2869,32 +3035,34 @@ msgid ""
 "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for "
 "tips, tricks, extra tutorials and effects plug-ins."
 msgstr ""
-"更多：請參訪我們的 [[https://wiki.audacityteam.org/index.php|Wiki]] 以獲取最"
-"新的提示、技巧、額外的教學和效果外掛程式。"
+"更多：請參訪我們的 [[https://wiki.audacityteam.org/index.php|Wiki]] "
+"以獲取最新的提示、技巧、額外的教學和效果外掛程式。"
 
 #: src/HelpText.cpp
 msgid ""
-"Audacity can import unprotected files in many other formats (such as M4A and "
-"WMA, compressed WAV files from portable recorders and audio from video "
-"files) if you download and install the optional [[https://manual."
-"audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg "
-"library]] to your computer."
+"Audacity can import unprotected files in many other formats (such as M4A and"
+" WMA, compressed WAV files from portable recorders and audio from video "
+"files) if you download and install the optional "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|"
+" FFmpeg library]] to your computer."
 msgstr ""
-"如果您下載並安裝額外的 [[https://manual.audacityteam.org/man/"
-"faq_opening_and_saving_files.html#foreign|FFmpeg 函式庫]]到您的電腦，"
-"Audacity 可以匯入許多其它格式 (例如：M4A、WMA、攜帶式錄音裝置壓制的 WAV 檔案"
-"和視訊檔案中的音訊) 的未受保護檔案。"
+"如果您下載並安裝額外的 "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|FFmpeg"
+" 函式庫]]到您的電腦，Audacity 可以匯入許多其它格式 (例如：M4A、WMA、攜帶式錄音裝置壓制的 WAV 檔案和視訊檔案中的音訊) "
+"的未受保護檔案。"
 
 #: src/HelpText.cpp
 msgid ""
-"You can also read our help on importing [[https://manual.audacityteam.org/"
-"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
-"manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
-"CDs]]."
+"You can also read our help on importing "
+"[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI "
+"files]] and tracks from "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|"
+" audio CDs]]."
 msgstr ""
-"您也可以參閱關於如何匯入 [[https://manual.audacityteam.org/man/"
-"playing_and_recording.html#midi|MIDI 檔案]]和從[[https://manual.audacityteam."
-"org/man/faq_opening_and_saving_files.html#fromcd|音訊 CD]]匯入軌道的說明。"
+"您也可以參閱關於如何匯入 "
+"[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI "
+"檔案]]和從[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|音訊"
+" CD]]匯入軌道的說明。"
 
 #: src/HelpText.cpp
 msgid ""
@@ -2902,20 +3070,16 @@ msgid ""
 "online]].<br><br>To always view the Manual online, change \"Location of "
 "Manual\" in Interface Preferences to \"From Internet\"."
 msgstr ""
-"您的電腦似乎並未安裝「help」資料夾。請[[*URL*|線上檢視內容]]。如果您希望總是"
-"在網路上瀏覽使用手冊，請在偏好設定中將「使用手冊位置」變更為「網路」。"
+"您的電腦似乎並未安裝「help」資料夾。請[[*URL*|線上檢視內容]]。如果您希望總是在網路上瀏覽使用手冊，請在偏好設定中將「使用手冊位置」變更為「網路」。"
 
 #: src/HelpText.cpp
 msgid ""
 "The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
-"download the Manual]].<br><br>To always view the Manual online, change "
+"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html|"
+" download the Manual]].<br><br>To always view the Manual online, change "
 "\"Location of Manual\" in Interface Preferences to \"From Internet\"."
 msgstr ""
-"您的電腦似乎並未安裝「help」資料夾。請[[*URL*|線上檢視內容]]或[[https://"
-"manual.audacityteam.org/man/unzipping_the_manual.html|下載整份使用手冊]]。"
-"<br><br>如果您希望總是在網路上瀏覽使用手冊，請在偏好設定中將「使用手冊位置」"
-"變更為「網路」。"
+"您的電腦似乎並未安裝「help」資料夾。請[[*URL*|線上檢視內容]]或[[https://manual.audacityteam.org/man/unzipping_the_manual.html|下載整份使用手冊]]。<br><br>如果您希望總是在網路上瀏覽使用手冊，請在偏好設定中將「使用手冊位置」變更為「網路」。"
 
 #: src/HelpText.cpp
 msgid "Check Online"
@@ -2999,33 +3163,6 @@ msgstr ""
 msgid "Internal Error"
 msgstr "內部錯誤"
 
-#: src/Internat.cpp
-msgid "Unable to determine"
-msgstr "無法確定"
-
-#: src/Internat.cpp
-#, c-format
-msgid "%s bytes"
-msgstr "%s 位元組"
-
-#. i18n-hint: Abbreviation for Kilo bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s KB"
-msgstr "%s KB"
-
-#. i18n-hint: Abbreviation for Mega bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s MB"
-msgstr "%s MB"
-
-#. i18n-hint: Abbreviation for Giga bytes
-#: src/Internat.cpp
-#, c-format
-msgid "%s GB"
-msgstr "%s GB"
-
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
 msgstr "編輯標籤"
@@ -3036,8 +3173,8 @@ msgid "Track"
 msgstr "軌道"
 
 #. i18n-hint: (noun)
-#: src/LabelDialog.cpp src/menus/LabelMenus.cpp
-#: src/toolbars/TranscriptionToolBar.cpp
+#: src/LabelDialog.cpp src/commands/SetLabelCommand.cpp
+#: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp plug-ins/equalabel.ny
 msgid "Label"
 msgstr "標籤"
@@ -3131,14 +3268,6 @@ msgstr "所選的語言 %s (%s) 和系統語言 %s (%s) 不相同。"
 msgid "Confirm"
 msgstr "確認"
 
-#: src/Languages.cpp
-msgid "Simplified"
-msgstr "簡易"
-
-#: src/Languages.cpp
-msgid "System"
-msgstr "系統"
-
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
 msgstr "轉換舊版本專案檔案時發生錯誤"
@@ -3222,7 +3351,8 @@ msgid "Gain"
 msgstr "增益"
 
 #. i18n-hint: title of the MIDI Velocity slider
-#. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
+#. i18n-hint: Title of the Velocity slider, used to adjust the volume of note
+#. tracks
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -3460,34 +3590,39 @@ msgstr "A♭"
 msgid "B♭"
 msgstr "B♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "C♯/D♭"
 msgstr "C♯/D♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "D♯/E♭"
 msgstr "D♯/E♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "F♯/G♭"
 msgstr "F♯/G♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "G♯/A♭"
 msgstr "G♯/A♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: src/PitchName.cpp
 msgid "A♯/B♭"
 msgstr "A♯/B♭"
 
 #: src/PluginManager.cpp
 msgid "Manage Plug-ins"
-msgstr "外掛管理"
+msgstr "外掛程式管理"
 
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
@@ -3627,6 +3762,10 @@ msgstr[0] "是否啟用這些外掛程式？\n"
 msgid "Enable new plug-ins"
 msgstr "啟用新的外掛程式"
 
+#: src/PluginManager.h
+msgid "Nyquist Prompt"
+msgstr "Nyquist 提示字元"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "列印時發生錯誤。"
@@ -3656,7 +3795,7 @@ msgid ""
 "Try changing the audio host, playback device and the project sample rate."
 msgstr ""
 "開啟聲音裝置時發生錯誤。\n"
-"請試著變更音訊主機、播放裝置和專案的取樣頻率。"
+"請試著變更音訊通訊介面、播放裝置和專案的取樣頻率。"
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "The tracks selected for recording must all have the same sampling rate"
@@ -3731,11 +3870,9 @@ msgstr "立即關閉專案，不儲存變更"
 #: src/ProjectFSCK.cpp
 msgid ""
 "Continue with repairs noted in log, and check for more errors. This will "
-"save the project in its current state, unless you \"Close project immediately"
-"\" on further error alerts."
-msgstr ""
-"繼續開啟，進行修復並記錄修復日誌，同時檢查是否有其它錯誤。這將依目前狀態儲存"
-"專案，除非您在之後再遇到錯誤警示時選擇「立即關閉專案」。"
+"save the project in its current state, unless you \"Close project "
+"immediately\" on further error alerts."
+msgstr "繼續開啟，進行修復並記錄修復日誌，同時檢查是否有其它錯誤。這將依目前狀態儲存專案，除非您在之後再遇到錯誤警示時選擇「立即關閉專案」。"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -3989,13 +4126,13 @@ msgstr "這不是 Audacity 專案檔案"
 
 #: src/ProjectFileIO.cpp
 msgid ""
-"This project was created with a newer version of Audacity:\n"
+"This project was created with a newer version of Audacity.\n"
 "\n"
-"You will need to upgrade to process it"
+"You will need to upgrade to open it."
 msgstr ""
-"這個專案是用較新版本的 Audacity 建立的：\n"
+"這個專案是用較新版本的 Audacity 建立的.\n"
 "\n"
-"升級後才能處理"
+"你比需要升級後才能打開他."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4153,8 +4290,7 @@ msgstr "(已復原)"
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
-"You are using Audacity %s. You may need to upgrade to a newer version to "
-"open this file."
+"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
 msgstr ""
 "此檔案是用 Audacity %s 儲存的。\n"
 "您正在使用的是 Audacity %s。您需要升級為較新的版本，才能開啟此檔案。"
@@ -4166,6 +4302,10 @@ msgstr "無法開啟專案檔案"
 #: src/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
 msgstr "無法從專案檔案移除自動儲存資訊。"
+
+#: src/ProjectFileIO.cpp
+msgid "Unable to bind to blob"
+msgstr "無法建立儲存區塊"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to decode project document"
@@ -4301,8 +4441,7 @@ msgstr "已儲存 %s"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the file name provided would overwrite "
-"another project.\n"
+"The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
 msgstr ""
 "因為輸入的檔案名稱可能覆寫其他專案，未儲存該專案。\n"
@@ -4347,8 +4486,7 @@ msgstr "警告：將會覆寫已有的專案"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the selected project is open in another "
-"window.\n"
+"The project was not saved because the selected project is open in another window.\n"
 "Please try again and select an original name."
 msgstr ""
 "因為選擇的專案正在由其他視窗開啟，未儲存該專案。\n"
@@ -4357,7 +4495,7 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid "%sSave Copy of Project \"%s\" As..."
-msgstr "%s將「%s」專案的拷貝另存為⋯"
+msgstr "%s將「%s」專案的另存為⋯"
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4383,14 +4521,6 @@ msgstr "%s 已在其他視窗開啟。"
 #: src/ProjectFileManager.cpp src/import/ImportAUP.cpp
 msgid "Error Opening Project"
 msgstr "開啟專案時發生錯誤"
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"Project resides on FAT formatted drive.\n"
-"Copy it to another drive to open it."
-msgstr ""
-"專案存在 FAT 格式磁碟。\n"
-"複製到其他磁碟後才能開啟。"
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4430,6 +4560,14 @@ msgid "Error Opening File or Project"
 msgstr "開啟檔案或專案時發生錯誤"
 
 #: src/ProjectFileManager.cpp
+msgid ""
+"Project resides on FAT formatted drive.\n"
+"Copy it to another drive to open it."
+msgstr ""
+"專案存在 FAT 格式磁碟。\n"
+"複製到其他磁碟後才能開啟。"
+
+#: src/ProjectFileManager.cpp
 msgid "Project was recovered"
 msgstr "專案已復原"
 
@@ -4465,13 +4603,11 @@ msgstr "壓縮專案"
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid ""
-"Compacting this project will free up disk space by removing unused bytes "
-"within the file.\n"
+"Compacting this project will free up disk space by removing unused bytes within the file.\n"
 "\n"
 "There is %s of free disk space and this project is currently using %s.\n"
 "\n"
-"If you proceed, the current Undo/Redo History and clipboard contents will be "
-"discarded and you will recover approximately %s of disk space.\n"
+"If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.\n"
 "\n"
 "Do you want to continue?"
 msgstr ""
@@ -4479,8 +4615,7 @@ msgstr ""
 "\n"
 "剩餘磁碟空間尚有 %s，而專案現在用了 %s。\n"
 "\n"
-"如果繼續，目前的復原 / 重作紀錄，以及剪貼簿內容都會被捨棄，而預估您可以復原 "
-"%s 的磁碟空間。\n"
+"如果繼續，目前的復原 / 重作紀錄，以及剪貼簿內容都會被捨棄，而預估您可以復原 %s 的磁碟空間。\n"
 "\n"
 "是否繼續？"
 
@@ -4505,7 +4640,8 @@ msgstr "無法自動備份資料庫。"
 msgid "Welcome to Audacity version %s"
 msgstr "歡迎使用 Audacity %s 版"
 
-#. i18n-hint: The first %s numbers the project, the second %s is the project name.
+#. i18n-hint: The first %s numbers the project, the second %s is the project
+#. name.
 #: src/ProjectManager.cpp
 #, c-format
 msgid "%sSave changes to %s?"
@@ -4589,13 +4725,14 @@ msgstr "位於 %s 的外掛程式群組已與先前定義的群組合併"
 #: src/Registry.cpp
 #, c-format
 msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was discarded"
+"Plug-in item at %s conflicts with a previously defined item and was "
+"discarded"
 msgstr "位於 %s 的外掛程式項目與先前定義的項目衝突，且已捨棄"
 
 #: src/Registry.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Plug-in items at %s specify conflicting placements"
-msgstr "位於 %s 的外掛程式項目與先前定義的項目"
+msgstr "位於 %s 的外掛程式項目與先前定義的項目有衝突"
 
 #: src/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -4611,7 +4748,7 @@ msgstr "高品質"
 
 #: src/Resample.cpp
 msgid "Best Quality (Slowest)"
-msgstr "超品質（最慢）"
+msgstr "最高品質（最慢）"
 
 #. i18n-hint: Audio data bit depth (precision): 16-bit integers
 #: src/SampleFormat.cpp
@@ -4624,7 +4761,7 @@ msgid "24-bit PCM"
 msgstr "24 位元 PCM"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualityPrefs.cpp
+#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
 msgid "32-bit float"
 msgstr "32 位元浮點"
 
@@ -4752,7 +4889,8 @@ msgstr "計量表"
 msgid "Play Meter"
 msgstr "播放計量表"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being
+#. recorded.
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -4787,7 +4925,8 @@ msgid "Ruler"
 msgstr "尺標"
 
 #. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and musical
+#. * data associated with a time line, such as sequences of labels, and
+#. musical
 #. * notes
 #: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
@@ -4905,7 +5044,7 @@ msgstr "啟動強度 (分貝)："
 msgid "Welcome to Audacity!"
 msgstr "歡迎使用 Audacity！"
 
-#: src/SplashDialog.cpp
+#: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "啟動時不再顯示本視窗"
 
@@ -4936,10 +5075,6 @@ msgstr "年份"
 #: src/Tags.cpp
 msgid "Genre"
 msgstr "類型"
-
-#: src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "註釋"
 
 #: src/Tags.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
@@ -5058,7 +5193,8 @@ msgstr ""
 "  %s。"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
+#. graphical user interface, including choices of colors, and similarity of
+#. images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
 #: src/Theme.cpp
@@ -5193,14 +5329,18 @@ msgstr "高對比"
 msgid "Custom"
 msgstr "自訂"
 
-#. i18n-hint: This string is used to configure the controls which shows the recording
-#. * duration. As such it is important that only the alphabetic parts of the string
+#. i18n-hint: This string is used to configure the controls which shows the
+#. recording
+#. * duration. As such it is important that only the alphabetic parts of the
+#. string
 #. * are translated, with the numbers left exactly as they are.
-#. * The string 'days' indicates that the first number in the control will be the number of days,
-#. * then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-#. * number displayed is minutes, and the 's' indicates that the fourth number displayed is
+#. * The string 'days' indicates that the first number in the control will be
+#. the number of days,
+#. * then the 'h' indicates the second number displayed is hours, the 'm'
+#. indicates the third
+#. * number displayed is minutes, and the 's' indicates that the fourth number
+#. displayed is
 #. * seconds.
-#.
 #: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
 #: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
 #: src/effects/VST/VSTEffect.cpp src/effects/ladspa/LadspaEffect.cpp
@@ -5262,8 +5402,7 @@ msgstr "自動匯出時發生錯誤"
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid ""
-"You may not have enough free disk space to complete this Timer Recording, "
-"based on your current settings.\n"
+"You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n"
 "\n"
 "Do you wish to continue?\n"
 "\n"
@@ -5402,12 +5541,15 @@ msgstr "099 時 060 分 060 秒"
 msgid "099 days 024 h 060 m 060 s"
 msgstr "099 日 024 時 060 分 060 秒"
 
-#. i18n-hint: This string is used to configure the controls for times when the recording is
-#. * started and stopped. As such it is important that only the alphabetic parts of the string
+#. i18n-hint: This string is used to configure the controls for times when the
+#. recording is
+#. * started and stopped. As such it is important that only the alphabetic
+#. parts of the string
 #. * are translated, with the numbers left exactly as they are.
-#. * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
-#. * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
-#.
+#. * The 'h' indicates the first number displayed is hours, the 'm' indicates
+#. the second number
+#. * displayed is minutes, and the 's' indicates that the third number
+#. displayed is seconds.
 #: src/TimerRecordDialog.cpp
 msgid "Start Date and Time"
 msgstr "起始日期和時間"
@@ -5452,8 +5594,8 @@ msgstr "啟用自動匯出(&E)"
 msgid "Export Project As:"
 msgstr "匯出專案為："
 
-#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp src/prefs/PlaybackPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp
+#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
 msgid "Options"
 msgstr "選項"
 
@@ -5661,7 +5803,8 @@ msgstr "選取範圍太小，無法使用語音索引。"
 msgid "Calibration Results\n"
 msgstr "校正結果\n"
 
-#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'
+#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard
+#. Deviations'
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Energy                  -- mean: %1.4f  sd: (%1.4f)\n"
@@ -5719,7 +5862,8 @@ msgstr ""
 msgid "Applying %s..."
 msgstr "正在套用 %s..."
 
-#. i18n-hint: An item name followed by a value, with appropriate separating punctuation
+#. i18n-hint: An item name followed by a value, with appropriate separating
+#. punctuation
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -5774,9 +5918,7 @@ msgid ""
 "The following commands have had their shortcuts removed, because their "
 "default shortcut is new or changed, and is the same shortcut that you have "
 "assigned to another command."
-msgstr ""
-"下列命令的快捷鍵已被移除，因為其預設快捷鍵被新增或變更，且跟您先前指派至其他"
-"命令的快捷鍵相同。"
+msgstr "下列命令的快捷鍵已被移除，因為其預設快捷鍵被新增或變更，且跟您先前指派至其他命令的快捷鍵相同。"
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
@@ -5818,9 +5960,10 @@ msgstr "拖動"
 msgid "Panel"
 msgstr "面板"
 
-#: src/commands/DragCommand.cpp
+#: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
 msgid "Application"
-msgstr "應用"
+msgstr "附屬應用"
 
 #: src/commands/DragCommand.cpp
 msgid "Track 0"
@@ -5953,7 +6096,7 @@ msgstr "提供指令說明。"
 
 #: src/commands/HelpCommand.h
 msgid "For comments in a macro."
-msgstr "對於巨集中的註解。"
+msgstr "對於連續指令中的註解。"
 
 #: src/commands/ImportExportCommands.cpp
 msgid "Import2"
@@ -5981,7 +6124,7 @@ msgstr "匯出到檔案。"
 
 #: src/commands/LoadCommands.cpp
 msgid "Builtin Commands"
-msgstr "內嵌指令"
+msgstr "內建指令"
 
 #: src/commands/LoadCommands.cpp src/effects/LoadEffects.cpp
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
@@ -5992,7 +6135,7 @@ msgstr "Audacity 團隊"
 
 #: src/commands/LoadCommands.cpp
 msgid "Provides builtin commands to Audacity"
-msgstr "提供內嵌指令給 Audacity"
+msgstr "提供內建指令給 Audacity"
 
 #: src/commands/LoadCommands.cpp
 msgid "Unknown built-in command name"
@@ -6327,6 +6470,16 @@ msgstr "時間："
 msgid "Delete"
 msgstr "刪除"
 
+#: src/commands/SetEnvelopeCommand.cpp
+msgid "Edited Envelope"
+msgstr "已編輯的波封"
+
+#. i18n-hint: The envelope is a curve that controls the audio loudness.
+#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
+#: src/tracks/ui/EnvelopeHandle.cpp
+msgid "Envelope"
+msgstr "波封"
+
 #: src/commands/SetEnvelopeCommand.h
 msgid "Sets an envelope point position."
 msgstr "設定波封點位置。"
@@ -6346,6 +6499,10 @@ msgstr "結束："
 #: src/commands/SetLabelCommand.cpp src/commands/SetTrackInfoCommand.cpp
 msgid "Selected"
 msgstr "已選擇"
+
+#: src/commands/SetLabelCommand.cpp
+msgid "Edited Label"
+msgstr "已編輯標籤"
 
 #: src/commands/SetLabelCommand.h
 msgid "Sets various values for a label."
@@ -6466,9 +6623,11 @@ msgstr "使用頻譜偏好設定"
 msgid "Spectral Select"
 msgstr "頻譜選擇"
 
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Gray Scale"
-msgstr "灰度比例"
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr "繪製樣式  (&m)"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track"
@@ -6510,20 +6669,20 @@ msgstr "自動閃避"
 msgid ""
 "Reduces (ducks) the volume of one or more tracks whenever the volume of a "
 "specified \"control\" track reaches a particular level"
-msgstr ""
-"無論指定的「控制」軌道的音量是否達到特定電平，都將自動減少（迴避）一個或多個"
-"軌道的音量"
+msgstr "無論指定的「控制」軌道的音量是否達到特定電平，都將自動減少（迴避）一個或多個軌道的音量"
 
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the
+#. volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
 msgid ""
-"You selected a track which does not contain audio. AutoDuck can only process "
-"audio tracks."
+"You selected a track which does not contain audio. AutoDuck can only process"
+" audio tracks."
 msgstr "您選擇的軌道並未含有音訊。自動閃避只能處理音訊軌道。"
 
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the
+#. volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
@@ -6756,7 +6915,8 @@ msgstr "變更速率，同時影響拍速和音高"
 msgid "&Speed Multiplier:"
 msgstr "速度倍數(&S)："
 
-#. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
+#. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per
+#. minute".
 #. "vinyl" refers to old-fashioned phonograph records
 #: src/effects/ChangeSpeed.cpp
 msgid "Standard Vinyl rpm:"
@@ -6764,7 +6924,6 @@ msgstr "標準黑膠唱片每分鐘轉速："
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
-#.
 #: src/effects/ChangeSpeed.cpp
 msgid "From rpm"
 msgstr "從 RPM"
@@ -6777,7 +6936,6 @@ msgstr "從(&F)"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
-#.
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
 msgstr "至 RPM"
@@ -6991,20 +7149,23 @@ msgid "Attack Time"
 msgstr "起音時間"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
+#. where the
 #. * sound dies away.
 #: src/effects/Compressor.cpp
 msgid "R&elease Time:"
 msgstr "釋放時間(&E)："
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
+#. where the
 #. * sound dies away.
 #: src/effects/Compressor.cpp
 msgid "Release Time"
 msgstr "釋放時間"
 
-#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate
+#. it.
 #: src/effects/Compressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
 msgstr "壓縮後增益補償 0 分貝(&K)"
@@ -7189,7 +7350,8 @@ msgstr "背景電平過高"
 msgid "Background higher than foreground"
 msgstr "背景電平高於前景電平"
 
-#. i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/
+#. i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0',
+#. see http://www.w3.org/TR/WCAG20/
 #: src/effects/Contrast.cpp
 msgid "WCAG2 Pass"
 msgstr "WCAG2 符合"
@@ -7544,7 +7706,7 @@ msgstr "（0 至 5）:"
 
 #: src/effects/DtmfGen.cpp
 msgid "DTMF Tones"
-msgstr "雙音多頻音"
+msgstr "雙音多頻音(電話聲)"
 
 #: src/effects/DtmfGen.cpp
 msgid ""
@@ -7630,7 +7792,7 @@ msgstr "衰減係數(&E)："
 
 #: src/effects/Effect.cpp
 msgid "Built-in"
-msgstr "內嵌"
+msgstr "內建"
 
 #: src/effects/Effect.cpp
 msgid "Presets"
@@ -7677,10 +7839,11 @@ msgstr "正在準備預覽"
 
 #: src/effects/Effect.cpp
 msgid "Previewing"
-msgstr "正在預覽"
+msgstr "正在預覽中"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or
+#. Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: src/effects/Effect.h
@@ -7965,10 +8128,6 @@ msgstr "停止播放(&P)"
 msgid "Play"
 msgstr "播放"
 
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Prompt"
-msgstr "Nyquist 提示字元"
-
 #. i18n-hint: Technical term for a kind of curve.
 #: src/effects/Equalization.cpp
 msgid "B-spline"
@@ -7988,11 +8147,11 @@ msgstr "等化"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 msgid "Filter Curve EQ"
-msgstr "濾波曲線 EQ"
+msgstr "EQ - 曲線等化器"
 
 #: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
 msgid "Graphic EQ"
-msgstr "圖形等化器"
+msgstr "EQ - 頻段等化器"
 
 #: src/effects/Equalization.cpp
 msgid "Adjusts the volume levels of particular frequencies"
@@ -8037,10 +8196,9 @@ msgstr "高音減弱"
 #: src/effects/Equalization.cpp
 msgid ""
 "To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
-"then use that one."
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
-"如要在連鎖指令使用此濾波曲線，請為其選擇新的名稱。\n"
+"如要在連續指令使用此濾波曲線，請為其選擇新的名稱。\n"
 "選擇「儲存/管理曲線...」按鈕並重新命名「未命名」曲線，接著便可使用該曲線。"
 
 #: src/effects/Equalization.cpp
@@ -8091,7 +8249,8 @@ msgstr "%d Hz"
 msgid "%g kHz"
 msgstr "%g kHz"
 
-#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
+#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in
+#. translation.
 #: src/effects/Equalization.cpp
 #, c-format
 msgid "%gk"
@@ -8163,7 +8322,7 @@ msgstr "顯示格線(&R)"
 
 #: src/effects/Equalization.cpp
 msgid "&Processing: "
-msgstr "處理(&P)："
+msgstr "處理(&P):"
 
 #: src/effects/Equalization.cpp
 msgid "D&efault"
@@ -8354,7 +8513,6 @@ msgstr "曲線已匯出"
 msgid "No curves exported"
 msgstr "未匯出任何曲線"
 
-# times?
 #: src/effects/Equalization48x.cpp
 #, c-format
 msgid ""
@@ -8422,11 +8580,11 @@ msgstr "上下翻轉音訊樣本，顛倒兩極"
 
 #: src/effects/LoadEffects.cpp
 msgid "Builtin Effects"
-msgstr "內嵌效果"
+msgstr "內建效果"
 
 #: src/effects/LoadEffects.cpp
 msgid "Provides builtin effects to Audacity"
-msgstr "提供內嵌效果給 Audacity"
+msgstr "提供內建效果給 Audacity"
 
 #: src/effects/LoadEffects.cpp
 msgid "Unknown built-in effect name"
@@ -8536,11 +8694,11 @@ msgstr "舊的"
 
 #: src/effects/NoiseReduction.cpp
 msgid "none, Hann (2.0.6 behavior)"
-msgstr ""
+msgstr "none, Hann (2.0.6 行為)"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hann, none"
-msgstr ""
+msgstr "Hann, none"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hann, Hann (default)"
@@ -8548,19 +8706,19 @@ msgstr "4（預設值）"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Blackman, Hann"
-msgstr ""
+msgstr "Blackman, Hann"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hamming, none"
-msgstr ""
+msgstr "Hamming, none"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hamming, Hann"
-msgstr ""
+msgstr "Hamming, Hann"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Hamming, Reciprocal Hamming"
-msgstr ""
+msgstr "Hamming, Reciprocal Hamming"
 
 #: src/effects/NoiseReduction.cpp src/menus/PluginMenus.cpp
 msgid "Noise Reduction"
@@ -8693,7 +8851,8 @@ msgstr "移除(&D)"
 msgid "&Isolate"
 msgstr "隔離(&I)"
 
-#. i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" !
+#. i18n-hint: Means the difference between effect and original sound.
+#. Translate differently from "Reduce" !
 #: src/effects/NoiseReduction.cpp
 msgid "Resid&ue"
 msgstr "剩餘(&U)"
@@ -8882,25 +9041,25 @@ msgstr "個別正規化立體聲聲道(&O)"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch"
-msgstr "Paulstretch"
+msgstr "慢速播放"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "使用 Paulstretch 僅在極端的時間拉伸或者「停滯」效果"
+msgstr "使用 慢速播放 僅在極端的時間拉伸或者「停滯」效果"
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
-#.
 #: src/effects/Paulstretch.cpp
 msgid "&Stretch Factor:"
-msgstr "拉伸係數(&S)："
+msgstr "幾倍長度(&S)："
 
 #: src/effects/Paulstretch.cpp
 msgid "&Time Resolution (seconds):"
 msgstr "時間解析度 (秒)(&T)："
 
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
+#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
+#. effect.
 #: src/effects/Paulstretch.cpp
 #, c-format
 msgid ""
@@ -8914,7 +9073,8 @@ msgstr ""
 "嘗試延長音訊選取部分為至少 %.1f 秒，\n"
 "或者減少「時間解析度」至少於 %.1f 秒。"
 
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
+#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
+#. effect.
 #: src/effects/Paulstretch.cpp
 #, c-format
 msgid ""
@@ -8928,7 +9088,8 @@ msgstr ""
 "對於目前的音訊選取部分，\n"
 "最大的「時間解析度」為 %.1f 秒。"
 
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
+#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch
+#. effect.
 #: src/effects/Paulstretch.cpp
 #, c-format
 msgid ""
@@ -9016,8 +9177,7 @@ msgstr "設定一個或多個音軌的峰值振幅"
 
 #: src/effects/Repair.cpp
 msgid ""
-"The Repair effect is intended to be used on very short sections of damaged "
-"audio (up to 128 samples).\n"
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
@@ -9174,17 +9334,20 @@ msgstr "翻轉選擇的音訊"
 msgid "SBSMS Time / Pitch Stretch"
 msgstr "SBSMS 時間/音高拉伸"
 
-#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
+#. i18n-hint: Butterworth is the name of the person after whom the filter type
+#. is named.
 #: src/effects/ScienFilter.cpp
 msgid "Butterworth"
 msgstr "巴特沃斯濾波器"
 
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
 #: src/effects/ScienFilter.cpp
 msgid "Chebyshev Type I"
 msgstr "切比雪夫一型濾波器"
 
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
 #: src/effects/ScienFilter.cpp
 msgid "Chebyshev Type II"
 msgstr "切比雪夫二型濾波器"
@@ -9214,7 +9377,8 @@ msgstr "如要套用過濾器，所有選擇的軌道必須具有相同的取樣
 msgid "&Filter Type:"
 msgstr "過濾器類型(&F)："
 
-#. i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.
+#. i18n-hint: 'Order' means the complexity of the filter, and is a number
+#. between 1 and 10.
 #: src/effects/ScienFilter.cpp
 msgid "O&rder:"
 msgstr "順序(&R)："
@@ -9283,32 +9447,40 @@ msgstr "靜音臨界值："
 msgid "Silence Threshold"
 msgstr "靜音臨界值"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time:"
 msgstr "預平滑時間："
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time"
 msgstr "預平滑時間"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Line Time:"
 msgstr "線時間："
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
@@ -9319,8 +9491,10 @@ msgstr "線時間"
 msgid "Smooth Time:"
 msgstr "平滑時間："
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
@@ -9490,8 +9664,8 @@ msgstr "自動減少通行長度當音量低於特定強度"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
-"When truncating independently, there may only be one selected audio track in "
-"each Sync-Locked Track Group."
+"When truncating independently, there may only be one selected audio track in"
+" each Sync-Locked Track Group."
 msgstr "當個別截斷時，每個同步鎖定軌道組只能有一個音訊軌道被選取。"
 
 #: src/effects/TruncSilence.cpp
@@ -9551,6 +9725,10 @@ msgid ""
 "require 8192 samples or less to work properly. However most effects can "
 "accept large buffers and using them will greatly reduce processing time."
 msgstr ""
+"The buffer size controls the number of samples sent to the effect on each "
+"iteration. Smaller values will cause slower processing and some effects "
+"require 8192 samples or less to work properly. However most effects can "
+"accept large buffers and using them will greatly reduce processing time."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
@@ -9568,6 +9746,7 @@ msgid ""
 "silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all VST effects."
 msgstr ""
+"在部分的處理模式，部分的VST效果必須要延遲回傳聲音給AUDACITY。如果不補償這樣的延遲，你會發現聲音當中插入少量的靜音。開啟此選項會提供這樣的補償，但無法適用於所有的VST效果"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -9583,9 +9762,7 @@ msgid ""
 "Most VST effects have a graphical interface for setting parameter values. A "
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
-msgstr ""
-"大多數 VST 效果都有提供圖形介面可用於設定。也能使用基本的純文字方法。重新開啟"
-"效果以生效。"
+msgstr "大多數 VST 效果都有提供圖形介面可用於設定。也能使用基本的純文字方法。重新開啟效果以生效。"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
 msgid "Enable &graphical interface"
@@ -9602,7 +9779,7 @@ msgstr "VST 預設集另存為："
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Standard VST bank file"
-msgstr ""
+msgstr "標準 VST 規格檔案"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Standard VST program file"
@@ -9654,7 +9831,8 @@ msgstr "無法讀取預設集檔案。"
 msgid "This parameter file was saved from %s. Continue?"
 msgstr "此參數檔案是從 %s 儲存的。是否繼續？"
 
-#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software
+#. protocol
 #. developed by Steinberg GmbH
 #: src/effects/VST/VSTEffect.h
 msgid "VST"
@@ -9719,6 +9897,9 @@ msgid ""
 "will provide that compensation, but it may not work for all Audio Unit "
 "effects."
 msgstr ""
+"在部分的處理模式，部分的 聲音效果單元 "
+"必須要延遲回傳聲音給AUDACITY。如果不補償這樣的延遲，你會發現聲音當中插入少量的靜音。開啟此選項會提供這樣的補償，但無法適用於所有的 "
+"聲音效果單元。"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "User Interface"
@@ -9728,12 +9909,11 @@ msgstr "介面"
 msgid ""
 "Select \"Full\" to use the graphical interface if supplied by the Audio "
 "Unit. Select \"Generic\" to use the system supplied generic interface. "
-"Select \"Basic\" for a basic text-only interface. Reopen the effect for this "
-"to take effect."
+"Select \"Basic\" for a basic text-only interface. Reopen the effect for this"
+" to take effect."
 msgstr ""
-"選擇「完整」，則會在音訊單元 (Audio Unit) 提供時使用圖形介面。選擇「通用」則"
-"使用系統提供的圖形介面。選擇「基本」則使用基本的純文字介面。重新啟動這個效果"
-"以生效。"
+"選擇「完整」，則會在音訊單元 (Audio Unit) "
+"提供時使用圖形介面。選擇「通用」則使用系統提供的圖形介面。選擇「基本」則使用基本的純文字介面。重新啟動這個效果以生效。"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Select &interface"
@@ -9868,7 +10048,6 @@ msgstr "Audio Unit"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
-#.
 #: src/effects/ladspa/LadspaEffect.cpp
 msgid "LADSPA Effects"
 msgstr "LADSPA 效果"
@@ -9892,9 +10071,14 @@ msgid ""
 "small silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
+"在部分的處理模式，部分的LADSPA "
+"效果必須要延遲回傳聲音給AUDACITY。如果不補償這樣的延遲，你會發現聲音當中插入少量的靜音。開啟此選項會提供這樣的補償，但無法適用於所有的LADSPA"
+" 效果"
 
-#. i18n-hint: An item name introducing a value, which is not part of the string but
-#. appears in a following text box window; translate with appropriate punctuation
+#. i18n-hint: An item name introducing a value, which is not part of the
+#. string but
+#. appears in a following text box window; translate with appropriate
+#. punctuation
 #: src/effects/ladspa/LadspaEffect.cpp src/effects/nyquist/Nyquist.cpp
 #: src/effects/vamp/VampEffect.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
@@ -9908,7 +10092,6 @@ msgstr "效果輸出"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
-#.
 #: src/effects/ladspa/LadspaEffect.h
 msgid "LADSPA"
 msgstr "LADSPA"
@@ -9929,15 +10112,16 @@ msgid ""
 "silences have been inserted into the audio. Enabling this setting will "
 "provide that compensation, but it may not work for all LV2 effects."
 msgstr ""
+"在部分的處理模式，部分的 LV2 "
+"效果必須要延遲回傳聲音給AUDACITY。如果不補償這樣的延遲，你會發現聲音當中插入少量的靜音。開啟此選項會提供這樣的補償，但無法適用於所有的 LV2 "
+"效果"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "LV2 effects can have a graphical interface for setting parameter values. A "
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
-msgstr ""
-"大多數 LV2 效果都能有提供圖形介面可用於設定。也能使用基本的純文字方法。重新開"
-"啟此效果以生效。"
+msgstr "大多數 LV2 效果都能有提供圖形介面可用於設定。也能使用基本的純文字方法。重新開啟此效果以生效。"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
@@ -9983,7 +10167,8 @@ msgstr "為 Audacity 提供 Nyquist 效果支援"
 msgid "Applying Nyquist Effect..."
 msgstr "正在套用 Nyquist 效果..."
 
-#. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
+#. i18n-hint: It is acceptable to translate this the same as for "Nyquist
+#. Prompt"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Worker"
 msgstr "Nyquist 提示"
@@ -9991,6 +10176,12 @@ msgstr "Nyquist 提示"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Ill-formed Nyquist plug-in header"
 msgstr "Nyquist 外掛程式標頭格式有問題"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr "開啟"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -10232,7 +10423,8 @@ msgstr "外掛程式設定"
 msgid "Program"
 msgstr "程式"
 
-#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. i18n-hint: Vamp is the proper name of a software protocol for sound
+#. analysis.
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
@@ -10272,8 +10464,7 @@ msgstr "是否確定要將檔案匯出為「%s」？\n"
 msgid ""
 "You are about to export a %s file with the name \"%s\".\n"
 "\n"
-"Normally these files end in \".%s\", and some programs will not open files "
-"with nonstandard extensions.\n"
+"Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
 "Are you sure you want to export the file under this name?"
 msgstr ""
@@ -10302,8 +10493,8 @@ msgstr "軌道將在匯出檔案被混合為立體聲檔案。"
 
 #: src/export/Export.cpp
 msgid ""
-"Your tracks will be mixed down to one exported file according to the encoder "
-"settings."
+"Your tracks will be mixed down to one exported file according to the encoder"
+" settings."
 msgstr "根據編碼器設定，軌道將在匯出檔案被混合為較少的聲道。"
 
 #: src/export/Export.cpp
@@ -10356,7 +10547,8 @@ msgstr "顯示輸出"
 #. i18n-hint: Some programmer-oriented terminology here:
 #. "Data" refers to the sound to be exported, "piped" means sent,
 #. and "standard in" means the default input stream that the external program,
-#. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
+#. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually
+#. used
 #. in the program as a format string.  Keep %f unchanged.
 #: src/export/ExportCL.cpp
 #, c-format
@@ -10399,7 +10591,7 @@ msgstr "使用命令列編碼器匯出音訊"
 msgid "Command Output"
 msgstr "指令輸出"
 
-#: src/export/ExportCL.cpp
+#: src/export/ExportCL.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "確定(&O)"
 
@@ -10449,14 +10641,14 @@ msgstr "FFmpeg：錯誤 - 無法加入音軌至輸出檔案「%s」"
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
+msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
 msgstr "FFmpeg：錯誤 - 無法開啟輸出檔案「%s」以寫入。錯誤碼為 %d。"
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
-"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
+"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is "
+"%d."
 msgstr "FFmpeg：錯誤 - 無法寫入輸出檔案「%s」的頭部。錯誤碼為 %d。"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
@@ -10528,8 +10720,8 @@ msgstr "FFmpeg：錯誤 - 無法編碼音訊影格。"
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid ""
-"Attempted to export %d channels, but maximum number of channels for selected "
-"output format is %d"
+"Attempted to export %d channels, but maximum number of channels for selected"
+" output format is %d"
 msgstr "嘗試匯出 %d 個聲道，但選擇的輸出格式支援的最大聲道數是 %d"
 
 #: src/export/ExportFFmpeg.cpp
@@ -10563,8 +10755,7 @@ msgstr "目前的輸出檔案格式並不支援此專案的取樣頻率 (%d)。"
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
-msgstr ""
-"目前的輸出檔案格式並不支援此專案的取樣頻率 (%d) 和位元率 (%d kbps) 的組合。"
+msgstr "目前的輸出檔案格式並不支援此專案的取樣頻率 (%d) 和位元率 (%d kbps) 的組合。"
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
@@ -10678,7 +10869,7 @@ msgstr "60 ms"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Narrowband"
-msgstr ""
+msgstr "窄頻"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Mediumband"
@@ -10686,11 +10877,11 @@ msgstr "中頻"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Wideband"
-msgstr ""
+msgstr "寬頻"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Super Wideband"
-msgstr ""
+msgstr "超寬頻"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Fullband"
@@ -10849,8 +11040,7 @@ msgstr "編解碼器："
 msgid ""
 "Not all formats and codecs are compatible. Nor are all option combinations "
 "compatible with all codecs."
-msgstr ""
-"並非所有的格式和編解碼器都是相容的，並非所有的選項組合都與編解碼器相容。"
+msgstr "並非所有的格式和編解碼器都是相容的，並非所有的選項組合都與編解碼器相容。"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Show All Formats"
@@ -11131,15 +11321,19 @@ msgstr ""
 "可選\n"
 "0 - 預設值"
 
-#. i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
-#. 'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
+#. i18n-hint: 'mux' is short for multiplexor, a device that selects between
+#. several inputs
+#. 'Mux Rate' is a parameter that has some bearing on compression ratio for
+#. MPEG
 #. it has a hard to predict effect on the degree of compression
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Mux Rate:"
 msgstr "多工率："
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
+#. compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one
+#. piece.
 #: src/export/ExportFFmpegDialogs.cpp
 msgid ""
 "Packet size\n"
@@ -11150,8 +11344,10 @@ msgstr ""
 "可選\n"
 "0 - 預設值"
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
+#. compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one
+#. piece.
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Packet Size:"
 msgstr "封包大小："
@@ -11313,15 +11509,6 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (檔案較小)"
 
-#: src/export/ExportMP3.cpp
-msgid "Fast"
-msgstr "快速"
-
-#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
-#: plug-ins/sample-data-export.ny
-msgid "Standard"
-msgstr "標準"
-
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: src/export/ExportMP3.cpp
 msgid "Insane, 320 kbps"
@@ -11329,7 +11516,7 @@ msgstr "最高，320 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
-msgstr "極高，220-260 kbps"
+msgstr "高等，220-260 kbps"
 
 #: src/export/ExportMP3.cpp
 msgid "Standard, 170-210 kbps"
@@ -11346,7 +11533,12 @@ msgstr "最高"
 
 #: src/export/ExportMP3.cpp
 msgid "Extreme"
-msgstr "極高"
+msgstr "高等"
+
+#: src/export/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: plug-ins/sample-data-export.ny
+msgid "Standard"
+msgstr "標準"
 
 #: src/export/ExportMP3.cpp
 msgid "Medium"
@@ -11377,13 +11569,10 @@ msgid "Bit Rate Mode:"
 msgstr "位元率模式："
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
+#: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp
+#: src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "品質"
-
-#: src/export/ExportMP3.cpp
-msgid "Variable Speed:"
-msgstr "變速："
 
 #: src/export/ExportMP3.cpp
 msgid "Channel Mode:"
@@ -11393,7 +11582,8 @@ msgstr "聲道模式："
 msgid "Force export to mono"
 msgstr "強制匯出為單聲道"
 
-#. i18n-hint: LAME is the name of an MP3 converter and should not be translated
+#. i18n-hint: LAME is the name of an MP3 converter and should not be
+#. translated
 #: src/export/ExportMP3.cpp
 msgid "Locate LAME"
 msgstr "尋找 LAME"
@@ -11430,8 +11620,7 @@ msgstr "%s 在哪裡？"
 #: src/export/ExportMP3.cpp
 #, c-format
 msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
-"Audacity %d.%d.%d.\n"
+"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 "您正連結到 lame_enc.dll v%d.%d。這個版本與 Audacity %d.%d.%d 並不相容。\n"
@@ -11536,7 +11725,7 @@ msgstr "找不到 MP3 匯出函式庫"
 
 #: src/export/ExportMP3.cpp
 msgid "(Built-in)"
-msgstr "(內嵌)"
+msgstr "(內建)"
 
 #: src/export/ExportMultiple.cpp
 msgid "Export Multiple"
@@ -11645,7 +11834,8 @@ msgstr "匯出下列 %lld 個檔案之後匯出被停止。"
 
 #: src/export/ExportMultiple.cpp
 #, c-format
-msgid "Something went really wrong after exporting the following %lld file(s)."
+msgid ""
+"Something went really wrong after exporting the following %lld file(s)."
 msgstr "匯出下列 %lld 個檔案之後發生嚴重錯誤。"
 
 #: src/export/ExportMultiple.cpp
@@ -11755,8 +11945,7 @@ msgstr "其它非壓縮格式檔案"
 
 #: src/export/ExportPCM.cpp
 msgid ""
-"You have attempted to Export a WAV or AIFF file which would be greater than "
-"4GB.\n"
+"You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
 "嘗試匯出大於 4GB 的 WAV 或 AIFF 檔案。\n"
@@ -11859,10 +12048,8 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a playlist file. \n"
-"Audacity cannot open this file because it only contains links to other "
-"files. \n"
-"You may be able to open it in a text editor and download the actual audio "
-"files."
+"Audacity cannot open this file because it only contains links to other files. \n"
+"You may be able to open it in a text editor and download the actual audio files."
 msgstr ""
 "「%s」是播放清單檔案。\n"
 "Audacity 無法開啟此檔案，因為這只是一個含有檔案連結的檔案。\n"
@@ -11885,10 +12072,8 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is an Advanced Audio Coding file.\n"
-"Without the optional FFmpeg library, Audacity cannot open this type of "
-"file.\n"
-"Otherwise, you need to convert it to a supported audio format, such as WAV "
-"or AIFF."
+"Without the optional FFmpeg library, Audacity cannot open this type of file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "「%s」是進階音訊編碼 (AAC) 檔案。\n"
 "需要額外安裝 FFmpeg 函式庫，Audacity 才能開啟此類型的檔案。\n"
@@ -11943,8 +12128,7 @@ msgid ""
 "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
-"and try importing it again. Otherwise you need to convert it to a supported "
-"audio \n"
+"and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
 msgstr ""
 "「%s」是 Musepack 音訊檔案。\n"
@@ -12124,8 +12308,7 @@ msgstr "找不到專案資料資料夾：「%s」"
 msgid ""
 "MIDI tracks found in project file, but this build of Audacity does not "
 "include MIDI support, bypassing track."
-msgstr ""
-"在專案檔案中遇到 MIDI 音軌，但這個 Audacity 組建未附 MIDI 支援，略過音軌。"
+msgstr "在專案檔案中遇到 MIDI 音軌，但這個 Audacity 組建未附 MIDI 支援，略過音軌。"
 
 #: src/import/ImportAUP.cpp
 msgid "Project Import"
@@ -12135,19 +12318,19 @@ msgstr "專案匯入"
 msgid ""
 "The active project already has a time track and one was encountered in the "
 "project being imported, bypassing imported time track."
-msgstr ""
+msgstr "目前已經使用中的專案已經有其時間軌，並切影響到現有的編輯檔案的時間軌，將會忽略輸入"
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
-msgstr "無效的取樣頻率 - maxsamples"
+msgstr "無效的取樣頻率 - maxsamples."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'sampleformat' attribute."
-msgstr ""
+msgstr "Invalid sequence 'sampleformat' attribute."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'numsamples' attribute."
-msgstr "無效的取樣頻率 - numsamples"
+msgstr "無效的取樣頻率 - numsamples."
 
 #: src/import/ImportAUP.cpp
 msgid "Unable to parse the waveblock 'start' attribute"
@@ -12655,7 +12838,7 @@ msgstr "匯入(&I)"
 
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size. Could not import audio"
-msgstr "資料大小無效。無法匯入音訊"
+msgstr "因資料大小錯誤。無法匯入音訊"
 
 #. i18n-hint: given the name of a track, specify its left channel
 #: src/menus/ClipMenus.cpp
@@ -12677,7 +12860,6 @@ msgstr "%s 右聲道"
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
-#.
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %d of %d clip %s"
@@ -12700,7 +12882,6 @@ msgstr "終點"
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
-#.
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %d and %s %d of %d clip %s"
@@ -12897,7 +13078,7 @@ msgstr "分離"
 
 #: src/menus/EditMenus.cpp
 msgid "Metadata Tags"
-msgstr "後設資料標記"
+msgstr "詮釋資料標記"
 
 #: src/menus/EditMenus.cpp
 msgid "&Edit"
@@ -12967,7 +13148,7 @@ msgstr "合併(&J)"
 
 #: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
 msgid "Detac&h at Silences"
-msgstr "靜音處分離(&H)"
+msgstr "分離靜音處(&H)"
 
 #: src/menus/EditMenus.cpp
 msgid "&Metadata..."
@@ -12995,27 +13176,27 @@ msgstr "混音器(&X)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Ad&just Playback Volume..."
-msgstr "調整播放音量(&J)..."
+msgstr "播放音量調整(&J)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "&Increase Playback Volume"
-msgstr "提高播放音量(&I)"
+msgstr "播放音量提高(&I)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "&Decrease Playback Volume"
-msgstr "降低播放音量(&D)"
+msgstr "播放音量降低(&D)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Adj&ust Recording Volume..."
-msgstr "調整錄音音量(&U)..."
+msgstr "錄音音量調整(&U)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "I&ncrease Recording Volume"
-msgstr "提高錄音音量(&N)"
+msgstr "錄音音量提高(&N)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "D&ecrease Recording Volume"
-msgstr "降低錄音音量(&E)"
+msgstr "錄音音量降低(&E)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "De&vice"
@@ -13023,19 +13204,19 @@ msgstr "裝置(&V)"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change &Recording Device..."
-msgstr "變更錄音裝置(&R)..."
+msgstr "錄音裝置變更(&R)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change &Playback Device..."
-msgstr "變更播放裝置(&P)..."
+msgstr "播放裝置變更(&P)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change Audio &Host..."
-msgstr "變更音訊主機(&H)..."
+msgstr "音訊通訊介面變更(&H)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "Change Recording Cha&nnels..."
-msgstr "變更輸入聲道(&N)..."
+msgstr "輸入聲道變更(&N)..."
 
 #: src/menus/ExtraMenus.cpp
 msgid "&Full Screen (on/off)"
@@ -13052,7 +13233,7 @@ msgstr ""
 
 #: src/menus/FileMenus.cpp
 msgid "Export Selected Audio"
-msgstr "匯出選擇的音訊"
+msgstr "匯出所選擇的音訊"
 
 #. i18n-hint: filename containing exported text from label tracks
 #: src/menus/FileMenus.cpp
@@ -13152,15 +13333,15 @@ msgstr "匯出(&E)"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
-msgstr "匯出為 MP&3"
+msgstr "匯出為 MP3  (&3)"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as &WAV"
-msgstr "匯出為 &WAV"
+msgstr "匯出為 WAV (&W)"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as &OGG"
-msgstr "匯出為 &OGG"
+msgstr "匯出為 OGG (&O)"
 
 #: src/menus/FileMenus.cpp
 msgid "&Export Audio..."
@@ -13176,11 +13357,11 @@ msgstr "匯出標籤(&L)..."
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Multiple..."
-msgstr "匯出多個檔案(&M)..."
+msgstr "匯出成多個檔案(&M)..."
 
 #: src/menus/FileMenus.cpp
 msgid "Export MI&DI..."
-msgstr "匯出 MI&DI..."
+msgstr "匯出 MIDI... (&D)"
 
 #: src/menus/FileMenus.cpp
 msgid "&Audio..."
@@ -13192,7 +13373,7 @@ msgstr "標籤(&L)..."
 
 #: src/menus/FileMenus.cpp
 msgid "&MIDI..."
-msgstr "&MIDI..."
+msgstr "MIDI... (&M)"
 
 #: src/menus/FileMenus.cpp
 msgid "&Raw Data..."
@@ -13244,11 +13425,11 @@ msgstr "快速修正"
 
 #: src/menus/HelpMenus.cpp
 msgid "Nothing to do"
-msgstr "沒有事情可以做"
+msgstr "沒有可被執行的項目"
 
 #: src/menus/HelpMenus.cpp
 msgid "No quick, easily fixed problems were found"
-msgstr "找不到可以快速修正的問題"
+msgstr "找不到可被快速修正的問題"
 
 #: src/menus/HelpMenus.cpp
 msgid "Clocks on the Tracks"
@@ -13273,10 +13454,6 @@ msgstr "音訊裝置資訊"
 #: src/menus/HelpMenus.cpp
 msgid "MIDI Device Info"
 msgstr "MIDI 裝置資訊"
-
-#: src/menus/HelpMenus.cpp
-msgid "Menu Tree"
-msgstr "選單樹"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Fix..."
@@ -13310,17 +13487,13 @@ msgstr "音訊裝置資訊(&D)..."
 msgid "&MIDI Device Info..."
 msgstr "&MIDI 裝置資訊..."
 
-#: src/menus/HelpMenus.cpp
+#: src/menus/HelpMenus.cpp src/widgets/ErrorDialog.cpp
 msgid "Show &Log..."
 msgstr "顯示日誌(&L)..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
 msgstr "生成支援資料(&G)..."
-
-#: src/menus/HelpMenus.cpp
-msgid "Menu Tree..."
-msgstr "選單樹…"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
@@ -13514,11 +13687,11 @@ msgstr "分割(&T)"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Split"
-msgstr "標籤分割"
+msgstr "將標籤處分割"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Join"
-msgstr "標籤合併"
+msgstr "將標籤處合併"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Backward Through Active Windows"
@@ -13636,11 +13809,11 @@ msgstr "連鎖指令(&M)..."
 
 #: src/menus/PluginMenus.cpp
 msgid "&Apply Macro"
-msgstr "套用連鎖指令(&A)"
+msgstr "套用連續指令(&A)"
 
 #: src/menus/PluginMenus.cpp
 msgid "Palette..."
-msgstr "調製板..."
+msgstr "編輯器..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Reset &Configuration"
@@ -14017,7 +14190,6 @@ msgstr "游標大幅右移(&M)"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
-#.
 #: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
 msgid "See&k"
 msgstr "定位播放(&K)"
@@ -14166,7 +14338,7 @@ msgstr "已對齊/移動至首尾相接"
 
 #: src/menus/TrackMenus.cpp
 msgid "Aligned end to end"
-msgstr "已首尾相接對齊"
+msgstr "已頭尾相接對齊"
 
 #: src/menus/TrackMenus.cpp
 msgid "Align/Move End to End"
@@ -14174,7 +14346,7 @@ msgstr "首尾相接對齊/移動"
 
 #: src/menus/TrackMenus.cpp
 msgid "Align End to End"
-msgstr "首尾相接對齊"
+msgstr "頭尾相接對齊"
 
 #: src/menus/TrackMenus.cpp
 msgid "Aligned/Moved together"
@@ -14206,7 +14378,7 @@ msgstr "已調整增益"
 
 #: src/menus/TrackMenus.cpp
 msgid "Adjusted Pan"
-msgstr "已調整平移"
+msgstr "已調整左右聲道平移"
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new audio track"
@@ -14328,7 +14500,7 @@ msgstr "混音(&X)"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix Stereo Down to &Mono"
-msgstr "將立體聲混合為單聲道(&M)"
+msgstr "將立體聲轉換成單聲道(&M)"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mi&x and Render"
@@ -14490,17 +14662,20 @@ msgstr "將焦點軌道置頂(&O)"
 msgid "Move Focused Track to &Bottom"
 msgstr "將焦點軌道置底(&B)"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
 msgid "Playing"
 msgstr "正在播放"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
-#: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp
-#: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
-#: src/prefs/RecordingPrefs.h src/toolbars/ControlToolBar.cpp
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/menus/TransportMenus.cpp src/prefs/MidiIOPrefs.cpp
+#: src/toolbars/ControlToolBar.cpp
 msgid "Recording"
 msgstr "錄製"
 
@@ -14526,8 +14701,7 @@ msgid ""
 "Timer Recording cannot be used with more than one open project.\n"
 "\n"
 "Please close any additional projects and try again."
-msgstr ""
-"預約錄製專案不能和多個開啟的專案共同使用。請關閉任何其他專案，然後重試。"
+msgstr "預約錄製專案不能和多個開啟的專案共同使用。請關閉任何其他專案，然後重試。"
 
 #: src/menus/TransportMenus.cpp
 msgid ""
@@ -14557,7 +14731,7 @@ msgstr "請選擇剪輯內的時間。"
 #. play, record, pause etc.
 #: src/menus/TransportMenus.cpp
 msgid "Tra&nsport"
-msgstr "播錄(&N)"
+msgstr "播放錄音(&N)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Pl&aying"
@@ -14574,24 +14748,24 @@ msgstr "播放/停止和設定游標(&S)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Loop Play"
-msgstr "循環播放(&L)"
+msgstr "循環播放 (&L)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Pause"
-msgstr "暫停(&P)"
+msgstr "暫停 (&P)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Recording"
-msgstr "錄製(&R)"
+msgstr "錄製中 (&R)"
 
 #. i18n-hint: (verb)
 #: src/menus/TransportMenus.cpp
 msgid "&Record"
-msgstr "錄製(&R)"
+msgstr "錄製 (&R)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Append Record"
-msgstr "附加錄製(&A)"
+msgstr "附加錄製 (&A)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Record &New Track"
@@ -14603,7 +14777,7 @@ msgstr "預約錄製(&T)..."
 
 #: src/menus/TransportMenus.cpp
 msgid "Punch and Rol&l Record"
-msgstr ""
+msgstr "接續選取區域後錄音"
 
 #: src/menus/TransportMenus.cpp
 msgid "Pla&y Region"
@@ -14643,7 +14817,7 @@ msgstr "疊錄 (開啟/關閉)(&O)"
 
 #: src/menus/TransportMenus.cpp
 msgid "So&ftware Playthrough (on/off)"
-msgstr "軟體監播 (開啟/關閉)(&F)"
+msgstr "軟體監播 (開/關)(&F)"
 
 #: src/menus/TransportMenus.cpp
 msgid "A&utomated Recording Level Adjustment (on/off)"
@@ -14651,53 +14825,53 @@ msgstr "輸入強度自動調整 (開啟/關閉)(&U)"
 
 #: src/menus/TransportMenus.cpp
 msgid "T&ransport"
-msgstr "播錄(&R)"
+msgstr "播錄 (&R)"
 
 #. i18n-hint: (verb) Start playing audio
 #: src/menus/TransportMenus.cpp
 msgid "Pl&ay"
-msgstr "播放(&A)"
+msgstr "播放 (&A)"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/menus/TransportMenus.cpp
 msgid "Sto&p"
-msgstr "停止(&P)"
+msgstr "停止 (&P)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play &One Second"
-msgstr "播放一秒(&O)"
+msgstr "播放一秒 (&O)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play to &Selection"
-msgstr "播放至選擇選圍(&S)"
+msgstr "播放至選擇選圍 (&S)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play &Before Selection Start"
-msgstr "播放至選取部分起點前(&B)"
+msgstr "從選取區域 起點 前播放 (&B)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Af&ter Selection Start"
-msgstr "於選取部分起點後播放(&T)"
+msgstr "從選取區域 起點 後播放 (&T)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Be&fore Selection End"
-msgstr "播放至選取部分終點前(&F)"
+msgstr "從選取區域 終點 前播放 (&F)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Aft&er Selection End"
-msgstr "於選取部分終點後播放(&E)"
+msgstr "從選取區域 終點 後播放 (&E)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Before a&nd After Selection Start"
-msgstr "播放選區起點前後(&N)"
+msgstr "播放選取區域 起點的前後片段 (&N)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play Before an&d After Selection End"
-msgstr "播放選區終點前後(&D)"
+msgstr "播放選取區域 終點的前後片段 (&D)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview"
-msgstr "播放裁切區域預覽(&I)"
+msgstr "播放裁切預覽 (忽略選取區)  (&u)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Play-at-Speed"
@@ -14710,11 +14884,11 @@ msgstr "以正常速度播放(&A)"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Loop Play-at-Speed"
-msgstr "以指定速度循環播放(&L)"
+msgstr "以指定速度循環播放 (&L)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview-at-Speed"
-msgstr "以指定速度播放剪下預覽(&U)"
+msgstr "以指定速度播放 裁切預覽 (忽略選取區)   (&u)"
 
 #: src/menus/TransportMenus.cpp
 msgid "Ad&just Playback Speed..."
@@ -14811,6 +14985,10 @@ msgid "&Extra Menus (on/off)"
 msgstr "額外選單 (開啟/關閉) (&E)"
 
 #: src/menus/ViewMenus.cpp
+msgid "Track &Name (on/off)"
+msgstr "軌道名稱(開啟/關閉) (&N)"
+
+#: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
 msgstr "顯示削波 (開啟/關閉) (&S)"
 
@@ -14852,6 +15030,28 @@ msgstr "正在解碼波形"
 #, c-format
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s %2.0f%% 已完成。點選以變更工作焦點。"
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "Preferences for Application"
+msgstr "偏好設定"
+
+#. i18n-hint: Title for the update notifications panel in the preferences
+#. dialog.
+#: src/prefs/ApplicationPrefs.cpp
+msgid "Update notifications"
+msgstr "更新提醒設定"
+
+#. i18n-hint: Check-box title that configures periodic updates checking.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Check for updates"
+msgstr "檢查更新 (&C)"
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid ""
+"App update checking requires network access. In order to protect your "
+"privacy, Audacity does not store any personal information."
+msgstr "程式更新需要使用到網路，為了維護你的隱私，AUDACITY並沒有收集任何個人資訊。"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -14901,6 +15101,13 @@ msgstr "播放"
 msgid "&Device:"
 msgstr "裝置(&D)："
 
+#. i18n-hint: modifier as in "Recording preferences", not progressive verb
+#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/prefs/RecordingPrefs.h
+msgctxt "preference"
+msgid "Recording"
+msgstr "錄製"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
 msgstr "裝置(&V)："
@@ -14944,6 +15151,7 @@ msgstr "2 (立體聲)"
 
 #. i18n-hint:  Directories, also called directories, in computer file systems
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Directories"
 msgstr "目錄"
 
@@ -14996,6 +15204,10 @@ msgid "Bro&wse..."
 msgstr "瀏覽(&W)..."
 
 #: src/prefs/DirectoriesPrefs.cpp
+msgid "&Macro output:"
+msgstr "連續指令輸出 (&M)"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
 msgstr "暫存檔案目錄"
 
@@ -15014,10 +15226,6 @@ msgstr "瀏覽(&S)..."
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "剩餘空間(&F)："
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Free Space"
-msgstr "剩餘空間"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
@@ -15086,7 +15294,6 @@ msgstr "依種類分組"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
-#.
 #: src/prefs/EffectsPrefs.cpp
 msgid "&LADSPA"
 msgstr "&LADSPA"
@@ -15098,20 +15305,23 @@ msgid "LV&2"
 msgstr "LV&2"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or
+#. Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: src/prefs/EffectsPrefs.cpp
 msgid "N&yquist"
 msgstr "N&yquist"
 
-#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. i18n-hint: Vamp is the proper name of a software protocol for sound
+#. analysis.
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Vamp"
 msgstr "&Vamp"
 
-#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software
+#. protocol
 #. developed by Steinberg GmbH
 #: src/prefs/EffectsPrefs.cpp
 msgid "V&ST"
@@ -15119,7 +15329,7 @@ msgstr "V&ST"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Enable Effects"
-msgstr "啟用效果"
+msgstr "啟用效果模組格式"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -15218,9 +15428,8 @@ msgid ""
 "what you are doing, it is recommended to trim spaces. Do you want Audacity "
 "to trim spaces for you?"
 msgstr ""
-"在某個項目中有空白字元 (空格字元、換行字元、定位字元)，這些字元可能會破壞樣式"
-"比對。除非您了解其內容，否則建議將其刪除。是否需要 Audacity 為您刪除這些空白"
-"字元？"
+"在某個項目中有空白字元 (空格字元、換行字元、定位字元)，這些字元可能會破壞樣式比對。除非您了解其內容，否則建議將其刪除。是否需要 Audacity "
+"為您刪除這些空白字元？"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -15288,7 +15497,8 @@ msgstr "本機"
 msgid "From Internet"
 msgstr "在網路"
 
-#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
+#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformPrefs.cpp
 msgid "Display"
 msgstr "顯示"
 
@@ -15339,7 +15549,7 @@ msgstr "主要使用由右向左的文字（例如阿拉伯文和希伯來文）
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
-msgstr ""
+msgstr "請不要小數後使用逗號"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
@@ -15353,10 +15563,6 @@ msgstr "顯示跟隨播放尺標"
 #, c-format
 msgid "Language \"%s\" is unknown"
 msgstr "語言「%s」未知"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "Master Gain Control"
-msgstr "主增益控制"
 
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
@@ -15521,10 +15727,11 @@ msgstr "匯入鍵盤快捷鍵時發生錯誤"
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid ""
-"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
-"and \"%s\".\n"
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" and \"%s\".\n"
 "Nothing is imported."
 msgstr ""
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" and \"%s\".\n"
+"Nothing is imported."
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15534,9 +15741,10 @@ msgstr "已載入 %d 個鍵盤快捷鍵\n"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid ""
 "\n"
-"The following commands are not mentioned in the imported file, but have "
-"their shortcuts removed because of the conflict with other new shortcuts:\n"
+"The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
+"\n"
+"The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -15566,6 +15774,11 @@ msgid ""
 "\n"
 "\t"
 msgstr ""
+"\n"
+"\n"
+"\t 和 \n"
+"\n"
+"\t"
 
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
@@ -15608,24 +15821,8 @@ msgid "MP3 Library Version:"
 msgstr "MP3 函式庫版本："
 
 #: src/prefs/LibraryPrefs.cpp
-msgid "LAME MP3 Library:"
-msgstr "LAME MP3 函式庫："
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Locate..."
-msgstr "定位(&L)..."
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "&Download"
-msgstr "下載(&D)"
-
-#: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "FFmpeg 匯入/匯出函式庫"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "FFmpeg Library Version:"
-msgstr "FFmpeg 函式庫版本："
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "No compatible FFmpeg library was found"
@@ -15634,6 +15831,10 @@ msgstr "找不到相容的 FFmpeg 函式庫"
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
 msgstr "編譯時未加入 FFmpeg 支援"
+
+#: src/prefs/LibraryPrefs.cpp
+msgid "FFmpeg Library Version:"
+msgstr "FFmpeg 函式庫版本："
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library:"
@@ -15698,7 +15899,8 @@ msgstr "MIDI 合成器遲滯必須是整數"
 msgid "Midi IO"
 msgstr "MIDI IO"
 
-#. i18n-hint: Modules are optional extensions to Audacity that add NEW features.
+#. i18n-hint: Modules are optional extensions to Audacity that add NEW
+#. features.
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr "模組"
@@ -15709,8 +15911,7 @@ msgstr "模組偏好設定"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity "
-"Manual\n"
+"These are experimental modules. Enable them only if you've read the Audacity Manual\n"
 "and know what you are doing."
 msgstr ""
 "這些是實驗性模組。請在您已詳讀使用手冊並了解其內容時\n"
@@ -15721,12 +15922,12 @@ msgstr ""
 msgid ""
 "  'Ask' means Audacity will ask if you want to load the module each time it "
 "starts."
-msgstr ""
-"  「詢問」意指 Audacity 會在每次外掛程式啟動時詢問您是否載入該外掛程式。"
+msgstr "  「詢問」意指 Audacity 會在每次外掛程式啟動時詢問您是否載入該外掛程式。"
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
+msgid ""
+"  'Failed' means Audacity thinks the module is broken and won't run it."
 msgstr "  「失敗」意指 Audacity 認為該外掛程式是損壞的，不會執行該外掛程式。"
 
 #. i18n-hint preserve the leading spaces
@@ -15890,11 +16091,6 @@ msgid "Move clip up/down between tracks"
 msgstr "在軌道之間上下移動剪輯"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp src/tracks/ui/EnvelopeHandle.cpp
-msgid "Envelope"
-msgstr "波封"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/prefs/MousePrefs.cpp
 msgid "Change Amplification Envelope"
 msgstr "變更波封增幅"
@@ -15973,7 +16169,7 @@ msgstr "播放偏好設定"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
-msgstr "效果預覽"
+msgstr "預覽效果"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Length:"
@@ -15982,7 +16178,7 @@ msgstr "長度(&L)："
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Cut Preview"
-msgstr "裁切區域預覽"
+msgstr "播放裁切預覽 (忽略選取區) "
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Before cut region:"
@@ -16006,15 +16202,15 @@ msgstr "長區間(&N)："
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
-msgstr "變速播放(&V)"
+msgstr "允許播放中調整播放速度(&V)"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
-msgstr ""
+msgstr "播放時快速淡出淡入 (&M)"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr ""
+msgstr "忽略跟隨播放 當使用固定播放頭時 (&p)"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
@@ -16027,14 +16223,6 @@ msgstr "類別"
 #: src/prefs/PrefsDialog.cpp src/prefs/PrefsDialog.h
 msgid "Preferences:"
 msgstr "偏好設定："
-
-#: src/prefs/QualityPrefs.cpp
-msgid "16-bit"
-msgstr "16 位元"
-
-#: src/prefs/QualityPrefs.cpp
-msgid "24-bit"
-msgstr "24 位元"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Preferences for Quality"
@@ -16069,7 +16257,8 @@ msgstr "即時轉換"
 msgid "Sample Rate Con&verter:"
 msgstr "取樣頻率轉換器(&V)："
 
-#. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
+#. i18n-hint: technical term for randomization to reduce undesirable
+#. resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "&Dither:"
 msgstr "高頻抖動(&D)："
@@ -16082,10 +16271,19 @@ msgstr "高品質轉換"
 msgid "Sample Rate Conver&ter:"
 msgstr "取樣頻率轉換器(&T)："
 
-#. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
+#. i18n-hint: technical term for randomization to reduce undesirable
+#. resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "高頻抖動(&H)："
+
+#: src/prefs/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16 位元"
+
+#: src/prefs/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24 位元"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
@@ -16107,7 +16305,8 @@ msgstr "軟體輸入監播(&S)"
 msgid "Record on a new track"
 msgstr "將聲音錄在新的軌道"
 
-#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the
+#. recording
 #: src/prefs/RecordingPrefs.cpp
 msgid "Detect dropouts"
 msgstr "偵測 dropout"
@@ -16193,23 +16392,25 @@ msgstr "聲控啟動錄製"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Pre-ro&ll:"
-msgstr ""
+msgstr "Pre-ro&ll:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
-msgstr ""
+msgstr "Cross&fade:"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Mel"
 msgstr "Mel"
 
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for
+#. Heinrich Barkhausen
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Bark"
 msgstr "Bark"
 
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates
+#. Equivalent Rectangular Bandwidth
 #: src/prefs/SpectrogramSettings.cpp
 msgid "ERB"
 msgstr "等效矩形頻寬（ERB）"
@@ -16218,6 +16419,30 @@ msgstr "等效矩形頻寬（ERB）"
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Period"
 msgstr "週期"
+
+#. i18n-hint: New color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "彩色（預設值）"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "彩色（經典）"
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "灰度(&Y)"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "反轉灰階(&L)"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Frequencies"
@@ -16300,11 +16525,7 @@ msgstr "範圍 (dB)(&R)："
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "High &boost (dB/dec):"
-msgstr ""
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "Gra&yscale"
-msgstr "灰度(&Y)"
+msgstr "高增強 (&b) (dB/dec)"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Algorithm"
@@ -16350,7 +16571,8 @@ msgstr "啟用頻譜選擇(&B)"
 msgid "Show a grid along the &Y-axis"
 msgstr "沿 Y 軸顯示網格(&Y)"
 
-#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated
+#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be
+#. translated
 #: src/prefs/SpectrumPrefs.cpp
 msgid "FFT Find Notes"
 msgstr "快速傅立葉轉換 (FFT) 尋找音符"
@@ -16412,7 +16634,8 @@ msgid "The maximum number of notes must be in the range 1..128"
 msgstr "最大音符數必須是在 1 至 128 之間"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
+#. graphical user interface, including choices of colors, and similarity of
+#. images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
 #: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
@@ -16431,15 +16654,12 @@ msgstr "資訊"
 msgid ""
 "Themability is an experimental feature.\n"
 "\n"
-"To try it out, click \"Save Theme Cache\" then find and modify the images "
-"and colors in\n"
+"To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into "
-"Audacity.\n"
+"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
 "\n"
-"(Only the Transport Toolbar and the colors on the wavetrack are currently "
-"affected, even\n"
+"(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.)"
 msgstr ""
 "主題選用是實驗性功能。\n"
@@ -16454,8 +16674,7 @@ msgstr ""
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
-"Saving and loading individual theme files uses a separate file for each "
-"image, but is\n"
+"Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
 msgstr ""
 "儲存和載入個別佈景主題檔案對每個圖像使用獨立檔案，\n"
@@ -16736,8 +16955,10 @@ msgstr "波形偏好設定"
 msgid "Waveform dB &range:"
 msgstr "波形分貝範圍(&R)："
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/toolbars/ControlToolBar.cpp
 msgid "Stopped"
 msgstr "已停止"
@@ -16774,7 +16995,8 @@ msgstr "選擇到終點"
 msgid "Select to Start"
 msgstr "選擇到起點"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
 #, c-format
@@ -16804,7 +17026,7 @@ msgstr "錄製裝置"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Audio Host"
-msgstr "音訊主機"
+msgstr "音訊通訊介面"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Recording Channels"
@@ -16828,7 +17050,7 @@ msgstr "選擇播放裝置"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Select Audio Host"
-msgstr "選擇音訊主機"
+msgstr "選擇音訊通訊介面"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Select Recording Channels"
@@ -16907,7 +17129,8 @@ msgstr "錄製計量表"
 msgid "Playback Meter"
 msgstr "播放計量表"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being
+#. recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -16993,7 +17216,6 @@ msgstr "跟隨播放"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Stop Scrubbing"
 msgstr "停止跟隨播放"
@@ -17001,7 +17223,6 @@ msgstr "停止跟隨播放"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Start Scrubbing"
 msgstr "開始跟隨播放"
@@ -17009,7 +17230,6 @@ msgstr "開始跟隨播放"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Stop Seeking"
 msgstr "停止定位播放"
@@ -17017,7 +17237,6 @@ msgstr "停止定位播放"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/toolbars/ScrubbingToolBar.cpp
 msgid "Start Seeking"
 msgstr "開始定位播放"
@@ -17317,8 +17536,8 @@ msgstr "降八度音(&V)"
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
 msgid ""
-"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
-"region."
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom"
+" region."
 msgstr "點選以垂直放大，Shift-點選以縮小，拖動以指定一個縮放區域。"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
@@ -17426,7 +17645,7 @@ msgid ""
 "To change Spectrogram Settings, stop any\n"
 " playing or recording first."
 msgstr ""
-"要變更頻譜圖設定，\n"
+"要變更頻譜圖設定前，\n"
 " 請先停止任何播放或錄製。"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
@@ -17456,7 +17675,8 @@ msgid "Processing...   %i%%"
 msgstr "正在處理⋯   %i%%"
 
 #. i18n-hint: The strings name a track and a format
-#. i18n-hint: The strings name a track and a channel choice (mono, left, or right)
+#. i18n-hint: The strings name a track and a channel choice (mono, left, or
+#. right)
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformView.cpp
 #, c-format
@@ -17812,7 +18032,6 @@ msgstr "已調整的波封。"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
-#.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
 msgstr "跟隨播放(&S)"
@@ -17824,7 +18043,6 @@ msgstr "定位播放"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
-#.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub &Ruler"
 msgstr "跟隨播放尺標(&R)"
@@ -17886,8 +18104,8 @@ msgstr "點選並拖動以調整頻帶寬度。"
 msgid "Edit, Preferences..."
 msgstr "編輯，偏好設定..."
 
-# TODO: 需要修改
-#. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac
+#. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux,
+#. "Command+," for Mac
 #: src/tracks/ui/SelectHandle.cpp
 #, c-format
 msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
@@ -17901,7 +18119,8 @@ msgstr "點選並拖動以設定頻帶寬度。"
 msgid "Click and drag to select audio"
 msgstr "點選並拖動以選擇音訊"
 
-#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any
+#. nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
 msgid "(snapping)"
 msgstr "（貼齊）"
@@ -17958,13 +18177,15 @@ msgstr "Command 鍵 + 按一下"
 msgid "Ctrl+Click"
 msgstr "Ctrl + 按一下"
 
-#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
+#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows,
+#. 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
 msgstr "%s以選擇或取消選擇軌道。上下拖動以更改軌道次序。"
 
-#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
+#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows,
+#. 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track."
@@ -17996,6 +18217,95 @@ msgstr "拖動以縮放到區域內，右鍵點選以縮小"
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "左鍵=放大，右鍵=縮小，中鍵=正常"
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "檢查更新檔案時發生錯誤"
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr "無法連結到Audacity的更新主機."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr "更新檔案可能是無效或已損壞."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "下載更新檔案的時候發生錯誤."
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr "無法打開Audacity下載連結."
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App update checking"
+msgstr "檢查程式更新"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid ""
+"To stay up to date, you will receive an in-app notification whenever there "
+"is a new version of Audacity available to download."
+msgstr "為了確保應用程式保持在最新版本的的狀況，你會在Audacity 新版本釋出的時候收到提醒。"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid ""
+"In order to protect your privacy, Audacity does not collect any personal "
+"information. However, app update checking does require network access."
+msgstr "為了保護您的隱私，Audacity 並不會蒐集任何個人資訊，但檢查是否有新版本的程式將會需要網路連線"
+
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can turn off app update checking at any time in %s."
+msgstr "你可以在%s關閉程式更新檢查。"
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App updates"
+msgstr "程式更新"
+
+#. i18n-hint: a page in the Preferences dialog; use same name
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Preferences > Application"
+msgstr "偏好設定 > 附屬應用"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "更新 Audacity"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr "略過(&S)"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr "安裝更新(&I)"
+
+#. i18n-hint Substitution of version number for %s.
+#: src/update/UpdatePopupDialog.cpp
+#, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "新版本 Audacity %s  已經出來了!"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "修改記錄"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr "更多資訊請閱讀 GitHub"
 
 #: src/widgets/AButton.cpp
 msgid "(disabled)"
@@ -18239,10 +18549,12 @@ msgstr "時:分:秒 + 厘秒"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
-#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
+#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for
+#. seconds
 #. * (the hundredths are shown as decimal seconds). Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060>0100 s"
@@ -18255,11 +18567,13 @@ msgid "hh:mm:ss + milliseconds"
 msgstr "時:分:秒 + 毫秒"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
+#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to
+#. the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
 #. * milliseconds are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060>01000 s"
@@ -18276,7 +18590,8 @@ msgstr "時:分:秒 + 取樣點"
 #. * abbreviation for minutes, 's' to the abbreviation for seconds and
 #. * translate samples . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+># samples"
@@ -18285,7 +18600,6 @@ msgstr "0100 時 060 分 060 秒+># 取樣點"
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
-#.
 #: src/widgets/NumericTextCtrl.cpp plug-ins/sample-data-export.ny
 msgid "samples"
 msgstr "取樣點"
@@ -18309,7 +18623,8 @@ msgstr "時:分:秒 + 影片影格 (24 fps)"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames' . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>24 frames"
@@ -18340,7 +18655,8 @@ msgstr "時:分:秒 + NTSC 丟棄影格"
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the |N alone, it's important!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>30 frames|N"
@@ -18358,7 +18674,8 @@ msgstr "時:分:秒 + NTSC 無丟棄影格"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the | .999000999 alone,
 #. * the whole things really is slightly off-speed!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>030 frames| .999000999"
@@ -18389,7 +18706,8 @@ msgstr "時:分:秒 + PAL 影格 (25 fps)"
 #. * and frames with PAL TV frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Nice simple time code!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>25 frames"
@@ -18419,7 +18737,8 @@ msgstr "時:分:秒 + CDDA 影格 (75 fps)"
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>75 frames"
@@ -18441,7 +18760,8 @@ msgstr "01000,01000 影格|75"
 
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "010,01000>0100 Hz"
@@ -18458,7 +18778,8 @@ msgstr "kHz"
 
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000>01000 kHz|0.001"
@@ -18476,7 +18797,8 @@ msgstr "八度音"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "100>01000 octaves|1.442695041"
@@ -18496,7 +18818,8 @@ msgstr "半音 + 音分"
 #. i18n-hint: Format string for displaying log of frequency in semitones
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "1000 semitones >0100 cents|17.312340491"
@@ -18572,6 +18895,31 @@ msgstr "確定要關閉嗎？"
 #: src/widgets/ProgressDialog.cpp
 msgid "Confirm Close"
 msgstr "確認關閉"
+
+#. i18n-hint: %s is replaced with a directory path.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, c-format
+msgid "Unable to write files to directory: %s."
+msgstr "無法寫入檔案到  %s 目錄"
+
+#. i18n-hint: This message describes the error in the Error dialog.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+msgid ""
+"Please check that the directory exists, has the necessary permissions, and "
+"the drive isn't full."
+msgstr "請檢查指定的目錄是否存在並且有足夠的儲存空間，並且有足夠的存取權限"
+
+#. i18n-hint: %s is replaced with 'Preferences > Directories'.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, c-format
+msgid "You can change the directory in %s."
+msgstr "你可以在 %s 修改目錄設定"
+
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories
+#. page.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+msgid "Preferences > Directories"
+msgstr "偏好設定 > 目錄"
 
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
@@ -18711,9 +19059,12 @@ msgid ""
 "                      Try increasing the low frequency bound~%~\n"
 "                      or reduce the filter 'Width'."
 msgstr ""
+"~aNotch filter parameters cannot be applied.~%~\n"
+"                      Try increasing the low frequency bound~%~\n"
+"                      or reduce the filter 'Width'."
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Error.~%"
 msgstr "錯誤。~%"
@@ -18745,8 +19096,7 @@ msgstr "~a中心頻率必須高於 0 Hz。"
 #, lisp-format
 msgid ""
 "~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting "
-"cannot~%~\n"
+"                        For the current track, the high frequency setting cannot~%~\n"
 "                        be greater than ~a Hz"
 msgstr ""
 "~a頻率選取部分對於軌道取樣率來說太高。~%~\n"
@@ -18840,7 +19190,7 @@ msgstr "終點 (或起點)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Handy Presets (override controls)"
-msgstr ""
+msgstr "動作預製（覆蓋控制）"
 
 #: plug-ins/adjustable-fade.ny
 msgid "None Selected"
@@ -18922,7 +19272,7 @@ msgstr ""
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
-msgstr "尋找拍子"
+msgstr "找尋拍子"
 
 #: plug-ins/beat.ny
 msgid "Finding beats..."
@@ -18972,8 +19322,9 @@ msgstr "錯誤。~%選取部分無效。~%選擇了多於 2 個音訊剪輯。"
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
-msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr "錯誤。~%選取部分無效。~%選取部分的開首或結尾有空白。"
+msgid ""
+"Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr "錯誤。~%選取部分無效。~ %E選取部分的開首或結尾有空白。"
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -19222,7 +19573,7 @@ msgstr "僅警告"
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "Warning: Overlapping region labels.~%"
-msgstr ""
+msgstr "警告：區域標籤重疊. ~%"
 
 #. i18n-hint:  Type of label
 #: plug-ins/equalabel.ny
@@ -19263,7 +19614,7 @@ msgstr "頻率 (赫茲)"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "Roll-off (dB per octave)"
-msgstr ""
+msgstr "滾降 (每八度/分貝)"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "6 dB"
@@ -19352,11 +19703,11 @@ msgstr "聲音出現後的點"
 
 #: plug-ins/label-sounds.ny
 msgid "Region around sounds"
-msgstr ""
+msgstr "聲音區間"
 
 #: plug-ins/label-sounds.ny
 msgid "Region between sounds"
-msgstr "聲音間區域"
+msgstr "聲音之間的空白區域"
 
 #: plug-ins/label-sounds.ny
 msgid "Maximum leading silence"
@@ -19377,8 +19728,9 @@ msgid "~ah ~am ~as"
 msgstr "~ah ~am ~as"
 
 #: plug-ins/label-sounds.ny
-msgid "Too many silences detected.nOnly the first 10000 labels added."
-msgstr "偵測到過多靜音.n只加入前 10000 個標籤。"
+#, lisp-format
+msgid "Too many silences detected.~%Only the first 10000 labels added."
+msgstr "偵測到過多靜音.~%只加入前 10000 個標籤。"
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
@@ -19399,6 +19751,8 @@ msgid ""
 "Labelling regions between sounds requires~%at least two sounds.~%Only one "
 "sound detected."
 msgstr ""
+"Labelling regions between sounds requires~%at least two sounds.~%Only one "
+"sound detected."
 
 #: plug-ins/limiter.ny
 msgid "Limiter"
@@ -19420,7 +19774,8 @@ msgstr "軟限制"
 msgid "Hard Limit"
 msgstr "硬限制"
 
-#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into
+#. clips
 #: plug-ins/limiter.ny
 msgid "Soft Clip"
 msgstr "軟剪輯"
@@ -19521,6 +19876,10 @@ msgid ""
 "is too high for selected track.\n"
 "Set the control below ~a kHz."
 msgstr ""
+"Error.\n"
+"\"Gate frequencies above: ~s kHz\"\n"
+"is too high for selected track.\n"
+"Set the control below ~a kHz."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19550,6 +19909,8 @@ msgid ""
 "Peak based on first ~a seconds ~a dB~%\n"
 "Suggested Threshold Setting ~a dB."
 msgstr ""
+"Peak based on first ~a seconds ~a dB~%\n"
+"Suggested Threshold Setting ~a dB."
 
 #. i18n-hint: hours and minutes. Do not translate "~a".
 #: plug-ins/noisegate.ny
@@ -19627,21 +19988,19 @@ msgid "Allow"
 msgstr "允許"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Error.n"
-msgstr "錯誤.n"
-
-#: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
 msgstr "成功。~%檔案已寫入至：~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Warning.nFailed to copy some files:n"
-msgstr "警告.n無法複製部分檔案：n"
+#, lisp-format
+msgid "Warning.~%Failed to copy some files:~%"
+msgstr "警告.~%F無法複製一些檔案:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
-msgid "Plug-ins installed.n(Use the Plug-in Manager to enable effects):"
-msgstr "安裝的外掛程式.n(使用外掛程式管理工具啟用效果)："
+#, lisp-format
+msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
+msgstr "安裝的外掛程式 .~% (使用外掛程式管理工具啟用效果)："
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -19674,11 +20033,11 @@ msgstr "錯誤。~%未選擇檔案。"
 
 #: plug-ins/pluck.ny
 msgid "Pluck"
-msgstr "Pluck"
+msgstr "撥弦聲"
 
 #: plug-ins/pluck.ny
 msgid "Generating pluck sound..."
-msgstr "正在生成 Pluck 聲音..."
+msgstr "正在生成撥弦聲..."
 
 #: plug-ins/pluck.ny
 msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
@@ -19690,7 +20049,7 @@ msgstr "David R.Sky"
 
 #: plug-ins/pluck.ny
 msgid "Pluck MIDI pitch"
-msgstr "Pluck MIDI 音高"
+msgstr "撥弦聲 MIDI 音高"
 
 #: plug-ins/pluck.ny
 msgid "Fade-out type"
@@ -19981,15 +20340,12 @@ msgstr ""
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid ""
-"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
-"~a ~\n"
-"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
-"Unweighted RMS: ~a dB.~%~\n"
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
 msgstr ""
 "~a~%取樣率：~a Hz。樣本值按 ~a 比例。~a。~%~a已處理長度：~a ~\n"
-"                  個樣本，~a 秒。~%峰值振幅：~a (線性) ~a dB。  未加權 RMS："
-"~a dB。~%~\n"
+"                  個樣本，~a 秒。~%峰值振幅：~a (線性) ~a dB。  未加權 RMS：~a dB。~%~\n"
 "                  直流偏移：~a~a"
 
 #: plug-ins/sample-data-export.ny
@@ -20027,13 +20383,15 @@ msgstr "<b>取樣率：</b> &nbsp;&nbsp;~a Hz。"
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgstr "<b>振幅峰值：</b> &nbsp;&nbsp;~a (線性) &nbsp;&nbsp;~a dB。"
 
-#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
+#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a
+#. signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
-msgstr ""
+msgstr "<b>RMS</b> (未經權重): &nbsp;&nbsp;~a dB."
 
-#. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
+#. i18n-hint: DC derives from "direct current" in electronics, really means
+#. the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
@@ -20309,6 +20667,14 @@ msgid ""
 "                    Variation of residuals: ~a\n"
 "                    y equals ~a plus ~a times x~%"
 msgstr ""
+"Average x: ~a, y: ~a\n"
+"                    Covariance x y: ~a\n"
+"                    Average variance x: ~a, y: ~a\n"
+"                    Standard deviation x: ~a, y: ~a\n"
+"                    Coefficient of correlation: ~a\n"
+"                    Coefficient of determination: ~a\n"
+"                    Variation of residuals: ~a\n"
+"                    y equals ~a plus ~a times x~%"
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
@@ -20323,13 +20689,17 @@ msgid ""
 "                The center can't be removed.\n"
 "                Any remaining difference may be caused by lossy encoding."
 msgstr ""
+" - The two channels are identical, i.e. dual mono.\n"
+"                The center can't be removed.\n"
+"                Any remaining difference may be caused by lossy encoding."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely "
-"panned.\n"
+" - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
 "                Most likely, the center extraction will be poor."
 msgstr ""
+" - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
+"                Most likely, the center extraction will be poor."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20339,21 +20709,19 @@ msgstr " - 不錯，至少平均來說是立體聲，不是隔得很遠。"
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used "
-"reverb."
+"                However, the center extraction depends also on the used reverb."
 msgstr ""
+" - An ideal value for Stereo.\n"
+"                However, the center extraction depends also on the used reverb."
 
 #: plug-ins/vocalrediso.ny
-#, fuzzy
 msgid ""
 " - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a "
-"unbalanced manner.\n"
+"                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
 "                The center extraction can still be good though."
 msgstr ""
 " - 兩個軌道幾乎不相關\n"
-"                Either you have only noise or the piece is mastered in a "
-"unbalanced manner.\n"
+"                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
 "                The center extraction can still be good though."
 
 #: plug-ins/vocalrediso.ny
@@ -20370,11 +20738,10 @@ msgstr ""
 msgid ""
 " - The two channels are nearly identical.\n"
 "                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between "
-"the speakers.\n"
+"                  to spread the signal over the physical distance between the speakers.\n"
 "                  Don't expect good results from a center removal."
 msgstr ""
-" - 兩個聲道接近一致\n"
+" - 兩個聲道接近一致.\n"
 "                  顯然的，這裡使用了一個pseudo 立體聲效果\n"
 "                  使得信號在兩個喇叭之間在實際距離之前擴散.\n"
 "                  不要期待中央擴散有好的效果"
@@ -20435,660 +20802,3 @@ msgstr "Radar Needles 頻率 (赫茲)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "錯誤。~%必須是立體聲。"
-
-#~ msgid "Cleanup of orphan blocks failed"
-#~ msgstr "無法清理孤立區塊"
-
-#~ msgid "Failed to copy tags"
-#~ msgstr "無法複製標籤"
-
-#~ msgid "Select any uncompressed audio file"
-#~ msgstr "選擇任一非壓縮格式音訊檔案"
-
-#~ msgid ""
-#~ "One or more external audio files could not be found.\n"
-#~ "It is possible they were moved, deleted, or the drive they were on was "
-#~ "unmounted.\n"
-#~ "Silence is being substituted for the affected audio.\n"
-#~ "The first detected missing file is:\n"
-#~ "%s\n"
-#~ "There may be additional missing files.\n"
-#~ "Choose Help > Diagnostics > Check Dependencies to view a list of "
-#~ "locations of the missing files."
-#~ msgstr ""
-#~ "找不到某些外部音訊檔案。\n"
-#~ "也許其已經被移除、刪除，或是其所在的磁碟機未被掛載。\n"
-#~ "對於受到影響的音訊將用靜音取代。\n"
-#~ "第一個被偵測到的缺失檔案是：\n"
-#~ "%s\n"
-#~ "也許還有其他的缺失檔案。\n"
-#~ "選擇「說明」>「診斷」>「檢查依存關係...」來檢視缺失檔案的位置清單。"
-
-#~ msgid "Files Missing"
-#~ msgstr "缺失檔案"
-
-#~ msgid "File decoded successfully\n"
-#~ msgstr "檔案成功解碼\n"
-
-#~ msgid "decode an autosave file"
-#~ msgstr "解碼自動儲存檔案"
-
-#~ msgid "Error Decoding File"
-#~ msgstr "解碼檔案時發生錯誤"
-
-#~ msgid "After recovery, save the project to save the changes to disk."
-#~ msgstr "在復原後，請儲存專案，以將變更儲存至磁碟。"
-
-#~ msgid "Discard Projects"
-#~ msgstr "捨棄專案"
-
-#~ msgid "Recover Projects"
-#~ msgstr "復原專案"
-
-#~ msgid "Confirm Discard Projects"
-#~ msgstr "確認捨棄專案"
-
-#~ msgid "Could not enumerate files in auto save directory."
-#~ msgstr "無法列舉在自動儲存目錄中的檔案。"
-
-#~ msgid "No Action"
-#~ msgstr "無動作"
-
-#~ msgid "Export as MP3 56k before"
-#~ msgstr "之前是匯出為 MP3 56k"
-
-#~ msgid "Export as MP3 56k after"
-#~ msgstr "之後是匯出為 MP3 56k"
-
-#~ msgid "Export as MP3"
-#~ msgstr "匯出為 MP3"
-
-#~ msgid "Export as Ogg"
-#~ msgstr "匯出為 Ogg"
-
-#~ msgid "Export as WAV"
-#~ msgstr "匯出為 WAV"
-
-#~ msgid "Select to Ends"
-#~ msgstr "選擇到結束"
-
-#~ msgid "Special Command"
-#~ msgstr "特殊指令"
-
-#~ msgid ""
-#~ "Export recording to %s\n"
-#~ "/%s/%s.%s"
-#~ msgstr ""
-#~ "匯出錄音至 %s\n"
-#~ "/%s/%s.%s"
-
-#~ msgid "Export recording"
-#~ msgstr "匯出錄音"
-
-#~ msgid "Ogg Vorbis support is not included in this build of Audacity"
-#~ msgstr "本 Audacity 版本不包含 Ogg Vorbis 的支援"
-
-#~ msgid "FLAC support is not included in this build of Audacity"
-#~ msgstr "本 Audacity 版本不包含 FLAC 的支援"
-
-#~ msgid "Command %s not implemented yet"
-#~ msgstr "指令 %s 還未完成"
-
-#~ msgid ""
-#~ "Your project is currently self-contained; it does not depend on any "
-#~ "external audio files. \n"
-#~ "\n"
-#~ "If you change the project to a state that has external dependencies on "
-#~ "imported files, it will no longer be self-contained. If you then Save "
-#~ "without copying those files in, you may lose data."
-#~ msgstr ""
-#~ "您的專案目前是自含的；該專案並不依存於任何外部音訊檔案。\n"
-#~ "\n"
-#~ "如果變更專案使其具有與匯入檔案有外部依存關係的狀態，該專案將不再是自含"
-#~ "的。\n"
-#~ "如果稍後儲存時不複製這些外部音訊檔案到專案中，將可能遺失資料。"
-
-#~ msgid "Cleaning project temporary files"
-#~ msgstr "正在清理專案暫存檔案"
-
-#~ msgid "Cleaning up temporary files"
-#~ msgstr "正在清理暫存檔案"
-
-#~ msgid "Cleaning up after failed save"
-#~ msgstr "正在執行儲存失敗後的清理"
-
-#~ msgid "Cleaning up cache directories"
-#~ msgstr "正在清理快取目錄"
-
-#~ msgid "%s-old%d"
-#~ msgstr "%s-old%d"
-
-#~ msgid "Renamed file: %s\n"
-#~ msgstr "已重新命名檔案：%s\n"
-
-#~ msgid "Changed block %s to new alias name\n"
-#~ msgstr "已將區塊 %s 變更為新的別名\n"
-
-#~ msgid "Caching audio"
-#~ msgstr "正在快取音訊"
-
-#~ msgid "Caching audio into memory"
-#~ msgstr "正在快取音訊到記憶體中"
-
-#~ msgid "Saving recorded audio"
-#~ msgstr "正在儲存錄製的音訊"
-
-#~ msgid "Saving recorded audio to disk"
-#~ msgstr "正在將錄製的音訊儲存到磁碟"
-
-#~ msgid "Audacity projects"
-#~ msgstr "Audacity 專案"
-
-#~ msgid "Reclaimable Space"
-#~ msgstr "可回收空間"
-
-#~ msgid ""
-#~ "Audacity cannot start because the settings file at %s is not writable."
-#~ msgstr "Audacity 無法啟動，因為位於 %s 的設定檔案無法寫入。"
-
-#~ msgid ""
-#~ "This file was saved by Audacity version %s. The format has changed. \n"
-#~ "\n"
-#~ "Audacity can try to open and save this file, but saving it in this \n"
-#~ "version will then prevent any 1.2 or earlier version opening it. \n"
-#~ "\n"
-#~ "Audacity might corrupt the file in opening it, so you should back it up "
-#~ "first. \n"
-#~ "\n"
-#~ "Open this file now?"
-#~ msgstr ""
-#~ "此檔案是由 Audacity 版本 %s 所儲存。格式已經變更。\n"
-#~ "\n"
-#~ "Audacity 可以嘗試開啟並儲存此檔案，但是使用本版本進行儲存後，\n"
-#~ "將導致 1.2 或更早版本的 Audacity 無法開啟此檔案。\n"
-#~ "\n"
-#~ "Audacity 也可能在開啟此檔案時將其損壞，因此您應該先進行備份。\n"
-#~ "\n"
-#~ "是否立即開啟此檔案？"
-
-#~ msgid "1.0 or earlier"
-#~ msgstr "1.0 或更早版本"
-
-#~ msgid "Warning - Opening Old Project File"
-#~ msgstr "警告 - 正在開啟舊版專案檔案"
-
-#~ msgid "<unrecognized version -- possibly corrupt project file>"
-#~ msgstr "<無法識別版本 -- 可能是損壞的專案檔案>"
-
-#~ msgid "Could not create autosave file: %s"
-#~ msgstr "無法建立自動儲存檔案：%s"
-
-#~ msgid "Could not remove old autosave file: %s"
-#~ msgstr "無法移除舊的自動儲存檔案：%s"
-
-#~ msgid "Error decoding file"
-#~ msgstr "解碼檔案時發生錯誤"
-
-#~ msgid ""
-#~ "Could not save project. Perhaps %s \n"
-#~ "is not writable or the disk is full."
-#~ msgstr ""
-#~ "無法儲存專案。可能 %s \n"
-#~ "是不可寫入的或磁碟空間已滿。"
-
-#~ msgid ""
-#~ "Could not save project. Path not found. Try creating \n"
-#~ "directory \"%s\" before saving project with this name."
-#~ msgstr ""
-#~ "無法儲存專案。找不到路徑。在使用此名稱儲存專案之前\n"
-#~ "請先試著建立目錄「%s」。"
-
-#~ msgid ""
-#~ "'Save Lossless Copy of Project' is for an Audacity project, not an audio "
-#~ "file.\n"
-#~ "For an audio file that will open in other apps, use 'Export'.\n"
-#~ "\n"
-#~ "Lossless copies of project are a good way to backup your project, \n"
-#~ "with no loss of quality, but the projects are large.\n"
-#~ msgstr ""
-#~ "「另存無損壓縮專案」是 Audacity 專案，而非音訊檔案。\n"
-#~ "如果該音訊檔案將會以其他應用程式開啟，請使用「匯出」。\n"
-#~ "\n"
-#~ "「另存無損壓縮專案」非常適合用於備份，\n"
-#~ "檔案完全沒有失真，但很大。\n"
-
-#~ msgid "%sSave Compressed Copy of Project \"%s\" As..."
-#~ msgstr "%s將「%s」專案壓縮另存為..."
-
-#~ msgid ""
-#~ "'Save Compressed Copy of Project' is for an Audacity project, not an "
-#~ "audio file.\n"
-#~ "For an audio file that will open in other apps, use 'Export'.\n"
-#~ "\n"
-#~ "Compressed project files are a good way to transmit your project "
-#~ "online, \n"
-#~ "but they have some loss of fidelity.\n"
-#~ msgstr ""
-#~ "「另存壓縮專案」是 Audacity 專案，而非音訊檔案。\n"
-#~ "如果該音訊檔案將會以其他應用程式開啟，請使用「匯出」。\n"
-#~ "\n"
-#~ "「另存壓縮專案」非常適合用於網路上傳輸，\n"
-#~ "但是該檔案可能會有些微失真。\n"
-
-#~ msgid ""
-#~ "Audacity was unable to convert an Audacity 1.0 project to the new project "
-#~ "format."
-#~ msgstr "Audacity 無法將 Audacity 1.0 專案轉換為新的專案格式。"
-
-#~ msgid "Could not remove old auto save file"
-#~ msgstr "無法移除舊的自動儲存檔案"
-
-#~ msgid "On-demand import and waveform calculation complete."
-#~ msgstr "需求匯入和波形計算已完成。"
-
-#~ msgid ""
-#~ "Import(s) complete. Running %d on-demand waveform calculations. Overall "
-#~ "%2.0f%% complete."
-#~ msgstr "匯入已完成。正在執行 %d 次需求波形計算。總共已完成 %2.0f%%。"
-
-#~ msgid ""
-#~ "Import complete. Running an on-demand waveform calculation. %2.0f%% "
-#~ "complete."
-#~ msgstr "匯入已完成。正在執行需求波形計算。已完成 %2.0f%%。"
-
-#~ msgid "Compress"
-#~ msgstr "壓縮"
-
-#~ msgid "Waiting for waveform to finish computing..."
-#~ msgstr "正在等待波形完成計算..."
-
-#~ msgid "&Use legacy (version 3) syntax."
-#~ msgstr "使用舊版（第 3 版）語法(&U)。"
-
-#~ msgid ""
-#~ "You are attempting to overwrite an aliased file that is missing.\n"
-#~ "The file cannot be written because the path is needed to restore the "
-#~ "original audio to the project.\n"
-#~ "Choose Help > Diagnostics > Check Dependencies to view the locations of "
-#~ "all missing files.\n"
-#~ "If you still wish to export, please choose a different filename or folder."
-#~ msgstr ""
-#~ "您正嘗試覆寫一個不見的別名檔案。\n"
-#~ "無法寫入此檔案，因為該路徑需要將原始音訊還原到專案。\n"
-#~ "選擇「說明」>「診斷」>「檢查依存關係...」來檢視所有缺少檔案的位置。\n"
-#~ "如果仍然要匯出，請選擇另一個檔案名稱或資料夾。"
-
-#~ msgid "FFmpeg : ERROR - Failed to write audio frame to file."
-#~ msgstr "FFmpeg：錯誤 - 寫入音訊影格至檔案失敗。"
-
-#~ msgid ""
-#~ "\"%s\" is an Audacity Project file. \n"
-#~ "Use the 'File > Open' command to open Audacity Projects."
-#~ msgstr ""
-#~ "「%s」是 Audacity 專案檔案。\n"
-#~ "請用「檔案」>「開啟」以開啟 Audacity 專案。"
-
-#, fuzzy
-#~ msgid ""
-#~ "MP3 Decoding Failed:\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr "解碼檔案時發生錯誤"
-
-#~ msgid ""
-#~ "When importing uncompressed audio files you can either copy them into the "
-#~ "project, or read them directly from their current location (without "
-#~ "copying).\n"
-#~ "\n"
-#~ msgstr ""
-#~ "匯入未壓縮音訊檔案時，您能複製音訊檔案至專案，或是直接從檔案目前位置讀取"
-#~ "（而不複製）。\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "Your current preference is set to copy in.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "目前的偏好設定為複製進來。\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "Your current preference is set to read directly.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "目前的偏好設定為直接讀取。\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "Reading the files directly allows you to play or edit them almost "
-#~ "immediately. This is less safe than copying in, because you must retain "
-#~ "the files with their original names in their original locations.\n"
-#~ "Help > Diagnostics > Check Dependencies will show the original names and "
-#~ "locations of any files that you are reading directly.\n"
-#~ "\n"
-#~ "How do you want to import the current file(s)?"
-#~ msgstr ""
-#~ "直接讀取檔案讓你能夠用幾乎立即的時間播放或編輯。因為您需要保留原始路徑中原"
-#~ "始檔名的檔案，所以比複製更危險。\n"
-#~ "\n"
-#~ "「說明」>「診斷」>「檢查依存關係...」會顯示任何您正在直接讀取之檔案的原始"
-#~ "名稱及路徑。\n"
-#~ "\n"
-#~ "您想要怎麼匯入目前的檔案？"
-
-#~ msgid "Choose an import method"
-#~ msgstr "選擇匯入方式"
-
-#~ msgid "Make a &copy of the files before editing (safer)"
-#~ msgstr "在編輯前生成一份檔案的複本 (較安全)(&C)"
-
-#~ msgid "Read the files &directly from the original (faster)"
-#~ msgstr "從原始檔案直接讀取檔案 (較快速)(&D)"
-
-#~ msgid "Don't &warn again and always use my choice above"
-#~ msgstr "請不要再次警告，始終使用我以上的選擇(&W)"
-
-#~ msgid "Bad data size"
-#~ msgstr "資料大小有問題"
-
-#~ msgid "Clip L&eft"
-#~ msgstr "剪輯左(&E)"
-
-#~ msgid "Clip Rig&ht"
-#~ msgstr "剪輯右(&H)"
-
-#~ msgid "Save Lossless Copy of Project..."
-#~ msgstr "儲存專案的無損壓縮複本..."
-
-#~ msgid "&Save Compressed Copy of Project..."
-#~ msgstr "儲存專案的壓縮複本(&S)..."
-
-#~ msgid "Chec&k Dependencies..."
-#~ msgstr "檢查依存關係(&K)..."
-
-#~ msgid "C&hoose..."
-#~ msgstr "選擇(&H)..."
-
-#~ msgid "Audio cache"
-#~ msgstr "音訊快取"
-
-#~ msgid "Play and/or record using &RAM (useful for slow drives)"
-#~ msgstr "使用隨機存取記憶體來播放和/或錄製 (對慢速磁碟機來說非常有用)(&R)"
-
-#~ msgid "Mi&nimum Free Memory (MB):"
-#~ msgstr "最小可用記憶體 (MB)(&N)："
-
-#~ msgid ""
-#~ "If the available system memory falls below this value, audio will no "
-#~ "longer\n"
-#~ "be cached in memory and will be written to disk."
-#~ msgstr ""
-#~ "如果系統的可用記憶體低於該數值，音訊就不會\n"
-#~ "在記憶體中被快取，而會被寫入磁碟中。"
-
-#~ msgid "When importing audio files"
-#~ msgstr "當匯入音訊檔案時"
-
-#~ msgid "Allow &background on-demand loading"
-#~ msgstr "允許背景需求載入(&B)"
-
-#~ msgid "Projects"
-#~ msgstr "專案"
-
-#~ msgid "Preferences for Projects"
-#~ msgstr "專案偏好設定"
-
-#~ msgid "When saving a project that depends on other audio files"
-#~ msgstr "當儲存一個依存於其它音訊檔案的專案時"
-
-#~ msgid "&Low disk space at launch or new project"
-#~ msgstr "程式啟動或新增專案時磁碟空間不足(&L)"
-
-#~ msgid "&Importing uncompressed audio files"
-#~ msgstr "匯入非壓縮格式音訊檔案(&I)"
-
-#~ msgid "Silence Finder"
-#~ msgstr "尋找靜音"
-
-#~ msgid "Treat audio below this level as silence (dB)"
-#~ msgstr "將低於此等級的音訊視為靜音 (dB)"
-
-#~ msgid "Minimum duration of silence (seconds)"
-#~ msgstr "靜音的最小持續時間 (秒)"
-
-#~ msgid "Label placement (seconds before silence ends)"
-#~ msgstr "標籤置放點 (聲音結束後的秒數)"
-
-#~ msgid "S"
-#~ msgstr "S"
-
-#~ msgid ""
-#~ "No silences found.\n"
-#~ "Try reducing the silence level and\n"
-#~ "the minimum silence duration."
-#~ msgstr ""
-#~ "找不到靜音。\n"
-#~ "請試試降低靜音等級，及\n"
-#~ "最小靜音持續時間。"
-
-#~ msgid "Sound Finder"
-#~ msgstr "尋找聲音"
-
-#~ msgid "Finding sound..."
-#~ msgstr "尋找聲音..."
-
-#~ msgid "Jeremy R. Brown"
-#~ msgstr "Jeremy R. Brown"
-
-#~ msgid "Treat audio below this level as silence [ -dB]"
-#~ msgstr "將低於此水平的音訊視為靜音 [ -dB]"
-
-#~ msgid "Minimum duration of silence between sounds [seconds]"
-#~ msgstr "聲音之間的靜音的最小持續時間 [秒]"
-
-#~ msgid "Label starting point [seconds before sound starts]"
-#~ msgstr "標籤開始點 [聲音開始前的秒數]"
-
-#~ msgid "Label ending point [seconds after sound ends]"
-#~ msgstr "標籤結束點 [聲音結束後的秒數]"
-
-#~ msgid "Add a label at the end of the track? [No=0, Yes=1]"
-#~ msgstr "是否在軌道結束後加入標籤？[否=0，是=1]"
-
-#~ msgid "[End]"
-#~ msgstr "[結束]"
-
-#~ msgid "Gating audio..."
-#~ msgstr "正在阻擋音訊..."
-
-#, fuzzy
-#~ msgid "Apply Low-Cut filter"
-#~ msgstr "正在套用校平器..."
-
-#~ msgid "File dialog failed with error code %0lx."
-#~ msgstr "檔案對話框失敗，錯誤代碼 %0lx。"
-
-#~ msgid "About Audacity"
-#~ msgstr "關於 Audacity"
-
-#~ msgid "<h3>Audacity "
-#~ msgstr "<h3>Audacity "
-
-#~ msgid ""
-#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
-#~ "copyright &copy; 1999-2018 Audacity Team.<br>"
-#~ msgstr ""
-#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> 軟體，&copy; "
-#~ "1999-2018 Audacity 團隊，版權所有。<br>"
-
-#~ msgid "mkdir in DirManager::MakeBlockFilePath failed."
-#~ msgstr "在 DirManager::MakeBlockFilePath 中執行 mkdir 失敗。"
-
-#~ msgid ""
-#~ "Audacity found an orphan block file: %s. \n"
-#~ "Please consider saving and reloading the project to perform a complete "
-#~ "project check."
-#~ msgstr ""
-#~ "Audacity 找到一個孤立區塊檔案：%s。\n"
-#~ "請考慮儲存並重新載入專案來執行一次完整的專案檢查。"
-
-#~ msgid "Unable to open/create test file."
-#~ msgstr "無法開啟/建立測試檔案。"
-
-#~ msgid "Unable to remove '%s'."
-#~ msgstr "無法移除 '%s'。"
-
-#~ msgid "Unable to rename '%s' to '%s'."
-#~ msgstr "無法將 '%s' 重新命名為 '%s'。"
-
-#~ msgid "Missing aliased audio file: '%s'"
-#~ msgstr "遺失別名音訊檔案：'%s'"
-
-#~ msgid "Missing alias (.auf) block file: '%s'"
-#~ msgstr "遺失別名 (.auf) 區塊檔案：'%s'"
-
-#~ msgid "Missing data block file: '%s'"
-#~ msgstr "遺失資料區塊檔案：'%s'"
-
-#~ msgid "KB"
-#~ msgstr "KB"
-
-#~ msgid "MB"
-#~ msgstr "MB"
-
-#~ msgid "GB"
-#~ msgstr "GB"
-
-#~ msgid "Unable to load the module \"%s\". Error: %s"
-#~ msgstr "無法載入「%s」模組。錯誤：%s"
-
-#~ msgid ""
-#~ "The module \"%s\" does not provide a version string. It will not be "
-#~ "loaded."
-#~ msgstr "模組「%s」未提供版本字串。不會載入該模組。"
-
-#~ msgid ""
-#~ "The module \"%s\" is matched with Audacity version \"%s\". It will not be "
-#~ "loaded."
-#~ msgstr "模組「%s」與 Audacity 版本「%s」相符。不會載入該模組。"
-
-#~ msgid ""
-#~ "The module \"%s\" failed to initialize.\n"
-#~ "It will not be loaded."
-#~ msgstr ""
-#~ "模組「%s」無法初始化。\n"
-#~ "不會載入此模組。"
-
-#~ msgid ""
-#~ "The module \"%s\" does not provide any of the required functions. It will "
-#~ "not be loaded."
-#~ msgstr "模組「%s」未提供任何所需函式。不會載入此模組。"
-
-#~ msgid "   Project check replaced missing aliased file(s) with silence."
-#~ msgstr "   專案檢查已經用靜音取代遺失的別名檔案。"
-
-#~ msgid "   Project check regenerated missing alias summary file(s)."
-#~ msgstr "   專案檢查已經重新建立遺失的別名摘要檔案。"
-
-#~ msgid ""
-#~ "   Project check replaced missing audio data block file(s) with silence."
-#~ msgstr "   專案檢查已經用靜音取代遺失的音訊資料區塊檔案。"
-
-#~ msgid ""
-#~ "   Project check ignored orphan block file(s). They will be deleted when "
-#~ "project is saved."
-#~ msgstr "   專案檢查已經忽略孤立區塊檔案。當儲存專案時，它們將會被刪除。"
-
-#~ msgid ""
-#~ "Project check found file inconsistencies inspecting the loaded project "
-#~ "data."
-#~ msgstr "專案檢查在檢查載入的專案資料時發現有檔案不一致。"
-
-#~ msgid "Presets (*.txt)|*.txt|All files|*"
-#~ msgstr "預設集 (*.txt)|*.txt|所有檔案|*"
-
-#~ msgid "VST plugin registration failed for %s\n"
-#~ msgstr "VST 外掛程式註冊失敗，%s\n"
-
-#~ msgid "VST plugin initialization failed\n"
-#~ msgstr "VST 外掛程式初始化失敗\n"
-
-#~ msgid "Couldn't create the \"%s\" directory"
-#~ msgstr "無法建立「%s」目錄"
-
-#~ msgid "&Buffer Size (8 to %d samples):"
-#~ msgstr "緩衝區大小 (8 到 %d 取樣點)(&B)："
-
-#~ msgid "LV2 sequence buffer overflow"
-#~ msgstr "LV2 序列緩衝區溢出"
-
-#~ msgid "%s requires unsupported feature %s"
-#~ msgstr "%s 需要不支援的 %s 功能"
-
-#~ msgid "%s requires unsupported option %s"
-#~ msgstr "%s 需要不支援的 %s 選項"
-
-#~ msgid ""
-#~ "'%s' returned:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "「%s」傳回了：\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
-#~ "Control not created."
-#~ msgstr ""
-#~ "錯誤的 Nyquist「控制項」類型規格：「%s」(位於外掛程式檔案「%s」)。\n"
-#~ "控制項未被建立。"
-
-#~ msgid ""
-#~ "Invalid wildcard string in 'path' control.'\n"
-#~ "Using empty string instead."
-#~ msgstr ""
-#~ "「path」控制項有無效的萬用字元字串\n"
-#~ "改為使用空字串。"
-
-#~ msgid "%d kpbs"
-#~ msgstr "%d kpbs"
-
-#~ msgid "dummyStringClipBoundaryMessage"
-#~ msgstr "dummyStringClipBoundaryMessage"
-
-#~ msgid "dummyStringClipBoundaryMessageLong"
-#~ msgstr "dummyStringClipBoundaryMessageLong"
-
-#~ msgid "dummyStringOnSelectClip"
-#~ msgstr "dummyStringOnSelectClip"
-
-#~ msgid ""
-#~ "\n"
-#~ "   *   \""
-#~ msgstr ""
-#~ "\n"
-#~ "   *   「"
-
-#~ msgid "' is used by \""
-#~ msgstr "』被「"
-
-#~ msgid "\")\n"
-#~ msgstr "」使用)\n"
-
-#~ msgid ""
-#~ "\".\n"
-#~ "Nothing is imported."
-#~ msgstr ""
-#~ "\"。\n"
-#~ "未匯入任何項目。"
-
-#~ msgid "Zoom Reset\tShift-Right-Click"
-#~ msgstr "重設縮放\tShift + 右鍵點選"
-
-#~ msgid "Zoom Out\tShift-Left-Click"
-#~ msgstr "縮小\tShift + 左鍵點選"
-
-#~ msgid "Zoom to Fit\tShift-Right-Click"
-#~ msgstr "縮放至適合\tShift + 右鍵點選"
-
-#~ msgid "e"
-#~ msgstr "e"

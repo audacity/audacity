@@ -74,6 +74,15 @@ macro( set_cache_value var value )
    set_property( CACHE ${var} PROPERTY VALUE "${value}" )
 endmacro()
 
+# Set a CMake variable to the value of the corresponding environment variable
+# if the CMake variable is not already defined. Any addition arguments after
+# the variable name are passed through to set().
+macro( set_from_env var )
+   if( NOT DEFINED ${var} AND NOT "$ENV{${var}}" STREQUAL "" )
+      set( ${var} "$ENV{${var}}" ${ARGN} ) # pass additional args (e.g. CACHE)
+   endif()
+endmacro()
+
 # Set the given property and its config specific brethren to the same value
 function( set_target_property_all target property value )
    set_target_properties( "${target}" PROPERTIES "${property}" "${value}" )
@@ -229,15 +238,15 @@ function( audacity_append_common_compiler_options var use_pch )
          -DAUDACITY_FILE_VERSION=L"${AUDACITY_VERSION},${AUDACITY_RELEASE},${AUDACITY_REVISION},${AUDACITY_MODLEVEL}"
 
          # This renames a good use of this C++ keyword that we don't need
-	 # to review when hunting for leaks because of naked new and delete.
+	      # to review when hunting for leaks because of naked new and delete.
 	 -DPROHIBITED==delete
 
          # Reviewed, certified, non-leaky uses of NEW that immediately entrust
-	 # their results to RAII objects.
+	      # their results to RAII objects.
          # You may use it in NEW code when constructing a wxWindow subclass
-	 # with non-NULL parent window.
+	      # with non-NULL parent window.
          # You may use it in NEW code when the NEW expression is the
-	 # constructor argument for a standard smart
+	      # constructor argument for a standard smart
          # pointer like std::unique_ptr or std::shared_ptr.
          -Dsafenew=new
 
@@ -246,14 +255,14 @@ function( audacity_append_common_compiler_options var use_pch )
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-type>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=dangling-else>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-stack-address>
-	 # Yes, CMake will change -D to /D as needed for Windows:
+	      # Yes, CMake will change -D to /D as needed for Windows:
          -DWXINTL_NO_GETTEXT_MACRO
          $<$<CXX_COMPILER_ID:MSVC>:-D_USE_MATH_DEFINES>
          $<$<CXX_COMPILER_ID:MSVC>:-DNOMINMAX>
 
          # Define/undefine _DEBUG
 	 # Yes, -U to /U too as needed for Windows:
-	 $<IF:$<CONFIG:Release>,-U_DEBUG,-D_DEBUG=1>
+	 $<IF:$<CONFIG:Debug>,-D_DEBUG=1,-U_DEBUG>
    )   
    # Definitions controlled by the AUDACITY_BUILD_LEVEL switch
    if( AUDACITY_BUILD_LEVEL EQUAL 0 )
@@ -270,6 +279,7 @@ endfunction()
 function( import_export_symbol var module_name )
    # compute, e.g. "TRACK_UI_API" from module name "mod-track-ui"
    string( REGEX REPLACE "^mod-" "" symbol "${module_name}" )
+   string( REGEX REPLACE "^lib-" "" symbol "${symbol}" )
    string( TOUPPER "${symbol}" symbol )
    string( REPLACE "-" "_" symbol "${symbol}" )
    string( APPEND symbol "_API" )
@@ -300,8 +310,21 @@ function( export_symbol_define var module_name )
    set( "${var}" "${symbol}=${value}" PARENT_SCOPE )
 endfunction()
 
+# shorten a target name for purposes of generating a dependency graph picture
+function( canonicalize_node_name var node )
+   # strip generator expressions
+   string( REGEX REPLACE ".*>.*:(.*)>" "\\1" node "${node}" )
+   # omit the "-interface" for alias targets to modules
+   string( REGEX REPLACE "-interface\$" "" node "${node}"  )
+   # shorten names of standard libraries or Apple frameworks
+   string( REGEX REPLACE "^-(l|framework )" "" node "${node}" )
+   # shorten paths
+   get_filename_component( node "${node}" NAME_WE )
+   set( "${var}" "${node}" PARENT_SCOPE )
+endfunction()
+
 function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
-   ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES )
+   ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES LIBTYPE )
 
    set( TARGET ${NAME} )
    set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
@@ -310,17 +333,70 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    def_vars()
 
-   if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-      set( LIBTYPE SHARED )
+   if (LIBTYPE STREQUAL "MODULE" AND CMAKE_SYSTEM_NAME MATCHES "Windows")
+      set( REAL_LIBTYPE SHARED )
    else()
-      set( LIBTYPE MODULE )
+      set( REAL_LIBTYPE "${LIBTYPE}" )
    endif()
-   add_library( ${TARGET} ${LIBTYPE} )
+   add_library( ${TARGET} ${REAL_LIBTYPE} )
+
+   # Manual propagation seems to be necessary from
+   # interface libraries -- just doing target_link_libraries naming them
+   # doesn't work as promised
+
+   # compute INCLUDES
+   set( INCLUDES )
+   list( APPEND INCLUDES PUBLIC ${TARGET_ROOT} )
+
+   # compute DEFINES
+   set( DEFINES )
+   list( APPEND DEFINES ${ADDITIONAL_DEFINES} )
+
+   # send the file to the proper place in the build tree, by setting the
+   # appropriate property for the platform
+   if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+      set( DIRECTORY_PROPERTY RUNTIME_OUTPUT_DIRECTORY )
+   else ()
+      set( DIRECTORY_PROPERTY LIBRARY_OUTPUT_DIRECTORY )
+   endif ()
+
+   if (LIBTYPE STREQUAL "MODULE")
+      set( ATTRIBUTES "shape=box" )
+      set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_MODDIR}" )
+      set_target_properties( ${TARGET}
+         PROPERTIES
+            PREFIX ""
+            FOLDER "modules" # for IDE organization
+      )
+      if( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
+         add_custom_command(
+	    TARGET ${TARGET}
+            COMMAND ${CMAKE_COMMAND}
+	       -D SRC="${_MODDIR}/${TARGET}.so"
+               -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
+               -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+            POST_BUILD )
+      endif()
+   else()
+      set( ATTRIBUTES "shape=octagon" )
+      set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_SHARED_PROXY_PATH}" )
+      set_target_properties( ${TARGET}
+         PROPERTIES
+            PREFIX ""
+            FOLDER "libraries" # for IDE organization
+            INSTALL_NAME_DIR ""
+            BUILD_WITH_INSTALL_NAME_DIR YES
+      )
+   endif()
+
+   if( "wxBase" IN_LIST IMPORT_TARGETS OR "wxwidgets::base" IN_LIST IMPORT_TARGETS )
+      string( APPEND ATTRIBUTES " style=filled" )
+   endif()
 
    export_symbol_define( export_symbol "${TARGET}" )
    import_symbol_define( import_symbol "${TARGET}" )
-   set( DEFINES
-      ${ADDITIONAL_DEFINES}
+
+   list( APPEND DEFINES
       PRIVATE "${export_symbol}"
       INTERFACE "${import_symbol}"
    )
@@ -332,17 +408,12 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    # compute LIBRARIES
    set( LIBRARIES )
+   
    foreach( IMPORT ${IMPORT_TARGETS} )
       list( APPEND LIBRARIES "${IMPORT}" )
    endforeach()
-   list( APPEND LIBRARIES ${ADDITIONAL_LIBRARIES} )
 
-   set_target_property_all( ${TARGET} LIBRARY_OUTPUT_DIRECTORY "${_MODDIR}" )
-   set_target_properties( ${TARGET}
-      PROPERTIES
-         PREFIX ""
-         FOLDER "modules"
-   )
+   list( APPEND LIBRARIES ${ADDITIONAL_LIBRARIES} )
 
 #   list( TRANSFORM SOURCES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/" )
 
@@ -360,30 +431,61 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
    target_link_options( ${TARGET} PRIVATE ${LOPTS} )
    target_link_libraries( ${TARGET} PUBLIC ${LIBRARIES} )
 
+   if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows" )
+      add_custom_command(
+         TARGET "${TARGET}"
+         POST_BUILD
+         COMMAND $<IF:$<CONFIG:Debug>,echo,strip> -x $<TARGET_FILE:${TARGET}>
+      )
+   endif()
+
+   if( NOT REAL_LIBTYPE STREQUAL "MODULE" )
+      if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+         set( REQUIRED_LOCATION "${_EXEDIR}" )
+      elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin")
+         set( REQUIRED_LOCATION "${_PKGLIB}" )
+      else()
+         set( REQUIRED_LOCATION "${_DEST}/${_PKGLIB}" )
+      endif()
+
+      add_custom_command(TARGET ${TARGET} POST_BUILD
+         COMMAND ${CMAKE_COMMAND} -E copy 
+            "$<TARGET_FILE:${TARGET}>" 
+            "${REQUIRED_LOCATION}/$<TARGET_FILE_NAME:${TARGET}>"
+      )
+   endif()
+
    # define an additional interface library target
    set(INTERFACE_TARGET "${TARGET}-interface")
-   if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+   if (NOT REAL_LIBTYPE STREQUAL "MODULE")
       add_library("${INTERFACE_TARGET}" ALIAS "${TARGET}")
    else()
       add_library("${INTERFACE_TARGET}" INTERFACE)
-      foreach(PROP INTERFACE_INCLUDE_DIRECTORIES INTERFACE_COMPILE_DEFINITIONS)
+      foreach(PROP
+         INTERFACE_INCLUDE_DIRECTORIES
+         INTERFACE_COMPILE_DEFINITIONS
+         INTERFACE_LINK_LIBRARIES
+      )
          get_target_property( PROPS "${TARGET}" "${PROP}" )
-	 if (PROPS)
+         if (PROPS)
             set_target_properties(
                "${INTERFACE_TARGET}"
-	       PROPERTIES "${PROP}" "${PROPS}" )
-	 endif()
+               PROPERTIES "${PROP}" "${PROPS}" )
+         endif()
       endforeach()
    endif()
 
    # collect dependency information
-   list( APPEND GRAPH_EDGES "\"${TARGET}\" [shape=box]" )
+   list( APPEND GRAPH_EDGES "\"${TARGET}\" [${ATTRIBUTES}]" )
+   if (NOT LIBTYPE STREQUAL "MODULE")
+      list( APPEND GRAPH_EDGES "\"Audacity\" -> \"${TARGET}\"" )
+   endif ()
    set(ACCESS PUBLIC PRIVATE INTERFACE)
    foreach( IMPORT ${IMPORT_TARGETS} )
       if(IMPORT IN_LIST ACCESS)
          continue()
       endif()
-      string( REGEX REPLACE "-interface\$" "" IMPORT "${IMPORT}"  )
+      canonicalize_node_name(IMPORT "${IMPORT}")
       list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\"" )
    endforeach()
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
@@ -409,8 +511,49 @@ macro( audacity_module NAME SOURCES IMPORT_TARGETS
       "${IMPORT_TARGETS}"
       "${ADDITIONAL_DEFINES}"
       "${ADDITIONAL_LIBRARIES}"
+      "MODULE"
    )
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+endmacro()
+
+# Set up for defining a library target.
+# The application depends on all libraries.
+# Pass a name and sources, and a list of other targets.
+# Use the interface compile definitions and include directories of the
+# other targets, and link to them.
+# More defines, and more target libraries (maybe generator expressions)
+# may be given too.
+macro( audacity_library NAME SOURCES IMPORT_TARGETS
+   ADDITIONAL_DEFINES ADDITIONAL_LIBRARIES )
+   # ditto comment in the previous macro
+   audacity_module_fn(
+      "${NAME}"
+      "${SOURCES}"
+      "${IMPORT_TARGETS}"
+      "${ADDITIONAL_DEFINES}"
+      "${ADDITIONAL_LIBRARIES}"
+      "SHARED"
+   )
+   set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+   # Collect list of libraries for the executable to declare dependency on
+   list( APPEND AUDACITY_LIBRARIES "${NAME}" )
+   set( AUDACITY_LIBRARIES "${AUDACITY_LIBRARIES}" PARENT_SCOPE )
+endmacro()
+
+# A special macro for header only libraries
+
+macro( audacity_header_only_library NAME SOURCES IMPORT_TARGETS
+   ADDITIONAL_DEFINES )
+   # ditto comment in the previous macro
+   add_library( ${NAME} INTERFACE )
+
+   target_include_directories ( ${NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} )
+   target_sources( ${NAME} INTERFACE ${SOURCES})
+   target_link_libraries( ${NAME} INTERFACE ${IMPORT_TARGETS} )
+   target_compile_definitions( ${NAME} INTERFACE ${ADDITIONAL_DEFINES} )
+
+   list( APPEND AUDACITY_LIBRARIES "${NAME}" )
+   set( AUDACITY_LIBRARIES "${AUDACITY_LIBRARIES}" PARENT_SCOPE )
 endmacro()
 
 #
@@ -499,6 +642,7 @@ function( addlib dir name symbol required check )
    if( ${use} STREQUAL "system" )
       # Look them up
       pkg_check_modules( PKG_${TARGET} ${packages} )
+
       if( PKG_${TARGET}_FOUND )
          message( STATUS "Using '${name}' system library" )
 
@@ -512,8 +656,20 @@ function( addlib dir name symbol required check )
          target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
          target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
       else()
-         set( ${use} "local" )
-         set_property( CACHE ${use} PROPERTY VALUE "local" )
+         find_package( ${packages} QUIET )
+
+         if( TARGET ${TARGET} )
+            set( PKG_${TARGET}_FOUND Yes )
+         endif()
+      endif()
+
+      if( NOT PKG_${TARGET}_FOUND )
+         if( ${_OPT}obey_system_dependencies )
+            message( FATAL_ERROR "Failed to find the system package ${name}" )
+         else()
+            set( ${use} "local" )
+            set_property( CACHE ${use} PROPERTY VALUE "local" )
+         endif()
       endif()
    endif()
 

@@ -12,8 +12,8 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_PLAY_INDICATOR_OVERLAY__
 
 #include <wx/event.h> // to inherit
-#include "../../MemoryX.h"
-#include "../../ClientData.h"
+#include <memory>
+#include "ClientData.h"
 #include "../../widgets/Overlay.h" // to inherit
 
 class AudacityProject;

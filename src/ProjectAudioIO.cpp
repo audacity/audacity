@@ -12,7 +12,6 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "AudioIOBase.h"
 #include "Project.h"
-#include "widgets/MeterPanelBase.h"
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sAudioIOKey{
   []( AudacityProject &parent ){
@@ -56,12 +55,13 @@ bool ProjectAudioIO::IsAudioActive() const
       gAudioIO->IsStreamActive(GetAudioIOToken());
 }
 
-MeterPanelBase *ProjectAudioIO::GetPlaybackMeter()
+const std::shared_ptr<Meter> &ProjectAudioIO::GetPlaybackMeter() const
 {
    return mPlaybackMeter;
 }
 
-void ProjectAudioIO::SetPlaybackMeter(MeterPanelBase *playback)
+void ProjectAudioIO::SetPlaybackMeter(
+   const std::shared_ptr<Meter> &playback)
 {
    auto &project = mProject;
    mPlaybackMeter = playback;
@@ -72,12 +72,13 @@ void ProjectAudioIO::SetPlaybackMeter(MeterPanelBase *playback)
    }
 }
 
-MeterPanelBase *ProjectAudioIO::GetCaptureMeter()
+const std::shared_ptr<Meter> &ProjectAudioIO::GetCaptureMeter() const
 {
    return mCaptureMeter;
 }
 
-void ProjectAudioIO::SetCaptureMeter(MeterPanelBase *capture)
+void ProjectAudioIO::SetCaptureMeter(
+   const std::shared_ptr<Meter> &capture)
 {
    auto &project = mProject;
    mCaptureMeter = capture;
