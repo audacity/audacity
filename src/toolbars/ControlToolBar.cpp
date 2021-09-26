@@ -66,6 +66,7 @@
 #include "ProjectStatus.h"
 #include "../ProjectWindow.h"
 #include "../Track.h"
+#include "ViewInfo.h"
 #include "../widgets/AButton.h"
 #include "FileNames.h"
 
@@ -644,6 +645,11 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
    else
       // push-downs of the stop button are only momentary and always pop up now
       mStop->PopUp();
+
+   if (ViewInfo::Get(mProject).playRegion.Locked())
+      mLoop->PushDown();
+   else
+      mLoop->PopUp();
    
    UpdateStatusBar();
    EnableDisableButtons();
