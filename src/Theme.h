@@ -61,12 +61,12 @@ enum teThemeType
 
 
 
+//! A cursor for iterating the theme bitmap
 class AUDACITY_DLL_API FlowPacker
 {
 public:
-   FlowPacker(){;};
-   ~FlowPacker(){;};
-   void Init(int width);
+   explicit FlowPacker(int width);
+   ~FlowPacker() {}
    void GetNextPosition( int xSize, int ySize );
    void SetNewGroup( int iGroupSize );
    void SetColourGroup( );
@@ -75,22 +75,21 @@ public:
    void RectMid( int &x, int &y );
 
    // These 4 should become private again...
-   int mFlags;
-   int mxPos;
-   int myPos;
-   int myHeight;
-   int mBorderWidth;
+   int mFlags = resFlagPaired;
+   int mxPos = 0;
+   int myPos = 0;
+   int myHeight = 0;
+   int mBorderWidth = 1;
 
 private:
-   int iImageGroupSize;
-   int iImageGroupIndex;
-   int mOldFlags;
-   int myPosBase;
-   int mxWidth;
-   int mxCacheWidth;
+   int iImageGroupSize = 1;
+   int iImageGroupIndex = -1;
+   int mOldFlags = resFlagPaired;
+   int myPosBase = 0;
+   int mxCacheWidth = 0;
 
-   int mComponentWidth;
-   int mComponentHeight;
+   int mComponentWidth = 0;
+   int mComponentHeight = 0;
 
 };
 
@@ -120,7 +119,7 @@ public:
    void WriteImageDefs( );
    void WriteImageMap( );
    static bool LoadPreferredTheme();
-   bool IsUsingSystemTextColour(){ return bIsUsingSystemTextColour;};
+   bool IsUsingSystemTextColour(){ return bIsUsingSystemTextColour; }
    void RecolourBitmap( int iIndex, wxColour From, wxColour To );
    void RecolourTheme();
 
@@ -152,7 +151,6 @@ protected:
 
    std::vector<wxColour> mColours;
    wxArrayString mColourNames;
-   FlowPacker mFlow;
 };
 
 

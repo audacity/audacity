@@ -371,18 +371,10 @@ void ThemeBase::RegisterColour( int &iIndex, const wxColour &Clr, const wxString
    iIndex = mColours.size() - 1;
 }
 
-void FlowPacker::Init(int width)
+FlowPacker::FlowPacker(int width)
+   : mxCacheWidth{ width }
 {
-   mFlags = resFlagPaired;
-   mOldFlags = mFlags;
-   mxCacheWidth = width;
-
-   myPos = 0;
-   myPosBase =0;
-   myHeight = 0;
-   iImageGroupSize = 1;
    SetNewGroup(1);
-   mBorderWidth = 0;
 }
 
 void FlowPacker::SetNewGroup( int iGroupSize )
@@ -544,8 +536,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
 
    int i;
 
-   mFlow.Init( ImageCacheWidth );
-   mFlow.mBorderWidth =1;
+   FlowPacker context{ ImageCacheWidth };
 
 //#define IMAGE_MAP
 #ifdef IMAGE_MAP
@@ -557,20 +548,20 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    for(i = 0;i < (int)mImages.size();i++)
    {
       wxImage &SrcImage = mImages[i];
-      mFlow.mFlags = mBitmapFlags[i];
+      context.mFlags = mBitmapFlags[i];
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {
-         mFlow.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
-         ImageCache.SetRGB( mFlow.Rect(), 0xf2, 0xb0, 0x27 );
-         if( (mFlow.mFlags & resFlagSkip) == 0 )
+         context.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
+         ImageCache.SetRGB( context.Rect(), 0xf2, 0xb0, 0x27 );
+         if( (context.mFlags & resFlagSkip) == 0 )
             PasteSubImage( &ImageCache, &SrcImage, 
-               mFlow.mxPos + mFlow.mBorderWidth, 
-               mFlow.myPos + mFlow.mBorderWidth);
+               context.mxPos + context.mBorderWidth,
+               context.myPos + context.mBorderWidth);
          else
-            ImageCache.SetRGB( mFlow.RectInner(), 1,1,1);
+            ImageCache.SetRGB( context.RectInner(), 1,1,1);
 #ifdef IMAGE_MAP
          // No href in html.  Uses title not alt.
-         wxRect R( mFlow.Rect() );
+         wxRect R( context.Rect() );
          wxLogDebug( wxT("<area title=\"Bitmap:%s\" shape=rect coords=\"%i,%i,%i,%i\">"),
             mBitmapNames[i],
             R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom() );
@@ -581,26 +572,26 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    // Now save the colours.
    int x,y;
 
-   mFlow.SetColourGroup();
+   context.SetColourGroup();
    const int iColSize = 10;
    for(i = 0; i < (int)mColours.size(); i++)
    {
-      mFlow.GetNextPosition( iColSize, iColSize );
+      context.GetNextPosition( iColSize, iColSize );
       wxColour c = mColours[i];
-      ImageCache.SetRGB( mFlow.Rect() , 0xf2, 0xb0, 0x27 );
-      ImageCache.SetRGB( mFlow.RectInner() , c.Red(), c.Green(), c.Blue() );
+      ImageCache.SetRGB( context.Rect() , 0xf2, 0xb0, 0x27 );
+      ImageCache.SetRGB( context.RectInner() , c.Red(), c.Green(), c.Blue() );
 
       // YUCK!  No function in wxWidgets to set a rectangle of alpha...
       for(x=0;x<iColSize;x++)
       {
          for(y=0;y<iColSize;y++)
          {
-            ImageCache.SetAlpha( mFlow.mxPos + x, mFlow.myPos+y, 255);
+            ImageCache.SetAlpha( context.mxPos + x, context.myPos+y, 255);
          }
       }
 #ifdef IMAGE_MAP
       // No href in html.  Uses title not alt.
-      wxRect R( mFlow.Rect() );
+      wxRect R( context.Rect() );
       wxLogDebug( wxT("<area title=\"Colour:%s\" shape=rect coords=\"%i,%i,%i,%i\">"),
          mColourNames[i],
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom() );
@@ -699,8 +690,7 @@ void ThemeBase::WriteImageMap( )
    wxBusyCursor busy;
 
    int i;
-   mFlow.Init( ImageCacheWidth );
-   mFlow.mBorderWidth = 1;
+   FlowPacker context{ ImageCacheWidth };
 
    wxFFile File( FileNames::ThemeCacheHtm(), wxT("wb") );// I'll put in NEW lines explicitly.
    if( !File.IsOpened() )
@@ -715,12 +705,12 @@ void ThemeBase::WriteImageMap( )
    for(i = 0; i < (int)mImages.size(); i++)
    {
       wxImage &SrcImage = mImages[i];
-      mFlow.mFlags = mBitmapFlags[i];
+      context.mFlags = mBitmapFlags[i];
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {
-         mFlow.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
+         context.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
          // No href in html.  Uses title not alt.
-         wxRect R( mFlow.RectInner() );
+         wxRect R( context.RectInner() );
          File.Write( wxString::Format(
             wxT("<area title=\"Bitmap:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
             mBitmapNames[i],
@@ -728,13 +718,13 @@ void ThemeBase::WriteImageMap( )
       }
    }
    // Now save the colours.
-   mFlow.SetColourGroup();
+   context.SetColourGroup();
    const int iColSize = 10;
    for(i = 0; i < (int)mColours.size(); i++)
    {
-      mFlow.GetNextPosition( iColSize, iColSize );
+      context.GetNextPosition( iColSize, iColSize );
       // No href in html.  Uses title not alt.
-      wxRect R( mFlow.RectInner() );
+      wxRect R( context.RectInner() );
       File.Write( wxString::Format( wxT("<area title=\"Colour:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
          mColourNames[i],
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
@@ -900,19 +890,18 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       ImageCache.Rescale(  ImageCacheWidth, h );
    }
    int i;
-   mFlow.Init(ImageCacheWidth);
-   mFlow.mBorderWidth = 1;
+   FlowPacker context{ ImageCacheWidth };
    // Load the bitmaps
    for(i = 0; i < (int)mImages.size(); i++)
    {
       wxImage &Image = mImages[i];
-      mFlow.mFlags = mBitmapFlags[i];
+      context.mFlags = mBitmapFlags[i];
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {
-         mFlow.GetNextPosition( Image.GetWidth(),Image.GetHeight() );
-         wxRect R = mFlow.RectInner();
+         context.GetNextPosition( Image.GetWidth(),Image.GetHeight() );
+         wxRect R = context.RectInner();
          //wxLogDebug( "[%i, %i, %i, %i, \"%s\"], ", R.x, R.y, R.width, R.height, mBitmapNames[i].c_str() );
-         Image = GetSubImageWithAlpha( ImageCache, mFlow.RectInner() );
+         Image = GetSubImageWithAlpha( ImageCache, context.RectInner() );
          mBitmaps[i] = wxBitmap(Image);
       }
    }
@@ -922,14 +911,14 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 //   return true; //To not load colours..
    // Now load the colours.
    int x,y;
-   mFlow.SetColourGroup();
+   context.SetColourGroup();
    wxColour TempColour;
    const int iColSize=10;
    for(i = 0; i < (int)mColours.size(); i++)
    {
-      mFlow.GetNextPosition( iColSize, iColSize );
-      mFlow.RectMid( x, y );
-      wxRect R = mFlow.RectInner();
+      context.GetNextPosition( iColSize, iColSize );
+      context.RectMid( x, y );
+      wxRect R = context.RectInner();
       //wxLogDebug( "[%i, %i, %i, %i, \"%s\"], ", R.x, R.y, R.width, R.height, mColourNames[i].c_str() );
       // Only change the colour if the alpha is opaque.
       // This allows us to add NEW colours more easily.
