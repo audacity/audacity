@@ -594,13 +594,16 @@ void FrequencyPlotDialog::GetAudio()
          auto start = track->TimeToLongSamples(selectedRegion.t0());
          auto end = track->TimeToLongSamples(selectedRegion.t1());
          auto dataLen = end - start;
-         if (dataLen > 10485760) {
+         // Permit approximately 46.60 minutes of selected samples at
+         // a sampling frequency of 48 kHz (11.65 minutes at 192 kHz).
+         auto maxDataLen = size_t(2) << 26;
+         if (dataLen > maxDataLen) {
             warning = true;
-            mDataLen = 10485760;
+            mDataLen = maxDataLen;
          }
-         else
-            // dataLen is not more than 10 * 2 ^ 20
+         else {
             mDataLen = dataLen.as_size_t();
+         }
          mData = Floats{ mDataLen };
          // Don't allow throw for bad reads
          track->GetFloats(mData.get(), start, mDataLen,
@@ -998,6 +1001,7 @@ void FrequencyPlotDialog::OnCloseButton(wxCommandEvent & WXUNUSED(event))
    gPrefs->Write(wxT("/FrequencyPlotDialog/FuncChoice"), mFuncChoice->GetSelection());
    gPrefs->Write(wxT("/FrequencyPlotDialog/AxisChoice"), mAxisChoice->GetSelection());
    gPrefs->Flush();
+   mData.reset();
    Show(false);
 }
 
