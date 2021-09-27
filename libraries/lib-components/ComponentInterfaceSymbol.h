@@ -61,6 +61,7 @@ public:
 
    bool empty() const { return mInternal.empty(); }
 
+   //! Comparator for such as find_if, using internal name only
    friend inline bool operator == (
       const ComponentInterfaceSymbol &a, const ComponentInterfaceSymbol &b )
    { return a.mInternal == b.mInternal; }
@@ -68,6 +69,11 @@ public:
    friend inline bool operator != (
       const ComponentInterfaceSymbol &a, const ComponentInterfaceSymbol &b )
    { return !( a == b ); }
+
+   //! Comparator for use in ordered containers, using internal name only
+   friend inline bool operator < (
+      const ComponentInterfaceSymbol &a, const ComponentInterfaceSymbol &b )
+   { return a.mInternal < b.mInternal; }
 
 private:
    wxString mInternal;

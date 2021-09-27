@@ -64,6 +64,8 @@ can't be.
 
 
 
+#include <map>
+
 #include <wx/wxprec.h>
 #include <wx/dcclient.h>
 #include <wx/image.h>
@@ -72,7 +74,7 @@ can't be.
 #include <wx/mstream.h>
 #include <wx/settings.h>
 
-#include "AllThemeResources.h"  // can remove this later, only needed for 'XPMS_RETIRED'.
+#include "AllThemeResources.h"
 #include "BasicUI.h"
 #include "FileNames.h"
 #include "Prefs.h"
@@ -80,124 +82,6 @@ can't be.
 #include "Internat.h"
 #include "MemoryX.h"
 #include "widgets/AudacityMessageBox.h"
-
-// JKC: First get the MAC specific images.
-// As we've disabled USE_AQUA_THEME, we need to name each file we use.
-//
-// JKC: Mac Hackery.
-// These #defines are very temporary.  We want to ensure the Mac XPM names don't collide with
-// the PC XPM names, so we do some #defines and later undo them.
-// Use the same trick wherever we need to avoid name collisions.
-
-// All this will vanish when the XPMs are eliminated.
-
-// Indeed XPMS_RETIRED the #ifndef ensures we're already not using any of it.
-#ifndef XPMS_RETIRED
-
-
-// This step should mean that we get PC/Linux images only
-// except where we EXPLICITLY request otherwise.
-#undef USE_AQUA_THEME
-
-// This step ensures we treat the cursors as 32x32 even on Mac.
-// We're not yet creating the cursors from the theme, so
-// all this ensures is that the sizing on PC and Mac stays in step.
-#define CURSORS_SIZE32
-
-
-#define DownButton             MacDownButton
-#define HiliteButton           MacHiliteButton
-#define UpButton               MacUpButton
-#define Down                   MacDown
-#define Hilite                 MacHilite
-#define Up                     MacUp
-#define Slider                 MacSlider
-#define SliderThumb            MacSliderThumb
-
-
-#include "../images/Aqua/HiliteButtonSquare.xpm"
-#include "../images/Aqua/UpButtonSquare.xpm"
-#include "../images/Aqua/DownButtonSquare.xpm"
-#include "../images/Aqua/Slider.xpm"
-#include "../images/Aqua/SliderThumb.xpm"
-#include "../images/Aqua/Down.xpm"
-#include "../images/Aqua/Hilite.xpm"
-#include "../images/Aqua/Up.xpm"
-
-#if 0
-// These ones aren't used...
-#include "../images/Aqua/DownButtonStripes.xpm"
-#include "../images/Aqua/DownButtonWhite.xpm"
-#include "../images/Aqua/HiliteButtonStripes.xpm"
-#include "../images/Aqua/HiliteButtonWhite.xpm"
-#include "../images/Aqua/UpButtonStripes.xpm"
-#include "../images/Aqua/UpButtonWhite.xpm"
-#endif
-
-#undef DownButton
-#undef UpButton
-#undef HiliteButton
-#undef Down
-#undef Hilite
-#undef Up
-#undef Slider
-#undef SliderThumb
-
-
-
-//-- OK now on to includes for Linux/PC images.
-
-#include "../images/PostfishButtons.h"
-#include "../images/ControlButtons.h"
-#define HAVE_SHARED_BUTTONS
-#include "../images/EditButtons.h"
-#include "../images/MixerImages.h"
-#include "../images/Cursors.h"
-#include "../images/ToolBarButtons.h"
-#include "../images/TranscriptionButtons.h"
-#include "../images/ToolsButtons.h"
-
-#include "../images/ExpandingToolBar/ToolBarToggle.xpm"
-#include "../images/ExpandingToolBar/ToolBarTarget.xpm"
-#include "../images/ExpandingToolBar/ToolBarGrabber.xpm"
-
-#define Slider      VolumeSlider
-#define SliderThumb VolumeSliderThumb
-#include "../images/ControlButtons/Slider.xpm"
-#include "../images/ControlButtons/SliderThumb.xpm"
-#undef Slider
-#undef SliderThumb
-
-// A different slider's thumb.
-#include "../images/SliderThumb.xpm"
-#include "../images/SliderThumbAlpha.xpm"
-
-// Include files to get the default images
-//#include "../images/Aqua.xpm"
-#include "../images/Arrow.xpm"
-#include "../images/GlyphImages.h"
-#include "../images/UploadImages.h"
-
-#include "../images/AudacityLogoWithName.xpm"
-//#include "../images/AudacityLogo.xpm"
-#include "../images/AudacityLogo48x48.xpm"
-#endif
-
-
-// Include the ImageCache...
-
-static const unsigned char DarkImageCacheAsData[] = {
-#include "DarkThemeAsCeeCode.h"
-};
-static const unsigned char LightImageCacheAsData[] = {
-#include "LightThemeAsCeeCode.h"
-};
-static const unsigned char ClassicImageCacheAsData[] = {
-#include "ClassicThemeAsCeeCode.h"
-};
-static const unsigned char HiContrastImageCacheAsData[] = {
-#include "HiContrastThemeAsCeeCode.h"
-};
 
 // theTheme is a global variable.
 AUDACITY_DLL_API Theme theTheme;
@@ -231,9 +115,9 @@ void Theme::EnsureInitialised()
 bool ThemeBase::LoadPreferredTheme()
 {
 // DA: Default themes differ.
-   auto theme = GUITheme.Read();
+   Identifier theme = GUITheme().Read();
 
-   theTheme.LoadTheme( theTheme.ThemeTypeOfTypeName( theme ) );
+   theTheme.LoadTheme( theme );
    return true;
 }
 
@@ -244,7 +128,8 @@ void Theme::RegisterImages()
    mbInitialised = true;
 
 // This initialises the variables e.g
-// RegisterImage( bmpRecordButton, some image, wxT("RecordButton"));
+// RegisterImage( myFlags, bmpRecordButton, some image, wxT("RecordButton"));
+   int myFlags = resFlagPaired;
 #define THEME_INITS
 #include "AllThemeResources.h"
 
@@ -264,6 +149,27 @@ ThemeBase::ThemeBase(void)
 
 ThemeBase::~ThemeBase(void)
 {
+}
+
+using ThemeCacheLookup =
+   std::map< EnumValueSymbol, const std::vector<unsigned char>& >;
+
+static ThemeCacheLookup &GetThemeCacheLookup()
+{
+   static ThemeCacheLookup theMap;
+   return theMap;
+}
+
+ThemeBase::RegisteredTheme::RegisteredTheme(
+   EnumValueSymbol symbol, const std::vector<unsigned char> &data )
+   : symbol{ symbol }
+{
+   GetThemeCacheLookup().emplace(symbol, data);
+}
+
+ThemeBase::RegisteredTheme::~RegisteredTheme()
+{
+   GetThemeCacheLookup().erase(symbol);
 }
 
 /// This function is called to load the initial Theme images.
@@ -425,7 +331,7 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 // Bit depth and mask needs review.
 // Note that XPMs don't offer translucency, so unsuitable for a round shape overlay, 
 // for example.
-void ThemeBase::RegisterImage( int &iIndex, char const ** pXpm, const wxString & Name )
+void ThemeBase::RegisterImage( int &flags, int &iIndex, char const ** pXpm, const wxString & Name )
 {
    wxASSERT( iIndex == -1 ); // Don't initialise same bitmap twice!
    wxBitmap Bmp( pXpm );
@@ -438,10 +344,10 @@ void ThemeBase::RegisterImage( int &iIndex, char const ** pXpm, const wxString &
    //wxBitmap Bmp2( Img, 32 );
    //wxBitmap Bmp2( Img );
 
-   RegisterImage( iIndex, Img, Name );
+   RegisterImage( flags, iIndex, Img, Name );
 }
 
-void ThemeBase::RegisterImage( int &iIndex, const wxImage &Image, const wxString & Name )
+void ThemeBase::RegisterImage( int &flags, int &iIndex, const wxImage &Image, const wxString & Name )
 {
    wxASSERT( iIndex == -1 ); // Don't initialise same bitmap twice!
    mImages.push_back( Image );
@@ -460,8 +366,8 @@ void ThemeBase::RegisterImage( int &iIndex, const wxImage &Image, const wxString
 #endif
 
    mBitmapNames.push_back( Name );
-   mBitmapFlags.push_back( mFlow.mFlags );
-   mFlow.mFlags &= ~resFlagSkip;
+   mBitmapFlags.push_back( flags );
+   flags &= ~resFlagSkip;
    iIndex = mBitmaps.size() - 1;
 }
 
@@ -473,18 +379,10 @@ void ThemeBase::RegisterColour( int &iIndex, const wxColour &Clr, const wxString
    iIndex = mColours.size() - 1;
 }
 
-void FlowPacker::Init(int width)
+FlowPacker::FlowPacker(int width)
+   : mxCacheWidth{ width }
 {
-   mFlags = resFlagPaired;
-   mOldFlags = mFlags;
-   mxCacheWidth = width;
-
-   myPos = 0;
-   myPosBase =0;
-   myHeight = 0;
-   iImageGroupSize = 1;
    SetNewGroup(1);
-   mBorderWidth = 0;
 }
 
 void FlowPacker::SetNewGroup( int iGroupSize )
@@ -646,8 +544,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
 
    int i;
 
-   mFlow.Init( ImageCacheWidth );
-   mFlow.mBorderWidth =1;
+   FlowPacker context{ ImageCacheWidth };
 
 //#define IMAGE_MAP
 #ifdef IMAGE_MAP
@@ -659,20 +556,20 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    for(i = 0;i < (int)mImages.size();i++)
    {
       wxImage &SrcImage = mImages[i];
-      mFlow.mFlags = mBitmapFlags[i];
+      context.mFlags = mBitmapFlags[i];
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {
-         mFlow.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
-         ImageCache.SetRGB( mFlow.Rect(), 0xf2, 0xb0, 0x27 );
-         if( (mFlow.mFlags & resFlagSkip) == 0 )
+         context.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
+         ImageCache.SetRGB( context.Rect(), 0xf2, 0xb0, 0x27 );
+         if( (context.mFlags & resFlagSkip) == 0 )
             PasteSubImage( &ImageCache, &SrcImage, 
-               mFlow.mxPos + mFlow.mBorderWidth, 
-               mFlow.myPos + mFlow.mBorderWidth);
+               context.mxPos + context.mBorderWidth,
+               context.myPos + context.mBorderWidth);
          else
-            ImageCache.SetRGB( mFlow.RectInner(), 1,1,1);
+            ImageCache.SetRGB( context.RectInner(), 1,1,1);
 #ifdef IMAGE_MAP
          // No href in html.  Uses title not alt.
-         wxRect R( mFlow.Rect() );
+         wxRect R( context.Rect() );
          wxLogDebug( wxT("<area title=\"Bitmap:%s\" shape=rect coords=\"%i,%i,%i,%i\">"),
             mBitmapNames[i],
             R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom() );
@@ -683,26 +580,26 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    // Now save the colours.
    int x,y;
 
-   mFlow.SetColourGroup();
+   context.SetColourGroup();
    const int iColSize = 10;
    for(i = 0; i < (int)mColours.size(); i++)
    {
-      mFlow.GetNextPosition( iColSize, iColSize );
+      context.GetNextPosition( iColSize, iColSize );
       wxColour c = mColours[i];
-      ImageCache.SetRGB( mFlow.Rect() , 0xf2, 0xb0, 0x27 );
-      ImageCache.SetRGB( mFlow.RectInner() , c.Red(), c.Green(), c.Blue() );
+      ImageCache.SetRGB( context.Rect() , 0xf2, 0xb0, 0x27 );
+      ImageCache.SetRGB( context.RectInner() , c.Red(), c.Green(), c.Blue() );
 
       // YUCK!  No function in wxWidgets to set a rectangle of alpha...
       for(x=0;x<iColSize;x++)
       {
          for(y=0;y<iColSize;y++)
          {
-            ImageCache.SetAlpha( mFlow.mxPos + x, mFlow.myPos+y, 255);
+            ImageCache.SetAlpha( context.mxPos + x, context.myPos+y, 255);
          }
       }
 #ifdef IMAGE_MAP
       // No href in html.  Uses title not alt.
-      wxRect R( mFlow.Rect() );
+      wxRect R( context.Rect() );
       wxLogDebug( wxT("<area title=\"Colour:%s\" shape=rect coords=\"%i,%i,%i,%i\">"),
          mColourNames[i],
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom() );
@@ -801,8 +698,7 @@ void ThemeBase::WriteImageMap( )
    wxBusyCursor busy;
 
    int i;
-   mFlow.Init( ImageCacheWidth );
-   mFlow.mBorderWidth = 1;
+   FlowPacker context{ ImageCacheWidth };
 
    wxFFile File( FileNames::ThemeCacheHtm(), wxT("wb") );// I'll put in NEW lines explicitly.
    if( !File.IsOpened() )
@@ -817,12 +713,12 @@ void ThemeBase::WriteImageMap( )
    for(i = 0; i < (int)mImages.size(); i++)
    {
       wxImage &SrcImage = mImages[i];
-      mFlow.mFlags = mBitmapFlags[i];
+      context.mFlags = mBitmapFlags[i];
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {
-         mFlow.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
+         context.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
          // No href in html.  Uses title not alt.
-         wxRect R( mFlow.RectInner() );
+         wxRect R( context.RectInner() );
          File.Write( wxString::Format(
             wxT("<area title=\"Bitmap:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
             mBitmapNames[i],
@@ -830,13 +726,13 @@ void ThemeBase::WriteImageMap( )
       }
    }
    // Now save the colours.
-   mFlow.SetColourGroup();
+   context.SetColourGroup();
    const int iColSize = 10;
    for(i = 0; i < (int)mColours.size(); i++)
    {
-      mFlow.GetNextPosition( iColSize, iColSize );
+      context.GetNextPosition( iColSize, iColSize );
       // No href in html.  Uses title not alt.
-      wxRect R( mFlow.RectInner() );
+      wxRect R( context.RectInner() );
       File.Write( wxString::Format( wxT("<area title=\"Colour:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
          mColourNames[i],
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
@@ -892,32 +788,15 @@ teThemeType ThemeBase::GetFallbackThemeType(){
 // Fallback must be an internally supported type,
 // to guarantee it is found.
 #ifdef EXPERIMENTAL_DA
-   return themeDark;
+   return "dark";
 #else
-   return themeLight;
+   return "light";
 #endif
 }
 
-teThemeType ThemeBase::ThemeTypeOfTypeName( const wxString & Name )
-{
-   static const wxArrayStringEx aThemes{
-      "classic" ,
-      "dark" ,
-      "light" ,
-      "high-contrast" ,
-      "custom" ,
-   };
-   int themeIx = make_iterator_range( aThemes ).index( Name );
-   if( themeIx < 0 )
-      return GetFallbackThemeType();
-   return (teThemeType)themeIx;
-}
-
-
-
 /// Reads an image cache including images, cursors and colours.
-/// @param bBinaryRead if true means read from an external binary file.
-///   otherwise the data is taken from a compiled in block of memory.
+/// @param type if empty means read from an external binary file.
+///   otherwise the data is taken from a block of memory.
 /// @param bOkIfNotFound if true means do not report absent file.
 /// @return true iff we loaded the images.
 bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
@@ -932,9 +811,9 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 //      ImageCache.InitAlpha();
 //   }
 
-   gPrefs->Read(wxT("/GUI/BlendThemes"), &bRecolourOnLoad, true);
+   bRecolourOnLoad = GUIBlendThemes.Read();
 
-   if(  type == themeFromFile )
+   if( type.empty() )
    {
       const auto &FileName = FileNames::ThemeCachePng();
       if( !wxFileExists( FileName ))
@@ -960,25 +839,14 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    {
       size_t ImageSize = 0;
       const unsigned char * pImage = nullptr;
-      switch( type ){
-         default: 
-         case themeClassic : 
-            ImageSize = sizeof(ClassicImageCacheAsData);
-            pImage = ClassicImageCacheAsData;
-            break;
-         case themeLight : 
-            ImageSize = sizeof(LightImageCacheAsData);
-            pImage = LightImageCacheAsData;
-            break;
-         case themeDark : 
-            ImageSize = sizeof(DarkImageCacheAsData);
-            pImage = DarkImageCacheAsData;
-            break;
-         case themeHiContrast : 
-            ImageSize = sizeof(HiContrastImageCacheAsData);
-            pImage = HiContrastImageCacheAsData;
-            break;
+      auto &lookup = GetThemeCacheLookup();
+      auto iter = lookup.find({type, {}});
+      if (const auto end = lookup.end(); iter == end) {
+         iter = lookup.find({"classic", {}});
+         wxASSERT(iter != end);
       }
+      ImageSize = iter->second.size();
+      pImage = iter->second.data();
       //wxLogDebug("Reading ImageCache %p size %i", pImage, ImageSize );
       wxMemoryInputStream InternalStream( pImage, ImageSize );
 
@@ -1002,19 +870,18 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       ImageCache.Rescale(  ImageCacheWidth, h );
    }
    int i;
-   mFlow.Init(ImageCacheWidth);
-   mFlow.mBorderWidth = 1;
+   FlowPacker context{ ImageCacheWidth };
    // Load the bitmaps
    for(i = 0; i < (int)mImages.size(); i++)
    {
       wxImage &Image = mImages[i];
-      mFlow.mFlags = mBitmapFlags[i];
+      context.mFlags = mBitmapFlags[i];
       if( (mBitmapFlags[i] & resFlagInternal)==0)
       {
-         mFlow.GetNextPosition( Image.GetWidth(),Image.GetHeight() );
-         wxRect R = mFlow.RectInner();
+         context.GetNextPosition( Image.GetWidth(),Image.GetHeight() );
+         wxRect R = context.RectInner();
          //wxLogDebug( "[%i, %i, %i, %i, \"%s\"], ", R.x, R.y, R.width, R.height, mBitmapNames[i].c_str() );
-         Image = GetSubImageWithAlpha( ImageCache, mFlow.RectInner() );
+         Image = GetSubImageWithAlpha( ImageCache, context.RectInner() );
          mBitmaps[i] = wxBitmap(Image);
       }
    }
@@ -1024,14 +891,14 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 //   return true; //To not load colours..
    // Now load the colours.
    int x,y;
-   mFlow.SetColourGroup();
+   context.SetColourGroup();
    wxColour TempColour;
    const int iColSize=10;
    for(i = 0; i < (int)mColours.size(); i++)
    {
-      mFlow.GetNextPosition( iColSize, iColSize );
-      mFlow.RectMid( x, y );
-      wxRect R = mFlow.RectInner();
+      context.GetNextPosition( iColSize, iColSize );
+      context.RectMid( x, y );
+      wxRect R = context.RectInner();
       //wxLogDebug( "[%i, %i, %i, %i, \"%s\"], ", R.x, R.y, R.width, R.height, mColourNames[i].c_str() );
       // Only change the colour if the alpha is opaque.
       // This allows us to add NEW colours more easily.
@@ -1234,27 +1101,6 @@ wxSize  ThemeBase::ImageSize( int iIndex )
    return wxSize( Image.GetWidth(), Image.GetHeight());
 }
 
-// The next two functions are for future use.
-#if 0
-wxCursor & ThemeBase::Cursor( int iIndex )
-{
-   wxASSERT( iIndex >= 0 );
-   EnsureInitialised();
-   // Purposeful null deref.  Function is for future use.
-   // If anyone tries to use it now they will get an error.
-   return *(wxCursor*)NULL;
-}
-
-wxFont   & ThemeBase::Font( int iIndex )
-{
-   wxASSERT( iIndex >= 0 );
-   EnsureInitialised();
-   // Purposeful null deref.  Function is for future use.
-   // If anyone tries to use it now they will get an error.
-   return *(wxFont*)NULL;
-}
-#endif
-
 /// Replaces both the image and the bitmap.
 void ThemeBase::ReplaceImage( int iIndex, wxImage * pImage )
 {
@@ -1303,39 +1149,50 @@ void auStaticText::OnPaint(wxPaintEvent & WXUNUSED(evt))
    dc.DrawText( GetLabel(), 0,0);
 }
 
-constexpr int defaultTheme =
-#ifdef EXPERIMENTAL_DA
-   2 // "dark"
-#else
-   1 // "light"
-#endif
-;
+ChoiceSetting &GUITheme()
+{
+   auto symbols = []{
+      std::vector<EnumValueSymbol> symbols;
 
-ChoiceSetting GUITheme{
-   wxT("/GUI/Theme"),
-   {
-      ByColumns,
-      {
-         /* i18n-hint: describing the "classic" or traditional
-            appearance of older versions of Audacity */
-         XO("Classic")  ,
-         /* i18n-hint: Light meaning opposite of dark */
-         XO("Light")  ,
-         XO("Dark")  ,
-         /* i18n-hint: greater difference between foreground and
-            background colors */
-         XO("High Contrast")  ,
+      // Gather registered themes
+      for (const auto &[symbol, data] : GetThemeCacheLookup())
+         symbols.emplace_back(symbol);
+
+      // Sort the names, with built-in themes to the front,
+      // conserving the ordering that was used in 3.1.0; otherwise
+      // sorting other registered themes alphabetically by identifier
+      static const Identifier names[] = {
+         "classic", "light", "dark", "high-contrast"
+      };
+      static auto index = [](const EnumValueSymbol &symbol){
+         auto begin = std::begin(names), end = std::end(names);
+         return std::find(begin, end, symbol.Internal()) - begin;
+      };
+      std::stable_sort( symbols.begin(), symbols.end(),
+         [](auto &a, auto &b){ return index(a) < index(b); } );
+
+      // Last, custom
+      symbols.emplace_back(
          /* i18n-hint: user defined */
-         XO("Custom")  ,
-      },
-      {
-         wxT("classic")  ,
-         wxT("light")  ,
-         wxT("dark")  ,
-         wxT("high-contrast")  ,
-         wxT("custom")  ,
-      }
-   },
-   defaultTheme
-};
+         "custom", XO("Custom")
+      );
+   
+      return symbols;
+   };
 
+   constexpr int defaultTheme =
+#ifdef EXPERIMENTAL_DA
+      2 // "dark"
+#else
+      1 // "light"
+#endif
+   ;
+
+   static ChoiceSetting setting {
+      wxT("/GUI/Theme"), symbols(), defaultTheme
+   };
+
+   return setting;
+}
+
+BoolSetting GUIBlendThemes{ wxT("/GUI/BlendThemes"), true };
