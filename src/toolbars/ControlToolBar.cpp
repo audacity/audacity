@@ -65,6 +65,7 @@
 #include "../ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "../ProjectWindow.h"
+#include "../SelectUtilities.h"
 #include "../Track.h"
 #include "ViewInfo.h"
 #include "../widgets/AButton.h"
@@ -87,6 +88,7 @@ BEGIN_EVENT_TABLE(ControlToolBar, ToolBar)
    EVT_BUTTON(ID_REW_BUTTON,    ControlToolBar::OnRewind)
    EVT_BUTTON(ID_FF_BUTTON,     ControlToolBar::OnFF)
    EVT_BUTTON(ID_PAUSE_BUTTON,  ControlToolBar::OnPause)
+   EVT_BUTTON(ID_LOOP_BUTTON,   ControlToolBar::OnLoop)
    EVT_IDLE(ControlToolBar::OnIdle)
 END_EVENT_TABLE()
 
@@ -588,6 +590,16 @@ void ControlToolBar::OnRecord(wxCommandEvent &evt)
 void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
 {
    ProjectAudioManager::Get( mProject ).OnPause();
+}
+
+void ControlToolBar::OnLoop(wxCommandEvent & WXUNUSED(evt))
+{
+   // Toggle the state of the play region lock
+   auto &region = ViewInfo::Get(mProject).playRegion;
+   if (region.Locked())
+      SelectUtilities::UnlockPlayRegion(mProject);
+   else
+      SelectUtilities::LockPlayRegion(mProject);
 }
 
 void ControlToolBar::OnIdle(wxIdleEvent & event)

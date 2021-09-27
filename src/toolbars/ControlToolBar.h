@@ -53,6 +53,7 @@ class AUDACITY_DLL_API ControlToolBar final : public ToolBar {
    void OnRecord(wxCommandEvent & evt);
    void OnFF(wxCommandEvent & evt);
    void OnPause(wxCommandEvent & evt);
+   void OnLoop(wxCommandEvent & evt);
    void OnIdle(wxIdleEvent & event);
 
    // Choice among the appearances of the play button:
