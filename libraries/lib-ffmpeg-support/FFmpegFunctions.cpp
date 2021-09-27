@@ -163,21 +163,15 @@ struct FFmpegFunctions::Private final
       if (path.empty())
          return nullptr;
 
-      std::shared_ptr<wxDynamicLibrary> library =
-         std::make_shared<wxDynamicLibrary>();
-
-      if (!library->Load(wxFileNameFromPath(path)))
-         return nullptr;
-
-      return library;
+      return LoadLibrary(wxFileNameFromPath(path));
    }
 
    bool Load(FFmpegFunctions& functions, const wxString& path)
    {
       // We start by loading AVFormat
-      AVFormatLibrary = std::make_shared<wxDynamicLibrary>();
+      AVFormatLibrary = LoadLibrary(path);
 
-      if (!AVFormatLibrary->Load(path))
+      if (AVFormatLibrary == nullptr)
       {
          wxLogSysError("Failed to load %s", path.c_str());
          return false;
@@ -226,6 +220,29 @@ struct FFmpegFunctions::Private final
 
       return true;
    }
+
+   std::shared_ptr<wxDynamicLibrary> LoadLibrary(const wxString& libraryName) const
+   {
+#if defined(__WXMAC__)
+      // On macOS dyld reads environment only when application starts.
+      // Let's emulate the process manually
+      for(const wxString& path : FFmpegFunctions::GetSearchPaths())
+      {
+         const wxString fullName = wxFileName(path, libraryName).GetFullPath();
+
+         auto library = std::make_shared<wxDynamicLibrary>(fullName);
+
+         if (library->IsLoaded())
+            return library;
+      }
+#endif
+      auto library = std::make_shared<wxDynamicLibrary> (libraryName);
+
+      if (library->IsLoaded())
+         return library;
+
+      return {};
+   }
 };
 
 FFmpegFunctions::FFmpegFunctions()
@@ -252,7 +269,9 @@ std::shared_ptr<FFmpegFunctions> FFmpegFunctions::Load()
    const auto supportedVersions =
       FFmpegAPIResolver::Get().GetSuportedAVFormatVersions();
 
+#if !defined(__WXMAC__)
    EnvSetter envSetter;
+#endif
 
    for (int version : supportedVersions)
    {
