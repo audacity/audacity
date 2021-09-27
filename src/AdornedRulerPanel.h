@@ -59,8 +59,6 @@ public:
 
    void SetPlayRegion(double playRegionStart, double playRegionEnd);
    void ClearPlayRegion();
-   void LockPlayRegion();
-   void UnlockPlayRegion();
    void TogglePinnedHead();
 
    void GetMaxSize(wxCoord *width, wxCoord *height);
@@ -229,6 +227,7 @@ private:
    struct MainGroup;
 
    SelectedRegion mLastDrawnSelectedRegion;
+   bool mLastPlayRegionLocked = false;
    double mLastDrawnH{};
    double mLastDrawnZoom{};
    bool mDirtySelectedRegion{};

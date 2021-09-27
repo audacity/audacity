@@ -12,6 +12,7 @@
 
 #include <wx/frame.h>
 
+#include "widgets/AudacityMessageBox.h"
 #include "CommonCommandFlags.h"
 #include "Menus.h"
 #include "Project.h"
@@ -156,6 +157,29 @@ void DoSelectSomething(AudacityProject &project)
 
    if( bTime || bTracks )
       DoSelectTimeAndTracks( project, bTime, bTracks );
+}
+
+void LockPlayRegion(AudacityProject &project)
+{
+   auto &tracks = TrackList::Get( project );
+
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   if (playRegion.GetStart() >= tracks.GetEndTime()) {
+      AudacityMessageBox(
+         XO("Cannot lock region beyond\nend of project."),
+         XO("Error"));
+   }
+   else {
+      playRegion.SetLocked( true );
+   }
+}
+
+void UnlockPlayRegion(AudacityProject &project)
+{
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   playRegion.SetLocked( false );
 }
 
 }
