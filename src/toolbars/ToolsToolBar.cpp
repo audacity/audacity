@@ -80,7 +80,6 @@ ToolsToolBar::ToolsToolBar( AudacityProject &project )
    //Read the following wxASSERTs as documentating a design decision
    wxASSERT( selectTool   == selectTool   - firstTool );
    wxASSERT( envelopeTool == envelopeTool - firstTool );
-   wxASSERT( slideTool    == slideTool    - firstTool );
    wxASSERT( zoomTool     == zoomTool     - firstTool );
    wxASSERT( drawTool     == drawTool     - firstTool );
    wxASSERT( multiTool    == multiTool    - firstTool );
@@ -148,7 +147,6 @@ void ToolsToolBar::RegenerateTooltips()
    } table[] = {
       { selectTool,   wxT("SelectTool"),    XO("Selection Tool")  },
       { envelopeTool, wxT("EnvelopeTool"),  XO("Envelope Tool")   },
-      { slideTool,    wxT("TimeShiftTool"), XO("Time Shift Tool") },
       { zoomTool,     wxT("ZoomTool"),      XO("Zoom Tool")       },
       { drawTool,     wxT("DrawTool"),      XO("Draw Tool")       },
       { multiTool,    wxT("MultiTool"),     XO("Multi-Tool")      },
@@ -200,11 +198,7 @@ void ToolsToolBar::Populate()
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsSmall();
 
-#ifdef EXPERIMENTAL_BRUSH_TOOL
-   Add(mToolSizer = safenew wxGridSizer(2, 4, 1, 1));
-#else
    Add(mToolSizer = safenew wxGridSizer(2, 3, 1, 1));
-#endif
 
    /* Tools */
    using namespace ToolCodes;
@@ -212,10 +206,9 @@ void ToolsToolBar::Populate()
    mTool[ envelopeTool ] = MakeTool( this, bmpEnvelope, envelopeTool, XO("Envelope Tool") );
    mTool[ drawTool     ] = MakeTool( this, bmpDraw, drawTool, XO("Draw Tool") );
    mTool[ zoomTool     ] = MakeTool( this, bmpZoom, zoomTool, XO("Zoom Tool") );
-   mTool[ slideTool    ] = MakeTool( this, bmpTimeShift, slideTool, XO("Slide Tool") );
    mTool[ multiTool    ] = MakeTool( this, bmpMulti, multiTool, XO("Multi-Tool") );
 #ifdef EXPERIMENTAL_BRUSH_TOOL
-   mTool[ brushTool    ] = MakeTool( this, bmpDraw, brushTool, XO("Brush Tool") );
+   mTool[ brushTool    ] = MakeTool( this, bmpSpectralBrush, brushTool, XO("Brush Tool") );
 #endif
 
    // It's OK to reset the tool when regenerating this, e.g after visiting preferences.
@@ -372,12 +365,6 @@ void OnZoomTool(const CommandContext &context)
    SetTool(context.project, ToolCodes::zoomTool);
 }
 
-/// Handler to set the Time shift tool active
-void OnTimeShiftTool(const CommandContext &context)
-{
-   SetTool(context.project, ToolCodes::slideTool);
-}
-
 void OnMultiTool(const CommandContext &context)
 {
    SetTool(context.project, ToolCodes::multiTool);
@@ -442,13 +429,11 @@ BaseItemSharedPtr ExtraToolsMenu()
          AlwaysEnabledFlag, wxT("F3") ),
       Command( wxT("ZoomTool"), XXO("&Zoom Tool"), FN(OnZoomTool),
          AlwaysEnabledFlag, wxT("F4") ),
-      Command( wxT("TimeShiftTool"), XXO("&Time Shift Tool"),
-         FN(OnTimeShiftTool), AlwaysEnabledFlag, wxT("F5") ),
       Command( wxT("MultiTool"), XXO("&Multi Tool"), FN(OnMultiTool),
-         AlwaysEnabledFlag, wxT("F6") ),
+         AlwaysEnabledFlag, wxT("F5") ),
 #ifdef EXPERIMENTAL_BRUSH_TOOL
       Command( wxT("BrushTool"), XXO("&Brush Tool"), FN(OnBrushTool),
-               AlwaysEnabledFlag, wxT("F7") ),
+               AlwaysEnabledFlag, wxT("F6") ),
 #endif
       Command( wxT("PrevTool"), XXO("&Previous Tool"), FN(OnPrevTool),
          AlwaysEnabledFlag, wxT("A") ),
