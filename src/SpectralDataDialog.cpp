@@ -15,6 +15,8 @@
 
 #ifdef EXPERIMENTAL_BRUSH_TOOL
 
+#include <type_traits>
+
 #include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/button.h>
@@ -345,8 +347,31 @@ void SpectralDataDialogWorker::OnToolChanged(wxCommandEvent &evt)
    evt.Skip();
    if (evt.GetInt() == ProjectSettings::ChangedTool) {
       // Find not Get to avoid creating the dialog if not yet done
-      if (auto pDialog = SpectralDataDialog::Find(&mProject) )
+      if (auto pDialog = SpectralDataDialog::Find(&mProject);
+          pDialog && pDialog->IsShown())
          pDialog->DoToolChanged();
+      else {
+         // Dialog is hidden, or not yet constructed
+         using Type = std::underlying_type_t<decltype(ToolCodes::brushTool)>;
+         constexpr auto value = static_cast<Type>(ToolCodes::brushTool);
+
+         auto &projectSettings = ProjectSettings::Get( mProject );
+         if (projectSettings.GetTool() == value) {
+            auto oldValue = static_cast<Type>( evt.GetExtraLong() );
+            if (oldValue + 1 == value)
+               // continue tool rotation
+               wxTheApp->CallAfter([&]{ projectSettings.SetTool(
+                  (value + 1) % ToolCodes::numTools); });
+            else if ((oldValue + ToolCodes::numTools - 1 ) % ToolCodes::numTools
+               == value)
+               // continue backwards tool rotation
+               wxTheApp->CallAfter([&]{ projectSettings.SetTool(
+                  (value + ToolCodes::numTools - 1 ) % ToolCodes::numTools); });
+            else
+               // restore old tool value
+               wxTheApp->CallAfter([&]{ projectSettings.SetTool(oldValue); });
+         }
+      }
    }
 }
 

@@ -21,6 +21,8 @@ Paul Licameli split from AudacityProject.h
 class AudacityProject;
 
 // Sent to the project when certain settings change
+// See enum EventCode below for values of GetInt() identifying changed setting
+// The previous value of that setting can also be found using GetExtraLong()
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
    EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 
