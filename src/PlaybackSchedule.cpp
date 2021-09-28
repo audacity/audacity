@@ -15,6 +15,8 @@
 #include "Mix.h"
 #include "SampleCount.h"
 
+#include <cmath>
+
 PlaybackPolicy::~PlaybackPolicy() = default;
 void PlaybackPolicy::Initialize( PlaybackSchedule &, double rate )
 {
@@ -112,9 +114,11 @@ PlaybackPolicy::GetPlaybackSlice(PlaybackSchedule &schedule, size_t available)
    return { available, frames, toProduce };
 }
 
-double PlaybackPolicy::AdvancedTrackTime( PlaybackSchedule &schedule,
-   double trackTime, double realDuration )
+std::pair<double, double>
+PlaybackPolicy::AdvancedTrackTime( PlaybackSchedule &schedule,
+   double trackTime, size_t nSamples )
 {
+   auto realDuration = nSamples / mRate;
    if (schedule.ReversedTime())
       realDuration *= -1.0;
 
@@ -123,8 +127,11 @@ double PlaybackPolicy::AdvancedTrackTime( PlaybackSchedule &schedule,
          schedule.SolveWarpedLength(trackTime, realDuration);
    else
       trackTime += realDuration;
-
-   return trackTime;
+   
+   if ( trackTime >= schedule.mT1 )
+      return { schedule.mT1, std::numeric_limits<double>::infinity() };
+   else
+      return { trackTime, trackTime };
 }
 
 bool PlaybackPolicy::RepositionPlayback(
@@ -175,9 +182,10 @@ LoopingPlaybackPolicy::GetPlaybackSlice(
    auto toProduce = frames;
    double deltat = frames / mRate;
 
+   mRemaining = realTimeRemaining * mRate;
    if (deltat > realTimeRemaining)
    {
-      toProduce = frames = realTimeRemaining * mRate;
+      toProduce = frames = mRemaining;
       schedule.RealTimeAdvance( realTimeRemaining );
    }
    else
@@ -194,60 +202,29 @@ LoopingPlaybackPolicy::GetPlaybackSlice(
    return { available, frames, toProduce };
 }
 
-double LoopingPlaybackPolicy::AdvancedTrackTime(
-   PlaybackSchedule &schedule,
-   double trackTime, double realDuration )
+std::pair<double, double> LoopingPlaybackPolicy::AdvancedTrackTime(
+   PlaybackSchedule &schedule, double trackTime, size_t nSamples )
 {
-   if (schedule.ReversedTime())
-      realDuration *= -1.0;
+   mRemaining -= std::min(mRemaining, nSamples);
+   if ( mRemaining == 0 )
+      // Wrap to start
+      return { schedule.mT1, schedule.mT0 };
 
    // Defense against cases that might cause loops not to terminate
    if ( fabs(schedule.mT0 - schedule.mT1) < 1e-9 )
-      return schedule.mT0;
+      return {schedule.mT0, schedule.mT0};
 
-   if (schedule.mEnvelope) {
-      double total=0.0;
-      bool foundTotal = false;
-      do {
-         auto oldTime = trackTime;
-         if (foundTotal && fabs(realDuration) > fabs(total))
-            // Avoid SolveWarpedLength
-            trackTime = schedule.mT1;
-         else
-            trackTime =
-               schedule.SolveWarpedLength(trackTime, realDuration);
+   auto realDuration = nSamples / mRate;
+   if (schedule.ReversedTime())
+      realDuration *= -1.0;
 
-         if (!schedule.Overruns( trackTime ))
-            break;
-
-         // Bug1922:  The part of the time track outside the loop should not
-         // influence the result
-         double delta;
-         if (foundTotal && oldTime == schedule.mT0)
-            // Avoid integrating again
-            delta = total;
-         else {
-            delta = schedule.ComputeWarpedLength(oldTime, schedule.mT1);
-            if (oldTime == schedule.mT0)
-               foundTotal = true, total = delta;
-         }
-         realDuration -= delta;
-         trackTime = schedule.mT0;
-      } while ( true );
-   }
-   else {
+   if (schedule.mEnvelope)
+      trackTime =
+         schedule.SolveWarpedLength(trackTime, realDuration);
+   else
       trackTime += realDuration;
 
-      // Wrap to start if looping
-      while ( schedule.Overruns( trackTime ) ) {
-         // LL:  This is not exactly right, but I'm at my wits end trying to
-         //      figure it out.  Feel free to fix it.  :-)
-         // MB: it's much easier than you think, mTime isn't warped at all!
-         trackTime -= schedule.mT1 - schedule.mT0;
-      }
-   }
-
-   return trackTime;
+   return { trackTime, trackTime };
 }
 
 bool LoopingPlaybackPolicy::RepositionPlayback(
@@ -326,11 +303,6 @@ double PlaybackSchedule::ClampTrackTime( double trackTime ) const
       return std::max(mT0, std::min(mT1, trackTime));
 }
 
-bool PlaybackSchedule::Overruns( double trackTime ) const
-{
-   return (ReversedTime() ? trackTime <= mT1 : trackTime >= mT1);
-}
-
 double PlaybackSchedule::ComputeWarpedLength(double t0, double t1) const
 {
    if (mEnvelope)
@@ -388,8 +360,7 @@ double RecordingSchedule::ToDiscard() const
 }
 
 void PlaybackSchedule::TimeQueue::Producer(
-   PlaybackSchedule &schedule, double rate,
-   size_t nSamples )
+   PlaybackSchedule &schedule, size_t nSamples )
 {
    auto &policy = schedule.GetPolicy();
 
@@ -405,7 +376,10 @@ void PlaybackSchedule::TimeQueue::Producer(
    auto space = TimeQueueGrainSize - remainder;
 
    while ( nSamples >= space ) {
-      time = policy.AdvancedTrackTime( schedule, time, space / rate );
+      auto times = policy.AdvancedTrackTime( schedule, time, space );
+      time = times.second;
+      if (!std::isfinite(time))
+         time = times.first;
       index = (index + 1) % mSize;
       mData[ index ] = time;
       nSamples -= space;
@@ -414,8 +388,12 @@ void PlaybackSchedule::TimeQueue::Producer(
    }
 
    // Last odd lot
-   if ( nSamples > 0 )
-      time = policy.AdvancedTrackTime( schedule, time, nSamples / rate );
+   if ( nSamples > 0 ) {
+      auto times = policy.AdvancedTrackTime( schedule, time, nSamples );
+      time = times.second;
+      if (!std::isfinite(time))
+         time = times.first;
+   }
 
    mLastTime = time;
    mTail.mRemainder = remainder + nSamples;
