@@ -28,10 +28,12 @@
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
+#include <wx/tglbtn.h>
 
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
 
+#include "AllThemeResources.h"
 #include "AudioIO.h"
 #include "ClientData.h"
 #include "Clipboard.h"
@@ -48,6 +50,7 @@
 #include "ShuttleGui.h"
 #include "SpectralDataManager.h"
 #include "tracks/playabletrack/wavetrack/ui/SpectrumView.h"
+#include "Theme.h"
 #include "TrackPanel.h"
 #include "WaveTrack.h"
 
@@ -56,7 +59,8 @@
 #include "widgets/wxPanelWrapper.h" // to inherit
 
 enum {
-   ID_CHECKBOX_SMART = 10000,
+   ID_BRUSH_BUTTON = 10000,
+   ID_CHECKBOX_SMART,
    ID_CHECKBOX_OVERTONES,
    ID_SLIDER_BRUSH_SIZE
 };
@@ -95,6 +99,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
 
          void OnCloseWindow(wxCloseEvent &event);
          void OnApply(wxCommandEvent &event);
+         void OnBrushButton(wxCommandEvent &event);
          void OnBrushSizeSlider(wxCommandEvent &event);
          void OnCheckSmartSelection(wxCommandEvent &event);
          void OnCheckOvertones(wxCommandEvent &event);
@@ -103,6 +108,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
          void UpdatePrefs() override;
 
          AudacityProject   &mProject;
+         wxToggleButton *mBrushButton = nullptr;
          bool              mAudioIOBusy { false };
 
       public:
@@ -122,6 +128,7 @@ private:
 };
 
 BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
+   EVT_TOGGLEBUTTON(ID_BRUSH_BUTTON, SpectralDataDialog::OnBrushButton)
    EVT_CHECKBOX(ID_CHECKBOX_SMART, SpectralDataDialog::OnCheckSmartSelection)
    EVT_CHECKBOX(ID_CHECKBOX_OVERTONES, SpectralDataDialog::OnCheckOvertones)
    EVT_CLOSE(SpectralDataDialog::OnCloseWindow)
@@ -167,14 +174,23 @@ static const AttachedWindows::RegisteredFactory key{
       }
 };
 
+static wxToggleButton *MakeButton(wxWindow *pParent)
+{
+   auto button = safenew wxBitmapToggleButton{
+      pParent, ID_BRUSH_BUTTON, theTheme.Bitmap(bmpSpectralBrush) };
+   // Name isn't shown but may be pronounced by a screen reader
+   button->SetName(XO("Brush Tool").Translation());
+   return button;
+}
+
 void SpectralDataDialog::Populate(ShuttleGui & S)
 {
-   auto imageList = std::make_unique<wxImageList>(9, 16);
-   imageList->Add(wxIcon(empty9x16_xpm));
-   imageList->Add(wxIcon(arrow_xpm));
+   mBrushButton = MakeButton(this);
 
    S.StartVerticalLay(true);
    {
+      S.AddWindow(mBrushButton, wxALIGN_LEFT);
+
       S.StartStatic(XO("Options"), 1);
       {
          S.Id(ID_CHECKBOX_OVERTONES)
@@ -254,6 +270,14 @@ void SpectralDataDialog::UpdatePrefs()
    if (shown) {
       Show(true);
    }
+}
+
+void SpectralDataDialog::OnBrushButton(wxCommandEvent &event) {
+   if (mBrushButton->GetValue())
+      ProjectSettings::Get(mProject).SetTool(ToolCodes::brushTool);
+   else
+      // Don't stay up
+      mBrushButton->SetValue(true);
 }
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sSpectralWorkerKey{
