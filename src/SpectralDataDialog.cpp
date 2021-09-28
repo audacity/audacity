@@ -47,7 +47,9 @@
 #include "ProjectWindows.h"
 #include "ShuttleGui.h"
 #include "SpectralDataManager.h"
+#include "tracks/playabletrack/wavetrack/ui/SpectrumView.h"
 #include "TrackPanel.h"
+#include "WaveTrack.h"
 
 #include "commands/CommandManagerWindowClasses.h"
 #include "widgets/AudacityMessageBox.h"
@@ -113,8 +115,10 @@ public:
    explicit SpectralDataDialogWorker( AudacityProject &project );
 
    void OnToolChanged(wxCommandEvent &evt);
+   void OnIdle(wxIdleEvent &evt);
 private:
    AudacityProject &mProject;
+   unsigned mPrevNViews = 0;
 };
 
 BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
@@ -138,6 +142,7 @@ SpectralDataDialog::SpectralDataDialog(AudacityProject &parent)
    // Construct the GUI.
    ShuttleGui S(this, eIsCreating);
    Populate(S);
+   CentreOnParent();
 
    wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
                   &SpectralDataDialog::OnAudioIO,
@@ -287,6 +292,7 @@ SpectralDataDialogWorker::SpectralDataDialogWorker(AudacityProject &project)
    : mProject{ project }
 {
    project.Bind(EVT_PROJECT_SETTINGS_CHANGE, &SpectralDataDialogWorker::OnToolChanged, this);
+   wxTheApp->Bind(wxEVT_IDLE, &SpectralDataDialogWorker::OnIdle, this);
 }
 
 void SpectralDataDialogWorker::OnToolChanged(wxCommandEvent &evt)
@@ -299,6 +305,44 @@ void SpectralDataDialogWorker::OnToolChanged(wxCommandEvent &evt)
       if (auto pDialog = SpectralDataDialog::Find(&mProject) )
          pDialog->Show(projectSettings.GetTool() == ToolCodes::brushTool);
    }
+}
+
+static bool HasVisibleSpectralView(WaveTrack *wt)
+{
+   auto &trackView = TrackView::Get(*wt);
+   if ( auto waveTrackViewPtr = dynamic_cast<WaveTrackView*>(&trackView) ) {
+      const auto range = waveTrackViewPtr->GetSubViews();
+      return std::any_of( range.begin(), range.end(),
+         [](const auto &pair){
+            return dynamic_cast<SpectrumView*>(pair.second.get()); } );
+   }
+   return false;
+}
+
+static unsigned CountVisibleSpectralViews( AudacityProject &project )
+{
+   const auto range = TrackList::Get(project).Any< WaveTrack >();
+   return std::count_if( range.begin(), range.end(), HasVisibleSpectralView );
+}
+
+void SpectralDataDialogWorker::OnIdle(wxIdleEvent &evt)
+{
+   evt.Skip();
+   auto nViews = CountVisibleSpectralViews(mProject);
+   if (nViews > mPrevNViews) {
+      // Some track transitioned its view to spectral or multi.
+      // Show the dialog.
+      auto &dialog = SpectralDataDialog::Get(mProject);
+      dialog.Show();
+      dialog.Raise();
+   }
+   else if (nViews == 0 && mPrevNViews > 0) {
+      // The last spectrum view was closed.
+      // Hide the dialog.
+      if (auto pDialog = SpectralDataDialog::Find(&mProject))
+         pDialog->Hide();
+   }
+   mPrevNViews = nViews;
 }
 
 void SpectralDataDialog::OnBrushSizeSlider(wxCommandEvent &event) {
