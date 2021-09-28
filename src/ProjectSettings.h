@@ -37,7 +37,6 @@ enum {
    envelopeTool,
    drawTool,
    zoomTool,
-   slideTool,
    multiTool,
 #ifdef EXPERIMENTAL_BRUSH_TOOL
    brushTool,
