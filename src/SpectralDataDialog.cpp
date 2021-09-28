@@ -73,7 +73,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
 {
 
       public:
-         explicit SpectralDataDialog(AudacityProject * parent);
+         explicit SpectralDataDialog(AudacityProject &parent);
 
          void UpdateDisplay(wxEvent &e);
 
@@ -94,7 +94,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
          // PrefsListener implementation
          void UpdatePrefs() override;
 
-         AudacityProject   *mProject { nullptr };
+         AudacityProject   &mProject;
          bool              mAudioIOBusy { false };
 
       public:
@@ -108,7 +108,7 @@ public:
 
    void OnToolChanged(wxCommandEvent &evt);
 private:
-   AudacityProject *mProject { nullptr };
+   AudacityProject &mProject;
 };
 
 BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
@@ -120,9 +120,9 @@ END_EVENT_TABLE()
 
 #define Title XO("Spectral Data Control Panel")
 
-SpectralDataDialog::SpectralDataDialog(AudacityProject *parent)
+SpectralDataDialog::SpectralDataDialog(AudacityProject &parent)
    : mProject(parent)
-   , wxDialogWrapper(FindProjectFrame( parent ), wxID_ANY, Title,
+   , wxDialogWrapper(FindProjectFrame( &parent ), wxID_ANY, Title,
                          wxDefaultPosition, wxDefaultSize,
                          wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 
@@ -143,16 +143,16 @@ SpectralDataDialog::SpectralDataDialog(AudacityProject *parent)
 
    Clipboard::Get().Bind(
          EVT_CLIPBOARD_CHANGE, &SpectralDataDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_PUSHED, &SpectralDataDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_MODIFIED, &SpectralDataDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_OR_REDO, &SpectralDataDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_RESET, &SpectralDataDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_PURGE, &SpectralDataDialog::UpdateDisplay, this);
+   parent.Bind(EVT_UNDO_PUSHED, &SpectralDataDialog::UpdateDisplay, this);
+   parent.Bind(EVT_UNDO_MODIFIED, &SpectralDataDialog::UpdateDisplay, this);
+   parent.Bind(EVT_UNDO_OR_REDO, &SpectralDataDialog::UpdateDisplay, this);
+   parent.Bind(EVT_UNDO_RESET, &SpectralDataDialog::UpdateDisplay, this);
+   parent.Bind(EVT_UNDO_PURGE, &SpectralDataDialog::UpdateDisplay, this);
 }
 
 static const AttachedWindows::RegisteredFactory key{
       []( AudacityProject &project ){
-         return safenew SpectralDataDialog( &project );
+         return safenew SpectralDataDialog( project );
       }
 };
 
@@ -251,7 +251,7 @@ static const AudacityProject::AttachedObjects::RegisteredFactory sSpectralWorker
 
 AttachedWindows::RegisteredFactory sSpectralDataDialogKey{
       []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-         return safenew SpectralDataDialog( &parent );
+         return safenew SpectralDataDialog( parent );
       }
 };
 
@@ -260,39 +260,39 @@ AttachedWindows::RegisteredFactory sSpectralDataDialogKey{
 // 2. In Worker::OnToolChanged(), get Dialog from AttachedWindows and invoke Show()
 // 3. Dialog::OnApply() listens to the apply button in Dialog, which calculates and applies the effect
 SpectralDataDialogWorker::SpectralDataDialogWorker(AudacityProject &project)
+   : mProject{ project }
 {
    project.Bind(EVT_PROJECT_SETTINGS_CHANGE, &SpectralDataDialogWorker::OnToolChanged, this);
-   mProject = &project;
 }
 
 void SpectralDataDialogWorker::OnToolChanged(wxCommandEvent &evt)
 {
    evt.Skip();
-   auto &projectSettings = ProjectSettings::Get( *mProject );
+   auto &projectSettings = ProjectSettings::Get( mProject );
    if (evt.GetInt() == ProjectSettings::ChangedTool)
    {
       auto &spectralDataDialog =
-         GetAttachedWindows(*mProject).Get( sSpectralDataDialogKey );
+         GetAttachedWindows(mProject).Get( sSpectralDataDialogKey );
       spectralDataDialog.Show(projectSettings.GetTool() == ToolCodes::brushTool);
    }
 }
 
 void SpectralDataDialog::OnBrushSizeSlider(wxCommandEvent &event) {
-   auto &projectSettings = ProjectSettings::Get( *mProject );
+   auto &projectSettings = ProjectSettings::Get( mProject );
    projectSettings.SetBrushRadius(event.GetInt());
 }
 
 void SpectralDataDialog::OnCheckSmartSelection(wxCommandEvent &event){
    int isSelected = event.GetInt();
    wxASSERT(isSelected == 0 || isSelected == 1);
-   auto &projectSettings = ProjectSettings::Get( *mProject );
+   auto &projectSettings = ProjectSettings::Get( mProject );
    projectSettings.SetSmartSelection(isSelected);
 }
 
 void SpectralDataDialog::OnCheckOvertones(wxCommandEvent &event){
    int isSelected = event.GetInt();
    wxASSERT(isSelected == 0 || isSelected == 1);
-   auto &projectSettings = ProjectSettings::Get( *mProject );
+   auto &projectSettings = ProjectSettings::Get( mProject );
    projectSettings.SetOvertones(isSelected);
 }
 
