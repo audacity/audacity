@@ -142,13 +142,17 @@ public:
    void RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name );
 
    teThemeType GetFallbackThemeType();
-   void CreateImageCache(bool bBinarySave = true);
+   void CreateImageCache();
+   bool CreateOneImageCache(teThemeType id, bool bBinarySave);
    bool ReadImageCache( teThemeType type = {}, bool bOkIfNotFound=false);
-   void LoadComponents( bool bOkIfNotFound =false);
-   void SaveComponents();
+   void LoadThemeComponents( bool bOkIfNotFound =false);
+   void LoadOneThemeComponents( teThemeType id, bool bOkIfNotFound = false);
+   void SaveThemeComponents();
+   bool SaveOneThemeComponents( teThemeType id );
    void SaveThemeAsCode();
    void WriteImageDefs( );
    void WriteImageMap( );
+   void WriteOneImageMap( teThemeType id );
    static bool LoadPreferredTheme();
    void RecolourBitmap( int iIndex, wxColour From, wxColour To );
    void RecolourTheme();
