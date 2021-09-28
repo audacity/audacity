@@ -103,39 +103,32 @@ FilePath ThemeDir()
 }
 
 //! Has the side-effect of ensuring existence of the directory
-FilePath ThemeComponentsDir()
+FilePath ThemeSubdir(Identifier id)
 {
-   return FileNames::MkDir( wxFileName( ThemeDir(), wxT("Components") ).GetFullPath() );
+   return FileNames::MkDir(
+      wxFileName( ThemeDir(), id.GET() ).GetFullPath() );
 }
 
-FilePath ThemeCachePng()
+//! Has the side-effect of ensuring existence of the directory
+FilePath ThemeComponentsDir(Identifier id)
 {
-   return wxFileName( ThemeDir(), wxT("ImageCache.png") ).GetFullPath();
+   return FileNames::MkDir( wxFileName( ThemeSubdir(id), wxT("Components") ).GetFullPath() );
 }
 
-FilePath ThemeCacheHtm()
-{
-   return wxFileName( ThemeDir(), wxT("ImageCache.htm") ).GetFullPath();
-}
+constexpr auto ImageCacheFileName = L"ImageCache.png";
+
+constexpr auto ImageMapFileName = L"ImageCache.htm";
 
 FilePath ThemeImageDefsAsCee()
 {
    return wxFileName( ThemeDir(), wxT("ThemeImageDefsAsCee.h") ).GetFullPath();
 }
 
-FilePath ThemeCacheAsCee( )
-{
-// DA: Theme sourcery file name.
-#ifndef EXPERIMENTAL_DA
-   return wxFileName( ThemeDir(), wxT("ThemeAsCeeCode.h") ).GetFullPath();
-#else
-   return wxFileName( ThemeDir(), wxT("DarkThemeAsCeeCode.h") ).GetFullPath();
-#endif
-}
+constexpr auto ThemeCacheFileName = L"ThemeAsCeeCode.h";
 
-FilePath ThemeComponent(const wxString &Str)
+FilePath ThemeComponent(const wxString &dir, const wxString &Str)
 {
-   return wxFileName( ThemeComponentsDir(), Str, wxT("png") ).GetFullPath();
+   return wxFileName( dir, Str, wxT("png") ).GetFullPath();
 }
 }
 
@@ -208,7 +201,7 @@ ThemeBase::RegisteredTheme::~RegisteredTheme()
 void ThemeBase::SwitchTheme( teThemeType Theme )
 {
    // Switch the active theme set
-   mpSet = &mSets[Theme];
+   mpSet = &mSets[Theme.empty() ? GUITheme().Read() : Theme];
    auto &resources = *mpSet;
    EnsureInitialised();
 
@@ -548,12 +541,8 @@ int SourceOutputStream::OpenFile(const FilePath & Filename)
    bOk = File.Open( Filename, wxFile::write );
    if( bOk )
    {
-// DA: Naming of output sourcery
-#ifdef EXPERIMENTAL_DA
-      File.Write( wxT("///   @file DarkThemeAsCeeCode.h\r\n") );
-#else
-      File.Write( wxT("///   @file ThemeAsCeeCode.h\r\n") );
-#endif
+      File.Write( wxString::Format(
+         wxT("///   @file %s\r\n"), wxFileName(Filename).GetFullName()));
       File.Write( wxT("///   @brief This file was Auto-Generated.\r\n") );
       File.Write( wxT("///\r\n") );
       File.Write( wxT("///   It is included by Theme.cpp.\r\n") );
@@ -595,10 +584,26 @@ const int ImageCacheWidth = 440;
 
 const int ImageCacheHeight = 836;
 
-void ThemeBase::CreateImageCache( bool bBinarySave )
+void ThemeBase::CreateImageCache()
 {
+   ValueRestorer cleanup{ mpSet };
+   for (auto &[key, data] : GetThemeCacheLookup())
+      if (!CreateOneImageCache(key.Internal(), true))
+         // Some file failed to save, message was given
+         return;
+   BasicUI::ShowMessageBox(
+/* i18n-hint: A theme is a consistent visual style across an application's
+graphical user interface, including choices of colors, and similarity of images
+such as those on button controls.  Audacity can load and save alternative
+themes. */
+      XO("Themes written to:\n  %s/*/%s.")
+         .Format( ThemeDir(), ImageCacheFileName ));
+}
+
+bool ThemeBase::CreateOneImageCache( teThemeType id, bool bBinarySave )
+{
+   SwitchTheme( id );
    auto &resources = *mpSet;
-   EnsureInitialised();
 
    wxImage ImageCache( ImageCacheWidth, ImageCacheHeight );
    ImageCache.SetRGB( wxRect( 0,0,ImageCacheWidth, ImageCacheHeight), 1,1,1);//Not-quite black.
@@ -691,7 +696,8 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    // IF bBinarySave, THEN saving to a normal PNG file.
    if( bBinarySave )
    {
-      const auto &FileName = ThemeCachePng();
+      auto dir = ThemeSubdir(id);
+      auto FileName = wxFileName{ dir, ImageCacheFileName }.GetFullPath();
 
       // Perhaps we should prompt the user if they are overwriting
       // an existing theme cache?
@@ -704,7 +710,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
 //             .Format( FileName );
             TranslatableString{ FileName };
          ShowMessageBox( message );
-         return;
+         return false;
       }
 #endif
 #if 0
@@ -720,52 +726,56 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
          ShowMessageBox(
             XO("Audacity could not write file:\n  %s.")
                .Format( FileName ));
-         return;
+         return false;
       }
-      ShowMessageBox(
-/* i18n-hint: A theme is a consistent visual style across an application's
- graphical user interface, including choices of colors, and similarity of images
- such as those on button controls.  Audacity can load and save alternative
- themes. */
-         XO("Theme written to:\n  %s.")
-            .Format( FileName ));
    }
    // ELSE saving to a C code textual version.
    else
    {
+      // Generated header file is not put in the sub-directory for
+      // the theme, but is instead distinguished by a prefix on the file name.
+      // So the header can simply be copied into the source code tree.
+      auto dir = ThemeDir();
       SourceOutputStream OutStream;
-      const auto &FileName = ThemeCacheAsCee( );
+      auto name = ThemeFilePrefix(id) + ThemeCacheFileName;
+      auto FileName = wxFileName{ dir, name }.GetFullPath();
       if( !OutStream.OpenFile( FileName ))
       {
          ShowMessageBox(
             XO("Audacity could not open file:\n  %s\nfor writing.")
                .Format( FileName ));
-         return;
+         return false;
       }
       if( !ImageCache.SaveFile(OutStream, wxBITMAP_TYPE_PNG ) )
       {
          ShowMessageBox(
             XO("Audacity could not write images to file:\n  %s.")
                .Format( FileName ));
-         return;
+         return false;
       }
-      ShowMessageBox(
-         /* i18n-hint "Cee" means the C computer programming language */
-         XO("Theme as Cee code written to:\n  %s.")
-            .Format( FileName ));
    }
+   return true;
+}
+
+void ThemeBase::WriteImageMap( )
+{
+   ValueRestorer cleanup{ mpSet };
+   for (auto &[key, data] : GetThemeCacheLookup())
+      WriteOneImageMap(key.Internal());
 }
 
 /// Writes an html file with an image map of the ImageCache
 /// Very handy for seeing what each part is for.
-void ThemeBase::WriteImageMap( )
+void ThemeBase::WriteOneImageMap( teThemeType id )
 {
+   SwitchTheme( id );
    auto &resources = *mpSet;
-   EnsureInitialised();
 
    FlowPacker context{ ImageCacheWidth };
-
-   wxFFile File( ThemeCacheHtm(), wxT("wb") );// I'll put in NEW lines explicitly.
+   
+   auto dir = ThemeSubdir(id);
+   auto FileName = wxFileName{ dir, ImageMapFileName }.GetFullPath();
+   wxFFile File( FileName, wxT("wb") );// I'll put in NEW lines explicitly.
    if( !File.IsOpened() )
       return;
 
@@ -811,6 +821,9 @@ void ThemeBase::WriteImageMap( )
 /// Writes a series of Macro definitions that can be used in the include file.
 void ThemeBase::WriteImageDefs( )
 {
+   // The generated image defs macro calls depend only on sizes of images,
+   // not contents, and so there is only one file good across all themes.
+
    auto &resources = *mpSet;
    EnsureInitialised();
 
@@ -883,7 +896,10 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    {
       mPreferredSystemAppearance = PreferredSystemAppearance::Light;
 
-      const auto &FileName = ThemeCachePng();
+      // Take the image cache file for the theme chosen in preferences
+      auto dir = ThemeSubdir(GUITheme().Read());
+      const auto &FileName =
+         wxFileName{ dir, ImageCacheFileName }.GetFullPath();
       if( !wxFileExists( FileName ))
       {
          if( bOkIfNotFound )
@@ -989,11 +1005,20 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    return true;
 }
 
-void ThemeBase::LoadComponents( bool bOkIfNotFound )
+void ThemeBase::LoadThemeComponents( bool bOkIfNotFound )
 {
+   ValueRestorer cleanup{ mpSet };
+   for (auto &[key, data] : GetThemeCacheLookup())
+      LoadOneThemeComponents( key.Internal(), bOkIfNotFound );
+}
+
+void ThemeBase::LoadOneThemeComponents( teThemeType id, bool bOkIfNotFound )
+{
+   SwitchTheme( id );
    auto &resources = *mpSet;
    // IF directory doesn't exist THEN return early.
-   if( !wxDirExists( ThemeComponentsDir() ))
+   const auto dir = ThemeComponentsDir(id);
+   if( !wxDirExists( dir ))
       return;
 
    using namespace BasicUI;
@@ -1002,10 +1027,9 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
    FilePath FileName;
    for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
-
       if( !(resources.mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = ThemeComponent( resources.mBitmapNames[i] );
+         FileName = ThemeComponent( dir, resources.mBitmapNames[i] );
          if( wxFileExists( FileName ))
          {
             if( !resources.mImages[i].LoadFile( FileName, wxBITMAP_TYPE_PNG ))
@@ -1038,16 +1062,29 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
       ShowMessageBox(
          XO(
 "None of the expected theme component files\n were found in:\n  %s.")
-            .Format( ThemeComponentsDir() ));
+            .Format( dir ));
    }
 }
 
-void ThemeBase::SaveComponents()
+void ThemeBase::SaveThemeComponents()
+{
+   ValueRestorer cleanup{ mpSet };
+   for (auto &[key, data] : GetThemeCacheLookup())
+      if (!SaveOneThemeComponents( key.Internal() ))
+         // Some file failed to save, message was given
+         return;
+   BasicUI::ShowMessageBox(
+      XO("Themes written to:\n  %s/*/Components/.").Format(ThemeDir()));
+}
+
+bool ThemeBase::SaveOneThemeComponents( teThemeType id )
 {
    using namespace BasicUI;
+   SwitchTheme( id );
    auto &resources = *mpSet;
    // IF directory doesn't exist THEN create it
-   if( !wxDirExists( ThemeComponentsDir() ))
+   const auto dir = ThemeComponentsDir(id);
+   if( !wxDirExists( dir ))
    {
       /// \bug 1 in wxWidgets documentation; wxMkDir returns false if
       /// directory didn't exist, even if it successfully creates it.
@@ -1055,16 +1092,16 @@ void ThemeBase::SaveComponents()
       /// \bug 2 in wxWidgets documentation; wxMkDir has only one argument
       /// under MSW
 #ifdef __WXMSW__
-      wxMkDir( ThemeComponentsDir().fn_str() );
+      wxMkDir( dir.fn_str() );
 #else
-      wxMkDir( ThemeComponentsDir().fn_str(), 0700 );
+      wxMkDir( dir.fn_str(), 0700 );
 #endif
-      if( !wxDirExists( ThemeComponentsDir() ))
+      if( !wxDirExists( dir ))
       {
          ShowMessageBox(
             XO("Could not create directory:\n  %s")
-               .Format( ThemeComponentsDir() ) );
-         return;
+               .Format( dir ) );
+         return false;
       }
    }
 
@@ -1074,7 +1111,7 @@ void ThemeBase::SaveComponents()
    {
       if( !(resources.mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = ThemeComponent( resources.mBitmapNames[i] );
+         FileName = ThemeComponent( dir, resources.mBitmapNames[i] );
          if( wxFileExists( FileName ))
          {
             ++n;
@@ -1091,38 +1128,44 @@ void ThemeBase::SaveComponents()
          ShowMessageBox(
             XO(
 "Some required files in:\n  %s\nwere already present. Overwrite?")
-               .Format( ThemeComponentsDir() ),
+               .Format( dir ),
             MessageBoxOptions{}
                .ButtonStyle(Button::YesNo)
                .DefaultIsNo());
       if (result == MessageBoxResult::No)
-         return;
+         return false;
    }
 
    for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
       if( !(resources.mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = ThemeComponent( resources.mBitmapNames[i] );
+         FileName = ThemeComponent( dir, resources.mBitmapNames[i] );
          if( !resources.mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
          {
             ShowMessageBox(
                XO("Audacity could not save file:\n  %s")
                   .Format( FileName ));
-            return;
+            return false;
          }
       }
    }
-   ShowMessageBox(
-      XO("Theme written to:\n  %s.")
-         .Format( ThemeComponentsDir() ) );
+   return true;
 }
-
 
 void ThemeBase::SaveThemeAsCode()
 {
-   // false indicates not using standard binary method.
-   CreateImageCache( false );
+   ValueRestorer cleanup{ mpSet };
+   for (auto &[key, data] : GetThemeCacheLookup()) {
+      // false indicates not using standard binary method.
+      if (!CreateOneImageCache(key.Internal(), false))
+         // Some file failed to save, message was given
+         return;
+   }
+   BasicUI::ShowMessageBox(
+      /* i18n-hint "Cee" means the C computer programming language */
+      XO("Themes as Cee code written to:\n  %s/*%s.")
+         .Format( ThemeDir(), ThemeCacheFileName ));
 }
 
 wxImage ThemeBase::MakeImageWithAlpha( wxBitmap & Bmp )
