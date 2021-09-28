@@ -81,7 +81,7 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(std::weak_ptr<WaveClipTrimHandle>& h
     auto& zoomInfo = ViewInfo::Get(*pProject);
     //Test left and right boundaries of each clip
     //and determine the maximum offsets allowed for trimming,
-    //which are constrainted either by other clips, own length,
+    //which are constrained either by other clips, own length,
     //or another own edge
     for (const auto& clip : waveTrack->GetClips())
     {
