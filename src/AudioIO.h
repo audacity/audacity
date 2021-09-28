@@ -255,7 +255,7 @@ public:
    ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
    WaveTrackArray      mPlaybackTracks;
 
-   ArrayOf<std::unique_ptr<Mixer>> mPlaybackMixers;
+   std::vector<std::unique_ptr<Mixer>> mPlaybackMixers;
    static int          mNextStreamToken;
    double              mFactor;
    unsigned long       mMaxFramesOutput; // The actual number of frames output.
@@ -310,16 +310,6 @@ protected:
    // the state used by the third, Audio thread.
    wxMutex mSuspendAudioThread;
 
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-public:
-   struct ScrubState;
-   std::unique_ptr<ScrubState> mScrubState;
-
-   bool mSilentScrub;
-   double mScrubSpeed;
-   sampleCount mScrubDuration;
-#endif
-
 protected:
    // A flag tested and set in one thread, cleared in another.  Perhaps
    // this guarantee of atomicity is more cautious than necessary.
@@ -358,23 +348,6 @@ private:
 };
 
 struct PaStreamInfo;
-
-//! Describes an amount of contiguous (but maybe time-warped) data to be extracted from tracks to play
-struct PlaybackSlice {
-   const size_t frames; //!< Total number frames to be buffered
-   const size_t toProduce; //!< Not more than `frames`; the difference will be trailing silence
-   const bool progress; //!< To be removed
-
-   //! Constructor enforces some invariants
-   /*! @invariant `result.toProduce <= result.frames && result.frames <= available`
-    */
-   PlaybackSlice(
-      size_t available, size_t frames_, size_t toProduce_, bool progress_)
-      : frames{ std::min(available, frames_) }
-      , toProduce{ std::min(toProduce_, frames) }
-      , progress{ progress_ }
-   {}
-};
 
 class AUDACITY_DLL_API AudioIO final
    : public AudioIoCallback
@@ -422,23 +395,6 @@ public:
    //! Enqueue action for main thread idle time, not before the end of any recording in progress
    /*! This may be called from non-main threads */
    void CallAfterRecording(PostRecordingAction action);
-
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   bool IsScrubbing() const { return IsBusy() && mScrubState != 0; }
-
-   /** \brief Notify scrubbing engine of desired position or speed.
-   * If options.adjustStart is true, then when mouse movement exceeds maximum
-   * scrub speed, adjust the beginning of the scrub interval rather than the
-   * end, so that the scrub skips or "stutters" to stay near the cursor.
-   */
-   void UpdateScrub(double endTimeOrSpeed, const ScrubbingOptions &options);
-
-   void StopScrub();
-
-   /** \brief return the ending time of the last scrub interval.
-   */
-   double GetLastScrubTime() const;
-#endif
 
 public:
    wxString LastPaErrorString();
@@ -569,16 +525,6 @@ private:
 
    //! First part of TrackBufferExchange
    void FillPlayBuffers();
-   //! Called one or more times by FillPlayBuffers
-   PlaybackSlice GetPlaybackSlice(
-      size_t available //!< how many more samples may be buffered
-   );
-   //! FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
-   bool RepositionPlayback(
-      size_t frames, //!< how many samples were just now buffered for play
-      size_t available, //!< how many more samples may be buffered
-      bool progress
-   );
 
    //! Second part of TrackBufferExchange
    void DrainRecordBuffers();
@@ -605,8 +551,7 @@ private:
      */
    bool AllocateBuffers(
       const AudioIOStartStreamOptions &options,
-      const TransportTracks &tracks, double t0, double t1, double sampleRate,
-      bool scrubbing );
+      const TransportTracks &tracks, double t0, double t1, double sampleRate );
 
    /** \brief Clean up after StartStream if it fails.
      *
@@ -617,7 +562,5 @@ private:
    PostRecordingAction mPostRecordingAction;
    bool mDelayingActions{ false };
 };
-
-static constexpr unsigned ScrubPollInterval_ms = 50;
 
 #endif
