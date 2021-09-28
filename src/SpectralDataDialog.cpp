@@ -18,6 +18,7 @@
 #include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/dialog.h>
 #include <wx/event.h>
 #include <wx/frame.h>
@@ -88,6 +89,7 @@ class SpectralDataDialog final : public wxDialogWrapper,
          explicit SpectralDataDialog(AudacityProject &parent);
 
          void UpdateDisplay(wxEvent &e);
+         void UpdateControls( bool active );
 
          bool Show( bool show = true ) override;
 
@@ -112,6 +114,8 @@ class SpectralDataDialog final : public wxDialogWrapper,
          bool              mAudioIOBusy { false };
 
       public:
+         void DoToolChanged();
+
          DECLARE_EVENT_TABLE()
 };
 
@@ -166,6 +170,8 @@ SpectralDataDialog::SpectralDataDialog(AudacityProject &parent)
    parent.Bind(EVT_UNDO_OR_REDO, &SpectralDataDialog::UpdateDisplay, this);
    parent.Bind(EVT_UNDO_RESET, &SpectralDataDialog::UpdateDisplay, this);
    parent.Bind(EVT_UNDO_PURGE, &SpectralDataDialog::UpdateDisplay, this);
+
+   DoToolChanged();
 }
 
 static const AttachedWindows::RegisteredFactory key{
@@ -194,7 +200,8 @@ void SpectralDataDialog::Populate(ShuttleGui & S)
       S.StartStatic(XO("Options"), 1);
       {
          S.Id(ID_CHECKBOX_OVERTONES)
-               .AddCheckBox(XXO("Enable overtones selection"), false),
+               .AddCheckBox(XXO("Enable overtones selection"), false);
+
          S.Id(ID_CHECKBOX_SMART)
                .AddCheckBox(XXO("Enable smart selection"), false);
       }
@@ -234,10 +241,23 @@ void SpectralDataDialog::UpdateDisplay(wxEvent& e)
       DoUpdate();
 }
 
+void SpectralDataDialog::UpdateControls( bool active )
+{
+   if (mBrushButton)
+      mBrushButton->SetValue(active);
+}
+
+static bool IsBrushToolActive(AudacityProject &project)
+{
+   return ProjectSettings::Get(project).GetTool() == ToolCodes::brushTool;
+}
+
 bool SpectralDataDialog::Show( bool show )
 {
    if ( show && !IsShown())
       DoUpdate();
+   if ( IsShown() && !show && IsBrushToolActive(mProject) )
+      ProjectSettings::Get(mProject).SetTool(ToolCodes::selectTool);
    auto result = wxDialogWrapper::Show( show );
    CommandManager::Get( mProject ).UpdateCheckmarks( mProject );
    return result;
@@ -266,6 +286,7 @@ void SpectralDataDialog::UpdatePrefs()
    SetTitle(Title);
    ShuttleGui S(this, eIsCreating);
    Populate(S);
+   DoToolChanged();
 
    if (shown) {
       Show(true);
@@ -322,12 +343,10 @@ SpectralDataDialogWorker::SpectralDataDialogWorker(AudacityProject &project)
 void SpectralDataDialogWorker::OnToolChanged(wxCommandEvent &evt)
 {
    evt.Skip();
-   auto &projectSettings = ProjectSettings::Get( mProject );
-   if (evt.GetInt() == ProjectSettings::ChangedTool)
-   {
+   if (evt.GetInt() == ProjectSettings::ChangedTool) {
       // Find not Get to avoid creating the dialog if not yet done
       if (auto pDialog = SpectralDataDialog::Find(&mProject) )
-         pDialog->Show(projectSettings.GetTool() == ToolCodes::brushTool);
+         pDialog->DoToolChanged();
    }
 }
 
@@ -367,6 +386,11 @@ void SpectralDataDialogWorker::OnIdle(wxIdleEvent &evt)
          pDialog->Hide();
    }
    mPrevNViews = nViews;
+}
+
+void SpectralDataDialog::DoToolChanged()
+{
+   UpdateControls( IsBrushToolActive(mProject) );
 }
 
 void SpectralDataDialog::OnBrushSizeSlider(wxCommandEvent &event) {

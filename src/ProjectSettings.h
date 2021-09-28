@@ -33,22 +33,20 @@ enum
 
 namespace ToolCodes {
 enum {
+   // The buttons that are in the Tools toolbar must be in correspondence
+   // with the first few
    selectTool,
    envelopeTool,
    drawTool,
    zoomTool,
    multiTool,
+
 #ifdef EXPERIMENTAL_BRUSH_TOOL
    brushTool,
 #endif
+
    numTools,
-   
    firstTool = selectTool,
-#ifdef EXPERIMENTAL_BRUSH_TOOL
-   lastTool = brushTool,
-#else
-   lastTool = multiTool,
-#endif
 };
 }
 
