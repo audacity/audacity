@@ -35,6 +35,9 @@
 #include "AudioIO.h"
 #include "ClientData.h"
 #include "Clipboard.h"
+#include "commands/CommandContext.h"
+#include "commands/CommandManager.h"
+#include "Menus.h"
 #include "UndoManager.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -73,6 +76,9 @@ class SpectralDataDialog final : public wxDialogWrapper,
 {
 
       public:
+         static SpectralDataDialog &Get(AudacityProject &project);
+         static SpectralDataDialog *Find(AudacityProject *pProject);
+
          explicit SpectralDataDialog(AudacityProject &parent);
 
          void UpdateDisplay(wxEvent &e);
@@ -211,7 +217,9 @@ bool SpectralDataDialog::Show( bool show )
 {
    if ( show && !IsShown())
       DoUpdate();
-   return wxDialogWrapper::Show( show );
+   auto result = wxDialogWrapper::Show( show );
+   CommandManager::Get( mProject ).UpdateCheckmarks( mProject );
+   return result;
 }
 
 void SpectralDataDialog::DoUpdate()
@@ -255,6 +263,22 @@ AttachedWindows::RegisteredFactory sSpectralDataDialogKey{
       }
 };
 
+SpectralDataDialog &SpectralDataDialog::Get( AudacityProject &project )
+{
+   // Ensure existence of the dialog
+   return static_cast<SpectralDataDialog&>(
+      GetAttachedWindows(project).Get( sSpectralDataDialogKey ) );
+}
+
+SpectralDataDialog *SpectralDataDialog::Find( AudacityProject *pProject )
+{
+   // Return a pointer to the dialog only if it exists
+   return pProject
+      ? static_cast<SpectralDataDialog*>(
+         GetAttachedWindows(*pProject).Find( sSpectralDataDialogKey ) )
+      : nullptr;
+}
+
 // Current workflow for spectral editing dialog:
 // 1. ProjectSettings change event listened by Worker::OnToolChanged()
 // 2. In Worker::OnToolChanged(), get Dialog from AttachedWindows and invoke Show()
@@ -271,9 +295,9 @@ void SpectralDataDialogWorker::OnToolChanged(wxCommandEvent &evt)
    auto &projectSettings = ProjectSettings::Get( mProject );
    if (evt.GetInt() == ProjectSettings::ChangedTool)
    {
-      auto &spectralDataDialog =
-         GetAttachedWindows(mProject).Get( sSpectralDataDialogKey );
-      spectralDataDialog.Show(projectSettings.GetTool() == ToolCodes::brushTool);
+      // Find not Get to avoid creating the dialog if not yet done
+      if (auto pDialog = SpectralDataDialog::Find(&mProject) )
+         pDialog->Show(projectSettings.GetTool() == ToolCodes::brushTool);
    }
 }
 
@@ -294,6 +318,42 @@ void SpectralDataDialog::OnCheckOvertones(wxCommandEvent &event){
    wxASSERT(isSelected == 0 || isSelected == 1);
    auto &projectSettings = ProjectSettings::Get( mProject );
    projectSettings.SetOvertones(isSelected);
+}
+
+namespace {
+struct Handler : CommandHandlerObject {
+   void OnSpectralEditingPanel(const CommandContext &context)
+   {
+      auto &project = context.project;
+      auto &dialog = SpectralDataDialog::Get(project);
+      dialog.Show( !dialog.IsShown() );
+   }
+};
+
+CommandHandlerObject &findCommandHandler(AudacityProject &) {
+   // Handler is not stateful.  Doesn't need a factory registered with
+   // AudacityProject.
+   static Handler instance;
+   return instance;
+}
+
+using namespace MenuTable;
+MenuTable::AttachedItem sAttachment{
+   wxT("View/Other/Toolbars/Toolbars/Other"),
+   ( FinderScope{ findCommandHandler },
+      Command( wxT("ShowSpectralSelectionPanel"),
+         XXO("Spectra&l Selection Panel"),
+         &Handler::OnSpectralEditingPanel,
+         AlwaysEnabledFlag,
+         CommandManager::Options{}
+            .CheckTest( [](AudacityProject &project) {
+               // Find not Get to avoid creating the dialog if not yet done
+               auto pDialog = SpectralDataDialog::Find(&project);
+               return pDialog && pDialog->IsShown();
+            } ) )
+   )
+};
+
 }
 
 #endif
