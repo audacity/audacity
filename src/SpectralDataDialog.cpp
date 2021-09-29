@@ -29,6 +29,7 @@
 #include <wx/listctrl.h>
 #include <wx/settings.h>
 #include <wx/spinctrl.h>
+#include <wx/statline.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/tglbtn.h>
@@ -61,9 +62,15 @@
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/wxPanelWrapper.h" // to inherit
 
+// If defined, make a checkbox for smart selection of the fundamental
+// independently of overtones
+#undef SMART_CHECKBOX
+
 enum {
    ID_BRUSH_BUTTON = 10000,
+#ifdef SMART_CHECKBOX
    ID_CHECKBOX_SMART,
+#endif
    ID_CHECKBOX_OVERTONES,
    ID_SLIDER_BRUSH_SIZE
 };
@@ -135,7 +142,9 @@ private:
 
 BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
    EVT_TOGGLEBUTTON(ID_BRUSH_BUTTON, SpectralDataDialog::OnBrushButton)
+ #ifdef SMART_CHECKBOX
    EVT_CHECKBOX(ID_CHECKBOX_SMART, SpectralDataDialog::OnCheckSmartSelection)
+#endif
    EVT_CHECKBOX(ID_CHECKBOX_OVERTONES, SpectralDataDialog::OnCheckOvertones)
    EVT_CLOSE(SpectralDataDialog::OnCloseWindow)
    EVT_SLIDER(ID_SLIDER_BRUSH_SIZE, SpectralDataDialog::OnBrushSizeSlider)
@@ -196,27 +205,32 @@ void SpectralDataDialog::Populate(ShuttleGui & S)
    mBrushButton = MakeButton(this);
 
    S.StartVerticalLay(true);
+   S.SetBorder(10);
    {
+      S.AddVariableText(XO("Spectral Brush"));
       S.AddWindow(mBrushButton, wxALIGN_LEFT);
 
-      S.StartStatic(XO("Options"), 1);
-      {
-         S.Id(ID_CHECKBOX_OVERTONES)
-               .AddCheckBox(XXO("Enable overtones selection"), false);
+      S.AddVariableText(XO("Brush radius"));
+      S.Id(ID_SLIDER_BRUSH_SIZE)
+            .Style(wxSL_HORIZONTAL)
+            .Name(XO("Custom brush size"))
+            .AddSlider( {}, 5, 10, 1);
 
-         S.Id(ID_CHECKBOX_SMART)
-               .AddCheckBox(XXO("Enable smart selection"), false);
-      }
-      S.EndStatic();
+      S.AddWindow(safenew wxStaticLine{ S.GetParent() });
+      
+      S.Id(ID_CHECKBOX_OVERTONES)
+         .AddCheckBox(
+            XXO("Auto-select overtones (beta)"),
+            false);
 
-      S.StartStatic(XO("Brush radius"), 1);
-      {
-         S.Id(ID_SLIDER_BRUSH_SIZE)
-               .Style(wxSL_HORIZONTAL)
-               .Name(XO("Custom brush size"))
-               .AddSlider( {}, 5, 10, 1);
-      }
-      S.EndStatic();
+#ifdef SMART_CHECKBOX
+      S.Id(ID_CHECKBOX_SMART)
+            .AddCheckBox(XXO("Enable smart selection"), false);
+#endif
+
+      S.AddVariableText(
+         XO("Select the fundamental frequency\n"
+            "and release the mouse"));
    }
    S.EndVerticalLay();
    // ----------------------- End of main section --------------
@@ -435,6 +449,10 @@ void SpectralDataDialog::OnCheckOvertones(wxCommandEvent &event){
    wxASSERT(isSelected == 0 || isSelected == 1);
    auto &projectSettings = ProjectSettings::Get( mProject );
    projectSettings.SetOvertones(isSelected);
+#ifndef SMART_CHECKBOX
+   // One checkbox controls both things
+   OnCheckSmartSelection(event);
+#endif
 }
 
 namespace {
