@@ -126,11 +126,11 @@ LVAL snd_samples(sound_type s, int64_t len)
     if (len > INT_MAX / sizeof(LVAL)) {
         len = INT_MAX / sizeof(LVAL);
     }
-    v = newvector(len);
+    v = newvector((int) len);
 
     while (len > 0) {
         sample_block_type sampblock = sound_get_next(s, &blocklen);
-        long togo = MIN(blocklen, len);
+        long togo = MIN(blocklen, (int) len);
         long i;
         sample_block_values_type sbufp = sampblock->samples;
         for (i = 0; i < togo; i++) {

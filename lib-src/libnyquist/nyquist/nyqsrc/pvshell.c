@@ -76,10 +76,12 @@ long pvshell_test_g(pvshell_type susp)
 }
 
 
-/* pvshell_fetch -- computes h(f, g, x, y) where f and g are 
- *  sounds, x and y are doubles, and h implemented via a function 
+/* pvshell_fetch -- computes h(f, g) where f and g are 
+ *  sounds, and h implemented via a function 
  *  pointer. This could certainly be generalized further, but 
- *  maybe we should take this one step at a time.
+ *  maybe we should take this one step at a time. This description
+ *  is incomplete -- there's state attached to the suspension and 
+ *  h is computed incrementally like all Nyquist primitives.
  */
 void pvshell_fetch(snd_susp_type a_susp, snd_list_type snd_list)
 {
