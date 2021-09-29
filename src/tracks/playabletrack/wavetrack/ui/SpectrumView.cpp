@@ -11,6 +11,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 #include "SpectrumView.h"
 
+#include "SpectralDataManager.h" // Cycle :-(
 #include "SpectrumVRulerControls.h"
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"
@@ -921,3 +922,37 @@ PopupMenuTable::AttachedItem sAttachment{
 };
 }
 
+static bool ShouldCaptureEvent(wxKeyEvent& event, SpectralData *pData)
+{
+   const auto keyCode = event.GetKeyCode();
+   return
+      (keyCode == WXK_BACK || keyCode == WXK_DELETE ||
+       keyCode == WXK_NUMPAD_DELETE)
+      && pData && !pData->dataHistory.empty();
+}
+
+unsigned SpectrumView::CaptureKey(
+   wxKeyEvent& event, ViewInfo&, wxWindow*, AudacityProject*)
+{
+   bool capture = ShouldCaptureEvent(event, mpSpectralData.get());
+   event.Skip(!capture);
+   return RefreshCode::RefreshNone;
+}
+
+unsigned SpectrumView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow*, AudacityProject* project)
+{
+   bool capture = ShouldCaptureEvent(event, mpSpectralData.get());
+   event.Skip(!capture);
+   if (capture && SpectralDataManager::ProcessTracks(*project))
+      // Not RefreshCell, because there might be effects in multiple tracks
+      return RefreshCode::RefreshAll;
+   return RefreshCode::RefreshNone;
+}
+
+unsigned SpectrumView::Char(
+   wxKeyEvent &event, ViewInfo&, wxWindow*, AudacityProject* )
+{
+   bool capture = ShouldCaptureEvent(event, mpSpectralData.get());
+   event.Skip(!capture);
+   return RefreshCode::RefreshNone;
+}

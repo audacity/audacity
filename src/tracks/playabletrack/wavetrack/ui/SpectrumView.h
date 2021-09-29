@@ -149,6 +149,17 @@ private:
       const AudacityProject *pProject, int currentTool, bool bMultiTool )
       override;
 
+   unsigned CaptureKey
+   (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
+       AudacityProject* project) override;
+
+   unsigned KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
+       AudacityProject* project) override;
+
+   unsigned Char
+   (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
+       AudacityProject* project) override;
+
 protected:
    void DoSetMinimized( bool minimized ) override;
 };

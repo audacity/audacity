@@ -51,8 +51,7 @@
 #include "widgets/wxPanelWrapper.h" // to inherit
 
 enum {
-   ID_ON_APPLY = 10000,
-   ID_CHECKBOX_SMART,
+   ID_CHECKBOX_SMART = 10000,
    ID_CHECKBOX_OVERTONES,
    ID_SLIDER_BRUSH_SIZE
 };
@@ -113,7 +112,6 @@ private:
 };
 
 BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
-   EVT_BUTTON(ID_ON_APPLY, SpectralDataDialog::OnApply)
    EVT_CHECKBOX(ID_CHECKBOX_SMART, SpectralDataDialog::OnCheckSmartSelection)
    EVT_CHECKBOX(ID_CHECKBOX_OVERTONES, SpectralDataDialog::OnCheckOvertones)
    EVT_CLOSE(SpectralDataDialog::OnCloseWindow)
@@ -184,8 +182,6 @@ void SpectralDataDialog::Populate(ShuttleGui & S)
       }
       S.EndStatic();
    }
-   S.Id(ID_ON_APPLY)
-         .AddButton(XXO("Apply effect to selection."));
    S.EndVerticalLay();
    // ----------------------- End of main section --------------
 
@@ -244,21 +240,6 @@ void SpectralDataDialog::UpdatePrefs()
 
    if (shown) {
       Show(true);
-   }
-}
-
-void SpectralDataDialog::OnApply(wxCommandEvent &event) {
-   auto &tracks = TrackList::Get(*mProject);
-   auto &trackPanel = TrackPanel::Get(*mProject);
-
-   int applyCount = SpectralDataManager::ProcessTracks(tracks);
-   if (applyCount) {
-      trackPanel.Refresh(false);
-      AudacityMessageBox(XO("Effect applied to %d selection(s).").Format(applyCount));
-      ProjectHistory::Get(*mProject).PushState(
-            XO("Applied effect to selection"),
-            XO("Applied effect to selection"));
-      ProjectHistory::Get(*mProject).ModifyState(true);
    }
 }
 
