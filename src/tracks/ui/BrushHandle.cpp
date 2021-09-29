@@ -309,7 +309,7 @@ UIHandle::Result BrushHandle::Drag
    int h1 = posXToHopNum(dest_xcoord);
    int b1 = posYToFreqBin(dest_ycoord);
 
-   mbCtrlDown = event.ControlDown();
+   mbCtrlDown = event.ControlDown() || event.AltDown();
 
    // Use the hop and bin number to calculate the brush stroke, instead of the mouse coordinates
    // For mouse coordinate:
