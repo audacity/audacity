@@ -1,6 +1,0 @@
-#include "ToolBarImages/DockUp.xpm"
-#include "ToolBarImages/DockDown.xpm"
-#include "ToolBarImages/DockOver.xpm"
-#include "ToolBarImages/DockUpShort.xpm"
-#include "ToolBarImages/DockDownShort.xpm"
-#include "ToolBarImages/DockOverShort.xpm"

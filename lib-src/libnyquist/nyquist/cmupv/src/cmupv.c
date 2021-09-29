@@ -129,8 +129,8 @@ typedef enum {
 
 struct position  // each element in the structure array
 {
-    long ana_pos; // the sample number of the center of analysis frame
-    long syn_pos; // the sample number of the center of synthesis frame
+    int64_t ana_pos; // the sample number of the center of analysis frame
+    int64_t syn_pos; // the sample number of the center of synthesis frame
 };
 
 typedef struct {
@@ -153,7 +153,7 @@ typedef struct {
     int mode; // 0 - normal, 1 - phase fix, 2 - robovoice
     float *ana_win; // the window function used on input (analysis)
     float *syn_win; // the window function used on output (synthesis)
-    long input_eff_pos; // input effective position is the sample number
+    int64_t input_eff_pos; // input effective position is the sample number
         // of the input that corresponds to the current output
     float *input_buffer; // used to buffer input samples
     long input_buffer_len; // how many floats can input_buffer hold?
@@ -200,10 +200,10 @@ typedef struct {
         // pos_buffer_rear, the queue is empty. Never points to 
         // pos_buffer + queue_length. It wraps around to pos_buffer.
     long queue_length; // length of the circular queue of corresponding times
-    long input_total; // how many input samples did we get so far?
+    int64_t input_total; // how many input samples did we get so far?
         // initially 0, and incremented upon pv_put_input()
         // so the input_total count corresponds to the input_rear pointer.
-    long output_total; // how many output samples did we produce so far?
+    int64_t output_total; // how many output samples did we produce so far?
         // initially 0, and incremented by block_size after each call to
         // pv_get_output(). Corresponds to out_next.
 } PV;
@@ -218,7 +218,7 @@ typedef struct {
 //
 int round_log_power(int fftsize, int *size_ptr)
 {
-    long double log2_fft = log2l(fftsize);
+    double log2_fft = log2l(fftsize);
     int round_log2_fft = (int) log2_fft;
     if (round_log2_fft < log2_fft) {
         round_log2_fft += 1;
@@ -584,8 +584,8 @@ double pv_get_effective_pos(Phase_vocoder x)
         // we can drop old positions from queue now:
         pv->pos_buffer_head = pos_find_prev;
         // interpolate
-        long output_step = pos_find->syn_pos - pos_find_prev->syn_pos;
-        long input_step =  pos_find->ana_pos - pos_find_prev->ana_pos;
+        long output_step = (long) (pos_find->syn_pos - pos_find_prev->syn_pos);
+        long input_step =  (long) (pos_find->ana_pos - pos_find_prev->ana_pos);
         return pos_find_prev->ana_pos + input_step * 
             (double)(pv->output_total - pos_find_prev->syn_pos) / 
             (double)output_step;
@@ -1052,8 +1052,8 @@ float *pv_get_output2(Phase_vocoder x)
     // addded at frame_next, so we've already computed 
     // out_next - frame_next:
     while (blocksize > (pv->frame_next - out_next)) {
-        long out_cnt = (long) (pv->output_total + (pv->frame_next - out_next) + 
-                       fftsize / 2);
+        int64_t out_cnt = (pv->output_total + (pv->frame_next - out_next) + 
+                           fftsize / 2);
         // if there's no room in the output buffer, shift the samples.
         // This is done here to avoid extra work (sometimes pv_get_output2
         // can be called and the samples are already in the buffer so there's
@@ -1080,7 +1080,7 @@ float *pv_get_output2(Phase_vocoder x)
         /*DBG
         write_pv_frame(out_cnt - fftsize / 2, ana_frame, fftsize, "pvana");
         DBG*/
-	int i;
+        int i;
         for (i = 0; i < fftsize; i++) ana_frame[i] *= ana_win[i];
         compute_one_frame(pv, ana_hopsize);
         pv->first_time = FALSE;
@@ -1090,7 +1090,7 @@ float *pv_get_output2(Phase_vocoder x)
                (long) (out_next - output_buffer),
                (long) (pv->output_total - (out_next - output_buffer)));
     }
-    D printf("pv_get_output2 returning at offset %ld abs %ld\n", 
+    D printf("pv_get_output2 returning at offset %ld abs %I64d\n",
              (long) (pv->out_next - pv->output_buffer), pv->output_total);
     /*DBG out_next position is output_total, so if we subtract out_next - output_buffer,
        we get the absolute position of the output_buffer

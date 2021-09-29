@@ -183,9 +183,9 @@ public:
 #   if defined(__WXMSW__)
          { XO("Only avformat.dll"), { wxT("avformat-*.dll") } },
 #   elif defined(__WXMAC__)
-         { XO("Only avformat.dll"), { wxT("ffmpeg.*.64bit.dylib") } },
+         { XO("Only ffmpeg.*.dylib"), { wxT("ffmpeg.*.dylib") } },
 #   else
-         { XO("Only avformat.dll"), { wxT("libavformat.so.*") } },
+         { XO("Only libavformat.so"), { wxT("libavformat.so.*") } },
 #   endif
          FileNames::DynamicLibraries,
          FileNames::AllFiles

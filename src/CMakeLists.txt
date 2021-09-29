@@ -120,6 +120,7 @@ list( APPEND SOURCES
       Benchmark.h
       CellularPanel.cpp
       CellularPanel.h
+      ClassicThemeAsCeeCode.cpp
       ClassicThemeAsCeeCode.h
       Clipboard.cpp
       Clipboard.h
@@ -127,6 +128,7 @@ list( APPEND SOURCES
       CommonCommandFlags.h
       CrashReport.cpp
       CrashReport.h
+      DarkThemeAsCeeCode.cpp
       DarkThemeAsCeeCode.h
       DBConnection.cpp
       DBConnection.h
@@ -144,6 +146,7 @@ list( APPEND SOURCES
       FreqWindow.h
       HelpText.cpp
       HelpText.h
+      HiContrastThemeAsCeeCode.cpp
       HiContrastThemeAsCeeCode.h
       HistoryWindow.cpp
       HistoryWindow.h
@@ -170,6 +173,7 @@ list( APPEND SOURCES
       LangChoice.h
       Legacy.cpp
       Legacy.h
+      LightThemeAsCeeCode.cpp
       LightThemeAsCeeCode.h
       LogWindow.cpp
       LogWindow.h
@@ -235,6 +239,8 @@ list( APPEND SOURCES
       SampleBlock.h
       Screenshot.cpp
       Screenshot.h
+      ScrubState.cpp
+      ScrubState.h
       SelectUtilities.cpp
       SelectUtilities.h
       SelectFile.cpp
@@ -271,7 +277,6 @@ list( APPEND SOURCES
       Tags.h
       Theme.cpp
       Theme.h
-      ThemeAsCeeCode.h
       TimeDialog.cpp
       TimeDialog.h
       TimeTrack.cpp

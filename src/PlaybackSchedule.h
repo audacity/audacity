@@ -12,7 +12,9 @@
 #define __AUDACITY_PLAYBACK_SCHEDULE__
 
 #include "MemoryX.h"
+#include "Mix.h"
 #include <atomic>
+#include <chrono>
 #include <vector>
 
 struct AudioIOStartStreamOptions;
@@ -142,6 +144,113 @@ struct RecordingSchedule {
    double ToDiscard() const;
 };
 
+class Mixer;
+struct PlaybackSchedule;
+
+//! Describes an amount of contiguous (but maybe time-warped) data to be extracted from tracks to play
+struct PlaybackSlice {
+   const size_t frames; //!< Total number of frames to be buffered
+   const size_t toProduce; //!< Not more than `frames`; the difference will be trailing silence
+
+   //! Constructor enforces some invariants
+   /*! @invariant `result.toProduce <= result.frames && result.frames <= available`
+    */
+   PlaybackSlice(
+      size_t available, size_t frames_, size_t toProduce_)
+      : frames{ std::min(available, frames_) }
+      , toProduce{ std::min(toProduce_, frames) }
+   {}
+};
+
+//! Directs which parts of tracks to fetch for playback
+/*!
+ A non-default policy object may be created each time playback begins, and if so it is destroyed when
+ playback stops, not reused in the next playback.
+
+ Methods of the object are passed a PlaybackSchedule as context.
+ */
+class PlaybackPolicy {
+public:
+   //! @section Called by the main thread
+
+   virtual ~PlaybackPolicy() = 0;
+
+   //! Called before starting an audio stream
+   virtual void Initialize( PlaybackSchedule &schedule, double rate );
+
+   //! Called after stopping of an audio stream or an unsuccessful start
+   virtual void Finalize( PlaybackSchedule &schedule );
+
+   //! Options to use when constructing mixers for each playback track
+   virtual Mixer::WarpOptions MixerWarpOptions(PlaybackSchedule &schedule);
+
+   //! Times are in seconds
+   struct BufferTimes {
+      double batchSize; //!< Try to put at least this much into the ring buffer in each pass
+      double latency; //!< Try not to let ring buffer contents fall below this
+      double ringBufferDelay; //!< Length of ring buffer in seconds
+   };
+   //! Provide hints for construction of playback RingBuffer objects
+   virtual BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule);
+
+   //! Normalizes mTime, clamping it and handling gaps from cut preview.
+   /*!
+    * Clamps the time (unless scrubbing), and skips over the cut section.
+    * Returns a time in seconds.
+    */
+   virtual double NormalizeTrackTime( PlaybackSchedule &schedule );
+
+   //! @section Called by the PortAudio callback thread
+
+   //! Whether repositioning commands are allowed during playback
+   virtual bool AllowSeek( PlaybackSchedule &schedule );
+
+   //! Returns true if schedule.GetTrackTime() has reached the end of playback
+   virtual bool Done( PlaybackSchedule &schedule,
+      unsigned long outputFrames //!< how many playback frames were taken from RingBuffers
+   );
+
+   //! @section Called by the AudioIO::TrackBufferExchange thread
+
+   //! How long to wait between calls to AudioIO::TrackBufferExchange
+   virtual std::chrono::milliseconds
+      SleepInterval( PlaybackSchedule &schedule );
+
+   //! Choose length of one fetch of samples from tracks in a call to AudioIO::FillPlayBuffers
+   virtual PlaybackSlice GetPlaybackSlice( PlaybackSchedule &schedule,
+      size_t available //!< upper bound for the length of the fetch
+   );
+
+   //! Compute a new point in a track's timeline from an old point and a real duration
+   /*!
+    Needed because playback might be at non-unit speed.
+
+    Called one or more times between GetPlaybackSlice and RepositionPlayback, until the
+    total real duration of the advances equals the most recent playback slice (including any trailing silence).
+    */
+   virtual double AdvancedTrackTime( PlaybackSchedule &schedule,
+      double trackTime, double realDuration );
+
+   using Mixers = std::vector<std::unique_ptr<Mixer>>;
+
+   //! AudioIO::FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
+   /*!
+    @return if true, AudioIO::FillPlayBuffers stops producing samples even if space remains
+    */
+   virtual bool RepositionPlayback(
+      PlaybackSchedule &schedule, const Mixers &playbackMixers,
+      size_t frames, //!< how many samples were just now buffered for play
+      size_t available //!< how many more samples may be buffered
+   );
+
+   //! @section To be removed
+
+   virtual bool Looping( const PlaybackSchedule &schedule ) const;
+
+protected:
+   double mRate = 0;
+};
+
 struct AUDACITY_DLL_API PlaybackSchedule {
 
    /// Playback starts at offset of mT0, which is measured in seconds.
@@ -203,9 +312,8 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       //! Aligned to avoid false sharing
       NonInterfering<Cursor> mHead, mTail;
 
-      void Producer(
-         const PlaybackSchedule &schedule, double rate, double scrubSpeed,
-         size_t nSamples );
+      void Producer( PlaybackSchedule &schedule,
+         double rate, size_t nSamples );
       double Consumer( size_t nSamples, double rate );
 
       //! Empty the queue and reassign the last produced time
@@ -213,15 +321,9 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       void Prime(double time);
    } mTimeQueue;
 
-   volatile enum {
-      PLAY_STRAIGHT,
-      PLAY_LOOPED,
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-      PLAY_SCRUB,
-      PLAY_AT_SPEED, // a version of PLAY_SCRUB.
-      PLAY_KEYBOARD_SCRUB,
-#endif
-   }                   mPlayMode { PLAY_STRAIGHT };
+   PlaybackPolicy &GetPolicy();
+   const PlaybackPolicy &GetPolicy() const;
+
    double              mCutPreviewGapStart;
    double              mCutPreviewGapLen;
 
@@ -282,32 +384,13 @@ struct AUDACITY_DLL_API PlaybackSchedule {
     */
    double LimitTrackTime() const;
 
-   /** \brief Normalizes mTime, clamping it and handling gaps from cut preview.
-    *
-    * Clamps the time (unless scrubbing), and skips over the cut section.
-    * Returns a time in seconds.
-    */
-   double NormalizeTrackTime() const;
+   void ResetMode() {
+      mPolicyValid.store(false, std::memory_order_release);
+   }
 
-   void ResetMode() { mPlayMode = PLAY_STRAIGHT; }
-
-   bool PlayingStraight() const { return mPlayMode == PLAY_STRAIGHT; }
-   bool Looping() const         { return mPlayMode == PLAY_LOOPED; }
-   bool Scrubbing() const       { return mPlayMode == PLAY_SCRUB || mPlayMode == PLAY_KEYBOARD_SCRUB; }
-   bool PlayingAtSpeed() const  { return mPlayMode == PLAY_AT_SPEED; }
-   bool Interactive() const     { return Scrubbing() || PlayingAtSpeed(); }
-
-   // Returns true if a loop pass, or the sole pass of straight play,
-   // is completed at the current value of mTime
-   bool PassIsComplete() const;
 
    // Returns true if time equals t1 or is on opposite side of t1, to t0
    bool Overruns( double trackTime ) const;
-
-   // Compute the NEW track time for the given one and a real duration,
-   // taking into account whether the schedule is for looping
-   double AdvancedTrackTime(
-      double trackTime, double realElapsed, double speed) const;
 
    // Convert time between mT0 and argument to real duration, according to
    // time track if one is given; result is always nonnegative
@@ -325,6 +408,26 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    
    void RealTimeRestart();
 
+private:
+   std::unique_ptr<PlaybackPolicy> mpPlaybackPolicy;
+   std::atomic<bool> mPolicyValid{ false };
 };
 
+class LoopingPlaybackPolicy final : public PlaybackPolicy {
+public:
+   ~LoopingPlaybackPolicy() override;
+
+   bool Done( PlaybackSchedule &schedule, unsigned long ) override;
+   PlaybackSlice GetPlaybackSlice(
+      PlaybackSchedule &schedule, size_t available ) override;
+
+   double AdvancedTrackTime( PlaybackSchedule &schedule,
+      double trackTime, double realDuration ) override;
+
+   bool RepositionPlayback(
+      PlaybackSchedule &schedule, const Mixers &playbackMixers,
+      size_t frames, size_t available ) override;
+
+   bool Looping( const PlaybackSchedule & ) const override;
+};
 #endif

@@ -150,9 +150,6 @@ double AudioIoCallback::mCachedBestRateOut;
 bool AudioIoCallback::mCachedBestRatePlaying;
 bool AudioIoCallback::mCachedBestRateCapturing;
 
-
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-
 #ifdef __WXGTK__
    // Might #define this for a useful thing on Linux
    #undef REALTIME_ALSA_THREAD
@@ -163,276 +160,6 @@ bool AudioIoCallback::mCachedBestRateCapturing;
 
 #ifdef REALTIME_ALSA_THREAD
 #include "pa_linux_alsa.h"
-#endif
-
-
-struct AudioIoCallback::ScrubState : NonInterferingBase
-{
-   ScrubState(double t0,
-              double rate,
-              const ScrubbingOptions &options)
-      : mRate(rate)
-      , mStartTime( t0 )
-   {
-      const double t1 = options.bySpeed ? options.initSpeed : t0;
-      Update( t1, options );
-   }
-
-   void Update(double end, const ScrubbingOptions &options)
-   {
-      // Called by another thread
-      mMessage.Write({ end, options });
-   }
-
-   void Get(sampleCount &startSample, sampleCount &endSample,
-         sampleCount inDuration, sampleCount &duration)
-   {
-      // Called by the thread that calls AudioIO::TrackBufferExchange
-      startSample = endSample = duration = -1LL;
-      sampleCount s0Init;
-
-      Message message( mMessage.Read() );
-      if ( !mStarted ) {
-         s0Init = llrint( mRate *
-            std::max( message.options.minTime,
-               std::min( message.options.maxTime, mStartTime ) ) );
-
-         // Make some initial silence. This is not needed in the case of
-         // keyboard scrubbing or play-at-speed, because the initial speed
-         // is known when this function is called the first time.
-         if ( !(message.options.isKeyboardScrubbing ||
-            message.options.isPlayingAtSpeed) ) {
-            mData.mS0 = mData.mS1 = s0Init;
-            mData.mGoal = -1;
-            mData.mDuration = duration = inDuration;
-            mData.mSilence = 0;
-         }
-      }
-
-      if (mStarted || message.options.isKeyboardScrubbing ||
-         message.options.isPlayingAtSpeed) {
-         Data newData;
-         inDuration += mAccumulatedSeekDuration;
-
-         // If already started, use the previous end as NEW start.
-         const auto s0 = mStarted ? mData.mS1 : s0Init;
-         const sampleCount s1 ( message.options.bySpeed
-            ? s0.as_double() +
-               lrint(inDuration.as_double() * message.end) // end is a speed
-            : lrint(message.end * mRate)            // end is a time
-         );
-         auto success =
-            newData.Init(mData, s0, s1, inDuration, message.options, mRate);
-         if (success)
-            mAccumulatedSeekDuration = 0;
-         else {
-            mAccumulatedSeekDuration += inDuration;
-            return;
-         }
-         mData = newData;
-      };
-
-      mStarted = true;
-
-      Data &entry = mData;
-      if (  mStopped.load( std::memory_order_relaxed ) ) {
-         // We got the shut-down signal, or we discarded all the work.
-         // Output the -1 values.
-      }
-      else if (entry.mDuration > 0) {
-         // First use of the entry
-         startSample = entry.mS0;
-         endSample = entry.mS1;
-         duration = entry.mDuration;
-         entry.mDuration = 0;
-      }
-      else if (entry.mSilence > 0) {
-         // Second use of the entry
-         startSample = endSample = entry.mS1;
-         duration = entry.mSilence;
-         entry.mSilence = 0;
-      }
-   }
-
-   void Stop()
-   {
-      mStopped.store( true, std::memory_order_relaxed );
-   }
-
-#if 0
-   // Needed only for the DRAG_SCRUB experiment
-   // Should make mS1 atomic then?
-   double LastTrackTime() const
-   {
-      // Needed by the main thread sometimes
-      return mData.mS1.as_double() / mRate;
-   }
-#endif
-
-   ~ScrubState() {}
-
-private:
-   struct Data
-   {
-      Data()
-         : mS0(0)
-         , mS1(0)
-         , mGoal(0)
-         , mDuration(0)
-         , mSilence(0)
-      {}
-
-      bool Init(Data &rPrevious, sampleCount s0, sampleCount s1,
-         sampleCount duration,
-         const ScrubbingOptions &options, double rate)
-      {
-         auto previous = &rPrevious;
-         auto origDuration = duration;
-         mSilence = 0;
-
-         const bool &adjustStart = options.adjustStart;
-
-         wxASSERT(duration > 0);
-         double speed =
-            (std::abs((s1 - s0).as_long_long())) / duration.as_double();
-         bool adjustedSpeed = false;
-
-         auto minSpeed = std::min(options.minSpeed, options.maxSpeed);
-         wxASSERT(minSpeed == options.minSpeed);
-
-         // May change the requested speed and duration
-         if (!adjustStart && speed > options.maxSpeed)
-         {
-            // Reduce speed to the maximum selected in the user interface.
-            speed = options.maxSpeed;
-            mGoal = s1;
-            adjustedSpeed = true;
-         }
-         else if (!adjustStart &&
-            previous->mGoal >= 0 &&
-            previous->mGoal == s1)
-         {
-            // In case the mouse has not moved, and playback
-            // is catching up to the mouse at maximum speed,
-            // continue at no less than maximum.  (Without this
-            // the final catch-up can make a slow scrub interval
-            // that drops the pitch and sounds wrong.)
-            minSpeed = options.maxSpeed;
-            mGoal = s1;
-            adjustedSpeed = true;
-         }
-         else
-            mGoal = -1;
-
-         if (speed < minSpeed) {
-            if (s0 != s1 && adjustStart)
-               // Do not trim the duration.
-               ;
-            else
-               // Trim the duration.
-               duration =
-                  std::max(0L, lrint(speed * duration.as_double() / minSpeed));
-
-            speed = minSpeed;
-            adjustedSpeed = true;
-         }
-
-         if (speed < ScrubbingOptions::MinAllowedScrubSpeed()) {
-            // Mixers were set up to go only so slowly, not slower.
-            // This will put a request for some silence in the work queue.
-            adjustedSpeed = true;
-            speed = 0.0;
-         }
-
-         // May change s1 or s0 to match speed change or stay in bounds of the project
-
-         if (adjustedSpeed && !adjustStart)
-         {
-            // adjust s1
-            const sampleCount diff = lrint(speed * duration.as_double());
-            if (s0 < s1)
-               s1 = s0 + diff;
-            else
-               s1 = s0 - diff;
-         }
-
-         bool silent = false;
-
-         // Adjust s1 (again), and duration, if s1 is out of bounds,
-         // or abandon if a stutter is too short.
-         // (Assume s0 is in bounds, because it equals the last scrub's s1 which was checked.)
-         if (s1 != s0)
-         {
-            // When playback follows a fast mouse movement by "stuttering"
-            // at maximum playback, don't make stutters too short to be useful.
-            if (options.adjustStart &&
-                duration < llrint( options.minStutterTime * rate ) )
-               return false;
-
-            sampleCount minSample { llrint(options.minTime * rate) };
-            sampleCount maxSample { llrint(options.maxTime * rate) };
-            auto newDuration = duration;
-            const auto newS1 = std::max(minSample, std::min(maxSample, s1));
-            if(s1 != newS1)
-               newDuration = std::max( sampleCount{ 0 },
-                  sampleCount(
-                     duration.as_double() * (newS1 - s0).as_double() /
-                        (s1 - s0).as_double()
-                  )
-               );
-            if (newDuration == 0) {
-               // A silent scrub with s0 == s1
-               silent = true;
-               s1 = s0;
-            }
-            else if (s1 != newS1) {
-               // Shorten
-               duration = newDuration;
-               s1 = newS1;
-            }
-         }
-
-         if (adjustStart && !silent)
-         {
-            // Limit diff because this is seeking.
-            const sampleCount diff =
-               lrint(std::min(options.maxSpeed, speed) * duration.as_double());
-            if (s0 < s1)
-               s0 = s1 - diff;
-            else
-               s0 = s1 + diff;
-         }
-
-         mS0 = s0;
-         mS1 = s1;
-         mDuration = duration;
-         if (duration < origDuration)
-            mSilence = origDuration - duration;
-
-         return true;
-      }
-
-      sampleCount mS0;
-      sampleCount mS1;
-      sampleCount mGoal;
-      sampleCount mDuration;
-      sampleCount mSilence;
-   };
-
-   double mStartTime;
-   bool mStarted{ false };
-   std::atomic<bool> mStopped { false };
-   Data mData;
-   const double mRate;
-   struct Message {
-      Message() = default;
-      Message(const Message&) = default;
-      double end;
-      ScrubbingOptions options;
-   };
-   MessageBuffer<Message> mMessage;
-   sampleCount mAccumulatedSeekDuration{};
-};
 #endif
 
 int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
@@ -621,12 +348,6 @@ AudioIO::AudioIO()
 #endif
 
    mLastPlaybackTimeMillis = 0;
-
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   mScrubState = NULL;
-   mScrubDuration = 0;
-   mSilentScrub = false;
-#endif
 }
 
 AudioIO::~AudioIO()
@@ -1096,14 +817,13 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    });
 
    mPlaybackBuffers.reset();
-   mPlaybackMixers.reset();
+   mPlaybackMixers.clear();
    mCaptureBuffers.reset();
    mResample.reset();
    mPlaybackSchedule.mTimeQueue.mData.reset();
 
    mPlaybackSchedule.Init(
       t0, t1, options, mCaptureTracks.empty() ? nullptr : &mRecordingSchedule );
-   const bool scrubbing = mPlaybackSchedule.Interactive();
 
    unsigned int playbackChannels = 0;
    unsigned int captureChannels = 0;
@@ -1141,6 +861,11 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    successAudio = StartPortAudioStream(options, playbackChannels,
                                        captureChannels, captureFormat);
+
+   // Call this only after reassignment of mRate that might happen in the
+   // previous call.
+   mPlaybackSchedule.GetPolicy().Initialize( mPlaybackSchedule, mRate );
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    auto range = Extensions();
    successAudio = successAudio &&
@@ -1160,7 +885,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       return 0;
    }
 
-   if ( ! AllocateBuffers( options, tracks, t0, t1, options.rate, scrubbing ) )
+   if ( ! AllocateBuffers( options, tracks, t0, t1, options.rate ) )
       return 0;
 
    if (mNumPlaybackChannels > 0)
@@ -1213,22 +938,6 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       mPlaybackSchedule.mTimeQueue.mData[0] =
          mPlaybackSchedule.mTimeQueue.mLastTime;
    // else recording only without overdub
-
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   if (scrubbing)
-   {
-      const auto &scrubOptions = *options.pScrubbingOptions;
-      mScrubState =
-         std::make_unique<ScrubState>(
-            mPlaybackSchedule.mT0,
-            mRate,
-            scrubOptions);
-      mScrubDuration = 0;
-      mSilentScrub = false;
-   }
-   else
-      mScrubState.reset();
-#endif
 
    // We signal the audio thread to call TrackBufferExchange, to prime the RingBuffers
    // so that they will have data in them when the stream starts.  Having the
@@ -1363,13 +1072,15 @@ void AudioIO::CallAfterRecording(PostRecordingAction action)
 
 bool AudioIO::AllocateBuffers(
    const AudioIOStartStreamOptions &options,
-   const TransportTracks &tracks, double t0, double t1, double sampleRate,
-   bool scrubbing )
+   const TransportTracks &tracks, double t0, double t1, double sampleRate )
 {
    bool success = false;
    auto cleanup = finally([&]{
       if (!success) StartStreamCleanup( false );
    });
+
+   auto &policy = mPlaybackSchedule.GetPolicy();
+   auto times = policy.SuggestedBufferTimes(mPlaybackSchedule);
 
    //
    // The (audio) stream has been opened successfully (assuming we tried
@@ -1387,22 +1098,15 @@ bool AudioIO::AllocateBuffers(
    // real playback time to produce with each filling of the buffers
    // by the Audio thread (except at the end of playback):
    // usually, make fillings fewer and longer for less CPU usage.
-   // But for useful scrubbing, we can't run too far ahead without checking
-   // mouse input, so make fillings more and shorter.
    // What Audio thread produces for playback is then consumed by the PortAudio
    // thread, in many smaller pieces.
-   double playbackTime = 4.0;
-   if (scrubbing)
-      // Specify a very short minimum batch for non-seek scrubbing, to allow
-      // more frequent polling of the mouse
-      playbackTime =
-         lrint(options.pScrubbingOptions->delay * mRate) / mRate;
+   double playbackTime = lrint(times.batchSize * mRate) / mRate;
    
    wxASSERT( playbackTime >= 0 );
    mPlaybackSamplesToCopy = playbackTime * mRate;
 
    // Capacity of the playback buffer.
-   mPlaybackRingBufferSecs = 10.0;
+   mPlaybackRingBufferSecs = times.ringBufferDelay;
 
    mCaptureRingBufferSecs =
       4.5 + 0.5 * std::min(size_t(16), mCaptureTracks.size());
@@ -1426,26 +1130,13 @@ bool AudioIO::AllocateBuffers(
             // Always make at least one playback buffer
             mPlaybackBuffers.reinit(
                std::max<size_t>(1, mPlaybackTracks.size()));
-            mPlaybackMixers.reinit(mPlaybackTracks.size());
+            mPlaybackMixers.clear();
+            mPlaybackMixers.resize(mPlaybackTracks.size());
 
-            const Mixer::WarpOptions &warpOptions =
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-               scrubbing
-                  ? Mixer::WarpOptions
-                     (ScrubbingOptions::MinAllowedScrubSpeed(),
-                      ScrubbingOptions::MaxAllowedScrubSpeed())
-                  :
-#endif
-                    Mixer::WarpOptions(mPlaybackSchedule.mEnvelope);
+            const auto &warpOptions =
+               policy.MixerWarpOptions(mPlaybackSchedule);
 
-            mPlaybackQueueMinimum = mPlaybackSamplesToCopy;
-            if (scrubbing)
-               // Specify enough playback RingBuffer latency so we can refill
-               // once every seek stutter without falling behind the demand.
-               // (Scrub might switch in and out of seeking with left mouse
-               // presses in the ruler)
-               mPlaybackQueueMinimum = lrint(
-                  2 * options.pScrubbingOptions->minStutterTime * mRate );
+            mPlaybackQueueMinimum = lrint( mRate * times.latency );
             mPlaybackQueueMinimum =
                std::min( mPlaybackQueueMinimum, playbackBufferSize );
 
@@ -1566,7 +1257,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    }
 
    mPlaybackBuffers.reset();
-   mPlaybackMixers.reset();
+   mPlaybackMixers.clear();
    mCaptureBuffers.reset();
    mResample.reset();
    mPlaybackSchedule.mTimeQueue.mData.reset();
@@ -1579,9 +1270,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
       mStreamToken = 0;
    }
 
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   mScrubState.reset();
-#endif
+   mPlaybackSchedule.GetPolicy().Finalize( mPlaybackSchedule );
 }
 
 bool AudioIO::IsAvailable(AudacityProject *project) const
@@ -1743,7 +1432,7 @@ void AudioIO::StopStream()
       if (mPlaybackTracks.size() > 0)
       {
          mPlaybackBuffers.reset();
-         mPlaybackMixers.reset();
+         mPlaybackMixers.clear();
          mPlaybackSchedule.mTimeQueue.mData.reset();
       }
 
@@ -1869,9 +1558,7 @@ void AudioIO::StopStream()
    mPlaybackTracks.clear();
    mCaptureTracks.clear();
 
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   mScrubState.reset();
-#endif
+   mPlaybackSchedule.GetPolicy().Finalize( mPlaybackSchedule );
 
    if (pListener) {
       // Tell UI to hide sample rate
@@ -1898,33 +1585,6 @@ void AudioIO::SetPaused(bool state)
 
    mPaused = state;
 }
-
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-void AudioIO::UpdateScrub
-   (double endTimeOrSpeed, const ScrubbingOptions &options)
-{
-   if (mScrubState)
-      mScrubState->Update(endTimeOrSpeed, options);
-}
-
-void AudioIO::StopScrub()
-{
-   if (mScrubState)
-      mScrubState->Stop();
-}
-
-#if 0
-// Only for DRAG_SCRUB
-double AudioIO::GetLastScrubTime() const
-{
-   if (mScrubState)
-      return mScrubState->LastTrackTime();
-   else
-      return -1.0;
-}
-#endif
-
-#endif
 
 double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
 {
@@ -2011,7 +1671,7 @@ double AudioIO::GetStreamTime()
    if( !IsStreamActive() )
       return BAD_STREAM_TIME;
 
-   return mPlaybackSchedule.NormalizeTrackTime();
+   return mPlaybackSchedule.GetPolicy().NormalizeTrackTime(mPlaybackSchedule);
 }
 
 
@@ -2029,7 +1689,8 @@ AudioThread::ExitCode AudioThread::Entry()
    {
       using Clock = std::chrono::steady_clock;
       auto loopPassStart = Clock::now();
-      const auto interval = ScrubPollInterval_ms;
+      auto &schedule = gAudioIO->mPlaybackSchedule;
+      const auto interval = schedule.GetPolicy().SleepInterval(schedule);
 
       // Set LoopActive outside the tests to avoid race condition
       gAudioIO->mAudioThreadTrackBufferExchangeLoopActive = true;
@@ -2044,11 +1705,7 @@ AudioThread::ExitCode AudioThread::Entry()
       }
       gAudioIO->mAudioThreadTrackBufferExchangeLoopActive = false;
 
-      if ( gAudioIO->mPlaybackSchedule.Interactive() )
-         std::this_thread::sleep_until(
-            loopPassStart + std::chrono::milliseconds( interval ) );
-      else
-         Sleep(10);
+      std::this_thread::sleep_until( loopPassStart + interval );
    }
 
    return 0;
@@ -2112,6 +1769,8 @@ void AudioIO::FillPlayBuffers()
    if (nAvailable < mPlaybackSamplesToCopy)
       return;
 
+   auto &policy = mPlaybackSchedule.GetPolicy();
+
    // More than mPlaybackSamplesToCopy might be copied:
    // May produce a larger amount when initially priming the buffer, or
    // perhaps again later in play to avoid underfilling the queue and falling
@@ -2134,7 +1793,8 @@ void AudioIO::FillPlayBuffers()
    // user interface.
    bool done = false;
    do {
-      const auto [frames, toProduce, progress] = GetPlaybackSlice(available);
+      const auto [frames, toProduce] =
+         policy.GetPlaybackSlice(mPlaybackSchedule, available);
 
       // Update the time queue.  This must be done before writing to the
       // ring buffers of samples, for proper synchronization with the
@@ -2142,7 +1802,6 @@ void AudioIO::FillPlayBuffers()
       // queue after reading the sample queues.  The sample queues use
       // atomic variables, the time queue doesn't.
       mPlaybackSchedule.mTimeQueue.Producer( mPlaybackSchedule, mRate,
-         (mPlaybackSchedule.Interactive() ? mScrubSpeed : 1.0),
          frames);
 
       for (size_t i = 0; i < mPlaybackTracks.size(); i++)
@@ -2172,134 +1831,9 @@ void AudioIO::FillPlayBuffers()
       available -= frames;
       // wxASSERT(available >= 0); // don't assert on this thread
 
-      done = RepositionPlayback(frames, available, progress);
-   } while (!done);
-}
-
-PlaybackSlice AudioIO::GetPlaybackSlice(const size_t available)
-{
-   // How many samples to produce for each channel.
-   auto frames = available;
-   bool progress = true;
-   auto toProduce = frames;
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   if (mPlaybackSchedule.Interactive())
-      // scrubbing and play-at-speed are not limited by the real time
-      // and length accumulators
-      toProduce =
-      frames = limitSampleBufferSize(frames, mScrubDuration);
-   else
-#endif
-   {
-      double deltat = frames / mRate;
-      const auto realTimeRemaining = mPlaybackSchedule.RealTimeRemaining();
-      if (deltat > realTimeRemaining)
-      {
-         // Produce some extra silence so that the time queue consumer can
-         // satisfy its end condition
-         double extraRealTime = mPlaybackSchedule.PlayingStraight()
-            ? (TimeQueueGrainSize + 1) / mRate
-            : 0;
-
-         auto extra = std::min( extraRealTime, deltat - realTimeRemaining );
-         auto realTime = realTimeRemaining + extra;
-         frames = realTime * mRate;
-         toProduce = realTimeRemaining * mRate;
-
-         // Don't fall into an infinite loop, if loop-playing a selection
-         // that is so short, it has no samples: detect that case
-         progress =
-            !(mPlaybackSchedule.Looping() &&
-              mPlaybackSchedule.mWarpedTime == 0.0 && frames == 0);
-         mPlaybackSchedule.RealTimeAdvance( realTime );
-      }
-      else
-         mPlaybackSchedule.RealTimeAdvance( deltat );
-   }
-
-   if (!progress)
-      frames = available, toProduce = 0;
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   else if ( mPlaybackSchedule.Interactive() && mSilentScrub)
-      toProduce = 0;
-#endif
-
-   return { available, frames, toProduce, progress };
-}
-
-bool AudioIO::RepositionPlayback(size_t frames, size_t available, bool progress)
-{
-   bool done = false;
-   switch (mPlaybackSchedule.mPlayMode)
-   {
-   #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   case PlaybackSchedule::PLAY_SCRUB:
-   case PlaybackSchedule::PLAY_AT_SPEED:
-   case PlaybackSchedule::PLAY_KEYBOARD_SCRUB:
-   {
-      mScrubDuration -= frames;
-      wxASSERT(mScrubDuration >= 0);
-      done = (available == 0);
-      if (!done && mScrubDuration <= 0)
-      {
-         sampleCount startSample, endSample;
-         mScrubState->Get(
-            startSample, endSample, available, mScrubDuration);
-         if (mScrubDuration < 0)
-         {
-            // Can't play anything
-            // Stop even if we don't fill up available
-            mScrubDuration = 0;
-            done = true;
-         }
-         else
-         {
-            mSilentScrub = (endSample == startSample);
-            double startTime, endTime;
-            startTime = startSample.as_double() / mRate;
-            endTime = endSample.as_double() / mRate;
-            auto diff = (endSample - startSample).as_long_long();
-            if (mScrubDuration == 0)
-               mScrubSpeed = 0;
-            else
-               mScrubSpeed =
-                  double(diff) / mScrubDuration.as_double();
-            if (!mSilentScrub)
-            {
-               for (size_t i = 0; i < mPlaybackTracks.size(); i++) {
-                  if (mPlaybackSchedule.mPlayMode == PlaybackSchedule::PLAY_AT_SPEED)
-                     mPlaybackMixers[i]->SetSpeedForPlayAtSpeed(mScrubSpeed);
-                  else if (mPlaybackSchedule.mPlayMode == PlaybackSchedule::PLAY_KEYBOARD_SCRUB)
-                     mPlaybackMixers[i]->SetSpeedForKeyboardScrubbing(mScrubSpeed, startTime);
-                  else
-                     mPlaybackMixers[i]->SetTimesAndSpeed(
-                        startTime, endTime, fabs( mScrubSpeed ));
-               }
-            }
-            mPlaybackSchedule.mTimeQueue.mLastTime = startTime;
-         }
-      }
-   }
-      break;
-   #endif
-   case PlaybackSchedule::PLAY_LOOPED:
-   {
-      done = !progress || (available == 0);
-      // msmeyer: If playing looped, check if we are at the end of the buffer
-      // and if yes, restart from the beginning.
-      if (mPlaybackSchedule.RealTimeRemaining() <= 0)
-      {
-         for (size_t i = 0; i < mPlaybackTracks.size(); i++)
-            mPlaybackMixers[i]->Restart();
-         mPlaybackSchedule.RealTimeRestart();
-      }
-   }
-      break;
-   default:
-      done = true;
-      break;
-   }
-   return done;
+      done = policy.RepositionPlayback( mPlaybackSchedule, mPlaybackMixers,
+         frames, available );
+   } while (available && !done);
 }
 
 void AudioIO::DrainRecordBuffers()
@@ -2826,11 +2360,8 @@ bool AudioIoCallback::FillOutputBuffers(
 
    float *outputFloats = outputBuffer;
 
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   // While scrubbing, ignore seek requests
-   if (mSeek && mPlaybackSchedule.Interactive())
+   if (mSeek && !mPlaybackSchedule.GetPolicy().AllowSeek(mPlaybackSchedule))
       mSeek = 0.0;
-#endif
 
    if (mSeek){
       mCallbackReturn = CallbackDoSeek();
@@ -3038,7 +2569,7 @@ void AudioIoCallback::DrainInputBuffers(
 
    // If there are no playback tracks, and we are recording, then the
    // earlier checks for being past the end won't happen, so do it here.
-   if (mPlaybackSchedule.PassIsComplete()) {
+   if (mPlaybackSchedule.GetPolicy().Done(mPlaybackSchedule, 0)) {
       mCallbackReturn = paComplete;
    }
 
@@ -3528,14 +3059,9 @@ void AudioIoCallback::CallbackCheckCompletion(
    if (mPaused)
       return;
 
-   bool done = mPlaybackSchedule.PassIsComplete();
+   bool done =
+      mPlaybackSchedule.GetPolicy().Done(mPlaybackSchedule, len);
    if (!done)
-      return;
-
-   done =  mPlaybackSchedule.PlayingAtSpeed()
-      // some leftover length allowed in this case
-      || (mPlaybackSchedule.PlayingStraight() && len == 0);
-   if(!done) 
       return;
 
    for( auto &ext : Extensions() )

@@ -787,7 +787,7 @@ void MIDIPlay::OutputEvent(double pauseTime)
    // The special event gAllNotesOff means "end of playback, send
    // all notes off on all channels"
    if (mNextEvent == &gAllNotesOff) {
-      bool looping = mPlaybackSchedule.Looping();
+      bool looping = mPlaybackSchedule.GetPolicy().Looping(mPlaybackSchedule);
       AllNotesOff(looping);
       if (looping) {
          // jump back to beginning of loop

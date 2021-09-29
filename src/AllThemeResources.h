@@ -48,7 +48,6 @@ from there.  Audacity will look for a file called "Pause.png".
 
 
 #include "MacroMagic.h"
-#define XPMS_RETIRED
 
    SET_THEME_FLAGS(  resFlagPaired  );
    DEFINE_IMAGE( bmpPause, wxImage( 16, 16 ), wxT("Pause"));

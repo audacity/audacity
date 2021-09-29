@@ -120,12 +120,13 @@ void NoteTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
             (px >= clipRect.GetLeft() && px <= clipRect.GetRight() &&
                 py >= clipRect.GetTop() && py <= clipRect.GetBottom());
 
-        context.dc.SetClippingRegion(rect);
-        context.dc.SetTextBackground(wxTransparentColor);
-        context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
-        context.dc.SetFont(wxFont(wxFontInfo()));
-        TrackArt::DrawClipAffordance(context.dc, clipRect, nt->GetName(), highlight, selected);
-        context.dc.DestroyClippingRegion();
+        {
+            wxDCClipper clipper(context.dc, rect);
+            context.dc.SetTextBackground(wxTransparentColor);
+            context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
+            context.dc.SetFont(wxFont(wxFontInfo()));
+            TrackArt::DrawClipAffordance(context.dc, clipRect, nt->GetName(), highlight, selected);
+        }
     }
 }
 

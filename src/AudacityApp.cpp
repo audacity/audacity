@@ -384,6 +384,11 @@ void PopulatePreferences()
       gPrefs->Write(wxT("/GUI/Toolbars/Time/Show"),1);
    }
 
+   if (std::pair{ vMajor, vMinor } < std::pair{ 3, 1 } ) {
+      // Reset the control toolbar
+      gPrefs->Write(wxT("/GUI/Toolbars/Control/W"), -1);
+   }
+
    // write out the version numbers to the prefs file for future checking
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);

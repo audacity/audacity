@@ -17,6 +17,7 @@
 #include "../ProjectWindows.h"
 #include "../ProjectWindow.h"
 #include "../ProjectManager.h"
+#include "../SelectUtilities.h"
 #include "../SoundActivatedRecord.h"
 #include "../TimerRecordDialog.h"
 #include "../TrackPanelAx.h"
@@ -647,12 +648,12 @@ void OnPunchAndRoll(const CommandContext &context)
 
 void OnLockPlayRegion(const CommandContext &context)
 {
-   AdornedRulerPanel::Get( context.project ).LockPlayRegion();
+   SelectUtilities::LockPlayRegion(context.project);
 }
 
 void OnUnlockPlayRegion(const CommandContext &context)
 {
-   AdornedRulerPanel::Get( context.project ).UnlockPlayRegion();
+   SelectUtilities::UnlockPlayRegion(context.project);
 }
 
 void OnRescanDevices(const CommandContext &WXUNUSED(context) )

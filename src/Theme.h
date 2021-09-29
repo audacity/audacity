@@ -19,11 +19,16 @@
 #include <vector>
 #include <wx/defs.h>
 #include <wx/window.h> // to inherit
+#include "ComponentInterfaceSymbol.h"
+
+#include "Prefs.h"
+
+//! A choice of theme such as "Light", "Dark", ...
+using teThemeType = Identifier;
 
 class wxArrayString;
 class wxBitmap;
 class wxColour;
-class wxFont;
 class wxImage;
 class wxPen;
 
@@ -37,8 +42,6 @@ enum teResourceType
    resTypeColour,
    resTypeBitmap,
    resTypeImage = resTypeBitmap,
-   resTypeCursor,
-   resTypeFont
 };
 
 enum teResourceFlags
@@ -51,23 +54,12 @@ enum teResourceFlags
    resFlagSkip = 0x10
 };
 
-enum teThemeType
-{
-   themeClassic,
-   themeDark,
-   themeLight,
-   themeHiContrast,
-   themeFromFile,
-};
-
-
-
+//! A cursor for iterating the theme bitmap
 class AUDACITY_DLL_API FlowPacker
 {
 public:
-   FlowPacker(){;};
-   ~FlowPacker(){;};
-   void Init(int width);
+   explicit FlowPacker(int width);
+   ~FlowPacker() {}
    void GetNextPosition( int xSize, int ySize );
    void SetNewGroup( int iGroupSize );
    void SetColourGroup( );
@@ -76,22 +68,21 @@ public:
    void RectMid( int &x, int &y );
 
    // These 4 should become private again...
-   int mFlags;
-   int mxPos;
-   int myPos;
-   int myHeight;
-   int mBorderWidth;
+   int mFlags = resFlagPaired;
+   int mxPos = 0;
+   int myPos = 0;
+   int myHeight = 0;
+   int mBorderWidth = 1;
 
 private:
-   int iImageGroupSize;
-   int iImageGroupIndex;
-   int mOldFlags;
-   int myPosBase;
-   int mxWidth;
-   int mxCacheWidth;
+   int iImageGroupSize = 1;
+   int iImageGroupIndex = -1;
+   int mOldFlags = resFlagPaired;
+   int myPosBase = 0;
+   int mxCacheWidth = 0;
 
-   int mComponentWidth;
-   int mComponentHeight;
+   int mComponentWidth = 0;
+   int mComponentHeight = 0;
 
 };
 
@@ -106,22 +97,32 @@ public:
 
 public:
    virtual void EnsureInitialised()=0;
+
+   // Typically statically constructed:
+   struct AUDACITY_DLL_API RegisteredTheme {
+      RegisteredTheme(EnumValueSymbol symbol,
+         const std::vector<unsigned char> &data /*!<
+            A reference to this vector is stored, not a copy of it! */
+      );
+      ~RegisteredTheme();
+      const EnumValueSymbol symbol;
+   };
+
    void LoadTheme( teThemeType Theme );
-   void RegisterImage( int &iIndex,char const** pXpm, const wxString & Name);
-   void RegisterImage( int &iIndex, const wxImage &Image, const wxString & Name );
+   void RegisterImage( int &flags, int &iIndex,char const** pXpm, const wxString & Name);
+   void RegisterImage( int &flags, int &iIndex, const wxImage &Image, const wxString & Name );
    void RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name );
 
    teThemeType GetFallbackThemeType();
-   teThemeType ThemeTypeOfTypeName( const wxString & Name );
    void CreateImageCache(bool bBinarySave = true);
-   bool ReadImageCache( teThemeType type = themeFromFile, bool bOkIfNotFound=false);
+   bool ReadImageCache( teThemeType type = {}, bool bOkIfNotFound=false);
    void LoadComponents( bool bOkIfNotFound =false);
    void SaveComponents();
    void SaveThemeAsCode();
    void WriteImageDefs( );
    void WriteImageMap( );
    static bool LoadPreferredTheme();
-   bool IsUsingSystemTextColour(){ return bIsUsingSystemTextColour;};
+   bool IsUsingSystemTextColour(){ return bIsUsingSystemTextColour; }
    void RecolourBitmap( int iIndex, wxColour From, wxColour To );
    void RecolourTheme();
 
@@ -129,8 +130,6 @@ public:
    wxColour & Colour( int iIndex );
    wxBitmap & Bitmap( int iIndex );
    wxImage  & Image( int iIndex );
-   wxCursor & Cursor( int iIndex );
-   wxFont   & Font( int iIndex );
    wxSize ImageSize( int iIndex );
    bool bRecolourOnLoad;  // Request to recolour.
    bool bIsUsingSystemTextColour;
@@ -140,7 +139,6 @@ public:
 
    void SetBrushColour( wxBrush & Brush, int iIndex );
    void SetPenColour(   wxPen & Pen, int iIndex );
-   void SetFlags( int flags ){ mFlow.mFlags = flags;};
 
    // Utility function that combines a bitmap and a mask, both in XPM format.
    wxImage MaskedImage( char const ** pXpm, char const ** pMask );
@@ -156,7 +154,6 @@ protected:
 
    std::vector<wxColour> mColours;
    wxArrayString mColourNames;
-   FlowPacker mFlow;
 };
 
 
@@ -193,8 +190,12 @@ public:
 
 extern AUDACITY_DLL_API Theme theTheme;
 
+extern AUDACITY_DLL_API BoolSetting
+     GUIBlendThemes
+;
+
 extern AUDACITY_DLL_API ChoiceSetting
-     GUITheme
+     &GUITheme()
 ;
 
 #endif // __AUDACITY_THEME__
