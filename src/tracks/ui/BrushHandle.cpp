@@ -139,32 +139,6 @@ namespace
    }
 }
 
-UIHandlePtr BrushHandle::HitTest
-      (std::weak_ptr<BrushHandle> &holder,
-       const TrackPanelMouseState &st, const AudacityProject *pProject,
-       const std::shared_ptr<TrackView> &pTrackView,
-       const std::shared_ptr<SpectralData> &mpData)
-{
-   const auto &viewInfo = ViewInfo::Get( *pProject );
-   auto &projectSettings = ProjectSettings::Get( *pProject );
-   auto result = std::make_shared<BrushHandle>(
-      pTrackView, TrackList::Get( *pProject ),
-      st, viewInfo, mpData, projectSettings);
-
-   result = AssignUIHandlePtr(holder, result);
-
-   //Make sure we are within the selected track
-   // Adjusting the selection edges can be turned off in
-   // the preferences...
-   auto pTrack = pTrackView->FindTrack();
-   if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
-   {
-      return result;
-   }
-
-   return result;
-}
-
 BrushHandle::BrushHandle
       ( const std::shared_ptr<TrackView> &pTrackView,
         const TrackList &trackList,

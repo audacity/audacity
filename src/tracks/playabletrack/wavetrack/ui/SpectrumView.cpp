@@ -55,6 +55,34 @@ bool SpectrumView::IsSpectral() const
    return true;
 }
 
+// This always hits, but details of the hit vary with mouse position and
+// key state.
+static UIHandlePtr BrushHandleHitTest(
+   std::weak_ptr<BrushHandle> &holder,
+   const TrackPanelMouseState &st, const AudacityProject *pProject,
+   const std::shared_ptr<TrackView> &pTrackView,
+   const std::shared_ptr<SpectralData> &mpData)
+{
+   const auto &viewInfo = ViewInfo::Get( *pProject );
+   auto &projectSettings = ProjectSettings::Get( *pProject );
+   auto result = std::make_shared<BrushHandle>(
+      pTrackView, TrackList::Get( *pProject ),
+      st, viewInfo, mpData, projectSettings);
+
+   result = AssignUIHandlePtr(holder, result);
+
+   //Make sure we are within the selected track
+   // Adjusting the selection edges can be turned off in
+   // the preferences...
+   auto pTrack = pTrackView->FindTrack();
+   if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
+   {
+      return result;
+   }
+
+   return result;
+}
+
 std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
@@ -65,7 +93,7 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
 #ifdef EXPERIMENTAL_BRUSH_TOOL
    mOnBrushTool = (currentTool == ToolCodes::brushTool);
    if(mOnBrushTool){
-      const auto result = BrushHandle::HitTest(mBrushHandle, state,
+      const auto result = BrushHandleHitTest(mBrushHandle, state,
                                                pProject, shared_from_this(),
                                                mpSpectralData);
       results.push_back(result);

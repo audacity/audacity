@@ -39,14 +39,6 @@ public:
        const std::shared_ptr<SpectralData> &pSpectralData,
        const ProjectSettings &pSettings);
 
-   // This always hits, but details of the hit vary with mouse position and
-   // key state.
-   static UIHandlePtr HitTest
-      (std::weak_ptr<BrushHandle> &holder,
-       const TrackPanelMouseState &state, const AudacityProject *pProject,
-       const std::shared_ptr<TrackView> &pTrackView,
-       const std::shared_ptr<SpectralData> &mpSpectralData);
-
    BrushHandle &operator=(const BrushHandle&) = default;
    
    virtual ~BrushHandle();
