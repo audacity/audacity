@@ -172,10 +172,7 @@ struct FFmpegFunctions::Private final
       AVFormatLibrary = LoadLibrary(path);
 
       if (AVFormatLibrary == nullptr)
-      {
-         wxLogSysError("Failed to load %s", path.c_str());
          return false;
-      }
 
       if ((AVCodecLibrary = LibraryWithSymbol("avcodec_version")) == nullptr)
          return false;
@@ -241,6 +238,14 @@ struct FFmpegFunctions::Private final
       if (library->IsLoaded())
          return library;
 
+      // Loading has failed.
+      // wxLogSysError doesn't report errors correctly on *NIX
+#if defined(_WIN32)
+      wxLogSysError("Failed to load %s", libraryName.c_str());
+#else
+      const char* errorString = dlerror();
+      wxLogError("Failed to load %s (%s)", libraryName.c_str(), errorString);
+#endif
       return {};
    }
 };
