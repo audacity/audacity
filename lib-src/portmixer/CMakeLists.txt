@@ -130,3 +130,7 @@ target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
+
+if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
+   target_compile_options( ${TARGET} PRIVATE -fPIC )
+endif()
