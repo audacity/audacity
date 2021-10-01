@@ -77,8 +77,8 @@ public:
       LoadSampleBlock,
       InsertSampleBlock,
       DeleteSampleBlock,
-      GetRootPage,
-      GetDBPage
+      GetSampleBlockSize,
+      GetAllSampleBlocksSize
    };
    sqlite3_stmt *Prepare(enum StatementID id, const char *sql);
 
