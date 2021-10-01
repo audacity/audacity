@@ -902,6 +902,7 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 {
    SetLayoutDirection(wxLayout_LeftToRight);
 
+   mPlaybackLoopingCell = std::make_shared<PlaybackLoopingCell>();
    mQPCell = std::make_shared<QPCell>( this );
    mScrubbingCell = std::make_shared<ScrubbingCell>( this );
    
@@ -1213,7 +1214,18 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    if (!mViewInfo->selectedRegion.isPoint())
    {
+#if 0
+      mPlaybackLooping.DrawLoopingRange(&backDC, mInner,
+          max(1, Time2Pos(mViewInfo->selectedRegion.t0())),
+          min(mInner.width, Time2Pos(mViewInfo->selectedRegion.t1()))
+      );
+#endif
       DoDrawSelection(&backDC);
+   }
+
+   if (PlaybackLooping::GetInstance().IsProcessing())
+   {
+       mPlaybackLoopingCell->DrawLoopingRange(&backDC, viewInfo);
    }
 
    DoDrawMarks(&backDC, true);
@@ -2263,7 +2275,8 @@ struct AdornedRulerPanel::Subgroup final : TrackPanelGroup {
    {
       return { Axis::Y, ( mRuler.ShowingScrubRuler() )
          ? Refinement{
-            { mRuler.mInner.GetTop(), mRuler.mQPCell },
+            //{ mRuler.mInner.GetTop(), mRuler.mQPCell },
+            { mRuler.mInner.GetTop(), mRuler.mPlaybackLoopingCell },
             { mRuler.mScrubZone.GetTop(), mRuler.mScrubbingCell },
             { mRuler.mScrubZone.GetBottom() + 1, nullptr }
          }

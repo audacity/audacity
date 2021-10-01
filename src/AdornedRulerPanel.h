@@ -15,6 +15,7 @@
 #include "widgets/Ruler.h" // member variable
 #include "Prefs.h"
 #include "ViewInfo.h" // for PlayRegion
+#include "PlaybackLooping.h"
 
 class AudacityProject;
 struct SelectedRegionEvent;
@@ -231,6 +232,9 @@ private:
    double mLastDrawnH{};
    double mLastDrawnZoom{};
    bool mDirtySelectedRegion{};
+
+   //PlaybackLooping mPlaybackLooping;
+   std::shared_ptr<PlaybackLoopingCell> mPlaybackLoopingCell;
 };
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__

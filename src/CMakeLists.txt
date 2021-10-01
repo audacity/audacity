@@ -198,6 +198,8 @@ list( APPEND SOURCES
       NoteTrack.h
       PitchName.cpp
       PitchName.h
+      PlaybackLooping.cpp
+      PlaybackLooping.h
       PlaybackSchedule.cpp
       PlaybackSchedule.h
       PluginManager.cpp
