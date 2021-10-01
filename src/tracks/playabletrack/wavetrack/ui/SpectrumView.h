@@ -11,6 +11,7 @@ Paul Licameli split from WaveTrackView.h
 #ifndef __AUDACITY_SPECTRUM_VIEW__
 #define __AUDACITY_SPECTRUM_VIEW__
 
+#include <functional>
 #include <map>
 #include <set>
 #include "WaveTrackView.h" // to inherit
@@ -45,14 +46,14 @@ public:
    std::vector<std::pair<int, int>> coordHistory;
 
    // Abstracted the copy method for future extension
-   void CopyFrom(const std::shared_ptr<SpectralData> &src){
-      mStartSample = src->GetStartSample();
-      mEndSample = src->GetEndSample();
+   void CopyFrom(const SpectralData &src){
+      mStartSample = src.GetStartSample();
+      mEndSample = src.GetEndSample();
 
       // std containers will perform deepcopy automatically
-      dataHistory = src->dataHistory;
-      dataBuffer = src->dataBuffer;
-      coordHistory = src->coordHistory;
+      dataHistory = src.dataHistory;
+      dataBuffer = src.dataBuffer;
+      coordHistory = src.coordHistory;
    }
 
    int GetHopSize() const {
@@ -112,7 +113,6 @@ public:
 class SpectrumView final : public WaveTrackSubView
 {
    SpectrumView &operator=( const SpectrumView& ) = delete;
-
 public:
    SpectrumView(WaveTrackView &waveTrackView, const SpectrumView &src) = delete;
    explicit SpectrumView(WaveTrackView &waveTrackView);
@@ -129,9 +129,12 @@ public:
    static int mBrushRadius;
 
    void CopyToSubView( WaveTrackSubView *destSubView ) const override;
+
+   class SpectralDataSaver;
+
 private:
     std::weak_ptr<BrushHandle> mBrushHandle;
-    std::shared_ptr<SpectralData> mpSpectralData;
+    std::shared_ptr<SpectralData> mpSpectralData, mpBackupSpectralData;
     bool mOnBrushTool;
 
    // TrackPanelDrawable implementation
@@ -149,7 +152,20 @@ private:
       const AudacityProject *pProject, int currentTool, bool bMultiTool )
       override;
 
-protected:
+   unsigned CaptureKey
+   (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
+       AudacityProject* project) override;
+
+   unsigned KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
+       AudacityProject* project) override;
+
+   unsigned Char
+   (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
+       AudacityProject* project) override;
+
+   static void ForAll( AudacityProject &project,
+      std::function<void(SpectrumView &view)> fn );
+
    void DoSetMinimized( bool minimized ) override;
 };
 

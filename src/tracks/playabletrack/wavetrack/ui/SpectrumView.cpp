@@ -11,6 +11,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 #include "SpectrumView.h"
 
+#include "SpectralDataManager.h" // Cycle :-(
 #include "SpectrumVRulerControls.h"
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"
@@ -54,6 +55,104 @@ bool SpectrumView::IsSpectral() const
    return true;
 }
 
+class SpectrumView::SpectralDataSaver : public BrushHandle::StateSaver {
+public:
+   explicit SpectralDataSaver( SpectrumView &view )
+      : mView{ view }
+   {}
+
+   void Init( AudacityProject &project, bool clearAll ) override
+   {
+      mpProject = &project;
+      ForAll( project, [this, clearAll](SpectrumView &view){
+         auto pOldData = view.mpSpectralData;
+         if (clearAll) {
+            auto &pNewData = view.mpBackupSpectralData =
+               std::make_shared<SpectralData>(pOldData->GetSR());
+            pNewData->CopyFrom(*pOldData);
+            pOldData->clearAllData();
+         }
+         else {
+            // Back up one view only
+            if (&mView == &view) {
+               auto &pNewData = view.mpBackupSpectralData =
+                  std::make_shared<SpectralData>(pOldData->GetSR());
+               pNewData->CopyFrom( *pOldData );
+            }
+            else
+               view.mpBackupSpectralData = {};
+         }
+      });
+   }
+
+   ~SpectralDataSaver() override
+   {
+      if (mpProject)
+         ForAll( *mpProject, [this](SpectrumView &view){
+            if (mCommitted) {
+               // Discard all backups
+               view.mpBackupSpectralData = {};
+            }
+            else {
+               // Restore all
+               if (auto &pBackupData = view.mpBackupSpectralData) {
+                  view.mpSpectralData->CopyFrom(*pBackupData);
+                  pBackupData.reset();
+               }
+            }
+         });
+   }
+
+private:
+   SpectrumView &mView;
+   AudacityProject *mpProject = nullptr;
+};
+
+// This always hits, but details of the hit vary with mouse position and
+// key state.
+static UIHandlePtr BrushHandleHitTest(
+   std::weak_ptr<BrushHandle> &holder,
+   const TrackPanelMouseState &st, const AudacityProject *pProject,
+   const std::shared_ptr<SpectrumView> &pTrackView,
+   const std::shared_ptr<SpectralData> &mpData)
+{
+   const auto &viewInfo = ViewInfo::Get( *pProject );
+   auto &projectSettings = ProjectSettings::Get( *pProject );
+   auto result = std::make_shared<BrushHandle>(
+      std::make_shared<SpectrumView::SpectralDataSaver>(*pTrackView),
+      pTrackView, TrackList::Get( *pProject ),
+      st, viewInfo, mpData, projectSettings);
+
+   result = AssignUIHandlePtr(holder, result);
+
+   //Make sure we are within the selected track
+   // Adjusting the selection edges can be turned off in
+   // the preferences...
+   auto pTrack = pTrackView->FindTrack();
+   if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
+   {
+      return result;
+   }
+
+   return result;
+}
+
+void SpectrumView::ForAll( AudacityProject &project,
+   std::function<void(SpectrumView &view)> fn )
+{
+   if (!fn)
+      return;
+   for ( const auto wt : TrackList::Get(project).Any< WaveTrack >() ) {
+      if (auto pWaveTrackView =
+          dynamic_cast<WaveTrackView*>( &TrackView::Get(*wt)) ) {
+         for (const auto &pSubView : pWaveTrackView->GetAllSubViews()) {
+            if (const auto sView = dynamic_cast<SpectrumView*>(pSubView.get()))
+               fn( *sView );
+         }
+      }
+   }
+}
+
 std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
@@ -64,9 +163,10 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
 #ifdef EXPERIMENTAL_BRUSH_TOOL
    mOnBrushTool = (currentTool == ToolCodes::brushTool);
    if(mOnBrushTool){
-      const auto result = BrushHandle::HitTest(mBrushHandle, state,
-                                               pProject, shared_from_this(),
-                                               mpSpectralData);
+      const auto result = BrushHandleHitTest(
+         mBrushHandle, state,
+         pProject, std::static_pointer_cast<SpectrumView>(shared_from_this()),
+         mpSpectralData);
       results.push_back(result);
       return results;
    }
@@ -119,7 +219,7 @@ std::shared_ptr<SpectralData> SpectrumView::GetSpectralData(){
 void SpectrumView::CopyToSubView(WaveTrackSubView *destSubView) const{
    if ( const auto pDest = dynamic_cast< SpectrumView* >( destSubView ) ) {
       pDest->mpSpectralData =  std::make_shared<SpectralData>(mpSpectralData->GetSR());
-      pDest->mpSpectralData->CopyFrom(mpSpectralData);
+      pDest->mpSpectralData->CopyFrom(*mpSpectralData);
    }
 }
 
@@ -921,3 +1021,37 @@ PopupMenuTable::AttachedItem sAttachment{
 };
 }
 
+static bool ShouldCaptureEvent(wxKeyEvent& event, SpectralData *pData)
+{
+   const auto keyCode = event.GetKeyCode();
+   return
+      (keyCode == WXK_BACK || keyCode == WXK_DELETE ||
+       keyCode == WXK_NUMPAD_DELETE)
+      && pData && !pData->dataHistory.empty();
+}
+
+unsigned SpectrumView::CaptureKey(
+   wxKeyEvent& event, ViewInfo&, wxWindow*, AudacityProject*)
+{
+   bool capture = ShouldCaptureEvent(event, mpSpectralData.get());
+   event.Skip(!capture);
+   return RefreshCode::RefreshNone;
+}
+
+unsigned SpectrumView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow*, AudacityProject* project)
+{
+   bool capture = ShouldCaptureEvent(event, mpSpectralData.get());
+   event.Skip(!capture);
+   if (capture && SpectralDataManager::ProcessTracks(*project))
+      // Not RefreshCell, because there might be effects in multiple tracks
+      return RefreshCode::RefreshAll;
+   return RefreshCode::RefreshNone;
+}
+
+unsigned SpectrumView::Char(
+   wxKeyEvent &event, ViewInfo&, wxWindow*, AudacityProject* )
+{
+   bool capture = ShouldCaptureEvent(event, mpSpectralData.get());
+   event.Skip(!capture);
+   return RefreshCode::RefreshNone;
+}

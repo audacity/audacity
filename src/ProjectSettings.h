@@ -21,6 +21,8 @@ Paul Licameli split from AudacityProject.h
 class AudacityProject;
 
 // Sent to the project when certain settings change
+// See enum EventCode below for values of GetInt() identifying changed setting
+// The previous value of that setting can also be found using GetExtraLong()
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
    EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 
@@ -33,23 +35,20 @@ enum
 
 namespace ToolCodes {
 enum {
+   // The buttons that are in the Tools toolbar must be in correspondence
+   // with the first few
    selectTool,
    envelopeTool,
    drawTool,
    zoomTool,
-   slideTool,
    multiTool,
+
 #ifdef EXPERIMENTAL_BRUSH_TOOL
    brushTool,
 #endif
+
    numTools,
-   
    firstTool = selectTool,
-#ifdef EXPERIMENTAL_BRUSH_TOOL
-   lastTool = brushTool,
-#else
-   lastTool = multiTool,
-#endif
 };
 }
 
