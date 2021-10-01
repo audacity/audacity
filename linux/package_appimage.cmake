@@ -15,6 +15,7 @@ endif()
 configure_file("${CPACK_AUDACITY_SOURCE_DIR}/linux/AppRun.sh" "${appdir}/AppRun" ESCAPE_QUOTES @ONLY)
 configure_file("${CPACK_AUDACITY_SOURCE_DIR}/linux/check_dependencies.sh" "${appdir}/bin/check_dependencies" ESCAPE_QUOTES @ONLY)
 configure_file("${CPACK_AUDACITY_SOURCE_DIR}/linux/ldd_recursive.pl" "${appdir}/bin/ldd_recursive" COPYONLY)
+file(COPY "${CPACK_AUDACITY_FINDLIB_LOCATION}/findlib" DESTINATION "${appdir}/bin/")
 
 execute_process(
    COMMAND "linux/create_appimage.sh" "${appdir}" "${appimage}"

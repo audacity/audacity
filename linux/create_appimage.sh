@@ -71,6 +71,7 @@ if create_path "linuxdeploy"; then
     download_linuxdeploy_component linuxdeploy continuous
 )
 fi
+
 export PATH="${PWD%/}/linuxdeploy:${PATH}"
 linuxdeploy --list-plugins
 
@@ -89,10 +90,71 @@ ln -sf share/icons/hicolor/scalable/apps/audacity.svg "${appdir}/.DirIcon"
 
 # HACK: Some wxWidget libraries depend on themselves. Add
 # them to LD_LIBRARY_PATH so that linuxdeploy can find them.
-export LD_LIBRARY_PATH="${appdir}/usr/lib/audacity:${LD_LIBRARY_PATH-}"
+export LD_LIBRARY_PATH="${appdir}/usr/lib:${appdir}/usr/lib/audacity:${LD_LIBRARY_PATH-}"
+
+# Prevent linuxdeploy setting RUNPATH in binaries that shouldn't have it
+mv "${appdir}/bin/findlib" "${appdir}/../findlib"
 
 linuxdeploy --appdir "${appdir}" # add all shared library dependencies
-rm "${appdir}/lib/libatk-1.0.so.0"
+rm -R "${appdir}/lib/audacity"
+
+# Put the non-RUNPATH binaries back
+mv "${appdir}/../findlib" "${appdir}/bin/findlib"
+
+##########################################################################
+# BUNDLE REMAINING DEPENDENCIES MANUALLY
+##########################################################################
+
+function find_library()
+{
+  # Print full path to a library or return exit status 1 if not found
+  "${appdir}/bin/findlib" "$@"
+}
+
+function fallback_library()
+{
+  # Copy a library into a special fallback directory inside the AppDir.
+  # Fallback libraries are not loaded at runtime by default, but they can
+  # be loaded if it is found that the application would crash otherwise.
+  local library="$1"
+  local full_path="$(find_library "$1")"
+  local new_path="${appdir}/fallback/${library}"
+  mkdir -p "${new_path}" # directory has the same name as the library
+  cp -L "${full_path}" "${new_path}/${library}"
+  rm -f "${appdir}/lib/${library}"
+  # Use the AppRun script to check at runtime whether the user has a copy of
+  # this library. If not then add our copy's directory to $LD_LIBRARY_PATH.
+}
+
+unwanted_files=(
+  lib/libQt5Core.so.5
+  lib/libQt5Gui.so.5
+  lib/libQt5Widgets.so.5
+)
+
+fallback_libraries=(
+  libatk-1.0.so.0 # This will possibly prevent browser from opening
+  libatk-bridge-2.0.so.0 
+  libcairo.so.2 # This breaks FFmpeg support
+  libcairo-gobject.so.2
+  libjack.so.0 # https://github.com/LMMS/lmms/pull/3958
+  libportaudio.so # This is required to enable system PortAudio (so Jack is enabled!)
+  libgmodule-2.0.so.0 # Otherwise - Manjaro/Arch will crash, because of libgio mismatch
+  # But if gmodule is present - glib2 is too
+  # Some ot the GTK libraries are balcklisted from being included
+  # libgio-2.0.so.0
+  # libglib-2.0.so.0
+  # libgobject-2.0.so.0
+  libgthread-2.0.so.0
+)
+
+for file in "${unwanted_files[@]}"; do
+  rm -f "${appdir}/${file}"
+done
+
+for fb_lib in "${fallback_libraries[@]}"; do
+  fallback_library "${fb_lib}"
+done
 
 #============================================================================
 # Build AppImage
