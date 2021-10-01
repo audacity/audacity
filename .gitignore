@@ -162,3 +162,7 @@ win/xaudacity.ico
 
 .idea/
 .vscode/
+
+# AppImage
+linuxdeploy/*
+appimagetool/*

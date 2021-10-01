@@ -7,7 +7,19 @@ if [[ ! "${APPIMAGE}" || ! "${APPDIR}" ]]; then
     export APPDIR="$(dirname "${APPIMAGE}")"
 fi
 
-export LD_LIBRARY_PATH="${APPDIR}/lib:${LD_LIBRARY_PATH}"
+# Check system libraries and load a fallback if necessary
+fallback_libs="" # start empty
+for fb_dir in "${APPDIR}/fallback"/*; do
+  if [[ -d "${fb_dir}" ]]; then
+    library="${fb_dir##*/}" # library named like directory
+    if ! "${APPDIR}/bin/findlib" "${library}" >&2; then
+      echo "${APPIMAGE}: Using fallback for library '${library}'" >&2
+      fallback_libs="${fallback_libs}:${fb_dir}" # append path
+    fi
+  fi
+done
+
+export LD_LIBRARY_PATH="${APPDIR}/lib:${LD_LIBRARY_PATH}${fallback_libs}"
 
 export AUDACITY_PATH="${AUDACITY_PATH}:${APPDIR}/share/audacity"
 export AUDACITY_MODULES_PATH="${AUDACITY_MODULES_PATH}:${APPDIR}/lib/modules"
