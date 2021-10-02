@@ -93,6 +93,21 @@ private:
 
 };
 
+struct ThemeSet
+{
+   // wxImage, wxBitmap copy cheaply using reference counting
+   std::vector<wxImage> mImages;
+   std::vector<wxBitmap> mBitmaps;
+   wxArrayString mBitmapNames;
+   std::vector<int> mBitmapFlags;
+
+   std::vector<wxColour> mColours;
+   wxArrayString mColourNames;
+
+   bool bInitialised = false;
+   bool bRecolourOnLoad = false;  // Request to recolour.
+};
+
 class THEME_API ThemeBase /* not final */
 {
 public:
@@ -141,7 +156,6 @@ public:
    wxBitmap & Bitmap( int iIndex );
    wxImage  & Image( int iIndex );
    wxSize ImageSize( int iIndex );
-   bool bRecolourOnLoad;  // Request to recolour.
 
    void ReplaceImage( int iIndex, wxImage * pImage );
    void RotateImageInto( int iTo, int iFrom, bool bClockwise );
@@ -169,8 +183,10 @@ protected:
 
    PreferredSystemAppearance mPreferredSystemAppearance { PreferredSystemAppearance::Light };
    OnPreferredSystemAppearanceChanged mOnPreferredSystemAppearanceChanged;
-};
 
+   ThemeSet mSet;
+   ThemeSet *mpSet = &mSet;
+};
 
 class THEME_API Theme final : public ThemeBase
 {
@@ -181,7 +197,6 @@ public:
 public:
    void EnsureInitialised() override;
    void RegisterImagesAndColours();
-   bool mbInitialised;
 };
 
 extern THEME_API Theme theTheme;
