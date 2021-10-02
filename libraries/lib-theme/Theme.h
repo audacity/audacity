@@ -14,6 +14,7 @@
 #ifndef __AUDACITY_THEME__
 #define __AUDACITY_THEME__
 
+#include <map>
 #include <vector>
 #include <wx/arrstr.h>
 #include <wx/defs.h>
@@ -118,7 +119,7 @@ public:
    virtual ~ThemeBase(void);
 
 public:
-   virtual void EnsureInitialised()=0;
+   virtual void EnsureInitialised() = 0;
 
    // Typically statically constructed:
    struct THEME_API RegisteredTheme {
@@ -134,6 +135,7 @@ public:
       const std::vector<unsigned char>& data;
    };
 
+   void SwitchTheme( teThemeType Theme );
    void LoadTheme( teThemeType Theme );
    void RegisterImage( int &flags, int &iIndex,char const** pXpm, const wxString & Name);
    void RegisterImage( int &flags, int &iIndex, const wxImage &Image, const wxString & Name );
@@ -171,6 +173,10 @@ public:
    using OnPreferredSystemAppearanceChanged = std::function<void (PreferredSystemAppearance)>;
    OnPreferredSystemAppearanceChanged
    SetOnPreferredSystemAppearanceChanged(OnPreferredSystemAppearanceChanged handler);
+
+   // Reclaim resources after finished with theme editing
+   void DeleteUnusedThemes();
+
 protected:
    // wxImage, wxBitmap copy cheaply using reference counting
    std::vector<wxImage> mImages;
@@ -184,8 +190,8 @@ protected:
    PreferredSystemAppearance mPreferredSystemAppearance { PreferredSystemAppearance::Light };
    OnPreferredSystemAppearanceChanged mOnPreferredSystemAppearanceChanged;
 
-   ThemeSet mSet;
-   ThemeSet *mpSet = &mSet;
+   std::map<Identifier, ThemeSet> mSets;
+   ThemeSet *mpSet = nullptr;
 };
 
 class THEME_API Theme final : public ThemeBase

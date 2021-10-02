@@ -243,6 +243,7 @@ bool GUIPrefs::Commit()
    {
       wxBusyCursor busy;
       theTheme.LoadPreferredTheme();
+      theTheme.DeleteUnusedThemes();
    }
    ThemePrefs::ApplyUpdatedImages();
 
