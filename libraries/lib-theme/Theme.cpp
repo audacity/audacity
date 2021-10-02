@@ -153,11 +153,13 @@ ThemeBase::RegisteredTheme::~RegisteredTheme()
    GetThemeCacheLookup().erase(symbol);
 }
 
-/// This function is called to load the initial Theme images.
-/// It does not though cause the GUI to refresh.
-void ThemeBase::LoadTheme( teThemeType Theme )
+void ThemeBase::SwitchTheme( teThemeType Theme )
 {
+   // Switch the active theme set
+   mpSet = &mSets[Theme];
+   auto &resources = *mpSet;
    EnsureInitialised();
+
    const bool cbOkIfNotFound = true;
 
    if( !ReadImageCache( Theme, cbOkIfNotFound ) )
@@ -185,6 +187,13 @@ void ThemeBase::LoadTheme( teThemeType Theme )
       CreateImageCache();
 #endif
    }
+}
+
+/// This function is called to load the initial Theme images.
+/// It does not though cause the GUI to refresh.
+void ThemeBase::LoadTheme( teThemeType Theme )
+{
+   SwitchTheme( Theme );
 
    // Post-processing steps after loading of the cache
 
@@ -326,7 +335,6 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 // for example.
 void ThemeBase::RegisterImage( int &flags, int &iIndex, char const ** pXpm, const wxString & Name )
 {
-   wxASSERT( iIndex == -1 ); // Don't initialise same bitmap twice!
    wxBitmap Bmp( pXpm );
    wxImage Img( Bmp.ConvertToImage() );
    // The next line recommended by http://forum.audacityteam.org/viewtopic.php?f=50&t=96765
@@ -342,7 +350,6 @@ void ThemeBase::RegisterImage( int &flags, int &iIndex, char const ** pXpm, cons
 
 void ThemeBase::RegisterImage( int &flags, int &iIndex, const wxImage &Image, const wxString & Name )
 {
-   wxASSERT( iIndex == -1 ); // Don't initialise same bitmap twice!
    auto &resources = *mpSet;
    resources.mImages.push_back( Image );
 
@@ -362,16 +369,29 @@ void ThemeBase::RegisterImage( int &flags, int &iIndex, const wxImage &Image, co
    resources.mBitmapNames.push_back( Name );
    resources.mBitmapFlags.push_back( flags );
    flags &= ~resFlagSkip;
-   iIndex = resources.mBitmaps.size() - 1;
+   auto index = resources.mBitmaps.size() - 1;
+   if (iIndex == -1)
+      // First time assignment of global variable identifying an image
+      iIndex = index;
+   else
+      // If revisiting for another theme set,
+      // images should be re-done in the same sequence
+      wxASSERT(iIndex == index);
 }
 
 void ThemeBase::RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name )
 {
-   wxASSERT( iIndex == -1 ); // Don't initialise same colour twice!
    auto &resources = *mpSet;
    resources.mColours.push_back( Clr );
    resources.mColourNames.push_back( Name );
-   iIndex = resources.mColours.size() - 1;
+   auto index = resources.mColours.size() - 1;
+   if (iIndex == -1)
+      // First time assignment of global variable identifying a colour
+      iIndex = index;
+   else
+      // If revisiting for another theme set,
+      // colours should be re-done in the same sequence
+      wxASSERT(iIndex == index);
 }
 
 FlowPacker::FlowPacker(int width)
@@ -1058,6 +1078,17 @@ wxImage ThemeBase::MakeImageWithAlpha( wxBitmap & Bmp )
    // BUG in wxWidgets.  Conversion from BMP to image does not preserve alpha.
    wxImage image( Bmp.ConvertToImage() );
    return image;
+}
+
+void ThemeBase::DeleteUnusedThemes()
+{
+   auto iter = mSets.begin(), end = mSets.end();
+   while (iter != end) {
+      if (mpSet == &iter->second)
+         ++iter;
+      else
+         iter = mSets.erase(iter);
+   }
 }
 
 wxColour & ThemeBase::Colour( int iIndex )
