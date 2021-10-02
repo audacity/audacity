@@ -1327,7 +1327,7 @@ bool AudacityApp::OnInit()
    this->AssociateFileTypes();
 #endif
 
-   theTheme.EnsureInitialised();
+   theTheme.LoadPreferredTheme();
 
    // AColor depends on theTheme.
    AColor::Init();

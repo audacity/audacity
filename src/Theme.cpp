@@ -94,28 +94,22 @@ void Theme::EnsureInitialised()
 {
    if( mbInitialised )
       return;
-   RegisterImages();
-   RegisterColours();
+   RegisterImagesAndColours();
 
 #ifdef EXPERIMENTAL_EXTRA_THEME_RESOURCES
    extern void RegisterExtraThemeResources();
    RegisterExtraThemeResources();
 #endif
-
-   LoadPreferredTheme();
-
 }
 
 bool ThemeBase::LoadPreferredTheme()
 {
-// DA: Default themes differ.
    Identifier theme = GUITheme().Read();
-
    theTheme.LoadTheme( theme );
    return true;
 }
 
-void Theme::RegisterImages()
+void Theme::RegisterImagesAndColours()
 {
    if( mbInitialised )
       return;
@@ -128,11 +122,6 @@ void Theme::RegisterImages()
 #include "AllThemeResources.h"
 
 
-}
-
-
-void Theme::RegisterColours()
-{
 }
 
 ThemeBase::ThemeBase(void)

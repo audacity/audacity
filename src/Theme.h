@@ -166,8 +166,7 @@ public:
    ~Theme(void);
 public:
    void EnsureInitialised() override;
-   void RegisterImages();
-   void RegisterColours();
+   void RegisterImagesAndColours();
    bool mbInitialised;
 };
 
