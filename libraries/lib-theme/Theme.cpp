@@ -80,7 +80,6 @@ THEME_API Theme theTheme;
 
 Theme::Theme(void)
 {
-   mbInitialised=false;
 }
 
 Theme::~Theme(void)
@@ -90,7 +89,7 @@ Theme::~Theme(void)
 
 void Theme::EnsureInitialised()
 {
-   if( mbInitialised )
+   if ( !mpSet || mpSet->bInitialised )
       return;
    RegisterImagesAndColours();
 
@@ -109,9 +108,9 @@ bool ThemeBase::LoadPreferredTheme()
 
 void Theme::RegisterImagesAndColours()
 {
-   if( mbInitialised )
+   if ( !mpSet || mpSet->bInitialised )
       return;
-   mbInitialised = true;
+   mpSet->bInitialised = true;
 
 // This initialises the variables e.g
 // RegisterImage( myFlags, bmpRecordButton, some image, wxT("RecordButton"));
@@ -124,7 +123,6 @@ void Theme::RegisterImagesAndColours()
 
 ThemeBase::ThemeBase(void)
 {
-   bRecolourOnLoad = false;
 }
 
 ThemeBase::~ThemeBase(void)
@@ -196,7 +194,7 @@ void ThemeBase::LoadTheme( teThemeType Theme )
 
    // Other modifications of images happening only when the setting
    // GUIBlendThemes is true
-   if ( bRecolourOnLoad ) {
+   if ( mpSet->bRecolourOnLoad ) {
       RecolourTheme();
 
       wxColor Back        = theTheme.Colour( clrTrackInfo );
@@ -212,7 +210,7 @@ void ThemeBase::LoadTheme( teThemeType Theme )
          if ( ContrastLevel > 250 )
             Colour( clrTrackPanelText ) = DesiredText;
       }
-      bRecolourOnLoad = false;
+      mpSet->bRecolourOnLoad = false;
    }
 
    // Next line is not required as we haven't yet built the GUI
@@ -339,7 +337,8 @@ void ThemeBase::RegisterImage( int &flags, int &iIndex, char const ** pXpm, cons
 void ThemeBase::RegisterImage( int &flags, int &iIndex, const wxImage &Image, const wxString & Name )
 {
    wxASSERT( iIndex == -1 ); // Don't initialise same bitmap twice!
-   mImages.push_back( Image );
+   auto &resources = *mpSet;
+   resources.mImages.push_back( Image );
 
 #ifdef __APPLE__
    // On Mac, bitmaps with alpha don't work.
@@ -349,23 +348,24 @@ void ThemeBase::RegisterImage( int &flags, int &iIndex, const wxImage &Image, co
    // the blending ourselves anyway.]
    wxImage TempImage( Image );
    TempImage.ConvertAlphaToMask();
-   mBitmaps.push_back( wxBitmap( TempImage ) );
+   resources.mBitmaps.push_back( wxBitmap( TempImage ) );
 #else
-   mBitmaps.push_back( wxBitmap( Image ) );
+   resources.mBitmaps.push_back( wxBitmap( Image ) );
 #endif
 
-   mBitmapNames.push_back( Name );
-   mBitmapFlags.push_back( flags );
+   resources.mBitmapNames.push_back( Name );
+   resources.mBitmapFlags.push_back( flags );
    flags &= ~resFlagSkip;
-   iIndex = mBitmaps.size() - 1;
+   iIndex = resources.mBitmaps.size() - 1;
 }
 
 void ThemeBase::RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name )
 {
    wxASSERT( iIndex == -1 ); // Don't initialise same colour twice!
-   mColours.push_back( Clr );
-   mColourNames.push_back( Name );
-   iIndex = mColours.size() - 1;
+   auto &resources = *mpSet;
+   resources.mColours.push_back( Clr );
+   resources.mColourNames.push_back( Name );
+   iIndex = resources.mColours.size() - 1;
 }
 
 FlowPacker::FlowPacker(int width)
@@ -519,6 +519,7 @@ const int ImageCacheHeight = 836;
 
 void ThemeBase::CreateImageCache( bool bBinarySave )
 {
+   auto &resources = *mpSet;
    EnsureInitialised();
 
    wxImage ImageCache( ImageCacheWidth, ImageCacheHeight );
@@ -530,8 +531,6 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
       ImageCache.InitAlpha();
    }
 
-   int i;
-
    FlowPacker context{ ImageCacheWidth };
 
 //#define IMAGE_MAP
@@ -541,15 +540,15 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
 #endif
 
    // Save the bitmaps
-   for(i = 0;i < (int)mImages.size();i++)
+   for (size_t i = 0; i < resources.mImages.size() ; ++i)
    {
-      wxImage &SrcImage = mImages[i];
-      context.mFlags = mBitmapFlags[i];
-      if( (mBitmapFlags[i] & resFlagInternal)==0)
+      wxImage &SrcImage = resources.mImages[i];
+      context.mFlags = resources.mBitmapFlags[i];
+      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
       {
          context.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
          ImageCache.SetRGB( context.Rect(), 0xf2, 0xb0, 0x27 );
-         if( (context.mFlags & resFlagSkip) == 0 )
+         if( !(context.mFlags & resFlagSkip) )
             PasteSubImage( &ImageCache, &SrcImage, 
                context.mxPos + context.mBorderWidth,
                context.myPos + context.mBorderWidth);
@@ -570,10 +569,10 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
 
    context.SetColourGroup();
    const int iColSize = 10;
-   for(i = 0; i < (int)mColours.size(); i++)
+   for (size_t i = 0; i < resources.mColours.size(); ++i)
    {
       context.GetNextPosition( iColSize, iColSize );
-      wxColour c = mColours[i];
+      wxColour c = resources.mColours[i];
       ImageCache.SetRGB( context.Rect() , 0xf2, 0xb0, 0x27 );
       ImageCache.SetRGB( context.RectInner() , c.Red(), c.Green(), c.Blue() );
 
@@ -594,9 +593,8 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
 #endif
    }
 #if TEST_CARD
-   int j;
-   for(i=0;i<ImageCacheWidth;i++)
-      for(j=0;j<ImageCacheHeight;j++){
+   for ( unsigned i = 0; i < ImageCacheWidth; ++i)
+      for ( unsigned j = 0; j < ImageCacheHeight; ++j) {
          int r = j &0xff;
          int g = i &0xff;
          int b = (j >> 8) | ((i>>4)&0xf0);
@@ -684,9 +682,9 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
 /// Very handy for seeing what each part is for.
 void ThemeBase::WriteImageMap( )
 {
+   auto &resources = *mpSet;
    EnsureInitialised();
 
-   int i;
    FlowPacker context{ ImageCacheWidth };
 
    wxFFile File( FileNames::ThemeCacheHtm(), wxT("wb") );// I'll put in NEW lines explicitly.
@@ -699,31 +697,31 @@ void ThemeBase::WriteImageMap( )
    File.Write( Temp );
    File.Write( wxT("<map name=\"map1\">\r\n") );
 
-   for(i = 0; i < (int)mImages.size(); i++)
+   for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
-      wxImage &SrcImage = mImages[i];
-      context.mFlags = mBitmapFlags[i];
-      if( (mBitmapFlags[i] & resFlagInternal)==0)
+      wxImage &SrcImage = resources.mImages[i];
+      context.mFlags = resources.mBitmapFlags[i];
+      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
       {
          context.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
          // No href in html.  Uses title not alt.
          wxRect R( context.RectInner() );
          File.Write( wxString::Format(
             wxT("<area title=\"Bitmap:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
-            mBitmapNames[i],
+            resources.mBitmapNames[i],
             R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
       }
    }
    // Now save the colours.
    context.SetColourGroup();
    const int iColSize = 10;
-   for(i = 0; i < (int)mColours.size(); i++)
+   for (size_t i = 0; i < resources.mColours.size(); ++i)
    {
       context.GetNextPosition( iColSize, iColSize );
       // No href in html.  Uses title not alt.
       wxRect R( context.RectInner() );
       File.Write( wxString::Format( wxT("<area title=\"Colour:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
-         mColourNames[i],
+         resources.mColourNames[i],
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
    }
    File.Write( wxT("</map>\r\n") );
@@ -735,20 +733,20 @@ void ThemeBase::WriteImageMap( )
 /// Writes a series of Macro definitions that can be used in the include file.
 void ThemeBase::WriteImageDefs( )
 {
+   auto &resources = *mpSet;
    EnsureInitialised();
 
-   int i;
    wxFFile File( FileNames::ThemeImageDefsAsCee(), wxT("wb") );
    if( !File.IsOpened() )
       return;
    teResourceFlags PrevFlags = (teResourceFlags)-1;
-   for(i = 0; i < (int)mImages.size(); i++)
+   for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
-      wxImage &SrcImage = mImages[i];
+      wxImage &SrcImage = resources.mImages[i];
       // No href in html.  Uses title not alt.
-      if( PrevFlags != mBitmapFlags[i] )
+      if( PrevFlags != resources.mBitmapFlags[i] )
       {
-         PrevFlags = (teResourceFlags)mBitmapFlags[i];
+         PrevFlags = (teResourceFlags)resources.mBitmapFlags[i];
          int t = (int)PrevFlags;
          wxString Temp;
          if( t==0 ) Temp = wxT(" resFlagNone ");
@@ -763,10 +761,10 @@ void ThemeBase::WriteImageDefs( )
       }
       File.Write( wxString::Format(
          wxT("   DEFINE_IMAGE( bmp%s, wxImage( %i, %i ), wxT(\"%s\"));\r\n"),
-         mBitmapNames[i],
+         resources.mBitmapNames[i],
          SrcImage.GetWidth(),
          SrcImage.GetHeight(),
-         mBitmapNames[i]
+         resources.mBitmapNames[i]
          ));
    }
 }
@@ -789,6 +787,7 @@ teThemeType ThemeBase::GetFallbackThemeType(){
 /// @return true iff we loaded the images.
 bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 {
+   auto &resources = *mpSet;
    EnsureInitialised();
    wxImage ImageCache;
 
@@ -798,7 +797,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 //      ImageCache.InitAlpha();
 //   }
 
-   bRecolourOnLoad = GUIBlendThemes.Read();
+   mpSet->bRecolourOnLoad = GUIBlendThemes.Read();
 
    using namespace BasicUI;
 
@@ -863,20 +862,19 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       int h = ImageCache.GetHeight() * ((1.0*ImageCacheWidth)/ImageCache.GetWidth());
       ImageCache.Rescale(  ImageCacheWidth, h );
    }
-   int i;
    FlowPacker context{ ImageCacheWidth };
    // Load the bitmaps
-   for(i = 0; i < (int)mImages.size(); i++)
+   for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
-      wxImage &Image = mImages[i];
-      context.mFlags = mBitmapFlags[i];
-      if( (mBitmapFlags[i] & resFlagInternal)==0)
+      wxImage &Image = resources.mImages[i];
+      context.mFlags = resources.mBitmapFlags[i];
+      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
       {
          context.GetNextPosition( Image.GetWidth(),Image.GetHeight() );
          wxRect R = context.RectInner();
          //wxLogDebug( "[%i, %i, %i, %i, \"%s\"], ", R.x, R.y, R.width, R.height, mBitmapNames[i].c_str() );
          Image = GetSubImageWithAlpha( ImageCache, context.RectInner() );
-         mBitmaps[i] = wxBitmap(Image);
+         resources.mBitmaps[i] = wxBitmap(Image);
       }
    }
    if( !ImageCache.HasAlpha() )
@@ -888,7 +886,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    context.SetColourGroup();
    wxColour TempColour;
    const int iColSize=10;
-   for(i = 0; i < (int)mColours.size(); i++)
+   for (size_t i = 0; i < resources.mColours.size(); ++i)
    {
       context.GetNextPosition( iColSize, iColSize );
       context.RectMid( x, y );
@@ -907,7 +905,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
          /// find an alternative way to make adding NEW colours easier.
          /// e.g. initialise the background to translucent, perhaps.
          if( TempColour != wxColour(1,1,1) )
-            mColours[i] = TempColour;
+            resources.mColours[i] = TempColour;
       }
    }
    return true;
@@ -915,24 +913,24 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 
 void ThemeBase::LoadComponents( bool bOkIfNotFound )
 {
+   auto &resources = *mpSet;
    // IF directory doesn't exist THEN return early.
    if( !wxDirExists( FileNames::ThemeComponentsDir() ))
       return;
 
    using namespace BasicUI;
 
-   int i;
    int n=0;
    FilePath FileName;
-   for(i = 0; i < (int)mImages.size(); i++)
+   for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
 
-      if( (mBitmapFlags[i] & resFlagInternal)==0)
+      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = FileNames::ThemeComponent( mBitmapNames[i] );
+         FileName = FileNames::ThemeComponent( resources.mBitmapNames[i] );
          if( wxFileExists( FileName ))
          {
-            if( !mImages[i].LoadFile( FileName, wxBITMAP_TYPE_PNG ))
+            if( !resources.mImages[i].LoadFile( FileName, wxBITMAP_TYPE_PNG ))
             {
                ShowMessageBox(
                   XO(
@@ -945,12 +943,12 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
             /// load it, it comes back with a mask instead!  (well I guess it is more
             /// efficient).  Anyway, we want alpha and not a mask, so we call InitAlpha,
             /// and that transfers the mask into the alpha channel, and we're done.
-            if( ! mImages[i].HasAlpha() )
+            if( ! resources.mImages[i].HasAlpha() )
             {
                // wxLogDebug( wxT("File %s lacked alpha"), mBitmapNames[i] );
-               mImages[i].InitAlpha();
+               resources.mImages[i].InitAlpha();
             }
-            mBitmaps[i] = wxBitmap( mImages[i] );
+            resources.mBitmaps[i] = wxBitmap( resources.mImages[i] );
             n++;
          }
       }
@@ -969,7 +967,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
 void ThemeBase::SaveComponents()
 {
    using namespace BasicUI;
-
+   auto &resources = *mpSet;
    // IF directory doesn't exist THEN create it
    if( !wxDirExists( FileNames::ThemeComponentsDir() ))
    {
@@ -992,14 +990,13 @@ void ThemeBase::SaveComponents()
       }
    }
 
-   int i;
    int n=0;
    FilePath FileName;
-   for(i = 0; i < (int)mImages.size(); i++)
+   for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
-      if( (mBitmapFlags[i] & resFlagInternal)==0)
+      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = FileNames::ThemeComponent( mBitmapNames[i] );
+         FileName = FileNames::ThemeComponent( resources.mBitmapNames[i] );
          if( wxFileExists( FileName ))
          {
             ++n;
@@ -1024,12 +1021,12 @@ void ThemeBase::SaveComponents()
          return;
    }
 
-   for(i = 0; i < (int)mImages.size(); i++)
+   for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
-      if( (mBitmapFlags[i] & resFlagInternal)==0)
+      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = FileNames::ThemeComponent( mBitmapNames[i] );
-         if( !mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
+         FileName = FileNames::ThemeComponent( resources.mBitmapNames[i] );
+         if( !resources.mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
          {
             ShowMessageBox(
                XO("Audacity could not save file:\n  %s")
@@ -1060,8 +1057,9 @@ wxImage ThemeBase::MakeImageWithAlpha( wxBitmap & Bmp )
 wxColour & ThemeBase::Colour( int iIndex )
 {
    wxASSERT( iIndex >= 0 );
+   auto &resources = *mpSet;
    EnsureInitialised();
-   return mColours[iIndex];
+   return resources.mColours[iIndex];
 }
 
 void ThemeBase::SetBrushColour( wxBrush & Brush, int iIndex )
@@ -1079,21 +1077,24 @@ void ThemeBase::SetPenColour(   wxPen & Pen, int iIndex )
 wxBitmap & ThemeBase::Bitmap( int iIndex )
 {
    wxASSERT( iIndex >= 0 );
+   auto &resources = *mpSet;
    EnsureInitialised();
-   return mBitmaps[iIndex];
+   return resources.mBitmaps[iIndex];
 }
 
 wxImage  & ThemeBase::Image( int iIndex )
 {
    wxASSERT( iIndex >= 0 );
+   auto &resources = *mpSet;
    EnsureInitialised();
-   return mImages[iIndex];
+   return resources.mImages[iIndex];
 }
 wxSize  ThemeBase::ImageSize( int iIndex )
 {
    wxASSERT( iIndex >= 0 );
+   auto &resources = *mpSet;
    EnsureInitialised();
-   wxImage & Image = mImages[iIndex];
+   wxImage & Image = resources.mImages[iIndex];
    return wxSize( Image.GetWidth(), Image.GetHeight());
 }
 
