@@ -1149,14 +1149,37 @@ auto WaveTrackView::GetSubViews(const wxRect* rect) -> Refinement
    return results;
 }
 
+/*
+ Note that the WaveTrackView isn't in the TrackPanel subdivision, but it is
+ set sometimes as the focused cell, and therefore the following functions can
+ be visited.  To visit their overrides in the sub-views and affordances,
+ which are never focused, we must forward to them.  To do that properly, if
+ any cell declines to handle the event by setting it as skipped, it must be
+ set again to not-skipped before attempting the next call-through.
+ */
 unsigned WaveTrackView::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
 {
    unsigned result{ RefreshCode::RefreshNone };
+
+   // Give sub-views first chance to handle the event
+   for (auto &subView : GetSubViews()) {
+      // Event defaults in skipped state which must be turned off explicitly
+      wxASSERT(!event.GetSkipped());
+      result |= subView.second->CaptureKey(event, viewInfo, pParent, project);
+      if (!event.GetSkipped())
+         // sub view wants it
+         return result;
+      else
+         event.Skip(false);
+   }
+
    if (auto affordance = GetAffordanceControls())
       result |= affordance->CaptureKey(event, viewInfo, pParent, project);
     
-   if(event.GetSkipped())
+   if (event.GetSkipped()) {
+      event.Skip(false);
       result |= CommonTrackView::CaptureKey(event, viewInfo, pParent, project);
+   }
 
    return result;
 }
@@ -1164,11 +1187,26 @@ unsigned WaveTrackView::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWind
 unsigned WaveTrackView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
 {
    unsigned result{ RefreshCode::RefreshNone };
+
+   // Give sub-views first chance to handle the event
+   for (auto &subView : GetSubViews()) {
+      // Event defaults in skipped state which must be turned off explicitly
+      wxASSERT(!event.GetSkipped());
+      result |= subView.second->KeyDown(event, viewInfo, pParent, project);
+      if (!event.GetSkipped())
+         // sub view wants it
+         return result;
+      else
+         event.Skip(false);
+   }
+
    if (auto affordance = GetAffordanceControls())
       result |= affordance->KeyDown(event, viewInfo, pParent, project);
     
-   if(event.GetSkipped())
+   if(event.GetSkipped()) {
+      event.Skip(false);
       result |= CommonTrackView::KeyDown(event, viewInfo, pParent, project);
+   }
 
    return result;
 }
@@ -1176,11 +1214,26 @@ unsigned WaveTrackView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow*
 unsigned WaveTrackView::Char(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
 {
    unsigned result{ RefreshCode::RefreshNone };
+
+   // Give sub-views first chance to handle the event
+   for (auto &subView : GetSubViews()) {
+      // Event defaults in skipped state which must be turned off explicitly
+      wxASSERT(!event.GetSkipped());
+      result |= subView.second->Char(event, viewInfo, pParent, project);
+      if (!event.GetSkipped())
+         // sub view wants it
+         return result;
+      else
+         event.Skip(false);
+   }
+
    if (auto affordance = GetAffordanceControls())
       result |= affordance->Char(event, viewInfo, pParent, project);
     
-   if(event.GetSkipped())
+   if(event.GetSkipped()) {
+      event.Skip(false);
       result |= CommonTrackView::Char(event, viewInfo, pParent, project);
+   }
 
    return result;
 }

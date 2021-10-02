@@ -66,7 +66,7 @@ IMPLEMENT_CLASS(ToolsToolBar, ToolBar);
 
 BEGIN_EVENT_TABLE(ToolsToolBar, ToolBar)
    EVT_COMMAND_RANGE(ToolCodes::firstTool + FirstToolID,
-                     ToolCodes::lastTool + FirstToolID,
+                     ToolsToolBar::numTools - 1 + FirstToolID,
                      wxEVT_COMMAND_BUTTON_CLICKED,
                      ToolsToolBar::OnTool)
 END_EVENT_TABLE()
@@ -80,13 +80,9 @@ ToolsToolBar::ToolsToolBar( AudacityProject &project )
    //Read the following wxASSERTs as documentating a design decision
    wxASSERT( selectTool   == selectTool   - firstTool );
    wxASSERT( envelopeTool == envelopeTool - firstTool );
-   wxASSERT( slideTool    == slideTool    - firstTool );
    wxASSERT( zoomTool     == zoomTool     - firstTool );
    wxASSERT( drawTool     == drawTool     - firstTool );
    wxASSERT( multiTool    == multiTool    - firstTool );
-#ifdef EXPERIMENTAL_BRUSH_TOOL
-   wxASSERT( brushTool    == brushTool    - firstTool );
-#endif
    bool multiToolActive = false;
    gPrefs->Read(wxT("/GUI/ToolBars/Tools/MultiToolActive"), &multiToolActive);
 
@@ -94,11 +90,15 @@ ToolsToolBar::ToolsToolBar( AudacityProject &project )
       mCurrentTool = multiTool;
    else
       mCurrentTool = selectTool;
+
+   project.Bind(EVT_PROJECT_SETTINGS_CHANGE,
+      &ToolsToolBar::OnToolChanged, this);
 }
 
 ToolsToolBar::~ToolsToolBar()
 {
-   static_assert( ToolsToolBar::numTools == ToolCodes::numTools,
+   static_assert(
+      ToolsToolBar::numTools <= ToolCodes::numTools,
       "mismatch in number of tools" );
 }
 
@@ -148,13 +148,9 @@ void ToolsToolBar::RegenerateTooltips()
    } table[] = {
       { selectTool,   wxT("SelectTool"),    XO("Selection Tool")  },
       { envelopeTool, wxT("EnvelopeTool"),  XO("Envelope Tool")   },
-      { slideTool,    wxT("TimeShiftTool"), XO("Time Shift Tool") },
       { zoomTool,     wxT("ZoomTool"),      XO("Zoom Tool")       },
       { drawTool,     wxT("DrawTool"),      XO("Draw Tool")       },
       { multiTool,    wxT("MultiTool"),     XO("Multi-Tool")      },
-#ifdef EXPERIMENTAL_BRUSH_TOOL
-      { brushTool,    wxT("BrushTool"),     XO("Brush Tool")      },
-#endif
    };
 
    for (const auto &entry : table) {
@@ -200,11 +196,7 @@ void ToolsToolBar::Populate()
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsSmall();
 
-#ifdef EXPERIMENTAL_BRUSH_TOOL
-   Add(mToolSizer = safenew wxGridSizer(2, 4, 1, 1));
-#else
    Add(mToolSizer = safenew wxGridSizer(2, 3, 1, 1));
-#endif
 
    /* Tools */
    using namespace ToolCodes;
@@ -212,94 +204,48 @@ void ToolsToolBar::Populate()
    mTool[ envelopeTool ] = MakeTool( this, bmpEnvelope, envelopeTool, XO("Envelope Tool") );
    mTool[ drawTool     ] = MakeTool( this, bmpDraw, drawTool, XO("Draw Tool") );
    mTool[ zoomTool     ] = MakeTool( this, bmpZoom, zoomTool, XO("Zoom Tool") );
-   mTool[ slideTool    ] = MakeTool( this, bmpTimeShift, slideTool, XO("Slide Tool") );
    mTool[ multiTool    ] = MakeTool( this, bmpMulti, multiTool, XO("Multi-Tool") );
-#ifdef EXPERIMENTAL_BRUSH_TOOL
-   mTool[ brushTool    ] = MakeTool( this, bmpDraw, brushTool, XO("Brush Tool") );
-#endif
 
-   // It's OK to reset the tool when regenerating this, e.g after visiting preferences.
-   SetCurrentTool( selectTool );
-   mTool[mCurrentTool]->PushDown();
+   DoToolChanged();
 
    RegenerateTooltips();
 }
 
-/// Gets the currently active tool
-/// In Multi-mode this might not return the multi-tool itself
-/// since the active tool may be changed by what you hover over.
-int ToolsToolBar::GetCurrentTool() const
-{
-   return mCurrentTool;
-}
-
-/// Sets the currently active tool
-/// @param tool - The index of the tool to be used.
-void ToolsToolBar::SetCurrentTool(int tool)
-{
-   //In multi-mode the current tool is shown by the
-   //cursor icon.  The buttons are not updated.
-
-   using namespace ToolCodes;
-   bool leavingMulticlipMode =
-      IsDown(multiTool) && tool != multiTool;
-
-   if (leavingMulticlipMode)
-      mTool[multiTool]->PopUp();
-
-   if (tool != mCurrentTool || leavingMulticlipMode) {
-      mTool[mCurrentTool]->PopUp();
-      mCurrentTool=tool;
-      mTool[mCurrentTool]->PushDown();
-   }
-   //JKC: ANSWER-ME: Why is this required?
-   //msmeyer: I think it isn't, we leave it out for 1.3.1 (beta), and
-   // we'll see if anyone complains.
-   //for ( auto pProject : AllProjects{} )
-   //   ProjectWindow::Get( *pProject ).RedrawProject();
-
-   gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
-                 IsDown(multiTool));
-   gPrefs->Flush();
-
-   ProjectSettings::Get( mProject ).SetTool( mCurrentTool );
-}
-
-bool ToolsToolBar::IsDown(int tool) const
-{
-   return mTool[tool]->IsDown();
-}
-
-int ToolsToolBar::GetDownTool()
-{
-   int tool;
-
-   using namespace ToolCodes;
-   for (tool = firstTool; tool <= lastTool; tool++)
-      if (IsDown(tool))
-         return tool;
-
-   return firstTool;  // Should never happen
-}
-
 void ToolsToolBar::OnTool(wxCommandEvent & evt)
 {
+   // This will cause callback to OnToolChanged
+   auto iTool = evt.GetId() - ToolCodes::firstTool - FirstToolID;
+   auto pButton = mTool[iTool];
+   if (pButton->IsDown())
+      ProjectSettings::Get( mProject ).SetTool( iTool );
+   else
+      // Don't stay up
+      pButton->PushDown();
+}
+
+void ToolsToolBar::OnToolChanged(wxCommandEvent &evt)
+{
+   evt.Skip(); // Let other listeners hear the event too
+   if (evt.GetInt() != ProjectSettings::ChangedTool)
+      return;
+   DoToolChanged();
+   ProjectWindow::Get( mProject ).RedrawProject();
+}
+
+void ToolsToolBar::DoToolChanged()
+{
+   auto &projectSettings = ProjectSettings::Get( mProject );
    using namespace ToolCodes;
-   mCurrentTool = evt.GetId() - firstTool - FirstToolID;
+   mCurrentTool = projectSettings.GetTool() - firstTool;
    for (int i = 0; i < numTools; i++)
       if (i == mCurrentTool)
          mTool[i]->PushDown();
       else
          mTool[i]->PopUp();
 
-   for ( auto pProject : AllProjects{} )
-      ProjectWindow::Get( *pProject ).RedrawProject();
-
    gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),
-                 IsDown(multiTool));
+                 mTool[multiTool]->IsDown());
    gPrefs->Flush();
-
-   ProjectSettings::Get( mProject ).SetTool( mCurrentTool );
 }
 
 void ToolsToolBar::Create(wxWindow * parent)
@@ -333,7 +279,7 @@ void SetTool(AudacityProject &project, int tool)
 {
    auto toolbar = &ToolsToolBar::Get( project );
    if (toolbar) {
-      toolbar->SetCurrentTool(tool);
+      ProjectSettings::Get(project).SetTool(tool);
       TrackPanel::Get( project ).Refresh(false);
    }
 }
@@ -372,48 +318,29 @@ void OnZoomTool(const CommandContext &context)
    SetTool(context.project, ToolCodes::zoomTool);
 }
 
-/// Handler to set the Time shift tool active
-void OnTimeShiftTool(const CommandContext &context)
-{
-   SetTool(context.project, ToolCodes::slideTool);
-}
-
 void OnMultiTool(const CommandContext &context)
 {
    SetTool(context.project, ToolCodes::multiTool);
 }
 
-#ifdef EXPERIMENTAL_BRUSH_TOOL
-/// Handler to set the brush tool active
-void OnBrushTool(const CommandContext &context)
-{
-   SetTool(context.project, ToolCodes::brushTool);
-}
-#endif
-
 void OnPrevTool(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &toolbar = ToolsToolBar::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
+   auto &settings = ProjectSettings::Get( project );
 
-   using namespace ToolCodes;
-   // Use GetDownTool() here since GetCurrentTool() can return a value that
-   // doesn't represent the real tool if the Multi-tool is being used.
-   toolbar.SetCurrentTool((toolbar.GetDownTool()+(numTools-1))%numTools);
+   settings.SetTool(
+      (settings.GetTool() + (ToolCodes::numTools - 1 )) % ToolCodes::numTools);
    trackPanel.Refresh(false);
 }
 
 void OnNextTool(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &toolbar = ToolsToolBar::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
+   auto &settings = ProjectSettings::Get( project );
 
-   using namespace ToolCodes;
-   // Use GetDownTool() here since GetCurrentTool() can return a value that
-   // doesn't represent the real tool if the Multi-tool is being used.
-   toolbar.SetCurrentTool((toolbar.GetDownTool()+1)%numTools);
+   settings.SetTool( (settings.GetTool() + 1) % ToolCodes::numTools );
    trackPanel.Refresh(false);
 }
 
@@ -442,14 +369,8 @@ BaseItemSharedPtr ExtraToolsMenu()
          AlwaysEnabledFlag, wxT("F3") ),
       Command( wxT("ZoomTool"), XXO("&Zoom Tool"), FN(OnZoomTool),
          AlwaysEnabledFlag, wxT("F4") ),
-      Command( wxT("TimeShiftTool"), XXO("&Time Shift Tool"),
-         FN(OnTimeShiftTool), AlwaysEnabledFlag, wxT("F5") ),
       Command( wxT("MultiTool"), XXO("&Multi Tool"), FN(OnMultiTool),
-         AlwaysEnabledFlag, wxT("F6") ),
-#ifdef EXPERIMENTAL_BRUSH_TOOL
-      Command( wxT("BrushTool"), XXO("&Brush Tool"), FN(OnBrushTool),
-               AlwaysEnabledFlag, wxT("F7") ),
-#endif
+         AlwaysEnabledFlag, wxT("F5") ),
       Command( wxT("PrevTool"), XXO("&Previous Tool"), FN(OnPrevTool),
          AlwaysEnabledFlag, wxT("A") ),
       Command( wxT("NextTool"), XXO("&Next Tool"), FN(OnNextTool),

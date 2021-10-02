@@ -17,6 +17,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../UIHandle.h"
 #include "SelectedRegion.h"
 
+class AudacityProject;
 class SelectionStateChanger;
 class SnapManager;
 class SpectrumAnalyst;
@@ -32,20 +33,29 @@ class AUDACITY_DLL_API BrushHandle : public UIHandle
    BrushHandle(const BrushHandle&);
 
 public:
+   /*! Callbacks from the brush handle */
+   // Call Init() on click; Commit() on release; destroy on cancel
+   class StateSaver {
+   public:
+      virtual ~StateSaver();
+      virtual void Init( AudacityProject &project, bool clearAll ) = 0;
+
+      void Commit()
+      {
+         mCommitted = true;
+      }
+
+   protected:
+      bool mCommitted = false;
+   };
+
    explicit BrushHandle
-      (const std::shared_ptr<TrackView> &pTrackView,
+      (std::shared_ptr<StateSaver> pStateSaver,
+       const std::shared_ptr<TrackView> &pTrackView,
        const TrackList &trackList,
        const TrackPanelMouseState &st, const ViewInfo &viewInfo,
        const std::shared_ptr<SpectralData> &pSpectralData,
        const ProjectSettings &pSettings);
-
-   // This always hits, but details of the hit vary with mouse position and
-   // key state.
-   static UIHandlePtr HitTest
-      (std::weak_ptr<BrushHandle> &holder,
-       const TrackPanelMouseState &state, const AudacityProject *pProject,
-       const std::shared_ptr<TrackView> &pTrackView,
-       const std::shared_ptr<SpectralData> &mpSpectralData);
 
    BrushHandle &operator=(const BrushHandle&) = default;
    
@@ -75,9 +85,10 @@ public:
 
    Result Cancel(AudacityProject*) override;
 
+private:
+   std::shared_ptr<StateSaver> mpStateSaver;
    std::shared_ptr<SpectralData> mpSpectralData;
 
-private:
    std::weak_ptr<Track> FindTrack();
 
    // TrackPanelDrawable implementation

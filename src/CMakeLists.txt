@@ -1296,6 +1296,9 @@ else()
                           -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
+   
+   add_executable(findlib ../linux/findlib.c)
+   target_link_libraries(findlib ${CMAKE_DL_LIBS})
 endif()
 
 if(CRASH_REPORT_URL)

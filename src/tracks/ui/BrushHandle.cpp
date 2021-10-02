@@ -139,39 +139,15 @@ namespace
    }
 }
 
-UIHandlePtr BrushHandle::HitTest
-      (std::weak_ptr<BrushHandle> &holder,
-       const TrackPanelMouseState &st, const AudacityProject *pProject,
-       const std::shared_ptr<TrackView> &pTrackView,
-       const std::shared_ptr<SpectralData> &mpData)
-{
-   const auto &viewInfo = ViewInfo::Get( *pProject );
-   auto &projectSettings = ProjectSettings::Get( *pProject );
-   auto result = std::make_shared<BrushHandle>(
-      pTrackView, TrackList::Get( *pProject ),
-      st, viewInfo, mpData, projectSettings);
-
-   result = AssignUIHandlePtr(holder, result);
-
-   //Make sure we are within the selected track
-   // Adjusting the selection edges can be turned off in
-   // the preferences...
-   auto pTrack = pTrackView->FindTrack();
-   if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
-   {
-      return result;
-   }
-
-   return result;
-}
-
 BrushHandle::BrushHandle
-      ( const std::shared_ptr<TrackView> &pTrackView,
+      ( std::shared_ptr<StateSaver> pStateSaver,
+        const std::shared_ptr<TrackView> &pTrackView,
         const TrackList &trackList,
         const TrackPanelMouseState &st, const ViewInfo &viewInfo,
         const std::shared_ptr<SpectralData> &pSpectralData,
         const ProjectSettings &pSettings)
-      : mpView{ pTrackView }
+      : mpStateSaver{ move(pStateSaver) }
+      , mpView{ pTrackView }
       , mpSpectralData(pSpectralData)
 {
    const wxMouseState &state = st.state;
@@ -243,6 +219,10 @@ void BrushHandle::HandleHopBinData(int hopNum, int freqBinNum) {
 UIHandle::Result BrushHandle::Click
       (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
+   if (mpStateSaver)
+      // Clear all unless there is a modifier key down
+      mpStateSaver->Init( *pProject, !evt.event.HasAnyModifiers() );
+
    using namespace RefreshCode;
 
    const auto pView = mpView.lock();
@@ -329,7 +309,7 @@ UIHandle::Result BrushHandle::Drag
    int h1 = posXToHopNum(dest_xcoord);
    int b1 = posYToFreqBin(dest_ycoord);
 
-   mbCtrlDown = event.ControlDown();
+   mbCtrlDown = event.ControlDown() || event.AltDown();
 
    // Use the hop and bin number to calculate the brush stroke, instead of the mouse coordinates
    // For mouse coordinate:
@@ -397,6 +377,10 @@ UIHandle::Result BrushHandle::Release
 {
    using namespace RefreshCode;
    mpSpectralData->saveAndClearBuffer();
+   if (mpStateSaver) {
+      mpStateSaver->Commit();
+      mpStateSaver.reset();
+   }
    if(mbCtrlDown){
       ProjectHistory::Get( *pProject ).PushState(
             XO( "Erased selected area" ),
@@ -415,9 +399,7 @@ UIHandle::Result BrushHandle::Release
 
 UIHandle::Result BrushHandle::Cancel(AudacityProject *pProject)
 {
-   mpSpectralData->dataBuffer.clear();
-   mpSpectralData->coordHistory.clear();
-
+   mpStateSaver.reset();
    return RefreshCode::RefreshAll;
 }
 
@@ -444,3 +426,5 @@ std::weak_ptr<Track> BrushHandle::FindTrack()
    else
       return pView->FindTrack();
 }
+
+BrushHandle::StateSaver::~StateSaver() = default;

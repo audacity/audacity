@@ -22,10 +22,13 @@ Paul Licameli split from AudacityProject.cpp
 wxDEFINE_EVENT(EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 
 namespace {
-   void Notify( AudacityProject &project, ProjectSettings::EventCode code )
+   void Notify(
+      AudacityProject &project, ProjectSettings::EventCode code,
+      long previousValue )
    {
       wxCommandEvent e{ EVT_PROJECT_SETTINGS_CHANGE };
       e.SetInt( static_cast<int>( code ) );
+      e.SetExtraLong( previousValue );
       project.ProcessEvent( e );
    }
 }
@@ -166,10 +169,11 @@ int ProjectSettings::GetSnapTo() const
    return mSnapTo;
 }
 
-// Move it to source file, to trigger event
 void ProjectSettings::SetTool(int tool) {
-   mCurrentTool = tool;
-   Notify( mProject, ChangedTool );
+   if (auto oldValue = mCurrentTool; oldValue != tool) {
+      mCurrentTool = tool;
+      Notify( mProject, ChangedTool, oldValue );
+   }
 }
 
 bool ProjectSettings::IsSyncLocked() const
@@ -184,9 +188,9 @@ bool ProjectSettings::IsSyncLocked() const
 void ProjectSettings::SetSyncLock(bool flag)
 {
    auto &project = mProject;
-   if (flag != mIsSyncLocked) {
+   if (auto oldValue = mIsSyncLocked; flag != oldValue) {
       mIsSyncLocked = flag;
-      Notify( project, ChangedSyncLock );
+      Notify( project, ChangedSyncLock, oldValue );
    }
 }
 
