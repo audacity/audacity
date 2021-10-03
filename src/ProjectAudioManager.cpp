@@ -477,6 +477,8 @@ void ProjectAudioManager::PlayCurrentRegion(bool looped /* = false */,
 
       const auto &playRegion = ViewInfo::Get( *p ).playRegion;
 
+      if (looped)
+         cutpreview = false;
       auto options = DefaultPlayOptions( *p, looped );
       if (cutpreview)
          options.envelope = nullptr;

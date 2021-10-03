@@ -490,6 +490,8 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 
    // Scrubbing only supports straight through play.
    // So if looped or cutPreview, we have to fall back to fixed speed.
+   if (looped)
+      cutPreview = false;
    bFixedSpeedPlay = bFixedSpeedPlay || looped || cutPreview;
    if (bFixedSpeedPlay)
    {
