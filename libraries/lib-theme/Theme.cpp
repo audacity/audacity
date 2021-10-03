@@ -86,6 +86,15 @@ Theme::~Theme(void)
 {
 }
 
+static wxString ThemeFilePrefix( teThemeType id )
+{
+   auto strings = wxSplit(id.GET(), L'-');
+   wxString result;
+   for (auto &string : strings)
+      result += string.Capitalize();
+   return result;
+}
+
 
 void Theme::EnsureInitialised()
 {
