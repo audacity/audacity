@@ -1859,21 +1859,34 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    // Verify sample rate
    if (!make_iterator_range( sampRates ).contains( rate ) ||
       (rate < lowrate) || (rate > highrate)) {
-       if (project->mBatchMode) {
-           if (bitrate > 32) {
-               rate = 48000;
-           }
-           else if (bitrate <= 32) {
-               rate = 240000;
-           }
-       }
-       else {
-           rate = AskResample(bitrate, rate, lowrate, highrate);
-       }
-      if (rate == 0) {
-         return ProgressResult::Cancelled;
-      }
-   }
+        // Force valid sample rate in macros.
+		if (project->mBatchMode) {
+			if (!make_iterator_range( sampRates ).contains( rate )) {
+				auto const bestRateIt = std::lower_bound(sampRates.begin(),
+				sampRates.end(), rate);
+				rate = (bestRateIt == sampRates.end()) ? highrate : *bestRateIt;
+			}
+			if (rate < lowrate) {
+				rate = lowrate;
+			}
+			else if (rate > highrate) {
+				rate = highrate;
+			}
+		}
+		// else validate or prompt
+		else {
+			if (!make_iterator_range( sampRates ).contains( rate ) ||
+				(rate < lowrate) || (rate > highrate)) {
+				rate = AskResample(bitrate, rate, lowrate, highrate);
+			}
+			if (rate == 0) {
+				return ProgressResult::Cancelled;
+       
+			}
+		}
+	}
+
+
 
    // Set the channel mode
    if (forceMono) {
