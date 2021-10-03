@@ -318,7 +318,7 @@ void PowerSpectrum(size_t NumSamples, const float *In, float *Out)
          + (pFFT[hFFT->BitReversed[i]+1]*pFFT[hFFT->BitReversed[i]+1]);
    }
    // Handle the (real-only) DC and Fs/2 bins
-   Out[0] = pFFT[0]*pFFT[0];
+   Out[0] = pFFT[0]*pFFT[0]/4;
    Out[NumSamples / 2] = pFFT[1]*pFFT[1];
 }
 
