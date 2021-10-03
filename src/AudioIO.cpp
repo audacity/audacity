@@ -924,12 +924,12 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
       // Main thread's initialization of mTime
       mPlaybackSchedule.SetTrackTime( time );
+      mPlaybackSchedule.GetPolicy().OffsetTrackTime( mPlaybackSchedule, 0 );
 
       // Reset mixer positions for all playback tracks
       unsigned numMixers = mPlaybackTracks.size();
       for (unsigned ii = 0; ii < numMixers; ++ii)
          mPlaybackMixers[ii]->Reposition( time );
-      mPlaybackSchedule.RealTimeInit( time );
    }
    
    // Now that we are done with SetTrackTime():
@@ -1801,8 +1801,7 @@ void AudioIO::FillPlayBuffers()
       // consumer side in the PortAudio thread, which reads the time
       // queue after reading the sample queues.  The sample queues use
       // atomic variables, the time queue doesn't.
-      mPlaybackSchedule.mTimeQueue.Producer( mPlaybackSchedule, mRate,
-         frames);
+      mPlaybackSchedule.mTimeQueue.Producer(mPlaybackSchedule, frames);
 
       for (size_t i = 0; i < mPlaybackTracks.size(); i++)
       {
@@ -3017,12 +3016,12 @@ int AudioIoCallback::CallbackDoSeek()
    }
 
    // Calculate the NEW time position, in the PortAudio callback
-   const auto time = mPlaybackSchedule.ClampTrackTime(
-      mPlaybackSchedule.GetTrackTime() + mSeek );
+   const auto time =
+      mPlaybackSchedule.GetPolicy().OffsetTrackTime( mPlaybackSchedule, mSeek );
+
    mPlaybackSchedule.SetTrackTime( time );
    mSeek = 0.0;
 
-   mPlaybackSchedule.RealTimeInit( time );
 
    // Reset mixer positions and flush buffers for all tracks
    for (size_t i = 0; i < numPlaybackTracks; i++)

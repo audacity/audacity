@@ -14,6 +14,7 @@ Paul Licameli split from ProjectManager.cpp
 #include <wx/app.h>
 #include <wx/frame.h>
 #include <wx/statusbr.h>
+#include <algorithm>
 
 #include "AudioIO.h"
 #include "BasicUI.h"
@@ -99,7 +100,194 @@ auto ProjectAudioManager::StatusWidthFunction(
    return {};
 }
 
-/*! @excsafety{Strong} -- For state of mCutPreviewTracks */
+namespace {
+// The implementation is general enough to allow backwards play too
+class CutPreviewPlaybackPolicy final : public PlaybackPolicy {
+public:
+   CutPreviewPlaybackPolicy(
+      double gapLeft, //!< Lower bound track time of of elision
+      double gapLength //!< Non-negative track duration
+   );
+   ~CutPreviewPlaybackPolicy() override;
+
+   void Initialize(PlaybackSchedule &schedule, double rate) override;
+
+   bool Done(PlaybackSchedule &schedule, unsigned long) override;
+
+   double OffsetTrackTime( PlaybackSchedule &schedule, double offset ) override;
+
+   PlaybackSlice GetPlaybackSlice(
+      PlaybackSchedule &schedule, size_t available) override;
+
+   std::pair<double, double> AdvancedTrackTime( PlaybackSchedule &schedule,
+      double trackTime, size_t nSamples) override;
+
+   bool RepositionPlayback(
+      PlaybackSchedule &schedule, const Mixers &playbackMixers,
+      size_t frames, size_t available) override;
+
+private:
+   double GapStart() const
+   { return mReversed ? mGapLeft + mGapLength : mGapLeft; }
+   double GapEnd() const
+   { return mReversed ? mGapLeft : mGapLeft + mGapLength; }
+   bool AtOrBefore(double trackTime1, double trackTime2) const
+   { return mReversed ? trackTime1 >= trackTime2 : trackTime1 <= trackTime2; }
+
+   //! Fixed at construction time; these are a track time and duration
+   const double mGapLeft, mGapLength;
+
+   //! Starting and ending track times set in Initialize()
+   double mStart = 0, mEnd = 0;
+
+   // Non-negative real time durations
+   double mDuration1 = 0, mDuration2 = 0;
+   double mInitDuration1 = 0, mInitDuration2 = 0;
+
+   bool mDiscontinuity{ false };
+   bool mReversed{ false };
+};
+
+CutPreviewPlaybackPolicy::CutPreviewPlaybackPolicy(
+   double gapLeft, double gapLength)
+: mGapLeft{ gapLeft }, mGapLength{ gapLength }
+{
+   wxASSERT(gapLength >= 0.0);
+}
+
+CutPreviewPlaybackPolicy::~CutPreviewPlaybackPolicy() = default;
+
+void CutPreviewPlaybackPolicy::Initialize(
+   PlaybackSchedule &schedule, double rate)
+{
+   PlaybackPolicy::Initialize(schedule, rate);
+
+   // Examine mT0 and mT1 in the schedule only now; ignore changes during play
+   double left = mStart = schedule.mT0;
+   double right = mEnd = schedule.mT1;
+   mReversed = left > right;
+   if (mReversed)
+      std::swap(left, right);
+
+   if (left < mGapLeft)
+      mDuration1 = schedule.ComputeWarpedLength(left, mGapLeft);
+   const auto gapEnd = mGapLeft + mGapLength;
+   if (gapEnd < right)
+      mDuration2 = schedule.ComputeWarpedLength(gapEnd, right);
+   if (mReversed)
+      std::swap(mDuration1, mDuration2);
+   if (sampleCount(mDuration2 * rate) == 0)
+      mDuration2 = mDuration1, mDuration1 = 0;
+   mInitDuration1 = mDuration1;
+   mInitDuration2 = mDuration2;
+}
+
+bool CutPreviewPlaybackPolicy::Done(PlaybackSchedule &schedule, unsigned long)
+{
+   //! Called in the PortAudio thread
+   auto diff = schedule.GetTrackTime() - mEnd;
+   if (mReversed)
+      diff *= -1;
+   return sampleCount(diff * mRate) >= 0;
+}
+
+double CutPreviewPlaybackPolicy::OffsetTrackTime(
+   PlaybackSchedule &schedule, double offset )
+{
+   // Compute new time by applying the offset, jumping over the gap
+   auto time = schedule.GetTrackTime();
+   if (offset >= 0) {
+      auto space = std::clamp(mGapLeft - time, 0.0, offset);
+      time += space;
+      offset -= space;
+      if (offset > 0)
+         time = std::max(time, mGapLeft + mGapLength) + offset;
+   }
+   else {
+      auto space = std::clamp(mGapLeft + mGapLength - time, offset, 0.0);
+      time += space;
+      offset -= space;
+      if (offset < 0)
+         time = std::min(time, mGapLeft) + offset;
+   }
+   time = std::clamp(time, std::min(mStart, mEnd), std::max(mStart, mEnd));
+
+   // Reset the durations
+   mDiscontinuity = false;
+   mDuration1 = mInitDuration1;
+   mDuration2 = mInitDuration2;
+   if (AtOrBefore(time, GapStart()))
+      mDuration1 = std::max(0.0,
+         mDuration1 - fabs(schedule.ComputeWarpedLength(mStart, time)));
+   else {
+      mDuration1 = 0;
+      mDuration2 = std::max(0.0,
+         mDuration2 - fabs(schedule.ComputeWarpedLength(GapEnd(), time)));
+   }
+
+   return time;
+}
+
+PlaybackSlice CutPreviewPlaybackPolicy::GetPlaybackSlice(
+   PlaybackSchedule &, size_t available)
+{
+   size_t frames = available;
+   size_t toProduce = frames;
+   sampleCount samples1(mDuration1 * mRate);
+   if (samples1 > 0 && samples1 < frames)
+      // Shorter slice than requested, up to the discontinuity
+      toProduce = frames = samples1.as_size_t();
+   else if (samples1 == 0) {
+      sampleCount samples2(mDuration2 * mRate);
+      if (samples2 < frames) {
+         toProduce = samples2.as_size_t();
+         // Produce some extra silence so that the time queue consumer can
+         // satisfy its end condition
+         frames = std::min(available, toProduce + TimeQueueGrainSize + 1);
+      }
+   }
+   return { available, frames, toProduce };
+}
+
+std::pair<double, double> CutPreviewPlaybackPolicy::AdvancedTrackTime(
+   PlaybackSchedule &schedule, double trackTime, size_t nSamples)
+{
+   auto realDuration = nSamples / mRate;
+   if (mDuration1 > 0) {
+      mDuration1 = std::max(0.0, mDuration1 - realDuration);
+      if (sampleCount(mDuration1 * mRate) == 0) {
+         mDuration1 = 0;
+         mDiscontinuity = true;
+         return { GapStart(), GapEnd() };
+      }
+   }
+   else
+      mDuration2 = std::max(0.0, mDuration2 - realDuration);
+   if (mReversed)
+      realDuration *= -1;
+   const double time = schedule.SolveWarpedLength(trackTime, realDuration);
+
+   if ( mReversed ? time <= mEnd : time >= mEnd )
+      return {mEnd, std::numeric_limits<double>::infinity()};
+   else
+      return {time, time};
+}
+
+bool CutPreviewPlaybackPolicy::RepositionPlayback( PlaybackSchedule &,
+   const Mixers &playbackMixers, size_t, size_t )
+{
+   if (mDiscontinuity) {
+      mDiscontinuity = false;
+      auto newTime = GapEnd();
+      for (auto &pMixer : playbackMixers)
+         pMixer->Reposition(newTime, true);
+      // Tell TrackBufferExchange that we aren't done yet
+      return false;
+   }
+   return true;
+}
+}
+
 int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    const AudioIOStartStreamOptions &options,
                                    PlayMode mode,
@@ -219,23 +407,18 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
          gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
          double tcp0 = tless-beforeLen;
-         double diff = tgreater - tless;
-         double tcp1 = (tgreater+afterLen) - diff;
-         SetupCutPreviewTracks(tcp0, tless, tgreater, tcp1);
+         const double diff = tgreater - tless;
+         double tcp1 = tgreater+afterLen;
          if (backwards)
             std::swap(tcp0, tcp1);
-         if (mCutPreviewTracks)
-         {
-            AudioIOStartStreamOptions myOptions = options;
-            myOptions.cutPreviewGapStart = t0;
-            myOptions.cutPreviewGapLen = t1 - t0;
-            token = gAudioIO->StartStream(
-               GetAllPlaybackTracks(*mCutPreviewTracks, false, nonWaveToo),
-               tcp0, tcp1, myOptions);
-         }
-         else
-            // Cannot create cut preview tracks, clean up and exit
-            return -1;
+         AudioIOStartStreamOptions myOptions = options;
+         myOptions.policyFactory =
+            [tless, diff]() -> std::unique_ptr<PlaybackPolicy> {
+               return std::make_unique<CutPreviewPlaybackPolicy>(tless, diff);
+            };
+         token = gAudioIO->StartStream(
+            GetAllPlaybackTracks(TrackList::Get(*p), false, nonWaveToo),
+            tcp0, tcp1, myOptions);
       }
       else {
          token = gAudioIO->StartStream(
@@ -349,8 +532,6 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
    projectAudioManager.SetPaused( false );
    //Make sure you tell gAudioIO to unpause
    gAudioIO->SetPaused( false );
-
-   ClearCutPreviewTracks();
 
    // So that we continue monitoring after playing or recording.
    // also clean the MeterQueues
@@ -809,38 +990,6 @@ void ProjectAudioManager::OnPause()
    {
       gAudioIO->SetPaused(paused);
    }
-}
-
-/*! @excsafety{Strong} -- For state of mCutPreviewTracks*/
-void ProjectAudioManager::SetupCutPreviewTracks(double WXUNUSED(playStart), double cutStart,
-                                           double cutEnd, double  WXUNUSED(playEnd))
-
-{
-   ClearCutPreviewTracks();
-   AudacityProject *p = &mProject;
-   {
-      auto trackRange = TrackList::Get( *p ).Selected< const PlayableTrack >();
-      if( !trackRange.empty() ) {
-         auto cutPreviewTracks = TrackList::Create( nullptr );
-         for (const auto track1 : trackRange) {
-            // Duplicate and change tracks
-            // Clear has a very small chance of throwing
-
-            auto newTrack = track1->Duplicate();
-            newTrack->Clear(cutStart, cutEnd);
-            cutPreviewTracks->Add( newTrack );
-         }
-         // use No-throw-guarantee:
-         mCutPreviewTracks = cutPreviewTracks;
-      }
-   }
-}
-
-void ProjectAudioManager::ClearCutPreviewTracks()
-{
-   if (mCutPreviewTracks)
-      mCutPreviewTracks->Clear();
-   mCutPreviewTracks.reset();
 }
 
 void ProjectAudioManager::CancelRecording()
