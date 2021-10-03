@@ -94,11 +94,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 #include "wxFileNameWrapper.h"
-<<<<<<< HEAD
 #include "Project.h"
-=======
-#include "../../libraries/lib-project/Project.h"
->>>>>>> f020f9068af78918a47b24a1aedc9689078e12df
 
 #include "Export.h"
 
