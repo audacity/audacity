@@ -86,7 +86,8 @@ Theme::~Theme(void)
 {
 }
 
-static wxString ThemeFilePrefix( teThemeType id )
+namespace {
+wxString ThemeFilePrefix( teThemeType id )
 {
    auto strings = wxSplit(id.GET(), L'-');
    wxString result;
@@ -95,6 +96,48 @@ static wxString ThemeFilePrefix( teThemeType id )
    return result;
 }
 
+//! Has the side-effect of ensuring existence of the directory
+FilePath ThemeDir()
+{
+   return FileNames::MkDir( wxFileName( FileNames::DataDir(), wxT("Theme") ).GetFullPath() );
+}
+
+//! Has the side-effect of ensuring existence of the directory
+FilePath ThemeComponentsDir()
+{
+   return FileNames::MkDir( wxFileName( ThemeDir(), wxT("Components") ).GetFullPath() );
+}
+
+FilePath ThemeCachePng()
+{
+   return wxFileName( ThemeDir(), wxT("ImageCache.png") ).GetFullPath();
+}
+
+FilePath ThemeCacheHtm()
+{
+   return wxFileName( ThemeDir(), wxT("ImageCache.htm") ).GetFullPath();
+}
+
+FilePath ThemeImageDefsAsCee()
+{
+   return wxFileName( ThemeDir(), wxT("ThemeImageDefsAsCee.h") ).GetFullPath();
+}
+
+FilePath ThemeCacheAsCee( )
+{
+// DA: Theme sourcery file name.
+#ifndef EXPERIMENTAL_DA
+   return wxFileName( ThemeDir(), wxT("ThemeAsCeeCode.h") ).GetFullPath();
+#else
+   return wxFileName( ThemeDir(), wxT("DarkThemeAsCeeCode.h") ).GetFullPath();
+#endif
+}
+
+FilePath ThemeComponent(const wxString &Str)
+{
+   return wxFileName( ThemeComponentsDir(), Str, wxT("png") ).GetFullPath();
+}
+}
 
 void Theme::EnsureInitialised()
 {
@@ -648,7 +691,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    // IF bBinarySave, THEN saving to a normal PNG file.
    if( bBinarySave )
    {
-      const auto &FileName = FileNames::ThemeCachePng();
+      const auto &FileName = ThemeCachePng();
 
       // Perhaps we should prompt the user if they are overwriting
       // an existing theme cache?
@@ -691,7 +734,7 @@ void ThemeBase::CreateImageCache( bool bBinarySave )
    else
    {
       SourceOutputStream OutStream;
-      const auto &FileName = FileNames::ThemeCacheAsCee( );
+      const auto &FileName = ThemeCacheAsCee( );
       if( !OutStream.OpenFile( FileName ))
       {
          ShowMessageBox(
@@ -722,7 +765,7 @@ void ThemeBase::WriteImageMap( )
 
    FlowPacker context{ ImageCacheWidth };
 
-   wxFFile File( FileNames::ThemeCacheHtm(), wxT("wb") );// I'll put in NEW lines explicitly.
+   wxFFile File( ThemeCacheHtm(), wxT("wb") );// I'll put in NEW lines explicitly.
    if( !File.IsOpened() )
       return;
 
@@ -771,7 +814,7 @@ void ThemeBase::WriteImageDefs( )
    auto &resources = *mpSet;
    EnsureInitialised();
 
-   wxFFile File( FileNames::ThemeImageDefsAsCee(), wxT("wb") );
+   wxFFile File( ThemeImageDefsAsCee(), wxT("wb") );
    if( !File.IsOpened() )
       return;
    teResourceFlags PrevFlags = (teResourceFlags)-1;
@@ -840,7 +883,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    {
       mPreferredSystemAppearance = PreferredSystemAppearance::Light;
 
-      const auto &FileName = FileNames::ThemeCachePng();
+      const auto &FileName = ThemeCachePng();
       if( !wxFileExists( FileName ))
       {
          if( bOkIfNotFound )
@@ -950,7 +993,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
 {
    auto &resources = *mpSet;
    // IF directory doesn't exist THEN return early.
-   if( !wxDirExists( FileNames::ThemeComponentsDir() ))
+   if( !wxDirExists( ThemeComponentsDir() ))
       return;
 
    using namespace BasicUI;
@@ -962,7 +1005,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
 
       if( !(resources.mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = FileNames::ThemeComponent( resources.mBitmapNames[i] );
+         FileName = ThemeComponent( resources.mBitmapNames[i] );
          if( wxFileExists( FileName ))
          {
             if( !resources.mImages[i].LoadFile( FileName, wxBITMAP_TYPE_PNG ))
@@ -995,7 +1038,7 @@ void ThemeBase::LoadComponents( bool bOkIfNotFound )
       ShowMessageBox(
          XO(
 "None of the expected theme component files\n were found in:\n  %s.")
-            .Format( FileNames::ThemeComponentsDir() ));
+            .Format( ThemeComponentsDir() ));
    }
 }
 
@@ -1004,7 +1047,7 @@ void ThemeBase::SaveComponents()
    using namespace BasicUI;
    auto &resources = *mpSet;
    // IF directory doesn't exist THEN create it
-   if( !wxDirExists( FileNames::ThemeComponentsDir() ))
+   if( !wxDirExists( ThemeComponentsDir() ))
    {
       /// \bug 1 in wxWidgets documentation; wxMkDir returns false if
       /// directory didn't exist, even if it successfully creates it.
@@ -1012,15 +1055,15 @@ void ThemeBase::SaveComponents()
       /// \bug 2 in wxWidgets documentation; wxMkDir has only one argument
       /// under MSW
 #ifdef __WXMSW__
-      wxMkDir( FileNames::ThemeComponentsDir().fn_str() );
+      wxMkDir( ThemeComponentsDir().fn_str() );
 #else
-      wxMkDir( FileNames::ThemeComponentsDir().fn_str(), 0700 );
+      wxMkDir( ThemeComponentsDir().fn_str(), 0700 );
 #endif
-      if( !wxDirExists( FileNames::ThemeComponentsDir() ))
+      if( !wxDirExists( ThemeComponentsDir() ))
       {
          ShowMessageBox(
             XO("Could not create directory:\n  %s")
-               .Format( FileNames::ThemeComponentsDir() ) );
+               .Format( ThemeComponentsDir() ) );
          return;
       }
    }
@@ -1031,7 +1074,7 @@ void ThemeBase::SaveComponents()
    {
       if( !(resources.mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = FileNames::ThemeComponent( resources.mBitmapNames[i] );
+         FileName = ThemeComponent( resources.mBitmapNames[i] );
          if( wxFileExists( FileName ))
          {
             ++n;
@@ -1048,7 +1091,7 @@ void ThemeBase::SaveComponents()
          ShowMessageBox(
             XO(
 "Some required files in:\n  %s\nwere already present. Overwrite?")
-               .Format( FileNames::ThemeComponentsDir() ),
+               .Format( ThemeComponentsDir() ),
             MessageBoxOptions{}
                .ButtonStyle(Button::YesNo)
                .DefaultIsNo());
@@ -1060,7 +1103,7 @@ void ThemeBase::SaveComponents()
    {
       if( !(resources.mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = FileNames::ThemeComponent( resources.mBitmapNames[i] );
+         FileName = ThemeComponent( resources.mBitmapNames[i] );
          if( !resources.mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
          {
             ShowMessageBox(
@@ -1072,7 +1115,7 @@ void ThemeBase::SaveComponents()
    }
    ShowMessageBox(
       XO("Theme written to:\n  %s.")
-         .Format( FileNames::ThemeComponentsDir() ) );
+         .Format( ThemeComponentsDir() ) );
 }
 
 
