@@ -39,10 +39,17 @@ enum {
    zoomTool,
    slideTool,
    multiTool,
+#ifdef EXPERIMENTAL_BRUSH_TOOL
+   brushTool,
+#endif
    numTools,
    
    firstTool = selectTool,
+#ifdef EXPERIMENTAL_BRUSH_TOOL
+   lastTool = brushTool,
+#else
    lastTool = multiTool,
+#endif
 };
 }
 
@@ -59,6 +66,8 @@ public:
    // Values retrievable from GetInt() of the event for settings change
    enum EventCode : int {
       ChangedSyncLock,
+      ChangedProjectRate,
+      ChangedTool
    };
 
    explicit ProjectSettings( AudacityProject &project );
@@ -82,8 +91,18 @@ public:
 
    // Current tool
 
-   void SetTool(int tool) { mCurrentTool = tool; }
+   void SetTool(int tool);
    int GetTool() const { return mCurrentTool; }
+
+   // Current brush radius
+   void SetBrushRadius(int brushRadius) { mCurrentBrushRadius = brushRadius; }
+   int GetBrushRadius() const { return mCurrentBrushRadius; }
+
+   void SetSmartSelection(bool isSelected) { mbSmartSelection = isSelected; }
+   bool IsSmartSelection() const { return mbSmartSelection; }
+
+   void SetOvertones(bool isSelected) { mbOvertones = isSelected; }
+   bool IsOvertones() const { return mbOvertones; }
 
    // Speed play
    double GetPlaySpeed() const {
@@ -132,6 +151,10 @@ private:
    int mSnapTo;
 
    int mCurrentTool;
+   int mCurrentBrushRadius;
+   int mCurrentBrushHop;
+   bool mbSmartSelection { false };
+   bool mbOvertones { false };
    
    bool mTracksFitVerticallyZoomed{ false };  //lda
    bool mShowId3Dialog{ true }; //lda
