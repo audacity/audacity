@@ -151,6 +151,22 @@ add_conan_lib(
       libsndfile:shared=True
 )
 
+# Allow building with ASIO for windows users
+cmake_dependent_option(
+   ${_OPT}has_asio_support
+   "Build Audacity with ASIO support"
+   False
+   "WIN32 AND IS_64BIT"
+   False
+)
+
+# Conan expects Python boolean, CMake will convert values to
+# ON/OFF
+
+if( ${_OPT}has_asio_support )
+   set( portaudio_enable_asio "portaudio:with_asio=True" )
+endif()
+
 add_conan_lib(
    PortAudio
    portaudio/19.7.0
@@ -161,6 +177,7 @@ add_conan_lib(
       portaudio:shared=True
       # Audacity doesn't support WDM/KS (yet)
       portaudio:with_wdmks=False
+      ${portaudio_enable_asio}
 )
 
 if( ${_OPT}has_networking )
