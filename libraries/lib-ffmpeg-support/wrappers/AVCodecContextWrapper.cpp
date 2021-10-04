@@ -102,13 +102,18 @@ AVCodecContextWrapper::DecodeAudioPacket(const AVPacketWrapper* packet)
             return data; // Packet decoding has failed
 
          if (gotFrame == 0)
+         {
             /*
              "Note that this field being set to zero does not mean that an
              error has occurred. For decoders with AV_CODEC_CAP_DELAY set, no
              given decode call is guaranteed to produce a frame."
              */
             // (Let's assume this doesn't happen when flushing)
+            // Still, the data was consumed by the decoder, so we need to
+            // offset the packet
+            packetCopy->OffsetPacket(bytesDecoded);
             continue;
+         }
 
          const auto sampleSize =
             static_cast<size_t>(mFFmpeg.av_get_bytes_per_sample(
