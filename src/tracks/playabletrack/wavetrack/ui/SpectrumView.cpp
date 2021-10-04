@@ -910,11 +910,6 @@ struct SpectrogramSettingsHandler : PopupMenuHandler {
    {
       mpData = static_cast< PlayableTrackControls::InitMenuData* >(pUserData);
    }
-
-   void DestroyMenu() override
-   {
-      mpData = nullptr;
-   }
 };
 
 void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)

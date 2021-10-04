@@ -97,11 +97,6 @@ private:
 
    void InitUserData(void *pUserData) override;
 
-   void DestroyMenu() override
-   {
-      mpData = nullptr;
-   }
-
    CommonTrackControls::InitMenuData *mpData{};
 
    void UpdatePrefs() override
@@ -290,14 +285,14 @@ unsigned CommonTrackControls::DoContextMenu(
    InitMenuData data{ *pProject, track.get(), pParent, RefreshNone };
 
    const auto pTable = &TrackMenuTable::Instance();
-   auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);
+   auto pMenu = PopupMenuTable::BuildMenu(pTable, &data);
 
    PopupMenuTable *const pExtension = GetMenuExtension(track.get());
    if (pExtension)
       PopupMenuTable::ExtendMenu( *pMenu, *pExtension );
 
-   pParent->PopupMenu
-      (pMenu.get(), buttonRect.x + 1, buttonRect.y + buttonRect.height + 1);
+   pMenu->Popup( *pParent,
+      { buttonRect.x + 1, buttonRect.y + buttonRect.height + 1 } );
 
    return data.result;
 }

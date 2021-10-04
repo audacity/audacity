@@ -44,6 +44,7 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
    PopupMenuHandler &handler;
    InitFunction init;
 
+   //! @pre func is not null
    PopupMenuTableEntry( const Identifier &stringId,
       Type type_, int id_, const TranslatableString &caption_,
       wxCommandEventFunction func_, PopupMenuHandler &handler_,
@@ -55,7 +56,9 @@ struct AUDACITY_DLL_API PopupMenuTableEntry : Registry::SingleItem
       , func(func_)
       , handler( handler_ )
       , init( init_ )
-   {}
+   {
+      wxASSERT(func);
+   }
 
    ~PopupMenuTableEntry() override;
 };
@@ -85,19 +88,27 @@ public:
    PopupMenuHandler( const PopupMenuHandler& ) = delete;
    PopupMenuHandler& operator=( const PopupMenuHandler& ) = delete;
 
-   // Called before the menu items are appended.
-   // Store context data, if needed.
-   // May be called more than once before the menu opens.
+   //! Called before the menu items are appended.
+   /*! Store context data, if needed.
+      May be called more than once before the menu opens.
+      Pointer remains valid for the duration of any callback, if
+      PopupMenuTable::BuildMenu() is called and the result's Popup() is called
+      before any other menus are built.
+    */
    virtual void InitUserData(void *pUserData) = 0;
-
-   // Called when menu is destroyed.
-   // May be called more than once.
-   virtual void DestroyMenu() = 0;
 };
 
 struct PopupMenuVisitor : public MenuVisitor {
    explicit PopupMenuVisitor( PopupMenuTable &table ) : mTable{ table } {}
    PopupMenuTable &mTable;
+};
+
+// Opaque structure built by PopupMenuTable::BuildMenu
+class AUDACITY_DLL_API PopupMenu
+{
+public:
+   virtual ~PopupMenu();
+   virtual void Popup( wxWindow &window, const wxPoint &pos ) = 0;
 };
 
 class AUDACITY_DLL_API PopupMenuTable : public PopupMenuHandler
@@ -114,8 +125,8 @@ public:
 
    // Optional pUserData gets passed to the InitUserData routines of tables.
    // No memory management responsibility is assumed by this function.
-   static std::unique_ptr<wxMenu> BuildMenu
-      (wxEvtHandler *pParent, PopupMenuTable *pTable, void *pUserData = NULL);
+   static std::unique_ptr<PopupMenu> BuildMenu(
+      PopupMenuTable *pTable, void *pUserData = NULL);
 
    const Identifier &Id() const { return mId; }
    const TranslatableString &Caption() const { return mCaption; }
@@ -130,7 +141,7 @@ public:
 
    // menu must have been built by BuildMenu
    // More items get added to the end of it
-   static void ExtendMenu( wxMenu &menu, PopupMenuTable &otherTable );
+   static void ExtendMenu( PopupMenu &menu, PopupMenuTable &otherTable );
    
    const std::shared_ptr< Registry::GroupItem > &Get( void *pUserData )
    {
@@ -293,7 +304,7 @@ auto pMenu = PopupMenuTable::BuildMenu(pParent, &myTable, &data);
 OtherTable otherTable;
 PopupMenuTable::ExtendMenu( *pMenu, otherTable );
 
-pParent->PopupMenu(pMenu.get(), event.m_x, event.m_y);
+pMenu->Popup( *pParent, { event.m_x, event.m_y } );
 
 That's all!
 */

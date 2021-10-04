@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   @file JournalRegistry.h
-  @brief The journal system's error status and command dictionary
+  @brief Journal system's error status, command dictionary, initializers
 
   Paul Licameli
 
@@ -45,6 +45,22 @@ namespace Journal
 
    //\brief read-only access to the dictionary
    const Dictionary &GetDictionary();
+
+   //\brief Function performing additional initialization steps for journals
+   // Return value is success
+   using Initializer = std::function< bool() >;
+
+   //\brief Registers an initialization step in its constructor.
+   // Typically statically constructed
+   struct RegisteredInitializer{
+      explicit RegisteredInitializer( Initializer initializer );
+   };
+
+   using Initializers = std::vector< Initializer >;
+
+   //\brief Get all registered initializers
+   const Initializers &GetInitializers();
+
 }
 
 #endif

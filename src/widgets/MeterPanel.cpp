@@ -61,6 +61,7 @@
 
 #include "../AudioIO.h"
 #include "../AColor.h"
+#include "../widgets/BasicMenu.h"
 #include "../ImageManipulation.h"
 #include "Decibels.h"
 #include "Project.h"
@@ -70,6 +71,7 @@
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 #include "../Theme.h"
+#include "../widgets/wxWidgetsWindowPlacement.h"
 
 #include "../AllThemeResources.h"
 #include "../widgets/valnum.h"
@@ -1973,7 +1975,10 @@ void MeterPanel::ShowMenu(const wxPoint & pos)
 
    mAccSilent = true;      // temporarily make screen readers say (close to) nothing on focus events
 
-   PopupMenu(&menu, pos);
+   BasicMenu::Handle{ &menu }.Popup(
+      wxWidgetsWindowPlacement{ this },
+      { pos.x, pos.y }
+   );
 
    /* if stop/start monitoring was chosen in the menu, then by this point
    OnMonitoring has been called and variables which affect the accessibility

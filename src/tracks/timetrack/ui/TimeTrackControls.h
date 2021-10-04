@@ -51,8 +51,6 @@ protected:
    void InitUserData(void *pUserData) override;
 
 private:
-   void DestroyMenu() override;
-
    CommonTrackControls::InitMenuData *mpData{};
 
    void OnSetTimeTrackRange(wxCommandEvent & /*event*/);
