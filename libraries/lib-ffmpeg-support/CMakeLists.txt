@@ -45,6 +45,9 @@ if (${_OPT}use_ffmpeg)
       impl/avcodec/55/AVCodecIDLookup.cpp
       impl/avcodec/55/AVCodecImpl.cpp
 
+      impl/avcodec/57/AVCodecIDLookup.cpp
+      impl/avcodec/57/AVCodecImpl.cpp
+
       impl/avcodec/58/AVCodecIDLookup.cpp
       impl/avcodec/58/AVCodecImpl.cpp
 
@@ -52,12 +55,14 @@ if (${_OPT}use_ffmpeg)
       impl/avcodec/AVCodecFunctionsLoader.h
 
       impl/avformat/55/AVFormatImpl.cpp
+      impl/avformat/57/AVFormatImpl.cpp
       impl/avformat/58/AVFormatImpl.cpp
 
       impl/avformat/AVFormatFunctionsLoader.cpp
       impl/avformat/AVFormatFunctionsLoader.h
 
       impl/avutil/52/AVUtilImpl.cpp
+      impl/avutil/55/AVUtilImpl.cpp
       impl/avutil/56/AVUtilImpl.cpp
 
       impl/avutil/AVUtilFunctionsLoader.cpp
