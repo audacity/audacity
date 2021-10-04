@@ -95,7 +95,7 @@ public:
    bool setF1(double f, bool maySwap = true);
 
 private:
-   void Notify( bool delayed = false  );
+   void Notify( bool delayed = false );
 
    SelectedRegion mRegion;
 };
@@ -112,7 +112,20 @@ enum : int {
    kTrackInfoSliderExtra = 5,
 };
 
-class PlayRegion
+class PlayRegion;
+
+struct PlayRegionEvent : public wxEvent
+{
+   PlayRegionEvent( wxEventType commandType, PlayRegion *pRegion );
+   wxEvent *Clone() const override;
+
+   wxWeakRef< PlayRegion > pRegion;
+};
+
+wxDECLARE_EXPORTED_EVENT( SCREEN_GEOMETRY_API,
+   EVT_PLAY_REGION_CHANGE, PlayRegionEvent );
+
+class SCREEN_GEOMETRY_API PlayRegion : public wxEvtHandler
 {
 public:
    PlayRegion() = default;
@@ -146,17 +159,15 @@ public:
          return std::max( mStart, mEnd );
    }
 
-   void SetStart( double start ) { mStart = start; }
-   void SetEnd( double end ) { mEnd = end; }
-   void SetTimes( double start, double end ) { mStart = start, mEnd = end; }
+   void SetStart( double start );
+   void SetEnd( double end );
+   void SetTimes( double start, double end );
 
-   void Order()
-   {
-      if ( mStart >= 0 && mEnd >= 0 && mStart > mEnd)
-         std::swap( mStart, mEnd );
-   }
+   void Order();
 
 private:
+   void Notify();
+
    // Times:
    double mStart{ -1.0 };
    double mEnd{ -1.0 };
