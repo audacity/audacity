@@ -158,7 +158,7 @@ BaseItemSharedPtr ExtraMenu()
    ) };
 
    static const auto pred =
-      []{ return gPrefs->ReadBool(wxT("/GUI/ShowExtraMenus"), false); };
+      []{ return ShowExtraMenus.Read(); };
    static BaseItemSharedPtr menu{
       ConditionalItems( wxT("Optional"),
          pred, Menu( wxT("Extra"), XXO("Ext&ra"), extraItems ) )

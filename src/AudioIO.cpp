@@ -785,7 +785,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 #endif
 
    gPrefs->Read(wxT("/AudioIO/SWPlaythrough"), &mSoftwarePlaythrough, false);
-   gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &mPauseRec, false);
+   mPauseRec = SoundActivatedRecord.Read();
    gPrefs->Read(wxT("/AudioIO/Microfades"), &mbMicroFades, false);
    int silenceLevelDB;
    gPrefs->Read(wxT("/AudioIO/SilenceLevel"), &silenceLevelDB, -50);

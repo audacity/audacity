@@ -310,8 +310,8 @@ void OnShowExtraMenus(const CommandContext &context)
    auto &project = context.project;
    auto &commandManager = CommandManager::Get( project );
 
-   bool checked = !gPrefs->Read(wxT("/GUI/ShowExtraMenus"), 0L);
-   gPrefs->Write(wxT("/GUI/ShowExtraMenus"), checked);
+   bool checked = !ShowExtraMenus.Read();
+   ShowExtraMenus.Write( checked );
    gPrefs->Flush();
    commandManager.Check(wxT("ShowExtraMenus"), checked);
    MenuCreator::RebuildAllMenuBars();

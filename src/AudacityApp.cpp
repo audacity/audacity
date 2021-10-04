@@ -191,7 +191,7 @@ namespace {
 void PopulatePreferences()
 {
    bool resetPrefs = false;
-   wxString langCode = gPrefs->Read(wxT("/Locale/Language"), wxEmptyString);
+   wxString langCode = Language.Read();
    bool writeLang = false;
 
    const wxFileName fn(
@@ -256,7 +256,7 @@ void PopulatePreferences()
    // Save the specified language
    if (writeLang)
    {
-      gPrefs->Write(wxT("/Locale/Language"), langCode);
+      Language.Write(langCode);
    }
 
    // In AUdacity 2.1.0 support for the legacy 1.2.x preferences (depreciated since Audacity
@@ -271,7 +271,7 @@ void PopulatePreferences()
 
    // record the Prefs version for future checking (this has not been used for a very
    // long time).
-   gPrefs->Write(wxT("/PrefsVersion"), wxString(wxT(AUDACITY_PREFS_VERSION_STRING)));
+   AudacityPrefsVersionString.Write(AUDACITY_PREFS_VERSION_STRING);
 
    // Check if some prefs updates need to happen based on audacity version.
    // Unfortunately we can't use the PrefsVersion prefs key because that resets things.
@@ -392,9 +392,9 @@ void PopulatePreferences()
    }
 
    // write out the version numbers to the prefs file for future checking
-   gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
-   gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
-   gPrefs->Write(wxT("/Version/Micro"), AUDACITY_REVISION);
+   AudacityMajor.Write(AUDACITY_VERSION);
+   AudacityRelease.Write(AUDACITY_RELEASE);
+   AudacityRevision.Write(AUDACITY_REVISION);
 
    gPrefs->Flush();
 }

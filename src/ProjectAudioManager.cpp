@@ -652,7 +652,7 @@ WaveTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
 void ProjectAudioManager::OnRecord(bool altAppearance)
 {
    bool bPreferNewTrack;
-   gPrefs->Read("/GUI/PreferNewTrackRecord", &bPreferNewTrack, false);
+   bPreferNewTrack = PreferNewTrackRecord.Read();
    const bool appendRecord = (altAppearance == bPreferNewTrack);
 
    // Code from CommandHandler start...
@@ -870,10 +870,10 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
          auto recordingChannels = std::max(1, AudioIORecordChannels.Read());
 
-         gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &recordingNameCustom, false);
-         gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
-         gPrefs->Read(wxT("/GUI/TrackNames/DateStamp"), &useDateStamp, false);
-         gPrefs->Read(wxT("/GUI/TrackNames/TimeStamp"), &useTimeStamp, false);
+         recordingNameCustom = RecordingNameCustom.Read();
+         useTrackNumber = TrackNumber.Read();
+         useDateStamp = DateStamp.Read();
+         useTimeStamp = TimeStamp.Read();
          defaultTrackName = WaveTrack::GetDefaultAudioTrackNamePreference();
          gPrefs->Read(wxT("/GUI/TrackNames/RecodingTrackName"), &defaultRecordingTrackName, defaultTrackName);
 

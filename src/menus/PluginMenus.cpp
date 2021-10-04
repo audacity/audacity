@@ -14,6 +14,7 @@
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "../ProjectSelectionManager.h"
+#include "../ResetConfig.h"
 #include "../toolbars/ToolManager.h"
 #include "../Screenshot.h"
 #include "TempDirectory.h"
@@ -389,51 +390,8 @@ struct Handler : CommandHandlerObject {
 void OnResetConfig(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &menuManager = MenuManager::Get(project);
-   menuManager.mLastAnalyzerRegistration = MenuCreator::repeattypenone;
-   menuManager.mLastToolRegistration = MenuCreator::repeattypenone;
-   menuManager.mLastGenerator = "";
-   menuManager.mLastEffect = "";
-   menuManager.mLastAnalyzer = "";
-   menuManager.mLastTool = "";
-
-   ResetPreferences();
-
-   // Directory will be reset on next restart.
-   FileNames::UpdateDefaultPath(FileNames::Operation::Temp, TempDirectory::DefaultTempDir());
-
-   // There are many more things we could reset here.
-   // Beeds discussion as to which make sense to.
-   // Maybe in future versions?
-   // - Reset Effects
-   // - Reset Recording and Playback volumes
-   // - Reset Selection formats (and for spectral too)
-   // - Reset Play-at-speed speed to x1
-   // - Stop playback/recording and unapply pause.
-   // - Set Zoom sensibly.
-   gPrefs->Write("/GUI/SyncLockTracks", 0);
-   gPrefs->Write("/AudioIO/SoundActivatedRecord", 0);
-   gPrefs->Write("/SelectionToolbarMode", 0);
-   gPrefs->Flush();
-   DoReloadPreferences(project);
-   ToolManager::OnResetToolBars(context);
-
-   // These are necessary to preserve the newly correctly laid out toolbars.
-   // In particular the Device Toolbar ends up short on next restart, 
-   // if they are left out.
-   gPrefs->Write(wxT("/PrefsVersion"), wxString(wxT(AUDACITY_PREFS_VERSION_STRING)));
-
-   // write out the version numbers to the prefs file for future checking
-   gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
-   gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
-   gPrefs->Write(wxT("/Version/Micro"), AUDACITY_REVISION);
-
-   gPrefs->Flush();
-
-   ProjectSelectionManager::Get( project )
-      .AS_SetSnapTo(gPrefs->ReadLong("/SnapTo", SNAP_OFF));
-   ProjectSelectionManager::Get( project )
-      .AS_SetRate(gPrefs->ReadDouble("/DefaultProjectSampleRate", 44100.0));
+   auto &window = GetProjectFrame( project );
+   ::RunResetConfig(&window, project, context);
 }
 
 void OnManageGenerators(const CommandContext &context)

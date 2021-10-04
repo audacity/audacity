@@ -297,7 +297,7 @@ void OnTimerRecord(const CommandContext &context)
       #if 0
       // Timer Record should not record into a selection.
       bool bPreferNewTrack;
-      gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
+      bPreferNewTrack = PreferNewTrackRecord.Read();
       if (bPreferNewTrack) {
          window.Rewind(false);
       } else {
@@ -549,8 +549,8 @@ void OnSoundActivated(const CommandContext &context)
 void OnToggleSoundActivated(const CommandContext &WXUNUSED(context) )
 {
    bool pause;
-   gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &pause, false);
-   gPrefs->Write(wxT("/AudioIO/SoundActivatedRecord"), !pause);
+   pause = SoundActivatedRecord.Read();
+   SoundActivatedRecord.Write( !pause );
    gPrefs->Flush();
    MenuManager::ModifyAllProjectToolbarMenus();
 }
@@ -983,7 +983,7 @@ BaseItemSharedPtr TransportMenu()
                // and gets the prime position.
                // We supply the name for the 'other one' here.
                // It should be bound to Shift+R
-               (gPrefs->ReadBool("/GUI/PreferNewTrackRecord", false)
+               (PreferNewTrackRecord.Read()
                 ? XXO("&Append Record") : XXO("Record &New Track")),
                FN(OnRecord2ndChoice), CanStopFlags,
                wxT("Shift+R"),

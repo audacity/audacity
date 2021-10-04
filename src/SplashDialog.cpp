@@ -134,7 +134,7 @@ void SplashDialog::OnChar(wxMouseEvent &event)
 void SplashDialog::Populate( ShuttleGui & S )
 {
    bool bShow;
-   gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &bShow, true );
+   bShow = ShowSplashScreen.Read();
    S.StartVerticalLay(1);
 
    //v For now, change to AudacityLogoWithName via old-fashioned ways, not Theme.
@@ -196,7 +196,7 @@ SplashDialog::~SplashDialog()
 void SplashDialog::OnDontShow( wxCommandEvent & Evt )
 {
    bool bShow = !Evt.IsChecked();
-   gPrefs->Write(wxT("/GUI/ShowSplashScreen"), bShow );
+   bShow = ShowSplashScreen.Read();
    gPrefs->Flush();
 }
 

@@ -219,6 +219,8 @@ list( APPEND SOURCES
       RefreshCode.h
       ProjectWindows.cpp
       ProjectWindows.h
+      ResetConfig.cpp
+      ResetConfig.h
       RingBuffer.cpp
       RingBuffer.h
       SampleBlock.cpp

@@ -115,7 +115,7 @@ static const TranslatableString
 ControlToolBar::ControlToolBar( AudacityProject &project )
 : ToolBar(project, TransportBarID, XO("Transport"), wxT("Control"))
 {
-   mStrLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
+   mStrLocale = Language.Read();
 
    mSizer = NULL;
 }
@@ -222,7 +222,7 @@ void ControlToolBar::Populate()
       ID_RECORD_BUTTON, false, XO("Record"));
 
    bool bPreferNewTrack;
-   gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
+   bPreferNewTrack = PreferNewTrackRecord.Read();
    if( !bPreferNewTrack )
       MakeAlternateImages(*mRecord, 1, bmpRecordBelow, bmpRecordBelow,
          bmpRecordBelowDisabled);
@@ -294,7 +294,7 @@ void ControlToolBar::RegenerateTooltips()
          case ID_RECORD_BUTTON:
             // With shift
             {  bool bPreferNewTrack;
-               gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
+               bPreferNewTrack = PreferNewTrackRecord.Read();
                // For the shortcut tooltip.
                commands.push_back( {
                   wxT("Record2ndChoice"),
@@ -330,7 +330,7 @@ void ControlToolBar::UpdatePrefs()
    bool updated = false;
    bool active;
 
-   wxString strLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
+   wxString strLocale = Language.Read();
    if (mStrLocale != strLocale)
    {
       mStrLocale = strLocale;

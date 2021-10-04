@@ -487,7 +487,7 @@ auto LabelStruct::RegionRelation(
    bool retainLabels = false;
 
    wxASSERT(reg_t0 <= reg_t1);
-   gPrefs->Read(wxT("/GUI/RetainLabels"), &retainLabels);
+   retainLabels = RetainLabels.Read();
 
    if(retainLabels) {
 

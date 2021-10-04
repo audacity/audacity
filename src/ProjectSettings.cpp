@@ -74,7 +74,7 @@ ProjectSettings::ProjectSettings(AudacityProject &project)
 , mSnapTo( gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) )
 , mCurrentBrushRadius ( 5 )
 {
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
+   mIsSyncLocked = SyncLockTracks.Read();
 
    bool multiToolActive = false;
    gPrefs->Read(wxT("/GUI/ToolBars/Tools/MultiToolActive"), &multiToolActive);
@@ -91,7 +91,7 @@ void ProjectSettings::UpdatePrefs()
 {
    gPrefs->Read(wxT("/AudioFiles/ShowId3Dialog"), &mShowId3Dialog, true);
    gPrefs->Read(wxT("/GUI/EmptyCanBeDirty"), &mEmptyCanBeDirty, true);
-   gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &mShowSplashScreen, true);
+   mShowSplashScreen = ShowSplashScreen.Read();
    mSoloPref = TracksBehaviorsSolo.Read();
    // Update the old default to the NEW default.
    if (mSoloPref == wxT("Standard"))

@@ -14,7 +14,7 @@ Paul Licameli split from GUIPrefs.h
 // The workaround is to use LTR in those dialogs.
 #ifndef __WXMAC__
 #define RTL_WORKAROUND( pWnd ) \
-   if ( gPrefs->Read( "/GUI/RtlWorkaround", true) ) \
+   if ( RtlWorkaround.Read() ) \
        pWnd->SetLayoutDirection(wxLayout_LeftToRight);
 #else
    #define RTL_WORKAROUND( pWnd )

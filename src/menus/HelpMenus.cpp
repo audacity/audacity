@@ -86,9 +86,9 @@ QuickFixDialog::QuickFixDialog(wxWindow * pParent, AudacityProject &project) :
 {
    const long SNAP_OFF = 0;
 
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mbSyncLocked, false);
+   mbSyncLocked = SyncLockTracks.Read();
    mbInSnapTo = gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) !=0;
-   gPrefs->Read(wxT("/AudioIO/SoundActivatedRecord"), &mbSoundActivated, false);
+   mbSoundActivated = SoundActivatedRecord.Read();
 
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);

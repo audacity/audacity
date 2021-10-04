@@ -44,7 +44,7 @@ RecordingPrefs::RecordingPrefs(wxWindow * parent, wxWindowID winid)
 // i18n-hint: modifier as in "Recording preferences", not progressive verb
 :  PrefsPanel(parent, winid, XC("Recording", "preference"))
 {
-   gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &mUseCustomTrackName, false);
+   mUseCustomTrackName = RecordingNameCustom.Read();
    mOldNameChoice = mUseCustomTrackName;
    Populate();
 }

@@ -128,7 +128,7 @@ SelectionBar::SelectionBar( AudacityProject &project )
    mRate = (double) QualitySettings::DefaultSampleRate.Read();
 
    // Selection mode of 0 means showing 'start' and 'end' only.
-   mSelectionMode = gPrefs->ReadLong(wxT("/SelectionToolbarMode"),  0);
+   mSelectionMode = SelectionToolbarMode.Read();
 }
 
 SelectionBar::~SelectionBar()
@@ -361,7 +361,7 @@ void SelectionBar::UpdatePrefs()
    // This will only change the selection mode during a "Reset Configuration"
    // action since the read value will be the same during a normal preferences
    // update.
-   mSelectionMode = gPrefs->ReadLong(wxT("/SelectionToolbarMode"),  0);
+   mSelectionMode = SelectionToolbarMode.Read();
 
    // This will only change the time format during a "Reset Configuration"
    // action since the read value will be the same during a normal preferences
@@ -614,7 +614,7 @@ void SelectionBar::OnIdle( wxIdleEvent &evt )
 void SelectionBar::SelectionModeUpdated()
 {
    // We just changed the mode.  Remember it.
-   gPrefs->Write(wxT("/SelectionToolbarMode"), mSelectionMode);
+   SelectionToolbarMode.Write(mSelectionMode);
    gPrefs->Flush();
 
    wxSize sz = GetMinSize();

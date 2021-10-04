@@ -65,6 +65,52 @@
 
 BoolSetting DefaultUpdatesCheckingFlag{
     L"/Update/DefaultUpdatesChecking", true };
+StringSetting Language{
+    L"/Locale/Language", L"" };
+StringSetting HelpLocation{
+    L"/GUI/Help", L"Local" };
+StringSetting ThemeSetting{
+    L"/GUI/Theme", L"light" };
+BoolSetting ShowSplashScreen{
+    L"/GUI/ShowSplashScreen", true };
+BoolSetting ShowExtraMenus{
+    L"/GUI/ShowExtraMenus", false };
+BoolSetting BeepOnCompletion{
+    L"/GUI/BeepOnCompletion", false };
+BoolSetting RetainLabels{
+    L"/GUI/RetainLabels", false };
+BoolSetting RtlWorkaround{
+    L"/GUI/RtlWorkaround", true };
+BoolSetting ToolTips{
+    L"/QuickPlay/ToolTips", true };
+BoolSetting ScrubbingEnabled{
+    L"/QuickPlay/ScrubbingEnabled", false };
+BoolSetting PreferNewTrackRecord{
+    L"/GUI/PreferNewTrackRecord", false };
+BoolSetting DropoutDetected{
+    L"/Warnings/DropoutDetected", true };
+BoolSetting RecordingNameCustom{
+    L"/GUI/TrackNames/RecordingNameCustom", false };
+BoolSetting TrackNumber{
+    L"/GUI/TrackNames/TrackNumber", false };
+BoolSetting DateStamp{
+    L"/GUI/TrackNames/DateStamp", false };
+BoolSetting TimeStamp{
+    L"/GUI/TrackNames/TimeStamp", false };
+BoolSetting SyncLockTracks{
+    L"/GUI/SyncLockTracks", false };
+BoolSetting SoundActivatedRecord{
+    L"/AudioIO/SoundActivatedRecord", false };
+BoolSetting SelectionToolbarMode{
+    L"/SelectionToolbarMode", false };
+IntSetting AudacityMajor{
+    L"/Version/Major", AUDACITY_VERSION };
+IntSetting AudacityRelease{
+    L"/Version/Minor", AUDACITY_RELEASE };
+IntSetting AudacityRevision{
+    L"/Version/Micro", AUDACITY_REVISION };
+StringSetting AudacityPrefsVersionString{ 
+    L"/PrefsVersion", AUDACITY_PREFS_VERSION_STRING };
 
 std::unique_ptr<FileConfig> ugPrefs {};
 

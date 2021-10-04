@@ -438,5 +438,28 @@ struct PREFERENCES_API PreferenceInitializer {
 
 // Special extra-sticky settings
 extern PREFERENCES_API BoolSetting DefaultUpdatesCheckingFlag;
+extern PREFERENCES_API StringSetting Language;
+extern PREFERENCES_API StringSetting HelpLocation;
+extern PREFERENCES_API StringSetting ThemeSetting;
+extern PREFERENCES_API BoolSetting ShowSplashScreen;
+extern PREFERENCES_API BoolSetting ShowExtraMenus;
+extern PREFERENCES_API BoolSetting BeepOnCompletion;
+extern PREFERENCES_API BoolSetting RetainLabels;
+extern PREFERENCES_API BoolSetting RtlWorkaround;
+extern PREFERENCES_API BoolSetting ToolTips;
+extern PREFERENCES_API BoolSetting ScrubbingEnabled;
+extern PREFERENCES_API BoolSetting PreferNewTrackRecord;
+extern PREFERENCES_API BoolSetting DropoutDetected;
+extern PREFERENCES_API BoolSetting RecordingNameCustom;
+extern PREFERENCES_API BoolSetting TrackNumber;
+extern PREFERENCES_API BoolSetting DateStamp;
+extern PREFERENCES_API BoolSetting TimeStamp;
+extern PREFERENCES_API BoolSetting SyncLockTracks;
+extern PREFERENCES_API BoolSetting SoundActivatedRecord;
+extern PREFERENCES_API BoolSetting SelectionToolbarMode;
+extern PREFERENCES_API IntSetting AudacityMajor;
+extern PREFERENCES_API IntSetting AudacityRelease;
+extern PREFERENCES_API IntSetting AudacityRevision;
+extern PREFERENCES_API StringSetting AudacityPrefsVersionString;
 
 #endif

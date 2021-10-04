@@ -247,7 +247,7 @@ void HelpSystem::ShowHelp(wxWindow *parent,
 #ifdef EXPERIMENTAL_DA
    gPrefs->Read(wxT("/GUI/Help"), &HelpMode, wxT("FromInternet") );
 #else
-   gPrefs->Read(wxT("/GUI/Help"), &HelpMode, wxT("Local") );
+   HelpMode = HelpLocation.Read();
 #endif
 
    {
