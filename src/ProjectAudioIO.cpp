@@ -68,7 +68,7 @@ void ProjectAudioIO::SetPlaybackMeter(
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO)
    {
-      gAudioIO->SetPlaybackMeter( &project , mPlaybackMeter );
+      gAudioIO->SetPlaybackMeter( project.shared_from_this() , mPlaybackMeter );
    }
 }
 
@@ -86,6 +86,6 @@ void ProjectAudioIO::SetCaptureMeter(
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO)
    {
-      gAudioIO->SetCaptureMeter( &project, mCaptureMeter );
+      gAudioIO->SetCaptureMeter( project.shared_from_this(), mCaptureMeter );
    }
 }

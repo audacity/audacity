@@ -36,7 +36,7 @@ class RingBuffer;
 class Mixer;
 class Resample;
 class AudioThread;
-class SelectedRegion;
+class PlayRegionEvent;
 
 class AudacityProject;
 
@@ -400,7 +400,8 @@ public:
    wxString LastPaErrorString();
 
    wxLongLong GetLastPlaybackTime() const { return mLastPlaybackTimeMillis; }
-   AudacityProject *GetOwningProject() const { return mOwningProject; }
+   std::shared_ptr<AudacityProject> GetOwningProject() const
+   { return mOwningProject.lock(); }
 
    /** \brief Pause and un-pause playback and recording */
    void SetPaused(bool state);
@@ -461,7 +462,7 @@ public:
       double AILAGetLastDecisionTime();
    #endif
 
-   bool IsAvailable(AudacityProject *projecT) const;
+   bool IsAvailable(AudacityProject &project) const;
 
    /** \brief Return a valid sample rate that is supported by the current I/O
    * device(s).
@@ -514,6 +515,10 @@ private:
                              unsigned int numPlaybackChannels,
                              unsigned int numCaptureChannels,
                              sampleFormat captureFormat);
+
+   void SetOwningProject( const std::shared_ptr<AudacityProject> &pProject );
+   void ResetOwningProject();
+   static void LoopPlayUpdate( PlayRegionEvent &evt );
 
    /*!
     Called in a loop from another worker thread that does not have the low-latency constraints

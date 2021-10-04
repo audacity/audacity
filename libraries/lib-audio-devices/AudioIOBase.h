@@ -43,15 +43,16 @@ class PlaybackPolicy;
 struct AudioIOStartStreamOptions
 {
    explicit
-   AudioIOStartStreamOptions(AudacityProject *pProject_, double rate_)
-      : pProject{ pProject_ }
+   AudioIOStartStreamOptions(
+      const std::shared_ptr<AudacityProject> &pProject, double rate_)
+      : pProject{ pProject }
       , envelope(nullptr)
       , rate(rate_)
       , pStartTime(NULL)
       , preRoll(0.0)
    {}
 
-   AudacityProject *pProject{};
+   std::shared_ptr<AudacityProject> pProject;
    std::weak_ptr<Meter> captureMeter, playbackMeter;
    const BoundedEnvelope *envelope; // for time warping
    std::shared_ptr< AudioIOListener > listener;
@@ -107,9 +108,9 @@ public:
    AudioIOBase &operator=(const AudioIOBase &) = delete;
 
    void SetCaptureMeter(
-      AudacityProject *project, const std::weak_ptr<Meter> &meter);
+      const std::shared_ptr<AudacityProject> &project, const std::weak_ptr<Meter> &meter);
    void SetPlaybackMeter(
-      AudacityProject *project, const std::weak_ptr<Meter> &meter);
+      const std::shared_ptr<AudacityProject> &project, const std::weak_ptr<Meter> &meter);
 
    /** \brief update state after changing what audio devices are selected
     *
@@ -239,7 +240,7 @@ protected:
    static wxString DeviceName(const PaDeviceInfo* info);
    static wxString HostName(const PaDeviceInfo* info);
 
-   AudacityProject    *mOwningProject;
+   std::weak_ptr<AudacityProject> mOwningProject;
 
    /// True if audio playback is paused
    bool                mPaused;

@@ -1263,9 +1263,7 @@ void AdornedRulerPanel::DoSelectionChange( const SelectedRegion &selectedRegion 
 {
 
    auto gAudioIO = AudioIOBase::Get();
-   if ( !gAudioIO->IsBusy() &&
-      !ViewInfo::Get( *mProject ).playRegion.Locked()
-   ) {
+   if ( !ViewInfo::Get( *mProject ).playRegion.Locked() ) {
       SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
    }
 }
@@ -1709,6 +1707,8 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       loopEnabled = ((end - start) > 0.001)? true : false;
 
       bool looped = (loopEnabled && looped);
+      if (looped)
+         cutPreview = false;
       auto options = DefaultPlayOptions( *mProject, looped );
 
       auto oldStart = playRegion.GetStart();

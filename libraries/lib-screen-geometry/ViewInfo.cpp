@@ -152,6 +152,57 @@ void NotifyingSelectedRegion::Notify( bool delayed )
       ProcessEvent( evt );
 }
 
+wxDEFINE_EVENT( EVT_PLAY_REGION_CHANGE, PlayRegionEvent );
+
+PlayRegionEvent::PlayRegionEvent(
+   wxEventType commandType, PlayRegion *pReg )
+: wxEvent{ 0, commandType }
+, pRegion{ pReg }
+{}
+
+wxEvent *PlayRegionEvent::Clone() const
+{
+   return safenew PlayRegionEvent{ *this };
+}
+
+void PlayRegion::SetStart( double start )
+{
+   if (mStart != start) {
+      mStart = start;
+      Notify();
+   }
+}
+
+void PlayRegion::SetEnd( double end )
+{
+   if (mEnd != end) {
+      mEnd = end;
+      Notify();
+   }
+}
+
+void PlayRegion::SetTimes( double start, double end )
+{
+   if (mStart != start || mEnd != end) {
+      mStart = start, mEnd = end;
+      Notify();
+   }
+}
+
+void PlayRegion::Order()
+{
+   if ( mStart >= 0 && mEnd >= 0 && mStart > mEnd) {
+      std::swap( mStart, mEnd );
+      Notify();
+   }
+}
+
+void PlayRegion::Notify()
+{
+   PlayRegionEvent evt{ EVT_PLAY_REGION_CHANGE, this };
+   ProcessEvent( evt );
+}
+
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
    []( AudacityProject &project ) {
       return std::make_unique<ViewInfo>(0.0, 1.0, ZoomInfo::GetDefaultZoom());

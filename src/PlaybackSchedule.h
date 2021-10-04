@@ -20,6 +20,7 @@
 struct AudioIOStartStreamOptions;
 class BoundedEnvelope;
 using PRCrossfadeData = std::vector< std::vector < float > >;
+class PlayRegionEvent;
 
 constexpr size_t TimeQueueGrainSize = 2000;
 
@@ -193,13 +194,6 @@ public:
    //! Provide hints for construction of playback RingBuffer objects
    virtual BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule);
 
-   //! Normalizes mTime, clamping it and handling gaps from cut preview.
-   /*!
-    * Clamps the time (unless scrubbing), and skips over the cut section.
-    * Returns a time in seconds.
-    */
-   virtual double NormalizeTrackTime( PlaybackSchedule &schedule );
-
    //! @section Called by the PortAudio callback thread
 
    //! Whether repositioning commands are allowed during playback
@@ -312,9 +306,40 @@ struct AUDACITY_DLL_API PlaybackSchedule {
     thread, what the last consumed track time is.  The main thread can use that
     for other purposes such as refreshing the display of the play head position.
     */
-   struct TimeQueue {
-      ArrayOf<double> mData;
-      size_t mSize{ 0 };
+   class TimeQueue {
+   public:
+
+      //! @section called by main thread
+
+      void Clear();
+      void Resize(size_t size);
+
+      //! @section Called by the AudioIO::TrackBufferExchange thread
+
+      //! Enqueue track time value advanced by `nSamples` according to `schedule`'s PlaybackPolicy
+      void Producer( PlaybackSchedule &schedule, size_t nSamples );
+
+      //! Return the last time saved by Producer
+      double GetLastTime() const;
+
+      //! @section called by PortAudio callback thread
+
+      //! Find the track time value `nSamples` after the last consumed sample
+      double Consumer( size_t nSamples, double rate );
+
+      //! @section called by any thread while producer and consumer are suspended
+
+      //! Empty the queue and reassign the last produced time
+      /*! Assumes producer and consumer are suspended */
+      void Prime( double time );
+
+   private:
+      struct Record {
+         double timeValue;
+         // More fields to come
+      };
+      using Records = std::vector<Record>;
+      Records mData;
       double mLastTime {};
       struct Cursor {
          size_t mIndex {};
@@ -322,17 +347,18 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       };
       //! Aligned to avoid false sharing
       NonInterfering<Cursor> mHead, mTail;
-
-      void Producer( PlaybackSchedule &schedule, size_t nSamples );
-      double Consumer( size_t nSamples, double rate );
-
-      //! Empty the queue and reassign the last produced time
-      /*! Assumes the producer and consumer are suspended */
-      void Prime(double time);
    } mTimeQueue;
 
    PlaybackPolicy &GetPolicy();
    const PlaybackPolicy &GetPolicy() const;
+
+   // The main thread writes changes in response to user events, and
+   // the audio thread later reads, and changes the playback.
+   struct SlotData {
+      double mT0;
+      double mT1;
+   };
+   MessageBuffer<SlotData> mMessageChannel;
 
    void Init(
       double t0, double t1,
@@ -359,6 +385,9 @@ struct AUDACITY_DLL_API PlaybackSchedule {
     */
    double SolveWarpedLength(double t0, double length) const;
 
+   void MessageProducer( PlayRegionEvent &evt );
+   void MessageConsumer();
+
    /** \brief True if the end time is before the start time */
    bool ReversedTime() const
    {
@@ -383,13 +412,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
     * Returns a time in seconds.
     */
    double ClampTrackTime( double trackTime ) const;
-
-   /** \brief Clamps mTime to be between mT0 and mT1
-    *
-    * Returns the bound if the value is out of bounds; does not wrap.
-    * Returns a time in seconds.
-    */
-   double LimitTrackTime() const;
 
    void ResetMode() {
       mPolicyValid.store(false, std::memory_order_release);
@@ -419,6 +441,8 @@ private:
 class LoopingPlaybackPolicy final : public PlaybackPolicy {
 public:
    ~LoopingPlaybackPolicy() override;
+
+   BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
 
    bool Done( PlaybackSchedule &schedule, unsigned long ) override;
    PlaybackSlice GetPlaybackSlice(

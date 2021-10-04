@@ -35,25 +35,6 @@ PlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
    return { 4.0, 4.0, 10.0 };
 }
 
-double PlaybackPolicy::NormalizeTrackTime( PlaybackSchedule &schedule )
-{
-   // Track time readout for the main thread
-
-   // dmazzoni: This function is needed for two reasons:
-   // One is for looped-play mode - this function makes sure that the
-   // position indicator keeps wrapping around.  The other reason is
-   // more subtle - it's because PortAudio can query the hardware for
-   // the current stream time, and this query is not always accurate.
-   // Sometimes it's a little behind or ahead, and so this function
-   // makes sure that at least we clip it to the selection.
-
-   // Limit the time between t0 and t1.
-   // Should the limiting be necessary in any play mode if there are no bugs?
-   double absoluteTime = schedule.LimitTrackTime();
-
-   return absoluteTime;
-}
-
 bool PlaybackPolicy::AllowSeek(PlaybackSchedule &)
 {
    return true;
@@ -164,6 +145,14 @@ const PlaybackPolicy &PlaybackSchedule::GetPolicy() const
 
 LoopingPlaybackPolicy::~LoopingPlaybackPolicy() = default;
 
+PlaybackPolicy::BufferTimes
+LoopingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
+{
+   // Shorter times than in the default policy so that responses to changes of
+   // selection don't lag too much
+   return { 0.5, 0.5, 1.0 };
+}
+
 bool LoopingPlaybackPolicy::Done( PlaybackSchedule &, unsigned long )
 {
    return false;
@@ -174,7 +163,7 @@ LoopingPlaybackPolicy::GetPlaybackSlice(
    PlaybackSchedule &schedule, size_t available)
 {
    // How many samples to produce for each channel.
-   const auto realTimeRemaining = schedule.RealTimeRemaining();
+   const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
    auto frames = available;
    auto toProduce = frames;
    double deltat = frames / mRate;
@@ -229,10 +218,10 @@ bool LoopingPlaybackPolicy::RepositionPlayback(
 {
    // msmeyer: If playing looped, check if we are at the end of the buffer
    // and if yes, restart from the beginning.
-   if (schedule.RealTimeRemaining() <= 0)
+   if (mRemaining <= 0)
    {
       for (auto &pMixer : playbackMixers)
-         pMixer->Restart();
+         pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0 );
       schedule.RealTimeRestart();
    }
    return false;
@@ -280,13 +269,9 @@ void PlaybackSchedule::Init(
    mWarpedLength = RealDuration(mT1);
 
    mPolicyValid.store(true, std::memory_order_release);
-}
 
-double PlaybackSchedule::LimitTrackTime() const
-{
-   // Track time readout for the main thread
-   // Allows for forward or backward play
-   return ClampTrackTime( GetTrackTime() );
+   mMessageChannel.Initialize();
+   mMessageChannel.Write( { mT0, mT1 } );
 }
 
 double PlaybackSchedule::ClampTrackTime( double trackTime ) const
@@ -353,12 +338,24 @@ double RecordingSchedule::ToDiscard() const
    return std::max(0.0, -( mPosition + TotalCorrection() ) );
 }
 
+void PlaybackSchedule::TimeQueue::Clear()
+{
+   mData = Records{};
+   mHead = {};
+   mTail = {};
+}
+
+void PlaybackSchedule::TimeQueue::Resize(size_t size)
+{
+   mData.resize(size);
+}
+
 void PlaybackSchedule::TimeQueue::Producer(
    PlaybackSchedule &schedule, size_t nSamples )
 {
    auto &policy = schedule.GetPolicy();
 
-   if ( ! mData )
+   if ( mData.empty() )
       // Recording only.  Don't fill the queue.
       return;
 
@@ -368,14 +365,15 @@ void PlaybackSchedule::TimeQueue::Producer(
    auto time = mLastTime;
    auto remainder = mTail.mRemainder;
    auto space = TimeQueueGrainSize - remainder;
+   const auto size = mData.size();
 
    while ( nSamples >= space ) {
       auto times = policy.AdvancedTrackTime( schedule, time, space );
       time = times.second;
       if (!std::isfinite(time))
          time = times.first;
-      index = (index + 1) % mSize;
-      mData[ index ] = time;
+      index = (index + 1) % size;
+      mData[ index ].timeValue = time;
       nSamples -= space;
       remainder = 0;
       space = TimeQueueGrainSize;
@@ -394,9 +392,14 @@ void PlaybackSchedule::TimeQueue::Producer(
    mTail.mIndex = index;
 }
 
+double PlaybackSchedule::TimeQueue::GetLastTime() const
+{
+   return mLastTime;
+}
+
 double PlaybackSchedule::TimeQueue::Consumer( size_t nSamples, double rate )
 {
-   if ( ! mData ) {
+   if ( mData.empty() ) {
       // Recording only.  No scrub or playback time warp.  Don't use the queue.
       return ( mLastTime += nSamples / rate );
    }
@@ -405,21 +408,49 @@ double PlaybackSchedule::TimeQueue::Consumer( size_t nSamples, double rate )
    // with RingBuffer.
    auto remainder = mHead.mRemainder;
    auto space = TimeQueueGrainSize - remainder;
+   const auto size = mData.size();
    if ( nSamples >= space ) {
       remainder = 0,
-      mHead.mIndex = (mHead.mIndex + 1) % mSize,
+      mHead.mIndex = (mHead.mIndex + 1) % size,
       nSamples -= space;
       if ( nSamples >= TimeQueueGrainSize )
          mHead.mIndex =
-            (mHead.mIndex + ( nSamples / TimeQueueGrainSize ) ) % mSize,
+            (mHead.mIndex + ( nSamples / TimeQueueGrainSize ) ) % size,
          nSamples %= TimeQueueGrainSize;
    }
    mHead.mRemainder = remainder + nSamples;
-   return mData[ mHead.mIndex ];
+   return mData[ mHead.mIndex ].timeValue;
 }
 
 void PlaybackSchedule::TimeQueue::Prime(double time)
 {
    mHead = mTail = {};
    mLastTime = time;
+   if ( !mData.empty() )
+      mData[0].timeValue = time;
+}
+
+#include "ViewInfo.h"
+void PlaybackSchedule::MessageProducer( PlayRegionEvent &evt)
+{
+   // This executes in the main thread
+   auto *pRegion = evt.pRegion.get();
+   if ( !pRegion )
+      return;
+   const auto &region = *pRegion;
+
+   mMessageChannel.Write( { region.GetStart(), region.GetEnd() } );
+}
+
+void PlaybackSchedule::MessageConsumer()
+{
+   // This executes in the TrackBufferExchange thread
+   auto data = mMessageChannel.Read();
+   auto mine = std::tie(mT0, mT1);
+   auto theirs = std::tie(data.mT0, data.mT1);
+   if (mine != theirs) {
+      mine = theirs;
+      mWarpedLength = RealDuration(mT1);
+      RealTimeInit(mTimeQueue.GetLastTime());
+   }
 }

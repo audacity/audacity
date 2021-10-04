@@ -344,11 +344,6 @@ ScrubbingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
    };
 }
 
-double ScrubbingPlaybackPolicy::NormalizeTrackTime( PlaybackSchedule &schedule )
-{
-   return schedule.GetTrackTime();
-}
-
 bool ScrubbingPlaybackPolicy::AllowSeek( PlaybackSchedule & )
 {
    // While scrubbing, ignore seek requests

@@ -1000,7 +1000,7 @@ bool EffectUIHost::Initialize()
 {
    {
       auto gAudioIO = AudioIO::Get();
-      mDisableTransport = !gAudioIO->IsAvailable(mProject);
+      mDisableTransport = !gAudioIO->IsAvailable(*mProject);
       mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
       mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
    }
