@@ -1299,6 +1299,7 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
 
     //wxPrintf("Check if we need to make room for the pasted data\n");
 
+    auto pastingFromTempTrack = !other->GetOwner();
     bool editClipCanMove = GetEditClipsCanMove();
 
     // Make room for the pasted data
@@ -1405,7 +1406,12 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
             newClip->Resample(mRate);
             newClip->Offset(t0);
             newClip->MarkChanged();
-            newClip->SetName(MakeClipCopyName(clip->GetName()));
+            if (pastingFromTempTrack)
+                //Clips from the tracks which aren't bound to any TrackList are 
+                //considered to be new entities, thus named using "new" name template
+                newClip->SetName(MakeNewClipName());
+            else
+                newClip->SetName(MakeClipCopyName(clip->GetName()));
             mClips.push_back(std::move(newClip)); // transfer ownership
         }
     }
