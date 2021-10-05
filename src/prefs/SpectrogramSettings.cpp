@@ -29,7 +29,7 @@ Paul Licameli
 #include "../widgets/AudacityMessageBox.h"
 
 IntSetting SpectrumMaxFreq{
-   L"/Spectrum/MaxFreq", 8000 };
+   L"/Spectrum/MaxFreq", 20000 };
 
 namespace {
 // Other settings not yet used outside of this file
@@ -39,14 +39,14 @@ namespace {
 IntSetting SpectrumAlgorithm{
    L"/Spectrum/Algorithm", 0 }; // Default to Frequencies
 IntSetting SpectrumScale{
-   L"/Spectrum/ScaleType", 0 }; // Default to Linear
+   L"/Spectrum/ScaleType", 2 }; // Default to Mel
 IntSetting SpectrumWindowFunction{
    L"/Spectrum/WindowType", eWinFuncHann };
 
 BoolSetting SpectrumEnableSelection{
    L"/Spectrum/EnableSpectralSelection", true };
 IntSetting SpectrumFFTSize{
-   L"/Spectrum/FFTSize", 1024 };
+   L"/Spectrum/FFTSize", 2048 };
 IntSetting SpectrumFrequencyGain{
    L"/Spectrum/FrequencyGain", 0 };
 IntSetting SpectrumGain{
@@ -58,7 +58,7 @@ IntSetting SpectrumMinFreq{
 IntSetting SpectrumRange{
    L"/Spectrum/Range", 80 };
 IntSetting SpectrumZeroPaddingFactor{
-   L"/Spectrum/ZeroPaddingFactor", 1 };
+   L"/Spectrum/ZeroPaddingFactor", 2 };
 
 #ifdef EXPERIMENTAL_FIND_NOTES
 BoolSetting SpectrumFindNotes{
