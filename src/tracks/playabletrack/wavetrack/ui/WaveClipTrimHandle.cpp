@@ -13,7 +13,7 @@
 #include "RefreshCode.h"
 
 
-#include "../../../../images/Cursors.h"
+#include "../../../images/Cursors.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "WaveTrackView.h"
