@@ -1223,10 +1223,12 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
       DoDrawSelection(&backDC);
    }
 
+#if 0
    if (PlaybackLooping::GetInstance().IsProcessing())
    {
        mPlaybackLoopingCell->DrawLoopingRange(&backDC, viewInfo);
    }
+#endif
 
    DoDrawMarks(&backDC, true);
 
@@ -2349,6 +2351,13 @@ void AdornedRulerPanel::UpdateStatusMessage( const TranslatableString &message )
 
 void AdornedRulerPanel::CreateOverlays()
 {
+    if (!mPlaybackLoopingOverlay)
+    {
+        mPlaybackLoopingOverlay = std::make_shared<PlaybackLoopingIndication>(mInner);
+        this->AddOverlay(mPlaybackLoopingOverlay);
+    }
+
+#if 0
    if (!mOverlay) {
       mOverlay =
          std::make_shared<QuickPlayIndicatorOverlay>( mProject );
@@ -2361,6 +2370,7 @@ void AdornedRulerPanel::CreateOverlays()
          pCellularPanel->AddOverlay( mOverlay );
       this->AddOverlay( mOverlay->mPartner );
    }
+#endif
 }
 
 void AdornedRulerPanel::TogglePinnedHead()

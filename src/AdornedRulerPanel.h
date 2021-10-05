@@ -235,6 +235,7 @@ private:
 
    //PlaybackLooping mPlaybackLooping;
    std::shared_ptr<PlaybackLoopingCell> mPlaybackLoopingCell;
+   std::shared_ptr<PlaybackLoopingIndication> mPlaybackLoopingOverlay;
 };
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__

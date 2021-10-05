@@ -15,6 +15,7 @@
 #include "ViewInfo.h"
 #include "TrackPanelCell.h"
 #include "UIHandle.h"
+#include "widgets/Overlay.h"
 
 //! Playback looping service (processor).
 class AUDACITY_DLL_API PlaybackLooping
@@ -55,7 +56,22 @@ public:
     PlayRegion mLoopedPlayRegion;
     //PlayRegion GetLoopedPlayRegion();
 
+    int p0{ 0 }, p1{ 0 };
+
     void UpdateLoopingRange();
+};
+
+//! GUI class for draw looping range.
+class AUDACITY_DLL_API PlaybackLoopingIndication final: public Overlay
+{
+public:
+    PlaybackLoopingIndication(wxRect timeBarBoundaries);
+
+    unsigned SequenceNumber() const override;
+    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
+    void Draw(OverlayPanel& panel, wxDC& dc) override;
+
+    wxRect mTimeBarBoundaries;
 };
 
 //! Handling user events like mouse clicking, etc.
@@ -85,11 +101,12 @@ public:
     Result Cancel(AudacityProject* pProject) override;
 };
 
-//! Describe GUI cell.
+//! Describe node cell.
 class AUDACITY_DLL_API PlaybackLoopingCell : public TrackPanelCell
 {
 public:
     PlaybackLoopingCell();
+
 
     void DrawLoopingRange(wxDC* dc, ViewInfo& viewInfo);
 
@@ -98,4 +115,5 @@ public:
     std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState& state, const AudacityProject* pProject) override;
 
     std::weak_ptr<PlaybackLoopingHandle> mUiHandlerPointer;
+    std::shared_ptr<PlaybackLoopingIndication> mOverlay;
 };
