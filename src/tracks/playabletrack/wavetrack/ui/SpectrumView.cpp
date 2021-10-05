@@ -648,7 +648,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       specCache.Populate
          (settings, waveTrackCache,
           0, 0, numPixels,
-          clip->GetNumSamples(),
+          clip->GetPlaySamplesCount(),
           tOffset, rate,
           0 // FIXME: PRL -- make reassignment work with fisheye
        );

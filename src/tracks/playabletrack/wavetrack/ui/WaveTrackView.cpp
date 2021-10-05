@@ -42,9 +42,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackInfo.h"
 
 #include "WaveTrackAffordanceControls.h"
+#include "WaveClipTrimHandle.h"
 
 namespace {
-
 
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
 
@@ -216,7 +216,7 @@ class SubViewAdjustHandle : public UIHandle
 public:
    enum { MinHeight = SubViewAdjuster::HotZoneSize };
 
-   static UIHandlePtr HitTest( std::weak_ptr<UIHandle> &holder,
+   static UIHandlePtr HitTest( std::weak_ptr<SubViewAdjustHandle> &holder,
       WaveTrackView &view,
       WaveTrackSubView &subView,
       const TrackPanelMouseState &state )
@@ -230,7 +230,7 @@ public:
       auto index = hit.first;
 
       if ( index < adjuster.mPermutation.size() ) {
-         UIHandlePtr result = std::make_shared< SubViewAdjustHandle >(
+         auto result = std::make_shared< SubViewAdjustHandle >(
             std::move( adjuster ), index, view.GetLastHeight(), hit.second
          );
          result = AssignUIHandlePtr( holder, result );
@@ -428,7 +428,7 @@ public:
    // Make it somewhat wider than the close button
    enum { HotZoneWidth = 3 * kTrackInfoBtnSize / 2 };
 
-   static UIHandlePtr HitTest(  std::weak_ptr<UIHandle> &holder,
+   static UIHandlePtr HitTest(  std::weak_ptr<SubViewRearrangeHandle> &holder,
       WaveTrackView &view, WaveTrackSubView &subView,
       const TrackPanelMouseState &state )
    {
@@ -461,7 +461,7 @@ public:
       if ( ! hit )
          return {};
 
-      UIHandlePtr result = std::make_shared< SubViewRearrangeHandle >(
+      auto result = std::make_shared< SubViewRearrangeHandle >(
          std::move( adjuster ),
          index, view.GetLastHeight()
       );
@@ -624,7 +624,7 @@ class SubViewCloseHandle : public ButtonHandle
    }
 
 public:
-   static UIHandlePtr HitTest( std::weak_ptr<UIHandle> &holder,
+   static UIHandlePtr HitTest( std::weak_ptr<SubViewCloseHandle> &holder,
       WaveTrackView &view, WaveTrackSubView &subView,
       const TrackPanelMouseState &state )
    {
@@ -636,7 +636,7 @@ public:
       if ( !rect.Contains( state.state.GetPosition() ) )
          return {};
       auto index = adjuster.FindIndex( subView );
-      UIHandlePtr result = std::make_shared<SubViewCloseHandle>(
+      auto result = std::make_shared<SubViewCloseHandle>(
          std::move( adjuster ), index, view.FindTrack(), rect );
       result = AssignUIHandlePtr( holder, result );
       return result;
@@ -740,9 +740,7 @@ std::pair<
                //depending on which border hit test succeeded on we
                //need to choose a proper target for resizing
                auto it = bottomBorderHit ? currentChannel : currentChannel.advance(-1);
-               auto result = std::static_pointer_cast<UIHandle>(
-                  std::make_shared<TrackPanelResizeHandle>((*it)->shared_from_this(), py)
-               );
+               auto result = std::make_shared<TrackPanelResizeHandle>((*it)->shared_from_this(), py);
                result = AssignUIHandlePtr(mResizeHandle, result);
                results.second.push_back(result);
             }
@@ -757,6 +755,10 @@ std::pair<
          mRearrangeHandle,
          *pWaveTrackView, *this, state ) )
          results.second.push_back( pHandle );
+      if (auto pHandle = WaveClipTrimHandle::HitTest(
+          mClipTrimHandle,
+          *pWaveTrackView, pProject, state))
+          results.second.push_back(pHandle);
    }
    if (auto result = CutlineHandle::HitTest(
       mCutlineHandle, state.state, state.rect,
@@ -1345,7 +1347,7 @@ ClipParameters::ClipParameters
    (bool spectrum, const WaveTrack *track, const WaveClip *clip, const wxRect &rect,
    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
 {
-   tOffset = clip->GetOffset();
+   tOffset = clip->GetPlayStartTime();
    rate = clip->GetRate();
 
    h = zoomInfo.PositionToTime(0, 0
@@ -1364,7 +1366,7 @@ ClipParameters::ClipParameters
       sel0 = sel1 = 0.0;
    }
 
-   const double trackLen = clip->GetEndTime() - clip->GetStartTime();
+   const double trackLen = clip->GetPlayEndTime() - clip->GetPlayStartTime();
 
    tpre = h - tOffset;                 // offset corrected time of
    //  left edge of display
@@ -1380,8 +1382,8 @@ ClipParameters::ClipParameters
 
    // Calculate actual selection bounds so that t0 > 0 and t1 < the
    // end of the track
-   t0 = (tpre >= 0.0 ? tpre : 0.0);
-   t1 = (tpost < trackLen - sps * .99 ? tpost : trackLen - sps * .99);
+   t0 = std::max(tpre, .0);
+   t1 = std::min(tpost, trackLen - sps * .99);
    if (showIndividualSamples) {
       // adjustment so that the last circular point doesn't appear
       // to be hanging off the end
@@ -1485,15 +1487,14 @@ wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInf
     auto margin = .25 * srs;
     constexpr auto edgeLeft = static_cast<wxInt64>(std::numeric_limits<int>::min());
     constexpr auto edgeRight = static_cast<wxInt64>(std::numeric_limits<int>::max());
-    auto left = std::clamp(zoomInfo.TimeToPosition(clip.GetOffset() - margin, viewRect.x, true), edgeLeft, edgeRight);
-    auto right = std::clamp(zoomInfo.TimeToPosition(clip.GetEndTime() - srs + margin, viewRect.x, true), edgeLeft, edgeRight);
+    auto left = std::clamp(zoomInfo.TimeToPosition(clip.GetPlayStartTime() - margin, viewRect.x, true), edgeLeft, edgeRight);
+    auto right = std::clamp(zoomInfo.TimeToPosition(clip.GetPlayEndTime() - srs + margin, viewRect.x, true), edgeLeft, edgeRight);
     if (right > left)
     {
         //after clamping we can expect that left and right 
         //are small enough to be put into int
         return wxRect(static_cast<int>(left), viewRect.y, static_cast<int>(right - left), viewRect.height);
     }
-    //off the screen
     return wxRect();
 }
 

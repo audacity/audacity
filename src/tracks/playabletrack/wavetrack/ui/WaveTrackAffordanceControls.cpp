@@ -38,6 +38,8 @@
 #include "../../../../../images/Cursors.h"
 #include "../../../../HitTestResult.h"
 
+#include "WaveClipTrimHandle.h"
+
 class WaveTrackAffordanceHandle final : public AffordanceHandle
 {
     std::shared_ptr<WaveClip> mTarget;
@@ -69,7 +71,7 @@ public:
     UIHandle::Result SelectAt(const TrackPanelMouseEvent& event, AudacityProject* project) override
     {
         auto& viewInfo = ViewInfo::Get(*project);
-        viewInfo.selectedRegion.setTimes(mTarget->GetOffset(), mTarget->GetEndTime());
+        viewInfo.selectedRegion.setTimes(mTarget->GetPlayStartTime(), mTarget->GetPlayEndTime());
         
         ProjectHistory::Get(*project).ModifyState(false);
         
@@ -176,6 +178,17 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
     const auto rect = state.rect;
 
     const auto track = FindTrack();
+
+    {
+        auto handle = WaveClipTrimHandle::HitAnywhere(
+            mClipTrimHandle,
+            std::static_pointer_cast<WaveTrack>(track).get(),
+            pProject,
+            state);
+
+        if (handle)
+            results.push_back(handle);
+    }
 
     auto trackList = track->GetOwner();
     if ((std::abs(rect.GetTop() - py) <= WaveTrackView::kChannelSeparatorThickness / 2) 
@@ -360,8 +373,8 @@ unsigned WaveTrackAffordanceControls::KeyDown(wxKeyEvent& event, ViewInfo& viewI
         case WXK_NUMPAD_ENTER:
         case WXK_RETURN: {
             const auto pred = [&viewInfo](const WaveClip& clip) {
-            return clip.GetStartTime() == viewInfo.selectedRegion.t0() &&
-                clip.GetEndTime() == viewInfo.selectedRegion.t1();
+            return clip.GetPlayStartTime() == viewInfo.selectedRegion.t0() &&
+                clip.GetPlayEndTime() == viewInfo.selectedRegion.t1();
             };
             if (project)
                StartEditNameOfMatchingClip(*project, pred);
@@ -427,8 +440,8 @@ namespace {
     WaveClip* NextClipLooped(ViewInfo& viewInfo, Iter begin, Iter end, Comp comp)
     {
         auto it = std::find_if(begin, end, [&](WaveClip* clip) {
-            return clip->GetStartTime() == viewInfo.selectedRegion.t0() &&
-                clip->GetEndTime() == viewInfo.selectedRegion.t1();
+            return clip->GetPlayStartTime() == viewInfo.selectedRegion.t0() &&
+                clip->GetPlayEndTime() == viewInfo.selectedRegion.t1();
         });
         if (it == end)
             it = std::find_if(begin, end, comp);
@@ -456,17 +469,17 @@ bool WaveTrackAffordanceControls::SelectNextClip(ViewInfo& viewInfo, AudacityPro
     if (forward)
     {
         clip = NextClipLooped(viewInfo, clips.begin(), clips.end(), [&](const WaveClip* other) {
-            return other->GetStartTime() >= viewInfo.selectedRegion.t1();
+            return other->GetPlayStartTime() >= viewInfo.selectedRegion.t1();
         });
     }
     else
     {
         clip = NextClipLooped(viewInfo, clips.rbegin(), clips.rend(), [&](const WaveClip* other) {
-            return other->GetStartTime() <= viewInfo.selectedRegion.t0();
+            return other->GetPlayStartTime() <= viewInfo.selectedRegion.t0();
         });
     }
 
-    viewInfo.selectedRegion.setTimes(clip->GetOffset(), clip->GetEndTime());
+    viewInfo.selectedRegion.setTimes(clip->GetPlayStartTime(), clip->GetPlayEndTime());
     ProjectHistory::Get(*project).ModifyState(false);
     return true;
 }

@@ -22,6 +22,16 @@ class TranslatableString;
 class WaveTrack;
 class WaveTrackView;
 class WaveClip;
+class WaveClipTrimHandle;
+
+
+class TrackPanelResizeHandle;
+
+namespace {
+   class SubViewCloseHandle;
+   class SubViewAdjustHandle;
+   class SubViewRearrangeHandle;
+}
 
 class wxDC;
 
@@ -61,10 +71,11 @@ protected:
    override;
 
 private:
-   std::weak_ptr<UIHandle> mCloseHandle;
-   std::weak_ptr<UIHandle> mResizeHandle;
-   std::weak_ptr<UIHandle> mAdjustHandle;
-   std::weak_ptr<UIHandle> mRearrangeHandle;
+   std::weak_ptr<SubViewCloseHandle> mCloseHandle;
+   std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
+   std::weak_ptr<SubViewAdjustHandle> mAdjustHandle;
+   std::weak_ptr<SubViewRearrangeHandle> mRearrangeHandle;
+   std::weak_ptr<WaveClipTrimHandle> mClipTrimHandle;
    std::weak_ptr<CutlineHandle> mCutlineHandle;
    std::weak_ptr<WaveTrackView> mwWaveTrackView;
 };

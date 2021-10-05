@@ -71,8 +71,8 @@ bool TwoChannelsHaveSameBoundaries
    if (left.size() == right.size()) {
       sameClips = true;
       for (unsigned int i = 0; i < left.size(); i++) {
-         if (left[i]->GetStartTime() != right[i]->GetStartTime() ||
-            left[i]->GetEndTime() != right[i]->GetEndTime()) {
+         if (left[i]->GetPlayStartTime() != right[i]->GetPlayStartTime() ||
+            left[i]->GetPlayEndTime() != right[i]->GetPlayEndTime()) {
             sameClips = false;
             break;
          }
@@ -97,8 +97,8 @@ bool ChannelsHaveDifferentClipBoundaries(
    return false;
 }
 
-// When two clips are immediately next to each other, the GetEndTime() of the
-// first clip and the GetStartTime() of the second clip may not be exactly equal
+// When two clips are immediately next to each other, the GetPlayEndTime() of the 
+// first clip and the GetPlayStartTime() of the second clip may not be exactly equal
 // due to rounding errors. When searching for the next/prev start time from a
 // given time, the following function adjusts that given time if necessary to
 // take this into account. If the given time is the end time of the first of two
@@ -110,17 +110,17 @@ double AdjustForFindingStartTimes(
 {
    auto q = std::find_if(clips.begin(), clips.end(),
       [&] (const WaveClip* const& clip) {
-         return clip->GetEndTime() == time; });
+         return clip->GetPlayEndTime() == time; });
    if (q != clips.end() && q + 1 != clips.end() &&
       (*q)->SharesBoundaryWithNextClip(*(q+1))) {
-      time = (*(q+1))->GetStartTime();
+      time = (*(q+1))->GetPlayStartTime();
    }
 
    return time;
 }
 
-// When two clips are immediately next to each other, the GetEndTime() of the
-// first clip and the GetStartTime() of the second clip may not be exactly equal
+// When two clips are immediately next to each other, the GetPlayEndTime() of the
+// first clip and the GetPlayStartTime() of the second clip may not be exactly equal
 // due to rounding errors. When searching for the next/prev end time from a
 // given time, the following function adjusts that given time if necessary to
 // take this into account. If the given time is the start time of the second of
@@ -132,10 +132,10 @@ double AdjustForFindingEndTimes(
 {
    auto q = std::find_if(clips.begin(), clips.end(),
       [&] (const WaveClip* const& clip) {
-         return clip->GetStartTime() == time; });
+         return clip->GetPlayStartTime() == time; });
    if (q != clips.end() && q != clips.begin() &&
       (*(q - 1))->SharesBoundaryWithNextClip(*q)) {
-      time = (*(q-1))->GetEndTime();
+      time = (*(q-1))->GetPlayEndTime();
    }
 
    return time;
@@ -152,37 +152,37 @@ FoundClipBoundary FindNextClipBoundary
 
    auto pStart = std::find_if(clips.begin(), clips.end(),
       [&] (const WaveClip* const& clip) {
-         return clip->GetStartTime() > timeStart; });
+         return clip->GetPlayStartTime() > timeStart; });
    auto pEnd = std::find_if(clips.begin(), clips.end(),
       [&] (const WaveClip* const& clip) {
-         return clip->GetEndTime() > timeEnd; });
+         return clip->GetPlayEndTime() > timeEnd; });
 
    if (pStart != clips.end() && pEnd != clips.end()) {
       if ((*pEnd)->SharesBoundaryWithNextClip(*pStart)) {
          // boundary between two clips which are immediately next to each other.
          result.nFound = 2;
-         result.time = (*pEnd)->GetEndTime();
+         result.time = (*pEnd)->GetPlayEndTime();
          result.index1 = std::distance(clips.begin(), pEnd);
          result.clipStart1 = false;
          result.index2 = std::distance(clips.begin(), pStart);
          result.clipStart2 = true;
       }
-      else if ((*pStart)->GetStartTime() < (*pEnd)->GetEndTime()) {
+      else if ((*pStart)->GetPlayStartTime() < (*pEnd)->GetPlayEndTime()) {
          result.nFound = 1;
-         result.time = (*pStart)->GetStartTime();
+         result.time = (*pStart)->GetPlayStartTime();
          result.index1 = std::distance(clips.begin(), pStart);
          result.clipStart1 = true;
       }
       else  {
          result.nFound = 1;
-         result.time = (*pEnd)->GetEndTime();
+         result.time = (*pEnd)->GetPlayEndTime();
          result.index1 = std::distance(clips.begin(), pEnd);
          result.clipStart1 = false;
       }
    }
    else if (pEnd != clips.end()) {
       result.nFound = 1;
-      result.time = (*pEnd)->GetEndTime();
+      result.time = (*pEnd)->GetPlayEndTime();
       result.index1 = std::distance(clips.begin(), pEnd);
       result.clipStart1 = false;
    }
@@ -200,16 +200,16 @@ FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time)
 
    auto pStart = std::find_if(clips.rbegin(), clips.rend(),
       [&] (const WaveClip* const& clip) {
-         return clip->GetStartTime() < timeStart; });
+         return clip->GetPlayStartTime() < timeStart; });
    auto pEnd = std::find_if(clips.rbegin(), clips.rend(),
       [&] (const WaveClip* const& clip) {
-         return clip->GetEndTime() < timeEnd; });
+         return clip->GetPlayEndTime() < timeEnd; });
 
    if (pStart != clips.rend() && pEnd != clips.rend()) {
       if ((*pEnd)->SharesBoundaryWithNextClip(*pStart)) {
          // boundary between two clips which are immediately next to each other.
          result.nFound = 2;
-         result.time = (*pStart)->GetStartTime();
+         result.time = (*pStart)->GetPlayStartTime();
          result.index1 =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), pStart);
@@ -219,9 +219,9 @@ FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time)
                std::distance(clips.rbegin(), pEnd);
          result.clipStart2 = false;
       }
-      else if ((*pStart)->GetStartTime() > (*pEnd)->GetEndTime()) {
+      else if ((*pStart)->GetPlayStartTime() > (*pEnd)->GetPlayEndTime()) {
          result.nFound = 1;
-         result.time = (*pStart)->GetStartTime();
+         result.time = (*pStart)->GetPlayStartTime();
          result.index1 =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), pStart);
@@ -229,7 +229,7 @@ FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time)
       }
       else {
          result.nFound = 1;
-         result.time = (*pEnd)->GetEndTime();
+         result.time = (*pEnd)->GetPlayEndTime();
          result.index1 =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), pEnd);
@@ -238,7 +238,7 @@ FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time)
    }
    else if (pStart != clips.rend()) {
       result.nFound = 1;
-      result.time = (*pStart)->GetStartTime();
+      result.time = (*pStart)->GetPlayStartTime();
       result.index1 =
          static_cast<int>(clips.size()) - 1 -
             std::distance(clips.rbegin(), pStart);
@@ -409,11 +409,11 @@ FoundClip FindNextClip
    {
       auto p = std::find_if(clips.begin(), clips.end(),
          [&] (const WaveClip* const& clip) {
-            return clip->GetStartTime() == t0; });
-      if (p != clips.end() && (*p)->GetEndTime() > t1) {
+            return clip->GetPlayStartTime() == t0; });
+      if (p != clips.end() && (*p)->GetPlayEndTime() > t1) {
          result.found = true;
-         result.startTime = (*p)->GetStartTime();
-         result.endTime = (*p)->GetEndTime();
+         result.startTime = (*p)->GetPlayStartTime();
+         result.endTime = (*p)->GetPlayEndTime();
          result.index = std::distance(clips.begin(), p);
          return result;
       }
@@ -422,11 +422,11 @@ FoundClip FindNextClip
    {
       auto p = std::find_if(clips.begin(), clips.end(),
          [&] (const WaveClip* const& clip) {
-            return clip->GetStartTime() > t0; });
+            return clip->GetPlayStartTime() > t0; });
       if (p != clips.end()) {
          result.found = true;
-         result.startTime = (*p)->GetStartTime();
-         result.endTime = (*p)->GetEndTime();
+         result.startTime = (*p)->GetPlayStartTime();
+         result.endTime = (*p)->GetPlayEndTime();
          result.index = std::distance(clips.begin(), p);
          return result;
       }
@@ -449,11 +449,11 @@ FoundClip FindPrevClip
    {
       auto p = std::find_if(clips.begin(), clips.end(),
          [&] (const WaveClip* const& clip) {
-            return clip->GetStartTime() == t0; });
-      if (p != clips.end() && (*p)->GetEndTime() < t1) {
+            return clip->GetPlayStartTime() == t0; });
+      if (p != clips.end() && (*p)->GetPlayEndTime() < t1) {
          result.found = true;
-         result.startTime = (*p)->GetStartTime();
-         result.endTime = (*p)->GetEndTime();
+         result.startTime = (*p)->GetPlayStartTime();
+         result.endTime = (*p)->GetPlayEndTime();
          result.index = std::distance(clips.begin(), p);
          return result;
       }
@@ -462,11 +462,11 @@ FoundClip FindPrevClip
    {
       auto p = std::find_if(clips.rbegin(), clips.rend(),
          [&] (const WaveClip* const& clip) {
-            return clip->GetStartTime() < t0; });
+            return clip->GetPlayStartTime() < t0; });
       if (p != clips.rend()) {
          result.found = true;
-         result.startTime = (*p)->GetStartTime();
-         result.endTime = (*p)->GetEndTime();
+         result.startTime = (*p)->GetPlayStartTime();
+         result.endTime = (*p)->GetPlayEndTime();
          result.index =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), p);

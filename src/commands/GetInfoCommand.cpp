@@ -518,8 +518,8 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
          for (WaveClip * pClip : ptrs) {
             context.StartStruct();
             context.AddItem((double)i, "track");
-            context.AddItem(pClip->GetStartTime(), "start");
-            context.AddItem(pClip->GetEndTime(), "end");
+            context.AddItem(pClip->GetPlayStartTime(), "start");
+            context.AddItem(pClip->GetPlayEndTime(), "end");
             context.AddItem(pClip->GetColourIndex(), "color");
             context.EndStruct();
          }
@@ -546,7 +546,7 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
             context.StartStruct();
             context.AddItem((double)i, "track");
             context.AddItem((double)j, "clip");
-            context.AddItem(pClip->GetStartTime(), "start");
+            context.AddItem(pClip->GetPlayStartTime(), "start");
             Envelope * pEnv = pClip->GetEnvelope();
             context.StartField("points");
             context.StartArray();
@@ -560,7 +560,7 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
             }
             context.EndArray();
             context.EndField();
-            context.AddItem(pClip->GetEndTime(), "end");
+            context.AddItem(pClip->GetPlayEndTime(), "end");
             context.EndStruct();
             j++;
          }

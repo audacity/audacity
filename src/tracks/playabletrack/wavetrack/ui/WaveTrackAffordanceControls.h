@@ -25,6 +25,7 @@ class WaveClip;
 class TrackPanelResizeHandle;
 class WaveClipTitleEditHandle;
 class WaveTrackAffordanceHandle;
+class WaveClipTrimHandle;
 class TrackList;
 
 //Handles clip movement, selection, navigation and
@@ -40,6 +41,7 @@ class AUDACITY_DLL_API WaveTrackAffordanceControls :
     std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
     std::weak_ptr<WaveClipTitleEditHandle> mTitleEditHandle;
     std::weak_ptr<SelectHandle> mSelectHandle;
+    std::weak_ptr<WaveClipTrimHandle> mClipTrimHandle;
 
     std::shared_ptr<TextEditHelper> mTextEditHelper;
 
