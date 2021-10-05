@@ -20,10 +20,6 @@ list( APPEND INCLUDES
 list( APPEND DEFINES
    PRIVATE
       #
-      # We need the dbpage table for space calculations.
-      #
-      SQLITE_ENABLE_DBPAGE_VTAB=1
-      #
       # Recommended in SQLite docs
       #
       SQLITE_DQS=0
