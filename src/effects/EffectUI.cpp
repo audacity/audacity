@@ -14,12 +14,14 @@
 
 #include "EffectUI.h"
 
+#include "widgets/BasicMenu.h"
 #include "Effect.h"
 #include "EffectManager.h"
 #include "../ProjectHistory.h"
 #include "../ProjectWindowBase.h"
 #include "../TrackPanelAx.h"
 #include "RealtimeEffectManager.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
@@ -1000,7 +1002,7 @@ bool EffectUIHost::Initialize()
 {
    {
       auto gAudioIO = AudioIO::Get();
-      mDisableTransport = !gAudioIO->IsAvailable(mProject);
+      mDisableTransport = !gAudioIO->IsAvailable(*mProject);
       mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
       mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
    }
@@ -1256,6 +1258,8 @@ void EffectUIHost::OnDebug(wxCommandEvent & evt)
 void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 {
    wxMenu menu;
+   menu.Bind(wxEVT_MENU, [](auto&){}, kUserPresetsDummyID);
+   menu.Bind(wxEVT_MENU, [](auto&){}, kDeletePresetDummyID);
    if( !mEffect )
       return;
    
@@ -1331,13 +1335,17 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
       sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().Translation()));
       sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().Translation()));
-      
+      sub->Bind(wxEVT_MENU, [](auto&){}, kDummyID);
+
       menu.Append(0, _("About"), sub.release());
    }
    
    wxWindow *btn = FindWindow(kMenuID);
    wxRect r = btn->GetRect();
-   btn->PopupMenu(&menu, r.GetLeft(), r.GetBottom());
+   BasicMenu::Handle{ &menu }.Popup(
+      wxWidgetsWindowPlacement{ btn },
+      { r.GetLeft(), r.GetBottom() }
+   );
 }
 
 void EffectUIHost::Resume()

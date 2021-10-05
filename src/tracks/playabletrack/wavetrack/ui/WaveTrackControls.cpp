@@ -167,11 +167,6 @@ struct FormatMenuTable :  PopupMenuTable
 
    void InitUserData(void *pUserData) override;
 
-   void DestroyMenu() override
-   {
-      mpData = NULL;
-   }
-
    PlayableTrackControls::InitMenuData *mpData{};
 
    static int IdOfFormat(int format);
@@ -261,7 +256,8 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
 
    sampleCount totalSamples{ 0 };
    for (const auto& channel : TrackList::Channels(pTrack))
-      totalSamples += channel->GetNumSamples();
+      // Hidden samples are processed too, they should be counted as well
+      totalSamples += channel->GetSequenceSamplesCount();
    sampleCount processedSamples{ 0 };
 
    // Below is the lambda function that is passed along the call chain to
@@ -309,11 +305,6 @@ struct RateMenuTable : PopupMenuTable
    static RateMenuTable &Instance();
 
    void InitUserData(void *pUserData) override;
-
-   void DestroyMenu() override
-   {
-      mpData = NULL;
-   }
 
    PlayableTrackControls::InitMenuData *mpData{};
 
@@ -506,11 +497,6 @@ struct WaveTrackMenuTable
    }
 
    void InitUserData(void *pUserData) override;
-
-   void DestroyMenu() override
-   {
-      //mpData = nullptr;
-   }
 
    DECLARE_POPUP_MENU(WaveTrackMenuTable);
 

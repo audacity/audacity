@@ -299,7 +299,7 @@ void TranscriptionToolBar::EnableDisableButtons()
    auto gAudioIO = AudioIO::Get();
    bool canStopAudioStream = (!gAudioIO->IsStreamActive() ||
            gAudioIO->IsMonitoring() ||
-           gAudioIO->GetOwningProject() == p );
+           gAudioIO->GetOwningProject().get() == p );
    bool recording = gAudioIO->GetNumCaptureChannels() > 0;
 
    // Only interested in audio type tracks
@@ -490,6 +490,8 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 
    // Scrubbing only supports straight through play.
    // So if looped or cutPreview, we have to fall back to fixed speed.
+   if (looped)
+      cutPreview = false;
    bFixedSpeedPlay = bFixedSpeedPlay || looped || cutPreview;
    if (bFixedSpeedPlay)
    {

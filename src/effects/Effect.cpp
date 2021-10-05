@@ -26,7 +26,7 @@
 #include <wx/tokenzr.h>
 
 #include "../AudioIO.h"
-#include "widgets/wxWidgetsBasicUI.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 #include "../DBConnection.h"
 #include "../LabelTrack.h"
 #include "../Mix.h"

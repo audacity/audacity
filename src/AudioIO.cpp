@@ -120,6 +120,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "DBConnection.h"
 #include "ProjectFileIO.h"
 #include "ProjectWindows.h"
+#include "ViewInfo.h" // for PlayRegionEvent
 #include "WaveTrack.h"
 
 #include "effects/RealtimeEffectManager.h"
@@ -309,7 +310,6 @@ AudioIO::AudioIO()
    mUpdateMeters = false;
    mUpdatingMeters = false;
 
-   mOwningProject = NULL;
    mOutputMeter.reset();
 
    PaError err = Pa_Initialize();
@@ -352,6 +352,11 @@ AudioIO::AudioIO()
 
 AudioIO::~AudioIO()
 {
+   if ( !mOwningProject.expired() )
+      // Unlikely that this will be destroyed earlier than any projects, but
+      // be prepared anyway
+      ResetOwningProject();
+
 #if defined(USE_PORTMIXER)
    if (mPortMixer) {
       #if __WXMAC__
@@ -487,11 +492,16 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
 {
    auto sampleRate = options.rate;
    mNumPauseFrames = 0;
-   mOwningProject = options.pProject;
-
+   SetOwningProject( options.pProject );
+   bool success = false;
+   auto cleanup = finally([&]{
+      if (!success)
+         ResetOwningProject();
+   });
+   
    // PRL:  Protection from crash reported by David Bailes, involving starting
    // and stopping with frequent changes of active window, hard to reproduce
-   if (!mOwningProject)
+   if (mOwningProject.expired())
       return false;
 
    mInputMeter.reset();
@@ -590,7 +600,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       else
          captureParameters.suggestedLatency = latencyDuration/1000.0;
 
-      SetCaptureMeter( mOwningProject, options.captureMeter );
+      SetCaptureMeter( mOwningProject.lock(), options.captureMeter );
    }
 
    SetMeters();
@@ -665,12 +675,42 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    }
 #endif
 
-   return (mLastPaError == paNoError);
+   return (success = (mLastPaError == paNoError));
 }
 
 wxString AudioIO::LastPaErrorString()
 {
    return wxString::Format(wxT("%d %s."), (int) mLastPaError, Pa_GetErrorText(mLastPaError));
+}
+
+void AudioIO::SetOwningProject(
+   const std::shared_ptr<AudacityProject> &pProject )
+{
+   if ( !mOwningProject.expired() ) {
+      wxASSERT(false);
+      ResetOwningProject();
+   }
+
+   mOwningProject = pProject;
+
+   if (pProject)
+      ViewInfo::Get( *pProject ).playRegion.Bind(
+         EVT_PLAY_REGION_CHANGE, AudioIO::LoopPlayUpdate);
+}
+
+void AudioIO::ResetOwningProject()
+{
+   if ( auto pOwningProject = mOwningProject.lock() )
+      ViewInfo::Get( *pOwningProject ).playRegion.Unbind(
+         EVT_PLAY_REGION_CHANGE, AudioIO::LoopPlayUpdate);
+
+   mOwningProject.reset();
+}
+
+void AudioIO::LoopPlayUpdate( PlayRegionEvent &evt )
+{
+   evt.Skip();
+   AudioIO::Get()->mPlaybackSchedule.MessageProducer( evt );
 }
 
 void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
@@ -694,18 +734,19 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
                                   (unsigned int)captureChannels,
                                   captureFormat);
 
+   auto pOwningProject = mOwningProject.lock();
    if (!success) {
       using namespace BasicUI;
       auto msg = XO("Error opening recording device.\nError code: %s")
          .Format( Get()->LastPaErrorString() );
-      ShowErrorDialog( *ProjectFramePlacement( mOwningProject ),
+      ShowErrorDialog( *ProjectFramePlacement( pOwningProject.get() ),
          XO("Error"), msg, wxT("Error_opening_sound_device"),
          ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
       return;
    }
 
    wxCommandEvent e(EVT_AUDIOIO_MONITOR);
-   e.SetEventObject(mOwningProject);
+   e.SetEventObject( pOwningProject.get() );
    e.SetInt(true);
    wxTheApp->ProcessEvent(e);
 
@@ -820,7 +861,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mPlaybackMixers.clear();
    mCaptureBuffers.reset();
    mResample.reset();
-   mPlaybackSchedule.mTimeQueue.mData.reset();
+   mPlaybackSchedule.mTimeQueue.Clear();
 
    mPlaybackSchedule.Init(
       t0, t1, options, mCaptureTracks.empty() ? nullptr : &mRecordingSchedule );
@@ -924,19 +965,16 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
       // Main thread's initialization of mTime
       mPlaybackSchedule.SetTrackTime( time );
+      mPlaybackSchedule.GetPolicy().OffsetTrackTime( mPlaybackSchedule, 0 );
 
       // Reset mixer positions for all playback tracks
       unsigned numMixers = mPlaybackTracks.size();
       for (unsigned ii = 0; ii < numMixers; ++ii)
          mPlaybackMixers[ii]->Reposition( time );
-      mPlaybackSchedule.RealTimeInit( time );
    }
    
-   // Now that we are done with SetTrackTime():
-   mPlaybackSchedule.mTimeQueue.mLastTime = mPlaybackSchedule.GetTrackTime();
-   if (mPlaybackSchedule.mTimeQueue.mData)
-      mPlaybackSchedule.mTimeQueue.mData[0] =
-         mPlaybackSchedule.mTimeQueue.mLastTime;
+   // Now that we are done with AllocateBuffers() and SetTrackTime():
+   mPlaybackSchedule.mTimeQueue.Prime(mPlaybackSchedule.GetTrackTime());
    // else recording only without overdub
 
    // We signal the audio thread to call TrackBufferExchange, to prime the RingBuffers
@@ -1012,10 +1050,11 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       pListener->OnAudioIORate((int)mRate);
    }
 
+   auto pOwningProject = mOwningProject.lock();
    if (mNumPlaybackChannels > 0)
    {
       wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
-      e.SetEventObject(mOwningProject);
+      e.SetEventObject( pOwningProject.get() );
       e.SetInt(true);
       wxTheApp->ProcessEvent(e);
    }
@@ -1023,7 +1062,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    if (mNumCaptureChannels > 0)
    {
       wxCommandEvent e(EVT_AUDIOIO_CAPTURE);
-      e.SetEventObject(mOwningProject);
+      e.SetEventObject( pOwningProject.get() );
       e.SetInt(true);
       wxTheApp->ProcessEvent(e);
    }
@@ -1113,8 +1152,6 @@ bool AudioIO::AllocateBuffers(
    mMinCaptureSecsToCopy =
       0.2 + 0.2 * std::min(size_t(16), mCaptureTracks.size());
 
-   mPlaybackSchedule.mTimeQueue.mHead = {};
-   mPlaybackSchedule.mTimeQueue.mTail = {};
    bool bDone;
    do
    {
@@ -1189,8 +1226,7 @@ bool AudioIO::AllocateBuffers(
             const auto timeQueueSize = 1 +
                (playbackBufferSize + TimeQueueGrainSize - 1)
                   / TimeQueueGrainSize;
-            mPlaybackSchedule.mTimeQueue.mData.reinit( timeQueueSize );
-            mPlaybackSchedule.mTimeQueue.mSize = timeQueueSize;
+            mPlaybackSchedule.mTimeQueue.Resize( timeQueueSize );
          }
 
          if( mNumCaptureChannels > 0 )
@@ -1260,7 +1296,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mPlaybackMixers.clear();
    mCaptureBuffers.reset();
    mResample.reset();
-   mPlaybackSchedule.mTimeQueue.mData.reset();
+   mPlaybackSchedule.mTimeQueue.Clear();
 
    if(!bOnlyBuffers)
    {
@@ -1273,9 +1309,10 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mPlaybackSchedule.GetPolicy().Finalize( mPlaybackSchedule );
 }
 
-bool AudioIO::IsAvailable(AudacityProject *project) const
+bool AudioIO::IsAvailable(AudacityProject &project) const
 {
-   return mOwningProject == NULL || mOwningProject == project;
+   auto pOwningProject = mOwningProject.lock();
+   return !pOwningProject || pOwningProject.get() == &project;
 }
 
 void AudioIO::SetMeters()
@@ -1433,7 +1470,7 @@ void AudioIO::StopStream()
       {
          mPlaybackBuffers.reset();
          mPlaybackMixers.clear();
-         mPlaybackSchedule.mTimeQueue.mData.reset();
+         mPlaybackSchedule.mTimeQueue.Clear();
       }
 
       //
@@ -1480,8 +1517,9 @@ void AudioIO::StopStream()
             // This scope may combine many splittings of wave tracks
             // into one transaction, lessening the number of checkpoints
             Optional<TransactionScope> pScope;
-            if (mOwningProject) {
-               auto &pIO = ProjectFileIO::Get(*mOwningProject);
+            auto pOwningProject = mOwningProject.lock();
+            if (pOwningProject) {
+               auto &pIO = ProjectFileIO::Get(*pOwningProject);
                pScope.emplace(pIO.GetConnection(), "Dropouts");
             }
             for (auto &interval : mLostCaptureIntervals) {
@@ -1510,7 +1548,7 @@ void AudioIO::StopStream()
 
    mInputMeter.reset();
    mOutputMeter.reset();
-   mOwningProject = nullptr;
+   ResetOwningProject();
 
    if (pListener && mNumCaptureChannels > 0)
       pListener->OnAudioIOStopRecording();
@@ -1539,7 +1577,8 @@ void AudioIO::StopStream()
    if (mNumPlaybackChannels > 0)
    {
       wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
-      e.SetEventObject(mOwningProject);
+      auto pOwningProject = mOwningProject.lock();
+      e.SetEventObject(pOwningProject.get());
       e.SetInt(false);
       wxTheApp->ProcessEvent(e);
    }
@@ -1547,7 +1586,8 @@ void AudioIO::StopStream()
    if (mNumCaptureChannels > 0)
    {
       wxCommandEvent e(wasMonitoring ? EVT_AUDIOIO_MONITOR : EVT_AUDIOIO_CAPTURE);
-      e.SetEventObject(mOwningProject);
+      auto pOwningProject = mOwningProject.lock();
+      e.SetEventObject(pOwningProject.get());
       e.SetInt(false);
       wxTheApp->ProcessEvent(e);
    }
@@ -1671,7 +1711,7 @@ double AudioIO::GetStreamTime()
    if( !IsStreamActive() )
       return BAD_STREAM_TIME;
 
-   return mPlaybackSchedule.GetPolicy().NormalizeTrackTime(mPlaybackSchedule);
+   return mPlaybackSchedule.GetTrackTime();
 }
 
 
@@ -1801,8 +1841,7 @@ void AudioIO::FillPlayBuffers()
       // consumer side in the PortAudio thread, which reads the time
       // queue after reading the sample queues.  The sample queues use
       // atomic variables, the time queue doesn't.
-      mPlaybackSchedule.mTimeQueue.Producer( mPlaybackSchedule, mRate,
-         frames);
+      mPlaybackSchedule.mTimeQueue.Producer(mPlaybackSchedule, frames);
 
       for (size_t i = 0; i < mPlaybackTracks.size(); i++)
       {
@@ -1830,6 +1869,9 @@ void AudioIO::FillPlayBuffers()
 
       available -= frames;
       // wxASSERT(available >= 0); // don't assert on this thread
+
+      // Poll for selection change events
+      mPlaybackSchedule.MessageConsumer();
 
       done = policy.RepositionPlayback( mPlaybackSchedule, mPlaybackMixers,
          frames, available );
@@ -1878,8 +1920,9 @@ void AudioIO::DrainRecordBuffers()
          // and also an autosave, into one transaction,
          // lessening the number of checkpoints
          Optional<TransactionScope> pScope;
-         if (mOwningProject) {
-            auto &pIO = ProjectFileIO::Get(*mOwningProject);
+         auto pOwningProject = mOwningProject.lock();
+         if (pOwningProject) {
+            auto &pIO = ProjectFileIO::Get( *pOwningProject );
             pScope.emplace(pIO.GetConnection(), "Recording");
          }
 
@@ -2089,7 +2132,7 @@ double AudioIO::AILAGetLastDecisionTime() {
 }
 
 void AudioIO::AILAProcess(double maxPeak) {
-   AudacityProject *const proj = mOwningProject;
+   const auto proj = mOwningProject.lock();
    if (proj && mAILAActive) {
       if (mInputMeter && mInputMeter->IsClipping()) {
          mAILAClipped = true;
@@ -3017,12 +3060,12 @@ int AudioIoCallback::CallbackDoSeek()
    }
 
    // Calculate the NEW time position, in the PortAudio callback
-   const auto time = mPlaybackSchedule.ClampTrackTime(
-      mPlaybackSchedule.GetTrackTime() + mSeek );
+   const auto time =
+      mPlaybackSchedule.GetPolicy().OffsetTrackTime( mPlaybackSchedule, mSeek );
+
    mPlaybackSchedule.SetTrackTime( time );
    mSeek = 0.0;
 
-   mPlaybackSchedule.RealTimeInit( time );
 
    // Reset mixer positions and flush buffers for all tracks
    for (size_t i = 0; i < numPlaybackTracks; i++)

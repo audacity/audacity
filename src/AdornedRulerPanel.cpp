@@ -28,6 +28,7 @@
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
+#include "widgets/BasicMenu.h"
 #include "CellularPanel.h"
 #include "HitTestResult.h"
 #include "Menus.h"
@@ -53,6 +54,7 @@
 #include "widgets/AButton.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/Grabber.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 
 #include <wx/dcclient.h>
 #include <wx/menu.h>
@@ -1263,9 +1265,7 @@ void AdornedRulerPanel::DoSelectionChange( const SelectedRegion &selectedRegion 
 {
 
    auto gAudioIO = AudioIOBase::Get();
-   if ( !gAudioIO->IsBusy() &&
-      !ViewInfo::Get( *mProject ).playRegion.Locked()
-   ) {
+   if ( !ViewInfo::Get( *mProject ).playRegion.Locked() ) {
       SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
    }
 }
@@ -1709,6 +1709,8 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       loopEnabled = ((end - start) > 0.001)? true : false;
 
       bool looped = (loopEnabled && looped);
+      if (looped)
+         cutPreview = false;
       auto options = DefaultPlayOptions( *mProject, looped );
 
       auto oldStart = playRegion.GetStart();
@@ -1864,7 +1866,10 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    rulerMenu.AppendCheckItem(OnTogglePinnedStateID, _("Pinned Play Head"))->
       Check(TracksPrefs::GetPinnedHeadPreference());
 
-   PopupMenu(&rulerMenu, pos);
+   BasicMenu::Handle{ &rulerMenu }.Popup(
+      wxWidgetsWindowPlacement{ this },
+      { pos.x, pos.y }
+   );
 }
 
 void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
@@ -1875,7 +1880,10 @@ void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
 
    wxMenu rulerMenu;
    scrubber.PopulatePopupMenu(rulerMenu);
-   PopupMenu(&rulerMenu, pos);
+   BasicMenu::Handle{ &rulerMenu }.Popup(
+      wxWidgetsWindowPlacement{ this },
+      { pos.x, pos.y }
+   );
 }
 
 void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent&)

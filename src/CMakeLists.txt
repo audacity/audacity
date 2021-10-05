@@ -803,6 +803,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.h
       tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
       tracks/playabletrack/wavetrack/ui/SpectrumView.h
+      tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.h
+      tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -898,6 +900,8 @@ list( APPEND SOURCES
       widgets/AudacityTextEntryDialog.h
       widgets/BackedPanel.cpp
       widgets/BackedPanel.h
+      widgets/BasicMenu.cpp
+      widgets/BasicMenu.h
       widgets/ErrorDialog.cpp
       widgets/ErrorDialog.h
       widgets/ExpandingToolBar.cpp
@@ -968,6 +972,8 @@ list( APPEND SOURCES
       widgets/wxTextCtrlWrapper.h
       widgets/wxWidgetsBasicUI.cpp
       widgets/wxWidgetsBasicUI.h
+      widgets/wxWidgetsWindowPlacement.cpp
+      widgets/wxWidgetsWindowPlacement.h
 
       # Update version
       $<$<BOOL:${${_OPT}has_updates_check}>:

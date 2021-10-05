@@ -15,6 +15,8 @@
 #include "Mix.h"
 #include "SampleCount.h"
 
+#include <cmath>
+
 PlaybackPolicy::~PlaybackPolicy() = default;
 void PlaybackPolicy::Initialize( PlaybackSchedule &, double rate )
 {
@@ -33,37 +35,6 @@ PlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
    return { 4.0, 4.0, 10.0 };
 }
 
-double PlaybackPolicy::NormalizeTrackTime( PlaybackSchedule &schedule )
-{
-   // Track time readout for the main thread
-
-   // dmazzoni: This function is needed for two reasons:
-   // One is for looped-play mode - this function makes sure that the
-   // position indicator keeps wrapping around.  The other reason is
-   // more subtle - it's because PortAudio can query the hardware for
-   // the current stream time, and this query is not always accurate.
-   // Sometimes it's a little behind or ahead, and so this function
-   // makes sure that at least we clip it to the selection.
-   //
-   // msmeyer: There is also the possibility that we are using "cut preview"
-   //          mode. In this case, we should jump over a defined "gap" in the
-   //          audio.
-
-   // Limit the time between t0 and t1.
-   // Should the limiting be necessary in any play mode if there are no bugs?
-   double absoluteTime = schedule.LimitTrackTime();
-
-   if (schedule.mCutPreviewGapLen > 0)
-   {
-      // msmeyer: We're in cut preview mode, so if we are on the right
-      // side of the gap, we jump over it.
-      if (absoluteTime > schedule.mCutPreviewGapStart)
-         absoluteTime += schedule.mCutPreviewGapLen;
-   }
-
-   return absoluteTime;
-}
-
 bool PlaybackPolicy::AllowSeek(PlaybackSchedule &)
 {
    return true;
@@ -78,6 +49,15 @@ bool PlaybackPolicy::Done( PlaybackSchedule &schedule,
    return sampleCount(floor(diff * mRate + 0.5)) >= 0 &&
       // Require also that output frames are all consumed from ring buffer
       outputFrames == 0;
+}
+
+double PlaybackPolicy::OffsetTrackTime(
+   PlaybackSchedule &schedule, double offset )
+{
+   const auto time = schedule.ClampTrackTime(
+      schedule.GetTrackTime() + offset );
+   schedule.RealTimeInit( time );
+   return time;
 }
 
 std::chrono::milliseconds PlaybackPolicy::SleepInterval(PlaybackSchedule &)
@@ -112,9 +92,11 @@ PlaybackPolicy::GetPlaybackSlice(PlaybackSchedule &schedule, size_t available)
    return { available, frames, toProduce };
 }
 
-double PlaybackPolicy::AdvancedTrackTime( PlaybackSchedule &schedule,
-   double trackTime, double realDuration )
+std::pair<double, double>
+PlaybackPolicy::AdvancedTrackTime( PlaybackSchedule &schedule,
+   double trackTime, size_t nSamples )
 {
+   auto realDuration = nSamples / mRate;
    if (schedule.ReversedTime())
       realDuration *= -1.0;
 
@@ -123,8 +105,11 @@ double PlaybackPolicy::AdvancedTrackTime( PlaybackSchedule &schedule,
          schedule.SolveWarpedLength(trackTime, realDuration);
    else
       trackTime += realDuration;
-
-   return trackTime;
+   
+   if ( trackTime >= schedule.mT1 )
+      return { schedule.mT1, std::numeric_limits<double>::infinity() };
+   else
+      return { trackTime, trackTime };
 }
 
 bool PlaybackPolicy::RepositionPlayback(
@@ -160,6 +145,14 @@ const PlaybackPolicy &PlaybackSchedule::GetPolicy() const
 
 LoopingPlaybackPolicy::~LoopingPlaybackPolicy() = default;
 
+PlaybackPolicy::BufferTimes
+LoopingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
+{
+   // Shorter times than in the default policy so that responses to changes of
+   // selection don't lag too much
+   return { 0.5, 0.5, 1.0 };
+}
+
 bool LoopingPlaybackPolicy::Done( PlaybackSchedule &, unsigned long )
 {
    return false;
@@ -170,14 +163,15 @@ LoopingPlaybackPolicy::GetPlaybackSlice(
    PlaybackSchedule &schedule, size_t available)
 {
    // How many samples to produce for each channel.
-   const auto realTimeRemaining = schedule.RealTimeRemaining();
+   const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
    auto frames = available;
    auto toProduce = frames;
    double deltat = frames / mRate;
 
+   mRemaining = realTimeRemaining * mRate;
    if (deltat > realTimeRemaining)
    {
-      toProduce = frames = realTimeRemaining * mRate;
+      toProduce = frames = mRemaining;
       schedule.RealTimeAdvance( realTimeRemaining );
    }
    else
@@ -194,60 +188,29 @@ LoopingPlaybackPolicy::GetPlaybackSlice(
    return { available, frames, toProduce };
 }
 
-double LoopingPlaybackPolicy::AdvancedTrackTime(
-   PlaybackSchedule &schedule,
-   double trackTime, double realDuration )
+std::pair<double, double> LoopingPlaybackPolicy::AdvancedTrackTime(
+   PlaybackSchedule &schedule, double trackTime, size_t nSamples )
 {
-   if (schedule.ReversedTime())
-      realDuration *= -1.0;
+   mRemaining -= std::min(mRemaining, nSamples);
+   if ( mRemaining == 0 )
+      // Wrap to start
+      return { schedule.mT1, schedule.mT0 };
 
    // Defense against cases that might cause loops not to terminate
    if ( fabs(schedule.mT0 - schedule.mT1) < 1e-9 )
-      return schedule.mT0;
+      return {schedule.mT0, schedule.mT0};
 
-   if (schedule.mEnvelope) {
-      double total=0.0;
-      bool foundTotal = false;
-      do {
-         auto oldTime = trackTime;
-         if (foundTotal && fabs(realDuration) > fabs(total))
-            // Avoid SolveWarpedLength
-            trackTime = schedule.mT1;
-         else
-            trackTime =
-               schedule.SolveWarpedLength(trackTime, realDuration);
+   auto realDuration = nSamples / mRate;
+   if (schedule.ReversedTime())
+      realDuration *= -1.0;
 
-         if (!schedule.Overruns( trackTime ))
-            break;
-
-         // Bug1922:  The part of the time track outside the loop should not
-         // influence the result
-         double delta;
-         if (foundTotal && oldTime == schedule.mT0)
-            // Avoid integrating again
-            delta = total;
-         else {
-            delta = schedule.ComputeWarpedLength(oldTime, schedule.mT1);
-            if (oldTime == schedule.mT0)
-               foundTotal = true, total = delta;
-         }
-         realDuration -= delta;
-         trackTime = schedule.mT0;
-      } while ( true );
-   }
-   else {
+   if (schedule.mEnvelope)
+      trackTime =
+         schedule.SolveWarpedLength(trackTime, realDuration);
+   else
       trackTime += realDuration;
 
-      // Wrap to start if looping
-      while ( schedule.Overruns( trackTime ) ) {
-         // LL:  This is not exactly right, but I'm at my wits end trying to
-         //      figure it out.  Feel free to fix it.  :-)
-         // MB: it's much easier than you think, mTime isn't warped at all!
-         trackTime -= schedule.mT1 - schedule.mT0;
-      }
-   }
-
-   return trackTime;
+   return { trackTime, trackTime };
 }
 
 bool LoopingPlaybackPolicy::RepositionPlayback(
@@ -255,10 +218,10 @@ bool LoopingPlaybackPolicy::RepositionPlayback(
 {
    // msmeyer: If playing looped, check if we are at the end of the buffer
    // and if yes, restart from the beginning.
-   if (schedule.RealTimeRemaining() <= 0)
+   if (mRemaining <= 0)
    {
       for (auto &pMixer : playbackMixers)
-         pMixer->Restart();
+         pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0 );
       schedule.RealTimeRestart();
    }
    return false;
@@ -302,20 +265,13 @@ void PlaybackSchedule::Init(
    if (options.policyFactory)
       mpPlaybackPolicy = options.policyFactory();
 
-   mCutPreviewGapStart = options.cutPreviewGapStart;
-   mCutPreviewGapLen = options.cutPreviewGapLen;
-
    mWarpedTime = 0.0;
    mWarpedLength = RealDuration(mT1);
 
    mPolicyValid.store(true, std::memory_order_release);
-}
 
-double PlaybackSchedule::LimitTrackTime() const
-{
-   // Track time readout for the main thread
-   // Allows for forward or backward play
-   return ClampTrackTime( GetTrackTime() );
+   mMessageChannel.Initialize();
+   mMessageChannel.Write( { mT0, mT1 } );
 }
 
 double PlaybackSchedule::ClampTrackTime( double trackTime ) const
@@ -324,11 +280,6 @@ double PlaybackSchedule::ClampTrackTime( double trackTime ) const
       return std::max(mT1, std::min(mT0, trackTime));
    else
       return std::max(mT0, std::min(mT1, trackTime));
-}
-
-bool PlaybackSchedule::Overruns( double trackTime ) const
-{
-   return (ReversedTime() ? trackTime <= mT1 : trackTime >= mT1);
 }
 
 double PlaybackSchedule::ComputeWarpedLength(double t0, double t1) const
@@ -387,13 +338,24 @@ double RecordingSchedule::ToDiscard() const
    return std::max(0.0, -( mPosition + TotalCorrection() ) );
 }
 
+void PlaybackSchedule::TimeQueue::Clear()
+{
+   mData = Records{};
+   mHead = {};
+   mTail = {};
+}
+
+void PlaybackSchedule::TimeQueue::Resize(size_t size)
+{
+   mData.resize(size);
+}
+
 void PlaybackSchedule::TimeQueue::Producer(
-   PlaybackSchedule &schedule, double rate,
-   size_t nSamples )
+   PlaybackSchedule &schedule, size_t nSamples )
 {
    auto &policy = schedule.GetPolicy();
 
-   if ( ! mData )
+   if ( mData.empty() )
       // Recording only.  Don't fill the queue.
       return;
 
@@ -403,28 +365,41 @@ void PlaybackSchedule::TimeQueue::Producer(
    auto time = mLastTime;
    auto remainder = mTail.mRemainder;
    auto space = TimeQueueGrainSize - remainder;
+   const auto size = mData.size();
 
    while ( nSamples >= space ) {
-      time = policy.AdvancedTrackTime( schedule, time, space / rate );
-      index = (index + 1) % mSize;
-      mData[ index ] = time;
+      auto times = policy.AdvancedTrackTime( schedule, time, space );
+      time = times.second;
+      if (!std::isfinite(time))
+         time = times.first;
+      index = (index + 1) % size;
+      mData[ index ].timeValue = time;
       nSamples -= space;
       remainder = 0;
       space = TimeQueueGrainSize;
    }
 
    // Last odd lot
-   if ( nSamples > 0 )
-      time = policy.AdvancedTrackTime( schedule, time, nSamples / rate );
+   if ( nSamples > 0 ) {
+      auto times = policy.AdvancedTrackTime( schedule, time, nSamples );
+      time = times.second;
+      if (!std::isfinite(time))
+         time = times.first;
+   }
 
    mLastTime = time;
    mTail.mRemainder = remainder + nSamples;
    mTail.mIndex = index;
 }
 
+double PlaybackSchedule::TimeQueue::GetLastTime() const
+{
+   return mLastTime;
+}
+
 double PlaybackSchedule::TimeQueue::Consumer( size_t nSamples, double rate )
 {
-   if ( ! mData ) {
+   if ( mData.empty() ) {
       // Recording only.  No scrub or playback time warp.  Don't use the queue.
       return ( mLastTime += nSamples / rate );
    }
@@ -433,21 +408,49 @@ double PlaybackSchedule::TimeQueue::Consumer( size_t nSamples, double rate )
    // with RingBuffer.
    auto remainder = mHead.mRemainder;
    auto space = TimeQueueGrainSize - remainder;
+   const auto size = mData.size();
    if ( nSamples >= space ) {
       remainder = 0,
-      mHead.mIndex = (mHead.mIndex + 1) % mSize,
+      mHead.mIndex = (mHead.mIndex + 1) % size,
       nSamples -= space;
       if ( nSamples >= TimeQueueGrainSize )
          mHead.mIndex =
-            (mHead.mIndex + ( nSamples / TimeQueueGrainSize ) ) % mSize,
+            (mHead.mIndex + ( nSamples / TimeQueueGrainSize ) ) % size,
          nSamples %= TimeQueueGrainSize;
    }
    mHead.mRemainder = remainder + nSamples;
-   return mData[ mHead.mIndex ];
+   return mData[ mHead.mIndex ].timeValue;
 }
 
 void PlaybackSchedule::TimeQueue::Prime(double time)
 {
    mHead = mTail = {};
    mLastTime = time;
+   if ( !mData.empty() )
+      mData[0].timeValue = time;
+}
+
+#include "ViewInfo.h"
+void PlaybackSchedule::MessageProducer( PlayRegionEvent &evt)
+{
+   // This executes in the main thread
+   auto *pRegion = evt.pRegion.get();
+   if ( !pRegion )
+      return;
+   const auto &region = *pRegion;
+
+   mMessageChannel.Write( { region.GetStart(), region.GetEnd() } );
+}
+
+void PlaybackSchedule::MessageConsumer()
+{
+   // This executes in the TrackBufferExchange thread
+   auto data = mMessageChannel.Read();
+   auto mine = std::tie(mT0, mT1);
+   auto theirs = std::tie(data.mT0, data.mT1);
+   if (mine != theirs) {
+      mine = theirs;
+      mWarpedLength = RealDuration(mT1);
+      RealTimeInit(mTimeQueue.GetLastTime());
+   }
 }

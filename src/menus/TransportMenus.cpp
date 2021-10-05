@@ -577,7 +577,7 @@ void OnPunchAndRoll(const CommandContext &context)
          // May adjust t1 left
          // Let's ignore the possibility of a clip even shorter than the
          // crossfade duration!
-         newt1 = std::min(newt1, clip->GetEndTime() - crossFadeDuration);
+         newt1 = std::min(newt1, clip->GetPlayEndTime() - crossFadeDuration);
       }
    }
 

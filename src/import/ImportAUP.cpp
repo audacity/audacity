@@ -1471,7 +1471,7 @@ bool AUPImportFileHandle::AddSilence(sampleCount len)
 
    if (mClip)
    {
-      mClip->InsertSilence(mClip->GetEndTime(), mWaveTrack->LongSamplesToTime(len));
+      mClip->InsertSilence(mClip->GetPlayEndTime(), mWaveTrack->LongSamplesToTime(len));
    }
    else if (mWaveTrack)
    {

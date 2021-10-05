@@ -204,11 +204,6 @@ protected:
    void OnDownOctave(wxCommandEvent&){ OnZoom( kDownOctave );};
 
 private:
-   void DestroyMenu() override
-   {
-      mpData = nullptr;
-   }
-
    void InitUserData(void *pUserData) override;
 
    void UpdatePrefs() override
@@ -317,9 +312,9 @@ UIHandle::Result NoteTrackVZoomHandle::Release
 
       PopupMenuTable *const pTable =
           (PopupMenuTable *) &NoteTrackVRulerMenuTable::Instance();
-      auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);
+      auto pMenu = PopupMenuTable::BuildMenu(pTable, &data);
 
-      pParent->PopupMenu(pMenu.get(), event.m_x, event.m_y);
+      pMenu->Popup( *pParent, { event.m_x, event.m_y } );
 
       return data.result;
    }

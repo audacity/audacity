@@ -128,10 +128,6 @@ private:
    void SetCutting( bool value ) { mCutting = value; }
    void SetStopping( bool value ) { mStopping = value; }
 
-   void SetupCutPreviewTracks(double playStart, double cutStart,
-                             double cutEnd, double playEnd);
-   void ClearCutPreviewTracks();
-
    // Cancel the addition of temporary recording tracks into the project
    void CancelRecording();
 
@@ -146,8 +142,6 @@ private:
    void OnCheckpointFailure(wxCommandEvent &evt);
 
    AudacityProject &mProject;
-
-   std::shared_ptr<TrackList> mCutPreviewTracks;
 
    PlayMode mLastPlayMode{ PlayMode::normalPlay };
 

@@ -132,6 +132,7 @@ class AUDACITY_DLL_API SpectralDataDialogWorker final
       : public ClientData::Base{
 public:
    explicit SpectralDataDialogWorker( AudacityProject &project );
+   ~SpectralDataDialogWorker();
 
    void OnToolChanged(wxCommandEvent &evt);
    void OnIdle(wxIdleEvent &evt);
@@ -354,6 +355,11 @@ SpectralDataDialogWorker::SpectralDataDialogWorker(AudacityProject &project)
 {
    project.Bind(EVT_PROJECT_SETTINGS_CHANGE, &SpectralDataDialogWorker::OnToolChanged, this);
    wxTheApp->Bind(wxEVT_IDLE, &SpectralDataDialogWorker::OnIdle, this);
+}
+
+SpectralDataDialogWorker::~SpectralDataDialogWorker()
+{
+   wxTheApp->Unbind(wxEVT_IDLE, &SpectralDataDialogWorker::OnIdle, this);
 }
 
 void SpectralDataDialogWorker::OnToolChanged(wxCommandEvent &evt)

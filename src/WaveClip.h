@@ -81,6 +81,8 @@ public:
    size_t       len { 0 }; // counts pixels, not samples
    int          algorithm;
    double       pps;
+   double       leftTrim{ .0 };
+   double       rightTrim{ .0 };
    double       start;
    int          windowType;
    size_t       windowSize { 0 };
@@ -203,7 +205,8 @@ public:
 
    // Always gives non-negative answer, not more than sample sequence length
    // even if t0 really falls outside that range
-   void TimeToSamplesClip(double t0, sampleCount *s0) const;
+   sampleCount TimeToSequenceSamples(double t) const;
+   sampleCount ToSequenceSamples(sampleCount s) const;
 
    int GetRate() const { return mRate; }
 
@@ -216,24 +219,55 @@ public:
 
    void SetColourIndex( int index ){ mColourIndex = index;};
    int GetColourIndex( ) const { return mColourIndex;};
-   void SetOffset(double offset);
-   double GetOffset() const { return mOffset; }
+   
+   double GetSequenceStartTime() const noexcept;
+   void SetSequenceStartTime(double startTime);
+   double GetSequenceEndTime() const;
+   //! Returns the index of the first sample of the underlying sequence
+   sampleCount GetSequenceStartSample() const;
+   //! Returns the index of the sample next after the last sample of the underlying sequence
+   sampleCount GetSequenceEndSample() const;
+   //! Returns the total number of samples in underlying sequence (not counting the cutlines)
+   sampleCount GetSequenceSamplesCount() const;
+
+   double GetPlayStartTime() const noexcept;
+   void SetPlayStartTime(double time);
+
+   double GetPlayEndTime() const;
+
+   sampleCount GetPlayStartSample() const;
+   sampleCount GetPlayEndSample() const;
+   sampleCount GetPlaySamplesCount() const;
+
+   //! Sets the play start offset in seconds from the beginning of the underlying sequence
+   void SetTrimLeft(double trim);
+   //! Returns the play start offset in seconds from the beginning of the underlying sequence
+   double GetTrimLeft() const noexcept;
+
+   //! Sets the play end offset in seconds from the ending of the underlying sequence
+   void SetTrimRight(double trim);
+   //! Returns the play end offset in seconds from the ending of the underlying sequence
+   double GetTrimRight() const noexcept;
+
+   //! Moves play start position by deltaTime
+   void TrimLeft(double deltaTime);
+   //! Moves play end position by deltaTime
+   void TrimRight(double deltaTime);
+
+   //! Sets the the left trimming to the absoulte time (if that is in bounds)
+   void TrimLeftTo(double to);
+   //! Sets the the right trimming to the absoulte time (if that is in bounds)
+   void TrimRightTo(double to);
+
    /*! @excsafety{No-fail} */
-   void Offset(double delta)
-      { SetOffset(GetOffset() + delta); }
-   double GetStartTime() const;
-   double GetEndTime() const;
-   sampleCount GetStartSample() const;
-   sampleCount GetEndSample() const;
-   sampleCount GetNumSamples() const;
+   void Offset(double delta) noexcept;
 
    // One and only one of the following is true for a given t (unless the clip
-   // has zero length -- then BeforeClip() and AfterClip() can both be true).
-   // Within() is true if the time is substantially within the clip
-   bool WithinClip(double t) const;
-   bool BeforeClip(double t) const;
-   bool AfterClip(double t) const;
-   bool IsClipStartAfterClip(double t) const;
+   // has zero length -- then BeforePlayStartTime() and AfterPlayEndTime() can both be true).
+   // WithinPlayRegion() is true if the time is substantially within the clip
+   bool WithinPlayRegion(double t) const;
+   bool BeforePlayStartTime(double t) const;
+   bool AfterPlayEndTime(double t) const;
 
    bool GetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
@@ -357,12 +391,27 @@ public:
    void SetName(const wxString& name);
    const wxString& GetName() const;
 
+   sampleCount TimeToSamples(double time) const noexcept;
+   double SamplesToTime(sampleCount s) const noexcept;
+
+   //! Silences the 'length' amount of samples starting from 'offset'(relative to the play start)
+   void SetSilence(sampleCount offset, sampleCount length);
+
 public:
    // Cache of values to colour pixels of Spectrogram - used by TrackArtist
    mutable std::unique_ptr<SpecPxCache> mSpecPxCache;
 
 protected:
-   double mOffset { 0 };
+   /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
+   /// operation (but without putting the cut audio to the clipboard)
+   void ClearSequence(double t0, double t1);
+
+   
+
+   double mSequenceOffset { 0 };
+   double mTrimLeft{ 0 };
+   double mTrimRight{ 0 };
+
    int mRate;
    int mDirty { 0 };
    int mColourIndex;
