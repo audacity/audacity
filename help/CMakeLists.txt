@@ -11,23 +11,27 @@ if( NOT DEFINED PYTHON )
    return()
 endif()
 
-set( host "alphamanual.audacityteam.org" )
-set( src "https://${host}/man" )
 set( dst "${_DEST}/help/manual" )
-set( script_dir "${topdir}/scripts/mw2html_audacity" )
-set( script "mw2html.py" )
-set( out_dir "${_INTDIR}" )
-set( out "${out_dir}/${host}/index.html" )
+set( out "${CMAKE_BINARY_DIR}/help/manual/index.html" )
+
+set(manual_version "${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION}")
 
 add_custom_command(
    COMMENT
-      "Downloading manual from: ${src}"
+      "Downloading manual..."
    COMMAND
-      "${PYTHON}" "${script_dir}/${script}" -s "${src}" "${out_dir}"
+      ${CMAKE_COMMAND}
+         -D VERSION=${manual_version}
+         -D DESTINATION=${CMAKE_BINARY_DIR}
+         -P "${CMAKE_SOURCE_DIR}/help/DownloadManual.cmake"
    COMMAND
-      ${CMAKE_COMMAND} -E copy_directory "${out_dir}/${host}" "${dst}"
+      ${CMAKE_COMMAND}
+         -E tar "xf" "audacity-manual-${manual_version}.tar.gz"
+   COMMAND
+      ${CMAKE_COMMAND} -E copy_directory "help/manual" "${dst}"
+
    WORKING_DIRECTORY
-      "${script_dir}"
+      ${CMAKE_BINARY_DIR}
    OUTPUT
       "${out}"
 )
@@ -46,9 +50,9 @@ if( ${_OPT}package_manual )
    ")
 
    if( "${CMAKE_GENERATOR}" MATCHES "Xcode" )
-      install( DIRECTORY "${out_dir}/${host}/" DESTINATION "${_APPDIR}/help/manual" )
+      install( DIRECTORY "${CMAKE_BINARY_DIR}/help/manual" DESTINATION "${_APPDIR}/help/manual" )
    elseif( "${CMAKE_GENERATOR}" MATCHES "Visual Studio*" )
-      install( DIRECTORY "${out_dir}/${host}/" DESTINATION "help/manual" )
+      install( DIRECTORY "${CMAKE_BINARY_DIR}/help/manual" DESTINATION "help/manual" )
    endif()
 endif()
 
