@@ -181,4 +181,7 @@ public:
    mutable Floats         tWindow; // Window times time parameter
    mutable Floats         dWindow; // Derivative of window
 };
+
+extern AUDACITY_DLL_API IntSetting SpectrumMaxFreq;
+
 #endif
