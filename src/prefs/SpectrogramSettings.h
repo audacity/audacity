@@ -117,14 +117,12 @@ private:
 public:
    size_t WindowSize() const { return windowSize; }
 
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
 private:
    int zeroPaddingFactor;
 public:
    size_t ZeroPaddingFactor() const {
       return algorithm == algPitchEAC ? 1 : zeroPaddingFactor;
    }
-#endif
 
    size_t GetFFTLength() const; // window size (times zero padding, if STFT)
    size_t NBins() const;

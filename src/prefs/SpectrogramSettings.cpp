@@ -68,9 +68,7 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
    , frequencyGain(other.frequencyGain)
    , windowType(other.windowType)
    , windowSize(other.windowSize)
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    , zeroPaddingFactor(other.zeroPaddingFactor)
-#endif
    , colorScheme(other.colorScheme)
    , scaleType(other.scaleType)
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
@@ -105,9 +103,7 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
       frequencyGain = other.frequencyGain;
       windowType = other.windowType;
       windowSize = other.windowSize;
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
       zeroPaddingFactor = other.zeroPaddingFactor;
-#endif
       colorScheme = other.colorScheme;
       scaleType = other.scaleType;
 #ifndef SPECTRAL_SELECTION_GLOBAL_SWITCH
@@ -293,9 +289,7 @@ void SpectrogramSettings::LoadPrefs()
 
    windowSize = gPrefs->Read(wxT("/Spectrum/FFTSize"), 1024);
 
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    zeroPaddingFactor = gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), 1);
-#endif
 
    gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHann);
 
@@ -341,9 +335,7 @@ void SpectrogramSettings::SavePrefs()
 
    gPrefs->Write(wxT("/Spectrum/FFTSize"), windowSize);
 
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    gPrefs->Write(wxT("/Spectrum/ZeroPaddingFactor"), zeroPaddingFactor);
-#endif
 
    gPrefs->Write(wxT("/Spectrum/WindowType"), windowType);
 
@@ -396,11 +388,9 @@ void SpectrogramSettings::UpdatePrefs()
       gPrefs->Read(wxT("/Spectrum/FFTSize"), &windowSize, 1024);
    }
 
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    if (zeroPaddingFactor == defaults().zeroPaddingFactor) {
       gPrefs->Read(wxT("/Spectrum/ZeroPaddingFactor"), &zeroPaddingFactor, 1);
    }
-#endif
 
    if (windowType == defaults().windowType) {
       gPrefs->Read(wxT("/Spectrum/WindowType"), &windowType, eWinFuncHann);
@@ -568,7 +558,6 @@ void SpectrogramSettings::ConvertToEnumeratedWindowSizes()
       size >>= 1, ++logarithm;
    windowSize = std::max(0, std::min(NumWindowSizes - 1, logarithm));
 
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    // Choices for zero padding begin at 1
    logarithm = 0;
    size = unsigned(zeroPaddingFactor);
@@ -578,15 +567,12 @@ void SpectrogramSettings::ConvertToEnumeratedWindowSizes()
       std::min(LogMaxWindowSize - (windowSize + LogMinWindowSize),
          logarithm
    ));
-#endif
 }
 
 void SpectrogramSettings::ConvertToActualWindowSizes()
 {
    windowSize = 1 << (windowSize + LogMinWindowSize);
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    zeroPaddingFactor = 1 << zeroPaddingFactor;
-#endif
 }
 
 float SpectrogramSettings::findBin( float frequency, float binUnit ) const
@@ -600,11 +586,11 @@ float SpectrogramSettings::findBin( float frequency, float binUnit ) const
 
 size_t SpectrogramSettings::GetFFTLength() const
 {
-#ifndef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
-   return windowSize;
-#else
+//#ifndef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+  // return windowSize;
+//#else
    return windowSize * ((algorithm != algPitchEAC) ? zeroPaddingFactor : 1);
-#endif
+//#endif
 }
 
 size_t SpectrogramSettings::NBins() const
