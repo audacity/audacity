@@ -14,11 +14,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "TrackView.h"
 #include "../../AColor.h"
 #include "../../AdornedRulerPanel.h"
-#include "../../Project.h"
+#include "Project.h"
+#include "../../ProjectWindows.h"
 #include "../../Track.h" //
 #include "../../TrackPanelAx.h"
 #include "../../TrackPanel.h"
-#include "../../ViewInfo.h"
+#include "ViewInfo.h"
 
 #include <wx/dc.h>
 
@@ -99,7 +100,8 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
       return;
 
    auto &trackPanel = TrackPanel::Get( *mProject );
-   if (auto tp = dynamic_cast<TrackPanel*>(&panel)) {
+   //NOTE: point selection cursor drawing over tracks moved to TrackPanel.cpp(see also TrackArt::DrawCursor)
+   /*if (auto tp = dynamic_cast<TrackPanel*>(&panel)) {
       wxASSERT(mIsMaster);
       AColor::CursorColor(&dc);
 
@@ -127,5 +129,12 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
       AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());
    }
    else
-      wxASSERT(false);
+      wxASSERT(false);*/
+   if (auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
+       wxASSERT(!mIsMaster);
+       dc.SetPen(*wxBLACK_PEN);
+       // AColor::Line includes both endpoints so use GetBottom()
+       auto rect = ruler->GetInnerRect();
+       AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());
+   }
 }

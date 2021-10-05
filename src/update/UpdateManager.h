@@ -13,11 +13,17 @@
 #include "UpdateDataParser.h"
 
 #include "Prefs.h"
+#include "BasicUI.h"
 
 #include <wx/string.h>
 #include <wx/event.h>
 #include <wx/timer.h>
+#include <wx/progdlg.h>
 
+#include <iostream>
+#include <fstream>
+#include <mutex>
+ 
 /// A class that managing of updates.
 /**
     Opt-in request and show update dialog by the scheduled time.
@@ -32,7 +38,7 @@ public:
     static UpdateManager& GetInstance();
     static void Start();
 
-    void GetUpdates(bool ignoreNetworkErrors);
+    void GetUpdates(bool ignoreNetworkErrors, bool configurableNotification);
 
     VersionPatch GetVersionPatch() const;
 
@@ -47,6 +53,13 @@ private:
     /// Scheduling update time for avoiding multiplying update notifications.
     bool IsTimeForUpdatesChecking();
 
+    std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
+
+    std::string mAudacityInstallerPath;
+    std::ofstream mAudacityInstaller;
+    
+    std::mutex mUpdateMutex;
+    bool mOnProgress{ false };
 public:
     DECLARE_EVENT_TABLE()
 };

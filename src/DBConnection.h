@@ -58,7 +58,8 @@ public:
    ) const;
 
    int SafeMode(const char *schema = "main");
-   int FastMode(const char *schema = "main");
+   int FastMode(const char* schema = "main");
+   int SetPageSize(const char* schema = "main");
 
    bool Assign(sqlite3 *handle);
    sqlite3 *Detach();

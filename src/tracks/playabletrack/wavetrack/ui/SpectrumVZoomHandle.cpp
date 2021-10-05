@@ -14,8 +14,8 @@ Paul Licameli split from WaveTrackVZoomHandle.cpp
 #include "WaveTrackVZoomHandle.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../NumberScale.h"
-#include "../../../../Prefs.h"
+#include "NumberScale.h"
+#include "Prefs.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -35,6 +35,11 @@ void SpectrumVZoomHandle::Enter( bool, AudacityProject* )
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    mChangeHighlight = RefreshCode::RefreshCell;
 #endif
+}
+
+bool SpectrumVZoomHandle::HandlesRightClick()
+{
+   return true;
 }
 
 UIHandle::Result SpectrumVZoomHandle::Click

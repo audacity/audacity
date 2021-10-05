@@ -5,16 +5,18 @@
 #include "../LabelTrack.h"
 #include "../Menus.h"
 #include "../NoteTrack.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../ProjectHistory.h"
+#include "ProjectRate.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
+#include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
 #include "../UndoManager.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -46,7 +48,7 @@ bool DoPasteText(AudacityProject &project)
    for (auto pLabelTrack : tracks.Any<LabelTrack>())
    {
       // Does this track have an active label?
-      if (LabelTrackView::Get( *pLabelTrack ).HasSelection( project )) {
+      if (LabelTrackView::Get( *pLabelTrack ).GetTextEditIndex(project) != -1) {
 
          // Yes, so try pasting into it
          auto &view = LabelTrackView::Get( *pLabelTrack );
@@ -108,7 +110,7 @@ bool DoPasteNothingSelected(AudacityProject &project)
       // Select some pasted samples, which is probably impossible to get right
       // with various project and track sample rates.
       // So do it at the sample rate of the project
-      double projRate = ProjectSettings::Get( project ).GetRate();
+      double projRate = ProjectRate::Get( project ).GetRate();
       double quantT0 = QUANTIZED_TIME(clipboard.T0(), projRate);
       double quantT1 = QUANTIZED_TIME(clipboard.T1(), projRate);
       selectedRegion.setTimes(
@@ -135,7 +137,6 @@ namespace EditActions {
 // Menu handler functions
 
 struct Handler : CommandHandlerObject {
-
 void OnUndo(const CommandContext &context)
 {
    auto &project = context.project;
@@ -349,13 +350,34 @@ void OnCopy(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
+std::pair<double, double> FindSelection(const CommandContext &context)
+{
+   double sel0 = 0.0, sel1 = 0.0;
+   
+#if 0
+   // Use the overriding selection if any was given in the context
+   if (auto *pRegion = context.temporarySelection.pSelectedRegion) {
+      auto &selectedRegion = *pRegion;
+      sel0 = selectedRegion.t0();
+      sel1 = selectedRegion.t1();
+   }
+   else
+#endif
+   {
+      auto &selectedRegion = ViewInfo::Get(context.project).selectedRegion;
+      sel0 = selectedRegion.t0();
+      sel1 = selectedRegion.t1();
+   }
+   
+   return { sel0, sel1 };
+}
+
 void OnPaste(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    const auto &settings = ProjectSettings::Get( project );
    auto &window = ProjectWindow::Get( project );
 
@@ -375,8 +397,8 @@ void OnPaste(const CommandContext &context)
       return;
 
    // Otherwise, paste into the selected tracks.
-   double t0 = selectedRegion.t0();
-   double t1 = selectedRegion.t1();
+   double t0, t1;
+   std::tie(t0, t1) = FindSelection(context);
 
    auto pN = tracks.Any().begin();
 
@@ -599,7 +621,8 @@ void OnPaste(const CommandContext &context)
 
    if (bPastedSomething)
    {
-      selectedRegion.setT1( t0 + clipboard.Duration() );
+      ViewInfo::Get(project).selectedRegion
+         .setTimes( t0, t0 + clipboard.Duration() );
 
       ProjectHistory::Get( project )
          .PushState(XO("Pasted from the clipboard"), XO("Paste"));
@@ -607,6 +630,7 @@ void OnPaste(const CommandContext &context)
       if (ff) {
          TrackFocus::Get(project).Set(ff);
          ff->EnsureVisible();
+         ff->LinkConsistencyCheck();
       }
    }
 }
@@ -753,13 +777,21 @@ void OnSplit(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
 
-   double sel0 = selectedRegion.t0();
-   double sel1 = selectedRegion.t1();
-
-   for (auto wt : tracks.Selected< WaveTrack >())
-      wt->Split( sel0, sel1 );
+   auto [sel0, sel1] = FindSelection(context);
+   
+   if (auto *pTrack = context.temporarySelection.pTrack) {
+      if (auto pWaveTrack = dynamic_cast<WaveTrack*>(pTrack))
+         for (auto pChannel : TrackList::Channels(pWaveTrack))
+            pChannel->Split( sel0, sel1 );
+      else
+         // Did nothing, don't push history
+         return;
+   }
+   else {
+      for (auto wt : tracks.Selected< WaveTrack >())
+         wt->Split( sel0, sel1 );
+   }
 
    ProjectHistory::Get( project ).PushState(XO("Split"), XO("Split"));
 #if 0

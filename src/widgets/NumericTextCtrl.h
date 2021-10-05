@@ -17,8 +17,9 @@
 
 
 
-#include <memory>
-#include "../../include/audacity/ComponentInterface.h"
+#include "MemoryX.h"
+#include "ComponentInterface.h"
+#include "ComponentInterfaceSymbol.h"
 #include <vector>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>

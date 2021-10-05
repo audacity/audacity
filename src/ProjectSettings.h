@@ -16,10 +16,13 @@ Paul Licameli split from AudacityProject.h
 
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
+#include "audacity/Types.h"
 
 class AudacityProject;
 
 // Sent to the project when certain settings change
+// See enum EventCode below for values of GetInt() identifying changed setting
+// The previous value of that setting can also be found using GetExtraLong()
 wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
    EVT_PROJECT_SETTINGS_CHANGE, wxCommandEvent);
 
@@ -32,20 +35,24 @@ enum
 
 namespace ToolCodes {
 enum {
+   // The buttons that are in the Tools toolbar must be in correspondence
+   // with the first few
    selectTool,
    envelopeTool,
    drawTool,
    zoomTool,
-   slideTool,
    multiTool,
+
+#ifdef EXPERIMENTAL_BRUSH_TOOL
+   brushTool,
+#endif
+
    numTools,
-   
    firstTool = selectTool,
-   lastTool = multiTool,
 };
 }
 
-///\brief Holds various per-project settings values, including the sample rate,
+///\brief Holds various per-project settings values,
 /// and sends events to the project when certain values change
 class AUDACITY_DLL_API ProjectSettings final
    : public ClientData::Base
@@ -58,7 +65,8 @@ public:
    // Values retrievable from GetInt() of the event for settings change
    enum EventCode : int {
       ChangedSyncLock,
-      ChangedProjectRate
+      ChangedProjectRate,
+      ChangedTool
    };
 
    explicit ProjectSettings( AudacityProject &project );
@@ -75,11 +83,6 @@ public:
    bool IsSyncLocked() const;
    void SetSyncLock(bool flag);
    
-   // Rate
-
-   void SetRate(double rate);
-   double GetRate() const;
-
    // Snap To
 
    void SetSnapTo(int snap);
@@ -87,8 +90,18 @@ public:
 
    // Current tool
 
-   void SetTool(int tool) { mCurrentTool = tool; }
+   void SetTool(int tool);
    int GetTool() const { return mCurrentTool; }
+
+   // Current brush radius
+   void SetBrushRadius(int brushRadius) { mCurrentBrushRadius = brushRadius; }
+   int GetBrushRadius() const { return mCurrentBrushRadius; }
+
+   void SetSmartSelection(bool isSelected) { mbSmartSelection = isSelected; }
+   bool IsSmartSelection() const { return mbSmartSelection; }
+
+   void SetOvertones(bool isSelected) { mbOvertones = isSelected; }
+   bool IsOvertones() const { return mbOvertones; }
 
    // Speed play
    double GetPlaySpeed() const {
@@ -130,8 +143,6 @@ private:
 
    wxString mSoloPref;
 
-   double mRate;
-
    // This is atomic because scrubber may read it in a separate thread from
    // the main
    std::atomic<double> mPlaySpeed{};
@@ -139,6 +150,10 @@ private:
    int mSnapTo;
 
    int mCurrentTool;
+   int mCurrentBrushRadius;
+   int mCurrentBrushHop;
+   bool mbSmartSelection { false };
+   bool mbOvertones { false };
    
    bool mTracksFitVerticallyZoomed{ false };  //lda
    bool mShowId3Dialog{ true }; //lda

@@ -46,8 +46,11 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
       # Enable updates. See https://github.com/AppImage/AppImageSpec/blob/master/draft.md#update-information
       set(CPACK_AUDACITY_APPIMAGE_UPDATE_INFO "gh-releases-zsync|audacity|audacity|latest|${zsync_name}.AppImage.zsync")
    endif()
+   get_property(CPACK_AUDACITY_FINDLIB_LOCATION TARGET findlib PROPERTY RUNTIME_OUTPUT_DIRECTORY)
 elseif( CMAKE_SYSTEM_NAME STREQUAL "Darwin" )
    set( CPACK_GENERATOR DragNDrop )
+
+   set( CPACK_COMMAND_HDIUTIL "${CMAKE_SOURCE_DIR}/scripts/build/macOS/hdiutil_wrapper.sh" )
 
    set( CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/mac/Resources/Audacity-DMG-background.png")
    set( CPACK_DMG_DS_STORE_SETUP_SCRIPT "${CMAKE_SOURCE_DIR}/scripts/build/macOS/DMGSetup.scpt")
@@ -62,6 +65,22 @@ elseif( CMAKE_SYSTEM_NAME STREQUAL "Darwin" )
       # CPACK_POST_BUILD_SCRIPTS was added in 3.19, but we only need it on macOS
       SET( CPACK_POST_BUILD_SCRIPTS "${CMAKE_SOURCE_DIR}/scripts/build/macOS/DMGSign.cmake" )
    endif()
+endif()
+
+if( CMAKE_GENERATOR MATCHES "Makefiles|Ninja" )
+   set( CPACK_SOURCE_GENERATOR "TGZ" )
+   set( CPACK_AUDACITY_BUILD_DIR "${CMAKE_BINARY_DIR}")
+
+   list( APPEND CPACK_PRE_BUILD_SCRIPTS "${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules/CopySourceVariables.cmake" )
+
+   set(CPACK_SOURCE_IGNORE_FILES
+      "/.git"
+      "/.vscode"
+      "/.idea"
+      "/.*build.*"
+      "/conan-home"
+      "/\\\\.DS_Store"
+   )
 endif()
 
 include(CPack) # do this last

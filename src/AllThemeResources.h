@@ -48,7 +48,6 @@ from there.  Audacity will look for a file called "Pause.png".
 
 
 #include "MacroMagic.h"
-#define XPMS_RETIRED
 
    SET_THEME_FLAGS(  resFlagPaired  );
    DEFINE_IMAGE( bmpPause, wxImage( 16, 16 ), wxT("Pause"));
@@ -81,7 +80,7 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpIBeam, wxImage( 27, 27 ), wxT("IBeam"));
    DEFINE_IMAGE( bmpZoom, wxImage( 27, 27 ), wxT("Zoom"));
    DEFINE_IMAGE( bmpEnvelope, wxImage( 27, 27 ), wxT("Envelope"));
-   DEFINE_IMAGE( bmpTimeShift, wxImage( 27, 27 ), wxT("TimeShift"));
+   DEFINE_IMAGE( bmpSpectralBrush, wxImage( 27, 27 ), wxT("SpectralBrush"));
    DEFINE_IMAGE( bmpDraw, wxImage( 27, 27 ), wxT("Draw"));
    DEFINE_IMAGE( bmpMulti, wxImage( 27, 27 ), wxT("Multi"));
    DEFINE_IMAGE( bmpMic, wxImage( 25, 25 ), wxT("Mic"));
@@ -218,6 +217,7 @@ from there.  Audacity will look for a file called "Pause.png".
 
    SET_THEME_FLAGS(  resFlagCursor  );
    DEFINE_IMAGE( bmpIBeamCursor, wxImage( 32, 32 ), wxT("IBeamCursor"));
+   DEFINE_IMAGE( bmpCrosshairCursor, wxImage( 32, 32 ), wxT("CrosshairCursor"));
    DEFINE_IMAGE( bmpDrawCursor, wxImage( 32, 32 ), wxT("DrawCursor"));
    DEFINE_IMAGE( bmpEnvCursor, wxImage( 32, 32 ), wxT("EnvCursor"));
    DEFINE_IMAGE( bmpTimeCursor, wxImage( 32, 32 ), wxT("TimeCursor"));
@@ -371,3 +371,12 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrSpectro4Sel,         wxColour(  191,    0,    0),  wxT("Spectro4Sel") );
    DEFINE_COLOUR( clrSpectro5Sel,         wxColour(  191,  191,  191),  wxT("Spectro5Sel") );
 
+   DEFINE_COLOUR( clrClipAffordanceOutlinePen,    wxColour(    0,    0,    0),  wxT("ClipAffordanceOutlinePen") );
+   DEFINE_COLOUR( clrClipAffordanceInactiveBrush, wxColour(  219,  219,  219),  wxT("ClipAffordanceUnselectedBrush") );
+   DEFINE_COLOUR( clrClipAffordanceActiveBrush,   wxColour(  237,  237,  237),  wxT("ClipAffordanceSelectedBrush") );
+   DEFINE_COLOUR( clrClipAffordanceStroke,        wxColour(  255,  255,  255),  wxT("ClipAffordanceStroke") );
+
+   DEFINE_COLOUR( clrLabelTrackTextSelection, wxColour(183, 202, 226), wxT("LabelTrackTextSelection") );
+
+   DEFINE_COLOUR( clrClipNameText,          wxColour(0, 0, 0),       wxT("ClipNameText") );
+   DEFINE_COLOUR( clrClipNameTextSelection, wxColour(183, 202, 226), wxT("ClipNameTextSelection") );

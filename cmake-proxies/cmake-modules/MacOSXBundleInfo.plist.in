@@ -230,7 +230,7 @@
 	<key>NSHighResolutionCapable</key>
 	<true/>
    <key>NSRequiresAquaSystemAppearance</key>
-   <true/>
+   <false/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Audacity version ${AUDACITY_INFO_VERSION}</string>
 	<key>NSMicrophoneUsageDescription</key>

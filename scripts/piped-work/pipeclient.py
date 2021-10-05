@@ -272,10 +272,9 @@ def main():
     while True:
         reply = ''
         if sys.version_info[0] < 3:
-            message = input("\nEnter command or 'Q' to quit: ")
+            message = raw_input("\nEnter command or 'Q' to quit: ")
         else:
-            message = input(
-                "\nEnter command or 'Q' to quit: ")
+            message = input("\nEnter command or 'Q' to quit: ")
         start = time.time()
         if message.upper() == 'Q':
             sys.exit(0)

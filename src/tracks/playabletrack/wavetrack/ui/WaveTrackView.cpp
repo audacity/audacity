@@ -25,20 +25,26 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../../images/Cursors.h"
 #include "../../../../AllThemeResources.h"
 
+#include "../../../../commands/CommandContext.h"
 #include "../../../../HitTestResult.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackArtist.h"
+#include "../../../../TrackPanel.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
-#include "../../../../ViewInfo.h"
+#include "../../../../TrackPanelResizeHandle.h"
+#include "ViewInfo.h"
 #include "../../../../prefs/TracksPrefs.h"
 
 #include "../../../ui/TimeShiftHandle.h"
 #include "../../../ui/ButtonHandle.h"
 #include "../../../../TrackInfo.h"
 
+#include "WaveTrackAffordanceControls.h"
+
 namespace {
+
 
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
 
@@ -700,6 +706,49 @@ std::pair<
          mCloseHandle,
          *pWaveTrackView, *this, state ) )
          results.second.push_back( pHandle );
+
+      auto channels = TrackList::Channels(wt.get());
+      if(channels.size() > 1) {
+         // Only one cell is tested and we need to know
+         // which one and it's relative location to the border.
+         auto subviews = pWaveTrackView->GetSubViews();
+         auto currentSubview = std::find_if(subviews.begin(), subviews.end(), 
+            [self = shared_from_this()](const auto& p){
+               return self == p.second;
+         });
+         if (currentSubview != subviews.end())
+         {
+            auto currentSubviewIndex = std::distance(subviews.begin(), currentSubview);
+            
+            const auto py = state.state.GetY();
+            const auto topBorderHit = std::abs(py - state.rect.GetTop())
+               <= WaveTrackView::kChannelSeparatorThickness / 2;
+            const auto bottomBorderHit = std::abs(py - state.rect.GetBottom())
+               <= WaveTrackView::kChannelSeparatorThickness / 2;
+
+            auto currentChannel = channels.find(wt.get());
+            auto currentChannelIndex = std::distance(channels.begin(), currentChannel);
+
+            if (//for not-last-view check the bottom border hit
+               ((currentChannelIndex != channels.size() - 1)
+                  && (currentSubviewIndex == static_cast<int>(subviews.size()) - 1)
+                  && bottomBorderHit)
+               ||
+               //or for not-first-view check the top border hit
+               ((currentChannelIndex != 0) && currentSubviewIndex == 0 && topBorderHit))
+            {
+               //depending on which border hit test succeeded on we
+               //need to choose a proper target for resizing
+               auto it = bottomBorderHit ? currentChannel : currentChannel.advance(-1);
+               auto result = std::static_pointer_cast<UIHandle>(
+                  std::make_shared<TrackPanelResizeHandle>((*it)->shared_from_this(), py)
+               );
+               result = AssignUIHandlePtr(mResizeHandle, result);
+               results.second.push_back(result);
+            }
+         }
+      }
+
       if ( auto pHandle = SubViewAdjustHandle::HitTest(
          mAdjustHandle,
          *pWaveTrackView, *this, state ) )
@@ -760,6 +809,74 @@ void WaveTrackSubView::DrawBoldBoundaries(
    }
 }
 
+std::weak_ptr<WaveTrackView> WaveTrackSubView::GetWaveTrackView() const
+{
+   return mwWaveTrackView;
+}
+
+auto WaveTrackSubView::GetMenuItems(
+   const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
+      -> std::vector<MenuItem>
+{
+   const WaveClip *pClip = nullptr;
+   auto pTrack = static_cast<WaveTrack*>( FindTrack().get() );
+   double time = 0.0;
+   if ( pTrack && pPosition ) {
+      auto &viewInfo = ViewInfo::Get(*pProject);
+      time = viewInfo.PositionToTime( pPosition->x, rect.x );
+      pClip = pTrack->GetClipAtTime( time );
+   }
+
+   static auto FindAffordance = [](WaveTrack &track){
+      auto &view = TrackView::Get( track );
+      auto pAffordance = view.GetAffordanceControls();
+      return std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
+         pAffordance );
+   };
+
+   auto pRenameTrack = pTrack;
+   auto pRenameClip = pClip;
+   auto pAffordance = FindAffordance( *pTrack );
+   if ( pTrack && pClip && !pAffordance ) {
+      // Maybe an aligned right clip.  Check the first of the channel
+      // group instead for a clip at the same time.
+      if ( ( pRenameTrack = *TrackList::Channels( pTrack ).begin() ) ) {
+         pAffordance = FindAffordance( *pRenameTrack );
+         pRenameClip = pRenameTrack->GetClipAtTime( time );
+      }
+   }
+
+   auto RenameClip =
+   [pRenameTrack, pRenameClip, pAffordance]( const CommandContext &context ) {
+      auto &project = context.project;
+      // Begin editing of the label, either with a dialog or directly
+      // in the track panel.
+      pAffordance->StartEditNameOfMatchingClip( project,
+         [pRenameClip](auto &clip){ return &clip == pRenameClip; } );
+      // Refresh so that the insertion cursor appears
+      TrackPanel::Get(project).RefreshTrack(pRenameTrack);
+   };
+
+   if (pClip)
+      return {
+         { L"Cut", XO("Cut") },
+         { L"Copy", XO("Copy") },
+         { L"Paste", XO("Paste")  },
+         {},
+         { L"Split", XO("Split Clip") },
+         { L"TrackMute", XO("Mute/Unmute Track") },
+         {},
+         { L"RenameClip", XO("Rename clip..."), RenameClip,
+            (pAffordance && pRenameClip) },
+      };
+   else
+      return {
+         { L"Paste", XO("Paste")  },
+         {},
+         { L"TrackMute", XO("Mute/Unmute Track") },
+      };
+}
+
 WaveTrackView &WaveTrackView::Get( WaveTrack &track )
 {
    return static_cast< WaveTrackView& >( TrackView::Get( track ) );
@@ -782,6 +899,10 @@ WaveTrackSubView::WaveTrackSubView( WaveTrackView &waveTrackView )
       waveTrackView.shared_from_this() );
 }
 
+void WaveTrackSubView::CopyToSubView(WaveTrackSubView *destSubView) const {
+
+}
+
 WaveTrackView::~WaveTrackView()
 {
 }
@@ -795,6 +916,14 @@ void WaveTrackView::CopyTo( Track &track ) const
       // only these fields are important to preserve in undo/redo history
       pOther->RestorePlacements( SavePlacements() );
       pOther->mMultiView = mMultiView;
+
+      auto srcSubViewsPtrs  = const_cast<WaveTrackView*>( this )->GetAllSubViews();
+      auto destSubViewsPtrs  = const_cast<WaveTrackView*>( pOther )->GetAllSubViews();
+      wxASSERT(srcSubViewsPtrs.size() == destSubViewsPtrs.size());
+
+      for(auto i = 0; i != srcSubViewsPtrs.size(); i++){
+         srcSubViewsPtrs[i]->CopyToSubView(destSubViewsPtrs[i].get());
+      }
    }
 }
 
@@ -957,6 +1086,11 @@ void WaveTrackView::DoSetDisplay(Display display, bool exclusive)
 
 auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
 {
+   return GetSubViews(&rect);
+}
+
+auto WaveTrackView::GetSubViews(const wxRect* rect) -> Refinement
+{
    BuildSubViews();
 
    // Collect the visible views in the right sequence
@@ -966,43 +1100,142 @@ auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
    std::vector< Item > items;
    size_t ii = 0;
    float total = 0;
-   WaveTrackSubViews::ForEach( [&]( WaveTrackSubView &subView ){
-      auto &placement = mPlacements[ii];
+   WaveTrackSubViews::ForEach([&](WaveTrackSubView& subView) {
+      auto& placement = mPlacements[ii];
       auto index = placement.index;
       auto fraction = placement.fraction;
-      if ( index >= 0 && fraction > 0.0 )
+      if (index >= 0 && fraction > 0.0)
          total += fraction,
-         items.push_back( { index, fraction, subView.shared_from_this() } );
+         items.push_back({ index, fraction, subView.shared_from_this() });
       ++ii;
-   } );
-   std::sort( items.begin(), items.end(), [](const Item &a, const Item &b){
+   });
+   std::sort(items.begin(), items.end(), [](const Item& a, const Item& b) {
       return a.index < b.index;
-   } );
+   });
 
    // Remove views we don't need
    auto begin = items.begin(), end = items.end(),
-     newEnd = std::remove_if( begin, end,
-        []( const Item &item ){ return !item.pView; } );
-   items.erase( newEnd, end );
+        newEnd = std::remove_if(begin, end,
+            [](const Item& item) { return !item.pView; });
+   items.erase(newEnd, end);
 
-   // Assign coordinates, redenominating to the total height,
-   // storing integer values
    Refinement results;
-   results.reserve( items.size() );
-   const auto top = rect.GetTop();
-   const auto height = rect.GetHeight();
-   float partial = 0;
-   wxCoord lastCoord = 0;
-   for ( const auto &item : items ) {
-      wxCoord newCoord = top + (partial / total) * height;
-      results.emplace_back( newCoord, item.pView );
-      partial += item.fraction;
+
+   if (rect != nullptr)
+   {
+      // Assign coordinates, redenominating to the total height,
+      // storing integer values
+      results.reserve(items.size());
+      const auto top = rect->GetTop();
+      const auto height = rect->GetHeight();
+      float partial = 0;
+      wxCoord lastCoord = 0;
+      for (const auto& item : items) {
+         wxCoord newCoord = top + (partial / total) * height;
+         results.emplace_back(newCoord, item.pView);
+         partial += item.fraction;
+      }
+
+      // Cache for the use of sub-view dragging
+      mLastHeight = height;
+   }
+   else
+   {
+      std::transform(items.begin(), items.end(), std::back_inserter(results), [](const auto& item) {
+         return std::make_pair(0, item.pView);
+      });
    }
 
-   // Cache for the use of sub-view dragging
-   mLastHeight = height;
-
    return results;
+}
+
+/*
+ Note that the WaveTrackView isn't in the TrackPanel subdivision, but it is
+ set sometimes as the focused cell, and therefore the following functions can
+ be visited.  To visit their overrides in the sub-views and affordances,
+ which are never focused, we must forward to them.  To do that properly, if
+ any cell declines to handle the event by setting it as skipped, it must be
+ set again to not-skipped before attempting the next call-through.
+ */
+unsigned WaveTrackView::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
+{
+   unsigned result{ RefreshCode::RefreshNone };
+
+   // Give sub-views first chance to handle the event
+   for (auto &subView : GetSubViews()) {
+      // Event defaults in skipped state which must be turned off explicitly
+      wxASSERT(!event.GetSkipped());
+      result |= subView.second->CaptureKey(event, viewInfo, pParent, project);
+      if (!event.GetSkipped())
+         // sub view wants it
+         return result;
+      else
+         event.Skip(false);
+   }
+
+   if (auto affordance = GetAffordanceControls())
+      result |= affordance->CaptureKey(event, viewInfo, pParent, project);
+    
+   if (event.GetSkipped()) {
+      event.Skip(false);
+      result |= CommonTrackView::CaptureKey(event, viewInfo, pParent, project);
+   }
+
+   return result;
+}
+
+unsigned WaveTrackView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
+{
+   unsigned result{ RefreshCode::RefreshNone };
+
+   // Give sub-views first chance to handle the event
+   for (auto &subView : GetSubViews()) {
+      // Event defaults in skipped state which must be turned off explicitly
+      wxASSERT(!event.GetSkipped());
+      result |= subView.second->KeyDown(event, viewInfo, pParent, project);
+      if (!event.GetSkipped())
+         // sub view wants it
+         return result;
+      else
+         event.Skip(false);
+   }
+
+   if (auto affordance = GetAffordanceControls())
+      result |= affordance->KeyDown(event, viewInfo, pParent, project);
+    
+   if(event.GetSkipped()) {
+      event.Skip(false);
+      result |= CommonTrackView::KeyDown(event, viewInfo, pParent, project);
+   }
+
+   return result;
+}
+
+unsigned WaveTrackView::Char(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
+{
+   unsigned result{ RefreshCode::RefreshNone };
+
+   // Give sub-views first chance to handle the event
+   for (auto &subView : GetSubViews()) {
+      // Event defaults in skipped state which must be turned off explicitly
+      wxASSERT(!event.GetSkipped());
+      result |= subView.second->Char(event, viewInfo, pParent, project);
+      if (!event.GetSkipped())
+         // sub view wants it
+         return result;
+      else
+         event.Skip(false);
+   }
+
+   if (auto affordance = GetAffordanceControls())
+      result |= affordance->Char(event, viewInfo, pParent, project);
+    
+   if(event.GetSkipped()) {
+      event.Skip(false);
+      result |= CommonTrackView::Char(event, viewInfo, pParent, project);
+   }
+
+   return result;
 }
 
 std::vector< std::shared_ptr< WaveTrackSubView > >
@@ -1018,6 +1251,16 @@ WaveTrackView::GetAllSubViews()
    return results;
 }
 
+std::shared_ptr<CommonTrackCell> WaveTrackView::GetAffordanceControls()
+{
+    auto track = FindTrack();
+    if (!track->IsAlignedWithLeader())
+    {
+        return DoGetAffordance(track);
+    }
+    return {};
+}
+
 void WaveTrackView::DoSetMinimized( bool minimized )
 {
    BuildSubViews();
@@ -1029,13 +1272,19 @@ void WaveTrackView::DoSetMinimized( bool minimized )
    } );
 }
 
+std::shared_ptr<CommonTrackCell> WaveTrackView::DoGetAffordance(const std::shared_ptr<Track>& track)
+{
+    if (mpAffordanceCellControl == nullptr)
+        mpAffordanceCellControl = std::make_shared<WaveTrackAffordanceControls>(track);
+    return mpAffordanceCellControl;
+}
+
 using DoGetWaveTrackView = DoGetView::Override< WaveTrack >;
-template<> template<> auto DoGetWaveTrackView::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetWaveTrackView) {
    return [](WaveTrack &track) {
       return std::make_shared<WaveTrackView>( track.SharedPointer() );
    };
 }
-static DoGetWaveTrackView registerDoGetWaveTrackView;
 
 std::shared_ptr<TrackVRulerControls> WaveTrackView::DoGetVRulerControls()
 {
@@ -1229,20 +1478,23 @@ ClipParameters::ClipParameters
    }
 }
 
-void ClipParameters::DrawClipEdges( wxDC &dc, const wxRect &rect ) const
+wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect)
 {
-   // Draw clip edges
-   dc.SetPen(*wxGREY_PEN);
-   if (tpre < 0) {
-      AColor::Line(dc,
-                   mid.x - 1, mid.y,
-                   mid.x - 1, mid.y + rect.height);
-   }
-   if (tpost > t1) {
-      AColor::Line(dc,
-                   mid.x + mid.width, mid.y,
-                   mid.x + mid.width, mid.y + rect.height);
-   }
+    auto srs = 1. / static_cast<double>(clip.GetRate());
+    //to prevent overlap left and right most samples with frame border
+    auto margin = .25 * srs;
+    constexpr auto edgeLeft = static_cast<wxInt64>(std::numeric_limits<int>::min());
+    constexpr auto edgeRight = static_cast<wxInt64>(std::numeric_limits<int>::max());
+    auto left = std::clamp(zoomInfo.TimeToPosition(clip.GetOffset() - margin, viewRect.x, true), edgeLeft, edgeRight);
+    auto right = std::clamp(zoomInfo.TimeToPosition(clip.GetEndTime() - srs + margin, viewRect.x, true), edgeLeft, edgeRight);
+    if (right > left)
+    {
+        //after clamping we can expect that left and right 
+        //are small enough to be put into int
+        return wxRect(static_cast<int>(left), viewRect.y, static_cast<int>(right - left), viewRect.height);
+    }
+    //off the screen
+    return wxRect();
 }
 
 void WaveTrackView::Reparent( const std::shared_ptr<Track> &parent )
@@ -1252,6 +1504,17 @@ void WaveTrackView::Reparent( const std::shared_ptr<Track> &parent )
    WaveTrackSubViews::ForEach( [&parent](WaveTrackSubView &subView){
       subView.Reparent( parent );
    } );
+   if (mpAffordanceCellControl)
+      mpAffordanceCellControl->Reparent(parent);
+}
+
+std::weak_ptr<WaveClip> WaveTrackView::GetSelectedClip()
+{
+   if (auto affordance = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(GetAffordanceControls()))
+   {
+      return affordance->GetSelectedClip();
+   }
+   return {};
 }
 
 void WaveTrackView::BuildSubViews() const

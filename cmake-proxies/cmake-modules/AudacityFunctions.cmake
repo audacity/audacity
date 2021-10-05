@@ -51,22 +51,29 @@ function( set_dir_folder dir folder)
 endfunction()
 
 # Helper to retrieve the settings returned from pkg_check_modules()
-macro( get_package_interface package )
-   set( INCLUDES
+function( get_package_interface package target )
+   set( package_includes
       ${${package}_INCLUDE_DIRS}
    )
 
-   set( LINKDIRS
+   set( package_linkdirs
       ${${package}_LIBDIR}
    )
 
    # We resolve the full path of each library to ensure the
    # correct one is referenced while linking
+   set( package_libraries )
    foreach( lib ${${package}_LIBRARIES} )
-      find_library( LIB_${lib} ${lib} HINTS ${LINKDIRS} )
-      list( APPEND LIBRARIES ${LIB_${lib}} )
+      find_library( LIB_${lib} ${lib} HINTS ${package_linkdirs} )
+      list( APPEND package_libraries ${LIB_${lib}} )
    endforeach()
-endmacro()
+
+   # And add it to our target
+   target_include_directories( ${target} INTERFACE ${package_includes} )
+   target_link_libraries( ${target} INTERFACE ${package_libraries} )
+
+   message(STATUS "Interface ${target}:\n\tinclude: ${includes}\n\tLibraries: ${LIBRARIES}")
+endfunction()
 
 # Set the cache and context value
 macro( set_cache_value var value )
@@ -263,7 +270,7 @@ function( audacity_append_common_compiler_options var use_pch )
          # Define/undefine _DEBUG
 	 # Yes, -U to /U too as needed for Windows:
 	 $<IF:$<CONFIG:Debug>,-D_DEBUG=1,-U_DEBUG>
-   )   
+   )
    # Definitions controlled by the AUDACITY_BUILD_LEVEL switch
    if( AUDACITY_BUILD_LEVEL EQUAL 0 )
       list( APPEND ${var} -DIS_ALPHA -DUSE_ALPHA_MANUAL )
@@ -408,7 +415,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    # compute LIBRARIES
    set( LIBRARIES )
-   
+
    foreach( IMPORT ${IMPORT_TARGETS} )
       list( APPEND LIBRARIES "${IMPORT}" )
    endforeach()
@@ -449,8 +456,8 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       endif()
 
       add_custom_command(TARGET ${TARGET} POST_BUILD
-         COMMAND ${CMAKE_COMMAND} -E copy 
-            "$<TARGET_FILE:${TARGET}>" 
+         COMMAND ${CMAKE_COMMAND} -E copy
+            "$<TARGET_FILE:${TARGET}>"
             "${REQUIRED_LOCATION}/$<TARGET_FILE_NAME:${TARGET}>"
       )
    endif()
@@ -589,7 +596,7 @@ function( addlib dir name symbol required check )
    set( TARGET_ROOT ${libsrc}/${dir} )
 
    # Define the option name
-   set( use ${_OPT}use_${name} ) 
+   set( use ${_OPT}use_${name} )
 
    # If we're not checking for system or local here, then let the
    # target config handle the rest.
@@ -635,7 +642,7 @@ function( addlib dir name symbol required check )
    if ( TARGET "${TARGET}" )
       return()
    endif()
- 
+
    message( STATUS "========== Configuring ${name} ==========" )
 
    # Check for the system package(s) if the user prefers it
@@ -650,16 +657,22 @@ function( addlib dir name symbol required check )
          add_library( ${TARGET} INTERFACE IMPORTED GLOBAL )
 
          # Retrieve the package information
-         get_package_interface( PKG_${TARGET} )
-
-         # And add it to our target
-         target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
-         target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
-      elseif( ${_OPT}obey_system_dependencies )
-         message( FATAL_ERROR "Failed to find the system package ${name}" )
+         get_package_interface( PKG_${TARGET} ${TARGET} )
       else()
-         set( ${use} "local" )
-         set_property( CACHE ${use} PROPERTY VALUE "local" )
+         find_package( ${packages} QUIET )
+
+         if( TARGET ${TARGET} )
+            set( PKG_${TARGET}_FOUND Yes )
+         endif()
+      endif()
+
+      if( NOT PKG_${TARGET}_FOUND )
+         if( ${_OPT}obey_system_dependencies )
+            message( FATAL_ERROR "Failed to find the system package ${name}" )
+         else()
+            set( ${use} "local" )
+            set_property( CACHE ${use} PROPERTY VALUE "local" )
+         endif()
       endif()
    endif()
 
@@ -676,7 +689,7 @@ function( addlib dir name symbol required check )
       # Set the folder (for the IDEs) for each one
       foreach( target ${targets} )
          # Skip interface libraries since they don't have any source to
-         # present in the IDEs   
+         # present in the IDEs
          get_target_property( type "${target}" TYPE )
          if( NOT "${type}" STREQUAL "INTERFACE_LIBRARY" )
             set_target_properties( ${target} PROPERTIES FOLDER "lib-src" )

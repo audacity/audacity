@@ -37,9 +37,9 @@ other settings.
 
 #include "portaudio.h"
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
-#include "../DeviceManager.h"
+#include "DeviceManager.h"
 
 enum {
    HostID = 10000,
@@ -74,7 +74,7 @@ TranslatableString DevicePrefs::GetDescription()
    return XO("Preferences for Device");
 }
 
-wxString DevicePrefs::HelpPageName()
+ManualPageID DevicePrefs::HelpPageName()
 {
    return "Devices_Preferences";
 }

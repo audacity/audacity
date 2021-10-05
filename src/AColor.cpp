@@ -467,7 +467,7 @@ wxColour CursorColour( )
 
    // Pen colour is fine, if there is plenty of contrast.
    if( d  > 200 )
-      return clrCursorPen;
+      return theTheme.Colour( clrCursorPen );
 
    // otherwise return same colour as a selection.
    return theTheme.Colour( clrSelected );

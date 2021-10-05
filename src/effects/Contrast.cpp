@@ -14,18 +14,18 @@
 
 #include "../CommonCommandFlags.h"
 #include "../WaveTrack.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../ProjectFileIO.h"
-#include "../ProjectSettings.h"
+#include "ProjectRate.h"
 #include "../ProjectWindow.h"
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
-#include "../FileNames.h"
-#include "../ViewInfo.h"
+#include "FileNames.h"
+#include "ViewInfo.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
 
 #include <cmath>
 #include <limits>
@@ -40,8 +40,9 @@
 #include <wx/log.h>
 #include <wx/wfstream.h>
 #include <wx/txtstrm.h>
+#include <wx/textctrl.h>
 
-#include "../PlatformCompatibility.h"
+#include "PlatformCompatibility.h"
 
 #define DB_MAX_LIMIT 0.0   // Audio is massively distorted.
 #define WCAG2_PASS 20.0    // dB difference required to pass WCAG2 test.
@@ -212,8 +213,7 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    wxString number;
 
    auto p = FindProjectFromWindow( this );
-   const auto &settings = ProjectSettings::Get( *p );
-   mProjectRate = settings.GetRate();
+   mProjectRate = ProjectRate::Get(*p).GetRate();
 
       const auto options = NumericTextCtrl::Options{}
          .AutoPos(true)
@@ -361,7 +361,7 @@ void ContrastDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
    // Original help page is back on-line (March 2016), but the manual should be more reliable.
    // http://www.eramp.com/WCAG_2_audio_contrast_tool_help.htm
-   HelpSystem::ShowHelp(this, wxT("Contrast"));
+   HelpSystem::ShowHelp(this, L"Contrast");
 }
 
 void ContrastDialog::OnClose(wxCommandEvent & WXUNUSED(event))
@@ -532,7 +532,7 @@ void ContrastDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    auto project = FindProjectFromWindow( this );
    wxString fName = wxT("contrast.txt");
 
-   fName = FileNames::SelectFile(FileNames::Operation::Export,
+   fName = SelectFile(FileNames::Operation::Export,
       XO("Export Contrast Result As:"),
       wxEmptyString,
       fName,
@@ -652,12 +652,13 @@ void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
 // Remaining code hooks this add-on into the application
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
+#include "ProjectWindows.h"
 #include "../commands/ScreenshotCommand.h"
 
 namespace {
 
 // Contrast window attached to each project is built on demand by:
-AudacityProject::AttachedWindows::RegisteredFactory sContrastDialogKey{
+AttachedWindows::RegisteredFactory sContrastDialogKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &window = ProjectWindow::Get( parent );
       return safenew ContrastDialog(
@@ -673,8 +674,8 @@ struct Handler : CommandHandlerObject {
    {
       auto &project = context.project;
       CommandManager::Get(project).RegisterLastAnalyzer(context);  //Register Contrast as Last Analyzer
-      auto contrastDialog =
-         &project.AttachedWindows::Get< ContrastDialog >( sContrastDialogKey );
+      auto contrastDialog = &GetAttachedWindows(project)
+         .Get< ContrastDialog >( sContrastDialogKey );
 
       contrastDialog->CentreOnParent();
       if( ScreenshotCommand::MayCapture( contrastDialog ) )

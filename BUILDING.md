@@ -5,7 +5,7 @@
 * **python3** >= 3.5
 * **conan** >= 1.32.0
 * **cmake** >= 3.16
-* A working C++ 14 compiler
+* A working C++ 17 compiler
 
 ### Conan
 
@@ -37,7 +37,7 @@ On Linux, `cmake` is usually available from the system package manager.
 
 We build Audacity using [Microsoft Visual Studio 2019](https://visualstudio.microsoft.com/vs/community/). In order to build Audacity **Desktop development with C++** workload is required.
 
-As we require only C++14 - MSVC 2017 should work just fine too.
+As we require only C++17 - MSVC 2017 should work just fine too.
 
 ### MacOS
 
@@ -45,7 +45,7 @@ We build Audacity using XCode 12. However, it is likely possible to build it wit
 
 ### Linux
 
-We use GCC 9, but any C++14 compliant compiler should work.
+We use GCC 9, but any C++17 compliant compiler should work.
 
 On Debian or Ubuntu, you can install everything required using the following commands:
 
@@ -113,7 +113,7 @@ Alternatively, you can use **CLion**. If you chose to do so, open the directory 
 At the moment we only support **x86_64** builds. It is possible to build using AppleSilicon hardware but **mad** and **id3tag** should be disabled:
 
 ```
-cmake -GXCode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=off ../audacity
+cmake -GXcode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=off ../audacity
 ```
 
 ## Linux & Other OS
@@ -156,6 +156,11 @@ cmake -GXCode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=of
 
 You can use `cmake -LH` to get a list of the options available (or use CMake GUI or `ccmake`). The list will include documentation about each option. For convenience, [here is a list](CMAKE_OPTIONS.md) of the most notable options.
 
+### Building with ASIO support on Windows
+
+To enable ASIO support on Windows, please pass `audacity_has_asio_support=On` to CMake during the configuration. 
+ASIO is only supported on Windows and only for 64-bit builds.
+
 ### Building using system libraries
 
 On Linux it is possible to build Audacity using (almost) only the libraries provided by the package manager. Please, see the list of required libraries [here](linux/required_libraries.md).
@@ -187,3 +192,21 @@ $ docker run --rm -v ${pwd}:/audacity/audacity/ -v ${pwd}/../build/linux-system:
 ```
 
 To find system packages, we rely on `pkg-config`. There are several packages that have broken `*.pc` or do not use `pkg-config` at all. For the docker image - we handle this issue by installing the correct [`pc` files](linux/build-environment/pkgconfig/).
+
+### Disabling Conan
+
+Conan can be disabled completely using `-Daudacity_conan_enabled=Off` during the configuration. 
+This option implies `-Daudacity_obey_system_dependencies=On` and disables `local` for packages that are managed with Conan. 
+
+### Disabling pre-built binaries downloads for Conan
+
+It is possible to force Conan to build all the dependencies from the source code without using the pre-built binaries. To do so, please pass `-Daudaicity_conan_allow_prebuilt_binaries=Off` to CMake during the configuration. This option will trigger rebuild every
+time CMake configuration changes.
+
+### Reducing Conan cache size
+
+In order to reduce the space used by Conan cache, please run:
+
+```
+$ conan remove "*" --src --builds --force
+```

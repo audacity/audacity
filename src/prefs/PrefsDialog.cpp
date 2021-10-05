@@ -34,8 +34,9 @@
 #include <wx/treebook.h>
 #include <wx/treectrl.h>
 
-#include "../AudioIOBase.h"
-#include "../Prefs.h"
+#include "AudioIOBase.h"
+#include "Prefs.h"
+#include "ProjectWindows.h"
 #include "../ShuttleGui.h"
 #include "../commands/CommandManager.h"
 
@@ -656,7 +657,7 @@ void PrefsDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
 
 void PrefsDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   wxString page = GetCurrentPanel()->HelpPageName();
+   const auto &page = GetCurrentPanel()->HelpPageName();
    HelpSystem::ShowHelp(this, page, true);
 }
 
@@ -766,7 +767,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    //      so AudacityProject::UpdatePrefs() or any of the routines it calls must
    //      not cause MenuCreator::RebuildMenuBar() to be executed.
 
-   wxTheApp->AddPendingEvent(wxCommandEvent{ EVT_PREFS_UPDATE });
+   PrefsListener::Broadcast();
 
    if( IsModal() )
       EndModal(true);
@@ -840,7 +841,7 @@ void PrefsDialog::RecordExpansionState()
 
 #include <wx/frame.h>
 #include "../Menus.h"
-#include "../Project.h"
+#include "Project.h"
 
 void DoReloadPreferences( AudacityProject &project )
 {

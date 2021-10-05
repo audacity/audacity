@@ -36,8 +36,8 @@ for each problem encountered, since there can be many orphans.
 #include <wx/bmpbuttn.h>
 
 
-#include "../AudacityLogger.h"
 #include "wxPanelWrapper.h"
+#include "../LogWindow.h"
 #include "../Theme.h"
 #include "../AllThemeResources.h"
 #include "../widgets/HelpSystem.h"
@@ -59,7 +59,7 @@ private:
    void OnHelp(wxCommandEvent& event);
 
    wxRadioBox* mRadioBox;
-   wxString mHelpPage;
+   ManualPageID mHelpPage;
 
    DECLARE_EVENT_TABLE()
 };
@@ -145,7 +145,7 @@ MultiDialog::MultiDialog(wxWindow * pParent,
             auto pButton = S.Id(wxID_OK)
                .AddButton(XXO("OK"), wxALIGN_CENTER, !log);
 
-            if (!mHelpPage.IsEmpty()) {
+            if (!mHelpPage.empty()) {
                auto pHelpBtn = S.Id(wxID_HELP)
                   .AddBitmapButton(theTheme.Bitmap(bmpHelpIcon), wxALIGN_CENTER, false);
                pHelpBtn->SetToolTip(XO("Help").Translation());
@@ -169,10 +169,7 @@ void MultiDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
 void MultiDialog::OnShowLog(wxCommandEvent & WXUNUSED(event))
 {
-   auto logger = AudacityLogger::Get();
-   if (logger) {
-      logger->Show();
-   }
+   LogWindow::Show();
 }
 
 void MultiDialog::OnHelp(wxCommandEvent & WXUNUSED(event))

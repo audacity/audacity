@@ -16,8 +16,9 @@
 
 
 #include "TracksBehaviorsPrefs.h"
+#include "ViewInfo.h"
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
@@ -41,15 +42,9 @@ TranslatableString TracksBehaviorsPrefs::GetDescription()
    return XO("Preferences for TracksBehaviors");
 }
 
-wxString TracksBehaviorsPrefs::HelpPageName()
+ManualPageID TracksBehaviorsPrefs::HelpPageName()
 {
    return "Tracks_Behaviors_Preferences";
-}
-
-const wxChar *TracksBehaviorsPrefs::ScrollingPreferenceKey()
-{
-   static auto string = wxT("/GUI/ScrollBeyondZero");
-   return string;
 }
 
 void TracksBehaviorsPrefs::Populate()
@@ -90,7 +85,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
                      true});
       S.TieCheckBox(XXO("Editing a clip can &move other clips"),
                     {wxT("/GUI/EditClipCanMove"),
-                     true});
+                     false});
       S.TieCheckBox(XXO("\"Move track focus\" c&ycles repeatedly through tracks"),
                     {wxT("/GUI/CircularTrackNavigation"),
                      false});
@@ -102,8 +97,7 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
                      false});
 #ifdef EXPERIMENTAL_SCROLLING_LIMITS
       S.TieCheckBox(XXO("Enable scrolling left of &zero"),
-                    {ScrollingPreferenceKey(),
-                     ScrollingPreferenceDefault()});
+                    ScrollingPreference);
 #endif
       S.TieCheckBox(XXO("Advanced &vertical zooming"),
                     {wxT("/GUI/VerticalZooming"),
@@ -153,6 +147,6 @@ bool GetEditClipsCanMove()
    if( mIsSyncLocked )
       return true;
    bool editClipsCanMove;
-   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipsCanMove, true);
+   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipsCanMove, false);
    return editClipsCanMove;
 }

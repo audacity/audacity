@@ -24,6 +24,7 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
+#include <wx/app.h>
 #include <wx/choice.h>
 #include <wx/event.h>
 #include <wx/intl.h>
@@ -38,14 +39,14 @@
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"
-#include "../AudioIOBase.h"
+#include "AudioIOBase.h"
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../ShuttleGui.h"
 #include "../widgets/Grabber.h"
-#include "../DeviceManager.h"
+#include "DeviceManager.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/Grabber.h"
 
@@ -74,7 +75,7 @@ static int DeviceToolbarPrefsID()
 DeviceToolBar::DeviceToolBar( AudacityProject &project )
 : ToolBar( project, DeviceBarID, XO("Device"), wxT("Device"), true )
 {
-   wxTheApp->Bind( EVT_RESCANNED_DEVICES,
+   DeviceManager::Instance()->Bind( EVT_RESCANNED_DEVICES,
       &DeviceToolBar::OnRescannedDevices, this );
 }
 
@@ -244,7 +245,7 @@ void DeviceToolBar::UpdatePrefs()
 
    int hostSelectionIndex = mHost->GetSelection();
    wxString oldHost = hostSelectionIndex >= 0 ? mHost->GetString(hostSelectionIndex) :
-                                                wxT("");
+                                                wxString{};
    auto hostName = AudioIOHost.Read();
 
    // if the prefs host name doesn't match the one displayed, it changed
@@ -552,7 +553,7 @@ void DeviceToolBar::FillInputChannels()
    mInputChannels->SetMinSize(wxSize(50, wxDefaultCoord));
 }
 
-void DeviceToolBar::OnRescannedDevices( wxCommandEvent &event )
+void DeviceToolBar::OnRescannedDevices( wxEvent &event )
 {
    event.Skip();
    // Hosts may have disappeared or appeared so a complete repopulate is needed.
@@ -680,8 +681,7 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
       gAudioIO->HandleDeviceChange();
    }
 
-   wxTheApp->AddPendingEvent(wxCommandEvent{
-      EVT_PREFS_UPDATE, DeviceToolbarPrefsID() });
+   PrefsListener::Broadcast(DeviceToolbarPrefsID());
 }
 
 void DeviceToolBar::ShowInputDialog()

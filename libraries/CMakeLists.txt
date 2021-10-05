@@ -7,6 +7,19 @@ set( LIBRARIES
    lib-strings
    lib-utility
    lib-uuid
+   lib-components
+   lib-basic-ui
+   lib-exceptions
+   lib-preferences
+   lib-math
+   lib-files
+   lib-registries
+   lib-xml
+   lib-audio-devices
+   lib-project
+   lib-screen-geometry
+   lib-project-rate
+   lib-ffmpeg-support
 )
 
 if ( ${_OPT}has_networking )

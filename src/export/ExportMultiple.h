@@ -12,7 +12,7 @@
 #define __AUDACITY_EXPORT_MULTIPLE__
 
 #include "Export.h"
-#include "../wxFileNameWrapper.h" // member variable
+#include "wxFileNameWrapper.h" // member variable
 
 class wxButton;
 class wxCheckBox;
@@ -32,6 +32,7 @@ class Track;
 class AUDACITY_DLL_API ExportMultipleDialog final : public wxDialogWrapper
 {
 public:
+   using ProgressResult = BasicUI::ProgressResult;
 
    ExportMultipleDialog(AudacityProject *parent);
    virtual ~ExportMultipleDialog();

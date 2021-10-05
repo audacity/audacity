@@ -23,7 +23,7 @@
 
 #include "ShuttleGui.h"
 #include "Prefs.h"
-#include "prefs/GUISettings.h"
+#include "Decibels.h"
 
 BEGIN_EVENT_TABLE(SoundActivatedRecordDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, SoundActivatedRecordDialog::OnOK)
@@ -56,7 +56,7 @@ void SoundActivatedRecordDialog::PopulateOrExchange(ShuttleGui & S)
       S.TieSlider(
          XXO("Activation level (dB):"),
          {wxT("/AudioIO/SilenceLevel"), -50},
-         0, -gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE)
+         0, -DecibelScaleCutoff.Read()
       )->SetMinSize(wxSize(300, wxDefaultCoord));
       S.EndMultiColumn();
    }

@@ -35,11 +35,12 @@
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectSettings.h"
+#include "ProjectWindows.h"
 #include "UndoManager.h"
 #include "commands/CommandManager.h"
 #include "toolbars/ToolManager.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
+#include "BasicUI.h"
 
 #include <unordered_set>
 
@@ -805,8 +806,7 @@ void MenuManager::TellUserWhyDisallowed(
       return;
 
    // Does not have the warning icon...
-   ShowErrorDialog(
-      NULL,
+   BasicUI::ShowErrorDialog( {},
       untranslatedTitle,
       reason,
       helpPage);

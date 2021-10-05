@@ -4,12 +4,14 @@
 // C++ standard header <memory> with a few extensions
 #include <iterator>
 #include <memory>
+#include <new> // align_val_t and hardware_destructive_interference_size
 #include <cstdlib> // Needed for free.
 #ifndef safenew
 #define safenew new
 #endif
 
 #include <functional>
+#include <limits>
 
 /*
  * ArrayOf<X>
@@ -361,13 +363,15 @@ ValueRestorer< T > valueRestorer( T& var, const T& newValue )
   they cooperate correctly with stl algorithms and std::reverse_iterator
  */
 template< typename Value, typename Category = std::forward_iterator_tag >
-using ValueIterator = std::iterator<
-   Category, const Value, ptrdiff_t,
+struct ValueIterator{
+   using iterator_category = Category;
+   using value_type = Value;
+   using difference_type = ptrdiff_t;
    // void pointer type so that operator -> is disabled
-   void,
+   using pointer = void;
    // make "reference type" really the same as the value type
-   const Value
->;
+   using reference = const Value;
+};
 
 /**
   \brief A convenience for use with range-for
@@ -578,6 +582,47 @@ OutContainer transform_container( InContainer &inContainer, Function &&fn )
    return transform_range<OutContainer>(
       inContainer.begin(), inContainer.end(), fn );
 }
+
+//! Non-template helper for class template NonInterfering
+/*!
+ If a structure contains any members with large alignment, this base class may also allow it to work in
+ macOS builds under current limitations of the C++17 standard implementation.
+ */
+struct UTILITY_API alignas(
+#ifdef __WIN32__
+   std::hardware_destructive_interference_size
+#else
+   // That constant isn't defined for the other builds yet
+   64 /* ? */
+#endif
+)
+
+NonInterferingBase {
+   static void *operator new(std::size_t count, std::align_val_t al);
+   static void operator delete(void *ptr, std::align_val_t al);
+
+#if defined (_MSC_VER) && defined(_DEBUG)
+   // Versions that work in the presence of the DEBUG_NEW macro.
+   // Ignore the arguments supplied by the macro and forward to the
+   // other overloads.
+   static void *operator new(
+      std::size_t count, std::align_val_t al, int, const char *, int)
+   { return operator new(count, al); }
+   static void operator delete(
+      void *ptr, std::align_val_t al, int, const char *, int)
+   { return operator delete(ptr, al); }
+#endif
+};
+
+/*! Given a structure type T, derive a structure with sufficient padding so that there is not false sharing of
+ cache lines between successive elements of an array of those structures.
+ */
+template< typename T > struct NonInterfering
+   : NonInterferingBase // Inherit operators; use empty base class optimization
+   , T
+{
+   using T::T;
+};
 
 // These macros are used widely, so declared here.
 #define QUANTIZED_TIME(time, rate) (floor(((double)(time) * (rate)) + 0.5) / (rate))

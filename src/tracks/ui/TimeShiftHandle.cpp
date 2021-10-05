@@ -24,7 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "../../UndoManager.h"
-#include "../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../../images/Cursors.h"
 
 TimeShiftHandle::TimeShiftHandle
@@ -32,6 +32,21 @@ TimeShiftHandle::TimeShiftHandle
    : mGripHit{ gripHit }
 {
    mClipMoveState.mCapturedTrack = pTrack;
+}
+
+std::shared_ptr<Track> TimeShiftHandle::GetTrack() const
+{
+   return mClipMoveState.mCapturedTrack;
+}
+
+bool TimeShiftHandle::WasMoved() const
+{
+    return mDidSlideVertically || (mClipMoveState.initialized && mClipMoveState.wasMoved);
+}
+
+bool TimeShiftHandle::Clicked() const
+{
+   return mClipMoveState.initialized;
 }
 
 void TimeShiftHandle::Enter(bool, AudacityProject *)
@@ -257,12 +272,11 @@ bool CoarseTrackShifter::SyncLocks()
    return false;
 }
 
-template<> auto MakeTrackShifter::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL(MakeTrackShifter) {
    return [](Track &track, AudacityProject&) {
       return std::make_unique<CoarseTrackShifter>(track);
    };
 }
-static MakeTrackShifter registerMakeTrackShifter;
 
 void ClipMoveState::Init(
    AudacityProject &project,
@@ -274,6 +288,8 @@ void ClipMoveState::Init(
    TrackList &trackList, bool syncLocked )
 {
    shifters.clear();
+
+   initialized = true;
 
    auto &state = *this;
    state.mCapturedTrack = capturedTrack.SharedPointer();
@@ -426,6 +442,9 @@ double ClipMoveState::DoSlideHorizontal( double desiredSlideAmount )
    // finally, here is where clips are moved
    if ( desiredSlideAmount != 0.0 )
       state.DoHorizontalOffset( desiredSlideAmount );
+
+   //attempt to move a clip is counted to
+   wasMoved = true;
 
    return (state.hSlideAmount = desiredSlideAmount);
 }
@@ -940,6 +959,8 @@ UIHandle::Result TimeShiftHandle::Release
    if (mDidSlideVertically) {
       msg = XO("Moved clips to another track");
       consolidate = false;
+      for (auto& pair : mClipMoveState.shifters)
+         pair.first->LinkConsistencyCheck();
    }
    else {
       msg = ( mClipMoveState.hSlideAmount > 0

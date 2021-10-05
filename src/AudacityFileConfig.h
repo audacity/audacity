@@ -13,7 +13,7 @@ Paul Licameli split from Prefs.h
 #define __AUDACITY_FILE_CONFIG__
 
 #include <memory>
-#include "widgets/FileConfig.h" // to inherit
+#include "FileConfig.h" // to inherit
 
 /// \brief Our own specialisation of FileConfig.
 class AUDACITY_DLL_API AudacityFileConfig final : public FileConfig

@@ -22,7 +22,7 @@
 
 #include <wx/defs.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ TranslatableString WarningsPrefs::GetDescription()
    return XO("Preferences for Warnings");
 }
 
-wxString WarningsPrefs::HelpPageName()
+ManualPageID WarningsPrefs::HelpPageName()
 {
    return "Warnings_Preferences";
 }

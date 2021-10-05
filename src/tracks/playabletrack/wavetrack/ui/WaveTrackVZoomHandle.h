@@ -16,7 +16,7 @@ class PopupMenuTable;
 class WaveTrack;
 #include "WaveTrackViewConstants.h"
 #include "../../../../UIHandle.h"
-#include "../../../../Prefs.h"
+#include "Prefs.h"
 
 namespace WaveTrackVZoomHandle
 {
@@ -81,12 +81,6 @@ protected:
    {}
 
    void InitUserData(void *pUserData) override;
-
-private:
-   void DestroyMenu() override
-   {
-      mpData = nullptr;
-   }
 
 protected:
    InitMenuData *mpData {};

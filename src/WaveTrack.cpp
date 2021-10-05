@@ -35,6 +35,7 @@ from the project that will own the track.
 #include <wx/defs.h>
 #include <wx/intl.h>
 #include <wx/debug.h>
+#include <wx/log.h>
 
 #include <float.h>
 #include <math.h>
@@ -45,13 +46,13 @@ from the project that will own the track.
 #include "Envelope.h"
 #include "Sequence.h"
 
-#include "ProjectFileIORegistry.h"
-#include "ProjectSettings.h"
+#include "Project.h"
+#include "ProjectRate.h"
 
 #include "Prefs.h"
 
 #include "effects/TimeWarper.h"
-#include "prefs/QualitySettings.h"
+#include "QualitySettings.h"
 #include "prefs/SpectrogramSettings.h"
 #include "prefs/TracksPrefs.h"
 #include "prefs/TracksBehaviorsPrefs.h"
@@ -64,7 +65,34 @@ from the project that will own the track.
 
 using std::max;
 
-static ProjectFileIORegistry::Entry registerFactory{
+namespace {
+
+bool AreAligned(const WaveClipPointers& a, const WaveClipPointers& b)
+{
+   if (a.size() != b.size())
+      return false;
+
+   const auto compare = [](const WaveClip* a, const WaveClip* b) {
+      return a->GetStartTime() == b->GetStartTime() &&
+         a->GetNumSamples() == b->GetNumSamples();
+   };
+
+   return std::mismatch(a.begin(), a.end(), b.begin(), compare).first == a.end();
+}
+
+//Handles possible future file values
+Track::LinkType ToLinkType(int value)
+{
+   if (value < 0)
+      return Track::LinkType::None;
+   else if (value > 3)
+      return Track::LinkType::Group;
+   return static_cast<Track::LinkType>(value);
+}
+
+}
+
+static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    wxT( "wavetrack" ),
    []( AudacityProject &project ){
       auto &trackFactory = WaveTrackFactory::Get( project );
@@ -87,7 +115,7 @@ WaveTrack::Holder WaveTrackFactory::NewWaveTrack(sampleFormat format, double rat
    if (format == (sampleFormat)0)
       format = QualitySettings::SampleFormatChoice();
    if (rate == 0)
-      rate = mSettings.GetRate();
+      rate = mRate.GetRate();
    return std::make_shared<WaveTrack> ( mpFactory, format, rate );
 }
 
@@ -179,8 +207,6 @@ void WaveTrack::Reinit(const WaveTrack &orig)
       else
          mpWaveformSettings.reset();
    }
-
-   this->SetOffset(orig.GetOffset());
 }
 
 void WaveTrack::Merge(const Track &orig)
@@ -242,7 +268,39 @@ void WaveTrack::SetPanFromChannelType()
       SetPan( -1.0f );
    else if( mChannel == Track::RightChannel )
       SetPan( 1.0f );
-};
+}
+
+bool WaveTrack::LinkConsistencyCheck()
+{
+   auto err = PlayableTrack::LinkConsistencyCheck();
+
+   auto linkType = GetLinkType();
+   if (static_cast<int>(linkType) == 1 || //Comes from old audacity version
+       linkType == LinkType::Aligned) 
+   {
+      auto next = dynamic_cast<WaveTrack*>(*std::next(GetOwner()->Find(this)));
+      if (next == nullptr)
+      {
+         //next track is not a wave track, fix and report error
+          wxLogWarning(
+             wxT("Right track %s is expected to be a WaveTrack.\n Removing link from left wave track %s."),
+             next->GetName(), GetName());
+         SetLinkType(LinkType::None);
+         SetChannel(MonoChannel);
+         err = true;
+      }
+      else
+      {
+         auto newLinkType = AreAligned(SortedClipArray(), next->SortedClipArray())
+            ? LinkType::Aligned : LinkType::Group;
+         //not an error
+         if (newLinkType != linkType)
+            SetLinkType(newLinkType);
+      }
+   }
+   return !err;
+}
+
 
 void WaveTrack::SetLastScaleType() const
 {
@@ -352,9 +410,43 @@ auto WaveTrack::GetIntervals() -> Intervals
    return MakeIntervals<Intervals>( mClips );
 }
 
+const WaveClip* WaveTrack::FindClipByName(const wxString& name) const
+{
+   for (const auto& clip : mClips)
+   {
+      if (clip->GetName() == name)
+         return clip.get();
+   }
+   return nullptr;
+}
+
 Track::Holder WaveTrack::Clone() const
 {
    return std::make_shared<WaveTrack>( *this );
+}
+
+wxString WaveTrack::MakeClipCopyName(const wxString& originalName) const
+{
+   auto name = originalName;
+   for (auto i = 1;; ++i)
+   {
+      if (FindClipByName(name) == nullptr)
+         return name;
+      //i18n-hint Template for clip name generation on copy-paste
+      name = XC("%s - copy %i", "clip name template").Format(originalName, i).Translation();
+   }
+}
+
+wxString WaveTrack::MakeNewClipName() const
+{
+   auto name = GetName();
+   for (auto i = 1;; ++i)
+   {
+      if (FindClipByName(name) == nullptr)
+         return name;
+      //i18n-hint Template for clip name generation on inserting new empty clip
+      name = XC("%s %i", "clip name template").Format(GetName(), i).Translation();
+   }
 }
 
 double WaveTrack::GetRate() const
@@ -614,6 +706,11 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 
          auto newClip = std::make_unique<WaveClip>
             (*clip, mpFactory, ! forClipboard, clip_t0, clip_t1);
+         newClip->SetName( 
+            //i18n-hint Template for clip name generation used when copying a part of clip data
+            XC("%s samples [%.2f-%.2f]", "clip name template")
+                 .Format(clip->GetName(), clip_t0 - clip->GetStartTime(), clip_t1 - clip->GetStartTime())
+                 .Translation());
 
          //wxPrintf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
@@ -1058,17 +1155,18 @@ void WaveTrack::HandleClear(double t0, double t1,
                   // Delete in the middle of the clip...we actually create two
                   // NEW clips out of the left and right halves...
 
-                  // left
-                  clipsToAdd.push_back
-                     ( std::make_unique<WaveClip>( *clip, mpFactory, true ) );
-                  clipsToAdd.back()->Clear(t0, clip->GetEndTime());
+                  auto leftClip = std::make_unique<WaveClip>(*clip, mpFactory, true);
+                  //i18n-hint Name assigned to the first clip when splitting a wave track
+                  leftClip->SetName(XC("%s 1", "clip name template").Format(leftClip->GetName()).Translation());
+                  leftClip->Clear(t0, clip->GetEndTime());
+                  clipsToAdd.push_back(std::move(leftClip));
 
-                  // right
-                  clipsToAdd.push_back
-                     ( std::make_unique<WaveClip>( *clip, mpFactory, true ) );
-                  WaveClip *const right = clipsToAdd.back().get();
-                  right->Clear(clip->GetStartTime(), t1);
-                  right->Offset(t1 - clip->GetStartTime());
+                  auto rightClip = std::make_unique<WaveClip>(*clip, mpFactory, true);
+                  //i18n-hint Name assigned to the second clip when splitting a wave track
+                  rightClip->SetName(XC("%s 2", "clip name template").Format(rightClip->GetName()).Translation());
+                  rightClip->Clear(clip->GetStartTime(), t1);
+                  rightClip->Offset(t1 - clip->GetStartTime());
+                  clipsToAdd.push_back(std::move(rightClip));
 
                   clipsToDelete.push_back(clip.get());
                }
@@ -1310,6 +1408,7 @@ void WaveTrack::Paste(double t0, const Track *src)
             newClip->Resample(mRate);
             newClip->Offset(t0);
             newClip->MarkChanged();
+            newClip->SetName(MakeClipCopyName(clip->GetName()));
             mClips.push_back(std::move(newClip)); // transfer ownership
          }
       }
@@ -1479,7 +1578,7 @@ void WaveTrack::Join(double t0, double t1)
    // Merge all WaveClips overlapping selection into one
 
    WaveClipPointers clipsToDelete;
-   WaveClip *newClip;
+   WaveClip* newClip{};
 
    for (const auto &clip: mClips)
    {
@@ -1500,9 +1599,9 @@ void WaveTrack::Join(double t0, double t1)
    if( clipsToDelete.size() == 0 )
       return;
 
-   newClip = CreateClip();
-   double t = clipsToDelete[0]->GetOffset();
-   newClip->SetOffset(t);
+   auto t = clipsToDelete[0]->GetOffset();
+   newClip = CreateClip(t, clipsToDelete[0]->GetName());
+   
    for (const auto &clip : clipsToDelete)
    {
       //wxPrintf("t=%.6f adding clip (offset %.6f, %.6f ... %.6f)\n",
@@ -1603,6 +1702,13 @@ void WaveTrack::Flush()
    RightmostOrNewClip()->Flush();
 }
 
+namespace {
+bool IsValidChannel(const int nValue)
+{
+   return (nValue >= Track::LeftChannel) && (nValue <= Track::MonoChannel);
+}
+}
+
 bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    if (!wxStrcmp(tag, wxT("wavetrack"))) {
@@ -1650,13 +1756,13 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("channel")))
          {
             if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) ||
-                  !XMLValueChecker::IsValidChannel(nValue))
+                  !IsValidChannel(nValue))
                return false;
             mChannel = static_cast<Track::ChannelType>( nValue );
          }
          else if (!wxStrcmp(attr, wxT("linked")) &&
                   XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-            SetLinked(nValue != 0);
+            SetLinkType(ToLinkType(nValue));
          else if (!wxStrcmp(attr, wxT("colorindex")) &&
                   XMLValueChecker::IsGoodString(strValue) &&
                   strValue.ToLong(&nValue))
@@ -1665,7 +1771,7 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("sampleformat")) &&
                   XMLValueChecker::IsGoodInt(strValue) &&
                   strValue.ToLong(&nValue) &&
-                  XMLValueChecker::IsValidSampleFormat(nValue))
+                  Sequence::IsValidSampleFormat(nValue))
             mFormat = static_cast<sampleFormat>(nValue);
       } // while
       return true;
@@ -1723,7 +1829,7 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.StartTag(wxT("wavetrack"));
    this->Track::WriteCommonXMLAttributes( xmlFile );
    xmlFile.WriteAttr(wxT("channel"), mChannel);
-   xmlFile.WriteAttr(wxT("linked"), mLinked);
+   xmlFile.WriteAttr(wxT("linked"), static_cast<int>(GetLinkType()));
    this->PlayableTrack::WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("rate"), mRate);
    xmlFile.WriteAttr(wxT("gain"), (double)mGain);
@@ -2130,18 +2236,20 @@ Sequence* WaveTrack::GetSequenceAtTime(double time)
       return NULL;
 }
 
-WaveClip* WaveTrack::CreateClip()
+WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
 {
-   mClips.push_back(std::make_unique<WaveClip>(mpFactory, mFormat, mRate, GetWaveColorIndex()));
+   auto clip = std::make_unique<WaveClip>(mpFactory, mFormat, mRate, GetWaveColorIndex());
+   clip->SetName(name);
+   clip->SetOffset(offset);
+   mClips.push_back(std::move(clip));
+
    return mClips.back().get();
 }
 
 WaveClip* WaveTrack::NewestOrNewClip()
 {
    if (mClips.empty()) {
-      WaveClip *clip = CreateClip();
-      clip->SetOffset(mOffset);
-      return clip;
+      return CreateClip(mOffset, MakeNewClipName());
    }
    else
       return mClips.back().get();
@@ -2151,9 +2259,7 @@ WaveClip* WaveTrack::NewestOrNewClip()
 WaveClip* WaveTrack::RightmostOrNewClip()
 {
    if (mClips.empty()) {
-      WaveClip *clip = CreateClip();
-      clip->SetOffset(mOffset);
-      return clip;
+      return CreateClip(mOffset, MakeNewClipName());
    }
    else
    {
@@ -2308,6 +2414,11 @@ void WaveTrack::SplitAt(double t)
          c->Clear(t, c->GetEndTime());
          newClip->Clear(c->GetStartTime(), t);
 
+         //i18n-hint Name assigned to the first clip on split
+         c->SetName(XC("%s 1", "clip name template").Format(c->GetName()).Translation());
+         //i18n-hint Name assigned to the second clip on split
+         newClip->SetName(XC("%s 2", "clip name template").Format(newClip->GetName()).Translation());
+             
          //offset the NEW clip by the splitpoint (noting that it is already offset to c->GetStartTime())
          sampleCount here = llrint(floor(((t - c->GetStartTime()) * mRate) + 0.5));
          newClip->Offset(here.as_double()/(double)mRate);
@@ -2779,7 +2890,7 @@ void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
 #include "SampleBlock.h"
 static auto TrackFactoryFactory = []( AudacityProject &project ) {
    return std::make_shared< WaveTrackFactory >(
-      ProjectSettings::Get( project ),
+      ProjectRate::Get( project ),
       SampleBlockFactory::New( project ) );
 };
 

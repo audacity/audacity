@@ -4,16 +4,19 @@
 #include "../BatchProcessDialog.h"
 #include "../Benchmark.h"
 #include "../CommonCommandFlags.h"
+#include "../Journal.h"
 #include "../Menus.h"
 #include "../PluginManager.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "../PluginRegistrationDialog.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
+#include "../ProjectWindows.h"
 #include "../ProjectSelectionManager.h"
 #include "../toolbars/ToolManager.h"
 #include "../Screenshot.h"
-#include "../TempDirectory.h"
+#include "TempDirectory.h"
 #include "../UndoManager.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -23,11 +26,14 @@
 #include "../effects/RealtimeEffectManager.h"
 #include "../prefs/EffectsPrefs.h"
 #include "../prefs/PrefsDialog.h"
+#include "../widgets/AudacityMessageBox.h"
+
+#include <wx/log.h>
 
 // private helper classes and functions
 namespace {
 
-AudacityProject::AttachedWindows::RegisteredFactory sMacrosWindowKey{
+AttachedWindows::RegisteredFactory sMacrosWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &window = ProjectWindow::Get( parent );
       return safenew MacrosWindow(
@@ -36,10 +42,20 @@ AudacityProject::AttachedWindows::RegisteredFactory sMacrosWindowKey{
    }
 };
 
+bool ShowManager(
+   PluginManager &pm, wxWindow *parent, EffectType type)
+{
+   pm.CheckForUpdates();
+
+   PluginRegistrationDialog dlg(parent, type);
+   return dlg.ShowModal() == wxID_OK;
+}
+
 void DoManagePluginsMenu(AudacityProject &project, EffectType type)
 {
    auto &window = GetProjectFrame( project );
-   if (PluginManager::Get().ShowManager(&window, type))
+   auto &pm = PluginManager::Get();
+   if (ShowManager(pm, &window, type))
       MenuCreator::RebuildAllMenuBars();
 }
 
@@ -302,9 +318,8 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    std::vector<const PluginDescriptor*> optplugs;
 
    EffectManager & em = EffectManager::Get();
-   const PluginDescriptor *plug = pm.GetFirstPluginForEffectType(type);
-   while (plug)
-   {
+   for (auto &plugin : pm.EffectsOfType(type)) {
+      auto plug = &plugin;
       if( plug->IsInstantiated() && em.IsHidden(plug->GetID()) )
          continue;
       if ( !plug->IsEnabled() ){
@@ -322,7 +337,6 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
          defplugs.push_back(plug);
       else
          optplugs.push_back(plug);
-      plug = pm.GetNextPluginForEffectType(type);
    }
 
    wxString groupby = EffectsGroupBy.Read();
@@ -527,8 +541,8 @@ void OnManageMacros(const CommandContext &context )
 {
    auto &project = context.project;
    CommandManager::Get(project).RegisterLastTool(context);  //Register Macros as Last Tool
-   auto macrosWindow =
-      &project.AttachedWindows::Get< MacrosWindow >( sMacrosWindowKey );
+   auto macrosWindow = &GetAttachedWindows(project)
+      .AttachedWindows::Get< MacrosWindow >( sMacrosWindowKey );
    if (macrosWindow) {
       macrosWindow->Show();
       macrosWindow->Raise();
@@ -540,8 +554,8 @@ void OnApplyMacrosPalette(const CommandContext &context )
 {
    auto &project = context.project;
    CommandManager::Get(project).RegisterLastTool(context);  //Register Palette as Last Tool
-   auto macrosWindow =
-      &project.AttachedWindows::Get< MacrosWindow >( sMacrosWindowKey );
+   auto macrosWindow = &GetAttachedWindows(project)
+      .AttachedWindows::Get< MacrosWindow >( sMacrosWindowKey );
    if (macrosWindow) {
       macrosWindow->Show();
       macrosWindow->Raise();
@@ -583,6 +597,27 @@ void OnDetectUpstreamDropouts(const CommandContext &context)
    bool &setting = gAudioIO->mDetectUpstreamDropouts;
    commandManager.Check(wxT("DetectUpstreamDropouts"), !setting);
    setting = !setting;
+}
+
+void OnWriteJournal(const CommandContext &)
+{
+   auto OnMessage =
+      /* i18n-hint a "journal" is a text file that records
+       the user's interactions with the application */
+      XO("A journal will be recorded after Audacity restarts.");
+   auto OffMessage =
+      /* i18n-hint a "journal" is a text file that records
+       the user's interactions with the application */
+      XO("No journal will be recorded after Audacity restarts.");
+
+   using namespace Journal;
+   bool enabled = RecordEnabled();
+   if ( SetRecordEnabled(!enabled) )
+      enabled = !enabled;
+   if ( enabled )
+      AudacityMessageBox( OnMessage );
+   else
+      AudacityMessageBox( OffMessage );
 }
 
 void OnApplyMacroDirectly(const CommandContext &context )
@@ -1124,6 +1159,21 @@ BaseItemSharedPtr ToolsMenu()
                   return AudioIO::Get()->mDetectUpstreamDropouts; } ) )
       )
 #endif
+
+#if defined(IS_ALPHA) || defined(END_USER_JOURNALLING)
+      ,
+      Section( "",
+         Command( wxT("WriteJournal"),
+            /* i18n-hint a "journal" is a text file that records
+             the user's interactions with the application */
+            XXO("Write Journal"),
+            FN(OnWriteJournal),
+            AlwaysEnabledFlag,
+            Options{}.CheckTest( [](AudacityProject&){
+               return Journal::RecordEnabled(); } ) )
+      )
+#endif
+
    ) ) };
    return menu;
 }

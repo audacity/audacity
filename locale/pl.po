@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-15 12:48-0400\n"
-"PO-Revision-Date: 2021-07-19 00:00+0000\n"
+"PO-Revision-Date: 2021-09-16 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "Language: pl\n"
@@ -553,7 +553,7 @@ msgstr "%s, wtyczki Nyquista"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, web developer"
-msgstr "%s, twórca stron internetowych"
+msgstr "%s, twórca strony internetowej"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -672,7 +672,7 @@ msgstr "Strona internetowa i grafiki"
 
 #: src/AboutDialog.cpp
 msgid "Translators"
-msgstr "Tłumacze"
+msgstr "Tłumaczenie"
 
 #: src/AboutDialog.cpp src/prefs/LibraryPrefs.cpp
 msgid "Libraries"
@@ -2980,11 +2980,11 @@ msgstr "Działanie"
 
 #: src/HistoryWindow.cpp
 msgid "Used Space"
-msgstr "Używane miejsce na dysku"
+msgstr "Zajęte miejsce"
 
 #: src/HistoryWindow.cpp
 msgid "&Total space used"
-msgstr "&Całkowite używane miejsce"
+msgstr "&Całkowite zajęte miejsce"
 
 #: src/HistoryWindow.cpp
 msgid "&Undo levels available"
@@ -4531,12 +4531,11 @@ msgid ""
 "are open, then File > Save Project."
 msgstr ""
 "\n"
-"\n"
 "Jeśli teraz zapiszesz, to projekt nie będzie miał ścieżek.\n"
 "\n"
-"Aby zapisać ścieżki, które były poprzednio\n"
-"otwarte, kliknij 'Anuluj', 'Edycja > Cofnij', aż wszystkie\n"
-"ścieżki będą otwarte i wybierz 'Plik > Zapisz projekt'."
+"Aby zapisać ścieżki, które były poprzednio otwarte,\n"
+"kliknij 'Anuluj', 'Edycja > Cofnij', aż wszystkie ścieżki\n"
+"będą otwarte i wybierz 'Plik > Zapisz projekt'."
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -5242,7 +5241,6 @@ msgid ""
 msgstr ""
 "Wybrana nazwa pliku nie może być użyta\n"
 "dla nagrywania czasowego, ponieważ zastąpiłaby ona inny projekt.\n"
-"\n"
 "Spróbuj ponownie i wybierz niepowtarzalną nazwę."
 
 #: src/TimerRecordDialog.cpp
@@ -5321,7 +5319,7 @@ msgstr "Automatyczny eksport włączony:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Action after Timer Recording:"
-msgstr "Działanie po nagrywaniu czasowym"
+msgstr "Działanie po nagrywaniu czasowym:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record Progress"
@@ -5480,7 +5478,7 @@ msgstr "Nic nie rób"
 
 #: src/TimerRecordDialog.cpp
 msgid "Exit Audacity"
-msgstr "Opuść Audacity"
+msgstr "Zakończ Audacity"
 
 #: src/TimerRecordDialog.cpp
 msgid "Restart system"
@@ -7056,7 +7054,7 @@ msgstr "Możesz pomierzyć tylko jedną ścieżkę na raz."
 
 #: src/effects/Contrast.cpp
 msgid "Please select an audio track."
-msgstr "Zaznacz ścieżkę dźwiękową"
+msgstr "Zaznacz ścieżkę dźwiękową."
 
 #: src/effects/Contrast.cpp
 msgid ""
@@ -7533,7 +7531,7 @@ msgstr "Poziom rezydualny"
 
 #: src/effects/Distortion.cpp
 msgid "(Not Used):"
-msgstr "(Nieużywany):"
+msgstr "(nieużywane):"
 
 #. i18n-hint: Control range.
 #: src/effects/Distortion.cpp
@@ -9075,7 +9073,7 @@ msgstr "Nowa długość zaznaczenia: %s"
 
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
-msgstr "Ostrzeżenie - Brak powtórek"
+msgstr "Ostrzeżenie - Brak powtórek."
 
 #: src/effects/Reverb.cpp
 msgid "Vocal I"
@@ -12237,7 +12235,7 @@ msgstr "Importowano MIDI z '%s'"
 
 #: src/import/ImportMIDI.cpp
 msgid "Import MIDI"
-msgstr "Importuj MIDI..."
+msgstr "Importuj MIDI"
 
 #: src/import/ImportMIDI.cpp
 #, c-format
@@ -13154,7 +13152,7 @@ msgstr "&Drukuj..."
 #. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
 msgid "E&xit"
-msgstr "&Wyjście"
+msgstr "&Zakończ"
 
 #: src/menus/FileMenus.cpp
 msgid "Hidden File Menu"
@@ -14564,7 +14562,7 @@ msgstr "&Opcje transportu"
 
 #: src/menus/TransportMenus.cpp
 msgid "Sound Activation Le&vel..."
-msgstr "Po&ziom aktywacji dźwięku"
+msgstr "Po&ziom aktywacji dźwięku..."
 
 #: src/menus/TransportMenus.cpp
 msgid "Sound A&ctivated Recording (on/off)"
@@ -15323,7 +15321,7 @@ msgstr "Import/eksport"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Preferences for ImportExport"
-msgstr "Ustawienia import/eksport"
+msgstr "Ustawienia importu/eksportu"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Mix down to Stereo or Mono"
@@ -15981,7 +15979,7 @@ msgstr "%i Hz"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Other..."
-msgstr "Inne..."
+msgstr "Inna..."
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Sampling"
@@ -16335,7 +16333,7 @@ msgstr "&Kwantyzacja nut"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Global settings"
-msgstr "Ustawienia ogólne:"
+msgstr "Ustawienia ogólne"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble spectral selection"
@@ -17478,7 +17476,7 @@ msgstr "384000 Hz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Other..."
-msgstr "&Inne..."
+msgstr "&Inna..."
 
 #. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -17965,7 +17963,7 @@ msgstr "Nie można połączyć się z serwerem aktualizacji Audacity."
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Update data was corrupted."
-msgstr "Dane aktualizacji były uszkodzone."
+msgstr "Dane aktualizacji zostały uszkodzone."
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
@@ -18035,7 +18033,7 @@ msgstr "Dziennik zmian"
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "Read more on GitHub"
-msgstr "Czytaj więcej na GitHubie"
+msgstr "Przeczytaj więcej na GitHubie"
 
 #: src/widgets/AButton.cpp
 msgid "(disabled)"
@@ -19921,7 +19919,7 @@ msgstr "Amplituda (0-1)"
 
 #: plug-ins/sample-data-export.ny
 msgid "Sample Data Export"
-msgstr "Eksport przykładowych danych"
+msgstr "Eksportuj przykładowe dane"
 
 #: plug-ins/sample-data-export.ny
 msgid "Analyzing..."
@@ -20203,7 +20201,7 @@ msgstr "Błąd.~%\"~a\" nie może zostać zapisany."
 
 #: plug-ins/sample-data-import.ny
 msgid "Sample Data Import"
-msgstr "Import przykładowych danych"
+msgstr "Importuj przykładowe dane"
 
 #: plug-ins/sample-data-import.ny
 msgid "Reading and rendering samples..."

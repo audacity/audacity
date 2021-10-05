@@ -18,7 +18,7 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include "Effect.h"
-#include "../RealFFTf.h"
+#include "RealFFTf.h"
 
 // Flags to specialise the UI
 const int kEqOptionGraphic =1;
@@ -103,7 +103,7 @@ public:
 
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
-   wxString ManualPage() override;
+   ManualPageID ManualPage() override;
 
    // EffectDefinitionInterface implementation
 

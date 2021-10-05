@@ -17,12 +17,12 @@ Paul Licameli
 #include "SpectrogramSettings.h"
 
 #include "../AColor.h"
-#include "../NumberScale.h"
+#include "NumberScale.h"
 
 #include <algorithm>
 
-#include "../FFT.h"
-#include "../Prefs.h"
+#include "FFT.h"
+#include "Prefs.h"
 
 #include <cmath>
 

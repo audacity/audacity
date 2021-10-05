@@ -37,7 +37,7 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 #include "SetTrackInfoCommand.h"
 
 #include "LoadCommands.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
@@ -383,7 +383,7 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
       wt->SetWaveColorIndex( mColour );
 
    if( t && bHasHeight )
-      TrackView::Get( *t ).SetHeight( mHeight );
+      TrackView::Get( *t ).SetExpandedHeight( mHeight );
 
    if( wt && bHasDisplayType  ) {
       auto &view = WaveTrackView::Get( *wt );

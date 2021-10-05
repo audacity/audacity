@@ -38,7 +38,7 @@ the pitch without changing the tempo.
 #include "../PitchName.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
-#include "../Spectrum.h"
+#include "Spectrum.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "TimeWarper.h"
@@ -150,9 +150,9 @@ TranslatableString EffectChangePitch::GetDescription()
    return XO("Changes the pitch of a track without changing its tempo");
 }
 
-wxString EffectChangePitch::ManualPage()
+ManualPageID EffectChangePitch::ManualPage()
 {
-   return wxT("Change_Pitch");
+   return L"Change_Pitch";
 }
 
 // EffectDefinitionInterface implementation

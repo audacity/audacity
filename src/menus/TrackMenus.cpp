@@ -5,13 +5,14 @@
 #include "../Menus.h"
 #include "../Mix.h"
 
-#include "../Prefs.h"
-#include "../Project.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectHistory.h"
+#include "ProjectRate.h"
 #include "../ProjectSettings.h"
 #include "../PluginManager.h"
-#include "../ProjectStatus.h"
+#include "ProjectStatus.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "../ShuttleGui.h"
@@ -21,13 +22,13 @@
 #include "../TrackUtilities.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
-#include "../prefs/QualitySettings.h"
+#include "QualitySettings.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
 #include "../widgets/ASlider.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -48,10 +49,9 @@ namespace {
 void DoMixAndRender
 (AudacityProject &project, bool toNewTrack)
 {
-   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
-   auto rate = settings.GetRate();
+   auto rate = ProjectRate::Get(project).GetRate();
    auto defaultFormat = QualitySettings::SampleFormatChoice();
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -87,10 +87,10 @@ void DoMixAndRender
       auto pNewLeft = tracks.Add( uNewLeft );
       decltype(pNewLeft) pNewRight{};
       if (uNewRight)
-         pNewRight = tracks.Add( uNewRight );
-
-      // Do this only after adding tracks to the list
-      tracks.GroupChannels(*pNewLeft, pNewRight ? 2 : 1);
+      {
+         pNewRight = tracks.Add(uNewRight);
+         tracks.MakeMultiChannelTrack(*pNewLeft, 2, true);
+      }
 
       // If we're just rendering (not mixing), keep the track name the same
       if (selectedCount==1) {
@@ -334,6 +334,15 @@ void DoAlign
 }
 
 #ifdef EXPERIMENTAL_SCOREALIGN
+
+#ifdef USE_MIDI
+static const ReservedCommandFlag&
+   NoteTracksSelectedFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject &project){
+         return !TrackList::Get( project ).Selected<const NoteTrack>().empty();
+      }
+   }; return flag; }  //gsw
+#endif
 
 // rough relative amount of time to compute one
 //    frame of audio or midi, or one cell of matrix, or one iteration
@@ -604,14 +613,13 @@ struct Handler : CommandHandlerObject {
 void OnNewWaveTrack(const CommandContext &context)
 {
    auto &project = context.project;
-   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = QualitySettings::SampleFormatChoice();
 
-   auto rate = settings.GetRate();
+   auto rate = ProjectRate::Get(project).GetRate();
 
    auto t = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
    SelectUtilities::SelectNone( project );
@@ -628,13 +636,12 @@ void OnNewWaveTrack(const CommandContext &context)
 void OnNewStereoTrack(const CommandContext &context)
 {
    auto &project = context.project;
-   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &window = ProjectWindow::Get( project );
 
    auto defaultFormat = QualitySettings::SampleFormatChoice();
-   auto rate = settings.GetRate();
+   auto rate = ProjectRate::Get(project).GetRate();
 
    SelectUtilities::SelectNone( project );
 
@@ -644,7 +651,7 @@ void OnNewStereoTrack(const CommandContext &context)
    auto right = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
    right->SetSelected(true);
 
-   tracks.GroupChannels(*left, 2);
+   tracks.MakeMultiChannelTrack(*left, 2, true);
 
    ProjectHistory::Get( project )
       .PushState(XO("Created new stereo audio track"), XO("New Track"));
@@ -723,8 +730,7 @@ void OnMixAndRenderToNewTrack(const CommandContext &context)
 void OnResample(const CommandContext &context)
 {
    auto &project = context.project;
-   const auto &settings = ProjectSettings::Get( project );
-   auto projectRate = settings.GetRate();
+   auto projectRate = ProjectRate::Get(project).GetRate();
    auto &tracks = TrackList::Get( project );
    auto &undoManager = UndoManager::Get( project );
    auto &window = ProjectWindow::Get( project );
@@ -1178,7 +1184,11 @@ void OnTrackMute(const CommandContext &context)
 {
    auto &project = context.project;
 
-   const auto track = TrackFocus::Get( project ).Get();
+   // Use the temporary selection if it is specified, else the track focus
+   auto track = context.temporarySelection.pTrack;
+   if (!track)
+      track = TrackFocus::Get( project ).Get();
+
    if (track) track->TypeSwitch( [&](PlayableTrack *t) {
       TrackUtilities::DoTrackMute(project, t, false);
    });

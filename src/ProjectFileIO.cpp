@@ -12,29 +12,26 @@ Paul Licameli split from AudacityProject.cpp
 
 #include <atomic>
 #include <sqlite3.h>
+#include <wx/app.h>
 #include <wx/crt.h>
 #include <wx/frame.h>
-#include <wx/progdlg.h>
+#include <wx/log.h>
 #include <wx/sstream.h>
-#include <wx/xml/xml.h>
 
 #include "ActiveProjects.h"
+#include "CodeConversions.h"
 #include "DBConnection.h"
 #include "Project.h"
-#include "ProjectFileIORegistry.h"
 #include "ProjectSerializer.h"
-#include "ProjectSettings.h"
+#include "ProjectWindows.h"
 #include "SampleBlock.h"
-#include "Tags.h"
 #include "TempDirectory.h"
-#include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
-#include "widgets/NumericTextCtrl.h"
+#include "BasicUI.h"
 #include "widgets/ProgressDialog.h"
 #include "wxFileNameWrapper.h"
-#include "xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 #include "SentryHelper.h"
 
 // Don't change this unless the file format changes
@@ -287,6 +284,24 @@ ProjectFileIO::ProjectFileIO(AudacityProject &project)
    mTemporary = true;
 
    UpdatePrefs();
+
+   // Make sure there is plenty of space for Sqlite files
+   wxLongLong freeSpace = 0;
+
+   auto path = TempDirectory::TempDir();
+   if (wxGetDiskSpace(path, NULL, &freeSpace)) {
+      if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
+         auto volume = FileNames::AbbreviatePath( path );
+         /* i18n-hint: %s will be replaced by the drive letter (on Windows) */
+         BasicUI::ShowErrorDialog( {},
+            XO("Warning"),
+            XO("There is very little free disk space left on %s\n"
+               "Please select a bigger temporary directory location in\n"
+               "Directories Preferences.").Format( volume ),
+            "Error:_Disk_full_or_not_writable"
+            );
+      }
+   }
 }
 
 ProjectFileIO::~ProjectFileIO()
@@ -1140,7 +1155,7 @@ FilePath ProjectFileIO::SafetyFileName(const FilePath &src)
 
    int nn = 1;
    auto numberString = [](int num) -> wxString {
-      return num == 1 ? "" : wxString::Format(".%d", num);
+      return num == 1 ? wxString{} : wxString::Format(".%d", num);
    };
 
    auto suffixes = AuxiliaryFileSuffixes();
@@ -1170,27 +1185,23 @@ bool ProjectFileIO::RenameOrWarn(const FilePath &src, const FilePath &dst)
       done = true;
    });
 
-   auto &window = GetProjectFrame( mProject );
-
    // Provides a progress dialog with indeterminate mode
-   wxGenericProgressDialog pd(XO("Copying Project").Translation(),
-                              XO("This may take several seconds").Translation(),
-                              300000,     // range
-                              &window,     // parent
-                              wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
+   using namespace BasicUI;
+   auto pd = MakeGenericProgress(*ProjectFramePlacement(&mProject),
+      XO("Copying Project"), XO("This may take several seconds"));
+   wxASSERT(pd);
 
    // Wait for the checkpoints to end
    while (!done)
    {
       wxMilliSleep(50);
-      pd.Pulse();
+      pd->Pulse();
    }
    thread.join();
 
    if (!success)
    {
-      ShowError(
-         &window,
+      ShowError( *ProjectFramePlacement(&mProject),
          XO("Error Writing to File"),
          XO("Audacity failed to write file %s.\n"
             "Perhaps disk is full or not writable.\n"
@@ -1445,7 +1456,7 @@ void ProjectFileIO::UpdatePrefs()
 void ProjectFileIO::SetProjectTitle(int number)
 {
    auto &project = mProject;
-   auto pWindow = project.GetFrame();
+   auto pWindow = FindProjectFrame(&project);
    if (!pWindow)
    {
       return;
@@ -1523,14 +1534,10 @@ void ProjectFileIO::SetFileName(const FilePath &fileName)
 bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    auto &project = mProject;
-   auto &window = GetProjectFrame(project);
-   auto &viewInfo = ViewInfo::Get(project);
-   auto &settings = ProjectSettings::Get(project);
 
    wxString fileVersion;
    wxString audacityVersion;
    int requiredTags = 0;
-   long longVpos = 0;
 
    // loop through attrs, which is a null-terminated list of
    // attribute-value pairs
@@ -1544,12 +1551,9 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          break;
       }
 
-      if (viewInfo.ReadXMLAttribute(attr, value))
-      {
-         // We need to save vpos now and restore it below
-         longVpos = std::max(longVpos, long(viewInfo.vpos));
+      if ( ProjectFileIORegistry::Get()
+          .CallAttributeHandler( attr, project, value ) )
          continue;
-      }
 
       else if (!wxStrcmp(attr, wxT("version")))
       {
@@ -1562,49 +1566,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          audacityVersion = value;
          requiredTags++;
       }
-
-      else if (!wxStrcmp(attr, wxT("rate")))
-      {
-         double rate;
-         Internat::CompatibleToDouble(value, &rate);
-         settings.SetRate( rate );
-      }
-
-      else if (!wxStrcmp(attr, wxT("snapto")))
-      {
-         settings.SetSnapTo(wxString(value) == wxT("on") ? true : false);
-      }
-
-      else if (!wxStrcmp(attr, wxT("selectionformat")))
-      {
-         settings.SetSelectionFormat(
-            NumericConverter::LookupFormat( NumericConverter::TIME, value) );
-      }
-
-      else if (!wxStrcmp(attr, wxT("audiotimeformat")))
-      {
-         settings.SetAudioTimeFormat(
-            NumericConverter::LookupFormat( NumericConverter::TIME, value) );
-      }
-
-      else if (!wxStrcmp(attr, wxT("frequencyformat")))
-      {
-         settings.SetFrequencySelectionFormatName(
-            NumericConverter::LookupFormat( NumericConverter::FREQUENCY, value ) );
-      }
-
-      else if (!wxStrcmp(attr, wxT("bandwidthformat")))
-      {
-         settings.SetBandwidthSelectionFormatName(
-            NumericConverter::LookupFormat( NumericConverter::BANDWIDTH, value ) );
-      }
    } // while
-
-   if (longVpos != 0)
-   {
-      // PRL: It seems this must happen after SetSnapTo
-      viewInfo.vpos = longVpos;
-   }
 
    if (requiredTags < 2)
    {
@@ -1635,8 +1597,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       auto msg = XO("This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file.")
          .Format(audacityVersion, AUDACITY_VERSION_STRING);
 
-      ShowError(
-         &window,
+      ShowError( *ProjectFramePlacement(&project),
          XO("Can't open project file"),
          msg, 
          "FAQ:Errors_opening_an_Audacity_project"
@@ -1657,13 +1618,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 XMLTagHandler *ProjectFileIO::HandleXMLChild(const wxChar *tag)
 {
    auto &project = mProject;
-   auto fn = ProjectFileIORegistry::Lookup(tag);
-   if (fn)
-   {
-      return fn(project);
-   }
-
-   return nullptr;
+   return ProjectFileIORegistry::Get().CallObjectAccessor(tag, project);
 }
 
 void ProjectFileIO::OnCheckpointFailure()
@@ -1694,9 +1649,6 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
 {
    auto &proj = mProject;
    auto &tracklist = tracks ? *tracks : TrackList::Get(proj);
-   auto &viewInfo = ViewInfo::Get(proj);
-   auto &tags = Tags::Get(proj);
-   const auto &settings = ProjectSettings::Get(proj);
 
    //TIMER_START( "AudacityProject::WriteXML", xml_writer_timer );
 
@@ -1706,19 +1658,8 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
    xmlFile.WriteAttr(wxT("version"), wxT(AUDACITY_FILE_FORMAT_VERSION));
    xmlFile.WriteAttr(wxT("audacityversion"), AUDACITY_VERSION_STRING);
 
-   viewInfo.WriteXMLAttributes(xmlFile);
-   xmlFile.WriteAttr(wxT("rate"), settings.GetRate());
-   xmlFile.WriteAttr(wxT("snapto"), settings.GetSnapTo() ? wxT("on") : wxT("off"));
-   xmlFile.WriteAttr(wxT("selectionformat"),
-                     settings.GetSelectionFormat().Internal());
-   xmlFile.WriteAttr(wxT("frequencyformat"),
-                     settings.GetFrequencySelectionFormatName().Internal());
-   xmlFile.WriteAttr(wxT("bandwidthformat"),
-                     settings.GetBandwidthSelectionFormatName().Internal());
+   ProjectFileIORegistry::Get().CallWriters(proj, xmlFile);
 
-   tags.WriteXML(xmlFile);
-
-   unsigned int ndx = 0;
    tracklist.Any().Visit([&](const Track *t)
    {
       auto useTrack = t;
@@ -2041,7 +1982,7 @@ bool ProjectFileIO::SaveProject(
 
          if (!reopened) {
             wxTheApp->CallAfter([this]{
-               ShowError(nullptr,
+               ShowError( {},
                   XO("Warning"),
                   XO(
 "The project's database failed to reopen, "
@@ -2065,8 +2006,7 @@ bool ProjectFileIO::SaveProject(
       // after we switch to the new file.
       if (!CopyTo(fileName, XO("Saving project"), false))
       {
-         ShowError(
-            nullptr,
+         ShowError( {},
             XO("Error Saving Project"),
             FileException::WriteFailureMessage(fileName),
             "Error:_Disk_full_or_not_writable"
@@ -2105,24 +2045,23 @@ bool ProjectFileIO::SaveProject(
          });
 
          // Provides a progress dialog with indeterminate mode
-         wxGenericProgressDialog pd(XO("Syncing").Translation(),
-                                    XO("This may take several seconds").Translation(),
-                                    300000,     // range
-                                    nullptr,    // parent
-                                    wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
+         using namespace BasicUI;
+         auto pd = MakeGenericProgress({},
+            XO("Syncing"), XO("This may take several seconds"));
+         wxASSERT(pd);
 
          // Wait for the checkpoints to end
          while (!done)
          {
             wxMilliSleep(50);
-            pd.Pulse();
+            pd->Pulse();
          }
          thread.join();
 
          if (!success)
          {
             // Additional help via a Help button links to the manual.
-            ShowError(nullptr,
+            ShowError( {},
                       XO("Error Saving Project"),
                       XO("The project failed to open, possibly due to limited space\n"
                          "on the storage device.\n\n%s").Format(GetLastError()),
@@ -2144,7 +2083,7 @@ bool ProjectFileIO::SaveProject(
       if (!AutoSaveDelete())
       {
          // Additional help via a Help button links to the manual.
-         ShowError(nullptr,
+         ShowError( {},
                    XO("Error Saving Project"),
                    XO("Unable to remove autosave information, possibly due to limited space\n"
                       "on the storage device.\n\n%s").Format(GetLastError()),
@@ -2187,8 +2126,7 @@ bool ProjectFileIO::SaveProject(
    else
    {
       if ( !UpdateSaved( nullptr ) ) {
-         ShowError(
-            nullptr,
+         ShowError( {},
             XO("Error Saving Project"),
             FileException::WriteFailureMessage(fileName),
             "Error:_Disk_full_or_not_writable"
@@ -2311,12 +2249,16 @@ wxLongLong ProjectFileIO::GetFreeDiskSpace() const
 }
 
 /// Displays an error dialog with a button that offers help
-void ProjectFileIO::ShowError(wxWindow *parent,
+void ProjectFileIO::ShowError(const BasicUI::WindowPlacement &placement,
                               const TranslatableString &dlogTitle,
                               const TranslatableString &message,
                               const wxString &helpPage)
 {
-   ShowExceptionDialog(parent, dlogTitle, message, helpPage, true, GetLastLog());
+   using namespace audacity;
+   using namespace BasicUI;
+   ShowErrorDialog( placement, dlogTitle, message, helpPage,
+      ErrorDialogOptions{ ErrorDialogType::ModalErrorReport }
+         .Log(ToWString(GetLastLog())));
 }
 
 const TranslatableString &ProjectFileIO::GetLastError() const

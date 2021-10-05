@@ -14,18 +14,18 @@
 
 #include "Identifier.h"
 
-#include "../ClientData.h"
+#include "ClientData.h"
 #include "CommandFunctors.h"
 #include "CommandFlag.h"
 
 #include "Keyboard.h"
 
-#include "../Prefs.h"
-#include "../Registry.h"
+#include "Prefs.h"
+#include "Registry.h"
 
 #include <vector>
 
-#include "../xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #include <unordered_map>
 
@@ -312,7 +312,8 @@ private:
 
    bool HandleCommandEntry(AudacityProject &project,
       const CommandListEntry * entry, CommandFlag flags,
-      bool alwaysEnabled, const wxEvent * evt = NULL);
+      bool alwaysEnabled, const wxEvent * evt = nullptr,
+      const CommandContext *pGivenContext = nullptr );
 
    //
    // Modifying
@@ -335,8 +336,20 @@ public:
    wxMenu * CurrentMenu() const;
 
    void UpdateCheckmarks( AudacityProject &project );
+
+   //! Format a string appropriate for insertion in a menu
+   /*!
+    @param pLabel if not null, use this instead of the manager's
+    stored label
+    */
+   wxString FormatLabelForMenu(
+      const CommandID &id, const TranslatableString *pLabel) const;
+
 private:
    wxString FormatLabelForMenu(const CommandListEntry *entry) const;
+   wxString FormatLabelForMenu(
+      const TranslatableString &translatableLabel,
+      const NormalizedKeyString &keyStr) const;
    wxString FormatLabelWithDisabledAccel(const CommandListEntry *entry) const;
 
    //

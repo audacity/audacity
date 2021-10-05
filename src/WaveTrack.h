@@ -12,6 +12,7 @@
 #define __AUDACITY_WAVETRACK__
 
 #include "Track.h"
+#include "SampleCount.h"
 
 #include <vector>
 #include <functional>
@@ -87,6 +88,8 @@ private:
 
    friend class WaveTrackFactory;
 
+   wxString MakeClipCopyName(const wxString& originalName) const;
+   wxString MakeNewClipName() const;
  public:
 
    typedef WaveTrackLocation Location;
@@ -99,6 +102,8 @@ private:
    virtual ChannelType GetChannelIgnoringPan() const;
    ChannelType GetChannel() const override;
    virtual void SetPanFromChannelType() override;
+
+   bool LinkConsistencyCheck() override;
 
    /** @brief Get the time at which the first clip in the track starts
     *
@@ -455,8 +460,9 @@ private:
    }
    
    // Create NEW clip and add it to this track. Returns a pointer
-   // to the newly created clip.
-   WaveClip* CreateClip();
+   // to the newly created clip. Optionally initial offset and
+   // clip name may be provided
+   WaveClip* CreateClip(double offset = .0, const wxString& name = wxEmptyString);
 
    /** @brief Get access to the most recently added clip, or create a clip,
    *  if there is not already one.  THIS IS NOT NECESSARILY RIGHTMOST.
@@ -567,6 +573,9 @@ private:
 
    ConstIntervals GetIntervals() const override;
    Intervals GetIntervals() override;
+
+   //! Returns nullptr if clip with such name was not found
+   const WaveClip* FindClipByName(const wxString& name) const;
 
  protected:
    //
@@ -694,6 +703,8 @@ void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
 void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
    SampleBlockIDSet *pIDs = nullptr);
 
+class ProjectRate;
+
 class AUDACITY_DLL_API WaveTrackFactory final
    : public ClientData::Base
 {
@@ -703,9 +714,9 @@ class AUDACITY_DLL_API WaveTrackFactory final
    static WaveTrackFactory &Reset( AudacityProject &project );
    static void Destroy( AudacityProject &project );
 
-   WaveTrackFactory( const ProjectSettings &settings,
+   WaveTrackFactory( const ProjectRate &rate,
       const SampleBlockFactoryPtr &pFactory)
-      : mSettings{ settings }
+      : mRate{ rate }
       , mpFactory(pFactory)
    {
    }
@@ -716,7 +727,7 @@ class AUDACITY_DLL_API WaveTrackFactory final
    { return mpFactory; }
 
  private:
-   const ProjectSettings &mSettings;
+   const ProjectRate &mRate;
    SampleBlockFactoryPtr mpFactory;
  public:
    std::shared_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);

@@ -29,6 +29,7 @@
 #include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/intl.h>
+#include <wx/log.h>
 #include <wx/radiobut.h>
 #include <wx/simplebook.h>
 #include <wx/sizer.h>
@@ -37,19 +38,20 @@
 #include <wx/textctrl.h>
 #include <wx/textdlg.h>
 
-#include "../FileNames.h"
-#include "../LabelTrack.h"
-#include "../Project.h"
-#include "../ProjectSettings.h"
-#include "../ProjectWindow.h"
-#include "../Prefs.h"
+#include "FileNames.h"
+#include "LabelTrack.h"
+#include "Project.h"
+#include "ProjectSettings.h"
+#include "ProjectWindow.h"
+#include "ProjectWindows.h"
+#include "Prefs.h"
 #include "../SelectionState.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../WaveTrack.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
+#include "../widgets/AudacityTextEntryDialog.h"
 #include "../widgets/ProgressDialog.h"
 
 
@@ -574,7 +576,7 @@ void ExportMultipleDialog::OnCancel(wxCommandEvent& WXUNUSED(event))
 
 void ExportMultipleDialog::OnHelp(wxCommandEvent& WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Export_Multiple"), true);
+   HelpSystem::ShowHelp(this, L"Export_Multiple", true);
 }
 
 void ExportMultipleDialog::OnExport(wxCommandEvent& WXUNUSED(event))

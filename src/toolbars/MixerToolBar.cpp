@@ -23,6 +23,7 @@
 #include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
+#include <wx/app.h>
 #include <wx/choice.h>
 #include <wx/event.h>
 #include <wx/intl.h>
@@ -37,7 +38,7 @@
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../widgets/ASlider.h"
 #include "../widgets/Grabber.h"
 

@@ -80,6 +80,9 @@ private:
 class AUDACITY_DLL_API GlobalPrefsDialog final : public PrefsDialog
 {
 public:
+   /*!
+    @param pProject may be null
+    */
    GlobalPrefsDialog(
       wxWindow * parent, AudacityProject *pProject,
       PrefsPanel::Factories &factories =

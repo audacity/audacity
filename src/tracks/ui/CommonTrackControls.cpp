@@ -14,8 +14,9 @@ Paul Licameli split from TrackControls.cpp
 #include "TrackSelectHandle.h"
 #include "../../AColor.h"
 #include "../../RefreshCode.h"
-#include "../../Project.h"
+#include "Project.h"
 #include "../../ProjectHistory.h"
+#include "../../ProjectWindows.h"
 #include "../../TrackArtist.h"
 #include "../../TrackInfo.h"
 #include "../../TrackPanelDrawingContext.h"
@@ -95,11 +96,6 @@ private:
    void OnMoveTrack(wxCommandEvent &event);
 
    void InitUserData(void *pUserData) override;
-
-   void DestroyMenu() override
-   {
-      mpData = nullptr;
-   }
 
    CommonTrackControls::InitMenuData *mpData{};
 
@@ -203,7 +199,7 @@ public:
    //bool Apply(const CommandContext & context) override;
 
    // Provide an override, if we want the help button.
-   // wxString ManualPage() override {return wxT("");};
+   // ManualPageID ManualPage() override {return {};}
 public:
    wxString mName;
 };
@@ -275,7 +271,8 @@ void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
 }
 
 unsigned CommonTrackControls::DoContextMenu(
-   const wxRect &rect, wxWindow *pParent, wxPoint *, AudacityProject *pProject)
+   const wxRect &rect, wxWindow *pParent, const wxPoint *,
+   AudacityProject *pProject)
 {
    using namespace RefreshCode;
    wxRect buttonRect;
@@ -288,14 +285,14 @@ unsigned CommonTrackControls::DoContextMenu(
    InitMenuData data{ *pProject, track.get(), pParent, RefreshNone };
 
    const auto pTable = &TrackMenuTable::Instance();
-   auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);
+   auto pMenu = PopupMenuTable::BuildMenu(pTable, &data);
 
    PopupMenuTable *const pExtension = GetMenuExtension(track.get());
    if (pExtension)
       PopupMenuTable::ExtendMenu( *pMenu, *pExtension );
 
-   pParent->PopupMenu
-      (pMenu.get(), buttonRect.x + 1, buttonRect.y + buttonRect.height + 1);
+   pMenu->Popup( *pParent,
+      { buttonRect.x + 1, buttonRect.y + buttonRect.height + 1 } );
 
    return data.result;
 }

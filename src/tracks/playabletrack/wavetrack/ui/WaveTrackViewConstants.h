@@ -11,7 +11,7 @@ Paul Licameli split from class WaveTrack
 #ifndef __AUDACITY_WAVE_TRACK_VIEW_CONSTANTS__
 #define __AUDACITY_WAVE_TRACK_VIEW_CONSTANTS__
 
-#include "audacity/ComponentInterface.h" // for EnumValueSymbol
+#include "ComponentInterfaceSymbol.h" // for EnumValueSymbol
 
 namespace WaveTrackViewConstants
 {

@@ -41,6 +41,7 @@
 #include <wx/dynlib.h> //<! For windows.h
 
 #include "AudioIO.h"
+#include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "ProjectAudioManager.h"
 #include "ProjectFileIO.h"
@@ -51,7 +52,6 @@
 #include "widgets/NumericTextCtrl.h"
 #include "widgets/HelpSystem.h"
 #include "widgets/AudacityMessageBox.h"
-#include "widgets/ErrorDialog.h"
 #include "widgets/ProgressDialog.h"
 #include "widgets/wxTextCtrlWrapper.h"
 
@@ -303,7 +303,7 @@ void TimerRecordDialog::OnAutoSavePathButton_Click(wxCommandEvent& WXUNUSED(even
 {
    auto &projectFileIO = ProjectFileIO::Get(mProject);
 
-   wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
+   wxString fName = SelectFile(FileNames::Operation::Export,
       XO("Save Timer Recording As"),
       m_fnAutoSaveFile.GetPath(),
       m_fnAutoSaveFile.GetFullName(),
@@ -364,7 +364,7 @@ void TimerRecordDialog::OnAutoExportCheckBox_Change(wxCommandEvent& WXUNUSED(eve
 
 void TimerRecordDialog::OnHelpButtonClick(wxCommandEvent& WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Timer_Record"), true);
+   HelpSystem::ShowHelp(this, L"Timer_Record", true);
 }
 
 void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))

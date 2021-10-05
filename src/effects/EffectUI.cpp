@@ -14,12 +14,14 @@
 
 #include "EffectUI.h"
 
+#include "widgets/BasicMenu.h"
 #include "Effect.h"
 #include "EffectManager.h"
 #include "../ProjectHistory.h"
 #include "../ProjectWindowBase.h"
 #include "../TrackPanelAx.h"
 #include "RealtimeEffectManager.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
@@ -651,15 +653,16 @@ private:
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
 #include "../prefs/GUISettings.h" // for RTL_WORKAROUND
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectAudioManager.h"
 #include "../ShuttleGui.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../commands/AudacityCommand.h"
 #include "../commands/CommandContext.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
 
+#include <wx/app.h>
 #include <wx/bmpbuttn.h>
 #include <wx/checkbox.h>
 #include <wx/dcclient.h>
@@ -999,7 +1002,7 @@ bool EffectUIHost::Initialize()
 {
    {
       auto gAudioIO = AudioIO::Get();
-      mDisableTransport = !gAudioIO->IsAvailable(mProject);
+      mDisableTransport = !gAudioIO->IsAvailable(*mProject);
       mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
       mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
    }
@@ -1255,6 +1258,8 @@ void EffectUIHost::OnDebug(wxCommandEvent & evt)
 void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 {
    wxMenu menu;
+   menu.Bind(wxEVT_MENU, [](auto&){}, kUserPresetsDummyID);
+   menu.Bind(wxEVT_MENU, [](auto&){}, kDeletePresetDummyID);
    if( !mEffect )
       return;
    
@@ -1330,13 +1335,17 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       sub->Append(kDummyID, wxString::Format(_("Version: %s"), mEffect->GetVersion()));
       sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), mEffect->GetVendor().Translation()));
       sub->Append(kDummyID, wxString::Format(_("Description: %s"), mEffect->GetDescription().Translation()));
-      
+      sub->Bind(wxEVT_MENU, [](auto&){}, kDummyID);
+
       menu.Append(0, _("About"), sub.release());
    }
    
    wxWindow *btn = FindWindow(kMenuID);
    wxRect r = btn->GetRect();
-   btn->PopupMenu(&menu, r.GetLeft(), r.GetBottom());
+   BasicMenu::Handle{ &menu }.Popup(
+      wxWidgetsWindowPlacement{ btn },
+      { r.GetLeft(), r.GetBottom() }
+   );
 }
 
 void EffectUIHost::Resume()
@@ -1843,7 +1852,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
 };
 
 #include "../PluginManager.h"
-#include "../ProjectSettings.h"
+#include "ProjectRate.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "../TrackPanel.h"
@@ -1860,11 +1869,10 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
    const PluginID & ID, const CommandContext &context, unsigned flags )
 {
    AudacityProject &project = context.project;
-   const auto &settings = ProjectSettings::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
    auto &trackFactory = WaveTrackFactory::Get( project );
-   auto rate = settings.GetRate();
+   auto rate = ProjectRate::Get(project).GetRate();
    auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
    auto &commandManager = CommandManager::Get( project );
    auto &window = ProjectWindow::Get( project );
