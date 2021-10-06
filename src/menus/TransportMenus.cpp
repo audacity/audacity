@@ -297,6 +297,12 @@ void DoMoveToLabel(AudacityProject &project, bool next)
             window.ScrollIntoView(selectedRegion.t0());
             window.RedrawProject();
          }
+         /* i18n-hint:
+            String is replaced by the name of a label,
+            first number gives the position of that label in a sequence
+            of labels,
+            and the last number is the total number of labels in the sequence.
+         */
          auto message = XO("%s %d of %d")
             .Format( label->title, i + 1, lt->GetNumLabels() );
          trackFocus.MessageForScreenReader(message);
