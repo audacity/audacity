@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-07-15 12:48-0400\n"
-"PO-Revision-Date: 2021-09-16 00:00+0000\n"
+"PO-Revision-Date: 2021-10-07 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "Language: pl\n"
@@ -16811,7 +16811,7 @@ msgstr "Kopiuj zaznaczenie"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Trim audio outside selection"
-msgstr "Wytnij dźwięk poza zaznaczeniem"
+msgstr "Przytnij dźwięk poza zaznaczeniem"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Silence audio selection"
