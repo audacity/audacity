@@ -43,6 +43,24 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
 
 ;; Helper functions:
 
+; cannot make (loop for ... from ... to ... do ...) to work...
+(defun for-range (start stop step fn)
+  (when (< start stop) (for-range-rec start 0 stop step fn)))
+(defun for-range-rec (start i stop step fn)  ; There is a recursion limit (like around 100 recusions max).
+  (setf for-range-rec-v (funcall fn (+ start (* i step))))
+  (when (< (+ start (* (+ i 1) step)) stop) (setf for-range-rec-v (funcall fn (+ start (* (+ i 1) step)))))
+  (when (< (+ start (* (+ i 2) step)) stop) (setf for-range-rec-v (funcall fn (+ start (* (+ i 2) step)))))
+  (when (< (+ start (* (+ i 3) step)) stop) (setf for-range-rec-v (funcall fn (+ start (* (+ i 3) step)))))
+  (when (< (+ start (* (+ i 4) step)) stop) (setf for-range-rec-v (funcall fn (+ start (* (+ i 4) step)))))
+  (when (< (+ start (* (+ i 5) step)) stop) (setf for-range-rec-v (funcall fn (+ start (* (+ i 5) step)))))
+  (when (< (+ start (* (+ i 6) step)) stop) (setf for-range-rec-v (funcall fn (+ start (* (+ i 6) step)))))
+  (when (< (+ start (* (+ i 7) step)) stop) (setf for-range-rec-v (funcall fn (+ start (* (+ i 7) step)))))
+  (when (< (+ start (* (+ i 8) step)) stop) (setf for-range-rec-v (funcall fn (+ start (* (+ i 8) step)))))
+  (when (< (+ start (* (+ i 9) step)) stop) (setf for-range-rec-v (funcall fn (+ start (* (+ i 9) step)))))
+  (when (< (+ start (* (+ i 10) step)) stop) (setf for-range-rec-v (for-range-rec start (+ i 10) stop step fn)))
+  for-range-rec-v)
+
+
 (defun round-up (x)
   (if (> x (truncate x))
     (truncate (1+ x))
@@ -176,9 +194,15 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
             (cue (click click-type 0))))))) ;unaccented beat
         
 
-(defun make-click-track (bars mdur)
-  (setf *measure* (set-logical-stop (cue *measure*) (* timesig beatlen)))
-  (seqrep (i bars) (cue *measure*)))
+(defun make-click-track (bars mdur)  ; mdur is not used
+  (setf wave (s-rest (* timesig beatlen bars)))
+  (for-range 0 bars 1 (lambda (i)  ; using (for-range) because (simrep) has a maximum of 90 internal recursion... ie (simrep (i 91) => crash)
+    (setf wave (sim wave (at-abs (* i timesig beatlen) (cue (click click-type 1))))) ;accented beat
+    (for-range 0 (- timesig 1) 1 (lambda (x)
+      (setf wave (sim wave (at-abs (* (+ (* i timesig) x 1 (swing-adjust x swing)) beatlen) (cue (click click-type 0))))) ;unaccented beat
+    ))
+  ))
+  wave)
 
 
 ;;;;;;;;;;;;;;;;;
