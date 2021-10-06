@@ -13,6 +13,7 @@ cmake_args=(
     -D audacity_use_pch=no
     -D audacity_has_networking=yes
     -D audacity_has_updates_check=yes
+    -D SHOW_WHATS_NEW_SECTION=yes
     -D CMAKE_BUILD_TYPE="${AUDACITY_BUILD_TYPE}"
     -D CMAKE_INSTALL_PREFIX="${AUDACITY_INSTALL_PREFIX}"
 )

@@ -27,6 +27,14 @@
 #include "AllThemeResources.h"
 #include "Theme.h"
 
+#ifdef HAS_WHATS_NEW
+
+namespace
+{
+const char* WhatsNewURL = "https://youtube.com";
+}
+
+#endif
 
 wxString HtmlColourOfIndex( int i ){
    wxColour c =  theTheme.Colour(i);
@@ -259,8 +267,15 @@ static wxString HelpTextBuiltIn( const wxString & Key )
          << wxT(" [[https://forum.audacityteam.org/|Forum]] - for large knowledge base on using Audacity.")
          << wxT("</li></ul>")
 #else
-         << wxT("<center><h3>Audacity ")
-         << AUDACITY_VERSION_STRING
+         << wxT("<center><h3>")
+#ifndef HAS_WHATS_NEW
+         << wxT("Audacity ") << AUDACITY_VERSION_STRING
+#else
+         /* i18n-hint: %s is replaced with Audacity version */
+         << XO("What's new in Audacity %s").Format(AUDACITY_VERSION_STRING)
+         << wxT(R"(<p><a href=")") << WhatsNewURL << wxT(R"(">)")
+         << wxT(R"(<img src="memory:whats_new_btn.png" width="263" height="148" /></a></p>)")
+#endif
          << wxT("</h3><h3>")
          << XO("How to get help")
          << wxT("</h3></center>")
