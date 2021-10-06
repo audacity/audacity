@@ -1162,33 +1162,40 @@ auto WaveTrackView::GetSubViews(const wxRect* rect) -> Refinement
 unsigned WaveTrackView::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
 {
    unsigned result{ RefreshCode::RefreshNone };
-
-   // Give sub-views first chance to handle the event
-   for (auto &subView : GetSubViews()) {
-      // Event defaults in skipped state which must be turned off explicitly
-      wxASSERT(!event.GetSkipped());
-      result |= subView.second->CaptureKey(event, viewInfo, pParent, project);
-      if (!event.GetSkipped()) {
-         // sub view wants it
-         mKeyEventDelegate = subView.second;
-         return result;
+   auto pTrack = static_cast<WaveTrack*>(FindTrack().get());
+   for (auto pChannel : TrackList::Channels(pTrack)) {
+      event.Skip(false);
+      auto &waveTrackView = WaveTrackView::Get(*pChannel);
+      // Give sub-views first chance to handle the event
+      for (auto &subView : waveTrackView.GetSubViews()) {
+         // Event defaults in skipped state which must be turned off explicitly
+         wxASSERT(!event.GetSkipped());
+         result |= subView.second->CaptureKey(event, viewInfo, pParent, project);
+         if (!event.GetSkipped()) {
+            // sub view wants it
+            mKeyEventDelegate = subView.second;
+            return result;
+         }
+         else
+            event.Skip(false);
       }
-      else
-         event.Skip(false);
-   }
 
-   if (auto affordance = GetAffordanceControls()) {
-      result |= affordance->CaptureKey(event, viewInfo, pParent, project);
+      if (auto affordance = waveTrackView.GetAffordanceControls()) {
+         result |= affordance->CaptureKey(event, viewInfo, pParent, project);
+         if (!event.GetSkipped()) {
+            mKeyEventDelegate = affordance;
+            return result;
+         }
+      }
+       
+      event.Skip(false);
+      result |= waveTrackView.CommonTrackView::CaptureKey(
+         event, viewInfo, pParent, project);
       if (!event.GetSkipped()) {
-         mKeyEventDelegate = affordance;
-         return result;
+         mKeyEventDelegate = waveTrackView.shared_from_this();
+         break;
       }
    }
-    
-   event.Skip(false);
-   result |= CommonTrackView::CaptureKey(event, viewInfo, pParent, project);
-   if (!event.GetSkipped())
-      mKeyEventDelegate = shared_from_this();
 
    return result;
 }
