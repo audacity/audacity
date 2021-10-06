@@ -206,6 +206,8 @@ private:
    std::shared_ptr<CommonTrackCell> DoGetAffordance(const std::shared_ptr<Track>& track);
 
    std::shared_ptr<CommonTrackCell> mpAffordanceCellControl;
+
+   std::weak_ptr<TrackPanelCell> mKeyEventDelegate;
 };
 
 // Helper for drawing routines
