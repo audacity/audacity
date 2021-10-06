@@ -422,6 +422,8 @@ void WaveTrackAffordanceControls::OnTextContextMenu(AudacityProject* project, co
 
 void WaveTrackAffordanceControls::OnTrackChanged(TrackListEvent& evt)
 {
+    evt.Skip();
+
     if (mTextEditHelper)
     {
         auto trackList = FindTrack()->GetOwner();
