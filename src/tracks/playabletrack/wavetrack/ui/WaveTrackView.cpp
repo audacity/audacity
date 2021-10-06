@@ -1168,20 +1168,27 @@ unsigned WaveTrackView::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWind
       // Event defaults in skipped state which must be turned off explicitly
       wxASSERT(!event.GetSkipped());
       result |= subView.second->CaptureKey(event, viewInfo, pParent, project);
-      if (!event.GetSkipped())
+      if (!event.GetSkipped()) {
          // sub view wants it
+         mKeyEventDelegate = subView.second;
          return result;
+      }
       else
          event.Skip(false);
    }
 
-   if (auto affordance = GetAffordanceControls())
+   if (auto affordance = GetAffordanceControls()) {
       result |= affordance->CaptureKey(event, viewInfo, pParent, project);
-    
-   if (event.GetSkipped()) {
-      event.Skip(false);
-      result |= CommonTrackView::CaptureKey(event, viewInfo, pParent, project);
+      if (!event.GetSkipped()) {
+         mKeyEventDelegate = affordance;
+         return result;
+      }
    }
+    
+   event.Skip(false);
+   result |= CommonTrackView::CaptureKey(event, viewInfo, pParent, project);
+   if (!event.GetSkipped())
+      mKeyEventDelegate = shared_from_this();
 
    return result;
 }
@@ -1189,54 +1196,26 @@ unsigned WaveTrackView::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWind
 unsigned WaveTrackView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
 {
    unsigned result{ RefreshCode::RefreshNone };
-
-   // Give sub-views first chance to handle the event
-   for (auto &subView : GetSubViews()) {
-      // Event defaults in skipped state which must be turned off explicitly
-      wxASSERT(!event.GetSkipped());
-      result |= subView.second->KeyDown(event, viewInfo, pParent, project);
-      if (!event.GetSkipped())
-         // sub view wants it
-         return result;
+   if (auto delegate = mKeyEventDelegate.lock()) {
+      if (auto pWaveTrackView = dynamic_cast<WaveTrackView*>(delegate.get()))
+         result |= pWaveTrackView->CommonTrackView::KeyDown(
+            event, viewInfo, pParent, project);
       else
-         event.Skip(false);
+         result |= delegate->KeyDown(event, viewInfo, pParent, project);
    }
-
-   if (auto affordance = GetAffordanceControls())
-      result |= affordance->KeyDown(event, viewInfo, pParent, project);
-    
-   if(event.GetSkipped()) {
-      event.Skip(false);
-      result |= CommonTrackView::KeyDown(event, viewInfo, pParent, project);
-   }
-
    return result;
 }
 
 unsigned WaveTrackView::Char(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
 {
    unsigned result{ RefreshCode::RefreshNone };
-
-   // Give sub-views first chance to handle the event
-   for (auto &subView : GetSubViews()) {
-      // Event defaults in skipped state which must be turned off explicitly
-      wxASSERT(!event.GetSkipped());
-      result |= subView.second->Char(event, viewInfo, pParent, project);
-      if (!event.GetSkipped())
-         // sub view wants it
-         return result;
+   if (auto delegate = mKeyEventDelegate.lock()) {
+      if (auto pWaveTrackView = dynamic_cast<WaveTrackView*>(delegate.get()))
+         result |= pWaveTrackView->CommonTrackView::Char(
+            event, viewInfo, pParent, project);
       else
-         event.Skip(false);
+         result |= delegate->Char(event, viewInfo, pParent, project);
    }
-
-   if (auto affordance = GetAffordanceControls())
-      result |= affordance->Char(event, viewInfo, pParent, project);
-    
-   if(event.GetSkipped()) {
-      event.Skip(false);
-      result |= CommonTrackView::Char(event, viewInfo, pParent, project);
-   }
-
    return result;
 }
 
