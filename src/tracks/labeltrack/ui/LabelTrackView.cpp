@@ -1723,6 +1723,10 @@ bool LabelTrackView::DoKeyDown(
                mInitialCursorPos = mCurrentCursorPos;
                //Set the selection region to be equal to the selection bounds of the tabbed-to label.
                newSel = labelStruct.selectedRegion;
+               // message for screen reader
+               auto message = XO("%s %d of %d")
+                  .Format(labelStruct.title, mNavigationIndex + 1, pTrack->GetNumLabels());
+               TrackFocus::Get(project).MessageForScreenReader(message);
             }
             else {
                mNavigationIndex = -1;
