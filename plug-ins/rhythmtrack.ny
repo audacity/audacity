@@ -183,18 +183,7 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
   (* val (/ 3.0) (rem (1+ i) 2)))
 
 
-;Make one measure and save it in the global *measure*
-(defun makemeasure ()
-  (setf *measure*
-    (sim
-      (s-rest (* timesig beatlen)) ;required for trailing silence
-      (click click-type 1) ;accented beat
-      (simrep (x (- timesig 1))
-        (at-abs (* beatlen (+ x 1 (swing-adjust x swing)))
-            (cue (click click-type 0))))))) ;unaccented beat
-        
-
-(defun make-click-track (bars mdur)  ; mdur is not used
+(defun make-click-track (bars)
   (setf wave (s-rest (* timesig beatlen bars)))
   (for-range 0 bars 1 (lambda (i)  ; using (for-range) because (simrep) has a maximum of 90 internal recursion... ie (simrep (i 91) => crash)
     (setf wave (sim wave (at-abs (* i timesig beatlen) (cue (click click-type 1))))) ;accented beat
@@ -211,9 +200,6 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
       
 
 (setf beatlen (/ 60.0 tempo))
-
-;call function to make one measure
-(makemeasure)
 
 ; If 'Number of bars' = 0, calculate bars from 'Rhythm track duration'.
 (when (= bars 0)
@@ -236,6 +222,6 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
 'Rhythm track duration' to greater than zero.")
     (if (get '*track* 'view) ;NIL if previewing
         (seq (s-rest offset)
-             (make-click-track bars (* timesig beatlen)))
+             (make-click-track bars))
         ;; Don't preview the offset (silence).
-        (make-click-track bars (* timesig beatlen))))
+        (make-click-track bars)))
