@@ -370,7 +370,7 @@ BaseItemSharedPtr ExtraToolsMenu()
       Command( wxT("ZoomTool"), XXO("&Zoom Tool"), FN(OnZoomTool),
          AlwaysEnabledFlag, wxT("F4") ),
       Command( wxT("MultiTool"), XXO("&Multi Tool"), FN(OnMultiTool),
-         AlwaysEnabledFlag, wxT("F5") ),
+         AlwaysEnabledFlag, wxT("F6") ),
       Command( wxT("PrevTool"), XXO("&Previous Tool"), FN(OnPrevTool),
          AlwaysEnabledFlag, wxT("A") ),
       Command( wxT("NextTool"), XXO("&Next Tool"), FN(OnNextTool),
