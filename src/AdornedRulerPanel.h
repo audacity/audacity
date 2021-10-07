@@ -94,7 +94,7 @@ private:
    void DoDrawBackground(wxDC * dc);
    void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
-   void DoDrawSelection(wxDC * dc);
+   void DoDrawPlayRegion(wxDC * dc);
 
 public:
    void DoDrawScrubIndicator(wxDC * dc, wxCoord xx, int width, bool scrub, bool seek);
@@ -109,8 +109,6 @@ public:
    static TempAllowFocus TemporarilyAllowFocus();
 
 private:
-   void DoDrawPlayRegion(wxDC * dc);
-
    enum class MenuChoice { QuickPlay, Scrub };
    void ShowContextMenu( MenuChoice choice, const wxPoint *pPosition);
 

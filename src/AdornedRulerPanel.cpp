@@ -1215,14 +1215,9 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    DoDrawBackground(&backDC);
 
-   if (!mViewInfo->selectedRegion.isPoint())
-   {
-      DoDrawSelection(&backDC);
-   }
+   DoDrawPlayRegion(&backDC);
 
    DoDrawMarks(&backDC, true);
-
-   DoDrawPlayRegion(&backDC);
 
    DoDrawEdge(&backDC);
 
@@ -1961,65 +1956,6 @@ void AdornedRulerPanel::OnActivatePlayRegion(wxCommandEvent&)
 }
 
 
-// Draws the horizontal <===>
-void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
-{
-   const auto &viewInfo = ViewInfo::Get( *GetProject() );
-   const auto &playRegion = viewInfo.playRegion;
-   auto start = playRegion.GetStart();
-   auto end = playRegion.GetEnd();
-
-   if (start >= 0)
-   {
-      const int x1 = Time2Pos(start);
-      const int x2 = Time2Pos(end)-2;
-      int y = mInner.y - TopMargin + mInner.height/2;
-
-      bool isLocked = mLastPlayRegionActive = playRegion.Active();
-      AColor::PlayRegionColor(dc, isLocked);
-
-      wxPoint tri[3];
-      wxRect r;
-
-      tri[0].x = x1;
-      tri[0].y = y + PLAY_REGION_GLOBAL_OFFSET_Y;
-      tri[1].x = x1 + PLAY_REGION_TRIANGLE_SIZE;
-      tri[1].y = y - PLAY_REGION_TRIANGLE_SIZE + PLAY_REGION_GLOBAL_OFFSET_Y;
-      tri[2].x = x1 + PLAY_REGION_TRIANGLE_SIZE;
-      tri[2].y = y + PLAY_REGION_TRIANGLE_SIZE + PLAY_REGION_GLOBAL_OFFSET_Y;
-      dc->DrawPolygon(3, tri);
-
-      r.x = x1;
-      r.y = y - PLAY_REGION_TRIANGLE_SIZE + PLAY_REGION_GLOBAL_OFFSET_Y;
-      r.width = PLAY_REGION_RECT_WIDTH;
-      r.height = PLAY_REGION_TRIANGLE_SIZE*2 + 1;
-      dc->DrawRectangle(r);
-
-      if (end != start)
-      {
-         tri[0].x = x2;
-         tri[0].y = y + PLAY_REGION_GLOBAL_OFFSET_Y;
-         tri[1].x = x2 - PLAY_REGION_TRIANGLE_SIZE;
-         tri[1].y = y - PLAY_REGION_TRIANGLE_SIZE + PLAY_REGION_GLOBAL_OFFSET_Y;
-         tri[2].x = x2 - PLAY_REGION_TRIANGLE_SIZE;
-         tri[2].y = y + PLAY_REGION_TRIANGLE_SIZE + PLAY_REGION_GLOBAL_OFFSET_Y;
-         dc->DrawPolygon(3, tri);
-
-         r.x = x2 - PLAY_REGION_RECT_WIDTH + 1;
-         r.y = y - PLAY_REGION_TRIANGLE_SIZE + PLAY_REGION_GLOBAL_OFFSET_Y;
-         r.width = PLAY_REGION_RECT_WIDTH;
-         r.height = PLAY_REGION_TRIANGLE_SIZE*2 + 1;
-         dc->DrawRectangle(r);
-
-         r.x = x1 + PLAY_REGION_TRIANGLE_SIZE;
-         r.y = y - PLAY_REGION_RECT_HEIGHT/2 + PLAY_REGION_GLOBAL_OFFSET_Y;
-         r.width = std::max(0, x2-x1 - PLAY_REGION_TRIANGLE_SIZE*2);
-         r.height = PLAY_REGION_RECT_HEIGHT;
-         dc->DrawRectangle(r);
-      }
-   }
-}
-
 void AdornedRulerPanel::ShowContextMenu(
    MenuChoice choice, const wxPoint *pPosition)
 {
@@ -2099,21 +2035,61 @@ void AdornedRulerPanel::DrawSelection()
    Refresh();
 }
 
-void AdornedRulerPanel::DoDrawSelection(wxDC * dc)
+void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
 {
-   // Draw selection
-   const int p0 = max(1, Time2Pos(mViewInfo->selectedRegion.t0()));
-   const int p1 = min(mInner.width, Time2Pos(mViewInfo->selectedRegion.t1()));
+   const auto &viewInfo = ViewInfo::Get(*mProject);
+   const auto &playRegion = viewInfo.playRegion;
+   bool isActive = (mLastPlayRegionActive = playRegion.Active());
 
-   dc->SetBrush( wxBrush( theTheme.Colour( clrRulerBackground )) );
-   dc->SetPen(   wxPen(   theTheme.Colour( clrRulerBackground )) );
+   const auto t0 = playRegion.GetLastActiveStart(),
+      t1 = playRegion.GetLastActiveEnd();
+   if (t0 < 0 || t1 < 0)
+      // play region is cleared, that is undefined
+      return;
 
-   wxRect r;
-   r.x = p0;
-   r.y = mInner.y;
-   r.width = p1 - p0 - 1;
-   r.height = mInner.height;
-   dc->DrawRectangle( r );
+   const int p0 = max(1, Time2Pos(t0));
+   const int p1 = min(mInner.width, Time2Pos(t1));
+
+   // Paint the selected region bolder if independently varying, else dim
+   const auto color =
+      isActive ? clrRulerBackground : clrClipAffordanceInactiveBrush;
+   dc->SetBrush( wxBrush( theTheme.Colour( color )) );
+   dc->SetPen(   wxPen(   theTheme.Colour( color )) );
+
+   const int left = p0, top = mInner.y, right = p1, bottom = mInner.GetBottom();
+   dc->DrawRectangle( { wxPoint{left, top}, wxPoint{right, bottom} } );
+
+   {
+      // Color the edges of the play region like the ticks and numbers
+      ADCChanger cleanup( dc );
+      const auto edgeColour = theTheme.Colour(clrTrackPanelText);
+      dc->SetPen( { edgeColour } );
+      dc->SetBrush( { edgeColour } );
+
+      constexpr int side = 7;
+      constexpr int sideLessOne = side - 1;
+
+      // Paint two shapes, each a line plus triangle at bottom
+      {
+         wxPoint points[]{
+            {left, bottom - sideLessOne},
+            {left - sideLessOne, bottom},
+            {left, bottom},
+            {left, top},
+         };
+         dc->DrawPolygon( 4, points );
+      }
+
+      {
+         wxPoint points[]{
+            {right, top},
+            {right, bottom},
+            {right + sideLessOne, bottom},
+            {right, bottom - sideLessOne},
+         };
+         dc->DrawPolygon( 4, points );
+      }
+   }
 }
 
 int AdornedRulerPanel::GetRulerHeight(bool showScrubBar)
