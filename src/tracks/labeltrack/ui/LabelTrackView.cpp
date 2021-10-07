@@ -1509,6 +1509,7 @@ bool LabelTrackView::DoKeyDown(
    const auto pTrack = FindLabelTrack();
    const auto &mLabels = pTrack->GetLabels();
    if (IsValidIndex(mTextEditIndex, project)) {
+      // Do label text changes
       auto labelStruct = mLabels[mTextEditIndex];
       auto &title = labelStruct.title;
       wxUniChar wchar;
@@ -1676,8 +1677,12 @@ bool LabelTrackView::DoKeyDown(
    }
    else
    {
+      // Do navigation
       switch (keyCode) {
 
+      case WXK_ESCAPE:
+          mNavigationIndex = -1;
+          break;
       case WXK_TAB:
       case WXK_NUMPAD_TAB:
          if (!mLabels.empty()) {
