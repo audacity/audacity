@@ -41,7 +41,7 @@ wxPen AColor::darkPen[2];
 wxPen AColor::cursorPen;
 wxBrush AColor::indicatorBrush[2];
 wxPen AColor::indicatorPen[2];
-wxPen AColor::playRegionPen[2];
+// wxPen AColor::playRegionPen[2];
 wxBrush AColor::playRegionBrush[2];
 
 wxBrush AColor::muteBrush[2];
@@ -386,14 +386,6 @@ void AColor::IndicatorColor(wxDC * dc, bool bIsNotRecording)
    dc->SetBrush(indicatorBrush[index]);
 }
 
-void AColor::PlayRegionColor(wxDC * dc, bool locked)
-{
-   if (!inited)
-      Init();
-   dc->SetPen(playRegionPen[(int)locked]);
-   dc->SetBrush(playRegionBrush[(int)locked]);
-}
-
 void AColor::TrackFocusPen(wxDC * dc, int level)
 {
    if (!inited)
@@ -518,9 +510,9 @@ void AColor::Init()
    theTheme.SetBrushColour( indicatorBrush[1], clrPlaybackBrush);
 
    theTheme.SetBrushColour( playRegionBrush[0],clrRulerRecordingBrush);
-   theTheme.SetPenColour(   playRegionPen[0],  clrRulerRecordingPen);
+   // theTheme.SetPenColour(   playRegionPen[0],  clrRulerRecordingPen);
    theTheme.SetBrushColour( playRegionBrush[1],clrRulerPlaybackBrush);
-   theTheme.SetPenColour(   playRegionPen[1],  clrRulerPlaybackPen);
+   // theTheme.SetPenColour(   playRegionPen[1],  clrRulerPlaybackPen);
 
    //Determine tooltip color
    tooltipPen.SetColour( wxSystemSettingsNative::GetColour(wxSYS_COLOUR_INFOTEXT) );

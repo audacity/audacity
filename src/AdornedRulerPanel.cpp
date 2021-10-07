@@ -1205,8 +1205,6 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    DoDrawMarks(&backDC, true);
 
-   DoDrawPlayRegion(&backDC);
-
    DoDrawEdge(&backDC);
 
    DisplayBitmap(dc);
@@ -1940,65 +1938,6 @@ void AdornedRulerPanel::OnLockPlayRegion(wxCommandEvent&)
       SelectUtilities::LockPlayRegion(*mProject);
 }
 
-
-// Draws the horizontal <===>
-void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
-{
-   const auto &viewInfo = ViewInfo::Get( *GetProject() );
-   const auto &playRegion = viewInfo.playRegion;
-   auto start = playRegion.GetStart();
-   auto end = playRegion.GetEnd();
-
-   if (start >= 0)
-   {
-      const int x1 = Time2Pos(start);
-      const int x2 = Time2Pos(end)-2;
-      int y = mInner.y - TopMargin + mInner.height/2;
-
-      bool isLocked = mLastPlayRegionLocked = playRegion.Locked();
-      AColor::PlayRegionColor(dc, isLocked);
-
-      wxPoint tri[3];
-      wxRect r;
-
-      tri[0].x = x1;
-      tri[0].y = y + PLAY_REGION_GLOBAL_OFFSET_Y;
-      tri[1].x = x1 + PLAY_REGION_TRIANGLE_SIZE;
-      tri[1].y = y - PLAY_REGION_TRIANGLE_SIZE + PLAY_REGION_GLOBAL_OFFSET_Y;
-      tri[2].x = x1 + PLAY_REGION_TRIANGLE_SIZE;
-      tri[2].y = y + PLAY_REGION_TRIANGLE_SIZE + PLAY_REGION_GLOBAL_OFFSET_Y;
-      dc->DrawPolygon(3, tri);
-
-      r.x = x1;
-      r.y = y - PLAY_REGION_TRIANGLE_SIZE + PLAY_REGION_GLOBAL_OFFSET_Y;
-      r.width = PLAY_REGION_RECT_WIDTH;
-      r.height = PLAY_REGION_TRIANGLE_SIZE*2 + 1;
-      dc->DrawRectangle(r);
-
-      if (end != start)
-      {
-         tri[0].x = x2;
-         tri[0].y = y + PLAY_REGION_GLOBAL_OFFSET_Y;
-         tri[1].x = x2 - PLAY_REGION_TRIANGLE_SIZE;
-         tri[1].y = y - PLAY_REGION_TRIANGLE_SIZE + PLAY_REGION_GLOBAL_OFFSET_Y;
-         tri[2].x = x2 - PLAY_REGION_TRIANGLE_SIZE;
-         tri[2].y = y + PLAY_REGION_TRIANGLE_SIZE + PLAY_REGION_GLOBAL_OFFSET_Y;
-         dc->DrawPolygon(3, tri);
-
-         r.x = x2 - PLAY_REGION_RECT_WIDTH + 1;
-         r.y = y - PLAY_REGION_TRIANGLE_SIZE + PLAY_REGION_GLOBAL_OFFSET_Y;
-         r.width = PLAY_REGION_RECT_WIDTH;
-         r.height = PLAY_REGION_TRIANGLE_SIZE*2 + 1;
-         dc->DrawRectangle(r);
-
-         r.x = x1 + PLAY_REGION_TRIANGLE_SIZE;
-         r.y = y - PLAY_REGION_RECT_HEIGHT/2 + PLAY_REGION_GLOBAL_OFFSET_Y;
-         r.width = std::max(0, x2-x1 - PLAY_REGION_TRIANGLE_SIZE*2);
-         r.height = PLAY_REGION_RECT_HEIGHT;
-         dc->DrawRectangle(r);
-      }
-   }
-}
 
 void AdornedRulerPanel::ShowContextMenu(
    MenuChoice choice, const wxPoint *pPosition)
