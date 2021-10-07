@@ -1002,6 +1002,18 @@ int nyx_get_audio(nyx_audio_callback callback, void *userdata)
       goto finish;
    }
 
+   if (nyx_input_length == 0) {
+      LVAL val = getvalue(xlenter("LEN"));
+      if (val != s_unbound) {
+         if (ntype(val) == FLONUM) {
+            nyx_input_length = (int64_t) getflonum(val);
+         }
+         else if (ntype(val) == FIXNUM) {
+            nyx_input_length = (int64_t) getfixnum(val);
+         }
+      }
+   }
+
    // at this point, input sounds which were referenced by symbol S
    // (or nyx_get_audio_name()) could be referenced by nyx_result, but
    // S is now bound to NIL. nyx_result is a protected (garbage
