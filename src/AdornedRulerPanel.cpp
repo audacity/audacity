@@ -505,6 +505,8 @@ protected:
    Button mClicked{ Button::None };
 };
 
+#undef QUICK_PLAY_HANDLE
+#ifdef QUICK_PLAY_HANDLE
 class AdornedRulerPanel::QPHandle final : public CommonRulerHandle
 {
 public:
@@ -514,8 +516,6 @@ public:
    {
    }
    
-   std::unique_ptr<SnapManager> mSnapManager;
-
 private:
    Result Click(
       const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -535,6 +535,7 @@ private:
 
    SelectedRegion mOldSelection;
 };
+#endif
 
 namespace
 {
@@ -672,14 +673,18 @@ public:
    std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override
       { return mParent->mQPCell; }
 
-   bool Hit() const { return !mHolder.expired(); }
    bool Clicked() const {
+#ifdef QUICK_PLAY_HANDLE
       if (auto ptr = mHolder.lock())
          return ptr->Clicked();
+#endif
       return false;
    }
    
+#ifdef QUICK_PLAY_HANDLE
    std::weak_ptr<QPHandle> mHolder;
+#endif
+
    std::weak_ptr<PlayheadHandle> mPlayheadHolder;
 };
 
@@ -710,9 +715,11 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
    if (!mParent->mIsRecording) {
       mParent->UpdateQuickPlayPos( xx, state.state.ShiftDown() );
 
+      #if 0
       auto result = std::make_shared<QPHandle>( mParent, xx );
       result = AssignUIHandlePtr( mHolder, result );
       results.push_back( result );
+      #endif
    }
 
    return results;
@@ -1335,6 +1342,7 @@ bool AdornedRulerPanel::IsWithinMarker(int mousePosX, double markerTime)
    return mousePosX >= boundLeft && mousePosX < boundRight;
 }
 
+#ifdef QUICK_PLAY_HANDLE
 auto AdornedRulerPanel::QPHandle::Click(
    const TrackPanelMouseEvent &event, AudacityProject *pProject) -> Result
 {
@@ -1498,6 +1506,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
    Refresh();
    Update();
 }
+#endif
 
 auto AdornedRulerPanel::ScrubbingHandle::Preview(
    const TrackPanelMouseState &, AudacityProject *pProject)
@@ -1514,6 +1523,7 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview(
    };
 }
 
+#ifdef QUICK_PLAY_HANDLE
 auto AdornedRulerPanel::QPHandle::Preview(
    const TrackPanelMouseState &state, AudacityProject *pProject)
       -> HitTestPreview
@@ -1655,6 +1665,7 @@ auto AdornedRulerPanel::QPHandle::Cancel(AudacityProject *pProject) -> Result
 
    return result;
 }
+#endif
 
 void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
 {
@@ -1895,17 +1906,10 @@ void AdornedRulerPanel::DragSelection()
 
 void AdornedRulerPanel::HandleSnapping()
 {
-   auto handle = mQPCell->mHolder.lock();
-   if (handle) {
-      auto &pSnapManager = handle->mSnapManager;
-      if (! pSnapManager)
-         pSnapManager =
-            std::make_unique<SnapManager>(*mProject, *mTracks, *mViewInfo);
-      
-      auto results = pSnapManager->Snap(NULL, mQuickPlayPos, false);
-      mQuickPlayPos = results.outTime;
-      mIsSnapped = results.Snapped();
-   }
+   SnapManager snapManager{ *mProject, *mTracks, *mViewInfo };
+   auto results = snapManager.Snap(NULL, mQuickPlayPos, false);
+   mQuickPlayPos = results.outTime;
+   mIsSnapped = results.Snapped();
 }
 
 #if 0
