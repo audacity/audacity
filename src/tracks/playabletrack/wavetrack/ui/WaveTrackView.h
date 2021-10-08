@@ -172,6 +172,8 @@ public:
    (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
        AudacityProject* project) override;
 
+   unsigned LoseFocus(AudacityProject *project) override;
+
 private:
    void BuildSubViews() const;
    void DoSetDisplay(Display display, bool exclusive = true);

@@ -114,6 +114,10 @@ public:
     WaveClipTitleEditHandle(const std::shared_ptr<TextEditHelper>& helper)
         : mHelper(helper)
     { }
+   
+   ~WaveClipTitleEditHandle()
+   {
+   }
 
     Result Click(const TrackPanelMouseEvent& event, AudacityProject* project) override
     {
@@ -423,6 +427,11 @@ unsigned WaveTrackAffordanceControls::Char(wxKeyEvent& event, ViewInfo& viewInfo
     return RefreshCode::RefreshNone;
 }
 
+unsigned WaveTrackAffordanceControls::LoseFocus(AudacityProject *)
+{
+   return ExitTextEditing();
+}
+
 void WaveTrackAffordanceControls::OnTextEditFinished(AudacityProject* project, const wxString& text)
 {
     if (auto lock = mFocusClip.lock())
@@ -454,7 +463,12 @@ void WaveTrackAffordanceControls::OnTextContextMenu(AudacityProject* project, co
 void WaveTrackAffordanceControls::OnTrackChanged(TrackListEvent& evt)
 {
     evt.Skip();
+    ExitTextEditing();
+}
 
+unsigned WaveTrackAffordanceControls::ExitTextEditing()
+{
+    using namespace RefreshCode;
     if (mTextEditHelper)
     {
         auto trackList = FindTrack()->GetOwner();
@@ -463,7 +477,9 @@ void WaveTrackAffordanceControls::OnTrackChanged(TrackListEvent& evt)
             mTextEditHelper->Finish(trackList->GetOwner());
         }
         mTextEditHelper.reset();
+        return RefreshCell;
     }
+    return RefreshNone;
 }
 
 

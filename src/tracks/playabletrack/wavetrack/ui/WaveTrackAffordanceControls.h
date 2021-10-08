@@ -72,6 +72,8 @@ public:
     (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
         AudacityProject* project) override;
 
+    unsigned LoseFocus(AudacityProject *project) override;
+
     void OnTextEditFinished(AudacityProject* project, const wxString& text) override;
     void OnTextEditCancelled(AudacityProject* project) override;
     void OnTextModified(AudacityProject* project, const wxString& text) override;
@@ -84,6 +86,8 @@ public:
 
 private:
     void OnTrackChanged(TrackListEvent& evt);
+
+    unsigned ExitTextEditing();
 
     bool SelectNextClip(ViewInfo& viewInfo, AudacityProject* project, bool forward);
 
