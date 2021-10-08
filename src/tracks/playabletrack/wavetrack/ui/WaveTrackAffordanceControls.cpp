@@ -37,6 +37,7 @@
 #include "../../../../Theme.h"
 #include "../../../../../images/Cursors.h"
 #include "../../../../HitTestResult.h"
+#include "../../../../TrackPanelAx.h"
 
 #include "WaveClipTrimHandle.h"
 
@@ -527,6 +528,26 @@ bool WaveTrackAffordanceControls::SelectNextClip(ViewInfo& viewInfo, AudacityPro
 
     viewInfo.selectedRegion.setTimes(clip->GetPlayStartTime(), clip->GetPlayEndTime());
     ProjectHistory::Get(*project).ModifyState(false);
+
+    // create and send message to screen reader
+    auto it = std::find(clips.begin(), clips.end(), clip);
+    auto index = std::distance(clips.begin(), it);
+    
+    auto message = XP(
+    /* i18n-hint:
+        string is the name of a clip
+        first number is the position of that clip in a sequence of clips,
+        second number counts the clips */
+        "%s, %d of %d clip",
+        "%s, %d of %d clips",
+        2
+     )(
+        clip->GetName(),
+        static_cast<int>(index + 1),
+        static_cast<int>(clips.size())
+    );
+
+    TrackFocus::Get(*project).MessageForScreenReader(message);
     return true;
 }
 
