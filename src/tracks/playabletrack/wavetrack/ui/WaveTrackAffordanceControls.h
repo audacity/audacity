@@ -43,6 +43,7 @@ class AUDACITY_DLL_API WaveTrackAffordanceControls :
     std::weak_ptr<SelectHandle> mSelectHandle;
     std::weak_ptr<WaveClipTrimHandle> mClipTrimHandle;
 
+    std::weak_ptr<WaveClip> mEditedClip;
     std::shared_ptr<TextEditHelper> mTextEditHelper;
 
     wxFont mClipNameFont;
@@ -84,7 +85,11 @@ public:
             Edit the first clip in the track's list satisfying the test */
     );
 
+    unsigned OnAffordanceClick(const TrackPanelMouseEvent& event, AudacityProject* project);
+
 private:
+    void ResetClipNameEdit();
+
     void OnTrackChanged(TrackListEvent& evt);
 
     unsigned ExitTextEditing();

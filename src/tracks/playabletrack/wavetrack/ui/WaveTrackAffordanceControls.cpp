@@ -50,22 +50,16 @@ public:
 
     Result Click(const TrackPanelMouseEvent& event, AudacityProject* project) override
     {
-        if (event.event.LeftDClick())
+        auto affordanceControl = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(event.pCell);
+        Result result = RefreshCode::RefreshNone;
+        if (affordanceControl)
         {
-            auto& viewInfo = ViewInfo::Get(*project);
-            auto affordanceRect = ClipParameters::GetClipRect(*mTarget.get(), viewInfo, event.rect);
-            if (affordanceRect.Contains(event.event.GetPosition()))
-            {
-                if (auto affordanceControl = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(event.pCell))
-                {
-                    return affordanceControl->StartEditClipName(project) ? 
-                        (RefreshCode::RefreshCell | RefreshCode::Cancelled) : RefreshCode::RefreshNone;
-                }
-            }
-            return RefreshCode::RefreshNone;
+            result |= affordanceControl->OnAffordanceClick(event, project);
+            if (!event.event.GetSkipped())
+                return result;
+            event.event.Skip(false);
         }
-        else
-            return AffordanceHandle::Click(event, project);
+        return result | AffordanceHandle::Click(event, project);
     }
 
     UIHandle::Result SelectAt(const TrackPanelMouseEvent& event, AudacityProject* project) override
@@ -201,7 +195,7 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
     {
         //given that track is not a leader there always should be
         //another track before this one
-        auto prev = --trackList->Find(track.get());
+        auto prev = std::prev(trackList->Find(track.get()));
         results.push_back(
             AssignUIHandlePtr(
                 mResizeHandle, 
@@ -210,42 +204,36 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         );
     }
 
+    if (mTextEditHelper && mTextEditHelper->GetBBox().Contains(px, py))
+    {
+        results.push_back(
+            AssignUIHandlePtr(
+                mTitleEditHandle,
+                std::make_shared<WaveClipTitleEditHandle>(mTextEditHelper)
+            )
+        );
+    }
+
+    auto editClipLock = mEditedClip.lock();
     const auto waveTrack = std::static_pointer_cast<WaveTrack>(track->SubstitutePendingChangedTrack());
-    std::shared_ptr<WaveClip> focusClip;
     auto& zoomInfo = ViewInfo::Get(*pProject);
     for (const auto& clip : waveTrack->GetClips())
     {
+        if (clip == editClipLock)
+            continue;
+
         auto affordanceRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, state.rect);
         if (affordanceRect.Contains(px, py))
-        {
-            focusClip = clip;
-            break;
-        }
-    }
-
-
-    if (mTextEditHelper)
-    {
-        if(mTextEditHelper->GetBBox().Contains(px, py))
-            results.push_back(
-                AssignUIHandlePtr(
-                    mTitleEditHandle,
-                    std::make_shared<WaveClipTitleEditHandle>(mTextEditHelper)
-                )
-            );
-    }
-    else
-    {
-        if (focusClip)
         {
             results.push_back(
                 AssignUIHandlePtr(
                     mAffordanceHandle,
-                    std::make_shared<WaveTrackAffordanceHandle>(track, focusClip)
+                    std::make_shared<WaveTrackAffordanceHandle>(track, clip)
                 )
             );
+            mFocusClip = clip;
+            break;
         }
-        mFocusClip = focusClip;
     }
 
     const auto& settings = ProjectSettings::Get(*pProject);
@@ -292,7 +280,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
 
                 auto selected = GetSelectedClip().lock() == clip;
                 auto highlight = selected || affordanceRect.Contains(px, py);
-                if (mTextEditHelper && mFocusClip.lock() == clip)
+                if (mTextEditHelper && mEditedClip.lock() == clip)
                 {
                     TrackArt::DrawClipAffordance(context.dc, affordanceRect, wxEmptyString, highlight, selected);
                     mTextEditHelper->Draw(context.dc, TrackArt::GetAffordanceTitleRect(affordanceRect));
@@ -332,6 +320,10 @@ bool WaveTrackAffordanceControls::StartEditClipName(AudacityProject* project)
         }
         else
         {
+            if (mTextEditHelper)
+                mTextEditHelper->Finish(project);
+
+            mEditedClip = lock;
             mTextEditHelper = MakeTextEditHelper(clip->GetName());
             return true;
         }
@@ -434,7 +426,7 @@ unsigned WaveTrackAffordanceControls::LoseFocus(AudacityProject *)
 
 void WaveTrackAffordanceControls::OnTextEditFinished(AudacityProject* project, const wxString& text)
 {
-    if (auto lock = mFocusClip.lock())
+    if (auto lock = mEditedClip.lock())
     {
         if (text != lock->GetName()) {
             lock->SetName(text);
@@ -443,12 +435,12 @@ void WaveTrackAffordanceControls::OnTextEditFinished(AudacityProject* project, c
                 XO("Clip Name Edit"), UndoPush::CONSOLIDATE);
         }
     }
-    mTextEditHelper.reset();
+    ResetClipNameEdit();
 }
 
 void WaveTrackAffordanceControls::OnTextEditCancelled(AudacityProject* project)
 {
-    mTextEditHelper.reset();
+    ResetClipNameEdit();
 }
 
 void WaveTrackAffordanceControls::OnTextModified(AudacityProject* project, const wxString& text)
@@ -458,6 +450,12 @@ void WaveTrackAffordanceControls::OnTextModified(AudacityProject* project, const
 
 void WaveTrackAffordanceControls::OnTextContextMenu(AudacityProject* project, const wxPoint& position)
 {
+}
+
+void WaveTrackAffordanceControls::ResetClipNameEdit()
+{
+    mTextEditHelper.reset();
+    mEditedClip.reset();
 }
 
 void WaveTrackAffordanceControls::OnTrackChanged(TrackListEvent& evt)
@@ -471,12 +469,11 @@ unsigned WaveTrackAffordanceControls::ExitTextEditing()
     using namespace RefreshCode;
     if (mTextEditHelper)
     {
-        auto trackList = FindTrack()->GetOwner();
-        if (trackList)
+        if (auto trackList = FindTrack()->GetOwner())
         {
             mTextEditHelper->Finish(trackList->GetOwner());
         }
-        mTextEditHelper.reset();
+        ResetClipNameEdit();
         return RefreshCell;
     }
     return RefreshNone;
@@ -543,10 +540,38 @@ bool WaveTrackAffordanceControls::StartEditNameOfMatchingClip(
       [&](auto pClip){ return pClip && test && test(*pClip); });
     if (it != clips.end())
     {
-        mFocusClip = *it;
+        mEditedClip = *it;
         return StartEditClipName(&project);
     }
     return false;
+}
+
+unsigned WaveTrackAffordanceControls::OnAffordanceClick(const TrackPanelMouseEvent& event, AudacityProject* project)
+{
+    auto& viewInfo = ViewInfo::Get(*project);
+    if (mTextEditHelper)
+    {
+        if (auto lock = mEditedClip.lock())
+        {
+            auto affordanceRect = ClipParameters::GetClipRect(*lock.get(), viewInfo, event.rect);
+            if (!affordanceRect.Contains(event.event.GetPosition()))
+               return ExitTextEditing();
+        }
+    }
+    else if (auto lock = mFocusClip.lock())
+    {
+        if (event.event.LeftDClick())
+        {
+            auto affordanceRect = ClipParameters::GetClipRect(*lock.get(), viewInfo, event.rect);
+            if (affordanceRect.Contains(event.event.GetPosition()) &&
+                StartEditClipName(project))
+            {
+                event.event.Skip();
+                return RefreshCode::RefreshCell | RefreshCode::Cancelled;
+            }
+        }
+    }
+    return RefreshCode::RefreshNone;
 }
 
 std::shared_ptr<TextEditHelper> WaveTrackAffordanceControls::MakeTextEditHelper(const wxString& text)
