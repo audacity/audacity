@@ -536,6 +536,115 @@ private:
    SelectedRegion mOldSelection;
 };
 
+class AdornedRulerPanel::NewPlayRegionHandle final : public CommonRulerHandle
+{
+public:
+   explicit
+   NewPlayRegionHandle( AdornedRulerPanel *pParent, wxCoord xx )
+   : CommonRulerHandle( pParent, xx, MenuChoice::QuickPlay )
+   {
+   }
+   
+private:
+   Result Click(
+      const TrackPanelMouseEvent &event, AudacityProject *pProject) override
+   {
+      using namespace RefreshCode;
+      auto result = CommonRulerHandle::Click(event, pProject);
+      if (0 != (result & Cancelled) || mClicked != Button::Left)
+         return result;
+
+      // Find starting time of the drag
+      auto &viewInfo = ViewInfo::Get(*pProject);
+      const double time = viewInfo.PositionToTime(
+         event.event.m_x, viewInfo.GetLeftOffset());
+
+      // Change the play region
+      auto &playRegion = viewInfo.playRegion;
+      mWasLocked = playRegion.Locked();
+      mOldStart = playRegion.GetLastLockedStart();
+      mOldEnd = playRegion.GetLastLockedEnd();
+      if (!mWasLocked)
+         playRegion.SetLocked(true);
+      playRegion.SetTimes(time, time);
+
+      return RefreshAll;
+   }
+
+   Result Drag(
+      const TrackPanelMouseEvent &event, AudacityProject *pProject) override
+   {
+      using namespace RefreshCode;
+      auto result = CommonRulerHandle::Drag(event, pProject);
+      if (0 != (result & Cancelled) || mClicked != Button::Left)
+         return result;
+   
+      // Find present time of the drag
+      auto &viewInfo = ViewInfo::Get(*pProject);
+      const double time = viewInfo.PositionToTime(
+         event.event.m_x, viewInfo.GetLeftOffset());
+
+      // Change the play region
+      // The check whether this new time should be left or right isn't
+      // important.  The accessors for PlayRegion use min and max of stored
+      // values.
+      auto &playRegion = viewInfo.playRegion;
+      playRegion.SetEnd(time);
+
+      return RefreshAll;
+   }
+
+   HitTestPreview Preview(
+      const TrackPanelMouseState &state, AudacityProject *pProject)
+   override
+   {
+      static wxCursor cursor{ wxCURSOR_DEFAULT };
+      const auto message = XO("Click and drag to define the looping region.");
+      return {
+         message,
+         &cursor,
+         message
+      };
+   }
+
+   Result Release(
+      const TrackPanelMouseEvent &event,
+      AudacityProject *pProject, wxWindow *pParent)
+   override
+   {
+      using namespace RefreshCode;
+      auto result = CommonRulerHandle::Release(event, pProject, pParent);
+      if (0 != (result & Cancelled) || mClicked != Button::Left)
+         return result;
+
+      // Set the play region endpoints right even if not strictly needed
+      auto &viewInfo = ViewInfo::Get( *pProject );
+      auto &playRegion = viewInfo.playRegion;
+      playRegion.Order();
+
+      return RefreshNone;
+   }
+
+   Result Cancel(AudacityProject *pProject) override
+   {
+      using namespace RefreshCode;
+      auto result = CommonRulerHandle::Cancel(pProject);
+      if (0 != (result & Cancelled) || mClicked != Button::Left)
+         return result;
+
+      auto &viewInfo = ViewInfo::Get(*pProject);
+      auto &playRegion = viewInfo.playRegion;
+      playRegion.SetTimes(mOldStart, mOldEnd);
+      if (!mWasLocked)
+         playRegion.SetLocked(false);
+   
+      return RefreshAll;
+   }
+
+   double mOldStart = 0.0, mOldEnd = 0.0;
+   bool mWasLocked = false;
+};
+
 namespace
 {
 
@@ -680,6 +789,7 @@ public:
    }
    
    std::weak_ptr<QPHandle> mHolder;
+   std::weak_ptr<NewPlayRegionHandle> mNewPlayRegionHolder;
    std::weak_ptr<PlayheadHandle> mPlayheadHolder;
 };
 
@@ -715,6 +825,13 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
       result = AssignUIHandlePtr( mHolder, result );
       results.push_back( result );
       #endif
+   }
+
+   // Lowest priority hit is a handle to drag a completely new play region
+   {
+      auto result = std::make_shared<NewPlayRegionHandle>( mParent, xx );
+      result = AssignUIHandlePtr( mNewPlayRegionHolder, result );
+      results.push_back(result);
    }
 
    return results;
@@ -2264,7 +2381,9 @@ void AdornedRulerPanel::SetFocusedCell()
 void AdornedRulerPanel::ProcessUIHandleResult(
    TrackPanelCell *, TrackPanelCell *, unsigned refreshResult)
 {
-   if (refreshResult & RefreshCode::DrawOverlays)
+   if (refreshResult & RefreshCode::RefreshAll)
+      Refresh();
+   else if (refreshResult & RefreshCode::DrawOverlays)
       DrawBothOverlays();
 }
 
