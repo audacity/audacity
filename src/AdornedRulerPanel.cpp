@@ -1198,10 +1198,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    DoDrawBackground(&backDC);
 
-   if (!mViewInfo->selectedRegion.isPoint())
-   {
-      DoDrawSelection(&backDC);
-   }
+   DoDrawPlayRegion(&backDC);
 
    DoDrawMarks(&backDC, true);
 
@@ -2018,14 +2015,25 @@ void AdornedRulerPanel::DrawSelection()
    Refresh();
 }
 
-void AdornedRulerPanel::DoDrawSelection(wxDC * dc)
+void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
 {
-   // Draw selection
-   const int p0 = max(1, Time2Pos(mViewInfo->selectedRegion.t0()));
-   const int p1 = min(mInner.width, Time2Pos(mViewInfo->selectedRegion.t1()));
+   const auto &viewInfo = ViewInfo::Get(*mProject);
+   const auto &playRegion = viewInfo.playRegion;
+   bool isLocked = (mLastPlayRegionLocked = playRegion.Locked());
 
-   dc->SetBrush( wxBrush( theTheme.Colour( clrRulerBackground )) );
-   dc->SetPen(   wxPen(   theTheme.Colour( clrRulerBackground )) );
+   const auto t0 = playRegion.GetLastLockedStart(),
+      t1 = playRegion.GetLastLockedEnd();
+   if (t0 < 0 || t1 < 0)
+      // play region is cleared, that is undefined
+      return;
+
+   const int p0 = max(1, Time2Pos(t0));
+   const int p1 = min(mInner.width, Time2Pos(t1));
+
+   // Paint the selected region bolder if independently varying, else dim
+   const auto color = isLocked ? clrRulerBackground : clrUnselected;
+   dc->SetBrush( wxBrush( theTheme.Colour( color )) );
+   dc->SetPen(   wxPen(   theTheme.Colour( color )) );
 
    wxRect r;
    r.x = p0;

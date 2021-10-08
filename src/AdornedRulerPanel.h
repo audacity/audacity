@@ -95,7 +95,7 @@ private:
    void DoDrawBackground(wxDC * dc);
    void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
-   void DoDrawSelection(wxDC * dc);
+   void DoDrawPlayRegion(wxDC * dc);
 
 public:
    std::pair< wxPoint, wxBitmap >
