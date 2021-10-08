@@ -375,7 +375,7 @@ enum {
    OnToggleQuickPlayID = 7000,
    OnSyncQuickPlaySelID,
    OnAutoScrollID,
-   OnLockPlayRegionID,
+   OnActivatePlayRegionID,
    OnTogglePinnedStateID,
 };
 
@@ -388,7 +388,7 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
    EVT_MENU(OnToggleQuickPlayID, AdornedRulerPanel::OnToggleQuickPlay)
    EVT_MENU(OnSyncQuickPlaySelID, AdornedRulerPanel::OnSyncSelToQuickPlay)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
-   EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
+   EVT_MENU(OnActivatePlayRegionID, AdornedRulerPanel::OnActivatePlayRegion)
    EVT_MENU( OnTogglePinnedStateID, AdornedRulerPanel::OnTogglePinnedState )
 
    EVT_COMMAND( OnTogglePinnedStateID,
@@ -1156,7 +1156,7 @@ void AdornedRulerPanel::DoIdle()
      || dirtySelectedRegion
      || mLastDrawnH != viewInfo.h
      || mLastDrawnZoom != viewInfo.GetZoom()
-     || mLastPlayRegionLocked != viewInfo.playRegion.Locked()
+     || mLastPlayRegionActive != viewInfo.playRegion.Active()
    ;
    if (changed)
       // Cause ruler redraw anyway, because we may be zooming or scrolling,
@@ -1258,7 +1258,8 @@ void AdornedRulerPanel::DoSelectionChange(
 {
 
    auto gAudioIO = AudioIOBase::Get();
-   if ( !ViewInfo::Get( *mProject ).playRegion.Locked() ) {
+   if ( !ViewInfo::Get( *mProject ).playRegion.Active() ) {
+      // "Inactivated" play region follows the selection.
       SetPlayRegion( selectedRegion.t0(), selectedRegion.t1() );
    }
 }
@@ -1377,10 +1378,10 @@ auto AdornedRulerPanel::QPHandle::Click(
 
 void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
 {
-   // Temporarily unlock locked play region
-   if (mOldPlayRegion.Locked() && evt.LeftDown()) {
+   // Temporarily inactivate play region
+   if (mOldPlayRegion.Active() && evt.LeftDown()) {
       //mPlayRegionLock = true;
-      SelectUtilities::UnlockPlayRegion(*mProject);
+      SelectUtilities::InactivatePlayRegion(*mProject);
    }
 
    mLeftDownClickUnsnapped = mQuickPlayPosUnsnapped;
@@ -1435,7 +1436,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
       IsWithinMarker(mousePosX, mLeftDownClickUnsnapped);
    bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegion.GetStart());
    bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegion.GetEnd());
-   bool canDragSel = !mOldPlayRegion.Locked() && mPlayRegionDragsSelection;
+   bool canDragSel = !mOldPlayRegion.Active() && mPlayRegionDragsSelection;
    auto &viewInfo = ViewInfo::Get( *GetProject() );
    auto &playRegion = viewInfo.playRegion;
 
@@ -1632,12 +1633,12 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
    mLeftDownClick = -1;
 
    auto cleanup = finally( [&] {
-      if (mOldPlayRegion.Locked()) {
+      if (mOldPlayRegion.Active()) {
          // Restore Locked Play region
          SetPlayRegion(mOldPlayRegion.GetStart(), mOldPlayRegion.GetEnd());
-         SelectUtilities::LockPlayRegion(*mProject);
+         SelectUtilities::ActivatePlayRegion(*mProject);
          // and release local lock
-         mOldPlayRegion.SetLocked( false );
+         mOldPlayRegion.SetActive( false );
       }
    } );
 
@@ -1654,11 +1655,11 @@ auto AdornedRulerPanel::QPHandle::Cancel(AudacityProject *pProject) -> Result
          mParent->mMouseEventState = mesNone;
          mParent->SetPlayRegion(
             mParent->mOldPlayRegion.GetStart(), mParent->mOldPlayRegion.GetEnd());
-         if (mParent->mOldPlayRegion.Locked()) {
+         if (mParent->mOldPlayRegion.Active()) {
             // Restore Locked Play region
-            SelectUtilities::LockPlayRegion(*pProject);
+            SelectUtilities::ActivatePlayRegion(*pProject);
             // and release local lock
-            mParent->mOldPlayRegion.SetLocked( false );
+            mParent->mOldPlayRegion.SetActive( false );
          }
       }
    }
@@ -1846,15 +1847,15 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
       Check(mQuickPlayEnabled);
 
    auto pDrag = rulerMenu.AppendCheckItem(OnSyncQuickPlaySelID, _("Enable dragging selection"));
-   pDrag->Check(mPlayRegionDragsSelection && !playRegion.Locked());
-   pDrag->Enable(mQuickPlayEnabled && !playRegion.Locked());
+   pDrag->Check(mPlayRegionDragsSelection && !playRegion.Active());
+   pDrag->Enable(mQuickPlayEnabled && !playRegion.Active());
 
    rulerMenu.AppendCheckItem(OnAutoScrollID, _("Update display while playing"))->
       Check(mViewInfo->bUpdateTrackIndicator);
 
-   auto pLock = rulerMenu.AppendCheckItem(OnLockPlayRegionID, _("Lock Play Region"));
-   pLock->Check(playRegion.Locked());
-   pLock->Enable( playRegion.Locked() || !playRegion.Empty() );
+   auto pLock = rulerMenu.AppendCheckItem(OnActivatePlayRegionID, _("Lock Play Region"));
+   pLock->Check(playRegion.Active());
+   pLock->Enable( playRegion.Active() || !playRegion.Empty() );
 
 
    rulerMenu.AppendSeparator();
@@ -1934,14 +1935,14 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 }
 
 
-void AdornedRulerPanel::OnLockPlayRegion(wxCommandEvent&)
+void AdornedRulerPanel::OnActivatePlayRegion(wxCommandEvent&)
 {
    const auto &viewInfo = ViewInfo::Get( *GetProject() );
    const auto &playRegion = viewInfo.playRegion;
-   if (playRegion.Locked())
-      SelectUtilities::UnlockPlayRegion(*mProject);
+   if (playRegion.Active())
+      SelectUtilities::InactivatePlayRegion(*mProject);
    else
-      SelectUtilities::LockPlayRegion(*mProject);
+      SelectUtilities::ActivatePlayRegion(*mProject);
 }
 
 
@@ -1959,7 +1960,7 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
       const int x2 = Time2Pos(end)-2;
       int y = mInner.y - TopMargin + mInner.height/2;
 
-      bool isLocked = mLastPlayRegionLocked = playRegion.Locked();
+      bool isLocked = mLastPlayRegionActive = playRegion.Active();
       AColor::PlayRegionColor(dc, isLocked);
 
       wxPoint tri[3];

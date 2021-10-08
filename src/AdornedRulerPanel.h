@@ -156,7 +156,7 @@ private:
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    //void OnTimelineToolTips(wxCommandEvent &evt);
    void OnAutoScroll(wxCommandEvent &evt);
-   void OnLockPlayRegion(wxCommandEvent &evt);
+   void OnActivatePlayRegion(wxCommandEvent &evt);
 
    void OnPinnedButton(wxCommandEvent & event);
    void OnTogglePinnedState(wxCommandEvent & event);
@@ -227,7 +227,7 @@ private:
    struct MainGroup;
 
    SelectedRegion mLastDrawnSelectedRegion;
-   bool mLastPlayRegionLocked = false;
+   bool mLastPlayRegionActive = false;
    double mLastDrawnH{};
    double mLastDrawnZoom{};
    bool mDirtySelectedRegion{};

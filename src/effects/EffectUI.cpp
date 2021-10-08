@@ -1406,7 +1406,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
       auto &viewInfo = ViewInfo::Get( *mProject );
       const auto &selectedRegion = viewInfo.selectedRegion;
       const auto &playRegion = viewInfo.playRegion;
-      if ( playRegion.Locked() )
+      if ( playRegion.Active() )
       {
          mRegion.setTimes(playRegion.GetStart(), playRegion.GetEnd());
          mPlayPos = mRegion.t0();

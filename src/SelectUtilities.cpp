@@ -159,7 +159,7 @@ void DoSelectSomething(AudacityProject &project)
       DoSelectTimeAndTracks( project, bTime, bTracks );
 }
 
-void LockPlayRegion(AudacityProject &project)
+void ActivatePlayRegion(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
 
@@ -171,15 +171,15 @@ void LockPlayRegion(AudacityProject &project)
          XO("Error"));
    }
    else {
-      playRegion.SetLocked( true );
+      playRegion.SetActive( true );
    }
 }
 
-void UnlockPlayRegion(AudacityProject &project)
+void InactivatePlayRegion(AudacityProject &project)
 {
    auto &viewInfo = ViewInfo::Get( project );
    auto &playRegion = viewInfo.playRegion;
-   playRegion.SetLocked( false );
+   playRegion.SetActive( false );
 }
 
 }

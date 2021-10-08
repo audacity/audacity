@@ -597,10 +597,10 @@ void ControlToolBar::OnLoop(wxCommandEvent & WXUNUSED(evt))
 {
    // Toggle the state of the play region lock
    auto &region = ViewInfo::Get(mProject).playRegion;
-   if (region.Locked())
-      SelectUtilities::UnlockPlayRegion(mProject);
+   if (region.Active())
+      SelectUtilities::InactivatePlayRegion(mProject);
    else
-      SelectUtilities::LockPlayRegion(mProject);
+      SelectUtilities::ActivatePlayRegion(mProject);
 }
 
 void ControlToolBar::OnIdle(wxIdleEvent & event)
@@ -659,7 +659,7 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
       // push-downs of the stop button are only momentary and always pop up now
       mStop->PopUp();
 
-   if (ViewInfo::Get(mProject).playRegion.Locked())
+   if (ViewInfo::Get(mProject).playRegion.Active())
       mLoop->PushDown();
    else
       mLoop->PopUp();

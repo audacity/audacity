@@ -272,14 +272,14 @@ const ReservedCommandFlag&
 const ReservedCommandFlag&
    PlayRegionLockedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
-         return ViewInfo::Get(project).playRegion.Locked();
+         return ViewInfo::Get(project).playRegion.Active();
       }
    }; return flag; }  //msmeyer
 const ReservedCommandFlag&
    PlayRegionNotLockedFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          const auto &playRegion = ViewInfo::Get(project).playRegion;
-         return !playRegion.Locked() && !playRegion.Empty();
+         return !playRegion.Active() && !playRegion.Empty();
       }
    }; return flag; }  //msmeyer
 const ReservedCommandFlag&

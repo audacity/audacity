@@ -654,12 +654,12 @@ void OnPunchAndRoll(const CommandContext &context)
 
 void OnLockPlayRegion(const CommandContext &context)
 {
-   SelectUtilities::LockPlayRegion(context.project);
+   SelectUtilities::ActivatePlayRegion(context.project);
 }
 
 void OnUnlockPlayRegion(const CommandContext &context)
 {
-   SelectUtilities::UnlockPlayRegion(context.project);
+   SelectUtilities::InactivatePlayRegion(context.project);
 }
 
 void OnRescanDevices(const CommandContext &WXUNUSED(context) )
