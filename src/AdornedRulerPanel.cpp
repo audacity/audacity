@@ -710,9 +710,11 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
    if (!mParent->mIsRecording) {
       mParent->UpdateQuickPlayPos( xx, state.state.ShiftDown() );
 
+      #if 0
       auto result = std::make_shared<QPHandle>( mParent, xx );
       result = AssignUIHandlePtr( mHolder, result );
       results.push_back( result );
+      #endif
    }
 
    return results;
