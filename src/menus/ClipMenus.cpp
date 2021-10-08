@@ -44,6 +44,7 @@ struct FoundClip : FoundTrack {
    bool found{};
    double startTime{};
    double endTime{};
+   wxString name{};
    int index{};
 };
 
@@ -51,8 +52,10 @@ struct FoundClipBoundary : FoundTrack {
    int nFound{};    // 0, 1, or 2
    double time{};
    int index1{};
+   wxString name1{};
    bool clipStart1{};
    int index2{};
+   wxString name2{};
    bool clipStart2{};
 };
 
@@ -163,20 +166,24 @@ FoundClipBoundary FindNextClipBoundary
          result.nFound = 2;
          result.time = (*pEnd)->GetPlayEndTime();
          result.index1 = std::distance(clips.begin(), pEnd);
+         result.name1 = (*pEnd)->GetName();
          result.clipStart1 = false;
          result.index2 = std::distance(clips.begin(), pStart);
+         result.name2 = (*pStart)->GetName();
          result.clipStart2 = true;
       }
       else if ((*pStart)->GetPlayStartTime() < (*pEnd)->GetPlayEndTime()) {
          result.nFound = 1;
          result.time = (*pStart)->GetPlayStartTime();
          result.index1 = std::distance(clips.begin(), pStart);
+         result.name1 = (*pStart)->GetName();
          result.clipStart1 = true;
       }
       else  {
          result.nFound = 1;
          result.time = (*pEnd)->GetPlayEndTime();
          result.index1 = std::distance(clips.begin(), pEnd);
+         result.name1 = (*pEnd)->GetName();
          result.clipStart1 = false;
       }
    }
@@ -184,6 +191,7 @@ FoundClipBoundary FindNextClipBoundary
       result.nFound = 1;
       result.time = (*pEnd)->GetPlayEndTime();
       result.index1 = std::distance(clips.begin(), pEnd);
+      result.name1 = (*pEnd)->GetName();
       result.clipStart1 = false;
    }
 
@@ -213,10 +221,12 @@ FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time)
          result.index1 =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), pStart);
+         result.name1 = (*pStart)->GetName();
          result.clipStart1 = true;
          result.index2 =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), pEnd);
+         result.name2 = (*pEnd)->GetName();
          result.clipStart2 = false;
       }
       else if ((*pStart)->GetPlayStartTime() > (*pEnd)->GetPlayEndTime()) {
@@ -225,6 +235,7 @@ FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time)
          result.index1 =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), pStart);
+         result.name1 = (*pStart)->GetName();
          result.clipStart1 = true;
       }
       else {
@@ -233,6 +244,7 @@ FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time)
          result.index1 =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), pEnd);
+         result.name1 = (*pEnd)->GetName();
          result.clipStart1 = false;
       }
    }
@@ -242,6 +254,7 @@ FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time)
       result.index1 =
          static_cast<int>(clips.size()) - 1 -
             std::distance(clips.rbegin(), pStart);
+      result.name1 = (*pStart)->GetName();
       result.clipStart1 = true;
    }
 
@@ -322,17 +335,19 @@ TranslatableString ClipBoundaryMessage(
             /* i18n-hint:
                First %s is replaced with the noun "start" or "end"
                identifying one end of a clip,
+               second string is the name of that clip,
                first number gives the position of that clip in a sequence
                of clips,
                last number counts all clips,
                and the last string is the name of the track containing the
                clips.
              */
-            "%s %d of %d clip %s",
-            "%s %d of %d clips %s",
-            2
+            "%s %s, %d of %d clip %s",
+            "%s %s, %d of %d clips %s",
+            3
          )(
             result.clipStart1 ? XO("start") : XO("end"),
+            result.name1,
             result.index1 + 1,
             nClips,
             longName
@@ -341,21 +356,24 @@ TranslatableString ClipBoundaryMessage(
       else {
          str = XP(
             /* i18n-hint:
-               First two %s are each replaced with the noun "start"
+               First and third %s are each replaced with the noun "start"
                or with "end", identifying and end of a clip,
+               second and fourth strings are the names of those clips,
                first and second numbers give the position of those clips in
                a sequence of clips,
                last number counts all clips,
                and the last string is the name of the track containing the
                clips.
              */
-            "%s %d and %s %d of %d clip %s",
-            "%s %d and %s %d of %d clips %s",
-            4
+            "%s %s and %s %s, %d and %d of %d clip %s",
+            "%s %s and %s %s, %d and %d of %d clips %s",
+            6
          )(
             result.clipStart1 ? XO("start") : XO("end"),
-            result.index1 + 1,
+            result.name1,
             result.clipStart2 ? XO("start") : XO("end"),
+            result.name2,
+            result.index1 + 1,
             result.index2 + 1,
             nClips,
             longName
@@ -414,6 +432,7 @@ FoundClip FindNextClip
          result.found = true;
          result.startTime = (*p)->GetPlayStartTime();
          result.endTime = (*p)->GetPlayEndTime();
+         result.name = (*p)->GetName();
          result.index = std::distance(clips.begin(), p);
          return result;
       }
@@ -427,6 +446,7 @@ FoundClip FindNextClip
          result.found = true;
          result.startTime = (*p)->GetPlayStartTime();
          result.endTime = (*p)->GetPlayEndTime();
+         result.name = (*p)->GetName();
          result.index = std::distance(clips.begin(), p);
          return result;
       }
@@ -454,6 +474,7 @@ FoundClip FindPrevClip
          result.found = true;
          result.startTime = (*p)->GetPlayStartTime();
          result.endTime = (*p)->GetPlayEndTime();
+         result.name = (*p)->GetName();
          result.index = std::distance(clips.begin(), p);
          return result;
       }
@@ -467,6 +488,7 @@ FoundClip FindPrevClip
          result.found = true;
          result.startTime = (*p)->GetPlayStartTime();
          result.endTime = (*p)->GetPlayEndTime();
+         result.name = (*p)->GetName();
          result.index =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), p);
@@ -581,13 +603,16 @@ void DoSelectClip(AudacityProject &project, bool next)
          auto nClips = result.waveTrack->GetNumClips();
          auto str = XP(
             /* i18n-hint:
-               first number identifies one of a sequence of clips,
-               last number counts the clips,
-               string names a track */
-            "%d of %d clip %s",
-            "%d of %d clips %s",
-            1
+               first string is the name of a clip,
+               first number gives the position of that clip
+               in a sequence of clips,
+               last number counts all clips,
+               last string names a track */
+            "%s, %d of %d clip %s",
+            "%s, %d of %d clips %s",
+            2
          )(
+            result.name,
             result.index + 1,
             nClips,
             longName
