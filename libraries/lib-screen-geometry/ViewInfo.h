@@ -137,11 +137,13 @@ public:
       // Guarantee the equivalent un-swapped order of endpoints
       mStart = that.GetStart();
       mEnd = that.GetEnd();
+      mLastLockedStart = that.GetLastLockedStart();
+      mLastLockedEnd = that.GetLastLockedEnd();
       return *this;
    }
 
    bool Locked() const { return mLocked; }
-   void SetLocked( bool locked ) { mLocked = locked; }
+   void SetLocked( bool locked );
 
    bool Empty() const { return GetStart() == GetEnd(); }
    double GetStart() const
@@ -158,6 +160,20 @@ public:
       else
          return std::max( mStart, mEnd );
    }
+   double GetLastLockedStart() const
+   {
+      if ( mLastLockedEnd < 0 )
+         return mLastLockedStart;
+      else
+         return std::min( mLastLockedStart, mLastLockedEnd );
+   }
+   double GetLastLockedEnd() const
+   {
+      if ( mLastLockedStart < 0 )
+         return mLastLockedEnd;
+      else
+         return std::max( mLastLockedStart, mLastLockedEnd );
+   }
 
    void SetStart( double start );
    void SetEnd( double end );
@@ -171,6 +187,8 @@ private:
    // Times:
    double mStart{ -1.0 };
    double mEnd{ -1.0 };
+   double mLastLockedStart{ -1.0 };
+   double mLastLockedEnd{ -1.0 };
 
    bool mLocked{ false };
 };

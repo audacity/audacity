@@ -165,9 +165,21 @@ wxEvent *PlayRegionEvent::Clone() const
    return safenew PlayRegionEvent{ *this };
 }
 
+void PlayRegion::SetLocked( bool locked )
+{
+   mLocked = locked;
+   if (mLocked) {
+      // Restore values
+      mStart = mLastLockedStart;
+      mEnd = mLastLockedEnd;
+   }
+}
+
 void PlayRegion::SetStart( double start )
 {
    if (mStart != start) {
+      if (mLocked)
+         mLastLockedStart = start;
       mStart = start;
       Notify();
    }
@@ -176,6 +188,8 @@ void PlayRegion::SetStart( double start )
 void PlayRegion::SetEnd( double end )
 {
    if (mEnd != end) {
+      if (mLocked)
+         mLastLockedEnd = end;
       mEnd = end;
       Notify();
    }
@@ -184,6 +198,8 @@ void PlayRegion::SetEnd( double end )
 void PlayRegion::SetTimes( double start, double end )
 {
    if (mStart != start || mEnd != end) {
+      if (mLocked)
+         mLastLockedStart = start, mLastLockedEnd = end;
       mStart = start, mEnd = end;
       Notify();
    }
@@ -193,6 +209,8 @@ void PlayRegion::Order()
 {
    if ( mStart >= 0 && mEnd >= 0 && mStart > mEnd) {
       std::swap( mStart, mEnd );
+      if (mLocked)
+         mLastLockedStart = mStart, mLastLockedEnd = mEnd;
       Notify();
    }
 }
