@@ -207,6 +207,7 @@ private:
 private:
    class CommonRulerHandle;
    class QPHandle;
+   class PlayRegionAdjustingHandle;
    class ScrubbingHandle;
 
    class CommonCell;
