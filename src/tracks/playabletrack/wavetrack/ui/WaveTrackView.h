@@ -172,6 +172,8 @@ public:
    (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
        AudacityProject* project) override;
 
+   unsigned LoseFocus(AudacityProject *project) override;
+
 private:
    void BuildSubViews() const;
    void DoSetDisplay(Display display, bool exclusive = true);
@@ -206,6 +208,8 @@ private:
    std::shared_ptr<CommonTrackCell> DoGetAffordance(const std::shared_ptr<Track>& track);
 
    std::shared_ptr<CommonTrackCell> mpAffordanceCellControl;
+
+   std::weak_ptr<TrackPanelCell> mKeyEventDelegate;
 };
 
 // Helper for drawing routines

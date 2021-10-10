@@ -963,6 +963,13 @@ void CellularPanel::OnSetFocus(wxFocusEvent &event)
 
 void CellularPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
 {
+   if (auto pCell = GetFocusedCell()) {
+      auto refreshResult = pCell->LoseFocus(GetProject());
+      auto &state = *mState;
+      auto pClickedCell = state.mpClickedCell.lock();
+      if (pClickedCell)
+         ProcessUIHandleResult( pClickedCell.get(), {}, refreshResult );
+   }
    if (KeyboardCapture::IsHandler(this))
    {
       KeyboardCapture::Release(this);

@@ -1509,6 +1509,7 @@ bool LabelTrackView::DoKeyDown(
    const auto pTrack = FindLabelTrack();
    const auto &mLabels = pTrack->GetLabels();
    if (IsValidIndex(mTextEditIndex, project)) {
+      // Do label text changes
       auto labelStruct = mLabels[mTextEditIndex];
       auto &title = labelStruct.title;
       wxUniChar wchar;
@@ -1676,13 +1677,21 @@ bool LabelTrackView::DoKeyDown(
    }
    else
    {
+      // Do navigation
       switch (keyCode) {
 
+      case WXK_ESCAPE:
+          mNavigationIndex = -1;
+          break;
       case WXK_TAB:
       case WXK_NUMPAD_TAB:
          if (!mLabels.empty()) {
             int len = (int) mLabels.size();
-            if (IsValidIndex(mNavigationIndex, project))
+            // The case where the start of selection is the same as the
+            // start of a label is handled separately so that if some labels
+            // have the same start time, all labels are navigated.
+            if (IsValidIndex(mNavigationIndex, project)
+               && mLabels[mNavigationIndex].getT0() == newSel.t0())
             {
                 if (event.ShiftDown()) {
                     --mNavigationIndex;
@@ -1694,7 +1703,6 @@ bool LabelTrackView::DoKeyDown(
             }
             else
             {
-                // no valid navigation index, then
                 if (event.ShiftDown()) {
                     //search for the first label starting from the end (and before selection)
                     mNavigationIndex = len - 1;
@@ -1723,6 +1731,16 @@ bool LabelTrackView::DoKeyDown(
                mInitialCursorPos = mCurrentCursorPos;
                //Set the selection region to be equal to the selection bounds of the tabbed-to label.
                newSel = labelStruct.selectedRegion;
+               // message for screen reader
+               /* i18n-hint:
+                  String is replaced by the name of a label,
+                  first number gives the position of that label in a sequence
+                  of labels,
+                  and the last number is the total number of labels in the sequence.
+               */
+               auto message = XO("%s %d of %d")
+                  .Format(labelStruct.title, mNavigationIndex + 1, pTrack->GetNumLabels());
+               TrackFocus::Get(project).MessageForScreenReader(message);
             }
             else {
                mNavigationIndex = -1;

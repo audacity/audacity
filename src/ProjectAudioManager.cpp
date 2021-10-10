@@ -792,6 +792,16 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
    bool appendRecord = !tracks.captureTracks.empty();
 
+   auto makeNewClipName = [&](WaveTrack* track) {
+       for (auto i = 1;; ++i)
+       {
+           //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
+           auto name = XC("%s #%d", "clip name template").Format(track->GetName(), i).Translation();
+           if (track->FindClipByName(name) == nullptr)
+               return name;
+       }
+   };
+
    {
       if (appendRecord) {
          // Append recording:
@@ -826,16 +836,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // Less than or equal, not just less than, to ensure a clip boundary.
             // when append recording.
             if (endTime <= t0) {
-               auto newName = [&]() {
-                  for (auto i = 1;; ++i)
-                  {
-                     //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
-                     auto name = XC("%s #%d", "clip name template").Format(pending->GetName(), i).Translation();
-                     if (pending->FindClipByName(name) == nullptr)
-                        return name;
-                  }
-               }();
-               pending->CreateClip(t0, newName);
+               pending->CreateClip(t0, makeNewClipName(pending.get()));
             }
             transportTracks.captureTracks.push_back(pending);
          }
@@ -909,6 +910,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             else {
                newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
             }
+            //create a new clip with a proper name before recording is started
+            newTrack->CreateClip(.0, makeNewClipName(newTrack.get()));
 
             TrackList::Get( *p ).RegisterPendingNewTrack( newTrack );
 

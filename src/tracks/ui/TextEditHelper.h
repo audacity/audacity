@@ -65,6 +65,10 @@ public:
     static bool IsGoodEditKeyCode(int keyCode);
 
     TextEditHelper(const std::weak_ptr<TextEditDelegate>& delegate, const wxString& text, const wxFont& font);
+   
+   ~TextEditHelper()
+   {
+   }
 
     void SetTextColor(const wxColor& textColor);
     void SetTextSelectionColor(const wxColor& textSelectionColor);

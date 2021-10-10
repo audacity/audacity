@@ -438,7 +438,7 @@ wxString WaveTrack::MakeClipCopyName(const wxString& originalName) const
       if (FindClipByName(name) == nullptr)
          return name;
       //i18n-hint Template for clip name generation on copy-paste
-      name = XC("%s - copy %i", "clip name template").Format(originalName, i).Translation();
+      name = XC("%s.%i", "clip name template").Format(originalName, i).Translation();
    }
 }
 
@@ -711,11 +711,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 
          auto newClip = std::make_unique<WaveClip>
             (*clip, mpFactory, ! forClipboard, clip_t0, clip_t1);
-         newClip->SetName( 
-            //i18n-hint Template for clip name generation used when copying a part of clip data
-            XC("%s samples [%.2f-%.2f]", "clip name template")
-                 .Format(clip->GetName(), clip_t0 - clip->GetPlayStartTime(), clip_t1 - clip->GetPlayStartTime())
-                 .Translation());
+         newClip->SetName(clip->GetName());
 
          //wxPrintf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
@@ -1160,14 +1156,10 @@ void WaveTrack::HandleClear(double t0, double t1,
                   // NEW clips out of the left and right halves...
 
                   auto leftClip = std::make_unique<WaveClip>(*clip, mpFactory, true);
-                  //i18n-hint Name assigned to the first clip when splitting a wave track
-                  leftClip->SetName(XC("%s 1", "clip name template").Format(leftClip->GetName()).Translation());
                   leftClip->TrimRight(clip->GetPlayEndTime() - t0);
                   clipsToAdd.push_back(std::move(leftClip));
 
                   auto rightClip = std::make_unique<WaveClip>(*clip, mpFactory, true);
-                  //i18n-hint Name assigned to the second clip when splitting a wave track
-                  rightClip->SetName(XC("%s 2", "clip name template").Format(rightClip->GetName()).Translation());
                   rightClip->TrimLeft(t1 - rightClip->GetPlayStartTime());
                   clipsToAdd.push_back(std::move(rightClip));
 
@@ -1299,6 +1291,7 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
 
     //wxPrintf("Check if we need to make room for the pasted data\n");
 
+    auto pastingFromTempTrack = !other->GetOwner();
     bool editClipCanMove = GetEditClipsCanMove();
 
     // Make room for the pasted data
@@ -1405,7 +1398,12 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack* other)
             newClip->Resample(mRate);
             newClip->Offset(t0);
             newClip->MarkChanged();
-            newClip->SetName(MakeClipCopyName(clip->GetName()));
+            if (pastingFromTempTrack)
+                //Clips from the tracks which aren't bound to any TrackList are 
+                //considered to be new entities, thus named using "new" name template
+                newClip->SetName(MakeNewClipName());
+            else
+                newClip->SetName(MakeClipCopyName(clip->GetName()));
             mClips.push_back(std::move(newClip)); // transfer ownership
         }
     }
@@ -2406,11 +2404,6 @@ void WaveTrack::SplitAt(double t)
          auto newClip = std::make_unique<WaveClip>( *c, mpFactory, true );
          c->TrimRightTo(t);// put t on a sample
          newClip->TrimLeftTo(t);
-         
-         //i18n-hint Name assigned to the first clip on split
-         c->SetName(XC("%s 1", "clip name template").Format(c->GetName()).Translation());
-         //i18n-hint Name assigned to the second clip on split
-         newClip->SetName(XC("%s 2", "clip name template").Format(newClip->GetName()).Translation());
          
          // This could invalidate the iterators for the loop!  But we return
          // at once so it's okay

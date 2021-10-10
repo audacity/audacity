@@ -821,11 +821,7 @@ void SpecCache::Populate
       settings.algorithm == SpectrogramSettings::algPitchEAC;
    const bool reassignment =
       settings.algorithm == SpectrogramSettings::algReassignment;
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
-#else
-   const size_t zeroPaddingFactorSetting = 1;
-#endif
 
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
