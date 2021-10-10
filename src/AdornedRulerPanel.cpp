@@ -112,6 +112,92 @@ inline int IndicatorBigWidth()
    return IndicatorWidthForHeight(IndicatorBigHeight());
 }
 
+class AdornedRulerPanel::CommonRulerHandle : public UIHandle
+{
+public:
+   explicit
+   CommonRulerHandle(
+      AdornedRulerPanel *pParent, wxCoord xx, MenuChoice menuChoice )
+      : mParent(pParent)
+      , mX( xx )
+      , mChoice( menuChoice )
+   {}
+
+   bool Clicked() const { return mClicked != Button::None; }
+
+   static UIHandle::Result NeedChangeHighlight(
+      const CommonRulerHandle &oldState, const CommonRulerHandle &newState)
+   {
+      if (oldState.mX != newState.mX)
+         return RefreshCode::DrawOverlays;
+      return 0;
+   }
+
+protected:
+   bool HandlesRightClick() override { return true; }
+
+   Result Click(
+      const TrackPanelMouseEvent &event, AudacityProject *) override
+   {
+      mClicked = event.event.LeftIsDown() ? Button::Left : Button::Right;
+      return RefreshCode::DrawOverlays;
+   }
+
+   Result Drag(
+      const TrackPanelMouseEvent &, AudacityProject *) override
+   {
+      return RefreshCode::DrawOverlays;
+   }
+
+   Result Release(
+      const TrackPanelMouseEvent &event, AudacityProject *,
+      wxWindow *) override
+   {
+      if ( mParent && mClicked == Button::Right ) {
+         const auto pos = event.event.GetPosition();
+         mParent->ShowContextMenu( mChoice, &pos );
+      }
+      return RefreshCode::DrawOverlays;
+   }
+
+   Result Cancel(AudacityProject *) override
+   {
+      return RefreshCode::DrawOverlays;
+   }
+   
+   void Enter(bool, AudacityProject *) override
+   {
+      mChangeHighlight = RefreshCode::DrawOverlays;
+   }
+
+   wxWeakRef<AdornedRulerPanel> mParent;
+
+   wxCoord mX;
+   
+   MenuChoice mChoice;
+
+   enum class Button { None, Left, Right };
+   Button mClicked{ Button::None };
+};
+
+class AdornedRulerPanel::PlayRegionAdjustingHandle : public CommonRulerHandle {
+public:
+   using CommonRulerHandle::CommonRulerHandle;
+
+   HitTestPreview Preview(
+      const TrackPanelMouseState &state, AudacityProject *pProject)
+   override
+   {
+      static wxCursor cursor{ wxCURSOR_DEFAULT };
+      const auto message = XO("Click and drag to define the looping region.");
+      return {
+         message,
+         &cursor,
+         message
+      };
+   }
+};
+
 /**********************************************************************
 
 QuickPlayRulerOverlay.
@@ -437,74 +523,6 @@ protected:
    const MenuChoice mMenuChoice;
 };
 
-class AdornedRulerPanel::CommonRulerHandle : public UIHandle
-{
-public:
-   explicit
-   CommonRulerHandle(
-      AdornedRulerPanel *pParent, wxCoord xx, MenuChoice menuChoice )
-      : mParent(pParent)
-      , mX( xx )
-      , mChoice( menuChoice )
-   {}
-
-   bool Clicked() const { return mClicked != Button::None; }
-
-   static UIHandle::Result NeedChangeHighlight(
-      const CommonRulerHandle &oldState, const CommonRulerHandle &newState)
-   {
-      if (oldState.mX != newState.mX)
-         return RefreshCode::DrawOverlays;
-      return 0;
-   }
-
-protected:
-   bool HandlesRightClick() override { return true; }
-
-   Result Click(
-      const TrackPanelMouseEvent &event, AudacityProject *) override
-   {
-      mClicked = event.event.LeftIsDown() ? Button::Left : Button::Right;
-      return RefreshCode::DrawOverlays;
-   }
-
-   Result Drag(
-      const TrackPanelMouseEvent &, AudacityProject *) override
-   {
-      return RefreshCode::DrawOverlays;
-   }
-
-   Result Release(
-      const TrackPanelMouseEvent &event, AudacityProject *,
-      wxWindow *) override
-   {
-      if ( mParent && mClicked == Button::Right ) {
-         const auto pos = event.event.GetPosition();
-         mParent->ShowContextMenu( mChoice, &pos );
-      }
-      return RefreshCode::DrawOverlays;
-   }
-
-   Result Cancel(AudacityProject *) override
-   {
-      return RefreshCode::DrawOverlays;
-   }
-   
-   void Enter(bool, AudacityProject *) override
-   {
-      mChangeHighlight = RefreshCode::DrawOverlays;
-   }
-
-   wxWeakRef<AdornedRulerPanel> mParent;
-
-   wxCoord mX;
-   
-   MenuChoice mChoice;
-
-   enum class Button { None, Left, Right };
-   Button mClicked{ Button::None };
-};
-
 class AdornedRulerPanel::QPHandle final : public CommonRulerHandle
 {
 public:
@@ -536,12 +554,11 @@ private:
    SelectedRegion mOldSelection;
 };
 
-class AdornedRulerPanel::NewPlayRegionHandle final : public CommonRulerHandle
-{
+class AdornedRulerPanel::NewPlayRegionHandle final : public PlayRegionAdjustingHandle {
 public:
    explicit
    NewPlayRegionHandle( AdornedRulerPanel *pParent, wxCoord xx )
-   : CommonRulerHandle( pParent, xx, MenuChoice::QuickPlay )
+   : PlayRegionAdjustingHandle( pParent, xx, MenuChoice::QuickPlay )
    {
    }
    
@@ -550,7 +567,7 @@ private:
       const TrackPanelMouseEvent &event, AudacityProject *pProject) override
    {
       using namespace RefreshCode;
-      auto result = CommonRulerHandle::Click(event, pProject);
+      auto result = PlayRegionAdjustingHandle::Click(event, pProject);
       if (0 != (result & Cancelled) || mClicked != Button::Left)
          return result;
 
@@ -575,7 +592,7 @@ private:
       const TrackPanelMouseEvent &event, AudacityProject *pProject) override
    {
       using namespace RefreshCode;
-      auto result = CommonRulerHandle::Drag(event, pProject);
+      auto result = PlayRegionAdjustingHandle::Drag(event, pProject);
       if (0 != (result & Cancelled) || mClicked != Button::Left)
          return result;
    
@@ -594,26 +611,13 @@ private:
       return RefreshAll;
    }
 
-   HitTestPreview Preview(
-      const TrackPanelMouseState &state, AudacityProject *pProject)
-   override
-   {
-      static wxCursor cursor{ wxCURSOR_DEFAULT };
-      const auto message = XO("Click and drag to define the looping region.");
-      return {
-         message,
-         &cursor,
-         message
-      };
-   }
-
    Result Release(
       const TrackPanelMouseEvent &event,
       AudacityProject *pProject, wxWindow *pParent)
    override
    {
       using namespace RefreshCode;
-      auto result = CommonRulerHandle::Release(event, pProject, pParent);
+      auto result = PlayRegionAdjustingHandle::Release(event, pProject, pParent);
       if (0 != (result & Cancelled) || mClicked != Button::Left)
          return result;
 
@@ -628,7 +632,7 @@ private:
    Result Cancel(AudacityProject *pProject) override
    {
       using namespace RefreshCode;
-      auto result = CommonRulerHandle::Cancel(pProject);
+      auto result = PlayRegionAdjustingHandle::Cancel(pProject);
       if (0 != (result & Cancelled) || mClicked != Button::Left)
          return result;
 
