@@ -147,7 +147,6 @@ private:
    void ShowScrubMenu(const wxPoint & pos);
    void DragSelection();
    void HandleSnapping();
-   void OnToggleQuickPlay(wxCommandEvent &evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    //void OnTimelineToolTips(wxCommandEvent &evt);
    void OnAutoScroll(wxCommandEvent &evt);
@@ -160,7 +159,6 @@ private:
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
-   bool mQuickPlayEnabled;
 
    enum MouseEventState {
       mesNone,
