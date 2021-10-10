@@ -535,8 +535,7 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
 **********************************************************************/
 
 enum {
-   OnToggleQuickPlayID = 7000,
-   OnSyncQuickPlaySelID,
+   OnSyncQuickPlaySelID = 7000,
    OnAutoScrollID,
    OnLockPlayRegionID,
    OnTogglePinnedStateID,
@@ -548,7 +547,6 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
    EVT_SIZE(AdornedRulerPanel::OnSize)
 
    // Context menu commands
-   EVT_MENU(OnToggleQuickPlayID, AdornedRulerPanel::OnToggleQuickPlay)
    EVT_MENU(OnSyncQuickPlaySelID, AdornedRulerPanel::OnSyncSelToQuickPlay)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
    EVT_MENU(OnLockPlayRegionID, AdornedRulerPanel::OnLockPlayRegion)
@@ -1131,7 +1129,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mTimelineToolTip = !!gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L);
    mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
-   mQuickPlayEnabled = !!gPrefs->Read(wxT("/QuickPlay/QuickPlayEnabled"), 1L);
 
 #if wxUSE_TOOLTIPS
    wxToolTip::Enable(true);
@@ -1547,7 +1544,7 @@ auto AdornedRulerPanel::QPHandle::Click(
    auto result = CommonRulerHandle::Click(event, pProject);
    if (!( result & RefreshCode::Cancelled )) {
       if (mClicked == Button::Left) {
-         if (!(mParent && mParent->mQuickPlayEnabled))
+         if (!mParent)
             return RefreshCode::Cancelled;
 
          auto &scrubber = Scrubber::Get( *pProject );
@@ -1725,12 +1722,14 @@ auto AdornedRulerPanel::QPHandle::Preview(
       -> HitTestPreview
 {
    TranslatableString tooltip;
+   #if 0
    if (mParent && mParent->mTimelineToolTip) {
       if (!mParent->mQuickPlayEnabled)
          tooltip = XO("Quick-Play disabled");
       else
          tooltip = XO("Quick-Play enabled");
    }
+   #endif
 
    TranslatableString message;
    auto &scrubber = Scrubber::Get( *pProject );
@@ -1746,7 +1745,7 @@ auto AdornedRulerPanel::QPHandle::Preview(
    static wxCursor cursorSizeWE{ wxCURSOR_SIZEWE };
    
    bool showArrows = false;
-   if (mParent && mParent->mQuickPlayEnabled)
+   if (mParent)
       showArrows =
          (mClicked == Button::Left)
          || mParent->IsWithinMarker(
@@ -2040,12 +2039,9 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    const auto &playRegion = viewInfo.playRegion;
    wxMenu rulerMenu;
 
-   rulerMenu.AppendCheckItem(OnToggleQuickPlayID, _("Enable Quick-Play"))->
-      Check(mQuickPlayEnabled);
-
    auto pDrag = rulerMenu.AppendCheckItem(OnSyncQuickPlaySelID, _("Enable dragging selection"));
    pDrag->Check(mPlayRegionDragsSelection && playRegion.Locked());
-   pDrag->Enable(mQuickPlayEnabled && playRegion.Locked());
+   pDrag->Enable(playRegion.Locked());
 
    rulerMenu.AppendCheckItem(OnAutoScrollID, _("Update display while playing"))->
       Check(mViewInfo->bUpdateTrackIndicator);
@@ -2077,13 +2073,6 @@ void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
       wxWidgetsWindowPlacement{ this },
       { pos.x, pos.y }
    );
-}
-
-void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent&)
-{
-   mQuickPlayEnabled = (mQuickPlayEnabled)? false : true;
-   gPrefs->Write(wxT("/QuickPlay/QuickPlayEnabled"), mQuickPlayEnabled);
-   gPrefs->Flush();
 }
 
 void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
