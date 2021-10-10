@@ -200,8 +200,8 @@ private:
    void CreateOverlays();
 
    // Cooperating objects
-   class QuickPlayIndicatorOverlay;
-   std::shared_ptr<QuickPlayIndicatorOverlay> mOverlay;
+   class TrackPanelGuidelineOverlay;
+   std::shared_ptr<TrackPanelGuidelineOverlay> mOverlay;
 
    class ScrubbingRulerOverlay;
    
