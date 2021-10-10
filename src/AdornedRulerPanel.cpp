@@ -146,6 +146,7 @@ protected:
    Result Drag(
       const TrackPanelMouseEvent &, AudacityProject *) override
    {
+      mDragged = true;
       return RefreshCode::DrawOverlays;
    }
 
@@ -158,6 +159,27 @@ protected:
          mParent->ShowContextMenu( mChoice, &pos );
       }
       return RefreshCode::DrawOverlays;
+   }
+
+   double Time(AudacityProject &project) const
+   {
+      auto &viewInfo = ViewInfo::Get(project);
+      return viewInfo.PositionToTime(mX, viewInfo.GetLeftOffset());
+   }
+
+   // Danger!  `this` may be deleted!
+   void StartPlay(AudacityProject &project, bool shiftDown)
+   {
+      auto &ruler = AdornedRulerPanel::Get(project);
+   
+      // Keep a shared pointer to self.  Otherwise *this might get deleted
+      // in HandleQPRelease on Windows!  Because there is an event-loop yield
+      // stopping playback, which caused OnCaptureLost to be called, which caused
+      // clearing of CellularPanel targets!
+      auto saveMe = ruler.Target();
+
+      const auto startTime = Time(project);
+      ruler.StartQPPlay(shiftDown, false, &startTime);
    }
 
    Result Cancel(AudacityProject *) override
@@ -178,6 +200,7 @@ protected:
 
    enum class Button { None, Left, Right };
    Button mClicked{ Button::None };
+   bool mDragged{ false };
 };
 
 class AdornedRulerPanel::PlayRegionAdjustingHandle : public CommonRulerHandle {
@@ -622,21 +645,6 @@ private:
       auto result = PlayRegionAdjustingHandle::Click(event, pProject);
       if (0 != (result & Cancelled) || mClicked != Button::Left)
          return result;
-
-      // Find starting time of the drag
-      auto &viewInfo = ViewInfo::Get(*pProject);
-      const double time = viewInfo.PositionToTime(
-         event.event.m_x, viewInfo.GetLeftOffset());
-
-      // Change the play region
-      auto &playRegion = viewInfo.playRegion;
-      mWasLocked = playRegion.Locked();
-      mOldStart = playRegion.GetLastLockedStart();
-      mOldEnd = playRegion.GetLastLockedEnd();
-      if (!mWasLocked)
-         playRegion.SetLocked(true);
-      playRegion.SetTimes(time, time);
-
       return RefreshAll;
    }
 
@@ -647,6 +655,20 @@ private:
       auto result = PlayRegionAdjustingHandle::Drag(event, pProject);
       if (0 != (result & Cancelled) || mClicked != Button::Left)
          return result;
+      
+      if (mFirstDrag) {
+         // Change the play region
+         auto &viewInfo = ViewInfo::Get(*pProject);
+         auto &playRegion = viewInfo.playRegion;
+         mWasLocked = playRegion.Locked();
+         mOldStart = playRegion.GetLastLockedStart();
+         mOldEnd = playRegion.GetLastLockedEnd();
+         if (!mWasLocked)
+            playRegion.SetLocked(true);
+         const auto time = Time(*pProject);
+         playRegion.SetTimes(time, time);
+         mFirstDrag = false;
+      }
    
       DoSnap(pProject);
 
@@ -665,6 +687,10 @@ private:
       auto result = PlayRegionAdjustingHandle::Release(event, pProject, pParent);
       if (0 != (result & Cancelled) || mClicked != Button::Left)
          return result;
+      else if (!mDragged) {
+         StartPlay(*pProject, event.event.ShiftDown());
+         return result;
+      }
 
       // Set the play region endpoints right even if not strictly needed
       auto &viewInfo = ViewInfo::Get( *pProject );
@@ -678,7 +704,7 @@ private:
    {
       using namespace RefreshCode;
       auto result = PlayRegionAdjustingHandle::Cancel(pProject);
-      if (0 != (result & Cancelled) || mClicked != Button::Left)
+      if (0 != (result & Cancelled) || mClicked != Button::Left || !mDragged)
          return result;
 
       auto &viewInfo = ViewInfo::Get(*pProject);
@@ -708,6 +734,7 @@ private:
 
    double mOldStart = 0.0, mOldEnd = 0.0;
    bool mWasLocked = false;
+   bool mFirstDrag = true;
 };
 
 namespace
@@ -1835,26 +1862,28 @@ auto AdornedRulerPanel::QPHandle::Cancel(AudacityProject *pProject) -> Result
    return result;
 }
 
-void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
+void AdornedRulerPanel::StartQPPlay(
+   bool looped, bool cutPreview, const double *pStartTime)
 {
    const double t0 = mTracks->GetStartTime();
    const double t1 = mTracks->GetEndTime();
    auto &viewInfo = ViewInfo::Get( *mProject );
-   auto &playRegion = viewInfo.playRegion;
+   const auto &playRegion = viewInfo.playRegion;
    const auto &selectedRegion = viewInfo.selectedRegion;
    const double sel0 = selectedRegion.t0();
    const double sel1 = selectedRegion.t1();
 
    // Start / Restart playback on left click.
-   bool startPlaying = (playRegion.GetStart() >= 0);
+   bool startPlaying = true; // = (playRegion.GetStart() >= 0);
 
    if (startPlaying) {
       bool loopEnabled = true;
-      double start, end;
+      auto oldStart = std::max(0.0, playRegion.GetStart());
+      double start = oldStart, end = 0;
 
-      if (playRegion.Empty() && looped) {
-         // Loop play a point will loop either a selection or the project.
-         if ((playRegion.GetStart() > sel0) && (playRegion.GetStart() < sel1)) {
+      if (playRegion.Empty()) {
+         // Play either a selection or the project.
+         if (oldStart > sel0 && oldStart < sel1) {
             // we are in a selection, so use the selection
             start = sel0;
             end = sel1;
@@ -1864,21 +1893,22 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
             end = t1;
          }
       }
-      else {
-         start = playRegion.GetStart();
-         end = playRegion.GetEnd();
-      }
+      else
+         end = std::max(start, playRegion.GetEnd());
+
       // Looping a tiny selection may freeze, so just play it once.
       loopEnabled = ((end - start) > 0.001)? true : false;
 
-      bool looped = (loopEnabled && looped);
+      looped = (loopEnabled && looped);
       if (looped)
          cutPreview = false;
       auto options = DefaultPlayOptions( *mProject, looped );
 
-      auto oldStart = playRegion.GetStart();
-      if (!cutPreview)
+      if (!cutPreview) {
+         if (pStartTime)
+            oldStart = *pStartTime;
          options.pStartTime = &oldStart;
+      }
       else
          options.envelope = nullptr;
 
@@ -1893,8 +1923,8 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       projectAudioManager.Stop();
 
       // Change play region display while playing
-      playRegion.SetTimes( start, end );
-      Refresh();
+      // playRegion.SetTimes( start, end );
+      // Refresh();
 
       projectAudioManager.PlayPlayRegion((SelectedRegion(start, end)),
                           options, mode,

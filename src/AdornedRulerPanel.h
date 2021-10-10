@@ -90,7 +90,8 @@ private:
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPRelease(wxMouseEvent &event);
-   void StartQPPlay(bool looped, bool cutPreview);
+   void StartQPPlay(
+      bool looped, bool cutPreview, const double *pStartTime = nullptr);
 
    void DoDrawBackground(wxDC * dc);
    void DoDrawEdge(wxDC *dc);
