@@ -13,11 +13,13 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "AColor.h"
 #include "../../AdornedRulerPanel.h"
+#include "AllThemeResources.h"
 #include "../../AudioIO.h"
 #include "Project.h"
 #include "../../ProjectAudioIO.h"
 #include "../../ProjectAudioManager.h"
 #include "../../ProjectWindow.h"
+#include "Theme.h"
 #include "../../Track.h"
 #include "../../TrackPanel.h"
 #include "ViewInfo.h"
@@ -53,15 +55,34 @@ unsigned PlayIndicatorOverlayBase::SequenceNumber() const
    return 10;
 }
 
+namespace {
+// Returns the appropriate bitmap, and panel-relative coordinates for its
+// upper left corner.
+std::pair< wxPoint, wxBitmap > GetIndicatorBitmap( AudacityProject &project,
+   wxCoord xx, bool playing)
+{
+   bool pinned = Scrubber::Get( project ).IsTransportingPinned();
+   wxBitmap & bmp = theTheme.Bitmap( pinned ?
+      (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
+      (playing ? bmpPlayPointer : bmpRecordPointer)
+   );
+   const int IndicatorHalfWidth = bmp.GetWidth() / 2;
+   return {
+      { xx - IndicatorHalfWidth - 1,
+         AdornedRulerPanel::Get(project).GetInnerRect().y },
+      bmp
+   };
+}
+}
+
 std::pair<wxRect, bool> PlayIndicatorOverlayBase::DoGetRectangle(wxSize size)
 {
    wxCoord width = 1, xx = mLastIndicatorX;
 
    if ( !mIsMaster ) {
-      auto &ruler = AdornedRulerPanel::Get( *mProject );
       auto gAudioIO = AudioIO::Get();
       bool rec = gAudioIO->IsCapturing();
-      auto pair = ruler.GetIndicatorBitmap( xx, !rec );
+      auto pair = GetIndicatorBitmap( *mProject, xx, !rec );
       xx = pair.first.x;
       width = pair.second.GetWidth();
    }
@@ -105,7 +126,7 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, wxDC &dc)
    else if(auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
       wxASSERT(!mIsMaster);
 
-      auto pair = ruler->GetIndicatorBitmap( mLastIndicatorX, !rec );
+      auto pair = GetIndicatorBitmap( *mProject, mLastIndicatorX, !rec );
       dc.DrawBitmap( pair.second, pair.first.x, pair.first.y );
    }
    else

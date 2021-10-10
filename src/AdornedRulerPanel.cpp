@@ -200,19 +200,18 @@ public:
 
 /**********************************************************************
 
-QuickPlayRulerOverlay.
+ScrubbingRulerOverlay.
 Graphical helper for AdornedRulerPanel.
 
 **********************************************************************/
 
 class QuickPlayIndicatorOverlay;
 
-// This is an overlay drawn on the ruler.  It draws the little triangle or
-// the double-headed arrow.
-class AdornedRulerPanel::QuickPlayRulerOverlay final : public Overlay
+// This is an overlay drawn on the ruler.
+class AdornedRulerPanel::ScrubbingRulerOverlay final : public Overlay
 {
 public:
-   QuickPlayRulerOverlay(QuickPlayIndicatorOverlay &partner);
+   ScrubbingRulerOverlay(QuickPlayIndicatorOverlay &partner);
 
    // Available to this and to partner
 
@@ -252,7 +251,7 @@ private:
 // It draws the pale guide line that follows mouse movement.
 class AdornedRulerPanel::QuickPlayIndicatorOverlay final : public Overlay
 {
-   friend QuickPlayRulerOverlay;
+   friend ScrubbingRulerOverlay;
    friend AdornedRulerPanel;
 
 public:
@@ -265,8 +264,8 @@ private:
 
    AudacityProject *mProject;
 
-   std::shared_ptr<QuickPlayRulerOverlay> mPartner
-      { std::make_shared<QuickPlayRulerOverlay>(*this) };
+   std::shared_ptr<ScrubbingRulerOverlay> mPartner
+      { std::make_shared<ScrubbingRulerOverlay>(*this) };
 
    int mOldQPIndicatorPos { -1 };
    bool mOldQPIndicatorSnapped {};
@@ -275,31 +274,34 @@ private:
 
 /**********************************************************************
 
- Implementation of QuickPlayRulerOverlay.
+ Implementation of ScrubbingRulerOverlay.
 
  **********************************************************************/
 
-AdornedRulerPanel::QuickPlayRulerOverlay::QuickPlayRulerOverlay(
+AdornedRulerPanel::ScrubbingRulerOverlay::ScrubbingRulerOverlay(
    QuickPlayIndicatorOverlay &partner)
 : mPartner(partner)
 {
 }
 
-AdornedRulerPanel *AdornedRulerPanel::QuickPlayRulerOverlay::GetRuler() const
+AdornedRulerPanel *AdornedRulerPanel::ScrubbingRulerOverlay::GetRuler() const
 {
    return &Get( *mPartner.mProject );
 }
 
-void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
+void AdornedRulerPanel::ScrubbingRulerOverlay::Update()
 {
    const auto project = mPartner.mProject;
    auto &scrubber = Scrubber::Get( *project );
    auto ruler = GetRuler();
 
+   bool scrubbing = (scrubber.IsScrubbing()
+      && !scrubber.IsSpeedPlaying()
+      && !scrubber.IsKeyboardScrubbing());
+
    // Hide during transport, or if mouse is not in the ruler, unless scrubbing
    if ((!ruler->LastCell() || ProjectAudioIO::Get( *project ).IsAudioActive())
-       && (!scrubber.IsScrubbing() || scrubber.IsSpeedPlaying()
-          || scrubber.IsKeyboardScrubbing()))
+       && !scrubbing)
       mNewQPIndicatorPos = -1;
    else {
       const auto &selectedRegion = ViewInfo::Get( *project ).selectedRegion;
@@ -315,7 +317,7 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
          // These determine which shape is drawn on the ruler, and whether
          // in the scrub or the qp zone
          mNewScrub =
-            ruler->mMouseEventState == AdornedRulerPanel::mesNone &&
+            !ruler->Target() && // not doing some other drag in the ruler
             (ruler->LastCell() == ruler->mScrubbingCell ||
              (scrubber.HasMark()));
          mNewSeek = mNewScrub &&
@@ -332,13 +334,13 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Update()
 }
 
 unsigned
-AdornedRulerPanel::QuickPlayRulerOverlay::SequenceNumber() const
+AdornedRulerPanel::ScrubbingRulerOverlay::SequenceNumber() const
 {
    return 30;
 }
 
 std::pair<wxRect, bool>
-AdornedRulerPanel::QuickPlayRulerOverlay::DoGetRectangle(wxSize /*size*/)
+AdornedRulerPanel::ScrubbingRulerOverlay::DoGetRectangle(wxSize /*size*/)
 {
    Update();
 
@@ -366,7 +368,7 @@ AdornedRulerPanel::QuickPlayRulerOverlay::DoGetRectangle(wxSize /*size*/)
       return { {}, mNewQPIndicatorPos >= 0 };
 }
 
-void AdornedRulerPanel::QuickPlayRulerOverlay::Draw(
+void AdornedRulerPanel::ScrubbingRulerOverlay::Draw(
    OverlayPanel & /*panel*/, wxDC &dc)
 {
    mOldQPIndicatorPos = mNewQPIndicatorPos;
@@ -375,8 +377,8 @@ void AdornedRulerPanel::QuickPlayRulerOverlay::Draw(
    if (mOldQPIndicatorPos >= 0) {
       auto ruler = GetRuler();
       auto width = mOldScrub ? IndicatorBigWidth() : IndicatorSmallWidth;
-      ruler->DoDrawIndicator(
-         &dc, mOldQPIndicatorPos, true, width, mOldScrub, mOldSeek);
+      ruler->DoDrawScrubIndicator(
+         &dc, mOldQPIndicatorPos, width, mOldScrub, mOldSeek);
    }
 }
 
@@ -2177,13 +2179,11 @@ void AdornedRulerPanel::SetLeftOffset(int offset)
    mRuler.SetUseZoomInfo(offset, mViewInfo);
 }
 
-// Draws the play/recording position indicator.
-void AdornedRulerPanel::DoDrawIndicator(
-   wxDC * dc, wxCoord xx, bool playing, int width, bool scrub, bool seek)
+// Draws the scrubbing/seeking indicator.
+void AdornedRulerPanel::DoDrawScrubIndicator(
+   wxDC * dc, wxCoord xx, int width, bool scrub, bool seek)
 {
    ADCChanger changer(dc); // Undo pen and brush changes at function exit
-
-   AColor::IndicatorColor( dc, playing );
 
    wxPoint tri[ 3 ];
    if (seek) {
@@ -2237,40 +2237,6 @@ void AdornedRulerPanel::DoDrawIndicator(
       tri[ 2 ].x = xx + IndicatorHalfWidth;
       dc->DrawPolygon( 3, tri );
    }
-   else {
-      auto pair = GetIndicatorBitmap( xx, playing );
-      dc->DrawBitmap( pair.second, pair.first.x, pair.first.y );
-#if 0
-
-      // Down pointing triangle
-      auto height = IndicatorHeightForWidth(width);
-      const int IndicatorHalfWidth = width / 2;
-      tri[ 0 ].x = xx - IndicatorHalfWidth;
-      tri[ 0 ].y = mInner.y;
-      tri[ 1 ].x = xx + IndicatorHalfWidth;
-      tri[ 1 ].y = mInner.y;
-      tri[ 2 ].x = xx;
-      tri[ 2 ].y = mInner.y + height;
-      dc->DrawPolygon( 3, tri );
-#endif
-   }
-}
-
-// Returns the appropriate bitmap, and panel-relative coordinates for its
-// upper left corner.
-std::pair< wxPoint, wxBitmap >
-AdornedRulerPanel::GetIndicatorBitmap(wxCoord xx, bool playing) const
-{
-   bool pinned = Scrubber::Get( *mProject ).IsTransportingPinned();
-   wxBitmap & bmp = theTheme.Bitmap( pinned ?
-      (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
-      (playing ? bmpPlayPointer : bmpRecordPointer)
-   );
-   const int IndicatorHalfWidth = bmp.GetWidth() / 2;
-   return {
-      { xx - IndicatorHalfWidth - 1, mInner.y },
-      bmp
-   };
 }
 
 void AdornedRulerPanel::SetPlayRegion(
