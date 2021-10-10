@@ -196,6 +196,50 @@ public:
          message
       };
    }
+
+   Result Drag(
+      const TrackPanelMouseEvent &event, AudacityProject *pProject) override
+   {
+      using namespace RefreshCode;
+      auto result = CommonRulerHandle::Drag(event, pProject);
+      if (0 != (result & Cancelled) || mClicked != Button::Left)
+         return result;
+      auto &ruler = AdornedRulerPanel::Get(*pProject);
+      mX = event.event.m_x;
+      ruler.UpdateQuickPlayPos(event.event.m_x, event.event.ShiftDown());
+      return RefreshCode::DrawOverlays;
+   }
+
+   // Compare with class SelectHandle.  Perhaps a common base class for that
+   // class too should be defined.
+   bool HasEscape(AudacityProject *pProject) const override
+   {
+      return AdornedRulerPanel::Get(*pProject).mIsSnapped;
+   }
+
+   bool Escape(AudacityProject *pProject) override
+   {
+      if (HasEscape(pProject)) {
+         SetUseSnap(false, pProject);
+         return true;
+      }
+      return false;
+   }
+
+   void SetUseSnap(bool use, AudacityProject *pProject)
+   {
+      auto &isSnapped = AdornedRulerPanel::Get(*pProject).mIsSnapped;
+      bool change = (isSnapped != use);
+      isSnapped = use;
+      if (change) {
+         // Repaint to turn the snap lines on or off
+         mChangeHighlight = RefreshCode::RefreshAll;
+         if (Clicked())
+            DoSnap(pProject);
+      }
+   }
+
+   virtual void DoSnap(AudacityProject *pProject) = 0;
 };
 
 /**********************************************************************
@@ -429,13 +473,13 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
    mOldIndicatorSnapped = mNewIndicatorSnapped;
    mOldPreviewingScrub = mNewPreviewingScrub;
 
+   if ( !(mOldPreviewingScrub || mOldIndicatorSnapped) )
+      return;
+
    if (mOldQPIndicatorPos >= 0) {
       mOldPreviewingScrub
-      ? AColor::IndicatorColor(&dc, true) // Draw green line for preview.
-      : mOldIndicatorSnapped
-        ? AColor::SnapGuidePen(&dc)
-        : AColor::Light(&dc, false)
-      ;
+         ? AColor::IndicatorColor(&dc, true) // Draw green line for preview.
+         : AColor::SnapGuidePen(&dc); // Yellow snap guideline
 
       // Draw indicator in all visible tracks
       auto pCellularPanel = dynamic_cast<CellularPanel*>( &panel );
@@ -542,8 +586,6 @@ public:
    {
    }
    
-   std::unique_ptr<SnapManager> mSnapManager;
-
 private:
    Result Click(
       const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -606,17 +648,7 @@ private:
       if (0 != (result & Cancelled) || mClicked != Button::Left)
          return result;
    
-      // Find present time of the drag
-      auto &viewInfo = ViewInfo::Get(*pProject);
-      const double time = viewInfo.PositionToTime(
-         event.event.m_x, viewInfo.GetLeftOffset());
-
-      // Change the play region
-      // The check whether this new time should be left or right isn't
-      // important.  The accessors for PlayRegion use min and max of stored
-      // values.
-      auto &playRegion = viewInfo.playRegion;
-      playRegion.SetEnd(time);
+      DoSnap(pProject);
 
       return RefreshAll;
    }
@@ -653,6 +685,22 @@ private:
          playRegion.SetLocked(false);
    
       return RefreshAll;
+   }
+
+   void DoSnap(AudacityProject *pProject) override
+   {
+      // Find present time of the drag
+      bool isSnapped = AdornedRulerPanel::Get(*pProject).mIsSnapped;
+      const double time = isSnapped
+         ? mParent->mQuickPlayPos
+         : mParent->mQuickPlayPosUnsnapped;
+
+      // Change the play region
+      // The check whether this new time should be left or right isn't
+      // important.  The accessors for PlayRegion use min and max of stored
+      // values.
+      auto &playRegion = ViewInfo::Get(*pProject).playRegion;
+      playRegion.SetEnd(time);
    }
 
    double mOldStart = 0.0, mOldEnd = 0.0;
@@ -2023,17 +2071,10 @@ void AdornedRulerPanel::DragSelection()
 
 void AdornedRulerPanel::HandleSnapping()
 {
-   auto handle = mQPCell->mHolder.lock();
-   if (handle) {
-      auto &pSnapManager = handle->mSnapManager;
-      if (! pSnapManager)
-         pSnapManager =
-            std::make_unique<SnapManager>(*mProject, *mTracks, *mViewInfo);
-      
-      auto results = pSnapManager->Snap(NULL, mQuickPlayPos, false);
-      mQuickPlayPos = results.outTime;
-      mIsSnapped = results.Snapped();
-   }
+   SnapManager snapManager{ *mProject, *mTracks, *mViewInfo };
+   auto results = snapManager.Snap(NULL, mQuickPlayPos, false);
+   mQuickPlayPos = results.outTime;
+   mIsSnapped = results.Snapped();
 }
 
 #if 0
