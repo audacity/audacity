@@ -146,7 +146,7 @@ private:
    //
    void ShowMenu(const wxPoint & pos);
    void ShowScrubMenu(const wxPoint & pos);
-   void DragSelection();
+   static void DragSelection(AudacityProject &project);
    void HandleSnapping();
    void OnToggleQuickPlay(wxCommandEvent &evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);

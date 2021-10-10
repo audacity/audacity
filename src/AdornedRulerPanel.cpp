@@ -650,6 +650,9 @@ private:
    
       DoSnap(pProject);
 
+      if (AdornedRulerPanel::Get( *pProject ).mPlayRegionDragsSelection)
+         DragSelection(*pProject);
+
       return RefreshAll;
    }
 
@@ -1629,7 +1632,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
             mQuickPlayPos = mOldPlayRegion.GetEnd();
          playRegion.SetStart( mQuickPlayPos );
          if (canDragSel) {
-            DragSelection();
+            DragSelection(*GetProject());
          }
          break;
       case mesDraggingPlayRegionEnd:
@@ -1643,7 +1646,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
          }
          playRegion.SetEnd( mQuickPlayPos );
          if (canDragSel) {
-            DragSelection();
+            DragSelection(*GetProject());
          }
          break;
       case mesSelectingPlayRegionClick:
@@ -1667,7 +1670,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
          else
             playRegion.SetTimes( mLeftDownClick, mQuickPlayPos );
          if (canDragSel) {
-            DragSelection();
+            DragSelection(*GetProject());
          }
          break;
    }
@@ -2011,8 +2014,8 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
       Check(mQuickPlayEnabled);
 
    auto pDrag = rulerMenu.AppendCheckItem(OnSyncQuickPlaySelID, _("Enable dragging selection"));
-   pDrag->Check(mPlayRegionDragsSelection && !playRegion.Locked());
-   pDrag->Enable(mQuickPlayEnabled && !playRegion.Locked());
+   pDrag->Check(mPlayRegionDragsSelection && playRegion.Locked());
+   pDrag->Enable(mQuickPlayEnabled && playRegion.Locked());
 
    rulerMenu.AppendCheckItem(OnAutoScrollID, _("Update display while playing"))->
       Check(mViewInfo->bUpdateTrackIndicator);
@@ -2060,9 +2063,9 @@ void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
    gPrefs->Flush();
 }
 
-void AdornedRulerPanel::DragSelection()
+void AdornedRulerPanel::DragSelection(AudacityProject &project)
 {
-   auto &viewInfo = ViewInfo::Get( *GetProject() );
+   auto &viewInfo = ViewInfo::Get( project );
    const auto &playRegion = viewInfo.playRegion;
    auto &selectedRegion = viewInfo.selectedRegion;
    selectedRegion.setT0(playRegion.GetStart(), false);
