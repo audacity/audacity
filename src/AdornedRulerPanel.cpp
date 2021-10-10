@@ -119,19 +119,15 @@ Graphical helper for AdornedRulerPanel.
 
 **********************************************************************/
 
-class QuickPlayIndicatorOverlay;
+class TrackPanelGuidelineOverlay;
 
 // This is an overlay drawn on the ruler.
 class AdornedRulerPanel::ScrubbingRulerOverlay final : public Overlay
 {
 public:
-   ScrubbingRulerOverlay(QuickPlayIndicatorOverlay &partner);
-
-   // Available to this and to partner
+   ScrubbingRulerOverlay(TrackPanelGuidelineOverlay &partner);
 
    int mNewQPIndicatorPos { -1 };
-   bool mNewQPIndicatorSnapped {};
-   bool mNewPreviewingScrub {};
 
    bool mNewScrub {};
    bool mNewSeek {};
@@ -146,7 +142,7 @@ private:
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 
-   QuickPlayIndicatorOverlay &mPartner;
+   TrackPanelGuidelineOverlay &mPartner;
 
    // Used by this only
    int mOldQPIndicatorPos { -1 };
@@ -156,22 +152,24 @@ private:
 
 /**********************************************************************
 
- QuickPlayIndicatorOverlay.
- Graphical helper for AdornedRulerPanel.
+ TrackPanelGuidelineOverlay.
+ Updated for mouse events in AdornedRulerPanel, but draws on the TrackPanel.
 
  **********************************************************************/
 
 // This is an overlay drawn on a different window, the track panel.
 // It draws the pale guide line that follows mouse movement.
-class AdornedRulerPanel::QuickPlayIndicatorOverlay final : public Overlay
+class AdornedRulerPanel::TrackPanelGuidelineOverlay final : public Overlay
 {
    friend ScrubbingRulerOverlay;
    friend AdornedRulerPanel;
 
 public:
-   QuickPlayIndicatorOverlay(AudacityProject *project);
+   TrackPanelGuidelineOverlay(AudacityProject *project);
 
 private:
+   void Update();
+
    unsigned SequenceNumber() const override;
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
@@ -181,8 +179,11 @@ private:
    std::shared_ptr<ScrubbingRulerOverlay> mPartner
       { std::make_shared<ScrubbingRulerOverlay>(*this) };
 
+   bool mNewIndicatorSnapped {};
+   bool mNewPreviewingScrub {};
+
    int mOldQPIndicatorPos { -1 };
-   bool mOldQPIndicatorSnapped {};
+   bool mOldIndicatorSnapped {};
    bool mOldPreviewingScrub {};
 };
 
@@ -193,7 +194,7 @@ private:
  **********************************************************************/
 
 AdornedRulerPanel::ScrubbingRulerOverlay::ScrubbingRulerOverlay(
-   QuickPlayIndicatorOverlay &partner)
+   TrackPanelGuidelineOverlay &partner)
 : mPartner(partner)
 {
 }
@@ -236,13 +237,6 @@ void AdornedRulerPanel::ScrubbingRulerOverlay::Update()
              (scrubber.HasMark()));
          mNewSeek = mNewScrub &&
             (scrubber.Seeks() || scrubber.TemporarilySeeks());
-
-         // These two will determine the color of the line stroked over
-         // the track panel, green for scrub or yellow for snapped or white
-         mNewPreviewingScrub =
-            ruler->LastCell() == ruler->mScrubbingCell &&
-            !scrubber.IsScrubbing();
-         mNewQPIndicatorSnapped = ruler->mIsSnapped;
       }
    }
 }
@@ -298,47 +292,61 @@ void AdornedRulerPanel::ScrubbingRulerOverlay::Draw(
 
 /**********************************************************************
 
- Implementation of QuickPlayIndicatorOverlay.
+ Implementation of TrackPanelGuidelineOverlay.
 
  **********************************************************************/
 
-AdornedRulerPanel::QuickPlayIndicatorOverlay::QuickPlayIndicatorOverlay(
+AdornedRulerPanel::TrackPanelGuidelineOverlay::TrackPanelGuidelineOverlay(
    AudacityProject *project)
    : mProject(project)
 {
 }
 
 unsigned
-AdornedRulerPanel::QuickPlayIndicatorOverlay::SequenceNumber() const
+AdornedRulerPanel::TrackPanelGuidelineOverlay::SequenceNumber() const
 {
    return 30;
 }
 
-std::pair<wxRect, bool>
-AdornedRulerPanel::QuickPlayIndicatorOverlay::DoGetRectangle(wxSize size)
+void AdornedRulerPanel::TrackPanelGuidelineOverlay::Update()
 {
-   mPartner->Update();
+   const auto project = mProject;
+   auto &scrubber = Scrubber::Get( *project );
+   const auto ruler = &Get( *project );
+
+   // These two will determine the color of the line stroked over
+   // the track panel, green for scrub or yellow for snapped or white
+   mNewPreviewingScrub =
+      ruler->LastCell() == ruler->mScrubbingCell &&
+      !scrubber.IsScrubbing();
+   mNewIndicatorSnapped = ruler->mIsSnapped;
+}
+
+std::pair<wxRect, bool>
+AdornedRulerPanel::TrackPanelGuidelineOverlay::DoGetRectangle(wxSize size)
+{
+   Update();
 
    wxRect rect(mOldQPIndicatorPos, 0, 1, size.GetHeight());
    return std::make_pair(
       rect,
       (mOldQPIndicatorPos != mPartner->mNewQPIndicatorPos ||
-       mOldQPIndicatorSnapped != mPartner->mNewQPIndicatorSnapped ||
-       mOldPreviewingScrub != mPartner->mNewPreviewingScrub)
+       mOldIndicatorSnapped != mNewIndicatorSnapped ||
+       mOldPreviewingScrub != mNewPreviewingScrub)
    );
 }
 
-void AdornedRulerPanel::QuickPlayIndicatorOverlay::Draw(
+void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
    OverlayPanel &panel, wxDC &dc)
 {
    mOldQPIndicatorPos = mPartner->mNewQPIndicatorPos;
-   mOldQPIndicatorSnapped = mPartner->mNewQPIndicatorSnapped;
-   mOldPreviewingScrub = mPartner->mNewPreviewingScrub;
+   mOldIndicatorSnapped = mNewIndicatorSnapped;
+   mOldPreviewingScrub = mNewPreviewingScrub;
 
    if (mOldQPIndicatorPos >= 0) {
       mOldPreviewingScrub
       ? AColor::IndicatorColor(&dc, true) // Draw green line for preview.
-      : mOldQPIndicatorSnapped
+      : mOldIndicatorSnapped
         ? AColor::SnapGuidePen(&dc)
         : AColor::Light(&dc, false)
       ;
@@ -2299,7 +2307,7 @@ void AdornedRulerPanel::CreateOverlays()
 {
    if (!mOverlay) {
       mOverlay =
-         std::make_shared<QuickPlayIndicatorOverlay>( mProject );
+         std::make_shared<TrackPanelGuidelineOverlay>( mProject );
       auto pCellularPanel =
          dynamic_cast<CellularPanel*>( &GetProjectPanel( *GetProject() ) );
       if ( !pCellularPanel ) {
