@@ -206,7 +206,8 @@ void TranscriptionToolBar::Populate()
 
    AddButton(this, bmpPlay,     bmpPlayDisabled,   TTB_PlaySpeed,
       XO("Play at selected speed"));
-   MakeAlternateImages(bmpLoop, bmpLoopDisabled, TTB_PlaySpeed, 1);
+   // 3.1.0 abandoned distinct images for Shift
+   MakeAlternateImages(bmpPlay, bmpPlayDisabled, TTB_PlaySpeed, 1);
    MakeAlternateImages(bmpCutPreview, bmpCutPreviewDisabled, TTB_PlaySpeed, 2);
    mButtons[TTB_PlaySpeed]->FollowModifierKeys();
 
