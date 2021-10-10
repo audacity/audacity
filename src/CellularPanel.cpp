@@ -205,7 +205,8 @@ bool CellularPanel::HandleEscapeKey(bool down)
 
    {
       auto target = Target();
-      if (target && target->HasEscape() && target->Escape(GetProject())) {
+      const auto pProject = GetProject();
+      if (target && target->HasEscape(pProject) && target->Escape(pProject)) {
          HandleCursorForPresentMouseState(false);
          return true;
       }
@@ -449,7 +450,7 @@ bool CellularPanel::HasEscape()
    auto &state = *mState;
   if (state.mTarget + 1 == state.mTargets.size() &&
        Target() &&
-       !Target()->HasEscape())
+       !Target()->HasEscape(GetProject()))
        return false;
 
    return state.mTargets.size() > 0;

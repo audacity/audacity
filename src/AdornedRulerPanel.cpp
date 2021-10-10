@@ -232,11 +232,14 @@ public:
       if (0 != (result & Cancelled) || mClicked != Button::Left)
          return result;
 
+      auto &ruler = AdornedRulerPanel::Get(*pProject);
       mX = event.event.m_x;
+      ruler.UpdateQuickPlayPos(event.event.m_x);
    
       if (!mDragged) {
          SavePlayRegion(*pProject);
-         DoStartAdjust(*pProject, Time(*pProject));
+         const auto time = SnappedTime(*pProject, 0);
+         DoStartAdjust(*pProject, time);
          mDragged = true;
       }
       else
@@ -244,7 +247,7 @@ public:
 
       return RefreshAll;
    }
-
+  
    Result Release(
       const TrackPanelMouseEvent &event,
       AudacityProject *pProject, wxWindow *pParent)
@@ -284,7 +287,46 @@ public:
       return RefreshAll;
    }
 
+   // Compare with class SelectHandle.  Perhaps a common base class for that
+   // class too should be defined.
+   bool HasEscape(AudacityProject *pProject) const override
+   {
+      auto &ruler = AdornedRulerPanel::Get(*pProject);
+      auto values = ruler.mIsSnapped;
+      auto identity = [](auto x){ return x; }; // in the C++20 standard...
+      return std::any_of( values, values + ruler.mNumGuides, identity );
+   }
+
+   bool Escape(AudacityProject *pProject) override
+   {
+      if (HasEscape(pProject)) {
+         Unsnap(false, pProject);
+         return true;
+      }
+      return false;
+   }
+
 protected:
+
+double SnappedTime( AudacityProject &project, size_t ii )
+   {
+      const auto &ruler = AdornedRulerPanel::Get(project);
+      bool isSnapped = ruler.mIsSnapped[ii];
+      return isSnapped
+         ? ruler.mQuickPlayPos[ii]
+         : ruler.mQuickPlayPosUnsnapped[ii];
+   }
+
+   void Unsnap(bool use, AudacityProject *pProject)
+   {
+      auto &ruler = AdornedRulerPanel::Get(*pProject);
+      std::fill( ruler.mIsSnapped, ruler.mIsSnapped + ruler.mNumGuides, false );
+      // Repaint to turn the snap lines on or off
+      mChangeHighlight = RefreshCode::RefreshAll;
+      if (Clicked())
+         DoAdjust(*pProject);
+   }
+
    virtual void DoStartAdjust(AudacityProject &, double) = 0;
    virtual void DoAdjust(AudacityProject &) = 0;
 
@@ -550,13 +592,13 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
    mOldIndicatorSnapped = mPartner->mNewIndicatorSnapped;
    mOldPreviewingScrub = mNewPreviewingScrub;
 
+   if ( !(mOldPreviewingScrub || mOldIndicatorSnapped >= 0) )
+      return;
+
    if (mOldQPIndicatorPos >= 0) {
       mOldPreviewingScrub
-      ? AColor::IndicatorColor(&dc, true) // Draw green line for preview.
-      : mOldIndicatorSnapped
-        ? AColor::SnapGuidePen(&dc)
-        : AColor::Light(&dc, false)
-      ;
+         ? AColor::IndicatorColor(&dc, true) // Draw green line for preview.
+         : AColor::SnapGuidePen(&dc); // Yellow snap guideline
 
       // Draw indicator in all visible tracks
       auto pCellularPanel = dynamic_cast<CellularPanel*>( &panel );
@@ -705,7 +747,7 @@ private:
 
    void DoAdjust(AudacityProject &project) override
    {
-      const auto time = Time(project);
+      const auto time = SnappedTime(project, 0);
 
       // Change the play region
       // The check whether this new time should be start or end isn't
