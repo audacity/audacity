@@ -245,6 +245,9 @@ public:
       else
          DoAdjust(*pProject);
 
+      if (AdornedRulerPanel::Get( *pProject ).mPlayRegionDragsSelection)
+         DragSelection(*pProject);
+
       return RefreshAll;
    }
   
@@ -279,6 +282,7 @@ public:
 
       //! Restore state as before SavePlayRegion()
       auto &viewInfo = ViewInfo::Get(*pProject);
+      viewInfo.selectedRegion = mOldSelectedRegion;
       auto &playRegion = viewInfo.playRegion;
       playRegion.SetTimes(mOldStart, mOldEnd);
       if (!mWasActive)
@@ -333,6 +337,7 @@ double SnappedTime( AudacityProject &project, size_t ii )
    void SavePlayRegion(AudacityProject &project)
    {
       auto &viewInfo = ViewInfo::Get(project);
+      mOldSelectedRegion = viewInfo.selectedRegion;
       auto &playRegion = viewInfo.playRegion;
       mWasActive = playRegion.Active();
       mOldStart = playRegion.GetLastActiveStart();
@@ -347,6 +352,7 @@ private:
    wxCursor mCursor;
    size_t mNumGuides;
 
+   SelectedRegion mOldSelectedRegion;
    double mOldStart = 0.0, mOldEnd = 0.0;
    bool mWasActive = false;
    bool mSaved = false;
@@ -1690,7 +1696,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
             mQuickPlayPos[0] = mOldPlayRegion.GetEnd();
          playRegion.SetStart( mQuickPlayPos[0] );
          if (canDragSel) {
-            DragSelection();
+            DragSelection(*GetProject());
          }
          break;
       case mesDraggingPlayRegionEnd:
@@ -1704,7 +1710,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
          }
          playRegion.SetEnd( mQuickPlayPos[0] );
          if (canDragSel) {
-            DragSelection();
+            DragSelection(*GetProject());
          }
          break;
       case mesSelectingPlayRegionClick:
@@ -1728,7 +1734,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
          else
             playRegion.SetTimes( mLeftDownClick, mQuickPlayPos[0] );
          if (canDragSel) {
-            DragSelection();
+            DragSelection(*GetProject());
          }
          break;
    }
@@ -2080,8 +2086,8 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    wxMenu rulerMenu;
 
    auto pDrag = rulerMenu.AppendCheckItem(OnSyncQuickPlaySelID, _("Enable dragging selection"));
-   pDrag->Check(mPlayRegionDragsSelection && !playRegion.Active());
-   pDrag->Enable(!playRegion.Active());
+   pDrag->Check(mPlayRegionDragsSelection && playRegion.Active());
+   pDrag->Enable(playRegion.Active());
 
    rulerMenu.AppendCheckItem(OnAutoScrollID, _("Update display while playing"))->
       Check(mViewInfo->bUpdateTrackIndicator);
@@ -2134,9 +2140,9 @@ void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
    gPrefs->Flush();
 }
 
-void AdornedRulerPanel::DragSelection()
+void AdornedRulerPanel::DragSelection(AudacityProject &project)
 {
-   auto &viewInfo = ViewInfo::Get( *GetProject() );
+   auto &viewInfo = ViewInfo::Get( project );
    const auto &playRegion = viewInfo.playRegion;
    auto &selectedRegion = viewInfo.selectedRegion;
    selectedRegion.setT0(playRegion.GetStart(), false);
@@ -2147,10 +2153,13 @@ void AdornedRulerPanel::HandleSnapping(size_t index)
 {
    // Play region dragging can snap to selection boundaries
    const auto &selectedRegion = ViewInfo::Get(*GetProject()).selectedRegion;
-   SnapManager snapManager{ *mProject, *mTracks, *mViewInfo, {
-      SnapPoint{ selectedRegion.t0() },
-      SnapPoint{ selectedRegion.t1() },
-   } };
+   SnapPointArray candidates;
+   if (!mPlayRegionDragsSelection)
+      candidates = {
+         SnapPoint{ selectedRegion.t0() },
+         SnapPoint{ selectedRegion.t1() },
+      };
+   SnapManager snapManager{ *mProject, *mTracks, *mViewInfo, move(candidates) };
    auto results = snapManager.Snap(nullptr, mQuickPlayPos[index], false);
    mQuickPlayPos[index] = results.outTime;
    mIsSnapped[index] = results.Snapped();
