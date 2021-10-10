@@ -199,7 +199,8 @@ void ControlToolBar::Populate()
 
    mPlay = MakeButton(this, bmpPlay, bmpPlay, bmpPlayDisabled,
       ID_PLAY_BUTTON, true, XO("Play"));
-   MakeAlternateImages(*mPlay, 1, bmpLoop, bmpLoop, bmpLoopDisabled);
+   // 3.1.0 abandoned distinct images for Shift
+   MakeAlternateImages(*mPlay, 1, bmpPlay, bmpPlay, bmpPlayDisabled);
    MakeAlternateImages(*mPlay, 2,
       bmpCutPreview, bmpCutPreview, bmpCutPreviewDisabled);
    MakeAlternateImages(*mPlay, 3,
