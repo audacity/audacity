@@ -1331,7 +1331,10 @@ bool AudacityApp::OnInit()
        SetPreferredSystemAppearance(appearance);
    });
 
-   theTheme.LoadPreferredTheme();
+   {
+      wxBusyCursor busy;
+      theTheme.LoadPreferredTheme();
+   }
 
    // AColor depends on theTheme.
    AColor::Init();
