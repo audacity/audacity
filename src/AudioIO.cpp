@@ -1863,8 +1863,8 @@ void AudioIO::FillPlayBuffers()
       available -= frames;
       // wxASSERT(available >= 0); // don't assert on this thread
 
-      // Poll for selection change events
-      mPlaybackSchedule.MessageConsumer();
+      // Poll for play region change events
+      policy.MessageConsumer(mPlaybackSchedule);
 
       done = policy.RepositionPlayback( mPlaybackSchedule, mPlaybackMixers,
          frames, available );

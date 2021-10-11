@@ -236,6 +236,15 @@ public:
       AdvancedTrackTime( PlaybackSchedule &schedule,
          double trackTime, size_t nSamples );
 
+   //! May be called between AdvancedTrackTime() and RepositionPlayback()
+   /*!
+    Receive notifications from the main thread of changes of parameters
+    affecting the policy
+
+    Default implementation ignores all messages
+    */
+   virtual void MessageConsumer( PlaybackSchedule &schedule );
+
    using Mixers = std::vector<std::unique_ptr<Mixer>>;
 
    //! AudioIO::FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
@@ -322,6 +331,8 @@ struct AUDACITY_DLL_API PlaybackSchedule {
       //! Return the last time saved by Producer
       double GetLastTime() const;
 
+      void SetLastTime(double time);
+
       //! @section called by PortAudio callback thread
 
       //! Find the track time value `nSamples` after the last consumed sample
@@ -386,7 +397,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    double SolveWarpedLength(double t0, double length) const;
 
    void MessageProducer( PlayRegionEvent &evt );
-   void MessageConsumer();
 
    /** \brief True if the end time is before the start time */
    bool ReversedTime() const
@@ -452,6 +462,8 @@ public:
       AdvancedTrackTime( PlaybackSchedule &schedule,
          double trackTime, size_t nSamples ) override;
 
+   void MessageConsumer( PlaybackSchedule &schedule ) override;
+
    bool RepositionPlayback(
       PlaybackSchedule &schedule, const Mixers &playbackMixers,
       size_t frames, size_t available ) override;
@@ -461,5 +473,6 @@ public:
 private:
    size_t mRemaining{ 0 };
    bool mProgress{ true };
+   bool mKicked{ false };
 };
 #endif

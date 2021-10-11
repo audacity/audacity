@@ -127,8 +127,9 @@ class AUDACITY_DLL_API Mixer {
    /// Process() is called.
    void Reposition(double t, bool bSkipping = false);
 
-   // Used in scrubbing.
-   void SetTimesAndSpeed(double t0, double t1, double speed);
+   // Used in scrubbing and other nonuniform playback policies.
+   void SetTimesAndSpeed(
+      double t0, double t1, double speed, bool bSkipping = false);
    void SetSpeedForPlayAtSpeed(double speed);
    void SetSpeedForKeyboardScrubbing(double speed, double startTime);
 

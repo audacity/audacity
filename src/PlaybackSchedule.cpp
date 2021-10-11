@@ -60,6 +60,10 @@ double PlaybackPolicy::OffsetTrackTime(
    return time;
 }
 
+void PlaybackPolicy::MessageConsumer( PlaybackSchedule & )
+{
+}
+
 std::chrono::milliseconds PlaybackPolicy::SleepInterval(PlaybackSchedule &)
 {
    using namespace std::chrono;
@@ -213,6 +217,31 @@ std::pair<double, double> LoopingPlaybackPolicy::AdvancedTrackTime(
    return { trackTime, trackTime };
 }
 
+void LoopingPlaybackPolicy::MessageConsumer( PlaybackSchedule &schedule )
+{
+   // This executes in the TrackBufferExchange thread
+   auto data = schedule.mMessageChannel.Read();
+   auto mine = std::tie(schedule.mT0, schedule.mT1);
+   auto theirs = std::tie(data.mT0, data.mT1);
+   if (mine != theirs) {
+      mine = theirs;
+      schedule.mWarpedLength = schedule.RealDuration(schedule.mT1);
+      auto newTime = std::clamp(
+         schedule.mTimeQueue.GetLastTime(), schedule.mT0, schedule.mT1);
+      if (newTime == schedule.mT1)
+         newTime = schedule.mT0;
+
+      // So that the play head will redraw in the right place:
+      schedule.mTimeQueue.SetLastTime(newTime);
+
+      // Setup for the next visit to RepositionPlayback:
+      schedule.RealTimeInit(newTime);
+      const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
+      mRemaining = realTimeRemaining * mRate;
+      mKicked = true;
+   }
+}
+
 bool LoopingPlaybackPolicy::RepositionPlayback(
    PlaybackSchedule &schedule, const Mixers &playbackMixers, size_t, size_t )
 {
@@ -221,9 +250,19 @@ bool LoopingPlaybackPolicy::RepositionPlayback(
    if (mRemaining <= 0)
    {
       for (auto &pMixer : playbackMixers)
-         pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0 );
+         pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0, mKicked );
       schedule.RealTimeRestart();
    }
+   else if (mKicked)
+   {
+      const auto time = schedule.mTimeQueue.GetLastTime();
+      for (auto &pMixer : playbackMixers) {
+         // So that the mixer will fetch the next samples from the right place:
+         pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0 );
+         pMixer->Reposition(time, true);
+      }
+   }
+   mKicked = false; // Ow!  Stop it!  Mo-o-o-om!
    return false;
 }
 
@@ -397,6 +436,11 @@ double PlaybackSchedule::TimeQueue::GetLastTime() const
    return mLastTime;
 }
 
+void PlaybackSchedule::TimeQueue::SetLastTime(double time)
+{
+   mLastTime = time;
+}
+
 double PlaybackSchedule::TimeQueue::Consumer( size_t nSamples, double rate )
 {
    if ( mData.empty() ) {
@@ -440,17 +484,4 @@ void PlaybackSchedule::MessageProducer( PlayRegionEvent &evt)
    const auto &region = *pRegion;
 
    mMessageChannel.Write( { region.GetStart(), region.GetEnd() } );
-}
-
-void PlaybackSchedule::MessageConsumer()
-{
-   // This executes in the TrackBufferExchange thread
-   auto data = mMessageChannel.Read();
-   auto mine = std::tie(mT0, mT1);
-   auto theirs = std::tie(data.mT0, data.mT1);
-   if (mine != theirs) {
-      mine = theirs;
-      mWarpedLength = RealDuration(mT1);
-      RealTimeInit(mTimeQueue.GetLastTime());
-   }
 }
