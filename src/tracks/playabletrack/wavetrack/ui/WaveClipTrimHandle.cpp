@@ -159,8 +159,9 @@ UIHandle::Result WaveClipTrimHandle::Click
         mDragStartX = event.event.GetX();
         mInitialBorderPosition = mTargetBorder == Border::Left ? mClips[0]->GetPlayStartTime()
             : mClips[0]->GetPlayEndTime();
+        return RefreshCode::RefreshNone;
     }
-    return RefreshCode::RefreshNone;
+    return RefreshCode::Cancelled;
 }
 
 UIHandle::Result WaveClipTrimHandle::Drag
