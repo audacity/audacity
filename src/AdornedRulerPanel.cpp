@@ -627,6 +627,126 @@ private:
    SelectedRegion mOldSelection;
 };
 
+class AdornedRulerPanel::ResizePlayRegionHandle final
+   : public PlayRegionAdjustingHandle {
+public:
+   explicit
+   ResizePlayRegionHandle(
+      AdornedRulerPanel *pParent, wxCoord xx, bool hitLeft )
+   : PlayRegionAdjustingHandle( pParent, xx, MenuChoice::QuickPlay )
+   , mHitLeft{ hitLeft }
+   {
+   }
+   
+private:
+   HitTestPreview Preview(
+      const TrackPanelMouseState &state, AudacityProject *pProject)
+   override
+   {
+      auto result = PlayRegionAdjustingHandle::Preview(state, pProject);
+   
+      static wxCursor cursor{ wxCURSOR_SIZEWE };
+      result.cursor = &cursor;
+      return result;
+   }
+
+   Result Click(
+      const TrackPanelMouseEvent &event, AudacityProject *pProject) override
+   {
+      using namespace RefreshCode;
+      auto result = PlayRegionAdjustingHandle::Click(event, pProject);
+      if (0 != (result & Cancelled) || mClicked != Button::Left)
+         return result;
+
+      auto &viewInfo = ViewInfo::Get(*pProject);
+      auto &playRegion = viewInfo.playRegion;
+      mWasLocked = playRegion.Locked();
+      mOldStart = playRegion.GetLastLockedStart();
+      mOldEnd = playRegion.GetLastLockedEnd();
+      if (!mWasLocked)
+         playRegion.SetLocked(true);
+
+      return RefreshAll;
+   }
+
+   Result Drag(
+      const TrackPanelMouseEvent &event, AudacityProject *pProject) override
+   {
+      using namespace RefreshCode;
+      auto result = PlayRegionAdjustingHandle::Drag(event, pProject);
+      if (0 != (result & Cancelled) || mClicked != Button::Left)
+         return result;
+
+      DoSnap(pProject);
+
+      if (AdornedRulerPanel::Get( *pProject ).mPlayRegionDragsSelection)
+         DragSelection(*pProject);
+
+      return RefreshAll;
+   }
+
+   Result Release(
+      const TrackPanelMouseEvent &event,
+      AudacityProject *pProject, wxWindow *pParent)
+   override
+   {
+      using namespace RefreshCode;
+      auto result = PlayRegionAdjustingHandle::Release(event, pProject, pParent);
+      if (0 != (result & Cancelled) || mClicked != Button::Left)
+         return result;
+      else if (!mDragged) {
+         StartPlay(*pProject, event.event.ShiftDown());
+         return result;
+      }
+
+      // Set the play region endpoints right even if not strictly needed
+      auto &viewInfo = ViewInfo::Get( *pProject );
+      auto &playRegion = viewInfo.playRegion;
+      playRegion.Order();
+
+      return RefreshNone;
+   }
+
+   Result Cancel(AudacityProject *pProject) override
+   {
+      using namespace RefreshCode;
+      auto result = PlayRegionAdjustingHandle::Cancel(pProject);
+      if (0 != (result & Cancelled) || mClicked != Button::Left || !mDragged)
+         return result;
+
+      auto &viewInfo = ViewInfo::Get(*pProject);
+      auto &playRegion = viewInfo.playRegion;
+      playRegion.SetTimes(mOldStart, mOldEnd);
+      if (!mWasLocked)
+         playRegion.SetLocked(false);
+   
+      return RefreshAll;
+   }
+
+   void DoSnap(AudacityProject *pProject) override
+   {
+      // Find present time of the drag
+      bool isSnapped = AdornedRulerPanel::Get(*pProject).mIsSnapped;
+      const double time = isSnapped
+         ? mParent->mQuickPlayPos
+         : mParent->mQuickPlayPosUnsnapped;
+
+      // Change the play region
+      // The check whether this new time should be left or right isn't
+      // important.  The accessors for PlayRegion use min and max of stored
+      // values.
+      auto &playRegion = ViewInfo::Get(*pProject).playRegion;
+      if (mHitLeft)
+         playRegion.SetStart(time);
+      else
+         playRegion.SetEnd(time);
+   }
+
+   double mOldStart = 0.0, mOldEnd = 0.0;
+   bool mWasLocked = false;
+   bool mHitLeft = false;
+};
+
 class AdornedRulerPanel::NewPlayRegionHandle final : public PlayRegionAdjustingHandle {
 public:
    explicit
@@ -879,6 +999,7 @@ public:
    }
    
    std::weak_ptr<QPHandle> mHolder;
+   std::weak_ptr<ResizePlayRegionHandle> mResizePlayRegionHolder;
    std::weak_ptr<NewPlayRegionHandle> mNewPlayRegionHolder;
    std::weak_ptr<PlayheadHandle> mPlayheadHolder;
 };
@@ -906,6 +1027,18 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
    }
 #endif
    
+   // Higher priority hit is a handle to change the existing play region
+   bool hitLeft = false;
+   const auto &playRegion = ViewInfo::Get(*pProject).playRegion;
+   if ((hitLeft = mParent->IsWithinMarker(xx, playRegion.GetStart())) ||
+       mParent->IsWithinMarker(xx, playRegion.GetEnd()))
+   {
+      auto result =
+         std::make_shared<ResizePlayRegionHandle>( mParent, xx, hitLeft );
+      result = AssignUIHandlePtr( mResizePlayRegionHolder, result );
+      results.push_back(result);
+   }
+
    // Disable mouse actions on Timeline while recording.
    if (!mParent->mIsRecording) {
       mParent->UpdateQuickPlayPos( xx, state.state.ShiftDown() );
