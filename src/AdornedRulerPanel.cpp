@@ -737,6 +737,38 @@ private:
 };
 #endif
 
+class AdornedRulerPanel::ResizePlayRegionHandle final : public PlayRegionAdjustingHandle {
+public:
+   ResizePlayRegionHandle(
+      AdornedRulerPanel *pParent, wxCoord xx, bool hitLeft )
+   : PlayRegionAdjustingHandle( pParent, xx, MenuChoice::QuickPlay, {wxCURSOR_SIZEWE} )
+   , mHitLeft{ hitLeft }
+   {
+   }
+   
+private:
+   void DoStartAdjust(AudacityProject &project, double time) override
+   {
+   }
+
+   void DoAdjust(AudacityProject &project) override
+   {
+      const auto time = SnappedTime(project, 0);
+
+      // Change the play region
+      // The check whether this new time should be start or end isn't
+      // important.  The accessors for PlayRegion use min and max of stored
+      // values.
+      auto &playRegion = ViewInfo::Get(project).playRegion;
+      if (mHitLeft)
+         playRegion.SetStart(time);
+      else
+         playRegion.SetEnd(time);
+   }
+
+   bool mHitLeft = false;
+};
+
 class AdornedRulerPanel::NewPlayRegionHandle final : public PlayRegionAdjustingHandle {
 public:
    NewPlayRegionHandle( AdornedRulerPanel *pParent, wxCoord xx )
@@ -915,6 +947,7 @@ public:
    std::weak_ptr<QPHandle> mHolder;
 #endif
 
+   std::weak_ptr<ResizePlayRegionHandle> mResizePlayRegionHolder;
    std::weak_ptr<NewPlayRegionHandle> mNewPlayRegionHolder;
    std::weak_ptr<PlayheadHandle> mPlayheadHolder;
 };
@@ -951,6 +984,18 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
       result = AssignUIHandlePtr( mHolder, result );
       results.push_back( result );
       #endif
+   }
+
+   // High priority hit is a handle to change the existing play region
+   bool hitLeft = false;
+   const auto &playRegion = ViewInfo::Get(*pProject).playRegion;
+   if ((hitLeft = mParent->IsWithinMarker(xx, playRegion.GetStart())) ||
+       mParent->IsWithinMarker(xx, playRegion.GetEnd()))
+   {
+      auto result =
+         std::make_shared<ResizePlayRegionHandle>( mParent, xx, hitLeft );
+      result = AssignUIHandlePtr( mResizePlayRegionHolder, result );
+      results.push_back(result);
    }
 
    // Lowest priority hit is a handle to drag a completely new play region
