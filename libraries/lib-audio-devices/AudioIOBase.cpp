@@ -161,9 +161,8 @@ void AudioIOBase::HandleDeviceChange()
       // mCachedSampleRates is still empty, but it's not used again, so
       // can ignore
    }
+
    mInputMixerWorks = false;
-   mEmulateMixerOutputVol = true;
-   mMixerOutputVol = 1.0;
 
    int error;
    // This tries to open the device with the samplerate worked out above, which
@@ -270,17 +269,6 @@ void AudioIOBase::HandleDeviceChange()
    // signal level, we emulate it (by multiplying this value by all outgoing
    // samples)
 
-   mMixerOutputVol = Px_GetPCMOutputVolume(mPortMixer);
-   mEmulateMixerOutputVol = false;
-   Px_SetPCMOutputVolume(mPortMixer, 0.0);
-   if (Px_GetPCMOutputVolume(mPortMixer) > 0.1)
-      mEmulateMixerOutputVol = true;
-   Px_SetPCMOutputVolume(mPortMixer, 0.2f);
-   if (Px_GetPCMOutputVolume(mPortMixer) < 0.1 ||
-       Px_GetPCMOutputVolume(mPortMixer) > 0.3)
-      mEmulateMixerOutputVol = true;
-   Px_SetPCMOutputVolume(mPortMixer, mMixerOutputVol);
-
    float inputVol = Px_GetInputVolume(mPortMixer);
    mInputMixerWorks = true;   // assume it works unless proved wrong
    Px_SetInputVolume(mPortMixer, 0.0);
@@ -296,13 +284,9 @@ void AudioIOBase::HandleDeviceChange()
 
 
    #if 0
-   wxPrintf("PortMixer: Playback: %s Recording: %s\n",
-          mEmulateMixerOutputVol? "emulated": "native",
+   wxPrintf("PortMixer: Recording: %s\n"
           mInputMixerWorks? "hardware": "no control");
    #endif
-
-   mMixerOutputVol = 1.0;
-
 #endif   // USE_PORTMIXER
 }
 
@@ -819,7 +803,6 @@ wxString AudioIOBase::GetDeviceInfo() const
       {
       int highestSampleRate = supportedSampleRates.back();
       bool EmulateMixerInputVol = true;
-      bool EmulateMixerOutputVol = true;
       float MixerInputVol = 1.0;
       float MixerOutputVol = 1.0;
 
@@ -909,20 +892,7 @@ wxString AudioIOBase::GetDeviceInfo() const
          s << XO("%d - %s\n").Format( i, name );
       }
 
-      // Determine mixer capabilities - if it doesn't support either
-      // input or output, we emulate them (by multiplying this value
-      // by all incoming/outgoing samples)
-
-      MixerOutputVol = Px_GetPCMOutputVolume(PortMixer);
-      EmulateMixerOutputVol = false;
-      Px_SetPCMOutputVolume(PortMixer, 0.0);
-      if (Px_GetPCMOutputVolume(PortMixer) > 0.1)
-         EmulateMixerOutputVol = true;
-      Px_SetPCMOutputVolume(PortMixer, 0.2f);
-      if (Px_GetPCMOutputVolume(PortMixer) < 0.1 ||
-          Px_GetPCMOutputVolume(PortMixer) > 0.3)
-         EmulateMixerOutputVol = true;
-      Px_SetPCMOutputVolume(PortMixer, MixerOutputVol);
+     // Check, if PortMixer supports adjusting input levels on the interface
 
       MixerInputVol = Px_GetInputVolume(PortMixer);
       EmulateMixerInputVol = false;
@@ -941,9 +911,6 @@ wxString AudioIOBase::GetDeviceInfo() const
       s << ( EmulateMixerInputVol
          ? XO("Recording volume is emulated\n")
          : XO("Recording volume is native\n") );
-      s << ( EmulateMixerOutputVol
-         ? XO("Playback volume is emulated\n")
-         : XO("Playback volume is native\n") );
 
       Px_CloseMixer(PortMixer);
 
@@ -971,6 +938,8 @@ DoubleSetting AudioIOLatencyDuration{
    L"/AudioIO/LatencyDuration", 100.0 };
 StringSetting AudioIOPlaybackDevice{
    L"/AudioIO/PlaybackDevice", L"" };
+DoubleSetting AudioIOPlaybackVolume {
+   L"/AudioIO/PlaybackVolume", 1.0 };
 IntSetting AudioIORecordChannels{
    L"/AudioIO/RecordChannels", 2 };
 StringSetting AudioIORecordingDevice{
