@@ -2231,12 +2231,37 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
    dc->SetBrush( wxBrush( theTheme.Colour( color )) );
    dc->SetPen(   wxPen(   theTheme.Colour( color )) );
 
-   wxRect r;
-   r.x = p0;
-   r.y = mInner.y;
-   r.width = p1 - p0 - 1;
-   r.height = mInner.height;
-   dc->DrawRectangle( r );
+   const int left = p0, top = mInner.y, right = p1, bottom = mInner.GetBottom();
+   dc->DrawRectangle( { wxPoint{left, top}, wxPoint{right, bottom} } );
+
+   {
+      // Paint the edges of the play region like the ticks and numbers
+      ADCChanger cleanup( dc );
+      const auto edgeColour = theTheme.Colour(clrTrackPanelText);
+      dc->SetPen( { edgeColour } );
+      dc->SetBrush( { edgeColour } );
+
+      constexpr int side = 7;
+      constexpr int sideLessOne = side - 1;
+
+      {
+         AColor::Line( *dc, left, top, left, bottom );
+         wxPoint points[]{
+            {left, bottom},
+            {left, bottom - sideLessOne},
+            {left - sideLessOne, bottom} };
+         dc->DrawPolygon( 3, points );
+      }
+
+      {
+         AColor::Line( *dc, right, top, right, bottom );
+         wxPoint points[]{
+            {right, bottom},
+            {right + sideLessOne, bottom},
+            {right, bottom - sideLessOne} };
+         dc->DrawPolygon( 3, points );
+      }
+   }
 }
 
 int AdornedRulerPanel::GetRulerHeight(bool showScrubBar)
