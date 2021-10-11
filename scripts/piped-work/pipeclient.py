@@ -337,7 +337,7 @@ class PipeTerminal():
             else:
                 reply = self.get_reply(message)
             # if reply returned, print reply
-            if reply != None:
+            if reply is not None:
                 print(reply)
 
     def view_commands(self, category):
