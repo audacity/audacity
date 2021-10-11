@@ -30,6 +30,7 @@
 #include "AudioIO.h"
 #include "widgets/BasicMenu.h"
 #include "CellularPanel.h"
+#include "../images/Cursors.h"
 #include "HitTestResult.h"
 #include "Menus.h"
 #include "Prefs.h"
@@ -737,6 +738,44 @@ private:
 };
 #endif
 
+static auto handOpenCursor =
+    MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
+
+class AdornedRulerPanel::MovePlayRegionHandle final : public PlayRegionAdjustingHandle {
+public:
+   MovePlayRegionHandle( AdornedRulerPanel *pParent, wxCoord xx )
+   : PlayRegionAdjustingHandle( pParent, xx, MenuChoice::QuickPlay, *handOpenCursor, 2 )
+   {
+   }
+   
+   ~MovePlayRegionHandle()
+   {
+      mParent->mQuickPlayOffset[0] = 0;
+      mParent->mQuickPlayOffset[1] = 0;
+   }
+   
+private:
+   void DoStartAdjust(AudacityProject &project, double) override
+   {
+      // Ignore the snapping of the time at the mouse
+      const auto time = Time(project);
+      auto &playRegion = ViewInfo::Get(project).playRegion;
+      mParent->mQuickPlayOffset[0] = playRegion.GetStart() - time;
+      mParent->mQuickPlayOffset[1] = playRegion.GetEnd() - time;
+   }
+
+   void DoAdjust(AudacityProject &project) override
+   {
+      // Move the whole play region rigidly (usually)
+      // though the length might change slightly if only one edge snaps
+      const auto time0 = SnappedTime(project, 0),
+         time1 = SnappedTime(project, 1);
+
+      auto &playRegion = ViewInfo::Get(project).playRegion;
+      playRegion.SetTimes(time0, time1);
+   }
+};
+
 class AdornedRulerPanel::ResizePlayRegionHandle final : public PlayRegionAdjustingHandle {
 public:
    ResizePlayRegionHandle(
@@ -948,6 +987,7 @@ public:
 #endif
 
    std::weak_ptr<ResizePlayRegionHandle> mResizePlayRegionHolder;
+   std::weak_ptr<MovePlayRegionHandle> mMovePlayRegionHolder;
    std::weak_ptr<NewPlayRegionHandle> mNewPlayRegionHolder;
    std::weak_ptr<PlayheadHandle> mPlayheadHolder;
 };
@@ -995,6 +1035,18 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
       auto result =
          std::make_shared<ResizePlayRegionHandle>( mParent, xx, hitLeft );
       result = AssignUIHandlePtr( mResizePlayRegionHolder, result );
+      results.push_back(result);
+   }
+
+   // Middle priority hit is a handle to change the existing play region at
+   // both ends
+   if (auto time = mParent->Pos2Time(xx);
+       time >= playRegion.GetStart() &&
+       time <= playRegion.GetEnd())
+   {
+      auto result =
+         std::make_shared<MovePlayRegionHandle>( mParent, xx );
+      result = AssignUIHandlePtr( mMovePlayRegionHolder, result );
       results.push_back(result);
    }
 
