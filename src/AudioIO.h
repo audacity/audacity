@@ -256,6 +256,8 @@ public:
    WaveTrackArray      mPlaybackTracks;
 
    std::vector<std::unique_ptr<Mixer>> mPlaybackMixers;
+
+   float               mMixerOutputVol { 1.0 };
    static int          mNextStreamToken;
    double              mFactor;
    unsigned long       mMaxFramesOutput; // The actual number of frames output.
@@ -424,14 +426,6 @@ public:
     */
    bool InputMixerWorks();
 
-   /** @brief Find out if the output level control is being emulated via software attenuation
-    *
-    * Checks the mEmulateMixerOutputVol variable, which is set up in
-    * AudioIOBase::HandleDeviceChange(). External classes care, because we want to
-    * modify the UI if it doesn't work.
-    */
-   bool OutputMixerEmulated();
-
    /** \brief Get the list of inputs to the current mixer device
     *
     * Returns an array of strings giving the names of the inputs to the
@@ -565,6 +559,7 @@ private:
 
    std::mutex mPostRecordingActionMutex;
    PostRecordingAction mPostRecordingAction;
+
    bool mDelayingActions{ false };
 };
 

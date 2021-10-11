@@ -128,6 +128,8 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "widgets/AudacityMessageBox.h"
 #include "BasicUI.h"
 
+#include "Gain.h"
+
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    #define LOWER_BOUND 0.0
    #define UPPER_BOUND 1.0
@@ -343,9 +345,10 @@ AudioIO::AudioIO()
    HandleDeviceChange();
 #else
    mEmulateMixerOutputVol = true;
-   mMixerOutputVol = 1.0;
    mInputMixerWorks = false;
 #endif
+
+   mMixerOutputVol = AudioIOPlaybackVolume.Read();
 
    mLastPlaybackTimeMillis = 0;
 }
@@ -386,19 +389,18 @@ void AudioIO::SetMixer(int inputSource, float recordVolume,
                        float playbackVolume)
 {
    mMixerOutputVol = playbackVolume;
+   AudioIOPlaybackVolume.Write(mMixerOutputVol);
+
 #if defined(USE_PORTMIXER)
    PxMixer *mixer = mPortMixer;
    if( !mixer )
       return;
 
    float oldRecordVolume = Px_GetInputVolume(mixer);
-   float oldPlaybackVolume = Px_GetPCMOutputVolume(mixer);
 
    AudioIoCallback::SetMixer(inputSource);
    if( oldRecordVolume != recordVolume )
       Px_SetInputVolume(mixer, recordVolume);
-   if( oldPlaybackVolume != playbackVolume )
-      Px_SetPCMOutputVolume(mixer, playbackVolume);
 
 #endif
 }
@@ -406,6 +408,8 @@ void AudioIO::SetMixer(int inputSource, float recordVolume,
 void AudioIO::GetMixer(int *recordDevice, float *recordVolume,
                        float *playbackVolume)
 {
+   *playbackVolume = mMixerOutputVol;
+
 #if defined(USE_PORTMIXER)
 
    PxMixer *mixer = mPortMixer;
@@ -419,11 +423,6 @@ void AudioIO::GetMixer(int *recordDevice, float *recordVolume,
       else
          *recordVolume = 1.0f;
 
-      if (mEmulateMixerOutputVol)
-         *playbackVolume = mMixerOutputVol;
-      else
-         *playbackVolume = Px_GetPCMOutputVolume(mixer);
-
       return;
    }
 
@@ -431,17 +430,11 @@ void AudioIO::GetMixer(int *recordDevice, float *recordVolume,
 
    *recordDevice = 0;
    *recordVolume = 1.0f;
-   *playbackVolume = mMixerOutputVol;
 }
 
 bool AudioIO::InputMixerWorks()
 {
    return mInputMixerWorks;
-}
-
-bool AudioIO::OutputMixerEmulated()
-{
-   return mEmulateMixerOutputVol;
 }
 
 wxArrayString AudioIO::GetInputSourceNames()
@@ -2350,8 +2343,9 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
          outputMeterFloats[numPlaybackChannels*i+chan] +=
             gain*tempBuf[i];
 
-   if (mEmulateMixerOutputVol)
-      gain *= mMixerOutputVol;
+   // DV: We use gain to emulate panning.
+   // Let's keep the old behavior for panning.
+   gain *= ExpGain(mMixerOutputVol);
 
    float oldGain = vt->GetOldChannelGain(chan);
    if( gain != oldGain )
@@ -2968,10 +2962,10 @@ int AudioIoCallback::AudioCallback(
    float *tempFloats = (float *)alloca(framesPerBuffer*sizeof(float)*
                              MAX(numCaptureChannels,numPlaybackChannels));
 
-   bool bVolEmulationActive = 
-      (outputBuffer && mEmulateMixerOutputVol &&  mMixerOutputVol != 1.0);
-   // outputMeterFloats is the scratch pad for the output meter.  
-   // we can often reuse the existing outputBuffer and save on allocating 
+   bool bVolEmulationActive =
+      (outputBuffer && mMixerOutputVol != 1.0);
+   // outputMeterFloats is the scratch pad for the output meter.
+   // we can often reuse the existing outputBuffer and save on allocating
    // something new.
    float *outputMeterFloats = bVolEmulationActive ?
          (float *)alloca(framesPerBuffer*numPlaybackChannels * sizeof(float)) :

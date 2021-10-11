@@ -321,9 +321,7 @@ void MixerToolBar::SetToolTips()
    }
 
    if (mOutputSlider->IsEnabled()) {
-      auto format = (AudioIO::Get()->OutputMixerEmulated()
-         ? XO("Playback Volume: %.2f (emulated)")
-         : XO("Playback Volume: %.2f"));
+      auto format = XO("Playback Volume: %.2f");
 
       mOutputSlider->SetToolTipTemplate( format );
    }
