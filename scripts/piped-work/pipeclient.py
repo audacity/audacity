@@ -323,7 +323,7 @@ class PipeTerminal():
         while True:
             # check if python version
             if sys.version_info[0] < 3:
-                message = raw_input("\nEnter command, "
+                message = input("\nEnter command, "
                                     "'H' for usage help, or 'Q' to quit:\n> ")
             else:
                 message = input(
