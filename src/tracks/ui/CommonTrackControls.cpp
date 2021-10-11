@@ -12,7 +12,7 @@ Paul Licameli split from TrackControls.cpp
 
 #include "TrackButtonHandles.h"
 #include "TrackSelectHandle.h"
-#include "../../AColor.h"
+#include "AColor.h"
 #include "../../RefreshCode.h"
 #include "Project.h"
 #include "../../ProjectHistory.h"

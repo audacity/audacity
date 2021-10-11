@@ -48,8 +48,8 @@
 #include <wx/tooltip.h>
 
 #include "Prefs.h"
-#include "../AllThemeResources.h"
-#include "../ImageManipulation.h"
+#include "AllThemeResources.h"
+#include "ImageManipulation.h"
 #include "Project.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"

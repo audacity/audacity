@@ -17,9 +17,9 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../LabelTrack.h"
 
-#include "../../../AColor.h"
+#include "AColor.h"
 #include "../../../widgets/BasicMenu.h"
-#include "../../../AllThemeResources.h"
+#include "AllThemeResources.h"
 #include "../../../HitTestResult.h"
 #include "Project.h"
 #include "../../../ProjectHistory.h"
@@ -28,7 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ProjectWindow.h"
 #include "../../../ProjectWindows.h"
 #include "../../../RefreshCode.h"
-#include "../../../Theme.h"
+#include "Theme.h"
 #include "../../../TrackArtist.h"
 #include "../../../TrackPanelAx.h"
 #include "../../../TrackPanel.h"

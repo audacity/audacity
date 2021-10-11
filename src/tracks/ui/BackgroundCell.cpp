@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "BackgroundCell.h"
 
-#include "../../AColor.h"
+#include "AColor.h"
 #include "../../HitTestResult.h"
 #include "Project.h"
 #include "../../RefreshCode.h"

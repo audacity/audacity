@@ -44,9 +44,6 @@ from there.  Audacity will look for a file called "Pause.png".
 // Note: No '#ifndef/#define' pair on this header file.
 // we want to include it multiple times in Theme.cpp.
 
-
-
-
 #include "MacroMagic.h"
 
    SET_THEME_FLAGS(  resFlagPaired  );

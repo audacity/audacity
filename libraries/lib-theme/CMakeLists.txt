@@ -1,0 +1,33 @@
+#[[
+A library to hold a registry of image and color identifiers, and multiple themes
+associating data with those identifiers.
+]]#
+
+set( SOURCES
+   AColor.cpp
+   AColor.h
+   AColorResources.h
+   AllThemeResources.cpp
+   AllThemeResources.h
+   ClassicThemeAsCeeCode.cpp
+   ClassicThemeAsCeeCode.h
+   DarkThemeAsCeeCode.cpp
+   DarkThemeAsCeeCode.h
+   HiContrastThemeAsCeeCode.cpp
+   HiContrastThemeAsCeeCode.h
+   ImageManipulation.cpp
+   ImageManipulation.h
+   LightThemeAsCeeCode.cpp
+   LightThemeAsCeeCode.h
+   MacroMagic.h
+   Theme.cpp
+   Theme.h
+)
+set( LIBRARIES
+   lib-files-interface
+   PRIVATE
+   wxwidgets::wxwidgets
+ )
+audacity_library( lib-theme "${SOURCES}" "${LIBRARIES}"
+   "" ""
+)

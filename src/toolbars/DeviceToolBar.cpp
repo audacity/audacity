@@ -37,10 +37,10 @@
 
 #include "../TrackPanel.h"
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
 #include "AudioIOBase.h"
-#include "../ImageManipulation.h"
+#include "ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "Prefs.h"
 #include "Project.h"

@@ -60,9 +60,9 @@
 #include <math.h>
 
 #include "../AudioIO.h"
-#include "../AColor.h"
+#include "AColor.h"
 #include "../widgets/BasicMenu.h"
-#include "../ImageManipulation.h"
+#include "ImageManipulation.h"
 #include "Decibels.h"
 #include "Project.h"
 #include "../ProjectAudioManager.h"
@@ -70,10 +70,10 @@
 #include "../ProjectWindows.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"
-#include "../Theme.h"
+#include "Theme.h"
 #include "../widgets/wxWidgetsWindowPlacement.h"
 
-#include "../AllThemeResources.h"
+#include "AllThemeResources.h"
 #include "../widgets/valnum.h"
 
 #if wxUSE_ACCESSIBILITY

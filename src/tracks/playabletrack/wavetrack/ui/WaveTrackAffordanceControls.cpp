@@ -13,7 +13,7 @@
 #include <wx/dc.h>
 #include <wx/frame.h>
 
-#include "../../../../AllThemeResources.h"
+#include "AllThemeResources.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
@@ -34,7 +34,7 @@
 #include "../../../../ProjectSettings.h"
 #include "../../../../SelectionState.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../Theme.h"
+#include "Theme.h"
 #include "../../../../../images/Cursors.h"
 #include "../../../../HitTestResult.h"
 #include "../../../../TrackPanelAx.h"

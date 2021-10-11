@@ -15,8 +15,8 @@
 #include "../../../ui/AffordanceHandle.h"
 #include "../../../ui/SelectHandle.h"
 #include "../../../ui/TrackView.h"
-#include "../../../../AllThemeResources.h"
-#include "../../../../AColor.h"
+#include "AllThemeResources.h"
+#include "AColor.h"
 #include "../../../../NoteTrack.h"
 #include "ViewInfo.h"
 #include "../../../../TrackArtist.h"
@@ -30,7 +30,7 @@
 #include "../../../../SelectionState.h"
 #include "../../../../ProjectSettings.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../Theme.h"
+#include "Theme.h"
 
 class NoteTrackAffordanceHandle final : public AffordanceHandle
 {
