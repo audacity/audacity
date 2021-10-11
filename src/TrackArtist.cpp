@@ -302,6 +302,7 @@ void TrackArtist::UpdatePrefs()
 void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString& title, bool highlight, bool selected)
 {
    wxRect clipRect;
+   bool hasClipRect = dc.GetClippingBox(clipRect);
    //Fix #1689: visual glitches appear on attempt to draw a rectangle
    //larger than 0x7FFFFFF pixels wide (value was discovered
    //by manual testing, and maybe depends on OS being used), but
@@ -309,7 +310,7 @@ void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString& 
    //on the screen, so we can safely reduce its size to be slightly larger than
    //clipping rectangle, and avoid that problem
    auto drawingRect = rect;
-   if (dc.GetClippingBox(clipRect))
+   if (hasClipRect)
    {
        //to make sure that rounding happends outside the clipping rectangle
        drawingRect.SetLeft(std::max(rect.GetLeft(), clipRect.GetLeft() - ClipFrameRadius - 1));
@@ -340,7 +341,10 @@ void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString& 
 
    if (!title.empty())
    {
-      auto titleRect = TrackArt::GetAffordanceTitleRect(rect); 
+      auto titleRect = hasClipRect ?
+         //avoid drawing text outside the clipping rectangle if possible
+         TrackArt::GetAffordanceTitleRect(rect.Intersect(clipRect)) : 
+         TrackArt::GetAffordanceTitleRect(rect);
 
       auto truncatedTitle = TrackArt::TruncateText(dc, title, titleRect.GetWidth());
       if (!truncatedTitle.empty())
