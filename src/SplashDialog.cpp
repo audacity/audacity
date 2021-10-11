@@ -36,6 +36,7 @@ most commonly asked questions about Audacity.
 
 #include "FileNames.h"
 #include "Project.h"
+#include "ProjectWindows.h"
 #include "ShuttleGui.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/HelpSystem.h"
@@ -49,6 +50,42 @@ most commonly asked questions about Audacity.
 #include "../images/DarkAudacityLogoWithName.xpm"
 #else
 #include "../images/AudacityLogoWithName.xpm"
+#endif
+
+#ifdef HAS_WHATS_NEW
+
+#include "MemoryX.h"
+#include <wx/fs_mem.h>
+
+namespace
+{
+const char* WhatsNewURL = "https://youtube.com";
+
+#   include "../images/WhatsNewBtn.png.h"
+
+struct FSHelper final
+{
+   FSHelper()
+       : mMemoryFSHandler(std::make_unique<wxMemoryFSHandler>())
+   {
+      wxFileSystem::AddHandler(mMemoryFSHandler.get());
+
+      wxMemoryFSHandler::AddFile(
+         "whats_new_btn.png", bin2c_whats_new_btn_png,
+         sizeof(bin2c_whats_new_btn_png));
+   }
+
+   ~FSHelper()
+   {
+      wxMemoryFSHandler::RemoveFile("whats_new_btn.png");
+      wxFileSystem::RemoveHandler(mMemoryFSHandler.get());
+   }
+
+private:
+   std::unique_ptr<wxMemoryFSHandler> mMemoryFSHandler;
+};
+
+} // namespace
 #endif
 
 SplashDialog * SplashDialog::pSelf=NULL;
@@ -170,6 +207,10 @@ void SplashDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
 void SplashDialog::Show2( wxWindow * pParent )
 {
+#ifdef HAS_WHATS_NEW
+   FSHelper helper;
+#endif // HAS_WHATS_NEW
+
    if( pSelf == NULL )
    {
       // pParent owns it

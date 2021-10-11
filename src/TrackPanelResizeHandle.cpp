@@ -69,7 +69,7 @@ UIHandle::Result TrackPanelResizeHandle::Click(
          int coord = 0;
          for ( const auto channel : range ) {
             int newCoord = ((double)ii++ /size) * height;
-            TrackView::Get(*channel).SetHeight( newCoord - coord );
+            TrackView::Get(*channel).SetExpandedHeight( newCoord - coord );
             coord = newCoord;
          }
          ProjectHistory::Get( *pProject ).ModifyState(false);
@@ -92,7 +92,7 @@ TrackPanelResizeHandle::TrackPanelResizeHandle
    auto last = *channels.rbegin();
    auto &lastView = TrackView::Get( *last );
    mInitialTrackHeight = lastView.GetHeight();
-   mInitialActualHeight = lastView.GetActualHeight();
+   mInitialExpandedHeight = lastView.GetExpandedHeight();
    mInitialMinimized = lastView.GetMinimized();
 
    if (channels.size() > 1) {
@@ -100,7 +100,7 @@ TrackPanelResizeHandle::TrackPanelResizeHandle
       auto &firstView = TrackView::Get( *first );
 
       mInitialUpperTrackHeight = firstView.GetHeight();
-      mInitialUpperActualHeight = firstView.GetActualHeight();
+      mInitialUpperExpandedHeight = firstView.GetExpandedHeight();
 
       if (track.get() == *channels.rbegin())
          // capturedTrack is the lowest track
@@ -137,7 +137,7 @@ UIHandle::Result TrackPanelResizeHandle::Drag
       auto channels = TrackList::Channels( pTrack.get() );
       for (auto channel : channels) {
          auto &channelView = TrackView::Get( *channel );
-         channelView.SetHeight(channelView.GetHeight());
+         channelView.SetExpandedHeight(channelView.GetHeight());
          channelView.SetMinimized( false );
       }
 
@@ -171,8 +171,8 @@ UIHandle::Result TrackPanelResizeHandle::Drag
       if (newUpperTrackHeight < prevView.GetMinimizedHeight())
          newUpperTrackHeight = prevView.GetMinimizedHeight();
 
-      view.SetHeight(newTrackHeight);
-      prevView.SetHeight(newUpperTrackHeight);
+      view.SetExpandedHeight(newTrackHeight);
+      prevView.SetExpandedHeight(newUpperTrackHeight);
    };
 
    auto doResizeBetween = [&] (Track *next, bool WXUNUSED(vStereo)) {
@@ -194,15 +194,15 @@ UIHandle::Result TrackPanelResizeHandle::Drag
          mInitialUpperTrackHeight + mInitialTrackHeight - view.GetMinimizedHeight();
       }
 
-      view.SetHeight(newUpperTrackHeight);
-      nextView.SetHeight(newTrackHeight);
+      view.SetExpandedHeight(newUpperTrackHeight);
+      nextView.SetExpandedHeight(newTrackHeight);
    };
 
    auto doResize = [&] {
       int newTrackHeight = mInitialTrackHeight + delta;
       if (newTrackHeight < view.GetMinimizedHeight())
          newTrackHeight = view.GetMinimizedHeight();
-      view.SetHeight(newTrackHeight);
+      view.SetExpandedHeight(newTrackHeight);
    };
 
    //STM: We may be dragging one or two (stereo) tracks.
@@ -268,7 +268,7 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
    case IsResizing:
    {
       auto &view = TrackView::Get( *pTrack );
-      view.SetHeight(mInitialActualHeight);
+      view.SetExpandedHeight(mInitialExpandedHeight);
       view.SetMinimized( mInitialMinimized );
    }
    break;
@@ -277,9 +277,9 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
       Track *const next = * ++ tracks.Find(pTrack.get());
       auto
          &view = TrackView::Get( *pTrack ), &nextView = TrackView::Get( *next );
-      view.SetHeight(mInitialUpperActualHeight);
+      view.SetExpandedHeight(mInitialUpperExpandedHeight);
       view.SetMinimized( mInitialMinimized );
-      nextView.SetHeight(mInitialActualHeight);
+      nextView.SetExpandedHeight(mInitialExpandedHeight);
       nextView.SetMinimized( mInitialMinimized );
    }
    break;
@@ -288,9 +288,9 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
       Track *const prev = * -- tracks.Find(pTrack.get());
       auto
          &view = TrackView::Get( *pTrack ), &prevView = TrackView::Get( *prev );
-      view.SetHeight(mInitialActualHeight);
+      view.SetExpandedHeight(mInitialExpandedHeight);
       view.SetMinimized( mInitialMinimized );
-      prevView.SetHeight(mInitialUpperActualHeight);
+      prevView.SetExpandedHeight(mInitialUpperExpandedHeight);
       prevView.SetMinimized(mInitialMinimized);
    }
    break;

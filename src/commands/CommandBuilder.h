@@ -39,12 +39,12 @@ class CommandBuilder
 
       void Failure(const wxString &msg = {});
       void Success(const OldStyleCommandPointer &cmd);
-      void BuildCommand( AudacityProject *project,
+      void BuildCommand( AudacityProject &project,
          const wxString &cmdName, const wxString &cmdParams);
-      void BuildCommand( AudacityProject *project, const wxString &cmdString);
+      void BuildCommand( AudacityProject &project, const wxString &cmdString);
    public:
-      CommandBuilder(AudacityProject *project, const wxString &cmdString);
-      CommandBuilder(AudacityProject *project, const wxString &cmdName,
+      CommandBuilder(AudacityProject &project, const wxString &cmdString);
+      CommandBuilder(AudacityProject &project, const wxString &cmdName,
                      const wxString &cmdParams);
       ~CommandBuilder();
       bool WasValid();

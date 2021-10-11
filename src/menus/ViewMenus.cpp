@@ -1,9 +1,7 @@
-
-
 #include "../CommonCommandFlags.h"
 #include "../Menus.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
@@ -11,7 +9,7 @@
 #include "../TrackInfo.h"
 #include "../TrackPanel.h"
 #include "../UndoManager.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../prefs/GUIPrefs.h"
@@ -22,6 +20,7 @@
 #include "../effects/EffectUI.h"
 #endif
 
+#include <wx/app.h>
 #include <wx/scrolbar.h>
 
 // private helper classes and functions
@@ -154,7 +153,7 @@ void DoZoomFitV(AudacityProject &project)
    height = std::max( (int)TrackInfo::MinimumTrackHeight(), height );
 
    for (auto t : range)
-      TrackView::Get( *t ).SetHeight(height);
+      TrackView::Get( *t ).SetExpandedHeight(height);
 }
 }
 
@@ -332,8 +331,7 @@ void OnShowClipping(const CommandContext &context)
    gPrefs->Flush();
    commandManager.Check(wxT("ShowClipping"), checked);
 
-   wxTheApp->AddPendingEvent(wxCommandEvent{
-      EVT_PREFS_UPDATE, ShowClippingPrefsID() });
+   PrefsListener::Broadcast(ShowClippingPrefsID());
 
    trackPanel.Refresh(false);
 }
@@ -349,8 +347,7 @@ void OnShowNameOverlay(const CommandContext &context)
    gPrefs->Flush();
    commandManager.Check(wxT("ShowTrackNameInWaveform"), checked);
 
-   wxTheApp->AddPendingEvent(wxCommandEvent{
-      EVT_PREFS_UPDATE, ShowTrackNameInWaveformPrefsID() });
+   PrefsListener::Broadcast(ShowTrackNameInWaveformPrefsID());
 
    trackPanel.Refresh(false);
 }

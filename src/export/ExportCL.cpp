@@ -11,9 +11,7 @@
 
 **********************************************************************/
 
-
-
-#include "../ProjectSettings.h"
+#include "ProjectRate.h"
 
 #include <wx/app.h>
 #include <wx/button.h>
@@ -27,20 +25,21 @@
 #include <wx/msw/registry.h> // for wxRegKey
 #endif
 
-#include "../FileNames.h"
+#include "FileNames.h"
 #include "Export.h"
 
 #include "../Mix.h"
-#include "../Prefs.h"
+#include "Prefs.h"
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
 #include "../Track.h"
-#include "../float_cast.h"
+#include "float_cast.h"
 #include "../widgets/FileHistory.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 #include "../widgets/Warning.h"
-#include "../wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h"
 
 #ifdef USE_LIBID3TAG
    #include <id3tag.h>
@@ -187,7 +186,7 @@ void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
    type = { XO("Executables"), { ext } };
 #endif
 
-   path = FileNames::SelectFile(FileNames::Operation::Open,
+   path = SelectFile(FileNames::Operation::Open,
       XO("Find path to command"),
       wxEmptyString,
       wxEmptyString,
@@ -396,7 +395,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
    wxLogNull nolog;
 
    // establish parameters
-   int rate = lrint( ProjectSettings::Get( *project ).GetRate());
+   int rate = lrint( ProjectRate::Get( *project ).GetRate());
    const size_t maxBlockLen = 44100 * 5;
    unsigned long totalSamples = lrint((t1 - t0) * rate);
    unsigned long sampleBytes = totalSamples * channels * SAMPLE_SIZE(floatSample);
@@ -506,7 +505,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
                             mixerSpec);
 
    size_t numBytes = 0;
-   samplePtr mixed = NULL;
+   constSamplePtr mixed = NULL;
    auto updateResult = ProgressResult::Success;
 
    {
@@ -541,7 +540,7 @@ ProgressResult ExportCL::Export(AudacityProject *project,
             // Byte-swapping is necessary on big-endian machines, since
             // WAV files are little-endian
 #if wxBYTE_ORDER == wxBIG_ENDIAN
-            float *buffer = (float *) mixed;
+            auto buffer = (const float *) mixed;
             for (int i = 0; i < numBytes; i++) {
                buffer[i] = wxUINT32_SWAP_ON_BE(buffer[i]);
             }

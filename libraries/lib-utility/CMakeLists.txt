@@ -18,6 +18,7 @@ used utilities that don't correspond to things in the standard.
 set( SOURCES
    MemoryX.cpp
    MemoryX.h
+   ModuleConstants.cpp
    ModuleConstants.h
 )
 audacity_library( lib-utility "${SOURCES}" ""

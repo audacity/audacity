@@ -23,8 +23,8 @@
 #include <wx/checkbox.h>
 #include <wx/textctrl.h>
 
-#include "../FFT.h"
-#include "../Project.h"
+#include "FFT.h"
+#include "Project.h"
 #include "../ShuttleGui.h"
 
 #include "../TrackPanel.h"
@@ -77,7 +77,7 @@ TranslatableString SpectrumPrefs::GetDescription()
    return XO("Preferences for Spectrum");
 }
 
-wxString SpectrumPrefs::HelpPageName()
+ManualPageID SpectrumPrefs::HelpPageName()
 {
    // Currently (May2017) Spectrum Settings is the only preferences
    // we ever display in a dialog on its own without others.
@@ -91,7 +91,6 @@ wxString SpectrumPrefs::HelpPageName()
 
 enum {
    ID_WINDOW_SIZE = 10001,
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    ID_WINDOW_TYPE,
    ID_PADDING_SIZE,
    ID_SCALE,
@@ -101,9 +100,8 @@ enum {
    ID_GAIN,
    ID_RANGE,
    ID_FREQUENCY_GAIN,
-   ID_GRAYSCALE,
+   ID_COLOR_SCHEME,
    ID_SPECTRAL_SELECTION,
-#endif
    ID_DEFAULTS,
 };
 
@@ -124,7 +122,6 @@ void SpectrumPrefs::Populate(size_t windowSize)
 
 void SpectrumPrefs::PopulatePaddingChoices(size_t windowSize)
 {
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    mZeroPaddingChoice = 1;
 
    // The choice of window size restricts the choice of padding.
@@ -159,7 +156,6 @@ void SpectrumPrefs::PopulatePaddingChoices(size_t windowSize)
 
    if (pPaddingSizeControl)
       pPaddingSizeControl->SetSelection(mZeroPaddingChoice);
-#endif
 }
 
 void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
@@ -223,11 +219,13 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
                S.Id(ID_FREQUENCY_GAIN).TieNumericTextBox(XXO("High &boost (dB/dec):"),
                mTempSettings.frequencyGain,
                8);
+
+            // i18n-hint Scheme refers to a color scheme for spectrogram colors
+            S.Id(ID_COLOR_SCHEME).TieChoice(XC("Sche&me", "spectrum prefs"),
+               (int&)mTempSettings.colorScheme,
+               Msgids( SpectrogramSettings::GetColorSchemeNames() ) );
          }
          S.EndMultiColumn();
-
-         S.Id(ID_GRAYSCALE).TieCheckBox(XXO("Gra&yscale"),
-            mTempSettings.isGrayscale);
       }
       S.EndStatic();
    }
@@ -265,12 +263,10 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             mTempSettings.windowType,
             mTypeChoices);
 
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
          mZeroPaddingChoiceCtrl =
             S.Id(ID_PADDING_SIZE).TieChoice(XXO("&Zero padding factor:"),
             mTempSettings.zeroPaddingFactor,
             mZeroPaddingChoices);
-#endif
       }
       S.EndMultiColumn();
    }
@@ -565,9 +561,7 @@ void SpectrumPrefs::EnableDisableSTFTOnlyControls()
    mGain->Enable(STFT);
    mRange->Enable(STFT);
    mFrequencyGain->Enable(STFT);
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    mZeroPaddingChoiceCtrl->Enable(STFT);
-#endif
 }
 
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
@@ -584,7 +578,7 @@ BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
    EVT_TEXT(ID_GAIN, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_RANGE, SpectrumPrefs::OnControl)
    EVT_TEXT(ID_FREQUENCY_GAIN, SpectrumPrefs::OnControl)
-   EVT_CHECKBOX(ID_GRAYSCALE, SpectrumPrefs::OnControl)
+   EVT_CHOICE(ID_COLOR_SCHEME, SpectrumPrefs::OnControl)
    EVT_CHECKBOX(ID_SPECTRAL_SELECTION, SpectrumPrefs::OnControl)
 
 END_EVENT_TABLE()

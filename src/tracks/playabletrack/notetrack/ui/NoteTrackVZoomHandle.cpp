@@ -16,14 +16,14 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../HitTestResult.h"
 #include "../../../../NoteTrack.h"
-#include "../../../../Project.h"
+#include "Project.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../widgets/PopupMenuTable.h"
 #include "../../../../../images/Cursors.h"
-#include "../../../../Prefs.h"
+#include "Prefs.h"
 
 #include <wx/event.h>
 
@@ -103,6 +103,11 @@ UIHandlePtr NoteTrackVZoomHandle::HitTest
 
 NoteTrackVZoomHandle::~NoteTrackVZoomHandle()
 {
+}
+
+bool NoteTrackVZoomHandle::HandlesRightClick()
+{
+   return true;
 }
 
 UIHandle::Result NoteTrackVZoomHandle::Click
@@ -199,11 +204,6 @@ protected:
    void OnDownOctave(wxCommandEvent&){ OnZoom( kDownOctave );};
 
 private:
-   void DestroyMenu() override
-   {
-      mpData = nullptr;
-   }
-
    void InitUserData(void *pUserData) override;
 
    void UpdatePrefs() override
@@ -312,9 +312,9 @@ UIHandle::Result NoteTrackVZoomHandle::Release
 
       PopupMenuTable *const pTable =
           (PopupMenuTable *) &NoteTrackVRulerMenuTable::Instance();
-      auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);
+      auto pMenu = PopupMenuTable::BuildMenu(pTable, &data);
 
-      pParent->PopupMenu(pMenu.get(), event.m_x, event.m_y);
+      pMenu->Popup( *pParent, { event.m_x, event.m_y } );
 
       return data.result;
    }

@@ -35,16 +35,16 @@
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
 #include "../KeyboardCapture.h"
-#include "../Project.h"
+#include "Project.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
 #include "../Envelope.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
 #include "../tracks/ui/Scrubbing.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION
 #include "../VoiceKey.h"
@@ -299,7 +299,7 @@ void TranscriptionToolBar::EnableDisableButtons()
    auto gAudioIO = AudioIO::Get();
    bool canStopAudioStream = (!gAudioIO->IsStreamActive() ||
            gAudioIO->IsMonitoring() ||
-           gAudioIO->GetOwningProject() == p );
+           gAudioIO->GetOwningProject().get() == p );
    bool recording = gAudioIO->GetNumCaptureChannels() > 0;
 
    // Only interested in audio type tracks
@@ -490,6 +490,8 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
 
    // Scrubbing only supports straight through play.
    // So if looped or cutPreview, we have to fall back to fixed speed.
+   if (looped)
+      cutPreview = false;
    bFixedSpeedPlay = bFixedSpeedPlay || looped || cutPreview;
    if (bFixedSpeedPlay)
    {
@@ -525,13 +527,12 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       return;
    if (bFixedSpeedPlay)
    {
-      auto options = DefaultPlayOptions( *p );
-      options.playLooped = looped;
+      auto options = DefaultPlayOptions( *p, looped );
       // No need to set cutPreview options.
       options.envelope = mEnvelope.get();
       auto mode =
          cutPreview ? PlayMode::cutPreviewPlay
-         : options.playLooped ? PlayMode::loopedPlay
+         : looped ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
       projectAudioManager.PlayPlayRegion(
          SelectedRegion(playRegion.GetStart(), playRegion.GetEnd()),

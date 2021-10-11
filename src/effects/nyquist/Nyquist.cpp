@@ -53,25 +53,25 @@ effects from this one class.
 #include <wx/stdpaths.h>
 
 #include "../EffectManager.h"
-#include "../../FileNames.h"
+#include "FileNames.h"
 #include "../../LabelTrack.h"
 #include "Languages.h"
 #include "../../NoteTrack.h"
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../PluginManager.h"
-#include "../../Project.h"
-#include "../../ProjectSettings.h"
+#include "Project.h"
+#include "ProjectRate.h"
 #include "../../ShuttleGetDefinition.h"
 #include "../../ShuttleGui.h"
-#include "../../TempDirectory.h"
-#include "../../ViewInfo.h"
+#include "TempDirectory.h"
+#include "ViewInfo.h"
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
-#include "../../Prefs.h"
-#include "../../wxFileNameWrapper.h"
+#include "Prefs.h"
+#include "wxFileNameWrapper.h"
 #include "../../prefs/GUIPrefs.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
@@ -239,14 +239,14 @@ TranslatableString NyquistEffect::GetDescription()
    return mCopyright;
 }
 
-wxString NyquistEffect::ManualPage()
+ManualPageID NyquistEffect::ManualPage()
 {
       return mIsPrompt
-         ? wxT("Nyquist_Prompt")
+         ? wxString("Nyquist_Prompt")
          : mManPage;
 }
 
-wxString NyquistEffect::HelpPage()
+FilePath NyquistEffect::HelpPage()
 {
    auto paths = NyquistEffect::GetNyquistSearchPath();
    wxString fileName;
@@ -786,7 +786,7 @@ bool NyquistEffect::Process()
       // numbers to Nyquist, whereas using "%g" will use the user's
       // decimal separator which may be a comma in some countries.
       mProps += wxString::Format(wxT("(putprop '*PROJECT* (float %s) 'RATE)\n"),
-         Internat::ToString(ProjectSettings::Get(*project).GetRate()));
+         Internat::ToString(ProjectRate::Get(*project).GetRate()));
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'TRACKS)\n"), numTracks);
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'WAVETRACKS)\n"), numWave);
       mProps += wxString::Format(wxT("(putprop '*PROJECT* %d 'LABELTRACKS)\n"), numLabel);
@@ -1239,8 +1239,8 @@ bool NyquistEffect::ProcessOne()
          for (size_t i=0; i<ca.size(); i++) {
             if (i < 1000) {
                clips += wxString::Format(wxT("(list (float %s) (float %s))"),
-                                         Internat::ToString(ca[i]->GetStartTime()),
-                                         Internat::ToString(ca[i]->GetEndTime()));
+                                         Internat::ToString(ca[i]->GetPlayStartTime()),
+                                         Internat::ToString(ca[i]->GetPlayEndTime()));
             } else if (i == 1000) {
                // If final clip is NIL, plug-in developer knows there are more than 1000 clips in channel.
                clips += "NIL";
@@ -2183,7 +2183,7 @@ bool NyquistEffect::Parse(
          ctrl.label = tokens[4];
 
          // valStr may or may not be a quoted string
-         ctrl.valStr = len > 5 ? tokens[5] : wxT("");
+         ctrl.valStr = len > 5 ? tokens[5] : wxString{};
          ctrl.val = GetCtrlValue(ctrl.valStr);
          if (ctrl.valStr.length() > 0 &&
                (ctrl.valStr[0] == wxT('(') ||

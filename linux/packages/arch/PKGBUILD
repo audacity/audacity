@@ -1,0 +1,97 @@
+pkgname=audacity-test
+pkgver=3.0.3
+pkgrel=1
+pkgdesc="Audacity is an easy-to-use, multi-track audio editor and recorder"
+groups=(audio)
+url="https://audacityteam.org"
+license=(GPL)
+
+arch=(x86_64)
+
+depends=(zlib
+   alsa-lib
+   gtk2
+   expat
+   libid3tag 
+   libogg
+   libvorbis
+   flac
+   lame
+   twolame
+   libmad
+   libsndfile 
+   jack
+   lilv 
+   lv2
+   portaudio
+   portsmf
+   portmidi
+   suil
+   vamp-plugin-sdk
+   libsoxr
+   soundtouch
+   libpng
+   libjpeg-turbo
+   libsm
+)
+
+makedepends=(
+   git 
+   cmake 
+   python-pip
+   ffmpeg
+)
+
+optdepends=('ffmpeg: additional import/export capabilities')
+
+provides=(audacity audacity-test)
+conflicts=(audacity audacity-test)
+
+source=(
+  "audacity-sources.tar.gz"
+  "audacity-offline-dependencies-arch-linux.tar.gz"
+)
+
+md5sums=(
+  'SKIP'
+  'SKIP'
+)
+
+build() {
+    depsDir=$(readlink -f ./audacity-offline-dependencies)
+    python3 -m venv conan_env
+
+    source conan_env/bin/activate
+    pip3 install --no-index --find-links "$depsDir/pip_cache" conan 
+
+    export CONAN_USER_HOME="$depsDir/conan_home"
+    mkdir -p $CONAN_USER_HOME
+
+    conan config home
+    conan config init
+    conan config set storage.download_cache="$CONAN_USER_HOME/download_cache"
+
+    cmake_args=(
+        -D CMAKE_BUILD_TYPE=Release
+        -D CMAKE_INSTALL_PREFIX=/usr
+
+        -D audacity_conan_allow_prebuilt_binaries=no
+
+        -D audacity_lib_preference=system # Change the libs default to 'system'
+        -D audacity_obey_system_dependencies=On # And force it!
+
+        -D audacity_use_pch=no
+
+        -D audacity_use_wxwidgets=local # wxWidgets 3.1 is not available
+
+        -D audacity_use_sbsms=local # sbsms is only available in AUR
+    )
+
+    cmake -S audacity -B build "${cmake_args[@]}"
+    cmake --build build -- -j`nproc`
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir/" install
+}

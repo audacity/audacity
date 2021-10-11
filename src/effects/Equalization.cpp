@@ -69,6 +69,7 @@
 #include <wx/dcmemory.h>
 #include <wx/event.h>
 #include <wx/listctrl.h>
+#include <wx/log.h>
 #include <wx/image.h>
 #include <wx/intl.h>
 #include <wx/choice.h>
@@ -89,23 +90,23 @@
 #include "../AColor.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
-#include "../PlatformCompatibility.h"
-#include "../FileNames.h"
+#include "PlatformCompatibility.h"
+#include "FileNames.h"
 #include "../Envelope.h"
 #include "../EnvelopeEditor.h"
-#include "../widgets/ErrorDialog.h"
-#include "../FFT.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "FFT.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../Theme.h"
 #include "../TrackArtist.h"
 #include "../WaveClip.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/Ruler.h"
-#include "../xml/XMLFileReader.h"
+#include "../widgets/AudacityTextEntryDialog.h"
+#include "XMLFileReader.h"
 #include "../AllThemeResources.h"
-#include "../float_cast.h"
+#include "float_cast.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"
@@ -348,14 +349,14 @@ TranslatableString EffectEqualization::GetDescription()
    return XO("Adjusts the volume levels of particular frequencies");
 }
 
-wxString EffectEqualization::ManualPage()
+ManualPageID EffectEqualization::ManualPage()
 {
    // Bug 2509: Must use _ and not space in names.
    if( mOptions == kEqOptionGraphic )
-      return wxT("Graphic_EQ");
+      return L"Graphic_EQ";
    if( mOptions == kEqOptionCurve )
-      return wxT("Filter_Curve_EQ");
-   return wxT("Equalization");
+      return L"Filter_Curve_EQ";
+   return L"Equalization";
 }
 
 // EffectDefinitionInterface implementation
@@ -1383,8 +1384,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
       output->Append((samplePtr)buffer.get(), floatSample, mM - 1);
       output->Flush();
 
-      std::vector<EnvPoint> envPoints;
-
       // now move the appropriate bit of the output back to the track
       // (this could be enhanced in the future to use the tails)
       double offsetT0 = t->LongSamplesToTime(offset);
@@ -1407,8 +1406,8 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          double clipStartT;
          double clipEndT;
 
-         clipStartT = clip->GetStartTime();
-         clipEndT = clip->GetEndTime();
+         clipStartT = clip->GetPlayStartTime();
+         clipEndT = clip->GetPlayEndTime();
          if( clipEndT <= startT )
             continue;   // clip is not within selection
          if( clipStartT >= startT + lenT )
@@ -1424,14 +1423,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
 
          //save them
          clipStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
-
-         // Save the envelope points
-         const auto &env = *clip->GetEnvelope();
-         for (size_t i = 0, numPoints = env.GetNumberOfPoints(); i < numPoints; ++i) {
-            envPoints.push_back(env[i]);
-         }
       }
-
       //now go thru and replace the old clips with NEW
       for(unsigned int i = 0; i < clipStartEndTimes.size(); i++)
       {
@@ -1447,12 +1439,6 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
             !(clipRealStartEndTimes[i].first <= startT &&
             clipRealStartEndTimes[i].second >= startT+lenT) )
             t->Join(clipRealStartEndTimes[i].first,clipRealStartEndTimes[i].second);
-      }
-
-      // Restore the envelope points
-      for (auto point : envPoints) {
-         WaveClip *clip = t->GetClipAtTime(point.GetT());
-         clip->GetEnvelope()->Insert(point.GetT(), point.GetVal());
       }
    }
 
@@ -1830,7 +1816,8 @@ bool EffectEqualization::GetDefaultFileName(wxFileName &fileName)
       // LLL:  Is there really a need for an error message at all???
       //auto errorMessage = XO("EQCurves.xml and EQDefaultCurves.xml were not found on your system.\nPlease press 'help' to visit the download page.\n\nSave the curves at %s")
       //   .Format( FileNames::DataDir() );
-      //ShowErrorDialog(mUIParent, XO("EQCurves.xml and EQDefaultCurves.xml missing"),
+      //BasicUI::ShowErrorDialog( wxWidgetsWindowPlacement{ mUIParent },
+      //   XO("EQCurves.xml and EQDefaultCurves.xml missing"),
       //   errorMessage, wxT("http://wiki.audacityteam.org/wiki/EQCurvesDownload"), false);
 
       // Have another go at finding EQCurves.xml in the data dir, in case 'help' helped

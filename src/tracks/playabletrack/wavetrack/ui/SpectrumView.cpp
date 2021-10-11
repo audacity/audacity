@@ -11,22 +11,29 @@ Paul Licameli split from WaveTrackView.cpp
 
 #include "SpectrumView.h"
 
+#include "SpectralDataManager.h" // Cycle :-(
 #include "SpectrumVRulerControls.h"
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"
 
+#include "../../../ui/BrushHandle.h"
+
 #include "../../../../AColor.h"
-#include "../../../../Prefs.h"
-#include "../../../../NumberScale.h"
+#include "Prefs.h"
+#include "NumberScale.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
-#include "../../../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
+#include "../../../../ProjectSettings.h"
 
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
+
+class BrushHandle;
+class SpectralData;
 
 static WaveTrackSubView::Type sType{
    WaveTrackViewConstants::Spectrum,
@@ -35,6 +42,12 @@ static WaveTrackSubView::Type sType{
 
 static WaveTrackSubViewType::RegisteredType reg{ sType };
 
+SpectrumView::SpectrumView(WaveTrackView &waveTrackView) : WaveTrackSubView(waveTrackView) {
+   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+   mpSpectralData = std::make_shared<SpectralData>(wt->GetRate());
+   mOnBrushTool = false;
+}
+
 SpectrumView::~SpectrumView() = default;
 
 bool SpectrumView::IsSpectral() const
@@ -42,11 +55,122 @@ bool SpectrumView::IsSpectral() const
    return true;
 }
 
+class SpectrumView::SpectralDataSaver : public BrushHandle::StateSaver {
+public:
+   explicit SpectralDataSaver( SpectrumView &view )
+      : mView{ view }
+   {}
+
+   void Init( AudacityProject &project, bool clearAll ) override
+   {
+      mpProject = &project;
+      ForAll( project, [this, clearAll](SpectrumView &view){
+         auto pOldData = view.mpSpectralData;
+         if (clearAll) {
+            auto &pNewData = view.mpBackupSpectralData =
+               std::make_shared<SpectralData>(pOldData->GetSR());
+            pNewData->CopyFrom(*pOldData);
+            pOldData->clearAllData();
+         }
+         else {
+            // Back up one view only
+            if (&mView == &view) {
+               auto &pNewData = view.mpBackupSpectralData =
+                  std::make_shared<SpectralData>(pOldData->GetSR());
+               pNewData->CopyFrom( *pOldData );
+            }
+            else
+               view.mpBackupSpectralData = {};
+         }
+      });
+   }
+
+   ~SpectralDataSaver() override
+   {
+      if (mpProject)
+         ForAll( *mpProject, [this](SpectrumView &view){
+            if (mCommitted) {
+               // Discard all backups
+               view.mpBackupSpectralData = {};
+            }
+            else {
+               // Restore all
+               if (auto &pBackupData = view.mpBackupSpectralData) {
+                  view.mpSpectralData->CopyFrom(*pBackupData);
+                  pBackupData.reset();
+               }
+            }
+         });
+   }
+
+private:
+   SpectrumView &mView;
+   AudacityProject *mpProject = nullptr;
+};
+
+// This always hits, but details of the hit vary with mouse position and
+// key state.
+static UIHandlePtr BrushHandleHitTest(
+   std::weak_ptr<BrushHandle> &holder,
+   const TrackPanelMouseState &st, const AudacityProject *pProject,
+   const std::shared_ptr<SpectrumView> &pTrackView,
+   const std::shared_ptr<SpectralData> &mpData)
+{
+   const auto &viewInfo = ViewInfo::Get( *pProject );
+   auto &projectSettings = ProjectSettings::Get( *pProject );
+   auto result = std::make_shared<BrushHandle>(
+      std::make_shared<SpectrumView::SpectralDataSaver>(*pTrackView),
+      pTrackView, TrackList::Get( *pProject ),
+      st, viewInfo, mpData, projectSettings);
+
+   result = AssignUIHandlePtr(holder, result);
+
+   //Make sure we are within the selected track
+   // Adjusting the selection edges can be turned off in
+   // the preferences...
+   auto pTrack = pTrackView->FindTrack();
+   if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
+   {
+      return result;
+   }
+
+   return result;
+}
+
+void SpectrumView::ForAll( AudacityProject &project,
+   std::function<void(SpectrumView &view)> fn )
+{
+   if (!fn)
+      return;
+   for ( const auto wt : TrackList::Get(project).Any< WaveTrack >() ) {
+      if (auto pWaveTrackView =
+          dynamic_cast<WaveTrackView*>( &TrackView::Get(*wt)) ) {
+         for (const auto &pSubView : pWaveTrackView->GetAllSubViews()) {
+            if (const auto sView = dynamic_cast<SpectrumView*>(pSubView.get()))
+               fn( *sView );
+         }
+      }
+   }
+}
+
 std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
    const auto wt = std::static_pointer_cast< WaveTrack >( FindTrack() );
+   std::vector<UIHandlePtr> results;
+
+#ifdef EXPERIMENTAL_BRUSH_TOOL
+   mOnBrushTool = (currentTool == ToolCodes::brushTool);
+   if(mOnBrushTool){
+      const auto result = BrushHandleHitTest(
+         mBrushHandle, state,
+         pProject, std::static_pointer_cast<SpectrumView>(shared_from_this()),
+         mpSpectralData);
+      results.push_back(result);
+      return results;
+   }
+#endif
 
    return WaveTrackSubView::DoDetailedHitTest(
       state, pProject, currentTool, bMultiTool, wt
@@ -86,6 +210,17 @@ auto SpectrumView::SubViewType() const -> const Type &
 std::shared_ptr<TrackVRulerControls> SpectrumView::DoGetVRulerControls()
 {
    return std::make_shared<SpectrumVRulerControls>( shared_from_this() );
+}
+
+std::shared_ptr<SpectralData> SpectrumView::GetSpectralData(){
+   return mpSpectralData;
+}
+
+void SpectrumView::CopyToSubView(WaveTrackSubView *destSubView) const{
+   if ( const auto pDest = dynamic_cast< SpectrumView* >( destSubView ) ) {
+      pDest->mpSpectralData =  std::make_shared<SpectralData>(mpSpectralData->GetSR());
+      pDest->mpSpectralData->CopyFrom(*mpSpectralData);
+   }
 }
 
 namespace
@@ -169,13 +304,17 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
    return  AColor::ColorGradientTimeSelected;
 }
 
+
 void DrawClipSpectrum(TrackPanelDrawingContext &context,
                                    WaveTrackCache &waveTrackCache,
                                    const WaveClip *clip,
-                                   const wxRect & rect)
+                                   const wxRect &rect,
+                                   const std::shared_ptr<SpectralData> &mpSpectralData,
+                                   bool selected)
 {
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
+   bool onBrushTool = artist->onBrushTool;
    const auto &selectedRegion = *artist->pSelectedRegion;
    const auto &zoomInfo = *artist->pZoomInfo;
 
@@ -215,7 +354,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    freqHi = selectedRegion.f1();
 #endif
 
-   const bool &isGrayscale = settings.isGrayscale;
+   const int &colorScheme = settings.colorScheme;
    const int &range = settings.range;
    const int &gain = settings.gain;
 
@@ -509,7 +648,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       specCache.Populate
          (settings, waveTrackCache,
           0, 0, numPixels,
-          clip->GetNumSamples(),
+          clip->GetPlaySamplesCount(),
           tOffset, rate,
           0 // FIXME: PRL -- make reassignment work with fisheye
        );
@@ -528,8 +667,34 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
-   for (int xx = 0; xx < mid.width; ++xx) {
 
+   const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
+   int windowSize = mpSpectralData->GetWindowSize();
+   int hopSize = mpSpectralData->GetHopSize();
+   double sr = mpSpectralData->GetSR();
+   auto &dataHistory = mpSpectralData->dataHistory;
+
+   // Lazy way to add all hops and bins required for rendering
+   dataHistory.push_back(mpSpectralData->dataBuffer);
+
+   // Generate combined hops and bins map for rendering
+   std::map<long long, std::set<int>> hopBinMap;
+   for(auto vecIter = dataHistory.begin(); vecIter != dataHistory.end(); ++vecIter){
+      for(const auto &hopMap: *vecIter){
+         for(const auto &binNum: hopMap.second)
+            hopBinMap[hopMap.first].insert(binNum);
+      }
+   }
+
+   // Lambda for converting yy (not mouse coord!) to respective freq. bins
+   auto yyToFreqBin = [&](int yy){
+      const double p = double(yy) / hiddenMid.height;
+      float convertedFreq = numberScale.PositionToValue(p);
+      float convertedFreqBinNum = convertedFreq / (sr / windowSize);
+      return static_cast<int>(std::round(convertedFreqBinNum));
+   };
+
+   for (int xx = 0; xx < mid.width; ++xx) {
       int correctedX = xx + leftOffset - hiddenLeftOffset;
 
       // in fisheye mode the time scale has changed, so the row values aren't cached
@@ -555,9 +720,41 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
       maybeSelected = maybeSelected || (xx == selectedX);
 
+      // In case the xx matches the hop number, it will be used as iterator for frequency bins
+      std::set<int> *pSelectedBins = nullptr;
+      std::set<int>::iterator freqBinIter;
+      auto advanceFreqBinIter = [&](int nextBinRounded){
+         while (freqBinIter != pSelectedBins->end() &&
+         *freqBinIter < nextBinRounded)
+            ++freqBinIter;
+      };
+
+      bool hitHopNum = false;
+      if (onBrushTool) {
+         int convertedHopNum = (w0.as_long_long() + hopSize / 2) / hopSize;
+         hitHopNum = (hopBinMap.find(convertedHopNum) != hopBinMap.end());
+         if(hitHopNum) {
+            pSelectedBins = &hopBinMap[convertedHopNum];
+            freqBinIter = pSelectedBins->begin();
+            advanceFreqBinIter(std::round(yyToFreqBin(0)));
+         }
+      }
+   
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
+         if(onBrushTool)
+            maybeSelected = false;
          const float bin     = bins[yy];
          const float nextBin = bins[yy+1];
+         auto binRounded = std::round(yyToFreqBin(yy));
+         auto nextBinRounded = std::round(yyToFreqBin(yy + 1));
+
+         if(hitHopNum
+            && freqBinIter != pSelectedBins->end()
+            && binRounded == *freqBinIter)
+            maybeSelected = true;
+
+         if (hitHopNum)
+            advanceFreqBinIter(nextBinRounded);
 
          // For spectral selection, determine what colour
          // set to use.  We use a darker selection if
@@ -566,17 +763,21 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
          AColor::ColorGradientChoice selected = AColor::ColorGradientUnselected;
 
          // If we are in the time selected range, then we may use a different color set.
-         if (maybeSelected)
+         if (maybeSelected) {
             selected =
                ChooseColorSet(bin, nextBin, selBinLo, selBinCenter, selBinHi,
                   (xx + leftOffset - hiddenLeftOffset) / DASH_LENGTH, isSpectral);
+            if ( onBrushTool && selected != AColor::ColorGradientUnselected )
+               // use only two sets of colors
+               selected = AColor::ColorGradientTimeAndFrequencySelected;
+         }
 
          const float value = uncached
             ? findValue(uncached, bin, nextBin, nBins, autocorrelation, gain, range)
             : clip->mSpecPxCache->values[correctedX * hiddenMid.height + yy];
 
          unsigned char rv, gv, bv;
-         GetColorGradient(value, selected, isGrayscale, &rv, &gv, &bv);
+         GetColorGradient(value, selected, colorScheme, &rv, &gv, &bv);
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
          if (fftYGrid && yGrid[yy]) {
@@ -585,7 +786,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
             bv /= 1.1f;
          }
 #endif //EXPERIMENTAL_FFT_Y_GRID
-
          int px = ((mid.height - 1 - yy) * mid.width + xx);
 #ifdef EXPERIMENTAL_SPECTROGRAM_OVERLAY
          // More transparent the closer to zero intensity.
@@ -598,6 +798,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       } // each yy
    } // each xx
 
+   dataHistory.pop_back();
    wxBitmap converted = wxBitmap(image);
 
    wxMemoryDC memDC;
@@ -608,13 +809,18 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    // Draw clip edges, as also in waveform view, which improves the appearance
    // of split views
-   params.DrawClipEdges( dc, rect );
+   {
+      auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
+      if (!clipRect.IsEmpty())
+         TrackArt::DrawClipEdges(dc, clipRect, selected);
+   }
 }
 
 }
 
-void SpectrumView::DoDraw( TrackPanelDrawingContext &context,
-                                const WaveTrack *track,
+void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
+                                const WaveTrack* track,
+                                const WaveClip* selectedClip,
                                 const wxRect & rect )
 {
    const auto artist = TrackArtist::Get( context );
@@ -624,8 +830,10 @@ void SpectrumView::DoDraw( TrackPanelDrawingContext &context,
       context, rect, track, blankSelectedBrush, blankBrush );
 
    WaveTrackCache cache(track->SharedPointer<const WaveTrack>());
-   for (const auto &clip: track->GetClips())
-      DrawClipSpectrum( context, cache, clip.get(), rect );
+   for (const auto &clip: track->GetClips()){
+      DrawClipSpectrum( context, cache, clip.get(), rect,
+                        mpSpectralData, clip.get() == selectedClip);
+   }
 
    DrawBoldBoundaries( context, track, rect );
 }
@@ -653,14 +861,18 @@ void SpectrumView::Draw(
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
       dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
 #endif
+
+      auto waveTrackView = GetWaveTrackView().lock();
+      wxASSERT(waveTrackView.use_count());
       
-      DoDraw( context, wt.get(), rect );
+      auto seletedClip = waveTrackView->GetSelectedClip().lock();
+      DoDraw( context, wt.get(), seletedClip.get(), rect );
       
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
 #endif
    }
-   CommonTrackView::Draw( context, rect, iPass );
+   WaveTrackSubView::Draw( context, rect, iPass );
 }
 
 static const WaveTrackSubViews::RegisteredFactory key{
@@ -673,7 +885,7 @@ static const WaveTrackSubViews::RegisteredFactory key{
 // menu.  It is appropriate only to spectrum view and so is kept in this
 // source file with the rest of the spectrum view implementation.
 #include "WaveTrackControls.h"
-#include "../../../../AudioIOBase.h"
+#include "AudioIOBase.h"
 #include "../../../../Menus.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
@@ -697,11 +909,6 @@ struct SpectrogramSettingsHandler : PopupMenuHandler {
    void InitUserData(void *pUserData) override
    {
       mpData = static_cast< PlayableTrackControls::InitMenuData* >(pUserData);
-   }
-
-   void DestroyMenu() override
-   {
-      mpData = nullptr;
    }
 };
 
@@ -809,3 +1016,37 @@ PopupMenuTable::AttachedItem sAttachment{
 };
 }
 
+static bool ShouldCaptureEvent(wxKeyEvent& event, SpectralData *pData)
+{
+   const auto keyCode = event.GetKeyCode();
+   return
+      (keyCode == WXK_BACK || keyCode == WXK_DELETE ||
+       keyCode == WXK_NUMPAD_DELETE)
+      && pData && !pData->dataHistory.empty();
+}
+
+unsigned SpectrumView::CaptureKey(
+   wxKeyEvent& event, ViewInfo&, wxWindow*, AudacityProject*)
+{
+   bool capture = ShouldCaptureEvent(event, mpSpectralData.get());
+   event.Skip(!capture);
+   return RefreshCode::RefreshNone;
+}
+
+unsigned SpectrumView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow*, AudacityProject* project)
+{
+   bool capture = ShouldCaptureEvent(event, mpSpectralData.get());
+   event.Skip(!capture);
+   if (capture && SpectralDataManager::ProcessTracks(*project))
+      // Not RefreshCell, because there might be effects in multiple tracks
+      return RefreshCode::RefreshAll;
+   return RefreshCode::RefreshNone;
+}
+
+unsigned SpectrumView::Char(
+   wxKeyEvent &event, ViewInfo&, wxWindow*, AudacityProject* )
+{
+   bool capture = ShouldCaptureEvent(event, mpSpectralData.get());
+   event.Skip(!capture);
+   return RefreshCode::RefreshNone;
+}

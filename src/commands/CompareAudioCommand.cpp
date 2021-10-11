@@ -22,7 +22,7 @@ threshold of difference in two selected tracks
 #include "CompareAudioCommand.h"
 
 #include "LoadCommands.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 
 

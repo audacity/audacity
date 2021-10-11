@@ -40,7 +40,7 @@
 #include <wx/slider.h>
 #include <wx/stattext.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
@@ -198,9 +198,9 @@ TranslatableString EffectDistortion::GetDescription()
    return XO("Waveshaping distortion effect");
 }
 
-wxString EffectDistortion::ManualPage()
+ManualPageID EffectDistortion::ManualPage()
 {
-   return wxT("Distortion");
+   return L"Distortion";
 }
 
 // EffectDefinitionInterface implementation

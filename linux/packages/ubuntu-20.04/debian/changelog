@@ -1,0 +1,5 @@
+audacity (3.0.3-1) UNRELEASED; urgency=medium
+
+  * Initial release. (Closes: #XXXXXX)
+
+ -- Dmitry Vedenko <dvedenko@ubuntu>  Mon, 02 Aug 2021 14:55:02 +0300

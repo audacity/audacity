@@ -5,7 +5,7 @@
 #include "../ProjectWindow.h"
 #include "../UndoManager.h"
 #include "../WaveClip.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -44,6 +44,7 @@ struct FoundClip : FoundTrack {
    bool found{};
    double startTime{};
    double endTime{};
+   wxString name{};
    int index{};
 };
 
@@ -51,8 +52,10 @@ struct FoundClipBoundary : FoundTrack {
    int nFound{};    // 0, 1, or 2
    double time{};
    int index1{};
+   wxString name1{};
    bool clipStart1{};
    int index2{};
+   wxString name2{};
    bool clipStart2{};
 };
 
@@ -71,8 +74,8 @@ bool TwoChannelsHaveSameBoundaries
    if (left.size() == right.size()) {
       sameClips = true;
       for (unsigned int i = 0; i < left.size(); i++) {
-         if (left[i]->GetStartTime() != right[i]->GetStartTime() ||
-            left[i]->GetEndTime() != right[i]->GetEndTime()) {
+         if (left[i]->GetPlayStartTime() != right[i]->GetPlayStartTime() ||
+            left[i]->GetPlayEndTime() != right[i]->GetPlayEndTime()) {
             sameClips = false;
             break;
          }
@@ -97,8 +100,8 @@ bool ChannelsHaveDifferentClipBoundaries(
    return false;
 }
 
-// When two clips are immediately next to each other, the GetEndTime() of the
-// first clip and the GetStartTime() of the second clip may not be exactly equal
+// When two clips are immediately next to each other, the GetPlayEndTime() of the 
+// first clip and the GetPlayStartTime() of the second clip may not be exactly equal
 // due to rounding errors. When searching for the next/prev start time from a
 // given time, the following function adjusts that given time if necessary to
 // take this into account. If the given time is the end time of the first of two
@@ -110,17 +113,17 @@ double AdjustForFindingStartTimes(
 {
    auto q = std::find_if(clips.begin(), clips.end(),
       [&] (const WaveClip* const& clip) {
-         return clip->GetEndTime() == time; });
+         return clip->GetPlayEndTime() == time; });
    if (q != clips.end() && q + 1 != clips.end() &&
       (*q)->SharesBoundaryWithNextClip(*(q+1))) {
-      time = (*(q+1))->GetStartTime();
+      time = (*(q+1))->GetPlayStartTime();
    }
 
    return time;
 }
 
-// When two clips are immediately next to each other, the GetEndTime() of the
-// first clip and the GetStartTime() of the second clip may not be exactly equal
+// When two clips are immediately next to each other, the GetPlayEndTime() of the
+// first clip and the GetPlayStartTime() of the second clip may not be exactly equal
 // due to rounding errors. When searching for the next/prev end time from a
 // given time, the following function adjusts that given time if necessary to
 // take this into account. If the given time is the start time of the second of
@@ -132,10 +135,10 @@ double AdjustForFindingEndTimes(
 {
    auto q = std::find_if(clips.begin(), clips.end(),
       [&] (const WaveClip* const& clip) {
-         return clip->GetStartTime() == time; });
+         return clip->GetPlayStartTime() == time; });
    if (q != clips.end() && q != clips.begin() &&
       (*(q - 1))->SharesBoundaryWithNextClip(*q)) {
-      time = (*(q-1))->GetEndTime();
+      time = (*(q-1))->GetPlayEndTime();
    }
 
    return time;
@@ -152,38 +155,43 @@ FoundClipBoundary FindNextClipBoundary
 
    auto pStart = std::find_if(clips.begin(), clips.end(),
       [&] (const WaveClip* const& clip) {
-         return clip->GetStartTime() > timeStart; });
+         return clip->GetPlayStartTime() > timeStart; });
    auto pEnd = std::find_if(clips.begin(), clips.end(),
       [&] (const WaveClip* const& clip) {
-         return clip->GetEndTime() > timeEnd; });
+         return clip->GetPlayEndTime() > timeEnd; });
 
    if (pStart != clips.end() && pEnd != clips.end()) {
       if ((*pEnd)->SharesBoundaryWithNextClip(*pStart)) {
          // boundary between two clips which are immediately next to each other.
          result.nFound = 2;
-         result.time = (*pEnd)->GetEndTime();
+         result.time = (*pEnd)->GetPlayEndTime();
          result.index1 = std::distance(clips.begin(), pEnd);
+         result.name1 = (*pEnd)->GetName();
          result.clipStart1 = false;
          result.index2 = std::distance(clips.begin(), pStart);
+         result.name2 = (*pStart)->GetName();
          result.clipStart2 = true;
       }
-      else if ((*pStart)->GetStartTime() < (*pEnd)->GetEndTime()) {
+      else if ((*pStart)->GetPlayStartTime() < (*pEnd)->GetPlayEndTime()) {
          result.nFound = 1;
-         result.time = (*pStart)->GetStartTime();
+         result.time = (*pStart)->GetPlayStartTime();
          result.index1 = std::distance(clips.begin(), pStart);
+         result.name1 = (*pStart)->GetName();
          result.clipStart1 = true;
       }
       else  {
          result.nFound = 1;
-         result.time = (*pEnd)->GetEndTime();
+         result.time = (*pEnd)->GetPlayEndTime();
          result.index1 = std::distance(clips.begin(), pEnd);
+         result.name1 = (*pEnd)->GetName();
          result.clipStart1 = false;
       }
    }
    else if (pEnd != clips.end()) {
       result.nFound = 1;
-      result.time = (*pEnd)->GetEndTime();
+      result.time = (*pEnd)->GetPlayEndTime();
       result.index1 = std::distance(clips.begin(), pEnd);
+      result.name1 = (*pEnd)->GetName();
       result.clipStart1 = false;
    }
 
@@ -200,48 +208,53 @@ FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time)
 
    auto pStart = std::find_if(clips.rbegin(), clips.rend(),
       [&] (const WaveClip* const& clip) {
-         return clip->GetStartTime() < timeStart; });
+         return clip->GetPlayStartTime() < timeStart; });
    auto pEnd = std::find_if(clips.rbegin(), clips.rend(),
       [&] (const WaveClip* const& clip) {
-         return clip->GetEndTime() < timeEnd; });
+         return clip->GetPlayEndTime() < timeEnd; });
 
    if (pStart != clips.rend() && pEnd != clips.rend()) {
       if ((*pEnd)->SharesBoundaryWithNextClip(*pStart)) {
          // boundary between two clips which are immediately next to each other.
          result.nFound = 2;
-         result.time = (*pStart)->GetStartTime();
+         result.time = (*pStart)->GetPlayStartTime();
          result.index1 =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), pStart);
+         result.name1 = (*pStart)->GetName();
          result.clipStart1 = true;
          result.index2 =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), pEnd);
+         result.name2 = (*pEnd)->GetName();
          result.clipStart2 = false;
       }
-      else if ((*pStart)->GetStartTime() > (*pEnd)->GetEndTime()) {
+      else if ((*pStart)->GetPlayStartTime() > (*pEnd)->GetPlayEndTime()) {
          result.nFound = 1;
-         result.time = (*pStart)->GetStartTime();
+         result.time = (*pStart)->GetPlayStartTime();
          result.index1 =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), pStart);
+         result.name1 = (*pStart)->GetName();
          result.clipStart1 = true;
       }
       else {
          result.nFound = 1;
-         result.time = (*pEnd)->GetEndTime();
+         result.time = (*pEnd)->GetPlayEndTime();
          result.index1 =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), pEnd);
+         result.name1 = (*pEnd)->GetName();
          result.clipStart1 = false;
       }
    }
    else if (pStart != clips.rend()) {
       result.nFound = 1;
-      result.time = (*pStart)->GetStartTime();
+      result.time = (*pStart)->GetPlayStartTime();
       result.index1 =
          static_cast<int>(clips.size()) - 1 -
             std::distance(clips.rbegin(), pStart);
+      result.name1 = (*pStart)->GetName();
       result.clipStart1 = true;
    }
 
@@ -322,17 +335,19 @@ TranslatableString ClipBoundaryMessage(
             /* i18n-hint:
                First %s is replaced with the noun "start" or "end"
                identifying one end of a clip,
+               second string is the name of that clip,
                first number gives the position of that clip in a sequence
                of clips,
                last number counts all clips,
                and the last string is the name of the track containing the
                clips.
              */
-            "%s %d of %d clip %s",
-            "%s %d of %d clips %s",
-            2
+            "%s %s, %d of %d clip %s",
+            "%s %s, %d of %d clips %s",
+            3
          )(
             result.clipStart1 ? XO("start") : XO("end"),
+            result.name1,
             result.index1 + 1,
             nClips,
             longName
@@ -341,21 +356,24 @@ TranslatableString ClipBoundaryMessage(
       else {
          str = XP(
             /* i18n-hint:
-               First two %s are each replaced with the noun "start"
+               First and third %s are each replaced with the noun "start"
                or with "end", identifying and end of a clip,
+               second and fourth strings are the names of those clips,
                first and second numbers give the position of those clips in
                a sequence of clips,
                last number counts all clips,
                and the last string is the name of the track containing the
                clips.
              */
-            "%s %d and %s %d of %d clip %s",
-            "%s %d and %s %d of %d clips %s",
-            4
+            "%s %s and %s %s, %d and %d of %d clip %s",
+            "%s %s and %s %s, %d and %d of %d clips %s",
+            6
          )(
             result.clipStart1 ? XO("start") : XO("end"),
-            result.index1 + 1,
+            result.name1,
             result.clipStart2 ? XO("start") : XO("end"),
+            result.name2,
+            result.index1 + 1,
             result.index2 + 1,
             nClips,
             longName
@@ -409,11 +427,12 @@ FoundClip FindNextClip
    {
       auto p = std::find_if(clips.begin(), clips.end(),
          [&] (const WaveClip* const& clip) {
-            return clip->GetStartTime() == t0; });
-      if (p != clips.end() && (*p)->GetEndTime() > t1) {
+            return clip->GetPlayStartTime() == t0; });
+      if (p != clips.end() && (*p)->GetPlayEndTime() > t1) {
          result.found = true;
-         result.startTime = (*p)->GetStartTime();
-         result.endTime = (*p)->GetEndTime();
+         result.startTime = (*p)->GetPlayStartTime();
+         result.endTime = (*p)->GetPlayEndTime();
+         result.name = (*p)->GetName();
          result.index = std::distance(clips.begin(), p);
          return result;
       }
@@ -422,11 +441,12 @@ FoundClip FindNextClip
    {
       auto p = std::find_if(clips.begin(), clips.end(),
          [&] (const WaveClip* const& clip) {
-            return clip->GetStartTime() > t0; });
+            return clip->GetPlayStartTime() > t0; });
       if (p != clips.end()) {
          result.found = true;
-         result.startTime = (*p)->GetStartTime();
-         result.endTime = (*p)->GetEndTime();
+         result.startTime = (*p)->GetPlayStartTime();
+         result.endTime = (*p)->GetPlayEndTime();
+         result.name = (*p)->GetName();
          result.index = std::distance(clips.begin(), p);
          return result;
       }
@@ -449,11 +469,12 @@ FoundClip FindPrevClip
    {
       auto p = std::find_if(clips.begin(), clips.end(),
          [&] (const WaveClip* const& clip) {
-            return clip->GetStartTime() == t0; });
-      if (p != clips.end() && (*p)->GetEndTime() < t1) {
+            return clip->GetPlayStartTime() == t0; });
+      if (p != clips.end() && (*p)->GetPlayEndTime() < t1) {
          result.found = true;
-         result.startTime = (*p)->GetStartTime();
-         result.endTime = (*p)->GetEndTime();
+         result.startTime = (*p)->GetPlayStartTime();
+         result.endTime = (*p)->GetPlayEndTime();
+         result.name = (*p)->GetName();
          result.index = std::distance(clips.begin(), p);
          return result;
       }
@@ -462,11 +483,12 @@ FoundClip FindPrevClip
    {
       auto p = std::find_if(clips.rbegin(), clips.rend(),
          [&] (const WaveClip* const& clip) {
-            return clip->GetStartTime() < t0; });
+            return clip->GetPlayStartTime() < t0; });
       if (p != clips.rend()) {
          result.found = true;
-         result.startTime = (*p)->GetStartTime();
-         result.endTime = (*p)->GetEndTime();
+         result.startTime = (*p)->GetPlayStartTime();
+         result.endTime = (*p)->GetPlayEndTime();
+         result.name = (*p)->GetName();
          result.index =
             static_cast<int>(clips.size()) - 1 -
                std::distance(clips.rbegin(), p);
@@ -581,13 +603,16 @@ void DoSelectClip(AudacityProject &project, bool next)
          auto nClips = result.waveTrack->GetNumClips();
          auto str = XP(
             /* i18n-hint:
-               first number identifies one of a sequence of clips,
-               last number counts the clips,
-               string names a track */
-            "%d of %d clip %s",
-            "%d of %d clips %s",
-            1
+               first string is the name of a clip,
+               first number gives the position of that clip
+               in a sequence of clips,
+               last number counts all clips,
+               last string names a track */
+            "%s, %d of %d clip %s",
+            "%s, %d of %d clips %s",
+            2
          )(
+            result.name,
             result.index + 1,
             nClips,
             longName
@@ -643,7 +668,7 @@ double DoClipMove( AudacityProject &project, Track *track,
       // Find the first channel that has a clip at time t0
       auto hitTestResult = TrackShifter::HitTestResult::Track;
       for (auto channel : TrackList::Channels(track) ) {
-         uShifter = MakeTrackShifter::Call( *track, project );
+         uShifter = MakeTrackShifter::Call( *channel, project );
          if ( (hitTestResult = uShifter->HitTest( t0, viewInfo )) ==
              TrackShifter::HitTestResult::Miss )
             uShifter.reset();
@@ -657,7 +682,7 @@ double DoClipMove( AudacityProject &project, Track *track,
       auto desiredT0 = viewInfo.OffsetTimeByPixels( t0, ( right ? 1 : -1 ) );
       auto desiredSlideAmount = pShifter->HintOffsetLarger( desiredT0 - t0 );
 
-      state.Init( project, *track, hitTestResult, std::move( uShifter ),
+      state.Init( project, pShifter->GetTrack(), hitTestResult, std::move( uShifter ),
          t0, viewInfo, trackList, syncLocked );
 
       auto hSlideAmount = state.DoSlideHorizontal( desiredSlideAmount );

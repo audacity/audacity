@@ -39,6 +39,7 @@
 #include <wx/setup.h> // for wxUSE_* macros
 
 #ifndef WX_PRECOMP
+#include <wx/app.h>
 #include <wx/event.h>
 #include <wx/image.h>
 #include <wx/intl.h>
@@ -50,8 +51,8 @@
 #include "../BatchCommands.h"
 #include "../ImageManipulation.h"
 #include "../Menus.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"
 

@@ -38,7 +38,7 @@ class wxArrayString;
 #include <suil/suil.h>
 
 #include "../../ShuttleGui.h"
-#include "../../SampleFormat.h"
+#include "SampleFormat.h"
 
 #include "LoadLV2.h"
 #include "NativeWindow.h"

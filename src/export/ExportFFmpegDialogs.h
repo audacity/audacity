@@ -11,14 +11,13 @@ LRN
 #if !defined(__EXPORT_FFMPEG_DIALOGS_H__)
 #define __EXPORT_FFMPEG_DIALOGS_H__
 
-
-
 #if defined(USE_FFMPEG)
 
 #include "../FFmpeg.h"
+#include "FFmpegFunctions.h"
 
-#include "../xml/XMLFileReader.h"
-#include "../FileNames.h"
+#include "XMLFileReader.h"
+#include "FileNames.h"
 
 #include <unordered_map>
 #include "Identifier.h"
@@ -55,7 +54,7 @@ struct ExposedFormat
    const int canmetadata;           //!< !=0 if format supports metadata, AV_CANMETA any avformat version, otherwise version support added
    bool canutf8;              //!< true if format supports metadata in UTF-8, false otherwise
    const TranslatableString description; //!< format description (will be shown in export dialog)
-   AVCodecID codecid;         //!< codec ID (see libavcodec/avcodec.h)
+   AudacityAVCodecID codecid;         //!< codec ID (see libavcodec/avcodec.h)
    bool compiledIn;           //!< support for this codec/format is compiled in (checked at runtime)
 };
 
@@ -64,7 +63,7 @@ struct ExposedFormat
 struct CompatibilityEntry
 {
    const wxChar *fmt; //!< format, recognizable by guess_format()
-   AVCodecID codec;   //!< codec ID
+   AudacityAVCodecID codec; //!< codec ID
 };
 
 
@@ -197,7 +196,7 @@ struct ApplicableFor
 {
    bool                 enable;  //!< true if this control should be enabled, false otherwise
    int                  control; //!< control ID
-   AVCodecID            codec;   //!< Codec ID
+   AudacityAVCodecID codec;      //!< Codec ID
    const char          *format;  //!< Format short name
 };
 
@@ -259,6 +258,8 @@ private:
 
    wxArrayStringEx mPresetNames;
 
+   std::shared_ptr<FFmpegFunctions> mFFmpeg;
+
    /// Finds the format currently selected and returns its name and description
    void FindSelectedFormat(wxString **name, wxString **longname);
 
@@ -272,7 +273,7 @@ private:
    ///\param id Codec ID
    ///\param selfmt format selected at the moment
    ///\return index of the selfmt in NEW format list or -1 if it is not in the list
-   int FetchCompatibleFormatList(AVCodecID id, wxString *selfmt);
+   int FetchCompatibleFormatList(AudacityAVCodecID id, wxString* selfmt);
 
    /// Retrieves codec list from libavcodec
    void FetchCodecList();
@@ -281,7 +282,7 @@ private:
    ///\param fmt Format short name
    ///\param id id of the codec selected at the moment
    ///\return index of the id in NEW codec list or -1 if it is not in the list
-   int FetchCompatibleCodecList(const wxChar *fmt, AVCodecID id);
+   int FetchCompatibleCodecList(const wxChar* fmt, AudacityAVCodecID id);
 
    /// Retrieves list of presets from configuration file
    void FetchPresetList();
@@ -293,7 +294,7 @@ private:
    // leaving only relevant controls enabled.
    // Hiding the controls may have been a better idea,
    // but it's hard to hide their text labels too
-   void EnableDisableControls(AVCodec *cdc, wxString *selfmt);
+   void EnableDisableControls(AVCodecWrapper *cdc, wxString *selfmt);
    DECLARE_EVENT_TABLE()
 };
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-06-07 08:17-0400\n"
+"POT-Creation-Date: 2021-07-15 12:48-0400\n"
 "PO-Revision-Date: 2020-10-18 18:31+0530\n"
 "Last-Translator: Prof. Mukul Kulkarni <mlk.imcc@mespune.in>\n"
 "Language-Team: Prof. Mukul Kulkarni <mlk.imcc@mespune.in>\n"
@@ -18,6 +18,59 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n==0 || n==1);\n"
 "X-Generator: Poedit 2.4.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, c-format
+msgid "Exception code 0x%x"
+msgstr ""
+
+#. i18n-hint C++ programming assertion
+#: crashreports/crashreporter/CrashReportApp.cpp
+msgid "Unknown exception"
+msgstr ""
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, fuzzy
+msgid "Unknown error"
+msgstr "अज्ञात"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, fuzzy
+msgid "Problem Report for Audacity"
+msgstr "ऑड्यासिटीला व्हँप प्रभाव समर्थन प्रदान करते"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
+msgstr ""
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "Problem details"
+msgstr ""
+
+#: crashreports/crashreporter/CrashReportApp.cpp src/Tags.cpp
+#: src/prefs/MousePrefs.cpp src/widgets/ErrorReportDialog.cpp
+msgid "Comments"
+msgstr "टिप्पण्या"
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Don't send"
+msgstr ""
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgctxt "crash reporter button"
+msgid "&Send"
+msgstr ""
+
+#: crashreports/crashreporter/CrashReportApp.cpp
+#, fuzzy
+msgid "Failed to send crash report"
+msgstr "पूर्वनिर्धारितची धारिका वाचण्यात बंद."
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -55,157 +108,6 @@ msgstr "सोपे"
 #, fuzzy
 msgid "System"
 msgstr "संगणक प्रणाली तारीख(&D)"
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgid "Problem Report for Audacity"
-msgstr "ऑड्यासिटीला व्हँप प्रभाव समर्थन प्रदान करते"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid ""
-"Click \"Send\" to submit the report to Audacity. This information is "
-"collected anonymously."
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Problem details"
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h src/Tags.cpp src/prefs/MousePrefs.cpp
-msgid "Comments"
-msgstr "टिप्पण्या"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "crash reporter button"
-msgid "&Send"
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "crash reporter button"
-msgid "&Don't send"
-msgstr ""
-
-#. i18n-hint C++ programming exception
-#: libraries/lib-strings/UnusedStrings.h
-#, c-format
-msgid "Exception code 0x%x"
-msgstr ""
-
-#. i18n-hint C++ programming exception
-#: libraries/lib-strings/UnusedStrings.h
-msgid "Unknown exception"
-msgstr ""
-
-#. i18n-hint C++ programming assertion
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgid "Unknown assertion"
-msgstr "अज्ञात"
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgid "Unknown error"
-msgstr "अज्ञात"
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgid "Failed to send crash report"
-msgstr "पूर्वनिर्धारितची धारिका वाचण्यात बंद."
-
-#. i18n-hint Scheme refers to a color scheme for spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "spectrum prefs"
-msgid "Sche&me"
-msgstr ""
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Color (default)"
-msgstr "4 (पूर्वनिर्धारित)"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr "उत्कृष्ठ"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr "ग्रेस्केल(&y)"
-
-#. i18n-hint Choice of spectrogram colors
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr "(&L)रेखीय प्रमाणात"
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "update dialog"
-msgid "Update Audacity"
-msgstr "ऑड्यासिटी मधून बाहेर पडा"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "&Skip"
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "&Install update"
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "update dialog"
-msgid "Changelog"
-msgstr "माध्यम"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Read more on GitHub"
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "update dialog"
-msgid "Error checking for update"
-msgstr "धारिका विसंकेतन करताना त्रुटी आली"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Unable to connect to Audacity update server."
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Update data was corrupted."
-msgstr ""
-
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy
-msgctxt "update dialog"
-msgid "Error downloading update."
-msgstr "मेटा माहिती  लोड करण्यात त्रुटी"
-
-#: libraries/lib-strings/UnusedStrings.h
-msgctxt "update dialog"
-msgid "Can't open the Audacity download link."
-msgstr ""
-
-#. i18n-hint Substitution of version number for %s.
-#: libraries/lib-strings/UnusedStrings.h
-#, fuzzy, c-format
-msgctxt "update dialog"
-msgid "Audacity %s is available!"
-msgstr "ऑड्यासिटी साधनपट्टी%s"
 
 #: modules/mod-null/ModNullCallback.cpp
 #, fuzzy
@@ -341,9 +243,7 @@ msgstr "'नाइक्विस्ट (Nyquist) लिपी लोड कर�
 #: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr ""
-"'नाइक्विस्ट (Nyquist) लिपी्स (*.ny)|*.ny|Lisp लिपी्स (*.lsp)|*.lsp|सर्व "
-"आधीच्याप्रमाणे|*"
+msgstr "'नाइक्विस्ट (Nyquist) लिपी्स (*.ny)|*.ny|Lisp लिपी्स (*.lsp)|*.lsp|सर्व आधीच्याप्रमाणे|*"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
@@ -386,11 +286,8 @@ msgstr "(सी) 2009 लेलँड लुसियस यांनी"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
-msgid ""
-"External Audacity module which provides a simple IDE for writing effects."
-msgstr ""
-"बाह्य ऑड्यासिटी घटक जो प्रभाव लिहिण्यासाठी सोपा एकात्मिक विकास वातावरण (IDE)  "
-"प्रदान करतो."
+msgid "External Audacity module which provides a simple IDE for writing effects."
+msgstr "बाह्य ऑड्यासिटी घटक जो प्रभाव लिहिण्यासाठी सोपा एकात्मिक विकास वातावरण (IDE)  प्रदान करतो."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
@@ -692,14 +589,8 @@ msgstr "ठीक आहे"
 #. second %s will be "volunteers", fourth "available"
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid ""
-"%s is a free program written by a worldwide team of %s. %s is %s for "
-"Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr ""
-"ऑड्यासिटी ही एक संगणकाची आज्ञावली आहे जी जगातील स्वयंसेवकांच्या [[https://www."
-"audacityteam.org/about/credits|स्वयंसेवक]]. ऑड्यासिटी  [[https://www."
-"audacityteam.org/download|उपलब्ध]] इथे विंडोज़,मॅक आणि जीएनयू / लिनक्स (आणि इतर "
-"युनिक्स-सारखी प्रणाली) यासाठी आहे."
+msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
+msgstr "ऑड्यासिटी ही एक संगणकाची आज्ञावली आहे जी जगातील स्वयंसेवकांच्या [[https://www.audacityteam.org/about/credits|स्वयंसेवक]]. ऑड्यासिटी  [[https://www.audacityteam.org/download|उपलब्ध]] इथे विंडोज़,मॅक आणि जीएनयू / लिनक्स (आणि इतर युनिक्स-सारखी प्रणाली) यासाठी आहे."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
@@ -715,14 +606,8 @@ msgstr "परिवर्तनशील"
 #. i18n-hint first and third %s will be "forum", second "wiki"
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid ""
-"If you find a bug or have a suggestion for us, please write, in English, to "
-"our %s. For help, view the tips and tricks on our %s or visit our %s."
-msgstr ""
-"आपणास कोणतीही त्रुटी आढळल्यास किंवा आम्हाला सल्ला द्यायचा असेल तर कृपया आमच्या "
-"[[https: //forum.audacityteam.org/ | मंच]] वर इंग्रजीमध्ये लिहा. मदतीसाठी आमच्या "
-"[[https: //wiki.audacityteam.org/ | विकी]] पृष्ठावरील टिपा आणि युक्त्या पहा किंवा "
-"आमच्या [[https: //forum.audacityteam.org/ | मंच]] वर भेट द्या."
+msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
+msgstr "आपणास कोणतीही त्रुटी आढळल्यास किंवा आम्हाला सल्ला द्यायचा असेल तर कृपया आमच्या [[https: //forum.audacityteam.org/ | मंच]] वर इंग्रजीमध्ये लिहा. मदतीसाठी आमच्या [[https: //wiki.audacityteam.org/ | विकी]] पृष्ठावरील टिपा आणि युक्त्या पहा किंवा आमच्या [[https: //forum.audacityteam.org/ | मंच]] वर भेट द्या."
 
 #. i18n-hint substitutes into "write to our %s"
 #: src/AboutDialog.cpp
@@ -757,12 +642,8 @@ msgstr ""
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid ""
-"%s the free, open source, cross-platform software for recording and editing "
-"sounds."
-msgstr ""
-"ऑड्यासिटी हे ध्वनी मुद्रनासाठी विनामूल्य आणि मुक्त स्रोत , भिन्न मशीनवर चालणारी संगणकाची "
-"आज्ञावली आहे."
+msgid "%s the free, open source, cross-platform software for recording and editing sounds."
+msgstr "ऑड्यासिटी हे ध्वनी मुद्रनासाठी विनामूल्य आणि मुक्त स्रोत , भिन्न मशीनवर चालणारी संगणकाची आज्ञावली आहे."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -832,9 +713,7 @@ msgstr ""
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
 msgid "The name %s is a registered trademark."
-msgstr ""
-"&nbsp; &nbsp; ये <b>ऑड्यासिटी </b> हे नाव डोमिनिक माझोनीचे नोंदणीकृत अंकित केलेआहे.."
-"<br><br>"
+msgstr "&nbsp; &nbsp; ये <b>ऑड्यासिटी </b> हे नाव डोमिनिक माझोनीचे नोंदणीकृत अंकित केलेआहे..<br><br>"
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
@@ -985,8 +864,36 @@ msgid "Extreme Pitch and Tempo Change support"
 msgstr "ध्वनीची उच्चनीचता आणि ध्वनीची गतीमधील अत्यंत बदलांचे समर्थन"
 
 #: src/AboutDialog.cpp
+msgctxt "about dialog"
+msgid "Legal"
+msgstr ""
+
+#: src/AboutDialog.cpp
 msgid "GPL License"
 msgstr "जीपीएल(GPL) परवाना"
+
+#. i18n-hint: For "About Audacity...": Title for Privacy Policy section
+#: src/AboutDialog.cpp
+msgctxt "about dialog"
+msgid "PRIVACY POLICY"
+msgstr ""
+
+#: src/AboutDialog.cpp
+msgid "App update checking and error reporting require network access. These features are optional."
+msgstr ""
+
+#. i18n-hint: %s will be replaced with "our Privacy Policy"
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy, c-format
+msgid "See %s for more info."
+msgstr "एक किंवा अधिक धारिका निवडा"
+
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
+#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
+msgid "our Privacy Policy"
+msgstr ""
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -1104,14 +1011,16 @@ msgstr ""
 "प्रकल्पाच्या समाप्तीच्या पलीकडे प्रदेश \n"
 "कुलूप करणे शक्य नाही."
 
-#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/ProjectAudioManager.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/FileNames.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
+#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
+#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "त्रुटी"
@@ -1129,8 +1038,7 @@ msgstr "अयशस्वी!"
 msgid ""
 "Reset Preferences?\n"
 "\n"
-"This is a one-time question, after an 'install' where you asked to have the "
-"Preferences reset."
+"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
 msgstr ""
 "प्राधान्ये पुन्हा निवड करायची?\n"
 "\n"
@@ -1192,13 +1100,11 @@ msgstr "धारिका(&F)"
 #: src/AudacityApp.cpp
 msgid ""
 "Audacity could not find a safe place to store temporary files.\n"
-"Audacity needs a place where automatic cleanup programs won't delete the "
-"temporary files.\n"
+"Audacity needs a place where automatic cleanup programs won't delete the temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "तात्पुरत्या धारिका संचयित करण्यासाठी ऑड्यासिटीला सुरक्षित स्थान सापडले नाही.\n"
-"ऑड्यासिटी अशा जागेची आवश्यकता आहे जेथे स्वयंचलित जागा रिकामी करणाऱ्या संगणक आज्ञावली "
-"तात्पुरतीधारिका हटवत नाहीत.\n"
+"ऑड्यासिटी अशा जागेची आवश्यकता आहे जेथे स्वयंचलित जागा रिकामी करणाऱ्या संगणक आज्ञावली तात्पुरतीधारिका हटवत नाहीत.\n"
 "कृपया प्राधान्ये संवाद मध्ये उजवे निर्देशिका प्रविष्ट करा."
 
 #: src/AudacityApp.cpp
@@ -1210,12 +1116,8 @@ msgstr ""
 "कृपया प्राधान्ये संवाद मध्ये उजवे निर्देशिका प्रविष्ट करा."
 
 #: src/AudacityApp.cpp
-msgid ""
-"Audacity is now going to exit. Please launch Audacity again to use the new "
-"temporary directory."
-msgstr ""
-"ऑड्यासिटी आता बंद होत आहे. कृपया नवीन तात्पुरती निर्देशिका वापरण्यासाठी ऑड्यासिटी पुन्हा "
-"सुरु करा."
+msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
+msgstr "ऑड्यासिटी आता बंद होत आहे. कृपया नवीन तात्पुरती निर्देशिका वापरण्यासाठी ऑड्यासिटी पुन्हा सुरु करा."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -1369,19 +1271,16 @@ msgid ""
 "\n"
 "\t%s\n"
 "\n"
-"This could be caused by many reasons, but the most likely are that the disk "
-"is full or you do not have write permissions to the file. More information "
-"can be obtained by clicking the help button below.\n"
+"This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. More information can be obtained by clicking the help button below.\n"
 "\n"
 "You can attempt to correct the issue and then click \"Retry\" to continue.\n"
 "\n"
-"If you choose to \"Quit Audacity\", your project may be left in an unsaved "
-"state which will be recovered the next time you open it."
+"If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
 
 #: src/AudacityFileConfig.cpp src/ShuttleGui.cpp src/commands/HelpCommand.cpp
 #: src/effects/Equalization.cpp src/export/Export.cpp src/menus/HelpMenus.cpp
-#: src/widgets/MultiDialog.cpp
+#: src/widgets/ErrorReportDialog.cpp src/widgets/MultiDialog.cpp
 msgid "Help"
 msgstr "मदत"
 
@@ -1475,12 +1374,8 @@ msgid "Out of memory!"
 msgstr "मेमरी च्या बाहेर!"
 
 #: src/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. It was not possible to "
-"optimize it more. Still too high."
-msgstr ""
-"स्वयंचलित मुद्रण स्तर समायोजन थांबले. त्यास अधिक अनुकूलन करणे शक्य नव्हते. तरीही खूप जास्त "
-"आहे."
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
+msgstr "स्वयंचलित मुद्रण स्तर समायोजन थांबले. त्यास अधिक अनुकूलन करणे शक्य नव्हते. तरीही खूप जास्त आहे."
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1488,11 +1383,8 @@ msgid "Automated Recording Level Adjustment decreased the volume to %f."
 msgstr "स्वयंचलितमुद्रण स्तर समायोजन आवाज %f पर्यंत कमी झाले."
 
 #: src/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. It was not possible to "
-"optimize it more. Still too low."
-msgstr ""
-"स्वयंचलित मुद्रण स्तर समायोजन थांबले. त्यास अधिक अनुकूलन करणे शक्य नव्हते. तरीही खूप कमी आहे."
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
+msgstr "स्वयंचलित मुद्रण स्तर समायोजन थांबले. त्यास अधिक अनुकूलन करणे शक्य नव्हते. तरीही खूप कमी आहे."
 
 #: src/AudioIO.cpp
 #, c-format
@@ -1500,26 +1392,16 @@ msgid "Automated Recording Level Adjustment increased the volume to %.2f."
 msgstr "स्वयंचलित मुद्रण स्तर समायोजन आवाज %.2f पर्यंत वाढवला."
 
 #: src/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. The total number of analyses "
-"has been exceeded without finding an acceptable volume. Still too high."
-msgstr ""
-"स्वयंचलित मुद्रण स्तर समायोजन थांबले. स्वीकार्य आवाज न शोधता विश्लेषणाची एकूण संख्या "
-"ओलांडली आहे. तरीही खूप उंच आहे."
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
+msgstr "स्वयंचलित मुद्रण स्तर समायोजन थांबले. स्वीकार्य आवाज न शोधता विश्लेषणाची एकूण संख्या ओलांडली आहे. तरीही खूप उंच आहे."
 
 #: src/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. The total number of analyses "
-"has been exceeded without finding an acceptable volume. Still too low."
-msgstr ""
-"स्वयंचलित मुद्रण स्तर समायोजन थांबले. स्वीकार्य आवाज न शोधता विश्लेषणाची एकूण संख्या "
-"ओलांडली आहे. तरीही खूप कमी आहे."
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
+msgstr "स्वयंचलित मुद्रण स्तर समायोजन थांबले. स्वीकार्य आवाज न शोधता विश्लेषणाची एकूण संख्या ओलांडली आहे. तरीही खूप कमी आहे."
 
 #: src/AudioIO.cpp
 #, c-format
-msgid ""
-"Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
-"volume."
+msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
 msgstr "स्वयंचलित मुद्रण स्तर समायोजन थांबले.%.2f एक स्वीकार्य खंड दिसत आहे."
 
 #: src/AudioIOBase.cpp
@@ -1714,8 +1596,7 @@ msgstr "स्वयंचलित बिघाड पुनर्प्रा�
 #: src/AutoRecoveryDialog.cpp
 #, fuzzy
 msgid ""
-"The following projects were not saved properly the last time Audacity was "
-"run and can be automatically recovered.\n"
+"The following projects were not saved properly the last time Audacity was run and can be automatically recovered.\n"
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
@@ -2248,9 +2129,7 @@ msgstr "सर्व माहिती तपासणीची वेळ (2):%
 msgid ""
 "At 44100 Hz, %d bytes per sample, the estimated number of\n"
 " simultaneous tracks that could be played at once: %.1f\n"
-msgstr ""
-"44100 Hz येथे, अशा गीतपट्टाचे प्रति नमुना १६-बिटअंदाजे संख्या जी एकाच वेळी चालू शकते:"
-"%.1f\n"
+msgstr "44100 Hz येथे, अशा गीतपट्टाचे प्रति नमुना १६-बिटअंदाजे संख्या जी एकाच वेळी चालू शकते:%.1f\n"
 
 #: src/Benchmark.cpp
 msgid "TEST FAILED!!!\n"
@@ -2275,22 +2154,14 @@ msgstr ""
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Select the audio for %s to use (for example, Cmd + A to Select All) then try "
-"again."
-msgstr ""
-"वापरण्यासाठी %s साठी ध्वनी  निवडा (उदाहरणार्थ, सर्व निवडण्यासाठी Cmd + A) नंतर "
-"पुन्हा प्रयत्न करा."
+msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
+msgstr "वापरण्यासाठी %s साठी ध्वनी  निवडा (उदाहरणार्थ, सर्व निवडण्यासाठी Cmd + A) नंतर पुन्हा प्रयत्न करा."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Select the audio for %s to use (for example, Ctrl + A to Select All) then "
-"try again."
-msgstr ""
-"वापरण्यासाठी %s साठी ध्वनी  निवडा (उदाहरणार्थ, सर्व निवडाण्यासाठी Ctrl + A) नंतर "
-"पुन्हा प्रयत्न करा."
+msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
+msgstr "वापरण्यासाठी %s साठी ध्वनी  निवडा (उदाहरणार्थ, सर्व निवडाण्यासाठी Ctrl + A) नंतर पुन्हा प्रयत्न करा."
 
 #: src/CommonCommandFlags.cpp
 msgid "No Audio Selected"
@@ -2302,11 +2173,9 @@ msgstr "कोणताही ध्वनी  निवडलेला ना�
 msgid ""
 "Select the audio for %s to use.\n"
 "\n"
-"1. Select audio that represents noise and use %s to get your 'noise "
-"profile'.\n"
+"1. Select audio that represents noise and use %s to get your 'noise profile'.\n"
 "\n"
-"2. When you have got your noise profile, select the audio you want to "
-"change\n"
+"2. When you have got your noise profile, select the audio you want to change\n"
 "and use %s to change that audio."
 msgstr ""
 
@@ -2437,8 +2306,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"गहाळ म्हणून दर्शवलेल्या धारिका हलविल्या किंवा हटविल्या गेल्या आहेत आणि प्रत केल्या जाऊ शकत "
-"नाहीत\n"
+"गहाळ म्हणून दर्शवलेल्या धारिका हलविल्या किंवा हटविल्या गेल्या आहेत आणि प्रत केल्या जाऊ शकत नाहीत\n"
 "प्रकल्पची प्रत करण्यात सुरू होण्यासाठी ते त्यांच्या मूळ स्थानावर पुनर्संचयित करा."
 
 #: src/Dependencies.cpp
@@ -2515,17 +2383,13 @@ msgid "Missing"
 msgstr "धारिका गहाळ आहे"
 
 #: src/Dependencies.cpp
-msgid ""
-"If you proceed, your project will not be saved to disk. Is this what you "
-"want?"
-msgstr ""
-"आपण पुढे गेल्यास, आपला प्रकल्प मुद्रीकेवर जतन केला जाणार नाही. आपल्याला पाहिजे तेच आहे काय?"
+msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
+msgstr "आपण पुढे गेल्यास, आपला प्रकल्प मुद्रीकेवर जतन केला जाणार नाही. आपल्याला पाहिजे तेच आहे काय?"
 
 #: src/Dependencies.cpp
 #, fuzzy
 msgid ""
-"Your project is self-contained; it does not depend on any external audio "
-"files. \n"
+"Your project is self-contained; it does not depend on any external audio files. \n"
 "\n"
 "Some older Audacity projects may not be self-contained, and care \n"
 "is needed to keep their external dependencies in the right place.\n"
@@ -2533,8 +2397,7 @@ msgid ""
 msgstr ""
 "आपला प्रकल्प आत्ता आत्मनिर्भर आहे; हे कोणत्याही बाह्य धारीकेवर अवलंबून नाही.\n"
 "\n"
-"आपण प्रकल्प आयात केलेल्या धारिका  वापरत असल्यास, ती यापुढे आत्मनिर्भर राहणार नाही. "
-"यानंतर, आपण या आधीच्याप्रमाणेंची एक प्रत संग्रहित केल्यास आपण माहिती गमावू शकता."
+"आपण प्रकल्प आयात केलेल्या धारिका  वापरत असल्यास, ती यापुढे आत्मनिर्भर राहणार नाही. यानंतर, आपण या आधीच्याप्रमाणेंची एक प्रत संग्रहित केल्यास आपण माहिती गमावू शकता."
 
 #: src/Dependencies.cpp
 msgid "Dependency Check"
@@ -2641,9 +2504,7 @@ msgstr "एफएफएमपीईजी (FFmpeg) शोधा"
 #: src/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
-msgstr ""
-"ऑड्यासिटीला एफएफएमपीईजी (FFmpeg) ध्वनी  आयात आणि निर्यात करण्यासाठी धारिका '%s' "
-"आवश्यक आहे."
+msgstr "ऑड्यासिटीला एफएफएमपीईजी (FFmpeg) ध्वनी  आयात आणि निर्यात करण्यासाठी धारिका '%s' आवश्यक आहे."
 
 #: src/FFmpeg.cpp
 #, c-format
@@ -2690,8 +2551,7 @@ msgid ""
 "To use FFmpeg import, go to Edit > Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
 msgstr ""
-"ऑड्यासिटीने ध्वनी धारिका  आयात करण्यासाठी एफएफएमपीईजी (FFmpeg) वापरण्याचा प्रयत्न "
-"केला,\n"
+"ऑड्यासिटीने ध्वनी धारिका  आयात करण्यासाठी एफएफएमपीईजी (FFmpeg) वापरण्याचा प्रयत्न केला,\n"
 "परंतु ग्रंथालये आढळली नाहीत.\n"
 "\n"
 "एफएफम्पेग आयात वापरण्यासाठी, प्राधान्ये> ग्रंथालयत जा\n"
@@ -2727,8 +2587,7 @@ msgstr "ऑड्यासिटी %s मधील धारिका वाच
 #: src/FileException.cpp
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr ""
-"ऑड्यासिटी%s मध्ये धारिका  यशस्वीरित्या लिहिली परंतु %s असे पुनर्निर्मित करण्यात अयशस्वी."
+msgstr "ऑड्यासिटी%s मध्ये धारिका  यशस्वीरित्या लिहिली परंतु %s असे पुनर्निर्मित करण्यात अयशस्वी."
 
 #: src/FileException.cpp
 #, fuzzy, c-format
@@ -2815,14 +2674,17 @@ msgid "%s files"
 msgstr "एमपी३ (MP3) धारिका"
 
 #: src/FileNames.cpp
-msgid ""
-"The specified filename could not be converted due to Unicode character use."
-msgstr ""
-"युनिसांकेतिक आज्ञावली वर्ण वापरामुळे निर्दिष्ट आधीच्याप्रमाणेनाव रूपांतरित करणे शक्य नाही."
+msgid "The specified filename could not be converted due to Unicode character use."
+msgstr "युनिसांकेतिक आज्ञावली वर्ण वापरामुळे निर्दिष्ट आधीच्याप्रमाणेनाव रूपांतरित करणे शक्य नाही."
 
 #: src/FileNames.cpp
 msgid "Specify New Filename:"
 msgstr "नवीन धारिकानाव निर्दिष्ट करा:"
+
+#: src/FileNames.cpp
+#, fuzzy, c-format
+msgid "Directory %s does not have write permissions"
+msgstr "निर्देशिका%s अस्तित्त्वात नाही. तयार करायची?"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -2940,9 +2802,7 @@ msgstr "स्पेक्ट्रम रचण्यासाठी, सर्
 
 #: src/FreqWindow.cpp
 #, fuzzy, c-format
-msgid ""
-"Too much audio was selected. Only the first %.1f seconds of audio will be "
-"analyzed."
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
 msgstr "बर्‍याच ध्वनी  निवडला गेला. केवळ पहिल्या% .1f सेकंदाच्या ध्वनी चे विश्लेषण केले जाईल."
 
 #: src/FreqWindow.cpp
@@ -3066,15 +2926,11 @@ msgid "No Local Help"
 msgstr "स्थानिक मदत नाही"
 
 #: src/HelpText.cpp
-msgid ""
-"<br><br>The version of Audacity you are using is an <b>Alpha test version</"
-"b>."
-msgstr ""
-"<br> <br> आपण वापरत असलेल्या ऑड्यासिटीची आवृत्ती <b> अल्फा चाचणी आवृत्ती </ b> आहे."
+msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
+msgstr "<br> <br> आपण वापरत असलेल्या ऑड्यासिटीची आवृत्ती <b> अल्फा चाचणी आवृत्ती </ b> आहे."
 
 #: src/HelpText.cpp
-msgid ""
-"<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
+msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
 msgstr "<br> <br> आपण वापरत असलेल्या ची आवृत्ती <b> बीटा चाचणी आवृत्ती </ b> आहे."
 
 #: src/HelpText.cpp
@@ -3082,21 +2938,12 @@ msgid "Get the Official Released Version of Audacity"
 msgstr "ऑड्यासिटी अधिकृत प्रकाशित आवृत्ती मिळवा"
 
 #: src/HelpText.cpp
-msgid ""
-"We strongly recommend that you use our latest stable released version, which "
-"has full documentation and support.<br><br>"
-msgstr ""
-"आम्ही जोरदारपणे शिफारस करतो की आपणास आमची नवीनतम प्रसिद्ध केलेली आवृत्ती वापरावी "
-"ज्यात संपूर्ण कागदपत्रे आणि समर्थन आहे. <br> <br>"
+msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br><br>"
+msgstr "आम्ही जोरदारपणे शिफारस करतो की आपणास आमची नवीनतम प्रसिद्ध केलेली आवृत्ती वापरावी ज्यात संपूर्ण कागदपत्रे आणि समर्थन आहे. <br> <br>"
 
 #: src/HelpText.cpp
-msgid ""
-"You can help us get Audacity ready for release by joining our [[https://www."
-"audacityteam.org/community/|community]].<hr><br><br>"
-msgstr ""
-"आमच्या [[https://www.audacityteam.org/community/|community]] मध्ये सामील "
-"होण्याद्वारे आपण ऑड्यासिटीला प्रसिद्ध होण्यास सज्ज राहण्यास मदत करू शकता. <hr> <br> "
-"<br>"
+msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
+msgstr "आमच्या [[https://www.audacityteam.org/community/|community]] मध्ये सामील होण्याद्वारे आपण ऑड्यासिटीला प्रसिद्ध होण्यास सज्ज राहण्यास मदत करू शकता. <hr> <br> <br>"
 
 #: src/HelpText.cpp
 msgid "How to get help"
@@ -3109,86 +2956,39 @@ msgstr "या आमच्या समर्थन पद्धती आह�
 #. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a link.
 #: src/HelpText.cpp
 #, fuzzy
-msgid ""
-"[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual."
-"audacityteam.org/quick_help.html|view online]]"
-msgstr ""
-" [[file:quick_help.html|त्वरित मदत]] - स्थानिक पातळीवर स्थापित नसल्यास, "
-"[[https://manual.audacityteam.org/quick_help.html|]]"
+msgid "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]"
+msgstr " [[file:quick_help.html|त्वरित मदत]] - स्थानिक पातळीवर स्थापित नसल्यास, [[https://manual.audacityteam.org/quick_help.html|]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a link.
 #: src/HelpText.cpp
 #, fuzzy
-msgid ""
-" [[help:Main_Page|Manual]] - if not installed locally, [[https://manual."
-"audacityteam.org/|view online]]"
-msgstr ""
-" [[file:index.html|माहिती पुस्तिका]] - स्थानिक पातळीवर स्थापित नसल्यास, [[https://"
-"manual.audacityteam.org/|संकेतस्थळावर पहा]]"
+msgid " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]"
+msgstr " [[file:index.html|माहिती पुस्तिका]] - स्थानिक पातळीवर स्थापित नसल्यास, [[https://manual.audacityteam.org/|संकेतस्थळावर पहा]]"
 
 #: src/HelpText.cpp
-msgid ""
-" [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
-"online."
-msgstr ""
-" [[https://forum.audacityteam.org/|मंच]] - आपला प्रश्न थेट, महाजाळवर विचारा."
+msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
+msgstr " [[https://forum.audacityteam.org/|मंच]] - आपला प्रश्न थेट, महाजाळवर विचारा."
 
 #: src/HelpText.cpp
-msgid ""
-"More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for "
-"tips, tricks, extra tutorials and effects plug-ins."
-msgstr ""
-"अधिक: </ b> टिपा, युक्त्या, अतिरिक्त प्रशिक्षण आणि प्रभाव प्लगइनसाठी आमच्या [[https://"
-"wiki.audacityteam.org/index.php(Wiki]] ला भेट द्या."
+msgid "More:</b> Visit our [[https://wiki.audacityteam.org/index.php|Wiki]] for tips, tricks, extra tutorials and effects plug-ins."
+msgstr "अधिक: </ b> टिपा, युक्त्या, अतिरिक्त प्रशिक्षण आणि प्रभाव प्लगइनसाठी आमच्या [[https://wiki.audacityteam.org/index.php(Wiki]] ला भेट द्या."
 
 #: src/HelpText.cpp
-msgid ""
-"Audacity can import unprotected files in many other formats (such as M4A and "
-"WMA, compressed WAV files from portable recorders and audio from video "
-"files) if you download and install the optional [[https://manual."
-"audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg "
-"library]] to your computer."
-msgstr ""
-"जर आपण आपल्या संगणकावर वैकल्पिक डाउनलोड आणि स्थापित केले असेल तर ओड्यासीटी इतर अनेक "
-"स्वरूपात असुरक्षित धारिका आयात करू शकते (जसे की एम४ए( M4a) आणि डब्ल्यूएमए(WMA), पोर्टेबल "
-"मुद्रणमधून संकुचित डब्ल्यूएव्ही(WAV) धारिका आणि व्हिडिओ धारिकामधून ध्वनी) [[https://"
-"manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| "
-"एफएफयमपीईजी  ग्रंथालय]]."
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| FFmpeg library]] to your computer."
+msgstr "जर आपण आपल्या संगणकावर वैकल्पिक डाउनलोड आणि स्थापित केले असेल तर ओड्यासीटी इतर अनेक स्वरूपात असुरक्षित धारिका आयात करू शकते (जसे की एम४ए( M4a) आणि डब्ल्यूएमए(WMA), पोर्टेबल मुद्रणमधून संकुचित डब्ल्यूएव्ही(WAV) धारिका आणि व्हिडिओ धारिकामधून ध्वनी) [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign| एफएफयमपीईजी  ग्रंथालय]]."
 
 #: src/HelpText.cpp
 #, fuzzy
-msgid ""
-"You can also read our help on importing [[https://manual.audacityteam.org/"
-"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
-"manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
-"CDs]]."
-msgstr ""
-"आमची मदत  आयात करण्यासाठी [[https://manual.audacityteam.org/man/"
-"playing_and_recording.html#midi|एमआयडीआय (MIDI) आधीच्याप्रमाणे]]] आणि [[http://"
-"manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| "
-"ध्वनीमुद्रिका]]."
+msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
+msgstr "आमची मदत  आयात करण्यासाठी [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|एमआयडीआय (MIDI) आधीच्याप्रमाणे]]] आणि [[http://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| ध्वनीमुद्रिका]]."
 
 #: src/HelpText.cpp
-msgid ""
-"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]].<br><br>To always view the Manual online, change \"Location of "
-"Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-"मदत पुस्तिका स्थापित केलेली दिसत नाही. कृपया [[* यूआरएल * | मदत पुस्तिका महाजाळवर "
-"पहा]]. <br> <br> नेहमीच मदत पुस्तिका महाजाळवर पाहण्यासाठी मुखपृष्ठ प्राधान्यांमध्ये "
-"\"मदत पुस्तिकाचे स्थान\" \"आंतरजाळ वरून\" बदला."
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr "मदत पुस्तिका स्थापित केलेली दिसत नाही. कृपया [[* यूआरएल * | मदत पुस्तिका महाजाळवर पहा]]. <br> <br> नेहमीच मदत पुस्तिका महाजाळवर पाहण्यासाठी मुखपृष्ठ प्राधान्यांमध्ये \"मदत पुस्तिकाचे स्थान\" \"आंतरजाळ वरून\" बदला."
 
 #: src/HelpText.cpp
-msgid ""
-"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
-"download the Manual]].<br><br>To always view the Manual online, change "
-"\"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-"मदत पुस्तिका स्थापित केलेली दिसत नाही. कृपया [[* यूआरएल * | मदत पुस्तिका]] किंवा "
-"[[https: //manual.audacityteam.org/man/unzIP_the_manual.html | मदत पुस्तिका "
-"मिळवा]]. <br> <br> नेहमीच मदत पुस्तिका महाजाळवर पाहण्यासाठी, मुखपृष्ठ प्राधान्यांमधील "
-"\"मदत पुस्तिकेचे स्थान\" \"आंतरजाळ वरून\" बदला."
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr "मदत पुस्तिका स्थापित केलेली दिसत नाही. कृपया [[* यूआरएल * | मदत पुस्तिका]] किंवा [[https: //manual.audacityteam.org/man/unzIP_the_manual.html | मदत पुस्तिका मिळवा]]. <br> <br> नेहमीच मदत पुस्तिका महाजाळवर पाहण्यासाठी, मुखपृष्ठ प्राधान्यांमधील \"मदत पुस्तिकेचे स्थान\" \"आंतरजाळ वरून\" बदला."
 
 #: src/HelpText.cpp
 msgid "Check Online"
@@ -3374,9 +3174,7 @@ msgstr "ऑड्यासिटी वापरण्यासाठी भा�
 #. * versions of language names.
 #: src/LangChoice.cpp
 #, c-format
-msgid ""
-"The language you have chosen, %s (%s), is not the same as the system "
-"language, %s (%s)."
+msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
 msgstr "तुम्ही निवडलेली भाषा, %s (%s), प्रणालीच्या भाषेप्रमाणे नाही, %s (%s)."
 
 #: src/LangChoice.cpp src/effects/VST/VSTEffect.cpp
@@ -3732,9 +3530,7 @@ msgstr "प्लग-इन व्यवस्थापित करा"
 
 #: src/PluginManager.cpp
 msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr ""
-"प्रभाव निवडा, सुरू करा किंवा बंद करण्यासाठी कळवर क्लिक करा, आणि नंतर ठीक आहे वर क्लिक "
-"करा."
+msgstr "प्रभाव निवडा, सुरू करा किंवा बंद करण्यासाठी कळवर क्लिक करा, आणि नंतर ठीक आहे वर क्लिक करा."
 
 #. i18n-hint: This is before radio buttons selecting which effects to show
 #: src/PluginManager.cpp
@@ -3977,13 +3773,8 @@ msgid "Close project immediately with no changes"
 msgstr "कोणताही बदल न करता प्रकल्प त्वरित बंद करा"
 
 #: src/ProjectFSCK.cpp
-msgid ""
-"Continue with repairs noted in log, and check for more errors. This will "
-"save the project in its current state, unless you \"Close project immediately"
-"\" on further error alerts."
-msgstr ""
-"नोंदवहीमध्ये नोंदलेल्या दुरुस्तीसह सुरू ठेवा आणि अधिक त्रुटी पहा. पुढील त्रुटी सतर्कतेवर आपण "
-"\"प्रकल्प त्वरित बंद करा\" पर्यंत तो या प्रकल्पाला त्याच्या सद्य स्थितीत जतन करेल."
+msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+msgstr "नोंदवहीमध्ये नोंदलेल्या दुरुस्तीसह सुरू ठेवा आणि अधिक त्रुटी पहा. पुढील त्रुटी सतर्कतेवर आपण \"प्रकल्प त्वरित बंद करा\" पर्यंत तो या प्रकल्पाला त्याच्या सद्य स्थितीत जतन करेल."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -4375,12 +4166,10 @@ msgstr "(पुनर्प्राप्त)"
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
-"You are using Audacity %s. You may need to upgrade to a newer version to "
-"open this file."
+"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
 msgstr ""
 "ही धारिका ऑड्यासिटी %s वापरून जतन केली.\n"
-"आपण ऑड्यासिटी %s वापरत आहात. ही धारिका उघडण्यासाठी आपल्याला नवीन आवृत्तीमध्ये श्रेणी "
-"सुधारित करण्याची आवश्यकता असू शकते."
+"आपण ऑड्यासिटी %s वापरत आहात. ही धारिका उघडण्यासाठी आपल्याला नवीन आवृत्तीमध्ये श्रेणी सुधारित करण्याची आवश्यकता असू शकते."
 
 #: src/ProjectFileIO.cpp
 msgid "Can't open project file"
@@ -4406,9 +4195,7 @@ msgid "Unable to parse project information."
 msgstr "पूर्वनिर्धारितची धारिका वाचण्यात बंद."
 
 #: src/ProjectFileIO.cpp
-msgid ""
-"The project's database failed to reopen, possibly because of limited space "
-"on the storage device."
+msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
 msgstr ""
 
 #: src/ProjectFileIO.cpp
@@ -4511,9 +4298,7 @@ msgid ""
 msgstr ""
 
 #: src/ProjectFileManager.cpp
-msgid ""
-"The project exceeds the maximum size of 4GB when writing to a FAT32 "
-"formatted filesystem."
+msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
 msgstr ""
 
 #: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
@@ -4523,8 +4308,7 @@ msgstr "जनत झाले %s"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the file name provided would overwrite "
-"another project.\n"
+"The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
 msgstr ""
 "प्रकल्प जतन झाला नाही कारण प्रदान केलेले धारिकेचे  नाव दुसर्‍या प्रकल्पाला अधिलिखित करेल.\n"
@@ -4570,8 +4354,7 @@ msgstr "प्रकल्प अधिलिखित चेतावणी"
 #: src/ProjectFileManager.cpp
 #, fuzzy
 msgid ""
-"The project was not saved because the selected project is open in another "
-"window.\n"
+"The project was not saved because the selected project is open in another window.\n"
 "Please try again and select an original name."
 msgstr ""
 "प्रकल्प जतन होणार नाही कारण निवडलेला प्रकल्प दुसर्‍या विंडोमध्ये खुला आहे.\n"
@@ -4594,16 +4377,6 @@ msgstr ""
 msgid "Error Saving Copy of Project"
 msgstr "प्रकल्पाची प्रत जतन करताना त्रुटी"
 
-#: src/ProjectFileManager.cpp
-#, fuzzy
-msgid "Can't open new empty project"
-msgstr "प्रकल्प धारिका उघडू शकत नाही"
-
-#: src/ProjectFileManager.cpp
-#, fuzzy
-msgid "Error opening a new empty project"
-msgstr "धारिका किंवा प्रकल्प उघडण्यात त्रुटी"
-
 #: src/ProjectFileManager.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Select one or more files"
 msgstr "एक किंवा अधिक धारिका निवडा"
@@ -4616,12 +4389,6 @@ msgstr "%s आधीपासूनच दुसर्‍या विंडो�
 #: src/ProjectFileManager.cpp src/import/ImportAUP.cpp
 msgid "Error Opening Project"
 msgstr "प्रकल्प उघडण्यात त्रुटी"
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"Project resides on FAT formatted drive.\n"
-"Copy it to another drive to open it."
-msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -4662,6 +4429,12 @@ msgid "Error Opening File or Project"
 msgstr "धारिका किंवा प्रकल्प उघडण्यात त्रुटी"
 
 #: src/ProjectFileManager.cpp
+msgid ""
+"Project resides on FAT formatted drive.\n"
+"Copy it to another drive to open it."
+msgstr ""
+
+#: src/ProjectFileManager.cpp
 msgid "Project was recovered"
 msgstr "प्रकल्प पुनर्प्राप्त झाला"
 
@@ -4699,13 +4472,11 @@ msgstr "प्रकल्प स्थापित करा"
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid ""
-"Compacting this project will free up disk space by removing unused bytes "
-"within the file.\n"
+"Compacting this project will free up disk space by removing unused bytes within the file.\n"
 "\n"
 "There is %s of free disk space and this project is currently using %s.\n"
 "\n"
-"If you proceed, the current Undo/Redo History and clipboard contents will be "
-"discarded and you will recover approximately %s of disk space.\n"
+"If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.\n"
 "\n"
 "Do you want to continue?"
 msgstr ""
@@ -4816,8 +4587,7 @@ msgstr ""
 
 #: src/Registry.cpp
 #, c-format
-msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
 msgstr ""
 
 #: src/Registry.cpp
@@ -5135,7 +4905,7 @@ msgstr "सक्रियन पातळी (डीबी):"
 msgid "Welcome to Audacity!"
 msgstr "ऑड्यासिटीमध्ये आपले स्वागत आहे!"
 
-#: src/SplashDialog.cpp
+#: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
 msgid "Don't show this again at start up"
 msgstr "प्रारंभ झाल्यावर हे पुन्हा दर्शवू नका"
 
@@ -5491,16 +5261,14 @@ msgstr "स्वयंचलित निर्यात त्रुटी"
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid ""
-"You may not have enough free disk space to complete this Timer Recording, "
-"based on your current settings.\n"
+"You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n"
 "\n"
 "Do you wish to continue?\n"
 "\n"
 "Planned recording duration:   %s\n"
 "Recording time remaining on disk:   %s"
 msgstr ""
-"आपल्यास आपल्या वर्तमान समायोजनच्या आधारे हे समयबद्ध ध्वनीमुद्रण पूर्ण करण्यासाठी आपल्याकडे "
-"रिक्त रिक्त जागा रिक्त असू शकत नाही.\n"
+"आपल्यास आपल्या वर्तमान समायोजनच्या आधारे हे समयबद्ध ध्वनीमुद्रण पूर्ण करण्यासाठी आपल्याकडे रिक्त रिक्त जागा रिक्त असू शकत नाही.\n"
 "\n"
 "आपण सुरू ठेवू इच्छिता?\n"
 "\n"
@@ -5813,9 +5581,7 @@ msgstr " चालू निवडा"
 
 #: src/TrackPanelResizeHandle.cpp
 #, fuzzy
-msgid ""
-"Click and drag to adjust relative size of stereo tracks, double-click to "
-"make heights equal"
+msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
 msgstr "स्टिरिओ गीतपट्टाचा सापेक्ष आकार समायोजित करण्यासाठी क्लिक करा आणि ओढा."
 
 #: src/TrackPanelResizeHandle.cpp
@@ -6003,10 +5769,7 @@ msgid ""
 msgstr ""
 
 #: src/commands/CommandManager.cpp
-msgid ""
-"The following commands have had their shortcuts removed, because their "
-"default shortcut is new or changed, and is the same shortcut that you have "
-"assigned to another command."
+msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
 msgstr ""
 
 #: src/commands/CommandManager.cpp
@@ -6049,7 +5812,8 @@ msgstr "ओढा"
 msgid "Panel"
 msgstr "पॅनेल"
 
-#: src/commands/DragCommand.cpp
+#: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/UpdateNoticeDialog.cpp
 msgid "Application"
 msgstr "अनुप्रयोग"
 
@@ -6725,9 +6489,11 @@ msgstr "वर्णक्रमीय प्रीफेस वापरा"
 msgid "Spectral Select"
 msgstr "वर्णक्रमी निवडा"
 
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Gray Scale"
-msgstr "मापन करा"
+#. i18n-hint Scheme refers to a color scheme for spectrogram colors
+#: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
+msgctxt "spectrum prefs"
+msgid "Sche&me"
+msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track"
@@ -6770,29 +6536,21 @@ msgstr "स्वंय सोडा"
 
 #: src/effects/AutoDuck.cpp
 #, fuzzy
-msgid ""
-"Reduces (ducks) the volume of one or more tracks whenever the volume of a "
-"specified \"control\" track reaches a particular level"
-msgstr ""
-"निर्दिष्ट \"नियंत्रण\" ध्वनी विशिष्ट स्तरावर पोहोचल्यावर ध्वनी आवाजचे एक किंवा अधिक "
-"गीतपट्टा कमी करते (बदके)"
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr "निर्दिष्ट \"नियंत्रण\" ध्वनी विशिष्ट स्तरावर पोहोचल्यावर ध्वनी आवाजचे एक किंवा अधिक गीतपट्टा कमी करते (बदके)"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid ""
-"You selected a track which does not contain audio. AutoDuck can only process "
-"audio tracks."
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
 msgstr "आपण एक ध्वनी निवडला आहे, जो रिक्त  आहे ."
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces the volume)
 #. * of the audio automatically when there is sound on another track.  Not as
 #. * in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid ""
-"Auto Duck needs a control track which must be placed below the selected "
-"track(s)."
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
 msgstr "स्वंय डकला एक नियंत्रण ध्वनी आवश्यक आहे जो निवडलेल्या ध्वनी खाली ठेवला पाहिजे."
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
@@ -7360,11 +7118,8 @@ msgstr ""
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
-msgid ""
-"Contrast Analyzer, for measuring RMS volume differences between two "
-"selections of audio."
-msgstr ""
-"ध्वनी च्या दोन निवडींमधील RMS ध्वनी आवाजमधील फरक मोजणेण्यासाठी कॉन्ट्रास्ट विश्लेषक."
+msgid "Contrast Analyzer, for measuring RMS volume differences between two selections of audio."
+msgstr "ध्वनी च्या दोन निवडींमधील RMS ध्वनी आवाजमधील फरक मोजणेण्यासाठी कॉन्ट्रास्ट विश्लेषक."
 
 #. i18n-hint noun
 #: src/effects/Contrast.cpp src/effects/ToneGen.cpp
@@ -7854,12 +7609,8 @@ msgid "DTMF Tones"
 msgstr "DTMF स्वर"
 
 #: src/effects/DtmfGen.cpp
-msgid ""
-"Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
-"keypad on telephones"
-msgstr ""
-"टेलिफोनवर कळफलकद्वारे तयार केल्याप्रमाणे ड्युअल-ध्वनी मल्टी-वारंवारता (DTMF)ध्वनी व्युत्पन्न "
-"करते"
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
+msgstr "टेलिफोनवर कळफलकद्वारे तयार केल्याप्रमाणे ड्युअल-ध्वनी मल्टी-वारंवारता (DTMF)ध्वनी व्युत्पन्न करते"
 
 #: src/effects/DtmfGen.cpp
 msgid ""
@@ -8356,12 +8107,10 @@ msgstr "ट्रेबल"
 #, fuzzy
 msgid ""
 "To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
-"then use that one."
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
 "हे चाळण वक्र मॅक्रोमध्ये वापरण्यासाठी कृपया त्यासाठी एक नवीन नाव निवडा.\n"
-"'वक्र जतन / व्यवस्थापित करा ...' बटण निवडा आणि 'अज्ञात' वक्र पुनर्नामित करा, त्यानंतर "
-"ते वापरा."
+"'वक्र जतन / व्यवस्थापित करा ...' बटण निवडा आणि 'अज्ञात' वक्र पुनर्नामित करा, त्यानंतर ते वापरा."
 
 #: src/effects/Equalization.cpp
 #, fuzzy
@@ -8369,10 +8118,8 @@ msgid "Filter Curve EQ needs a different name"
 msgstr "EQ कर्व भिन्न नाव असणे आवश्यक आहे"
 
 #: src/effects/Equalization.cpp
-msgid ""
-"To apply Equalization, all selected tracks must have the same sample rate."
-msgstr ""
-"समिकरण लागू करण्यासाठी, सर्व निवडलेल्या गीतपट्टामध्ये समान नमुना दर असणे आवश्यक आहे."
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
+msgstr "समिकरण लागू करण्यासाठी, सर्व निवडलेल्या गीतपट्टामध्ये समान नमुना दर असणे आवश्यक आहे."
 
 #: src/effects/Equalization.cpp
 msgid "Track sample rate is too low for this effect."
@@ -8930,9 +8677,7 @@ msgid "All noise profile data must have the same sample rate."
 msgstr "सर्व ध्वनी प्रोफाइल माहितीमध्ये समान नमुना दर असणे आवश्यक आहे."
 
 #: src/effects/NoiseReduction.cpp
-msgid ""
-"The sample rate of the noise profile must match that of the sound to be "
-"processed."
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
 msgstr "ध्वनी प्रोफाइलचा नमुना दर प्रक्रियेसाठी असलेल्या ध्वनीशी जुळला पाहिजे."
 
 #: src/effects/NoiseReduction.cpp
@@ -9361,13 +9106,11 @@ msgstr "एक किंवा अधिक गीतपट्टाचे स�
 
 #: src/effects/Repair.cpp
 msgid ""
-"The Repair effect is intended to be used on very short sections of damaged "
-"audio (up to 128 samples).\n"
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
-"दुरूस्तीचा परिणाम खराब झालेल्या ध्वनी च्या अगदी लहान भागांवर (128 नमुने पर्यंत) "
-"वापरण्याचा हेतू आहे.\n"
+"दुरूस्तीचा परिणाम खराब झालेल्या ध्वनी च्या अगदी लहान भागांवर (128 नमुने पर्यंत) वापरण्याचा हेतू आहे.\n"
 "\n"
 "दृश्यरूप मोठे करा आणि दुरुस्तीसाठी सेकंदाचा एक लहान भाग निवडा."
 
@@ -9839,18 +9582,12 @@ msgid "Truncate Silence"
 msgstr "मौन कापा"
 
 #: src/effects/TruncSilence.cpp
-msgid ""
-"Automatically reduces the length of passages where the volume is below a "
-"specified level"
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
 msgstr "आवाज एका निर्दिष्ट स्तरापेक्षा कमी आहे तेथे स्वयंचलितपणे परिच्छेदाची लांबी कमी करते"
 
 #: src/effects/TruncSilence.cpp
-msgid ""
-"When truncating independently, there may only be one selected audio track in "
-"each Sync-Locked Track Group."
-msgstr ""
-"स्वतंत्रपणे छाटताना, प्रत्येक समक्रमित-कुलूप लावा केलेल्या गीतपट्टा गटामध्ये केवळ एक निवडलेला "
-"ध्वनी  गीतपट्टा असू शकतो."
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
+msgstr "स्वतंत्रपणे छाटताना, प्रत्येक समक्रमित-कुलूप लावा केलेल्या गीतपट्टा गटामध्ये केवळ एक निवडलेला ध्वनी  गीतपट्टा असू शकतो."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -9906,11 +9643,7 @@ msgid "Buffer Size"
 msgstr "तात्पुरती साठवण आकार"
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
-msgid ""
-"The buffer size controls the number of samples sent to the effect on each "
-"iteration. Smaller values will cause slower processing and some effects "
-"require 8192 samples or less to work properly. However most effects can "
-"accept large buffers and using them will greatly reduce processing time."
+msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp
@@ -9923,11 +9656,7 @@ msgid "Latency Compensation"
 msgstr "प्रलंबित भरपाई"
 
 #: src/effects/VST/VSTEffect.cpp
-msgid ""
-"As part of their processing, some VST effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all VST effects."
+msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
 msgstr ""
 
 #: src/effects/VST/VSTEffect.cpp src/effects/audiounits/AudioUnitEffect.cpp
@@ -9941,10 +9670,7 @@ msgstr "ग्राफिकल प्रभाव"
 
 #: src/effects/VST/VSTEffect.cpp
 #, fuzzy
-msgid ""
-"Most VST effects have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
+msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "बर्‍याच VST प्रभाव घटक मूल्य सेट करण्यासाठी ग्राफिकल मुखपृष्ठ दिला जातो."
 
 #: src/effects/VST/VSTEffect.cpp src/effects/lv2/LV2Effect.cpp
@@ -10027,9 +9753,7 @@ msgid "Wahwah"
 msgstr "वा-वा (Wahwah)"
 
 #: src/effects/Wahwah.cpp
-msgid ""
-"Rapid tone quality variations, like that guitar sound so popular in the "
-"1970's"
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
 msgstr "1970's० च्या दशकात गिटार ध्वनीप्रमाणे लोकप्रिय वेगवान ध्वनी गुणवत्तेतील भिन्नता"
 
 #: src/effects/Wahwah.cpp
@@ -10074,12 +9798,7 @@ msgid "Audio Unit Effect Options"
 msgstr "ध्वनी एकक प्रभाव पर्याय"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid ""
-"As part of their processing, some Audio Unit effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will notice "
-"that small silences have been inserted into the audio. Enabling this option "
-"will provide that compensation, but it may not work for all Audio Unit "
-"effects."
+msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -10087,11 +9806,7 @@ msgid "User Interface"
 msgstr "वापरकर्ता मुखपृष्ठ"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-msgid ""
-"Select \"Full\" to use the graphical interface if supplied by the Audio "
-"Unit. Select \"Generic\" to use the system supplied generic interface. "
-"Select \"Basic\" for a basic text-only interface. Reopen the effect for this "
-"to take effect."
+msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -10248,11 +9963,7 @@ msgid "LADSPA Effect Options"
 msgstr "LADSPA प्रभाव पर्याय"
 
 #: src/effects/ladspa/LadspaEffect.cpp
-msgid ""
-"As part of their processing, some LADSPA effects must delay returning audio "
-"to Audacity. When not compensating for this delay, you will notice that "
-"small silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all LADSPA effects."
+msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
 
 #. i18n-hint: An item name introducing a value, which is not part of the string but
@@ -10285,19 +9996,12 @@ msgid "&Buffer Size (8 to %d) samples:"
 msgstr "तात्पुरती साठवण आकार (8 ते 1048576 नमुने)(&B):"
 
 #: src/effects/lv2/LV2Effect.cpp
-msgid ""
-"As part of their processing, some LV2 effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this setting will "
-"provide that compensation, but it may not work for all LV2 effects."
+msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
 #, fuzzy
-msgid ""
-"LV2 effects can have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
+msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "बहुतेक LV2 प्रभावांमध्ये घटक मूल्ये सेट करण्यासाठी ग्राफिकल मुखपृष्ठ असतो."
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -10384,10 +10088,8 @@ msgid "Nyquist Error"
 msgstr "'नाइक्विस्ट (Nyquist) त्रुटी"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Sorry, cannot apply effect on stereo tracks where the tracks don't match."
-msgstr ""
-"क्षमस्व, जिथे गीतपट्टा जुळत नाहीत तेथे स्टिरिओ गीतपट्टावर प्रभाव लागू करू शकत नाही."
+msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
+msgstr "क्षमस्व, जिथे गीतपट्टा जुळत नाहीत तेथे स्टिरिओ गीतपट्टावर प्रभाव लागू करू शकत नाही."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -10460,17 +10162,13 @@ msgid "Nyquist returned nil audio.\n"
 msgstr "'नाइक्विस्ट (Nyquist) रिक्त ध्वनी  परत केला. \n"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr ""
-"[चेतावणी: नेयक्विस्टने अवैध यूटीएफ -8 स्ट्रिंग परत केली, येथे लॅटिन -1 म्हणून रुपांतरित केली "
-"गेली.]"
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr "[चेतावणी: नेयक्विस्टने अवैध यूटीएफ -8 स्ट्रिंग परत केली, येथे लॅटिन -1 म्हणून रुपांतरित केली गेली.]"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr ""
-"ऑड्यासिटीची ही आवृत्ती 'नाइक्विस्ट (Nyquist) प्लग-इन आवृत्ती %ld चे समर्थन करत नाही"
+msgstr "ऑड्यासिटीची ही आवृत्ती 'नाइक्विस्ट (Nyquist) प्लग-इन आवृत्ती %ld चे समर्थन करत नाही"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Could not open file"
@@ -10586,12 +10284,8 @@ msgid "Provides Vamp Effects support to Audacity"
 msgstr "ऑड्यासिटीला व्हँप प्रभाव समर्थन प्रदान करते"
 
 #: src/effects/vamp/VampEffect.cpp
-msgid ""
-"Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual "
-"channels of the track do not match."
-msgstr ""
-"क्षमस्व, जिथे गीतपट्ट्याचे स्वतंत्र वाहिन्या जुळत नाहीत तेथे स्टीरिओ गीतपट्ट्यावर व्हँप प्लगइन "
-"चालविले जाऊ शकत नाहीत."
+msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
+msgstr "क्षमस्व, जिथे गीतपट्ट्याचे स्वतंत्र वाहिन्या जुळत नाहीत तेथे स्टीरिओ गीतपट्ट्यावर व्हँप प्लगइन चालविले जाऊ शकत नाहीत."
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Sorry, failed to load Vamp Plug-in."
@@ -10650,15 +10344,13 @@ msgstr "आपली खात्री आहे की आपण धारि�
 msgid ""
 "You are about to export a %s file with the name \"%s\".\n"
 "\n"
-"Normally these files end in \".%s\", and some programs will not open files "
-"with nonstandard extensions.\n"
+"Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 "\n"
 "Are you sure you want to export the file under this name?"
 msgstr ""
 "आपण \"%s\" नावाने%s धारिका  निर्यात करणार आहात.\n"
 "\n"
-"साधारणपणे या धारिका  \".%s \" , मध्ये समाप्त होतात आणि काही प्रोग्राम्स नॉन-स्टँडर्ड "
-"विस्तारांसह धारिका  उघडणार नाहीत.\n"
+"साधारणपणे या धारिका  \".%s \" , मध्ये समाप्त होतात आणि काही प्रोग्राम्स नॉन-स्टँडर्ड विस्तारांसह धारिका  उघडणार नाहीत.\n"
 "\n"
 "आपणास खात्री आहे की आपण या नावाने धारिका निर्यात करू इच्छिता?"
 
@@ -10677,13 +10369,10 @@ msgstr "आपले गीतपट्टा एकत्र मिसळले
 
 #: src/export/Export.cpp
 msgid "Your tracks will be mixed down and exported as one stereo file."
-msgstr ""
-"आपले गीतपट्टा एकत्र मिसळले जातील आणि एक स्टिरिओ धारिका म्हणून निर्यात केले जातील."
+msgstr "आपले गीतपट्टा एकत्र मिसळले जातील आणि एक स्टिरिओ धारिका म्हणून निर्यात केले जातील."
 
 #: src/export/Export.cpp
-msgid ""
-"Your tracks will be mixed down to one exported file according to the encoder "
-"settings."
+msgid "Your tracks will be mixed down to one exported file according to the encoder settings."
 msgstr "आपले गीतपट्टा असंकेतन शब्दकोश समायोजननुसार एका निर्यात धारिकामध्ये मिसळले जातील."
 
 #: src/export/Export.cpp
@@ -10738,11 +10427,8 @@ msgstr "उत्पादित दर्शवा"
 #. in the program as a format string.  Keep %f unchanged.
 #: src/export/ExportCL.cpp
 #, c-format
-msgid ""
-"Data will be piped to standard in. \"%f\" uses the file name in the export "
-"window."
-msgstr ""
-"माहिती मानक मध्ये पिप केला जाईल. \"% F\" निर्यात विंडोमध्ये धारिकाचे नाव वापरते."
+msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
+msgstr "माहिती मानक मध्ये पिप केला जाईल. \"% F\" निर्यात विंडोमध्ये धारिकाचे नाव वापरते."
 
 #. i18n-hint files that can be run as programs
 #: src/export/ExportCL.cpp
@@ -10779,7 +10465,7 @@ msgstr "आज्ञा पंक्ति असंकेतन शब्दक
 msgid "Command Output"
 msgstr "आज्ञा उत्पादित"
 
-#: src/export/ExportCL.cpp
+#: src/export/ExportCL.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "ठीक आहे(&O)"
 
@@ -10815,8 +10501,7 @@ msgstr ""
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't determine format description for file \"%s\"."
-msgstr ""
-"एफएफएमपीईजी (FFmpeg): ERROR - \"%s\" धारिकाचे स्वरूप वर्णन निर्धारित करू शकत नाही."
+msgstr "एफएफएमपीईजी (FFmpeg): ERROR - \"%s\" धारिकाचे स्वरूप वर्णन निर्धारित करू शकत नाही."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg Error"
@@ -10829,25 +10514,17 @@ msgstr "एफएफएमपीईजी (FFmpeg): त्रुटी - उत�
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
-msgstr ""
-"एफएफएमपीईजी (FFmpeg) : त्रुटी - निर्यात धारिका  ध्वनी   \\%s\\ वरून ध्वनी  प्रवाह "
-"जोडू शकत नाही."
+msgstr "एफएफएमपीईजी (FFmpeg) : त्रुटी - निर्यात धारिका  ध्वनी   \\%s\\ वरून ध्वनी  प्रवाह जोडू शकत नाही."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
-msgstr ""
-"एफएफएमपीईजी (FFmpeg): ERROR - लिहिण्यासाठी उत्पादित धारिका \"%s\" उघडू शकत "
-"नाही. त्रुटी सांकेतिक आज्ञावली%d आहे."
+msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
+msgstr "एफएफएमपीईजी (FFmpeg): ERROR - लिहिण्यासाठी उत्पादित धारिका \"%s\" उघडू शकत नाही. त्रुटी सांकेतिक आज्ञावली%d आहे."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
-msgstr ""
-"एफएफएमपीईजी (FFmpeg): ERROR - उत्पादित धारिका \"%s\" वर शीर्षलेख लिहू शकत नाही. "
-"त्रुटी सांकेतिक आज्ञावली%d आहे."
+msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
+msgstr "एफएफएमपीईजी (FFmpeg): ERROR - उत्पादित धारिका \"%s\" वर शीर्षलेख लिहू शकत नाही. त्रुटी सांकेतिक आज्ञावली%d आहे."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpeg.cpp
@@ -10878,15 +10555,11 @@ msgstr "एफएफएमपीईजी (FFmpeg): त्रुटी - ध्�
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
-msgstr ""
-"एफएफएमपीईजी (FFmpeg): त्रुटी - FIFOमध्ये ध्वनी वाचण्यासाठी तात्पुरती साठवण वाटप करू "
-"शकत नाही."
+msgstr "एफएफएमपीईजी (FFmpeg): त्रुटी - FIFOमध्ये ध्वनी वाचण्यासाठी तात्पुरती साठवण वाटप करू शकत नाही."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
-msgstr ""
-"एफएफएमपीईजी (FFmpeg):   त्रुटी - नमुना तात्पुरते साठवणच्या आकाराची माहिती मिळू शकली "
-"नाही"
+msgstr "एफएफएमपीईजी (FFmpeg):   त्रुटी - नमुना तात्पुरते साठवणच्या आकाराची माहिती मिळू शकली नाही"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not allocate bytes for samples buffer"
@@ -10906,8 +10579,7 @@ msgstr "एफएफएमपीईजी (FFmpeg) : त्रुटी  - ब�
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write last audio frame to output file."
-msgstr ""
-"एफएफएमपीईजी (FFmpeg): त्रुटी - उत्पादित धारीकेवर शेवटचा ध्वनी फ्रेम लिहू शकला नाही."
+msgstr "एफएफएमपीईजी (FFmpeg): त्रुटी - उत्पादित धारीकेवर शेवटचा ध्वनी फ्रेम लिहू शकला नाही."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - nAudioFrameSizeOut too large."
@@ -10919,12 +10591,8 @@ msgstr "एफएफएमपीईजी (FFmpeg): त्रुटी - ध्�
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"Attempted to export %d channels, but maximum number of channels for selected "
-"output format is %d"
-msgstr ""
-"%d वाहिनी निर्यात करण्याचा प्रयत्न केला, परंतु निवडलेल्या उत्पादित स्वरूपनासाठी वाहिनीची "
-"कमाल संख्या%d आहे"
+msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
+msgstr "%d वाहिनी निर्यात करण्याचा प्रयत्न केला, परंतु निवडलेल्या उत्पादित स्वरूपनासाठी वाहिनीची कमाल संख्या%d आहे"
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
@@ -11258,12 +10926,8 @@ msgid "Codec:"
 msgstr "सांकेतिक आज्ञावली:"
 
 #: src/export/ExportFFmpegDialogs.cpp
-msgid ""
-"Not all formats and codecs are compatible. Nor are all option combinations "
-"compatible with all codecs."
-msgstr ""
-"सर्व स्वरूप आणि सांकेतिक आज्ञावलीची सुसंगतता नाही. तसेच सर्व प्रकारच्या पर्यायांचा संगम सर्व "
-"सांकेतिक आज्ञावलीशी सुसंगत नाही."
+msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
+msgstr "सर्व स्वरूप आणि सांकेतिक आज्ञावलीची सुसंगतता नाही. तसेच सर्व प्रकारच्या पर्यायांचा संगम सर्व सांकेतिक आज्ञावलीशी सुसंगत नाही."
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Show All Formats"
@@ -11322,13 +10986,10 @@ msgid ""
 "Recommended - 192000"
 msgstr ""
 "बिट रेट (बिट्स / सेकंद) - परिणामी धारिका आकार आणि गुणवत्तेवर परिणाम होतो\n"
-"काही सांकेतिक आज्ञावली केवळ विशिष्ट मूल्ये (128 के, 192 के, 256 के इत्यादी) स्वीकारू "
-"शकतात\n"
+"काही सांकेतिक आज्ञावली केवळ विशिष्ट मूल्ये (128 के, 192 के, 256 के इत्यादी) स्वीकारू शकतात\n"
 "0 - स्वयंचलित\n"
-"शिफारस केलेले - 192000 बिट रेट (बिट्स / सेकंद) - परिणामी धारिका आकार आणि गुणवत्तेवर "
-"प्रभाव पाडतो\n"
-"काही सांकेतिक आज्ञावली केवळ विशिष्ट मूल्ये (128 के, 192 के, 256 के इत्यादी) स्वीकारू "
-"शकतात\n"
+"शिफारस केलेले - 192000 बिट रेट (बिट्स / सेकंद) - परिणामी धारिका आकार आणि गुणवत्तेवर प्रभाव पाडतो\n"
+"काही सांकेतिक आज्ञावली केवळ विशिष्ट मूल्ये (128 के, 192 के, 256 के इत्यादी) स्वीकारू शकतात\n"
 "0 - स्वयंचलित\n"
 "शिफारस केलेले - 192000"
 
@@ -11851,12 +11512,10 @@ msgstr "%s कुठे आहे?"
 #: src/export/ExportMP3.cpp
 #, fuzzy, c-format
 msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
-"Audacity %d.%d.%d.\n"
+"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of 'LAME for Audacity'."
 msgstr ""
-"आपण lame_enc.dll v%d.%d शी दुवा साधत आहात. ही आवृत्ती ऑड्यासिटी%d.%d.%d सह सुसंगत "
-"नाही.\n"
+"आपण lame_enc.dll v%d.%d शी दुवा साधत आहात. ही आवृत्ती ऑड्यासिटी%d.%d.%d सह सुसंगत नाही.\n"
 "कृपया 'लेम फॉर ऑड्यासिटी' ची नवीनतम आवृत्ती डाउनलोड करा."
 
 #: src/export/ExportMP3.cpp
@@ -12102,8 +11761,7 @@ msgid ""
 "\n"
 "Suggested replacement:"
 msgstr ""
-"\"%s\" धारिका नाव नावपट्टी किंवा गीतपट्टा वैध नाही. आपण %s कोणत्याही वापरु शकत "
-"नाही\n"
+"\"%s\" धारिका नाव नावपट्टी किंवा गीतपट्टा वैध नाही. आपण %s कोणत्याही वापरु शकत नाही\n"
 "वापरा ..."
 
 #. i18n-hint: The second %s gives a letter that can't be used.
@@ -12114,8 +11772,7 @@ msgid ""
 "\n"
 "Suggested replacement:"
 msgstr ""
-"\"%s\" नावपट्टी किंवा गीतपट्टा कायदेशीर धारिका  नाव नाही. आपण \"%s\" वापरू शकत "
-"नाही.\n"
+"\"%s\" नावपट्टी किंवा गीतपट्टा कायदेशीर धारिका  नाव नाही. आपण \"%s\" वापरू शकत नाही.\n"
 "वापरा ..."
 
 #: src/export/ExportMultiple.cpp
@@ -12183,8 +11840,7 @@ msgstr "इतर एकत्रित धारिका"
 
 #: src/export/ExportPCM.cpp
 msgid ""
-"You have attempted to Export a WAV or AIFF file which would be greater than "
-"4GB.\n"
+"You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
 
@@ -12243,8 +11899,7 @@ msgid ""
 msgstr ""
 "\"%s\"\n"
 "एमआयडीआय (MIDI) आधीच्याप्रमाणे आहे, ध्वनी आधीच्याप्रमाणे नाही.\n"
-"ऑड्यासिटी वाजवा करण्यासाठी या प्रकारची आधीच्याप्रमाणे उघडू शकत नाही, परंतु आपण हे करू "
-"शकता\n"
+"ऑड्यासिटी वाजवा करण्यासाठी या प्रकारची आधीच्याप्रमाणे उघडू शकत नाही, परंतु आपण हे करू शकता\n"
 "आधीच्याप्रमाणे> आयात करा> एमआयडीआय (MIDI) वर क्लिक करून ते संपादित करा."
 
 #: src/import/Import.cpp
@@ -12256,8 +11911,7 @@ msgid ""
 msgstr ""
 "\"%s\"\n"
 "एमआयडीआय (MIDI) आधीच्याप्रमाणे आहे, ध्वनी आधीच्याप्रमाणे नाही.\n"
-"ऑड्यासिटी वाजवा करण्यासाठी या प्रकारची आधीच्याप्रमाणे उघडू शकत नाही, परंतु आपण हे करू "
-"शकता\n"
+"ऑड्यासिटी वाजवा करण्यासाठी या प्रकारची आधीच्याप्रमाणे उघडू शकत नाही, परंतु आपण हे करू शकता\n"
 "आधीच्याप्रमाणे> आयात करा> एमआयडीआय (MIDI) वर क्लिक करून ते संपादित करा."
 
 #: src/import/Import.cpp
@@ -12288,14 +11942,11 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a playlist file. \n"
-"Audacity cannot open this file because it only contains links to other "
-"files. \n"
-"You may be able to open it in a text editor and download the actual audio "
-"files."
+"Audacity cannot open this file because it only contains links to other files. \n"
+"You may be able to open it in a text editor and download the actual audio files."
 msgstr ""
 "\"%s\" ही एक वाजवा यादी आधीच्याप्रमाणे आहे.\n"
-"ऑड्यासिटी ही आधीच्याप्रमाणे उघडू शकत नाही कारण त्यात फक्त इतर आधीच्याप्रमाणे्सची लिंक "
-"आहे.\n"
+"ऑड्यासिटी ही आधीच्याप्रमाणे उघडू शकत नाही कारण त्यात फक्त इतर आधीच्याप्रमाणे्सची लिंक आहे.\n"
 "आपण तो मजकूर संपादकमध्ये उघडा आणि प्रत्यक्ष ध्वनी धारिका डाउनलोड करण्यात सुरू होऊ शकता."
 
 #. i18n-hint: %s will be the filename
@@ -12308,23 +11959,19 @@ msgid ""
 msgstr ""
 "\"%s\" एक Windows Media ध्वनी आधीच्याप्रमाणे आहे.\n"
 "पेटंट रोखण्यामुळे ऑड्यासिटी ही आधीच्याप्रमाणे उघडू शकत नाही.\n"
-"आपल्याला त्यास समर्थित ध्वनी स्वरूपनात रूपांतरित करण्याची आवश्यकता आहे, जसे की "
-"डब्ल्यूएवी(WAV) किंवा AIFF."
+"आपल्याला त्यास समर्थित ध्वनी स्वरूपनात रूपांतरित करण्याची आवश्यकता आहे, जसे की डब्ल्यूएवी(WAV) किंवा AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
 #, fuzzy, c-format
 msgid ""
 "\"%s\" is an Advanced Audio Coding file.\n"
-"Without the optional FFmpeg library, Audacity cannot open this type of "
-"file.\n"
-"Otherwise, you need to convert it to a supported audio format, such as WAV "
-"or AIFF."
+"Without the optional FFmpeg library, Audacity cannot open this type of file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" एक प्रगत ध्वनी सांकेतिक आज्ञावली आधीच्याप्रमाणे आहे.\n"
 "ऑड्यासिटी ही आधीच्याप्रमाणे उघडू शकत नाही.\n"
-"आपल्याला त्यास समर्थित ध्वनी स्वरूपनात रूपांतरित करण्याची आवश्यकता आहे, जसे की "
-"डब्ल्यूएवी(WAV) किंवा AIFF."
+"आपल्याला त्यास समर्थित ध्वनी स्वरूपनात रूपांतरित करण्याची आवश्यकता आहे, जसे की डब्ल्यूएवी(WAV) किंवा AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -12339,8 +11986,7 @@ msgstr ""
 "\"%s\" एक कूटबद्ध ध्वनी आधीच्याप्रमाणे आहे.\n"
 "हे विशेषत: महाजाळवर संगीत संग्रहमधील आहेत.\n"
 "एन्क्रिप्शनमुळे ऑड्यासिटी या प्रकारची आधीच्याप्रमाणे उघडू शकत नाही.\n"
-"ऑडीसिटी मध्ये आधीच्याप्रमाणे ध्वनीमुद्रण करण्याचा प्रयत्न करा, किंवा नंतर तो ध्वनी सीडी "
-"बर्न\n"
+"ऑडीसिटी मध्ये आधीच्याप्रमाणे ध्वनीमुद्रण करण्याचा प्रयत्न करा, किंवा नंतर तो ध्वनी सीडी बर्न\n"
 "सीडी गीतपट्टाला समर्थित ध्वनी स्वरूपात जसे की डब्ल्यूएवी(WAV) किंवा AIFF काढा."
 
 #. i18n-hint: %s will be the filename
@@ -12353,8 +11999,7 @@ msgid ""
 msgstr ""
 "\"%s\" एक रियलप्लेयर मीडिया आधीच्याप्रमाणे आहे.\n"
 "ऑड्यासिटी हे मालकीचे स्वरूप उघडू शकत नाही.\n"
-"आपल्याला त्यास समर्थित ध्वनी स्वरूपनात रूपांतरित करण्याची आवश्यकता आहे, जसे की "
-"डब्ल्यूएवी(WAV) किंवा AIFF."
+"आपल्याला त्यास समर्थित ध्वनी स्वरूपनात रूपांतरित करण्याची आवश्यकता आहे, जसे की डब्ल्यूएवी(WAV) किंवा AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -12367,8 +12012,7 @@ msgid ""
 msgstr ""
 "\"%s\" एक टीप-आधारित धारिका आहे, ध्वनी धारिका नाही.\n"
 "ऑड्यासिटी या प्रकारची धारिका  उघडू शकत नाही.\n"
-"त्यास ध्वनी धारिकामध्ये रूपांतरित करण्याचा प्रयत्न करा जसे की डब्ल्यूएव्ही किंवा एआयएफएफ "
-"आणि\n"
+"त्यास ध्वनी धारिकामध्ये रूपांतरित करण्याचा प्रयत्न करा जसे की डब्ल्यूएव्ही किंवा एआयएफएफ आणि\n"
 "नंतर ते आयात करा किंवा ऑड्यासिटीमध्ये ध्वनिमुद्रण करा."
 
 #. i18n-hint: %s will be the filename
@@ -12378,16 +12022,13 @@ msgid ""
 "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
-"and try importing it again. Otherwise you need to convert it to a supported "
-"audio \n"
+"and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" ही एक म्युझपॅक ध्वनी धारिका आहे.\n"
 "ऑड्यासिटी या प्रकारची धारिका  उघडू शकत नाही.\n"
-"ही एक एमपी३ (MP3) धारिका  असू शकते असे आपल्याला वाटत असल्यास, त्यास \".mp3\" ने "
-"समाप्त करण्यासाठी नाव बदला.\n"
-"आणि पुन्हा आयात करण्याचा प्रयत्न करा. अन्यथा आपल्याला समर्थित ध्वनीमध्ये रूपांतरित "
-"करण्याची आवश्यकता आहे\n"
+"ही एक एमपी३ (MP3) धारिका  असू शकते असे आपल्याला वाटत असल्यास, त्यास \".mp3\" ने समाप्त करण्यासाठी नाव बदला.\n"
+"आणि पुन्हा आयात करण्याचा प्रयत्न करा. अन्यथा आपल्याला समर्थित ध्वनीमध्ये रूपांतरित करण्याची आवश्यकता आहे\n"
 "स्वरूप, जसे की डब्ल्यूएव्ही किंवा एआयएफएफ."
 
 #. i18n-hint: %s will be the filename
@@ -12400,8 +12041,7 @@ msgid ""
 msgstr ""
 "\"%s\" एक वॅव्हपॅक ध्वनी आधीच्याप्रमाणे आहे.\n"
 "ऑड्यासिटी ही आधीच्याप्रमाणे उघडू शकत नाही.\n"
-"आपल्याला त्यास समर्थित ध्वनी स्वरूपनात रूपांतरित करण्याची आवश्यकता आहे, जसे की "
-"डब्ल्यूएवी(WAV) किंवा AIFF."
+"आपल्याला त्यास समर्थित ध्वनी स्वरूपनात रूपांतरित करण्याची आवश्यकता आहे, जसे की डब्ल्यूएवी(WAV) किंवा AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -12413,8 +12053,7 @@ msgid ""
 msgstr ""
 "\"%s\" एक Dolby डिजिटल ध्वनी आधीच्याप्रमाणे आहे.\n"
 "ऑड्यासिटी सध्या या प्रकारची आधीच्याप्रमाणे उघडू शकत नाही.\n"
-"आपल्याला त्यास समर्थित ध्वनी स्वरूपनात रूपांतरित करण्याची आवश्यकता आहे, जसे की "
-"डब्ल्यूएवी(WAV) किंवा AIFF."
+"आपल्याला त्यास समर्थित ध्वनी स्वरूपनात रूपांतरित करण्याची आवश्यकता आहे, जसे की डब्ल्यूएवी(WAV) किंवा AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -12426,8 +12065,7 @@ msgid ""
 msgstr ""
 "\"%s\" एक ओग स्पेक्स ध्वनी आधीच्याप्रमाणे आहे.\n"
 "ऑड्यासिटी सध्या या प्रकारची आधीच्याप्रमाणे उघडू शकत नाही.\n"
-"आपल्याला त्यास समर्थित ध्वनी स्वरूपनात रूपांतरित करण्याची आवश्यकता आहे, जसे की "
-"डब्ल्यूएवी(WAV) किंवा AIFF."
+"आपल्याला त्यास समर्थित ध्वनी स्वरूपनात रूपांतरित करण्याची आवश्यकता आहे, जसे की डब्ल्यूएवी(WAV) किंवा AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -12455,8 +12093,7 @@ msgid ""
 "%sFor uncompressed files, also try File > Import > Raw Data."
 msgstr ""
 "ऑड्यासिटीने धारिका '%s' चा प्रभाव ओळखला नाही.\n"
-"एफएफएमपीईजी (FFmpeg) स्थापित करण्याचा प्रयत्न करा. असम्पीडित धारिकासाठी, धारिका> "
-"आयात> रॉ माहिती देखील वापरून पहा."
+"एफएफएमपीईजी (FFmpeg) स्थापित करण्याचा प्रयत्न करा. असम्पीडित धारिकासाठी, धारिका> आयात> रॉ माहिती देखील वापरून पहा."
 
 #: src/import/Import.cpp
 msgid ""
@@ -12553,9 +12190,7 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "प्रकल्प माहिती पुस्तिका सापडली नाही: \"%s\""
 
 #: src/import/ImportAUP.cpp
-msgid ""
-"MIDI tracks found in project file, but this build of Audacity does not "
-"include MIDI support, bypassing track."
+msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr ""
 
 #: src/import/ImportAUP.cpp
@@ -12564,9 +12199,7 @@ msgid "Project Import"
 msgstr "प्रकल्प प्रारंभ करा"
 
 #: src/import/ImportAUP.cpp
-msgid ""
-"The active project already has a time track and one was encountered in the "
-"project being imported, bypassing imported time track."
+msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
 msgstr ""
 
 #: src/import/ImportAUP.cpp
@@ -12649,10 +12282,8 @@ msgstr "Ffmpeg-सुसंगत धारिका"
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/import/ImportFFmpeg.cpp
 #, c-format
-msgid ""
-"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
-msgstr ""
-"सूचकांक[%02x] सांकेतिक आज्ञावली[%s], भाषा[%s], बिट-दर[%s], माध्यम[%d], वेळ[%d]"
+msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr "सूचकांक[%02x] सांकेतिक आज्ञावली[%s], भाषा[%s], बिट-दर[%s], माध्यम[%d], वेळ[%d]"
 
 #: src/import/ImportFLAC.cpp
 msgid "FLAC files"
@@ -12677,8 +12308,7 @@ msgstr "विरामित स्थिती स्थिती सेट �
 #: src/import/ImportGStreamer.cpp
 #, fuzzy, c-format
 msgid "Index[%02d], Type[%s], Channels[%d], Rate[%d]"
-msgstr ""
-"सूचकांक[%02x] सांकेतिक आज्ञावली[%s], भाषा[%s], बिट-दर[%s], माध्यम[%d], वेळ[%d]"
+msgstr "सूचकांक[%02x] सांकेतिक आज्ञावली[%s], भाषा[%s], बिट-दर[%s], माध्यम[%d], वेळ[%d]"
 
 #: src/import/ImportGStreamer.cpp
 msgid "File doesn't contain any audio streams."
@@ -12714,8 +12344,7 @@ msgstr "LOF धारिकेत अवैध कालावधी."
 
 #: src/import/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
-msgstr ""
-"केवळ ध्वनी धारिका स्वतंत्रपणे हलविल्या जाऊ शकतात, एमआयडीआय (MIDI) गीतपट्टा नाहीत."
+msgstr "केवळ ध्वनी धारिका स्वतंत्रपणे हलविल्या जाऊ शकतात, एमआयडीआय (MIDI) गीतपट्टा नाहीत."
 
 #. i18n-hint: You do not need to translate "LOF"
 #: src/import/ImportLOF.cpp
@@ -12765,8 +12394,7 @@ msgstr "ओग व्हॉर्बिस(Ogg Vorbis) धारिका"
 #: src/import/ImportOGG.cpp
 #, fuzzy, c-format
 msgid "Index[%02x] Version[%d], Channels[%d], Rate[%ld]"
-msgstr ""
-"सूचकांक[%02x] सांकेतिक आज्ञावली[%s], भाषा[%s], बिट-दर[%s], माध्यम[%d], वेळ[%d]"
+msgstr "सूचकांक[%02x] सांकेतिक आज्ञावली[%s], भाषा[%s], बिट-दर[%s], माध्यम[%d], वेळ[%d]"
 
 #: src/import/ImportOGG.cpp
 msgid "Media read error"
@@ -13731,11 +13359,6 @@ msgstr "एमआयडीआय (MIDI) उपकरण माहिती"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
-msgid "Menu Tree"
-msgstr "मेनू"
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Quick Fix..."
 msgstr "त्वरित सहायता... (&Q)"
 
@@ -13774,10 +13397,6 @@ msgstr "नोंदी दाखवा...(&L)"
 #: src/menus/HelpMenus.cpp
 msgid "&Generate Support Data..."
 msgstr "संबंधित माहिती व्युत्पन्न करा ...(&G)"
-
-#: src/menus/HelpMenus.cpp
-msgid "Menu Tree..."
-msgstr ""
 
 #: src/menus/HelpMenus.cpp
 msgid "&Check for Updates..."
@@ -14696,10 +14315,8 @@ msgid "Created new label track"
 msgstr "नवीन नमित गीतपट्टा तयार केला"
 
 #: src/menus/TrackMenus.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"ऑड्यासिटी ही आवृत्ती प्रत्येक प्रकल्प विंडोसाठी फक्त एक वेळ गीतपट्टा करण्यास अनुमती देते."
+msgid "This version of Audacity only allows one time track for each project window."
+msgstr "ऑड्यासिटी ही आवृत्ती प्रत्येक प्रकल्प विंडोसाठी फक्त एक वेळ गीतपट्टा करण्यास अनुमती देते."
 
 #: src/menus/TrackMenus.cpp
 msgid "Created new time track"
@@ -14735,11 +14352,8 @@ msgstr "कृपया एक ध्वनीपट्टा निवडा."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-"संरेखन पूर्ण: %.2f ते %.2f सेकंद पर्यंत एमआयडीआय (MIDI), %.2f वरून %.2f से. पर्यंत ध्वनी."
+msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr "संरेखन पूर्ण: %.2f ते %.2f सेकंद पर्यंत एमआयडीआय (MIDI), %.2f वरून %.2f से. पर्यंत ध्वनी."
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync MIDI with Audio"
@@ -14747,12 +14361,8 @@ msgstr "एमआयडीआय (MIDI) ध्वनी सह समक्र�
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"संरेखन त्रुटी: पुरवणे खूप लहान: %.2f ते %.2f सेकंद पर्यंत एमआयडीआय (MIDI), %.2f ते %.2f "
-"से. पर्यंत सेकंदात ध्वनी ."
+msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr "संरेखन त्रुटी: पुरवणे खूप लहान: %.2f ते %.2f सेकंद पर्यंत एमआयडीआय (MIDI), %.2f ते %.2f से. पर्यंत सेकंदात ध्वनी ."
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
@@ -14969,17 +14579,18 @@ msgid "Move Focused Track to &Bottom"
 msgstr "केंद्रित गीतपट्टा तळाशी आणा (&b)"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/menus/TransportMenus.cpp src/toolbars/ControlToolBar.cpp
 #, fuzzy
 msgid "Playing"
 msgstr "ध्वनी वाजवणे(&a)"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
-#: src/menus/TransportMenus.cpp src/prefs/DevicePrefs.cpp
-#: src/prefs/MidiIOPrefs.cpp src/prefs/RecordingPrefs.cpp
-#: src/prefs/RecordingPrefs.h src/toolbars/ControlToolBar.cpp
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
+#: src/menus/TransportMenus.cpp src/prefs/MidiIOPrefs.cpp
+#: src/toolbars/ControlToolBar.cpp
 #, fuzzy
 msgid "Recording"
 msgstr "ध्वनीमुद्रण(&R)"
@@ -15354,6 +14965,27 @@ msgstr "विसंकेतन तरंगरूप"
 msgid "%s %2.0f%% complete. Click to change task focal point."
 msgstr "%s% 2.0f %% पूर्ण झाले. कार्य फोकल पॉईंट बदलण्यासाठी क्लिक करा."
 
+#: src/prefs/ApplicationPrefs.cpp
+#, fuzzy
+msgid "Preferences for Application"
+msgstr "प्राधान्ये: "
+
+#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#: src/prefs/ApplicationPrefs.cpp
+msgid "Update notifications"
+msgstr ""
+
+#. i18n-hint: Check-box title that configures periodic updates checking.
+#: src/prefs/ApplicationPrefs.cpp
+#, fuzzy
+msgctxt "application preferences"
+msgid "&Check for updates"
+msgstr "अद्यतनांसाठी तपासा ...(&C)"
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
+msgstr ""
+
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
 msgstr "बॅच"
@@ -15405,6 +15037,14 @@ msgstr "ध्वनी वाजवा"
 msgid "&Device:"
 msgstr "यंत्र (&D):"
 
+#. i18n-hint: modifier as in "Recording preferences", not progressive verb
+#: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/prefs/RecordingPrefs.h
+#, fuzzy
+msgctxt "preference"
+msgid "Recording"
+msgstr "ध्वनीमुद्रण(&R)"
+
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
 msgstr "यंत्र :"
@@ -15449,6 +15089,7 @@ msgstr "2 (स्टिरियो)"
 
 #. i18n-hint:  Directories, also called directories, in computer file systems
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/DirectoriesPrefs.h
+#: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Directories"
 msgstr "निर्देशिका"
 
@@ -15567,9 +15208,7 @@ msgid "Directory %s is not writable"
 msgstr "निर्देशिका %s लिहिण्यायोग्य नाही"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid ""
-"Changes to temporary directory will not take effect until Audacity is "
-"restarted"
+msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "ऑड्यासिटी पुन्हा सुरू होईपर्यंत तात्पुरत्या निर्देशिकेत बदल प्रभावी होणार नाहीत"
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -15733,15 +15372,8 @@ msgid "Unused filters:"
 msgstr "न वापरलेले चाळण:"
 
 #: src/prefs/ExtImportPrefs.cpp
-msgid ""
-"There are space characters (spaces, newlines, tabs or linefeeds) in one of "
-"the items. They are likely to break the pattern matching. Unless you know "
-"what you are doing, it is recommended to trim spaces. Do you want Audacity "
-"to trim spaces for you?"
-msgstr ""
-"यादीपैकी एकामध्ये स्पेस वर्ण (स्पेस, न्यू लाईन्स, टॅब किंवा लाइनफिडे) आहेत. ते नमुना जुळण्या "
-"खंडित होण्याची शक्यता आहे. आपण काय करीत आहात हे आपणास ठाऊक नसल्यास रिक्त स्थान ट्रिम "
-"करण्याची शिफारस केली जाते. आपणास ऑड्यासिटी आपल्यासाठी रिक्त स्थान ट्रिम करू इच्छित आहे?"
+msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
+msgstr "यादीपैकी एकामध्ये स्पेस वर्ण (स्पेस, न्यू लाईन्स, टॅब किंवा लाइनफिडे) आहेत. ते नमुना जुळण्या खंडित होण्याची शक्यता आहे. आपण काय करीत आहात हे आपणास ठाऊक नसल्यास रिक्त स्थान ट्रिम करण्याची शिफारस केली जाते. आपणास ऑड्यासिटी आपल्यासाठी रिक्त स्थान ट्रिम करू इच्छित आहे?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -16046,8 +15678,7 @@ msgstr "कळफलक आडमार्ग आयात त्रुटी"
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid ""
-"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
-"and \"%s\".\n"
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" and \"%s\".\n"
 "Nothing is imported."
 msgstr ""
 
@@ -16059,8 +15690,7 @@ msgstr "%d कळफलक आडमार्ग लोड केले\n"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid ""
 "\n"
-"The following commands are not mentioned in the imported file, but have "
-"their shortcuts removed because of the conflict with other new shortcuts:\n"
+"The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
@@ -16230,8 +15860,7 @@ msgstr "प्राधान्ये: "
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity "
-"Manual\n"
+"These are experimental modules. Enable them only if you've read the Audacity Manual\n"
 "and know what you are doing."
 msgstr ""
 "हे प्रायोगिक विभाग आहेत. आपण केवळ ऑड्यासिटी हस्तलिखित वाचल्यास त्यांना सुरू करा\n"
@@ -16240,20 +15869,14 @@ msgstr ""
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
 #, fuzzy
-msgid ""
-"  'Ask' means Audacity will ask if you want to load the module each time it "
-"starts."
-msgstr ""
-"'विचारा' म्हणजे ऑड्यासिटी तुम्हाला विचारेल की प्रत्येक वेळी जेव्हा आपण सुरू करतो तेव्हा घटक "
-"लोड करायचे असल्यास."
+msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
+msgstr "'विचारा' म्हणजे ऑड्यासिटी तुम्हाला विचारेल की प्रत्येक वेळी जेव्हा आपण सुरू करतो तेव्हा घटक लोड करायचे असल्यास."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
 #, fuzzy
 msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr ""
-"'अयशस्वी' म्हणजे ऑड्यासिटी असा विचार करते की घटक तुटलेले आहे आणि ते कार्यान्वित करणार "
-"नाही."
+msgstr "'अयशस्वी' म्हणजे ऑड्यासिटी असा विचार करते की घटक तुटलेले आहे आणि ते कार्यान्वित करणार नाही."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
@@ -16749,6 +16372,34 @@ msgstr "इ आर बी"
 msgid "Period"
 msgstr "कालावधी"
 
+#. i18n-hint: New color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (default)"
+msgstr "4 (पूर्वनिर्धारित)"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "उत्कृष्ठ"
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "ग्रेस्केल(&y)"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: src/prefs/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "(&L)रेखीय प्रमाणात"
+
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Frequencies"
 msgstr "वारंवारता"
@@ -16833,10 +16484,6 @@ msgstr "मर्यादा (डीबी):(&R)"
 #: src/prefs/SpectrumPrefs.cpp
 msgid "High &boost (dB/dec):"
 msgstr "जास्त बूस्ट (dB/dec)((&b)) :"
-
-#: src/prefs/SpectrumPrefs.cpp
-msgid "Gra&yscale"
-msgstr "ग्रेस्केल(&y)"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Algorithm"
@@ -16966,37 +16613,30 @@ msgstr "माहिती"
 msgid ""
 "Themability is an experimental feature.\n"
 "\n"
-"To try it out, click \"Save Theme Cache\" then find and modify the images "
-"and colors in\n"
+"To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into "
-"Audacity.\n"
+"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity.\n"
 "\n"
-"(Only the Transport Toolbar and the colors on the wavetrack are currently "
-"affected, even\n"
+"(Only the Transport Toolbar and the colors on the wavetrack are currently affected, even\n"
 "though the image file shows other icons too.)"
 msgstr ""
 "थिमॅबिलिटी हे प्रायोगिक वैशिष्ट्य आहे.\n"
 "\n"
-"हे करून पहाण्यासाठी, \"थीम तात्पुरता साठा जतन करा\" क्लिक करा आणि नंतर त्यामधील "
-"प्रतिमा आणि रंग शोधा आणि सुधारित करा\n"
+"हे करून पहाण्यासाठी, \"थीम तात्पुरता साठा जतन करा\" क्लिक करा आणि नंतर त्यामधील प्रतिमा आणि रंग शोधा आणि सुधारित करा\n"
 "जिम्प सारख्या प्रतिमा संपादकाचा वापर करुन ImageCacheVxx.png.\n"
 "\n"
-"बदललेली प्रतिमा आणि रंग परत ऑड्यासिटीमध्ये लोड करण्यासाठी \"थीम तात्पुरता साठा लोड करा"
-"\" क्लिक करा.\n"
+"बदललेली प्रतिमा आणि रंग परत ऑड्यासिटीमध्ये लोड करण्यासाठी \"थीम तात्पुरता साठा लोड करा\" क्लिक करा.\n"
 "\n"
 "(केवळ ट्रान्सपोर्ट साधनबार आणि वेव्हगीतपट्टावरील रंगांचा परिणाम सध्या देखील झाला आहे\n"
 "जरी प्रतिमा धारिका  अन्य चिन्ह देखील दर्शविते.)"
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
-"Saving and loading individual theme files uses a separate file for each "
-"image, but is\n"
+"Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
 msgstr ""
-"स्वतंत्र थीम धारिका  जतन करणे आणि लोड करणे प्रत्येक प्रतिमेसाठी विभाजन धारिका वापरते, "
-"परंतु आहे\n"
+"स्वतंत्र थीम धारिका  जतन करणे आणि लोड करणे प्रत्येक प्रतिमेसाठी विभाजन धारिका वापरते, परंतु आहे\n"
 "अन्यथा समान कल्पना."
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
@@ -17285,7 +16925,8 @@ msgid "Waveform dB &range:"
 msgstr "तरंगरूप (dB) आणि श्रेणी"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
-#. is playing or recording or stopped, and whether it is paused.
+#. is playing or recording or stopped, and whether it is paused;
+#. progressive verb form
 #: src/toolbars/ControlToolBar.cpp
 msgid "Stopped"
 msgstr "बंद करणे"
@@ -17871,12 +17512,8 @@ msgstr "पुढील अष्टक(&v )"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
-msgid ""
-"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
-"region."
-msgstr ""
-"अनुलंब दृश्यरूप आकार वाढविण्यासाठी क्लिक करा. दृश्यरूप आकार कमी करण्यासाठी शिफ्ट-क्लिक "
-"करा. दृश्यरूप आकार प्रदेश निर्दिष्ट करण्यासाठी ओढा."
+msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
+msgstr "अनुलंब दृश्यरूप आकार वाढविण्यासाठी क्लिक करा. दृश्यरूप आकार कमी करण्यासाठी शिफ्ट-क्लिक करा. दृश्यरूप आकार प्रदेश निर्दिष्ट करण्यासाठी ओढा."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackVZoomHandle.cpp
@@ -17957,8 +17594,7 @@ msgstr "नमुने संपादित करण्यासाठी क
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
-msgstr ""
-"रेखांकन वापरण्यासाठी, आपल्याला वैयक्तिक नमुने जोपर्यंत दिसत नाहीत तोपर्यंत दृश्यरूप मोठे करा."
+msgstr "रेखांकन वापरण्यासाठी, आपल्याला वैयक्तिक नमुने जोपर्यंत दिसत नाहीत तोपर्यंत दृश्यरूप मोठे करा."
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Moved Samples"
@@ -18217,8 +17853,7 @@ msgstr "% .0f %% अधिकार"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 #, fuzzy
-msgid ""
-"Click and drag to adjust sizes of sub-views, double-click to split evenly"
+msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
 msgstr "स्टिरिओ गीतपट्टाचा सापेक्ष आकार समायोजित करण्यासाठी क्लिक करा आणि ओढा."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
@@ -18440,8 +18075,7 @@ msgstr "शीर्ष निवड वारंवारता हलविण
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency to a spectral peak."
-msgstr ""
-"मध्यभागी निवड वारंवारता एका वर्णक्रमीत सर्वोच्च बिंदूावर नेण्यासाठी क्लिक करा आणि ओढा."
+msgstr "मध्यभागी निवड वारंवारता एका वर्णक्रमीत सर्वोच्च बिंदूावर नेण्यासाठी क्लिक करा आणि ओढा."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency."
@@ -18537,9 +18171,7 @@ msgstr "Ctrl- क्लिक करा"
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
-msgstr ""
-"गीतपट्टा निवडण्यासाठी किंवा निवड रद्द करण्यासाठी %s. गीतपट्टा क्रम बदलण्यासाठी वर "
-"किंवा खाली ओढा."
+msgstr "गीतपट्टा निवडण्यासाठी किंवा निवड रद्द करण्यासाठी %s. गीतपट्टा क्रम बदलण्यासाठी वर किंवा खाली ओढा."
 
 #. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -18564,8 +18196,7 @@ msgstr "गीतपट्टा हलवा"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Click to Zoom In, Shift-Click to Zoom Out"
-msgstr ""
-"दृश्यरूप आकार आत करण्यासाठी क्लिक करा, दृश्यरूप कमी करा करण्यासाठी शिफ्ट-क्लिक करा"
+msgstr "दृश्यरूप आकार आत करण्यासाठी क्लिक करा, दृश्यरूप कमी करा करण्यासाठी शिफ्ट-क्लिक करा"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
@@ -18574,6 +18205,96 @@ msgstr "\"क्षेत्रात आकार वाढविण्या�
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "डावे = आकार वाढ, उजवे = आकार घट, केंद्र = सामान्य"
+
+#: src/update/UpdateManager.cpp
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error checking for update"
+msgstr "धारिका विसंकेतन करताना त्रुटी आली"
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Unable to connect to Audacity update server."
+msgstr ""
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Update data was corrupted."
+msgstr ""
+
+#: src/update/UpdateManager.cpp
+#, fuzzy
+msgctxt "update dialog"
+msgid "Error downloading update."
+msgstr "मेटा माहिती  लोड करण्यात त्रुटी"
+
+#: src/update/UpdateManager.cpp
+msgctxt "update dialog"
+msgid "Can't open the Audacity download link."
+msgstr ""
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App update checking"
+msgstr ""
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
+msgstr ""
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
+msgstr ""
+
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can turn off app update checking at any time in %s."
+msgstr ""
+
+#. i18n-hint: Title of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App updates"
+msgstr ""
+
+#. i18n-hint: a page in the Preferences dialog; use same name
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy
+msgid "Preferences > Application"
+msgstr "प्राधान्ये: "
+
+#: src/update/UpdatePopupDialog.cpp
+#, fuzzy
+msgctxt "update dialog"
+msgid "Update Audacity"
+msgstr "ऑड्यासिटी मधून बाहेर पडा"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Skip"
+msgstr ""
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "&Install update"
+msgstr ""
+
+#. i18n-hint Substitution of version number for %s.
+#: src/update/UpdatePopupDialog.cpp
+#, fuzzy, c-format
+msgctxt "update dialog"
+msgid "Audacity %s is available!"
+msgstr "ऑड्यासिटी साधनपट्टी%s"
+
+#: src/update/UpdatePopupDialog.cpp
+#, fuzzy
+msgctxt "update dialog"
+msgid "Changelog"
+msgstr "माध्यम"
+
+#: src/update/UpdatePopupDialog.cpp
+msgctxt "update dialog"
+msgid "Read more on GitHub"
+msgstr ""
 
 #: src/widgets/AButton.cpp
 #, fuzzy
@@ -19168,6 +18889,31 @@ msgstr "आपणास खात्री आहे की आपण %s हट�
 msgid "Confirm Close"
 msgstr "बंद"
 
+#. i18n-hint: %s is replaced with a directory path.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, fuzzy, c-format
+msgid "Unable to write files to directory: %s."
+msgstr "पूर्वनिर्धारितची धारिका वाचण्यात बंद."
+
+#. i18n-hint: This message describes the error in the Error dialog.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
+msgstr ""
+
+#. i18n-hint: %s is replaced with 'Preferences > Directories'.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, fuzzy, c-format
+msgid "You can change the directory in %s."
+msgstr ""
+"निर्देशिका तयार करणे शक्य झाले नाही:\n"
+"   %s"
+
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#, fuzzy
+msgid "Preferences > Directories"
+msgstr "प्राधान्ये: "
+
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
 msgstr "ही चेतावणी पुन्हा दर्शवू नका"
@@ -19344,8 +19090,7 @@ msgstr "~a  केंद्राची वारंवारता 0 हर्�
 #, lisp-format
 msgid ""
 "~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting "
-"cannot~%~\n"
+"                        For the current track, the high frequency setting cannot~%~\n"
 "                        be greater than ~a Hz"
 msgstr ""
 "~a गीतपट्टा नमुना दरासाठी वारंवारता निवड खूप जास्त आहे. ~% ~\n"
@@ -19544,8 +19289,7 @@ msgid "Benjamin Schwartz and Steve Daulton"
 msgstr "बेंजामिन श्वार्ट्ज आणि स्टीव्ह डॉल्टन"
 
 #: plug-ins/clipfix.ny
-msgid ""
-"Licensing confirmed under terms of the GNU General Public License version 2"
+msgid "Licensing confirmed under terms of the GNU General Public License version 2"
 msgstr "GNU सामान्य सार्वजनिक परवाना संस्करण 2 नुसार परवान्याची पुष्टी झाली"
 
 #: plug-ins/clipfix.ny
@@ -19919,8 +19663,7 @@ msgstr "नावे सामील"
 
 #: plug-ins/label-sounds.ny plug-ins/noisegate.ny
 #, fuzzy
-msgid ""
-"Released under terms of the GNU General Public License version 2 or later."
+msgid "Released under terms of the GNU General Public License version 2 or later."
 msgstr "जीएनयू सामान्य सार्वजनिक परवाना आवृत्ती 2 च्या अटींनुसार प्रसिद्ध झाली"
 
 #: plug-ins/label-sounds.ny
@@ -20013,17 +19756,12 @@ msgstr "निवड %d नमुन्यांपेक्षा मोठी 
 
 #: plug-ins/label-sounds.ny
 #, fuzzy, lisp-format
-msgid ""
-"No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound "
-"duration'."
-msgstr ""
-"ध्वनी सापडला नाही. मौन ~% पातळी कमी करण्याचा प्रयत्न करा आणि कमीतकमी मौन कालावधी."
+msgid "No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound duration'."
+msgstr "ध्वनी सापडला नाही. मौन ~% पातळी कमी करण्याचा प्रयत्न करा आणि कमीतकमी मौन कालावधी."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
-msgid ""
-"Labelling regions between sounds requires~%at least two sounds.~%Only one "
-"sound detected."
+msgid "Labelling regions between sounds requires~%at least two sounds.~%Only one sound detected."
 msgstr ""
 
 #: plug-ins/limiter.ny
@@ -20612,8 +20350,7 @@ msgstr "नमुना दर: ~a हर्ट्ज. मोजणेवर न
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
-msgid ""
-"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgid "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
 msgstr "~a ~a ~% ~a नमुना दर: ~a हर्ट्ज. ~% लांबी प्रक्रिया: ~a नमुने ~a सेकंद. ~a"
 
 #: plug-ins/sample-data-export.ny
@@ -20629,15 +20366,12 @@ msgstr ""
 #: plug-ins/sample-data-export.ny
 #, fuzzy, lisp-format
 msgid ""
-"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
-"~a ~\n"
-"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
-"Unweighted RMS: ~a dB.~%~\n"
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
 msgstr ""
 "~a~%नमूना दर : ~a Hz. नमूना मूल्य ~a प्रमाणात. ~a.~%~aलांबीवर प्रक्रिया केली: ~a ~\n"
-"                  नमूने, ~a सेकंद.~%शीर्षक परिमाण : ~a (रेषात्मक) ~a dB.  बिनविरोध "
-"RMS: ~a dB.~%~\n"
+"                  नमूने, ~a सेकंद.~%शीर्षक परिमाण : ~a (रेषात्मक) ~a dB.  बिनविरोध RMS: ~a dB.~%~\n"
 "                  DC ऑफसेट: ~a~a"
 
 #: plug-ins/sample-data-export.ny
@@ -20971,12 +20705,8 @@ msgstr ""
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
-msgid ""
-"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
-"This means:~%~a~%"
-msgstr ""
-"पॅन स्थिती: ~a ~% डावे आणि उजवे वाहिनी जवळप्रवेश ~a% सह परस्परसंबंधित आहेत. याचा अर्थ: "
-"~% ~a ~%"
+msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
+msgstr "पॅन स्थिती: ~a ~% डावे आणि उजवे वाहिनी जवळप्रवेश ~a% सह परस्परसंबंधित आहेत. याचा अर्थ: ~% ~a ~%"
 
 #: plug-ins/vocalrediso.ny
 #, fuzzy
@@ -20992,24 +20722,21 @@ msgstr ""
 #: plug-ins/vocalrediso.ny
 #, fuzzy
 msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely "
-"panned.\n"
+" - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
 "                Most likely, the center extraction will be poor."
 msgstr ""
 " - दोन वाहिनी जोरदार संबंधित आहेत, म्हणजे जवळजवळ मोनो किंवा अत्यंत विस्तारित.\n"
 "    बहुधा, मध्यम उतारा क्षीण होईल."
 
 #: plug-ins/vocalrediso.ny
-msgid ""
-" - A fairly good value, at least stereo in average and not too wide spread."
+msgid " - A fairly good value, at least stereo in average and not too wide spread."
 msgstr " - बर्‍यापैकी चांगले मूल्य, सरासरी किमान स्टीरिओ आणि बरेचसे विस्तृत नाही."
 
 #: plug-ins/vocalrediso.ny
 #, fuzzy
 msgid ""
 " - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used "
-"reverb."
+"                However, the center extraction depends also on the used reverb."
 msgstr ""
 "  - स्टिरिओसाठी एक आदर्श मूल्य.\n"
 "   तथापि, केंद्र माहिती वापरलेल्या रीव्हर्बवर देखील अवलंबून असते."
@@ -21018,8 +20745,7 @@ msgstr ""
 #, fuzzy
 msgid ""
 " - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a "
-"unbalanced manner.\n"
+"                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
 "                The center extraction can still be good though."
 msgstr ""
 " - दोन वाहिनी जवळजवळ संबंधित नाहीत.\n"
@@ -21042,8 +20768,7 @@ msgstr ""
 msgid ""
 " - The two channels are nearly identical.\n"
 "                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between "
-"the speakers.\n"
+"                  to spread the signal over the physical distance between the speakers.\n"
 "                  Don't expect good results from a center removal."
 msgstr ""
 " - दोन माध्यम जवळप्रवेश एकसारखे आहेत.\n"
@@ -21108,6 +20833,28 @@ msgstr "रडार सुयाची वारंवारता"
 msgid "Error.~%Stereo track required."
 msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आवश्यक."
 
+#, fuzzy
+#~ msgid "Unknown assertion"
+#~ msgstr "अज्ञात"
+
+#, fuzzy
+#~ msgid "Can't open new empty project"
+#~ msgstr "प्रकल्प धारिका उघडू शकत नाही"
+
+#, fuzzy
+#~ msgid "Error opening a new empty project"
+#~ msgstr "धारिका किंवा प्रकल्प उघडण्यात त्रुटी"
+
+#~ msgid "Gray Scale"
+#~ msgstr "मापन करा"
+
+#, fuzzy
+#~ msgid "Menu Tree"
+#~ msgstr "मेनू"
+
+#~ msgid "Gra&yscale"
+#~ msgstr "ग्रेस्केल(&y)"
+
 #~ msgid "Fast"
 #~ msgstr "वेगवान"
 
@@ -21146,23 +20893,17 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgid "<h3>Audacity "
 #~ msgstr "<h3>ऑड्यासिटी "
 
-#~ msgid ""
-#~ "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is "
-#~ "copyright &copy; 1999-2018 Audacity Team.<br>"
-#~ msgstr ""
-#~ "<p><br>&nbsp;&nbsp;<b>ऑड्यासिटी <sup>&reg; </sup> </b>संगणकाची आज्ञावली आहे. "
-#~ "सर्वाधिकार &copy; १९९९-२०१८ ऑड्यासिटी संघ.<br>"
+#~ msgid "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>"
+#~ msgstr "<p><br>&nbsp;&nbsp;<b>ऑड्यासिटी <sup>&reg; </sup> </b>संगणकाची आज्ञावली आहे. सर्वाधिकार &copy; १९९९-२०१८ ऑड्यासिटी संघ.<br>"
 
 #~ msgid ""
 #~ "One or more external audio files could not be found.\n"
-#~ "It is possible they were moved, deleted, or the drive they were on was "
-#~ "unmounted.\n"
+#~ "It is possible they were moved, deleted, or the drive they were on was unmounted.\n"
 #~ "Silence is being substituted for the affected audio.\n"
 #~ "The first detected missing file is:\n"
 #~ "%s\n"
 #~ "There may be additional missing files.\n"
-#~ "Choose Help > Diagnostics > Check Dependencies to view a list of "
-#~ "locations of the missing files."
+#~ "Choose Help > Diagnostics > Check Dependencies to view a list of locations of the missing files."
 #~ msgstr ""
 #~ "एक किंवा अधिक बाह्य ध्वनी धारिका आढळल्या नाहीत.\n"
 #~ "ते कदाचित काढले गेले किंवा पुसले गेले किंवा डिस्क-ड्राइव्ह अनमाउंट केले असावे.\n"
@@ -21182,15 +20923,10 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgstr "अपोआप जतन होणारी धारिका विसंकेतन करा"
 
 #~ msgid ""
-#~ "Latency Correction setting has caused the recorded audio to be hidden "
-#~ "before zero.\n"
+#~ "Latency Correction setting has caused the recorded audio to be hidden before zero.\n"
 #~ "Audacity has brought it back to start at zero.\n"
-#~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track "
-#~ "to the right place."
-#~ msgstr ""
-#~ "उशीरा दुरुस्ती सामायोजानामुळे मुद्रित केलेला आवाज शून्यापूर्वी लपविला गेला आहे. "
-#~ "ऑड्यासिटीने शून्यावर प्रारंभ करण्यासाठी परत आणले आहे. गीतपट्टा उजवे ठिकाणी ओढा "
-#~ "करण्यासाठी आपल्याला वेळ शिफ्ट साधन (<---> किंवा एफ5(F5) ) वापरावे लागेल."
+#~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."
+#~ msgstr "उशीरा दुरुस्ती सामायोजानामुळे मुद्रित केलेला आवाज शून्यापूर्वी लपविला गेला आहे. ऑड्यासिटीने शून्यावर प्रारंभ करण्यासाठी परत आणले आहे. गीतपट्टा उजवे ठिकाणी ओढा करण्यासाठी आपल्याला वेळ शिफ्ट साधन (<---> किंवा एफ5(F5) ) वापरावे लागेल."
 
 #~ msgid "Latency problem"
 #~ msgstr "प्रलंबित समस्या"
@@ -21270,8 +21006,7 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 
 #~ msgid ""
 #~ "Audacity found an orphan block file: %s. \n"
-#~ "Please consider saving and reloading the project to perform a complete "
-#~ "project check."
+#~ "Please consider saving and reloading the project to perform a complete project check."
 #~ msgstr ""
 #~ "ऑड्यासिटीला एक अनाथ तुकडा धारिका सापडली:%s.\n"
 #~ "कृपया पूर्ण प्रकल्प तपासणी करण्यासाठी प्रकल्प जतन आणि रीलोड करण्याचा विचार करा."
@@ -21291,23 +21026,14 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgid "   Project check regenerated missing alias summary file(s)."
 #~ msgstr " प्रकल्प तपासणीत पुन्हा व्युत्पन्न गहाळ उर्फ सारांश आधीच्याप्रमाणे."
 
-#~ msgid ""
-#~ "   Project check replaced missing audio data block file(s) with silence."
-#~ msgstr ""
-#~ "   प्रकल्प तपासताना गहाळ ध्वनी माहिती तुकडा धारिका   शांततेत पुनर्स्थित केली.."
+#~ msgid "   Project check replaced missing audio data block file(s) with silence."
+#~ msgstr "   प्रकल्प तपासताना गहाळ ध्वनी माहिती तुकडा धारिका   शांततेत पुनर्स्थित केली.."
 
-#~ msgid ""
-#~ "   Project check ignored orphan block file(s). They will be deleted when "
-#~ "project is saved."
-#~ msgstr ""
-#~ " प्रकल्प तपासणीत दुर्लक्षित अनाथ तुकडा धारिका . प्रकल्प जतन झाल्यावर ते हटविले जातील."
+#~ msgid "   Project check ignored orphan block file(s). They will be deleted when project is saved."
+#~ msgstr " प्रकल्प तपासणीत दुर्लक्षित अनाथ तुकडा धारिका . प्रकल्प जतन झाल्यावर ते हटविले जातील."
 
-#~ msgid ""
-#~ "Project check found file inconsistencies inspecting the loaded project "
-#~ "data."
-#~ msgstr ""
-#~ "प्रकल्प तपासणीत लोड केलेल्या प्रकल्प माहितीची तपासणी करत असलेल्या धारिका  विसंगती "
-#~ "आढळल्या."
+#~ msgid "Project check found file inconsistencies inspecting the loaded project data."
+#~ msgstr "प्रकल्प तपासणीत लोड केलेल्या प्रकल्प माहितीची तपासणी करत असलेल्या धारिका  विसंगती आढळल्या."
 
 #~ msgid "Missing aliased audio file: '%s'"
 #~ msgstr "उपनावाचीधारिका गहाळ आहे: '%s'"
@@ -21330,23 +21056,15 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgid "Saving recorded audio to disk"
 #~ msgstr "ध्वनीमुद्र्केवर मुद्रित केलेला ध्वनी जतन करीत आहे"
 
-#~ msgid ""
-#~ "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*."
-#~ "dll|All Files|*"
-#~ msgstr ""
-#~ "फक्त avformat.dll|*avformat*.dll|गतिकरित्या दुवा साधलेल्या ग्रंथालय (*.dll)|*."
-#~ "dll|सर्व आधीच्याप्रमाणे|*"
+#~ msgid "Only avformat.dll|*avformat*.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files|*"
+#~ msgstr "फक्त avformat.dll|*avformat*.dll|गतिकरित्या दुवा साधलेल्या ग्रंथालय (*.dll)|*.dll|सर्व आधीच्याप्रमाणे|*"
 
 #, fuzzy
 #~ msgid "Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
 #~ msgstr "डायनॅमिक ग्रंथालय (* .dlib) | * .dlib | सर्व धारिका  (*) | *"
 
-#~ msgid ""
-#~ "Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|"
-#~ "*.so*|All Files (*)|*"
-#~ msgstr ""
-#~ "केवळ libavformat.so | libavformat * .so * | गतिकरित्या दुवा साधलेल्या ग्रंथालय "
-#~ "(*.so*)|*.so*| सर्व धारिका  (*) | *"
+#~ msgid "Only libavformat.so|libavformat*.so*|Dynamically Linked Libraries (*.so*)|*.so*|All Files (*)|*"
+#~ msgstr "केवळ libavformat.so | libavformat * .so * | गतिकरित्या दुवा साधलेल्या ग्रंथालय (*.so*)|*.so*| सर्व धारिका  (*) | *"
 
 #~ msgid "Reclaimable Space"
 #~ msgstr "पुन्हा मिळण्यायोग्य जागा"
@@ -21394,13 +21112,8 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgid "dummyStringOnSelectClip"
 #~ msgstr "निवड फीतवर डमी स्ट्रिंग"
 
-#~ msgid ""
-#~ "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files "
-#~ "(*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
-#~ msgstr ""
-#~ "एमआयडीआय (MIDI) आणि अल्लेग्रो धारिका (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|"
-#~ "एमआयडीआय (MIDI) धारिका (*.mid;*.midi)|*.mid;*.midi|अल्लेग्रो धारिका (*.gro)|"
-#~ "*.gro|सर्व धारिका|*"
+#~ msgid "MIDI and Allegro files (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|MIDI files (*.mid;*.midi)|*.mid;*.midi|Allegro files (*.gro)|*.gro|All files|*"
+#~ msgstr "एमआयडीआय (MIDI) आणि अल्लेग्रो धारिका (*.mid;*.midi;*.gro)|*.mid;*.midi;*.gro|एमआयडीआय (MIDI) धारिका (*.mid;*.midi)|*.mid;*.midi|अल्लेग्रो धारिका (*.gro)|*.gro|सर्व धारिका|*"
 
 #~ msgid "Select any uncompressed audio file"
 #~ msgstr "कोणतीही संकुचित ध्वनी धारिका निवडा"
@@ -21424,14 +21137,12 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgid "Unable to save MIDI device info"
 #~ msgstr "एमआयडीआय (MIDI) उपकरण माहिती जतन करण्यात अयशस्वी"
 
-#~ msgid ""
-#~ "The module %s does not provide a version string.  It will not be loaded."
+#~ msgid "The module %s does not provide a version string.  It will not be loaded."
 #~ msgstr ""
 #~ "विभाग %s आवृत्ती स्ट्रिंग पुरवत नाही.\n"
 #~ "ते लोड केले जाणार नाही."
 
-#~ msgid ""
-#~ "The module %s is matched with Audacity version %s.  It will not be loaded."
+#~ msgid "The module %s is matched with Audacity version %s.  It will not be loaded."
 #~ msgstr ""
 #~ "घटक %s ऑड्यासिटी आवृत्ती %s सह जुळले आहे.\n"
 #~ "\n"
@@ -21446,19 +21157,16 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ "Audacity can try to open and save this file, but saving it in this \n"
 #~ "version will then prevent any 1.2 or earlier version opening it. \n"
 #~ "\n"
-#~ "Audacity might corrupt the file in opening it, so you should back it up "
-#~ "first. \n"
+#~ "Audacity might corrupt the file in opening it, so you should back it up first. \n"
 #~ "\n"
 #~ "Open this file now?"
 #~ msgstr ""
 #~ "ही धारिका  ऑड्यासिटी आवृत्ती%s द्वारे जतन केली गेली. स्वरूप बदलले आहे.\n"
 #~ "\n"
-#~ "ऑड्यासिटीही धारिका  उघडण्याचा आणि जतन करण्याचा प्रयत्न करू शकते, परंतु त्यामध्ये यास "
-#~ "जतन करीत आहे\n"
+#~ "ऑड्यासिटीही धारिका  उघडण्याचा आणि जतन करण्याचा प्रयत्न करू शकते, परंतु त्यामध्ये यास जतन करीत आहे\n"
 #~ "आवृत्ती नंतर कोणत्याही 1.2 किंवा पूर्वीची आवृत्ती उघडण्यास प्रतिबंध करेल.\n"
 #~ "\n"
-#~ "ऑड्यासिटी धारिका  उघडण्यामध्ये दूषित होऊ शकते, म्हणून आपण प्रथम त्याचा बॅक अप "
-#~ "घ्यावा.\n"
+#~ "ऑड्यासिटी धारिका  उघडण्यामध्ये दूषित होऊ शकते, म्हणून आपण प्रथम त्याचा बॅक अप घ्यावा.\n"
 #~ "\n"
 #~ "ही धारिका  आता उघडायची?"
 
@@ -21468,11 +21176,8 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgid "Warning - Opening Old Project File"
 #~ msgstr "चेतावणी - जुनी प्रकल्पधारिका उघडत आहे"
 
-#~ msgid ""
-#~ "Audacity was unable to convert an Audacity 1.0 project to the new project "
-#~ "format."
-#~ msgstr ""
-#~ "ऑड्यासिटी ऑड्यासिटी १.० प्रकल्पला नवीन प्रकल्प स्वरूपात रूपांतरित करण्यात बंद आहे."
+#~ msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
+#~ msgstr "ऑड्यासिटी ऑड्यासिटी १.० प्रकल्पला नवीन प्रकल्प स्वरूपात रूपांतरित करण्यात बंद आहे."
 
 #~ msgid "Could not decode file: %s"
 #~ msgstr "आधीच्याप्रमाणे विसंकेतन करणे शक्य नाही:%s"
@@ -21501,15 +21206,13 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ "या नावाने प्रकल्प जतन करण्यापूर्वी \"%s\" निर्देशिका."
 
 #~ msgid ""
-#~ "'Save Lossless Copy of Project' is for an Audacity project, not an audio "
-#~ "file.\n"
+#~ "'Save Lossless Copy of Project' is for an Audacity project, not an audio file.\n"
 #~ "For an audio file that will open in other apps, use 'Export'.\n"
 #~ "\n"
 #~ "Lossless copies of project are a good way to backup your project, \n"
 #~ "with no loss of quality, but the projects are large.\n"
 #~ msgstr ""
-#~ "' प्रकल्पाची अनावश्यक प्रत जतन करा' ऑड्यासिटी प्रकल्प्रवेशाठी आहे , ध्वनीधारिका "
-#~ "नाही.\n"
+#~ "' प्रकल्पाची अनावश्यक प्रत जतन करा' ऑड्यासिटी प्रकल्प्रवेशाठी आहे , ध्वनीधारिका नाही.\n"
 #~ "अन्य अनुप्रयोगमध्ये उघडणार्या ध्वनी धारिकेसाठी, 'निर्यात' वापरा.\n"
 #~ "\n"
 #~ "प्रकल्पाची हानी नसणारी प्रती आपल्या बॅकअपचा चांगला मार्ग आहे,\n"
@@ -21519,35 +21222,25 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgstr "%s प्रकल्प \"%s\" ची संकुचित प्रत म्हणून जतन करा ..."
 
 #~ msgid ""
-#~ "'Save Compressed Copy of Project' is for an Audacity project, not an "
-#~ "audio file.\n"
+#~ "'Save Compressed Copy of Project' is for an Audacity project, not an audio file.\n"
 #~ "For an audio file that will open in other apps, use 'Export'.\n"
 #~ "\n"
-#~ "Compressed project files are a good way to transmit your project "
-#~ "online, \n"
+#~ "Compressed project files are a good way to transmit your project online, \n"
 #~ "but they have some loss of fidelity.\n"
 #~ msgstr ""
-#~ "'प्रकल्पाची संकुचित प्रत जतन करा' ऑड्यासिटी प्रकल्पसाठी आहे, ध्वनी आधीच्याप्रमाणे "
-#~ "नाही.\n"
+#~ "'प्रकल्पाची संकुचित प्रत जतन करा' ऑड्यासिटी प्रकल्पसाठी आहे, ध्वनी आधीच्याप्रमाणे नाही.\n"
 #~ "अन्य अनुप्रयोगमध्ये उघडणार्या ध्वनी आधीच्याप्रमाणेसाठी, 'निर्यात' वापरा.\n"
 #~ "\n"
-#~ "संकुचित प्रकल्प आधीच्याप्रमाणे्स हा आपला प्रकल्प महाजाळवर प्रसारित करण्याचा चांगला "
-#~ "मार्ग आहे,\n"
+#~ "संकुचित प्रकल्प आधीच्याप्रमाणे्स हा आपला प्रकल्प महाजाळवर प्रसारित करण्याचा चांगला मार्ग आहे,\n"
 #~ "परंतु त्यांच्यात काही निष्ठा आहे.\n"
 
 #~ msgid "On-demand import and waveform calculation complete."
 #~ msgstr "मागणीनुसार आयात आणि तरंगरूप गणना पूर्ण झाली."
 
-#~ msgid ""
-#~ "Import(s) complete. Running %d on-demand waveform calculations. Overall "
-#~ "%2.0f%% complete."
-#~ msgstr ""
-#~ "आयात पूर्ण झाली. चालू असलेल्या %d मागणीनुसार आयात आणि तरंगरूप गणना. एकूणच %2.0f %% "
-#~ "पूर्ण."
+#~ msgid "Import(s) complete. Running %d on-demand waveform calculations. Overall %2.0f%% complete."
+#~ msgstr "आयात पूर्ण झाली. चालू असलेल्या %d मागणीनुसार आयात आणि तरंगरूप गणना. एकूणच %2.0f %% पूर्ण."
 
-#~ msgid ""
-#~ "Import complete. Running an on-demand waveform calculation. %2.0f%% "
-#~ "complete."
+#~ msgid "Import complete. Running an on-demand waveform calculation. %2.0f%% complete."
 #~ msgstr "आयात पूर्ण झाली. मागणीनुसार तरंगरूप गणना सुरू आहे. एकूण% 2.0f %%."
 
 #~ msgid "Could not create autosave file: %s"
@@ -21605,8 +21298,7 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgstr "प्रक्रिया वेळ कमी करा."
 
 #~ msgid "As part of their processing, some VST effects must delay returning "
-#~ msgstr ""
-#~ "त्यांच्या प्रक्रियेचा एक भाग म्हणून काही VST प्रभावांनी परत येण्यास उशीर केला पाहिजे "
+#~ msgstr "त्यांच्या प्रक्रियेचा एक भाग म्हणून काही VST प्रभावांनी परत येण्यास उशीर केला पाहिजे "
 
 #~ msgid "audio to Audacity. When not compensating for this delay, you will "
 #~ msgstr "ध्वनी  ते ऑड्यासिटी. या विलंबची भरपाई न केल्यास आपण "
@@ -21629,18 +21321,13 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgid "VST plugin initialization failed\n"
 #~ msgstr "VST प्लगिन आरंभ अयशस्वी\n"
 
-#~ msgid ""
-#~ "As part of their processing, some Audio Unit effects must delay returning "
-#~ msgstr ""
-#~ "त्यांच्या प्रक्रियेचा एक भाग म्हणून काही ध्वनी  एकक प्रभावांनी परत येण्यास उशीर केला "
-#~ "पाहिजे "
+#~ msgid "As part of their processing, some Audio Unit effects must delay returning "
+#~ msgstr "त्यांच्या प्रक्रियेचा एक भाग म्हणून काही ध्वनी  एकक प्रभावांनी परत येण्यास उशीर केला पाहिजे "
 
 #~ msgid "not work for all Audio Unit effects."
 #~ msgstr "सर्व ध्वनी  एकक प्रभावांसाठी कार्य करत नाही."
 
-#~ msgid ""
-#~ "Select \"Full\" to use the graphical interface if supplied by the Audio "
-#~ "Unit."
+#~ msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit."
 #~ msgstr "ध्वनी  एककद्वारे पुरवले असल्यास ग्राफिकल मुखपृष्ठ वापरण्यासाठी \"पूर्ण\" निवडा."
 
 #~ msgid " Select \"Generic\" to use the system supplied generic interface."
@@ -21652,18 +21339,14 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgid "AudioUnit"
 #~ msgstr "ध्वनी एकक"
 
-#~ msgid ""
-#~ "As part of their processing, some LADSPA effects must delay returning "
-#~ msgstr ""
-#~ "त्यांच्या प्रक्रियेचा एक भाग म्हणून, काही LADSPA प्रभावांनी परत येण्यास उशीर केला "
-#~ "पाहिजे "
+#~ msgid "As part of their processing, some LADSPA effects must delay returning "
+#~ msgstr "त्यांच्या प्रक्रियेचा एक भाग म्हणून, काही LADSPA प्रभावांनी परत येण्यास उशीर केला पाहिजे "
 
 #~ msgid "not work for all LADSPA effects."
 #~ msgstr "सर्व LADSPA प्रभावांसाठी कार्य करत नाही."
 
 #~ msgid "As part of their processing, some LV2 effects must delay returning "
-#~ msgstr ""
-#~ "त्यांच्या प्रक्रियेचा एक भाग म्हणून, काही LV 2 प्रभावांनी परत येण्यास उशीर केला पाहिजे "
+#~ msgstr "त्यांच्या प्रक्रियेचा एक भाग म्हणून, काही LV 2 प्रभावांनी परत येण्यास उशीर केला पाहिजे "
 
 #~ msgid "Enabling this setting will provide that compensation, but it may "
 #~ msgstr "हा पर्याय सुरू केल्याने ते नुकसान भरपाई मिळेल, परंतु हे कदाचित "
@@ -21685,36 +21368,25 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
 #~ "Control not created."
 #~ msgstr ""
-#~ "गलत 'नाइक्विस्ट (Nyquist) 'नियंत्रण' प्रकार विनिर्देश : '%s' प्लग-इन धारिका '%s' "
-#~ "में.\n"
+#~ "गलत 'नाइक्विस्ट (Nyquist) 'नियंत्रण' प्रकार विनिर्देश : '%s' प्लग-इन धारिका '%s' में.\n"
 #~ "नियंत्रण नहीं बन पाया."
 
 #~ msgid "&Use legacy (version 3) syntax."
 #~ msgstr "वारसा (आवृत्ती 3) रचना वापरा(&U)."
 
-#~ msgid ""
-#~ "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|"
-#~ "*.txt|All files|*"
-#~ msgstr ""
-#~ "'नाइक्विस्ट (Nyquist) लिपी (*.ny)|*.ny|Lisp लिपी (*.lsp)|*.lsp|पाठ धारिका "
-#~ "(*.txt)|*.txt|सभी धारिका|*"
+#~ msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|Text files (*.txt)|*.txt|All files|*"
+#~ msgstr "'नाइक्विस्ट (Nyquist) लिपी (*.ny)|*.ny|Lisp लिपी (*.lsp)|*.lsp|पाठ धारिका (*.txt)|*.txt|सभी धारिका|*"
 
 #~ msgid ""
 #~ "You are attempting to overwrite an aliased file that is missing.\n"
-#~ "               The file cannot be written because the path is needed to "
-#~ "restore the original audio to the project.\n"
-#~ "               Choose Help > Diagnostics > Check Dependencies to view the "
-#~ "locations of all missing files.\n"
-#~ "               If you still wish to export, please choose a different "
-#~ "filename or folder."
+#~ "               The file cannot be written because the path is needed to restore the original audio to the project.\n"
+#~ "               Choose Help > Diagnostics > Check Dependencies to view the locations of all missing files.\n"
+#~ "               If you still wish to export, please choose a different filename or folder."
 #~ msgstr ""
 #~ "आपण गहाळ असलेल्या उपनाम धारिका अधिलिखित करण्याचा प्रयत्न करीत आहात.\n"
-#~ "                धारिका  लिहिणे शक्य नाही कारण प्रकल्पात मूळ ध्वनी पुनर्संचयित "
-#~ "करण्यासाठी पथ आवश्यक आहे.\n"
-#~ "                सर्व गहाळ धारिका्सची स्थाने पाहण्यासाठी मदत> निदान> तपासणीची "
-#~ "अवलंबन निवडा.\n"
-#~ "                आपण अद्याप निर्यात करू इच्छित असल्यास, कृपया एखादे भिन्न धारिका "
-#~ "नाव किंवा फोल्डर निवडा."
+#~ "                धारिका  लिहिणे शक्य नाही कारण प्रकल्पात मूळ ध्वनी पुनर्संचयित करण्यासाठी पथ आवश्यक आहे.\n"
+#~ "                सर्व गहाळ धारिका्सची स्थाने पाहण्यासाठी मदत> निदान> तपासणीची अवलंबन निवडा.\n"
+#~ "                आपण अद्याप निर्यात करू इच्छित असल्यास, कृपया एखादे भिन्न धारिका नाव किंवा फोल्डर निवडा."
 
 #~ msgid "FFmpeg : ERROR - Failed to write audio frame to file."
 #~ msgstr "एफएफएमपीईजी (FFmpeg): त्रुटी - ध्वनी फ्रेम धारिकावर लिहिण्यात अयशस्वी."
@@ -21728,26 +21400,14 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgid "%s kbps"
 #~ msgstr "%s kbps"
 
-#~ msgid ""
-#~ "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|"
-#~ "All Files|*"
-#~ msgstr ""
-#~ "केवळ lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*."
-#~ "dll|| सर्व  धारिका| *"
+#~ msgid "Only lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|All Files|*"
+#~ msgstr "केवळ lame_enc.dll|lame_enc.dll|Dynamically Linked Libraries (*.dll)|*.dll|| सर्व  धारिका| *"
 
-#~ msgid ""
-#~ "Only libmp3lame.dylib|libmp3lame.dylib|Dynamic Libraries (*.dylib)|*."
-#~ "dylib|All Files (*)|*"
-#~ msgstr ""
-#~ "फक्त libmp3lame.dylib | libmp3lame.dylib | डायनॅमिक ग्रंथालय (* .dylib) | * ."
-#~ "dylib | सर्वधारिका  (*) | *"
+#~ msgid "Only libmp3lame.dylib|libmp3lame.dylib|Dynamic Libraries (*.dylib)|*.dylib|All Files (*)|*"
+#~ msgstr "फक्त libmp3lame.dylib | libmp3lame.dylib | डायनॅमिक ग्रंथालय (* .dylib) | * .dylib | सर्वधारिका  (*) | *"
 
-#~ msgid ""
-#~ "Only libmp3lame.so.0|libmp3lame.so.0|Primary Shared Object files (*.so)|*."
-#~ "so|Extended Libraries (*.so*)|*.so*|All Files (*)|*"
-#~ msgstr ""
-#~ "केवल libmp3lame.so.0|libmp3lame.so.0|प्राथमिक साझा वस्तु धारिका (*.so)|*.so|"
-#~ "विस्तारित लाइब्रेरी (*.so*)|*.so*|सभी धारिका (*)|*"
+#~ msgid "Only libmp3lame.so.0|libmp3lame.so.0|Primary Shared Object files (*.so)|*.so|Extended Libraries (*.so*)|*.so*|All Files (*)|*"
+#~ msgstr "केवल libmp3lame.so.0|libmp3lame.so.0|प्राथमिक साझा वस्तु धारिका (*.so)|*.so|विस्तारित लाइब्रेरी (*.so*)|*.so*|सभी धारिका (*)|*"
 
 #~ msgid "AIFF (Apple) signed 16-bit PCM"
 #~ msgstr "AIFF (Apple) ने 16-बिट पीसीएमवर स्वाक्षरी केली"
@@ -21766,13 +21426,9 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ "ऑड्यासिटी प्रकल्प उघडण्यासाठी 'आधीच्याप्रमाणे> ओपन' आज्ञा वापरा."
 
 #~ msgid ""
-#~ "When importing uncompressed audio files you can either copy them into the "
-#~ "project, or read them directly from their current location (without "
-#~ "copying).\n"
+#~ "When importing uncompressed audio files you can either copy them into the project, or read them directly from their current location (without copying).\n"
 #~ "\n"
-#~ msgstr ""
-#~ "संकुचित ध्वनी धारिका  आयात करताना आपण एकतर त्यांना प्रकल्पमध्ये नक्कल करू शकता, किंवा "
-#~ "त्यांच्या वर्तमान स्थानावरून (नक्कल केल्याशिवाय) थेट वाचू शकता.\n"
+#~ msgstr "संकुचित ध्वनी धारिका  आयात करताना आपण एकतर त्यांना प्रकल्पमध्ये नक्कल करू शकता, किंवा त्यांच्या वर्तमान स्थानावरून (नक्कल केल्याशिवाय) थेट वाचू शकता.\n"
 
 #~ msgid ""
 #~ "Your current preference is set to copy in.\n"
@@ -21785,19 +21441,13 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgstr "आपले वर्तमान प्राधान्य थेट वाचण्यासाठी सेट केले आहे.\n"
 
 #~ msgid ""
-#~ "Reading the files directly allows you to play or edit them almost "
-#~ "immediately.  This is less safe than copying in, because you must retain "
-#~ "the files with their original names in their original locations.\n"
-#~ "Help > Diagnostics > Check Dependencies will show the original names and "
-#~ "locations of any files that you are reading directly.\n"
+#~ "Reading the files directly allows you to play or edit them almost immediately.  This is less safe than copying in, because you must retain the files with their original names in their original locations.\n"
+#~ "Help > Diagnostics > Check Dependencies will show the original names and locations of any files that you are reading directly.\n"
 #~ "\n"
 #~ "How do you want to import the current file(s)?"
 #~ msgstr ""
-#~ "धारिका  वाचणे आपणास जवळजवळ त्वरित वाजवा करण्यास किंवा संपादित करण्यास अनुमती देते. "
-#~ "हे नक्कल करण्यापेक्षा कमी सुरक्षित आहे, कारण आपण त्यांच्या मूळ नावांसह धारिका  त्यांच्या "
-#~ "मूळ ठिकाणी ठेवल्या पाहिजेत.\n"
-#~ "मदत> निदान> चेक अवलंबित्व आपण थेट वाचत असलेल्या कोणत्याही धारिकाची मूळ नावे आणि "
-#~ "स्थाने दर्शवतील.\n"
+#~ "धारिका  वाचणे आपणास जवळजवळ त्वरित वाजवा करण्यास किंवा संपादित करण्यास अनुमती देते. हे नक्कल करण्यापेक्षा कमी सुरक्षित आहे, कारण आपण त्यांच्या मूळ नावांसह धारिका  त्यांच्या मूळ ठिकाणी ठेवल्या पाहिजेत.\n"
+#~ "मदत> निदान> चेक अवलंबित्व आपण थेट वाचत असलेल्या कोणत्याही धारिकाची मूळ नावे आणि स्थाने दर्शवतील.\n"
 #~ "\n"
 #~ "आपण सद्य धारिका  कशी आयात करू इच्छिता?"
 
@@ -21832,8 +21482,7 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgstr "किमान मोकळी मेमरी (एमबी(MB)):"
 
 #~ msgid ""
-#~ "If the available system memory falls below this value, audio will no "
-#~ "longer\n"
+#~ "If the available system memory falls below this value, audio will no longer\n"
 #~ "be cached in memory and will be written to disk."
 #~ msgstr ""
 #~ "जर उपलब्ध प्रणाली मेमरी या मूल्यापेक्षा खाली गेली तर ध्वनी  यापुढे राहणार नाही\n"
@@ -21861,12 +21510,10 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgstr "इतर ध्वनी धारिकावर अवलंबून असलेला प्रकल्प जतन करताना"
 
 #~ msgid ""
-#~ "This is a debug version of Audacity, with an extra button, 'Output "
-#~ "Sourcery'.  This will save a\n"
+#~ "This is a debug version of Audacity, with an extra button, 'Output Sourcery'.  This will save a\n"
 #~ "C version of the image cache that can be compiled in as a default."
 #~ msgstr ""
-#~ "'उत्पादित स्त्रोत्री' या अतिरिक्त कळसह हे ऑड्यासिटीची त्रुटीसुधार आवृत्ती आहे. हे जतन "
-#~ "करेल\n"
+#~ "'उत्पादित स्त्रोत्री' या अतिरिक्त कळसह हे ऑड्यासिटीची त्रुटीसुधार आवृत्ती आहे. हे जतन करेल\n"
 #~ "पूर्वनिर्धारित म्हणून संकलित केली जाऊ शकणार्‍या प्रतिमांची तात्पुरता साठाची आवृत्ती."
 
 #~ msgid "Waveform (dB)"
@@ -21889,11 +21536,8 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgid "Zoom Out\tShift-Left-Click"
 #~ msgstr "दृश्यरूप कमी करा\t शिफ्ट-डावे क्लिक करा"
 
-#~ msgid ""
-#~ "To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown "
-#~ "Menu."
-#~ msgstr ""
-#~ "ड्रॉ ​​वापरण्यासाठी, गीतपट्टा ड्रॉपडाउन मेनूमध्ये 'तरंगरूप' किंवा 'तरंगरूप (डीबी)' निवडा."
+#~ msgid "To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
+#~ msgstr "ड्रॉ ​​वापरण्यासाठी, गीतपट्टा ड्रॉपडाउन मेनूमध्ये 'तरंगरूप' किंवा 'तरंगरूप (डीबी)' निवडा."
 
 #~ msgid "&Waveform (dB)"
 #~ msgstr "(&W)तरंगरूप (dB)"
@@ -21946,11 +21590,8 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgid "Label placement [seconds before silence ends]"
 #~ msgstr "नावपट्टी स्थापना [मौन समाप्त होण्यापूर्वी सेकंद]"
 
-#~ msgid ""
-#~ "No silences found. Try reducing the silence~%level and minimum silence "
-#~ "duration."
-#~ msgstr ""
-#~ "मौन आढळली नाही. मौन ~% पातळी कमी करण्याचा प्रयत्न करा आणि किमान मौन कालावधी."
+#~ msgid "No silences found. Try reducing the silence~%level and minimum silence duration."
+#~ msgstr "मौन आढळली नाही. मौन ~% पातळी कमी करण्याचा प्रयत्न करा आणि किमान मौन कालावधी."
 
 #~ msgid "Sound Finder"
 #~ msgstr "ध्वनी शोधक"
@@ -22036,12 +21677,8 @@ msgstr "त्रुटी.% स्टीरिओ गीतपट्टा आ�
 #~ msgid "File location (path to file)"
 #~ msgstr "धारिका स्थान (मार्ग दाखल)"
 
-#~ msgid ""
-#~ "Error~%The file must be a plain ASCII text file~%with '.txt' file "
-#~ "extension."
-#~ msgstr ""
-#~ "त्रुटी ~% धारिका '.txt' धारिका विस्तारासह धारिका एक साधी ASCII मजकूर धारिका ~"
-#~ "% असणे आवश्यक आहे."
+#~ msgid "Error~%The file must be a plain ASCII text file~%with '.txt' file extension."
+#~ msgstr "त्रुटी ~% धारिका '.txt' धारिका विस्तारासह धारिका एक साधी ASCII मजकूर धारिका ~% असणे आवश्यक आहे."
 
 #~ msgid "Error~%'~~/' is not valid on Windows"
 #~ msgstr "त्रुटी ~% '~~ /' विंडोज वर मान्य नाही"

@@ -54,9 +54,9 @@ a graph for EffectScienFilter.
 
 #include "../AColor.h"
 #include "../AllThemeResources.h"
-#include "../PlatformCompatibility.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "PlatformCompatibility.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../Theme.h"
@@ -192,9 +192,9 @@ TranslatableString EffectScienFilter::GetDescription()
    return XO("Performs IIR filtering that emulates analog filters");
 }
 
-wxString EffectScienFilter::ManualPage()
+ManualPageID EffectScienFilter::ManualPage()
 {
-   return wxT("Classic_Filters");
+   return L"Classic_Filters";
 }
 
 

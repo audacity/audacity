@@ -38,6 +38,9 @@ class AUDACITY_DLL_API EnvelopeHandle final : public UIHandle
 
 public:
    explicit EnvelopeHandle( Envelope *pEnvelope );
+   
+   EnvelopeHandle(EnvelopeHandle&&) = default;
+   EnvelopeHandle& operator=(EnvelopeHandle&&) = default;
 
    virtual ~EnvelopeHandle();
 

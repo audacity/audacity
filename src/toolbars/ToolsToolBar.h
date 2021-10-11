@@ -45,13 +45,8 @@ class ToolsToolBar final : public ToolBar {
    void UpdatePrefs() override;
 
    void OnTool(wxCommandEvent & evt);
-
-   void SetCurrentTool(int tool);
-
-   //These interrogate the state of the buttons or controls.
-   int GetCurrentTool() const;
-   bool IsDown(int tool) const;
-   int GetDownTool();
+   void OnToolChanged(wxCommandEvent &evt);
+   void DoToolChanged();
 
    void Populate() override;
    void Repaint(wxDC * WXUNUSED(dc)) override {};
@@ -64,8 +59,7 @@ class ToolsToolBar final : public ToolBar {
    wxImage *MakeToolImage(wxImage *tool, wxImage *mask, int style);
    static AButton *MakeTool(
       ToolsToolBar *pBar, teBmps eTool, int id, const TranslatableString &label);
-
-   enum { numTools = 6 };
+   enum { numTools = 5 };
    AButton *mTool[numTools];
    wxGridSizer *mToolSizer;
    int mCurrentTool;

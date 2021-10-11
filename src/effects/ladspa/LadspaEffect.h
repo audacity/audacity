@@ -18,12 +18,12 @@ class NumericTextCtrl;
 #include <wx/dynlib.h> // member variable
 #include <wx/event.h> // to inherit
 
-#include "audacity/EffectInterface.h"
-#include "audacity/ModuleInterface.h"
-#include "audacity/PluginInterface.h"
+#include "EffectInterface.h"
+#include "ModuleInterface.h"
+#include "PluginInterface.h"
 
 #include "ladspa.h"
-#include "../../SampleFormat.h"
+#include "SampleFormat.h"
 
 #define LADSPAEFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
@@ -237,8 +237,8 @@ public:
 
    bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
-   ComponentInterface *CreateInstance(const PluginPath & path) override;
-   void DeleteInstance(ComponentInterface *instance) override;
+   std::unique_ptr<ComponentInterface>
+      CreateInstance(const PluginPath & path) override;
 
    // LadspaEffectModule implementation
 

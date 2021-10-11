@@ -58,17 +58,18 @@
 #include "../AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectSettings.h"
-#include "../ProjectStatus.h"
+#include "ProjectStatus.h"
 #include "../ProjectWindow.h"
+#include "../SelectUtilities.h"
 #include "../Track.h"
+#include "ViewInfo.h"
 #include "../widgets/AButton.h"
-#include "../widgets/ErrorDialog.h"
-#include "../FileNames.h"
+#include "FileNames.h"
 
 #include "../tracks/ui/Scrubbing.h"
 #include "../toolbars/ToolManager.h"
@@ -87,18 +88,22 @@ BEGIN_EVENT_TABLE(ControlToolBar, ToolBar)
    EVT_BUTTON(ID_REW_BUTTON,    ControlToolBar::OnRewind)
    EVT_BUTTON(ID_FF_BUTTON,     ControlToolBar::OnFF)
    EVT_BUTTON(ID_PAUSE_BUTTON,  ControlToolBar::OnPause)
+   EVT_BUTTON(ID_LOOP_BUTTON,   ControlToolBar::OnLoop)
    EVT_IDLE(ControlToolBar::OnIdle)
 END_EVENT_TABLE()
 
 static const TranslatableString
    /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
-   is playing or recording or stopped, and whether it is paused. */
+   is playing or recording or stopped, and whether it is paused;
+   progressive verb form */
      sStatePlay = XO("Playing")
    /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
-   is playing or recording or stopped, and whether it is paused. */
+   is playing or recording or stopped, and whether it is paused;
+   progressive verb form */
    , sStateStop = XO("Stopped")
    /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
-   is playing or recording or stopped, and whether it is paused. */
+   is playing or recording or stopped, and whether it is paused;
+   progressive verb form */
    , sStateRecord = XO("Recording")
 ;
 
@@ -110,7 +115,6 @@ static const TranslatableString
 ControlToolBar::ControlToolBar( AudacityProject &project )
 : ToolBar(project, TransportBarID, XO("Transport"), wxT("Control"))
 {
-   gPrefs->Read(wxT("/GUI/ErgonomicTransportButtons"), &mErgonomicTransportButtons, true);
    mStrLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
 
    mSizer = NULL;
@@ -227,6 +231,11 @@ void ControlToolBar::Populate()
 
    mRecord->FollowModifierKeys();
 
+   mLoop = MakeButton(this, bmpLoop, bmpLoop, bmpLoopDisabled,
+      ID_LOOP_BUTTON,
+      true, // this makes it a toggle, like the pause button
+      XO("Looping Region"));
+
 #if wxUSE_TOOLTIPS
    RegenerateTooltips();
    wxToolTip::Enable(true);
@@ -317,12 +326,6 @@ void ControlToolBar::UpdatePrefs()
    bool updated = false;
    bool active;
 
-   gPrefs->Read( wxT("/GUI/ErgonomicTransportButtons"), &active, true );
-   if( mErgonomicTransportButtons != active )
-   {
-      mErgonomicTransportButtons = active;
-      updated = true;
-   }
    wxString strLocale = gPrefs->Read(wxT("/Locale/Language"), wxT(""));
    if (mStrLocale != strLocale)
    {
@@ -365,37 +368,21 @@ void ControlToolBar::ArrangeButtons()
    // Start with a little extra space
    mSizer->Add( 5, 55 );
 
-   // Add the buttons in order based on ergonomic setting
-   if( mErgonomicTransportButtons )
-   {
-      mPause->MoveBeforeInTabOrder( mRecord );
-      mPlay->MoveBeforeInTabOrder( mRecord );
-      mStop->MoveBeforeInTabOrder( mRecord );
-      mRewind->MoveBeforeInTabOrder( mRecord );
-      mFF->MoveBeforeInTabOrder( mRecord );
+   // Establish correct tab key sequence with mLoop last
+   mPause->MoveBeforeInTabOrder( mLoop );
+   mPlay->MoveBeforeInTabOrder( mLoop );
+   mStop->MoveBeforeInTabOrder( mLoop );
+   mRewind->MoveBeforeInTabOrder( mLoop );
+   mFF->MoveBeforeInTabOrder( mLoop );
+   mRecord->MoveBeforeInTabOrder( mLoop );
 
-      mSizer->Add( mPause,  0, flags, 2 );
-      mSizer->Add( mPlay,   0, flags, 2 );
-      mSizer->Add( mStop,   0, flags, 2 );
-      mSizer->Add( mRewind, 0, flags, 2 );
-      mSizer->Add( mFF,     0, flags, 10 );
-      mSizer->Add( mRecord, 0, flags, 5 );
-   }
-   else
-   {
-      mRewind->MoveBeforeInTabOrder( mFF );
-      mPlay->MoveBeforeInTabOrder( mFF );
-      mRecord->MoveBeforeInTabOrder( mFF );
-      mPause->MoveBeforeInTabOrder( mFF );
-      mStop->MoveBeforeInTabOrder( mFF );
-
-      mSizer->Add( mRewind, 0, flags, 2 );
-      mSizer->Add( mPlay,   0, flags, 2 );
-      mSizer->Add( mRecord, 0, flags, 2 );
-      mSizer->Add( mPause,  0, flags, 2 );
-      mSizer->Add( mStop,   0, flags, 2 );
-      mSizer->Add( mFF,     0, flags, 5 );
-   }
+   mSizer->Add( mPause,  0, flags, 2 );
+   mSizer->Add( mPlay,   0, flags, 2 );
+   mSizer->Add( mStop,   0, flags, 2 );
+   mSizer->Add( mRewind, 0, flags, 2 );
+   mSizer->Add( mFF,     0, flags, 10 );
+   mSizer->Add( mRecord, 0, flags, 10 );
+   mSizer->Add( mLoop, 0, flags, 5 );
 
    // Layout the sizer
    mSizer->Layout();
@@ -414,6 +401,7 @@ void ControlToolBar::ReCreateButtons()
    bool pauseDown = false;
    bool recordDown = false;
    bool recordShift = false;
+   bool loopDown = false;
 
    // ToolBar::ReCreateButtons() will get rid of its sizer and
    // since we've attached our sizer to it, ours will get deleted too
@@ -425,6 +413,7 @@ void ControlToolBar::ReCreateButtons()
       pauseDown = mPause->IsDown();
       recordDown = mRecord->IsDown();
       recordShift = mRecord->WasShiftDown();
+      loopDown = mLoop->IsDown();
       Detach( mSizer );
 
       std::unique_ptr < wxSizer > {mSizer}; // DELETE it
@@ -451,6 +440,9 @@ void ControlToolBar::ReCreateButtons()
       mRecord->SetAlternateIdx(recordShift ? 1 : 0);
       mRecord->PushDown();
    }
+
+   if (loopDown)
+      mLoop->PushDown();
 
    EnableDisableButtons();
 
@@ -494,6 +486,8 @@ void ControlToolBar::EnableDisableButtons()
    mFF->SetEnabled(tracks && (paused || (!playing && !recording)));
 
    mPause->SetEnabled(canStop);
+
+   mLoop->SetEnabled( !recording );
 }
 
 void ControlToolBar::SetPlay(bool down, PlayAppearance appearance)
@@ -598,6 +592,16 @@ void ControlToolBar::OnPause(wxCommandEvent & WXUNUSED(evt))
    ProjectAudioManager::Get( mProject ).OnPause();
 }
 
+void ControlToolBar::OnLoop(wxCommandEvent & WXUNUSED(evt))
+{
+   // Toggle the state of the play region lock
+   auto &region = ViewInfo::Get(mProject).playRegion;
+   if (region.Locked())
+      SelectUtilities::UnlockPlayRegion(mProject);
+   else
+      SelectUtilities::LockPlayRegion(mProject);
+}
+
 void ControlToolBar::OnIdle(wxIdleEvent & event)
 {
    event.Skip();
@@ -653,6 +657,11 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
    else
       // push-downs of the stop button are only momentary and always pop up now
       mStop->PopUp();
+
+   if (ViewInfo::Get(mProject).playRegion.Locked())
+      mLoop->PushDown();
+   else
+      mLoop->PopUp();
    
    UpdateStatusBar();
    EnableDisableButtons();

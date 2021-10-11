@@ -11,7 +11,7 @@ https://forum.audacityteam.org/viewforum.php?f=25 .
 Audacity is copyright (c) 1999-2021 by Audacity Team. This copyright 
 notice applies to all documents in the Audacity source code archive, 
 except as otherwise noted (mostly in the lib-src subdirectories). 
-"Audacity" is a registered trademark of Dominic Mazzoni. 
+"Audacity" is a registered trademark. 
 
 The Audacity documentation is licensed under the Creative Commons
 Attribution 3.0 license: https://creativecommons.org/licenses/by/3.0/legalcode .

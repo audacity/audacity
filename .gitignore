@@ -14,41 +14,14 @@ stamp-po
 *.stamp
 
 # Handcrafted makefiles
-!lib-src/expat/amiga/Makefile
-!lib-src/libnyquist/nyquist/sys/unix/*/Makefile
 !lib-src/lv2/Makefile
 !lib-src/mod-script-pipe/Makefile
 
 # Generated files by build system
-lib-src/expat/expat_config.h
-lib-src/libflac/doc/Doxyfile
-lib-src/libflac/config.h
-lib-src/libflac/test/common.sh
-lib-src/libid3tag/config.h
-lib-src/libid3tag/libid3tag.list
-lib-src/libmad/config.h
-lib-src/libmad/libmad.list
-lib-src/libmad/mad.h
-lib-src/libogg/config.h
-lib-src/libogg/include/ogg/config_types.h
-lib-src/libogg/libogg.spec
-lib-src/libsndfile/build-test-tarball.mk
-lib-src/libsndfile/doc/libsndfile.css
-lib-src/libsndfile/libsndfile.spec
-lib-src/libsndfile/man/sndfile-deinterleave.1
-lib-src/libsndfile/man/sndfile-metadata-set.1
-lib-src/libsndfile/src/config.h
-lib-src/libsndfile/src/sndfile.h
-lib-src/libsndfile/src/version-metadata.rc
-lib-src/libsndfile/tests/pedantic-header-test.sh
-lib-src/libsndfile/tests/test_wrapper.sh
 lib-src/libsoxr/soxr-config.h
 lib-src/libsoxr/src/libsoxr-dev.src
 lib-src/libsoxr/src/libsoxr.src
 lib-src/libsoxr/tests/ref-*.s32
-lib-src/libvorbis/config.h
-lib-src/libvorbis/doc/Doxyfile
-lib-src/libvorbis/libvorbis.spec
 lib-src/sbsms/libsbsms.spec
 lib-src/sbsms/src/config.h
 lib-src/soundtouch/include/soundtouch_config.h
@@ -143,31 +116,11 @@ dox/
 # Executable without extension
 /audacity
 src/audacity
-lib-src/expat/examples/elements
-lib-src/expat/examples/outline
-lib-src/expat/xmlwf/xmlwf
-lib-src/libflac/examples/c/decode/file/example_c_decode_file
-lib-src/libflac/examples/c/encode/file/example_c_encode_file
-lib-src/libflac/examples/cpp/decode/file/example_cpp_decode_file
-lib-src/libflac/examples/cpp/encode/file/example_cpp_encode_file
-lib-src/libflac/src/flac/flac
-lib-src/libflac/src/metaflac/metaflac
-lib-src/libflac/src/test_grabbag/cuesheet/test_cuesheet
-lib-src/libflac/src/test_grabbag/picture/test_picture
-lib-src/libflac/src/test_libFLAC++/test_libFLAC++
-lib-src/libflac/src/test_libFLAC/test_libFLAC
-lib-src/libflac/src/test_seeking/test_seeking
-lib-src/libflac/src/test_streams/test_streams
-lib-src/libogg/src/test_bitwise
-lib-src/libogg/src/test_framing
-lib-src/libsndfile/src/G72x/g72x_test
-lib-src/libsndfile/src/test_main
+
 lib-src/libsoxr/examples/1a-lsr
 lib-src/libsoxr/examples/3-options-input-fn
 lib-src/libsoxr/tests/vector-cmp
 lib-src/libsoxr/tests/vector-gen
-lib-src/libvorbis/lib/test_sharedbook
-lib-src/portaudio-v19/bin/
 lib-src/soundtouch/source/SoundStretch/soundstretch
 lib-src/twolame/frontend/twolame
 lib-src/twolame/simplefrontend/stwolame
@@ -206,3 +159,10 @@ win/xaudacity.ico
 #other files that get in the way
 */not-for-git/*
 *.dll
+
+.idea/
+.vscode/
+
+# AppImage
+linuxdeploy/*
+appimagetool/*

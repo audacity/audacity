@@ -113,7 +113,9 @@ for registering for changes.
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 #include <wx/bmpbuttn.h>
-#include "../include/audacity/ComponentInterface.h"
+#include <wx/wrapsizer.h>
+
+#include "ComponentInterface.h"
 #include "widgets/ReadOnlyText.h"
 #include "widgets/wxPanelWrapper.h"
 #include "widgets/wxTextCtrlWrapper.h"
@@ -190,6 +192,11 @@ void ShuttleGuiBase::ResetId()
    miIdNext = 3000;
 }
 
+
+int ShuttleGuiBase::GetBorder() const noexcept
+{
+   return miBorder;
+}
 
 /// Used to modify an already placed FlexGridSizer to make a column stretchy.
 void ShuttleGuiBase::SetStretchyCol( int i )
@@ -289,13 +296,13 @@ void ShuttleGuiBase::AddTitle(const TranslatableString &Prompt, int wrapWidth)
 
 /// Very generic 'Add' function.  We can add anything we like.
 /// Useful for unique controls
-wxWindow * ShuttleGuiBase::AddWindow(wxWindow * pWindow)
+wxWindow* ShuttleGuiBase::AddWindow(wxWindow* pWindow, int PositionFlags)
 {
    if( mShuttleMode != eIsCreating )
       return pWindow;
    mpWind = pWindow;
    SetProportions( 0 );
-   UpdateSizersCore(false, wxALIGN_CENTRE | wxALL);
+   UpdateSizersCore(false, PositionFlags | wxALL);
    return pWindow;
 }
 
@@ -1197,6 +1204,25 @@ void ShuttleGuiBase::EndVerticalLay()
 {
    if( mShuttleMode != eIsCreating )
       return;
+   PopSizer();
+}
+
+void ShuttleGuiBase::StartWrapLay(int PositionFlags, int iProp)
+{
+   if (mShuttleMode != eIsCreating)
+      return;
+
+   miSizerProp = iProp;
+   mpSubSizer = std::make_unique<wxWrapSizer>(wxHORIZONTAL, 0);
+
+   UpdateSizersCore(false, PositionFlags | wxALL);
+}
+
+void ShuttleGuiBase::EndWrapLay()
+{
+   if (mShuttleMode != eIsCreating)
+      return;
+
    PopSizer();
 }
 
@@ -2278,41 +2304,48 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
 
    wxButton *b = NULL;
    auto bs = std::make_unique<wxStdDialogButtonSizer>();
+   
+   const auto makeButton =
+   [parent]( wxWindowID id, const wxString label = {} ) {
+      auto result = safenew wxButton( parent, id, label );
+      result->SetName( result->GetLabel() );
+      return result;
+   };
 
    if( buttons & eOkButton )
    {
-      b = safenew wxButton(parent, wxID_OK);
+      b = makeButton( wxID_OK );
       b->SetDefault();
       bs->AddButton( b );
    }
 
    if( buttons & eCancelButton )
    {
-      bs->AddButton(safenew wxButton(parent, wxID_CANCEL));
+      bs->AddButton( makeButton( wxID_CANCEL ) );
    }
 
    if( buttons & eYesButton )
    {
-      b = safenew wxButton(parent, wxID_YES);
+      b = makeButton( wxID_YES );
       b->SetDefault();
       bs->AddButton( b );
    }
 
    if( buttons & eNoButton )
    {
-      bs->AddButton(safenew wxButton(parent, wxID_NO));
+      bs->AddButton( makeButton( wxID_NO ) );
    }
 
    if( buttons & eApplyButton )
    {
-      b = safenew wxButton(parent, wxID_APPLY);
+      b = makeButton( wxID_APPLY );
       b->SetDefault();
       bs->AddButton( b );
    }
 
    if( buttons & eCloseButton )
    {
-      bs->AddButton(safenew wxButton(parent, wxID_CANCEL, XO("&Close").Translation()));
+      bs->AddButton( makeButton( wxID_CANCEL, XO("&Close").Translation() ) );
    }
 
 #if defined(__WXMSW__)
@@ -2324,23 +2357,27 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       b = safenew wxBitmapButton(parent, wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
       b->SetToolTip( XO("Help").Translation() );
       b->SetLabel(XO("Help").Translation());       // for screen readers
+      b->SetName( b->GetLabel() );
       bs->AddButton( b );
    }
 #endif
 
    if (buttons & ePreviewButton)
    {
-      bs->Add(safenew wxButton(parent, ePreviewID, XO("&Preview").Translation()), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
+      bs->Add( makeButton( ePreviewID, XO("&Preview").Translation() ),
+         0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
    }
    if (buttons & ePreviewDryButton)
    {
-      bs->Add(safenew wxButton(parent, ePreviewDryID, XO("Dry Previe&w").Translation()), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
+      bs->Add( makeButton( ePreviewDryID, XO("Dry Previe&w").Translation() ),
+         0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
       bs->Add( 20, 0 );
    }
 
    if( buttons & eSettingsButton )
    {
-      bs->Add(safenew wxButton(parent, eSettingsID, XO("&Settings").Translation()), 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
+      bs->Add( makeButton( eSettingsID, XO("&Settings").Translation() ),
+         0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin);
       bs->Add( 20, 0 );
    }
 
@@ -2371,7 +2408,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
    // Add any buttons that need to cuddle up to the right hand cluster
    if( buttons & eDebugButton )
    {
-      b = safenew wxButton(parent, eDebugID, XO("Debu&g").Translation());
+      b = makeButton( eDebugID, XO("Debu&g").Translation() );
       bs->Insert( ++lastLastSpacer, b, 0, wxALIGN_CENTER | wxLEFT | wxRIGHT, margin );
    }
 
@@ -2391,6 +2428,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
       b = safenew wxBitmapButton(parent, wxID_HELP, theTheme.Bitmap( bmpHelpIcon ));
       b->SetToolTip( XO("Help").Translation() );
       b->SetLabel(XO("Help").Translation());       // for screen readers
+      b->SetName( b->GetLabel() );
       bs->Add( b, 0, wxALIGN_CENTER );
    }
 #endif

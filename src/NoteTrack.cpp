@@ -34,7 +34,7 @@
 
 #include "AColor.h"
 #include "Prefs.h"
-#include "ProjectFileIORegistry.h"
+#include "Project.h"
 #include "prefs/ImportExportPrefs.h"
 
 #include "InconsistencyException.h"
@@ -47,7 +47,7 @@
 #include "Theme.h"
 
 #ifdef SONIFY
-#include "../lib-src/portmidi/pm_common/portmidi.h"
+#include <portmidi.h>
 
 #define SON_PROGRAM 0
 #define SON_AutoSave 67
@@ -109,7 +109,7 @@ SONFNS(AutoSave)
 
 
 
-static ProjectFileIORegistry::Entry registerFactory{
+static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    wxT( "notetrack" ),
    []( AudacityProject &project ){
       auto &tracks = TrackList::Get( project );
@@ -885,6 +885,13 @@ bool NoteTrack::ExportAllegro(const wxString &f) const
 }
 
 
+namespace {
+bool IsValidVisibleChannels(const int nValue)
+{
+    return (nValue >= 0 && nValue < (1 << 16));
+}
+}
+
 bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 {
    if (!wxStrcmp(tag, wxT("notetrack"))) {
@@ -907,7 +914,7 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          else if (!wxStrcmp(attr, wxT("visiblechannels"))) {
              if (!XMLValueChecker::IsGoodInt(strValue) ||
                  !strValue.ToLong(&nValue) ||
-                 !XMLValueChecker::IsValidVisibleChannels(nValue))
+                 !IsValidVisibleChannels(nValue))
                  return false;
              mVisibleChannels = nValue;
          }
@@ -1151,5 +1158,120 @@ int NoteTrackDisplayData::YToIPitch(int y) const
 }
 
 const float NoteTrack::ZoomStep = powf( 2.0f, 0.25f );
+
+#include <wx/log.h>
+#include <wx/sstream.h>
+#include <wx/txtstrm.h>
+#include "AudioIOBase.h"
+#include "portmidi.h"
+
+// FIXME: When EXPERIMENTAL_MIDI_IN is added (eventually) this should also be enabled -- Poke
+wxString GetMIDIDeviceInfo()
+{
+   wxStringOutputStream o;
+   wxTextOutputStream s(o, wxEOL_UNIX);
+
+   if (AudioIOBase::Get()->IsStreamActive()) {
+      return XO("Stream is active ... unable to gather information.\n")
+         .Translation();
+   }
+
+
+   // XXX: May need to trap errors as with the normal device info
+   int recDeviceNum = Pm_GetDefaultInputDeviceID();
+   int playDeviceNum = Pm_GetDefaultOutputDeviceID();
+   int cnt = Pm_CountDevices();
+
+   // PRL:  why only into the log?
+   wxLogDebug(wxT("PortMidi reports %d MIDI devices"), cnt);
+
+   s << wxT("==============================\n");
+   s << XO("Default recording device number: %d\n").Format( recDeviceNum );
+   s << XO("Default playback device number: %d\n").Format( playDeviceNum );
+
+   auto recDevice = MIDIRecordingDevice.Read();
+   auto playDevice = MIDIPlaybackDevice.Read();
+
+   // This gets info on all available audio devices (input and output)
+   if (cnt <= 0) {
+      s << XO("No devices found\n");
+      return o.GetString();
+   }
+
+   for (int i = 0; i < cnt; i++) {
+      s << wxT("==============================\n");
+
+      const PmDeviceInfo* info = Pm_GetDeviceInfo(i);
+      if (!info) {
+         s << XO("Device info unavailable for: %d\n").Format( i );
+         continue;
+      }
+
+      wxString name = wxSafeConvertMB2WX(info->name);
+      wxString hostName = wxSafeConvertMB2WX(info->interf);
+
+      s << XO("Device ID: %d\n").Format( i );
+      s << XO("Device name: %s\n").Format( name );
+      s << XO("Host name: %s\n").Format( hostName );
+      /* i18n-hint: Supported, meaning made available by the system */
+      s << XO("Supports output: %d\n").Format( info->output );
+      /* i18n-hint: Supported, meaning made available by the system */
+      s << XO("Supports input: %d\n").Format( info->input );
+      s << XO("Opened: %d\n").Format( info->opened );
+
+      if (name == playDevice && info->output)
+         playDeviceNum = i;
+
+      if (name == recDevice && info->input)
+         recDeviceNum = i;
+
+      // XXX: This is only done because the same was applied with PortAudio
+      // If PortMidi returns -1 for the default device, use the first one
+      if (recDeviceNum < 0 && info->input){
+         recDeviceNum = i;
+      }
+      if (playDeviceNum < 0 && info->output){
+         playDeviceNum = i;
+      }
+   }
+
+   bool haveRecDevice = (recDeviceNum >= 0);
+   bool havePlayDevice = (playDeviceNum >= 0);
+
+   s << wxT("==============================\n");
+   if (haveRecDevice)
+      s << XO("Selected MIDI recording device: %d - %s\n").Format( recDeviceNum, recDevice );
+   else
+      s << XO("No MIDI recording device found for '%s'.\n").Format( recDevice );
+
+   if (havePlayDevice)
+      s << XO("Selected MIDI playback device: %d - %s\n").Format( playDeviceNum, playDevice );
+   else
+      s << XO("No MIDI playback device found for '%s'.\n").Format( playDevice );
+
+   // Mention our conditional compilation flags for Alpha only
+#ifdef IS_ALPHA
+
+   // Not internationalizing these alpha-only messages
+   s << wxT("==============================\n");
+#ifdef EXPERIMENTAL_MIDI_OUT
+   s << wxT("EXPERIMENTAL_MIDI_OUT is enabled\n");
+#else
+   s << wxT("EXPERIMENTAL_MIDI_OUT is NOT enabled\n");
+#endif
+#ifdef EXPERIMENTAL_MIDI_IN
+   s << wxT("EXPERIMENTAL_MIDI_IN is enabled\n");
+#else
+   s << wxT("EXPERIMENTAL_MIDI_IN is NOT enabled\n");
+#endif
+
+#endif
+
+   return o.GetString();
+}
+
+StringSetting MIDIPlaybackDevice{ L"/MidiIO/PlaybackDevice", L"" };
+StringSetting MIDIRecordingDevice{ L"/MidiIO/RecordingDevice", L"" };
+IntSetting MIDISynthLatency_ms{ L"/MidiIO/SynthLatency", 5 };
 
 #endif // USE_MIDI

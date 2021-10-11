@@ -28,10 +28,10 @@
 
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
-#include "../FFT.h"
+#include "FFT.h"
 #include "../widgets/valnum.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 
 #include "../WaveTrack.h"
 
@@ -117,9 +117,9 @@ TranslatableString EffectPaulstretch::GetDescription()
    return XO("Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
 }
 
-wxString EffectPaulstretch::ManualPage()
+ManualPageID EffectPaulstretch::ManualPage()
 {
-   return wxT("Paulstretch");
+   return L"Paulstretch";
 }
 
 // EffectDefinitionInterface implementation

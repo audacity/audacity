@@ -1,21 +1,24 @@
 
-
+#include <wx/app.h>
 #include <wx/bmpbuttn.h>
 #include <wx/textctrl.h>
 #include <wx/frame.h>
 
 #include "../AboutDialog.h"
 #include "../AllThemeResources.h"
-#include "../AudacityLogger.h"
-#include "../AudioIOBase.h"
+#include "AudioIOBase.h"
 #include "../CommonCommandFlags.h"
 #include "../CrashReport.h" // for HAS_CRASH_REPORT
-#include "../FileNames.h"
+#include "FileNames.h"
 #include "../HelpText.h"
+#include "../LogWindow.h"
 #include "../Menus.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "../NoteTrack.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../ProjectSelectionManager.h"
+#include "../ProjectWindows.h"
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../SplashDialog.h"
 #include "../Theme.h"
@@ -24,6 +27,10 @@
 #include "../prefs/PrefsDialog.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
+
+#if defined(HAVE_UPDATES_CHECK)
+#include "update/UpdateManager.h"
+#endif
 
 // private helper classes and functions
 namespace {
@@ -63,7 +70,7 @@ void ShowDiagnostics(
    if (dlg.ShowModal() == wxID_OK)
    {
       const auto fileDialogTitle = XO("Save %s").Format( description );
-      wxString fName = FileNames::SelectFile(FileNames::Operation::Export,
+      wxString fName = SelectFile(FileNames::Operation::Export,
          fileDialogTitle,
          wxEmptyString,
          defaultPath,
@@ -100,11 +107,11 @@ public:
    void PopulateOrExchange(ShuttleGui & S);
    void AddStuck( ShuttleGui & S, bool & bBool,
       const PrefSetter &prefSetter,
-      const TranslatableString &Prompt, wxString Help );
+      const TranslatableString &Prompt, const ManualPageID &Help );
 
    void OnOk(wxCommandEvent &event);
    void OnCancel(wxCommandEvent &event);
-   void OnHelp(const wxString &Str);
+   void OnHelp(const ManualPageID &Str);
    void OnFix(const PrefSetter &setter, wxWindowID id);
 
    AudacityProject &mProject;
@@ -154,7 +161,7 @@ QuickFixDialog::QuickFixDialog(wxWindow * pParent, AudacityProject &project) :
 
 void QuickFixDialog::AddStuck( ShuttleGui & S, bool & bBool,
    const PrefSetter &prefSetter,
-   const TranslatableString &Prompt, wxString Help )
+   const TranslatableString &Prompt, const ManualPageID &Help )
 {
    mItem++;
    wxWindowID id = FixButtonID + mItem;
@@ -266,7 +273,7 @@ void QuickFixDialog::OnCancel(wxCommandEvent &event)
    EndModal(wxID_CANCEL);
 }
 
-void QuickFixDialog::OnHelp(const wxString &Str)
+void QuickFixDialog::OnHelp(const ManualPageID &Str)
 {
    HelpSystem::ShowHelp(this, Str, true);
 }
@@ -309,7 +316,7 @@ void OnQuickHelp(const CommandContext &context)
    auto &project = context.project;
    HelpSystem::ShowHelp(
       &GetProjectFrame( project ),
-      wxT("Quick_Help"));
+      L"Quick_Help");
 }
 
 void OnManual(const CommandContext &context)
@@ -317,7 +324,7 @@ void OnManual(const CommandContext &context)
    auto &project = context.project;
    HelpSystem::ShowHelp(
       &GetProjectFrame( project ),
-      wxT("Main_Page"));
+      L"Main_Page");
 }
 
 void OnAudioDeviceInfo(const CommandContext &context)
@@ -334,7 +341,7 @@ void OnMidiDeviceInfo(const CommandContext &context)
 {
    auto &project = context.project;
    auto gAudioIO = AudioIOBase::Get();
-   wxString info = gAudioIO->GetMidiDeviceInfo();
+   auto info = GetMIDIDeviceInfo();
    ShowDiagnostics( project, info,
       XO("MIDI Device Info"), wxT("midideviceinfo.txt") );
 }
@@ -342,10 +349,7 @@ void OnMidiDeviceInfo(const CommandContext &context)
 
 void OnShowLog( const CommandContext &context )
 {
-   auto logger = AudacityLogger::Get();
-   if (logger) {
-      logger->Show();
-   }
+   LogWindow::Show();
 }
 
 #if defined(HAS_CRASH_REPORT)
@@ -439,13 +443,15 @@ void OnMenuTree(const CommandContext &context)
    MenuManager::Visit( visitor );
 
    ShowDiagnostics( project, visitor.info,
-      XO("Menu Tree"), wxT("menutree.txt"), true );
+      Verbatim("Menu Tree"), wxT("menutree.txt"), true );
 }
 
+#if defined(HAVE_UPDATES_CHECK)
 void OnCheckForUpdates(const CommandContext &WXUNUSED(context))
 {
-   ::OpenInDefaultBrowser( VerCheckUrl());
+    UpdateManager::GetInstance().GetUpdates(false, false);
 }
+#endif
 
 void OnAbout(const CommandContext &context)
 {
@@ -575,9 +581,8 @@ BaseItemSharedPtr HelpMenu()
 #else
       ,
 #endif
-
          // DA: Does not fully support update checking.
-   #ifndef EXPERIMENTAL_DA
+   #if !defined(EXPERIMENTAL_DA) && defined(HAVE_UPDATES_CHECK)
          Command( wxT("Updates"), XXO("&Check for Updates..."),
             FN(OnCheckForUpdates),
             AlwaysEnabledFlag ),

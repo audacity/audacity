@@ -8,10 +8,10 @@ $debugbutton false
 ;; As this is a new plug-in (Jan2021), display errors if they occur.
 $debugflags trace
 $author (_ "Steve Daulton")
-$release 3.0.0
-$copyright (_ "Released under terms of the GNU General Public License version 2 or later.")
+$release 3.0.4
+$copyright (_ "GNU General Public License v2.0 or later")
 
-;; Released under terms of the GNU General Public License version 2 or later:
+;; Released under terms of the GNU General Public License v2.0 or later:
 ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 ;;
 ;; For information about writing and modifying Nyquist plug-ins:
@@ -153,7 +153,7 @@ $control text (_ "Label text") string "" (_ "Sound ##1")
         ((not val) snd-list)
       (cond
         ((< val threshold)
-            (when (and (= sil-count sil-dur)(>= snd-count snd-dur))
+            (when (and (>= sil-count sil-dur)(>= snd-count snd-dur))
               ;convert sample counts to seconds and push to list.
               (push (list (/ snd-start srate)
                           (/ (- sample-count sil-count) srate))

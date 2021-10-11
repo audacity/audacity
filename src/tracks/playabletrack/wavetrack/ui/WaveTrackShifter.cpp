@@ -4,7 +4,7 @@
  */
 
 #include "../../../ui/TimeShiftHandle.h"
-#include "../../../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
 
@@ -21,8 +21,19 @@ public:
    HitTestResult HitTest(
       double time, const ViewInfo &viewInfo, HitTestParams* ) override
    {
-      auto pClip = mpTrack->GetClipAtTime( time );
-
+      auto pClip = [&]() {
+         auto ts = mpTrack->TimeToLongSamples(time);
+         
+         for (auto clip : mpTrack->GetClips())
+         {
+            const auto c0 = mpTrack->TimeToLongSamples(clip->GetPlayStartTime());
+            const auto c1 = mpTrack->TimeToLongSamples(clip->GetPlayEndTime());
+            if (ts >= c0 && ts < c1)
+               return clip;
+         }
+         return std::shared_ptr<WaveClip>{};
+      }();
+      
       if (!pClip)
          return HitTestResult::Miss;
 
@@ -38,7 +49,7 @@ public:
       UnfixIntervals( [&](const auto &interval){
          return
             static_cast<WaveTrack::IntervalData*>(interval.Extra())
-               ->GetClip().get() == pClip;
+               ->GetClip() == pClip;
       } );
       
       return HitTestResult::Intervals;
@@ -52,8 +63,11 @@ public:
          auto data =
             static_cast<WaveTrack::IntervalData*>( myInterval.Extra() );
          auto clip = data->GetClip().get();
-         return !(clip->IsClipStartAfterClip(interval.Start()) ||
-            clip->BeforeClip(interval.End()));
+         const auto c0 = mpTrack->TimeToLongSamples(clip->GetPlayStartTime());
+         const auto c1 = mpTrack->TimeToLongSamples(clip->GetPlayEndTime());
+         return 
+             mpTrack->TimeToLongSamples(interval.Start()) < c1 && 
+             mpTrack->TimeToLongSamples(interval.End()) >= c0;
       });
    }
 
@@ -172,10 +186,10 @@ public:
       else {
          auto data = static_cast<WaveTrack::IntervalData*>(MovingIntervals()[0].Extra());
          auto& clip = data->GetClip();
-         if (t0 < clip->GetStartTime())
-            t0 = clip->GetStartTime();
-         if (t0 > clip->GetEndTime())
-            t0 = clip->GetEndTime();
+         if (t0 < clip->GetPlayStartTime())
+            t0 = clip->GetPlayStartTime();
+         if (t0 > clip->GetPlayEndTime())
+            t0 = clip->GetPlayEndTime();
       }
       return t0;
    }
@@ -188,9 +202,8 @@ private:
 };
 
 using MakeWaveTrackShifter = MakeTrackShifter::Override<WaveTrack>;
-template<> template<> auto MakeWaveTrackShifter::Implementation() -> Function {
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(MakeWaveTrackShifter) {
    return [](WaveTrack &track, AudacityProject&) {
       return std::make_unique<WaveTrackShifter>(track);
    };
 }
-static MakeWaveTrackShifter registerMakeWaveTrackShifter;

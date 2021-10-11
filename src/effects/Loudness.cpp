@@ -24,7 +24,7 @@
 #include <wx/valgen.h>
 
 #include "Internat.h"
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ProjectFileManager.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
@@ -93,9 +93,9 @@ TranslatableString EffectLoudness::GetDescription()
    return XO("Sets the loudness of one or more tracks");
 }
 
-wxString EffectLoudness::ManualPage()
+ManualPageID EffectLoudness::ManualPage()
 {
-   return wxT("Loudness_Normalization");
+   return L"Loudness_Normalization";
 }
 
 // EffectDefinitionInterface implementation

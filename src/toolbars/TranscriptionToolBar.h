@@ -17,8 +17,6 @@
 
 #include <wx/brush.h> // member variable
 
-#include "Identifier.h"
-
 class wxChoice;
 class wxCommandEvent;
 class wxImage;
@@ -28,6 +26,7 @@ class AButton;
 class ASlider;
 class AudacityProject;
 class BoundedEnvelope;
+class sampleCount;
 class WaveTrack;
 
 #ifdef EXPERIMENTAL_VOICE_DETECTION

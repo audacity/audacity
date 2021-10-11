@@ -55,7 +55,7 @@ class ExtImportPrefs final : public PrefsPanel
    TranslatableString GetDescription() override;
 
    bool Commit() override;
-   wxString HelpPageName() override;
+   ManualPageID HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // See bug #2315 for discussion. This should be reviewed

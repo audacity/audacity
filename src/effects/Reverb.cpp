@@ -24,7 +24,7 @@
 #include <wx/slider.h>
 #include <wx/spinctrl.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
@@ -149,9 +149,9 @@ TranslatableString EffectReverb::GetDescription()
    return XO("Adds ambience or a \"hall effect\"");
 }
 
-wxString EffectReverb::ManualPage()
+ManualPageID EffectReverb::ManualPage()
 {
-   return wxT("Reverb");
+   return L"Reverb";
 }
 
 // EffectDefinitionInterface implementation

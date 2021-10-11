@@ -27,6 +27,7 @@
 
 #include "VSTEffect.h"
 #include "../../ModuleManager.h"
+#include "SampleCount.h"
 
 #include "../../widgets/ProgressDialog.h"
 
@@ -81,20 +82,21 @@
 // TODO:  Unfortunately we have some dependencies on Audacity provided 
 //        dialogs, widgets and other stuff.  This will need to be cleaned up.
 
-#include "../../FileNames.h"
-#include "../../PlatformCompatibility.h"
+#include "FileNames.h"
+#include "PlatformCompatibility.h"
+#include "../../SelectFile.h"
 #include "../../ShuttleGui.h"
 #include "../../effects/Effect.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/NumericTextCtrl.h"
-#include "../../xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../../widgets/WindowAccessible.h"
 #endif
 
-#include "audacity/ConfigInterface.h"
+#include "ConfigInterface.h"
 
 #include <cstring>
 
@@ -684,19 +686,12 @@ bool VSTEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
    return wxFileName::FileExists(realPath) || wxFileName::DirExists(realPath);
 }
 
-ComponentInterface *VSTEffectsModule::CreateInstance(const PluginPath & path)
+std::unique_ptr<ComponentInterface>
+VSTEffectsModule::CreateInstance(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
-   // Safety of this depends on complementary calls to DeleteInstance on the module manager side.
-   return safenew VSTEffect(path);
-}
-
-void VSTEffectsModule::DeleteInstance(ComponentInterface *instance)
-{
-   std::unique_ptr < VSTEffect > {
-      dynamic_cast<VSTEffect *>(instance)
-   };
+   return std::make_unique<VSTEffect>(path);
 }
 
 // ============================================================================
@@ -1441,7 +1436,7 @@ size_t VSTEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLe
       callProcessReplacing(inBlock, outBlock, blockLen);
 
       // And track the position
-      mTimeInfo.samplePos += ((double) blockLen / mTimeInfo.sampleRate);
+      mTimeInfo.samplePos += (double) blockLen;
    }
 
    return blockLen;
@@ -1858,8 +1853,8 @@ void VSTEffect::ExportPresets()
    // Ask the user for the real name
    //
    // Passing a valid parent will cause some effects dialogs to malfunction
-   // upon returning from the FileNames::SelectFile().
-   path = FileNames::SelectFile(FileNames::Operation::Presets,
+   // upon returning from the SelectFile().
+   path = SelectFile(FileNames::Operation::Presets,
       XO("Save VST Preset As:"),
       wxEmptyString,
       wxT("preset"),
@@ -1916,7 +1911,7 @@ void VSTEffect::ImportPresets()
    wxString path;
 
    // Ask the user for the real name
-   path = FileNames::SelectFile(FileNames::Operation::Presets,
+   path = SelectFile(FileNames::Operation::Presets,
       XO("Load VST Preset:"),
       wxEmptyString,
       wxT("preset"),

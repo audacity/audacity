@@ -17,7 +17,7 @@ Paul Licameli split from TrackInfo.cpp
 #include "../../../Track.h"
 #include "../../../TrackInfo.h"
 #include "../../../TrackPanelDrawingContext.h"
-#include "../../../ViewInfo.h"
+#include "ViewInfo.h"
 
 #include <wx/dc.h>
 

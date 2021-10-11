@@ -89,7 +89,7 @@ classes derived from it.
 
 #include "CommandContext.h"
 
-#include "../AudacityException.h"
+#include "AudacityException.h"
 
 
 

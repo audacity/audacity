@@ -64,12 +64,13 @@ the mouse around.
 
 #include <math.h>
 
+#include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "AColor.h"
 #include "CommonCommandFlags.h"
 #include "FFT.h"
 #include "PitchName.h"
-#include "prefs/GUISettings.h"
+#include "Decibels.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindow.h"
@@ -268,7 +269,7 @@ void FrequencyPlotDialog::Populate()
    sizeChoices[mSize].MSGID().GET().ToLong(&size);
    mWindowSize = size;
 
-   gPrefs->Read(ENV_DB_KEY, &dBRange, ENV_DB_RANGE);
+   dBRange = DecibelScaleCutoff.Read();
    if(dBRange < 90.)
       dBRange = 90.;
 
@@ -550,7 +551,7 @@ void FrequencyPlotDialog::OnGetURL(wxCommandEvent & WXUNUSED(event))
 {
    // Original help page is back on-line (March 2016), but the manual should be more reliable.
    // http://www.eramp.com/WCAG_2_audio_contrast_tool_help.htm
-   HelpSystem::ShowHelp(this, wxT("Plot Spectrum"));
+   HelpSystem::ShowHelp(this, L"Plot Spectrum");
 }
 
 bool FrequencyPlotDialog::Show(bool show)
@@ -564,7 +565,7 @@ bool FrequencyPlotDialog::Show(bool show)
 
    if (show && !shown)
    {
-      gPrefs->Read(ENV_DB_KEY, &dBRange, ENV_DB_RANGE);
+      dBRange = DecibelScaleCutoff.Read();
       if(dBRange < 90.)
          dBRange = 90.;
       GetAudio();
@@ -930,7 +931,7 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
       else
          px = (int)((bestpeak - xMin) * width / (xMax - xMin));
 
-      dc.SetPen(wxPen(wxColour(160,160,160), 1, wxPENSTYLE_SOLID));
+      dc.SetPen(wxPen(wxColour(255, 32, 32), 1, wxPENSTYLE_SOLID));
       AColor::Line(dc, r.x + 1 + px, r.y, r.x + 1 + px, r.y + r.height);
 
        // print out info about the cursor location
@@ -1055,7 +1056,7 @@ void FrequencyPlotDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 {
    wxString fName = _("spectrum.txt");
 
-   fName = FileNames::SelectFile(FileNames::Operation::Export,
+   fName = SelectFile(FileNames::Operation::Export,
       XO("Export Spectral Data As:"),
       wxEmptyString,
       fName,
@@ -1097,7 +1098,7 @@ void FrequencyPlotDialog::OnExport(wxCommandEvent & WXUNUSED(event))
 
 void FrequencyPlotDialog::OnReplot(wxCommandEvent & WXUNUSED(event))
 {
-   gPrefs->Read(ENV_DB_KEY, &dBRange, ENV_DB_RANGE);
+   dBRange = DecibelScaleCutoff.Read();
    if(dBRange < 90.)
       dBRange = 90.;
    GetAudio();
@@ -1195,10 +1196,11 @@ void FreqPlot::OnMouseEvent(wxMouseEvent & event)
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
 #include "commands/ScreenshotCommand.h"
+#include "ProjectWindows.h"
 
 namespace {
 
-AudacityProject::AttachedWindows::RegisteredFactory sFrequencyWindowKey{
+AttachedWindows::RegisteredFactory sFrequencyWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &window = ProjectWindow::Get( parent );
       return safenew FrequencyPlotDialog(
@@ -1214,8 +1216,8 @@ struct Handler : CommandHandlerObject {
    {
       auto &project = context.project;
       CommandManager::Get(project).RegisterLastAnalyzer(context);  //Register Plot Spectrum as Last Analyzer
-      auto freqWindow =
-         &project.AttachedWindows::Get< FrequencyPlotDialog >( sFrequencyWindowKey );
+      auto freqWindow = &GetAttachedWindows(project)
+         .Get< FrequencyPlotDialog >( sFrequencyWindowKey );
 
       if( ScreenshotCommand::MayCapture( freqWindow ) )
          return;

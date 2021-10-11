@@ -51,27 +51,43 @@ function( set_dir_folder dir folder)
 endfunction()
 
 # Helper to retrieve the settings returned from pkg_check_modules()
-macro( get_package_interface package )
-   set( INCLUDES
+function( get_package_interface package target )
+   set( package_includes
       ${${package}_INCLUDE_DIRS}
    )
 
-   set( LINKDIRS
+   set( package_linkdirs
       ${${package}_LIBDIR}
    )
 
    # We resolve the full path of each library to ensure the
    # correct one is referenced while linking
+   set( package_libraries )
    foreach( lib ${${package}_LIBRARIES} )
-      find_library( LIB_${lib} ${lib} HINTS ${LINKDIRS} )
-      list( APPEND LIBRARIES ${LIB_${lib}} )
+      find_library( LIB_${lib} ${lib} HINTS ${package_linkdirs} )
+      list( APPEND package_libraries ${LIB_${lib}} )
    endforeach()
-endmacro()
+
+   # And add it to our target
+   target_include_directories( ${target} INTERFACE ${package_includes} )
+   target_link_libraries( ${target} INTERFACE ${package_libraries} )
+
+   message(STATUS "Interface ${target}:\n\tinclude: ${includes}\n\tLibraries: ${LIBRARIES}")
+endfunction()
 
 # Set the cache and context value
 macro( set_cache_value var value )
    set( ${var} "${value}" )
    set_property( CACHE ${var} PROPERTY VALUE "${value}" )
+endmacro()
+
+# Set a CMake variable to the value of the corresponding environment variable
+# if the CMake variable is not already defined. Any addition arguments after
+# the variable name are passed through to set().
+macro( set_from_env var )
+   if( NOT DEFINED ${var} AND NOT "$ENV{${var}}" STREQUAL "" )
+      set( ${var} "$ENV{${var}}" ${ARGN} ) # pass additional args (e.g. CACHE)
+   endif()
 endmacro()
 
 # Set the given property and its config specific brethren to the same value
@@ -253,8 +269,8 @@ function( audacity_append_common_compiler_options var use_pch )
 
          # Define/undefine _DEBUG
 	 # Yes, -U to /U too as needed for Windows:
-	 $<IF:$<CONFIG:Release>,-U_DEBUG,-D_DEBUG=1>
-   )   
+	 $<IF:$<CONFIG:Debug>,-D_DEBUG=1,-U_DEBUG>
+   )
    # Definitions controlled by the AUDACITY_BUILD_LEVEL switch
    if( AUDACITY_BUILD_LEVEL EQUAL 0 )
       list( APPEND ${var} -DIS_ALPHA -DUSE_ALPHA_MANUAL )
@@ -299,6 +315,19 @@ function( export_symbol_define var module_name )
       set( value "" )
    endif()
    set( "${var}" "${symbol}=${value}" PARENT_SCOPE )
+endfunction()
+
+# shorten a target name for purposes of generating a dependency graph picture
+function( canonicalize_node_name var node )
+   # strip generator expressions
+   string( REGEX REPLACE ".*>.*:(.*)>" "\\1" node "${node}" )
+   # omit the "-interface" for alias targets to modules
+   string( REGEX REPLACE "-interface\$" "" node "${node}"  )
+   # shorten names of standard libraries or Apple frameworks
+   string( REGEX REPLACE "^-(l|framework )" "" node "${node}" )
+   # shorten paths
+   get_filename_component( node "${node}" NAME_WE )
+   set( "${var}" "${node}" PARENT_SCOPE )
 endfunction()
 
 function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
@@ -346,6 +375,15 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
             PREFIX ""
             FOLDER "modules" # for IDE organization
       )
+      if( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
+         add_custom_command(
+	    TARGET ${TARGET}
+            COMMAND ${CMAKE_COMMAND}
+	       -D SRC="${_MODDIR}/${TARGET}.so"
+               -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
+               -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+            POST_BUILD )
+      endif()
    else()
       set( ATTRIBUTES "shape=octagon" )
       set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_SHARED_PROXY_PATH}" )
@@ -377,7 +415,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    # compute LIBRARIES
    set( LIBRARIES )
-   
+
    foreach( IMPORT ${IMPORT_TARGETS} )
       list( APPEND LIBRARIES "${IMPORT}" )
    endforeach()
@@ -418,8 +456,8 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       endif()
 
       add_custom_command(TARGET ${TARGET} POST_BUILD
-         COMMAND ${CMAKE_COMMAND} -E copy 
-            "$<TARGET_FILE:${TARGET}>" 
+         COMMAND ${CMAKE_COMMAND} -E copy
+            "$<TARGET_FILE:${TARGET}>"
             "${REQUIRED_LOCATION}/$<TARGET_FILE_NAME:${TARGET}>"
       )
    endif()
@@ -454,7 +492,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       if(IMPORT IN_LIST ACCESS)
          continue()
       endif()
-      string( REGEX REPLACE "-interface\$" "" IMPORT "${IMPORT}"  )
+      canonicalize_node_name(IMPORT "${IMPORT}")
       list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\"" )
    endforeach()
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
@@ -558,7 +596,7 @@ function( addlib dir name symbol required check )
    set( TARGET_ROOT ${libsrc}/${dir} )
 
    # Define the option name
-   set( use ${_OPT}use_${name} ) 
+   set( use ${_OPT}use_${name} )
 
    # If we're not checking for system or local here, then let the
    # target config handle the rest.
@@ -604,7 +642,7 @@ function( addlib dir name symbol required check )
    if ( TARGET "${TARGET}" )
       return()
    endif()
- 
+
    message( STATUS "========== Configuring ${name} ==========" )
 
    # Check for the system package(s) if the user prefers it
@@ -619,16 +657,22 @@ function( addlib dir name symbol required check )
          add_library( ${TARGET} INTERFACE IMPORTED GLOBAL )
 
          # Retrieve the package information
-         get_package_interface( PKG_${TARGET} )
-
-         # And add it to our target
-         target_include_directories( ${TARGET} INTERFACE ${INCLUDES} )
-         target_link_libraries( ${TARGET} INTERFACE ${LIBRARIES} )
-      elseif( ${_OPT}obey_system_dependencies )
-         message( FATAL_ERROR "Failed to find the system package ${name}" )
+         get_package_interface( PKG_${TARGET} ${TARGET} )
       else()
-         set( ${use} "local" )
-         set_property( CACHE ${use} PROPERTY VALUE "local" )
+         find_package( ${packages} QUIET )
+
+         if( TARGET ${TARGET} )
+            set( PKG_${TARGET}_FOUND Yes )
+         endif()
+      endif()
+
+      if( NOT PKG_${TARGET}_FOUND )
+         if( ${_OPT}obey_system_dependencies )
+            message( FATAL_ERROR "Failed to find the system package ${name}" )
+         else()
+            set( ${use} "local" )
+            set_property( CACHE ${use} PROPERTY VALUE "local" )
+         endif()
       endif()
    endif()
 
@@ -645,7 +689,7 @@ function( addlib dir name symbol required check )
       # Set the folder (for the IDEs) for each one
       foreach( target ${targets} )
          # Skip interface libraries since they don't have any source to
-         # present in the IDEs   
+         # present in the IDEs
          get_target_property( type "${target}" TYPE )
          if( NOT "${type}" STREQUAL "INTERFACE_LIBRARY" )
             set_target_properties( ${target} PROPERTIES FOLDER "lib-src" )

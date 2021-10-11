@@ -26,6 +26,7 @@
 #include <wx/tokenzr.h>
 
 #include "../AudioIO.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 #include "../DBConnection.h"
 #include "../LabelTrack.h"
 #include "../Mix.h"
@@ -33,18 +34,18 @@
 #include "../ProjectAudioManager.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectSettings.h"
-#include "../prefs/QualitySettings.h"
+#include "QualitySettings.h"
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
-#include "../wxFileNameWrapper.h"
+#include "wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
 
 #include <unordered_map>
 
@@ -680,7 +681,7 @@ void Effect::ExportPresets()
    wxString commandId = GetSquashedName(GetSymbol().Internal()).GET();
    params =  commandId + ":" + params;
 
-   auto path = FileNames::SelectFile(FileNames::Operation::Presets,
+   auto path = SelectFile(FileNames::Operation::Presets,
                                      XO("Export Effect Parameters"),
                                      wxEmptyString,
                                      wxEmptyString,
@@ -725,7 +726,7 @@ void Effect::ImportPresets()
 {
    wxString params;
 
-   auto path = FileNames::SelectFile(FileNames::Operation::Presets,
+   auto path = SelectFile(FileNames::Operation::Presets,
                                      XO("Import Effect Parameters"),
                                      wxEmptyString,
                                      wxEmptyString,
@@ -1168,14 +1169,14 @@ bool Effect::HasFactoryDefaults()
    return HasPrivateConfigGroup(GetFactoryDefaultsGroup());
 }
 
-wxString Effect::ManualPage()
+ManualPageID Effect::ManualPage()
 {
-   return wxEmptyString;
+   return {};
 }
 
-wxString Effect::HelpPage()
+FilePath Effect::HelpPage()
 {
-   return wxEmptyString;
+   return {};
 }
 
 void Effect::SetUIFlags(unsigned flags) {
@@ -2395,8 +2396,8 @@ void Effect::Preview(bool dryOnly)
          mixRight->Offset(-mixRight->GetStartTime());
          mixRight->SetSelected(true);
          pRight = mTracks->Add( mixRight );
+         mTracks->MakeMultiChannelTrack(*pLeft, 2, true);
       }
-      mTracks->GroupChannels(*pLeft, pRight ? 2 : 1);
    }
    else {
       for (auto src : saveTracks->Any< const WaveTrack >()) {
@@ -2468,9 +2469,12 @@ void Effect::Preview(bool dryOnly)
          }
       }
       else {
-         ShowExceptionDialog(FocusDialog, XO("Error"),
-                         XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
-                         wxT("Error_opening_sound_device"));
+         using namespace BasicUI;
+         ShowErrorDialog(
+            wxWidgetsWindowPlacement{ FocusDialog }, XO("Error"),
+            XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
+            wxT("Error_opening_sound_device"),
+            ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
       }
    }
 }

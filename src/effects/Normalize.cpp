@@ -26,7 +26,7 @@
 #include <wx/stattext.h>
 #include <wx/valgen.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ProjectFileManager.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
@@ -78,9 +78,9 @@ TranslatableString EffectNormalize::GetDescription()
    return XO("Sets the peak amplitude of one or more tracks");
 }
 
-wxString EffectNormalize::ManualPage()
+ManualPageID EffectNormalize::ManualPage()
 {
-   return wxT("Normalize");
+   return L"Normalize";
 }
 
 // EffectDefinitionInterface implementation

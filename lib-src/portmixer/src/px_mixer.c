@@ -72,28 +72,6 @@ int OpenMixer_Unix_OSS(px_mixer *Px, int index);
 int OpenMixer_Linux_ALSA(px_mixer *Px, int index);
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#if defined(_DEBUG)
-#include <stdio.h>
-#include <stdlib.h>
-static void dprintf(const char *format, ...)
-{
-   char buf[4096];
-   va_list args;
-   int cnt;
-
-   va_start(args, format);
-   cnt = _vsnprintf(buf, sizeof(buf) - 1, format, args);
-   va_end(args);
-
-   if (cnt > 0) {
-      buf[cnt] = '\0';
-      OutputDebugString(buf);
-   }
-}
-#endif
-
 static px_mixer *verify_mixer(PxMixer *mixer)
 {
    px_mixer *Px = (px_mixer *)mixer;
@@ -109,8 +87,13 @@ static px_mixer *verify_mixer(PxMixer *mixer)
  audio device.  Pass 0 as the index for the first (default) mixer.
 */
 
-PxMixer *Px_OpenMixer(PaStream *pa_stream, int i)
+PxMixer* Px_OpenMixer(
+   PaStream* pa_stream, PaDeviceIndex inputDeviceIndex, PaDeviceIndex outputDeviceIndex, int i
+)
 {
+   if (pa_stream == NULL || (inputDeviceIndex < 0 && outputDeviceIndex < 0))
+      return NULL;
+
    px_mixer *Px;
    int good = TRUE;
 
@@ -121,6 +104,10 @@ PxMixer *Px_OpenMixer(PaStream *pa_stream, int i)
 
    Px->magic = PX_MIXER_MAGIC;
    Px->pa_stream = pa_stream;
+
+   Px->input_device_index = inputDeviceIndex;
+   Px->output_device_index = outputDeviceIndex;
+   
    Px->info = NULL;
 
    if (!initialize(Px)) {
@@ -128,7 +115,25 @@ PxMixer *Px_OpenMixer(PaStream *pa_stream, int i)
       return NULL;
    }
 
-   switch (Pa_GetStreamHostApiType(pa_stream))
+   // inputDeviceIndex and outputDeviceIndex can't be both invalid
+   // at the same time.
+   const PaDeviceInfo* deviceInfo = Pa_GetDeviceInfo(
+      inputDeviceIndex >= 0 ? inputDeviceIndex : outputDeviceIndex);
+
+   // But still we failed
+   if (deviceInfo == NULL) {
+      free(Px);
+      return NULL;
+   }
+
+   const PaHostApiInfo* hostApiInfo = Pa_GetHostApiInfo(deviceInfo->hostApi);
+
+   if (hostApiInfo == NULL) {
+      free(Px);
+      return NULL;
+   }
+
+   switch (hostApiInfo->type)
    {
 #if defined(PX_USE_WIN_MME)
       case paMME:

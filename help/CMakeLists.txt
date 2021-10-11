@@ -11,28 +11,50 @@ if( NOT DEFINED PYTHON )
    return()
 endif()
 
-set( host "alphamanual.audacityteam.org" )
-set( src "https://${host}/man" )
 set( dst "${_DEST}/help/manual" )
-set( script_dir "${topdir}/scripts/mw2html_audacity" )
-set( script "mw2html.py" )
-set( out_dir "${_INTDIR}" )
-set( out "${out_dir}/${host}/index.html" )
+set( out "${CMAKE_BINARY_DIR}/help/manual/index.html" )
+
+set(manual_version "${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_REVISION}")
 
 add_custom_command(
    COMMENT
-      "Downloading manual from: ${src}"
+      "Downloading manual..."
    COMMAND
-      "${PYTHON}" "${script_dir}/${script}" -s "${src}" "${out_dir}"
+      ${CMAKE_COMMAND}
+         -D VERSION=${manual_version}
+         -D DESTINATION=${CMAKE_BINARY_DIR}
+         -P "${CMAKE_SOURCE_DIR}/help/DownloadManual.cmake"
    COMMAND
-      ${CMAKE_COMMAND} -E copy_directory "${out_dir}/${host}" "${dst}"
+      ${CMAKE_COMMAND}
+         -E tar "xf" "audacity-manual-${manual_version}.tar.gz"
+   COMMAND
+      ${CMAKE_COMMAND} -E copy_directory "help/manual" "${dst}"
+
    WORKING_DIRECTORY
-      "${script_dir}"
+      ${CMAKE_BINARY_DIR}
    OUTPUT
       "${out}"
 )
 
 add_custom_target( ${TARGET} DEPENDS "${out}" )
+
+if( ${_OPT}package_manual )
+   install(CODE "                                     \
+      execute_process(                                \
+         COMMAND                                      \
+            ${CMAKE_COMMAND}                          \
+               --build ${CMAKE_BINARY_DIR}            \
+               --config \${CMAKE_INSTALL_CONFIG_NAME} \
+               --target manual                        \
+      )                                               \
+   ")
+
+   if( "${CMAKE_GENERATOR}" MATCHES "Xcode" )
+      install( DIRECTORY "${CMAKE_BINARY_DIR}/help/manual" DESTINATION "${_APPDIR}/help/manual" )
+   elseif( "${CMAKE_GENERATOR}" MATCHES "Visual Studio*" )
+      install( DIRECTORY "${CMAKE_BINARY_DIR}/help/manual" DESTINATION "help/manual" )
+   endif()
+endif()
 
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    if( NOT "${CMAKE_GENERATOR}" MATCHES "Visual Studio*")
@@ -41,7 +63,6 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )
       install( FILES "${_SRCDIR}/audacity.1"
                DESTINATION "${_MANDIR}/man1" )
       install( FILES "${_SRCDIR}/audacity.appdata.xml"
-               DESTINATION "${_DATADIR}/appdata" )
+               DESTINATION "${_DATADIR}/metainfo" )
    endif()
 endif()
-

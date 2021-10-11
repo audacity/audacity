@@ -16,9 +16,9 @@
 
 #include "Generator.h"
 
-#include "../Project.h"
-#include "../Prefs.h"
-#include "../ViewInfo.h"
+#include "Project.h"
+#include "Prefs.h"
+#include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../prefs/TracksBehaviorsPrefs.h"
 

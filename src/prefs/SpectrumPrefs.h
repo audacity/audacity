@@ -53,7 +53,7 @@ class SpectrumPrefs final : public PrefsPanel
    void Rollback();
    bool ShowsPreviewButton() override;
    bool Validate() override;
-   wxString HelpPageName() override;
+   ManualPageID HelpPageName() override;
 
  private:
    void Populate(size_t windowSize);
@@ -78,11 +78,12 @@ class SpectrumPrefs final : public PrefsPanel
    wxTextCtrl *mRange;
    wxTextCtrl *mFrequencyGain;
 
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
+   /*
+    Zero-padding factor for spectrograms can smooth the display of
+    spectrograms by interpolating in frequency domain. */
    int mZeroPaddingChoice;
    wxChoice *mZeroPaddingChoiceCtrl;
    TranslatableStrings mZeroPaddingChoices;
-#endif
 
    TranslatableStrings mTypeChoices;
 

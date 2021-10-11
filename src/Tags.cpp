@@ -40,18 +40,19 @@
 
 #ifndef WX_PRECOMP
 // Include your minimal set of headers here, or wx.h
+#include <wx/log.h>
 #include <wx/window.h>
 #endif
 
 #include "FileNames.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "ProjectFileIORegistry.h"
+#include "SelectFile.h"
 #include "ShuttleGui.h"
 #include "widgets/Grid.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/HelpSystem.h"
-#include "xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 
 #include <wx/button.h>
 #include <wx/choice.h>
@@ -224,7 +225,7 @@ static const wxChar *DefaultGenres[] =
    wxT("Synthpop")
 };
 
-static ProjectFileIORegistry::Entry registerFactory{
+static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    wxT( "tags" ),
    []( AudacityProject &project ){ return &Tags::Get( project ); }
 };
@@ -972,7 +973,7 @@ void TagsEditorDialog::OnDontShow( wxCommandEvent & Evt )
 
 void TagsEditorDialog::OnHelp(wxCommandEvent& WXUNUSED(event))
 {
-   HelpSystem::ShowHelp(this, wxT("Metadata_Editor"), true);
+   HelpSystem::ShowHelp(this, L"Metadata_Editor", true);
 }
 
 bool TagsEditorDialog::TransferDataFromWindow()
@@ -1238,7 +1239,7 @@ void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
    wxString fn;
 
    // Ask the user for the real name
-   fn = FileNames::SelectFile(FileNames::Operation::_None,
+   fn = SelectFile(FileNames::Operation::_None,
       XO("Load Metadata As:"),
       FileNames::DataDir(),
       wxT("Tags.xml"),
@@ -1296,7 +1297,7 @@ void TagsEditorDialog::OnSave(wxCommandEvent & WXUNUSED(event))
    TransferDataFromWindow();
 
    // Ask the user for the real name
-   fn = FileNames::SelectFile(FileNames::Operation::_None,
+   fn = SelectFile(FileNames::Operation::_None,
       XO("Save Metadata As:"),
       FileNames::DataDir(),
       wxT("Tags.xml"),
@@ -1533,3 +1534,9 @@ bool TagsEditorDialog::IsWindowRectValid(const wxRect *windowRect) const
 
    return true;
 }
+
+static ProjectFileIORegistry::WriterEntry entry {
+[](const AudacityProject &project, XMLWriter &xmlFile){
+   Tags::Get(project).WriteXML(xmlFile);
+}
+};

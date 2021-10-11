@@ -14,11 +14,12 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include "DBConnection.h"
 #include "ProjectFileIO.h"
 #include "SampleFormat.h"
-#include "xml/XMLTagHandler.h"
+#include "XMLTagHandler.h"
 
 #include "SampleBlock.h" // to inherit
 
 #include "SentryHelper.h"
+#include <wx/log.h>
 
 class SqliteSampleBlockFactory;
 

@@ -23,7 +23,7 @@
 //#include <algorithm>
 //#include <wx/defs.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
@@ -288,7 +288,7 @@ TranslatableString TracksPrefs::GetDescription()
    return XO("Preferences for Tracks");
 }
 
-wxString TracksPrefs::HelpPageName()
+ManualPageID TracksPrefs::HelpPageName()
 {
    return "Tracks_Preferences";
 }

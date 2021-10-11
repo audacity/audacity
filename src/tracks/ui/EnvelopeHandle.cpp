@@ -23,7 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TimeTrack.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
 
@@ -43,9 +43,9 @@ EnvelopeHandle::~EnvelopeHandle()
 {}
 
 UIHandlePtr EnvelopeHandle::HitAnywhere
-(std::weak_ptr<EnvelopeHandle> & WXUNUSED(holder), Envelope *envelope, bool timeTrack)
+(std::weak_ptr<EnvelopeHandle> &holder, Envelope *envelope, bool timeTrack)
 {
-   auto result = std::make_shared<EnvelopeHandle>( envelope );
+   auto result = AssignUIHandlePtr(holder, std::make_shared<EnvelopeHandle>(envelope));
    result->mTimeTrack = timeTrack;
    return result;
 }

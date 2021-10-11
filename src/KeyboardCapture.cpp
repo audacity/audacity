@@ -19,6 +19,7 @@
 #include <gtk/gtk.h>
 #endif
 
+#include <wx/app.h>
 #include <wx/button.h>
 #include <wx/eventfilter.h>
 #include <wx/toplevel.h>
@@ -212,6 +213,7 @@ public:
                   if ( auto button =
                      dynamic_cast<wxButton*>( top->GetDefaultItem() ) ) {
                      wxCommandEvent newEvent{ wxEVT_BUTTON, button->GetId() };
+                     newEvent.SetEventObject( button );
                      button->GetEventHandler()->AddPendingEvent( newEvent );
                      return Event_Processed;
                   }

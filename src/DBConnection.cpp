@@ -13,10 +13,10 @@ Paul Licameli -- split from ProjectFileIO.cpp
 
 #include "sqlite3.h"
 
-#include <wx/progdlg.h>
 #include <wx/string.h>
 
 #include "AudacityLogger.h"
+#include "BasicUI.h"
 #include "FileNames.h"
 #include "Internat.h"
 #include "Project.h"
@@ -24,8 +24,17 @@ Paul Licameli -- split from ProjectFileIO.cpp
 #include "wxFileNameWrapper.h"
 #include "SentryHelper.h"
 
+#define AUDACITY_PROJECT_PAGE_SIZE 65536
+
+#define xstr(a) str(a)
+#define str(a) #a
+
+static const char* PageSizeConfig =
+   "PRAGMA <schema>.page_size = " xstr(AUDACITY_PROJECT_PAGE_SIZE) ";"
+   "VACUUM;";
+
 // Configuration to provide "safe" connections
-static const char *SafeConfig =
+static const char* SafeConfig =
    "PRAGMA <schema>.busy_timeout = 5000;"
    "PRAGMA <schema>.locking_mode = SHARED;"
    "PRAGMA <schema>.synchronous = NORMAL;"
@@ -175,6 +184,15 @@ int DBConnection::OpenStepByStep(const FilePath fileName)
       return rc;
    }
 
+   rc = SetPageSize();
+
+   if (rc != SQLITE_OK)
+   {
+      SetDBError(XO("Failed to set page size for database %s")
+                    .Format(fileName));
+      return rc;
+   }
+
    // Set default mode
    // (See comments in ProjectFileIO::SaveProject() about threading
    rc = SafeMode();
@@ -240,17 +258,16 @@ bool DBConnection::Close()
       }
 
       // Provides a progress dialog with indeterminate mode
-      wxGenericProgressDialog pd(title.Translation(),
-                                 XO("This may take several seconds").Translation(),
-                                 300000,     // range
-                                 nullptr,    // parent
-                                 wxPD_APP_MODAL | wxPD_ELAPSED_TIME | wxPD_SMOOTH);
+      using namespace BasicUI;
+      auto pd = MakeGenericProgress({},
+         title, XO("This may take several seconds"));
+      wxASSERT(pd);
 
       // Wait for the checkpoints to end
       while (mCheckpointPending || mCheckpointActive)
       {
          wxMilliSleep(50);
-         pd.Pulse();
+         pd->Pulse();
       }
    }
 
@@ -342,6 +359,23 @@ int DBConnection::SafeMode(const char *schema /* = "main" */)
 int DBConnection::FastMode(const char *schema /* = "main" */)
 {
    return ModeConfig(mDB, schema, FastConfig);
+}
+
+int DBConnection::SetPageSize(const char* schema)
+{
+   // First of all - let's check if the database is empty.
+   // Otherwise, VACUUM can take a significant amount of time.
+   // VACUUM is required to force SQLite3 to change the page size.
+   // This function will be the first called on the connection,
+   // so if DB is empty we can assume that journal was not
+   // set to WAL yet.
+   int rc = sqlite3_exec(
+      mDB, "SELECT 1 FROM project LIMIT 1;", nullptr, nullptr, nullptr);
+
+   if (rc == SQLITE_OK)
+      return SQLITE_OK; // Project table exists, too late to VACUUM now
+
+   return ModeConfig(mDB, schema, PageSizeConfig);
 }
 
 int DBConnection::ModeConfig(sqlite3 *db, const char *schema, const char *config)

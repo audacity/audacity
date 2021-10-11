@@ -16,6 +16,7 @@ Paul Licameli split from ProjectManager.h
 
 #include "AudioIOListener.h" // to inherit
 #include "ClientData.h" // to inherit
+#include <wx/event.h> // to declare custom event type
 
 constexpr int RATE_NOT_SELECTED{ -1 };
 
@@ -55,7 +56,9 @@ public:
    static bool UseDuplex();
 
    static TransportTracks GetAllPlaybackTracks(
-      TrackList &trackList, bool selectedOnly, bool useMidi = false);
+      TrackList &trackList, bool selectedOnly,
+      bool nonWaveToo = false //!< if true, collect all PlayableTracks
+   );
 
    explicit ProjectAudioManager( AudacityProject &project );
    ProjectAudioManager( const ProjectAudioManager & ) PROHIBITED;
@@ -125,10 +128,6 @@ private:
    void SetCutting( bool value ) { mCutting = value; }
    void SetStopping( bool value ) { mStopping = value; }
 
-   void SetupCutPreviewTracks(double playStart, double cutStart,
-                             double cutEnd, double playEnd);
-   void ClearCutPreviewTracks();
-
    // Cancel the addition of temporary recording tracks into the project
    void CancelRecording();
 
@@ -143,8 +142,6 @@ private:
    void OnCheckpointFailure(wxCommandEvent &evt);
 
    AudacityProject &mProject;
-
-   std::shared_ptr<TrackList> mCutPreviewTracks;
 
    PlayMode mLastPlayMode{ PlayMode::normalPlay };
 
@@ -164,8 +161,8 @@ private:
 };
 
 AUDACITY_DLL_API
-AudioIOStartStreamOptions DefaultPlayOptions( AudacityProject &project );
-AUDACITY_DLL_API
+AudioIOStartStreamOptions DefaultPlayOptions(
+   AudacityProject &project, bool looped = false );
 AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 struct PropertiesOfSelected

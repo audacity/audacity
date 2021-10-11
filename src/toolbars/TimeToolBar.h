@@ -46,7 +46,7 @@ private:
    void SetResizingLimits();
    wxSize ComputeSizing(int digitH);
 
-   void OnSettingsChanged(wxCommandEvent &evt);
+   void OnRateChanged(wxEvent &evt);
    void OnUpdate(wxCommandEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnIdle(wxIdleEvent &evt);

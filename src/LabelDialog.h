@@ -15,7 +15,7 @@
 #include <wx/defs.h>
 
 #include "widgets/wxPanelWrapper.h" // to inherit
-#include "audacity/ComponentInterface.h" // member variable
+#include "ComponentInterface.h" // member variable
 
 class wxArrayString;
 class wxGridEvent;
@@ -60,8 +60,8 @@ class LabelDialog final : public wxDialogWrapper
    void Populate();
    void PopulateOrExchange( ShuttleGui & S );
    void PopulateLabels();
-   virtual void OnHelp(wxCommandEvent & event);
-   virtual wxString GetHelpPageName() {return "Labels_Editor";};
+   void OnHelp(wxCommandEvent & event);
+   ManualPageID GetHelpPageName() {return "Labels_Editor";}
 
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;

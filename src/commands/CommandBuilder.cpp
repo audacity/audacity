@@ -31,13 +31,13 @@ system by constructing BatchCommandEval objects.
 #include "../Shuttle.h"
 
 CommandBuilder::CommandBuilder(
-   AudacityProject *project, const wxString &cmdString)
+   AudacityProject &project, const wxString &cmdString)
    : mValid(false)
 {
    BuildCommand(project, cmdString);
 }
 
-CommandBuilder::CommandBuilder(AudacityProject *project,
+CommandBuilder::CommandBuilder(AudacityProject &project,
    const wxString &cmdName, const wxString &params)
    : mValid(false)
 {
@@ -82,7 +82,7 @@ void CommandBuilder::Success(const OldStyleCommandPointer &cmd)
    mValid = true;
 }
 
-void CommandBuilder::BuildCommand(AudacityProject *project,
+void CommandBuilder::BuildCommand(AudacityProject &project,
                                   const wxString &cmdName,
                                   const wxString &cmdParamsArg)
 {
@@ -188,7 +188,7 @@ void CommandBuilder::BuildCommand(AudacityProject *project,
 }
 
 void CommandBuilder::BuildCommand(
-   AudacityProject *project, const wxString &cmdStringArg)
+   AudacityProject &project, const wxString &cmdStringArg)
 {
    wxString cmdString(cmdStringArg);
 

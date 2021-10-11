@@ -71,8 +71,8 @@ bool SetEnvelopeCommand::ApplyInner( const CommandContext &context, Track * t )
          WaveClip * pClip = *it;
          bool bFound =
             !bHasT || (
-               ( pClip->GetStartTime() <= mT) &&
-               ( pClip->GetEndTime() >= mT )
+               ( pClip->GetPlayStartTime() <= mT) &&
+               ( pClip->GetPlayEndTime() >= mT )
             );
          if( bFound )
          {

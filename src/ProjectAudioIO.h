@@ -14,11 +14,9 @@ Paul Licameli split from AudacityProject.h
 #include "ClientData.h" // to inherit
 #include <wx/weakref.h>
 
+#include <memory>
 class AudacityProject;
-
-// Windows build needs complete type for parameter of wxWeakRef
-// class MeterPanelBase;
-#include "widgets/MeterPanelBase.h"
+class Meter;
 
 ///\ brief Holds per-project state needed for interaction with AudioIO,
 /// including the audio stream token and pointers to meters
@@ -38,17 +36,19 @@ public:
    bool IsAudioActive() const;
    void SetAudioIOToken(int token);
 
-   MeterPanelBase *GetPlaybackMeter();
-   void SetPlaybackMeter(MeterPanelBase *playback);
-   MeterPanelBase *GetCaptureMeter();
-   void SetCaptureMeter(MeterPanelBase *capture);
+   const std::shared_ptr<Meter> &GetPlaybackMeter() const;
+   void SetPlaybackMeter(
+      const std::shared_ptr<Meter> &playback);
+   const std::shared_ptr<Meter> &GetCaptureMeter() const;
+   void SetCaptureMeter(
+      const std::shared_ptr<Meter> &capture);
 
 private:
    AudacityProject &mProject;
 
    // Project owned meters
-   wxWeakRef<MeterPanelBase> mPlaybackMeter{};
-   wxWeakRef<MeterPanelBase> mCaptureMeter{};
+   std::shared_ptr<Meter> mPlaybackMeter;
+   std::shared_ptr<Meter> mCaptureMeter;
 
    int  mAudioIOToken{ -1 };
 };

@@ -26,6 +26,7 @@
 #include <wx/textctrl.h>
 #include <wx/bmpbuttn.h>
 
+#include "ui/AccessibleLinksFormatter.h"
 #include "AllThemeResources.h"
 #include "Theme.h"
 #include "HelpText.h"
@@ -37,6 +38,7 @@
 #include "CodeConversions.h"
 
 constexpr int MaxUserCommentLength = 2000;
+constexpr bool ErrorReportDialogHasUserComment = false;
 
 BEGIN_EVENT_TABLE(ErrorReportDialog, wxDialogWrapper)
     EVT_BUTTON(wxID_YES, ErrorReportDialog::OnSend)
@@ -46,7 +48,7 @@ END_EVENT_TABLE()
 
 ErrorReportDialog::ErrorReportDialog(
    wxWindow* parent, const TranslatableString& dlogTitle,
-   const TranslatableString& message, const wxString& helpUrl,
+   const TranslatableString& message, const ManualPageID& helpUrl,
    const wxString& log, const bool modal)
     : wxDialogWrapper(
          parent, wxID_ANY, dlogTitle, wxDefaultPosition, wxDefaultSize,
@@ -107,7 +109,7 @@ ErrorReportDialog::ErrorReportDialog(
          S.AddSpace(0, 20);
 
          S.AddVariableText(XO(
-               "Click \"Send\" to submit report to Audacity. This information is collected anonymously."))
+               "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."))
             ->SetFont(textFont);
 
          S.AddSpace(0, 20);
@@ -116,21 +118,41 @@ ErrorReportDialog::ErrorReportDialog(
 
          S.AddSpace(0, 6);
 
-         S.Style(wxTE_RICH | wxTE_READONLY | wxTE_MULTILINE | wxTE_DONTWRAP).MinSize(wxSize(0,152))
+         S.Style(wxTE_RICH | wxTE_READONLY | wxTE_MULTILINE | wxTE_DONTWRAP)
+            .MinSize(wxSize(0, 152))
+            .Name(XO("Problem details"))
             .AddTextBox({}, mReport->GetReportPreview(), 0);
 
          S.AddSpace(0, 20);
 
-         S.AddVariableText(XO("Comments"))->SetFont(textFont);
+         if constexpr (ErrorReportDialogHasUserComment)
+         {
+            S.AddVariableText(XO("Comments"))->SetFont(textFont);
 
-         S.AddSpace(0, 6);
+            S.AddSpace(0, 6);
 
-         mCommentsControl = S.Style(wxTE_MULTILINE)
-            .MinSize(wxSize(0, 76)).AddTextBox({}, {}, 0);
+            mCommentsControl = S.Style(wxTE_MULTILINE)
+                                  .MinSize(wxSize(0, 76))
+                                  .Name(XO("Comments"))
+                                  .AddTextBox({}, {}, 0);
 
-         mCommentsControl->SetMaxLength(MaxUserCommentLength);
+            mCommentsControl->SetMaxLength(MaxUserCommentLength);
 
-         S.AddSpace(0, 20);
+            S.AddSpace(0, 20);
+         }
+
+         /* i18n-hint: %s will be replaced with "our Privacy Policy" */
+         AccessibleLinksFormatter privacyPolicy(XO("See %s for more info."));
+
+         privacyPolicy.FormatLink(
+            /* i18n-hint: Title of hyperlink to the privacy policy. This is an
+               object of "See". */
+            wxT("%s"), XO("our Privacy Policy"),
+            "https://www.audacityteam.org/about/desktop-privacy-notice/");
+
+         privacyPolicy.Populate(S);
+
+		 S.AddSpace(0, 20);
 
          S.StartHorizontalLay(wxEXPAND);
          {
@@ -145,11 +167,11 @@ ErrorReportDialog::ErrorReportDialog(
             
             S.AddSpace(0, 0, 1);
 
-            S.Id(wxID_NO).AddButton(XO("Don't send"));
+            S.Id(wxID_NO).AddButton(XC("&Don't send", "crash reporter button"));
 
             S.AddSpace(13, 0);
 
-            S.Id(wxID_YES).AddButton(XO("Send"));
+            S.Id(wxID_YES).AddButton(XC("&Send", "crash reporter button"));
          }
          S.EndHorizontalLay();
 
@@ -177,7 +199,8 @@ void ErrorReportDialog::OnSend(wxCommandEvent& event)
 {
    Disable();
 
-   mReport->AddUserComment(audacity::ToUTF8(mCommentsControl->GetValue()));
+   if (mCommentsControl != nullptr)
+      mReport->AddUserComment(audacity::ToUTF8(mCommentsControl->GetValue()));
 
    mReport->Send(
       [this](int code, std::string body) { 
@@ -194,24 +217,14 @@ void ErrorReportDialog::OnDontSend(wxCommandEvent& event)
 
 void ErrorReportDialog::OnHelp(wxCommandEvent& event)
 {
-   if (mHelpUrl.StartsWith(wxT("innerlink:")))
+   const auto &helpUrl = mHelpUrl.GET();
+   if (helpUrl.StartsWith(wxT("innerlink:")))
    {
       HelpSystem::ShowHtmlText(
-         this, TitleText(mHelpUrl.Mid(10)), HelpText(mHelpUrl.Mid(10)), false,
+         this, TitleText(helpUrl.Mid(10)), HelpText(helpUrl.Mid(10)), false,
          true);
       return;
    }
 
    HelpSystem::ShowHelp(this, mHelpUrl, false);
-}
-
-void ShowErrorReportDialog(
-   wxWindow* parent, const TranslatableString& dlogTitle,
-   const TranslatableString& message, const wxString& helpPage,
-   const wxString& log)
-{
-   ErrorReportDialog dlog(parent, dlogTitle, message, helpPage, log);
-
-   dlog.CentreOnParent();
-   dlog.ShowModal();
 }

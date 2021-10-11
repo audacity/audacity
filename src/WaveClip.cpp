@@ -140,7 +140,9 @@ WaveClip::WaveClip(const WaveClip& orig,
    // current sample block factory, because we might be copying
    // from one project to another
 
-   mOffset = orig.mOffset;
+   mSequenceOffset = orig.mSequenceOffset;
+   mTrimLeft = orig.mTrimLeft;
+   mTrimRight = orig.mTrimRight;
    mRate = orig.mRate;
    mColourIndex = orig.mColourIndex;
    mSequence = std::make_unique<Sequence>(*orig.mSequence, factory);
@@ -150,6 +152,8 @@ WaveClip::WaveClip(const WaveClip& orig,
    mWaveCache = std::make_unique<WaveCache>();
    mSpecCache = std::make_unique<SpecCache>();
    mSpecPxCache = std::make_unique<SpecPxCache>(1);
+
+   mName = orig.mName;
 
    if ( copyCutlines )
       for (const auto &clip: orig.mCutLines)
@@ -166,7 +170,8 @@ WaveClip::WaveClip(const WaveClip& orig,
 {
    // Copy only a range of the other WaveClip
 
-   mOffset = orig.mOffset;
+   mSequenceOffset = orig.mSequenceOffset;
+   
    mRate = orig.mRate;
    mColourIndex = orig.mColourIndex;
 
@@ -176,17 +181,15 @@ WaveClip::WaveClip(const WaveClip& orig,
 
    mIsPlaceholder = orig.GetIsPlaceholder();
 
-   sampleCount s0, s1;
-
-   orig.TimeToSamplesClip(t0, &s0);
-   orig.TimeToSamplesClip(t1, &s1);
+   auto s0 = orig.TimeToSequenceSamples(t0);
+   auto s1 = orig.TimeToSequenceSamples(t1);
 
    mSequence = orig.mSequence->Copy(factory, s0, s1);
 
    mEnvelope = std::make_unique<Envelope>(
       *orig.mEnvelope,
-      mOffset + s0.as_double()/mRate,
-      mOffset + s1.as_double()/mRate
+      GetSequenceStartTime() + s0.as_double()/mRate,
+      GetSequenceStartTime() + s1.as_double()/mRate
    );
 
    if ( copyCutlines )
@@ -194,12 +197,12 @@ WaveClip::WaveClip(const WaveClip& orig,
       for (const auto &ppClip : orig.mCutLines)
       {
          const WaveClip* clip = ppClip.get();
-         double cutlinePosition = orig.mOffset + clip->GetOffset();
+         double cutlinePosition = orig.GetSequenceStartTime() + clip->GetSequenceStartTime();
          if (cutlinePosition >= t0 && cutlinePosition <= t1)
          {
             auto newCutLine =
                std::make_unique< WaveClip >( *clip, factory, true );
-            newCutLine->SetOffset( cutlinePosition - t0 );
+            newCutLine->SetSequenceStartTime( cutlinePosition - t0 );
             mCutLines.push_back(std::move(newCutLine));
          }
       }
@@ -210,17 +213,10 @@ WaveClip::~WaveClip()
 {
 }
 
-/*! @excsafety{No-fail} */
-void WaveClip::SetOffset(double offset)
-{
-    mOffset = offset;
-    mEnvelope->SetOffset(mOffset);
-}
-
 bool WaveClip::GetSamples(samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow) const
 {
-   return mSequence->Get(buffer, format, start, len, mayThrow);
+   return mSequence->Get(buffer, format, start + TimeToSamples(mTrimLeft), len, mayThrow);
 }
 
 /*! @excsafety{Strong} */
@@ -228,7 +224,7 @@ void WaveClip::SetSamples(constSamplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len)
 {
    // use Strong-guarantee
-   mSequence->SetSamples(buffer, format, start, len);
+   mSequence->SetSamples(buffer, format, start + TimeToSamples(mTrimLeft), len);
 
    // use No-fail-guarantee
    MarkChanged();
@@ -243,71 +239,6 @@ const BlockArray* WaveClip::GetSequenceBlockArray() const
 {
    return &mSequence->GetBlockArray();
 }
-
-double WaveClip::GetStartTime() const
-{
-   // JS: mOffset is the minimum value and it is returned; no clipping to 0
-   return mOffset;
-}
-
-double WaveClip::GetEndTime() const
-{
-   auto numSamples = mSequence->GetNumSamples();
-
-   double maxLen = mOffset + (numSamples+mAppendBufferLen).as_double()/mRate;
-   // JS: calculated value is not the length;
-   // it is a maximum value and can be negative; no clipping to 0
-
-   return maxLen;
-}
-
-sampleCount WaveClip::GetStartSample() const
-{
-   return sampleCount( floor(mOffset * mRate + 0.5) );
-}
-
-sampleCount WaveClip::GetEndSample() const
-{
-   return GetStartSample() + mSequence->GetNumSamples();
-}
-
-sampleCount WaveClip::GetNumSamples() const
-{
-   return mSequence->GetNumSamples();
-}
-
-// Bug 2288 allowed overlapping clips.
-// This was a classic fencepost error.
-// We are within the clip if start < t <= end.
-// Note that BeforeClip and AfterClip must be consistent 
-// with this definition.
-bool WaveClip::WithinClip(double t) const
-{
-   auto ts = (sampleCount)floor(t * mRate + 0.5);
-   return ts > GetStartSample() && ts < GetEndSample() + mAppendBufferLen;
-}
-
-bool WaveClip::BeforeClip(double t) const
-{
-   auto ts = (sampleCount)floor(t * mRate + 0.5);
-   return ts <= GetStartSample();
-}
-
-bool WaveClip::AfterClip(double t) const
-{
-   auto ts = (sampleCount)floor(t * mRate + 0.5);
-   return ts >= GetEndSample() + mAppendBufferLen;
-}
-
-// A sample at time t could be in the clip, but 
-// a clip start at time t still be from a clip 
-// not overlapping this one, with this test.
-bool WaveClip::IsClipStartAfterClip(double t) const
-{
-   auto ts = (sampleCount)floor(t * mRate + 0.5);
-   return ts >= GetEndSample() + mAppendBufferLen;
-}
-
 
 ///Delete the wave cache - force redraw.  Thread-safe
 void WaveClip::ClearWaveCache()
@@ -382,6 +313,8 @@ fillWhere(std::vector<sampleCount> &where, size_t len, double bias, double corre
 bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
                                double pixelsPerSecond) const
 {
+   t0 += GetTrimLeft();
+
    const bool allocated = (display.where != 0);
 
    const size_t numPixels = (int)display.width;
@@ -888,11 +821,7 @@ void SpecCache::Populate
       settings.algorithm == SpectrogramSettings::algPitchEAC;
    const bool reassignment =
       settings.algorithm == SpectrogramSettings::algReassignment;
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
-#else
-   const size_t zeroPaddingFactorSetting = 1;
-#endif
 
    // FFT length may be longer than the window of samples that affect results
    // because of zero padding done for increased frequency resolution
@@ -1011,11 +940,17 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
                               size_t numPixels,
                               double t0, double pixelsPerSecond) const
 {
+   t0 += GetTrimLeft();
+
    const WaveTrack *const track = waveTrackCache.GetTrack().get();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
 
+   //Trim offset comparison failure forces spectrogram cache rebuild 
+   //and skip copying "unchanged" data after clip border was trimmed.
    bool match =
       mSpecCache &&
+      mSpecCache->leftTrim == GetTrimLeft() &&
+      mSpecCache->rightTrim == GetTrimRight() &&
       mSpecCache->len > 0 &&
       mSpecCache->Matches
       (mDirty, pixelsPerSecond, settings, mRate);
@@ -1068,6 +1003,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 
    // Resize the cache, keep the contents unchanged.
    mSpecCache->Grow(numPixels, settings, pixelsPerSecond, t0);
+   mSpecCache->leftTrim = GetTrimLeft();
+   mSpecCache->rightTrim = GetTrimRight();
    auto nBins = settings.NBins();
 
    // Optimization: if the old cache is good and overlaps
@@ -1106,8 +1043,8 @@ bool WaveClip::GetSpectrogram(WaveTrackCache &waveTrackCache,
 
    mSpecCache->Populate
       (settings, waveTrackCache, copyBegin, copyEnd, numPixels,
-       mSequence->GetNumSamples(),
-       mOffset, mRate, pixelsPerSecond);
+       GetSequenceSamplesCount(),
+       GetSequenceStartTime(), mRate, pixelsPerSecond);
 
    mSpecCache->dirty = mDirty;
    spectrogram = &mSpecCache->freq[0];
@@ -1131,10 +1068,8 @@ std::pair<float, float> WaveClip::GetMinMax(
    if (t0 == t1)
       return{ 0.f, 0.f };
 
-   sampleCount s0, s1;
-
-   TimeToSamplesClip(t0, &s0);
-   TimeToSamplesClip(t1, &s1);
+   auto s0 = TimeToSequenceSamples(t0);
+   auto s1 = TimeToSequenceSamples(t1);
 
    return mSequence->GetMinMax(s0, s1-s0, mayThrow);
 }
@@ -1150,10 +1085,8 @@ float WaveClip::GetRMS(double t0, double t1, bool mayThrow) const
    if (t0 == t1)
       return 0.f;
 
-   sampleCount s0, s1;
-
-   TimeToSamplesClip(t0, &s0);
-   TimeToSamplesClip(t1, &s1);
+   auto s0 = TimeToSequenceSamples(t0);
+   auto s1 = TimeToSequenceSamples(t1);
 
    return mSequence->GetRMS(s0, s1-s0, mayThrow);
 }
@@ -1175,16 +1108,6 @@ void WaveClip::UpdateEnvelopeTrackLen()
    auto len = (mSequence->GetNumSamples().as_double()) / mRate;
    if (len != mEnvelope->GetTrackLen())
       mEnvelope->SetTrackLen(len, 1.0 / GetRate());
-}
-
-void WaveClip::TimeToSamplesClip(double t0, sampleCount *s0) const
-{
-   if (t0 < mOffset)
-      *s0 = 0;
-   else if (t0 > mOffset + mSequence->GetNumSamples().as_double()/mRate)
-      *s0 = mSequence->GetNumSamples();
-   else
-      *s0 = sampleCount( floor(((t0 - mOffset) * mRate) + 0.5) );
 }
 
 /*! @excsafety{Strong} */
@@ -1309,9 +1232,28 @@ bool WaveClip::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             if (!XMLValueChecker::IsGoodString(strValue) ||
                   !Internat::CompatibleToDouble(strValue, &dblValue))
                return false;
-            SetOffset(dblValue);
+            SetSequenceStartTime(dblValue);
          }
-         if (!wxStrcmp(attr, wxT("colorindex")))
+         else if (!wxStrcmp(attr, wxT("trimLeft")))
+         {
+            if (!XMLValueChecker::IsGoodString(strValue) ||
+               !Internat::CompatibleToDouble(strValue, &dblValue))
+               return false;
+            SetTrimLeft(dblValue);
+         }
+         else if (!wxStrcmp(attr, wxT("trimRight")))
+         {
+            if (!XMLValueChecker::IsGoodString(strValue) ||
+               !Internat::CompatibleToDouble(strValue, &dblValue))
+               return false;
+            SetTrimRight(dblValue);
+         }
+         else if (!wxStrcmp(attr, wxT("name")))
+         {
+            if(XMLValueChecker::IsGoodLongString(strValue))
+               SetName(strValue);
+         }
+         else if (!wxStrcmp(attr, wxT("colorindex")))
          {
             if (!XMLValueChecker::IsGoodString(strValue) ||
                   !strValue.ToLong( &longValue))
@@ -1353,7 +1295,10 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
    xmlFile.StartTag(wxT("waveclip"));
-   xmlFile.WriteAttr(wxT("offset"), mOffset, 8);
+   xmlFile.WriteAttr(wxT("offset"), mSequenceOffset, 8);
+   xmlFile.WriteAttr(wxT("trimLeft"), mTrimLeft, 8);
+   xmlFile.WriteAttr(wxT("trimRight"), mTrimRight, 8);
+   xmlFile.WriteAttr(wxT("name"), mName);
    xmlFile.WriteAttr(wxT("colorindex"), mColourIndex );
 
    mSequence->WriteXML(xmlFile);
@@ -1372,51 +1317,69 @@ void WaveClip::Paste(double t0, const WaveClip* other)
    const bool clipNeedsNewFormat =
       other->mSequence->GetSampleFormat() != mSequence->GetSampleFormat();
    std::unique_ptr<WaveClip> newClip;
-   const WaveClip* pastedClip;
 
-   if (clipNeedsResampling || clipNeedsNewFormat)
+   t0 = std::clamp(t0, GetPlayStartTime(), GetPlayEndTime());
+
+   //seems like edge cases cannot happen, see WaveTrack::PasteWaveTrack
+   if (t0 == GetPlayStartTime())
    {
-      newClip =
-         std::make_unique<WaveClip>(*other, mSequence->GetFactory(), true);
-      if (clipNeedsResampling)
-         // The other clip's rate is different from ours, so resample
-         newClip->Resample(mRate);
-      if (clipNeedsNewFormat)
-         // Force sample formats to match.
-         newClip->ConvertToSampleFormat(mSequence->GetSampleFormat());
-      pastedClip = newClip.get();
+       ClearSequence(GetSequenceStartTime(), t0);
+       SetTrimLeft(other->GetTrimLeft());
+
+       auto copy = std::make_unique<WaveClip>(*other, mSequence->GetFactory(), true);
+       copy->ClearSequence(copy->GetPlayEndTime(), copy->GetSequenceEndTime());
+       newClip = std::move(copy);
+   }
+   else if (t0 == GetPlayEndTime())
+   {
+       ClearSequence(GetPlayEndTime(), GetSequenceEndTime());
+       SetTrimRight(other->GetTrimRight());
+
+       auto copy = std::make_unique<WaveClip>(*other, mSequence->GetFactory(), true);
+       copy->ClearSequence(copy->GetSequenceStartTime(), copy->GetPlayStartTime());
+       newClip = std::move(copy);
    }
    else
    {
-      // No resampling or format change needed, just use original clip without making a copy
-      pastedClip = other;
+       newClip = std::make_unique<WaveClip>(*other, mSequence->GetFactory(), true,
+           other->GetPlayStartTime(), other->GetPlayEndTime());
+   }
+
+   if (clipNeedsResampling || clipNeedsNewFormat)
+   {
+      auto copy = std::make_unique<WaveClip>(*newClip.get(), mSequence->GetFactory(), true);
+      if (clipNeedsResampling)
+         // The other clip's rate is different from ours, so resample
+          copy->Resample(mRate);
+      if (clipNeedsNewFormat)
+         // Force sample formats to match.
+          copy->ConvertToSampleFormat(mSequence->GetSampleFormat());
+      newClip = std::move(copy);
    }
 
    // Paste cut lines contained in pasted clip
    WaveClipHolders newCutlines;
-   for (const auto &cutline: pastedClip->mCutLines)
+   for (const auto &cutline: newClip->mCutLines)
    {
-      newCutlines.push_back(
-         std::make_unique<WaveClip>
-            ( *cutline, mSequence->GetFactory(),
-              // Recursively copy cutlines of cutlines.  They don't need
-              // their offsets adjusted.
-              true));
-      newCutlines.back()->Offset(t0 - mOffset);
+      auto cutlineCopy = std::make_unique<WaveClip>(*cutline, mSequence->GetFactory(), 
+         // Recursively copy cutlines of cutlines.  They don't need
+         // their offsets adjusted.
+         true);
+      cutlineCopy->Offset(t0 - GetSequenceStartTime());
+      newCutlines.push_back(std::move(cutlineCopy));
    }
 
-   sampleCount s0;
-   TimeToSamplesClip(t0, &s0);
+   sampleCount s0 = TimeToSequenceSamples(t0);
 
    // Assume Strong-guarantee from Sequence::Paste
-   mSequence->Paste(s0, pastedClip->mSequence.get());
+   mSequence->Paste(s0, newClip->mSequence.get());
 
    // Assume No-fail-guarantee in the remaining
    MarkChanged();
    auto sampleTime = 1.0 / GetRate();
    mEnvelope->PasteEnvelope
-      (s0.as_double()/mRate + mOffset, pastedClip->mEnvelope.get(), sampleTime);
-   OffsetCutLines(t0, pastedClip->GetEndTime() - pastedClip->GetStartTime());
+      (s0.as_double()/mRate + GetSequenceStartTime(), newClip->mEnvelope.get(), sampleTime);
+   OffsetCutLines(t0, newClip->GetPlayEndTime() - newClip->GetPlayStartTime());
 
    for (auto &holder : newCutlines)
       mCutLines.push_back(std::move(holder));
@@ -1425,8 +1388,12 @@ void WaveClip::Paste(double t0, const WaveClip* other)
 /*! @excsafety{Strong} */
 void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
 {
-   sampleCount s0;
-   TimeToSamplesClip(t, &s0);
+   if (t == GetPlayStartTime() && t > GetSequenceStartTime())
+      ClearSequence(GetSequenceStartTime(), t);
+   else if (t == GetPlayEndTime() && t < GetSequenceEndTime())
+      ClearSequence(t, GetSequenceEndTime());
+
+   auto s0 = TimeToSequenceSamples(t);
    auto slen = (sampleCount)floor(len * mRate + 0.5);
 
    // use Strong-guarantee
@@ -1458,69 +1425,89 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
 /*! @excsafety{Strong} */
 void WaveClip::AppendSilence( double len, double envelopeValue )
 {
-   auto t = GetEndTime();
+   auto t = GetPlayEndTime();
    InsertSilence( t, len, &envelopeValue );
 }
 
 /*! @excsafety{Strong} */
 void WaveClip::Clear(double t0, double t1)
 {
-   sampleCount s0, s1;
+    auto st0 = t0;
+    auto st1 = t1;
+    auto offset = .0;
+    if (st0 <= GetPlayStartTime())
+    {
+        offset = (t0 - GetPlayStartTime()) + GetTrimLeft();
+        st0 = GetSequenceStartTime();
 
-   TimeToSamplesClip(t0, &s0);
-   TimeToSamplesClip(t1, &s1);
+        SetTrimLeft(.0);
+    }
+    if (st1 >= GetPlayEndTime())
+    {
+        st1 = GetSequenceEndTime();
+        SetTrimRight(.0);
+    }
+    ClearSequence(st0, st1);
 
-   // use Strong-guarantee
-   GetSequence()->Delete(s0, s1-s0);
+    if (offset != .0)
+        Offset(offset);        
+}
 
-   // use No-fail-guarantee in the remaining
+void WaveClip::ClearSequence(double t0, double t1)
+{
+    auto clip_t0 = std::max(t0, GetSequenceStartTime());
+    auto clip_t1 = std::min(t1, GetSequenceEndTime());
 
-   // msmeyer
-   //
-   // Delete all cutlines that are within the given area, if any.
-   //
-   // Note that when cutlines are active, two functions are used:
-   // Clear() and ClearAndAddCutLine(). ClearAndAddCutLine() is called
-   // whenever the user directly calls a command that removes some audio, e.g.
-   // "Cut" or "Clear" from the menu. This command takes care about recursive
-   // preserving of cutlines within clips. Clear() is called when internal
-   // operations want to remove audio. In the latter case, it is the right
-   // thing to just remove all cutlines within the area.
-   //
-   double clip_t0 = t0;
-   double clip_t1 = t1;
-   if (clip_t0 < GetStartTime())
-      clip_t0 = GetStartTime();
-   if (clip_t1 > GetEndTime())
-      clip_t1 = GetEndTime();
+    auto s0 = TimeToSequenceSamples(clip_t0);
+    auto s1 = TimeToSequenceSamples(clip_t1);
 
-   // May DELETE as we iterate, so don't use range-for
-   for (auto it = mCutLines.begin(); it != mCutLines.end();)
-   {
-      WaveClip* clip = it->get();
-      double cutlinePosition = mOffset + clip->GetOffset();
-      if (cutlinePosition >= t0 && cutlinePosition <= t1)
-      {
-         // This cutline is within the area, DELETE it
-         it = mCutLines.erase(it);
-      }
-      else
-      {
-         if (cutlinePosition >= t1)
-         {
-            clip->Offset(clip_t0 - clip_t1);
-         }
-         ++it;
-      }
-   }
+    if (s0 != s1)
+    {
+        // use Strong-guarantee
+        GetSequence()->Delete(s0, s1 - s0);
 
-   // Collapse envelope
-   auto sampleTime = 1.0 / GetRate();
-   GetEnvelope()->CollapseRegion( t0, t1, sampleTime );
-   if (t0 < GetStartTime())
-      Offset(-(GetStartTime() - t0));
+        // use No-fail-guarantee in the remaining
 
-   MarkChanged();
+        // msmeyer
+        //
+        // Delete all cutlines that are within the given area, if any.
+        //
+        // Note that when cutlines are active, two functions are used:
+        // Clear() and ClearAndAddCutLine(). ClearAndAddCutLine() is called
+        // whenever the user directly calls a command that removes some audio, e.g.
+        // "Cut" or "Clear" from the menu. This command takes care about recursive
+        // preserving of cutlines within clips. Clear() is called when internal
+        // operations want to remove audio. In the latter case, it is the right
+        // thing to just remove all cutlines within the area.
+        //
+
+        // May DELETE as we iterate, so don't use range-for
+        for (auto it = mCutLines.begin(); it != mCutLines.end();)
+        {
+            WaveClip* clip = it->get();
+            double cutlinePosition = GetSequenceStartTime() + clip->GetSequenceStartTime();
+            if (cutlinePosition >= t0 && cutlinePosition <= t1)
+            {
+                // This cutline is within the area, DELETE it
+                it = mCutLines.erase(it);
+            }
+            else
+            {
+                if (cutlinePosition >= t1)
+                {
+                    clip->Offset(clip_t0 - clip_t1);
+                }
+                ++it;
+            }
+        }
+
+        // Collapse envelope
+        auto sampleTime = 1.0 / GetRate();
+        GetEnvelope()->CollapseRegion(t0, t1, sampleTime);
+    }
+
+
+    MarkChanged();
 }
 
 /*! @excsafety{Weak}
@@ -1528,16 +1515,16 @@ void WaveClip::Clear(double t0, double t1)
 But some cutlines may be deleted */
 void WaveClip::ClearAndAddCutLine(double t0, double t1)
 {
-   if (t0 > GetEndTime() || t1 < GetStartTime())
+   if (t0 > GetPlayEndTime() || t1 < GetPlayStartTime())
       return; // time out of bounds
 
-   const double clip_t0 = std::max( t0, GetStartTime() );
-   const double clip_t1 = std::min( t1, GetEndTime() );
+   const double clip_t0 = std::max( t0, GetPlayStartTime() );
+   const double clip_t1 = std::min( t1, GetPlayEndTime() );
 
    auto newClip = std::make_unique< WaveClip >
       (*this, mSequence->GetFactory(), true, clip_t0, clip_t1);
 
-   newClip->SetOffset( clip_t0 - mOffset );
+   newClip->SetSequenceStartTime( clip_t0 - GetSequenceStartTime() );
 
    // Remove cutlines from this clip that were in the selection, shift
    // left those that were after the selection
@@ -1545,7 +1532,7 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    for (auto it = mCutLines.begin(); it != mCutLines.end();)
    {
       WaveClip* clip = it->get();
-      double cutlinePosition = mOffset + clip->GetOffset();
+      double cutlinePosition = GetSequenceStartTime() + clip->GetSequenceStartTime();
       if (cutlinePosition >= t0 && cutlinePosition <= t1)
          it = mCutLines.erase(it);
       else
@@ -1559,10 +1546,8 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    }
 
    // Clear actual audio data
-   sampleCount s0, s1;
-
-   TimeToSamplesClip(t0, &s0);
-   TimeToSamplesClip(t1, &s1);
+   auto s0 = TimeToSequenceSamples(t0);
+   auto s1 = TimeToSequenceSamples(t1);
 
    // use Weak-guarantee
    GetSequence()->Delete(s0, s1-s0);
@@ -1570,9 +1555,7 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    // Collapse envelope
    auto sampleTime = 1.0 / GetRate();
    GetEnvelope()->CollapseRegion( t0, t1, sampleTime );
-   if (t0 < GetStartTime())
-      Offset(-(GetStartTime() - t0));
-
+   
    MarkChanged();
 
    mCutLines.push_back(std::move(newClip));
@@ -1584,12 +1567,12 @@ bool WaveClip::FindCutLine(double cutLinePosition,
 {
    for (const auto &cutline: mCutLines)
    {
-      if (fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001)
+      if (fabs(GetSequenceStartTime() + cutline->GetSequenceStartTime() - cutLinePosition) < 0.0001)
       {
          if (cutlineStart)
-            *cutlineStart = mOffset+cutline->GetStartTime();
+            *cutlineStart = GetSequenceStartTime() + cutline->GetSequenceStartTime();
          if (cutlineEnd)
-            *cutlineEnd = mOffset+cutline->GetEndTime();
+            *cutlineEnd = GetSequenceStartTime() + cutline->GetSequenceEndTime();
          return true;
       }
    }
@@ -1603,7 +1586,7 @@ void WaveClip::ExpandCutLine(double cutLinePosition)
    auto end = mCutLines.end();
    auto it = std::find_if( mCutLines.begin(), end,
       [&](const WaveClipHolder &cutline) {
-         return fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001;
+         return fabs(GetSequenceStartTime() + cutline->GetSequenceStartTime() - cutLinePosition) < 0.0001;
       } );
 
    if ( it != end ) {
@@ -1614,7 +1597,7 @@ void WaveClip::ExpandCutLine(double cutLinePosition)
       // Do this to get the right result:
       cutline->mEnvelope->SetOffset(0);
 
-      Paste(mOffset+cutline->GetOffset(), cutline);
+      Paste(GetSequenceStartTime()+cutline->GetSequenceStartTime(), cutline);
       // Now erase the cutline,
       // but be careful to find it again, because Paste above may
       // have modified the array of cutlines (if our cutline contained
@@ -1635,7 +1618,8 @@ bool WaveClip::RemoveCutLine(double cutLinePosition)
    for (auto it = mCutLines.begin(); it != mCutLines.end(); ++it)
    {
       const auto &cutline = *it;
-      if (fabs(mOffset + cutline->GetOffset() - cutLinePosition) < 0.0001)
+      //std::numeric_limits<double>::epsilon() or (1.0 / static_cast<double>(mRate))? 
+      if (fabs(GetSequenceStartTime() + cutline->GetSequenceStartTime() - cutLinePosition) < 0.0001)
       {
          mCutLines.erase(it); // deletes cutline!
          return true;
@@ -1650,7 +1634,7 @@ void WaveClip::OffsetCutLines(double t0, double len)
 {
    for (const auto &cutLine : mCutLines)
    {
-      if (mOffset + cutLine->GetOffset() >= t0)
+      if (GetSequenceStartTime() + cutLine->GetSequenceStartTime() >= t0)
          cutLine->Offset(len);
    }
 }
@@ -1759,15 +1743,198 @@ void WaveClip::Resample(int rate, ProgressDialog *progress)
 }
 
 // Used by commands which interact with clips using the keyboard.
-// When two clips are immediately next to each other, the GetEndTime()
-// of the first clip and the GetStartTime() of the second clip may not
+// When two clips are immediately next to each other, the GetPlayEndTime()
+// of the first clip and the GetPlayStartTime() of the second clip may not
 // be exactly equal due to rounding errors.
 bool WaveClip::SharesBoundaryWithNextClip(const WaveClip* next) const
 {
-   double endThis = GetRate() * GetOffset() + GetNumSamples().as_double();
-   double startNext = next->GetRate() * next->GetOffset();
+   double endThis = GetRate() * GetPlayStartTime() + GetPlaySamplesCount().as_double();
+   double startNext = next->GetRate() * next->GetPlayStartTime();
 
    // given that a double has about 15 significant digits, using a criterion
    // of half a sample should be safe in all normal usage.
    return fabs(startNext - endThis) < 0.5;
+}
+
+void WaveClip::SetName(const wxString& name)
+{
+   mName = name;
+}
+
+const wxString& WaveClip::GetName() const
+{
+   return mName;
+}
+
+sampleCount WaveClip::TimeToSamples(double time) const noexcept
+{
+    return sampleCount(floor(time * mRate + 0.5));
+}
+
+double WaveClip::SamplesToTime(sampleCount s) const noexcept
+{
+    return s.as_double() / mRate;
+}
+
+void WaveClip::SetSilence(sampleCount offset, sampleCount length)
+{
+    GetSequence()->SetSilence(TimeToSamples(GetTrimLeft()) + offset, length);
+    MarkChanged();
+}
+
+sampleCount WaveClip::GetSequenceSamplesCount() const
+{
+    return mSequence->GetNumSamples();
+}
+
+double WaveClip::GetPlayStartTime() const noexcept
+{
+    return mSequenceOffset + mTrimLeft;
+}
+
+void WaveClip::SetPlayStartTime(double time)
+{
+    SetSequenceStartTime(time - mTrimLeft);
+}
+
+double WaveClip::GetPlayEndTime() const
+{
+    auto numSamples = mSequence->GetNumSamples();
+
+    double maxLen = GetSequenceStartTime() + ((numSamples + mAppendBufferLen).as_double()) / mRate - mTrimRight;
+    // JS: calculated value is not the length;
+    // it is a maximum value and can be negative; no clipping to 0
+
+    return maxLen;
+}
+
+sampleCount WaveClip::GetPlayStartSample() const
+{
+    return TimeToSamples(GetPlayStartTime());
+}
+
+sampleCount WaveClip::GetPlayEndSample() const
+{
+    return GetPlayStartSample() + GetPlaySamplesCount();
+}
+
+sampleCount WaveClip::GetPlaySamplesCount() const
+{
+    return mSequence->GetNumSamples()
+       - TimeToSamples(mTrimRight) - TimeToSamples(mTrimLeft);
+}
+
+void WaveClip::SetTrimLeft(double trim)
+{
+    mTrimLeft = std::max(.0, trim);
+}
+
+double WaveClip::GetTrimLeft() const noexcept
+{
+    return mTrimLeft;
+}
+
+void WaveClip::SetTrimRight(double trim)
+{
+    mTrimRight = std::max(.0, trim);
+}
+
+double WaveClip::GetTrimRight() const noexcept
+{
+    return mTrimRight;
+}
+
+void WaveClip::TrimLeft(double deltaTime)
+{
+    mTrimLeft += deltaTime;
+}
+
+void WaveClip::TrimRight(double deltaTime)
+{
+    mTrimRight += deltaTime;
+}
+
+void WaveClip::TrimLeftTo(double to)
+{
+    mTrimLeft = std::clamp(to, GetSequenceStartTime(), GetPlayEndTime()) - GetSequenceStartTime();
+}
+
+void WaveClip::TrimRightTo(double to)
+{
+    mTrimRight = GetSequenceEndTime() - std::clamp(to, GetPlayStartTime(), GetSequenceEndTime());
+}
+
+double WaveClip::GetSequenceStartTime() const noexcept
+{
+    // JS: mSequenceOffset is the minimum value and it is returned; no clipping to 0
+    return mSequenceOffset;
+}
+
+void WaveClip::SetSequenceStartTime(double startTime)
+{
+    mSequenceOffset = startTime;
+    mEnvelope->SetOffset(startTime);
+}
+
+double WaveClip::GetSequenceEndTime() const
+{
+    auto numSamples = mSequence->GetNumSamples();
+
+    double maxLen = GetSequenceStartTime() + (numSamples + mAppendBufferLen).as_double() / mRate;
+    // JS: calculated value is not the length;
+    // it is a maximum value and can be negative; no clipping to 0
+
+    return maxLen;
+}
+
+sampleCount WaveClip::GetSequenceStartSample() const
+{
+    return TimeToSamples(mSequenceOffset);
+}
+
+sampleCount WaveClip::GetSequenceEndSample() const
+{
+    return GetSequenceStartSample() + mSequence->GetNumSamples();
+}
+
+void WaveClip::Offset(double delta) noexcept
+{
+    SetSequenceStartTime(GetSequenceStartTime() + delta);
+}
+
+// Bug 2288 allowed overlapping clips.
+// This was a classic fencepost error.
+// We are within the clip if start < t <= end.
+// Note that BeforeClip and AfterClip must be consistent 
+// with this definition.
+bool WaveClip::WithinPlayRegion(double t) const
+{
+    auto ts = TimeToSamples(t);
+    return ts > GetPlayStartSample() && ts < GetPlayEndSample() + mAppendBufferLen;
+}
+
+bool WaveClip::BeforePlayStartTime(double t) const
+{
+    auto ts = TimeToSamples(t);
+    return ts <= GetPlayStartSample();
+}
+
+bool WaveClip::AfterPlayEndTime(double t) const
+{
+    auto ts = TimeToSamples(t);
+    return ts >= GetPlayEndSample() + mAppendBufferLen;
+}
+
+sampleCount WaveClip::TimeToSequenceSamples(double t) const
+{
+    if (t < GetSequenceStartTime())
+        return 0;
+    else if (t > GetSequenceEndTime())
+        return mSequence->GetNumSamples();
+    return TimeToSamples(t - GetSequenceStartTime());
+}
+
+sampleCount WaveClip::ToSequenceSamples(sampleCount s) const
+{
+    return s - GetSequenceStartSample();
 }

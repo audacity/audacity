@@ -26,8 +26,8 @@
 #include <wx/textctrl.h>
 #include <algorithm>
 
-#include "../prefs/GUISettings.h"
-#include "../Prefs.h"
+#include "Decibels.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
 
 using std::min;
@@ -41,7 +41,8 @@ BEGIN_EVENT_TABLE(RecordingPrefs, PrefsPanel)
 END_EVENT_TABLE()
 
 RecordingPrefs::RecordingPrefs(wxWindow * parent, wxWindowID winid)
-:  PrefsPanel(parent, winid, XO("Recording"))
+// i18n-hint: modifier as in "Recording preferences", not progressive verb
+:  PrefsPanel(parent, winid, XC("Recording", "preference"))
 {
    gPrefs->Read(wxT("/GUI/TrackNames/RecordingNameCustom"), &mUseCustomTrackName, false);
    mOldNameChoice = mUseCustomTrackName;
@@ -62,7 +63,7 @@ TranslatableString RecordingPrefs::GetDescription()
    return XO("Preferences for Recording");
 }
 
-wxString RecordingPrefs::HelpPageName()
+ManualPageID RecordingPrefs::HelpPageName()
 {
    return "Recording_Preferences";
 }
@@ -136,7 +137,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
                      {wxT("/AudioIO/SilenceLevel"),
                       -50},
                      0,
-                     -gPrefs->Read(ENV_DB_KEY, ENV_DB_RANGE));
+                     -DecibelScaleCutoff.Read());
       }
       S.EndMultiColumn();
    }

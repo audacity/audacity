@@ -14,6 +14,7 @@ This library depends only on the wxBase subset of wxWidgets.
 ]]#
 
 set( SOURCES
+   FutureStrings.h
    Identifier.cpp
    Identifier.h
    Internat.cpp
@@ -22,7 +23,6 @@ set( SOURCES
    Languages.h
    TranslatableString.cpp
    TranslatableString.h
-   UnusedStrings.h
    wxArrayStringEx.h
    wxArrayStringEx.cpp
 )

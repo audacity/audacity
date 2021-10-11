@@ -11,6 +11,8 @@
 #ifndef __AUDACITY_MODULE_CONSTANTS__
 #define __AUDACITY_MODULE_CONSTANTS__
 
+#include <string>
+
 #define ModuleDispatchName "ModuleDispatch"
 
 #ifdef _MSC_VER
@@ -52,5 +54,8 @@ extern "C" {                                                           \
 #define DEFINE_MODULE_ENTRIES                                          \
 DEFINE_VERSION_CHECK                                                   \
 extern "C" DLL_API int ModuleDispatch(ModuleDispatchTypes type){ return 1; }
+
+//! This program's name
+UTILITY_API extern const std::wstring AppName;
 
 #endif

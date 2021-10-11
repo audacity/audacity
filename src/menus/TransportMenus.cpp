@@ -3,18 +3,21 @@
 #include "../AdornedRulerPanel.h"
 #include "../AudioIO.h"
 #include "../CommonCommandFlags.h"
-#include "../DeviceManager.h"
+#include "DeviceManager.h"
 #include "../LabelTrack.h"
 #include "../Menus.h"
-#include "../Prefs.h"
-#include "../Project.h"
+#include "Prefs.h"
+#include "Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
 #include "../ProjectFileIO.h"
 #include "../ProjectHistory.h"
+#include "ProjectRate.h"
 #include "../ProjectSettings.h"
+#include "../ProjectWindows.h"
 #include "../ProjectWindow.h"
 #include "../ProjectManager.h"
+#include "../SelectUtilities.h"
 #include "../SoundActivatedRecord.h"
 #include "../TimerRecordDialog.h"
 #include "../TrackPanelAx.h"
@@ -24,16 +27,17 @@
 #include "../prefs/RecordingPrefs.h"
 #include "../prefs/TracksPrefs.h"
 #include "../WaveTrack.h"
-#include "../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../toolbars/TranscriptionToolBar.h"
 #include "../widgets/AudacityMessageBox.h"
-#include "../widgets/ErrorDialog.h"
+#include "BasicUI.h"
 #include "../widgets/ProgressDialog.h"
 
 #include <float.h>
+#include <wx/app.h>
 
 // private helper classes and functions
 namespace {
@@ -197,7 +201,6 @@ bool DoStopPlaying(const CommandContext &context)
    auto &projectAudioManager = ProjectAudioManager::Get(project);
    auto gAudioIO = AudioIOBase::Get();
    auto &toolbar = ControlToolBar::Get(project);
-   auto &window = ProjectWindow::Get(project);
    auto token = ProjectAudioIO::Get(project).GetAudioIOToken();
 
    //If this project is playing, stop playing, make sure everything is unpaused.
@@ -294,6 +297,12 @@ void DoMoveToLabel(AudacityProject &project, bool next)
             window.ScrollIntoView(selectedRegion.t0());
             window.RedrawProject();
          }
+         /* i18n-hint:
+            String is replaced by the name of a label,
+            first number gives the position of that label in a sequence
+            of labels,
+            and the last number is the total number of labels in the sequence.
+         */
          auto message = XO("%s %d of %d")
             .Format( label->title, i + 1, lt->GetNumLabels() );
          trackFocus.MessageForScreenReader(message);
@@ -408,7 +417,8 @@ void OnTimerRecord(const CommandContext &context)
 
    const auto existingTracks{ ProjectAudioManager::ChooseExistingRecordingTracks(project, true, rateOfSelected) };
    if (existingTracks.empty()) {
-      if (numberOfSelected > 0 && rateOfSelected != settings.GetRate()) {
+      if (numberOfSelected > 0 && rateOfSelected !=
+          ProjectRate::Get(project).GetRate()) {
          AudacityMessageBox(XO(
             "Too few tracks are selected for recording at this sample rate.\n"
             "(Audacity requires two channels at the same sample rate for\n"
@@ -498,7 +508,6 @@ void OnPunchAndRoll(const CommandContext &context)
 {
    AudacityProject &project = context.project;
    auto &viewInfo = ViewInfo::Get( project );
-   auto &window = GetProjectFrame( project );
 
    static const auto url =
       wxT("Punch_and_Roll_Record#Using_Punch_and_Roll_Record");
@@ -537,7 +546,8 @@ void OnPunchAndRoll(const CommandContext &context)
          : (recordingChannels == 2)
          ? XO("Please select in a stereo track or two mono tracks.")
          : XO("Please select at least %d channels.").Format( recordingChannels );
-      ShowErrorDialog(&window, XO("Error"), message, url);
+      BasicUI::ShowErrorDialog( *ProjectFramePlacement(&project),
+         XO("Error"), message, url);
       return;
    }
 
@@ -573,13 +583,14 @@ void OnPunchAndRoll(const CommandContext &context)
          // May adjust t1 left
          // Let's ignore the possibility of a clip even shorter than the
          // crossfade duration!
-         newt1 = std::min(newt1, clip->GetEndTime() - crossFadeDuration);
+         newt1 = std::min(newt1, clip->GetPlayEndTime() - crossFadeDuration);
       }
    }
 
    if (error) {
       auto message = XO("Please select a time within a clip.");
-      ShowErrorDialog( &window, XO("Error"), message, url);
+      BasicUI::ShowErrorDialog(
+         *ProjectFramePlacement(&project), XO("Error"), message, url);
       return;
    }
 
@@ -643,12 +654,12 @@ void OnPunchAndRoll(const CommandContext &context)
 
 void OnLockPlayRegion(const CommandContext &context)
 {
-   AdornedRulerPanel::Get( context.project ).LockPlayRegion();
+   SelectUtilities::LockPlayRegion(context.project);
 }
 
 void OnUnlockPlayRegion(const CommandContext &context)
 {
-   AdornedRulerPanel::Get( context.project ).UnlockPlayRegion();
+   SelectUtilities::UnlockPlayRegion(context.project);
 }
 
 void OnRescanDevices(const CommandContext &WXUNUSED(context) )

@@ -23,7 +23,7 @@
 #include <wx/valtext.h>
 #include <wx/stattext.h>
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -110,9 +110,9 @@ TranslatableString EffectDtmf::GetDescription()
    return XO("Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones");
 }
 
-wxString EffectDtmf::ManualPage()
+ManualPageID EffectDtmf::ManualPage()
 {
-   return wxT("DTMF_Tones");
+   return L"DTMF_Tones";
 }
 
 // EffectDefinitionInterface implementation

@@ -82,6 +82,7 @@ CommandManager.  It holds the callback for one command.
 #include "CommandContext.h"
 #include "CommandManagerWindowClasses.h"
 
+#include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/evtloop.h>
 #include <wx/frame.h>
@@ -91,9 +92,13 @@ CommandManager.  It holds the callback for one command.
 #include <wx/menu.h>
 #include <wx/tokenzr.h>
 
+#include "../ActiveProject.h"
+#include "../Journal.h"
+#include "../JournalOutput.h"
+#include "../JournalRegistry.h"
 #include "../Menus.h"
-
-#include "../Project.h"
+#include "Project.h"
+#include "ProjectWindows.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
 
@@ -815,13 +820,37 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
    return entry;
 }
 
+wxString CommandManager::FormatLabelForMenu(
+   const CommandID &id, const TranslatableString *pLabel) const
+{
+   NormalizedKeyString keyStr;
+   if (auto iter = mCommandNameHash.find(id); iter != mCommandNameHash.end()) {
+      if (auto pEntry = iter->second) {
+         keyStr = pEntry->key;
+         if (!pLabel)
+            pLabel = &pEntry->label;
+      }
+   }
+   if (pLabel)
+      return FormatLabelForMenu(*pLabel, keyStr);
+   return {};
+}
+
 wxString CommandManager::FormatLabelForMenu(const CommandListEntry *entry) const
 {
-   auto label = entry->label.Translation();
-   if (!entry->key.empty())
+   return FormatLabelForMenu( entry->label, entry->key );
+}
+
+wxString CommandManager::FormatLabelForMenu(
+   const TranslatableString &translatableLabel,
+   const NormalizedKeyString &keyStr) const
+{
+   auto label = translatableLabel.Translation();
+   auto key = keyStr.GET();
+   if (!key.empty())
    {
       // using GET to compose menu item name for wxWidgets
-      label += wxT("\t") + entry->key.GET();
+      label += wxT("\t") + key;
    }
 
    return label;
@@ -1182,6 +1211,32 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
    return false;
 }
 
+namespace {
+
+constexpr auto JournalCode = wxT("CM");  // for CommandManager
+
+// Register a callback for the journal
+Journal::RegisteredCommand sCommand{ JournalCode,
+[]( const wxArrayStringEx &fields )
+{
+   // Expect JournalCode and the command name.
+   // To do, perhaps, is to include some parameters.
+   bool handled = false;
+   if ( fields.size() == 2 ) {
+      if (auto project = GetActiveProject().lock()) {
+         auto pManager = &CommandManager::Get( *project );
+         auto flags = MenuManager::Get( *project ).GetUpdateFlags();
+         const CommandContext context( *project );
+         auto &command = fields[1];
+         handled =
+            pManager->HandleTextualCommand( command, context, flags, false );
+      }
+   }
+   return handled;
+}
+};
+
+}
 
 /// HandleCommandEntry() takes a CommandListEntry and executes it
 /// returning true iff successful.  If you pass any flags,
@@ -1189,7 +1244,8 @@ bool CommandManager::FilterKeyEvent(AudacityProject *project, const wxKeyEvent &
 ///with the command's flags.
 bool CommandManager::HandleCommandEntry(AudacityProject &project,
    const CommandListEntry * entry,
-   CommandFlag flags, bool alwaysEnabled, const wxEvent * evt)
+   CommandFlag flags, bool alwaysEnabled, const wxEvent * evt,
+   const CommandContext *pGivenContext)
 {
    if (!entry )
       return false;
@@ -1216,7 +1272,11 @@ bool CommandManager::HandleCommandEntry(AudacityProject &project,
       mNiceName = {};
    }
 
-   const CommandContext context{ project, evt, entry->index, entry->parameter };
+   Journal::Output({ JournalCode, entry->name.GET() });
+
+   CommandContext context{ project, evt, entry->index, entry->parameter };
+   if (pGivenContext)
+      context.temporarySelection = pGivenContext->temporarySelection;
    auto &handler = entry->finder(project);
    (handler.*(entry->callback))(context);
    mLastProcessId = 0;
@@ -1298,7 +1358,8 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
             Str == entry->labelPrefix.Translation() )
          {
             return HandleCommandEntry(
-               context.project, entry.get(), flags, alwaysEnabled)
+               context.project, entry.get(), flags, alwaysEnabled,
+               nullptr, &context)
                ? CommandSuccess : CommandFailure;
          }
       }
@@ -1308,7 +1369,8 @@ CommandManager::HandleTextualCommand(const CommandID & Str,
          if( Str == entry->name )
          {
             return HandleCommandEntry(
-               context.project, entry.get(), flags, alwaysEnabled)
+               context.project, entry.get(), flags, alwaysEnabled,
+               nullptr, &context)
                ? CommandSuccess : CommandFailure;
          }
       }
@@ -1654,14 +1716,17 @@ static struct InstallHandlers
       KeyboardCapture::SetPreFilter( []( wxKeyEvent & ) {
          // We must have a project since we will be working with the
          // CommandManager, which is tied to individual projects.
-         AudacityProject *project = GetActiveProject();
+         auto project = GetActiveProject().lock();
          return project && GetProjectFrame( *project ).IsEnabled();
       } );
       KeyboardCapture::SetPostFilter( []( wxKeyEvent &key ) {
          // Capture handler window didn't want it, so ask the CommandManager.
-         AudacityProject *project = GetActiveProject();
-         auto &manager = CommandManager::Get( *project );
-         return manager.FilterKeyEvent(project, key);
+         if (auto project = GetActiveProject().lock()) {
+            auto &manager = CommandManager::Get( *project );
+            return manager.FilterKeyEvent(project.get(), key);
+         }
+         else
+            return false;
       } );
    }
 } installHandlers;

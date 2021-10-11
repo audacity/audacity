@@ -29,6 +29,9 @@ AUDACITY_DLL_API void DoSelectAll( AudacityProject &project );
 AUDACITY_DLL_API void DoSelectAllAudio( AudacityProject &project );
 AUDACITY_DLL_API void DoSelectSomething( AudacityProject &project );
 
+AUDACITY_DLL_API void LockPlayRegion(AudacityProject &project);
+AUDACITY_DLL_API void UnlockPlayRegion(AudacityProject &project);
+
 }
 
 #endif

@@ -41,10 +41,11 @@ for drawing different aspects of the label and its text box.
 #include <limits.h>
 #include <float.h>
 
+#include <wx/log.h>
 #include <wx/tokenzr.h>
 
 #include "Prefs.h"
-#include "ProjectFileIORegistry.h"
+#include "Project.h"
 #include "prefs/ImportExportPrefs.h"
 
 #include "effects/TimeWarper.h"
@@ -55,7 +56,7 @@ wxDEFINE_EVENT(EVT_LABELTRACK_DELETION, LabelTrackEvent);
 wxDEFINE_EVENT(EVT_LABELTRACK_PERMUTED, LabelTrackEvent);
 wxDEFINE_EVENT(EVT_LABELTRACK_SELECTION, LabelTrackEvent);
 
-static ProjectFileIORegistry::Entry registerFactory{
+static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    wxT( "labeltrack" ),
    []( AudacityProject &project ){
       auto &tracks = TrackList::Get( project );

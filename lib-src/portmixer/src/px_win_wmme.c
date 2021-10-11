@@ -50,11 +50,18 @@ int OpenMixer_Win_MME(px_mixer *Px, int index)
    HWAVEIN hWaveIn;
    HWAVEOUT hWaveOut;
    MMRESULT res;
+
    UINT deviceIn = UINT_MAX;
    UINT deviceOut = UINT_MAX;
 
+#if PX_PAWINMME_GETSTREAMINPUTHANDLE_EXISTS
    hWaveIn = PaWinMME_GetStreamInputHandle(Px->pa_stream, 0);
    hWaveOut = PaWinMME_GetStreamOutputHandle(Px->pa_stream, 0);
+#else
+   hWaveIn = NULL;
+   hWaveOut = NULL;
+#endif
+
    if (hWaveIn) {
       res = waveInGetID(hWaveIn, &deviceIn);
       if (res != MMSYSERR_NOERROR) {

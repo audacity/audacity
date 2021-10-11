@@ -34,17 +34,22 @@ KeyConfigPrefs and MousePrefs use.
 #include <wx/statbox.h>
 #include <wx/textctrl.h>
 
-#include "../Prefs.h"
-#include "../Project.h"
+#include "ActiveProject.h"
+#include "Prefs.h"
+#include "Project.h"
+#include "../ProjectWindows.h"
 #include "../commands/CommandManager.h"
-#include "../xml/XMLFileReader.h"
+#include "XMLFileReader.h"
 
+#include "../SelectFile.h"
 #include "../ShuttleGui.h"
 
-#include "../FileNames.h"
+#include "FileNames.h"
 
+#include "../widgets/BasicMenu.h"
 #include "../widgets/KeyView.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/wxWidgetsWindowPlacement.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"
@@ -117,7 +122,7 @@ TranslatableString KeyConfigPrefs::GetDescription()
    return XO("Preferences for KeyConfig");
 }
 
-wxString KeyConfigPrefs::HelpPageName()
+ManualPageID KeyConfigPrefs::HelpPageName()
 {
    return "Keyboard_Preferences";
 }
@@ -475,7 +480,9 @@ void KeyConfigPrefs::OnShow(wxShowEvent & event)
 {
    event.Skip();
 
-   if (event.IsShown())
+   // This is required to prevent a crash if Preferences 
+   // were opened without a project.
+   if (event.IsShown() && mView != nullptr)
    {
       mView->Refresh();
    }
@@ -485,7 +492,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
 {
    wxString file = wxT("Audacity-keys.xml");
 
-   file = FileNames::SelectFile(FileNames::Operation::Open,
+   file = SelectFile(FileNames::Operation::Open,
       XO("Select an XML file containing Audacity keyboard shortcuts..."),
       wxEmptyString,
       file,
@@ -564,7 +571,7 @@ void KeyConfigPrefs::OnExport(wxCommandEvent & WXUNUSED(event))
 {
    wxString file = wxT("Audacity-keys.xml");
 
-   file = FileNames::SelectFile(FileNames::Operation::Export,
+   file = SelectFile(FileNames::Operation::Export,
       XO("Export Keyboard Shortcuts As:"),
       wxEmptyString,
       file,
@@ -594,8 +601,7 @@ void KeyConfigPrefs::OnDefaults(wxCommandEvent & WXUNUSED(event))
    Menu.Append( 1, _("Standard") );
    Menu.Append( 2, _("Full") );
    Menu.Bind( wxEVT_COMMAND_MENU_SELECTED, &KeyConfigPrefs::OnImportDefaults, this );
-   // Pop it up where the mouse is.
-   PopupMenu(&Menu);//, wxPoint(0, 0));
+   BasicMenu::Handle( &Menu ).Popup( wxWidgetsWindowPlacement{ this } );
 }
 
 void KeyConfigPrefs::FilterKeys( std::vector<NormalizedKeyString> & arr )

@@ -22,6 +22,7 @@
 #endif
 
 #include "LV2Effect.h"
+#include "SampleCount.h"
 
 #include <cmath>
 

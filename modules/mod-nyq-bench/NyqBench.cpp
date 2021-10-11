@@ -23,6 +23,7 @@
 #include <wx/textctrl.h>
 #include <wx/toolbar.h>
 
+#include "ActiveProject.h"
 #include "AudioIOBase.h"
 #include "CommonCommandFlags.h"
 #include "ModuleConstants.h"
@@ -1327,15 +1328,17 @@ void NyqBench::OnLargeIcons(wxCommandEvent & e)
 
 void NyqBench::OnGo(wxCommandEvent & e)
 {
-   // No need to delete...EffectManager will do it
-   mEffect = new NyquistEffect(wxT("Nyquist Effect Workbench"));
-   const PluginID & ID = EffectManager::Get().RegisterEffect(mEffect);
+   auto pEffect =
+      std::make_unique<NyquistEffect>(L"Nyquist Effect Workbench");
+   mEffect = pEffect.get();
+   const PluginID & ID =
+      EffectManager::Get().RegisterEffect(std::move(pEffect));
 
    mEffect->SetCommand(mScript->GetValue());
    mEffect->RedirectOutput();
 
-   AudacityProject *p = GetActiveProject();
-   wxASSERT(p != NULL);
+   auto p = GetActiveProject().lock();
+   wxASSERT(p);
 
    if (p) {
       wxWindowDisabler disable(this);
@@ -1526,7 +1529,7 @@ void NyqBench::OnViewUpdate(wxUpdateUIEvent & e)
 
 void NyqBench::OnRunUpdate(wxUpdateUIEvent & e)
 {
-   AudacityProject *p = GetActiveProject();
+   auto p = GetActiveProject().lock();
    wxToolBar *tbar = GetToolBar();
    wxMenuBar *mbar = GetMenuBar();
 

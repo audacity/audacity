@@ -37,9 +37,9 @@ other settings.
 
 #include "portaudio.h"
 
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../ShuttleGui.h"
-#include "../DeviceManager.h"
+#include "DeviceManager.h"
 
 enum {
    HostID = 10000,
@@ -74,7 +74,7 @@ TranslatableString DevicePrefs::GetDescription()
    return XO("Preferences for Device");
 }
 
-wxString DevicePrefs::HelpPageName()
+ManualPageID DevicePrefs::HelpPageName()
 {
    return "Devices_Preferences";
 }
@@ -162,7 +162,8 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   S.StartStatic(XO("Recording"));
+   // i18n-hint: modifier as in "Recording preferences", not progressive verb
+   S.StartStatic(XC("Recording", "preference"));
    {
       S.StartMultiColumn(2);
       {

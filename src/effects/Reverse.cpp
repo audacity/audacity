@@ -113,8 +113,8 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    // Beware, the array grows as we loop over it.  Use integer subscripts, not iterators.
    for (size_t ii = 0; ii < clips.size(); ++ii) {
       const auto &clip = clips[ii].get();
-      auto clipStart = clip->GetStartSample();
-      auto clipEnd = clip->GetEndSample();
+      auto clipStart = clip->GetPlayStartSample();
+      auto clipEnd = clip->GetPlayEndSample();
       if (clipStart < start && clipEnd > start && clipEnd <= end) { // the reverse selection begins at the inside of a clip
          double splitTime = track->LongSamplesToTime(start);
          track->SplitAt(splitTime);
@@ -148,8 +148,8 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    for (i=0; i < clipArray.size(); i++) {
 
       WaveClip *clip = clipArray[i];
-      auto clipStart = clip->GetStartSample();
-      auto clipEnd = clip->GetEndSample();
+      auto clipStart = clip->GetPlayStartSample();
+      auto clipEnd = clip->GetPlayEndSample();
 
       if (clipStart >= start && clipEnd <= end) { // if the clip is inside the selected region
 
@@ -159,7 +159,7 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
          if(checkedFirstClip == false && clipStart > start) {
             checkedFirstClip = true;
             if(i > 0) {
-               if (clipArray[i-1]->GetEndSample() <= start) {
+               if (clipArray[i-1]->GetPlayEndSample() <= start) {
                   currentEnd -= (clipStart - start);
                }
             }
@@ -182,12 +182,12 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
             double offsetStartTime = track->LongSamplesToTime(clipOffsetStart);
             if(i+1 < clipArray.size()) // update currentEnd if there is a clip to process next
             {
-               auto nextClipStart = clipArray[i+1]->GetStartSample();
+               auto nextClipStart = clipArray[i+1]->GetPlayStartSample();
                currentEnd = currentEnd - (clipEnd - clipStart) - (nextClipStart - clipEnd);
             }
 
             revClips.push_back(track->RemoveAndReturnClip(clip)); // detach the clip from track
-            revClips.back()->SetOffset(track->LongSamplesToTime(track->TimeToLongSamples(offsetStartTime))); // align time to a sample and set offset
+            revClips.back()->SetPlayStartTime(track->LongSamplesToTime(track->TimeToLongSamples(offsetStartTime))); // align time to a sample and set offset
          }
       }
       else if (clipStart >= end) { // clip is after the selection region

@@ -18,7 +18,11 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../RefreshCode.h"
 #include "../../../TrackPanelMouseEvent.h"
 #include "../../../UndoManager.h"
-#include "../../../ViewInfo.h"
+#include "ViewInfo.h"
+#include "../../../SelectionState.h"
+#include "../../../ProjectAudioIO.h"
+#include "../../../images/Cursors.h"
+#include "../../../tracks/ui/TimeShiftHandle.h"
 
 #include <wx/cursor.h>
 #include <wx/translation.h>
@@ -57,6 +61,7 @@ void LabelTrackHit::OnLabelPermuted( LabelTrackEvent &e )
    
    update( mMouseOverLabelLeft );
    update( mMouseOverLabelRight );
+   update( mMouseOverLabel );
 }
 
 LabelGlyphHandle::LabelGlyphHandle
@@ -80,17 +85,6 @@ UIHandle::Result LabelGlyphHandle::NeedChangeHighlight
       // pointer moves between the circle and the chevron
       return RefreshCode::RefreshCell;
    return 0;
-}
-
-HitTestPreview LabelGlyphHandle::HitPreview(bool hitCenter)
-{
-   static wxCursor arrowCursor{ wxCURSOR_ARROW };
-   return {
-      (hitCenter
-         ? XO("Drag one or more label boundaries.")
-         : XO("Drag label boundary.")),
-      &arrowCursor
-   };
 }
 
 UIHandlePtr LabelGlyphHandle::HitTest
@@ -124,26 +118,24 @@ LabelGlyphHandle::~LabelGlyphHandle()
 void LabelGlyphHandle::HandleGlyphClick
 (LabelTrackHit &hit, const wxMouseEvent & evt,
  const wxRect & r, const ZoomInfo &zoomInfo,
- NotifyingSelectedRegion &WXUNUSED(newSel))
+ NotifyingSelectedRegion &newSel)
 {
    if (evt.ButtonDown())
    {
       //OverGlyph sets mMouseOverLabel to be the chosen label.
       const auto pTrack = mpLT;
       LabelTrackView::OverGlyph(*pTrack, hit, evt.m_x, evt.m_y);
+
       hit.mIsAdjustingLabel = evt.Button(wxMOUSE_BTN_LEFT) &&
          ( hit.mEdge & 3 ) != 0;
 
       if (hit.mIsAdjustingLabel)
       {
+         auto& view = LabelTrackView::Get(*pTrack);
+         view.ResetTextSelection();
+
          double t = 0.0;
-         // We move if we hit the centre, we adjust one edge if we hit a chevron.
-         // This is if we are moving just one edge.
-         hit.mbIsMoving = (hit.mEdge & 4)!=0;
-
-         // No to the above!  We initially expect to be moving just one edge.
-         hit.mbIsMoving = false;
-
+         
          // When we start dragging the label(s) we don't want them to jump.
          // so we calculate the displacement of the mouse from the drag center
          // and use that in subsequent dragging calculations.  The mouse stays
@@ -170,11 +162,14 @@ void LabelGlyphHandle::HandleGlyphClick
             // If we're on a boundary between two different labels, 
             // then it's an adjust.
             // In both cases the two points coalesce.
-            hit.mbIsMoving = (hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight);
-
+            // 
+            // NOTE: seems that it's not neccessary that hitting the both
+            // left and right handles mean that we're dealing with a point, 
+            // but the range will be turned into a point on click
+            bool isPointLabel = hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight;
             // Except!  We don't coalesce if both ends are from the same label and
             // we have deliberately chosen to preserve length, by holding shift down.
-            if (!(hit.mbIsMoving && evt.ShiftDown()))
+            if (!(isPointLabel && evt.ShiftDown()))
             {
                MayAdjustLabel(hit, hit.mMouseOverLabelLeft, -1, false, t);
                MayAdjustLabel(hit, hit.mMouseOverLabelRight, 1, false, t);
@@ -190,6 +185,10 @@ void LabelGlyphHandle::HandleGlyphClick
          {
             t = mLabels[ hit.mMouseOverLabelLeft ].getT0();
          }
+         else if (hit.mMouseOverLabel >= 0)
+         {
+            t = mLabels[hit.mMouseOverLabel].getT0();
+         }
          mxMouseDisplacement = zoomInfo.TimeToPosition(t, r.x) - evt.m_x;
       }
    }
@@ -201,6 +200,8 @@ UIHandle::Result LabelGlyphHandle::Click
    auto result = LabelDefaultClickHandle::Click( evt, pProject );
 
    const wxMouseEvent &event = evt.event;
+   auto& selectionState = SelectionState::Get(*pProject);
+   auto& tracks = TrackList::Get(*pProject);
 
    auto &viewInfo = ViewInfo::Get( *pProject );
    HandleGlyphClick(
@@ -215,13 +216,6 @@ UIHandle::Result LabelGlyphHandle::Click
    else
       // redraw the track.
       result |= RefreshCode::RefreshCell;
-
-   // handle shift+ctrl down
-   /*if (event.ShiftDown()) { // && event.ControlDown()) {
-      lTrack->SetHighlightedByKey(true);
-      Refresh(false);
-      return;
-   }*/
 
    return result;
 }
@@ -300,24 +294,66 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
    const auto &mLabels = pTrack->GetLabels();
    if(evt.LeftUp())
    {
-      bool lupd = false, rupd = false;
+      bool updated = false;
       if( hit.mMouseOverLabelLeft >= 0 ) {
          auto labelStruct = mLabels[ hit.mMouseOverLabelLeft ];
-         lupd = labelStruct.updated;
+         updated |= labelStruct.updated;
          labelStruct.updated = false;
          pTrack->SetLabel( hit.mMouseOverLabelLeft, labelStruct );
       }
       if( hit.mMouseOverLabelRight >= 0 ) {
          auto labelStruct = mLabels[ hit.mMouseOverLabelRight ];
-         rupd = labelStruct.updated;
+         updated |= labelStruct.updated;
          labelStruct.updated = false;
          pTrack->SetLabel( hit.mMouseOverLabelRight, labelStruct );
+      }
+
+      if (hit.mMouseOverLabel >= 0)
+      {
+          auto labelStruct = mLabels[hit.mMouseOverLabel];
+          if (!labelStruct.updated)
+          {
+              //happens on click over bar between handles (without moving a cursor)
+              newSel = labelStruct.selectedRegion;
+
+              // IF the user clicked a label, THEN select all other tracks by Label
+              // do nothing if at least one other track is selected
+              auto& selectionState = SelectionState::Get(project);
+              auto& tracks = TrackList::Get(project);
+
+              bool done = tracks.Selected().any_of(
+                  [&](const Track* track) { return track != static_cast<Track*>(pTrack.get()); }
+              );
+
+              if (!done) {
+                  //otherwise, select all tracks
+                  for (auto t : tracks.Any())
+                      selectionState.SelectTrack(*t, true, true);
+              }
+
+              // Do this after, for its effect on TrackPanel's memory of last selected
+              // track (which affects shift-click actions)
+              selectionState.SelectTrack(*pTrack.get(), true, true);
+
+              // PRL: bug1659 -- make selection change undo correctly
+              updated = !ProjectAudioIO::Get(project).IsAudioActive();
+              
+              auto& view = LabelTrackView::Get(*pTrack);
+              view.SetNavigationIndex(hit.mMouseOverLabel);
+          }
+          else
+          {
+              labelStruct.updated = false;
+              pTrack->SetLabel(hit.mMouseOverLabel, labelStruct);
+              updated = true;
+          }
       }
 
       hit.mIsAdjustingLabel = false;
       hit.mMouseOverLabelLeft  = -1;
       hit.mMouseOverLabelRight = -1;
-      return lupd || rupd;
+      hit.mMouseOverLabel = -1;
+      return updated;
    }
 
    if(evt.Dragging())
@@ -328,35 +364,47 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
       //      to allow scrolling while dragging labels
       int x = Constrain( evt.m_x + mxMouseDisplacement - r.x, 0, r.width);
 
-      // If exactly one edge is selected we allow swapping
-      bool bAllowSwapping =
-         ( hit.mMouseOverLabelLeft >=0 ) !=
-         ( hit.mMouseOverLabelRight >= 0);
+      double fNewX = zoomInfo.PositionToTime(x, 0);
+      // Moving the whole ranged label(s)
+      if (hit.mMouseOverLabel != -1)
+      {
+         if (evt.ShiftDown())
+         {
+            auto dt = fNewX - mLabels[hit.mMouseOverLabel].getT0();
+            for (auto i = 0, count = static_cast<int>(mLabels.size()); i < count; ++i)
+               MayMoveLabel(i, -1, mLabels[i].getT0() + dt);
+         }
+         else
+            MayMoveLabel(hit.mMouseOverLabel, -1, fNewX);
+      }
       // If we're on the 'dot' and nowe're moving,
       // Though shift-down inverts that.
       // and if both edges the same, then we're always moving the label.
-      bool bLabelMoving = hit.mbIsMoving;
-      bLabelMoving ^= evt.ShiftDown();
-      bLabelMoving |= ( hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight );
-      double fNewX = zoomInfo.PositionToTime(x, 0);
-      if( bLabelMoving )
+      else if((hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight) || evt.ShiftDown())
       {
          MayMoveLabel( hit.mMouseOverLabelLeft,  -1, fNewX );
          MayMoveLabel( hit.mMouseOverLabelRight, +1, fNewX );
       }
       else
       {
+         // If exactly one edge is selected we allow swapping
+         bool bAllowSwapping =
+            (hit.mMouseOverLabelLeft >= 0) !=
+            (hit.mMouseOverLabelRight >= 0);
          MayAdjustLabel( hit, hit.mMouseOverLabelLeft,  -1, bAllowSwapping, fNewX );
          MayAdjustLabel( hit, hit.mMouseOverLabelRight, +1, bAllowSwapping, fNewX );
       }
 
       const auto &view = LabelTrackView::Get( *pTrack );
-      if( view.HasSelection( project ) )
+      auto navigationIndex = view.GetNavigationIndex(project);
+      if(navigationIndex != -1 &&
+          (navigationIndex == hit.mMouseOverLabel ||
+              navigationIndex == hit.mMouseOverLabelLeft ||
+              navigationIndex == hit.mMouseOverLabelRight))
       {
-         auto selIndex = view.GetSelectedIndex( project );
          //Set the selection region to be equal to
          //the NEW size of the label.
-         newSel = mLabels[ selIndex ].selectedRegion;
+         newSel = mLabels[navigationIndex].selectedRegion;
       }
       pTrack->SortLabels();
    }
@@ -381,7 +429,23 @@ UIHandle::Result LabelGlyphHandle::Drag
 HitTestPreview LabelGlyphHandle::Preview
 (const TrackPanelMouseState &, AudacityProject *)
 {
-   return HitPreview( (mpHit->mEdge & 4 )!=0);
+   static wxCursor arrowCursor{ wxCURSOR_ARROW };
+   static auto handOpenCursor =
+      MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
+   static auto handClosedCursor =
+      MakeCursor(wxCURSOR_HAND, RearrangingCursorXpm, 16, 16);
+
+   if (mpHit->mMouseOverLabel != -1)
+   {
+      return {
+         XO("Drag label. Hold shift and drag to move all labels on the same track."),
+         mpHit->mIsAdjustingLabel ? &*handClosedCursor : &*handOpenCursor
+      };
+   }
+   else if ((mpHit->mEdge & 4) != 0)
+      return { XO("Drag one or more label boundaries."), &arrowCursor };
+   else
+      return { XO("Drag label boundary."), &arrowCursor };
 }
 
 UIHandle::Result LabelGlyphHandle::Release

@@ -1,0 +1,43 @@
+#!/usr/bin/make -f
+
+include /usr/share/dpkg/architecture.mk
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+export CONAN_USER_HOME = $(shell pwd)/audacity-offline-dependencies/conan_home
+export PATH := $(shell pwd)/conan_env/bin:$(PATH)
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+	-DCMAKE_BUILD_TYPE=Release \
+	-Daudacity_conan_allow_prebuilt_binaries=no \
+	-Daudacity_lib_preference=system \
+	-Daudacity_obey_system_dependencies=On \
+	-Daudacity_use_pch=no \
+	-Daudacity_use_wxwidgets=local \
+	-Daudacity_use_vamp=local \
+	-Daudacity_use_sbsms=local 
+
+# tests fails with system portaudio
+override_dh_auto_test:
+
+override_dh_shlibdeps:
+	dh_shlibdeps -l$(shell pwd)/debian/audacity/usr/lib/$(DEB_BUILD_GNU_TYPE)/audacity
+
+execute_after_dh_auto_install:
+	#mv debian/audacity/usr/share/appdata/ debian/audacity/usr/share/metainfo/
+	rm debian/audacity/usr/share/doc/audacity/LICENSE.txt
+
+execute_before_dh_auto_configure:
+	python3 -m venv conan_env
+	conan_env/bin/pip3 install --no-index --find-links "./audacity-offline-dependencies/pip_cache" conan 
+
+	mkdir -p ${CONAN_USER_HOME}
+
+	conan config home
+	conan config init
+	conan config set storage.download_cache="${CONAN_USER_HOME}/download_cache"
+	conan profile update settings.compiler.libcxx=libstdc++11 default

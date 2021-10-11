@@ -437,8 +437,8 @@ void EffectSBSMS::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper *wa
    auto front = clips.front();
    auto back = clips.back();
    for (auto &clip : clips) {
-      auto st = clip->GetStartTime();
-      auto et = clip->GetEndTime();
+      auto st = clip->GetPlayStartTime();
+      auto et = clip->GetPlayEndTime();
 
       if (st >= mCurT0 || et < mCurT1) {
          if (mCurT0 < st && clip == front) {

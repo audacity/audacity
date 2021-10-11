@@ -16,8 +16,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../AColor.h"
 #include "../../SpectrumAnalyst.h"
-#include "../../NumberScale.h"
-#include "../../Project.h"
+#include "NumberScale.h"
+#include "Project.h"
 #include "../../ProjectAudioIO.h"
 #include "../../ProjectHistory.h"
 #include "../../ProjectSettings.h"
@@ -30,7 +30,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanel.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../ViewInfo.h"
+#include "ViewInfo.h"
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
@@ -572,7 +572,7 @@ UIHandle::Result SelectHandle::Click
          WaveClip *const selectedClip = wt->GetClipAtTime(time);
          if (selectedClip) {
             viewInfo.selectedRegion.setTimes(
-               selectedClip->GetOffset(), selectedClip->GetEndTime());
+               selectedClip->GetPlayStartTime(), selectedClip->GetPlayEndTime());
          }
       } );
 

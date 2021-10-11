@@ -56,7 +56,7 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # Define this so that sync-lock tiles shine through spectrogram.
    # The spectrogram pastes a bitmap over the tiles.
    # This makes it use alpha blending, most transparent where least intense.
-   SPECTROGRAM_OVERLAY
+   #SPECTROGRAM_OVERLAY
 
    # Define this so that sync-lock tiles shine through note/MIDI track.
    # The note track then relies on the same code for drawing background as
@@ -112,6 +112,9 @@ set( EXPERIMENTAL_OPTIONS_LIST
 
    # Paul Licameli (PRL) 5 Oct 2014
    SPECTRAL_EDITING
+
+   # Edward Hui 1 Jul 2021
+   #BRUSH_TOOL
 
    # Paul Licameli (PRL) 29 Nov 2014
    #IMPROVED_SEEKING
@@ -179,11 +182,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    #This flag is used only in CrashReport.h; elsewhere use HAS_CRASH_REPORT
    CRASH_REPORT
 
-   # Paul Licameli (PRL) 31 May 2015
-   # Zero-padding factor for spectrograms can smooth the display of spectrograms by
-   # interpolating in frequency domain.
-   ZERO_PADDED_SPECTROGRAMS
-
    # PRL 11 Jul 2017
    # Highlight more things in TrackPanel when the mouse moves over them,
    # using delibrately ugly pens and brushes until there is better cooperation
@@ -196,7 +194,10 @@ set( EXPERIMENTAL_OPTIONS_LIST
 
    # PRL 5 Jan 2018
    # Easy change of keystroke bindings for menu items
-   EASY_CHANGE_KEY_BINDINGS
+   #
+   # PRL disabled 31 Aug 2021 because, at least on Mac, it misfires the
+   # preference dialog whenever any keystroke shortcuts with Shift+ are used
+   # EASY_CHANGE_KEY_BINDINGS
 
    # PRL 1 Jun 2018
    PUNCH_AND_ROLL

@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ui/TrackVRulerControls.h"
 
 #include "../../../../HitTestResult.h"
-#include "../../../../Project.h"
+#include "Project.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -119,8 +119,8 @@ UIHandle::Result WaveTrackVZoomHandle::DoRelease(
          *pProject,
          pTrack, rect, RefreshCode::RefreshNone, event.m_y, doZoom };
 
-      auto pMenu = PopupMenuTable::BuildMenu(pParent, &table, &data);
-      pParent->PopupMenu(pMenu.get(), event.m_x, event.m_y);
+      auto pMenu = PopupMenuTable::BuildMenu( &table, &data );
+      pMenu->Popup( *pParent, { event.m_x, event.m_y } );
 
       return data.result;
    }

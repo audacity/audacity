@@ -56,8 +56,8 @@ or ASlider.
 
 #include "../AColor.h"
 #include "../ImageManipulation.h"
-#include "../Project.h"
-#include "../ProjectStatus.h"
+#include "Project.h"
+#include "ProjectStatus.h"
 #include "../ProjectWindowBase.h"
 #include "../ShuttleGui.h"
 #include "../Theme.h"
@@ -1323,6 +1323,7 @@ void LWSlider::OnKeyDown(wxKeyEvent & event)
                if (def && def->IsEnabled()) {
                   wxCommandEvent cevent(wxEVT_COMMAND_BUTTON_CLICKED,
                         def->GetId());
+                  cevent.SetEventObject( def );
                   mParent->GetEventHandler()->ProcessEvent(cevent);
                }
             }

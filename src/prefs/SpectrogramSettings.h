@@ -11,9 +11,9 @@ Paul Licameli
 #ifndef __AUDACITY_SPECTROGRAM_SETTINGS__
 #define __AUDACITY_SPECTROGRAM_SETTINGS__
 
-#include "../Prefs.h"
-#include "../SampleFormat.h"
-#include "../RealFFTf.h"
+#include "Prefs.h"
+#include "SampleFormat.h"
+#include "RealFFTf.h"
 
 #undef SPECTRAL_SELECTION_GLOBAL_SWITCH
 
@@ -67,6 +67,7 @@ public:
    };
 
    static const EnumValueSymbols &GetScaleNames();
+   static const EnumValueSymbols &GetColorSchemeNames();
    static const TranslatableStrings &GetAlgorithmNames();
 
    static SpectrogramSettings &defaults();
@@ -116,19 +117,32 @@ private:
 public:
    size_t WindowSize() const { return windowSize; }
 
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
 private:
    int zeroPaddingFactor;
 public:
    size_t ZeroPaddingFactor() const {
       return algorithm == algPitchEAC ? 1 : zeroPaddingFactor;
    }
-#endif
 
    size_t GetFFTLength() const; // window size (times zero padding, if STFT)
    size_t NBins() const;
 
-   bool isGrayscale;
+   enum ColorScheme : int {
+      // Keep in correspondence with AColor::colorSchemes, AColor::gradient_pre
+      csColorNew = 0,
+      csColorTheme,
+      csGrayscale,
+      csInvGrayscale,
+
+      csNumColorScheme,
+   };
+   ColorScheme colorScheme;
+
+   class ColorSchemeEnumSetting : public EnumSetting< ColorScheme > {
+       using EnumSetting< ColorScheme >::EnumSetting;
+       void Migrate(wxString &value) override;
+   };
+   static ColorSchemeEnumSetting colorSchemeSetting;
 
    ScaleType scaleType;
 
@@ -167,4 +181,7 @@ public:
    mutable Floats         tWindow; // Window times time parameter
    mutable Floats         dWindow; // Derivative of window
 };
+
+extern AUDACITY_DLL_API IntSetting SpectrumMaxFreq;
+
 #endif

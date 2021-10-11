@@ -95,3 +95,6 @@ target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 
+if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
+   target_compile_options( ${TARGET} PRIVATE -fPIC )
+endif()

@@ -33,7 +33,7 @@ Provides:
 
 #include <wx/app.h>
 #include <wx/wxprec.h>
-#include "../Prefs.h"
+#include "Prefs.h"
 #include "../Theme.h"
 #include "../ShuttleGui.h"
 #include "../AColor.h"
@@ -82,7 +82,7 @@ TranslatableString ThemePrefs::GetDescription()
    return XO("Preferences for Theme");
 }
 
-wxString ThemePrefs::HelpPageName()
+ManualPageID ThemePrefs::HelpPageName()
 {
    return "Theme_Preferences";
 }
