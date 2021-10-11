@@ -320,14 +320,17 @@ class PipeTerminal():
         command 'Amplify', returning it in "Brief" format.
         """
         print(self.__doc__)
+        prompt = ("\nEnter Command "
+                  "('H': Help, "
+                  "'C': Command List, "
+                  "'M': Menu List, "
+                  "'Q': Quit):\n> ")
         while True:
             # check if python version
             if sys.version_info[0] < 3:
-                message = input("\nEnter command, "
-                                    "'H' for usage help, or 'Q' to quit:\n> ")
+                message = input(prompt)
             else:
-                message = input(
-                    "\nEnter command, 'H' for usage help, or 'Q' to quit:\n> ")
+                message = input(prompt)
             # check if user input is a built-in command
             if message.upper() in self._builtIn:
                 reply = self._builtIn[message.upper()]()
