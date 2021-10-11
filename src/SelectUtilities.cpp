@@ -172,6 +172,14 @@ void ActivatePlayRegion(AudacityProject &project)
    }
    else {
       playRegion.SetActive( true );
+      if (playRegion.Empty()) {
+         auto &selectedRegion = viewInfo.selectedRegion;
+         if (!selectedRegion.isPoint())
+            playRegion.SetTimes(selectedRegion.t0(), selectedRegion.t1());
+         else
+            // Arbitrary first four seconds
+            playRegion.SetTimes(0.0, 4.0);
+      }
    }
 }
 
