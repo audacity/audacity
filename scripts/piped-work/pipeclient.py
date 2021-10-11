@@ -77,6 +77,7 @@ import errno
 import argparse
 import json
 from functools import partial
+from string import Template
 
 
 if sys.version_info[0] < 3 and sys.version_info[1] < 7:
