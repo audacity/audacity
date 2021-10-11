@@ -1352,7 +1352,7 @@ bool LabelTrackView::DoCaptureKey(
        !mLabels.empty())
       return true;
 
-   if (IsValidIndex(mTextEditIndex, project) || IsValidIndex(mNavigationIndex, project)) {
+   if (IsValidIndex(mTextEditIndex, project)) {
       if (IsGoodLabelEditKey(event)) {
          return true;
       }
