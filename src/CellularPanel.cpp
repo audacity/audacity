@@ -731,7 +731,11 @@ try
       GetParent()->GetEventHandler()->ProcessEvent(e);
    }
 
-   if (event.Leaving())
+   if (event.Entering())
+   {
+      Filter::spActivePanel = this;
+   }
+   else if (event.Leaving())
    {
       Leave();
 
