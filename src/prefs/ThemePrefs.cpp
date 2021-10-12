@@ -37,6 +37,7 @@ Provides:
 #include "Theme.h"
 #include "../ShuttleGui.h"
 #include "AColor.h"
+#include "BasicUI.h"
 
 wxDEFINE_EVENT(EVT_THEME_CHANGE, wxCommandEvent);
 
@@ -57,6 +58,21 @@ BEGIN_EVENT_TABLE(ThemePrefs, PrefsPanel)
    EVT_BUTTON(idReadThemeInternal,   ThemePrefs::OnReadThemeInternal)
    EVT_BUTTON(idSaveThemeAsCode,     ThemePrefs::OnSaveThemeAsCode)
 END_EVENT_TABLE()
+
+static bool ConfirmSave()
+{
+   if (!GUIBlendThemes.Read())
+      return true;
+
+   using namespace BasicUI;
+   const auto message = Verbatim(
+"\"Blend system and Audacity theme\" in Interface Preferences was on.\n"
+"This may cause images to to be re-saved with slight changes of color."
+   );
+
+   return MessageBoxResult::Cancel != ShowMessageBox(message,
+      MessageBoxOptions{}.CancelButton().IconStyle(Icon::Warning));
+}
 
 ThemePrefs::ThemePrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: A theme is a consistent visual style across an application's
@@ -182,6 +198,8 @@ void ThemePrefs::OnLoadThemeComponents(wxCommandEvent & WXUNUSED(event))
 /// Save Theme to multiple png files.
 void ThemePrefs::OnSaveThemeComponents(wxCommandEvent & WXUNUSED(event))
 {
+   if (!ConfirmSave())
+      return;
    wxBusyCursor busy;
    theTheme.SaveComponents();
 }
@@ -197,6 +215,8 @@ void ThemePrefs::OnLoadThemeCache(wxCommandEvent & WXUNUSED(event))
 /// Save Theme to single png file.
 void ThemePrefs::OnSaveThemeCache(wxCommandEvent & WXUNUSED(event))
 {
+   if (!ConfirmSave())
+      return;
    wxBusyCursor busy;
    theTheme.CreateImageCache();
    theTheme.WriteImageMap();// bonus - give them the html version.
@@ -213,6 +233,8 @@ void ThemePrefs::OnReadThemeInternal(wxCommandEvent & WXUNUSED(event))
 /// Save Theme as C source code.
 void ThemePrefs::OnSaveThemeAsCode(wxCommandEvent & WXUNUSED(event))
 {
+   if (!ConfirmSave())
+      return;
    wxBusyCursor busy;
    theTheme.SaveThemeAsCode();
    theTheme.WriteImageDefs();// bonus - give them the Defs too.
