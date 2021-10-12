@@ -125,7 +125,6 @@ void Theme::RegisterImagesAndColours()
 ThemeBase::ThemeBase(void)
 {
    bRecolourOnLoad = false;
-   bIsUsingSystemTextColour = false;
 }
 
 ThemeBase::~ThemeBase(void)
@@ -201,13 +200,11 @@ void ThemeBase::LoadTheme( teThemeType Theme )
 
    int TextColourDifference =  ColourDistance( CurrentText, DesiredText );
 
-   bIsUsingSystemTextColour = ( TextColourDifference == 0 );
-   // Theming is very accepting of alternative text colours.  They just need to 
+   // Theming is very accepting of alternative text colours.  They just need to
    // have decent contrast to the background colour, if we're blending themes. 
-   if( !bIsUsingSystemTextColour ){
+   if ( TextColourDifference != 0 ) {
       int ContrastLevel        =  ColourDistance( Back, DesiredText );
-      bIsUsingSystemTextColour = bRecolourOnLoad && (ContrastLevel > 250);
-      if( bIsUsingSystemTextColour )
+      if ( bRecolourOnLoad && (ContrastLevel > 250) )
          Colour( clrTrackPanelText ) = DesiredText;
    }
    bRecolourOnLoad = false;
