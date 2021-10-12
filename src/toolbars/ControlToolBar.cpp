@@ -572,7 +572,7 @@ void ControlToolBar::PlayDefault()
    // Let control have precedence over shift
    const bool cutPreview = mPlay->WasControlDown();
    const bool looped = !cutPreview &&
-      mPlay->WasShiftDown();
+      !mPlay->WasShiftDown();
    ProjectAudioManager::Get( mProject ).PlayCurrentRegion(looped, cutPreview);
 }
 

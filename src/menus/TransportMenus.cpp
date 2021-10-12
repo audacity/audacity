@@ -321,9 +321,9 @@ namespace TransportActions {
 
 struct Handler : CommandHandlerObject {
 
-// This Plays OR Stops audio.  It's a toggle.
-// It is usually bound to the SPACE key.
-void OnPlayStop(const CommandContext &context)
+// This plays (once, with fixed bounds) OR Stops audio.  It's a toggle.
+// The default binding for Shift+SPACE.
+void OnPlayOnceOrStop(const CommandContext &context)
 {
    if (DoStopPlaying(context.project))
       return;
@@ -335,9 +335,13 @@ void OnPlayStopSelect(const CommandContext &context)
    ProjectAudioManager::Get( context.project ).DoPlayStopSelect();
 }
 
-void OnPlayLooped(const CommandContext &context)
+// This plays (looping, maybe adjusting the loop) OR Stops audio.  It's a toggle.
+// The default binding for SPACE
+void OnPlayDefaultOrStop(const CommandContext &context)
 {
    auto &project = context.project;
+   if (DoStopPlaying(project))
+      return;
 
    if( !MakeReadyToPlay(project) )
       return;
@@ -1075,11 +1079,11 @@ BaseItemSharedPtr TransportMenu()
       Section( "Basic",
          Menu( wxT("Play"), XXO("Pl&aying"),
             /* i18n-hint: (verb) Start or Stop audio playback*/
-            Command( wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop),
+            Command( wxT("DefaultPlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayDefaultOrStop),
                CanStopAudioStreamFlag(), wxT("Space") ),
             Command( wxT("PlayStopSelect"), XXO("Play/Stop and &Set Cursor"),
                FN(OnPlayStopSelect), CanStopAudioStreamFlag(), wxT("X") ),
-            Command( wxT("PlayLooped"), XXO("&Loop Play"), FN(OnPlayLooped),
+            Command( wxT("OncePlayStop"), XXO("Play &Once/Stop"), FN(OnPlayOnceOrStop),
                CanStopAudioStreamFlag(), wxT("Shift+Space") ),
             Command( wxT("Pause"), XXO("&Pause"), FN(OnPause),
                CanStopAudioStreamFlag(), wxT("P") )
@@ -1204,7 +1208,7 @@ BaseItemSharedPtr ExtraTransportMenu()
    Menu( wxT("Transport"), XXO("T&ransport"),
       // PlayStop is already in the menus.
       /* i18n-hint: (verb) Start playing audio*/
-      Command( wxT("Play"), XXO("Pl&ay"), FN(OnPlayStop),
+      Command( wxT("Play"), XXO("Pl&ay Once"), FN(OnPlayOnceOrStop),
          WaveTracksExistFlag() | AudioIONotBusyFlag() ),
       /* i18n-hint: (verb) Stop playing audio*/
       Command( wxT("Stop"), XXO("Sto&p"), FN(OnStop),
@@ -1252,10 +1256,10 @@ BaseItemSharedPtr ExtraPlayAtSpeedMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("PlayAtSpeed"), XXO("&Play-at-Speed"),
       /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
-      Command( wxT("PlayAtSpeed"), XXO("Normal Pl&ay-at-Speed"),
-         FN(OnPlayAtSpeed), CaptureNotBusyFlag() ),
-      Command( wxT("PlayAtSpeedLooped"), XXO("&Loop Play-at-Speed"),
+      Command( wxT("PlayAtSpeedLooped"), XXO("&Play-at-Speed"),
          FN(OnPlayAtSpeedLooped), CaptureNotBusyFlag() ),
+      Command( wxT("PlayAtSpeed"), XXO("Play-at-Speed &Once"),
+         FN(OnPlayAtSpeed), CaptureNotBusyFlag() ),
       Command( wxT("PlayAtSpeedCutPreview"), XXO("Play C&ut Preview-at-Speed"),
          FN(OnPlayAtSpeedCutPreview), CaptureNotBusyFlag() ),
       Command( wxT("SetPlaySpeed"), XXO("Ad&just Playback Speed..."),
