@@ -271,7 +271,7 @@ function( audacity_append_common_compiler_options var use_pch )
 	 # Yes, -U to /U too as needed for Windows:
 	 $<IF:$<CONFIG:Debug>,-D_DEBUG=1,-U_DEBUG>
 
-         -DUSE_AQUA_THEME
+         $<$<PLATFORM_ID:Darwin>:-DUSE_AQUA_THEME>
    )   
    # Definitions controlled by the AUDACITY_BUILD_LEVEL switch
    if( AUDACITY_BUILD_LEVEL EQUAL 0 )
