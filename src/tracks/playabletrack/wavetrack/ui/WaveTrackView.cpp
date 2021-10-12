@@ -829,36 +829,6 @@ auto WaveTrackSubView::GetMenuItems(
       pClip = pTrack->GetClipAtTime( time );
    }
 
-   static auto FindAffordance = [](WaveTrack &track){
-      auto &view = TrackView::Get( track );
-      auto pAffordance = view.GetAffordanceControls();
-      return std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
-         pAffordance );
-   };
-
-   auto pRenameTrack = pTrack;
-   auto pRenameClip = pClip;
-   auto pAffordance = FindAffordance( *pTrack );
-   if ( pTrack && pClip && !pAffordance ) {
-      // Maybe an aligned right clip.  Check the first of the channel
-      // group instead for a clip at the same time.
-      if ( ( pRenameTrack = *TrackList::Channels( pTrack ).begin() ) ) {
-         pAffordance = FindAffordance( *pRenameTrack );
-         pRenameClip = pRenameTrack->GetClipAtTime( time );
-      }
-   }
-
-   auto RenameClip =
-   [pRenameTrack, pRenameClip, pAffordance]( const CommandContext &context ) {
-      auto &project = context.project;
-      // Begin editing of the label, either with a dialog or directly
-      // in the track panel.
-      pAffordance->StartEditNameOfMatchingClip( project,
-         [pRenameClip](auto &clip){ return &clip == pRenameClip; } );
-      // Refresh so that the insertion cursor appears
-      TrackPanel::Get(project).RefreshTrack(pRenameTrack);
-   };
-
    if (pClip)
       return {
          { L"Cut", XO("Cut") },
@@ -868,8 +838,7 @@ auto WaveTrackSubView::GetMenuItems(
          { L"Split", XO("Split Clip") },
          { L"TrackMute", XO("Mute/Unmute Track") },
          {},
-         { L"RenameClip", XO("Rename clip..."), RenameClip,
-            (pAffordance && pRenameClip) },
+         { L"RenameClip", XO("Rename clip...") },
       };
    else
       return {
