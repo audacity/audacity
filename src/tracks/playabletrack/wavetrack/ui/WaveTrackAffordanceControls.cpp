@@ -14,6 +14,10 @@
 #include <wx/frame.h>
 
 #include "AllThemeResources.h"
+#include "../../../../commands/CommandContext.h"
+#include "../../../../commands/CommandFlag.h"
+#include "../../../../commands/CommandFunctors.h"
+#include "../../../../commands/CommandManager.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
@@ -37,6 +41,7 @@
 #include "Theme.h"
 #include "../../../../../images/Cursors.h"
 #include "../../../../HitTestResult.h"
+#include "../../../../TrackPanel.h"
 #include "../../../../TrackPanelAx.h"
 
 #include "WaveClipTrimHandle.h"
@@ -358,13 +363,49 @@ Iter SelectedClip(const ViewInfo &viewInfo, Iter begin, Iter end)
       [&](auto &pClip){ return ClipIsSelected(viewInfo)(*pClip); });
 }
 
-bool SomeClipIsSelected(
-    const ViewInfo &viewInfo, const WaveTrack &waveTrack)
+auto FindAffordance(WaveTrack &track)
 {
-   auto &clips = waveTrack.GetClips();
-   auto begin = clips.begin(), end = clips.end();
-   return end != SelectedClip(viewInfo, begin, end);
+   auto &view = TrackView::Get( track );
+   auto pAffordance = view.GetAffordanceControls();
+   return std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
+      pAffordance );
 }
+
+std::pair<WaveTrack *, WaveClip *>
+SelectedClipOfFocusedTrack(AudacityProject &project)
+{
+   // Note that TrackFocus may change its state as a side effect, defining
+   // a track focus if there was none
+   if (auto pWaveTrack =
+      dynamic_cast<WaveTrack *>(TrackFocus::Get(project).Get())) {
+      for (auto pChannel : TrackList::Channels(pWaveTrack)) {
+         if (FindAffordance(*pChannel)) {
+            auto &viewInfo = ViewInfo::Get(project);
+            auto &clips = pChannel->GetClips();
+            auto begin = clips.begin(), end = clips.end(),
+               iter = SelectedClip(viewInfo, begin, end);
+            if (iter != end)
+               return { pChannel, iter->get() };
+         }
+      }
+   }
+   return { nullptr, nullptr };
+}
+
+// condition for enabling the command
+const ReservedCommandFlag &SomeClipIsSelectedFlag()
+{
+   static ReservedCommandFlag flag{
+      [](const AudacityProject &project){
+         return nullptr !=
+            // const_cast isn't pretty but not harmful in this case
+            SelectedClipOfFocusedTrack(const_cast<AudacityProject&>(project))
+               .second;
+      }
+   };
+   return flag;
+}
+
 }
 
 unsigned WaveTrackAffordanceControls::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
@@ -374,11 +415,7 @@ unsigned WaveTrackAffordanceControls::CaptureKey(wxKeyEvent& event, ViewInfo& vi
         // Handle the event if we are already editing clip name text...
         (mTextEditHelper != nullptr)
         // ... or it is the navigation key
-        || (keyCode == WXK_TAB)
-        // ... or if we should begin text editing, for the key and selection
-        || ((keyCode == WXK_RETURN || keyCode == WXK_NUMPAD_ENTER) &&
-           SomeClipIsSelected(
-                viewInfo, *static_cast<const WaveTrack*>(FindTrack().get())));
+        || (keyCode == WXK_TAB);
     if (!handleIt)
         event.Skip();
     return RefreshCode::RefreshNone;
@@ -402,12 +439,6 @@ unsigned WaveTrackAffordanceControls::KeyDown(wxKeyEvent& event, ViewInfo& viewI
         case WXK_TAB: {
             SelectNextClip(viewInfo, project, event.GetModifiers() != wxMOD_SHIFT);
         } break;
-        case WXK_NUMPAD_ENTER:
-        case WXK_RETURN: {
-            if (project)
-               StartEditNameOfMatchingClip(*project, ClipIsSelected(viewInfo));
-            break;
-        }
         }
     }
     return RefreshCode::RefreshCell;
@@ -603,3 +634,50 @@ std::shared_ptr<TextEditHelper> WaveTrackAffordanceControls::MakeTextEditHelper(
     return helper; 
 }
 
+// Register a menu item
+
+namespace {
+
+// Menu handler functions
+
+struct Handler : CommandHandlerObject {
+
+void OnEditClipName(const CommandContext &context)
+{
+   auto &project = context.project;
+   const auto [pTrack, pClip] = SelectedClipOfFocusedTrack(project);
+   if (pTrack && pClip) {
+      if (auto pAffordance = FindAffordance(*pTrack)) {
+         pAffordance->StartEditNameOfMatchingClip(project,
+            [pClip = pClip](auto &clip){ return &clip == pClip; });
+         // Refresh so the cursor appears
+         TrackPanel::Get(project).RefreshTrack(pTrack);
+      }
+   }
+}
+
+};
+
+#define FN(X) (& Handler :: X)
+
+CommandHandlerObject &findCommandHandler(AudacityProject &) {
+   // Handler is not stateful.  Doesn't need a factory registered with
+   // AudacityProject.
+   static Handler instance;
+   return instance;
+};
+
+using namespace MenuTable;
+
+// Register menu items
+
+AttachedItem sAttachment{ wxT("Edit/Other"),
+   ( FinderScope{ findCommandHandler },
+      Command( L"RenameClip", XXO("Rename Clip..."),
+         &Handler::OnEditClipName, SomeClipIsSelectedFlag(),
+         wxT("Ctrl+F2") ) )
+};
+
+}
+
+#undef FN
