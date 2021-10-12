@@ -46,6 +46,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "export/Export.h"
 #include "import/Import.h"
 #include "import/ImportMIDI.h"
+#include "import/ImportRaw.h"
 #include "toolbars/SelectionBar.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/FileHistory.h"
@@ -1272,11 +1273,30 @@ bool ProjectFileManager::Import(
          return false;
       }
 #endif
-      bool success = Importer::Get().Import(project, fileName,
+      auto [success, treatAsRaw] = Importer::Get().Import(project, fileName,
                                             &WaveTrackFactory::Get( project ),
                                             newTracks,
                                             newTags.get(),
                                             errorMessage);
+      if (!success && treatAsRaw) {
+          errorMessage = errorMessage.Join(XO("\n\nImport as Raw Data?"));
+          auto options = BasicUI::MessageBoxOptions{}
+              .Caption(XO("Error Importing"))
+              .ButtonStyle(BasicUI::Button::YesNo)
+              .IconStyle(BasicUI::Icon::Warning)
+              .Centered();
+          auto userSelection = BasicUI::ShowMessageBox(errorMessage, std::move(options));
+          if (userSelection == BasicUI::MessageBoxResult::Yes) {
+              auto& window = ProjectWindow::Get(project);
+              auto& trackFactory = WaveTrackFactory::Get(project);
+              ::ImportRaw(project, &window, fileName, &trackFactory, newTracks);
+              if (newTracks.size() > 0) {
+                  ProjectFileManager::Get(project)
+                      .AddImportedTracks(fileName, std::move(newTracks));
+              }
+          }
+          errorMessage = {};
+      }
       if (!errorMessage.empty()) {
          // Error message derived from Importer::Import
          // Additional help via a Help button links to the manual.

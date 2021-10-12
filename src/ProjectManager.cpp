@@ -337,10 +337,10 @@ public:
                DoImportMIDI( *mProject, name );
             else
 #endif
-               ProjectFileManager::Get( *mProject ).Import(name);
+               ProjectFileManager::Get(*mProject).Import(name);
          }
 
-         auto &window = ProjectWindow::Get( *mProject );
+         auto &window = ProjectWindow::Get(*mProject);
          window.ZoomAfterImport(nullptr);
 
          return true;

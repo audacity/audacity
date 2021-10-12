@@ -42,6 +42,7 @@ ImportLOF.cpp, and ImportAUP.cpp.
 
 #include <algorithm>
 #include <unordered_set>
+#include <tuple>
 
 #include <wx/textctrl.h>
 #include <wx/string.h>
@@ -454,13 +455,14 @@ std::unique_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
 }
 
 // returns number of tracks imported
-bool Importer::Import( AudacityProject &project,
+std::tuple<bool,bool> Importer::Import( AudacityProject &project,
                      const FilePath &fName,
                      WaveTrackFactory *trackFactory,
                      TrackHolders &tracks,
                      Tags *tags,
                      TranslatableString &errorMessage)
 {
+   bool treatAsRaw = false;
    AudacityProject *pProj = &project;
    auto cleanup = valueRestorer( pProj->mbBusyImporting, true );
 
@@ -473,7 +475,7 @@ bool Importer::Import( AudacityProject &project,
       errorMessage = XO(
 "\"%s\" \nis a MIDI file, not an audio file. \nAudacity cannot open this type of file for playing, but you can\nedit it by clicking File > Import > MIDI.")
          .Format( fName );
-      return false;
+      return {false, treatAsRaw};
    }
 #endif
 
@@ -482,7 +484,7 @@ bool Importer::Import( AudacityProject &project,
       errorMessage =
          XO("\"%s\" \nis a not an audio file. \nAudacity cannot open this type of file.")
          .Format( fName );
-      return false;
+      return {false, treatAsRaw};
    }
 
    using ImportPluginPtrs = std::vector< ImportPlugin* >;
@@ -620,7 +622,7 @@ bool Importer::Import( AudacityProject &project,
 
             if (ImportDlg.ShowModal() == wxID_CANCEL)
             {
-               return false;
+               return {false, treatAsRaw};
             }
          }
          // One stream - import it by default
@@ -634,13 +636,13 @@ bool Importer::Import( AudacityProject &project,
             // LOF ("list-of-files") has different semantics
             if (extension.IsSameAs(wxT("lof"), false))
             {
-               return true;
+               return { true, treatAsRaw };
             }
 
             // AUP ("legacy projects") have different semantics
             if (extension.IsSameAs(wxT("aup"), false))
             {
-               return true;
+               return { true,treatAsRaw };
             }
 
             auto end = tracks.end();
@@ -655,13 +657,13 @@ bool Importer::Import( AudacityProject &project,
             if (tracks.size() > 0)
             {
                // success!
-               return true;
+               return { true,treatAsRaw };
             }
          }
 
          if (res == ProgressResult::Cancelled || res == ProgressResult::Failed)
          {
-            return false;
+            return {false, treatAsRaw};
          }
 
          // We could exit here since we had a match on the file extension,
@@ -681,7 +683,7 @@ bool Importer::Import( AudacityProject &project,
       {
          errorMessage = XO("This version of Audacity was not compiled with %s support.")
             .Format( unusableImportPlugin->GetPluginFormatDescription() );
-         return false;
+         return {false, treatAsRaw};
       }
    }
 
@@ -695,7 +697,7 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "\"%s\" is an audio CD track. \nAudacity cannot open audio CDs directly. \nExtract (rip) the CD tracks to an audio format that \nAudacity can import, such as WAV or AIFF.")
             .Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
 
       // playlist type files
@@ -704,7 +706,7 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "\"%s\" is a playlist file. \nAudacity cannot open this file because it only contains links to other files. \nYou may be able to open it in a text editor and download the actual audio files.")
             .Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
       //WMA files of various forms
       if ((extension.IsSameAs(wxT("wma"), false))||(extension.IsSameAs(wxT("asf"), false))) {
@@ -712,7 +714,7 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "\"%s\" is a Windows Media Audio file. \nAudacity cannot open this type of file due to patent restrictions. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
             .Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
       //AAC files of various forms (probably not encrypted)
       if ((extension.IsSameAs(wxT("aac"), false))||(extension.IsSameAs(wxT("m4a"), false))||(extension.IsSameAs(wxT("m4r"), false))||(extension.IsSameAs(wxT("mp4"), false))) {
@@ -720,7 +722,7 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "\"%s\" is an Advanced Audio Coding file.\nWithout the optional FFmpeg library, Audacity cannot open this type of file.\nOtherwise, you need to convert it to a supported audio format, such as WAV or AIFF.")
             .Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
       // encrypted itunes files
       if ((extension.IsSameAs(wxT("m4p"), false))) {
@@ -728,7 +730,7 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "\"%s\" is an encrypted audio file. \nThese typically are from an online music store. \nAudacity cannot open this type of file due to the encryption. \nTry recording the file into Audacity, or burn it to audio CD then \nextract the CD track to a supported audio format such as WAV or AIFF.")
             .Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
       // Real Inc. files of various sorts
       if ((extension.IsSameAs(wxT("ra"), false))||(extension.IsSameAs(wxT("rm"), false))||(extension.IsSameAs(wxT("rpm"), false))) {
@@ -736,7 +738,7 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "\"%s\" is a RealPlayer media file. \nAudacity cannot open this proprietary format. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
             .Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
 
       // Other notes-based formats
@@ -745,7 +747,7 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "\"%s\" is a notes-based file, not an audio file. \nAudacity cannot open this type of file. \nTry converting it to an audio file such as WAV or AIFF and \nthen import it, or record it into Audacity.")
             .Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
 
       // MusePack files
@@ -754,7 +756,7 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "\"%s\" is a Musepack audio file. \nAudacity cannot open this type of file. \nIf you think it might be an mp3 file, rename it to end with \".mp3\" \nand try importing it again. Otherwise you need to convert it to a supported audio \nformat, such as WAV or AIFF.")
             .Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
 
       // WavPack files
@@ -763,7 +765,7 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "\"%s\" is a Wavpack audio file. \nAudacity cannot open this type of file. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
             .Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
 
       // AC3 files
@@ -772,7 +774,7 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "\"%s\" is a Dolby Digital audio file. \nAudacity cannot currently open this type of file. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
             .Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
 
       // Speex files
@@ -781,7 +783,7 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "\"%s\" is an Ogg Speex audio file. \nAudacity cannot currently open this type of file. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
             .Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
 
       // Video files of various forms
@@ -790,12 +792,12 @@ bool Importer::Import( AudacityProject &project,
 /* i18n-hint: %s will be the filename */
 "\"%s\" is a video file. \nAudacity cannot currently open this type of file. \nYou need to extract the audio to a supported format, such as WAV or AIFF.")
             .Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
 
       if( !wxFileExists(fName)){
          errorMessage = XO( "File \"%s\" not found.").Format( fName );
-         return false;
+         return {false, treatAsRaw};
       }
 
       // we were not able to recognize the file type
@@ -808,6 +810,7 @@ bool Importer::Import( AudacityProject &project,
                   ? XO("Try installing FFmpeg.\n\n") :
 #endif
                   Verbatim("") );
+      treatAsRaw = true;
    }
    else
    {
@@ -829,7 +832,7 @@ bool Importer::Import( AudacityProject &project,
          .Format( fName, pluglist );
    }
 
-   return false;
+   return {false, treatAsRaw};
 }
 
 //-------------------------------------------------------------------------

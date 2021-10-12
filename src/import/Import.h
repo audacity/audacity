@@ -165,10 +165,13 @@ public:
     * Allocates NEW ExtImportItem, fills it with default data
     * and returns a pointer to it.
     */
-    std::unique_ptr<ExtImportItem> CreateDefaultImportItem();
+   std::unique_ptr<ExtImportItem> CreateDefaultImportItem();
 
-   // if false, the import failed and errorMessage will be set.
-   bool Import( AudacityProject &project,
+   /**
+    * if first tuple item is false, the import failed and errorMessage will be set.
+    * if second tuple item is true, means format is not supported, can try to import it as raw data.
+    */
+   std::tuple<bool, bool> Import( AudacityProject &project,
               const FilePath &fName,
               WaveTrackFactory *trackFactory,
               TrackHolders &tracks,
