@@ -133,7 +133,6 @@ public:
    void WriteImageDefs( );
    void WriteImageMap( );
    static bool LoadPreferredTheme();
-   bool IsUsingSystemTextColour(){ return bIsUsingSystemTextColour; }
    void RecolourBitmap( int iIndex, wxColour From, wxColour To );
    void RecolourTheme();
 
@@ -143,7 +142,6 @@ public:
    wxImage  & Image( int iIndex );
    wxSize ImageSize( int iIndex );
    bool bRecolourOnLoad;  // Request to recolour.
-   bool bIsUsingSystemTextColour;
 
    void ReplaceImage( int iIndex, wxImage * pImage );
    void RotateImageInto( int iTo, int iFrom, bool bClockwise );
