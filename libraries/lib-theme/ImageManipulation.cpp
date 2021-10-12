@@ -94,6 +94,12 @@ std::unique_ptr<wxImage> ChangeImageColour(wxImage * srcImage,
       c = (c + 1) % 3;
    }
 
+   if (srcImage->HasAlpha()) {
+      // Preserve transparencies
+      dstImage->InitAlpha();
+      memcpy(dstImage->GetAlpha(), srcImage->GetAlpha(), width * height);
+   }
+
    return dstImage;
 }
 
