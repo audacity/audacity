@@ -13,6 +13,7 @@
 
 class AudacityProject;
 class Track;
+class TranslatableString;
 
 /// Namespace for functions for Select menu
 namespace SelectUtilities {
@@ -32,6 +33,11 @@ AUDACITY_DLL_API void DoSelectSomething( AudacityProject &project );
 AUDACITY_DLL_API void ActivatePlayRegion(AudacityProject &project);
 AUDACITY_DLL_API void InactivatePlayRegion(AudacityProject &project);
 
+//! Adjust left or right of selection or play region
+/*! Pop up a dialog if not playing or recording, else use the current
+   play position */
+AUDACITY_DLL_API void OnSetRegion(AudacityProject &project,
+   bool left, bool selection, const TranslatableString &dialogTitle);
 }
 
 #endif
