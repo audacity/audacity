@@ -493,23 +493,55 @@ void OnSelectSyncLockSel(const CommandContext &context)
       ProjectHistory::Get( project ).ModifyState(false);
 }
 
-//this pops up a dialog which allows the left selection to be set.
-//If playing/recording is happening, it sets the left selection at
-//the current play position.
-void OnSetLeftSelection(const CommandContext &context)
+// Adjust left or right of selection or play region
+// Pop up a dialog if not playing or recording, else use the current
+// play position
+void OnSetRegion(AudacityProject &project,
+   bool left, bool selection, const TranslatableString &dialogTitle)
 {
-   auto &project = context.project;
    auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   auto &selectedRegion = viewInfo.selectedRegion;
    const auto &settings = ProjectSettings::Get( project );
    auto &window = GetProjectFrame( project );
+
+   const auto getValue = [&]() -> double {
+      if (selection) {
+         if (left)
+            return selectedRegion.t0();
+         else
+            return selectedRegion.t1();
+      }
+      else {
+         if (left)
+            return playRegion.GetStart();
+         else
+            return playRegion.GetEnd();
+      }
+   };
+
+   const auto setValue = [&](double value){
+      if (selection) {
+         if (left)
+            selectedRegion.setT0(value, false);
+         else
+            selectedRegion.setT1(value, false);
+      }
+      else {
+         if (left)
+            playRegion.SetStart(value);
+         else
+            playRegion.SetEnd(value);
+      }
+   };
 
    bool bSelChanged = false;
    auto gAudioIO = AudioIO::Get();
    if ((token > 0) && gAudioIO->IsStreamActive(token))
    {
       double indicator = gAudioIO->GetStreamTime();
-      selectedRegion.setT0(indicator, false);
+      setValue(indicator);
       bSelChanged = true;
    }
    else
@@ -517,61 +549,31 @@ void OnSetLeftSelection(const CommandContext &context)
       auto fmt = settings.GetSelectionFormat();
       auto rate = ProjectRate::Get(project).GetRate();
 
-      TimeDialog dlg(&window, XO("Set Left Selection Boundary"),
-         fmt, rate, selectedRegion.t0(), XO("Position"));
+      TimeDialog dlg(&window, dialogTitle,
+         fmt, rate, getValue(), XO("Position"));
 
       if (wxID_OK == dlg.ShowModal())
       {
          //Get the value from the dialog
-         selectedRegion.setT0(
-            std::max(0.0, dlg.GetTimeValue()), false);
+         setValue( std::max(0.0, dlg.GetTimeValue()) );
          bSelChanged = true;
       }
    }
 
    if (bSelChanged)
-   {
       ProjectHistory::Get( project ).ModifyState(false);
-   }
+}
+
+void OnSetLeftSelection(const CommandContext &context)
+{
+   OnSetRegion(context.project,
+      true, true, XO("Set Left Selection Boundary"));
 }
 
 void OnSetRightSelection(const CommandContext &context)
 {
-   auto &project = context.project;
-   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   const auto &settings = ProjectSettings::Get( project );
-   auto &window = GetProjectFrame( project );
-
-   bool bSelChanged = false;
-   auto gAudioIO = AudioIO::Get();
-   if ((token > 0) && gAudioIO->IsStreamActive(token))
-   {
-      double indicator = gAudioIO->GetStreamTime();
-      selectedRegion.setT1(indicator, false);
-      bSelChanged = true;
-   }
-   else
-   {
-      auto fmt = settings.GetSelectionFormat();
-      auto rate = ProjectRate::Get(project).GetRate();
-
-      TimeDialog dlg(&window, XO("Set Right Selection Boundary"),
-         fmt, rate, selectedRegion.t1(), XO("Position"));
-
-      if (wxID_OK == dlg.ShowModal())
-      {
-         //Get the value from the dialog
-         selectedRegion.setT1(
-            std::max(0.0, dlg.GetTimeValue()), false);
-         bSelChanged = true;
-      }
-   }
-
-   if (bSelChanged)
-   {
-      ProjectHistory::Get( project ).ModifyState(false);
-   }
+   OnSetRegion(context.project,
+      false, true, XO("Set Right Selection Boundary"));
 }
 
 void OnSelectStartCursor(const CommandContext &context)
