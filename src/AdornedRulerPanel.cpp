@@ -1917,7 +1917,12 @@ void AdornedRulerPanel::DragSelection()
 
 void AdornedRulerPanel::HandleSnapping()
 {
-   SnapManager snapManager{ *mProject, *mTracks, *mViewInfo };
+   // Play region dragging can snap to selection boundaries
+   const auto &selectedRegion = ViewInfo::Get(*GetProject()).selectedRegion;
+   SnapManager snapManager{ *mProject, *mTracks, *mViewInfo, {
+      SnapPoint{ selectedRegion.t0() },
+      SnapPoint{ selectedRegion.t1() },
+   } };
    auto results = snapManager.Snap(NULL, mQuickPlayPos, false);
    mQuickPlayPos = results.outTime;
    mIsSnapped = results.Snapped();

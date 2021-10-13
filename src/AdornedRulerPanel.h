@@ -18,7 +18,6 @@
 
 class AudacityProject;
 struct SelectedRegionEvent;
-class SnapManager;
 class TrackList;
 
 // This is an Audacity Specific ruler panel.
