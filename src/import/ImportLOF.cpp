@@ -186,7 +186,7 @@ std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(
       if (!binaryFile.Open(filename))
          return nullptr; // File not found
 
-      char buf[BINARY_FILE_CHECK_BUFFER_SIZE];
+      wxChar buf[BINARY_FILE_CHECK_BUFFER_SIZE];
       int count = binaryFile.Read(buf, BINARY_FILE_CHECK_BUFFER_SIZE);
 
       for (int i = 0; i < count; i++)
