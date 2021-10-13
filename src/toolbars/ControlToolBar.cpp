@@ -235,7 +235,7 @@ void ControlToolBar::Populate()
    mLoop = MakeButton(this, bmpLoop, bmpLoop, bmpLoopDisabled,
       ID_LOOP_BUTTON,
       true, // this makes it a toggle, like the pause button
-      XO("Looping Region"));
+      LoopToggleText.Stripped());
 
 #if wxUSE_TOOLTIPS
    RegenerateTooltips();

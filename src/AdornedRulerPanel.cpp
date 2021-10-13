@@ -385,7 +385,9 @@ enum {
    OnToggleQuickPlayID = 7000,
    OnSyncQuickPlaySelID,
    OnAutoScrollID,
-   OnActivatePlayRegionID,
+   OnTogglePlayRegionID,
+   OnClearPlayRegionID,
+   OnSetPlayRegionToSelectionID,
    OnTogglePinnedStateID,
 };
 
@@ -398,7 +400,10 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
    EVT_MENU(OnToggleQuickPlayID, AdornedRulerPanel::OnToggleQuickPlay)
    EVT_MENU(OnSyncQuickPlaySelID, AdornedRulerPanel::OnSyncSelToQuickPlay)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
-   EVT_MENU(OnActivatePlayRegionID, AdornedRulerPanel::OnActivatePlayRegion)
+   EVT_MENU(OnTogglePlayRegionID, AdornedRulerPanel::OnTogglePlayRegion)
+   EVT_MENU(OnClearPlayRegionID, AdornedRulerPanel::OnClearPlayRegion)
+   EVT_MENU(OnSetPlayRegionToSelectionID,
+      AdornedRulerPanel::OnSetPlayRegionToSelection)
    EVT_MENU( OnTogglePinnedStateID, AdornedRulerPanel::OnTogglePinnedState )
 
    EVT_COMMAND( OnTogglePinnedStateID,
@@ -1862,10 +1867,21 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    rulerMenu.AppendCheckItem(OnAutoScrollID, _("Update display while playing"))->
       Check(mViewInfo->bUpdateTrackIndicator);
 
-   auto pLock = rulerMenu.AppendCheckItem(OnActivatePlayRegionID, _("Lock Play Region"));
-   pLock->Check(playRegion.Active());
-   pLock->Enable( playRegion.Active() || !playRegion.Empty() );
+   {
+      auto item = rulerMenu.AppendCheckItem(OnTogglePlayRegionID,
+         LoopToggleText.Stripped().Translation());
+      item->Check(playRegion.Active());
+   }
 
+   {
+      auto item = rulerMenu.Append(OnClearPlayRegionID,
+         _("Clear Looping Region"));
+   }
+
+   {
+      auto item = rulerMenu.Append(OnSetPlayRegionToSelectionID,
+         _("Set Loop To Selection"));
+   }
 
    rulerMenu.AppendSeparator();
    rulerMenu.AppendCheckItem(OnTogglePinnedStateID, _("Pinned Play Head"))->
@@ -1949,14 +1965,19 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 }
 
 
-void AdornedRulerPanel::OnActivatePlayRegion(wxCommandEvent&)
+void AdornedRulerPanel::OnTogglePlayRegion(wxCommandEvent&)
 {
-   const auto &viewInfo = ViewInfo::Get( *GetProject() );
-   const auto &playRegion = viewInfo.playRegion;
-   if (playRegion.Active())
-      SelectUtilities::InactivatePlayRegion(*mProject);
-   else
-      SelectUtilities::ActivatePlayRegion(*mProject);
+   SelectUtilities::TogglePlayRegion(*mProject);
+}
+
+void AdornedRulerPanel::OnClearPlayRegion(wxCommandEvent&)
+{
+   SelectUtilities::ClearPlayRegion(*mProject);
+}
+
+void AdornedRulerPanel::OnSetPlayRegionToSelection(wxCommandEvent&)
+{
+   SelectUtilities::SetPlayRegionToSelection(*mProject);
 }
 
 

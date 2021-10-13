@@ -151,7 +151,9 @@ private:
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    //void OnTimelineToolTips(wxCommandEvent &evt);
    void OnAutoScroll(wxCommandEvent &evt);
-   void OnActivatePlayRegion(wxCommandEvent &evt);
+   void OnTogglePlayRegion(wxCommandEvent &evt);
+   void OnClearPlayRegion(wxCommandEvent &evt);
+   void OnSetPlayRegionToSelection(wxCommandEvent &evt);
 
    void OnPinnedButton(wxCommandEvent & event);
    void OnTogglePinnedState(wxCommandEvent & event);

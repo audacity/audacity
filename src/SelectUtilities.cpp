@@ -198,6 +198,31 @@ void InactivatePlayRegion(AudacityProject &project)
    playRegion.SetTimes( selectedRegion.t0(), selectedRegion.t1() );
 }
 
+void TogglePlayRegion(AudacityProject &project)
+{
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   if (playRegion.Active())
+      InactivatePlayRegion(project);
+   else
+      ActivatePlayRegion(project);
+}
+
+void ClearPlayRegion(AudacityProject &project)
+{
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   playRegion.SetAllTimes(-1, -1);
+}
+
+void SetPlayRegionToSelection(AudacityProject &project)
+{
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   auto &selectedRegion = viewInfo.selectedRegion;
+   playRegion.SetAllTimes( selectedRegion.t0(), selectedRegion.t1() );
+}
+
 void OnSetRegion(AudacityProject &project,
    bool left, bool selection, const TranslatableString &dialogTitle)
 {

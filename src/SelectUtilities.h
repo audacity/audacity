@@ -32,6 +32,9 @@ AUDACITY_DLL_API void DoSelectSomething( AudacityProject &project );
 
 AUDACITY_DLL_API void ActivatePlayRegion(AudacityProject &project);
 AUDACITY_DLL_API void InactivatePlayRegion(AudacityProject &project);
+AUDACITY_DLL_API void TogglePlayRegion(AudacityProject &project);
+AUDACITY_DLL_API void ClearPlayRegion(AudacityProject &project);
+AUDACITY_DLL_API void SetPlayRegionToSelection(AudacityProject &project);
 
 //! Adjust left or right of selection or play region
 /*! Pop up a dialog if not playing or recording, else use the current

@@ -315,6 +315,10 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 
 }
 
+// Strings for menu items and also for dialog titles
+static const auto SetLoopInTitle = XXO("Set Loop &In");
+static const auto SetLoopOutTitle = XXO("Set Loop &Out");
+
 // Menu handler functions
 
 namespace TransportActions {
@@ -656,14 +660,40 @@ void OnPunchAndRoll(const CommandContext &context)
 }
 #endif
 
-void OnLockPlayRegion(const CommandContext &context)
+void OnTogglePlayRegion(const CommandContext &context)
 {
-   SelectUtilities::ActivatePlayRegion(context.project);
+   SelectUtilities::TogglePlayRegion(context.project);
 }
 
-void OnUnlockPlayRegion(const CommandContext &context)
+void OnClearPlayRegion(const CommandContext &context)
 {
-   SelectUtilities::InactivatePlayRegion(context.project);
+   SelectUtilities::ClearPlayRegion(context.project);
+}
+
+void OnSetPlayRegionIn(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &playRegion = ViewInfo::Get(project).playRegion;
+   if (!playRegion.Active())
+      SelectUtilities::ActivatePlayRegion(project);
+   SelectUtilities::OnSetRegion(project,
+      true, false, SetLoopInTitle.Stripped());
+}
+
+
+void OnSetPlayRegionOut(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &playRegion = ViewInfo::Get(project).playRegion;
+   if (!playRegion.Active())
+      SelectUtilities::ActivatePlayRegion(project);
+   SelectUtilities::OnSetRegion(project,
+      false, false, SetLoopOutTitle.Stripped());
+}
+
+void OnSetPlayRegionToSelection(const CommandContext &context)
+{
+   SelectUtilities::SetPlayRegionToSelection(context.project);
 }
 
 void OnRescanDevices(const CommandContext &WXUNUSED(context) )
@@ -1131,11 +1161,20 @@ BaseItemSharedPtr TransportMenu()
 
       Section( "Other",
          Section( "",
-            Menu( wxT("PlayRegion"), XXO("Pla&y Region"),
-               Command( wxT("LockPlayRegion"), XXO("&Lock"), FN(OnLockPlayRegion),
-                  PlayRegionNotLockedFlag() ),
-               Command( wxT("UnlockPlayRegion"), XXO("&Unlock"),
-                  FN(OnUnlockPlayRegion), PlayRegionLockedFlag() )
+            Menu( wxT("PlayRegion"), XXO("&Looping"),
+               Command( wxT("TogglePlayRegion"), LoopToggleText,
+                  FN(OnTogglePlayRegion), AlwaysEnabledFlag, L"L" ),
+               Command( wxT("ClearPlayRegion"), XXO("&Clear Loop"),
+                  FN(OnClearPlayRegion), AlwaysEnabledFlag ),
+               Command( wxT("SetPlayRegionToSelection"),
+                  XXO("&Set Loop to Selection"),
+                  FN(OnSetPlayRegionToSelection), AlwaysEnabledFlag ),
+               Command( wxT("SetPlayRegionIn"),
+                  SetLoopInTitle,
+                  FN(OnSetPlayRegionIn), AlwaysEnabledFlag ),
+               Command( wxT("SetPlayRegionOut"),
+                  SetLoopOutTitle,
+                  FN(OnSetPlayRegionOut), AlwaysEnabledFlag )
             )
          ),
 
