@@ -179,7 +179,11 @@ void InactivatePlayRegion(AudacityProject &project)
 {
    auto &viewInfo = ViewInfo::Get( project );
    auto &playRegion = viewInfo.playRegion;
+   auto &selectedRegion = viewInfo.selectedRegion;
+   // Set only the times that are fetched by the playback engine, but not
+   // the last-active times that are used for display.
    playRegion.SetActive( false );
+   playRegion.SetTimes( selectedRegion.t0(), selectedRegion.t1() );
 }
 
 }
