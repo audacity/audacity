@@ -19,7 +19,6 @@ Paul Licameli split from TrackPanel.cpp
 
 class AudacityProject;
 class SelectionStateChanger;
-class SnapManager;
 class SpectrumAnalyst;
 class Track;
 class TrackView;

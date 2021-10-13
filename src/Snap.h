@@ -55,15 +55,19 @@ struct SnapResults {
 class AUDACITY_DLL_API SnapManager
 {
 public:
+   //! Construct only for specified candidate points
    SnapManager(const AudacityProject &project,
                SnapPointArray candidates,
                const ZoomInfo &zoomInfo,
                bool noTimeSnap = false,
                int pixelTolerance = kPixelTolerance);
 
+   //! Construct for (optionally) specified points, plus significant points
+   //! on the tracks in the given list
    SnapManager(const AudacityProject &project,
                const TrackList &tracks,
                const ZoomInfo &zoomInfo,
+               SnapPointArray candidates = {},
                bool noTimeSnap = false,
                int pixelTolerance = kPixelTolerance);
 

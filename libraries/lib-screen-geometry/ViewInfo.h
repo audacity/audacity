@@ -133,15 +133,17 @@ public:
    PlayRegion( const PlayRegion& ) = delete;
    PlayRegion &operator= ( const PlayRegion &that )
    {
-      mLocked = that.mLocked;
+      mActive = that.mActive;
       // Guarantee the equivalent un-swapped order of endpoints
       mStart = that.GetStart();
       mEnd = that.GetEnd();
+      mLastActiveStart = that.GetLastActiveStart();
+      mLastActiveEnd = that.GetLastActiveEnd();
       return *this;
    }
 
-   bool Locked() const { return mLocked; }
-   void SetLocked( bool locked ) { mLocked = locked; }
+   bool Active() const { return mActive; }
+   void SetActive( bool active );
 
    bool Empty() const { return GetStart() == GetEnd(); }
    double GetStart() const
@@ -158,10 +160,26 @@ public:
       else
          return std::max( mStart, mEnd );
    }
+   double GetLastActiveStart() const
+   {
+      if ( mLastActiveEnd < 0 )
+         return mLastActiveStart;
+      else
+         return std::min( mLastActiveStart, mLastActiveEnd );
+   }
+   double GetLastActiveEnd() const
+   {
+      if ( mLastActiveStart < 0 )
+         return mLastActiveEnd;
+      else
+         return std::max( mLastActiveStart, mLastActiveEnd );
+   }
 
    void SetStart( double start );
    void SetEnd( double end );
    void SetTimes( double start, double end );
+   // Set current and last active times the same regardless of activation:
+   void SetAllTimes( double start, double end );
 
    void Order();
 
@@ -171,8 +189,10 @@ private:
    // Times:
    double mStart{ -1.0 };
    double mEnd{ -1.0 };
+   double mLastActiveStart{ -1.0 };
+   double mLastActiveEnd{ -1.0 };
 
-   bool mLocked{ false };
+   bool mActive{ false };
 };
 
 class SCREEN_GEOMETRY_API ViewInfo final

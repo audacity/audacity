@@ -221,6 +221,10 @@ void LoopingPlaybackPolicy::MessageConsumer( PlaybackSchedule &schedule )
 {
    // This executes in the TrackBufferExchange thread
    auto data = schedule.mMessageChannel.Read();
+   if (data.mT0 >= data.mT1)
+      // Ignore empty region
+      return;
+
    auto mine = std::tie(schedule.mT0, schedule.mT1);
    auto theirs = std::tie(data.mT0, data.mT1);
    if (mine != theirs) {

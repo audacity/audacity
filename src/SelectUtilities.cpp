@@ -159,7 +159,7 @@ void DoSelectSomething(AudacityProject &project)
       DoSelectTimeAndTracks( project, bTime, bTracks );
 }
 
-void LockPlayRegion(AudacityProject &project)
+void ActivatePlayRegion(AudacityProject &project)
 {
    auto &tracks = TrackList::Get( project );
 
@@ -171,15 +171,27 @@ void LockPlayRegion(AudacityProject &project)
          XO("Error"));
    }
    else {
-      playRegion.SetLocked( true );
+      playRegion.SetActive( true );
+      if (playRegion.Empty()) {
+         auto &selectedRegion = viewInfo.selectedRegion;
+         if (!selectedRegion.isPoint())
+            playRegion.SetTimes(selectedRegion.t0(), selectedRegion.t1());
+         else
+            // Arbitrary first four seconds
+            playRegion.SetTimes(0.0, 4.0);
+      }
    }
 }
 
-void UnlockPlayRegion(AudacityProject &project)
+void InactivatePlayRegion(AudacityProject &project)
 {
    auto &viewInfo = ViewInfo::Get( project );
    auto &playRegion = viewInfo.playRegion;
-   playRegion.SetLocked( false );
+   auto &selectedRegion = viewInfo.selectedRegion;
+   // Set only the times that are fetched by the playback engine, but not
+   // the last-active times that are used for display.
+   playRegion.SetActive( false );
+   playRegion.SetTimes( selectedRegion.t0(), selectedRegion.t1() );
 }
 
 }

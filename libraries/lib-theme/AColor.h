@@ -64,7 +64,6 @@ class THEME_API AColor {
 
    static void CursorColor(wxDC * dc);
    static void IndicatorColor(wxDC * dc, bool bIsNotRecording);
-   static void PlayRegionColor(wxDC * dc, bool locked);
 
    static void Mute(wxDC * dc, bool on, bool selected, bool soloing);
    static void Solo(wxDC * dc, bool on, bool selected);
@@ -94,8 +93,8 @@ class THEME_API AColor {
    static wxPen cursorPen;
    static wxPen indicatorPen[2];
    static wxBrush indicatorBrush[2];
-   static wxPen playRegionPen[2];
-   static wxBrush playRegionBrush[2];
+   // static wxPen playRegionPen[2];
+   static wxBrush playRegionBrush[1];
 
    static wxBrush muteBrush[2];
    static wxBrush soloBrush;

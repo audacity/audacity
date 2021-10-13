@@ -430,8 +430,12 @@ SelectHandle::SelectHandle
   const TrackList &trackList,
   const TrackPanelMouseState &st, const ViewInfo &viewInfo )
    : mpView{ pTrackView }
+   // Selection dragging can snap to play region boundaries
    , mSnapManager{ std::make_shared<SnapManager>(
-      *trackList.GetOwner(), trackList, viewInfo) }
+      *trackList.GetOwner(), trackList, viewInfo, SnapPointArray{
+         SnapPoint{ viewInfo.playRegion.GetLastActiveStart() },
+         SnapPoint{ viewInfo.playRegion.GetLastActiveEnd() },
+   } ) }
 {
    const wxMouseState &state = st.state;
    mRect = st.rect;
