@@ -11,7 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "PlayIndicatorOverlay.h"
 
-#include "../../AColor.h"
+#include "AColor.h"
 #include "../../AdornedRulerPanel.h"
 #include "../../AudioIO.h"
 #include "Project.h"

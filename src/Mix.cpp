@@ -766,13 +766,13 @@ void Mixer::Reposition(double t, bool bSkipping)
       MakeResamplers();
 }
 
-void Mixer::SetTimesAndSpeed(double t0, double t1, double speed)
+void Mixer::SetTimesAndSpeed(double t0, double t1, double speed, bool bSkipping)
 {
    wxASSERT(std::isfinite(speed));
    mT0 = t0;
    mT1 = t1;
    mSpeed = fabs(speed);
-   Reposition(t0);
+   Reposition(t0, bSkipping);
 }
 
 void Mixer::SetSpeedForPlayAtSpeed(double speed)

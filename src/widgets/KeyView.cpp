@@ -19,7 +19,7 @@
 #include <wx/settings.h>
 #include <wx/vlbox.h>
 
-#include "../AColor.h"
+#include "AColor.h"
 #include "../ShuttleGui.h"
 #include "../commands/CommandManager.h"
 

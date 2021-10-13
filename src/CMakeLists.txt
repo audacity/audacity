@@ -83,9 +83,6 @@ set( USE_VST ${${_OPT}use_vst} CACHE INTERNAL "" )
 #
 list( APPEND SOURCES
    PRIVATE
-      AColor.cpp
-      AColor.h
-      AColorResources.h
       ActiveProject.cpp
       ActiveProject.h
       ActiveProjects.cpp
@@ -94,8 +91,6 @@ list( APPEND SOURCES
       AboutDialog.h
       AdornedRulerPanel.cpp
       AdornedRulerPanel.h
-      AllThemeResources.cpp
-      AllThemeResources.h
       AudacityApp.cpp
       AudacityApp.h
       $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>
@@ -120,16 +115,12 @@ list( APPEND SOURCES
       Benchmark.h
       CellularPanel.cpp
       CellularPanel.h
-      ClassicThemeAsCeeCode.cpp
-      ClassicThemeAsCeeCode.h
       Clipboard.cpp
       Clipboard.h
       CommonCommandFlags.cpp
       CommonCommandFlags.h
       CrashReport.cpp
       CrashReport.h
-      DarkThemeAsCeeCode.cpp
-      DarkThemeAsCeeCode.h
       DBConnection.cpp
       DBConnection.h
       Diags.cpp
@@ -146,13 +137,9 @@ list( APPEND SOURCES
       FreqWindow.h
       HelpText.cpp
       HelpText.h
-      HiContrastThemeAsCeeCode.cpp
-      HiContrastThemeAsCeeCode.h
       HistoryWindow.cpp
       HistoryWindow.h
       HitTestResult.h
-      ImageManipulation.cpp
-      ImageManipulation.h
       Journal.cpp
       Journal.h
       JournalEvents.cpp
@@ -173,15 +160,12 @@ list( APPEND SOURCES
       LangChoice.h
       Legacy.cpp
       Legacy.h
-      LightThemeAsCeeCode.cpp
-      LightThemeAsCeeCode.h
       LogWindow.cpp
       LogWindow.h
       Lyrics.cpp
       Lyrics.h
       LyricsWindow.cpp
       LyricsWindow.h
-      MacroMagic.h
       Menus.cpp
       Menus.h
       MIDIPlay.cpp
@@ -275,8 +259,6 @@ list( APPEND SOURCES
       SseMathFuncs.h
       Tags.cpp
       Tags.h
-      Theme.cpp
-      Theme.h
       TimeDialog.cpp
       TimeDialog.h
       TimeTrack.cpp
@@ -963,6 +945,8 @@ list( APPEND SOURCES
       widgets/Warning.h
       widgets/WindowAccessible.cpp
       widgets/WindowAccessible.h
+      widgets/auStaticText.cpp
+      widgets/auStaticText.h
       widgets/numformatter.cpp
       widgets/numformatter.h
       widgets/valnum.cpp
@@ -1218,9 +1202,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          "-framework CoreAudio"
          "-framework CoreAudioKit"
    )
-
-   # Use the Aqua theme
-   set( USE_AQUA_THEME 1 )
 
    # Copy the required wxWidgets libs into the bundle
    add_custom_command(

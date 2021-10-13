@@ -18,7 +18,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 #include "../../../ui/BrushHandle.h"
 
-#include "../../../../AColor.h"
+#include "AColor.h"
 #include "Prefs.h"
 #include "NumberScale.h"
 #include "../../../../TrackArtist.h"

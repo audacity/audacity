@@ -14,11 +14,11 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../HitTestResult.h"
 
-#include "../../../AColor.h"
-#include "../../../AllThemeResources.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
 #include "../../../ProjectHistory.h"
 #include "../../../RefreshCode.h"
-#include "../../../Theme.h"
+#include "Theme.h"
 #include "../../../TimeTrack.h"
 #include "../../../TrackArtist.h"
 #include "../../../TrackPanelDrawingContext.h"

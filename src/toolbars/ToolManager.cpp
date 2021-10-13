@@ -52,16 +52,16 @@
 #include <wx/minifram.h>
 #include <wx/popupwin.h>
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
-#include "../ImageManipulation.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
+#include "ImageManipulation.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectWindows.h"
-#include "../widgets/AButton.h"
-#include "../widgets/ASlider.h"
-#include "../widgets/MeterPanelBase.h"
-#include "../widgets/Grabber.h"
+#include "ProjectWindows.h"
+#include "widgets/AButton.h"
+#include "widgets/ASlider.h"
+#include "widgets/MeterPanelBase.h"
+#include "widgets/Grabber.h"
 
 ////////////////////////////////////////////////////////////
 /// Methods for ToolFrame

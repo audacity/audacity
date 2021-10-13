@@ -14,11 +14,10 @@
 #ifndef __AUDACITY_THEME__
 #define __AUDACITY_THEME__
 
-
-
 #include <vector>
+#include <wx/arrstr.h>
 #include <wx/defs.h>
-#include <wx/window.h> // to inherit
+#include <wx/gdicmn.h>
 #include "ComponentInterfaceSymbol.h"
 
 #include "Prefs.h"
@@ -55,7 +54,7 @@ enum teResourceFlags
 };
 
 //! A cursor for iterating the theme bitmap
-class AUDACITY_DLL_API FlowPacker
+class THEME_API FlowPacker
 {
 public:
    explicit FlowPacker(int width);
@@ -86,7 +85,7 @@ private:
 
 };
 
-class AUDACITY_DLL_API ThemeBase /* not final */
+class THEME_API ThemeBase /* not final */
 {
 public:
    ThemeBase(void);
@@ -99,7 +98,7 @@ public:
    virtual void EnsureInitialised()=0;
 
    // Typically statically constructed:
-   struct AUDACITY_DLL_API RegisteredTheme {
+   struct THEME_API RegisteredTheme {
       RegisteredTheme(EnumValueSymbol symbol,
          const std::vector<unsigned char> &data /*!<
             A reference to this vector is stored, not a copy of it! */
@@ -157,7 +156,7 @@ protected:
 };
 
 
-class AUDACITY_DLL_API Theme final : public ThemeBase
+class THEME_API Theme final : public ThemeBase
 {
 public:
    Theme(void);
@@ -165,36 +164,17 @@ public:
    ~Theme(void);
 public:
    void EnsureInitialised() override;
-   void RegisterImages();
-   void RegisterColours();
+   void RegisterImagesAndColours();
    bool mbInitialised;
 };
 
-// A bit cheeky - putting a themable wxStaticText control into
-// theme, rather than in a new file.  Saves sorting out makefiles (for now).
-class wxWindow;
-class wxString;
-class wxPaintEvent;
+extern THEME_API Theme theTheme;
 
-class AUDACITY_DLL_API auStaticText : public wxWindow
-{
-public:
-   auStaticText(wxWindow* parent, wxString text);
-   void OnPaint(wxPaintEvent & evt);
-   bool AcceptsFocus() const override { return false; }
-   void OnErase(wxEraseEvent& event) {
-      static_cast<void>(event);
-   };
-   DECLARE_EVENT_TABLE();
-};
-
-extern AUDACITY_DLL_API Theme theTheme;
-
-extern AUDACITY_DLL_API BoolSetting
+extern THEME_API BoolSetting
      GUIBlendThemes
 ;
 
-extern AUDACITY_DLL_API ChoiceSetting
+extern THEME_API ChoiceSetting
      &GUITheme()
 ;
 

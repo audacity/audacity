@@ -31,9 +31,9 @@
 
 #include "../Envelope.h"
 
-#include "../AllThemeResources.h"
+#include "AllThemeResources.h"
 #include "../AudioIO.h"
-#include "../ImageManipulation.h"
+#include "ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "Project.h"
 #include "../ProjectAudioManager.h"

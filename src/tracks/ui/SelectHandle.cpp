@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Scrubbing.h"
 #include "TrackView.h"
 
-#include "../../AColor.h"
+#include "AColor.h"
 #include "../../SpectrumAnalyst.h"
 #include "NumberScale.h"
 #include "Project.h"

@@ -260,7 +260,6 @@ protected:
    float               mPreviousHWPlaythrough;
    #endif /* USE_PORTMIXER */
 
-   bool                mEmulateMixerOutputVol;
    /** @brief Can we control the hardware input level?
     *
     * This flag is set to true if using portmixer to control the
@@ -269,7 +268,6 @@ protected:
     * scaled clipping problems when trying to do software emulated input volume
     * control */
    bool                mInputMixerWorks;
-   float               mMixerOutputVol;
 
    // For cacheing supported sample rates
    static int mCachedPlaybackIndex;
@@ -326,6 +324,7 @@ extern AUDIO_DEVICES_API StringSetting AudioIOHost;
 extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyCorrection;
 extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyDuration;
 extern AUDIO_DEVICES_API StringSetting AudioIOPlaybackDevice;
+extern AUDIO_DEVICES_API DoubleSetting AudioIOPlaybackVolume;
 extern AUDIO_DEVICES_API IntSetting    AudioIORecordChannels;
 extern AUDIO_DEVICES_API StringSetting AudioIORecordingDevice;
 extern AUDIO_DEVICES_API StringSetting AudioIORecordingSource;

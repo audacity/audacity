@@ -25,14 +25,14 @@
 
 #include "FileNames.h"
 #include "Languages.h"
-#include "../Theme.h"
+#include "Theme.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 
 #include "Decibels.h"
 
 #include "ThemePrefs.h"
-#include "../AColor.h"
+#include "AColor.h"
 #include "../widgets/AudacityMessageBox.h"
 
 GUIPrefs::GUIPrefs(wxWindow * parent, wxWindowID winid)
@@ -240,7 +240,10 @@ bool GUIPrefs::Commit()
    }
 
    // Reads preference GUITheme
-   theTheme.LoadPreferredTheme();
+   {
+      wxBusyCursor busy;
+      theTheme.LoadPreferredTheme();
+   }
    ThemePrefs::ApplyUpdatedImages();
 
    return true;

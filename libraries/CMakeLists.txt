@@ -20,6 +20,7 @@ set( LIBRARIES
    lib-screen-geometry
    lib-project-rate
    lib-ffmpeg-support
+   lib-theme
 )
 
 if ( ${_OPT}has_networking )

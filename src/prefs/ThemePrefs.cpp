@@ -34,9 +34,9 @@ Provides:
 #include <wx/app.h>
 #include <wx/wxprec.h>
 #include "Prefs.h"
-#include "../Theme.h"
+#include "Theme.h"
 #include "../ShuttleGui.h"
-#include "../AColor.h"
+#include "AColor.h"
 
 wxDEFINE_EVENT(EVT_THEME_CHANGE, wxCommandEvent);
 
@@ -174,6 +174,7 @@ void ThemePrefs::PopulateOrExchange(ShuttleGui & S)
 /// Load Theme from multiple png files.
 void ThemePrefs::OnLoadThemeComponents(wxCommandEvent & WXUNUSED(event))
 {
+   wxBusyCursor busy;
    theTheme.LoadComponents();
    ApplyUpdatedImages();
 }
@@ -181,12 +182,14 @@ void ThemePrefs::OnLoadThemeComponents(wxCommandEvent & WXUNUSED(event))
 /// Save Theme to multiple png files.
 void ThemePrefs::OnSaveThemeComponents(wxCommandEvent & WXUNUSED(event))
 {
+   wxBusyCursor busy;
    theTheme.SaveComponents();
 }
 
 /// Load Theme from single png file.
 void ThemePrefs::OnLoadThemeCache(wxCommandEvent & WXUNUSED(event))
 {
+   wxBusyCursor busy;
    theTheme.ReadImageCache();
    ApplyUpdatedImages();
 }
@@ -194,6 +197,7 @@ void ThemePrefs::OnLoadThemeCache(wxCommandEvent & WXUNUSED(event))
 /// Save Theme to single png file.
 void ThemePrefs::OnSaveThemeCache(wxCommandEvent & WXUNUSED(event))
 {
+   wxBusyCursor busy;
    theTheme.CreateImageCache();
    theTheme.WriteImageMap();// bonus - give them the html version.
 }
@@ -201,6 +205,7 @@ void ThemePrefs::OnSaveThemeCache(wxCommandEvent & WXUNUSED(event))
 /// Read Theme from internal storage.
 void ThemePrefs::OnReadThemeInternal(wxCommandEvent & WXUNUSED(event))
 {
+   wxBusyCursor busy;
    theTheme.ReadImageCache( theTheme.GetFallbackThemeType() );
    ApplyUpdatedImages();
 }
@@ -208,6 +213,7 @@ void ThemePrefs::OnReadThemeInternal(wxCommandEvent & WXUNUSED(event))
 /// Save Theme as C source code.
 void ThemePrefs::OnSaveThemeAsCode(wxCommandEvent & WXUNUSED(event))
 {
+   wxBusyCursor busy;
    theTheme.SaveThemeAsCode();
    theTheme.WriteImageDefs();// bonus - give them the Defs too.
 }

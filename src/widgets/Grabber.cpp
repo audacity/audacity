@@ -29,10 +29,10 @@ around to NEW positions.
 #include <wx/intl.h>
 #include <wx/window.h>
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
 #include "Internat.h"
-#include "../Theme.h"
+#include "Theme.h"
 
 ////////////////////////////////////////////////////////////
 /// Methods for Grabber

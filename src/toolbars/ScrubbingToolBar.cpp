@@ -31,8 +31,8 @@
 #endif
 
 #include "../AdornedRulerPanel.h"
-#include "../AllThemeResources.h"
-#include "../ImageManipulation.h"
+#include "AllThemeResources.h"
+#include "ImageManipulation.h"
 #include "Prefs.h"
 #include "../UndoManager.h"
 #include "../widgets/AButton.h"

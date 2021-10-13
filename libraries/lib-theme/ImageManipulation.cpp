@@ -22,9 +22,9 @@ channel.  This collection of functions fills that gap.
 *//*********************************************************************/
 
 
-
 #include "ImageManipulation.h"
 
+#include <wx/colour.h>
 #include <wx/image.h>
 
 #include "AllThemeResources.h"
