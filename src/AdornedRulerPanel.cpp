@@ -1157,13 +1157,14 @@ void AdornedRulerPanel::DoIdle()
 
    auto &project = *mProject;
    auto &viewInfo = ViewInfo::Get( project );
-   const auto &selectedRegion = viewInfo.selectedRegion;
+   const auto &playRegion = viewInfo.playRegion;
 
-   bool dirtySelectedRegion = mDirtySelectedRegion
-      || ( mLastDrawnSelectedRegion != selectedRegion );
+   bool dirtyPlayRegion = mDirtyPlayRegion
+      || ( mLastDrawnPlayRegion != std::pair{
+         playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() } );
 
    changed = changed
-     || dirtySelectedRegion
+     || dirtyPlayRegion
      || mLastDrawnH != viewInfo.h
      || mLastDrawnZoom != viewInfo.GetZoom()
      || mLastPlayRegionActive != viewInfo.playRegion.Active()
@@ -1173,7 +1174,7 @@ void AdornedRulerPanel::DoIdle()
       // showing or hiding the scrub bar, etc.
       Refresh();
 
-   mDirtySelectedRegion = false;
+   mDirtyPlayRegion = false;
 }
 
 void AdornedRulerPanel::OnAudioStartStop(wxCommandEvent & evt)
@@ -1202,11 +1203,14 @@ void AdornedRulerPanel::OnAudioStartStop(wxCommandEvent & evt)
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
-   auto &viewInfo = ViewInfo::Get( *GetProject() );
+   const auto &viewInfo = ViewInfo::Get( *GetProject() );
+   const auto &playRegion = viewInfo.playRegion;
+   const auto playRegionBounds = std::pair{
+      playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() };
    mLastDrawnH = viewInfo.h;
    mLastDrawnZoom = viewInfo.GetZoom();
-   mDirtySelectedRegion = (mLastDrawnSelectedRegion != viewInfo.selectedRegion);
-   mLastDrawnSelectedRegion = viewInfo.selectedRegion;
+   mDirtyPlayRegion = (mLastDrawnPlayRegion != playRegionBounds);
+   mLastDrawnPlayRegion = playRegionBounds;
    // To do, note other fisheye state when we have that
 
    wxPaintDC dc(this);

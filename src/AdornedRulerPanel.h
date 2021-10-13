@@ -221,11 +221,11 @@ private:
    struct Subgroup;
    struct MainGroup;
 
-   SelectedRegion mLastDrawnSelectedRegion;
+   std::pair<double, double> mLastDrawnPlayRegion{};
    bool mLastPlayRegionActive = false;
    double mLastDrawnH{};
    double mLastDrawnZoom{};
-   bool mDirtySelectedRegion{};
+   bool mDirtyPlayRegion{};
 };
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__
