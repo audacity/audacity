@@ -1327,6 +1327,10 @@ bool AudacityApp::OnInit()
    this->AssociateFileTypes();
 #endif
 
+   theTheme.SetOnPreferredSystemAppearanceChanged([this](PreferredSystemAppearance appearance){
+       SetPreferredSystemAppearance(appearance);
+   });
+
    theTheme.LoadPreferredTheme();
 
    // AColor depends on theTheme.
@@ -2417,6 +2421,13 @@ void AudacityApp::OnMenuExit(wxCommandEvent & event)
    event.Skip(AllProjects{}.empty());
 
 }
+
+#ifndef __WXMAC__
+void AudacityApp::SetPreferredSystemAppearance(PreferredSystemAppearance)
+{
+   // Currently this is implemented only on macOS
+}
+#endif
 
 //BG: On Windows, associate the aup file type with Audacity
 /* We do this in the Windows installer now,

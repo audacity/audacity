@@ -19,5 +19,5 @@ static const std::vector<unsigned char> ImageCacheAsData {
 static ThemeBase::RegisteredTheme theme{
    /* i18n-hint: describing the "classic" or traditional
       appearance of older versions of Audacity */
-   { "classic", XO("Classic") }, ImageCacheAsData
+   { "classic", XO("Classic") }, PreferredSystemAppearance::Light, ImageCacheAsData
 };

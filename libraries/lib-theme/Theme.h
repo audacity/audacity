@@ -25,6 +25,14 @@
 //! A choice of theme such as "Light", "Dark", ...
 using teThemeType = Identifier;
 
+//! A system theme, that matches selected theme best (only works on macOS with builtin themes).
+enum class PreferredSystemAppearance
+{
+    Light,
+    Dark,
+    HighContrastDark
+};
+
 class wxArrayString;
 class wxBitmap;
 class wxColour;
@@ -100,11 +108,15 @@ public:
    // Typically statically constructed:
    struct THEME_API RegisteredTheme {
       RegisteredTheme(EnumValueSymbol symbol,
+         PreferredSystemAppearance preferredSystemAppearance,
          const std::vector<unsigned char> &data /*!<
             A reference to this vector is stored, not a copy of it! */
       );
       ~RegisteredTheme();
+
       const EnumValueSymbol symbol;
+      const PreferredSystemAppearance preferredSystemAppearance;
+      const std::vector<unsigned char>& data;
    };
 
    void LoadTheme( teThemeType Theme );
@@ -144,6 +156,9 @@ public:
    // Utility function that takes a 32 bit bitmap and makes it into an image.
    wxImage MakeImageWithAlpha( wxBitmap & Bmp );
 
+   using OnPreferredSystemAppearanceChanged = std::function<void (PreferredSystemAppearance)>;
+   OnPreferredSystemAppearanceChanged
+   SetOnPreferredSystemAppearanceChanged(OnPreferredSystemAppearanceChanged handler);
 protected:
    // wxImage, wxBitmap copy cheaply using reference counting
    std::vector<wxImage> mImages;
@@ -153,6 +168,9 @@ protected:
 
    std::vector<wxColour> mColours;
    wxArrayString mColourNames;
+
+   PreferredSystemAppearance mPreferredSystemAppearance { PreferredSystemAppearance::Light };
+   OnPreferredSystemAppearanceChanged mOnPreferredSystemAppearanceChanged;
 };
 
 
