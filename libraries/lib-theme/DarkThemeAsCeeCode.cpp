@@ -17,5 +17,5 @@ static const std::vector<unsigned char> ImageCacheAsData {
 };
 
 static ThemeBase::RegisteredTheme theme{
-   { "dark", XO("Dark") }, ImageCacheAsData
+   { "dark", XO("Dark") }, PreferredSystemAppearance::Dark, ImageCacheAsData
 };
