@@ -258,7 +258,7 @@ void ControlToolBar::RegenerateTooltips()
       {
          case ID_PLAY_BUTTON:
             // Without shift
-            name = wxT("PlayStop");
+            name = wxT("DefaultPlayStop");
             break;
          case ID_RECORD_BUTTON:
             // Without shift
@@ -277,6 +277,9 @@ void ControlToolBar::RegenerateTooltips()
          case ID_REW_BUTTON:
             name = wxT("CursProjectStart");
             break;
+         case ID_LOOP_BUTTON:
+            name = wxT("TogglePlayRegion");
+            break;
       }
       std::vector<ComponentInterfaceSymbol> commands(
          1u, { name, Verbatim( pCtrl->GetLabel() ) } );
@@ -286,7 +289,7 @@ void ControlToolBar::RegenerateTooltips()
       {
          case ID_PLAY_BUTTON:
             // With shift
-            commands.push_back( { wxT("PlayLooped"), XO("Loop Play") } );
+            commands.push_back( { wxT("OncePlayStop"), XO("Play Once") } );
             break;
          case ID_RECORD_BUTTON:
             // With shift
