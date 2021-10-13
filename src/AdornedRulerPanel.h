@@ -147,18 +147,18 @@ private:
    void ShowScrubMenu(const wxPoint & pos);
    void DragSelection();
    void HandleSnapping();
-   void OnToggleQuickPlay(wxCommandEvent &evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    //void OnTimelineToolTips(wxCommandEvent &evt);
    void OnAutoScroll(wxCommandEvent &evt);
-   void OnActivatePlayRegion(wxCommandEvent &evt);
+   void OnTogglePlayRegion(wxCommandEvent &evt);
+   void OnClearPlayRegion(wxCommandEvent &evt);
+   void OnSetPlayRegionToSelection(wxCommandEvent &evt);
 
    void OnPinnedButton(wxCommandEvent & event);
    void OnTogglePinnedState(wxCommandEvent & event);
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
-   bool mQuickPlayEnabled;
 
    enum MouseEventState {
       mesNone,
@@ -207,6 +207,7 @@ private:
 private:
    class CommonRulerHandle;
    class QPHandle;
+   class PlayRegionAdjustingHandle;
    class ScrubbingHandle;
 
    class CommonCell;

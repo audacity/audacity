@@ -13,13 +13,17 @@
 #include <wx/frame.h>
 
 #include "widgets/AudacityMessageBox.h"
+#include "AudioIO.h"
 #include "CommonCommandFlags.h"
 #include "Menus.h"
 #include "Project.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "ProjectWindows.h"
+#include "ProjectRate.h"
 #include "ProjectSettings.h"
 #include "SelectionState.h"
+#include "TimeDialog.h"
 #include "TrackPanelAx.h"
 #include "TrackPanel.h"
 #include "ViewInfo.h"
@@ -194,4 +198,96 @@ void InactivatePlayRegion(AudacityProject &project)
    playRegion.SetTimes( selectedRegion.t0(), selectedRegion.t1() );
 }
 
+void TogglePlayRegion(AudacityProject &project)
+{
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   if (playRegion.Active())
+      InactivatePlayRegion(project);
+   else
+      ActivatePlayRegion(project);
+}
+
+void ClearPlayRegion(AudacityProject &project)
+{
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   playRegion.SetAllTimes(-1, -1);
+}
+
+void SetPlayRegionToSelection(AudacityProject &project)
+{
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   auto &selectedRegion = viewInfo.selectedRegion;
+   playRegion.SetAllTimes( selectedRegion.t0(), selectedRegion.t1() );
+}
+
+void OnSetRegion(AudacityProject &project,
+   bool left, bool selection, const TranslatableString &dialogTitle)
+{
+   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
+   auto &viewInfo = ViewInfo::Get( project );
+   auto &playRegion = viewInfo.playRegion;
+   auto &selectedRegion = viewInfo.selectedRegion;
+   const auto &settings = ProjectSettings::Get( project );
+   auto &window = GetProjectFrame( project );
+
+   const auto getValue = [&]() -> double {
+      if (selection) {
+         if (left)
+            return selectedRegion.t0();
+         else
+            return selectedRegion.t1();
+      }
+      else {
+         if (left)
+            return playRegion.GetStart();
+         else
+            return playRegion.GetEnd();
+      }
+   };
+
+   const auto setValue = [&](double value){
+      if (selection) {
+         if (left)
+            selectedRegion.setT0(value, false);
+         else
+            selectedRegion.setT1(value, false);
+      }
+      else {
+         if (left)
+            playRegion.SetStart(value);
+         else
+            playRegion.SetEnd(value);
+      }
+   };
+
+   bool bSelChanged = false;
+   auto gAudioIO = AudioIO::Get();
+   if ((token > 0) && gAudioIO->IsStreamActive(token))
+   {
+      double indicator = gAudioIO->GetStreamTime();
+      setValue(indicator);
+      bSelChanged = true;
+   }
+   else
+   {
+      auto fmt = settings.GetSelectionFormat();
+      auto rate = ProjectRate::Get(project).GetRate();
+
+      TimeDialog dlg(&window, dialogTitle,
+         fmt, rate, getValue(), XO("Position"));
+
+      if (wxID_OK == dlg.ShowModal())
+      {
+         //Get the value from the dialog
+         setValue( std::max(0.0, dlg.GetTimeValue()) );
+         bSelChanged = true;
+      }
+   }
+
+   if (bSelChanged)
+      ProjectHistory::Get( project ).ModifyState(false);
+}
 }

@@ -112,6 +112,92 @@ inline int IndicatorBigWidth()
    return IndicatorWidthForHeight(IndicatorBigHeight());
 }
 
+class AdornedRulerPanel::CommonRulerHandle : public UIHandle
+{
+public:
+   explicit
+   CommonRulerHandle(
+      AdornedRulerPanel *pParent, wxCoord xx, MenuChoice menuChoice )
+      : mParent(pParent)
+      , mX( xx )
+      , mChoice( menuChoice )
+   {}
+
+   bool Clicked() const { return mClicked != Button::None; }
+
+   static UIHandle::Result NeedChangeHighlight(
+      const CommonRulerHandle &oldState, const CommonRulerHandle &newState)
+   {
+      if (oldState.mX != newState.mX)
+         return RefreshCode::DrawOverlays;
+      return 0;
+   }
+
+protected:
+   bool HandlesRightClick() override { return true; }
+
+   Result Click(
+      const TrackPanelMouseEvent &event, AudacityProject *) override
+   {
+      mClicked = event.event.LeftIsDown() ? Button::Left : Button::Right;
+      return RefreshCode::DrawOverlays;
+   }
+
+   Result Drag(
+      const TrackPanelMouseEvent &, AudacityProject *) override
+   {
+      return RefreshCode::DrawOverlays;
+   }
+
+   Result Release(
+      const TrackPanelMouseEvent &event, AudacityProject *,
+      wxWindow *) override
+   {
+      if ( mParent && mClicked == Button::Right ) {
+         const auto pos = event.event.GetPosition();
+         mParent->ShowContextMenu( mChoice, &pos );
+      }
+      return RefreshCode::DrawOverlays;
+   }
+
+   Result Cancel(AudacityProject *) override
+   {
+      return RefreshCode::DrawOverlays;
+   }
+   
+   void Enter(bool, AudacityProject *) override
+   {
+      mChangeHighlight = RefreshCode::DrawOverlays;
+   }
+
+   wxWeakRef<AdornedRulerPanel> mParent;
+
+   wxCoord mX;
+   
+   MenuChoice mChoice;
+
+   enum class Button { None, Left, Right };
+   Button mClicked{ Button::None };
+};
+
+class AdornedRulerPanel::PlayRegionAdjustingHandle : public CommonRulerHandle {
+public:
+   using CommonRulerHandle::CommonRulerHandle;
+
+   HitTestPreview Preview(
+      const TrackPanelMouseState &state, AudacityProject *pProject)
+   override
+   {
+      static wxCursor cursor{ wxCURSOR_DEFAULT };
+      const auto message = XO("Click and drag to define a looping region.");
+      return {
+         message,
+         &cursor,
+         message
+      };
+   }
+};
+
 /**********************************************************************
 
 ScrubbingRulerOverlay.
@@ -382,10 +468,11 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
 **********************************************************************/
 
 enum {
-   OnToggleQuickPlayID = 7000,
-   OnSyncQuickPlaySelID,
+   OnSyncQuickPlaySelID = 7000,
    OnAutoScrollID,
-   OnActivatePlayRegionID,
+   OnTogglePlayRegionID,
+   OnClearPlayRegionID,
+   OnSetPlayRegionToSelectionID,
    OnTogglePinnedStateID,
 };
 
@@ -395,10 +482,12 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
    EVT_SIZE(AdornedRulerPanel::OnSize)
 
    // Context menu commands
-   EVT_MENU(OnToggleQuickPlayID, AdornedRulerPanel::OnToggleQuickPlay)
    EVT_MENU(OnSyncQuickPlaySelID, AdornedRulerPanel::OnSyncSelToQuickPlay)
    EVT_MENU(OnAutoScrollID, AdornedRulerPanel::OnAutoScroll)
-   EVT_MENU(OnActivatePlayRegionID, AdornedRulerPanel::OnActivatePlayRegion)
+   EVT_MENU(OnTogglePlayRegionID, AdornedRulerPanel::OnTogglePlayRegion)
+   EVT_MENU(OnClearPlayRegionID, AdornedRulerPanel::OnClearPlayRegion)
+   EVT_MENU(OnSetPlayRegionToSelectionID,
+      AdornedRulerPanel::OnSetPlayRegionToSelection)
    EVT_MENU( OnTogglePinnedStateID, AdornedRulerPanel::OnTogglePinnedState )
 
    EVT_COMMAND( OnTogglePinnedStateID,
@@ -445,74 +534,6 @@ public:
 protected:
    AdornedRulerPanel *mParent;
    const MenuChoice mMenuChoice;
-};
-
-class AdornedRulerPanel::CommonRulerHandle : public UIHandle
-{
-public:
-   explicit
-   CommonRulerHandle(
-      AdornedRulerPanel *pParent, wxCoord xx, MenuChoice menuChoice )
-      : mParent(pParent)
-      , mX( xx )
-      , mChoice( menuChoice )
-   {}
-
-   bool Clicked() const { return mClicked != Button::None; }
-
-   static UIHandle::Result NeedChangeHighlight(
-      const CommonRulerHandle &oldState, const CommonRulerHandle &newState)
-   {
-      if (oldState.mX != newState.mX)
-         return RefreshCode::DrawOverlays;
-      return 0;
-   }
-
-protected:
-   bool HandlesRightClick() override { return true; }
-
-   Result Click(
-      const TrackPanelMouseEvent &event, AudacityProject *) override
-   {
-      mClicked = event.event.LeftIsDown() ? Button::Left : Button::Right;
-      return RefreshCode::DrawOverlays;
-   }
-
-   Result Drag(
-      const TrackPanelMouseEvent &, AudacityProject *) override
-   {
-      return RefreshCode::DrawOverlays;
-   }
-
-   Result Release(
-      const TrackPanelMouseEvent &event, AudacityProject *,
-      wxWindow *) override
-   {
-      if ( mParent && mClicked == Button::Right ) {
-         const auto pos = event.event.GetPosition();
-         mParent->ShowContextMenu( mChoice, &pos );
-      }
-      return RefreshCode::DrawOverlays;
-   }
-
-   Result Cancel(AudacityProject *) override
-   {
-      return RefreshCode::DrawOverlays;
-   }
-   
-   void Enter(bool, AudacityProject *) override
-   {
-      mChangeHighlight = RefreshCode::DrawOverlays;
-   }
-
-   wxWeakRef<AdornedRulerPanel> mParent;
-
-   wxCoord mX;
-   
-   MenuChoice mChoice;
-
-   enum class Button { None, Left, Right };
-   Button mClicked{ Button::None };
 };
 
 #undef QUICK_PLAY_HANDLE
@@ -937,7 +958,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mTimelineToolTip = !!gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L);
    mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
-   mQuickPlayEnabled = !!gPrefs->Read(wxT("/QuickPlay/QuickPlayEnabled"), 1L);
 
 #if wxUSE_TOOLTIPS
    wxToolTip::Enable(true);
@@ -1359,7 +1379,7 @@ auto AdornedRulerPanel::QPHandle::Click(
    auto result = CommonRulerHandle::Click(event, pProject);
    if (!( result & RefreshCode::Cancelled )) {
       if (mClicked == Button::Left) {
-         if (!(mParent && mParent->mQuickPlayEnabled))
+         if (!mParent)
             return RefreshCode::Cancelled;
 
          auto &scrubber = Scrubber::Get( *pProject );
@@ -1539,12 +1559,14 @@ auto AdornedRulerPanel::QPHandle::Preview(
       -> HitTestPreview
 {
    TranslatableString tooltip;
+   #if 0
    if (mParent && mParent->mTimelineToolTip) {
       if (!mParent->mQuickPlayEnabled)
          tooltip = XO("Quick-Play disabled");
       else
          tooltip = XO("Quick-Play enabled");
    }
+   #endif
 
    TranslatableString message;
    auto &scrubber = Scrubber::Get( *pProject );
@@ -1560,7 +1582,7 @@ auto AdornedRulerPanel::QPHandle::Preview(
    static wxCursor cursorSizeWE{ wxCURSOR_SIZEWE };
    
    bool showArrows = false;
-   if (mParent && mParent->mQuickPlayEnabled)
+   if (mParent)
       showArrows =
          (mClicked == Button::Left)
          || mParent->IsWithinMarker(
@@ -1852,20 +1874,28 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    const auto &playRegion = viewInfo.playRegion;
    wxMenu rulerMenu;
 
-   rulerMenu.AppendCheckItem(OnToggleQuickPlayID, _("Enable Quick-Play"))->
-      Check(mQuickPlayEnabled);
-
    auto pDrag = rulerMenu.AppendCheckItem(OnSyncQuickPlaySelID, _("Enable dragging selection"));
    pDrag->Check(mPlayRegionDragsSelection && !playRegion.Active());
-   pDrag->Enable(mQuickPlayEnabled && !playRegion.Active());
+   pDrag->Enable(!playRegion.Active());
 
    rulerMenu.AppendCheckItem(OnAutoScrollID, _("Update display while playing"))->
       Check(mViewInfo->bUpdateTrackIndicator);
 
-   auto pLock = rulerMenu.AppendCheckItem(OnActivatePlayRegionID, _("Lock Play Region"));
-   pLock->Check(playRegion.Active());
-   pLock->Enable( playRegion.Active() || !playRegion.Empty() );
+   {
+      auto item = rulerMenu.AppendCheckItem(OnTogglePlayRegionID,
+         LoopToggleText.Stripped().Translation());
+      item->Check(playRegion.Active());
+   }
 
+   {
+      auto item = rulerMenu.Append(OnClearPlayRegionID,
+         _("Clear Looping Region"));
+   }
+
+   {
+      auto item = rulerMenu.Append(OnSetPlayRegionToSelectionID,
+         _("Set Loop To Selection"));
+   }
 
    rulerMenu.AppendSeparator();
    rulerMenu.AppendCheckItem(OnTogglePinnedStateID, _("Pinned Play Head"))->
@@ -1889,13 +1919,6 @@ void AdornedRulerPanel::ShowScrubMenu(const wxPoint & pos)
       wxWidgetsWindowPlacement{ this },
       { pos.x, pos.y }
    );
-}
-
-void AdornedRulerPanel::OnToggleQuickPlay(wxCommandEvent&)
-{
-   mQuickPlayEnabled = (mQuickPlayEnabled)? false : true;
-   gPrefs->Write(wxT("/QuickPlay/QuickPlayEnabled"), mQuickPlayEnabled);
-   gPrefs->Flush();
 }
 
 void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
@@ -1949,14 +1972,19 @@ void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 }
 
 
-void AdornedRulerPanel::OnActivatePlayRegion(wxCommandEvent&)
+void AdornedRulerPanel::OnTogglePlayRegion(wxCommandEvent&)
 {
-   const auto &viewInfo = ViewInfo::Get( *GetProject() );
-   const auto &playRegion = viewInfo.playRegion;
-   if (playRegion.Active())
-      SelectUtilities::InactivatePlayRegion(*mProject);
-   else
-      SelectUtilities::ActivatePlayRegion(*mProject);
+   SelectUtilities::TogglePlayRegion(*mProject);
+}
+
+void AdornedRulerPanel::OnClearPlayRegion(wxCommandEvent&)
+{
+   SelectUtilities::ClearPlayRegion(*mProject);
+}
+
+void AdornedRulerPanel::OnSetPlayRegionToSelection(wxCommandEvent&)
+{
+   SelectUtilities::SetPlayRegionToSelection(*mProject);
 }
 
 

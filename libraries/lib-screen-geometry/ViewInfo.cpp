@@ -230,6 +230,8 @@ void PlayRegion::Notify()
    ProcessEvent( evt );
 }
 
+const auto LoopToggleText = XXO("&Loop On/Off");
+
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
    []( AudacityProject &project ) {
       return std::make_unique<ViewInfo>(0.0, 1.0, ZoomInfo::GetDefaultZoom());

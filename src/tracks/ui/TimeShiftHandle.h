@@ -43,7 +43,7 @@ public:
    //! Possibilities for HitTest on the clicked track
    enum class HitTestResult {
       Miss,      //!< Don't shift anything
-      Selection, //!< Shfit chosen intervals of this track; may shift other tracks' intervals
+      Selection, //!< Shift chosen intervals of this track; may shift other tracks' intervals
       Intervals, //!< Shift intervals only of selected track and sister channels
       Track      //!< Shift selected track and sister channels only, as a whole
    };

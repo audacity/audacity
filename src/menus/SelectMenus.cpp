@@ -15,7 +15,6 @@
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
-#include "../TimeDialog.h"
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
@@ -493,85 +492,16 @@ void OnSelectSyncLockSel(const CommandContext &context)
       ProjectHistory::Get( project ).ModifyState(false);
 }
 
-//this pops up a dialog which allows the left selection to be set.
-//If playing/recording is happening, it sets the left selection at
-//the current play position.
 void OnSetLeftSelection(const CommandContext &context)
 {
-   auto &project = context.project;
-   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   const auto &settings = ProjectSettings::Get( project );
-   auto &window = GetProjectFrame( project );
-
-   bool bSelChanged = false;
-   auto gAudioIO = AudioIO::Get();
-   if ((token > 0) && gAudioIO->IsStreamActive(token))
-   {
-      double indicator = gAudioIO->GetStreamTime();
-      selectedRegion.setT0(indicator, false);
-      bSelChanged = true;
-   }
-   else
-   {
-      auto fmt = settings.GetSelectionFormat();
-      auto rate = ProjectRate::Get(project).GetRate();
-
-      TimeDialog dlg(&window, XO("Set Left Selection Boundary"),
-         fmt, rate, selectedRegion.t0(), XO("Position"));
-
-      if (wxID_OK == dlg.ShowModal())
-      {
-         //Get the value from the dialog
-         selectedRegion.setT0(
-            std::max(0.0, dlg.GetTimeValue()), false);
-         bSelChanged = true;
-      }
-   }
-
-   if (bSelChanged)
-   {
-      ProjectHistory::Get( project ).ModifyState(false);
-   }
+   SelectUtilities::OnSetRegion(context.project,
+      true, true, XO("Set Left Selection Boundary"));
 }
 
 void OnSetRightSelection(const CommandContext &context)
 {
-   auto &project = context.project;
-   auto token = ProjectAudioIO::Get( project ).GetAudioIOToken();
-   auto &selectedRegion = ViewInfo::Get( project ).selectedRegion;
-   const auto &settings = ProjectSettings::Get( project );
-   auto &window = GetProjectFrame( project );
-
-   bool bSelChanged = false;
-   auto gAudioIO = AudioIO::Get();
-   if ((token > 0) && gAudioIO->IsStreamActive(token))
-   {
-      double indicator = gAudioIO->GetStreamTime();
-      selectedRegion.setT1(indicator, false);
-      bSelChanged = true;
-   }
-   else
-   {
-      auto fmt = settings.GetSelectionFormat();
-      auto rate = ProjectRate::Get(project).GetRate();
-
-      TimeDialog dlg(&window, XO("Set Right Selection Boundary"),
-         fmt, rate, selectedRegion.t1(), XO("Position"));
-
-      if (wxID_OK == dlg.ShowModal())
-      {
-         //Get the value from the dialog
-         selectedRegion.setT1(
-            std::max(0.0, dlg.GetTimeValue()), false);
-         bSelChanged = true;
-      }
-   }
-
-   if (bSelChanged)
-   {
-      ProjectHistory::Get( project ).ModifyState(false);
-   }
+   SelectUtilities::OnSetRegion(context.project,
+      false, true, XO("Set Right Selection Boundary"));
 }
 
 void OnSelectStartCursor(const CommandContext &context)
