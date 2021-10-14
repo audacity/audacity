@@ -316,7 +316,9 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 }
 
 // Strings for menu items and also for dialog titles
+/* i18n-hint Sets a starting point for looping play */
 static const auto SetLoopInTitle = XXO("Set Loop &In");
+/* i18n-hint Sets an ending point for looping play */
 static const auto SetLoopOutTitle = XXO("Set Loop &Out");
 
 // Menu handler functions
