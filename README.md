@@ -1,7 +1,8 @@
 [![Audacity](https://forum.audacityteam.org/styles/prosilver/theme/images/Audacity-logo_75px_trans_forum.png)](https://www.audacityteam.org) 
 =========================
-
-[**Audacity**](https://www.audacityteam.org) is an easy-to-use, multi-track audio editor and recorder for Windows, macOS, GNU/Linux and other operating systems. Audacity is open source software licensed under GPL, version 2 or later.
+![Audacity](https://www.audacityteam.org/wp-content/uploads/2020/10/01-Audacity-Rhythm-Track-and-mono-vocal-track-waveform-view.png)
+=========================
+[**Audacity**](https://www.audacityteam.org) is an easy-to-use, multi-track audio editor and recorder for Windows, macOS, GNU/Linux and other operating systems. Audacity is open source software licensed under [GPL](https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html), version 2 or later.
 
 - **Recording** from any real or virtual audio device that is available to the host system.
 - **Export / Import** a wide range of audio formats, extendible with FFmpeg.
@@ -19,6 +20,28 @@
 For end users, the latest Windows and macOS release version of Audacity is available from the [Audacity website](https://www.audacityteam.org/download/).
 Help with using Audacity is available from the [Audacity Forum](https://forum.audacityteam.org/).
 
-Build instructions are available [here](BUILDING.md).
+There are many ways you can [contribute](https://wiki.audacityteam.org/wiki/Contribute) to Audacity.
 
-More information for developers is available from the [Audacity Wiki](https://wiki.audacityteam.org/wiki/For_Developers).
+Help with using Audacity is available from the [Audacity Forum](https://forum.audacityteam.org/).
+
+## For Developers
+
+[Code of Conduct](CODE_OF_CONDUCT.md)
+
+[Coding Standards](https://wiki.audacityteam.org/wiki/CodingStandards)
+
+[How to report bugs](https://wiki.audacityteam.org/wiki/Reporting_Bugs)
+
+[QA procedures](https://wiki.audacityteam.org/wiki/QA_Procedures_overview)
+
+[Build instructions](BUILDING.md)
+
+For other relevant information, please look at the [Developer Guide](https://wiki.audacityteam.org/wiki/Developer_Guide).
+
+## More Information
+
+Details on the [Audacity license](https://www.audacityteam.org/about/license/).
+
+Connect with others in the [community](https://wiki.audacityteam.org/wiki/Community).
+
+Information not here can be found on the [Audacity Wiki](https://wiki.audacityteam.org/wiki/For_Developers).
