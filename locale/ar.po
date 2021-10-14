@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-07-15 12:48-0400\n"
+"POT-Creation-Date: 2021-10-14 10:06-0400\n"
 "PO-Revision-Date: 2020-06-17 17:06-0400\n"
 "Last-Translator: Hussam al-Homsi <sawuare@gmail.com>\n"
 "Language-Team: ar@li.org\n"
@@ -57,6 +57,25 @@ msgstr ""
 msgid "Comments"
 msgstr "تعليقات"
 
+#. i18n-hint: %s will be replaced with "our Privacy Policy"
+#: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/widgets/ErrorReportDialog.cpp
+#, fuzzy, c-format
+msgid "See %s for more info."
+msgstr "اختر واحدا أو أكثر من الملفات"
+
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an
+#. object of "See".
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an
+#. object of "See".
+#: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "our Privacy Policy"
+msgstr ""
+
 #: crashreports/crashreporter/CrashReportApp.cpp
 #: src/widgets/ErrorReportDialog.cpp
 msgctxt "crash reporter button"
@@ -73,6 +92,418 @@ msgstr ""
 #, fuzzy
 msgid "Failed to send crash report"
 msgstr "غير قادر على قراءة ملف المسبقات."
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+msgid "Stream is active ... unable to gather information.\n"
+msgstr ""
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, c-format
+msgid "Default recording device number: %d\n"
+msgstr "رقم جهاز التسجيل الافتراضي: %d\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, c-format
+msgid "Default playback device number: %d\n"
+msgstr "رقم جهاز التشغيل الافتراضي: %d\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, fuzzy
+msgid "No devices found\n"
+msgstr "لم يعثر على أجهزة"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, fuzzy, c-format
+msgid "Device info unavailable for: %d\n"
+msgstr "معلومات الجهاز غير متوفرة."
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, c-format
+msgid "Device ID: %d\n"
+msgstr "معرف الجهاز: %d\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, c-format
+msgid "Device name: %s\n"
+msgstr "اسم الجهاز: %s\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, c-format
+msgid "Host name: %s\n"
+msgstr "اسم المضيف: %s\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Recording channels: %d\n"
+msgstr "قنوات التسجيل"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "Playback channels: %d\n"
+msgstr ""
+"قنوات التشغيل: %d\n"
+"\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "Low Recording Latency: %g\n"
+msgstr "نهاية التسجيل:"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "Low Playback Latency: %g\n"
+msgstr ""
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy, c-format
+msgid "High Recording Latency: %g\n"
+msgstr "نهاية التسجيل:"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "High Playback Latency: %g\n"
+msgstr ""
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy
+msgid "Supported Rates:\n"
+msgstr "معدَّلات العينة"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "Selected recording device: %d - %s\n"
+msgstr "جهاز التسجيل المختار: %d - %s\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "No recording device found for '%s'.\n"
+msgstr ""
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "Selected playback device: %d - %s\n"
+msgstr "جهاز التشغيل المختار: %d - %s\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "No playback device found for '%s'.\n"
+msgstr ""
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Cannot check mutual sample rates without both devices.\n"
+msgstr ""
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "Received %d while opening devices\n"
+msgstr ""
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy
+msgid "Unable to open Portmixer\n"
+msgstr "غير قادر على فتح ملف النوع."
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Available mixers:\n"
+msgstr ""
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "%d - %s\n"
+msgstr "%d - %s\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Available recording sources:\n"
+msgstr "مصادر التسجيل المتاحة:\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Available playback volumes:\n"
+msgstr "حجوم التشغيل المتاحة:\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Recording volume is emulated\n"
+msgstr "حجم التسجيل محاكى\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Recording volume is native\n"
+msgstr "حجم التسجيل محلي\n"
+
+#: libraries/lib-basic-ui/BasicUI.cpp
+#: libraries/lib-exceptions/AudacityException.h src/commands/MessageCommand.cpp
+#: src/widgets/AudacityMessageBox.h
+msgid "Message"
+msgstr "رسالة"
+
+#: libraries/lib-exceptions/InconsistencyException.cpp
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at https://forum.audacityteam.org/."
+msgstr ""
+"خطأ داخلي في %s عند %s سطر %d.\n"
+"من فضلك أخبر فريق Audacity عند /https://forum.audacityteam.org."
+
+#: libraries/lib-exceptions/InconsistencyException.cpp
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at https://forum.audacityteam.org/."
+msgstr ""
+"خطأ داخلي عند %s سطر %d.\n"
+"من فضلك أخبر فريق Audacity عند /https://forum.audacityteam.org."
+
+#: libraries/lib-exceptions/InconsistencyException.h
+msgid "Internal Error"
+msgstr "خطأ داخلي"
+
+#: libraries/lib-files/FileException.cpp
+#, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr "أخفق Audacity في فتح ملف في %s."
+
+#: libraries/lib-files/FileException.cpp
+#, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr "أخفق Audacity في القراءة من ملف في %s."
+
+#: libraries/lib-files/FileException.cpp
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr "كتب Audacity ملفا في %s بنجاح لكن أخفق في إعادة تسميته إلى %s."
+
+#: libraries/lib-files/FileException.cpp
+#, fuzzy, c-format
+msgid ""
+"Audacity failed to write to a file.\n"
+"Perhaps %s is not writable or the disk is full.\n"
+"For tips on freeing up space, click the help button."
+msgstr ""
+"أخفق Audacity في الكتابة إلى ملف.\n"
+"ربما %s غير قابل للكتابة أو القرص ممتلئ."
+
+#: libraries/lib-files/FileException.h
+msgid "File Error"
+msgstr "خطأ ملف"
+
+#: libraries/lib-files/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny
+#, fuzzy
+msgid "All files"
+msgstr "جميع الملفات|*"
+
+#. i18n-hint an Audacity project is the state of the program, stored as
+#. files that can be reopened to resume the session later
+#: libraries/lib-files/FileNames.cpp
+#, fuzzy
+msgid "AUP3 project files"
+msgstr "احفظ ملفات بيانات المشروع"
+
+#: libraries/lib-files/FileNames.cpp
+msgid "Dynamically Linked Libraries"
+msgstr "المكتبات المربوطة ديناميكيا"
+
+#: libraries/lib-files/FileNames.cpp
+msgid "Dynamic Libraries"
+msgstr "المكتبات الديناميكية"
+
+#: libraries/lib-files/FileNames.cpp
+msgid "Text files"
+msgstr "ملفات نص"
+
+#: libraries/lib-files/FileNames.cpp
+#, fuzzy
+msgid "XML files"
+msgstr "ملفات MP3"
+
+#: libraries/lib-files/FileNames.cpp
+msgid ", "
+msgstr "، "
+
+#. i18n-hint a type or types such as "txt" or "txt, xml" will be
+#. substituted for %s
+#: libraries/lib-files/FileNames.cpp
+#, fuzzy, c-format
+msgid "%s files"
+msgstr "ملفات MP3"
+
+#: libraries/lib-files/FileNames.cpp src/BatchCommands.cpp
+#, c-format
+msgid "(%s)"
+msgstr "(%s)"
+
+#: libraries/lib-files/FileNames.cpp
+#, fuzzy, c-format
+msgid ""
+"\n"
+"%s does not have write permissions."
+msgstr "المجلد %s غير موجود. هل تريد إنشائه؟"
+
+#: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
+#: src/ProjectAudioManager.cpp src/SelectUtilities.cpp
+#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
+#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#: plug-ins/eq-xml-to-txt-converter.ny
+msgid "Error"
+msgstr "خطأ"
+
+#: libraries/lib-files/TempDirectory.cpp
+#, fuzzy
+msgid "Unsuitable"
+msgstr "الوحدة غير ملائمة"
+
+#: libraries/lib-files/TempDirectory.cpp
+msgid ""
+"The temporary files directory is on a FAT formatted drive.\n"
+"Resetting to default location."
+msgstr ""
+
+#: libraries/lib-files/TempDirectory.cpp
+#, c-format
+msgid ""
+"%s\n"
+"\n"
+"For tips on suitable drives, click the help button."
+msgstr ""
+
+#: libraries/lib-math/Dither.cpp src/commands/ScreenshotCommand.cpp
+#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp plug-ins/equalabel.ny
+#: plug-ins/sample-data-export.ny
+msgid "None"
+msgstr "لا شيء"
+
+#: libraries/lib-math/Dither.cpp
+msgid "Rectangle"
+msgstr "مستطيل"
+
+#: libraries/lib-math/Dither.cpp src/effects/ToneGen.cpp plug-ins/tremolo.ny
+msgid "Triangle"
+msgstr "مثلث"
+
+#: libraries/lib-math/Dither.cpp
+msgid "Shaped"
+msgstr "مُشَكل"
+
+#: libraries/lib-math/FFT.cpp
+msgid "Rectangular"
+msgstr "مستطيل"
+
+#. i18n-hint a proper name
+#: libraries/lib-math/FFT.cpp
+msgid "Bartlett"
+msgstr "بارتلت"
+
+#. i18n-hint a proper name
+#: libraries/lib-math/FFT.cpp
+msgid "Hamming"
+msgstr "هامينغ"
+
+#. i18n-hint a proper name
+#: libraries/lib-math/FFT.cpp
+msgid "Hann"
+msgstr "هان"
+
+#. i18n-hint a proper name
+#: libraries/lib-math/FFT.cpp
+msgid "Blackman"
+msgstr "بلاكمان"
+
+#. i18n-hint two proper names
+#: libraries/lib-math/FFT.cpp
+msgid "Blackman-Harris"
+msgstr "بلاكمان-هاريس"
+
+#. i18n-hint a proper name
+#: libraries/lib-math/FFT.cpp
+msgid "Welch"
+msgstr "ولتش"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-math/FFT.cpp
+msgid "Gaussian(a=2.5)"
+msgstr ""
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-math/FFT.cpp
+msgid "Gaussian(a=3.5)"
+msgstr ""
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-math/FFT.cpp
+msgid "Gaussian(a=4.5)"
+msgstr ""
+
+#: libraries/lib-math/Resample.cpp
+msgid "Low Quality (Fastest)"
+msgstr "جودة منخفضة (الأسرع)"
+
+#: libraries/lib-math/Resample.cpp
+msgid "Medium Quality"
+msgstr "جودة متوسطة"
+
+#: libraries/lib-math/Resample.cpp
+msgid "High Quality"
+msgstr "جودة عالية"
+
+#: libraries/lib-math/Resample.cpp
+msgid "Best Quality (Slowest)"
+msgstr "أفضل جودة (الأبطأ)"
+
+#. i18n-hint: Audio data bit depth (precision): 16-bit integers
+#: libraries/lib-math/SampleFormat.cpp
+msgid "16-bit PCM"
+msgstr "16-بِت PCM"
+
+#. i18n-hint: Audio data bit depth (precision): 24-bit integers
+#: libraries/lib-math/SampleFormat.cpp
+msgid "24-bit PCM"
+msgstr "24-بِت PCM"
+
+#. i18n-hint: Audio data bit depth (precision): 32-bit floating point
+#: libraries/lib-math/SampleFormat.cpp
+#: libraries/lib-project-rate/QualitySettings.cpp
+msgid "32-bit float"
+msgstr "32-بِت عائم"
+
+#: libraries/lib-math/SampleFormat.cpp
+#, fuzzy
+msgid "Unknown format"
+msgstr "مجهول"
+
+#: libraries/lib-project-rate/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16-بِت"
+
+#: libraries/lib-project-rate/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24-بِت"
+
+#: libraries/lib-registries/Registry.cpp
+#, c-format
+msgid "Plug-in group at %s was merged with a previously defined group"
+msgstr ""
+
+#: libraries/lib-registries/Registry.cpp
+#, c-format
+msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgstr ""
+
+#: libraries/lib-registries/Registry.cpp
+#, c-format
+msgid "Plug-in items at %s specify conflicting placements"
+msgstr ""
+
+#: libraries/lib-screen-geometry/ViewInfo.cpp
+msgid "&Loop On/Off"
+msgstr ""
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -110,6 +541,176 @@ msgstr "!عرض مُبسَّط"
 #, fuzzy
 msgid "System"
 msgstr "تاريخ النظام"
+
+#. i18n-hint: describing the "classic" or traditional
+#. appearance of older versions of Audacity
+#: libraries/lib-theme/ClassicThemeAsCeeCode.cpp
+msgid "Classic"
+msgstr "كلاسيكي"
+
+#: libraries/lib-theme/DarkThemeAsCeeCode.cpp
+msgid "Dark"
+msgstr "قاتم"
+
+#. i18n-hint: greater difference between foreground and
+#. background colors
+#: libraries/lib-theme/HiContrastThemeAsCeeCode.cpp
+msgid "High Contrast"
+msgstr "تباين مرتفع"
+
+#. i18n-hint: Light meaning opposite of dark
+#: libraries/lib-theme/LightThemeAsCeeCode.cpp
+msgid "Light"
+msgstr "خفيف"
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not write file:\n"
+"  %s."
+msgstr ""
+"لم يتمكن Audacity من كتابة الملف:\n"
+"  %s."
+
+#. i18n-hint: A theme is a consistent visual style across an application's
+#. graphical user interface, including choices of colors, and similarity of images
+#. such as those on button controls.  Audacity can load and save alternative
+#. themes.
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Theme written to:\n"
+"  %s."
+msgstr ""
+"الموضوع كتب إلى:\n"
+"  %s."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not open file:\n"
+"  %s\n"
+"for writing."
+msgstr ""
+"لم يتمكن Audacity من فتح الملف:\n"
+"  %s\n"
+"للكتابة."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not write images to file:\n"
+"  %s."
+msgstr ""
+"لم يتمكن Audacity من كتابة الصور في الملف:\n"
+"  %s."
+
+#. i18n-hint "Cee" means the C computer programming language
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Theme as Cee code written to:\n"
+"  %s."
+msgstr ""
+"الموضوع كشفرات Cee كتب إلى:\n"
+"  %s."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not find file:\n"
+"  %s.\n"
+"Theme not loaded."
+msgstr ""
+"لم يتمكن Audacity من إيجاد الملف:\n"
+"  %s.\n"
+"لم يتم تحميل الموضوع."
+
+#. i18n-hint: Do not translate png.  It is the name of a file format.
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not load file:\n"
+"  %s.\n"
+"Bad png format perhaps?"
+msgstr ""
+"لم يتمكن Audacity من تحميل الملف:\n"
+"  %s.\n"
+"ربما تكون صيغة بي.أن.جي سيئة؟"
+
+#: libraries/lib-theme/Theme.cpp
+msgid ""
+"Audacity could not read its default theme.\n"
+"Please report the problem."
+msgstr ""
+"لم يتمكن Audacity من قراءة الموضوع الافتراضي.\n"
+"من فضلك أخبر عن هذا المشكل."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"None of the expected theme component files\n"
+" were found in:\n"
+"  %s."
+msgstr ""
+"لم أعثر على أي من ملفات مكونات \n"
+"المواضيع المتوقعة في:\n"
+" %s."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Could not create directory:\n"
+"  %s"
+msgstr ""
+"لم أتمكن من إنشاء المجلد:\n"
+"  %s"
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Some required files in:\n"
+"  %s\n"
+"were already present. Overwrite?"
+msgstr ""
+"بعض الملفات المتطلبة في:\n"
+"  %s\n"
+"كانت موجودة بالفعل. اكتب عليها؟"
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not save file:\n"
+"  %s"
+msgstr ""
+"لم يتمكن Audacity من حفظ الملف:\n"
+"  %s"
+
+#. i18n-hint: user defined
+#: libraries/lib-theme/Theme.cpp
+msgid "Custom"
+msgstr "خاص"
+
+#: libraries/lib-xml/XMLFileReader.cpp src/effects/Effect.cpp
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "Could not open file: \"%s\""
+msgstr "لم أتمكن من فتح ملف: \"%s\""
+
+#: libraries/lib-xml/XMLFileReader.cpp
+#, fuzzy, c-format
+msgid "Error: %s at line %lu"
+msgstr "خطأ: %hs عند خط %lu"
+
+#: libraries/lib-xml/XMLFileReader.cpp
+#, c-format
+msgid "Could not load file: \"%s\""
+msgstr "لم أتمكن من تحميل الملف: \"%s\""
+
+#: libraries/lib-xml/XMLFileReader.cpp
+#, fuzzy
+msgid "Could not parse XML"
+msgstr "لم أتمكن من فتح الملف"
 
 #: modules/mod-null/ModNullCallback.cpp
 #, fuzzy
@@ -247,12 +848,13 @@ msgstr "نصوص Nyquist (*.ny)|*.ny|نصوص Lisp (*.lsp)|*.lsp|جميع الم
 msgid "Script was not saved."
 msgstr "لم يحفظ النص."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
-#: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
-#: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
-#: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
-#: src/export/ExportMultiple.cpp src/import/RawAudioGuess.cpp
-#: src/menus/EditMenus.cpp src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/DBConnection.cpp src/LogWindow.cpp
+#: src/ProjectFileIO.cpp src/ProjectHistory.cpp src/SqliteSampleBlock.cpp
+#: src/WaveClip.cpp src/WaveTrack.cpp src/export/Export.cpp
+#: src/export/ExportCL.cpp src/export/ExportMultiple.cpp
+#: src/import/RawAudioGuess.cpp src/menus/EditMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "تحذير"
 
@@ -304,7 +906,7 @@ msgstr "غير معنون"
 msgid "Nyquist Effect Workbench - "
 msgstr "نضد عمل تأثير Nyquist - "
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/PluginManager.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/PluginRegistrationDialog.cpp
 #: src/prefs/ModulePrefs.cpp
 msgid "New"
 msgstr "جديد"
@@ -338,6 +940,7 @@ msgid "Save script as..."
 msgstr "احفظ النص كـ..."
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Copy"
 msgstr "انسخ"
 
@@ -347,6 +950,7 @@ msgstr "انسخ إلى الحافظة"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Cut"
 msgstr "قص"
 
@@ -356,6 +960,7 @@ msgstr "قص إلى الحافظة"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Paste"
 msgstr "الصق"
 
@@ -373,6 +978,7 @@ msgid "Clear selection"
 msgstr "مسح الاختيار"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
+#: src/tracks/ui/BackgroundCell.cpp
 msgid "Select All"
 msgstr "اختر الجميع"
 
@@ -709,12 +1315,13 @@ msgstr "&nbsp; &nbsp; الاسم<b>Audacity</b> علامة تجارية مسجل
 msgid "Build Information"
 msgstr "معلومات الصيغة"
 
-#: src/AboutDialog.cpp src/PluginManager.cpp src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/prefs/ModulePrefs.cpp
 msgid "Enabled"
 msgstr "ممَكن"
 
-#: src/AboutDialog.cpp src/PluginManager.cpp src/export/ExportFFmpegDialogs.cpp
-#: src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "غير ممَكن"
 
@@ -866,18 +1473,10 @@ msgstr ""
 msgid "App update checking and error reporting require network access. These features are optional."
 msgstr ""
 
-#. i18n-hint: %s will be replaced with "our Privacy Policy"
-#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
-#, fuzzy, c-format
-msgid "See %s for more info."
-msgstr "اختر واحدا أو أكثر من الملفات"
-
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
-#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
-msgid "our Privacy Policy"
-msgstr ""
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Click and drag to define a looping region."
+msgstr "انقر و اسحب لتمدد المنطقة المختارة."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -965,10 +1564,6 @@ msgid "Timeline Options"
 msgstr "اختيارات البرامج المساعدة"
 
 #: src/AdornedRulerPanel.cpp
-msgid "Enable Quick-Play"
-msgstr "مكن التشغيل السريع"
-
-#: src/AdornedRulerPanel.cpp
 msgid "Enable dragging selection"
 msgstr "مكن الاختيار بالسحب"
 
@@ -976,34 +1571,21 @@ msgstr "مكن الاختيار بالسحب"
 msgid "Update display while playing"
 msgstr "حدث العرض أثناء التشغيل"
 
+#. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
-msgid "Lock Play Region"
-msgstr "اقفل منطقة التشغيل"
+#, fuzzy
+msgid "Clear Looping Region"
+msgstr "امسح"
+
+#: src/AdornedRulerPanel.cpp
+#, fuzzy
+msgid "Set Loop To Selection"
+msgstr "زوم إلى الاختيار"
 
 #: src/AdornedRulerPanel.cpp
 #, fuzzy
 msgid "Pinned Play Head"
 msgstr "مقدمة تسجيل/تشغيل مدبسة (جار/متوقف)"
-
-#: src/AdornedRulerPanel.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr "لا أستطيع قفل المنطقة بعد نهاية المشروع."
-
-#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/FileNames.cpp
-#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
-#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
-#: src/widgets/UnwritableLocationErrorDialog.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Error"
-msgstr "خطأ"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -1196,6 +1778,13 @@ msgstr ""
 msgid "set max disk block size in bytes"
 msgstr "عين الحجم الأقصى لكتل القرص بالبايتات"
 
+#. i18n-hint: brief help message for Audacity's command-line options
+#. A journal contains a sequence of user interface interactions to be repeated
+#. "log," "trail," "trace" have somewhat similar meanings
+#: src/AudacityApp.cpp
+msgid "replay a journal file"
+msgstr ""
+
 #. i18n-hint: This displays a list of available options
 #: src/AudacityApp.cpp
 msgid "this help message"
@@ -1234,11 +1823,6 @@ msgstr ""
 msgid "Audacity Project Files"
 msgstr "ملفات مشروع Audacity"
 
-#: src/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.cpp
-msgid "Message"
-msgstr "رسالة"
-
 #: src/AudacityFileConfig.cpp
 #, fuzzy
 msgid "Audacity Configuration Error"
@@ -1273,37 +1857,6 @@ msgstr "اخرج من Audacity"
 msgid "&Retry"
 msgstr ""
 
-#: src/AudacityLogger.cpp
-msgid "Audacity Log"
-msgstr "سجل Audacity"
-
-#: src/AudacityLogger.cpp src/Tags.cpp
-msgid "&Save..."
-msgstr "حفظ..."
-
-#. i18n-hint: (verb)
-#: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Cl&ear"
-msgstr "مسح"
-
-#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
-#: src/menus/FileMenus.cpp
-msgid "&Close"
-msgstr "إغلاق"
-
-#: src/AudacityLogger.cpp
-msgid "log.txt"
-msgstr "سجل.txt"
-
-#: src/AudacityLogger.cpp
-msgid "Save log to:"
-msgstr "حفظ السجل في:"
-
-#: src/AudacityLogger.cpp
-#, c-format
-msgid "Couldn't save log to file: %s"
-msgstr "لم أتمكن من حفظ السجل إلى الملف: %s"
-
 #: src/AudioIO.cpp
 msgid "Could not find any audio devices.\n"
 msgstr "لم أتمكن من إيجاد أية أجهزة صوتية.\n"
@@ -1314,7 +1867,7 @@ msgid ""
 "\n"
 msgstr "لن يكون بإمكانك إصدار أو تسجيل الصوت.\n"
 
-#: src/AudioIO.cpp
+#: src/AudioIO.cpp src/MIDIPlay.cpp
 #, c-format
 msgid "Error: %s"
 msgstr "خطأ: %s"
@@ -1322,20 +1875,6 @@ msgstr "خطأ: %s"
 #: src/AudioIO.cpp
 msgid "Error Initializing Audio"
 msgstr "خطأ في بدء الصوت"
-
-#: src/AudioIO.cpp
-msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "كان هناك خطأ في بدء طبقة المداخل\\المخارج للMIDI.\n"
-
-#: src/AudioIO.cpp
-msgid ""
-"You will not be able to play midi.\n"
-"\n"
-msgstr "لن يكون بإمكانك أن تعزف MIDI.\n"
-
-#: src/AudioIO.cpp
-msgid "Error Initializing Midi"
-msgstr "خطأ في بدء MIDI"
 
 #: src/AudioIO.cpp
 #, fuzzy
@@ -1386,189 +1925,6 @@ msgstr "توقف تعديل مستوى الصوت المؤتمت. تخطي ال�
 msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
 msgstr "توقف تعديل مستوى الصوت المؤتمت. يبدو %.2f حجما مقبولا."
 
-#: src/AudioIOBase.cpp
-msgid "Stream is active ... unable to gather information.\n"
-msgstr ""
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Default recording device number: %d\n"
-msgstr "رقم جهاز التسجيل الافتراضي: %d\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Default playback device number: %d\n"
-msgstr "رقم جهاز التشغيل الافتراضي: %d\n"
-
-#: src/AudioIOBase.cpp
-#, fuzzy
-msgid "No devices found\n"
-msgstr "لم يعثر على أجهزة"
-
-#: src/AudioIOBase.cpp
-#, fuzzy, c-format
-msgid "Device info unavailable for: %d\n"
-msgstr "معلومات الجهاز غير متوفرة."
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Device ID: %d\n"
-msgstr "معرف الجهاز: %d\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Device name: %s\n"
-msgstr "اسم الجهاز: %s\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Host name: %s\n"
-msgstr "اسم المضيف: %s\n"
-
-#: src/AudioIOBase.cpp
-#, fuzzy, c-format
-msgid "Recording channels: %d\n"
-msgstr "قنوات التسجيل"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Playback channels: %d\n"
-msgstr ""
-"قنوات التشغيل: %d\n"
-"\n"
-
-#: src/AudioIOBase.cpp
-#, fuzzy, c-format
-msgid "Low Recording Latency: %g\n"
-msgstr "نهاية التسجيل:"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Low Playback Latency: %g\n"
-msgstr ""
-
-#: src/AudioIOBase.cpp
-#, fuzzy, c-format
-msgid "High Recording Latency: %g\n"
-msgstr "نهاية التسجيل:"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "High Playback Latency: %g\n"
-msgstr ""
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/AudioIOBase.cpp
-#, fuzzy
-msgid "Supported Rates:\n"
-msgstr "معدَّلات العينة"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Selected recording device: %d - %s\n"
-msgstr "جهاز التسجيل المختار: %d - %s\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "No recording device found for '%s'.\n"
-msgstr ""
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Selected playback device: %d - %s\n"
-msgstr "جهاز التشغيل المختار: %d - %s\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "No playback device found for '%s'.\n"
-msgstr ""
-
-#: src/AudioIOBase.cpp
-msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr ""
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Received %d while opening devices\n"
-msgstr ""
-
-#: src/AudioIOBase.cpp
-#, fuzzy
-msgid "Unable to open Portmixer\n"
-msgstr "غير قادر على فتح ملف النوع."
-
-#: src/AudioIOBase.cpp
-msgid "Available mixers:\n"
-msgstr ""
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "%d - %s\n"
-msgstr "%d - %s\n"
-
-#: src/AudioIOBase.cpp
-msgid "Available recording sources:\n"
-msgstr "مصادر التسجيل المتاحة:\n"
-
-#: src/AudioIOBase.cpp
-msgid "Available playback volumes:\n"
-msgstr "حجوم التشغيل المتاحة:\n"
-
-#: src/AudioIOBase.cpp
-msgid "Recording volume is emulated\n"
-msgstr "حجم التسجيل محاكى\n"
-
-#: src/AudioIOBase.cpp
-msgid "Recording volume is native\n"
-msgstr "حجم التسجيل محلي\n"
-
-#: src/AudioIOBase.cpp
-#, fuzzy
-msgid "Playback volume is emulated\n"
-msgstr "حجم التشغيل: %s (محاكى)"
-
-#: src/AudioIOBase.cpp
-#, fuzzy
-msgid "Playback volume is native\n"
-msgstr "حجم التشغيل: %s (محاكى)"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Supports output: %d\n"
-msgstr ""
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Supports input: %d\n"
-msgstr ""
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Opened: %d\n"
-msgstr ""
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "جهاز تسجيل MIDI المختار: %d - %s\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "No MIDI recording device found for '%s'.\n"
-msgstr ""
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Selected MIDI playback device: %d - %s\n"
-msgstr "جهاز تشغيل MIDI المختار: %d - %s\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "No MIDI playback device found for '%s'.\n"
-msgstr ""
-
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
 msgstr "استرجاع تلقائي بعد التحطم"
@@ -1595,7 +1951,8 @@ msgid "Select"
 msgstr "اختيار"
 
 #. i18n-hint: (noun).  It's the name of the project to recover.
-#: src/AutoRecoveryDialog.cpp src/PluginManager.cpp src/TrackInfo.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TrackInfo.cpp
 msgid "Name"
 msgstr "الاسم"
 
@@ -1691,11 +2048,6 @@ msgstr "تأثير"
 #, fuzzy
 msgid "Menu Command (With Parameters)"
 msgstr "حرر المتغيرات"
-
-#: src/BatchCommands.cpp src/FileNames.cpp
-#, c-format
-msgid "(%s)"
-msgstr "(%s)"
 
 #: src/BatchCommands.cpp
 msgid "Menu Command (No Parameters)"
@@ -2198,6 +2550,11 @@ msgstr "%s: %s"
 
 #: src/DBConnection.cpp
 #, fuzzy, c-format
+msgid "Failed to set page size for database %s"
+msgstr "أخفقت في إزالة %s"
+
+#: src/DBConnection.cpp
+#, fuzzy, c-format
 msgid "Failed to set safe mode on primary connection to %s"
 msgstr "أخفقت في إيجاد المشفر"
 
@@ -2376,74 +2733,6 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "فحص التبعيات"
 
-#: src/Dither.cpp src/commands/ScreenshotCommand.cpp
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
-#: src/prefs/TracksBehaviorsPrefs.cpp plug-ins/equalabel.ny
-#: plug-ins/sample-data-export.ny
-msgid "None"
-msgstr "لا شيء"
-
-#: src/Dither.cpp
-msgid "Rectangle"
-msgstr "مستطيل"
-
-#: src/Dither.cpp plug-ins/tremolo.ny
-msgid "Triangle"
-msgstr "مثلث"
-
-#: src/Dither.cpp
-msgid "Shaped"
-msgstr "مُشَكل"
-
-#: src/FFT.cpp
-msgid "Rectangular"
-msgstr "مستطيل"
-
-#. i18n-hint a proper name
-#: src/FFT.cpp
-msgid "Bartlett"
-msgstr "بارتلت"
-
-#. i18n-hint a proper name
-#: src/FFT.cpp
-msgid "Hamming"
-msgstr "هامينغ"
-
-#. i18n-hint a proper name
-#: src/FFT.cpp
-msgid "Hann"
-msgstr "هان"
-
-#. i18n-hint a proper name
-#: src/FFT.cpp
-msgid "Blackman"
-msgstr "بلاكمان"
-
-#. i18n-hint two proper names
-#: src/FFT.cpp
-msgid "Blackman-Harris"
-msgstr "بلاكمان-هاريس"
-
-#. i18n-hint a proper name
-#: src/FFT.cpp
-msgid "Welch"
-msgstr "ولتش"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: src/FFT.cpp
-msgid "Gaussian(a=2.5)"
-msgstr ""
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: src/FFT.cpp
-msgid "Gaussian(a=3.5)"
-msgstr ""
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: src/FFT.cpp
-msgid "Gaussian(a=4.5)"
-msgstr ""
-
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
 msgstr "دعم FFmpeg غير مجمع"
@@ -2502,6 +2791,19 @@ msgstr "لتحصل على نسخة مجانية من FFmpeg، انقر هنا --
 msgid "Download"
 msgstr "نزل"
 
+#: src/FFmpeg.cpp
+msgid "Only avformat.dll"
+msgstr "فقط avformat.dll"
+
+#: src/FFmpeg.cpp
+#, fuzzy
+msgid "Only ffmpeg.*.dylib"
+msgstr "فقط libmp3lame.dylib"
+
+#: src/FFmpeg.cpp
+msgid "Only libavformat.so"
+msgstr "فقط libavformat.so"
+
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
 #. "Where would I find the file '%s'?" instead if you want.
@@ -2532,48 +2834,6 @@ msgstr ""
 msgid "Do not show this warning again"
 msgstr "لا تظهر هذا التحذير مرة أخرى"
 
-#: src/FFmpeg.cpp
-msgid "Failed to find compatible FFmpeg libraries."
-msgstr "أخفقت في إيجاد مكتبات FFmpeg متوافقة."
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h
-msgid "Only avformat.dll"
-msgstr "فقط avformat.dll"
-
-#: src/FFmpeg.h
-msgid "Only libavformat.so"
-msgstr "فقط libavformat.so"
-
-#: src/FileException.cpp
-#, c-format
-msgid "Audacity failed to open a file in %s."
-msgstr "أخفق Audacity في فتح ملف في %s."
-
-#: src/FileException.cpp
-#, c-format
-msgid "Audacity failed to read from a file in %s."
-msgstr "أخفق Audacity في القراءة من ملف في %s."
-
-#: src/FileException.cpp
-#, c-format
-msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr "كتب Audacity ملفا في %s بنجاح لكن أخفق في إعادة تسميته إلى %s."
-
-#: src/FileException.cpp
-#, fuzzy, c-format
-msgid ""
-"Audacity failed to write to a file.\n"
-"Perhaps %s is not writable or the disk is full.\n"
-"For tips on freeing up space, click the help button."
-msgstr ""
-"أخفق Audacity في الكتابة إلى ملف.\n"
-"ربما %s غير قابل للكتابة أو القرص ممتلئ."
-
-#: src/FileException.h
-msgid "File Error"
-msgstr "خطأ ملف"
-
 #. i18n-hint: %s will be the error message from the libsndfile software library
 #: src/FileFormats.cpp
 #, c-format
@@ -2599,61 +2859,6 @@ msgstr "لا تنسخ أي صوت"
 #: src/FileFormats.cpp
 msgid "As&k"
 msgstr "اسأل"
-
-#: src/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny
-#, fuzzy
-msgid "All files"
-msgstr "جميع الملفات|*"
-
-#. i18n-hint an Audacity project is the state of the program, stored as
-#. files that can be reopened to resume the session later
-#: src/FileNames.cpp
-#, fuzzy
-msgid "AUP3 project files"
-msgstr "احفظ ملفات بيانات المشروع"
-
-#: src/FileNames.cpp
-msgid "Dynamically Linked Libraries"
-msgstr "المكتبات المربوطة ديناميكيا"
-
-#: src/FileNames.cpp
-msgid "Dynamic Libraries"
-msgstr "المكتبات الديناميكية"
-
-#: src/FileNames.cpp
-msgid "Text files"
-msgstr "ملفات نص"
-
-#: src/FileNames.cpp
-#, fuzzy
-msgid "XML files"
-msgstr "ملفات MP3"
-
-#: src/FileNames.cpp
-msgid ", "
-msgstr "، "
-
-#. i18n-hint a type or types such as "txt" or "txt, xml" will be
-#. substituted for %s
-#: src/FileNames.cpp
-#, fuzzy, c-format
-msgid "%s files"
-msgstr "ملفات MP3"
-
-#: src/FileNames.cpp
-msgid "The specified filename could not be converted due to Unicode character use."
-msgstr "لم يكن من الممكن تحويل اسم-الملف المحدد بسبب استخدام شفرات الشفرة الموحدة."
-
-#: src/FileNames.cpp
-msgid "Specify New Filename:"
-msgstr "عين اسم-ملف جديد:"
-
-#: src/FileNames.cpp
-#, fuzzy, c-format
-msgid "Directory %s does not have write permissions"
-msgstr "المجلد %s غير موجود. هل تريد إنشائه؟"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -2705,7 +2910,7 @@ msgstr "تردد لوغاريتمي"
 #: src/effects/Equalization.cpp src/effects/Loudness.cpp
 #: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
 #: src/effects/TruncSilence.cpp src/prefs/WaveformSettings.cpp
-#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
+#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2910,6 +3115,12 @@ msgstr "نحن ننصح أن تستخدم إصدارانا المطلق المس
 msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr><br><br>"
 msgstr "يمكنك أن تساعدنا في جعل Audacity جاهزا للإطلاق بالالتحاق [[https://www.audacityteam.org/community/|بمجتمعنا]].<hr><br><br>"
 
+#. i18n-hint: %s is replaced with Audacity version
+#: src/HelpText.cpp
+#, c-format
+msgid "What's new in Audacity %s"
+msgstr ""
+
 #: src/HelpText.cpp
 msgid "How to get help"
 msgstr "كيف تحصل على المساعدة"
@@ -3016,27 +3227,10 @@ msgstr ""
 msgid "&History..."
 msgstr "التاريخ..."
 
-#: src/InconsistencyException.cpp
-#, c-format
-msgid ""
-"Internal error in %s at %s line %d.\n"
-"Please inform the Audacity team at https://forum.audacityteam.org/."
-msgstr ""
-"خطأ داخلي في %s عند %s سطر %d.\n"
-"من فضلك أخبر فريق Audacity عند /https://forum.audacityteam.org."
-
-#: src/InconsistencyException.cpp
-#, c-format
-msgid ""
-"Internal error at %s line %d.\n"
-"Please inform the Audacity team at https://forum.audacityteam.org/."
-msgstr ""
-"خطأ داخلي عند %s سطر %d.\n"
-"من فضلك أخبر فريق Audacity عند /https://forum.audacityteam.org."
-
-#: src/InconsistencyException.h
-msgid "Internal Error"
-msgstr "خطأ داخلي"
+#: src/JournalEvents.cpp
+#, fuzzy
+msgid "Journal recording failed"
+msgstr "أخفق حل الشفرة\n"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3158,6 +3352,37 @@ msgstr ""
 msgid "Opening Audacity Project"
 msgstr "فتح مشروع  Audacity"
 
+#: src/LogWindow.cpp
+msgid "Audacity Log"
+msgstr "سجل Audacity"
+
+#: src/LogWindow.cpp src/Tags.cpp
+msgid "&Save..."
+msgstr "حفظ..."
+
+#. i18n-hint: (verb)
+#: src/LogWindow.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Cl&ear"
+msgstr "مسح"
+
+#: src/LogWindow.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
+msgid "&Close"
+msgstr "إغلاق"
+
+#: src/LogWindow.cpp
+msgid "log.txt"
+msgstr "سجل.txt"
+
+#: src/LogWindow.cpp
+msgid "Save log to:"
+msgstr "حفظ السجل في:"
+
+#: src/LogWindow.cpp
+#, c-format
+msgid "Couldn't save log to file: %s"
+msgstr "لم أتمكن من حفظ السجل إلى الملف: %s"
+
 #: src/LyricsWindow.cpp
 #, c-format
 msgid "Audacity Karaoke%s"
@@ -3166,6 +3391,20 @@ msgstr "Karaoke Audacity%s"
 #: src/LyricsWindow.cpp
 msgid "&Karaoke..."
 msgstr "Karaoke..."
+
+#: src/MIDIPlay.cpp
+msgid "There was an error initializing the midi i/o layer.\n"
+msgstr "كان هناك خطأ في بدء طبقة المداخل\\المخارج للMIDI.\n"
+
+#: src/MIDIPlay.cpp
+msgid ""
+"You will not be able to play midi.\n"
+"\n"
+msgstr "لن يكون بإمكانك أن تعزف MIDI.\n"
+
+#: src/MIDIPlay.cpp
+msgid "Error Initializing Midi"
+msgstr "خطأ في بدء MIDI"
 
 #: src/Menus.cpp
 #, c-format
@@ -3371,6 +3610,43 @@ msgstr ""
 msgid "Note Track"
 msgstr "مقطع نغمة"
 
+#. i18n-hint: Supported, meaning made available by the system
+#: src/NoteTrack.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr ""
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/NoteTrack.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr ""
+
+#: src/NoteTrack.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr ""
+
+#: src/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "جهاز تسجيل MIDI المختار: %d - %s\n"
+
+#: src/NoteTrack.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr ""
+
+#: src/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "جهاز تشغيل MIDI المختار: %d - %s\n"
+
+#: src/NoteTrack.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr ""
+
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "C"
@@ -3482,114 +3758,6 @@ msgid "A♯/B♭"
 msgstr "لا♯/سي♭"
 
 #: src/PluginManager.cpp
-msgid "Manage Plug-ins"
-msgstr "أدر الموصلات"
-
-#: src/PluginManager.cpp
-msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr "اختر التأثيرات، انقر \"مكن\" أو \"ألغي تمكين\"، ثم انقر حسنا."
-
-#. i18n-hint: This is before radio buttons selecting which effects to show
-#: src/PluginManager.cpp
-msgid "Show:"
-msgstr "أظهر:"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginManager.cpp
-msgid "Show all"
-msgstr "أظهر الجميع"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginManager.cpp src/menus/SelectMenus.cpp
-msgid "&All"
-msgstr "الجميع"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginManager.cpp
-msgid "Show disabled"
-msgstr "أظهر الغير ممَكن"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginManager.cpp
-msgid "D&isabled"
-msgstr "غير ممَكن"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginManager.cpp
-msgid "Show enabled"
-msgstr "أظهر الممَكن"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginManager.cpp
-msgid "E&nabled"
-msgstr "ممَكن"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginManager.cpp
-msgid "Show new"
-msgstr "أظهر الجديد"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginManager.cpp
-msgid "Ne&w"
-msgstr "جديد"
-
-#: src/PluginManager.cpp
-msgid "State"
-msgstr "حالة"
-
-#: src/PluginManager.cpp
-msgid "Path"
-msgstr "طريق"
-
-#: src/PluginManager.cpp
-msgid "&Select All"
-msgstr "اختر الجميع"
-
-#: src/PluginManager.cpp
-msgid "C&lear All"
-msgstr "امسح الجميع"
-
-#: src/PluginManager.cpp src/effects/EffectUI.cpp src/prefs/RecordingPrefs.cpp
-msgid "&Enable"
-msgstr "مكن"
-
-#: src/PluginManager.cpp
-msgid "&Disable"
-msgstr "ألغ تمكين"
-
-#: src/PluginManager.cpp
-#, c-format
-msgid ""
-"Enabling effects or commands:\n"
-"\n"
-"%s"
-msgstr ""
-"أمكن التأثيرات أو الأوامر:\n"
-"\n"
-"%s"
-
-#: src/PluginManager.cpp
-#, c-format
-msgid ""
-"Enabling effect or command:\n"
-"\n"
-"%s"
-msgstr ""
-"أمكن التأثير أو الأمر:\n"
-"\n"
-"%s"
-
-#: src/PluginManager.cpp
-#, fuzzy, c-format
-msgid ""
-"Effect or Command at %s failed to register:\n"
-"%s"
-msgstr ""
-"أخفق التأثير عند %s في التدوين:\n"
-"%s"
-
-#: src/PluginManager.cpp
 #, fuzzy, c-format
 msgid "Overwrite the plug-in file %s?"
 msgstr "اكتب على الملف الموصل %s؟"
@@ -3631,6 +3799,115 @@ msgstr "مكن موصلات جديدة"
 msgid "Nyquist Prompt"
 msgstr "تذكرة Nyquist"
 
+#: src/PluginRegistrationDialog.cpp
+msgid "Manage Plug-ins"
+msgstr "أدر الموصلات"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Select effects, click the Enable or Disable button, then click OK."
+msgstr "اختر التأثيرات، انقر \"مكن\" أو \"ألغي تمكين\"، ثم انقر حسنا."
+
+#. i18n-hint: This is before radio buttons selecting which effects to show
+#: src/PluginRegistrationDialog.cpp
+msgid "Show:"
+msgstr "أظهر:"
+
+#. i18n-hint: Radio button to show all effects
+#: src/PluginRegistrationDialog.cpp
+msgid "Show all"
+msgstr "أظهر الجميع"
+
+#. i18n-hint: Radio button to show all effects
+#: src/PluginRegistrationDialog.cpp src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "الجميع"
+
+#. i18n-hint: Radio button to show just the currently disabled effects
+#: src/PluginRegistrationDialog.cpp
+msgid "Show disabled"
+msgstr "أظهر الغير ممَكن"
+
+#. i18n-hint: Radio button to show just the currently disabled effects
+#: src/PluginRegistrationDialog.cpp
+msgid "D&isabled"
+msgstr "غير ممَكن"
+
+#. i18n-hint: Radio button to show just the currently enabled effects
+#: src/PluginRegistrationDialog.cpp
+msgid "Show enabled"
+msgstr "أظهر الممَكن"
+
+#. i18n-hint: Radio button to show just the currently enabled effects
+#: src/PluginRegistrationDialog.cpp
+msgid "E&nabled"
+msgstr "ممَكن"
+
+#. i18n-hint: Radio button to show just the newly discovered effects
+#: src/PluginRegistrationDialog.cpp
+msgid "Show new"
+msgstr "أظهر الجديد"
+
+#. i18n-hint: Radio button to show just the newly discovered effects
+#: src/PluginRegistrationDialog.cpp
+msgid "Ne&w"
+msgstr "جديد"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "State"
+msgstr "حالة"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Path"
+msgstr "طريق"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Select All"
+msgstr "اختر الجميع"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "C&lear All"
+msgstr "امسح الجميع"
+
+#: src/PluginRegistrationDialog.cpp src/effects/EffectUI.cpp
+#: src/prefs/RecordingPrefs.cpp
+msgid "&Enable"
+msgstr "مكن"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Disable"
+msgstr "ألغ تمكين"
+
+#: src/PluginRegistrationDialog.cpp
+#, c-format
+msgid ""
+"Enabling effects or commands:\n"
+"\n"
+"%s"
+msgstr ""
+"أمكن التأثيرات أو الأوامر:\n"
+"\n"
+"%s"
+
+#: src/PluginRegistrationDialog.cpp
+#, c-format
+msgid ""
+"Enabling effect or command:\n"
+"\n"
+"%s"
+msgstr ""
+"أمكن التأثير أو الأمر:\n"
+"\n"
+"%s"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy, c-format
+msgid ""
+"Effect or Command at %s failed to register:\n"
+"%s"
+msgstr ""
+"أخفق التأثير عند %s في التدوين:\n"
+"%s"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "حصل مشكل في الطباعة."
@@ -3638,16 +3915,6 @@ msgstr "حصل مشكل في الطباعة."
 #: src/Printing.cpp
 msgid "Print"
 msgstr "طباعة"
-
-#: src/Project.cpp
-#, fuzzy, c-format
-msgid ""
-"There is very little free disk space left on %s\n"
-"Please select a bigger temporary directory location in\n"
-"Directories Preferences."
-msgstr ""
-"تبقت مساحة قرص قليلة جدا على هذا الحجم.\n"
-"من فضلك اختر مجلدا مؤقتا آخر في التفضيلات."
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -3680,6 +3947,13 @@ msgstr ""
 
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Too Few Compatible Tracks Selected"
+msgstr ""
+
+#. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
+#: src/ProjectAudioManager.cpp
+#, c-format
+msgctxt "clip name template"
+msgid "%s #%d"
 msgstr ""
 
 #: src/ProjectAudioManager.cpp
@@ -3910,6 +4184,16 @@ msgstr "<غير معنون>"
 #, fuzzy, c-format
 msgid "[Project %02i] "
 msgstr "المشروع"
+
+#: src/ProjectFileIO.cpp
+#, fuzzy, c-format
+msgid ""
+"There is very little free disk space left on %s\n"
+"Please select a bigger temporary directory location in\n"
+"Directories Preferences."
+msgstr ""
+"تبقت مساحة قرص قليلة جدا على هذا الحجم.\n"
+"من فضلك اختر مجلدا مؤقتا آخر في التفضيلات."
 
 #: src/ProjectFileIO.cpp
 #, fuzzy
@@ -4392,6 +4676,13 @@ msgstr "استرجع المشروع"
 msgid "Recover"
 msgstr "استرجاع"
 
+#. i18n-hint Name default name assigned to a clip on track import
+#: src/ProjectFileManager.cpp
+#, fuzzy, c-format
+msgctxt "clip name template"
+msgid "%s %d"
+msgstr "%s %d من %d مقطع مصغر %s"
+
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid "Imported '%s'"
@@ -4538,57 +4829,6 @@ msgstr "شريط تمرير أفقي"
 msgid "Vertical Scrollbar"
 msgstr "شريط تمرير عمودي"
 
-#: src/Registry.cpp
-#, c-format
-msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr ""
-
-#: src/Registry.cpp
-#, c-format
-msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr ""
-
-#: src/Registry.cpp
-#, c-format
-msgid "Plug-in items at %s specify conflicting placements"
-msgstr ""
-
-#: src/Resample.cpp
-msgid "Low Quality (Fastest)"
-msgstr "جودة منخفضة (الأسرع)"
-
-#: src/Resample.cpp
-msgid "Medium Quality"
-msgstr "جودة متوسطة"
-
-#: src/Resample.cpp
-msgid "High Quality"
-msgstr "جودة عالية"
-
-#: src/Resample.cpp
-msgid "Best Quality (Slowest)"
-msgstr "أفضل جودة (الأبطأ)"
-
-#. i18n-hint: Audio data bit depth (precision): 16-bit integers
-#: src/SampleFormat.cpp
-msgid "16-bit PCM"
-msgstr "16-بِت PCM"
-
-#. i18n-hint: Audio data bit depth (precision): 24-bit integers
-#: src/SampleFormat.cpp
-msgid "24-bit PCM"
-msgstr "24-بِت PCM"
-
-#. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
-msgid "32-bit float"
-msgstr "32-بِت عائم"
-
-#: src/SampleFormat.cpp
-#, fuzzy
-msgid "Unknown format"
-msgstr "مجهول"
-
 #: src/Screenshot.cpp
 msgid "Screen Capture Frame"
 msgstr "إطار التقاط الشاشة"
@@ -4699,7 +4939,7 @@ msgstr "المازج"
 
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
+#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "العداد"
 
@@ -4809,6 +5049,24 @@ msgstr "أخفق الالتقاط!"
 msgid "Long Message"
 msgstr "رسالة طويلة"
 
+#: src/SelectFile.cpp
+msgid "The specified filename could not be converted due to Unicode character use."
+msgstr "لم يكن من الممكن تحويل اسم-الملف المحدد بسبب استخدام شفرات الشفرة الموحدة."
+
+#: src/SelectFile.cpp
+msgid "Specify New Filename:"
+msgstr "عين اسم-ملف جديد:"
+
+#: src/SelectUtilities.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr "لا أستطيع قفل المنطقة بعد نهاية المشروع."
+
+#: src/SelectUtilities.cpp
+msgid "Position"
+msgstr "موضع"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4857,6 +5115,54 @@ msgstr "تسجيل مفعل بالصوت"
 #: src/SoundActivatedRecord.cpp
 msgid "Activation level (dB):"
 msgstr "مستوى التفعيل (dB):"
+
+#: src/SpectralDataDialog.cpp
+msgid "Spectral Data Control Panel"
+msgstr ""
+
+#: src/SpectralDataDialog.cpp
+#, fuzzy
+msgid "Brush Tool"
+msgstr "الأداة السابقة"
+
+#: src/SpectralDataDialog.cpp
+#, fuzzy
+msgid "Spectral Brush"
+msgstr "طيفي"
+
+#: src/SpectralDataDialog.cpp
+msgid "Brush radius"
+msgstr ""
+
+#: src/SpectralDataDialog.cpp
+#, fuzzy
+msgid "Custom brush size"
+msgstr "منحنى خاص"
+
+#: src/SpectralDataDialog.cpp
+msgid "Auto-select overtones (beta)"
+msgstr ""
+
+#: src/SpectralDataDialog.cpp
+#, fuzzy
+msgid "Enable smart selection"
+msgstr "مكن الاختيار الطيفي"
+
+#: src/SpectralDataDialog.cpp
+msgid ""
+"Select the fundamental frequency\n"
+"and release the mouse"
+msgstr ""
+
+#: src/SpectralDataDialog.cpp
+#, fuzzy
+msgid "Spectra&l Selection Panel"
+msgstr "الاختيار الطيفي"
+
+#: src/SpectralDataManager.cpp
+#, fuzzy
+msgid "Applied effect to selection"
+msgstr "حاذيت النهاية إلى نهاية الاختيار"
 
 #: src/SplashDialog.cpp
 msgid "Welcome to Audacity!"
@@ -4978,174 +5284,6 @@ msgstr "حفظ الميتابيانات كـ:"
 #: src/Tags.cpp
 msgid "Error Saving Tags File"
 msgstr "خطأ في حفظ ملف البطاقات"
-
-#: src/TempDirectory.cpp
-#, fuzzy
-msgid "Unsuitable"
-msgstr "الوحدة غير ملائمة"
-
-#: src/TempDirectory.cpp
-msgid ""
-"The temporary files directory is on a FAT formatted drive.\n"
-"Resetting to default location."
-msgstr ""
-
-#: src/TempDirectory.cpp
-#, c-format
-msgid ""
-"%s\n"
-"\n"
-"For tips on suitable drives, click the help button."
-msgstr ""
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not write file:\n"
-"  %s."
-msgstr ""
-"لم يتمكن Audacity من كتابة الملف:\n"
-"  %s."
-
-#. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
-#. such as those on button controls.  Audacity can load and save alternative
-#. themes.
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Theme written to:\n"
-"  %s."
-msgstr ""
-"الموضوع كتب إلى:\n"
-"  %s."
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not open file:\n"
-"  %s\n"
-"for writing."
-msgstr ""
-"لم يتمكن Audacity من فتح الملف:\n"
-"  %s\n"
-"للكتابة."
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not write images to file:\n"
-"  %s."
-msgstr ""
-"لم يتمكن Audacity من كتابة الصور في الملف:\n"
-"  %s."
-
-#. i18n-hint "Cee" means the C computer programming language
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Theme as Cee code written to:\n"
-"  %s."
-msgstr ""
-"الموضوع كشفرات Cee كتب إلى:\n"
-"  %s."
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not find file:\n"
-"  %s.\n"
-"Theme not loaded."
-msgstr ""
-"لم يتمكن Audacity من إيجاد الملف:\n"
-"  %s.\n"
-"لم يتم تحميل الموضوع."
-
-#. i18n-hint: Do not translate png.  It is the name of a file format.
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not load file:\n"
-"  %s.\n"
-"Bad png format perhaps?"
-msgstr ""
-"لم يتمكن Audacity من تحميل الملف:\n"
-"  %s.\n"
-"ربما تكون صيغة بي.أن.جي سيئة؟"
-
-#: src/Theme.cpp
-msgid ""
-"Audacity could not read its default theme.\n"
-"Please report the problem."
-msgstr ""
-"لم يتمكن Audacity من قراءة الموضوع الافتراضي.\n"
-"من فضلك أخبر عن هذا المشكل."
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"None of the expected theme component files\n"
-" were found in:\n"
-"  %s."
-msgstr ""
-"لم أعثر على أي من ملفات مكونات \n"
-"المواضيع المتوقعة في:\n"
-" %s."
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Could not create directory:\n"
-"  %s"
-msgstr ""
-"لم أتمكن من إنشاء المجلد:\n"
-"  %s"
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Some required files in:\n"
-"  %s\n"
-"were already present. Overwrite?"
-msgstr ""
-"بعض الملفات المتطلبة في:\n"
-"  %s\n"
-"كانت موجودة بالفعل. اكتب عليها؟"
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not save file:\n"
-"  %s"
-msgstr ""
-"لم يتمكن Audacity من حفظ الملف:\n"
-"  %s"
-
-#. i18n-hint: describing the "classic" or traditional
-#. appearance of older versions of Audacity
-#: src/Theme.cpp
-msgid "Classic"
-msgstr "كلاسيكي"
-
-#. i18n-hint: Light meaning opposite of dark
-#: src/Theme.cpp
-msgid "Light"
-msgstr "خفيف"
-
-#: src/Theme.cpp
-msgid "Dark"
-msgstr "قاتم"
-
-#. i18n-hint: greater difference between foreground and
-#. background colors
-#: src/Theme.cpp
-msgid "High Contrast"
-msgstr "تباين مرتفع"
-
-#. i18n-hint: user defined
-#: src/Theme.cpp
-msgid "Custom"
-msgstr "خاص"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -5638,6 +5776,20 @@ msgstr "أنجزت المعايرة"
 msgid "Resampling failed."
 msgstr "إعادة أخذ العينات أخفقت."
 
+#. i18n-hint Template for clip name generation on copy-paste
+#: src/WaveTrack.cpp
+#, c-format
+msgctxt "clip name template"
+msgid "%s.%i"
+msgstr ""
+
+#. i18n-hint Template for clip name generation on inserting new empty clip
+#: src/WaveTrack.cpp
+#, c-format
+msgctxt "clip name template"
+msgid "%s %i"
+msgstr ""
+
 #: src/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
 msgstr "ليست هناك مساحة كافية للصق الاختيار"
@@ -5645,11 +5797,6 @@ msgstr "ليست هناك مساحة كافية للصق الاختيار"
 #: src/WaveTrack.cpp
 msgid "There is not enough room available to expand the cut line"
 msgstr "ليست هناك مساحة كافية لتوسيع خط القص"
-
-#: src/blockfile/NotYetAvailableException.cpp
-#, c-format
-msgid "This operation cannot be done until importation of %s completes."
-msgstr "لا بمكن أن تنجز هذه العملية حتى ينتهي استوراد %s."
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
@@ -5674,7 +5821,8 @@ msgstr "أطبق %s..."
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
+#: src/effects/vamp/VampEffect.cpp src/import/ImportRaw.cpp
+#: src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
@@ -5767,7 +5915,7 @@ msgid "Panel"
 msgstr "لوح"
 
 #: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "Application"
 msgstr "التطبيق"
 
@@ -6012,9 +6160,10 @@ msgstr ""
 msgid "Get Preference"
 msgstr "استخدم التفضيلات"
 
-#: src/commands/PreferenceCommands.cpp src/commands/SetProjectCommand.cpp
-#: src/commands/SetTrackInfoCommand.cpp
+#: src/commands/PreferenceCommands.cpp src/commands/SetClipCommand.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Name:"
 msgstr "الاسم:"
@@ -6405,7 +6554,7 @@ msgstr "رتب المقاطع"
 
 #: src/commands/SetTrackInfoCommand.cpp src/effects/ToneGen.cpp
 #: src/prefs/SpectrogramSettings.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp src/widgets/Meter.cpp
+#: src/prefs/WaveformSettings.cpp src/widgets/MeterPanel.cpp
 #: plug-ins/sample-data-export.ny
 msgid "Linear"
 msgstr "خطي"
@@ -7655,12 +7804,6 @@ msgid "Export Effect Parameters"
 msgstr "حرر المتغيرات"
 
 #: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
-#: src/xml/XMLFileReader.cpp
-#, c-format
-msgid "Could not open file: \"%s\""
-msgstr "لم أتمكن من فتح ملف: \"%s\""
-
-#: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
 msgid "Error Saving Effect Presets"
 msgstr "خطأ في حفظ مسبقات التأثير"
 
@@ -7914,7 +8057,7 @@ msgstr "استورد..."
 msgid "Export..."
 msgstr "صدر..."
 
-#: src/effects/EffectUI.cpp src/widgets/Meter.cpp
+#: src/effects/EffectUI.cpp src/widgets/MeterPanel.cpp
 msgid "Options..."
 msgstr "اختيارات..."
 
@@ -8451,7 +8594,7 @@ msgstr "اسم تأثير مبني-داخليا مجهول"
 msgid "perceived loudness"
 msgstr "الجهارة المحسوسة"
 
-#: src/effects/Loudness.cpp src/widgets/Meter.cpp
+#: src/effects/Loudness.cpp src/widgets/MeterPanel.cpp
 msgid "RMS"
 msgstr "ج.م.م"
 
@@ -8553,35 +8696,6 @@ msgstr "ثاني أكبر"
 #: src/effects/NoiseReduction.cpp
 msgid "Old"
 msgstr "قديم"
-
-#: src/effects/NoiseReduction.cpp
-msgid "none, Hann (2.0.6 behavior)"
-msgstr "لا شيء، هان (سلوك 2.0.6)"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Hann, none"
-msgstr "هان، لا شيء"
-
-#: src/effects/NoiseReduction.cpp
-#, fuzzy
-msgid "Hann, Hann (default)"
-msgstr "4 (أساسي)"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Blackman, Hann"
-msgstr "بلاكمان، هان"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Hamming, none"
-msgstr "هامينغ، لا شيء"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Hamming, Hann"
-msgstr "هامينغ، هان"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Hamming, Reciprocal Hamming"
-msgstr "هامينغ، مقلوب هامينغ"
 
 #: src/effects/NoiseReduction.cpp src/menus/PluginMenus.cpp
 msgid "Noise Reduction"
@@ -12621,6 +12735,12 @@ msgstr "المقدار الذي سيستورد:"
 msgid "Sample rate:"
 msgstr "معدَّل العينة:"
 
+#. i18n-hint: Guess format of raw file
+#: src/import/ImportRaw.cpp
+#, fuzzy
+msgid "Detect"
+msgstr "اكتشف السكون"
+
 #: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
 msgid "&Import"
 msgstr "استورد"
@@ -12644,6 +12764,7 @@ msgstr "%s يمين"
 #. i18n-hint:
 #. First %s is replaced with the noun "start" or "end"
 #. identifying one end of a clip,
+#. second string is the name of that clip,
 #. first number gives the position of that clip in a sequence
 #. of clips,
 #. last number counts all clips,
@@ -12651,9 +12772,9 @@ msgstr "%s يمين"
 #. clips.
 #.
 #: src/menus/ClipMenus.cpp
-#, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
+#, fuzzy, c-format
+msgid "%s %s, %d of %d clip %s"
+msgid_plural "%s %s, %d of %d clips %s"
 msgstr[0] "%s %d من %d مقطع مصغر %s"
 msgstr[1] "%s %d من %d مقطع مصغر %s"
 msgstr[2] "%s %d من %d مقاطع مصغرة %s"
@@ -12670,8 +12791,9 @@ msgid "end"
 msgstr "نهاية"
 
 #. i18n-hint:
-#. First two %s are each replaced with the noun "start"
+#. First and third %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
+#. second and fourth strings are the names of those clips,
 #. first and second numbers give the position of those clips in
 #. a sequence of clips,
 #. last number counts all clips,
@@ -12679,9 +12801,9 @@ msgstr "نهاية"
 #. clips.
 #.
 #: src/menus/ClipMenus.cpp
-#, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
+#, fuzzy, c-format
+msgid "%s %s and %s %s, %d and %d of %d clip %s"
+msgid_plural "%s %s and %s %s, %d and %d of %d clips %s"
 msgstr[0] "%s %d و %s %d من %d مقطع %s"
 msgstr[1] "%s %d و %s %d من %d مقطع %s"
 msgstr[2] "%s %d و %s %d من %d مقاطع %s"
@@ -12690,19 +12812,21 @@ msgstr[4] "%s %d و %s %d من %d مقاطع %s"
 msgstr[5] "%s %d و %s %d من %d مقاطع %s"
 
 #. i18n-hint:
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
+#. first string is the name of a clip,
+#. first number gives the position of that clip
+#. in a sequence of clips,
+#. last number counts all clips,
+#. last string names a track
 #: src/menus/ClipMenus.cpp
-#, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] "%d من %d مقطع مصغر %s"
-msgstr[1] "%d من %d مقطع مصغر %s"
-msgstr[2] "%d من %d مقاطع مصغرة %s"
-msgstr[3] "%d من %d مقاطع مصغرة %s"
-msgstr[4] "%d من %d مقاطع مصغرة %s"
-msgstr[5] "%d من %d مقاطع مصغرة %s"
+#, fuzzy, c-format
+msgid "%s, %d of %d clip %s"
+msgid_plural "%s, %d of %d clips %s"
+msgstr[0] "%s %d من %d مقطع مصغر %s"
+msgstr[1] "%s %d من %d مقطع مصغر %s"
+msgstr[2] "%s %d من %d مقاطع مصغرة %s"
+msgstr[3] "%s %d من %d مقاطع مصغرة %s"
+msgstr[4] "%s %d من %d مقاطع مصغرة %s"
+msgstr[5] "%s %d من %d مقاطع مصغرة %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time shifted clips to the right"
@@ -13036,6 +13160,11 @@ msgstr "غير قنوات التسجيل"
 #: src/menus/ExtraMenus.cpp
 msgid "&Full Screen (on/off)"
 msgstr "شاشة كاملة (جار/متوقف)"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Cannot proceed to export."
+msgstr "لايوجد علامات للتصدير."
 
 #: src/menus/FileMenus.cpp
 #, c-format
@@ -13584,6 +13713,18 @@ msgstr "جديد..."
 msgid "Unknown"
 msgstr "مجهول"
 
+#. i18n-hint a "journal" is a text file that records
+#. the user's interactions with the application
+#: src/menus/PluginMenus.cpp
+msgid "A journal will be recorded after Audacity restarts."
+msgstr ""
+
+#. i18n-hint a "journal" is a text file that records
+#. the user's interactions with the application
+#: src/menus/PluginMenus.cpp
+msgid "No journal will be recorded after Audacity restarts."
+msgstr ""
+
 #: src/menus/PluginMenus.cpp
 #, fuzzy, c-format
 msgid "&Repeat %s"
@@ -13667,6 +13808,12 @@ msgstr "حاك أخطاء تسجيل"
 #: src/menus/PluginMenus.cpp
 msgid "Detect Upstream Dropouts"
 msgstr "اكتشف الانقطاعات المؤقتة ضد التيار"
+
+#. i18n-hint a "journal" is a text file that records
+#. the user's interactions with the application
+#: src/menus/PluginMenus.cpp
+msgid "Write Journal"
+msgstr ""
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/menus/PluginMenus.cpp
@@ -13771,10 +13918,6 @@ msgstr "صور الشاشة (صيغة قصيرة)..."
 #: src/menus/SelectMenus.cpp
 msgid "Set Left Selection Boundary"
 msgstr "عين حد الاختيار الأيسر"
-
-#: src/menus/SelectMenus.cpp
-msgid "Position"
-msgstr "موضع"
 
 #: src/menus/SelectMenus.cpp
 msgid "Set Right Selection Boundary"
@@ -14544,7 +14687,13 @@ msgstr "لا مقطع علامة"
 msgid "no label track at or below focused track"
 msgstr "لا مقطع علامة عند أو تحت المقطع الذي عليه تركيز"
 
-#: src/menus/TransportMenus.cpp
+#. i18n-hint:
+#. String is replaced by the name of a label,
+#. first number gives the position of that label in a sequence
+#. of labels,
+#. and the last number is the total number of labels in the sequence.
+#.
+#: src/menus/TransportMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
 #, fuzzy, c-format
 msgid "%s %d of %d"
 msgstr "%s %d من %d مقطع مصغر %s"
@@ -14552,6 +14701,18 @@ msgstr "%s %d من %d مقطع مصغر %s"
 #: src/menus/TransportMenus.cpp
 msgid "no labels in label track"
 msgstr "لا علامات في مقطع العلامة"
+
+#. i18n-hint Sets a starting point for looping play
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Set Loop &In"
+msgstr "زوم داخلا"
+
+#. i18n-hint Sets an ending point for looping play
+#: src/menus/TransportMenus.cpp
+#, fuzzy
+msgid "Set Loop &Out"
+msgstr "زوم خارجا"
 
 #: src/menus/TransportMenus.cpp
 msgid ""
@@ -14612,8 +14773,9 @@ msgid "Play/Stop and &Set Cursor"
 msgstr "شغل/أوقف و ضع المؤشر"
 
 #: src/menus/TransportMenus.cpp
-msgid "&Loop Play"
-msgstr "تشغيل حلقي"
+#, fuzzy
+msgid "Play &Once/Stop"
+msgstr "شغل/أوقف"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Pause"
@@ -14645,16 +14807,18 @@ msgid "Punch and Rol&l Record"
 msgstr ""
 
 #: src/menus/TransportMenus.cpp
-msgid "Pla&y Region"
-msgstr "شغل منطقة"
+msgid "&Looping"
+msgstr ""
 
 #: src/menus/TransportMenus.cpp
-msgid "&Lock"
-msgstr "اقفل"
+#, fuzzy
+msgid "&Clear Loop"
+msgstr "امسح"
 
 #: src/menus/TransportMenus.cpp
-msgid "&Unlock"
-msgstr "افتح القفل"
+#, fuzzy
+msgid "&Set Loop to Selection"
+msgstr "زوم إلى الاختيار"
 
 #: src/menus/TransportMenus.cpp
 msgid "R&escan Audio Devices"
@@ -14694,8 +14858,9 @@ msgstr "تنقل"
 
 #. i18n-hint: (verb) Start playing audio
 #: src/menus/TransportMenus.cpp
-msgid "Pl&ay"
-msgstr "شغل"
+#, fuzzy
+msgid "Pl&ay Once"
+msgstr "أشغل"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/menus/TransportMenus.cpp
@@ -14738,18 +14903,15 @@ msgstr "شغل قبل وبعد نهاية الاختيار"
 msgid "Play C&ut Preview"
 msgstr "شغل عرض القص المسبق"
 
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/menus/TransportMenus.cpp
 msgid "&Play-at-Speed"
 msgstr "شغل-في-سرعة"
 
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/menus/TransportMenus.cpp
-msgid "Normal Pl&ay-at-Speed"
-msgstr "شغل-في-سرعة عادي"
-
-#: src/menus/TransportMenus.cpp
-msgid "&Loop Play-at-Speed"
-msgstr "شغل تكراريا في سرعة"
+#, fuzzy
+msgid "Play-at-Speed &Once"
+msgstr "شغل-في-سرعة"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview-at-Speed"
@@ -14886,19 +15048,6 @@ msgstr "أحضر الجميع إلى الأمام"
 #: src/menus/WindowMenus.cpp
 msgid "Minimize All Projects"
 msgstr "صغر جميع المشاريع"
-
-#: src/ondemand/ODComputeSummaryTask.h
-msgid "Import complete. Calculating waveform"
-msgstr "أنجز الاستيراد. يتم الآن حساب الشكل الموجي"
-
-#: src/ondemand/ODDecodeTask.h
-msgid "Decoding Waveform"
-msgstr "أحل تشفير الشكل الموجي"
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, c-format
-msgid "%s %2.0f%% complete. Click to change task focal point."
-msgstr "%s %2.0f%% مكتمل. انقر لتغير بؤرة المهمة."
 
 #: src/prefs/ApplicationPrefs.cpp
 #, fuzzy
@@ -15111,6 +15260,11 @@ msgid "Choose a location to place the temporary directory"
 msgstr "اختر مكانا لوضع المجلد المؤقت"
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Cannot set the preference."
+msgstr "خذ التفضيل..."
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
 msgstr "غير متوفر - الموقع أعلى لا وجود له"
 
@@ -15120,18 +15274,38 @@ msgid "Choose a location"
 msgstr "اختر موقعا لحفظ الملفات"
 
 #: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy, c-format
+msgid ""
+"\n"
+"Directory %s does not exist. Create it?"
+msgstr "المجلد %s غير موجود. هل تريد إنشائه؟"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Directory creation failed."
+msgstr "حوار المجلدات"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy, c-format
+msgid ""
+"\n"
+"%s"
+msgstr "%s: %s"
+
+#: src/prefs/DirectoriesPrefs.cpp
 #, c-format
 msgid "Directory %s is not suitable (at risk of being cleaned out)"
 msgstr "المجلد %s غير مناسب (مهدد بالمسح)"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, c-format
-msgid "Directory %s does not exist. Create it?"
-msgstr "المجلد %s غير موجود. هل تريد إنشائه؟"
+#, fuzzy
+msgid "'Temporary Directory' cannot be set."
+msgstr "مجلد الملفات المؤقتة"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "New Temporary Directory"
-msgstr "مجلد مؤقت جديد"
+#, fuzzy
+msgid "'Temporary files' directory cannot be set."
+msgstr "مجلد الملفات المؤقتة"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15145,6 +15319,30 @@ msgstr "التغييرات إلى المجلد المؤقت لن تكون فعّ
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
 msgstr "تحديث المجلد المؤقت"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "'Open' directory cannot be set."
+msgstr "مجلد الملفات المؤقتة"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "'Save' directory cannot be set."
+msgstr "مجلد الملفات المؤقتة"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "'Import' directory cannot be set."
+msgstr "مجلد الملفات المؤقتة"
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "'Export' directory cannot be set."
+msgstr "صدر مسبقات وحدة الصوت"
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "'Macro Output' directory cannot be set."
+msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
@@ -16144,14 +16342,6 @@ msgstr "محول معدل العينة:"
 msgid "Dit&her:"
 msgstr "الارتجاف:"
 
-#: src/prefs/QualitySettings.cpp
-msgid "16-bit"
-msgstr "16-بِت"
-
-#: src/prefs/QualitySettings.cpp
-msgid "24-bit"
-msgstr "24-بِت"
-
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
 msgstr "تفضيلات للتسجيل"
@@ -16849,8 +17039,9 @@ msgid "Skip to End"
 msgstr "تخطى إلى النهاية"
 
 #: src/toolbars/ControlToolBar.cpp
-msgid "Loop Play"
-msgstr "تشغيل حلقي"
+#, fuzzy
+msgid "Play Once"
+msgstr "شغل ثانية واحدة"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Record New Track"
@@ -17054,11 +17245,6 @@ msgstr "حجم التسجيل (غير متوفر، استخدم مازج الن�
 
 #: src/toolbars/MixerToolBar.cpp
 #, fuzzy, c-format
-msgid "Playback Volume: %.2f (emulated)"
-msgstr "حجم التشغيل: %s (محاكى)"
-
-#: src/toolbars/MixerToolBar.cpp
-#, fuzzy, c-format
 msgid "Playback Volume: %.2f"
 msgstr "حجم التشغيل: %s"
 
@@ -17253,10 +17439,6 @@ msgid "Envelope Tool"
 msgstr "أداة الغلاف"
 
 #: src/toolbars/ToolsToolBar.cpp
-msgid "Time Shift Tool"
-msgstr "أداة تحريك الوقت"
-
-#: src/toolbars/ToolsToolBar.cpp
 msgid "Zoom Tool"
 msgstr "أداة التزويم"
 
@@ -17269,10 +17451,6 @@ msgstr "أداة الرسم"
 #, fuzzy
 msgid "Multi-Tool"
 msgstr "الأداة المتعددة"
-
-#: src/toolbars/ToolsToolBar.cpp
-msgid "Slide Tool"
-msgstr "أداة الانزلاق"
 
 #. i18n-hint: Clicking this menu item shows a toolbar
 #. that has some tools in it
@@ -17297,10 +17475,6 @@ msgid "&Zoom Tool"
 msgstr "أداة التزويم"
 
 #: src/toolbars/ToolsToolBar.cpp
-msgid "&Time Shift Tool"
-msgstr "أداة تحريك الوقت"
-
-#: src/toolbars/ToolsToolBar.cpp
 msgid "&Multi Tool"
 msgstr "الأداة المتعددة"
 
@@ -17321,14 +17495,19 @@ msgid "Playback Speed"
 msgstr "سرعة التشغيل"
 
 #: src/toolbars/TranscriptionToolBar.cpp
-msgid "Looped-Play-at-Speed"
-msgstr "شغل تكراريا في سرعة"
+#, fuzzy
+msgid "Play-at-Speed Once"
+msgstr "شغل-في-سرعة"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for transcription (currently just vary play speed)
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Pla&y-at-Speed Toolbar"
 msgstr "شريط أدوات شغل-في-سرعة"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
+msgid "Drag label. Hold shift and drag to move all labels on the same track."
+msgstr ""
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -17536,6 +17715,66 @@ msgstr "أوقف الصوت أولا"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "S&pectrogram Settings..."
 msgstr "أوضاع الصورة الطيفية..."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, fuzzy
+msgid "Click and drag to move clip boundary in time"
+msgstr "انقر و اسحب لتحريك المقطع في الوقت"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, fuzzy
+msgid "Clip-Trim-Left"
+msgstr "المقطع الضمني يسارا"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, c-format
+msgid "Moved by %.02f"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, fuzzy
+msgid "Clip-Trim-Right"
+msgstr "قص اليمين"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Set Wave Clip Name"
+msgstr "اسم المقطع"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Click and drag to select text"
+msgstr "انقر و اسحب لاختيار الصوت"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Modified Clip Name"
+msgstr "علامةمعدَّلة"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Clip Name Edit"
+msgstr "تحرير العينة"
+
+#. i18n-hint:
+#. string is the name of a clip
+#. first number is the position of that clip in a sequence of clips,
+#. second number counts the clips
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy, c-format
+msgid "%s, %d of %d clip"
+msgid_plural "%s, %d of %d clips"
+msgstr[0] "%s %d من %d مقطع مصغر %s"
+msgstr[1] "%s %d من %d مقطع مصغر %s"
+msgstr[2] "%s %d من %d مقاطع مصغرة %s"
+msgstr[3] "%s %d من %d مقاطع مصغرة %s"
+msgstr[4] "%s %d من %d مقاطع مصغرة %s"
+msgstr[5] "%s %d من %d مقاطع مصغرة %s"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Rename Clip..."
+msgstr "أعد تسمية..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -17771,6 +18010,21 @@ msgstr ""
 msgid "Close sub-view"
 msgstr ""
 
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
+#, fuzzy
+msgid "Split Clip"
+msgstr "عين المقطع الضمني"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
+#, fuzzy
+msgid "Mute/Unmute Track"
+msgstr "أصمت/ألغ إصمات المقطع المركز"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
+#, fuzzy
+msgid "Rename clip..."
+msgstr "أعد تسمية..."
+
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom x1/2"
 msgstr "زوم 1/2x"
@@ -17865,6 +18119,45 @@ msgstr "المدى..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "استيفاء لوغارثمي"
+
+#. i18n-hint Appears on hovering mouse over clip affordance
+#: src/tracks/ui/AffordanceHandle.cpp
+msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
+msgstr ""
+
+#: src/tracks/ui/BackgroundCell.cpp
+#, fuzzy
+msgid "Add Mono Track"
+msgstr "مقطع أحادي"
+
+#: src/tracks/ui/BackgroundCell.cpp
+#, fuzzy
+msgid "Add Stereo Track"
+msgstr "مقطع ثنائي"
+
+#: src/tracks/ui/BackgroundCell.cpp
+#, fuzzy
+msgid "Add Label Track"
+msgstr "مقطع علامة"
+
+#: src/tracks/ui/BackgroundCell.cpp
+#, fuzzy
+msgid "Export Audio..."
+msgstr "صدر الصوت..."
+
+#: src/tracks/ui/BrushHandle.cpp
+#, fuzzy
+msgid "Erased selected area"
+msgstr "احذف القانون المحدد"
+
+#: src/tracks/ui/BrushHandle.cpp
+msgid "Selected area using Brush Tool"
+msgstr ""
+
+#: src/tracks/ui/BrushHandle.cpp
+#, fuzzy
+msgid "Brush tool selection"
+msgstr "قص الاختيار"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "&Name..."
@@ -18108,6 +18401,30 @@ msgstr "اسحب لتزوم داخل المنطقة، انقر الزر الأي
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "أيسر=زوم داخلا، أيمن=زوم خارجا، أوسط=عادي"
 
+#. i18n-hint: Title of the dialog no updates available.
+#: src/update/NoUpdatesAvailableDialog.cpp
+#, fuzzy
+msgid "No Updates Available"
+msgstr "متغير"
+
+#: src/update/NoUpdatesAvailableDialog.cpp
+#, fuzzy
+msgid "Check for Updates"
+msgstr "تحقق من وجود تحديثات..."
+
+#. i18n-hint: %s is replaced with 'Preferences > Application'.
+#: src/update/NoUpdatesAvailableDialog.cpp
+#, c-format
+msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
+msgstr ""
+
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
+#. i18n-hint: a page in the Preferences dialog; use same name
+#: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
+#, fuzzy
+msgid "Preferences > Application"
+msgstr "تفضيلات للجودة"
+
 #: src/update/UpdateManager.cpp
 #, fuzzy
 msgctxt "update dialog"
@@ -18127,13 +18444,23 @@ msgstr ""
 #: src/update/UpdateManager.cpp
 #, fuzzy
 msgctxt "update dialog"
-msgid "Error downloading update."
+msgid "Error downloading update"
 msgstr "خطأ في تحميل ما وراء المعطيات"
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr ""
+
+#: src/update/UpdateManager.cpp
+#, fuzzy
+msgid "Audacity update"
+msgstr "سجل Audacity"
+
+#: src/update/UpdateManager.cpp
+#, fuzzy, c-format
+msgid "Downloading %s"
+msgstr "نزل"
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -18157,12 +18484,6 @@ msgstr ""
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
 msgstr ""
-
-#. i18n-hint: a page in the Preferences dialog; use same name
-#: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
-msgid "Preferences > Application"
-msgstr "تفضيلات للجودة"
 
 #: src/update/UpdatePopupDialog.cpp
 #, fuzzy
@@ -18203,7 +18524,7 @@ msgstr ""
 msgid "(disabled)"
 msgstr " (غير ممَكن)"
 
-#: src/widgets/AButton.cpp src/widgets/Meter.cpp
+#: src/widgets/AButton.cpp src/widgets/MeterPanel.cpp
 msgid "Press"
 msgstr "اضغط"
 
@@ -18213,13 +18534,13 @@ msgstr "زر"
 
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
-#: src/widgets/ASlider.cpp src/widgets/Meter.cpp
+#: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
 msgid "L"
 msgstr "يسار"
 
 #. i18n-hint: One-letter abbreviation for Right, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Right, in VU Meter
-#: src/widgets/ASlider.cpp src/widgets/Meter.cpp
+#: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
 msgid "R"
 msgstr "يمين"
 
@@ -18284,43 +18605,43 @@ msgstr "مساعدة على الإنترنت"
 msgid "Menu"
 msgstr "قائمة"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Click to Start Monitoring"
 msgstr "انقر لتبدأ المراقبة"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Click for Monitoring"
 msgstr "انقر للمراقبة"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Click to Start"
 msgstr "انقر لتبدأ"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Click"
 msgstr "نقرة"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Stop Monitoring"
 msgstr "وقف المراقبة"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Start Monitoring"
 msgstr "بدأ المراقبة"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Recording Meter Options"
 msgstr "اختيارات عداد التسجيل"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Playback Meter Options"
 msgstr "اختيارات عداد التشغيل"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Refresh Rate"
 msgstr "حدث المعدل"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid ""
 "Higher refresh rates make the meter show more frequent\n"
 "changes. A rate of 30 per second or less should prevent\n"
@@ -18330,61 +18651,61 @@ msgstr ""
 "معدل 30 لكل ثانية أو أقل يجب أن يمنع العداد من التأثير\n"
 "على جودة الصوت على الآلات الأبطأ."
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter refresh rate per second [1-100]"
 msgstr "معدَّل تحديث العداد في الثانية [1-100]"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter refresh rate per second [1-100]: "
 msgstr "معدَّل تجديد العداد في الثانية [1-100]: "
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter Style"
 msgstr "شكل العداد"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Gradient"
 msgstr "منحدر"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter Type"
 msgstr "نوع العداد"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Orientation"
 msgstr "التوجيه"
 
-#: src/widgets/Meter.cpp plug-ins/crossfadetracks.ny
+#: src/widgets/MeterPanel.cpp plug-ins/crossfadetracks.ny
 msgid "Automatic"
 msgstr "تلقائي"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Horizontal"
 msgstr "أفقي"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Vertical"
 msgstr "عمودي"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid " Monitoring "
 msgstr " أراقب "
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid " Active "
 msgstr " فعال "
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 #, c-format
 msgid " Peak %2.f dB"
 msgstr " قمة %2.f dB"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 #, c-format
 msgid " Peak %.2f "
 msgstr " القمة %.2f "
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid " Clipped "
 msgstr " قص "
 
@@ -18877,21 +19198,6 @@ msgstr "حوار المجلدات"
 msgid "File Dialog"
 msgstr "حوار الملف"
 
-#: src/xml/XMLFileReader.cpp
-#, fuzzy, c-format
-msgid "Error: %s at line %lu"
-msgstr "خطأ: %hs عند خط %lu"
-
-#: src/xml/XMLFileReader.cpp
-#, c-format
-msgid "Could not load file: \"%s\""
-msgstr "لم أتمكن من تحميل الملف: \"%s\""
-
-#: src/xml/XMLFileReader.cpp
-#, fuzzy
-msgid "Could not parse XML"
-msgstr "لم أتمكن من فتح الملف"
-
 #: plug-ins/SpectralEditMulti.ny
 #, fuzzy
 msgid "Spectral edit multi tool"
@@ -18908,16 +19214,11 @@ msgid "Paul Licameli"
 msgstr ""
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
-#: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
-#: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/beat.ny plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/highpass.ny plug-ins/lowpass.ny
 #: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
-#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocoder.ny
+#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+#: plug-ins/vocalrediso.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr ""
 
@@ -19010,6 +19311,14 @@ msgstr "أطبق الخبو..."
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
 msgstr "ستيف دالتون"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
+#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/label-sounds.ny
+#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
+msgid "GNU General Public License v2.0 or later"
+msgstr ""
 
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
@@ -19549,10 +19858,6 @@ msgstr ""
 #, fuzzy
 msgid "Label Sounds"
 msgstr "ضم العلامة"
-
-#: plug-ins/label-sounds.ny plug-ins/noisegate.ny
-msgid "Released under terms of the GNU General Public License version 2 or later."
-msgstr ""
 
 #: plug-ins/label-sounds.ny
 #, fuzzy
@@ -20677,6 +20982,112 @@ msgstr "تردد إبر الرادار (هرتز)"
 msgid "Error.~%Stereo track required."
 msgstr ""
 
+#~ msgid "Enable Quick-Play"
+#~ msgstr "مكن التشغيل السريع"
+
+#~ msgid "Lock Play Region"
+#~ msgstr "اقفل منطقة التشغيل"
+
+#, fuzzy
+#~ msgid "Playback volume is emulated\n"
+#~ msgstr "حجم التشغيل: %s (محاكى)"
+
+#, fuzzy
+#~ msgid "Playback volume is native\n"
+#~ msgstr "حجم التشغيل: %s (محاكى)"
+
+#~ msgid "Failed to find compatible FFmpeg libraries."
+#~ msgstr "أخفقت في إيجاد مكتبات FFmpeg متوافقة."
+
+#, c-format
+#~ msgid "This operation cannot be done until importation of %s completes."
+#~ msgstr "لا بمكن أن تنجز هذه العملية حتى ينتهي استوراد %s."
+
+#~ msgid "none, Hann (2.0.6 behavior)"
+#~ msgstr "لا شيء، هان (سلوك 2.0.6)"
+
+#~ msgid "Hann, none"
+#~ msgstr "هان، لا شيء"
+
+#, fuzzy
+#~ msgid "Hann, Hann (default)"
+#~ msgstr "4 (أساسي)"
+
+#~ msgid "Blackman, Hann"
+#~ msgstr "بلاكمان، هان"
+
+#~ msgid "Hamming, none"
+#~ msgstr "هامينغ، لا شيء"
+
+#~ msgid "Hamming, Hann"
+#~ msgstr "هامينغ، هان"
+
+#~ msgid "Hamming, Reciprocal Hamming"
+#~ msgstr "هامينغ، مقلوب هامينغ"
+
+#, c-format
+#~ msgid "%d of %d clip %s"
+#~ msgid_plural "%d of %d clips %s"
+#~ msgstr[0] "%d من %d مقطع مصغر %s"
+#~ msgstr[1] "%d من %d مقطع مصغر %s"
+#~ msgstr[2] "%d من %d مقاطع مصغرة %s"
+#~ msgstr[3] "%d من %d مقاطع مصغرة %s"
+#~ msgstr[4] "%d من %d مقاطع مصغرة %s"
+#~ msgstr[5] "%d من %d مقاطع مصغرة %s"
+
+#~ msgid "&Loop Play"
+#~ msgstr "تشغيل حلقي"
+
+#~ msgid "Pla&y Region"
+#~ msgstr "شغل منطقة"
+
+#~ msgid "&Lock"
+#~ msgstr "اقفل"
+
+#~ msgid "&Unlock"
+#~ msgstr "افتح القفل"
+
+#~ msgid "Pl&ay"
+#~ msgstr "شغل"
+
+#~ msgid "Normal Pl&ay-at-Speed"
+#~ msgstr "شغل-في-سرعة عادي"
+
+#~ msgid "&Loop Play-at-Speed"
+#~ msgstr "شغل تكراريا في سرعة"
+
+#~ msgid "Import complete. Calculating waveform"
+#~ msgstr "أنجز الاستيراد. يتم الآن حساب الشكل الموجي"
+
+#~ msgid "Decoding Waveform"
+#~ msgstr "أحل تشفير الشكل الموجي"
+
+#, c-format
+#~ msgid "%s %2.0f%% complete. Click to change task focal point."
+#~ msgstr "%s %2.0f%% مكتمل. انقر لتغير بؤرة المهمة."
+
+#~ msgid "New Temporary Directory"
+#~ msgstr "مجلد مؤقت جديد"
+
+#~ msgid "Loop Play"
+#~ msgstr "تشغيل حلقي"
+
+#, fuzzy, c-format
+#~ msgid "Playback Volume: %.2f (emulated)"
+#~ msgstr "حجم التشغيل: %s (محاكى)"
+
+#~ msgid "Time Shift Tool"
+#~ msgstr "أداة تحريك الوقت"
+
+#~ msgid "Slide Tool"
+#~ msgstr "أداة الانزلاق"
+
+#~ msgid "&Time Shift Tool"
+#~ msgstr "أداة تحريك الوقت"
+
+#~ msgid "Looped-Play-at-Speed"
+#~ msgstr "شغل تكراريا في سرعة"
+
 #, fuzzy
 #~ msgid "Unknown assertion"
 #~ msgstr "مجهول"
@@ -21174,12 +21585,6 @@ msgstr ""
 #~ msgid "dummyStringOnSelectClip"
 #~ msgstr "سلسلة زائفة عند اختيار مقطع مصغر"
 
-#~ msgid "Clip L&eft"
-#~ msgstr "المقطع الضمني يسارا"
-
-#~ msgid "Clip Rig&ht"
-#~ msgstr "قص اليمين"
-
 #, fuzzy
 #~ msgid "Save Lossless Copy of Project..."
 #~ msgstr "احفظ نسخة مضغوطة من المشروع..."
@@ -21457,9 +21862,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Remove Center Classic: Mono"
 #~ msgstr "أزلت خط القطع"
-
-#~ msgid "Decoding failed\n"
-#~ msgstr "أخفق حل الشفرة\n"
 
 #~ msgid "Could not decode file: %s"
 #~ msgstr "لم أتمكن من حل شفرة ملف: %s"
