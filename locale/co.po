@@ -16509,7 +16509,7 @@ msgstr "Ampiitutine minima (dB) :"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Max. Number of Notes (1..128):"
-msgstr "Massimu Numeru massimu di note (da 1 à 128) :"
+msgstr "Numeru massimu di note (da 1 à 128) :"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Find Notes"
