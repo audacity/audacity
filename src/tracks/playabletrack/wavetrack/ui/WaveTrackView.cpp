@@ -31,6 +31,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
+#include "../../../../TrackPanelAx.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackPanelResizeHandle.h"
@@ -40,6 +41,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ui/TimeShiftHandle.h"
 #include "../../../ui/ButtonHandle.h"
 #include "../../../../TrackInfo.h"
+
+#include "../WaveTrackUtils.h"
 
 #include "WaveTrackAffordanceControls.h"
 #include "WaveClipTrimHandle.h"
@@ -1055,6 +1058,71 @@ void WaveTrackView::DoSetDisplay(Display display, bool exclusive)
    }
 }
 
+namespace {
+   template<typename Iter, typename Comp>
+   const WaveClip* NextClipLooped(ViewInfo& viewInfo, Iter begin, Iter end, Comp comp)
+   {
+      auto it = WaveTrackUtils::SelectedClip(viewInfo, begin, end);
+      if (it == end)
+         it = std::find_if(begin, end, comp);
+      else
+         it = std::next(it);
+
+      if (it == end)
+         return *begin;
+      return *it;
+   }
+}
+
+bool WaveTrackView::SelectNextClip(ViewInfo& viewInfo, AudacityProject* project, bool forward)
+{
+   //Iterates through clips in a looped manner
+   auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(FindTrack());
+   if (!waveTrack)
+      return false;
+   auto clips = waveTrack->SortedClipArray();
+   if (clips.empty())
+      return false;
+
+   const WaveClip* clip{ };
+   if (forward)
+   {
+      clip = NextClipLooped(viewInfo, clips.begin(), clips.end(), [&](const WaveClip* other) {
+         return other->GetPlayStartTime() >= viewInfo.selectedRegion.t1();
+      });
+   }
+   else
+   {
+      clip = NextClipLooped(viewInfo, clips.rbegin(), clips.rend(), [&](const WaveClip* other) {
+         return other->GetPlayStartTime() <= viewInfo.selectedRegion.t0();
+      });
+   }
+
+   viewInfo.selectedRegion.setTimes(clip->GetPlayStartTime(), clip->GetPlayEndTime());
+   ProjectHistory::Get(*project).ModifyState(false);
+
+   // create and send message to screen reader
+   auto it = std::find(clips.begin(), clips.end(), clip);
+   auto index = std::distance(clips.begin(), it);
+
+   auto message = XP(
+   /* i18n-hint:
+       string is the name of a clip
+       first number is the position of that clip in a sequence of clips,
+       second number counts the clips */
+       "%s, %d of %d clip",
+       "%s, %d of %d clips",
+       2
+   )(
+      clip->GetName(),
+      static_cast<int>(index + 1),
+      static_cast<int>(clips.size())
+  );
+
+   TrackFocus::Get(*project).MessageForScreenReader(message);
+   return true;
+}
+
 auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
 {
    return GetSubViews(&rect);
@@ -1156,14 +1224,20 @@ unsigned WaveTrackView::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWind
             return result;
          }
       }
-       
+
       event.Skip(false);
-      result |= waveTrackView.CommonTrackView::CaptureKey(
+   }
+   switch (event.GetKeyCode())
+   {
+   case WXK_TAB:
+      break;
+   default:
+      result |= CommonTrackView::CaptureKey(
          event, viewInfo, pParent, project);
-      if (!event.GetSkipped()) {
-         mKeyEventDelegate = waveTrackView.shared_from_this();
-         break;
-      }
+      break;
+   };
+   if (!event.GetSkipped()) {
+      mKeyEventDelegate = shared_from_this();
    }
 
    return result;
@@ -1174,8 +1248,16 @@ unsigned WaveTrackView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow*
    unsigned result{ RefreshCode::RefreshNone };
    if (auto delegate = mKeyEventDelegate.lock()) {
       if (auto pWaveTrackView = dynamic_cast<WaveTrackView*>(delegate.get()))
-         result |= pWaveTrackView->CommonTrackView::KeyDown(
-            event, viewInfo, pParent, project);
+      {
+         if (event.GetKeyCode() == WXK_TAB)
+         {
+            SelectNextClip(viewInfo, project, event.GetModifiers() != wxMOD_SHIFT);
+            result |= RefreshCode::RefreshCell;
+         }
+         else
+            result |= pWaveTrackView->CommonTrackView::KeyDown(
+               event, viewInfo, pParent, project);
+      }
       else
          result |= delegate->KeyDown(event, viewInfo, pParent, project);
    }
