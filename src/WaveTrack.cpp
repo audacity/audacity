@@ -63,6 +63,8 @@ from the project that will own the track.
 #include "tracks/ui/TrackView.h"
 #include "tracks/ui/TrackControls.h"
 
+#include "ProjectFormatExtensionsRegistry.h"
+
 using std::max;
 
 namespace {
@@ -111,7 +113,9 @@ static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
 
 WaveTrack::Holder WaveTrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
 {
-   return std::static_pointer_cast<WaveTrack>( orig.Duplicate() );
+   auto waveTrack = std::static_pointer_cast<WaveTrack>( orig.Duplicate() );
+
+   return waveTrack;
 }
 
 
@@ -121,7 +125,10 @@ WaveTrack::Holder WaveTrackFactory::NewWaveTrack(sampleFormat format, double rat
       format = QualitySettings::SampleFormatChoice();
    if (rate == 0)
       rate = mRate.GetRate();
-   return std::make_shared<WaveTrack> ( mpFactory, format, rate );
+
+   auto waveTrack = std::make_shared<WaveTrack> ( mpFactory, format, rate );
+
+   return waveTrack;
 }
 
 WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
@@ -2908,3 +2915,21 @@ void WaveTrackFactory::Destroy( AudacityProject &project )
 {
    project.AttachedObjects::Assign( key2, nullptr );
 }
+
+ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
+   [](const AudacityProject& project) -> ProjectFormatVersion
+   {
+      const TrackList& trackList = TrackList::Get(project);
+
+      for (auto wt : trackList.Any<const WaveTrack>())
+      {
+         for (const auto& clip : wt->GetAllClips())
+         {
+            if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
+               return { 3, 1, 0, 0 };
+         }
+      }
+
+      return BaseProjectFormatVersion;
+   }
+);

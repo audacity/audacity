@@ -244,7 +244,6 @@ private:
 
    bool CheckVersion();
    bool InstallSchema(sqlite3 *db, const char *schema = "main");
-   bool UpgradeSchema();
 
    // Write project or autosave XML (binary) documents
    bool WriteDoc(const char *table, const ProjectSerializer &autosave, const char *schema = "main");
