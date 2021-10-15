@@ -115,7 +115,6 @@ inline int IndicatorBigWidth()
 class AdornedRulerPanel::CommonRulerHandle : public UIHandle
 {
 public:
-   explicit
    CommonRulerHandle(
       AdornedRulerPanel *pParent, wxCoord xx, MenuChoice menuChoice )
       : mParent(pParent)
@@ -182,12 +181,18 @@ protected:
 
 class AdornedRulerPanel::PlayRegionAdjustingHandle : public CommonRulerHandle {
 public:
-   using CommonRulerHandle::CommonRulerHandle;
+   PlayRegionAdjustingHandle(
+      AdornedRulerPanel *pParent, wxCoord xx, MenuChoice menuChoice,
+      size_t numGuides = 1)
+   : CommonRulerHandle{ pParent, xx, menuChoice }
+   , mNumGuides{ numGuides }
+   {}
 
    HitTestPreview Preview(
       const TrackPanelMouseState &state, AudacityProject *pProject)
    override
    {
+      mParent->SetNumGuides(mNumGuides);
       static wxCursor cursor{ wxCURSOR_DEFAULT };
       const auto message = XO("Click and drag to define a looping region.");
       return {
@@ -196,6 +201,8 @@ public:
          message
       };
    }
+
+   size_t mNumGuides;
 };
 
 /**********************************************************************
@@ -308,12 +315,12 @@ void AdornedRulerPanel::ScrubbingRulerOverlay::Update()
       const auto &selectedRegion = ViewInfo::Get( *project ).selectedRegion;
       double latestEnd =
          std::max(ruler->mTracks->GetEndTime(), selectedRegion.t1());
-      if (ruler->mQuickPlayPos >= latestEnd)
+      if (ruler->mQuickPlayPos[0] >= latestEnd)
          mNewQPIndicatorPos = -1;
       else {
          // This will determine the x coordinate of the line and of the
          // ruler indicator
-         mNewQPIndicatorPos = ruler->Time2Pos(ruler->mQuickPlayPos);
+         mNewQPIndicatorPos = ruler->Time2Pos(ruler->mQuickPlayPos[0]);
 
          // These determine which shape is drawn on the ruler, and whether
          // in the scrub or the qp zone
@@ -405,7 +412,7 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Update()
    mNewPreviewingScrub =
       ruler->LastCell() == ruler->mScrubbingCell &&
       !scrubber.IsScrubbing();
-   mNewIndicatorSnapped = ruler->mIsSnapped;
+   mNewIndicatorSnapped = ruler->mIsSnapped[0];
 }
 
 std::pair<wxRect, bool>
@@ -592,9 +599,9 @@ double GetPlayHeadFraction( const AudacityProject *pProject, wxCoord xx )
 class PlayheadHandle : public UIHandle
 {
 public:
-   explicit
-   PlayheadHandle( wxCoord xx )
-      : mX( xx )
+   PlayheadHandle( AdornedRulerPanel &parent, wxCoord xx )
+      : mpParent{ &parent }
+      , mX( xx )
    {}
 
    static UIHandle::Result NeedChangeHighlight(
@@ -606,7 +613,8 @@ public:
    }
    
    static std::shared_ptr<PlayheadHandle>
-   HitTest( const AudacityProject *pProject, wxCoord xx )
+   HitTest(
+      const AudacityProject *pProject, AdornedRulerPanel &parent, wxCoord xx )
    {
       if( Scrubber::Get( *pProject )
          .IsTransportingPinned() &&
@@ -614,7 +622,7 @@ public:
       {
          const auto targetX = GetPlayHeadX( pProject );
          if ( abs( xx - targetX ) <= SELECT_TOLERANCE_PIXEL )
-            return std::make_shared<PlayheadHandle>( xx );
+            return std::make_shared<PlayheadHandle>( parent, xx );
       }
       return {};
    }
@@ -652,6 +660,7 @@ protected:
       const TrackPanelMouseState &, AudacityProject *)
       override
    {
+      mpParent->SetNumGuides(1);
       static wxCursor cursor{ wxCURSOR_SIZEWE };
       return {
          XO( "Click and drag to adjust, double-click to reset" ),
@@ -682,6 +691,7 @@ protected:
       mChangeHighlight = RefreshCode::DrawOverlays;
    }
 
+   AdornedRulerPanel *mpParent;
    wxCoord mX;
    double mOrigPreference {};
 };
@@ -734,7 +744,7 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
    {
       // Allow click and drag on the play head even while recording
       // Make this handle more prominent then the quick play handle
-      auto result = PlayheadHandle::HitTest( pProject, xx );
+      auto result = PlayheadHandle::HitTest( pProject, *mParent, xx );
       if (result) {
          result = AssignUIHandlePtr( mPlayheadHolder, result );
          results.push_back( result );
@@ -951,8 +961,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    mRuler.SetFormat( Ruler::TimeFormat );
 
    mTracks = &TrackList::Get( *project );
-
-   mIsSnapped = false;
 
    mIsRecording = false;
 
@@ -1413,8 +1421,8 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
       SelectUtilities::InactivatePlayRegion(*mProject);
    }
 
-   mLeftDownClickUnsnapped = mQuickPlayPosUnsnapped;
-   mLeftDownClick = mQuickPlayPos;
+   mLeftDownClickUnsnapped[0] = mQuickPlayPosUnsnapped[0];
+   mLeftDownClick = mQuickPlayPos[0];
    bool isWithinStart = IsWithinMarker(mousePosX, mOldPlayRegion.GetStart());
    bool isWithinEnd = IsWithinMarker(mousePosX, mOldPlayRegion.GetEnd());
 
@@ -1426,11 +1434,11 @@ void AdornedRulerPanel::HandleQPClick(wxMouseEvent &evt, wxCoord mousePosX)
       // otherwise check which marker is nearer
       else {
          // Don't compare times, compare positions.
-         //if (fabs(mQuickPlayPos - mPlayRegionStart) < fabs(mQuickPlayPos - mPlayRegionEnd))
+         //if (fabs(mQuickPlayPos[0] - mPlayRegionStart) < fabs(mQuickPlayPos[0] - mPlayRegionEnd))
          auto start = mOldPlayRegion.GetStart();
          auto end = mOldPlayRegion.GetEnd();
-         if (abs(Time2Pos(mQuickPlayPos) - Time2Pos(start)) <
-             abs(Time2Pos(mQuickPlayPos) - Time2Pos(end)))
+         if (abs(Time2Pos(mQuickPlayPos[0]) - Time2Pos(start)) <
+             abs(Time2Pos(mQuickPlayPos[0]) - Time2Pos(end)))
             mMouseEventState = mesDraggingPlayRegionStart;
          else
             mMouseEventState = mesDraggingPlayRegionEnd;
@@ -1474,36 +1482,36 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
       case mesNone:
          // If close to either end of play region, snap to closest
          if (isWithinStart || isWithinEnd) {
-            if (fabs(mQuickPlayPos - mOldPlayRegion.GetStart()) < fabs(mQuickPlayPos - mOldPlayRegion.GetEnd()))
-               mQuickPlayPos = mOldPlayRegion.GetStart();
+            if (fabs(mQuickPlayPos[0] - mOldPlayRegion.GetStart()) < fabs(mQuickPlayPos[0] - mOldPlayRegion.GetEnd()))
+               mQuickPlayPos[0] = mOldPlayRegion.GetStart();
             else
-               mQuickPlayPos = mOldPlayRegion.GetEnd();
+               mQuickPlayPos[0] = mOldPlayRegion.GetEnd();
          }
          break;
       case mesDraggingPlayRegionStart:
          // Don't start dragging until beyond tolerance initial playback start
          if (!mIsDragging && isWithinStart)
-            mQuickPlayPos = mOldPlayRegion.GetStart();
+            mQuickPlayPos[0] = mOldPlayRegion.GetStart();
          else
             mIsDragging = true;
          // avoid accidental tiny selection
          if (isWithinEnd)
-            mQuickPlayPos = mOldPlayRegion.GetEnd();
-         playRegion.SetStart( mQuickPlayPos );
+            mQuickPlayPos[0] = mOldPlayRegion.GetEnd();
+         playRegion.SetStart( mQuickPlayPos[0] );
          if (canDragSel) {
             DragSelection();
          }
          break;
       case mesDraggingPlayRegionEnd:
          if (!mIsDragging && isWithinEnd) {
-            mQuickPlayPos = mOldPlayRegion.GetEnd();
+            mQuickPlayPos[0] = mOldPlayRegion.GetEnd();
          }
          else
             mIsDragging = true;
          if (isWithinStart) {
-            mQuickPlayPos = mOldPlayRegion.GetStart();
+            mQuickPlayPos[0] = mOldPlayRegion.GetStart();
          }
-         playRegion.SetEnd( mQuickPlayPos );
+         playRegion.SetEnd( mQuickPlayPos[0] );
          if (canDragSel) {
             DragSelection();
          }
@@ -1512,7 +1520,7 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
 
          // Don't start dragging until mouse is beyond tolerance of initial click.
          if (isWithinClick || mLeftDownClick == -1) {
-            mQuickPlayPos = mLeftDownClick;
+            mQuickPlayPos[0] = mLeftDownClick;
             playRegion.SetTimes(mLeftDownClick, mLeftDownClick);
          }
          else {
@@ -1521,13 +1529,13 @@ void AdornedRulerPanel::HandleQPDrag(wxMouseEvent &/*event*/, wxCoord mousePosX)
          break;
       case mesSelectingPlayRegionRange:
          if (isWithinClick) {
-            mQuickPlayPos = mLeftDownClick;
+            mQuickPlayPos[0] = mLeftDownClick;
          }
 
-         if (mQuickPlayPos < mLeftDownClick)
-            playRegion.SetTimes( mQuickPlayPos, mLeftDownClick );
+         if (mQuickPlayPos[0] < mLeftDownClick)
+            playRegion.SetTimes( mQuickPlayPos[0], mLeftDownClick );
          else
-            playRegion.SetTimes( mLeftDownClick, mQuickPlayPos );
+            playRegion.SetTimes( mLeftDownClick, mQuickPlayPos[0] );
          if (canDragSel) {
             DragSelection();
          }
@@ -1545,6 +1553,7 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview(
    auto &scrubber = Scrubber::Get( *pProject );
    auto message = ScrubbingMessage(scrubber, mClicked == Button::Left);
 
+   mParent->SetNumGuides(1);
    return {
       message,
       {},
@@ -1558,6 +1567,7 @@ auto AdornedRulerPanel::QPHandle::Preview(
    const TrackPanelMouseState &state, AudacityProject *pProject)
       -> HitTestPreview
 {
+   mParent->SetNumGuides(1);
    TranslatableString tooltip;
    #if 0
    if (mParent && mParent->mTimelineToolTip) {
@@ -1849,15 +1859,22 @@ void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
 
 void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX)
 {
-   // Keep Quick-Play within usable track area.
+   // Invoked for mouse-over preview events, or dragging, or scrub position
+   // polling updates.  Remember x coordinates, converted to times, for
+   // drawing of guides.
+
+   // Keep Quick-Play within usable track area.  (Dependent on zoom)
    const auto &viewInfo = ViewInfo::Get( *mProject );
    auto width = viewInfo.GetTracksUsableWidth();
    mousePosX = std::max(mousePosX, viewInfo.GetLeftOffset());
    mousePosX = std::min(mousePosX, viewInfo.GetLeftOffset() + width - 1);
+   const auto time = Pos2Time(mousePosX);
 
-   mQuickPlayPosUnsnapped = mQuickPlayPos = Pos2Time(mousePosX);
-
-   HandleSnapping();
+   for (size_t ii = 0; ii < mNumGuides; ++ii) {
+      mQuickPlayPosUnsnapped[ii] = mQuickPlayPos[ii] =
+         time + mQuickPlayOffset[ii];
+      HandleSnapping(ii);
+   }
 }
 
 // Pop-up menus
@@ -1932,7 +1949,7 @@ void AdornedRulerPanel::DragSelection()
    selectedRegion.setT1(playRegion.GetEnd(), true);
 }
 
-void AdornedRulerPanel::HandleSnapping()
+void AdornedRulerPanel::HandleSnapping(size_t index)
 {
    // Play region dragging can snap to selection boundaries
    const auto &selectedRegion = ViewInfo::Get(*GetProject()).selectedRegion;
@@ -1940,9 +1957,9 @@ void AdornedRulerPanel::HandleSnapping()
       SnapPoint{ selectedRegion.t0() },
       SnapPoint{ selectedRegion.t1() },
    } };
-   auto results = snapManager.Snap(NULL, mQuickPlayPos, false);
-   mQuickPlayPos = results.outTime;
-   mIsSnapped = results.Snapped();
+   auto results = snapManager.Snap(nullptr, mQuickPlayPos[index], false);
+   mQuickPlayPos[index] = results.outTime;
+   mIsSnapped[index] = results.Snapped();
 }
 
 #if 0
@@ -2227,6 +2244,19 @@ bool AdornedRulerPanel::s_AcceptsFocus{ false };
 auto AdornedRulerPanel::TemporarilyAllowFocus() -> TempAllowFocus {
    s_AcceptsFocus = true;
    return TempAllowFocus{ &s_AcceptsFocus };
+}
+
+void AdornedRulerPanel::SetNumGuides(size_t nn)
+{
+   nn = std::min(nn, MAX_GUIDES);
+   // If increasing the number of guides, reinitialize newer ones
+   for (size_t ii = mNumGuides; ii < nn; ++ii) {
+      mQuickPlayOffset[ii] = 0;
+      mQuickPlayPosUnsnapped[ii] = 0;
+      mQuickPlayPos[ii] = 0;
+      mIsSnapped[ii] = false;
+   }
+   mNumGuides = nn;
 }
 
 void AdornedRulerPanel::SetFocusFromKbd()

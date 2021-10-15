@@ -108,6 +108,8 @@ private:
 public:
    static TempAllowFocus TemporarilyAllowFocus();
 
+   void SetNumGuides(size_t nn);
+
 private:
    enum class MenuChoice { QuickPlay, Scrub };
    void ShowContextMenu( MenuChoice choice, const wxPoint *pPosition);
@@ -131,10 +133,13 @@ private:
 
 
    double mIndTime;
-   double mQuickPlayPosUnsnapped;
-   double mQuickPlayPos;
 
-   bool mIsSnapped;
+   static constexpr size_t MAX_GUIDES = 2;
+   double mQuickPlayOffset[MAX_GUIDES]{};
+   double mQuickPlayPosUnsnapped[MAX_GUIDES]{};
+   double mQuickPlayPos[MAX_GUIDES]{};
+   bool mIsSnapped[MAX_GUIDES]{};
+   size_t mNumGuides{ 1 };
 
    PlayRegion mOldPlayRegion;
 
@@ -146,7 +151,7 @@ private:
    void ShowMenu(const wxPoint & pos);
    void ShowScrubMenu(const wxPoint & pos);
    void DragSelection();
-   void HandleSnapping();
+   void HandleSnapping(size_t index);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    //void OnTimelineToolTips(wxCommandEvent &evt);
    void OnAutoScroll(wxCommandEvent &evt);
