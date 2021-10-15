@@ -206,7 +206,8 @@ void TranscriptionToolBar::Populate()
 
    AddButton(this, bmpPlay,     bmpPlayDisabled,   TTB_PlaySpeed,
       XO("Play at selected speed"));
-   MakeAlternateImages(bmpLoop, bmpLoopDisabled, TTB_PlaySpeed, 1);
+   // 3.1.0 abandoned distinct images for Shift
+   MakeAlternateImages(bmpPlay, bmpPlayDisabled, TTB_PlaySpeed, 1);
    MakeAlternateImages(bmpCutPreview, bmpCutPreviewDisabled, TTB_PlaySpeed, 2);
    mButtons[TTB_PlaySpeed]->FollowModifierKeys();
 
@@ -341,8 +342,9 @@ void TranscriptionToolBar::RegenerateTooltips()
       CommandID commandName2;
       TranslatableString untranslatedLabel2;
    } table[] = {
-      { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-Speed"),
-      wxT("PlayAtSpeedLooped"),    XO("Looped-Play-at-Speed")
+      { TTB_PlaySpeed,
+         wxT("PlayAtSpeedLooped"),    XO("Play-at-Speed"),
+         wxT("PlayAtSpeed"),    XO("Play-at-Speed Once"),
       },
    };
 
@@ -555,7 +557,7 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
    // Let control have precedence over shift
    const bool cutPreview = mButtons[TTB_PlaySpeed]->WasControlDown();
    const bool looped = !cutPreview &&
-      button->WasShiftDown();
+      !button->WasShiftDown();
    PlayAtSpeed(looped, cutPreview);
 }
 

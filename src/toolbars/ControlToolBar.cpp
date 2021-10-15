@@ -199,7 +199,8 @@ void ControlToolBar::Populate()
 
    mPlay = MakeButton(this, bmpPlay, bmpPlay, bmpPlayDisabled,
       ID_PLAY_BUTTON, true, XO("Play"));
-   MakeAlternateImages(*mPlay, 1, bmpLoop, bmpLoop, bmpLoopDisabled);
+   // 3.1.0 abandoned distinct images for Shift
+   MakeAlternateImages(*mPlay, 1, bmpPlay, bmpPlay, bmpPlayDisabled);
    MakeAlternateImages(*mPlay, 2,
       bmpCutPreview, bmpCutPreview, bmpCutPreviewDisabled);
    MakeAlternateImages(*mPlay, 3,
@@ -234,7 +235,7 @@ void ControlToolBar::Populate()
    mLoop = MakeButton(this, bmpLoop, bmpLoop, bmpLoopDisabled,
       ID_LOOP_BUTTON,
       true, // this makes it a toggle, like the pause button
-      XO("Looping Region"));
+      LoopToggleText.Stripped());
 
 #if wxUSE_TOOLTIPS
    RegenerateTooltips();
@@ -257,7 +258,7 @@ void ControlToolBar::RegenerateTooltips()
       {
          case ID_PLAY_BUTTON:
             // Without shift
-            name = wxT("PlayStop");
+            name = wxT("DefaultPlayStop");
             break;
          case ID_RECORD_BUTTON:
             // Without shift
@@ -276,6 +277,9 @@ void ControlToolBar::RegenerateTooltips()
          case ID_REW_BUTTON:
             name = wxT("CursProjectStart");
             break;
+         case ID_LOOP_BUTTON:
+            name = wxT("TogglePlayRegion");
+            break;
       }
       std::vector<ComponentInterfaceSymbol> commands(
          1u, { name, Verbatim( pCtrl->GetLabel() ) } );
@@ -285,7 +289,7 @@ void ControlToolBar::RegenerateTooltips()
       {
          case ID_PLAY_BUTTON:
             // With shift
-            commands.push_back( { wxT("PlayLooped"), XO("Loop Play") } );
+            commands.push_back( { wxT("OncePlayStop"), XO("Play Once") } );
             break;
          case ID_RECORD_BUTTON:
             // With shift
@@ -571,7 +575,7 @@ void ControlToolBar::PlayDefault()
    // Let control have precedence over shift
    const bool cutPreview = mPlay->WasControlDown();
    const bool looped = !cutPreview &&
-      mPlay->WasShiftDown();
+      !mPlay->WasShiftDown();
    ProjectAudioManager::Get( mProject ).PlayCurrentRegion(looped, cutPreview);
 }
 
@@ -596,10 +600,10 @@ void ControlToolBar::OnLoop(wxCommandEvent & WXUNUSED(evt))
 {
    // Toggle the state of the play region lock
    auto &region = ViewInfo::Get(mProject).playRegion;
-   if (region.Locked())
-      SelectUtilities::UnlockPlayRegion(mProject);
+   if (region.Active())
+      SelectUtilities::InactivatePlayRegion(mProject);
    else
-      SelectUtilities::LockPlayRegion(mProject);
+      SelectUtilities::ActivatePlayRegion(mProject);
 }
 
 void ControlToolBar::OnIdle(wxIdleEvent & event)
@@ -658,7 +662,7 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
       // push-downs of the stop button are only momentary and always pop up now
       mStop->PopUp();
 
-   if (ViewInfo::Get(mProject).playRegion.Locked())
+   if (ViewInfo::Get(mProject).playRegion.Active())
       mLoop->PushDown();
    else
       mLoop->PopUp();

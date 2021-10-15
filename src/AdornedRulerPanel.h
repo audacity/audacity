@@ -18,7 +18,6 @@
 
 class AudacityProject;
 struct SelectedRegionEvent;
-class SnapManager;
 class TrackList;
 
 // This is an Audacity Specific ruler panel.
@@ -95,12 +94,10 @@ private:
    void DoDrawBackground(wxDC * dc);
    void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
-   void DoDrawSelection(wxDC * dc);
+   void DoDrawPlayRegion(wxDC * dc);
 
 public:
-   std::pair< wxPoint, wxBitmap >
-      GetIndicatorBitmap(wxCoord xx, bool playing) const;
-   void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub, bool seek);
+   void DoDrawScrubIndicator(wxDC * dc, wxCoord xx, int width, bool scrub, bool seek);
    void UpdateButtonStates();
 
 private:
@@ -112,8 +109,6 @@ public:
    static TempAllowFocus TemporarilyAllowFocus();
 
 private:
-   void DoDrawPlayRegion(wxDC * dc);
-
    enum class MenuChoice { QuickPlay, Scrub };
    void ShowContextMenu( MenuChoice choice, const wxPoint *pPosition);
 
@@ -152,18 +147,18 @@ private:
    void ShowScrubMenu(const wxPoint & pos);
    void DragSelection();
    void HandleSnapping();
-   void OnToggleQuickPlay(wxCommandEvent &evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    //void OnTimelineToolTips(wxCommandEvent &evt);
    void OnAutoScroll(wxCommandEvent &evt);
-   void OnLockPlayRegion(wxCommandEvent &evt);
+   void OnTogglePlayRegion(wxCommandEvent &evt);
+   void OnClearPlayRegion(wxCommandEvent &evt);
+   void OnSetPlayRegionToSelection(wxCommandEvent &evt);
 
    void OnPinnedButton(wxCommandEvent & event);
    void OnTogglePinnedState(wxCommandEvent & event);
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
-   bool mQuickPlayEnabled;
 
    enum MouseEventState {
       mesNone,
@@ -204,14 +199,15 @@ private:
    void CreateOverlays();
 
    // Cooperating objects
-   class QuickPlayIndicatorOverlay;
-   std::shared_ptr<QuickPlayIndicatorOverlay> mOverlay;
+   class TrackPanelGuidelineOverlay;
+   std::shared_ptr<TrackPanelGuidelineOverlay> mOverlay;
 
-   class QuickPlayRulerOverlay;
+   class ScrubbingRulerOverlay;
    
 private:
    class CommonRulerHandle;
    class QPHandle;
+   class PlayRegionAdjustingHandle;
    class ScrubbingHandle;
 
    class CommonCell;
@@ -226,11 +222,11 @@ private:
    struct Subgroup;
    struct MainGroup;
 
-   SelectedRegion mLastDrawnSelectedRegion;
-   bool mLastPlayRegionLocked = false;
+   std::pair<double, double> mLastDrawnPlayRegion{};
+   bool mLastPlayRegionActive = false;
    double mLastDrawnH{};
    double mLastDrawnZoom{};
-   bool mDirtySelectedRegion{};
+   bool mDirtyPlayRegion{};
 };
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__

@@ -16,8 +16,7 @@
 
 
 #include "Identifier.h"
-
-
+#include "Theme.h"
 
 #include <wx/app.h> // to inherit
 #include <wx/timer.h> // member variable
@@ -88,11 +87,11 @@ class AudacityApp final : public wxApp {
     void AssociateFileTypes();
    #endif
 
-#ifdef __WXMAC__
+   void SetPreferredSystemAppearance(PreferredSystemAppearance appearance);
 
+#ifdef __WXMAC__
    void MacActivateApp();
    void MacFinishLaunching();
-
 #endif
 
 

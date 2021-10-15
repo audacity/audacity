@@ -133,7 +133,7 @@ ThemeBase::~ThemeBase(void)
 }
 
 using ThemeCacheLookup =
-   std::map< EnumValueSymbol, const std::vector<unsigned char>& >;
+   std::map< EnumValueSymbol, const ThemeBase::RegisteredTheme& >;
 
 static ThemeCacheLookup &GetThemeCacheLookup()
 {
@@ -142,10 +142,13 @@ static ThemeCacheLookup &GetThemeCacheLookup()
 }
 
 ThemeBase::RegisteredTheme::RegisteredTheme(
-   EnumValueSymbol symbol, const std::vector<unsigned char> &data )
+   EnumValueSymbol symbol, PreferredSystemAppearance preferredSystemAppearance,
+   const std::vector<unsigned char> &data )
    : symbol{ symbol }
+   , preferredSystemAppearance { preferredSystemAppearance }
+   , data { data }
 {
-   GetThemeCacheLookup().emplace(symbol, data);
+   GetThemeCacheLookup().emplace(symbol, *this);
 }
 
 ThemeBase::RegisteredTheme::~RegisteredTheme()
@@ -212,6 +215,8 @@ void ThemeBase::LoadTheme( teThemeType Theme )
    // Next line is not required as we haven't yet built the GUI
    // when this function is (or should be) called.
    // ApplyUpdatedImages();
+   if(mOnPreferredSystemAppearanceChanged)
+      mOnPreferredSystemAppearanceChanged(mPreferredSystemAppearance);
 }
 
 void ThemeBase::RecolourBitmap( int iIndex, wxColour From, wxColour To )
@@ -796,6 +801,8 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 
    if( type.empty() )
    {
+      mPreferredSystemAppearance = PreferredSystemAppearance::Light;
+
       const auto &FileName = FileNames::ThemeCachePng();
       if( !wxFileExists( FileName ))
       {
@@ -826,8 +833,11 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
          iter = lookup.find({"classic", {}});
          wxASSERT(iter != end);
       }
-      ImageSize = iter->second.size();
-      pImage = iter->second.data();
+
+      mPreferredSystemAppearance = iter->second.preferredSystemAppearance;
+
+      ImageSize = iter->second.data.size();
+      pImage = iter->second.data.data();
       //wxLogDebug("Reading ImageCache %p size %i", pImage, ImageSize );
       wxMemoryInputStream InternalStream( pImage, ImageSize );
 
@@ -1142,6 +1152,16 @@ ChoiceSetting &GUITheme()
    };
 
    return setting;
+}
+
+ThemeBase::OnPreferredSystemAppearanceChanged
+ThemeBase::SetOnPreferredSystemAppearanceChanged(OnPreferredSystemAppearanceChanged handler)
+{
+   auto previous = std::move(mOnPreferredSystemAppearanceChanged);
+
+   mOnPreferredSystemAppearanceChanged = std::move(handler);
+
+   return std::move(previous);
 }
 
 BoolSetting GUIBlendThemes{ wxT("/GUI/BlendThemes"), true };

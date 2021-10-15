@@ -44,9 +44,10 @@ bool TextEditHelper::IsGoodEditKeyCode(int keyCode)
 TextEditHelper::TextEditHelper(const std::weak_ptr<TextEditDelegate>& delegate, const wxString& text, const wxFont& font)
     : mFont(font), 
     mDelegate(delegate), 
-    mText(text)
+    mText(text),
+    mInitialCursorPos(0)
 {
-    mCurrentCursorPos = mInitialCursorPos = text.Length();
+    mCurrentCursorPos = text.Length();
 }
 
 void TextEditHelper::SetTextColor(const wxColor& textColor)

@@ -19,5 +19,7 @@ static const std::vector<unsigned char> ImageCacheAsData {
 static ThemeBase::RegisteredTheme theme{
    /* i18n-hint: greater difference between foreground and
       background colors */
-   { "high-contrast", XO("High Contrast") }, ImageCacheAsData
+   { "high-contrast", XO("High Contrast") },
+   PreferredSystemAppearance::HighContrastDark,
+   ImageCacheAsData
 };

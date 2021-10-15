@@ -165,9 +165,24 @@ wxEvent *PlayRegionEvent::Clone() const
    return safenew PlayRegionEvent{ *this };
 }
 
+void PlayRegion::SetActive( bool active )
+{
+   mActive = active;
+   if (mActive) {
+      // Restore values
+      if (mStart != mLastActiveStart || mEnd != mLastActiveEnd) {
+         mStart = mLastActiveStart;
+         mEnd = mLastActiveEnd;
+         Notify();
+      }
+   }
+}
+
 void PlayRegion::SetStart( double start )
 {
    if (mStart != start) {
+      if (mActive)
+         mLastActiveStart = start;
       mStart = start;
       Notify();
    }
@@ -176,6 +191,8 @@ void PlayRegion::SetStart( double start )
 void PlayRegion::SetEnd( double end )
 {
    if (mEnd != end) {
+      if (mActive)
+         mLastActiveEnd = end;
       mEnd = end;
       Notify();
    }
@@ -184,15 +201,25 @@ void PlayRegion::SetEnd( double end )
 void PlayRegion::SetTimes( double start, double end )
 {
    if (mStart != start || mEnd != end) {
+      if (mActive)
+         mLastActiveStart = start, mLastActiveEnd = end;
       mStart = start, mEnd = end;
       Notify();
    }
+}
+
+void PlayRegion::SetAllTimes( double start, double end )
+{
+   SetTimes(start, end);
+   mLastActiveStart = start, mLastActiveEnd = end;
 }
 
 void PlayRegion::Order()
 {
    if ( mStart >= 0 && mEnd >= 0 && mStart > mEnd) {
       std::swap( mStart, mEnd );
+      if (mActive)
+         mLastActiveStart = mStart, mLastActiveEnd = mEnd;
       Notify();
    }
 }
@@ -202,6 +229,8 @@ void PlayRegion::Notify()
    PlayRegionEvent evt{ EVT_PLAY_REGION_CHANGE, this };
    ProcessEvent( evt );
 }
+
+const TranslatableString LoopToggleText = XXO("&Loop On/Off");
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
    []( AudacityProject &project ) {

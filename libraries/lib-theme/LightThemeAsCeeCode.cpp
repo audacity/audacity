@@ -18,5 +18,5 @@ static const std::vector<unsigned char> ImageCacheAsData {
 
 static ThemeBase::RegisteredTheme theme{
    /* i18n-hint: Light meaning opposite of dark */
-   { "light", XO("Light") }, ImageCacheAsData
+   { "light", XO("Light") }, PreferredSystemAppearance::Light, ImageCacheAsData
 };
