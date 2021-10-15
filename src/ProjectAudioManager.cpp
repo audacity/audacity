@@ -911,7 +911,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
             }
             //create a new clip with a proper name before recording is started
-            newTrack->CreateClip(.0, makeNewClipName(newTrack.get()));
+            newTrack->CreateClip(t0, makeNewClipName(newTrack.get()));
 
             TrackList::Get( *p ).RegisterPendingNewTrack( newTrack );
 
