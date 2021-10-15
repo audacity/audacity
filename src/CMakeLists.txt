@@ -808,6 +808,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h
       tracks/playabletrack/wavetrack/ui/WaveformView.cpp
       tracks/playabletrack/wavetrack/ui/WaveformView.h
+      tracks/playabletrack/wavetrack/WaveTrackUtils.cpp
+      tracks/playabletrack/wavetrack/WaveTrackUtils.h
       tracks/timetrack/ui/TimeTrackControls.cpp
       tracks/timetrack/ui/TimeTrackControls.h
       tracks/timetrack/ui/TimeTrackVRulerControls.cpp
