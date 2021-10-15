@@ -177,6 +177,7 @@ public:
 private:
    void BuildSubViews() const;
    void DoSetDisplay(Display display, bool exclusive = true);
+   bool SelectNextClip(ViewInfo& viewInfo, AudacityProject* project, bool forward);
 
    // TrackPanelDrawable implementation
    void Draw(

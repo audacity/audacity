@@ -94,7 +94,5 @@ private:
 
     unsigned ExitTextEditing();
 
-    bool SelectNextClip(ViewInfo& viewInfo, AudacityProject* project, bool forward);
-
     std::shared_ptr<TextEditHelper> MakeTextEditHelper(const wxString& text);
 };
