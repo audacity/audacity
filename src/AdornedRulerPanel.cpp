@@ -221,6 +221,7 @@ public:
    ScrubbingRulerOverlay(TrackPanelGuidelineOverlay &partner);
 
    int mNewQPIndicatorPos { -1 };
+   int mNewIndicatorSnapped { -1 };
 
    bool mNewScrub {};
    bool mNewSeek {};
@@ -272,11 +273,10 @@ private:
    std::shared_ptr<ScrubbingRulerOverlay> mPartner
       { std::make_shared<ScrubbingRulerOverlay>(*this) };
 
-   bool mNewIndicatorSnapped {};
    bool mNewPreviewingScrub {};
 
    int mOldQPIndicatorPos { -1 };
-   bool mOldIndicatorSnapped {};
+   int mOldIndicatorSnapped { -1 };
    bool mOldPreviewingScrub {};
 };
 
@@ -320,7 +320,16 @@ void AdornedRulerPanel::ScrubbingRulerOverlay::Update()
       else {
          // This will determine the x coordinate of the line and of the
          // ruler indicator
-         mNewQPIndicatorPos = ruler->Time2Pos(ruler->mQuickPlayPos[0]);
+
+         // Test all snap points
+         mNewIndicatorSnapped = -1;
+         for (size_t ii = 0;
+              mNewIndicatorSnapped == -1 && ii < ruler->mNumGuides; ++ii) {
+            if (ruler->mIsSnapped[ii]) {
+               mNewIndicatorSnapped = ii;
+               mNewQPIndicatorPos = ruler->Time2Pos(ruler->mQuickPlayPos[ii]);
+            }
+         }
 
          // These determine which shape is drawn on the ruler, and whether
          // in the scrub or the qp zone
@@ -407,12 +416,11 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Update()
    auto &scrubber = Scrubber::Get( *project );
    const auto ruler = &Get( *project );
 
-   // These two will determine the color of the line stroked over
+   // Determine the color of the line stroked over
    // the track panel, green for scrub or yellow for snapped or white
    mNewPreviewingScrub =
       ruler->LastCell() == ruler->mScrubbingCell &&
       !scrubber.IsScrubbing();
-   mNewIndicatorSnapped = ruler->mIsSnapped[0];
 }
 
 std::pair<wxRect, bool>
@@ -424,7 +432,7 @@ AdornedRulerPanel::TrackPanelGuidelineOverlay::DoGetRectangle(wxSize size)
    return std::make_pair(
       rect,
       (mOldQPIndicatorPos != mPartner->mNewQPIndicatorPos ||
-       mOldIndicatorSnapped != mNewIndicatorSnapped ||
+       mOldIndicatorSnapped != mPartner->mNewIndicatorSnapped ||
        mOldPreviewingScrub != mNewPreviewingScrub)
    );
 }
@@ -433,7 +441,7 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
    OverlayPanel &panel, wxDC &dc)
 {
    mOldQPIndicatorPos = mPartner->mNewQPIndicatorPos;
-   mOldIndicatorSnapped = mNewIndicatorSnapped;
+   mOldIndicatorSnapped = mPartner->mNewIndicatorSnapped;
    mOldPreviewingScrub = mNewPreviewingScrub;
 
    if (mOldQPIndicatorPos >= 0) {
