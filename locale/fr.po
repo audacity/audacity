@@ -4652,7 +4652,7 @@ msgstr ""
 "\n"
 "Pour sauvegarder toute piste précédemment ouverte :\n"
 "Annuler, Édition > Annuler, jusqu’à ce que toutes les pistes\n"
-"soient ouverte, puis Fichier > Sauvegarder le projet.\n"
+"soient ouvertes, puis Fichier > Sauvegarder le projet.\n"
 "\n"
 "Sauvegarder malgré tout ?"
 
