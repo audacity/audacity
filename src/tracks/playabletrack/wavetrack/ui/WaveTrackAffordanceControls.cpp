@@ -592,7 +592,7 @@ bool WaveTrackAffordanceControls::StartEditNameOfMatchingClip(
       [&](auto pClip){ return pClip && test && test(*pClip); });
     if (it != clips.end())
     {
-        mEditedClip = *it;
+        mFocusClip = *it;
         return StartEditClipName(&project);
     }
     return false;
