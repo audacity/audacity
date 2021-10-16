@@ -744,7 +744,7 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
    
    // Disable mouse actions on Timeline while recording.
    if (!mParent->mIsRecording) {
-      mParent->UpdateQuickPlayPos( xx, state.state.ShiftDown() );
+      mParent->UpdateQuickPlayPos( xx );
 
       #if 0
       auto result = std::make_shared<QPHandle>( mParent, xx );
@@ -872,7 +872,7 @@ std::vector<UIHandlePtr> AdornedRulerPanel::ScrubbingCell::HitTest(
    // Disable mouse actions on Timeline while recording.
    if (!mParent->mIsRecording) {
       auto xx = state.state.m_x;
-      mParent->UpdateQuickPlayPos( xx, state.state.ShiftDown() );
+      mParent->UpdateQuickPlayPos( xx );
       auto result = std::make_shared<ScrubbingHandle>( mParent, xx );
       result = AssignUIHandlePtr( mHolder, result );
       results.push_back( result );
@@ -1450,7 +1450,7 @@ auto AdornedRulerPanel::QPHandle::Drag(
       if (mClicked == Button::Left) {
          if ( mParent ) {
             mX = event.event.m_x;
-            mParent->UpdateQuickPlayPos( mX, event.event.ShiftDown() );
+            mParent->UpdateQuickPlayPos( mX );
             mParent->HandleQPDrag( event.event, mX );
          }
       }
@@ -1847,7 +1847,7 @@ void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
    UpdateButtonStates();
 }
 
-void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown)
+void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX)
 {
    // Keep Quick-Play within usable track area.
    const auto &viewInfo = ViewInfo::Get( *mProject );
@@ -1858,12 +1858,6 @@ void AdornedRulerPanel::UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown)
    mQuickPlayPosUnsnapped = mQuickPlayPos = Pos2Time(mousePosX);
 
    HandleSnapping();
-
-   // If not looping, restrict selection to end of project
-   if ((LastCell() == mQPCell || mQPCell->Clicked()) && !shiftDown) {
-      const double t1 = mTracks->GetEndTime();
-      mQuickPlayPos = std::min(t1, mQuickPlayPos);
-   }
 }
 
 // Pop-up menus

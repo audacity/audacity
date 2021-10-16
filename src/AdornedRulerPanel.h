@@ -67,7 +67,7 @@ public:
    void UpdatePrefs() override;
    void ReCreateButtons();
 
-   void UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown);
+   void UpdateQuickPlayPos(wxCoord &mousePosX);
 
    bool ShowingScrubRuler() const;
    //void OnToggleScrubRulerFromMenu(wxCommandEvent& );
