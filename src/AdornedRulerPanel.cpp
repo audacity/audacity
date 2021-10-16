@@ -165,6 +165,21 @@ protected:
       return viewInfo.PositionToTime(mX, viewInfo.GetLeftOffset());
    }
 
+   // Danger!  `this` may be deleted!
+   void StartPlay(AudacityProject &project, const wxMouseEvent &event)
+   {
+      auto &ruler = AdornedRulerPanel::Get(project);
+   
+      // Keep a shared pointer to self.  Otherwise *this might get deleted
+      // in HandleQPRelease on Windows!  Because there is an event-loop yield
+      // stopping playback, which caused OnCaptureLost to be called, which caused
+      // clearing of CellularPanel targets!
+      auto saveMe = ruler.Target();
+
+      const auto startTime = Time(project);
+      ruler.StartQPPlay(!event.ShiftDown(), false, &startTime);
+   }
+
    Result Cancel(AudacityProject *) override
    {
       return RefreshCode::DrawOverlays;
@@ -237,6 +252,10 @@ public:
    {
       using namespace RefreshCode;
       auto result = CommonRulerHandle::Release(event, pProject, pParent);
+
+      if (mClicked == Button::Left && !mDragged)
+         StartPlay(*pProject, event.event);
+
       if (!mDragged || 0 != (result & Cancelled))
          return result;
 
@@ -1813,7 +1832,7 @@ void AdornedRulerPanel::HandleQPRelease(wxMouseEvent &evt)
       }
    } );
 
-   StartQPPlay(evt.ShiftDown(), evt.ControlDown());
+   StartQPPlay(!evt.ShiftDown(), evt.ControlDown());
 }
 
 auto AdornedRulerPanel::QPHandle::Cancel(AudacityProject *pProject) -> Result
@@ -1839,26 +1858,28 @@ auto AdornedRulerPanel::QPHandle::Cancel(AudacityProject *pProject) -> Result
 }
 #endif
 
-void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
+void AdornedRulerPanel::StartQPPlay(
+   bool looped, bool cutPreview, const double *pStartTime)
 {
    const double t0 = mTracks->GetStartTime();
    const double t1 = mTracks->GetEndTime();
    auto &viewInfo = ViewInfo::Get( *mProject );
-   auto &playRegion = viewInfo.playRegion;
+   const auto &playRegion = viewInfo.playRegion;
    const auto &selectedRegion = viewInfo.selectedRegion;
    const double sel0 = selectedRegion.t0();
    const double sel1 = selectedRegion.t1();
 
    // Start / Restart playback on left click.
-   bool startPlaying = (playRegion.GetStart() >= 0);
+   bool startPlaying = true; // = (playRegion.GetStart() >= 0);
 
    if (startPlaying) {
       bool loopEnabled = true;
-      double start, end;
+      auto oldStart = std::max(0.0, playRegion.GetStart());
+      double start = oldStart, end = 0;
 
-      if (playRegion.Empty() && looped) {
-         // Loop play a point will loop either a selection or the project.
-         if ((playRegion.GetStart() > sel0) && (playRegion.GetStart() < sel1)) {
+      if (playRegion.Empty()) {
+         // Play either a selection or the project.
+         if (oldStart > sel0 && oldStart < sel1) {
             // we are in a selection, so use the selection
             start = sel0;
             end = sel1;
@@ -1868,21 +1889,22 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
             end = t1;
          }
       }
-      else {
-         start = playRegion.GetStart();
-         end = playRegion.GetEnd();
-      }
+      else
+         end = std::max(start, playRegion.GetEnd());
+
       // Looping a tiny selection may freeze, so just play it once.
       loopEnabled = ((end - start) > 0.001)? true : false;
 
-      bool looped = (loopEnabled && looped);
+      looped = (loopEnabled && looped);
       if (looped)
          cutPreview = false;
       auto options = DefaultPlayOptions( *mProject, looped );
 
-      auto oldStart = playRegion.GetStart();
-      if (!cutPreview)
+      if (!cutPreview) {
+         if (pStartTime)
+            oldStart = *pStartTime;
          options.pStartTime = &oldStart;
+      }
       else
          options.envelope = nullptr;
 
@@ -1896,9 +1918,9 @@ void AdornedRulerPanel::StartQPPlay(bool looped, bool cutPreview)
       auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
       projectAudioManager.Stop();
 
-      // Change play region display while playing
-      playRegion.SetTimes( start, end );
-      Refresh();
+      // Don't change play region, assume caller set it as needed
+      // playRegion.SetTimes( start, end );
+      // Refresh();
 
       projectAudioManager.PlayPlayRegion((SelectedRegion(start, end)),
                           options, mode,
