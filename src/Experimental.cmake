@@ -75,7 +75,7 @@ set( EXPERIMENTAL_OPTIONS_LIST
 
    #August 2009 - Theming not locked down enough for a stable release.
    # This turns on the Theme panel in Prefs dialog. It is independent of THEMING.
-   #THEME_PREFS
+   THEME_PREFS
 
    # This shows the zoom toggle button on the edit toolbar.
    ZOOM_TOGGLE_BUTTON

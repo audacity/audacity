@@ -125,7 +125,6 @@ void Theme::RegisterImagesAndColours()
 ThemeBase::ThemeBase(void)
 {
    bRecolourOnLoad = false;
-   bIsUsingSystemTextColour = false;
 }
 
 ThemeBase::~ThemeBase(void)
@@ -189,28 +188,32 @@ void ThemeBase::LoadTheme( teThemeType Theme )
 #endif
    }
 
+   // Post-processing steps after loading of the cache
+
+   // Two always overwritten images
    RotateImageInto( bmpRecordBeside, bmpRecordBelow, false );
    RotateImageInto( bmpRecordBesideDisabled, bmpRecordBelowDisabled, false );
 
-   if( bRecolourOnLoad )
+   // Other modifications of images happening only when the setting
+   // GUIBlendThemes is true
+   if ( bRecolourOnLoad ) {
       RecolourTheme();
 
-   wxColor Back        = theTheme.Colour( clrTrackInfo );
-   wxColor CurrentText = theTheme.Colour( clrTrackPanelText );
-   wxColor DesiredText = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT );
+      wxColor Back        = theTheme.Colour( clrTrackInfo );
+      wxColor CurrentText = theTheme.Colour( clrTrackPanelText );
+      wxColor DesiredText = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT );
 
-   int TextColourDifference =  ColourDistance( CurrentText, DesiredText );
+      int TextColourDifference =  ColourDistance( CurrentText, DesiredText );
 
-   bIsUsingSystemTextColour = ( TextColourDifference == 0 );
-   // Theming is very accepting of alternative text colours.  They just need to 
-   // have decent contrast to the background colour, if we're blending themes. 
-   if( !bIsUsingSystemTextColour ){
-      int ContrastLevel        =  ColourDistance( Back, DesiredText );
-      bIsUsingSystemTextColour = bRecolourOnLoad && (ContrastLevel > 250);
-      if( bIsUsingSystemTextColour )
-         Colour( clrTrackPanelText ) = DesiredText;
+      // Theming is very accepting of alternative text colours.  They just need to
+      // have decent contrast to the background colour, if we're blending themes.
+      if ( TextColourDifference != 0 ) {
+         int ContrastLevel        =  ColourDistance( Back, DesiredText );
+         if ( ContrastLevel > 250 )
+            Colour( clrTrackPanelText ) = DesiredText;
+      }
+      bRecolourOnLoad = false;
    }
-   bRecolourOnLoad = false;
 
    // Next line is not required as we haven't yet built the GUI
    // when this function is (or should be) called.
