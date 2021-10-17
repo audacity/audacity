@@ -213,10 +213,16 @@ void ThemeBase::LoadTheme( teThemeType Theme )
       mpSet->bRecolourOnLoad = false;
    }
 
+
    // Next line is not required as we haven't yet built the GUI
    // when this function is (or should be) called.
    // ApplyUpdatedImages();
-   if(mOnPreferredSystemAppearanceChanged)
+
+   // The next step doesn't post-process the theme data.  It only modifies
+   // system settings.  So it is not necessary to make it conditional on
+   // preferences, for avoidance of errors in the use of Theme preferences.
+   // (See commit 2020217)
+   if (mOnPreferredSystemAppearanceChanged)
       mOnPreferredSystemAppearanceChanged(mPreferredSystemAppearance);
 }
 
