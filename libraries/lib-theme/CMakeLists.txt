@@ -13,8 +13,8 @@ set( SOURCES
    ClassicThemeAsCeeCode.h
    DarkThemeAsCeeCode.cpp
    DarkThemeAsCeeCode.h
-   HiContrastThemeAsCeeCode.cpp
-   HiContrastThemeAsCeeCode.h
+   HighContrastThemeAsCeeCode.cpp
+   HighContrastThemeAsCeeCode.h
    ImageManipulation.cpp
    ImageManipulation.h
    LightThemeAsCeeCode.cpp

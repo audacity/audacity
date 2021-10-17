@@ -356,46 +356,6 @@ FilePath FileNames::ModulesDir()
    return modulesDir.GetFullPath();
 }
 
-FilePath FileNames::ThemeDir()
-{
-   return FileNames::MkDir( wxFileName( DataDir(), wxT("Theme") ).GetFullPath() );
-}
-
-FilePath FileNames::ThemeComponentsDir()
-{
-   return FileNames::MkDir( wxFileName( ThemeDir(), wxT("Components") ).GetFullPath() );
-}
-
-FilePath FileNames::ThemeCachePng()
-{
-   return wxFileName( ThemeDir(), wxT("ImageCache.png") ).GetFullPath();
-}
-
-FilePath FileNames::ThemeCacheHtm()
-{
-   return wxFileName( ThemeDir(), wxT("ImageCache.htm") ).GetFullPath();
-}
-
-FilePath FileNames::ThemeImageDefsAsCee()
-{
-   return wxFileName( ThemeDir(), wxT("ThemeImageDefsAsCee.h") ).GetFullPath();
-}
-
-FilePath FileNames::ThemeCacheAsCee( )
-{
-// DA: Theme sourcery file name.
-#ifndef EXPERIMENTAL_DA
-   return wxFileName( ThemeDir(), wxT("ThemeAsCeeCode.h") ).GetFullPath();
-#else
-   return wxFileName( ThemeDir(), wxT("DarkThemeAsCeeCode.h") ).GetFullPath();
-#endif
-}
-
-FilePath FileNames::ThemeComponent(const wxString &Str)
-{
-   return wxFileName( ThemeComponentsDir(), Str, wxT("png") ).GetFullPath();
-}
-
 //
 // Returns the full path of program module (.exe, .dll, .so, .dylib) containing address
 //
