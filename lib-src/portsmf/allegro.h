@@ -1010,7 +1010,7 @@ public:
     // Prepare to enumerate events in order. If note_off_flag is true, then
     // iteration_next will merge note-off events into the sequence. If you
     // call begin(), you should not normally call begin_seq(). See above.
-    void begin(void *cookie = NULL) { begin_seq(seq, cookie); }
+    void begin(void *aCookie = NULL) { begin_seq(seq, aCookie); }
     // return next event (or NULL). If iteration_begin was called with
     // note_off_flag = true, and if note_on is not NULL, then *note_on
     // is set to true when the result value represents a note-on or update.
