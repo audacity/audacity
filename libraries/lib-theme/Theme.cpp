@@ -87,6 +87,9 @@ Theme::~Theme(void)
 }
 
 namespace {
+// Side of a square painted in one of the theme colours in image caches
+constexpr int iColSize = 10;
+
 wxString ThemeFilePrefix( teThemeType id )
 {
    auto strings = wxSplit(id.GET(), L'-');
@@ -666,7 +669,6 @@ bool ThemeBase::CreateOneImageCache( teThemeType id, bool bBinarySave )
    int x,y;
 
    context.SetColourGroup();
-   const int iColSize = 10;
    for (size_t i = 0; i < resources.mColours.size(); ++i)
    {
       context.GetNextPosition( iColSize, iColSize );
@@ -817,7 +819,6 @@ void ThemeBase::WriteOneImageMap( teThemeType id )
    }
    // Now save the colours.
    context.SetColourGroup();
-   const int iColSize = 10;
    for (size_t i = 0; i < resources.mColours.size(); ++i)
    {
       context.GetNextPosition( iColSize, iColSize );
@@ -994,7 +995,6 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    int x,y;
    context.SetColourGroup();
    wxColour TempColour;
-   const int iColSize=10;
    for (size_t i = 0; i < resources.mColours.size(); ++i)
    {
       context.GetNextPosition( iColSize, iColSize );
@@ -1122,16 +1122,21 @@ bool ThemeBase::SaveOneThemeComponents( teThemeType id )
 
    int n=0;
    FilePath FileName;
-   for (size_t i = 0; i < resources.mImages.size(); ++i)
-   {
-      if( !(mBitmapFlags[i] & resFlagInternal) )
-      {
+   for (size_t i = 0; i < resources.mImages.size(); ++i) {
+      if ( !(mBitmapFlags[i] & resFlagInternal) ) {
          FileName = ThemeComponent( dir, mBitmapNames[i] );
-         if( wxFileExists( FileName ))
-         {
+         if ( wxFileExists( FileName ) ) {
             ++n;
             break;
          }
+      }
+   }
+
+   for (size_t i = 0; i < resources.mColours.size(); ++i) {
+      FileName = ThemeComponent( dir, mColourNames[i] );
+      if ( wxFileExists( FileName ) ) {
+         ++n;
+         break;
       }
    }
 
@@ -1151,18 +1156,30 @@ bool ThemeBase::SaveOneThemeComponents( teThemeType id )
          return false;
    }
 
-   for (size_t i = 0; i < resources.mImages.size(); ++i)
-   {
-      if( !(mBitmapFlags[i] & resFlagInternal) )
-      {
+   for (size_t i = 0; i < resources.mImages.size(); ++i) {
+      if( !(mBitmapFlags[i] & resFlagInternal) ) {
          FileName = ThemeComponent( dir, mBitmapNames[i] );
-         if( !resources.mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
-         {
+         if( !resources.mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG )) {
             ShowMessageBox(
                XO("Audacity could not save file:\n  %s")
                   .Format( FileName ));
             return false;
          }
+      }
+   }
+
+   wxImage littleSquare{ iColSize, iColSize };
+   wxRect littleRect{ wxSize{ iColSize, iColSize } };
+   for (size_t i = 0; i < resources.mColours.size(); ++i) {
+      const auto &colour = resources.mColours[i];
+      littleSquare.SetRGB( littleRect,
+         colour.Red(), colour.Green(), colour.Blue() );
+      FileName = ThemeComponent( dir, mColourNames[i] );
+      if( !littleSquare.SaveFile( FileName, wxBITMAP_TYPE_PNG )) {
+         ShowMessageBox(
+            XO("Audacity could not save file:\n  %s")
+               .Format( FileName ));
+         return false;
       }
    }
    return true;
