@@ -1,4 +1,4 @@
-///   @file HiContrastThemeAsCeeCode.h
+///   @file HighContrastThemeAsCeeCode.h
 ///   @brief This file was Auto-Generated.
 ///
 ///   It is included by Theme.cpp.

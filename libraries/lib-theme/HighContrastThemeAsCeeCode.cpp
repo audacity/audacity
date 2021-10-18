@@ -2,7 +2,7 @@
  
  Audacity: A Digital Audio Editor
  
- @file HiContrastThemeAsCeeCode.cpp
+ @file HighContrastThemeAsCeeCode.cpp
  
  Paul Licameli split from Theme.cpp
  
@@ -13,7 +13,7 @@
 
 static const std::vector<unsigned char> ImageCacheAsData {
 // Include the generated file full of numbers
-#include "HiContrastThemeAsCeeCode.h"
+#include "HighContrastThemeAsCeeCode.h"
 };
 
 static ThemeBase::RegisteredTheme theme{
