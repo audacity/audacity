@@ -20,7 +20,7 @@ For example DEFINE_IMAGE will generate:
 
   - extern int name;
   - int name = -1;
-  - RegisterImage( myFlags, name, initialiser, textual_name);
+  - RegisterImage( allNames, myFlags, name, initialiser, textual_name);
 
 On three different passes.  We control which by defining one of
 THEME_INITS or THEME_DECLARATIONS or neither of these.
@@ -40,9 +40,9 @@ using teBmps = int; /// The index of a bitmap resource in Theme Resources.
 
 #ifdef THEME_INITS
 #define DEFINE_IMAGE( name, initialiser, textual_name ) \
-   theTheme.RegisterImage( myFlags, name, initialiser, textual_name );
+   theTheme.RegisterImage( allNames, myFlags, name, initialiser, textual_name );
 #define DEFINE_COLOUR( name, initialiser, textual_name )\
-   theTheme.RegisterColour( name, initialiser, textual_name );
+   theTheme.RegisterColour( allNames, name, initialiser, textual_name );
 #define SET_THEME_FLAGS( flags ) ( myFlags = flags );
 #undef THEME_DECLARATIONS
 #undef THEME_EXTERNS

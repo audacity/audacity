@@ -287,7 +287,7 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrHzPlot,               wxColour(140, 60, 190),    wxT("HzPlot") );
    DEFINE_COLOUR( clrWavelengthPlot,       wxColour(200, 50, 150),    wxT("WavelengthPlot") );
 
-   DEFINE_COLOUR( clrEnvelope,             wxColour( 110, 110, 220),  wxT("Envelope") );
+   DEFINE_COLOUR( clrEnvelope,             wxColour( 110, 110, 220),  wxT("EnvelopeColour") );
 
    DEFINE_COLOUR( clrMuteButtonActive,     wxColour( 160, 170, 210),  wxT("MuteButtonActive") );
    DEFINE_COLOUR( clrMuteButtonVetoed,     wxColour( 180, 180, 185),  wxT("MuteButtonVetoed") );
