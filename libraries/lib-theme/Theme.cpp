@@ -411,32 +411,39 @@ void ThemeBase::RegisterImage( int &flags, int &iIndex, const wxImage &Image, co
    resources.mBitmaps.push_back( wxBitmap( Image ) );
 #endif
 
-   resources.mBitmapNames.push_back( Name );
-   resources.mBitmapFlags.push_back( flags );
    flags &= ~resFlagSkip;
    auto index = resources.mBitmaps.size() - 1;
-   if (iIndex == -1)
+   if (iIndex == -1) {
       // First time assignment of global variable identifying an image
       iIndex = index;
-   else
+      mBitmapNames.push_back( Name );
+      mBitmapFlags.push_back( flags );
+   }
+   else {
       // If revisiting for another theme set,
       // images should be re-done in the same sequence
       wxASSERT(iIndex == index);
+      wxASSERT(mBitmapNames[index] == Name);
+      wxASSERT(mBitmapFlags[index] == flags);
+   }
 }
 
 void ThemeBase::RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name )
 {
    auto &resources = *mpSet;
    resources.mColours.push_back( Clr );
-   resources.mColourNames.push_back( Name );
    auto index = resources.mColours.size() - 1;
-   if (iIndex == -1)
+   if (iIndex == -1) {
       // First time assignment of global variable identifying a colour
       iIndex = index;
-   else
+      mColourNames.push_back( Name );
+   }
+   else {
       // If revisiting for another theme set,
       // colours should be re-done in the same sequence
       wxASSERT(iIndex == index);
+      wxASSERT(mColourNames[index] == Name);
+   }
 }
 
 FlowPacker::FlowPacker(int width)
@@ -626,8 +633,8 @@ bool ThemeBase::CreateOneImageCache( teThemeType id, bool bBinarySave )
    for (size_t i = 0; i < resources.mImages.size() ; ++i)
    {
       wxImage &SrcImage = resources.mImages[i];
-      context.mFlags = resources.mBitmapFlags[i];
-      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
+      context.mFlags = mBitmapFlags[i];
+      if( !(mBitmapFlags[i] & resFlagInternal) )
       {
          context.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
          ImageCache.SetRGB( context.Rect(), 0xf2, 0xb0, 0x27 );
@@ -788,15 +795,15 @@ void ThemeBase::WriteOneImageMap( teThemeType id )
    for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
       wxImage &SrcImage = resources.mImages[i];
-      context.mFlags = resources.mBitmapFlags[i];
-      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
+      context.mFlags = mBitmapFlags[i];
+      if( !(mBitmapFlags[i] & resFlagInternal) )
       {
          context.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
          // No href in html.  Uses title not alt.
          wxRect R( context.RectInner() );
          File.Write( wxString::Format(
             wxT("<area title=\"Bitmap:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
-            resources.mBitmapNames[i],
+            mBitmapNames[i],
             R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
       }
    }
@@ -809,7 +816,7 @@ void ThemeBase::WriteOneImageMap( teThemeType id )
       // No href in html.  Uses title not alt.
       wxRect R( context.RectInner() );
       File.Write( wxString::Format( wxT("<area title=\"Colour:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
-         resources.mColourNames[i],
+         mColourNames[i],
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
    }
    File.Write( wxT("</map>\r\n") );
@@ -835,9 +842,9 @@ void ThemeBase::WriteImageDefs( )
    {
       wxImage &SrcImage = resources.mImages[i];
       // No href in html.  Uses title not alt.
-      if( PrevFlags != resources.mBitmapFlags[i] )
+      if( PrevFlags != mBitmapFlags[i] )
       {
-         PrevFlags = (teResourceFlags)resources.mBitmapFlags[i];
+         PrevFlags = (teResourceFlags)mBitmapFlags[i];
          int t = (int)PrevFlags;
          wxString Temp;
          if( t==0 ) Temp = wxT(" resFlagNone ");
@@ -852,10 +859,10 @@ void ThemeBase::WriteImageDefs( )
       }
       File.Write( wxString::Format(
          wxT("   DEFINE_IMAGE( bmp%s, wxImage( %i, %i ), wxT(\"%s\"));\r\n"),
-         resources.mBitmapNames[i],
+         mBitmapNames[i],
          SrcImage.GetWidth(),
          SrcImage.GetHeight(),
-         resources.mBitmapNames[i]
+         mBitmapNames[i]
          ));
    }
 }
@@ -961,8 +968,8 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
       wxImage &Image = resources.mImages[i];
-      context.mFlags = resources.mBitmapFlags[i];
-      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
+      context.mFlags = mBitmapFlags[i];
+      if( !(mBitmapFlags[i] & resFlagInternal) )
       {
          context.GetNextPosition( Image.GetWidth(),Image.GetHeight() );
          wxRect R = context.RectInner();
@@ -1027,9 +1034,9 @@ void ThemeBase::LoadOneThemeComponents( teThemeType id, bool bOkIfNotFound )
    FilePath FileName;
    for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
-      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
+      if( !(mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = ThemeComponent( dir, resources.mBitmapNames[i] );
+         FileName = ThemeComponent( dir, mBitmapNames[i] );
          if( wxFileExists( FileName ))
          {
             if( !resources.mImages[i].LoadFile( FileName, wxBITMAP_TYPE_PNG ))
@@ -1109,9 +1116,9 @@ bool ThemeBase::SaveOneThemeComponents( teThemeType id )
    FilePath FileName;
    for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
-      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
+      if( !(mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = ThemeComponent( dir, resources.mBitmapNames[i] );
+         FileName = ThemeComponent( dir, mBitmapNames[i] );
          if( wxFileExists( FileName ))
          {
             ++n;
@@ -1138,9 +1145,9 @@ bool ThemeBase::SaveOneThemeComponents( teThemeType id )
 
    for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
-      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
+      if( !(mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = ThemeComponent( dir, resources.mBitmapNames[i] );
+         FileName = ThemeComponent( dir, mBitmapNames[i] );
          if( !resources.mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
          {
             ShowMessageBox(

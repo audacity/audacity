@@ -99,11 +99,7 @@ struct ThemeSet
    // wxImage, wxBitmap copy cheaply using reference counting
    std::vector<wxImage> mImages;
    std::vector<wxBitmap> mBitmaps;
-   wxArrayString mBitmapNames;
-   std::vector<int> mBitmapFlags;
-
    std::vector<wxColour> mColours;
-   wxArrayString mColourNames;
 
    bool bInitialised = false;
    bool bRecolourOnLoad = false;  // Request to recolour.
@@ -182,13 +178,8 @@ public:
    void DeleteUnusedThemes();
 
 protected:
-   // wxImage, wxBitmap copy cheaply using reference counting
-   std::vector<wxImage> mImages;
-   std::vector<wxBitmap> mBitmaps;
    wxArrayString mBitmapNames;
    std::vector<int> mBitmapFlags;
-
-   std::vector<wxColour> mColours;
    wxArrayString mColourNames;
 
    PreferredSystemAppearance mPreferredSystemAppearance { PreferredSystemAppearance::Light };
