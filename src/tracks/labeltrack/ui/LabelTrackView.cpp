@@ -1338,21 +1338,28 @@ static bool IsGoodLabelEditKey(const wxKeyEvent & evt)
 bool LabelTrackView::DoCaptureKey(
    AudacityProject &project, wxKeyEvent & event )
 {
-   // Check for modifiers and only allow shift
    int mods = event.GetModifiers();
+   auto code = event.GetKeyCode();
+   const auto pTrack = FindLabelTrack();
+   const auto& mLabels = pTrack->GetLabels();
+
+   // Allow hardcoded Ctrl+F2 for renaming the selected label,
+   // if we have any labels
+   if (code == WXK_F2 && mods == wxMOD_CONTROL && !mLabels.empty()) {
+      return true;
+   }
+
+   // Check for modifiers and only allow shift
    if (mods != wxMOD_NONE && mods != wxMOD_SHIFT) {
       return false;
    }
 
    // Always capture the navigation keys, if we have any labels
-   auto code = event.GetKeyCode();
-   const auto pTrack = FindLabelTrack();
-   const auto &mLabels = pTrack->GetLabels();
    if ((code == WXK_TAB || code == WXK_NUMPAD_TAB) &&
        !mLabels.empty())
       return true;
 
-   if (IsValidIndex(mTextEditIndex, project) || IsValidIndex(mNavigationIndex, project)) {
+   if (IsValidIndex(mTextEditIndex, project)) {
       if (IsGoodLabelEditKey(event)) {
          return true;
       }
@@ -1500,7 +1507,9 @@ bool LabelTrackView::DoKeyDown(
    const int mods = event.GetModifiers();
 
    // Check for modifiers and only allow shift
-   if (mods != wxMOD_NONE && mods != wxMOD_SHIFT) {
+   // except in the case of F2, so hardcoded Ctrl+F2 can
+   // be used for renaming a label
+   if (keyCode != WXK_F2 && mods != wxMOD_NONE && mods != wxMOD_SHIFT) {
       event.Skip();
       return updated;
    }
@@ -1747,11 +1756,10 @@ bool LabelTrackView::DoKeyDown(
             }
          }
          break;
-      case WXK_RETURN:
-      case WXK_NUMPAD_ENTER:
-         //pressing Enter key activates editing of the label
-         //pointed to by mNavigationIndex (if valid)
-         if (IsValidIndex(mNavigationIndex, project)) {
+      case WXK_F2:
+         // Hardcoded Ctrl+F2 activates editing of the label
+         // pointed to by mNavigationIndex (if valid)
+         if ((mods == wxMOD_CONTROL) && IsValidIndex(mNavigationIndex, project)) {
              SetTextSelection(mNavigationIndex);
          }
          break;
