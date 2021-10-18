@@ -1029,6 +1029,10 @@ void ThemeBase::LoadThemeComponents( bool bOkIfNotFound )
 
 void ThemeBase::LoadOneThemeComponents( teThemeType id, bool bOkIfNotFound )
 {
+   auto BadPngMessage = XO(
+/* i18n-hint: Do not translate png.  It is the name of a file format.*/
+"Audacity could not load file:\n  %s.\nBad png format perhaps?");
+
    SwitchTheme( id );
    auto &resources = *mpSet;
    // IF directory doesn't exist THEN return early.
@@ -1049,11 +1053,7 @@ void ThemeBase::LoadOneThemeComponents( teThemeType id, bool bOkIfNotFound )
          {
             if( !resources.mImages[i].LoadFile( FileName, wxBITMAP_TYPE_PNG ))
             {
-               ShowMessageBox(
-                  XO(
-               /* i18n-hint: Do not translate png.  It is the name of a file format.*/
-"Audacity could not load file:\n  %s.\nBad png format perhaps?")
-                     .Format( FileName ));
+               ShowMessageBox(BadPngMessage.Format( FileName ));
                return;
             }
             /// JKC: \bug (wxWidgets) A png may have been saved with alpha, but when you
@@ -1068,6 +1068,26 @@ void ThemeBase::LoadOneThemeComponents( teThemeType id, bool bOkIfNotFound )
             resources.mBitmaps[i] = wxBitmap( resources.mImages[i] );
             n++;
          }
+      }
+   }
+
+   for (size_t i = 0; i < resources.mColours.size(); ++i)
+   {
+      FileName = ThemeComponent( dir, mColourNames[i] );
+      if ( wxFileExists( FileName ) ) {
+         wxImage littleImage;
+         if ( !littleImage.LoadFile( FileName, wxBITMAP_TYPE_PNG ) ) {
+            ShowMessageBox( BadPngMessage.Format( FileName ));
+            return;
+         }
+         // Sample the little square in the middle
+         constexpr auto coord = iColSize / 2;
+         resources.mColours[i] = {
+            littleImage.GetRed(coord, coord),
+            littleImage.GetGreen(coord, coord),
+            littleImage.GetBlue(coord, coord)
+         };
+         n++;
       }
    }
    if( n==0 )
