@@ -59,7 +59,7 @@ most commonly asked questions about Audacity.
 
 namespace
 {
-const char* WhatsNewURL = "https://youtube.com";
+const char* WhatsNewURL = "https://audacityteam.org/3.1.0-video";
 
 #   include "../images/WhatsNewBtn.png.h"
 
@@ -86,6 +86,10 @@ private:
 };
 
 } // namespace
+
+constexpr int HTMLWindowHeight = 425;
+#else
+constexpr int HTMLWindowHeight = 280;
 #endif
 
 SplashDialog * SplashDialog::pSelf=NULL;
@@ -167,8 +171,7 @@ void SplashDialog::Populate( ShuttleGui & S )
       .AddWindow( icon );
 
    mpHtml = safenew LinkingHtmlWindow(S.GetParent(), -1,
-                                         wxDefaultPosition,
-                                         wxSize(506, 280),
+                                         wxDefaultPosition, wxSize(506, HTMLWindowHeight),
                                          wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER );
    mpHtml->SetPage(HelpText( wxT("welcome") ));
    S.Prop(1)
