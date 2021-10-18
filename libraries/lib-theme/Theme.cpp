@@ -160,6 +160,7 @@ void Theme::RegisterImagesAndColours()
 // This initialises the variables e.g
 // RegisterImage( myFlags, bmpRecordButton, some image, wxT("RecordButton"));
    int myFlags = resFlagPaired;
+   NameSet allNames;
 #define THEME_INITS
 #include "AllThemeResources.h"
 
@@ -378,7 +379,8 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 // Bit depth and mask needs review.
 // Note that XPMs don't offer translucency, so unsuitable for a round shape overlay, 
 // for example.
-void ThemeBase::RegisterImage( int &flags, int &iIndex, char const ** pXpm, const wxString & Name )
+void ThemeBase::RegisterImage( NameSet &allNames,
+   int &flags, int &iIndex, char const ** pXpm, const wxString & Name )
 {
    wxBitmap Bmp( pXpm );
    wxImage Img( Bmp.ConvertToImage() );
@@ -390,10 +392,11 @@ void ThemeBase::RegisterImage( int &flags, int &iIndex, char const ** pXpm, cons
    //wxBitmap Bmp2( Img, 32 );
    //wxBitmap Bmp2( Img );
 
-   RegisterImage( flags, iIndex, Img, Name );
+   RegisterImage( allNames, flags, iIndex, Img, Name );
 }
 
-void ThemeBase::RegisterImage( int &flags, int &iIndex, const wxImage &Image, const wxString & Name )
+void ThemeBase::RegisterImage( NameSet &allNames,
+   int &flags, int &iIndex, const wxImage &Image, const wxString & Name )
 {
    auto &resources = *mpSet;
    resources.mImages.push_back( Image );
@@ -418,6 +421,8 @@ void ThemeBase::RegisterImage( int &flags, int &iIndex, const wxImage &Image, co
       iIndex = index;
       mBitmapNames.push_back( Name );
       mBitmapFlags.push_back( flags );
+      if (!allNames.insert(Name).second)
+         wxASSERT(false);
    }
    else {
       // If revisiting for another theme set,
@@ -428,7 +433,8 @@ void ThemeBase::RegisterImage( int &flags, int &iIndex, const wxImage &Image, co
    }
 }
 
-void ThemeBase::RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name )
+void ThemeBase::RegisterColour( NameSet &allNames,
+   int &iIndex, const wxColour &Clr, const wxString & Name )
 {
    auto &resources = *mpSet;
    resources.mColours.push_back( Clr );
@@ -437,6 +443,8 @@ void ThemeBase::RegisterColour( int &iIndex, const wxColour &Clr, const wxString
       // First time assignment of global variable identifying a colour
       iIndex = index;
       mColourNames.push_back( Name );
+      if (!allNames.insert(Name).second)
+         wxASSERT(false);
    }
    else {
       // If revisiting for another theme set,
