@@ -98,7 +98,7 @@ void EditToolBar::AddSeparator()
 /// Very similar to code in ControlToolBar...
 AButton *EditToolBar::AddButton(
    EditToolBar *pBar,
-   teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+   ImageId eEnabledUp, ImageId eEnabledDown, ImageId eDisabled,
    int id,
    const TranslatableString &label,
    bool toggle)

@@ -165,7 +165,7 @@ void TranscriptionToolBar::SetPlaySpeed( double value )
 /// Very similar to code in ControlToolBar...
 AButton *TranscriptionToolBar::AddButton(
    TranscriptionToolBar *pBar,
-   teBmps eFore, teBmps eDisabled,
+   ImageId eFore, ImageId eDisabled,
    int id,
    const TranslatableString &label)
 {
@@ -189,7 +189,7 @@ AButton *TranscriptionToolBar::AddButton(
 }
 
 void TranscriptionToolBar::MakeAlternateImages(
-   teBmps eFore, teBmps eDisabled,
+   ImageId eFore, ImageId eDisabled,
    int id, unsigned altIdx)
 {
    ToolBar::MakeAlternateImages(*mButtons[id], altIdx,

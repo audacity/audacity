@@ -151,13 +151,13 @@ public:
  public:
    static
    AButton *MakeButton(wxWindow *parent,
-                       teBmps eUp,
-                       teBmps eDown,
-                       teBmps eHilite,
-                       teBmps eDownHi,
-                       teBmps eStandardUp,
-                       teBmps eStandardDown,
-                       teBmps eDisabled,
+                       ImageId eUp,
+                       ImageId eDown,
+                       ImageId eHilite,
+                       ImageId eDownHi,
+                       ImageId eStandardUp,
+                       ImageId eStandardDown,
+                       ImageId eDisabled,
                        wxWindowID id,
                        wxPoint placement,
                        bool processdownevents,
@@ -166,22 +166,22 @@ public:
 
    static
    AButton *MakeButton(ToolBar *parent,
-                       teBmps eEnabledUp,
-                       teBmps eEnabledDown,
-                       teBmps eDisabled,
-                       int id,
-                       bool processdownevents,
-                       const TranslatableString &label);
+      ImageId eEnabledUp,
+      ImageId eEnabledDown,
+      ImageId eDisabled,
+      int id,
+      bool processdownevents,
+      const TranslatableString &label);
 
    static
    void MakeAlternateImages(AButton &button, int idx,
-                            teBmps eUp,
-                            teBmps eDown,
-                            teBmps eHilite,
-                            teBmps eDownHi,
-                            teBmps eStandardUp,
-                            teBmps eStandardDown,
-                            teBmps eDisabled,
+                            ImageId eUp,
+                            ImageId eDown,
+                            ImageId eHilite,
+                            ImageId eDownHi,
+                            ImageId eStandardUp,
+                            ImageId eStandardDown,
+                            ImageId eDisabled,
                             wxSize size);
 
    static
@@ -198,10 +198,10 @@ public:
  protected:
    void SetButton(bool down, AButton *button);
 
-   static void MakeMacRecoloredImage(teBmps eBmpOut, teBmps eBmpIn);
-   static void MakeMacRecoloredImageSize(teBmps eBmpOut, teBmps eBmpIn, const wxSize& size);
-   static void MakeRecoloredImage(teBmps eBmpOut, teBmps eBmpIn);
-   static void MakeRecoloredImageSize(teBmps eBmpOut, teBmps eBmpIn, const wxSize& size);
+   static void MakeMacRecoloredImage(ImageId eBmpOut, ImageId eBmpIn);
+   static void MakeMacRecoloredImageSize(ImageId eBmpOut, ImageId eBmpIn, const wxSize& size);
+   static void MakeRecoloredImage(ImageId eBmpOut, ImageId eBmpIn);
+   static void MakeRecoloredImageSize(ImageId eBmpOut, ImageId eBmpIn, const wxSize& size);
 
    wxBoxSizer *GetSizer();
 

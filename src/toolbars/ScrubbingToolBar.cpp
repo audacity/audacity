@@ -84,7 +84,7 @@ void ScrubbingToolBar::Create(wxWindow * parent)
 /// Very similar to code in ControlToolBar...
 AButton *ScrubbingToolBar::AddButton
 (ScrubbingToolBar *pBar,
- teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+ ImageId eEnabledUp, ImageId eEnabledDown, ImageId eDisabled,
  int id,
  const TranslatableString &label,
  bool toggle)

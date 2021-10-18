@@ -14,6 +14,7 @@ set( SOURCES
    MacroMagic.h
    Theme.cpp
    Theme.h
+   ThemeIds.h
 )
 set( LIBRARIES
    lib-files-interface

@@ -762,24 +762,24 @@ void ToolBar::Detach( wxSizer *sizer )
    mHSizer->Detach( sizer );
 }
 
-void ToolBar::MakeMacRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
+void ToolBar::MakeMacRecoloredImage( ImageId eBmpOut, ImageId eBmpIn )
 {
    theTheme.ReplaceImage( eBmpOut, &theTheme.Image( eBmpIn ));
 }
 
-void ToolBar::MakeMacRecoloredImageSize(teBmps eBmpOut, teBmps eBmpIn, const wxSize& size)
+void ToolBar::MakeMacRecoloredImageSize(ImageId eBmpOut, ImageId eBmpIn, const wxSize& size)
 {
    MakeMacRecoloredImage( eBmpOut, eBmpIn );
    theTheme.Image( eBmpOut ).Rescale( size.GetWidth(), size.GetHeight() );
 }
 
-void ToolBar::MakeRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
+void ToolBar::MakeRecoloredImage( ImageId eBmpOut, ImageId eBmpIn )
 {
    // Don't recolour the buttons...
    MakeMacRecoloredImage( eBmpOut, eBmpIn );
 }
 
-void ToolBar::MakeRecoloredImageSize(teBmps eBmpOut, teBmps eBmpIn, const wxSize& size)
+void ToolBar::MakeRecoloredImageSize(ImageId eBmpOut, ImageId eBmpIn, const wxSize& size)
 {
    MakeRecoloredImage( eBmpOut, eBmpIn );
    theTheme.Image( eBmpOut ).Rescale( size.GetWidth(), size.GetHeight() );
@@ -850,13 +850,13 @@ void ToolBar::MakeButtonBackgroundsSmall()
 /// @param processdownevents true iff button handles down events.
 /// @param size              Size of the background.
 AButton * ToolBar::MakeButton(wxWindow *parent,
-                              teBmps eUp,
-                              teBmps eDown,
-                              teBmps eHilite,
-                              teBmps eDownHi,
-                              teBmps eStandardUp,
-                              teBmps eStandardDown,
-                              teBmps eDisabled,
+                              ImageId eUp,
+                              ImageId eDown,
+                              ImageId eHilite,
+                              ImageId eDownHi,
+                              ImageId eStandardUp,
+                              ImageId eStandardDown,
+                              ImageId eDisabled,
                               wxWindowID id,
                               wxPoint placement,
                               bool processdownevents,
@@ -891,12 +891,12 @@ AButton * ToolBar::MakeButton(wxWindow *parent,
 /// @param processdownevents true iff button handles down events.
 /// @param label             Button label
 AButton * ToolBar::MakeButton(ToolBar *parent,
-                              teBmps eEnabledUp,
-                              teBmps eEnabledDown,
-                              teBmps eDisabled,
-                              int id,
-                              bool processdownevents,
-                              const TranslatableString &label)
+   ImageId eEnabledUp,
+   ImageId eEnabledDown,
+   ImageId eDisabled,
+   int id,
+   bool processdownevents,
+   const TranslatableString &label)
 {
    AButton *r = ToolBar::MakeButton(parent,
       bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,
@@ -920,13 +920,13 @@ AButton * ToolBar::MakeButton(ToolBar *parent,
 
 //static
 void ToolBar::MakeAlternateImages(AButton &button, int idx,
-                                  teBmps eUp,
-                                  teBmps eDown,
-                                  teBmps eHilite,
-                                  teBmps eDownHi,
-                                  teBmps eStandardUp,
-                                  teBmps eStandardDown,
-                                  teBmps eDisabled,
+                                  ImageId eUp,
+                                  ImageId eDown,
+                                  ImageId eHilite,
+                                  ImageId eDownHi,
+                                  ImageId eStandardUp,
+                                  ImageId eStandardDown,
+                                  ImageId eDisabled,
                                   wxSize size)
 {
    // wxMax to cater for case of image being bigger than the button.

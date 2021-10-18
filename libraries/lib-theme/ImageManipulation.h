@@ -15,6 +15,8 @@ class wxColour;
 class wxImage;
 class wxRect;
 
+#include "ThemeIds.h"
+
 // This looks at the first pixel in the image, and shifts
 // the entire image by the vector difference between that
 // pixel and the dstColour.  For better control, use
@@ -44,13 +46,10 @@ std::unique_ptr<wxImage> OverlayImage(wxImage * background, wxImage * foreground
                       wxImage * mask, int xoff, int yoff);
 
 
-// JKC: will probably change name from 'teBmps' to 'tIndexBmp';
-using teBmps = int; /// The index of a bitmap resource in Theme Resources.
-
 // Same idea, but this time the mask is an alpha channel in
 // the foreground bitmap, and it's all retrieved from Themes.
 THEME_API
-std::unique_ptr<wxImage> OverlayImage(teBmps eBack, teBmps eForeground,
+std::unique_ptr<wxImage> OverlayImage(ImageId eBack, ImageId eForeground,
                       int xoff, int yoff);
 
 

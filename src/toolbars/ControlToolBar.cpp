@@ -152,9 +152,9 @@ void ControlToolBar::Create(wxWindow * parent)
 
 // static
 void ControlToolBar::MakeAlternateImages(AButton &button, int idx,
-                                         teBmps eEnabledUp,
-                                         teBmps eEnabledDown,
-                                         teBmps eDisabled)
+                                         ImageId eEnabledUp,
+                                         ImageId eEnabledDown,
+                                         ImageId eDisabled)
 {
    ToolBar::MakeAlternateImages(button, idx,
       bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,

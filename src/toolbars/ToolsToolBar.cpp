@@ -170,7 +170,7 @@ void ToolsToolBar::UpdatePrefs()
 }
 
 AButton * ToolsToolBar::MakeTool(
-   ToolsToolBar *pBar, teBmps eTool,
+   ToolsToolBar *pBar, ImageId eTool,
    int id, const TranslatableString &label)
 {
    AButton *button = ToolBar::MakeButton(pBar,

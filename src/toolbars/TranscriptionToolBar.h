@@ -121,11 +121,11 @@ class TranscriptionToolBar final : public ToolBar {
    void SetPlaySpeed( double value );
    static AButton *AddButton(
       TranscriptionToolBar *pBar,
-      teBmps eFore, teBmps eDisabled,
+      ImageId eFore, ImageId eDisabled,
       int id,
       const TranslatableString &label);
    void MakeAlternateImages(
-      teBmps eFore, teBmps eDisabled,
+      ImageId eFore, ImageId eDisabled,
       int id, unsigned altIdx);
    void GetSamples(const WaveTrack *t, sampleCount *s0, sampleCount *slen);
    void SetButton(bool newstate, AButton *button);

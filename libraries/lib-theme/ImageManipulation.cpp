@@ -174,7 +174,7 @@ std::unique_ptr<wxImage> OverlayImage(wxImage * background, wxImage * foreground
 /// returns a NEW image where the foreground has been
 /// overlaid onto the background using alpha-blending,
 /// at location (xoff, yoff).
-std::unique_ptr<wxImage> OverlayImage(teBmps eBack, teBmps eForeground,
+std::unique_ptr<wxImage> OverlayImage(ImageId eBack, ImageId eForeground,
                       int xoff, int yoff)
 {
    wxImage imgBack(theTheme.Image( eBack       ));

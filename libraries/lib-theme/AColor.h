@@ -17,6 +17,7 @@
 #include <memory>
 #include <wx/brush.h> // member variable
 #include <wx/pen.h> // member variable
+#include "ThemeIds.h"
 
 class wxDC;
 class wxGraphicsContext;

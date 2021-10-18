@@ -28,7 +28,7 @@ THEME_INITS or THEME_DECLARATIONS or neither of these.
 
 *//*******************************************************************/
 
-using teBmps = int; /// The index of a bitmap resource in Theme Resources.
+#include "ThemeIds.h"
 
 // undefine the macros.
 #undef DEFINE_IMAGE
@@ -49,7 +49,7 @@ using teBmps = int; /// The index of a bitmap resource in Theme Resources.
 #endif
 
 #ifdef THEME_DECLARATIONS
-#define DEFINE_IMAGE( name, initialiser, textual_name )  THEME_API teBmps name=-1;
+#define DEFINE_IMAGE( name, initialiser, textual_name )  THEME_API ImageId name=-1;
 #define DEFINE_COLOUR( name, initialiser, textual_name ) THEME_API int name=-1;
 #define SET_THEME_FLAGS( flags )
 #undef THEME_INITS
@@ -57,7 +57,7 @@ using teBmps = int; /// The index of a bitmap resource in Theme Resources.
 #endif
 
 #ifdef THEME_EXTERNS
-#define DEFINE_IMAGE( name, initialiser, textual_name )  extern THEME_API teBmps name;
+#define DEFINE_IMAGE( name, initialiser, textual_name )  extern THEME_API ImageId name;
 #define DEFINE_COLOUR( name, initialiser, textual_name ) extern THEME_API int name;
 #define SET_THEME_FLAGS( flags )
 #endif

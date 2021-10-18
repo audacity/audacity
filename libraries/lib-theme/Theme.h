@@ -22,6 +22,7 @@
 #include <wx/defs.h>
 #include <wx/gdicmn.h>
 #include "ComponentInterfaceSymbol.h"
+#include "ThemeIds.h"
 
 #include "Observer.h"
 #include "Prefs.h"
@@ -44,9 +45,6 @@ class wxImage;
 class wxPen;
 
 class ChoiceSetting;
-
-// JKC: will probably change name from 'teBmps' to 'tIndexBmp';
-using teBmps = int; /// The index of a bitmap resource in Theme Resources.
 
 enum teResourceType
 {

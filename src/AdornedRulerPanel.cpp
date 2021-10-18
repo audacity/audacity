@@ -1381,7 +1381,7 @@ void AdornedRulerPanel::ReCreateButtons()
    size.y = std::min(size.y, GetRulerHeight(false));
 
    auto buttonMaker = [&]
-   (wxWindowID id, teBmps bitmap, bool toggle)
+   (wxWindowID id, ImageId bitmap, bool toggle)
    {
       const auto button =
       ToolBar::MakeButton(

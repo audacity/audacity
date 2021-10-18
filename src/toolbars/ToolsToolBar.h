@@ -58,7 +58,7 @@ class ToolsToolBar final : public ToolBar {
    void RegenerateTooltips() override;
    wxImage *MakeToolImage(wxImage *tool, wxImage *mask, int style);
    static AButton *MakeTool(
-      ToolsToolBar *pBar, teBmps eTool, int id, const TranslatableString &label);
+      ToolsToolBar *pBar, ImageId eTool, int id, const TranslatableString &label);
    enum { numTools = 4 };
    AButton *mTool[numTools];
    wxGridSizer *mToolSizer;
