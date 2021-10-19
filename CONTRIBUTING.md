@@ -6,7 +6,7 @@ Audacity is mostly coded in C++. You'll need to be somewhat comfortable in it to
 
 If you want to develop Audacity: 
 
-* Build instrucitons can be found in the BUILDING.md
+* Build instructions can be found in the BUILDING.md
 * [Coding standards](https://github.com/audacity/audacity/wiki/Coding-Standards) and other info on the process can be found [in the wiki](https://github.com/audacity/audacity/wiki). 
 * You can find good first issues and other things which we think might be good things for contributors in the [Community Collaboration Project](https://github.com/audacity/audacity/projects/15).
 * You will need to [sign the CLA](https://www.audacityteam.org/cla/) to contribute code.
