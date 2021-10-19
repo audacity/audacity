@@ -503,14 +503,14 @@ bool SelectHandle::HasSnap() const
       (IsClicked() ? mSnapEnd : mSnapStart).snappedPoint;
 }
 
-bool SelectHandle::HasEscape() const
+bool SelectHandle::HasEscape(AudacityProject *) const
 {
    return HasSnap() && mUseSnap;
 }
 
 bool SelectHandle::Escape(AudacityProject *project)
 {
-   if (SelectHandle::HasEscape()) {
+   if (SelectHandle::HasEscape(project)) {
       SetUseSnap(false, project);
       return true;
    }
@@ -979,7 +979,7 @@ HitTestPreview SelectHandle::Preview
    if (tip.empty()) {
       tip = XO("Click and drag to select audio");
    }
-   if (HasEscape() && mUseSnap) {
+   if (HasEscape(pProject) && mUseSnap) {
       tip.Join(
 /* i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries */
         XO("(snapping)"), wxT(" ")

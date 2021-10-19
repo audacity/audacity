@@ -60,7 +60,7 @@ public:
    // Tell whether the handle has its own escape action.  In case it is already
    // clicked, it will not cancel on Escape key if true.
    // Default is always false.
-   virtual bool HasEscape() const;
+   virtual bool HasEscape(AudacityProject *pProject) const;
 
    // The handle may change state and mark itself for highlight change.
    // Default does nothing and returns false
