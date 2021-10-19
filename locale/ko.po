@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2021-10-16 11:44+0900\n"
+"PO-Revision-Date: 2021-10-18 11:27+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (https://www.transifex.com/klyok/teams/690/ko/)\n"
 "Language: ko\n"
@@ -490,10 +490,8 @@ msgstr "%s 에 있는 플러그인 그룹은 이전에 정의된 그룹에 병�
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
-msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was "
-"discarded"
-msgstr "%s 에 있는 플러그인의 아이템이 이전에 정의된 아이템과 중복되어 무시됨 "
+msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgstr "%s 에 있는 플러그인의 아이템이 이전에 정의된 아이템과 중복되어 무시됨"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
@@ -876,8 +874,7 @@ msgid "(C) 2009 by Leland Lucius"
 msgstr "(C) 2009 리랜드 루시우스"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid ""
-"External Audacity module which provides a simple IDE for writing effects."
+msgid "External Audacity module which provides a simple IDE for writing effects."
 msgstr "효과 작성용 간단한 IDE를 제공하는 외부 오데시티 모듈."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
@@ -1560,12 +1557,10 @@ msgstr "재생 중 화면 업데이트"
 
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Clear Looping Region"
 msgstr "반복구간 지우기"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Set Loop To Selection"
 msgstr "선택 영역을 반복구간으로"
 
@@ -2548,7 +2543,7 @@ msgid "(%d): %s"
 msgstr "(%d): %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set page size for database %s"
 msgstr "데이터베이스 %s의 페이지 크기 설정에 실패"
 
@@ -2801,7 +2796,6 @@ msgid "Only avformat.dll"
 msgstr "오직 avformat.dll"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid "Only ffmpeg.*.dylib"
 msgstr "단지 ffmpeg.*.dylib"
 
@@ -3229,7 +3223,6 @@ msgid "&History..."
 msgstr "작업내역(&H)..."
 
 #: src/JournalEvents.cpp
-#, fuzzy
 msgid "Journal recording failed"
 msgstr "저널 녹음 실패"
 
@@ -4725,7 +4718,7 @@ msgstr "복구"
 
 #. i18n-hint Name default name assigned to a clip on track import
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgctxt "clip name template"
 msgid "%s %d"
 msgstr "%s %d"
@@ -5164,12 +5157,10 @@ msgid "Spectral Data Control Panel"
 msgstr "스펙트럼 데이터 제어 패널"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Brush Tool"
 msgstr "브러시 도구"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Spectral Brush"
 msgstr "스펙트럼 브러시"
 
@@ -5178,16 +5169,14 @@ msgid "Brush radius"
 msgstr "브러시 크기"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Custom brush size"
-msgstr "사용자 정의 브러시"
+msgstr "사용자 정의 브러시 크기"
 
 #: src/SpectralDataDialog.cpp
 msgid "Auto-select overtones (beta)"
 msgstr "오버톤 자동 선택 (beta)"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Enable smart selection"
 msgstr "스마트 선택 활성화"
 
@@ -5200,12 +5189,10 @@ msgstr ""
 "마우스 버튼을 놓으세요"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Spectra&l Selection Panel"
-msgstr "스펙트럼 선택 패널"
+msgstr "스펙트럼 선택 패널 (&L)"
 
 #: src/SpectralDataManager.cpp
-#, fuzzy
 msgid "Applied effect to selection"
 msgstr "선택 영역에 효과 적용"
 
@@ -6932,7 +6919,7 @@ msgstr "from (&F)"
 #.
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
-msgstr "to rpm"
+msgstr "To rpm"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
@@ -12697,7 +12684,6 @@ msgstr "샘플링 주파수:"
 
 #. i18n-hint: Guess format of raw file
 #: src/import/ImportRaw.cpp
-#, fuzzy
 msgid "Detect"
 msgstr "검출"
 
@@ -12732,7 +12718,7 @@ msgstr "%s 오른쪽"
 #. clips.
 #.
 #: src/menus/ClipMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s %s, %d of %d clip %s"
 msgid_plural "%s %s, %d of %d clips %s"
 msgstr[0] "%s %s, %d/%d 클립%s"
@@ -12755,7 +12741,7 @@ msgstr "끝"
 #. and the last string is the name of the track containing the
 #. clips.
 #: src/menus/ClipMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s %s and %s %s, %d and %d of %d clip %s"
 msgid_plural "%s %s and %s %s, %d and %d of %d clips %s"
 msgstr[0] "%s %s 그리고 %s %s, %d 그리고 %d / %d 클립 %s"
@@ -12767,7 +12753,7 @@ msgstr[0] "%s %s 그리고 %s %s, %d 그리고 %d / %d 클립 %s"
 #. last number counts all clips,
 #. last string names a track
 #: src/menus/ClipMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, %d of %d clip %s"
 msgid_plural "%s, %d of %d clips %s"
 msgstr[0] "%s, %d / %d 클립 %s"
@@ -12864,7 +12850,7 @@ msgstr "클립보드로 잘라내기"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Deleted %.2f seconds at t=%.2f"
-msgstr "t=%.2f에서 %.2f초를 삭제했습니다"
+msgstr "%.2f초를 삭제 (t=%.2f)"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting one type of track into another is not allowed."
@@ -12893,7 +12879,7 @@ msgstr "분할 잘라내기"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Split-deleted %.2f seconds at t=%.2f"
-msgstr "t-=%.2f에서 %.2f초를 분할 삭제했습니다"
+msgstr "%.2f초를 분할 삭제 (t=%.2f)"
 
 #: src/menus/EditMenus.cpp
 msgid "Split Delete"
@@ -12935,7 +12921,7 @@ msgstr "새로 분할하기"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Joined %.2f seconds at t=%.2f"
-msgstr "t=%.2f에서 %.2f초를 연결했습니다"
+msgstr "%.2f초를 연결 (t=%.2f)"
 
 #: src/menus/EditMenus.cpp
 msgid "Join"
@@ -12944,7 +12930,7 @@ msgstr "연결하기"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Detached %.2f seconds at t=%.2f"
-msgstr "t=%.2f에서 %.2f초를 분리했습니다"
+msgstr "%.2f초를 분리 (t=%.2f)"
 
 #: src/menus/EditMenus.cpp
 msgid "Detach"
@@ -13097,7 +13083,6 @@ msgid "&Full Screen (on/off)"
 msgstr "전체 화면 (켬/끔)(&F)"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Cannot proceed to export."
 msgstr "내보내기를 할 수 없습니다."
 
@@ -14591,15 +14576,13 @@ msgstr "레이블 트랙에 레이블이 없습니다"
 
 #. i18n-hint Sets a starting point for looping play
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Set Loop &In"
-msgstr "구간 반복 시작(&I)"
+msgstr "구간 반복 시작점(&I)"
 
 #. i18n-hint Sets an ending point for looping play
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Set Loop &Out"
-msgstr "구간 반복 끝(&O)"
+msgstr "구간 반복 끝점(&O)"
 
 #: src/menus/TransportMenus.cpp
 msgid ""
@@ -14658,7 +14641,6 @@ msgid "Play/Stop and &Set Cursor"
 msgstr "재생/정지 후 커서 설정(&S)"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Play &Once/Stop"
 msgstr "한번 재생/정지(&O)"
 
@@ -14696,14 +14678,12 @@ msgid "&Looping"
 msgstr "구간 반복 (&L)"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "&Clear Loop"
 msgstr "반복구간 지우기 (&C)"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "&Set Loop to Selection"
-msgstr "선택 영역을 반복 구간으로 (&S)"
+msgstr "선택 영역을 반복구간으로 (&S)"
 
 #: src/menus/TransportMenus.cpp
 msgid "R&escan Audio Devices"
@@ -14743,7 +14723,6 @@ msgstr "전송 (&R)"
 
 #. i18n-hint: (verb) Start playing audio
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Pl&ay Once"
 msgstr "한번 재생(&A)"
 
@@ -14794,7 +14773,6 @@ msgid "&Play-at-Speed"
 msgstr "재생 속도 (&P)"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Play-at-Speed &Once"
 msgstr "지정 속도로 한번 재생 (&O)"
 
@@ -15140,7 +15118,7 @@ msgid "Choose a location"
 msgstr "위치를 선택하세요"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Directory %s does not exist. Create it?"
@@ -15149,12 +15127,11 @@ msgstr ""
 "%s 디렉토리가 없습니다. 새로 만들까요?"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Directory creation failed."
 msgstr "디렉토리를 만들 수 없습니다."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "%s"
@@ -15168,12 +15145,10 @@ msgid "Directory %s is not suitable (at risk of being cleaned out)"
 msgstr "%s 폴더는 적당하지 않습니다 (정리될 위험이 있음)"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Temporary Directory' cannot be set."
 msgstr "'임시 디렉토리' 설정할 수 없습니다."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Temporary files' directory cannot be set."
 msgstr "'임시 파일' 디렉토리를 설정할 수 없습니다."
 
@@ -15191,22 +15166,18 @@ msgid "Temp Directory Update"
 msgstr "임시 디렉토리 업데이트"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Open' directory cannot be set."
 msgstr "'열기' 디렉토리를 설정할 수 없습니다."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Save' directory cannot be set."
 msgstr "'저장' 디렉토리를 설정할 수 없습니다."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Import' directory cannot be set."
 msgstr "'가져오기' 디렉토리를 설정할 수 없습니다."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Export' directory cannot be set."
 msgstr "'내보내기' 디렉토리를 설정할 수 없습니다."
 
@@ -15435,8 +15406,7 @@ msgstr "로컬에서"
 msgid "From Internet"
 msgstr "인터넷에서"
 
-#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformPrefs.cpp
+#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
 msgstr "표시"
 
@@ -15811,7 +15781,7 @@ msgstr "미디 장치"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "Preferences for MidiIO"
-msgstr "midiIO 환경설정"
+msgstr "환경설정 midiIO"
 
 #: src/prefs/MidiIOPrefs.cpp
 msgid "No MIDI interfaces"
@@ -16429,7 +16399,7 @@ msgstr "환경설정 적용(&U)"
 
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "S&cale:"
-msgstr "스케일 (&C) : "
+msgstr "스케일 (&C):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Mi&n Frequency (Hz):"
@@ -16489,7 +16459,7 @@ msgstr "윈도우 형식(&T):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Zero padding factor:"
-msgstr "0 채우기 팩터 (&Z) : "
+msgstr "0 채우기 팩터 (&Z):"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble Spectral Selection"
@@ -16903,7 +16873,6 @@ msgid "Skip to End"
 msgstr "끝으로 이동하기"
 
 #: src/toolbars/ControlToolBar.cpp
-#, fuzzy
 msgid "Play Once"
 msgstr "한번 재생"
 
@@ -17358,7 +17327,6 @@ msgid "Playback Speed"
 msgstr "재생 속도"
 
 #: src/toolbars/TranscriptionToolBar.cpp
-#, fuzzy
 msgid "Play-at-Speed Once"
 msgstr "지정 속도로 한번 재생"
 
@@ -17573,7 +17541,6 @@ msgid "S&pectrogram Settings..."
 msgstr "스펙트로그램 설정(&P)..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
-#, fuzzy
 msgid "Click and drag to move clip boundary in time"
 msgstr "클립 선택영역을 변경하려면 클릭 후 드래그하세요"
 
@@ -17591,22 +17558,18 @@ msgid "Clip-Trim-Right"
 msgstr "클립 오른쪽 잘라내기"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Set Wave Clip Name"
 msgstr "Wave 클립 이름 설정"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Click and drag to select text"
 msgstr "텍스트 선택은 클릭 후 드래그하세요"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Modified Clip Name"
 msgstr "변경된 클립 이름"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Clip Name Edit"
 msgstr "클립 이름 편집"
 
@@ -17615,15 +17578,14 @@ msgstr "클립 이름 편집"
 #. first number is the position of that clip in a sequence of clips,
 #. second number counts the clips
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
 msgstr[0] "%s, %d / %d 클립"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Rename Clip..."
-msgstr "이름 변경..."
+msgstr "클립 이름 변경..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -17856,17 +17818,14 @@ msgid "Close sub-view"
 msgstr "하위 보기 닫기"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Split Clip"
 msgstr "클립 분할"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Mute/Unmute Track"
 msgstr "트랙 음소거/해제"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Rename clip..."
 msgstr "클립 이름 바꾸기..."
 
@@ -17971,27 +17930,22 @@ msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on t
 msgstr "클립의 위치를 변경하려면 드래그. Shift를 누르고 드래그 하면 같은 트랙의 모든 클립을 이동."
 
 #: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
 msgid "Add Mono Track"
 msgstr "모노 트랙 추가"
 
 #: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
 msgid "Add Stereo Track"
 msgstr "스테레오 트랙 추가"
 
 #: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
 msgid "Add Label Track"
 msgstr "레이블 트랙 추가"
 
 #: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
 msgid "Export Audio..."
 msgstr "오디오 내보내기..."
 
 #: src/tracks/ui/BrushHandle.cpp
-#, fuzzy
 msgid "Erased selected area"
 msgstr "선택 영역 지우기"
 
@@ -18000,7 +17954,6 @@ msgid "Selected area using Brush Tool"
 msgstr "브러시 도구를 사용하여 선택된 영역"
 
 #: src/tracks/ui/BrushHandle.cpp
-#, fuzzy
 msgid "Brush tool selection"
 msgstr "브러시 도구 선택"
 
@@ -18239,12 +18192,10 @@ msgstr "왼쪽=확대, 오른쪽=축소, 가운데=정상"
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
-#, fuzzy
 msgid "No Updates Available"
 msgstr "적용할 업데이트가 없습니다"
 
 #: src/update/NoUpdatesAvailableDialog.cpp
-#, fuzzy
 msgid "Check for Updates"
 msgstr "업데이트 확인"
 
@@ -18276,7 +18227,6 @@ msgid "Update data was corrupted."
 msgstr "업데이트 데이터가 손실되었습니다."
 
 #: src/update/UpdateManager.cpp
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error downloading update"
 msgstr "업그레이드 다운로드 오류"
@@ -18287,14 +18237,13 @@ msgid "Can't open the Audacity download link."
 msgstr "오데시티 다운로드 링크를 열 수 없습니다."
 
 #: src/update/UpdateManager.cpp
-#, fuzzy
 msgid "Audacity update"
 msgstr "오데시티 업데이트"
 
 #: src/update/UpdateManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Downloading %s"
-msgstr "다운로드 중 %s"
+msgstr "다운로드 %s"
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19149,9 +19098,8 @@ msgstr "Steve Daulton"
 #: plug-ins/eq-xml-to-txt-converter.ny plug-ins/label-sounds.ny
 #: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
 #: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
-#, fuzzy
 msgid "GNU General Public License v2.0 or later"
-msgstr "GNU General Public License Version 2 또는 이후 버전의 라이센스로 배포됨"
+msgstr "GNU 일반 범용 라이센스 2.0 또는 이후 버전"
 
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
@@ -20229,7 +20177,7 @@ msgstr "분석중..."
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
-msgstr "첫번째로 출력 리미트 "
+msgstr "첫번째로 출력 리미트"
 
 #: plug-ins/sample-data-export.ny
 msgid "Measurement scale"
