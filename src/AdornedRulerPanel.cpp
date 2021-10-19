@@ -764,7 +764,7 @@ public:
    : PlayRegionAdjustingHandle( pParent, xx, MenuChoice::QuickPlay, *handOpenCursor, 2 )
    {
    }
-   
+
    ~MovePlayRegionHandle()
    {
       mParent->mQuickPlayOffset[0] = 0;
@@ -1045,8 +1045,9 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
    // High priority hit is a handle to change the existing play region
    bool hitLeft = false;
    const auto &playRegion = ViewInfo::Get(*pProject).playRegion;
-   if ((hitLeft = mParent->IsWithinMarker(xx, playRegion.GetStart())) ||
-       mParent->IsWithinMarker(xx, playRegion.GetEnd()))
+   if ((hitLeft =
+        mParent->IsWithinMarker(xx, playRegion.GetLastActiveStart())) ||
+       mParent->IsWithinMarker(xx, playRegion.GetLastActiveStart()))
    {
       auto result =
          std::make_shared<ResizePlayRegionHandle>( mParent, xx, hitLeft );
@@ -1055,8 +1056,9 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
    }
 
    // Middle priority hit is a handle to change the existing play region at
-   // both ends
+   // both ends, but only when the play region is active
    if (auto time = mParent->Pos2Time(xx);
+       playRegion.Active() &&
        time >= playRegion.GetStart() &&
        time <= playRegion.GetEnd())
    {
