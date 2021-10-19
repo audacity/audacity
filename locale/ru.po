@@ -3131,7 +3131,7 @@ msgstr "Можно помочь подготовить Audacity к выпуск�
 #: src/HelpText.cpp
 #, c-format
 msgid "What's new in Audacity %s"
-msgstr "Нове в Audacity %s"
+msgstr "Новое в Audacity %s"
 
 #: src/HelpText.cpp
 msgid "How to get help"
