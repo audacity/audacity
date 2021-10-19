@@ -313,13 +313,30 @@ public:
 
 protected:
 
-double SnappedTime( AudacityProject &project, size_t ii )
+   double SnappedTime( AudacityProject &project, size_t ii )
    {
       const auto &ruler = AdornedRulerPanel::Get(project);
       bool isSnapped = ruler.mIsSnapped[ii];
       return isSnapped
          ? ruler.mQuickPlayPos[ii]
          : ruler.mQuickPlayPosUnsnapped[ii];
+   }
+
+   std::pair<double, double> SnappedTimes( AudacityProject &project )
+   {
+      const auto &ruler = AdornedRulerPanel::Get(project);
+      for (size_t ii = 0; ii < ruler.mNumGuides; ++ii)
+         if (ruler.mIsSnapped[ii]) {
+            double time0 = ruler.mQuickPlayPos[ii];
+            double delta = time0 - ruler.mQuickPlayPosUnsnapped[ii];
+            double time1 = ruler.mQuickPlayPosUnsnapped[1 - ii] + delta;
+            if (ii == 1)
+               return { time1, time0 };
+            else
+               return { time0, time1 };
+         }
+      // No snap
+      return { ruler.mQuickPlayPos[0], ruler.mQuickPlayPos[1] };
    }
 
    void Unsnap(bool use, AudacityProject *pProject)
@@ -768,11 +785,10 @@ private:
    {
       // Move the whole play region rigidly (usually)
       // though the length might change slightly if only one edge snaps
-      const auto time0 = SnappedTime(project, 0),
-         time1 = SnappedTime(project, 1);
+      const auto times = SnappedTimes(project);
 
       auto &playRegion = ViewInfo::Get(project).playRegion;
-      playRegion.SetTimes(time0, time1);
+      playRegion.SetTimes(times.first, times.second);
    }
 };
 
