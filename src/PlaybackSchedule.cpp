@@ -254,7 +254,7 @@ bool LoopingPlaybackPolicy::RepositionPlayback(
    if (mRemaining <= 0)
    {
       for (auto &pMixer : playbackMixers)
-         pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0, mKicked );
+         pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0, true );
       schedule.RealTimeRestart();
    }
    else if (mKicked)
