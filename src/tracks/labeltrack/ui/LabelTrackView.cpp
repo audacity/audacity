@@ -1197,6 +1197,23 @@ bool LabelTrackView::PasteSelectedText(
    return true;
 }
 
+bool LabelTrackView::SelectAllText(AudacityProject& project)
+{
+    if (!IsValidIndex(mTextEditIndex, project))
+        return false;
+
+    const auto pTrack = FindLabelTrack();
+
+    const auto& mLabels = pTrack->GetLabels();
+    auto labelStruct = mLabels[mTextEditIndex];
+    auto& title = labelStruct.title;
+
+    mInitialCursorPos = 0;
+    mCurrentCursorPos = title.Length();
+
+    return true;
+}
+
 /// @return true if the text data is available in the clipboard, false otherwise
 bool LabelTrackView::IsTextClipSupported()
 {

@@ -114,6 +114,8 @@ public:
 
    bool CutSelectedText( AudacityProject &project );
    bool CopySelectedText( AudacityProject &project );
+   bool SelectAllText(AudacityProject& project);
+   
    bool PasteSelectedText(
       AudacityProject &project, double sel0, double sel1 );
 
