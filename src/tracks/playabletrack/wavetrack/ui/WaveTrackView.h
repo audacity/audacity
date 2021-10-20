@@ -27,6 +27,7 @@ class ZoomInfo;
 
 
 class TrackPanelResizeHandle;
+class WaveTrackAffordanceHandle;
 
 namespace {
    class SubViewCloseHandle;
@@ -226,6 +227,8 @@ private:
    std::shared_ptr<CommonTrackCell> mpAffordanceCellControl;
 
    std::weak_ptr<TrackPanelCell> mKeyEventDelegate;
+
+   std::weak_ptr<WaveTrackAffordanceHandle> mAffordanceHandle;
 };
 
 // Helper for drawing routines

@@ -200,8 +200,7 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         if (clip == editClipLock)
             continue;
 
-        auto affordanceRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, state.rect);
-        if (affordanceRect.Contains(px, py))
+        if (WaveTrackView::HitTest(*clip, zoomInfo, state.rect, {px, py}))
         {
             results.push_back(
                 AssignUIHandlePtr(

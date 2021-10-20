@@ -45,6 +45,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../WaveTrackUtils.h"
 
 #include "WaveTrackAffordanceControls.h"
+#include "WaveTrackAffordanceHandle.h"
 #include "WaveClipTrimHandle.h"
 
 namespace {
@@ -927,19 +928,36 @@ WaveTrackView::DoDetailedHitTest
    // If that toolbar were eliminated, this could simplify to a sequence of
    // hit test routines describable by a table.
 
-   UIHandlePtr result;
    std::vector<UIHandlePtr> results;
+
+   const auto& viewInfo = ViewInfo::Get(*pProject);
+
+   for (auto& clip : pTrack->GetClips())
+   {
+      if (!WaveTrackView::ClipDetailsVisible(*clip, viewInfo, st.rect)
+         && HitTest(*clip, viewInfo, st.rect, st.state.GetPosition()))
+      {
+         auto waveTrackView = std::static_pointer_cast<WaveTrackView>(pTrack->GetTrackView());
+         results.push_back(
+            AssignUIHandlePtr(
+               waveTrackView->mAffordanceHandle,
+               std::make_shared<WaveTrackAffordanceHandle>(pTrack, clip)
+            )
+         );
+      }
+   }
 
    if (bMultiTool && st.state.CmdDown()) {
       // Ctrl modifier key in multi-tool overrides everything else
       // (But this does not do the time shift constrained to the vertical only,
       //  which is what happens when you hold Ctrl in the Time Shift tool mode)
-      result = TimeShiftHandle::HitAnywhere(
+      auto result = TimeShiftHandle::HitAnywhere(
          view.mTimeShiftHandle, pTrack, false);
       if (result)
          results.push_back(result);
       return { true, results };
    }
+
    return { false, results };
 }
 
