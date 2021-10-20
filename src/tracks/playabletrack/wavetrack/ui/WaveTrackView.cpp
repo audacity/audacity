@@ -1459,6 +1459,36 @@ namespace {
 }
 #endif
 
+namespace
+{
+   // Returns an offset in seconds to be applied to the right clip 
+   // boundary so that it does not overlap the last sample
+   double CalculateAdjustmentForZoomLevel(
+      const wxRect& viewRect, 
+      const ZoomInfo& zoomInfo, 
+      int rate, 
+      double& outAveragePPS,
+      //Is zoom level sufficient to show individual samples?
+      bool& outShowSamples)
+   {
+      static constexpr double pixelsOffset{ 2 };//The desired offset in pixels
+
+      auto h = zoomInfo.PositionToTime(0, 0, true);
+      auto h1 = zoomInfo.PositionToTime(viewRect.width, 0, true);
+
+      // Determine whether we should show individual samples
+      // or draw circular points as well
+      outAveragePPS = viewRect.width / (rate * (h1 - h));// pixels per sample
+      outShowSamples = outAveragePPS > 0.5;
+
+      if(outShowSamples)
+         // adjustment so that the last circular point doesn't appear
+         // to be hanging off the end
+         return  pixelsOffset / (outAveragePPS * rate); // pixels / ( pixels / second ) = seconds
+      return .0;
+   }
+}
+
 ClipParameters::ClipParameters
    (bool spectrum, const WaveTrack *track, const WaveClip *clip, const wxRect &rect,
    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
@@ -1491,20 +1521,11 @@ ClipParameters::ClipParameters
 
    const double sps = 1. / rate;            //seconds-per-sample
 
-   // Determine whether we should show individual samples
-   // or draw circular points as well
-   averagePixelsPerSample = rect.width / (rate * (h1 - h));
-   showIndividualSamples = averagePixelsPerSample > 0.5;
-
    // Calculate actual selection bounds so that t0 > 0 and t1 < the
    // end of the track
    t0 = std::max(tpre, .0);
-   t1 = std::min(tpost, trackLen - sps * .99);
-   if (showIndividualSamples) {
-      // adjustment so that the last circular point doesn't appear
-      // to be hanging off the end
-      t1 += 2. / (averagePixelsPerSample * rate);
-   }
+   t1 = std::min(tpost, trackLen - sps * .99) 
+      + CalculateAdjustmentForZoomLevel(rect, zoomInfo, rate, averagePixelsPerSample, showIndividualSamples);
 
    // Make sure t1 (the right bound) is greater than 0
    if (t1 < 0.0) {
@@ -1596,20 +1617,37 @@ ClipParameters::ClipParameters
    }
 }
 
-wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect)
+wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, bool* outShowSamples)
 {
     auto srs = 1. / static_cast<double>(clip.GetRate());
-    //to prevent overlap left and right most samples with frame border
-    auto margin = .25 * srs;
+    double averagePixelsPerSample{};
+    bool showIndividualSamples{};
+    auto clipEndingAdjustemt 
+       = CalculateAdjustmentForZoomLevel(viewRect, zoomInfo, clip.GetRate(), averagePixelsPerSample, showIndividualSamples);
+    if (outShowSamples != nullptr)
+       *outShowSamples = showIndividualSamples;
     constexpr auto edgeLeft = static_cast<wxInt64>(std::numeric_limits<int>::min());
     constexpr auto edgeRight = static_cast<wxInt64>(std::numeric_limits<int>::max());
-    auto left = std::clamp(zoomInfo.TimeToPosition(clip.GetPlayStartTime() - margin, viewRect.x, true), edgeLeft, edgeRight);
-    auto right = std::clamp(zoomInfo.TimeToPosition(clip.GetPlayEndTime() - srs + margin, viewRect.x, true), edgeLeft, edgeRight);
-    if (right > left)
+    auto left = std::clamp(
+       zoomInfo.TimeToPosition(
+          clip.GetPlayStartTime(), viewRect.x, true
+       ), edgeLeft, edgeRight
+    );
+    auto right = std::clamp(
+       zoomInfo.TimeToPosition(
+          clip.GetPlayEndTime() - .99 * srs + clipEndingAdjustemt, viewRect.x, true
+       ), edgeLeft, edgeRight
+    );
+    if (right >= left)
     {
         //after clamping we can expect that left and right 
         //are small enough to be put into int
-        return wxRect(static_cast<int>(left), viewRect.y, static_cast<int>(right - left), viewRect.height);
+        return wxRect(
+           static_cast<int>(left), 
+           viewRect.y, 
+           std::max(1, static_cast<int>(right - left)), 
+           viewRect.height
+        );
     }
     return wxRect();
 }
