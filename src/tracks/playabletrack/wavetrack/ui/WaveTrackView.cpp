@@ -49,6 +49,8 @@ Paul Licameli split from TrackPanel.cpp
 
 namespace {
 
+constexpr int kClipDetailedViewMinimumWidth{ 3 };
+
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
 
 // Structure that collects and modifies information on sub-view positions
@@ -1324,6 +1326,31 @@ bool WaveTrackView::CopySelectedText(AudacityProject& project)
       }
    }
    return false;
+}
+
+bool WaveTrackView::ClipDetailsVisible(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect)
+{
+   //Do not fold clips to line at sample zoom level, as
+   //it may become impossible to 'unfold' it when clip is trimmed
+   //to a single sample
+   bool showSamples{ false };
+   auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, viewRect, &showSamples);
+   return showSamples || clipRect.width >= kClipDetailedViewMinimumWidth;
+}
+
+wxRect WaveTrackView::ClipHitTestArea(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect)
+{
+   bool showSamples{ false };
+   auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, viewRect, &showSamples);
+   if (showSamples || clipRect.width >= kClipDetailedViewMinimumWidth)
+      return clipRect;
+
+   return clipRect.Inflate(2, 0);
+}
+
+bool WaveTrackView::HitTest(const WaveClip& clip, const ZoomInfo& viewInfo, const wxRect& viewRect, const wxPoint& pos)
+{
+   return ClipHitTestArea(clip, viewInfo, viewRect).Contains(pos);
 }
 
 bool WaveTrackView::PasteText(AudacityProject& project)
