@@ -17,10 +17,12 @@
 #include "../SelectUtilities.h"
 #include "../TrackPanel.h"
 #include "../WaveTrack.h"
+#include "../LabelTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../toolbars/ControlToolBar.h"
 #include "../tracks/ui/SelectHandle.h"
+#include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
@@ -457,6 +459,16 @@ struct Handler
 
 void OnSelectAll(const CommandContext &context)
 {
+   auto& trackPanel = TrackPanel::Get(context.project);
+   auto& tracks = TrackList::Get(context.project);
+   
+   for (auto lt : tracks.Selected< LabelTrack >()) {
+      auto& view = LabelTrackView::Get(*lt);
+      if (view.SelectAllText(context.project)) {
+         trackPanel.Refresh(false);
+         return;
+      }
+   }
    SelectUtilities::DoSelectAll( context.project );
 }
 
