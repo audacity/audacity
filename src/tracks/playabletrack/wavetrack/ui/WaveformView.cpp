@@ -278,7 +278,7 @@ void DrawWaveformBackground(TrackPanelDrawingContext &context,
        zeroLevelYCoordinate <= rect.GetBottom()) {
       dc.SetPen(*wxBLACK_PEN);
       AColor::Line(dc, rect.x, zeroLevelYCoordinate,
-                   rect.x + rect.width, zeroLevelYCoordinate);
+                   rect.x + rect.width - 1, zeroLevelYCoordinate);
    }
 }
 
