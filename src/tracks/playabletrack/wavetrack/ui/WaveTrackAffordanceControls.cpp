@@ -397,8 +397,9 @@ const ReservedCommandFlag &SomeClipIsSelectedFlag()
 
 unsigned WaveTrackAffordanceControls::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project)
 {
-    if (!mTextEditHelper)
-       // Handle the event if we are already editing clip name text...
+    if (!mTextEditHelper 
+       || !mTextEditHelper->CaptureKey(event.GetKeyCode(), event.GetModifiers()))
+       // Handle the event if it can be processed by the text editor (if any)
        event.Skip();
     return RefreshCode::RefreshNone;
 }
@@ -410,10 +411,11 @@ unsigned WaveTrackAffordanceControls::KeyDown(wxKeyEvent& event, ViewInfo& viewI
     
     if (mTextEditHelper)
     {
-        mTextEditHelper->OnKeyDown(keyCode, event.GetModifiers(), project);
-        if (!TextEditHelper::IsGoodEditKeyCode(keyCode))
-            event.Skip();
-        return RefreshCode::RefreshCell;
+       if (!mTextEditHelper->OnKeyDown(keyCode, event.GetModifiers(), project) 
+          && !TextEditHelper::IsGoodEditKeyCode(keyCode))
+          event.Skip();
+
+       return RefreshCode::RefreshCell;
     }
     return RefreshCode::RefreshNone;
 }
@@ -503,6 +505,46 @@ bool WaveTrackAffordanceControls::StartEditNameOfMatchingClip(
         return StartEditClipName(&project);
     }
     return false;
+}
+
+bool WaveTrackAffordanceControls::OnTextCopy(AudacityProject& project)
+{
+   if (mTextEditHelper)
+   {
+      mTextEditHelper->CopySelectedText(project);
+      return true;
+   }
+   return false;
+}
+
+bool WaveTrackAffordanceControls::OnTextCut(AudacityProject& project)
+{
+   if (mTextEditHelper)
+   {
+      mTextEditHelper->CutSelectedText(project);
+      return true;
+   }
+   return false;
+}
+
+bool WaveTrackAffordanceControls::OnTextPaste(AudacityProject& project)
+{
+   if (mTextEditHelper)
+   {
+      mTextEditHelper->PasteSelectedText(project);
+      return true;
+   }
+   return false;
+}
+
+bool WaveTrackAffordanceControls::OnTextSelect(AudacityProject& project)
+{
+   if (mTextEditHelper)
+   {
+      mTextEditHelper->SelectAll();
+      return true;
+   }
+   return false;
 }
 
 unsigned WaveTrackAffordanceControls::OnAffordanceClick(const TrackPanelMouseEvent& event, AudacityProject* project)

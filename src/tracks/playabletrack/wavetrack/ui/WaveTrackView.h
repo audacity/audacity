@@ -174,6 +174,16 @@ public:
 
    unsigned LoseFocus(AudacityProject *project) override;
 
+   //FIXME: These functions do not push state to undo history
+   //because attempt to do so leads to a focus lose which, in
+   //turn finilizes text editing (state is saved after text
+   //editing was intentionally finished instead)
+
+   bool CutSelectedText(AudacityProject& project);
+   bool CopySelectedText(AudacityProject& project);
+   bool PasteText(AudacityProject& project);
+   bool SelectAllText(AudacityProject& project);
+
 private:
    void BuildSubViews() const;
    void DoSetDisplay(Display display, bool exclusive = true);

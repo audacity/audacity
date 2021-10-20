@@ -469,6 +469,17 @@ void OnSelectAll(const CommandContext &context)
          return;
       }
    }
+
+   //Presumably, there might be not more than one track
+   //that expects text input
+   for (auto wt : tracks.Any<WaveTrack>()) {
+      auto& view = WaveTrackView::Get(*wt);
+      if (view.SelectAllText(context.project)) {
+         trackPanel.Refresh(false);
+         return;
+      }
+   }
+
    SelectUtilities::DoSelectAll( context.project );
 }
 

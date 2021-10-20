@@ -87,6 +87,11 @@ public:
 
     unsigned OnAffordanceClick(const TrackPanelMouseEvent& event, AudacityProject* project);
 
+    bool OnTextCopy(AudacityProject& project);
+    bool OnTextCut(AudacityProject& project);
+    bool OnTextPaste(AudacityProject& project);
+    bool OnTextSelect(AudacityProject& project);
+
 private:
     void ResetClipNameEdit();
 
