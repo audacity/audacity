@@ -128,8 +128,9 @@ bool PlaybackPolicy::Looping(const PlaybackSchedule &) const
 }
 
 namespace {
-struct DefaultPlaybackPolicy final : PlaybackPolicy {
-   ~DefaultPlaybackPolicy() override = default;
+//! The old default playback policy plays once and consumes no messages
+struct OldDefaultPlaybackPolicy final : PlaybackPolicy {
+   ~OldDefaultPlaybackPolicy() override = default;
 };
 }
 
@@ -138,7 +139,7 @@ PlaybackPolicy &PlaybackSchedule::GetPolicy()
    if (mPolicyValid.load(std::memory_order_acquire) && mpPlaybackPolicy)
       return *mpPlaybackPolicy;
 
-   static DefaultPlaybackPolicy defaultPolicy;
+   static OldDefaultPlaybackPolicy defaultPolicy;
    return defaultPolicy;
 }
 
@@ -147,23 +148,23 @@ const PlaybackPolicy &PlaybackSchedule::GetPolicy() const
    return const_cast<PlaybackSchedule&>(*this).GetPolicy();
 }
 
-LoopingPlaybackPolicy::~LoopingPlaybackPolicy() = default;
+NewDefaultPlaybackPolicy::~NewDefaultPlaybackPolicy() = default;
 
 PlaybackPolicy::BufferTimes
-LoopingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
+NewDefaultPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
 {
    // Shorter times than in the default policy so that responses to changes of
    // selection don't lag too much
    return { 0.5, 0.5, 1.0 };
 }
 
-bool LoopingPlaybackPolicy::Done( PlaybackSchedule &, unsigned long )
+bool NewDefaultPlaybackPolicy::Done( PlaybackSchedule &, unsigned long )
 {
    return false;
 }
 
 PlaybackSlice
-LoopingPlaybackPolicy::GetPlaybackSlice(
+NewDefaultPlaybackPolicy::GetPlaybackSlice(
    PlaybackSchedule &schedule, size_t available)
 {
    // How many samples to produce for each channel.
@@ -192,7 +193,7 @@ LoopingPlaybackPolicy::GetPlaybackSlice(
    return { available, frames, toProduce };
 }
 
-std::pair<double, double> LoopingPlaybackPolicy::AdvancedTrackTime(
+std::pair<double, double> NewDefaultPlaybackPolicy::AdvancedTrackTime(
    PlaybackSchedule &schedule, double trackTime, size_t nSamples )
 {
    mRemaining -= std::min(mRemaining, nSamples);
@@ -217,7 +218,7 @@ std::pair<double, double> LoopingPlaybackPolicy::AdvancedTrackTime(
    return { trackTime, trackTime };
 }
 
-void LoopingPlaybackPolicy::MessageConsumer( PlaybackSchedule &schedule )
+void NewDefaultPlaybackPolicy::MessageConsumer( PlaybackSchedule &schedule )
 {
    // This executes in the TrackBufferExchange thread
    auto data = schedule.mMessageChannel.Read();
@@ -246,7 +247,7 @@ void LoopingPlaybackPolicy::MessageConsumer( PlaybackSchedule &schedule )
    }
 }
 
-bool LoopingPlaybackPolicy::RepositionPlayback(
+bool NewDefaultPlaybackPolicy::RepositionPlayback(
    PlaybackSchedule &schedule, const Mixers &playbackMixers, size_t, size_t )
 {
    // msmeyer: If playing looped, check if we are at the end of the buffer
@@ -270,7 +271,7 @@ bool LoopingPlaybackPolicy::RepositionPlayback(
    return false;
 }
 
-bool LoopingPlaybackPolicy::Looping( const PlaybackSchedule & ) const
+bool NewDefaultPlaybackPolicy::Looping( const PlaybackSchedule & ) const
 {
    return true;
 }

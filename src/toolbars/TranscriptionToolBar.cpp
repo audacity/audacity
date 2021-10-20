@@ -473,7 +473,7 @@ void TranscriptionToolBar::GetSamples(
 #define TIMETRACK_MAX 10.0
 
 // Come here from button clicks, or commands
-void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
+void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
 {
    // Can't do anything without an active project
    AudacityProject *p = &mProject;
@@ -491,10 +491,10 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       bFixedSpeedPlay = true;
 
    // Scrubbing only supports straight through play.
-   // So if looped or cutPreview, we have to fall back to fixed speed.
-   if (looped)
+   // So if newDefault or cutPreview, we have to fall back to fixed speed.
+   if (newDefault)
       cutPreview = false;
-   bFixedSpeedPlay = bFixedSpeedPlay || looped || cutPreview;
+   bFixedSpeedPlay = bFixedSpeedPlay || newDefault || cutPreview;
    if (bFixedSpeedPlay)
    {
       // Create a BoundedEnvelope if we haven't done so already
@@ -529,12 +529,12 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       return;
    if (bFixedSpeedPlay)
    {
-      auto options = DefaultPlayOptions( *p, looped );
+      auto options = DefaultPlayOptions( *p, newDefault );
       // No need to set cutPreview options.
       options.envelope = mEnvelope.get();
       auto mode =
          cutPreview ? PlayMode::cutPreviewPlay
-         : looped ? PlayMode::loopedPlay
+         : newDefault ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
       projectAudioManager.PlayPlayRegion(
          SelectedRegion(playRegion.GetStart(), playRegion.GetEnd()),

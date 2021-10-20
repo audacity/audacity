@@ -311,7 +311,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
    double t1 = selectedRegion.t1();
    // SelectedRegion guarantees t0 <= t1, so we need another boolean argument
    // to indicate backwards play.
-   const bool looped = (mode == PlayMode::loopedPlay);
+   const bool newDefault = (mode == PlayMode::loopedPlay);
 
    if (backwards)
       std::swap(t0, t1);
@@ -352,7 +352,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
    double loopOffset = 0.0;
 
    if (t1 == t0) {
-      if (looped) {
+      if (newDefault) {
          const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
          // play selection if there is one, otherwise
          // set start of play region to project start,
@@ -459,7 +459,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
    return token;
 }
 
-void ProjectAudioManager::PlayCurrentRegion(bool looped /* = false */,
+void ProjectAudioManager::PlayCurrentRegion(bool newDefault /* = false */,
                                        bool cutpreview /* = false */)
 {
    auto &projectAudioManager = *this;
@@ -474,14 +474,14 @@ void ProjectAudioManager::PlayCurrentRegion(bool looped /* = false */,
 
       const auto &playRegion = ViewInfo::Get( *p ).playRegion;
 
-      if (looped)
+      if (newDefault)
          cutpreview = false;
-      auto options = DefaultPlayOptions( *p, looped );
+      auto options = DefaultPlayOptions( *p, newDefault );
       if (cutpreview)
          options.envelope = nullptr;
       auto mode =
          cutpreview ? PlayMode::cutPreviewPlay
-         : looped ? PlayMode::loopedPlay
+         : newDefault ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
       PlayPlayRegion(SelectedRegion(playRegion.GetStart(), playRegion.GetEnd()),
                      options,
@@ -1157,7 +1157,7 @@ const ReservedCommandFlag&
    }; return flag; }
 
 AudioIOStartStreamOptions
-DefaultPlayOptions( AudacityProject &project, bool looped )
+DefaultPlayOptions( AudacityProject &project, bool newDefault )
 {
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    AudioIOStartStreamOptions options { project.shared_from_this(),
@@ -1168,9 +1168,9 @@ DefaultPlayOptions( AudacityProject &project, bool looped )
    options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
    options.listener = ProjectAudioManager::Get( project ).shared_from_this();
    
-   if (looped)
+   if (newDefault)
       options.policyFactory = []() -> std::unique_ptr<PlaybackPolicy> {
-         return std::make_unique<LoopingPlaybackPolicy>(); };
+         return std::make_unique<NewDefaultPlaybackPolicy>(); };
    return options;
 }
 

@@ -448,9 +448,9 @@ private:
    std::atomic<bool> mPolicyValid{ false };
 };
 
-class LoopingPlaybackPolicy final : public PlaybackPolicy {
+class NewDefaultPlaybackPolicy final : public PlaybackPolicy {
 public:
-   ~LoopingPlaybackPolicy() override;
+   ~NewDefaultPlaybackPolicy() override;
 
    BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
 
