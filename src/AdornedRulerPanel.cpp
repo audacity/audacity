@@ -1047,7 +1047,7 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
    const auto &playRegion = ViewInfo::Get(*pProject).playRegion;
    if ((hitLeft =
         mParent->IsWithinMarker(xx, playRegion.GetLastActiveStart())) ||
-       mParent->IsWithinMarker(xx, playRegion.GetLastActiveStart()))
+       mParent->IsWithinMarker(xx, playRegion.GetLastActiveEnd()))
    {
       auto result =
          std::make_shared<ResizePlayRegionHandle>( mParent, xx, hitLeft );
