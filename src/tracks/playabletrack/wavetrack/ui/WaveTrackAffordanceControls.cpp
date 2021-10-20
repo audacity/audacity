@@ -251,9 +251,13 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
             for (const auto& clip : waveTrack->GetClips())
             {
                 auto affordanceRect
-                    = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
-                if (affordanceRect.IsEmpty())
-                    continue;
+                   = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
+
+                if(!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+                {
+                   TrackArt::DrawClipFolded(context.dc, affordanceRect);
+                   continue;
+                }
 
                 auto selected = GetSelectedClip().lock() == clip;
                 auto highlight = selected || affordanceRect.Contains(px, py);

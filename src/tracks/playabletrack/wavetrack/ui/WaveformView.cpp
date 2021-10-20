@@ -688,6 +688,15 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    highlightEnvelope = target && target->GetEnvelope() == clip->GetEnvelope();
 #endif
 
+   //If clip is "too small" draw a placeholder instead of
+   //attempting to fit the contents into a few pixels
+   if (!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+   {
+      auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
+      TrackArt::DrawClipFolded(dc, clipRect);
+      return;
+   }
+
    const ClipParameters params{
       false, track, clip, rect, selectedRegion, zoomInfo };
    const wxRect &hiddenMid = params.hiddenMid;
@@ -903,8 +912,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    }
    {
       auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
-      if (!clipRect.IsEmpty())
-          TrackArt::DrawClipEdges(dc, clipRect, selected);
+      TrackArt::DrawClipEdges(dc, clipRect, selected);
    }
 }
 
