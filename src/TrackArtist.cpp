@@ -402,6 +402,12 @@ void TrackArt::DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected)
    }
 }
 
+void TrackArt::DrawClipFolded(wxDC& dc, const wxRect& rect)
+{
+   AColor::UseThemeColour(&dc, clrClipAffordanceOutlinePen);
+   dc.DrawRectangle(rect);
+}
+
 // Draws the sync-lock bitmap, tiled; always draws stationary relative to the DC
 //
 // AWD: now that the tiles don't link together, we're drawing a tilted grid, at
