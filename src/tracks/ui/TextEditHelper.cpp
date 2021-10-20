@@ -83,9 +83,20 @@ void TextEditHelper::SetSelection(int from, int to)
     mCurrentCursorPos = to;
 }
 
+void TextEditHelper::SelectAll()
+{
+    mInitialCursorPos = 0;
+    mCurrentCursorPos = mText.Length();
+}
+
 bool TextEditHelper::IsSelectionEmpty()
 {
     return mCurrentCursorPos == mInitialCursorPos;
+}
+
+bool TextEditHelper::CaptureKey(int, int mods)
+{
+   return mods == wxMOD_NONE || mods == wxMOD_SHIFT;
 }
 
 bool TextEditHelper::OnKeyDown(int keyCode, int mods, AudacityProject* project)
@@ -93,6 +104,9 @@ bool TextEditHelper::OnKeyDown(int keyCode, int mods, AudacityProject* project)
     auto delegate = mDelegate.lock();
     if (!delegate)
         return false;
+
+    if (!CaptureKey(keyCode, mods))
+       return false;
 
     wxUniChar wchar;
     bool more = true;
