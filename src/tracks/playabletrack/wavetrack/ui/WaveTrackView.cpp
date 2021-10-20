@@ -1261,6 +1261,9 @@ unsigned WaveTrackView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow*
       else
          result |= delegate->KeyDown(event, viewInfo, pParent, project);
    }
+   else
+      event.Skip();
+
    return result;
 }
 
@@ -1274,6 +1277,9 @@ unsigned WaveTrackView::Char(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pP
       else
          result |= delegate->Char(event, viewInfo, pParent, project);
    }
+   else
+      event.Skip();
+
    return result;
 }
 
