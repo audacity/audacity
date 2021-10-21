@@ -27,7 +27,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2021-07-17 10:17+0200\n"
+"PO-Revision-Date: 2021-10-20 20:20+0200\n"
 "Last-Translator: jhuffer <joachim.huffer@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/klyok/audacity/language/de/)\n"
 "Language: de\n"
@@ -346,11 +346,13 @@ msgid "(%s)"
 msgstr "(%s)"
 
 #: libraries/lib-files/FileNames.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "%s does not have write permissions."
-msgstr "Verzeichnis %s hat keine Schreibberechtigungen"
+msgstr ""
+"\n"
+"%s hat keine Schreibberechtigungen."
 
 #: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
 #: src/ProjectAudioManager.cpp src/SelectUtilities.cpp
@@ -518,7 +520,7 @@ msgstr "Erweiterungen bei %s spezifizieren widersprüchliche Platzierungen"
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
-msgstr ""
+msgstr "Sch&leife an/aus"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -1481,9 +1483,8 @@ msgid "App update checking and error reporting require network access. These fea
 msgstr "Für die Überprüfung auf App-Aktualisierungen und die Fehlerberichterstattung ist Netzwerkzugriff erforderlich. Diese Funktionen sind optional."
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Click and drag to define a looping region."
-msgstr "Klicken und Ziehen, um den ausgewählten Bereich zu dehnen."
+msgstr "Klicken und Ziehen, um einen Schleifenbereich zu definieren."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -1577,14 +1578,12 @@ msgstr "Anzeige während Wiedergabe aktualisieren"
 
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Clear Looping Region"
-msgstr "Protokoll löschen"
+msgstr "Schleifenbereich löschen"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Set Loop To Selection"
-msgstr "Zoom auf Auswahl"
+msgstr "Schleife auf Auswahl anwenden"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Pinned Play Head"
@@ -1805,7 +1804,7 @@ msgstr "Max. Disk-Blockgröße in Bytes festlegen"
 #. "log," "trail," "trace" have somewhat similar meanings
 #: src/AudacityApp.cpp
 msgid "replay a journal file"
-msgstr ""
+msgstr "Journaldatei wiedergeben"
 
 #. i18n-hint: This displays a list of available options
 #: src/AudacityApp.cpp
@@ -2567,12 +2566,9 @@ msgid "(%d): %s"
 msgstr "(%d): %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set page size for database %s"
-msgstr ""
-"Datenbankdatei konnte nicht geöffnet werden:\n"
-"\n"
-"%s"
+msgstr "Seitengröße für Datenbank konnte nicht eingestellt werden %s"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2823,9 +2819,8 @@ msgid "Only avformat.dll"
 msgstr "Nur avformat.dll"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid "Only ffmpeg.*.dylib"
-msgstr "Nur ibmp3lame.dylib"
+msgstr "Nur ffmpeg.*.dylib"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -3146,7 +3141,7 @@ msgstr "Sie können uns helfen, Audacity zur Veröffentlichung fertig zu stellen
 #: src/HelpText.cpp
 #, c-format
 msgid "What's new in Audacity %s"
-msgstr ""
+msgstr "Was ist neu in Audacity %s"
 
 #: src/HelpText.cpp
 msgid "How to get help"
@@ -3251,9 +3246,8 @@ msgid "&History..."
 msgstr "&Verlauf..."
 
 #: src/JournalEvents.cpp
-#, fuzzy
 msgid "Journal recording failed"
-msgstr "Aufnahme gespeichert:"
+msgstr "Journalaufzeichnung fehlgeschlagen"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3985,7 +3979,7 @@ msgstr "Zu wenig kompatible Spuren ausgewählt"
 #, c-format
 msgctxt "clip name template"
 msgid "%s #%d"
-msgstr ""
+msgstr "%s #%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -4748,10 +4742,10 @@ msgstr "Wiederherstellen"
 
 #. i18n-hint Name default name assigned to a clip on track import
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgctxt "clip name template"
 msgid "%s %d"
-msgstr "%s %d von %d"
+msgstr "%s %d"
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -5187,51 +5181,47 @@ msgstr "Startpegel (dB):"
 
 #: src/SpectralDataDialog.cpp
 msgid "Spectral Data Control Panel"
-msgstr ""
+msgstr "Spektraldaten-Steuerungspanel"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Brush Tool"
-msgstr "&Vorheriges Werkzeug"
+msgstr "Pinselwerkzeug"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Spectral Brush"
-msgstr "&Spektral"
+msgstr "Spektralpinsel"
 
 #: src/SpectralDataDialog.cpp
 msgid "Brush radius"
-msgstr ""
+msgstr "Pinselradius"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Custom brush size"
-msgstr "Angepasste Kurve"
+msgstr "Angepasste Pinselgröße"
 
 #: src/SpectralDataDialog.cpp
 msgid "Auto-select overtones (beta)"
-msgstr ""
+msgstr "Obertöne automatisch auswählen (Beta)"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Enable smart selection"
-msgstr "Spektralauswahl &aktivieren"
+msgstr "Smart-Auswahl aktivieren"
 
 #: src/SpectralDataDialog.cpp
 msgid ""
 "Select the fundamental frequency\n"
 "and release the mouse"
 msgstr ""
+"Wählen Sie die Grundfrequenz\n"
+"und lassen die Maus los"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Spectra&l Selection Panel"
-msgstr "Spektralauswahl"
+msgstr "Spektra&lauswahlpanel"
 
 #: src/SpectralDataManager.cpp
-#, fuzzy
 msgid "Applied effect to selection"
-msgstr "Ende auf Auswahlende ausgerichtet"
+msgstr "Effekt auf Auswahl angewendet"
 
 #: src/SplashDialog.cpp
 msgid "Welcome to Audacity!"
@@ -5849,14 +5839,14 @@ msgstr "Änderung der Abtastrate fehlgeschlagen."
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%i"
-msgstr ""
+msgstr "%s.%i"
 
 #. i18n-hint Template for clip name generation on inserting new empty clip
 #: src/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
 msgid "%s %i"
-msgstr ""
+msgstr "%s %i"
 
 #: src/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -12718,9 +12708,8 @@ msgstr "Abtastrate:"
 
 #. i18n-hint: Guess format of raw file
 #: src/import/ImportRaw.cpp
-#, fuzzy
 msgid "Detect"
-msgstr "Stille erkennen"
+msgstr "Erkennen"
 
 #: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
 msgid "&Import"
@@ -12753,11 +12742,11 @@ msgstr "%s rechts"
 #. clips.
 #.
 #: src/menus/ClipMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s %s, %d of %d clip %s"
 msgid_plural "%s %s, %d of %d clips %s"
-msgstr[0] "%s %d von %d Clip %s"
-msgstr[1] "%s %d von %d Clips %s"
+msgstr[0] "%s %s, %d von %d Clip %s"
+msgstr[1] "%s %s, %d von %d Clips %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "start"
@@ -12778,11 +12767,11 @@ msgstr "Ende"
 #. clips.
 #.
 #: src/menus/ClipMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s %s and %s %s, %d and %d of %d clip %s"
 msgid_plural "%s %s and %s %s, %d and %d of %d clips %s"
-msgstr[0] "%s %d und %s %d von %d Clip %s"
-msgstr[1] "%s %d und %s %d von %d Clips %s"
+msgstr[0] "%s %s und %s %s, %d und %d von %d Clip %s"
+msgstr[1] "%s %s und %s %s, %d und %d von %d Clips %s"
 
 #. i18n-hint:
 #. first string is the name of a clip,
@@ -12791,11 +12780,11 @@ msgstr[1] "%s %d und %s %d von %d Clips %s"
 #. last number counts all clips,
 #. last string names a track
 #: src/menus/ClipMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, %d of %d clip %s"
 msgid_plural "%s, %d of %d clips %s"
-msgstr[0] "%s %d von %d Clip %s"
-msgstr[1] "%s %d von %d Clips %s"
+msgstr[0] "%s, %d von %d Clip %s"
+msgstr[1] "%s, %d von %d Clips %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time shifted clips to the right"
@@ -13122,9 +13111,8 @@ msgid "&Full Screen (on/off)"
 msgstr "&Vollbild (an/aus)"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Cannot proceed to export."
-msgstr "Keine Voreinstellungen zum exportieren"
+msgstr "Der Export kann nicht fortgesetzt werden."
 
 #: src/menus/FileMenus.cpp
 #, c-format
@@ -13665,13 +13653,13 @@ msgstr "Unbekannt"
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "A journal will be recorded after Audacity restarts."
-msgstr ""
+msgstr "Nach dem Neustart von Audacity wird ein Journal aufgezeichnet."
 
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "No journal will be recorded after Audacity restarts."
-msgstr ""
+msgstr "Nach dem Neustart von Audacity wird kein Journal aufgezeichnet."
 
 #: src/menus/PluginMenus.cpp
 #, c-format
@@ -13755,7 +13743,7 @@ msgstr "Vorgelagerte Aussetzer erkennen"
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "Write Journal"
-msgstr ""
+msgstr "Journal schreiben"
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/menus/PluginMenus.cpp
@@ -14616,15 +14604,13 @@ msgstr "keine Textmarken in Textspur"
 
 #. i18n-hint Sets a starting point for looping play
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Set Loop &In"
-msgstr "Hera&n zoomen"
+msgstr "Schleifenbeg&inn festlegen"
 
 #. i18n-hint Sets an ending point for looping play
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Set Loop &Out"
-msgstr "Her&aus zoomen"
+msgstr "Schleifenen&de festlegen"
 
 #: src/menus/TransportMenus.cpp
 msgid ""
@@ -14683,9 +14669,8 @@ msgid "Play/Stop and &Set Cursor"
 msgstr "Wiedergabe/Stopp und Cursor fe&stlegen"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Play &Once/Stop"
-msgstr "Wiederg&abe/Stopp"
+msgstr "Einmal wiedergeben/st&oppen"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Pause"
@@ -14718,17 +14703,15 @@ msgstr "\"Punch and Rol&l\" Aufnahme"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Looping"
-msgstr ""
+msgstr "Sch&leife"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "&Clear Loop"
-msgstr "Protokoll löschen"
+msgstr "S&chleife löschen"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "&Set Loop to Selection"
-msgstr "Auf Auswahl &zoomen"
+msgstr "&Schleife auf Auswahl festlegen"
 
 #: src/menus/TransportMenus.cpp
 msgid "R&escan Audio Devices"
@@ -14768,9 +14751,8 @@ msgstr "&Transport"
 
 #. i18n-hint: (verb) Start playing audio
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Pl&ay Once"
-msgstr "Wiederg&abe"
+msgstr "Einm&al wiedergeben"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/menus/TransportMenus.cpp
@@ -14819,9 +14801,8 @@ msgid "&Play-at-Speed"
 msgstr "Wiedergabe mit &Geschwindigkeit"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Play-at-Speed &Once"
-msgstr "Schnellere/langsamere Wiedergabe"
+msgstr "Einmal mit &Geschwindigkeit wiedergeben"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview-at-Speed"
@@ -15153,9 +15134,8 @@ msgid "Choose a location to place the temporary directory"
 msgstr "Wählen Sie einen Ort für das temporäre Verzeichnis"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Cannot set the preference."
-msgstr "Einstellung erhalten..."
+msgstr "Die Einstellung kann nicht vorgenommen werden."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
@@ -15166,23 +15146,26 @@ msgid "Choose a location"
 msgstr "Wählen Sie einen Ort"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Directory %s does not exist. Create it?"
-msgstr "Verzeichnis %s existiert nicht. Anlegen?"
+msgstr ""
+"\n"
+"Verzeichnis %s existiert nicht. Erstellen?"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Directory creation failed."
-msgstr "Verzeichnisdialog"
+msgstr "Verzeichniserstellung fehlgeschlagen."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "%s"
-msgstr "%s:"
+msgstr ""
+"\n"
+"%s"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15190,14 +15173,12 @@ msgid "Directory %s is not suitable (at risk of being cleaned out)"
 msgstr "Verzeichnis %s ist nicht geeignet (wird wahrscheinlich gesäubert)"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Temporary Directory' cannot be set."
-msgstr "Das Verzeichnis für temporäre Dateien darf nicht auf einem FAT-Laufwerk sein."
+msgstr "'Temporäres Verzeichnis' kann nicht eingestellt werden."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Temporary files' directory cannot be set."
-msgstr "Das Verzeichnis für temporäre Dateien darf nicht auf einem FAT-Laufwerk sein."
+msgstr "'Temporäre Dateien'-Verzeichnis kann nicht eingestellt werden."
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15213,28 +15194,24 @@ msgid "Temp Directory Update"
 msgstr "Temp-Verzeichnisaktualisierung"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Open' directory cannot be set."
-msgstr "Das Verzeichnis für temporäre Dateien darf nicht auf einem FAT-Laufwerk sein."
+msgstr "'Öffnen'-Verzeichnis kann nicht eingestellt werden."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Save' directory cannot be set."
-msgstr "Das Verzeichnis für temporäre Dateien darf nicht auf einem FAT-Laufwerk sein."
+msgstr "'Speichern'-Verzeichnis kann nicht eingestellt werden."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Import' directory cannot be set."
-msgstr "Das Verzeichnis für temporäre Dateien darf nicht auf einem FAT-Laufwerk sein."
+msgstr "'Import'-Verzeichnis kann nicht eingestellt werden."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Export' directory cannot be set."
-msgstr "Audio-Unit Voreinstellungen exportieren"
+msgstr "'Export'-Verzeichnis kann nicht eingestellt werden."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Macro Output' directory cannot be set."
-msgstr ""
+msgstr "'Makroausgabe'-Verzeichnis kann nicht eingestellt werden."
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
@@ -16916,9 +16893,8 @@ msgid "Skip to End"
 msgstr "Ans Ende springen"
 
 #: src/toolbars/ControlToolBar.cpp
-#, fuzzy
 msgid "Play Once"
-msgstr "Eine Sekunde wiedergeben"
+msgstr "Einmal wiedergeben"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Record New Track"
@@ -17371,9 +17347,8 @@ msgid "Playback Speed"
 msgstr "Wiedergabe-Geschwindigkeit"
 
 #: src/toolbars/TranscriptionToolBar.cpp
-#, fuzzy
 msgid "Play-at-Speed Once"
-msgstr "Schnellere/langsamere Wiedergabe"
+msgstr "Einmal mit Geschwindigkeit wiedergeben"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for transcription (currently just vary play speed)
@@ -17383,7 +17358,7 @@ msgstr "Wiedergabe-mit-&Geschwindigkeit-Werkzeugleiste"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
-msgstr ""
+msgstr "Textmarke ziehen. Halten Sie die Umschalttaste gedrückt und ziehen, um alle Textmarken auf der selben Spur zu verschieben."
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -17517,7 +17492,7 @@ msgstr "Zum Aufklappen links klicken, zum Entfernen rechts klicken"
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to merge clips"
-msgstr "Um Clips zusammenzuführen links klicken"
+msgstr "Links klicken, um Clips zusammenzuführen "
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Merged Clips"
@@ -17586,58 +17561,52 @@ msgid "S&pectrogram Settings..."
 msgstr "S&pektrogramm-Einstellungen..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
-#, fuzzy
 msgid "Click and drag to move clip boundary in time"
-msgstr "Klicken und Ziehen, um eine Spur auf der Zeitachse zu verschieben"
+msgstr "Klicken und Ziehen, um die Clipgrenzen zeitlich zu verschieben"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Left"
-msgstr ""
+msgstr "Clip-Trim-Links"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 #, c-format
 msgid "Moved by %.02f"
-msgstr ""
+msgstr "Verschoben um %.02f"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Right"
-msgstr ""
+msgstr "Clip-Trim-Rechts"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Set Wave Clip Name"
-msgstr "Spurname einstellen"
+msgstr "Wellenclipname einstellen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Click and drag to select text"
-msgstr "Klicken und Ziehen, um Audio auszuwählen"
+msgstr "Klicken und Ziehen, um Text auszuwählen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Modified Clip Name"
-msgstr "Textmarke geändert"
+msgstr "Clipname verändert"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Clip Name Edit"
-msgstr "Sample bearbeiten"
+msgstr "Clipname bearbeiten"
 
 #. i18n-hint:
 #. string is the name of a clip
 #. first number is the position of that clip in a sequence of clips,
 #. second number counts the clips
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
-msgstr[0] "%s %d von %d Clip %s"
-msgstr[1] "%s %d von %d Clips %s"
+msgstr[0] "%s, %d von %d Clip"
+msgstr[1] "%s, %d von %d Clips"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Rename Clip..."
-msgstr "Umbenennen..."
+msgstr "Clip umbenennen..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -17870,19 +17839,16 @@ msgid "Close sub-view"
 msgstr "Unteransicht schließen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Split Clip"
-msgstr "Clip setzen"
+msgstr "Clip teilen"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Mute/Unmute Track"
-msgstr "Fokussierte Spur st&umm/laut"
+msgstr "Spur stumm/laut"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Rename clip..."
-msgstr "Umbenennen..."
+msgstr "Clip umbenennen..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom x1/2"
@@ -17982,41 +17948,35 @@ msgstr "Logarithmische &Interpolation"
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
 msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
-msgstr ""
+msgstr "Ziehen Sie Clips um sie neu zu positionieren. Halten Sie die Umschalttaste und ziehen Sie, um alle Clips auf der selben Spur zu verschieben."
 
 #: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
 msgid "Add Mono Track"
-msgstr "&Monospur"
+msgstr "Monospur hinzufügen"
 
 #: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
 msgid "Add Stereo Track"
-msgstr "&Stereospur"
+msgstr "Stereospur hinzufügen"
 
 #: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
 msgid "Add Label Track"
-msgstr "Textspur"
+msgstr "Textmarkenspur hinzufügen"
 
 #: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
 msgid "Export Audio..."
-msgstr "Audio &exportieren..."
+msgstr "Audio exportieren..."
 
 #: src/tracks/ui/BrushHandle.cpp
-#, fuzzy
 msgid "Erased selected area"
-msgstr "Gewählte Regel &löschen"
+msgstr "Ausgewählter Bereich gelöscht"
 
 #: src/tracks/ui/BrushHandle.cpp
 msgid "Selected area using Brush Tool"
-msgstr ""
+msgstr "Bereich mit Pinselwerkzeug gewählt"
 
 #: src/tracks/ui/BrushHandle.cpp
-#, fuzzy
 msgid "Brush tool selection"
-msgstr "Auswahl ausschneiden"
+msgstr "Pinselwerkzeug-Auswahl"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "&Name..."
@@ -18253,20 +18213,18 @@ msgstr "Links=Heranzoomen, Rechts=Herauszoomen, Mitte=Normal"
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
-#, fuzzy
 msgid "No Updates Available"
-msgstr "verfügbar"
+msgstr "Keine Aktualisierungen verfügbar"
 
 #: src/update/NoUpdatesAvailableDialog.cpp
-#, fuzzy
 msgid "Check for Updates"
-msgstr "Auf Aktualisierungen &prüfen"
+msgstr "Auf Aktualisierungen prüfen"
 
 #. i18n-hint: %s is replaced with 'Preferences > Application'.
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, c-format
 msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
-msgstr ""
+msgstr "Wenn Sie Ihre Einstellung für automatische Updateprüfungen ändern möchten, können Sie sie unter %s finden."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
@@ -18290,10 +18248,9 @@ msgid "Update data was corrupted."
 msgstr "Update-Daten waren beschädigt."
 
 #: src/update/UpdateManager.cpp
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error downloading update"
-msgstr "Fehler beim Herunterladen des Updates."
+msgstr "Fehler beim Herunterladen des Updates"
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
@@ -18301,14 +18258,13 @@ msgid "Can't open the Audacity download link."
 msgstr "Der Download-Link von Audacity kann nicht geöffnet werden."
 
 #: src/update/UpdateManager.cpp
-#, fuzzy
 msgid "Audacity update"
-msgstr "Audacity-Audio"
+msgstr "Audacity-Aktualisierung"
 
 #: src/update/UpdateManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Downloading %s"
-msgstr "Herunterladen"
+msgstr "%s wird heruntergeladen"
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19163,9 +19119,8 @@ msgstr "Steve Daulton"
 #: plug-ins/eq-xml-to-txt-converter.ny plug-ins/label-sounds.ny
 #: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
 #: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
-#, fuzzy
 msgid "GNU General Public License v2.0 or later"
-msgstr "Veröffentlicht unter den Bedingungen der GNU General Public Lizenz Version 2 oder später."
+msgstr "GNU General Public Lizenz v2.0 oder später"
 
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
