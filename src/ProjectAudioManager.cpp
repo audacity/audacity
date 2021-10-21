@@ -300,6 +300,8 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if ( !canStop )
       return -1;
 
+   auto pStartTime = options.pStartTime;
+
    bool nonWaveToo = options.playNonWaveTracks;
 
    // Uncomment this for laughs!
@@ -345,10 +347,9 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
       return -1;  // No need to continue without audio tracks
 
 #if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
-   double init_seek = 0.0;
+   double initSeek = 0.0;
 #endif
-
-   double loop_offset = 0.0;
+   double loopOffset = 0.0;
 
    if (t1 == t0) {
       if (looped) {
@@ -364,7 +365,9 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          else {
             // loop the entire project
             // Bug2347, loop playback from cursor position instead of project start
-            loop_offset = t0 - tracks.GetStartTime();
+            loopOffset = t0 - tracks.GetStartTime();
+            if (!pStartTime)
+               pStartTime = &loopOffset;
             t0 = tracks.GetStartTime();
             t1 = tracks.GetEndTime();
          }
@@ -378,7 +381,9 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          }
 #if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
          else {
-            init_seek = t0;         //AC: init_seek is where playback will 'start'
+            initSeek = t0;         //AC: initSeek is where playback will 'start'
+            if (!pStartTime)
+               pStartTime = &initSeek;
             t0 = tracks.GetStartTime();
          }
 #endif
@@ -418,24 +423,16 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
             };
          token = gAudioIO->StartStream(
             GetAllPlaybackTracks(TrackList::Get(*p), false, nonWaveToo),
-            tcp0, tcp1, myOptions);
+            tcp0, tcp1, myOptions, pStartTime);
       }
       else {
          token = gAudioIO->StartStream(
             GetAllPlaybackTracks( tracks, false, nonWaveToo ),
-            t0, t1, options);
+            t0, t1, options, pStartTime);
       }
       if (token != 0) {
          success = true;
          ProjectAudioIO::Get(*p).SetAudioIOToken(token);
-         if (loop_offset != 0.0) {
-            // Bug 2347
-            gAudioIO->SeekStream(loop_offset);
-         }
-#if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR )
-         //AC: If init_seek was set, now's the time to make it happen.
-         gAudioIO->SeekStream(init_seek);
-#endif
       }
       else {
          // Bug1627 (part of it):
@@ -934,7 +931,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          gAudioIO->AILAInitialize();
       #endif
 
-      int token = gAudioIO->StartStream(transportTracks, t0, t1, options);
+      int token = gAudioIO->StartStream(
+         transportTracks, t0, t1, options, options.pStartTime);
 
       success = (token != 0);
 
