@@ -759,7 +759,8 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
 
 int AudioIO::StartStream(const TransportTracks &tracks,
                          double t0, double t1,
-                         const AudioIOStartStreamOptions &options)
+                         const AudioIOStartStreamOptions &options,
+                         double *pStartTime)
 {
    mLostSamples = 0;
    mLostCaptureIntervals.clear();
@@ -951,10 +952,10 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    AILASetStartTime();
 #endif
 
-   if (options.pStartTime)
+   if (pStartTime)
    {
       // Calculate the NEW time position
-      const auto time = mPlaybackSchedule.ClampTrackTime( *options.pStartTime );
+      const auto time = mPlaybackSchedule.ClampTrackTime( *pStartTime );
 
       // Main thread's initialization of mTime
       mPlaybackSchedule.SetTrackTime( time );
