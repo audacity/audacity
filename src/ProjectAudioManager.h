@@ -99,9 +99,7 @@ public:
    int PlayPlayRegion(const SelectedRegion &selectedRegion,
                       const AudioIOStartStreamOptions &options,
                       PlayMode playMode,
-                      bool backwards = false,
-                      // Allow t0 and t1 to be beyond end of tracks
-                      bool playWhiteSpace = false);
+                      bool backwards = false);
 
    // Play currently selected region, or if nothing selected,
    // play from current cursor.

@@ -291,8 +291,7 @@ bool CutPreviewPlaybackPolicy::RepositionPlayback( PlaybackSchedule &,
 int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    const AudioIOStartStreamOptions &options,
                                    PlayMode mode,
-                                   bool backwards, /* = false */
-                                   bool playWhiteSpace /* = false */)
+                                   bool backwards /* = false */)
 {
    auto &projectAudioManager = *this;
    bool canStop = projectAudioManager.CanStopAudioStream();
@@ -341,7 +340,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
    else
       hasaudio = ! tracks.Any<WaveTrack>().empty();
 
-   double latestEnd = (playWhiteSpace)? t1 : tracks.GetEndTime();
+   double latestEnd = tracks.GetEndTime();
 
    if (!hasaudio)
       return -1;  // No need to continue without audio tracks

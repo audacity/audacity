@@ -2086,8 +2086,7 @@ void AdornedRulerPanel::StartQPPlay(
 
       projectAudioManager.PlayPlayRegion((SelectedRegion(start, end)),
                           options, mode,
-                          false,
-                          true);
+                          false);
 
    }
 }
