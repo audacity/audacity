@@ -72,6 +72,8 @@ struct AudioIOStartStreamOptions
 
    using PolicyFactory = std::function< std::unique_ptr<PlaybackPolicy>() >;
    PolicyFactory policyFactory;
+
+   bool loopEnabled{ false };
 };
 
 struct AudioIODiagnostics{

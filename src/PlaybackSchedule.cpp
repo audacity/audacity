@@ -148,6 +148,10 @@ const PlaybackPolicy &PlaybackSchedule::GetPolicy() const
    return const_cast<PlaybackSchedule&>(*this).GetPolicy();
 }
 
+NewDefaultPlaybackPolicy::NewDefaultPlaybackPolicy( bool loopEnabled )
+   : mLoopEnabled{ loopEnabled }
+{}
+
 NewDefaultPlaybackPolicy::~NewDefaultPlaybackPolicy() = default;
 
 PlaybackPolicy::BufferTimes
@@ -222,6 +226,10 @@ void NewDefaultPlaybackPolicy::MessageConsumer( PlaybackSchedule &schedule )
 {
    // This executes in the TrackBufferExchange thread
    auto data = schedule.mMessageChannel.Read();
+
+   bool loopWasEnabled = mLoopEnabled;
+   mLoopEnabled = data.mLoopEnabled;
+
    if (data.mT0 >= data.mT1)
       // Ignore empty region
       return;
@@ -315,7 +323,7 @@ void PlaybackSchedule::Init(
    mPolicyValid.store(true, std::memory_order_release);
 
    mMessageChannel.Initialize();
-   mMessageChannel.Write( { mT0, mT1 } );
+   mMessageChannel.Write( { mT0, mT1, options.loopEnabled } );
 }
 
 double PlaybackSchedule::ClampTrackTime( double trackTime ) const
@@ -488,5 +496,7 @@ void PlaybackSchedule::MessageProducer( PlayRegionEvent &evt)
       return;
    const auto &region = *pRegion;
 
-   mMessageChannel.Write( { region.GetStart(), region.GetEnd() } );
+   mMessageChannel.Write( {
+      region.GetStart(), region.GetEnd(), region.Active()
+   } );
 }

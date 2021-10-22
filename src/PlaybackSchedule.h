@@ -368,6 +368,7 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    struct SlotData {
       double mT0;
       double mT1;
+      bool mLoopEnabled;
    };
    MessageBuffer<SlotData> mMessageChannel;
 
@@ -450,6 +451,7 @@ private:
 
 class NewDefaultPlaybackPolicy final : public PlaybackPolicy {
 public:
+   explicit NewDefaultPlaybackPolicy(bool loopEnabled);
    ~NewDefaultPlaybackPolicy() override;
 
    BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
@@ -474,5 +476,6 @@ private:
    size_t mRemaining{ 0 };
    bool mProgress{ true };
    bool mKicked{ false };
+   bool mLoopEnabled{ true };
 };
 #endif

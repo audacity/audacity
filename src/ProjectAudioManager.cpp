@@ -1168,9 +1168,14 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
    options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
    options.listener = ProjectAudioManager::Get( project ).shared_from_this();
    
+   bool loopEnabled = ViewInfo::Get(project).playRegion.Active();
+   options.loopEnabled = loopEnabled;
+
    if (newDefault)
-      options.policyFactory = []() -> std::unique_ptr<PlaybackPolicy> {
-         return std::make_unique<NewDefaultPlaybackPolicy>(); };
+      options.policyFactory = [loopEnabled]() -> std::unique_ptr<PlaybackPolicy> {
+         return std::make_unique<NewDefaultPlaybackPolicy>(
+            loopEnabled); };
+
    return options;
 }
 
