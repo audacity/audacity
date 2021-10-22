@@ -428,8 +428,11 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
       }
       else {
          double mixerLimit = t1;
-         if (newDefault)
+         if (newDefault) {
             mixerLimit = latestEnd;
+            if (pStartTime && *pStartTime >= t1)
+               t1 = latestEnd;
+         }
          token = gAudioIO->StartStream(
             GetAllPlaybackTracks( tracks, false, nonWaveToo ),
             t0, t1, mixerLimit, options);
@@ -1176,9 +1179,10 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
 
    if (newDefault) {
       const double trackEndTime = TrackList::Get(project).GetEndTime();
-      options.policyFactory = [trackEndTime, loopEnabled]() -> std::unique_ptr<PlaybackPolicy> {
+      const double loopEndTime = ViewInfo::Get(project).playRegion.GetEnd();
+      options.policyFactory = [trackEndTime, loopEndTime, loopEnabled]() -> std::unique_ptr<PlaybackPolicy> {
          return std::make_unique<NewDefaultPlaybackPolicy>(
-            trackEndTime, loopEnabled); };
+            trackEndTime, loopEndTime, loopEnabled); };
    }
 
    return options;
