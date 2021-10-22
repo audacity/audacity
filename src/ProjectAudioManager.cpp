@@ -1171,10 +1171,12 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
    bool loopEnabled = ViewInfo::Get(project).playRegion.Active();
    options.loopEnabled = loopEnabled;
 
-   if (newDefault)
-      options.policyFactory = [loopEnabled]() -> std::unique_ptr<PlaybackPolicy> {
+   if (newDefault) {
+      const double trackEndTime = TrackList::Get(project).GetEndTime();
+      options.policyFactory = [trackEndTime, loopEnabled]() -> std::unique_ptr<PlaybackPolicy> {
          return std::make_unique<NewDefaultPlaybackPolicy>(
-            loopEnabled); };
+            trackEndTime, loopEnabled); };
+   }
 
    return options;
 }

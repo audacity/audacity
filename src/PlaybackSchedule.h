@@ -451,7 +451,7 @@ private:
 
 class NewDefaultPlaybackPolicy final : public PlaybackPolicy {
 public:
-   explicit NewDefaultPlaybackPolicy(bool loopEnabled);
+   NewDefaultPlaybackPolicy(double trackEndTime, bool loopEnabled);
    ~NewDefaultPlaybackPolicy() override;
 
    BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
@@ -473,6 +473,7 @@ public:
    bool Looping( const PlaybackSchedule & ) const override;
 
 private:
+   const double mTrackEndTime;
    size_t mRemaining{ 0 };
    bool mProgress{ true };
    bool mKicked{ false };

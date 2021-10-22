@@ -148,8 +148,10 @@ const PlaybackPolicy &PlaybackSchedule::GetPolicy() const
    return const_cast<PlaybackSchedule&>(*this).GetPolicy();
 }
 
-NewDefaultPlaybackPolicy::NewDefaultPlaybackPolicy( bool loopEnabled )
-   : mLoopEnabled{ loopEnabled }
+NewDefaultPlaybackPolicy::NewDefaultPlaybackPolicy(
+   double trackEndTime, bool loopEnabled )
+   : mTrackEndTime{ trackEndTime }
+   , mLoopEnabled{ loopEnabled }
 {}
 
 NewDefaultPlaybackPolicy::~NewDefaultPlaybackPolicy() = default;
