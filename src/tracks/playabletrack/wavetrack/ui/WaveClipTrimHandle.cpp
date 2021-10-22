@@ -85,7 +85,11 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(std::weak_ptr<WaveClipTrimHandle>& h
     //or another own edge
     for (const auto& clip : waveTrack->GetClips())
     {
+        if (!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+           continue;
+
         auto clipRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
+        
         if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold)
         {
             auto left = -std::numeric_limits<double>::infinity();

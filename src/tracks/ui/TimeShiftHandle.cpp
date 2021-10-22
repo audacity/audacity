@@ -340,11 +340,32 @@ void ClipMoveState::Init(
       }
    }
    else {
-      // Move intervals only of the chosen channel group
-      for ( auto channel : TrackList::Channels( &capturedTrack ) ) {
-         auto &shifter = *state.shifters[channel];
-         if ( channel != &capturedTrack )
-            shifter.SelectInterval(TrackInterval{clickTime, clickTime});
+      // Move intervals only of the chosen channel group      
+
+      auto selectIntervals = [&](const TrackShifter::Intervals& intervals) {
+         for (auto channel : TrackList::Channels(&capturedTrack)) {
+            auto& shifter = *state.shifters[channel];
+            if (channel != &capturedTrack)
+            {
+               for (auto& interval : intervals)
+               {
+                  shifter.SelectInterval(interval);
+               }
+            }
+         }
+      };
+      if (capturedTrack.GetLinkType() == Track::LinkType::Aligned || 
+         capturedTrack.IsAlignedWithLeader())
+         //for aligned tracks we always match the whole clip that was
+         //positively hit tested
+         selectIntervals(state.shifters[&capturedTrack]->MovingIntervals());
+      else
+      {
+         TrackShifter::Intervals intervals;
+         intervals.emplace_back(TrackInterval { clickTime, clickTime });
+         //for not align, match clips from other channels that are 
+         //exactly at clicked time point
+         selectIntervals(intervals);
       }
    }
    

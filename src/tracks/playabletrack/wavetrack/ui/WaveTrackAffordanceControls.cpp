@@ -29,10 +29,11 @@
 #include "../../../../ShuttleGui.h"
 #include "../../../../ProjectWindows.h"
 #include "../../../../commands/AudacityCommand.h"
-#include "../../../ui/AffordanceHandle.h"
+
 #include "../../../ui/TextEditHelper.h"
 #include "../../../ui/SelectHandle.h"
 #include "WaveTrackView.h"//need only ClipParameters
+#include "WaveTrackAffordanceHandle.h"
 
 #include "../../../../ProjectHistory.h"
 #include "../../../../ProjectSettings.h"
@@ -48,38 +49,7 @@
 
 #include "WaveClipTrimHandle.h"
 
-class WaveTrackAffordanceHandle final : public AffordanceHandle
-{
-    std::shared_ptr<WaveClip> mTarget;
-public:
-    WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, const std::shared_ptr<WaveClip>& target) 
-        : AffordanceHandle(track), mTarget(target)
-    { }
 
-    Result Click(const TrackPanelMouseEvent& event, AudacityProject* project) override
-    {
-        auto affordanceControl = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(event.pCell);
-        Result result = RefreshCode::RefreshNone;
-        if (affordanceControl)
-        {
-            result |= affordanceControl->OnAffordanceClick(event, project);
-            if (!event.event.GetSkipped())
-                return result;
-            event.event.Skip(false);
-        }
-        return result | AffordanceHandle::Click(event, project);
-    }
-
-    UIHandle::Result SelectAt(const TrackPanelMouseEvent& event, AudacityProject* project) override
-    {
-        auto& viewInfo = ViewInfo::Get(*project);
-        viewInfo.selectedRegion.setTimes(mTarget->GetPlayStartTime(), mTarget->GetPlayEndTime());
-        
-        ProjectHistory::Get(*project).ModifyState(false);
-        
-        return RefreshCode::RefreshAll | RefreshCode::Cancelled;
-    }
-};
 
 class SetWaveClipNameCommand : public AudacityCommand
 {
@@ -230,8 +200,7 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         if (clip == editClipLock)
             continue;
 
-        auto affordanceRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, state.rect);
-        if (affordanceRect.Contains(px, py))
+        if (WaveTrackView::HitTest(*clip, zoomInfo, state.rect, {px, py}))
         {
             results.push_back(
                 AssignUIHandlePtr(
@@ -282,9 +251,13 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
             for (const auto& clip : waveTrack->GetClips())
             {
                 auto affordanceRect
-                    = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
-                if (affordanceRect.IsEmpty())
-                    continue;
+                   = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
+
+                if(!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+                {
+                   TrackArt::DrawClipFolded(context.dc, affordanceRect);
+                   continue;
+                }
 
                 auto selected = GetSelectedClip().lock() == clip;
                 auto highlight = selected || affordanceRect.Contains(px, py);
