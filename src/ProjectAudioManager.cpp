@@ -424,12 +424,15 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
             };
          token = gAudioIO->StartStream(
             GetAllPlaybackTracks(TrackList::Get(*p), false, nonWaveToo),
-            tcp0, tcp1, myOptions);
+            tcp0, tcp1, tcp1, myOptions);
       }
       else {
+         double mixerLimit = t1;
+         if (newDefault)
+            mixerLimit = latestEnd;
          token = gAudioIO->StartStream(
             GetAllPlaybackTracks( tracks, false, nonWaveToo ),
-            t0, t1, options);
+            t0, t1, mixerLimit, options);
       }
       if (token != 0) {
          success = true;
@@ -932,7 +935,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          gAudioIO->AILAInitialize();
       #endif
 
-      int token = gAudioIO->StartStream(transportTracks, t0, t1, options);
+      int token = gAudioIO->StartStream(transportTracks, t0, t1, t1, options);
 
       success = (token != 0);
 

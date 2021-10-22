@@ -758,10 +758,11 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
 }
 
 int AudioIO::StartStream(const TransportTracks &tracks,
-                         double t0, double t1,
-                         const AudioIOStartStreamOptions &options)
+   double t0, double t1, double mixerLimit,
+   const AudioIOStartStreamOptions &options)
 {
    const auto &pStartTime = options.pStartTime;
+   t1 = std::min(t1, mixerLimit);
 
    mLostSamples = 0;
    mLostCaptureIntervals.clear();
@@ -921,7 +922,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       return 0;
    }
 
-   if ( ! AllocateBuffers( options, tracks, t0, t1, options.rate ) )
+   if ( ! AllocateBuffers( options, tracks, t0, mixerLimit, options.rate ) )
       return 0;
 
    if (mNumPlaybackChannels > 0)
