@@ -54,8 +54,7 @@ bool PlaybackPolicy::Done( PlaybackSchedule &schedule,
 double PlaybackPolicy::OffsetTrackTime(
    PlaybackSchedule &schedule, double offset )
 {
-   const auto time = schedule.ClampTrackTime(
-      schedule.GetTrackTime() + offset );
+   const auto time = schedule.GetTrackTime() + offset;
    schedule.RealTimeInit( time );
    return time;
 }
@@ -328,14 +327,6 @@ void PlaybackSchedule::Init(
    mMessageChannel.Write( { mT0, mT1, options.loopEnabled } );
 }
 
-double PlaybackSchedule::ClampTrackTime( double trackTime ) const
-{
-   if (ReversedTime())
-      return std::max(mT1, std::min(mT0, trackTime));
-   else
-      return std::max(mT0, std::min(mT1, trackTime));
-}
-
 double PlaybackSchedule::ComputeWarpedLength(double t0, double t1) const
 {
    if (mEnvelope)
@@ -354,7 +345,12 @@ double PlaybackSchedule::SolveWarpedLength(double t0, double length) const
 
 double PlaybackSchedule::RealDuration(double trackTime1) const
 {
-   return fabs(ComputeWarpedLength(mT0, trackTime1));
+   return fabs(RealDurationSigned(trackTime1));
+}
+
+double PlaybackSchedule::RealDurationSigned(double trackTime1) const
+{
+   return ComputeWarpedLength(mT0, trackTime1);
 }
 
 double PlaybackSchedule::RealTimeRemaining() const
@@ -369,7 +365,7 @@ void PlaybackSchedule::RealTimeAdvance( double increment )
 
 void PlaybackSchedule::RealTimeInit( double trackTime )
 {
-   mWarpedTime = RealDuration( trackTime );
+   mWarpedTime = RealDurationSigned( trackTime );
 }
 
 void PlaybackSchedule::RealTimeRestart()

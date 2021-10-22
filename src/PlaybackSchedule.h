@@ -417,13 +417,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    void SetTrackTime( double time )
    { mTime.store(time, std::memory_order_relaxed); }
 
-   /** \brief Clamps argument to be between mT0 and mT1
-    *
-    * Returns the bound if the value is out of bounds; does not wrap.
-    * Returns a time in seconds.
-    */
-   double ClampTrackTime( double trackTime ) const;
-
    void ResetMode() {
       mPolicyValid.store(false, std::memory_order_release);
    }
@@ -431,6 +424,10 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    // Convert time between mT0 and argument to real duration, according to
    // time track if one is given; result is always nonnegative
    double RealDuration(double trackTime1) const;
+
+   // Convert time between mT0 and argument to real duration, according to
+   // time track if one is given; may be negative
+   double RealDurationSigned(double trackTime1) const;
 
    // How much real time left?
    double RealTimeRemaining() const;
