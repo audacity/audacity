@@ -759,9 +759,10 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
 
 int AudioIO::StartStream(const TransportTracks &tracks,
                          double t0, double t1,
-                         const AudioIOStartStreamOptions &options,
-                         double *pStartTime)
+                         const AudioIOStartStreamOptions &options)
 {
+   const auto &pStartTime = options.pStartTime;
+
    mLostSamples = 0;
    mLostCaptureIntervals.clear();
    mDetectDropouts =

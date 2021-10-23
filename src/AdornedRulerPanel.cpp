@@ -2065,8 +2065,7 @@ void AdornedRulerPanel::StartQPPlay(
 
       if (!cutPreview) {
          if (pStartTime)
-            oldStart = *pStartTime;
-         options.pStartTime = &oldStart;
+            options.pStartTime.emplace(*pStartTime);
       }
       else
          options.envelope = nullptr;

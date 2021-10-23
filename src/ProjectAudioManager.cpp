@@ -300,7 +300,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if ( !canStop )
       return -1;
 
-   auto pStartTime = options.pStartTime;
+   auto &pStartTime = options.pStartTime;
 
    bool nonWaveToo = options.playNonWaveTracks;
 
@@ -367,7 +367,9 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
             // Bug2347, loop playback from cursor position instead of project start
             loopOffset = t0 - tracks.GetStartTime();
             if (!pStartTime)
-               pStartTime = &loopOffset;
+               // TODO move this reassignment elsewhere so we don't need an
+               // ugly mutable member
+               pStartTime.emplace(loopOffset);
             t0 = tracks.GetStartTime();
             t1 = tracks.GetEndTime();
          }
@@ -383,7 +385,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          else {
             initSeek = t0;         //AC: initSeek is where playback will 'start'
             if (!pStartTime)
-               pStartTime = &initSeek;
+               pStartTime.emplace(initSeek);
             t0 = tracks.GetStartTime();
          }
 #endif
@@ -423,12 +425,12 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
             };
          token = gAudioIO->StartStream(
             GetAllPlaybackTracks(TrackList::Get(*p), false, nonWaveToo),
-            tcp0, tcp1, myOptions, pStartTime);
+            tcp0, tcp1, myOptions);
       }
       else {
          token = gAudioIO->StartStream(
             GetAllPlaybackTracks( tracks, false, nonWaveToo ),
-            t0, t1, options, pStartTime);
+            t0, t1, options);
       }
       if (token != 0) {
          success = true;
@@ -931,8 +933,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          gAudioIO->AILAInitialize();
       #endif
 
-      int token = gAudioIO->StartStream(
-         transportTracks, t0, t1, options, options.pStartTime);
+      int token = gAudioIO->StartStream(transportTracks, t0, t1, options);
 
       success = (token != 0);
 

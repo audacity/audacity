@@ -380,8 +380,7 @@ public:
 
    int StartStream(const TransportTracks &tracks,
                    double t0, double t1,
-                   const AudioIOStartStreamOptions &options,
-                   double *pStartTime);
+                   const AudioIOStartStreamOptions &options);
 
    /** \brief Stop recording, playback or input monitoring.
     *
