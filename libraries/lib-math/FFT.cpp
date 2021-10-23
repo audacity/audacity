@@ -305,21 +305,27 @@ void PowerSpectrum(size_t NumSamples, const float *In, float *Out)
 {
    auto hFFT = GetFFT(NumSamples);
    Floats pFFT{ NumSamples };
+
    // Copy the data into the processing buffer
-   for (size_t i = 0; i<NumSamples; i++)
+   for (size_t i = 0; i < NumSamples; i++)
       pFFT[i] = In[i];
 
    // Perform the FFT
    RealFFTf(pFFT.get(), hFFT.get());
 
-   // Copy the data into the real and imaginary outputs
-   for (size_t i = 1; i<NumSamples / 2; i++) {
-      Out[i]= (pFFT[hFFT->BitReversed[i]  ]*pFFT[hFFT->BitReversed[i]  ])
-         + (pFFT[hFFT->BitReversed[i]+1]*pFFT[hFFT->BitReversed[i]+1]);
+   // Determine the real and imaginary parts for each 
+   // frequency bin (excluding the DC and Fs/2 bins),
+   // and then compute the power.
+   for (size_t i = 1; i < NumSamples/2; i++) {
+      size_t idx = hFFT->BitReversed[i];
+      auto realPart = pFFT[idx];
+      auto imagPart = pFFT[idx + 1];
+      Out[i] = realPart * realPart + imagPart * imagPart;
    }
+
    // Handle the (real-only) DC and Fs/2 bins
    Out[0] = pFFT[0]*pFFT[0]/4;
-   Out[NumSamples / 2] = pFFT[1]*pFFT[1];
+   Out[NumSamples/2] = pFFT[1]*pFFT[1]/4;
 }
 
 /*

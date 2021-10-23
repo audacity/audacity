@@ -1081,7 +1081,9 @@ void FrequencyPlotDialog::OnExport(wxCommandEvent & WXUNUSED(event))
    if (mAlgChoice->GetSelection() == 0) {
       ss
          << XO("Frequency (Hz)\tLevel (dB)") << '\n';
-      for (int i = 0; i < processedSize; i++)
+      // Write out all analysed frequencies, from
+      // DC to half the sampling rate (Fs/2).
+      for (int i = 0; i <= processedSize; i++)
          ss
             << wxString::Format(wxT("%f\t%f\n"),
                i * mRate / mWindowSize, processed[i] );
