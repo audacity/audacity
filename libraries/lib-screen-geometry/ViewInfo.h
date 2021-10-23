@@ -181,6 +181,11 @@ public:
    // Set current and last active times the same regardless of activation:
    void SetAllTimes( double start, double end );
 
+   //! Set to an invalid state
+   void Clear();
+   //! Test whether in invalid state
+   bool IsClear() const;
+
    void Order();
 
 private:

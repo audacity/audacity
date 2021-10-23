@@ -214,6 +214,18 @@ void PlayRegion::SetAllTimes( double start, double end )
    mLastActiveStart = start, mLastActiveEnd = end;
 }
 
+static constexpr auto invalidValue = std::numeric_limits<double>::min();
+
+void PlayRegion::Clear()
+{
+   SetAllTimes(invalidValue, invalidValue);
+}
+
+bool PlayRegion::IsClear() const
+{
+   return GetStart() == invalidValue && GetEnd() == invalidValue;
+}
+
 void PlayRegion::Order()
 {
    if ( mStart >= 0 && mEnd >= 0 && mStart > mEnd) {
