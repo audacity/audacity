@@ -180,7 +180,7 @@ TranslatableString LOFImportPlugin::GetPluginFormatDescription()
 std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(
    const FilePath &filename, AudacityProject *pProject)
 {
-   // Check if it is a binary file
+   // Check if it is a text file.
    {
       wxFile binaryFile;
       if (!binaryFile.Open(filename))
@@ -189,16 +189,62 @@ std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(
       char buf[BINARY_FILE_CHECK_BUFFER_SIZE];
       int count = binaryFile.Read(buf, BINARY_FILE_CHECK_BUFFER_SIZE);
 
-      for (int i = 0; i < count; i++)
+      bool isTextFile = false;
+      const std::string lofToken("file");
+
+      // At least we should get a size more than: <token> + <space> + <filename>.
+      if (count > (lofToken.length() + sizeof(' ') + 1))
       {
-         // Check if this char is below the space character, but not a
-         // line feed or carriage return
-         if (buf[i] < 32 && buf[i] != 10 && buf[i] != 13)
-         {
-            // Assume it is a binary file
-            binaryFile.Close();
-            return nullptr;
-         }
+          // Audacity can import list from LOF only with BOM or ASCII,
+          // each other text (like unicode without BOM, bin, etc) can't be recognized.
+
+          // UTF-16 BOM checker.
+          auto IsUtf16_BE = [](const char* str) -> bool
+          {
+              return str[0] == static_cast<char>(0xFE) && str[1] == static_cast<char>(0xFF);
+          };
+          auto IsUtf16_LE = [](const char* str) -> bool
+          {
+              return str[0] == static_cast<char>(0xFF) && str[1] == static_cast<char>(0xFE);
+          };
+
+          // UTF-32 BOM checker.
+          auto IsUtf32_BE = [](const char* str) -> bool
+          {
+              return str[0] == static_cast<char>(0x00) &&
+                     str[1] == static_cast<char>(0x00) &&
+                     str[2] == static_cast<char>(0xFE) &&
+                     str[3] == static_cast<char>(0xFF);
+          };
+          auto IsUtf32_LE = [](const char* str) -> bool
+          {
+              return str[0] == static_cast<char>(0xFF) &&
+                     str[1] == static_cast<char>(0xFE) &&
+                     str[2] == static_cast<char>(0x00) &&
+                     str[3] == static_cast<char>(0x00);
+          };
+
+          // Is unicode text file.
+          if (IsUtf16_BE(buf) || IsUtf16_LE(buf) || IsUtf32_BE(buf) || IsUtf32_LE(buf))
+          {
+              isTextFile = true;
+          }
+          // Try parse as ASCII and UTF-8 text as ASCII too.
+          else
+          {
+              buf[sizeof(buf) - 1] = '\0';
+
+              std::string importedText(buf);
+
+              if (importedText.find(lofToken) != std::string::npos)
+                  isTextFile = true;
+          }
+      }
+
+      if (!isTextFile)
+      {
+          binaryFile.Close();
+          return nullptr;
       }
    }
 

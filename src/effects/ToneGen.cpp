@@ -66,7 +66,7 @@ static const EnumValueSymbol kWaveStrings[nWaveforms] =
    { XO("Square") },
    { XO("Sawtooth") },
    { XO("Square, no alias") },
-   { XO("Triangle") }
+   { XC("Triangle", "waveform") }
 };
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
