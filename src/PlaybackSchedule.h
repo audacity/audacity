@@ -236,15 +236,6 @@ public:
       AdvancedTrackTime( PlaybackSchedule &schedule,
          double trackTime, size_t nSamples );
 
-   //! May be called between AdvancedTrackTime() and RepositionPlayback()
-   /*!
-    Receive notifications from the main thread of changes of parameters
-    affecting the policy
-
-    Default implementation ignores all messages
-    */
-   virtual void MessageConsumer( PlaybackSchedule &schedule );
-
    using Mixers = std::vector<std::unique_ptr<Mixer>>;
 
    //! AudioIO::FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
@@ -451,6 +442,8 @@ public:
    NewDefaultPlaybackPolicy(double trackEndTime, bool loopEnabled);
    ~NewDefaultPlaybackPolicy() override;
 
+   void Initialize( PlaybackSchedule &schedule, double rate ) override;
+
    BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
 
    bool Done( PlaybackSchedule &schedule, unsigned long ) override;
@@ -460,8 +453,6 @@ public:
    std::pair<double, double>
       AdvancedTrackTime( PlaybackSchedule &schedule,
          double trackTime, size_t nSamples ) override;
-
-   void MessageConsumer( PlaybackSchedule &schedule ) override;
 
    bool RepositionPlayback(
       PlaybackSchedule &schedule, const Mixers &playbackMixers,
@@ -473,7 +464,6 @@ private:
    const double mTrackEndTime;
    size_t mRemaining{ 0 };
    bool mProgress{ true };
-   bool mKicked{ false };
    bool mLoopEnabled{ true };
 };
 #endif

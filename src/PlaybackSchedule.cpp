@@ -18,10 +18,12 @@
 #include <cmath>
 
 PlaybackPolicy::~PlaybackPolicy() = default;
+
 void PlaybackPolicy::Initialize( PlaybackSchedule &, double rate )
 {
    mRate = rate;
 }
+
 void PlaybackPolicy::Finalize( PlaybackSchedule & ){}
 
 Mixer::WarpOptions PlaybackPolicy::MixerWarpOptions(PlaybackSchedule &schedule)
@@ -57,10 +59,6 @@ double PlaybackPolicy::OffsetTrackTime(
    const auto time = schedule.GetTrackTime() + offset;
    schedule.RealTimeInit( time );
    return time;
-}
-
-void PlaybackPolicy::MessageConsumer( PlaybackSchedule & )
-{
 }
 
 std::chrono::milliseconds PlaybackPolicy::SleepInterval(PlaybackSchedule &)
@@ -155,6 +153,14 @@ NewDefaultPlaybackPolicy::NewDefaultPlaybackPolicy(
 
 NewDefaultPlaybackPolicy::~NewDefaultPlaybackPolicy() = default;
 
+void NewDefaultPlaybackPolicy::Initialize(
+   PlaybackSchedule &schedule, double rate )
+{
+   PlaybackPolicy::Initialize(schedule, rate);
+   schedule.mMessageChannel.Write( {
+      schedule.mT0, schedule.mT1, mLoopEnabled } );
+}
+
 PlaybackPolicy::BufferTimes
 NewDefaultPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
 {
@@ -223,7 +229,8 @@ std::pair<double, double> NewDefaultPlaybackPolicy::AdvancedTrackTime(
    return { trackTime, trackTime };
 }
 
-void NewDefaultPlaybackPolicy::MessageConsumer( PlaybackSchedule &schedule )
+bool NewDefaultPlaybackPolicy::RepositionPlayback(
+   PlaybackSchedule &schedule, const Mixers &playbackMixers, size_t, size_t )
 {
    // This executes in the TrackBufferExchange thread
    auto data = schedule.mMessageChannel.Read();
@@ -231,34 +238,32 @@ void NewDefaultPlaybackPolicy::MessageConsumer( PlaybackSchedule &schedule )
    bool loopWasEnabled = mLoopEnabled;
    mLoopEnabled = data.mLoopEnabled;
 
+   bool kicked = false;
    if (data.mT0 >= data.mT1)
       // Ignore empty region
-      return;
+      ;
+   else {
+      auto mine = std::tie(schedule.mT0, schedule.mT1);
+      auto theirs = std::tie(data.mT0, data.mT1);
+      if (mine != theirs) {
+         mine = theirs;
+         schedule.mWarpedLength = schedule.RealDuration(schedule.mT1);
+         auto newTime = std::clamp(
+            schedule.mTimeQueue.GetLastTime(), schedule.mT0, schedule.mT1);
+         if (newTime == schedule.mT1)
+            newTime = schedule.mT0;
 
-   auto mine = std::tie(schedule.mT0, schedule.mT1);
-   auto theirs = std::tie(data.mT0, data.mT1);
-   if (mine != theirs) {
-      mine = theirs;
-      schedule.mWarpedLength = schedule.RealDuration(schedule.mT1);
-      auto newTime = std::clamp(
-         schedule.mTimeQueue.GetLastTime(), schedule.mT0, schedule.mT1);
-      if (newTime == schedule.mT1)
-         newTime = schedule.mT0;
+         // So that the play head will redraw in the right place:
+         schedule.mTimeQueue.SetLastTime(newTime);
 
-      // So that the play head will redraw in the right place:
-      schedule.mTimeQueue.SetLastTime(newTime);
-
-      // Setup for the next visit to RepositionPlayback:
-      schedule.RealTimeInit(newTime);
-      const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
-      mRemaining = realTimeRemaining * mRate;
-      mKicked = true;
+         // Setup for the next visit to RepositionPlayback:
+         schedule.RealTimeInit(newTime);
+         const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
+         mRemaining = realTimeRemaining * mRate;
+         kicked = true;
+      }
    }
-}
 
-bool NewDefaultPlaybackPolicy::RepositionPlayback(
-   PlaybackSchedule &schedule, const Mixers &playbackMixers, size_t, size_t )
-{
    // msmeyer: If playing looped, check if we are at the end of the buffer
    // and if yes, restart from the beginning.
    if (mRemaining <= 0)
@@ -267,7 +272,7 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
          pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0, true );
       schedule.RealTimeRestart();
    }
-   else if (mKicked)
+   else if (kicked)
    {
       const auto time = schedule.mTimeQueue.GetLastTime();
       for (auto &pMixer : playbackMixers) {
@@ -276,7 +281,6 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
          pMixer->Reposition(time, true);
       }
    }
-   mKicked = false; // Ow!  Stop it!  Mo-o-o-om!
    return false;
 }
 
@@ -324,7 +328,6 @@ void PlaybackSchedule::Init(
    mPolicyValid.store(true, std::memory_order_release);
 
    mMessageChannel.Initialize();
-   mMessageChannel.Write( { mT0, mT1, options.loopEnabled } );
 }
 
 double PlaybackSchedule::ComputeWarpedLength(double t0, double t1) const
