@@ -257,13 +257,17 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
    bool empty = (data.mT0 >= data.mT1);
    bool kicked = false;
 
+   // Amount in seconds by which right boundary can be moved left of the play
+   // head, yet loop play in progress will still capture the head
+   constexpr auto allowance = 0.5;
+
    bool loopWasEnabled = !RevertToOldDefault(schedule);
    mLoopEnabled = data.mLoopEnabled && !empty &&
-      schedule.mTimeQueue.GetLastTime() <= data.mT1;
+      schedule.mTimeQueue.GetLastTime() <= data.mT1 + allowance;
 
    auto mine = std::tie(schedule.mT0, mLoopEndTime);
    auto theirs = std::tie(data.mT0, data.mT1);
-   if ( mLoopEnabled ? (mine != theirs) : loopWasEnabled )  {
+   if ( mLoopEnabled ? (mine != theirs) : loopWasEnabled ) {
       kicked = true;
       if (!empty) {
          mine = theirs;
@@ -281,7 +285,7 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
       newTime = std::clamp(newTime, schedule.mT0, schedule.mT1);
 #endif
 
-      if (newTime == schedule.mT1 && mLoopEnabled)
+      if (newTime >= schedule.mT1 && mLoopEnabled)
          newTime = schedule.mT0;
 
       // So that the play head will redraw in the right place:
