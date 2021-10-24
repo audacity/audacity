@@ -64,6 +64,8 @@ and use it for toolbar and window layouts too.
 #include <wx/pen.h>
 #include <wx/file.h>
 #include <wx/ffile.h>
+#include <wx/txtstrm.h>
+#include <wx/wfstream.h>
 #include <wx/mstream.h>
 #include <wx/settings.h>
 
@@ -121,6 +123,8 @@ FilePath ThemeComponentsDir(Identifier id)
 constexpr auto ImageCacheFileName = L"ImageCache.png";
 
 constexpr auto ImageMapFileName = L"ImageCache.htm";
+
+constexpr auto ColorFileName = L"Colors.txt";
 
 FilePath ThemeImageDefsAsCee()
 {
@@ -1133,6 +1137,9 @@ bool ThemeBase::SaveOneThemeComponents( teThemeType id )
       }
    }
 
+   if( wxFileExists( ThemeComponent( dir, ColorFileName ) ) )
+      ++n;
+
    using namespace BasicUI;
 
    if (n > 0)
@@ -1163,6 +1170,32 @@ bool ThemeBase::SaveOneThemeComponents( teThemeType id )
          }
       }
    }
+
+   // Now write complete information about the colors in one text file
+   {
+      const auto fName = wxFileName{ dir, ColorFileName }.GetFullPath();
+      wxFileOutputStream ffStream{ fName };
+      if (!ffStream.IsOk()) {
+         ShowMessageBox( XO("Couldn't write to file: %s").Format( fName ) );
+         return false;
+      }
+      wxTextOutputStream ss{ffStream};
+      // Open with, for instance, ".darkTheme {"
+      ss << "." << id.GET() << "Theme {\n";
+      for (size_t i = 0; i < resources.mColours.size(); ++i) {
+         const auto &colour = resources.mColours[i];
+         ss
+            // Write names, aligning the colons in a column,
+            // followed by #rrggbb;
+            << wxString::Format("%30s: #", mColourNames[i])
+            << wxString::Format("%02x", colour.Red())
+            << wxString::Format("%02x", colour.Green())
+            << wxString::Format("%02x", colour.Blue())
+            << ";\n";
+      }
+      ss << "}";
+   }
+
    return true;
 }
 
