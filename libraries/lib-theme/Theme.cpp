@@ -68,6 +68,7 @@ and use it for toolbar and window layouts too.
 #include <wx/wfstream.h>
 #include <wx/mstream.h>
 #include <wx/settings.h>
+#include <regex>
 
 #include "AllThemeResources.h"
 #include "BasicUI.h"
@@ -1072,6 +1073,47 @@ void ThemeBase::LoadOneThemeComponents( teThemeType id, bool bOkIfNotFound )
          }
       }
    }
+
+   // Now read complete information about the colors from one text file
+   {
+      const auto fName = wxFileName{ dir, ColorFileName }.GetFullPath();
+      wxTextFile file{ fName };
+      file.Open();
+      if (!file.IsOpened())
+         ShowMessageBox( XO("Couldn't read from file: %s").Format( fName ) );
+      else {
+         ++n;
+         // Scan the line for name and #xxxxxx;
+         static const std::wregex expr{
+            LR"(^ *([_[:alnum:]]+).*#([0-9a-fA-F]{6});)" };
+         const auto begin = mColourNames.begin(),
+             end = mColourNames.end();
+         std::unordered_set<wxString> names;
+         for (auto str = file.GetFirstLine();
+              !file.Eof(); str = file.GetNextLine()) {
+            if (std::wsmatch match;
+                regex_search( str.ToStdWstring(), match, expr )) {
+               const wxString name{ match[1] };
+               if (!names.insert(name).second)
+                  ShowMessageBox( Verbatim("Ignoring duplicate color name: %s")
+                     .Format( name ) );
+               else if (const auto iter = std::find(begin, end, name);
+                  iter == end)
+                  ShowMessageBox(
+                     Verbatim("Unrecognized color name: %s").Format( name ) );
+               else {
+                  auto rrggbb =
+                     static_cast<unsigned>(stoi(match[2], nullptr, 16));
+                  unsigned char rr = (rrggbb >> 16) & 0xffu;
+                  unsigned char gg = (rrggbb >> 8) & 0xffu;
+                  unsigned char bb = rrggbb & 0xffu;
+                  resources.mColours[iter - begin] = { rr, gg, bb };
+               }
+            }
+         }
+      }
+   }
+
    if( n==0 )
    {
       if( bOkIfNotFound )
