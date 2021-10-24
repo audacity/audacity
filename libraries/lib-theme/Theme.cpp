@@ -87,6 +87,9 @@ Theme::~Theme(void)
 }
 
 namespace {
+// Side of a square painted in one of the theme colours in image caches
+constexpr int iColSize = 10;
+
 wxString ThemeFilePrefix( teThemeType id )
 {
    auto strings = wxSplit(id.GET(), L'-');
@@ -664,7 +667,6 @@ bool ThemeBase::CreateOneImageCache( teThemeType id, bool bBinarySave )
    int x,y;
 
    context.SetColourGroup();
-   const int iColSize = 10;
    for (size_t i = 0; i < resources.mColours.size(); ++i)
    {
       context.GetNextPosition( iColSize, iColSize );
@@ -815,7 +817,6 @@ void ThemeBase::WriteOneImageMap( teThemeType id )
    }
    // Now save the colours.
    context.SetColourGroup();
-   const int iColSize = 10;
    for (size_t i = 0; i < resources.mColours.size(); ++i)
    {
       context.GetNextPosition( iColSize, iColSize );
@@ -992,7 +993,6 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    int x,y;
    context.SetColourGroup();
    wxColour TempColour;
-   const int iColSize=10;
    for (size_t i = 0; i < resources.mColours.size(); ++i)
    {
       context.GetNextPosition( iColSize, iColSize );
