@@ -41,7 +41,7 @@ namespace {
 
 WaveClipTrimHandle::ClipTrimPolicy::~ClipTrimPolicy() { }
 
-class WaveClipTrimHandle::AdjustBorder : public WaveClipTrimHandle::ClipTrimPolicy
+class WaveClipTrimHandle::AdjustBorder final : public WaveClipTrimHandle::ClipTrimPolicy
 {
    std::vector<std::shared_ptr<WaveClip>> mClips;
    double mInitialBorderPosition{};
@@ -144,10 +144,102 @@ public:
          }
          else
          {
-            auto dt = std::abs(mClips[0]->GetPlayEndTime() - mInitialBorderPosition);
+            auto dt = std::abs(mInitialBorderPosition - mClips[0]->GetPlayEndTime());
             ProjectHistory::Get(project).PushState(XO("Clip-Trim-Right"),
                 XO("Moved by %.02f").Format(dt), UndoPush::CONSOLIDATE);
          }
+      }
+   }
+
+   void Cancel() override
+   {
+      TrimTo(mInitialBorderPosition);
+   }
+};
+
+class WaveClipTrimHandle::AdjustBetweenBorders final : public WaveClipTrimHandle::ClipTrimPolicy
+{
+   std::pair<double, double> mRange;
+   std::vector<std::shared_ptr<WaveClip>> mLeftClips;
+   std::vector<std::shared_ptr<WaveClip>> mRightClips;
+   double mInitialBorderPosition{};
+   int mDragStartX{ };
+
+   void TrimTo(double t)
+   {
+      t = std::clamp(t, mRange.first, mRange.second);
+
+      for (auto& clip : mLeftClips)
+         clip->TrimRightTo(t);
+      for (auto& clip : mRightClips)
+         clip->TrimLeftTo(t);
+   }
+
+public:
+   AdjustBetweenBorders(
+      WaveTrack* track, 
+      std::shared_ptr<WaveClip>& leftClip, 
+      std::shared_ptr<WaveClip>& rightClip)
+   {
+      auto clips = track->GetClips();
+
+      wxASSERT(std::find(clips.begin(), clips.end(), leftClip) != clips.end());
+      wxASSERT(std::find(clips.begin(), clips.end(), rightClip) != clips.end());
+
+      if (track->IsAlignedWithLeader() || track->GetLinkType() == Track::LinkType::Aligned)
+      {
+         //find clips in other channels which are also should be trimmed
+         mLeftClips = FindClipsInChannels(leftClip->GetPlayStartTime(), leftClip->GetPlayEndTime(), track);
+         mRightClips = FindClipsInChannels(rightClip->GetPlayStartTime(), rightClip->GetPlayEndTime(), track);
+      }
+      else
+      {
+         mLeftClips.push_back(leftClip);
+         mRightClips.push_back(rightClip);
+      }
+
+      mRange = std::make_pair(
+         //not less than 1 sample length
+         mLeftClips[0]->GetPlayStartTime() + 1.0 / mLeftClips[0]->GetRate(),
+         mRightClips[0]->GetPlayEndTime() - 1.0 / mRightClips[0]->GetRate()
+      );
+      mInitialBorderPosition = mRightClips[0]->GetPlayStartTime();
+   }
+
+   bool Init(const TrackPanelMouseEvent& event) override
+   {
+      if (event.event.LeftDown())
+      {
+         mDragStartX = event.event.GetX();
+         return true;
+      }
+      return false;
+   }
+
+   void Trim(const TrackPanelMouseEvent& event, AudacityProject& project) override
+   {
+      const auto newX = event.event.GetX();
+      const auto dx = newX - mDragStartX;
+
+      auto& viewInfo = ViewInfo::Get(project);
+
+      auto eventT = viewInfo.PositionToTime(viewInfo.TimeToPosition(mInitialBorderPosition, event.rect.x) + dx, event.rect.x);
+      auto offset = sampleCount(
+         floor(
+            (eventT - mInitialBorderPosition) * mLeftClips[0]->GetRate()
+         )
+      ).as_double() / mLeftClips[0]->GetRate();
+      
+      TrimTo(mInitialBorderPosition + offset);
+   }
+
+   void Finish(AudacityProject& project) override
+   {
+      if (mRightClips[0]->GetPlayStartTime() != mInitialBorderPosition)
+      {
+         auto dt = std::abs(mRightClips[0]->GetPlayStartTime() - mInitialBorderPosition);
+         ProjectHistory::Get(project).PushState(XO("Clip-Trim-Between"),
+               XO("Moved by %.02f").Format(dt), UndoPush::CONSOLIDATE);
       }
    }
 
@@ -188,12 +280,12 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(std::weak_ptr<WaveClipTrimHandle>& h
 
     auto& zoomInfo = ViewInfo::Get(*pProject);
 
-    std::unique_ptr<ClipTrimPolicy> clipTrimPolicy;
+    std::shared_ptr<WaveClip> leftClip;
+    std::shared_ptr<WaveClip> rightClip;
 
     //Test left and right boundaries of each clip
-    //and determine the maximum offsets allowed for trimming,
-    //which are constrained either by other clips, own length,
-    //or another own edge
+    //to determine which type of trimming should be applied
+    //and input for the policy
     for (auto& clip : waveTrack->GetClips())
     {
         if (!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
@@ -202,24 +294,25 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(std::weak_ptr<WaveClipTrimHandle>& h
         auto clipRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
         
         if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold)
-        {
-           clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, clip, true);
-           return AssignUIHandlePtr(
-              holder,
-              std::make_shared<WaveClipTrimHandle>(clipTrimPolicy)
-           );
-        }
+           rightClip = clip;
         else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold)
-        {
-           clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, clip, false);
-           return AssignUIHandlePtr(
-              holder,
-              std::make_shared<WaveClipTrimHandle>(clipTrimPolicy)
-           );
-        }
+           leftClip = clip;
     }
 
-    return {};
+    std::unique_ptr<ClipTrimPolicy> clipTrimPolicy;
+    if (leftClip && rightClip)
+       clipTrimPolicy = std::make_unique<AdjustBetweenBorders>(waveTrack, leftClip, rightClip);
+    else if (leftClip)
+       clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, leftClip, false);
+    else if (rightClip)
+       clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, rightClip, true);
+    
+    if(clipTrimPolicy)
+      return AssignUIHandlePtr(
+         holder,
+         std::make_shared<WaveClipTrimHandle>(clipTrimPolicy)
+      );
+    return { };
 }
 
 UIHandlePtr WaveClipTrimHandle::HitTest(std::weak_ptr<WaveClipTrimHandle>& holder,
