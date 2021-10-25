@@ -20,22 +20,25 @@ class WaveClipTrimHandle : public UIHandle
 {
     static constexpr int BoundaryThreshold = 5;
 
-    enum class Border {
-        Left,
-        Right
-    };
-
-    std::pair<double, double> mRange;
-    std::vector<std::shared_ptr<WaveClip>> mClips;
-
-    int     mDragStartX{};
-    Border  mTargetBorder{ Border::Left };
-    double  mInitialBorderPosition{};
-
     static HitTestPreview HitPreview(const AudacityProject*, bool unsafe);
 
+    //Different policies implement different trimming scenarios
+    class ClipTrimPolicy
+    {
+    public:
+       virtual ~ClipTrimPolicy();
+
+       virtual bool Init(const TrackPanelMouseEvent& event) = 0;
+       virtual void Trim(const TrackPanelMouseEvent& event, AudacityProject& project) = 0;
+       virtual void Finish(AudacityProject& project) = 0;
+       virtual void Cancel() = 0;
+    };
+    class AdjustBorder;
+    
+    std::unique_ptr<ClipTrimPolicy> mClipTrimPolicy;
+
 public:
-    WaveClipTrimHandle(const std::pair<double, double>& range, const std::vector<std::shared_ptr<WaveClip>>& clips, Border targetBorder);
+    WaveClipTrimHandle(std::unique_ptr<ClipTrimPolicy>& clipTrimPolicy);
 
     static UIHandlePtr HitAnywhere(std::weak_ptr<WaveClipTrimHandle>& holder,
         WaveTrack* waveTrack,
