@@ -2397,7 +2397,7 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
    const auto &playRegion = viewInfo.playRegion;
    bool isActive = (mLastPlayRegionActive = playRegion.Active());
 
-   if (playRegion.IsClear())
+   if (playRegion.IsLastActiveRegionClear())
       return;
 
    const auto t0 = playRegion.GetLastActiveStart(),
