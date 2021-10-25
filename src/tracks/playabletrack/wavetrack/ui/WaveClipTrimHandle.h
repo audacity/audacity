@@ -34,6 +34,7 @@ class WaveClipTrimHandle : public UIHandle
        virtual void Cancel() = 0;
     };
     class AdjustBorder;
+    class AdjustBetweenBorders;
     
     std::unique_ptr<ClipTrimPolicy> mClipTrimPolicy;
 
