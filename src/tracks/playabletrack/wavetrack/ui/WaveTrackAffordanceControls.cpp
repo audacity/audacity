@@ -294,7 +294,7 @@ bool WaveTrackAffordanceControls::StartEditClipName(AudacityProject* project)
             {
                 clip->SetName(Command.mName);
                 ProjectHistory::Get(*project).PushState(XO("Modified Clip Name"),
-                    XO("Clip Name Edit"), UndoPush::CONSOLIDATE);
+                    XO("Clip Name Edit"));
 
                 return true;
             }
@@ -413,7 +413,7 @@ void WaveTrackAffordanceControls::OnTextEditFinished(AudacityProject* project, c
             lock->SetName(text);
 
             ProjectHistory::Get(*project).PushState(XO("Modified Clip Name"),
-                XO("Clip Name Edit"), UndoPush::CONSOLIDATE);
+                XO("Clip Name Edit"));
         }
     }
     ResetClipNameEdit();
