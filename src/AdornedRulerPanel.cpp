@@ -487,31 +487,27 @@ void AdornedRulerPanel::ScrubbingRulerOverlay::Update()
       const auto &selectedRegion = ViewInfo::Get( *project ).selectedRegion;
       double latestEnd =
          std::max(ruler->mTracks->GetEndTime(), selectedRegion.t1());
-      if (ruler->mQuickPlayPos[0] >= latestEnd)
-         mNewQPIndicatorPos = -1;
-      else {
-         // This will determine the x coordinate of the line and of the
-         // ruler indicator
+      // This will determine the x coordinate of the line and of the
+      // ruler indicator
 
-         // Test all snap points
-         mNewIndicatorSnapped = -1;
-         for (size_t ii = 0;
-              mNewIndicatorSnapped == -1 && ii < ruler->mNumGuides; ++ii) {
-            if (ruler->mIsSnapped[ii]) {
-               mNewIndicatorSnapped = ii;
-               mNewQPIndicatorPos = ruler->Time2Pos(ruler->mQuickPlayPos[ii]);
-            }
+      // Test all snap points
+      mNewIndicatorSnapped = -1;
+      for (size_t ii = 0;
+           mNewIndicatorSnapped == -1 && ii < ruler->mNumGuides; ++ii) {
+         if (ruler->mIsSnapped[ii]) {
+            mNewIndicatorSnapped = ii;
+            mNewQPIndicatorPos = ruler->Time2Pos(ruler->mQuickPlayPos[ii]);
          }
-
-         // These determine which shape is drawn on the ruler, and whether
-         // in the scrub or the qp zone
-         mNewScrub =
-            !ruler->Target() && // not doing some other drag in the ruler
-            (ruler->LastCell() == ruler->mScrubbingCell ||
-             (scrubber.HasMark()));
-         mNewSeek = mNewScrub &&
-            (scrubber.Seeks() || scrubber.TemporarilySeeks());
       }
+
+      // These determine which shape is drawn on the ruler, and whether
+      // in the scrub or the qp zone
+      mNewScrub =
+         !ruler->Target() && // not doing some other drag in the ruler
+         (ruler->LastCell() == ruler->mScrubbingCell ||
+          (scrubber.HasMark()));
+      mNewSeek = mNewScrub &&
+         (scrubber.Seeks() || scrubber.TemporarilySeeks());
    }
 }
 
@@ -2403,11 +2399,11 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
    const auto &playRegion = viewInfo.playRegion;
    bool isActive = (mLastPlayRegionActive = playRegion.Active());
 
+   if (playRegion.IsClear())
+      return;
+
    const auto t0 = playRegion.GetLastActiveStart(),
       t1 = playRegion.GetLastActiveEnd();
-   if (t0 < 0 || t1 < 0)
-      // play region is cleared, that is undefined
-      return;
 
    const int p0 = max(1, Time2Pos(t0));
    const int p1 = min(mInner.width, Time2Pos(t1));
