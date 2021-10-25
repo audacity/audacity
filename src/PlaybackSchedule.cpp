@@ -18,10 +18,12 @@
 #include <cmath>
 
 PlaybackPolicy::~PlaybackPolicy() = default;
+
 void PlaybackPolicy::Initialize( PlaybackSchedule &, double rate )
 {
    mRate = rate;
 }
+
 void PlaybackPolicy::Finalize( PlaybackSchedule & ){}
 
 Mixer::WarpOptions PlaybackPolicy::MixerWarpOptions(PlaybackSchedule &schedule)
@@ -43,6 +45,7 @@ bool PlaybackPolicy::AllowSeek(PlaybackSchedule &)
 bool PlaybackPolicy::Done( PlaybackSchedule &schedule,
    unsigned long outputFrames)
 {
+   // Called from portAudio thread, use GetTrackTime()
    auto diff = schedule.GetTrackTime() - schedule.mT1;
    if (schedule.ReversedTime())
       diff *= -1;
@@ -54,14 +57,9 @@ bool PlaybackPolicy::Done( PlaybackSchedule &schedule,
 double PlaybackPolicy::OffsetTrackTime(
    PlaybackSchedule &schedule, double offset )
 {
-   const auto time = schedule.ClampTrackTime(
-      schedule.GetTrackTime() + offset );
+   const auto time = schedule.GetTrackTime() + offset;
    schedule.RealTimeInit( time );
    return time;
-}
-
-void PlaybackPolicy::MessageConsumer( PlaybackSchedule & )
-{
 }
 
 std::chrono::milliseconds PlaybackPolicy::SleepInterval(PlaybackSchedule &)
@@ -128,8 +126,9 @@ bool PlaybackPolicy::Looping(const PlaybackSchedule &) const
 }
 
 namespace {
-struct DefaultPlaybackPolicy final : PlaybackPolicy {
-   ~DefaultPlaybackPolicy() override = default;
+//! The old default playback policy plays once and consumes no messages
+struct OldDefaultPlaybackPolicy final : PlaybackPolicy {
+   ~OldDefaultPlaybackPolicy() override = default;
 };
 }
 
@@ -138,7 +137,7 @@ PlaybackPolicy &PlaybackSchedule::GetPolicy()
    if (mPolicyValid.load(std::memory_order_acquire) && mpPlaybackPolicy)
       return *mpPlaybackPolicy;
 
-   static DefaultPlaybackPolicy defaultPolicy;
+   static OldDefaultPlaybackPolicy defaultPolicy;
    return defaultPolicy;
 }
 
@@ -147,25 +146,53 @@ const PlaybackPolicy &PlaybackSchedule::GetPolicy() const
    return const_cast<PlaybackSchedule&>(*this).GetPolicy();
 }
 
-LoopingPlaybackPolicy::~LoopingPlaybackPolicy() = default;
+NewDefaultPlaybackPolicy::NewDefaultPlaybackPolicy(
+   double trackEndTime, double loopEndTime, bool loopEnabled )
+   : mTrackEndTime{ trackEndTime }
+   , mLoopEndTime{ loopEndTime }
+   , mLoopEnabled{ loopEnabled }
+{}
+
+NewDefaultPlaybackPolicy::~NewDefaultPlaybackPolicy() = default;
+
+void NewDefaultPlaybackPolicy::Initialize(
+   PlaybackSchedule &schedule, double rate )
+{
+   PlaybackPolicy::Initialize(schedule, rate);
+   schedule.mMessageChannel.Write( {
+      schedule.mT0, mLoopEndTime, mLoopEnabled } );
+}
 
 PlaybackPolicy::BufferTimes
-LoopingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
+NewDefaultPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
 {
    // Shorter times than in the default policy so that responses to changes of
    // selection don't lag too much
    return { 0.5, 0.5, 1.0 };
 }
 
-bool LoopingPlaybackPolicy::Done( PlaybackSchedule &, unsigned long )
+bool NewDefaultPlaybackPolicy::RevertToOldDefault(const PlaybackSchedule &schedule) const
 {
+   return !mLoopEnabled ||
+      // Even if loop is enabled, ignore it if right of looping region
+      schedule.mTimeQueue.GetLastTime() > mLoopEndTime;
+}
+
+bool NewDefaultPlaybackPolicy::Done(
+   PlaybackSchedule &schedule, unsigned long outputFrames )
+{
+   if (RevertToOldDefault(schedule))
+      return PlaybackPolicy::Done(schedule, outputFrames);
    return false;
 }
 
 PlaybackSlice
-LoopingPlaybackPolicy::GetPlaybackSlice(
+NewDefaultPlaybackPolicy::GetPlaybackSlice(
    PlaybackSchedule &schedule, size_t available)
 {
+   if (RevertToOldDefault(schedule))
+      return PlaybackPolicy::GetPlaybackSlice(schedule, available);
+
    // How many samples to produce for each channel.
    const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
    auto frames = available;
@@ -192,9 +219,12 @@ LoopingPlaybackPolicy::GetPlaybackSlice(
    return { available, frames, toProduce };
 }
 
-std::pair<double, double> LoopingPlaybackPolicy::AdvancedTrackTime(
+std::pair<double, double> NewDefaultPlaybackPolicy::AdvancedTrackTime(
    PlaybackSchedule &schedule, double trackTime, size_t nSamples )
 {
+   if (RevertToOldDefault(schedule))
+      return PlaybackPolicy::AdvancedTrackTime(schedule, trackTime, nSamples);
+
    mRemaining -= std::min(mRemaining, nSamples);
    if ( mRemaining == 0 )
       // Wrap to start
@@ -217,38 +247,59 @@ std::pair<double, double> LoopingPlaybackPolicy::AdvancedTrackTime(
    return { trackTime, trackTime };
 }
 
-void LoopingPlaybackPolicy::MessageConsumer( PlaybackSchedule &schedule )
+bool NewDefaultPlaybackPolicy::RepositionPlayback(
+   PlaybackSchedule &schedule, const Mixers &playbackMixers,
+   size_t frames, size_t available )
 {
    // This executes in the TrackBufferExchange thread
    auto data = schedule.mMessageChannel.Read();
-   if (data.mT0 >= data.mT1)
-      // Ignore empty region
-      return;
 
-   auto mine = std::tie(schedule.mT0, schedule.mT1);
+   bool empty = (data.mT0 >= data.mT1);
+   bool kicked = false;
+
+   // Amount in seconds by which right boundary can be moved left of the play
+   // head, yet loop play in progress will still capture the head
+   constexpr auto allowance = 0.5;
+
+   bool loopWasEnabled = !RevertToOldDefault(schedule);
+   mLoopEnabled = data.mLoopEnabled && !empty &&
+      schedule.mTimeQueue.GetLastTime() <= data.mT1 + allowance;
+
+   auto mine = std::tie(schedule.mT0, mLoopEndTime);
    auto theirs = std::tie(data.mT0, data.mT1);
-   if (mine != theirs) {
-      mine = theirs;
+   if ( mLoopEnabled ? (mine != theirs) : loopWasEnabled ) {
+      kicked = true;
+      if (!empty) {
+         mine = theirs;
+         schedule.mT1 = data.mT1;
+      }
+      if (!mLoopEnabled)
+         // Continue play to the end
+         schedule.mT1 = std::max(schedule.mT0, mTrackEndTime);
       schedule.mWarpedLength = schedule.RealDuration(schedule.mT1);
-      auto newTime = std::clamp(
-         schedule.mTimeQueue.GetLastTime(), schedule.mT0, schedule.mT1);
-      if (newTime == schedule.mT1)
+
+      auto newTime = schedule.mTimeQueue.GetLastTime();
+#if 0
+      // This would make play jump forward or backward into the adjusted
+      // looping region if not already in it
+      newTime = std::clamp(newTime, schedule.mT0, schedule.mT1);
+#endif
+
+      if (newTime >= schedule.mT1 && mLoopEnabled)
          newTime = schedule.mT0;
 
       // So that the play head will redraw in the right place:
       schedule.mTimeQueue.SetLastTime(newTime);
 
-      // Setup for the next visit to RepositionPlayback:
       schedule.RealTimeInit(newTime);
       const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
       mRemaining = realTimeRemaining * mRate;
-      mKicked = true;
    }
-}
 
-bool LoopingPlaybackPolicy::RepositionPlayback(
-   PlaybackSchedule &schedule, const Mixers &playbackMixers, size_t, size_t )
-{
+   if (RevertToOldDefault(schedule) && !kicked)
+      return PlaybackPolicy::RepositionPlayback( schedule, playbackMixers,
+         frames, available);
+
    // msmeyer: If playing looped, check if we are at the end of the buffer
    // and if yes, restart from the beginning.
    if (mRemaining <= 0)
@@ -257,7 +308,7 @@ bool LoopingPlaybackPolicy::RepositionPlayback(
          pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0, true );
       schedule.RealTimeRestart();
    }
-   else if (mKicked)
+   else if (kicked)
    {
       const auto time = schedule.mTimeQueue.GetLastTime();
       for (auto &pMixer : playbackMixers) {
@@ -266,11 +317,10 @@ bool LoopingPlaybackPolicy::RepositionPlayback(
          pMixer->Reposition(time, true);
       }
    }
-   mKicked = false; // Ow!  Stop it!  Mo-o-o-om!
    return false;
 }
 
-bool LoopingPlaybackPolicy::Looping( const PlaybackSchedule & ) const
+bool NewDefaultPlaybackPolicy::Looping( const PlaybackSchedule & ) const
 {
    return true;
 }
@@ -314,15 +364,6 @@ void PlaybackSchedule::Init(
    mPolicyValid.store(true, std::memory_order_release);
 
    mMessageChannel.Initialize();
-   mMessageChannel.Write( { mT0, mT1 } );
-}
-
-double PlaybackSchedule::ClampTrackTime( double trackTime ) const
-{
-   if (ReversedTime())
-      return std::max(mT1, std::min(mT0, trackTime));
-   else
-      return std::max(mT0, std::min(mT1, trackTime));
 }
 
 double PlaybackSchedule::ComputeWarpedLength(double t0, double t1) const
@@ -343,7 +384,12 @@ double PlaybackSchedule::SolveWarpedLength(double t0, double length) const
 
 double PlaybackSchedule::RealDuration(double trackTime1) const
 {
-   return fabs(ComputeWarpedLength(mT0, trackTime1));
+   return fabs(RealDurationSigned(trackTime1));
+}
+
+double PlaybackSchedule::RealDurationSigned(double trackTime1) const
+{
+   return ComputeWarpedLength(mT0, trackTime1);
 }
 
 double PlaybackSchedule::RealTimeRemaining() const
@@ -358,7 +404,7 @@ void PlaybackSchedule::RealTimeAdvance( double increment )
 
 void PlaybackSchedule::RealTimeInit( double trackTime )
 {
-   mWarpedTime = RealDuration( trackTime );
+   mWarpedTime = RealDurationSigned( trackTime );
 }
 
 void PlaybackSchedule::RealTimeRestart()
@@ -487,5 +533,7 @@ void PlaybackSchedule::MessageProducer( PlayRegionEvent &evt)
       return;
    const auto &region = *pRegion;
 
-   mMessageChannel.Write( { region.GetStart(), region.GetEnd() } );
+   mMessageChannel.Write( {
+      region.GetStart(), region.GetEnd(), region.Active()
+   } );
 }

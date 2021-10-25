@@ -758,10 +758,12 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
 }
 
 int AudioIO::StartStream(const TransportTracks &tracks,
-                         double t0, double t1,
-                         const AudioIOStartStreamOptions &options,
-                         double *pStartTime)
+   double t0, double t1, double mixerLimit,
+   const AudioIOStartStreamOptions &options)
 {
+   const auto &pStartTime = options.pStartTime;
+   t1 = std::min(t1, mixerLimit);
+
    mLostSamples = 0;
    mLostCaptureIntervals.clear();
    mDetectDropouts =
@@ -920,8 +922,14 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       return 0;
    }
 
-   if ( ! AllocateBuffers( options, tracks, t0, t1, options.rate ) )
-      return 0;
+   {
+      double mixerStart = t0;
+      if (pStartTime)
+         mixerStart = std::min( mixerStart, *pStartTime );
+      if ( ! AllocateBuffers( options, tracks,
+         mixerStart, mixerLimit, options.rate ) )
+         return 0;
+   }
 
    if (mNumPlaybackChannels > 0)
    {
@@ -955,7 +963,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    if (pStartTime)
    {
       // Calculate the NEW time position
-      const auto time = mPlaybackSchedule.ClampTrackTime( *pStartTime );
+      const auto time = *pStartTime;
 
       // Main thread's initialization of mTime
       mPlaybackSchedule.SetTrackTime( time );
@@ -1189,23 +1197,27 @@ bool AudioIO::AllocateBuffers(
                WaveTrackConstArray mixTracks;
                mixTracks.push_back(mPlaybackTracks[i]);
 
-               double endTime;
+               double startTime, endTime;
                if (make_iterator_range(tracks.prerollTracks)
-                      .contains(mPlaybackTracks[i]))
+                      .contains(mPlaybackTracks[i])) {
                   // Stop playing this track after pre-roll
+                  startTime = mPlaybackSchedule.mT0;
                   endTime = t0;
-               else
+               }
+               else {
                   // Pass t1 -- not mT1 as may have been adjusted for latency
                   // -- so that overdub recording stops playing back samples
                   // at the right time, though transport may continue to record
+                  startTime = t0;
                   endTime = t1;
+               }
 
                mPlaybackMixers[i] = std::make_unique<Mixer>
                   (mixTracks,
                   // Don't throw for read errors, just play silence:
                   false,
                   warpOptions,
-                  mPlaybackSchedule.mT0,
+                  startTime,
                   endTime,
                   1,
                   std::max( mPlaybackSamplesToCopy, mPlaybackQueueMinimum ),
@@ -1863,9 +1875,6 @@ void AudioIO::FillPlayBuffers()
 
       available -= frames;
       // wxASSERT(available >= 0); // don't assert on this thread
-
-      // Poll for play region change events
-      policy.MessageConsumer(mPlaybackSchedule);
 
       done = policy.RepositionPlayback( mPlaybackSchedule, mPlaybackMixers,
          frames, available );

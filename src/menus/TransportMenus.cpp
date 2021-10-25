@@ -43,7 +43,7 @@
 namespace {
 
 void PlayCurrentRegionAndWait(const CommandContext &context,
-                              bool looped = false,
+                              bool newDefault = false,
                               bool cutpreview = false)
 {
    auto &project = context.project;
@@ -53,9 +53,9 @@ void PlayCurrentRegionAndWait(const CommandContext &context,
    double t0 = playRegion.GetStart();
    double t1 = playRegion.GetEnd();
 
-   projectAudioManager.PlayCurrentRegion(looped, cutpreview);
+   projectAudioManager.PlayCurrentRegion(newDefault, cutpreview);
 
-   if (project.mBatchMode > 0 && t0 != t1 && !looped) {
+   if (project.mBatchMode > 0 && t0 != t1 && !newDefault) {
       wxYieldIfNeeded();
 
       /* i18n-hint: This title appears on a dialog that indicates the progress
@@ -235,7 +235,7 @@ bool DoStopPlaying(const CommandContext &context)
    return false;
 }
 
-void DoStartPlaying(const CommandContext &context, bool looping = false)
+void DoStartPlaying(const CommandContext &context, bool newDefault = false)
 {
    auto &project = context.project;
    auto &projectAudioManager = ProjectAudioManager::Get(project);
@@ -245,7 +245,7 @@ void DoStartPlaying(const CommandContext &context, bool looping = false)
       //Otherwise, start playing (assuming audio I/O isn't busy)
 
       // Will automatically set mLastPlayMode
-      PlayCurrentRegionAndWait(context, looping);
+      PlayCurrentRegionAndWait(context, newDefault);
    }
 }
 
@@ -285,12 +285,12 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 
       if (i >= 0) {
          const LabelStruct* label = lt->GetLabel(i);
-         bool looping = projectAudioManager.Looping();
+         bool newDefault = projectAudioManager.Looping();
          if (ProjectAudioIO::Get( project ).IsAudioActive()) {
             DoStopPlaying(project);
             selectedRegion = label->selectedRegion;
             window.RedrawProject();
-            DoStartPlaying(project, looping);
+            DoStartPlaying(project, newDefault);
          }
          else {
             selectedRegion = label->selectedRegion;

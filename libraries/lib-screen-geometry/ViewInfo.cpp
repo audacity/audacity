@@ -167,14 +167,16 @@ wxEvent *PlayRegionEvent::Clone() const
 
 void PlayRegion::SetActive( bool active )
 {
-   mActive = active;
-   if (mActive) {
-      // Restore values
-      if (mStart != mLastActiveStart || mEnd != mLastActiveEnd) {
-         mStart = mLastActiveStart;
-         mEnd = mLastActiveEnd;
-         Notify();
+   if (mActive != active) {
+      mActive = active;
+      if (mActive) {
+         // Restore values
+         if (mStart != mLastActiveStart || mEnd != mLastActiveEnd) {
+            mStart = mLastActiveStart;
+            mEnd = mLastActiveEnd;
+         }
       }
+      Notify();
    }
 }
 

@@ -2018,7 +2018,7 @@ auto AdornedRulerPanel::QPHandle::Cancel(AudacityProject *pProject) -> Result
 #endif
 
 void AdornedRulerPanel::StartQPPlay(
-   bool looped, bool cutPreview, const double *pStartTime)
+   bool newDefault, bool cutPreview, const double *pStartTime)
 {
    const double t0 = mTracks->GetStartTime();
    const double t1 = mTracks->GetEndTime();
@@ -2054,22 +2054,21 @@ void AdornedRulerPanel::StartQPPlay(
       // Looping a tiny selection may freeze, so just play it once.
       loopEnabled = ((end - start) > 0.001)? true : false;
 
-      looped = (loopEnabled && looped);
-      if (looped)
+      newDefault = (loopEnabled && newDefault);
+      if (newDefault)
          cutPreview = false;
-      auto options = DefaultPlayOptions( *mProject, looped );
+      auto options = DefaultPlayOptions( *mProject, newDefault );
 
       if (!cutPreview) {
          if (pStartTime)
-            oldStart = *pStartTime;
-         options.pStartTime = &oldStart;
+            options.pStartTime.emplace(*pStartTime);
       }
       else
          options.envelope = nullptr;
 
       auto mode =
          cutPreview ? PlayMode::cutPreviewPlay
-         : looped ? PlayMode::loopedPlay
+         : newDefault ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
 
       // Stop only after deciding where to start again, because an event
@@ -2083,8 +2082,7 @@ void AdornedRulerPanel::StartQPPlay(
 
       projectAudioManager.PlayPlayRegion((SelectedRegion(start, end)),
                           options, mode,
-                          false,
-                          true);
+                          false);
 
    }
 }
