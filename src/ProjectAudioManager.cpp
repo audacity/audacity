@@ -708,8 +708,20 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
             }
 
             existingTracks = ChooseExistingRecordingTracks(*p, false, options.rate);
-            if(!existingTracks.empty())
-                t0 = std::max( t0, trackRange.max( &Track::GetEndTime ) );
+            if (!existingTracks.empty())
+            {
+               auto endTime = std::max_element(
+                  existingTracks.begin(),
+                  existingTracks.end(),
+                  [](const auto& a, const auto& b) {
+                     return a->GetEndTime() < b->GetEndTime();
+                  }
+               )->get()->GetEndTime();
+
+               //If there is a suitable track, then adjust t0 so
+               //that recording not starts before the end of that track
+               t0 = std::max(t0, endTime);
+            }
             // If suitable tracks still not found, will record into NEW ones,
             // starting with t0
          }
