@@ -313,6 +313,12 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    }
 }
 
+bool IsLoopingEnabled(const AudacityProject& project)
+{
+   auto &playRegion = ViewInfo::Get(project).playRegion;
+    return playRegion.Active();
+}
+
 }
 
 // Strings for menu items and also for dialog titles
@@ -1165,7 +1171,10 @@ BaseItemSharedPtr TransportMenu()
          Section( "",
             Menu( wxT("PlayRegion"), XXO("&Looping"),
                Command( wxT("TogglePlayRegion"), LoopToggleText,
-                  FN(OnTogglePlayRegion), AlwaysEnabledFlag, L"L" ),
+                  FN(OnTogglePlayRegion), AlwaysEnabledFlag,
+                     Options(L"L").CheckTest([](const AudacityProject& project){
+                         return IsLoopingEnabled(project);
+                     } )),
                Command( wxT("ClearPlayRegion"), XXO("&Clear Loop"),
                   FN(OnClearPlayRegion), AlwaysEnabledFlag ),
                Command( wxT("SetPlayRegionToSelection"),
