@@ -293,20 +293,38 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(std::weak_ptr<WaveClipTrimHandle>& h
 
         auto clipRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
         
-        if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold)
+        //double the hit testing area in case if clip are close to each other
+        if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold * 2)
            rightClip = clip;
-        else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold)
+        else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold * 2)
            leftClip = clip;
     }
 
     std::unique_ptr<ClipTrimPolicy> clipTrimPolicy;
     if (leftClip && rightClip)
-       clipTrimPolicy = std::make_unique<AdjustBetweenBorders>(waveTrack, leftClip, rightClip);
-    else if (leftClip)
-       clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, leftClip, false);
-    else if (rightClip)
-       clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, rightClip, true);
-    
+    {
+       //between adjacent clips
+       if(ClipParameters::GetClipRect(*leftClip, zoomInfo, rect).GetRight() > px)
+         clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, leftClip, false);//right border
+       else
+         clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, rightClip, true);//left border
+    }
+    else
+    {
+       auto clip = leftClip ? leftClip : rightClip;
+       if (clip)
+       {
+          //single clip case, determine the border,
+          //hit testing area differs from one
+          //used for general case
+          auto clipRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
+          if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold)
+             clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, clip, true);
+          else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold)
+             clipTrimPolicy = std::make_unique<AdjustBorder>(waveTrack, clip, false);
+       }
+    }
+
     if(clipTrimPolicy)
       return AssignUIHandlePtr(
          holder,
