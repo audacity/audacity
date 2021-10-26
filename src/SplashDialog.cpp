@@ -59,8 +59,6 @@ most commonly asked questions about Audacity.
 
 namespace
 {
-const char* WhatsNewURL = "https://audacityteam.org/3.1.0-video";
-
 #   include "../images/WhatsNewBtn.png.h"
 
 struct FSHelper final
