@@ -64,8 +64,11 @@ and use it for toolbar and window layouts too.
 #include <wx/pen.h>
 #include <wx/file.h>
 #include <wx/ffile.h>
+#include <wx/txtstrm.h>
+#include <wx/wfstream.h>
 #include <wx/mstream.h>
 #include <wx/settings.h>
+#include <regex>
 
 #include "AllThemeResources.h"
 #include "BasicUI.h"
@@ -87,6 +90,9 @@ Theme::~Theme(void)
 }
 
 namespace {
+// Side of a square painted in one of the theme colours in image caches
+constexpr int iColSize = 10;
+
 wxString ThemeFilePrefix( teThemeType id )
 {
    auto strings = wxSplit(id.GET(), L'-');
@@ -118,6 +124,8 @@ FilePath ThemeComponentsDir(Identifier id)
 constexpr auto ImageCacheFileName = L"ImageCache.png";
 
 constexpr auto ImageMapFileName = L"ImageCache.htm";
+
+constexpr auto ColorFileName = L"Colors.txt";
 
 FilePath ThemeImageDefsAsCee()
 {
@@ -160,6 +168,7 @@ void Theme::RegisterImagesAndColours()
 // This initialises the variables e.g
 // RegisterImage( myFlags, bmpRecordButton, some image, wxT("RecordButton"));
    int myFlags = resFlagPaired;
+   NameSet allNames;
 #define THEME_INITS
 #include "AllThemeResources.h"
 
@@ -378,7 +387,8 @@ wxImage ThemeBase::MaskedImage( char const ** pXpm, char const ** pMask )
 // Bit depth and mask needs review.
 // Note that XPMs don't offer translucency, so unsuitable for a round shape overlay, 
 // for example.
-void ThemeBase::RegisterImage( int &flags, int &iIndex, char const ** pXpm, const wxString & Name )
+void ThemeBase::RegisterImage( NameSet &allNames,
+   int &flags, int &iIndex, char const ** pXpm, const wxString & Name )
 {
    wxBitmap Bmp( pXpm );
    wxImage Img( Bmp.ConvertToImage() );
@@ -390,10 +400,11 @@ void ThemeBase::RegisterImage( int &flags, int &iIndex, char const ** pXpm, cons
    //wxBitmap Bmp2( Img, 32 );
    //wxBitmap Bmp2( Img );
 
-   RegisterImage( flags, iIndex, Img, Name );
+   RegisterImage( allNames, flags, iIndex, Img, Name );
 }
 
-void ThemeBase::RegisterImage( int &flags, int &iIndex, const wxImage &Image, const wxString & Name )
+void ThemeBase::RegisterImage( NameSet &allNames,
+   int &flags, int &iIndex, const wxImage &Image, const wxString & Name )
 {
    auto &resources = *mpSet;
    resources.mImages.push_back( Image );
@@ -411,32 +422,42 @@ void ThemeBase::RegisterImage( int &flags, int &iIndex, const wxImage &Image, co
    resources.mBitmaps.push_back( wxBitmap( Image ) );
 #endif
 
-   resources.mBitmapNames.push_back( Name );
-   resources.mBitmapFlags.push_back( flags );
    flags &= ~resFlagSkip;
    auto index = resources.mBitmaps.size() - 1;
-   if (iIndex == -1)
+   if (iIndex == -1) {
       // First time assignment of global variable identifying an image
       iIndex = index;
-   else
+      mBitmapNames.push_back( Name );
+      mBitmapFlags.push_back( flags );
+      wxASSERT(allNames.insert(Name).second);
+   }
+   else {
       // If revisiting for another theme set,
       // images should be re-done in the same sequence
       wxASSERT(iIndex == index);
+      wxASSERT(mBitmapNames[index] == Name);
+      wxASSERT(mBitmapFlags[index] == flags);
+   }
 }
 
-void ThemeBase::RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name )
+void ThemeBase::RegisterColour( NameSet &allNames,
+   int &iIndex, const wxColour &Clr, const wxString & Name )
 {
    auto &resources = *mpSet;
    resources.mColours.push_back( Clr );
-   resources.mColourNames.push_back( Name );
    auto index = resources.mColours.size() - 1;
-   if (iIndex == -1)
+   if (iIndex == -1) {
       // First time assignment of global variable identifying a colour
       iIndex = index;
-   else
+      mColourNames.push_back( Name );
+      wxASSERT(allNames.insert(Name).second);
+   }
+   else {
       // If revisiting for another theme set,
       // colours should be re-done in the same sequence
       wxASSERT(iIndex == index);
+      wxASSERT(mColourNames[index] == Name);
+   }
 }
 
 FlowPacker::FlowPacker(int width)
@@ -626,8 +647,8 @@ bool ThemeBase::CreateOneImageCache( teThemeType id, bool bBinarySave )
    for (size_t i = 0; i < resources.mImages.size() ; ++i)
    {
       wxImage &SrcImage = resources.mImages[i];
-      context.mFlags = resources.mBitmapFlags[i];
-      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
+      context.mFlags = mBitmapFlags[i];
+      if( !(mBitmapFlags[i] & resFlagInternal) )
       {
          context.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
          ImageCache.SetRGB( context.Rect(), 0xf2, 0xb0, 0x27 );
@@ -651,7 +672,6 @@ bool ThemeBase::CreateOneImageCache( teThemeType id, bool bBinarySave )
    int x,y;
 
    context.SetColourGroup();
-   const int iColSize = 10;
    for (size_t i = 0; i < resources.mColours.size(); ++i)
    {
       context.GetNextPosition( iColSize, iColSize );
@@ -788,28 +808,27 @@ void ThemeBase::WriteOneImageMap( teThemeType id )
    for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
       wxImage &SrcImage = resources.mImages[i];
-      context.mFlags = resources.mBitmapFlags[i];
-      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
+      context.mFlags = mBitmapFlags[i];
+      if( !(mBitmapFlags[i] & resFlagInternal) )
       {
          context.GetNextPosition( SrcImage.GetWidth(), SrcImage.GetHeight());
          // No href in html.  Uses title not alt.
          wxRect R( context.RectInner() );
          File.Write( wxString::Format(
             wxT("<area title=\"Bitmap:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
-            resources.mBitmapNames[i],
+            mBitmapNames[i],
             R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
       }
    }
    // Now save the colours.
    context.SetColourGroup();
-   const int iColSize = 10;
    for (size_t i = 0; i < resources.mColours.size(); ++i)
    {
       context.GetNextPosition( iColSize, iColSize );
       // No href in html.  Uses title not alt.
       wxRect R( context.RectInner() );
       File.Write( wxString::Format( wxT("<area title=\"Colour:%s\" shape=rect coords=\"%i,%i,%i,%i\">\r\n"),
-         resources.mColourNames[i],
+         mColourNames[i],
          R.GetLeft(), R.GetTop(), R.GetRight(), R.GetBottom()) );
    }
    File.Write( wxT("</map>\r\n") );
@@ -835,9 +854,9 @@ void ThemeBase::WriteImageDefs( )
    {
       wxImage &SrcImage = resources.mImages[i];
       // No href in html.  Uses title not alt.
-      if( PrevFlags != resources.mBitmapFlags[i] )
+      if( PrevFlags != mBitmapFlags[i] )
       {
-         PrevFlags = (teResourceFlags)resources.mBitmapFlags[i];
+         PrevFlags = (teResourceFlags)mBitmapFlags[i];
          int t = (int)PrevFlags;
          wxString Temp;
          if( t==0 ) Temp = wxT(" resFlagNone ");
@@ -852,10 +871,10 @@ void ThemeBase::WriteImageDefs( )
       }
       File.Write( wxString::Format(
          wxT("   DEFINE_IMAGE( bmp%s, wxImage( %i, %i ), wxT(\"%s\"));\r\n"),
-         resources.mBitmapNames[i],
+         mBitmapNames[i],
          SrcImage.GetWidth(),
          SrcImage.GetHeight(),
-         resources.mBitmapNames[i]
+         mBitmapNames[i]
          ));
    }
 }
@@ -961,8 +980,8 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
       wxImage &Image = resources.mImages[i];
-      context.mFlags = resources.mBitmapFlags[i];
-      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
+      context.mFlags = mBitmapFlags[i];
+      if( !(mBitmapFlags[i] & resFlagInternal) )
       {
          context.GetNextPosition( Image.GetWidth(),Image.GetHeight() );
          wxRect R = context.RectInner();
@@ -979,7 +998,6 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
    int x,y;
    context.SetColourGroup();
    wxColour TempColour;
-   const int iColSize=10;
    for (size_t i = 0; i < resources.mColours.size(); ++i)
    {
       context.GetNextPosition( iColSize, iColSize );
@@ -1027,9 +1045,9 @@ void ThemeBase::LoadOneThemeComponents( teThemeType id, bool bOkIfNotFound )
    FilePath FileName;
    for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
-      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
+      if( !(mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = ThemeComponent( dir, resources.mBitmapNames[i] );
+         FileName = ThemeComponent( dir, mBitmapNames[i] );
          if( wxFileExists( FileName ))
          {
             if( !resources.mImages[i].LoadFile( FileName, wxBITMAP_TYPE_PNG ))
@@ -1055,6 +1073,47 @@ void ThemeBase::LoadOneThemeComponents( teThemeType id, bool bOkIfNotFound )
          }
       }
    }
+
+   // Now read complete information about the colors from one text file
+   {
+      const auto fName = wxFileName{ dir, ColorFileName }.GetFullPath();
+      wxTextFile file{ fName };
+      file.Open();
+      if (!file.IsOpened())
+         ShowMessageBox( XO("Couldn't read from file: %s").Format( fName ) );
+      else {
+         ++n;
+         // Scan the line for name and #xxxxxx;
+         static const std::wregex expr{
+            LR"(^ *([_[:alnum:]]+).*#([0-9a-fA-F]{6});)" };
+         const auto begin = mColourNames.begin(),
+             end = mColourNames.end();
+         std::unordered_set<wxString> names;
+         for (auto str = file.GetFirstLine();
+              !file.Eof(); str = file.GetNextLine()) {
+            if (std::wsmatch match;
+                regex_search( str.ToStdWstring(), match, expr )) {
+               const wxString name{ match[1] };
+               if (!names.insert(name).second)
+                  ShowMessageBox( Verbatim("Ignoring duplicate color name: %s")
+                     .Format( name ) );
+               else if (const auto iter = std::find(begin, end, name);
+                  iter == end)
+                  ShowMessageBox(
+                     Verbatim("Unrecognized color name: %s").Format( name ) );
+               else {
+                  auto rrggbb =
+                     static_cast<unsigned>(stoi(match[2], nullptr, 16));
+                  unsigned char rr = (rrggbb >> 16) & 0xffu;
+                  unsigned char gg = (rrggbb >> 8) & 0xffu;
+                  unsigned char bb = rrggbb & 0xffu;
+                  resources.mColours[iter - begin] = { rr, gg, bb };
+               }
+            }
+         }
+      }
+   }
+
    if( n==0 )
    {
       if( bOkIfNotFound )
@@ -1109,9 +1168,9 @@ bool ThemeBase::SaveOneThemeComponents( teThemeType id )
    FilePath FileName;
    for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
-      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
+      if( !(mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = ThemeComponent( dir, resources.mBitmapNames[i] );
+         FileName = ThemeComponent( dir, mBitmapNames[i] );
          if( wxFileExists( FileName ))
          {
             ++n;
@@ -1119,6 +1178,9 @@ bool ThemeBase::SaveOneThemeComponents( teThemeType id )
          }
       }
    }
+
+   if( wxFileExists( ThemeComponent( dir, ColorFileName ) ) )
+      ++n;
 
    using namespace BasicUI;
 
@@ -1138,9 +1200,9 @@ bool ThemeBase::SaveOneThemeComponents( teThemeType id )
 
    for (size_t i = 0; i < resources.mImages.size(); ++i)
    {
-      if( !(resources.mBitmapFlags[i] & resFlagInternal) )
+      if( !(mBitmapFlags[i] & resFlagInternal) )
       {
-         FileName = ThemeComponent( dir, resources.mBitmapNames[i] );
+         FileName = ThemeComponent( dir, mBitmapNames[i] );
          if( !resources.mImages[i].SaveFile( FileName, wxBITMAP_TYPE_PNG ))
          {
             ShowMessageBox(
@@ -1150,6 +1212,32 @@ bool ThemeBase::SaveOneThemeComponents( teThemeType id )
          }
       }
    }
+
+   // Now write complete information about the colors in one text file
+   {
+      const auto fName = wxFileName{ dir, ColorFileName }.GetFullPath();
+      wxFileOutputStream ffStream{ fName };
+      if (!ffStream.IsOk()) {
+         ShowMessageBox( XO("Couldn't write to file: %s").Format( fName ) );
+         return false;
+      }
+      wxTextOutputStream ss{ffStream};
+      // Open with, for instance, ".darkTheme {"
+      ss << "." << id.GET() << "Theme {\n";
+      for (size_t i = 0; i < resources.mColours.size(); ++i) {
+         const auto &colour = resources.mColours[i];
+         ss
+            // Write names, aligning the colons in a column,
+            // followed by #rrggbb;
+            << wxString::Format("%30s: #", mColourNames[i])
+            << wxString::Format("%02x", colour.Red())
+            << wxString::Format("%02x", colour.Green())
+            << wxString::Format("%02x", colour.Blue())
+            << ";\n";
+      }
+      ss << "}";
+   }
+
    return true;
 }
 

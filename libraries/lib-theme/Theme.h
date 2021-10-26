@@ -15,6 +15,7 @@
 #define __AUDACITY_THEME__
 
 #include <map>
+#include <unordered_set>
 #include <vector>
 #include <wx/arrstr.h>
 #include <wx/defs.h>
@@ -99,11 +100,7 @@ struct ThemeSet
    // wxImage, wxBitmap copy cheaply using reference counting
    std::vector<wxImage> mImages;
    std::vector<wxBitmap> mBitmaps;
-   wxArrayString mBitmapNames;
-   std::vector<int> mBitmapFlags;
-
    std::vector<wxColour> mColours;
-   wxArrayString mColourNames;
 
    bool bInitialised = false;
    bool bRecolourOnLoad = false;  // Request to recolour.
@@ -137,9 +134,16 @@ public:
 
    void SwitchTheme( teThemeType Theme );
    void LoadTheme( teThemeType Theme );
-   void RegisterImage( int &flags, int &iIndex,char const** pXpm, const wxString & Name);
-   void RegisterImage( int &flags, int &iIndex, const wxImage &Image, const wxString & Name );
-   void RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name );
+
+   // For checking uniqueness of names during registration
+   using NameSet = std::unordered_set<wxString>;
+
+   void RegisterImage( NameSet &allNames,
+      int &flags, int &iIndex,char const** pXpm, const wxString & Name);
+   void RegisterImage( NameSet &allNames,
+      int &flags, int &iIndex, const wxImage &Image, const wxString & Name );
+   void RegisterColour( NameSet &allNames,
+      int &iIndex, const wxColour &Clr, const wxString & Name );
 
    teThemeType GetFallbackThemeType();
    void CreateImageCache();
@@ -182,13 +186,8 @@ public:
    void DeleteUnusedThemes();
 
 protected:
-   // wxImage, wxBitmap copy cheaply using reference counting
-   std::vector<wxImage> mImages;
-   std::vector<wxBitmap> mBitmaps;
    wxArrayString mBitmapNames;
    std::vector<int> mBitmapFlags;
-
-   std::vector<wxColour> mColours;
    wxArrayString mColourNames;
 
    PreferredSystemAppearance mPreferredSystemAppearance { PreferredSystemAppearance::Light };
