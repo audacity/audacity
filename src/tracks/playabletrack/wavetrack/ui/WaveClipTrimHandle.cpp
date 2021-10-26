@@ -368,8 +368,11 @@ HitTestPreview WaveClipTrimHandle::Preview(const TrackPanelMouseState& mouseStat
 UIHandle::Result WaveClipTrimHandle::Click
 (const TrackPanelMouseEvent& event, AudacityProject* pProject)
 {
-   if (mClipTrimPolicy->Init(event))
-      return RefreshCode::RefreshNone;
+   if (!ProjectAudioIO::Get(*pProject).IsAudioActive())
+   {
+      if (mClipTrimPolicy->Init(event))
+         return RefreshCode::RefreshNone;
+   }
    return RefreshCode::Cancelled;
 }
 
