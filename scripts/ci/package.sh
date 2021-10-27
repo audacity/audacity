@@ -6,10 +6,16 @@ set -euxo pipefail
 
 cd build
 
-cpack -C "${AUDACITY_BUILD_TYPE}" --verbose
+if [[ "${OSTYPE}" == msys* ]]; then # Windows
+   if [[ ${GIT_BRANCH} == release* ]]; then
+      cmake --build . --target innosetup --config "${AUDACITY_BUILD_TYPE}"
+   fi
 
-if [[ "${OSTYPE}" == msys* && ${GIT_BRANCH} == release* ]]; then # Windows
-    cmake --build . --target innosetup --config "${AUDACITY_BUILD_TYPE}"
+   # Chocolatey went wild again (6 years passed!) and added cpack.exe alias to choco pack
+   # This breaks the GitHub actions
+   cmake --build . --target package --config "${AUDACITY_BUILD_TYPE}"
+else # Linux & others
+   cpack -C "${AUDACITY_BUILD_TYPE}" --verbose
 fi
 
 # Remove the temporary directory
