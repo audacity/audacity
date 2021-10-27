@@ -63,8 +63,10 @@ elseif( CMAKE_SYSTEM_NAME STREQUAL "Darwin" )
       set( CPACK_PERFORM_NOTARIZATION ${${_OPT}perform_notarization} )
 
       # CPACK_POST_BUILD_SCRIPTS was added in 3.19, but we only need it on macOS
-      SET( CPACK_POST_BUILD_SCRIPTS "${CMAKE_SOURCE_DIR}/scripts/build/macOS/DMGSign.cmake" )
+      set( CPACK_POST_BUILD_SCRIPTS "${CMAKE_SOURCE_DIR}/scripts/build/macOS/DMGSign.cmake" )
    endif()
+elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
+   set( CPACK_GENERATOR ZIP )
 endif()
 
 if( CMAKE_GENERATOR MATCHES "Makefiles|Ninja" )
