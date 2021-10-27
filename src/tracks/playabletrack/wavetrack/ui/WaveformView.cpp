@@ -902,7 +902,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
       DrawEnvelope(
          context, mid, env, zoomMin, zoomMax, dB, dBRange, highlightEnvelope );
       EnvelopeEditor::DrawPoints( *clip->GetEnvelope(),
-          context, mid, dB, dBRange, zoomMin, zoomMax, true );
+          context, mid, dB, dBRange, zoomMin, zoomMax, true, rect.x - mid.x );
    }
 
    // Draw arrows on the left side if the track extends to the left of the
