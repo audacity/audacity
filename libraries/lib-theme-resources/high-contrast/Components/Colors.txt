@@ -33,7 +33,7 @@
                  ResponseLines: #00ff00;
                         HzPlot: #8c3cbe;
                 WavelengthPlot: #c83296;
-                      Envelope: #c1ecc2;
+                EnvelopeColour: #c1ecc2;
               MuteButtonActive: #a0aad2;
               MuteButtonVetoed: #b4b4b9;
                      CursorPen: #000000;
@@ -99,4 +99,11 @@
                    Spectro3Sel: #ac13ac;
                    Spectro4Sel: #bf0000;
                    Spectro5Sel: #bfbfbf;
+      ClipAffordanceOutlinePen: #595959;
+ ClipAffordanceUnselectedBrush: #cacaca;
+   ClipAffordanceSelectedBrush: #dbdbdb;
+          ClipAffordanceStroke: #ffffff;
+       LabelTrackTextSelection: #b7cae2;
+                  ClipNameText: #000000;
+         ClipNameTextSelection: #b7cae2;
 }
