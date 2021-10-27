@@ -72,7 +72,8 @@
                    MuteClipped: #888890;
                   ProgressDone: #3cf03c;
                 ProgressNotYet: #ffffff;
-                       SyncSel: #c0c0c0;
-              TrackInfoSyncSel: #404040;
+                   SyncLockSel: #c0c0c0;
+          TrackInfoSyncLockSel: #404040;
                 SelTranslucent: #686894;
+                 BlankSelected: #aaaac0;
 }
