@@ -1,10 +1,10 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
-Changes in version 3.1.0: 
+Changes in version 3.1.0:
 
- This release introduces clip handles, smart clips and playback looping as its major new features. 
+ This release introduces clip handles, smart clips and playback looping as its major new features.
 
- Smaller changes: 
+ Smaller changes:
 
 	* Context menus have been added in more places.
 	* In the preferences, Tracks > Track behaviors > Editing a clip can move other clips is now disabled by default
@@ -14,17 +14,17 @@ Changes in version 3.1.0:
 	* A journaling feature has been added for QA purposes.
 	* Generate > Tone now supports triangle waves.
 	* There now exist "What's new" screens for the update and welcome dialogs.
-	* Timeline Quick Play has been removed in favor of easier manipulation of looping regions.
-	* Audacity's theme will now match the system theme on macOS.
-	* The shortcut to rename labels has temporarily been changed to Ctrl+F2
-	
- Library changes: 
- 
+	* Timeline Quick Play for regions and locked regions have been replaced by playback looping.0
+   * The shortcut to rename labels and clip names has temporarily been hardcoded to Ctrl+F2.
+     * This conflicts with the default xfce shortcut to change workspaces.
+
+ Library changes:
+
 	* FFMPEG now supports avformat 55, 57 and 58.
 	* PortAudio has been updated to version 19.7 and devendored (so it can be built against 19.6).
 	* Several libraries (expat, libsndfile, ...) have been devendored. The CMakeLists.txt lists which versions we build against.
 
- Fixed Bugs: 
+ Fixed Bugs:
   There are some 50 issues closed labeled as bug. Among them:
 
 	* AppImages support localization. #1382
