@@ -319,7 +319,7 @@ UIHandlePtr WaveClipTrimHandle::HitTest(std::weak_ptr<WaveClipTrimHandle>& holde
     WaveTrackView& view, const AudacityProject* pProject,
     const TrackPanelMouseState& state)
 {
-    auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(view.FindTrack()->SubstitutePendingChangedTrack());
+    auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(view.FindTrack());
     //For multichannel tracks, show trim handle only for the leader track
     if (!waveTrack->IsLeader() && waveTrack->IsAlignedWithLeader())
         return {};
