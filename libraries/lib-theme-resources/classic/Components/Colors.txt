@@ -56,9 +56,9 @@
             LabelUnselectedPen: #c0c0c0;
               LabelSelectedPen: #9494aa;
               LabelSurroundPen: #000000;
-                   TrackFocus0: #ffff80;
-                   TrackFocus1: #d7d78a;
-                   TrackFocus2: #b9b98e;
+                   TrackFocus0: #c8c8c8;
+                   TrackFocus1: #b4b4b4;
+                   TrackFocus2: #a0a0a0;
                      SnapGuide: #ffff00;
                      TrackInfo: #404040;
              TrackInfoSelected: #5d415d;
@@ -73,7 +73,6 @@
                   ProgressDone: #3cf03c;
                 ProgressNotYet: #ffffff;
                    SyncLockSel: #c0c0c0;
-          TrackInfoSyncLockSel: #404040;
                 SelTranslucent: #686894;
                  BlankSelected: #aaaac0;
 }
