@@ -21,6 +21,7 @@ set( LIBRARIES
    lib-project-rate
    lib-ffmpeg-support
    lib-theme
+   lib-theme-resources
 )
 
 if ( ${_OPT}has_networking )
