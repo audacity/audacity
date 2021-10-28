@@ -21,6 +21,7 @@ set( LIBRARIES
    lib-project-rate
    lib-ffmpeg-support
    lib-theme
+   image-compiler # not a library, but has a place in their dependency graph   
    lib-theme-resources
 )
 

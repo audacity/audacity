@@ -959,6 +959,10 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
       mPreferredSystemAppearance = iter->second.preferredSystemAppearance;
 
       ImageSize = iter->second.data.size();
+      if (ImageSize == 0)
+         // This must be the image compiler
+         return true;
+
       pImage = iter->second.data.data();
       //wxLogDebug("Reading ImageCache %p size %i", pImage, ImageSize );
       wxMemoryInputStream InternalStream( pImage, ImageSize );
