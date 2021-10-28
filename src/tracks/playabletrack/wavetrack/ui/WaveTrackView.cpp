@@ -31,6 +31,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
+#include "../../../../TrackPanelAx.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackPanelResizeHandle.h"
@@ -41,10 +42,15 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ui/ButtonHandle.h"
 #include "../../../../TrackInfo.h"
 
+#include "../WaveTrackUtils.h"
+
 #include "WaveTrackAffordanceControls.h"
+#include "WaveTrackAffordanceHandle.h"
 #include "WaveClipTrimHandle.h"
 
 namespace {
+
+constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
 
@@ -922,19 +928,36 @@ WaveTrackView::DoDetailedHitTest
    // If that toolbar were eliminated, this could simplify to a sequence of
    // hit test routines describable by a table.
 
-   UIHandlePtr result;
    std::vector<UIHandlePtr> results;
+
+   const auto& viewInfo = ViewInfo::Get(*pProject);
+
+   for (auto& clip : pTrack->GetClips())
+   {
+      if (!WaveTrackView::ClipDetailsVisible(*clip, viewInfo, st.rect)
+         && HitTest(*clip, viewInfo, st.rect, st.state.GetPosition()))
+      {
+         auto waveTrackView = std::static_pointer_cast<WaveTrackView>(pTrack->GetTrackView());
+         results.push_back(
+            AssignUIHandlePtr(
+               waveTrackView->mAffordanceHandle,
+               std::make_shared<WaveTrackAffordanceHandle>(pTrack, clip)
+            )
+         );
+      }
+   }
 
    if (bMultiTool && st.state.CmdDown()) {
       // Ctrl modifier key in multi-tool overrides everything else
       // (But this does not do the time shift constrained to the vertical only,
       //  which is what happens when you hold Ctrl in the Time Shift tool mode)
-      result = TimeShiftHandle::HitAnywhere(
+      auto result = TimeShiftHandle::HitAnywhere(
          view.mTimeShiftHandle, pTrack, false);
       if (result)
          results.push_back(result);
       return { true, results };
    }
+
    return { false, results };
 }
 
@@ -1055,6 +1078,71 @@ void WaveTrackView::DoSetDisplay(Display display, bool exclusive)
    }
 }
 
+namespace {
+   template<typename Iter, typename Comp>
+   const WaveClip* NextClipLooped(ViewInfo& viewInfo, Iter begin, Iter end, Comp comp)
+   {
+      auto it = WaveTrackUtils::SelectedClip(viewInfo, begin, end);
+      if (it == end)
+         it = std::find_if(begin, end, comp);
+      else
+         it = std::next(it);
+
+      if (it == end)
+         return *begin;
+      return *it;
+   }
+}
+
+bool WaveTrackView::SelectNextClip(ViewInfo& viewInfo, AudacityProject* project, bool forward)
+{
+   //Iterates through clips in a looped manner
+   auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(FindTrack());
+   if (!waveTrack)
+      return false;
+   auto clips = waveTrack->SortedClipArray();
+   if (clips.empty())
+      return false;
+
+   const WaveClip* clip{ };
+   if (forward)
+   {
+      clip = NextClipLooped(viewInfo, clips.begin(), clips.end(), [&](const WaveClip* other) {
+         return other->GetPlayStartTime() >= viewInfo.selectedRegion.t1();
+      });
+   }
+   else
+   {
+      clip = NextClipLooped(viewInfo, clips.rbegin(), clips.rend(), [&](const WaveClip* other) {
+         return other->GetPlayStartTime() <= viewInfo.selectedRegion.t0();
+      });
+   }
+
+   viewInfo.selectedRegion.setTimes(clip->GetPlayStartTime(), clip->GetPlayEndTime());
+   ProjectHistory::Get(*project).ModifyState(false);
+
+   // create and send message to screen reader
+   auto it = std::find(clips.begin(), clips.end(), clip);
+   auto index = std::distance(clips.begin(), it);
+
+   auto message = XP(
+   /* i18n-hint:
+       string is the name of a clip
+       first number is the position of that clip in a sequence of clips,
+       second number counts the clips */
+       "%s, %d of %d clip",
+       "%s, %d of %d clips",
+       2
+   )(
+      clip->GetName(),
+      static_cast<int>(index + 1),
+      static_cast<int>(clips.size())
+  );
+
+   TrackFocus::Get(*project).MessageForScreenReader(message);
+   return true;
+}
+
 auto WaveTrackView::GetSubViews( const wxRect &rect ) -> Refinement
 {
    return GetSubViews(&rect);
@@ -1156,14 +1244,20 @@ unsigned WaveTrackView::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWind
             return result;
          }
       }
-       
+
       event.Skip(false);
-      result |= waveTrackView.CommonTrackView::CaptureKey(
+   }
+   switch (event.GetKeyCode())
+   {
+   case WXK_TAB:
+      break;
+   default:
+      result |= CommonTrackView::CaptureKey(
          event, viewInfo, pParent, project);
-      if (!event.GetSkipped()) {
-         mKeyEventDelegate = waveTrackView.shared_from_this();
-         break;
-      }
+      break;
+   };
+   if (!event.GetSkipped()) {
+      mKeyEventDelegate = shared_from_this();
    }
 
    return result;
@@ -1174,11 +1268,22 @@ unsigned WaveTrackView::KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow*
    unsigned result{ RefreshCode::RefreshNone };
    if (auto delegate = mKeyEventDelegate.lock()) {
       if (auto pWaveTrackView = dynamic_cast<WaveTrackView*>(delegate.get()))
-         result |= pWaveTrackView->CommonTrackView::KeyDown(
-            event, viewInfo, pParent, project);
+      {
+         if (event.GetKeyCode() == WXK_TAB)
+         {
+            SelectNextClip(viewInfo, project, event.GetModifiers() != wxMOD_SHIFT);
+            result |= RefreshCode::RefreshCell;
+         }
+         else
+            result |= pWaveTrackView->CommonTrackView::KeyDown(
+               event, viewInfo, pParent, project);
+      }
       else
          result |= delegate->KeyDown(event, viewInfo, pParent, project);
    }
+   else
+      event.Skip();
+
    return result;
 }
 
@@ -1192,6 +1297,9 @@ unsigned WaveTrackView::Char(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pP
       else
          result |= delegate->Char(event, viewInfo, pParent, project);
    }
+   else
+      event.Skip();
+
    return result;
 }
 
@@ -1199,10 +1307,98 @@ unsigned WaveTrackView::LoseFocus(AudacityProject *project)
 {
    unsigned result = RefreshCode::RefreshNone;
    if (auto delegate = mKeyEventDelegate.lock()) {
-      result = delegate->LoseFocus(project);
+      if (auto waveTrackView = dynamic_cast<WaveTrackView*>(delegate.get()))
+         result = waveTrackView->CommonTrackView::LoseFocus(project);
+      else
+         result = delegate->LoseFocus(project);
       mKeyEventDelegate.reset();
    }
    return result;
+}
+
+bool WaveTrackView::CutSelectedText(AudacityProject& project)
+{
+   for (auto channel : TrackList::Channels(FindTrack().get()))
+   {
+      auto& view = TrackView::Get(*channel);
+      if (auto affordance 
+         = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(view.GetAffordanceControls()))
+      {
+         if (affordance->OnTextCut(project))
+            return true;
+      }
+   }
+   return false;
+}
+
+bool WaveTrackView::CopySelectedText(AudacityProject& project)
+{
+   for (auto channel : TrackList::Channels(FindTrack().get()))
+   {
+      auto& view = TrackView::Get(*channel);
+      if (auto affordance
+         = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(view.GetAffordanceControls()))
+      {
+         if (affordance->OnTextCopy(project))
+            return true;
+      }
+   }
+   return false;
+}
+
+bool WaveTrackView::ClipDetailsVisible(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect)
+{
+   //Do not fold clips to line at sample zoom level, as
+   //it may become impossible to 'unfold' it when clip is trimmed
+   //to a single sample
+   bool showSamples{ false };
+   auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, viewRect, &showSamples);
+   return showSamples || clipRect.width >= kClipDetailedViewMinimumWidth;
+}
+
+wxRect WaveTrackView::ClipHitTestArea(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect)
+{
+   bool showSamples{ false };
+   auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, viewRect, &showSamples);
+   if (showSamples || clipRect.width >= kClipDetailedViewMinimumWidth)
+      return clipRect;
+
+   return clipRect.Inflate(2, 0);
+}
+
+bool WaveTrackView::HitTest(const WaveClip& clip, const ZoomInfo& viewInfo, const wxRect& viewRect, const wxPoint& pos)
+{
+   return ClipHitTestArea(clip, viewInfo, viewRect).Contains(pos);
+}
+
+bool WaveTrackView::PasteText(AudacityProject& project)
+{
+   for (auto channel : TrackList::Channels(FindTrack().get()))
+   {
+      auto& view = TrackView::Get(*channel);
+      if (auto affordance
+         = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(view.GetAffordanceControls()))
+      {
+         if (affordance->OnTextPaste(project))
+            return true;
+      }
+   }
+   return false;
+}
+
+bool WaveTrackView::SelectAllText(AudacityProject& project)
+{
+   for (auto channel : TrackList::Channels(FindTrack().get()))
+   {
+      auto& view = TrackView::Get(*channel);
+      if (auto affordance
+         = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(view.GetAffordanceControls()))
+      {
+         if (affordance->OnTextSelect(project))
+            return true;
+      }
+   }
+   return false;
 }
 
 std::vector< std::shared_ptr< WaveTrackSubView > >
@@ -1308,6 +1504,36 @@ namespace {
 }
 #endif
 
+namespace
+{
+   // Returns an offset in seconds to be applied to the right clip 
+   // boundary so that it does not overlap the last sample
+   double CalculateAdjustmentForZoomLevel(
+      const wxRect& viewRect, 
+      const ZoomInfo& zoomInfo, 
+      int rate, 
+      double& outAveragePPS,
+      //Is zoom level sufficient to show individual samples?
+      bool& outShowSamples)
+   {
+      static constexpr double pixelsOffset{ 2 };//The desired offset in pixels
+
+      auto h = zoomInfo.PositionToTime(0, 0, true);
+      auto h1 = zoomInfo.PositionToTime(viewRect.width, 0, true);
+
+      // Determine whether we should show individual samples
+      // or draw circular points as well
+      outAveragePPS = viewRect.width / (rate * (h1 - h));// pixels per sample
+      outShowSamples = outAveragePPS > 0.5;
+
+      if(outShowSamples)
+         // adjustment so that the last circular point doesn't appear
+         // to be hanging off the end
+         return  pixelsOffset / (outAveragePPS * rate); // pixels / ( pixels / second ) = seconds
+      return .0;
+   }
+}
+
 ClipParameters::ClipParameters
    (bool spectrum, const WaveTrack *track, const WaveClip *clip, const wxRect &rect,
    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
@@ -1340,20 +1566,11 @@ ClipParameters::ClipParameters
 
    const double sps = 1. / rate;            //seconds-per-sample
 
-   // Determine whether we should show individual samples
-   // or draw circular points as well
-   averagePixelsPerSample = rect.width / (rate * (h1 - h));
-   showIndividualSamples = averagePixelsPerSample > 0.5;
-
    // Calculate actual selection bounds so that t0 > 0 and t1 < the
    // end of the track
    t0 = std::max(tpre, .0);
-   t1 = std::min(tpost, trackLen - sps * .99);
-   if (showIndividualSamples) {
-      // adjustment so that the last circular point doesn't appear
-      // to be hanging off the end
-      t1 += 2. / (averagePixelsPerSample * rate);
-   }
+   t1 = std::min(tpost, trackLen - sps * .99) 
+      + CalculateAdjustmentForZoomLevel(rect, zoomInfo, rate, averagePixelsPerSample, showIndividualSamples);
 
    // Make sure t1 (the right bound) is greater than 0
    if (t1 < 0.0) {
@@ -1445,20 +1662,37 @@ ClipParameters::ClipParameters
    }
 }
 
-wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect)
+wxRect ClipParameters::GetClipRect(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect, bool* outShowSamples)
 {
     auto srs = 1. / static_cast<double>(clip.GetRate());
-    //to prevent overlap left and right most samples with frame border
-    auto margin = .25 * srs;
+    double averagePixelsPerSample{};
+    bool showIndividualSamples{};
+    auto clipEndingAdjustemt 
+       = CalculateAdjustmentForZoomLevel(viewRect, zoomInfo, clip.GetRate(), averagePixelsPerSample, showIndividualSamples);
+    if (outShowSamples != nullptr)
+       *outShowSamples = showIndividualSamples;
     constexpr auto edgeLeft = static_cast<wxInt64>(std::numeric_limits<int>::min());
     constexpr auto edgeRight = static_cast<wxInt64>(std::numeric_limits<int>::max());
-    auto left = std::clamp(zoomInfo.TimeToPosition(clip.GetPlayStartTime() - margin, viewRect.x, true), edgeLeft, edgeRight);
-    auto right = std::clamp(zoomInfo.TimeToPosition(clip.GetPlayEndTime() - srs + margin, viewRect.x, true), edgeLeft, edgeRight);
-    if (right > left)
+    auto left = std::clamp(
+       zoomInfo.TimeToPosition(
+          clip.GetPlayStartTime(), viewRect.x, true
+       ), edgeLeft, edgeRight
+    );
+    auto right = std::clamp(
+       zoomInfo.TimeToPosition(
+          clip.GetPlayEndTime() - .99 * srs + clipEndingAdjustemt, viewRect.x, true
+       ), edgeLeft, edgeRight
+    );
+    if (right >= left)
     {
         //after clamping we can expect that left and right 
         //are small enough to be put into int
-        return wxRect(static_cast<int>(left), viewRect.y, static_cast<int>(right - left), viewRect.height);
+        return wxRect(
+           static_cast<int>(left), 
+           viewRect.y, 
+           std::max(1, static_cast<int>(right - left)), 
+           viewRect.height
+        );
     }
     return wxRect();
 }

@@ -27,7 +27,7 @@ public:
       TrackPanelDrawingContext &context,
       const wxRect & r,
       bool dB, double dBRange,
-      float zoomMin, float zoomMax, bool mirrored);
+      float zoomMin, float zoomMax, bool mirrored, int origin = 0);
 
    EnvelopeEditor(Envelope &envelope, bool mirrored);
    ~EnvelopeEditor();

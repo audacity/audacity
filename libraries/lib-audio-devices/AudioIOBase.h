@@ -16,6 +16,7 @@ Paul Licameli split from AudioIO.h
 
 #include <cfloat>
 #include <functional>
+#include <optional>
 #include <vector>
 #include <wx/string.h>
 #include "MemoryX.h"
@@ -48,7 +49,6 @@ struct AudioIOStartStreamOptions
       : pProject{ pProject }
       , envelope(nullptr)
       , rate(rate_)
-      , pStartTime(NULL)
       , preRoll(0.0)
    {}
 
@@ -57,7 +57,7 @@ struct AudioIOStartStreamOptions
    const BoundedEnvelope *envelope; // for time warping
    std::shared_ptr< AudioIOListener > listener;
    double rate;
-   double * pStartTime;
+   mutable std::optional<double> pStartTime;
    double preRoll;
 
    bool playNonWaveTracks{ true };
@@ -72,6 +72,8 @@ struct AudioIOStartStreamOptions
 
    using PolicyFactory = std::function< std::unique_ptr<PlaybackPolicy>() >;
    PolicyFactory policyFactory;
+
+   bool loopEnabled{ false };
 };
 
 struct AudioIODiagnostics{

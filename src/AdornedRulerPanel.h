@@ -67,7 +67,7 @@ public:
    void UpdatePrefs() override;
    void ReCreateButtons();
 
-   void UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown);
+   void UpdateQuickPlayPos(wxCoord &mousePosX);
 
    bool ShowingScrubRuler() const;
    //void OnToggleScrubRulerFromMenu(wxCommandEvent& );
@@ -89,7 +89,8 @@ private:
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPRelease(wxMouseEvent &event);
-   void StartQPPlay(bool looped, bool cutPreview);
+   void StartQPPlay(
+      bool newDefault, bool cutPreview, const double *pStartTime = nullptr);
 
    void DoDrawBackground(wxDC * dc);
    void DoDrawEdge(wxDC *dc);
@@ -107,6 +108,8 @@ private:
 
 public:
    static TempAllowFocus TemporarilyAllowFocus();
+
+   void SetNumGuides(size_t nn);
 
 private:
    enum class MenuChoice { QuickPlay, Scrub };
@@ -131,10 +134,13 @@ private:
 
 
    double mIndTime;
-   double mQuickPlayPosUnsnapped;
-   double mQuickPlayPos;
 
-   bool mIsSnapped;
+   static constexpr size_t MAX_GUIDES = 2;
+   double mQuickPlayOffset[MAX_GUIDES]{};
+   double mQuickPlayPosUnsnapped[MAX_GUIDES]{};
+   double mQuickPlayPos[MAX_GUIDES]{};
+   bool mIsSnapped[MAX_GUIDES]{};
+   size_t mNumGuides{ 1 };
 
    PlayRegion mOldPlayRegion;
 
@@ -145,8 +151,8 @@ private:
    //
    void ShowMenu(const wxPoint & pos);
    void ShowScrubMenu(const wxPoint & pos);
-   void DragSelection();
-   void HandleSnapping();
+   static void DragSelection(AudacityProject &project);
+   void HandleSnapping(size_t index);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    //void OnTimelineToolTips(wxCommandEvent &evt);
    void OnAutoScroll(wxCommandEvent &evt);
@@ -208,6 +214,9 @@ private:
    class CommonRulerHandle;
    class QPHandle;
    class PlayRegionAdjustingHandle;
+   class MovePlayRegionHandle;
+   class ResizePlayRegionHandle;
+   class NewPlayRegionHandle;
    class ScrubbingHandle;
 
    class CommonCell;

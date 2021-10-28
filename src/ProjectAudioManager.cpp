@@ -291,14 +291,15 @@ bool CutPreviewPlaybackPolicy::RepositionPlayback( PlaybackSchedule &,
 int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                                    const AudioIOStartStreamOptions &options,
                                    PlayMode mode,
-                                   bool backwards, /* = false */
-                                   bool playWhiteSpace /* = false */)
+                                   bool backwards /* = false */)
 {
    auto &projectAudioManager = *this;
    bool canStop = projectAudioManager.CanStopAudioStream();
 
    if ( !canStop )
       return -1;
+
+   auto &pStartTime = options.pStartTime;
 
    bool nonWaveToo = options.playNonWaveTracks;
 
@@ -309,7 +310,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
    double t1 = selectedRegion.t1();
    // SelectedRegion guarantees t0 <= t1, so we need another boolean argument
    // to indicate backwards play.
-   const bool looped = (mode == PlayMode::loopedPlay);
+   const bool newDefault = (mode == PlayMode::loopedPlay);
 
    if (backwards)
       std::swap(t0, t1);
@@ -339,19 +340,18 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
    else
       hasaudio = ! tracks.Any<WaveTrack>().empty();
 
-   double latestEnd = (playWhiteSpace)? t1 : tracks.GetEndTime();
+   double latestEnd = tracks.GetEndTime();
 
    if (!hasaudio)
       return -1;  // No need to continue without audio tracks
 
 #if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
-   double init_seek = 0.0;
+   double initSeek = 0.0;
 #endif
-
-   double loop_offset = 0.0;
+   double loopOffset = 0.0;
 
    if (t1 == t0) {
-      if (looped) {
+      if (newDefault) {
          const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
          // play selection if there is one, otherwise
          // set start of play region to project start,
@@ -364,7 +364,11 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          else {
             // loop the entire project
             // Bug2347, loop playback from cursor position instead of project start
-            loop_offset = t0 - tracks.GetStartTime();
+            loopOffset = t0 - tracks.GetStartTime();
+            if (!pStartTime)
+               // TODO move this reassignment elsewhere so we don't need an
+               // ugly mutable member
+               pStartTime.emplace(loopOffset);
             t0 = tracks.GetStartTime();
             t1 = tracks.GetEndTime();
          }
@@ -378,7 +382,9 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          }
 #if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
          else {
-            init_seek = t0;         //AC: init_seek is where playback will 'start'
+            initSeek = t0;         //AC: initSeek is where playback will 'start'
+            if (!pStartTime)
+               pStartTime.emplace(initSeek);
             t0 = tracks.GetStartTime();
          }
 #endif
@@ -418,24 +424,22 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
             };
          token = gAudioIO->StartStream(
             GetAllPlaybackTracks(TrackList::Get(*p), false, nonWaveToo),
-            tcp0, tcp1, myOptions);
+            tcp0, tcp1, tcp1, myOptions);
       }
       else {
+         double mixerLimit = t1;
+         if (newDefault) {
+            mixerLimit = latestEnd;
+            if (pStartTime && *pStartTime >= t1)
+               t1 = latestEnd;
+         }
          token = gAudioIO->StartStream(
             GetAllPlaybackTracks( tracks, false, nonWaveToo ),
-            t0, t1, options);
+            t0, t1, mixerLimit, options);
       }
       if (token != 0) {
          success = true;
          ProjectAudioIO::Get(*p).SetAudioIOToken(token);
-         if (loop_offset != 0.0) {
-            // Bug 2347
-            gAudioIO->SeekStream(loop_offset);
-         }
-#if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR )
-         //AC: If init_seek was set, now's the time to make it happen.
-         gAudioIO->SeekStream(init_seek);
-#endif
       }
       else {
          // Bug1627 (part of it):
@@ -462,7 +466,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
    return token;
 }
 
-void ProjectAudioManager::PlayCurrentRegion(bool looped /* = false */,
+void ProjectAudioManager::PlayCurrentRegion(bool newDefault /* = false */,
                                        bool cutpreview /* = false */)
 {
    auto &projectAudioManager = *this;
@@ -477,14 +481,14 @@ void ProjectAudioManager::PlayCurrentRegion(bool looped /* = false */,
 
       const auto &playRegion = ViewInfo::Get( *p ).playRegion;
 
-      if (looped)
+      if (newDefault)
          cutpreview = false;
-      auto options = DefaultPlayOptions( *p, looped );
+      auto options = DefaultPlayOptions( *p, newDefault );
       if (cutpreview)
          options.envelope = nullptr;
       auto mode =
          cutpreview ? PlayMode::cutPreviewPlay
-         : looped ? PlayMode::loopedPlay
+         : newDefault ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
       PlayPlayRegion(SelectedRegion(playRegion.GetStart(), playRegion.GetEnd()),
                      options,
@@ -704,8 +708,20 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
             }
 
             existingTracks = ChooseExistingRecordingTracks(*p, false, options.rate);
-            if(!existingTracks.empty())
-                t0 = std::max( t0, trackRange.max( &Track::GetEndTime ) );
+            if (!existingTracks.empty())
+            {
+               auto endTime = std::max_element(
+                  existingTracks.begin(),
+                  existingTracks.end(),
+                  [](const auto& a, const auto& b) {
+                     return a->GetEndTime() < b->GetEndTime();
+                  }
+               )->get()->GetEndTime();
+
+               //If there is a suitable track, then adjust t0 so
+               //that recording not starts before the end of that track
+               t0 = std::max(t0, endTime);
+            }
             // If suitable tracks still not found, will record into NEW ones,
             // starting with t0
          }
@@ -934,7 +950,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          gAudioIO->AILAInitialize();
       #endif
 
-      int token = gAudioIO->StartStream(transportTracks, t0, t1, options);
+      int token = gAudioIO->StartStream(transportTracks, t0, t1, t1, options);
 
       success = (token != 0);
 
@@ -1159,7 +1175,7 @@ const ReservedCommandFlag&
    }; return flag; }
 
 AudioIOStartStreamOptions
-DefaultPlayOptions( AudacityProject &project, bool looped )
+DefaultPlayOptions( AudacityProject &project, bool newDefault )
 {
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    AudioIOStartStreamOptions options { project.shared_from_this(),
@@ -1170,9 +1186,20 @@ DefaultPlayOptions( AudacityProject &project, bool looped )
    options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
    options.listener = ProjectAudioManager::Get( project ).shared_from_this();
    
-   if (looped)
-      options.policyFactory = []() -> std::unique_ptr<PlaybackPolicy> {
-         return std::make_unique<LoopingPlaybackPolicy>(); };
+   bool loopEnabled = ViewInfo::Get(project).playRegion.Active();
+   options.loopEnabled = loopEnabled;
+
+   if (newDefault) {
+      const double trackEndTime = TrackList::Get(project).GetEndTime();
+      const double loopEndTime = ViewInfo::Get(project).playRegion.GetEnd();
+      options.policyFactory = [trackEndTime, loopEndTime, loopEnabled]() -> std::unique_ptr<PlaybackPolicy> {
+         return std::make_unique<NewDefaultPlaybackPolicy>(
+            trackEndTime, loopEndTime, loopEnabled); };
+
+      // Start play from left edge of selection
+      options.pStartTime.emplace(ViewInfo::Get(project).selectedRegion.t0());
+   }
+
    return options;
 }
 

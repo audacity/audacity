@@ -87,14 +87,17 @@ public:
 
     unsigned OnAffordanceClick(const TrackPanelMouseEvent& event, AudacityProject* project);
 
+    bool OnTextCopy(AudacityProject& project);
+    bool OnTextCut(AudacityProject& project);
+    bool OnTextPaste(AudacityProject& project);
+    bool OnTextSelect(AudacityProject& project);
+
 private:
     void ResetClipNameEdit();
 
     void OnTrackChanged(TrackListEvent& evt);
 
     unsigned ExitTextEditing();
-
-    bool SelectNextClip(ViewInfo& viewInfo, AudacityProject* project, bool forward);
 
     std::shared_ptr<TextEditHelper> MakeTextEditHelper(const wxString& text);
 };

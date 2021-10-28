@@ -139,6 +139,7 @@ private:
    
    void OnSetFocus(wxFocusEvent & event);
    void OnKillFocus(wxFocusEvent & event);
+   void DoKillFocus();
    
    void OnContextMenu(wxContextMenuEvent & event);
    

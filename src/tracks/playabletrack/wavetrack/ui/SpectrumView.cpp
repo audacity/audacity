@@ -322,6 +322,15 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    Profiler profiler;
 #endif
 
+   //If clip is "too small" draw a placeholder instead of
+   //attempting to fit the contents into a few pixels
+   if (!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+   {
+      auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
+      TrackArt::DrawClipFolded(dc, clipRect);
+      return;
+   }
+
    const WaveTrack *const track = waveTrackCache.GetTrack().get();
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
@@ -811,8 +820,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    // of split views
    {
       auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
-      if (!clipRect.IsEmpty())
-         TrackArt::DrawClipEdges(dc, clipRect, selected);
+      TrackArt::DrawClipEdges(dc, clipRect, selected);
    }
 }
 

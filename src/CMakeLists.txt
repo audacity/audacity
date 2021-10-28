@@ -789,6 +789,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.h
+      tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceHandle.cpp
+      tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceHandle.h
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackShifter.cpp
@@ -808,6 +810,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h
       tracks/playabletrack/wavetrack/ui/WaveformView.cpp
       tracks/playabletrack/wavetrack/ui/WaveformView.h
+      tracks/playabletrack/wavetrack/WaveTrackUtils.cpp
+      tracks/playabletrack/wavetrack/WaveTrackUtils.h
       tracks/timetrack/ui/TimeTrackControls.cpp
       tracks/timetrack/ui/TimeTrackControls.h
       tracks/timetrack/ui/TimeTrackVRulerControls.cpp

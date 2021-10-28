@@ -60,20 +60,42 @@ struct CellularPanel::Filter : wxEventFilter
 
    int FilterEvent( wxEvent &event ) override
    {
-      if ( spActivePanel &&
-         event.GetEventType() == wxEVT_KEY_DOWN &&
-         static_cast< wxKeyEvent& >( event ).GetKeyCode() == WXK_ESCAPE ) {
-         spActivePanel->HandleEscapeKey( true );
-         return Event_Processed;
+      const auto type = event.GetEventType();
+      if (type == wxEVT_KEY_DOWN &&
+          static_cast< wxKeyEvent& >( event ).GetKeyCode() == WXK_ESCAPE ) {
+         bool eatEvent = false;
+         for (const auto &pPanel: {spClickedPanel, spEnteredPanel}) {
+            if (pPanel) {
+               eatEvent = true;
+               // Handle escape either in the clicked panel to abort a drag, or
+               // to switch among hit test candidates before button down in the
+               // entered (but not yet clicked) panel
+               pPanel->HandleEscapeKey( true );
+            }
+         }
+         if (eatEvent)
+            return Event_Processed;
       }
-      else
-         return Event_Skip;
+      else if ((type == wxEVT_LEFT_DOWN ||
+                type == wxEVT_RIGHT_DOWN ||
+                type == wxEVT_MIDDLE_DOWN)) {
+         if ( spClickedPanel &&
+             spClickedPanel != event.GetEventObject() ) {
+            // Clicking away from the panel doesn't necessarily change wxWidgets
+            // focus, so we use this global filter instead
+            spClickedPanel->DoKillFocus();
+            // Don't eat the event
+         }
+      }
+      return Event_Skip;
    }
 
-   static wxWeakRef< CellularPanel > spActivePanel;
+   static wxWeakRef< CellularPanel > spClickedPanel;
+   static wxWeakRef< CellularPanel > spEnteredPanel;
 };
 
-wxWeakRef< CellularPanel > CellularPanel::Filter::spActivePanel = nullptr;
+wxWeakRef< CellularPanel > CellularPanel::Filter::spClickedPanel = nullptr;
+wxWeakRef< CellularPanel > CellularPanel::Filter::spEnteredPanel = nullptr;
 
 struct CellularPanel::State
 {
@@ -152,7 +174,7 @@ void CellularPanel::Uncapture(bool escaping, wxMouseState *pState)
    HandleMotion( *pState );
  
    if ( escaping || !AcceptsFocus() )
-      Filter::spActivePanel = nullptr;
+      Filter::spClickedPanel = nullptr;
 }
 
 bool CellularPanel::CancelDragging( bool escaping )
@@ -183,7 +205,8 @@ bool CellularPanel::HandleEscapeKey(bool down)
 
    {
       auto target = Target();
-      if (target && target->HasEscape() && target->Escape(GetProject())) {
+      const auto pProject = GetProject();
+      if (target && target->HasEscape(pProject) && target->Escape(pProject)) {
          HandleCursorForPresentMouseState(false);
          return true;
       }
@@ -427,7 +450,7 @@ bool CellularPanel::HasEscape()
    auto &state = *mState;
   if (state.mTarget + 1 == state.mTargets.size() &&
        Target() &&
-       !Target()->HasEscape())
+       !Target()->HasEscape(GetProject()))
        return false;
 
    return state.mTargets.size() > 0;
@@ -733,10 +756,12 @@ try
 
    if (event.Entering())
    {
-      Filter::spActivePanel = this;
+      Filter::spEnteredPanel = this;
    }
    else if (event.Leaving())
    {
+      if (Filter::spEnteredPanel == this)
+         Filter::spEnteredPanel = nullptr;
       Leave();
 
       auto buttons =
@@ -745,7 +770,7 @@ try
          // event.ButtonIsDown(wxMOUSE_BTN_ANY);
          ::wxGetMouseState().ButtonIsDown(wxMOUSE_BTN_ANY);
 
-      if(!buttons) {
+      if (!buttons) {
          CancelDragging( false );
 
 #if defined(__WXMAC__)
@@ -912,7 +937,7 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
       if (refreshResult & RefreshCode::Cancelled)
          state.mUIHandle.reset(), handle.reset(), ClearTargets();
       else {
-         Filter::spActivePanel = this;
+         Filter::spClickedPanel = this;
 
 #if wxUSE_TOOLTIPS
          // Remove any outstanding tooltip
@@ -965,7 +990,7 @@ void CellularPanel::OnSetFocus(wxFocusEvent &event)
    Refresh( false);
 }
 
-void CellularPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
+void CellularPanel::DoKillFocus()
 {
    if (auto pCell = GetFocusedCell()) {
       auto refreshResult = pCell->LoseFocus(GetProject());
@@ -974,11 +999,16 @@ void CellularPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
       if (pClickedCell)
          ProcessUIHandleResult( pClickedCell.get(), {}, refreshResult );
    }
+   Refresh( false);
+}
+
+void CellularPanel::OnKillFocus(wxFocusEvent & WXUNUSED(event))
+{
+   DoKillFocus();
    if (KeyboardCapture::IsHandler(this))
    {
       KeyboardCapture::Release(this);
    }
-   Refresh( false);
 }
 
 // Empty out-of-line default functions to fill Visitor's vtable

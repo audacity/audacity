@@ -1197,6 +1197,23 @@ bool LabelTrackView::PasteSelectedText(
    return true;
 }
 
+bool LabelTrackView::SelectAllText(AudacityProject& project)
+{
+    if (!IsValidIndex(mTextEditIndex, project))
+        return false;
+
+    const auto pTrack = FindLabelTrack();
+
+    const auto& mLabels = pTrack->GetLabels();
+    auto labelStruct = mLabels[mTextEditIndex];
+    auto& title = labelStruct.title;
+
+    mInitialCursorPos = 0;
+    mCurrentCursorPos = title.Length();
+
+    return true;
+}
+
 /// @return true if the text data is available in the clipboard, false otherwise
 bool LabelTrackView::IsTextClipSupported()
 {
@@ -1620,32 +1637,41 @@ bool LabelTrackView::DoKeyDown(
       case WXK_LEFT:
       case WXK_NUMPAD_LEFT:
          // Moving cursor left
-         while ((mCurrentCursorPos > 0) && more) {
-            wchar = title.at( mCurrentCursorPos-1 );
-            more = !( ((int)wchar > 0xDFFF) || ((int)wchar <0xDC00));
+         if (mods != wxMOD_SHIFT && mCurrentCursorPos != mInitialCursorPos)
+            //put cursor to the left edge of selection
+            mInitialCursorPos = mCurrentCursorPos =
+               std::min(mInitialCursorPos, mCurrentCursorPos);
+         else
+         {
+            while ((mCurrentCursorPos > 0) && more) {
+               wchar = title.at(mCurrentCursorPos - 1);
+               more = !(((int)wchar > 0xDFFF) || ((int)wchar < 0xDC00));
 
-            mCurrentCursorPos--;
-            if (mods == wxMOD_SHIFT)
-               ;
-            else
-               mInitialCursorPos = mCurrentCursorPos =
-                  std::min(mInitialCursorPos, mCurrentCursorPos);
+               --mCurrentCursorPos;
+            }
+            if (mods != wxMOD_SHIFT)
+               mInitialCursorPos = mCurrentCursorPos;
          }
+         
          break;
 
       case WXK_RIGHT:
       case WXK_NUMPAD_RIGHT:
          // Moving cursor right
-         while ((mCurrentCursorPos < (int)title.length())&& more) {
-            wchar = title.at( mCurrentCursorPos );
-            more = !( ((int)wchar > 0xDBFF) || ((int)wchar <0xD800));
+         if(mods != wxMOD_SHIFT && mCurrentCursorPos != mInitialCursorPos)
+            //put cursor to the right edge of selection
+            mInitialCursorPos = mCurrentCursorPos =
+               std::max(mInitialCursorPos, mCurrentCursorPos);
+         else
+         {
+            while ((mCurrentCursorPos < (int)title.length()) && more) {
+               wchar = title.at(mCurrentCursorPos);
+               more = !(((int)wchar > 0xDBFF) || ((int)wchar < 0xD800));
 
-            mCurrentCursorPos++;
-            if (mods == wxMOD_SHIFT)
-               ;
-            else
-               mInitialCursorPos = mCurrentCursorPos =
-                  std::max(mInitialCursorPos, mCurrentCursorPos);
+               ++mCurrentCursorPos;
+            }
+            if (mods != wxMOD_SHIFT)
+               mInitialCursorPos = mCurrentCursorPos;
          }
          break;
 

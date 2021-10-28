@@ -572,11 +572,12 @@ void ControlToolBar::OnStop(wxCommandEvent & WXUNUSED(evt))
 
 void ControlToolBar::PlayDefault()
 {
-   // Let control have precedence over shift
+   // Let control-down have precedence over shift state
    const bool cutPreview = mPlay->WasControlDown();
-   const bool looped = !cutPreview &&
+   const bool newDefault = !cutPreview &&
       !mPlay->WasShiftDown();
-   ProjectAudioManager::Get( mProject ).PlayCurrentRegion(looped, cutPreview);
+   ProjectAudioManager::Get( mProject )
+      .PlayCurrentRegion(newDefault, cutPreview);
 }
 
 /*! @excsafety{Strong} -- For state of current project's tracks */
@@ -642,11 +643,13 @@ void ControlToolBar::OnIdle(wxIdleEvent & event)
    }
    else {
       mPlay->PushDown();
+      // Choose among alternative appearances of the play button, although
+      // options 0 and 1 became non-distinct in 3.1.0
       mPlay->SetAlternateIdx(
          projectAudioManager.Cutting()
          ? 2
-         : projectAudioManager.Looping()
-            ? 1
+         // : projectAudioManager.Looping()
+            // ? 1
             : 0
       );
    }

@@ -181,16 +181,25 @@ public:
    // Set current and last active times the same regardless of activation:
    void SetAllTimes( double start, double end );
 
+   //! Set to an invalid state
+   void Clear();
+   //! Test whether in invalid state
+   bool IsClear() const;
+   //! Test whether last active region is in invalid state
+   bool IsLastActiveRegionClear() const;
+
    void Order();
 
 private:
    void Notify();
 
    // Times:
-   double mStart{ -1.0 };
-   double mEnd{ -1.0 };
-   double mLastActiveStart{ -1.0 };
-   double mLastActiveEnd{ -1.0 };
+   static constexpr auto invalidValue = std::numeric_limits<double>::min();
+
+   double mStart { invalidValue };
+   double mEnd { invalidValue };
+   double mLastActiveStart { invalidValue };
+   double mLastActiveEnd { invalidValue };
 
    bool mActive{ false };
 };

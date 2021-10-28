@@ -29,6 +29,8 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 
+#include "commands/CommandManager.h"
+
 namespace {
 
 // Temporal selection (not TimeTrack selection)
@@ -169,22 +171,18 @@ void ActivatePlayRegion(AudacityProject &project)
 
    auto &viewInfo = ViewInfo::Get( project );
    auto &playRegion = viewInfo.playRegion;
-   if (playRegion.GetStart() >= tracks.GetEndTime()) {
-      AudacityMessageBox(
-         XO("Cannot lock region beyond\nend of project."),
-         XO("Error"));
+   playRegion.SetActive( true );
+   if (playRegion.Empty()) {
+      auto &selectedRegion = viewInfo.selectedRegion;
+      if (!selectedRegion.isPoint())
+         playRegion.SetTimes(selectedRegion.t0(), selectedRegion.t1());
+      else
+         // Arbitrary first four seconds
+         playRegion.SetTimes(0.0, 4.0);
    }
-   else {
-      playRegion.SetActive( true );
-      if (playRegion.Empty()) {
-         auto &selectedRegion = viewInfo.selectedRegion;
-         if (!selectedRegion.isPoint())
-            playRegion.SetTimes(selectedRegion.t0(), selectedRegion.t1());
-         else
-            // Arbitrary first four seconds
-            playRegion.SetTimes(0.0, 4.0);
-      }
-   }
+
+   // Ensure the proper state of looping in the menu
+   CommandManager::Get( project ).UpdateCheckmarks( project );
 }
 
 void InactivatePlayRegion(AudacityProject &project)
@@ -196,6 +194,9 @@ void InactivatePlayRegion(AudacityProject &project)
    // the last-active times that are used for display.
    playRegion.SetActive( false );
    playRegion.SetTimes( selectedRegion.t0(), selectedRegion.t1() );
+
+   // Ensure the proper state of looping in the menu
+   CommandManager::Get( project ).UpdateCheckmarks( project );
 }
 
 void TogglePlayRegion(AudacityProject &project)
@@ -212,7 +213,7 @@ void ClearPlayRegion(AudacityProject &project)
 {
    auto &viewInfo = ViewInfo::Get( project );
    auto &playRegion = viewInfo.playRegion;
-   playRegion.SetAllTimes(-1, -1);
+   playRegion.Clear();
 }
 
 void SetPlayRegionToSelection(AudacityProject &project)

@@ -379,8 +379,9 @@ public:
     * instance.  For use with IsStreamActive() */
 
    int StartStream(const TransportTracks &tracks,
-                   double t0, double t1,
-                   const AudioIOStartStreamOptions &options);
+      double t0, double t1,
+      double mixerLimit, //!< Time at which mixer stops producing, maybe > t1
+      const AudioIOStartStreamOptions &options);
 
    /** \brief Stop recording, playback or input monitoring.
     *
