@@ -2444,8 +2444,7 @@ void Effect::Preview(bool dryOnly)
 
       // Start audio playing
       auto options = DefaultPlayOptions(*pProject);
-      int token =
-         gAudioIO->StartStream(tracks, mT0, t1, options);
+      int token = gAudioIO->StartStream(tracks, mT0, t1, t1, options);
 
       if (token) {
          auto previewing = ProgressResult::Success;

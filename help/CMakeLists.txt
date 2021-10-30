@@ -50,9 +50,9 @@ if( ${_OPT}package_manual )
    ")
 
    if( "${CMAKE_GENERATOR}" MATCHES "Xcode" )
-      install( DIRECTORY "${CMAKE_BINARY_DIR}/help/manual" DESTINATION "${_APPDIR}/help/manual" )
+      install( DIRECTORY "${CMAKE_BINARY_DIR}/help/manual" DESTINATION "${_APPDIR}/help" )
    elseif( "${CMAKE_GENERATOR}" MATCHES "Visual Studio*" )
-      install( DIRECTORY "${CMAKE_BINARY_DIR}/help/manual" DESTINATION "help/manual" )
+      install( DIRECTORY "${CMAKE_BINARY_DIR}/help/manual" DESTINATION "help" )
    endif()
 endif()
 

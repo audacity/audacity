@@ -1,5 +1,43 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.1.0:
+
+ This release introduces clip handles, smart clips and playback looping as its major new features.
+
+ Smaller changes:
+
+	* Context menus have been added in more places.
+	* In the preferences, Tracks > Track behaviors > Editing a clip can move other clips is now disabled by default
+	* The spectrogram defaults have been changed: scale type to Mel (was Linear), top of scale to 20000 Hz (was 8000 Hz), window size to 2048 (was 1024), and zero padding to 2 (was 1).
+	* The main volume controls no longer change the system volume.
+	* Raw Import now will remember the previously used settings. Automatic detection of the format now is a button.
+	* A journaling feature has been added for QA purposes.
+	* Generate > Tone now supports triangle waves.
+	* There now exist "What's new" screens for the update and welcome dialogs.
+	* Timeline Quick Play for regions and locked regions have been replaced by playback looping.0
+   * The shortcut to rename labels and clip names has temporarily been hardcoded to Ctrl+F2.
+     * This conflicts with the default xfce shortcut to change workspaces.
+
+ Library changes:
+
+	* FFMPEG now supports avformat 55, 57 and 58.
+	* PortAudio has been updated to version 19.7 and devendored (so it can be built against 19.6).
+	* Several libraries (expat, libsndfile, ...) have been devendored. The CMakeLists.txt lists which versions we build against.
+
+ Fixed Bugs:
+  There are some 50 issues closed labeled as bug. Among them:
+
+	* AppImages support localization. #1382
+	* Progress bars for Nyquist generators have been made more accurate. #1856
+	* Rhythm tracks can no longer drift off-time by 2ms over 9 minutes; they're now sample-accurate. #1853
+	* The play button has regained a pixel or two to become a triangle once more. #1792
+	* Auto Duck has been made way more accurate and should no longer miss sections above the threshold. #1389
+	* The manual now only is included in the executable once #1917
+	* Shift-clicking a menu item no longer opens the settings menu #1358
+	* FFMPEG no longer segfaults ALSA #1170
+	* Audacity no longer crashes when macros output directory is set to C:\ #1174
+	* A bouncing ball of death problem has been fixed #1312
+
 Changes in version 3.0.5:
 
  This is a hotfix release that fixes a bug on macOS that could corrupt project files when being opened via cmd+o on languages where the decimal separator wasn't a dot. (#1571)

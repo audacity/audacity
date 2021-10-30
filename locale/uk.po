@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2021-07-15 22:24+0300\n"
+"PO-Revision-Date: 2021-10-14 17:25+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -322,11 +322,13 @@ msgid "(%s)"
 msgstr "(%s)"
 
 #: libraries/lib-files/FileNames.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "%s does not have write permissions."
-msgstr "Немає прав доступу на запис до каталогу %s"
+msgstr ""
+"\n"
+"%s не має прав доступу на запис."
 
 #: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
 #: src/ProjectAudioManager.cpp src/SelectUtilities.cpp
@@ -495,6 +497,7 @@ msgstr "Записи додатків у %s визначають парамет�
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
 msgstr ""
+"Увімкнути/Вимкнути &цикл"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -1461,9 +1464,8 @@ msgid "App update checking and error reporting require network access. These fea
 msgstr "Пошук оновлень програми та звітування щодо помилок потребують доступу до мережі. Ці можливості не є обов'язковими."
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Click and drag to define a looping region."
-msgstr "Натисніть кнопку миші і перетягніть вказівник, щоб розширити позначену ділянку."
+msgstr "Натисніть кнопку миші і перетягніть, щоб визначити ділянку циклу."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -1557,14 +1559,12 @@ msgstr "Оновлювати відображення під час відтво
 
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Clear Looping Region"
-msgstr "Спорожнити журнал"
+msgstr "Зняти ділянку циклічності"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Set Loop To Selection"
-msgstr "Масштабувати до позначеного"
+msgstr "Цикл за позначеним"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Pinned Play Head"
@@ -1787,6 +1787,7 @@ msgstr "встановити максимальний розмір блоку д
 #: src/AudacityApp.cpp
 msgid "replay a journal file"
 msgstr ""
+"повторно відтворити файл журналу"
 
 #. i18n-hint: This displays a list of available options
 #: src/AudacityApp.cpp
@@ -2548,12 +2549,10 @@ msgid "(%d): %s"
 msgstr "(%d): %s"
 
 #: src/DBConnection.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set page size for database %s"
 msgstr ""
-"Не вдалося відкрити файл бази даних:\n"
-"\n"
-"%s"
+"Не вдалося встановити розмір сторінки для бази даних %s"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -2804,9 +2803,8 @@ msgid "Only avformat.dll"
 msgstr "Лише avformat.dll"
 
 #: src/FFmpeg.cpp
-#, fuzzy
 msgid "Only ffmpeg.*.dylib"
-msgstr "Лише libmp3lame.dylib"
+msgstr "Лише ffmpeg.*.dylib"
 
 #: src/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -3128,6 +3126,7 @@ msgstr "Ви можете допомогти нам поліпшити Audacity 
 #, c-format
 msgid "What's new in Audacity %s"
 msgstr ""
+"Нове в Audacity %s"
 
 #: src/HelpText.cpp
 msgid "How to get help"
@@ -3232,9 +3231,8 @@ msgid "&History..."
 msgstr "&Журнал змін…"
 
 #: src/JournalEvents.cpp
-#, fuzzy
 msgid "Journal recording failed"
-msgstr "Запис збережено:"
+msgstr "Не вдалося виконати запис до журналу"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3968,6 +3966,7 @@ msgstr "Позначено надто мало сумісних доріжок"
 msgctxt "clip name template"
 msgid "%s #%d"
 msgstr ""
+"%s №%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -4732,10 +4731,10 @@ msgstr "Відновити"
 
 #. i18n-hint Name default name assigned to a clip on track import
 #: src/ProjectFileManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgctxt "clip name template"
 msgid "%s %d"
-msgstr "%s %d з %d"
+msgstr "%s %d"
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -5177,50 +5176,49 @@ msgstr "Рівень активації (дБ):"
 #: src/SpectralDataDialog.cpp
 msgid "Spectral Data Control Panel"
 msgstr ""
+"Панель керування спектральними даними"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Brush Tool"
-msgstr "&Попередній інструмент"
+msgstr "Інструмент «Пензель»"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Spectral Brush"
-msgstr "С&пектральний"
+msgstr "Спектральний пензель"
 
 #: src/SpectralDataDialog.cpp
 msgid "Brush radius"
 msgstr ""
+"Радіус пензля"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Custom brush size"
-msgstr "Нетипова крива"
+msgstr "Нетиповий розмір пензля"
 
 #: src/SpectralDataDialog.cpp
 msgid "Auto-select overtones (beta)"
 msgstr ""
+"Автовибір обертонів (бета)"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Enable smart selection"
-msgstr "&Увімкнути спектральний вибір"
+msgstr "Увімкнути кмітливий вибір"
 
 #: src/SpectralDataDialog.cpp
 msgid ""
 "Select the fundamental frequency\n"
 "and release the mouse"
 msgstr ""
+"Виберіть базову частоту\n"
+"і відпустіть кнопку миші"
 
 #: src/SpectralDataDialog.cpp
-#, fuzzy
 msgid "Spectra&l Selection Panel"
-msgstr "Спектральний вибір"
+msgstr "Панель с&пектрального вибору"
 
 #: src/SpectralDataManager.cpp
-#, fuzzy
 msgid "Applied effect to selection"
-msgstr "Кінець вирівняно до кінця позначеного"
+msgstr "До позначеного застосовано ефект"
 
 #: src/SplashDialog.cpp
 msgid "Welcome to Audacity!"
@@ -5838,6 +5836,7 @@ msgstr "Не вдалося змінити частоту дискретизац
 msgctxt "clip name template"
 msgid "%s.%i"
 msgstr ""
+"%s.%i"
 
 #. i18n-hint Template for clip name generation on inserting new empty clip
 #: src/WaveTrack.cpp
@@ -5845,6 +5844,7 @@ msgstr ""
 msgctxt "clip name template"
 msgid "%s %i"
 msgstr ""
+"%s %i"
 
 #: src/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -12702,9 +12702,8 @@ msgstr "Частота дискретизації:"
 
 #. i18n-hint: Guess format of raw file
 #: src/import/ImportRaw.cpp
-#, fuzzy
 msgid "Detect"
-msgstr "Виявлення тиші"
+msgstr "Виявити"
 
 #: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
 msgid "&Import"
@@ -12737,13 +12736,13 @@ msgstr "%s, правий"
 #. clips.
 #.
 #: src/menus/ClipMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s %s, %d of %d clip %s"
 msgid_plural "%s %s, %d of %d clips %s"
-msgstr[0] "%s %d з %d кліпу %s"
-msgstr[1] "%s %d з %d кліпів %s"
-msgstr[2] "%s %d з %d кліпів %s"
-msgstr[3] "%s %d з %d кліпів %s"
+msgstr[0] "%s %s, %d з %d кліпу %s"
+msgstr[1] "%s %s, %d з %d кліпів %s"
+msgstr[2] "%s %s, %d з %d кліпу %s"
+msgstr[3] "%s %s, %d з %d кліпу %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "start"
@@ -12764,13 +12763,13 @@ msgstr "кінець"
 #. clips.
 #.
 #: src/menus/ClipMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s %s and %s %s, %d and %d of %d clip %s"
 msgid_plural "%s %s and %s %s, %d and %d of %d clips %s"
-msgstr[0] "%s %d і %s %d з %d кліпу %s"
-msgstr[1] "%s %d і %s %d з %d кліпів %s"
-msgstr[2] "%s %d і %s %d з %d кліпів %s"
-msgstr[3] "%s %d і %s %d з %d кліпів %s"
+msgstr[0] "%s %s і %s %s, %d і %d з %d кліпу %s"
+msgstr[1] "%s %s і %s %s, %d і %d з %d кліпів %s"
+msgstr[2] "%s %s і %s %s, %d і %d з %d кліпів %s"
+msgstr[3] "%s %s і %s %s, %d і %d з %d кліпів %s"
 
 #. i18n-hint:
 #. first string is the name of a clip,
@@ -12779,13 +12778,13 @@ msgstr[3] "%s %d і %s %d з %d кліпів %s"
 #. last number counts all clips,
 #. last string names a track
 #: src/menus/ClipMenus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, %d of %d clip %s"
 msgid_plural "%s, %d of %d clips %s"
-msgstr[0] "%s %d з %d кліпу %s"
-msgstr[1] "%s %d з %d кліпів %s"
-msgstr[2] "%s %d з %d кліпів %s"
-msgstr[3] "%s %d з %d кліпів %s"
+msgstr[0] "%s, %d з %d кліпу %s"
+msgstr[1] "%s, %d з %d кліпів %s"
+msgstr[2] "%s, %d з %d кліпів %s"
+msgstr[3] "%s, %d з %d кліпу %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time shifted clips to the right"
@@ -13112,9 +13111,8 @@ msgid "&Full Screen (on/off)"
 msgstr "&Повноекранний режим (увімкн./вимкн.)"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Cannot proceed to export."
-msgstr "Немає шаблонів для експортування"
+msgstr "Неможливо продовжити експортування."
 
 #: src/menus/FileMenus.cpp
 #, c-format
@@ -13656,12 +13654,14 @@ msgstr "Невідомий"
 #: src/menus/PluginMenus.cpp
 msgid "A journal will be recorded after Audacity restarts."
 msgstr ""
+"Запис до журналу вестиметься після перезапуску Audacity."
 
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "No journal will be recorded after Audacity restarts."
 msgstr ""
+"Після перезапуску Audacity запис до журналу не вестиметься."
 
 #: src/menus/PluginMenus.cpp
 #, c-format
@@ -13746,6 +13746,7 @@ msgstr "Виявляти провали у початкових даних"
 #: src/menus/PluginMenus.cpp
 msgid "Write Journal"
 msgstr ""
+"Записувати журнал"
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/menus/PluginMenus.cpp
@@ -14606,15 +14607,13 @@ msgstr "немає міток на доріжці міток"
 
 #. i18n-hint Sets a starting point for looping play
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Set Loop &In"
-msgstr "З&більшити"
+msgstr "Встановити по&чаток циклу"
 
 #. i18n-hint Sets an ending point for looping play
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Set Loop &Out"
-msgstr "З&меншити"
+msgstr "Встановити &кінець циклу"
 
 #: src/menus/TransportMenus.cpp
 msgid ""
@@ -14673,9 +14672,8 @@ msgid "Play/Stop and &Set Cursor"
 msgstr "Пуск/Стоп і вс&тановлення курсора"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Play &Once/Stop"
-msgstr "Ві&дтворити/Зупинити"
+msgstr "Відтворити &раз/Стоп"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Pause"
@@ -14709,16 +14707,15 @@ msgstr "Запис із п&ерезаписуванням"
 #: src/menus/TransportMenus.cpp
 msgid "&Looping"
 msgstr ""
+"За&циклення"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "&Clear Loop"
-msgstr "Спорожнити журнал"
+msgstr "З&няти циклічність"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "&Set Loop to Selection"
-msgstr "Мас&штабувати до вибраного"
+msgstr "Ци&кл за позначеним"
 
 #: src/menus/TransportMenus.cpp
 msgid "R&escan Audio Devices"
@@ -14758,9 +14755,8 @@ msgstr "&Керування"
 
 #. i18n-hint: (verb) Start playing audio
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Pl&ay Once"
-msgstr "Ві&дтворення"
+msgstr "Відтворити &раз"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/menus/TransportMenus.cpp
@@ -14809,9 +14805,8 @@ msgid "&Play-at-Speed"
 msgstr "&Відтворення на швидкості"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Play-at-Speed &Once"
-msgstr "Відтворити на швидкості"
+msgstr "Відтворити на &швидкості раз"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview-at-Speed"
@@ -15143,9 +15138,8 @@ msgid "Choose a location to place the temporary directory"
 msgstr "Виберіть розташування каталогу тимчасових файлів"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Cannot set the preference."
-msgstr "Отримати налаштування…"
+msgstr "Не вдалося встановити налаштування."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
@@ -15156,23 +15150,26 @@ msgid "Choose a location"
 msgstr "Виберіть місце"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Directory %s does not exist. Create it?"
-msgstr "Каталог %s не існує. Створити його?"
+msgstr ""
+"\n"
+"Каталогу %s не існує. Створити його?"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "Directory creation failed."
-msgstr "Діалогове вікно каталогів"
+msgstr "Не вдалося створити каталог."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "%s"
-msgstr "%s:"
+msgstr ""
+"\n"
+"%s"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15180,14 +15177,12 @@ msgid "Directory %s is not suitable (at risk of being cleaned out)"
 msgstr "Не варто використовувати каталог %s (ризикуєте його автоматичним спорожненням)"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Temporary Directory' cannot be set."
-msgstr "Каталог тимчасових файлів не може зберігатися на диску FAT."
+msgstr "Не вдалося встановити «Тимчасовий каталог»."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Temporary files' directory cannot be set."
-msgstr "Каталог тимчасових файлів не може зберігатися на диску FAT."
+msgstr "Не вдалося встановити каталог «Тимчасові файли»."
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15203,28 +15198,25 @@ msgid "Temp Directory Update"
 msgstr "Оновлення теки тимчасових даних"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Open' directory cannot be set."
-msgstr "Каталог тимчасових файлів не може зберігатися на диску FAT."
+msgstr "Не вдалося встановити каталог «Відкрити»."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Save' directory cannot be set."
-msgstr "Каталог тимчасових файлів не може зберігатися на диску FAT."
+msgstr "Не вдалося встановити каталог «Зберегти»."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Import' directory cannot be set."
-msgstr "Каталог тимчасових файлів не може зберігатися на диску FAT."
+msgstr "Не вдалося встановити каталог «Імпортувати»."
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
 msgid "'Export' directory cannot be set."
-msgstr "Експортувати набори налаштувань Audio Unit"
+msgstr "Не вдалося встановити каталог «Експортувати»."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Macro Output' directory cannot be set."
 msgstr ""
+"Не вдалося встановити каталог «Виведення макросу»."
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
@@ -16905,9 +16897,8 @@ msgid "Skip to End"
 msgstr "Перейти на кінець доріжки"
 
 #: src/toolbars/ControlToolBar.cpp
-#, fuzzy
 msgid "Play Once"
-msgstr "Від&творити 1 секунду"
+msgstr "Відтворити раз"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Record New Track"
@@ -17360,9 +17351,8 @@ msgid "Playback Speed"
 msgstr "Швидкість програвання"
 
 #: src/toolbars/TranscriptionToolBar.cpp
-#, fuzzy
 msgid "Play-at-Speed Once"
-msgstr "Відтворити на швидкості"
+msgstr "Відтворити на швидкості раз"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for transcription (currently just vary play speed)
@@ -17373,6 +17363,8 @@ msgstr "Панель ві&дтворення на швидкості"
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
 msgstr ""
+"Перетягніть мітку. Утримуйте Shift під час перетягування, щоб пересунути усі"
+" мітки однієї доріжки."
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -17575,60 +17567,57 @@ msgid "S&pectrogram Settings..."
 msgstr "Пара&метри спектрограми…"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
-#, fuzzy
 msgid "Click and drag to move clip boundary in time"
-msgstr "Натисніть кнопку миші і перетягніть, щоб пересунути доріжку у часі"
+msgstr "Натисніть кнопку миші і перетягніть, щоб пересунути межі кліпу у часі"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Left"
 msgstr ""
+"Обрізання кліпу ліворуч"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 #, c-format
 msgid "Moved by %.02f"
 msgstr ""
+"Пересунуто на %.02f"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Right"
 msgstr ""
+"Обрізання кліпу праворуч"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Set Wave Clip Name"
-msgstr "Встановлення назви доріжки"
+msgstr "Встановити назву кліпу хвилі"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Click and drag to select text"
-msgstr "Натисніть кнопку миші і перетягніть вказівник, щоб позначити звукові дані"
+msgstr "Натисніть кнопку миші і перетягніть вказівник, щоб позначити текст"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Modified Clip Name"
-msgstr "Мітку змінено"
+msgstr "Змінена назва кліпу"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Clip Name Edit"
-msgstr "Редагування семплу"
+msgstr "Редагування назви кліпу"
 
 #. i18n-hint:
 #. string is the name of a clip
 #. first number is the position of that clip in a sequence of clips,
 #. second number counts the clips
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
-msgstr[0] "%s %d з %d кліпу %s"
-msgstr[1] "%s %d з %d кліпів %s"
-msgstr[2] "%s %d з %d кліпів %s"
-msgstr[3] "%s %d з %d кліпів %s"
+msgstr[0] "%s, %d з %d кліпу"
+msgstr[1] "%s, %d з %d кліпів"
+msgstr[2] "%s, %d з %d кліпів"
+msgstr[3] "%s, %d з %d кліпу"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Rename Clip..."
-msgstr "Перейменувати…"
+msgstr "Перейменувати кліп…"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -17861,19 +17850,16 @@ msgid "Close sub-view"
 msgstr "Закрити підпанель"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Split Clip"
-msgstr "Встановити обрізання"
+msgstr "Поділити кліп"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Mute/Unmute Track"
-msgstr "&Вимкнути або увімкнути звук на фокусованій доріжці"
+msgstr "Вимкнути або увімкнути звук на доріжці"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
-#, fuzzy
 msgid "Rename clip..."
-msgstr "Перейменувати…"
+msgstr "Перейменувати кліп…"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom x1/2"
@@ -17974,40 +17960,37 @@ msgstr "Логарифмічна &інтерполяція"
 #: src/tracks/ui/AffordanceHandle.cpp
 msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
 msgstr ""
+"Перетягуйте кліпи, щоб змінити їхнє розташування. Утримуйте Shift під час "
+"перетягування, щоб пересунути усі кліпи однієї доріжки."
 
 #: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
 msgid "Add Mono Track"
-msgstr "&Монодоріжку"
+msgstr "Додати монодоріжку"
 
 #: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
 msgid "Add Stereo Track"
-msgstr "&Стереодоріжку"
+msgstr "Додати стереодоріжку"
 
 #: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
 msgid "Add Label Track"
-msgstr "Позначити доріжку"
+msgstr "Додати доріжку міток"
 
 #: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
 msgid "Export Audio..."
-msgstr "&Експортувати звукові дані…"
+msgstr "Експортувати звук…"
 
 #: src/tracks/ui/BrushHandle.cpp
-#, fuzzy
 msgid "Erased selected area"
-msgstr "Ви&лучити позначене правило"
+msgstr "Витерто позначену ділянку"
 
 #: src/tracks/ui/BrushHandle.cpp
 msgid "Selected area using Brush Tool"
 msgstr ""
+"Позначено ділянку за допомогою інструмента «Пензель»"
 
 #: src/tracks/ui/BrushHandle.cpp
-#, fuzzy
 msgid "Brush tool selection"
-msgstr "Вирізати позначене"
+msgstr "Позначення інструментом «Пензель»"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "&Name..."
@@ -18244,20 +18227,20 @@ msgstr "Ліва=Збільшити, Права=Зменшити, Середня
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
-#, fuzzy
 msgid "No Updates Available"
-msgstr "можна користуватися"
+msgstr "Немає доступних оновлень"
 
 #: src/update/NoUpdatesAvailableDialog.cpp
-#, fuzzy
 msgid "Check for Updates"
-msgstr "&Перевірити наявність оновлень"
+msgstr "Перевірити наявність оновлень"
 
 #. i18n-hint: %s is replaced with 'Preferences > Application'.
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, c-format
 msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
 msgstr ""
+"Якщо ви хочете змінити налаштування автоматичного пошуку оновлень, ви можете"
+" знайти їх на сторінці %s."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
@@ -18281,10 +18264,9 @@ msgid "Update data was corrupted."
 msgstr "Дані оновлення пошкоджено."
 
 #: src/update/UpdateManager.cpp
-#, fuzzy
 msgctxt "update dialog"
 msgid "Error downloading update"
-msgstr "Помилка під час отримання оновлення."
+msgstr "Помилка під час отримання оновлення"
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
@@ -18292,14 +18274,13 @@ msgid "Can't open the Audacity download link."
 msgstr "Не вдалося відкрити посилання для отримання Audacity."
 
 #: src/update/UpdateManager.cpp
-#, fuzzy
 msgid "Audacity update"
-msgstr "Звук Audacity"
+msgstr "Оновлення Audacity"
 
 #: src/update/UpdateManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Downloading %s"
-msgstr "Звантажити"
+msgstr "Отримуємо %s"
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19154,9 +19135,8 @@ msgstr "Steve Daulton"
 #: plug-ins/eq-xml-to-txt-converter.ny plug-ins/label-sounds.ny
 #: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
 #: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
-#, fuzzy
 msgid "GNU General Public License v2.0 or later"
-msgstr "Випущено за умов дотримання Загальної громадської ліцензії GNU (GPL) версії 2 або новішої версії."
+msgstr "GNU General Public License версії 2.0 або пізнішої"
 
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format

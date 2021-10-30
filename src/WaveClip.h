@@ -16,6 +16,7 @@
 
 #include "SampleFormat.h"
 #include "XMLTagHandler.h"
+#include "SampleCount.h"
 
 #include <wx/longlong.h>
 

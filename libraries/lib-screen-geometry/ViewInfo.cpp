@@ -167,14 +167,16 @@ wxEvent *PlayRegionEvent::Clone() const
 
 void PlayRegion::SetActive( bool active )
 {
-   mActive = active;
-   if (mActive) {
-      // Restore values
-      if (mStart != mLastActiveStart || mEnd != mLastActiveEnd) {
-         mStart = mLastActiveStart;
-         mEnd = mLastActiveEnd;
-         Notify();
+   if (mActive != active) {
+      mActive = active;
+      if (mActive) {
+         // Restore values
+         if (mStart != mLastActiveStart || mEnd != mLastActiveEnd) {
+            mStart = mLastActiveStart;
+            mEnd = mLastActiveEnd;
+         }
       }
+      Notify();
    }
 }
 
@@ -212,6 +214,21 @@ void PlayRegion::SetAllTimes( double start, double end )
 {
    SetTimes(start, end);
    mLastActiveStart = start, mLastActiveEnd = end;
+}
+
+void PlayRegion::Clear()
+{
+   SetAllTimes(invalidValue, invalidValue);
+}
+
+bool PlayRegion::IsClear() const
+{
+   return GetStart() == invalidValue && GetEnd() == invalidValue;
+}
+
+bool PlayRegion::IsLastActiveRegionClear() const
+{
+   return GetLastActiveStart() == invalidValue && GetLastActiveEnd() == invalidValue;
 }
 
 void PlayRegion::Order()

@@ -78,8 +78,10 @@ public:
 
     std::pair<int, int> GetSelection() const;
     void SetSelection(int from, int to);
+    void SelectAll();
     bool IsSelectionEmpty();
 
+    bool CaptureKey(int keyCode, int mods);
     bool OnKeyDown(int keyCode, int mods, AudacityProject* project);
     bool OnChar(int charCode, AudacityProject* project);
 

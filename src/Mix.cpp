@@ -725,6 +725,9 @@ double Mixer::MixGetCurrentTime()
    return mTime;
 }
 
+#if 0
+// Was used before 3.1.0 whenever looping play restarted
+// No longer used
 void Mixer::Restart()
 {
    mTime = mT0;
@@ -742,6 +745,7 @@ void Mixer::Restart()
    // flushed.  Should that be considered a bug in sox?  This works around it:
    MakeResamplers();
 }
+#endif
 
 void Mixer::Reposition(double t, bool bSkipping)
 {

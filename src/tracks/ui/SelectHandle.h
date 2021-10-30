@@ -54,7 +54,7 @@ public:
    void Enter(bool forward, AudacityProject *pProject) override;
 
    bool HasSnap() const;
-   bool HasEscape() const override;
+   bool HasEscape(AudacityProject *pProject) const override;
 
    bool Escape(AudacityProject *pProject) override;
 

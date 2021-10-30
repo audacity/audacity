@@ -31,7 +31,7 @@ using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 enum class PlayMode : int {
    normalPlay,
    oneSecondPlay, // Disables auto-scrolling
-   loopedPlay, // Disables auto-scrolling
+   loopedPlay, // Possibly looped play (not always); disables auto-scrolling
    cutPreviewPlay
 };
 
@@ -81,6 +81,7 @@ public:
 
    // Whether the last attempt to start recording requested appending to tracks
    bool Appending() const { return mAppending; }
+   // Whether potentially looping play (using new default PlaybackPolicy)
    bool Looping() const { return mLooping; }
    bool Cutting() const { return mCutting; }
 
@@ -98,13 +99,13 @@ public:
    int PlayPlayRegion(const SelectedRegion &selectedRegion,
                       const AudioIOStartStreamOptions &options,
                       PlayMode playMode,
-                      bool backwards = false,
-                      // Allow t0 and t1 to be beyond end of tracks
-                      bool playWhiteSpace = false);
+                      bool backwards = false);
 
    // Play currently selected region, or if nothing selected,
    // play from current cursor.
-   void PlayCurrentRegion(bool looped = false, bool cutpreview = false);
+   void PlayCurrentRegion(
+      bool newDefault = false, //!< See DefaultPlayOptions
+      bool cutpreview = false);
 
    void OnPause();
    
@@ -162,7 +163,10 @@ private:
 
 AUDACITY_DLL_API
 AudioIOStartStreamOptions DefaultPlayOptions(
-   AudacityProject &project, bool looped = false );
+   AudacityProject &project,
+   bool newDefault = false /*!< "new" default playback policy adjusts to
+      changes of the looping region, "old" default plays once straight */
+);
 AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
 
 struct PropertiesOfSelected

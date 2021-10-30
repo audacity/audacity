@@ -30,7 +30,7 @@
 
 namespace
 {
-const char* WhatsNewURL = "https://youtube.com";
+const char* WhatsNewURL = "https://audacityteam.org/3.1.0-video";
 }
 
 #endif
