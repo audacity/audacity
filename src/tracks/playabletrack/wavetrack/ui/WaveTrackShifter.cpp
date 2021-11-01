@@ -25,9 +25,23 @@ public:
       auto pClip = [&]() {
          for (auto clip : mpTrack->GetClips())
          {
-            if (WaveTrackView::HitTest(*clip, viewInfo, params->rect, { params->xx, params->yy }))
-               return clip;
+            if (params != nullptr)
+            {
+               if (WaveTrackView::HitTest(
+                      *clip, viewInfo, params->rect,
+                      { params->xx, params->yy }))
+                  return clip;
+            }
+            else
+            {
+               // WithinPlayRegion misses first sample, which breaks moving
+               // "selected" clip. Probable WithinPlayRegion should be fixed
+               // instead?
+               if (clip->GetPlayStartTime() <= time && time < clip->GetPlayEndTime())
+                  return clip;
+            }
          }
+
          return std::shared_ptr<WaveClip>{};
       }();
       
