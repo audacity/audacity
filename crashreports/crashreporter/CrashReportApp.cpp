@@ -122,7 +122,7 @@ namespace
                     throw std::logic_error("malformed parameters string: unexpected identifier");
 
                 int begin = i;
-                while (isalnum(str[i]))
+                while (isalnum(str[i]) || str[i] == '[' || str[i] == ']')
                     ++i;
 
                 key = str.substr(begin, i - begin);
