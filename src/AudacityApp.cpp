@@ -407,6 +407,9 @@ void InitBreakpad()
     
     if(databasePath.DirExists())
     {   
+        const auto sentryRelease = wxString::Format(
+           "audacity@%d.%d.%d", AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION
+        );
         BreakpadConfigurer configurer;
         configurer.SetDatabasePathUTF8(databasePath.GetPath().ToUTF8().data())
             .SetSenderPathUTF8(wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath().ToUTF8().data())
@@ -414,7 +417,8 @@ void InitBreakpad()
             .SetReportURL(CRASH_REPORT_URL)
     #endif
             .SetParameters({
-                { "version", wxString(AUDACITY_VERSION_STRING).ToUTF8().data() }
+                { "version", wxString(AUDACITY_VERSION_STRING).ToUTF8().data() },
+                { "sentry[release]",  sentryRelease.ToUTF8().data() }
             })
             .Start();
     }
