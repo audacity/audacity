@@ -78,7 +78,7 @@ enum FieldTypes
 // contain the envelope name, but that's not a problem.
 
 NameMap ProjectSerializer::mNames;
-wxMemoryBuffer ProjectSerializer::mDict;
+MemoryStream ProjectSerializer::mDict;
 
 TranslatableString ProjectSerializer::FailureMessage( const FilePath &/*filePath*/ )
 {
@@ -128,14 +128,14 @@ namespace {
 
    // Write native little-endian to little-endian file format
    template< typename Number >
-   void WriteLittleEndian( wxMemoryBuffer &out, Number value )
+   void WriteLittleEndian( MemoryStream &out, Number value )
    {
       out.AppendData( &value, sizeof(value) );
    }
 
    // Write native big-endian to little-endian file format
    template< typename Number >
-   void WriteBigEndian( wxMemoryBuffer &out, Number value )
+   void WriteBigEndian( MemoryStream &out, Number value )
    {
       auto begin = static_cast<unsigned char*>( static_cast<void*>( &value ) );
       std::reverse( begin, begin + sizeof( value ) );
@@ -199,9 +199,6 @@ namespace {
 
 ProjectSerializer::ProjectSerializer(size_t allocSize)
 {
-   mDict.SetBufSize(allocSize);
-   mBuffer.SetBufSize(allocSize);
-
    static std::once_flag flag;
    std::call_once(flag, []{
       // Just once per run, store header information in the unique static
@@ -326,8 +323,8 @@ void ProjectSerializer::WriteSubTree(const ProjectSerializer & value)
 {
    mBuffer.AppendByte(FT_Push);
 
-   mBuffer.AppendData(value.mDict.GetData(), value.mDict.GetDataLen());
-   mBuffer.AppendData(value.mBuffer.GetData(), value.mBuffer.GetDataLen());
+   mBuffer.AppendData(value.mDict.GetData(), value.mDict.GetSize());
+   mBuffer.AppendData(value.mBuffer.GetData(), value.mBuffer.GetSize());
 
    mBuffer.AppendByte(FT_Pop);
 }
@@ -362,19 +359,19 @@ void ProjectSerializer::WriteName(const wxString & name)
    WriteUShort( mBuffer, id );
 }
 
-const wxMemoryBuffer &ProjectSerializer::GetDict() const
+const MemoryStream &ProjectSerializer::GetDict() const
 {
    return mDict;
 }
 
-const wxMemoryBuffer &ProjectSerializer::GetData() const
+const MemoryStream& ProjectSerializer::GetData() const
 {
    return mBuffer;
 }
 
 bool ProjectSerializer::IsEmpty() const
 {
-   return mBuffer.GetDataLen() == 0;
+   return mBuffer.GetSize() == 0;
 }
 
 bool ProjectSerializer::DictChanged() const
