@@ -68,7 +68,6 @@ int OpenMixer_Mac_CoreAudio(px_mixer *Px, int index)
    PxInfo   *info;
    OSStatus err;
    UInt32   outSize;
-   UInt32   inID;
    int      i;
 
    if (!initialize(Px)) {
@@ -86,13 +85,16 @@ int OpenMixer_Mac_CoreAudio(px_mixer *Px, int index)
       return TRUE;
    }
 
-   outSize = sizeof(UInt32);
-   err = AudioDeviceGetPropertyInfo(info->input,
-                                    0,
-                                    IS_INPUT,
-                                    kAudioDevicePropertyDataSources,
-                                    &outSize,
-                                    NULL);
+   AudioObjectPropertyAddress inAddress = {
+      kAudioDevicePropertyDataSources,
+      kAudioObjectPropertyScopeInput,
+      kAudioObjectPropertyElementMaster
+   };
+   err = AudioObjectGetPropertyDataSize(info->input,
+                                        &inAddress,
+                                        0,
+                                        NULL,
+                                        &outSize);
    if (err) {
       /* No input sources available.  Input device may still be usable. */
       return TRUE;
@@ -106,12 +108,12 @@ int OpenMixer_Mac_CoreAudio(px_mixer *Px, int index)
       return cleanup(Px);
    }
 
-   err = AudioDeviceGetProperty(info->input,
-                                0,
-                                IS_INPUT,
-                                kAudioDevicePropertyDataSources,
-                                &outSize,
-                                info->srcids);
+   err = AudioObjectGetPropertyData(info->input,
+                                    &inAddress,
+                                    0,
+                                    NULL,
+                                    &outSize,
+                                    info->srcids);
    if (err) {
       return cleanup(Px);
    }
@@ -127,12 +129,13 @@ int OpenMixer_Mac_CoreAudio(px_mixer *Px, int index)
       trans.mOutputDataSize = sizeof(CFStringRef);
 
       outSize = sizeof(AudioValueTranslation);
-      err = AudioDeviceGetProperty(info->input,
-                                   0,
-                                   IS_INPUT,
-                                   kAudioDevicePropertyDataSourceNameForIDCFString,
-                                   &outSize,
-                                   &trans);
+      inAddress.mSelector = kAudioDevicePropertyDataSourceNameForIDCFString;
+      err = AudioObjectGetPropertyData(info->input,
+                                       &inAddress,
+                                       0,
+                                       NULL,
+                                       &outSize,
+                                       &trans);
       if (err) {
          return cleanup(Px);
       }
@@ -231,7 +234,7 @@ static const char *get_mixer_name(px_mixer *Px, int index)
 
 /*
  Px_CloseMixer() closes a mixer opened using Px_OpenMixer and frees any
- memory associated with it. 
+ memory associated with it.
 */
 
 static void close_mixer(px_mixer *Px)
@@ -254,24 +257,28 @@ static PxVolume get_volume(AudioDeviceID device, Boolean isInput)
    int ch;
    PxVolume max;
 
-
    /* First try adjusting the master volume */
+   AudioObjectPropertyAddress inAddress = {
+      kAudioDevicePropertyVolumeScalar,
+      isInput ? kAudioObjectPropertyScopeInput : kAudioObjectPropertyScopeOutput,
+      kAudioObjectPropertyElementMaster
+   };
    outSize = sizeof(Float32);
-   err = AudioDeviceGetProperty(device,
-                                0,
-                                isInput,
-                                kAudioDevicePropertyVolumeScalar,
-                                &outSize,
-                                &vol);
+   err = AudioObjectGetPropertyData(device,
+                                    &inAddress,
+                                    0,
+                                    NULL,
+                                    &outSize,
+                                    &vol);
    if (!err) {
       outSize = sizeof(UInt32);
-      err = AudioDeviceGetProperty(device,
-                                   0,
-                                   isInput,
-                                   kAudioDevicePropertyMute,
-                                   &outSize,
-                                   &mute);
-
+      inAddress.mSelector = kAudioDevicePropertyMute;
+      err = AudioObjectGetPropertyData(device,
+                                       &inAddress,
+                                       0,
+                                       NULL,
+                                       &outSize,
+                                       &mute);
       if (!err) {
          if (mute) {
             vol = 0.0;
@@ -283,13 +290,16 @@ static PxVolume get_volume(AudioDeviceID device, Boolean isInput)
 
    /* Assume no master volume, so find highest volume of individual channels */
    for (ch = 1; ch <= 2; ch++) {
+      inAddress.mElement = ch;
+      
       outSize = sizeof(Float32);
-      err = AudioDeviceGetProperty(device,
-                                   ch,
-                                   isInput,
-                                   kAudioDevicePropertyVolumeScalar,
-                                   &outSize,
-                                   &vol);
+      inAddress.mSelector = kAudioDevicePropertyVolumeScalar;
+      err = AudioObjectGetPropertyData(device,
+                                       &inAddress,
+                                       0,
+                                       NULL,
+                                       &outSize,
+                                       &vol);
       if (!err) {
          if (vol > maxvol) {
             maxvol = vol;
@@ -297,13 +307,13 @@ static PxVolume get_volume(AudioDeviceID device, Boolean isInput)
       }
 
       outSize = sizeof(UInt32);
-      err = AudioDeviceGetProperty(device,
-                                   ch,
-                                   isInput,
-                                   kAudioDevicePropertyMute,
-                                   &outSize,
-                                   &mute);
-
+      inAddress.mSelector = kAudioDevicePropertyMute;
+      err = AudioObjectGetPropertyData(device,
+                                       &inAddress,
+                                       0,
+                                       NULL,
+                                       &outSize,
+                                       &mute);
       if (!err) {
          if (mute) {
             muted = 1;
@@ -332,49 +342,53 @@ static void set_volume(AudioDeviceID device, Boolean isInput, PxVolume volume)
    UInt32 mute = (vol <= 0.05);
 
    /* Try setting just the master volume first */
-   err = AudioDeviceSetProperty(device,
-                                0,
-                                0,
-                                isInput,
-                                kAudioDevicePropertyVolumeScalar,
-                                sizeof(Float32),
-                                &vol);
+   AudioObjectPropertyAddress inAddress = {
+      kAudioDevicePropertyVolumeScalar,
+      isInput ? kAudioObjectPropertyScopeInput : kAudioObjectPropertyScopeOutput,
+      kAudioObjectPropertyElementMaster
+   };
+   err = AudioObjectSetPropertyData(device,
+                                    &inAddress,
+                                    0,
+                                    NULL,
+                                    sizeof(Float32),
+                                    &vol);
    if (!err) {
-      AudioDeviceSetProperty(device,
-                             0,
-                             0,
-                             isInput,
-                             kAudioDevicePropertyMute,
-                             sizeof(UInt32),
-                             &mute);
-
+      inAddress.mSelector = kAudioDevicePropertyMute;
+      AudioObjectSetPropertyData(device,
+                                 &inAddress,
+                                 0,
+                                 NULL,
+                                 sizeof(UInt32),
+                                 &mute);
       return;
    }
 
    /* Assume no master volume, so set individual channels */
    for (ch = 1; ch <= 2; ch++) {
-      err = AudioDeviceSetProperty(device,
-                                   0,
-                                   ch,
-                                   isInput,
-                                   kAudioDevicePropertyVolumeScalar,
-                                   sizeof(Float32),
-                                   &vol);
+      inAddress.mElement = ch;
+      inAddress.mSelector = kAudioDevicePropertyVolumeScalar;
+      err = AudioObjectSetPropertyData(device,
+                                       &inAddress,
+                                       0,
+                                       NULL,
+                                       sizeof(Float32),
+                                       &vol);
       if (!err) {
-         AudioDeviceSetProperty(device,
-                                0,
-                                ch,
-                                isInput,
-                                kAudioDevicePropertyMute,
-                                sizeof(UInt32),
-                                &mute);
+         inAddress.mSelector = kAudioDevicePropertyMute;
+         AudioObjectSetPropertyData(device,
+                                    &inAddress,
+                                    0,
+                                    NULL,
+                                    sizeof(UInt32),
+                                    &mute);
       }
    }
 }
 
 static int supports_pcm_output_volume(px_mixer *Px)
 {
-	return 1 ;
+   return 1;
 }
 
 static PxVolume get_pcm_output_volume(px_mixer *Px)
@@ -449,14 +463,18 @@ static int get_current_input_source(px_mixer *Px)
    UInt32   outID = 0;
    int      i;
 
+   AudioObjectPropertyAddress inAddress = {
+      kAudioDevicePropertyDataSource,
+      kAudioObjectPropertyScopeInput,
+      kAudioObjectPropertyElementMaster
+   };
    outSize = sizeof(UInt32);
-   err = AudioDeviceGetProperty(info->input,
-                                0,
-                                IS_INPUT,
-                                kAudioDevicePropertyDataSource,
-                                &outSize,
-                                &outID);
-
+   err = AudioObjectGetPropertyData(info->input,
+                                    &inAddress,
+                                    0,
+                                    NULL,
+                                    &outSize,
+                                    &outID);
    if (!err) {
       for (i = 0; i < info->numsrcs; i++) {
          if (info->srcids[i] == outID) {
@@ -471,20 +489,22 @@ static int get_current_input_source(px_mixer *Px)
 static void set_current_input_source(px_mixer *Px, int i)
 {
    PxInfo *info = (PxInfo *)Px->info;
-   OSStatus err;
 
    if (i >= info->numsrcs) {
       return;
    }
-
-   err = AudioDeviceSetProperty(info->input,
-                                0,
-                                0,
-                                IS_INPUT,
-                                kAudioDevicePropertyDataSource,
-                                sizeof(UInt32),
-                                &info->srcids[i]);
-
+   
+   AudioObjectPropertyAddress inAddress = {
+      kAudioDevicePropertyDataSource,
+      kAudioObjectPropertyScopeInput,
+      kAudioObjectPropertyElementMaster
+   };
+   AudioObjectSetPropertyData(info->input,
+                              &inAddress,
+                              0,
+                              NULL,
+                              sizeof(UInt32),
+                              &info->srcids[i]);
    return;
 }
 
@@ -523,14 +543,19 @@ static PxVolume get_play_through(px_mixer *Px)
    OSStatus err;
    UInt32   outSize;
    UInt32   flag;
+   AudioObjectPropertyAddress inAddress = {
+      kAudioDevicePropertyPlayThru,
+      kAudioDevicePropertyScopePlayThrough,
+      kAudioObjectPropertyElementMaster
+   };
 
    outSize = sizeof(UInt32);
-   err =  AudioDeviceGetProperty(info->output,
-                                 0,
-                                 IS_OUTPUT,
-                                 kAudioDevicePropertyPlayThru,
-                                 &outSize,
-                                 &flag);
+   err = AudioObjectGetPropertyData(info->output,
+                                    &inAddress,
+                                    0,
+                                    NULL,
+                                    &outSize,
+                                    &flag);
    if (err)
       return 0.0;
  
@@ -544,13 +569,17 @@ static void set_play_through(px_mixer *Px, PxVolume volume)
 {
    PxInfo *info = (PxInfo *)Px->info;
    UInt32 flag = (volume > 0.01);
-   OSStatus err;
+   AudioObjectPropertyAddress inAddress = {
+      kAudioDevicePropertyPlayThru,
+      kAudioDevicePropertyScopePlayThrough,
+      kAudioObjectPropertyElementMaster
+   };
 
-   err =  AudioDeviceSetProperty(info->output,
-                                 0,
-                                 0,
-                                 IS_OUTPUT,
-                                 kAudioDevicePropertyPlayThru,
-                                 sizeof(UInt32),
-                                 &flag);
+   AudioObjectSetPropertyData(info->input,
+                              &inAddress,
+                              0,
+                              NULL,
+                              sizeof(UInt32),
+                              &flag);
+   return;
 }
