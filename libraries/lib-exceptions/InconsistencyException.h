@@ -37,8 +37,8 @@ public:
        , func { fn }, file { f }, line { l }
    {}
 
-   InconsistencyException(InconsistencyException&& that)
-      : MessageBoxException(std::move(that))
+   InconsistencyException(const InconsistencyException& that)
+      : MessageBoxException(that)
       , func{ that.func }
       , file{ that.file }
       , line{ that.line }
