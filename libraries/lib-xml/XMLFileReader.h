@@ -14,6 +14,7 @@ typedef struct XML_ParserStruct *XML_Parser;
 
 #include "XMLTagHandler.h"
 #include "Internat.h" // for TranslatableString
+#include "MemoryStream.h"
 
 class XML_API XMLFileReader final {
  public:
@@ -24,6 +25,8 @@ class XML_API XMLFileReader final {
               const FilePath &fname);
    bool ParseString(XMLTagHandler *baseHandler,
                     const wxString &xmldata);
+
+   bool ParseMemoryStream(XMLTagHandler* baseHandler, const MemoryStream& xmldata);
 
    const TranslatableString &GetErrorStr() const;
    const TranslatableString &GetLibraryErrorStr() const;
@@ -38,6 +41,9 @@ class XML_API XMLFileReader final {
    static void charHandler(void *userData, const char *s, int len);
 
  private:
+   bool ParseBuffer(
+      XMLTagHandler* baseHandler, const char* buffer, size_t len, bool isFinal);
+
    XML_Parser       mParser;
    XMLTagHandler   *mBaseHandler;
    using Handlers = std::vector<XMLTagHandler*>;
