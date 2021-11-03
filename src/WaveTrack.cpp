@@ -40,6 +40,7 @@ from the project that will own the track.
 #include <float.h>
 #include <math.h>
 #include <algorithm>
+#include <optional>
 
 #include "float_cast.h"
 
@@ -836,6 +837,34 @@ void WaveTrack::SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSetting
    }
 }
 
+namespace {
+   
+   //Internal structure, which is supposed to contain
+   //data related to clip boundaries, and used during 
+   //ClearAndPaste to restore old splits after new
+   //data is pasted
+   struct SplitInfo
+   {
+      //Time, where boundary is located
+      double time;
+      //Contains trimmed data, which should be re-appended to
+      //the clip to the left from the boundary, may be null
+      std::shared_ptr<WaveClip> left;
+      //Contains trimmed data, which should be re-appended to
+      //the clip to the right from the boundary, may be null
+      std::shared_ptr<WaveClip> right;
+      //Contains clip name next to the left from the boundary,
+      //if present, that needs to be re-assigned to the matching
+      //clip after split
+      std::optional<wxString> leftClipName;
+      //Contains clip name next to the right from the boundary,
+      //if present, that needs to be re-assigned to the matching
+      //clip after split
+      std::optional<wxString> rightClipName;
+   };
+
+}
+
 //
 // ClearAndPaste() is a specialized version of HandleClear()
 // followed by Paste() and is used mostly by effects that
@@ -843,8 +872,11 @@ void WaveTrack::SetWaveformSettings(std::unique_ptr<WaveformSettings> &&pSetting
 //
 // HandleClear() removes any cut/split lines with the
 // cleared range, but, in most cases, effects want to preserve
-// the existing cut/split lines, so they are saved before the
-// HandleClear()/Paste() and restored after.
+// the existing cut/split lines, trimmed data and clip names,
+// so they are saved before the HandleClear()/Paste() and restored after.
+// When pasted track has split lines with hidden data at same places 
+// as the target one, then only targets hidden data is preserved, and
+// hidden data from pasted track is discarded.
 //
 // If the pasted track overlaps two or more clips, then it will
 // be pasted with visible split lines.  Normally, effects do not
@@ -869,8 +901,22 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       return;
    }
 
-   std::vector<double> splits;
+   std::vector<SplitInfo> splits;
    WaveClipHolders cuts;
+
+   //helper routine, that finds SplitInfo by time value,
+   //or creates a new one if no one exists yet
+   auto get_split = [&](double time) {
+      auto it = std::find_if(splits.begin(), splits.end(), [time](const SplitInfo& split) {
+         return split.time == time;
+      });
+      if(it == splits.end())
+         it = splits.insert(
+            splits.end(),
+            { time, nullptr, nullptr, std::nullopt, std::nullopt }
+         );
+      return it;
+   };
 
    // If provided time warper was NULL, use a default one that does nothing
    IdentityTimeWarper localWarper;
@@ -887,14 +933,22 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       double st;
 
       // Remember clip boundaries as locations to split
+      // we need to copy clips, trims and names, because the original ones
+      // could be changed later during Clear/Paste routines
       st = LongSamplesToTime(TimeToLongSamples(clip->GetPlayStartTime()));
-      if (st >= t0 && st <= t1 && !make_iterator_range(splits).contains(st)) {
-         splits.push_back(st);
+      if (st >= t0 && st <= t1) {
+         auto it = get_split(st);
+         if (clip->GetTrimLeft() != 0)
+            it->right = std::make_shared<WaveClip>(*clip, mpFactory, false, clip->GetSequenceStartTime(), st);
+         it->rightClipName = clip->GetName();
       }
 
       st = LongSamplesToTime(TimeToLongSamples(clip->GetPlayEndTime()));
-      if (st >= t0 && st <= t1 && !make_iterator_range(splits).contains(st)) {
-         splits.push_back(st);
+      if (st >= t0 && st <= t1) {
+         auto it = get_split(st);
+         if (clip->GetTrimRight() != 0)
+            it->left = std::make_shared<WaveClip>(*clip, mpFactory, false, st, clip->GetSequenceEndTime());
+         it->leftClipName = clip->GetName();
       }
 
       // Search for cut lines
@@ -981,9 +1035,73 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       // Restore cut/split lines
       if (preserve) {
 
-         // Restore the split lines, transforming the position appropriately
-         for (const auto split: splits) {
-            SplitAt(warper->Warp(split));
+         auto attachLeft = [](WaveClip* target, WaveClip* src) 
+         {
+            wxASSERT(target->GetTrimLeft() == 0);
+            if (target->GetTrimLeft() != 0)
+               return;
+
+            auto trim = src->GetPlayEndTime() - src->GetPlayStartTime();
+            target->Paste(target->GetPlayStartTime(), src);
+            target->SetTrimLeft(trim);
+            //Play start time needs to be ajusted after 
+            //prepending data to the sequence
+            target->Offset(-trim);
+         };
+
+         auto attachRight = [](WaveClip* target, WaveClip* src)
+         {
+            wxASSERT(target->GetTrimRight() == 0);
+            if (target->GetTrimRight() != 0)
+               return;
+            
+            auto trim = src->GetPlayEndTime() - src->GetPlayStartTime();
+            target->Paste(target->GetPlayEndTime(), src);
+            target->SetTrimRight(trim);
+         };
+
+         // Restore the split lines and trims, transforming the position appropriately
+         for (const auto& split: splits) {
+            auto at = LongSamplesToTime(TimeToLongSamples(warper->Warp(split.time)));
+            for (const auto& clip : GetClips())
+            {
+               if (clip->WithinPlayRegion(at))//strictly inside
+               {
+                  auto newClip = std::make_unique<WaveClip>(*clip, mpFactory, true);
+
+                  clip->ClearRight(at);
+                  newClip->ClearLeft(at);
+                  if (split.left)
+                     attachRight(clip.get(), split.left.get());
+                  if (split.right)
+                     attachLeft(newClip.get(), split.right.get());
+                  AddClip(std::move(newClip));
+                  break;
+               }
+               else if (clip->GetPlayStartSample() == TimeToLongSamples(at) && split.right)
+               {
+                  attachLeft(clip.get(), split.right.get());
+                  break;
+               }
+               else if (clip->GetPlayEndSample() == TimeToLongSamples(at) && split.left)
+               {
+                  attachRight(clip.get(), split.left.get());
+                  break;
+               }
+            }
+         }
+
+         //Restore clip names
+         for (const auto& split : splits)
+         {
+            auto s = TimeToLongSamples(warper->Warp(split.time));
+            for (auto& clip : GetClips())
+            {
+               if (split.rightClipName.has_value() && clip->GetPlayStartSample() == s)
+                  clip->SetName(*split.rightClipName);
+               else if (split.leftClipName.has_value() && clip->GetPlayEndSample() == s)
+                  clip->SetName(*split.leftClipName);
+            }
          }
 
          // Restore the saved cut lines, also transforming if time altered
