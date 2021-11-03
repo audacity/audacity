@@ -329,6 +329,16 @@ public:
    /// operation (but without putting the cut audio to the clipboard)
    void Clear(double t0, double t1);
 
+   /// Removes samples starting from the left boundary of the clip till
+   /// t, if it's inside the play region. Also removes trimmed (hidden)
+   /// data, if present. Changes offset to make remaining samples stay
+   /// at their old place. Destructive operation.
+   void ClearLeft(double t);
+   /// Removes samples starting from t (if it's inside the clip),
+   /// till the right boundary. Also removes trimmed (hidden)
+   /// data, if present. Destructive operation.
+   void ClearRight(double t);
+
    /// Clear, and add cut line that starts at t0 and contains everything until t1.
    void ClearAndAddCutLine(double t0, double t1);
 
