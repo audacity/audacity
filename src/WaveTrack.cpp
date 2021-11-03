@@ -1508,17 +1508,12 @@ void WaveTrack::Disjoin(double t0, double t1)
       if( endTime < t0 || startTime > t1 )
          continue;
 
-      if( t0 > startTime )
-         startTime = t0;
-      if( t1 < endTime )
-         endTime = t1;
-
       //simply look for a sequence of zeroes and if the sequence
       //is greater than minimum number, split-DELETE the region
 
       sampleCount seqStart = -1;
-      auto start = clip->TimeToSequenceSamples(startTime);
-      auto end = clip->TimeToSequenceSamples(endTime);
+      auto start = clip->TimeToSamples(std::max(.0, t0 - startTime));
+      auto end = clip->TimeToSamples(std::min(endTime, t1) - startTime);
 
       auto len = ( end - start );
       for( decltype(len) done = 0; done < len; done += maxAtOnce )
@@ -1547,11 +1542,12 @@ void WaveTrack::Disjoin(double t0, double t1)
                      seqEnd = curSamplePos;
                   if( seqEnd - seqStart + 1 > minSamples )
                   {
-                     regions.push_back(Region(
-                        seqStart.as_double() / GetRate()
-                                              + clip->GetPlayStartTime(),
-                        seqEnd.as_double() / GetRate()
-                                              + clip->GetPlayStartTime()));
+                     regions.push_back(
+                        Region(
+                           startTime + clip->SamplesToTime(seqStart),
+                           startTime + clip->SamplesToTime(seqEnd)
+                        )
+                     );
                   }
                   seqStart = -1;
                }
