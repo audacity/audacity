@@ -157,13 +157,15 @@ bool XMLValueChecker::IsGoodIntForRange(const wxString & strInt, const wxString 
 bool XMLValueChecker::IsGoodInt(const wxString & strInt)
 {
    // Signed long: -2,147,483,648 to +2,147,483,647, i.e., -2^31 to 2^31-1
-   return IsGoodIntForRange( strInt, "2147483648" );
+   static const wxString maxAbs = "2147483648";
+   return IsGoodIntForRange(strInt, maxAbs);
 }
 
 bool XMLValueChecker::IsGoodInt64(const wxString & strInt)
 {
    // Signed 64-bit:  -9,223,372,036,854,775,808 to +9,223,372,036,854,775,807, i.e., -2^63 to 2^63-1
-   return IsGoodIntForRange( strInt, "9223372036854775808" );
+   static const wxString maxAbs = "9223372036854775808";
+   return IsGoodIntForRange(strInt, maxAbs);
 }
 
 bool XMLTagHandler::ReadXMLTag(const char *tag, const char **attrs)
