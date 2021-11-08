@@ -29,7 +29,7 @@ void MemoryStream::AppendData(const void* data, const size_t length)
    if (mChunks.empty())
       mChunks.emplace_back();
 
-   AppendDataView dataView = { data, length };
+   StreamChunk dataView = { data, length };
 
    while (mChunks.back().Append(dataView) > 0)
       mChunks.emplace_back();
@@ -59,12 +59,12 @@ const void* MemoryStream::GetData() const
    return mLinearData.data();
 }
 
-const size_t MemoryStream::GetSize() const
+const size_t MemoryStream::GetSize() const noexcept
 {
    return mDataSize;
 }
 
-size_t MemoryStream::Chunk::Append(AppendDataView& dataView)
+size_t MemoryStream::Chunk::Append(StreamChunk& dataView)
 {
    const size_t dataSize = dataView.second;
 
@@ -95,4 +95,67 @@ size_t MemoryStream::Chunk::Append(AppendDataView& dataView)
    BytesUsed += bytesToWrite;
 
    return bytesLeft;
+}
+
+bool MemoryStream::IsEmpty() const noexcept
+{
+   return mDataSize == 0;
+}
+
+MemoryStream::Iterator MemoryStream::begin() const
+{
+   return Iterator(this, true);
+}
+
+MemoryStream::Iterator MemoryStream::end() const
+{
+   return Iterator(this, false);
+}
+
+MemoryStream::Iterator::Iterator(const MemoryStream* stream, bool isBegin)
+    : mStream(stream)
+    , mListIterator(isBegin ? mStream->mChunks.cbegin() : mStream->mChunks.cend())
+    , mShowLinearPart(isBegin && mStream->mLinearData.size() > 0)
+{
+}
+
+MemoryStream::Iterator& MemoryStream::Iterator::operator++()
+{
+   if (mShowLinearPart)
+      mShowLinearPart = false;
+   else
+      ++mListIterator;
+
+   return *this;
+}
+
+MemoryStream::Iterator MemoryStream::Iterator::operator++(int)
+{
+   Iterator result { *this };
+   this->operator++();
+   return result;
+}
+
+MemoryStream::StreamChunk MemoryStream::Iterator::operator*() const
+{
+   if (mShowLinearPart)
+      return { mStream->mLinearData.data(), mStream->mLinearData.size() };
+
+   return { mListIterator->Data.data(), mListIterator->BytesUsed };
+}
+
+MemoryStream::StreamChunk MemoryStream::Iterator::operator->() const
+{
+   return this->operator*();
+}
+
+bool MemoryStream::Iterator::operator!=(const Iterator& rhs) const noexcept
+{
+   return !(*this == rhs);
+}
+
+bool MemoryStream::Iterator::operator==(const Iterator& rhs) const noexcept
+{
+   return mStream == rhs.mStream && mListIterator == rhs.mListIterator &&
+          mShowLinearPart == rhs.mShowLinearPart;
 }
