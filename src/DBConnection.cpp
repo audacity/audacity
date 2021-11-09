@@ -702,7 +702,7 @@ bool TransactionScope::Commit()
 
    mInTrans = !TransactionCommit(mName);
 
-   return mInTrans;
+   return !mInTrans;
 }
 
 ConnectionPtr::~ConnectionPtr()
