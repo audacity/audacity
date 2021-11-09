@@ -1830,7 +1830,6 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       return false;
    }
 
-   wxString project;
    wxMemoryBuffer buffer;
    bool usedAutosave = true;
 
@@ -1863,8 +1862,9 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
    }
    else
    {
-      project = ProjectSerializer::Decode(buffer);
-      if (project.empty())
+      MemoryStream stream = ProjectSerializer::Decode(buffer);
+
+      if (stream.IsEmpty())
       {
          SetError(XO("Unable to decode project document"));
 
@@ -1874,7 +1874,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       XMLFileReader xmlFile;
 
       // Load 'er up
-      success = xmlFile.ParseString(this, project);
+      success = xmlFile.ParseMemoryStream(this, stream);
       if (!success)
       {
          SetError(

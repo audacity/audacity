@@ -20,6 +20,8 @@
 #include <cstdint>
 #include <mutex>
 #include <wx/ustring.h>
+#include <codecvt>
+#include <locale>
 
 ///
 /// ProjectSerializer class
@@ -380,11 +382,11 @@ bool ProjectSerializer::DictChanged() const
 }
 
 // See ProjectFileIO::LoadProject() for explanation of the blockids arg
-wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
+MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
 {
    wxMemoryInputStream in(buffer.GetData(), buffer.GetDataLen());
 
-   XMLStringWriter out;
+   XMLUtf8BufferWriter out;
 
    std::vector<char> bytes;
    IdMap mIds;
@@ -394,45 +396,45 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
    mIds.clear();
 
    struct Error{}; // exception type for short-range try/catch
-   auto Lookup = [&mIds]( UShort id ) -> const wxString &
+   auto Lookup = [&mIds]( UShort id ) -> std::string_view
    {
       auto iter = mIds.find( id );
       if (iter == mIds.end())
       {
          throw Error{};
       }
+
       return iter->second;
    };
 
-   auto ReadString = [&mCharSize, &in, &bytes](int len) -> wxString
+   auto ReadString = [&mCharSize, &in, &bytes](int len) -> std::string
    {
-      bytes.reserve( len + 4 );
+      bytes.reserve( len );
       auto data = bytes.data();
       in.Read( data, len );
-      // Make a null terminator of the widest type
-      memset( data + len, '\0', 4 );
-      wxUString str;
       
       switch (mCharSize)
       {
          case 1:
-            str.assignFromUTF8(data, len);
-         break;
+            return std::string(bytes.data(), len);
 
          case 2:
-            str.assignFromUTF16((wxChar16 *) data, len / 2);
-         break;
+            return std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t>().to_bytes(
+               reinterpret_cast<char16_t*>(data),
+               reinterpret_cast<char16_t*>(data) + len / 2);
 
          case 4:
-            str = wxU32CharBuffer::CreateNonOwned((wxChar32 *) data, len / 4);
-         break;
+            return std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t>()
+               .to_bytes(
+                  reinterpret_cast<char32_t*>(data),
+                  reinterpret_cast<char32_t*>(data) + len / 4);
 
          default:
             wxASSERT_MSG(false, wxT("Characters size not 1, 2, or 4"));
          break;
       }
 
-      return str;
+      return {};
    };
 
    try
@@ -592,5 +594,5 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
       return {};
    }
 
-   return out;
+   return out.ConsumeResult();
 }

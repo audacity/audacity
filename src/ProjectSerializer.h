@@ -28,7 +28,7 @@ using SampleBlockID = long long;
 ///
 
 using NameMap = std::unordered_map<wxString, unsigned short>;
-using IdMap = std::unordered_map<unsigned short, wxString>;
+using IdMap = std::unordered_map<unsigned short, std::string>;
 
 // This class's overrides do NOT throw AudacityException.
 class AUDACITY_DLL_API ProjectSerializer final : public XMLWriter
@@ -67,10 +67,10 @@ public:
    bool DictChanged() const;
 
    // Returns empty string if decoding fails
-   static wxString Decode(const wxMemoryBuffer &buffer);
+   static MemoryStream Decode(const wxMemoryBuffer &buffer);
 
 private:
-   void WriteName(const wxString & name);
+   void WriteName(const wxString& name);
 
 private:
    MemoryStream mBuffer;
