@@ -187,22 +187,22 @@ bool XMLTagHandler::ReadXMLTag(const char *tag, const char **attrs)
    }
    out_attrs[tmp_attrs.size()] = 0;
 
-   bool result = HandleXMLTag(UTF8CTOWX(tag), out_attrs.get());
+   bool result = HandleXMLTag(tag, out_attrs.get());
 
    return result;
 }
 
 void XMLTagHandler::ReadXMLEndTag(const char *tag)
 {
-   HandleXMLEndTag(UTF8CTOWX(tag));
+   HandleXMLEndTag(tag);
 }
 
 void XMLTagHandler::ReadXMLContent(const char *s, int len)
 {
-   HandleXMLContent(wxString(s, wxConvUTF8, len));
+   HandleXMLContent(std::string_view(s, len));
 }
 
 XMLTagHandler *XMLTagHandler::ReadXMLChild(const char *tag)
 {
-   return HandleXMLChild(UTF8CTOWX(tag));
+   return HandleXMLChild(tag);
 }

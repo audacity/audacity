@@ -2182,16 +2182,16 @@ void EffectEqualization::Flatten()
 //
 // Process XML tags and handle the ones we recognize
 //
-bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool EffectEqualization::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
 {
    // May want to add a version strings...
-   if( !wxStrcmp( tag, wxT("equalizationeffect") ) )
+   if (tag == "equalizationeffect")
    {
       return true;
    }
 
    // Located a NEW curve
-   if( !wxStrcmp(tag, wxT("curve") ) )
+   if (tag == "curve")
    {
       // Process the attributes
       while( *attrs )
@@ -2236,7 +2236,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    }
 
    // Located a NEW point
-   if( !wxStrcmp( tag, wxT("point") ) )
+   if(tag == "point")
    {
       // Set defaults in case attributes are missing
       double f = 0.0;
@@ -2283,19 +2283,19 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 //
 // Return handler for recognized tags
 //
-XMLTagHandler *EffectEqualization::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *EffectEqualization::HandleXMLChild(const std::string_view& tag)
 {
-   if( !wxStrcmp( tag, wxT("equalizationeffect") ) )
+   if (tag == "equalizationeffect")
    {
       return this;
    }
 
-   if( !wxStrcmp( tag, wxT("curve") ) )
+   if (tag == "curve")
    {
       return this;
    }
 
-   if( !wxStrcmp( tag, wxT("point") ) )
+   if (tag == "point")
    {
       return this;
    }

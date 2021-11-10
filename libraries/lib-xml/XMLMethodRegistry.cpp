@@ -23,10 +23,10 @@ void XMLMethodRegistryBase::Register(
 }
 
 XMLTagHandler *XMLMethodRegistryBase::CallObjectAccessor(
-   const wxString &tag, void *p )
+   const std::string_view &tag, void *p )
 {
    const auto &table = mTagTable;
-   if (auto iter = table.find( tag ); iter != table.end())
+   if (auto iter = table.find( std::string(tag) ); iter != table.end())
       if (auto &fn = iter->second)
          return fn( p );
    return nullptr;

@@ -1212,9 +1212,9 @@ void WaveClip::Flush()
    //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
 }
 
-bool WaveClip::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool WaveClip::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
 {
-   if (!wxStrcmp(tag, wxT("waveclip")))
+   if (tag == "waveclip")
    {
       double dblValue;
       long longValue;
@@ -1267,19 +1267,19 @@ bool WaveClip::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void WaveClip::HandleXMLEndTag(const wxChar *tag)
+void WaveClip::HandleXMLEndTag(const std::string_view& tag)
 {
-   if (!wxStrcmp(tag, wxT("waveclip")))
+   if (tag == "waveclip")
       UpdateEnvelopeTrackLen();
 }
 
-XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *WaveClip::HandleXMLChild(const std::string_view& tag)
 {
-   if (!wxStrcmp(tag, wxT("sequence")))
+   if (tag == "sequence")
       return mSequence.get();
-   else if (!wxStrcmp(tag, wxT("envelope")))
+   else if (tag == "envelope")
       return mEnvelope.get();
-   else if (!wxStrcmp(tag, wxT("waveclip")))
+   else if (tag == "waveclip")
    {
       // Nested wave clips are cut lines
       mCutLines.push_back(

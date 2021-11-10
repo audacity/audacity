@@ -1532,13 +1532,13 @@ NormalizedKeyString CommandManager::GetDefaultKeyFromName(const CommandID &name)
    return entry->defaultKey;
 }
 
-bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool CommandManager::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
 {
-   if (!wxStrcmp(tag, wxT("audacitykeyboard"))) {
+   if (tag == "audacitykeyboard") {
       mXMLKeysRead = 0;
    }
 
-   if (!wxStrcmp(tag, wxT("command"))) {
+   if (tag == "command") {
       wxString name;
       NormalizedKeyString key;
 
@@ -1565,10 +1565,10 @@ bool CommandManager::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 }
 
 // This message is displayed now in KeyConfigPrefs::OnImport()
-void CommandManager::HandleXMLEndTag(const wxChar *tag)
+void CommandManager::HandleXMLEndTag(const std::string_view& tag)
 {
    /*
-   if (!wxStrcmp(tag, wxT("audacitykeyboard"))) {
+   if (tag == "audacitykeyboard") {
       AudacityMessageBox(
          XO("Loaded %d keyboard shortcuts\n")
             .Format( mXMLKeysRead ),
@@ -1578,7 +1578,7 @@ void CommandManager::HandleXMLEndTag(const wxChar *tag)
    */
 }
 
-XMLTagHandler *CommandManager::HandleXMLChild(const wxChar * WXUNUSED(tag))
+XMLTagHandler *CommandManager::HandleXMLChild(const std::string_view&  WXUNUSED(tag))
 {
    return this;
 }

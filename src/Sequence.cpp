@@ -782,12 +782,12 @@ size_t Sequence::GetBestBlockSize(sampleCount start) const
    return result;
 }
 
-bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool Sequence::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
 {
    auto &factory = *mpFactory;
 
    /* handle waveblock tag and its attributes */
-   if (!wxStrcmp(tag, wxT("waveblock")))
+   if (tag == "waveblock")
    {
       SeqBlock wb;
 
@@ -833,7 +833,7 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    }
 
    /* handle sequence tag and its attributes */
-   if (!wxStrcmp(tag, wxT("sequence")))
+   if (tag == "sequence")
    {
       while(*attrs)
       {
@@ -899,9 +899,9 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void Sequence::HandleXMLEndTag(const wxChar *tag)
+void Sequence::HandleXMLEndTag(const std::string_view& tag)
 {
-   if (wxStrcmp(tag, wxT("sequence")) != 0)
+   if (tag != "sequence" != 0)
    {
       return;
    }
@@ -941,9 +941,9 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
    }
 }
 
-XMLTagHandler *Sequence::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *Sequence::HandleXMLChild(const std::string_view& tag)
 {
-   if (!wxStrcmp(tag, wxT("waveblock")))
+   if (tag == "waveblock")
    {
       return this;
    }

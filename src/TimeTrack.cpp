@@ -223,9 +223,9 @@ void TimeTrack::SetInterpolateLog(bool interpolateLog) {
    mEnvelope->SetExponential(interpolateLog);
 }
 
-bool TimeTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool TimeTrack::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
 {
-   if (!wxStrcmp(tag, wxT("timetrack"))) {
+   if (tag == "timetrack") {
       mRescaleXMLValues = true; // will be set to false if upper/lower is found
       long nValue;
       while(*attrs) {
@@ -270,7 +270,7 @@ bool TimeTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void TimeTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
+void TimeTrack::HandleXMLEndTag(const std::string_view&  WXUNUSED(tag))
 {
    if(mRescaleXMLValues)
    {
@@ -280,9 +280,9 @@ void TimeTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
    }
 }
 
-XMLTagHandler *TimeTrack::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *TimeTrack::HandleXMLChild(const std::string_view& tag)
 {
-   if (!wxStrcmp(tag, wxT("envelope")))
+   if (tag == "envelope")
       return mEnvelope.get();
 
   return NULL;

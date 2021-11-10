@@ -543,13 +543,13 @@ void Tags::SetTag(const wxString & name, const int & value)
    SetTag(name, wxString::Format(wxT("%d"), value));
 }
 
-bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool Tags::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
 {
-   if (wxStrcmp(tag, wxT("tags")) == 0) {
+   if (tag == "tags") {
       return true;
    }
 
-   if (wxStrcmp(tag, wxT("tag")) == 0) {
+   if (tag == "tag") {
       wxString n, v;
 
       while (*attrs) {
@@ -584,13 +584,13 @@ bool Tags::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-XMLTagHandler *Tags::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *Tags::HandleXMLChild(const std::string_view& tag)
 {
-   if (wxStrcmp(tag, wxT("tags")) == 0) {
+   if (tag == "tags") {
       return this;
    }
 
-   if (wxStrcmp(tag, wxT("tag")) == 0) {
+   if (tag == "tag") {
       return this;
    }
 

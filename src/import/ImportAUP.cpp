@@ -116,9 +116,9 @@ private:
    };
    using stack = std::vector<struct node>;
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   void HandleXMLEndTag(const wxChar *tag) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const std::string_view& tag, const wxChar **attrs) override;
+   void HandleXMLEndTag(const std::string_view& tag) override;
+   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
 
    bool HandleProject(XMLTagHandler *&handle);
    bool HandleLabelTrack(XMLTagHandler *&handle);
@@ -203,8 +203,8 @@ private:
    unsigned long mNumChannels;
 
    stack mHandlers;
-   wxString mParentTag;
-   wxString mCurrentTag;
+   std::string mParentTag;
+   std::string mCurrentTag;
    const wxChar **mAttrs;
 
    wxFileName mProjDir;
@@ -510,12 +510,12 @@ bool AUPImportFileHandle::Open()
    return false;
 }
 
-XMLTagHandler *AUPImportFileHandle::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *AUPImportFileHandle::HandleXMLChild(const std::string_view& tag)
 {
    return this;
 }
 
-void AUPImportFileHandle::HandleXMLEndTag(const wxChar *tag)
+void AUPImportFileHandle::HandleXMLEndTag(const std::string_view& tag)
 {
    if (mUpdateResult != ProgressResult::Success)
    {
@@ -524,7 +524,7 @@ void AUPImportFileHandle::HandleXMLEndTag(const wxChar *tag)
 
    struct node node = mHandlers.back();
 
-   if (wxStrcmp(tag, wxT("waveclip")) == 0)
+   if (tag == "waveclip")
    {
       mClip = nullptr;
    }
@@ -544,7 +544,7 @@ void AUPImportFileHandle::HandleXMLEndTag(const wxChar *tag)
    }
 }
 
-bool AUPImportFileHandle::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool AUPImportFileHandle::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
 {
    if (mUpdateResult != ProgressResult::Success)
    {
@@ -552,78 +552,78 @@ bool AUPImportFileHandle::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    }
 
    mParentTag = mCurrentTag;
-   mCurrentTag = tag;
+   mCurrentTag = std::string(tag);
    mAttrs = attrs;
 
    XMLTagHandler *handler = nullptr;
    bool success = false;
 
-   if (mCurrentTag.IsSameAs(wxT("project")) ||
-       mCurrentTag.IsSameAs(wxT("audacityproject")))
+   if (mCurrentTag == "project" ||
+       mCurrentTag == "audacityproject")
    {
       success = HandleProject(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("labeltrack")))
+   else if (mCurrentTag == "labeltrack")
    {
       success = HandleLabelTrack(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("notetrack")))
+   else if (mCurrentTag == "notetrack")
    {
       success = HandleNoteTrack(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("timetrack")))
+   else if (mCurrentTag == "timetrack")
    {
       success = HandleTimeTrack(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("wavetrack")))
+   else if (mCurrentTag == "wavetrack")
    {
       success = HandleWaveTrack(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("tags")))
+   else if (mCurrentTag == "tags")
    {
       success = HandleTags(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("tag")))
+   else if (mCurrentTag == "tag")
    {
       success = HandleTag(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("label")))
+   else if (mCurrentTag == "label")
    {
       success = HandleLabel(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("waveclip")))
+   else if (mCurrentTag == "waveclip")
    {
       success = HandleWaveClip(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("sequence")))
+   else if (mCurrentTag == "sequence")
    {
       success = HandleSequence(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("waveblock")))
+   else if (mCurrentTag == "waveblock")
    {
       success = HandleWaveBlock(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("envelope")))
+   else if (mCurrentTag == "envelope")
    {
       success = HandleEnvelope(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("controlpoint")))
+   else if (mCurrentTag == "controlpoint")
    {
       success = HandleControlPoint(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("simpleblockfile")))
+   else if (mCurrentTag == "simpleblockfile")
    {
       success = HandleSimpleBlockFile(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("silentblockfile")))
+   else if (mCurrentTag == "silentblockfile")
    {
       success = HandleSilentBlockFile(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("pcmaliasblockfile")))
+   else if (mCurrentTag == "pcmaliasblockfile")
    {
       success = HandlePCMAliasBlockFile(handler);
    }
-   else if (mCurrentTag.IsSameAs(wxT("import")))
+   else if (mCurrentTag == "import")
    {
       success = HandleImport(handler);
    }
@@ -957,7 +957,7 @@ bool AUPImportFileHandle::HandleTags(XMLTagHandler *&handler)
 
 bool AUPImportFileHandle::HandleTag(XMLTagHandler *&handler)
 {
-   if (!mParentTag.IsSameAs(wxT("tags")))
+   if (mParentTag != "tags")
    {
       return false;
    }
@@ -1004,7 +1004,7 @@ bool AUPImportFileHandle::HandleTag(XMLTagHandler *&handler)
 
 bool AUPImportFileHandle::HandleLabel(XMLTagHandler *&handler)
 {
-   if (!mParentTag.IsSameAs(wxT("labeltrack")))
+   if (mParentTag != "labeltrack")
    {
       return false;
    }
@@ -1019,13 +1019,13 @@ bool AUPImportFileHandle::HandleWaveClip(XMLTagHandler *&handler)
 {
    struct node node = mHandlers.back();
 
-   if (mParentTag.IsSameAs(wxT("wavetrack")))
+   if (mParentTag == "wavetrack")
    {
       WaveTrack *wavetrack = static_cast<WaveTrack *>(node.handler);
 
       handler = wavetrack->CreateClip();
    }
-   else if (mParentTag.IsSameAs(wxT("waveclip")))
+   else if (mParentTag == "waveclip")
    {
       // Nested wave clips are cut lines
       WaveClip *waveclip = static_cast<WaveClip *>(node.handler);
@@ -1043,7 +1043,7 @@ bool AUPImportFileHandle::HandleEnvelope(XMLTagHandler *&handler)
 {
    struct node node = mHandlers.back();
 
-   if (mParentTag.IsSameAs(wxT("timetrack")))
+   if (mParentTag == "timetrack")
    {
       // If an imported timetrack was bypassed, then we want to bypass the
       // envelope as well.  (See HandleTimeTrack and HandleControlPoint)
@@ -1056,12 +1056,12 @@ bool AUPImportFileHandle::HandleEnvelope(XMLTagHandler *&handler)
    }
    // Earlier versions of Audacity had a single implied waveclip, so for
    // these versions, we get or create the only clip in the track.
-   else if (mParentTag.IsSameAs(wxT("wavetrack")))
+   else if (mParentTag == "wavetrack")
    {
       handler = mWaveTrack->RightmostOrNewClip()->GetEnvelope();
    }
    // Nested wave clips are cut lines
-   else if (mParentTag.IsSameAs(wxT("waveclip")))
+   else if (mParentTag == "waveclip")
    {
       WaveClip *waveclip = static_cast<WaveClip *>(node.handler);
 
@@ -1075,7 +1075,7 @@ bool AUPImportFileHandle::HandleControlPoint(XMLTagHandler *&handler)
 {
    struct node node = mHandlers.back();
 
-   if (mParentTag.IsSameAs(wxT("envelope")))
+   if (mParentTag == "envelope")
    {
       // If an imported timetrack was bypassed, then we want to bypass the
       // control points as well.  (See HandleTimeTrack and HandleEnvelope)
@@ -1098,7 +1098,7 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
 
    // Earlier versions of Audacity had a single implied waveclip, so for
    // these versions, we get or create the only clip in the track.
-   if (mParentTag.IsSameAs(wxT("wavetrack")))
+   if (mParentTag == "wavetrack")
    {
       XMLTagHandler *dummy;
       HandleWaveClip(dummy);
@@ -1423,7 +1423,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
    {
       // Most of the "import" tag attributes are the same as for "wavetrack" tags,
       // so apply them via WaveTrack::HandleXMLTag().
-      bSuccess = pTrack->HandleXMLTag(wxT("wavetrack"), mAttrs);
+      bSuccess = pTrack->HandleXMLTag("wavetrack", mAttrs);
 
       // "offset" tag is ignored in WaveTrack::HandleXMLTag except for legacy projects,
       // so handle it here.

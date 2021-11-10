@@ -1142,19 +1142,19 @@ void FFmpegPresets::LoadPreset(ExportFFmpegOptions *parent, wxString &name)
    }
 }
 
-bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool FFmpegPresets::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
 {
    if (mAbortImport)
    {
       return false;
    }
 
-   if (!wxStrcmp(tag,wxT("ffmpeg_presets")))
+   if (tag == "ffmpeg_presets")
    {
       return true;
    }
 
-   if (!wxStrcmp(tag,wxT("preset")))
+   if (tag == "preset")
    {
       while (*attrs)
       {
@@ -1196,7 +1196,7 @@ bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
 
-   if (!wxStrcmp(tag,wxT("setctrlstate")) && mPreset)
+   if (tag == "setctrlstate" && mPreset)
    {
       long id = -1;
       while (*attrs)
@@ -1225,18 +1225,18 @@ bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-XMLTagHandler *FFmpegPresets::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *FFmpegPresets::HandleXMLChild(const std::string_view& tag)
 {
    if (mAbortImport)
    {
       return NULL;
    }
 
-   if (!wxStrcmp(tag, wxT("preset")))
+   if (tag == "preset")
    {
       return this;
    }
-   else if (!wxStrcmp(tag, wxT("setctrlstate")))
+   else if (tag == "setctrlstate")
    {
       return this;
    }

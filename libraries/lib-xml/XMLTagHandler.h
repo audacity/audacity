@@ -6,6 +6,7 @@
 
   Dominic Mazzoni
   Vaughan Johnson
+  Dmitry Vedenko
 
   The XMLTagHandler class is an interface which should be implemented by
   classes which wish to be able to load and save themselves
@@ -18,7 +19,11 @@
 #ifndef __AUDACITY_XML_TAG_HANDLER__
 #define __AUDACITY_XML_TAG_HANDLER__
 
+#include <string_view>
+
 #include "XMLWriter.h"
+
+
 class XML_API XMLValueChecker
 {
 public:
@@ -72,23 +77,23 @@ class XML_API XMLTagHandler /* not final */ {
    // tag and the attribute-value pairs (null-terminated), and
    // return true on success, and false on failure.  If you return
    // false, you will not get any calls about children.
-   virtual bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) = 0;
+   virtual bool HandleXMLTag(const std::string_view& tag, const wxChar **attrs) = 0;
 
    // This method will be called when a closing tag is encountered.
    // It is optional to override this method.
-   virtual void HandleXMLEndTag(const wxChar * WXUNUSED(tag)) {}
+   virtual void HandleXMLEndTag(const std::string_view& WXUNUSED(tag)) {}
 
    // This method will be called when element content has been
    // encountered.
    // It is optional to override this method.
-   virtual void HandleXMLContent(const wxString & WXUNUSED(content)) {}
+   virtual void HandleXMLContent(const std::string_view& WXUNUSED(content)) {}
 
    // If the XML document has children of your tag, this method
    // should be called.  Typically you should construct a NEW
    // object for the child, insert it into your own local data
    // structures, and then return it.  If you do not wish to
    // handle this child, return NULL and it will be ignored.
-   virtual XMLTagHandler *HandleXMLChild(const wxChar *tag) = 0;
+   virtual XMLTagHandler *HandleXMLChild(const std::string_view& tag) = 0;
 
    // These functions receive data from expat.  They do charset
    // conversion and then pass the data to the handlers above.

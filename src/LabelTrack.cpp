@@ -566,9 +566,9 @@ void LabelTrack::Import(wxTextFile & in)
    SortLabels();
 }
 
-bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool LabelTrack::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
 {
-   if (!wxStrcmp(tag, wxT("label"))) {
+   if (tag == "label") {
 
       SelectedRegion selectedRegion;
       wxString title;
@@ -608,7 +608,7 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       return true;
    }
-   else if (!wxStrcmp(tag, wxT("labeltrack"))) {
+   else if (tag == "labeltrack") {
       long nValue = -1;
       while (*attrs) {
          const wxChar *attr = *attrs++;
@@ -639,9 +639,9 @@ bool LabelTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-XMLTagHandler *LabelTrack::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *LabelTrack::HandleXMLChild(const std::string_view& tag)
 {
-   if (!wxStrcmp(tag, wxT("label")))
+   if (tag == "label")
       return this;
    else
       return NULL;

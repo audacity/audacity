@@ -44,7 +44,7 @@ protected:
    TagTable mTagTable;
 
    void Register( const wxString &tag, TypeErasedObjectAccessor accessor );
-   XMLTagHandler *CallObjectAccessor( const wxString &tag, void *p );
+   XMLTagHandler *CallObjectAccessor( const std::string_view &tag, void *p );
 
    using TypeErasedAccessor = std::function< void*( void* ) >;
    using TypeErasedAccessors = std::vector< TypeErasedAccessor >;
@@ -99,8 +99,7 @@ struct ObjectReaderEntry {
    }
 };
 
-XMLTagHandler *CallObjectAccessor(
-   const wxString &tag, Host &host )
+XMLTagHandler *CallObjectAccessor(const std::string_view& tag, Host& host)
 {
    return XMLMethodRegistryBase::CallObjectAccessor( tag, &host );
 }

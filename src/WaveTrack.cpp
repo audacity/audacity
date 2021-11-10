@@ -1823,9 +1823,9 @@ bool IsValidChannel(const int nValue)
 }
 }
 
-bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool WaveTrack::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
 {
-   if (!wxStrcmp(tag, wxT("wavetrack"))) {
+   if (tag == "wavetrack") {
       double dblValue;
       long nValue;
       while(*attrs) {
@@ -1894,33 +1894,33 @@ bool WaveTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void WaveTrack::HandleXMLEndTag(const wxChar * WXUNUSED(tag))
+void WaveTrack::HandleXMLEndTag(const std::string_view&  WXUNUSED(tag))
 {
    // In case we opened a pre-multiclip project, we need to
    // simulate closing the waveclip tag.
-   NewestOrNewClip()->HandleXMLEndTag(wxT("waveclip"));
+   NewestOrNewClip()->HandleXMLEndTag("waveclip");
 }
 
-XMLTagHandler *WaveTrack::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
 {
    //
    // This is legacy code (1.2 and previous) and is not called for NEW projects!
    //
-   if (!wxStrcmp(tag, wxT("sequence")) || !wxStrcmp(tag, wxT("envelope")))
+   if (tag == "sequence" || tag == "envelope")
    {
       // This is a legacy project, so set the cached offset
       NewestOrNewClip()->SetSequenceStartTime(mLegacyProjectFileOffset);
 
       // Legacy project file tracks are imported as one single wave clip
-      if (!wxStrcmp(tag, wxT("sequence")))
+      if (tag == "sequence")
          return NewestOrNewClip()->GetSequence();
-      else if (!wxStrcmp(tag, wxT("envelope")))
+      else if (tag == "envelope")
          return NewestOrNewClip()->GetEnvelope();
    }
 
    // JKC... for 1.1.0, one step better than what we had, but still badly broken.
-   //If we see a waveblock at this level, we'd better generate a sequence.
-   if( !wxStrcmp( tag, wxT("waveblock" )))
+   // If we see a waveblock at this level, we'd better generate a sequence.
+   if (tag == "waveblock")
    {
       // This is a legacy project, so set the cached offset
       NewestOrNewClip()->SetSequenceStartTime(mLegacyProjectFileOffset);
@@ -1931,7 +1931,7 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const wxChar *tag)
    //
    // This is for the NEW file format (post-1.2)
    //
-   if (!wxStrcmp(tag, wxT("waveclip")))
+   if (tag == "waveclip")
       return CreateClip();
    else
       return NULL;
