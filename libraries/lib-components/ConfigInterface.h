@@ -43,6 +43,10 @@
 #define __AUDACITY_CONFIGINTERFACE_H__
 
 #include "Identifier.h"
+#include <functional>
+#include <tuple>
+#include <type_traits>
+#include <variant>
 #include <vector>
 
 namespace PluginSettings {
@@ -52,6 +56,28 @@ enum ConfigurationType : unsigned {
 };
 
 }
+
+//! Supported types for settings
+using ConfigValueTypes = std::tuple<
+     wxString
+   , int
+   , bool
+   , float
+   , double
+>;
+
+//! Define a reference to a variable of one of the types in ConfigValueTypes
+/*! Avoid repetition of the list of types */
+template<bool is_const, typename> struct ConfigReferenceGenerator;
+template<bool is_const, typename... Types>
+struct ConfigReferenceGenerator<is_const, std::tuple<Types...>> {
+   using type = std::variant< std::reference_wrapper<
+      std::conditional_t<is_const, const Types, Types> >... >;
+};
+using ConfigReference =
+   ConfigReferenceGenerator<false, ConfigValueTypes>::type;
+using ConfigConstReference =
+   ConfigReferenceGenerator<true, ConfigValueTypes>::type;
 
 /*************************************************************************************//**
 
@@ -75,34 +101,43 @@ public:
       ConfigurationType type, const RegistryPath & group,
       RegistryPaths & subgroups) = 0;
 
-   virtual bool GetConfig(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, wxString & value,
-      const wxString & defval = {}) = 0;
-   virtual bool GetConfig(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, int & value, int defval = 0) = 0;
-   virtual bool GetConfig(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, bool & value, bool defval = false) = 0;
-   virtual bool GetConfig(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, float & value, float defval = 0.0f) = 0;
-   virtual bool GetConfig(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, double & value, double defval = 0.0) = 0;
+   // GetConfig with default value
+   template<typename Value>
+   bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, Value &var, Value defval)
+   { return GetConfigValue(type, group, key,
+      std::ref(var), std::cref(defval)); }
 
-   virtual bool SetConfig(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, const wxString & value) = 0;
-   virtual bool SetConfig(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, const int & value) = 0;
-   virtual bool SetConfig(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, const bool & value) = 0;
-   virtual bool SetConfig(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, const float & value) = 0;
-   virtual bool SetConfig(ConfigurationType type, const RegistryPath & group,
-      const RegistryPath & key, const double & value) = 0;
+   // GetConfig with implicitly converted default value
+   template<typename Value, typename ConvertibleToValue>
+   bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, Value &var, ConvertibleToValue defval)
+   { return GetConfig(type, group, key, var, static_cast<Value>(defval)); }
+
+   // GetConfig with default value assumed to be Value{}
+   template<typename Value>
+   bool GetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, Value &var)
+   { return GetConfig(type, group, key, var, Value{}); }
+
+   template<typename Value>
+   bool SetConfig(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, const Value &value)
+   { return SetConfigValue(type, group, key, std::cref(value)); }
 
    virtual bool RemoveConfigSubgroup(
       ConfigurationType type, const RegistryPath & group) = 0;
    virtual bool RemoveConfig(
       ConfigurationType type, const RegistryPath & group,
       const RegistryPath & key) = 0;
+
+protected:
+   //! @pre var and defval wrap references to the same type (ignoring const)
+   virtual bool GetConfigValue(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key,
+      ConfigReference var, ConfigConstReference defval) = 0;
+   virtual bool SetConfigValue(ConfigurationType type, const RegistryPath & group,
+      const RegistryPath & key, ConfigConstReference value) = 0;
 };
 
 #endif // __AUDACITY_CONFIGINTERFACE_H__

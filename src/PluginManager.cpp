@@ -505,69 +505,18 @@ bool PluginManager::GetConfigSubgroups(ConfigurationType type,
    return GetSubgroups(Group(type, ID, group), subgroups);
 }
 
-bool PluginManager::GetConfig(ConfigurationType type, const PluginID & ID,
-   const RegistryPath & group, const RegistryPath & key, wxString & value,
-   const wxString & defval)
+bool PluginManager::GetConfigValue(ConfigurationType type, const PluginID & ID,
+   const RegistryPath & group, const RegistryPath & key,
+   ConfigReference var, ConfigConstReference defval)
 {
-   return GetConfig(Key(type, ID, group, key), value, defval);
+   return GetConfigValue(Key(type, ID, group, key), var, defval);
 }
 
-bool PluginManager::GetConfig(ConfigurationType type, const PluginID & ID,
-   const RegistryPath & group, const RegistryPath & key, int & value,
-   int defval)
+bool PluginManager::SetConfigValue(ConfigurationType type, const PluginID & ID,
+   const RegistryPath & group, const RegistryPath & key,
+   ConfigConstReference value)
 {
-   return GetConfig(Key(type, ID, group, key), value, defval);
-}
-
-bool PluginManager::GetConfig(ConfigurationType type, const PluginID & ID,
-   const RegistryPath & group, const RegistryPath & key, bool & value,
-   bool defval)
-{
-   return GetConfig(Key(type, ID, group, key), value, defval);
-}
-
-bool PluginManager::GetConfig(ConfigurationType type, const PluginID & ID,
-   const RegistryPath & group, const RegistryPath & key, float & value,
-   float defval)
-{
-   return GetConfig(Key(type, ID, group, key), value, defval);
-}
-
-bool PluginManager::GetConfig(ConfigurationType type, const PluginID & ID,
-   const RegistryPath & group, const RegistryPath & key, double & value,
-   double defval)
-{
-   return GetConfig(Key(type, ID, group, key), value, defval);
-}
-
-bool PluginManager::SetConfig(ConfigurationType type, const PluginID & ID,
-   const RegistryPath & group, const RegistryPath & key, const wxString & value)
-{
-   return SetConfig(Key(type, ID, group, key), value);
-}
-
-bool PluginManager::SetConfig(ConfigurationType type, const PluginID & ID,
-   const RegistryPath & group, const RegistryPath & key, const int & value)
-{
-   return SetConfig(Key(type, ID, group, key), value);
-}
-
-bool PluginManager::SetConfig(ConfigurationType type, const PluginID & ID,
-   const RegistryPath & group, const RegistryPath & key, const bool & value)
-{
-   return SetConfig(Key(type, ID, group, key), value);
-}
-
-bool PluginManager::SetConfig(ConfigurationType type, const PluginID & ID,
-   const RegistryPath & group, const RegistryPath & key, const float & value)
-{
-   return SetConfig(Key(type, ID, group, key), value);
-}
-
-bool PluginManager::SetConfig(ConfigurationType type, const PluginID & ID,
-   const RegistryPath & group, const RegistryPath & key, const double & value)
-{
-   return SetConfig(Key(type, ID, group, key), value);
+   return SetConfigValue(Key(type, ID, group, key), value);
 }
 
 bool PluginManager::RemoveConfigSubgroup(ConfigurationType type,
@@ -1638,153 +1587,40 @@ bool PluginManager::GetSubgroups(const RegistryPath & group, RegistryPaths & sub
    return true;
 }
 
-bool PluginManager::GetConfig(const RegistryPath & key, int & value, int defval)
+bool PluginManager::GetConfigValue(
+   const RegistryPath & key, ConfigReference var, ConfigConstReference defval)
 {
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Read(key, &value, defval);
-   }
-
-   return result;
-}
-
-bool PluginManager::GetConfig(const RegistryPath & key, wxString & value, const wxString & defval)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      wxString wxval;
-
-      result = GetSettings()->Read(key, &wxval, defval);
-
-      value = wxval;
-   }
-
-   return result;
-}
-
-bool PluginManager::GetConfig(const RegistryPath & key, bool & value, bool defval)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Read(key, &value, defval);
-   }
-
-   return result;
-}
-
-bool PluginManager::GetConfig(const RegistryPath & key, float & value, float defval)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      double dval = 0.0;
-
-      result = GetSettings()->Read(key, &dval, (double) defval);
-
-      value = (float) dval;
-   }
-
-   return result;
-}
-
-bool PluginManager::GetConfig(const RegistryPath & key, double & value, double defval)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Read(key, &value, defval);
-   }
-
-   return result;
-}
-
-bool PluginManager::SetConfig(const RegistryPath & key, const wxString & value)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      wxString wxval = value;
-      result = GetSettings()->Write(key, wxval);
-      if (result)
-      {
-         result = GetSettings()->Flush();
+   if (key.empty())
+      return false;
+   const auto visitor = [&](const auto var){
+      const auto pVar = &var.get();
+      // precondition is that defval wraps same type as var
+      using Type = typename decltype(var)::type;
+      const auto pDefval =
+         std::get_if<std::reference_wrapper<const Type>>(&defval);
+      if constexpr( std::is_same_v<Type, float> ) {
+         double temp;
+         if( GetSettings()->Read(key, &temp, *pDefval) ) {
+            *pVar = static_cast<float>(temp);
+            return true;
+         }
+         return false;
       }
-   }
-
-   return result;
+      else
+         return GetSettings()->Read(key, pVar, *pDefval);
+   };
+   return Visit(visitor, var);
 }
 
-bool PluginManager::SetConfig(const RegistryPath & key, const int & value)
+bool PluginManager::SetConfigValue(
+   const RegistryPath & key, ConfigConstReference value)
 {
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Write(key, value);
-      if (result)
-      {
-         result = GetSettings()->Flush();
-      }
-   }
-
-   return result;
-}
-
-bool PluginManager::SetConfig(const RegistryPath & key, const bool & value)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Write(key, value);
-      if (result)
-      {
-         result = GetSettings()->Flush();
-      }
-   }
-
-   return result;
-}
-
-bool PluginManager::SetConfig(const RegistryPath & key, const float & value)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Write(key, value);
-      if (result)
-      {
-         result = GetSettings()->Flush();
-      }
-   }
-
-   return result;
-}
-
-bool PluginManager::SetConfig(const RegistryPath & key, const double & value)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Write(key, value);
-      if (result)
-      {
-         result = GetSettings()->Flush();
-      }
-   }
-
-   return result;
+   if (key.empty())
+      return false;
+   const auto visitor = [&](const auto value){
+      return GetSettings()->Write(key, value.get()) && GetSettings()->Flush();
+   };
+   return Visit(visitor, value);
 }
 
 /* Return value is a key for lookup in a config file */

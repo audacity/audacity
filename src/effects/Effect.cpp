@@ -893,73 +893,19 @@ bool Effect::GetConfigSubgroups(PluginSettings::ConfigurationType type,
       type, GetID(), group, subgroups);
 }
 
-bool Effect::GetConfig(PluginSettings::ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key, wxString & value,
-   const wxString & defval)
+bool Effect::GetConfigValue(ConfigurationType type,
+   const RegistryPath & group, const RegistryPath & key,
+   ConfigReference var, ConfigConstReference defval)
 {
-   return PluginManager::Get().GetConfig(type, GetID(), group, key, value,
-      defval);
+   return PluginManager::Get()
+      .GetConfigValue(type, GetID(), group, key, var, defval);
 }
 
-bool Effect::GetConfig(PluginSettings::ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key, int & value,
-   int defval)
+bool Effect::SetConfigValue(ConfigurationType type,
+   const RegistryPath & group, const RegistryPath & key,
+   ConfigConstReference value)
 {
-   return PluginManager::Get().GetConfig(type, GetID(), group, key, value,
-      defval);
-}
-
-bool Effect::GetConfig(PluginSettings::ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key, bool & value,
-   bool defval)
-{
-   return PluginManager::Get().GetConfig(type, GetID(), group, key, value,
-      defval);
-}
-
-bool Effect::GetConfig(PluginSettings::ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key, float & value,
-   float defval)
-{
-   return PluginManager::Get().GetConfig(type, GetID(), group, key, value,
-      defval);
-}
-
-bool Effect::GetConfig(PluginSettings::ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key, double & value, double defval)
-{
-   return PluginManager::Get().GetConfig(type, GetID(), group, key, value,
-      defval);
-}
-
-bool Effect::SetConfig(PluginSettings::ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key, const wxString & value)
-{
-   return PluginManager::Get().SetConfig(type, GetID(), group, key, value);
-}
-
-bool Effect::SetConfig(PluginSettings::ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key, const int & value)
-{
-   return PluginManager::Get().SetConfig(type, GetID(), group, key, value);
-}
-
-bool Effect::SetConfig(PluginSettings::ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key, const bool & value)
-{
-   return PluginManager::Get().SetConfig(type, GetID(), group, key, value);
-}
-
-bool Effect::SetConfig(PluginSettings::ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key, const float & value)
-{
-   return PluginManager::Get().SetConfig(type, GetID(), group, key, value);
-}
-
-bool Effect::SetConfig(PluginSettings::ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key, const double & value)
-{
-   return PluginManager::Get().SetConfig(type, GetID(), group, key, value);
+   return PluginManager::Get().SetConfigValue(type, GetID(), group, key, value);
 }
 
 bool Effect::RemoveConfigSubgroup(PluginSettings::ConfigurationType type,

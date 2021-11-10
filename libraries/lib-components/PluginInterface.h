@@ -88,37 +88,14 @@ public:
    virtual bool GetConfigSubgroups(ConfigurationType type, const PluginID & ID,
       const RegistryPath & group, RegistryPaths & subgroups) = 0;
 
-   virtual bool GetConfig(ConfigurationType type, const PluginID & ID,
-      const RegistryPath & group, const RegistryPath & key, wxString & value,
-      const wxString & defval) = 0;
-   virtual bool GetConfig(ConfigurationType type, const PluginID & ID,
-      const RegistryPath & group, const RegistryPath & key, int & value,
-      int defval) = 0;
-   virtual bool GetConfig(ConfigurationType type, const PluginID & ID,
-      const RegistryPath & group, const RegistryPath & key, bool & value,
-      bool defval) = 0;
-   virtual bool GetConfig(ConfigurationType type, const PluginID & ID,
-      const RegistryPath & group, const RegistryPath & key, float & value,
-      float defval) = 0;
-   virtual bool GetConfig(ConfigurationType type, const PluginID & ID,
-      const RegistryPath & group, const RegistryPath & key, double & value,
-      double defval) = 0;
+   //! @pre var and defval wrap references to the same type (ignoring const)
+   virtual bool GetConfigValue(ConfigurationType type, const PluginID & ID,
+      const RegistryPath & group, const RegistryPath & key,
+      ConfigReference var, ConfigConstReference defval) = 0;
 
-   virtual bool SetConfig(ConfigurationType type, const PluginID & ID,
+   virtual bool SetConfigValue(ConfigurationType type, const PluginID & ID,
       const RegistryPath & group, const RegistryPath & key,
-      const wxString & value) = 0;
-   virtual bool SetConfig(ConfigurationType type, const PluginID & ID,
-      const RegistryPath & group, const RegistryPath & key,
-      const int & value) = 0;
-   virtual bool SetConfig(ConfigurationType type, const PluginID & ID,
-      const RegistryPath & group, const RegistryPath & key,
-      const bool & value) = 0;
-   virtual bool SetConfig(ConfigurationType type, const PluginID & ID,
-      const RegistryPath & group, const RegistryPath & key,
-      const float & value) = 0;
-   virtual bool SetConfig(ConfigurationType type, const PluginID & ID,
-      const RegistryPath & group, const RegistryPath & key,
-      const double & value) = 0;
+      ConfigConstReference value) = 0;
 
    virtual bool RemoveConfigSubgroup(ConfigurationType type,
       const PluginID & ID, const RegistryPath & group) = 0;
