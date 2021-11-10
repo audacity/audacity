@@ -799,7 +799,7 @@ bool ThemeBase::ReadImageCache( teThemeType type, bool bOkIfNotFound)
 
    using namespace BasicUI;
 
-   if( type.empty() )
+   if( type.empty() || type == "custom" )
    {
       mPreferredSystemAppearance = PreferredSystemAppearance::Light;
 
