@@ -63,8 +63,12 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpFFwdDisabled, wxImage( 16, 16 ), wxT("FFwdDisabled"));
    DEFINE_IMAGE( bmpRecord, wxImage( 16, 16 ), wxT("Record"));
    DEFINE_IMAGE( bmpRecordDisabled, wxImage( 16, 16 ), wxT("RecordDisabled"));
+
+   // These two images are always overwritten after loading the theme, so in
+   // fact their contents are don't-care
    DEFINE_IMAGE( bmpRecordBeside, wxImage( 16, 16 ), wxT("RecordBeside"));
    DEFINE_IMAGE( bmpRecordBesideDisabled, wxImage( 16, 16 ), wxT("RecordBesideDisabled"));
+
    DEFINE_IMAGE( bmpRecordBelow, wxImage( 16, 16 ), wxT("RecordBelow"));
    DEFINE_IMAGE( bmpRecordBelowDisabled, wxImage( 16, 16 ), wxT("RecordBelowDisabled"));
    DEFINE_IMAGE( bmpScrub, wxImage( 18, 16 ), wxT("Scrub"));
@@ -283,7 +287,7 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrHzPlot,               wxColour(140, 60, 190),    wxT("HzPlot") );
    DEFINE_COLOUR( clrWavelengthPlot,       wxColour(200, 50, 150),    wxT("WavelengthPlot") );
 
-   DEFINE_COLOUR( clrEnvelope,             wxColour( 110, 110, 220),  wxT("Envelope") );
+   DEFINE_COLOUR( clrEnvelope,             wxColour( 110, 110, 220),  wxT("EnvelopeColour") );
 
    DEFINE_COLOUR( clrMuteButtonActive,     wxColour( 160, 170, 210),  wxT("MuteButtonActive") );
    DEFINE_COLOUR( clrMuteButtonVetoed,     wxColour( 180, 180, 185),  wxT("MuteButtonVetoed") );

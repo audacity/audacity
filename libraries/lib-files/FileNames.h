@@ -134,13 +134,6 @@ namespace FileNames
     * if they don't have system admin rights. Under default settings, it's
     * <DataDir>/Plug-Ins/ */
    FILES_API FilePath PlugInDir();
-   FILES_API FilePath ThemeDir();
-   FILES_API FilePath ThemeComponentsDir();
-   FILES_API FilePath ThemeCachePng();
-   FILES_API FilePath ThemeCacheAsCee();
-   FILES_API FilePath ThemeComponent(const wxString &Str);
-   FILES_API FilePath ThemeCacheHtm();
-   FILES_API FilePath ThemeImageDefsAsCee();
 
    // Obtain name of loaded module that contains address
    FILES_API FilePath PathFromAddr(void *addr);
