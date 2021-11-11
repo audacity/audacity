@@ -560,7 +560,7 @@ bool Effect::LoadUserPreset(const RegistryPath & name)
       return false;
    }
 
-   return SetAutomationParameters(parms);
+   return SetAutomationParametersFromString(parms);
 }
 
 bool Effect::SaveUserPreset(const RegistryPath & name)
@@ -571,10 +571,8 @@ bool Effect::SaveUserPreset(const RegistryPath & name)
    }
 
    wxString parms;
-   if (!GetAutomationParameters(parms))
-   {
+   if (!GetAutomationParametersAsString(parms))
       return false;
-   }
 
    return SetConfig(GetDefinition(), PluginSettings::Private,
       name, wxT("Parameters"), parms);
@@ -670,7 +668,7 @@ static const FileNames::FileTypes &PresetTypes()
 void Effect::ExportPresets()
 {
    wxString params;
-   GetAutomationParameters(params);
+   GetAutomationParametersAsString(params);
    wxString commandId = GetSquashedName(GetSymbol().Internal()).GET();
    params =  commandId + ":" + params;
 
@@ -758,7 +756,7 @@ void Effect::ImportPresets()
             }
             return;
          }
-         SetAutomationParameters(params);
+         SetAutomationParametersFromString(params);
       }
    }
 
@@ -914,7 +912,7 @@ bool Effect::Startup()
    return true;
 }
 
-bool Effect::GetAutomationParameters(wxString & parms)
+bool Effect::GetAutomationParametersAsString(wxString & parms)
 {
    CommandParameters eap;
 
@@ -937,7 +935,7 @@ bool Effect::GetAutomationParameters(wxString & parms)
    return eap.GetParameters(parms);
 }
 
-bool Effect::SetAutomationParameters(const wxString & parms)
+bool Effect::SetAutomationParametersFromString(const wxString & parms)
 {
    wxString preset = parms;
    bool success = false;

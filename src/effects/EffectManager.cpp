@@ -240,7 +240,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
    {
       wxString parms;
 
-      effect->GetAutomationParameters(parms);
+      effect->GetAutomationParametersAsString(parms);
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
@@ -258,7 +258,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
    {
       wxString parms;
 
-      command->GetAutomationParameters(parms);
+      command->GetAutomationParametersAsString(parms);
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
@@ -282,10 +282,11 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
 
       if (eap.HasEntry(wxT("Use Preset")))
       {
-         return effect->SetAutomationParameters(eap.Read(wxT("Use Preset")));
+         return effect
+            ->SetAutomationParametersFromString(eap.Read(wxT("Use Preset")));
       }
 
-      return effect->SetAutomationParameters(params);
+      return effect->SetAutomationParametersFromString(params);
    }
    AudacityCommand *command = GetAudacityCommand(ID);
    
@@ -297,10 +298,11 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
 
       if (eap.HasEntry(wxT("Use Preset")))
       {
-         return command->SetAutomationParameters(eap.Read(wxT("Use Preset")));
+         return command
+            ->SetAutomationParametersFromString(eap.Read(wxT("Use Preset")));
       }
 
-      return command->SetAutomationParameters(params);
+      return command->SetAutomationParametersFromString(params);
    }
    return false;
 }
