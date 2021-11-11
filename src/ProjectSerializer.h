@@ -57,9 +57,6 @@ public:
    void WriteData(const wxString & value) override;
    void Write(const wxString & data) override;
 
-   // Non-override functions
-   void WriteSubTree(const ProjectSerializer & value);
-
    const MemoryStream& GetDict() const;
    const MemoryStream& GetData() const;
 
@@ -67,7 +64,7 @@ public:
    bool DictChanged() const;
 
    // Returns empty string if decoding fails
-   static MemoryStream Decode(const wxMemoryBuffer &buffer);
+   static bool Decode(const wxMemoryBuffer &buffer, XMLTagHandler* hadler);
 
 private:
    void WriteName(const wxString& name);

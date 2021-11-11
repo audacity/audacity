@@ -22,6 +22,7 @@
 #include <wx/ustring.h>
 #include <codecvt>
 #include <locale>
+#include <deque>
 
 #include <wx/log.h>
 
@@ -199,7 +200,129 @@ namespace {
    using Digits = Int;  // Instead, just an unsigned char?
    static const auto WriteDigits = WriteInt;
    static const auto ReadDigits = ReadInt;
-}
+
+   class XMLTagHandlerAdapter final
+   {
+   public:
+      explicit XMLTagHandlerAdapter(XMLTagHandler* handler) noexcept
+          : mBaseHandler(handler)
+      {
+      }
+
+      void EmitStartTag(const std::string_view& name)
+      {
+         if (mInTag)
+            EmitStartTag();
+
+         mCurrentTagName = name;
+         mInTag = true;
+      }
+
+      void EndTag(const std::string_view& name)
+      {
+         if (mInTag)
+            EmitStartTag();
+
+         if (XMLTagHandler* const handler = mHandlers.back())
+            handler->HandleXMLEndTag(name);
+
+         mHandlers.pop_back();
+      }
+
+      void WriteAttr(const std::string_view& name, std::string value)
+      {
+         assert(mInTag);
+
+         if (!mInTag)
+            return;
+
+         mAttributes.emplace_back(name, CacheString(std::move(value)));
+      }
+
+      template<typename T>
+      void WriteAttr(const std::string_view& name, T value)
+      {
+         assert(mInTag);
+
+         if (!mInTag)
+            return;
+
+         mAttributes.emplace_back(name, XMLAttributeValueView(value));
+      }
+
+      void WriteData(std::string value)
+      {
+         if (mInTag)
+            EmitStartTag();
+
+         if (XMLTagHandler* const handler = mHandlers.back())
+            handler->HandleXMLContent(CacheString(std::move(value)));
+      }
+
+      void WriteRaw(std::string value)
+      {
+      }
+
+      bool Finalize()
+      {
+         if (mInTag)
+         {
+            EmitStartTag();
+            EndTag(mCurrentTagName);
+         }
+
+         return mBaseHandler != nullptr;
+      }
+
+   private:
+      void EmitStartTag()
+      {
+         if (mHandlers.empty())
+         {
+            mHandlers.push_back(mBaseHandler);
+         }
+         else
+         {
+            if (XMLTagHandler* const handler = mHandlers.back())
+               mHandlers.push_back(handler->HandleXMLChild(mCurrentTagName));
+            else
+               mHandlers.push_back(NULL);
+         }
+
+         if (XMLTagHandler*& handler = mHandlers.back())
+         {
+            if (!handler->HandleXMLTag(mCurrentTagName, mAttributes))
+            {
+               handler = nullptr;
+
+               if (mHandlers.size() == 1)
+                  mBaseHandler = nullptr;
+            }
+         }
+
+         mStringsCache.clear();
+         mAttributes.clear();
+         mInTag = false;
+      }
+
+      std::string_view CacheString(std::string string)
+      {
+         mStringsCache.emplace_back(std::move(string));
+         return mStringsCache.back();
+      }
+
+      XMLTagHandler* mBaseHandler;
+
+      std::vector<XMLTagHandler*> mHandlers;
+
+      std::string_view mCurrentTagName;
+
+      std::deque<std::string> mStringsCache;
+      AttributesList mAttributes;
+
+      bool mInTag { false };
+   };
+   }
 
 ProjectSerializer::ProjectSerializer(size_t allocSize)
 {
@@ -323,16 +446,6 @@ void ProjectSerializer::Write(const wxString & value)
    mBuffer.AppendData(value.wx_str(), len);
 }
 
-void ProjectSerializer::WriteSubTree(const ProjectSerializer & value)
-{
-   mBuffer.AppendByte(FT_Push);
-
-   mBuffer.AppendData(value.mDict.GetData(), value.mDict.GetSize());
-   mBuffer.AppendData(value.mBuffer.GetData(), value.mBuffer.GetSize());
-
-   mBuffer.AppendByte(FT_Pop);
-}
-
 void ProjectSerializer::WriteName(const wxString & name)
 {
    wxASSERT(name.length() * sizeof(wxStringCharType) <= SHRT_MAX);
@@ -384,11 +497,14 @@ bool ProjectSerializer::DictChanged() const
 }
 
 // See ProjectFileIO::LoadProject() for explanation of the blockids arg
-MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
+bool ProjectSerializer::Decode(const wxMemoryBuffer &buffer, XMLTagHandler* handler)
 {
+   if (handler == nullptr)
+      return false;
+
    wxMemoryInputStream in(buffer.GetData(), buffer.GetDataLen());
 
-   XMLUtf8BufferWriter out;
+   XMLTagHandlerAdapter adapter(handler);
 
    std::vector<char> bytes;
    IdMap mIds;
@@ -409,11 +525,17 @@ MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
       return iter->second;
    };
 
-   auto ReadString = [&mCharSize, &in, &bytes](int len) -> std::string
+   int64_t stringsCount = 0;
+   int64_t stringsLength = 0;
+
+   auto ReadString = [&mCharSize, &in, &bytes, &stringsCount, &stringsLength](int len) -> std::string
    {
       bytes.reserve( len );
       auto data = bytes.data();
       in.Read( data, len );
+
+      stringsCount++;
+      stringsLength += len;
       
       switch (mCharSize)
       {
@@ -473,7 +595,7 @@ MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
             {
                id = ReadUShort( in );
 
-               out.StartTag(Lookup(id));
+               adapter.EmitStartTag(Lookup(id));
             }
             break;
 
@@ -481,7 +603,7 @@ MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
             {
                id = ReadUShort( in );
 
-               out.EndTag(Lookup(id));
+               adapter.EndTag(Lookup(id));
             }
             break;
 
@@ -489,7 +611,8 @@ MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
             {
                id = ReadUShort( in );
                int len = ReadLength( in );
-               out.WriteAttr(Lookup(id), ReadString(len));
+               
+               adapter.WriteAttr(Lookup(id), ReadString(len));
             }
             break;
 
@@ -499,9 +622,9 @@ MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
 
                id = ReadUShort( in );
                in.Read(&val, sizeof(val));
-               int dig = ReadDigits( in );
+               /* int dig = */ReadDigits(in);
 
-               out.WriteAttr(Lookup(id), val, dig);
+               adapter.WriteAttr(Lookup(id), val);
             }
             break;
 
@@ -511,9 +634,9 @@ MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
 
                id = ReadUShort( in );
                in.Read(&val, sizeof(val));
-               int dig = ReadDigits( in );
+               /*int dig = */ReadDigits(in);
 
-               out.WriteAttr(Lookup(id), val, dig);
+               adapter.WriteAttr(Lookup(id), val);
             }
             break;
 
@@ -522,7 +645,7 @@ MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
                id = ReadUShort( in );
                int val = ReadInt( in );
 
-               out.WriteAttr(Lookup(id), val);
+               adapter.WriteAttr(Lookup(id), val);
             }
             break;
 
@@ -533,7 +656,7 @@ MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
                id = ReadUShort( in );
                in.Read(&val, 1);
 
-               out.WriteAttr(Lookup(id), val);
+               adapter.WriteAttr(Lookup(id), val);
             }
             break;
 
@@ -542,7 +665,7 @@ MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
                id = ReadUShort( in );
                long val = ReadLong( in );
 
-               out.WriteAttr(Lookup(id), val);
+               adapter.WriteAttr(Lookup(id), val);
             }
             break;
 
@@ -550,7 +673,7 @@ MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
             {
                id = ReadUShort( in );
                long long val = ReadLongLong( in );
-               out.WriteAttr(Lookup(id), val);
+               adapter.WriteAttr(Lookup(id), val);
             }
             break;
 
@@ -559,21 +682,21 @@ MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
                id = ReadUShort( in );
                size_t val = ReadULong( in );
 
-               out.WriteAttr(Lookup(id), val);
+               adapter.WriteAttr(Lookup(id), val);
             }
             break;
 
             case FT_Data:
             {
                int len = ReadLength( in );
-               out.WriteData(ReadString(len));
+               adapter.WriteData(ReadString(len));
             }
             break;
 
             case FT_Raw:
             {
                int len = ReadLength( in );
-               out.Write(ReadString(len));
+               adapter.WriteRaw(ReadString(len));
             }
             break;
 
@@ -593,8 +716,11 @@ MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
    {
       // Document was corrupt, or platform differences in size or endianness
       // were not well canonicalized
-      return {};
+      return false;
    }
 
-   return out.ConsumeResult();
+   wxLogInfo(
+      "Loaded %lld string %f Kb in size", stringsCount, stringsLength / 1024.0);
+
+   return adapter.Finalize();
 }

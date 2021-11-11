@@ -1966,6 +1966,8 @@ bool ProjectFileIO::WriteDoc(const char *table,
 
 bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
 {
+   auto now = std::chrono::high_resolution_clock::now();
+
    bool success = false;
 
    auto cleanup = finally([&]
@@ -2016,24 +2018,12 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
    }
    else
    {
-      MemoryStream stream = ProjectSerializer::Decode(buffer);
-
-      if (stream.IsEmpty())
-      {
-         SetError(XO("Unable to decode project document"));
-
-         return false;
-      }
-
-      XMLFileReader xmlFile;
-
       // Load 'er up
-      success = xmlFile.ParseMemoryStream(this, stream);
+      success = ProjectSerializer::Decode(buffer, this);
       if (!success)
       {
          SetError(
-            XO("Unable to parse project information."),
-            xmlFile.GetErrorStr()
+            XO("Unable to parse project information.")
          );
          return false;
       }
@@ -2082,6 +2072,12 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
    DiscardConnection();
 
    success = true;
+
+   auto duration = std::chrono::high_resolution_clock::now() - now;
+
+   wxLogInfo(
+      "Project loaded in %lld ms",
+      std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
 
    return true;
 }
