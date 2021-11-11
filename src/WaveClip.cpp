@@ -1453,6 +1453,25 @@ void WaveClip::Clear(double t0, double t1)
         Offset(offset);        
 }
 
+void WaveClip::ClearLeft(double t)
+{
+   if (t > GetPlayStartTime() && t < GetPlayEndTime())
+   {
+      ClearSequence(GetSequenceStartTime(), t);
+      SetTrimLeft(.0);
+      SetSequenceStartTime(t);
+   }
+}
+
+void WaveClip::ClearRight(double t)
+{
+   if (t > GetPlayStartTime() && t < GetPlayEndTime())
+   {
+      ClearSequence(t, GetSequenceEndTime());
+      SetTrimRight(.0);
+   }
+}
+
 void WaveClip::ClearSequence(double t0, double t1)
 {
     auto clip_t0 = std::max(t0, GetSequenceStartTime());

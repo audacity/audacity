@@ -20,6 +20,8 @@
 #include <cstdint>
 #include <mutex>
 #include <wx/ustring.h>
+#include <codecvt>
+#include <locale>
 
 ///
 /// ProjectSerializer class
@@ -78,7 +80,7 @@ enum FieldTypes
 // contain the envelope name, but that's not a problem.
 
 NameMap ProjectSerializer::mNames;
-wxMemoryBuffer ProjectSerializer::mDict;
+MemoryStream ProjectSerializer::mDict;
 
 TranslatableString ProjectSerializer::FailureMessage( const FilePath &/*filePath*/ )
 {
@@ -128,14 +130,14 @@ namespace {
 
    // Write native little-endian to little-endian file format
    template< typename Number >
-   void WriteLittleEndian( wxMemoryBuffer &out, Number value )
+   void WriteLittleEndian( MemoryStream &out, Number value )
    {
       out.AppendData( &value, sizeof(value) );
    }
 
    // Write native big-endian to little-endian file format
    template< typename Number >
-   void WriteBigEndian( wxMemoryBuffer &out, Number value )
+   void WriteBigEndian( MemoryStream &out, Number value )
    {
       auto begin = static_cast<unsigned char*>( static_cast<void*>( &value ) );
       std::reverse( begin, begin + sizeof( value ) );
@@ -199,9 +201,6 @@ namespace {
 
 ProjectSerializer::ProjectSerializer(size_t allocSize)
 {
-   mDict.SetBufSize(allocSize);
-   mBuffer.SetBufSize(allocSize);
-
    static std::once_flag flag;
    std::call_once(flag, []{
       // Just once per run, store header information in the unique static
@@ -326,8 +325,8 @@ void ProjectSerializer::WriteSubTree(const ProjectSerializer & value)
 {
    mBuffer.AppendByte(FT_Push);
 
-   mBuffer.AppendData(value.mDict.GetData(), value.mDict.GetDataLen());
-   mBuffer.AppendData(value.mBuffer.GetData(), value.mBuffer.GetDataLen());
+   mBuffer.AppendData(value.mDict.GetData(), value.mDict.GetSize());
+   mBuffer.AppendData(value.mBuffer.GetData(), value.mBuffer.GetSize());
 
    mBuffer.AppendByte(FT_Pop);
 }
@@ -362,19 +361,19 @@ void ProjectSerializer::WriteName(const wxString & name)
    WriteUShort( mBuffer, id );
 }
 
-const wxMemoryBuffer &ProjectSerializer::GetDict() const
+const MemoryStream &ProjectSerializer::GetDict() const
 {
    return mDict;
 }
 
-const wxMemoryBuffer &ProjectSerializer::GetData() const
+const MemoryStream& ProjectSerializer::GetData() const
 {
    return mBuffer;
 }
 
 bool ProjectSerializer::IsEmpty() const
 {
-   return mBuffer.GetDataLen() == 0;
+   return mBuffer.GetSize() == 0;
 }
 
 bool ProjectSerializer::DictChanged() const
@@ -383,11 +382,11 @@ bool ProjectSerializer::DictChanged() const
 }
 
 // See ProjectFileIO::LoadProject() for explanation of the blockids arg
-wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
+MemoryStream ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
 {
    wxMemoryInputStream in(buffer.GetData(), buffer.GetDataLen());
 
-   XMLStringWriter out;
+   XMLUtf8BufferWriter out;
 
    std::vector<char> bytes;
    IdMap mIds;
@@ -397,45 +396,45 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
    mIds.clear();
 
    struct Error{}; // exception type for short-range try/catch
-   auto Lookup = [&mIds]( UShort id ) -> const wxString &
+   auto Lookup = [&mIds]( UShort id ) -> std::string_view
    {
       auto iter = mIds.find( id );
       if (iter == mIds.end())
       {
          throw Error{};
       }
+
       return iter->second;
    };
 
-   auto ReadString = [&mCharSize, &in, &bytes](int len) -> wxString
+   auto ReadString = [&mCharSize, &in, &bytes](int len) -> std::string
    {
-      bytes.reserve( len + 4 );
+      bytes.reserve( len );
       auto data = bytes.data();
       in.Read( data, len );
-      // Make a null terminator of the widest type
-      memset( data + len, '\0', 4 );
-      wxUString str;
       
       switch (mCharSize)
       {
          case 1:
-            str.assignFromUTF8(data, len);
-         break;
+            return std::string(bytes.data(), len);
 
          case 2:
-            str.assignFromUTF16((wxChar16 *) data, len / 2);
-         break;
+            return std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t>().to_bytes(
+               reinterpret_cast<char16_t*>(data),
+               reinterpret_cast<char16_t*>(data) + len / 2);
 
          case 4:
-            str = wxU32CharBuffer::CreateNonOwned((wxChar32 *) data, len / 4);
-         break;
+            return std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t>()
+               .to_bytes(
+                  reinterpret_cast<char32_t*>(data),
+                  reinterpret_cast<char32_t*>(data) + len / 4);
 
          default:
             wxASSERT_MSG(false, wxT("Characters size not 1, 2, or 4"));
          break;
       }
 
-      return str;
+      return {};
    };
 
    try
@@ -595,5 +594,5 @@ wxString ProjectSerializer::Decode(const wxMemoryBuffer &buffer)
       return {};
    }
 
-   return out;
+   return out.ConsumeResult();
 }

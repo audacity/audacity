@@ -12,6 +12,8 @@ Paul Licameli split from AudacityProject.cpp
 
 #include <atomic>
 #include <sqlite3.h>
+#include <optional>
+
 #include <wx/app.h>
 #include <wx/crt.h>
 #include <wx/frame.h>
@@ -209,6 +211,80 @@ public:
    }
 
    int mRc;
+};
+
+class SQLiteBlobStream final
+{
+public:
+   static std::optional<SQLiteBlobStream> Open(
+      sqlite3* db, const char* schema, const char* table, const char* column,
+      int64_t rowID, bool readOnly) noexcept
+   {
+      if (db == nullptr)
+         return {};
+
+      sqlite3_blob* blob = nullptr;
+
+      const int rc = sqlite3_blob_open(
+         db, schema, table, column, rowID, readOnly ? 0 : 1, &blob);
+
+      if (rc != SQLITE_OK)
+         return {};
+
+      return std::make_optional<SQLiteBlobStream>(blob, readOnly);
+   }
+
+   SQLiteBlobStream(sqlite3_blob* blob, bool readOnly) noexcept
+       : mBlob(blob)
+       , mIsReadOnly(readOnly)
+   {}
+
+   ~SQLiteBlobStream() noexcept
+   {
+      // Destructor should not throw and there is no
+      // way to handle the error otherwise
+      (void) Close();
+   }
+
+   bool IsOpen() const noexcept
+   {
+      return mBlob != nullptr;
+   }
+
+   int Close() noexcept
+   {
+      if (mBlob == nullptr)
+         return SQLITE_OK;
+
+      const int rc = sqlite3_blob_close(mBlob);
+
+      mBlob = nullptr;
+
+      return rc;
+   }
+
+   int Write(const void* ptr, int size) noexcept
+   {
+      // Stream APIs usually return the number of bytes written.
+      // sqlite3_blob_write is all-or-nothing function,
+      // so Write will return the result of the call
+      if (!IsOpen() || mIsReadOnly || ptr == nullptr)
+         return SQLITE_MISUSE;
+
+      const int rc = sqlite3_blob_write(mBlob, ptr, size, mWriteOffset);
+
+      if (rc == SQLITE_OK)
+         mWriteOffset += size;
+
+      return rc;
+   }
+
+private:
+   sqlite3_blob* mBlob { nullptr };
+
+   int mWriteOffset { 0 };
+
+   bool mIsReadOnly { false };
 };
 
 bool ProjectFileIO::InitializeSQL()
@@ -1723,17 +1799,19 @@ bool ProjectFileIO::WriteDoc(const char *table,
                              const char *schema /* = "main" */)
 {
    auto db = DB();
+
+   TransactionScope transaction(GetConnection(), "UpdateProject");
+
    int rc;
 
    // For now, we always use an ID of 1. This will replace the previously
    // written row every time.
    char sql[256];
-   sqlite3_snprintf(sizeof(sql),
-                    sql,
-                    "INSERT INTO %s.%s(id, dict, doc) VALUES(1, ?1, ?2)"
-                    "       ON CONFLICT(id) DO UPDATE SET dict = ?1, doc = ?2;",
-                    schema,
-                    table);
+   sqlite3_snprintf(
+      sizeof(sql), sql,
+      "INSERT INTO %s.%s(id, dict, doc) VALUES(1, ?1, ?2)"
+      "       ON CONFLICT(id) DO UPDATE SET dict = ?1, doc = ?2;",
+      schema, table);
 
    sqlite3_stmt *stmt = nullptr;
    auto cleanup = finally([&]
@@ -1757,37 +1835,120 @@ bool ProjectFileIO::WriteDoc(const char *table,
       return false;
    }
 
-   const wxMemoryBuffer &dict = autosave.GetDict();
-   const wxMemoryBuffer &data = autosave.GetData();
+   const MemoryStream& dict = autosave.GetDict();
+   const MemoryStream& data = autosave.GetData();
 
    // Bind statement parameters
    // Might return SQL_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
-   if (sqlite3_bind_blob(stmt, 1, dict.GetData(), dict.GetDataLen(), SQLITE_STATIC) ||
-       sqlite3_bind_blob(stmt, 2, data.GetData(), data.GetDataLen(), SQLITE_STATIC))
+   if (
+      sqlite3_bind_zeroblob(stmt, 1, dict.GetSize()) ||
+      sqlite3_bind_zeroblob(stmt, 2, data.GetSize()))
    {
       ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
       ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
       ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::bind");
 
-      SetDBError(
-         XO("Unable to bind to blob")
-      );
+      SetDBError(XO("Unable to bind to blob"));
       return false;
    }
 
+   const auto reportError = [this](auto sql) {
+      SetDBError(
+         XO("Failed to update the project file.\nThe following command failed:\n\n%s")
+            .Format(sql));
+   };
+
    rc = sqlite3_step(stmt);
+
    if (rc != SQLITE_DONE)
    {
       ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
       ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
       ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::step");
 
-      SetDBError(
-         XO("Failed to update the project file.\nThe following command failed:\n\n%s").Format(sql)
-      );
+      reportError(sql);
       return false;
    }
+
+   // Finalize the statement before commiting the transaction
+   sqlite3_finalize(stmt);
+   stmt = nullptr;
+
+   // Get rowid
+
+   int64_t rowID = 0;
+
+   const wxString rowIDSql =
+      wxString::Format("SELECT ROWID FROM %s.%s WHERE id = 1;", schema, table);
+
+   if (!Query(
+          rowIDSql,
+          [&rowID](int cols, char** vals, char** names)
+          {
+             if (cols != 1)
+                return -1;
+
+             rowID = std::stoll(vals[0]);
+             return 0;
+          }))
+   {
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(sqlite3_errcode(db)));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::rowid");
+
+      reportError(rowIDSql);
+      return false;
+   }
+
+   const auto writeStream = [db, schema, table, rowID, this](const char* column, const MemoryStream& stream) {
+
+      auto blobStream =
+         SQLiteBlobStream::Open(db, schema, table, column, rowID, false);
+
+      if (!blobStream)
+      {
+         ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(sqlite3_errcode(db)));
+         ADD_EXCEPTION_CONTEXT("sqlite3.col", column);
+         ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::openBlobStream");
+
+         SetDBError(XO("Unable to bind to blob"));
+         return false;
+      }
+
+      for (auto chunk : stream)
+      {
+         if (SQLITE_OK != blobStream->Write(chunk.first, chunk.second))
+         {
+            ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(sqlite3_errcode(db)));
+            ADD_EXCEPTION_CONTEXT("sqlite3.col", column);
+            ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::writeBlobStream");
+            // The user visible message is not changed, so there is no need for new strings
+            SetDBError(XO("Unable to bind to blob"));
+            return false;
+         }
+      }
+
+      if (blobStream->Close() != SQLITE_OK)
+      {
+         ADD_EXCEPTION_CONTEXT(
+            "sqlite3.rc", std::to_string(sqlite3_errcode(db)));
+         ADD_EXCEPTION_CONTEXT("sqlite3.col", column);
+         ADD_EXCEPTION_CONTEXT(
+            "sqlite3.context", "ProjectGileIO::WriteDoc::writeBlobStream");
+         // The user visible message is not changed, so there is no need for new
+         // strings
+         SetDBError(XO("Unable to bind to blob"));
+         return false;
+      }
+
+      return true;
+   };
+
+   if (!writeStream("dict", dict))
+      return false;
+
+   if (!writeStream("doc", data))
+      return false;
 
    const auto requiredVersion =
       ProjectFormatExtensionsRegistry::Get().GetRequiredVersion(mProject);
@@ -1800,14 +1961,11 @@ bool ProjectFileIO::WriteDoc(const char *table,
       // DV: Very unlikely case.
       // Since we need to improve the error messages in the future, let's use
       // the generic message for now, so no new strings are needed
-      SetDBError(
-         XO("Failed to update the project file.\nThe following command failed:\n\n%s")
-            .Format(setVersionSql));
-
+      reportError(setVersionSql);
       return false;
    }
 
-   return true;
+   return transaction.Commit();
 }
 
 bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
@@ -1830,7 +1988,6 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       return false;
    }
 
-   wxString project;
    wxMemoryBuffer buffer;
    bool usedAutosave = true;
 
@@ -1863,8 +2020,9 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
    }
    else
    {
-      project = ProjectSerializer::Decode(buffer);
-      if (project.empty())
+      MemoryStream stream = ProjectSerializer::Decode(buffer);
+
+      if (stream.IsEmpty())
       {
          SetError(XO("Unable to decode project document"));
 
@@ -1874,7 +2032,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       XMLFileReader xmlFile;
 
       // Load 'er up
-      success = xmlFile.ParseString(this, project);
+      success = xmlFile.ParseMemoryStream(this, stream);
       if (!success)
       {
          SetError(
