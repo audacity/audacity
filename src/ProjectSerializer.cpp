@@ -92,237 +92,261 @@ XO("This recovery file was saved by Audacity 2.3.0 or before.\n"
    "You need to run that version of Audacity to recover the project." );
 }
 
-namespace {
-   // Aliases for the FIXED-WIDTH integer types that are used in the file
-   // format.
-   
-   // Chosen so that among the four build types (32 bit Windows, 64
-   // bit Windows, 64 bit Mac clang, Linux g++) presently done (3.0.0
-   // development), we use the narrowest width of the type on any of them, so
-   // that anything saved on one build will be read back identically on all
-   // builds. (Although this means that very large values on some systems might
-   // be saved and then read back with loss.)
+namespace
+{
+// Aliases for the FIXED-WIDTH integer types that are used in the file
+// format.
 
-   // In fact the only types for which this matters are long (only 32 bits on
-   // 32 and 64 bit Windows) and size_t (only 32 bits on 32 bit Windows).
+// Chosen so that among the four build types (32 bit Windows, 64
+// bit Windows, 64 bit Mac clang, Linux g++) presently done (3.0.0
+// development), we use the narrowest width of the type on any of them, so
+// that anything saved on one build will be read back identically on all
+// builds. (Although this means that very large values on some systems might
+// be saved and then read back with loss.)
 
-   using UShort = std::uint16_t;
-   using Int = std::int32_t;
+// In fact the only types for which this matters are long (only 32 bits on
+// 32 and 64 bit Windows) and size_t (only 32 bits on 32 bit Windows).
 
-   using Long = std::int32_t;   // To save long values
-   using ULong = std::uint32_t; // To save size_t values
+using UShort = std::uint16_t;
+using Int = std::int32_t;
 
-   using LongLong = std::int64_t;
+using Long = std::int32_t;   // To save long values
+using ULong = std::uint32_t; // To save size_t values
 
-   // Detect this computer's endianness
-   bool IsLittleEndian()
+using LongLong = std::int64_t;
+
+// Detect this computer's endianness
+bool IsLittleEndian()
+{
+   const std::uint32_t x = 1u;
+   return static_cast<const unsigned char*>(static_cast<const void*>(&x))[0];
+   // We will assume the same for other widths!
+}
+// In C++20 this could be
+// constexpr bool IsLittleEndian = (std::endian::native == std::endian::little);
+// static_assert( IsLittleEndian || (std::endian::native == std::endian::big),
+//    "Oh no!  I'm mixed-endian!" );
+
+// Functions that can read and write native integer types to a canonicalized
+// little-endian file format.  (We don't bother to do the same for floating
+// point numbers.)
+
+// Write native little-endian to little-endian file format
+template <typename Number>
+void WriteLittleEndian(MemoryStream& out, Number value)
+{
+   out.AppendData(&value, sizeof(value));
+}
+
+// Write native big-endian to little-endian file format
+template <typename Number> void WriteBigEndian(MemoryStream& out, Number value)
+{
+   auto begin = static_cast<unsigned char*>(static_cast<void*>(&value));
+   std::reverse(begin, begin + sizeof(value));
+   out.AppendData(&value, sizeof(value));
+}
+
+// Read little-endian file format to native little-endian
+template <typename Number> Number ReadLittleEndian(wxMemoryInputStream& in)
+{
+   Number result;
+   in.Read(&result, sizeof(result));
+   return result;
+}
+
+// Read little-endian file format to native big-endian
+template <typename Number> Number ReadBigEndian(wxMemoryInputStream& in)
+{
+   Number result;
+   in.Read(&result, sizeof(result));
+   auto begin = static_cast<unsigned char*>(static_cast<void*>(&result));
+   std::reverse(begin, begin + sizeof(result));
+   return result;
+}
+
+// Choose between implementations!
+static const auto WriteUShort =
+   IsLittleEndian() ? &WriteLittleEndian<UShort> : &WriteBigEndian<UShort>;
+static const auto WriteInt =
+   IsLittleEndian() ? &WriteLittleEndian<Int> : &WriteBigEndian<Int>;
+static const auto WriteLong =
+   IsLittleEndian() ? &WriteLittleEndian<Long> : &WriteBigEndian<Long>;
+static const auto WriteULong =
+   IsLittleEndian() ? &WriteLittleEndian<ULong> : &WriteBigEndian<ULong>;
+static const auto WriteLongLong =
+   IsLittleEndian() ? &WriteLittleEndian<LongLong> : &WriteBigEndian<LongLong>;
+
+static const auto ReadUShort =
+   IsLittleEndian() ? &ReadLittleEndian<UShort> : &ReadBigEndian<UShort>;
+static const auto ReadInt =
+   IsLittleEndian() ? &ReadLittleEndian<Int> : &ReadBigEndian<Int>;
+static const auto ReadLong =
+   IsLittleEndian() ? &ReadLittleEndian<Long> : &ReadBigEndian<Long>;
+static const auto ReadULong =
+   IsLittleEndian() ? &ReadLittleEndian<ULong> : &ReadBigEndian<ULong>;
+static const auto ReadLongLong =
+   IsLittleEndian() ? &ReadLittleEndian<LongLong> : &ReadBigEndian<LongLong>;
+
+// Functions to read and write certain lengths -- maybe we will change
+// our choices for widths or signedness?
+
+using Length = Int; // Instead, as wide as size_t?
+static const auto WriteLength = WriteInt;
+static const auto ReadLength = ReadInt;
+
+using Digits = Int; // Instead, just an unsigned char?
+static const auto WriteDigits = WriteInt;
+static const auto ReadDigits = ReadInt;
+
+class XMLTagHandlerAdapter final
+{
+public:
+   explicit XMLTagHandlerAdapter(XMLTagHandler* handler) noexcept
+       : mBaseHandler(handler)
    {
-      const std::uint32_t x = 1u;
-      return
-         static_cast<const unsigned char*>(static_cast<const void*>(&x))[0];
-      // We will assume the same for other widths!
    }
-   // In C++20 this could be
-   // constexpr bool IsLittleEndian = (std::endian::native == std::endian::little);
-   // static_assert( IsLittleEndian || (std::endian::native == std::endian::big),
-   //    "Oh no!  I'm mixed-endian!" );
 
-   // Functions that can read and write native integer types to a canonicalized
-   // little-endian file format.  (We don't bother to do the same for floating
-   // point numbers.)
-
-   // Write native little-endian to little-endian file format
-   template< typename Number >
-   void WriteLittleEndian( MemoryStream &out, Number value )
+   void EmitStartTag(const std::string_view& name)
    {
-      out.AppendData( &value, sizeof(value) );
+      if (mInTag)
+         EmitStartTag();
+
+      mCurrentTagName = name;
+      mInTag = true;
    }
 
-   // Write native big-endian to little-endian file format
-   template< typename Number >
-   void WriteBigEndian( MemoryStream &out, Number value )
+   void EndTag(const std::string_view& name)
    {
-      auto begin = static_cast<unsigned char*>( static_cast<void*>( &value ) );
-      std::reverse( begin, begin + sizeof( value ) );
-      out.AppendData( &value, sizeof(value) );
+      if (mInTag)
+         EmitStartTag();
+
+      if (XMLTagHandler* const handler = mHandlers.back())
+         handler->HandleXMLEndTag(name);
+
+      mHandlers.pop_back();
    }
 
-   // Read little-endian file format to native little-endian
-   template< typename Number >
-   Number ReadLittleEndian( wxMemoryInputStream &in )
+   void WriteAttr(const std::string_view& name, std::string value)
    {
-      Number result;
-      in.Read( &result, sizeof(result) );
-      return result;
+      assert(mInTag);
+
+      if (!mInTag)
+         return;
+
+      mAttributes.emplace_back(name, CacheString(std::move(value)));
    }
 
-   // Read little-endian file format to native big-endian
-   template< typename Number >
-   Number ReadBigEndian( wxMemoryInputStream &in )
+   template <typename T> void WriteAttr(const std::string_view& name, T value)
    {
-      Number result;
-      in.Read( &result, sizeof(result) );
-      auto begin = static_cast<unsigned char*>( static_cast<void*>( &result ) );
-      std::reverse( begin, begin + sizeof( result ) );
-      return result;
+      assert(mInTag);
+
+      if (!mInTag)
+         return;
+
+      mAttributes.emplace_back(name, XMLAttributeValueView(value));
    }
 
-   // Choose between implementations!
-   static const auto WriteUShort =   IsLittleEndian()
-      ? &WriteLittleEndian<UShort>   : &WriteBigEndian<UShort>;
-   static const auto WriteInt =      IsLittleEndian()
-      ? &WriteLittleEndian<Int>      : &WriteBigEndian<Int>;
-   static const auto WriteLong =     IsLittleEndian()
-      ? &WriteLittleEndian<Long>     : &WriteBigEndian<Long>;
-   static const auto WriteULong =    IsLittleEndian()
-      ? &WriteLittleEndian<ULong>    : &WriteBigEndian<ULong>;
-   static const auto WriteLongLong = IsLittleEndian()
-      ? &WriteLittleEndian<LongLong> : &WriteBigEndian<LongLong>;
-
-   static const auto ReadUShort =   IsLittleEndian()
-      ? &ReadLittleEndian<UShort>   : &ReadBigEndian<UShort>;
-   static const auto ReadInt =      IsLittleEndian()
-      ? &ReadLittleEndian<Int>      : &ReadBigEndian<Int>;
-   static const auto ReadLong =     IsLittleEndian()
-      ? &ReadLittleEndian<Long>     : &ReadBigEndian<Long>;
-   static const auto ReadULong =    IsLittleEndian()
-      ? &ReadLittleEndian<ULong>    : &ReadBigEndian<ULong>;
-   static const auto ReadLongLong = IsLittleEndian()
-      ? &ReadLittleEndian<LongLong> : &ReadBigEndian<LongLong>;
-
-   // Functions to read and write certain lengths -- maybe we will change
-   // our choices for widths or signedness?
-
-   using Length = Int;  // Instead, as wide as size_t?
-   static const auto WriteLength = WriteInt;
-   static const auto ReadLength = ReadInt;
-
-   using Digits = Int;  // Instead, just an unsigned char?
-   static const auto WriteDigits = WriteInt;
-   static const auto ReadDigits = ReadInt;
-
-   class XMLTagHandlerAdapter final
+   void WriteData(std::string value)
    {
-   public:
-      explicit XMLTagHandlerAdapter(XMLTagHandler* handler) noexcept
-          : mBaseHandler(handler)
+      if (mInTag)
+         EmitStartTag();
+
+      if (XMLTagHandler* const handler = mHandlers.back())
+         handler->HandleXMLContent(CacheString(std::move(value)));
+   }
+
+   void WriteRaw(std::string value)
+   {
+   }
+
+   bool Finalize()
+   {
+      if (mInTag)
       {
+         EmitStartTag();
+         EndTag(mCurrentTagName);
       }
 
-      void EmitStartTag(const std::string_view& name)
-      {
-         if (mInTag)
-            EmitStartTag();
+      return mBaseHandler != nullptr;
+   }
 
-         mCurrentTagName = name;
-         mInTag = true;
+private:
+   void EmitStartTag()
+   {
+      if (mHandlers.empty())
+      {
+         mHandlers.push_back(mBaseHandler);
       }
-
-      void EndTag(const std::string_view& name)
+      else
       {
-         if (mInTag)
-            EmitStartTag();
-
          if (XMLTagHandler* const handler = mHandlers.back())
-            handler->HandleXMLEndTag(name);
-
-         mHandlers.pop_back();
-      }
-
-      void WriteAttr(const std::string_view& name, std::string value)
-      {
-         assert(mInTag);
-
-         if (!mInTag)
-            return;
-
-         mAttributes.emplace_back(name, CacheString(std::move(value)));
-      }
-
-      template<typename T>
-      void WriteAttr(const std::string_view& name, T value)
-      {
-         assert(mInTag);
-
-         if (!mInTag)
-            return;
-
-         mAttributes.emplace_back(name, XMLAttributeValueView(value));
-      }
-
-      void WriteData(std::string value)
-      {
-         if (mInTag)
-            EmitStartTag();
-
-         if (XMLTagHandler* const handler = mHandlers.back())
-            handler->HandleXMLContent(CacheString(std::move(value)));
-      }
-
-      void WriteRaw(std::string value)
-      {
-      }
-
-      bool Finalize()
-      {
-         if (mInTag)
-         {
-            EmitStartTag();
-            EndTag(mCurrentTagName);
-         }
-
-         return mBaseHandler != nullptr;
-      }
-
-   private:
-      void EmitStartTag()
-      {
-         if (mHandlers.empty())
-         {
-            mHandlers.push_back(mBaseHandler);
-         }
+            mHandlers.push_back(handler->HandleXMLChild(mCurrentTagName));
          else
-         {
-            if (XMLTagHandler* const handler = mHandlers.back())
-               mHandlers.push_back(handler->HandleXMLChild(mCurrentTagName));
-            else
-               mHandlers.push_back(NULL);
-         }
-
-         if (XMLTagHandler*& handler = mHandlers.back())
-         {
-            if (!handler->HandleXMLTag(mCurrentTagName, mAttributes))
-            {
-               handler = nullptr;
-
-               if (mHandlers.size() == 1)
-                  mBaseHandler = nullptr;
-            }
-         }
-
-         mStringsCache.clear();
-         mAttributes.clear();
-         mInTag = false;
+            mHandlers.push_back(NULL);
       }
 
-      std::string_view CacheString(std::string string)
+      if (XMLTagHandler*& handler = mHandlers.back())
       {
-         mStringsCache.emplace_back(std::move(string));
-         return mStringsCache.back();
+         if (!handler->HandleXMLTag(mCurrentTagName, mAttributes))
+         {
+            handler = nullptr;
+
+            if (mHandlers.size() == 1)
+               mBaseHandler = nullptr;
+         }
       }
 
-      XMLTagHandler* mBaseHandler;
-
-      std::vector<XMLTagHandler*> mHandlers;
-
-      std::string_view mCurrentTagName;
-
-      std::deque<std::string> mStringsCache;
-      AttributesList mAttributes;
-
-      bool mInTag { false };
-   };
+      mStringsCache.clear();
+      mAttributes.clear();
+      mInTag = false;
    }
+
+   std::string_view CacheString(std::string string)
+   {
+      mStringsCache.emplace_back(std::move(string));
+      return mStringsCache.back();
+   }
+
+   XMLTagHandler* mBaseHandler;
+
+   std::vector<XMLTagHandler*> mHandlers;
+
+   std::string_view mCurrentTagName;
+
+   std::deque<std::string> mStringsCache;
+   AttributesList mAttributes;
+
+   bool mInTag { false };
+};
+
+// template<typename BaseCharType>
+// std::string FastStringConvertFromAscii(const BaseCharType* begin, const BaseCharType* end)
+// {
+// 
+// }
+
+template<typename BaseCharType>
+std::string FastStringConvert(const void* bytes, int bytesCount)
+{
+   constexpr int charSize = sizeof(BaseCharType);
+
+   assert(bytesCount % charSize == 0);
+
+   const auto begin = static_cast<const BaseCharType*>(bytes);
+   const auto end = begin + bytesCount / charSize;
+
+   const bool isAscii = std::all_of(
+      begin, end,
+      [](BaseCharType c)
+      { return static_cast<std::make_unsigned_t<BaseCharType>>(c) < 0x7f; });
+
+   if (isAscii)
+      return std::string(begin, end);
+   
+   return std::wstring_convert<std::codecvt_utf8<BaseCharType>, BaseCharType>()
+      .to_bytes(begin, end);
+}
+} // namespace
 
 ProjectSerializer::ProjectSerializer(size_t allocSize)
 {
@@ -543,15 +567,10 @@ bool ProjectSerializer::Decode(const wxMemoryBuffer &buffer, XMLTagHandler* hand
             return std::string(bytes.data(), len);
 
          case 2:
-            return std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t>().to_bytes(
-               reinterpret_cast<char16_t*>(data),
-               reinterpret_cast<char16_t*>(data) + len / 2);
+            return FastStringConvert<char16_t>(bytes.data(), len);
 
          case 4:
-            return std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t>()
-               .to_bytes(
-                  reinterpret_cast<char32_t*>(data),
-                  reinterpret_cast<char32_t*>(data) + len / 4);
+            return FastStringConvert<char32_t>(bytes.data(), len);
 
          default:
             wxASSERT_MSG(false, wxT("Characters size not 1, 2, or 4"));
