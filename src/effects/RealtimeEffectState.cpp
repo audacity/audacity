@@ -17,28 +17,27 @@ RealtimeEffectState::RealtimeEffectState( EffectProcessor &effect )
 {
 }
 
-bool RealtimeEffectState::RealtimeSuspend()
+bool RealtimeEffectState::Suspend()
 {
    auto result = mEffect.RealtimeSuspend();
    if ( result ) {
-      mRealtimeSuspendCount++;
+      mSuspendCount++;
    }
    return result;
 }
 
-bool RealtimeEffectState::RealtimeResume() noexcept
+bool RealtimeEffectState::Resume() noexcept
 {
    auto result = mEffect.RealtimeResume();
    if ( result ) {
-      mRealtimeSuspendCount--;
+      mSuspendCount--;
    }
    return result;
 }
 
-// RealtimeAddProcessor and RealtimeProcess use the same method of
-// determining the current processor index, so updates to one should
-// be reflected in the other.
-bool RealtimeEffectState::RealtimeAddProcessor(int group, unsigned chans, float rate)
+//! Set up processors to be visited repeatedly in Process.
+/*! The iteration over channels in AddTrack and Process must be the same */
+bool RealtimeEffectState::AddTrack(int group, unsigned chans, float rate)
 {
    auto ichans = chans;
    auto ochans = chans;
@@ -103,10 +102,9 @@ bool RealtimeEffectState::RealtimeAddProcessor(int group, unsigned chans, float 
    return true;
 }
 
-// RealtimeAddProcessor and RealtimeProcess use the same method of
-// determining the current processor group, so updates to one should
-// be reflected in the other.
-size_t RealtimeEffectState::RealtimeProcess(int group,
+//! Visit the effect processors that were added in AddTrack
+/*! The iteration over channels in AddTrack and Process must be the same */
+size_t RealtimeEffectState::Process(int group,
                                     unsigned chans,
                                     float **inbuf,
                                     float **outbuf,
@@ -225,8 +223,8 @@ size_t RealtimeEffectState::RealtimeProcess(int group,
    return len;
 }
 
-bool RealtimeEffectState::IsRealtimeActive() const noexcept
+bool RealtimeEffectState::IsActive() const noexcept
 {
-   return mRealtimeSuspendCount == 0;
+   return mSuspendCount == 0;
 }
 

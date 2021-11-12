@@ -921,7 +921,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
          auto & em = RealtimeEffectManager::Get(*pOwningProject);
          // Setup for realtime playback at the rate of the realtime
          // stream, not the rate of the track.
-         em.RealtimeInitialize(mRate);
+         em.Initialize(mRate);
 
          // The following adds a NEW effect processor for each logical track and the
          // group determination should mimic what is done in audacityAudioCallback()
@@ -937,7 +937,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
             // Setup for realtime playback at the rate of the realtime
             // stream, not the rate of the track.
-            em.RealtimeAddProcessor(group++, std::min(2u, chanCnt), mRate);
+            em.AddTrack(group++, std::min(2u, chanCnt), mRate);
          }
       }
    }
@@ -1272,7 +1272,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    if (mNumPlaybackChannels > 0)
    {
       if (auto pOwningProject = mOwningProject.lock())
-         RealtimeEffectManager::Get(*pOwningProject).RealtimeFinalize();
+         RealtimeEffectManager::Get(*pOwningProject).Finalize();
    }
 
    mPlaybackBuffers.reset();
@@ -1357,7 +1357,7 @@ void AudioIO::StopStream()
    if (mNumPlaybackChannels > 0)
    {
       if (auto pOwningProject = mOwningProject.lock())
-         RealtimeEffectManager::Get(*pOwningProject).RealtimeFinalize();
+         RealtimeEffectManager::Get(*pOwningProject).Finalize();
    }
 
    //
@@ -1596,9 +1596,9 @@ void AudioIO::SetPaused(bool state)
       if (auto pOwningProject = mOwningProject.lock()) {
          auto &em = RealtimeEffectManager::Get(*pOwningProject);
          if (state)
-            em.RealtimeSuspend();
+            em.Suspend();
          else
-            em.RealtimeResume();
+            em.Resume();
       }
    }
 
