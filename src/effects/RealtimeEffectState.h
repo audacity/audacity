@@ -24,12 +24,12 @@ public:
 
    EffectProcessor &GetEffect() const { return mEffect; }
 
-   bool RealtimeSuspend();
-   bool RealtimeResume() noexcept;
-   bool RealtimeAddProcessor(int group, unsigned chans, float rate);
-   size_t RealtimeProcess(int group,
+   bool Suspend();
+   bool Resume() noexcept;
+   bool AddTrack(int group, unsigned chans, float rate);
+   size_t Process(int group,
       unsigned chans, float **inbuf, float **outbuf, size_t numSamples);
-   bool IsRealtimeActive() const noexcept;
+   bool IsActive() const noexcept;
 
 private:
    EffectProcessor &mEffect;
@@ -37,7 +37,7 @@ private:
    std::vector<int> mGroupProcessor;
    int mCurrentProcessor;
 
-   std::atomic<int> mRealtimeSuspendCount{ 1 };    // Effects are initially suspended
+   std::atomic<int> mSuspendCount{ 1 };    // Effects are initially suspended
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTSTATE_H__
