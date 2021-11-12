@@ -46,24 +46,24 @@ RealtimeEffectManager::~RealtimeEffectManager()
 {
 }
 
-bool RealtimeEffectManager::RealtimeIsActive() const noexcept
+bool RealtimeEffectManager::IsActive() const noexcept
 {
    return mStates.size() != 0;
 }
 
-bool RealtimeEffectManager::RealtimeIsSuspended() const noexcept
+bool RealtimeEffectManager::IsSuspended() const noexcept
 {
    return mSuspended;
 }
 
-void RealtimeEffectManager::RealtimeInitialize(double rate)
+void RealtimeEffectManager::Initialize(double rate)
 {
    // The audio thread should not be running yet, but protect anyway
    SuspensionScope scope{ &mProject };
 
    // (Re)Set processor parameters
-   mRealtimeChans.clear();
-   mRealtimeRates.clear();
+   mChans.clear();
+   mRates.clear();
 
    // RealtimeAdd/RemoveEffect() needs to know when we're active so it can
    // initialize newly added effects
@@ -76,19 +76,19 @@ void RealtimeEffectManager::RealtimeInitialize(double rate)
    }
 }
 
-void RealtimeEffectManager::RealtimeAddProcessor(int group, unsigned chans, float rate)
+void RealtimeEffectManager::AddTrack(int group, unsigned chans, float rate)
 {
    for (auto &state : mStates)
-      state->RealtimeAddProcessor(group, chans, rate);
+      state->AddTrack(group, chans, rate);
 
-   mRealtimeChans.push_back(chans);
-   mRealtimeRates.push_back(rate);
+   mChans.push_back(chans);
+   mRates.push_back(rate);
 }
 
-void RealtimeEffectManager::RealtimeFinalize()
+void RealtimeEffectManager::Finalize()
 {
    // Make sure nothing is going on
-   RealtimeSuspend();
+   Suspend();
 
    // It is now safe to clean up
    mLatency = std::chrono::microseconds(0);
@@ -98,14 +98,14 @@ void RealtimeEffectManager::RealtimeFinalize()
       state->GetEffect().RealtimeFinalize();
 
    // Reset processor parameters
-   mRealtimeChans.clear();
-   mRealtimeRates.clear();
+   mChans.clear();
+   mRates.clear();
 
    // No longer active
    mActive = false;
 }
 
-void RealtimeEffectManager::RealtimeSuspend()
+void RealtimeEffectManager::Suspend()
 {
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
@@ -119,10 +119,10 @@ void RealtimeEffectManager::RealtimeSuspend()
 
    // And make sure the effects don't either
    for (auto &state : mStates)
-      state->RealtimeSuspend();
+      state->Suspend();
 }
 
-void RealtimeEffectManager::RealtimeResume() noexcept
+void RealtimeEffectManager::Resume() noexcept
 {
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
@@ -133,7 +133,7 @@ void RealtimeEffectManager::RealtimeResume() noexcept
 
    // Tell the effects to get ready for more action
    for (auto &state : mStates)
-      state->RealtimeResume();
+      state->Resume();
 
    // And we should too
    mSuspended = false;
@@ -142,7 +142,7 @@ void RealtimeEffectManager::RealtimeResume() noexcept
 //
 // This will be called in a different thread than the main GUI thread.
 //
-void RealtimeEffectManager::RealtimeProcessStart()
+void RealtimeEffectManager::ProcessStart()
 {
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
@@ -153,7 +153,7 @@ void RealtimeEffectManager::RealtimeProcessStart()
    {
       for (auto &state : mStates)
       {
-         if (state->IsRealtimeActive())
+         if (state->IsActive())
             state->GetEffect().RealtimeProcessStart();
       }
    }
@@ -162,7 +162,7 @@ void RealtimeEffectManager::RealtimeProcessStart()
 //
 // This will be called in a different thread than the main GUI thread.
 //
-size_t RealtimeEffectManager::RealtimeProcess(int group, unsigned chans, float **buffers, size_t numSamples)
+size_t RealtimeEffectManager::Process(int group, unsigned chans, float **buffers, size_t numSamples)
 {
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
@@ -195,9 +195,9 @@ size_t RealtimeEffectManager::RealtimeProcess(int group, unsigned chans, float *
    size_t called = 0;
    for (auto &state : mStates)
    {
-      if (state->IsRealtimeActive())
+      if (state->IsActive())
       {
-         state->RealtimeProcess(group, chans, ibuf, obuf, numSamples);
+         state->Process(group, chans, ibuf, obuf, numSamples);
          called++;
       }
 
@@ -235,7 +235,7 @@ size_t RealtimeEffectManager::RealtimeProcess(int group, unsigned chans, float *
 //
 // This will be called in a different thread than the main GUI thread.
 //
-void RealtimeEffectManager::RealtimeProcessEnd() noexcept
+void RealtimeEffectManager::ProcessEnd() noexcept
 {
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
@@ -246,13 +246,13 @@ void RealtimeEffectManager::RealtimeProcessEnd() noexcept
    {
       for (auto &state : mStates)
       {
-         if (state->IsRealtimeActive())
+         if (state->IsActive())
             state->GetEffect().RealtimeProcessEnd();
       }
    }
 }
 
-auto RealtimeEffectManager::GetRealtimeLatency() const -> Latency
+auto RealtimeEffectManager::GetLatency() const -> Latency
 {
    return mLatency;
 }
