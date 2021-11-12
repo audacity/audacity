@@ -1020,12 +1020,7 @@ bool grisu2(char* buf, char* last, int& len, int& decimal_exponent, FloatType va
 */
 inline ToCharsResult append_exponent(char* buf, char* last, int e)
 {
-   auto k = static_cast<std::uint32_t>(e);
-
-   const int requiredSymbolsCount = k < 100 ? 3 : 4;
-   char* requiredLast = buf + requiredSymbolsCount + 1;
-
-   if (requiredLast > last)
+   if (buf >= last)
       return { last, std::errc::value_too_large };
 
    if (e < 0)
@@ -1037,6 +1032,14 @@ inline ToCharsResult append_exponent(char* buf, char* last, int e)
    {
       *buf++ = '+';
    }
+
+   auto k = static_cast<std::uint32_t>(e);
+
+   const int requiredSymbolsCount = k < 100 ? 2 : 3;
+   char* requiredLast = buf + requiredSymbolsCount + 1;
+
+   if (requiredLast > last)
+      return { last, std::errc::value_too_large };
 
    if (k < 10)
    {
@@ -1206,10 +1209,9 @@ ToCharsResult float_to_chars(
    // for a consistent behavior
    if (digitsAfterDecimalPoint >= 0)
    {
-      if (len > digitsAfterDecimalPoint && -decimal_exponent > digitsAfterDecimalPoint)
+      if (len + decimal_exponent > 0 && -decimal_exponent > digitsAfterDecimalPoint)
       {
          const int difference = digitsAfterDecimalPoint + decimal_exponent;
-
          decimal_exponent = -digitsAfterDecimalPoint;
          len += difference;
       }
