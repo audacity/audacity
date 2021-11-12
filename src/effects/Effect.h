@@ -26,7 +26,8 @@ class wxListBox;
 class wxWindow;
 
 #include "ConfigInterface.h"
-#include "EffectInterface.h"
+#include "EffectHostInterface.h" // to inherit
+#include "EffectInterface.h" // to inherit
 #include "PluginInterface.h"
 
 #include "SampleCount.h"
@@ -174,6 +175,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectHostInterface implementation
 
+   EffectDefinitionInterface &GetDefinition() override;
    double GetDefaultDuration() override;
    double GetDuration() override;
    NumericFormatSymbol GetDurationFormat() override;
@@ -185,49 +187,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    RegistryPath GetFactoryDefaultsGroup() override;
    virtual wxString GetSavedStateGroup() /* not override? */;
 
-   // ConfigClientInterface implementation
-
-   bool HasSharedConfigGroup(const RegistryPath & group) override;
-   bool GetSharedConfigSubgroups(const RegistryPath & group, RegistryPaths &subgroups) override;
-
-   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval = {}) override;
-   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, int & value, int defval = 0) override;
-   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, bool & value, bool defval = false) override;
-   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, float & value, float defval = 0.0) override;
-   bool GetSharedConfig(const RegistryPath & group, const RegistryPath & key, double & value, double defval = 0.0) override;
-
-   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const wxString & value) override;
-   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const int & value) override;
-   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const bool & value) override;
-   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const float & value) override;
-   bool SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const double & value) override;
-
-   bool RemoveSharedConfigSubgroup(const RegistryPath & group) override;
-   bool RemoveSharedConfig(const RegistryPath & group, const RegistryPath & key) override;
-
-   bool HasPrivateConfigGroup(const RegistryPath & group) override;
-   bool GetPrivateConfigSubgroups(const RegistryPath & group, RegistryPaths &paths) override;
-
-   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval = {}) override;
-   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, int & value, int defval = 0) override;
-   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, bool & value, bool defval = false) override;
-   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, float & value, float defval = 0.0) override;
-   bool GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, double & value, double defval = 0.0) override;
-
-   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const wxString & value) override;
-   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const int & value) override;
-   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const bool & value) override;
-   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const float & value) override;
-   bool SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const double & value) override;
-
-   bool RemovePrivateConfigSubgroup(const RegistryPath & group) override;
-   bool RemovePrivateConfig(const RegistryPath & group, const RegistryPath & key) override;
-
    // Effect implementation
 
    // NEW virtuals
-   virtual PluginID GetID();
-
    virtual bool Startup(EffectClientInterface *client);
    virtual bool Startup();
 

@@ -559,7 +559,8 @@ bool Effect::LoadUserPreset(const RegistryPath & name)
    }
 
    wxString parms;
-   if (!GetPrivateConfig(name, wxT("Parameters"), parms))
+   if (!GetConfig(GetDefinition(), PluginSettings::Private,
+      name, wxT("Parameters"), parms))
    {
       return false;
    }
@@ -580,7 +581,8 @@ bool Effect::SaveUserPreset(const RegistryPath & name)
       return false;
    }
 
-   return SetPrivateConfig(name, wxT("Parameters"), parms);
+   return SetConfig(GetDefinition(), PluginSettings::Private,
+      name, wxT("Parameters"), parms);
 }
 
 RegistryPaths Effect::GetFactoryPresets()
@@ -808,6 +810,11 @@ void Effect::ShowOptions()
 
 // EffectHostInterface implementation
 
+EffectDefinitionInterface &Effect::GetDefinition()
+{
+   return mClient ? *mClient : *this;
+}
+
 double Effect::GetDefaultDuration()
 {
    return 30.0;
@@ -844,7 +851,8 @@ void Effect::SetDuration(double seconds)
 
    if (GetType() == EffectTypeGenerate)
    {
-      SetPrivateConfig(GetCurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
+      SetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
    }
 
    mDuration = seconds;
@@ -878,158 +886,7 @@ wxString Effect::GetSavedStateGroup()
    return wxT("SavedState");
 }
 
-// ConfigClientInterface implementation
-bool Effect::HasSharedConfigGroup(const RegistryPath & group)
-{
-   return PluginManager::Get().HasSharedConfigGroup(GetID(), group);
-}
-
-bool Effect::GetSharedConfigSubgroups(const RegistryPath & group, RegistryPaths &subgroups)
-{
-   return PluginManager::Get().GetSharedConfigSubgroups(GetID(), group, subgroups);
-}
-
-bool Effect::GetSharedConfig(const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval)
-{
-   return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
-}
-
-bool Effect::GetSharedConfig(const RegistryPath & group, const RegistryPath & key, int & value, int defval)
-{
-   return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
-}
-
-bool Effect::GetSharedConfig(const RegistryPath & group, const RegistryPath & key, bool & value, bool defval)
-{
-   return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
-}
-
-bool Effect::GetSharedConfig(const RegistryPath & group, const RegistryPath & key, float & value, float defval)
-{
-   return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
-}
-
-bool Effect::GetSharedConfig(const RegistryPath & group, const RegistryPath & key, double & value, double defval)
-{
-   return PluginManager::Get().GetSharedConfig(GetID(), group, key, value, defval);
-}
-
-bool Effect::SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const wxString & value)
-{
-   return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
-}
-
-bool Effect::SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const int & value)
-{
-   return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
-}
-
-bool Effect::SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const bool & value)
-{
-   return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
-}
-
-bool Effect::SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const float & value)
-{
-   return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
-}
-
-bool Effect::SetSharedConfig(const RegistryPath & group, const RegistryPath & key, const double & value)
-{
-   return PluginManager::Get().SetSharedConfig(GetID(), group, key, value);
-}
-
-bool Effect::RemoveSharedConfigSubgroup(const RegistryPath & group)
-{
-   return PluginManager::Get().RemoveSharedConfigSubgroup(GetID(), group);
-}
-
-bool Effect::RemoveSharedConfig(const RegistryPath & group, const RegistryPath & key)
-{
-   return PluginManager::Get().RemoveSharedConfig(GetID(), group, key);
-}
-
-bool Effect::HasPrivateConfigGroup(const RegistryPath & group)
-{
-   return PluginManager::Get().HasPrivateConfigGroup(GetID(), group);
-}
-
-bool Effect::GetPrivateConfigSubgroups(const RegistryPath & group, RegistryPaths & subgroups)
-{
-   return PluginManager::Get().GetPrivateConfigSubgroups(GetID(), group, subgroups);
-}
-
-bool Effect::GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval)
-{
-   return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
-}
-
-bool Effect::GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, int & value, int defval)
-{
-   return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
-}
-
-bool Effect::GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, bool & value, bool defval)
-{
-   return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
-}
-
-bool Effect::GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, float & value, float defval)
-{
-   return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
-}
-
-bool Effect::GetPrivateConfig(const RegistryPath & group, const RegistryPath & key, double & value, double defval)
-{
-   return PluginManager::Get().GetPrivateConfig(GetID(), group, key, value, defval);
-}
-
-bool Effect::SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const wxString & value)
-{
-   return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
-}
-
-bool Effect::SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const int & value)
-{
-   return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
-}
-
-bool Effect::SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const bool & value)
-{
-   return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
-}
-
-bool Effect::SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const float & value)
-{
-   return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
-}
-
-bool Effect::SetPrivateConfig(const RegistryPath & group, const RegistryPath & key, const double & value)
-{
-   return PluginManager::Get().SetPrivateConfig(GetID(), group, key, value);
-}
-
-bool Effect::RemovePrivateConfigSubgroup(const RegistryPath & group)
-{
-   return PluginManager::Get().RemovePrivateConfigSubgroup(GetID(), group);
-}
-
-bool Effect::RemovePrivateConfig(const RegistryPath & group, const RegistryPath & key)
-{
-   return PluginManager::Get().RemovePrivateConfig(GetID(), group, key);
-}
-
 // Effect implementation
-
-PluginID Effect::GetID()
-{
-   if (mClient)
-   {
-      return PluginManager::GetID(mClient);
-   }
-
-   return PluginManager::GetID(this);
-}
 
 bool Effect::Startup(EffectClientInterface *client)
 {
@@ -1048,11 +905,13 @@ bool Effect::Startup(EffectClientInterface *client)
    mNumAudioOut = GetAudioOutCount();
 
    bool haveDefaults;
-   GetPrivateConfig(GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
+   GetConfig(GetDefinition(), PluginSettings::Private, GetFactoryDefaultsGroup(),
+      wxT("Initialized"), haveDefaults, false);
    if (!haveDefaults)
    {
       SaveUserPreset(GetFactoryDefaultsGroup());
-      SetPrivateConfig(GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+      SetConfig(GetDefinition(), PluginSettings::Private, GetFactoryDefaultsGroup(),
+         wxT("Initialized"), true);
    }
    LoadUserPreset(GetCurrentSettingsGroup());
 
@@ -1152,7 +1011,8 @@ RegistryPaths Effect::GetUserPresets()
 {
    RegistryPaths presets;
 
-   GetPrivateConfigSubgroups(GetUserPresetsGroup(wxEmptyString), presets);
+   GetConfigSubgroups(GetDefinition(), PluginSettings::Private,
+      GetUserPresetsGroup(wxEmptyString), presets);
 
    std::sort( presets.begin(), presets.end() );
 
@@ -1161,12 +1021,14 @@ RegistryPaths Effect::GetUserPresets()
 
 bool Effect::HasCurrentSettings()
 {
-   return HasPrivateConfigGroup(GetCurrentSettingsGroup());
+   return HasConfigGroup(GetDefinition(),
+      PluginSettings::Private, GetCurrentSettingsGroup());
 }
 
 bool Effect::HasFactoryDefaults()
 {
-   return HasPrivateConfigGroup(GetFactoryDefaultsGroup());
+   return HasConfigGroup(GetDefinition(),
+      PluginSettings::Private, GetFactoryDefaultsGroup());
 }
 
 ManualPageID Effect::ManualPage()
@@ -1235,7 +1097,9 @@ bool Effect::DoEffect(double projectRate,
    mDuration = 0.0;
    if (GetType() == EffectTypeGenerate)
    {
-      GetPrivateConfig(GetCurrentSettingsGroup(), wxT("LastUsedDuration"), mDuration, GetDefaultDuration());
+      GetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(),
+         wxT("LastUsedDuration"), mDuration, GetDefaultDuration());
    }
 
    WaveTrack *newTrack{};

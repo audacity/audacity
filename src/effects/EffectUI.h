@@ -17,6 +17,7 @@
 #include <wx/bitmap.h> // member variables
 
 #include "Identifier.h"
+#include "EffectHostInterface.h"
 #include "PluginInterface.h"
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
