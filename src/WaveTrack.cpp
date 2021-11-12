@@ -1708,9 +1708,10 @@ void WaveTrack::Join(double t0, double t1)
    if( clipsToDelete.size() == 0 )
       return;
 
-   auto t = clipsToDelete[0]->GetSequenceStartTime();
+   auto t = clipsToDelete[0]->GetPlayStartTime();
    //preserve left trim data if any
-   newClip = CreateClip(t, clipsToDelete[0]->GetName());
+   newClip = CreateClip(clipsToDelete[0]->GetSequenceStartTime(),
+      clipsToDelete[0]->GetName());
    
    for (const auto &clip : clipsToDelete)
    {
