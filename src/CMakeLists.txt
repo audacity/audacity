@@ -453,6 +453,8 @@ list( APPEND SOURCES
       effects/Phaser.h
       effects/RealtimeEffectManager.cpp
       effects/RealtimeEffectManager.h
+      effects/RealtimeEffectState.cpp
+      effects/RealtimeEffectState.h
       effects/Repair.cpp
       effects/Repair.h
       effects/Repeat.cpp
