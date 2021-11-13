@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_REALTIME_EFFECT_MANAGER__
 #define __AUDACITY_REALTIME_EFFECT_MANAGER__
 
+#include <atomic>
 #include <chrono>
 #include <memory>
 #include <mutex>
@@ -117,8 +118,8 @@ private:
    std::mutex mLock;
    std::vector< std::unique_ptr<RealtimeEffectState> > mStates;
    Latency mLatency{ 0 };
-   bool mRealtimeSuspended;
-   bool mRealtimeActive;
+   std::atomic<bool> mSuspended{ true };
+   std::atomic<bool> mActive{ false };
    std::vector<unsigned> mRealtimeChans;
    std::vector<double> mRealtimeRates;
 };

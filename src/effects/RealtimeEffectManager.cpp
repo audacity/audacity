@@ -26,8 +26,6 @@ RealtimeEffectManager & RealtimeEffectManager::Get()
 
 RealtimeEffectManager::RealtimeEffectManager()
 {
-   mRealtimeActive = false;
-   mRealtimeSuspended = true;
 }
 
 RealtimeEffectManager::~RealtimeEffectManager()
@@ -41,7 +39,7 @@ bool RealtimeEffectManager::RealtimeIsActive()
 
 bool RealtimeEffectManager::RealtimeIsSuspended()
 {
-   return mRealtimeSuspended;
+   return mSuspended;
 }
 
 void RealtimeEffectManager::RealtimeAddEffect(EffectProcessor &effect)
@@ -54,7 +52,7 @@ void RealtimeEffectManager::RealtimeAddEffect(EffectProcessor &effect)
    auto &state = mStates.back();
 
    // Initialize effect if realtime is already active
-   if (mRealtimeActive)
+   if (mActive)
    {
       // Initialize realtime processing
       effect.RealtimeInitialize();
@@ -72,7 +70,7 @@ void RealtimeEffectManager::RealtimeRemoveEffect(EffectProcessor &effect)
    // Block RealtimeProcess()
    SuspensionScope scope;
 
-   if (mRealtimeActive)
+   if (mActive)
    {
       // Cleanup realtime processing
       effect.RealtimeFinalize();
@@ -100,7 +98,7 @@ void RealtimeEffectManager::RealtimeInitialize(double rate)
 
    // RealtimeAdd/RemoveEffect() needs to know when we're active so it can
    // initialize newly added effects
-   mRealtimeActive = true;
+   mActive = true;
 
    // Tell each effect to get ready for action
    for (auto &state : mStates) {
@@ -135,7 +133,7 @@ void RealtimeEffectManager::RealtimeFinalize()
    mRealtimeRates.clear();
 
    // No longer active
-   mRealtimeActive = false;
+   mActive = false;
 }
 
 void RealtimeEffectManager::RealtimeSuspend()
@@ -144,11 +142,11 @@ void RealtimeEffectManager::RealtimeSuspend()
    std::lock_guard<std::mutex> guard(mLock);
 
    // Already suspended...bail
-   if (mRealtimeSuspended)
+   if (mSuspended)
       return;
 
    // Show that we aren't going to be doing anything
-   mRealtimeSuspended = true;
+   mSuspended = true;
 
    // And make sure the effects don't either
    for (auto &state : mStates)
@@ -173,7 +171,7 @@ void RealtimeEffectManager::RealtimeResume() noexcept
    std::lock_guard<std::mutex> guard(mLock);
 
    // Already running...bail
-   if (!mRealtimeSuspended)
+   if (!mSuspended)
       return;
 
    // Tell the effects to get ready for more action
@@ -181,7 +179,7 @@ void RealtimeEffectManager::RealtimeResume() noexcept
       state->RealtimeResume();
 
    // And we should too
-   mRealtimeSuspended = false;
+   mSuspended = false;
 }
 
 void RealtimeEffectManager::RealtimeResumeOne( EffectProcessor &effect )
@@ -206,7 +204,7 @@ void RealtimeEffectManager::RealtimeProcessStart()
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   if (!mRealtimeSuspended)
+   if (!mSuspended)
    {
       for (auto &state : mStates)
       {
@@ -226,7 +224,7 @@ size_t RealtimeEffectManager::RealtimeProcess(int group, unsigned chans, float *
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended, so allow the samples to pass as-is.
-   if (mRealtimeSuspended || mStates.empty())
+   if (mSuspended || mStates.empty())
    {
       return numSamples;
    }
@@ -299,7 +297,7 @@ void RealtimeEffectManager::RealtimeProcessEnd() noexcept
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   if (!mRealtimeSuspended)
+   if (!mSuspended)
    {
       for (auto &state : mStates)
       {
