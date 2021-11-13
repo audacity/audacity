@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_REALTIME_EFFECT_MANAGER__
 #define __AUDACITY_REALTIME_EFFECT_MANAGER__
 
+#include <chrono>
 #include <memory>
 #include <mutex>
 #include <vector>
@@ -21,6 +22,7 @@ class RealtimeEffectState;
 class AUDACITY_DLL_API RealtimeEffectManager final
 {
 public:
+   using Latency = std::chrono::microseconds;
    using EffectArray = std::vector <EffectProcessor*> ;
 
    /** Get the singleton instance of the RealtimeEffectManager. **/
@@ -38,7 +40,7 @@ public:
    void RealtimeSuspendOne( EffectProcessor &effect );
    void RealtimeResume() noexcept;
    void RealtimeResumeOne( EffectProcessor &effect );
-   int GetRealtimeLatency();
+   Latency GetRealtimeLatency() const;
 
    //! Object whose lifetime encompasses one suspension of processing in one thread
    class SuspensionScope {
@@ -114,7 +116,7 @@ private:
 
    std::mutex mLock;
    std::vector< std::unique_ptr<RealtimeEffectState> > mStates;
-   int mRealtimeLatency;
+   Latency mLatency{ 0 };
    bool mRealtimeSuspended;
    bool mRealtimeActive;
    std::vector<unsigned> mRealtimeChans;

@@ -28,7 +28,6 @@ RealtimeEffectManager::RealtimeEffectManager()
 {
    mRealtimeActive = false;
    mRealtimeSuspended = true;
-   mRealtimeLatency = 0;
 }
 
 RealtimeEffectManager::~RealtimeEffectManager()
@@ -125,7 +124,7 @@ void RealtimeEffectManager::RealtimeFinalize()
    RealtimeSuspend();
 
    // It is now safe to clean up
-   mRealtimeLatency = 0;
+   mLatency = std::chrono::microseconds(0);
 
    // Tell each effect to clean up as well
    for (auto &state : mStates)
@@ -234,7 +233,7 @@ size_t RealtimeEffectManager::RealtimeProcess(int group, unsigned chans, float *
 
    // Remember when we started so we can calculate the amount of latency we
    // are introducing
-   wxMilliClock_t start = wxGetUTCTimeMillis();
+   auto start = std::chrono::steady_clock::now();
 
    // Allocate the in/out buffer arrays
    float **ibuf = (float **) alloca(chans * sizeof(float *));
@@ -281,7 +280,8 @@ size_t RealtimeEffectManager::RealtimeProcess(int group, unsigned chans, float *
    }
 
    // Remember the latency
-   mRealtimeLatency = (int) (wxGetUTCTimeMillis() - start).GetValue();
+   auto end = std::chrono::steady_clock::now();
+   mLatency = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
    //
    // This is wrong...needs to handle tails
@@ -309,7 +309,7 @@ void RealtimeEffectManager::RealtimeProcessEnd() noexcept
    }
 }
 
-int RealtimeEffectManager::GetRealtimeLatency()
+auto RealtimeEffectManager::GetRealtimeLatency() const -> Latency
 {
-   return mRealtimeLatency;
+   return mLatency;
 }
