@@ -12,8 +12,8 @@
 #define __AUDACITY_REALTIME_EFFECT_MANAGER__
 
 #include <memory>
+#include <mutex>
 #include <vector>
-#include <wx/thread.h>
 
 class EffectProcessor;
 class RealtimeEffectState;
@@ -112,7 +112,7 @@ private:
    RealtimeEffectManager(const RealtimeEffectManager&) = delete;
    RealtimeEffectManager &operator=(const RealtimeEffectManager&) = delete;
 
-   wxCriticalSection mRealtimeLock;
+   std::mutex mLock;
    std::vector< std::unique_ptr<RealtimeEffectState> > mStates;
    int mRealtimeLatency;
    bool mRealtimeSuspended;
