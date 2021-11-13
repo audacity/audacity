@@ -46,38 +46,13 @@
 #include <functional>
 #include <tuple>
 #include <type_traits>
-#include <variant>
 #include <vector>
 
 class EffectDefinitionInterface;
 
+#include "PluginInterface.h"
+
 namespace PluginSettings {
-
-enum ConfigurationType : unsigned {
-   Shared, Private
-};
-
-//! Supported types for settings
-using ConfigValueTypes = std::tuple<
-     wxString
-   , int
-   , bool
-   , float
-   , double
->;
-
-//! Define a reference to a variable of one of the types in ConfigValueTypes
-/*! Avoid repetition of the list of types */
-template<bool is_const, typename> struct ConfigReferenceGenerator;
-template<bool is_const, typename... Types>
-struct ConfigReferenceGenerator<is_const, std::tuple<Types...>> {
-   using type = std::variant< std::reference_wrapper<
-      std::conditional_t<is_const, const Types, Types> >... >;
-};
-using ConfigReference =
-   ConfigReferenceGenerator<false, ConfigValueTypes>::type;
-using ConfigConstReference =
-   ConfigReferenceGenerator<true, ConfigValueTypes>::type;
 
 AUDACITY_DLL_API bool HasConfigGroup( EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group);
