@@ -9,10 +9,6 @@
 
 EffectDefinitionInterface::~EffectDefinitionInterface() = default;
 
-EffectHostInterface::~EffectHostInterface() = default;
-
 EffectClientInterface::~EffectClientInterface() = default;
-
-EffectUIHostInterface::~EffectUIHostInterface() = default;
 
 EffectUIClientInterface::~EffectUIClientInterface() = default;

@@ -17,11 +17,17 @@
 #include "widgets/BasicMenu.h"
 #include "Effect.h"
 #include "EffectManager.h"
+#include "../PluginManager.h"
 #include "../ProjectHistory.h"
 #include "../ProjectWindowBase.h"
 #include "../TrackPanelAx.h"
 #include "RealtimeEffectManager.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
+
+static PluginID GetID(Effect &effect)
+{
+   return PluginManager::GetID(&effect.GetDefinition());
+}
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
@@ -179,9 +185,7 @@ EffectRack::~EffectRack()
       {
          Effect *effect = mEffects[i];
          gPrefs->Write(wxString::Format(wxT("/EffectsRack/Slot%02d"), i),
-                       wxString::Format(wxT("%d,%s"),
-                                        mPowerState[i],
-                                        effect->GetID()));
+            wxString::Format(wxT("%d,%s"), mPowerState[i], GetID(*effect)));
       }
    }
 }
@@ -313,9 +317,8 @@ void EffectRack::OnApply(wxCommandEvent & WXUNUSED(evt))
    {
       if (mPowerState[i])
       {
-         if (!EffectUI::DoEffect(mEffects[i]->GetID(),
-                           *project,
-                           EffectManager::kConfigured))
+         if (!EffectUI::DoEffect(GetID(*mEffects[i]),
+            *project, EffectManager::kConfigured))
             // If any effect fails (or throws), then stop.
             return;
       }
@@ -1203,7 +1206,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       // This is absolute hackage...but easy and I can't think of another way just now.
       //
       // It should callback to the EffectManager to kick off the processing
-      EffectUI::DoEffect(mEffect->GetID(), context,
+      EffectUI::DoEffect(GetID(*mEffect), context,
          EffectManager::kConfigured);
    }
 
@@ -1556,7 +1559,9 @@ void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
                                 wxICON_QUESTION | wxYES_NO);
    if (res == wxYES)
    {
-      mEffect->RemovePrivateConfigSubgroup(mEffect->GetUserPresetsGroup(preset));
+      RemoveConfigSubgroup(mEffect->GetDefinition(),
+         PluginSettings::Private,
+         mEffect->GetUserPresetsGroup(preset));
    }
    
    LoadUserPresets();
@@ -1790,7 +1795,9 @@ void EffectUIHost::LoadUserPresets()
    mUserPresets.clear();
    
    if( mEffect )
-      mEffect->GetPrivateConfigSubgroups(mEffect->GetUserPresetsGroup(wxEmptyString), mUserPresets);
+      GetConfigSubgroups(mEffect->GetDefinition(),
+         PluginSettings::Private,
+         mEffect->GetUserPresetsGroup(wxEmptyString), mUserPresets);
    
    std::sort( mUserPresets.begin(), mUserPresets.end() );
    

@@ -18,6 +18,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-files-interface
+   lib-string-utils-interface
    expat::expat
    PRIVATE
    wxBase

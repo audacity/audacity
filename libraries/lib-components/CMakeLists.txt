@@ -12,16 +12,12 @@ list( APPEND SOURCES
    ComponentInterface.cpp
    ComponentInterface.h
    ComponentInterfaceSymbol.h
-   ConfigInterface.cpp
-   ConfigInterface.h
    EffectAutomationParameters.cpp
    EffectAutomationParameters.h
    EffectInterface.cpp
    EffectInterface.h
    ModuleInterface.cpp
    ModuleInterface.h
-   PluginInterface.cpp
-   PluginInterface.h
 )
 audacity_library( lib-components "${SOURCES}"
    "lib-strings-interface;PRIVATE;wxBase"

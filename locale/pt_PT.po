@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2021-10-20 15:07+0100\n"
+"PO-Revision-Date: 2021-11-05 04:11+0000\n"
 "Last-Translator: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language-Team: Bruno Ramalhete <bram.512@gmail.com>\n"
 "Language: pt_PT\n"
@@ -1463,11 +1463,11 @@ msgstr "Suporte do misturador de placas de som"
 
 #: src/AboutDialog.cpp
 msgid "Pitch and Tempo Change support"
-msgstr "Suporte a Mudança de Tom e Ritmo"
+msgstr "Suporte a Mudança de Tom e Tempo"
 
 #: src/AboutDialog.cpp
 msgid "Extreme Pitch and Tempo Change support"
-msgstr "Suporte a Mudança Extrema de Tom e Ritmo"
+msgstr "Suporte a Mudança Extrema de Tom e Tempo"
 
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
@@ -3397,7 +3397,7 @@ msgstr "&Histórico..."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
-msgstr "Gravação journal falhou"
+msgstr "Falhou ao gravar ficheiro journal"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -4569,7 +4569,7 @@ msgstr "Não é possível anexar base de dados de destino"
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
-msgstr "Incapaz de mudar para o modo fast journaling"
+msgstr "Impossível mudar para o modo fast journaling"
 
 #: src/ProjectFileIO.cpp
 msgid "Failed to bind SQL parameter"
@@ -6032,12 +6032,12 @@ msgstr "Energia                 -- média: %1.4f  sd: (%1.4f)\n"
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Sign Changes        -- mean: %1.4f  sd: (%1.4f)\n"
-msgstr "Mudança de sinal   -- média: %1.4f  sd: (%1.4f)\n"
+msgstr "Mudanças de Sinal        -- média: %1.4f  sd: (%1.4f)\n"
 
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Direction Changes  -- mean: %1.4f  sd: (%1.4f)\n"
-msgstr "Mudança de Direcção -- média: %1.4f  sd: (%1.4f)\n"
+msgstr "Mudanças de Direção  -- média: %1.4f  sd: (%1.4f)\n"
 
 #: src/VoiceKey.cpp
 msgid "Calibration Complete"
@@ -7022,20 +7022,20 @@ msgstr "Alterar Tom"
 
 #: src/effects/ChangePitch.cpp
 msgid "Changes the pitch of a track without changing its tempo"
-msgstr "Alterar o tom de uma faixa sem alterar o seu tempo"
+msgstr "Altera o tom de uma faixa sem alterar o seu tempo"
 
 #: src/effects/ChangePitch.cpp
 msgid "High Quality Pitch Change"
-msgstr "Alteração de Alta Qualidade de Tempo"
+msgstr "Alteração de Alta Qualidade de Tom"
 
 #: src/effects/ChangePitch.cpp
 msgid "Change Pitch without Changing Tempo"
-msgstr "Alterar o Tom sem Alterar o Ritmo"
+msgstr "Alterar o Tom sem Alterar o Tempo"
 
 #: src/effects/ChangePitch.cpp
 #, c-format
 msgid "Estimated Start Pitch: %s%d (%.3f Hz)"
-msgstr "Tom estimado de início: %s%d (%.3f Hz)"
+msgstr "Tom Estimado de Início: %s%d (%.3f Hz)"
 
 #. i18n-hint: (noun) Musical pitch.
 #: src/effects/ChangePitch.cpp
@@ -7138,19 +7138,19 @@ msgstr "n/d"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Change Speed"
-msgstr "Alterar Pulsação"
+msgstr "Alterar Velocidade"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Changes the speed of a track, also changing its pitch"
-msgstr "Alterar a pulsação de uma faixa, também mudando o tom"
+msgstr "Altera a velocidade de uma faixa, também alterando o tom"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Change Speed, affecting both Tempo and Pitch"
-msgstr "Alterar Pulsação, afetando ambos o Ritmo e o Tom"
+msgstr "Alterar Velocidade, afetando ambos o Tempo e o Tom"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "&Speed Multiplier:"
-msgstr "Multiplicador de &Pulsação:"
+msgstr "Multiplicador de &Velocidade:"
 
 #. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
 #. "vinyl" refers to old-fashioned phonograph records
@@ -7214,11 +7214,11 @@ msgstr "para"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo"
-msgstr "Alterar Ritmo"
+msgstr "Alterar Tempo"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Changes the tempo of a selection without changing its pitch"
-msgstr "Alterar o tempo de uma seleção sem alterar o tom"
+msgstr "Altera o tempo de uma seleção sem alterar o tom"
 
 #: src/effects/ChangeTempo.cpp
 msgid "High Quality Tempo Change"
@@ -7226,7 +7226,7 @@ msgstr "Alterar Alta Qualidade de Tempo"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Change Tempo without Changing Pitch"
-msgstr "Alterar Ritmo sem alterar o Tom"
+msgstr "Alterar o Tempo sem Alterar o Tom"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
@@ -9763,15 +9763,15 @@ msgstr "Esticar Deslizante"
 
 #: src/effects/TimeScale.cpp
 msgid "Allows continuous changes to the tempo and/or pitch"
-msgstr "Permite mudanças contínuas de ritmo e/ou tom"
+msgstr "Permite mudanças contínuas de tempo e/ou tom"
 
 #: src/effects/TimeScale.cpp
 msgid "Initial Tempo Change (%)"
-msgstr "Alterar Pulsação Inicial (%)"
+msgstr "Alteração de Tempo Inicial (%)"
 
 #: src/effects/TimeScale.cpp
 msgid "Final Tempo Change (%)"
-msgstr "Alterar Pulsação Final (%)"
+msgstr "Alteração de Tempo Final (%)"
 
 #: src/effects/TimeScale.cpp
 msgid "Initial Pitch Shift"
@@ -10604,7 +10604,7 @@ msgid ""
 "Discard changes?"
 msgstr ""
 "O programa recente foi modificado.\n"
-"Descartar modificações?"
+"Descartar alterações?"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "File could not be loaded"
@@ -14075,13 +14075,13 @@ msgstr "Desconhecido"
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "A journal will be recorded after Audacity restarts."
-msgstr "Um journal será gravado depois do Audacity reiniciar."
+msgstr "Um ficheiro journal será gravado após o Audacity reiniciar."
 
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "No journal will be recorded after Audacity restarts."
-msgstr "Nenhum journal será gravado depois do Audacity reiniciar."
+msgstr "Nenhum ficheiro journal será gravado após o Audacity reiniciar."
 
 #: src/menus/PluginMenus.cpp
 #, c-format
@@ -15239,7 +15239,7 @@ msgstr "&Play-at-Speed"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play-at-Speed &Once"
-msgstr "Reproduzir-na-Velocidade Únic&o"
+msgstr "Play-at-Speed Únic&o"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview-at-Speed"
@@ -16425,7 +16425,7 @@ msgstr "Roda do Rato"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Change scrub speed"
-msgstr "Alterar Velocidade de percorrer"
+msgstr "Alterar velocidade de percorrer"
 
 #: src/prefs/MousePrefs.cpp
 msgid "Zoom in on Point"
@@ -17828,13 +17828,13 @@ msgstr "Velocidade de Reprodução"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play-at-Speed Once"
-msgstr "Reproduzir-na-Velocidade Único"
+msgstr "Play-at-Speed Único"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for transcription (currently just vary play speed)
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Pla&y-at-Speed Toolbar"
-msgstr "Barra de Ferramentas &Reproduzir-na-Velocidade"
+msgstr "Barra de Ferramentas Pla&y-at-Speed"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
@@ -19922,7 +19922,7 @@ msgstr "Efeito de mudança de tom"
 
 #: plug-ins/delay.ny
 msgid "Pitch/Tempo"
-msgstr "Tom/Ritmo"
+msgstr "Tom/Tempo"
 
 #: plug-ins/delay.ny
 msgid "Low-quality Pitch Shift"

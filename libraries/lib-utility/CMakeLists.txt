@@ -20,6 +20,8 @@ set( SOURCES
    MemoryX.h
    ModuleConstants.cpp
    ModuleConstants.h
+   MemoryStream.cpp
+   MemoryStream.h
 )
 audacity_library( lib-utility "${SOURCES}" ""
    "" ""

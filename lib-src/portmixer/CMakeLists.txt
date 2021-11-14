@@ -9,14 +9,14 @@ if (UNIX AND NOT APPLE)
    set(CMAKE_REQUIRED_LIBRARIES PortAudio::PortAudio)
 
    check_include_file( "pa_jack.h" PA_HAS_JACK )
-   
+
    check_include_file( "pa_linux_alsa.h" PA_HAS_ALSA )
    if( PA_HAS_ALSA )
       find_package( ALSA REQUIRED QUIET )
    endif()
 
    # There is no easy check, that portaudio was compiled with OSS support
-   # Let's pretend that it is always is. 
+   # Let's pretend that it is always is.
    # Otherwise, OSS code path will never be triggered
    set( PA_HAS_OSS True)
    if( PA_HAS_OSS )
@@ -92,7 +92,7 @@ list( APPEND DEFINES
          PX_USE_MAC_COREAUDIO=1
       >
 
-      $<$<BOOL:${PA_HAS_OSS}>:  
+      $<$<BOOL:${PA_HAS_OSS}>:
          PX_USE_UNIX_OSS=1
       >
 
@@ -130,7 +130,4 @@ target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 target_link_libraries( ${TARGET} PRIVATE ${LIBRARIES} )
-
-if( CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
-   target_compile_options( ${TARGET} PRIVATE -fPIC )
-endif()
+set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)

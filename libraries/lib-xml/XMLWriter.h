@@ -4,7 +4,7 @@
 
   XMLWriter.h
 
-  Leland Lucius
+  Leland Lucius, Dmitry Vedenko
 
 **********************************************************************/
 #ifndef __AUDACITY_XML_XML_FILE_WRITER__
@@ -12,6 +12,9 @@
 
 #include <vector>
 #include <wx/ffile.h> // to inherit
+
+#include <string_view> // For UTF8 writer
+#include "MemoryStream.h"
 
 #include "FileException.h"
 
@@ -144,6 +147,41 @@ class XML_API XMLStringWriter final : public wxString, public XMLWriter {
 
  private:
 
+};
+
+class XML_API XMLUtf8BufferWriter final
+{
+public:
+   void StartTag(const std::string_view& name);
+   void EndTag(const std::string_view& name);
+
+   void WriteAttr(const std::string_view& name, const Identifier& value);
+   // using GET once here, permitting Identifiers in XML,
+   // so no need for it at each WriteAttr call
+
+   void WriteAttr(const std::string_view& name, const std::string_view& value);
+
+   void WriteAttr(const std::string_view& name, int value);
+   void WriteAttr(const std::string_view& name, bool value);
+   void WriteAttr(const std::string_view& name, long value);
+   void WriteAttr(const std::string_view& name, long long value);
+   void WriteAttr(const std::string_view& name, size_t value);
+   void WriteAttr(const std::string_view& name, float value, int digits = -1);
+   void WriteAttr(const std::string_view& name, double value, int digits = -1);
+
+   void WriteData(const std::string_view& value);
+
+   void WriteSubTree(const std::string_view& value);
+
+   void Write(const std::string_view& value);
+
+   MemoryStream ConsumeResult();
+private:
+   void WriteEscaped(const std::string_view& value);
+
+   MemoryStream mStream;
+
+   bool mInTag { false };
 };
 
 #endif
