@@ -38,7 +38,7 @@ elseif( GIT_FOUND )
 else()
    # No Git installed and no version data is available.
    # Generate an empty file and let AboutDialog do the rest
-   file( TOUCH "${_PRVDIR}/RevisionIdent.h" )
+   file( WRITE "${_PRVDIR}/RevisionIdent.h" )
 endif()
 
 # Handle Audio Units option
