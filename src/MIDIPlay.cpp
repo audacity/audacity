@@ -490,7 +490,11 @@ static double SystemTime(bool usingAlsa)
    if (usingAlsa) {
       struct timespec now;
       // CLOCK_MONOTONIC_RAW is unaffected by NTP or adj-time
+#ifdef FreeBSD
+      clock_gettime(CLOCK_REALTIME, &now);
+#else
       clock_gettime(CLOCK_MONOTONIC_RAW, &now);
+#endif
       //return now.tv_sec + now.tv_nsec * 0.000000001;
       return (now.tv_sec + now.tv_nsec * 0.000000001) - streamStartTime;
    }
