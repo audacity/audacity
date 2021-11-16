@@ -1318,10 +1318,20 @@ void WaveClip::Paste(double t0, const WaveClip* other)
       other->mSequence->GetSampleFormat() != mSequence->GetSampleFormat();
    std::unique_ptr<WaveClip> newClip;
 
-   t0 = std::clamp(t0, GetPlayStartTime(), GetPlayEndTime());
+   const auto playStartTime = GetPlayStartTime();
+   const auto playEndTime = GetPlayEndTime();
 
-   //seems like edge cases cannot happen, see WaveTrack::PasteWaveTrack
-   if (t0 == GetPlayStartTime())
+   t0 = std::clamp(t0, playStartTime, playEndTime);
+
+   if (playEndTime - playStartTime < 0.5 / GetRate())
+   {
+       //It's better to use copy constructor in the first place,
+       //not WaveClip::Paste, if possible
+       newClip = std::make_unique<WaveClip>(*other, mSequence->GetFactory(), true);
+       SetTrimLeft(other->GetTrimLeft());
+       SetTrimRight(other->GetTrimRight());
+   }
+   else if (t0 == GetPlayStartTime())
    {
        ClearSequence(GetSequenceStartTime(), t0);
        SetTrimLeft(other->GetTrimLeft());
