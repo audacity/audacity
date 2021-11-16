@@ -1288,7 +1288,7 @@ void WaveTrack::HandleClear(double t0, double t1,
                   // guarantee, and might modify another clip
                   clipsToDelete.push_back( clip.get() );
                   auto newClip = std::make_unique<WaveClip>( *clip, mpFactory, true );
-                  newClip->ClearLeft(t1);
+                  newClip->TrimLeft(t1 - clip->GetPlayStartTime());
                   clipsToAdd.push_back( std::move( newClip ) );
                }
                else if (clip->AfterPlayEndTime(t1)) {
@@ -1298,7 +1298,7 @@ void WaveTrack::HandleClear(double t0, double t1,
                   // guarantee, and might modify another clip
                   clipsToDelete.push_back( clip.get() );
                   auto newClip = std::make_unique<WaveClip>( *clip, mpFactory, true );
-                  newClip->ClearRight(t0);
+                  newClip->TrimRight(clip->GetPlayEndTime() - t0);
 
                   clipsToAdd.push_back( std::move( newClip ) );
                }
@@ -1307,11 +1307,11 @@ void WaveTrack::HandleClear(double t0, double t1,
                   // NEW clips out of the left and right halves...
 
                   auto leftClip = std::make_unique<WaveClip>(*clip, mpFactory, true);
-                  leftClip->ClearRight(t0);
+                  leftClip->TrimRight(clip->GetPlayEndTime() - t0);
                   clipsToAdd.push_back(std::move(leftClip));
 
                   auto rightClip = std::make_unique<WaveClip>(*clip, mpFactory, true);
-                  rightClip->ClearLeft(t1);
+                  rightClip->TrimLeft(t1 - rightClip->GetPlayStartTime());
                   clipsToAdd.push_back(std::move(rightClip));
 
                   clipsToDelete.push_back(clip.get());
