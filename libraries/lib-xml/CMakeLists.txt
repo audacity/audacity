@@ -6,6 +6,8 @@ type.
 ]]#
 
 set( SOURCES
+   XMLAttributeValueView.cpp
+   XMLAttributeValueView.h
    XMLFileReader.cpp
    XMLFileReader.h
    XMLMethodRegistry.cpp
