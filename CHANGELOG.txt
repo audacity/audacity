@@ -1,5 +1,25 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.1.2:
+
+ This is a hotfix release. It fixes the following bugs: 
+ 
+	Fixed UTF8 support in clip titles #2135
+	Fixed data loss when joining clips #2123
+	Fixed a crash with exporting resampled tracks #2136
+	Fixed a crash when opening projects with very small double values #2128
+
+Changes in version 3.1.1:
+
+ This is a hotfix release. It fixes the following bugs:
+
+	* Fixed FFMPEG imports only importing the left channel #2046
+	* Improved Audacity's performance when many clips are present
+	* Fixed a crash with detach at silences #2072
+	* Fixed clip name corruption when applying effects to adjacent clips #1889
+	* Fixed a crash with the time shift commands #2061
+	* Fixed custom themes not working #2043
+
 Changes in version 3.1.0:
 
  This release introduces clip handles, smart clips and playback looping as its major new features.
