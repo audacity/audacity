@@ -40,6 +40,8 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectFormatExtensionsRegistry.h"
 
+#include "BufferedStreamReader.h"
+
 // Don't change this unless the file format changes
 // in an irrevocable way
 #define AUDACITY_FILE_FORMAT_VERSION "1.3.0"
@@ -286,6 +288,38 @@ private:
    int mWriteOffset { 0 };
 
    bool mIsReadOnly { false };
+};
+
+class BufferedBlobStream : public BufferedStreamReader
+{
+public:
+   BufferedBlobStream(const wxMemoryBuffer& buffer)
+       : mBuffer(buffer)
+   {
+   }
+
+private:
+   const wxMemoryBuffer& mBuffer;
+   size_t mCurrentIndex { 0 };
+
+protected:
+   bool HasMoreData() const override
+   {
+      return mCurrentIndex < mBuffer.GetBufSize();
+   }
+
+   size_t ReadData(void* buffer, size_t maxBytes) override
+   {
+      const size_t bytesLeft = mBuffer.GetBufSize() - mCurrentIndex;
+      const size_t bytesToWrite = std::min(bytesLeft, maxBytes);
+
+      std::memcpy(
+         buffer, static_cast<uint8_t*>(mBuffer.GetData()) + mCurrentIndex,
+         bytesToWrite);
+
+      mCurrentIndex += bytesToWrite;
+      return bytesToWrite;
+   }
 };
 
 bool ProjectFileIO::InitializeSQL()
@@ -2019,7 +2053,8 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
    else
    {
       // Load 'er up
-      success = ProjectSerializer::Decode(buffer, this);
+      BufferedBlobStream stream(buffer);
+      success = ProjectSerializer::Decode(stream, this);
       if (!success)
       {
          SetError(

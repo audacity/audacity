@@ -18,11 +18,13 @@
 
 #include <unordered_set>
 #include <unordered_map>
+
 #include "Identifier.h"
 
 // From SampleBlock.h
 using SampleBlockID = long long;
 
+class BufferedStreamReader;
 ///
 /// ProjectSerializer
 ///
@@ -64,7 +66,7 @@ public:
    bool DictChanged() const;
 
    // Returns empty string if decoding fails
-   static bool Decode(const wxMemoryBuffer &buffer, XMLTagHandler* hadler);
+   static bool Decode(BufferedStreamReader& in, XMLTagHandler* handler);
 
 private:
    void WriteName(const wxString& name);

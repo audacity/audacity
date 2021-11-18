@@ -26,6 +26,8 @@
 
 #include <wx/log.h>
 
+#include "BufferedStreamReader.h"
+
 ///
 /// ProjectSerializer class
 ///
@@ -147,18 +149,18 @@ template <typename Number> void WriteBigEndian(MemoryStream& out, Number value)
 }
 
 // Read little-endian file format to native little-endian
-template <typename Number> Number ReadLittleEndian(wxMemoryInputStream& in)
+template <typename Number> Number ReadLittleEndian(BufferedStreamReader& in)
 {
    Number result;
-   in.Read(&result, sizeof(result));
+   in.ReadValue(result);
    return result;
 }
 
 // Read little-endian file format to native big-endian
-template <typename Number> Number ReadBigEndian(wxMemoryInputStream& in)
+template <typename Number> Number ReadBigEndian(BufferedStreamReader& in)
 {
    Number result;
-   in.Read(&result, sizeof(result));
+   in.ReadValue(result);
    auto begin = static_cast<unsigned char*>(static_cast<void*>(&result));
    std::reverse(begin, begin + sizeof(result));
    return result;
@@ -255,8 +257,12 @@ public:
          handler->HandleXMLContent(CacheString(std::move(value)));
    }
 
-   void WriteRaw(std::string value)
+   void WriteRaw(std::string)
    {
+      // This method is intentionally left empty.
+      // The only data that is serialized by FT_Raw
+      // is the boilerplate code like <?xml > and <!DOCTYPE>
+      // which are ignored
    }
 
    bool Finalize()
@@ -521,12 +527,10 @@ bool ProjectSerializer::DictChanged() const
 }
 
 // See ProjectFileIO::LoadProject() for explanation of the blockids arg
-bool ProjectSerializer::Decode(const wxMemoryBuffer &buffer, XMLTagHandler* handler)
+bool ProjectSerializer::Decode(BufferedStreamReader& in, XMLTagHandler* handler)
 {
    if (handler == nullptr)
       return false;
-
-   wxMemoryInputStream in(buffer.GetData(), buffer.GetDataLen());
 
    XMLTagHandlerAdapter adapter(handler);
 
