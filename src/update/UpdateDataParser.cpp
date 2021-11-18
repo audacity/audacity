@@ -49,7 +49,7 @@ wxArrayString UpdateDataParser::SplitChangelogSentences(const wxString& changelo
     return changelogSentenceList;
 }
 
-bool UpdateDataParser::HandleXMLTag(const std::string_view& tag, const wxChar** attrs)
+bool UpdateDataParser::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
 {
     if (tag == mXmlTagNames[XmlParsedTags::kDescriptionTag])
     {

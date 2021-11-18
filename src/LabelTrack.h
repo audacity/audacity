@@ -108,7 +108,7 @@ private:
    Track::Holder Clone() const override;
 
 public:
-   bool HandleXMLTag(const std::string_view& tag, const wxChar **attrs) override;
+   bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const override;
 

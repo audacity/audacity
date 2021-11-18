@@ -349,17 +349,15 @@ void PlayableTrack::WriteXMLAttributes(XMLWriter &xmlFile) const
 }
 
 // Return true iff the attribute is recognized.
-bool PlayableTrack::HandleXMLAttribute(const wxChar *attr, const wxChar *value)
+bool PlayableTrack::HandleXMLAttribute(const std::string_view &attr, const XMLAttributeValueView &value)
 {
-   const wxString strValue{ value };
    long nValue;
-   if (!wxStrcmp(attr, wxT("mute")) &&
-            XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+
+   if (attr == "mute" && value.TryGet(nValue)) {
       mMute = (nValue != 0);
       return true;
    }
-   else if (!wxStrcmp(attr, wxT("solo")) &&
-            XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+   else if (attr == "solo" && value.TryGet(nValue)) {
       mSolo = (nValue != 0);
       return true;
    }
@@ -1266,21 +1264,20 @@ void Track::WriteCommonXMLAttributes(
 }
 
 // Return true iff the attribute is recognized.
-bool Track::HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value)
+bool Track::HandleCommonXMLAttribute(
+   const std::string_view& attr, const XMLAttributeValueView& valueView)
 {
    long nValue = -1;
-   wxString strValue( value );
-   if ( mpView && mpView->HandleXMLAttribute( attr, value ) )
-      ;
-   else if ( mpControls && mpControls->HandleXMLAttribute( attr, value ) )
-      ;
-   else if (!wxStrcmp(attr, wxT("name")) &&
-      XMLValueChecker::IsGoodString(strValue)) {
-      SetName( strValue );
+
+   if (mpView && mpView->HandleXMLAttribute(attr, valueView))
+      return true;
+   else if (mpControls && mpControls->HandleXMLAttribute(attr, valueView))
+      return true;
+   else if (attr == "name") {
+      SetName(valueView.ToWString());
       return true;
    }
-   else if (!wxStrcmp(attr, wxT("isSelected")) &&
-         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+   else if (attr == "isSelected" && valueView.TryGet(nValue)) {
       this->SetSelected(nValue != 0);
       return true;
    }

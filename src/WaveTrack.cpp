@@ -101,7 +101,7 @@ Track::LinkType ToLinkType(int value)
 }
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
-   wxT( "wavetrack" ),
+   "wavetrack",
    []( AudacityProject &project ){
       auto &trackFactory = WaveTrackFactory::Get( project );
       auto &tracks = TrackList::Get( project );
@@ -1823,31 +1823,27 @@ bool IsValidChannel(const int nValue)
 }
 }
 
-bool WaveTrack::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
+bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (tag == "wavetrack") {
       double dblValue;
       long nValue;
-      while(*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
 
-         if (!value)
-            break;
+      for (auto pair : attrs)
+      {
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         const wxString strValue = value;
-         if (!wxStrcmp(attr, wxT("rate")))
+         if (attr == "rate")
          {
             // mRate is an int, but "rate" in the project file is a float.
-            if (!XMLValueChecker::IsGoodString(strValue) ||
-                  !Internat::CompatibleToDouble(strValue, &dblValue) ||
+            if (!value.TryGet(dblValue) ||
                   (dblValue < 1.0) || (dblValue > 1000000.0)) // allow a large range to be read
                return false;
+
             mRate = lrint(dblValue);
          }
-         else if (!wxStrcmp(attr, wxT("offset")) &&
-                  XMLValueChecker::IsGoodString(strValue) &&
-                  Internat::CompatibleToDouble(strValue, &dblValue))
+         else if (attr == "offset" && value.TryGet(dblValue))
          {
             // Offset is only relevant for legacy project files. The value
             // is cached until the actual WaveClip containing the legacy
@@ -1856,35 +1852,26 @@ bool WaveTrack::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
          }
          else if (this->PlayableTrack::HandleXMLAttribute(attr, value))
          {}
-         else if (this->Track::HandleCommonXMLAttribute(attr, strValue))
+         else if (this->Track::HandleCommonXMLAttribute(attr, value))
             ;
-         else if (!wxStrcmp(attr, wxT("gain")) &&
-                  XMLValueChecker::IsGoodString(strValue) &&
-                  Internat::CompatibleToDouble(strValue, &dblValue))
+         else if (attr == "gain" && value.TryGet(dblValue))
             mGain = dblValue;
-         else if (!wxStrcmp(attr, wxT("pan")) &&
-                  XMLValueChecker::IsGoodString(strValue) &&
-                  Internat::CompatibleToDouble(strValue, &dblValue) &&
+         else if (attr == "pan" && value.TryGet(dblValue) &&
                   (dblValue >= -1.0) && (dblValue <= 1.0))
             mPan = dblValue;
-         else if (!wxStrcmp(attr, wxT("channel")))
+         else if (attr == "channel")
          {
-            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&nValue) ||
+            if (!value.TryGet(nValue) ||
                   !IsValidChannel(nValue))
                return false;
             mChannel = static_cast<Track::ChannelType>( nValue );
          }
-         else if (!wxStrcmp(attr, wxT("linked")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
+         else if (attr == "linked" && value.TryGet(nValue))
             SetLinkType(ToLinkType(nValue));
-         else if (!wxStrcmp(attr, wxT("colorindex")) &&
-                  XMLValueChecker::IsGoodString(strValue) &&
-                  strValue.ToLong(&nValue))
+         else if (attr == "colorindex" && value.TryGet(nValue))
             // Don't use SetWaveColorIndex as it sets the clips too.
             mWaveColorIndex  = nValue;
-         else if (!wxStrcmp(attr, wxT("sampleformat")) &&
-                  XMLValueChecker::IsGoodInt(strValue) &&
-                  strValue.ToLong(&nValue) &&
+         else if (attr == "sampleformat" && value.TryGet(nValue) &&
                   Sequence::IsValidSampleFormat(nValue))
             mFormat = static_cast<sampleFormat>(nValue);
       } // while

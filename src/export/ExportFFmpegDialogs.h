@@ -331,7 +331,7 @@ public:
    void ImportPresets(wxString &filename);
    void ExportPresets(wxString &filename);
 
-   bool HandleXMLTag(const std::string_view& tag, const wxChar **attrs) override;
+   bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXMLHeader(XMLWriter &xmlFile) const;
    void WriteXML(XMLWriter &xmlFile) const;

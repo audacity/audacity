@@ -17,16 +17,21 @@ XMLMethodRegistryBase::XMLMethodRegistryBase() = default;
 XMLMethodRegistryBase::~XMLMethodRegistryBase() = default;
 
 void XMLMethodRegistryBase::Register(
-   const wxString &tag, TypeErasedObjectAccessor accessor )
+   std::string tag, TypeErasedObjectAccessor accessor )
 {
-   mTagTable[ tag ] = move( accessor );
+   // Store string in a separate container from the map, so the map
+   // can be keyed by string_view.
+   // Beware small-string optimization!  Be sure strings don't relocate for
+   // growth of the container.  Use a list, not a vector.
+   auto &newtag = mTags.emplace_front(move(tag));
+   mTagTable[ newtag ] = move( accessor );
 }
 
 XMLTagHandler *XMLMethodRegistryBase::CallObjectAccessor(
    const std::string_view &tag, void *p )
 {
    const auto &table = mTagTable;
-   if (auto iter = table.find( std::string(tag) ); iter != table.end())
+   if (auto iter = table.find( tag ); iter != table.end())
       if (auto &fn = iter->second)
          return fn( p );
    return nullptr;
@@ -38,16 +43,18 @@ void XMLMethodRegistryBase::PushAccessor( TypeErasedAccessor accessor )
 }
 
 void XMLMethodRegistryBase::Register(
-   const wxString &tag, TypeErasedMutator mutator )
+   std::string tag, TypeErasedMutator mutator )
 {
-   mMutatorTable[ tag ] = { mAccessors.size() - 1, move( mutator ) };
+   // Similar to the other overload of Register
+   auto &newtag = mMutatorTags.emplace_front(move(tag));
+   mMutatorTable[ newtag ] = { mAccessors.size() - 1, move( mutator ) };
 }
 
-bool XMLMethodRegistryBase::CallAttributeHandler( const wxString &tag,
-      void *p, const wchar_t *value )
+bool XMLMethodRegistryBase::CallAttributeHandler( const std::string_view &tag,
+      void *p, const XMLAttributeValueView &value )
 {
    const auto &table = mMutatorTable;
-   if (auto iter = table.find( tag ); iter != table.end())
+   if (auto iter = table.find(tag); iter != table.end())
       // Tag is known
       if (auto &pair = iter->second;
           pair.second && pair.first < mAccessors.size() )

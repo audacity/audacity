@@ -2182,7 +2182,7 @@ void EffectEqualization::Flatten()
 //
 // Process XML tags and handle the ones we recognize
 //
-bool EffectEqualization::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
+bool EffectEqualization::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    // May want to add a version strings...
    if (tag == "equalizationeffect")
@@ -2194,18 +2194,15 @@ bool EffectEqualization::HandleXMLTag(const std::string_view& tag, const wxChar 
    if (tag == "curve")
    {
       // Process the attributes
-      while( *attrs )
+      for (auto pair : attrs)
       {
-         // Cache attr/value and bump to next
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+         auto attr = pair.first;
+         auto value = pair.second;
 
          // Create a NEW curve and name it
-         if( !wxStrcmp( attr, wxT("name") ) )
+         if( attr == "name" )
          {
-            const wxString strValue = value;
-            if (!XMLValueChecker::IsGoodString(strValue))
-               return false;
+            const wxString strValue = value.ToWString();
             // check for a duplicate name and add (n) if there is one
             int n = 0;
             wxString strValueTemp = strValue;
@@ -2244,26 +2241,22 @@ bool EffectEqualization::HandleXMLTag(const std::string_view& tag, const wxChar 
 
       // Process the attributes
       double dblValue;
-      while( *attrs )
-      {   // Cache attr/value and bump to next
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         const wxString strValue = value;
+      for (auto pair : attrs)
+      {
+         auto attr = pair.first;
+         auto value = pair.second;
 
          // Get the frequency
-         if( !wxStrcmp( attr, wxT("f") ) )
+         if( attr == "f" )
          {
-            if (!XMLValueChecker::IsGoodString(strValue) ||
-               !Internat::CompatibleToDouble(strValue, &dblValue))
+            if (!value.TryGet(dblValue))
                return false;
             f = dblValue;
          }
          // Get the dB
-         else if( !wxStrcmp( attr, wxT("d") ) )
+         else if( attr == "d" )
          {
-            if (!XMLValueChecker::IsGoodString(strValue) ||
-               !Internat::CompatibleToDouble(strValue, &dblValue))
+            if (!value.TryGet(dblValue))
                return false;
             d = dblValue;
          }

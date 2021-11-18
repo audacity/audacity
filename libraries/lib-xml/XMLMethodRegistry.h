@@ -11,7 +11,9 @@
 #ifndef __AUDACITY_XML_METHOD_REGISTRY__
 #define __AUDACITY_XML_METHOD_REGISTRY__
 
-#include <wx/string.h>
+#include <forward_list>
+#include <string>
+#include <string_view>
 #include <functional>
 #include <type_traits>
 #include <unordered_map>
@@ -20,6 +22,7 @@
 
 class XMLTagHandler;
 class XMLWriter;
+class XMLAttributeValueView;
 
 //! Implementation helper for ProjectFileIORegistry.
 /*! It makes most of the work non-inline and is used by derived classes that
@@ -29,21 +32,22 @@ public:
 
    //! A helper type alias for a function taking a structure and a string value
 template< typename Substructure >
-using Mutator = std::function< void(Substructure&, const wchar_t *) >;
+using Mutator = std::function< void(Substructure&, const XMLAttributeValueView &) >;
 
 //! A helper type alias for a list of mutators, associated with tag strings
 template< typename Substructure >
-using Mutators = std::vector< std::pair< wxString, Mutator<Substructure> > >;
+using Mutators = std::vector< std::pair< std::string, Mutator<Substructure> > >;
 
    XMLMethodRegistryBase();
    ~XMLMethodRegistryBase();
 protected:
    using TypeErasedObjectAccessor = std::function< XMLTagHandler *( void* ) >;
    using TagTable =
-      std::unordered_map< wxString, TypeErasedObjectAccessor >;
+      std::unordered_map< std::string_view, TypeErasedObjectAccessor >;
    TagTable mTagTable;
+   std::forward_list<std::string> mTags;
 
-   void Register( const wxString &tag, TypeErasedObjectAccessor accessor );
+   void Register(std::string tag, TypeErasedObjectAccessor accessor);
    XMLTagHandler *CallObjectAccessor( const std::string_view &tag, void *p );
 
    using TypeErasedAccessor = std::function< void*( void* ) >;
@@ -52,16 +56,17 @@ protected:
 
    void PushAccessor( TypeErasedAccessor accessor );
 
-   using TypeErasedMutator = std::function< void( void*, const wchar_t* ) >;
+   using TypeErasedMutator = std::function< void( void*, const XMLAttributeValueView& ) >;
    //! From attribute name, to index in accessor table with a mutator
-   using MutatorTable =
-      std::unordered_map< wxString, std::pair< size_t, TypeErasedMutator > >;
+   using MutatorTable = std::unordered_map<std::string_view,
+      std::pair<size_t, TypeErasedMutator>>;
    MutatorTable mMutatorTable;
+   std::forward_list<std::string> mMutatorTags;
 
-   void Register( const wxString &tag, TypeErasedMutator mutator );
+   void Register(std::string tag, TypeErasedMutator mutator);
 
-   bool CallAttributeHandler( const wxString &tag,
-      void *p, const wchar_t *value );
+   bool CallAttributeHandler(const std::string_view& tag,
+      void *p, const XMLAttributeValueView &value );
 
    using TypeErasedWriter = std::function< void(const void *, XMLWriter &) >;
    using WriterTable = std::vector< TypeErasedWriter >;
@@ -89,7 +94,7 @@ struct ObjectReaderEntry {
       typename ObjectAccessor /*!< Often a lambda.
          A function from Host& to XMLTagHandler*, maybe returning null */
    >
-   ObjectReaderEntry( const wxString &tag, ObjectAccessor fn )
+   ObjectReaderEntry( const std::string &tag, ObjectAccessor fn )
    {
       // Remember the function, type-erased
       Get().Register( tag, [ fn = std::move(fn) ] (void *p) {
@@ -140,7 +145,7 @@ struct AttributeReaderEntries {
 
 // @return whether any function was found and called for the tag
 bool CallAttributeHandler(
-   const wxString &tag, Host &host, const wchar_t *value )
+   const std::string_view &tag, Host &host, const XMLAttributeValueView& value )
 {
    return XMLMethodRegistryBase::CallAttributeHandler( tag, &host, value );
 }

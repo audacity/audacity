@@ -23,6 +23,8 @@
 #include <codecvt>
 #include <locale>
 
+#include <wx/log.h>
+
 ///
 /// ProjectSerializer class
 ///

@@ -167,7 +167,7 @@ private:
    bool GetDefaultFileName(wxFileName &fileName);
    
    // XMLTagHandler callback methods for loading and saving
-   bool HandleXMLTag(const std::string_view& tag, const wxChar **attrs) override;
+   bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const;
 

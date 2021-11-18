@@ -57,7 +57,7 @@ wxDEFINE_EVENT(EVT_LABELTRACK_PERMUTED, LabelTrackEvent);
 wxDEFINE_EVENT(EVT_LABELTRACK_SELECTION, LabelTrackEvent);
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
-   wxT( "labeltrack" ),
+   "labeltrack",
    []( AudacityProject &project ){
       auto &tracks = TrackList::Get( project );
       auto result = tracks.Add(std::make_shared<LabelTrack>());
@@ -566,7 +566,7 @@ void LabelTrack::Import(wxTextFile & in)
    SortLabels();
 }
 
-bool LabelTrack::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
+bool LabelTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (tag == "label") {
 
@@ -575,24 +575,16 @@ bool LabelTrack::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
 
       // loop through attrs, which is a null-terminated list of
       // attribute-value pairs
-      while(*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+      for (auto pair : attrs)
+      {
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
-            break;
-
-         const wxString strValue = value;
-         // Bug 1905 was about long label strings.
-         if (!XMLValueChecker::IsGoodLongString(strValue))
-         {
-            return false;
-         }
-
-         if (selectedRegion.HandleXMLAttribute(attr, value, wxT("t"), wxT("t1")))
+         if (selectedRegion.HandleXMLAttribute(attr, value, "t", "t1"))
             ;
-         else if (!wxStrcmp(attr, wxT("title")))
-            title = strValue;
+         // Bug 1905 no longer applies, as valueView has no limits anyway
+         else if (attr == "title")
+            title = value.ToWString();
 
       } // while
 
@@ -610,18 +602,14 @@ bool LabelTrack::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
    }
    else if (tag == "labeltrack") {
       long nValue = -1;
-      while (*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+      for (auto pair : attrs)
+      {
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
-            return true;
-
-         const wxString strValue = value;
-         if (this->Track::HandleCommonXMLAttribute(attr, strValue))
+         if (this->Track::HandleCommonXMLAttribute(attr, value))
             ;
-         else if (!wxStrcmp(attr, wxT("numlabels")) &&
-                     XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
+         else if (attr == "numlabels" && value.TryGet(nValue))
          {
             if (nValue < 0)
             {
@@ -659,7 +647,7 @@ void LabelTrack::WriteXML(XMLWriter &xmlFile) const
    for (auto &labelStruct: mLabels) {
       xmlFile.StartTag(wxT("label"));
       labelStruct.getSelectedRegion()
-         .WriteXMLAttributes(xmlFile, wxT("t"), wxT("t1"));
+         .WriteXMLAttributes(xmlFile, "t", "t1");
       // PRL: to do: write other selection fields
       xmlFile.WriteAttr(wxT("title"), labelStruct.title);
       xmlFile.EndTag(wxT("label"));

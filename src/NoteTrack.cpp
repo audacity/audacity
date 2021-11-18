@@ -110,7 +110,7 @@ SONFNS(AutoSave)
 
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
-   wxT( "notetrack" ),
+   "notetrack",
    []( AudacityProject &project ){
       auto &tracks = TrackList::Get( project );
       auto result = tracks.Add( std::make_shared<NoteTrack>());
@@ -892,46 +892,38 @@ bool IsValidVisibleChannels(const int nValue)
 }
 }
 
-bool NoteTrack::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
+bool NoteTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (tag == "notetrack") {
-      while (*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-         if (!value)
-            break;
-         const wxString strValue = value;
+      for (auto pair : attrs)
+      {
+         auto attr = pair.first;
+         auto value = pair.second;
+
          long nValue;
          double dblValue;
-         if (this->Track::HandleCommonXMLAttribute(attr, strValue))
+         if (this->Track::HandleCommonXMLAttribute(attr, value))
             ;
          else if (this->NoteTrackBase::HandleXMLAttribute(attr, value))
          {}
-         else if (!wxStrcmp(attr, wxT("offset")) &&
-                  XMLValueChecker::IsGoodString(strValue) &&
-                  Internat::CompatibleToDouble(strValue, &dblValue))
+         else if (attr == "offset" && value.TryGet(dblValue))
             SetOffset(dblValue);
-         else if (!wxStrcmp(attr, wxT("visiblechannels"))) {
-             if (!XMLValueChecker::IsGoodInt(strValue) ||
-                 !strValue.ToLong(&nValue) ||
+         else if (attr == "visiblechannels") {
+             if (!value.TryGet(nValue) ||
                  !IsValidVisibleChannels(nValue))
                  return false;
              mVisibleChannels = nValue;
          }
 #ifdef EXPERIMENTAL_MIDI_OUT
-         else if (!wxStrcmp(attr, wxT("velocity")) &&
-                  XMLValueChecker::IsGoodString(strValue) &&
-                  Internat::CompatibleToDouble(strValue, &dblValue))
+         else if (attr == "velocity" && value.TryGet(dblValue))
             mVelocity = (float) dblValue;
 #endif
-         else if (!wxStrcmp(attr, wxT("bottomnote")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
+         else if (attr == "bottomnote" && value.TryGet(nValue))
             SetBottomNote(nValue);
-         else if (!wxStrcmp(attr, wxT("topnote")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
+         else if (attr == "topnote" && value.TryGet(nValue))
             SetTopNote(nValue);
-         else if (!wxStrcmp(attr, wxT("data"))) {
-             std::string s(strValue.mb_str(wxConvUTF8));
+         else if (attr == "data") {
+             std::string s(value.ToWString());
              std::istringstream data(s);
              mSeq = std::make_unique<Alg_seq>(data, false);
          }

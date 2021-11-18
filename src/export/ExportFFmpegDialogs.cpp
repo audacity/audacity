@@ -1142,7 +1142,7 @@ void FFmpegPresets::LoadPreset(ExportFFmpegOptions *parent, wxString &name)
    }
 }
 
-bool FFmpegPresets::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
+bool FFmpegPresets::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (mAbortImport)
    {
@@ -1156,20 +1156,19 @@ bool FFmpegPresets::HandleXMLTag(const std::string_view& tag, const wxChar **att
 
    if (tag == "preset")
    {
-      while (*attrs)
+      for (auto pair : attrs)
       {
-         const wxChar *attr = *attrs++;
-         wxString value = *attrs++;
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
-            break;
-
-         if (!wxStrcmp(attr,wxT("name")))
+         if (attr == "name")
          {
-            mPreset = FindPreset(value);
+            wxString strValue = value.ToWString();
+            mPreset = FindPreset(strValue);
+
             if (mPreset)
             {
-               auto query = XO("Replace preset '%s'?").Format( value );
+               auto query = XO("Replace preset '%s'?").Format( strValue );
                int action = AudacityMessageBox(
                   query,
                   XO("Confirm Overwrite"),
@@ -1188,9 +1187,10 @@ bool FFmpegPresets::HandleXMLTag(const std::string_view& tag, const wxChar **att
             }
             else
             {
-               mPreset = &mPresets[value];
+               mPreset = &mPresets[strValue];
             }
-            mPreset->mPresetName = value;
+
+            mPreset->mPresetName = strValue;
          }
       }
       return true;
@@ -1199,24 +1199,21 @@ bool FFmpegPresets::HandleXMLTag(const std::string_view& tag, const wxChar **att
    if (tag == "setctrlstate" && mPreset)
    {
       long id = -1;
-      while (*attrs)
+      for (auto pair : attrs)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
-            break;
-
-         if (!wxStrcmp(attr,wxT("id")))
+         if (attr == "id")
          {
             for (long i = FEFirstID; i < FELastID; i++)
-               if (!wxStrcmp(FFmpegExportCtrlIDNames[i - FEFirstID],value))
+               if (!wxStrcmp(FFmpegExportCtrlIDNames[i - FEFirstID], value.ToWString()))
                   id = i;
          }
-         else if (!wxStrcmp(attr,wxT("state")))
+         else if (attr == "state")
          {
             if (id > FEFirstID && id < FELastID)
-               mPreset->mControlState[id - FEFirstID] = wxString(value);
+               mPreset->mControlState[id - FEFirstID] = value.ToWString();
          }
       }
       return true;

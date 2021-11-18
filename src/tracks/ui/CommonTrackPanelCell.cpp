@@ -153,7 +153,8 @@ void CommonTrackCell::WriteXMLAttributes( XMLWriter & ) const
 {
 }
 
-bool CommonTrackCell::HandleXMLAttribute( const wxChar *, const wxChar * )
+bool CommonTrackCell::HandleXMLAttribute(
+   const std::string_view& attr, const XMLAttributeValueView& valueView)
 {
    return false;
 }

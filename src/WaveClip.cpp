@@ -1212,51 +1212,43 @@ void WaveClip::Flush()
    //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
 }
 
-bool WaveClip::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
+bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (tag == "waveclip")
    {
       double dblValue;
       long longValue;
-      while (*attrs)
+      for (auto pair : attrs)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
-            break;
-
-         const wxString strValue = value;
-         if (!wxStrcmp(attr, wxT("offset")))
+         if (attr == "offset")
          {
-            if (!XMLValueChecker::IsGoodString(strValue) ||
-                  !Internat::CompatibleToDouble(strValue, &dblValue))
+            if (!value.TryGet(dblValue))
                return false;
             SetSequenceStartTime(dblValue);
          }
-         else if (!wxStrcmp(attr, wxT("trimLeft")))
+         else if (attr == "trimLeft")
          {
-            if (!XMLValueChecker::IsGoodString(strValue) ||
-               !Internat::CompatibleToDouble(strValue, &dblValue))
+            if (!value.TryGet(dblValue))
                return false;
             SetTrimLeft(dblValue);
          }
-         else if (!wxStrcmp(attr, wxT("trimRight")))
+         else if (attr == "trimRight")
          {
-            if (!XMLValueChecker::IsGoodString(strValue) ||
-               !Internat::CompatibleToDouble(strValue, &dblValue))
+            if (!value.TryGet(dblValue))
                return false;
             SetTrimRight(dblValue);
          }
-         else if (!wxStrcmp(attr, wxT("name")))
+         else if (attr == "name")
          {
-            if(XMLValueChecker::IsGoodLongString(strValue))
-               SetName(strValue);
+            if(value.IsStringView())
+               SetName(value.ToWString());
          }
-         else if (!wxStrcmp(attr, wxT("colorindex")))
+         else if (attr == "colorindex")
          {
-            if (!XMLValueChecker::IsGoodString(strValue) ||
-                  !strValue.ToLong( &longValue))
+            if (!value.TryGet(longValue))
                return false;
             SetColourIndex(longValue);
          }

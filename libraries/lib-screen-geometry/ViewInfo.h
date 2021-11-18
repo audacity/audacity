@@ -56,12 +56,12 @@ public:
    // does not emit events
    void WriteXMLAttributes
       (XMLWriter &xmlFile,
-       const wxChar *legacyT0Name, const wxChar *legacyT1Name) const
+       const char *legacyT0Name, const char *legacyT1Name) const
    { mRegion.WriteXMLAttributes(xmlFile, legacyT0Name, legacyT1Name); }
 
    //! Return some information used for deserialization purposes by ViewInfo
    static XMLMethodRegistryBase::Mutators<NotifyingSelectedRegion>
-      Mutators(const wxString &legacyT0Name, const wxString &legacyT1Name);
+      Mutators(const char *legacyT0Name, const char *legacyT1Name);
 
    // const-only access allows assignment from this into a SelectedRegion
    // or otherwise passing it into a function taking const SelectedRegion&

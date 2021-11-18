@@ -36,7 +36,7 @@
 #define TIMETRACK_MAX 10.0
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
-   wxT( "timetrack" ),
+   "timetrack",
    []( AudacityProject &project ){
       auto &tracks = TrackList::Get( project );
       auto &viewInfo = ViewInfo::Get( project );
@@ -223,40 +223,37 @@ void TimeTrack::SetInterpolateLog(bool interpolateLog) {
    mEnvelope->SetExponential(interpolateLog);
 }
 
-bool TimeTrack::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
+bool TimeTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (tag == "timetrack") {
       mRescaleXMLValues = true; // will be set to false if upper/lower is found
+
       long nValue;
-      while(*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
 
-         if (!value)
-            break;
+      for (auto pair : attrs)
+      {
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         const wxString strValue = value;
-         if (this->Track::HandleCommonXMLAttribute(attr, strValue))
+         if (this->Track::HandleCommonXMLAttribute(attr, value))
             ;
-         else if (!wxStrcmp(attr, wxT("rangelower")))
+         else if (attr == "rangelower")
          {
-            SetRangeLower( Internat::CompatibleToDouble(value) );
+            SetRangeLower( value.Get(GetRangeLower()) );
             mRescaleXMLValues = false;
          }
-         else if (!wxStrcmp(attr, wxT("rangeupper")))
+         else if (attr == "rangeupper")
          {
-            SetRangeUpper( Internat::CompatibleToDouble(value) );
+            SetRangeUpper( value.Get(GetRangeUpper()) );
             mRescaleXMLValues = false;
          }
-         else if (!wxStrcmp(attr, wxT("displaylog")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
+         else if (attr == "displaylog" && value.TryGet(nValue))
          {
             SetDisplayLog(nValue != 0);
             //TODO-MB: This causes a graphical glitch, TrackPanel should probably be Refresh()ed after loading.
             //         I don't know where to do this though.
          }
-         else if (!wxStrcmp(attr, wxT("interpolatelog")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
+         else if (attr == "interpolatelog" && value.TryGet(nValue))
          {
             SetInterpolateLog(nValue != 0);
          }

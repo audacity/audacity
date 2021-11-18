@@ -13,6 +13,7 @@ Paul Licameli
 
 
 #include <algorithm>
+#include "XMLAttributeValueView.h"
 
 #include "Prefs.h"
 #include "Project.h"
@@ -33,7 +34,7 @@ wxEvent *SelectedRegionEvent::Clone() const
 
 XMLMethodRegistryBase::Mutators<NotifyingSelectedRegion>
 NotifyingSelectedRegion::Mutators(
-   const wxString &legacyT0Name, const wxString &legacyT1Name)
+   const char *legacyT0Name, const char *legacyT1Name)
 {
    XMLMethodRegistryBase::Mutators<NotifyingSelectedRegion> results;
    // Get serialization methods of contained SelectedRegion, and wrap each
@@ -311,7 +312,7 @@ void ViewInfo::SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, do
 void ViewInfo::WriteXMLAttributes(XMLWriter &xmlFile) const
 // may throw
 {
-   selectedRegion.WriteXMLAttributes(xmlFile, wxT("sel0"), wxT("sel1"));
+   selectedRegion.WriteXMLAttributes(xmlFile, "sel0", "sel1");
    xmlFile.WriteAttr(wxT("vpos"), vpos);
    xmlFile.WriteAttr(wxT("h"), h, 10);
    xmlFile.WriteAttr(wxT("zoom"), zoom, 10);
@@ -325,25 +326,23 @@ ProjectFileIORegistry::AttributeReaderEntries entries {
 {
    return ViewInfo::Get(project).selectedRegion;
 },
-NotifyingSelectedRegion::Mutators(L"sel0", L"sel1")
+NotifyingSelectedRegion::Mutators("sel0", "sel1")
 };
 
 ProjectFileIORegistry::AttributeReaderEntries entries2 {
 // Just a pointer to function, but needing overload resolution as non-const:
 (ViewInfo& (*)(AudacityProject &)) &ViewInfo::Get,
 {
-   { L"vpos", [](auto &viewInfo, auto value){
-      long longVpos;
-      wxString(value).ToLong(&longVpos);
-      viewInfo.vpos = (int)(longVpos);
+   { "vpos", [](auto &viewInfo, auto value){
+      viewInfo.vpos = value.Get(viewInfo.vpos);
       // Note that (other than in import of old .aup files) there is no other
       // reassignment of vpos, except in handling the vertical scroll.
    } },
-   { L"h", [](auto &viewInfo, auto value){
-      Internat::CompatibleToDouble(value, &viewInfo.h);
+   { "h", [](auto &viewInfo, auto value){
+      viewInfo.h = value.Get(viewInfo.h);
    } },
-   { L"zoom", [](auto &viewInfo, auto value){
-      Internat::CompatibleToDouble(value, &viewInfo.zoom);
+   { "zoom", [](auto &viewInfo, auto value){
+      viewInfo.zoom = value.Get(viewInfo.zoom);
    } },
 } };
 

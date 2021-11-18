@@ -1532,7 +1532,7 @@ NormalizedKeyString CommandManager::GetDefaultKeyFromName(const CommandID &name)
    return entry->defaultKey;
 }
 
-bool CommandManager::HandleXMLTag(const std::string_view& tag, const wxChar **attrs)
+bool CommandManager::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (tag == "audacitykeyboard") {
       mXMLKeysRead = 0;
@@ -1542,17 +1542,20 @@ bool CommandManager::HandleXMLTag(const std::string_view& tag, const wxChar **at
       wxString name;
       NormalizedKeyString key;
 
-      while(*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+      for (auto pair : attrs)
+      {
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
-            break;
+         if (value.IsStringView())
+         {
+            const wxString strValue = value.ToWString();
 
-         if (!wxStrcmp(attr, wxT("name")) && XMLValueChecker::IsGoodString(value))
-            name = value;
-         if (!wxStrcmp(attr, wxT("key")) && XMLValueChecker::IsGoodString(value))
-            key = NormalizedKeyString{ value };
+            if (attr == "name")
+               name = strValue;
+            else if (attr == "key")
+               key = NormalizedKeyString{ strValue };
+         }
       }
 
       if (mCommandNameHash[name]) {
