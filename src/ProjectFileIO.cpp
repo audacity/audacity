@@ -41,6 +41,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectFormatExtensionsRegistry.h"
 
 #include "BufferedStreamReader.h"
+#include "FromChars.h"
 
 // Don't change this unless the file format changes
 // in an irrevocable way
@@ -240,7 +241,24 @@ public:
    SQLiteBlobStream(sqlite3_blob* blob, bool readOnly) noexcept
        : mBlob(blob)
        , mIsReadOnly(readOnly)
-   {}
+   {
+      mBlobSize = sqlite3_blob_bytes(blob);
+   }
+
+   SQLiteBlobStream(SQLiteBlobStream&& rhs) noexcept
+   {
+      *this = std::move(rhs);
+   }
+
+   SQLiteBlobStream& operator = (SQLiteBlobStream&& rhs) noexcept
+   {
+      std::swap(mBlob, rhs.mBlob);
+      std::swap(mBlobSize, rhs.mBlobSize);
+      std::swap(mOffset, rhs.mOffset);
+      std::swap(mIsReadOnly, rhs.mIsReadOnly);
+
+      return *this;
+   }
 
    ~SQLiteBlobStream() noexcept
    {
@@ -274,53 +292,134 @@ public:
       if (!IsOpen() || mIsReadOnly || ptr == nullptr)
          return SQLITE_MISUSE;
 
-      const int rc = sqlite3_blob_write(mBlob, ptr, size, mWriteOffset);
+      const int rc = sqlite3_blob_write(mBlob, ptr, size, mOffset);
 
       if (rc == SQLITE_OK)
-         mWriteOffset += size;
+         mOffset += size;
 
       return rc;
    }
 
+   int Read(void* ptr, int& size) noexcept
+   {
+      if (!IsOpen() || ptr == nullptr)
+         return SQLITE_MISUSE;
+
+      const int availableBytes = mBlobSize - mOffset;
+
+      if (availableBytes == 0)
+      {
+         size = 0;
+         return SQLITE_OK;
+      }
+      else if (availableBytes < size)
+      {
+         size = availableBytes;
+      }
+
+      const int rc = sqlite3_blob_read(mBlob, ptr, size, mOffset);
+
+      if (rc == SQLITE_OK)
+         mOffset += size;
+
+      return rc;
+   }
+
+   bool IsEof() const noexcept
+   {
+      return mOffset == mBlobSize;
+   }
+
 private:
    sqlite3_blob* mBlob { nullptr };
+   size_t mBlobSize { 0 };
 
-   int mWriteOffset { 0 };
+   int mOffset { 0 };
 
    bool mIsReadOnly { false };
 };
 
-class BufferedBlobStream : public BufferedStreamReader
+class BufferedProjectBlobStream : public BufferedStreamReader
 {
 public:
-   BufferedBlobStream(const wxMemoryBuffer& buffer)
-       : mBuffer(buffer)
+   static constexpr std::array<const char*, 2> Columns = { "dict", "doc" };
+
+   BufferedProjectBlobStream(
+      sqlite3* db, const char* schema, const char* table,
+      int64_t rowID)
+       // Despite we use 64k pages in SQLite - it is impossible to guarantee
+       // that read is satisfied from a single page.
+       // Reading 64k proved to be slower, (64k - 8) gives no measurable difference
+       // to reading 32k.
+       // Reading 4k is slower than reading 32k.
+       : BufferedStreamReader(32 * 1024) 
+       , mDB(db)
+       , mSchema(schema)
+       , mTable(table)
+       , mRowID(rowID)
    {
    }
 
 private:
-   const wxMemoryBuffer& mBuffer;
-   size_t mCurrentIndex { 0 };
+   bool OpenBlob(size_t index)
+   {
+      if (index >= Columns.size())
+      {
+         mBlobStream.reset();
+         return false;
+      }
+
+      mBlobStream = SQLiteBlobStream::Open(
+         mDB, mSchema, mTable, Columns[index], mRowID, true);
+
+      return mBlobStream.has_value();
+   }
+
+   std::optional<SQLiteBlobStream> mBlobStream;
+   size_t mNextBlobIndex { 0 };
+
+   sqlite3* mDB;
+   const char* mSchema;
+   const char* mTable;
+   const int64_t mRowID;
 
 protected:
    bool HasMoreData() const override
    {
-      return mCurrentIndex < mBuffer.GetBufSize();
+      return mBlobStream.has_value() || mNextBlobIndex < Columns.size();
    }
 
    size_t ReadData(void* buffer, size_t maxBytes) override
    {
-      const size_t bytesLeft = mBuffer.GetBufSize() - mCurrentIndex;
-      const size_t bytesToWrite = std::min(bytesLeft, maxBytes);
+      if (!mBlobStream || mBlobStream->IsEof())
+      {
+         if (!OpenBlob(mNextBlobIndex++))
+            return {};
+      }
 
-      std::memcpy(
-         buffer, static_cast<uint8_t*>(mBuffer.GetData()) + mCurrentIndex,
-         bytesToWrite);
+      // Do not allow reading more then 2GB at a time (O_o)
+      maxBytes = std::min<size_t>(maxBytes, std::numeric_limits<int>::max());
+      auto bytesRead = static_cast<int>(maxBytes);
 
-      mCurrentIndex += bytesToWrite;
-      return bytesToWrite;
+      if (SQLITE_OK != mBlobStream->Read(buffer, bytesRead))
+      {
+         // Reading has failed, close the stream and do not allow opening
+         // the next one
+         mBlobStream = {};
+         mNextBlobIndex = Columns.size();
+
+         return 0;
+      }
+      else if (bytesRead == 0)
+      {
+         mBlobStream = {};
+      }
+
+      return static_cast<size_t>(bytesRead);
    }
 };
+
+constexpr std::array<const char*, 2> BufferedProjectBlobStream::Columns;
 
 bool ProjectFileIO::InitializeSQL()
 {
@@ -632,7 +731,7 @@ static int ExecCallback(void *data, int cols, char **vals, char **names)
    );
 }
 
-int ProjectFileIO::Exec(const char *query, const ExecCB &callback)
+int ProjectFileIO::Exec(const char *query, const ExecCB &callback, bool silent)
 {
    char *errmsg = nullptr;
 
@@ -640,7 +739,7 @@ int ProjectFileIO::Exec(const char *query, const ExecCB &callback)
    int rc = sqlite3_exec(DB(), query, ExecCallback,
                          const_cast<void*>(ptr), &errmsg);
 
-   if (rc != SQLITE_ABORT && errmsg)
+   if (rc != SQLITE_ABORT && errmsg && !silent)
    {
       ADD_EXCEPTION_CONTEXT("sqlite3.query", query);
       ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
@@ -659,9 +758,9 @@ int ProjectFileIO::Exec(const char *query, const ExecCB &callback)
    return rc;
 }
 
-bool ProjectFileIO::Query(const char *sql, const ExecCB &callback)
+bool ProjectFileIO::Query(const char *sql, const ExecCB &callback, bool silent)
 {
-   int rc = Exec(sql, callback);
+   int rc = Exec(sql, callback, silent);
    // SQLITE_ABORT is a non-error return only meaning the callback
    // stopped the iteration of rows early
    if ( !(rc == SQLITE_OK || rc == SQLITE_ABORT) )
@@ -672,7 +771,7 @@ bool ProjectFileIO::Query(const char *sql, const ExecCB &callback)
    return true;
 }
 
-bool ProjectFileIO::GetValue(const char *sql, wxString &result)
+bool ProjectFileIO::GetValue(const char *sql, wxString &result, bool silent)
 {
    // Retrieve the first column in the first row, if any
    result.clear();
@@ -683,65 +782,29 @@ bool ProjectFileIO::GetValue(const char *sql, wxString &result)
       return 1;
    };
 
-   return Query(sql, cb);
+   return Query(sql, cb, silent);
 }
 
-bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
+bool ProjectFileIO::GetValue(const char *sql, int64_t &value, bool silent)
 {
-   auto db = DB();
-   int rc;
-
-   buffer.Clear();
-
-   sqlite3_stmt *stmt = nullptr;
-   auto cleanup = finally([&]
+   bool success = false;
+   auto cb = [&value, &success](int cols, char** vals, char**)
    {
-      if (stmt)
+      if (cols > 0)
       {
-         sqlite3_finalize(stmt);
+         const std::string_view valueString = vals[0];
+
+         success = std::errc() ==
+            FromChars(
+               valueString.data(), valueString.data() + valueString.length(),
+               value)
+               .ec;
       }
-   });
+      // Stop after one row
+      return 1;
+   };
 
-   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
-   if (rc != SQLITE_OK)
-   {
-      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetBlob::prepare");
-
-      SetDBError(
-         XO("Unable to prepare project file command:\n\n%s").Format(sql)
-      );
-      return false;
-   }
-
-   rc = sqlite3_step(stmt);
-
-   // A row wasn't found...not an error
-   if (rc == SQLITE_DONE)
-   {
-      return true;
-   }
-
-   if (rc != SQLITE_ROW)
-   {
-      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetBlob::step");
-
-      SetDBError(
-         XO("Failed to retrieve data from the project file.\nThe following command failed:\n\n%s").Format(sql)
-      );
-      // AUD TODO handle error
-      return false;
-   }
-
-   const void *blob = sqlite3_column_blob(stmt, 0);
-   int size = sqlite3_column_bytes(stmt, 0);
-
-   buffer.AppendData(blob, size);
-
-   return true;
+   return Query(sql, cb, silent) && success;
 }
 
 bool ProjectFileIO::CheckVersion()
@@ -1912,16 +1975,7 @@ bool ProjectFileIO::WriteDoc(const char *table,
    const wxString rowIDSql =
       wxString::Format("SELECT ROWID FROM %s.%s WHERE id = 1;", schema, table);
 
-   if (!Query(
-          rowIDSql,
-          [&rowID](int cols, char** vals, char** names)
-          {
-             if (cols != 1)
-                return -1;
-
-             rowID = std::stoll(vals[0]);
-             return 0;
-          }))
+   if (!GetValue(rowIDSql, rowID, true))
    {
       ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(sqlite3_errcode(db)));
       ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::rowid");
@@ -2020,41 +2074,39 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       return false;
    }
 
-   wxMemoryBuffer buffer;
-   bool usedAutosave = true;
+   int64_t rowId = -1;
 
-   // Get the autosave doc, if any
-   if (!ignoreAutosave &&
-       !GetBlob("SELECT dict || doc FROM autosave WHERE id = 1;", buffer))
-   {
-      // Error already set
-      return false;
-   }
- 
+   bool useAutosave =
+      !ignoreAutosave &&
+      GetValue("SELECT ROWID FROM main.autosave WHERE id = 1;", rowId, true);
+
+   int64_t rowsCount = 0;
    // If we didn't have an autosave doc, load the project doc instead
-   if (buffer.GetDataLen() == 0)
+   if (
+      !useAutosave &&
+      (!GetValue("SELECT COUNT(1) FROM main.project;", rowsCount, true) || rowsCount == 0))
    {
-      usedAutosave = false;
+      // Missing both the autosave and project docs. This can happen if the
+      // system were to crash before the first autosave into a temporary file.
+      // This should be a recoverable scenario.
+      mRecovered = true;
+      mModified = true;
 
-      if (!GetBlob("SELECT dict || doc FROM project WHERE id = 1;", buffer))
-      {
-         // Error already set
-         return false;
-      }
+      return true;
    }
 
-   // Missing both the autosave and project docs. This can happen if the
-   // system were to crash before the first autosave into a temporary file.
-   // This should be a recoverable scenario.
-   if (buffer.GetDataLen() == 0)
+   if (!useAutosave && !GetValue("SELECT ROWID FROM main.project WHERE id = 1;", rowId, false))
    {
-      mRecovered = true;
+      return false;
    }
    else
    {
       // Load 'er up
-      BufferedBlobStream stream(buffer);
+      BufferedProjectBlobStream stream(
+         DB(), "main", useAutosave ? "autosave" : "project", rowId);
+
       success = ProjectSerializer::Decode(stream, this);
+
       if (!success)
       {
          SetError(
@@ -2078,7 +2130,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       }
    
       // Remember if we used autosave or not
-      if (usedAutosave)
+      if (useAutosave)
       {
          mRecovered = true;
       }
