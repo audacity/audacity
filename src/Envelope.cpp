@@ -302,25 +302,23 @@ static double Limit( double Lo, double Value, double Hi )
 }
 #endif
 
-bool Envelope::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool Envelope::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
 {
    // Return unless it's the envelope tag.
-   if (wxStrcmp(tag, wxT("envelope")))
+   if (tag != "envelope")
       return false;
 
-   int numPoints = 0;
-   long nValue = -1;
+   int numPoints = -1;
 
-   while (*attrs) {
-      const wxChar *attr = *attrs++;
-      const wxChar *value = *attrs++;
-      if (!value)
-         break;
-      const wxString strValue = value;
-      if( !wxStrcmp(attr, wxT("numpoints")) &&
-            XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
-         numPoints = nValue;
+   for (auto pair : attrs)
+   {
+      auto attr = pair.first;
+      auto value = pair.second;
+
+      if (attr == "numpoints")
+         value.TryGet(numPoints);
    }
+
    if (numPoints < 0)
       return false;
 
@@ -329,9 +327,9 @@ bool Envelope::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return true;
 }
 
-XMLTagHandler *Envelope::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *Envelope::HandleXMLChild(const std::string_view& tag)
 {
-   if (wxStrcmp(tag, wxT("controlpoint")))
+   if (tag != "controlpoint")
       return NULL;
 
    mEnv.push_back( EnvPoint{} );

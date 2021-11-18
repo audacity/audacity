@@ -13,6 +13,7 @@ Paul Licameli split from class Track
 
 #include <memory>
 #include "CommonTrackPanelCell.h" // to inherit
+#include "XMLAttributeValueView.h"
 
 class Track;
 class TrackList;
@@ -90,7 +91,7 @@ public:
    virtual std::shared_ptr<CommonTrackCell> GetAffordanceControls();
 
    void WriteXMLAttributes( XMLWriter & ) const override;
-   bool HandleXMLAttribute( const wxChar *attr, const wxChar *value ) override;
+   bool HandleXMLAttribute( const std::string_view& attr, const XMLAttributeValueView& valueView ) override;
 
    // New virtual function.  The default just returns a one-element array
    // containing this.  Overrides might refine the Y axis.

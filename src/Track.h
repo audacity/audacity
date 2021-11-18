@@ -826,7 +826,7 @@ public:
       XMLWriter &xmlFile, bool includeNameAndSelected = true) const;
 
    // Return true iff the attribute is recognized.
-   bool HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value);
+   bool HandleCommonXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView);
 
 protected:
    std::shared_ptr<CommonTrackCell> mpView;
@@ -845,7 +845,7 @@ public:
    void WriteXMLAttributes(XMLWriter &WXUNUSED(xmlFile)) const {}
 
    // Return true iff the attribute is recognized.
-   bool HandleXMLAttribute(const wxChar * /*attr*/, const wxChar * /*value*/)
+   bool HandleXMLAttribute(const std::string_view & /*attr*/, const XMLAttributeValueView &/*value*/)
    { return false; }
 };
 
@@ -871,7 +871,7 @@ public:
    void WriteXMLAttributes(XMLWriter &xmlFile) const;
 
    // Return true iff the attribute is recognized.
-   bool HandleXMLAttribute(const wxChar *attr, const wxChar *value);
+   bool HandleXMLAttribute(const std::string_view &attr, const XMLAttributeValueView &value);
 
 protected:
    bool                mMute { false };

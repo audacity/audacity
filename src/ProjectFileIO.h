@@ -209,12 +209,12 @@ private:
       const TrackList *tracks = nullptr) /* not override */;
 
    // XMLTagHandler callback methods
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
+   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
 
    void UpdatePrefs() override;
 
-   int Exec(const char *query, const ExecCB &callback);
+   int Exec(const char *query, const ExecCB &callback, bool silent = false);
 
    // The opening of the database may be delayed until demanded.
    // Returns a non-null pointer to an open database, or throws an exception
@@ -237,10 +237,10 @@ private:
    // Use a connection that is already open rather than invoke OpenConnection
    void UseConnection(Connection &&conn, const FilePath &filePath);
 
-   bool Query(const char *sql, const ExecCB &callback);
+   bool Query(const char *sql, const ExecCB &callback, bool silent = false);
 
-   bool GetValue(const char *sql, wxString &value);
-   bool GetBlob(const char *sql, wxMemoryBuffer &buffer);
+   bool GetValue(const char *sql, wxString &value, bool silent = false);
+   bool GetValue(const char *sql, int64_t &value, bool silent = false);
 
    bool CheckVersion();
    bool InstallSchema(sqlite3 *db, const char *schema = "main");

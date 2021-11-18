@@ -3698,25 +3698,18 @@ void VSTEffect::SaveXML(const wxFileName & fn)
    xmlFile.Commit();
 }
 
-bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool VSTEffect::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
-   if (wxStrcmp(tag, wxT("vstprogrampersistence")) == 0)
+   if (tag == "vstprogrampersistence")
    {
-      while (*attrs)
+      for (auto pair : attrs)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
+         if (attr == "version")
          {
-            break;
-         }
-
-         const wxString strValue = value;
-
-         if (wxStrcmp(attr, wxT("version")) == 0)
-         {
-            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&mXMLVersion))
+            if (!value.TryGet(mXMLVersion))
             {
                return false;
             }
@@ -3735,7 +3728,7 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
 
-   if (wxStrcmp(tag, wxT("effect")) == 0)
+   if (tag == "effect")
    {
       memset(&mXMLInfo, 0, sizeof(mXMLInfo));
       mXMLInfo.version = 1;
@@ -3743,29 +3736,19 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       mXMLInfo.pluginVersion = mAEffect->version;
       mXMLInfo.numElements = mAEffect->numParams;
 
-      while (*attrs)
+      for (auto pair : attrs)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
+         if (attr == "name")
          {
-            break;
-         }
+            wxString strValue = value.ToWString();
 
-         const wxString strValue = value;
-
-         if (wxStrcmp(attr, wxT("name")) == 0)
-         {
-            if (!XMLValueChecker::IsGoodString(strValue))
-            {
-               return false;
-            }
-
-            if (value != GetSymbol().Internal())
+            if (strValue != GetSymbol().Internal())
             {
                auto msg = XO("This parameter file was saved from %s. Continue?")
-                  .Format( value );
+                  .Format( strValue );
                int result = AudacityMessageBox(
                   msg,
                   XO("Confirm"),
@@ -3777,30 +3760,30 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                }
             }
          }
-         else if (wxStrcmp(attr, wxT("version")) == 0)
+         else if (attr == "version")
          {
             long version;
-            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&version))
+            if (!value.TryGet(version))
             {
                return false;
             }
 
             mXMLInfo.pluginVersion = (int) version;
          }
-         else if (mXMLVersion > 1 && wxStrcmp(attr, wxT("uniqueID")) == 0)
+         else if (mXMLVersion > 1 && attr == "uniqueID")
          {
             long uniqueID;
-            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&uniqueID))
+            if (!value.TryGet(uniqueID))
             {
                return false;
             }
 
             mXMLInfo.pluginUniqueID = (int) uniqueID;
          }
-         else if (mXMLVersion > 1 && wxStrcmp(attr, wxT("numParams")) == 0)
+         else if (mXMLVersion > 1 && attr == "numParams")
          {
             long numParams;
-            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&numParams))
+            if (!value.TryGet(numParams))
             {
                return false;
             }
@@ -3816,26 +3799,16 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
 
-   if (wxStrcmp(tag, wxT("program")) == 0)
+   if (tag == "program")
    {
-      while (*attrs)
+      for (auto pair : attrs)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
+         if (attr == "name")
          {
-            break;
-         }
-
-         const wxString strValue = value;
-
-         if (wxStrcmp(attr, wxT("name")) == 0)
-         {
-            if (!XMLValueChecker::IsGoodString(strValue))
-            {
-               return false;
-            }
+            const wxString strValue = value.ToWString();
 
             if (strValue.length() > 24)
             {
@@ -3870,25 +3843,19 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
 
-   if (wxStrcmp(tag, wxT("param")) == 0)
+   if (tag == "param")
    {
       long ndx = -1;
       double val = -1.0;
-      while (*attrs)
+
+      for (auto pair : attrs)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
+         if (attr == "index")
          {
-            break;
-         }
-
-         const wxString strValue = value;
-
-         if (wxStrcmp(attr, wxT("index")) == 0)
-         {
-            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&ndx))
+            if (!value.TryGet(ndx))
             {
                return false;
             }
@@ -3900,18 +3867,15 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                return false;
             }
          }
-         else if (wxStrcmp(attr, wxT("name")) == 0)
+         // "name" attribute is ignored for params
+         /* else if (attr == "name")
          {
-            if (!XMLValueChecker::IsGoodString(strValue))
-            {
-               return false;
-            }
+
             // Nothing to do with it for now
-         }
-         else if (wxStrcmp(attr, wxT("value")) == 0)
+         }*/
+         else if (attr == "value")
          {
-            if (!XMLValueChecker::IsGoodInt(strValue) ||
-               !Internat::CompatibleToDouble(strValue, &val))
+            if (!value.TryGet(val))
             {
                return false;
             }
@@ -3933,7 +3897,7 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return true;
    }
 
-   if (wxStrcmp(tag, wxT("chunk")) == 0)
+   if (tag == "chunk")
    {
       mInChunk = true;
       return true;
@@ -3942,9 +3906,9 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void VSTEffect::HandleXMLEndTag(const wxChar *tag)
+void VSTEffect::HandleXMLEndTag(const std::string_view& tag)
 {
-   if (wxStrcmp(tag, wxT("chunk")) == 0)
+   if (tag == "chunk")
    {
       if (mChunk.length())
       {
@@ -3961,7 +3925,7 @@ void VSTEffect::HandleXMLEndTag(const wxChar *tag)
       mInChunk = false;
    }
 
-   if (wxStrcmp(tag, wxT("program")) == 0)
+   if (tag == "program")
    {
       if (mInSet)
       {
@@ -3972,37 +3936,37 @@ void VSTEffect::HandleXMLEndTag(const wxChar *tag)
    }
 }
 
-void VSTEffect::HandleXMLContent(const wxString & content)
+void VSTEffect::HandleXMLContent(const std::string_view& content)
 {
    if (mInChunk)
    {
-      mChunk += wxString(content).Trim(true).Trim(false);
+      mChunk += wxString(std::string(content)).Trim(true).Trim(false);
    }
 }
 
-XMLTagHandler *VSTEffect::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *VSTEffect::HandleXMLChild(const std::string_view& tag)
 {
-   if (wxStrcmp(tag, wxT("vstprogrampersistence")) == 0)
+   if (tag == "vstprogrampersistence")
    {
       return this;
    }
 
-   if (wxStrcmp(tag, wxT("effect")) == 0)
+   if (tag == "effect")
    {
       return this;
    }
 
-   if (wxStrcmp(tag, wxT("program")) == 0)
+   if (tag == "program")
    {
       return this;
    }
 
-   if (wxStrcmp(tag, wxT("param")) == 0)
+   if (tag == "param")
    {
       return this;
    }
 
-   if (wxStrcmp(tag, wxT("chunk")) == 0)
+   if (tag == "chunk")
    {
       return this;
    }
