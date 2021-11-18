@@ -16,9 +16,7 @@
 #include "ViewInfo.h"
 #include "../../SelectionState.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../WaveClip.h"
 #include "../../Track.h"
-#include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
 
 HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool unsafe, bool moving)
@@ -69,17 +67,17 @@ UIHandle::Result AffordanceHandle::Click(const TrackPanelMouseEvent& evt, Audaci
 UIHandle::Result AffordanceHandle::Release(const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent)
 {
     auto result = TimeShiftHandle::Release(event, pProject, pParent);
-    //Clip was not moved
-    if (!TimeShiftHandle::WasMoved())
+    if (!WasMoved())
     {
-        const auto track = TrackList::Get(*pProject).Lock<Track>(GetTrack());
-
-        auto& selectionState = SelectionState::Get(*pProject);
         auto& trackList = TrackList::Get(*pProject);
-        selectionState.SelectNone(trackList);
-        selectionState.SelectTrack(*track, true, true);
+        if(const auto track = trackList.Lock<Track>(GetTrack()))
+        {
+            auto& selectionState = SelectionState::Get(*pProject);
+            selectionState.SelectNone(trackList);
+            selectionState.SelectTrack(*track, true, true);
 
-        result |= SelectAt(event, pProject);
+            result |= SelectAt(event, pProject);
+        }
     }
     return result;
 }
