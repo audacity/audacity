@@ -583,7 +583,7 @@ MemoryStream XMLUtf8BufferWriter::ConsumeResult()
 
 void XMLUtf8BufferWriter::WriteEscaped(const std::string_view& value)
 {
-   for (char c : value)
+   for (auto c : value)
    {
       switch (c)
       {
@@ -607,7 +607,7 @@ void XMLUtf8BufferWriter::WriteEscaped(const std::string_view& value)
          Write("&gt;");
          break;
       default:
-         if (c > 0x1F || charXMLCompatiblity[c] != 0)
+         if (static_cast<uint8_t>(c) > 0x1F || charXMLCompatiblity[c] != 0)
             mStream.AppendByte(c);
       }
    }

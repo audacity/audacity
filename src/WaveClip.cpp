@@ -1808,7 +1808,7 @@ sampleCount WaveClip::GetSequenceSamplesCount() const
 
 double WaveClip::GetPlayStartTime() const noexcept
 {
-    return mSequenceOffset + mTrimLeft;
+    return mSequenceOffset + SamplesToTime(TimeToSamples(mTrimLeft));
 }
 
 void WaveClip::SetPlayStartTime(double time)
@@ -1820,7 +1820,8 @@ double WaveClip::GetPlayEndTime() const
 {
     auto numSamples = mSequence->GetNumSamples();
 
-    double maxLen = GetSequenceStartTime() + ((numSamples + mAppendBufferLen).as_double()) / mRate - mTrimRight;
+    double maxLen = GetSequenceStartTime() + ((numSamples + mAppendBufferLen).as_double()) / mRate 
+       - SamplesToTime(TimeToSamples(mTrimRight));
     // JS: calculated value is not the length;
     // it is a maximum value and can be negative; no clipping to 0
 
