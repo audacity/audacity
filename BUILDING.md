@@ -7,6 +7,8 @@
 * **cmake** >= 3.16
 * A working C++ 17 compiler
 
+For Windows see below for important installer settings.
+
 ### Conan
 
 [The best way to install Conan is `pip`.](https://docs.conan.io/en/latest/installation.html)
@@ -27,7 +29,7 @@ Alternatively, on macOS, Conan is available from `brew`.
 
 ### CMake
 
-On Windows, please use the [prebuilt binaries](https://cmake.org/download/).
+On Windows, please use the [prebuilt binaries](https://cmake.org/download/). Ensure you select one of the options to add cmake to the system path.
 
 On macOS, the easiest way to install CMake is `brew install cmake`.
 
@@ -58,7 +60,9 @@ $ sudo apt-get install libgtk2.0-dev libasound2-dev libavformat-dev libjack-jack
 
 ## Building on Windows
 
-1. Clone Audacity from the Audacity GitHub project. 
+1. Ensure the Python installer option `Add python to environment variables` is checked. Go to Windows Settings "Add or Remove Programs" and modify Python settings if required.
+  
+2. Clone Audacity from the Audacity GitHub project. 
   
    For example, in the **git-bash** run:
 
@@ -85,6 +89,10 @@ $ sudo apt-get install libgtk2.0-dev libasound2-dev libavformat-dev libjack-jack
 Generally, steps 1-5 are only needed the first-time you configure. Then, after you've generated the solution, you can open it in Visual Studio next time. If the project configuration has changed, the IDE will invoke CMake internally. 
 
 > Conan Center provides prebuilt binaries only for **x64**. Configuring the project for Win32 will take much longer, as all the 3rd party libraries will be built during the configuration.
+
+### Building with ASIO support on Windows
+
+To enable ASIO support, please select `audacity_has_asio_support=On` in CMake after the intial configuration and then run select **Configure** again as described above. ASIO is only supported on Windows and only for 64-bit builds.
 
 ## macOS
 
@@ -155,11 +163,6 @@ cmake -GXcode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=of
 ### CMake options
 
 You can use `cmake -LH` to get a list of the options available (or use CMake GUI or `ccmake`). The list will include documentation about each option. For convenience, [here is a list](CMAKE_OPTIONS.md) of the most notable options.
-
-### Building with ASIO support on Windows
-
-To enable ASIO support on Windows, please pass `audacity_has_asio_support=On` to CMake during the configuration. 
-ASIO is only supported on Windows and only for 64-bit builds.
 
 ### Building using system libraries
 
