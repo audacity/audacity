@@ -26,6 +26,7 @@
 #include "PluginInterface.h"
 
 #include "AUControl.h"
+#include <wx/weakref.h>
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
 /* i18n-hint: the name of an Apple audio software protocol */
@@ -38,7 +39,6 @@ class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
 
 class AudioUnitEffect : public wxEvtHandler,
-                        public EffectClientInterface,
                         public EffectUIClientInterface
 {
 public:
@@ -67,8 +67,6 @@ public:
    bool SupportsAutomation() override;
 
    // EffectClientInterface implementation
-
-   bool SetHost(EffectHostInterface *host) override;
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
@@ -100,8 +98,8 @@ public:
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
+   int ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -115,7 +113,7 @@ public:
 
    // EffectUIClientInterface implementation
 
-   void SetHostUI(EffectUIHostInterface *host) override;
+   bool SetHost(EffectHostInterface *host) override;
    bool PopulateUI(ShuttleGui &S) override;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
@@ -203,9 +201,8 @@ private:
    ArrayOf<AudioBufferList> mInputList;
    ArrayOf<AudioBufferList> mOutputList;
 
-   EffectUIHostInterface *mUIHost;
    wxWindow *mParent;
-   wxDialog *mDialog;
+   wxWeakRef<wxDialog> mDialog;
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
    bool mIsGraphical;
 

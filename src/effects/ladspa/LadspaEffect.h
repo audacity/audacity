@@ -17,6 +17,7 @@ class NumericTextCtrl;
 
 #include <wx/dynlib.h> // member variable
 #include <wx/event.h> // to inherit
+#include <wx/weakref.h>
 
 #include "EffectInterface.h"
 #include "ModuleInterface.h"
@@ -40,7 +41,6 @@ class NumericTextCtrl;
 class LadspaEffectMeter;
 
 class LadspaEffect final : public wxEvtHandler,
-                     public EffectClientInterface,
                      public EffectUIClientInterface
 {
 public:
@@ -66,8 +66,6 @@ public:
    bool SupportsAutomation() override;
 
    // EffectClientInterface implementation
-
-   bool SetHost(EffectHostInterface *host) override;
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
@@ -99,8 +97,8 @@ public:
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
+   int ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -114,7 +112,7 @@ public:
 
    // EffectUIClientInterface implementation
 
-   void SetHostUI(EffectUIHostInterface *host) override;
+   bool SetHost(EffectHostInterface *host) override;
    bool PopulateUI(ShuttleGui &S) override;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
@@ -183,10 +181,8 @@ private:
    // Realtime processing
    std::vector<LADSPA_Handle> mSlaves;
 
-   EffectUIHostInterface *mUIHost;
-
    NumericTextCtrl *mDuration;
-   wxDialog *mDialog;
+   wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent;
    ArrayOf<wxSlider*> mSliders;
    ArrayOf<wxTextCtrl*> mFields;

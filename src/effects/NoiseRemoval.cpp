@@ -153,7 +153,12 @@ bool EffectNoiseRemoval::CheckWhetherSkipEffect()
    return (mLevel == 0);
 }
 
-bool EffectNoiseRemoval::ShowInterface(
+//! An override still here for historical reasons, ignoring the factory
+/*! We would like to make this effect behave more like others, but it does have
+ its unusual two-pass nature.  First choose and analyze an example of noise,
+ then apply noise reduction to another selection.  That is difficult to fit into
+ the framework for managing settings of other effects. */
+int EffectNoiseRemoval::ShowHostInterface(
    wxWindow &parent, const EffectDialogFactory &, bool forceModal )
 {
    // to do: use forceModal correctly
@@ -183,9 +188,9 @@ bool EffectNoiseRemoval::ShowInterface(
    dlog.CentreOnParent();
    dlog.ShowModal();
 
-   if (dlog.GetReturnCode() == 0) {
-      return false;
-   }
+   const auto returnCode = dlog.GetReturnCode();
+   if (!returnCode)
+      return 0;
 
    mSensitivity = dlog.mSensitivity;
    mNoiseGain = -dlog.mGain;
@@ -200,7 +205,9 @@ bool EffectNoiseRemoval::ShowInterface(
    gPrefs->Write(wxT("/Effects/NoiseRemoval/NoiseLeaveNoise"), mbLeaveNoise);
 
    mDoProfile = (dlog.GetReturnCode() == 1);
-   return gPrefs->Flush();
+   if (!gPrefs->Flush())
+      return 0;
+   return returnCode;
 }
 
 bool EffectNoiseRemoval::Process()

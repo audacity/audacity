@@ -1009,18 +1009,18 @@ finish:
    return success;
 }
 
-bool NyquistEffect::ShowInterface(
+int NyquistEffect::ShowHostInterface(
    wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
 {
-   bool res = true;
+   int res = wxID_APPLY;
    if (!(Effect::TestUIFlags(EffectManager::kRepeatNyquistPrompt) && mIsPrompt)) {
       // Show the normal (prompt or effect) interface
-      res = Effect::ShowInterface(parent, factory, forceModal);
+      res = Effect::ShowHostInterface(parent, factory, forceModal);
    }
 
 
    // Remember if the user clicked debug
-   mDebug = (mUIResultID == eDebugID);
+   mDebug = (res == eDebugID);
 
    // We're done if the user clicked "Close", we are not the Nyquist Prompt,
    // or the program currently loaded into the prompt doesn't have a UI.
@@ -1041,7 +1041,7 @@ bool NyquistEffect::ShowInterface(
       effect.SetAutomationParameters(cp);
 
       // Show the normal (prompt or effect) interface
-      res = effect.ShowInterface(parent, factory, forceModal);
+      res = effect.ShowHostInterface(parent, factory, forceModal);
       if (res)
       {
          CommandParameters cp;
@@ -1052,7 +1052,7 @@ bool NyquistEffect::ShowInterface(
    else
    {
       effect.SetCommand(mInputCmd);
-      effect.mDebug = (mUIResultID == eDebugID);
+      effect.mDebug = (res == eDebugID);
       res = Delegate(effect, parent, factory);
       mT0 = effect.mT0;
       mT1 = effect.mT1;
@@ -1071,8 +1071,11 @@ void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
    {
       BuildEffectWindow(S);
    }
+}
 
-   EnableDebug(mDebugButton);
+bool NyquistEffect::EnablesDebug()
+{
+   return mDebugButton;
 }
 
 bool NyquistEffect::TransferDataToWindow()

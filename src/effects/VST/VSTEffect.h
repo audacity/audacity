@@ -18,6 +18,7 @@
 
 #include "SampleFormat.h"
 #include "XMLTagHandler.h"
+#include <wx/weakref.h>
 
 class wxSizerItem;
 class wxSlider;
@@ -90,7 +91,6 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class VSTEffect final : public wxEvtHandler,
-                  public EffectClientInterface,
                   public EffectUIClientInterface,
                   public XMLTagHandler,
                   public VSTEffectLink
@@ -118,8 +118,6 @@ class VSTEffect final : public wxEvtHandler,
    bool SupportsAutomation() override;
 
    // EffectClientInterface implementation
-
-   bool SetHost(EffectHostInterface *host) override;
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
@@ -151,8 +149,8 @@ class VSTEffect final : public wxEvtHandler,
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
+   int ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -166,7 +164,7 @@ class VSTEffect final : public wxEvtHandler,
 
    // EffectUIClientInterface implementation
 
-   void SetHostUI(EffectUIHostInterface *host) override;
+   bool SetHost(EffectHostInterface *host) override;
    bool PopulateUI(ShuttleGui &S) override;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
@@ -369,9 +367,8 @@ private:
    size_t mNumSamples;
 
    // UI
-   wxDialog *mDialog;
+   wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent;
-   EffectUIHostInterface *mUIHost;
    wxSizerItem *mContainer;
    bool mGui;
 
