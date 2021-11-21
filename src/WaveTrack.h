@@ -640,4 +640,9 @@ extern AUDACITY_DLL_API StringSetting AudioTrackNameSetting;
 
 AUDACITY_DLL_API bool GetEditClipsCanMove();
 
+// Generate a registry for serialized data
+#include "XMLMethodRegistry.h"
+using WaveTrackIORegistry = XMLMethodRegistry<WaveTrack>;
+DECLARE_XML_METHOD_REGISTRY( AUDACITY_DLL_API, WaveTrackIORegistry );
+
 #endif // __AUDACITY_WAVETRACK__
