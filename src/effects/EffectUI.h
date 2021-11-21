@@ -118,19 +118,14 @@ class Effect;
 class wxCheckBox;
 
 //
-class EffectUIHost final : public wxDialogWrapper,
-                     public EffectUIHostInterface
+class EffectUIHost final : public wxDialogWrapper
 {
 public:
    // constructors and destructors
    EffectUIHost(wxWindow *parent,
                 AudacityProject &project,
-                Effect *effect,
-                EffectUIClientInterface *client);
-   EffectUIHost(wxWindow *parent,
-                AudacityProject &project,
-                AudacityCommand *command,
-                EffectUIClientInterface *client);
+                Effect &effect,
+                EffectUIClientInterface &client);
    virtual ~EffectUIHost();
 
    bool TransferDataToWindow() override;
@@ -179,9 +174,8 @@ private:
 private:
    AudacityProject *mProject;
    wxWindow *mParent;
-   Effect *mEffect;
-   AudacityCommand * mCommand;
-   EffectUIClientInterface *mClient;
+   Effect &mEffect;
+   EffectUIClientInterface &mClient;
 
    RegistryPaths mUserPresets;
    bool mInitialized;
@@ -225,8 +219,8 @@ class CommandContext;
 namespace  EffectUI {
 
    AUDACITY_DLL_API
-   wxDialog *DialogFactory( wxWindow &parent, EffectHostInterface *pHost,
-      EffectUIClientInterface *client);
+   wxDialog *DialogFactory( wxWindow &parent, EffectHostInterface &host,
+      EffectUIClientInterface &client);
 
    /** Run an effect given the plugin ID */
    // Returns true on success.  Will only operate on tracks that

@@ -99,7 +99,6 @@ Effect::Effect()
    mProgress = NULL;
 
    mUIParent = NULL;
-   mUIDialog = NULL;
    mUIFlags = 0;
 
    mNumAudioIn = 0;
@@ -108,8 +107,6 @@ Effect::Effect()
    mBufferSize = 0;
    mBlockSize = 0;
    mNumChannels = 0;
-
-   mUIDebug = false;
 
    // PRL:  I think this initialization of mProjectRate doesn't matter
    // because it is always reassigned in DoEffect before it is used
@@ -122,10 +119,11 @@ Effect::Effect()
 
 Effect::~Effect()
 {
-   if (mUIDialog)
-   {
-      mUIDialog->Close();
-   }
+   // Destroying what is usually the unique Effect object of its subclass,
+   // which lasts until the end of the session.
+   // Maybe there is a non-modal realtime dialog still open.
+   if (mHostUIDialog)
+      mHostUIDialog->Close();
 }
 
 // EffectDefinitionInterface implementation
@@ -478,57 +476,64 @@ bool Effect::RealtimeProcessEnd()
    return true;
 }
 
-bool Effect::ShowInterface(wxWindow &parent,
-   const EffectDialogFactory &factory, bool forceModal)
+int Effect::ShowClientInterface(
+   wxWindow &parent, wxDialog &dialog, bool forceModal)
 {
-   if (!IsInteractive())
-   {
-      return true;
-   }
-
-   if (mUIDialog)
-   {
-      if ( mUIDialog->Close(true) )
-         mUIDialog = nullptr;
-      return false;
-   }
-
-   if (mClient)
-   {
-      return mClient->ShowInterface(parent, factory, forceModal);
-   }
-
-   // mUIDialog is null
-   auto cleanup = valueRestorer( mUIDialog );
-   
-   if ( factory )
-      mUIDialog = factory(parent, this, this);
-   if (!mUIDialog)
-   {
-      return false;
-   }
-
-
+   // Remember the dialog with a weak pointer, but don't control its lifetime
+   mUIDialog = &dialog;
    mUIDialog->Layout();
    mUIDialog->Fit();
    mUIDialog->SetMinSize(mUIDialog->GetSize());
 
    auto hook = GetVetoDialogHook();
    if( hook && hook( mUIDialog ) )
-      return false;
+      return 0;
 
    if( SupportsRealtime() && !forceModal )
    {
       mUIDialog->Show();
-      cleanup.release();
-
       // Return false to bypass effect processing
-      return false;
+      return 0;
    }
 
-   bool res = mUIDialog->ShowModal() != 0;
+   return mUIDialog->ShowModal();
+}
 
-   return res;
+int Effect::ShowHostInterface(wxWindow &parent,
+   const EffectDialogFactory &factory, bool forceModal)
+{
+   if (!IsInteractive())
+      // Effect without UI just proceeds quietly to apply it destructively.
+      return wxID_APPLY;
+
+   if (mHostUIDialog)
+   {
+      // Realtime effect has shown its nonmodal dialog, now hides it, and does
+      // nothing else.
+      if ( mHostUIDialog->Close(true) )
+         mHostUIDialog = nullptr;
+      return 0;
+   }
+
+   // Create the dialog
+   // Host, not client, is responsible for invoking the factory and managing
+   // the lifetime of the dialog.
+   // The usual factory lets the client (which is this, when self-hosting)
+   // populate it.  That factory function is called indirectly through a
+   // std::function to avoid source code dependency cycles.
+   const auto client = mClient ? mClient : this;
+   mHostUIDialog = factory(parent, *this, *client);
+   if (!mHostUIDialog)
+      return 0;
+
+   // Let the client show the dialog and decide whether to keep it open
+   auto result = client->ShowClientInterface(parent, *mHostUIDialog, forceModal);
+   if (!mHostUIDialog->IsShown())
+      // Client didn't show it, or showed it modally and closed it
+      // So destroy it
+      mHostUIDialog.reset();
+
+   return result;
 }
 
 bool Effect::GetAutomationParameters(CommandParameters & parms)
@@ -616,10 +621,6 @@ bool Effect::LoadFactoryDefaults()
 }
 
 // EffectUIClientInterface implementation
-
-void Effect::SetHostUI(EffectUIHostInterface *WXUNUSED(host))
-{
-}
 
 bool Effect::PopulateUI(ShuttleGui &S)
 {
@@ -888,7 +889,7 @@ wxString Effect::GetSavedStateGroup()
 
 // Effect implementation
 
-bool Effect::Startup(EffectClientInterface *client)
+bool Effect::Startup(EffectUIClientInterface *client)
 {
    // Let destructor know we need to be shutdown
    mClient = client;
@@ -1170,7 +1171,7 @@ bool Effect::DoEffect(double projectRate,
    // Prompting may call Effect::Preview
    if ( pParent && dialogFactory &&
       IsInteractive() &&
-      !ShowInterface( *pParent, dialogFactory, IsBatchProcessing() ) )
+      !ShowHostInterface( *pParent, dialogFactory, IsBatchProcessing() ) )
    {
       return false;
    }
@@ -1855,11 +1856,6 @@ bool Effect::EnablePreview(bool enable)
    }
 
    return enable;
-}
-
-void Effect::EnableDebug(bool enable)
-{
-   mUIDebug = enable;
 }
 
 void Effect::SetLinearEffectFlag(bool linearEffectFlag)

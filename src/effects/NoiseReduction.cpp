@@ -211,7 +211,7 @@ public:
    Settings();
    ~Settings() {}
 
-   bool PromptUser(EffectNoiseReduction *effect,
+   int PromptUser(EffectNoiseReduction *effect,
       wxWindow &parent, bool bHasProfile, bool bAllowTwiddleSettings);
    bool PrefsIO(bool read);
    bool Validate(EffectNoiseReduction *effect) const;
@@ -446,7 +446,12 @@ bool EffectNoiseReduction::CheckWhetherSkipEffect()
    return false;
 }
 
-bool EffectNoiseReduction::ShowInterface(
+//! An override still here for historical reasons, ignoring the factory
+/*! We would like to make this effect behave more like others, but it does have
+ its unusual two-pass nature.  First choose and analyze an example of noise,
+ then apply noise reduction to another selection.  That is difficult to fit into
+ the framework for managing settings of other effects. */
+int EffectNoiseReduction::ShowHostInterface(
    wxWindow &parent, const EffectDialogFactory &, bool forceModal)
 {
    // to do: use forceModal correctly
@@ -459,7 +464,7 @@ bool EffectNoiseReduction::ShowInterface(
       bool(mStatistics), forceModal);
 }
 
-bool EffectNoiseReduction::Settings::PromptUser
+int EffectNoiseReduction::Settings::PromptUser
 (EffectNoiseReduction *effect, wxWindow &parent,
  bool bHasProfile, bool bAllowTwiddleSettings)
 {
@@ -469,13 +474,16 @@ bool EffectNoiseReduction::Settings::PromptUser
    dlog.CentreOnParent();
    dlog.ShowModal();
 
-   if (dlog.GetReturnCode() == 0)
-      return false;
+   const auto returnCode = dlog.GetReturnCode();
+   if (!returnCode)
+      return 0;
 
    *this = dlog.GetTempSettings();
-   mDoProfile = (dlog.GetReturnCode() == 1);
+   mDoProfile = (returnCode == 1);
 
-   return PrefsIO(false);
+   if (!PrefsIO(false))
+      return 0;
+   return returnCode;
 }
 
 namespace {

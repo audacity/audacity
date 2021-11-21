@@ -36,6 +36,7 @@ class wxWindow;
 #include "../Track.h"
 
 #include "../widgets/wxPanelWrapper.h" // to inherit
+#include <wx/windowptr.h>
 
 class wxArrayString;
 class ShuttleGui;
@@ -66,10 +67,10 @@ class WaveTrack;
 // TODO:  Much more cleanup of old methods and variables is needed, but
 // TODO:  can't be done until after all effects are using the NEW API.
 
+//! An Effect object is at once host and client:  it is self-hosting.
 class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
-                                public EffectClientInterface,
-                                public EffectUIClientInterface,
-                                public EffectHostInterface
+   public EffectUIClientInterface,
+   public EffectUIHostInterface
 {
  //
  // public methods
@@ -142,8 +143,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                                        size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
+   int ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal = false) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -157,7 +158,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectUIClientInterface implementation
 
-   void SetHostUI(EffectUIHostInterface *host) override;
    bool PopulateUI(ShuttleGui &S) final;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
@@ -185,12 +185,18 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    RegistryPath GetUserPresetsGroup(const RegistryPath & name) override;
    RegistryPath GetCurrentSettingsGroup() override;
    RegistryPath GetFactoryDefaultsGroup() override;
+
    virtual wxString GetSavedStateGroup() /* not override? */;
+
+   // EffectUIHostInterface implementation
+
+   int ShowHostInterface( wxWindow &parent,
+      const EffectDialogFactory &factory, bool forceModal = false) override;
 
    // Effect implementation
 
    // NEW virtuals
-   virtual bool Startup(EffectClientInterface *client);
+   virtual bool Startup(EffectUIClientInterface *client);
    virtual bool Startup();
 
    virtual bool GetAutomationParameters(wxString & parms);
@@ -285,7 +291,6 @@ protected:
    virtual bool TransferDataFromWindow() /* not override */;
    virtual bool EnableApply(bool enable = true);
    virtual bool EnablePreview(bool enable = true);
-   virtual void EnableDebug(bool enable = true);
 
    // No more virtuals!
 
@@ -415,7 +420,6 @@ protected:
 // may be needed by any particular subclass of Effect.
 //
 protected:
-
    ProgressDialog *mProgress; // Temporary pointer, NOT deleted in destructor.
    double         mProjectRate; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
@@ -436,9 +440,11 @@ protected:
    int            mPass;
 
    // UI
-   wxDialog       *mUIDialog;
+   //! This smart pointer controls the lifetime of the dialog
+   wxWindowPtr<wxDialog> mHostUIDialog;
+   //! This weak pointer may be the same as the above, or null
+   wxWeakRef<wxDialog> mUIDialog;
    wxWindow       *mUIParent;
-   int            mUIResultID;
    unsigned       mUIFlags;
 
    sampleCount    mSampleCnt;
@@ -478,8 +484,6 @@ private:
 
    bool mIsPreview;
 
-   bool mUIDebug;
-
    std::vector<Track*> mIMap;
    std::vector<Track*> mOMap;
 
@@ -487,7 +491,7 @@ private:
    int mNumGroups;
 
    // For client driver
-   EffectClientInterface *mClient;
+   EffectUIClientInterface *mClient;
    size_t mNumAudioIn;
    size_t mNumAudioOut;
 

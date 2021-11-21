@@ -630,7 +630,6 @@ LadspaEffect::LadspaEffect(const wxString & path, int index)
 
    mLatencyPort = -1;
 
-   mDialog = NULL;
    mParent = NULL;
 }
 
@@ -1068,26 +1067,11 @@ bool LadspaEffect::RealtimeProcessEnd()
    return true;
 }
 
-bool LadspaEffect::ShowInterface(
-   wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
+int LadspaEffect::ShowClientInterface(
+   wxWindow &parent, wxDialog &dialog, bool forceModal)
 {
-   if (mDialog)
-   {
-      if ( mDialog->Close(true) )
-         mDialog = nullptr;
-      return false;
-   }
-
-   // mDialog is null
-   auto cleanup = valueRestorer( mDialog );
-
-   if ( factory )
-      mDialog = factory(parent, mHost, this);
-   if (!mDialog)
-   {
-      return false;
-   }
-
+   // Remember the dialog with a weak pointer, but don't control its lifetime
+   mDialog = &dialog;
    mDialog->Layout();
    mDialog->Fit();
    mDialog->SetMinSize(mDialog->GetSize());
@@ -1095,14 +1079,10 @@ bool LadspaEffect::ShowInterface(
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
    {
       mDialog->Show();
-      cleanup.release();
-
-      return false;
+      return 0;
    }
 
-   bool res = mDialog->ShowModal() != 0;
-
-   return res;
+   return mDialog->ShowModal();
 }
 
 bool LadspaEffect::GetAutomationParameters(CommandParameters & parms)
@@ -1187,11 +1167,6 @@ bool LadspaEffect::LoadFactoryDefaults()
 // ============================================================================
 // EffectUIClientInterface Implementation
 // ============================================================================
-
-void LadspaEffect::SetHostUI(EffectUIHostInterface *host)
-{
-   mUIHost = host;
-}
 
 bool LadspaEffect::PopulateUI(ShuttleGui &S)
 {
@@ -1545,7 +1520,6 @@ bool LadspaEffect::CloseUI()
    mFields.reset();
    mLabels.reset();
 
-   mUIHost = NULL;
    mParent = NULL;
    mDialog = NULL;
 

@@ -42,8 +42,6 @@
 #ifndef __AUDACITY_EFFECTINTERFACE_H__
 #define __AUDACITY_EFFECTINTERFACE_H__
 
-#include <functional>
-
 #include "ComponentInterface.h"
 #include "ComponentInterfaceSymbol.h"
 #include "EffectAutomationParameters.h" // for command automation
@@ -100,13 +98,13 @@ public:
 
    // Can the effect be used without the UI.
    virtual bool SupportsAutomation() = 0;
+
+   //! Whether the effect dialog should have a Debug button; default, always false.
+   virtual bool EnablesDebug();
 };
 
 class wxDialog;
 class wxWindow;
-
-// Incomplete type not defined in libraries -- TODO clean that up:
-class EffectUIHostInterface;
 
 class EffectUIClientInterface;
 
@@ -164,14 +162,7 @@ AudacityCommand.
 class COMPONENTS_API EffectClientInterface  /* not final */ : public EffectDefinitionInterface
 {
 public:
-   using EffectDialogFactory = std::function<
-      wxDialog* ( wxWindow &parent,
-         EffectHostInterface*, EffectUIClientInterface* )
-   >;
-
    virtual ~EffectClientInterface();
-
-   virtual bool SetHost(EffectHostInterface *host) = 0;
 
    virtual unsigned GetAudioInCount() = 0;
    virtual unsigned GetAudioOutCount() = 0;
@@ -202,10 +193,6 @@ public:
    virtual size_t RealtimeProcess(int group, float **inBuf, float **outBuf, size_t numSamples) = 0;
    virtual bool RealtimeProcessEnd() = 0;
 
-   virtual bool ShowInterface(
-      wxWindow &parent, const EffectDialogFactory &factory,
-      bool forceModal = false
-   ) = 0;
    // Some effects will use define params to define what parameters they take.
    // If they do, they won't need to implement Get or SetAutomation parameters.
    // since the Effect class can do it.  Or at least that is how things happen
@@ -233,13 +220,26 @@ values.  It can import and export presets.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectUIClientInterface /* not final */
+   : public EffectClientInterface
 {
 public:
    virtual ~EffectUIClientInterface();
 
-   virtual void SetHostUI(EffectUIHostInterface *host) = 0;
+   /*!
+    @return 0 if destructive effect processing should not proceed (and there
+    may be a non-modal dialog still opened); otherwise, modal dialog return code
+    */
+   virtual int ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal = false
+   ) = 0;
+
+   virtual bool SetHost(EffectHostInterface *host) = 0;
+
    virtual bool IsGraphicalUI() = 0;
+
+   //! Adds controls to a panel that is given as the parent window of `S`
    virtual bool PopulateUI(ShuttleGui &S) = 0;
+
    virtual bool ValidateUI() = 0;
    virtual bool HideUI() = 0;
    virtual bool CloseUI() = 0;

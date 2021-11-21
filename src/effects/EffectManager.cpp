@@ -305,17 +305,21 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
    return false;
 }
 
+//! Shows an effect or command dialog so the user can specify settings for later
+/*!
+ It is used when defining a macro.  It does not invoke the effect or command.
+ */
 bool EffectManager::PromptUser(
-   const PluginID & ID,
-   const EffectClientInterface::EffectDialogFactory &factory, wxWindow &parent)
+   const PluginID & ID, const EffectDialogFactory &factory, wxWindow &parent)
 {
    bool result = false;
    Effect *effect = GetEffect(ID);
 
    if (effect)
    {
-      result = effect->ShowInterface(
-         parent, factory, effect->IsBatchProcessing() );
+      //! Show the effect dialog, only so that the user can choose settings.
+      result = effect->ShowHostInterface(
+         parent, factory, effect->IsBatchProcessing() ) != 0;
       return result;
    }
 
@@ -735,7 +739,7 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
       auto effect = std::make_shared<Effect>(); // TODO: use make_unique and store in std::unordered_map
       if (effect)
       {
-         EffectClientInterface *client = dynamic_cast<EffectClientInterface *>(ident);
+         const auto client = dynamic_cast<EffectUIClientInterface *>(ident);
          if (client && effect->Startup(client))
          {
             auto pEffect = effect.get();
