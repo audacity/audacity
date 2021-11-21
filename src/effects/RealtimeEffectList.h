@@ -12,6 +12,8 @@
 #include <vector>
 
 #include "TrackAttachment.h"
+#include "ModuleInterface.h" // for PluginID
+#include "XMLTagHandler.h"
 
 class AudacityProject;
 
@@ -19,7 +21,7 @@ class RealtimeEffectState;
 
 class Track;
 
-class RealtimeEffectList final : public TrackAttachment
+class RealtimeEffectList final : public TrackAttachment, public XMLTagHandler
 {
    RealtimeEffectList(const RealtimeEffectList &) = delete;
    RealtimeEffectList &operator=(const RealtimeEffectList &) = delete;
@@ -40,7 +42,17 @@ public:
    //! Apply the function to all states sequentially.
    void Visit(StateVisitor func);
 
+   //! Returns null if the id is nonempty but no such effect was found
+   RealtimeEffectState *AddState(const PluginID &id);
+
    using States = std::vector<std::unique_ptr<RealtimeEffectState>>;
+
+   static const std::string &XMLTag();
+   bool HandleXMLTag(
+      const std::string_view &tag, const AttributesList &attrs) override;
+   void HandleXMLEndTag(const std::string_view &tag) override;
+   XMLTagHandler *HandleXMLChild(const std::string_view &tag) override;
+   void WriteXML(XMLWriter &xmlFile) const;
 
 private:
    States mStates;
