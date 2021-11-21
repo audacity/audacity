@@ -17,10 +17,11 @@
 #include <vector>
 #include <cstddef>
 #include "ModuleInterface.h" // for PluginID
+#include "XMLTagHandler.h"
 
 class EffectProcessor;
 
-class RealtimeEffectState
+class RealtimeEffectState : public XMLTagHandler
 {
 public:
    //! Type of hook function that application installs
@@ -56,8 +57,16 @@ public:
    //! Main thread cleans up playback
    bool Finalize();
 
+   static const std::string &XMLTag();
+   bool HandleXMLTag(
+      const std::string_view &tag, const AttributesList &attrs) override;
+   void HandleXMLEndTag(const std::string_view &tag) override;
+   XMLTagHandler *HandleXMLChild(const std::string_view &tag) override;
+   void WriteXML(XMLWriter &xmlFile);
+
 private:
    PluginID mID;
+   wxString mParameters;  // Used only during deserialization
    std::unique_ptr<EffectProcessor> mEffect;
 
    std::vector<int> mGroupProcessor;

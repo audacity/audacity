@@ -11,6 +11,7 @@
 #include "RealtimeEffectState.h"
 
 #include "EffectInterface.h"
+#include "PluginManager.h"
 
 #include "Effect.h"
 
@@ -304,4 +305,116 @@ bool RealtimeEffectState::Finalize()
       return false;
 
    return mEffect->RealtimeFinalize();
+}
+
+const std::string &RealtimeEffectState::XMLTag()
+{
+   static const std::string result{"effect"};
+   return result;
+}
+
+static const auto idAttribute = "id";
+static const auto versionAttribute = "version";
+static const auto parametersAttribute = "parameters";
+static const auto parameterAttribute = "parameter";
+static const auto nameAttribute = "name";
+static const auto valueAttribute = "value";
+
+bool RealtimeEffectState::HandleXMLTag(
+   const std::string_view &tag, const AttributesList &attrs)
+{
+   if (tag == XMLTag()) {
+      mParameters.clear();
+      mEffect.reset();
+      mID.clear();
+
+      for (auto pair : attrs) {
+         auto attr = pair.first;
+         auto value = pair.second;
+
+         if (attr == idAttribute) {
+            SetID(value.ToWString());
+            if (!mEffect) {
+               // TODO - complain!!!!
+            }
+         }
+         else if (attr == versionAttribute) {
+         }
+      }
+
+      return true;
+   }
+   else if (tag == parametersAttribute)
+      return true;
+   else if (tag == parameterAttribute) {
+      wxString n;
+      wxString v;
+
+      for (auto pair : attrs) {
+         auto attr = pair.first;
+         auto value = pair.second;
+
+         if (attr == nameAttribute)
+            n = value.ToWString();
+         else if (attr == valueAttribute)
+            v = value.ToWString();
+      }
+
+      mParameters += wxString::Format(wxT("\"%s=%s\" "), n, v);
+
+      return true;
+   }
+   else
+      return false;
+}
+
+void RealtimeEffectState::HandleXMLEndTag(const std::string_view &tag)
+{
+   if (tag == XMLTag()) {
+      if (mEffect && !mParameters.empty()) {
+         CommandParameters parms(mParameters);
+         mEffect->SetAutomationParameters(parms);
+      }
+      mParameters.clear();
+   }
+}
+
+XMLTagHandler *RealtimeEffectState::HandleXMLChild(const std::string_view &tag)
+{
+   return this;
+}
+
+void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
+{
+   if (!mEffect)
+      return;
+
+   xmlFile.StartTag(XMLTag());
+   xmlFile.WriteAttr(idAttribute, XMLWriter::XMLEsc(PluginManager::GetID(mEffect.get())));
+   xmlFile.WriteAttr(versionAttribute, XMLWriter::XMLEsc(mEffect->GetVersion()));
+
+   CommandParameters cmdParms;
+   if (mEffect->GetAutomationParameters(cmdParms)) {
+      xmlFile.StartTag(parametersAttribute);
+
+      wxString entryName;
+      long entryIndex;
+      bool entryKeepGoing;
+
+      entryKeepGoing = cmdParms.GetFirstEntry(entryName, entryIndex);
+      while (entryKeepGoing) {
+         wxString entryValue = cmdParms.Read(entryName, "");
+
+         xmlFile.StartTag(parameterAttribute);
+         xmlFile.WriteAttr(nameAttribute, XMLWriter::XMLEsc(entryName));
+         xmlFile.WriteAttr(valueAttribute, XMLWriter::XMLEsc(entryValue));
+         xmlFile.EndTag(parameterAttribute);
+
+         entryKeepGoing = cmdParms.GetNextEntry(entryName, entryIndex);
+      }
+
+      xmlFile.EndTag(parametersAttribute);
+   }
+
+   xmlFile.EndTag(XMLTag());
 }
