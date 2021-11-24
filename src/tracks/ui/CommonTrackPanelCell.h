@@ -19,6 +19,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <functional>
 #include "ComponentInterfaceSymbol.h"
 
+#include "XMLTagHandler.h"
+
 class CommandContext;
 class Track;
 class XMLWriter;
@@ -114,7 +116,8 @@ public:
    virtual void WriteXMLAttributes( XMLWriter & ) const;
 
    // default recognizes no attributes, and returns false
-   virtual bool HandleXMLAttribute( const wxChar *attr, const wxChar *value );
+   virtual bool HandleXMLAttribute(
+      const std::string_view& attr, const XMLAttributeValueView& valueView);
 
 private:
    std::weak_ptr< Track > mwTrack;

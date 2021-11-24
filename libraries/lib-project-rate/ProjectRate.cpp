@@ -15,6 +15,7 @@ Paul Licameli split from ProjectSettings.cpp
 #include "Project.h"
 #include "QualitySettings.h"
 #include "XMLWriter.h"
+#include "XMLAttributeValueView.h"
 
 wxDEFINE_EVENT(EVT_PROJECT_RATE_CHANGE, wxEvent);
 
@@ -87,9 +88,8 @@ static ProjectFileIORegistry::WriterEntry entry {
 static ProjectFileIORegistry::AttributeReaderEntries entries {
 // Just a pointer to function, but needing overload resolution as non-const:
 (ProjectRate& (*)(AudacityProject &)) &ProjectRate::Get, {
-   { L"rate", [](auto &settings, auto value){
-      double rate;
-      Internat::CompatibleToDouble(value, &rate);
+   { "rate", [](auto &settings, auto value){
+      double rate = value.Get(settings.GetRate());
       settings.SetRate( rate );
    } },
 } };

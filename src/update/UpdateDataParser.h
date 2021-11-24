@@ -45,22 +45,23 @@ private:
     };
     XmlParsedTags mXmlParsingState{ XmlParsedTags::kNotUsedTag };
 
-    std::map<XmlParsedTags, wxString> mXmlTagNames{
-        { XmlParsedTags::kUpdateTag, wxT("Updates") },
-        { XmlParsedTags::kDescriptionTag, wxT("Description") },
-        { XmlParsedTags::kOsTag, wxT("OS") },
-        { XmlParsedTags::kWin32Tag, wxT("Win32") },
-        { XmlParsedTags::kWin64Tag, wxT("Win64") },
-        { XmlParsedTags::kMacosTag, wxT("Macos") },
-        { XmlParsedTags::kLinuxTag, wxT("Linux") },
-        { XmlParsedTags::kVersionTag, wxT("Version") },
-        { XmlParsedTags::kLinkTag, wxT("Link") },
+    std::map<XmlParsedTags, const char*> mXmlTagNames{
+        { XmlParsedTags::kUpdateTag, "Updates" },
+        { XmlParsedTags::kDescriptionTag, "Description" },
+        { XmlParsedTags::kOsTag, "OS" },
+        { XmlParsedTags::kWin32Tag, "Win32" },
+        { XmlParsedTags::kWin64Tag, "Win64" },
+        { XmlParsedTags::kMacosTag, "Macos" },
+        { XmlParsedTags::kLinuxTag, "Linux" },
+        { XmlParsedTags::kVersionTag, "Version" },
+        { XmlParsedTags::kLinkTag, "Link" },
     };
 
-    bool HandleXMLTag(const wxChar* tag, const wxChar** attrs) override;
-    void HandleXMLEndTag(const wxChar* tag) override;
-    void HandleXMLContent(const wxString& content) override;
-    XMLTagHandler* HandleXMLChild(const wxChar* tag) override;
+    bool HandleXMLTag(
+       const std::string_view& tag, const AttributesList& attrs) override;
+    void HandleXMLEndTag(const std::string_view& tag) override;
+    void HandleXMLContent(const std::string_view& content) override;
+    XMLTagHandler* HandleXMLChild(const std::string_view& tag) override;
 
     wxArrayString SplitChangelogSentences(const wxString& changelogContent);
 
