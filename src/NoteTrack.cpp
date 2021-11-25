@@ -40,8 +40,6 @@
 #include "InconsistencyException.h"
 
 #include "effects/TimeWarper.h"
-#include "tracks/ui/TrackView.h"
-#include "tracks/ui/TrackControls.h"
 
 #include "AllThemeResources.h"
 #include "Theme.h"
@@ -111,14 +109,16 @@ SONFNS(AutoSave)
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    "notetrack",
-   []( AudacityProject &project ){
-      auto &tracks = TrackList::Get( project );
-      auto result = tracks.Add( std::make_shared<NoteTrack>());
-      TrackView::Get( *result );
-      TrackControls::Get( *result );
-      return result;
-   }
+   NoteTrack::New
 };
+
+NoteTrack *NoteTrack::New( AudacityProject &project )
+{
+   auto &tracks = TrackList::Get( project );
+   auto result = tracks.Add( std::make_shared<NoteTrack>());
+   result->AttachedTrackObjects::BuildAll();
+   return result;
+}
 
 NoteTrack::NoteTrack()
    : NoteTrackBase()

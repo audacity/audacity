@@ -25,6 +25,9 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
 
  public:
 
+   // Construct and also build all attachments
+   static TimeTrack *New(AudacityProject &project);
+
    explicit TimeTrack(const ZoomInfo *zoomInfo);
    /** @brief Copy-Constructor - create a NEW TimeTrack:: which is an independent copy of the original
     *

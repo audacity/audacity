@@ -31,12 +31,6 @@ for drawing different aspects of the label and its text box.
 
 #include "LabelTrack.h"
 
-#include "tracks/ui/TrackView.h"
-#include "tracks/ui/TrackControls.h"
-
-
-
-#include <stdio.h>
 #include <algorithm>
 #include <limits.h>
 #include <float.h>
@@ -58,14 +52,16 @@ wxDEFINE_EVENT(EVT_LABELTRACK_SELECTION, LabelTrackEvent);
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    "labeltrack",
-   []( AudacityProject &project ){
-      auto &tracks = TrackList::Get( project );
-      auto result = tracks.Add(std::make_shared<LabelTrack>());
-      TrackView::Get( *result );
-      TrackControls::Get( *result );
-      return result;
-   }
+   LabelTrack::New
 };
+
+LabelTrack *LabelTrack::New( AudacityProject &project )
+{
+   auto &tracks = TrackList::Get( project );
+   auto result = tracks.Add(std::make_shared<LabelTrack>());
+   result->AttachedTrackObjects::BuildAll();
+   return result;
+}
 
 LabelTrack::LabelTrack():
    Track(),
