@@ -442,8 +442,8 @@ protected:
    int            mPass;
 
    // UI
-   //! This smart pointer controls the lifetime of the dialog
-   wxWindowPtr<wxDialog> mHostUIDialog;
+   //! This smart pointer tracks the lifetime of the dialog
+   wxWeakRef<wxDialog> mHostUIDialog;
    //! This weak pointer may be the same as the above, or null
    wxWeakRef<wxDialog> mUIDialog;
    wxWindow       *mUIParent;
