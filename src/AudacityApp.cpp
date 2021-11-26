@@ -102,6 +102,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "Sequence.h"
 #include "SelectFile.h"
 #include "TempDirectory.h"
+#include "LoadThemeResources.h"
 #include "Track.h"
 #include "prefs/PrefsDialog.h"
 #include "Theme.h"
@@ -1348,6 +1349,8 @@ bool AudacityApp::OnInit()
       FinishPreferences();
       return false;
    }
+
+   ThemeResources::Load();
 
 #ifdef __WXMAC__
    // Bug2437:  When files are opened from Finder and another instance of
