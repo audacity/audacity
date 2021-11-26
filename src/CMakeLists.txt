@@ -1034,6 +1034,9 @@ list( APPEND DEFINES
       $<$<BOOL:${HAVE_MLOCK}>:
          HAVE_MLOCK
       >
+      $<$<PLATFORM_ID:CYGWIN>:
+         _GNU_SOURCE=1
+      >
       $<$<PLATFORM_ID:Windows>:
          _CRT_SECURE_NO_WARNINGS
          __STDC_CONSTANT_MACROS
