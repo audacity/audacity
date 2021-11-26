@@ -22,3 +22,22 @@ gh_export AUDACITY_BUILD_TYPE="RelWithDebInfo"
 gh_export AUDACITY_INSTALL_PREFIX="${repository_root}/build/install"
 
 gh_export GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+if [[ "${OSTYPE}" == msys* ]]; then # Windows
+
+    # On Windows, we pin the MSVC version
+    # Compiler version stands to MSVC version here
+
+    compiler_version=$(echo "${AUDACITY_CMAKE_GENERATOR}" | grep -m 1 -Eo "[[:digit:]]+" | head -1)
+
+elif [[ "${OSTYPE}" == darwin* ]]; then # macOS
+
+    compiler_version="$(clang -dumpversion)"
+
+else # Linux & others
+
+    compiler_version="$(cc -dumpversion)"
+
+fi
+
+gh_export COMPILER_VERSION="${compiler_version}"
