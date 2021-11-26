@@ -270,19 +270,6 @@ const ReservedCommandFlag&
       }
    }; return flag; }
 const ReservedCommandFlag&
-   PlayRegionLockedFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project){
-         return ViewInfo::Get(project).playRegion.Locked();
-      }
-   }; return flag; }  //msmeyer
-const ReservedCommandFlag&
-   PlayRegionNotLockedFlag() { static ReservedCommandFlag flag{
-      [](const AudacityProject &project){
-         const auto &playRegion = ViewInfo::Get(project).playRegion;
-         return !playRegion.Locked() && !playRegion.Empty();
-      }
-   }; return flag; }  //msmeyer
-const ReservedCommandFlag&
    WaveTracksExistFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
          return !TrackList::Get( project ).Any<const WaveTrack>().empty();

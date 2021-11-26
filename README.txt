@@ -1,6 +1,8 @@
 Audacity(R): free, open source, cross-platform audio software for 
 multi-track recording and editing: https://www.audacityteam.org/ . 
 
+See the CHANGELOG.txt file for a list of changes. 
+
 User support is provided on Audacity Forum:
 https://forum.audacityteam.org/ .
 
@@ -16,31 +18,24 @@ except as otherwise noted (mostly in the lib-src subdirectories).
 The Audacity documentation is licensed under the Creative Commons
 Attribution 3.0 license: https://creativecommons.org/licenses/by/3.0/legalcode .
 
-Compilation instructions for Audacity are provided in the source code:
-* Windows: win\build.txt
-* macOS: mac/build.txt
-* GNU/Linux: linux/build.txt 
+Compilation instructions for Audacity are provided in the BUILDING.md file.
 
 You can ask for help with compilation problems at:
 https://forum.audacityteam.org/viewforum.php?f=19 .
 
 If you want to suggest some simple text change in our code, please submit a 
 pull request on https://github.com/audacity/audacity/pulls . It's usually 
-best to discuss functional code changes with us first on audacity-devel: 
-https://lists.sourceforge.net/lists/listinfo/audacity-devel . 
+best to discuss functional code changes with us first on the dev discord server: 
+https://discord.gg/N3XKxzTrq3
 
-Version 3.0.3
 
-Contents of this README:
+Licensing and Source Code, Libraries and Additional Copyright Information 
+follows.
 
-1.  Licensing
-2.  Changes since version 3.0.2
-3.  Known Issues at Release
-4.  Source Code, Libraries and Additional Copyright Information
 
+
+Licensing
 --------------------------------------------------------------------------------
-
-1. Licensing
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
@@ -60,77 +55,11 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
   Free Software Foundation, Inc.
   59 Temple Place - Suite 330
   Boston, MA 02111-1307 USA
-
-
---------------------------------------------------------------------------------
-
-2. Changes since version 3.0.0: 
-
-
-Improvements
-
- * More information to help Audacity developers is now provided 
-   with most error reports.
- * Manage Macros dialog is now clearer about how to save and
-   close the dialog, thanks to changes in buttons.
- * In MP3 export we removed a legacy option for a slower encoding
-   that is no better than the faster one.
-
-See also: https://wiki.audacityteam.org/wiki/New_features_in_Audacity_3.0.2
-
-
-Bug Fixes
-
- Over 30 bugs in 3.0.0 fixed, including:
-
-
- * 2676 - Export: Incorrect handling over 0 dB
- * 2692 - Mac: VI users get trapped in radio buttons of Keyboard Preferences
- * 2694 - Coloring of tracks in Mixer Board are awry
- * 2696 - Metadata Editor: changed size is not remembered/restored on next use
- * 2697 - Linux: AUP3 projects use incorrect char size on "differently"
-          configured wxWidgets
- * 2698 - Noise Gate fails silently if "hold" is non-zero
- * 2699 - Windows: Cannot edit labels with emoji in them correctly
- * 2701 - Progress dialog interferes with scripting
- * 2703 - Mac: EGAT preview dialog is hidden behind the EGAT dialog
- * 2704 - Mac: Stop button in EGATs with Preview does nor stop the preview
- * 2706 - Win: Vocal Reduction and Isolation most options fail
- * 2707 - Opened projects not being removed from "audacity.cfg"
- * 2708 - Nyquist effects fail silently with One hour plus stereo
- * 2709 - Mac: Missing sub-menu check marks in French
- * 2710 - Compressor with audio before T=0 crashes Audacity
- * 2714 - (Japanese & Korean) "Unable to parse project information"
- * 2716 - Cleared "Recent Files" are restored on next launch
- * 2718 - Failed to execute a project file command (on server)
- * 2720 - Cannot open project that's in a read only folder - error message vague
- * 2722 - Noise Gate fails on a one hour stereo selection
-
-See also: https://wiki.audacityteam.org/wiki/Release_Notes_3.0.2
-
-
+  
+  
+  
+Source Code, Libraries and Additional Copyright Information
 -------------------------------------------------------------------------------
-
-
-3. Some Known Issues in 3.0.2:
-
-We have two significant bugs we would like help in tracking down:
-
-1) Audacity may occasionally report "Failed to open the project 
-   database".  We don't think this is causing people to lose data.
-2) Audacity may offer to 'recover' a project at start up, when
-   there is nothing to recover.
-
-If there are repeatable steps to make these bugs happen, this
-could help us track down what is causing them.
-
-For best workarounds and other known issues in 3.0.2, please see:
-  https://wiki.audacityteam.org/wiki/Release_Notes_3.0.2/Issues 
-
-
--------------------------------------------------------------------------------
-
-4.  Source Code, Libraries and Additional Copyright Information
 
 Source code to this program is always available; for more information visit
 our web site at:

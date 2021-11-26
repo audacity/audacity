@@ -21,7 +21,7 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
 
 $control wave (_ "Waveform type") choice (
    (_ "Sine")
-   (_ "Triangle")
+   (_C "Triangle" "waveform")
    (_ "Sawtooth")
    ("InverseSawtooth" (_ "Inverse Sawtooth"))
    (_ "Square")

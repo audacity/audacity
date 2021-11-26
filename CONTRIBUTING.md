@@ -1,26 +1,41 @@
-# Contributing
-
-Information about contributing to Audacity is available at https://wiki.audacityteam.org/wiki/Contribute
-
-Visit that page to find up to date links.
-
-## Feedback
-
-* The Audacity forum is the best place to get help with using Audacity.
-* Suggestions for improvements to Audacity are best sent to the Audacity forum.
-* Bug reports to our feedback email address.
+There are several ways to contribute to Audacity: 
 
 ## Developing
 
-* To discuss code for a proposed change, best to subscribe to audacity devel email list.
-* Code must be GPL v2 compatible.  
+Audacity is mostly coded in C++. You'll need to be somewhat comfortable in it to start contributing code. 
 
-## Translation
+If you want to develop Audacity: 
 
-* Best to subscribe to the translation email address
+* Build instructions can be found in the BUILDING.md
+* [Coding standards](https://github.com/audacity/audacity/wiki/Coding-Standards) and other info on the process can be found [in the wiki](https://github.com/audacity/audacity/wiki). 
+* You can find good first issues and other things which we think might be good things for contributors in the [Community Collaboration Project](https://github.com/audacity/audacity/projects/15).
+* You will need to [sign the CLA](https://www.audacityteam.org/cla/) to contribute code.
+* If you need help, you can ask in the [Audacity dev discord](https://discord.gg/N3XKxzTrq3).
+
+### Developing Plug-ins
+
+Audacity supports a wide variety of plug-in APIs, namely [Nyquist](https://manual.audacityteam.org/man/nyquist.html), LV2, Audio Units (macOS only) and VST2 effects. These plug-ins generally won't be shipped as part of Audacity, but they still may be a tremendous help for Audacity users.
+
+## Testing / Finding bugs
+
+You can download current development builds in the [Actions tab on Github](https://github.com/audacity/audacity/actions). These builds are tied to certain pull requests. As a rule of thumb: If it's not yet merged, report any broken things you find which might be a result of the pull request directly as a comment on the pull request. If the code has been merged, [make a new bug in the issue tracker](https://github.com/audacity/audacity/issues/new/choose).
+
+When reporting bugs, try to find the most general form of it. For example, if you encounter a bug when amplifying a clip 2 hours into a project, try to see if it also happens when you're using a different effect (Normalize, for example), and if it also happens if the clip is near the beginning. 
+
+Bugs must be reproducible. If you can't find steps to reproduce a bug, try asking if you went wrong somewhere [in the Audacity forum](https://forum.audacityteam.org/index.php) instead. 
+
+## Translating
+
+See [our translators page](https://www.audacityteam.org/community/translators/) for more information on how to translate Audacity. 
+
+## Feedback & Feature requests
+
+If you have anything you thing Audacity can do better, you can voice it in [the relevant section in the forum](https://forum.audacityteam.org/viewforum.php?f=25). If you have a very concrete idea something in the code which should be added or changed, you can also  [make an enhancement request in the issue tracker](https://github.com/audacity/audacity/issues/new/choose).
 
 ## Supporting Users
 
-* Best done on the Audacity forum.
+The most active Audacity user community can be found [in the forum](https://forum.audacityteam.org/index.php), so if you want to help users with their problems, this would be the first stop.
 
+### Making video tutorials
 
+Video tutorials are very helpful to users, as they tend to be easier to follow than written instructions. When you make video tutorials, make sure to mention which version of Audacity you're using, so that users know what the problem might be should they stumble upon your tutorial after a few years and find that their version of Audacity does very different things to yours.

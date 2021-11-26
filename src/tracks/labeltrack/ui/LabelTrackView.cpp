@@ -17,8 +17,9 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../LabelTrack.h"
 
-#include "../../../AColor.h"
-#include "../../../AllThemeResources.h"
+#include "AColor.h"
+#include "../../../widgets/BasicMenu.h"
+#include "AllThemeResources.h"
 #include "../../../HitTestResult.h"
 #include "Project.h"
 #include "../../../ProjectHistory.h"
@@ -27,7 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ProjectWindow.h"
 #include "../../../ProjectWindows.h"
 #include "../../../RefreshCode.h"
-#include "../../../Theme.h"
+#include "Theme.h"
 #include "../../../TrackArtist.h"
 #include "../../../TrackPanelAx.h"
 #include "../../../TrackPanel.h"
@@ -35,6 +36,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../UndoManager.h"
 #include "ViewInfo.h"
 #include "../../../widgets/AudacityTextEntryDialog.h"
+#include "../../../widgets/wxWidgetsWindowPlacement.h"
 
 #include <wx/clipbrd.h>
 #include <wx/dcclient.h>
@@ -1195,6 +1197,23 @@ bool LabelTrackView::PasteSelectedText(
    return true;
 }
 
+bool LabelTrackView::SelectAllText(AudacityProject& project)
+{
+    if (!IsValidIndex(mTextEditIndex, project))
+        return false;
+
+    const auto pTrack = FindLabelTrack();
+
+    const auto& mLabels = pTrack->GetLabels();
+    auto labelStruct = mLabels[mTextEditIndex];
+    auto& title = labelStruct.title;
+
+    mInitialCursorPos = 0;
+    mCurrentCursorPos = title.Length();
+
+    return true;
+}
+
 /// @return true if the text data is available in the clipboard, false otherwise
 bool LabelTrackView::IsTextClipSupported()
 {
@@ -1336,21 +1355,28 @@ static bool IsGoodLabelEditKey(const wxKeyEvent & evt)
 bool LabelTrackView::DoCaptureKey(
    AudacityProject &project, wxKeyEvent & event )
 {
-   // Check for modifiers and only allow shift
    int mods = event.GetModifiers();
+   auto code = event.GetKeyCode();
+   const auto pTrack = FindLabelTrack();
+   const auto& mLabels = pTrack->GetLabels();
+
+   // Allow hardcoded Ctrl+F2 for renaming the selected label,
+   // if we have any labels
+   if (code == WXK_F2 && mods == wxMOD_CONTROL && !mLabels.empty()) {
+      return true;
+   }
+
+   // Check for modifiers and only allow shift
    if (mods != wxMOD_NONE && mods != wxMOD_SHIFT) {
       return false;
    }
 
    // Always capture the navigation keys, if we have any labels
-   auto code = event.GetKeyCode();
-   const auto pTrack = FindLabelTrack();
-   const auto &mLabels = pTrack->GetLabels();
    if ((code == WXK_TAB || code == WXK_NUMPAD_TAB) &&
        !mLabels.empty())
       return true;
 
-   if (IsValidIndex(mTextEditIndex, project) || IsValidIndex(mNavigationIndex, project)) {
+   if (IsValidIndex(mTextEditIndex, project)) {
       if (IsGoodLabelEditKey(event)) {
          return true;
       }
@@ -1498,7 +1524,10 @@ bool LabelTrackView::DoKeyDown(
    const int mods = event.GetModifiers();
 
    // Check for modifiers and only allow shift
-   if (mods != wxMOD_NONE && mods != wxMOD_SHIFT) {
+   // except in the case of Ctrl + F2, so hardcoded Ctrl+F2 can
+   // be used for renaming a label
+   if ((keyCode != WXK_F2 && mods != wxMOD_NONE && mods != wxMOD_SHIFT)
+      || (keyCode == WXK_F2 && mods != wxMOD_CONTROL)) {
       event.Skip();
       return updated;
    }
@@ -1507,6 +1536,7 @@ bool LabelTrackView::DoKeyDown(
    const auto pTrack = FindLabelTrack();
    const auto &mLabels = pTrack->GetLabels();
    if (IsValidIndex(mTextEditIndex, project)) {
+      // Do label text changes
       auto labelStruct = mLabels[mTextEditIndex];
       auto &title = labelStruct.title;
       wxUniChar wchar;
@@ -1607,32 +1637,41 @@ bool LabelTrackView::DoKeyDown(
       case WXK_LEFT:
       case WXK_NUMPAD_LEFT:
          // Moving cursor left
-         while ((mCurrentCursorPos > 0) && more) {
-            wchar = title.at( mCurrentCursorPos-1 );
-            more = !( ((int)wchar > 0xDFFF) || ((int)wchar <0xDC00));
+         if (mods != wxMOD_SHIFT && mCurrentCursorPos != mInitialCursorPos)
+            //put cursor to the left edge of selection
+            mInitialCursorPos = mCurrentCursorPos =
+               std::min(mInitialCursorPos, mCurrentCursorPos);
+         else
+         {
+            while ((mCurrentCursorPos > 0) && more) {
+               wchar = title.at(mCurrentCursorPos - 1);
+               more = !(((int)wchar > 0xDFFF) || ((int)wchar < 0xDC00));
 
-            mCurrentCursorPos--;
-            if (mods == wxMOD_SHIFT)
-               ;
-            else
-               mInitialCursorPos = mCurrentCursorPos =
-                  std::min(mInitialCursorPos, mCurrentCursorPos);
+               --mCurrentCursorPos;
+            }
+            if (mods != wxMOD_SHIFT)
+               mInitialCursorPos = mCurrentCursorPos;
          }
+         
          break;
 
       case WXK_RIGHT:
       case WXK_NUMPAD_RIGHT:
          // Moving cursor right
-         while ((mCurrentCursorPos < (int)title.length())&& more) {
-            wchar = title.at( mCurrentCursorPos );
-            more = !( ((int)wchar > 0xDBFF) || ((int)wchar <0xD800));
+         if(mods != wxMOD_SHIFT && mCurrentCursorPos != mInitialCursorPos)
+            //put cursor to the right edge of selection
+            mInitialCursorPos = mCurrentCursorPos =
+               std::max(mInitialCursorPos, mCurrentCursorPos);
+         else
+         {
+            while ((mCurrentCursorPos < (int)title.length()) && more) {
+               wchar = title.at(mCurrentCursorPos);
+               more = !(((int)wchar > 0xDBFF) || ((int)wchar < 0xD800));
 
-            mCurrentCursorPos++;
-            if (mods == wxMOD_SHIFT)
-               ;
-            else
-               mInitialCursorPos = mCurrentCursorPos =
-                  std::max(mInitialCursorPos, mCurrentCursorPos);
+               ++mCurrentCursorPos;
+            }
+            if (mods != wxMOD_SHIFT)
+               mInitialCursorPos = mCurrentCursorPos;
          }
          break;
 
@@ -1674,13 +1713,21 @@ bool LabelTrackView::DoKeyDown(
    }
    else
    {
+      // Do navigation
       switch (keyCode) {
 
+      case WXK_ESCAPE:
+          mNavigationIndex = -1;
+          break;
       case WXK_TAB:
       case WXK_NUMPAD_TAB:
          if (!mLabels.empty()) {
             int len = (int) mLabels.size();
-            if (IsValidIndex(mNavigationIndex, project))
+            // The case where the start of selection is the same as the
+            // start of a label is handled separately so that if some labels
+            // have the same start time, all labels are navigated.
+            if (IsValidIndex(mNavigationIndex, project)
+               && mLabels[mNavigationIndex].getT0() == newSel.t0())
             {
                 if (event.ShiftDown()) {
                     --mNavigationIndex;
@@ -1692,7 +1739,6 @@ bool LabelTrackView::DoKeyDown(
             }
             else
             {
-                // no valid navigation index, then
                 if (event.ShiftDown()) {
                     //search for the first label starting from the end (and before selection)
                     mNavigationIndex = len - 1;
@@ -1721,16 +1767,25 @@ bool LabelTrackView::DoKeyDown(
                mInitialCursorPos = mCurrentCursorPos;
                //Set the selection region to be equal to the selection bounds of the tabbed-to label.
                newSel = labelStruct.selectedRegion;
+               // message for screen reader
+               /* i18n-hint:
+                  String is replaced by the name of a label,
+                  first number gives the position of that label in a sequence
+                  of labels,
+                  and the last number is the total number of labels in the sequence.
+               */
+               auto message = XO("%s %d of %d")
+                  .Format(labelStruct.title, mNavigationIndex + 1, pTrack->GetNumLabels());
+               TrackFocus::Get(project).MessageForScreenReader(message);
             }
             else {
                mNavigationIndex = -1;
             }
          }
          break;
-      case WXK_RETURN:
-      case WXK_NUMPAD_ENTER:
-         //pressing Enter key activates editing of the label
-         //pointed to by mNavigationIndex (if valid)
+      case WXK_F2:     // Must be Ctrl + F2 to have reached here
+         // Hardcoded Ctrl+F2 activates editing of the label
+         // pointed to by mNavigationIndex (if valid)
          if (IsValidIndex(mNavigationIndex, project)) {
              SetTextSelection(mNavigationIndex);
          }
@@ -1904,7 +1959,10 @@ void LabelTrackView::ShowContextMenu( AudacityProject &project )
       // So, workaround it by editing the label AFTER the popup menu is
       // closed. It's really ugly, but it works.  :-(
       mEditIndex = -1;
-      parent->PopupMenu(&menu, x, ls->y + (mIconHeight / 2) - 1);
+      BasicMenu::Handle{ &menu }.Popup(
+         wxWidgetsWindowPlacement{ parent },
+         { x, ls->y + (mIconHeight / 2) - 1 }
+      );
       if (mEditIndex >= 0)
       {
          DoEditLabels( project, FindLabelTrack().get(), mEditIndex );

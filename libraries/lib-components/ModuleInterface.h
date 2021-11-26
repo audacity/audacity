@@ -46,7 +46,12 @@
 #include <memory>
 #include "Identifier.h"
 #include "ComponentInterface.h"
-#include "PluginInterface.h"
+#include "ComponentInterfaceSymbol.h"
+
+using PluginID = wxString;
+using PluginIDs = wxArrayString;
+// Incomplete type not defined in libraries -- TODO clean that up:
+class PluginManagerInterface;
 
 // ============================================================================
 //

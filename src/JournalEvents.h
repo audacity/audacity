@@ -16,10 +16,10 @@ namespace Journal
 {
 namespace Events
 {
-   //\brief Initialization, to be called after wxWidgets has initialized
-   void Initialize();
+   //\brief Whether events are being recorded to the journal
+   bool IsWatching();
 
-   //! Install the global event filter for recording
-   void Watch();
+   //\brief Stop watching events, and give the user an error message
+   void FailedEventSerialization();
 }
 }

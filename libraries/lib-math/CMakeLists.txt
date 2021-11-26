@@ -24,6 +24,7 @@ set( SOURCES
    Spectrum.cpp
    Spectrum.h
    float_cast.h
+   Gain.h
 )
 set( LIBRARIES
    libsoxr

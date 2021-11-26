@@ -18,7 +18,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include "SampleHandle.h"
 #include "../../../ui/EnvelopeHandle.h"
 #include "../../../ui/TimeShiftHandle.h"
-#include "../../../../AColor.h"
+#include "AColor.h"
 #include "../../../../Envelope.h"
 #include "../../../../EnvelopeEditor.h"
 #include "../../../../ProjectSettings.h"
@@ -278,7 +278,7 @@ void DrawWaveformBackground(TrackPanelDrawingContext &context,
        zeroLevelYCoordinate <= rect.GetBottom()) {
       dc.SetPen(*wxBLACK_PEN);
       AColor::Line(dc, rect.x, zeroLevelYCoordinate,
-                   rect.x + rect.width, zeroLevelYCoordinate);
+                   rect.x + rect.width - 1, zeroLevelYCoordinate);
    }
 }
 
@@ -482,11 +482,11 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context,
    const auto artist = TrackArtist::Get( context );
    const auto &zoomInfo = *artist->pZoomInfo;
 
-   const double toffset = clip->GetOffset();
+   const double toffset = clip->GetPlayStartTime();
    double rate = clip->GetRate();
    const double t0 = std::max(0.0, zoomInfo.PositionToTime(0, -leftOffset) - toffset);
    const auto s0 = sampleCount(floor(t0 * rate));
-   const auto snSamples = clip->GetNumSamples();
+   const auto snSamples = clip->GetPlaySamplesCount();
    if (s0 > snSamples)
       return;
 
@@ -688,6 +688,15 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    highlightEnvelope = target && target->GetEnvelope() == clip->GetEnvelope();
 #endif
 
+   //If clip is "too small" draw a placeholder instead of
+   //attempting to fit the contents into a few pixels
+   if (!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
+   {
+      auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
+      TrackArt::DrawClipFolded(dc, clipRect);
+      return;
+   }
+
    const ClipParameters params{
       false, track, clip, rect, selectedRegion, zoomInfo };
    const wxRect &hiddenMid = params.hiddenMid;
@@ -807,7 +816,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
       if (portion.inFisheye) {
          if (!showIndividualSamples) {
             fisheyeDisplay.Allocate();
-            const auto numSamples = clip->GetNumSamples();
+            const auto numSamples = clip->GetPlaySamplesCount();
             // Get wave display data for different magnification
             int jj = 0;
             for (; jj < rectPortion.width; ++jj) {
@@ -893,7 +902,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
       DrawEnvelope(
          context, mid, env, zoomMin, zoomMax, dB, dBRange, highlightEnvelope );
       EnvelopeEditor::DrawPoints( *clip->GetEnvelope(),
-          context, rect, dB, dBRange, zoomMin, zoomMax, true );
+          context, mid, dB, dBRange, zoomMin, zoomMax, true, rect.x - mid.x );
    }
 
    // Draw arrows on the left side if the track extends to the left of the
@@ -903,8 +912,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    }
    {
       auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
-      if (!clipRect.IsEmpty())
-          TrackArt::DrawClipEdges(dc, clipRect, selected);
+      TrackArt::DrawClipEdges(dc, clipRect, selected);
    }
 }
 
@@ -1075,11 +1083,6 @@ struct WaveColorMenuTable : PopupMenuTable
    static WaveColorMenuTable &Instance();
 
    void InitUserData(void *pUserData) override;
-
-   void DestroyMenu() override
-   {
-      mpData = NULL;
-   }
 
    PlayableTrackControls::InitMenuData *mpData{};
 

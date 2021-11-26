@@ -60,11 +60,11 @@ array of Ruler::Label.
 #include <wx/dcclient.h>
 #include <wx/dcscreen.h>
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
 #include "../Envelope.h"
 #include "NumberScale.h"
-#include "../Theme.h"
+#include "Theme.h"
 #include "ViewInfo.h"
 
 using std::min;

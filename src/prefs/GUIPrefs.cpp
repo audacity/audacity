@@ -25,14 +25,14 @@
 
 #include "FileNames.h"
 #include "Languages.h"
-#include "../Theme.h"
+#include "Theme.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 
 #include "Decibels.h"
 
 #include "ThemePrefs.h"
-#include "../AColor.h"
+#include "AColor.h"
 #include "../widgets/AudacityMessageBox.h"
 
 GUIPrefs::GUIPrefs(wxWindow * parent, wxWindowID winid)
@@ -157,7 +157,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.TieChoice( XXO("Location of &Manual:"), GUIManualLocation);
 
-         S.TieChoice( XXO("Th&eme:"), GUITheme);
+         S.TieChoice( XXO("Th&eme:"), GUITheme());
 
          S.TieChoice( XXO("Meter dB &range:"),
             {
@@ -168,12 +168,6 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
          );
       }
       S.EndMultiColumn();
-//      S.AddSpace(10);
-// JKC: This is a silly preference.  Kept here as a reminder that we may
-// later want to have configurable button order.
-//      S.TieCheckBox(XXO("&Ergonomic order of Transport Toolbar buttons"),
-//                    wxT("/GUI/ErgonomicTransportButtons"),
-//                    true);
 
    }
    S.EndStatic();
@@ -201,8 +195,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
                     {wxT("/GUI/RetainLabels"),
                      false});
       S.TieCheckBox(XXO("B&lend system and Audacity theme"),
-                    {wxT("/GUI/BlendThemes"),
-                     true});
+                     GUIBlendThemes);
 #ifndef __WXMAC__
       /* i18n-hint: RTL stands for 'Right to Left'  */
       S.TieCheckBox(XXO("Use mostly Left-to-Right layouts in RTL languages"),
@@ -247,7 +240,11 @@ bool GUIPrefs::Commit()
    }
 
    // Reads preference GUITheme
-   theTheme.LoadPreferredTheme();
+   {
+      wxBusyCursor busy;
+      theTheme.LoadPreferredTheme();
+      theTheme.DeleteUnusedThemes();
+   }
    ThemePrefs::ApplyUpdatedImages();
 
    return true;

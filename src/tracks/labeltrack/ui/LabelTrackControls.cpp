@@ -50,11 +50,6 @@ public:
       mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
    }
 
-   void DestroyMenu() override
-   {
-      mpData = nullptr;
-   }
-
    CommonTrackControls::InitMenuData *mpData{};
 
    void OnSetFont(wxCommandEvent &);

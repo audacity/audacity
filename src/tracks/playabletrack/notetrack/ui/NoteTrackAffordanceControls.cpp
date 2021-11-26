@@ -15,8 +15,8 @@
 #include "../../../ui/AffordanceHandle.h"
 #include "../../../ui/SelectHandle.h"
 #include "../../../ui/TrackView.h"
-#include "../../../../AllThemeResources.h"
-#include "../../../../AColor.h"
+#include "AllThemeResources.h"
+#include "AColor.h"
 #include "../../../../NoteTrack.h"
 #include "ViewInfo.h"
 #include "../../../../TrackArtist.h"
@@ -30,7 +30,7 @@
 #include "../../../../SelectionState.h"
 #include "../../../../ProjectSettings.h"
 #include "../../../../RefreshCode.h"
-#include "../../../../Theme.h"
+#include "Theme.h"
 
 class NoteTrackAffordanceHandle final : public AffordanceHandle
 {
@@ -91,7 +91,8 @@ std::vector<UIHandlePtr> NoteTrackAffordanceControls::HitTest(const TrackPanelMo
     {
         results.push_back(
             SelectHandle::HitTest(
-                mSelectHandle, state, pProject, std::static_pointer_cast<TrackView>(track->GetTrackView())
+                mSelectHandle, state, pProject,
+                TrackView::Get(*track).shared_from_this()
             )
         );
     }
@@ -120,12 +121,13 @@ void NoteTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
             (px >= clipRect.GetLeft() && px <= clipRect.GetRight() &&
                 py >= clipRect.GetTop() && py <= clipRect.GetBottom());
 
-        context.dc.SetClippingRegion(rect);
-        context.dc.SetTextBackground(wxTransparentColor);
-        context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
-        context.dc.SetFont(wxFont(wxFontInfo()));
-        TrackArt::DrawClipAffordance(context.dc, clipRect, nt->GetName(), highlight, selected);
-        context.dc.DestroyClippingRegion();
+        {
+            wxDCClipper clipper(context.dc, rect);
+            context.dc.SetTextBackground(wxTransparentColor);
+            context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
+            context.dc.SetFont(wxFont(wxFontInfo()));
+            TrackArt::DrawClipAffordance(context.dc, clipRect, nt->GetName(), highlight, selected);
+        }
     }
 }
 

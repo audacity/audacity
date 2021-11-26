@@ -493,69 +493,36 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
    return;
 }
 
-bool PluginManager::HasSharedConfigGroup(const PluginID & ID, const RegistryPath & group)
+bool PluginManager::HasConfigGroup(ConfigurationType type, const PluginID & ID,
+   const RegistryPath & group)
 {
-   return HasGroup(SharedGroup(ID, group));
+   return HasGroup(Group(type, ID, group));
 }
 
-bool PluginManager::GetSharedConfigSubgroups(const PluginID & ID, const RegistryPath & group, RegistryPaths & subgroups)
+bool PluginManager::GetConfigSubgroups(ConfigurationType type,
+   const PluginID & ID, const RegistryPath & group, RegistryPaths & subgroups)
 {
-   return GetSubgroups(SharedGroup(ID, group), subgroups);
+   return GetSubgroups(Group(type, ID, group), subgroups);
 }
 
-bool PluginManager::GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval)
+bool PluginManager::GetConfigValue(ConfigurationType type, const PluginID & ID,
+   const RegistryPath & group, const RegistryPath & key,
+   ConfigReference var, ConfigConstReference defval)
 {
-   return GetConfig(SharedKey(ID, group, key), value, defval);
+   return GetConfigValue(Key(type, ID, group, key), var, defval);
 }
 
-bool PluginManager::GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, int & value, int defval)
+bool PluginManager::SetConfigValue(ConfigurationType type, const PluginID & ID,
+   const RegistryPath & group, const RegistryPath & key,
+   ConfigConstReference value)
 {
-   return GetConfig(SharedKey(ID, group, key), value, defval);
+   return SetConfigValue(Key(type, ID, group, key), value);
 }
 
-bool PluginManager::GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, bool & value, bool defval)
+bool PluginManager::RemoveConfigSubgroup(ConfigurationType type,
+   const PluginID & ID, const RegistryPath & group)
 {
-   return GetConfig(SharedKey(ID, group, key), value, defval);
-}
-
-bool PluginManager::GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, float & value, float defval)
-{
-   return GetConfig(SharedKey(ID, group, key), value, defval);
-}
-
-bool PluginManager::GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, double & value, double defval)
-{
-   return GetConfig(SharedKey(ID, group, key), value, defval);
-}
-
-bool PluginManager::SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const wxString & value)
-{
-   return SetConfig(SharedKey(ID, group, key), value);
-}
-
-bool PluginManager::SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const int & value)
-{
-   return SetConfig(SharedKey(ID, group, key), value);
-}
-
-bool PluginManager::SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const bool & value)
-{
-   return SetConfig(SharedKey(ID, group, key), value);
-}
-
-bool PluginManager::SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const float & value)
-{
-   return SetConfig(SharedKey(ID, group, key), value);
-}
-
-bool PluginManager::SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const double & value)
-{
-   return SetConfig(SharedKey(ID, group, key), value);
-}
-
-bool PluginManager::RemoveSharedConfigSubgroup(const PluginID & ID, const RegistryPath & group)
-{
-   bool result = GetSettings()->DeleteGroup(SharedGroup(ID, group));
+   bool result = GetSettings()->DeleteGroup(Group(type, ID, group));
    if (result)
    {
       GetSettings()->Flush();
@@ -564,91 +531,10 @@ bool PluginManager::RemoveSharedConfigSubgroup(const PluginID & ID, const Regist
    return result;
 }
 
-bool PluginManager::RemoveSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key)
+bool PluginManager::RemoveConfig(ConfigurationType type, const PluginID & ID,
+   const RegistryPath & group, const RegistryPath & key)
 {
-   bool result = GetSettings()->DeleteEntry(SharedKey(ID, group, key));
-   if (result)
-   {
-      GetSettings()->Flush();
-   }
-
-   return result;
-}
-
-bool PluginManager::HasPrivateConfigGroup(const PluginID & ID, const RegistryPath & group)
-{
-   return HasGroup(PrivateGroup(ID, group));
-}
-
-bool PluginManager::GetPrivateConfigSubgroups(const PluginID & ID, const RegistryPath & group, RegistryPaths & subgroups)
-{
-   return GetSubgroups(PrivateGroup(ID, group), subgroups);
-}
-
-bool PluginManager::GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval)
-{
-   return GetConfig(PrivateKey(ID, group, key), value, defval);
-}
-
-bool PluginManager::GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, int & value, int defval)
-{
-   return GetConfig(PrivateKey(ID, group, key), value, defval);
-}
-
-bool PluginManager::GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, bool & value, bool defval)
-{
-   return GetConfig(PrivateKey(ID, group, key), value, defval);
-}
-
-bool PluginManager::GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, float & value, float defval)
-{
-   return GetConfig(PrivateKey(ID, group, key), value, defval);
-}
-
-bool PluginManager::GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, double & value, double defval)
-{
-   return GetConfig(PrivateKey(ID, group, key), value, defval);
-}
-
-bool PluginManager::SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const wxString & value)
-{
-   return SetConfig(PrivateKey(ID, group, key), value);
-}
-
-bool PluginManager::SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const int & value)
-{
-   return SetConfig(PrivateKey(ID, group, key), value);
-}
-
-bool PluginManager::SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const bool & value)
-{
-   return SetConfig(PrivateKey(ID, group, key), value);
-}
-
-bool PluginManager::SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const float & value)
-{
-   return SetConfig(PrivateKey(ID, group, key), value);
-}
-
-bool PluginManager::SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const double & value)
-{
-   return SetConfig(PrivateKey(ID, group, key), value);
-}
-
-bool PluginManager::RemovePrivateConfigSubgroup(const PluginID & ID, const RegistryPath & group)
-{
-   bool result = GetSettings()->DeleteGroup(PrivateGroup(ID, group));
-   if (result)
-   {
-      GetSettings()->Flush();
-   }
-
-   return result;
-}
-
-bool PluginManager::RemovePrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key)
-{
-   bool result = GetSettings()->DeleteEntry(PrivateKey(ID, group, key));
+   bool result = GetSettings()->DeleteEntry(Key(type, ID, group, key));
    if (result)
    {
       GetSettings()->Flush();
@@ -1701,158 +1587,48 @@ bool PluginManager::GetSubgroups(const RegistryPath & group, RegistryPaths & sub
    return true;
 }
 
-bool PluginManager::GetConfig(const RegistryPath & key, int & value, int defval)
+bool PluginManager::GetConfigValue(
+   const RegistryPath & key, ConfigReference var, ConfigConstReference defval)
 {
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Read(key, &value, defval);
-   }
-
-   return result;
-}
-
-bool PluginManager::GetConfig(const RegistryPath & key, wxString & value, const wxString & defval)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      wxString wxval;
-
-      result = GetSettings()->Read(key, &wxval, defval);
-
-      value = wxval;
-   }
-
-   return result;
-}
-
-bool PluginManager::GetConfig(const RegistryPath & key, bool & value, bool defval)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Read(key, &value, defval);
-   }
-
-   return result;
-}
-
-bool PluginManager::GetConfig(const RegistryPath & key, float & value, float defval)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      double dval = 0.0;
-
-      result = GetSettings()->Read(key, &dval, (double) defval);
-
-      value = (float) dval;
-   }
-
-   return result;
-}
-
-bool PluginManager::GetConfig(const RegistryPath & key, double & value, double defval)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Read(key, &value, defval);
-   }
-
-   return result;
-}
-
-bool PluginManager::SetConfig(const RegistryPath & key, const wxString & value)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      wxString wxval = value;
-      result = GetSettings()->Write(key, wxval);
-      if (result)
-      {
-         result = GetSettings()->Flush();
+   if (key.empty())
+      return false;
+   const auto visitor = [&](const auto var){
+      const auto pVar = &var.get();
+      // precondition is that defval wraps same type as var
+      using Type = typename decltype(var)::type;
+      const auto pDefval =
+         std::get_if<std::reference_wrapper<const Type>>(&defval);
+      if constexpr( std::is_same_v<Type, float> ) {
+         double temp;
+         if( GetSettings()->Read(key, &temp, *pDefval) ) {
+            *pVar = static_cast<float>(temp);
+            return true;
+         }
+         return false;
       }
-   }
-
-   return result;
+      else
+         return GetSettings()->Read(key, pVar, *pDefval);
+   };
+   return Visit(visitor, var);
 }
 
-bool PluginManager::SetConfig(const RegistryPath & key, const int & value)
+bool PluginManager::SetConfigValue(
+   const RegistryPath & key, ConfigConstReference value)
 {
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Write(key, value);
-      if (result)
-      {
-         result = GetSettings()->Flush();
-      }
-   }
-
-   return result;
-}
-
-bool PluginManager::SetConfig(const RegistryPath & key, const bool & value)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Write(key, value);
-      if (result)
-      {
-         result = GetSettings()->Flush();
-      }
-   }
-
-   return result;
-}
-
-bool PluginManager::SetConfig(const RegistryPath & key, const float & value)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Write(key, value);
-      if (result)
-      {
-         result = GetSettings()->Flush();
-      }
-   }
-
-   return result;
-}
-
-bool PluginManager::SetConfig(const RegistryPath & key, const double & value)
-{
-   bool result = false;
-
-   if (!key.empty())
-   {
-      result = GetSettings()->Write(key, value);
-      if (result)
-      {
-         result = GetSettings()->Flush();
-      }
-   }
-
-   return result;
+   if (key.empty())
+      return false;
+   const auto visitor = [&](const auto value){
+      return GetSettings()->Write(key, value.get()) && GetSettings()->Flush();
+   };
+   return Visit(visitor, value);
 }
 
 /* Return value is a key for lookup in a config file */
-RegistryPath PluginManager::SettingsPath(const PluginID & ID, bool shared)
+RegistryPath PluginManager::SettingsPath(
+   ConfigurationType type, const PluginID & ID)
 {
+   bool shared = (type == ConfigurationType::Shared);
+
    // All the strings reported by PluginDescriptor and used in this function
    // persist in the plugin settings configuration file, so they should not
    // be changed across Audacity versions, or else compatibility of the
@@ -1880,9 +1656,10 @@ RegistryPath PluginManager::SettingsPath(const PluginID & ID, bool shared)
 }
 
 /* Return value is a key for lookup in a config file */
-RegistryPath PluginManager::SharedGroup(const PluginID & ID, const RegistryPath & group)
+RegistryPath PluginManager::Group( ConfigurationType type,
+   const PluginID & ID, const RegistryPath & group) 
 {
-   wxString path = SettingsPath(ID, true);
+   auto path = SettingsPath(type, ID);
 
    wxFileName ff(group);
    if (!ff.GetName().empty())
@@ -1894,35 +1671,10 @@ RegistryPath PluginManager::SharedGroup(const PluginID & ID, const RegistryPath 
 }
 
 /* Return value is a key for lookup in a config file */
-RegistryPath PluginManager::SharedKey(const PluginID & ID, const RegistryPath & group, const RegistryPath & key)
+RegistryPath PluginManager::Key(ConfigurationType type, const PluginID & ID,
+   const RegistryPath & group, const RegistryPath & key)
 {
-   auto path = SharedGroup(ID, group);
-   if (path.empty())
-   {
-      return path;
-   }
-
-   return path + key;
-}
-
-/* Return value is a key for lookup in a config file */
-RegistryPath PluginManager::PrivateGroup(const PluginID & ID, const RegistryPath & group)
-{
-   auto path = SettingsPath(ID, false);
-
-   wxFileName ff(group);
-   if (!ff.GetName().empty())
-   {
-      path += ff.GetFullPath(wxPATH_UNIX) + wxCONFIG_PATH_SEPARATOR;
-   }
-
-   return path;
-}
-
-/* Return value is a key for lookup in a config file */
-RegistryPath PluginManager::PrivateKey(const PluginID & ID, const RegistryPath & group, const RegistryPath & key)
-{
-   auto path = PrivateGroup(ID, group);
+   auto path = Group(type, ID, group);
    if (path.empty())
    {
       return path;

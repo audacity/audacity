@@ -14,7 +14,6 @@
 *//*******************************************************************/
 
 #include "Journal.h"
-#include "JournalEvents.h"
 #include "JournalOutput.h"
 #include "JournalRegistry.h"
 
@@ -179,13 +178,13 @@ bool Begin( const FilePath &dataDir )
       }
    }
 
-   if ( !GetError() && IsRecording() )
-      // one time installation
-      Events::Watch();
-
-   if ( !GetError() && IsReplaying() )
-      // Be sure event types are registered for dispatch
-      Events::Initialize();
+   // Call other registered initialization steps
+   for (auto &initializer : GetInitializers()) {
+      if (initializer && !initializer()) {
+         SetError();
+         break;
+      }
+   }
 
    return !GetError();
 }

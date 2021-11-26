@@ -41,7 +41,6 @@ struct TrackListEvent;
 class TrackPanel;
 class TrackArtist;
 class Ruler;
-class SnapManager;
 class AdornedRulerPanel;
 class LWSlider;
 

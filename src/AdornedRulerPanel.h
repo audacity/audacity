@@ -18,7 +18,6 @@
 
 class AudacityProject;
 struct SelectedRegionEvent;
-class SnapManager;
 class TrackList;
 
 // This is an Audacity Specific ruler panel.
@@ -59,8 +58,6 @@ public:
 
    void SetPlayRegion(double playRegionStart, double playRegionEnd);
    void ClearPlayRegion();
-   void LockPlayRegion();
-   void UnlockPlayRegion();
    void TogglePinnedHead();
 
    void GetMaxSize(wxCoord *width, wxCoord *height);
@@ -70,7 +67,7 @@ public:
    void UpdatePrefs() override;
    void ReCreateButtons();
 
-   void UpdateQuickPlayPos(wxCoord &mousePosX, bool shiftDown);
+   void UpdateQuickPlayPos(wxCoord &mousePosX);
 
    bool ShowingScrubRuler() const;
    //void OnToggleScrubRulerFromMenu(wxCommandEvent& );
@@ -92,17 +89,16 @@ private:
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPDrag(wxMouseEvent &event, wxCoord mousePosX);
    void HandleQPRelease(wxMouseEvent &event);
-   void StartQPPlay(bool looped, bool cutPreview);
+   void StartQPPlay(
+      bool newDefault, bool cutPreview, const double *pStartTime = nullptr);
 
    void DoDrawBackground(wxDC * dc);
    void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
-   void DoDrawSelection(wxDC * dc);
+   void DoDrawPlayRegion(wxDC * dc);
 
 public:
-   std::pair< wxPoint, wxBitmap >
-      GetIndicatorBitmap(wxCoord xx, bool playing) const;
-   void DoDrawIndicator(wxDC * dc, wxCoord xx, bool playing, int width, bool scrub, bool seek);
+   void DoDrawScrubIndicator(wxDC * dc, wxCoord xx, int width, bool scrub, bool seek);
    void UpdateButtonStates();
 
 private:
@@ -113,9 +109,9 @@ private:
 public:
    static TempAllowFocus TemporarilyAllowFocus();
 
-private:
-   void DoDrawPlayRegion(wxDC * dc);
+   void SetNumGuides(size_t nn);
 
+private:
    enum class MenuChoice { QuickPlay, Scrub };
    void ShowContextMenu( MenuChoice choice, const wxPoint *pPosition);
 
@@ -138,10 +134,13 @@ private:
 
 
    double mIndTime;
-   double mQuickPlayPosUnsnapped;
-   double mQuickPlayPos;
 
-   bool mIsSnapped;
+   static constexpr size_t MAX_GUIDES = 2;
+   double mQuickPlayOffset[MAX_GUIDES]{};
+   double mQuickPlayPosUnsnapped[MAX_GUIDES]{};
+   double mQuickPlayPos[MAX_GUIDES]{};
+   bool mIsSnapped[MAX_GUIDES]{};
+   size_t mNumGuides{ 1 };
 
    PlayRegion mOldPlayRegion;
 
@@ -152,20 +151,20 @@ private:
    //
    void ShowMenu(const wxPoint & pos);
    void ShowScrubMenu(const wxPoint & pos);
-   void DragSelection();
-   void HandleSnapping();
-   void OnToggleQuickPlay(wxCommandEvent &evt);
+   static void DragSelection(AudacityProject &project);
+   void HandleSnapping(size_t index);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
    //void OnTimelineToolTips(wxCommandEvent &evt);
    void OnAutoScroll(wxCommandEvent &evt);
-   void OnLockPlayRegion(wxCommandEvent &evt);
+   void OnTogglePlayRegion(wxCommandEvent &evt);
+   void OnClearPlayRegion(wxCommandEvent &evt);
+   void OnSetPlayRegionToSelection(wxCommandEvent &evt);
 
    void OnPinnedButton(wxCommandEvent & event);
    void OnTogglePinnedState(wxCommandEvent & event);
 
    bool mPlayRegionDragsSelection;
    bool mTimelineToolTip;
-   bool mQuickPlayEnabled;
 
    enum MouseEventState {
       mesNone,
@@ -206,14 +205,18 @@ private:
    void CreateOverlays();
 
    // Cooperating objects
-   class QuickPlayIndicatorOverlay;
-   std::shared_ptr<QuickPlayIndicatorOverlay> mOverlay;
+   class TrackPanelGuidelineOverlay;
+   std::shared_ptr<TrackPanelGuidelineOverlay> mOverlay;
 
-   class QuickPlayRulerOverlay;
+   class ScrubbingRulerOverlay;
    
 private:
    class CommonRulerHandle;
    class QPHandle;
+   class PlayRegionAdjustingHandle;
+   class MovePlayRegionHandle;
+   class ResizePlayRegionHandle;
+   class NewPlayRegionHandle;
    class ScrubbingHandle;
 
    class CommonCell;
@@ -228,10 +231,11 @@ private:
    struct Subgroup;
    struct MainGroup;
 
-   SelectedRegion mLastDrawnSelectedRegion;
+   std::pair<double, double> mLastDrawnPlayRegion{};
+   bool mLastPlayRegionActive = false;
    double mLastDrawnH{};
    double mLastDrawnZoom{};
-   bool mDirtySelectedRegion{};
+   bool mDirtyPlayRegion{};
 };
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__

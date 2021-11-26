@@ -91,7 +91,6 @@ ManualPageID SpectrumPrefs::HelpPageName()
 
 enum {
    ID_WINDOW_SIZE = 10001,
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    ID_WINDOW_TYPE,
    ID_PADDING_SIZE,
    ID_SCALE,
@@ -103,7 +102,6 @@ enum {
    ID_FREQUENCY_GAIN,
    ID_COLOR_SCHEME,
    ID_SPECTRAL_SELECTION,
-#endif
    ID_DEFAULTS,
 };
 
@@ -124,7 +122,6 @@ void SpectrumPrefs::Populate(size_t windowSize)
 
 void SpectrumPrefs::PopulatePaddingChoices(size_t windowSize)
 {
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    mZeroPaddingChoice = 1;
 
    // The choice of window size restricts the choice of padding.
@@ -159,7 +156,6 @@ void SpectrumPrefs::PopulatePaddingChoices(size_t windowSize)
 
    if (pPaddingSizeControl)
       pPaddingSizeControl->SetSelection(mZeroPaddingChoice);
-#endif
 }
 
 void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
@@ -267,12 +263,10 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             mTempSettings.windowType,
             mTypeChoices);
 
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
          mZeroPaddingChoiceCtrl =
             S.Id(ID_PADDING_SIZE).TieChoice(XXO("&Zero padding factor:"),
             mTempSettings.zeroPaddingFactor,
             mZeroPaddingChoices);
-#endif
       }
       S.EndMultiColumn();
    }
@@ -567,9 +561,7 @@ void SpectrumPrefs::EnableDisableSTFTOnlyControls()
    mGain->Enable(STFT);
    mRange->Enable(STFT);
    mFrequencyGain->Enable(STFT);
-#ifdef EXPERIMENTAL_ZERO_PADDED_SPECTROGRAMS
    mZeroPaddingChoiceCtrl->Enable(STFT);
-#endif
 }
 
 BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)

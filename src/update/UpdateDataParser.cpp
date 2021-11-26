@@ -49,9 +49,9 @@ wxArrayString UpdateDataParser::SplitChangelogSentences(const wxString& changelo
     return changelogSentenceList;
 }
 
-bool UpdateDataParser::HandleXMLTag(const wxChar* tag, const wxChar** attrs)
+bool UpdateDataParser::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
 {
-    if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kDescriptionTag]) == 0)
+    if (tag == mXmlTagNames[XmlParsedTags::kDescriptionTag])
     {
         mXmlParsingState = XmlParsedTags::kDescriptionTag;
         return true;
@@ -64,7 +64,7 @@ bool UpdateDataParser::HandleXMLTag(const wxChar* tag, const wxChar** attrs)
 
     if (is32Bit)
     {
-       if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kWin32Tag]) == 0)
+       if (tag == mXmlTagNames[XmlParsedTags::kWin32Tag])
        {
           if (info.GetOperatingSystemId() & wxOS_WINDOWS)
              mXmlParsingState = XmlParsedTags::kOsTag;
@@ -74,7 +74,7 @@ bool UpdateDataParser::HandleXMLTag(const wxChar* tag, const wxChar** attrs)
 
     if (is64Bit)
     {
-       if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kWin64Tag]) == 0)
+       if (tag == mXmlTagNames[XmlParsedTags::kWin64Tag])
        {
           if (info.GetOperatingSystemId() & wxOS_WINDOWS)
              mXmlParsingState = XmlParsedTags::kOsTag;
@@ -82,28 +82,28 @@ bool UpdateDataParser::HandleXMLTag(const wxChar* tag, const wxChar** attrs)
        }
     }
 
-    if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kMacosTag]) == 0)
+    if (tag == mXmlTagNames[XmlParsedTags::kMacosTag])
     {
         if (info.GetOperatingSystemId() & wxOS_MAC)
             mXmlParsingState = XmlParsedTags::kOsTag;
         return true;
     }
 
-    if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kLinuxTag]) == 0)
+    if (tag == mXmlTagNames[XmlParsedTags::kLinuxTag])
     {
         if (info.GetOperatingSystemId() & wxOS_UNIX_LINUX)
             mXmlParsingState = XmlParsedTags::kOsTag;
         return true;
     }
 
-    if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kVersionTag]) == 0)
+    if (tag == mXmlTagNames[XmlParsedTags::kVersionTag])
     {
         if (mXmlParsingState == XmlParsedTags::kOsTag)
             mXmlParsingState = XmlParsedTags::kVersionTag;
         return true;
     }
 
-    if (wxStrcmp(tag, mXmlTagNames[XmlParsedTags::kLinkTag]) == 0)
+    if (tag == mXmlTagNames[XmlParsedTags::kLinkTag])
     {
         if (mXmlParsingState == XmlParsedTags::kOsTag)
             mXmlParsingState = XmlParsedTags::kLinkTag;
@@ -112,14 +112,14 @@ bool UpdateDataParser::HandleXMLTag(const wxChar* tag, const wxChar** attrs)
 
     for (auto& xmlTag : mXmlTagNames)
     {
-        if (wxStrcmp(tag, xmlTag.second) == 0)
+        if (tag == xmlTag.second)
             return true;
     }
 
     return false;
 }
 
-void UpdateDataParser::HandleXMLEndTag(const wxChar* tag)
+void UpdateDataParser::HandleXMLEndTag(const std::string_view& tag)
 {
     if (mXmlParsingState == XmlParsedTags::kDescriptionTag ||
         mXmlParsingState == XmlParsedTags::kLinkTag)
@@ -131,12 +131,12 @@ void UpdateDataParser::HandleXMLEndTag(const wxChar* tag)
         mXmlParsingState = XmlParsedTags::kOsTag;
 }
 
-void UpdateDataParser::HandleXMLContent(const wxString& content)
+void UpdateDataParser::HandleXMLContent(const std::string_view& content)
 {
     if (mVersionPatch == nullptr)
         return;
 
-    wxString trimmedContent(content);
+    wxString trimmedContent = std::string(content);
 
     switch (mXmlParsingState)
     {
@@ -160,11 +160,11 @@ void UpdateDataParser::HandleXMLContent(const wxString& content)
     }
 }
 
-XMLTagHandler* UpdateDataParser::HandleXMLChild(const wxChar* tag)
+XMLTagHandler* UpdateDataParser::HandleXMLChild(const std::string_view& tag)
 {
     for (auto& xmlTag : mXmlTagNames)
     {
-        if (wxStrcmp(tag, xmlTag.second) == 0)
+        if (tag == xmlTag.second)
             return this;
     }
 

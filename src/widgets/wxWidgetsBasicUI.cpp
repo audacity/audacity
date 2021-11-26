@@ -8,6 +8,7 @@ Paul Licameli
 
 **********************************************************************/
 #include "wxWidgetsBasicUI.h"
+#include "wxWidgetsWindowPlacement.h"
 #include "MemoryX.h" // for Destroy_ptr
 #include "widgets/ErrorDialog.h"
 #ifdef HAS_SENTRY_REPORTING
@@ -21,8 +22,6 @@ Paul Licameli
 
 using namespace BasicUI;
 
-wxWidgetsWindowPlacement::~wxWidgetsWindowPlacement() = default;
-
 wxWidgetsBasicUI::~wxWidgetsBasicUI() = default;
 
 void wxWidgetsBasicUI::DoCallAfter(const Action &action)
@@ -35,16 +34,6 @@ void wxWidgetsBasicUI::DoYield()
    wxTheApp->Yield();
 }
 
-namespace {
-wxWindow *GetParent(const BasicUI::WindowPlacement &placement)
-{
-   if (auto *pPlacement =
-       dynamic_cast<const wxWidgetsWindowPlacement*>(&placement))
-      return pPlacement->pWindow;
-   return nullptr;
-}
-}
-
 void wxWidgetsBasicUI::DoShowErrorDialog(
    const BasicUI::WindowPlacement &placement,
    const TranslatableString &dlogTitle,
@@ -54,7 +43,7 @@ void wxWidgetsBasicUI::DoShowErrorDialog(
 {
    using namespace BasicUI;
    bool modal = true;
-   auto parent = GetParent(placement);
+   auto parent = wxWidgetsWindowPlacement::GetParent(placement);
    switch (options.type) {
       case ErrorDialogType::ModalErrorReport: {
 #ifdef HAS_SENTRY_REPORTING
@@ -141,7 +130,9 @@ wxWidgetsBasicUI::DoMessageBox(
    // This calls through to ::wxMessageBox:
    auto wxResult =
       ::AudacityMessageBox(message, options.caption, style,
-         options.parent ? GetParent(*options.parent) : nullptr);
+         options.parent
+           ? wxWidgetsWindowPlacement::GetParent(*options.parent)
+           : nullptr);
    // This switch exhausts all possibilities for the return from::wxMessageBox.
    // see utilscmn.cpp in wxWidgets.
    // Remap to our toolkit-neutral enumeration.
@@ -232,5 +223,5 @@ wxWidgetsBasicUI::DoMakeGenericProgress(
    const TranslatableString &message)
 {
    return std::make_unique<MyGenericProgress>(
-      title, message, GetParent(placement));
+      title, message, wxWidgetsWindowPlacement::GetParent(placement));
 }

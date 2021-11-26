@@ -89,6 +89,7 @@ public:
    EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;
+   bool EnablesDebug() override;
 
    // EffectClientInterface implementation
 
@@ -102,7 +103,7 @@ public:
    bool Init() override;
    bool CheckWhetherSkipEffect() override;
    bool Process() override;
-   bool ShowInterface( wxWindow &parent,
+   int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory, bool forceModal = false) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool TransferDataToWindow() override;

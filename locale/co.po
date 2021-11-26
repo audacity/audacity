@@ -6,10 +6,10 @@
 # Patriccollu <Patrick.Santa-Maria@laposte.net>, 2021
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.0.3\n"
+"Project-Id-Version: audacity 3.1.0 in Corsican\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-07-15 12:48-0400\n"
-"PO-Revision-Date: 2021-06-08 18:36+0200\n"
+"POT-Creation-Date: 2021-10-14 10:06-0400\n"
+"PO-Revision-Date: 2021-10-15 11:51+0200\n"
 "Last-Translator: Patriccollu di Santa Maria è Sichè <https://github.com/Patriccollu/Lingua_Corsa-Infurmatica/tree/ceppu/Prughjetti/Audacity>\n"
 "Language-Team: Patriccollu di Santa Maria è Sichè\n"
 "Language: co\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. i18n-hint C++ programming assertion
 #: crashreports/crashreporter/CrashReportApp.cpp
@@ -53,6 +53,25 @@ msgstr "Detaglii di u prublema"
 msgid "Comments"
 msgstr "Cummenti"
 
+#. i18n-hint: %s will be replaced with "our Privacy Policy"
+#: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/widgets/ErrorReportDialog.cpp
+#, c-format
+msgid "See %s for more info."
+msgstr "Fighjate %s per sapene di più."
+
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an
+#. object of "See".
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an
+#. object of "See".
+#: crashreports/crashreporter/CrashReportApp.cpp src/AboutDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/widgets/ErrorReportDialog.cpp
+msgid "our Privacy Policy"
+msgstr "a nostra pulitica di cunfidenzialità"
+
 #: crashreports/crashreporter/CrashReportApp.cpp
 #: src/widgets/ErrorReportDialog.cpp
 msgctxt "crash reporter button"
@@ -68,6 +87,415 @@ msgstr "&Mandà"
 #: crashreports/crashreporter/CrashReportApp.cpp
 msgid "Failed to send crash report"
 msgstr "Fiascu per mandà u raportu di lampata"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+msgid "Stream is active ... unable to gather information.\n"
+msgstr "U flussu hè attivu… ma incapace d’arricoglie infurmazione.\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, c-format
+msgid "Default recording device number: %d\n"
+msgstr "Numeru d’apparechju d’arregistramentu predefinitu : %d\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, c-format
+msgid "Default playback device number: %d\n"
+msgstr "Numeru d’apparechju di lettura predefinitu : %d\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+msgid "No devices found\n"
+msgstr "Nisunu apparechju trovu\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, c-format
+msgid "Device info unavailable for: %d\n"
+msgstr "Infurmazione d’apparechju indispunibule per : %d\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, c-format
+msgid "Device ID: %d\n"
+msgstr "Identificazione d’apparechju : %d\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, c-format
+msgid "Device name: %s\n"
+msgstr "Nome d’apparechju : %s\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#, c-format
+msgid "Host name: %s\n"
+msgstr "Nome d’ospite : %s\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "Recording channels: %d\n"
+msgstr "Canali d’arregistramentu : %d\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "Playback channels: %d\n"
+msgstr "Canali di lettura : %d\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "Low Recording Latency: %g\n"
+msgstr "Cumportu d’attesa bassu d’arregistramentu : %g\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "Low Playback Latency: %g\n"
+msgstr "Cumportu d’attesa bassu di lettura : %g\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "High Recording Latency: %g\n"
+msgstr "Cumportu d’attesa altu d’arregistramentu : %g\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "High Playback Latency: %g\n"
+msgstr "Cumportu d’attesa altu di lettura : %g\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Supported Rates:\n"
+msgstr "Frequenze accettate :\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "Selected recording device: %d - %s\n"
+msgstr "Apparechju d’arregistramentu selezziunatu : %d - %s\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "No recording device found for '%s'.\n"
+msgstr "Alcunu apparechju d’arregistramentu trovu per « %s ».\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "Selected playback device: %d - %s\n"
+msgstr "Apparechju di lettura selezziunatu : %d - %s\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "No playback device found for '%s'.\n"
+msgstr "Alcunu apparechju di lettura trovu per « %s ».\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Cannot check mutual sample rates without both devices.\n"
+msgstr "Impussibule di verificà e frequenze di campiunariu mutuale senza i dui apparechji.\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "Received %d while opening devices\n"
+msgstr "Ricevutu %d durante l’apertura di l’apparechji\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Unable to open Portmixer\n"
+msgstr "Impussibule d’apre Portmixer\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Available mixers:\n"
+msgstr "Mischiadori dispunibule :\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, c-format
+msgid "%d - %s\n"
+msgstr "%d - %s\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Available recording sources:\n"
+msgstr "Fonti d’arregistramentu dispunibule :\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Available playback volumes:\n"
+msgstr "Vulumi di lettura dispunibule :\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Recording volume is emulated\n"
+msgstr "U vulume d’arregistramentu hè simulatu\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Recording volume is native\n"
+msgstr "U vulume d’arregistramentu hè nativu\n"
+
+#: libraries/lib-basic-ui/BasicUI.cpp
+#: libraries/lib-exceptions/AudacityException.h src/commands/MessageCommand.cpp
+#: src/widgets/AudacityMessageBox.h
+msgid "Message"
+msgstr "Messaghju"
+
+#: libraries/lib-exceptions/InconsistencyException.cpp
+#, c-format
+msgid ""
+"Internal error in %s at %s line %d.\n"
+"Please inform the Audacity team at https://forum.audacityteam.org/."
+msgstr ""
+"Sbagliu internu in %s à %s linea %d.\n"
+"Ci vole à infurmà a squadra Audacity à https://forum.audacityteam.org/."
+
+#: libraries/lib-exceptions/InconsistencyException.cpp
+#, c-format
+msgid ""
+"Internal error at %s line %d.\n"
+"Please inform the Audacity team at https://forum.audacityteam.org/."
+msgstr ""
+"Sbagliu internu à %s linea %d.\n"
+"Ci vole à infurmà a squadra Audacity à https://forum.audacityteam.org/."
+
+#: libraries/lib-exceptions/InconsistencyException.h
+msgid "Internal Error"
+msgstr "Sbagliu Internu"
+
+#: libraries/lib-files/FileException.cpp
+#, c-format
+msgid "Audacity failed to open a file in %s."
+msgstr "Fiascu d’Audacity per apre un schedariu in %s."
+
+#: libraries/lib-files/FileException.cpp
+#, c-format
+msgid "Audacity failed to read from a file in %s."
+msgstr "Fiascu d’Audacity per leghje un schedariu in %s."
+
+#: libraries/lib-files/FileException.cpp
+#, c-format
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr "Audacity hà riesciutu à scrive un schedariu in %s ma hà fiascatu à rinuminallu cum’è %s."
+
+#: libraries/lib-files/FileException.cpp
+#, c-format
+msgid ""
+"Audacity failed to write to a file.\n"
+"Perhaps %s is not writable or the disk is full.\n"
+"For tips on freeing up space, click the help button."
+msgstr ""
+"Fiascu d’Audacity per scrive in un schedariu.\n"
+"Forse ùn si pò scrive in %s, osinnò u discu hè pienu.\n"
+"Cliccu nant’à u buttone d’aiutu per cunnosce minichichje per liberà spaziu."
+
+#: libraries/lib-files/FileException.h
+msgid "File Error"
+msgstr "Sbagliu di schedariu"
+
+#: libraries/lib-files/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
+#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny
+msgid "All files"
+msgstr "Tutti i schedarii"
+
+#. i18n-hint an Audacity project is the state of the program, stored as
+#. files that can be reopened to resume the session later
+#: libraries/lib-files/FileNames.cpp
+msgid "AUP3 project files"
+msgstr "Schedarii di prughjettu AUP3"
+
+#: libraries/lib-files/FileNames.cpp
+msgid "Dynamically Linked Libraries"
+msgstr "Bibliuteche à leie dinamiche"
+
+#: libraries/lib-files/FileNames.cpp
+msgid "Dynamic Libraries"
+msgstr "Bibliuteche dinamiche"
+
+#: libraries/lib-files/FileNames.cpp
+msgid "Text files"
+msgstr "Schedarii di testu"
+
+#: libraries/lib-files/FileNames.cpp
+msgid "XML files"
+msgstr "Schedarii XML"
+
+#: libraries/lib-files/FileNames.cpp
+msgid ", "
+msgstr ", "
+
+#. i18n-hint a type or types such as "txt" or "txt, xml" will be
+#. substituted for %s
+#: libraries/lib-files/FileNames.cpp
+#, c-format
+msgid "%s files"
+msgstr "Schedarii %s"
+
+#: libraries/lib-files/FileNames.cpp src/BatchCommands.cpp
+#, c-format
+msgid "(%s)"
+msgstr "(%s)"
+
+#: libraries/lib-files/FileNames.cpp
+#, c-format
+msgid ""
+"\n"
+"%s does not have write permissions."
+msgstr ""
+"\n"
+"%s ùn hà micca i diritti di scrittura."
+
+#: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
+#: src/ProjectAudioManager.cpp src/SelectUtilities.cpp
+#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp src/effects/Effect.cpp
+#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
+#: src/export/ExportFFmpeg.cpp src/export/ExportMP2.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
+#: src/widgets/UnwritableLocationErrorDialog.cpp
+#: plug-ins/eq-xml-to-txt-converter.ny
+msgid "Error"
+msgstr "Sbagliu"
+
+#: libraries/lib-files/TempDirectory.cpp
+msgid "Unsuitable"
+msgstr "Micca adattatu"
+
+#: libraries/lib-files/TempDirectory.cpp
+msgid ""
+"The temporary files directory is on a FAT formatted drive.\n"
+"Resetting to default location."
+msgstr ""
+"U cartulare timpurariu di schedarii si trova nant’à un lettore di furmatu FAT.\n"
+"Reiniziazione à u locu predefinitu."
+
+#: libraries/lib-files/TempDirectory.cpp
+#, c-format
+msgid ""
+"%s\n"
+"\n"
+"For tips on suitable drives, click the help button."
+msgstr ""
+"%s\n"
+"Cliccu nant’à u buttone d’aiutu per cunnosce minichichje nant’à i lettori adattati."
+
+#: libraries/lib-math/Dither.cpp src/commands/ScreenshotCommand.cpp
+#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/prefs/TracksBehaviorsPrefs.cpp plug-ins/equalabel.ny
+#: plug-ins/sample-data-export.ny
+msgid "None"
+msgstr "Nisuna"
+
+#: libraries/lib-math/Dither.cpp
+msgid "Rectangle"
+msgstr "Rettangulu"
+
+#: libraries/lib-math/Dither.cpp src/effects/ToneGen.cpp plug-ins/tremolo.ny
+msgid "Triangle"
+msgstr "Triangulu"
+
+#: libraries/lib-math/Dither.cpp
+msgid "Shaped"
+msgstr "Onda"
+
+#: libraries/lib-math/FFT.cpp
+msgid "Rectangular"
+msgstr "Rettangulare"
+
+#. i18n-hint a proper name
+#: libraries/lib-math/FFT.cpp
+msgid "Bartlett"
+msgstr "Bartlett"
+
+#. i18n-hint a proper name
+#: libraries/lib-math/FFT.cpp
+msgid "Hamming"
+msgstr "Hamming"
+
+#. i18n-hint a proper name
+#: libraries/lib-math/FFT.cpp
+msgid "Hann"
+msgstr "Hann"
+
+#. i18n-hint a proper name
+#: libraries/lib-math/FFT.cpp
+msgid "Blackman"
+msgstr "Blackman"
+
+#. i18n-hint two proper names
+#: libraries/lib-math/FFT.cpp
+msgid "Blackman-Harris"
+msgstr "Blackman-Harris"
+
+#. i18n-hint a proper name
+#: libraries/lib-math/FFT.cpp
+msgid "Welch"
+msgstr "Welch"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-math/FFT.cpp
+msgid "Gaussian(a=2.5)"
+msgstr "Gaussianu (a=2,5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-math/FFT.cpp
+msgid "Gaussian(a=3.5)"
+msgstr "Gaussianu (a=3,5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-math/FFT.cpp
+msgid "Gaussian(a=4.5)"
+msgstr "Gaussianu (a=4,5)"
+
+#: libraries/lib-math/Resample.cpp
+msgid "Low Quality (Fastest)"
+msgstr "Bassa qualità (a più rapida)"
+
+#: libraries/lib-math/Resample.cpp
+msgid "Medium Quality"
+msgstr "Qualità mediana"
+
+#: libraries/lib-math/Resample.cpp
+msgid "High Quality"
+msgstr "Alta qualità"
+
+#: libraries/lib-math/Resample.cpp
+msgid "Best Quality (Slowest)"
+msgstr "Qualità a più bella (u più pianu)"
+
+#. i18n-hint: Audio data bit depth (precision): 16-bit integers
+#: libraries/lib-math/SampleFormat.cpp
+msgid "16-bit PCM"
+msgstr "16-bit PCM"
+
+#. i18n-hint: Audio data bit depth (precision): 24-bit integers
+#: libraries/lib-math/SampleFormat.cpp
+msgid "24-bit PCM"
+msgstr "24-bit PCM"
+
+#. i18n-hint: Audio data bit depth (precision): 32-bit floating point
+#: libraries/lib-math/SampleFormat.cpp
+#: libraries/lib-project-rate/QualitySettings.cpp
+msgid "32-bit float"
+msgstr "32 bit virgula mobile"
+
+#: libraries/lib-math/SampleFormat.cpp
+msgid "Unknown format"
+msgstr "Furmatu scunnisciutu"
+
+#: libraries/lib-project-rate/QualitySettings.cpp
+msgid "16-bit"
+msgstr "16-bit"
+
+#: libraries/lib-project-rate/QualitySettings.cpp
+msgid "24-bit"
+msgstr "24-bit"
+
+#: libraries/lib-registries/Registry.cpp
+#, c-format
+msgid "Plug-in group at %s was merged with a previously defined group"
+msgstr "U gruppu di moduli d’estensione in %s hè statu unitu à un gruppu definitu precedentemente"
+
+#: libraries/lib-registries/Registry.cpp
+#, c-format
+msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgstr "L’elementu di modulu d’estensione in %s hè in cunflittu cù un elementu definitu precedentemente è hè statu scartatu"
+
+#: libraries/lib-registries/Registry.cpp
+#, c-format
+msgid "Plug-in items at %s specify conflicting placements"
+msgstr "L’elementi di modulu d’estensione in %s specificanu pusizioni in cunflittu"
+
+#: libraries/lib-screen-geometry/ViewInfo.cpp
+msgid "&Loop On/Off"
+msgstr "&Iterazione attivata/disattivata"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -103,6 +531,175 @@ msgstr "Semplificatu"
 #: libraries/lib-strings/Languages.cpp
 msgid "System"
 msgstr "Sistema"
+
+#. i18n-hint: describing the "classic" or traditional
+#. appearance of older versions of Audacity
+#: libraries/lib-theme/ClassicThemeAsCeeCode.cpp
+msgid "Classic"
+msgstr "Classicu"
+
+#: libraries/lib-theme/DarkThemeAsCeeCode.cpp
+msgid "Dark"
+msgstr "Scuru"
+
+#. i18n-hint: greater difference between foreground and
+#. background colors
+#: libraries/lib-theme/HiContrastThemeAsCeeCode.cpp
+msgid "High Contrast"
+msgstr "Cuntrastu forte"
+
+#. i18n-hint: Light meaning opposite of dark
+#: libraries/lib-theme/LightThemeAsCeeCode.cpp
+msgid "Light"
+msgstr "Chjaru"
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not write file:\n"
+"  %s."
+msgstr ""
+"Audacity ùn pò micca scrive u schedariu :\n"
+"  %s."
+
+#. i18n-hint: A theme is a consistent visual style across an application's
+#. graphical user interface, including choices of colors, and similarity of images
+#. such as those on button controls.  Audacity can load and save alternative
+#. themes.
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Theme written to:\n"
+"  %s."
+msgstr ""
+"Temu scrittu ver di :\n"
+"  %s."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not open file:\n"
+"  %s\n"
+"for writing."
+msgstr ""
+"Audacity ùn pò micca apre u schedariu :\n"
+"  %s\n"
+"per scrivecci."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not write images to file:\n"
+"  %s."
+msgstr ""
+"Audacity ùn pò micca scrive fiure ver di u schedariu :\n"
+"  %s."
+
+#. i18n-hint "Cee" means the C computer programming language
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Theme as Cee code written to:\n"
+"  %s."
+msgstr ""
+"Temu scrittu in codice C ver di :\n"
+"  %s."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not find file:\n"
+"  %s.\n"
+"Theme not loaded."
+msgstr ""
+"Audacity ùn pò micca truvà u schedariu :\n"
+"  %s.\n"
+"U temu ùn hè micca caricatu."
+
+#. i18n-hint: Do not translate png.  It is the name of a file format.
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not load file:\n"
+"  %s.\n"
+"Bad png format perhaps?"
+msgstr ""
+"Audacity ùn pò micca caricà u schedariu :\n"
+"  %s.\n"
+"Forse un furmatu png gattivu ?"
+
+#: libraries/lib-theme/Theme.cpp
+msgid ""
+"Audacity could not read its default theme.\n"
+"Please report the problem."
+msgstr ""
+"Audacity ùn pò micca leghje u so temu predefinitu.\n"
+"Ci vole à riferisce u penseru."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"None of the expected theme component files\n"
+" were found in:\n"
+"  %s."
+msgstr ""
+"Nisunu di i schedarii di cumpunente di u temu aspettatu\n"
+" ùn hè statu trovu in :\n"
+"  %s."
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Could not create directory:\n"
+"  %s"
+msgstr ""
+"Impussibule di creà u cartulare :\n"
+"  %s"
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Some required files in:\n"
+"  %s\n"
+"were already present. Overwrite?"
+msgstr ""
+"Certì schedarii richiesti in :\n"
+"  %s\n"
+"sò dighjà presente. Rimpiazzalli ?"
+
+#: libraries/lib-theme/Theme.cpp
+#, c-format
+msgid ""
+"Audacity could not save file:\n"
+"  %s"
+msgstr ""
+"Audacity ùn pò micca arregistrà u schedariu :\n"
+"  %s"
+
+#. i18n-hint: user defined
+#: libraries/lib-theme/Theme.cpp
+msgid "Custom"
+msgstr "Persunalizatu"
+
+#: libraries/lib-xml/XMLFileReader.cpp src/effects/Effect.cpp
+#: src/effects/VST/VSTEffect.cpp
+#, c-format
+msgid "Could not open file: \"%s\""
+msgstr "Ùn si pò micca apre u schedariu : « %s »"
+
+#: libraries/lib-xml/XMLFileReader.cpp
+#, c-format
+msgid "Error: %s at line %lu"
+msgstr "Sbagliu : %s à a linea %lu"
+
+#: libraries/lib-xml/XMLFileReader.cpp
+#, c-format
+msgid "Could not load file: \"%s\""
+msgstr "Ùn si pò micca caricà u schedariu : « %s »"
+
+#: libraries/lib-xml/XMLFileReader.cpp
+msgid "Could not parse XML"
+msgstr "Ùn si pò micca analizà u XML"
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "1st Experimental Command..."
@@ -238,12 +835,13 @@ msgstr "Scenarii Nyquist (*.ny)|*.ny|Scenarii Lisp (*.lsp)|*.lsp|Tutti schedarii
 msgid "Script was not saved."
 msgstr "U scenariu ùn hè statu micca arregistratu."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/AudacityLogger.cpp
-#: src/DBConnection.cpp src/Project.cpp src/ProjectFileIO.cpp
-#: src/ProjectHistory.cpp src/SqliteSampleBlock.cpp src/WaveClip.cpp
-#: src/WaveTrack.cpp src/export/Export.cpp src/export/ExportCL.cpp
-#: src/export/ExportMultiple.cpp src/import/RawAudioGuess.cpp
-#: src/menus/EditMenus.cpp src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/DBConnection.cpp src/LogWindow.cpp
+#: src/ProjectFileIO.cpp src/ProjectHistory.cpp src/SqliteSampleBlock.cpp
+#: src/WaveClip.cpp src/WaveTrack.cpp src/export/Export.cpp
+#: src/export/ExportCL.cpp src/export/ExportMultiple.cpp
+#: src/import/RawAudioGuess.cpp src/menus/EditMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "Avertimentu"
 
@@ -295,7 +893,7 @@ msgstr "Senza titulu"
 msgid "Nyquist Effect Workbench - "
 msgstr "Attellu di travagliu d’effettu Nyquist - "
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/PluginManager.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/PluginRegistrationDialog.cpp
 #: src/prefs/ModulePrefs.cpp
 msgid "New"
 msgstr "Novu"
@@ -329,6 +927,7 @@ msgid "Save script as..."
 msgstr "Arregistrà u scenariu cù u nome…"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Copy"
 msgstr "Cupià"
 
@@ -338,6 +937,7 @@ msgstr "Cupià ver di u preme’papei"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Cut"
 msgstr "Taglià"
 
@@ -347,6 +947,7 @@ msgstr "Taglià ver di u preme’papei"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
 #: src/toolbars/EditToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Paste"
 msgstr "Incullà"
 
@@ -364,6 +965,7 @@ msgid "Clear selection"
 msgstr "Squassà a selezzione"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
+#: src/tracks/ui/BackgroundCell.cpp
 msgid "Select All"
 msgstr "Tuttu selezziunà"
 
@@ -699,12 +1301,13 @@ msgstr "U nome %s hè una marca disposta."
 msgid "Build Information"
 msgstr "Infurmazione di custruzzione"
 
-#: src/AboutDialog.cpp src/PluginManager.cpp src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/prefs/ModulePrefs.cpp
 msgid "Enabled"
 msgstr "Attivatu"
 
-#: src/AboutDialog.cpp src/PluginManager.cpp src/export/ExportFFmpegDialogs.cpp
-#: src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/export/ExportFFmpegDialogs.cpp src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Disattivatu"
 
@@ -838,7 +1441,7 @@ msgstr "Permette u cambiu estremu d’intunazione è di tempo"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "Legal"
-msgstr ""
+msgstr "Infurmazione legale"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -848,24 +1451,16 @@ msgstr "Licenza GPL"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "PRIVACY POLICY"
-msgstr ""
+msgstr "PULITICA DI CUNFIDENZIALITÀ"
 
 #: src/AboutDialog.cpp
 msgid "App update checking and error reporting require network access. These features are optional."
-msgstr ""
+msgstr "A verificazione di i rinnovi è u signalamentu di i sbaglii richiedenu l’accessu à a reta. Ste funzioni sò ozzionale."
 
-#. i18n-hint: %s will be replaced with "our Privacy Policy"
-#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
-#, fuzzy, c-format
-msgid "See %s for more info."
-msgstr "Selezziunà un schedariu o più"
-
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
-#: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
-msgid "our Privacy Policy"
-msgstr ""
+#: src/AdornedRulerPanel.cpp
+		
+msgid "Click and drag to define a looping region."
+msgstr "Cliccà è fà trascinà per definisce una regione iterativa."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -873,7 +1468,7 @@ msgstr "L’azzioni in a linea tempurale sò disattivate durante l’arregistram
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to adjust, double-click to reset"
-msgstr "Cliccà è trascinà per adattà, dopiu-cliccu per reinizià"
+msgstr "Cliccà è trascinà per adattà, doppiu-cliccu per reinizià"
 
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
@@ -950,46 +1545,27 @@ msgid "Timeline Options"
 msgstr "Ozzioni di linea tempurale"
 
 #: src/AdornedRulerPanel.cpp
-msgid "Enable Quick-Play"
-msgstr "Attivà a lettura rapida"
-
-#: src/AdornedRulerPanel.cpp
 msgid "Enable dragging selection"
 msgstr "Attivà a trascinatura di selezzione"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Update display while playing"
-msgstr "Attualizà l’affissame durante a lettura"
+msgstr "Attualizà l’affissera durante a lettura"
+
+#. i18n-hint Clear is a verb
+#: src/AdornedRulerPanel.cpp
+		
+msgid "Clear Looping Region"
+msgstr "Squassà a regione iterativa"
 
 #: src/AdornedRulerPanel.cpp
-msgid "Lock Play Region"
-msgstr "Ammarchjunà a lettura di regione"
+		
+msgid "Set Loop To Selection"
+msgstr "Definisce a selezzione cum’è iterazione"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Pinned Play Head"
 msgstr "Testa di lettura spirlata"
-
-#: src/AdornedRulerPanel.cpp
-msgid ""
-"Cannot lock region beyond\n"
-"end of project."
-msgstr ""
-"Ùn si pò ammarchjunà a regione\n"
-"aldilà di a fine di u prughjettu."
-
-#: src/AdornedRulerPanel.cpp src/AudioIO.cpp src/FileNames.cpp
-#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/Effect.cpp src/effects/Generator.cpp
-#: src/effects/nyquist/Nyquist.cpp src/export/ExportFFmpeg.cpp
-#: src/export/ExportMP2.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#: src/widgets/FileDialog/gtk/FileDialogPrivate.cpp
-#: src/widgets/UnwritableLocationErrorDialog.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Error"
-msgstr "Sbagliu"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -1201,6 +1777,13 @@ msgstr "Un sbagliu ch’ùn si pò ricuperà hè accadutu à l’avviu"
 msgid "set max disk block size in bytes"
 msgstr "definisce a dimensione massima in ottetti di bloccu di discu"
 
+#. i18n-hint: brief help message for Audacity's command-line options
+#. A journal contains a sequence of user interface interactions to be repeated
+#. "log," "trail," "trace" have somewhat similar meanings
+#: src/AudacityApp.cpp
+msgid "replay a journal file"
+msgstr "eseguisce torna un ghjurnale d’interazzioni"
+
 #. i18n-hint: This displays a list of available options
 #: src/AudacityApp.cpp
 msgid "this help message"
@@ -1237,11 +1820,6 @@ msgstr ""
 #: src/AudacityApp.cpp
 msgid "Audacity Project Files"
 msgstr "Schedarii di prughjettu Audacity"
-
-#: src/AudacityException.h src/commands/MessageCommand.cpp
-#: src/widgets/AudacityMessageBox.cpp
-msgid "Message"
-msgstr "Messaghju"
 
 #: src/AudacityFileConfig.cpp
 msgid "Audacity Configuration Error"
@@ -1284,37 +1862,6 @@ msgstr "&Esce da Audacity"
 msgid "&Retry"
 msgstr "&Torna"
 
-#: src/AudacityLogger.cpp
-msgid "Audacity Log"
-msgstr "Ghjurnale d’Audacity"
-
-#: src/AudacityLogger.cpp src/Tags.cpp
-msgid "&Save..."
-msgstr "Arre&gistrà…"
-
-#. i18n-hint: (verb)
-#: src/AudacityLogger.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
-msgid "Cl&ear"
-msgstr "&Viutà"
-
-#: src/AudacityLogger.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
-#: src/menus/FileMenus.cpp
-msgid "&Close"
-msgstr "&Chjode"
-
-#: src/AudacityLogger.cpp
-msgid "log.txt"
-msgstr "log.txt"
-
-#: src/AudacityLogger.cpp
-msgid "Save log to:"
-msgstr "Arregistrà u ghjurnale ver di :"
-
-#: src/AudacityLogger.cpp
-#, c-format
-msgid "Couldn't save log to file: %s"
-msgstr "Ùn si pò micca arregistrà u ghjurnale ver di u schedariu : %s"
-
 #: src/AudioIO.cpp
 msgid "Could not find any audio devices.\n"
 msgstr "Ùn si pò truvà alcunu apparechju audio.\n"
@@ -1327,7 +1874,7 @@ msgstr ""
 "Ùn serà micca pussibule di sunà o d’arregistrà l’audio.\n"
 "\n"
 
-#: src/AudioIO.cpp
+#: src/AudioIO.cpp src/MIDIPlay.cpp
 #, c-format
 msgid "Error: %s"
 msgstr "Sbagliu : %s"
@@ -1335,22 +1882,6 @@ msgstr "Sbagliu : %s"
 #: src/AudioIO.cpp
 msgid "Error Initializing Audio"
 msgstr "Sbagliu à l’iniziu di l’audio"
-
-#: src/AudioIO.cpp
-msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "Ci hè statu un sbagliu à l’iniziu di u stratu e/s MIDI.\n"
-
-#: src/AudioIO.cpp
-msgid ""
-"You will not be able to play midi.\n"
-"\n"
-msgstr ""
-"Ùn ci serà micca pussibule di sunà un MIDI.\n"
-"\n"
-
-#: src/AudioIO.cpp
-msgid "Error Initializing Midi"
-msgstr "Sbagliu à l’Iniziu di u MIDI"
 
 #: src/AudioIO.cpp
 msgid "Audacity Audio"
@@ -1400,182 +1931,6 @@ msgstr "Fermata di l’accumudata autumatica di livellu d’arregistramentu. U n
 msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
 msgstr "Fermata di l’accumudata autumatica di livellu d’arregistramentu. %.2f pare un vulume accettevule."
 
-#: src/AudioIOBase.cpp
-msgid "Stream is active ... unable to gather information.\n"
-msgstr "U flussu hè attivu… ma incapace d’arricoglie infurmazione.\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Default recording device number: %d\n"
-msgstr "Numeru d’apparechju d’arregistramentu predefinitu : %d\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Default playback device number: %d\n"
-msgstr "Numeru d’apparechju di lettura predefinitu : %d\n"
-
-#: src/AudioIOBase.cpp
-msgid "No devices found\n"
-msgstr "Nisunu apparechju trovu\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Device info unavailable for: %d\n"
-msgstr "Infurmazione d’apparechju indispunibule per : %d\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Device ID: %d\n"
-msgstr "Identificazione d’apparechju : %d\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Device name: %s\n"
-msgstr "Nome d’apparechju : %s\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Host name: %s\n"
-msgstr "Nome d’ospite : %s\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Recording channels: %d\n"
-msgstr "Canali d’arregistramentu : %d\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Playback channels: %d\n"
-msgstr "Canali di lettura : %d\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Low Recording Latency: %g\n"
-msgstr "Cumportu d’attesa bassu d’arregistramentu : %g\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Low Playback Latency: %g\n"
-msgstr "Cumportu d’attesa bassu di lettura : %g\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "High Recording Latency: %g\n"
-msgstr "Cumportu d’attesa altu d’arregistramentu : %g\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "High Playback Latency: %g\n"
-msgstr "Cumportu d’attesa altu di lettura : %g\n"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/AudioIOBase.cpp
-msgid "Supported Rates:\n"
-msgstr "Frequenze accettate :\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Selected recording device: %d - %s\n"
-msgstr "Apparechju d’arregistramentu selezziunatu : %d - %s\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "No recording device found for '%s'.\n"
-msgstr "Alcunu apparechju d’arregistramentu trovu per « %s ».\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Selected playback device: %d - %s\n"
-msgstr "Apparechju di lettura selezziunatu : %d - %s\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "No playback device found for '%s'.\n"
-msgstr "Alcunu apparechju di lettura trovu per « %s ».\n"
-
-#: src/AudioIOBase.cpp
-msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr "Impussibule di verificà e frequenze di campiunariu mutuale senza i dui apparechji.\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Received %d while opening devices\n"
-msgstr "Ricevutu %d durante l’apertura di l’apparechji\n"
-
-#: src/AudioIOBase.cpp
-msgid "Unable to open Portmixer\n"
-msgstr "Impussibule d’apre Portmixer\n"
-
-#: src/AudioIOBase.cpp
-msgid "Available mixers:\n"
-msgstr "Mischiadori dispunibule :\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "%d - %s\n"
-msgstr "%d - %s\n"
-
-#: src/AudioIOBase.cpp
-msgid "Available recording sources:\n"
-msgstr "Fonti d’arregistramentu dispunibule :\n"
-
-#: src/AudioIOBase.cpp
-msgid "Available playback volumes:\n"
-msgstr "Vulumi di lettura dispunibule :\n"
-
-#: src/AudioIOBase.cpp
-msgid "Recording volume is emulated\n"
-msgstr "U vulume d’arregistramentu hè simulatu\n"
-
-#: src/AudioIOBase.cpp
-msgid "Recording volume is native\n"
-msgstr "U vulume d’arregistramentu hè nativu\n"
-
-#: src/AudioIOBase.cpp
-msgid "Playback volume is emulated\n"
-msgstr "U vulume di lettura hè simulatu\n"
-
-#: src/AudioIOBase.cpp
-msgid "Playback volume is native\n"
-msgstr "U vulume di lettura hè nativu\n"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Supports output: %d\n"
-msgstr "Pigliata in carica di l’esciuta : %d\n"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Supports input: %d\n"
-msgstr "Pigliata in carica di l’entrata : %d\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Opened: %d\n"
-msgstr "Apertu : %d\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "Apparechju d’arregistramentu MIDI selezziunatu : %d - %s\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "No MIDI recording device found for '%s'.\n"
-msgstr "Alcunu apparechju d’arregistramentu MIDI trovu per « %s ».\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "Selected MIDI playback device: %d - %s\n"
-msgstr "Apparechju di lettura MIDI selezziunatu : %d - %s\n"
-
-#: src/AudioIOBase.cpp
-#, c-format
-msgid "No MIDI playback device found for '%s'.\n"
-msgstr "Alcunu apparechju di lettura MIDI trovu per « %s ».\n"
-
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
 msgstr "Ricuperazione autumatica di lampata"
@@ -1601,7 +1956,8 @@ msgid "Select"
 msgstr "Selezziunà"
 
 #. i18n-hint: (noun).  It's the name of the project to recover.
-#: src/AutoRecoveryDialog.cpp src/PluginManager.cpp src/TrackInfo.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TrackInfo.cpp
 msgid "Name"
 msgstr "Nome"
 
@@ -1687,11 +2043,6 @@ msgstr "Effettu"
 #: src/BatchCommands.cpp
 msgid "Menu Command (With Parameters)"
 msgstr "Listinu di cumanda (cù parametri)"
-
-#: src/BatchCommands.cpp src/FileNames.cpp
-#, c-format
-msgid "(%s)"
-msgstr "(%s)"
 
 #: src/BatchCommands.cpp
 msgid "Menu Command (No Parameters)"
@@ -2194,6 +2545,14 @@ msgstr "(%d) : %s"
 
 #: src/DBConnection.cpp
 #, c-format
+msgid "Failed to set page size for database %s"
+msgstr "Fiascu per definisce a dimensione di pagina per a basa di dati %s"
+												  
+	
+	
+
+#: src/DBConnection.cpp
+#, c-format
 msgid "Failed to set safe mode on primary connection to %s"
 msgstr "Fiascu per definisce u modu assicuratu di cunnessione principale nant’à %s"
 
@@ -2379,74 +2738,6 @@ msgstr ""
 msgid "Dependency Check"
 msgstr "Cuntrollu di dipendenza"
 
-#: src/Dither.cpp src/commands/ScreenshotCommand.cpp
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
-#: src/prefs/TracksBehaviorsPrefs.cpp plug-ins/equalabel.ny
-#: plug-ins/sample-data-export.ny
-msgid "None"
-msgstr "Nisuna"
-
-#: src/Dither.cpp
-msgid "Rectangle"
-msgstr "Rettangulu"
-
-#: src/Dither.cpp plug-ins/tremolo.ny
-msgid "Triangle"
-msgstr "Triangulu"
-
-#: src/Dither.cpp
-msgid "Shaped"
-msgstr "Onda"
-
-#: src/FFT.cpp
-msgid "Rectangular"
-msgstr "Rettangulare"
-
-#. i18n-hint a proper name
-#: src/FFT.cpp
-msgid "Bartlett"
-msgstr "Bartlett"
-
-#. i18n-hint a proper name
-#: src/FFT.cpp
-msgid "Hamming"
-msgstr "Hamming"
-
-#. i18n-hint a proper name
-#: src/FFT.cpp
-msgid "Hann"
-msgstr "Hann"
-
-#. i18n-hint a proper name
-#: src/FFT.cpp
-msgid "Blackman"
-msgstr "Blackman"
-
-#. i18n-hint two proper names
-#: src/FFT.cpp
-msgid "Blackman-Harris"
-msgstr "Blackman-Harris"
-
-#. i18n-hint a proper name
-#: src/FFT.cpp
-msgid "Welch"
-msgstr "Welch"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: src/FFT.cpp
-msgid "Gaussian(a=2.5)"
-msgstr "Gaussianu (a=2,5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: src/FFT.cpp
-msgid "Gaussian(a=3.5)"
-msgstr "Gaussianu (a=3,5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: src/FFT.cpp
-msgid "Gaussian(a=4.5)"
-msgstr "Gaussianu (a=4,5)"
-
 #: src/FFmpeg.cpp
 msgid "FFmpeg support not compiled in"
 msgstr "L’accessu à FFmpeg ùn hè micca cumpilatu"
@@ -2504,6 +2795,19 @@ msgstr "Per ottene una copia di rigalu di FFmpeg, cliccà quì -->"
 msgid "Download"
 msgstr "Scaricà"
 
+#: src/FFmpeg.cpp
+msgid "Only avformat.dll"
+msgstr "Solu avformat.dll"
+
+#: src/FFmpeg.cpp
+		
+msgid "Only ffmpeg.*.dylib"
+msgstr "Solu ffmpeg.*.dylib"
+
+#: src/FFmpeg.cpp
+msgid "Only libavformat.so"
+msgstr "Solu libavformat.so"
+
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
 #. "Where would I find the file '%s'?" instead if you want.
@@ -2534,49 +2838,6 @@ msgstr ""
 msgid "Do not show this warning again"
 msgstr "Ùn affissà più st’avertimentu"
 
-#: src/FFmpeg.cpp
-msgid "Failed to find compatible FFmpeg libraries."
-msgstr "Impussibule di truvà bibliuteche FFmpeg cunciliabile."
-
-#. i18n-hint: do not translate avformat.  Preserve the computer gibberish.
-#: src/FFmpeg.h
-msgid "Only avformat.dll"
-msgstr "Solu avformat.dll"
-
-#: src/FFmpeg.h
-msgid "Only libavformat.so"
-msgstr "Solu libavformat.so"
-
-#: src/FileException.cpp
-#, c-format
-msgid "Audacity failed to open a file in %s."
-msgstr "Fiascu d’Audacity per apre un schedariu in %s."
-
-#: src/FileException.cpp
-#, c-format
-msgid "Audacity failed to read from a file in %s."
-msgstr "Fiascu d’Audacity per leghje un schedariu in %s."
-
-#: src/FileException.cpp
-#, c-format
-msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr "Audacity hà riesciutu à scrive un schedariu in %s ma hà fiascatu à rinuminallu cum’è %s."
-
-#: src/FileException.cpp
-#, c-format
-msgid ""
-"Audacity failed to write to a file.\n"
-"Perhaps %s is not writable or the disk is full.\n"
-"For tips on freeing up space, click the help button."
-msgstr ""
-"Fiascu d’Audacity per scrive in un schedariu.\n"
-"Forse ùn si pò scrive in %s, osinnò u discu hè pienu.\n"
-"Cliccu nant’à u buttone d’aiutu per cunnosce minichichje per liberà spaziu."
-
-#: src/FileException.h
-msgid "File Error"
-msgstr "Sbagliu di schedariu"
-
 #. i18n-hint: %s will be the error message from the libsndfile software library
 #: src/FileFormats.cpp
 #, c-format
@@ -2602,58 +2863,6 @@ msgstr "Ùn cupià &nisunu audio"
 #: src/FileFormats.cpp
 msgid "As&k"
 msgstr "&Dumandà"
-
-#: src/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny
-msgid "All files"
-msgstr "Tutti i schedarii"
-
-#. i18n-hint an Audacity project is the state of the program, stored as
-#. files that can be reopened to resume the session later
-#: src/FileNames.cpp
-msgid "AUP3 project files"
-msgstr "Schedarii di prughjettu AUP3"
-
-#: src/FileNames.cpp
-msgid "Dynamically Linked Libraries"
-msgstr "Bibliuteche à leie dinamiche"
-
-#: src/FileNames.cpp
-msgid "Dynamic Libraries"
-msgstr "Bibliuteche dinamiche"
-
-#: src/FileNames.cpp
-msgid "Text files"
-msgstr "Schedarii di testu"
-
-#: src/FileNames.cpp
-msgid "XML files"
-msgstr "Schedarii XML"
-
-#: src/FileNames.cpp
-msgid ", "
-msgstr ", "
-
-#. i18n-hint a type or types such as "txt" or "txt, xml" will be
-#. substituted for %s
-#: src/FileNames.cpp
-#, c-format
-msgid "%s files"
-msgstr "Schedarii %s"
-
-#: src/FileNames.cpp
-msgid "The specified filename could not be converted due to Unicode character use."
-msgstr "U nome di schedariu specificatu ùn pò micca esse cunvertitu per via di l’impiegu di caratteri Unicode."
-
-#: src/FileNames.cpp
-msgid "Specify New Filename:"
-msgstr "Specificà un novu nome di schedariu :"
-
-#: src/FileNames.cpp
-#, fuzzy, c-format
-msgid "Directory %s does not have write permissions"
-msgstr "U cartulare %s ùn esiste micca. Creallu ?"
 
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
@@ -2705,7 +2914,7 @@ msgstr "Frequenza lugaritmica"
 #: src/effects/Equalization.cpp src/effects/Loudness.cpp
 #: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
 #: src/effects/TruncSilence.cpp src/prefs/WaveformSettings.cpp
-#: src/widgets/Meter.cpp plug-ins/sample-data-export.ny
+#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
 msgstr "dB"
 
@@ -2912,6 +3121,12 @@ msgstr ""
 "You can help us get Audacity ready for release by joining our [[http://www.audacityteam.org/community/|community]].<hr><br><br>\n"
 "Pudete aiutacci à rende Audacity più prestu à cambià raghjunghjendu a nostra [[https://www.audacityteam.org/community/|cumunità]].<hr><br><br>"
 
+#. i18n-hint: %s is replaced with Audacity version
+#: src/HelpText.cpp
+#, c-format
+msgid "What's new in Audacity %s"
+msgstr "Ciò chì hè novu in Audacity %s"
+
 #: src/HelpText.cpp
 msgid "How to get help"
 msgstr "Cumu ottene un aiutu"
@@ -3014,27 +3229,10 @@ msgstr "A cumpressione hà liberatu %s di spaziu di discu."
 msgid "&History..."
 msgstr "&Cronolugia…"
 
-#: src/InconsistencyException.cpp
-#, c-format
-msgid ""
-"Internal error in %s at %s line %d.\n"
-"Please inform the Audacity team at https://forum.audacityteam.org/."
-msgstr ""
-"Sbagliu internu in %s à %s linea %d.\n"
-"Ci vole à infurmà a squadra Audacity à https://forum.audacityteam.org/."
-
-#: src/InconsistencyException.cpp
-#, c-format
-msgid ""
-"Internal error at %s line %d.\n"
-"Please inform the Audacity team at https://forum.audacityteam.org/."
-msgstr ""
-"Sbagliu internu à %s linea %d.\n"
-"Ci vole à infurmà a squadra Audacity à https://forum.audacityteam.org/."
-
-#: src/InconsistencyException.h
-msgid "Internal Error"
-msgstr "Sbagliu Internu"
+#: src/JournalEvents.cpp
+		
+msgid "Journal recording failed"
+msgstr "Fiascu d’arregistramentu di u ghjurnale d’interazzioni"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -3078,7 +3276,7 @@ msgstr "Novu…"
 
 #: src/LabelDialog.cpp
 msgid "Press F2 or double click to edit cell contents."
-msgstr "Tastu F2 o dopiu-cliccu per mudificà u cuntenutu di cellula."
+msgstr "Tastu F2 o doppiu-cliccu per mudificà u cuntenutu di cellula."
 
 #: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Select a text file containing labels"
@@ -3156,6 +3354,37 @@ msgstr ""
 msgid "Opening Audacity Project"
 msgstr "Apertura d’un prughjettu Audacity"
 
+#: src/LogWindow.cpp
+msgid "Audacity Log"
+msgstr "Ghjurnale d’Audacity"
+
+#: src/LogWindow.cpp src/Tags.cpp
+msgid "&Save..."
+msgstr "Arre&gistrà…"
+
+#. i18n-hint: (verb)
+#: src/LogWindow.cpp src/Tags.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Cl&ear"
+msgstr "&Viutà"
+
+#: src/LogWindow.cpp src/ShuttleGui.cpp src/effects/Contrast.cpp
+#: src/menus/FileMenus.cpp
+msgid "&Close"
+msgstr "&Chjode"
+
+#: src/LogWindow.cpp
+msgid "log.txt"
+msgstr "log.txt"
+
+#: src/LogWindow.cpp
+msgid "Save log to:"
+msgstr "Arregistrà u ghjurnale ver di :"
+
+#: src/LogWindow.cpp
+#, c-format
+msgid "Couldn't save log to file: %s"
+msgstr "Ùn si pò micca arregistrà u ghjurnale ver di u schedariu : %s"
+
 #: src/LyricsWindow.cpp
 #, c-format
 msgid "Audacity Karaoke%s"
@@ -3164,6 +3393,22 @@ msgstr "Karaoke%s Audacity"
 #: src/LyricsWindow.cpp
 msgid "&Karaoke..."
 msgstr "&Karaoke…"
+
+#: src/MIDIPlay.cpp
+msgid "There was an error initializing the midi i/o layer.\n"
+msgstr "Ci hè statu un sbagliu à l’iniziu di u stratu e/s MIDI.\n"
+
+#: src/MIDIPlay.cpp
+msgid ""
+"You will not be able to play midi.\n"
+"\n"
+msgstr ""
+"Ùn ci serà micca pussibule di sunà un MIDI.\n"
+"\n"
+
+#: src/MIDIPlay.cpp
+msgid "Error Initializing Midi"
+msgstr "Sbagliu à l’Iniziu di u MIDI"
 
 #: src/Menus.cpp
 #, c-format
@@ -3310,7 +3555,7 @@ msgid ""
 "\n"
 "It will not be loaded."
 msgstr ""
-"U modulu « %s » currispunde à a versione « %s » d’Audacity.\n"
+"U modulu « %s » currisponde à a versione « %s » d’Audacity.\n"
 "\n"
 "Ùn serà micca caricatu."
 
@@ -3374,6 +3619,43 @@ msgstr ""
 #: src/NoteTrack.cpp src/TrackPanelAx.cpp
 msgid "Note Track"
 msgstr "Traccia di nota"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/NoteTrack.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr "Pigliata in carica di l’esciuta : %d\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: src/NoteTrack.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr "Pigliata in carica di l’entrata : %d\n"
+
+#: src/NoteTrack.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr "Apertu : %d\n"
+
+#: src/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "Apparechju d’arregistramentu MIDI selezziunatu : %d - %s\n"
+
+#: src/NoteTrack.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr "Alcunu apparechju d’arregistramentu MIDI trovu per « %s ».\n"
+
+#: src/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "Apparechju di lettura MIDI selezziunatu : %d - %s\n"
+
+#: src/NoteTrack.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr "Alcunu apparechju di lettura MIDI trovu per « %s ».\n"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -3486,114 +3768,6 @@ msgid "A♯/B♭"
 msgstr "Là♯/Si♭"
 
 #: src/PluginManager.cpp
-msgid "Manage Plug-ins"
-msgstr "Urganizà i moduli d’estensione"
-
-#: src/PluginManager.cpp
-msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr "Selezziunà effetti, cliccà u buttone Attivà o Disattivà, è dopu, cliccà Vai."
-
-#. i18n-hint: This is before radio buttons selecting which effects to show
-#: src/PluginManager.cpp
-msgid "Show:"
-msgstr "Affissà :"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginManager.cpp
-msgid "Show all"
-msgstr "Tuttu affissà"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginManager.cpp src/menus/SelectMenus.cpp
-msgid "&All"
-msgstr "T&uttu"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginManager.cpp
-msgid "Show disabled"
-msgstr "Affissà i disattivati"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginManager.cpp
-msgid "D&isabled"
-msgstr "D&isattivatu"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginManager.cpp
-msgid "Show enabled"
-msgstr "Affissà l’attivati"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginManager.cpp
-msgid "E&nabled"
-msgstr "Atti&vatu"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginManager.cpp
-msgid "Show new"
-msgstr "Affissà i novi"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginManager.cpp
-msgid "Ne&w"
-msgstr "&Novu"
-
-#: src/PluginManager.cpp
-msgid "State"
-msgstr "Statu"
-
-#: src/PluginManager.cpp
-msgid "Path"
-msgstr "Chjassu"
-
-#: src/PluginManager.cpp
-msgid "&Select All"
-msgstr "&Tuttu selezziunà"
-
-#: src/PluginManager.cpp
-msgid "C&lear All"
-msgstr "S&quassà tuttu"
-
-#: src/PluginManager.cpp src/effects/EffectUI.cpp src/prefs/RecordingPrefs.cpp
-msgid "&Enable"
-msgstr "&Attivà"
-
-#: src/PluginManager.cpp
-msgid "&Disable"
-msgstr "&Disattivà"
-
-#: src/PluginManager.cpp
-#, c-format
-msgid ""
-"Enabling effects or commands:\n"
-"\n"
-"%s"
-msgstr ""
-"Attivazione di l’effetti o di e cumande :\n"
-"\n"
-"%s"
-
-#: src/PluginManager.cpp
-#, c-format
-msgid ""
-"Enabling effect or command:\n"
-"\n"
-"%s"
-msgstr ""
-"Attivazione di l’effettu o di a cumanda :\n"
-"\n"
-"%s"
-
-#: src/PluginManager.cpp
-#, c-format
-msgid ""
-"Effect or Command at %s failed to register:\n"
-"%s"
-msgstr ""
-"Fiascu di l’inscrizzione di l’effettu o di a cumanda in %s :\n"
-"%s"
-
-#: src/PluginManager.cpp
 #, c-format
 msgid "Overwrite the plug-in file %s?"
 msgstr "Rimpiazzà u schedariu di u modulu d’estensione %s ?"
@@ -3632,6 +3806,115 @@ msgstr "Attivà i novi moduli d’estensione"
 msgid "Nyquist Prompt"
 msgstr "Cunsola Nyquist"
 
+#: src/PluginRegistrationDialog.cpp
+msgid "Manage Plug-ins"
+msgstr "Urganizà i moduli d’estensione"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Select effects, click the Enable or Disable button, then click OK."
+msgstr "Selezziunà effetti, cliccà u buttone Attivà o Disattivà, è dopu, cliccà Vai."
+
+#. i18n-hint: This is before radio buttons selecting which effects to show
+#: src/PluginRegistrationDialog.cpp
+msgid "Show:"
+msgstr "Affissà :"
+
+#. i18n-hint: Radio button to show all effects
+#: src/PluginRegistrationDialog.cpp
+msgid "Show all"
+msgstr "Tuttu affissà"
+
+#. i18n-hint: Radio button to show all effects
+#: src/PluginRegistrationDialog.cpp src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "T&uttu"
+
+#. i18n-hint: Radio button to show just the currently disabled effects
+#: src/PluginRegistrationDialog.cpp
+msgid "Show disabled"
+msgstr "Affissà i disattivati"
+
+#. i18n-hint: Radio button to show just the currently disabled effects
+#: src/PluginRegistrationDialog.cpp
+msgid "D&isabled"
+msgstr "D&isattivatu"
+
+#. i18n-hint: Radio button to show just the currently enabled effects
+#: src/PluginRegistrationDialog.cpp
+msgid "Show enabled"
+msgstr "Affissà l’attivati"
+
+#. i18n-hint: Radio button to show just the currently enabled effects
+#: src/PluginRegistrationDialog.cpp
+msgid "E&nabled"
+msgstr "Atti&vatu"
+
+#. i18n-hint: Radio button to show just the newly discovered effects
+#: src/PluginRegistrationDialog.cpp
+msgid "Show new"
+msgstr "Affissà i novi"
+
+#. i18n-hint: Radio button to show just the newly discovered effects
+#: src/PluginRegistrationDialog.cpp
+msgid "Ne&w"
+msgstr "&Novu"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "State"
+msgstr "Statu"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Path"
+msgstr "Chjassu"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Select All"
+msgstr "&Tuttu selezziunà"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "C&lear All"
+msgstr "S&quassà tuttu"
+
+#: src/PluginRegistrationDialog.cpp src/effects/EffectUI.cpp
+#: src/prefs/RecordingPrefs.cpp
+msgid "&Enable"
+msgstr "&Attivà"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Disable"
+msgstr "&Disattivà"
+
+#: src/PluginRegistrationDialog.cpp
+#, c-format
+msgid ""
+"Enabling effects or commands:\n"
+"\n"
+"%s"
+msgstr ""
+"Attivazione di l’effetti o di e cumande :\n"
+"\n"
+"%s"
+
+#: src/PluginRegistrationDialog.cpp
+#, c-format
+msgid ""
+"Enabling effect or command:\n"
+"\n"
+"%s"
+msgstr ""
+"Attivazione di l’effettu o di a cumanda :\n"
+"\n"
+"%s"
+
+#: src/PluginRegistrationDialog.cpp
+#, c-format
+msgid ""
+"Effect or Command at %s failed to register:\n"
+"%s"
+msgstr ""
+"Fiascu di l’inscrizzione di l’effettu o di a cumanda in %s :\n"
+"%s"
+
 #: src/Printing.cpp
 msgid "There was a problem printing."
 msgstr "Ci hè statu un penseru per stampà."
@@ -3639,17 +3922,6 @@ msgstr "Ci hè statu un penseru per stampà."
 #: src/Printing.cpp
 msgid "Print"
 msgstr "Stampà"
-
-#: src/Project.cpp
-#, c-format
-msgid ""
-"There is very little free disk space left on %s\n"
-"Please select a bigger temporary directory location in\n"
-"Directories Preferences."
-msgstr ""
-"Ci hè troppu pocu spaziu liberu nant’à %s\n"
-"Ci vole à selezziunà un locu più maiò per u cartulare\n"
-"timpurariu in e preferenze di cartulari."
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -3685,6 +3957,13 @@ msgstr ""
 #: src/ProjectAudioManager.cpp src/menus/TransportMenus.cpp
 msgid "Too Few Compatible Tracks Selected"
 msgstr "Troppu poche di traccie cunciliabile selezziunate"
+
+#. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
+#: src/ProjectAudioManager.cpp
+#, c-format
+msgctxt "clip name template"
+msgid "%s #%d"
+msgstr "%s n°%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -3919,6 +4198,17 @@ msgid "[Project %02i] "
 msgstr "[Prughjettu %02i] "
 
 #: src/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"There is very little free disk space left on %s\n"
+"Please select a bigger temporary directory location in\n"
+"Directories Preferences."
+msgstr ""
+"Ci hè troppu pocu spaziu liberu nant’à %s\n"
+"Ci vole à selezziunà un locu più maiò per u cartulare\n"
+"timpurariu in e preferenze di cartulari."
+
+#: src/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
 msgstr "Fiascu per apre a basa di dati di u prughjettu"
 
@@ -3997,7 +4287,7 @@ msgid ""
 msgstr ""
 "Stu prughjettu hè statu creatu cù una versione più recente d’Audacity.\n"
 "\n"
-"Ci vole à rinnovà Audacity per apre u prughjettu."
+"Ci vole à attualizà Audacity per apre u prughjettu."
 
 #: src/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4156,7 +4446,7 @@ msgid ""
 "You are using Audacity %s. You may need to upgrade to a newer version to open this file."
 msgstr ""
 "Stu schedariu hè statu arregistratu da Audacity %s.\n"
-"Impiegate Audacity %s. Ci vuleria à cambià per una versione più recente per apre stu schedariu."
+"Impiegate Audacity %s. Ci vuleria à attualizà cù una versione più recente per apre stu schedariu."
 
 #: src/ProjectFileIO.cpp
 msgid "Can't open project file"
@@ -4436,6 +4726,13 @@ msgstr "U prughjettu hè statu ricuperatu"
 msgid "Recover"
 msgstr "Ricuperà"
 
+#. i18n-hint Name default name assigned to a clip on track import
+#: src/ProjectFileManager.cpp
+#, c-format
+msgctxt "clip name template"
+msgid "%s %d"
+msgstr "%s %d"
+
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid "Imported '%s'"
@@ -4579,56 +4876,6 @@ msgstr "Barra di sfilarata orizuntale"
 msgid "Vertical Scrollbar"
 msgstr "Barra di sfilarata verticale"
 
-#: src/Registry.cpp
-#, c-format
-msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr "U gruppu di moduli d’estensione in %s hè statu unitu à un gruppu definitu precedentemente"
-
-#: src/Registry.cpp
-#, c-format
-msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr "L’elementu di modulu d’estensione in %s hè in cunflittu cù un elementu definitu precedentemente è hè statu scartatu"
-
-#: src/Registry.cpp
-#, c-format
-msgid "Plug-in items at %s specify conflicting placements"
-msgstr "L’elementi di modulu d’estensione in %s specificanu pusizioni in cunflittu"
-
-#: src/Resample.cpp
-msgid "Low Quality (Fastest)"
-msgstr "Bassa qualità (a più rapida)"
-
-#: src/Resample.cpp
-msgid "Medium Quality"
-msgstr "Qualità mediana"
-
-#: src/Resample.cpp
-msgid "High Quality"
-msgstr "Alta qualità"
-
-#: src/Resample.cpp
-msgid "Best Quality (Slowest)"
-msgstr "Qualità a più bella (u più pianu)"
-
-#. i18n-hint: Audio data bit depth (precision): 16-bit integers
-#: src/SampleFormat.cpp
-msgid "16-bit PCM"
-msgstr "16-bit PCM"
-
-#. i18n-hint: Audio data bit depth (precision): 24-bit integers
-#: src/SampleFormat.cpp
-msgid "24-bit PCM"
-msgstr "24-bit PCM"
-
-#. i18n-hint: Audio data bit depth (precision): 32-bit floating point
-#: src/SampleFormat.cpp src/prefs/QualitySettings.cpp
-msgid "32-bit float"
-msgstr "32 bit virgula mobile"
-
-#: src/SampleFormat.cpp
-msgid "Unknown format"
-msgstr "Furmatu scunnisciutu"
-
 #: src/Screenshot.cpp
 msgid "Screen Capture Frame"
 msgstr "Sequenza di cattura di screnu"
@@ -4739,7 +4986,7 @@ msgstr "Mischiu"
 
 #. i18n-hint: Noun (the meter is used for playback or record level monitoring)
 #: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-#: src/toolbars/MeterToolBar.cpp src/widgets/Meter.cpp
+#: src/toolbars/MeterToolBar.cpp src/widgets/MeterPanel.cpp
 msgid "Meter"
 msgstr "Cuntadore"
 
@@ -4849,6 +5096,26 @@ msgstr "Cattura fiasca !"
 msgid "Long Message"
 msgstr "Messaghju longu"
 
+#: src/SelectFile.cpp
+msgid "The specified filename could not be converted due to Unicode character use."
+msgstr "U nome di schedariu specificatu ùn pò micca esse cunvertitu per via di l’impiegu di caratteri Unicode."
+
+#: src/SelectFile.cpp
+msgid "Specify New Filename:"
+msgstr "Specificà un novu nome di schedariu :"
+
+#: src/SelectUtilities.cpp
+msgid ""
+"Cannot lock region beyond\n"
+"end of project."
+msgstr ""
+"Ùn si pò ammarchjunà a regione\n"
+"aldilà di a fine di u prughjettu."
+
+#: src/SelectUtilities.cpp
+msgid "Position"
+msgstr "Pusizione"
+
 #: src/Sequence.cpp
 #, c-format
 msgid ""
@@ -4897,6 +5164,56 @@ msgstr "Arregistramentu attivatu di u sonu"
 #: src/SoundActivatedRecord.cpp
 msgid "Activation level (dB):"
 msgstr "Livellu d’attivazione (dB) :"
+
+#: src/SpectralDataDialog.cpp
+msgid "Spectral Data Control Panel"
+msgstr "Pannellu di cuntrollu di i dati spettrali"
+
+#: src/SpectralDataDialog.cpp
+		
+msgid "Brush Tool"
+msgstr "Attrezzu pinnellu"
+
+#: src/SpectralDataDialog.cpp
+		
+msgid "Spectral Brush"
+msgstr "Pinnellu spettrale"
+
+#: src/SpectralDataDialog.cpp
+msgid "Brush radius"
+msgstr "Raghju di u pinnellu"
+
+#: src/SpectralDataDialog.cpp
+		
+msgid "Custom brush size"
+msgstr "Dimensione persunalizata di u pinnellu"
+
+#: src/SpectralDataDialog.cpp
+msgid "Auto-select overtones (beta)"
+msgstr "Selezzione autumatica d’armonichi (beta)"
+
+#: src/SpectralDataDialog.cpp
+		
+msgid "Enable smart selection"
+msgstr "Attivà a selezzione astuta"
+
+#: src/SpectralDataDialog.cpp
+msgid ""
+"Select the fundamental frequency\n"
+"and release the mouse"
+msgstr ""
+"Selezziunà a frequenza fundamentale\n"
+"è rilascià u topu"
+
+#: src/SpectralDataDialog.cpp
+		
+msgid "Spectra&l Selection Panel"
+msgstr "Pannellu di selezzione spettra&le"
+
+#: src/SpectralDataManager.cpp
+		
+msgid "Applied effect to selection"
+msgstr "Effettu appiecatu à a selezzione"
 
 #: src/SplashDialog.cpp
 msgid "Welcome to Audacity!"
@@ -5017,177 +5334,6 @@ msgstr "Arregistrà i metadati cù u nome :"
 #: src/Tags.cpp
 msgid "Error Saving Tags File"
 msgstr "Sbagliu d’arregistramentu di u schedariu d’etichette"
-
-#: src/TempDirectory.cpp
-msgid "Unsuitable"
-msgstr "Micca adattatu"
-
-#: src/TempDirectory.cpp
-msgid ""
-"The temporary files directory is on a FAT formatted drive.\n"
-"Resetting to default location."
-msgstr ""
-"U cartulare timpurariu di schedarii si trova nant’à un lettore di furmatu FAT.\n"
-"Reiniziazione à u locu predefinitu."
-
-#: src/TempDirectory.cpp
-#, c-format
-msgid ""
-"%s\n"
-"\n"
-"For tips on suitable drives, click the help button."
-msgstr ""
-"%s\n"
-"Cliccu nant’à u buttone d’aiutu per cunnosce minichichje nant’à i lettori adattati."
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not write file:\n"
-"  %s."
-msgstr ""
-"Audacity ùn pò micca scrive u schedariu :\n"
-"  %s."
-
-#. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
-#. such as those on button controls.  Audacity can load and save alternative
-#. themes.
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Theme written to:\n"
-"  %s."
-msgstr ""
-"Temu scrittu ver di :\n"
-"  %s."
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not open file:\n"
-"  %s\n"
-"for writing."
-msgstr ""
-"Audacity ùn pò micca apre u schedariu :\n"
-"  %s\n"
-"per scrivecci."
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not write images to file:\n"
-"  %s."
-msgstr ""
-"Audacity ùn pò micca scrive fiure ver di u schedariu :\n"
-"  %s."
-
-#. i18n-hint "Cee" means the C computer programming language
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Theme as Cee code written to:\n"
-"  %s."
-msgstr ""
-"Temu scrittu in codice C ver di :\n"
-"  %s."
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not find file:\n"
-"  %s.\n"
-"Theme not loaded."
-msgstr ""
-"Audacity ùn pò micca truvà u schedariu :\n"
-"  %s.\n"
-"U temu ùn hè micca caricatu."
-
-#. i18n-hint: Do not translate png.  It is the name of a file format.
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not load file:\n"
-"  %s.\n"
-"Bad png format perhaps?"
-msgstr ""
-"Audacity ùn pò micca caricà u schedariu :\n"
-"  %s.\n"
-"Forse un furmatu png gattivu ?"
-
-#: src/Theme.cpp
-msgid ""
-"Audacity could not read its default theme.\n"
-"Please report the problem."
-msgstr ""
-"Audacity ùn pò micca leghje u so temu predefinitu.\n"
-"Ci vole à riferisce u penseru."
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"None of the expected theme component files\n"
-" were found in:\n"
-"  %s."
-msgstr ""
-"Nisunu di i schedarii di cumpunente di u temu aspettatu\n"
-" ùn hè statu trovu in :\n"
-"  %s."
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Could not create directory:\n"
-"  %s"
-msgstr ""
-"Impussibule di creà u cartulare :\n"
-"  %s"
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Some required files in:\n"
-"  %s\n"
-"were already present. Overwrite?"
-msgstr ""
-"Certì schedarii richiesti in :\n"
-"  %s\n"
-"sò dighjà presente. Rimpiazzalli ?"
-
-#: src/Theme.cpp
-#, c-format
-msgid ""
-"Audacity could not save file:\n"
-"  %s"
-msgstr ""
-"Audacity ùn pò micca arregistrà u schedariu :\n"
-"  %s"
-
-#. i18n-hint: describing the "classic" or traditional
-#. appearance of older versions of Audacity
-#: src/Theme.cpp
-msgid "Classic"
-msgstr "Classicu"
-
-#. i18n-hint: Light meaning opposite of dark
-#: src/Theme.cpp
-msgid "Light"
-msgstr "Chjaru"
-
-#: src/Theme.cpp
-msgid "Dark"
-msgstr "Scuru"
-
-#. i18n-hint: greater difference between foreground and
-#. background colors
-#: src/Theme.cpp
-msgid "High Contrast"
-msgstr "Cuntrastu forte"
-
-#. i18n-hint: user defined
-#: src/Theme.cpp
-msgid "Custom"
-msgstr "Persunalizatu"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -5575,7 +5721,7 @@ msgstr " Selezzione attiva"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
-msgstr "Cliccà è fà trascinà per adattà a dimensione relativa di e traccie stereo, dopiu-cliccu per apparinà l’altezze"
+msgstr "Cliccà è fà trascinà per adattà a dimensione relativa di e traccie stereo, doppiu-cliccu per apparinà l’altezze"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
@@ -5679,6 +5825,20 @@ msgstr "Calibrera compia"
 msgid "Resampling failed."
 msgstr "Ricampiunariu fiascu."
 
+#. i18n-hint Template for clip name generation on copy-paste
+#: src/WaveTrack.cpp
+#, c-format
+msgctxt "clip name template"
+msgid "%s.%i"
+msgstr "%s.%i"
+
+#. i18n-hint Template for clip name generation on inserting new empty clip
+#: src/WaveTrack.cpp
+#, c-format
+msgctxt "clip name template"
+msgid "%s %i"
+msgstr "%s %i"
+
 #: src/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
 msgstr "Ùn ci hè abbastanza piazza per incullà a selezzione"
@@ -5686,11 +5846,6 @@ msgstr "Ùn ci hè abbastanza piazza per incullà a selezzione"
 #: src/WaveTrack.cpp
 msgid "There is not enough room available to expand the cut line"
 msgstr "Ùn ci hè abbastanza piazza per allargà a linea di taglia"
-
-#: src/blockfile/NotYetAvailableException.cpp
-#, c-format
-msgid "This operation cannot be done until importation of %s completes."
-msgstr "Ùn si pò fà st’operazione nanzu l’impurtazione di %s."
 
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
 #: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
@@ -5715,7 +5870,8 @@ msgstr "Appiecazione di %s…"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/Effect.cpp
-#: src/effects/vamp/VampEffect.cpp src/menus/PluginMenus.cpp
+#: src/effects/vamp/VampEffect.cpp src/import/ImportRaw.cpp
+#: src/menus/PluginMenus.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 #: src/widgets/ASlider.cpp
@@ -5808,7 +5964,7 @@ msgid "Panel"
 msgstr "Pannellu"
 
 #: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "Application"
 msgstr "Appiecazione"
 
@@ -6044,9 +6200,10 @@ msgstr "Viota u cuntenutu di u ghjurnale."
 msgid "Get Preference"
 msgstr "Ottene e preferenze"
 
-#: src/commands/PreferenceCommands.cpp src/commands/SetProjectCommand.cpp
-#: src/commands/SetTrackInfoCommand.cpp
+#: src/commands/PreferenceCommands.cpp src/commands/SetClipCommand.cpp
+#: src/commands/SetProjectCommand.cpp src/commands/SetTrackInfoCommand.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Name:"
 msgstr "Nome :"
@@ -6425,7 +6582,7 @@ msgstr "Definisce l’aspetti di a traccia"
 
 #: src/commands/SetTrackInfoCommand.cpp src/effects/ToneGen.cpp
 #: src/prefs/SpectrogramSettings.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp src/widgets/Meter.cpp
+#: src/prefs/WaveformSettings.cpp src/widgets/MeterPanel.cpp
 #: plug-ins/sample-data-export.ny
 msgid "Linear"
 msgstr "Lineare"
@@ -6444,7 +6601,7 @@ msgstr "Mez’onda"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Display:"
-msgstr "Affissame :"
+msgstr "Affissera :"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Scale:"
@@ -6572,7 +6729,7 @@ msgstr "&Sogliu :"
 
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
-msgstr "A previsualizazione hè indispunibule"
+msgstr "A fighjulata hè indispunibule"
 
 #: src/effects/BassTreble.cpp
 msgid "Bass and Treble"
@@ -7635,12 +7792,6 @@ msgid "Export Effect Parameters"
 msgstr "Espurtà i parametri di l’effettu"
 
 #: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
-#: src/xml/XMLFileReader.cpp
-#, c-format
-msgid "Could not open file: \"%s\""
-msgstr "Ùn si pò micca apre u schedariu : « %s »"
-
-#: src/effects/Effect.cpp src/effects/VST/VSTEffect.cpp
 msgid "Error Saving Effect Presets"
 msgstr "Sbagliu d’arregistramentu di e prerigature di l’effettu"
 
@@ -7667,11 +7818,11 @@ msgstr "%s : hè per un effettu, generatore, o analizatore sfarente.\n"
 
 #: src/effects/Effect.cpp
 msgid "Preparing preview"
-msgstr "Preparazione di a previsualizazione"
+msgstr "Preparazione di a fighjulata"
 
 #: src/effects/Effect.cpp
 msgid "Previewing"
-msgstr "Previsualizazione"
+msgstr "Fighjulata"
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
 #. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
@@ -7846,11 +7997,11 @@ msgstr "Principià a &lettura"
 
 #: src/effects/EffectUI.cpp
 msgid "Preview effect"
-msgstr "Previsualizazione di l’effettu"
+msgstr "Fighjulata di l’effettu"
 
 #: src/effects/EffectUI.cpp
 msgid "&Preview effect"
-msgstr "Previsualizazione di l’&effettu"
+msgstr "Fighjulata di l’&effettu"
 
 #: src/effects/EffectUI.cpp
 msgid "Skip backward"
@@ -7892,7 +8043,7 @@ msgstr "Impurtà…"
 msgid "Export..."
 msgstr "Espurtà…"
 
-#: src/effects/EffectUI.cpp src/widgets/Meter.cpp
+#: src/effects/EffectUI.cpp src/widgets/MeterPanel.cpp
 msgid "Options..."
 msgstr "Ozzioni…"
 
@@ -8426,7 +8577,7 @@ msgstr "Nome scunnisciutu d’effettu integratu"
 msgid "perceived loudness"
 msgstr "intensità percepità"
 
-#: src/effects/Loudness.cpp src/widgets/Meter.cpp
+#: src/effects/Loudness.cpp src/widgets/MeterPanel.cpp
 msgid "RMS"
 msgstr "RMS"
 
@@ -8524,34 +8675,6 @@ msgstr "Secondu più maiò"
 msgid "Old"
 msgstr "Vechju"
 
-#: src/effects/NoiseReduction.cpp
-msgid "none, Hann (2.0.6 behavior)"
-msgstr "nisunu, Hann (cumpurtamentu 2.0.6)"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Hann, none"
-msgstr "Hann, nisunu"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Hann, Hann (default)"
-msgstr "Hann, Hann (predefinitu)"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Blackman, Hann"
-msgstr "Blackman, Hann"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Hamming, none"
-msgstr "Hamming, nisunu"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Hamming, Hann"
-msgstr "Hamming, Hann"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Hamming, Reciprocal Hamming"
-msgstr "Hamming, Hamming reciprocu"
-
 #: src/effects/NoiseReduction.cpp src/menus/PluginMenus.cpp
 msgid "Noise Reduction"
 msgstr "Riduzzione di trostu"
@@ -8586,7 +8709,7 @@ msgstr "Tutti i dati di prufilu di trostu devenu avè a listessa frequenza di ca
 
 #: src/effects/NoiseReduction.cpp
 msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "A frequenza di campiunariu di u prufilu di trostu deve currispunde à quellu di u sonu à trattà."
+msgstr "A frequenza di campiunariu di u prufilu di trostu deve currisponde à quellu di u sonu à trattà."
 
 #: src/effects/NoiseReduction.cpp
 msgid "Selected noise profile is too short."
@@ -8813,15 +8936,15 @@ msgstr "Definisce l’ampiitutine di piccu d’una o parechje traccie"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset and Normalizing...\n"
-msgstr "Cacciatura di u spustamentu DC è nurmalizazione…\n"
+msgstr "Cacciatura di u staccamentu DC è nurmalizazione…\n"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset...\n"
-msgstr "Cacciatura di u spustamentu DC…\n"
+msgstr "Cacciatura di u staccamentu DC…\n"
 
 #: src/effects/Normalize.cpp
 msgid "Normalizing without removing DC offset...\n"
-msgstr "Nurmalizazione senza cacciatura di u spustamentu DC…\n"
+msgstr "Nurmalizazione senza cacciatura di u staccamentu DC…\n"
 
 #: src/effects/Normalize.cpp
 msgid "Not doing anything...\n"
@@ -8854,7 +8977,7 @@ msgstr "Trattamentu di a seconda traccia di u paghju stereo : %s"
 
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
-msgstr "&Caccià u spustamentu DC (centrà nant’à 0.0 verticalmente)"
+msgstr "&Caccià u staccamentu DC (centrà nant’à 0.0 verticalmente)"
 
 #: src/effects/Normalize.cpp
 msgid "&Normalize peak amplitude to   "
@@ -8897,7 +9020,7 @@ msgid ""
 "Try increasing the audio selection to at least %.1f seconds,\n"
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
-"A selezzione audio hè troppu corta per a previsualizazione.\n"
+"A selezzione audio hè troppu corta per a fighjulata.\n"
 "\n"
 "Pruvate d’aummentà a selezzione audio d’omancu %.1f seconde,\n"
 "o di riduce a « Risuluzione tempurale » di %.1f seconde."
@@ -8911,7 +9034,7 @@ msgid ""
 "For the current audio selection, the maximum\n"
 "'Time Resolution' is %.1f seconds."
 msgstr ""
-"Ùn si pò previsualizà.\n"
+"A fighjulata hè impussibule.\n"
 "\n"
 "Per a selezzione audio currente, a\n"
 "« risuluzione tempurale » massima hè di %.1f seconde."
@@ -9656,7 +9779,7 @@ msgstr "Spustamen&tu di frequenza Wah (%) :"
 
 #: src/effects/Wahwah.cpp
 msgid "Wah frequency offset in percent"
-msgstr "Spustamentu di frequenza Wah in percentuale"
+msgstr "Staccamentu di frequenza Wah in percentuale"
 
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: src/effects/audiounits/AudioUnitEffect.cpp
@@ -10505,7 +10628,7 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
 msgstr ""
-"A cumbinazione di a frequenza di campiunariu (%d) è di u scolu binariu (%d kbps) di u prughjettu\n"
+"A cumbinazione di a frequenza di campiunariu (%d) è di u flussu binariu (%d kbps) di u prughjettu\n"
 "ùn hè micca accettata da u furmatu attuale di u schedariu di destinazione. "
 
 #: src/export/ExportFFmpeg.cpp src/export/ExportMP3.cpp
@@ -10526,7 +10649,7 @@ msgstr "%d kbps"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportMP2.cpp
 msgid "Bit Rate:"
-msgstr "Scolu binariu :"
+msgstr "Flussu binariu :"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Quality (kbps):"
@@ -10847,7 +10970,7 @@ msgid ""
 "0 - automatic\n"
 "Recommended - 192000"
 msgstr ""
-"U scolu binariu (bits/seconda) influenzeghja a dimensione è a qualità di u schedariu di destinazione\n"
+"U flussu binariu (bits/seconda) influenzeghja a dimensione è a qualità di u schedariu di destinazione\n"
 "Certi cudechi ponu solu accettà valori specifichi (128k, 192k, 256k, ecc)\n"
 "0 - autumaticu\n"
 "Ricumandatu - 192000"
@@ -10862,7 +10985,7 @@ msgstr ""
 "Qualità generale, impiegata sfarentemente secondu i cudechi\n"
 "Richiesta per vorbis\n"
 "0 - autumatica\n"
-"-1 - inattiva (invece impiegate scolu binariu)"
+"-1 - inattiva (invece impiegate flussu binariu)"
 
 #: src/export/ExportFFmpegDialogs.cpp src/export/ExportOGG.cpp
 msgid "Quality:"
@@ -11066,7 +11189,7 @@ msgid ""
 "Optional\n"
 "0 - default"
 msgstr ""
-"Scolu binariu massimu di u flussu multiplessatu\n"
+"Flussu binariu massimu di u flussu multiplessatu\n"
 "Ozzionale\n"
 "0 - predefinitu"
 
@@ -11196,7 +11319,7 @@ msgstr "Schedarii MP2"
 
 #: src/export/ExportMP2.cpp
 msgid "Cannot export MP2 with this sample rate and bit rate"
-msgstr "Impussibule d’espurtà in furmatu MP2 cù sta frequenza di campiunariu è stu scolu binariu"
+msgstr "Impussibule d’espurtà in furmatu MP2 cù sta frequenza di campiunariu è stu flussu binariu"
 
 #: src/export/ExportMP2.cpp src/export/ExportMP3.cpp src/export/ExportOGG.cpp
 msgid "Unable to open target file for writing"
@@ -11309,7 +11432,7 @@ msgstr "Stereo"
 
 #: src/export/ExportMP3.cpp
 msgid "Bit Rate Mode:"
-msgstr "Modu di scolu binariu :"
+msgstr "Modu di flussu binariu :"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
 #: src/export/ExportMP3.cpp src/prefs/QualityPrefs.cpp src/prefs/QualityPrefs.h
@@ -11461,7 +11584,7 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
 msgstr ""
-"A cumbinazione di a frequenza di campiunariu (%d) è di u scolu binariu (%d kbps) di u prughjettu\n"
+"A cumbinazione di a frequenza di campiunariu (%d) è di u flussu binariu (%d kbps) di u prughjettu\n"
 "ùn hè micca accettata da u furmatu MP3 di u schedariu. "
 
 #: src/export/ExportMP3.cpp
@@ -11637,7 +11760,7 @@ msgstr "Schedarii Ogg Vorbis"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - rate or quality problem"
-msgstr "Impussibule d’espurtà - prublema di scolu o di qualità"
+msgstr "Impussibule d’espurtà - prublema di flussu o di qualità"
 
 #: src/export/ExportOGG.cpp
 msgid "Unable to export - problem with metadata"
@@ -12002,7 +12125,7 @@ msgid ""
 msgstr ""
 "Stu prughjettu hè statu arregistratu da Audacity versione 1.0 o più vechja. U furmatu hà cambiatu è sta versione d’Audacity ùn pò impurtà u prughjettu.\n"
 "\n"
-"Impiegate una versione d’Audacity più vechja chì a 3.0.0 per mudernizà\n"
+"Impiegate una versione d’Audacity più vechja chì a 3.0.0 per attualizà\n"
 "u prughjettu eppò puderete impurtallu cù a versione attuale d’Audacity."
 
 #: src/import/ImportAUP.cpp
@@ -12147,7 +12270,7 @@ msgstr "Schedarii cunciliabile cù FFmpeg"
 #: src/import/ImportFFmpeg.cpp
 #, c-format
 msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
-msgstr "Indice[%02x] Cudecu[%s], Linguaghju[%s], Scolu binariu[%s], Canali[%d], Durata[%d]"
+msgstr "Indice[%02x] Cudecu[%s], Linguaghju[%s], Flussu binariu[%s], Canali[%d], Durata[%d]"
 
 #: src/import/ImportFLAC.cpp
 msgid "FLAC files"
@@ -12194,7 +12317,7 @@ msgstr "Lista di i schedarii in furmatu di testu"
 #. i18n-hint: You do not need to translate "LOF"
 #: src/import/ImportLOF.cpp
 msgid "Invalid window offset in LOF file."
-msgstr "Spustamentu di finestra inaccettevule in u schedariu LOF."
+msgstr "Staccamentu di finestra inaccettevule in u schedariu LOF."
 
 #. i18n-hint: You do not need to translate "LOF"
 #: src/import/ImportLOF.cpp
@@ -12213,7 +12336,7 @@ msgstr "E traccie MIDI ùn ponu micca esse cumpensate individualmente, solu i sc
 #. i18n-hint: You do not need to translate "LOF"
 #: src/import/ImportLOF.cpp
 msgid "Invalid track offset in LOF file."
-msgstr "Spustamentu di traccia inaccettevule in u schedariu LOF."
+msgstr "Staccamentu di traccia inaccettevule in u schedariu LOF."
 
 #: src/import/ImportMIDI.cpp
 #, c-format
@@ -12555,7 +12678,7 @@ msgstr "Canali :"
 #. i18n-hint: (noun)
 #: src/import/ImportRaw.cpp
 msgid "Start offset:"
-msgstr "Spustamentu iniziale :"
+msgstr "Staccamentu iniziale :"
 
 #: src/import/ImportRaw.cpp
 msgid "bytes"
@@ -12569,6 +12692,12 @@ msgstr "Quantità à impurtà :"
 #: src/import/ImportRaw.cpp
 msgid "Sample rate:"
 msgstr "Frequenza di campiunariu :"
+
+#. i18n-hint: Guess format of raw file
+#: src/import/ImportRaw.cpp
+		
+msgid "Detect"
+msgstr "Abbentà"
 
 #: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
 msgid "&Import"
@@ -12593,6 +12722,7 @@ msgstr "%s à diritta"
 #. i18n-hint:
 #. First %s is replaced with the noun "start" or "end"
 #. identifying one end of a clip,
+#. second string is the name of that clip,
 #. first number gives the position of that clip in a sequence
 #. of clips,
 #. last number counts all clips,
@@ -12601,22 +12731,23 @@ msgstr "%s à diritta"
 #.
 #: src/menus/ClipMenus.cpp
 #, c-format
-msgid "%s %d of %d clip %s"
-msgid_plural "%s %d of %d clips %s"
-msgstr[0] "%s %d di %d pezzu %s"
-msgstr[1] "%s %d di %d pezzi %s"
+msgid "%s %s, %d of %d clip %s"
+msgid_plural "%s %s, %d of %d clips %s"
+msgstr[0] "%s %s, %d nant’à %d pezzu %s"
+msgstr[1] "%s %s, %d nant’à %d pezzi %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "start"
-msgstr "Principiu"
+msgstr "principiu"
 
 #: src/menus/ClipMenus.cpp
 msgid "end"
-msgstr "Fine"
+msgstr "fine"
 
 #. i18n-hint:
-#. First two %s are each replaced with the noun "start"
+#. First and third %s are each replaced with the noun "start"
 #. or with "end", identifying and end of a clip,
+#. second and fourth strings are the names of those clips,
 #. first and second numbers give the position of those clips in
 #. a sequence of clips,
 #. last number counts all clips,
@@ -12625,21 +12756,23 @@ msgstr "Fine"
 #.
 #: src/menus/ClipMenus.cpp
 #, c-format
-msgid "%s %d and %s %d of %d clip %s"
-msgid_plural "%s %d and %s %d of %d clips %s"
-msgstr[0] "%s %d è %s %d di %d pezzu %s"
-msgstr[1] "%s %d è %s %d di %d pezzi %s"
+msgid "%s %s and %s %s, %d and %d of %d clip %s"
+msgid_plural "%s %s and %s %s, %d and %d of %d clips %s"
+msgstr[0] "%s %s è %s %s, %d è %d nant’à %d pezzu %s"
+msgstr[1] "%s %s è %s %s, %d è %d nant’à %d pezzi %s"
 
 #. i18n-hint:
-#. first number identifies one of a sequence of clips,
-#. last number counts the clips,
-#. string names a track
+#. first string is the name of a clip,
+#. first number gives the position of that clip
+#. in a sequence of clips,
+#. last number counts all clips,
+#. last string names a track
 #: src/menus/ClipMenus.cpp
 #, c-format
-msgid "%d of %d clip %s"
-msgid_plural "%d of %d clips %s"
-msgstr[0] "%d di %d pezzu %s"
-msgstr[1] "%d di %d pezzi %s"
+msgid "%s, %d of %d clip %s"
+msgid_plural "%s, %d of %d clips %s"
+msgstr[0] "%s, %d nant’à %d pezzu %s"
+msgstr[1] "%s, %d nant’à %d pezzi %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time shifted clips to the right"
@@ -12786,7 +12919,7 @@ msgstr "Ammuzzà e traccie audio selezziunate da %.2f seconde à %.2f seconde"
 
 #: src/menus/EditMenus.cpp
 msgid "Trim Audio"
-msgstr "Amuzzatura audio"
+msgstr "Ammuzzatura audio"
 
 #: src/menus/EditMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -12873,7 +13006,7 @@ msgstr "A&mmutulisce l’audio"
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
 msgid "Tri&m Audio"
-msgstr "&Amuzzà l’audio"
+msgstr "&Ammuzzà l’audio"
 
 #. i18n-hint: (verb) It's an item on a menu.
 #: src/menus/EditMenus.cpp
@@ -12964,6 +13097,11 @@ msgstr "Cambià i &canali d’arregistramentu…"
 #: src/menus/ExtraMenus.cpp
 msgid "&Full Screen (on/off)"
 msgstr "&Screnu Sanu (iè/no)"
+
+#: src/menus/FileMenus.cpp
+		
+msgid "Cannot proceed to export."
+msgstr "Ùn si pò micca espurtà."
 
 #: src/menus/FileMenus.cpp
 #, c-format
@@ -13500,6 +13638,18 @@ msgstr "…"
 msgid "Unknown"
 msgstr "Scunnisciutu"
 
+#. i18n-hint a "journal" is a text file that records
+#. the user's interactions with the application
+#: src/menus/PluginMenus.cpp
+msgid "A journal will be recorded after Audacity restarts."
+msgstr "Un ghjurnale d’interazzioni serà arregistratu dopu à u rilanciu d’Audacity."
+
+#. i18n-hint a "journal" is a text file that records
+#. the user's interactions with the application
+#: src/menus/PluginMenus.cpp
+msgid "No journal will be recorded after Audacity restarts."
+msgstr "Nisunu ghjurnale d’interazzioni serà arregistratu dopu à u rilanciu d’Audacity."
+
 #: src/menus/PluginMenus.cpp
 #, c-format
 msgid "&Repeat %s"
@@ -13577,6 +13727,12 @@ msgstr "Simulà sbaglii d’arregistramentu"
 #: src/menus/PluginMenus.cpp
 msgid "Detect Upstream Dropouts"
 msgstr "Abbentà e perdite da fiume insù"
+
+#. i18n-hint a "journal" is a text file that records
+#. the user's interactions with the application
+#: src/menus/PluginMenus.cpp
+msgid "Write Journal"
+msgstr "Scrive un ghjurnale d’interazzioni"
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/menus/PluginMenus.cpp
@@ -13676,10 +13832,6 @@ msgstr "Catture di screnu (forma corta)…"
 #: src/menus/SelectMenus.cpp
 msgid "Set Left Selection Boundary"
 msgstr "Definisce a cunfina manca di a selezzione"
-
-#: src/menus/SelectMenus.cpp
-msgid "Position"
-msgstr "Pusizione"
 
 #: src/menus/SelectMenus.cpp
 msgid "Set Right Selection Boundary"
@@ -14424,7 +14576,13 @@ msgstr "nisuna traccia d’etichetta"
 msgid "no label track at or below focused track"
 msgstr "nisuna traccia d’etichetta nant’à o sottu a traccia messa in evidenza"
 
-#: src/menus/TransportMenus.cpp
+#. i18n-hint:
+#. String is replaced by the name of a label,
+#. first number gives the position of that label in a sequence
+#. of labels,
+#. and the last number is the total number of labels in the sequence.
+#.
+#: src/menus/TransportMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
 #, c-format
 msgid "%s %d of %d"
 msgstr "%s %d di %d"
@@ -14432,6 +14590,18 @@ msgstr "%s %d di %d"
 #: src/menus/TransportMenus.cpp
 msgid "no labels in label track"
 msgstr "nisuna etichetta i a traccia d’etichetta"
+
+#. i18n-hint Sets a starting point for looping play
+#: src/menus/TransportMenus.cpp
+		
+msgid "Set Loop &In"
+msgstr "Definisce u &principiu di l’iterazione"
+
+#. i18n-hint Sets an ending point for looping play
+#: src/menus/TransportMenus.cpp
+		
+msgid "Set Loop &Out"
+msgstr "Definisce a &fine di l’iterazione"
 
 #: src/menus/TransportMenus.cpp
 msgid ""
@@ -14490,8 +14660,9 @@ msgid "Play/Stop and &Set Cursor"
 msgstr "Leghje/Piantà è &definizione di u cursore"
 
 #: src/menus/TransportMenus.cpp
-msgid "&Loop Play"
-msgstr "Leghje &abeternu"
+		
+msgid "Play &Once/Stop"
+msgstr "Leghje una &volta/Piantà"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Pause"
@@ -14523,16 +14694,18 @@ msgid "Punch and Rol&l Record"
 msgstr "Arregistrà in Appin&zunà è Sfilà"
 
 #: src/menus/TransportMenus.cpp
-msgid "Pla&y Region"
-msgstr "Leghje u &rughjone"
+msgid "&Looping"
+msgstr "&Iterazione"
 
 #: src/menus/TransportMenus.cpp
-msgid "&Lock"
-msgstr "&Ammarchjunà"
+		
+msgid "&Clear Loop"
+msgstr "&Squassà l’iterazione"
 
 #: src/menus/TransportMenus.cpp
-msgid "&Unlock"
-msgstr "&Spalancà"
+		
+msgid "&Set Loop to Selection"
+msgstr "&Definisce a selezzione cum’è iterazione"
 
 #: src/menus/TransportMenus.cpp
 msgid "R&escan Audio Devices"
@@ -14572,8 +14745,9 @@ msgstr "Tras&portu"
 
 #. i18n-hint: (verb) Start playing audio
 #: src/menus/TransportMenus.cpp
-msgid "Pl&ay"
-msgstr "&Leghje"
+		
+msgid "Pl&ay Once"
+msgstr "Le&ghje una volta"
 
 #. i18n-hint: (verb) Stop playing audio
 #: src/menus/TransportMenus.cpp
@@ -14616,18 +14790,15 @@ msgstr "Leghje nanzu è dopu a fin&e di a selezzione"
 msgid "Play C&ut Preview"
 msgstr "Prelettura di a &tagliatura"
 
+#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/menus/TransportMenus.cpp
 msgid "&Play-at-Speed"
 msgstr "Leghje à a &vitezza"
 
-#. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/menus/TransportMenus.cpp
-msgid "Normal Pl&ay-at-Speed"
-msgstr "Leghje à a vitezza &nurmale"
-
-#: src/menus/TransportMenus.cpp
-msgid "&Loop Play-at-Speed"
-msgstr "Leghje ab&eternu à a vitezza"
+		
+msgid "Play-at-Speed &Once"
+msgstr "Leghje à a &vitezza una volta"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview-at-Speed"
@@ -14761,39 +14932,26 @@ msgstr "&Mette tuttu di fronte"
 msgid "Minimize All Projects"
 msgstr "Inchjuculì tutti i prughjetti"
 
-#: src/ondemand/ODComputeSummaryTask.h
-msgid "Import complete. Calculating waveform"
-msgstr "Impurtazione compia. Calculu di a forma d’onda"
-
-#: src/ondemand/ODDecodeTask.h
-msgid "Decoding Waveform"
-msgstr "Discudificazione di a forma d’onda"
-
-#: src/ondemand/ODWaveTrackTaskQueue.cpp
-#, c-format
-msgid "%s %2.0f%% complete. Click to change task focal point."
-msgstr "%s %2.0f%% compiu. Cliccà per cambià u puntu fucale di a tacca."
-
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
+		
 msgid "Preferences for Application"
-msgstr "Preferenze per a qualità"
+msgstr "Preferenze per l’appiecazione"
 
 #. i18n-hint: Title for the update notifications panel in the preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Nutificazioni per i rinnovi"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
+		
 msgctxt "application preferences"
 msgid "&Check for updates"
-msgstr "&Cuntrollà e nove versioni…"
+msgstr "&Cuntrollà e nove versioni"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "A verificazione di i rinnovi richiede l’accessu à a reta. Per prutege a vostra cunfidenzialità, Audacity ùn arregistra alcuna infurmazione persunale."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -14846,7 +15004,7 @@ msgstr "&Apparechju :"
 #. i18n-hint: modifier as in "Recording preferences", not progressive verb
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
 #: src/prefs/RecordingPrefs.h
-#, fuzzy
+		
 msgctxt "preference"
 msgid "Recording"
 msgstr "Arregistramentu"
@@ -14975,6 +15133,11 @@ msgid "Choose a location to place the temporary directory"
 msgstr "Sceglie un locu per piazzà u cartulare timpurariu"
 
 #: src/prefs/DirectoriesPrefs.cpp
+		
+msgid "Cannot set the preference."
+msgstr "Ùn si pò micca definisce e preferenze."
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
 msgstr "indispunibule - u locu insù ùn esiste micca"
 
@@ -14984,17 +15147,42 @@ msgstr "Sceglie un locu"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
+msgid ""
+"\n"
+"Directory %s does not exist. Create it?"
+msgstr ""
+"\n"
+"U cartulare %s ùn esiste micca. Creallu ?"
+
+#: src/prefs/DirectoriesPrefs.cpp
+		
+msgid "Directory creation failed."
+msgstr "Fiascu di a creazione di u cartulare."
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, c-format
+msgid ""
+"\n"
+"%s"
+msgstr ""
+"\n"
+"%s"
+			  
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, c-format
 msgid "Directory %s is not suitable (at risk of being cleaned out)"
 msgstr "U cartulare %s ùn hè micca apprupriatu (ci hè un risicu d’esse viutatu)"
 
 #: src/prefs/DirectoriesPrefs.cpp
-#, c-format
-msgid "Directory %s does not exist. Create it?"
-msgstr "U cartulare %s ùn esiste micca. Creallu ?"
+		
+msgid "'Temporary Directory' cannot be set."
+msgstr "U cartulare timpurariu ùn pò micca esse definitu."
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "New Temporary Directory"
-msgstr "Novu cartulare timpurariu"
+		
+msgid "'Temporary files' directory cannot be set."
+msgstr "U cartulare di i schedarii timpurarii ùn pò micca esse definitu."
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -15008,6 +15196,30 @@ msgstr "I cambiamenti di u cartulare timpurariu seranu effettivi dopu un rilanci
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
 msgstr "Mudificazione di u cartulare timpurariu"
+
+#: src/prefs/DirectoriesPrefs.cpp
+		
+msgid "'Open' directory cannot be set."
+msgstr "U cartulare d’apertura ùn pò micca esse definitu."
+
+#: src/prefs/DirectoriesPrefs.cpp
+		
+msgid "'Save' directory cannot be set."
+msgstr "U cartulare d’arregistramentu ùn pò micca esse definitu."
+
+#: src/prefs/DirectoriesPrefs.cpp
+		
+msgid "'Import' directory cannot be set."
+msgstr "U cartulare d’impurtazione ùn pò micca esse definitu."
+
+#: src/prefs/DirectoriesPrefs.cpp
+		
+msgid "'Export' directory cannot be set."
+msgstr "U cartulare d’espurtazione ùn pò micca esse definitu."
+
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "'Macro Output' directory cannot be set."
+msgstr "U cartulare di l’esciute di prucedura ùn pò micca esse definitu."
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
@@ -15162,7 +15374,7 @@ msgstr "Filtri micca aduprati :"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
-msgstr "Ci sò caratteri di spaziu (spazii, nove linee o tabulazioni) in unu di st’elementi. Ponu rompe u trattamentu di currispundenza. Fora s’è voi site sicuri di ciò chì voi fate, hè ricumandatu di squassà i spazii. Vulete squassà i spazii autumaticamente ?"
+msgstr "Ci sò caratteri di spaziu (spazii, nove linee o tabulazioni) in unu di st’elementi. Ponu rompe u trattamentu di currispundenza. Fora s’è voi site sicuri di ciò chì voi fate, hè ricumandatu d’ammuzzà i spazii. Vulete squassà i spazii autumaticamente ?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -15232,7 +15444,7 @@ msgstr "Da Internet"
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
-msgstr "Affissame"
+msgstr "Affissera"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "&Language:"
@@ -15400,15 +15612,15 @@ msgstr "&Tastu"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by tree"
-msgstr "Affissame da arburu"
+msgstr "Affissera da l’arburu"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by name"
-msgstr "Affissame da nome"
+msgstr "Affissera da u nome"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by key"
-msgstr "Affissame da tastu"
+msgstr "Affissera da u tastu"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Searc&h:"
@@ -15897,7 +16109,7 @@ msgstr "Preferenze per a lettura"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
-msgstr "Previsualizà l’effetti"
+msgstr "Fighjulata di l’effetti"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Length:"
@@ -15906,7 +16118,7 @@ msgstr "D&urata :"
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Cut Preview"
-msgstr "Preparazione di a tagliatura"
+msgstr "Fighjulata di a tagliatura"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Before cut region:"
@@ -16002,14 +16214,6 @@ msgstr "Cunverti&dore di frequenza di campiunariu :"
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "A&llisciata :"
-
-#: src/prefs/QualitySettings.cpp
-msgid "16-bit"
-msgstr "16-bit"
-
-#: src/prefs/QualitySettings.cpp
-msgid "24-bit"
-msgstr "24-bit"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Preferences for Recording"
@@ -16580,7 +16784,7 @@ msgstr "Affissà u &nome di a traccia in cavalcatura"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
-msgstr "Impiegà un affissame à me&za onda quandu a traccia hè ripiegata"
+msgstr "Impiegà un affissera à me&za onda quandu a traccia hè ripiegata"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
@@ -16596,7 +16800,7 @@ msgstr "&Pusizione di testa spirlata"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default &view mode:"
-msgstr "&Modu predefinitu d’affissame :"
+msgstr "&Modu predefinitu d’affissera :"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default Waveform scale:"
@@ -16604,7 +16808,7 @@ msgstr "Scala predefinita di forma d’onda :"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Display &samples:"
-msgstr "Affissame di &campioni :"
+msgstr "Affissera di &campioni :"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default audio track &name:"
@@ -16696,8 +16900,9 @@ msgid "Skip to End"
 msgstr "Andà à a fine"
 
 #: src/toolbars/ControlToolBar.cpp
-msgid "Loop Play"
-msgstr "Lettura ab eternu"
+		
+msgid "Play Once"
+msgstr "Leghje una volta"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Record New Track"
@@ -16795,7 +17000,7 @@ msgstr "Cupià a selezzione"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Trim audio outside selection"
-msgstr "Amuzzà l’audio fora di a selezzione"
+msgstr "Ammuzzà l’audio fora di a selezzione"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Silence audio selection"
@@ -16901,11 +17106,6 @@ msgstr "Vulume d’arregistramentu (micca dispunibule ; impiegà u mischiadore s
 
 #: src/toolbars/MixerToolBar.cpp
 #, c-format
-msgid "Playback Volume: %.2f (emulated)"
-msgstr "Vulume di lettura : %.2f (simulatu)"
-
-#: src/toolbars/MixerToolBar.cpp
-#, c-format
 msgid "Playback Volume: %.2f"
 msgstr "Vulume di lettura :%.2f"
 
@@ -17003,7 +17203,7 @@ msgstr "Durata è centru di a selezzione"
 
 #: src/toolbars/SelectionBar.cpp src/toolbars/SpectralSelectionBar.cpp
 msgid "Show"
-msgstr "Affissame"
+msgstr "Affissera"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Snap To"
@@ -17100,10 +17300,6 @@ msgid "Envelope Tool"
 msgstr "Attrezzu d’inviluppu (livellu)"
 
 #: src/toolbars/ToolsToolBar.cpp
-msgid "Time Shift Tool"
-msgstr "Attrezzu di sculiscera tempurale"
-
-#: src/toolbars/ToolsToolBar.cpp
 msgid "Zoom Tool"
 msgstr "Attrezzu d’ingrandamentu"
 
@@ -17115,10 +17311,6 @@ msgstr "Attrezzu di disegnu"
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Multi-Tool"
 msgstr "Attrezzi multiple"
-
-#: src/toolbars/ToolsToolBar.cpp
-msgid "Slide Tool"
-msgstr "Attrezzu laterale"
 
 #. i18n-hint: Clicking this menu item shows a toolbar
 #. that has some tools in it
@@ -17143,10 +17335,6 @@ msgid "&Zoom Tool"
 msgstr "Attrezzu d’in&grandamentu"
 
 #: src/toolbars/ToolsToolBar.cpp
-msgid "&Time Shift Tool"
-msgstr "Attrezzu di sculiscera &tempurale"
-
-#: src/toolbars/ToolsToolBar.cpp
 msgid "&Multi Tool"
 msgstr "Attrezzi &multiple"
 
@@ -17167,14 +17355,19 @@ msgid "Playback Speed"
 msgstr "Vitezza di lettura"
 
 #: src/toolbars/TranscriptionToolBar.cpp
-msgid "Looped-Play-at-Speed"
-msgstr "Leghje ab&eternu à a vitezza"
+		
+msgid "Play-at-Speed Once"
+msgstr "Leghje à a vitezza una volta"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for transcription (currently just vary play speed)
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Pla&y-at-Speed Toolbar"
 msgstr "Barra d’attrezzi di letture à a &vitezza"
+
+#: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
+msgid "Drag label. Hold shift and drag to move all labels on the same track."
+msgstr "Fate trascinà l’etichetta. Mantinite u tastu Maiusc è fà trascinà per dispiazzà tutte l’etichette nant’à a listessa traccia."
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -17375,6 +17568,60 @@ msgstr "Da prima, piantate l’audio"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "S&pectrogram Settings..."
 msgstr "&Preferenze di spettrogrammu…"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+		
+msgid "Click and drag to move clip boundary in time"
+msgstr "Cliccà è fà trascinà per dispiazzà tempuralmente a cunfina di u pezzu"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+msgid "Clip-Trim-Left"
+msgstr "Ammuzzà u pezzu à manca"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+#, c-format
+msgid "Moved by %.02f"
+msgstr "Dispiazzatu da %.02f"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+msgid "Clip-Trim-Right"
+msgstr "Ammuzzà u pezzu à diritta"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+		
+msgid "Set Wave Clip Name"
+msgstr "Definisce u nome di u pezzu d’onda"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+		
+msgid "Click and drag to select text"
+msgstr "Cliccà è fà trascinà per selezziunà u testu"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+		
+msgid "Modified Clip Name"
+msgstr "Nome di pezzu mudificatu"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+		
+msgid "Clip Name Edit"
+msgstr "Mudificazione di u nome di pezzu"
+
+#. i18n-hint:
+#. string is the name of a clip
+#. first number is the position of that clip in a sequence of clips,
+#. second number counts the clips
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, c-format
+msgid "%s, %d of %d clip"
+msgid_plural "%s, %d of %d clips"
+msgstr[0] "%s, %d nant’à %d pezzu"
+msgstr[1] "%s, %d nant’à %d pezzi"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+		
+msgid "Rename Clip..."
+msgstr "Rinuminà u pezzu…"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -17592,7 +17839,7 @@ msgstr "%.0f%% à diritta"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr "Cliccà è trascinà per adattà e dimensioni di e viste secundarie, dopiu-cliccu per sparte in parti uguali"
+msgstr "Cliccà è trascinà per adattà e dimensioni di e viste secundarie, doppiu-cliccu per sparte in parti uguali"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -17605,6 +17852,21 @@ msgstr "Accuncià e viste secundarie"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Close sub-view"
 msgstr "Chjode a vista secundaria"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
+		
+msgid "Split Clip"
+msgstr "Sparte u pezzu"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
+		
+msgid "Mute/Unmute Track"
+msgstr "Ammutulì/ùn ammuttulì a traccia"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
+		
+msgid "Rename clip..."
+msgstr "Rinuminà u pezzu…"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom x1/2"
@@ -17663,15 +17925,15 @@ msgstr "Definisce a stesa"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track display to linear"
-msgstr "Definisce l’affissame lineare per a traccia di tempo"
+msgstr "Definisce l’affissera lineare per a traccia di tempo"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set Display"
-msgstr "Definisce l’affissame"
+msgstr "Definisce l’affissera"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track display to logarithmic"
-msgstr "Definisce l’affissame lugaritmicu per a traccia di tempo"
+msgstr "Definisce l’affissera lugaritmicu per a traccia di tempo"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track interpolation to linear"
@@ -17700,6 +17962,45 @@ msgstr "&Stesa…"
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "&Interpolazione lugaritmica"
+
+#. i18n-hint Appears on hovering mouse over clip affordance
+#: src/tracks/ui/AffordanceHandle.cpp
+msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
+msgstr "Fate trascinà i pezzi per cambià e so pusizioni. Mantinite u tastu Maiusc è fà trascinà per dispiazzà tutti i pezzi nant’à a listessa traccia."
+
+#: src/tracks/ui/BackgroundCell.cpp
+		
+msgid "Add Mono Track"
+msgstr "Aghjunghje una traccia mono"
+
+#: src/tracks/ui/BackgroundCell.cpp
+		
+msgid "Add Stereo Track"
+msgstr "Aghjunghje una traccia stereo"
+
+#: src/tracks/ui/BackgroundCell.cpp
+		
+msgid "Add Label Track"
+msgstr "Aghjunghje una traccia d’etichetta"
+
+#: src/tracks/ui/BackgroundCell.cpp
+		
+msgid "Export Audio..."
+msgstr "Espurtà l’audio…"
+
+#: src/tracks/ui/BrushHandle.cpp
+		
+msgid "Erased selected area"
+msgstr "Aree selezziunate squassate"
+
+#: src/tracks/ui/BrushHandle.cpp
+msgid "Selected area using Brush Tool"
+msgstr "Area selezziunata impieghendu l’attrezzu pinnellu"
+
+#: src/tracks/ui/BrushHandle.cpp
+		
+msgid "Brush tool selection"
+msgstr "Selezzione cù l’attrezzu pinnellu"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "&Name..."
@@ -17934,6 +18235,30 @@ msgstr "Trascinà per ingrandà in una regione, Cliccu dirittu per riduce"
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Manca=ingrandà, Diritta=riduce, Centru=nurmale"
 
+#. i18n-hint: Title of the dialog no updates available.
+#: src/update/NoUpdatesAvailableDialog.cpp
+		
+msgid "No Updates Available"
+msgstr "Nisuna nova versione dispunibule"
+
+#: src/update/NoUpdatesAvailableDialog.cpp
+		
+msgid "Check for Updates"
+msgstr "Cuntrollu di e nove versioni"
+
+#. i18n-hint: %s is replaced with 'Preferences > Application'.
+#: src/update/NoUpdatesAvailableDialog.cpp
+#, c-format
+msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
+msgstr "S’è vo vulete cambià a vostra preferenza per a verificazione autumatica di i rinnovi, pudete truvalla in %s."
+
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
+#. i18n-hint: a page in the Preferences dialog; use same name
+#: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
+		
+msgid "Preferences > Application"
+msgstr "Preferenze > Appiecazione"
+
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Error checking for update"
@@ -17942,7 +18267,7 @@ msgstr "Sbagliu à u cuntrollu di a nova versione"
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Unable to connect to Audacity update server."
-msgstr "Impussibule di cunnettassi à u servitore di e nove versioni d’Audacity."
+msgstr "Impussibule di cunnettesi à u servitore di e nove versioni d’Audacity."
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
@@ -17950,43 +18275,48 @@ msgid "Update data was corrupted."
 msgstr "I dati di u rinnovu sò alterati."
 
 #: src/update/UpdateManager.cpp
+		
 msgctxt "update dialog"
-msgid "Error downloading update."
-msgstr "Sbagliu à u scaricamentu di u rinnovu."
+msgid "Error downloading update"
+msgstr "Sbagliu à u scaricamentu di u rinnovu"
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Ùn si pò micca apre u liame di scaricamentu d’Audacity."
 
+#: src/update/UpdateManager.cpp
+		
+msgid "Audacity update"
+msgstr "Rinnovu d’Audacity"
+
+#: src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "Scaricamentu di %s"
+
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App update checking"
-msgstr ""
+msgstr "Verificazione di e nove versioni di l’appiecazione"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr ""
+msgstr "Per stà à ghjornu, vi riceverete una nutificazione in l’appiecazione quandu si puderà scaricà una nova versione d’Audacity."
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr ""
+msgstr "Per prutege a vostra cunfidenzialità, Audacity ùn culletta alcuna infurmazione persunale. Sarrimanenti, a verificazione di i rinnovi di l’appiecazione richiede l’accessu à a reta."
 
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn off app update checking at any time in %s."
-msgstr ""
+msgstr "Pudete disattivà a verificazione di e nove versioni di l’appiecazione à ogni mumentu in %s."
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
-msgstr ""
-
-#. i18n-hint: a page in the Preferences dialog; use same name
-#: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
-msgid "Preferences > Application"
-msgstr "Preferenze per a qualità"
+msgstr "Rinnovi d’appiecazione"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -18024,7 +18354,7 @@ msgstr "Sapene di più nant’à GitHub"
 msgid "(disabled)"
 msgstr "(disattivatu)"
 
-#: src/widgets/AButton.cpp src/widgets/Meter.cpp
+#: src/widgets/AButton.cpp src/widgets/MeterPanel.cpp
 msgid "Press"
 msgstr "Appughjà"
 
@@ -18034,13 +18364,13 @@ msgstr "Buttone"
 
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in VU Meter
-#: src/widgets/ASlider.cpp src/widgets/Meter.cpp
+#: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
 msgid "L"
 msgstr "M"
 
 #. i18n-hint: One-letter abbreviation for Right, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Right, in VU Meter
-#: src/widgets/ASlider.cpp src/widgets/Meter.cpp
+#: src/widgets/ASlider.cpp src/widgets/MeterPanel.cpp
 msgid "R"
 msgstr "D"
 
@@ -18105,43 +18435,43 @@ msgstr "Aiutu nant’à Internet"
 msgid "Menu"
 msgstr "Listinu"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Click to Start Monitoring"
 msgstr "Cliccà per principià l’appustamentu"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Click for Monitoring"
 msgstr "Cliccà per l’appustamentu"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Click to Start"
 msgstr "Cliccà per principià"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Click"
 msgstr "Cliccà"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Stop Monitoring"
 msgstr "Piantà l’appustamentu"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Start Monitoring"
 msgstr "Principià l’appustamentu"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Recording Meter Options"
 msgstr "Ozzioni di u cuntadore d’arregistramentu"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Playback Meter Options"
 msgstr "Ozzioni di u cuntadore di lettura"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Refresh Rate"
 msgstr "Frequenza d’attualizazione"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid ""
 "Higher refresh rates make the meter show more frequent\n"
 "changes. A rate of 30 per second or less should prevent\n"
@@ -18151,61 +18481,61 @@ msgstr ""
 "rapidi. Una frequenza di 30 o menu à a seconda duveria impedisce\n"
 "d’affettà a qualità audio di l’urdinatori i più lenti."
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter refresh rate per second [1-100]"
 msgstr "Frequenza d’attualizazione à a seconda di i cuntadori [da 1 à 100]"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter refresh rate per second [1-100]: "
 msgstr "Frequenza d’attualizazione à a seconda di i cuntadori [da 1 à 100] : "
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter Style"
 msgstr "Stilu di cuntadore"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Gradient"
 msgstr "Sgradatu"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Meter Type"
 msgstr "Tipu di cuntadore"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Orientation"
 msgstr "Orientazione"
 
-#: src/widgets/Meter.cpp plug-ins/crossfadetracks.ny
+#: src/widgets/MeterPanel.cpp plug-ins/crossfadetracks.ny
 msgid "Automatic"
 msgstr "Autumatica"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Horizontal"
 msgstr "Orizuntale"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid "Vertical"
 msgstr "Verticale"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid " Monitoring "
 msgstr " Appustamentu "
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid " Active "
 msgstr " Attivu "
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 #, c-format
 msgid " Peak %2.f dB"
 msgstr " Piccu %2.f dB"
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 #, c-format
 msgid " Peak %.2f "
 msgstr " Piccu %.2f "
 
-#: src/widgets/Meter.cpp
+#: src/widgets/MeterPanel.cpp
 msgid " Clipped "
 msgstr " Tazzatu "
 
@@ -18598,28 +18928,28 @@ msgstr "Cunfirmà a chjusura"
 
 #. i18n-hint: %s is replaced with a directory path.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to write files to directory: %s."
-msgstr "Impussibule di leghje a prerigatura in « %s »"
+msgstr "Ùn si pò scrive di schedariu in u cartulare : %s."
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
-msgstr ""
+msgstr "Ci vole à verificà chì u cartulare esiste bè, ch’ellu hà i permessi richiesti, è chì u discu ùn hè micca pienu."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "You can change the directory in %s."
-msgstr ""
-"Impussibule di creà u cartulare :\n"
-"  %s"
+msgstr "Pudete cambià u cartulare in %s."
+									   
+	  
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#, fuzzy
+		
 msgid "Preferences > Directories"
-msgstr "Preferenze per i cartulari"
+msgstr "Preferenze > Cartulari"
 
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
@@ -18693,20 +19023,6 @@ msgstr "Dialogu di selezzione di cartulare"
 msgid "File Dialog"
 msgstr "Dialogu di selezzione di schedariu"
 
-#: src/xml/XMLFileReader.cpp
-#, c-format
-msgid "Error: %s at line %lu"
-msgstr "Sbagliu : %s à a linea %lu"
-
-#: src/xml/XMLFileReader.cpp
-#, c-format
-msgid "Could not load file: \"%s\""
-msgstr "Ùn si pò micca caricà u schedariu : « %s »"
-
-#: src/xml/XMLFileReader.cpp
-msgid "Could not parse XML"
-msgstr "Ùn si pò micca analizà u XML"
-
 #: plug-ins/SpectralEditMulti.ny
 msgid "Spectral edit multi tool"
 msgstr "Attrezzi multiple di mudificazione spettrale"
@@ -18722,16 +19038,11 @@ msgid "Paul Licameli"
 msgstr "Paul Licameli"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
-#: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
-#: plug-ins/adjustable-fade.ny plug-ins/beat.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
-#: plug-ins/highpass.ny plug-ins/limiter.ny plug-ins/lowpass.ny
+#: plug-ins/SpectralEditShelves.ny plug-ins/beat.ny plug-ins/delay.ny
+#: plug-ins/equalabel.ny plug-ins/highpass.ny plug-ins/lowpass.ny
 #: plug-ins/notch.ny plug-ins/nyquist-plug-in-installer.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny
-#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
-#: plug-ins/spectral-delete.ny plug-ins/tremolo.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocoder.ny
+#: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
+#: plug-ins/vocalrediso.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
 msgstr "Pruvistu sottu à i termi di a licenza GNU General Public License versione 2"
 
@@ -18834,6 +19145,15 @@ msgstr "Appiecazione di a scaghjatura…"
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
 msgstr "Steve Daulton"
+
+#: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
+#: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
+#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/label-sounds.ny
+#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/sample-data-export.ny
+#: plug-ins/sample-data-import.ny plug-ins/spectral-delete.ny
+		
+msgid "GNU General Public License v2.0 or later"
+msgstr "Licenza GNU General Public v2.0 o più recente"
 
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
@@ -19354,10 +19674,6 @@ msgstr ""
 msgid "Label Sounds"
 msgstr "Etichetta Soni"
 
-#: plug-ins/label-sounds.ny plug-ins/noisegate.ny
-msgid "Released under terms of the GNU General Public License version 2 or later."
-msgstr "Pruvistu sottu à i termi di a licenza GNU General Public License versione 2 o più recente."
-
 #: plug-ins/label-sounds.ny
 msgid "Threshold level (dB)"
 msgstr "Livellu di sogliu (dB)"
@@ -19680,7 +19996,7 @@ msgstr "Permette"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
-msgstr "Successu.~%Schedarii scritti nant’à :~%~s~%"
+msgstr "Successu.~%FSchedarii scritti nant’à :~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
@@ -20035,7 +20351,7 @@ msgid ""
 msgstr ""
 "~a~%Frequenza di campiunariu : ~a Hz. Valori di campione nant’à a scala ~a. ~a.~%~aLonghezza trattata : ~a ~\n"
 "                  campioni, ~a seconde.~%Ampiitutine di piccu : ~a (lineare) ~a dB.  RMS senza punderatezza : ~a dB.~%~\n"
-"                  Spustamentu DC : ~a~a"
+"                  Staccamentu DC : ~a~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20082,7 +20398,7 @@ msgstr "<b>RMS</b> (senza punderatezza): &nbsp;&nbsp;~a dB."
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
-msgstr "<b>Spustamentu DC :</b> &nbsp;&nbsp;~a"
+msgstr "<b>Staccamentu DC :</b> &nbsp;&nbsp;~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20486,6 +20802,105 @@ msgstr "Frequenza di l’achi di u radar (Hz)"
 #, lisp-format
 msgid "Error.~%Stereo track required."
 msgstr "Sbagliu.~%Traccia stereo richiesta."
+
+#~ msgid "Enable Quick-Play"
+#~ msgstr "Attivà a lettura rapida"
+
+#~ msgid "Lock Play Region"
+#~ msgstr "Ammarchjunà a lettura di regione"
+
+#~ msgid "Playback volume is emulated\n"
+#~ msgstr "U vulume di lettura hè simulatu\n"
+
+#~ msgid "Playback volume is native\n"
+#~ msgstr "U vulume di lettura hè nativu\n"
+
+#~ msgid "Failed to find compatible FFmpeg libraries."
+#~ msgstr "Impussibule di truvà bibliuteche FFmpeg cunciliabile."
+
+#, c-format
+#~ msgid "This operation cannot be done until importation of %s completes."
+#~ msgstr "Ùn si pò fà st’operazione nanzu l’impurtazione di %s."
+
+#~ msgid "none, Hann (2.0.6 behavior)"
+#~ msgstr "nisunu, Hann (cumpurtamentu 2.0.6)"
+
+#~ msgid "Hann, none"
+#~ msgstr "Hann, nisunu"
+
+#~ msgid "Hann, Hann (default)"
+#~ msgstr "Hann, Hann (predefinitu)"
+
+#~ msgid "Blackman, Hann"
+#~ msgstr "Blackman, Hann"
+
+#~ msgid "Hamming, none"
+#~ msgstr "Hamming, nisunu"
+
+#~ msgid "Hamming, Hann"
+#~ msgstr "Hamming, Hann"
+
+#~ msgid "Hamming, Reciprocal Hamming"
+#~ msgstr "Hamming, Hamming reciprocu"
+
+#, c-format
+#~ msgid "%d of %d clip %s"
+#~ msgid_plural "%d of %d clips %s"
+#~ msgstr[0] "%d di %d pezzu %s"
+#~ msgstr[1] "%d di %d pezzi %s"
+
+#~ msgid "&Loop Play"
+#~ msgstr "Leghje &abeternu"
+
+#~ msgid "Pla&y Region"
+#~ msgstr "Leghje u &rughjone"
+
+#~ msgid "&Lock"
+#~ msgstr "&Ammarchjunà"
+
+#~ msgid "&Unlock"
+#~ msgstr "&Spalancà"
+
+#~ msgid "Pl&ay"
+#~ msgstr "&Leghje"
+
+#~ msgid "Normal Pl&ay-at-Speed"
+#~ msgstr "Leghje à a vitezza &nurmale"
+
+#~ msgid "&Loop Play-at-Speed"
+#~ msgstr "Leghje ab&eternu à a vitezza"
+
+#~ msgid "Import complete. Calculating waveform"
+#~ msgstr "Impurtazione compia. Calculu di a forma d’onda"
+
+#~ msgid "Decoding Waveform"
+#~ msgstr "Discudificazione di a forma d’onda"
+
+#, c-format
+#~ msgid "%s %2.0f%% complete. Click to change task focal point."
+#~ msgstr "%s %2.0f%% compiu. Cliccà per cambià u puntu fucale di a tacca."
+
+#~ msgid "New Temporary Directory"
+#~ msgstr "Novu cartulare timpurariu"
+
+#~ msgid "Loop Play"
+#~ msgstr "Lettura ab eternu"
+
+#, c-format
+#~ msgid "Playback Volume: %.2f (emulated)"
+#~ msgstr "Vulume di lettura : %.2f (simulatu)"
+
+#~ msgid "Time Shift Tool"
+#~ msgstr "Attrezzu di sculiscera tempurale"
+
+#~ msgid "Slide Tool"
+#~ msgstr "Attrezzu laterale"
+
+#~ msgid "&Time Shift Tool"
+#~ msgstr "Attrezzu di sculiscera &tempurale"
+
+#~ msgid "Looped-Play-at-Speed"
+#~ msgstr "Leghje ab&eternu à a vitezza"
 
 #~ msgid "Unknown assertion"
 #~ msgstr "Asserimentu scunnisciutu"

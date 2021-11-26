@@ -18,6 +18,7 @@
 
 #include "Effect.h"
 #include "ModuleManager.h"
+#include "PluginInterface.h"
 
 static bool sInitialized = false;
 

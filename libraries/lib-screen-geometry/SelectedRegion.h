@@ -28,9 +28,12 @@
 #include <wx/defs.h>
 #include <wx/chartype.h> // for wxChar, a typedef
 #include <math.h>
+#include <string_view>
+
 #include "XMLMethodRegistry.h"
 
 class XMLWriter;
+class XMLAttributeValueView;
 
 class SCREEN_GEOMETRY_API SelectedRegion {
 
@@ -203,22 +206,22 @@ public:
    // as SelectedRegion is extended.  Therefore, this is not an
    // XMLTagHandler.
 
-   static const wxChar *sDefaultT0Name;
-   static const wxChar *sDefaultT1Name;
+   static const char* sDefaultT0Name;
+   static const char* sDefaultT1Name;
 
    // Serialize, not with tags of its own, but as attributes within a tag.
    // Don't add more legacy arguments as the structure grows.
    void WriteXMLAttributes
       (XMLWriter &xmlFile,
-       const wxChar *legacyT0Name = sDefaultT0Name,
-       const wxChar *legacyT1Name = sDefaultT1Name) const;
+       const char *legacyT0Name = sDefaultT0Name,
+       const char *legacyT1Name = sDefaultT1Name) const;
 
    // Return true iff the attribute is recognized.
    // Don't add more legacy arguments as the structure grows.
    bool HandleXMLAttribute
-      (const wxChar *attr, const wxChar *value,
-       const wxChar *legacyT0Name = sDefaultT0Name,
-       const wxChar *legacyT1Name = sDefaultT1Name);
+      (const std::string_view &attr, const XMLAttributeValueView &value,
+       const char *legacyT0Name = sDefaultT0Name,
+       const char* legacyT1Name = sDefaultT1Name);
 
    /*
     This function encapsulates details of serialization of
@@ -227,7 +230,7 @@ public:
     */
    static XMLMethodRegistryBase::Mutators<SelectedRegion>
    Mutators(
-      const wxString &legacyT0Name, const wxString &legacyT1Name);
+      const char *legacyT0Name, const char* legacyT1Name);
 
    bool ensureOrdering() 
    {

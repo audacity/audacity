@@ -54,6 +54,7 @@ effects from this one class.
 #include <wx/scrolwin.h>
 #include <wx/version.h>
 
+#include "../../EffectHostInterface.h"
 #include "FileNames.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/NumericTextCtrl.h"
@@ -396,7 +397,8 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
 class LadspaEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   LadspaEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
+   LadspaEffectOptionsDialog(wxWindow * parent,
+      EffectHostInterface &host, EffectDefinitionInterface &effect);
    virtual ~LadspaEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -404,7 +406,8 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectHostInterface *mHost;
+   EffectHostInterface &mHost;
+   EffectDefinitionInterface &mEffect;
    bool mUseLatency;
 
    DECLARE_EVENT_TABLE()
@@ -414,12 +417,15 @@ BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LadspaEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialogWrapper(parent, wxID_ANY, XO("LADSPA Effect Options"))
+LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(wxWindow * parent,
+   EffectHostInterface &host, EffectDefinitionInterface &effect)
+: wxDialogWrapper(parent, wxID_ANY, XO("LADSPA Effect Options"))
+, mHost{ host }
+, mEffect{ effect }
 {
-   mHost = host;
-
-   mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
+   GetConfig(mEffect,
+      PluginSettings::Shared, wxT("Options"), wxT("UseLatency"),
+      mUseLatency, true);
 
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -476,7 +482,8 @@ void LadspaEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
-   mHost->SetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency);
+   SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
+      wxT("UseLatency"), mUseLatency);
 
    EndModal(wxID_OK);
 }
@@ -623,7 +630,6 @@ LadspaEffect::LadspaEffect(const wxString & path, int index)
 
    mLatencyPort = -1;
 
-   mDialog = NULL;
    mParent = NULL;
 }
 
@@ -864,14 +870,18 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
    // mHost will be null during registration
    if (mHost)
    {
-      mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+         wxT("UseLatency"), mUseLatency, true);
 
       bool haveDefaults;
-      mHost->GetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
+      GetConfig(*this, PluginSettings::Private,
+         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+         false);
       if (!haveDefaults)
       {
          SaveParameters(mHost->GetFactoryDefaultsGroup());
-         mHost->SetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+         SetConfig(*this, PluginSettings::Private,
+            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
       LoadParameters(mHost->GetCurrentSettingsGroup());
@@ -1057,26 +1067,11 @@ bool LadspaEffect::RealtimeProcessEnd()
    return true;
 }
 
-bool LadspaEffect::ShowInterface(
-   wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
+int LadspaEffect::ShowClientInterface(
+   wxWindow &parent, wxDialog &dialog, bool forceModal)
 {
-   if (mDialog)
-   {
-      if ( mDialog->Close(true) )
-         mDialog = nullptr;
-      return false;
-   }
-
-   // mDialog is null
-   auto cleanup = valueRestorer( mDialog );
-
-   if ( factory )
-      mDialog = factory(parent, mHost, this);
-   if (!mDialog)
-   {
-      return false;
-   }
-
+   // Remember the dialog with a weak pointer, but don't control its lifetime
+   mDialog = &dialog;
    mDialog->Layout();
    mDialog->Fit();
    mDialog->SetMinSize(mDialog->GetSize());
@@ -1084,14 +1079,10 @@ bool LadspaEffect::ShowInterface(
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
    {
       mDialog->Show();
-      cleanup.release();
-
-      return false;
+      return 0;
    }
 
-   bool res = mDialog->ShowModal() != 0;
-
-   return res;
+   return mDialog->ShowModal();
 }
 
 bool LadspaEffect::GetAutomationParameters(CommandParameters & parms)
@@ -1176,11 +1167,6 @@ bool LadspaEffect::LoadFactoryDefaults()
 // ============================================================================
 // EffectUIClientInterface Implementation
 // ============================================================================
-
-void LadspaEffect::SetHostUI(EffectUIHostInterface *host)
-{
-   mUIHost = host;
-}
 
 bool LadspaEffect::PopulateUI(ShuttleGui &S)
 {
@@ -1534,7 +1520,6 @@ bool LadspaEffect::CloseUI()
    mFields.reset();
    mLabels.reset();
 
-   mUIHost = NULL;
    mParent = NULL;
    mDialog = NULL;
 
@@ -1561,11 +1546,12 @@ bool LadspaEffect::HasOptions()
 
 void LadspaEffect::ShowOptions()
 {
-   LadspaEffectOptionsDialog dlg(mParent, mHost);
+   LadspaEffectOptionsDialog dlg(mParent, *mHost, *this);
    if (dlg.ShowModal())
    {
       // Reinitialize configuration options
-      mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+         wxT("UseLatency"), mUseLatency, true);
    }
 }
 
@@ -1623,7 +1609,8 @@ void LadspaEffect::Unload()
 bool LadspaEffect::LoadParameters(const RegistryPath & group)
 {
    wxString parms;
-   if (!mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
+   if (!GetConfig(*this, PluginSettings::Private, group, wxT("Parameters"),
+      parms, wxEmptyString))
    {
       return false;
    }
@@ -1651,7 +1638,8 @@ bool LadspaEffect::SaveParameters(const RegistryPath & group)
       return false;
    }
 
-   return mHost->SetPrivateConfig(group, wxT("Parameters"), parms);
+   return SetConfig(*this, PluginSettings::Private,
+      group, wxT("Parameters"), parms);
 }
 
 LADSPA_Handle LadspaEffect::InitInstance(float sampleRate)

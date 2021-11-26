@@ -73,6 +73,9 @@ public:
    // Constructor / Destructor / Duplicator
    //
 
+   // Construct and also build all attachments
+   static WaveTrack *New( AudacityProject &project );
+
    WaveTrack(
       const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
    WaveTrack(const WaveTrack &orig);
@@ -80,7 +83,6 @@ public:
    // overwrite data excluding the sample sequence but including display
    // settings
    void Reinit(const WaveTrack &orig);
-
 private:
    void Init(const WaveTrack &orig);
 
@@ -148,7 +150,8 @@ private:
    int GetWaveColorIndex() const { return mWaveColorIndex; };
    void SetWaveColorIndex(int colorIndex);
 
-   sampleCount GetNumSamples() const;
+   sampleCount GetPlaySamplesCount() const;
+   sampleCount GetSequenceSamplesCount() const;
 
    sampleFormat GetSampleFormat() const { return mFormat; }
    void ConvertToSampleFormat(sampleFormat format,
@@ -328,9 +331,9 @@ private:
    // XMLTagHandler callback methods for loading and saving
    //
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   void HandleXMLEndTag(const wxChar *tag) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
+   void HandleXMLEndTag(const std::string_view& tag) override;
+   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const override;
 
    // Returns true if an error occurred while reading from XML
@@ -576,7 +579,6 @@ private:
 
    //! Returns nullptr if clip with such name was not found
    const WaveClip* FindClipByName(const wxString& name) const;
-
  protected:
    //
    // Protected variables
@@ -610,6 +612,8 @@ private:
    //
 
 private:
+
+   void PasteWaveTrack(double t0, const WaveTrack* other);
 
    TrackKind GetKind() const override { return TrackKind::Wave; }
 
@@ -714,10 +718,11 @@ class AUDACITY_DLL_API WaveTrackFactory final
    static WaveTrackFactory &Reset( AudacityProject &project );
    static void Destroy( AudacityProject &project );
 
-   WaveTrackFactory( const ProjectRate &rate,
+   WaveTrackFactory(
+      const ProjectRate& rate,
       const SampleBlockFactoryPtr &pFactory)
-      : mRate{ rate }
-      , mpFactory(pFactory)
+       : mRate{ rate }
+       , mpFactory(pFactory)
    {
    }
    WaveTrackFactory( const WaveTrackFactory & ) PROHIBITED;

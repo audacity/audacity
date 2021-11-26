@@ -83,9 +83,6 @@ set( USE_VST ${${_OPT}use_vst} CACHE INTERNAL "" )
 #
 list( APPEND SOURCES
    PRIVATE
-      AColor.cpp
-      AColor.h
-      AColorResources.h
       ActiveProject.cpp
       ActiveProject.h
       ActiveProjects.cpp
@@ -94,8 +91,6 @@ list( APPEND SOURCES
       AboutDialog.h
       AdornedRulerPanel.cpp
       AdornedRulerPanel.h
-      AllThemeResources.cpp
-      AllThemeResources.h
       AudacityApp.cpp
       AudacityApp.h
       $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>
@@ -120,18 +115,20 @@ list( APPEND SOURCES
       Benchmark.h
       CellularPanel.cpp
       CellularPanel.h
-      ClassicThemeAsCeeCode.h
       Clipboard.cpp
       Clipboard.h
       CommonCommandFlags.cpp
       CommonCommandFlags.h
+      ConfigInterface.cpp
+      ConfigInterface.h
       CrashReport.cpp
       CrashReport.h
-      DarkThemeAsCeeCode.h
       DBConnection.cpp
       DBConnection.h
       Diags.cpp
       Diags.h
+      EffectHostInterface.cpp
+      EffectHostInterface.h
       Envelope.cpp
       Envelope.h
       EnvelopeEditor.cpp
@@ -144,12 +141,9 @@ list( APPEND SOURCES
       FreqWindow.h
       HelpText.cpp
       HelpText.h
-      HiContrastThemeAsCeeCode.h
       HistoryWindow.cpp
       HistoryWindow.h
       HitTestResult.h
-      ImageManipulation.cpp
-      ImageManipulation.h
       Journal.cpp
       Journal.h
       JournalEvents.cpp
@@ -170,14 +164,12 @@ list( APPEND SOURCES
       LangChoice.h
       Legacy.cpp
       Legacy.h
-      LightThemeAsCeeCode.h
       LogWindow.cpp
       LogWindow.h
       Lyrics.cpp
       Lyrics.h
       LyricsWindow.cpp
       LyricsWindow.h
-      MacroMagic.h
       Menus.cpp
       Menus.h
       MIDIPlay.cpp
@@ -196,6 +188,8 @@ list( APPEND SOURCES
       PitchName.h
       PlaybackSchedule.cpp
       PlaybackSchedule.h
+      PluginInterface.cpp
+      PluginInterface.h
       PluginManager.cpp
       PluginManager.h
       PluginRegistrationDialog.cpp
@@ -235,6 +229,8 @@ list( APPEND SOURCES
       SampleBlock.h
       Screenshot.cpp
       Screenshot.h
+      ScrubState.cpp
+      ScrubState.h
       SelectUtilities.cpp
       SelectUtilities.h
       SelectFile.cpp
@@ -269,9 +265,6 @@ list( APPEND SOURCES
       SseMathFuncs.h
       Tags.cpp
       Tags.h
-      Theme.cpp
-      Theme.h
-      ThemeAsCeeCode.h
       TimeDialog.cpp
       TimeDialog.h
       TimeTrack.cpp
@@ -284,6 +277,8 @@ list( APPEND SOURCES
       TrackArtist.h
       TrackInfo.cpp
       TrackInfo.h
+      TrackAttachment.h
+      TrackAttachment.cpp
       TrackPanel.cpp
       TrackPanel.h
       TrackPanelAx.cpp
@@ -798,8 +793,12 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.h
       tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
       tracks/playabletrack/wavetrack/ui/SpectrumView.h
+      tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.h
+      tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.h
+      tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceHandle.cpp
+      tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceHandle.h
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackShifter.cpp
@@ -819,6 +818,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h
       tracks/playabletrack/wavetrack/ui/WaveformView.cpp
       tracks/playabletrack/wavetrack/ui/WaveformView.h
+      tracks/playabletrack/wavetrack/WaveTrackUtils.cpp
+      tracks/playabletrack/wavetrack/WaveTrackUtils.h
       tracks/timetrack/ui/TimeTrackControls.cpp
       tracks/timetrack/ui/TimeTrackControls.h
       tracks/timetrack/ui/TimeTrackVRulerControls.cpp
@@ -893,6 +894,8 @@ list( APPEND SOURCES
       widgets/AudacityTextEntryDialog.h
       widgets/BackedPanel.cpp
       widgets/BackedPanel.h
+      widgets/BasicMenu.cpp
+      widgets/BasicMenu.h
       widgets/ErrorDialog.cpp
       widgets/ErrorDialog.h
       widgets/ExpandingToolBar.cpp
@@ -954,6 +957,8 @@ list( APPEND SOURCES
       widgets/Warning.h
       widgets/WindowAccessible.cpp
       widgets/WindowAccessible.h
+      widgets/auStaticText.cpp
+      widgets/auStaticText.h
       widgets/numformatter.cpp
       widgets/numformatter.h
       widgets/valnum.cpp
@@ -963,6 +968,8 @@ list( APPEND SOURCES
       widgets/wxTextCtrlWrapper.h
       widgets/wxWidgetsBasicUI.cpp
       widgets/wxWidgetsBasicUI.h
+      widgets/wxWidgetsWindowPlacement.cpp
+      widgets/wxWidgetsWindowPlacement.h
 
       # Update version
       $<$<BOOL:${${_OPT}has_updates_check}>:
@@ -1208,9 +1215,6 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          "-framework CoreAudioKit"
    )
 
-   # Use the Aqua theme
-   set( USE_AQUA_THEME 1 )
-
    # Copy the required wxWidgets libs into the bundle
    add_custom_command(
       TARGET
@@ -1291,10 +1295,17 @@ else()
                           -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
+   
+   add_executable(findlib ../linux/findlib.c)
+   target_link_libraries(findlib ${CMAKE_DL_LIBS})
 endif()
 
 if(CRASH_REPORT_URL)
     list(APPEND DEFINES PRIVATE -DCRASH_REPORT_URL="${CRASH_REPORT_URL}")
+endif()
+
+if(SHOW_WHATS_NEW_SECTION)
+   list(APPEND DEFINES PRIVATE HAS_WHATS_NEW )
 endif()
 
 set_target_property_all( ${TARGET} RUNTIME_OUTPUT_NAME ${AUDACITY_NAME} )

@@ -48,21 +48,22 @@ configure_file("${OUTPUT_DIR}/audacity.iss.in" "${OUTPUT_DIR}/audacity.iss")
 
 file(COPY "${SOURCE_DIR}/presets" DESTINATION "${OUTPUT_DIR}/Additional")
 
-file(COPY 
+file(COPY
         "${SOURCE_DIR}/LICENSE.txt"
         "${SOURCE_DIR}/README.txt"
         "${SOURCE_DIR}/win/audacity.ico"
-    DESTINATION 
+    DESTINATION
         "${OUTPUT_DIR}/Additional"
 )
 
 # "Install" prebuilt package
 
 execute_process(
-    COMMAND 
+    COMMAND
         ${CMAKE_COMMAND}
             --install ${BUILD_DIR}
             --prefix "${OUTPUT_DIR}/Package"
+            --config "${CONFIG}"
 )
 
 # Build the installer

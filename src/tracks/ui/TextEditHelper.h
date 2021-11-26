@@ -65,6 +65,10 @@ public:
     static bool IsGoodEditKeyCode(int keyCode);
 
     TextEditHelper(const std::weak_ptr<TextEditDelegate>& delegate, const wxString& text, const wxFont& font);
+   
+   ~TextEditHelper()
+   {
+   }
 
     void SetTextColor(const wxColor& textColor);
     void SetTextSelectionColor(const wxColor& textSelectionColor);
@@ -74,8 +78,10 @@ public:
 
     std::pair<int, int> GetSelection() const;
     void SetSelection(int from, int to);
+    void SelectAll();
     bool IsSelectionEmpty();
 
+    bool CaptureKey(int keyCode, int mods);
     bool OnKeyDown(int keyCode, int mods, AudacityProject* project);
     bool OnChar(int charCode, AudacityProject* project);
 

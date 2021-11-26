@@ -52,6 +52,44 @@ most commonly asked questions about Audacity.
 #include "../images/AudacityLogoWithName.xpm"
 #endif
 
+#ifdef HAS_WHATS_NEW
+
+#include "MemoryX.h"
+#include <wx/fs_mem.h>
+
+namespace
+{
+#   include "../images/WhatsNewBtn.png.h"
+
+struct FSHelper final
+{
+   FSHelper()
+       : mMemoryFSHandler(std::make_unique<wxMemoryFSHandler>())
+   {
+      wxFileSystem::AddHandler(mMemoryFSHandler.get());
+
+      wxMemoryFSHandler::AddFile(
+         "whats_new_btn.png", bin2c_whats_new_btn_png,
+         sizeof(bin2c_whats_new_btn_png));
+   }
+
+   ~FSHelper()
+   {
+      wxMemoryFSHandler::RemoveFile("whats_new_btn.png");
+      wxFileSystem::RemoveHandler(mMemoryFSHandler.get());
+   }
+
+private:
+   std::unique_ptr<wxMemoryFSHandler> mMemoryFSHandler;
+};
+
+} // namespace
+
+constexpr int HTMLWindowHeight = 425;
+#else
+constexpr int HTMLWindowHeight = 280;
+#endif
+
 SplashDialog * SplashDialog::pSelf=NULL;
 
 enum
@@ -131,8 +169,7 @@ void SplashDialog::Populate( ShuttleGui & S )
       .AddWindow( icon );
 
    mpHtml = safenew LinkingHtmlWindow(S.GetParent(), -1,
-                                         wxDefaultPosition,
-                                         wxSize(506, 280),
+                                         wxDefaultPosition, wxSize(506, HTMLWindowHeight),
                                          wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER );
    mpHtml->SetPage(HelpText( wxT("welcome") ));
    S.Prop(1)
@@ -171,6 +208,10 @@ void SplashDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
 void SplashDialog::Show2( wxWindow * pParent )
 {
+#ifdef HAS_WHATS_NEW
+   FSHelper helper;
+#endif // HAS_WHATS_NEW
+
    if( pSelf == NULL )
    {
       // pParent owns it

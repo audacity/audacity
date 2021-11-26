@@ -25,6 +25,7 @@ class WaveClip;
 class TrackPanelResizeHandle;
 class WaveClipTitleEditHandle;
 class WaveTrackAffordanceHandle;
+class WaveClipTrimHandle;
 class TrackList;
 
 //Handles clip movement, selection, navigation and
@@ -40,7 +41,9 @@ class AUDACITY_DLL_API WaveTrackAffordanceControls :
     std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
     std::weak_ptr<WaveClipTitleEditHandle> mTitleEditHandle;
     std::weak_ptr<SelectHandle> mSelectHandle;
+    std::weak_ptr<WaveClipTrimHandle> mClipTrimHandle;
 
+    std::weak_ptr<WaveClip> mEditedClip;
     std::shared_ptr<TextEditHelper> mTextEditHelper;
 
     wxFont mClipNameFont;
@@ -70,6 +73,8 @@ public:
     (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
         AudacityProject* project) override;
 
+    unsigned LoseFocus(AudacityProject *project) override;
+
     void OnTextEditFinished(AudacityProject* project, const wxString& text) override;
     void OnTextEditCancelled(AudacityProject* project) override;
     void OnTextModified(AudacityProject* project, const wxString& text) override;
@@ -80,10 +85,19 @@ public:
             Edit the first clip in the track's list satisfying the test */
     );
 
+    unsigned OnAffordanceClick(const TrackPanelMouseEvent& event, AudacityProject* project);
+
+    bool OnTextCopy(AudacityProject& project);
+    bool OnTextCut(AudacityProject& project);
+    bool OnTextPaste(AudacityProject& project);
+    bool OnTextSelect(AudacityProject& project);
+
 private:
+    void ResetClipNameEdit();
+
     void OnTrackChanged(TrackListEvent& evt);
 
-    bool SelectNextClip(ViewInfo& viewInfo, AudacityProject* project, bool forward);
+    unsigned ExitTextEditing();
 
     std::shared_ptr<TextEditHelper> MakeTextEditHelper(const wxString& text);
 };

@@ -21,6 +21,7 @@ class wxArrayString;
 #include <wx/msgqueue.h>
 #include <wx/thread.h>
 #include <wx/timer.h>
+#include <wx/weakref.h>
 
 #include "lv2/atom/forge.h"
 #include "lv2/data-access/data-access.h"
@@ -253,7 +254,6 @@ class LV2Wrapper;
 using URIDMap = std::vector<MallocString<>>;
 
 class LV2Effect final : public wxEvtHandler,
-                        public EffectClientInterface,
                         public EffectUIClientInterface
 {
 public:
@@ -279,8 +279,6 @@ public:
    bool SupportsAutomation() override;
 
    // EffectClientInterface implementation
-
-   bool SetHost(EffectHostInterface *host) override;
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
@@ -309,15 +307,15 @@ public:
    size_t RealtimeProcess(int group, float **inbuf, float **outbuf, size_t numSamples) override;
    bool RealtimeProcessEnd() override;
 
-   bool ShowInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
+   int ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 
    // EffectUIClientInterface implementation
 
-   void SetHostUI(EffectUIHostInterface *host) override;
+   bool SetHost(EffectHostInterface *host) override;
    bool PopulateUI(ShuttleGui &S) override;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
@@ -508,9 +506,8 @@ private:
 
    wxTimer mTimer;
 
-   wxDialog *mDialog;
+   wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent;
-   EffectUIHostInterface *mUIHost;
 
    bool mUseGUI;
 

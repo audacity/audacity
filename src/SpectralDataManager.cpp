@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include "FFT.h"
+#include "ProjectHistory.h"
 #include "SpectralDataManager.h"
 #include "WaveTrack.h"
 
@@ -32,7 +33,8 @@ struct SpectralDataManager::Setting{
    bool mNeedOutput = true;
 };
 
-int SpectralDataManager::ProcessTracks(TrackList &tracks){
+bool SpectralDataManager::ProcessTracks(AudacityProject &project){
+   auto &tracks = TrackList::Get(project);
    int applyCount = 0;
    Setting setting;
    Worker worker(setting);
@@ -56,7 +58,14 @@ int SpectralDataManager::ProcessTracks(TrackList &tracks){
       }
    }
 
-   return applyCount;
+   if (applyCount) {
+      ProjectHistory::Get(project).PushState(
+            XO("Applied effect to selection"),
+            XO("Applied effect to selection"));
+      ProjectHistory::Get(project).ModifyState(true);
+   }
+
+   return applyCount > 0;
 }
 
 int SpectralDataManager::FindFrequencySnappingBin(WaveTrack *wt,

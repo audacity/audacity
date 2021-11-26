@@ -5,7 +5,7 @@ def_vars()
 
 set(SOURCES
     HexHelpers.h
-    
+
     UrlEncode.h
     UrlEncode.cpp
 
@@ -17,6 +17,12 @@ set(SOURCES
 
     DateTimeConversions.h
     DateTimeConversions.cpp
+
+    ToChars.h
+    ToChars.cpp
+
+    FromChars.h
+    FromChars.cpp
 )
 
 set( LIBRARIES

@@ -42,9 +42,9 @@
 
 #include <algorithm>
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
-#include "../ImageManipulation.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
+#include "ImageManipulation.h"
 #include "Prefs.h"
 #include "../widgets/Grabber.h"
 

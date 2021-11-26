@@ -60,7 +60,7 @@ SampleBlockPtr SampleBlockFactory::CreateSilent(
 
 SampleBlockPtr SampleBlockFactory::CreateFromXML(
    sampleFormat srcformat,
-   const wxChar **attrs)
+   const AttributesList &attrs)
 {
    auto result = DoCreateFromXML(srcformat, attrs);
    if (!result)

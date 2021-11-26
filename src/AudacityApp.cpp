@@ -384,6 +384,11 @@ void PopulatePreferences()
       gPrefs->Write(wxT("/GUI/Toolbars/Time/Show"),1);
    }
 
+   if (std::pair{ vMajor, vMinor } < std::pair{ 3, 1 } ) {
+      // Reset the control toolbar
+      gPrefs->Write(wxT("/GUI/Toolbars/Control/W"), -1);
+   }
+
    // write out the version numbers to the prefs file for future checking
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
@@ -402,6 +407,9 @@ void InitBreakpad()
     
     if(databasePath.DirExists())
     {   
+        const auto sentryRelease = wxString::Format(
+           "audacity@%d.%d.%d", AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION
+        );
         BreakpadConfigurer configurer;
         configurer.SetDatabasePathUTF8(databasePath.GetPath().ToUTF8().data())
             .SetSenderPathUTF8(wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath().ToUTF8().data())
@@ -409,7 +417,8 @@ void InitBreakpad()
             .SetReportURL(CRASH_REPORT_URL)
     #endif
             .SetParameters({
-                { "version", wxString(AUDACITY_VERSION_STRING).ToUTF8().data() }
+                { "version", wxString(AUDACITY_VERSION_STRING).ToUTF8().data() },
+                { "sentry[release]",  sentryRelease.ToUTF8().data() }
             })
             .Start();
     }
@@ -1322,7 +1331,14 @@ bool AudacityApp::OnInit()
    this->AssociateFileTypes();
 #endif
 
-   theTheme.EnsureInitialised();
+   theTheme.SetOnPreferredSystemAppearanceChanged([this](PreferredSystemAppearance appearance){
+       SetPreferredSystemAppearance(appearance);
+   });
+
+   {
+      wxBusyCursor busy;
+      theTheme.LoadPreferredTheme();
+   }
 
    // AColor depends on theTheme.
    AColor::Init();
@@ -2412,6 +2428,13 @@ void AudacityApp::OnMenuExit(wxCommandEvent & event)
    event.Skip(AllProjects{}.empty());
 
 }
+
+#ifndef __WXMAC__
+void AudacityApp::SetPreferredSystemAppearance(PreferredSystemAppearance)
+{
+   // Currently this is implemented only on macOS
+}
+#endif
 
 //BG: On Windows, associate the aup file type with Audacity
 /* We do this in the Windows installer now,

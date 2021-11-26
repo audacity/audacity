@@ -85,8 +85,8 @@ bool SetClipCommand::ApplyInner( const CommandContext &, Track * t )
          WaveClip * pClip = *it;
          bool bFound =
             !bHasContainsTime || (
-               ( pClip->GetStartTime() <= mContainsTime ) &&
-               ( pClip->GetEndTime() >= mContainsTime )
+               ( pClip->GetPlayStartTime() <= mContainsTime ) &&
+               ( pClip->GetPlayEndTime() >= mContainsTime )
             );
          if( bFound )
          {
@@ -96,7 +96,7 @@ bool SetClipCommand::ApplyInner( const CommandContext &, Track * t )
                pClip->SetColourIndex(mColour);
             // No validation of overlap yet.  We assume the user is sensible!
             if( bHasT0 )
-               pClip->SetOffset(mT0);
+               pClip->SetPlayStartTime(mT0);
             // \todo Use SetClip to move a clip between tracks too.
             if( bHasName )
                pClip->SetName(mName);

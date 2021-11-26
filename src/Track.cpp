@@ -35,7 +35,6 @@ and TimeTrack.
 #include <wx/textfile.h>
 #include <wx/log.h>
 
-#include "tracks/ui/CommonTrackPanelCell.h"
 #include "Project.h"
 #include "ProjectSettings.h"
 
@@ -114,9 +113,10 @@ Track::Holder Track::Duplicate() const
    // invoke "virtual constructor" to copy track object proper:
    auto result = Clone();
 
-   if (mpView)
+   AttachedTrackObjects::ForEach([&](auto &attachment){
       // Copy view state that might be important to undo/redo
-      mpView->CopyTo( *result );
+      attachment.CopyTo( *result );
+   });
 
    return result;
 }
@@ -139,26 +139,6 @@ void Track::SetOwner
    // focused track too.  Otherwise focus could remain on an invisible (or deleted) track.
    mList = list;
    mNode = node;
-}
-
-const std::shared_ptr<CommonTrackCell> &Track::GetTrackView()
-{
-   return mpView;
-}
-
-void Track::SetTrackView( const std::shared_ptr<CommonTrackCell> &pView )
-{
-   mpView = pView;
-}
-
-const std::shared_ptr<CommonTrackCell> &Track::GetTrackControls()
-{
-   return mpControls;
-}
-
-void Track::SetTrackControls( const std::shared_ptr<CommonTrackCell> &pControls )
-{
-   mpControls = pControls;
 }
 
 int Track::GetIndex() const
@@ -349,17 +329,15 @@ void PlayableTrack::WriteXMLAttributes(XMLWriter &xmlFile) const
 }
 
 // Return true iff the attribute is recognized.
-bool PlayableTrack::HandleXMLAttribute(const wxChar *attr, const wxChar *value)
+bool PlayableTrack::HandleXMLAttribute(const std::string_view &attr, const XMLAttributeValueView &value)
 {
-   const wxString strValue{ value };
    long nValue;
-   if (!wxStrcmp(attr, wxT("mute")) &&
-            XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+
+   if (attr == "mute" && value.TryGet(nValue)) {
       mMute = (nValue != 0);
       return true;
    }
-   else if (!wxStrcmp(attr, wxT("solo")) &&
-            XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+   else if (attr == "solo" && value.TryGet(nValue)) {
       mSolo = (nValue != 0);
       return true;
    }
@@ -1048,8 +1026,7 @@ TrackList::RegisterPendingChangedTrack( Updater updater, Track *src )
       pTrack = src->Clone(); // not duplicate
       // Share the satellites with the original, though they do not point back
       // to the pending track
-      pTrack->mpView = src->mpView;
-      pTrack->mpControls = src->mpControls;
+      ((AttachedTrackObjects&)*pTrack) = *src; // shallow copy
    }
 
    if (pTrack) {
@@ -1148,10 +1125,9 @@ bool TrackList::ApplyPendingTracks()
 
    for (auto &pendingTrack : updates) {
       if (pendingTrack) {
-         if (pendingTrack->mpView)
-            pendingTrack->mpView->Reparent( pendingTrack );
-         if (pendingTrack->mpControls)
-            pendingTrack->mpControls->Reparent( pendingTrack );
+         pendingTrack->AttachedTrackObjects::ForEach([&](auto &attachment){
+            attachment.Reparent( pendingTrack );
+         });
          auto src = FindById( pendingTrack->GetId() );
          if (src)
             this->Replace(src, pendingTrack), result = true;
@@ -1259,28 +1235,28 @@ void Track::WriteCommonXMLAttributes(
       xmlFile.WriteAttr(wxT("name"), GetName());
       xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
    }
-   if ( mpView )
-      mpView->WriteXMLAttributes( xmlFile );
-   if ( mpControls )
-      mpControls->WriteXMLAttributes( xmlFile );
+   AttachedTrackObjects::ForEach([&](auto &attachment){
+      attachment.WriteXMLAttributes( xmlFile );
+   });
 }
 
 // Return true iff the attribute is recognized.
-bool Track::HandleCommonXMLAttribute(const wxChar *attr, const wxChar *value)
+bool Track::HandleCommonXMLAttribute(
+   const std::string_view& attr, const XMLAttributeValueView& valueView)
 {
    long nValue = -1;
-   wxString strValue( value );
-   if ( mpView && mpView->HandleXMLAttribute( attr, value ) )
+
+   bool handled = false;
+   AttachedTrackObjects::ForEach([&](auto &attachment){
+      handled = handled || attachment.HandleXMLAttribute( attr, valueView );
+   });
+   if (handled)
       ;
-   else if ( mpControls && mpControls->HandleXMLAttribute( attr, value ) )
-      ;
-   else if (!wxStrcmp(attr, wxT("name")) &&
-      XMLValueChecker::IsGoodString(strValue)) {
-      SetName( strValue );
+   else if (attr == "name") {
+      SetName(valueView.ToWString());
       return true;
    }
-   else if (!wxStrcmp(attr, wxT("isSelected")) &&
-         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+   else if (attr == "isSelected" && valueView.TryGet(nValue)) {
       this->SetSelected(nValue != 0);
       return true;
    }

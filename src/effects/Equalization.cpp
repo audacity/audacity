@@ -87,7 +87,7 @@
 #include <wx/tooltip.h>
 #include <wx/utils.h>
 
-#include "../AColor.h"
+#include "AColor.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "PlatformCompatibility.h"
@@ -97,7 +97,7 @@
 #include "FFT.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../Theme.h"
+#include "Theme.h"
 #include "../TrackArtist.h"
 #include "../WaveClip.h"
 #include "ViewInfo.h"
@@ -105,7 +105,7 @@
 #include "../widgets/Ruler.h"
 #include "../widgets/AudacityTextEntryDialog.h"
 #include "XMLFileReader.h"
-#include "../AllThemeResources.h"
+#include "AllThemeResources.h"
 #include "float_cast.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -262,10 +262,14 @@ EffectEqualization::EffectEqualization(int Options)
    mInterp = DEF_InterpMeth;
    mCurveName = DEF_CurveName;
 
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin, DEF_dBMin);
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax, DEF_dBMax);
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
+   GetConfig(GetDefinition(), PluginSettings::Private,
+      GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin, DEF_dBMin);
+   GetConfig(GetDefinition(), PluginSettings::Private,
+      GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax, DEF_dBMax);
+   GetConfig(GetDefinition(), PluginSettings::Private,
+      GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
+   GetConfig(GetDefinition(), PluginSettings::Private,
+      GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
 
    mLogEnvelope = std::make_unique<Envelope>
       (false,
@@ -575,10 +579,14 @@ bool EffectEqualization::ValidateUI()
    }
    SaveCurves();
 
-   SetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin);
-   SetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax);
-   SetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
-   SetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
+   SetConfig(GetDefinition(), PluginSettings::Private,
+      GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin);
+   SetConfig(GetDefinition(), PluginSettings::Private,
+      GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax);
+   SetConfig(GetDefinition(), PluginSettings::Private,
+      GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
+   SetConfig(GetDefinition(), PluginSettings::Private,
+      GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
 
    return true;
 }
@@ -631,7 +639,8 @@ bool EffectEqualization::Startup()
          dBMin = -30;  //default
       }
       mdBMin = dBMin;
-      SetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin);
+      SetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin);
 
       double dBMax;
       gPrefs->Read(base + wxT("dBMax"), &dBMax, 30.);
@@ -639,13 +648,16 @@ bool EffectEqualization::Startup()
          dBMax = 30;  //default
       }
       mdBMax = dBMax;
-      SetPrivateConfig(GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax);
+      SetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax);
 
       gPrefs->Read(base + wxT("DrawMode"), &mDrawMode, true);
-      SetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
+      SetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
 
       gPrefs->Read(base + wxT("DrawGrid"), &mDrawGrid, true);
-      SetPrivateConfig(GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
+      SetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
 
       // Do not migrate again
       gPrefs->Write(base + wxT("Migrated"), true);
@@ -1406,8 +1418,8 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
          double clipStartT;
          double clipEndT;
 
-         clipStartT = clip->GetStartTime();
-         clipEndT = clip->GetEndTime();
+         clipStartT = clip->GetPlayStartTime();
+         clipEndT = clip->GetPlayEndTime();
          if( clipEndT <= startT )
             continue;   // clip is not within selection
          if( clipStartT >= startT + lenT )
@@ -2182,30 +2194,27 @@ void EffectEqualization::Flatten()
 //
 // Process XML tags and handle the ones we recognize
 //
-bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool EffectEqualization::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    // May want to add a version strings...
-   if( !wxStrcmp( tag, wxT("equalizationeffect") ) )
+   if (tag == "equalizationeffect")
    {
       return true;
    }
 
    // Located a NEW curve
-   if( !wxStrcmp(tag, wxT("curve") ) )
+   if (tag == "curve")
    {
       // Process the attributes
-      while( *attrs )
+      for (auto pair : attrs)
       {
-         // Cache attr/value and bump to next
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+         auto attr = pair.first;
+         auto value = pair.second;
 
          // Create a NEW curve and name it
-         if( !wxStrcmp( attr, wxT("name") ) )
+         if( attr == "name" )
          {
-            const wxString strValue = value;
-            if (!XMLValueChecker::IsGoodString(strValue))
-               return false;
+            const wxString strValue = value.ToWString();
             // check for a duplicate name and add (n) if there is one
             int n = 0;
             wxString strValueTemp = strValue;
@@ -2236,7 +2245,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    }
 
    // Located a NEW point
-   if( !wxStrcmp( tag, wxT("point") ) )
+   if(tag == "point")
    {
       // Set defaults in case attributes are missing
       double f = 0.0;
@@ -2244,26 +2253,22 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
       // Process the attributes
       double dblValue;
-      while( *attrs )
-      {   // Cache attr/value and bump to next
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         const wxString strValue = value;
+      for (auto pair : attrs)
+      {
+         auto attr = pair.first;
+         auto value = pair.second;
 
          // Get the frequency
-         if( !wxStrcmp( attr, wxT("f") ) )
+         if( attr == "f" )
          {
-            if (!XMLValueChecker::IsGoodString(strValue) ||
-               !Internat::CompatibleToDouble(strValue, &dblValue))
+            if (!value.TryGet(dblValue))
                return false;
             f = dblValue;
          }
          // Get the dB
-         else if( !wxStrcmp( attr, wxT("d") ) )
+         else if( attr == "d" )
          {
-            if (!XMLValueChecker::IsGoodString(strValue) ||
-               !Internat::CompatibleToDouble(strValue, &dblValue))
+            if (!value.TryGet(dblValue))
                return false;
             d = dblValue;
          }
@@ -2283,19 +2288,19 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 //
 // Return handler for recognized tags
 //
-XMLTagHandler *EffectEqualization::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *EffectEqualization::HandleXMLChild(const std::string_view& tag)
 {
-   if( !wxStrcmp( tag, wxT("equalizationeffect") ) )
+   if (tag == "equalizationeffect")
    {
       return this;
    }
 
-   if( !wxStrcmp( tag, wxT("curve") ) )
+   if (tag == "curve")
    {
       return this;
    }
 
-   if( !wxStrcmp( tag, wxT("point") ) )
+   if (tag == "point")
    {
       return this;
    }

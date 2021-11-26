@@ -30,7 +30,11 @@ the general functionality for creating XML in UTF8 encoding.
 #include <wx/ffile.h>
 #include <wx/intl.h>
 
-#include <string.h>
+#include <cstring>
+
+#include "ToChars.h"
+
+#include "InconsistencyException.h"
 
 //table for xml encoding compatibility with expat decoding
 //see wxWidgets-2.8.12/src/expat/lib/xmltok_impl.h
@@ -427,4 +431,184 @@ XMLStringWriter::~XMLStringWriter()
 void XMLStringWriter::Write(const wxString &data)
 {
    Append(data);
+}
+
+void XMLUtf8BufferWriter::StartTag(const std::string_view& name)
+{
+   if (mInTag)
+      Write(">");
+
+   Write("<");
+   Write(name);
+
+   mInTag = true;
+}
+
+void XMLUtf8BufferWriter::EndTag(const std::string_view& name)
+{
+   if (mInTag)
+   {
+      Write("/>");
+      mInTag = false;
+   }
+   else
+   {
+      Write("</");
+      Write(name);
+      Write(">");
+   }
+}
+
+void XMLUtf8BufferWriter::WriteAttr(const std::string_view& name, const Identifier& value) 
+{
+   const wxScopedCharBuffer utf8Value = value.GET().utf8_str();
+
+   WriteAttr(name, { utf8Value.data(), utf8Value.length() });
+}
+
+void XMLUtf8BufferWriter::WriteAttr(
+   const std::string_view& name, const std::string_view& value)
+{
+   assert(mInTag);
+
+   Write(" ");
+   Write(name);
+   Write("=\"");
+   WriteEscaped(value);
+   Write("\"");
+}
+
+void XMLUtf8BufferWriter::WriteAttr(const std::string_view& name, int value)
+{
+   WriteAttr(name, static_cast<long long>(value));
+}
+
+void XMLUtf8BufferWriter::WriteAttr(const std::string_view& name, bool value)
+{
+   WriteAttr(name, static_cast<long long>(value));
+}
+
+void XMLUtf8BufferWriter::WriteAttr(const std::string_view& name, long value)
+{
+   // long can be int or long long. Assume the longest!
+   WriteAttr(name, static_cast<long long>(value));
+}
+
+void XMLUtf8BufferWriter::WriteAttr(
+   const std::string_view& name, long long value)
+{
+   // -9223372036854775807 is the worst case
+   constexpr size_t bufferSize = 21;
+   char buffer[bufferSize];
+
+   const auto result = ToChars(buffer, buffer + bufferSize, value);
+
+   if (result.ec != std::errc())
+      THROW_INCONSISTENCY_EXCEPTION;
+
+   WriteAttr(name, std::string_view(buffer, result.ptr - buffer));
+}
+
+void XMLUtf8BufferWriter::WriteAttr(const std::string_view& name, size_t value)
+{
+   // Well, that maintains the original behavior
+   WriteAttr(name, static_cast<long long>(value));
+}
+
+void XMLUtf8BufferWriter::WriteAttr(
+   const std::string_view& name, float value, int digits /*= -1*/)
+{
+   constexpr size_t bufferSize = std::numeric_limits<float>::max_digits10 +
+                                 5 + // No constexpr log2 yet! example - e-308
+                                 3; // Dot, sign an 0 separator
+
+   char buffer[bufferSize];
+
+   const auto result = ToChars(buffer, buffer + bufferSize, value, digits);
+
+   if (result.ec != std::errc())
+      THROW_INCONSISTENCY_EXCEPTION;
+
+   WriteAttr(name, std::string_view(buffer, result.ptr - buffer));
+}
+
+void XMLUtf8BufferWriter::WriteAttr(
+   const std::string_view& name, double value, int digits /*= -1*/)
+{
+   constexpr size_t bufferSize = std::numeric_limits<double>::max_digits10 +
+                                 5 + // No constexpr log2 yet!
+                                 3;  // Dot, sign an 0 separator
+
+   char buffer[bufferSize];
+
+   const auto result = ToChars(buffer, buffer + bufferSize, value, digits);
+
+   if (result.ec != std::errc())
+      THROW_INCONSISTENCY_EXCEPTION;
+
+   WriteAttr(name, std::string_view(buffer, result.ptr - buffer));
+}
+
+void XMLUtf8BufferWriter::WriteData(const std::string_view& value)
+{
+   if (mInTag)
+   {
+      Write(">");
+      mInTag = false;
+   }
+
+   WriteEscaped(value);
+}
+
+void XMLUtf8BufferWriter::WriteSubTree(const std::string_view& value)
+{
+   if (mInTag)
+   {
+      Write(">");
+      mInTag = false;
+   }
+
+   Write(value);
+}
+
+void XMLUtf8BufferWriter::Write(const std::string_view& value)
+{
+   mStream.AppendData(value.data(), value.length());
+}
+
+MemoryStream XMLUtf8BufferWriter::ConsumeResult()
+{
+   return std::move(mStream);
+}
+
+void XMLUtf8BufferWriter::WriteEscaped(const std::string_view& value)
+{
+   for (auto c : value)
+   {
+      switch (c)
+      {
+      case wxT('\''):
+         Write("&apos;");
+         break;
+
+      case wxT('"'):
+         Write("&quot;");
+         break;
+
+      case wxT('&'):
+         Write("&amp;");
+         break;
+
+      case wxT('<'):
+         Write("&lt;");
+         break;
+
+      case wxT('>'):
+         Write("&gt;");
+         break;
+      default:
+         if (static_cast<uint8_t>(c) > 0x1F || charXMLCompatiblity[c] != 0)
+            mStream.AppendByte(c);
+      }
+   }
 }

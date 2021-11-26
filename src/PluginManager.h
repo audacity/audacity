@@ -191,41 +191,24 @@ public:
                                     FilePaths & files,
                                     bool directories = false) override;
 
-   bool HasSharedConfigGroup(const PluginID & ID, const RegistryPath & group) /* not override */;
-   bool GetSharedConfigSubgroups(const PluginID & ID, const RegistryPath & group, RegistryPaths &subgroups) override;
+   bool HasConfigGroup(ConfigurationType type, const PluginID & ID,
+      const RegistryPath & group) /* not override */;
+   bool GetConfigSubgroups(ConfigurationType type, const PluginID & ID,
+      const RegistryPath & group,
+      RegistryPaths & subgroups) override;
 
-   bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval = _T("")) override;
-   bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, int & value, int defval = 0) override;
-   bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, bool & value, bool defval = false) override;
-   bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, float & value, float defval = 0.0) override;
-   bool GetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, double & value, double defval = 0.0) override;
+   bool GetConfigValue(ConfigurationType type, const PluginID & ID,
+      const RegistryPath & group, const RegistryPath & key,
+      ConfigReference var, ConfigConstReference defval) override;
 
-   bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const wxString & value) override;
-   bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const int & value) override;
-   bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const bool & value) override;
-   bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const float & value) override;
-   bool SetSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const double & value) override;
+   bool SetConfigValue(ConfigurationType type, const PluginID & ID,
+      const RegistryPath & group, const RegistryPath & key,
+      ConfigConstReference value) override;
 
-   bool RemoveSharedConfigSubgroup(const PluginID & ID, const RegistryPath & group) override;
-   bool RemoveSharedConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key) override;
-
-   bool HasPrivateConfigGroup(const PluginID & ID, const RegistryPath & group) /* not override */;
-   bool GetPrivateConfigSubgroups(const PluginID & ID, const RegistryPath & group, RegistryPaths &subgroups) override;
-
-   bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, wxString & value, const wxString & defval = _T("")) override;
-   bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, int & value, int defval = 0) override;
-   bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, bool & value, bool defval = false) override;
-   bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, float & value, float defval = 0.0) override;
-   bool GetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, double & value, double defval = 0.0) override;
-
-   bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const wxString & value) override;
-   bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const int & value) override;
-   bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const bool & value) override;
-   bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const float & value) override;
-   bool SetPrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key, const double & value) override;
-
-   bool RemovePrivateConfigSubgroup(const PluginID & ID, const RegistryPath & group) override;
-   bool RemovePrivateConfig(const PluginID & ID, const RegistryPath & group, const RegistryPath & key) override;
+   bool RemoveConfigSubgroup(ConfigurationType type,
+      const PluginID & ID, const RegistryPath & group) override;
+   bool RemoveConfig(ConfigurationType type, const PluginID & ID,
+      const RegistryPath & group, const RegistryPath & key) override;
 
    // PluginManager implementation
 
@@ -315,24 +298,16 @@ private:
    bool HasGroup(const RegistryPath & group);
    bool GetSubgroups(const RegistryPath & group, RegistryPaths & subgroups);
 
-   bool GetConfig(const RegistryPath & key, wxString & value, const wxString & defval = L"");
-   bool GetConfig(const RegistryPath & key, int & value, int defval = 0);
-   bool GetConfig(const RegistryPath & key, bool & value, bool defval = false);
-   bool GetConfig(const RegistryPath & key, float & value, float defval = 0.0);
-   bool GetConfig(const RegistryPath & key, double & value, double defval = 0.0);
-
-   bool SetConfig(const RegistryPath & key, const wxString & value);
-   bool SetConfig(const RegistryPath & key, const int & value);
-   bool SetConfig(const RegistryPath & key, const bool & value);
-   bool SetConfig(const RegistryPath & key, const float & value);
-   bool SetConfig(const RegistryPath & key, const double & value);
+   bool GetConfigValue(const RegistryPath & key, ConfigReference var,
+         ConfigConstReference defval);
+   bool SetConfigValue(const RegistryPath & key, ConfigConstReference value);
 
    /* Return values are keys for lookup in a config file */
-   RegistryPath SettingsPath(const PluginID & ID, bool shared);
-   RegistryPath SharedGroup(const PluginID & ID, const RegistryPath & group);
-   RegistryPath SharedKey(const PluginID & ID, const RegistryPath & group, const RegistryPath & key);
-   RegistryPath PrivateGroup(const PluginID & ID, const RegistryPath & group);
-   RegistryPath PrivateKey(const PluginID & ID, const RegistryPath & group, const RegistryPath & key);
+   RegistryPath SettingsPath(ConfigurationType type, const PluginID & ID);
+   RegistryPath Group(ConfigurationType type, const PluginID & ID,
+      const RegistryPath & group);
+   RegistryPath Key(ConfigurationType type, const PluginID & ID,
+      const RegistryPath & group, const RegistryPath & key);
 
    // The PluginID must be kept unique.  Since the wxFileConfig class does not preserve
    // case, we use base64 encoding.

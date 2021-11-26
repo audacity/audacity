@@ -21,7 +21,7 @@ class SpectralDataManager{
 public:
    SpectralDataManager();
    ~SpectralDataManager();
-   static int ProcessTracks(TrackList& tracks);
+   static bool ProcessTracks(AudacityProject &project);
    static int FindFrequencySnappingBin(WaveTrack *wt,
                                   long long startSC,
                                   int hopSize,

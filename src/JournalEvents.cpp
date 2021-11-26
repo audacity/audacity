@@ -2,13 +2,14 @@
 
   Audacity: A Digital Audio Editor
 
-  @file JournalWindowPaths.cpp
+  @file JournalEvents.cpp
 
   Paul Licameli
 
 *********************************************************************/
 
 #include "JournalEvents.h"
+#include "Journal.h"
 #include "JournalOutput.h"
 #include "JournalRegistry.h"
 #include "JournalWindowPaths.h"
@@ -26,6 +27,7 @@
 #include <wx/window.h>
 
 #include "AudacityException.h"
+#include "BasicUI.h"
 #include "Identifier.h"
 #include "wxArrayStringEx.h"
 
@@ -66,6 +68,9 @@ struct RegisteredEventType : RegisteredCommand {
    {}
 };
 
+//! Whether the event filter is still watching events
+static bool sWatching{ true };
+
 /*!
 An entry in a catalog describing the types of events that are intercepted
 and recorded, and simulated when playing back.
@@ -74,7 +79,7 @@ struct Type : RegisteredEventType {
 
    // Function that returns a list of parameters that, with the event type,
    // are sufficient to record an event to the journal and recreate it on
-   // playback; or a nullopt for failure
+   // playback; or a nullopt to skip the event
    using Serializer =
       std::function< std::optional<wxArrayStringEx>( const wxEvent& ) >;
 
@@ -179,6 +184,8 @@ std::optional<wxArrayStringEx> WindowEventSerialization( const wxEvent &event )
    std::optional< wxArrayStringEx > result;
    if ( auto windowName = WindowEventName( event ); !windowName.empty() )
       result.emplace( wxArrayStringEx{ windowName } );
+   else
+      FailedEventSerialization();
    return result;
 }
 
@@ -198,7 +205,7 @@ static Type NullaryCommandType( EventType type, const wxString &code ){
    };
 
    return Type{ type, code, WindowEventSerialization, deserialize };
-};
+}
 
 template<typename Event = wxCommandEvent, typename EventType >
 static Type BooleanCommandType( EventType type, const wxString &code ){
@@ -237,7 +244,7 @@ static Type BooleanCommandType( EventType type, const wxString &code ){
    };
 
    return Type{ type, code, serialize, deserialize };
-};
+}
 
 template<typename Event = wxCommandEvent, typename EventType >
 static Type NumericalCommandType( EventType type, const wxString &code ){
@@ -277,7 +284,7 @@ static Type NumericalCommandType( EventType type, const wxString &code ){
    };
 
    return Type{ type, code, serialize, deserialize };
-};
+}
 
 template<typename Event = wxCommandEvent, typename EventType >
 static Type TextualCommandType( EventType type, const wxString &code ){
@@ -320,7 +327,7 @@ static Type TextualCommandType( EventType type, const wxString &code ){
    };
 
    return Type{ type, code, serialize, deserialize };
-};
+}
 
 const Types &TypeCatalog()
 {
@@ -384,7 +391,7 @@ struct Watcher : wxEventFilter
 
    int FilterEvent( wxEvent &event ) override
    {
-      if (!mWatching)
+      if (!IsWatching())
          // Previously encountered error stopped recording of any more events
          return Event_Skip;
 
@@ -394,13 +401,8 @@ struct Watcher : wxEventFilter
          // Try to write a representation to the journal
          const auto &info = iter->second;
          auto pStrings = info.serializer(event);
-         if (!pStrings) {
-            // After one event of one of the interesting types fails to record,
-            // don't try again
-            mWatching = false;
-            throw SimpleMessageBoxException( ExceptionType::BadUserAction,
-               XO("Journal recording failed"));
-         }
+         if (!pStrings)
+            return Event_Skip;
          else {
             pStrings->insert(pStrings->begin(), info.code.GET());
             Journal::Output(*pStrings);
@@ -412,11 +414,26 @@ struct Watcher : wxEventFilter
 
       return Event_Skip;
    }
-
-   bool mWatching{ true };
 };
 
 }
+
+bool IsWatching()
+{
+   return sWatching;
+}
+
+void FailedEventSerialization()
+{
+   // After one event of one of the interesting types fails to record,
+   // don't try again
+   sWatching = false;
+   BasicUI::CallAfter( []{
+      BasicUI::ShowMessageBox(XO("Journal recording failed"));
+   } );
+}
+
+namespace {
 
 void Initialize()
 {
@@ -426,6 +443,23 @@ void Initialize()
 void Watch()
 {
    static Watcher instance;
+}
+
+// Add a callback for startup of journalling
+RegisteredInitializer initializer{ [](){
+   // Register the event handler for recording
+   // and dictionary items for replaying
+   if ( !GetError() && IsRecording() )
+      // one time installation
+      Watch();
+
+   if ( !GetError() && IsReplaying() )
+      // Be sure event types are registered for dispatch
+      Initialize();
+
+   return true;
+} };
+
 }
 
 }

@@ -82,12 +82,6 @@ protected:
 
    void InitUserData(void *pUserData) override;
 
-private:
-   void DestroyMenu() override
-   {
-      mpData = nullptr;
-   }
-
 protected:
    InitMenuData *mpData {};
 

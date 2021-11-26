@@ -174,11 +174,29 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
       (simrep (x (- timesig 1))
         (at-abs (* beatlen (+ x 1 (swing-adjust x swing)))
             (cue (click click-type 0))))))) ;unaccented beat
-        
+
+(defun samplecount (total)
+  ;;; Return number of samples required to reach target
+  (defun lastsample (target)
+    (let ((required (- target total)))
+      (setf total target)
+      required))
+  (function lastsample))
+
+
+(defun get-measure (barnum)
+  (let ((end (* (1+ barnum) (* timesig beatlen)))
+        required-samples)
+    ;; Actual end time is integer samples
+    (setf end (round (* end *sound-srate*)))
+    (setf required-samples (funcall addsamples end))
+    (setf *measure* (set-logical-stop (cue *measure*)
+                                      (/ required-samples *sound-srate*))))
+  *measure*)
+
 
 (defun make-click-track (bars mdur)
-  (setf *measure* (set-logical-stop (cue *measure*) (* timesig beatlen)))
-  (seqrep (i bars) (cue *measure*)))
+  (seqrep (i bars) (cue (get-measure i))))
 
 
 ;;;;;;;;;;;;;;;;;
@@ -206,6 +224,9 @@ $control low (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
 
 ;; Calculate LEN for progress bar.
 (setq len (/ (* 60.0 *sound-srate* timesig bars) tempo))
+
+;; Initialize sample count
+(setf addsamples (samplecount 0))
 
 (if (< bars 1)
     (_ "Set either 'Number of bars' or

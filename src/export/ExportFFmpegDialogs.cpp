@@ -1142,34 +1142,33 @@ void FFmpegPresets::LoadPreset(ExportFFmpegOptions *parent, wxString &name)
    }
 }
 
-bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool FFmpegPresets::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    if (mAbortImport)
    {
       return false;
    }
 
-   if (!wxStrcmp(tag,wxT("ffmpeg_presets")))
+   if (tag == "ffmpeg_presets")
    {
       return true;
    }
 
-   if (!wxStrcmp(tag,wxT("preset")))
+   if (tag == "preset")
    {
-      while (*attrs)
+      for (auto pair : attrs)
       {
-         const wxChar *attr = *attrs++;
-         wxString value = *attrs++;
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
-            break;
-
-         if (!wxStrcmp(attr,wxT("name")))
+         if (attr == "name")
          {
-            mPreset = FindPreset(value);
+            wxString strValue = value.ToWString();
+            mPreset = FindPreset(strValue);
+
             if (mPreset)
             {
-               auto query = XO("Replace preset '%s'?").Format( value );
+               auto query = XO("Replace preset '%s'?").Format( strValue );
                int action = AudacityMessageBox(
                   query,
                   XO("Confirm Overwrite"),
@@ -1188,35 +1187,33 @@ bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             }
             else
             {
-               mPreset = &mPresets[value];
+               mPreset = &mPresets[strValue];
             }
-            mPreset->mPresetName = value;
+
+            mPreset->mPresetName = strValue;
          }
       }
       return true;
    }
 
-   if (!wxStrcmp(tag,wxT("setctrlstate")) && mPreset)
+   if (tag == "setctrlstate" && mPreset)
    {
       long id = -1;
-      while (*attrs)
+      for (auto pair : attrs)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
-            break;
-
-         if (!wxStrcmp(attr,wxT("id")))
+         if (attr == "id")
          {
             for (long i = FEFirstID; i < FELastID; i++)
-               if (!wxStrcmp(FFmpegExportCtrlIDNames[i - FEFirstID],value))
+               if (!wxStrcmp(FFmpegExportCtrlIDNames[i - FEFirstID], value.ToWString()))
                   id = i;
          }
-         else if (!wxStrcmp(attr,wxT("state")))
+         else if (attr == "state")
          {
             if (id > FEFirstID && id < FELastID)
-               mPreset->mControlState[id - FEFirstID] = wxString(value);
+               mPreset->mControlState[id - FEFirstID] = value.ToWString();
          }
       }
       return true;
@@ -1225,18 +1222,18 @@ bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-XMLTagHandler *FFmpegPresets::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *FFmpegPresets::HandleXMLChild(const std::string_view& tag)
 {
    if (mAbortImport)
    {
       return NULL;
    }
 
-   if (!wxStrcmp(tag, wxT("preset")))
+   if (tag == "preset")
    {
       return this;
    }
-   else if (!wxStrcmp(tag, wxT("setctrlstate")))
+   else if (tag == "setctrlstate")
    {
       return this;
    }

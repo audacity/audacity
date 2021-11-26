@@ -44,9 +44,10 @@ bool TextEditHelper::IsGoodEditKeyCode(int keyCode)
 TextEditHelper::TextEditHelper(const std::weak_ptr<TextEditDelegate>& delegate, const wxString& text, const wxFont& font)
     : mFont(font), 
     mDelegate(delegate), 
-    mText(text)
+    mText(text),
+    mInitialCursorPos(0)
 {
-    mCurrentCursorPos = mInitialCursorPos = text.Length();
+    mCurrentCursorPos = text.Length();
 }
 
 void TextEditHelper::SetTextColor(const wxColor& textColor)
@@ -82,9 +83,20 @@ void TextEditHelper::SetSelection(int from, int to)
     mCurrentCursorPos = to;
 }
 
+void TextEditHelper::SelectAll()
+{
+    mInitialCursorPos = 0;
+    mCurrentCursorPos = mText.Length();
+}
+
 bool TextEditHelper::IsSelectionEmpty()
 {
     return mCurrentCursorPos == mInitialCursorPos;
+}
+
+bool TextEditHelper::CaptureKey(int, int mods)
+{
+   return mods == wxMOD_NONE || mods == wxMOD_SHIFT;
 }
 
 bool TextEditHelper::OnKeyDown(int keyCode, int mods, AudacityProject* project)
@@ -92,6 +104,9 @@ bool TextEditHelper::OnKeyDown(int keyCode, int mods, AudacityProject* project)
     auto delegate = mDelegate.lock();
     if (!delegate)
         return false;
+
+    if (!CaptureKey(keyCode, mods))
+       return false;
 
     wxUniChar wchar;
     bool more = true;
@@ -179,34 +194,43 @@ bool TextEditHelper::OnKeyDown(int keyCode, int mods, AudacityProject* project)
     case WXK_LEFT:
     case WXK_NUMPAD_LEFT:
         // Moving cursor left
-        while ((mCurrentCursorPos > 0) && more) {
-            wchar = mText.at(mCurrentCursorPos - 1);
-            more = !(((int)wchar > 0xDFFF) || ((int)wchar < 0xDC00));
+       if (mods != wxMOD_SHIFT && mCurrentCursorPos != mInitialCursorPos)
+          //put cursor to the left edge of selection
+          mInitialCursorPos = mCurrentCursorPos =
+          std::min(mInitialCursorPos, mCurrentCursorPos);
+       else
+       {
+          while ((mCurrentCursorPos > 0) && more) {
+             wchar = mText.at(mCurrentCursorPos - 1);
+             more = !(((int)wchar > 0xDFFF) || ((int)wchar < 0xDC00));
 
-            mCurrentCursorPos--;
-            if (mods == wxMOD_SHIFT)
-                ;
-            else
-                mInitialCursorPos = mCurrentCursorPos =
-                std::min(mInitialCursorPos, mCurrentCursorPos);
-        }
-        return true;
+             --mCurrentCursorPos;
+          }
+          if (mods != wxMOD_SHIFT)
+             mInitialCursorPos = mCurrentCursorPos;
+       }
+       return true;
 
     case WXK_RIGHT:
     case WXK_NUMPAD_RIGHT:
-        // Moving cursor right
-        while ((mCurrentCursorPos < (int)mText.length()) && more) {
-            wchar = mText.at(mCurrentCursorPos);
-            more = !(((int)wchar > 0xDBFF) || ((int)wchar < 0xD800));
+       // Moving cursor right
+       if (mods != wxMOD_SHIFT && mCurrentCursorPos != mInitialCursorPos)
+          //put cursor to the right edge of selection
+          mInitialCursorPos = mCurrentCursorPos =
+          std::max(mInitialCursorPos, mCurrentCursorPos);
+       else
+       {
+          while ((mCurrentCursorPos < (int)mText.length()) && more) {
+             wchar = mText.at(mCurrentCursorPos);
+             more = !(((int)wchar > 0xDBFF) || ((int)wchar < 0xD800));
 
-            mCurrentCursorPos++;
-            if (mods == wxMOD_SHIFT)
-                ;
-            else
-                mInitialCursorPos = mCurrentCursorPos =
-                std::max(mInitialCursorPos, mCurrentCursorPos);
-        }
-        return true;
+             ++mCurrentCursorPos;
+          }
+          if (mods != wxMOD_SHIFT)
+             mInitialCursorPos = mCurrentCursorPos;
+       }
+
+       return true;
 
     case WXK_ESCAPE:
         delegate->OnTextEditCancelled(project);

@@ -12,6 +12,9 @@ Paul Licameli split from AudacityProject.cpp
 
 #include <atomic>
 #include <sqlite3.h>
+#include <optional>
+#include <cstring>
+
 #include <wx/app.h>
 #include <wx/crt.h>
 #include <wx/frame.h>
@@ -33,6 +36,12 @@ Paul Licameli split from AudacityProject.cpp
 #include "wxFileNameWrapper.h"
 #include "XMLFileReader.h"
 #include "SentryHelper.h"
+#include "MemoryX.h"
+
+#include "ProjectFormatExtensionsRegistry.h"
+
+#include "BufferedStreamReader.h"
+#include "FromChars.h"
 
 // Don't change this unless the file format changes
 // in an irrevocable way
@@ -72,7 +81,8 @@ static const int ProjectFileID = PACK('A', 'U', 'D', 'Y');
 // Note that this is NOT the "schema_version" that SQLite maintains. The value
 // specified here is stored in the "user_version" field of the SQLite database
 // header.
-static const int ProjectFileVersion = PACK(3, 0, 0, 0);
+// DV: ProjectFileVersion is now evaluated at runtime
+// static const int ProjectFileVersion = PACK(3, 0, 0, 0);
 
 // Navigation:
 //
@@ -88,7 +98,7 @@ static const char *ProjectFileSchema =
    // See the CMakeList.txt for the SQLite lib for more
    // settings.
    "PRAGMA <schema>.application_id = %d;"
-   "PRAGMA <schema>.user_version = %d;"
+   "PRAGMA <schema>.user_version = %u;"
    ""
    // project is a binary representation of an XML file.
    // it's in binary for speed.
@@ -206,6 +216,210 @@ public:
 
    int mRc;
 };
+
+class SQLiteBlobStream final
+{
+public:
+   static std::optional<SQLiteBlobStream> Open(
+      sqlite3* db, const char* schema, const char* table, const char* column,
+      int64_t rowID, bool readOnly) noexcept
+   {
+      if (db == nullptr)
+         return {};
+
+      sqlite3_blob* blob = nullptr;
+
+      const int rc = sqlite3_blob_open(
+         db, schema, table, column, rowID, readOnly ? 0 : 1, &blob);
+
+      if (rc != SQLITE_OK)
+         return {};
+
+      return std::make_optional<SQLiteBlobStream>(blob, readOnly);
+   }
+
+   SQLiteBlobStream(sqlite3_blob* blob, bool readOnly) noexcept
+       : mBlob(blob)
+       , mIsReadOnly(readOnly)
+   {
+      mBlobSize = sqlite3_blob_bytes(blob);
+   }
+
+   SQLiteBlobStream(SQLiteBlobStream&& rhs) noexcept
+   {
+      *this = std::move(rhs);
+   }
+
+   SQLiteBlobStream& operator = (SQLiteBlobStream&& rhs) noexcept
+   {
+      std::swap(mBlob, rhs.mBlob);
+      std::swap(mBlobSize, rhs.mBlobSize);
+      std::swap(mOffset, rhs.mOffset);
+      std::swap(mIsReadOnly, rhs.mIsReadOnly);
+
+      return *this;
+   }
+
+   ~SQLiteBlobStream() noexcept
+   {
+      // Destructor should not throw and there is no
+      // way to handle the error otherwise
+      (void) Close();
+   }
+
+   bool IsOpen() const noexcept
+   {
+      return mBlob != nullptr;
+   }
+
+   int Close() noexcept
+   {
+      if (mBlob == nullptr)
+         return SQLITE_OK;
+
+      const int rc = sqlite3_blob_close(mBlob);
+
+      mBlob = nullptr;
+
+      return rc;
+   }
+
+   int Write(const void* ptr, int size) noexcept
+   {
+      // Stream APIs usually return the number of bytes written.
+      // sqlite3_blob_write is all-or-nothing function,
+      // so Write will return the result of the call
+      if (!IsOpen() || mIsReadOnly || ptr == nullptr)
+         return SQLITE_MISUSE;
+
+      const int rc = sqlite3_blob_write(mBlob, ptr, size, mOffset);
+
+      if (rc == SQLITE_OK)
+         mOffset += size;
+
+      return rc;
+   }
+
+   int Read(void* ptr, int& size) noexcept
+   {
+      if (!IsOpen() || ptr == nullptr)
+         return SQLITE_MISUSE;
+
+      const int availableBytes = mBlobSize - mOffset;
+
+      if (availableBytes == 0)
+      {
+         size = 0;
+         return SQLITE_OK;
+      }
+      else if (availableBytes < size)
+      {
+         size = availableBytes;
+      }
+
+      const int rc = sqlite3_blob_read(mBlob, ptr, size, mOffset);
+
+      if (rc == SQLITE_OK)
+         mOffset += size;
+
+      return rc;
+   }
+
+   bool IsEof() const noexcept
+   {
+      return mOffset == mBlobSize;
+   }
+
+private:
+   sqlite3_blob* mBlob { nullptr };
+   size_t mBlobSize { 0 };
+
+   int mOffset { 0 };
+
+   bool mIsReadOnly { false };
+};
+
+class BufferedProjectBlobStream : public BufferedStreamReader
+{
+public:
+   static constexpr std::array<const char*, 2> Columns = { "dict", "doc" };
+
+   BufferedProjectBlobStream(
+      sqlite3* db, const char* schema, const char* table,
+      int64_t rowID)
+       // Despite we use 64k pages in SQLite - it is impossible to guarantee
+       // that read is satisfied from a single page.
+       // Reading 64k proved to be slower, (64k - 8) gives no measurable difference
+       // to reading 32k.
+       // Reading 4k is slower than reading 32k.
+       : BufferedStreamReader(32 * 1024) 
+       , mDB(db)
+       , mSchema(schema)
+       , mTable(table)
+       , mRowID(rowID)
+   {
+   }
+
+private:
+   bool OpenBlob(size_t index)
+   {
+      if (index >= Columns.size())
+      {
+         mBlobStream.reset();
+         return false;
+      }
+
+      mBlobStream = SQLiteBlobStream::Open(
+         mDB, mSchema, mTable, Columns[index], mRowID, true);
+
+      return mBlobStream.has_value();
+   }
+
+   std::optional<SQLiteBlobStream> mBlobStream;
+   size_t mNextBlobIndex { 0 };
+
+   sqlite3* mDB;
+   const char* mSchema;
+   const char* mTable;
+   const int64_t mRowID;
+
+protected:
+   bool HasMoreData() const override
+   {
+      return mBlobStream.has_value() || mNextBlobIndex < Columns.size();
+   }
+
+   size_t ReadData(void* buffer, size_t maxBytes) override
+   {
+      if (!mBlobStream || mBlobStream->IsEof())
+      {
+         if (!OpenBlob(mNextBlobIndex++))
+            return {};
+      }
+
+      // Do not allow reading more then 2GB at a time (O_o)
+      maxBytes = std::min<size_t>(maxBytes, std::numeric_limits<int>::max());
+      auto bytesRead = static_cast<int>(maxBytes);
+
+      if (SQLITE_OK != mBlobStream->Read(buffer, bytesRead))
+      {
+         // Reading has failed, close the stream and do not allow opening
+         // the next one
+         mBlobStream = {};
+         mNextBlobIndex = Columns.size();
+
+         return 0;
+      }
+      else if (bytesRead == 0)
+      {
+         mBlobStream = {};
+      }
+
+      return static_cast<size_t>(bytesRead);
+   }
+};
+
+constexpr std::array<const char*, 2> BufferedProjectBlobStream::Columns;
 
 bool ProjectFileIO::InitializeSQL()
 {
@@ -517,7 +731,7 @@ static int ExecCallback(void *data, int cols, char **vals, char **names)
    );
 }
 
-int ProjectFileIO::Exec(const char *query, const ExecCB &callback)
+int ProjectFileIO::Exec(const char *query, const ExecCB &callback, bool silent)
 {
    char *errmsg = nullptr;
 
@@ -525,7 +739,7 @@ int ProjectFileIO::Exec(const char *query, const ExecCB &callback)
    int rc = sqlite3_exec(DB(), query, ExecCallback,
                          const_cast<void*>(ptr), &errmsg);
 
-   if (rc != SQLITE_ABORT && errmsg)
+   if (rc != SQLITE_ABORT && errmsg && !silent)
    {
       ADD_EXCEPTION_CONTEXT("sqlite3.query", query);
       ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
@@ -544,9 +758,9 @@ int ProjectFileIO::Exec(const char *query, const ExecCB &callback)
    return rc;
 }
 
-bool ProjectFileIO::Query(const char *sql, const ExecCB &callback)
+bool ProjectFileIO::Query(const char *sql, const ExecCB &callback, bool silent)
 {
-   int rc = Exec(sql, callback);
+   int rc = Exec(sql, callback, silent);
    // SQLITE_ABORT is a non-error return only meaning the callback
    // stopped the iteration of rows early
    if ( !(rc == SQLITE_OK || rc == SQLITE_ABORT) )
@@ -557,7 +771,7 @@ bool ProjectFileIO::Query(const char *sql, const ExecCB &callback)
    return true;
 }
 
-bool ProjectFileIO::GetValue(const char *sql, wxString &result)
+bool ProjectFileIO::GetValue(const char *sql, wxString &result, bool silent)
 {
    // Retrieve the first column in the first row, if any
    result.clear();
@@ -568,65 +782,29 @@ bool ProjectFileIO::GetValue(const char *sql, wxString &result)
       return 1;
    };
 
-   return Query(sql, cb);
+   return Query(sql, cb, silent);
 }
 
-bool ProjectFileIO::GetBlob(const char *sql, wxMemoryBuffer &buffer)
+bool ProjectFileIO::GetValue(const char *sql, int64_t &value, bool silent)
 {
-   auto db = DB();
-   int rc;
-
-   buffer.Clear();
-
-   sqlite3_stmt *stmt = nullptr;
-   auto cleanup = finally([&]
+   bool success = false;
+   auto cb = [&value, &success](int cols, char** vals, char**)
    {
-      if (stmt)
+      if (cols > 0)
       {
-         sqlite3_finalize(stmt);
+         const std::string_view valueString = vals[0];
+
+         success = std::errc() ==
+            FromChars(
+               valueString.data(), valueString.data() + valueString.length(),
+               value)
+               .ec;
       }
-   });
+      // Stop after one row
+      return 1;
+   };
 
-   rc = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
-   if (rc != SQLITE_OK)
-   {
-      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetBlob::prepare");
-
-      SetDBError(
-         XO("Unable to prepare project file command:\n\n%s").Format(sql)
-      );
-      return false;
-   }
-
-   rc = sqlite3_step(stmt);
-
-   // A row wasn't found...not an error
-   if (rc == SQLITE_DONE)
-   {
-      return true;
-   }
-
-   if (rc != SQLITE_ROW)
-   {
-      ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetBlob::step");
-
-      SetDBError(
-         XO("Failed to retrieve data from the project file.\nThe following command failed:\n\n%s").Format(sql)
-      );
-      // AUD TODO handle error
-      return false;
-   }
-
-   const void *blob = sqlite3_column_blob(stmt, 0);
-   int size = sqlite3_column_bytes(stmt, 0);
-
-   buffer.AppendData(blob, size);
-
-   return true;
+   return Query(sql, cb, silent) && success;
 }
 
 bool ProjectFileIO::CheckVersion()
@@ -678,11 +856,12 @@ bool ProjectFileIO::CheckVersion()
       return false;
    }
 
-   long version = wxStrtol<char **>(result, nullptr, 10);
+   const ProjectFormatVersion version =
+      ProjectFormatVersion::FromPacked(wxStrtoul<char**>(result, nullptr, 10));
 
    // Project file version is higher than ours. We will refuse to
    // process it since we can't trust anything about it.
-   if (version > ProjectFileVersion)
+   if (SupportedProjectFormatVersion < version)
    {
       SetError(
          XO("This project was created with a newer version of Audacity.\n\nYou will need to upgrade to open it.")
@@ -690,13 +869,6 @@ bool ProjectFileIO::CheckVersion()
       return false;
    }
    
-   // Project file is older than ours, ask the user if it's okay to
-   // upgrade.
-   if (version < ProjectFileVersion)
-   {
-      return UpgradeSchema();
-   }
-
    return true;
 }
 
@@ -705,7 +877,7 @@ bool ProjectFileIO::InstallSchema(sqlite3 *db, const char *schema /* = "main" */
    int rc;
 
    wxString sql;
-   sql.Printf(ProjectFileSchema, ProjectFileID, ProjectFileVersion);
+   sql.Printf(ProjectFileSchema, ProjectFileID, BaseProjectFormatVersion.GetPacked());
    sql.Replace("<schema>", schema);
 
    rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
@@ -717,12 +889,6 @@ bool ProjectFileIO::InstallSchema(sqlite3 *db, const char *schema /* = "main" */
       return false;
    }
 
-   return true;
-}
-
-bool ProjectFileIO::UpgradeSchema()
-{
-   // To do
    return true;
 }
 
@@ -1531,7 +1697,7 @@ void ProjectFileIO::SetFileName(const FilePath &fileName)
    SetProjectTitle();
 }
 
-bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool ProjectFileIO::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    auto &project = mProject;
 
@@ -1541,29 +1707,24 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
    // loop through attrs, which is a null-terminated list of
    // attribute-value pairs
-   while (*attrs)
+   for (auto pair : attrs)
    {
-      const wxChar *attr = *attrs++;
-      const wxChar *value = *attrs++;
-
-      if (!value || !XMLValueChecker::IsGoodString(value))
-      {
-         break;
-      }
+      auto attr = pair.first;
+      auto value = pair.second;
 
       if ( ProjectFileIORegistry::Get()
           .CallAttributeHandler( attr, project, value ) )
          continue;
 
-      else if (!wxStrcmp(attr, wxT("version")))
+      else if (attr == "version")
       {
-         fileVersion = value;
+         fileVersion = value.ToWString();
          requiredTags++;
       }
 
-      else if (!wxStrcmp(attr, wxT("audacityversion")))
+      else if (attr == "audacityversion")
       {
-         audacityVersion = value;
+         audacityVersion = value.ToWString();
          requiredTags++;
       }
    } // while
@@ -1606,7 +1767,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       return false;
    }
 
-   if (wxStrcmp(tag, wxT("project")))
+   if (tag != "project")
    {
       return false;
    }
@@ -1615,7 +1776,7 @@ bool ProjectFileIO::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return true;
 }
 
-XMLTagHandler *ProjectFileIO::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *ProjectFileIO::HandleXMLChild(const std::string_view& tag)
 {
    auto &project = mProject;
    return ProjectFileIORegistry::Get().CallObjectAccessor(tag, project);
@@ -1731,17 +1892,19 @@ bool ProjectFileIO::WriteDoc(const char *table,
                              const char *schema /* = "main" */)
 {
    auto db = DB();
+
+   TransactionScope transaction(GetConnection(), "UpdateProject");
+
    int rc;
 
    // For now, we always use an ID of 1. This will replace the previously
    // written row every time.
    char sql[256];
-   sqlite3_snprintf(sizeof(sql),
-                    sql,
-                    "INSERT INTO %s.%s(id, dict, doc) VALUES(1, ?1, ?2)"
-                    "       ON CONFLICT(id) DO UPDATE SET dict = ?1, doc = ?2;",
-                    schema,
-                    table);
+   sqlite3_snprintf(
+      sizeof(sql), sql,
+      "INSERT INTO %s.%s(id, dict, doc) VALUES(1, ?1, ?2)"
+      "       ON CONFLICT(id) DO UPDATE SET dict = ?1, doc = ?2;",
+      schema, table);
 
    sqlite3_stmt *stmt = nullptr;
    auto cleanup = finally([&]
@@ -1765,43 +1928,134 @@ bool ProjectFileIO::WriteDoc(const char *table,
       return false;
    }
 
-   const wxMemoryBuffer &dict = autosave.GetDict();
-   const wxMemoryBuffer &data = autosave.GetData();
+   const MemoryStream& dict = autosave.GetDict();
+   const MemoryStream& data = autosave.GetData();
 
    // Bind statement parameters
    // Might return SQL_MISUSE which means it's our mistake that we violated
    // preconditions; should return SQL_OK which is 0
-   if (sqlite3_bind_blob(stmt, 1, dict.GetData(), dict.GetDataLen(), SQLITE_STATIC) ||
-       sqlite3_bind_blob(stmt, 2, data.GetData(), data.GetDataLen(), SQLITE_STATIC))
+   if (
+      sqlite3_bind_zeroblob(stmt, 1, dict.GetSize()) ||
+      sqlite3_bind_zeroblob(stmt, 2, data.GetSize()))
    {
       ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
       ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
       ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::bind");
 
-      SetDBError(
-         XO("Unable to bind to blob")
-      );
+      SetDBError(XO("Unable to bind to blob"));
       return false;
    }
 
+   const auto reportError = [this](auto sql) {
+      SetDBError(
+         XO("Failed to update the project file.\nThe following command failed:\n\n%s")
+            .Format(sql));
+   };
+
    rc = sqlite3_step(stmt);
+
    if (rc != SQLITE_DONE)
    {
       ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
       ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
       ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::step");
 
-      SetDBError(
-         XO("Failed to update the project file.\nThe following command failed:\n\n%s").Format(sql)
-      );
+      reportError(sql);
       return false;
    }
 
-   return true;
+   // Finalize the statement before commiting the transaction
+   sqlite3_finalize(stmt);
+   stmt = nullptr;
+
+   // Get rowid
+
+   int64_t rowID = 0;
+
+   const wxString rowIDSql =
+      wxString::Format("SELECT ROWID FROM %s.%s WHERE id = 1;", schema, table);
+
+   if (!GetValue(rowIDSql, rowID, true))
+   {
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(sqlite3_errcode(db)));
+      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::rowid");
+
+      reportError(rowIDSql);
+      return false;
+   }
+
+   const auto writeStream = [db, schema, table, rowID, this](const char* column, const MemoryStream& stream) {
+
+      auto blobStream =
+         SQLiteBlobStream::Open(db, schema, table, column, rowID, false);
+
+      if (!blobStream)
+      {
+         ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(sqlite3_errcode(db)));
+         ADD_EXCEPTION_CONTEXT("sqlite3.col", column);
+         ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::openBlobStream");
+
+         SetDBError(XO("Unable to bind to blob"));
+         return false;
+      }
+
+      for (auto chunk : stream)
+      {
+         if (SQLITE_OK != blobStream->Write(chunk.first, chunk.second))
+         {
+            ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(sqlite3_errcode(db)));
+            ADD_EXCEPTION_CONTEXT("sqlite3.col", column);
+            ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::writeBlobStream");
+            // The user visible message is not changed, so there is no need for new strings
+            SetDBError(XO("Unable to bind to blob"));
+            return false;
+         }
+      }
+
+      if (blobStream->Close() != SQLITE_OK)
+      {
+         ADD_EXCEPTION_CONTEXT(
+            "sqlite3.rc", std::to_string(sqlite3_errcode(db)));
+         ADD_EXCEPTION_CONTEXT("sqlite3.col", column);
+         ADD_EXCEPTION_CONTEXT(
+            "sqlite3.context", "ProjectGileIO::WriteDoc::writeBlobStream");
+         // The user visible message is not changed, so there is no need for new
+         // strings
+         SetDBError(XO("Unable to bind to blob"));
+         return false;
+      }
+
+      return true;
+   };
+
+   if (!writeStream("dict", dict))
+      return false;
+
+   if (!writeStream("doc", data))
+      return false;
+
+   const auto requiredVersion =
+      ProjectFormatExtensionsRegistry::Get().GetRequiredVersion(mProject);
+
+   const wxString setVersionSql =
+      wxString::Format("PRAGMA user_version = %u", requiredVersion.GetPacked());
+
+   if (!Query(setVersionSql.c_str(), [](auto...) { return 0; }))
+   {
+      // DV: Very unlikely case.
+      // Since we need to improve the error messages in the future, let's use
+      // the generic message for now, so no new strings are needed
+      reportError(setVersionSql);
+      return false;
+   }
+
+   return transaction.Commit();
 }
 
 bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
 {
+   auto now = std::chrono::high_resolution_clock::now();
+
    bool success = false;
 
    auto cleanup = finally([&]
@@ -1820,56 +2074,43 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       return false;
    }
 
-   wxString project;
-   wxMemoryBuffer buffer;
-   bool usedAutosave = true;
+   int64_t rowId = -1;
 
-   // Get the autosave doc, if any
-   if (!ignoreAutosave &&
-       !GetBlob("SELECT dict || doc FROM autosave WHERE id = 1;", buffer))
-   {
-      // Error already set
-      return false;
-   }
- 
+   bool useAutosave =
+      !ignoreAutosave &&
+      GetValue("SELECT ROWID FROM main.autosave WHERE id = 1;", rowId, true);
+
+   int64_t rowsCount = 0;
    // If we didn't have an autosave doc, load the project doc instead
-   if (buffer.GetDataLen() == 0)
+   if (
+      !useAutosave &&
+      (!GetValue("SELECT COUNT(1) FROM main.project;", rowsCount, true) || rowsCount == 0))
    {
-      usedAutosave = false;
+      // Missing both the autosave and project docs. This can happen if the
+      // system were to crash before the first autosave into a temporary file.
+      // This should be a recoverable scenario.
+      mRecovered = true;
+      mModified = true;
 
-      if (!GetBlob("SELECT dict || doc FROM project WHERE id = 1;", buffer))
-      {
-         // Error already set
-         return false;
-      }
+      return true;
    }
 
-   // Missing both the autosave and project docs. This can happen if the
-   // system were to crash before the first autosave into a temporary file.
-   // This should be a recoverable scenario.
-   if (buffer.GetDataLen() == 0)
+   if (!useAutosave && !GetValue("SELECT ROWID FROM main.project WHERE id = 1;", rowId, false))
    {
-      mRecovered = true;
+      return false;
    }
    else
    {
-      project = ProjectSerializer::Decode(buffer);
-      if (project.empty())
-      {
-         SetError(XO("Unable to decode project document"));
-
-         return false;
-      }
-
-      XMLFileReader xmlFile;
-
       // Load 'er up
-      success = xmlFile.ParseString(this, project);
+      BufferedProjectBlobStream stream(
+         DB(), "main", useAutosave ? "autosave" : "project", rowId);
+
+      success = ProjectSerializer::Decode(stream, this);
+
       if (!success)
       {
          SetError(
-            XO("Unable to parse project information."),
-            xmlFile.GetErrorStr()
+            XO("Unable to parse project information.")
          );
          return false;
       }
@@ -1889,7 +2130,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       }
    
       // Remember if we used autosave or not
-      if (usedAutosave)
+      if (useAutosave)
       {
          mRecovered = true;
       }
@@ -1918,6 +2159,12 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
    DiscardConnection();
 
    success = true;
+
+   auto duration = std::chrono::high_resolution_clock::now() - now;
+
+   wxLogInfo(
+      "Project loaded in %lld ms",
+      std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
 
    return true;
 }
@@ -2364,258 +2611,80 @@ int64_t ProjectFileIO::GetTotalUsage()
 }
 
 //
-// Returns the amount of disk space used by the specified sample blockid or all
-// of the sample blocks if the blockid is 0.  It does this by using the raw SQLite
-// pages available from the "sqlite_dbpage" virtual table to traverse the SQLite
-// table b-tree described here:  https://www.sqlite.org/fileformat.html
+// Returns the estimation of disk space used by the specified sample blockid or all
+// of the sample blocks if the blockid is 0. This does not include small overhead
+// of the internal SQLite structures, only the size used by the data
 //
 int64_t ProjectFileIO::GetDiskUsage(DBConnection &conn, SampleBlockID blockid /* = 0 */)
 {
-   // Information we need to track our travels through the b-tree
-   typedef struct
+   sqlite3_stmt* stmt = nullptr;
+
+   if (blockid == 0)
    {
-      int64_t pgno;
-      int currentCell;
-      int numCells;
-      unsigned char data[65536];
-   } page;
-   std::vector<page> stack;
+      static const char* statement =
+R"(SELECT 
+	sum(length(blockid) + length(sampleformat) + 
+	length(summin) + length(summax) + length(sumrms) + 
+	length(summary256) + length(summary64k) +
+	length(samples))
+FROM sampleblocks;)";
 
-   int64_t total = 0;
-   int64_t found = 0;
-   int64_t right = 0;
-   int rc;
-
-   // Get the rootpage for the sampleblocks table.
-   sqlite3_stmt *stmt =
-      conn.Prepare(DBConnection::GetRootPage,
-                    "SELECT rootpage FROM sqlite_master WHERE tbl_name = 'sampleblocks';");
-   if (stmt == nullptr || sqlite3_step(stmt) != SQLITE_ROW)
+      stmt = conn.Prepare(DBConnection::GetAllSampleBlocksSize, statement);
+   }
+   else
    {
-      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(sqlite3_errcode(conn.DB())));
-      ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetDiskUsage");
+      static const char* statement =
+R"(SELECT 
+	length(blockid) + length(sampleformat) + 
+	length(summin) + length(summax) + length(sumrms) + 
+	length(summary256) + length(summary64k) +
+	length(samples)
+FROM sampleblocks WHERE blockid = ?1;)";
 
-      return 0;
+      stmt = conn.Prepare(DBConnection::GetSampleBlockSize, statement);
    }
 
-   // And store it in our first stack frame
-   stack.push_back({sqlite3_column_int64(stmt, 0)});
+   auto cleanup = finally(
+      [stmt]() {
+         // Clear statement bindings and rewind statement
+         if (stmt != nullptr)
+         {
+            sqlite3_clear_bindings(stmt);
+            sqlite3_reset(stmt);
+         }
+      });
 
-   // All done with the statement
-   sqlite3_clear_bindings(stmt);
-   sqlite3_reset(stmt);
-
-   // Prepare/retrieve statement to read raw database page
-   stmt = conn.Prepare(DBConnection::GetDBPage,
-      "SELECT data FROM sqlite_dbpage WHERE pgno = ?1;");
-   if (stmt == nullptr)
+   if (blockid != 0)
    {
-      return 0;
-   }
+      int rc = sqlite3_bind_int64(stmt, 1, blockid);
 
-   // Traverse the b-tree until we've visited all of the leaf pages or until
-   // we find the one corresponding to the passed in sample blockid. Because we
-   // use an integer primary key for the sampleblocks table, the traversal will
-   // be in ascending blockid sequence.
-   do
-   {
-      // Acces the top stack frame
-      page &pg = stack.back();
-
-      // Read the page from the sqlite_dbpage table if it hasn't yet been loaded
-      if (pg.numCells == 0)
+      if (rc != SQLITE_OK)
       {
-         // Bind the page number
-         sqlite3_bind_int64(stmt, 1, pg.pgno);
+         ADD_EXCEPTION_CONTEXT(
+            "sqlite3.rc", std::to_string(rc));
 
-         // And retrieve the page
-         if (sqlite3_step(stmt) != SQLITE_ROW)
-         {
-            // REVIEW: Likely harmless failure - says size is zero on
-            // this error.
-            // LLL: Yea, but not much else we can do.
-            return 0;
-         }
+         ADD_EXCEPTION_CONTEXT(
+            "sqlite3.context", "ProjectFileIO::GetDiskUsage::bind");
 
-         // Copy the page content to the stack frame
-         memcpy(&pg.data,
-                sqlite3_column_blob(stmt, 0),
-                sqlite3_column_bytes(stmt, 0));
-
-         // And retrieve the total number of cells within it
-         pg.numCells = get2(&pg.data[3]);
-
-         // Reset statement for next usage
-         sqlite3_clear_bindings(stmt);
-         sqlite3_reset(stmt);
-      }
-
-      //wxLogDebug("%*.*spgno %lld currentCell %d numCells %d", (stack.size() - 1) * 2, (stack.size() - 1) * 2, "", pg.pgno, pg.currentCell, pg.numCells);
-
-      // Process an interior table b-tree page
-      if (pg.data[0] == 0x05)
-      {
-         // Process the next cell if we haven't examined all of them yet
-         if (pg.currentCell < pg.numCells)
-         {
-            // Remember the right-most leaf page number.
-            right = get4(&pg.data[8]);
-
-            // Iterate over the cells.
-            //
-            // If we're not looking for a specific blockid, then we always push the
-            // target page onto the stack and leave the loop after a single iteration.
-            //
-            // Otherwise, we match the blockid against the highest integer key contained
-            // within the cell and if the blockid falls within the cell, we stack the
-            // page and stop the iteration.
-            //
-            // In theory, we could do a binary search for a specific blockid here, but
-            // because our sample blocks are always large, we will get very few cells
-            // per page...usually 6 or less.
-            //
-            // In both cases, the stacked page can be either an internal or leaf page.
-            bool stacked = false;
-            while (pg.currentCell < pg.numCells)
-            {
-               // Get the offset to this cell using the offset in the cell pointer
-               // array.
-               //
-               // The cell pointer array starts immediately after the page header
-               // at offset 12 and the retrieved offset is from the beginning of
-               // the page.
-               int celloff = get2(&pg.data[12 + (pg.currentCell * 2)]);
-
-               // Bump to the next cell for the next iteration.
-               pg.currentCell++;
-
-               // Get the page number this cell describes
-               int pagenum = get4(&pg.data[celloff]);
-
-               // And the highest integer key, which starts at offset 4 within the cell.
-               int64_t intkey = 0;
-               get_varint(&pg.data[celloff + 4], &intkey);
-
-               //wxLogDebug("%*.*sinternal - right %lld celloff %d pagenum %d intkey %lld", (stack.size() - 1) * 2, (stack.size() - 1) * 2, " ", right, celloff, pagenum, intkey);
-
-               // Stack the described page if we're not looking for a specific blockid
-               // or if this page contains the given blockid.
-               if (!blockid || blockid <= intkey)
-               {
-                  stack.push_back({pagenum, 0, 0});
-                  stacked = true;
-                  break;
-               }
-            }
-
-            // If we pushed a new page onto the stack, we need to jump back up
-            // to read the page
-            if (stacked)
-            {
-               continue;
-            }
-         }
-
-         // We've exhausted all the cells with this page, so we stack the right-most
-         // leaf page.  Ensure we only process it once.
-         if (right)
-         {
-            stack.push_back({right, 0, 0});
-            right = 0;
-            continue;
-         }
-      }
-      // Process a leaf table b-tree page
-      else if (pg.data[0] == 0x0d)
-      {
-         // Iterate over the cells
-         //
-         // If we're not looking for a specific blockid, then just accumulate the
-         // payload sizes. We will be reading every leaf page in the sampleblocks
-         // table.
-         //
-         // Otherwise we break out when we find the matching blockid. In this case,
-         // we only ever look at 1 leaf page.
-         bool stop = false;
-         for (int i = 0; i < pg.numCells; i++)
-         {
-            // Get the offset to this cell using the offset in the cell pointer
-            // array.
-            //
-            // The cell pointer array starts immediately after the page header
-            // at offset 8 and the retrieved offset is from the beginning of
-            // the page.
-            int celloff = get2(&pg.data[8 + (i * 2)]);
-
-            // Get the total payload size in bytes of the described row.
-            int64_t payload = 0;
-            int digits = get_varint(&pg.data[celloff], &payload);
-
-            // Get the integer key for this row.
-            int64_t intkey = 0;
-            get_varint(&pg.data[celloff + digits], &intkey);
-
-            //wxLogDebug("%*.*sleaf - celloff %4d intkey %lld payload %lld", (stack.size() - 1) * 2, (stack.size() - 1) * 2, " ", celloff, intkey, payload);
-
-            // Add this payload size to the total if we're not looking for a specific
-            // blockid
-            if (!blockid)
-            {
-               total += payload;
-            }
-            // Otherwise, return the payload size for a matching row
-            else if (blockid == intkey)
-            {
-               return payload;
-            }
-         }
-      }
-
-      // Done with the current branch, so pop back up to the previous one (if any)
-      stack.pop_back();
-   } while (!stack.empty());
-
-   // Return the total used for all sample blocks
-   return total;
-}
-
-// Retrieves a 2-byte big-endian integer from the page data
-unsigned int ProjectFileIO::get2(const unsigned char *ptr)
-{
-   return (ptr[0] << 8) | ptr[1];
-}
-
-// Retrieves a 4-byte big-endian integer from the page data
-unsigned int ProjectFileIO::get4(const unsigned char *ptr)
-{
-   return ((unsigned int) ptr[0] << 24) |
-          ((unsigned int) ptr[1] << 16) |
-          ((unsigned int) ptr[2] << 8)  |
-          ((unsigned int) ptr[3]);
-}
-
-// Retrieves a variable length integer from the page data. Returns the
-// number of digits used to encode the integer and the stores the
-// value at the given location.
-int ProjectFileIO::get_varint(const unsigned char *ptr, int64_t *out)
-{
-   int64_t val = 0;
-   int i;
-
-   for (i = 0; i < 8; ++i)
-   {
-      val = (val << 7) + (ptr[i] & 0x7f);
-      if ((ptr[i] & 0x80) == 0)
-      {
-         *out = val;
-         return i + 1;
+         conn.ThrowException(false);
       }
    }
 
-   val = (val << 8) + (ptr[i] & 0xff);
-   *out = val;
+   int rc = sqlite3_step(stmt);
 
-   return 9;
+   if (rc != SQLITE_ROW)
+   {
+      ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+
+      ADD_EXCEPTION_CONTEXT(
+         "sqlite3.context", "ProjectFileIO::GetDiskUsage::step");
+
+      conn.ThrowException(false);
+   }
+
+   const int64_t size = sqlite3_column_int64(stmt, 0);
+
+   return size;
 }
 
 InvisibleTemporaryProject::InvisibleTemporaryProject()

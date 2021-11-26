@@ -53,6 +53,7 @@
 
 #include "widgets/AButton.h"
 #include "widgets/MeterPanel.h"
+#include "widgets/auStaticText.h"
 
 
 #include "../images/MusicalInstruments.h"
@@ -600,6 +601,9 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    //      mTrack->TimeToLongSamples(t1 - t0));
    //}
    //
+
+   // PRL: TODO:  don't fetch from wave tracks at calculated times, for update
+   // of the meter display, but instead consult PlaybackPolicy
 
    const auto pTrack = GetWave();
    auto startSample = (sampleCount)((pTrack->GetRate() * t0) + 0.5);
@@ -1157,6 +1161,8 @@ void MixerBoard::UpdateMeters(const double t1, const bool bLoopedPlay)
       mPrevT1 = t1;
       return;
    }
+
+   // PRL:  TODO:  reexamine the assumptions below
 
    // In loopedPlay mode, at the end of the loop, mPrevT1 is set to
    // selection end, so the next t1 will be less, but we do want to

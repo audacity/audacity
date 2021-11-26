@@ -42,11 +42,8 @@
 #ifndef __AUDACITY_EFFECTINTERFACE_H__
 #define __AUDACITY_EFFECTINTERFACE_H__
 
-#include <functional>
-
 #include "ComponentInterface.h"
 #include "ComponentInterfaceSymbol.h"
-#include "ConfigInterface.h"
 #include "EffectAutomationParameters.h" // for command automation
 
 class ShuttleGui;
@@ -101,37 +98,18 @@ public:
 
    // Can the effect be used without the UI.
    virtual bool SupportsAutomation() = 0;
+
+   //! Whether the effect dialog should have a Debug button; default, always false.
+   virtual bool EnablesDebug();
 };
 
 class wxDialog;
 class wxWindow;
-class EffectUIHostInterface;
+
 class EffectUIClientInterface;
 
-/*************************************************************************************//**
-
-\class EffectHostInterface 
-
-\brief EffectHostInterface is a decorator of a EffectUIClientInterface.  It adds 
-virtual (abstract) functions to get presets and actually apply the effect.  It uses
-ConfigClientInterface to add Getters/setters for private and shared configs. 
-
-*******************************************************************************************/
-class COMPONENTS_API EffectHostInterface  /* not final */ : public ConfigClientInterface
-{
-public:
-   virtual ~EffectHostInterface();
-
-   virtual double GetDefaultDuration() = 0;
-   virtual double GetDuration() = 0;
-   virtual NumericFormatSymbol GetDurationFormat() = 0;
-   virtual void SetDuration(double seconds) = 0;
-
-   // Preset handling
-   virtual RegistryPath GetUserPresetsGroup(const RegistryPath & name) = 0;
-   virtual RegistryPath GetCurrentSettingsGroup() = 0;
-   virtual RegistryPath GetFactoryDefaultsGroup() = 0;
-};
+// Incomplete type not defined in libraries -- TODO clean that up:
+class EffectHostInterface;
 
 class sampleCount;
 
@@ -184,14 +162,7 @@ AudacityCommand.
 class COMPONENTS_API EffectClientInterface  /* not final */ : public EffectDefinitionInterface
 {
 public:
-   using EffectDialogFactory = std::function<
-      wxDialog* ( wxWindow &parent,
-         EffectHostInterface*, EffectUIClientInterface* )
-   >;
-
    virtual ~EffectClientInterface();
-
-   virtual bool SetHost(EffectHostInterface *host) = 0;
 
    virtual unsigned GetAudioInCount() = 0;
    virtual unsigned GetAudioOutCount() = 0;
@@ -222,10 +193,6 @@ public:
    virtual size_t RealtimeProcess(int group, float **inBuf, float **outBuf, size_t numSamples) = 0;
    virtual bool RealtimeProcessEnd() = 0;
 
-   virtual bool ShowInterface(
-      wxWindow &parent, const EffectDialogFactory &factory,
-      bool forceModal = false
-   ) = 0;
    // Some effects will use define params to define what parameters they take.
    // If they do, they won't need to implement Get or SetAutomation parameters.
    // since the Effect class can do it.  Or at least that is how things happen
@@ -246,21 +213,6 @@ public:
 
 /*************************************************************************************//**
 
-\class EffectUIHostInterface
-
-\brief EffectUIHostInterface has nothing in it.  It is provided so that an Effect
-can call SetHostUI passing in a pointer to an EffectUIHostInterface.  It contains no 
-functionality and is provided, apparently, for type checking.  Since only EffectUIHost
-uses it, EffectUIHost could be used instead.
-*******************************************************************************************/
-class COMPONENTS_API EffectUIHostInterface
-{
-public:
-   virtual ~EffectUIHostInterface();
-};
-
-/*************************************************************************************//**
-
 \class EffectUIClientInterface
 
 \brief EffectUIClientInterface is an abstract base class to populate a UI and validate UI
@@ -268,13 +220,26 @@ values.  It can import and export presets.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectUIClientInterface /* not final */
+   : public EffectClientInterface
 {
 public:
    virtual ~EffectUIClientInterface();
 
-   virtual void SetHostUI(EffectUIHostInterface *host) = 0;
+   /*!
+    @return 0 if destructive effect processing should not proceed (and there
+    may be a non-modal dialog still opened); otherwise, modal dialog return code
+    */
+   virtual int ShowClientInterface(
+      wxWindow &parent, wxDialog &dialog, bool forceModal = false
+   ) = 0;
+
+   virtual bool SetHost(EffectHostInterface *host) = 0;
+
    virtual bool IsGraphicalUI() = 0;
+
+   //! Adds controls to a panel that is given as the parent window of `S`
    virtual bool PopulateUI(ShuttleGui &S) = 0;
+
    virtual bool ValidateUI() = 0;
    virtual bool HideUI() = 0;
    virtual bool CloseUI() = 0;

@@ -33,10 +33,10 @@
 #include <wx/tooltip.h>
 #endif
 
-#include "../AColor.h"
-#include "../AllThemeResources.h"
+#include "AColor.h"
+#include "AllThemeResources.h"
 #include "../AudioIO.h"
-#include "../ImageManipulation.h"
+#include "ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "Prefs.h"
 #include "../widgets/ASlider.h"
@@ -321,9 +321,7 @@ void MixerToolBar::SetToolTips()
    }
 
    if (mOutputSlider->IsEnabled()) {
-      auto format = (AudioIO::Get()->OutputMixerEmulated()
-         ? XO("Playback Volume: %.2f (emulated)")
-         : XO("Playback Volume: %.2f"));
+      auto format = XO("Playback Volume: %.2f");
 
       mOutputSlider->SetToolTipTemplate( format );
    }

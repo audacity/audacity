@@ -25,6 +25,9 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
 
  public:
 
+   // Construct and also build all attachments
+   static TimeTrack *New(AudacityProject &project);
+
    explicit TimeTrack(const ZoomInfo *zoomInfo);
    /** @brief Copy-Constructor - create a NEW TimeTrack:: which is an independent copy of the original
     *
@@ -61,9 +64,9 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
 
    // XMLTagHandler callback methods for loading and saving
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   void HandleXMLEndTag(const wxChar *tag) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
+   void HandleXMLEndTag(const std::string_view& tag) override;
+   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const override;
 
    // Lock and unlock the track: you must lock the track before

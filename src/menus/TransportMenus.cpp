@@ -17,6 +17,7 @@
 #include "../ProjectWindows.h"
 #include "../ProjectWindow.h"
 #include "../ProjectManager.h"
+#include "../SelectUtilities.h"
 #include "../SoundActivatedRecord.h"
 #include "../TimerRecordDialog.h"
 #include "../TrackPanelAx.h"
@@ -42,7 +43,7 @@
 namespace {
 
 void PlayCurrentRegionAndWait(const CommandContext &context,
-                              bool looped = false,
+                              bool newDefault = false,
                               bool cutpreview = false)
 {
    auto &project = context.project;
@@ -52,9 +53,9 @@ void PlayCurrentRegionAndWait(const CommandContext &context,
    double t0 = playRegion.GetStart();
    double t1 = playRegion.GetEnd();
 
-   projectAudioManager.PlayCurrentRegion(looped, cutpreview);
+   projectAudioManager.PlayCurrentRegion(newDefault, cutpreview);
 
-   if (project.mBatchMode > 0 && t0 != t1 && !looped) {
+   if (project.mBatchMode > 0 && t0 != t1 && !newDefault) {
       wxYieldIfNeeded();
 
       /* i18n-hint: This title appears on a dialog that indicates the progress
@@ -234,7 +235,7 @@ bool DoStopPlaying(const CommandContext &context)
    return false;
 }
 
-void DoStartPlaying(const CommandContext &context, bool looping = false)
+void DoStartPlaying(const CommandContext &context, bool newDefault = false)
 {
    auto &project = context.project;
    auto &projectAudioManager = ProjectAudioManager::Get(project);
@@ -244,7 +245,7 @@ void DoStartPlaying(const CommandContext &context, bool looping = false)
       //Otherwise, start playing (assuming audio I/O isn't busy)
 
       // Will automatically set mLastPlayMode
-      PlayCurrentRegionAndWait(context, looping);
+      PlayCurrentRegionAndWait(context, newDefault);
    }
 }
 
@@ -284,18 +285,24 @@ void DoMoveToLabel(AudacityProject &project, bool next)
 
       if (i >= 0) {
          const LabelStruct* label = lt->GetLabel(i);
-         bool looping = projectAudioManager.Looping();
+         bool newDefault = projectAudioManager.Looping();
          if (ProjectAudioIO::Get( project ).IsAudioActive()) {
             DoStopPlaying(project);
             selectedRegion = label->selectedRegion;
             window.RedrawProject();
-            DoStartPlaying(project, looping);
+            DoStartPlaying(project, newDefault);
          }
          else {
             selectedRegion = label->selectedRegion;
             window.ScrollIntoView(selectedRegion.t0());
             window.RedrawProject();
          }
+         /* i18n-hint:
+            String is replaced by the name of a label,
+            first number gives the position of that label in a sequence
+            of labels,
+            and the last number is the total number of labels in the sequence.
+         */
          auto message = XO("%s %d of %d")
             .Format( label->title, i + 1, lt->GetNumLabels() );
          trackFocus.MessageForScreenReader(message);
@@ -306,7 +313,19 @@ void DoMoveToLabel(AudacityProject &project, bool next)
    }
 }
 
+bool IsLoopingEnabled(const AudacityProject& project)
+{
+   auto &playRegion = ViewInfo::Get(project).playRegion;
+    return playRegion.Active();
 }
+
+}
+
+// Strings for menu items and also for dialog titles
+/* i18n-hint Sets a starting point for looping play */
+static const auto SetLoopInTitle = XXO("Set Loop &In");
+/* i18n-hint Sets an ending point for looping play */
+static const auto SetLoopOutTitle = XXO("Set Loop &Out");
 
 // Menu handler functions
 
@@ -314,9 +333,9 @@ namespace TransportActions {
 
 struct Handler : CommandHandlerObject {
 
-// This Plays OR Stops audio.  It's a toggle.
-// It is usually bound to the SPACE key.
-void OnPlayStop(const CommandContext &context)
+// This plays (once, with fixed bounds) OR Stops audio.  It's a toggle.
+// The default binding for Shift+SPACE.
+void OnPlayOnceOrStop(const CommandContext &context)
 {
    if (DoStopPlaying(context.project))
       return;
@@ -328,9 +347,13 @@ void OnPlayStopSelect(const CommandContext &context)
    ProjectAudioManager::Get( context.project ).DoPlayStopSelect();
 }
 
-void OnPlayLooped(const CommandContext &context)
+// This plays (looping, maybe adjusting the loop) OR Stops audio.  It's a toggle.
+// The default binding for SPACE
+void OnPlayDefaultOrStop(const CommandContext &context)
 {
    auto &project = context.project;
+   if (DoStopPlaying(project))
+      return;
 
    if( !MakeReadyToPlay(project) )
       return;
@@ -576,7 +599,7 @@ void OnPunchAndRoll(const CommandContext &context)
          // May adjust t1 left
          // Let's ignore the possibility of a clip even shorter than the
          // crossfade duration!
-         newt1 = std::min(newt1, clip->GetEndTime() - crossFadeDuration);
+         newt1 = std::min(newt1, clip->GetPlayEndTime() - crossFadeDuration);
       }
    }
 
@@ -645,14 +668,40 @@ void OnPunchAndRoll(const CommandContext &context)
 }
 #endif
 
-void OnLockPlayRegion(const CommandContext &context)
+void OnTogglePlayRegion(const CommandContext &context)
 {
-   AdornedRulerPanel::Get( context.project ).LockPlayRegion();
+   SelectUtilities::TogglePlayRegion(context.project);
 }
 
-void OnUnlockPlayRegion(const CommandContext &context)
+void OnClearPlayRegion(const CommandContext &context)
 {
-   AdornedRulerPanel::Get( context.project ).UnlockPlayRegion();
+   SelectUtilities::ClearPlayRegion(context.project);
+}
+
+void OnSetPlayRegionIn(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &playRegion = ViewInfo::Get(project).playRegion;
+   if (!playRegion.Active())
+      SelectUtilities::ActivatePlayRegion(project);
+   SelectUtilities::OnSetRegion(project,
+      true, false, SetLoopInTitle.Stripped());
+}
+
+
+void OnSetPlayRegionOut(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &playRegion = ViewInfo::Get(project).playRegion;
+   if (!playRegion.Active())
+      SelectUtilities::ActivatePlayRegion(project);
+   SelectUtilities::OnSetRegion(project,
+      false, false, SetLoopOutTitle.Stripped());
+}
+
+void OnSetPlayRegionToSelection(const CommandContext &context)
+{
+   SelectUtilities::SetPlayRegionToSelection(context.project);
 }
 
 void OnRescanDevices(const CommandContext &WXUNUSED(context) )
@@ -1068,11 +1117,11 @@ BaseItemSharedPtr TransportMenu()
       Section( "Basic",
          Menu( wxT("Play"), XXO("Pl&aying"),
             /* i18n-hint: (verb) Start or Stop audio playback*/
-            Command( wxT("PlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayStop),
+            Command( wxT("DefaultPlayStop"), XXO("Pl&ay/Stop"), FN(OnPlayDefaultOrStop),
                CanStopAudioStreamFlag(), wxT("Space") ),
             Command( wxT("PlayStopSelect"), XXO("Play/Stop and &Set Cursor"),
                FN(OnPlayStopSelect), CanStopAudioStreamFlag(), wxT("X") ),
-            Command( wxT("PlayLooped"), XXO("&Loop Play"), FN(OnPlayLooped),
+            Command( wxT("OncePlayStop"), XXO("Play &Once/Stop"), FN(OnPlayOnceOrStop),
                CanStopAudioStreamFlag(), wxT("Shift+Space") ),
             Command( wxT("Pause"), XXO("&Pause"), FN(OnPause),
                CanStopAudioStreamFlag(), wxT("P") )
@@ -1120,11 +1169,23 @@ BaseItemSharedPtr TransportMenu()
 
       Section( "Other",
          Section( "",
-            Menu( wxT("PlayRegion"), XXO("Pla&y Region"),
-               Command( wxT("LockPlayRegion"), XXO("&Lock"), FN(OnLockPlayRegion),
-                  PlayRegionNotLockedFlag() ),
-               Command( wxT("UnlockPlayRegion"), XXO("&Unlock"),
-                  FN(OnUnlockPlayRegion), PlayRegionLockedFlag() )
+            Menu( wxT("PlayRegion"), XXO("&Looping"),
+               Command( wxT("TogglePlayRegion"), LoopToggleText,
+                  FN(OnTogglePlayRegion), AlwaysEnabledFlag,
+                     Options(L"L").CheckTest([](const AudacityProject& project){
+                         return IsLoopingEnabled(project);
+                     } )),
+               Command( wxT("ClearPlayRegion"), XXO("&Clear Loop"),
+                  FN(OnClearPlayRegion), AlwaysEnabledFlag ),
+               Command( wxT("SetPlayRegionToSelection"),
+                  XXO("&Set Loop to Selection"),
+                  FN(OnSetPlayRegionToSelection), AlwaysEnabledFlag ),
+               Command( wxT("SetPlayRegionIn"),
+                  SetLoopInTitle,
+                  FN(OnSetPlayRegionIn), AlwaysEnabledFlag ),
+               Command( wxT("SetPlayRegionOut"),
+                  SetLoopOutTitle,
+                  FN(OnSetPlayRegionOut), AlwaysEnabledFlag )
             )
          ),
 
@@ -1197,7 +1258,7 @@ BaseItemSharedPtr ExtraTransportMenu()
    Menu( wxT("Transport"), XXO("T&ransport"),
       // PlayStop is already in the menus.
       /* i18n-hint: (verb) Start playing audio*/
-      Command( wxT("Play"), XXO("Pl&ay"), FN(OnPlayStop),
+      Command( wxT("Play"), XXO("Pl&ay Once"), FN(OnPlayOnceOrStop),
          WaveTracksExistFlag() | AudioIONotBusyFlag() ),
       /* i18n-hint: (verb) Stop playing audio*/
       Command( wxT("Stop"), XXO("Sto&p"), FN(OnStop),
@@ -1245,10 +1306,10 @@ BaseItemSharedPtr ExtraPlayAtSpeedMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("PlayAtSpeed"), XXO("&Play-at-Speed"),
       /* i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview. */
-      Command( wxT("PlayAtSpeed"), XXO("Normal Pl&ay-at-Speed"),
-         FN(OnPlayAtSpeed), CaptureNotBusyFlag() ),
-      Command( wxT("PlayAtSpeedLooped"), XXO("&Loop Play-at-Speed"),
+      Command( wxT("PlayAtSpeedLooped"), XXO("&Play-at-Speed"),
          FN(OnPlayAtSpeedLooped), CaptureNotBusyFlag() ),
+      Command( wxT("PlayAtSpeed"), XXO("Play-at-Speed &Once"),
+         FN(OnPlayAtSpeed), CaptureNotBusyFlag() ),
       Command( wxT("PlayAtSpeedCutPreview"), XXO("Play C&ut Preview-at-Speed"),
          FN(OnPlayAtSpeedCutPreview), CaptureNotBusyFlag() ),
       Command( wxT("SetPlaySpeed"), XXO("Ad&just Playback Speed..."),

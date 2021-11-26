@@ -31,9 +31,9 @@
 
 #include "../Envelope.h"
 
-#include "../AllThemeResources.h"
+#include "AllThemeResources.h"
 #include "../AudioIO.h"
-#include "../ImageManipulation.h"
+#include "ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "Project.h"
 #include "../ProjectAudioManager.h"
@@ -206,7 +206,8 @@ void TranscriptionToolBar::Populate()
 
    AddButton(this, bmpPlay,     bmpPlayDisabled,   TTB_PlaySpeed,
       XO("Play at selected speed"));
-   MakeAlternateImages(bmpLoop, bmpLoopDisabled, TTB_PlaySpeed, 1);
+   // 3.1.0 abandoned distinct images for Shift
+   MakeAlternateImages(bmpPlay, bmpPlayDisabled, TTB_PlaySpeed, 1);
    MakeAlternateImages(bmpCutPreview, bmpCutPreviewDisabled, TTB_PlaySpeed, 2);
    mButtons[TTB_PlaySpeed]->FollowModifierKeys();
 
@@ -299,7 +300,7 @@ void TranscriptionToolBar::EnableDisableButtons()
    auto gAudioIO = AudioIO::Get();
    bool canStopAudioStream = (!gAudioIO->IsStreamActive() ||
            gAudioIO->IsMonitoring() ||
-           gAudioIO->GetOwningProject() == p );
+           gAudioIO->GetOwningProject().get() == p );
    bool recording = gAudioIO->GetNumCaptureChannels() > 0;
 
    // Only interested in audio type tracks
@@ -341,8 +342,9 @@ void TranscriptionToolBar::RegenerateTooltips()
       CommandID commandName2;
       TranslatableString untranslatedLabel2;
    } table[] = {
-      { TTB_PlaySpeed,   wxT("PlayAtSpeed"),    XO("Play-at-Speed"),
-      wxT("PlayAtSpeedLooped"),    XO("Looped-Play-at-Speed")
+      { TTB_PlaySpeed,
+         wxT("PlayAtSpeedLooped"),    XO("Play-at-Speed"),
+         wxT("PlayAtSpeed"),    XO("Play-at-Speed Once"),
       },
    };
 
@@ -471,7 +473,7 @@ void TranscriptionToolBar::GetSamples(
 #define TIMETRACK_MAX 10.0
 
 // Come here from button clicks, or commands
-void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
+void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
 {
    // Can't do anything without an active project
    AudacityProject *p = &mProject;
@@ -489,8 +491,10 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       bFixedSpeedPlay = true;
 
    // Scrubbing only supports straight through play.
-   // So if looped or cutPreview, we have to fall back to fixed speed.
-   bFixedSpeedPlay = bFixedSpeedPlay || looped || cutPreview;
+   // So if newDefault or cutPreview, we have to fall back to fixed speed.
+   if (newDefault)
+      cutPreview = false;
+   bFixedSpeedPlay = bFixedSpeedPlay || newDefault || cutPreview;
    if (bFixedSpeedPlay)
    {
       // Create a BoundedEnvelope if we haven't done so already
@@ -525,13 +529,12 @@ void TranscriptionToolBar::PlayAtSpeed(bool looped, bool cutPreview)
       return;
    if (bFixedSpeedPlay)
    {
-      auto options = DefaultPlayOptions( *p );
-      options.playLooped = looped;
+      auto options = DefaultPlayOptions( *p, newDefault );
       // No need to set cutPreview options.
       options.envelope = mEnvelope.get();
       auto mode =
          cutPreview ? PlayMode::cutPreviewPlay
-         : options.playLooped ? PlayMode::loopedPlay
+         : newDefault ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
       projectAudioManager.PlayPlayRegion(
          SelectedRegion(playRegion.GetStart(), playRegion.GetEnd()),
@@ -554,7 +557,7 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
    // Let control have precedence over shift
    const bool cutPreview = mButtons[TTB_PlaySpeed]->WasControlDown();
    const bool looped = !cutPreview &&
-      button->WasShiftDown();
+      !button->WasShiftDown();
    PlayAtSpeed(looped, cutPreview);
 }
 

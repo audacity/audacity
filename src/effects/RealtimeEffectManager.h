@@ -29,8 +29,8 @@ public:
    // Realtime effect processing
    bool RealtimeIsActive();
    bool RealtimeIsSuspended();
-   void RealtimeAddEffect(EffectClientInterface *effect);
-   void RealtimeRemoveEffect(EffectClientInterface *effect);
+   void RealtimeAddEffect(EffectClientInterface &effect);
+   void RealtimeRemoveEffect(EffectClientInterface &effect);
    void RealtimeSetEffects(const EffectArray & mActive);
    void RealtimeInitialize(double rate);
    void RealtimeAddProcessor(int group, unsigned chans, float rate);

@@ -163,25 +163,16 @@ struct FFmpegFunctions::Private final
       if (path.empty())
          return nullptr;
 
-      std::shared_ptr<wxDynamicLibrary> library =
-         std::make_shared<wxDynamicLibrary>();
-
-      if (!library->Load(wxFileNameFromPath(path)))
-         return nullptr;
-
-      return library;
+      return LoadLibrary(wxFileNameFromPath(path));
    }
 
    bool Load(FFmpegFunctions& functions, const wxString& path)
    {
       // We start by loading AVFormat
-      AVFormatLibrary = std::make_shared<wxDynamicLibrary>();
+      AVFormatLibrary = LoadLibrary(path);
 
-      if (!AVFormatLibrary->Load(path))
-      {
-         wxLogSysError("Failed to load %s", path.c_str());
+      if (AVFormatLibrary == nullptr)
          return false;
-      }
 
       if ((AVCodecLibrary = LibraryWithSymbol("avcodec_version")) == nullptr)
          return false;
@@ -226,6 +217,37 @@ struct FFmpegFunctions::Private final
 
       return true;
    }
+
+   std::shared_ptr<wxDynamicLibrary> LoadLibrary(const wxString& libraryName) const
+   {
+#if defined(__WXMAC__)
+      // On macOS dyld reads environment only when application starts.
+      // Let's emulate the process manually
+      for(const wxString& path : FFmpegFunctions::GetSearchPaths())
+      {
+         const wxString fullName = wxFileName(path, libraryName).GetFullPath();
+
+         auto library = std::make_shared<wxDynamicLibrary>(fullName);
+
+         if (library->IsLoaded())
+            return library;
+      }
+#endif
+      auto library = std::make_shared<wxDynamicLibrary> (libraryName);
+
+      if (library->IsLoaded())
+         return library;
+
+      // Loading has failed.
+      // wxLogSysError doesn't report errors correctly on *NIX
+#if defined(_WIN32)
+      wxLogSysError("Failed to load %s", libraryName.c_str());
+#else
+      const char* errorString = dlerror();
+      wxLogError("Failed to load %s (%s)", libraryName.c_str(), errorString);
+#endif
+      return {};
+   }
 };
 
 FFmpegFunctions::FFmpegFunctions()
@@ -252,7 +274,9 @@ std::shared_ptr<FFmpegFunctions> FFmpegFunctions::Load()
    const auto supportedVersions =
       FFmpegAPIResolver::Get().GetSuportedAVFormatVersions();
 
+#if !defined(__WXMAC__)
    EnvSetter envSetter;
+#endif
 
    for (int version : supportedVersions)
    {

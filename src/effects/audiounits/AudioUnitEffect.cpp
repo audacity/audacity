@@ -44,6 +44,7 @@
 #include <wx/tokenzr.h>
 
 #include "../../SelectFile.h"
+#include "../../EffectHostInterface.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/valnum.h"
@@ -498,7 +499,8 @@ OSType AudioUnitEffectsModule::ToOSType(const wxString & type)
 class AudioUnitEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   AudioUnitEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
+   AudioUnitEffectOptionsDialog(wxWindow * parent,
+      EffectHostInterface &host, EffectDefinitionInterface &effect);
    virtual ~AudioUnitEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -506,7 +508,8 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectHostInterface *mHost;
+   EffectHostInterface &mHost;
+   EffectDefinitionInterface &mEffect;
 
    bool mUseLatency;
    TranslatableString mUIType;
@@ -518,16 +521,19 @@ BEGIN_EVENT_TABLE(AudioUnitEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, AudioUnitEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host)
-:  wxDialogWrapper(parent, wxID_ANY, XO("Audio Unit Effect Options"))
+AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(wxWindow * parent,
+   EffectHostInterface &host, EffectDefinitionInterface &effect)
+: wxDialogWrapper(parent, wxID_ANY, XO("Audio Unit Effect Options"))
+, mHost{ host }
+, mEffect{ effect }
 {
-   mHost = host;
-
-   mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
+   GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
+      wxT("UseLatency"), mUseLatency, true);
 
    // Expect one of three string values from the config file
    wxString uiType;
-   mHost->GetSharedConfig(wxT("Options"), wxT("UIType"), uiType, wxT("Full"));
+   GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
+      wxT("UIType"), uiType, wxT("Full"));
 
    // Get the localization of the string for display to the user
    mUIType = TranslatableString{ uiType, {} };
@@ -618,8 +624,10 @@ void AudioUnitEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    // un-translate the type
    auto uiType = mUIType.MSGID().GET();
 
-   mHost->SetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency);
-   mHost->SetSharedConfig(wxT("Options"), wxT("UIType"), uiType);
+   SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
+      wxT("UseLatency"), mUseLatency);
+   SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
+      wxT("UIType"), uiType);
 
    EndModal(wxID_OK);
 }
@@ -775,7 +783,9 @@ TranslatableString AudioUnitEffectImportDialog::Import(
 
    // And write it to the config
    wxString group = mEffect->mHost->GetUserPresetsGroup(name);
-   if (!mEffect->mHost->SetPrivateConfig(group, PRESET_KEY, parms))
+   if (!SetConfig(*mEffect,
+      PluginSettings::Private, group, PRESET_KEY,
+      parms))
    {
       return XO("Unable to store preset in config file");
    }
@@ -839,8 +849,6 @@ AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
    mInteractive = false;
    mIsGraphical = false;
 
-   mUIHost = NULL;
-   mDialog = NULL;
    mParent = NULL;
 
    mUnitInitialized = false;
@@ -1036,15 +1044,19 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
    // mHost will be null during registration
    if (mHost)
    {
-      mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
-      mHost->GetSharedConfig(wxT("Options"), wxT("UIType"), mUIType, wxT("Full"));
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+         wxT("UseLatency"), mUseLatency, true);
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+         wxT("UIType"), mUIType, wxT("Full"));
 
       bool haveDefaults;
-      mHost->GetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
+      GetConfig(*this, PluginSettings::Private,
+         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
       if (!haveDefaults)
       {
          SavePreset(mHost->GetFactoryDefaultsGroup());
-         mHost->SetPrivateConfig(mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+         SetConfig(*this, PluginSettings::Private,
+            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
       LoadPreset(mHost->GetCurrentSettingsGroup());
@@ -1457,43 +1469,18 @@ bool AudioUnitEffect::RealtimeProcessEnd()
    return true;
 }
 
-bool AudioUnitEffect::ShowInterface(wxWindow &parent,
-                                    const EffectDialogFactory &factory,
-                                    bool forceModal)
+int AudioUnitEffect::ShowClientInterface(
+   wxWindow &parent, wxDialog &dialog, bool forceModal)
 {
-   if (mDialog)
-   {
-      if (mDialog->Close(true))
-      {
-         mDialog = nullptr;
-      }
-      return false;
-   }
-
-   // mDialog is null
-   auto cleanup = valueRestorer(mDialog);
-
-   if (factory)
-   {
-      mDialog = factory(parent, mHost, this);
-   }
-
-   if (!mDialog)
-   {
-      return false;
-   }
-
+   // Remember the dialog with a weak pointer, but don't control its lifetime
+   mDialog = &dialog;
    if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
    {
       mDialog->Show();
-      cleanup.release();
-
-      return false;
+      return 0;
    }
 
-   bool res = mDialog->ShowModal() != 0;
-
-   return res;
+   return mDialog->ShowModal();
 }
 
 bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms)
@@ -1707,11 +1694,6 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets()
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-void AudioUnitEffect::SetHostUI(EffectUIHostInterface *host)
-{
-   mUIHost = host;
-}
-
 bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
 {
    // OSStatus result;
@@ -1833,7 +1815,6 @@ bool AudioUnitEffect::CloseUI()
    }
 #endif
 
-   mUIHost = NULL;
    mParent = NULL;
    mDialog = NULL;
 
@@ -1942,12 +1923,14 @@ bool AudioUnitEffect::HasOptions()
 
 void AudioUnitEffect::ShowOptions()
 {
-   AudioUnitEffectOptionsDialog dlg(mParent, mHost);
+   AudioUnitEffectOptionsDialog dlg(mParent, *mHost, *this);
    if (dlg.ShowModal())
    {
       // Reinitialize configuration settings
-      mHost->GetSharedConfig(wxT("Options"), wxT("UseLatency"), mUseLatency, true);
-      mHost->GetSharedConfig(wxT("Options"), wxT("UIType"), mUIType, wxT("Full"));
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+         wxT("UseLatency"), mUseLatency, true);
+      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+         wxT("UIType"), mUIType, wxT("Full"));
    }
 }
 
@@ -1960,7 +1943,9 @@ bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
    wxString parms;
 
    // Attempt to load old preset parameters and resave using new method
-   if (mHost->GetPrivateConfig(group, wxT("Parameters"), parms, wxEmptyString))
+   if (GetConfig(*this,
+      PluginSettings::Private, group, wxT("Parameters"),
+      parms, wxEmptyString))
    {
       CommandParameters eap;
       if (eap.SetParameters(parms))
@@ -1969,7 +1954,8 @@ bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
          {
             if (SavePreset(group))
             {
-               mHost->RemovePrivateConfig(group, wxT("Parameters"));
+               RemoveConfig(*this, PluginSettings::Private,
+                  group, wxT("Parameters"));
             }
          }
       }
@@ -1977,7 +1963,9 @@ bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
    }
 
    // Retrieve the preset
-   if (!mHost->GetPrivateConfig(group, PRESET_KEY, parms, wxEmptyString))
+   if (!GetConfig(*this,
+      PluginSettings::Private, group, PRESET_KEY, parms,
+      wxEmptyString))
    {
       // Commented "CurrentSettings" gets tried a lot and useless messages appear
       // in the log
@@ -2102,7 +2090,8 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group)
       wxString parms = wxBase64Encode(CFDataGetBytePtr(data.get()), length);
 
       // And write it to the config
-      if (!mHost->SetPrivateConfig(group, PRESET_KEY, parms))
+      if (!SetConfig(*this,
+         PluginSettings::Private, group, PRESET_KEY, parms))
       {
          return false;
       }

@@ -206,8 +206,10 @@ bool EffectChangeSpeed::Startup()
          mFromVinyl = kVinyl_33AndAThird;
       }
 
-      SetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
-      SetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
+      SetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
+      SetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
 
       SaveUserPreset(GetCurrentSettingsGroup());
 
@@ -294,12 +296,15 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
 {
    {
       wxString formatId;
-      GetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"),
-                       formatId, mFormat.Internal());
+      GetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(),
+         wxT("TimeFormat"), formatId, mFormat.Internal());
       mFormat = NumericConverter::LookupFormat(
          NumericConverter::TIME, formatId );
    }
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, mFromVinyl);
+   GetConfig(GetDefinition(), PluginSettings::Private,
+      GetCurrentSettingsGroup(),
+      wxT("VinylChoice"), mFromVinyl, mFromVinyl);
 
    S.SetBorder(5);
 
@@ -457,8 +462,10 @@ bool EffectChangeSpeed::TransferDataFromWindow()
    }
    m_PercentChange = exactPercent;
 
-   SetPrivateConfig(GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
-   SetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
+   SetConfig(GetDefinition(), PluginSettings::Private,
+      GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
+   SetConfig(GetDefinition(), PluginSettings::Private,
+      GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
 
    return true;
 }
@@ -560,8 +567,8 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
       auto front = clips.front();
       auto back = clips.back();
       for (auto &clip : clips) {
-         auto st = clip->GetStartTime();
-         auto et = clip->GetEndTime();
+         auto st = clip->GetPlayStartTime();
+         auto et = clip->GetPlayEndTime();
 
          if (st >= mCurT0 || et < mCurT1) {
             if (mCurT0 < st && clip == front) {
@@ -662,7 +669,8 @@ void EffectChangeSpeed::OnChoice_Vinyl(wxCommandEvent & WXUNUSED(evt))
    mToVinyl = mpChoice_ToVinyl->GetSelection();
    // Use this as the 'preferred' choice.
    if (mFromVinyl != kVinyl_NA) {
-      SetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
+      SetConfig(GetDefinition(), PluginSettings::Private,
+         GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
    }
 
    // If mFromVinyl & mToVinyl are set, then there's a NEW percent change.
@@ -772,7 +780,8 @@ void EffectChangeSpeed::Update_Vinyl()
             mpChoice_ToVinyl->SetSelection(mpChoice_FromVinyl->GetSelection());
          } else {
             // Use the last saved option.
-            GetPrivateConfig(GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, 0);
+            GetConfig(GetDefinition(), PluginSettings::Private,
+               GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, 0);
             mpChoice_FromVinyl->SetSelection(mFromVinyl);
             mpChoice_ToVinyl->SetSelection(mFromVinyl);
          }

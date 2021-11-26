@@ -54,5 +54,21 @@ const Dictionary &GetDictionary()
 {
    return sDictionary();
 }
+ 
+static std::vector<Initializer> &sInitializers()
+{
+   static std::vector<Initializer> sTheFunctions;
+   return sTheFunctions;
+}
+
+RegisteredInitializer::RegisteredInitializer( Initializer initializer )
+{
+   sInitializers().push_back( move(initializer) );
+}
+
+const Initializers &GetInitializers()
+{
+   return sInitializers();
+}
 
 }

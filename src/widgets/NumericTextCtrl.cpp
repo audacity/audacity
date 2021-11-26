@@ -169,10 +169,12 @@ different formats.
 #include "NumericTextCtrl.h"
 
 #include "SampleCount.h"
-#include "../AllThemeResources.h"
-#include "../AColor.h"
+#include "AllThemeResources.h"
+#include "AColor.h"
+#include "BasicMenu.h"
 #include "../KeyboardCapture.h"
-#include "../Theme.h"
+#include "Theme.h"
+#include "wxWidgetsWindowPlacement.h"
 
 #include <algorithm>
 #include <math.h>
@@ -1771,7 +1773,11 @@ void NumericTextCtrl::OnContext(wxContextMenuEvent &event)
       }
    }
 
-   PopupMenu(&menu, wxPoint(0, 0));
+   menu.Bind(wxEVT_MENU, [](auto&){});
+   BasicMenu::Handle{ &menu }.Popup(
+      wxWidgetsWindowPlacement{ this },
+      { 0, 0 }
+   );
 
    // This used to be in an EVT_MENU() event handler, but GTK
    // is sensitive to what is done within the handler if the

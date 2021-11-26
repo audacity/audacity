@@ -40,8 +40,6 @@
 #include "InconsistencyException.h"
 
 #include "effects/TimeWarper.h"
-#include "tracks/ui/TrackView.h"
-#include "tracks/ui/TrackControls.h"
 
 #include "AllThemeResources.h"
 #include "Theme.h"
@@ -110,15 +108,17 @@ SONFNS(AutoSave)
 
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
-   wxT( "notetrack" ),
-   []( AudacityProject &project ){
-      auto &tracks = TrackList::Get( project );
-      auto result = tracks.Add( std::make_shared<NoteTrack>());
-      TrackView::Get( *result );
-      TrackControls::Get( *result );
-      return result;
-   }
+   "notetrack",
+   NoteTrack::New
 };
+
+NoteTrack *NoteTrack::New( AudacityProject &project )
+{
+   auto &tracks = TrackList::Get( project );
+   auto result = tracks.Add( std::make_shared<NoteTrack>());
+   result->AttachedTrackObjects::BuildAll();
+   return result;
+}
 
 NoteTrack::NoteTrack()
    : NoteTrackBase()
@@ -892,46 +892,38 @@ bool IsValidVisibleChannels(const int nValue)
 }
 }
 
-bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool NoteTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
-   if (!wxStrcmp(tag, wxT("notetrack"))) {
-      while (*attrs) {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-         if (!value)
-            break;
-         const wxString strValue = value;
+   if (tag == "notetrack") {
+      for (auto pair : attrs)
+      {
+         auto attr = pair.first;
+         auto value = pair.second;
+
          long nValue;
          double dblValue;
-         if (this->Track::HandleCommonXMLAttribute(attr, strValue))
+         if (this->Track::HandleCommonXMLAttribute(attr, value))
             ;
          else if (this->NoteTrackBase::HandleXMLAttribute(attr, value))
          {}
-         else if (!wxStrcmp(attr, wxT("offset")) &&
-                  XMLValueChecker::IsGoodString(strValue) &&
-                  Internat::CompatibleToDouble(strValue, &dblValue))
+         else if (attr == "offset" && value.TryGet(dblValue))
             SetOffset(dblValue);
-         else if (!wxStrcmp(attr, wxT("visiblechannels"))) {
-             if (!XMLValueChecker::IsGoodInt(strValue) ||
-                 !strValue.ToLong(&nValue) ||
+         else if (attr == "visiblechannels") {
+             if (!value.TryGet(nValue) ||
                  !IsValidVisibleChannels(nValue))
                  return false;
              mVisibleChannels = nValue;
          }
 #ifdef EXPERIMENTAL_MIDI_OUT
-         else if (!wxStrcmp(attr, wxT("velocity")) &&
-                  XMLValueChecker::IsGoodString(strValue) &&
-                  Internat::CompatibleToDouble(strValue, &dblValue))
+         else if (attr == "velocity" && value.TryGet(dblValue))
             mVelocity = (float) dblValue;
 #endif
-         else if (!wxStrcmp(attr, wxT("bottomnote")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
+         else if (attr == "bottomnote" && value.TryGet(nValue))
             SetBottomNote(nValue);
-         else if (!wxStrcmp(attr, wxT("topnote")) &&
-                  XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue))
+         else if (attr == "topnote" && value.TryGet(nValue))
             SetTopNote(nValue);
-         else if (!wxStrcmp(attr, wxT("data"))) {
-             std::string s(strValue.mb_str(wxConvUTF8));
+         else if (attr == "data") {
+             std::string s(value.ToWString());
              std::istringstream data(s);
              mSeq = std::make_unique<Alg_seq>(data, false);
          }
@@ -941,7 +933,7 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-XMLTagHandler *NoteTrack::HandleXMLChild(const wxChar * WXUNUSED(tag))
+XMLTagHandler *NoteTrack::HandleXMLChild(const std::string_view&  WXUNUSED(tag))
 {
    return NULL;
 }

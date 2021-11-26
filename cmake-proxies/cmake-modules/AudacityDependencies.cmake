@@ -167,13 +167,7 @@ function (add_conan_lib package conan_package_name )
                     add_library( ${interface_name} INTERFACE IMPORTED GLOBAL)
 
                     # Retrieve the package information
-                    get_package_interface( PKG_${package} )
-
-                    # And add it to our target
-                    target_include_directories( ${interface_name} INTERFACE ${INCLUDES} )
-                    target_link_libraries( ${interface_name} INTERFACE ${LIBRARIES} )
-
-                    message(STATUS "Added inteface ${interface_name} ${INCLUDES} ${LIBRARIES}")
+                    get_package_interface( PKG_${package} ${interface_name} )
                     return()
                 endif()
             endforeach()

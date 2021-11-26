@@ -13,6 +13,7 @@ Paul Licameli
 
 
 #include <algorithm>
+#include "XMLAttributeValueView.h"
 
 #include "Prefs.h"
 #include "Project.h"
@@ -33,7 +34,7 @@ wxEvent *SelectedRegionEvent::Clone() const
 
 XMLMethodRegistryBase::Mutators<NotifyingSelectedRegion>
 NotifyingSelectedRegion::Mutators(
-   const wxString &legacyT0Name, const wxString &legacyT1Name)
+   const char *legacyT0Name, const char *legacyT1Name)
 {
    XMLMethodRegistryBase::Mutators<NotifyingSelectedRegion> results;
    // Get serialization methods of contained SelectedRegion, and wrap each
@@ -152,6 +153,103 @@ void NotifyingSelectedRegion::Notify( bool delayed )
       ProcessEvent( evt );
 }
 
+wxDEFINE_EVENT( EVT_PLAY_REGION_CHANGE, PlayRegionEvent );
+
+PlayRegionEvent::PlayRegionEvent(
+   wxEventType commandType, PlayRegion *pReg )
+: wxEvent{ 0, commandType }
+, pRegion{ pReg }
+{}
+
+wxEvent *PlayRegionEvent::Clone() const
+{
+   return safenew PlayRegionEvent{ *this };
+}
+
+void PlayRegion::SetActive( bool active )
+{
+   if (mActive != active) {
+      mActive = active;
+      if (mActive) {
+         // Restore values
+         if (mStart != mLastActiveStart || mEnd != mLastActiveEnd) {
+            mStart = mLastActiveStart;
+            mEnd = mLastActiveEnd;
+         }
+      }
+      Notify();
+   }
+}
+
+void PlayRegion::SetStart( double start )
+{
+   if (mStart != start) {
+      if (mActive)
+         mLastActiveStart = start;
+      mStart = start;
+      Notify();
+   }
+}
+
+void PlayRegion::SetEnd( double end )
+{
+   if (mEnd != end) {
+      if (mActive)
+         mLastActiveEnd = end;
+      mEnd = end;
+      Notify();
+   }
+}
+
+void PlayRegion::SetTimes( double start, double end )
+{
+   if (mStart != start || mEnd != end) {
+      if (mActive)
+         mLastActiveStart = start, mLastActiveEnd = end;
+      mStart = start, mEnd = end;
+      Notify();
+   }
+}
+
+void PlayRegion::SetAllTimes( double start, double end )
+{
+   SetTimes(start, end);
+   mLastActiveStart = start, mLastActiveEnd = end;
+}
+
+void PlayRegion::Clear()
+{
+   SetAllTimes(invalidValue, invalidValue);
+}
+
+bool PlayRegion::IsClear() const
+{
+   return GetStart() == invalidValue && GetEnd() == invalidValue;
+}
+
+bool PlayRegion::IsLastActiveRegionClear() const
+{
+   return GetLastActiveStart() == invalidValue && GetLastActiveEnd() == invalidValue;
+}
+
+void PlayRegion::Order()
+{
+   if ( mStart >= 0 && mEnd >= 0 && mStart > mEnd) {
+      std::swap( mStart, mEnd );
+      if (mActive)
+         mLastActiveStart = mStart, mLastActiveEnd = mEnd;
+      Notify();
+   }
+}
+
+void PlayRegion::Notify()
+{
+   PlayRegionEvent evt{ EVT_PLAY_REGION_CHANGE, this };
+   ProcessEvent( evt );
+}
+
+const TranslatableString LoopToggleText = XXO("&Loop On/Off");
+
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
    []( AudacityProject &project ) {
       return std::make_unique<ViewInfo>(0.0, 1.0, ZoomInfo::GetDefaultZoom());
@@ -214,7 +312,7 @@ void ViewInfo::SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, do
 void ViewInfo::WriteXMLAttributes(XMLWriter &xmlFile) const
 // may throw
 {
-   selectedRegion.WriteXMLAttributes(xmlFile, wxT("sel0"), wxT("sel1"));
+   selectedRegion.WriteXMLAttributes(xmlFile, "sel0", "sel1");
    xmlFile.WriteAttr(wxT("vpos"), vpos);
    xmlFile.WriteAttr(wxT("h"), h, 10);
    xmlFile.WriteAttr(wxT("zoom"), zoom, 10);
@@ -228,25 +326,23 @@ ProjectFileIORegistry::AttributeReaderEntries entries {
 {
    return ViewInfo::Get(project).selectedRegion;
 },
-NotifyingSelectedRegion::Mutators(L"sel0", L"sel1")
+NotifyingSelectedRegion::Mutators("sel0", "sel1")
 };
 
 ProjectFileIORegistry::AttributeReaderEntries entries2 {
 // Just a pointer to function, but needing overload resolution as non-const:
 (ViewInfo& (*)(AudacityProject &)) &ViewInfo::Get,
 {
-   { L"vpos", [](auto &viewInfo, auto value){
-      long longVpos;
-      wxString(value).ToLong(&longVpos);
-      viewInfo.vpos = (int)(longVpos);
+   { "vpos", [](auto &viewInfo, auto value){
+      viewInfo.vpos = value.Get(viewInfo.vpos);
       // Note that (other than in import of old .aup files) there is no other
       // reassignment of vpos, except in handling the vertical scroll.
    } },
-   { L"h", [](auto &viewInfo, auto value){
-      Internat::CompatibleToDouble(value, &viewInfo.h);
+   { "h", [](auto &viewInfo, auto value){
+      viewInfo.h = value.Get(viewInfo.h);
    } },
-   { L"zoom", [](auto &viewInfo, auto value){
-      Internat::CompatibleToDouble(value, &viewInfo.zoom);
+   { "zoom", [](auto &viewInfo, auto value){
+      viewInfo.zoom = value.Get(viewInfo.zoom);
    } },
 } };
 

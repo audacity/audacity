@@ -13,21 +13,24 @@
 
 #include "XMLTagHandler.h"
 
-#include <wx/mstream.h> // member variables
+#include "MemoryStream.h" // member variables
+#include <wx/mstream.h>
 
 #include <unordered_set>
 #include <unordered_map>
+
 #include "Identifier.h"
 
 // From SampleBlock.h
 using SampleBlockID = long long;
 
+class BufferedStreamReader;
 ///
 /// ProjectSerializer
 ///
 
 using NameMap = std::unordered_map<wxString, unsigned short>;
-using IdMap = std::unordered_map<unsigned short, wxString>;
+using IdMap = std::unordered_map<unsigned short, std::string>;
 
 // This class's overrides do NOT throw AudacityException.
 class AUDACITY_DLL_API ProjectSerializer final : public XMLWriter
@@ -56,27 +59,24 @@ public:
    void WriteData(const wxString & value) override;
    void Write(const wxString & data) override;
 
-   // Non-override functions
-   void WriteSubTree(const ProjectSerializer & value);
-
-   const wxMemoryBuffer &GetDict() const;
-   const wxMemoryBuffer &GetData() const;
+   const MemoryStream& GetDict() const;
+   const MemoryStream& GetData() const;
 
    bool IsEmpty() const;
    bool DictChanged() const;
 
    // Returns empty string if decoding fails
-   static wxString Decode(const wxMemoryBuffer &buffer);
+   static bool Decode(BufferedStreamReader& in, XMLTagHandler* handler);
 
 private:
-   void WriteName(const wxString & name);
+   void WriteName(const wxString& name);
 
 private:
-   wxMemoryBuffer mBuffer;
+   MemoryStream mBuffer;
    bool mDictChanged;
 
    static NameMap mNames;
-   static wxMemoryBuffer mDict;
+   static MemoryStream mDict;
 };
 
 #endif

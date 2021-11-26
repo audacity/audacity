@@ -56,12 +56,12 @@ public:
    // does not emit events
    void WriteXMLAttributes
       (XMLWriter &xmlFile,
-       const wxChar *legacyT0Name, const wxChar *legacyT1Name) const
+       const char *legacyT0Name, const char *legacyT1Name) const
    { mRegion.WriteXMLAttributes(xmlFile, legacyT0Name, legacyT1Name); }
 
    //! Return some information used for deserialization purposes by ViewInfo
    static XMLMethodRegistryBase::Mutators<NotifyingSelectedRegion>
-      Mutators(const wxString &legacyT0Name, const wxString &legacyT1Name);
+      Mutators(const char *legacyT0Name, const char *legacyT1Name);
 
    // const-only access allows assignment from this into a SelectedRegion
    // or otherwise passing it into a function taking const SelectedRegion&
@@ -95,7 +95,7 @@ public:
    bool setF1(double f, bool maySwap = true);
 
 private:
-   void Notify( bool delayed = false  );
+   void Notify( bool delayed = false );
 
    SelectedRegion mRegion;
 };
@@ -112,7 +112,20 @@ enum : int {
    kTrackInfoSliderExtra = 5,
 };
 
-class PlayRegion
+class PlayRegion;
+
+struct PlayRegionEvent : public wxEvent
+{
+   PlayRegionEvent( wxEventType commandType, PlayRegion *pRegion );
+   wxEvent *Clone() const override;
+
+   wxWeakRef< PlayRegion > pRegion;
+};
+
+wxDECLARE_EXPORTED_EVENT( SCREEN_GEOMETRY_API,
+   EVT_PLAY_REGION_CHANGE, PlayRegionEvent );
+
+class SCREEN_GEOMETRY_API PlayRegion : public wxEvtHandler
 {
 public:
    PlayRegion() = default;
@@ -120,15 +133,17 @@ public:
    PlayRegion( const PlayRegion& ) = delete;
    PlayRegion &operator= ( const PlayRegion &that )
    {
-      mLocked = that.mLocked;
+      mActive = that.mActive;
       // Guarantee the equivalent un-swapped order of endpoints
       mStart = that.GetStart();
       mEnd = that.GetEnd();
+      mLastActiveStart = that.GetLastActiveStart();
+      mLastActiveEnd = that.GetLastActiveEnd();
       return *this;
    }
 
-   bool Locked() const { return mLocked; }
-   void SetLocked( bool locked ) { mLocked = locked; }
+   bool Active() const { return mActive; }
+   void SetActive( bool active );
 
    bool Empty() const { return GetStart() == GetEnd(); }
    double GetStart() const
@@ -145,24 +160,51 @@ public:
       else
          return std::max( mStart, mEnd );
    }
-
-   void SetStart( double start ) { mStart = start; }
-   void SetEnd( double end ) { mEnd = end; }
-   void SetTimes( double start, double end ) { mStart = start, mEnd = end; }
-
-   void Order()
+   double GetLastActiveStart() const
    {
-      if ( mStart >= 0 && mEnd >= 0 && mStart > mEnd)
-         std::swap( mStart, mEnd );
+      if ( mLastActiveEnd < 0 )
+         return mLastActiveStart;
+      else
+         return std::min( mLastActiveStart, mLastActiveEnd );
+   }
+   double GetLastActiveEnd() const
+   {
+      if ( mLastActiveStart < 0 )
+         return mLastActiveEnd;
+      else
+         return std::max( mLastActiveStart, mLastActiveEnd );
    }
 
-private:
-   // Times:
-   double mStart{ -1.0 };
-   double mEnd{ -1.0 };
+   void SetStart( double start );
+   void SetEnd( double end );
+   void SetTimes( double start, double end );
+   // Set current and last active times the same regardless of activation:
+   void SetAllTimes( double start, double end );
 
-   bool mLocked{ false };
+   //! Set to an invalid state
+   void Clear();
+   //! Test whether in invalid state
+   bool IsClear() const;
+   //! Test whether last active region is in invalid state
+   bool IsLastActiveRegionClear() const;
+
+   void Order();
+
+private:
+   void Notify();
+
+   // Times:
+   static constexpr auto invalidValue = std::numeric_limits<double>::min();
+
+   double mStart { invalidValue };
+   double mEnd { invalidValue };
+   double mLastActiveStart { invalidValue };
+   double mLastActiveEnd { invalidValue };
+
+   bool mActive{ false };
 };
+
+extern SCREEN_GEOMETRY_API const TranslatableString LoopToggleText;
 
 class SCREEN_GEOMETRY_API ViewInfo final
    : public wxEvtHandler, public ZoomInfo

@@ -46,6 +46,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
       # Enable updates. See https://github.com/AppImage/AppImageSpec/blob/master/draft.md#update-information
       set(CPACK_AUDACITY_APPIMAGE_UPDATE_INFO "gh-releases-zsync|audacity|audacity|latest|${zsync_name}.AppImage.zsync")
    endif()
+   get_property(CPACK_AUDACITY_FINDLIB_LOCATION TARGET findlib PROPERTY RUNTIME_OUTPUT_DIRECTORY)
 elseif( CMAKE_SYSTEM_NAME STREQUAL "Darwin" )
    set( CPACK_GENERATOR DragNDrop )
 
@@ -62,8 +63,10 @@ elseif( CMAKE_SYSTEM_NAME STREQUAL "Darwin" )
       set( CPACK_PERFORM_NOTARIZATION ${${_OPT}perform_notarization} )
 
       # CPACK_POST_BUILD_SCRIPTS was added in 3.19, but we only need it on macOS
-      SET( CPACK_POST_BUILD_SCRIPTS "${CMAKE_SOURCE_DIR}/scripts/build/macOS/DMGSign.cmake" )
+      set( CPACK_POST_BUILD_SCRIPTS "${CMAKE_SOURCE_DIR}/scripts/build/macOS/DMGSign.cmake" )
    endif()
+elseif (CMAKE_SYSTEM_NAME MATCHES "Windows")
+   set( CPACK_GENERATOR ZIP )
 endif()
 
 if( CMAKE_GENERATOR MATCHES "Makefiles|Ninja" )

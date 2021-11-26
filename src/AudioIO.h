@@ -36,7 +36,7 @@ class RingBuffer;
 class Mixer;
 class Resample;
 class AudioThread;
-class SelectedRegion;
+class PlayRegionEvent;
 
 class AudacityProject;
 
@@ -255,7 +255,9 @@ public:
    ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
    WaveTrackArray      mPlaybackTracks;
 
-   ArrayOf<std::unique_ptr<Mixer>> mPlaybackMixers;
+   std::vector<std::unique_ptr<Mixer>> mPlaybackMixers;
+
+   float               mMixerOutputVol { 1.0 };
    static int          mNextStreamToken;
    double              mFactor;
    unsigned long       mMaxFramesOutput; // The actual number of frames output.
@@ -310,16 +312,6 @@ protected:
    // the state used by the third, Audio thread.
    wxMutex mSuspendAudioThread;
 
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-public:
-   struct ScrubState;
-   std::unique_ptr<ScrubState> mScrubState;
-
-   bool mSilentScrub;
-   double mScrubSpeed;
-   sampleCount mScrubDuration;
-#endif
-
 protected:
    // A flag tested and set in one thread, cleared in another.  Perhaps
    // this guarantee of atomicity is more cautious than necessary.
@@ -359,23 +351,6 @@ private:
 
 struct PaStreamInfo;
 
-//! Describes an amount of contiguous (but maybe time-warped) data to be extracted from tracks to play
-struct PlaybackSlice {
-   const size_t frames; //!< Total number frames to be buffered
-   const size_t toProduce; //!< Not more than `frames`; the difference will be trailing silence
-   const bool progress; //!< To be removed
-
-   //! Constructor enforces some invariants
-   /*! @invariant `result.toProduce <= result.frames && result.frames <= available`
-    */
-   PlaybackSlice(
-      size_t available, size_t frames_, size_t toProduce_, bool progress_)
-      : frames{ std::min(available, frames_) }
-      , toProduce{ std::min(toProduce_, frames) }
-      , progress{ progress_ }
-   {}
-};
-
 class AUDACITY_DLL_API AudioIO final
    : public AudioIoCallback
 {
@@ -404,8 +379,9 @@ public:
     * instance.  For use with IsStreamActive() */
 
    int StartStream(const TransportTracks &tracks,
-                   double t0, double t1,
-                   const AudioIOStartStreamOptions &options);
+      double t0, double t1,
+      double mixerLimit, //!< Time at which mixer stops producing, maybe > t1
+      const AudioIOStartStreamOptions &options);
 
    /** \brief Stop recording, playback or input monitoring.
     *
@@ -423,28 +399,12 @@ public:
    /*! This may be called from non-main threads */
    void CallAfterRecording(PostRecordingAction action);
 
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   bool IsScrubbing() const { return IsBusy() && mScrubState != 0; }
-
-   /** \brief Notify scrubbing engine of desired position or speed.
-   * If options.adjustStart is true, then when mouse movement exceeds maximum
-   * scrub speed, adjust the beginning of the scrub interval rather than the
-   * end, so that the scrub skips or "stutters" to stay near the cursor.
-   */
-   void UpdateScrub(double endTimeOrSpeed, const ScrubbingOptions &options);
-
-   void StopScrub();
-
-   /** \brief return the ending time of the last scrub interval.
-   */
-   double GetLastScrubTime() const;
-#endif
-
 public:
    wxString LastPaErrorString();
 
    wxLongLong GetLastPlaybackTime() const { return mLastPlaybackTimeMillis; }
-   AudacityProject *GetOwningProject() const { return mOwningProject; }
+   std::shared_ptr<AudacityProject> GetOwningProject() const
+   { return mOwningProject.lock(); }
 
    /** \brief Pause and un-pause playback and recording */
    void SetPaused(bool state);
@@ -466,14 +426,6 @@ public:
     * disable the UI if it doesn't work.
     */
    bool InputMixerWorks();
-
-   /** @brief Find out if the output level control is being emulated via software attenuation
-    *
-    * Checks the mEmulateMixerOutputVol variable, which is set up in
-    * AudioIOBase::HandleDeviceChange(). External classes care, because we want to
-    * modify the UI if it doesn't work.
-    */
-   bool OutputMixerEmulated();
 
    /** \brief Get the list of inputs to the current mixer device
     *
@@ -505,7 +457,7 @@ public:
       double AILAGetLastDecisionTime();
    #endif
 
-   bool IsAvailable(AudacityProject *projecT) const;
+   bool IsAvailable(AudacityProject &project) const;
 
    /** \brief Return a valid sample rate that is supported by the current I/O
    * device(s).
@@ -559,6 +511,10 @@ private:
                              unsigned int numCaptureChannels,
                              sampleFormat captureFormat);
 
+   void SetOwningProject( const std::shared_ptr<AudacityProject> &pProject );
+   void ResetOwningProject();
+   static void LoopPlayUpdate( PlayRegionEvent &evt );
+
    /*!
     Called in a loop from another worker thread that does not have the low-latency constraints
     of the PortAudio callback thread.  Does less frequent and larger batches of work that may
@@ -569,16 +525,6 @@ private:
 
    //! First part of TrackBufferExchange
    void FillPlayBuffers();
-   //! Called one or more times by FillPlayBuffers
-   PlaybackSlice GetPlaybackSlice(
-      size_t available //!< how many more samples may be buffered
-   );
-   //! FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
-   bool RepositionPlayback(
-      size_t frames, //!< how many samples were just now buffered for play
-      size_t available, //!< how many more samples may be buffered
-      bool progress
-   );
 
    //! Second part of TrackBufferExchange
    void DrainRecordBuffers();
@@ -605,8 +551,7 @@ private:
      */
    bool AllocateBuffers(
       const AudioIOStartStreamOptions &options,
-      const TransportTracks &tracks, double t0, double t1, double sampleRate,
-      bool scrubbing );
+      const TransportTracks &tracks, double t0, double t1, double sampleRate );
 
    /** \brief Clean up after StartStream if it fails.
      *
@@ -615,9 +560,8 @@ private:
 
    std::mutex mPostRecordingActionMutex;
    PostRecordingAction mPostRecordingAction;
+
    bool mDelayingActions{ false };
 };
-
-static constexpr unsigned ScrubPollInterval_ms = 50;
 
 #endif

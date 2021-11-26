@@ -79,3 +79,8 @@ unsigned TrackPanelCell::Char(
    event.Skip();
    return RefreshCode::RefreshNone;
 }
+
+unsigned TrackPanelCell::LoseFocus(AudacityProject *)
+{
+   return RefreshCode::RefreshNone;
+}

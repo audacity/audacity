@@ -49,11 +49,6 @@ void TimeTrackMenuTable::InitUserData(void *pUserData)
    mpData = static_cast<CommonTrackControls::InitMenuData*>(pUserData);
 }
 
-void TimeTrackMenuTable::DestroyMenu()
-{
-   mpData = nullptr;
-}
-
 void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
 {
    TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);

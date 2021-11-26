@@ -114,7 +114,7 @@ set( EXPERIMENTAL_OPTIONS_LIST
    SPECTRAL_EDITING
 
    # Edward Hui 1 Jul 2021
-   BRUSH_TOOL
+   #BRUSH_TOOL
 
    # Paul Licameli (PRL) 29 Nov 2014
    #IMPROVED_SEEKING
@@ -181,11 +181,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    #Define to include crash reporting, if available in wxWidgets build
    #This flag is used only in CrashReport.h; elsewhere use HAS_CRASH_REPORT
    CRASH_REPORT
-
-   # Paul Licameli (PRL) 31 May 2015
-   # Zero-padding factor for spectrograms can smooth the display of spectrograms by
-   # interpolating in frequency domain.
-   ZERO_PADDED_SPECTROGRAMS
 
    # PRL 11 Jul 2017
    # Highlight more things in TrackPanel when the mouse moves over them,

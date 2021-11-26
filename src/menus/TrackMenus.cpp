@@ -507,9 +507,9 @@ void DoSortTracks( AudacityProject &project, int flags )
             int ndx;
             for (ndx = 0; ndx < w->GetNumClips(); ndx++) {
                const auto c = w->GetClipByIndex(ndx);
-               if (c->GetNumSamples() == 0)
+               if (c->GetPlaySamplesCount() == 0)
                   continue;
-               stime = std::min(stime, c->GetStartTime());
+               stime = std::min(stime, c->GetPlayStartTime());
             }
             return stime;
          },

@@ -14,12 +14,15 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/event.h>
 #include <wx/menu.h>
 
+#include "../../widgets/BasicMenu.h"
+#include "BasicUI.h"
 #include "../../commands/CommandContext.h"
 #include "../../commands/CommandManager.h"
 #include "../../HitTestResult.h"
 #include "../../RefreshCode.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
+#include "../../widgets/wxWidgetsWindowPlacement.h"
 
 namespace {
    CommonTrackPanelCell::Hook &GetHook()
@@ -108,7 +111,13 @@ unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
       ++ii;
    }
    
-   pParent->PopupMenu(&menu, pPoint ? *pPoint : wxDefaultPosition);
+   BasicUI::Point point;
+   if (pPoint)
+      point = { pPoint->x, pPoint->y };
+   BasicMenu::Handle{ &menu }.Popup(
+      wxWidgetsWindowPlacement{ pParent },
+      point
+   );
 
    return RefreshCode::RefreshNone;
 }
@@ -126,10 +135,6 @@ CommonTrackCell::CommonTrackCell( const std::shared_ptr< Track > &parent )
 
 CommonTrackCell::~CommonTrackCell() = default;
 
-void CommonTrackCell::CopyTo( Track& ) const
-{
-}
-
 void CommonTrackCell::Reparent( const std::shared_ptr<Track> &parent )
 {
    mwTrack = parent;
@@ -138,13 +143,4 @@ void CommonTrackCell::Reparent( const std::shared_ptr<Track> &parent )
 std::shared_ptr<Track> CommonTrackCell::DoFindTrack()
 {
    return mwTrack.lock();
-}
-
-void CommonTrackCell::WriteXMLAttributes( XMLWriter & ) const
-{
-}
-
-bool CommonTrackCell::HandleXMLAttribute( const wxChar *, const wxChar * )
-{
-   return false;
 }

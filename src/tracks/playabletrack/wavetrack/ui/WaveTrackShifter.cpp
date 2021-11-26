@@ -7,6 +7,7 @@
 #include "ViewInfo.h"
 #include "../../../../WaveClip.h"
 #include "../../../../WaveTrack.h"
+#include "WaveTrackView.h"
 
 class WaveTrackShifter final : public TrackShifter {
 public:
@@ -19,10 +20,31 @@ public:
    Track &GetTrack() const override { return *mpTrack; }
 
    HitTestResult HitTest(
-      double time, const ViewInfo &viewInfo, HitTestParams* ) override
+      double time, const ViewInfo &viewInfo, HitTestParams* params) override
    {
-      auto pClip = mpTrack->GetClipAtTime( time );
+      auto pClip = [&]() {
+         for (auto clip : mpTrack->GetClips())
+         {
+            if (params != nullptr)
+            {
+               if (WaveTrackView::HitTest(
+                      *clip, viewInfo, params->rect,
+                      { params->xx, params->yy }))
+                  return clip;
+            }
+            else
+            {
+               // WithinPlayRegion misses first sample, which breaks moving
+               // "selected" clip. Probable WithinPlayRegion should be fixed
+               // instead?
+               if (clip->GetPlayStartTime() <= time && time < clip->GetPlayEndTime())
+                  return clip;
+            }
+         }
 
+         return std::shared_ptr<WaveClip>{};
+      }();
+      
       if (!pClip)
          return HitTestResult::Miss;
 
@@ -38,7 +60,7 @@ public:
       UnfixIntervals( [&](const auto &interval){
          return
             static_cast<WaveTrack::IntervalData*>(interval.Extra())
-               ->GetClip().get() == pClip;
+               ->GetClip() == pClip;
       } );
       
       return HitTestResult::Intervals;
@@ -52,8 +74,11 @@ public:
          auto data =
             static_cast<WaveTrack::IntervalData*>( myInterval.Extra() );
          auto clip = data->GetClip().get();
-         return !(clip->IsClipStartAfterClip(interval.Start()) ||
-            clip->BeforeClip(interval.End()));
+         const auto c0 = mpTrack->TimeToLongSamples(clip->GetPlayStartTime());
+         const auto c1 = mpTrack->TimeToLongSamples(clip->GetPlayEndTime());
+         return 
+             mpTrack->TimeToLongSamples(interval.Start()) < c1 && 
+             mpTrack->TimeToLongSamples(interval.End()) > c0;
       });
    }
 
@@ -172,10 +197,10 @@ public:
       else {
          auto data = static_cast<WaveTrack::IntervalData*>(MovingIntervals()[0].Extra());
          auto& clip = data->GetClip();
-         if (t0 < clip->GetStartTime())
-            t0 = clip->GetStartTime();
-         if (t0 > clip->GetEndTime())
-            t0 = clip->GetEndTime();
+         if (t0 < clip->GetPlayStartTime())
+            t0 = clip->GetPlayStartTime();
+         if (t0 > clip->GetPlayEndTime())
+            t0 = clip->GetPlayEndTime();
       }
       return t0;
    }

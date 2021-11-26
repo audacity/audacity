@@ -16,10 +16,14 @@ used utilities that don't correspond to things in the standard.
 ]]#
 
 set( SOURCES
+   BufferedStreamReader.cpp
+   BufferedStreamReader.h
    MemoryX.cpp
    MemoryX.h
    ModuleConstants.cpp
    ModuleConstants.h
+   MemoryStream.cpp
+   MemoryStream.h
 )
 audacity_library( lib-utility "${SOURCES}" ""
    "" ""
