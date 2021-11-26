@@ -12,6 +12,8 @@
 
 #include <cstdint>
 #include <string>
+#include <stdexcept>
+#include <limits>
 #include <string_view>
 #include <wx/string.h>
 
