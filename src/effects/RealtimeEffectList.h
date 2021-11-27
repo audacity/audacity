@@ -44,6 +44,8 @@ public:
 
    //! Returns null if the id is nonempty but no such effect was found
    RealtimeEffectState *AddState(const PluginID &id);
+   void RemoveState(RealtimeEffectState &state);
+   void Swap(size_t index1, size_t index2);
 
    using States = std::vector<std::unique_ptr<RealtimeEffectState>>;
 

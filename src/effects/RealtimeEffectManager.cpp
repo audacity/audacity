@@ -13,7 +13,6 @@
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 
-#include "EffectInterface.h"
 #include <memory>
 #include "Project.h"
 #include "Track.h"
@@ -57,6 +56,9 @@ void RealtimeEffectManager::Initialize(double rate)
 {
    // The audio thread should not be running yet, but protect anyway
    SuspensionScope scope{ &mProject };
+
+   // Remember the rate
+   mRate = rate;
 
    // (Re)Set processor parameters
    mChans.clear();
@@ -266,6 +268,55 @@ void RealtimeEffectManager::VisitAll(StateVisitor func)
    // And all track lists
    for (auto leader : mGroupLeaders)
       RealtimeEffectList::Get(*leader).Visit(func);
+}
+
+RealtimeEffectState *
+RealtimeEffectManager::AddState(Track *pTrack, const PluginID & id)
+{
+   auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
+   RealtimeEffectList &states = pLeader
+      ? RealtimeEffectList::Get(*pLeader)
+      : RealtimeEffectList::Get(mProject);
+
+   SuspensionScope scope{ &mProject };
+   // Protect...
+   std::lock_guard<std::mutex> guard(mLock);
+
+   auto pState = states.AddState(id);
+   if (!pState)
+      return nullptr;
+   auto &state = *pState;
+   
+   if (mActive)
+   {
+      // Adding a state while playback is in-flight
+      state.Initialize(mRate);
+
+      for (auto &leader : mGroupLeaders) {
+         // Add all tracks to a per-project state, but add only the same track
+         // to a state in the per-track list
+         if (pLeader && pLeader != leader)
+            continue;
+
+         auto chans = mChans[leader];
+         auto rate = mRates[leader];
+
+         state.AddTrack(leader, chans, rate);
+      }
+   }
+   return &state;
+}
+
+void RealtimeEffectManager::RemoveState(RealtimeEffectList &states, RealtimeEffectState &state)
+{
+   SuspensionScope scope{ &mProject };
+   // Protect...
+   std::lock_guard<std::mutex> guard(mLock);
+
+   if (mActive)
+      state.Finalize();
+
+   states.RemoveState(state);
 }
 
 auto RealtimeEffectManager::GetLatency() const -> Latency
