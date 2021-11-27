@@ -75,6 +75,20 @@ RealtimeEffectState *RealtimeEffectList::AddState(const PluginID &id)
       return nullptr;
 }
 
+void RealtimeEffectList::RemoveState(RealtimeEffectState &state)
+{
+   auto end = mStates.end(),
+      found = std::find_if(mStates.begin(), end,
+         [&](const auto &item) { return item.get() == &state; } );
+   if (found != end)
+      mStates.erase(found);
+}
+
+void RealtimeEffectList::Swap(size_t index1, size_t index2)
+{
+   std::swap(mStates[index1], mStates[index2]);
+}
+
 const std::string &RealtimeEffectList::XMLTag()
 {
    static const std::string result{"effects"};
