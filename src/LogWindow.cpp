@@ -111,7 +111,10 @@ void LogWindow::Show(bool show)
       S.StartVerticalLay(true);
       {
          sText = S.Style(wxTE_MULTILINE | wxHSCROLL | wxTE_READONLY | wxTE_RICH)
-            .AddTextWindow({}); // Populate this text window below
+            .AddTextWindow({});
+         
+         // Populated TextWindow created above
+         if (pLogger) *sText << pLogger->GetBuffer();
 
          S.AddSpace(0, 5);
          S.StartHorizontalLay(wxALIGN_CENTER, 0);
