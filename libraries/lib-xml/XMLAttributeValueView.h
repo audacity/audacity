@@ -11,8 +11,11 @@
 #pragma once
 
 #include <cstdint>
+#include <stdexcept>
 #include <string>
 #include <string_view>
+#include <limits>
+
 #include <wx/string.h>
 
 /*! \brief A view into an attribute value. The class does not take the ownership of the data.

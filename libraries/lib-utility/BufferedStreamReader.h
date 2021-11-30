@@ -11,6 +11,7 @@
 #pragma once
 
 #include <vector>
+#include <cstddef>
 #include <cstdint>
 #include <type_traits>
 
