@@ -30,7 +30,7 @@ See [our translators page](https://www.audacityteam.org/community/translators/) 
 
 ## Feedback & Feature requests
 
-If you have anything you thing Audacity can do better, you can voice it in [the relevant section in the forum](https://forum.audacityteam.org/viewforum.php?f=25). If you have a very concrete idea something in the code which should be added or changed, you can also  [make an enhancement request in the issue tracker](https://github.com/audacity/audacity/issues/new/choose).
+If you have anything you think Audacity can do better, you can voice it in [the relevant section in the forum](https://forum.audacityteam.org/viewforum.php?f=25). If you have a very concrete idea something in the code which should be added or changed, you can also  [make an enhancement request in the issue tracker](https://github.com/audacity/audacity/issues/new/choose).
 
 ## Supporting Users
 
