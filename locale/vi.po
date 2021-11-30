@@ -6,6 +6,7 @@
 # brad freedom <brad.freedom@gmail.com>, 2020-2021
 # hong cuong <hongcuongvn282@gmail.com>, 2021
 # Mers Ng <mersoit792@gmail.com>, 2020-2021
+# Muon Viet, 2021
 # hong cuong <hongcuongvn282@gmail.com>, 2021
 # Nguyen Mien <Hamien0604@gmail.com>, 2020-2021
 msgid ""
@@ -13,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2021-10-25 00:50+0000\n"
-"Last-Translator: brad freedom <brad.freedom@gmail.com>\n"
+"PO-Revision-Date: 2021-11-29 09:09+0000\n"
+"Last-Translator: Muon Viet\n"
 "Language-Team: Vietnamese (http://www.transifex.com/klyok/audacity/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +65,7 @@ msgstr "Ghi ch"
 #: src/widgets/ErrorReportDialog.cpp
 #, c-format
 msgid "See %s for more info."
-msgstr ""
+msgstr "Xem %s để biết thêm thông tin."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an
 #. object of "See".
@@ -326,7 +327,7 @@ msgstr "(%s)"
 msgid ""
 "\n"
 "%s does not have write permissions."
-msgstr ""
+msgstr "\n%s không có quyền ghi."
 
 #: libraries/lib-files/FileNames.cpp src/AudioIO.cpp
 #: src/ProjectAudioManager.cpp src/SelectUtilities.cpp
@@ -491,7 +492,7 @@ msgstr "Mục tin thêm vào ở %s xác định các sắp xếp gây xung đ�
 
 #: libraries/lib-screen-geometry/ViewInfo.cpp
 msgid "&Loop On/Off"
-msgstr ""
+msgstr "&Vòng lặp  Bật/Tắt"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -667,7 +668,7 @@ msgstr "Không thể nạp tập tin: \"%s\""
 
 #: libraries/lib-xml/XMLFileReader.cpp
 msgid "Could not parse XML"
-msgstr ""
+msgstr "Không thể phân tích XML"
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "1st Experimental Command..."
@@ -1432,7 +1433,7 @@ msgstr "Hỗ trợ thay đổi âm tần và tốc độ cực trị"
 #: src/AboutDialog.cpp
 msgctxt "about dialog"
 msgid "Legal"
-msgstr ""
+msgstr "Hợp lệ"
 
 #: src/AboutDialog.cpp
 msgid "GPL License"
@@ -1448,11 +1449,11 @@ msgstr "Chính sách quyền riêng tư"
 msgid ""
 "App update checking and error reporting require network access. These "
 "features are optional."
-msgstr ""
+msgstr "Ứng dụng cập nhật kiểm tra và báo lỗi yêu cầu quyền truy cập mạng. Các tính năng này là tùy chọn."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
-msgstr ""
+msgstr "Nhấp và kéo để xác định vùng lặp lại."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -1542,11 +1543,11 @@ msgstr "Cập nhật màn hình khi chạy tua"
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
 msgid "Clear Looping Region"
-msgstr ""
+msgstr "&Xoá vòng lặp đã chọn"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Set Loop To Selection"
-msgstr ""
+msgstr "Đặt vòng lặp thành lựa chọn"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Pinned Play Head"
@@ -1731,7 +1732,7 @@ msgstr "đặt kích thước khối dung lượng lớn nhất theo bytes"
 #. "log," "trail," "trace" have somewhat similar meanings
 #: src/AudacityApp.cpp
 msgid "replay a journal file"
-msgstr ""
+msgstr "Phát Tập tin  Journal  lại  "
 
 #. i18n-hint: This displays a list of available options
 #: src/AudacityApp.cpp
@@ -2470,7 +2471,7 @@ msgstr "(%d): %s"
 #: src/DBConnection.cpp
 #, c-format
 msgid "Failed to set page size for database %s"
-msgstr ""
+msgstr "Không đặt được kích thước trang cho cơ sở dữ liệu %s"
 
 #: src/DBConnection.cpp
 #, c-format
@@ -3162,7 +3163,7 @@ msgstr "Đã &làm..."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
-msgstr ""
+msgstr "Ghi nhật ký không thành công"
 
 #: src/LabelDialog.cpp
 msgid "Edit Labels"
@@ -4922,45 +4923,45 @@ msgstr "Mức độ kích hoạt (dB):"
 
 #: src/SpectralDataDialog.cpp
 msgid "Spectral Data Control Panel"
-msgstr ""
+msgstr "Spectral Data Control Panel - Bảng điều chỉnh dữ liệu phổ âm thanh"
 
 #: src/SpectralDataDialog.cpp
 msgid "Brush Tool"
-msgstr ""
+msgstr "Brush tool - Công cụ bàn chải"
 
 #: src/SpectralDataDialog.cpp
 msgid "Spectral Brush"
-msgstr ""
+msgstr "Bàn chải quang phổ"
 
 #: src/SpectralDataDialog.cpp
 msgid "Brush radius"
-msgstr ""
+msgstr "Bán kính bàn chải"
 
 #: src/SpectralDataDialog.cpp
 msgid "Custom brush size"
-msgstr ""
+msgstr "Kích thước bàn chải tùy chọn"
 
 #: src/SpectralDataDialog.cpp
 msgid "Auto-select overtones (beta)"
-msgstr ""
+msgstr "Tự động chọn âm bội (beta)"
 
 #: src/SpectralDataDialog.cpp
 msgid "Enable smart selection"
-msgstr ""
+msgstr "Bật vùng chọn thông minh"
 
 #: src/SpectralDataDialog.cpp
 msgid ""
 "Select the fundamental frequency\n"
 "and release the mouse"
-msgstr ""
+msgstr "Chọn tần số cơ bản\nvà thả chuột"
 
 #: src/SpectralDataDialog.cpp
 msgid "Spectra&l Selection Panel"
-msgstr ""
+msgstr "Bảng lựa chọn quang phổ&l"
 
 #: src/SpectralDataManager.cpp
 msgid "Applied effect to selection"
-msgstr ""
+msgstr "Áp dụng hiệu ứng cho lựa chọn"
 
 #: src/SplashDialog.cpp
 msgid "Welcome to Audacity!"
@@ -9639,15 +9640,15 @@ msgstr "Lỗi khi đặt tên thiết lập sẫn"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to retrieve preset content"
-msgstr ""
+msgstr "Không truy xuất được nội dung đặt trước"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to convert property list to XML data"
-msgstr ""
+msgstr "Không chuyển đổi được danh sách thuộc tính sang dữ liệu XML"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "XML data is empty after conversion"
-msgstr ""
+msgstr "Dữ liệu XML trống sau khi chuyển đổi"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -9656,11 +9657,11 @@ msgstr "Không thể lưu thiết lập sẵn XML vào \"%s\""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to convert preset to internal format"
-msgstr ""
+msgstr "Không chuyển đổi được giá trị đặt trước sang định dạng nội bộ"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to create property list for preset"
-msgstr ""
+msgstr "Không tạo được danh sách thuộc tính cho giá trị đặt trước"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -9697,7 +9698,7 @@ msgid ""
 "to Audacity. When not compensating for this delay, you will notice that "
 "small silences have been inserted into the audio. Enabling this option will "
 "provide that compensation, but it may not work for all LADSPA effects."
-msgstr ""
+msgstr "Là một phần của quá trình xử lý, một số hiệu ứng LADSPA phải trì hoãn việc trả lại âm thanh cho Audacity. Khi không bù đắp cho độ trễ này, bạn sẽ nhận thấy rằng các khoảng lặng nhỏ đã được chèn vào âm thanh. Kích hoạt tùy chọn này sẽ cung cấp phần bù đó, nhưng nó có thể không hoạt động đối với tất cả các hiệu ứng LADSPA."
 
 #. i18n-hint: An item name introducing a value, which is not part of the
 #. string but
@@ -9735,14 +9736,14 @@ msgid ""
 "Audacity. When not compensating for this delay, you will notice that small "
 "silences have been inserted into the audio. Enabling this setting will "
 "provide that compensation, but it may not work for all LV2 effects."
-msgstr ""
+msgstr "Là một phần của quá trình xử lý, một số hiệu ứng LV2 phải trì hoãn việc trả lại âm thanh cho Audacity. Khi không bù đắp cho độ trễ này, bạn sẽ nhận thấy rằng các khoảng lặng nhỏ đã được chèn vào âm thanh. Bật cài đặt này sẽ cung cấp mức bù đó, nhưng nó có thể không hoạt động đối với tất cả các hiệu ứng LV2."
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid ""
 "LV2 effects can have a graphical interface for setting parameter values. A "
 "basic text-only method is also available.  Reopen the effect for this to "
 "take effect."
-msgstr ""
+msgstr "Hiệu ứng LV2 có thể có giao diện đồ họa để thiết lập các giá trị tham số. Một phương pháp chỉ văn bản cơ bản cũng có sẵn. Mở lại hiệu ứng để điều này có hiệu lực."
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
@@ -9751,12 +9752,12 @@ msgstr "không thể tạo được hiệu ứng"
 #: src/effects/lv2/LV2Effect.cpp
 #, c-format
 msgid "%s requires unsupported feature %s\n"
-msgstr ""
+msgstr "%s yêu cầu tính năng không được hỗ trợ %s\n"
 
 #: src/effects/lv2/LV2Effect.cpp
 #, c-format
 msgid "%s requires unsupported option %s\n"
-msgstr ""
+msgstr "%s yêu cầu tùy chọn không được hỗ trợ %s\n"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Generator"
@@ -9796,13 +9797,13 @@ msgstr "Nyquist Worker"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Ill-formed Nyquist plug-in header"
-msgstr ""
+msgstr "Ill-hình thành tiêu đề trình cắm thêm Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
 "Enable track spectrogram view before\n"
 "applying 'Spectral' effects."
-msgstr ""
+msgstr "Bật chế độ xem biểu đồ quang phổ theo dõi trước khi \n áp dụng các hiệu ứng 'Quang phổ'."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -9867,17 +9868,17 @@ msgstr "Plug-in \"điện toán\""
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned a list."
-msgstr ""
+msgstr "Nyquist đã trả lại một danh sách."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "Nyquist returned the value: %f"
-msgstr ""
+msgstr "Nyquist trả về giá trị: %f"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "Nyquist returned the value: %d"
-msgstr ""
+msgstr "Nyquist trả về giá trị: %d"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned too many audio channels.\n"
@@ -10194,11 +10195,11 @@ msgstr "&OK"
 
 #: src/export/ExportCL.cpp
 msgid "You've specified a file name without an extension. Are you sure?"
-msgstr ""
+msgstr "Bạn đã chỉ định một tên tệp không có phần mở rộng. Bạn có chắc không?"
 
 #: src/export/ExportCL.cpp
 msgid "Program name appears to be missing."
-msgstr ""
+msgstr "Tên chương trình xuất hiện bị thiếu."
 
 #: src/export/ExportCL.cpp
 #, c-format
@@ -10208,7 +10209,7 @@ msgstr "\"%s\" không tìm được."
 #: src/export/ExportCL.cpp
 #, c-format
 msgid "Unable to locate \"%s\" in your path."
-msgstr ""
+msgstr "Không thể tìm thấy \" %s\" trong đường dẫn của bạn."
 
 #: src/export/ExportFFmpeg.cpp
 msgid ""
@@ -10260,7 +10261,7 @@ msgstr "Codec  có lỗi  (EPERM)"
 
 #: src/export/ExportFFmpeg.cpp
 msgid "The codec reported an invalid parameter (EINVAL)"
-msgstr ""
+msgstr "Bộ giải mã đã báo cáo một tham số không hợp lệ (EINVAL)"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpeg.cpp
@@ -10483,7 +10484,7 @@ msgstr "bộ nén"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Frame Duration:"
-msgstr ""
+msgstr "Thời lượng khung hình:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Vbr Mode:"
@@ -10491,7 +10492,7 @@ msgstr "Chế độ VBR"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Application:"
-msgstr ""
+msgstr "Ứng dụng:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Cutoff:"
@@ -10503,11 +10504,11 @@ msgstr "mở tùy chọn định dạng FFmpeg tùy biến"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Current Format:"
-msgstr ""
+msgstr "Định dạng hiện tại:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Current Codec:"
-msgstr ""
+msgstr "Bộ giải mã hiện tại:"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Error Saving FFmpeg Presets"
@@ -10567,7 +10568,7 @@ msgstr "tập tin AMR (narrow band) (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "Opus (OggOpus) Files (FFmpeg)"
-msgstr ""
+msgstr "Tệp Opus (OggOpus) (FFmpeg)"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "WMA (version 2) Files (FFmpeg)"
@@ -10904,7 +10905,7 @@ msgstr "Xuất thiết lập sẵn vào tập tin XML nào? "
 #: src/export/ExportFFmpegDialogs.cpp
 #, c-format
 msgid "Format %s is not compatible with codec %s."
-msgstr ""
+msgstr "Định dạng 1%s không tương thích với codec %s."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpegDialogs.cpp
@@ -11143,7 +11144,7 @@ msgstr "%s ở đâu thế?"
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of 'LAME for Audacity'."
-msgstr ""
+msgstr "Bạn đang liên kết đến lame_enc.dll v %d. %d. Phiên bản này không tương thích với Audacity %d.%d.%d.\nVui lòng tải xuống phiên bản mới nhất của 'LAME for Audacity'."
 
 #: src/export/ExportMP3.cpp
 msgid "Only lame_enc.dll"
@@ -11163,7 +11164,7 @@ msgstr "Chỉ libmp3lame.so.0"
 
 #: src/export/ExportMP3.cpp
 msgid "Primary shared object files"
-msgstr ""
+msgstr "Tệp đối tượng được chia sẻ chính"
 
 #: src/export/ExportMP3.cpp
 msgid "Extended libraries"
@@ -11244,7 +11245,7 @@ msgstr "Không thể tìm thấy thư viện xuất MP3"
 
 #: src/export/ExportMP3.cpp
 msgid "(Built-in)"
-msgstr ""
+msgstr "(Tích hợp sẵn)"
 
 #: src/export/ExportMultiple.cpp
 msgid "Export Multiple"
@@ -11365,7 +11366,7 @@ msgstr "Không tồn tại \"%s\".\n\nBạn có muốn tạo nó không?"
 
 #: src/export/ExportMultiple.cpp
 msgid "Continue to export remaining files?"
-msgstr ""
+msgstr "Tiếp tục xuất các tệp còn lại?"
 
 #. i18n-hint: The second %s gives some letters that can't be used.
 #: src/export/ExportMultiple.cpp
@@ -11377,7 +11378,7 @@ msgid ""
 "%s\n"
 "\n"
 "Suggested replacement:"
-msgstr ""
+msgstr "Nhãn hoặc track \"%s\" không phải là tên tệp hợp pháp.\nBạn không thể sử dụng bất kỳ ký tự nào trong số các ký tự sau:\n\n\n%s\n\nThay thế được đề xuất:"
 
 #. i18n-hint: The second %s gives a letter that can't be used.
 #: src/export/ExportMultiple.cpp
@@ -11386,7 +11387,7 @@ msgid ""
 "Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n"
 "\n"
 "Suggested replacement:"
-msgstr ""
+msgstr "Nhãn hoặc bản nhạc \" %s \" không phải là tên tệp hợp pháp. Bạn không thể sử dụng \" %s\". \n\nThay thế được đề xuất:"
 
 #: src/export/ExportMultiple.cpp
 msgid "Save As..."
@@ -11452,7 +11453,7 @@ msgstr "các tập tin khác không được nén"
 msgid ""
 "You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
-msgstr ""
+msgstr "Bạn đã cố gắng xuất tệp WAV hoặc AIFF có dung lượng lớn hơn 4GB.\nAudacity không thể thực hiện được việc này, quá trình xuất tệp đã bị hủy bỏ."
 
 #: src/export/ExportPCM.cpp
 msgid "Error Exporting"
@@ -11462,7 +11463,7 @@ msgstr "Lỗi khi xuất"
 msgid ""
 "Your exported WAV file has been truncated as Audacity cannot export WAV\n"
 "files bigger than 4GB."
-msgstr ""
+msgstr "Tệp WAV đã xuất của bạn đã bị cắt bớt vì Audacity không thể xuất tệp WAV\nlớn hơn 4GB."
 
 #: src/export/ExportPCM.cpp
 msgid "GSM 6.10 requires mono"
@@ -11470,7 +11471,7 @@ msgstr "GSM 6.10 phải dụng mono"
 
 #: src/export/ExportPCM.cpp
 msgid "WAVEX and GSM 6.10 formats are not compatible"
-msgstr ""
+msgstr "Các định dạng WAVEX và GSM 6.10 không tương thích"
 
 #: src/export/ExportPCM.cpp
 msgid "Cannot export audio in this format."
@@ -11556,7 +11557,7 @@ msgid ""
 "\"%s\" is an Advanced Audio Coding file.\n"
 "Without the optional FFmpeg library, Audacity cannot open this type of file.\n"
 "Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF."
-msgstr ""
+msgstr "\"%s\"  là tệp Mã hóa âm thanh nâng cao.\nKhông có thư viện FFmpeg tùy chọn, Audacity không thể mở loại tệp này.\nNgoài ra, bạn cần chuyển đổi tệp sang định dạng âm thanh được hỗ trợ, chẳng hạn như WAV hoặc AIFF."
 
 #. i18n-hint: %s will be the filename
 #: src/import/Import.cpp
@@ -11693,11 +11694,11 @@ msgid ""
 "\n"
 "Use a version of Audacity prior to v3.0.0 to upgrade the project and then\n"
 "you may import it with this version of Audacity."
-msgstr ""
+msgstr "Dự án này đã được lưu bằng Audacity phiên bản 1.0 trở xuống. Định dạng đã thay đổi\n và phiên bản Audacity này không thể nhập dự án.\n\nHãy sử dụng phiên bản Audacity trước v3.0.0 để nâng cấp dự án và sau đó\nbạn có thể nhập dự án bằng phiên bản Audacity này."
 
 #: src/import/ImportAUP.cpp
 msgid "Internal error in importer...tag not recognized"
-msgstr ""
+msgstr "Lỗi nội bộ trong trình nhập ... không nhận dạng được thẻ"
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -11755,19 +11756,19 @@ msgstr "Dự án đang hoạt động hiện có một chuỗi âm và một tro
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
-msgstr ""
+msgstr "Thuộc tính 'maxsamples' của chuỗi không hợp lệ."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'sampleformat' attribute."
-msgstr ""
+msgstr "Thuộc tính 'sampleformat' của chuỗi không hợp lệ."
 
 #: src/import/ImportAUP.cpp
 msgid "Invalid sequence 'numsamples' attribute."
-msgstr ""
+msgstr "Thuộc tính 'numsamples' của chuỗi không hợp lệ."
 
 #: src/import/ImportAUP.cpp
 msgid "Unable to parse the waveblock 'start' attribute"
-msgstr ""
+msgstr "Không thể phân tích cú pháp thuộc tính \"start\" của waveblock"
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -11775,15 +11776,15 @@ msgid ""
 "Missing project file %s\n"
 "\n"
 "Inserting silence instead."
-msgstr ""
+msgstr "Thiếu tệp dự án %s\n\nĐang chèn khoảng lặng vào thay thế."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid simpleblockfile 'len' attribute."
-msgstr ""
+msgstr "Thuộc tính simpleblockfile 'len' bị thiếu hoặc không hợp lệ."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid silentblockfile 'len' attribute."
-msgstr ""
+msgstr "Thiếu hoặc không hợp lệ thuộc tính 'len' silentblockfile."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -11791,15 +11792,15 @@ msgid ""
 "Missing alias file %s\n"
 "\n"
 "Inserting silence instead."
-msgstr ""
+msgstr "Tệp bí danh  %s bị thiếu\n\nChèn khoảng lặng."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
-msgstr ""
+msgstr "Thuộc tính 'aliaslen' pcmaliasblockfile bị thiếu hoặc không hợp lệ."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
-msgstr ""
+msgstr "Thuộc tính 'aliaslen' pcmaliasblockfile bị thiếu hoặc không hợp lệ."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -11807,7 +11808,7 @@ msgid ""
 "Error while processing %s\n"
 "\n"
 "Inserting silence."
-msgstr ""
+msgstr "Lỗi khi xử lý %s .Chèn khoảng lặng."
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -11817,12 +11818,12 @@ msgstr "Lỗi mở %s"
 #: src/import/ImportAUP.cpp
 #, c-format
 msgid "Failed to seek to position %lld in %s"
-msgstr ""
+msgstr "Không tìm được vị trí %lld trong %s"
 
 #: src/import/ImportAUP.cpp
 #, c-format
 msgid "Unable to read %lld samples from %s"
-msgstr ""
+msgstr "Không thể đọc %lld mẫu từ %s"
 
 #: src/import/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -11833,7 +11834,7 @@ msgstr "tập tin tương thích FFmpeg"
 #, c-format
 msgid ""
 "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
-msgstr ""
+msgstr "Chỉ mục [ %02x] Codec [ 2 %s], Ngôn ngữ [2 %s], Tốc độ bit [2 %s], Kênh [3 %d], Thời lượng [3 %d]"
 
 #: src/import/ImportFLAC.cpp
 msgid "FLAC files"
@@ -11858,7 +11859,7 @@ msgstr "Không thể dừng 'stream state'."
 #: src/import/ImportGStreamer.cpp
 #, c-format
 msgid "Index[%02d], Type[%s], Channels[%d], Rate[%d]"
-msgstr ""
+msgstr "Chỉ mục [%02d], Loại[%s], Kênh[%d], Tỉ lệ[%d]"
 
 #: src/import/ImportGStreamer.cpp
 msgid "File doesn't contain any audio streams."
@@ -11935,7 +11936,7 @@ msgid ""
 "\n"
 "This is likely caused by a malformed MP3.\n"
 "\n"
-msgstr ""
+msgstr "Nhập không thành công\n\nĐiều này có thể do tệp MP3 không đúng định dạng.\n\n"
 
 #: src/import/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -11944,7 +11945,7 @@ msgstr "Tập tin Ogg Vorbis"
 #: src/import/ImportOGG.cpp
 #, c-format
 msgid "Index[%02x] Version[%d], Channels[%d], Rate[%ld]"
-msgstr ""
+msgstr "Chỉ mục[%02x] Phiên bản[%d], Kênh[%d], Tỷ lệ[%ld]"
 
 #: src/import/ImportOGG.cpp
 msgid "Media read error"
@@ -12263,7 +12264,7 @@ msgstr "&Nhập"
 
 #: src/import/RawAudioGuess.cpp
 msgid "Bad data size. Could not import audio"
-msgstr ""
+msgstr "Kích thước dữ liệu không tốt. Không thể nhập âm thanh"
 
 #. i18n-hint: given the name of a track, specify its left channel
 #: src/menus/ClipMenus.cpp
@@ -12653,7 +12654,7 @@ msgstr "&toàn màn hình (tắt/bật)"
 
 #: src/menus/FileMenus.cpp
 msgid "Cannot proceed to export."
-msgstr ""
+msgstr "Không thể tiếp tục xuất."
 
 #: src/menus/FileMenus.cpp
 #, c-format
@@ -12754,7 +12755,7 @@ msgstr "Lưu &như dự án mới..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Backup Project..."
-msgstr ""
+msgstr "&Sao lưu Dự án..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Export"
@@ -12824,7 +12825,7 @@ msgstr "Th&oát"
 
 #: src/menus/FileMenus.cpp
 msgid "Hidden File Menu"
-msgstr ""
+msgstr "Menu tệp ẩn"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as FLAC"
@@ -12842,7 +12843,7 @@ msgstr "Không thể  lưu %s"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
-msgstr ""
+msgstr "Bạn có những vấn đề này?"
 
 #: src/menus/HelpMenus.cpp
 msgid "Fix"
@@ -12850,7 +12851,7 @@ msgstr "Sửa"
 
 #: src/menus/HelpMenus.cpp
 msgid "Quick Fixes"
-msgstr ""
+msgstr "Sửa nhanh"
 
 #: src/menus/HelpMenus.cpp
 msgid "Nothing to do"
@@ -12858,15 +12859,15 @@ msgstr "không thể làm gì"
 
 #: src/menus/HelpMenus.cpp
 msgid "No quick, easily fixed problems were found"
-msgstr ""
+msgstr "Không tìm thấy sự cố nhanh chóng, dễ dàng sửa chữa nào"
 
 #: src/menus/HelpMenus.cpp
 msgid "Clocks on the Tracks"
-msgstr ""
+msgstr "Đồng hồ trên các Track"
 
 #: src/menus/HelpMenus.cpp
 msgid "Can't select precisely"
-msgstr ""
+msgstr "Không thể chọn chính xác"
 
 #: src/menus/HelpMenus.cpp
 msgid "Recording stops and starts"
@@ -12886,7 +12887,7 @@ msgstr "Thông tin thiết bị MIDI"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Fix..."
-msgstr ""
+msgstr "& Sửa nhanh ..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Getting Started"
@@ -12902,7 +12903,7 @@ msgstr "&trợ giúp nhanh..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Manual..."
-msgstr ""
+msgstr "&Thủ công..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -13190,13 +13191,13 @@ msgstr "không xác định"
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "A journal will be recorded after Audacity restarts."
-msgstr ""
+msgstr "Nhật ký sẽ được ghi lại sau khi Audacity khởi động lại."
 
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "No journal will be recorded after Audacity restarts."
-msgstr ""
+msgstr "Không có nhật ký nào sẽ được ghi lại sau khi Audacity khởi động lại."
 
 #: src/menus/PluginMenus.cpp
 #, c-format
@@ -13218,7 +13219,7 @@ msgstr "Thêm/Xoá Plug-ins (điện toán) "
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Generator"
-msgstr ""
+msgstr "Lặp lại Trình tạo cuối cùng"
 
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
@@ -13234,7 +13235,7 @@ msgstr "&Phân tích"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Analyzer"
-msgstr ""
+msgstr "Lập lại phân tích trước đó"
 
 #: src/menus/PluginMenus.cpp src/toolbars/ToolsToolBar.cpp
 msgid "T&ools"
@@ -13242,7 +13243,7 @@ msgstr "công &cụ"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Tool"
-msgstr ""
+msgstr "Lập lại dụng cụ trước đó"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Macros..."
@@ -13254,11 +13255,11 @@ msgstr "&thực hiện lệnh Macro"
 
 #: src/menus/PluginMenus.cpp
 msgid "Palette..."
-msgstr ""
+msgstr "Tấm trộn..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Reset &Configuration"
-msgstr ""
+msgstr "Đặt lại & Cấu hình"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Screenshot..."
@@ -13280,7 +13281,7 @@ msgstr "Phát hiện các khoảng hụt tiếng ngược dòng 'upstream dropou
 #. the user's interactions with the application
 #: src/menus/PluginMenus.cpp
 msgid "Write Journal"
-msgstr ""
+msgstr "Viết nhật ký"
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/menus/PluginMenus.cpp
@@ -14147,12 +14148,12 @@ msgstr "không có nhãn nào trong mục nhãn dán đoạn âm"
 #. i18n-hint Sets a starting point for looping play
 #: src/menus/TransportMenus.cpp
 msgid "Set Loop &In"
-msgstr ""
+msgstr "Thiết lập vòng lặp & Vào"
 
 #. i18n-hint Sets an ending point for looping play
 #: src/menus/TransportMenus.cpp
 msgid "Set Loop &Out"
-msgstr ""
+msgstr "Thiết lập vòng lặp & Ra"
 
 #: src/menus/TransportMenus.cpp
 msgid ""
@@ -14206,7 +14207,7 @@ msgstr "Phát/Dừng và &đặt con trỏ"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play &Once/Stop"
-msgstr ""
+msgstr "Phát & Một lần / Dừng"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Pause"
@@ -14247,7 +14248,7 @@ msgstr "&Xoá vòng lặp đã chọn"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Set Loop to Selection"
-msgstr ""
+msgstr "& Đặt Vòng lặp thành Lựa chọn"
 
 #: src/menus/TransportMenus.cpp
 msgid "R&escan Audio Devices"
@@ -14338,7 +14339,7 @@ msgstr "&tốc độ phát"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play-at-Speed &Once"
-msgstr ""
+msgstr "Phát ở tốc độ & một lần"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview-at-Speed"
@@ -14358,11 +14359,11 @@ msgstr "&Giảm tốc độ phát lại"
 
 #: src/menus/TransportMenus.cpp
 msgid "Move to Pre&vious Label"
-msgstr ""
+msgstr "Di chuyển đến nhãn Trước & đó"
 
 #: src/menus/TransportMenus.cpp
 msgid "Move to Ne&xt Label"
-msgstr ""
+msgstr "Di chuyển đến nhãn tiếp & theo"
 
 #: src/menus/ViewMenus.cpp
 msgid "&View"
@@ -14440,7 +14441,7 @@ msgstr "&Menu mở rộng (bật/tắt)"
 
 #: src/menus/ViewMenus.cpp
 msgid "Track &Name (on/off)"
-msgstr ""
+msgstr "Track & Tên (bật / tắt)"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping (on/off)"
@@ -14474,25 +14475,25 @@ msgstr "thu nhỏ tất cả dự án"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
-msgstr ""
+msgstr "Các tùy chỉnh cho ứng dụng"
 
 #. i18n-hint: Title for the update notifications panel in the preferences
 #. dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Các thông báo cập nhật"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
 msgid "&Check for updates"
-msgstr ""
+msgstr "&Kiểm tra cập nhật"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid ""
 "App update checking requires network access. In order to protect your "
 "privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "Ứng dụng kiểm tra cập nhật yêu cầu truy cập mạng. Để bảo vệ sự riêng tư của bạn, Audacity không lưu trữ bất kỳ thông tin cá nhân nào."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -14500,7 +14501,7 @@ msgstr "Lệnh Gộp"
 
 #: src/prefs/BatchPrefs.cpp
 msgid "Preferences for Batch"
-msgstr ""
+msgstr "Tùy chỉnh cho Hàng loạt"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
@@ -14598,7 +14599,7 @@ msgstr "Thư mục"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Preferences for Directories"
-msgstr ""
+msgstr "Tùy chỉnh cho Địa chỉ"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Default directories"
@@ -14608,7 +14609,7 @@ msgstr "Thư mục mặc định"
 msgid ""
 "Leave a field empty to go to the last directory used for that operation.\n"
 "Fill in a field to always go to that directory for that operation."
-msgstr ""
+msgstr "Chuyển một trường trống đến thư mục cuối được sử dụng cho thao tác đó.\nĐiền vào một trường để luôn chuyển đến thư mục đó cho thao tác đó."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "O&pen:"
@@ -14644,7 +14645,7 @@ msgstr "&Duyệt..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Macro output:"
-msgstr ""
+msgstr "&Macro đầu ra:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory"
@@ -14656,7 +14657,7 @@ msgstr "&Vị trí"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temporary files directory cannot be on a FAT drive."
-msgstr ""
+msgstr "Thư mục tệp tạm thời không thể nằm trên ổ đĩa FAT."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Brow&se..."
@@ -14994,7 +14995,7 @@ msgstr "n&ền:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Meter dB &range:"
-msgstr ""
+msgstr "Đồng hồ đo dB & phạm vi:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show 'How to Get &Help' at launch"
@@ -15027,7 +15028,7 @@ msgstr "chỉ dùng bảng mẫu từ trái sang phải trong ngôn ngữ RTL"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
-msgstr ""
+msgstr "Không bao giờ sử dụng dấu phẩy làm dấu thập phân"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show Timeline Tooltips"
@@ -15060,7 +15061,7 @@ msgstr "&Trộn xuống Stereo hoặc Mono"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Use Advanced Mixing Options"
-msgstr ""
+msgstr "& Sử dụng các tùy chọn trộn nâng cao"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&tandard"
@@ -15068,7 +15069,7 @@ msgstr "&Chuẩn"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "E&xtended (with frequency ranges)"
-msgstr ""
+msgstr "Mở & rộng (với dải tần số)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Seconds"
@@ -15089,11 +15090,11 @@ msgstr "c&hạy trình biên soạn các thẻ meta trước khi xuất bản"
 #. i18n-hint 'blank space' is space on the tracks with no audio in it
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Ignore blank space at the beginning"
-msgstr ""
+msgstr "& Bỏ qua khoảng trống ở đầu"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Label Style:"
-msgstr ""
+msgstr "Kiểu nhãn đã xuất:"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -15110,7 +15111,7 @@ msgstr "Bàn phím"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Preferences for KeyConfig"
-msgstr ""
+msgstr "Các tùy chỉnh dành cho KeyConfig"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
@@ -15190,7 +15191,7 @@ msgstr "Mặc đị&nh"
 msgid ""
 "\n"
 "   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
-msgstr ""
+msgstr "\n * \"%s\" (bởi vì đường dẫn '%s' đã được dùng bởi \"%s\")\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -15260,7 +15261,7 @@ msgid ""
 "\t%s\n"
 "\n"
 "instead. Otherwise, click Cancel."
-msgstr ""
+msgstr "Đường dẫn bàn phím '%s' đã được gán cho:\t%sNhấp vào OK để gán đường dẫn cho \t%sthay thế. Nếu không, Nhấp vào Cancel."
 
 #: src/prefs/KeyConfigPrefs.h
 msgid "Key Config"
@@ -15288,7 +15289,7 @@ msgstr "Không tìm thấy thư viện FFmpeg tương thích"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg support is not compiled in"
-msgstr ""
+msgstr "Hỗ trợ FFmpeg không được biên dịch trong"
 
 #: src/prefs/LibraryPrefs.cpp
 msgid "FFmpeg Library Version:"
@@ -15376,18 +15377,18 @@ msgstr "Đây là các mô-đun thử nghiemj. Bật lên nếu bạn đã tham 
 msgid ""
 "  'Ask' means Audacity will ask if you want to load the module each time it "
 "starts."
-msgstr ""
+msgstr "'Hỏi' có nghĩa là Audacity sẽ hỏi bạn có muốn tải mô-đun mỗi khi nó khởi động hay không."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
 msgid ""
 "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr ""
+msgstr "'Không thành công' có nghĩa là Audacity cho rằng mô-đun bị hỏng và sẽ không chạy được."
 
 #. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
 msgid "  'New' means no choice has been made yet."
-msgstr ""
+msgstr "'Mới' có nghĩa là chưa có lựa chọn nào được đưa ra."
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when Audacity starts up."
@@ -15656,15 +15657,15 @@ msgstr "chu kỳ d&ài:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Vari-Speed Play"
-msgstr ""
+msgstr "& Phát tốc độ đa dạng"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
-msgstr ""
+msgstr "&Micro-fades - chuyển dần micro "
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr ""
+msgstr "Luôn luôn bỏ & ghim"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
@@ -16007,7 +16008,7 @@ msgstr "&Loại cửa sổ:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Zero padding factor:"
-msgstr ""
+msgstr "& Hệ số đệm bằng không:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble Spectral Selection"
@@ -16090,7 +16091,7 @@ msgstr "Sắc thái giao diện"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Preferences for Theme"
-msgstr ""
+msgstr "Tùy chỉnh cho Chủ đề"
 
 #: src/prefs/ThemePrefs.cpp
 msgid "Info"
@@ -16148,7 +16149,7 @@ msgstr "kiểu xữ lý đoạn âm"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Preferences for TracksBehaviors"
-msgstr ""
+msgstr "Tùy chỉnh cho TracksBehaviors"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Simple"
@@ -16156,11 +16157,11 @@ msgstr "Đơn giản"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Multi-track"
-msgstr ""
+msgstr "Nhiều bài hát"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Select all audio, if selection required"
-msgstr ""
+msgstr "& Chọn tất cả âm thanh, nếu cần lựa chọn"
 
 #. i18n-hint: Cut-lines are lines that can expand to show the cut audio.
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -16282,7 +16283,7 @@ msgstr "Zoom tối đa "
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Preferences for Tracks"
-msgstr ""
+msgstr "Tùy chỉnh cho Track"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
@@ -16290,7 +16291,7 @@ msgstr "tự đồng điều chỉnh cao độ của đoạn âm"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Sho&w track name as overlay"
-msgstr ""
+msgstr "Sho&w tên bản nhạc dưới dạng lớp phủ"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
@@ -16314,7 +16315,7 @@ msgstr "chế độ xem &mặc định:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default Waveform scale:"
-msgstr ""
+msgstr "Thang đo Dạng sóng mặc định:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Display &samples:"
@@ -16347,7 +16348,7 @@ msgstr "cảnh báo"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Preferences for Warnings"
-msgstr ""
+msgstr "Tùy chỉnh cho Cảnh báo"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Show Warnings/Prompts for"
@@ -16375,7 +16376,7 @@ msgstr "Trộn khi xuất (tùy chỉnh FFmpeg hoặc chương trình bên ngoà
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Missing file &name extension during export"
-msgstr ""
+msgstr "Thiếu tệp & tên phần mở rộng trong khi xuất"
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
@@ -16384,11 +16385,11 @@ msgstr "Dạng sóng"
 
 #: src/prefs/WaveformPrefs.cpp
 msgid "Preferences for Waveforms"
-msgstr ""
+msgstr "Tùy chỉnh cho Dạng sóng"
 
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveform dB &range:"
-msgstr ""
+msgstr "Dạng sóng dB & phạm vi:"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether
 #. Audacity
@@ -16730,7 +16731,7 @@ msgstr "Giữa"
 #: src/toolbars/SelectionBar.cpp
 #, c-format
 msgid "Snap Clicks/Selections to %s"
-msgstr ""
+msgstr "Chuyển các Nhấp chuột/Lựa chọn thành %s"
 
 #. i18n-hint: %s is replaced e.g by one of 'Length', 'Center',
 #. 'Start', or 'End' (translated), to indicate that it will be
@@ -16864,7 +16865,7 @@ msgstr "Tốc độ phát lại"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play-at-Speed Once"
-msgstr ""
+msgstr "Phát ở tốc độ một lần"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for transcription (currently just vary play speed)
@@ -16874,7 +16875,7 @@ msgstr "Thanh công cụ tốc độ phát âm thanh"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
-msgstr ""
+msgstr "Kéo nhãn. Giữ phím shift và kéo để di chuyển tất cả các nhãn trên cùng một bản nhạc."
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -16978,13 +16979,13 @@ msgstr "Zoom mặc định "
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Shift-Right-Click"
-msgstr ""
+msgstr "Shift-Right-Click"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Left-Click/Left-Drag"
-msgstr ""
+msgstr "Nhấp chuột trái/Kéo về trái"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -17066,7 +17067,7 @@ msgstr "&ảnh phổ"
 msgid ""
 "To change Spectrogram Settings, stop any\n"
 " playing or recording first."
-msgstr ""
+msgstr "Để thay đổi Cài đặt Quang phổ, trước tiên hãy dừng bất kỳ\nsự phát âm hoặc ghi âm trước."
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Stop the Audio First"
@@ -17078,11 +17079,11 @@ msgstr "Cái đặt Ảnh& phổ"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Click and drag to move clip boundary in time"
-msgstr ""
+msgstr "Nhấp và kéo để di chuyển ranh giới clip trong thời gian"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Left"
-msgstr ""
+msgstr "Clip-Cắt-Trái"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 #, c-format
@@ -17091,19 +17092,19 @@ msgstr "Đã di chuyển %.02f"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
 msgid "Clip-Trim-Right"
-msgstr ""
+msgstr "Clip-Cắt-Phải"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Set Wave Clip Name"
-msgstr ""
+msgstr "Đặt tên clip sóng"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Click and drag to select text"
-msgstr ""
+msgstr "Nhấp và kéo để chọn văn bản"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Modified Clip Name"
-msgstr ""
+msgstr "Tên clip đã sửa đổi"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Clip Name Edit"
@@ -17129,7 +17130,7 @@ msgstr "&định dạng"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Changing sample format"
-msgstr ""
+msgstr "Thay đổi định dạng mẫu"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
@@ -17227,7 +17228,7 @@ msgstr "Đặt tốc độ lấy mẫu"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp
 msgid "&Multi-view"
-msgstr ""
+msgstr "&Hiển thị nhiều tệp cùng lúc"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Ma&ke Stereo Track"
@@ -17345,19 +17346,19 @@ msgstr "Click và rê chuột để điều chỉnh kích cỡ tương đối"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to rearrange sub-views"
-msgstr ""
+msgstr "Nhấp và kéo để sắp xếp lại các chế độ xem phụ đề"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Rearrange sub-views"
-msgstr ""
+msgstr "Sắp xếp lại hiển thị phụ đề"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Close sub-view"
-msgstr ""
+msgstr "Đóng chế độ xem phụ đề"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Split Clip"
-msgstr ""
+msgstr "Tách Clip"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Mute/Unmute Track"
@@ -17467,7 +17468,7 @@ msgstr "nội suy &logarit"
 msgid ""
 "Drag clips to reposition them. Hold Shift and drag to move all clips on the "
 "same track."
-msgstr ""
+msgstr "Kéo các clip để định vị lại chúng. Giữ phím Shift và kéo để di chuyển tất cả các clip trên cùng một track."
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Add Mono Track"
@@ -17491,11 +17492,11 @@ msgstr "Xoá vùng chọn"
 
 #: src/tracks/ui/BrushHandle.cpp
 msgid "Selected area using Brush Tool"
-msgstr ""
+msgstr "Khu vực được chọn sử dụng Công cụ Brush-Bàn chải"
 
 #: src/tracks/ui/BrushHandle.cpp
 msgid "Brush tool selection"
-msgstr ""
+msgstr "Lựa chọn công cụ Brush-Bàn chải"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "&Name..."
@@ -17579,11 +17580,11 @@ msgstr "Đang &phát theo con trỏ"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub Bac&kwards"
-msgstr ""
+msgstr "Quét ngược lại"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub For&wards"
-msgstr ""
+msgstr "Quét tới trước"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move left selection boundary."
@@ -17645,7 +17646,7 @@ msgstr "Nhấn và rê để di chuyển dải âm theo thời gian"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Could not shift between tracks"
-msgstr ""
+msgstr "Không thể chuyển đổi giữa các track"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Moved clips to another track"
@@ -17747,14 +17748,14 @@ msgstr "Tìm bảng cập nhật"
 msgid ""
 "If you want to change your preference for automatic updates checking, you "
 "can find it in %s."
-msgstr ""
+msgstr "Nếu bạn muốn thay đổi tùy chỉnh kiểm tra cập nhật tự động, bạn có thể tìm thấy nó trong %s."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Application
 #. page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "Preferences > Application"
-msgstr ""
+msgstr "Tùy chỉnh > Ứng dụng"
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
@@ -17793,29 +17794,29 @@ msgstr "Đang tải về %s"
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App update checking"
-msgstr ""
+msgstr "Ứng dụng kiểm tra cập nhật"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid ""
 "To stay up to date, you will receive an in-app notification whenever there "
 "is a new version of Audacity available to download."
-msgstr ""
+msgstr "Để luôn cập nhật, bạn sẽ nhận được thông báo trong ứng dụng bất cứ khi nào có phiên bản Audacity mới để tải xuống."
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid ""
 "In order to protect your privacy, Audacity does not collect any personal "
 "information. However, app update checking does require network access."
-msgstr ""
+msgstr "Để bảo vệ sự riêng tư của bạn, Audacity không thu thập bất kỳ thông tin cá nhân nào. Tuy nhiên, ứng dụng kiểm tra cập nhật yêu cầu quyền truy cập mạng."
 
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn off app update checking at any time in %s."
-msgstr ""
+msgstr "Bạn có thể tắt tính năng kiểm tra cập nhật ứng dụng bất kỳ lúc nào trong %s."
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
-msgstr ""
+msgstr "Các bản cập nhật ứng dụng"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -18367,7 +18368,7 @@ msgstr "1000 semitones >0100 cents|17.312340491"
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hundredths of cents"
-msgstr ""
+msgstr "Xu thứ 100"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in decades
@@ -18384,7 +18385,7 @@ msgstr "10>01000 decades|0.434294482"
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: src/widgets/NumericTextCtrl.cpp
 msgid "thousandths of decades"
-msgstr ""
+msgstr "phần nghìn của thập kỷ"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
@@ -18439,26 +18440,26 @@ msgstr "Xác nhận đóng"
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 #, c-format
 msgid "Unable to write files to directory: %s."
-msgstr ""
+msgstr "Không thể ghi tệp vào thư mục: %s."
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid ""
 "Please check that the directory exists, has the necessary permissions, and "
 "the drive isn't full."
-msgstr ""
+msgstr "Vui lòng kiểm tra xem thư mục có tồn tại hay không, có các quyền cần thiết và ổ đĩa chưa đầy hay không."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 #, c-format
 msgid "You can change the directory in %s."
-msgstr ""
+msgstr "Bạn có thể thay đổi thư mục trong  %s."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Directories
 #. page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Preferences > Directories"
-msgstr ""
+msgstr "Tùy chỉnh> Thư mục"
 
 #: src/widgets/Warning.cpp
 msgid "Don't show this warning again"
@@ -18514,7 +18515,7 @@ msgstr "giá trị không được phép bé hơn %s"
 #: src/widgets/valnum.cpp
 #, c-format
 msgid "Value must not be greater than %s"
-msgstr ""
+msgstr "Giá trị không được lớn hơn %s"
 
 #: src/widgets/wxPanelWrapper.h
 msgid "Dialog"
@@ -18553,7 +18554,7 @@ msgstr "Paul Licameli"
 #: plug-ins/rhythmtrack.ny plug-ins/rissetdrum.ny plug-ins/tremolo.ny
 #: plug-ins/vocalrediso.ny plug-ins/vocoder.ny
 msgid "Released under terms of the GNU General Public License version 2"
-msgstr ""
+msgstr "Phát hành theo các điều khoản GNU General Public License phiên bản 2"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -18585,7 +18586,7 @@ msgstr "Lỗi.~%"
 
 #: plug-ins/SpectralEditParametricEQ.ny
 msgid "Spectral edit parametric EQ"
-msgstr ""
+msgstr "Chỉnh sửa quang phổ tham số EQ"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
 msgid "Gain (dB)"
@@ -18594,7 +18595,7 @@ msgstr "Gain (dB)"
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
 msgid "~aLow frequency is undefined."
-msgstr ""
+msgstr "~aTần số thấp là không xác định."
 
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
@@ -18620,7 +18621,7 @@ msgid ""
 "~aBandwidth is zero (the upper and lower~%~\n"
 "                         frequencies are both ~a Hz).~%~\n"
 "                         Please select a frequency range."
-msgstr ""
+msgstr "~aBăng thông bằng 0 (giá trị trên và dưới~%~\ntần số là cả hai ~a Hz).~%~ \nVui lòng chọn một dải tần số."
 
 #: plug-ins/SpectralEditShelves.ny
 msgid "Spectral edit shelves"
@@ -18632,7 +18633,7 @@ msgstr "Âm lượng giảm dần - Studio  Fade Out"
 
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 msgid "Applying Fade..."
-msgstr ""
+msgstr "Đang áp dụng hiệu ứng Fade(chuyển dần)..."
 
 #: plug-ins/StudioFadeOut.ny plug-ins/adjustable-fade.ny
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny plug-ins/delay.ny
@@ -18678,7 +18679,7 @@ msgstr "Đường cong S hướng lên trên"
 
 #: plug-ins/adjustable-fade.ny
 msgid "S-Curve Down"
-msgstr ""
+msgstr "S-Curve Hạ xuống"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Mid-fade Adjust (%)"
@@ -18686,7 +18687,7 @@ msgstr "điều chỉnh phai ở giữa (%)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Start/End as"
-msgstr ""
+msgstr "Bắt đầu/Kết thúc như"
 
 #: plug-ins/adjustable-fade.ny
 msgid "% of Original"
@@ -18702,7 +18703,7 @@ msgstr "Bắt đầu (hoặc kết thúc)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "End (or start)"
-msgstr ""
+msgstr "Kết thúc (hoặc bắt đầu)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Handy Presets (override controls)"
@@ -18781,7 +18782,7 @@ msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                 Hint: 6 dB doubles the amplitude~%~\n"
 "                                 -6 dB halves the amplitude."
-msgstr ""
+msgstr "~adB giá trị không thể nhiều hơn +100 dB.~%~%~\n Gợi ý: 6 dB tăng gấp đôi biên độ~%~\n -6 dB giảm một nữa biên độ."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -18797,7 +18798,7 @@ msgstr "mức tỷ lệ"
 
 #: plug-ins/clipfix.ny
 msgid "Clip Fix"
-msgstr ""
+msgstr "Sửa điểm ghim"
 
 #: plug-ins/clipfix.ny
 msgid "Reconstructing clips..."
@@ -18814,11 +18815,11 @@ msgstr "Việc cấp phép được xác nhận theo các điều khoản của 
 
 #: plug-ins/clipfix.ny
 msgid "Threshold of Clipping (%)"
-msgstr ""
+msgstr "Ngưỡng clip (%)"
 
 #: plug-ins/clipfix.ny
 msgid "Reduce amplitude to allow for restored peaks (dB)"
-msgstr ""
+msgstr "Giảm biên độ để cho phép các đỉnh được khôi phục (dB)"
 
 #: plug-ins/crossfadeclips.ny
 msgid "Crossfade Clips"
@@ -18826,12 +18827,12 @@ msgstr "clip nhiễu"
 
 #: plug-ins/crossfadeclips.ny plug-ins/crossfadetracks.ny
 msgid "Crossfading..."
-msgstr ""
+msgstr "Chuyển đổi dần dần từ âm này qua âm khác hoặc từ âm thanh sang im lặng từ từ(dần dần)"
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
-msgstr ""
+msgstr "Lỗi.~%Lựa chọn không hợp lệ.~% Hơn 2 đoạn âm thanh đã được chọn."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -18842,7 +18843,7 @@ msgstr "lỗi:~%vùng chọn không hợp lệ.\"%Edung lượng ổ đĩa trố
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Crossfade Clips may only be applied to one track."
-msgstr ""
+msgstr "Lỗi.~%Crossfade Clips chỉ có thể được áp dụng cho một track."
 
 #: plug-ins/crossfadetracks.ny
 msgid "Crossfade Tracks"
@@ -18850,7 +18851,7 @@ msgstr "đoạn âm nhiễu xuyên kênh"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Fade type"
-msgstr ""
+msgstr "Kiểu chuyển dần"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Constant Gain"
@@ -18858,11 +18859,11 @@ msgstr "giá trị Gain không đổi"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Constant Power 1"
-msgstr ""
+msgstr "Công suất không đổi 1"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Constant Power 2"
-msgstr ""
+msgstr "Công suất không đổi 2"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Custom Curve"
@@ -18874,7 +18875,7 @@ msgstr "Tùy chọn đường cong"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Fade direction"
-msgstr ""
+msgstr "Hướng mờ dần"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Alternating Out / In"
@@ -18887,15 +18888,15 @@ msgstr "Luân phiên Vào / Ra"
 #: plug-ins/crossfadetracks.ny
 #, lisp-format
 msgid "Error.~%Select 2 (or more) tracks to crossfade."
-msgstr ""
+msgstr "Lỗi.~% Chọn 2 hoặc nhiều track để áp dụng crossfade."
 
 #: plug-ins/delay.ny
 msgid "Delay"
-msgstr ""
+msgstr "Delay - Độ trể"
 
 #: plug-ins/delay.ny
 msgid "Applying Delay Effect..."
-msgstr ""
+msgstr "Đang áp dụng hiệu ứng độ trễ ..."
 
 #: plug-ins/delay.ny
 msgid "Delay type"
@@ -18907,7 +18908,7 @@ msgstr "đều đặng"
 
 #: plug-ins/delay.ny
 msgid "Bouncing Ball"
-msgstr ""
+msgstr "Quả bóng nảy"
 
 #: plug-ins/delay.ny
 msgid "Reverse Bouncing Ball"
@@ -18947,7 +18948,7 @@ msgstr "Cho phép thay đổi thời lượng"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "EQ XML to TXT Converter"
-msgstr ""
+msgstr "Bộ chuyển đổi EQ XML sang TXT"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Select target EQ effect"
@@ -18955,7 +18956,7 @@ msgstr "Chọn mục tiêu EQ Effect (Hiệu ứng)"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Equalization XML file"
-msgstr ""
+msgstr "Tệp chứa thông số điều chỉnh âm thanh XML"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "XML file"
@@ -18967,11 +18968,11 @@ msgstr "Liệu tập tin văn bản đầu ra có tồn tại"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Append number"
-msgstr ""
+msgstr "Số được thêm"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Overwrite"
-msgstr ""
+msgstr "Ghi đè"
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 #, lisp-format
@@ -19000,11 +19001,11 @@ msgstr "thêm các nhãn đều nhau vào đoạn âm..."
 #. i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.
 #: plug-ins/equalabel.ny
 msgid "Create labels based on"
-msgstr ""
+msgstr "Tạo nhãn dựa trên"
 
 #: plug-ins/equalabel.ny
 msgid "Number & Interval"
-msgstr ""
+msgstr "Số & Khoảng thời gian"
 
 #: plug-ins/equalabel.ny
 msgid "Number of Labels"
@@ -19012,7 +19013,7 @@ msgstr "Số lượng nhãn"
 
 #: plug-ins/equalabel.ny
 msgid "Label Interval"
-msgstr ""
+msgstr "Khoảng cách xen giữa nhãn"
 
 #: plug-ins/equalabel.ny
 msgid "Number of labels"
@@ -19020,15 +19021,15 @@ msgstr "Số lượng nhãn"
 
 #: plug-ins/equalabel.ny
 msgid "Label interval (seconds)"
-msgstr ""
+msgstr "Nhãn khoảng thời gian (giây)"
 
 #: plug-ins/equalabel.ny
 msgid "Length of label region (seconds)"
-msgstr ""
+msgstr "Độ dài của vùng nhãn (giây)"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
-msgstr ""
+msgstr "Điều chỉnh khoảng cách nhãn để phù hợp với chiều dài"
 
 #. i18n-hint: Do not translate '##1'
 #: plug-ins/equalabel.ny plug-ins/label-sounds.ny
@@ -19069,11 +19070,11 @@ msgstr "3 (Sau nhãn)"
 
 #: plug-ins/equalabel.ny
 msgid "Begin numbering from"
-msgstr ""
+msgstr "Bắt đầu đánh số từ"
 
 #: plug-ins/equalabel.ny
 msgid "Message on completion"
-msgstr ""
+msgstr "Thông báo khi hoàn thành"
 
 #: plug-ins/equalabel.ny
 msgid "Details"
@@ -19081,17 +19082,17 @@ msgstr "Chi tiết"
 
 #: plug-ins/equalabel.ny
 msgid "Warnings only"
-msgstr ""
+msgstr "Chỉ cảnh báo"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "Warning: Overlapping region labels.~%"
-msgstr ""
+msgstr "Cảnh báo: Các vùng nhãn đang chồng chéo. ~%"
 
 #. i18n-hint:  Type of label
 #: plug-ins/equalabel.ny
 msgid "region labels"
-msgstr ""
+msgstr "các vùng nhãn"
 
 #: plug-ins/equalabel.ny
 msgid "point labels"
@@ -19101,12 +19102,12 @@ msgstr "nhãn điểm"
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~a~a ~a at intervals of ~a seconds.~%"
-msgstr ""
+msgstr "~a~a ~a ở trong khoảng của ~a giây.~%"
 
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~aRegion length = ~a seconds."
-msgstr ""
+msgstr "~aĐộ dài vòng lặp = ~a giây."
 
 #: plug-ins/highpass.ny
 msgid "High-Pass Filter"
@@ -19114,11 +19115,11 @@ msgstr "Bộ lọc high-pass"
 
 #: plug-ins/highpass.ny
 msgid "Performing High-Pass Filter..."
-msgstr ""
+msgstr "Đang tối ưu bộ lọc tầng số cao..."
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/rhythmtrack.ny
 msgid "Dominic Mazzoni"
-msgstr ""
+msgstr "Dominic Mazzoni"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
 #: plug-ins/rissetdrum.ny plug-ins/tremolo.ny
@@ -19127,7 +19128,7 @@ msgstr "Tần số (Hz)"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "Roll-off (dB per octave)"
-msgstr ""
+msgstr "Roll-of(dB trên mỗi quãng tám)"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 msgid "6 dB"
@@ -19159,24 +19160,24 @@ msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                   Track sample rate is ~a Hz~%~\n"
 "                   Frequency must be less than ~a Hz."
-msgstr ""
+msgstr "Lỗi:~%~%F Tần số (~a Hz) là quá cao đối với tốc độ mẫu của track.~%~%~ \nTốc độ lấy mẫu bản nhạc là ~a Hz~%~\n Tần số phải nhỏ hơn ~a Hz."
 
 #. i18n-hint: Name of effect that labels sounds
 #: plug-ins/label-sounds.ny
 msgid "Label Sounds"
-msgstr ""
+msgstr "Nhãn âm thanh"
 
 #: plug-ins/label-sounds.ny
 msgid "Threshold level (dB)"
-msgstr ""
+msgstr "Mức ngưỡng (dB)"
 
 #: plug-ins/label-sounds.ny
 msgid "Threshold measurement"
-msgstr ""
+msgstr "Thang đo ngưỡng"
 
 #: plug-ins/label-sounds.ny
 msgid "Peak level"
-msgstr ""
+msgstr "Mức cao điểm"
 
 #: plug-ins/label-sounds.ny
 msgid "Average level"
@@ -19188,11 +19189,11 @@ msgstr "Mức độ RMS"
 
 #: plug-ins/label-sounds.ny
 msgid "Minimum silence duration"
-msgstr ""
+msgstr "Thời lượng im lặng tối thiểu"
 
 #: plug-ins/label-sounds.ny
 msgid "Minimum label interval"
-msgstr ""
+msgstr "Khoảng thời gian nhãn tối thiểu"
 
 #: plug-ins/label-sounds.ny
 msgid "Label type"
@@ -19200,27 +19201,27 @@ msgstr "Loại Nhãn"
 
 #: plug-ins/label-sounds.ny
 msgid "Point before sound"
-msgstr ""
+msgstr "Điểm trước âm thanh"
 
 #: plug-ins/label-sounds.ny
 msgid "Point after sound"
-msgstr ""
+msgstr "Điểm sau âm thanh"
 
 #: plug-ins/label-sounds.ny
 msgid "Region around sounds"
-msgstr ""
+msgstr "Khu vực xung quanh âm thanh"
 
 #: plug-ins/label-sounds.ny
 msgid "Region between sounds"
-msgstr ""
+msgstr "Vùng giữa các âm thanh"
 
 #: plug-ins/label-sounds.ny
 msgid "Maximum leading silence"
-msgstr ""
+msgstr "Khoảng lặng hàng đầu tối đa"
 
 #: plug-ins/label-sounds.ny
 msgid "Maximum trailing silence"
-msgstr ""
+msgstr "Khoảng im lặng cuối cùng tối đa"
 
 #: plug-ins/label-sounds.ny
 msgid "Sound ##1"
@@ -19235,31 +19236,31 @@ msgstr "~ah ~am ~as"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr ""
+msgstr "Đã phát hiện quá nhiều khoảng lặng. ~% Chỉ 10000 nhãn đầu tiên được thêm vào."
 
 #. i18n-hint: '~a' will be replaced by a time duration
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Error.~%Selection must be less than ~a."
-msgstr ""
+msgstr "Lỗi.~%Lựa chọn phải nhỏ hơn ~a."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid ""
 "No sounds found.~%Try lowering the 'Threshold' or reduce 'Minimum sound "
 "duration'."
-msgstr ""
+msgstr "Không tìm thấy âm thanh nào.~% Hãy thử giảm 'Ngưỡng' hoặc giảm 'Thời lượng âm thanh tối thiểu'."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid ""
 "Labelling regions between sounds requires~%at least two sounds.~%Only one "
 "sound detected."
-msgstr ""
+msgstr "Việc gắn nhãn các vùng giữa các âm thanh yêu cầu~%at có ít nhất hai âm thanh. ~% Chỉ phát hiện một âm thanh."
 
 #: plug-ins/limiter.ny
 msgid "Limiter"
-msgstr "bộ định giới hạn"
+msgstr "Limiter-Bộ định giới hạn"
 
 #: plug-ins/limiter.ny
 msgid "Limiting..."
@@ -19313,7 +19314,7 @@ msgstr "Áp dụng tăng Gain"
 
 #: plug-ins/lowpass.ny
 msgid "Low-Pass Filter"
-msgstr ""
+msgstr "Low-Pass Filter - Bộ lọc tần số thấp"
 
 #: plug-ins/lowpass.ny
 msgid "Performing Low-Pass Filter..."
@@ -19325,47 +19326,47 @@ msgstr "Noise Gate - Bộ lọc Nhiễu"
 
 #: plug-ins/noisegate.ny
 msgid "Select Function"
-msgstr ""
+msgstr "Lựa chọn Chức năng"
 
 #: plug-ins/noisegate.ny
 msgid "Gate"
-msgstr ""
+msgstr "Cổng"
 
 #: plug-ins/noisegate.ny
 msgid "Analyze Noise Level"
-msgstr ""
+msgstr "Phân tích Mức độ Tiếng ồn"
 
 #: plug-ins/noisegate.ny
 msgid "Stereo Linking"
-msgstr ""
+msgstr "Liên kết âm thanh nổi"
 
 #: plug-ins/noisegate.ny
 msgid "Link Stereo Tracks"
-msgstr ""
+msgstr "Liên kết các bản nhạc âm thanh nổi"
 
 #: plug-ins/noisegate.ny
 msgid "Don't Link Stereo"
-msgstr ""
+msgstr "Không liên kết âm thanh nổi"
 
 #: plug-ins/noisegate.ny
 msgid "Gate threshold (dB)"
-msgstr ""
+msgstr "Ngưỡng cổng (dB)"
 
 #: plug-ins/noisegate.ny
 msgid "Gate frequencies above (kHz)"
-msgstr ""
+msgstr "Cổng tần số  trên (kHz)"
 
 #: plug-ins/noisegate.ny
 msgid "Level reduction (dB)"
-msgstr ""
+msgstr "Mức giảm (dB)"
 
 #: plug-ins/noisegate.ny
 msgid "Attack (ms)"
-msgstr ""
+msgstr "Sự đánh nhạc"
 
 #: plug-ins/noisegate.ny
 msgid "Decay (ms)"
-msgstr ""
+msgstr "Nhỏ dần (ms)"
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19374,7 +19375,7 @@ msgid ""
 "\"Gate frequencies above: ~s kHz\"\n"
 "is too high for selected track.\n"
 "Set the control below ~a kHz."
-msgstr ""
+msgstr "Lỗi.\"Các tầng số ở cổng trên: ~s kHz\"là quá cao so với track đã chọn. Đặt điều khiển dưới ~a kHz."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19382,7 +19383,7 @@ msgid ""
 "Error.\n"
 "Selection too long.\n"
 "Maximum length is ~a."
-msgstr ""
+msgstr "Lỗi.\nLựa chọn quá dài.\nĐộ dài tối đa là ~a."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -19390,24 +19391,24 @@ msgid ""
 "Error.\n"
 "Insufficient audio selected.\n"
 "Make the selection longer than ~a ms."
-msgstr ""
+msgstr "Lỗi.\nÂm thanh được chọn không đầy đủ.\nThực hiện lựa chọn dài hơn ~a ms."
 
 #: plug-ins/noisegate.ny
 #, lisp-format
 msgid ""
 "Peak based on first ~a seconds ~a dB~%\n"
 "Suggested Threshold Setting ~a dB."
-msgstr ""
+msgstr "Đỉnh dựa trên ~a những giây đầu tiên ~a dB\n~%Đề xuất cài đặt ngưỡng ~a dB."
 
 #. i18n-hint: hours and minutes. Do not translate "~a".
 #: plug-ins/noisegate.ny
 #, lisp-format
 msgid "~ah ~am"
-msgstr ""
+msgstr "~ah ~am"
 
 #: plug-ins/notch.ny
 msgid "Notch Filter"
-msgstr ""
+msgstr "Bộ lọc Notch"
 
 #: plug-ins/notch.ny
 msgid "Applying Notch Filter..."
@@ -19419,7 +19420,7 @@ msgstr "Steve Daulton and Bill Wharrie"
 
 #: plug-ins/notch.ny
 msgid "Q (higher value reduces width)"
-msgstr ""
+msgstr "Q (giá trị cao hơn làm giảm chiều rộng)"
 
 #: plug-ins/notch.ny
 #, lisp-format
@@ -19427,11 +19428,11 @@ msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
-msgstr ""
+msgstr "Lỗi:~%~%F Tần số (~a Hz)quá cao so với tốc độ lấy mẫu của track.~%~%~ \nTốc độ mẫu của track là ~a Hz.~%~\nTần số phải nhỏ hơn ~a Hz."
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Nyquist Plug-in Installer"
-msgstr ""
+msgstr "Trình cài đặt phần mở rộng Nyquist "
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -19457,11 +19458,11 @@ msgstr "Tập tin văn bản"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "All supported"
-msgstr ""
+msgstr "Tất cả đều được hỗ trợ"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Allow overwriting"
-msgstr ""
+msgstr "Cho phép ghi đè"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Disallow"
@@ -19474,17 +19475,17 @@ msgstr "Cho phép"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
-msgstr ""
+msgstr "Thành công.~ %F tệp được ghi vào:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr ""
+msgstr "Cảnh báo.~1 %F Sao chép một số tệp không thành công:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
-msgstr ""
+msgstr "Phần mở rộng đã được cài đặt.~%(Sử dụng Quản lí phần mở rộng để kích hoạt các hiệu ứng):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -19545,15 +19546,15 @@ msgstr "gián đoạn"
 
 #: plug-ins/pluck.ny
 msgid "Gradual"
-msgstr ""
+msgstr "Dần dần"
 
 #: plug-ins/pluck.ny
 msgid "Duration (60s max)"
-msgstr ""
+msgstr "Thời lượng (Tối đa 60s)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm Track"
-msgstr ""
+msgstr "Track nhịp điệu"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Generating Rhythm..."
@@ -19569,7 +19570,7 @@ msgstr "30 - 300 nhịp/phút"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Beats per bar"
-msgstr ""
+msgstr "Nhiệp điệu của mỗi thanh"
 
 #: plug-ins/rhythmtrack.ny
 msgid "1 - 20 beats/measure"
@@ -19585,11 +19586,11 @@ msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
-msgstr ""
+msgstr "Đặt 'Số thanh' thành 0 để bật 'Thời lượng track nhịp điệu'."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
-msgstr ""
+msgstr "Số của các thanh"
 
 #: plug-ins/rhythmtrack.ny
 msgid "1 - 1000 bars"
@@ -19601,7 +19602,7 @@ msgstr "thời lượng nhịp điệu của dải âm"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Used if 'Number of bars' = 0"
-msgstr ""
+msgstr "Sử dụng nếu 'Số của các thanh' = 0"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Start time offset"
@@ -19613,15 +19614,15 @@ msgstr "khoản lặng trước nhịp đầu tiên"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Beat sound"
-msgstr ""
+msgstr "Âm thanh nhạc nền"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Metronome Tick"
-msgstr ""
+msgstr "Đánh dấu nhịp"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Ping (short)"
-msgstr ""
+msgstr "Ping (ngắn)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Ping (long)"
@@ -19641,15 +19642,15 @@ msgstr "âm click nhiễu"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Drip (short)"
-msgstr ""
+msgstr "Nhỏ giọt (ngắn)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Drip (long)"
-msgstr ""
+msgstr "Nhỏ giọt (dài)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "MIDI pitch of strong beat"
-msgstr ""
+msgstr "Cao độ MIDI của phách mạnh"
 
 #: plug-ins/rhythmtrack.ny
 msgid "18 - 116"
@@ -19663,7 +19664,7 @@ msgstr "cao độ MIDI của beat thấp"
 msgid ""
 "Set either 'Number of bars' or\n"
 "'Rhythm track duration' to greater than zero."
-msgstr ""
+msgstr "Đặt 'Số của các thanh' hoặc\n'' Thời lượng track nhịp điệu ' lớn hơn 0."
 
 #: plug-ins/rissetdrum.ny
 msgid "Risset Drum"
@@ -19679,7 +19680,7 @@ msgstr "Steven Jones"
 
 #: plug-ins/rissetdrum.ny
 msgid "Decay (seconds)"
-msgstr ""
+msgstr "Nhỏ dần (giây)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Center frequency of noise (Hz)"
@@ -19739,7 +19740,7 @@ msgstr "thời gian được ghi lại"
 
 #: plug-ins/sample-data-export.ny
 msgid "Include header information"
-msgstr ""
+msgstr "Bao gồm thông tin tiêu đề"
 
 #: plug-ins/sample-data-export.ny
 msgid "Minimal"
@@ -19755,7 +19756,7 @@ msgstr "tùy chọn tiêu đề"
 
 #: plug-ins/sample-data-export.ny
 msgid "Channel layout for stereo"
-msgstr ""
+msgstr "Bố cục kênh cho âm thanh nổi"
 
 #. i18n-hint: Left and Right
 #: plug-ins/sample-data-export.ny
@@ -19764,7 +19765,7 @@ msgstr "hai kênh trái phải trên cùng một luồng"
 
 #: plug-ins/sample-data-export.ny
 msgid "Alternate Lines"
-msgstr ""
+msgstr "Các dòng thay thế"
 
 #. i18n-hint: L for Left
 #: plug-ins/sample-data-export.ny
@@ -19787,12 +19788,12 @@ msgstr "[-inf]"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left Channel.~%~%"
-msgstr ""
+msgstr "Kênh trái.~%~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~%~%Right Channel.~%~%"
-msgstr ""
+msgstr "~%~%Kênh phải.~%~%"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -19802,7 +19803,7 @@ msgstr "~adữ liệu được ghi vào:~%~a"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
-msgstr ""
+msgstr "Tỷ lệ mẫu: ~a Hz. Giá trị mẫu trên ~a scale.~%~a~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -19815,7 +19816,7 @@ msgstr "~a ~a~%~a tốc độ lấy mẫu: ~a Hz~%Length đã xữ lý xong: ~a 
 msgid ""
 "~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~\n"
 "                     Length processed: ~a samples ~a seconds.~a"
-msgstr ""
+msgstr "~a ~a~%~aTốc độ mẫu: ~a Hz. Giá trị mẫu trên ~a thang đo.~%~\nĐộ dài được xử lí: ~a mẫu ~a giây.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -19823,7 +19824,7 @@ msgid ""
 "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~\n"
 "                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
-msgstr ""
+msgstr "~a~%Tốc độ mẫu: ~a Hz. Các giá trị lấy mẫu ~a tỉ lệ. ~a.~%~aĐộ dài đã xử lý: ~a ~ \nmẫu, ~a giây.~%Biên độ đỉnh: ~a (tuyến tính) ~a dB. RMS không trọng tâm: ~a dB.~%~\nĐộ lệch DC: ~a~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -19847,12 +19848,12 @@ msgstr "~a giây."
 
 #: plug-ins/sample-data-export.ny
 msgid "Audio data analysis:"
-msgstr ""
+msgstr "Phân tích dữ liệu âm thanh:"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>Sample Rate:</b> &nbsp;&nbsp;~a Hz."
-msgstr ""
+msgstr "1 Tốc độ mẫu: 1 &nbsp;&nbsp;~a Hz."
 
 #. i18n-hint: abbreviates "decibels"
 #: plug-ins/sample-data-export.ny
@@ -19877,12 +19878,12 @@ msgstr "<b>DC Offset:</b> &nbsp;&nbsp;~a"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~a linear, &nbsp;&nbsp;~a dB."
-msgstr ""
+msgstr "~sự tuyến tính, &nbsp;&nbsp;~a dB."
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a linear, &nbsp;&nbsp;~a dB."
-msgstr ""
+msgstr "Còn lại: ~a lin, ~a dB | Đúng: ~a tỉ lệ thuận, &nbsp;&nbsp;~a dB."
 
 #: plug-ins/sample-data-export.ny
 msgid "sample data"
@@ -19894,11 +19895,11 @@ msgstr "Mẫu #"
 
 #: plug-ins/sample-data-export.ny
 msgid "Value (linear)"
-msgstr ""
+msgstr "Giá trị(tuyến tính)"
 
 #: plug-ins/sample-data-export.ny
 msgid "Value (dB)"
-msgstr ""
+msgstr "Giá trị (dB)"
 
 #: plug-ins/sample-data-export.ny
 msgid "audio sample value analysis"
@@ -19930,7 +19931,7 @@ msgstr "được cung cấp với <span>cổng xuất dữ liệu mẫu </span>c
 
 #: plug-ins/sample-data-export.ny
 msgid "linear"
-msgstr ""
+msgstr "tuyến tính"
 
 #: plug-ins/sample-data-export.ny
 msgid "2 channels (stereo)"
@@ -19992,7 +19993,7 @@ msgstr "quá trình xử lý dữ liệu không hợp lệ"
 
 #: plug-ins/sample-data-import.ny
 msgid "Throw Error"
-msgstr ""
+msgstr "Lỗi bỏ đi"
 
 #: plug-ins/sample-data-import.ny
 msgid "Read as Zero"
@@ -20012,7 +20013,7 @@ msgid ""
 "Error:~%~\n"
 "              The file must contain only plain ASCII text.~%~\n"
 "              (Invalid byte '~a' at byte number: ~a)"
-msgstr ""
+msgstr "Lỗi:~%~ \nTệp chỉ được chứa văn bản ASCII thuần túy.~%~\n (Byte không hợp lệ '~a' ở số byte: ~a)"
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -20020,7 +20021,7 @@ msgid ""
 "Error~%~\n"
 "              Data must be numbers in plain ASCII text.~%~\n"
 "              '~a' is not a numeric value."
-msgstr ""
+msgstr "Lỗi~%~ Dữ liệu phải là số dưới dạng văn bản ASCII thuần túy.~%~ \n'~a' không phải là một giá trị số."
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -20029,12 +20030,12 @@ msgstr "Lỗi.~% Không thể mở tập tin"
 
 #: plug-ins/spectral-delete.ny
 msgid "Spectral Delete"
-msgstr ""
+msgstr "Xóa quang phổ"
 
 #: plug-ins/spectral-delete.ny
 #, lisp-format
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
-msgstr ""
+msgstr "Lỗi. ~% Tốc độ mẫu track dưới 100 Hz không được hỗ trợ."
 
 #: plug-ins/tremolo.ny
 msgid "Tremolo"
@@ -20054,11 +20055,11 @@ msgstr "răng cưa đảo nghịch"
 
 #: plug-ins/tremolo.ny
 msgid "Starting phase (degrees)"
-msgstr ""
+msgstr "Khởi động pha (độ)"
 
 #: plug-ins/tremolo.ny
 msgid "Wet level (percent)"
-msgstr ""
+msgstr "Wet level -  Mức độ ướt (phần trăm)"
 
 #: plug-ins/vocalrediso.ny
 msgid "Vocal Reduction and Isolation"
@@ -20066,7 +20067,7 @@ msgstr "giảm và lọc tiếng"
 
 #: plug-ins/vocalrediso.ny
 msgid "Applying Action..."
-msgstr ""
+msgstr "Đang áp dụng hành động"
 
 #: plug-ins/vocalrediso.ny
 msgid "Robert Haenggi"
@@ -20074,7 +20075,7 @@ msgstr "Robert Haenggi"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Vocals: to mono"
-msgstr ""
+msgstr "Loại bỏ giọng nói: sang đơn kênh"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Vocals"
@@ -20082,7 +20083,7 @@ msgstr "Xóa Vocals"
 
 #: plug-ins/vocalrediso.ny
 msgid "Isolate Vocals"
-msgstr ""
+msgstr "Tách giọng nói(hát)"
 
 #: plug-ins/vocalrediso.ny
 msgid "Isolate Vocals and Invert"
@@ -20090,11 +20091,11 @@ msgstr "Phân tách vocals và nghịch đão"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Center: to mono"
-msgstr ""
+msgstr "Loại bỏ trung tâm: sang đơn kênh"
 
 #: plug-ins/vocalrediso.ny
 msgid "Remove Center"
-msgstr ""
+msgstr "Loại bỏ trung tâm"
 
 #: plug-ins/vocalrediso.ny
 msgid "Isolate Center"
@@ -20114,7 +20115,7 @@ msgstr "Độ dài"
 
 #: plug-ins/vocalrediso.ny
 msgid "Low Cut for Vocals (Hz)"
-msgstr ""
+msgstr "Cắt âm thấp cho giọng hát (Hz)"
 
 #: plug-ins/vocalrediso.ny
 msgid "High Cut for Vocals (Hz)"
@@ -20131,7 +20132,7 @@ msgid ""
 "                    Coefficient of determination: ~a\n"
 "                    Variation of residuals: ~a\n"
 "                    y equals ~a plus ~a times x~%"
-msgstr ""
+msgstr "Trùng bình x: ~a, y: ~a\nPhương sai x y: ~a\nPhương sai trung bình x: ~a, y: ~a\nĐộ lệch tiêu chuẩn x: ~a, y: ~a\nHệ số tương quan: ~a \nHệ số xác định: ~a\nBiến đổi của phần dư: ~a\ny bằng ~a cộng ~a lần x~%"
 
 #: plug-ins/vocalrediso.ny
 #, lisp-format
@@ -20145,38 +20146,38 @@ msgid ""
 " - The two channels are identical, i.e. dual mono.\n"
 "                The center can't be removed.\n"
 "                Any remaining difference may be caused by lossy encoding."
-msgstr ""
+msgstr "- Hai kênh giống hệt nhau, i.e. kênh đơn kép.\nTrung tâm không thể bị loại bỏ.\nBất kỳ sự khác biệt nào còn lại có thể do mã hóa bị mất."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
 "                Most likely, the center extraction will be poor."
-msgstr ""
+msgstr "- Hai kênh có liên quan chặt chẽ với nhau, tức là gần như đơn âm hoặc cực kỳ giống.\nRất có thể, khả năng trích xuất trung tâm sẽ kém."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - A fairly good value, at least stereo in average and not too wide spread."
-msgstr ""
+msgstr "- Một giá trị khá tốt, ít nhất là âm thanh nổi ở mức trung bình và độ dàn trải không quá rộng."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - An ideal value for Stereo.\n"
 "                However, the center extraction depends also on the used reverb."
-msgstr ""
+msgstr "- Một giá trị lý tưởng cho Âm thanh nổi.\nTuy nhiên, việc trích xuất trung tâm cũng phụ thuộc vào âm trả lại được sử dụng."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - The two channels are almost not related.\n"
 "                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
 "                The center extraction can still be good though."
-msgstr ""
+msgstr "- Hai kênh gần như không liên quan.\nHoặc bạn chỉ có tiếng ồn hoặc track chính không cân bằng.\nTuy nhiên, việc khai thác trung tâm vẫn có thể tốt."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
 " - Although the Track is stereo, the field is obviously extra wide.\n"
 "                This can cause strange effects.\n"
 "                Especially when played by only one speaker."
-msgstr ""
+msgstr "- Mặc dù Bản nhạc là âm thanh nổi, nhưng trường rõ ràng là cực rộng.\nĐiều này có thể gây ra các hiệu ứng kỳ lạ.\nĐặc biệt là khi chỉ phát bởi một loa."
 
 #: plug-ins/vocalrediso.ny
 msgid ""
@@ -20184,7 +20185,7 @@ msgid ""
 "                  Obviously, a pseudo stereo effect has been used\n"
 "                  to spread the signal over the physical distance between the speakers.\n"
 "                  Don't expect good results from a center removal."
-msgstr ""
+msgstr "- Hai kênh gần giống nhau.\nRõ ràng, hiệu ứng âm thanh nổi giả đã được sử dụng\nđể truyền tín hiệu qua khoảng cách vật lý giữa các loa.\nĐừng mong đợi kết quả tốt từ việc loại bỏ trung tâm."
 
 #: plug-ins/vocalrediso.ny
 msgid "This plug-in works only with stereo tracks."
@@ -20192,7 +20193,7 @@ msgstr " plug-in này chỉ dùng được với các đoạn âm stereo."
 
 #: plug-ins/vocoder.ny
 msgid "Vocoder"
-msgstr ""
+msgstr "Hiệu ứng giọng nói đặc biệt "
 
 #: plug-ins/vocoder.ny
 msgid "Processing Vocoder..."
@@ -20204,7 +20205,7 @@ msgstr "Edgar-RFT"
 
 #: plug-ins/vocoder.ny
 msgid "Distance: (1 to 120, default = 20)"
-msgstr ""
+msgstr "Khoảng cách: (1 đến 120, mặc định = 20)"
 
 #: plug-ins/vocoder.ny
 msgid "Output choice"
@@ -20228,7 +20229,7 @@ msgstr "Biên độ của audio gốc (phần trăm)"
 
 #: plug-ins/vocoder.ny
 msgid "Amplitude of white noise (percent)"
-msgstr ""
+msgstr "Biên độ của tiếng ồn trắng (phần trăm)"
 
 #: plug-ins/vocoder.ny
 msgid "Amplitude of Radar Needles (percent)"
