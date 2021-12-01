@@ -213,9 +213,9 @@ Scrubber::Scrubber(AudacityProject *project)
    : mScrubToken(-1)
    , mScrubSpeedDisplayCountdown(0)
    , mScrubStartPosition(-1)
+   , mSmoothScrollingScrub(false)
    , mPaused(true)
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
-   , mSmoothScrollingScrub(false)
    , mLogMaxScrubSpeed(0)
 #endif
 
