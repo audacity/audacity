@@ -1476,7 +1476,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
 
          // If we are unwinding for an exception, don't do another
          // potentially throwing operation
-         if (!std::uncaught_exception())
+         if (std::uncaught_exceptions() == 0)
             // If this does throw, let that propagate, don't guard the call
             AddSilence(len);
       }

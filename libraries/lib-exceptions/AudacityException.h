@@ -214,7 +214,7 @@ R GuardedCall(
          // At this point, e is the "current" exception, but not "uncaught"
          // unless it was rethrown by handler.  handler might also throw some
          // other exception object.
-         if (!std::uncaught_exception()) {
+         if (std::uncaught_exceptions() == 0) {
             auto pException = std::current_exception(); // This points to e
             AudacityException::EnqueueAction(
                pException, std::move(delayedHandler));
