@@ -120,6 +120,7 @@ public:
       AdornedRulerPanel *pParent, wxCoord xx, MenuChoice menuChoice )
       : mParent(pParent)
       , mX( xx )
+      , mClickedX( xx )
       , mChoice( menuChoice )
    {}
 
@@ -140,6 +141,7 @@ protected:
       const TrackPanelMouseEvent &event, AudacityProject *) override
    {
       mClicked = event.event.LeftIsDown() ? Button::Left : Button::Right;
+      mClickedX = event.event.GetX();
       return RefreshCode::DrawOverlays;
    }
 
@@ -194,6 +196,7 @@ protected:
    wxWeakRef<AdornedRulerPanel> mParent;
 
    wxCoord mX;
+   wxCoord mClickedX;
    
    MenuChoice mChoice;
 
@@ -238,6 +241,9 @@ public:
       ruler.UpdateQuickPlayPos(event.event.m_x);
    
       if (!mDragged) {
+         if (fabs(mX - mClickedX) < SELECT_TOLERANCE_PIXEL)
+            // Don't start a drag yet for a small mouse movement
+            return RefreshNone;
          SavePlayRegion(*pProject);
          const auto time = SnappedTime(*pProject, 0);
          DoStartAdjust(*pProject, time);
