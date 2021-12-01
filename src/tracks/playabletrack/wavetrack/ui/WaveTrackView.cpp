@@ -48,8 +48,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackAffordanceHandle.h"
 #include "WaveClipTrimHandle.h"
 
-namespace {
-
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
@@ -691,7 +689,6 @@ private:
    size_t mMySubView{};
 };
 
-}
 
 std::pair<
    bool, // if true, hit-testing is finished
