@@ -601,12 +601,12 @@ private:
    /*! Mutually recursive (in compile time) with template Track::Executor. */
    struct Dispatcher {
       //! First, recursive case of metafunction, defers generation of operator ()
-      template< typename R, typename ConcreteType,
+      template< typename R, typename ArgumentType,
                 typename Function, typename ...Functions >
       struct inapplicable
       {
          //! The template specialization to recur with
-         using Tail = Executor< R, ConcreteType, Functions... >;
+         using Tail = Executor< R, ArgumentType, Functions... >;
          //! Constant used in a compile-time check
          enum : unsigned { SetUsed = Tail::SetUsed << 1 };
 
@@ -618,7 +618,7 @@ private:
       };
 
       //! Second, nonrecursive case of metafunction, generates operator () that calls function without fallthrough
-      template< typename R, typename BaseClass, typename ConcreteType,
+      template< typename R, typename BaseClass, typename ArgumentType,
                 typename Function, typename ...Functions >
       struct applicable1
       {
@@ -633,12 +633,12 @@ private:
       };
 
       //! Third, recursive case of metafunction, generates operator () that calls function with fallthrough
-      template< typename R, typename BaseClass, typename ConcreteType,
+      template< typename R, typename BaseClass, typename ArgumentType,
                 typename Function, typename ...Functions >
       struct applicable2
       {
          //! The template specialization to recur with
-         using Tail = Executor< R, ConcreteType, Functions... >;
+         using Tail = Executor< R, ArgumentType, Functions... >;
          //! Constant used in a compile-time check
          enum : unsigned { SetUsed = (Tail::SetUsed << 1) | 1u };
 
@@ -657,35 +657,35 @@ private:
       //! Variadic template implements metafunction with specializations, to choose among implementations of operator ()
       template< typename ... > struct Switch {};
 
-      //! Base case, no more base classes of ConcreteType
+      //! Base case, no more base classes of ArgumentType
       /*! Computes a type as the return type of undefined member test() */
-      template< typename R, typename ConcreteType >
-      struct Switch< R, ConcreteType >
+      template< typename R, typename ArgumentType >
+      struct Switch< R, ArgumentType >
       {
-         //! No BaseClass of ConcreteType is acceptable to Function.
+         //! No BaseClass of ArgumentType is acceptable to Function.
          template< typename Function, typename ...Functions >
             static auto test()
-               -> inapplicable< R, ConcreteType, Function, Functions... >;
+               -> inapplicable< R, ArgumentType, Function, Functions... >;
       };
 
-      //! Recursive case, tries to match function with one base class of ConcreteType
+      //! Recursive case, tries to match function with one base class of ArgumentType
       /*! Computes a type as the return type of undefined member test() */
-      template< typename R, typename ConcreteType,
+      template< typename R, typename ArgumentType,
                 typename BaseClass, typename ...BaseClasses >
-      struct Switch< R, ConcreteType, BaseClass, BaseClasses... >
+      struct Switch< R, ArgumentType, BaseClass, BaseClasses... >
       {
          //! Recur to this type to try the next base class
-         using Retry = Switch< R, ConcreteType, BaseClasses... >;
+         using Retry = Switch< R, ArgumentType, BaseClasses... >;
 
          //! Catch-all overload of undefined function used in decltype only
-         /*! If ConcreteType is not compatible with BaseClass, or if
+         /*! If ArgumentType is not compatible with BaseClass, or if
           Function does not accept BaseClass*, try other BaseClasses. */
          template< typename Function, typename ...Functions >
             static auto test( const void * )
                -> decltype( Retry::template test< Function, Functions... >() );
 
-         //! overload when upcast of ConcreteType* works, with sfinae'd return type
-         /*! If BaseClass is a base of ConcreteType and Function can take a pointer to it,
+         //! overload when upcast of ArgumentType* works, with sfinae'd return type
+         /*! If BaseClass is a base of ArgumentType and Function can take a pointer to it,
            then overload resolution chooses this.
            If not, then the sfinae rule makes this overload unavailable. */
          template< typename Function, typename ...Functions >
@@ -693,12 +693,12 @@ private:
                -> decltype(
                   (void) std::declval<Function>()
                      ( (BaseClass*)nullptr ),
-                  applicable1< R, BaseClass, ConcreteType,
+                  applicable1< R, BaseClass, ArgumentType,
                                Function, Functions... >{}
                );
 
-         //! overload when upcast of ConcreteType* works, with sfinae'd return type
-         /*! If BaseClass is a base of ConcreteType and Function can take a pointer to it,
+         //! overload when upcast of ArgumentType* works, with sfinae'd return type
+         /*! If BaseClass is a base of ArgumentType and Function can take a pointer to it,
            with a second argument for a continuation,
            then overload resolution chooses this.
            If not, then the sfinae rule makes this overload unavailable. */
@@ -708,13 +708,13 @@ private:
                   (void) std::declval<Function>()
                      ( (BaseClass*)nullptr,
                        std::declval< Continuation<R> >() ),
-                  applicable2< R, BaseClass, ConcreteType,
+                  applicable2< R, BaseClass, ArgumentType,
                                Function, Functions... >{}
                );
 
-         //! Whether upcast of ConcreteType* to first BaseClass* works
+         //! Whether upcast of ArgumentType* to first BaseClass* works
          static constexpr bool Compatible = CompatibleTrackKinds(
-            track_kind<BaseClass>(), track_kind<ConcreteType>() );
+            track_kind<BaseClass>(), track_kind<ArgumentType>() );
          //! undefined function used in decltype only to compute a type, using other overloads
          template< typename Function, typename ...Functions >
             static auto test()
@@ -725,10 +725,10 @@ private:
    };
 
    //! Base case of metafunction implementing Track::TypeSwitch generates operator () with nonvoid return
-   template< typename R, typename ConcreteType >
-   struct Executor< R, ConcreteType >
+   template< typename R, typename ArgumentType >
+   struct Executor< R, ArgumentType >
    {
-      using NominalType = ConcreteType;
+      using NominalType = ArgumentType;
       //! Constant used in a compile-time check
       enum : unsigned { SetUsed = 0 };
       //! No functions matched, so do nothing
@@ -736,44 +736,44 @@ private:
    };
 
    //! Base case of metafunction implementing Track::TypeSwitch generates operator () with void return
-   template< typename ConcreteType >
-   struct Executor< void, ConcreteType >
+   template< typename ArgumentType >
+   struct Executor< void, ArgumentType >
    {
-      using NominalType = ConcreteType;
+      using NominalType = ArgumentType;
       //! Constant used in a compile-time check
       enum : unsigned { SetUsed = 0 };
       //! No functions matched, so do nothing
       void operator () (const void *, ...) { }
    };
 
-   //! Implements Track::TypeSwitch, its operator() invokes the first function that can accept ConcreteType*
+   //! Implements Track::TypeSwitch, its operator() invokes the first function that can accept ArgumentType*
    /*! Mutually recursive (in compile time) with template Track::Dispatcher. */
-   template< typename R, typename ConcreteType,
+   template< typename R, typename ArgumentType,
              typename Function, typename ...Functions >
-   struct Executor< R, ConcreteType, Function, Functions... >
+   struct Executor< R, ArgumentType, Function, Functions... >
       : decltype(
-         Dispatcher::Switch< R, ConcreteType,
+         Dispatcher::Switch< R, ArgumentType,
             Track, AudioTrack, PlayableTrack,
             WaveTrack, LabelTrack, TimeTrack,
             NoteTrack >
                ::template test<Function, Functions... >())
    {
-      using NominalType = ConcreteType;
+      using NominalType = ArgumentType;
    };
 
-   //! Implements const overload of Track::TypeSwitch, its operator() invokes the first function that can accept ConcreteType*
+   //! Implements const overload of Track::TypeSwitch, its operator() invokes the first function that can accept ArgumentType*
    /*! Mutually recursive (in compile time) with template Track::Dispatcher. */
-   template< typename R, typename ConcreteType,
+   template< typename R, typename ArgumentType,
              typename Function, typename ...Functions >
-   struct Executor< R, const ConcreteType, Function, Functions... >
+   struct Executor< R, const ArgumentType, Function, Functions... >
       : decltype(
-         Dispatcher::Switch< R, ConcreteType,
+         Dispatcher::Switch< R, ArgumentType,
             const Track, const AudioTrack, const PlayableTrack,
             const WaveTrack, const LabelTrack, const TimeTrack,
             const NoteTrack >
                ::template test<Function, Functions... >())
    {
-      using NominalType = ConcreteType;
+      using NominalType = ArgumentType;
    };
 
 public:
