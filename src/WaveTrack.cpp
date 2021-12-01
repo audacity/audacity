@@ -314,6 +314,24 @@ bool WaveTrack::LinkConsistencyCheck()
 }
 
 
+static const Track::TypeInfo &typeInfo()
+{
+   static const Track::TypeInfo info{
+      { "wave", "wave", XO("Wave Track") },
+      true, &PlayableTrack::ClassTypeInfo() };
+   return info;
+}
+
+auto WaveTrack::GetTypeInfo() const -> const TypeInfo &
+{
+   return typeInfo();
+}
+
+auto WaveTrack::ClassTypeInfo() -> const TypeInfo &
+{
+   return typeInfo();
+}
+
 void WaveTrack::SetLastScaleType() const
 {
    mLastScaleType = GetWaveformSettings().scaleType;

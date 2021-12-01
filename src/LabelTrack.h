@@ -23,6 +23,7 @@ class AudacityProject;
 class NotifyingSelectedRegion;
 class TimeWarper;
 
+class LabelTrack;
 struct LabelTrackHit;
 struct TrackPanelDrawingContext;
 
@@ -158,6 +159,9 @@ public:
    int FindNextLabel(const SelectedRegion& currentSelection);
    int FindPrevLabel(const SelectedRegion& currentSelection);
 
+   const TypeInfo &GetTypeInfo() const override;
+   static const TypeInfo &ClassTypeInfo();
+
    Track::Holder PasteInto( AudacityProject & ) const override;
 
    struct IntervalData final : Track::IntervalData {
@@ -173,8 +177,6 @@ public:
    void SortLabels();
 
  private:
-   TrackKind GetKind() const override { return TrackKind::Label; }
-
    LabelArray mLabels;
 
    // Set in copied label tracks
@@ -182,6 +184,8 @@ public:
 
    int miLastLabel;                 // used by FindNextLabel and FindPrevLabel
 };
+
+ENUMERATE_TRACK_TYPE(LabelTrack);
 
 struct LabelTrackEvent : TrackListEvent
 {

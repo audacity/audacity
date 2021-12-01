@@ -41,7 +41,7 @@ small calculations of rectangles.
 #include "../ProjectWindow.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
-#include "../Track.h"
+#include "Track.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
 

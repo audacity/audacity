@@ -65,6 +65,7 @@ effects from this one class.
 #include "../../ShuttleGetDefinition.h"
 #include "../../ShuttleGui.h"
 #include "TempDirectory.h"
+#include "SyncLock.h"
 #include "ViewInfo.h"
 #include "../../WaveClip.h"
 #include "../../WaveTrack.h"
@@ -863,7 +864,7 @@ bool NyquistEffect::Process()
             }
 
             // Check whether we're in the same group as the last selected track
-            Track *gt = *TrackList::SyncLockGroup(mCurTrack[0]).first;
+            Track *gt = *SyncLock::Group(mCurTrack[0]).first;
             mFirstInGroup = !gtLast || (gtLast != gt);
             gtLast = gt;
 
@@ -1621,9 +1622,9 @@ bool NyquistEffect::ProcessOne()
 
       // If we were first in the group adjust non-selected group tracks
       if (mFirstInGroup) {
-         for (auto t : TrackList::SyncLockGroup(mCurTrack[i]))
+         for (auto t : SyncLock::Group(mCurTrack[i]))
          {
-            if (!t->GetSelected() && t->IsSyncLockSelected()) {
+            if (!t->GetSelected() && SyncLock::IsSyncLockSelected(t)) {
                t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());
             }
          }

@@ -18,6 +18,7 @@
 
 #include "Project.h"
 #include "Prefs.h"
+#include "SyncLock.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../prefs/TracksBehaviorsPrefs.h"
@@ -98,7 +99,7 @@ bool Generator::Process()
          ntrack++;
       },
       [&](Track *t) {
-         if (t->IsSyncLockSelected()) {
+         if (SyncLock::IsSyncLockSelected(t)) {
             t->SyncLockAdjust(mT1, mT0 + GetDuration());
          }
       }

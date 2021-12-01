@@ -19,7 +19,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../RefreshCode.h"
 #include "../../SelectUtilities.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../Track.h"
+#include "Track.h"
 
 #include <wx/cursor.h>
 #include <wx/translation.h>

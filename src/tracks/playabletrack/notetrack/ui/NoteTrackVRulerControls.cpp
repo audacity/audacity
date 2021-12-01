@@ -226,6 +226,6 @@ void NoteTrackVRulerControls::UpdateRuler( const wxRect &rect )
    vruler->SetBounds(rect.x, rect.y, rect.x + 1, rect.y + rect.height-1);
    vruler->SetOrientation(wxVERTICAL);
 
-   vruler->GetMaxSize( &nt->vrulerSize.x, &nt->vrulerSize.y );
+   vruler->GetMaxSize( &nt->vrulerSize.first, &nt->vrulerSize.second );
 }
 #endif

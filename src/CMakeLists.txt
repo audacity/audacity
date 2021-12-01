@@ -265,20 +265,18 @@ list( APPEND SOURCES
       SseMathFuncs.h
       Tags.cpp
       Tags.h
+      SyncLock.cpp
+      SyncLock.h
       TimeDialog.cpp
       TimeDialog.h
       TimeTrack.cpp
       TimeTrack.h
       TimerRecordDialog.cpp
       TimerRecordDialog.h
-      Track.cpp
-      Track.h
       TrackArtist.cpp
       TrackArtist.h
       TrackInfo.cpp
       TrackInfo.h
-      TrackAttachment.h
-      TrackAttachment.cpp
       TrackPanel.cpp
       TrackPanel.h
       TrackPanelAx.cpp

@@ -89,7 +89,7 @@
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
-#include "../Track.h"
+#include "Track.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"

@@ -28,6 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ProjectWindow.h"
 #include "../../../ProjectWindows.h"
 #include "../../../RefreshCode.h"
+#include "../../../SyncLock.h"
 #include "Theme.h"
 #include "../../../TrackArtist.h"
 #include "../../../TrackPanelAx.h"
@@ -803,7 +804,7 @@ void LabelTrackView::Draw
 
    TrackArt::DrawBackgroundWithSelection( context, r, pTrack.get(),
       AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
-      ( pTrack->GetSelected() || pTrack->IsSyncLockSelected() ) );
+      SyncLock::IsSelectedOrSyncLockSelected(pTrack.get()) );
 
    wxCoord textWidth, textHeight;
 
@@ -2361,4 +2362,10 @@ std::shared_ptr<TrackVRulerControls> LabelTrackView::DoGetVRulerControls()
 {
    return
       std::make_shared<LabelTrackVRulerControls>( shared_from_this() );
+}
+
+using GetLabelTrackSyncLockPolicy =
+   GetSyncLockPolicy::Override< const LabelTrack >;
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetLabelTrackSyncLockPolicy) {
+   return [](auto &) { return SyncLockPolicy::EndSeparator; };
 }

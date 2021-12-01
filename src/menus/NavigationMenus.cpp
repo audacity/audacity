@@ -6,7 +6,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
-#include "../Track.h"
+#include "Track.h"
 #include "../SelectionState.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"

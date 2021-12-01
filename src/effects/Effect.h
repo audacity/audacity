@@ -33,7 +33,7 @@ class wxWindow;
 #include "SampleCount.h"
 #include "SelectedRegion.h"
 
-#include "../Track.h"
+#include "Track.h"
 
 #include "../widgets/wxPanelWrapper.h" // to inherit
 #include <wx/windowptr.h>
@@ -54,6 +54,8 @@ class Track;
 class TrackList;
 class WaveTrackFactory;
 class WaveTrack;
+
+using FloatBuffers = ArraysOf<float>;
 
 /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
  Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).

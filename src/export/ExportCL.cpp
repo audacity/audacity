@@ -33,7 +33,7 @@
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Tags.h"
-#include "../Track.h"
+#include "Track.h"
 #include "float_cast.h"
 #include "../widgets/FileHistory.h"
 #include "../widgets/AudacityMessageBox.h"

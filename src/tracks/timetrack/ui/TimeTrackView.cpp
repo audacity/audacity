@@ -30,6 +30,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/dc.h>
 
+using Doubles = ArrayOf<double>;
+
 TimeTrackView::TimeTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackView{ pTrack }
 {

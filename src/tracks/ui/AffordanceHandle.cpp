@@ -16,7 +16,7 @@
 #include "ViewInfo.h"
 #include "../../SelectionState.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../Track.h"
+#include "Track.h"
 #include "../../../images/Cursors.h"
 
 HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool unsafe, bool moving)
