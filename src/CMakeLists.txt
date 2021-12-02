@@ -265,14 +265,14 @@ list( APPEND SOURCES
       SseMathFuncs.h
       Tags.cpp
       Tags.h
+      SyncLock.cpp
+      SyncLock.h
       TimeDialog.cpp
       TimeDialog.h
       TimeTrack.cpp
       TimeTrack.h
       TimerRecordDialog.cpp
       TimerRecordDialog.h
-      Track.cpp
-      Track.h
       TrackArtist.cpp
       TrackArtist.h
       TrackInfo.cpp
@@ -1031,6 +1031,9 @@ list( APPEND DEFINES
       >
       $<$<BOOL:${HAVE_MLOCK}>:
          HAVE_MLOCK
+      >
+      $<$<PLATFORM_ID:CYGWIN>:
+         _GNU_SOURCE=1
       >
       $<$<PLATFORM_ID:Windows>:
          _CRT_SECURE_NO_WARNINGS

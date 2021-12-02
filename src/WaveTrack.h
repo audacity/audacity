@@ -13,6 +13,7 @@
 
 #include "Track.h"
 #include "SampleCount.h"
+#include "SampleFormat.h"
 
 #include <vector>
 #include <functional>
@@ -72,6 +73,9 @@ public:
    //
    // Constructor / Destructor / Duplicator
    //
+
+   // Construct and also build all attachments
+   static WaveTrack *New( AudacityProject &project );
 
    WaveTrack(
       const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
@@ -328,9 +332,9 @@ private:
    // XMLTagHandler callback methods for loading and saving
    //
 
-   bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
-   void HandleXMLEndTag(const wxChar *tag) override;
-   XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
+   bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
+   void HandleXMLEndTag(const std::string_view& tag) override;
+   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const override;
 
    // Returns true if an error occurred while reading from XML
@@ -542,6 +546,9 @@ private:
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, ProgressDialog *progress = NULL);
 
+   const TypeInfo &GetTypeInfo() const override;
+   static const TypeInfo &ClassTypeInfo();
+
    int GetLastScaleType() const { return mLastScaleType; }
    void SetLastScaleType() const;
 
@@ -612,8 +619,6 @@ private:
 
    void PasteWaveTrack(double t0, const WaveTrack* other);
 
-   TrackKind GetKind() const override { return TrackKind::Wave; }
-
    //
    // Private variables
    //
@@ -627,6 +632,8 @@ private:
    std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
    std::unique_ptr<WaveformSettings> mpWaveformSettings;
 };
+
+ENUMERATE_TRACK_TYPE(WaveTrack);
 
 //! A short-lived object, during whose lifetime, the contents of the WaveTrack are assumed not to change.
 /*! It can replace repeated calls to WaveTrack::Get() (each of which opens and closes at least one block).

@@ -342,10 +342,8 @@ bool EffectEqualization48x::TrackCompare()
    for (auto aTrack :
       mEffectEqualization->inputTracks()->Any< const WaveTrack >()) {
 
-      // Include selected tracks, plus sync-lock selected tracks for Track::All.
-      if (aTrack->GetSelected() ||
-         (// mEffectEqualization->mOutputTracksType == TrackKind::All &&
-          aTrack->IsSyncLockSelected()))
+      // Include selected tracks, plus sync-lock selected tracks
+      if (aTrack->GetSelected() || aTrack->IsSyncLockSelected())
       {
          auto o = mEffectEqualization->mFactory->DuplicateWaveTrack( *aTrack );
          SecondIMap.push_back(aTrack);

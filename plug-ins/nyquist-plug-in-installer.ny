@@ -185,11 +185,11 @@ $control overwrite (_ "Allow overwriting") choice ((_ "Disallow") (_ "Allow")) 0
   ;; Format results and display in human readable form.
   (cond
     ((isempty install-success)
-      (setf msg (_ "Error.~%")))
+      (setf msg (format nil (_ "Error.~%"))))
     ((isempty install-fail)
       (setf msg (format nil (_ "Success.~%Files written to:~%~s~%")
                         (get '*system-dir* 'user-plug-in))))
-    (t (setf msg (_ "Warning.~%Failed to copy some files:~%"))))
+    (t (setf msg (format nil (_ "Warning.~%Failed to copy some files:~%")))))
   (setf results (append install-success install-fail))
   (setf results (sort-results results))
   (let ((status -1))
@@ -211,9 +211,10 @@ $control overwrite (_ "Allow overwriting") choice ((_ "Disallow") (_ "Allow")) 0
 (defun status (num)
   ;; Return status message corresponding to the installation status number.
   ;; This allows result messages to be grouped according to installation status.
-  (case num
-    ;; Success
-    (0 (_ "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"))
+  (case num ; Success
+    ; Translations fail when strings contain control characters, so
+    ; use FORMAT directive "~%" instead of "\n" for new line.
+    (0 (format nil (_ "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):")))
     (1 (_ "Plug-ins updated:"))
     (2 (_ "Files copied to plug-ins folder:"))
     ;; Fail

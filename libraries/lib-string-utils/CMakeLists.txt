@@ -20,6 +20,9 @@ set(SOURCES
 
     ToChars.h
     ToChars.cpp
+
+    FromChars.h
+    FromChars.cpp
 )
 
 set( LIBRARIES

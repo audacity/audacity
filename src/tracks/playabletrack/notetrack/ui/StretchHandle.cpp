@@ -22,6 +22,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../ProjectHistory.h"
 #include "../../../../ProjectSettings.h"
 #include "../../../../RefreshCode.h"
+#include "../../../../SyncLock.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../UndoManager.h"
 #include "ViewInfo.h"
@@ -233,7 +234,7 @@ UIHandle::Result StretchHandle::Release
    auto &viewInfo = ViewInfo::Get( *pProject );
    if ( settings.IsSyncLocked() && ( left || right ) ) {
       for ( auto track :
-           TrackList::SyncLockGroup( mpTrack.get() ) ) {
+           SyncLock::Group( mpTrack.get() ) ) {
          if ( track != mpTrack.get() ) {
             if ( left ) {
                auto origT0 = mStretchState.mOrigSel0Quantized;

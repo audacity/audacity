@@ -150,7 +150,7 @@ public:
 
    SampleBlockPtr DoCreateFromXML(
       sampleFormat srcformat,
-      const wxChar **attrs) override;
+      const AttributesList &attrs) override;
 
    BlockDeletionCallback SetBlockDeletionCallback(
       BlockDeletionCallback callback ) override;
@@ -223,29 +223,21 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
 
 
 SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
-   sampleFormat srcformat, const wxChar **attrs )
+   sampleFormat srcformat, const AttributesList &attrs )
 {
    std::shared_ptr<SampleBlock> sb;
 
    int found = 0;
 
    // loop through attrs, which is a null-terminated list of attribute-value pairs
-   while(*attrs)
+   for (auto pair : attrs)
    {
-      const wxChar *attr = *attrs++;
-      const wxChar *value = *attrs++;
+      auto attr = pair.first;
+      auto value = pair.second;
 
-      if (!value)
-      {
-         break;
-      }
-
-      const wxString strValue = value;   // promote string, we need this for all
-      double dblValue;
       long long nValue;
 
-      if (wxStrcmp(attr, wxT("blockid")) == 0 &&
-         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLongLong(&nValue))
+      if (attr == "blockid" && value.TryGet(nValue))
       {
          if (nValue <= 0) {
             sb = DoCreateSilent( -nValue, floatSample );

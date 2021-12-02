@@ -29,6 +29,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../HitTestResult.h"
 #include "../../../../ProjectHistory.h"
 #include "../../../../RefreshCode.h"
+#include "../../../../SyncLock.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
 #include "../../../../TrackPanelAx.h"
@@ -937,10 +938,10 @@ WaveTrackView::DoDetailedHitTest
       if (!WaveTrackView::ClipDetailsVisible(*clip, viewInfo, st.rect)
          && HitTest(*clip, viewInfo, st.rect, st.state.GetPosition()))
       {
-         auto waveTrackView = std::static_pointer_cast<WaveTrackView>(pTrack->GetTrackView());
+         auto &waveTrackView = WaveTrackView::Get(*pTrack);
          results.push_back(
             AssignUIHandlePtr(
-               waveTrackView->mAffordanceHandle,
+               waveTrackView.mAffordanceHandle,
                std::make_shared<WaveTrackAffordanceHandle>(pTrack, clip)
             )
          );
@@ -1553,7 +1554,8 @@ ClipParameters::ClipParameters
 
    //If the track isn't selected, make the selection empty
    if (!track->GetSelected() &&
-      (spectrum || !track->IsSyncLockSelected())) { // PRL: why was there a difference for spectrum?
+      (spectrum ||
+       !SyncLock::IsSyncLockSelected(track))) { // PRL: why was there a difference for spectrum?
       sel0 = sel1 = 0.0;
    }
 
@@ -1752,4 +1754,10 @@ void WaveTrackView::Draw(
    wxASSERT( false );
 
    CommonTrackView::Draw( context, rect, iPass );
+}
+
+using GetWaveTrackSyncLockPolicy =
+   GetSyncLockPolicy::Override< const WaveTrack >;
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetWaveTrackSyncLockPolicy) {
+   return [](auto &) { return SyncLockPolicy::Grouped; };
 }

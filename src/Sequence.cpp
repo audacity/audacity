@@ -782,12 +782,12 @@ size_t Sequence::GetBestBlockSize(sampleCount start) const
    return result;
 }
 
-bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
+bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    auto &factory = *mpFactory;
 
    /* handle waveblock tag and its attributes */
-   if (!wxStrcmp(tag, wxT("waveblock")))
+   if (tag == "waveblock")
    {
       SeqBlock wb;
 
@@ -800,30 +800,23 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       // loop through attrs, which is a null-terminated list of attribute-value pairs
-      while(*attrs)
+      for (auto pair : attrs)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
+         auto attr = pair.first;
+         auto value = pair.second;
 
-         if (!value)
-         {
-            break;
-         }
-
-         long long nValue = 0;
-
-         const wxString strValue = value;	// promote string, we need this for all
-
-         if (wxStrcmp(attr, wxT("start")) == 0)
+         if (attr == "start")
          {
             // This attribute is a sample offset, so can be 64bit
-            if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
+            sampleCount::type start;
+
+            if (!value.TryGet(start))
             {
                mErrorOpening = true;
                return false;
             }
 
-            wb.start = nValue;
+            wb.start = start;
          }
       }
 
@@ -833,26 +826,19 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    }
 
    /* handle sequence tag and its attributes */
-   if (!wxStrcmp(tag, wxT("sequence")))
+   if (tag == "sequence")
    {
-      while(*attrs)
+      for (auto pair : attrs)
       {
-         const wxChar *attr = *attrs++;
-         const wxChar *value = *attrs++;
-
-         if (!value)
-         {
-            break;
-         }
+         auto attr = pair.first;
+         auto value = pair.second;
 
          long long nValue = 0;
 
-         const wxString strValue = value;	// promote string, we need this for all
-
-         if (!wxStrcmp(attr, wxT("maxsamples")))
+         if (attr == "maxsamples")
          {
             // This attribute is a sample count, so can be 64bit
-            if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
+            if (!value.TryGet(nValue))
             {
                mErrorOpening = true;
                return false;
@@ -870,28 +856,30 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             // nValue is now safe for size_t
             mMaxSamples = nValue;
          }
-         else if (!wxStrcmp(attr, wxT("sampleformat")))
+         else if (attr == "sampleformat")
          {
             // This attribute is a sample format, normal int
             long fValue;
-            if (!XMLValueChecker::IsGoodInt(strValue) || !strValue.ToLong(&fValue) || (fValue < 0) || !IsValidSampleFormat(fValue))
+
+            if (!value.TryGet(fValue) || !IsValidSampleFormat(fValue))
             {
                mErrorOpening = true;
                return false;
             }
+
             mSampleFormat = (sampleFormat)fValue;
          }
-         else if (!wxStrcmp(attr, wxT("numsamples")))
+         else if (attr == "numsamples")
          {
             // This attribute is a sample count, so can be 64bit
-            if (!XMLValueChecker::IsGoodInt64(strValue) || !strValue.ToLongLong(&nValue) || (nValue < 0))
+            if (!value.TryGet(nValue) || (nValue < 0))
             {
                mErrorOpening = true;
                return false;
             }
             mNumSamples = nValue;
          }
-      } // while
+      } // for
 
       return true;
    }
@@ -899,9 +887,9 @@ bool Sequence::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
    return false;
 }
 
-void Sequence::HandleXMLEndTag(const wxChar *tag)
+void Sequence::HandleXMLEndTag(const std::string_view& tag)
 {
-   if (wxStrcmp(tag, wxT("sequence")) != 0)
+   if (tag != "sequence" != 0)
    {
       return;
    }
@@ -941,9 +929,9 @@ void Sequence::HandleXMLEndTag(const wxChar *tag)
    }
 }
 
-XMLTagHandler *Sequence::HandleXMLChild(const wxChar *tag)
+XMLTagHandler *Sequence::HandleXMLChild(const std::string_view& tag)
 {
-   if (!wxStrcmp(tag, wxT("waveblock")))
+   if (tag == "waveblock")
    {
       return this;
    }

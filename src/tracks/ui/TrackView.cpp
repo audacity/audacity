@@ -9,7 +9,7 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 
 #include "TrackView.h"
-#include "../../Track.h"
+#include "Track.h"
 
 #include "ClientData.h"
 #include "Project.h"
@@ -60,18 +60,20 @@ void TrackView::CopyTo( Track &track ) const
    other.mHeight = mHeight;
 }
 
+static const AttachedTrackObjects::RegisteredFactory key{
+   []( Track &track ){
+      return DoGetView::Call( track );
+   }
+};
+
 TrackView &TrackView::Get( Track &track )
 {
-   auto pView = std::static_pointer_cast<TrackView>( track.GetTrackView() );
-   if (!pView)
-      // create on demand
-      track.SetTrackView( pView = DoGetView::Call( track ) );
-   return *pView;
+   return track.AttachedObjects::Get< TrackView >( key );
 }
 
 const TrackView &TrackView::Get( const Track &track )
 {
-   return Get( const_cast< Track& >( track ) );
+   return Get( const_cast< Track & >( track ) );
 }
 
 void TrackView::SetMinimized(bool isMinimized)
@@ -91,12 +93,12 @@ void TrackView::WriteXMLAttributes( XMLWriter &xmlFile ) const
    xmlFile.WriteAttr(wxT("minimized"), GetMinimized());
 }
 
-bool TrackView::HandleXMLAttribute( const wxChar *attr, const wxChar *value )
+bool TrackView::HandleXMLAttribute(
+   const std::string_view& attr, const XMLAttributeValueView& valueView)
 {
-   wxString strValue( value );
    long nValue;
-   if (!wxStrcmp(attr, wxT("height")) &&
-         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+
+   if (attr == "height" && valueView.TryGet(nValue)) {
       // Bug 2803: Extreme values for track height (caused by integer overflow)
       // will stall Audacity as it tries to create an enormous vertical ruler.
       // So clamp to reasonable values.
@@ -104,8 +106,7 @@ bool TrackView::HandleXMLAttribute( const wxChar *attr, const wxChar *value )
       SetExpandedHeight(nValue);
       return true;
    }
-   else if (!wxStrcmp(attr, wxT("minimized")) &&
-         XMLValueChecker::IsGoodInt(strValue) && strValue.ToLong(&nValue)) {
+   else if ( attr == "minimized" && valueView.TryGet(nValue)) {
       SetMinimized(nValue != 0);
       return true;
    }

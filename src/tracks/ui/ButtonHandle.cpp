@@ -13,7 +13,7 @@ Paul Licameli
 
 #include "../../HitTestResult.h"
 #include "../../RefreshCode.h"
-#include "../../Track.h"
+#include "Track.h"
 #include "../../TrackPanelMouseEvent.h"
 
 ButtonHandle::ButtonHandle
