@@ -18600,7 +18600,7 @@ msgstr "~aTần số thấp là không xác định."
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
 msgid "~aHigh frequency is undefined."
-msgstr "~giải tần cao không xác định."
+msgstr "~agiải tần cao không xác định."
 
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
@@ -18613,7 +18613,7 @@ msgid ""
 "~aFrequency selection is too high for track sample rate.~%~\n"
 "                        For the current track, the high frequency setting cannot~%~\n"
 "                        be greater than ~a Hz"
-msgstr "vùng chọn tần số quá lớn để lấy mẫu đoạn âm. ~%~\nkhông thể ~%~\nchỉnh tần số lớn hơn ~a Hz đối với đoạn âm này"
+msgstr "~avùng chọn tần số quá lớn để lấy mẫu đoạn âm. ~%~\nkhông thể ~%~\nchỉnh tần số lớn hơn ~a Hz đối với đoạn âm này"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
 #, lisp-format
@@ -18621,7 +18621,7 @@ msgid ""
 "~aBandwidth is zero (the upper and lower~%~\n"
 "                         frequencies are both ~a Hz).~%~\n"
 "                         Please select a frequency range."
-msgstr "~aBăng thông bằng 0 (giá trị trên và dưới~%~\ntần số là cả hai ~a Hz).~%~ \nVui lòng chọn một dải tần số."
+msgstr "~aBăng thông bằng 0 (giá trị trên và dưới~%~\ntần số là cả hai ~a Hz).~%~\nVui lòng chọn một dải tần số."
 
 #: plug-ins/SpectralEditShelves.ny
 msgid "Spectral edit shelves"
@@ -19160,7 +19160,7 @@ msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                   Track sample rate is ~a Hz~%~\n"
 "                   Frequency must be less than ~a Hz."
-msgstr "Lỗi:~%~%F Tần số (~a Hz) là quá cao đối với tốc độ mẫu của track.~%~%~ \nTốc độ lấy mẫu bản nhạc là ~a Hz~%~\n Tần số phải nhỏ hơn ~a Hz."
+msgstr "Lỗi:~%~%Tần số (~a Hz) là quá cao đối với tốc độ mẫu của track.~%~%~\nTốc độ lấy mẫu bản nhạc là ~a Hz~%~\n Tần số phải nhỏ hơn ~a Hz."
 
 #. i18n-hint: Name of effect that labels sounds
 #: plug-ins/label-sounds.ny
@@ -19428,7 +19428,7 @@ msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                 Track sample rate is ~a Hz.~%~\n"
 "                 Frequency must be less than ~a Hz."
-msgstr "Lỗi:~%~%F Tần số (~a Hz)quá cao so với tốc độ lấy mẫu của track.~%~%~ \nTốc độ mẫu của track là ~a Hz.~%~\nTần số phải nhỏ hơn ~a Hz."
+msgstr "Lỗi:~%~%Tần số (~a Hz)quá cao so với tốc độ lấy mẫu của track.~%~%~\nTốc độ mẫu của track là ~a Hz.~%~\nTần số phải nhỏ hơn ~a Hz."
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Nyquist Plug-in Installer"
@@ -19475,12 +19475,12 @@ msgstr "Cho phép"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
-msgstr "Thành công.~ %F tệp được ghi vào:~%~s~%"
+msgstr "Thành công.~%tệp được ghi vào:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "Cảnh báo.~1 %F Sao chép một số tệp không thành công:~%"
+msgstr "Cảnh báo.~%Sao chép một số tệp không thành công:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
@@ -19824,7 +19824,7 @@ msgid ""
 "~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~\n"
 "                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
-msgstr "~a~%Tốc độ mẫu: ~a Hz. Các giá trị lấy mẫu ~a tỉ lệ. ~a.~%~aĐộ dài đã xử lý: ~a ~ \nmẫu, ~a giây.~%Biên độ đỉnh: ~a (tuyến tính) ~a dB. RMS không trọng tâm: ~a dB.~%~\nĐộ lệch DC: ~a~a"
+msgstr "~a~%Tốc độ mẫu: ~a Hz. Các giá trị lấy mẫu ~a tỉ lệ. ~a.~%~aĐộ dài đã xử lý: ~a ~\nmẫu, ~a giây.~%Biên độ đỉnh: ~a (tuyến tính) ~a dB. RMS không trọng tâm: ~a dB.~%~\nĐộ lệch DC: ~a~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20013,7 +20013,7 @@ msgid ""
 "Error:~%~\n"
 "              The file must contain only plain ASCII text.~%~\n"
 "              (Invalid byte '~a' at byte number: ~a)"
-msgstr "Lỗi:~%~ \nTệp chỉ được chứa văn bản ASCII thuần túy.~%~\n (Byte không hợp lệ '~a' ở số byte: ~a)"
+msgstr "Lỗi:~%~\nTệp chỉ được chứa văn bản ASCII thuần túy.~%~\n (Byte không hợp lệ '~a' ở số byte: ~a)"
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -20021,7 +20021,7 @@ msgid ""
 "Error~%~\n"
 "              Data must be numbers in plain ASCII text.~%~\n"
 "              '~a' is not a numeric value."
-msgstr "Lỗi~%~ Dữ liệu phải là số dưới dạng văn bản ASCII thuần túy.~%~ \n'~a' không phải là một giá trị số."
+msgstr "Lỗi~%~\n Dữ liệu phải là số dưới dạng văn bản ASCII thuần túy.~%~\n'~a' không phải là một giá trị số."
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
