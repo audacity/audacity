@@ -363,8 +363,6 @@ private:
    VSTEffect *mMaster;     // non-NULL if a slave
    VSTEffectArray mSlaves;
    unsigned mNumChannels;
-   FloatBuffers mMasterIn, mMasterOut;
-   size_t mNumSamples;
 
    // UI
    wxWeakRef<wxDialog> mDialog;

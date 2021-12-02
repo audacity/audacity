@@ -207,8 +207,6 @@ private:
    AudioUnitEffect *mMaster;     // non-NULL if a slave
    AudioUnitEffectArray mSlaves;
    unsigned mNumChannels;
-   ArraysOf<float> mMasterIn, mMasterOut;
-   size_t mNumSamples;
 
    AUEventListenerRef mEventListenerRef;
 
