@@ -1182,8 +1182,6 @@ size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
 bool LV2Effect::RealtimeInitialize()
 {
    mMasterIn.reinit(mAudioIn, (unsigned int) mBlockSize);
-   mMasterOut.reinit(mAudioOut, (unsigned int) mBlockSize);
-
    for (auto & port : mCVPorts)
    {
       port->mBuffer.reinit((unsigned) mBlockSize, port->mIsInput);
@@ -1215,8 +1213,6 @@ bool LV2Effect::RealtimeFinalize()
    }
 
    mMasterIn.reset();
-   mMasterOut.reset();
-
    return true;
 }
 
@@ -1418,20 +1414,6 @@ bool LV2Effect::RealtimeProcessEnd()
    if (mNumSamples == 0)
    {
       return true;
-   }
-
-   int i = 0;
-   int o = 0;
-   for (auto & port : mAudioPorts)
-   {
-      lilv_instance_connect_port(mMaster->GetInstance(),
-                                 port->mIndex,
-                                 (port->mIsInput ? mMasterIn[i++].get() : mMasterOut[o++].get()));
-   }
-
-   if (mRolling)
-   {
-      lilv_instance_run(mMaster->GetInstance(), mNumSamples);
    }
 
    for (auto & port : mAtomPorts)

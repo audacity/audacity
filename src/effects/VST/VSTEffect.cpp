@@ -1476,9 +1476,6 @@ void VSTEffect::SetChannelCount(unsigned numChannels)
 
 bool VSTEffect::RealtimeInitialize()
 {
-   mMasterIn.reinit( mAudioIns, mBlockSize, true );
-   mMasterOut.reinit( mAudioOuts, mBlockSize );
-
    return ProcessInitialize(0, NULL);
 }
 
@@ -1524,10 +1521,6 @@ bool VSTEffect::RealtimeFinalize()
       slave->ProcessFinalize();
    mSlaves.clear();
 
-   mMasterIn.reset();
-
-   mMasterOut.reset();
-
    return ProcessFinalize();
 }
 
@@ -1553,38 +1546,17 @@ bool VSTEffect::RealtimeResume()
 
 bool VSTEffect::RealtimeProcessStart()
 {
-   for (unsigned int i = 0; i < mAudioIns; i++)
-      memset(mMasterIn[i].get(), 0, mBlockSize * sizeof(float));
-
-   mNumSamples = 0;
-
    return true;
 }
 
 size_t VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
-
-   for (unsigned int c = 0; c < mAudioIns; c++)
-   {
-      for (decltype(numSamples) s = 0; s < numSamples; s++)
-      {
-         mMasterIn[c][s] += inbuf[c][s];
-      }
-   }
-   mNumSamples = std::max(numSamples, mNumSamples);
-
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
 }
 
 bool VSTEffect::RealtimeProcessEnd()
 {
-   // These casts to float** should be safe...
-   ProcessBlock(
-      reinterpret_cast <float**> (mMasterIn.get()),
-      reinterpret_cast <float**> (mMasterOut.get()),
-      mNumSamples);
-
    return true;
 }
 

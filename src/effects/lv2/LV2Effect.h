@@ -490,7 +490,7 @@ private:
    LV2Wrapper *mProcess;
    std::vector<LV2Wrapper *> mSlaves;
 
-   FloatBuffers mMasterIn, mMasterOut;
+   FloatBuffers mMasterIn;
    size_t mNumSamples;
    size_t mFramePos;
 
