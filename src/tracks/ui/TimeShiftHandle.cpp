@@ -19,7 +19,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
 #include "../../Snap.h"
-#include "../../Track.h"
+#include "../../SyncLock.h"
+#include "Track.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
@@ -382,7 +383,7 @@ void ClipMoveState::Init(
             if (!shifter.SyncLocks())
                continue;
             auto &track = shifter.GetTrack();
-            auto group = TrackList::SyncLockGroup(&track);
+            auto group = SyncLock::Group(&track);
             if ( group.size() <= 1 )
                continue;
 

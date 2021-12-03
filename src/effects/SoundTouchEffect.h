@@ -27,6 +27,7 @@ namespace soundtouch { class SoundTouch; }
 
 
 class TimeWarper;
+class NoteTrack;
 class WaveTrack;
 
 class EffectSoundTouch /* not final */ : public Effect

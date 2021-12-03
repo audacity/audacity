@@ -403,6 +403,15 @@ elseif( CMAKE_CXX_COMPILER_ID MATCHES "MSVC" )
    if( NOT IS_64BIT )
       set( SSE_FLAG "/arch:SSE2" )
    endif()
+
+   # Windows 11 SDK has a bug in winnt.h header, which breaks RC invocation
+   # https://issueexplorer.com/issue/microsoft/Windows-Dev-Performance/98
+   # TODO: We need to check if we are building for ARM64 here
+   if( IS_64BIT )
+      set(CMAKE_RC_FLAGS "/D_AMD64_")
+   else()
+      set(CMAKE_RC_FLAGS "/D_X86_")
+   endif()
 endif()
 
 check_include_files( "float.h;stdarg.h;stdlib.h;string.h" STDC_HEADERS )

@@ -16,6 +16,7 @@ Paul Licameli split from Menus.cpp
 #include <wx/frame.h>
 
 #include "AudioIO.h"
+#include "LabelTrack.h"
 #include "Menus.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"

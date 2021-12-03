@@ -118,7 +118,7 @@ Steps 1 and 2 are only required for first-time builds.
 
 Alternatively, you can use **CLion**. If you chose to do so, open the directory where you have cloned Audacity using CLion and you are good to go.
 
-At the moment we only support **x86_64** builds. It is possible to build using AppleSilicon hardware but **mad** and **id3tag** should be disabled:
+At the moment we only support **x86_64** builds. It is possible to build using AppleSilicon (AKA M1/arm64) hardware but **mad** and **id3tag** should be disabled:
 
 ```
 cmake -GXcode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=off ../audacity

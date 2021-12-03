@@ -48,7 +48,7 @@ $copyright (_ "Released under terms of the GNU General Public License version 2"
                   p-err f0)))
       ;; Biqud filter fails if centre frequency is very low and bandwidth very high.
       ;; 'Magic numbers' 10 Hz and 10 octaves are experimental.
-      ((and f0 (< f0 10) (or (not bw)(> bw 10)))
+      ((and f0 (< f0 10) bw (> bw 10))
         (throw 'error-message
           (format nil (_ "~aNotch filter parameters cannot be applied.~%~
                       Try increasing the low frequency bound~%~

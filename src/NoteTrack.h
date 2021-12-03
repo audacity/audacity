@@ -189,14 +189,15 @@ public:
          mVisibleChannels = CHANNEL_BIT(c);
    }
 
+   const TypeInfo &GetTypeInfo() const override;
+   static const TypeInfo &ClassTypeInfo();
+
    Track::Holder PasteInto( AudacityProject & ) const override;
 
    ConstIntervals GetIntervals() const override;
    Intervals GetIntervals() override;
 
  private:
-
-   TrackKind GetKind() const override { return TrackKind::Note; }
 
    void AddToDuration( double delta );
 
@@ -277,6 +278,8 @@ public:
 extern AUDACITY_DLL_API StringSetting MIDIPlaybackDevice;
 extern AUDACITY_DLL_API StringSetting MIDIRecordingDevice;
 extern AUDACITY_DLL_API IntSetting MIDISynthLatency_ms;
+
+ENUMERATE_TRACK_TYPE(NoteTrack);
 
 #endif // USE_MIDI
 

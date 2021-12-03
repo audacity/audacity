@@ -118,6 +118,10 @@ public:
 public:
    virtual void EnsureInitialised() = 0;
 
+   // Get and set the root directory for saving and loading of files
+   FilePath GetFilePath();
+   void SetFilePath(const FilePath &path);
+
    // Typically statically constructed:
    struct THEME_API RegisteredTheme {
       RegisteredTheme(EnumValueSymbol symbol,
@@ -186,6 +190,8 @@ public:
    void DeleteUnusedThemes();
 
 protected:
+   FilePath mThemeDir;
+
    wxArrayString mBitmapNames;
    std::vector<int> mBitmapFlags;
    wxArrayString mColourNames;

@@ -38,6 +38,7 @@
 #include "../SelectFile.h"
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
+#include "../SyncLock.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "wxFileNameWrapper.h"
@@ -1394,7 +1395,7 @@ bool Effect::ProcessPass()
          count++;
       },
       [&](Track *t) {
-         if (t->IsSyncLockSelected())
+         if (SyncLock::IsSyncLockSelected(t))
             t->SyncLockAdjust(mT1, mT0 + mDuration);
       }
    );
@@ -1941,7 +1942,7 @@ void Effect::CopyInputTracks(bool allSyncLockSelected)
    auto trackRange = mTracks->Any() +
       [&] (const Track *pTrack) {
          return allSyncLockSelected
-         ? pTrack->IsSelectedOrSyncLockSelected()
+         ? SyncLock::IsSelectedOrSyncLockSelected(pTrack)
          : track_cast<const WaveTrack*>( pTrack ) && pTrack->GetSelected();
       };
 

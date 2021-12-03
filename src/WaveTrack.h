@@ -13,6 +13,7 @@
 
 #include "Track.h"
 #include "SampleCount.h"
+#include "SampleFormat.h"
 
 #include <vector>
 #include <functional>
@@ -545,6 +546,9 @@ private:
    // Resample track (i.e. all clips in the track)
    void Resample(int rate, ProgressDialog *progress = NULL);
 
+   const TypeInfo &GetTypeInfo() const override;
+   static const TypeInfo &ClassTypeInfo();
+
    int GetLastScaleType() const { return mLastScaleType; }
    void SetLastScaleType() const;
 
@@ -615,8 +619,6 @@ private:
 
    void PasteWaveTrack(double t0, const WaveTrack* other);
 
-   TrackKind GetKind() const override { return TrackKind::Wave; }
-
    //
    // Private variables
    //
@@ -630,6 +632,8 @@ private:
    std::unique_ptr<SpectrogramSettings> mpSpectrumSettings;
    std::unique_ptr<WaveformSettings> mpWaveformSettings;
 };
+
+ENUMERATE_TRACK_TYPE(WaveTrack);
 
 //! A short-lived object, during whose lifetime, the contents of the WaveTrack are assumed not to change.
 /*! It can replace repeated calls to WaveTrack::Get() (each of which opens and closes at least one block).

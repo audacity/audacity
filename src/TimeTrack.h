@@ -43,6 +43,9 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
    virtual ~TimeTrack();
 
 
+   const TypeInfo &GetTypeInfo() const override;
+   static const TypeInfo &ClassTypeInfo();
+
    bool SupportsBasicEditing() const override;
 
    Holder PasteInto( AudacityProject & ) const override;
@@ -100,9 +103,6 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
  private:
    void CleanState();
 
-   // Identifying the type of track
-   TrackKind GetKind() const override { return TrackKind::Time; }
-
    const ZoomInfo  *const mZoomInfo;
    std::unique_ptr<BoundedEnvelope> mEnvelope;
    std::unique_ptr<Ruler> mRuler;
@@ -121,6 +121,8 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
 private:
    Track::Holder Clone() const override;
 };
+
+ENUMERATE_TRACK_TYPE(TimeTrack);
 
 
 #endif // __AUDACITY_TIMETRACK__

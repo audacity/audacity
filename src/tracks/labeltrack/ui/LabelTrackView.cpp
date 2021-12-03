@@ -28,6 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../ProjectWindow.h"
 #include "../../../ProjectWindows.h"
 #include "../../../RefreshCode.h"
+#include "../../../SyncLock.h"
 #include "Theme.h"
 #include "../../../TrackArtist.h"
 #include "../../../TrackPanelAx.h"
@@ -803,7 +804,7 @@ void LabelTrackView::Draw
 
    TrackArt::DrawBackgroundWithSelection( context, r, pTrack.get(),
       AColor::labelSelectedBrush, AColor::labelUnselectedBrush,
-      ( pTrack->GetSelected() || pTrack->IsSyncLockSelected() ) );
+      SyncLock::IsSelectedOrSyncLockSelected(pTrack.get()) );
 
    wxCoord textWidth, textHeight;
 
@@ -2313,9 +2314,8 @@ int LabelTrackView::DialogForLabelName(
       trackPanel.FindTrackRect( trackFocus.Get() ).GetBottomLeft();
    // The start of the text in the text box will be roughly in line with the label's position
    // if it's a point label, or the start of its region if it's a region label.
-   position.x +=
-      + std::max(0, static_cast<int>(viewInfo.TimeToPosition(
-         viewInfo.GetLeftOffset(), region.t0())))
+   position.x += viewInfo.GetLeftOffset()
+      + std::max(0, static_cast<int>(viewInfo.TimeToPosition(region.t0())))
       - 39;
    position.y += 2;  // just below the bottom of the track
    position = trackPanel.ClientToScreen(position);
@@ -2361,4 +2361,10 @@ std::shared_ptr<TrackVRulerControls> LabelTrackView::DoGetVRulerControls()
 {
    return
       std::make_shared<LabelTrackVRulerControls>( shared_from_this() );
+}
+
+using GetLabelTrackSyncLockPolicy =
+   GetSyncLockPolicy::Override< const LabelTrack >;
+DEFINE_ATTACHED_VIRTUAL_OVERRIDE(GetLabelTrackSyncLockPolicy) {
+   return [](auto &) { return SyncLockPolicy::EndSeparator; };
 }

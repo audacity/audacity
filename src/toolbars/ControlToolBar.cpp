@@ -66,7 +66,7 @@
 #include "ProjectStatus.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
-#include "../Track.h"
+#include "Track.h"
 #include "ViewInfo.h"
 #include "../widgets/AButton.h"
 #include "FileNames.h"

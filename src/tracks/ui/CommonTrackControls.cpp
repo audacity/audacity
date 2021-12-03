@@ -26,7 +26,7 @@ Paul Licameli split from TrackControls.cpp
 #include "../../commands/AudacityCommand.h"
 #include "../../commands/CommandManager.h"
 #include "../../ShuttleGui.h"
-#include "../../Track.h"
+#include "Track.h"
 #include "../../widgets/PopupMenuTable.h"
 
 #include <wx/dc.h>
@@ -372,7 +372,7 @@ void CommonTrackControls::Draw(
    
       // Vaughan, 2010-08-24: No longer doing this.
       // Draw sync-lock tiles in ruler area.
-      //if (t->IsSyncLockSelected()) {
+      //if (SyncLock::IsSyncLockSelected(t)) {
       //   wxRect tileFill = rect;
       //   tileFill.x = mViewInfo->GetVRulerOffset();
       //   tileFill.width = mViewInfo->GetVRulerWidth();

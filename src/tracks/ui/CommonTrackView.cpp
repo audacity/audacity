@@ -17,7 +17,7 @@ Paul Licameli split from class TrackView
 #include "../ui/SelectHandle.h"
 #include "AColor.h"
 #include "../../ProjectSettings.h"
-#include "../../Track.h"
+#include "Track.h"
 #include "../../TrackArtist.h"
 #include "../../TrackInfo.h"
 #include "../../TrackPanelDrawingContext.h"
