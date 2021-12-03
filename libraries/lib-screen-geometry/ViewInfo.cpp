@@ -353,7 +353,7 @@ int ViewInfo::UpdateScrollPrefsID()
    return 10000;
 }
 
-static ProjectFileIORegistry::WriterEntry entry {
+static ProjectFileIORegistry::AttributeWriterEntry entry {
 [](const AudacityProject &project, XMLWriter &xmlFile){
    ViewInfo::Get(project).WriteXMLAttributes(xmlFile);
 }

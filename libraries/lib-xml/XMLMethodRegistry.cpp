@@ -65,14 +65,29 @@ bool XMLMethodRegistryBase::CallAttributeHandler( const std::string_view &tag,
    return false;
 }
 
-void XMLMethodRegistryBase::Register( TypeErasedWriter writer )
+void XMLMethodRegistryBase::RegisterAttributeWriter( TypeErasedWriter writer )
 {
-   mWriterTable.emplace_back( move( writer ) );
+   mAttributeWriterTable.emplace_back( move( writer ) );
 }
 
-void XMLMethodRegistryBase::CallWriters( const void *p, XMLWriter &writer )
+void XMLMethodRegistryBase::CallAttributeWriters(
+   const void *p, XMLWriter &writer )
 {
-   const auto &table = mWriterTable;
+   const auto &table = mAttributeWriterTable;
+   for ( auto &fn : table )
+      if (fn)
+         fn( p, writer );
+}
+
+void XMLMethodRegistryBase::RegisterObjectWriter( TypeErasedWriter writer )
+{
+   mObjectWriterTable.emplace_back( move( writer ) );
+}
+
+void XMLMethodRegistryBase::CallObjectWriters(
+   const void *p, XMLWriter &writer )
+{
+   const auto &table = mObjectWriterTable;
    for ( auto &fn : table )
       if (fn)
          fn( p, writer );
