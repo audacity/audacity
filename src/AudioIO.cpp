@@ -120,6 +120,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "DBConnection.h"
 #include "ProjectFileIO.h"
 #include "ProjectWindows.h"
+#include "TransactionScope.h"
 #include "ViewInfo.h" // for PlayRegionEvent
 #include "WaveTrack.h"
 

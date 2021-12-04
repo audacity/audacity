@@ -586,6 +586,7 @@ int DBConnection::CheckpointHook(void *data, sqlite3 *db, const char *schema, in
    return SQLITE_OK;
 }
 
+#if 0
 bool TransactionScope::TransactionStart(const wxString &name)
 {
    char *errmsg = nullptr;
@@ -704,6 +705,7 @@ bool TransactionScope::Commit()
 
    return !mInTrans;
 }
+#endif
 
 ConnectionPtr::~ConnectionPtr()
 {

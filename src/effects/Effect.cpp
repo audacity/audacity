@@ -27,7 +27,6 @@
 
 #include "../AudioIO.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
-#include "../DBConnection.h"
 #include "../LabelTrack.h"
 #include "../Mix.h"
 #include "../PluginManager.h"
@@ -39,6 +38,7 @@
 #include "../ShuttleGui.h"
 #include "../Shuttle.h"
 #include "../SyncLock.h"
+#include "../TransactionScope.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "wxFileNameWrapper.h"

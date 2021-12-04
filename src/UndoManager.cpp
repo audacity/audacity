@@ -35,6 +35,7 @@ UndoManager
 //#include "NoteTrack.h"  // for Sonify* function declarations
 #include "Diags.h"
 #include "Tags.h"
+#include "TransactionScope.h"
 #include "widgets/ProgressDialog.h"
 
 
