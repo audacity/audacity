@@ -322,7 +322,7 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
 
 bool NewDefaultPlaybackPolicy::Looping( const PlaybackSchedule & ) const
 {
-   return true;
+   return mLoopEnabled;
 }
 
 void PlaybackSchedule::Init(
