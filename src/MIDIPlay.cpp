@@ -761,6 +761,17 @@ double MIDIPlay::UncorrectedMidiEventTime(double pauseTime)
    return time + pauseTime;
 }
 
+bool MIDIPlay::Unmuted() const
+{
+   int channel = (mNextEvent->chan) & 0xF; // must be in [0..15]
+   if (!mNextEventTrack->IsVisibleChan(channel))
+      return false;
+   const bool channelIsMute = mHasSolo
+      ? !mNextEventTrack->GetSolo()
+      : mNextEventTrack->GetMute();
+   return !channelIsMute;
+}
+
 bool MIDIPlay::OutputEvent(double pauseTime, bool midiStateOnly)
 {
    int channel = (mNextEvent->chan) & 0xF; // must be in [0..15]
@@ -807,11 +818,15 @@ bool MIDIPlay::OutputEvent(double pauseTime, bool midiStateOnly)
    // and if playback resumes, the pending note-off events WILL also
    // be sent (but if that is a problem, there would also be a problem
    // in the non-pause case.
-   if (((mNextEventTrack->IsVisibleChan(channel)) &&
-        // only play if note is not muted:
-        !((mHasSolo || mNextEventTrack->GetMute()) &&
-          !mNextEventTrack->GetSolo())) ||
-       (mNextEvent->is_note() && !mNextIsNoteOn)) {
+   const bool sendIt = [&]{
+      const bool isNote = mNextEvent->is_note();
+      if (isNote && !mNextIsNoteOn)
+         // Regardless of channel visibility state,
+         // always send note-off events
+         return true;
+      return Unmuted();
+   }();
+   if (sendIt) {
       // Note event
       if (mNextEvent->is_note() && !midiStateOnly) {
          // Pitch and velocity

@@ -123,6 +123,8 @@ struct MIDIPlay : AudioIOExt
    // synth latency.
    double UncorrectedMidiEventTime(double pauseTime);
 
+   bool Unmuted() const;
+
    // Returns true after outputting all-notes-off
    /// when true, midiStateOnly means send only updates, not note-ons,
    /// used to send state changes that precede the selected notes
