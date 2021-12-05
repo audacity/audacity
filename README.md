@@ -4,7 +4,7 @@
 [**Audacity**](https://www.audacityteam.org) is an easy-to-use, multi-track audio editor and recorder for Windows, macOS, GNU/Linux and other operating systems. Audacity is open source software licensed under GPL, version 2 or later.
 
 - **Recording** from any real or virtual audio device that is available to the host system.
-- **Export / Import** a wide range of audio formats, extendable with FFmpeg.
+- **Export / Import** a wide range of audio formats, extensible with FFmpeg.
 - **High quality** using 32-bit float audio processing.
 - **Plug-in Support** for multiple audio plug-in formats, including VST, LV2, and AU.
 - **Macros** for chaining commands and batch processing.
