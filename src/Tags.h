@@ -99,9 +99,6 @@ class AUDACITY_DLL_API Tags final
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
-   void AllowEditTitle(bool editTitle);
-   void AllowEditTrackNumber(bool editTrackNumber);
-
    void LoadDefaultGenres();
    void LoadGenres();
 
@@ -132,9 +129,6 @@ class AUDACITY_DLL_API Tags final
    TagMap mMap;
 
    wxArrayString mGenres;
-
-   bool mEditTitle;
-   bool mEditTrackNumber;
 };
 
 inline bool operator != (const Tags &lhs, const Tags &rhs)
