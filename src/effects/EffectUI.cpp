@@ -757,10 +757,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 
 EffectUIHost::~EffectUIHost()
 {
-   CleanupRealtime();
-   if (mNeedsResume)
-      Resume();
-   mClient.CloseUI();
+   wxASSERT(mClosed);
 }
 
 // ============================================================================
@@ -1082,6 +1079,9 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
    mClient.CloseUI();
 
    Destroy();
+#if wxDEBUG_LEVEL
+   mClosed = true;
+#endif
 }
 
 void EffectUIHost::OnApply(wxCommandEvent & evt)
