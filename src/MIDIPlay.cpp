@@ -801,16 +801,30 @@ bool MIDIPlay::OutputEvent(double pauseTime, bool midiStateOnly)
       return true;
    }
 
+   // (RBD)
    // if mNextEvent's channel is visible, play it, visibility can
-   // be updated while playing. Be careful: if we have a note-off,
+   // be updated while playing.
+   
+   // Be careful: if we have a note-off,
    // then we must not pay attention to the channel selection
    // or mute/solo buttons because we must turn the note off
-   // even if the user changed something after the note began
+   // even if the user changed something after the note began.
+
    // Note that because multiple tracks can output to the same
    // MIDI channels, it is not a good idea to send "All Notes Off"
    // when the user presses the mute button. We have no easy way
    // to know what notes are sounding on any given muted track, so
    // we'll just wait for the note-off events to happen.
+
+   // (PRL)
+   // Does that mean, try to get right results when playing to the same SET
+   // of MIDI channels, but tracks play to different channels?  In the
+   // case that two unrelated tracks try to merge events, for notes that
+   // overlap in time, to the same channel -- then one track still turns off
+   // a note that another turned on.  Maybe the prevention of this case belongs
+   // to higher levels of the program, and should just be assumed here.
+
+   // (RBD)
    // Also note that note-offs are only sent when we call
    // mIterator->request_note_off(), so notes that are not played
    // will not generate random note-offs. There is the interesting
@@ -820,9 +834,11 @@ bool MIDIPlay::OutputEvent(double pauseTime, bool midiStateOnly)
    // in the non-pause case.
    const bool sendIt = [&]{
       const bool isNote = mNextEvent->is_note();
-      if (isNote && !mNextIsNoteOn)
+      if (!(isNote && mNextIsNoteOn))
          // Regardless of channel visibility state,
-         // always send note-off events
+         // always send note-off events,
+         // and update events (program change, control change, pressure, bend)
+         // in case the user changes the muting during play
          return true;
       return Unmuted();
    }();
