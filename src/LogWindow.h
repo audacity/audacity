@@ -17,6 +17,8 @@ class AUDACITY_DLL_API LogWindow
 public:
    //! Show or hide the unique logging window; create it on demand the first time it is shown
    static void Show(bool show = true);
+   //! Destroys the log window (if any)
+   static void Destroy();
 };
 
 #endif
