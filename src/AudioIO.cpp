@@ -1840,15 +1840,16 @@ void AudioIO::FillPlayBuffers()
    // user interface.
    bool done = false;
    do {
-      const auto [frames, toProduce] =
+      const auto slice =
          policy.GetPlaybackSlice(mPlaybackSchedule, available);
+      const auto &[frames, toProduce] = slice;
 
       // Update the time queue.  This must be done before writing to the
       // ring buffers of samples, for proper synchronization with the
       // consumer side in the PortAudio thread, which reads the time
       // queue after reading the sample queues.  The sample queues use
       // atomic variables, the time queue doesn't.
-      mPlaybackSchedule.mTimeQueue.Producer(mPlaybackSchedule, frames);
+      mPlaybackSchedule.mTimeQueue.Producer(mPlaybackSchedule, slice);
 
       for (size_t i = 0; i < mPlaybackTracks.size(); i++)
       {
@@ -2958,7 +2959,7 @@ int AudioIoCallback::AudioCallback(
       mNumPauseFrames += framesPerBuffer;
 
    for( auto &ext : Extensions() ) {
-      ext.ComputeOtherTimings(mRate,
+      ext.ComputeOtherTimings(mRate, IsPaused(),
          timeInfo,
          framesPerBuffer);
       ext.FillOtherBuffers(
