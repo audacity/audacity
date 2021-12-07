@@ -32,8 +32,8 @@ UIHandle::Result WaveTrackAffordanceHandle::Click(const TrackPanelMouseEvent& ev
       if (affordanceControl)
       {
          result |= affordanceControl->OnAffordanceClick(event, project);
-         if (!event.event.GetSkipped())
-            return result;
+         if (!event.event.GetSkipped())//event is "consumed"
+            return result | RefreshCode::Cancelled;
          event.event.Skip(false);
       }
    }
