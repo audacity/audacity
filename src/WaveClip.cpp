@@ -1382,8 +1382,10 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
 {
    if (t == GetPlayStartTime() && t > GetSequenceStartTime())
       ClearSequence(GetSequenceStartTime(), t);
-   else if (t == GetPlayEndTime() && t < GetSequenceEndTime())
+   else if (t == GetPlayEndTime() && t < GetSequenceEndTime()) {
       ClearSequence(t, GetSequenceEndTime());
+      SetTrimRight(.0);
+   }
 
    auto s0 = TimeToSequenceSamples(t);
    auto slen = (sampleCount)floor(len * mRate + 0.5);
