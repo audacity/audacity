@@ -127,30 +127,6 @@ private:
    bool mBypass;
 };
 
-//! RAII for a database transaction, possibly nested
-/*! Make a savepoint (a transaction, possibly nested) with the given name;
-    roll it back at destruction time, unless an explicit Commit() happened first.
-    Commit() must not be called again after one successful call.
-    An exception is thrown from the constructor if the transaction cannot open.
- */
-class AUDACITY_DLL_API TransactionScope
-{
-public:
-   TransactionScope(DBConnection &connection, const char *name);
-   ~TransactionScope();
-
-   bool Commit();
-
-private:
-   bool TransactionStart(const wxString &name);
-   bool TransactionCommit(const wxString &name);
-   bool TransactionRollback(const wxString &name);
-
-   DBConnection &mConnection;
-   bool mInTrans;
-   wxString mName;
-};
-
 using Connection = std::unique_ptr<DBConnection>;
 
 // This object attached to the project simply holds the pointer to the
