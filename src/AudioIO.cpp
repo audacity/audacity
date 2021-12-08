@@ -82,6 +82,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include <stdlib.h>
 #include <algorithm>
 #include <numeric>
+#include <optional>
 
 #ifdef __WXMSW__
 #include <malloc.h>
@@ -117,11 +118,11 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "Decibels.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "DBConnection.h"
-#include "ProjectFileIO.h"
 #include "ProjectWindows.h"
+#include "TransactionScope.h"
 #include "ViewInfo.h" // for PlayRegionEvent
 #include "WaveTrack.h"
+#include "TransactionScope.h"
 
 #include "effects/RealtimeEffectManager.h"
 #include "QualitySettings.h"
@@ -1523,12 +1524,9 @@ void AudioIO::StopStream()
          {
             // This scope may combine many splittings of wave tracks
             // into one transaction, lessening the number of checkpoints
-            Optional<TransactionScope> pScope;
-            auto pOwningProject = mOwningProject.lock();
-            if (pOwningProject) {
-               auto &pIO = ProjectFileIO::Get(*pOwningProject);
-               pScope.emplace(pIO.GetConnection(), "Dropouts");
-            }
+            std::optional<TransactionScope> pScope;
+            if (auto pOwningProject = mOwningProject.lock())
+               pScope.emplace(*pOwningProject, "Dropouts");
             for (auto &interval : mLostCaptureIntervals) {
                auto &start = interval.first;
                auto duration = interval.second;
@@ -1840,15 +1838,16 @@ void AudioIO::FillPlayBuffers()
    // user interface.
    bool done = false;
    do {
-      const auto [frames, toProduce] =
+      const auto slice =
          policy.GetPlaybackSlice(mPlaybackSchedule, available);
+      const auto &[frames, toProduce] = slice;
 
       // Update the time queue.  This must be done before writing to the
       // ring buffers of samples, for proper synchronization with the
       // consumer side in the PortAudio thread, which reads the time
       // queue after reading the sample queues.  The sample queues use
       // atomic variables, the time queue doesn't.
-      mPlaybackSchedule.mTimeQueue.Producer(mPlaybackSchedule, frames);
+      mPlaybackSchedule.mTimeQueue.Producer(mPlaybackSchedule, slice);
 
       for (size_t i = 0; i < mPlaybackTracks.size(); i++)
       {
@@ -1923,12 +1922,9 @@ void AudioIO::DrainRecordBuffers()
          // This scope may combine many appendings of wave tracks,
          // and also an autosave, into one transaction,
          // lessening the number of checkpoints
-         Optional<TransactionScope> pScope;
-         auto pOwningProject = mOwningProject.lock();
-         if (pOwningProject) {
-            auto &pIO = ProjectFileIO::Get( *pOwningProject );
-            pScope.emplace(pIO.GetConnection(), "Recording");
-         }
+         std::optional<TransactionScope> pScope;
+         if (auto pOwningProject = mOwningProject.lock())
+            pScope.emplace(*pOwningProject, "Recording");
 
          bool newBlocks = false;
 
@@ -2958,7 +2954,7 @@ int AudioIoCallback::AudioCallback(
       mNumPauseFrames += framesPerBuffer;
 
    for( auto &ext : Extensions() ) {
-      ext.ComputeOtherTimings(mRate,
+      ext.ComputeOtherTimings(mRate, IsPaused(),
          timeInfo,
          framesPerBuffer);
       ext.FillOtherBuffers(

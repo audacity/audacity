@@ -29,6 +29,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectWindows.h"
 #include "SampleBlock.h"
 #include "TempDirectory.h"
+#include "TransactionScope.h"
 #include "WaveTrack.h"
 #include "widgets/AudacityMessageBox.h"
 #include "BasicUI.h"
@@ -1893,7 +1894,7 @@ bool ProjectFileIO::WriteDoc(const char *table,
 {
    auto db = DB();
 
-   TransactionScope transaction(GetConnection(), "UpdateProject");
+   TransactionScope transaction(mProject, "UpdateProject");
 
    int rc;
 

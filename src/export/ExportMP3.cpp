@@ -94,6 +94,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
 #include "wxFileNameWrapper.h"
+#include "Project.h"
 
 #include "Export.h"
 
@@ -1834,7 +1835,6 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
       bitrate = fixRateValues[ brate ];
       exporter.SetMode(MODE_ABR);
       exporter.SetBitrate(bitrate);
-
       if (bitrate > 160) {
          lowrate = 32000;
       }
@@ -1859,11 +1859,32 @@ ProgressResult ExportMP3::Export(AudacityProject *project,
    // Verify sample rate
    if (!make_iterator_range( sampRates ).contains( rate ) ||
       (rate < lowrate) || (rate > highrate)) {
-      rate = AskResample(bitrate, rate, lowrate, highrate);
-      if (rate == 0) {
-         return ProgressResult::Cancelled;
-      }
-   }
+        // Force valid sample rate in macros.
+		if (project->mBatchMode) {
+			if (!make_iterator_range( sampRates ).contains( rate )) {
+				auto const bestRateIt = std::lower_bound(sampRates.begin(),
+				sampRates.end(), rate);
+				rate = (bestRateIt == sampRates.end()) ? highrate : *bestRateIt;
+			}
+			if (rate < lowrate) {
+				rate = lowrate;
+			}
+			else if (rate > highrate) {
+				rate = highrate;
+			}
+		}
+		// else validate or prompt
+		else {
+			if (!make_iterator_range( sampRates ).contains( rate ) ||
+				(rate < lowrate) || (rate > highrate)) {
+				rate = AskResample(bitrate, rate, lowrate, highrate);
+			}
+			if (rate == 0) {
+				return ProgressResult::Cancelled;
+       
+			}
+		}
+	}
 
    // Set the channel mode
    if (forceMono) {

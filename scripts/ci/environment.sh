@@ -41,3 +41,4 @@ else # Linux & others
 fi
 
 gh_export COMPILER_VERSION="${compiler_version}"
+gh_export CONAN_VERSION="$(conan --version)"
