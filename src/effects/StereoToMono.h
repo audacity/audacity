@@ -31,7 +31,7 @@ public:
    EffectType GetType() override;
    bool IsInteractive() override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
@@ -39,7 +39,7 @@ public:
    // Effect implementation
 
    bool Process() override;
-   bool IsHidden() override;
+   bool IsHiddenFromMenus() override;
 
 private:
    // EffectStereoToMono implementation

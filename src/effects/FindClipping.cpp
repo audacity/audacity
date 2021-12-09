@@ -80,7 +80,7 @@ EffectType EffectFindClipping::GetType()
    return EffectTypeAnalyze;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectFindClipping::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mStart, Start );
    S.SHUTTLE_PARAM( mStop, Stop );

@@ -90,7 +90,7 @@ EffectType EffectNormalize::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectNormalize::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mPeakLevel, PeakLevel );
    S.SHUTTLE_PARAM( mGain, ApplyGain );

@@ -129,7 +129,7 @@ EffectType EffectPaulstretch::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectPaulstretch::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mAmount, Amount );
    S.SHUTTLE_PARAM( mTime_resolution, Time );

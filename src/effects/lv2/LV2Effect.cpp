@@ -518,7 +518,7 @@ bool LV2Effect::SupportsAutomation()
 }
 
 // ============================================================================
-// EffectClientInterface Implementation
+// EffectProcessor Implementation
 // ============================================================================
 bool LV2Effect::SetHost(EffectHostInterface *host)
 {
@@ -1046,11 +1046,6 @@ sampleCount LV2Effect::GetLatency()
 size_t LV2Effect::GetTailSize()
 {
    return 0;
-}
-
-bool LV2Effect::IsReady()
-{
-   return mMaster != NULL;
 }
 
 bool LV2Effect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))

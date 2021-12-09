@@ -58,7 +58,7 @@ bool EffectInvert::IsInteractive()
    return false;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 unsigned EffectInvert::GetAudioInCount()
 {

@@ -86,7 +86,7 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// VSTEffect is an Audacity EffectClientInterface that forwards actual 
+/// VSTEffect is an Audacity EffectProcessor that forwards actual 
 /// audio processing via a VSTEffectLink
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,7 +117,17 @@ class VSTEffect final : public wxEvtHandler,
    bool SupportsRealtime() override;
    bool SupportsAutomation() override;
 
-   // EffectClientInterface implementation
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
+
+   bool LoadUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(const RegistryPath & name) override;
+
+   RegistryPaths GetFactoryPresets() override;
+   bool LoadFactoryPreset(int id) override;
+   bool LoadFactoryDefaults() override;
+
+   // EffectProcessor implementation
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
@@ -132,7 +142,7 @@ class VSTEffect final : public wxEvtHandler,
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
-   bool IsReady() override;
+   bool IsReady();
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
@@ -151,16 +161,6 @@ class VSTEffect final : public wxEvtHandler,
 
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
-
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
-   bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
-
-   RegistryPaths GetFactoryPresets() override;
-   bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
 
    // EffectUIClientInterface implementation
 

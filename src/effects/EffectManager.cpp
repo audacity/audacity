@@ -121,8 +121,8 @@ TranslatableString EffectManager::GetVendorName(const PluginID & ID)
 
 CommandID EffectManager::GetCommandIdentifier(const PluginID & ID)
 {
-   wxString name = PluginManager::Get().GetSymbol(ID).Internal();
-   return Effect::GetSquashedName(name);
+   auto name = PluginManager::Get().GetSymbol(ID).Internal();
+   return EffectDefinitionInterface::GetSquashedName(name);
 }
 
 TranslatableString EffectManager::GetCommandDescription(const PluginID & ID)
@@ -205,7 +205,7 @@ bool EffectManager::IsHidden(const PluginID & ID)
 
    if (effect)
    {
-      return effect->IsHidden();
+      return effect->IsHiddenFromMenus();
    }
 
    return false;
@@ -240,7 +240,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
    {
       wxString parms;
 
-      effect->GetAutomationParameters(parms);
+      effect->GetAutomationParametersAsString(parms);
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
@@ -258,7 +258,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
    {
       wxString parms;
 
-      command->GetAutomationParameters(parms);
+      command->GetAutomationParametersAsString(parms);
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
@@ -282,10 +282,11 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
 
       if (eap.HasEntry(wxT("Use Preset")))
       {
-         return effect->SetAutomationParameters(eap.Read(wxT("Use Preset")));
+         return effect
+            ->SetAutomationParametersFromString(eap.Read(wxT("Use Preset")));
       }
 
-      return effect->SetAutomationParameters(params);
+      return effect->SetAutomationParametersFromString(params);
    }
    AudacityCommand *command = GetAudacityCommand(ID);
    
@@ -297,10 +298,11 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
 
       if (eap.HasEntry(wxT("Use Preset")))
       {
-         return command->SetAutomationParameters(eap.Read(wxT("Use Preset")));
+         return command
+            ->SetAutomationParametersFromString(eap.Read(wxT("Use Preset")));
       }
 
-      return command->SetAutomationParameters(params);
+      return command->SetAutomationParametersFromString(params);
    }
    return false;
 }
@@ -334,6 +336,27 @@ bool EffectManager::PromptUser(
    return result;
 }
 
+static bool HasCurrentSettings(EffectHostInterface &host)
+{
+   return HasConfigGroup(host.GetDefinition(), PluginSettings::Private,
+      host.GetCurrentSettingsGroup());
+}
+
+static bool HasFactoryDefaults(EffectHostInterface &host)
+{
+   return HasConfigGroup(host.GetDefinition(), PluginSettings::Private,
+      host.GetFactoryDefaultsGroup());
+}
+
+static RegistryPaths GetUserPresets(EffectHostInterface &host)
+{
+   RegistryPaths presets;
+   GetConfigSubgroups(host.GetDefinition(), PluginSettings::Private,
+      host.GetUserPresetsGroup({}), presets);
+   std::sort( presets.begin(), presets.end() );
+   return presets;
+}
+
 bool EffectManager::HasPresets(const PluginID & ID)
 {
    Effect *effect = GetEffect(ID);
@@ -343,10 +366,10 @@ bool EffectManager::HasPresets(const PluginID & ID)
       return false;
    }
 
-   return effect->GetUserPresets().size() > 0 ||
+   return GetUserPresets(*effect).size() > 0 ||
           effect->GetFactoryPresets().size() > 0 ||
-          effect->HasCurrentSettings() ||
-          effect->HasFactoryDefaults();
+          HasCurrentSettings(*effect) ||
+          HasFactoryDefaults(*effect);
 }
 
 #include <wx/choice.h>
@@ -424,7 +447,7 @@ EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
    }
    S.EndVerticalLay();
 
-   mUserPresets = effect->GetUserPresets();
+   mUserPresets = GetUserPresets(*effect);
    mFactoryPresets = effect->GetFactoryPresets();
 
    if (mUserPresets.size() > 0)
@@ -437,12 +460,12 @@ EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
       mType->Append(_("Factory Presets"));
    }
 
-   if (effect->HasCurrentSettings())
+   if (HasCurrentSettings(*effect))
    {
       mType->Append(_("Current Settings"));
    }
 
-   if (effect->HasFactoryDefaults())
+   if (HasFactoryDefaults(*effect))
    {
       mType->Append(_("Factory Defaults"));
    }
@@ -671,11 +694,11 @@ wxString EffectManager::GetDefaultPreset(const PluginID & ID)
    }
 
    wxString preset;
-   if (effect->HasCurrentSettings())
+   if (HasCurrentSettings(*effect))
    {
       preset = Effect::kCurrentSettingsIdent;
    }
-   else if (effect->HasFactoryDefaults())
+   else if (HasFactoryDefaults(*effect))
    {
       preset = Effect::kFactoryDefaultsIdent;
    }

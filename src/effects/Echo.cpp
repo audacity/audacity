@@ -79,7 +79,7 @@ EffectType EffectEcho::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 unsigned EffectEcho::GetAudioInCount()
 {

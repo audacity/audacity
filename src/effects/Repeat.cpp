@@ -88,7 +88,7 @@ EffectType EffectRepeat::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectRepeat::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( repeatCount, Count );
    return true;

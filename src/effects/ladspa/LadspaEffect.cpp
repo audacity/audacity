@@ -721,7 +721,7 @@ bool LadspaEffect::SupportsAutomation()
 }
 
 // ============================================================================
-// EffectClientInterface Implementation
+// EffectProcessor Implementation
 // ============================================================================
 
 bool LadspaEffect::SetHost(EffectHostInterface *host)
@@ -941,11 +941,6 @@ sampleCount LadspaEffect::GetLatency()
 size_t LadspaEffect::GetTailSize()
 {
    return 0;
-}
-
-bool LadspaEffect::IsReady()
-{
-   return mReady;
 }
 
 bool LadspaEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))

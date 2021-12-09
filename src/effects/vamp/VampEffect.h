@@ -57,11 +57,12 @@ public:
    bool IsInteractive() override;
    bool IsDefault() override;
 
-   // EffectClientInterface implementation
-
-   unsigned GetAudioInCount() override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
+
+   // EffectProcessor implementation
+
+   unsigned GetAudioInCount() override;
 
    // Effect implementation
 

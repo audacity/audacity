@@ -105,7 +105,7 @@ EffectType EffectLoudness::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectLoudness::DefineParams( ShuttleParams & S )
 {
    S.SHUTTLE_PARAM( mStereoInd, StereoInd );

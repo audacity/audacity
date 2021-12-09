@@ -296,7 +296,7 @@ bool NyquistEffect::IsDefault()
    return mIsPrompt;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool NyquistEffect::DefineParams( ShuttleParams & S )
 {
    // For now we assume Nyquist can do get and set better than DefineParams can,
@@ -570,11 +570,16 @@ bool NyquistEffect::Init()
 
       for ( auto t :
                TrackList::Get( *project ).Selected< const WaveTrack >() ) {
-         const auto displays = WaveTrackView::Get(*t).GetDisplays();
-         if (displays.end() != std::find(
-            displays.begin(), displays.end(),
-            WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }))
-            hasSpectral = true;
+         // Find() not Get() to avoid creation-on-demand of views in case we are
+         // only previewing
+         auto pView = WaveTrackView::Find( t );
+         if ( pView ) {
+            const auto displays = pView->GetDisplays();
+            if (displays.end() != std::find(
+               displays.begin(), displays.end(),
+               WaveTrackSubView::Type{ WaveTrackViewConstants::Spectrum, {} }))
+               hasSpectral = true;
+         }
          if ( hasSpectral &&
              (t->GetSpectrogramSettings().SpectralSelectionEnabled())) {
             bAllowSpectralEditing = true;
@@ -1155,22 +1160,27 @@ bool NyquistEffect::ProcessOne()
          [&](const WaveTrack *wt) {
             type = wxT("wave");
             spectralEditp = mCurTrack[0]->GetSpectrogramSettings().SpectralSelectionEnabled()? wxT("T") : wxT("NIL");
-            auto displays = WaveTrackView::Get( *wt ).GetDisplays();
-            auto format = [&]( decltype(displays[0]) display ) {
-               // Get the English name of the view type, without menu codes,
-               // as a string that Lisp can examine
-               return wxString::Format( wxT("\"%s\""),
-                  display.name.Stripped().Debug() );
-            };
-            if (displays.empty())
-               view = wxT("NIL");
-            else if (displays.size() == 1)
-               view = format( displays[0] );
-            else {
-               view = wxT("(list");
-               for ( auto display : displays )
-                  view += wxString(wxT(" ")) + format( display );
-               view += wxT(")");
+            view = wxT("NIL");
+            // Find() not Get() to avoid creation-on-demand of views in case we are
+            // only previewing
+            if ( const auto pView = WaveTrackView::Find( wt ) ) {
+               auto displays = pView->GetDisplays();
+               auto format = [&]( decltype(displays[0]) display ) {
+                  // Get the English name of the view type, without menu codes,
+                  // as a string that Lisp can examine
+                  return wxString::Format( wxT("\"%s\""),
+                     display.name.Stripped().Debug() );
+               };
+               if (displays.empty())
+                  ;
+               else if (displays.size() == 1)
+                  view = format( displays[0] );
+               else {
+                  view = wxT("(list");
+                  for ( auto display : displays )
+                     view += wxString(wxT(" ")) + format( display );
+                  view += wxT(")");
+               }
             }
          },
 #if defined(USE_MIDI)
