@@ -113,7 +113,7 @@ EffectType EffectTimeScale::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectTimeScale::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( m_RatePercentChangeStart,  RatePercentStart );
    S.SHUTTLE_PARAM( m_RatePercentChangeEnd,    RatePercentEnd );

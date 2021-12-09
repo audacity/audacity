@@ -127,7 +127,7 @@ EffectType EffectCompressor::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectCompressor::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mThresholdDB, Threshold );
    S.SHUTTLE_PARAM( mNoiseFloorDB, NoiseFloor );

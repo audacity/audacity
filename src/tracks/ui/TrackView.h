@@ -46,6 +46,8 @@ public:
 
    static TrackView &Get( Track & );
    static const TrackView &Get( const Track & );
+   static TrackView *Find( Track * );
+   static const TrackView *Find( const Track * );
 
    bool GetMinimized() const { return mMinimized; }
    void SetMinimized( bool minimized );

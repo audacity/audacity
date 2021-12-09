@@ -141,7 +141,7 @@ bool EffectChangeTempo::SupportsAutomation()
    return true;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectChangeTempo::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( m_PercentChange, Percentage );
    S.SHUTTLE_PARAM( mUseSBSMS, UseSBSMS );

@@ -36,7 +36,7 @@ public:
 
    EffectType GetType() override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    bool DefineParams( ShuttleParams & S ) override;
    bool GetAutomationParameters(CommandParameters & parms) override;

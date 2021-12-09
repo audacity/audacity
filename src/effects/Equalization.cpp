@@ -370,7 +370,7 @@ EffectType EffectEqualization::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectEqualization::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mM, FilterLength );
    //S.SHUTTLE_PARAM( mCurveName, CurveName);

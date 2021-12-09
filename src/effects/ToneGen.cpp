@@ -155,7 +155,7 @@ EffectType EffectToneGen::GetType()
    return EffectTypeGenerate;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 unsigned EffectToneGen::GetAudioOutCount()
 {

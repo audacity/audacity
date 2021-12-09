@@ -161,7 +161,7 @@ EffectType EffectReverb::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 unsigned EffectReverb::GetAudioInCount()
 {

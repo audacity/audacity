@@ -52,8 +52,12 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
+   RegistryPaths GetFactoryPresets() override;
+   bool LoadFactoryPreset(int id) override;
 
-   // EffectClientInterface implementation
+   // EffectProcessor implementation
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
@@ -61,10 +65,6 @@ public:
    bool ProcessFinalize() override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
    bool DefineParams( ShuttleParams & S ) override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-   RegistryPaths GetFactoryPresets() override;
-   bool LoadFactoryPreset(int id) override;
 
    // Effect implementation
 

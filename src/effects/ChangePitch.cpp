@@ -162,7 +162,7 @@ EffectType EffectChangePitch::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectChangePitch::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( m_dPercentChange, Percentage );
    S.SHUTTLE_PARAM( mUseSBSMS, UseSBSMS );

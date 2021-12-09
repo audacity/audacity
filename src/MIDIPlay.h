@@ -13,7 +13,6 @@ Paul Licameli split from AudIOBase.h
 #define __AUDACITY_MIDI_PLAY__
 
 #include "AudioIOExt.h"
-#include "NoteTrack.h"
 #include <optional>
 #include "../lib-src/header-substitutes/allegro.h"
 
@@ -21,6 +20,7 @@ typedef void PmStream;
 typedef int32_t PmTimestamp;
 class Alg_event;
 class Alg_iterator;
+class NoteTrack;
 using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 class AudioThread;
@@ -29,9 +29,58 @@ class AudioThread;
 // which seems not to implement the notes-off message correctly.
 #define AUDIO_IO_GB_MIDI_WORKAROUND
 
+#include "NoteTrack.h"
 #include "PlaybackSchedule.h"
 
 namespace {
+
+struct MIDIPlay;
+
+Alg_update gAllNotesOff; // special event for loop ending
+// the fields of this event are never used, only the address is important
+
+struct Iterator {
+   Iterator(
+      const PlaybackSchedule &schedule, MIDIPlay &midiPlay,
+      NoteTrackConstArray &midiPlaybackTracks,
+      double startTime, double offset, bool send );
+   ~Iterator();
+
+   void Prime(bool send, double startTime);
+
+   double GetNextEventTime() const;
+
+   // Compute nondecreasing real time stamps, accounting for pauses, but not the
+   // synth latency.
+   double UncorrectedMidiEventTime(double pauseTime);
+
+   bool Unmuted(bool hasSolo) const;
+
+   // Returns true after outputting all-notes-off
+   bool OutputEvent(double pauseTime,
+      /// when true, sendMidiState means send only updates, not note-ons,
+      /// used to send state changes that precede the selected notes
+      bool sendMidiState,
+      bool hasSolo);
+   void GetNextEvent();
+
+   const PlaybackSchedule &mPlaybackSchedule;
+   MIDIPlay &mMIDIPlay;
+   Alg_iterator it{ nullptr, false };
+   /// The next event to play (or null)
+   Alg_event    *mNextEvent = nullptr;
+
+   /// Track of next event
+   NoteTrack        *mNextEventTrack = nullptr;
+
+   /// Is the next event a note-on?
+   bool             mNextIsNoteOn = false;
+
+private:
+   /// Real time at which the next event should be output, measured in seconds.
+   /// Note that this could be a note's time+duration for note offs.
+   double           mNextEventTime = 0;
+};
 
 struct MIDIPlay : AudioIOExt
 {
@@ -94,34 +143,14 @@ struct MIDIPlay : AudioIOExt
 
    double mSystemMinusAudioTimePlusLatency = 0.0;
 
-   std::optional<Alg_iterator> mIterator;
-   /// The next event to play (or null)
-   Alg_event    *mNextEvent = nullptr;
+   std::optional<Iterator> mIterator;
 
 #ifdef AUDIO_IO_GB_MIDI_WORKAROUND
    std::vector< std::pair< int, int > > mPendingNotesOff;
 #endif
 
-   /// Real time at which the next event should be output, measured in seconds.
-   /// Note that this could be a note's time+duration for note offs.
-   double           mNextEventTime = 0.0;
-   /// Track of next event
-   NoteTrack        *mNextEventTrack = nullptr;
-   /// Is the next event a note-on?
-   bool             mNextIsNoteOn = false;
-   /// when true, mSendMidiState means send only updates, not note-on's,
-   /// used to send state changes that precede the selected notes
-   bool             mSendMidiState = false;
-
-   void PrepareMidiIterator(bool send, double offset);
+   void PrepareMidiIterator(bool send, double startTime, double offset);
    bool StartPortMidiStream(double rate);
-
-   // Compute nondecreasing real time stamps, accounting for pauses, but not the
-   // synth latency.
-   double UncorrectedMidiEventTime(double pauseTime);
-
-   void OutputEvent(double pauseTime);
-   void GetNextEvent();
    double PauseTime(double rate, unsigned long pauseFrames);
    void AllNotesOff(bool looping = false);
 
@@ -131,27 +160,12 @@ struct MIDIPlay : AudioIOExt
     */
    PmTimestamp MidiTime();
 
-   // Note: audio code solves the problem of soloing/muting tracks by scanning
-   // all playback tracks on every call to the audio buffer fill routine.
-   // We do the same for Midi, but it seems wasteful for at least two
-   // threads to be frequently polling to update status. This could be
-   // eliminated (also with a reduction in code I think) by updating mHasSolo
-   // each time a solo button is activated or deactivated. For now, I'm
-   // going to do this polling in the FillMidiBuffer routine to localize
-   // changes for midi to the midi code, but I'm declaring the variable
-   // here so possibly in the future, Audio code can use it too. -RBD
- private:
-   bool  mHasSolo = false; // is any playback solo button pressed?
- public:
-   bool SetHasSolo(bool hasSolo);
-   bool GetHasSolo() { return mHasSolo; }
-
    bool mUsingAlsa = false;
 
    static bool IsActive();
    bool IsOtherStreamActive() const override;
 
-   void ComputeOtherTimings(double rate,
+   void ComputeOtherTimings(double rate, bool paused,
       const PaStreamCallbackTimeInfo *timeInfo,
       unsigned long framesPerBuffer) override;
    void SignalOtherCompletion() override;
