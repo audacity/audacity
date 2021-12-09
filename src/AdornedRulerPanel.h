@@ -98,8 +98,12 @@ private:
    wxRect RegionRectangle(double t0, double t1) const;
    wxRect PlayRegionRectangle() const;
    wxRect SelectedRegionRectangle() const;
-   void DoDrawPlayRegion(wxDC * dc, const wxRect &rect);
+   void DoDrawPlayRegion(wxDC * dc,
+      const wxRect &rectP, const wxRect &rectL, const wxRect &rectR);
    void DoDrawPlayRegionLimits(wxDC * dc, const wxRect &rect);
+   void DoDrawOverlap(wxDC * dc, const wxRect &rect);
+   void DoDrawSelection(wxDC * dc,
+      const wxRect &rectS, const wxRect &rectL, const wxRect &rectR);
 
 public:
    void DoDrawScrubIndicator(wxDC * dc, wxCoord xx, int width, bool scrub, bool seek);

@@ -1574,7 +1574,9 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
       rectL = { rectL.GetTopLeft(), wxPoint{ rectO.GetLeft() - 1, bottom } };
    }
 
-   DoDrawPlayRegion(&backDC, rectP);
+   DoDrawPlayRegion(&backDC, rectP, rectL, rectR);
+   DoDrawOverlap(&backDC, rectO);
+   DoDrawSelection(&backDC, rectS, rectL, rectR);
 
    DoDrawPlayRegionLimits(&backDC, rectP);
 
@@ -2386,6 +2388,17 @@ inline ColorId TimelineLoopRegionColor(bool isActive)
    return isActive ? clrRulerBackground : clrClipAffordanceInactiveBrush;
 }
 
+static inline wxColour AlphaBlend(ColorId fg, ColorId bg, double alpha)
+{
+   const auto &fgc = theTheme.Colour(fg);
+   const auto &bgc = theTheme.Colour(bg);
+   return wxColour{
+      wxColour::AlphaBlend(fgc.Red(), bgc.Red(), alpha),
+      wxColour::AlphaBlend(fgc.Green(), bgc.Green(), alpha),
+      wxColour::AlphaBlend(fgc.Blue(), bgc.Blue(), alpha)
+   };
+}
+
 void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
 {
    // Draw AdornedRulerPanel border
@@ -2466,7 +2479,8 @@ wxRect AdornedRulerPanel::RegionRectangle(double t0, double t1) const
    return { wxPoint{left, top}, wxPoint{right, bottom} };
 }
 
-void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc, const wxRect &rect)
+void AdornedRulerPanel::DoDrawPlayRegion(
+   wxDC * dc, const wxRect &rectP, const wxRect &rectL, const wxRect &rectR)
 {
    const auto &viewInfo = ViewInfo::Get(*mProject);
    const auto &playRegion = viewInfo.playRegion;
@@ -2480,7 +2494,8 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc, const wxRect &rect)
    dc->SetBrush( wxBrush( theTheme.Colour( color )) );
    dc->SetPen(   wxPen(   theTheme.Colour( color )) );
 
-   dc->DrawRectangle( rect );
+   dc->DrawRectangle( rectP.Intersect(rectL) );
+   dc->DrawRectangle( rectP.Intersect(rectR) );
 }
 
 void AdornedRulerPanel::DoDrawPlayRegionLimits(wxDC * dc, const wxRect &rect)
@@ -2518,6 +2533,27 @@ void AdornedRulerPanel::DoDrawPlayRegionLimits(wxDC * dc, const wxRect &rect)
       };
       dc->DrawPolygon( 4, points );
    }
+}
+
+constexpr double SelectionOpacity = 0.2;
+
+void AdornedRulerPanel::DoDrawOverlap(wxDC * dc, const wxRect &rect)
+{
+   dc->SetBrush( wxBrush{ AlphaBlend(
+      TimelineLimitsColor(), TimelineLoopRegionColor(mLastPlayRegionActive),
+      SelectionOpacity) } );
+   dc->SetPen( *wxTRANSPARENT_PEN );
+   dc->DrawRectangle( rect );
+}
+
+void AdornedRulerPanel::DoDrawSelection(
+   wxDC * dc, const wxRect &rectS, const wxRect &rectL, const wxRect &rectR)
+{
+   dc->SetBrush( wxBrush{ AlphaBlend(
+      TimelineLimitsColor(), TimelineBackgroundColor(), SelectionOpacity) } );
+   dc->SetPen( *wxTRANSPARENT_PEN );
+   dc->DrawRectangle( rectS.Intersect(rectL) );
+   dc->DrawRectangle( rectS.Intersect(rectR) );
 }
 
 int AdornedRulerPanel::GetRulerHeight(bool showScrubBar)
