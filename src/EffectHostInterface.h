@@ -31,6 +31,8 @@ ConfigClientInterface to add Getters/setters for private and shared configs.
 class AUDACITY_DLL_API EffectHostInterface
 {
 public:
+   EffectHostInterface &operator=(EffectHostInterface&) = delete;
+
    virtual ~EffectHostInterface();
 
    virtual EffectDefinitionInterface &GetDefinition() = 0;
@@ -62,6 +64,7 @@ using EffectDialogFactory = std::function<
 class AUDACITY_DLL_API EffectUIHostInterface : public EffectHostInterface
 {
 public:
+   EffectUIHostInterface &operator=(EffectUIHostInterface&) = delete;
    virtual ~EffectUIHostInterface();
 
    /*!
