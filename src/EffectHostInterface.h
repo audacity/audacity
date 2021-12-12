@@ -12,7 +12,6 @@
 #ifndef __AUDACITY_EFFECTHOSTINTERFACE_H__
 #define __AUDACITY_EFFECTHOSTINTERFACE_H__
 
-#include "ConfigInterface.h"
 #include "ComponentInterfaceSymbol.h"
 
 #include <functional>
