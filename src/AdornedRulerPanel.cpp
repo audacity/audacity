@@ -1558,7 +1558,22 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    DoDrawBackground(&backDC);
 
-   const auto rectP = PlayRegionRectangle();
+   // Find play region rectangle, selected rectangle, and their overlap
+   const auto rectP = PlayRegionRectangle(),
+      rectS = SelectedRegionRectangle(),
+      rectO = rectP.Intersect(rectS);
+
+   // What's left and right of the overlap?  Assume same tops and bottoms
+   const auto top = rectP.GetTop(),
+      bottom = rectP.GetBottom();
+   wxRect rectL{
+      wxPoint{ 0, top }, wxPoint{ this->GetSize().GetWidth() - 1, bottom } };
+   wxRect rectR = {};
+   if (!rectO.IsEmpty()) {
+      rectR = { wxPoint{ rectO.GetRight() + 1, top }, rectL.GetBottomRight() };
+      rectL = { rectL.GetTopLeft(), wxPoint{ rectO.GetLeft() - 1, bottom } };
+   }
+
    DoDrawPlayRegion(&backDC, rectP);
 
    DoDrawPlayRegionLimits(&backDC, rectP);
@@ -2406,10 +2421,24 @@ wxRect AdornedRulerPanel::PlayRegionRectangle() const
    return RegionRectangle(t0, t1);
 }
 
+wxRect AdornedRulerPanel::SelectedRegionRectangle() const
+{
+   const auto &viewInfo = ViewInfo::Get(*mProject);
+   const auto &selectedRegion = viewInfo.selectedRegion;
+   const auto t0 = selectedRegion.t0(), t1 = selectedRegion.t1();
+   return RegionRectangle(t0, t1);
+}
+
 wxRect AdornedRulerPanel::RegionRectangle(double t0, double t1) const
 {
-   const int p0 = max(1, Time2Pos(t0));
-   const int p1 = min(mInner.width, Time2Pos(t1));
+   int p0 = -1, p1 = -1;
+   if (t0 == t1)
+      // Make the rectangle off-screen horizontally, but set the height
+      ;
+   else {
+      p0 = max(1, Time2Pos(t0));
+      p1 = min(mInner.width, Time2Pos(t1));
+   }
 
    const int left = p0, top = mInner.y, right = p1, bottom = mInner.GetBottom();
    return { wxPoint{left, top}, wxPoint{right, bottom} };

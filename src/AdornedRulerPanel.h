@@ -97,6 +97,7 @@ private:
    void DoDrawMarks(wxDC * dc, bool /*text */ );
    wxRect RegionRectangle(double t0, double t1) const;
    wxRect PlayRegionRectangle() const;
+   wxRect SelectedRegionRectangle() const;
    void DoDrawPlayRegion(wxDC * dc, const wxRect &rect);
    void DoDrawPlayRegionLimits(wxDC * dc, const wxRect &rect);
 
