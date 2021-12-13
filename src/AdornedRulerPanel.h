@@ -235,7 +235,6 @@ private:
    bool mLastPlayRegionActive = false;
    double mLastDrawnH{};
    double mLastDrawnZoom{};
-   bool mDirtyPlayRegion{};
 };
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__

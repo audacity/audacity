@@ -1501,12 +1501,9 @@ void AdornedRulerPanel::DoIdle()
    auto &viewInfo = ViewInfo::Get( project );
    const auto &playRegion = viewInfo.playRegion;
 
-   bool dirtyPlayRegion = mDirtyPlayRegion
-      || ( mLastDrawnPlayRegion != std::pair{
-         playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() } );
-
    changed = changed
-     || dirtyPlayRegion
+     || mLastDrawnPlayRegion != std::pair{
+         playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() }
      || mLastDrawnH != viewInfo.h
      || mLastDrawnZoom != viewInfo.GetZoom()
      || mLastPlayRegionActive != viewInfo.playRegion.Active()
@@ -1515,8 +1512,6 @@ void AdornedRulerPanel::DoIdle()
       // Cause ruler redraw anyway, because we may be zooming or scrolling,
       // showing or hiding the scrub bar, etc.
       Refresh();
-
-   mDirtyPlayRegion = false;
 }
 
 void AdornedRulerPanel::OnAudioStartStop(wxCommandEvent & evt)
@@ -1551,7 +1546,6 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
       playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() };
    mLastDrawnH = viewInfo.h;
    mLastDrawnZoom = viewInfo.GetZoom();
-   mDirtyPlayRegion = (mLastDrawnPlayRegion != playRegionBounds);
    mLastDrawnPlayRegion = playRegionBounds;
    // To do, note other fisheye state when we have that
 
