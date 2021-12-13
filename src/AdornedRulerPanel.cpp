@@ -2364,16 +2364,38 @@ void AdornedRulerPanel::ShowContextMenu(
    }
 }
 
+using ColorId = decltype(clrTrackInfo);
+
+inline ColorId TimelineBackgroundColor()
+{
+   return clrTrackInfo;
+}
+
+inline ColorId TimelineTextColor()
+{
+   return clrTrackPanelText;
+}
+
+inline ColorId TimelineLimitsColor()
+{
+   return TimelineTextColor();
+}
+
+inline ColorId TimelineLoopRegionColor(bool isActive)
+{
+   return isActive ? clrRulerBackground : clrClipAffordanceInactiveBrush;
+}
+
 void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
 {
    // Draw AdornedRulerPanel border
-   AColor::UseThemeColour( dc, clrTrackInfo );
+   AColor::UseThemeColour( dc, TimelineBackgroundColor() );
    dc->DrawRectangle( mInner );
 
    if (ShowingScrubRuler()) {
       // Let's distinguish the scrubbing area by using a themable
       // colour and a line to set it off.  
-      AColor::UseThemeColour(dc, clrScrubRuler, clrTrackPanelText );
+      AColor::UseThemeColour(dc, clrScrubRuler, TimelineTextColor() );
       wxRect ScrubRect = mScrubZone;
       ScrubRect.Inflate( 1,0 );
       dc->DrawRectangle(ScrubRect);
@@ -2402,7 +2424,7 @@ void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )
    const double max = Pos2Time(mInner.width);
    const double hiddenMax = Pos2Time(mInner.width, true);
 
-   mRuler.SetTickColour( theTheme.Colour( clrTrackPanelText ) );
+   mRuler.SetTickColour( theTheme.Colour( TimelineTextColor() ) );
    mRuler.SetRange( min, max, hiddenMin, hiddenMax );
    mRuler.Draw( *dc );
 }
@@ -2454,8 +2476,7 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc, const wxRect &rect)
    const bool isActive = (mLastPlayRegionActive = playRegion.Active());
 
    // Paint the selected region bolder if independently varying, else dim
-   const auto color =
-      isActive ? clrRulerBackground : clrClipAffordanceInactiveBrush;
+   const auto color = TimelineLoopRegionColor(isActive);
    dc->SetBrush( wxBrush( theTheme.Colour( color )) );
    dc->SetPen(   wxPen(   theTheme.Colour( color )) );
 
@@ -2466,7 +2487,7 @@ void AdornedRulerPanel::DoDrawPlayRegionLimits(wxDC * dc, const wxRect &rect)
 {
    // Color the edges of the play region like the ticks and numbers
    ADCChanger cleanup( dc );
-   const auto edgeColour = theTheme.Colour(clrTrackPanelText);
+   const auto edgeColour = theTheme.Colour(TimelineLimitsColor());
    dc->SetPen( { edgeColour } );
    dc->SetBrush( { edgeColour } );
 
