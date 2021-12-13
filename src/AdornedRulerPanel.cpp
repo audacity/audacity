@@ -1558,7 +1558,10 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    DoDrawBackground(&backDC);
 
-   DoDrawPlayRegion(&backDC);
+   const auto rectP = PlayRegionRectangle();
+   DoDrawPlayRegion(&backDC, rectP);
+
+   DoDrawPlayRegionLimits(&backDC, rectP);
 
    DoDrawMarks(&backDC, true);
 
@@ -1665,14 +1668,14 @@ bool AdornedRulerPanel::UpdateRects()
    return true;
 }
 
-double AdornedRulerPanel::Pos2Time(int p, bool ignoreFisheye)
+double AdornedRulerPanel::Pos2Time(int p, bool ignoreFisheye) const
 {
    return mViewInfo->PositionToTime(p, mLeftOffset
       , ignoreFisheye
    );
 }
 
-int AdornedRulerPanel::Time2Pos(double t, bool ignoreFisheye)
+int AdornedRulerPanel::Time2Pos(double t, bool ignoreFisheye) const
 {
    return mViewInfo->TimeToPosition(t, mLeftOffset
       , ignoreFisheye
@@ -2394,20 +2397,32 @@ void AdornedRulerPanel::DrawSelection()
    Refresh();
 }
 
-void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
+wxRect AdornedRulerPanel::PlayRegionRectangle() const
 {
    const auto &viewInfo = ViewInfo::Get(*mProject);
    const auto &playRegion = viewInfo.playRegion;
-   bool isActive = (mLastPlayRegionActive = playRegion.Active());
+   const auto t0 = playRegion.GetLastActiveStart(),
+      t1 = playRegion.GetLastActiveEnd();
+   return RegionRectangle(t0, t1);
+}
 
+wxRect AdornedRulerPanel::RegionRectangle(double t0, double t1) const
+{
+   const int p0 = max(1, Time2Pos(t0));
+   const int p1 = min(mInner.width, Time2Pos(t1));
+
+   const int left = p0, top = mInner.y, right = p1, bottom = mInner.GetBottom();
+   return { wxPoint{left, top}, wxPoint{right, bottom} };
+}
+
+void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc, const wxRect &rect)
+{
+   const auto &viewInfo = ViewInfo::Get(*mProject);
+   const auto &playRegion = viewInfo.playRegion;
    if (playRegion.IsLastActiveRegionClear())
       return;
 
-   const auto t0 = playRegion.GetLastActiveStart(),
-      t1 = playRegion.GetLastActiveEnd();
-
-   const int p0 = max(1, Time2Pos(t0));
-   const int p1 = min(mInner.width, Time2Pos(t1));
+   const bool isActive = (mLastPlayRegionActive = playRegion.Active());
 
    // Paint the selected region bolder if independently varying, else dim
    const auto color =
@@ -2415,39 +2430,43 @@ void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
    dc->SetBrush( wxBrush( theTheme.Colour( color )) );
    dc->SetPen(   wxPen(   theTheme.Colour( color )) );
 
-   const int left = p0, top = mInner.y, right = p1, bottom = mInner.GetBottom();
-   dc->DrawRectangle( { wxPoint{left, top}, wxPoint{right, bottom} } );
+   dc->DrawRectangle( rect );
+}
+
+void AdornedRulerPanel::DoDrawPlayRegionLimits(wxDC * dc, const wxRect &rect)
+{
+   // Color the edges of the play region like the ticks and numbers
+   ADCChanger cleanup( dc );
+   const auto edgeColour = theTheme.Colour(clrTrackPanelText);
+   dc->SetPen( { edgeColour } );
+   dc->SetBrush( { edgeColour } );
+
+   constexpr int side = 7;
+   constexpr int sideLessOne = side - 1;
+
+   // Paint two shapes, each a line plus triangle at bottom
+   const auto left = rect.GetLeft(),
+      right = rect.GetRight(),
+      bottom = rect.GetBottom(),
+      top = rect.GetTop();
+   {
+      wxPoint points[]{
+         {left, bottom - sideLessOne},
+         {left - sideLessOne, bottom},
+         {left, bottom},
+         {left, top},
+      };
+      dc->DrawPolygon( 4, points );
+   }
 
    {
-      // Color the edges of the play region like the ticks and numbers
-      ADCChanger cleanup( dc );
-      const auto edgeColour = theTheme.Colour(clrTrackPanelText);
-      dc->SetPen( { edgeColour } );
-      dc->SetBrush( { edgeColour } );
-
-      constexpr int side = 7;
-      constexpr int sideLessOne = side - 1;
-
-      // Paint two shapes, each a line plus triangle at bottom
-      {
-         wxPoint points[]{
-            {left, bottom - sideLessOne},
-            {left - sideLessOne, bottom},
-            {left, bottom},
-            {left, top},
-         };
-         dc->DrawPolygon( 4, points );
-      }
-
-      {
-         wxPoint points[]{
-            {right, top},
-            {right, bottom},
-            {right + sideLessOne, bottom},
-            {right, bottom - sideLessOne},
-         };
-         dc->DrawPolygon( 4, points );
-      }
+      wxPoint points[]{
+         {right, top},
+         {right, bottom},
+         {right + sideLessOne, bottom},
+         {right, bottom - sideLessOne},
+      };
+      dc->DrawPolygon( 4, points );
    }
 }
 
