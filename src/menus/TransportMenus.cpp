@@ -1176,10 +1176,11 @@ BaseItemSharedPtr TransportMenu()
                          return IsLoopingEnabled(project);
                      } )),
                Command( wxT("ClearPlayRegion"), XXO("&Clear Loop"),
-                  FN(OnClearPlayRegion), AlwaysEnabledFlag ),
+                  FN(OnClearPlayRegion), AlwaysEnabledFlag, L"Shift+Alt+L" ),
                Command( wxT("SetPlayRegionToSelection"),
                   XXO("&Set Loop to Selection"),
-                  FN(OnSetPlayRegionToSelection), AlwaysEnabledFlag ),
+                  FN(OnSetPlayRegionToSelection), AlwaysEnabledFlag,
+                     L"Shift+L" ),
                Command( wxT("SetPlayRegionIn"),
                   SetLoopInTitle,
                   FN(OnSetPlayRegionIn), AlwaysEnabledFlag ),
