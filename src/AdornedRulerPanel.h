@@ -231,6 +231,7 @@ private:
    struct Subgroup;
    struct MainGroup;
 
+   SelectedRegion mLastDrawnSelectedRegion;
    std::pair<double, double> mLastDrawnPlayRegion{};
    bool mLastPlayRegionActive = false;
    double mLastDrawnH{};

@@ -1499,9 +1499,11 @@ void AdornedRulerPanel::DoIdle()
 
    auto &project = *mProject;
    auto &viewInfo = ViewInfo::Get( project );
+   const auto &selectedRegion = viewInfo.selectedRegion;
    const auto &playRegion = viewInfo.playRegion;
 
    changed = changed
+     || mLastDrawnSelectedRegion != selectedRegion
      || mLastDrawnPlayRegion != std::pair{
          playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() }
      || mLastDrawnH != viewInfo.h
@@ -1547,6 +1549,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    mLastDrawnH = viewInfo.h;
    mLastDrawnZoom = viewInfo.GetZoom();
    mLastDrawnPlayRegion = playRegionBounds;
+   mLastDrawnSelectedRegion = viewInfo.selectedRegion;
    // To do, note other fisheye state when we have that
 
    wxPaintDC dc(this);
