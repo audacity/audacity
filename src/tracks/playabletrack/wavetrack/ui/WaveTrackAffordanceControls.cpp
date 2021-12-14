@@ -153,12 +153,12 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
 
     const auto rect = state.rect;
 
-    const auto track = FindTrack();
+    auto track = std::static_pointer_cast<WaveTrack>(FindTrack());
 
     {
         auto handle = WaveClipTrimHandle::HitAnywhere(
             mClipTrimHandle,
-            std::static_pointer_cast<WaveTrack>(track).get(),
+            track,
             pProject,
             state);
 

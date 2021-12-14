@@ -32,6 +32,8 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
 
+#include "float_cast.h"
+
 class BrushHandle;
 class SpectralData;
 
@@ -700,7 +702,12 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       const double p = double(yy) / hiddenMid.height;
       float convertedFreq = numberScale.PositionToValue(p);
       float convertedFreqBinNum = convertedFreq / (sr / windowSize);
-      return static_cast<int>(std::round(convertedFreqBinNum));
+
+      // By default lrintf will round to nearest by default, rounding to even on tie.
+      // std::round that was used here before rounds halfway cases away from zero.
+      // However, we can probably tolerate rounding issues here, as this will only slightly affect
+      // the visuals.
+      return static_cast<int>(lrintf(convertedFreqBinNum));
    };
 
    for (int xx = 0; xx < mid.width; ++xx) {
@@ -745,7 +752,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
          if(hitHopNum) {
             pSelectedBins = &hopBinMap[convertedHopNum];
             freqBinIter = pSelectedBins->begin();
-            advanceFreqBinIter(std::round(yyToFreqBin(0)));
+            advanceFreqBinIter(yyToFreqBin(0));
          }
       }
    
@@ -754,8 +761,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
             maybeSelected = false;
          const float bin     = bins[yy];
          const float nextBin = bins[yy+1];
-         auto binRounded = std::round(yyToFreqBin(yy));
-         auto nextBinRounded = std::round(yyToFreqBin(yy + 1));
+         auto binRounded = yyToFreqBin(yy);
+         auto nextBinRounded = yyToFreqBin(yy + 1);
 
          if(hitHopNum
             && freqBinIter != pSelectedBins->end()
