@@ -1351,11 +1351,19 @@ set( AUDACITY_LIBRARIES
    lib-theme-resources-interface
    lib-track-interface
    lib-transactions-interface
-   lib-network-manager-interface
+)
 
-# This library depends on lib-network-manager
-# If Sentry reporting is disabled, an INTERFACE library
-# will be defined
+if ( ${_OPT}has_networking )
+   list( APPEND AUDACITY_LIBRARIES
+      lib-network-manager-interface
+   )
+endif()
+
+list( APPEND AUDACITY_LIBRARIES
+   # If Sentry reporting is enabled, this library depends on
+   # lib-network-manager
+   # If Sentry reporting is disabled, an INTERFACE library
+   # will be defined
    lib-sentry-reporting
 )
 
