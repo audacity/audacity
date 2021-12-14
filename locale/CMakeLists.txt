@@ -14,7 +14,7 @@ find_package( Gettext QUIET )
 if( GETTEXT_FOUND )
    mark_as_advanced( FORCE GETTEXT_MSGFMT_EXECUTABLE )
    mark_as_advanced( FORCE GETTEXT_MSGMERGE_EXECUTABLE )
-   set( msgfmt "${GETTEXT_MSGFMT_EXECUTABLE}" )
+   set( msgfmt "${GETTEXT_MSGFMT_EXECUTABLE}" --check-format )
 elseif( PYTHON )
    set( msgfmt "${PYTHON}" "${TARGET_ROOT}/msgfmt.py" )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
@@ -56,7 +56,7 @@ foreach( source ${SOURCES} )
       COMMAND
          "${CMAKE_COMMAND}" -E make_directory "${dst}"
       COMMAND
-         ${msgfmt} --check-format -o "${mo}" "${po}"
+         ${msgfmt} -o "${mo}" "${po}"
       OUTPUT
          "${mo}"
    )

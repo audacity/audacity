@@ -575,7 +575,7 @@ bool Exporter::ExamineTracks()
          message = XO("All audio is muted.");
       ShowExportErrorDialog(
          ":576",
-         message);
+         message, AudacityExportCaptionStr(), false);
       return false;
    }
 
@@ -1518,14 +1518,15 @@ TranslatableString AudacityExportMessageStr()
 // we need from them is that they be distinct.
 void ShowExportErrorDialog(wxString ErrorCode,
    TranslatableString message,
-   const TranslatableString& caption)
+   const TranslatableString& caption,
+   bool allowReporting)
 {
    using namespace BasicUI;
    ShowErrorDialog( {},
       caption,
       message.Format( ErrorCode ),
       "Error:_Unable_to_export", // URL.
-      ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
+      ErrorDialogOptions { allowReporting ? ErrorDialogType::ModalErrorReport : ErrorDialogType::ModalError });
 }
 
 void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName)

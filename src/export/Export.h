@@ -332,7 +332,8 @@ AUDACITY_DLL_API TranslatableString AudacityExportMessageStr();
 /// Rather than repeat the code, we have it just once.
 AUDACITY_DLL_API void ShowExportErrorDialog(wxString ErrorCode,
    TranslatableString message = AudacityExportMessageStr(),
-   const TranslatableString& caption = AudacityExportCaptionStr());
+   const TranslatableString& caption = AudacityExportCaptionStr(),
+   bool allowReporting = true);
 
 AUDACITY_DLL_API
 void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName);
