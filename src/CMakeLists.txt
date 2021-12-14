@@ -1341,6 +1341,32 @@ if(HAVE_CLOCK_GETTIME)
    list( APPEND DEFINES HAVE_CLOCK_GETTIME )
 endif()
 
+set( AUDACITY_LIBRARIES
+# A sub-sequence of what is in libraries/CMakeLists.txt :
+   lib-string-utils-interface
+   lib-uuid-interface
+   lib-screen-geometry-interface
+   lib-project-rate-interface
+   lib-ffmpeg-support-interface
+   lib-theme-resources-interface
+   lib-track-interface
+   lib-transactions-interface
+)
+
+if ( ${_OPT}has_networking )
+   list( APPEND AUDACITY_LIBRARIES
+      lib-network-manager-interface
+   )
+endif()
+
+list( APPEND AUDACITY_LIBRARIES
+   # If Sentry reporting is enabled, this library depends on
+   # lib-network-manager
+   # If Sentry reporting is disabled, an INTERFACE library
+   # will be defined
+   lib-sentry-reporting
+)
+
 target_sources( ${TARGET} PRIVATE ${HEADERS} ${SOURCES} ${RESOURCES} ${MAC_RESOURCES} ${WIN_RESOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_compile_options( ${TARGET} PRIVATE ${OPTIONS} )
@@ -1399,7 +1425,7 @@ endif()
 
 # collect dependency information for third party libraries
 list( APPEND GRAPH_EDGES "Audacity [shape=house]" )
-foreach( LIBRARY ${LIBRARIES} )
+foreach( LIBRARY ${LIBRARIES} ${AUDACITY_LIBRARIES} )
    if (NOT LIBRARY MATCHES "PUBLIC|PRIVATE|INTERFACE")
       canonicalize_node_name(LIBRARY "${LIBRARY}")
       list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${LIBRARY}\"" )
