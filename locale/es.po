@@ -1192,7 +1192,7 @@ msgid ""
 "%s is a free program written by a worldwide team of %s. %s is %s for Windows,"
 " Mac, and GNU/Linux (and other Unix-like systems)."
 msgstr ""
-"%s es una aplicación libre, escrita por un equipo de %s. Audacity está %s"
+"%s es una aplicación libre, escrita por un equipo de %s. %s está %s"
 " para Windows, Mac y GNU/Linux (y otros sistemas operativos tipo Unix)."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
@@ -13210,7 +13210,7 @@ msgstr "final"
 #, c-format
 msgid "%s %s and %s %s, %d and %d of %d clip %s"
 msgid_plural "%s %s and %s %s, %d and %d of %d clips %s"
-msgstr[0] "%s %s y %s %s, %d de %d bloque %s"
+msgstr[0] "%s %s y %s %s, %d y %d de %d bloque %s"
 msgstr[1] "%s %s y %s %s, %d y %d de %d bloques %s"
 
 #. i18n-hint:

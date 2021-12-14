@@ -175,6 +175,11 @@ void LogWindow::Show(bool show)
    }
 }
 
+void LogWindow::Destroy()
+{
+   sFrame.reset();
+}
+
 namespace {
 void OnCloseWindow(wxCloseEvent & WXUNUSED(e))
 {

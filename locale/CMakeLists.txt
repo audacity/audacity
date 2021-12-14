@@ -56,7 +56,7 @@ foreach( source ${SOURCES} )
       COMMAND
          "${CMAKE_COMMAND}" -E make_directory "${dst}"
       COMMAND
-         ${msgfmt} -o "${mo}" "${po}"
+         ${msgfmt} --check-format -o "${mo}" "${po}"
       OUTPUT
          "${mo}"
    )

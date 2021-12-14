@@ -70,10 +70,14 @@ protected:
 
    using TypeErasedWriter = std::function< void(const void *, XMLWriter &) >;
    using WriterTable = std::vector< TypeErasedWriter >;
-   WriterTable mWriterTable;
 
-   void Register( TypeErasedWriter writer );
-   void CallWriters( const void *p, XMLWriter &writer );
+   WriterTable mAttributeWriterTable;
+   void RegisterAttributeWriter( TypeErasedWriter writer );
+   void CallAttributeWriters( const void *p, XMLWriter &writer );
+
+   WriterTable mObjectWriterTable;
+   void RegisterObjectWriter( TypeErasedWriter writer );
+   void CallObjectWriters( const void *p, XMLWriter &writer );
 };
 
 /*! A class template of inline type-erasing wrapper functions, but one function
@@ -151,10 +155,10 @@ bool CallAttributeHandler(
 }
 
 //! Typically statically constructed
-struct WriterEntry {
+struct AttributeWriterEntry {
    template <
 /*!
- The Writer may write any number of XML attributes or tags or both.
+ The Writer may write any number of XML attributes, but must not write tags.
  So there should be some reader entries corresponding to each writer, and that
  may be many-to-one.
  The readers must not make assumptions about the sequence in which they will
@@ -163,10 +167,10 @@ struct WriterEntry {
       typename Writer /*!< Often a lambda.
          Takes const Host& and XMLWriter& and returns void */
    >
-   explicit WriterEntry( Writer fn )
+   explicit AttributeWriterEntry( Writer fn )
    {
       // Remember the function, type-erased
-      Get().Register(
+      Get().RegisterAttributeWriter(
          [ fn = std::move(fn) ] ( const void *p, XMLWriter &writer ) {
             // CallObjectAccessor will guarantee p is not null
             return fn( *static_cast<const Host *>(p), writer );
@@ -174,9 +178,38 @@ struct WriterEntry {
    }
 };
 
-void CallWriters( const Host &host, XMLWriter &writer )
+//! Typically statically constructed
+struct ObjectWriterEntry {
+   template <
+/*!
+ The Writer may write any number of XML tags, but no attributes.
+ So there should be some reader entries corresponding to each writer, and that
+ may be many-to-one.
+ The readers must not make assumptions about the sequence in which they will
+ be called.
+ */
+      typename Writer /*!< Often a lambda.
+         Takes const Host& and XMLWriter& and returns void */
+   >
+   explicit ObjectWriterEntry( Writer fn )
+   {
+      // Remember the function, type-erased
+      Get().RegisterObjectWriter(
+         [ fn = std::move(fn) ] ( const void *p, XMLWriter &writer ) {
+            // CallObjectAccessor will guarantee p is not null
+            return fn( *static_cast<const Host *>(p), writer );
+         } );
+   }
+};
+
+void CallAttributeWriters( const Host &host, XMLWriter &writer )
 {
-   XMLMethodRegistryBase::CallWriters( &host, writer );
+   XMLMethodRegistryBase::CallAttributeWriters( &host, writer );
+}
+
+void CallObjectWriters( const Host &host, XMLWriter &writer )
+{
+   XMLMethodRegistryBase::CallObjectWriters( &host, writer );
 }
 
 //! Get the unique instance
