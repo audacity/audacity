@@ -13,6 +13,8 @@
 #include "AudioIOBase.h"
 #include "Envelope.h"
 #include "Mix.h"
+#include "Project.h"
+#include "ProjectSettings.h"
 #include "SampleCount.h"
 #include "ViewInfo.h" // for PlayRegionEvent
 
@@ -168,6 +170,9 @@ void NewDefaultPlaybackPolicy::Initialize(
 
    ViewInfo::Get( mProject ).playRegion.Bind( EVT_PLAY_REGION_CHANGE,
       &NewDefaultPlaybackPolicy::OnPlayRegionChange, this);
+   if (mVariableSpeed)
+      mProject.Bind( EVT_PROJECT_SETTINGS_CHANGE,
+         &NewDefaultPlaybackPolicy::OnPlaySpeedChange, this);
 }
 
 PlaybackPolicy::BufferTimes
@@ -348,6 +353,12 @@ bool NewDefaultPlaybackPolicy::Looping( const PlaybackSchedule & ) const
 void NewDefaultPlaybackPolicy::OnPlayRegionChange( PlayRegionEvent &evt)
 {
    // This executes in the main thread
+   evt.Skip(); // Let other listeners hear the event too
+   WriteMessage();
+}
+
+void NewDefaultPlaybackPolicy::OnPlaySpeedChange(wxCommandEvent &evt)
+{
    evt.Skip(); // Let other listeners hear the event too
    WriteMessage();
 }

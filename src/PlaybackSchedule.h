@@ -462,6 +462,7 @@ public:
 private:
    bool RevertToOldDefault( const PlaybackSchedule &schedule ) const;
    void OnPlayRegionChange(PlayRegionEvent &evt);
+   void OnPlaySpeedChange(wxCommandEvent &evt);
    void WriteMessage();
 
    AudacityProject &mProject;
