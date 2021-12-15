@@ -17,6 +17,9 @@
 #include <chrono>
 #include <vector>
 
+#include <wx/event.h>
+
+class AudacityProject;
 struct AudioIOStartStreamOptions;
 class BoundedEnvelope;
 using PRCrossfadeData = std::vector< std::vector < float > >;
@@ -354,15 +357,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
    PlaybackPolicy &GetPolicy();
    const PlaybackPolicy &GetPolicy() const;
 
-   // The main thread writes changes in response to user events, and
-   // the audio thread later reads, and changes the playback.
-   struct SlotData {
-      double mT0;
-      double mT1;
-      bool mLoopEnabled;
-   };
-   MessageBuffer<SlotData> mMessageChannel;
-
    void Init(
       double t0, double t1,
       const AudioIOStartStreamOptions &options,
@@ -387,8 +381,6 @@ struct AUDACITY_DLL_API PlaybackSchedule {
     * @return The end point (in seconds from project start) as unwarped time
     */
    double SolveWarpedLength(double t0, double length) const;
-
-   void MessageProducer( PlayRegionEvent &evt );
 
    /** \brief True if the end time is before the start time */
    bool ReversedTime() const
@@ -437,9 +429,13 @@ private:
    std::atomic<bool> mPolicyValid{ false };
 };
 
-class NewDefaultPlaybackPolicy final : public PlaybackPolicy {
+class NewDefaultPlaybackPolicy final
+   : public PlaybackPolicy
+   , public NonInterferingBase
+   , public wxEvtHandler
+{
 public:
-   NewDefaultPlaybackPolicy(
+   NewDefaultPlaybackPolicy( AudacityProject &project,
       double trackEndTime, double loopEndTime, bool loopEnabled);
    ~NewDefaultPlaybackPolicy() override;
 
@@ -464,6 +460,19 @@ public:
 
 private:
    bool RevertToOldDefault( const PlaybackSchedule &schedule ) const;
+   void OnPlayRegionChange(PlayRegionEvent &evt);
+   void WriteMessage();
+
+   AudacityProject &mProject;
+
+   // The main thread writes changes in response to user events, and
+   // the audio thread later reads, and changes the playback.
+   struct SlotData {
+      double mT0;
+      double mT1;
+      bool mLoopEnabled;
+   };
+   MessageBuffer<SlotData> mMessageChannel;
 
    const double mTrackEndTime;
    double mLoopEndTime;

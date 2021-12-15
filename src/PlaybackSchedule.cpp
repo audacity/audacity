@@ -14,6 +14,7 @@
 #include "Envelope.h"
 #include "Mix.h"
 #include "SampleCount.h"
+#include "ViewInfo.h" // for PlayRegionEvent
 
 #include <cmath>
 
@@ -146,9 +147,10 @@ const PlaybackPolicy &PlaybackSchedule::GetPolicy() const
    return const_cast<PlaybackSchedule&>(*this).GetPolicy();
 }
 
-NewDefaultPlaybackPolicy::NewDefaultPlaybackPolicy(
+NewDefaultPlaybackPolicy::NewDefaultPlaybackPolicy( AudacityProject &project,
    double trackEndTime, double loopEndTime, bool loopEnabled )
-   : mTrackEndTime{ trackEndTime }
+   : mProject{ project }
+   , mTrackEndTime{ trackEndTime }
    , mLoopEndTime{ loopEndTime }
    , mLoopEnabled{ loopEnabled }
 {}
@@ -159,8 +161,11 @@ void NewDefaultPlaybackPolicy::Initialize(
    PlaybackSchedule &schedule, double rate )
 {
    PlaybackPolicy::Initialize(schedule, rate);
-   schedule.mMessageChannel.Write( {
+   mMessageChannel.Write( {
       schedule.mT0, mLoopEndTime, mLoopEnabled } );
+
+   ViewInfo::Get( mProject ).playRegion.Bind( EVT_PLAY_REGION_CHANGE,
+      &NewDefaultPlaybackPolicy::OnPlayRegionChange, this);
 }
 
 PlaybackPolicy::BufferTimes
@@ -252,7 +257,7 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
    size_t frames, size_t available )
 {
    // This executes in the TrackBufferExchange thread
-   auto data = schedule.mMessageChannel.Read();
+   auto data = mMessageChannel.Read();
 
    bool empty = (data.mT0 >= data.mT1);
    bool kicked = false;
@@ -338,6 +343,21 @@ bool NewDefaultPlaybackPolicy::Looping( const PlaybackSchedule & ) const
    return true;
 }
 
+void NewDefaultPlaybackPolicy::OnPlayRegionChange( PlayRegionEvent &evt)
+{
+   // This executes in the main thread
+   evt.Skip(); // Let other listeners hear the event too
+   WriteMessage();
+}
+
+void NewDefaultPlaybackPolicy::WriteMessage()
+{
+   const auto &region = ViewInfo::Get( mProject ).playRegion;
+   mMessageChannel.Write( {
+      region.GetStart(), region.GetEnd(), region.Active()
+   } );
+}
+
 void PlaybackSchedule::Init(
    const double t0, const double t1,
    const AudioIOStartStreamOptions &options,
@@ -375,8 +395,6 @@ void PlaybackSchedule::Init(
    mWarpedLength = RealDuration(mT1);
 
    mPolicyValid.store(true, std::memory_order_release);
-
-   mMessageChannel.Initialize();
 }
 
 double PlaybackSchedule::ComputeWarpedLength(double t0, double t1) const
@@ -535,18 +553,4 @@ void PlaybackSchedule::TimeQueue::Prime(double time)
    mLastTime = time;
    if ( !mData.empty() )
       mData[0].timeValue = time;
-}
-
-#include "ViewInfo.h"
-void PlaybackSchedule::MessageProducer( PlayRegionEvent &evt)
-{
-   // This executes in the main thread
-   auto *pRegion = evt.pRegion.get();
-   if ( !pRegion )
-      return;
-   const auto &region = *pRegion;
-
-   mMessageChannel.Write( {
-      region.GetStart(), region.GetEnd(), region.Active()
-   } );
 }

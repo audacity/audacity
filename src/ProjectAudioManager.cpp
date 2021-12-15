@@ -1192,8 +1192,9 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
    if (newDefault) {
       const double trackEndTime = TrackList::Get(project).GetEndTime();
       const double loopEndTime = ViewInfo::Get(project).playRegion.GetEnd();
-      options.policyFactory = [trackEndTime, loopEndTime, loopEnabled]() -> std::unique_ptr<PlaybackPolicy> {
-         return std::make_unique<NewDefaultPlaybackPolicy>(
+      options.policyFactory =
+      [&project, trackEndTime, loopEndTime, loopEnabled]() -> std::unique_ptr<PlaybackPolicy> {
+         return std::make_unique<NewDefaultPlaybackPolicy>( project,
             trackEndTime, loopEndTime, loopEnabled); };
 
       // Start play from left edge of selection
