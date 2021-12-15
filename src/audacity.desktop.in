@@ -46,6 +46,7 @@ Comment[zh_CN]=录音和编辑音频文件
 Comment[zh_TW]=錄音和編輯音訊檔案
 
 Icon=@AUDACITY_NAME@
+StartupWMClass=Audacity
 
 Type=Application
 Categories=AudioVideo;Audio;AudioVideoEditing;
