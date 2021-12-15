@@ -436,7 +436,8 @@ class NewDefaultPlaybackPolicy final
 {
 public:
    NewDefaultPlaybackPolicy( AudacityProject &project,
-      double trackEndTime, double loopEndTime, bool loopEnabled);
+      double trackEndTime, double loopEndTime,
+      bool loopEnabled, bool variableSpeed);
    ~NewDefaultPlaybackPolicy() override;
 
    void Initialize( PlaybackSchedule &schedule, double rate ) override;
@@ -479,5 +480,6 @@ private:
    size_t mRemaining{ 0 };
    bool mProgress{ true };
    bool mLoopEnabled{ true };
+   bool mVariableSpeed{ false };
 };
 #endif

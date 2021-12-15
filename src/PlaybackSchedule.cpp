@@ -148,11 +148,13 @@ const PlaybackPolicy &PlaybackSchedule::GetPolicy() const
 }
 
 NewDefaultPlaybackPolicy::NewDefaultPlaybackPolicy( AudacityProject &project,
-   double trackEndTime, double loopEndTime, bool loopEnabled )
+   double trackEndTime, double loopEndTime,
+   bool loopEnabled, bool variableSpeed )
    : mProject{ project }
    , mTrackEndTime{ trackEndTime }
    , mLoopEndTime{ loopEndTime }
    , mLoopEnabled{ loopEnabled }
+   , mVariableSpeed{ variableSpeed }
 {}
 
 NewDefaultPlaybackPolicy::~NewDefaultPlaybackPolicy() = default;
@@ -389,7 +391,7 @@ void PlaybackSchedule::Init(
    SetTrackTime( mT0 );
 
    if (options.policyFactory)
-      mpPlaybackPolicy = options.policyFactory();
+      mpPlaybackPolicy = options.policyFactory(options);
 
    mWarpedTime = 0.0;
    mWarpedLength = RealDuration(mT1);

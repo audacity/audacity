@@ -348,7 +348,7 @@ void Scrubber::MarkScrubStart(
 static AudioIOStartStreamOptions::PolicyFactory
 ScrubbingPlaybackPolicyFactory(const ScrubbingOptions &options)
 {
-   return [options]() -> std::unique_ptr<PlaybackPolicy>
+   return [options](auto&) -> std::unique_ptr<PlaybackPolicy>
    {
       return std::make_unique<ScrubbingPlaybackPolicy>(options);
    };
