@@ -530,7 +530,7 @@ void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
    {
       auto options = DefaultPlayOptions( *p, newDefault );
       // No need to set cutPreview options.
-      options.envelope = mEnvelope.get();
+      options.envelope = bFixedSpeedPlay ? mEnvelope.get() : nullptr;
       options.variableSpeed = !bFixedSpeedPlay;
       auto mode =
          cutPreview ? PlayMode::cutPreviewPlay

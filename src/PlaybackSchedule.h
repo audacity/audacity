@@ -473,12 +473,14 @@ private:
    // The main thread writes changes in response to user events, and
    // the audio thread later reads, and changes the playback.
    struct SlotData {
+      double mPlaySpeed;
       double mT0;
       double mT1;
       bool mLoopEnabled;
    };
    MessageBuffer<SlotData> mMessageChannel;
 
+   double mLastPlaySpeed{ 1.0 };
    const double mTrackEndTime;
    double mLoopEndTime;
    size_t mRemaining{ 0 };
