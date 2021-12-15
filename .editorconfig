@@ -1,0 +1,34 @@
+# https://EditorConfig.org
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 3
+charset = "utf-8"
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[Makefile]
+indent_style = tab
+
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[*.py]
+indent_size = 4
+
+[*.json]
+insert_final_newline = unset
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.sh]
+end_of_line = lf
+indent_size = 4
+
+[*.{bat,ps1}]
+end_of_line = crlf
+ident_size = 4
