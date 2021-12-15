@@ -61,7 +61,6 @@ public:
    // Returns true iff the event should be considered consumed by this:
    // Assume xx is relative to the left edge of TrackPanel!
    bool MaybeStartScrubbing(wxCoord xx);
-   bool StartSpeedPlay(double speed, double time0, double time1);
    bool StartKeyboardScrubbing(double time0, bool backwards);
    double GetKeyboardScrubbingSpeed();
 

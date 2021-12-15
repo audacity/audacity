@@ -779,12 +779,6 @@ void Mixer::SetTimesAndSpeed(double t0, double t1, double speed, bool bSkipping)
    Reposition(t0, bSkipping);
 }
 
-void Mixer::SetSpeedForPlayAtSpeed(double speed)
-{
-   wxASSERT(std::isfinite(speed));
-   mSpeed = fabs(speed);
-}
-
 void Mixer::SetSpeedForKeyboardScrubbing(double speed, double startTime)
 {
    wxASSERT(std::isfinite(speed));

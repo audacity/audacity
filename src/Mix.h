@@ -130,7 +130,6 @@ class AUDACITY_DLL_API Mixer {
    // Used in scrubbing and other nonuniform playback policies.
    void SetTimesAndSpeed(
       double t0, double t1, double speed, bool bSkipping = false);
-   void SetSpeedForPlayAtSpeed(double speed);
    void SetSpeedForKeyboardScrubbing(double speed, double startTime);
 
    /// Current time in seconds (unwarped, i.e. always between startTime and stopTime)
