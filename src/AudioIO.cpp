@@ -91,7 +91,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "portmixer.h"
 #endif
 
-#include <wx/app.h>
 #include <wx/frame.h>
 #include <wx/wxcrtvararg.h>
 #include <wx/log.h>
@@ -1069,7 +1068,7 @@ void AudioIO::CallAfterRecording(PostRecordingAction action)
    // Don't delay it except until idle time.
    // (Recording might start between now and then, but won't go far before
    // the action is done.  So the system isn't bulletproof yet.)
-   wxTheApp->CallAfter(std::move(action));
+   BasicUI::CallAfter(move(action));
 }
 
 bool AudioIO::AllocateBuffers(
@@ -1523,7 +1522,7 @@ void AudioIO::StopStream()
    if (pListener && mNumCaptureChannels > 0)
       pListener->OnAudioIOStopRecording();
 
-   wxTheApp->CallAfter([this]{
+   BasicUI::CallAfter([this]{
       if (mPortStreamV19 && mNumCaptureChannels > 0)
          // Recording was restarted between StopStream and idle time
          // So the actions can keep waiting
