@@ -214,8 +214,8 @@ Mixer::WarpOptions::WarpOptions(const BoundedEnvelope *e)
     : envelope(e), minSpeed(0.0), maxSpeed(0.0)
  {}
 
-Mixer::WarpOptions::WarpOptions(double min, double max)
-   : minSpeed(min), maxSpeed(max)
+Mixer::WarpOptions::WarpOptions(double min, double max, double initial)
+   : minSpeed{min}, maxSpeed{max}, initialSpeed{initial}
 {
    if (minSpeed < 0)
    {
@@ -275,7 +275,7 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
    mTime = startTime;
    mBufferSize = outBufferSize;
    mInterleaved = outInterleaved;
-   mSpeed = 1.0;
+   mSpeed = warpOptions.initialSpeed;
    if( mixerSpec && mixerSpec->GetNumChannels() == mNumChannels &&
          mixerSpec->GetNumTracks() == mNumInputTracks )
       mMixerSpec = mixerSpec;

@@ -87,12 +87,13 @@ class AUDACITY_DLL_API Mixer {
        explicit WarpOptions(const BoundedEnvelope *e);
 
        //! Construct with no time warp
-       WarpOptions(double min, double max);
+       WarpOptions(double min, double max, double initial = 1.0);
 
     private:
        friend class Mixer;
        const BoundedEnvelope *envelope = nullptr;
        double minSpeed, maxSpeed;
+       double initialSpeed{ 1.0 };
     };
 
     //

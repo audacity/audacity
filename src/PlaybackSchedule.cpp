@@ -175,6 +175,16 @@ void NewDefaultPlaybackPolicy::Initialize(
          &NewDefaultPlaybackPolicy::OnPlaySpeedChange, this);
 }
 
+Mixer::WarpOptions NewDefaultPlaybackPolicy::MixerWarpOptions(
+   PlaybackSchedule &schedule)
+{
+   if (mVariableSpeed)
+      // Enable variable rate mixing
+      return Mixer::WarpOptions(0.01, 32.0, GetPlaySpeed());
+   else
+      return PlaybackPolicy::MixerWarpOptions(schedule);
+}
+
 PlaybackPolicy::BufferTimes
 NewDefaultPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
 {
@@ -369,6 +379,13 @@ void NewDefaultPlaybackPolicy::WriteMessage()
    mMessageChannel.Write( {
       region.GetStart(), region.GetEnd(), region.Active()
    } );
+}
+
+double NewDefaultPlaybackPolicy::GetPlaySpeed()
+{
+   return mVariableSpeed
+      ? ProjectSettings::Get(mProject).GetPlaySpeed()
+      : 1.0;
 }
 
 void PlaybackSchedule::Init(

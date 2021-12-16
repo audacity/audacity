@@ -442,6 +442,8 @@ public:
 
    void Initialize( PlaybackSchedule &schedule, double rate ) override;
 
+   Mixer::WarpOptions MixerWarpOptions(PlaybackSchedule &schedule) override;
+
    BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
 
    bool Done( PlaybackSchedule &schedule, unsigned long ) override;
@@ -464,6 +466,7 @@ private:
    void OnPlayRegionChange(PlayRegionEvent &evt);
    void OnPlaySpeedChange(wxCommandEvent &evt);
    void WriteMessage();
+   double GetPlaySpeed();
 
    AudacityProject &mProject;
 
