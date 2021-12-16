@@ -261,10 +261,18 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
    // head, yet loop play in progress will still capture the head
    constexpr auto allowance = 0.5;
 
+   // Looping may become enabled if the main thread said so, but require too
+   // that the loop region is non-empty and the play head is not far to its
+   // right
    bool loopWasEnabled = !RevertToOldDefault(schedule);
    mLoopEnabled = data.mLoopEnabled && !empty &&
       schedule.mTimeQueue.GetLastTime() <= data.mT1 + allowance;
 
+   // Four cases:  looping transitions off, or transitions on, or stays on,
+   // or stays off.
+
+   // If looping transitions on, or remains on and the region changed,
+   // adjust the schedule...
    auto mine = std::tie(schedule.mT0, mLoopEndTime);
    auto theirs = std::tie(data.mT0, data.mT1);
    if ( mLoopEnabled ? (mine != theirs) : loopWasEnabled ) {
@@ -295,25 +303,30 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
       const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
       mRemaining = realTimeRemaining * mRate;
    }
-
-   if (RevertToOldDefault(schedule) && !kicked)
-      return PlaybackPolicy::RepositionPlayback( schedule, playbackMixers,
-         frames, available);
+   else {
+      // ... else the region did not change, or looping is now off, in
+      // which case we have nothing special to do
+      if (RevertToOldDefault(schedule))
+         return PlaybackPolicy::RepositionPlayback( schedule, playbackMixers,
+            frames, available);
+   }
 
    // msmeyer: If playing looped, check if we are at the end of the buffer
    // and if yes, restart from the beginning.
    if (mRemaining <= 0)
    {
+      // Looping jumps left
       for (auto &pMixer : playbackMixers)
          pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0, true );
       schedule.RealTimeRestart();
    }
    else if (kicked)
    {
+      // Play bounds need redefinition
       const auto time = schedule.mTimeQueue.GetLastTime();
       for (auto &pMixer : playbackMixers) {
          // So that the mixer will fetch the next samples from the right place:
-         pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0 );
+         pMixer->SetTimesAndSpeed( time, schedule.mT1, 1.0 );
          pMixer->Reposition(time, true);
       }
    }

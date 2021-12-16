@@ -23,7 +23,6 @@
 
 #include <wx/defs.h>
 #include <wx/sizer.h>
-#include <wx/tokenzr.h>
 
 #include "../AudioIO.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
@@ -42,8 +41,6 @@
 #include "../WaveTrack.h"
 #include "wxFileNameWrapper.h"
 #include "../widgets/ProgressDialog.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/AudacityMessageBox.h"
 
@@ -99,7 +96,6 @@ Effect::Effect()
    mProgress = NULL;
 
    mUIParent = NULL;
-   mUIFlags = 0;
 
    mNumAudioIn = 0;
    mNumAudioOut = 0;
@@ -250,7 +246,7 @@ bool Effect::SupportsAutomation()
    return true;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 bool Effect::SetHost(EffectHostInterface *host)
 {
@@ -352,16 +348,6 @@ size_t Effect::GetTailSize()
    }
 
    return 0;
-}
-
-bool Effect::IsReady()
-{
-   if (mClient)
-   {
-      return mClient->IsReady();
-   }
-
-   return true;
 }
 
 bool Effect::ProcessInitialize(sampleCount totalLen, ChannelNames chanMap)
@@ -530,8 +516,11 @@ int Effect::ShowHostInterface(wxWindow &parent,
    auto result = client->ShowClientInterface(parent, *mHostUIDialog, forceModal);
    if (!mHostUIDialog->IsShown())
       // Client didn't show it, or showed it modally and closed it
-      // So destroy it
-      mHostUIDialog.reset();
+      // So destroy it.
+      // (I think mHostUIDialog only needs to be a local variable in this
+      // function -- that it is always null when the function begins -- but
+      // that may change. PRL)
+      mHostUIDialog->Destroy();
 
    return result;
 }
@@ -570,7 +559,7 @@ bool Effect::LoadUserPreset(const RegistryPath & name)
       return false;
    }
 
-   return SetAutomationParameters(parms);
+   return SetAutomationParametersFromString(parms);
 }
 
 bool Effect::SaveUserPreset(const RegistryPath & name)
@@ -581,10 +570,8 @@ bool Effect::SaveUserPreset(const RegistryPath & name)
    }
 
    wxString parms;
-   if (!GetAutomationParameters(parms))
-   {
+   if (!GetAutomationParametersAsString(parms))
       return false;
-   }
 
    return SetConfig(GetDefinition(), PluginSettings::Private,
       name, wxT("Parameters"), parms);
@@ -680,9 +667,9 @@ static const FileNames::FileTypes &PresetTypes()
 void Effect::ExportPresets()
 {
    wxString params;
-   GetAutomationParameters(params);
-   wxString commandId = GetSquashedName(GetSymbol().Internal()).GET();
-   params =  commandId + ":" + params;
+   GetAutomationParametersAsString(params);
+   auto commandId = GetSquashedName(GetSymbol().Internal());
+   params =  commandId.GET() + ":" + params;
 
    auto path = SelectFile(FileNames::Operation::Presets,
                                      XO("Export Effect Parameters"),
@@ -747,7 +734,7 @@ void Effect::ImportPresets()
          wxString ident = params.BeforeFirst(':');
          params = params.AfterFirst(':');
 
-         wxString commandId = GetSquashedName(GetSymbol().Internal()).GET();
+         auto commandId = GetSquashedName(GetSymbol().Internal());
 
          if (ident != commandId) {
             // effect identifiers are a sensible length!
@@ -768,36 +755,12 @@ void Effect::ImportPresets()
             }
             return;
          }
-         SetAutomationParameters(params);
+         SetAutomationParametersFromString(params);
       }
    }
 
    //SetWindowTitle();
 
-}
-
-CommandID Effect::GetSquashedName(wxString name)
-{
-   // Get rid of leading and trailing white space
-   name.Trim(true).Trim(false);
-
-   if (name.empty())
-   {
-      return name;
-   }
-
-   wxStringTokenizer st(name, wxT(" "));
-   wxString id;
-
-   // CamelCase the name
-   while (st.HasMoreTokens())
-   {
-      wxString tok = st.GetNextToken();
-
-      id += tok.Left(1).MakeUpper() + tok.Mid(1).MakeLower();
-   }
-
-   return id;
 }
 
 bool Effect::HasOptions()
@@ -924,7 +887,7 @@ bool Effect::Startup()
    return true;
 }
 
-bool Effect::GetAutomationParameters(wxString & parms)
+bool Effect::GetAutomationParametersAsString(wxString & parms)
 {
    CommandParameters eap;
 
@@ -947,7 +910,7 @@ bool Effect::GetAutomationParameters(wxString & parms)
    return eap.GetParameters(parms);
 }
 
-bool Effect::SetAutomationParameters(const wxString & parms)
+bool Effect::SetAutomationParametersFromString(const wxString & parms)
 {
    wxString preset = parms;
    bool success = false;
@@ -1008,44 +971,6 @@ bool Effect::SetAutomationParameters(const wxString & parms)
    return TransferDataToWindow();
 }
 
-RegistryPaths Effect::GetUserPresets()
-{
-   RegistryPaths presets;
-
-   GetConfigSubgroups(GetDefinition(), PluginSettings::Private,
-      GetUserPresetsGroup(wxEmptyString), presets);
-
-   std::sort( presets.begin(), presets.end() );
-
-   return presets;
-}
-
-bool Effect::HasCurrentSettings()
-{
-   return HasConfigGroup(GetDefinition(),
-      PluginSettings::Private, GetCurrentSettingsGroup());
-}
-
-bool Effect::HasFactoryDefaults()
-{
-   return HasConfigGroup(GetDefinition(),
-      PluginSettings::Private, GetFactoryDefaultsGroup());
-}
-
-ManualPageID Effect::ManualPage()
-{
-   return {};
-}
-
-FilePath Effect::HelpPage()
-{
-   return {};
-}
-
-void Effect::SetUIFlags(unsigned flags) {
-   mUIFlags = flags;
-}
-
 unsigned Effect::TestUIFlags(unsigned mask) {
    return mask & mUIFlags;
 }
@@ -1073,9 +998,11 @@ bool Effect::DoEffect(double projectRate,
                       TrackList *list,
                       WaveTrackFactory *factory,
                       NotifyingSelectedRegion &selectedRegion,
+                      unsigned flags,
                       wxWindow *pParent,
                       const EffectDialogFactory &dialogFactory)
 {
+   auto cleanup0 = valueRestorer(mUIFlags, flags);
    wxASSERT(selectedRegion.duration() >= 0.0);
 
    mOutputTracks.reset();
@@ -1208,18 +1135,13 @@ bool Effect::Delegate(
    region.setTimes( mT0, mT1 );
 
    return delegate.DoEffect( mProjectRate, mTracks, mFactory,
-      region, &parent, factory );
+      region, mUIFlags, &parent, factory );
 }
 
 // All legacy effects should have this overridden
 bool Effect::Init()
 {
    return true;
-}
-
-int Effect::GetPass()
-{
-   return mPass;
 }
 
 bool Effect::InitPass1()
@@ -2146,11 +2068,6 @@ double Effect::CalcPreviewInputLength(double previewLength)
    return previewLength;
 }
 
-bool Effect::IsHidden()
-{
-   return false;
-}
-
 void Effect::Preview(bool dryOnly)
 {
    if (mNumTracks == 0) { // nothing to preview
@@ -2247,8 +2164,6 @@ void Effect::Preview(bool dryOnly)
 
       mixLeft->Offset(-mixLeft->GetStartTime());
       mixLeft->SetSelected(true);
-      WaveTrackView::Get( *mixLeft )
-         .SetDisplay(WaveTrackViewConstants::NoDisplay);
       auto pLeft = mTracks->Add( mixLeft );
       Track *pRight{};
       if (mixRight) {
@@ -2263,8 +2178,6 @@ void Effect::Preview(bool dryOnly)
          if (src->GetSelected() || mPreviewWithNotSelected) {
             auto dest = src->Copy(mT0, t1);
             dest->SetSelected(src->GetSelected());
-            WaveTrackView::Get( *static_cast<WaveTrack*>(dest.get()) )
-               .SetDisplay(WaveTrackViewConstants::NoDisplay);
             mTracks->Add( dest );
          }
       }

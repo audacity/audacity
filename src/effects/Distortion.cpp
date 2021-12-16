@@ -219,7 +219,7 @@ bool EffectDistortion::SupportsRealtime()
 #endif
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 unsigned EffectDistortion::GetAudioInCount()
 {

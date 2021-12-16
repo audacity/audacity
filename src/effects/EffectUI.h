@@ -211,6 +211,11 @@ private:
    bool mDismissed{};
    bool mNeedsResume{};
 
+#if wxDEBUG_LEVEL
+   // Used only in an assertion
+   bool mClosed{ false };
+#endif
+
    DECLARE_EVENT_TABLE()
 };
 

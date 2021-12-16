@@ -981,9 +981,9 @@ void ProjectManager::ResetProjectToEmpty() {
 
    WaveTrackFactory::Reset( project );
 
-   projectHistory.SetDirty( false );
-   auto &undoManager = UndoManager::Get( project );
-   undoManager.ClearStates();
+   // InitialState will reset UndoManager
+   projectHistory.InitialState();
+   projectHistory.SetDirty(false);
 
    projectFileManager.CloseProject();
    projectFileManager.OpenProject();

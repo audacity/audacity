@@ -130,7 +130,7 @@ EffectType EffectAutoDuck::GetType()
    return EffectTypeProcess;
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 bool EffectAutoDuck::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM(  mDuckAmountDb, DuckAmountDb);
    S.SHUTTLE_PARAM(  mInnerFadeDownLen, InnerFadeDownLen);

@@ -19330,7 +19330,7 @@ msgstr ""
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
-msgid "Error.~%"
+msgid "Error.~%%"
 msgstr "錯誤。~%"
 
 #: plug-ins/SpectralEditParametricEQ.ny
@@ -19596,7 +19596,7 @@ msgstr "錯誤。~%選取區域無效。~%選擇多於  2 個音訊剪輯。"
 #, lisp-format
 msgid ""
 "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr "錯誤。~%選取區域無效~ %E選取區域的開頭或結尾有空白。"
+msgstr "錯誤。~%選取區域無效~%選取區域的開頭或結尾有空白。"
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -20262,7 +20262,7 @@ msgstr "成功。~%檔案已寫入至：~%~s~%"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "警告.~%F無法複製一些檔案:~%"
+msgstr "警告.~%無法複製一些檔案:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format

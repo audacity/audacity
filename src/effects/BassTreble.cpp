@@ -120,7 +120,7 @@ bool EffectBassTreble::SupportsRealtime()
 }
 
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 unsigned EffectBassTreble::GetAudioInCount()
 {
@@ -353,7 +353,7 @@ void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRa
 }
 
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 
 size_t EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,

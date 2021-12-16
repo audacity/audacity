@@ -56,7 +56,7 @@ public:
    wxString GetVersion() override;
    TranslatableString GetDescription() override;
 
-   // EffectComponentInterface implementation
+   // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
    EffectFamilySymbol GetFamily() override;
@@ -66,7 +66,17 @@ public:
    bool SupportsRealtime() override;
    bool SupportsAutomation() override;
 
-   // EffectClientInterface implementation
+   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(CommandParameters & parms) override;
+
+   bool LoadUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(const RegistryPath & name) override;
+
+   RegistryPaths GetFactoryPresets() override;
+   bool LoadFactoryPreset(int id) override;
+   bool LoadFactoryDefaults() override;
+
+   // EffectProcessor implementation
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
@@ -81,7 +91,6 @@ public:
    sampleCount GetLatency() override;
    size_t GetTailSize() override;
 
-   bool IsReady() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
@@ -100,16 +109,6 @@ public:
 
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
-
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
-   bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
-
-   bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
-   RegistryPaths GetFactoryPresets() override;
 
    // EffectUIClientInterface implementation
 
@@ -196,7 +195,6 @@ private:
    bool mUseLatency;
 
    AudioTimeStamp mTimeStamp;
-   bool mReady;
 
    ArrayOf<AudioBufferList> mInputList;
    ArrayOf<AudioBufferList> mOutputList;

@@ -20,9 +20,9 @@
 class RealtimeEffectState
 {
 public:
-   explicit RealtimeEffectState( EffectClientInterface &effect );
+   explicit RealtimeEffectState( EffectProcessor &effect );
 
-   EffectClientInterface &GetEffect() const { return mEffect; }
+   EffectProcessor &GetEffect() const { return mEffect; }
 
    bool RealtimeSuspend();
    bool RealtimeResume();
@@ -32,7 +32,7 @@ public:
    bool IsRealtimeActive();
 
 private:
-   EffectClientInterface &mEffect;
+   EffectProcessor &mEffect;
 
    std::vector<int> mGroupProcessor;
    int mCurrentProcessor;
@@ -110,7 +110,7 @@ bool RealtimeEffectManager::RealtimeIsSuspended()
    return mRealtimeSuspended;
 }
 
-void RealtimeEffectManager::RealtimeAddEffect(EffectClientInterface &effect)
+void RealtimeEffectManager::RealtimeAddEffect(EffectProcessor &effect)
 {
    // Block RealtimeProcess()
    RealtimeSuspend();
@@ -137,7 +137,7 @@ void RealtimeEffectManager::RealtimeAddEffect(EffectClientInterface &effect)
    RealtimeResume();
 }
 
-void RealtimeEffectManager::RealtimeRemoveEffect(EffectClientInterface &effect)
+void RealtimeEffectManager::RealtimeRemoveEffect(EffectProcessor &effect)
 {
    // Block RealtimeProcess()
    RealtimeSuspend();
@@ -235,7 +235,7 @@ void RealtimeEffectManager::RealtimeSuspend()
    mRealtimeLock.Leave();
 }
 
-void RealtimeEffectManager::RealtimeSuspendOne( EffectClientInterface &effect )
+void RealtimeEffectManager::RealtimeSuspendOne( EffectProcessor &effect )
 {
    auto begin = mStates.begin(), end = mStates.end();
    auto found = std::find_if( begin, end,
@@ -268,7 +268,7 @@ void RealtimeEffectManager::RealtimeResume()
    mRealtimeLock.Leave();
 }
 
-void RealtimeEffectManager::RealtimeResumeOne( EffectClientInterface &effect )
+void RealtimeEffectManager::RealtimeResumeOne( EffectProcessor &effect )
 {
    auto begin = mStates.begin(), end = mStates.end();
    auto found = std::find_if( begin, end,
@@ -404,7 +404,7 @@ int RealtimeEffectManager::GetRealtimeLatency()
    return mRealtimeLatency;
 }
 
-RealtimeEffectState::RealtimeEffectState( EffectClientInterface &effect )
+RealtimeEffectState::RealtimeEffectState( EffectProcessor &effect )
    : mEffect{ effect }
 {
 }

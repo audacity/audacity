@@ -106,14 +106,11 @@ public:
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
    ManualPageID ManualPage() override;
+   bool DefineParams( ShuttleParams & S ) override;
 
    // EffectDefinitionInterface implementation
 
    EffectType GetType() override;
-
-   // EffectClientInterface implementation
-
-   bool DefineParams( ShuttleParams & S ) override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
    bool LoadFactoryDefaults() override;

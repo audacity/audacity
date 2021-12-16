@@ -36,8 +36,6 @@ namespace WaveTrackViewConstants
       // Add values here, and update MaxDisplay.
 
       MaxDisplay = Spectrum,
-
-      NoDisplay,            // Preview track has no display
    };
 
    // Only two types of sample display for now, but

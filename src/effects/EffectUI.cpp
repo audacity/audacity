@@ -757,10 +757,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 
 EffectUIHost::~EffectUIHost()
 {
-   CleanupRealtime();
-   if (mNeedsResume)
-      Resume();
-   mClient.CloseUI();
+   wxASSERT(mClosed);
 }
 
 // ============================================================================
@@ -1082,6 +1079,9 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
    mClient.CloseUI();
 
    Destroy();
+#if wxDEBUG_LEVEL
+   mClosed = true;
+#endif
 }
 
 void EffectUIHost::OnApply(wxCommandEvent & evt)
@@ -1862,12 +1862,12 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent, EffectHostInterface &host,
          EffectRack::Get( context.project ).Add(effect);
       }
 #endif
-      effect->SetUIFlags(flags);
       success = effect->DoEffect(
          rate,
          &tracks,
          &trackFactory,
          selectedRegion,
+         flags,
          &window,
          (flags & EffectManager::kConfigured) == 0
             ? DialogFactory

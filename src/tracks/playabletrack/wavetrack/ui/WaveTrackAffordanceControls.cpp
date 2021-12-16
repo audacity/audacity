@@ -153,12 +153,12 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
 
     const auto rect = state.rect;
 
-    const auto track = FindTrack();
+    auto track = std::static_pointer_cast<WaveTrack>(FindTrack());
 
     {
         auto handle = WaveClipTrimHandle::HitAnywhere(
             mClipTrimHandle,
-            std::static_pointer_cast<WaveTrack>(track).get(),
+            track,
             pProject,
             state);
 
@@ -296,8 +296,6 @@ bool WaveTrackAffordanceControls::StartEditClipName(AudacityProject* project)
                 clip->SetName(Command.mName);
                 ProjectHistory::Get(*project).PushState(XO("Modified Clip Name"),
                     XO("Clip Name Edit"));
-
-                return true;
             }
         }
         else
@@ -307,8 +305,8 @@ bool WaveTrackAffordanceControls::StartEditClipName(AudacityProject* project)
 
             mEditedClip = lock;
             mTextEditHelper = MakeTextEditHelper(clip->GetName());
-            return true;
         }
+        return true;
     }
     return false;
 }
@@ -541,8 +539,8 @@ unsigned WaveTrackAffordanceControls::OnAffordanceClick(const TrackPanelMouseEve
             if (affordanceRect.Contains(event.event.GetPosition()) &&
                 StartEditClipName(project))
             {
-                event.event.Skip();
-                return RefreshCode::RefreshCell | RefreshCode::Cancelled;
+                event.event.Skip(false);
+                return RefreshCode::RefreshCell;
             }
         }
     }

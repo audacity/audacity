@@ -1000,8 +1000,12 @@ UIHandle::Result TimeShiftHandle::Release
 
 UIHandle::Result TimeShiftHandle::Cancel(AudacityProject *pProject)
 {
-   ProjectHistory::Get( *pProject ).RollbackState();
-   return RefreshCode::RefreshAll;
+   if(mClipMoveState.initialized)
+   {
+      ProjectHistory::Get( *pProject ).RollbackState();
+      return RefreshCode::RefreshAll;
+   }
+   return RefreshCode::RefreshNone;
 }
 
 void TimeShiftHandle::Draw(

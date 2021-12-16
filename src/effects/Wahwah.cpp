@@ -127,7 +127,7 @@ bool EffectWahwah::SupportsRealtime()
 #endif
 }
 
-// EffectClientInterface implementation
+// EffectProcessor implementation
 
 unsigned EffectWahwah::GetAudioInCount()
 {

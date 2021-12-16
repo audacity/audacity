@@ -221,8 +221,10 @@ enum InfoKeys
 /// Information about one VST effect.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class VSTSubProcess final : public wxProcess,
-                      public EffectDefinitionInterface
+//! This object exists in a separate process, to validate a newly seen plug-in.
+/*! It needs to implement EffectDefinitionInterface but mostly just as stubs */
+class VSTSubProcess final : public wxProcess
+   , public EffectDefinitionInterface
 {
 public:
    VSTSubProcess()
@@ -230,7 +232,7 @@ public:
       Redirect();
    }
 
-   // EffectClientInterface implementation
+   // EffectDefinitionInterface implementation
 
    PluginPath GetPath() override
    {
@@ -291,6 +293,16 @@ public:
    {
       return mAutomatable;
    }
+
+   bool GetAutomationParameters(CommandParameters &) override { return true; }
+   bool SetAutomationParameters(CommandParameters &) override { return true; }
+
+   bool LoadUserPreset(const RegistryPath &) override { return true; }
+   bool SaveUserPreset(const RegistryPath &) override { return true; }
+
+   RegistryPaths GetFactoryPresets() override { return {}; }
+   bool LoadFactoryPreset(int) override { return true; }
+   bool LoadFactoryDefaults() override { return true; }
 
 public:
    wxString mPath;
@@ -1291,7 +1303,7 @@ bool VSTEffect::SupportsAutomation()
 }
 
 // ============================================================================
-// EffectClientInterface Implementation
+// EffectProcessor Implementation
 // ============================================================================
 
 bool VSTEffect::SetHost(EffectHostInterface *host)

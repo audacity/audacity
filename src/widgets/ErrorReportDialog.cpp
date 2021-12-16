@@ -37,6 +37,25 @@
 #include "SentryReport.h"
 #include "CodeConversions.h"
 
+namespace
+{
+// wxWidgets set an inaccessible border for the wxCollapsiblePane
+// which makes layout of the dialog even more difficult.
+// This code was copied from the wxWidgets 3.1.3 collpaneg.cpp
+int GetCollapsiblePaneBorder(wxWindow* root)
+{
+#if defined(__WXMAC__)
+   (void)root;
+   return 6;
+#elif defined(__WXMSW__)
+   return root->ConvertDialogToPixels(wxSize(2, 0)).x;
+#else
+   (void)root;
+   return 5;
+#endif
+}
+}
+
 constexpr int MaxUserCommentLength = 2000;
 constexpr bool ErrorReportDialogHasUserComment = false;
 
@@ -69,90 +88,118 @@ ErrorReportDialog::ErrorReportDialog(
    const wxFont headingFont = wxFont(wxFontInfo(12).Bold());
    const wxFont textFont = wxFont(wxFontInfo(10));
 
+   const int CollapsibleBorderSize = GetCollapsiblePaneBorder(this);
+
    S.SetBorder(0);
 
    S.StartHorizontalLay(wxEXPAND, 0);
    {
-      S.AddSpace(40, 0);
+      S.AddSpace(40 - CollapsibleBorderSize, 0);
+
       S.StartVerticalLay(wxEXPAND, 0);
       {
          S.AddSpace(0, 32);
 
-         S.StartHorizontalLay(wxEXPAND, 1);
+         S.StartHorizontalLay(wxEXPAND, 0);
          {
-            S.StartVerticalLay(0);
+            S.AddSpace(CollapsibleBorderSize);
+
+            S.StartVerticalLay(wxEXPAND, 0);
             {
-               wxBitmap bitmap = wxArtProvider::GetBitmap(
-                  wxART_WARNING, wxART_MESSAGE_BOX, wxSize(24, 24));
+               S.StartHorizontalLay(wxEXPAND, 1);
+               {
+                  S.StartVerticalLay(0);
+                  {
+                     wxBitmap bitmap = wxArtProvider::GetBitmap(
+                        wxART_WARNING, wxART_MESSAGE_BOX, wxSize(24, 24));
 
-               S.Prop(0).AddWindow(
-                  safenew wxStaticBitmap(S.GetParent(), -1, bitmap));
+                     S.Prop(0).AddWindow(
+                        safenew wxStaticBitmap(S.GetParent(), -1, bitmap));
 
-               S.AddSpace(0, 0, 1);
-            }
-            S.EndVerticalLay();
+                     S.AddSpace(0, 0, 1);
+                  }
+                  S.EndVerticalLay();
 
-            S.AddSpace(10, 0);
+                  S.AddSpace(10, 0);
 
-            S.StartVerticalLay(0);
-            {
-               S.AddSpace(0, 7);
+                  S.StartVerticalLay(0);
+                  {
+                     S.AddSpace(0, 7);
 
-               S.Prop(1)
-                  .AddVariableText(message, false, 0, 560)
-                  ->SetFont(headingFont);
+                     S.Prop(1)
+                        .AddVariableText(message, false, 0, 560)
+                        ->SetFont(headingFont);
+                  }
+                  S.EndVerticalLay();
+               }
+               S.EndHorizontalLay();
+
+               S.AddSpace(0, 20);
+
+               S.AddVariableText(XO(
+                     "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."))
+                  ->SetFont(textFont);
+
+               S.AddSpace(0, 6);
+
+               /* i18n-hint: %s will be replaced with "our Privacy Policy" */
+               AccessibleLinksFormatter privacyPolicy(
+                  XO("See %s for more info."));
+
+               privacyPolicy.FormatLink(
+                  /* i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See". */
+                  wxT("%s"),
+                  XO("our Privacy Policy"),
+                  "https://www.audacityteam.org/about/desktop-privacy-notice/");
+
+               privacyPolicy.Populate(S);
             }
             S.EndVerticalLay();
          }
          S.EndHorizontalLay();
 
-         S.AddSpace(0, 20);
+		 S.AddSpace(0, 6);
 
-         S.AddVariableText(XO(
-               "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."))
-            ->SetFont(textFont);
-
-         S.AddSpace(0, 20);
-
-         S.AddVariableText(XO("Problem details"))->SetFont(textFont);
-
-         S.AddSpace(0, 6);
-
-         S.Style(wxTE_RICH | wxTE_READONLY | wxTE_MULTILINE | wxTE_DONTWRAP)
-            .MinSize(wxSize(0, 152))
-            .Name(XO("Problem details"))
-            .AddTextBox({}, mReport->GetReportPreview(), 0);
-
-         S.AddSpace(0, 20);
-
-         if constexpr (ErrorReportDialogHasUserComment)
+         S.StartHorizontalLay(wxEXPAND, 0);
          {
-            S.AddVariableText(XO("Comments"))->SetFont(textFont);
+            auto pane = safenew wxCollapsiblePane(
+               S.GetParent(), wxID_ANY, XO("Problem details").Translation());
 
-            S.AddSpace(0, 6);
+            S.Style(wxEXPAND | wxALIGN_LEFT);
+            S.Prop(1);
+            S.AddWindow(pane);
 
-            mCommentsControl = S.Style(wxTE_MULTILINE)
-                                  .MinSize(wxSize(0, 76))
-                                  .Name(XO("Comments"))
-                                  .AddTextBox({}, {}, 0);
+            ShuttleGui SI(pane->GetPane(), eIsCreating);
 
-            mCommentsControl->SetMaxLength(MaxUserCommentLength);
+            SI.StartVerticalLay();
+            {
+               SI.Style(
+                  wxTE_RICH | wxTE_READONLY | wxTE_MULTILINE | wxTE_DONTWRAP)
+                .MinSize(wxSize(0, 152))
+                .Name(XO("Problem details"))
+                .AddTextBox({}, mReport->GetReportPreview(), 0);
 
-            S.AddSpace(0, 20);
+               if constexpr (ErrorReportDialogHasUserComment)
+               {
+                  SI.AddSpace(0, 20);
+
+                  SI.AddVariableText(XO("Comments"))->SetFont(textFont);
+
+                  SI.AddSpace(0, 6);
+
+                  mCommentsControl = SI.Style(wxTE_MULTILINE)
+                                      .MinSize(wxSize(0, 76))
+                                      .Name(XO("Comments"))
+                                      .AddTextBox({}, {}, 0);
+
+                  mCommentsControl->SetMaxLength(MaxUserCommentLength);
+               }
+            }
+            SI.EndVerticalLay();
          }
+         S.EndHorizontalLay();
 
-         /* i18n-hint: %s will be replaced with "our Privacy Policy" */
-         AccessibleLinksFormatter privacyPolicy(XO("See %s for more info."));
-
-         privacyPolicy.FormatLink(
-            /* i18n-hint: Title of hyperlink to the privacy policy. This is an
-               object of "See". */
-            wxT("%s"), XO("our Privacy Policy"),
-            "https://www.audacityteam.org/about/desktop-privacy-notice/");
-
-         privacyPolicy.Populate(S);
-
-		 S.AddSpace(0, 20);
+         S.AddSpace(0, 20);
 
          S.StartHorizontalLay(wxEXPAND);
          {

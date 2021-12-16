@@ -51,7 +51,7 @@ endif()
 
 add_conan_lib(
    wxWidgets
-   wxwidgets/3.1.3.1-audacity
+   wxwidgets/3.1.3.2-audacity
    REQUIRED
    ALWAYS_ALLOW_CONAN_FALLBACK
    OPTION_NAME wxwidgets
@@ -101,7 +101,7 @@ add_conan_lib(
 
 add_conan_lib(
    libmad
-   libmad/0.15.2b@audacity/stable
+   libmad/0.15.2b-1@
    OPTION_NAME libmad
    PKG_CONFIG "mad >= 0.15.0b" # Ubuntu has broken PC file
 )

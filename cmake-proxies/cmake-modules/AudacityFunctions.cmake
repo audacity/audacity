@@ -486,9 +486,6 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    # collect dependency information
    list( APPEND GRAPH_EDGES "\"${TARGET}\" [${ATTRIBUTES}]" )
-   if (NOT LIBTYPE STREQUAL "MODULE")
-      list( APPEND GRAPH_EDGES "\"Audacity\" -> \"${TARGET}\"" )
-   endif ()
    set(ACCESS PUBLIC PRIVATE INTERFACE)
    foreach( IMPORT ${IMPORT_TARGETS} )
       if(IMPORT IN_LIST ACCESS)
@@ -544,9 +541,6 @@ macro( audacity_library NAME SOURCES IMPORT_TARGETS
       "SHARED"
    )
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
-   # Collect list of libraries for the executable to declare dependency on
-   list( APPEND AUDACITY_LIBRARIES "${NAME}" )
-   set( AUDACITY_LIBRARIES "${AUDACITY_LIBRARIES}" PARENT_SCOPE )
 endmacro()
 
 # A special macro for header only libraries
@@ -560,9 +554,6 @@ macro( audacity_header_only_library NAME SOURCES IMPORT_TARGETS
    target_sources( ${NAME} INTERFACE ${SOURCES})
    target_link_libraries( ${NAME} INTERFACE ${IMPORT_TARGETS} )
    target_compile_definitions( ${NAME} INTERFACE ${ADDITIONAL_DEFINES} )
-
-   list( APPEND AUDACITY_LIBRARIES "${NAME}" )
-   set( AUDACITY_LIBRARIES "${AUDACITY_LIBRARIES}" PARENT_SCOPE )
 endmacro()
 
 #

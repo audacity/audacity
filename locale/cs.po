@@ -1176,7 +1176,7 @@ msgstr "OK"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
-msgstr "Audacity je svobodný program tvořený lidmi z celého světa%s. %s je %s pro Windows  Mac OS X a GNU/Linux (a jiné Unixové systémy)."
+msgstr "%s je svobodný program tvořený lidmi z celého světa%s. %s je %s pro Windows  Mac OS X a GNU/Linux (a jiné Unixové systémy)."
 
 #. i18n-hint: substitutes into "a worldwide team of %s"
 #: src/AboutDialog.cpp
@@ -11728,7 +11728,7 @@ msgid ""
 "\n"
 "Suggested replacement:"
 msgstr ""
-"Štítek nebo stopa \"s\" není možný souborový název. Nemůžete použít \"%s\".\n"
+"Štítek nebo stopa \"%s\" není možný souborový název. Nemůžete použít \"%s\".\n"
 "\n"
 "Navrhovaná náhrada:"
 
