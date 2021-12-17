@@ -1499,14 +1499,13 @@ void AdornedRulerPanel::DoIdle()
 
    auto &project = *mProject;
    auto &viewInfo = ViewInfo::Get( project );
+   const auto &selectedRegion = viewInfo.selectedRegion;
    const auto &playRegion = viewInfo.playRegion;
 
-   bool dirtyPlayRegion = mDirtyPlayRegion
-      || ( mLastDrawnPlayRegion != std::pair{
-         playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() } );
-
    changed = changed
-     || dirtyPlayRegion
+     || mLastDrawnSelectedRegion != selectedRegion
+     || mLastDrawnPlayRegion != std::pair{
+         playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() }
      || mLastDrawnH != viewInfo.h
      || mLastDrawnZoom != viewInfo.GetZoom()
      || mLastPlayRegionActive != viewInfo.playRegion.Active()
@@ -1515,8 +1514,6 @@ void AdornedRulerPanel::DoIdle()
       // Cause ruler redraw anyway, because we may be zooming or scrolling,
       // showing or hiding the scrub bar, etc.
       Refresh();
-
-   mDirtyPlayRegion = false;
 }
 
 void AdornedRulerPanel::OnAudioStartStop(wxCommandEvent & evt)
@@ -1551,8 +1548,8 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
       playRegion.GetLastActiveStart(), playRegion.GetLastActiveEnd() };
    mLastDrawnH = viewInfo.h;
    mLastDrawnZoom = viewInfo.GetZoom();
-   mDirtyPlayRegion = (mLastDrawnPlayRegion != playRegionBounds);
    mLastDrawnPlayRegion = playRegionBounds;
+   mLastDrawnSelectedRegion = viewInfo.selectedRegion;
    // To do, note other fisheye state when we have that
 
    wxPaintDC dc(this);
@@ -1561,7 +1558,27 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    DoDrawBackground(&backDC);
 
-   DoDrawPlayRegion(&backDC);
+   // Find play region rectangle, selected rectangle, and their overlap
+   const auto rectP = PlayRegionRectangle(),
+      rectS = SelectedRegionRectangle(),
+      rectO = rectP.Intersect(rectS);
+
+   // What's left and right of the overlap?  Assume same tops and bottoms
+   const auto top = rectP.GetTop(),
+      bottom = rectP.GetBottom();
+   wxRect rectL{
+      wxPoint{ 0, top }, wxPoint{ this->GetSize().GetWidth() - 1, bottom } };
+   wxRect rectR = {};
+   if (!rectO.IsEmpty()) {
+      rectR = { wxPoint{ rectO.GetRight() + 1, top }, rectL.GetBottomRight() };
+      rectL = { rectL.GetTopLeft(), wxPoint{ rectO.GetLeft() - 1, bottom } };
+   }
+
+   DoDrawPlayRegion(&backDC, rectP, rectL, rectR);
+   DoDrawOverlap(&backDC, rectO);
+   DoDrawSelection(&backDC, rectS, rectL, rectR);
+
+   DoDrawPlayRegionLimits(&backDC, rectP);
 
    DoDrawMarks(&backDC, true);
 
@@ -1668,14 +1685,14 @@ bool AdornedRulerPanel::UpdateRects()
    return true;
 }
 
-double AdornedRulerPanel::Pos2Time(int p, bool ignoreFisheye)
+double AdornedRulerPanel::Pos2Time(int p, bool ignoreFisheye) const
 {
    return mViewInfo->PositionToTime(p, mLeftOffset
       , ignoreFisheye
    );
 }
 
-int AdornedRulerPanel::Time2Pos(double t, bool ignoreFisheye)
+int AdornedRulerPanel::Time2Pos(double t, bool ignoreFisheye) const
 {
    return mViewInfo->TimeToPosition(t, mLeftOffset
       , ignoreFisheye
@@ -2349,16 +2366,49 @@ void AdornedRulerPanel::ShowContextMenu(
    }
 }
 
+using ColorId = decltype(clrTrackInfo);
+
+inline ColorId TimelineBackgroundColor()
+{
+   return clrTrackInfo;
+}
+
+inline ColorId TimelineTextColor()
+{
+   return clrTrackPanelText;
+}
+
+inline ColorId TimelineLimitsColor()
+{
+   return TimelineTextColor();
+}
+
+inline ColorId TimelineLoopRegionColor(bool isActive)
+{
+   return isActive ? clrRulerBackground : clrClipAffordanceInactiveBrush;
+}
+
+static inline wxColour AlphaBlend(ColorId fg, ColorId bg, double alpha)
+{
+   const auto &fgc = theTheme.Colour(fg);
+   const auto &bgc = theTheme.Colour(bg);
+   return wxColour{
+      wxColour::AlphaBlend(fgc.Red(), bgc.Red(), alpha),
+      wxColour::AlphaBlend(fgc.Green(), bgc.Green(), alpha),
+      wxColour::AlphaBlend(fgc.Blue(), bgc.Blue(), alpha)
+   };
+}
+
 void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
 {
    // Draw AdornedRulerPanel border
-   AColor::UseThemeColour( dc, clrTrackInfo );
+   AColor::UseThemeColour( dc, TimelineBackgroundColor() );
    dc->DrawRectangle( mInner );
 
    if (ShowingScrubRuler()) {
       // Let's distinguish the scrubbing area by using a themable
       // colour and a line to set it off.  
-      AColor::UseThemeColour(dc, clrScrubRuler, clrTrackPanelText );
+      AColor::UseThemeColour(dc, clrScrubRuler, TimelineTextColor() );
       wxRect ScrubRect = mScrubZone;
       ScrubRect.Inflate( 1,0 );
       dc->DrawRectangle(ScrubRect);
@@ -2387,7 +2437,7 @@ void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )
    const double max = Pos2Time(mInner.width);
    const double hiddenMax = Pos2Time(mInner.width, true);
 
-   mRuler.SetTickColour( theTheme.Colour( clrTrackPanelText ) );
+   mRuler.SetTickColour( theTheme.Colour( TimelineTextColor() ) );
    mRuler.SetRange( min, max, hiddenMin, hiddenMax );
    mRuler.Draw( *dc );
 }
@@ -2397,61 +2447,113 @@ void AdornedRulerPanel::DrawSelection()
    Refresh();
 }
 
-void AdornedRulerPanel::DoDrawPlayRegion(wxDC * dc)
+wxRect AdornedRulerPanel::PlayRegionRectangle() const
 {
    const auto &viewInfo = ViewInfo::Get(*mProject);
    const auto &playRegion = viewInfo.playRegion;
-   bool isActive = (mLastPlayRegionActive = playRegion.Active());
+   const auto t0 = playRegion.GetLastActiveStart(),
+      t1 = playRegion.GetLastActiveEnd();
+   return RegionRectangle(t0, t1);
+}
 
+wxRect AdornedRulerPanel::SelectedRegionRectangle() const
+{
+   const auto &viewInfo = ViewInfo::Get(*mProject);
+   const auto &selectedRegion = viewInfo.selectedRegion;
+   const auto t0 = selectedRegion.t0(), t1 = selectedRegion.t1();
+   return RegionRectangle(t0, t1);
+}
+
+wxRect AdornedRulerPanel::RegionRectangle(double t0, double t1) const
+{
+   int p0 = -1, p1 = -1;
+   if (t0 == t1)
+      // Make the rectangle off-screen horizontally, but set the height
+      ;
+   else {
+      p0 = max(1, Time2Pos(t0));
+      p1 = min(mInner.width, Time2Pos(t1));
+   }
+
+   const int left = p0, top = mInner.y, right = p1, bottom = mInner.GetBottom();
+   return { wxPoint{left, top}, wxPoint{right, bottom} };
+}
+
+void AdornedRulerPanel::DoDrawPlayRegion(
+   wxDC * dc, const wxRect &rectP, const wxRect &rectL, const wxRect &rectR)
+{
+   const auto &viewInfo = ViewInfo::Get(*mProject);
+   const auto &playRegion = viewInfo.playRegion;
    if (playRegion.IsLastActiveRegionClear())
       return;
 
-   const auto t0 = playRegion.GetLastActiveStart(),
-      t1 = playRegion.GetLastActiveEnd();
-
-   const int p0 = max(1, Time2Pos(t0));
-   const int p1 = min(mInner.width, Time2Pos(t1));
+   const bool isActive = (mLastPlayRegionActive = playRegion.Active());
 
    // Paint the selected region bolder if independently varying, else dim
-   const auto color =
-      isActive ? clrRulerBackground : clrClipAffordanceInactiveBrush;
+   const auto color = TimelineLoopRegionColor(isActive);
    dc->SetBrush( wxBrush( theTheme.Colour( color )) );
    dc->SetPen(   wxPen(   theTheme.Colour( color )) );
 
-   const int left = p0, top = mInner.y, right = p1, bottom = mInner.GetBottom();
-   dc->DrawRectangle( { wxPoint{left, top}, wxPoint{right, bottom} } );
+   dc->DrawRectangle( rectP.Intersect(rectL) );
+   dc->DrawRectangle( rectP.Intersect(rectR) );
+}
+
+void AdornedRulerPanel::DoDrawPlayRegionLimits(wxDC * dc, const wxRect &rect)
+{
+   // Color the edges of the play region like the ticks and numbers
+   ADCChanger cleanup( dc );
+   const auto edgeColour = theTheme.Colour(TimelineLimitsColor());
+   dc->SetPen( { edgeColour } );
+   dc->SetBrush( { edgeColour } );
+
+   constexpr int side = 7;
+   constexpr int sideLessOne = side - 1;
+
+   // Paint two shapes, each a line plus triangle at bottom
+   const auto left = rect.GetLeft(),
+      right = rect.GetRight(),
+      bottom = rect.GetBottom(),
+      top = rect.GetTop();
+   {
+      wxPoint points[]{
+         {left, bottom - sideLessOne},
+         {left - sideLessOne, bottom},
+         {left, bottom},
+         {left, top},
+      };
+      dc->DrawPolygon( 4, points );
+   }
 
    {
-      // Color the edges of the play region like the ticks and numbers
-      ADCChanger cleanup( dc );
-      const auto edgeColour = theTheme.Colour(clrTrackPanelText);
-      dc->SetPen( { edgeColour } );
-      dc->SetBrush( { edgeColour } );
-
-      constexpr int side = 7;
-      constexpr int sideLessOne = side - 1;
-
-      // Paint two shapes, each a line plus triangle at bottom
-      {
-         wxPoint points[]{
-            {left, bottom - sideLessOne},
-            {left - sideLessOne, bottom},
-            {left, bottom},
-            {left, top},
-         };
-         dc->DrawPolygon( 4, points );
-      }
-
-      {
-         wxPoint points[]{
-            {right, top},
-            {right, bottom},
-            {right + sideLessOne, bottom},
-            {right, bottom - sideLessOne},
-         };
-         dc->DrawPolygon( 4, points );
-      }
+      wxPoint points[]{
+         {right, top},
+         {right, bottom},
+         {right + sideLessOne, bottom},
+         {right, bottom - sideLessOne},
+      };
+      dc->DrawPolygon( 4, points );
    }
+}
+
+constexpr double SelectionOpacity = 0.2;
+
+void AdornedRulerPanel::DoDrawOverlap(wxDC * dc, const wxRect &rect)
+{
+   dc->SetBrush( wxBrush{ AlphaBlend(
+      TimelineLimitsColor(), TimelineLoopRegionColor(mLastPlayRegionActive),
+      SelectionOpacity) } );
+   dc->SetPen( *wxTRANSPARENT_PEN );
+   dc->DrawRectangle( rect );
+}
+
+void AdornedRulerPanel::DoDrawSelection(
+   wxDC * dc, const wxRect &rectS, const wxRect &rectL, const wxRect &rectR)
+{
+   dc->SetBrush( wxBrush{ AlphaBlend(
+      TimelineLimitsColor(), TimelineBackgroundColor(), SelectionOpacity) } );
+   dc->SetPen( *wxTRANSPARENT_PEN );
+   dc->DrawRectangle( rectS.Intersect(rectL) );
+   dc->DrawRectangle( rectS.Intersect(rectR) );
 }
 
 int AdornedRulerPanel::GetRulerHeight(bool showScrubBar)
