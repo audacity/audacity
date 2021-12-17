@@ -14,7 +14,7 @@
 #include "Envelope.h"
 #include "Mix.h"
 #include "Project.h"
-#include "ProjectSettings.h"
+#include "ProjectAudioIO.h"
 #include "SampleCount.h"
 #include "ViewInfo.h" // for PlayRegionEvent
 
@@ -172,7 +172,7 @@ void NewDefaultPlaybackPolicy::Initialize(
    ViewInfo::Get( mProject ).playRegion.Bind( EVT_PLAY_REGION_CHANGE,
       &NewDefaultPlaybackPolicy::OnPlayRegionChange, this);
    if (mVariableSpeed)
-      mProject.Bind( EVT_PROJECT_SETTINGS_CHANGE,
+      mProject.Bind( EVT_PLAY_SPEED_CHANGE,
          &NewDefaultPlaybackPolicy::OnPlaySpeedChange, this);
 }
 
@@ -397,7 +397,7 @@ void NewDefaultPlaybackPolicy::WriteMessage()
 double NewDefaultPlaybackPolicy::GetPlaySpeed()
 {
    return mVariableSpeed
-      ? ProjectSettings::Get(mProject).GetPlaySpeed()
+      ? ProjectAudioIO::Get(mProject).GetPlaySpeed()
       : 1.0;
 }
 
