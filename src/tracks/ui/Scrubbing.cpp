@@ -20,7 +20,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectAudioManager.h"
 #include "../../ProjectHistory.h"
 #include "../../ProjectWindows.h"
-#include "../../ProjectSettings.h"
 #include "ProjectStatus.h"
 #include "../../ScrubState.h"
 #include "../../Track.h"
@@ -599,8 +598,8 @@ void Scrubber::ContinueScrubbingPoll()
       // default speed of 1.3 set, so that we can hear there is a problem
       // when playAtSpeedTB not found.
       double speed = 1.3;
-      const auto &settings = ProjectSettings::Get( *mProject );
-      speed = settings.GetPlaySpeed();
+      const auto &projectAudioIO = ProjectAudioIO::Get( *mProject );
+      speed = projectAudioIO.GetPlaySpeed();
       mOptions.minSpeed = speed -0.01;
       mOptions.maxSpeed = speed +0.01;
       mOptions.adjustStart = false;

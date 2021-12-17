@@ -13,10 +13,16 @@ Paul Licameli split from AudacityProject.h
 
 #include "ClientData.h" // to inherit
 #include <wx/weakref.h>
+#include <wx/event.h> // to declare custom event type
 
+#include <atomic>
 #include <memory>
 class AudacityProject;
 class Meter;
+
+// Sent to the project when the play speed changes
+wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
+   EVT_PLAY_SPEED_CHANGE, wxCommandEvent);
 
 ///\ brief Holds per-project state needed for interaction with AudioIO,
 /// including the audio stream token and pointers to meters
@@ -43,12 +49,21 @@ public:
    void SetCaptureMeter(
       const std::shared_ptr<Meter> &capture);
 
+   // Speed play
+   double GetPlaySpeed() const {
+      return mPlaySpeed.load( std::memory_order_relaxed ); }
+   void SetPlaySpeed( double value );
+
 private:
    AudacityProject &mProject;
 
    // Project owned meters
    std::shared_ptr<Meter> mPlaybackMeter;
    std::shared_ptr<Meter> mCaptureMeter;
+
+   // This is atomic because scrubber may read it in a separate thread from
+   // the main
+   std::atomic<double> mPlaySpeed{};
 
    int  mAudioIOToken{ -1 };
 };

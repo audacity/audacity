@@ -36,8 +36,8 @@
 #include "ImageManipulation.h"
 #include "../KeyboardCapture.h"
 #include "Project.h"
+#include "../ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
-#include "../ProjectSettings.h"
 #include "../Envelope.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
@@ -156,7 +156,7 @@ void TranscriptionToolBar::Create(wxWindow * parent)
 void TranscriptionToolBar::SetPlaySpeed( double value )
 {
    mPlaySpeed = value;
-   ProjectSettings::Get( mProject ).SetPlaySpeed( GetPlaySpeed() );
+   ProjectAudioIO::Get( mProject ).SetPlaySpeed( GetPlaySpeed() );
 }
 
 /// This is a convenience function that allows for button creation in
