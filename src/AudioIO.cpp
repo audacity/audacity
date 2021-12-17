@@ -631,7 +631,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
          break;
       }
       wxLogDebug("Attempt %u to open capture stream failed with: %d", 1 + tries, mLastPaError);
-      wxMilliSleep(1000);
+      using namespace std::chrono;
+      std::this_thread::sleep_for(1s);
    }
 
 
@@ -775,8 +776,10 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    if (mPortStreamV19) {
       StopStream();
-      while(mPortStreamV19)
-         wxMilliSleep( 50 );
+      while(mPortStreamV19) {
+         using namespace std::chrono;
+         std::this_thread::sleep_for(50ms);
+      }
    }
 
 #ifdef __WXGTK__
@@ -975,7 +978,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       if (options.playbackStreamPrimer) {
          interval = options.playbackStreamPrimer();
       }
-      wxMilliSleep( interval );
+      using namespace std::chrono;
+      std::this_thread::sleep_for(milliseconds{interval});
    }
 
    if(mNumPlaybackChannels > 0 || mNumCaptureChannels > 0) {
@@ -1353,8 +1357,10 @@ void AudioIO::StopStream()
       // If we can gracefully fade out in 200ms, with the faded-out play buffers making it through
       // the sound card, then do so.  If we can't, don't wait around.  Just stop quickly and accept
       // there will be a click.
-      if( mbMicroFades  && (latency < 150 ))
-         wxMilliSleep( latency + 50);
+      if( mbMicroFades  && (latency < 150 )) {
+         using namespace std::chrono;
+         std::this_thread::sleep_for(milliseconds{latency + 50});
+      }
    }
 
    wxMutexLocker locker(mSuspendAudioThread);
@@ -1403,7 +1409,8 @@ void AudioIO::StopStream()
    mUpdateMeters = false;
    while(mUpdatingMeters) {
       ::wxSafeYield();
-      wxMilliSleep( 50 );
+      using namespace std::chrono;
+      std::this_thread::sleep_for(50ms);
    }
 
    // Turn off HW playthrough if PortMixer is being used
@@ -1450,7 +1457,8 @@ void AudioIO::StopStream()
          //FIXME: Seems like this block of the UI thread isn't bounded,
          //but we cannot allow event handlers to see incompletely terminated
          //AudioIO state with wxYield (or similar functions)
-         wxMilliSleep( 50 );
+         using namespace std::chrono;
+         std::this_thread::sleep_for(50ms);
       }
 
       //
@@ -3041,7 +3049,8 @@ int AudioIoCallback::CallbackDoSeek()
    mAudioThreadTrackBufferExchangeLoopRunning = false;
    while( mAudioThreadTrackBufferExchangeLoopActive )
    {
-      wxMilliSleep( 50 );
+      using namespace std::chrono;
+      std::this_thread::sleep_for(50ms);
    }
 
    // Calculate the NEW time position, in the PortAudio callback
@@ -3072,7 +3081,8 @@ int AudioIoCallback::CallbackDoSeek()
    mAudioThreadShouldCallTrackBufferExchangeOnce = true;
    while( mAudioThreadShouldCallTrackBufferExchangeOnce )
    {
-      wxMilliSleep( 50 );
+      using namespace std::chrono;
+      std::this_thread::sleep_for(50ms);
    }
 
    // Reenable the audio thread

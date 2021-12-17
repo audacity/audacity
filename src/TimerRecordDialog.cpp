@@ -23,6 +23,7 @@
 
 #include "FileNames.h"
 
+#include <thread>
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include <wx/wxcrtvararg.h>
@@ -537,7 +538,8 @@ int TimerRecordDialog::RunWaitDialog()
          // Loop for progress display during recording.
          while (bIsRecording && (updateResult == ProgressResult::Success)) {
             updateResult = progress.UpdateProgress();
-            wxMilliSleep(kTimerInterval);
+            using namespace std::chrono;
+            std::this_thread::sleep_for(milliseconds{kTimerInterval});
             bIsRecording = (wxDateTime::UNow() <= m_DateTime_End); // Call UNow() again for extra accuracy...
          }
       }
@@ -1036,7 +1038,8 @@ ProgressResult TimerRecordDialog::WaitForStart()
    while (updateResult == ProgressResult::Success && !bIsRecording)
    {
       updateResult = progress.UpdateProgress();
-      wxMilliSleep(kTimerInterval);
+      using namespace std::chrono;
+      std::this_thread::sleep_for(milliseconds{kTimerInterval});
       bIsRecording = (m_DateTime_Start <= wxDateTime::UNow());
    }
    return updateResult;
@@ -1086,7 +1089,8 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
    while (iUpdateResult == ProgressResult::Success && !bIsTime)
    {
       iUpdateResult = dlgAction.UpdateProgress();
-      wxMilliSleep(kTimerInterval);
+      using namespace std::chrono;
+      std::this_thread::sleep_for(milliseconds{kTimerInterval});
       bIsTime = (dtActionTime <= wxDateTime::UNow());
    }
    return iUpdateResult;

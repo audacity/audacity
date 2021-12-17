@@ -20,6 +20,7 @@
 #include "TimeWarper.h"
 
 #include <algorithm>
+#include <thread>
 
 #include <wx/defs.h>
 #include <wx/sizer.h>
@@ -2209,7 +2210,8 @@ void Effect::Preview(bool dryOnly)
             (GetName(), XO("Previewing"), pdlgHideCancelButton);
 
             while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
-               ::wxMilliSleep(100);
+               using namespace std::chrono;
+               std::this_thread::sleep_for(100ms);
                previewing = progress.Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
             }
          }
@@ -2217,7 +2219,8 @@ void Effect::Preview(bool dryOnly)
          gAudioIO->StopStream();
 
          while (gAudioIO->IsBusy()) {
-            ::wxMilliSleep(100);
+            using namespace std::chrono;
+            std::this_thread::sleep_for(100ms);
          }
       }
       else {

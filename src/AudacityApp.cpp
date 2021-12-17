@@ -1905,7 +1905,8 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
                return false;
          }
 
-         wxMilliSleep(10);
+         using namespace std::chrono;
+         std::this_thread::sleep_for(10ms);
       }
       // There is another copy of Audacity running.  Force quit.
 

@@ -12,6 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "Scrubbing.h"
 
 #include <functional>
+#include <thread>
 
 #include "../../AudioIO.h"
 #include "../../CommonCommandFlags.h"
@@ -152,7 +153,8 @@ auto Scrubber::ScrubPollerThread::Entry() -> ExitCode
 {
    while( !TestDestroy() )
    {
-      wxThread::Sleep(ScrubPollInterval_ms);
+      using namespace std::chrono;
+      std::this_thread::sleep_for(milliseconds{ScrubPollInterval_ms});
       mScrubber.ContinueScrubbingPoll();
    }
    return 0;

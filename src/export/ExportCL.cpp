@@ -13,6 +13,8 @@
 
 #include "ProjectRate.h"
 
+#include <thread>
+
 #include <wx/app.h>
 #include <wx/button.h>
 #include <wx/cmdline.h>
@@ -570,7 +572,8 @@ ProgressResult ExportCL::Export(AudacityProject *project,
 
    // Wait for process to terminate
    while (process.IsActive()) {
-      wxMilliSleep(10);
+      using namespace std::chrono;
+      std::this_thread::sleep_for(10ms);
       wxTheApp->Yield();
    }
 

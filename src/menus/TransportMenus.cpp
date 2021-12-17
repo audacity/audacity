@@ -37,6 +37,7 @@
 #include "BasicUI.h"
 #include "../widgets/ProgressDialog.h"
 
+#include <thread>
 #include <float.h>
 #include <wx/app.h>
 
@@ -65,7 +66,8 @@ bool MakeReadyToPlay(AudacityProject &project)
       toolbar.SetStop();         //Pushes stop down
       toolbar.OnStop(evt);
 
-      ::wxMilliSleep(100);
+      using namespace std::chrono;
+      std::this_thread::sleep_for(100ms);
    }
 
    // If it didn't stop playing quickly, or if some other
