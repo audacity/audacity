@@ -13,8 +13,10 @@ Paul Licameli split from class TrackView
 
 #include "TrackView.h" // to inherit
 
+class Envelope;
 class SelectHandle;
 class TimeShiftHandle;
+class ZoomInfo;
 
 class AUDACITY_DLL_API CommonTrackView /* not final */ : public TrackView
 {
@@ -34,6 +36,14 @@ public:
    void TimeShiftHitTest();
 
    virtual int GetMinimizedHeight() const override;
+
+   /** \brief Get many envelope points for pixel columns at once,
+    * but don't assume uniform time per pixel.
+   */
+   static void GetEnvelopeValues( const Envelope &env,
+      double aligned_time, double sampleDur,
+      double *buffer, int bufferLen, int leftOffset,
+      const ZoomInfo &zoomInfo);
 
 protected:
    // Rather override this for subclasses:

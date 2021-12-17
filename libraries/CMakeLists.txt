@@ -25,6 +25,7 @@ set( LIBRARIES
    lib-theme-resources
    lib-track
    lib-transactions
+   lib-sample-track
 )
 
 if ( ${_OPT}has_networking )

@@ -20,38 +20,19 @@
 #ifndef __AUDACITY_MIX__
 #define __AUDACITY_MIX__
 
-#include "audacity/Types.h"
 #include "SampleFormat.h"
+#include <functional>
 #include <vector>
 
 class sampleCount;
 class Resample;
 class BoundedEnvelope;
-class WaveTrackFactory;
 class TrackList;
-class WaveTrack;
-using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
-class WaveTrackCache;
+class SampleTrack;
+using SampleTrackConstArray = std::vector < std::shared_ptr < const SampleTrack > >;
+class SampleTrackCache;
 
-/** @brief Mixes together all input tracks, applying any envelopes, amplitude
- * gain, panning, and real-time effects in the process.
- *
- * Takes one or more tracks as input; of all the WaveTrack s that are selected,
- * it mixes them together, applying any envelopes, amplitude gain, panning, and
- * real-time effects in the process.  The resulting pair of tracks (stereo) are
- * "rendered" and have no effects, gain, panning, or envelopes. Other sorts of
- * tracks are ignored.
- * If the start and end times passed are the same this is taken as meaning
- * no explicit time range to process, and the whole occupied length of the
- * input tracks is processed.
- */
-void AUDACITY_DLL_API MixAndRender(TrackList * tracks, WaveTrackFactory *factory,
-                  double rate, sampleFormat format,
-                  double startTime, double endTime,
-                  std::shared_ptr<WaveTrack> &uLeft,
-                  std::shared_ptr<WaveTrack> &uRight);
-
-class AUDACITY_DLL_API MixerSpec
+class SAMPLE_TRACK_API MixerSpec
 {
    unsigned mNumTracks, mNumChannels, mMaxNumChannels;
 
@@ -73,14 +54,24 @@ public:
    MixerSpec& operator=( const MixerSpec &mixerSpec );
 };
 
-class AUDACITY_DLL_API Mixer {
+class SAMPLE_TRACK_API Mixer {
  public:
 
     // An argument to Mixer's constructor
-    class AUDACITY_DLL_API WarpOptions
+    class SAMPLE_TRACK_API WarpOptions
     {
     public:
-       //! Construct with warp from the TimeTrack if there is one
+       //! Type of hook function for default time warp
+       using DefaultWarpFunction =
+          std::function< const BoundedEnvelope*(const TrackList&) >;
+
+       //! Install a default warp function, returning the previously installed
+       static DefaultWarpFunction SetDefaultWarpFunction(DefaultWarpFunction);
+
+       //! Apply the default warp function
+       static const BoundedEnvelope *DefaultWarp(const TrackList &list);
+
+       //! Construct using the default warp function
        explicit WarpOptions(const TrackList &list);
 
        //! Construct with an explicit warp
@@ -99,7 +90,7 @@ class AUDACITY_DLL_API Mixer {
    // Constructor / Destructor
    //
 
-   Mixer(const WaveTrackConstArray &inputTracks, bool mayThrow,
+   Mixer(const SampleTrackConstArray &inputTracks, bool mayThrow,
          const WarpOptions &warpOptions,
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
@@ -146,10 +137,10 @@ class AUDACITY_DLL_API Mixer {
  private:
 
    void Clear();
-   size_t MixSameRate(int *channelFlags, WaveTrackCache &cache,
+   size_t MixSameRate(int *channelFlags, SampleTrackCache &cache,
                            sampleCount *pos);
 
-   size_t MixVariableRates(int *channelFlags, WaveTrackCache &cache,
+   size_t MixVariableRates(int *channelFlags, SampleTrackCache &cache,
                                 sampleCount *pos, float *queue,
                                 int *queueStart, int *queueLen,
                                 Resample * pResample);
@@ -160,7 +151,7 @@ class AUDACITY_DLL_API Mixer {
 
     // Input
    const size_t     mNumInputTracks;
-   ArrayOf<WaveTrackCache> mInputTrack;
+   ArrayOf<SampleTrackCache> mInputTrack;
    bool             mbVariableRates;
    const BoundedEnvelope *mEnvelope;
    ArrayOf<sampleCount> mSamplePos;

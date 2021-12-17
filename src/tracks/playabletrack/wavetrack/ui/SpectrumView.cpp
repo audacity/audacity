@@ -28,6 +28,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../WaveTrack.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "../../../../ProjectSettings.h"
+#include "SampleTrackCache.h"
 
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
@@ -306,9 +307,8 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
    return  AColor::ColorGradientTimeSelected;
 }
 
-
 void DrawClipSpectrum(TrackPanelDrawingContext &context,
-                                   WaveTrackCache &waveTrackCache,
+                                   SampleTrackCache &waveTrackCache,
                                    const WaveClip *clip,
                                    const wxRect &rect,
                                    const std::shared_ptr<SpectralData> &mpSpectralData,
@@ -333,7 +333,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       return;
    }
 
-   const WaveTrack *const track = waveTrackCache.GetTrack().get();
+   const auto track =
+      static_cast<const WaveTrack*>(waveTrackCache.GetTrack().get());
    const SpectrogramSettings &settings = track->GetSpectrogramSettings();
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 
@@ -844,7 +845,7 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
    TrackArt::DrawBackgroundWithSelection(
       context, rect, track, blankSelectedBrush, blankBrush );
 
-   WaveTrackCache cache(track->SharedPointer<const WaveTrack>());
+   SampleTrackCache cache(track->SharedPointer<const WaveTrack>());
    for (const auto &clip: track->GetClips()){
       DrawClipSpectrum( context, cache, clip.get(), rect,
                         mpSpectralData, clip.get() == selectedClip);

@@ -1195,7 +1195,7 @@ bool AudioIO::AllocateBuffers(
                   std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
                // use track time for the end time, not real time!
-               WaveTrackConstArray mixTracks;
+               SampleTrackConstArray mixTracks;
                mixTracks.push_back(mPlaybackTracks[i]);
 
                double startTime, endTime;

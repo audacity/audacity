@@ -81,7 +81,7 @@
 
 #include "FileNames.h"
 #include "float_cast.h"
-#include "../Mix.h"
+#include "Mix.h"
 #include "Prefs.h"
 #include "ProjectRate.h"
 #include "../ProjectSettings.h"

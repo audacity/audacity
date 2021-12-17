@@ -129,8 +129,6 @@ list( APPEND SOURCES
       Diags.h
       EffectHostInterface.cpp
       EffectHostInterface.h
-      Envelope.cpp
-      Envelope.h
       EnvelopeEditor.cpp
       EnvelopeEditor.h
       FFmpeg.cpp
@@ -174,8 +172,8 @@ list( APPEND SOURCES
       Menus.h
       MIDIPlay.cpp
       MIDIPlay.h
-      Mix.cpp
-      Mix.h
+      MixAndRender.cpp
+      MixAndRender.h
       MixerBoard.cpp
       MixerBoard.h
       ModuleManager.cpp
@@ -1349,8 +1347,8 @@ set( AUDACITY_LIBRARIES
    lib-project-rate-interface
    lib-ffmpeg-support-interface
    lib-theme-resources-interface
-   lib-track-interface
    lib-transactions-interface
+   lib-sample-track-interface
 )
 
 if ( ${_OPT}has_networking )
