@@ -95,7 +95,15 @@ private:
    void DoDrawBackground(wxDC * dc);
    void DoDrawEdge(wxDC *dc);
    void DoDrawMarks(wxDC * dc, bool /*text */ );
-   void DoDrawPlayRegion(wxDC * dc);
+   wxRect RegionRectangle(double t0, double t1) const;
+   wxRect PlayRegionRectangle() const;
+   wxRect SelectedRegionRectangle() const;
+   void DoDrawPlayRegion(wxDC * dc,
+      const wxRect &rectP, const wxRect &rectL, const wxRect &rectR);
+   void DoDrawPlayRegionLimits(wxDC * dc, const wxRect &rect);
+   void DoDrawOverlap(wxDC * dc, const wxRect &rect);
+   void DoDrawSelection(wxDC * dc,
+      const wxRect &rectS, const wxRect &rectL, const wxRect &rectR);
 
 public:
    void DoDrawScrubIndicator(wxDC * dc, wxCoord xx, int width, bool scrub, bool seek);
@@ -115,8 +123,8 @@ private:
    enum class MenuChoice { QuickPlay, Scrub };
    void ShowContextMenu( MenuChoice choice, const wxPoint *pPosition);
 
-   double Pos2Time(int p, bool ignoreFisheye = false);
-   int Time2Pos(double t, bool ignoreFisheye = false);
+   double Pos2Time(int p, bool ignoreFisheye = false) const;
+   int Time2Pos(double t, bool ignoreFisheye = false) const;
 
    bool IsWithinMarker(int mousePosX, double markerTime);
 
@@ -231,11 +239,11 @@ private:
    struct Subgroup;
    struct MainGroup;
 
+   SelectedRegion mLastDrawnSelectedRegion;
    std::pair<double, double> mLastDrawnPlayRegion{};
    bool mLastPlayRegionActive = false;
    double mLastDrawnH{};
    double mLastDrawnZoom{};
-   bool mDirtyPlayRegion{};
 };
 
 #endif //define __AUDACITY_ADORNED_RULER_PANEL__
