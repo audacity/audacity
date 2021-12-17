@@ -36,7 +36,6 @@ class RingBuffer;
 class Mixer;
 class Resample;
 class AudioThread;
-class PlayRegionEvent;
 
 class AudacityProject;
 
@@ -513,7 +512,6 @@ private:
 
    void SetOwningProject( const std::shared_ptr<AudacityProject> &pProject );
    void ResetOwningProject();
-   static void LoopPlayUpdate( PlayRegionEvent &evt );
 
    /*!
     Called in a loop from another worker thread that does not have the low-latency constraints

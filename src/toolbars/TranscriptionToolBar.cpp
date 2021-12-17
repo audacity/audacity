@@ -490,11 +490,10 @@ void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
    if ( TrackList::Get( *p ).Any< NoteTrack >() )
       bFixedSpeedPlay = true;
 
-   // Scrubbing only supports straight through play.
-   // So if newDefault or cutPreview, we have to fall back to fixed speed.
+   // If cutPreview, we have to fall back to fixed speed.
    if (newDefault)
       cutPreview = false;
-   bFixedSpeedPlay = bFixedSpeedPlay || newDefault || cutPreview;
+   bFixedSpeedPlay = bFixedSpeedPlay || cutPreview;
    if (bFixedSpeedPlay)
    {
       // Create a BoundedEnvelope if we haven't done so already
@@ -527,11 +526,12 @@ void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
    // Start playing
    if (playRegion.GetStart() < 0)
       return;
-   if (bFixedSpeedPlay)
+
    {
       auto options = DefaultPlayOptions( *p, newDefault );
       // No need to set cutPreview options.
-      options.envelope = mEnvelope.get();
+      options.envelope = bFixedSpeedPlay ? mEnvelope.get() : nullptr;
+      options.variableSpeed = !bFixedSpeedPlay;
       auto mode =
          cutPreview ? PlayMode::cutPreviewPlay
          : newDefault ? PlayMode::loopedPlay
@@ -541,16 +541,10 @@ void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
             options,
             mode);
    }
-   else
-   {
-      auto &scrubber = Scrubber::Get( *p );
-      scrubber.StartSpeedPlay(GetPlaySpeed(),
-         playRegion.GetStart(), playRegion.GetEnd());
-   }
 }
 
 // Come here from button clicks only
-void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & event)
 {
    auto button = mButtons[TTB_PlaySpeed];
 
@@ -558,6 +552,7 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
    const bool cutPreview = mButtons[TTB_PlaySpeed]->WasControlDown();
    const bool looped = !cutPreview &&
       !button->WasShiftDown();
+   OnSpeedSlider(event);
    PlayAtSpeed(looped, cutPreview);
 }
 
