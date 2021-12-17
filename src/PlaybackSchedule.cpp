@@ -37,7 +37,8 @@ Mixer::WarpOptions PlaybackPolicy::MixerWarpOptions(PlaybackSchedule &schedule)
 PlaybackPolicy::BufferTimes
 PlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
 {
-   return { 4.0, 4.0, 10.0 };
+   using namespace std::chrono;
+   return { 4.0s, 4.0s, 10.0s };
 }
 
 bool PlaybackPolicy::AllowSeek(PlaybackSchedule &)
@@ -191,7 +192,8 @@ NewDefaultPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
 {
    // Shorter times than in the default policy so that responses to changes of
    // loop region or speed slider don't lag too much
-   return { 0.05, 0.05, 0.25 };
+   using namespace std::chrono;
+   return { 0.05s, 0.05s, 0.25s };
 }
 
 bool NewDefaultPlaybackPolicy::RevertToOldDefault(const PlaybackSchedule &schedule) const

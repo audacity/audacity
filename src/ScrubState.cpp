@@ -219,7 +219,7 @@ private:
             // When playback follows a fast mouse movement by "stuttering"
             // at maximum playback, don't make stutters too short to be useful.
             if (options.adjustStart &&
-                duration < llrint( options.minStutterTime * rate ) )
+                duration < llrint( options.minStutterTime.count() * rate ) )
                return false;
 
             sampleCount minSample { llrint(options.minTime * rate) };
@@ -324,6 +324,7 @@ Mixer::WarpOptions ScrubbingPlaybackPolicy::MixerWarpOptions(PlaybackSchedule &)
 PlaybackPolicy::BufferTimes
 ScrubbingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
 {
+   using namespace std::chrono;
    return {
       // For useful scrubbing, we can't run too far ahead without checking
       // mouse input, so make fillings more and shorter.
@@ -338,7 +339,7 @@ ScrubbingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
       2 * mOptions.minStutterTime,
 
       // Same as for default policy
-      10.0
+      10.0s
    };
 }
 
@@ -357,7 +358,7 @@ bool ScrubbingPlaybackPolicy::Done(
 std::chrono::milliseconds
 ScrubbingPlaybackPolicy::SleepInterval( PlaybackSchedule & )
 {
-   return std::chrono::milliseconds{ ScrubPollInterval_ms };
+   return ScrubPollInterval_ms;
 }
 
 PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(

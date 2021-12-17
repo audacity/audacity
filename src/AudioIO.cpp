@@ -974,12 +974,12 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mAudioThreadShouldCallTrackBufferExchangeOnce = true;
 
    while( mAudioThreadShouldCallTrackBufferExchangeOnce ) {
-      auto interval = 50ull;
+      using namespace std::chrono;
+      auto interval = 50ms;
       if (options.playbackStreamPrimer) {
          interval = options.playbackStreamPrimer();
       }
-      using namespace std::chrono;
-      std::this_thread::sleep_for(milliseconds{interval});
+      std::this_thread::sleep_for(interval);
    }
 
    if(mNumPlaybackChannels > 0 || mNumCaptureChannels > 0) {
@@ -1130,7 +1130,7 @@ bool AudioIO::AllocateBuffers(
    // usually, make fillings fewer and longer for less CPU usage.
    // What Audio thread produces for playback is then consumed by the PortAudio
    // thread, in many smaller pieces.
-   double playbackTime = lrint(times.batchSize * mRate) / mRate;
+   double playbackTime = lrint(times.batchSize.count() * mRate) / mRate;
    
    wxASSERT( playbackTime >= 0 );
    mPlaybackSamplesToCopy = playbackTime * mRate;
@@ -1153,7 +1153,7 @@ bool AudioIO::AllocateBuffers(
             // Allocate output buffers.  For every output track we allocate
             // a ring buffer of ten seconds
             auto playbackBufferSize =
-               (size_t)lrint(mRate * mPlaybackRingBufferSecs);
+               (size_t)lrint(mRate * mPlaybackRingBufferSecs.count());
 
             // Always make at least one playback buffer
             mPlaybackBuffers.reinit(
@@ -1164,7 +1164,7 @@ bool AudioIO::AllocateBuffers(
             const auto &warpOptions =
                policy.MixerWarpOptions(mPlaybackSchedule);
 
-            mPlaybackQueueMinimum = lrint( mRate * times.latency );
+            mPlaybackQueueMinimum = lrint( mRate * times.latency.count() );
             mPlaybackQueueMinimum =
                std::min( mPlaybackQueueMinimum, playbackBufferSize );
 
@@ -1267,7 +1267,7 @@ bool AudioIO::AllocateBuffers(
          // In the extraordinarily rare case that we can't even afford 100
          // samples, just give up.
          auto playbackBufferSize =
-            (size_t)lrint(mRate * mPlaybackRingBufferSecs);
+            (size_t)lrint(mRate * mPlaybackRingBufferSecs.count());
          if(playbackBufferSize < 100 || mPlaybackSamplesToCopy < 100)
          {
             AudacityMessageBox( XO("Out of memory!") );

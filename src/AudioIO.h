@@ -263,7 +263,7 @@ public:
    bool                mbMicroFades; 
 
    double              mSeek;
-   double              mPlaybackRingBufferSecs;
+   PlaybackPolicy::Duration mPlaybackRingBufferSecs;
    double              mCaptureRingBufferSecs;
 
    /// Preferred batch size for replenishing the playback RingBuffer

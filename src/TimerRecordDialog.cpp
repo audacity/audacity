@@ -86,7 +86,7 @@ enum {
 const int kSlowTimerInterval = 1000; // ms
 
 // This timer interval is used in some busy-wait loops and is much shorter.
-const int kTimerInterval = 50; // ms
+constexpr auto kTimerInterval = std::chrono::milliseconds{50};
 
 static double wxDateTime_to_AudacityTime(wxDateTime& dateTime)
 {
@@ -539,7 +539,7 @@ int TimerRecordDialog::RunWaitDialog()
          while (bIsRecording && (updateResult == ProgressResult::Success)) {
             updateResult = progress.UpdateProgress();
             using namespace std::chrono;
-            std::this_thread::sleep_for(milliseconds{kTimerInterval});
+            std::this_thread::sleep_for(kTimerInterval);
             bIsRecording = (wxDateTime::UNow() <= m_DateTime_End); // Call UNow() again for extra accuracy...
          }
       }
@@ -1039,7 +1039,7 @@ ProgressResult TimerRecordDialog::WaitForStart()
    {
       updateResult = progress.UpdateProgress();
       using namespace std::chrono;
-      std::this_thread::sleep_for(milliseconds{kTimerInterval});
+      std::this_thread::sleep_for(kTimerInterval);
       bIsRecording = (m_DateTime_Start <= wxDateTime::UNow());
    }
    return updateResult;
@@ -1090,7 +1090,7 @@ ProgressResult TimerRecordDialog::PreActionDelay(int iActionIndex, TimerRecordCo
    {
       iUpdateResult = dlgAction.UpdateProgress();
       using namespace std::chrono;
-      std::this_thread::sleep_for(milliseconds{kTimerInterval});
+      std::this_thread::sleep_for(kTimerInterval);
       bIsTime = (dtActionTime <= wxDateTime::UNow());
    }
    return iUpdateResult;

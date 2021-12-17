@@ -52,10 +52,10 @@ enum {
    ScrubSpeedStepsPerOctave = 4,
 #endif
 
-   kOneSecondCountdown = 1000 / ScrubPollInterval_ms,
+   kOneSecondCountdown = 1000 / ScrubPollInterval_ms.count(),
 };
 
-static const double MinStutter = 0.2;
+static constexpr PlaybackPolicy::Duration MinStutter{0.2};
 // static const double MaxDragSpeed = 1.0;
 
 namespace {
@@ -153,8 +153,7 @@ auto Scrubber::ScrubPollerThread::Entry() -> ExitCode
 {
    while( !TestDestroy() )
    {
-      using namespace std::chrono;
-      std::this_thread::sleep_for(milliseconds{ScrubPollInterval_ms});
+      std::this_thread::sleep_for(ScrubPollInterval_ms);
       mScrubber.ContinueScrubbingPoll();
    }
    return 0;
@@ -423,7 +422,7 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
 #endif
             options.playNonWaveTracks = false;
             options.envelope = nullptr;
-            mOptions.delay = (ScrubPollInterval_ms / 1000.0);
+            mOptions.delay = ScrubPollInterval_ms;
             mOptions.isKeyboardScrubbing = false;
             mOptions.initSpeed = 0;
             mOptions.minSpeed = 0.0;
@@ -449,9 +448,9 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
                std::max(0.0, TrackList::Get( *mProject ).GetEndTime());
             mOptions.minStutterTime =
 #ifdef DRAG_SCRUB
-               mDragging ? 0.0 :
+               mDragging ? PlaybackPolicy::Duration{} :
 #endif
-               std::max(0.0, MinStutter);
+               std::max(PlaybackPolicy::Duration{}, MinStutter);
 
             const bool backwards = time1 < time0;
 #ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
@@ -528,7 +527,7 @@ bool Scrubber::StartKeyboardScrubbing(double time0, bool backwards)
 
    // delay and minStutterTime are used in AudioIO::AllocateBuffers() for setting the
    // values of mPlaybackQueueMinimum and mPlaybackSamplesToCopy respectively.
-   mOptions.delay = (ScrubPollInterval_ms / 1000.0);
+   mOptions.delay = ScrubPollInterval_ms;
    mOptions.minStutterTime = mOptions.delay;
 
    mOptions.initSpeed = GetKeyboardScrubbingSpeed();
@@ -730,7 +729,7 @@ void Scrubber::StartPolling()
    mpThread->Run();
 #endif
    
-   mPoller->Start(ScrubPollInterval_ms * 0.9);
+   mPoller->Start(ScrubPollInterval_ms.count() * 0.9);
 }
 
 void Scrubber::StopPolling()
