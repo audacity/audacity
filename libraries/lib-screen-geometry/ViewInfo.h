@@ -118,8 +118,6 @@ struct PlayRegionEvent : public wxEvent
 {
    PlayRegionEvent( wxEventType commandType, PlayRegion *pRegion );
    wxEvent *Clone() const override;
-
-   wxWeakRef< PlayRegion > pRegion;
 };
 
 wxDECLARE_EXPORTED_EVENT( SCREEN_GEOMETRY_API,

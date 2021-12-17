@@ -62,8 +62,8 @@ Mixer::WarpOptions::WarpOptions(const BoundedEnvelope *e)
     : envelope(e), minSpeed(0.0), maxSpeed(0.0)
  {}
 
-Mixer::WarpOptions::WarpOptions(double min, double max)
-   : minSpeed(min), maxSpeed(max)
+Mixer::WarpOptions::WarpOptions(double min, double max, double initial)
+   : minSpeed{min}, maxSpeed{max}, initialSpeed{initial}
 {
    if (minSpeed < 0)
    {
@@ -123,7 +123,7 @@ Mixer::Mixer(const SampleTrackConstArray &inputTracks,
    mTime = startTime;
    mBufferSize = outBufferSize;
    mInterleaved = outInterleaved;
-   mSpeed = 1.0;
+   mSpeed = warpOptions.initialSpeed;
    if( mixerSpec && mixerSpec->GetNumChannels() == mNumChannels &&
          mixerSpec->GetNumTracks() == mNumInputTracks )
       mMixerSpec = mixerSpec;
@@ -625,12 +625,6 @@ void Mixer::SetTimesAndSpeed(double t0, double t1, double speed, bool bSkipping)
    mT1 = t1;
    mSpeed = fabs(speed);
    Reposition(t0, bSkipping);
-}
-
-void Mixer::SetSpeedForPlayAtSpeed(double speed)
-{
-   wxASSERT(std::isfinite(speed));
-   mSpeed = fabs(speed);
 }
 
 void Mixer::SetSpeedForKeyboardScrubbing(double speed, double startTime)

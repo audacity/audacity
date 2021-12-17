@@ -25,7 +25,6 @@ struct ScrubbingOptions {
    double minTime {};
 
    bool bySpeed {};
-   bool isPlayingAtSpeed{};
    bool isKeyboardScrubbing{};
 
    double delay {};

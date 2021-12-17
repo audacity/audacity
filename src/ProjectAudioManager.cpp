@@ -419,7 +419,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
             std::swap(tcp0, tcp1);
          AudioIOStartStreamOptions myOptions = options;
          myOptions.policyFactory =
-            [tless, diff]() -> std::unique_ptr<PlaybackPolicy> {
+            [tless, diff](auto&) -> std::unique_ptr<PlaybackPolicy> {
                return std::make_unique<CutPreviewPlaybackPolicy>(tless, diff);
             };
          token = gAudioIO->StartStream(
@@ -1191,9 +1191,14 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
    if (newDefault) {
       const double trackEndTime = TrackList::Get(project).GetEndTime();
       const double loopEndTime = ViewInfo::Get(project).playRegion.GetEnd();
-      options.policyFactory = [trackEndTime, loopEndTime, loopEnabled]() -> std::unique_ptr<PlaybackPolicy> {
-         return std::make_unique<NewDefaultPlaybackPolicy>(
-            trackEndTime, loopEndTime, loopEnabled); };
+      options.policyFactory = [&project, trackEndTime, loopEndTime](
+         const AudioIOStartStreamOptions &options)
+            -> std::unique_ptr<PlaybackPolicy>
+      {
+         return std::make_unique<NewDefaultPlaybackPolicy>( project,
+            trackEndTime, loopEndTime,
+            options.loopEnabled, options.variableSpeed);
+      };
 
       // Start play from left edge of selection
       options.pStartTime.emplace(ViewInfo::Get(project).selectedRegion.t0());

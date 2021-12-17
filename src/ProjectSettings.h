@@ -65,8 +65,8 @@ public:
    // Values retrievable from GetInt() of the event for settings change
    enum EventCode : int {
       ChangedSyncLock,
-      ChangedProjectRate,
-      ChangedTool
+      ChangedTool,
+      ChangedPlaySpeed,
    };
 
    explicit ProjectSettings( AudacityProject &project );
@@ -106,9 +106,8 @@ public:
    // Speed play
    double GetPlaySpeed() const {
       return mPlaySpeed.load( std::memory_order_relaxed ); }
-   void SetPlaySpeed( double value ) {
-      mPlaySpeed.store( value, std::memory_order_relaxed ); }
-
+   void SetPlaySpeed( double value );
+   
    // Selection Format
    void SetSelectionFormat(const NumericFormatSymbol & format);
    const NumericFormatSymbol & GetSelectionFormat() const;

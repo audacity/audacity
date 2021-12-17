@@ -78,12 +78,13 @@ class SAMPLE_TRACK_API Mixer {
        explicit WarpOptions(const BoundedEnvelope *e);
 
        //! Construct with no time warp
-       WarpOptions(double min, double max);
+       WarpOptions(double min, double max, double initial = 1.0);
 
     private:
        friend class Mixer;
        const BoundedEnvelope *envelope = nullptr;
        double minSpeed, maxSpeed;
+       double initialSpeed{ 1.0 };
     };
 
     //
@@ -121,7 +122,6 @@ class SAMPLE_TRACK_API Mixer {
    // Used in scrubbing and other nonuniform playback policies.
    void SetTimesAndSpeed(
       double t0, double t1, double speed, bool bSkipping = false);
-   void SetSpeedForPlayAtSpeed(double speed);
    void SetSpeedForKeyboardScrubbing(double speed, double startTime);
 
    /// Current time in seconds (unwarped, i.e. always between startTime and stopTime)

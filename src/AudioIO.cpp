@@ -119,8 +119,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectWindows.h"
-#include "TransactionScope.h"
-#include "ViewInfo.h" // for PlayRegionEvent
 #include "WaveTrack.h"
 #include "TransactionScope.h"
 
@@ -686,25 +684,11 @@ void AudioIO::SetOwningProject(
    }
 
    mOwningProject = pProject;
-
-   if (pProject)
-      ViewInfo::Get( *pProject ).playRegion.Bind(
-         EVT_PLAY_REGION_CHANGE, AudioIO::LoopPlayUpdate);
 }
 
 void AudioIO::ResetOwningProject()
 {
-   if ( auto pOwningProject = mOwningProject.lock() )
-      ViewInfo::Get( *pOwningProject ).playRegion.Unbind(
-         EVT_PLAY_REGION_CHANGE, AudioIO::LoopPlayUpdate);
-
    mOwningProject.reset();
-}
-
-void AudioIO::LoopPlayUpdate( PlayRegionEvent &evt )
-{
-   evt.Skip();
-   AudioIO::Get()->mPlaybackSchedule.MessageProducer( evt );
 }
 
 void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
