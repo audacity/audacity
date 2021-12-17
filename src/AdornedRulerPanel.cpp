@@ -509,7 +509,7 @@ void AdornedRulerPanel::ScrubbingRulerOverlay::Update()
       // These determine which shape is drawn on the ruler, and whether
       // in the scrub or the qp zone
       mNewScrub =
-         !ruler->Target() && // not doing some other drag in the ruler
+         !ruler->IsMouseCaptured() && // not doing some other drag in the ruler
          (ruler->LastCell() == ruler->mScrubbingCell ||
           (scrubber.HasMark()));
       mNewSeek = mNewScrub &&
