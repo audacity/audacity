@@ -41,8 +41,6 @@ class EffectRack;
 class AudacityCommand;
 
 
-class NotifyingSelectedRegion;
-
 class AUDACITY_DLL_API EffectManager
 {
 public:

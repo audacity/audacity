@@ -15,22 +15,10 @@ Paul Licameli
 #include <algorithm>
 #include "XMLAttributeValueView.h"
 
+#include "BasicUI.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "XMLWriter.h"
-
-wxDEFINE_EVENT( EVT_SELECTED_REGION_CHANGE, SelectedRegionEvent );
-
-SelectedRegionEvent::SelectedRegionEvent(
-   wxEventType commandType, NotifyingSelectedRegion *pReg )
-: wxEvent{ 0, commandType }
-, pRegion{ pReg }
-{}
-
-wxEvent *SelectedRegionEvent::Clone() const
-{
-   return safenew SelectedRegionEvent{ *this };
-}
 
 XMLMethodRegistryBase::Mutators<NotifyingSelectedRegion>
 NotifyingSelectedRegion::Mutators(
@@ -146,23 +134,13 @@ bool NotifyingSelectedRegion::setF1(double f, bool maySwap)
 
 void NotifyingSelectedRegion::Notify( bool delayed )
 {
-   SelectedRegionEvent evt{ EVT_SELECTED_REGION_CHANGE, this };
-   if ( delayed )
-      QueueEvent( evt.Clone() );
+   if (delayed)
+      BasicUI::CallAfter([This = wxWeakRef(this)]{
+         if (This)
+            This->Publish({});
+      });
    else
-      ProcessEvent( evt );
-}
-
-wxDEFINE_EVENT( EVT_PLAY_REGION_CHANGE, PlayRegionEvent );
-
-PlayRegionEvent::PlayRegionEvent(
-   wxEventType commandType, PlayRegion *pReg )
-: wxEvent{ 0, commandType }
-{}
-
-wxEvent *PlayRegionEvent::Clone() const
-{
-   return safenew PlayRegionEvent{ *this };
+      Publish({});
 }
 
 void PlayRegion::SetActive( bool active )
@@ -243,8 +221,7 @@ void PlayRegion::Order()
 
 void PlayRegion::Notify()
 {
-   PlayRegionEvent evt{ EVT_PLAY_REGION_CHANGE, this };
-   ProcessEvent( evt );
+   Publish({});
 }
 
 const TranslatableString LoopToggleText = XXO("&Loop On/Off");

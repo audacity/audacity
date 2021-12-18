@@ -13,6 +13,7 @@
 
 #include "CellularPanel.h"
 #include "widgets/Ruler.h" // member variable
+#include "Observer.h"
 #include "Prefs.h"
 #include "ViewInfo.h" // for PlayRegion
 
@@ -84,7 +85,7 @@ private:
    void OnSize(wxSizeEvent &evt);
    void OnLeave(wxMouseEvent &evt);
    void OnThemeChange(wxCommandEvent& evt);
-   void OnSelectionChange(SelectedRegionEvent& evt);
+   void OnSelectionChange(Observer::Message);
    void DoSelectionChange( const SelectedRegion &selectedRegion );
    bool UpdateRects();
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
@@ -235,6 +236,8 @@ private:
    
    class ScrubbingCell;
    std::shared_ptr<ScrubbingCell> mScrubbingCell;
+
+   Observer::Subscription mSubscription;
 
    // classes implementing subdivision for CellularPanel
    struct Subgroup;

@@ -18,6 +18,8 @@
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../ProjectHistory.h"
 
+#include <wx/event.h>
+
 WaveTrackAffordanceHandle::WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, const std::shared_ptr<WaveClip>& target)
    : AffordanceHandle(track), mTarget(target)
 { }

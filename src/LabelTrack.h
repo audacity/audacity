@@ -21,7 +21,6 @@
 class wxTextFile;
 
 class AudacityProject;
-class NotifyingSelectedRegion;
 class TimeWarper;
 
 class LabelTrack;

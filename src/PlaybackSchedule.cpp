@@ -170,8 +170,8 @@ void NewDefaultPlaybackPolicy::Initialize(
    mMessageChannel.Write( { mLastPlaySpeed,
       schedule.mT0, mLoopEndTime, mLoopEnabled } );
 
-   ViewInfo::Get( mProject ).playRegion.Bind( EVT_PLAY_REGION_CHANGE,
-      &NewDefaultPlaybackPolicy::OnPlayRegionChange, this);
+   mSubscription = ViewInfo::Get( mProject ).playRegion.Subscribe(
+      *this, &NewDefaultPlaybackPolicy::OnPlayRegionChange);
    if (mVariableSpeed)
       mProject.Bind( EVT_PLAY_SPEED_CHANGE,
          &NewDefaultPlaybackPolicy::OnPlaySpeedChange, this);
@@ -386,10 +386,9 @@ bool NewDefaultPlaybackPolicy::Looping( const PlaybackSchedule & ) const
    return mLoopEnabled;
 }
 
-void NewDefaultPlaybackPolicy::OnPlayRegionChange( PlayRegionEvent &evt)
+void NewDefaultPlaybackPolicy::OnPlayRegionChange(Observer::Message)
 {
    // This executes in the main thread
-   evt.Skip(); // Let other listeners hear the event too
    WriteMessage();
 }
 
