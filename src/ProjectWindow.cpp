@@ -1679,7 +1679,7 @@ void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
 
    auto cleanup = finally([&]{
       // Propagate the message to other listeners bound to this
-      this->SafelyProcessEvent( event );
+      this->Publish({});
    });
 
    if(!ProjectAudioIO::Get( *mProject ).IsAudioActive())

@@ -15,6 +15,7 @@ Paul Licameli split from AudacityProject.h
 #include "ProjectWindowBase.h" // to inherit
 #include "TrackPanelListener.h" // to inherit
 #include "Prefs.h"
+#include "Observer.h"
 
 class Track;
 
@@ -58,6 +59,7 @@ public:
    void UpdateStatusWidths();
 
    class PlaybackScroller final : public wxEvtHandler
+      , public Observer::Publisher<>
    {
    public:
       explicit PlaybackScroller(AudacityProject *project);
