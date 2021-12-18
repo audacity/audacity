@@ -14,6 +14,8 @@ Paul Licameli split from AudacityProject.h
 #include <memory>
 #include <unordered_set>
 
+#include <wx/event.h>
+
 #include "ClientData.h" // to inherit
 #include "Prefs.h" // to inherit
 #include "XMLTagHandler.h" // to inherit

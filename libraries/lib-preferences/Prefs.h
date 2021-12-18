@@ -41,7 +41,6 @@
 #include "FileConfig.h"
 
 #include <memory>
-#include <wx/event.h> // to declare custom event types
 
 class wxFileName;
 
