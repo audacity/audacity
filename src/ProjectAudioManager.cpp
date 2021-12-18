@@ -22,6 +22,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "LabelTrack.h"
 #include "Menus.h"
 #include "Meter.h"
+#include "Mix.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
@@ -31,7 +32,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectStatus.h"
 #include "ProjectWindows.h"
 #include "ScrubState.h"
-#include "TimeTrack.h"
 #include "TrackPanelAx.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -419,7 +419,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
             std::swap(tcp0, tcp1);
          AudioIOStartStreamOptions myOptions = options;
          myOptions.policyFactory =
-            [tless, diff]() -> std::unique_ptr<PlaybackPolicy> {
+            [tless, diff](auto&) -> std::unique_ptr<PlaybackPolicy> {
                return std::make_unique<CutPreviewPlaybackPolicy>(tless, diff);
             };
          token = gAudioIO->StartStream(
@@ -1182,8 +1182,7 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
       ProjectRate::Get( project ).GetRate() };
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   auto timeTrack = *TrackList::Get( project ).Any<TimeTrack>().begin();
-   options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
+   options.envelope = Mixer::WarpOptions::DefaultWarp(TrackList::Get(project));
    options.listener = ProjectAudioManager::Get( project ).shared_from_this();
    
    bool loopEnabled = ViewInfo::Get(project).playRegion.Active();
@@ -1192,9 +1191,14 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
    if (newDefault) {
       const double trackEndTime = TrackList::Get(project).GetEndTime();
       const double loopEndTime = ViewInfo::Get(project).playRegion.GetEnd();
-      options.policyFactory = [trackEndTime, loopEndTime, loopEnabled]() -> std::unique_ptr<PlaybackPolicy> {
-         return std::make_unique<NewDefaultPlaybackPolicy>(
-            trackEndTime, loopEndTime, loopEnabled); };
+      options.policyFactory = [&project, trackEndTime, loopEndTime](
+         const AudioIOStartStreamOptions &options)
+            -> std::unique_ptr<PlaybackPolicy>
+      {
+         return std::make_unique<NewDefaultPlaybackPolicy>( project,
+            trackEndTime, loopEndTime,
+            options.loopEnabled, options.variableSpeed);
+      };
 
       // Start play from left edge of selection
       options.pStartTime.emplace(ViewInfo::Get(project).selectedRegion.t0());

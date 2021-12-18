@@ -48,7 +48,7 @@
 
 #include "Export.h"
 #include "FileIO.h"
-#include "../Mix.h"
+#include "Mix.h"
 #include "Prefs.h"
 #include "ProjectRate.h"
 #include "../ShuttleGui.h"

@@ -158,7 +158,6 @@ wxDEFINE_EVENT( EVT_PLAY_REGION_CHANGE, PlayRegionEvent );
 PlayRegionEvent::PlayRegionEvent(
    wxEventType commandType, PlayRegion *pReg )
 : wxEvent{ 0, commandType }
-, pRegion{ pReg }
 {}
 
 wxEvent *PlayRegionEvent::Clone() const

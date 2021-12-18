@@ -13,7 +13,10 @@
 #include "AudioIOBase.h"
 #include "Envelope.h"
 #include "Mix.h"
+#include "Project.h"
+#include "ProjectSettings.h"
 #include "SampleCount.h"
+#include "ViewInfo.h" // for PlayRegionEvent
 
 #include <cmath>
 
@@ -146,11 +149,14 @@ const PlaybackPolicy &PlaybackSchedule::GetPolicy() const
    return const_cast<PlaybackSchedule&>(*this).GetPolicy();
 }
 
-NewDefaultPlaybackPolicy::NewDefaultPlaybackPolicy(
-   double trackEndTime, double loopEndTime, bool loopEnabled )
-   : mTrackEndTime{ trackEndTime }
+NewDefaultPlaybackPolicy::NewDefaultPlaybackPolicy( AudacityProject &project,
+   double trackEndTime, double loopEndTime,
+   bool loopEnabled, bool variableSpeed )
+   : mProject{ project }
+   , mTrackEndTime{ trackEndTime }
    , mLoopEndTime{ loopEndTime }
    , mLoopEnabled{ loopEnabled }
+   , mVariableSpeed{ variableSpeed }
 {}
 
 NewDefaultPlaybackPolicy::~NewDefaultPlaybackPolicy() = default;
@@ -159,16 +165,33 @@ void NewDefaultPlaybackPolicy::Initialize(
    PlaybackSchedule &schedule, double rate )
 {
    PlaybackPolicy::Initialize(schedule, rate);
-   schedule.mMessageChannel.Write( {
+   mLastPlaySpeed = GetPlaySpeed();
+   mMessageChannel.Write( { mLastPlaySpeed,
       schedule.mT0, mLoopEndTime, mLoopEnabled } );
+
+   ViewInfo::Get( mProject ).playRegion.Bind( EVT_PLAY_REGION_CHANGE,
+      &NewDefaultPlaybackPolicy::OnPlayRegionChange, this);
+   if (mVariableSpeed)
+      mProject.Bind( EVT_PROJECT_SETTINGS_CHANGE,
+         &NewDefaultPlaybackPolicy::OnPlaySpeedChange, this);
+}
+
+Mixer::WarpOptions NewDefaultPlaybackPolicy::MixerWarpOptions(
+   PlaybackSchedule &schedule)
+{
+   if (mVariableSpeed)
+      // Enable variable rate mixing
+      return Mixer::WarpOptions(0.01, 32.0, GetPlaySpeed());
+   else
+      return PlaybackPolicy::MixerWarpOptions(schedule);
 }
 
 PlaybackPolicy::BufferTimes
 NewDefaultPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
 {
    // Shorter times than in the default policy so that responses to changes of
-   // selection don't lag too much
-   return { 0.5, 0.5, 1.0 };
+   // loop region or speed slider don't lag too much
+   return { 0.05, 0.05, 0.25 };
 }
 
 bool NewDefaultPlaybackPolicy::RevertToOldDefault(const PlaybackSchedule &schedule) const
@@ -190,16 +213,17 @@ PlaybackSlice
 NewDefaultPlaybackPolicy::GetPlaybackSlice(
    PlaybackSchedule &schedule, size_t available)
 {
+   // How many samples to produce for each channel.
+   const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
+   mRemaining = realTimeRemaining * mRate;
+
    if (RevertToOldDefault(schedule))
       return PlaybackPolicy::GetPlaybackSlice(schedule, available);
 
-   // How many samples to produce for each channel.
-   const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
    auto frames = available;
    auto toProduce = frames;
    double deltat = frames / mRate;
 
-   mRemaining = realTimeRemaining * mRate;
    if (deltat > realTimeRemaining)
    {
       toProduce = frames = mRemaining;
@@ -222,7 +246,7 @@ NewDefaultPlaybackPolicy::GetPlaybackSlice(
 std::pair<double, double> NewDefaultPlaybackPolicy::AdvancedTrackTime(
    PlaybackSchedule &schedule, double trackTime, size_t nSamples )
 {
-   if (RevertToOldDefault(schedule))
+   if (!mVariableSpeed && RevertToOldDefault(schedule))
       return PlaybackPolicy::AdvancedTrackTime(schedule, trackTime, nSamples);
 
    mRemaining -= std::min(mRemaining, nSamples);
@@ -234,7 +258,7 @@ std::pair<double, double> NewDefaultPlaybackPolicy::AdvancedTrackTime(
    if ( fabs(schedule.mT0 - schedule.mT1) < 1e-9 )
       return {schedule.mT0, schedule.mT0};
 
-   auto realDuration = nSamples / mRate;
+   auto realDuration = (nSamples / mRate) * mLastPlaySpeed;
    if (schedule.ReversedTime())
       realDuration *= -1.0;
 
@@ -252,7 +276,13 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
    size_t frames, size_t available )
 {
    // This executes in the TrackBufferExchange thread
-   auto data = schedule.mMessageChannel.Read();
+   auto data = mMessageChannel.Read();
+
+   bool speedChange = false;
+   if (mVariableSpeed) {
+      speedChange = (mLastPlaySpeed != data.mPlaySpeed);
+      mLastPlaySpeed = data.mPlaySpeed;
+   }
 
    bool empty = (data.mT0 >= data.mT1);
    bool kicked = false;
@@ -270,6 +300,7 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
 
    // Four cases:  looping transitions off, or transitions on, or stays on,
    // or stays off.
+   // Besides which, the variable speed slider may have changed.
 
    // If looping transitions on, or remains on and the region changed,
    // adjust the schedule...
@@ -303,6 +334,9 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
       const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
       mRemaining = realTimeRemaining * mRate;
    }
+   else if (speedChange)
+      // Don't return early
+      kicked = true;
    else {
       // ... else the region did not change, or looping is now off, in
       // which case we have nothing special to do
@@ -317,7 +351,8 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
    {
       // Looping jumps left
       for (auto &pMixer : playbackMixers)
-         pMixer->SetTimesAndSpeed( schedule.mT0, schedule.mT1, 1.0, true );
+         pMixer->SetTimesAndSpeed(
+            schedule.mT0, schedule.mT1, mLastPlaySpeed, true );
       schedule.RealTimeRestart();
    }
    else if (kicked)
@@ -326,7 +361,7 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
       const auto time = schedule.mTimeQueue.GetLastTime();
       for (auto &pMixer : playbackMixers) {
          // So that the mixer will fetch the next samples from the right place:
-         pMixer->SetTimesAndSpeed( time, schedule.mT1, 1.0 );
+         pMixer->SetTimesAndSpeed( time, schedule.mT1, mLastPlaySpeed );
          pMixer->Reposition(time, true);
       }
    }
@@ -336,6 +371,34 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
 bool NewDefaultPlaybackPolicy::Looping( const PlaybackSchedule & ) const
 {
    return mLoopEnabled;
+}
+
+void NewDefaultPlaybackPolicy::OnPlayRegionChange( PlayRegionEvent &evt)
+{
+   // This executes in the main thread
+   evt.Skip(); // Let other listeners hear the event too
+   WriteMessage();
+}
+
+void NewDefaultPlaybackPolicy::OnPlaySpeedChange(wxCommandEvent &evt)
+{
+   evt.Skip(); // Let other listeners hear the event too
+   WriteMessage();
+}
+
+void NewDefaultPlaybackPolicy::WriteMessage()
+{
+   const auto &region = ViewInfo::Get( mProject ).playRegion;
+   mMessageChannel.Write( { GetPlaySpeed(),
+      region.GetStart(), region.GetEnd(), region.Active()
+   } );
+}
+
+double NewDefaultPlaybackPolicy::GetPlaySpeed()
+{
+   return mVariableSpeed
+      ? ProjectSettings::Get(mProject).GetPlaySpeed()
+      : 1.0;
 }
 
 void PlaybackSchedule::Init(
@@ -369,14 +432,12 @@ void PlaybackSchedule::Init(
    SetTrackTime( mT0 );
 
    if (options.policyFactory)
-      mpPlaybackPolicy = options.policyFactory();
+      mpPlaybackPolicy = options.policyFactory(options);
 
    mWarpedTime = 0.0;
    mWarpedLength = RealDuration(mT1);
 
    mPolicyValid.store(true, std::memory_order_release);
-
-   mMessageChannel.Initialize();
 }
 
 double PlaybackSchedule::ComputeWarpedLength(double t0, double t1) const
@@ -548,18 +609,4 @@ void PlaybackSchedule::TimeQueue::Prime(double time)
    mLastTime = time;
    if ( !mData.empty() )
       mData[0].timeValue = time;
-}
-
-#include "ViewInfo.h"
-void PlaybackSchedule::MessageProducer( PlayRegionEvent &evt)
-{
-   // This executes in the main thread
-   auto *pRegion = evt.pRegion.get();
-   if ( !pRegion )
-      return;
-   const auto &region = *pRegion;
-
-   mMessageChannel.Write( {
-      region.GetStart(), region.GetEnd(), region.Active()
-   } );
 }

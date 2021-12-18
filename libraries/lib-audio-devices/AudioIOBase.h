@@ -70,10 +70,12 @@ struct AudioIOStartStreamOptions
    // The return value is a number of milliseconds to sleep before calling again
    std::function< unsigned long() > playbackStreamPrimer;
 
-   using PolicyFactory = std::function< std::unique_ptr<PlaybackPolicy>() >;
+   using PolicyFactory = std::function<
+      std::unique_ptr<PlaybackPolicy>(const AudioIOStartStreamOptions&) >;
    PolicyFactory policyFactory;
 
    bool loopEnabled{ false };
+   bool variableSpeed{ false };
 };
 
 struct AudioIODiagnostics{

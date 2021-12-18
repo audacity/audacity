@@ -92,7 +92,7 @@
 #include "../ShuttleGui.h"
 #include "PlatformCompatibility.h"
 #include "FileNames.h"
-#include "../Envelope.h"
+#include "Envelope.h"
 #include "../EnvelopeEditor.h"
 #include "FFT.h"
 #include "Prefs.h"

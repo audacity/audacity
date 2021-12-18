@@ -140,6 +140,14 @@ void ProjectSettings::SetBandwidthSelectionFormatName(
    mBandwidthSelectionFormatName = formatName;
 }
 
+void ProjectSettings::SetPlaySpeed(double value)
+{
+   if (auto oldValue = GetPlaySpeed(); value != oldValue) {
+      mPlaySpeed.store( value, std::memory_order_relaxed );
+      Notify( mProject, ChangedPlaySpeed, oldValue );
+   }
+}
+
 void ProjectSettings::SetSelectionFormat(const NumericFormatSymbol & format)
 {
    mSelectionFormat = format;

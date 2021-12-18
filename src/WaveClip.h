@@ -33,7 +33,7 @@ using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 class Sequence;
 class SpectrogramSettings;
 class WaveCache;
-class WaveTrackCache;
+class SampleTrackCache;
 class wxFileNameWrapper;
 
 class AUDACITY_DLL_API SpecCache {
@@ -60,7 +60,7 @@ public:
    // Calculate one column of the spectrum
    bool CalculateOneSpectrum
       (const SpectrogramSettings &settings,
-       WaveTrackCache &waveTrackCache,
+       SampleTrackCache &waveTrackCache,
        const int xx, sampleCount numSamples,
        double offset, double rate, double pixelsPerSecond,
        int lowerBoundX, int upperBoundX,
@@ -74,7 +74,7 @@ public:
 
    // Calculate the dirty columns at the begin and end of the cache
    void Populate
-      (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
+      (const SpectrogramSettings &settings, SampleTrackCache &waveTrackCache,
        int copyBegin, int copyEnd, size_t numPixels,
        sampleCount numSamples,
        double offset, double rate, double pixelsPerSecond);
@@ -297,7 +297,7 @@ public:
     * calculations and Contrast */
    bool GetWaveDisplay(WaveDisplay &display,
                        double t0, double pixelsPerSecond) const;
-   bool GetSpectrogram(WaveTrackCache &cache,
+   bool GetSpectrogram(SampleTrackCache &cache,
                        const float *& spectrogram,
                        const sampleCount *& where,
                        size_t numPixels,

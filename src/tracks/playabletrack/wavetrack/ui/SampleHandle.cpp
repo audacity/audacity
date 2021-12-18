@@ -14,7 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <algorithm>
 #include <wx/gdicmn.h>
 
-#include "../../../../Envelope.h"
+#include "Envelope.h"
 #include "../../../../HitTestResult.h"
 #include "../../../../prefs/WaveformSettings.h"
 #include "../../../../ProjectAudioIO.h"

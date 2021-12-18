@@ -35,7 +35,7 @@ function.
 #include <wx/spinctrl.h>
 #include <wx/combobox.h>
 
-#include "../Mix.h"
+#include "Mix.h"
 #include "ProjectRate.h"
 #include "ProjectSettings.h"
 #include "../Tags.h"
