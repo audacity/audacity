@@ -12,20 +12,6 @@ Paul Licameli
 
 #include "Project.h"
 
-ProjectStatusEvent::ProjectStatusEvent( StatusBarField field )
-   : wxEvent{ -1, EVT_PROJECT_STATUS_UPDATE }
-   , mField{ field }
-{}
-
-ProjectStatusEvent::~ProjectStatusEvent() = default;
-
-wxEvent *ProjectStatusEvent::Clone() const
-{
-   return safenew ProjectStatusEvent{*this};
-}
-
-wxDEFINE_EVENT(EVT_PROJECT_STATUS_UPDATE, ProjectStatusEvent);
-
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
   []( AudacityProject &parent ){
      return std::make_shared< ProjectStatus >( parent );
@@ -81,16 +67,13 @@ void ProjectStatus::Set(const TranslatableString &msg, StatusBarField field )
    // compare full translations not msgids!
    if ( msg.Translation() != lastMessage.Translation() ) {
       lastMessage = msg;
-      ProjectStatusEvent evt{ field };
-      project.ProcessEvent( evt );
+      Publish(field);
    }
 }
 
 void ProjectStatus::UpdatePrefs()
 {
    auto &project = mProject;
-   for (auto field = 1; field <= nStatusBarFields; field++) {
-      ProjectStatusEvent evt{ StatusBarField(field) };
-      project.ProcessEvent( evt );
-   }
+   for (auto field = 1; field <= nStatusBarFields; ++field)
+      Publish(static_cast<StatusBarField>(field));
 }
