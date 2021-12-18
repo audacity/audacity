@@ -16,6 +16,7 @@
 #include "SelectedRegion.h"
 #include "Track.h"
 
+#include <wx/event.h> // to inherit
 
 class wxTextFile;
 
@@ -187,7 +188,7 @@ public:
 
 ENUMERATE_TRACK_TYPE(LabelTrack);
 
-struct LabelTrackEvent : TrackListEvent
+struct LabelTrackEvent : public wxEvent
 {
    explicit
    LabelTrackEvent(
@@ -196,7 +197,8 @@ struct LabelTrackEvent : TrackListEvent
       int formerPosition,
       int presentPosition
    )
-   : TrackListEvent{ commandType, pTrack }
+   : wxEvent{ 0, commandType }
+   , mpTrack{ pTrack }
    , mTitle{ title }
    , mFormerPosition{ formerPosition }
    , mPresentPosition{ presentPosition }
@@ -206,6 +208,8 @@ struct LabelTrackEvent : TrackListEvent
    wxEvent *Clone() const override {
       // wxWidgets will own the event object
       return safenew LabelTrackEvent(*this); }
+
+   const std::weak_ptr<Track> mpTrack;
 
    // invalid for selection events
    wxString mTitle;

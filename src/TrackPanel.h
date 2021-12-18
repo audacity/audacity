@@ -23,6 +23,7 @@
 #include "SelectedRegion.h"
 
 #include "CellularPanel.h"
+#include "Observer.h"
 
 #include "commands/CommandManagerWindowClasses.h"
 
@@ -84,9 +85,9 @@ class AUDACITY_DLL_API TrackPanel final
    void OnMouseEvent(wxMouseEvent & event);
    void OnKeyDown(wxKeyEvent & event);
 
-   void OnTrackListResizing(TrackListEvent & event);
-   void OnTrackListDeletion(wxEvent & event);
-   void OnEnsureVisible(TrackListEvent & event);
+   void OnTrackListResizing(const TrackListEvent &event);
+   void OnTrackListDeletion();
+   void OnEnsureVisible(const TrackListEvent & event);
    void UpdateViewIfNoTracks(); // Call this to update mViewInfo, etc, after track(s) removal, before Refresh().
 
    double GetMostRecentXPos();
@@ -181,6 +182,8 @@ public:
 public:
 
 protected:
+   Observer::Subscription mSubscription;
+
    TrackPanelListener *mListener;
 
    std::shared_ptr<TrackList> mTracks;

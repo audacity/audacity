@@ -16,6 +16,8 @@ Paul Licameli
 #include "Track.h"
 #include "../../TrackPanelMouseEvent.h"
 
+#include <wx/event.h>
+
 ButtonHandle::ButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
    : mpTrack{ pTrack }

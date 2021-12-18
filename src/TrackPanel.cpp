@@ -295,18 +295,19 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
       &TrackPanel::OnIdle, this);
 
    // Register for tracklist updates
-   mTracks->Bind(EVT_TRACKLIST_RESIZING,
-                    &TrackPanel::OnTrackListResizing,
-                    this);
-   mTracks->Bind(EVT_TRACKLIST_ADDITION,
-                    &TrackPanel::OnTrackListResizing,
-                    this);
-   mTracks->Bind(EVT_TRACKLIST_DELETION,
-                    &TrackPanel::OnTrackListDeletion,
-                    this);
-   mTracks->Bind(EVT_TRACKLIST_TRACK_REQUEST_VISIBLE,
-                    &TrackPanel::OnEnsureVisible,
-                    this);
+   mSubscription = mTracks->Subscribe([this](const TrackListEvent &event){
+      switch (event.mType) {
+      case TrackListEvent::RESIZING:
+      case TrackListEvent::ADDITION:
+         OnTrackListResizing(event); break;
+      case TrackListEvent::DELETION:
+         OnTrackListDeletion(); break;
+      case TrackListEvent::TRACK_REQUEST_VISIBLE:
+         OnEnsureVisible(event); break;
+      default:
+         break;
+      }
+   });
 
    auto theProject = GetProject();
    theProject->Bind(
@@ -667,21 +668,20 @@ void TrackPanel::UpdateViewIfNoTracks()
 
 // The tracks positions within the list have changed, so update the vertical
 // ruler size for the track that triggered the event.
-void TrackPanel::OnTrackListResizing(TrackListEvent & e)
+void TrackPanel::OnTrackListResizing(const TrackListEvent &e)
 {
    auto t = e.mpTrack.lock();
    // A deleted track can trigger the event.  In which case do nothing here.
    // A deleted track can have a valid pointer but no owner, bug 2060
    if( t && t->HasOwner() )
       UpdateVRuler(t.get());
-   e.Skip();
 
    // fix for bug 2477
    mListener->TP_RedrawScrollbars();
 }
 
 // Tracks have been removed from the list.
-void TrackPanel::OnTrackListDeletion(wxEvent & e)
+void TrackPanel::OnTrackListDeletion()
 {
    // copy shared_ptr for safety, as in HandleClick
    auto handle = Target();
@@ -694,8 +694,6 @@ void TrackPanel::OnTrackListDeletion(wxEvent & e)
    TrackFocus( *GetProject() ).Get();
 
    UpdateVRulerSize();
-
-   e.Skip();
 }
 
 void TrackPanel::OnKeyDown(wxKeyEvent & event)
@@ -1006,10 +1004,9 @@ void TrackPanel::OnTrackMenu(Track *t)
 }
 
 // Tracks have been removed from the list.
-void TrackPanel::OnEnsureVisible(TrackListEvent & e)
+void TrackPanel::OnEnsureVisible(const TrackListEvent & e)
 {
-   e.Skip();
-   bool modifyState = e.GetInt();
+   bool modifyState = e.mExtra;
 
    auto pTrack = e.mpTrack.lock();
    auto t = pTrack.get();

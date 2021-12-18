@@ -18,7 +18,11 @@
 
 #include <vector>
 #include <functional>
+#include <wx/thread.h>
 #include <wx/longlong.h>
+
+class wxRect;
+
 #include "WaveTrackLocation.h"
 
 namespace BasicUI{ class ProgressDialog; }
