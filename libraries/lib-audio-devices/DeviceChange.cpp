@@ -15,7 +15,7 @@
 
 #include "DeviceChange.h"
 
-
+#include "BasicUI.h"
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 
@@ -24,9 +24,6 @@
 #include <wx/module.h>
 #include <wx/timer.h>
 #include <wx/thread.h>
-
-DECLARE_LOCAL_EVENT_TYPE(EVT_DEVICE_CHANGE, -1);
-DEFINE_EVENT_TYPE(EVT_DEVICE_CHANGE);
 
 #if defined(__WXMSW__)
 
@@ -121,10 +118,9 @@ public:
       if (mEnabled)
       {
          mEnabled = false;
-         wxMutexGuiEnter();
-         wxCommandEvent e(EVT_DEVICE_CHANGE);
-         mHandler->AddPendingEvent(e);
-         wxMutexGuiLeave();
+         BasicUI::CallAfter([This]{
+            This->mHandler->Publish(DeviceChangeMessage::Change);
+         });
       }
 
       return S_OK;
@@ -135,7 +131,7 @@ public:
       return S_OK;
    }
 
-   bool SetHandler(wxEvtHandler *handler)
+   bool SetHandler(DeviceChangeMessagePublisher *handler)
    {
       mHandler = handler;
 
@@ -160,7 +156,7 @@ public:
    }
 
 private:
-   wxEvtHandler *mHandler;
+   DeviceChangeMessagePublisher *mHandler;
    bool mEnabled;
    ULONG mRefCnt;
    IMMDeviceEnumerator *mEnumerator;
@@ -194,7 +190,7 @@ public:
    }
 
    // IUnknown implementation
-   bool SetHandler(wxEvtHandler *handler)
+   bool SetHandler(DeviceChangeMessagePublisher *handler)
    {
       mHandler = handler;
 
@@ -253,10 +249,9 @@ public:
                if (This->mEnabled)
                {
                   This->mEnabled = false;
-                  wxMutexGuiEnter();
-                  wxCommandEvent e(EVT_DEVICE_CHANGE);
-                  This->mHandler->AddPendingEvent(e);
-                  wxMutexGuiLeave();
+                  BasicUI::CallAfter([This]{
+                     This->mHandler->Publish(DeviceChangeMessage::Change);
+                  });
                }
          
                udev_device_unref(dev);
@@ -270,7 +265,7 @@ public:
    }
 
 private:
-   wxEvtHandler *mHandler;
+   DeviceChangeMessagePublisher *mHandler;
    bool mEnabled;
    pthread_t mThread;
 };
@@ -308,7 +303,7 @@ public:
    }
 
    // IUnknown implementation
-   bool SetHandler(wxEvtHandler *handler)
+   bool SetHandler(DeviceChangeMessagePublisher *handler)
    {
       mHandler = handler;
 
@@ -322,6 +317,7 @@ public:
                                                   &property_address,
                                                   DeviceChangeListener::Listener,
                                                   this) == 0;
+      return true;
    }
 
    void Enable(bool enable)
@@ -347,25 +343,23 @@ public:
          if (This->mEnabled)
          {
             This->mEnabled = false;
-            wxMutexGuiEnter();
-            wxCommandEvent e(EVT_DEVICE_CHANGE);
-            This->mHandler->AddPendingEvent(e);
-            wxMutexGuiLeave();
-         }   
+            BasicUI::CallAfter([This]{
+               This->mHandler->Publish(DeviceChangeMessage::Change);
+            });
+         }
       }
    
        return 0;
    }
 
 private:
-   wxEvtHandler *mHandler;
+   DeviceChangeMessagePublisher *mHandler;
    bool mEnabled;
    bool mListening;
 };
 #endif
 
 BEGIN_EVENT_TABLE(DeviceChangeHandler, wxEvtHandler)
-   EVT_COMMAND(wxID_ANY, EVT_DEVICE_CHANGE, DeviceChangeHandler::OnChange)
    EVT_TIMER(wxID_ANY, DeviceChangeHandler::OnTimer)
 END_EVENT_TABLE()
 
@@ -376,6 +370,9 @@ DeviceChangeHandler::DeviceChangeHandler()
    mListener = std::make_unique<DeviceChangeListener>();
    mListener->SetHandler(this);
    mListener->Enable(true);
+
+   // Subscribe to self!
+   mSubscription = this->Subscribe(*this, &DeviceChangeHandler::OnChange);
 }
 
 DeviceChangeHandler::~DeviceChangeHandler()
@@ -389,9 +386,10 @@ void DeviceChangeHandler::Enable(bool enable)
    mListener->Enable(enable);
 }
 
-void DeviceChangeHandler::OnChange(wxCommandEvent & evt)
+void DeviceChangeHandler::OnChange(DeviceChangeMessage m)
 {
-   mTimer.Start(500, true);
+   if (m == DeviceChangeMessage::Change)
+      mTimer.Start(500, true);
 }
 
 void DeviceChangeHandler::OnTimer(wxTimerEvent & evt)
