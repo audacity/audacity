@@ -502,9 +502,10 @@ void AdornedRulerPanel::ScrubbingRulerOverlay::Update()
            mNewIndicatorSnapped == -1 && ii < ruler->mNumGuides; ++ii) {
          if (ruler->mIsSnapped[ii]) {
             mNewIndicatorSnapped = ii;
-            mNewQPIndicatorPos = ruler->Time2Pos(ruler->mQuickPlayPos[ii]);
          }
       }
+      mNewQPIndicatorPos = ruler->Time2Pos(
+         ruler->mQuickPlayPos[std::max(0, mNewIndicatorSnapped)]);
 
       // These determine which shape is drawn on the ruler, and whether
       // in the scrub or the qp zone
@@ -618,13 +619,12 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
    mOldIndicatorSnapped = mPartner->mNewIndicatorSnapped;
    mOldPreviewingScrub = mNewPreviewingScrub;
 
-   if ( !(mOldPreviewingScrub || mOldIndicatorSnapped >= 0) )
-      return;
-
    if (mOldQPIndicatorPos >= 0) {
       mOldPreviewingScrub
          ? AColor::IndicatorColor(&dc, true) // Draw green line for preview.
-         : AColor::SnapGuidePen(&dc); // Yellow snap guideline
+         : (mOldIndicatorSnapped >= 0)
+            ? AColor::SnapGuidePen(&dc) // Yellow snap guideline
+            : AColor::Light(&dc, false);
 
       // Draw indicator in all visible tracks
       auto pCellularPanel = dynamic_cast<CellularPanel*>( &panel );
