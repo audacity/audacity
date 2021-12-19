@@ -238,9 +238,6 @@ private:
                size_t len, unsigned int stride=1) override;
    void Flush() override;
 
-   ///Invalidates all clips' wavecaches.  Careful, This may not be threadsafe.
-   void ClearWaveCaches();
-
    ///
    /// MM: Now that each wave track can contain multiple clips, we don't
    /// have a continuous space of samples anymore, but we simulate it,

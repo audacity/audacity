@@ -240,12 +240,6 @@ const BlockArray* WaveClip::GetSequenceBlockArray() const
    return &mSequence->GetBlockArray();
 }
 
-///Delete the wave cache - force redraw.  Thread-safe
-void WaveClip::ClearWaveCache()
-{
-   mWaveCache = std::make_unique<WaveCache>();
-}
-
 namespace {
 
 inline

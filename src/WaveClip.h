@@ -381,9 +381,6 @@ public:
    void CloseLock(); //should be called when the project closes.
    // not balanced by unlocking calls.
 
-   ///Delete the wave cache - force redraw.  Thread-safe
-   void ClearWaveCache();
-
    //
    // XMLTagHandler callback methods for loading and saving
    //
