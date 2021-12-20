@@ -669,6 +669,7 @@ BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
    EVT_IDLE( AdornedRulerPanel::OnIdle )
    EVT_PAINT(AdornedRulerPanel::OnPaint)
    EVT_SIZE(AdornedRulerPanel::OnSize)
+   EVT_LEAVE_WINDOW(AdornedRulerPanel::OnLeave)
 
    // Context menu commands
    EVT_MENU(OnSyncQuickPlaySelID, AdornedRulerPanel::OnSyncSelToQuickPlay)
@@ -1604,6 +1605,14 @@ void AdornedRulerPanel::OnSize(wxSizeEvent &evt)
    UpdateRects();
 
    OverlayPanel::OnSize(evt);
+}
+
+void AdornedRulerPanel::OnLeave(wxMouseEvent& evt)
+{
+   evt.Skip();
+   CallAfter([this]{
+      DrawBothOverlays();
+   });
 }
 
 void AdornedRulerPanel::OnThemeChange(wxCommandEvent& evt)
