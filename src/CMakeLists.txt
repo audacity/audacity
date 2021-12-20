@@ -89,6 +89,8 @@ list( APPEND SOURCES
       ActiveProjects.h
       AboutDialog.cpp
       AboutDialog.h
+      $<$<NOT:$<BOOL:${${_OPT}bundle_gplv3}>>:AboutDialogGPLv2Text.cpp>
+      $<$<BOOL:${${_OPT}bundle_gplv3}>:AboutDialogGPLv3Text.cpp>
       AdornedRulerPanel.cpp
       AdornedRulerPanel.h
       AudacityApp.cpp
