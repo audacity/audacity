@@ -2,7 +2,7 @@
 
    Audacity - A Digital Audio Editor
    Copyright 1999-2009 Audacity Team
-   License: GPL v2 - see LICENSE.txt
+   License: GPL v2 or later - see LICENSE.txt
 
    Dan Horgan
 
