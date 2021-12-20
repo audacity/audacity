@@ -28,6 +28,7 @@ if( INNO_SETUP_COMPILER )
                 -DWINDOWS_CERTIFICATE=${WINDOWS_CERTIFICATE}
                 -D WINDOWS_CERTIFICATE_PASSWORD=${WINDOWS_CERTIFICATE_PASSWORD}
                 -D CONFIG=$<CONFIG>
+                -D USE_GPL3=${${_OPT}bundle_gplv3}
                 -P "${CMAKE_SOURCE_DIR}/win/Inno_Setup_Wizard/BuildInnoSetupInstaller.cmake"
         VERBATIM
     )
