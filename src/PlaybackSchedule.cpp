@@ -215,18 +215,18 @@ NewDefaultPlaybackPolicy::GetPlaybackSlice(
 {
    // How many samples to produce for each channel.
    const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
-   mRemaining = realTimeRemaining * mRate;
+   mRemaining = realTimeRemaining * mRate / mLastPlaySpeed;
 
-   if (RevertToOldDefault(schedule))
+   if (mLastPlaySpeed == 1.0 && RevertToOldDefault(schedule))
       return PlaybackPolicy::GetPlaybackSlice(schedule, available);
 
    auto frames = available;
    auto toProduce = frames;
-   double deltat = frames / mRate;
+   double deltat = (frames / mRate) * mLastPlaySpeed;
 
    if (deltat > realTimeRemaining)
    {
-      toProduce = frames = mRemaining;
+      toProduce = frames = (realTimeRemaining * mRate) / mLastPlaySpeed;
       schedule.RealTimeAdvance( realTimeRemaining );
    }
    else
@@ -332,7 +332,7 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
 
       schedule.RealTimeInit(newTime);
       const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
-      mRemaining = realTimeRemaining * mRate;
+      mRemaining = realTimeRemaining * mRate / mLastPlaySpeed;
    }
    else if (speedChange)
       // Don't return early
