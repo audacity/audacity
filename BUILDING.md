@@ -33,17 +33,17 @@ On Windows, please use the [prebuilt binaries](https://cmake.org/download/). Ens
 
 On macOS, the easiest way to install CMake is `brew install cmake`.
 
-On Linux, `cmake` is usually available from the system package manager.
+On Linux, `cmake` is usually available from the system package manager. Alternatively, `sudo pip3 install cmake` can be used to install the latest version of CMake.
 
 ### Windows
 
-We build Audacity using [Microsoft Visual Studio 2019](https://visualstudio.microsoft.com/vs/community/). In order to build Audacity **Desktop development with C++** workload is required.
+We build Audacity using [Microsoft Visual Studio](https://visualstudio.microsoft.com/vs/community/) 2019 and 2022. In order to build Audacity **Desktop development with C++** workload is required.
 
 As we require only C++17 - MSVC 2017 should work just fine too.
 
-### MacOS
+### macOS
 
-We build Audacity using XCode 12. However, it is likely possible to build it with XCode 7.
+We build Audacity using XCode versions 12 and 13. However, it is likely possible to build it with XCode 7.
 
 ### Linux
 
@@ -205,6 +205,32 @@ This option implies `-Daudacity_obey_system_dependencies=On` and disables `local
 
 It is possible to force Conan to build all the dependencies from the source code without using the pre-built binaries. To do so, please pass `-Daudaicity_conan_allow_prebuilt_binaries=Off` to CMake during the configuration. This option will trigger rebuild every
 time CMake configuration changes.
+
+### Troubleshooting Conan issues
+
+To fix errors, similar to the following:
+
+```
+ERROR: HTTPSConnectionPool(host='center.conan.io', port=443): Max retries exceeded with url: /v1/ping (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1131)
+```
+
+please, update your Conan version. Alternatively, the problem can be fixed using:
+
+```
+$ conan config install https://github.com/conan-io/conanclientcert.git
+```
+
+For errors like:
+
+```
+Unable to connect to conan-center=https://conan.bintray.com
+```
+
+please run
+
+```
+conan remote remove conan-center
+```
 
 ### Reducing Conan cache size
 
