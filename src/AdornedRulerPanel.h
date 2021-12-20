@@ -82,6 +82,7 @@ private:
    void OnAudioStartStop(wxCommandEvent & evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
+   void OnLeave(wxMouseEvent &evt);
    void OnThemeChange(wxCommandEvent& evt);
    void OnSelectionChange(SelectedRegionEvent& evt);
    void DoSelectionChange( const SelectedRegion &selectedRegion );
