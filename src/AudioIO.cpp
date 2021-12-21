@@ -2849,8 +2849,7 @@ void AudioIoCallback::SendVuOutputMeterData(
       //    The problem there occurs if Software Playthrough is on.
       //    Could conditionally do the update here if Software Playthrough is off,
       //    and in TrackPanel::OnTimer() if Software Playthrough is on, but not now.
-      // PRL 12 Jul 2015: and what was in TrackPanel::OnTimer is now handled by means of event
-      // type EVT_TRACK_PANEL_TIMER
+      // PRL 12 Jul 2015: and what was in TrackPanel::OnTimer is now handled by means of track panel timer events
       //MixerBoard* pMixerBoard = mOwningProject->GetMixerBoard();
       //if (pMixerBoard)
       //   pMixerBoard->UpdateMeters(GetStreamTime(),

@@ -234,7 +234,7 @@ private:
    // event handlers
    void OnPaint(wxPaintEvent& evt);
    void OnSize(wxSizeEvent &evt);
-   void OnTimer(wxCommandEvent &event);
+   void OnTimer(Observer::Message);
    void OnTrackSetChanged();
    void OnTrackChanged(const TrackListEvent &event);
    void OnStartStop(wxCommandEvent &event);
@@ -248,7 +248,8 @@ public:
    int mMuteSoloWidth;
 
 private:
-   Observer::Subscription mSubscription;
+   Observer::Subscription mPlaybackScrollerSubscription,
+      mTrackPanelSubscription;
 
    // Track clusters are maintained in the same order as the WaveTracks.
    std::vector<MixerTrackCluster*> mMixerTrackClusters;

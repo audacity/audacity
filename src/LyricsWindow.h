@@ -15,6 +15,7 @@
 #include <wx/frame.h> // to inherit
 #include <memory>
 
+#include "Observer.h"
 #include "Prefs.h"
 
 class AudacityProject;
@@ -34,7 +35,7 @@ class LyricsWindow final : public wxFrame,
 
    void OnStyle_BouncingBall(wxCommandEvent &evt);
    void OnStyle_Highlight(wxCommandEvent &evt);
-   void OnTimer(wxCommandEvent &event);
+   void OnTimer(Observer::Message);
 
    void SetWindowTitle();
 
@@ -43,6 +44,7 @@ class LyricsWindow final : public wxFrame,
 
    std::weak_ptr<AudacityProject> mProject;
    LyricsPanel *mLyricsPanel;
+   Observer::Subscription mSubscription;
 
  public:
    DECLARE_EVENT_TABLE()

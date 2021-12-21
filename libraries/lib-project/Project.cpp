@@ -14,8 +14,6 @@
 #include <wx/display.h>
 #include <wx/filename.h>
 
-wxDEFINE_EVENT(EVT_TRACK_PANEL_TIMER, wxCommandEvent);
-
 size_t AllProjects::size() const
 {
    return gAudacityProjects.size();
