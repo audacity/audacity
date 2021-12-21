@@ -1,14 +1,8 @@
-Note: 
-Audacity is distributed under the terms of the GNU GPLv2 or later.
-This includes everything in the source code distribution
-except code in the lib-src directory.  Code in the lib-src
-directory may be released under a different license
-(which is GPL-compatible).  For a summary, see the
-README.txt file, and for specific details, see the license
-information inside each subdirectory of lib-src.
-
-Audacity binaries with VST3 support are distributed under the terms
-of the GNU GPLv3. 
+Audacity is released under the GNU General Public License version 3 (GPLv3). 
+Individual source files may be available under other licenses as specified 
+in those files or an accompanying file. In particular, many source files are 
+available under GPL version 2 (GPLv2) or (at your option) any later version, 
+and this is the default license used where no other license is specified.
 
 Documentation is distributed under a Creative Commons-Attribution license.
 (CC-BY 3.0)
