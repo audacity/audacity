@@ -620,6 +620,15 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
    mOldPreviewingScrub = mNewPreviewingScrub;
 
    if (mOldQPIndicatorPos >= 0) {
+      if (!mOldPreviewingScrub && mOldIndicatorSnapped < 0) {
+         auto &ruler = AdornedRulerPanel::Get(*mProject);
+         if (auto pHandle =
+             dynamic_cast<PlayRegionAdjustingHandle*>(ruler.Target().get());
+            pHandle->Clicked())
+            // Do not draw the quick-play guideline
+            return;
+      }
+   
       mOldPreviewingScrub
          ? AColor::IndicatorColor(&dc, true) // Draw green line for preview.
          : (mOldIndicatorSnapped >= 0)
