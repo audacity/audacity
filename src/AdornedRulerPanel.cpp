@@ -624,7 +624,7 @@ void AdornedRulerPanel::TrackPanelGuidelineOverlay::Draw(
          auto &ruler = AdornedRulerPanel::Get(*mProject);
          if (auto pHandle =
              dynamic_cast<PlayRegionAdjustingHandle*>(ruler.Target().get());
-            pHandle->Clicked())
+             pHandle != nullptr && pHandle->Clicked())
             // Do not draw the quick-play guideline
             return;
       }
