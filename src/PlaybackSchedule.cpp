@@ -204,8 +204,12 @@ bool NewDefaultPlaybackPolicy::RevertToOldDefault(const PlaybackSchedule &schedu
 bool NewDefaultPlaybackPolicy::Done(
    PlaybackSchedule &schedule, unsigned long outputFrames )
 {
-   if (RevertToOldDefault(schedule))
-      return PlaybackPolicy::Done(schedule, outputFrames);
+   if (RevertToOldDefault(schedule)) {
+      auto diff = schedule.GetTrackTime() - schedule.mT1;
+      if (schedule.ReversedTime())
+         diff *= -1;
+      return sampleCount(floor(diff * mRate + 0.5)) >= 0;
+   }
    return false;
 }
 
@@ -217,17 +221,23 @@ NewDefaultPlaybackPolicy::GetPlaybackSlice(
    const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
    mRemaining = realTimeRemaining * mRate / mLastPlaySpeed;
 
-   if (mLastPlaySpeed == 1.0 && RevertToOldDefault(schedule))
-      return PlaybackPolicy::GetPlaybackSlice(schedule, available);
-
    auto frames = available;
    auto toProduce = frames;
    double deltat = (frames / mRate) * mLastPlaySpeed;
 
-   if (deltat > realTimeRemaining)
-   {
+   if (deltat > realTimeRemaining) {
       toProduce = frames = (realTimeRemaining * mRate) / mLastPlaySpeed;
-      schedule.RealTimeAdvance( realTimeRemaining );
+      auto realTime = realTimeRemaining;
+      double extra = 0;
+      if (RevertToOldDefault(schedule)) {
+         // Produce some extra silence so that the time queue consumer can
+         // satisfy its end condition
+         const double extraRealTime =
+            ((TimeQueueGrainSize + 1) / mRate) * mLastPlaySpeed;
+         auto extra = std::min( extraRealTime, deltat - realTimeRemaining );
+         frames = ((realTimeRemaining + extra) * mRate) / mLastPlaySpeed;
+      }
+      schedule.RealTimeAdvance( realTimeRemaining + extra );
    }
    else
       schedule.RealTimeAdvance( deltat );
@@ -246,11 +256,12 @@ NewDefaultPlaybackPolicy::GetPlaybackSlice(
 std::pair<double, double> NewDefaultPlaybackPolicy::AdvancedTrackTime(
    PlaybackSchedule &schedule, double trackTime, size_t nSamples )
 {
-   if (!mVariableSpeed && RevertToOldDefault(schedule))
+   bool revert = RevertToOldDefault(schedule);
+   if (!mVariableSpeed && revert)
       return PlaybackPolicy::AdvancedTrackTime(schedule, trackTime, nSamples);
 
    mRemaining -= std::min(mRemaining, nSamples);
-   if ( mRemaining == 0 )
+   if ( mRemaining == 0 && !revert )
       // Wrap to start
       return { schedule.mT1, schedule.mT0 };
 
