@@ -5,7 +5,7 @@
   Wrapper.c
 
   Audacity(R) is copyright (c) 2020-2020 Audacity Team.
-  License: GPL v2.  See License.txt.
+  License: GPL v2 or later.  See License.txt.
 
 *******************************************************************//**
 

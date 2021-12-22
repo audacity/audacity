@@ -14,7 +14,7 @@
 #include "Envelope.h"
 #include "Mix.h"
 #include "Project.h"
-#include "ProjectSettings.h"
+#include "ProjectAudioIO.h"
 #include "SampleCount.h"
 #include "ViewInfo.h" // for PlayRegionEvent
 
@@ -172,7 +172,7 @@ void NewDefaultPlaybackPolicy::Initialize(
    ViewInfo::Get( mProject ).playRegion.Bind( EVT_PLAY_REGION_CHANGE,
       &NewDefaultPlaybackPolicy::OnPlayRegionChange, this);
    if (mVariableSpeed)
-      mProject.Bind( EVT_PROJECT_SETTINGS_CHANGE,
+      mProject.Bind( EVT_PLAY_SPEED_CHANGE,
          &NewDefaultPlaybackPolicy::OnPlaySpeedChange, this);
 }
 
@@ -215,18 +215,18 @@ NewDefaultPlaybackPolicy::GetPlaybackSlice(
 {
    // How many samples to produce for each channel.
    const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
-   mRemaining = realTimeRemaining * mRate;
+   mRemaining = realTimeRemaining * mRate / mLastPlaySpeed;
 
-   if (RevertToOldDefault(schedule))
+   if (mLastPlaySpeed == 1.0 && RevertToOldDefault(schedule))
       return PlaybackPolicy::GetPlaybackSlice(schedule, available);
 
    auto frames = available;
    auto toProduce = frames;
-   double deltat = frames / mRate;
+   double deltat = (frames / mRate) * mLastPlaySpeed;
 
    if (deltat > realTimeRemaining)
    {
-      toProduce = frames = mRemaining;
+      toProduce = frames = (realTimeRemaining * mRate) / mLastPlaySpeed;
       schedule.RealTimeAdvance( realTimeRemaining );
    }
    else
@@ -332,7 +332,7 @@ bool NewDefaultPlaybackPolicy::RepositionPlayback(
 
       schedule.RealTimeInit(newTime);
       const auto realTimeRemaining = std::max(0.0, schedule.RealTimeRemaining());
-      mRemaining = realTimeRemaining * mRate;
+      mRemaining = realTimeRemaining * mRate / mLastPlaySpeed;
    }
    else if (speedChange)
       // Don't return early
@@ -397,7 +397,7 @@ void NewDefaultPlaybackPolicy::WriteMessage()
 double NewDefaultPlaybackPolicy::GetPlaySpeed()
 {
    return mVariableSpeed
-      ? ProjectSettings::Get(mProject).GetPlaySpeed()
+      ? ProjectAudioIO::Get(mProject).GetPlaySpeed()
       : 1.0;
 }
 
