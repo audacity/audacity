@@ -30,6 +30,8 @@
 
 class wxRect;
 
+struct AudioIOEvent;
+
 // All cells of the TrackPanel are subclasses of this
 class CommonTrackPanelCell;
 
@@ -79,7 +81,7 @@ class AUDACITY_DLL_API TrackPanel final
 
    void UpdatePrefs() override;
 
-   void OnAudioIO(wxCommandEvent & evt);
+   void OnAudioIO(AudioIOEvent);
 
    void OnPaint(wxPaintEvent & event);
    void OnMouseEvent(wxMouseEvent & event);
@@ -182,7 +184,8 @@ public:
 public:
 
 protected:
-   Observer::Subscription mSubscription;
+   Observer::Subscription mTrackListScubscription,
+      mAudioIOScubscription;
 
    TrackPanelListener *mListener;
 

@@ -47,7 +47,6 @@ is time to refresh some aspect of the screen.
 #include "TrackPanel.h"
 #include "TrackPanelConstants.h"
 
-#include <wx/app.h>
 #include <wx/setup.h> // for wxUSE_* macros
 
 #include "AdornedRulerPanel.h"
@@ -295,7 +294,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
       &TrackPanel::OnIdle, this);
 
    // Register for tracklist updates
-   mSubscription = mTracks->Subscribe([this](const TrackListEvent &event){
+   mTrackListScubscription =
+   mTracks->Subscribe([this](const TrackListEvent &event){
       switch (event.mType) {
       case TrackListEvent::RESIZING:
       case TrackListEvent::ADDITION:
@@ -317,12 +317,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    theProject->Bind(EVT_UNDO_RESET, &TrackPanel::OnUndoReset, this);
 
-   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
-                     &TrackPanel::OnAudioIO,
-                     this);
-   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
-                     &TrackPanel::OnAudioIO,
-                     this);
+   mAudioIOScubscription =
+      AudioIO::Get()->Subscribe(*this, &TrackPanel::OnAudioIO);
    UpdatePrefs();
 }
 
@@ -807,9 +803,10 @@ void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,
    CallAfter([this]{ CellularPanel::HandleCursorForPresentMouseState(); } );
 }
 
-void TrackPanel::OnAudioIO(wxCommandEvent & evt)
+void TrackPanel::OnAudioIO(AudioIOEvent evt)
 {
-   evt.Skip();
+   if (evt.type == AudioIOEvent::MONITOR)
+      return;
    // Some hit tests want to change their cursor to and from the ban symbol
    CallAfter( [this]{ CellularPanel::HandleCursorForPresentMouseState(); } );
 }

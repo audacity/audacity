@@ -142,10 +142,6 @@ AudioIO *AudioIO::Get()
    return static_cast< AudioIO* >( AudioIOBase::Get() );
 }
 
-wxDEFINE_EVENT(EVT_AUDIOIO_PLAYBACK, wxCommandEvent);
-wxDEFINE_EVENT(EVT_AUDIOIO_CAPTURE, wxCommandEvent);
-wxDEFINE_EVENT(EVT_AUDIOIO_MONITOR, wxCommandEvent);
-
 // static
 int AudioIoCallback::mNextStreamToken = 0;
 double AudioIoCallback::mCachedBestRateOut;
@@ -727,10 +723,7 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
       return;
    }
 
-   wxCommandEvent e(EVT_AUDIOIO_MONITOR);
-   e.SetEventObject( pOwningProject.get() );
-   e.SetInt(true);
-   wxTheApp->ProcessEvent(e);
+   Publish({ pOwningProject.get(), AudioIOEvent::MONITOR, true });
 
    // FIXME: TRAP_ERR PaErrorCode 'noted' but not reported in StartMonitoring.
    // Now start the PortAudio stream!
@@ -1046,20 +1039,9 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    auto pOwningProject = mOwningProject.lock();
    if (mNumPlaybackChannels > 0)
-   {
-      wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
-      e.SetEventObject( pOwningProject.get() );
-      e.SetInt(true);
-      wxTheApp->ProcessEvent(e);
-   }
-
+      Publish({ pOwningProject.get(), AudioIOEvent::PLAYBACK, true });
    if (mNumCaptureChannels > 0)
-   {
-      wxCommandEvent e(EVT_AUDIOIO_CAPTURE);
-      e.SetEventObject( pOwningProject.get() );
-      e.SetInt(true);
-      wxTheApp->ProcessEvent(e);
-   }
+      Publish({ pOwningProject.get(), AudioIOEvent::CAPTURE, true });
 
    commit = true;
    return mStreamToken;
@@ -1574,22 +1556,16 @@ void AudioIO::StopStream()
    bool wasMonitoring = mStreamToken == 0;
    mStreamToken = 0;
 
-   if (mNumPlaybackChannels > 0)
    {
-      wxCommandEvent e(EVT_AUDIOIO_PLAYBACK);
       auto pOwningProject = mOwningProject.lock();
-      e.SetEventObject(pOwningProject.get());
-      e.SetInt(false);
-      wxTheApp->ProcessEvent(e);
-   }
-   
-   if (mNumCaptureChannels > 0)
-   {
-      wxCommandEvent e(wasMonitoring ? EVT_AUDIOIO_MONITOR : EVT_AUDIOIO_CAPTURE);
-      auto pOwningProject = mOwningProject.lock();
-      e.SetEventObject(pOwningProject.get());
-      e.SetInt(false);
-      wxTheApp->ProcessEvent(e);
+      if (mNumPlaybackChannels > 0)
+         Publish({ pOwningProject.get(), AudioIOEvent::PLAYBACK, false });
+      if (mNumCaptureChannels > 0)
+         Publish({ pOwningProject.get(),
+            wasMonitoring
+               ? AudioIOEvent::MONITOR
+               : AudioIOEvent::CAPTURE,
+            false });
    }
 
    mNumCaptureChannels = 0;

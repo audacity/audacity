@@ -665,7 +665,6 @@ private:
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
 
-#include <wx/app.h>
 #include <wx/bmpbuttn.h>
 #include <wx/checkbox.h>
 #include <wx/dcclient.h>
@@ -1403,13 +1402,11 @@ void EffectUIHost::OnFFwd(wxCommandEvent & WXUNUSED(evt))
    }
 }
 
-void EffectUIHost::OnPlayback(wxCommandEvent & evt)
+void EffectUIHost::OnPlayback(AudioIOEvent evt)
 {
-   evt.Skip();
-   
-   if (evt.GetInt() != 0)
+   if (evt.on)
    {
-      if (evt.GetEventObject() != mProject)
+      if (evt.pProject != mProject)
       {
          mDisableTransport = true;
       }
@@ -1433,13 +1430,11 @@ void EffectUIHost::OnPlayback(wxCommandEvent & evt)
    UpdateControls();
 }
 
-void EffectUIHost::OnCapture(wxCommandEvent & evt)
+void EffectUIHost::OnCapture(AudioIOEvent evt)
 {
-   evt.Skip();
-   
-   if (evt.GetInt() != 0)
+   if (evt.on)
    {
-      if (evt.GetEventObject() != mProject)
+      if (evt.pProject != mProject)
       {
          mDisableTransport = true;
       }
@@ -1733,13 +1728,16 @@ void EffectUIHost::InitializeRealtime()
    {
       RealtimeEffectManager::Get().RealtimeAddEffect(mEffect);
       
-      wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
-                     &EffectUIHost::OnPlayback,
-                     this);
-      
-      wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
-                     &EffectUIHost::OnCapture,
-                     this);
+      AudioIO::Get()->Subscribe([this](AudioIOEvent event){
+         switch (event.type) {
+         case AudioIOEvent::PLAYBACK:
+            OnPlayback(event); break;
+         case AudioIOEvent::CAPTURE:
+            OnCapture(event); break;
+         default:
+            break;
+         }
+      });
       
       mInitialized = true;
    }

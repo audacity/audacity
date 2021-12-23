@@ -941,10 +941,8 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
       }
    });
 
-   wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
-      wxCommandEventHandler(MixerBoard::OnStartStop),
-      NULL,
-      this);
+   mAudioIOSubscription =
+      AudioIO::Get()->Subscribe(*this, &MixerBoard::OnStartStop);
 }
 
 
@@ -1384,11 +1382,10 @@ void MixerBoard::OnTrackSetChanged()
    Refresh();
 }
 
-void MixerBoard::OnStartStop(wxCommandEvent &evt)
+void MixerBoard::OnStartStop(AudioIOEvent evt)
 {
-   evt.Skip();
-   bool start = evt.GetInt();
-   ResetMeters( start );
+   if (evt.type == AudioIOEvent::PLAYBACK)
+      ResetMeters( evt.on );
 }
 
 // class MixerBoardFrame

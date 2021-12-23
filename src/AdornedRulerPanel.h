@@ -18,6 +18,7 @@
 #include "ViewInfo.h" // for PlayRegion
 
 class AudacityProject;
+struct AudioIOEvent;
 struct SelectedRegionEvent;
 class TrackList;
 
@@ -80,7 +81,7 @@ public:
 private:
    void DoIdle();
    void OnIdle( wxIdleEvent &evt );
-   void OnAudioStartStop(wxCommandEvent & evt);
+   void OnAudioStartStop(AudioIOEvent);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnLeave(wxMouseEvent &evt);
@@ -237,7 +238,8 @@ private:
    class ScrubbingCell;
    std::shared_ptr<ScrubbingCell> mScrubbingCell;
 
-   Observer::Subscription mSubscription;
+   Observer::Subscription mAudioIOSubscription,
+      mPlayRegionSubscription;
 
    // classes implementing subdivision for CellularPanel
    struct Subgroup;
