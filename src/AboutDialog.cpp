@@ -93,6 +93,9 @@ void AboutDialog::CreateCreditsList()
    const auto coFounderFormat =
    /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
       XO("%s, co-founder and developer");
+  const auto designerFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, designer");
    const auto developerFormat =
    /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
       XO("%s, developer");
@@ -134,14 +137,15 @@ void AboutDialog::CreateCreditsList()
       XO("%s, graphics");
 
    // The Audacity Team: developers and support
-   AddCredit(wxT("Anton Gerasimov"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Jouni Helminen"), roleTeamMember);
+
    AddCredit(wxT("Peter Jonas"), developerFormat, roleTeamMember);
    AddCredit(wxT("Martin Keary"), roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Pavel Penikov"), testerFormat, roleTeamMember);
    AddCredit(wxT("Anita Sudan"), roleTeamMember);
    AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Leo Wattenberg"), documentationAndSupportFormat, roleTeamMember);
 
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
@@ -160,7 +164,9 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Steve Daulton"), roleEmeritusTeam);
    AddCredit(wxT("Al Dimond"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Benjamin Drung"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Anton Gerasimov"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Joshua Haberman"), developerFormat, roleEmeritusTeam);
+   AddCredit(wxT("Jouni Helminen"), designerFormat, roleEmeritusTeam);
    AddCredit(wxT("Ruslan Ijbulatov"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Vaughan Johnson"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleEmeritusTeam);
