@@ -37,7 +37,7 @@ Edward Hui
 #include "../../../images/Cursors.h"
 #include "../playabletrack/wavetrack/ui/SpectrumView.h"
 
-#include <tgmath.h>
+#include <cmath>
 #include <wx/event.h>
 #include <iostream>
 
