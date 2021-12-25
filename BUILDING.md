@@ -6,6 +6,7 @@
 * **conan** >= 1.32.0
 * **cmake** >= 3.16
 * A working C++ 17 compiler
+* Graphviz (optional)
 
 For Windows see below for important installer settings.
 
@@ -57,6 +58,17 @@ $ sudo apt-get install -y build-essential cmake git python3-pip
 $ sudo pip3 install conan
 $ sudo apt-get install libgtk2.0-dev libasound2-dev libavformat-dev libjack-jackd2-dev uuid-dev
 ```
+
+### Graphviz
+
+https://graphviz.org/download/
+
+This is not necessary to build and run Audacity. It generates diagrams that aid understanding of the large scale structure of Audacity's source code.
+
+If you install Graphviz, then an image file modules.dot.svg is generated in the build directory as a by-product of configuration. It shows the dependencies among the Audacity executable, its optional extension modules, its shared libraries, and third-party libraries.
+
+You will also be able to change to the scripts directory and run ./graph.pl to generate a diagram of dependencies among source code files within the executable.
+
 
 ## Building on Windows
 

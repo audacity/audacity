@@ -2,9 +2,30 @@ List of significant changes and bug fixes going back to version 1.1.0
 
 Changes in version 3.1.3
 
- This is a hotfix release. It improves project performance significantly (up to 50x) compared to 3.1.0, and fixes the following bugs:
+ This is a patch release. It improves the following aspects:
 
-	Fixes a crash when releasing a clip handle #2147
+	Improved performance. Loading in projects especially should now be up to 50x faster compared to 3.1.0. #2121 #2087 #2065 #2267
+	Added snap guides when resizing clips #2066
+	Added new shortcuts for looping: Shift+L for "Set Loop to Selection", Shift+Alt+L for "Clear Looping Region" #2209
+	Added a new selection region indicator in the timeline (identical in function as the one found pre-3.1, but with updated visuals)​ #2067
+
+	Changed error messages to look less like a crash report #2178
+	Re-added the Quick Play indicator (green triangle and line) that got lost during 3.1.0 development #2122
+
+	Fixed Play-at-speed not updating the playback speed dynamically #2149
+	Fixed looping regions being created unintentionally when attempting to use Timeline Quick Play #2182
+	Fixed looping sometimes playing the wrong audio #2103
+	Fixed a bug that could cause data-loss when joining multiple clips #2226
+	Fixed scrub preview visibility #2294
+	Fixed a bug when trying to locate FFMPEG manually #2282
+	Fixed a glitch with Loop Playback #2314
+
+	Fixed a crash and a macOS-specific bug when renaming sync-locked clips using a dialog box. #2199, #2198
+	Fixed a crash when releasing a clip handle #2147
+	Fixed a freeze when closing Audacity with the logging window open #2114
+	Fixed a crash when loading a saved project using certain compilers #2216
+	Fixed a crash on paste after running macros #2021
+	Fixed a crash when cancelling a nyquist prompt #2239
 
 Changes in version 3.1.2:
 

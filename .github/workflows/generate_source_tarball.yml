@@ -3,7 +3,7 @@ name: Generate Source Tarball
 on:
   push:
   workflow_dispatch:
-    
+
 defaults:
   run:
     shell: bash
@@ -34,9 +34,9 @@ jobs:
           cache-name: cache-conan-modules
         with:
           path: ${{ env.CONAN_USER_HOME }}
-          key: host-3-${{ matrix.config.name }}-${{ hashFiles('cmake-proxies/CMakeLists.txt') }}
+          key: host-3-${{ matrix.config.name }}-${{ env.CONAN_VERSION }}-${{ env.COMPILER_VERSION }}-${{ hashFiles('cmake-proxies/CMakeLists.txt') }}
           restore-keys: |
-            host-3-${{ matrix.config.name }}-
+            host-3-${{ matrix.config.name }}-${{ env.CONAN_VERSION }}-${{ env.COMPILER_VERSION }}-
 
       - name: Configure
         run: |
@@ -45,7 +45,7 @@ jobs:
       - name: Package
         run: |
           cmake --build build --target package_source
-    
+
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
