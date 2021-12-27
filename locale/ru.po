@@ -500,7 +500,7 @@ msgstr "Группа плагинов в %s была объединена с р�
 #: libraries/lib-registries/Registry.cpp
 #, c-format
 msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr "Элемент плагинов в %s конфликтует с ранее определенным элементом и был отклонён"
+msgstr "Элемент плагинов в %s конфликтует с ранее определённым элементом и был отклонён"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
@@ -717,11 +717,11 @@ msgstr "Не удался парсинг XML"
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "1st Experimental Command..."
-msgstr "1-ая експериментальная команда…"
+msgstr "1-ая экспериментальная команда…"
 
 #: modules/mod-null/ModNullCallback.cpp
 msgid "2nd Experimental Command"
-msgstr "2-ая експериментальная команда…"
+msgstr "2-ая экспериментальная команда…"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
@@ -1313,7 +1313,7 @@ msgstr "%s, %s команда %s, 1999–2021."
 #: src/AboutDialog.cpp
 #, c-format
 msgid "The name %s is a registered trademark."
-msgstr "Имя %s является зарегистрованной торговой маркой."
+msgstr "Имя %s является зарегистрированной торговой маркой."
 
 #: src/AboutDialog.cpp
 msgid "Build Information"
@@ -2375,7 +2375,7 @@ msgstr "Обработка %d изменений...\n"
 #: src/Benchmark.cpp
 #, c-format
 msgid "Cut: %lld - %lld \n"
-msgstr "Вырезатьt: %lld - %lld \n"
+msgstr "Вырезать: %lld - %lld \n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -2945,11 +2945,11 @@ msgstr "Гц"
 
 #: src/FreqWindow.cpp
 msgid "Cursor:"
-msgstr "Курсор: "
+msgstr "Курсор:"
 
 #: src/FreqWindow.cpp
 msgid "Peak:"
-msgstr "Пик: "
+msgstr "Пик:"
 
 #: src/FreqWindow.cpp
 msgid "&Grids"
@@ -3799,7 +3799,7 @@ msgstr ""
 msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
-msgstr[0] "Включить эти плагины?\n"
+msgstr[0] "Включить этот плагин?\n"
 msgstr[1] "Включить эти плагины?\n"
 msgstr[2] "Включить эти плагины?\n"
 
@@ -4282,7 +4282,7 @@ msgstr ""
 
 #: src/ProjectFileIO.cpp
 msgid "This is not an Audacity project file"
-msgstr "Это не файл проекта Audacit"
+msgstr "Это не файл проекта Audacity"
 
 #: src/ProjectFileIO.cpp
 msgid ""
@@ -5923,7 +5923,7 @@ msgstr ""
 
 #: src/commands/CommandManager.cpp
 msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
-msgstr "Сочетания клавиш следующих команд были удалены, поскольку их стандартные сочетания были изменены и совпали с назначенными сочетаниями клавишдругой команде."
+msgstr "Сочетания клавиш следующих команд были удалены, поскольку их стандартные сочетания были изменены и совпали с назначенными сочетаниями клавиш другой команде."
 
 #: src/commands/CommandManager.cpp
 msgid "Shortcuts have been removed"
@@ -6188,7 +6188,7 @@ msgstr "Сохраняет проект."
 
 #: src/commands/OpenSaveCommands.h
 msgid "Saves a copy of current project."
-msgstr "Сохраняет копию текущео проекта."
+msgstr "Сохраняет копию текущего проекта."
 
 #: src/commands/OpenSaveCommands.h
 msgid "Saves the log contents."
@@ -10723,7 +10723,7 @@ msgstr "Небольшая задержка"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "2.5 ms"
-msgstr "2.5 мс"
+msgstr "2,5 мс"
 
 #: src/export/ExportFFmpegDialogs.cpp
 msgid "5 ms"
@@ -12136,7 +12136,7 @@ msgstr ""
 
 #: src/import/ImportAUP.cpp
 msgid "Internal error in importer...tag not recognized"
-msgstr "Внутренняя ошибк импортёра ...тег не распознан"
+msgstr "Внутренняя ошибка импортёра... тег не распознан"
 
 #: src/import/ImportAUP.cpp
 #, c-format
@@ -12559,7 +12559,7 @@ msgstr "GSM 6.10"
 
 #: src/import/ImportPCM.cpp
 msgid "32kbs G721 ADPCM"
-msgstr "32 кб/сек G721 ADPCM"
+msgstr "32 кб/с G721 ADPCM"
 
 #: src/import/ImportPCM.cpp
 msgid "24kbs G723 ADPCM"
@@ -14204,7 +14204,7 @@ msgstr "Начало выровнено по курсору/началу выд�
 
 #: src/menus/TrackMenus.cpp
 msgid "Aligned/Moved start to selection end"
-msgstr "Начало выровнено/перемещёно до конца выделения"
+msgstr "Начало выровнено/перемещено до конца выделения"
 
 #: src/menus/TrackMenus.cpp
 msgid "Aligned start to selection end"
@@ -15165,7 +15165,7 @@ msgstr ""
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
 msgid "Directory %s is not suitable (at risk of being cleaned out)"
-msgstr "Каталог %s не подходит (есть риск его автоочитстки)"
+msgstr "Каталог %s не подходит (есть риск его автоочистки)"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Temporary Directory' cannot be set."
@@ -15628,7 +15628,7 @@ msgstr "&Задать"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
-msgstr "Прим.: нажатие  Cmd+Q завершит работу. Все остальные клавиши действительны."
+msgstr "Прим.: нажатие Cmd+Q завершит работу. Все остальные клавиши действительны."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Import..."
@@ -16147,7 +16147,7 @@ msgstr "Категория"
 
 #: src/prefs/PrefsDialog.cpp src/prefs/PrefsDialog.h
 msgid "Preferences:"
-msgstr "Настройки: "
+msgstr "Настройки:"
 
 #: src/prefs/QualityPrefs.cpp
 msgid "Preferences for Quality"
@@ -16241,7 +16241,7 @@ msgstr "Формат имени новых записанных треков"
 #. i18n-hint: end of two-part phrase, "Name newly recorded tracks with:"
 #: src/prefs/RecordingPrefs.cpp
 msgid "With:"
-msgstr "Включает: "
+msgstr "Включает:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Custom Track &Name"
@@ -17350,7 +17350,7 @@ msgstr "Проигрывание на скорости"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
-msgstr "Перетащите метку.  При перетаскивании удерживайте Shift, чтобы переместить все метки одного трека."
+msgstr "Перетащите метку. При перетаскивании удерживайте Shift, чтобы переместить все метки одного трека."
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -17517,7 +17517,7 @@ msgstr "При отрисовке увеличьте масштаб до отд�
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Moved Samples"
-msgstr "Перемещёные сэмплы"
+msgstr "Перемещённые сэмплы"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Sample Edit"
@@ -17593,7 +17593,7 @@ msgstr "Изменение имени клипа"
 #, c-format
 msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
-msgstr[0] "%s, %d из %dклипа"
+msgstr[0] "%s, %d из %d клипа"
 msgstr[1] "%s, %d из %d клипов"
 msgstr[2] "%s, %d из %d клипов"
 
@@ -17699,7 +17699,7 @@ msgstr "Изменить частоту"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Set Rate"
-msgstr "Задать рейтинг"
+msgstr "Задать частоту"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.cpp
@@ -17817,7 +17817,7 @@ msgstr "%.0f%% правый"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr "Щёлкните и перетащите, чтобы настроить размер подидов, дважды щёлкните, чтобы разделить равномерно"
+msgstr "Щёлкните и перетащите, чтобы настроить размер подвидов, дважды щёлкните, чтобы разделить равномерно"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -18123,7 +18123,7 @@ msgstr "Не удалось переключиться между треками
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Moved clips to another track"
-msgstr "Клипы перемещёны на другой трек"
+msgstr "Клипы перемещены на другой трек"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 #, c-format
@@ -18217,13 +18217,13 @@ msgstr "Проверить наличие обновлений"
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, c-format
 msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
-msgstr "Если хотите изменит настройки автоматического поиска обновлений, то можете найти ина страницех в %s"
+msgstr "Если вы хотите изменить настройку автоматического поиска обновлений, то можете найти её в %s."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "Preferences > Application"
-msgstr "Настройни > Приложение"
+msgstr "Настройки > Приложение"
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
@@ -18257,7 +18257,7 @@ msgstr "Обновления Audacity"
 #: src/update/UpdateManager.cpp
 #, c-format
 msgid "Downloading %s"
-msgstr "Загрузкаg %s"
+msgstr "Загрузка %s"
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -18619,7 +18619,7 @@ msgstr "01000,01000,01000 сэмплов|#"
 #. * seconds and frames at 24 frames per second (commonly used for films)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + film frames (24 fps)"
-msgstr "чч:мм:сс + кинокадры (24 кадра/сек)"
+msgstr "чч:мм:сс + кинокадры (24 кадра/с)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames at 24 frames per second. Change the 'h' to the abbreviation
@@ -18636,7 +18636,7 @@ msgstr "0100 ч 060 м 060 с+>24 кадра"
 #. * frames) at 24 frames per second (commonly used for films)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "film frames (24 fps)"
-msgstr "кинокадры (24 кадра/сек)"
+msgstr "кинокадры (24 кадра/с)"
 
 #. i18n-hint: Format string for displaying time in frames at 24 frames per
 #. * second. Change the comma
@@ -18700,7 +18700,7 @@ msgstr "01000,01000 кадры|29.97002997"
 #. * seconds and frames at PAL TV frame rate (used for European TV)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + PAL frames (25 fps)"
-msgstr "чч:мм:сс + кадры PAL (24 кадра/сек)"
+msgstr "чч:мм:сс + кадры PAL (24 кадра/с)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with PAL TV frames. Change the 'h' to the abbreviation
@@ -18716,7 +18716,7 @@ msgstr "0100 ч 060 м 060 с+>25 кадров"
 #. * TV frame rate (used for European TV)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "PAL frames (25 fps)"
-msgstr "кадры PAL (25 кадров/сек)"
+msgstr "кадры PAL (25 кадров/с)"
 
 #. i18n-hint: Format string for displaying time in frames with NTSC frames.
 #. * Change the comma
@@ -18730,7 +18730,7 @@ msgstr "01000,01000 кадры|25"
 #. * seconds and frames at CD Audio frame rate (75 frames per second)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + CDDA frames (75 fps)"
-msgstr "чч:мм:сс + кадры CDDA (75 кадров/сек)"
+msgstr "чч:мм:сс + кадры CDDA (75 кадров/с)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
@@ -18746,7 +18746,7 @@ msgstr "0100 ч 060 м 060 с+>75 кадров"
 #. * Audio frame rate (75 frames per second)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "CDDA frames (75 fps)"
-msgstr "кадры CDDA (75 кадров/сек)"
+msgstr "кадры CDDA (75 кадров/с)"
 
 #. i18n-hint: Format string for displaying time in frames with CD Audio
 #. * frames. Change the comma
@@ -19644,7 +19644,7 @@ msgstr "Порог:"
 
 #: plug-ins/label-sounds.ny
 msgid "Peak level"
-msgstr "Пик: "
+msgstr "Пик:"
 
 #: plug-ins/label-sounds.ny
 msgid "Average level"
@@ -20309,7 +20309,7 @@ msgid ""
 "                  DC offset: ~a~a"
 msgstr ""
 "~a~%Частота дискретизации: ~a Гц. Значение сэмпла на шкале ~a. ~a.~%~aДлина обработки: \"~a ~\n"
-"                 сэмплов ~a сек.~%Пик амплитуды: ~a (линейная) ~a дБ.  Невзвешанная RMS: ~a дБ.~%~\n"
+"                 сэмплов ~a сек.~%Пик амплитуды: ~a (линейная) ~a дБ.  Невзвешенная RMS: ~a дБ.~%~\n"
 "                  DC-смещение: ~a~a"
 
 #: plug-ins/sample-data-export.ny
