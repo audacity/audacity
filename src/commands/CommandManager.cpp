@@ -214,20 +214,6 @@ const CommandManager &CommandManager::Get( const AudacityProject &project )
    return Get( const_cast< AudacityProject & >( project ) );
 }
 
-static CommandManager::MenuHook &sMenuHook()
-{
-   static CommandManager::MenuHook theHook;
-   return theHook;
-}
-
-auto CommandManager::SetMenuHook( const MenuHook &hook ) -> MenuHook
-{
-   auto &theHook = sMenuHook();
-   auto result = theHook;
-   theHook = hook;
-   return result;
-}
-
 ///
 ///  Standard Constructor
 ///
@@ -1329,8 +1315,7 @@ bool CommandManager::HandleMenuID(
    mLastProcessId = id;
    CommandListEntry *entry = mCommandNumericIDHash[id];
 
-   auto hook = sMenuHook();
-   if (hook && hook(entry->name))
+   if (GlobalMenuHook::Call(entry->name))
       return true;
 
    return HandleCommandEntry( project, entry, flags, alwaysEnabled );
