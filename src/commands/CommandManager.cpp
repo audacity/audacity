@@ -1697,25 +1697,21 @@ void CommandManager::RemoveDuplicateShortcuts()
 
 #include "../KeyboardCapture.h"
 
-static struct InstallHandlers
-{
-   InstallHandlers()
-   {
-      KeyboardCapture::SetPreFilter( []( wxKeyEvent & ) {
-         // We must have a project since we will be working with the
-         // CommandManager, which is tied to individual projects.
-         auto project = GetActiveProject().lock();
-         return project && GetProjectFrame( *project ).IsEnabled();
-      } );
-      KeyboardCapture::SetPostFilter( []( wxKeyEvent &key ) {
-         // Capture handler window didn't want it, so ask the CommandManager.
-         if (auto project = GetActiveProject().lock()) {
-            auto &manager = CommandManager::Get( *project );
-            return manager.FilterKeyEvent(project.get(), key);
-         }
-         else
-            return false;
-      } );
+static KeyboardCapture::PreFilter::Scope scope1{
+[]( wxKeyEvent & ) {
+   // We must have a project since we will be working with the
+   // CommandManager, which is tied to individual projects.
+   auto project = GetActiveProject().lock();
+   return project && GetProjectFrame( *project ).IsEnabled();
+} };
+static KeyboardCapture::PostFilter::Scope scope2{
+[]( wxKeyEvent &key ) {
+   // Capture handler window didn't want it, so ask the CommandManager.
+   if (auto project = GetActiveProject().lock()) {
+      auto &manager = CommandManager::Get( *project );
+      return manager.FilterKeyEvent(project.get(), key);
    }
-} installHandlers;
+   else
+      return false;
+} };
 
