@@ -59,7 +59,7 @@ effects from this one class.
 #include "../../NoteTrack.h"
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
-#include "../../PluginManager.h"
+#include "PluginManager.h"
 #include "Project.h"
 #include "ProjectRate.h"
 #include "../../ShuttleGetDefinition.h"

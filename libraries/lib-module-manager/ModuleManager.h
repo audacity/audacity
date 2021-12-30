@@ -16,8 +16,8 @@
 #include <functional>
 #include <map>
 #include <vector>
+#include <wx/string.h>
 
-#include "audacity/Types.h"
 #include "Identifier.h"
 
 class wxArrayString;
@@ -25,6 +25,8 @@ class wxDynamicLibrary;
 class ComponentInterface;
 class ModuleInterface;
 class wxWindow;
+using PluginID = wxString;
+class TranslatableString;
 
 //
 // Module Manager
@@ -67,7 +69,7 @@ using ModuleInterfaceHandle = std::unique_ptr<
 typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
 typedef std::map<ModuleInterface *, std::unique_ptr<wxDynamicLibrary>> LibraryMap;
 
-class AUDACITY_DLL_API ModuleManager final
+class MODULE_MANAGER_API ModuleManager final
 {
 public:
 
@@ -142,9 +144,9 @@ private:
 // ----------------------------------------------------------------------------
 using ModuleMain = ModuleInterface *(*)();
 
-AUDACITY_DLL_API
+MODULE_MANAGER_API
 void RegisterProvider(ModuleMain rtn);
-AUDACITY_DLL_API
+MODULE_MANAGER_API
 void UnregisterProvider(ModuleMain rtn);
 
 // Guarantee the registry exists before any registrations, so it will

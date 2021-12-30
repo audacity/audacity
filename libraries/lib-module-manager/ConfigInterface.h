@@ -54,13 +54,13 @@ class EffectDefinitionInterface;
 
 namespace PluginSettings {
 
-AUDACITY_DLL_API bool HasConfigGroup( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool HasConfigGroup( EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group);
-AUDACITY_DLL_API bool GetConfigSubgroups( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool GetConfigSubgroups( EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group,
    RegistryPaths & subgroups);
 
-AUDACITY_DLL_API bool GetConfigValue( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool GetConfigValue( EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group,
    const RegistryPath & key, ConfigReference var, ConfigConstReference value);
 
@@ -89,7 +89,7 @@ inline bool GetConfig( EffectDefinitionInterface &ident,
    return GetConfig(ident, type, group, key, var, Value{});
 }
 
-AUDACITY_DLL_API bool SetConfigValue( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool SetConfigValue( EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group,
    const RegistryPath & key, ConfigConstReference value);
 
@@ -101,9 +101,9 @@ inline bool SetConfig( EffectDefinitionInterface &ident,
    return SetConfigValue(ident, type, group, key, std::cref(value));
 }
 
-AUDACITY_DLL_API bool RemoveConfigSubgroup( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool RemoveConfigSubgroup( EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group);
-AUDACITY_DLL_API bool RemoveConfig( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool RemoveConfig( EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group,
    const RegistryPath & key);
 

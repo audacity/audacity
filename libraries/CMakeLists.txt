@@ -26,6 +26,7 @@ set( LIBRARIES
    lib-track
    lib-transactions
    lib-sample-track
+   lib-module-manager
 )
 
 if ( ${_OPT}has_networking )
