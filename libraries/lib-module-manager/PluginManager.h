@@ -223,7 +223,6 @@ public:
 
    bool DropFile(const wxString &fileName);
 
-   //! @pre Initialize() has been called
    static PluginManager & Get();
 
    static PluginID GetID(ModuleInterface *module);

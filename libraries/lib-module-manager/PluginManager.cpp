@@ -581,7 +581,6 @@ static PluginManager::FileConfigFactory sFactory;
 
 PluginManager & PluginManager::Get()
 {
-   wxASSERT(sFactory);
    if (!mInstance)
    {
       mInstance.reset(safenew PluginManager);
