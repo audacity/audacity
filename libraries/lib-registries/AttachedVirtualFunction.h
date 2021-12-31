@@ -169,9 +169,16 @@ public:
       for which no override was defined */
    static Function Implementation();
 
+#ifdef _WIN32
+   __declspec(dllexport)
+#endif
     //! At least one static instance must be created; more instances are harmless
     /*! (There will be others if there are any overrides.) */
-   AttachedVirtualFunction();
+   AttachedVirtualFunction()
+   {
+      static std::once_flag flag;
+      std::call_once( flag, []{ Register<Object>( Implementation() ); } );
+   }
 
    //! For defining overrides of the method
    /*!
@@ -202,6 +209,9 @@ public:
          return Overridden::Implementation()(
             object, std::forward< Arguments >( arguments )... );
       }
+#ifdef _WIN32
+   __declspec(dllexport)
+#endif
       //! At least one static instance must be created; more instances are harmless
       /*! (There will be others if there are any further overrides.) */
       Override()
@@ -274,27 +284,22 @@ private:
    };
 
    using Registry = std::vector< Entry >;
-   static Registry &GetRegistry();
+#ifdef _WIN32
+   __declspec(dllexport)
+#endif
+   static Registry &GetRegistry()
+   {
+      static Registry registry;
+      return registry;
+   }
 };
 
 //! Typically follow the `using` declaration of a new AttachedVirtualFunction with this macro
 #define DECLARE_EXPORTED_ATTACHED_VIRTUAL(DECLSPEC, Name)      \
-   template<> DECLSPEC Name::AttachedVirtualFunction();        \
-   template<> auto DECLSPEC Name::GetRegistry() -> Registry &; \
    template<> auto DECLSPEC Name::Implementation() -> Function
 
 //! Used in the companion .cpp file to the .h using the above macro; followed by a function body
 #define DEFINE_ATTACHED_VIRTUAL(Name)                          \
-   template<> Name::AttachedVirtualFunction()                  \
-   {                                                           \
-      static std::once_flag flag;                              \
-      std::call_once( flag, []{ Register<Object>( Implementation() ); } ); \
-   }                                                           \
-   template<> auto Name::GetRegistry() -> Registry &           \
-   {                                                           \
-      static Registry registry;                                \
-      return registry;                                         \
-   }                                                           \
    static Name register ## Name ;                              \
    template<> auto Name::Implementation() -> Function
 
