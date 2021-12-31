@@ -52,7 +52,8 @@ enum {
    ScrubSpeedStepsPerOctave = 4,
 #endif
 
-   kOneSecondCountdown = 1000 / ScrubPollInterval_ms.count(),
+   kOneSecondCountdown =
+      1000 / std::chrono::milliseconds{ScrubPollInterval}.count(),
 };
 
 static constexpr PlaybackPolicy::Duration MinStutter{0.2};
@@ -153,7 +154,7 @@ auto Scrubber::ScrubPollerThread::Entry() -> ExitCode
 {
    while( !TestDestroy() )
    {
-      std::this_thread::sleep_for(ScrubPollInterval_ms);
+      std::this_thread::sleep_for(ScrubPollInterval);
       mScrubber.ContinueScrubbingPoll();
    }
    return 0;
@@ -417,12 +418,12 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
             // execute too much else
             options.playbackStreamPrimer = [this](){
                ContinueScrubbingPoll();
-               return ScrubPollInterval_ms;
+               return ScrubPollInterval;
             };
 #endif
             options.playNonWaveTracks = false;
             options.envelope = nullptr;
-            mOptions.delay = ScrubPollInterval_ms;
+            mOptions.delay = ScrubPollInterval;
             mOptions.isKeyboardScrubbing = false;
             mOptions.initSpeed = 0;
             mOptions.minSpeed = 0.0;
@@ -518,7 +519,7 @@ bool Scrubber::StartKeyboardScrubbing(double time0, bool backwards)
    // execute too much else
    options.playbackStreamPrimer = [this]() {
       ContinueScrubbingPoll();
-      return ScrubPollInterval_ms;
+      return ScrubPollInterval;
    };
 #endif
 
@@ -527,7 +528,7 @@ bool Scrubber::StartKeyboardScrubbing(double time0, bool backwards)
 
    // delay and minStutterTime are used in AudioIO::AllocateBuffers() for setting the
    // values of mPlaybackQueueMinimum and mPlaybackSamplesToCopy respectively.
-   mOptions.delay = ScrubPollInterval_ms;
+   mOptions.delay = ScrubPollInterval;
    mOptions.minStutterTime = mOptions.delay;
 
    mOptions.initSpeed = GetKeyboardScrubbingSpeed();
@@ -728,8 +729,9 @@ void Scrubber::StartPolling()
    mpThread->Create(4096);
    mpThread->Run();
 #endif
-   
-   mPoller->Start(ScrubPollInterval_ms.count() * 0.9);
+
+   mPoller->Start( 0.9 *
+      std::chrono::duration<double, std::milli>{ScrubPollInterval}.count());
 }
 
 void Scrubber::StopPolling()

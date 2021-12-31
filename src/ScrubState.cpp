@@ -358,7 +358,7 @@ bool ScrubbingPlaybackPolicy::Done(
 std::chrono::milliseconds
 ScrubbingPlaybackPolicy::SleepInterval( PlaybackSchedule & )
 {
-   return ScrubPollInterval_ms;
+   return ScrubPollInterval;
 }
 
 PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(

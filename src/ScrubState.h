@@ -106,6 +106,6 @@ struct ScrubState
    static double GetLastScrubTime();
 };
 
-static constexpr auto ScrubPollInterval_ms = std::chrono::milliseconds{50};
+static constexpr auto ScrubPollInterval = std::chrono::milliseconds{50};
 
 #endif
