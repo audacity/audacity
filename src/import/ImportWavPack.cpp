@@ -24,6 +24,7 @@
 #include "ImportPlugin.h"
 
 #include<wx/string.h>
+#include<stdlib.h>
 
 #include "Prefs.h"
 #include "../Tags.h"
@@ -115,7 +116,7 @@ TranslatableString WavPackImportPlugin::GetPluginFormatDescription()
 std::unique_ptr<ImportFileHandle> WavPackImportPlugin::Open(const FilePath &filename, AudacityProject*)
 {
    char errMessage[100]; // To hold possible error message
-   int flags = OPEN_WVC | OPEN_FILE_UTF8;
+   int flags = OPEN_WVC | OPEN_FILE_UTF8 | OPEN_TAGS;
    WavpackContext *wavpackContext = WavpackOpenFileInput(filename, errMessage, flags, 0);
    
    if (!wavpackContext) {
@@ -204,7 +205,7 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
    if (totalSamplesRead < mNumSamples)
       updateResult = ProgressResult::Failed;
 
-   if (updateResult == ProgressResult::Failed)
+   if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
       return updateResult;
 
    for (const auto &channel : mChannels)
@@ -212,6 +213,54 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
 
    if (!mChannels.empty())
       outTracks.push_back(std::move(mChannels));
+
+   int wavpackMode = WavpackGetMode(mWavPackContext);
+   if (wavpackMode & MODE_VALID_TAG) {
+      bool apeTag = wavpackMode & MODE_APETAG;
+      int numItems = WavpackGetNumTagItems(mWavPackContext);
+
+      if (numItems > 0) {
+         tags->Clear();
+         for (int i = 0; i < numItems; i++) {
+            int itemLen = 0, valueLen = 0;
+            char *item, *itemValue;
+            wxString value, name;
+
+            // Get the actual length of the item key at this index i
+            itemLen = WavpackGetTagItemIndexed(mWavPackContext, i, NULL, 0);
+            item = (char *)malloc(itemLen + 1);
+            WavpackGetTagItemIndexed(mWavPackContext, i, item, itemLen + 1);
+            name = UTF8CTOWX(item);
+
+            // Get the actual length of the value for this item key
+            valueLen = WavpackGetTagItem(mWavPackContext, item, NULL, 0);
+            itemValue = (char *)malloc(valueLen + 1);
+            WavpackGetTagItem(mWavPackContext, item, itemValue, valueLen + 1);
+
+            if (apeTag) {
+               for (int j = 0; j < valueLen; j++) {
+                  // APEv2 text tags can have multiple NULL separated string values
+                  if (!itemValue[j]) {
+                     itemValue[j] = '\\';
+                  }
+               }
+            }
+            value = UTF8CTOWX(itemValue);
+
+            if (name.Upper() == wxT("DATE") && !tags->HasTag(TAG_YEAR)) {
+               long val;
+               if (value.length() == 4 && value.ToLong(&val)) {
+                  name = TAG_YEAR;
+               }
+            }
+
+            tags->SetTag(name, value);
+
+            free(item);
+            free(itemValue);
+         }
+      }
+   }
 
    return updateResult;
 }
