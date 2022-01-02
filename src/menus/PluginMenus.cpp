@@ -6,7 +6,7 @@
 #include "../CommonCommandFlags.h"
 #include "../Journal.h"
 #include "../Menus.h"
-#include "../PluginManager.h"
+#include "PluginManager.h"
 #include "../PluginRegistrationDialog.h"
 #include "Prefs.h"
 #include "Project.h"

@@ -28,15 +28,14 @@ for shared and private configs - which need to move out.
 #include <wx/log.h>
 #include <wx/tokenzr.h>
 
+#include "BasicUI.h"
 #include "ModuleInterface.h"
 
-#include "AudacityFileConfig.h"
 #include "Internat.h" // for macro XO
 #include "FileNames.h"
 #include "MemoryX.h"
 #include "ModuleManager.h"
 #include "PlatformCompatibility.h"
-#include "widgets/AudacityMessageBox.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -571,6 +570,8 @@ PluginManager::~PluginManager()
 // PluginManager implementation
 // ----------------------------------------------------------------------------
 
+static PluginManager::FileConfigFactory sFactory;
+
 // ============================================================================
 //
 // Return reference to singleton
@@ -588,8 +589,10 @@ PluginManager & PluginManager::Get()
    return *mInstance;
 }
 
-void PluginManager::Initialize()
+void PluginManager::Initialize(FileConfigFactory factory)
 {
+   sFactory = move(factory);
+
    // Always load the registry first
    Load();
 
@@ -639,6 +642,7 @@ void PluginManager::Terminate()
 
 bool PluginManager::DropFile(const wxString &fileName)
 {
+   using namespace BasicUI;
    auto &mm = ModuleManager::Get();
    const wxFileName src{ fileName };
 
@@ -668,11 +672,12 @@ bool PluginManager::DropFile(const wxString &fileName)
             dst.SetFullName( src.GetFullName() );
             if ( dst.Exists() ) {
                // Query whether to overwrite
-               bool overwrite = (wxYES == ::AudacityMessageBox(
+               bool overwrite = (MessageBoxResult::Yes == ShowMessageBox(
                   XO("Overwrite the plug-in file %s?")
                      .Format( dst.GetFullPath() ),
-                  XO("Plug-in already exists"),
-                  wxYES_NO ) );
+                  MessageBoxOptions{}
+                     .Caption(XO("Plug-in already exists"))
+                     .ButtonStyle(Button::YesNo)));
                if ( !overwrite )
                   return true;
             }
@@ -692,7 +697,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             }
 
             if (!copied) {
-               ::AudacityMessageBox(
+               ShowMessageBox(
                   XO("Plug-in file is in use. Failed to overwrite") );
                return true;
             }
@@ -713,7 +718,7 @@ bool PluginManager::DropFile(const wxString &fileName)
                });
             if ( ! nPlugIns ) {
                // Unlikely after the dry run succeeded
-               ::AudacityMessageBox(
+               ShowMessageBox(
                   XO("Failed to register:\n%s").Format( errMsg ) );
                return true;
             }
@@ -730,10 +735,11 @@ bool PluginManager::DropFile(const wxString &fileName)
                )( nIds );
                for (const auto &name : names)
                   message.Join( Verbatim( name ), wxT("\n") );
-               bool enable = (wxYES == ::AudacityMessageBox(
+               bool enable = (MessageBoxResult::Yes == ShowMessageBox(
                   message,
-                  XO("Enable new plug-ins"),
-                  wxYES_NO ) );
+                  MessageBoxOptions{}
+                     .Caption(XO("Enable new plug-ins"))
+                     .ButtonStyle(Button::YesNo)));
                for (const auto &id : ids)
                   mPlugins[id].SetEnabled(enable);
                // Make changes to enabled status persist:
@@ -751,8 +757,7 @@ bool PluginManager::DropFile(const wxString &fileName)
 void PluginManager::Load()
 {
    // Create/Open the registry
-   auto pRegistry = AudacityFileConfig::Create(
-      {}, {}, FileNames::PluginRegistry());
+   auto pRegistry = sFactory(FileNames::PluginRegistry());
    auto &registry = *pRegistry;
 
    // If this group doesn't exist then we have something that's not a registry.
@@ -1096,8 +1101,7 @@ void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
 void PluginManager::Save()
 {
    // Create/Open the registry
-   auto pRegistry = AudacityFileConfig::Create(
-      {}, {}, FileNames::PluginRegistry());
+   auto pRegistry = sFactory(FileNames::PluginRegistry());
    auto &registry = *pRegistry;
 
    // Clear pluginregistry.cfg (not audacity.cfg)
@@ -1518,8 +1522,7 @@ FileConfig *PluginManager::GetSettings()
 {
    if (!mSettings)
    {
-      mSettings =
-         AudacityFileConfig::Create({}, {}, FileNames::PluginSettings());
+      mSettings = sFactory(FileNames::PluginSettings());
 
       // Check for a settings version that we can understand
       if (mSettings->HasEntry(SETVERKEY))

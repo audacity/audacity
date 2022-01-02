@@ -14,6 +14,7 @@
 #include <wx/defs.h>
 
 #include "wxArrayStringEx.h"
+#include <functional>
 #include <map>
 #include <memory>
 
@@ -40,7 +41,7 @@ typedef enum : unsigned {
 } PluginType;
 
 // TODO:  Convert this to multiple derived classes
-class AUDACITY_DLL_API PluginDescriptor
+class MODULE_MANAGER_API PluginDescriptor
 {
 public:
    PluginDescriptor();
@@ -170,7 +171,7 @@ typedef wxArrayString PluginIDs;
 
 class PluginRegistrationDialog;
 
-class AUDACITY_DLL_API PluginManager final : public PluginManagerInterface
+class MODULE_MANAGER_API PluginManager final : public PluginManagerInterface
 {
 public:
 
@@ -212,7 +213,12 @@ public:
 
    // PluginManager implementation
 
-   void Initialize();
+   // Initialization must inject a factory to make a concrete subtype of
+   // FileConfig
+   using FileConfigFactory = std::function<
+      std::unique_ptr<FileConfig>(const FilePath &localFilename ) >;
+   /*! @pre `factory != nullptr` */
+   void Initialize(FileConfigFactory factory);
    void Terminate();
 
    bool DropFile(const wxString &fileName);
@@ -232,7 +238,7 @@ public:
 
    //! @name iteration over plugins of certain types, supporting range-for syntax
    //! @{
-   class Iterator {
+   class MODULE_MANAGER_API Iterator {
    public:
       //! Iterates all, even disabled
       explicit Iterator(PluginManager &manager);

@@ -23,8 +23,8 @@ enum {
 
 namespace ModuleSettings {
 
-int GetModuleStatus( const FilePath &fname );
-void SetModuleStatus( const FilePath &fname, int iStatus );
+MODULE_MANAGER_API int GetModuleStatus( const FilePath &fname );
+MODULE_MANAGER_API void SetModuleStatus( const FilePath &fname, int iStatus );
 
 }
 

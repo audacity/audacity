@@ -18,7 +18,7 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffect.h"
-#include "../../ModuleManager.h"
+#include "ModuleManager.h"
 #include "SampleCount.h"
 
 #include <wx/defs.h>
@@ -1340,8 +1340,6 @@ size_t AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, size_t b
 
 bool AudioUnitEffect::RealtimeInitialize()
 {
-   mMasterIn.reinit(mAudioIns, mBlockSize, true);
-   mMasterOut.reinit(mAudioOuts, mBlockSize);
    return ProcessInitialize(0);
 }
 
@@ -1375,10 +1373,6 @@ bool AudioUnitEffect::RealtimeFinalize()
       mSlaves[i]->ProcessFinalize();
    }
    mSlaves.clear();
-
-   mMasterIn.reset();
-   mMasterOut.reset();
-
    return ProcessFinalize();
 }
 
@@ -1420,13 +1414,6 @@ bool AudioUnitEffect::RealtimeResume()
 
 bool AudioUnitEffect::RealtimeProcessStart()
 {
-   for (size_t i = 0; i < mAudioIns; i++)
-   {
-      memset(mMasterIn[i].get(), 0, mBlockSize * sizeof(float));
-   }
-
-   mNumSamples = 0;
-
    return true;
 }
 
@@ -1436,25 +1423,11 @@ size_t AudioUnitEffect::RealtimeProcess(int group,
                                         size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
-
-   for (size_t c = 0; c < mAudioIns; c++)
-   {
-      for (decltype(numSamples) s = 0; s < numSamples; s++)
-      {
-         mMasterIn[c][s] += inbuf[c][s];
-      }
-   }
-   mNumSamples = wxMax(numSamples, mNumSamples);
-
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
 }
 
 bool AudioUnitEffect::RealtimeProcessEnd()
 {
-   ProcessBlock(reinterpret_cast<float**>(mMasterIn.get()),
-                reinterpret_cast<float**>(mMasterOut.get()),
-                mNumSamples);
-
    return true;
 }
 

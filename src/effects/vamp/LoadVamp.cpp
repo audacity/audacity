@@ -12,7 +12,7 @@
 
 #if defined(USE_VAMP)
 #include "LoadVamp.h"
-#include "../../ModuleManager.h"
+#include "ModuleManager.h"
 
 #include <wx/filename.h>
 

@@ -121,8 +121,6 @@ list( APPEND SOURCES
       Clipboard.h
       CommonCommandFlags.cpp
       CommonCommandFlags.h
-      ConfigInterface.cpp
-      ConfigInterface.h
       CrashReport.cpp
       CrashReport.h
       DBConnection.cpp
@@ -178,20 +176,12 @@ list( APPEND SOURCES
       MixAndRender.h
       MixerBoard.cpp
       MixerBoard.h
-      ModuleManager.cpp
-      ModuleManager.h
-      ModuleSettings.cpp
-      ModuleSettings.h
       NoteTrack.cpp
       NoteTrack.h
       PitchName.cpp
       PitchName.h
       PlaybackSchedule.cpp
       PlaybackSchedule.h
-      PluginInterface.cpp
-      PluginInterface.h
-      PluginManager.cpp
-      PluginManager.h
       PluginRegistrationDialog.cpp
       PluginRegistrationDialog.h
       Printing.cpp
@@ -1351,6 +1341,7 @@ set( AUDACITY_LIBRARIES
    lib-theme-resources-interface
    lib-transactions-interface
    lib-sample-track-interface
+   lib-module-manager-interface
 )
 
 if ( ${_OPT}has_networking )

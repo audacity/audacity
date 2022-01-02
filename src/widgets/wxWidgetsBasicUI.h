@@ -41,6 +41,11 @@ protected:
    DoMakeGenericProgress(const BasicUI::WindowPlacement &placement,
       const TranslatableString &title,
       const TranslatableString &message) override;
+   int DoMultiDialog(const TranslatableString &message,
+      const TranslatableString &title,
+      const TranslatableStrings &buttons,
+      const ManualPageID &helpPage,
+      const TranslatableString &boxMsg, bool log) override;
 };
 
 #endif

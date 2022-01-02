@@ -16,6 +16,7 @@ Paul Licameli
 #endif
 #include "widgets/AudacityMessageBox.h"
 #include "ProgressDialog.h"
+#include "MultiDialog.h"
 #include <wx/app.h>
 #include <wx/progdlg.h>
 #include <wx/windowptr.h>
@@ -224,4 +225,13 @@ wxWidgetsBasicUI::DoMakeGenericProgress(
 {
    return std::make_unique<MyGenericProgress>(
       title, message, wxWidgetsWindowPlacement::GetParent(placement));
+}
+
+int wxWidgetsBasicUI::DoMultiDialog(const TranslatableString &message,
+   const TranslatableString &title,
+   const TranslatableStrings &buttons,
+   const ManualPageID &helpPage,
+   const TranslatableString &boxMsg, bool log)
+{
+   return ::ShowMultiDialog(message, title, buttons, helpPage, boxMsg, log);
 }

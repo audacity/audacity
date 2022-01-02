@@ -18,11 +18,10 @@ i.e. an alternative to the usual interface, for Audacity.
 
 *//*******************************************************************/
 
-
 #include "ModuleManager.h"
 #include "ModuleInterface.h"
 
-
+#include "BasicUI.h"
 
 #include <wx/dynlib.h>
 #include <wx/log.h>
@@ -38,10 +37,6 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "Prefs.h"
 #include "ModuleSettings.h"
 #endif
-
-#include "widgets/MultiDialog.h"
-
-#include "widgets/AudacityMessageBox.h"
 
 #define initFnName      "ExtensionModuleInit"
 #define versionFnName   "GetVersionString"
@@ -60,11 +55,19 @@ Module::~Module()
 {
 }
 
+static BasicUI::MessageBoxResult DoMessageBox(const TranslatableString &msg)
+{
+   using namespace BasicUI;
+   return ShowMessageBox(msg,
+      MessageBoxOptions{}.Caption(XO("Module Unsuitable")));
+}
+
 void Module::ShowLoadFailureError(const wxString &Error)
 {
    auto ShortName = wxFileName(mName).GetName();
-   AudacityMessageBox(XO("Unable to load the \"%s\" module.\n\nError: %s").Format(ShortName, Error),
-                      XO("Module Unsuitable"));
+   DoMessageBox(
+      XO("Unable to load the \"%s\" module.\n\nError: %s")
+         .Format(ShortName, Error));
    wxLogMessage(wxT("Unable to load the module \"%s\". Error: %s"), mName, Error);
 }
 
@@ -94,10 +97,9 @@ bool Module::Load(wxString &deferredErrorMessage)
    // Check version string matches.  (For now, they must match exactly)
    tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
    if (versionFn == NULL){
-      AudacityMessageBox(
+      DoMessageBox(
          XO("The module \"%s\" does not provide a version string.\n\nIt will not be loaded.")
-            .Format( ShortName),
-         XO("Module Unsuitable"));
+            .Format( ShortName));
       wxLogMessage(wxT("The module \"%s\" does not provide a version string. It will not be loaded."), mName);
       mLib->Unload();
       return false;
@@ -105,10 +107,9 @@ bool Module::Load(wxString &deferredErrorMessage)
 
    wxString moduleVersion = versionFn();
    if( moduleVersion != AUDACITY_VERSION_STRING) {
-      AudacityMessageBox(
+      DoMessageBox(
          XO("The module \"%s\" is matched with Audacity version \"%s\".\n\nIt will not be loaded.")
-            .Format(ShortName, moduleVersion),
-         XO("Module Unsuitable"));
+            .Format(ShortName, moduleVersion));
       wxLogMessage(wxT("The module \"%s\" is matched with Audacity version \"%s\". It will not be loaded."), mName, moduleVersion);
       mLib->Unload();
       return false;
@@ -129,9 +130,9 @@ bool Module::Load(wxString &deferredErrorMessage)
 
    mDispatch = NULL;
 
-   AudacityMessageBox(
-      XO("The module \"%s\" failed to initialize.\n\nIt will not be loaded.").Format(ShortName),
-      XO("Module Unsuitable"));
+   DoMessageBox(
+      XO("The module \"%s\" failed to initialize.\n\nIt will not be loaded.")
+         .Format(ShortName));
    wxLogMessage(wxT("The module \"%s\" failed to initialize.\nIt will not be loaded."), mName);
    mLib->Unload();
 
@@ -290,8 +291,8 @@ void ModuleManager::TryLoadModules(
          const TranslatableStrings buttons{
             XO("Yes"), XO("No"),
          };  // could add a button here for 'yes and remember that', and put it into the cfg file.  Needs more thought.
-         int action;
-         action = ShowMultiDialog(msg, XO("Audacity Module Loader"),
+         int action = BasicUI::ShowMultiDialog(msg,
+            XO("Audacity Module Loader"),
             buttons,
             "",
             XO("Try and load this module?"),
@@ -324,9 +325,9 @@ void ModuleManager::TryLoadModules(
          if (!module->HasDispatch())
          {
             auto ShortName = wxFileName(file).GetName();
-            AudacityMessageBox(
-               XO("The module \"%s\" does not provide any of the required functions.\n\nIt will not be loaded.").Format(ShortName),
-               XO("Module Unsuitable"));
+            DoMessageBox(
+               XO("The module \"%s\" does not provide any of the required functions.\n\nIt will not be loaded.")
+                  .Format(ShortName));
             wxLogMessage(wxT("The module \"%s\" does not provide any of the required functions. It will not be loaded."), file);
             module->Unload();
          }
