@@ -354,39 +354,21 @@ Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac
 /* Do the i18n of a string with markup carefully with hints.
  (Remember languages with cases.) */
       XO(
-/* i18n-hint: First and third %s will be the program's name,
-  second %s will be "volunteers", fourth "available" */
-"%s is a free program written by a worldwide team of %s. \
-%s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems).")
+/* i18n-hint: %s substitutes to the program name. Do not change the links (ie the left side of the [[ | ]] ) */
+"%s is free, open source software, developed by [[https://mu.se|Muse Group]] with support of the [[https://www.audacityteam.org/about/credits|Free/Open Source community]].  \
+%s is [[https://www.audacityteam.org/download|available]] for Windows, MacOS and GNU/Linux.")
          .Format(
             ProgramName,
-            Verbatim("[[https://www.audacityteam.org/about/credits|%s]]")
-               /* i18n-hint: substitutes into "a worldwide team of %s" */
-               .Format( XO("volunteers") ),
-            ProgramName,
-            Verbatim("[[https://www.audacityteam.org/download|%s]]")
-               /* i18n-hint: substitutes into "Audacity is %s" */
-               .Format( XO("available") ) )
+            ProgramName)
 #endif
    ;
 
    // This trick here means that the English language version won't mention using
    // English, whereas all translated versions will.
    auto par2Str = XO(
-/* i18n-hint first and third %s will be "forum", second "wiki" */
-"If you find a bug or have a suggestion for us, please write, in English, to our %s. \
-For help, view the tips and tricks on our %s or \
-visit our %s.")
-      .Format(
-         Verbatim("[[https://forum.audacityteam.org/|%s]]")
-            /* i18n-hint substitutes into "write to our %s" */
-            .Format( XC("forum", "dative") ),
-         Verbatim("[[https://wiki.audacityteam.org/|%s]]")
-            /* i18n-hint substitutes into "view the tips and tricks on our %s" */
-            .Format( XO("wiki") ),
-         Verbatim("[[https://forum.audacityteam.org/|%s]]")
-            /* i18n-hint substitutes into "visit our %s" */
-            .Format( XC("forum", "accusative") ) );
+/* i18n-hint Do not change the links (ie the left side of the [[ | ]] ) */
+"For support, please read [[https://manual.audacityteam.org/|the manual]], or ask, in English, in [[https://forum.audacityteam.org/|our forum]] or [[https://discord.gg/audacity|discord server]]. \
+Bug reports and suggestions are also welcome.");
    auto par2StrTranslated = par2Str.Translation();
 
    if( par2StrTranslated == par2Str.MSGID().GET() )
