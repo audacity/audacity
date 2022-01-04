@@ -338,35 +338,6 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 {
    CreateCreditsList();
 
-   auto par1Str =
-// DA: Says that it is a customised version.
-#ifdef EXPERIMENTAL_DA
-      wxT(
-"Audacity, which this is a customised version of, is a free program written by a worldwide team of [[https://www.audacityteam.org/about/credits|volunteers]]. \
-Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).")
-#else
-/* Do the i18n of a string with markup carefully with hints.
- (Remember languages with cases.) */
-      XO(
-/* i18n-hint: %s substitutes to the program name. Do not change the links (ie the left side of the [[ | ]] ) */
-"%s is free, open source software, developed by [[https://mu.se|Muse Group]] with support of the [[https://www.audacityteam.org/about/credits|Free/Open Source community]].  \
-%s is [[https://www.audacityteam.org/download|available]] for Windows, MacOS and GNU/Linux.")
-         .Format(
-            ProgramName,
-            ProgramName)
-#endif
-   ;
-
-   // This trick here means that the English language version won't mention using
-   // English, whereas all translated versions will.
-   auto par2Str = XO(
-/* i18n-hint Do not change the links (ie the left side of the [[ | ]] ) */
-"For support, please read [[https://manual.audacityteam.org/|the manual]], or ask, in English, in [[https://forum.audacityteam.org/|our forum]] or [[https://discord.gg/audacity|discord server]]. \
-Bug reports and suggestions are also welcome.");
-   auto par2StrTranslated = par2Str.Translation();
-
-   if( par2StrTranslated == par2Str.MSGID().GET() )
-      par2StrTranslated.Replace( wxT(", in English,"), wxT("") );
 
    /* i18n-hint: The translation of "translator_credits" will appear
     *  in the credits in the About Audacity window.  Use this to add
@@ -408,10 +379,6 @@ Bug reports and suggestions are also welcome.");
             .Format(ProgramName)
 #endif
 
-      // << wxT("<p><br>")
-      // << par1Str
-      // << wxT("<p>")
-      // << par2Str
       << wxT("<h3>")
       << XO("Credits")
       << wxT("</h3>")
