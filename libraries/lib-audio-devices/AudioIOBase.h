@@ -317,7 +317,7 @@ protected:
    /** \brief How many sample rates to try */
    static const int NumRatesToTry;
 
-   /*! This class needs to iterate this array for one limited purpose but does
+   /*! This class needs to iterate this array for two limited purposes but does
     not populate it and does not give access to it except to subclasses
     */
    std::vector<std::unique_ptr<AudioIOExtBase>> mAudioIOExt;

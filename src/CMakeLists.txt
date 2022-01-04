@@ -106,6 +106,8 @@ list( APPEND SOURCES
       AudioIO.h
       AudioIOExt.cpp
       AudioIOExt.h
+      AudioIOExtensions.cpp
+      AudioIOExtensions.h
       AudioIOListener.h
       AutoRecoveryDialog.cpp
       AutoRecoveryDialog.h

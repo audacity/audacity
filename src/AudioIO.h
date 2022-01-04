@@ -15,7 +15,7 @@
 
 
 
-#include "AudioIOBase.h" // to inherit
+#include "AudioIOExtensions.h" // to inherit
 #include "PlaybackSchedule.h" // member variable
 
 #include <functional>
@@ -30,7 +30,6 @@
 #include "SampleFormat.h"
 
 class wxArrayString;
-class AudioIOBase;
 class AudioIO;
 class RingBuffer;
 class Mixer;
@@ -113,7 +112,7 @@ int audacityAudioCallback(
 class AudioIOExt;
 
 class AUDACITY_DLL_API AudioIoCallback /* not final */
-   : public AudioIOBase
+   : public AudioIOExtensions
 {
 public:
    AudioIoCallback();
@@ -126,51 +125,6 @@ public:
       unsigned long framesPerBuffer,
       const PaStreamCallbackTimeInfo *timeInfo,
       const PaStreamCallbackFlags statusFlags, void *userData);
-
-   //! @name iteration over extensions, supporting range-for syntax
-   //! @{
-   class AUDACITY_DLL_API AudioIOExtIterator {
-   public:
-      using difference_type = ptrdiff_t;
-      using value_type = AudioIOExt &;
-      using pointer = AudioIOExt *;
-      using reference = AudioIOExt &;
-      using iterator_category = std::forward_iterator_tag;
-
-      explicit AudioIOExtIterator( AudioIoCallback &audioIO, bool end )
-         : mIterator{ end
-            ? audioIO.mAudioIOExt.end()
-            : audioIO.mAudioIOExt.begin() }
-      {}
-      AudioIOExtIterator &operator ++ () { ++mIterator; return *this; }
-      auto operator *() const -> AudioIOExt &;
-      friend inline bool operator == (
-         const AudioIOExtIterator &xx, const AudioIOExtIterator &yy)
-      {
-         return xx.mIterator == yy.mIterator;
-      }
-      friend inline bool operator != (
-         const AudioIOExtIterator &xx, const AudioIOExtIterator &yy)
-      {
-         return !(xx == yy);
-      }
-   private:
-      std::vector<std::unique_ptr<AudioIOExtBase>>::const_iterator mIterator;
-   };
-   struct AudioIOExtRange {
-      AudioIOExtIterator first;
-      AudioIOExtIterator second;
-      AudioIOExtIterator begin() const { return first; }
-      AudioIOExtIterator end() const { return second; }
-   };
-
-   AudioIOExtRange Extensions() {
-      return {
-         AudioIOExtIterator{ *this, false },
-         AudioIOExtIterator{ *this, true }
-      };
-   }
-   //! @}
 
    std::shared_ptr< AudioIOListener > GetListener() const
       { return mListener.lock(); }
@@ -389,14 +343,6 @@ protected:
    struct TransportState;
    //! Holds some state for duration of playback or recording
    std::unique_ptr<TransportState> mpTransportState;
-
-private:
-   /*!
-    Privatize the inherited array but give access by Extensions().
-    This class guarantees that this array is populated only with non-null
-    pointers to the subtype AudioIOExt
-    */
-   using AudioIOBase::mAudioIOExt;
 };
 
 struct PaStreamInfo;

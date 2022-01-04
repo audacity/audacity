@@ -2997,12 +2997,8 @@ bool AudioIoCallback::AllTracksAlreadySilent()
 
 AudioIoCallback::AudioIoCallback()
 {
-   auto &factories = AudioIOExt::GetFactories();
-   for (auto &factory: factories)
-      if (auto pExt = factory(mPlaybackSchedule))
-         mAudioIOExt.push_back( move(pExt) );
+   AudioIOExtensions::Initialize(mPlaybackSchedule);
 }
-
 
 AudioIoCallback::~AudioIoCallback()
 {
@@ -3203,14 +3199,6 @@ void AudioIoCallback::CallbackCheckCompletion(
    callbackReturn = paComplete;
 }
 
-auto AudioIoCallback::AudioIOExtIterator::operator *() const -> AudioIOExt &
-{
-   // Down-cast and dereference are safe because only AudioIOCallback
-   // populates the array
-   return *static_cast<AudioIOExt*>(mIterator->get());
-}
-
-
 void AudioIoCallback::StartAudioThread()
 {
    mAudioThreadTrackBufferExchangeLoopRunning.store(true, std::memory_order_release);
@@ -3268,8 +3256,6 @@ void AudioIoCallback::ProcessOnceAndWait(std::chrono::milliseconds sleepTime)
       std::this_thread::sleep_for(sleepTime);
    }
 }
-
-
 
 bool AudioIO::IsCapturing() const
 {

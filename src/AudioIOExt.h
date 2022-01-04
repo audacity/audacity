@@ -34,6 +34,7 @@ public:
    static Factories &GetFactories();
 
    //! Typically statically constructed
+   /*! Registration of factories must be done before AudioIO is initialized */
    struct AUDIO_DEVICES_API RegisteredFactory{
       explicit RegisteredFactory(Factory factory);
       ~RegisteredFactory();

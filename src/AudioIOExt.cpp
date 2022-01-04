@@ -20,6 +20,7 @@ auto AudioIOExt::GetFactories() -> Factories &
 
 AudioIOExt::RegisteredFactory::RegisteredFactory(Factory factory)
 {
+   wxASSERT(!AudioIOBase::Get());
    GetFactories().push_back( move(factory) );
 }
 
