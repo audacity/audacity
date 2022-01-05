@@ -100,8 +100,6 @@ void MuteAndSoloDrawFunction
    wxRect bev = rect;
    if ( bHasSoloButton )
       GetNarrowMuteHorizontalBounds( rect, bev );
-   else
-      GetWideMuteSoloHorizontalBounds( rect, bev );
    {
       auto target = dynamic_cast<MuteButtonHandle*>( context.target.get() );
       bool hit = target && target->GetTrack().get() == pTrack;
@@ -140,15 +138,10 @@ void PlayableTrackControls::GetMuteSoloRect
    bool bSameRow = ( yMute == ySolo );
    bool bNarrow = bSameRow && bHasSoloButton;
 
-   if( bNarrow )
-   {
-      if( solo )
-         GetNarrowSoloHorizontalBounds( rect, dest );
-      else
-         GetNarrowMuteHorizontalBounds( rect, dest );
-   }
+   if( solo )
+       GetNarrowSoloHorizontalBounds( rect, dest );
    else
-      GetWideMuteSoloHorizontalBounds( rect, dest );
+       GetNarrowMuteHorizontalBounds( rect, dest );
 
    if( bSameRow || !solo )
       dest.y = rect.y + yMute;
