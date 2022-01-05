@@ -146,7 +146,11 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
    AddCredit(wxT("Leo Wattenberg"), documentationAndSupportFormat, roleTeamMember);
-
+   
+   // Former Musers
+   AddCredit(wxT("Anton Gerasimov"), developerFormat, roleExMuse);
+   AddCredit(wxT("Jouni Helminen"), designerFormat, roleExMuse);
+   
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
@@ -164,9 +168,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Steve Daulton"), roleEmeritusTeam);
    AddCredit(wxT("Al Dimond"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Benjamin Drung"), developerFormat, roleEmeritusTeam);
-   AddCredit(wxT("Anton Gerasimov"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Joshua Haberman"), developerFormat, roleEmeritusTeam);
-   AddCredit(wxT("Jouni Helminen"), designerFormat, roleEmeritusTeam);
    AddCredit(wxT("Ruslan Ijbulatov"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Vaughan Johnson"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleEmeritusTeam);
@@ -403,6 +405,11 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       << XO("%s Team Members").Format( ProgramName )
       << wxT("</b><br>")
       << GetCreditsByRole(roleTeamMember)
+	  
+	  << wxT("<p><b>")
+      << XO("Former Musers")
+      << wxT("</b><br>")
+      << GetCreditsByRole(roleExMuse)
 
       << wxT("<p><b> ")
       << XO("Emeritus:")
