@@ -38,12 +38,8 @@ enum
    ID_DutyCycle,
 };
 
-// DA: DTMF for Audacity uses a different string.
-#ifdef EXPERIMENTAL_DA
-#define SHORT_APP_NAME "darkaudacity"
-#else
 #define SHORT_APP_NAME "audacity"
-#endif
+
 
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //

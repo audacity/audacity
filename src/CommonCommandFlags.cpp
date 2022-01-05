@@ -78,25 +78,10 @@ static CommandFlagOptions result{
       // PRL:  These strings have hard-coded mention of a certain shortcut key,
       // thus assuming the default shortcuts.  That is questionable.
       TranslatableString format;
-#ifdef EXPERIMENTAL_DA
+
       // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
       format = XO("You must first select some audio for '%s' to act on.\n\nCtrl + A selects all audio.");
-#else
-#ifdef __WXMAC__
-      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-      format = XO("Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
-      // No need to explain what a help button is for.
-      // "\n\nClick the Help button to learn more about selection methods."
-      );
 
-#else
-      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-      format = XO("Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
-      // No need to explain what a help button is for.
-      // "\n\nClick the Help button to learn more about selection methods."
-      );
-#endif
-#endif
       return format.Format( Name );
    },
    "Selecting_Audio_-_the_basics",

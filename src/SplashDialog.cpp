@@ -45,12 +45,8 @@ most commonly asked questions about Audacity.
 #include "Prefs.h"
 #include "HelpText.h"
 
-// DA: Logo for Splash Dialog (welcome dialog)
-#ifdef EXPERIMENTAL_DA
-#include "../images/DarkAudacityLogoWithName.xpm"
-#else
 #include "../images/AudacityLogoWithName.xpm"
-#endif
+
 
 #ifdef HAS_WHATS_NEW
 

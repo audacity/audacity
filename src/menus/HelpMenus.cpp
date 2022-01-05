@@ -512,24 +512,10 @@ BaseItemSharedPtr HelpMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Help"), XXO("&Help"),
       Section( "Basic",
-         // QuickFix menu item not in Audacity 2.3.1 whilst we discuss further.
-   #ifdef EXPERIMENTAL_DA
-         // DA: Has QuickFix menu item.
-         Command( wxT("QuickFix"), XXO("&Quick Fix..."), FN(OnQuickFix),
-            AlwaysEnabledFlag ),
-         // DA: 'Getting Started' rather than 'Quick Help'.
-         Command( wxT("QuickHelp"), XXO("&Getting Started"), FN(OnQuickHelp),
-            AlwaysEnabledFlag ),
-         // DA: Emphasise it is the Audacity Manual (No separate DA manual).
-         Command( wxT("Manual"), XXO("Audacity &Manual"), FN(OnManual),
-            AlwaysEnabledFlag )
-
-   #else
          Command( wxT("QuickHelp"), XXO("&Quick Help..."), FN(OnQuickHelp),
             AlwaysEnabledFlag ),
          Command( wxT("Manual"), XXO("&Manual..."), FN(OnManual),
             AlwaysEnabledFlag )
-   #endif
       ),
 
    #ifdef __WXMAC__
