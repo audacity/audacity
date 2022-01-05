@@ -634,12 +634,6 @@ void ToolManager::Reset()
          || ndx == SpectralSelectionBarID
 #endif
          || ndx == ScrubbingBarID
-// DA: Hides three more toolbars.
-#ifdef EXPERIMENTAL_DA
-         || ndx == DeviceBarID
-         || ndx == TranscriptionBarID
-         || ndx == SelectionBarID
-#endif
          )
          expose = false;
 

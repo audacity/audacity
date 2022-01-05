@@ -734,11 +734,7 @@ void OnTogglePinnedHead(const CommandContext &context)
 void OnTogglePlayRecording(const CommandContext &WXUNUSED(context) )
 {
    bool Duplex;
-#ifdef EXPERIMENTAL_DA
-   gPrefs->Read(wxT("/AudioIO/Duplex"), &Duplex, false);
-#else
    gPrefs->Read(wxT("/AudioIO/Duplex"), &Duplex, true);
-#endif
    gPrefs->Write(wxT("/AudioIO/Duplex"), !Duplex);
    gPrefs->Flush();
    MenuManager::ModifyAllProjectToolbarMenus();
@@ -1218,13 +1214,7 @@ BaseItemSharedPtr TransportMenu()
                Command( wxT("Overdub"), XXO("&Overdub (on/off)"),
                   FN(OnTogglePlayRecording),
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
-                  Options{}.CheckTest( wxT("/AudioIO/Duplex"),
-#ifdef EXPERIMENTAL_DA
-                     false
-#else
-                     true
-#endif
-                  ) ),
+                  Options{}.CheckTest( wxT("/AudioIO/Duplex"), true) ),
                Command( wxT("SWPlaythrough"), XXO("So&ftware Playthrough (on/off)"),
                   FN(OnToggleSWPlaythrough),
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag(),

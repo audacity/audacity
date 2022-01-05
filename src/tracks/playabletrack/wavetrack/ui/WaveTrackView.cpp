@@ -804,12 +804,7 @@ void WaveTrackSubView::DrawBoldBoundaries(
             dc.SetPen( highlightLoc ? AColor::uglyPen : *wxRED_PEN );
          }
          else {
-#ifdef EXPERIMENTAL_DA
-            // JKC Black does not show up enough.
-            dc.SetPen(highlightLoc ? AColor::uglyPen : *wxWHITE_PEN);
-#else
             dc.SetPen(highlightLoc ? AColor::uglyPen : *wxBLACK_PEN);
-#endif
          }
          AColor::Line(dc, (int) (rect.x + xx), rect.y, (int) (rect.x + xx), rect.y + rect.height);
          dc.SetPen( highlightLoc ? AColor::uglyPen : *wxGREY_PEN );

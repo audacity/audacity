@@ -641,10 +641,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       }
       mRuler.SetTickColour( clrText );
       dc.SetTextForeground( clrText );
-      // Draw the ruler
-#ifndef EXPERIMENTAL_DA
-      mRuler.Draw(dc);
-#endif
+      mRuler.Draw(dc); // Draw the ruler
 
       // Bitmap created...unselect
       dc.SelectObject(wxNullBitmap);
@@ -661,7 +658,6 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    destDC.SetTextForeground( clrText );
 
-#ifndef EXPERIMENTAL_DA
    // We can have numbers over the bars, in which case we have to draw them each time.
    if (mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
    {
@@ -676,7 +672,6 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       }
       mRuler.Draw(destDC);
    }
-#endif
 
    // Let the user know they can click to start monitoring
    if( mIsInput && !mActive )

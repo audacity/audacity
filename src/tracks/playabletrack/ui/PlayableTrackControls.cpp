@@ -39,14 +39,6 @@ void GetNarrowSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
    dest.width = rect.width - muteRect.width + TitleSoloBorderOverlap;
 }
 
-void GetWideMuteSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
-{
-   // Larger button, symmetrically placed intended.
-   // On windows this gives 15 pixels each side.
-   dest.width = rect.width - 2 * kTrackInfoBtnSize + 6;
-   dest.x = rect.x + kTrackInfoBtnSize -3;
-}
-
 void MuteOrSoloDrawFunction
 ( wxDC *dc, const wxRect &bev, const Track *pTrack, bool down, 
   bool WXUNUSED(captured),
@@ -96,34 +88,6 @@ void MuteOrSoloDrawFunction
    TrackInfo::SetTrackInfoFont(dc);
    dc->GetTextExtent(str, &textWidth, &textHeight);
    dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
-}
-
-void WideMuteDrawFunction
-( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack )
-{
-   auto dc = &context.dc;
-   wxRect bev = rect;
-   GetWideMuteSoloHorizontalBounds( rect, bev );
-   auto target = dynamic_cast<MuteButtonHandle*>( context.target.get() );
-   bool hit = target && target->GetTrack().get() == pTrack;
-   bool captured = hit && target->IsClicked();
-   bool down = captured && bev.Contains( context.lastState.GetPosition());
-   MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false, hit );
-}
-
-void WideSoloDrawFunction
-( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack )
-{
-   auto dc = &context.dc;
-   wxRect bev = rect;
-   GetWideMuteSoloHorizontalBounds( rect, bev );
-   auto target = dynamic_cast<SoloButtonHandle*>( context.target.get() );
-   bool hit = target && target->GetTrack().get() == pTrack;
-   bool captured = hit && target->IsClicked();
-   bool down = captured && bev.Contains( context.lastState.GetPosition());
-   MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true, hit );
 }
 
 void MuteAndSoloDrawFunction
@@ -202,17 +166,8 @@ const TCPLines& PlayableTrackControls::StaticTCPLines()
    std::call_once( flag, []{
       playableTrackTCPLines = CommonTrackControls::StaticTCPLines();
       playableTrackTCPLines.insert( playableTrackTCPLines.end(), {
-   #ifdef EXPERIMENTAL_DA
-         // DA: Has Mute and Solo on separate lines.
-         { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1,
-           WideMuteDrawFunction },
-         { TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
-           WideSoloDrawFunction },
-   #else
          { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
            MuteAndSoloDrawFunction },
-   #endif
-
       } );
    } );
    return playableTrackTCPLines;

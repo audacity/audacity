@@ -153,12 +153,8 @@ It handles initialization and termination by subclassing wxApp.
 #endif
 #endif
 
-// DA: Logo for Splash Screen
-#ifdef EXPERIMENTAL_DA
-#include "../images/DarkAudacityLogoWithName.xpm"
-#else
 #include "../images/AudacityLogoWithName.xpm"
-#endif
+
 
 #include <thread>
 
@@ -1211,12 +1207,8 @@ bool AudacityApp::OnInit()
          wxT("/var/tmp/audacity-%s"), wxGetUserId() ) );
    }
 
-// DA: Path env variable.
-#ifndef EXPERIMENTAL_DA
    wxString pathVar = wxGetenv(wxT("AUDACITY_PATH"));
-#else
-   wxString pathVar = wxGetenv(wxT("DARKAUDACITY_PATH"));
-#endif
+
    if (!pathVar.empty())
       FileNames::AddMultiPathsToPathList(pathVar, audacityPathList);
    FileNames::AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
