@@ -29,7 +29,7 @@ best to discuss functional code changes with us first on the dev discord server:
 https://discord.gg/N3XKxzTrq3
 
 
-Licensing and Source Code, Libraries and Additional Copyright Information 
+Licensing and Source Code, Libraries, and Additional Copyright Information 
 follows.
 
 
@@ -50,7 +50,7 @@ License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program (in a file called LICENSE.txt); if not, go
-to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
+to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to:
 
   Free Software Foundation, Inc.
   59 Temple Place - Suite 330
@@ -58,7 +58,7 @@ to https://www.gnu.org/licenses/old-licenses/gpl-2.0.html or write to
   
   
   
-Source Code, Libraries and Additional Copyright Information
+Source Code, Libraries, and Additional Copyright Information
 -------------------------------------------------------------------------------
 
 Source code to this program is always available; for more information visit
@@ -126,11 +126,11 @@ GPL-compatible license.  Specifically:
 
   SoundTouch: LGPL
     Changes tempo without changing pitch and vice versa.
-    Included in audacity
+    Included in Audacity
 
   SQLite: Public Domain
     Small and fast SQL database engine.
-    Included in audacity
+    Included in Audacity
 
   Twolame: LGPL
     Encodes MPEG I layer 2 audio (used in DVDs and Radio). Optional separate
