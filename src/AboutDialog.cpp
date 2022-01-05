@@ -48,6 +48,7 @@ hold information about one contributor to Audacity.
 
 #include "AllThemeResources.h"
 #include "Theme.h"
+#include "../images/AudacityLogoWithName.xpm"
 
 // Notice this is a "system include".  This is on purpose and only until
 // we convert over to CMake.  Once converted, the "RevisionIndent.h" file
