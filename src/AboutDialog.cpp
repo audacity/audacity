@@ -58,9 +58,8 @@ hold information about one contributor to Audacity.
 
 // Notice this is a "system include".  This is on purpose and only until
 // we convert over to CMake.  Once converted, the "RevisionIndent.h" file
-// should be deleted and this can be changed back to a user include if
-// desired.
-//
+// should be deleted and this can be changed back to a user include if desired.
+
 // RevisionIdent.h may contain #defines like these ones:
 //#define REV_LONG "28864acb238cb3ca71dda190a2d93242591dd80e"
 //#define REV_TIME "Sun Apr 12 12:40:22 2015 +0100"
@@ -71,7 +70,7 @@ hold information about one contributor to Audacity.
 #endif
 
 #ifdef REV_LONG
-#define REV_IDENT wxString( "[[https://github.com/audacity/audacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME 
+#define REV_IDENT wxString( "[[https://github.com/audacity/audacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME )
 #else
 #define REV_IDENT (XO("No revision identifier was provided").Translation())
 #endif
@@ -147,9 +146,9 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
    AddCredit(wxT("Leo Wattenberg"), documentationAndSupportFormat, roleTeamMember);
 
-   // Emeritus: people who were "lead developers" or made an
-   // otherwise distinguished contribution, but who are no
-   // longer active.
+   /* Emeritus: people who were "lead developers" or made an
+      otherwise distinguished contribution, but who are no 
+      longer active. */
    AddCredit(
       wxT("[[https://wiki.audacityteam.org/wiki/User:Galeandrews|Gale Andrews]]"),
       qualityAssuranceFormat, roleEmeritusTeam);
@@ -318,7 +317,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
 
    SetName();
    this->SetBackgroundColour(theTheme.Colour( clrAboutBoxBackground ));
-   //this->SetBackgroundColour(theTheme.Colour( clrMedium ));
+   
    icon = NULL;
    ShuttleGui S( this, eIsCreating );
    S.StartNotebook();
@@ -480,9 +479,9 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       //v For now, change to AudacityLogoWithName via old-fashioned way, not Theme.
       wxBitmap logo(AudacityLogoWithName_xpm); //v
 
-      // JKC: Resize to 50% of size.  Later we may use a smaller xpm as
-      // our source, but this allows us to tweak the size - if we want to.
-      // It also makes it easier to revert to full size if we decide to.
+      /* JKC: Resize to 50% of size.  Later we may use a smaller xpm as
+         our source, but this allows us to tweak the size - if we want to.
+         It also makes it easier to revert to full size if we decide to. */
       const float fScale = 0.5f;// smaller size.
       wxImage RescaledImage(logo.ConvertToImage());
       wxColour MainColour(
@@ -496,9 +495,9 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 
       icon =
          safenew wxStaticBitmap(S.GetParent(), -1,
-         //*logo, //v
-         //v theTheme.Bitmap(bmpAudacityLogo), wxPoint(93, 10), wxSize(215, 190));
-         //v theTheme.Bitmap(bmpAudacityLogoWithName),
+         /*  logo, v
+           v theTheme.Bitmap(bmpAudacityLogo), wxPoint(93, 10), wxSize(215, 190));
+           v theTheme.Bitmap(bmpAudacityLogoWithName), */
          RescaledBitmap,
          wxDefaultPosition,
          wxSize((int)(LOGOWITHNAME_WIDTH*fScale), (int)(LOGOWITHNAME_HEIGHT*fScale)));
