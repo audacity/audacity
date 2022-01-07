@@ -20,6 +20,7 @@
 #ifndef __AUDACITY_MIX__
 #define __AUDACITY_MIX__
 
+#include "GlobalVariable.h"
 #include "SampleFormat.h"
 #include <functional>
 #include <vector>
@@ -61,15 +62,9 @@ class SAMPLE_TRACK_API Mixer {
     class SAMPLE_TRACK_API WarpOptions
     {
     public:
-       //! Type of hook function for default time warp
-       using DefaultWarpFunction =
-          std::function< const BoundedEnvelope*(const TrackList&) >;
-
-       //! Install a default warp function, returning the previously installed
-       static DefaultWarpFunction SetDefaultWarpFunction(DefaultWarpFunction);
-
-       //! Apply the default warp function
-       static const BoundedEnvelope *DefaultWarp(const TrackList &list);
+       //! Hook function for default time warp
+       using DefaultWarp =
+          GlobalHook<WarpOptions, const BoundedEnvelope*(const TrackList&)>;
 
        //! Construct using the default warp function
        explicit WarpOptions(const TrackList &list);
