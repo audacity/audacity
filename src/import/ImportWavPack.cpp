@@ -129,6 +129,10 @@ std::unique_ptr<ImportFileHandle> WavPackImportPlugin::Open(const FilePath &file
    return std::move(handle);
 }
 
+static Importer::RegisteredImportPlugin registered{ "WavPack",
+   std::make_unique< WavPackImportPlugin >()
+};
+
 // ============================================================================
 // WavPackImportFileHandle
 // ============================================================================
@@ -190,9 +194,9 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
       do {
          samplesRead = WavpackUnpackSamples(mWavPackContext, wavpackBuffer.get(), SAMPLES_TO_READ);
 
-         for (unsigned int c = 0; c<samplesRead; c += mNumChannels) {
+         for (int64_t c = 0; c<samplesRead * mNumChannels;) {
             auto iter = mChannels.begin();
-            for (unsigned chn = 0; chn<mNumChannels; ++iter, ++chn) {
+            for (unsigned chn = 0; chn<mNumChannels; ++iter, ++c, ++chn) {
                iter->get()->Append((char *)&wavpackBuffer[c], mFormat, 1);
             }
          }
@@ -202,7 +206,7 @@ ProgressResult WavPackImportFileHandle::Import(WaveTrackFactory *trackFactory, T
       } while (updateResult == ProgressResult::Success && samplesRead != 0);
    }
 
-   if (totalSamplesRead < mNumSamples)
+   if (updateResult != ProgressResult::Stopped && totalSamplesRead < mNumSamples)
       updateResult = ProgressResult::Failed;
 
    if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
