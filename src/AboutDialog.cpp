@@ -93,6 +93,9 @@ void AboutDialog::CreateCreditsList()
    const auto coFounderFormat =
    /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
       XO("%s, co-founder and developer");
+  const auto designerFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, designer");
    const auto developerFormat =
    /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
       XO("%s, developer");
@@ -134,15 +137,20 @@ void AboutDialog::CreateCreditsList()
       XO("%s, graphics");
 
    // The Audacity Team: developers and support
-   AddCredit(wxT("Anton Gerasimov"), developerFormat, roleTeamMember);
-   AddCredit(wxT("Jouni Helminen"), roleTeamMember);
+
    AddCredit(wxT("Peter Jonas"), developerFormat, roleTeamMember);
    AddCredit(wxT("Martin Keary"), roleTeamMember);
    AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
+   AddCredit(wxT("Pavel Penikov"), testerFormat, roleTeamMember);
    AddCredit(wxT("Anita Sudan"), roleTeamMember);
    AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
-
+   AddCredit(wxT("Leo Wattenberg"), documentationAndSupportFormat, roleTeamMember);
+   
+   // Former Musers
+   AddCredit(wxT("Anton Gerasimov"), developerFormat, roleExMuse);
+   AddCredit(wxT("Jouni Helminen"), designerFormat, roleExMuse);
+   
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
@@ -338,53 +346,6 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
 {
    CreateCreditsList();
 
-   auto par1Str =
-// DA: Says that it is a customised version.
-#ifdef EXPERIMENTAL_DA
-      wxT(
-"Audacity, which this is a customised version of, is a free program written by a worldwide team of [[https://www.audacityteam.org/about/credits|volunteers]]. \
-Audacity is [[https://www.audacityteam.org/download|available]] for Windows, Mac, and GNU/Linux (and other Unix-like systems).")
-#else
-/* Do the i18n of a string with markup carefully with hints.
- (Remember languages with cases.) */
-      XO(
-/* i18n-hint: First and third %s will be the program's name,
-  second %s will be "volunteers", fourth "available" */
-"%s is a free program written by a worldwide team of %s. \
-%s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems).")
-         .Format(
-            ProgramName,
-            Verbatim("[[https://www.audacityteam.org/about/credits|%s]]")
-               /* i18n-hint: substitutes into "a worldwide team of %s" */
-               .Format( XO("volunteers") ),
-            ProgramName,
-            Verbatim("[[https://www.audacityteam.org/download|%s]]")
-               /* i18n-hint: substitutes into "Audacity is %s" */
-               .Format( XO("available") ) )
-#endif
-   ;
-
-   // This trick here means that the English language version won't mention using
-   // English, whereas all translated versions will.
-   auto par2Str = XO(
-/* i18n-hint first and third %s will be "forum", second "wiki" */
-"If you find a bug or have a suggestion for us, please write, in English, to our %s. \
-For help, view the tips and tricks on our %s or \
-visit our %s.")
-      .Format(
-         Verbatim("[[https://forum.audacityteam.org/|%s]]")
-            /* i18n-hint substitutes into "write to our %s" */
-            .Format( XC("forum", "dative") ),
-         Verbatim("[[https://wiki.audacityteam.org/|%s]]")
-            /* i18n-hint substitutes into "view the tips and tricks on our %s" */
-            .Format( XO("wiki") ),
-         Verbatim("[[https://forum.audacityteam.org/|%s]]")
-            /* i18n-hint substitutes into "visit our %s" */
-            .Format( XC("forum", "accusative") ) );
-   auto par2StrTranslated = par2Str.Translation();
-
-   if( par2StrTranslated == par2Str.MSGID().GET() )
-      par2StrTranslated.Replace( wxT(", in English,"), wxT("") );
 
    /* i18n-hint: The translation of "translator_credits" will appear
     *  in the credits in the About Audacity window.  Use this to add
@@ -426,10 +387,6 @@ visit our %s.")
             .Format(ProgramName)
 #endif
 
-      // << wxT("<p><br>")
-      // << par1Str
-      // << wxT("<p>")
-      // << par2Str
       << wxT("<h3>")
       << XO("Credits")
       << wxT("</h3>")
@@ -448,6 +405,11 @@ visit our %s.")
       << XO("%s Team Members").Format( ProgramName )
       << wxT("</b><br>")
       << GetCreditsByRole(roleTeamMember)
+	  
+	  << wxT("<p><b>")
+      << XO("Former Musers")
+      << wxT("</b><br>")
+      << GetCreditsByRole(roleExMuse)
 
       << wxT("<p><b> ")
       << XO("Emeritus:")
