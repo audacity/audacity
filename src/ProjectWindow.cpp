@@ -356,19 +356,11 @@ END_EVENT_TABLE()
 // Common mouse wheel handling in track panel cells, moved here to avoid
 // compilation dependencies on Track, TrackPanel, and Scrubbing at low levels
 // which made cycles
-static struct MouseWheelHandler {
-
-MouseWheelHandler()
-{
-   CommonTrackPanelCell::InstallMouseWheelHook( *this );
-}
-
+static CommonTrackPanelCell::MouseWheelHook::Scope scope{
 // Need a bit of memory from one call to the next
-mutable double mVertScrollRemainder = 0.0;
-
-unsigned operator()
-   ( const TrackPanelMouseEvent &evt, AudacityProject *pProject ) const
-{
+[mVertScrollRemainder = 0.0](
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject )
+mutable -> unsigned {
    using namespace RefreshCode;
 
    if ( TrackList::Get( *pProject ).empty() )
@@ -495,9 +487,7 @@ unsigned operator()
    }
 
    return result;
-}
-
-} sMouseWheelHandler;
+} };
 
 AttachedWindows::RegisteredFactory sProjectWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
