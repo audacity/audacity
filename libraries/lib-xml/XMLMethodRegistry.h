@@ -209,21 +209,16 @@ void CallWriters( const Host &host, XMLWriter &writer )
 }
 
 //! Get the unique instance
-static XMLMethodRegistry &Get();
+static
+#ifdef _WIN32
+   __declspec(dllexport)
+#endif
+XMLMethodRegistry &Get()
+{
+   static XMLMethodRegistry registry;
+   return registry;
+}
 
 };
-
-/*! Typically follows the `using` declaration of an XMLMethodRegistry
-   specialization; DECLSPEC is for linkage visibility */
-#define DECLARE_XML_METHOD_REGISTRY(DECLSPEC, Name) \
-   template<> auto DECLSPEC Name::Get() -> Name &;
-
-/*! Typically in the companion .cpp file */
-#define DEFINE_XML_METHOD_REGISTRY(Name)  \
-   template<> auto Name::Get() -> Name &  \
-   {                                      \
-      static Name registry;               \
-      return registry;                    \
-   }
 
 #endif

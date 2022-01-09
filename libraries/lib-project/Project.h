@@ -130,6 +130,5 @@ private:
 #include "XMLMethodRegistry.h"
 class AudacityProject;
 using ProjectFileIORegistry = XMLMethodRegistry<AudacityProject>;
-DECLARE_XML_METHOD_REGISTRY( PROJECT_API, ProjectFileIORegistry );
 
 #endif
