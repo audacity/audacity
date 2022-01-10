@@ -658,6 +658,10 @@ list( APPEND SOURCES
          export/ExportMP2.cpp
       >
 
+      $<$<BOOL:${USE_WAVPACK}>:
+         export/ExportWavPack.cpp
+      >
+      
       $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
          export/ExportOGG.cpp
       >
