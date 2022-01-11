@@ -37,6 +37,11 @@ jobs:
           arch: Intel # as reported by Apple menu > About This Mac
           generator: Xcode
 
+        - name: macOS_AppleSilicon
+          os: macos-11
+          arch: AppleSilicon # as reported by Apple menu > About This Mac
+          generator: Xcode
+
         - name: Windows_32bit
           os: windows-latest
           arch: 32bit # as reported by Windows Settings > System > About

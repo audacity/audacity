@@ -84,13 +84,23 @@ cmake_policy( SET CMP0075 NEW )
 
 # Definitions that must happen before the project() command
 if( APPLE )
-   set( MIN_MACOS_VERSION 10.9 )
-   set( TARGET_MACOS_VERSION 10.13 )
+   set( MACOS_ARCHITECTURE "${CMAKE_HOST_SYSTEM_PROCESSOR}" CACHE STRING "Target architecture for MacOS builds. One of x86_64/arm64" )
+
+   if( MACOS_ARCHITECTURE STREQUAL "x86_64" )
+      set( MIN_MACOS_VERSION 10.9 )
+      set( TARGET_MACOS_VERSION 10.13 )
+      set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
+   elseif( MACOS_ARCHITECTURE STREQUAL "arm64" )
+      set( MIN_MACOS_VERSION 10.13 )
+      set( TARGET_MACOS_VERSION 10.13 )
+      set( CMAKE_OSX_ARCHITECTURES arm64 CACHE INTERNAL "" )
+   else()
+      message( FATAL_ERROR "MACOS_ARCHITECTURE must be x86_64 or arm64")
+   endif()
    # Generate schema files
    set( CMAKE_XCODE_GENERATE_SCHEME ON )
 
    # Define the OSX compatibility parameters
-   set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
    set( CMAKE_OSX_DEPLOYMENT_TARGET ${MIN_MACOS_VERSION} CACHE INTERNAL "" )
    set( CMAKE_OSX_SYSROOT macosx CACHE INTERNAL "" )
    set( CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "" CACHE INTERNAL "" )
@@ -360,6 +370,8 @@ if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( _PKGLIB "${_DEST}/Frameworks" )
 
    set( CMAKE_MACOSX_RPATH OFF )
+   set( CMAKE_SKIP_BUILD_RPATH ON )
+   set( CMAKE_SKIP_INSTALL_RPATH ON )
 endif()
 
 # Add the math library (if found) to the list of required libraries
