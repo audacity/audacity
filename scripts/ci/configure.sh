@@ -32,7 +32,6 @@ elif [[ "${AUDACITY_CMAKE_GENERATOR}" == Xcode* ]]; then
     cmake_args+=(
         # skip unneeded configurations
         -D CMAKE_CONFIGURATION_TYPES="${AUDACITY_BUILD_TYPE}"
-        -T buildsystem=1
     )
 fi
 

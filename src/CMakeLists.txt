@@ -1239,15 +1239,28 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    )
 
    # Define the Wrapper target
+   if( CMAKE_CONFIGURATION_TYPES )
+      set( WRAPPER_EXEDIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../Wrapper/${CMAKE_CFG_INTDIR}" )
+   else()
+      set( WRAPPER_EXEDIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/../Wrapper/${CMAKE_BUILD_TYPE}" )
+   endif()
+
    set( WRAPPER_ROOT "${TARGET_ROOT}/../mac" )
    set( WRAPPER_SOURCES "${WRAPPER_ROOT}/Wrapper.c" )
 
    add_executable( Wrapper "${WRAPPER_SOURCES}" )
-   add_dependencies( "${TARGET}" Wrapper )
+   add_dependencies( ${TARGET} Wrapper )
 
-   set_target_property_all( "Wrapper" RUNTIME_OUTPUT_DIRECTORY "${_EXEDIR}" )
+   set_target_property_all( Wrapper RUNTIME_OUTPUT_DIRECTORY "${WRAPPER_EXEDIR}" )
    organize_source( "${WRAPPER_ROOT}" "mac" "${WRAPPER_SOURCES}" )
 
+   add_custom_command(
+      TARGET
+         ${TARGET}
+      COMMAND
+         ${CMAKE_COMMAND} -E copy $<TARGET_FILE:Wrapper> "${_EXEDIR}/Wrapper"
+      POST_BUILD
+   )
 else()
    set_target_property_all( ${TARGET} RUNTIME_OUTPUT_DIRECTORY "${_DEST}" )
 
