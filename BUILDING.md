@@ -117,7 +117,7 @@ To enable ASIO support, please select `audacity_has_asio_support=On` in CMake af
 2. Configure Audacity using CMake:
    ```
    $ mkdir build && cd build
-   $ cmake -GXcode -T buildsystem=1 ../audacity
+   $ cmake -GXcode ../audacity
    ```
 
 3. Open Audacity XCode project:
@@ -133,8 +133,17 @@ Alternatively, you can use **CLion**. If you chose to do so, open the directory 
 At the moment we only support **x86_64** builds. It is possible to build using AppleSilicon (AKA M1/arm64) hardware but **mad** and **id3tag** should be disabled:
 
 ```
-cmake -GXcode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=off ../audacity
+cmake -GXcode -Daudacity_use_mad="off" -Daudacity_use_id3tag=off ../audacity
 ```
+
+Before Audacity 3.2 only the XCode "legacy" build system was supported. In order to build older version please use:
+
+```
+   $ mkdir build && cd build
+   $ cmake -GXcode -T buildsystem=1 ../audacity
+```
+
+to configure Audacity. 
 
 ## Linux & Other OS
 
