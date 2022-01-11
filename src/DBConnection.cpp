@@ -266,7 +266,8 @@ bool DBConnection::Close()
       // Wait for the checkpoints to end
       while (mCheckpointPending || mCheckpointActive)
       {
-         wxMilliSleep(50);
+         using namespace std::chrono;
+         std::this_thread::sleep_for(50ms);
          pd->Pulse();
       }
    }

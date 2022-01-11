@@ -87,7 +87,8 @@ void Generate(wxDebugReport::Context ctx)
       // Wait for information to be gathered
       while (!done)
       {
-         wxMilliSleep(50);
+         using namespace std::chrono;
+         std::this_thread::sleep_for(50ms);
          pd->Pulse();
       }
       thread.join();

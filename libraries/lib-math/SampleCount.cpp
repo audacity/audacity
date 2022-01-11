@@ -16,7 +16,7 @@
 
 size_t sampleCount::as_size_t() const {
    wxASSERT(value >= 0);
-   wxASSERT(static_cast<std::make_unsigned<type>::type>(value) <= std::numeric_limits<size_t>::max());
+   wxASSERT(static_cast<std::make_unsigned_t<type>>(value) <= std::numeric_limits<size_t>::max());
    return value;
 }
 

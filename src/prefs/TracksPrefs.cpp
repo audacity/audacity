@@ -19,6 +19,7 @@
 
 
 #include "TracksPrefs.h"
+#include "MemoryX.h"
 
 //#include <algorithm>
 //#include <wx/defs.h>

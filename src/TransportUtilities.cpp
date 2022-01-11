@@ -11,6 +11,7 @@
 
 #include "TransportUtilities.h"
 
+#include <thread>
 #include "AudioIO.h"
 #include "commands/CommandContext.h"
 #include "Project.h"
@@ -52,7 +53,8 @@ void TransportUtilities::PlayCurrentRegionAndWait(
             break;
          }
 
-         wxMilliSleep(100);
+         using namespace std::chrono;
+         std::this_thread::sleep_for(100ms);
          wxYieldIfNeeded();
       }
 
@@ -93,7 +95,8 @@ void TransportUtilities::PlayPlayRegionAndWait(
             break;
          }
 
-         wxMilliSleep(100);
+         using namespace std::chrono;
+         std::this_thread::sleep_for(100ms);
          wxYieldIfNeeded();
       }
 
@@ -132,7 +135,8 @@ void TransportUtilities::RecordAndWait(
             break;
          }
 
-         wxMilliSleep(100);
+         using namespace std::chrono;
+         std::this_thread::sleep_for(100ms);
          wxYieldIfNeeded();
       }
 

@@ -189,7 +189,7 @@ public:
 
       // Check that inheritance is correct
       static_assert(
-         std::is_base_of< typename Overridden::Object, Object >::value,
+         std::is_base_of_v< typename Overridden::Object, Object >,
          "overridden class must be a base of the overriding class"
       );
 

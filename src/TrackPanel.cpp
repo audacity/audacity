@@ -381,7 +381,7 @@ void TrackPanel::OnIdle(wxIdleEvent& event)
    // The window must be ready when the timer fires (#1401)
    if (IsShownOnScreen())
    {
-      mTimer.Start(kTimerInterval, FALSE);
+      mTimer.Start(std::chrono::milliseconds{kTimerInterval}.count(), FALSE);
 
       // Timer is started, we don't need the event anymore
       GetProjectFrame( *GetProject() ).Unbind(wxEVT_IDLE,
@@ -727,7 +727,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
       // When this timer fires, we call TrackPanel::OnTimer and
       // possibly update the screen for offscreen scrolling.
       mTimer.Stop();
-      mTimer.Start(kTimerInterval, FALSE);
+      mTimer.Start(std::chrono::milliseconds{kTimerInterval}.count(), FALSE);
    }
 
 

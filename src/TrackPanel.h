@@ -11,9 +11,7 @@
 #ifndef __AUDACITY_TRACK_PANEL__
 #define __AUDACITY_TRACK_PANEL__
 
-
-
-
+#include <chrono>
 #include <vector>
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -53,9 +51,7 @@ struct TrackPanelDrawingContext;
 
 enum class UndoPush : unsigned char;
 
-enum {
-   kTimerInterval = 50, // milliseconds
-};
+static constexpr auto  kTimerInterval = std::chrono::milliseconds{50};
 
 const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 

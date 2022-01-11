@@ -336,8 +336,8 @@ template <typename FloatType> boundaries compute_boundaries(FloatType value)
    constexpr std::uint64_t kHiddenBit = std::uint64_t { 1 }
                                         << (kPrecision - 1); // = 2^(p-1)
 
-   using bits_type = typename std::conditional<
-      kPrecision == 24, std::uint32_t, std::uint64_t>::type;
+   using bits_type = std::conditional_t<
+      kPrecision == 24, std::uint32_t, std::uint64_t>;
 
    const std::uint64_t bits = reinterpret_bits<bits_type>(value);
    const std::uint64_t E = bits >> (kPrecision - 1);

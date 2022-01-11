@@ -18,6 +18,8 @@
 #include "DeviceToolBar.h"
 #include "ToolManager.h"
 
+#include <thread>
+
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -675,8 +677,10 @@ void DeviceToolBar::OnChoice(wxCommandEvent &event)
       if (gAudioIO->IsMonitoring())
       {
          gAudioIO->StopStream();
-         while (gAudioIO->IsBusy())
-            wxMilliSleep(100);
+         while (gAudioIO->IsBusy()) {
+            using namespace std::chrono;
+            std::this_thread::sleep_for(100ms);
+         }
       }
       gAudioIO->HandleDeviceChange();
    }

@@ -17,6 +17,7 @@ of languages for Audacity.
 
 
 #include "LangChoice.h"
+#include "MemoryX.h"
 
 #include <wx/defs.h>
 #include <wx/button.h>

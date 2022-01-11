@@ -305,10 +305,10 @@ void DeviceManager::Rescan()
 }
 
 
-float DeviceManager::GetTimeSinceRescan() {
+std::chrono::duration<float> DeviceManager::GetTimeSinceRescan() {
    auto now = std::chrono::steady_clock::now();
    auto dur = std::chrono::duration_cast<std::chrono::duration<float>>(now - mRescanTime);
-   return dur.count();
+   return dur;
 }
 
 

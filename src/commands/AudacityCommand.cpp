@@ -21,6 +21,7 @@ ShuttleGui.
 
 
 #include "AudacityCommand.h"
+#include "MemoryX.h"
 
 #include "CommandContext.h"
 

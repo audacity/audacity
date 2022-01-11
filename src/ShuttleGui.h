@@ -19,12 +19,13 @@
 
 #include <vector>
 #include <wx/slider.h> // to inherit
-#include "MemoryX.h"
 #include <wx/listbase.h> // for wxLIST_FORMAT_LEFT
 
 #include "Prefs.h"
 #include "WrappedType.h"
 #include "ComponentInterfaceSymbol.h"
+
+#include <optional>
 
 class ChoiceSetting;
 
@@ -175,10 +176,9 @@ struct Item {
       wxEventTypeTag<Tag> eventType,
       void (Handler::*func)(Argument&)
    ) &&
-        -> typename std::enable_if<
-            std::is_base_of<Argument, Tag>::value,
-            Item&&
-        >::type
+        -> std::enable_if_t<
+            std::is_base_of_v<Argument, Tag>,
+            Item&& >
    {
       mRootConnections.push_back({
          eventType,
@@ -572,7 +572,7 @@ private:
 
    std::vector<EnumValueSymbol> mRadioSymbols;
    wxString mRadioSettingName; /// The setting controlled by a group.
-   Optional<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
+   std::optional<WrappedType> mRadioValue;  /// The wrapped value associated with the active radio button.
    int mRadioCount;       /// The index of this radio item.  -1 for none.
    wxString mRadioValueString; /// Unwrapped string value.
    wxRadioButton * DoAddRadioButton(
@@ -700,10 +700,9 @@ public:
       wxEventTypeTag<Tag> eventType,
       void (Handler::*func)(Argument&)
    )
-        -> typename std::enable_if<
-            std::is_base_of<Argument, Tag>::value,
-            ShuttleGui&
-        >::type
+        -> std::enable_if_t<
+            std::is_base_of_v<Argument, Tag>,
+            ShuttleGui& >
    {
       std::move( mItem ).ConnectRoot( eventType, func );
       return *this;

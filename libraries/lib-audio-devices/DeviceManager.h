@@ -62,7 +62,7 @@ class AUDIO_DEVICES_API DeviceManager final
    void Rescan();
 
    // Time since devices scanned in seconds.
-   float GetTimeSinceRescan();
+   std::chrono::duration<float> GetTimeSinceRescan();
 
    DeviceSourceMap* GetDefaultOutputDevice(int hostIndex);
    DeviceSourceMap* GetDefaultInputDevice(int hostIndex);
