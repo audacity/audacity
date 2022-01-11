@@ -33,8 +33,8 @@
 #include "../ProjectSettings.h"
 #include "QualitySettings.h"
 #include "../SelectFile.h"
+#include "../ShuttleAutomation.h"
 #include "../ShuttleGui.h"
-#include "../Shuttle.h"
 #include "../SyncLock.h"
 #include "TransactionScope.h"
 #include "ViewInfo.h"
@@ -43,6 +43,7 @@
 #include "../widgets/ProgressDialog.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/VetoDialogHook.h"
 
 #include <unordered_map>
 
@@ -59,25 +60,6 @@ const wxString Effect::kCurrentSettingsIdent = wxT("<Current Settings>");
 const wxString Effect::kFactoryDefaultsIdent = wxT("<Factory Defaults>");
 
 using t2bHash = std::unordered_map< void*, bool >;
-
-namespace {
-
-Effect::VetoDialogHook &GetVetoDialogHook()
-{
-   static Effect::VetoDialogHook sHook = nullptr;
-   return sHook;
-}
-
-}
-
-auto Effect::SetVetoDialogHook( VetoDialogHook hook )
-   -> VetoDialogHook
-{
-   auto &theHook = GetVetoDialogHook();
-   auto result = theHook;
-   theHook = hook;
-   return result;
-}
 
 Effect::Effect()
 {
@@ -471,8 +453,7 @@ int Effect::ShowClientInterface(
    mUIDialog->Fit();
    mUIDialog->SetMinSize(mUIDialog->GetSize());
 
-   auto hook = GetVetoDialogHook();
-   if( hook && hook( mUIDialog ) )
+   if( ::CallVetoDialogHook( mUIDialog ) )
       return 0;
 
    if( SupportsRealtime() && !forceModal )

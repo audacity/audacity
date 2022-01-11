@@ -62,6 +62,7 @@ is time to refresh some aspect of the screen.
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"
 #include "Theme.h"
+#include "TrackArt.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"
 //#define DEBUG_DRAW_TIMING 1

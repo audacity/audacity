@@ -36,8 +36,6 @@
 #include "ClientData.h"
 #include <utility>
 
-#include "widgets/wxPanelWrapper.h" // to inherit
-
 #include <memory>
 #include <unordered_map>
 #include "Identifier.h"
@@ -52,7 +50,6 @@ class wxTextCtrl;
 class AudacityProject;
 class Grid;
 class ShuttleGui;
-class TagsEditorDialog;
 class ComboEditor;
 
 using TagMap = std::unordered_map< wxString, wxString >;
@@ -92,15 +89,9 @@ class AUDACITY_DLL_API Tags final
 
    Tags & operator= (const Tags & src );
 
-   bool ShowEditDialog(
-      wxWindow *parent, const TranslatableString &title, bool force = false);
-
    bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
-
-   void AllowEditTitle(bool editTitle);
-   void AllowEditTrackNumber(bool editTrackNumber);
 
    void LoadDefaultGenres();
    void LoadGenres();
@@ -132,75 +123,9 @@ class AUDACITY_DLL_API Tags final
    TagMap mMap;
 
    wxArrayString mGenres;
-
-   bool mEditTitle;
-   bool mEditTrackNumber;
 };
 
 inline bool operator != (const Tags &lhs, const Tags &rhs)
 { return !(lhs == rhs); }
-
-class TagsEditorDialog final : public wxDialogWrapper
-{
- public:
-   // constructors and destructors
-   TagsEditorDialog(wxWindow * parent,
-              const TranslatableString &title,
-              Tags * tags,
-              bool editTitle,
-              bool editTrack);
-
-   virtual ~TagsEditorDialog();
-
-#if !defined(__WXMSW__)
-   bool IsEscapeKey(const wxKeyEvent& /*event*/) override { return false; }
-#endif
-
-   void PopulateOrExchange(ShuttleGui & S);
-
-   void OnDontShow( wxCommandEvent & Evt);
-   void OnHelp(wxCommandEvent & Evt);
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
-
- private:
-   void PopulateGenres();
-   void SetEditors();
-
-   void OnChange(wxGridEvent & event);
-
-   void OnEdit(wxCommandEvent & event);
-   void OnReset(wxCommandEvent & event);
-
-   void OnClear(wxCommandEvent & event);
-
-   void OnLoad(wxCommandEvent & event);
-   void OnSave(wxCommandEvent & event);
-   void OnSaveDefaults(wxCommandEvent & event);
-
-   void OnAdd(wxCommandEvent & event);
-   void OnRemove(wxCommandEvent & event);
-
-   void OnOk(wxCommandEvent & event);
-   void DoCancel(bool escKey);
-   void OnCancel(wxCommandEvent & event);
-
-   void OnKeyDown(wxKeyEvent &event);
-
-   bool IsWindowRectValid(const wxRect *windowRect) const;
-
- private:
-   Tags *mTags;
-   bool mEditTitle;
-   bool mEditTrack;
-
-   Tags mLocal;
-
-   Grid *mGrid;
-   ComboEditor *mComboEditor;
-   wxGridCellStringRenderer *mStringRenderer;
-
-   DECLARE_EVENT_TABLE()
-};
 
 #endif

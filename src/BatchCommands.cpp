@@ -50,6 +50,7 @@ processing.  See also MacrosWindow and ApplyMacroDialog.
 #include "widgets/AudacityMessageBox.h"
 
 #include "commands/CommandContext.h"
+#include "commands/CommandDispatch.h"
 
 MacroCommands::MacroCommands( AudacityProject &project )
 : mProject{ project }
@@ -590,34 +591,6 @@ bool MacroCommands::ApplyEffectCommand(
    return res;
 }
 
-bool MacroCommands::HandleTextualCommand( CommandManager &commandManager,
-   const CommandID & Str,
-   const CommandContext & context, CommandFlag flags, bool alwaysEnabled)
-{
-   switch ( commandManager.HandleTextualCommand(
-      Str, context, flags, alwaysEnabled) ) {
-   case CommandManager::CommandSuccess:
-      return true;
-   case CommandManager::CommandFailure:
-      return false;
-   case CommandManager::CommandNotFound:
-   default:
-      break;
-   }
-
-   // Not one of the singleton commands.
-   // We could/should try all the list-style commands.
-   // instead we only try the effects.
-   EffectManager & em = EffectManager::Get();
-   for (auto &plug : PluginManager::Get().PluginsOfType(PluginTypeEffect))
-      if (em.GetCommandIdentifier(plug.GetID()) == Str)
-         return EffectUI::DoEffect(
-            plug.GetID(), context,
-            EffectManager::kConfigured);
-
-   return false;
-}
-
 bool MacroCommands::ApplyCommand( const TranslatableString &friendlyCommand,
    const CommandID & command, const wxString & params,
    CommandContext const * pContext)
@@ -638,7 +611,7 @@ bool MacroCommands::ApplyCommand( const TranslatableString &friendlyCommand,
    AudacityProject *project = &mProject;
    auto &manager = CommandManager::Get( *project );
    if( pContext ){
-      if( HandleTextualCommand(
+      if( ::HandleTextualCommand(
          manager, command, *pContext, AlwaysEnabledFlag, true ) )
          return true;
       pContext->Status( wxString::Format(

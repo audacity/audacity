@@ -48,7 +48,6 @@
 #endif
 
 #include "AllThemeResources.h"
-#include "../BatchCommands.h"
 #include "ImageManipulation.h"
 #include "../Menus.h"
 #include "Prefs.h"
@@ -58,6 +57,7 @@
 
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../commands/CommandDispatch.h"
 
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
 
@@ -299,7 +299,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
 
    auto flags = MenuManager::Get(*p).GetUpdateFlags();
    const CommandContext context( *p );
-   MacroCommands::HandleTextualCommand( cm,
+   ::HandleTextualCommand( cm,
       EditToolbarButtonList[id].commandName, context, flags, false);
 
 #if defined(__WXMAC__)

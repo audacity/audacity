@@ -19,7 +19,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "AudioIO.h"
 #include "BasicUI.h"
 #include "CommonCommandFlags.h"
-#include "LabelTrack.h"
 #include "Menus.h"
 #include "Meter.h"
 #include "Mix.h"
@@ -41,9 +40,10 @@ Paul Licameli split from ProjectManager.cpp
 #include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/TrackView.h"
 #include "widgets/MeterPanelBase.h"
-#include "widgets/Warning.h"
 #include "widgets/AudacityMessageBox.h"
 
+
+wxDEFINE_EVENT(EVT_RECORDING_DROPOUT, RecordingDropoutEvent);
 
 static AudacityProject::AttachedObjects::RegisteredFactory
 sProjectAudioManagerKey {
@@ -1042,7 +1042,6 @@ void ProjectAudioManager::OnAudioIOStopRecording()
    auto &project = mProject;
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
-   auto &window = GetProjectFrame( project );
 
    // Only push state if we were capturing and not monitoring
    if (projectAudioIO.GetAudioIOToken() > 0)
@@ -1065,44 +1064,11 @@ void ProjectAudioManager::OnAudioIOStopRecording()
 
          // Now, we may add a label track to give information about
          // dropouts.  We allow failure of this.
-         auto &tracks = TrackList::Get( project );
          auto gAudioIO = AudioIO::Get();
          auto &intervals = gAudioIO->LostCaptureIntervals();
          if (intervals.size()) {
-            // Make a track with labels for recording errors
-            auto uTrack = std::make_shared<LabelTrack>();
-            auto pTrack = uTrack.get();
-            tracks.Add( uTrack );
-            /* i18n-hint:  A name given to a track, appearing as its menu button.
-             The translation should be short or else it will not display well.
-             At most, about 11 Latin characters.
-             Dropout is a loss of a short sequence of audio sample data from the
-             recording */
-            pTrack->SetName(_("Dropouts"));
-            long counter = 1;
-            for (auto &interval : intervals)
-               pTrack->AddLabel(
-                  SelectedRegion{ interval.first,
-                     interval.first + interval.second },
-                  wxString::Format(wxT("%ld"), counter++));
-
-            history.ModifyState( true ); // this might fail and throw
-
-            // CallAfter so that we avoid any problems of yielding
-            // to the event loop while still inside the timer callback,
-            // entering StopStream() recursively
-            wxTheApp->CallAfter( [&] {
-               ShowWarningDialog(&window, wxT("DropoutDetected"), XO("\
-Recorded audio was lost at the labeled locations. Possible causes:\n\
-\n\
-Other applications are competing with Audacity for processor time\n\
-\n\
-You are saving directly to a slow external storage device\n\
-"
-                  ),
-                  false,
-                  XXO("Turn off dropout detection"));
-            });
+            RecordingDropoutEvent evt{ intervals };
+            mProject.ProcessEvent(evt);
          }
       }
    }

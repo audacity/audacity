@@ -40,10 +40,6 @@ class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
       int *pDefaultRangeIndex = nullptr
    );
 
-   // If no input language given, defaults to system language.
-   // Returns the language actually used which is not lang if lang cannot be found.
-   static wxString SetLang( const wxString & lang );
-
  private:
    void Populate();
 
