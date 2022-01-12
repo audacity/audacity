@@ -257,7 +257,8 @@ function ( _conan_install build_type )
 
     conan_cmake_install(PATH_OR_REFERENCE .
         ${CONAN_BUILD_MODE}
-        SETTINGS ${settings}
+        PROFILE_BUILD default
+        SETTINGS_HOST ${settings}
     )
 endfunction()
 
