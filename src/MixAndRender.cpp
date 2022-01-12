@@ -10,9 +10,9 @@ Paul Licameli split from Mix.cpp
 
 #include "MixAndRender.h"
 
+#include "BasicUI.h"
 #include "Mix.h"
 #include "WaveTrack.h"
-#include "widgets/ProgressDialog.h"
 
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 
@@ -128,11 +128,10 @@ void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
       startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
       rate, format);
 
-   ::wxSafeYield();
-
+   using namespace BasicUI;
    auto updateResult = ProgressResult::Success;
    {
-      ProgressDialog progress(XO("Mix and Render"),
+      auto pProgress = MakeProgress(XO("Mix and Render"),
          XO("Mixing and rendering tracks"));
 
       while (updateResult == ProgressResult::Success) {
@@ -152,7 +151,8 @@ void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
             mixRight->Append(buffer, format, blockLen);
          }
 
-         updateResult = progress.Update(mixer.MixGetCurrentTime() - startTime, endTime - startTime);
+         updateResult = pProgress->Poll(
+            mixer.MixGetCurrentTime() - startTime, endTime - startTime);
       }
    }
 

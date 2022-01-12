@@ -160,6 +160,9 @@ public:
       unsigned long long numerator,
       unsigned long long denominator,
       const TranslatableString &message = {}) = 0;
+
+   //! Change an existing dialog's message
+   virtual void SetMessage(const TranslatableString & message) = 0;
 };
 
 //! Abstraction of a progress dialog with undefined time-to-completion estimate

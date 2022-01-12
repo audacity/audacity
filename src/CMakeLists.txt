@@ -478,8 +478,6 @@ list( APPEND SOURCES
       effects/StereoToMono.h
       effects/TimeScale.cpp
       effects/TimeScale.h
-      effects/TimeWarper.cpp
-      effects/TimeWarper.h
       effects/ToneGen.cpp
       effects/ToneGen.h
       effects/TruncSilence.cpp
@@ -789,8 +787,12 @@ list( APPEND SOURCES
       tracks/playabletrack/ui/PlayableTrackControls.h
       tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
       tracks/playabletrack/wavetrack/ui/CutlineHandle.h
+      tracks/playabletrack/wavetrack/ui/GetWaveDisplay.cpp
+      tracks/playabletrack/wavetrack/ui/GetWaveDisplay.h
       tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
       tracks/playabletrack/wavetrack/ui/SampleHandle.h
+      tracks/playabletrack/wavetrack/ui/SpectrumCache.cpp
+      tracks/playabletrack/wavetrack/ui/SpectrumCache.h
       tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
       tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.h
       tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
@@ -799,6 +801,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/SpectrumView.h
       tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.h
       tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+      tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+      tracks/playabletrack/wavetrack/ui/WaveClipUtilities.h
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceHandle.cpp
@@ -821,6 +825,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h
+      tracks/playabletrack/wavetrack/ui/WaveformCache.cpp
+      tracks/playabletrack/wavetrack/ui/WaveformCache.h
       tracks/playabletrack/wavetrack/ui/WaveformView.cpp
       tracks/playabletrack/wavetrack/ui/WaveformView.h
       tracks/playabletrack/wavetrack/WaveTrackUtils.cpp

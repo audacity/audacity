@@ -39,7 +39,7 @@
 
 #include "InconsistencyException.h"
 
-#include "effects/TimeWarper.h"
+#include "TimeWarper.h"
 
 #include "AllThemeResources.h"
 #include "Theme.h"

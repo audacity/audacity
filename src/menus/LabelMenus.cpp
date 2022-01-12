@@ -658,6 +658,7 @@ void OnDisjoinLabels(const CommandContext &context)
       track->TypeSwitch(
          [&](WaveTrack *t)
          {
+            wxBusyCursor busy;
             t->Disjoin(t0, t1);
          }
       );

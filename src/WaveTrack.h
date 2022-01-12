@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_WAVETRACK__
 #define __AUDACITY_WAVETRACK__
 
+#include "Prefs.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
 #include "SampleTrack.h"
@@ -18,10 +19,9 @@
 #include <vector>
 #include <functional>
 #include <wx/longlong.h>
-
 #include "WaveTrackLocation.h"
 
-class ProgressDialog;
+namespace BasicUI{ class ProgressDialog; }
 
 class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
@@ -70,6 +70,7 @@ class Envelope;
 class AUDACITY_DLL_API WaveTrack final : public WritableSampleTrack
 {
 public:
+   static wxString GetDefaultAudioTrackNamePreference();
 
    //
    // Constructor / Destructor / Duplicator
@@ -236,9 +237,6 @@ private:
    bool Append(constSamplePtr buffer, sampleFormat format,
                size_t len, unsigned int stride=1) override;
    void Flush() override;
-
-   ///Invalidates all clips' wavecaches.  Careful, This may not be threadsafe.
-   void ClearWaveCaches();
 
    ///
    /// MM: Now that each wave track can contain multiple clips, we don't
@@ -490,7 +488,7 @@ private:
    void Merge(const Track &orig) override;
 
    // Resample track (i.e. all clips in the track)
-   void Resample(int rate, ProgressDialog *progress = NULL);
+   void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
@@ -633,5 +631,9 @@ class AUDACITY_DLL_API WaveTrackFactory final
       sampleFormat format = (sampleFormat)0,
       double rate = 0);
 };
+
+extern AUDACITY_DLL_API StringSetting AudioTrackNameSetting;
+
+AUDACITY_DLL_API bool GetEditClipsCanMove();
 
 #endif // __AUDACITY_WAVETRACK__

@@ -44,10 +44,11 @@ class AudacityCommand;
 
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
 
+namespace BasicUI { class ProgressDialog; }
+
 class AudacityProject;
 class LabelTrack;
 class NotifyingSelectedRegion;
-class ProgressDialog;
 class SelectedRegion;
 class EffectUIHost;
 class Track;
@@ -411,7 +412,7 @@ protected:
 // may be needed by any particular subclass of Effect.
 //
 protected:
-   ProgressDialog *mProgress; // Temporary pointer, NOT deleted in destructor.
+   BasicUI::ProgressDialog *mProgress = nullptr; // Temporary pointer, NOT deleted in destructor.
    double         mProjectRate; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
    double         mSampleRate;
