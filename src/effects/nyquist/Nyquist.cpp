@@ -62,6 +62,7 @@ effects from this one class.
 #include "PluginManager.h"
 #include "Project.h"
 #include "ProjectRate.h"
+#include "../../ShuttleAutomation.h"
 #include "../../ShuttleGetDefinition.h"
 #include "../../ShuttleGui.h"
 #include "TempDirectory.h"
@@ -825,7 +826,7 @@ bool NyquistEffect::Process()
          XO("Nyquist Error") );
    }
 
-   Optional<TrackIterRange<WaveTrack>> pRange;
+   std::optional<TrackIterRange<WaveTrack>> pRange;
    if (!bOnePassTool)
       pRange.emplace(mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader);
 

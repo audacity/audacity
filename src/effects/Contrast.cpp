@@ -26,6 +26,7 @@
 #include "../widgets/HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/VetoDialogHook.h"
 
 #include <cmath>
 #include <limits>
@@ -678,7 +679,7 @@ struct Handler : CommandHandlerObject {
          .Get< ContrastDialog >( sContrastDialogKey );
 
       contrastDialog->CentreOnParent();
-      if( ScreenshotCommand::MayCapture( contrastDialog ) )
+      if( ::CallVetoDialogHook( contrastDialog ) )
          return;
       contrastDialog->Show();
    }

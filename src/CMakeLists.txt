@@ -127,6 +127,8 @@ list( APPEND SOURCES
       DBConnection.h
       Diags.cpp
       Diags.h
+      DropTarget.cpp
+      DropoutDetector.cpp
       EffectHostInterface.cpp
       EffectHostInterface.h
       EnvelopeEditor.cpp
@@ -139,6 +141,8 @@ list( APPEND SOURCES
       FreqWindow.h
       HelpText.cpp
       HelpText.h
+      HelpUtilities.cpp
+      HelpUtilities.h
       HistoryWindow.cpp
       HistoryWindow.h
       HitTestResult.h
@@ -231,6 +235,8 @@ list( APPEND SOURCES
       Sequence.h
       Shuttle.cpp
       Shuttle.h
+      ShuttleAutomation.cpp
+      ShuttleAutomation.h
       ShuttleGetDefinition.cpp
       ShuttleGetDefinition.h
       ShuttleGui.cpp
@@ -253,16 +259,20 @@ list( APPEND SOURCES
       SqliteSampleBlock.cpp
       SseMathFuncs.cpp
       SseMathFuncs.h
-      Tags.cpp
-      Tags.h
       SyncLock.cpp
       SyncLock.h
+      Tags.cpp
+      Tags.h
+      TagsEditor.cpp
+      TagsEditor.h
       TimeDialog.cpp
       TimeDialog.h
       TimeTrack.cpp
       TimeTrack.h
       TimerRecordDialog.cpp
       TimerRecordDialog.h
+      TrackArt.cpp
+      TrackArt.h
       TrackArtist.cpp
       TrackArtist.h
       TrackInfo.cpp
@@ -287,6 +297,8 @@ list( APPEND SOURCES
       TrackUtilities.h
       UIHandle.cpp
       UIHandle.h
+      TransportUtilities.cpp
+      TransportUtilities.h
       UndoManager.cpp
       UndoManager.h
       VoiceKey.cpp
@@ -317,6 +329,8 @@ list( APPEND SOURCES
       commands/CommandDirectory.h
       commands/CommandFlag.h
       commands/CommandFunctors.h
+      commands/CommandDispatch.cpp
+      commands/CommandDispatch.h
       commands/CommandHandler.cpp
       commands/CommandHandler.h
       commands/CommandManager.cpp
@@ -464,8 +478,6 @@ list( APPEND SOURCES
       effects/StereoToMono.h
       effects/TimeScale.cpp
       effects/TimeScale.h
-      effects/TimeWarper.cpp
-      effects/TimeWarper.h
       effects/ToneGen.cpp
       effects/ToneGen.h
       effects/TruncSilence.cpp
@@ -662,6 +674,7 @@ list( APPEND SOURCES
       prefs/ExtImportPrefs.h
       prefs/GUIPrefs.cpp
       prefs/GUIPrefs.h
+      prefs/GUISettings.cpp
       prefs/GUISettings.h
       prefs/ImportExportPrefs.cpp
       prefs/ImportExportPrefs.h
@@ -756,6 +769,7 @@ list( APPEND SOURCES
       tracks/playabletrack/notetrack/ui/NoteTrackButtonHandle.h
       tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackControls.h
+      tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackShifter.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
       tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.h
@@ -773,8 +787,12 @@ list( APPEND SOURCES
       tracks/playabletrack/ui/PlayableTrackControls.h
       tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
       tracks/playabletrack/wavetrack/ui/CutlineHandle.h
+      tracks/playabletrack/wavetrack/ui/GetWaveDisplay.cpp
+      tracks/playabletrack/wavetrack/ui/GetWaveDisplay.h
       tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
       tracks/playabletrack/wavetrack/ui/SampleHandle.h
+      tracks/playabletrack/wavetrack/ui/SpectrumCache.cpp
+      tracks/playabletrack/wavetrack/ui/SpectrumCache.h
       tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
       tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.h
       tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
@@ -783,12 +801,15 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/SpectrumView.h
       tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.h
       tracks/playabletrack/wavetrack/ui/WaveClipTrimHandle.cpp
+      tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+      tracks/playabletrack/wavetrack/ui/WaveClipUtilities.h
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceHandle.h
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackControls.h
+      tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackShifter.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.h
@@ -804,12 +825,15 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h
+      tracks/playabletrack/wavetrack/ui/WaveformCache.cpp
+      tracks/playabletrack/wavetrack/ui/WaveformCache.h
       tracks/playabletrack/wavetrack/ui/WaveformView.cpp
       tracks/playabletrack/wavetrack/ui/WaveformView.h
       tracks/playabletrack/wavetrack/WaveTrackUtils.cpp
       tracks/playabletrack/wavetrack/WaveTrackUtils.h
       tracks/timetrack/ui/TimeTrackControls.cpp
       tracks/timetrack/ui/TimeTrackControls.h
+      tracks/timetrack/ui/TimeTrackMenuItems.cpp
       tracks/timetrack/ui/TimeTrackVRulerControls.cpp
       tracks/timetrack/ui/TimeTrackVRulerControls.h
       tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
@@ -941,6 +965,8 @@ list( APPEND SOURCES
       >
       widgets/UnwritableLocationErrorDialog.cpp
       widgets/UnwritableLocationErrorDialog.h
+      widgets/VetoDialogHook.cpp
+      widgets/VetoDialogHook.h
       widgets/Warning.cpp
       widgets/Warning.h
       widgets/WindowAccessible.cpp

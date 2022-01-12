@@ -39,11 +39,13 @@ class CommandOutputTargets;
 class CommandSignature;
 class wxString;
 
+#include <optional>
+
 class AUDACITY_DLL_API OldStyleCommandType : public AudacityCommand
 {
 private:
    ComponentInterfaceSymbol mSymbol;
-   Optional<CommandSignature> mSignature;
+   std::optional<CommandSignature> mSignature;
 
 public:
    OldStyleCommandType();

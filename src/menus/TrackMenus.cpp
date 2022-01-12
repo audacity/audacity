@@ -15,7 +15,6 @@
 #include "../SelectUtilities.h"
 #include "../ShuttleGui.h"
 #include "../SyncLock.h"
-#include "../TimeTrack.h"
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../TrackUtilities.h"
@@ -367,7 +366,7 @@ class ASAProgress final : public SAProgress {
    long mTotalCells; // how many matrix cells?
    long mCellCount; // how many cells so far?
    long mPrevCellCount; // cell_count last reported with Update()
-   Optional<ProgressDialog> mProgress;
+   std::optional<ProgressDialog> mProgress;
    #ifdef COLLECT_TIMING_DATA
       FILE *mTimeFile;
       wxDateTime mStartTime;
@@ -610,103 +609,6 @@ namespace TrackActions {
 
 struct Handler : CommandHandlerObject {
 
-void OnNewWaveTrack(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   auto defaultFormat = QualitySettings::SampleFormatChoice();
-
-   auto rate = ProjectRate::Get(project).GetRate();
-
-   auto t = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
-   SelectUtilities::SelectNone( project );
-
-   t->SetSelected(true);
-
-   ProjectHistory::Get( project )
-      .PushState(XO("Created new audio track"), XO("New Track"));
-
-   TrackFocus::Get(project).Set(t);
-   t->EnsureVisible();
-}
-
-void OnNewStereoTrack(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   auto defaultFormat = QualitySettings::SampleFormatChoice();
-   auto rate = ProjectRate::Get(project).GetRate();
-
-   SelectUtilities::SelectNone( project );
-
-   auto left = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
-   left->SetSelected(true);
-
-   auto right = tracks.Add( trackFactory.NewWaveTrack( defaultFormat, rate ) );
-   right->SetSelected(true);
-
-   tracks.MakeMultiChannelTrack(*left, 2, true);
-
-   ProjectHistory::Get( project )
-      .PushState(XO("Created new stereo audio track"), XO("New Track"));
-
-   TrackFocus::Get(project).Set(left);
-   left->EnsureVisible();
-}
-
-void OnNewLabelTrack(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &trackFactory = WaveTrackFactory::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   auto t = tracks.Add( std::make_shared<LabelTrack>() );
-
-   SelectUtilities::SelectNone( project );
-
-   t->SetSelected(true);
-
-   ProjectHistory::Get( project )
-      .PushState(XO("Created new label track"), XO("New Track"));
-
-   TrackFocus::Get(project).Set(t);
-   t->EnsureVisible();
-}
-
-void OnNewTimeTrack(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   auto &window = ProjectWindow::Get( project );
-
-   if ( *tracks.Any<TimeTrack>().begin() ) {
-      AudacityMessageBox(
-         XO(
-"This version of Audacity only allows one time track for each project window.") );
-      return;
-   }
-
-   auto t = tracks.AddToHead( std::make_shared<TimeTrack>(&viewInfo) );
-
-   SelectUtilities::SelectNone( project );
-
-   t->SetSelected(true);
-
-   ProjectHistory::Get( project )
-      .PushState(XO("Created new time track"), XO("New Track"));
-
-   TrackFocus::Get(project).Set(t);
-   t->EnsureVisible();
-}
-
 void OnStereoToMono(const CommandContext &context)
 {
    EffectUI::DoEffect(
@@ -809,14 +711,15 @@ void OnResample(const CommandContext &context)
    {
       auto msg = XO("Resampling track %d").Format( ++ndx );
 
-      ProgressDialog progress(XO("Resample"), msg);
+      using namespace BasicUI;
+      auto progress = MakeProgress(XO("Resample"), msg);
 
       // The resampling of a track may be stopped by the user.  This might
       // leave a track with multiple clips in a partially resampled state.
       // But the thrown exception will cause rollback in the application
       // level handler.
 
-       wt->Resample(newRate, &progress);
+       wt->Resample(newRate, progress.get());
 
       // Each time a track is successfully, completely resampled,
       // commit that to the undo stack.  The second and later times,
@@ -1308,16 +1211,7 @@ BaseItemSharedPtr TracksMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Tracks"), XXO("&Tracks"),
       Section( "Add",
-         Menu( wxT("Add"), XXO("Add &New"),
-            Command( wxT("NewMonoTrack"), XXO("&Mono Track"), FN(OnNewWaveTrack),
-               AudioIONotBusyFlag(), wxT("Ctrl+Shift+N") ),
-            Command( wxT("NewStereoTrack"), XXO("&Stereo Track"),
-               FN(OnNewStereoTrack), AudioIONotBusyFlag() ),
-            Command( wxT("NewLabelTrack"), XXO("&Label Track"),
-               FN(OnNewLabelTrack), AudioIONotBusyFlag() ),
-            Command( wxT("NewTimeTrack"), XXO("&Time Track"),
-               FN(OnNewTimeTrack), AudioIONotBusyFlag() )
-         )
+         Menu( wxT("Add"), XXO("Add &New") )
       ),
 
       //////////////////////////////////////////////////////////////////////////

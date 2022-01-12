@@ -20,6 +20,7 @@
 #include "TimeWarper.h"
 
 #include <algorithm>
+#include <thread>
 
 #include <wx/defs.h>
 #include <wx/sizer.h>
@@ -33,8 +34,8 @@
 #include "../ProjectSettings.h"
 #include "QualitySettings.h"
 #include "../SelectFile.h"
+#include "../ShuttleAutomation.h"
 #include "../ShuttleGui.h"
-#include "../Shuttle.h"
 #include "../SyncLock.h"
 #include "TransactionScope.h"
 #include "ViewInfo.h"
@@ -43,6 +44,7 @@
 #include "../widgets/ProgressDialog.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/VetoDialogHook.h"
 
 #include <unordered_map>
 
@@ -59,25 +61,6 @@ const wxString Effect::kCurrentSettingsIdent = wxT("<Current Settings>");
 const wxString Effect::kFactoryDefaultsIdent = wxT("<Factory Defaults>");
 
 using t2bHash = std::unordered_map< void*, bool >;
-
-namespace {
-
-Effect::VetoDialogHook &GetVetoDialogHook()
-{
-   static Effect::VetoDialogHook sHook = nullptr;
-   return sHook;
-}
-
-}
-
-auto Effect::SetVetoDialogHook( VetoDialogHook hook )
-   -> VetoDialogHook
-{
-   auto &theHook = GetVetoDialogHook();
-   auto result = theHook;
-   theHook = hook;
-   return result;
-}
 
 Effect::Effect()
 {
@@ -471,8 +454,7 @@ int Effect::ShowClientInterface(
    mUIDialog->Fit();
    mUIDialog->SetMinSize(mUIDialog->GetSize());
 
-   auto hook = GetVetoDialogHook();
-   if( hook && hook( mUIDialog ) )
+   if( ::CallVetoDialogHook( mUIDialog ) )
       return 0;
 
    if( SupportsRealtime() && !forceModal )
@@ -1106,13 +1088,14 @@ bool Effect::DoEffect(double projectRate,
    bool skipFlag = CheckWhetherSkipEffect();
    if (skipFlag == false)
    {
+      using namespace BasicUI;
       auto name = GetName();
-      ProgressDialog progress{
+      auto progress = MakeProgress(
          name,
          XO("Applying %s...").Format( name ),
-         pdlgHideStopButton
-      };
-      auto vr = valueRestorer( mProgress, &progress );
+         ProgressShowCancel
+      );
+      auto vr = valueRestorer( mProgress, progress.get() );
 
       {
          returnVal = Process();
@@ -1798,7 +1781,7 @@ void Effect::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
 bool Effect::TotalProgress(double frac, const TranslatableString &msg)
 {
    auto updateResult = (mProgress ?
-      mProgress->Update(frac, msg) :
+      mProgress->Poll(frac * 1000, 1000, msg) :
       ProgressResult::Success);
    return (updateResult != ProgressResult::Success);
 }
@@ -1806,7 +1789,7 @@ bool Effect::TotalProgress(double frac, const TranslatableString &msg)
 bool Effect::TrackProgress(int whichTrack, double frac, const TranslatableString &msg)
 {
    auto updateResult = (mProgress ?
-      mProgress->Update(whichTrack + frac, (double) mNumTracks, msg) :
+      mProgress->Poll(whichTrack + frac, (double) mNumTracks, msg) :
       ProgressResult::Success);
    return (updateResult != ProgressResult::Success);
 }
@@ -1814,7 +1797,7 @@ bool Effect::TrackProgress(int whichTrack, double frac, const TranslatableString
 bool Effect::TrackGroupProgress(int whichGroup, double frac, const TranslatableString &msg)
 {
    auto updateResult = (mProgress ?
-      mProgress->Update(whichGroup + frac, (double) mNumGroups, msg) :
+      mProgress->Poll(whichGroup + frac, (double) mNumGroups, msg) :
       ProgressResult::Success);
    return (updateResult != ProgressResult::Success);
 }
@@ -2194,12 +2177,13 @@ void Effect::Preview(bool dryOnly)
 
    // Apply effect
    if (!dryOnly) {
-      ProgressDialog progress{
+      using namespace BasicUI;
+      auto progress = MakeProgress(
          GetName(),
          XO("Preparing preview"),
-         pdlgHideCancelButton
-      }; // Have only "Stop" button.
-      auto vr = valueRestorer( mProgress, &progress );
+         ProgressShowStop
+      ); // Have only "Stop" button.
+      auto vr = valueRestorer( mProgress, progress.get() );
 
       auto vr2 = valueRestorer( mIsPreview, true );
 
@@ -2228,7 +2212,8 @@ void Effect::Preview(bool dryOnly)
             (GetName(), XO("Previewing"), pdlgHideCancelButton);
 
             while (gAudioIO->IsStreamActive(token) && previewing == ProgressResult::Success) {
-               ::wxMilliSleep(100);
+               using namespace std::chrono;
+               std::this_thread::sleep_for(100ms);
                previewing = progress.Update(gAudioIO->GetStreamTime() - mT0, t1 - mT0);
             }
          }
@@ -2236,7 +2221,8 @@ void Effect::Preview(bool dryOnly)
          gAudioIO->StopStream();
 
          while (gAudioIO->IsBusy()) {
-            ::wxMilliSleep(100);
+            using namespace std::chrono;
+            std::this_thread::sleep_for(100ms);
          }
       }
       else {

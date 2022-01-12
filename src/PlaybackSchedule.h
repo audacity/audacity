@@ -175,6 +175,8 @@ struct PlaybackSlice {
  */
 class PlaybackPolicy {
 public:
+   using Duration = std::chrono::duration<double>;
+
    //! @section Called by the main thread
 
    virtual ~PlaybackPolicy() = 0;
@@ -190,9 +192,9 @@ public:
 
    //! Times are in seconds
    struct BufferTimes {
-      double batchSize; //!< Try to put at least this much into the ring buffer in each pass
-      double latency; //!< Try not to let ring buffer contents fall below this
-      double ringBufferDelay; //!< Length of ring buffer in seconds
+      Duration batchSize; //!< Try to put at least this much into the ring buffer in each pass
+      Duration latency; //!< Try not to let ring buffer contents fall below this
+      Duration ringBufferDelay; //!< Length of ring buffer
    };
    //! Provide hints for construction of playback RingBuffer objects
    virtual BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule);

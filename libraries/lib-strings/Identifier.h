@@ -157,7 +157,7 @@ template< typename Tag1, typename Tag2, bool b1, bool b2 >
 inline bool operator == (
    const TaggedIdentifier< Tag1, b1 > &x, const TaggedIdentifier< Tag2, b2 > &y )
 {
-   static_assert( std::is_same< Tag1, Tag2 >::value && b1 == b2,
+   static_assert( std::is_same_v< Tag1, Tag2 > && b1 == b2,
       "TaggedIdentifiers with different tags or sensitivity are not comparable" );
    // This test should be eliminated at compile time:
    if ( b1 )
@@ -175,7 +175,7 @@ template< typename Tag1, typename Tag2, bool b1, bool b2 >
 inline bool operator < (
    const TaggedIdentifier< Tag1, b1 > &x, const TaggedIdentifier< Tag2, b2 > &y )
 {
-   static_assert( std::is_same< Tag1, Tag2 >::value && b1 == b2,
+   static_assert( std::is_same_v< Tag1, Tag2 > && b1 == b2,
       "TaggedIdentifiers with different tags or sensitivity are not comparable" );
    // This test should be eliminated at compile time:
    if ( b1 )

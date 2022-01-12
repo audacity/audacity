@@ -15,7 +15,6 @@ Geometric TimeWarper classes
 
 *//*******************************************************************/
 
-
 #include "TimeWarper.h"
 
 #include <wx/string.h>

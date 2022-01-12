@@ -11,10 +11,8 @@ Paul Licameli split from AudioIO.h
 #ifndef __AUDACITY_AUDIO_IO_BASE__
 #define __AUDACITY_AUDIO_IO_BASE__
 
-
-
-
 #include <cfloat>
+#include <chrono>
 #include <functional>
 #include <optional>
 #include <vector>
@@ -67,8 +65,8 @@ struct AudioIOStartStreamOptions
 
    // An unfortunate thing needed just to make scrubbing work on Linux when
    // we can't use a separate polling thread.
-   // The return value is a number of milliseconds to sleep before calling again
-   std::function< unsigned long() > playbackStreamPrimer;
+   // The return value is duration to sleep before calling again
+   std::function< std::chrono::milliseconds() > playbackStreamPrimer;
 
    using PolicyFactory = std::function<
       std::unique_ptr<PlaybackPolicy>(const AudioIOStartStreamOptions&) >;

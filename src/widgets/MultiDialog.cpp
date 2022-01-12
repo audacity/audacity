@@ -18,6 +18,7 @@
 
 
 #include "MultiDialog.h"
+#include "MemoryX.h"
 
 #include "../ShuttleGui.h"
 

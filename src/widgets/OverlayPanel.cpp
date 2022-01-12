@@ -10,8 +10,8 @@
 #include "OverlayPanel.h"
 
 #include "Overlay.h"
-#include "MemoryX.h"
 #include <algorithm>
+#include <optional>
 #include <wx/dcclient.h>
 
 OverlayPanel::OverlayPanel(wxWindow * parent, wxWindowID id,
@@ -99,7 +99,7 @@ void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
       } while (!done);
    }
 
-   Optional<wxClientDC> myDC;
+   std::optional<wxClientDC> myDC;
    auto &dc = pDC ? *pDC : (myDC.emplace(this), *myDC);
 
    // Erase

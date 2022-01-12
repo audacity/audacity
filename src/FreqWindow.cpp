@@ -83,6 +83,7 @@ the mouse around.
 #include "./widgets/HelpSystem.h"
 #include "widgets/AudacityMessageBox.h"
 #include "widgets/Ruler.h"
+#include "widgets/VetoDialogHook.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
@@ -1025,7 +1026,7 @@ void FrequencyPlotDialog::Recalc()
    // controls while the plot was being recalculated.  This doesn't appear to be necessary
    // so just use the top level window instead.
    {
-      Optional<wxWindowDisabler> blocker;
+      std::optional<wxWindowDisabler> blocker;
       if (IsShown())
          blocker.emplace(this);
       wxYieldIfNeeded();
@@ -1196,7 +1197,6 @@ void FreqPlot::OnMouseEvent(wxMouseEvent & event)
 // Remaining code hooks this add-on into the application
 #include "commands/CommandContext.h"
 #include "commands/CommandManager.h"
-#include "commands/ScreenshotCommand.h"
 #include "ProjectWindows.h"
 
 namespace {
@@ -1220,7 +1220,7 @@ struct Handler : CommandHandlerObject {
       auto freqWindow = &GetAttachedWindows(project)
          .Get< FrequencyPlotDialog >( sFrequencyWindowKey );
 
-      if( ScreenshotCommand::MayCapture( freqWindow ) )
+      if( ::CallVetoDialogHook( freqWindow ) )
          return;
       freqWindow->Show(true);
       freqWindow->Raise();

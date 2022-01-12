@@ -111,7 +111,7 @@ bool EffectFindClipping::SetAutomationParameters(CommandParameters & parms)
 bool EffectFindClipping::Process()
 {
    std::shared_ptr<AddedAnalysisTrack> addedTrack;
-   Optional<ModifiedAnalysisTrack> modifiedTrack;
+   std::optional<ModifiedAnalysisTrack> modifiedTrack;
    const wxString name{ _("Clipping") };
 
    auto clt = *inputTracks()->Any< const LabelTrack >().find_if(

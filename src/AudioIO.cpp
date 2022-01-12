@@ -616,8 +616,11 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    // On my test machine, no more than 3 attempts are required.
    unsigned int maxTries = 1;
 #ifdef __WXGTK__
-   if (DeviceManager::Instance()->GetTimeSinceRescan() < 10)
-      maxTries = 5;
+   {
+      using namespace std::chrono;
+      if (DeviceManager::Instance()->GetTimeSinceRescan() < 10s)
+         maxTries = 5;
+   }
 #endif
 
    for (unsigned int tries = 0; tries < maxTries; tries++) {
@@ -631,7 +634,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
          break;
       }
       wxLogDebug("Attempt %u to open capture stream failed with: %d", 1 + tries, mLastPaError);
-      wxMilliSleep(1000);
+      using namespace std::chrono;
+      std::this_thread::sleep_for(1s);
    }
 
 
@@ -775,8 +779,10 @@ int AudioIO::StartStream(const TransportTracks &tracks,
 
    if (mPortStreamV19) {
       StopStream();
-      while(mPortStreamV19)
-         wxMilliSleep( 50 );
+      while(mPortStreamV19) {
+         using namespace std::chrono;
+         std::this_thread::sleep_for(50ms);
+      }
    }
 
 #ifdef __WXGTK__
@@ -971,11 +977,12 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    mAudioThreadShouldCallTrackBufferExchangeOnce = true;
 
    while( mAudioThreadShouldCallTrackBufferExchangeOnce ) {
-      auto interval = 50ull;
+      using namespace std::chrono;
+      auto interval = 50ms;
       if (options.playbackStreamPrimer) {
          interval = options.playbackStreamPrimer();
       }
-      wxMilliSleep( interval );
+      std::this_thread::sleep_for(interval);
    }
 
    if(mNumPlaybackChannels > 0 || mNumCaptureChannels > 0) {
@@ -1126,7 +1133,7 @@ bool AudioIO::AllocateBuffers(
    // usually, make fillings fewer and longer for less CPU usage.
    // What Audio thread produces for playback is then consumed by the PortAudio
    // thread, in many smaller pieces.
-   double playbackTime = lrint(times.batchSize * mRate) / mRate;
+   double playbackTime = lrint(times.batchSize.count() * mRate) / mRate;
    
    wxASSERT( playbackTime >= 0 );
    mPlaybackSamplesToCopy = playbackTime * mRate;
@@ -1149,7 +1156,7 @@ bool AudioIO::AllocateBuffers(
             // Allocate output buffers.  For every output track we allocate
             // a ring buffer of ten seconds
             auto playbackBufferSize =
-               (size_t)lrint(mRate * mPlaybackRingBufferSecs);
+               (size_t)lrint(mRate * mPlaybackRingBufferSecs.count());
 
             // Always make at least one playback buffer
             mPlaybackBuffers.reinit(
@@ -1160,7 +1167,7 @@ bool AudioIO::AllocateBuffers(
             const auto &warpOptions =
                policy.MixerWarpOptions(mPlaybackSchedule);
 
-            mPlaybackQueueMinimum = lrint( mRate * times.latency );
+            mPlaybackQueueMinimum = lrint( mRate * times.latency.count() );
             mPlaybackQueueMinimum =
                std::min( mPlaybackQueueMinimum, playbackBufferSize );
 
@@ -1263,7 +1270,7 @@ bool AudioIO::AllocateBuffers(
          // In the extraordinarily rare case that we can't even afford 100
          // samples, just give up.
          auto playbackBufferSize =
-            (size_t)lrint(mRate * mPlaybackRingBufferSecs);
+            (size_t)lrint(mRate * mPlaybackRingBufferSecs.count());
          if(playbackBufferSize < 100 || mPlaybackSamplesToCopy < 100)
          {
             AudacityMessageBox( XO("Out of memory!") );
@@ -1353,8 +1360,10 @@ void AudioIO::StopStream()
       // If we can gracefully fade out in 200ms, with the faded-out play buffers making it through
       // the sound card, then do so.  If we can't, don't wait around.  Just stop quickly and accept
       // there will be a click.
-      if( mbMicroFades  && (latency < 150 ))
-         wxMilliSleep( latency + 50);
+      if( mbMicroFades  && (latency < 150 )) {
+         using namespace std::chrono;
+         std::this_thread::sleep_for(milliseconds{latency + 50});
+      }
    }
 
    wxMutexLocker locker(mSuspendAudioThread);
@@ -1403,7 +1412,8 @@ void AudioIO::StopStream()
    mUpdateMeters = false;
    while(mUpdatingMeters) {
       ::wxSafeYield();
-      wxMilliSleep( 50 );
+      using namespace std::chrono;
+      std::this_thread::sleep_for(50ms);
    }
 
    // Turn off HW playthrough if PortMixer is being used
@@ -1450,7 +1460,8 @@ void AudioIO::StopStream()
          //FIXME: Seems like this block of the UI thread isn't bounded,
          //but we cannot allow event handlers to see incompletely terminated
          //AudioIO state with wxYield (or similar functions)
-         wxMilliSleep( 50 );
+         using namespace std::chrono;
+         std::this_thread::sleep_for(50ms);
       }
 
       //
@@ -3041,7 +3052,8 @@ int AudioIoCallback::CallbackDoSeek()
    mAudioThreadTrackBufferExchangeLoopRunning = false;
    while( mAudioThreadTrackBufferExchangeLoopActive )
    {
-      wxMilliSleep( 50 );
+      using namespace std::chrono;
+      std::this_thread::sleep_for(50ms);
    }
 
    // Calculate the NEW time position, in the PortAudio callback
@@ -3072,7 +3084,8 @@ int AudioIoCallback::CallbackDoSeek()
    mAudioThreadShouldCallTrackBufferExchangeOnce = true;
    while( mAudioThreadShouldCallTrackBufferExchangeOnce )
    {
-      wxMilliSleep( 50 );
+      using namespace std::chrono;
+      std::this_thread::sleep_for(50ms);
    }
 
    // Reenable the audio thread

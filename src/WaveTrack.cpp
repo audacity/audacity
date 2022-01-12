@@ -52,11 +52,9 @@ from the project that will own the track.
 
 #include "Prefs.h"
 
-#include "effects/TimeWarper.h"
+#include "TimeWarper.h"
 #include "QualitySettings.h"
 #include "prefs/SpectrogramSettings.h"
-#include "prefs/TracksPrefs.h"
-#include "prefs/TracksBehaviorsPrefs.h"
 #include "prefs/WaveformSettings.h"
 
 #include "InconsistencyException.h"
@@ -95,6 +93,21 @@ Track::LinkType ToLinkType(int value)
    return static_cast<Track::LinkType>(value);
 }
 
+}
+
+static auto DefaultName = XO("Audio Track");
+
+wxString WaveTrack::GetDefaultAudioTrackNamePreference()
+{
+   const auto name = AudioTrackNameSetting.ReadWithDefault(L"");
+
+   if (name.empty() || ( name == DefaultName.MSGID() ))
+      // When nothing was specified,
+      // the default-default is whatever translation of...
+      /* i18n-hint: The default name for an audio track. */
+      return DefaultName.Translation();
+   else
+      return name;
 }
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
@@ -145,7 +158,7 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
    mOldGain[0] = 0.0;
    mOldGain[1] = 0.0;
    mWaveColorIndex = 0;
-   SetDefaultName(TracksPrefs::GetDefaultAudioTrackNamePreference());
+   SetDefaultName(GetDefaultAudioTrackNamePreference());
    SetName(GetDefaultName());
    mDisplayMin = -1.0;
    mDisplayMax = 1.0;
@@ -1633,8 +1646,6 @@ void WaveTrack::Disjoin(double t0, double t1)
    Floats buffer{ maxAtOnce };
    Regions regions;
 
-   wxBusyCursor busy;
-
    for (const auto &clip : mClips)
    {
       double startTime = clip->GetPlayStartTime();
@@ -2686,7 +2697,7 @@ void WaveTrack::MergeClips(int clipidx1, int clipidx2)
 
 /*! @excsafety{Weak} -- Partial completion may leave clips at differing sample rates!
 */
-void WaveTrack::Resample(int rate, ProgressDialog *progress)
+void WaveTrack::Resample(int rate, BasicUI::ProgressDialog *progress)
 {
    for (const auto &clip : mClips)
       clip->Resample(rate, progress);
@@ -2716,13 +2727,6 @@ WaveClipPointers WaveTrack::SortedClipArray()
 WaveClipConstPointers WaveTrack::SortedClipArray() const
 {
    return FillSortedClipArray<WaveClipConstPointers>(mClips);
-}
-
-///Deletes all clips' wavecaches.  Careful, This may not be threadsafe.
-void WaveTrack::ClearWaveCaches()
-{
-   for (const auto &clip : mClips)
-      clip->ClearWaveCache();
 }
 
 auto WaveTrack::AllClipsIterator::operator ++ () -> AllClipsIterator &
@@ -2831,3 +2835,24 @@ ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
       return BaseProjectFormatVersion;
    }
 );
+
+StringSetting AudioTrackNameSetting{
+   L"/GUI/TrackNames/DefaultTrackName",
+   // Computed default value depends on chosen language
+   []{ return DefaultName.Translation(); }
+};
+
+// Bug 825 is essentially that SyncLock requires EditClipsCanMove.
+// SyncLock needs rethinking, but meanwhile this function
+// fixes the issues of Bug 825 by allowing clips to move when in
+// SyncLock.
+bool GetEditClipsCanMove()
+{
+   bool mIsSyncLocked;
+   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
+   if( mIsSyncLocked )
+      return true;
+   bool editClipsCanMove;
+   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipsCanMove, false);
+   return editClipsCanMove;
+}
