@@ -495,6 +495,12 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\"" )
    endforeach()
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+
+   # collect unit test targets if they are present
+   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests")
+      add_subdirectory(tests)
+   endif()
+
 endfunction()
 
 # Set up for defining a module target.

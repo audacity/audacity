@@ -5,6 +5,8 @@
 # generator expressions.
 cmake_minimum_required( VERSION 3.15 )
 
+enable_testing()
+
 # If building with GNU compiler, then must be 4.9 or later.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
     CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.9")
