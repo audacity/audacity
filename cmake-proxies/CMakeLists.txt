@@ -222,7 +222,7 @@ if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows")
    )
 endif()
 
-if( ${_OPT}has_sentry_reporting )
+if( ${_OPT}has_sentry_reporting OR ${_OPT}has_deeplearning)
    add_conan_lib(
       RapidJSON
       rapidjson/1.1.0
@@ -238,6 +238,16 @@ add_conan_lib(
    CONAN_OPTIONS
       portmidi:shared=True
 )
+
+if( ${_OPT}has_deeplearning )
+   add_conan_lib(
+      Torch
+      libtorch-binary/1.9.0
+      OPTION_NAME libtorch
+      HAS_ONLY_DEBUG_RELEASE
+      FIND_PACKAGE_OPTIONS
+   )
+endif()
 
 set_conan_vars_to_parent()
 

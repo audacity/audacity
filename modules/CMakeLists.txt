@@ -2,9 +2,16 @@
 
 # The list of modules is ordered so that each module occurs after any others
 # that it depends on
-set( MODULES
+set( MODULES )
+
+if (${_OPT}has_deeplearning)
+   list( APPEND MODULES mod-deep-learning )
+endif()
+
+list( APPEND MODULES
    mod-script-pipe
 )
+
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows" )
    list( APPEND MODULES
       mod-null
