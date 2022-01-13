@@ -80,10 +80,19 @@ struct PrefsListener::Impl
    Observer::Subscription mSubscription;
 };
 
-static Observer::Publisher<int> &hub()
+namespace {
+
+struct Hub : Observer::Publisher<int>
 {
-   static Observer::Publisher<int> theHub;
+   using Publisher::Publish;
+};
+
+static Hub &hub()
+{
+   static Hub theHub;
    return theHub;
+}
+
 }
 
 void PrefsListener::Broadcast(int id)
