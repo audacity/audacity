@@ -372,8 +372,7 @@ void CurlResponse::perform ()
         }
         else
         {
-            if (mHttpCode == 0)
-                mHttpCode = handle.getHTTPCode ();
+            mHttpCode = handle.getHTTPCode ();
         }
 
         mRequestFinished = true;
