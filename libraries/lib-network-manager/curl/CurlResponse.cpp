@@ -304,8 +304,7 @@ void CurlResponse::perform (const void* ptr, size_t size)
         }
         else
         {
-            if (mHttpCode == 0)
-                mHttpCode = handle.getHTTPCode ();
+            mHttpCode = handle.getHTTPCode ();
         }
 
         mRequestFinished = true;
