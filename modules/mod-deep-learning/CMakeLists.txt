@@ -28,6 +28,8 @@ set( SOURCES
    DeepModelManager.cpp
    DeepModelManager.h
 
+   DeepLearningEffectBase.cpp
+   DeepLearningEffectBase.h
    ModelManagerPanel.cpp
    ModelManagerPanel.h
    ModelCardPanel.cpp
