@@ -136,9 +136,10 @@ void ModelCardPanel::PopulateNameAndAuthor(ShuttleGui &S)
       mModelName->SetFont(wxFont(wxFontInfo().Bold()));
 
       // model size
-      mModelSize = S.AddVariableText(Verbatim("[- MB]"));
-      FetchModelSize();
+      float sizeMB = static_cast<float>(mCard->model_size()) / static_cast<float>(1024 * 1024);
 
+      // i8n-hint: Model file size, in megabytes 
+      mModelSize = S.AddVariableText(XO("[%.1f MB]").Format(sizeMB));
    }
    S.EndMultiColumn();
    // S.EndHorizontalLay();
@@ -297,24 +298,6 @@ void ModelCardPanel::PopulateMoreInfo(ShuttleGui &S)
    S.EndHorizontalLay();
 }
 
-void ModelCardPanel::FetchModelSize()
-{
-   DeepModelManager &manager = DeepModelManager::Get();
-
-   ModelSizeCallback onGetModelSize = [this](size_t size)
-   {
-      this->CallAfter(
-         [this, size]()
-         {
-            float sizeMB = static_cast<float>(size) / static_cast<float>(1024 * 1024);
-            mModelSize->SetLabel(Verbatim("[%.1f MB]").Format(sizeMB).Translation());
-         }
-      );
-   }; 
-
-   manager.FetchModelSize(mCard, onGetModelSize);
-}
-
 void ModelCardPanel::SetInstallStatus(InstallStatus status)
 {
    mInstallStatusBook->ChangeSelection(
@@ -340,7 +323,6 @@ void ModelCardPanel::OnCancelInstall(wxCommandEvent &event)
    DeepModelManager &manager = DeepModelManager::Get();
 
    manager.CancelInstall(mCard);
-   manager.Uninstall(mCard);
    SetInstallStatus(InstallStatus::Uninstalled);
 }
 
@@ -350,7 +332,8 @@ void ModelCardPanel::OnInstall(wxCommandEvent &event)
 {
    DeepModelManager &manager = DeepModelManager::Get();
 
-   ProgressCallback onProgress([this, &manager](int64_t current, int64_t expected)
+   auto wthis = wxWeakRef(this);
+   ProgressCallback onProgress([wthis, &manager](int64_t current, int64_t expected)
    {
       // bail if we've been deleted
       if (!wthis)
@@ -370,43 +353,22 @@ void ModelCardPanel::OnInstall(wxCommandEvent &event)
          wthis->mProgressGauge->Pulse();
    });
 
-   CompletionHandler onInstallDone([this, &manager](int httpCode, std::string responseBody)
+   InstallCompletionHandler onInstallDone([wthis, &manager]()
    {  
-      this->CallAfter(
-         [this, httpCode, &manager]()
-         {
-            if (httpCode == 200 || httpCode == 302)
-            {
-               // check if install succeeded
-               if (manager.IsInstalled(this->mCard))
-                  this->SetInstallStatus(InstallStatus::Installed);
-               else
-               {
-                  mEffect->MessageBox(
-                     XO("An error ocurred while installing the model with Repo ID %s. ")
-                        .Format(this->mCard->GetRepoID())
-                  );
-                  this->SetInstallStatus(InstallStatus::Uninstalled);
-               }
-            }
-            else
-            {
-               this->SetInstallStatus(InstallStatus::Uninstalled);
-               mEffect->MessageBox(
-                  XO("An error ocurred while downloading the model with Repo ID %s. \n"
-                     "HTTP Code: %d").Format(this->mCard->GetRepoID(), httpCode)
-               );
-            }
-         }
-      ); 
+      // bail if we've been deleted
+      if (!wthis)
+         return;
+
+      // check if install succeeded
+      if (manager.IsInstalled(wthis->mCard))
+         wthis->SetInstallStatus(InstallStatus::Installed);
+      else
+         wthis->SetInstallStatus(InstallStatus::Uninstalled);
    });
 
    if (!manager.IsInstalled(mCard))
    {
       this->SetInstallStatus(InstallStatus::Installing);
-
-      // TODO: since this is done in another thread, how do I catch an error, like
-      // losing the connection in the middle of a download? 
       manager.Install(mCard, std::move(onProgress), std::move(onInstallDone));
    }
 }

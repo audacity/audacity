@@ -44,6 +44,7 @@ set( SOURCES
 )
 set( LIBRARIES
    Audacity
+   ThreadPool::ThreadPool
 )
 
 audacity_module( mod-deep-learning "${SOURCES}" "${LIBRARIES}"
