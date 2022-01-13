@@ -363,8 +363,6 @@ public:
 
 private:
    bool RevertToOldDefault( const PlaybackSchedule &schedule ) const;
-   void OnPlayRegionChange(Observer::Message);
-   void OnPlaySpeedChange(wxCommandEvent &evt);
    void WriteMessage();
    double GetPlaySpeed();
 
@@ -380,7 +378,8 @@ private:
    };
    MessageBuffer<SlotData> mMessageChannel;
 
-   Observer::Subscription mSubscription;
+   Observer::Subscription mRegionSubscription,
+      mSpeedSubscription;
 
    double mLastPlaySpeed{ 1.0 };
    const double mTrackEndTime;
