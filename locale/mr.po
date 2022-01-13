@@ -5540,7 +5540,7 @@ msgstr "अंशांकन परिणाम\n"
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Energy                  -- mean: %1.4f  sd: (%1.4f)\n"
-msgstr "%1.4f ऊर्जा                    --  सरासरी: %1.4f एस.डी: (% 1.4f)\n"
+msgstr "ऊर्जा                    --  सरासरी: %1.4f एस.डी: (% 1.4f)\n"
 
 #: src/VoiceKey.cpp
 #, c-format
