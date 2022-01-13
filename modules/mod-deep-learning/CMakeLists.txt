@@ -28,6 +28,8 @@ set( SOURCES
    DeepModelManager.cpp
    DeepModelManager.h
 
+   ModelCardPanel.cpp
+   ModelCardPanel.h
 )
 set( LIBRARIES
    Audacity
