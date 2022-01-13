@@ -70,7 +70,8 @@
 //#endif
 
 #ifdef _MSC_VER
-#ifdef _DEBUG
+// LibTorch uses placement new, which is incompatible with this approach
+#if defined(_DEBUG) && !defined(HAVE_LIB_TORCH)
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 #undef new

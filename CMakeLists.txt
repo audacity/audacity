@@ -290,6 +290,15 @@ elseif( NOT CMAKE_SIZEOF_VOID_P STREQUAL "4" )
    set( IS_64BIT ON )
 endif()
 
+# only build deep learning tools if 64 bit
+cmake_dependent_option(
+   ${_OPT}has_deeplearning
+   "Build deep learning features into Audacity"
+   Off
+   "${_OPT}has_networking;IS_64BIT"
+   Off
+)
+
 message( STATUS "Build Info:" )
 message( STATUS "  Host System: ${CMAKE_HOST_SYSTEM}" )
 message( STATUS "  Host System Name: ${CMAKE_HOST_SYSTEM_NAME}" )
@@ -656,6 +665,11 @@ if(${_OPT}has_crashreports)
 endif()
 
 add_subdirectory( "tests/journals" )
+
+# add deep learning modules
+if(${_OPT}has_deeplearning)
+   add_subdirectory( "deeplearning-models" )
+endif()
 
 # Generate config file
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )

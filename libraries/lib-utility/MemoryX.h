@@ -481,7 +481,8 @@ NonInterferingBase {
    static void *operator new(std::size_t count, std::align_val_t al);
    static void operator delete(void *ptr, std::align_val_t al);
 
-#if defined (_MSC_VER) && defined(_DEBUG)
+// LibTorch uses placement new, which is incompatible with this approach
+#if defined(_MSC_VER) && defined(_DEBUG) && !defined(HAVE_LIB_TORCH)
    // Versions that work in the presence of the DEBUG_NEW macro.
    // Ignore the arguments supplied by the macro and forward to the
    // other overloads.

@@ -1,0 +1,49 @@
+{
+   "type": "object",
+   "properties": {
+      "name": {"type": "string" },
+      "author": {"type": "string"},
+      "long_description": {
+         "type": "string",
+         "maxLength": 280
+      },
+      "short_description": {
+         "type": "string",
+         "maxLength": 60
+      },
+      "domain_tags": {
+         "type": "array",
+         "items": {
+            "type": "string",
+            "enum": ["music", "environmental", "speech", "other"]
+         },
+         "maxItems": 4
+      },
+      "tags": {
+         "type": "array",
+         "maxItems": 5,
+         "items": {
+            "type": "string"
+         }, 
+         "uniqueItems": true
+      },
+      "effect_type": {
+         "type": "string",
+         "enum": ["waveform-to-waveform", "waveform-to-labels"]
+      },
+      "multichannel": {
+         "type": "boolean"
+      },
+      "labels": {
+         "type": "array",
+         "items": {"type": "string"}
+      }, 
+      "sample_rate": {
+         "type": "integer", 
+         "minimum": 0,
+         "maximum": 384000
+      }
+   }, 
+   "required": ["short_description", "long_description", "domain_tags", 
+               "effect_type", "multichannel", "labels", "sample_rate"]
+}

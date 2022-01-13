@@ -199,6 +199,11 @@ to configure Audacity.
 
 You can use `cmake -LH` to get a list of the options available (or use CMake GUI or `ccmake`). The list will include documentation about each option. For convenience, [here is a list](CMAKE_OPTIONS.md) of the most notable options.
 
+### Building with Deep Learning 
+
+To enable deep learning features, pass `audacity_has_deep_learning=on` and `audacity_has_networking=yes` to CMake. 
+Deep Learning is only supported on Linux, macOS, and Windows 64-bit builds.
+
 ### Building using system libraries
 
 On Linux it is possible to build Audacity using (almost) only the libraries provided by the package manager. Please, see the list of required libraries [here](linux/required_libraries.md).
