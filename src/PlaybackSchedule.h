@@ -19,8 +19,6 @@
 #include <chrono>
 #include <vector>
 
-#include <wx/event.h>
-
 class AudacityProject;
 struct AudioIOStartStreamOptions;
 class BoundedEnvelope;
@@ -332,7 +330,6 @@ private:
 class NewDefaultPlaybackPolicy final
    : public PlaybackPolicy
    , public NonInterferingBase
-   , public wxEvtHandler
 {
 public:
    NewDefaultPlaybackPolicy( AudacityProject &project,
@@ -363,8 +360,6 @@ public:
 
 private:
    bool RevertToOldDefault( const PlaybackSchedule &schedule ) const;
-   void OnPlayRegionChange(Observer::Message);
-   void OnPlaySpeedChange(wxCommandEvent &evt);
    void WriteMessage();
    double GetPlaySpeed();
 
@@ -380,7 +375,8 @@ private:
    };
    MessageBuffer<SlotData> mMessageChannel;
 
-   Observer::Subscription mSubscription;
+   Observer::Subscription mRegionSubscription,
+      mSpeedSubscription;
 
    double mLastPlaySpeed{ 1.0 };
    const double mTrackEndTime;
