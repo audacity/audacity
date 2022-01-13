@@ -37,6 +37,10 @@ set( SOURCES
    ExploreHuggingFaceDialog.cpp
    ExploreHuggingFaceDialog.h
       
+   DeepLearningEffect.cpp 
+   DeepLearningEffect.h
+   DeepLearningAnalyzer.cpp
+   DeepLearningAnalyzer.h
 )
 set( LIBRARIES
    Audacity
