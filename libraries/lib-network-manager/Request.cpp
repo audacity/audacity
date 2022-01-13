@@ -100,6 +100,17 @@ Request::Timeout Request::getTimeout () const noexcept
     return mTimeout;
 }
 
+Request& Request::setBlocking(bool block) noexcept
+{
+    mBlocking = block;
+    return *this;
+}
+
+bool Request::getBlocking() const noexcept
+{
+    return mBlocking;
+}
+
 Request& Request::appendCookies (const CookiesList& list)
 {
     for (const Cookie& cookie : list)
