@@ -48,7 +48,6 @@ public:
    void OnExplore(wxCommandEvent & WXUNUSED(event));
 
 private:
-   wxStaticText *mFetchStatus  { nullptr };
    wxButton *mAddRepoButton  { nullptr };
    wxButton *mExploreButton  { nullptr };
    ModelManagerPanel *mManagerPanel  { nullptr };

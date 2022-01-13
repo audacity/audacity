@@ -17,6 +17,7 @@
 
 #include <wx/tokenzr.h>
 #include <wx/log.h>
+#include <wx/app.h>
 
 using namespace audacity;
 
@@ -35,7 +36,8 @@ namespace {
 }
  
 DeepModelManager::DeepModelManager() :
-   mAPIEndpoint("https://huggingface.co/api/")
+   mAPIEndpoint("https://huggingface.co/api/"), 
+   mThreadPool(std::make_unique<ThreadPool>(std::thread::hardware_concurrency()))
 {
    const std::string schemaPath = audacity::ToUTF8(
       wxFileName(DeepModel::BuiltInModulesDir(), wxT("modelcard-schema.json"))
@@ -102,101 +104,73 @@ bool DeepModelManager::IsInstalled(ModelCardHolder card) const
    return success;
 }
 
-void DeepModelManager::Install(ModelCardHolder card, ProgressCallback onProgress, CompletionHandler onCompleted)
+void DeepModelManager::Install(ModelCardHolder card, ProgressCallback onProgress, InstallCompletionHandler onCompleted)
 { 
    if (IsInstalled(card))
       return ;
 
-   ProgressCallback progressHandler(
-   [this, card, handler {std::move(onProgress)}](int64_t current, int64_t expected)
-   {
-      // if the install has been cancelled, bail
-      // if we don't bail early, then calling the handler will 
-      // segfault.
-      if (!this->IsInstalling(card))
-         return;
-
-      return handler(current, expected);
-   }
+   // save the metadata
+   wxLogDebug("saving modelcard for %s \n", card->GetRepoID());
+   card->SerializeToFile(
+      audacity::ToUTF8(wxFileName(GetRepoDir(card), METADATA_FILENAME).GetFullPath())
    );
 
-   // set up the install handler
-   CompletionHandler installHandler(
-   [this, card, handler {std::move(onCompleted)} ](int httpCode, std::string body)
-   {
-      if (!this->IsInstalling(card))
-      {
-         Uninstall(card);
-         return;
-      }
-
-      if (!(httpCode == 200) && 
-          !(httpCode == 302))
-         Uninstall(card);
-          
-      
-      // let the caller handle this
-      handler(httpCode, body);
-
-      // get rid of the cached response
-      this->mResponseMap.erase(card->GetRepoID());
-   });
-
    // download the model
-   try 
-   {
-      // save the metadata
-      wxLogDebug("saving modelcard for %s \n", card->GetRepoID());
-      card->SerializeToFile(
-         audacity::ToUTF8(wxFileName(GetRepoDir(card), METADATA_FILENAME).GetFullPath())
-      );
+   wxLogDebug("downloading model for %s \n",card->GetRepoID());
+   network_manager::ResponsePtr response = DownloadModel(card, onProgress, onCompleted);
 
-      wxLogDebug("downloading model for %s \n",card->GetRepoID());
-
-      network_manager::ResponsePtr response = DownloadModel(card, progressHandler, installHandler);
-
-      // add response to a temporary map (in case of cancellation)
+   // add response to a temporary map (in case of cancellation)
+   std::lock_guard<std::mutex> guard(mResponseMutex);
       mResponseMap[card->GetRepoID()] = response;
-   }
-   catch (const char *msg)
-   {
-      wxLogError(msg);
-      return;
-   }
 }
 
 void DeepModelManager::Uninstall(ModelCardHolder card)
 {
    bool success = true;
-   success &= wxRemoveFile(wxFileName(GetRepoDir(card), MODEL_FILENAME).GetFullPath());
-   success &= wxRemoveFile(wxFileName(GetRepoDir(card), METADATA_FILENAME).GetFullPath());
+   auto modelFile = wxFileName(GetRepoDir(card), MODEL_FILENAME);
+   auto cardFile = wxFileName(GetRepoDir(card), METADATA_FILENAME);
+
+   if (modelFile.FileExists())
+      success &= wxRemoveFile(modelFile.GetFullPath());
+   if (cardFile.FileExists())
+      success &= wxRemoveFile(cardFile.GetFullPath());
 
    if (!success)
-      throw ModelManagerException(XO("An error occurred while uninstalling the model."));
+   {
+      wxTheApp->CallAfter([](){
+         throw ModelManagerException(XO("An error occurred while uninstalling the model."));
+      });
+   }
    
    wxRmDir(wxFileName(GetRepoDir(card)).GetFullPath());
    
 }
 
-bool DeepModelManager::IsInstalling(ModelCardHolder card) const
+bool DeepModelManager::IsInstalling(ModelCardHolder card)
 {
-   return mResponseMap.find(card->GetRepoID()) != mResponseMap.end();
+   std::lock_guard<std::mutex> guard(mResponseMutex);
+      return mResponseMap.find(card->GetRepoID()) != mResponseMap.end();
 }
 
-void DeepModelManager::CancelInstall(ModelCardHolder card)
+void DeepModelManager::CancelInstall(ModelCardHolder card, bool error)
 {
-   if (!IsInstalling(card))
-    {
-      // should never really reach here (can't cancel an install that's not ongoing)
-      wxASSERT(false);
-      return;
-    }   
-   else
+   const std::string repoid = card->GetRepoID();
+   
+   std::lock_guard<std::mutex> guard(mResponseMutex);
+      if (mResponseMap.find(repoid) != mResponseMap.end())
+      {
+         network_manager::ResponsePtr response =  mResponseMap[repoid];
+         response->abort();
+         mResponseMap.erase(repoid);
+      }
+
+   Uninstall(card);
+
+   if (error)
    {
-      const std::string repoid = card->GetRepoID();
-      network_manager::ResponsePtr response = mResponseMap[repoid];
-      response->abort();
-      mResponseMap.erase(repoid);
+      auto msg = XO("An error occurred while installing the model with repoID %s.").Format(repoid);
+      wxLogError(msg.Translation());
+      throw ModelManagerException(msg);
    }
 }
 
@@ -209,51 +183,6 @@ ModelCardCollection DeepModelManager::GetCards(const std::string &effect_type) c
    return mCards.Filter(filterId);
 }
 
-void DeepModelManager::FetchModelCards(CardFetchedCallback onCardFetched, CardFetchProgressCallback onProgress)
-{
-   // add the card to our collection before passing to the callback
-   CardFetchedCallback onCardFetchedWrapper = [this, onCardFetched = std::move(onCardFetched)]
-   (bool success, ModelCardHolder card)
-   {
-      if (success)
-      {
-         // validate it and insert it into collection
-         try
-         {
-            std::lock_guard<std::mutex> guard(mCardMutex);
-               this->mCards.Insert(card);
-         }
-         catch (const InvalidModelCardDocument &e)
-         {
-            // TODO: GetRepoID should be a no-throw if we're going to use it here
-            wxLogError("Failed to validate metadata.json for repo %s ;\n %s", 
-                     card->GetRepoID(), e.what());
-         }
-      }
-      // pass it on
-      onCardFetched(success, card);
-   };
-
-   // get the repos 
-   RepoListFetchedCallback onRepoListFetched = [this, onCardFetchedWrapper = std::move(onCardFetchedWrapper),
-                                                onProgress = std::move(onProgress)]
-   (bool success, RepoIDList ids)
-   {
-      if (success)
-      {
-         int64_t total = ids.size();
-         for (int64_t idx = 0;  idx < total ; idx++)
-         {
-            onProgress(idx+1, total);
-            std::string repoId = ids[idx];
-            this->FetchCard(repoId, onCardFetchedWrapper);
-         }
-      }
-   };
-
-   FetchRepos(onRepoListFetched);
-}
-
 std::string DeepModelManager::GetRootURL(const std::string &repoID) const
 {
    return "https://huggingface.co/"+repoID+"/resolve/main/";
@@ -264,34 +193,7 @@ std::string DeepModelManager::GetFileURL(const std::string &repoID, const std::s
    return GetRootURL(repoID)+filePath;
 }
 
-void DeepModelManager::FetchLocalCards(CardFetchedCallback onCardFetched)
-{
-   FilePaths pathList;
-   FilePaths modelFiles; 
-
-   // NOTE: maybe we should support multiple search paths? 
-   pathList.push_back(DeepModel::DLModelsDir());
-
-   FileNames::FindFilesInPathList(wxT(MODEL_FILENAME), pathList, 
-                                 modelFiles, wxDIR_FILES | wxDIR_DIRS);
-
-   for (const auto &modelFile : modelFiles)
-   {
-      wxFileName modelPath(modelFile);
-      wxFileName cardPath(modelPath.GetFullPath());
-
-      cardPath.SetFullName(METADATA_FILENAME);
-
-      if (cardPath.FileExists() && modelPath.FileExists())
-      {
-         ModelCardHolder card = std::make_shared<ModelCard>();
-         bool success = NewCardFromLocal(card, audacity::ToUTF8(cardPath.GetFullPath()));
-         onCardFetched(success, card);
-      }
-   }
-}
-
-void DeepModelManager::FetchRepos(RepoListFetchedCallback onReposFetched)
+RepoIDList DeepModelManager::FetchRepos() const
 {
    // NOTE: the url below asks for all repos in huggingface
    // that contain the tag "audacity". 
@@ -300,88 +202,183 @@ void DeepModelManager::FetchRepos(RepoListFetchedCallback onReposFetched)
    // on their own for more repos
    // std::string query = mAPIEndpoint + "models?filter=audacity";
    std::string query = GetFileURL("hugggof/audacity-models", "models.json");
+   wxLogDebug("Fetching available repositories from URL: %s", query);
 
-   // TODO: handle exception in main thread. try using a broken url?
-   CompletionHandler handler = 
-   [query, onReposFetched = std::move(onReposFetched)]
-   (int httpCode, std::string body)
+   auto response = doGet(query);
+   const std::string responseData = response->readAll<std::string>();
+   int httpCode = response->getHTTPCode();
+   wxLogDebug("Got reponse with HTTP code: %d", httpCode);
+
+   RepoIDList repos;
+   if (httpCode != 200)
    {
-      RepoIDList repos;
-      if (httpCode != 200)
-      {
-         wxLogError("GET request failed for url %s. Error code: %d", 
-                     query, httpCode);
-         onReposFetched(false, repos); 
-      }
-      else
-      {
-         bool success = true;
+      auto msg = XO("Failed to fetch available repositories from Huggingface.\n"
+                   "HTTP code: %d").Format(httpCode);
+      wxLogError(msg.Translation());
+      throw ModelManagerException(msg);
+   }
 
-         Doc reposDoc;
-         try
-         {
-            reposDoc = parsers::ParseString(body);
-         }
-         catch (const InvalidModelCardDocument &e)
-         {
-            wxLogError("error parsing JSON reponse for fetching repos");
-            wxLogError(e.what());
-            success = false;
-         }
+   Doc reposDoc;
+   try
+   {
+      // could throw InvalidModelCardDocument if the string isn't valid json
+      reposDoc = parsers::ParseString(responseData);
 
-         if (success && reposDoc.IsArray())
+      // if we didn't get an array, throw
+      if (!reposDoc.IsArray())
+         throw InvalidModelCardDocument(XO("Provided JSON document is not an Array."));
+
+   }
+   catch (const InvalidModelCardDocument &e)
+   {
+      auto msg = XO("Error parsing JSON reponse for fetching a list of deep model repositories.");
+      wxLogError(msg.Translation());
+      wxLogError("ModelCard error: %s", e.what());
+      throw ModelManagerException(msg);
+   }
+
+   // iterate through list of repos and add them to our list
+   for (auto itr = reposDoc.Begin(); itr != reposDoc.End(); ++itr)
+   {
+      wxLogDebug("Found repo with name %s", itr->GetString());
+      repos.emplace_back(itr->GetString());
+   }
+
+   return repos;
+}
+
+void DeepModelManager::FetchLocalCards(CardFetchedCallback onCardFetched)
+{
+   wxLogDebug("Fetching local deep model cards");
+   mThreadPool->enqueue([onCardFetched, this]()
+   {
+      FilePaths pathList;
+      FilePaths modelFiles; 
+
+      // NOTE: maybe we should support multiple search paths? 
+      pathList.push_back(DeepModel::DLModelsDir());
+
+      FileNames::FindFilesInPathList(wxT(MODEL_FILENAME), pathList, 
+                                    modelFiles, wxDIR_FILES | wxDIR_DIRS);
+
+      for (const auto &modelFile : modelFiles)
+      {
+         wxFileName modelPath(modelFile);
+         wxFileName cardPath(modelPath.GetFullPath());
+
+         cardPath.SetFullName(METADATA_FILENAME);
+
+         if (cardPath.FileExists() && modelPath.FileExists())
          {
-            for (auto itr = reposDoc.Begin(); itr != reposDoc.End(); ++itr)
+            // may throw, so just catch and log
+            try
             {
-               wxLogDebug("Found repo with name %s", itr->GetString());
-               repos.emplace_back(itr->GetString());
+               ModelCardHolder card = NewCardFromLocal(audacity::ToUTF8(cardPath.GetFullPath()));
+
+               // call the callback from the main UI thread
+               wxTheApp->CallAfter([onCardFetched, card]()
+               {
+                  onCardFetched(card);
+               });
+            }
+            catch (const InvalidModelCardDocument &e)
+            { 
+               wxLogError(e.what()); 
             }
          }
-         else 
-            success = false;
+      }
+   });
+}
 
-         onReposFetched(success, repos);
+void DeepModelManager::FetchHuggingFaceCards(CardFetchedCallback onCardFetched)
+{
+   // fetch all cards from huggingface
+   mThreadPool->enqueue([onCardFetched, this]()
+   {
+      // fetch the list of repos
+      RepoIDList repos = FetchRepos();
+
+      // fetch each model card in a separate thread
+      // when this pool goes out of scope, all threads will join. 
+      auto pool = ThreadPool(std::thread::hardware_concurrency());
+
+      int64_t total = repos.size();
+      for (int64_t idx = 0;  idx < total ; idx++)
+      {
+         pool.enqueue(
+         [idx, total, this, onCardFetched, &repos]()
+         {
+            std::string repoId = repos[idx];
+            AddHuggingFaceCard(repoId, onCardFetched, true);
+         });
+      }
+   });
+
+   // all threads will join when the pool gets destroyed here
+}
+
+void DeepModelManager::AddHuggingFaceCard(const std::string &repoID, CardFetchedCallback onCardFetched, bool block)
+{
+   auto worker = [this, repoID, onCardFetched = std::move(onCardFetched)]()
+   {
+      // need to catch any errors here and just log them
+      try { 
+         ModelCardHolder card = this->FetchCard(repoID); 
+
+         // validate and insert into the collection.
+         std::lock_guard<std::mutex> guard(mCardMutex);
+            this->mCards.Insert(card);
+
+         // call the callback from the main UI thread
+         wxTheApp->CallAfter([onCardFetched = std::move(onCardFetched), card]()
+         {
+            onCardFetched(card);
+         });
+      }
+      catch (const ModelManagerException &e)
+      { 
+         wxLogError(e.what()); 
+         }
+      catch (const InvalidModelCardDocument &e)
+      { 
+         wxLogError(e.what()); 
       }
    };
 
-   doGet(query, handler);
+   if (!block)
+      mThreadPool->enqueue(worker);
+   else
+      worker();
 }
 
-void DeepModelManager::FetchCard(const std::string &repoID, CardFetchedCallback onCardFetched)
+ModelCardHolder DeepModelManager::FetchCard(const std::string &repoID) const
 { 
-   const std::string modelCardUrl = GetFileURL(repoID, METADATA_FILENAME);
-   wxLogMessage("Fetching model card from %s", modelCardUrl);
+   const std::string query = GetFileURL(repoID, METADATA_FILENAME);
+   wxLogDebug("Fetching model card from %s", query);
 
-   // TODO: how do you handle an exception inside a thread, like this one? 
-   CompletionHandler completionHandler = 
-   [this, modelCardUrl, repoID, onCardFetched = std::move(onCardFetched)]
-   (int httpCode, std::string body)
-   { 
-      ModelCardHolder card = std::make_shared<ModelCard>();
-      if (httpCode != 200)
-      {
-         wxLogError(
-            wxString("GET request failed for url %s. Error code: %d")
-                  .Format(wxString(modelCardUrl), httpCode)
-         );
-         onCardFetched(false, card);
-      }
-      else
-      {
-         wxLogMessage(
-            wxString("GET request succeeded for url %s. Error code: %d")
-                  .Format(wxString(modelCardUrl), httpCode)
-         );
-         bool success = NewCardFromHuggingFace(card, body, repoID);
-         onCardFetched(success, card);
-      }
+   auto response = doGet(query);
+   const std::string responseData = response->readAll<std::string>();
+   int httpCode = response->getHTTPCode();
+   wxLogDebug("Got reponse with HTTP code: %d", httpCode);
 
-   };
+   if (httpCode != 200)
+   {
+      auto msg = XO("Failed to fetch model card with URL %s from Huggingface.\n"
+                   "HTTP code: %d").Format(query, httpCode);
+      wxLogError(msg.Translation());
+      throw ModelManagerException(msg);;
+   }
 
-   doGet(modelCardUrl, completionHandler);
+   // may throw InvalidModelCardDocument if parsing fails
+   ModelCardHolder card = NewCardFromHuggingFace(responseData, repoID);
+
+   // now, fill out the size
+   FetchModelSize(card);
+
+   return card;
 }
 
-void DeepModelManager::FetchModelSize(ModelCardHolder card, ModelSizeCallback onModelSizeRetrieved) const
+void DeepModelManager::FetchModelSize(ModelCardHolder card) const
 {
    if (card->local())
    {
@@ -392,39 +389,45 @@ void DeepModelManager::FetchModelSize(ModelCardHolder card, ModelSizeCallback on
       {
          size_t model_size = GetFileSize(modelPath);
          card->model_size(model_size);
-         onModelSizeRetrieved(model_size);
+      }
+      else
+      {
+         // throw if the model card is local but the modelPath doesn't exist
+         auto msg = XO("Model card is local but the model file %s doesn't exist.").Format(modelPath.GetFullPath());
+         wxLogError(msg.Translation());
+         throw ModelManagerException(msg);
       }
    }
    else
    {
       using namespace network_manager;
+      NetworkManager &manager = NetworkManager::GetInstance();
 
       const std::string modelUrl = GetFileURL(card->GetRepoID(), MODEL_FILENAME);
-
       Request request(modelUrl);
-
-      NetworkManager &manager = NetworkManager::GetInstance();
+      request.setBlocking(true);
       ResponsePtr response = manager.doHead(request);
 
-      response->setRequestFinishedCallback(
-         [card, response, handler = std::move(onModelSizeRetrieved)](IResponse*)
-         {
-            if ((response->getHTTPCode() != 200) 
-                  && (response->getHTTPCode() != 302))
-               return;
+      bool success = true;
+      if ((response->getHTTPCode() != 200) && (response->getHTTPCode() != 302))
+         success = false;
 
-            if (response->hasHeader("x-linked-size"))
-            {
-               std::string length = response->getHeader("x-linked-size");
+      if (response->hasHeader("x-linked-size"))
+      {
+         std::string length = response->getHeader("x-linked-size");
+         card->model_size(std::stoi(length, nullptr, 10));
+      }
+      else // failed fetching model size
+         success = false;
 
-               size_t modelSize = std::stoi(length, nullptr, 10);
-               handler(modelSize);
-
-               card->model_size(modelSize);
-            }
-
-         }
-      );
+      // throw if something went wrong during the HEAD request
+      if (!success)
+      {
+         auto msg = XO("Failed to fetch model size for model card with repo ID %s.\n"
+                      "HTTP code: %d").Format(card->GetRepoID(), response->getHTTPCode());
+         wxLogError(msg.Translation());
+         throw ModelManagerException(msg);
+      }
    }
 }
 
@@ -434,54 +437,38 @@ ModelCardHolder DeepModelManager::GetEmptyCard() const
    return card;
 }
 
-bool DeepModelManager::NewCardFromHuggingFace(ModelCardHolder card, const std::string &jsonBody, const std::string &repoID)
+ModelCardHolder DeepModelManager::NewCardFromHuggingFace(const std::string &jsonBody, const std::string &repoID) const
 {
+   ModelCardHolder card = std::make_shared<ModelCard>();
+
    wxStringTokenizer st(wxString(repoID), wxT("/"));
    const std::string cardAuthor = audacity::ToUTF8(st.GetNextToken());
    const std::string cardName = audacity::ToUTF8(st.GetNextToken());
    
-   try
-   {
-      Doc doc = parsers::ParseString(jsonBody);
-      card->Deserialize(doc, mModelCardSchema);
-      (*card).name(cardName)
-             .author(cardAuthor)
-             .local(false)
-             .local_path(audacity::ToUTF8(GetRepoDir(card)));
+   Doc doc = parsers::ParseString(jsonBody);
+   card->Deserialize(doc, mModelCardSchema);
+   (*card).name(cardName)
+            .author(cardAuthor)
+            .local(false)
+            .local_path(audacity::ToUTF8(GetRepoDir(card)));
 
-      return true;
-   }
-   catch (const InvalidModelCardDocument &e)
-   {
-      wxLogError(wxString(e.what()));
-      return false;
-   }
-   catch (const char *msg)
-   { 
-      wxLogError(wxString(msg));
-      wxASSERT(false);
-      return false;
-   }
+   return card;
 }
 
-bool DeepModelManager::NewCardFromLocal(ModelCardHolder card, const std::string &filePath)
+ModelCardHolder DeepModelManager::NewCardFromLocal(const std::string &filePath)
 {
-   try
-   {
-      std::string localPath = audacity::ToUTF8(wxFileName(wxString(filePath)).GetPath());
-      card->DeserializeFromFile(filePath, mModelCardSchema);
-      (*card).local(true)
-             .local_path(localPath);
-      return true;
-   }
-   catch (const InvalidModelCardDocument &e)
-   {
-      return false;
-   }
+   ModelCardHolder card = std::make_shared<ModelCard>();
+
+   std::string localPath = audacity::ToUTF8(wxFileName(wxString(filePath)).GetPath());
+   card->DeserializeFromFile(filePath, mModelCardSchema);
+   (*card).local(true)
+            .local_path(localPath);
+
+   return card;
 }
 
 network_manager::ResponsePtr DeepModelManager::DownloadModel
-(ModelCardHolder card, ProgressCallback onProgress, CompletionHandler onCompleted)
+(ModelCardHolder card, ProgressCallback onProgress, InstallCompletionHandler onCompleted)
 {
    using namespace network_manager;
 
@@ -509,24 +496,43 @@ network_manager::ResponsePtr DeepModelManager::DownloadModel
 
    // completion handler
    response->setRequestFinishedCallback(
-      [response, handler = std::move(onCompleted)](IResponse*) 
+      [response, onCompleted = std::move(onCompleted), 
+       this, card](IResponse*) 
+   {
+      // bail if the response was aborted
+      if (!this->IsInstalling(card))
       {
-         const std::string responseData = response->readAll<std::string>();
-
-         if (handler)
-            handler(response->getHTTPCode(), responseData);
+         CancelInstall(card, true);
+         return;
       }
-   );
+
+      int httpCode = response->getHTTPCode();
+      // bail if the response is invalid
+      if (!(httpCode == 200) && 
+         !(httpCode == 302))
+         CancelInstall(card, true);
+      
+      {
+      std::lock_guard<std::mutex> guard(mResponseMutex);
+         this->mResponseMap.erase(card->GetRepoID());
+      }
+
+      // call OnCompleted on the UI thread
+      if (onCompleted)
+         wxTheApp->CallAfter(onCompleted);
+
+   });
 
    // write to file here
    response->setOnDataReceivedCallback(
       [this, response, card, file](IResponse*) 
       {
-         // abort
+         // abort if we've been cancelled
          if (!this->IsInstalling(card))
          {
-            Uninstall(card);
-            return;
+            wxTheApp->CallAfter([this, card](){
+               CancelInstall(card, true);
+            });
          }
 
          // only attempt save if request succeeded
@@ -537,9 +543,9 @@ network_manager::ResponsePtr DeepModelManager::DownloadModel
             size_t bytesWritten = file->Write(responseData.c_str(), responseData.size());
 
             if (bytesWritten != responseData.size())
-            {
-               Uninstall(card);
-            }
+               wxTheApp->CallAfter([this, card](){
+                  CancelInstall(card, true);
+               });
          }
       }
    );
@@ -549,26 +555,16 @@ network_manager::ResponsePtr DeepModelManager::DownloadModel
 }
 
 network_manager::ResponsePtr DeepModelManager::doGet
-(std::string url, CompletionHandler completionHandler, ProgressCallback onProgress)
+(std::string url) const
 {
    using namespace network_manager;
 
    Request request(url);
 
+   request.setBlocking(true);
+
    NetworkManager &manager = NetworkManager::GetInstance();
    ResponsePtr response = manager.doGet(request);
-
-   // set callback for download progress
-   if (onProgress)
-      response->setDownloadProgressCallback(onProgress);
-
-   response->setRequestFinishedCallback(
-      [response, handler = std::move(completionHandler)](IResponse*) {
-         const std::string responseData = response->readAll<std::string>();
-
-         if (handler)
-            handler(response->getHTTPCode(), responseData);
-      });
 
    return response;
 }

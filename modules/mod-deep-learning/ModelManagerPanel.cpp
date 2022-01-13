@@ -127,20 +127,16 @@ void ModelManagerPanel::AddCard(ModelCardHolder card)
 
 CardFetchedCallback ModelManagerPanel::GetCardFetchedCallback()
 {
-   CardFetchedCallback onCardFetched = [this](bool success, ModelCardHolder card)
+   auto wthis = wxWeakRef(this);
+   CardFetchedCallback onCardFetched = [wthis](ModelCardHolder card)
    {
-      this->CallAfter(
-         [this, success, card]()
-         {
-            if (success)
-            {
-               bool found = mPanels.find(card->GetRepoID()) != mPanels.end();
-               bool effectTypeMatches = card->effect_type() == mDeepEffectID;
-               if (!found && effectTypeMatches)
-                  this->AddCard(card);
-            }
-         }
-      );
+      // bail if we've been deleted
+      if (!wthis)
+         return;
+      bool found = wthis->mPanels.find(card->GetRepoID()) != wthis->mPanels.end();
+      bool effectTypeMatches = card->effect_type() == wthis->mDeepEffectID;
+      if (!found && effectTypeMatches)
+         wthis->AddCard(card);
    };
 
    return onCardFetched;
@@ -151,19 +147,9 @@ void ModelManagerPanel::FetchCards()
    DeepModelManager &manager = DeepModelManager::Get();
    CardFetchedCallback onCardFetched = GetCardFetchedCallback();
 
-   CardFetchProgressCallback onCardFetchedProgress = [this](int64_t current, int64_t total)
-   {
-      this->CallAfter(
-         [this, current, total]()
-         {
-            if (mTools)
-               this->mTools->SetFetchProgress(current, total);
-         }
-      );
-   };
-
-   manager.FetchModelCards(onCardFetched, onCardFetchedProgress);
+   // prioritize local cards first
    manager.FetchLocalCards(onCardFetched);
+   manager.FetchHuggingFaceCards(onCardFetched);
 }
 
 void ModelManagerPanel::SetSelectedCard(ModelCardHolder card)
@@ -194,9 +180,6 @@ void ModelManagerPanel::SetSelectedCard(ModelCardHolder card)
    mScroller->SetSize(oldScrollerSize);
    mScroller->Refresh();
    mScroller->Scroll(0, oldPos);
-   // mScroller->FitInside();
-   // mScroller->Layout();
-   // mScroller->GetParent()->Layout();
 }
 
 // ManagerToolsPanel
@@ -212,10 +195,7 @@ ManagerToolsPanel::ManagerToolsPanel(wxWindow *parent, ModelManagerPanel *panel)
    PopulateOrExchange(S);
 
    SetWindowStyle(wxBORDER_SIMPLE);
-   // Fit();
    Layout();
-   // Center();
-   // SetMinSize(GetSize());
    Refresh();
 }
 
@@ -225,8 +205,6 @@ void ManagerToolsPanel::PopulateOrExchange(ShuttleGui &S)
    {
       mAddRepoButton = S.AddButton(XO("Add From HuggingFace"));
       mExploreButton = S.AddButton(XO("Explore Models"));
-      mFetchStatus = S.AddVariableText(XO("Fetching models..."), 
-                                 true, wxALIGN_CENTER_VERTICAL);
    }
    S.EndHorizontalLay();
 
@@ -247,52 +225,31 @@ void ManagerToolsPanel::OnAddRepo(wxCommandEvent & WXUNUSED(event))
    {
       wxString repoId = dialog.GetValue();
       // wrap the card fetched callback 
+      auto wthis = wxWeakRef(this);
       CardFetchedCallback onCardFetched(
-         [this, repoId](bool success, ModelCardHolder card)
+      [wthis, repoId, &manager](ModelCardHolder card)
+      {
+         if (!wthis)
+            return;
+         // if the card got inserted into the manager's card collection, 
+         // go ahead and add it to the manager panel
+         // show a message box if it didn't
+         ModelCardCollection cards = manager.GetCards();
+         if (!cards.Find(card))
          {
-            this->CallAfter(
-               [this, success, card, repoId]()
-               {
-                  this->mManagerPanel->GetCardFetchedCallback()(success, card);
-                  if (!success)
-                  {
-                     mManagerPanel->mEffect->MessageBox(
-                        XO("An error occurred while fetching  %s from HuggingFace. "
-                        "This model may be broken. If you are the model developer, "
-                         "check the error log for more details.")
-                           .Format(repoId)
-                     );
-                  }
-               }
+            wthis->mManagerPanel->mEffect->MessageBox(
+               XO("An error occurred while fetching  %s from HuggingFace. "
+               "This model may be broken. If you are the model developer, "
+                  "check the error log for more details.")
+                  .Format(repoId)
             );
          }
-      );
 
-      manager.FetchCard(audacity::ToUTF8(repoId), onCardFetched);
-   }
-}
+         wthis->mManagerPanel->GetCardFetchedCallback()(card);
+      });
 
-void ManagerToolsPanel::SetFetchProgress(int64_t current, int64_t total)
-{
-   if (!mFetchStatus)
-      return;
-
-   if (total == 0)
-   {
-      wxString translated = XO("Error fetching models.").Translation();
-      mFetchStatus->SetLabel(translated);
-   }
-
-   if (current < total)
-   {
-      wxString translated = XO("Fetching %d out of %d")
-            .Format((int)current, (int)total).Translation();
-      mFetchStatus->SetLabel(translated);
-   }
-
-   if (current == total)
-   {
-      mFetchStatus->SetLabel(XO("Manager ready.").Translation());
+      // make a non blocking call to fetch the card
+      manager.AddHuggingFaceCard(audacity::ToUTF8(repoId), onCardFetched, false);
    }
 }
 

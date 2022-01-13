@@ -55,7 +55,6 @@ public:
 
    ModelCardHolder GetCard() const { return mCard; }
 
-
    enum class InstallStatus 
    {
       Uninstalled, 
@@ -98,8 +97,6 @@ protected:
    void PopulateMoreInfo(ShuttleGui &S);
    void PopulateMetadata(ShuttleGui &S);
    void PopulateInstallCtrls(ShuttleGui &S);
-
-   void FetchModelSize();
 
 private:
    wxWindow *mParent {nullptr};
