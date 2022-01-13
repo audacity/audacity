@@ -17,6 +17,9 @@ musical instrument recognition, automatic speech recognition, etc.).
 ]]
 
 set( SOURCES
+   ActiveModel.cpp
+   ActiveModel.h
+
    DeepModel.cpp
    DeepModel.h
    ModelCard.cpp
