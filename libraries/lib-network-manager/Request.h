@@ -60,11 +60,18 @@ public:
 
     Request& setTimeout(Timeout timeout) noexcept;
     Timeout getTimeout() const noexcept;
+
+   //! if set to true, the request will be performed in 
+   //! the current thread. Otherwise, the request will be 
+   //! enqueued to the thread pool.
+    Request& setBlocking(bool block) noexcept;
+    bool getBlocking() const noexcept;
 private:
     std::string mUrl;
 
     HeadersList mHeaders;
     CookiesList mCookies;
+    bool mBlocking { false };
 
     size_t mMaxRedirects { INFINITE_REDIRECTS };
 
