@@ -1666,11 +1666,8 @@ ProjectWindow::PlaybackScroller::PlaybackScroller(AudacityProject *project)
 {
 }
 
-void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
+void ProjectWindow::PlaybackScroller::OnTimer()
 {
-   // Let other listeners get the notification
-   event.Skip();
-
    auto gAudioIO = AudioIO::Get();
    mRecentStreamTime = gAudioIO->GetStreamTime();
 
