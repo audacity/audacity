@@ -18,7 +18,10 @@
 
 #include "Identifier.h"
 #include "EffectHostInterface.h"
+#include "Observer.h"
 #include "PluginInterface.h"
+
+struct AudioIOEvent;
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 
@@ -152,8 +155,8 @@ private:
    void OnPlay(wxCommandEvent & evt);
    void OnRewind(wxCommandEvent & evt);
    void OnFFwd(wxCommandEvent & evt);
-   void OnPlayback(wxCommandEvent & evt);
-   void OnCapture(wxCommandEvent & evt);
+   void OnPlayback(AudioIOEvent);
+   void OnCapture(AudioIOEvent);
    void OnUserPreset(wxCommandEvent & evt);
    void OnFactoryPreset(wxCommandEvent & evt);
    void OnDeletePreset(wxCommandEvent & evt);
@@ -172,6 +175,8 @@ private:
    void Resume();
 
 private:
+   Observer::Subscription mSubscription;
+
    AudacityProject *mProject;
    wxWindow *mParent;
    Effect &mEffect;

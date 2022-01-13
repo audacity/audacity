@@ -15,15 +15,12 @@ Paul Licameli split from ProjectSettings.h
 class AudacityProject;
 
 #include "ClientData.h"
-#include <wx/event.h> // to declare custom event type
-
-// Sent to the project when the rate changes
-wxDECLARE_EXPORTED_EVENT(PROJECT_RATE_API,
-   EVT_PROJECT_RATE_CHANGE, wxEvent);
+#include "Observer.h"
 
 ///\brief Holds project sample rate
 class PROJECT_RATE_API ProjectRate final
    : public ClientData::Base
+   , public Observer::Publisher<double>
 {
 public:
    static ProjectRate &Get( AudacityProject &project );
@@ -37,7 +34,6 @@ public:
    double GetRate() const;
 
 private:
-   AudacityProject &mProject;
    double mRate;
 };
 

@@ -31,6 +31,7 @@ and TimeTrack.
 #include <wx/textfile.h>
 #include <wx/log.h>
 
+#include "BasicUI.h"
 #include "Project.h"
 
 #include "InconsistencyException.h"
@@ -363,15 +364,8 @@ bool Track::LinkConsistencyCheck()
 //
 // The TrackList sends events whenever certain updates occur to the list it
 // is managing.  Any other classes that may be interested in get these updates
-// should use TrackList::Connect() or TrackList::Bind().
+// should use TrackList::Subscribe().
 //
-wxDEFINE_EVENT(EVT_TRACKLIST_TRACK_DATA_CHANGE, TrackListEvent);
-wxDEFINE_EVENT(EVT_TRACKLIST_SELECTION_CHANGE, TrackListEvent);
-wxDEFINE_EVENT(EVT_TRACKLIST_TRACK_REQUEST_VISIBLE, TrackListEvent);
-wxDEFINE_EVENT(EVT_TRACKLIST_PERMUTED, TrackListEvent);
-wxDEFINE_EVENT(EVT_TRACKLIST_RESIZING, TrackListEvent);
-wxDEFINE_EVENT(EVT_TRACKLIST_ADDITION, TrackListEvent);
-wxDEFINE_EVENT(EVT_TRACKLIST_DELETION, TrackListEvent);
 
 // same value as in the default constructed TrackId:
 long TrackList::sCounter = -1;
@@ -391,8 +385,7 @@ const TrackList &TrackList::Get( const AudacityProject &project )
 }
 
 TrackList::TrackList( AudacityProject *pOwner )
-:  wxEvtHandler()
-, mOwner{ pOwner }
+   : mOwner{ pOwner }
 {
 }
 
@@ -461,57 +454,52 @@ void TrackList::RecalcPositions(TrackNodePointer node)
    UpdatePendingTracks();
 }
 
+void TrackList::QueueEvent(TrackListEvent event)
+{
+   BasicUI::CallAfter( [this, event = std::move(event)]{ Publish(event); } );
+}
+
 void TrackList::SelectionEvent( const std::shared_ptr<Track> &pTrack )
 {
-   // wxWidgets will own the event object
-   QueueEvent(
-      safenew TrackListEvent{ EVT_TRACKLIST_SELECTION_CHANGE, pTrack } );
+   QueueEvent({ TrackListEvent::SELECTION_CHANGE, pTrack });
 }
 
 void TrackList::DataEvent( const std::shared_ptr<Track> &pTrack, int code )
 {
-   // wxWidgets will own the event object
-   QueueEvent(
-      safenew TrackListEvent{ EVT_TRACKLIST_TRACK_DATA_CHANGE, pTrack, code } );
+   QueueEvent({
+      TrackListEvent::TRACK_DATA_CHANGE, pTrack, code });
 }
 
 void TrackList::EnsureVisibleEvent(
    const std::shared_ptr<Track> &pTrack, bool modifyState )
 {
-   auto pEvent = std::make_unique<TrackListEvent>(
-      EVT_TRACKLIST_TRACK_REQUEST_VISIBLE, pTrack, 0 );
-   pEvent->SetInt( modifyState ? 1 : 0 );
-   // wxWidgets will own the event object
-   QueueEvent( pEvent.release() );
+   QueueEvent({ TrackListEvent::TRACK_REQUEST_VISIBLE,
+      pTrack, static_cast<int>(modifyState) });
 }
 
 void TrackList::PermutationEvent(TrackNodePointer node)
 {
-   // wxWidgets will own the event object
-   QueueEvent( safenew TrackListEvent{ EVT_TRACKLIST_PERMUTED, *node.first } );
+   QueueEvent({ TrackListEvent::PERMUTED, *node.first });
 }
 
 void TrackList::DeletionEvent(TrackNodePointer node)
 {
-   // wxWidgets will own the event object
-   QueueEvent( safenew TrackListEvent{
-      EVT_TRACKLIST_DELETION,
+   QueueEvent({
+      TrackListEvent::DELETION,
       node.second && node.first != node.second->end()
          ? *node.first
          : nullptr
-   } );
+   });
 }
 
 void TrackList::AdditionEvent(TrackNodePointer node)
 {
-   // wxWidgets will own the event object
-   QueueEvent( safenew TrackListEvent{ EVT_TRACKLIST_ADDITION, *node.first } );
+   QueueEvent({ TrackListEvent::ADDITION, *node.first });
 }
 
 void TrackList::ResizingEvent(TrackNodePointer node)
 {
-   // wxWidgets will own the event object
-   QueueEvent( safenew TrackListEvent{ EVT_TRACKLIST_RESIZING, *node.first } );
+   QueueEvent({ TrackListEvent::RESIZING, *node.first });
 }
 
 auto TrackList::EmptyRange() const

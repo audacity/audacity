@@ -1664,9 +1664,6 @@ void ProjectWindow::TP_HandleResize()
 ProjectWindow::PlaybackScroller::PlaybackScroller(AudacityProject *project)
 : mProject(project)
 {
-   mProject->Bind(EVT_TRACK_PANEL_TIMER,
-      &PlaybackScroller::OnTimer,
-      this);
 }
 
 void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
@@ -1679,7 +1676,7 @@ void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
 
    auto cleanup = finally([&]{
       // Propagate the message to other listeners bound to this
-      this->SafelyProcessEvent( event );
+      this->Publish({});
    });
 
    if(!ProjectAudioIO::Get( *mProject ).IsAudioActive())

@@ -77,8 +77,8 @@ static int DeviceToolbarPrefsID()
 DeviceToolBar::DeviceToolBar( AudacityProject &project )
 : ToolBar( project, DeviceBarID, XO("Device"), wxT("Device"), true )
 {
-   DeviceManager::Instance()->Bind( EVT_RESCANNED_DEVICES,
-      &DeviceToolBar::OnRescannedDevices, this );
+   mSubscription = DeviceManager::Instance()->Subscribe(
+      *this, &DeviceToolBar::OnRescannedDevices );
 }
 
 DeviceToolBar::~DeviceToolBar()
@@ -555,11 +555,11 @@ void DeviceToolBar::FillInputChannels()
    mInputChannels->SetMinSize(wxSize(50, wxDefaultCoord));
 }
 
-void DeviceToolBar::OnRescannedDevices( wxEvent &event )
+void DeviceToolBar::OnRescannedDevices(DeviceChangeMessage m)
 {
-   event.Skip();
    // Hosts may have disappeared or appeared so a complete repopulate is needed.
-   RefillCombos();
+   if (m == DeviceChangeMessage::Rescan)
+      RefillCombos();
 }
 
 //return 1 if host changed, 0 otherwise.

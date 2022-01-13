@@ -76,9 +76,6 @@ using AttachedProjectObjects = ClientData::Site<
    AudacityProject, ClientData::Base, ClientData::SkipCopying, std::shared_ptr
 >;
 
-wxDECLARE_EXPORTED_EVENT(PROJECT_API,
-                         EVT_TRACK_PANEL_TIMER, wxCommandEvent);
-
 ///\brief The top-level handle to an Audacity project.  It serves as a source
 /// of events that other objects can bind to, and a container of associated
 /// sub-objects that it treats opaquely.  It stores a filename and a status
