@@ -234,67 +234,79 @@ torch::Tensor DeepLearningEffectBase::BuildMultichannelTensor(WaveTrack *leader,
    return torch::cat(channelStack);
 }
 
+struct ForwardPassStatus
+{
+   torch::Tensor input;
+   torch::jit::IValue output;
+   std::atomic<bool> done {false};
+   std::atomic<bool> success {true};
+   DeepModelHolder model;
+};
+
 torch::jit::IValue DeepLearningEffectBase::ForwardPassInThread(torch::Tensor input)
 {
-   torch::jit::IValue output;
+   auto status = std::make_shared<ForwardPassStatus>();
 
-   std::atomic<bool> done = {false};
-   std::atomic<bool> success = {true};
-
-   // make a copy of the model (in case we need to abort)
-   DeepModelHolder model = this->mActiveModel->GetModel();
+   status->input = input;
+   status->model = this->mActiveModel->GetModel();
+   status->done = false;
+   status->success = true;
 
    auto thread = std::thread(
-      [model, &input, &output, &done, &success]()
+      [status]()
       {
          try
          {
-            torch::jit::IValue tempOut = model->Forward(input);
+            torch::jit::IValue tempOut = status->model->Forward(status->input);
 
             // only write to output tensor if abort was not requested
-            if (success)
-               output = tempOut;
+            if (status->success)
+               status->output = tempOut;
          }
          catch (const ModelException &e)
          {
             wxLogError(e.what());
             wxLogDebug(e.what());
-            success = false;
-            output = torch::jit::IValue(torch::zeros_like(input));
+            status->success = false;
+            status->output = torch::jit::IValue(
+                              torch::zeros_like(status->input));
          }
-         done = true;
+         status->done = true;
       }
    );
 
    // wait for the thread to finish
-   while (!done)
+   while (!status->done)
    {
       if (TrackProgress(mCurrentTrackNum, mCurrentProgress))
       {
          // abort if requested
-         success = false;
+         status->success = false;
 
          // tensor output will be destroyed once the thread is destroyed
          thread.detach();
 
-         output = torch::jit::IValue(torch::zeros_like(input));
-         return output;
+         status->output = torch::jit::IValue(
+                           torch::zeros_like(status->input));
+         return status->output;
       }
 
       ::wxSafeYield();
       using namespace std::chrono;
       std::this_thread::sleep_for(50ms);
    }
-   thread.join();
 
-   if (!success)
+   if (thread.joinable())
+      thread.join();
+
+   if (!status->success)
    {
       Effect::MessageBox(XO("An internal error occurred within the neural network model. "
                         "This model may be broken. Please check the error log for more details"),
                         wxICON_ERROR);
    }
 
-   return output;
+   return status->output;
 }
 
 void DeepLearningEffectBase::TensorToTrack(torch::Tensor waveform, WaveTrack::Holder track,
