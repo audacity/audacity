@@ -16,10 +16,10 @@
 #include <vector>
 #include <list>
 #include <functional>
-#include <wx/event.h> // to inherit wxEvent
 #include <wx/longlong.h>
 
 #include "ClientData.h"
+#include "Observer.h"
 // TrackAttachment needs to be a complete type for the Windows build, though
 // not the others, so there is a nested include here:
 #include "TrackAttachment.h"
@@ -824,9 +824,9 @@ public:
    virtual double GetStartTime() const = 0;
    virtual double GetEndTime() const = 0;
 
-   // Send an event to listeners when state of the track changes
+   // Send a notification to subscribers when state of the track changes
    // To do: define values for the argument to distinguish different parts
-   // of the state, perhaps with wxNewId
+   // of the state
    void Notify( int code = -1 );
 
    // An always-true predicate useful for defining iterators
@@ -1236,66 +1236,52 @@ template <
 
 
 //! Notification of changes in individual tracks of TrackList, or of TrackList's composition
-struct TrackListEvent : public wxEvent
+struct TrackListEvent
 {
-   explicit
-   TrackListEvent(
-      wxEventType commandType,
-      const std::weak_ptr<Track> &pTrack = {}, int code = -1)
-   : wxEvent{ 0, commandType }
-   , mpTrack{ pTrack }
-   , mCode{ code }
+   enum Type {
+      //! Posted when the set of selected tracks changes.
+      SELECTION_CHANGE,
+
+      //! Posted when certain fields of a track change.
+      TRACK_DATA_CHANGE,
+
+      //! Posted when a track needs to be scrolled into view.
+      TRACK_REQUEST_VISIBLE,
+
+      //! Posted when tracks are reordered but otherwise unchanged.
+      /*! mpTrack points to the moved track that is earliest in the New ordering. */
+      PERMUTED,
+
+      //! Posted when some track changed its height.
+      RESIZING,
+
+      //! Posted when a track has been added to a tracklist.  Also posted when one track replaces another
+      ADDITION,
+
+      //! Posted when a track has been deleted from a tracklist. Also posted when one track replaces another
+      /*! mpTrack points to the first track after the deletion, if there is one. */
+      DELETION,
+   };
+
+   TrackListEvent( Type type,
+      const std::weak_ptr<Track> &pTrack = {}, int extra = -1)
+      : mType{ type }
+      , mpTrack{ pTrack }
+      , mExtra{ extra }
    {}
 
    TrackListEvent( const TrackListEvent& ) = default;
 
-   wxEvent *Clone() const override {
-      // wxWidgets will own the event object
-      return safenew TrackListEvent(*this); }
-
-   std::weak_ptr<Track> mpTrack;
-   int mCode;
-
-   void SetInt( int extra ) { mExtra = extra; }
-   int GetInt() const { return mExtra; }
-   int mExtra = 0;
+   const Type mType;
+   const std::weak_ptr<Track> mpTrack;
+   const int mExtra;
 };
-
-//! Posted when the set of selected tracks changes.
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_SELECTION_CHANGE, TrackListEvent);
-
-//! Posted when certain fields of a track change.
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_TRACK_DATA_CHANGE, TrackListEvent);
-
-//! Posted when a track needs to be scrolled into view.
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_TRACK_REQUEST_VISIBLE, TrackListEvent);
-
-//! Posted when tracks are reordered but otherwise unchanged.
-/*! mpTrack points to the moved track that is earliest in the New ordering. */
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_PERMUTED, TrackListEvent);
-
-//! Posted when some track changed its height.
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_RESIZING, TrackListEvent);
-
-//! Posted when a track has been added to a tracklist.  Also posted when one track replaces another
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_ADDITION, TrackListEvent);
-
-//! Posted when a track has been deleted from a tracklist. Also posted when one track replaces another
-/*! mpTrack points to the first track after the deletion, if there is one. */
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_DELETION, TrackListEvent);
 
 /*! @brief A flat linked list of tracks supporting Add,  Remove,
  * Clear, and Contains, serialization of the list of tracks, event notifications
  */
 class TRACK_API TrackList final
-   : public wxEvtHandler
+   : public Observer::Publisher<TrackListEvent>
    , public ListOfTracks
    , public std::enable_shared_from_this<TrackList>
    , public ClientData::Base
@@ -1657,6 +1643,7 @@ private:
    }
 
    void RecalcPositions(TrackNodePointer node);
+   void QueueEvent(TrackListEvent event);
    void SelectionEvent( const std::shared_ptr<Track> &pTrack );
    void PermutationEvent(TrackNodePointer node);
    void DataEvent( const std::shared_ptr<Track> &pTrack, int code );

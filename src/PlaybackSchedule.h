@@ -13,6 +13,7 @@
 
 #include "MemoryX.h"
 #include "Mix.h"
+#include "Observer.h"
 #include <atomic>
 #include <chrono>
 #include <vector>
@@ -465,7 +466,7 @@ public:
 
 private:
    bool RevertToOldDefault( const PlaybackSchedule &schedule ) const;
-   void OnPlayRegionChange(PlayRegionEvent &evt);
+   void OnPlayRegionChange(Observer::Message);
    void OnPlaySpeedChange(wxCommandEvent &evt);
    void WriteMessage();
    double GetPlaySpeed();
@@ -481,6 +482,8 @@ private:
       bool mLoopEnabled;
    };
    MessageBuffer<SlotData> mMessageChannel;
+
+   Observer::Subscription mSubscription;
 
    double mLastPlaySpeed{ 1.0 };
    const double mTrackEndTime;

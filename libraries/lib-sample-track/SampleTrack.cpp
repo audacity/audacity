@@ -10,6 +10,8 @@ Paul Licameli split from WaveTrack.cpp
 
 #include "SampleTrack.h"
 
+#include <cmath>
+
 SampleTrack::~SampleTrack() = default;
 
 static const Track::TypeInfo &typeInfo()

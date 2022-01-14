@@ -13,10 +13,12 @@
 
 #include "CellularPanel.h"
 #include "widgets/Ruler.h" // member variable
+#include "Observer.h"
 #include "Prefs.h"
 #include "ViewInfo.h" // for PlayRegion
 
 class AudacityProject;
+struct AudioIOEvent;
 struct SelectedRegionEvent;
 class TrackList;
 
@@ -79,12 +81,12 @@ public:
 private:
    void DoIdle();
    void OnIdle( wxIdleEvent &evt );
-   void OnAudioStartStop(wxCommandEvent & evt);
+   void OnAudioStartStop(AudioIOEvent);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnLeave(wxMouseEvent &evt);
    void OnThemeChange(wxCommandEvent& evt);
-   void OnSelectionChange(SelectedRegionEvent& evt);
+   void OnSelectionChange(Observer::Message);
    void DoSelectionChange( const SelectedRegion &selectedRegion );
    bool UpdateRects();
    void HandleQPClick(wxMouseEvent &event, wxCoord mousePosX);
@@ -235,6 +237,9 @@ private:
    
    class ScrubbingCell;
    std::shared_ptr<ScrubbingCell> mScrubbingCell;
+
+   Observer::Subscription mAudioIOSubscription,
+      mPlayRegionSubscription;
 
    // classes implementing subdivision for CellularPanel
    struct Subgroup;

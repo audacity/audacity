@@ -11,8 +11,8 @@
 #pragma once
 
 #include <wx/font.h>
-#include <wx/event.h>
 
+#include "Observer.h"
 #include "../../../ui/CommonTrackPanelCell.h"
 #include "../../../ui/TextEditHelper.h"
 
@@ -33,7 +33,6 @@ class TrackList;
 class AUDACITY_DLL_API WaveTrackAffordanceControls : 
     public CommonTrackCell,
     public TextEditDelegate,
-    public wxEvtHandler,
     public std::enable_shared_from_this<WaveTrackAffordanceControls>
 {
     std::weak_ptr<WaveClip> mFocusClip;
@@ -95,9 +94,11 @@ public:
 private:
     void ResetClipNameEdit();
 
-    void OnTrackChanged(TrackListEvent& evt);
+    void OnTrackChanged(const TrackListEvent& evt);
 
     unsigned ExitTextEditing();
 
     std::shared_ptr<TextEditHelper> MakeTextEditHelper(const wxString& text);
+
+    Observer::Subscription mSubscription;
 };

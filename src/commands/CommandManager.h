@@ -29,6 +29,7 @@
 
 #include <unordered_map>
 
+class wxEvent;
 class wxMenu;
 class wxMenuBar;
 using CommandParameter = CommandID;

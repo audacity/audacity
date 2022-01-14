@@ -989,7 +989,6 @@ bool Effect::DoEffect(double projectRate,
 
    mOutputTracks.reset();
 
-   mpSelectedRegion = &selectedRegion;
    mFactory = factory;
    mProjectRate = projectRate;
    mTracks = list;

@@ -24,8 +24,7 @@
 #include <utility>
 #include <wx/atomic.h> // member variable
 
-#include <wx/event.h> // to declare custom event types
-
+#include "Observer.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
 
@@ -53,12 +52,19 @@ typedef int PaError;
 
 bool ValidateDeviceNames();
 
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_AUDIOIO_PLAYBACK, wxCommandEvent);
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_AUDIOIO_CAPTURE, wxCommandEvent);
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_AUDIOIO_MONITOR, wxCommandEvent);
+/*!
+ Emitted by the global AudioIO object when play, recording, or monitoring
+ starts or stops
+*/
+struct AudioIOEvent {
+   AudacityProject *pProject;
+   enum Type {
+      PLAYBACK,
+      CAPTURE,
+      MONITOR,
+   } type;
+   bool on;
+};
 
 struct TransportTracks {
    WaveTrackArray playbackTracks;
@@ -352,6 +358,7 @@ struct PaStreamInfo;
 
 class AUDACITY_DLL_API AudioIO final
    : public AudioIoCallback
+   , public Observer::Publisher<AudioIOEvent>
 {
 
    AudioIO();

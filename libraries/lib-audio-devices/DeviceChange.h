@@ -11,6 +11,11 @@
 #ifndef __AUDACITY_DEVICECHANGE_H__
 #define __AUDACITY_DEVICECHANGE_H__
 
+#include "Observer.h"
+
+enum class DeviceChangeMessage : char { Rescan, Change };
+using DeviceChangeMessagePublisher = Observer::Publisher<DeviceChangeMessage>;
+
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 
 #include <memory>
@@ -22,17 +27,20 @@
 #if defined(HAVE_DEVICE_CHANGE)
 
 #include <wx/timer.h> // member variable
+#include "Observer.h"
 
 class DeviceChangeInterface /* not final */
 {
 public:
    virtual ~DeviceChangeInterface() {};
 
-   virtual bool SetHandler(wxEvtHandler *handler) = 0;
+   virtual bool SetHandler(DeviceChangeMessagePublisher *handler) = 0;
    virtual void Enable(bool enable = true) = 0;
 };
 
-class DeviceChangeHandler : public wxEvtHandler
+class DeviceChangeHandler
+   : public wxEvtHandler // for wxTimerEvent
+   , public DeviceChangeMessagePublisher
 {
 public:
    DeviceChangeHandler();
@@ -43,11 +51,13 @@ public:
    virtual void DeviceChangeNotification() = 0;
 
 private:
-   void OnChange(wxCommandEvent & evt);
+   void OnChange(DeviceChangeMessage);
    void OnTimer(wxTimerEvent & evt);
 
    std::unique_ptr<DeviceChangeInterface> mListener;
    wxTimer mTimer;
+
+   Observer::Subscription mSubscription;
 
    DECLARE_EVENT_TABLE()
 };

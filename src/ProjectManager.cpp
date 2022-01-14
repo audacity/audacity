@@ -81,8 +81,8 @@ ProjectManager::ProjectManager( AudacityProject &project )
 {
    auto &window = ProjectWindow::Get( mProject );
    window.Bind( wxEVT_CLOSE_WINDOW, &ProjectManager::OnCloseWindow, this );
-   mProject.Bind(EVT_PROJECT_STATUS_UPDATE,
-      &ProjectManager::OnStatusChange, this);
+   mSubscription = ProjectStatus::Get(mProject)
+      .Subscribe(*this, &ProjectManager::OnStatusChange);
    project.Bind( EVT_RECONNECTION_FAILURE,
       &ProjectManager::OnReconnectionFailure, this );
 }
@@ -846,10 +846,8 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
    RestartTimer();
 }
 
-void ProjectManager::OnStatusChange( ProjectStatusEvent &evt )
+void ProjectManager::OnStatusChange(StatusBarField field)
 {
-   evt.Skip();
-
    auto &project = mProject;
 
    // Be careful to null-check the window.  We might get to this function
@@ -862,7 +860,6 @@ void ProjectManager::OnStatusChange( ProjectStatusEvent &evt )
 
    window.UpdateStatusWidths();
 
-   auto field = evt.mField;
    const auto &msg = ProjectStatus::Get( project ).Get( field );
    SetStatusText( msg, field );
    

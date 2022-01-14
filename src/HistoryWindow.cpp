@@ -19,7 +19,6 @@ undo memory so as to free up space.
 
 #include "HistoryWindow.h"
 
-#include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
@@ -87,13 +86,7 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
    ShuttleGui S(this, eIsCreating);
    Populate(S);
 
-   wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
-                     &HistoryDialog::OnAudioIO,
-                     this);
-
-   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
-                     &HistoryDialog::OnAudioIO,
-                     this);
+   mSubscription = AudioIO::Get()->Subscribe(*this, &HistoryDialog::OnAudioIO);
 
    Clipboard::Get().Bind(
       EVT_CLIPBOARD_CHANGE, &HistoryDialog::UpdateDisplay, this);
@@ -180,14 +173,11 @@ void HistoryDialog::Populate(ShuttleGui & S)
    mList->SetTextColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
 }
 
-void HistoryDialog::OnAudioIO(wxCommandEvent& evt)
+void HistoryDialog::OnAudioIO(AudioIOEvent evt)
 {
-   evt.Skip();
-
-   if (evt.GetInt() != 0)
-      mAudioIOBusy = true;
-   else
-      mAudioIOBusy = false;
+   if (evt.type == AudioIOEvent::MONITOR)
+      return;
+   mAudioIOBusy = evt.on;
 
 #if defined(ALLOW_DISCARD)
    mDiscard->Enable(!mAudioIOBusy);

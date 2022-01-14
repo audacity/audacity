@@ -23,7 +23,7 @@
 
 #include "Mix.h"
 
-#include <math.h>
+#include <cmath>
 
 #include "Envelope.h"
 #include "SampleTrack.h"

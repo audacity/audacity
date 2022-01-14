@@ -2877,7 +2877,7 @@ msgstr "स्पेक्ट्रम रचण्यासाठी, सर्
 msgid ""
 "Too much audio was selected. Only the first %.1f seconds of audio will be "
 "analyzed."
-msgstr ""
+msgstr "बरेच ध्वनी निवडले होते. केवळ पहिल्या%.1f सेकंदाच्या ध्वनीचे विश्लेषण केले जाईल"
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -5540,7 +5540,7 @@ msgstr "अंशांकन परिणाम\n"
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Energy                  -- mean: %1.4f  sd: (%1.4f)\n"
-msgstr ""
+msgstr "ऊर्जा                    --  सरासरी: %1.4f एस.डी: (% 1.4f)\n"
 
 #: src/VoiceKey.cpp
 #, c-format

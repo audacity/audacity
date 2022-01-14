@@ -13,6 +13,7 @@
 #include <wx/string.h>
 #include <wx/dynlib.h>
 #include <wx/log.h>
+#include <wx/utils.h>
 
 #if defined(__WXMSW__)
 #  include <wx/buffer.h>
