@@ -2394,7 +2394,7 @@ bool AudioIoCallback::FillOutputBuffers(
 
 {
    auto pProject = mOwningProject.lock();
-   RealtimeEffectManager::ProcessScope scope{ pProject.get() };
+   RealtimeEffects::ProcessingScope scope{ pProject.get() };
 
    int chanCnt = 0;
 

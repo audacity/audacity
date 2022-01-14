@@ -27,6 +27,11 @@ class RealtimeEffectList;
 class RealtimeEffectState;
 class Track;
 
+namespace RealtimeEffects {
+   class SuspensionScope;
+   class ProcessingScope;
+}
+
 class AUDACITY_DLL_API RealtimeEffectManager final
    : public ClientData::Base
 {
@@ -52,77 +57,6 @@ public:
    void Resume() noexcept;
    Latency GetLatency() const;
 
-   //! Object whose lifetime encompasses one suspension of processing in one thread
-   class SuspensionScope {
-   public:
-      explicit SuspensionScope(AudacityProject *pProject)
-         : mpProject{ pProject }
-      {
-         if (mpProject)
-            Get(*mpProject).Suspend();
-      }
-      SuspensionScope( SuspensionScope &&other )
-         : mpProject{ other.mpProject }
-      {
-         other.mpProject = nullptr;
-      }
-      SuspensionScope& operator=( SuspensionScope &&other )
-      {
-         auto pProject = other.mpProject;
-         other.mpProject = nullptr;
-         mpProject = pProject;
-         return *this;
-      }
-      ~SuspensionScope()
-      {
-         if (mpProject)
-            Get(*mpProject).Resume();
-      }
-
-   private:
-      AudacityProject *mpProject = nullptr;
-   };
-
-   //! Object whose lifetime encompasses one block of processing in one thread
-   class ProcessScope {
-   public:
-      explicit ProcessScope(AudacityProject *pProject)
-         : mpProject{ pProject }
-      {
-         if (mpProject)
-            Get(*mpProject).ProcessStart();
-      }
-      ProcessScope( ProcessScope &&other )
-         : mpProject{ other.mpProject }
-      {
-         other.mpProject = nullptr;
-      }
-      ProcessScope& operator=( ProcessScope &&other )
-      {
-         auto pProject = other.mpProject;
-         other.mpProject = nullptr;
-         mpProject = pProject;
-         return *this;
-      }
-      ~ProcessScope()
-      {
-         if (mpProject)
-            Get(*mpProject).ProcessEnd();
-      }
-
-      size_t Process(Track *track, float **buffers, size_t numSamples)
-      {
-         if (mpProject)
-            return Get(*mpProject)
-               .Process(track, buffers, numSamples);
-         else
-            return numSamples; // consider them trivially processed
-      }
-
-   private:
-      AudacityProject *mpProject = nullptr;
-   };
-
    //! Main thread appends a global or per-track effect
    /*!
     @param pTrack if null, then state is added to the global list
@@ -133,6 +67,8 @@ public:
    void RemoveState(RealtimeEffectList &states, RealtimeEffectState &state);
 
 private:
+
+   friend RealtimeEffects::ProcessingScope;
    void ProcessStart();
    size_t Process(Track *track, float **buffers, size_t numSamples);
    void ProcessEnd() noexcept;
@@ -164,5 +100,80 @@ private:
    std::unordered_map<Track *, unsigned> mChans;
    std::unordered_map<Track *, double> mRates;
 };
+
+namespace RealtimeEffects {
+//! Brackets one suspension of processing in the main thread
+class SuspensionScope {
+public:
+   SuspensionScope() {}
+   explicit SuspensionScope(AudacityProject *pProject)
+      : mpProject{ pProject }
+   {
+      if (mpProject)
+         RealtimeEffectManager::Get(*mpProject).Suspend();
+   }
+   SuspensionScope( SuspensionScope &&other )
+      : mpProject{ other.mpProject }
+   {
+      other.mpProject = nullptr;
+   }
+   SuspensionScope& operator=( SuspensionScope &&other )
+   {
+      auto pProject = other.mpProject;
+      other.mpProject = nullptr;
+      mpProject = pProject;
+      return *this;
+   }
+   ~SuspensionScope()
+   {
+      if (mpProject)
+         RealtimeEffectManager::Get(*mpProject).Resume();
+   }
+
+private:
+   AudacityProject *mpProject = nullptr;
+};
+
+//! Brackets one block of processing in one thread
+class ProcessingScope {
+public:
+   ProcessingScope() {}
+   explicit ProcessingScope(AudacityProject *pProject)
+      : mpProject{ pProject }
+   {
+      if (mpProject)
+         RealtimeEffectManager::Get(*mpProject).ProcessStart();
+   }
+   ProcessingScope( ProcessingScope &&other )
+      : mpProject{ other.mpProject }
+   {
+      other.mpProject = nullptr;
+   }
+   ProcessingScope& operator=( ProcessingScope &&other )
+   {
+      auto pProject = other.mpProject;
+      other.mpProject = nullptr;
+      mpProject = pProject;
+      return *this;
+   }
+   ~ProcessingScope()
+   {
+      if (mpProject)
+         RealtimeEffectManager::Get(*mpProject).ProcessEnd();
+   }
+
+   size_t Process(Track *track, float **buffers, size_t numSamples)
+   {
+      if (mpProject)
+         return RealtimeEffectManager::Get(*mpProject)
+            .Process(track, buffers, numSamples);
+      else
+         return numSamples; // consider them trivially processed
+   }
+
+private:
+   AudacityProject *mpProject = nullptr;
+};
+}
 
 #endif

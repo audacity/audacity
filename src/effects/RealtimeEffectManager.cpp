@@ -55,7 +55,7 @@ bool RealtimeEffectManager::IsActive() const noexcept
 void RealtimeEffectManager::Initialize(double rate)
 {
    // The audio thread should not be running yet, but protect anyway
-   SuspensionScope scope{ &mProject };
+   RealtimeEffects::SuspensionScope scope{ &mProject };
 
    // Remember the rate
    mRate = rate;
@@ -278,7 +278,7 @@ RealtimeEffectManager::AddState(Track *pTrack, const PluginID & id)
       ? RealtimeEffectList::Get(*pLeader)
       : RealtimeEffectList::Get(mProject);
 
-   SuspensionScope scope{ &mProject };
+   RealtimeEffects::SuspensionScope scope{ &mProject };
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 
@@ -309,7 +309,7 @@ RealtimeEffectManager::AddState(Track *pTrack, const PluginID & id)
 
 void RealtimeEffectManager::RemoveState(RealtimeEffectList &states, RealtimeEffectState &state)
 {
-   SuspensionScope scope{ &mProject };
+   RealtimeEffects::SuspensionScope scope{ &mProject };
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 
