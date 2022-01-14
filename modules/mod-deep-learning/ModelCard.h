@@ -165,6 +165,7 @@ private:
 
 using ModelCardHolder = std::shared_ptr<ModelCard>;
 using ModelCardFilter = std::function<bool(const ModelCard& card)>;
+using ModelCardComparison = std::function<bool(const ModelCard &a, const ModelCard &b)>;
 
 class ModelCardCollection final
 {
@@ -176,6 +177,9 @@ public:
 
    //! returns a view of a subset as dictated by the filter
    ModelCardCollection Filter(ModelCardFilter filter) const;
+
+   //! returns a sorted view of the cards
+   ModelCardCollection Sort(ModelCardComparison cmp) const;
 
    //! iterators 
    ModelCardHolder &operator[](size_t i) {return mCards[i];}
