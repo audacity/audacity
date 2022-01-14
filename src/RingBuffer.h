@@ -29,6 +29,8 @@ class RingBuffer final : public NonInterferingBase {
               // optional number of trailing zeroes
               size_t padding = 0);
    size_t Clear(sampleFormat format, size_t samples);
+   //! Flush after a sequence of Put (and/or Clear) calls to let consumer see
+   void Flush();
 
    //
    // For the reader only:
@@ -43,13 +45,15 @@ class RingBuffer final : public NonInterferingBase {
    size_t Filled( size_t start, size_t end );
    size_t Free( size_t start, size_t end );
 
+   size_t mWritten{0};
+
    // Align the two atomics to avoid false sharing
-   NonInterfering< std::atomic<size_t> > mStart { 0 }, mEnd{ 0 };
+   NonInterfering< std::atomic<size_t> > mStart{ 0 }, mEnd{ 0 };
 
    const size_t  mBufferSize;
 
-   sampleFormat  mFormat;
-   SampleBuffer  mBuffer;
+   const sampleFormat  mFormat;
+   const SampleBuffer  mBuffer;
 };
 
 #endif /*  __AUDACITY_RING_BUFFER__ */

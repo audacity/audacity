@@ -1888,6 +1888,14 @@ void AudioIO::FillPlayBuffers()
       done = policy.RepositionPlayback( mPlaybackSchedule, mPlaybackMixers,
          frames, available );
    } while (available && !done);
+
+   /* The flushing of all the Puts to the RingBuffers is lifted out of the loop.
+    It's only here that a release is done on the atomic variable that
+    indicates the readiness of sample data to the consumer.  That atomic
+    also sychronizes the use of the TimeQueue.
+    */
+   for (size_t i = 0; i < std::max(size_t{1}, mPlaybackTracks.size()); ++i)
+      mPlaybackBuffers[i]->Flush();
 }
 
 void AudioIO::DrainRecordBuffers()
@@ -2730,6 +2738,7 @@ void AudioIoCallback::DrainInputBuffers(
       // wxASSERT(put == len);
       // but we can't assert in this thread
       wxUnusedVar(put);
+      mCaptureBuffers[t]->Flush();
    }
 }
 
