@@ -352,6 +352,23 @@ bool ModelCardCollection::Insert(ModelCardHolder card)
       return false;
 }
 
+ModelCardCollection ModelCardCollection::Sort(ModelCardComparison cmp) const
+{
+   // make a copy
+   ModelCardCollection that(*this);
+
+   // ModelCardComparison expects ModelCard objects, not ModelCardHolder. 
+   // wrap the predicate so we can use std::sort. 
+   auto predicate = [cmp = std::move(cmp)](ModelCardHolder a, ModelCardHolder b)
+   {
+      return cmp(*a, *b);
+   };
+   
+   std::sort(that.mCards.begin(), that.mCards.end(), predicate);
+
+   return that;
+}
+
 ModelCardCollection ModelCardCollection::Filter(ModelCardFilter filter) const
 {
    ModelCardCollection that;
