@@ -78,10 +78,13 @@ static CommandFlagOptions result{
       // PRL:  These strings have hard-coded mention of a certain shortcut key,
       // thus assuming the default shortcuts.  That is questionable.
       TranslatableString format;
-
+#ifdef __WXMAC__
+      // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+      format = XO("You must first select some audio for '%s' to act on.\n\nCmd + A selects all audio.");
+#else
       // i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
       format = XO("You must first select some audio for '%s' to act on.\n\nCtrl + A selects all audio.");
-
+#endif
       return format.Format( Name );
    },
    "Selecting_Audio_-_the_basics",
