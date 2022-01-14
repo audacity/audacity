@@ -425,7 +425,7 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    }
 
    // Notify listeners for timer ticks
-   window.GetPlaybackScroller().Publish({});
+   window.GetPlaybackScroller().OnTimer();
 
    DrawOverlays(false);
    mRuler->DrawOverlays(false);
