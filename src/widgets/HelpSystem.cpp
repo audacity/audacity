@@ -242,13 +242,7 @@ void HelpSystem::ShowHelp(wxWindow *parent,
 {
    wxASSERT(parent); // to justify safenew
    wxString HelpMode = wxT("Local");
-
-// DA: Default for DA is manual from internet.
-#ifdef EXPERIMENTAL_DA
-   gPrefs->Read(wxT("/GUI/Help"), &HelpMode, wxT("FromInternet") );
-#else
    gPrefs->Read(wxT("/GUI/Help"), &HelpMode, wxT("Local") );
-#endif
 
    {
       // these next lines are for legacy cfg files (pre 2.0) where we had different modes

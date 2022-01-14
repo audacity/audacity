@@ -535,13 +535,8 @@ static struct DefaultConfigEntry {
    { PlayMeterBarID,         RecordMeterBarID,       NoBarID                },
    { MixerBarID,             PlayMeterBarID,         NoBarID                },
    { EditBarID,              MixerBarID,             NoBarID                },
-
-// DA: Transcription Toolbar not docked, by default.
-#ifdef EXPERIMENTAL_DA
-   { TranscriptionBarID,     NoBarID,                NoBarID                },
-#else
    { TranscriptionBarID,     EditBarID,              NoBarID                },
-#endif
+
 
    // start another top dock row
    { ScrubbingBarID,         NoBarID,                TransportBarID         },
