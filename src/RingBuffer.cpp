@@ -130,6 +130,29 @@ size_t RingBuffer::Clear(sampleFormat format, size_t samplesToClear)
    return cleared;
 }
 
+std::pair<samplePtr, size_t> RingBuffer::GetUnflushed(unsigned iBlock)
+{
+   // This function is called by the writer
+
+   // Find total number of samples unflushed:
+   auto end = mEnd.load(std::memory_order_relaxed);
+   const size_t size = Filled(end, mWritten);
+
+   // How many in the first part:
+   const size_t size0 = std::min(size, mBufferSize - end);
+   // How many wrap around the ring buffer:
+   const size_t size1 = size - size0;
+
+   if (iBlock == 0)
+      return {
+         size0 ? mBuffer.ptr() + end * SAMPLE_SIZE(mFormat) : nullptr,
+         size0 };
+   else
+      return {
+         size1 ? mBuffer.ptr() : nullptr,
+         size1 };
+}
+
 void RingBuffer::Flush()
 {
    // Atomically update the end pointer with release, so the nonatomic writes

@@ -29,6 +29,8 @@ class RingBuffer final : public NonInterferingBase {
               // optional number of trailing zeroes
               size_t padding = 0);
    size_t Clear(sampleFormat format, size_t samples);
+   //! Get access to written but unflushed data, which is in at most two blocks
+   std::pair<samplePtr, size_t> GetUnflushed(unsigned iBlock);
    //! Flush after a sequence of Put (and/or Clear) calls to let consumer see
    void Flush();
 
