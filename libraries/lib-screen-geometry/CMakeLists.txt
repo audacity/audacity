@@ -4,8 +4,6 @@ times, or frequencies, or amplitudes.
 ]]#
 
 set( SOURCES
-   Decibels.cpp
-   Decibels.h
    NumberScale.h
    SelectedRegion.cpp
    SelectedRegion.h

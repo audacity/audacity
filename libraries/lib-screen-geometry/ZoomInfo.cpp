@@ -9,7 +9,6 @@
 **********************************************************************/
 
 #include "ZoomInfo.h"
-#include "Decibels.h"
 
 #include <cmath>
 
@@ -23,16 +22,10 @@ ZoomInfo::ZoomInfo(double start, double pixelsPerSecond)
    , h(start)
    , zoom(pixelsPerSecond)
 {
-   UpdatePrefs();
 }
 
 ZoomInfo::~ZoomInfo()
 {
-}
-
-void ZoomInfo::UpdatePrefs()
-{
-   dBr = DecibelScaleCutoff.Read();
 }
 
 /// Converts a position (mouse X coordinate) to

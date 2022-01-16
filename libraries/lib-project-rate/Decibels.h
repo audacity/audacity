@@ -17,6 +17,6 @@ Paul Licameli
 #include "Prefs.h"
 
 //! Negation of this value is the lowest dB level that should be shown in dB scales
-extern SCREEN_GEOMETRY_API IntSetting DecibelScaleCutoff;
+extern PROJECT_RATE_API IntSetting DecibelScaleCutoff;
 
 #endif
