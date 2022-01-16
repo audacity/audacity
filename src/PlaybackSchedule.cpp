@@ -16,7 +16,7 @@
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "SampleCount.h"
-#include "ViewInfo.h" // for PlayRegionEvent
+#include "ViewInfo.h"
 
 #include <cmath>
 
