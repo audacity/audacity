@@ -17,6 +17,7 @@ Paul Licameli split from ProjectManager.h
 #include "AudioIOListener.h" // to inherit
 #include "ClientData.h" // to inherit
 #include "Observer.h"
+#include "Observer.h"
 
 #include <atomic>
 
@@ -40,6 +41,7 @@ enum class PlayMode : int {
 struct TransportTracks;
 
 enum StatusBarField : int;
+enum class ProjectFileIOMessage : int;
 
 //! Notification, after recording has stopped, when dropouts have been detected
 struct RecordingDropoutEvent {
@@ -158,8 +160,9 @@ private:
    void OnCommitRecording() override;
    void OnSoundActivationThreshold() override;
 
-   void OnCheckpointFailure(class wxCommandEvent &evt);
+   void OnCheckpointFailure(ProjectFileIOMessage);
 
+   Observer::Subscription mCheckpointFailureSubcription;
    AudacityProject &mProject;
 
    PlayMode mLastPlayMode{ PlayMode::normalPlay };

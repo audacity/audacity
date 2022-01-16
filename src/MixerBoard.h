@@ -287,6 +287,7 @@ private:
 
    void SetWindowTitle();
 
+   Observer::Subscription mTitleChangeSubscription;
    AudacityProject *mProject;
 public:
    MixerBoard* mMixerBoard;
