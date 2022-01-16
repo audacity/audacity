@@ -1175,7 +1175,7 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
          const AudioIOStartStreamOptions &options)
             -> std::unique_ptr<PlaybackPolicy>
       {
-         return std::make_unique<NewDefaultPlaybackPolicy>( project,
+         return std::make_unique<DefaultPlaybackPolicy>( project,
             trackEndTime, loopEndTime,
             options.loopEnabled, options.variableSpeed);
       };
