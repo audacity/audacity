@@ -27,7 +27,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "Project.h"
 #include "ProjectHistory.h"
 #include "ProjectSerializer.h"
-#include "ProjectWindows.h"
 #include "FileNames.h"
 #include "SampleBlock.h"
 #include "TempDirectory.h"
@@ -453,7 +452,7 @@ ProjectFileIO::ProjectFileIO(AudacityProject &project)
    mModified = false;
    mTemporary = true;
 
-   UpdatePrefs();
+   SetProjectTitle();
 
    // Make sure there is plenty of space for Sqlite files
    wxLongLong freeSpace = 0;
@@ -1582,12 +1581,6 @@ void ProjectFileIO::UpdatePrefs()
 void ProjectFileIO::SetProjectTitle(int number)
 {
    auto &project = mProject;
-   auto pWindow = FindProjectFrame(&project);
-   if (!pWindow)
-   {
-      return;
-   }
-   auto &window = *pWindow;
    wxString name = project.GetProjectName();
 
    // If we are showing project numbers, then we also explicitly show "<untitled>" if there
@@ -1614,11 +1607,8 @@ void ProjectFileIO::SetProjectTitle(int number)
       name += _("(Recovered)");
    }
 
-   if (name != window.GetTitle())
-   {
-      window.SetTitle( name );
-      window.SetName(name);       // to make the nvda screen reader read the correct title
-
+   if (name != mTitle) {
+      mTitle = name;
       BasicUI::CallAfter( [wThis = weak_from_this()]{
          if (auto pThis = wThis.lock())
             pThis->Publish(ProjectFileIOMessage::ProjectTitleChange);

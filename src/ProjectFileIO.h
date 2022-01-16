@@ -76,6 +76,8 @@ public:
    ProjectFileIO &operator=( const ProjectFileIO & ) PROHIBITED;
    ~ProjectFileIO();
 
+   const wxString &GetProjectTitle() const { return mTitle; }
+
    // It seems odd to put this method in this class, but the results do depend
    // on what is discovered while opening the file, such as whether it is a
    // recovery file
@@ -286,6 +288,8 @@ private:
 
    // non-static data members
    AudacityProject &mProject;
+
+   wxString mTitle;
 
    std::shared_ptr<DBConnectionErrors> mpErrors;
 

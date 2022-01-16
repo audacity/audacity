@@ -24,6 +24,7 @@ class wxScrollBar;
 class wxPanel;
 class wxSplitterWindow;
 class RealtimeEffectPanel;
+enum class ProjectFileIOMessage : int;
 
 class ProjectWindow;
 void InitProjectWindow( ProjectWindow &window );
@@ -201,6 +202,7 @@ public:
    void OnUndoPushedModified();
    void OnUndoRedo();
    void OnUndoReset();
+   void OnProjectTitleChange(ProjectFileIOMessage);
 
    bool mbInitializingScrollbar{ false };
 
@@ -228,7 +230,9 @@ private:
 private:
 
    Observer::Subscription mUndoSubscription
-      , mThemeChangeSubscription;
+      , mThemeChangeSubscription
+      , mTitleChangeSubcription
+   ;
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
 
    DECLARE_EVENT_TABLE()
