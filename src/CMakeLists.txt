@@ -127,6 +127,8 @@ list( APPEND SOURCES
       CrashReport.h
       DBConnection.cpp
       DBConnection.h
+      DefaultPlaybackPolicy.cpp
+      DefaultPlaybackPolicy.h
       Diags.cpp
       Diags.h
       DropTarget.cpp
