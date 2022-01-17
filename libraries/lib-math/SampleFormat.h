@@ -79,6 +79,18 @@ public:
    {
       Free();
    }
+   SampleBuffer(SampleBuffer &&other)
+   {
+      mPtr = other.mPtr;
+      other.mPtr = nullptr;
+   }
+   SampleBuffer &operator=(SampleBuffer &&other)
+   {
+      auto ptr = other.mPtr;
+      other.mPtr = nullptr;
+      mPtr = ptr;
+      return *this;
+   }
 
    // WARNING!  May not preserve contents.
    SampleBuffer &Allocate(size_t count, sampleFormat format)

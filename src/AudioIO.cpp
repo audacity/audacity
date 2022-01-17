@@ -892,6 +892,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    });
 
    mPlaybackBuffers.reset();
+   mScratchBuffers.clear();
+   mScratchPointers.clear();
    mPlaybackMixers.clear();
    mCaptureBuffers.reset();
    mResample.reset();
@@ -1179,6 +1181,16 @@ bool AudioIO::AllocateBuffers(
             // Always make at least one playback buffer
             mPlaybackBuffers.reinit(
                std::max<size_t>(1, mPlaybackTracks.size()));
+            // Number of scratch buffers depends on device playback channels
+            if (mNumPlaybackChannels > 0) {
+               mScratchBuffers.resize(mNumPlaybackChannels * 2);
+               mScratchPointers.clear();
+               for (auto &buffer : mScratchBuffers) {
+                  buffer.Allocate(playbackBufferSize, floatSample);
+                  mScratchPointers.push_back(
+                     reinterpret_cast<float*>(buffer.ptr()));
+               }
+            }
             mPlaybackMixers.clear();
             mPlaybackMixers.resize(mPlaybackTracks.size());
 
@@ -1306,6 +1318,8 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mpTransportState.reset();
 
    mPlaybackBuffers.reset();
+   mScratchBuffers.clear();
+   mScratchPointers.clear();
    mPlaybackMixers.clear();
    mCaptureBuffers.reset();
    mResample.reset();
@@ -1488,6 +1502,8 @@ void AudioIO::StopStream()
       if (mPlaybackTracks.size() > 0)
       {
          mPlaybackBuffers.reset();
+         mScratchBuffers.clear();
+         mScratchPointers.clear();
          mPlaybackMixers.clear();
          mPlaybackSchedule.mTimeQueue.Clear();
       }
