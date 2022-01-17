@@ -57,7 +57,7 @@ void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
 
    // Find out the rectangles and outdatedness for each overlay
    wxSize size(GetBackingDC().GetSize());
-   for (const auto pOverlay : mOverlays)
+   for (const auto& pOverlay : mOverlays)
       pairs.push_back( pOverlay.lock()->GetRectangle(size) );
 
    // See what requires redrawing.  If repainting, all.
