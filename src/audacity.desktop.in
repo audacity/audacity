@@ -10,6 +10,11 @@ GenericName[el]=Επεξεργαστής ήχου
 GenericName[es]=Editor de audio
 GenericName[fr]=Éditeur audio
 GenericName[hi]=ध्वनि संपादक
+GenericName[gu]=ધ્વનિ સંપાદક
+GenericName[kn]=ಧ್ವನಿ ಸಂಪಾದಕ
+GenericName[it]=editore di suoni
+GenericName[ta]=ஒலி ஆசிரியர்
+GenericName[la]=sonus editor
 GenericName[ja]=音声編集ソフト
 GenericName[ko]=오디오 편집기
 GenericName[lt]=Garsų rengyklė
@@ -22,6 +27,7 @@ GenericName[tr]=Ses Düzenleyici
 GenericName[uk]=Редактор звукових файлів
 GenericName[zh_CN]=音频编辑器
 GenericName[zh_TW]=音訊編輯器
+# comments added 
 Comment=Record and edit audio files
 Comment[ar]=سجل و حرر ملفات صوت
 Comment[ca]=Enregistreu i editeu els fitxers d'àudio
@@ -44,6 +50,12 @@ Comment[tr]=Ses dosyalarını kaydetme ve düzenleme
 Comment[uk]=Запис і редагування звукових файлів
 Comment[zh_CN]=录音和编辑音频文件
 Comment[zh_TW]=錄音和編輯音訊檔案
+# keywords added
+
+Keywords= Audio 
+Keywords= Recording
+Keywords= Editing 
+
 
 Icon=@AUDACITY_NAME@
 StartupWMClass=Audacity
