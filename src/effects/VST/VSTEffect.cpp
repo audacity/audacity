@@ -1534,14 +1534,16 @@ bool VSTEffect::RealtimeSuspend()
    return true;
 }
 
-bool VSTEffect::RealtimeResume()
+bool VSTEffect::RealtimeResume() noexcept
 {
+return GuardedCall<bool>([&]{
    PowerOn();
 
    for (const auto &slave : mSlaves)
       slave->PowerOn();
 
    return true;
+});
 }
 
 bool VSTEffect::RealtimeProcessStart()

@@ -24,7 +24,7 @@ public:
    EffectProcessor &GetEffect() const { return mEffect; }
 
    bool RealtimeSuspend();
-   bool RealtimeResume();
+   bool RealtimeResume() noexcept;
    bool RealtimeAddProcessor(int group, unsigned chans, float rate);
    size_t RealtimeProcess(int group,
       unsigned chans, float **inbuf, float **outbuf, size_t numSamples);

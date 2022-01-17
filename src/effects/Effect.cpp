@@ -404,7 +404,7 @@ bool Effect::RealtimeSuspend()
    return true;
 }
 
-bool Effect::RealtimeResume()
+bool Effect::RealtimeResume() noexcept
 {
    if (mClient)
       return mClient->RealtimeResume();

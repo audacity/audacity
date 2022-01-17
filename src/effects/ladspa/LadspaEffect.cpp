@@ -1029,7 +1029,7 @@ bool LadspaEffect::RealtimeSuspend()
    return true;
 }
 
-bool LadspaEffect::RealtimeResume()
+bool LadspaEffect::RealtimeResume() noexcept
 {
    return true;
 }

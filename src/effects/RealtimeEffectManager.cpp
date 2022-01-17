@@ -50,7 +50,7 @@ bool RealtimeEffectManager::RealtimeIsSuspended()
 void RealtimeEffectManager::RealtimeAddEffect(EffectProcessor &effect)
 {
    // Block RealtimeProcess()
-   RealtimeSuspend();
+   SuspensionScope scope;
 
    // Add to list of active effects
    mStates.emplace_back( std::make_unique< RealtimeEffectState >( effect ) );
@@ -68,16 +68,12 @@ void RealtimeEffectManager::RealtimeAddEffect(EffectProcessor &effect)
          state->RealtimeAddProcessor(i, mRealtimeChans[i], mRealtimeRates[i]);
       }
    }
-   
-
-   // Allow RealtimeProcess() to, well, process 
-   RealtimeResume();
 }
 
 void RealtimeEffectManager::RealtimeRemoveEffect(EffectProcessor &effect)
 {
    // Block RealtimeProcess()
-   RealtimeSuspend();
+   SuspensionScope scope;
 
    if (mRealtimeActive)
    {
@@ -94,15 +90,12 @@ void RealtimeEffectManager::RealtimeRemoveEffect(EffectProcessor &effect)
    );
    if (found != end)
       mStates.erase(found);
-
-   // Allow RealtimeProcess() to, well, process 
-   RealtimeResume();
 }
 
 void RealtimeEffectManager::RealtimeInitialize(double rate)
 {
    // The audio thread should not be running yet, but protect anyway
-   RealtimeSuspend();
+   SuspensionScope scope;
 
    // (Re)Set processor parameters
    mRealtimeChans.clear();
@@ -117,9 +110,6 @@ void RealtimeEffectManager::RealtimeInitialize(double rate)
       state->GetEffect().SetSampleRate(rate);
       state->GetEffect().RealtimeInitialize();
    }
-
-   // Get things moving
-   RealtimeResume();
 }
 
 void RealtimeEffectManager::RealtimeAddProcessor(int group, unsigned chans, float rate)
@@ -184,7 +174,7 @@ void RealtimeEffectManager::RealtimeSuspendOne( EffectProcessor &effect )
       (*found)->RealtimeSuspend();
 }
 
-void RealtimeEffectManager::RealtimeResume()
+void RealtimeEffectManager::RealtimeResume() noexcept
 {
    mRealtimeLock.Enter();
 

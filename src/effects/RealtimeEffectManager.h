@@ -36,9 +36,37 @@ public:
    void RealtimeFinalize();
    void RealtimeSuspend();
    void RealtimeSuspendOne( EffectProcessor &effect );
-   void RealtimeResume();
+   void RealtimeResume() noexcept;
    void RealtimeResumeOne( EffectProcessor &effect );
    int GetRealtimeLatency();
+
+   //! Object whose lifetime encompasses one suspension of processing in one thread
+   class SuspensionScope {
+   public:
+      SuspensionScope()
+      {
+         Get().RealtimeSuspend();
+      }
+      SuspensionScope( SuspensionScope &&other )
+      {
+         other.mMoved = true;
+      }
+      SuspensionScope& operator=( SuspensionScope &&other )
+      {
+         auto moved = other.mMoved;
+         other.mMoved = true;
+         mMoved = moved;
+         return *this;
+      }
+      ~SuspensionScope()
+      {
+         if (!mMoved)
+            Get().RealtimeResume();
+      }
+
+   private:
+      bool mMoved{ false };
+   };
 
    //! Object whose lifetime encompasses one block of processing in one thread
    class ProcessScope {
