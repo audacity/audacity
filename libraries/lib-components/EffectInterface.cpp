@@ -7,7 +7,6 @@
 **********************************************************************/
 #include "EffectInterface.h"
 #include <wx/tokenzr.h>
-#include <wx/window.h>
 
 const RegistryPath &EffectSettingsExtra::DurationKey()
 {

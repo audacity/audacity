@@ -732,3 +732,29 @@ function( addlib dir name symbol required check )
    endif()
 endfunction()
 
+# Copy named properties from one target to another
+function(copy_target_properties
+  src  # target
+  dest # target
+  # prop1 prop2...
+)
+   foreach(property ${ARGN})
+      get_target_property(value ${src} ${property})
+      if(value)
+         set_target_properties(${dest} PROPERTIES ${property} "${value}")
+      endif()
+   endforeach()
+endfunction()
+
+function(make_interface_library
+   new  # name for new target
+   old   # existing library target
+)
+   add_library(${new} INTERFACE)
+   copy_target_properties(${old} ${new}
+      INTERFACE_COMPILE_DEFINITIONS
+      INTERFACE_COMPILE_OPTIONS
+      INTERFACE_INCLUDE_DIRECTORIES
+      INTERFACE_LINK_DIRECTORIES
+      INTERFACE_LINK_LIBRARIES)
+endfunction()
