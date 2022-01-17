@@ -1555,7 +1555,7 @@ size_t VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf, size
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
 }
 
-bool VSTEffect::RealtimeProcessEnd()
+bool VSTEffect::RealtimeProcessEnd() noexcept
 {
    return true;
 }

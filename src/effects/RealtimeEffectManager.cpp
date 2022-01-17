@@ -317,7 +317,7 @@ size_t RealtimeEffectManager::RealtimeProcess(int group, unsigned chans, float *
 //
 // This will be called in a different thread than the main GUI thread.
 //
-void RealtimeEffectManager::RealtimeProcessEnd()
+void RealtimeEffectManager::RealtimeProcessEnd() noexcept
 {
    // Protect ourselves from the main thread
    mRealtimeLock.Enter();

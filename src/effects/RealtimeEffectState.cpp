@@ -225,7 +225,7 @@ size_t RealtimeEffectState::RealtimeProcess(int group,
    return len;
 }
 
-bool RealtimeEffectState::IsRealtimeActive()
+bool RealtimeEffectState::IsRealtimeActive() const noexcept
 {
    return mRealtimeSuspendCount == 0;
 }

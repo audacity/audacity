@@ -148,7 +148,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                                        float **inbuf,
                                        float **outbuf,
                                        size_t numSamples) override;
-   bool RealtimeProcessEnd() override;
+   bool RealtimeProcessEnd() noexcept override;
 
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal = false) override;

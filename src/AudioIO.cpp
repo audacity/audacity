@@ -2393,8 +2393,8 @@ bool AudioIoCallback::FillOutputBuffers(
       tempBufs[c] = (float *) alloca(framesPerBuffer * sizeof(float));
    // ------ End of MEMORY ALLOCATION ---------------
 
-   auto & em = RealtimeEffectManager::Get();
-   em.RealtimeProcessStart();
+{
+   RealtimeEffectManager::ProcessScope scope;
 
    bool selected = false;
    int group = 0;
@@ -2492,7 +2492,7 @@ bool AudioIoCallback::FillOutputBuffers(
       len = mMaxFramesOutput;
 
       if( !dropQuickly && selected )
-         len = em.RealtimeProcess(group, chanCnt, tempBufs, len);
+         len = scope.Process(group, chanCnt, tempBufs, len);
       group++;
 
       CallbackCheckCompletion(mCallbackReturn, len);
@@ -2537,8 +2537,8 @@ bool AudioIoCallback::FillOutputBuffers(
    }
 
    // wxASSERT( maxLen == toGet );
+}
 
-   em.RealtimeProcessEnd();
    mLastPlaybackTimeMillis = ::wxGetUTCTimeMillis();
 
    ClampBuffer( outputFloats, framesPerBuffer*numPlaybackChannels );

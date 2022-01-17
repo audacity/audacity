@@ -28,7 +28,7 @@ public:
    bool RealtimeAddProcessor(int group, unsigned chans, float rate);
    size_t RealtimeProcess(int group,
       unsigned chans, float **inbuf, float **outbuf, size_t numSamples);
-   bool IsRealtimeActive();
+   bool IsRealtimeActive() const noexcept;
 
 private:
    EffectProcessor &mEffect;

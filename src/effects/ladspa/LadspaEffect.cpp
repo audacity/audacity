@@ -1059,7 +1059,7 @@ size_t LadspaEffect::RealtimeProcess(int group,
    return numSamples;
 }
 
-bool LadspaEffect::RealtimeProcessEnd()
+bool LadspaEffect::RealtimeProcessEnd() noexcept
 {
    return true;
 }

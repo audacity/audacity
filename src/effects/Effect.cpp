@@ -435,7 +435,7 @@ size_t Effect::RealtimeProcess(int group,
    return 0;
 }
 
-bool Effect::RealtimeProcessEnd()
+bool Effect::RealtimeProcessEnd() noexcept
 {
    if (mClient)
    {

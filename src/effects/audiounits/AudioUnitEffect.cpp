@@ -1426,7 +1426,7 @@ size_t AudioUnitEffect::RealtimeProcess(int group,
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
 }
 
-bool AudioUnitEffect::RealtimeProcessEnd()
+bool AudioUnitEffect::RealtimeProcessEnd() noexcept
 {
    return true;
 }

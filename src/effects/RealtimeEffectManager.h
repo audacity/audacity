@@ -38,14 +38,51 @@ public:
    void RealtimeSuspendOne( EffectProcessor &effect );
    void RealtimeResume();
    void RealtimeResumeOne( EffectProcessor &effect );
-   void RealtimeProcessStart();
-   size_t RealtimeProcess(int group, unsigned chans, float **buffers, size_t numSamples);
-   void RealtimeProcessEnd();
    int GetRealtimeLatency();
 
+   //! Object whose lifetime encompasses one block of processing in one thread
+   class ProcessScope {
+   public:
+      ProcessScope()
+      {
+         Get().RealtimeProcessStart();
+      }
+      ProcessScope( ProcessScope &&other )
+      {
+         other.mMoved = true;
+      }
+      ProcessScope& operator=( ProcessScope &&other )
+      {
+         auto moved = other.mMoved;
+         other.mMoved = true;
+         mMoved = moved;
+         return *this;
+      }
+      ~ProcessScope()
+      {
+         if (!mMoved)
+            Get().RealtimeProcessEnd();
+      }
+
+      size_t Process( int group,
+         unsigned chans, float **buffers, size_t numSamples)
+      {
+         return Get().RealtimeProcess(group, chans, buffers, numSamples);
+      }
+
+   private:
+      bool mMoved{ false };
+   };
+
 private:
+   void RealtimeProcessStart();
+   size_t RealtimeProcess(int group, unsigned chans, float **buffers, size_t numSamples);
+   void RealtimeProcessEnd() noexcept;
+
    RealtimeEffectManager();
    ~RealtimeEffectManager();
+   RealtimeEffectManager(const RealtimeEffectManager&) = delete;
+   RealtimeEffectManager &operator=(const RealtimeEffectManager&) = delete;
 
    wxCriticalSection mRealtimeLock;
    std::vector< std::unique_ptr<RealtimeEffectState> > mStates;
