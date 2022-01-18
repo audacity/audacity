@@ -21,10 +21,6 @@
 
 class ShuttleGui;
 
-// An event sent to the application when the user changes choice of theme
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_THEME_CHANGE, wxCommandEvent);
-
 #define THEME_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Theme") }
 
 class ThemePrefs final : public PrefsPanel
@@ -38,8 +34,6 @@ class ThemePrefs final : public PrefsPanel
    bool Commit() override;
    void Cancel() override;
    ManualPageID HelpPageName() override;
-
-   static void ApplyUpdatedImages();
 
  private:
    void Populate();

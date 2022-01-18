@@ -177,7 +177,7 @@ public:
 
  private:
 
-   void OnThemeChange(wxCommandEvent & evt);
+   void OnThemeChange(struct ThemeChangeMessage);
 
    // PrefsListener implementation
    void UpdatePrefs() override;
@@ -231,7 +231,8 @@ private:
 
 private:
 
-   Observer::Subscription mUndoSubscription;
+   Observer::Subscription mUndoSubscription
+      , mThemeChangeSubscription;
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
 
    DECLARE_EVENT_TABLE()

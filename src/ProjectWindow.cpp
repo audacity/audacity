@@ -677,7 +677,8 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
          }
       });
 
-   wxTheApp->Bind(EVT_THEME_CHANGE, &ProjectWindow::OnThemeChange, this);
+   mThemeChangeSubscription =
+      theTheme.Subscribe(*this, &ProjectWindow::OnThemeChange);
 }
 
 ProjectWindow::~ProjectWindow()
@@ -738,9 +739,10 @@ void ProjectWindow::RedrawProject(const bool bForceWaveTracks /*= false*/)
    });
 }
 
-void ProjectWindow::OnThemeChange(wxCommandEvent& evt)
+void ProjectWindow::OnThemeChange(ThemeChangeMessage message)
 {
-   evt.Skip();
+   if (message.appearance)
+      return;
    auto &project = mProject;
    this->ApplyUpdatedTheme();
    auto &toolManager = ToolManager::Get( project );
