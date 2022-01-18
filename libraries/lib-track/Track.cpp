@@ -456,7 +456,10 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 
 void TrackList::QueueEvent(TrackListEvent event)
 {
-   BasicUI::CallAfter( [this, event = std::move(event)]{ Publish(event); } );
+   BasicUI::CallAfter( [wThis = weak_from_this(), event = std::move(event)]{
+      if (auto pThis = wThis.lock())
+         pThis->Publish(event);
+   } );
 }
 
 void TrackList::SelectionEvent( const std::shared_ptr<Track> &pTrack )

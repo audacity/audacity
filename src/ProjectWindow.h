@@ -81,9 +81,9 @@ public:
 
       double GetRecentStreamTime() const { return mRecentStreamTime; }
 
-   private:
-      void OnTimer(wxCommandEvent &event);
+      void OnTimer();
 
+   private:
       AudacityProject *mProject;
       Mode mMode { Mode::Off };
 

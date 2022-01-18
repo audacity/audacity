@@ -211,11 +211,11 @@ const Scrubber &Scrubber::Get( const AudacityProject &project )
 
 Scrubber::Scrubber(AudacityProject *project)
    : mScrubToken(-1)
-   , mPaused(true)
    , mScrubSpeedDisplayCountdown(0)
    , mScrubStartPosition(-1)
-#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    , mSmoothScrollingScrub(false)
+   , mPaused(true)
+#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    , mLogMaxScrubSpeed(0)
 #endif
 
