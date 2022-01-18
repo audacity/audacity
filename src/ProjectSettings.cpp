@@ -59,6 +59,10 @@ ProjectSettings::ProjectSettings(AudacityProject &project)
       NumericConverter::TIME,
       gPrefs->Read(wxT("/SelectionFormat"), wxT("")))
 }
+, mAudioTimeFormat{ NumericTextCtrl::LookupFormat(
+   NumericConverter::TIME,
+   gPrefs->Read(wxT("/AudioTimeFormat"), wxT("hh:mm:ss")))
+}
 , mFrequencySelectionFormatName{ NumericTextCtrl::LookupFormat(
    NumericConverter::FREQUENCY,
    gPrefs->Read(wxT("/FrequencySelectionFormatName"), wxT("")) )
@@ -66,10 +70,6 @@ ProjectSettings::ProjectSettings(AudacityProject &project)
 , mBandwidthSelectionFormatName{ NumericTextCtrl::LookupFormat(
    NumericConverter::BANDWIDTH,
    gPrefs->Read(wxT("/BandwidthSelectionFormatName"), wxT("")) )
-}
-, mAudioTimeFormat{ NumericTextCtrl::LookupFormat(
-   NumericConverter::TIME,
-   gPrefs->Read(wxT("/AudioTimeFormat"), wxT("hh:mm:ss")))
 }
 , mSnapTo( gPrefs->Read(wxT("/SnapTo"), SNAP_OFF) )
 , mCurrentBrushRadius ( 5 )

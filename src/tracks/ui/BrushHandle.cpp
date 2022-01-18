@@ -147,8 +147,8 @@ BrushHandle::BrushHandle
         const std::shared_ptr<SpectralData> &pSpectralData,
         const ProjectSettings &pSettings)
       : mpStateSaver{ move(pStateSaver) }
-      , mpSpectralData(pSpectralData)
       , mpView{ pTrackView }
+      , mpSpectralData(pSpectralData)
 {
    const wxMouseState &state = st.state;
    auto pTrack = pTrackView->FindTrack().get();

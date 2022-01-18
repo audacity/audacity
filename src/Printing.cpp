@@ -48,8 +48,8 @@ class AudacityPrintout final : public wxPrintout
    AudacityPrintout(wxString title,
                     TrackList *tracks, TrackPanel &panel):
       wxPrintout(title),
-        mPanel(panel)
-      , mTracks(tracks)
+      mTracks(tracks)
+      , mPanel(panel)
    {
    }
    bool OnPrintPage(int page);

@@ -149,12 +149,6 @@ public:
       } );
    }
 
-   struct Record : detail::RecordBase {
-      explicit Record(Callback callback) : callback{ move(callback) } {}
-      Callback callback;
-   };
-
-protected:
    //! Send a message to connected callbacks
    /*! Later-connected are called earlier; if !NotifyAll, any callback may
      return true, to stop the notification; see also class ExceptionPolicy
@@ -164,6 +158,11 @@ protected:
     an exception, and ordered a stop)
     */
    CallbackReturn Publish(const Message &message);
+
+   struct Record : detail::RecordBase {
+      explicit Record(Callback callback) : callback{ move(callback) } {}
+      Callback callback;
+   };
 
 private:
    // RecordList needs to be non-relocating but the Publisher object is movable

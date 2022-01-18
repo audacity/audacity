@@ -29,8 +29,8 @@
 #include "Dither.h"
 
 RingBuffer::RingBuffer(sampleFormat format, size_t size)
-   : mBufferSize{ std::max<size_t>(size, 64) }
-   , mFormat{ format }
+   : mFormat{ format }
+   , mBufferSize{ std::max<size_t>(size, 64) }
    , mBuffer{ mBufferSize, mFormat }
 {
 }

@@ -30,9 +30,11 @@ class ZoomInfo;
 class TrackPanelResizeHandle;
 class WaveTrackAffordanceHandle;
 
-class SubViewCloseHandle;
-class SubViewAdjustHandle;
-class SubViewRearrangeHandle;
+namespace {
+   class SubViewCloseHandle;
+   class SubViewAdjustHandle;
+   class SubViewRearrangeHandle;
+}
 
 class wxDC;
 
