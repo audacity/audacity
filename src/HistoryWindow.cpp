@@ -86,15 +86,14 @@ HistoryDialog::HistoryDialog(AudacityProject *parent, UndoManager *manager):
    ShuttleGui S(this, eIsCreating);
    Populate(S);
 
-   mSubscription = AudioIO::Get()->Subscribe(*this, &HistoryDialog::OnAudioIO);
+   mAudioIOSubscription = AudioIO::Get()->Subscribe(*this, &HistoryDialog::OnAudioIO);
 
    Clipboard::Get().Bind(
-      EVT_CLIPBOARD_CHANGE, &HistoryDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_PUSHED, &HistoryDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_MODIFIED, &HistoryDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_OR_REDO, &HistoryDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_RESET, &HistoryDialog::UpdateDisplay, this);
-   parent->Bind(EVT_UNDO_PURGE, &HistoryDialog::UpdateDisplay, this);
+      EVT_CLIPBOARD_CHANGE, &HistoryDialog::UpdateDisplayForClipboard, this);
+
+   if (parent)
+      mUndoSubscription = UndoManager::Get(*parent)
+         .Subscribe(*this, &HistoryDialog::UpdateDisplay);
 }
 
 void HistoryDialog::Populate(ShuttleGui & S)
@@ -185,9 +184,29 @@ void HistoryDialog::OnAudioIO(AudioIOEvent evt)
 #endif
 }
 
-void HistoryDialog::UpdateDisplay(wxEvent& e)
+void HistoryDialog::UpdateDisplayForClipboard(wxEvent& e)
 {
    e.Skip();
+   DoUpdateDisplay();
+}
+
+void HistoryDialog::UpdateDisplay(UndoRedoMessage message)
+{
+   switch (message.type) {
+   case UndoRedoMessage::Pushed:
+   case UndoRedoMessage::Modified:
+   case UndoRedoMessage::UndoOrRedo:
+   case UndoRedoMessage::Reset:
+   case UndoRedoMessage::Purge:
+      break;
+   default:
+      return;
+   }
+   DoUpdateDisplay();
+}
+
+void HistoryDialog::DoUpdateDisplay()
+{
    if(IsShown())
       DoUpdate();
 }

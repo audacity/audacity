@@ -40,13 +40,6 @@ UndoManager
 
 #include <unordered_set>
 
-wxDEFINE_EVENT(EVT_UNDO_PUSHED, wxCommandEvent);
-wxDEFINE_EVENT(EVT_UNDO_MODIFIED, wxCommandEvent);
-wxDEFINE_EVENT(EVT_UNDO_RENAMED, wxCommandEvent);
-wxDEFINE_EVENT(EVT_UNDO_OR_REDO, wxCommandEvent);
-wxDEFINE_EVENT(EVT_UNDO_RESET, wxCommandEvent);
-wxDEFINE_EVENT(EVT_UNDO_PURGE, wxCommandEvent);
-
 using SampleBlockID = long long;
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
@@ -170,6 +163,13 @@ void UndoManager::RemoveStateAt(int n)
    stack.erase(iter);
 }
 
+void UndoManager::EnqueueMessage(UndoRedoMessage message)
+{
+   BasicUI::CallAfter([wThis = weak_from_this(), message]{
+      if (auto pThis = wThis.lock())
+         pThis->Publish(message);
+   });
+}
 
 //! Just to find a denominator for a progress indicator.
 /*! This estimate procedure should in fact be exact */
@@ -237,8 +237,7 @@ void UndoManager::RemoveStates(size_t begin, size_t end)
    trans.Commit();
    
    if (begin != end)
-      // wxWidgets will own the event object
-      mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_PURGE } );
+      EnqueueMessage({ UndoRedoMessage::Purge });
 
    // Check sanity
    wxASSERT_MSG(
@@ -301,8 +300,7 @@ void UndoManager::ModifyState(const TrackList * l,
    stack[current]->state.selectedRegion = selectedRegion;
 //   SonifyEndModifyState();
 
-   // wxWidgets will own the event object
-   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_MODIFIED } );
+   EnqueueMessage({ UndoRedoMessage::Modified });
 }
 
 void UndoManager::RenameState( int state,
@@ -314,8 +312,7 @@ void UndoManager::RenameState( int state,
       theState.description = longDescription;
       theState.shortDescription = shortDescription;
 
-      // wxWidgets will own the event object
-      mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RENAMED } );
+      EnqueueMessage({ UndoRedoMessage::Renamed });
    }
 }
 
@@ -363,8 +360,7 @@ void UndoManager::PushState(const TrackList * l,
 
    lastAction = longDescription;
 
-   // wxWidgets will own the event object
-   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_PUSHED } );
+   EnqueueMessage({ UndoRedoMessage::Pushed });
 }
 
 void UndoManager::AbandonRedo()
@@ -386,8 +382,7 @@ void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
 
    consumer( *stack[current] );
 
-   // wxWidgets will own the event object
-   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RESET } );
+   EnqueueMessage({ UndoRedoMessage::Reset });
 }
 
 void UndoManager::Undo(const Consumer &consumer)
@@ -401,8 +396,7 @@ void UndoManager::Undo(const Consumer &consumer)
 
    consumer( *stack[current] );
 
-   // wxWidgets will own the event object
-   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_OR_REDO } );
+   EnqueueMessage({ UndoRedoMessage::UndoOrRedo });
 }
 
 void UndoManager::Redo(const Consumer &consumer)
@@ -429,8 +423,7 @@ void UndoManager::Redo(const Consumer &consumer)
 
    consumer( *stack[current] );
 
-   // wxWidgets will own the event object
-   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_OR_REDO } );
+   EnqueueMessage({ UndoRedoMessage::UndoOrRedo });
 }
 
 void UndoManager::VisitStates( const Consumer &consumer, bool newestFirst )

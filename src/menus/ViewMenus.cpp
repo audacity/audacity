@@ -350,27 +350,26 @@ void OnShowNameOverlay(const CommandContext &context)
 }
 
 // Not a menu item, but a listener for events
-void OnUndoPushed( wxCommandEvent &evt )
+void OnUndoPushed(UndoRedoMessage message)
 {
-   evt.Skip();
-   const auto &settings = ProjectSettings::Get( mProject );
-   if (settings.GetTracksFitVerticallyZoomed())
-      DoZoomFitV( mProject );
+   if (message.type == UndoRedoMessage::Pushed) {
+      const auto &settings = ProjectSettings::Get( mProject );
+      if (settings.GetTracksFitVerticallyZoomed())
+         DoZoomFitV( mProject );
+   }
 }
 
 Handler( AudacityProject &project )
    : mProject{ project }
 {
-   mProject.Bind( EVT_UNDO_PUSHED, &Handler::OnUndoPushed, this );
+   mUndoSubscription = UndoManager::Get(mProject)
+      .Subscribe(*this, &Handler::OnUndoPushed);
 }
 
-~Handler()
-{
-   mProject.Unbind( EVT_UNDO_PUSHED, &Handler::OnUndoPushed, this );
-}
 Handler( const Handler & ) PROHIBITED;
 Handler &operator=( const Handler & ) PROHIBITED;
 
+Observer::Subscription mUndoSubscription;
 AudacityProject &mProject;
 
 }; // struct Handler

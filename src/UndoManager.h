@@ -50,32 +50,28 @@
 #define __AUDACITY_UNDOMANAGER__
 
 #include <vector>
-#include <wx/event.h> // to declare custom event types
 #include "ClientData.h"
+#include "Observer.h"
 #include "SelectedRegion.h"
 
-// Events emitted by AudacityProject for the use of listeners
-
-// Project state did not change, but a new state was copied into Undo history
-// and any redo states were lost
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_PUSHED, wxCommandEvent);
-
-// Project state did not change, but current state was modified in Undo history
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_MODIFIED, wxCommandEvent);
-
-// Project state did not change, but current state was renamed in Undo history
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_RENAMED, wxCommandEvent);
-
-// Project state changed because of undo or redo; undo manager
-// contents did not change other than the pointer to current state
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_OR_REDO, wxCommandEvent);
-
-// Project state changed other than for single-step undo/redo; undo manager
-// contents did not change other than the pointer to current state
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_RESET, wxCommandEvent);
-
-// Undo or redo states discarded
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API, EVT_UNDO_PURGE, wxCommandEvent);
+//! Type of message published by UndoManager, always during idle time
+struct UndoRedoMessage {
+   enum Type {
+      Pushed, /*!< Project state did not change, but a new state was copied
+               into Undo history and any redo states were lost */
+      Modified, /*!< Project state did not change, but current state was
+                 modified in Undo history */
+      Renamed, /*!< Project state did not change, but current state was renamed
+                in Undo history */
+      UndoOrRedo, /*!< Project state changed because of undo or redo; undo
+                   manager contents did not change other than the pointer to
+                   current state */
+      Reset, /*!< Project state changed other than for single-step undo/redo;
+              undo manager contents did not change other than the pointer to
+              current state */
+      Purge, //!< Undo or redo states discarded
+   } type;
+};
 
 class AudacityProject;
 class Tags;
@@ -134,6 +130,8 @@ inline UndoPush operator & (UndoPush a, UndoPush b)
 /*! The history should be cleared before destruction */
 class AUDACITY_DLL_API UndoManager final
    : public ClientData::Base
+   , public Observer::Publisher<UndoRedoMessage>
+   , public std::enable_shared_from_this<UndoManager>
 {
  public:
    static UndoManager &Get( AudacityProject &project );
@@ -175,7 +173,7 @@ class AUDACITY_DLL_API UndoManager final
    void SetLongDescription(unsigned int n, const TranslatableString &desc);
 
    // These functions accept a callback that uses the state,
-   // and then they send to the project EVT_UNDO_RESET or EVT_UNDO_OR_REDO when
+   // and then they send to the project Reset or UndoOrRedo when
    // that has finished.
    using Consumer = std::function< void( const UndoStackElem & ) >;
    void SetStateTo(unsigned int n, const Consumer &consumer);
@@ -207,6 +205,8 @@ class AUDACITY_DLL_API UndoManager final
    // void Debug(); // currently unused
 
  private:
+   void EnqueueMessage(UndoRedoMessage message);
+
    size_t EstimateRemovedBlocks(size_t begin, size_t end);
 
    void RemoveStateAt(int n);

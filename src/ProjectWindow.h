@@ -196,9 +196,9 @@ public:
    void DoScroll();
    void OnScroll(wxScrollEvent & event);
    void OnToolBarUpdate(wxCommandEvent & event);
-   void OnUndoPushedModified( wxCommandEvent & );
-   void OnUndoRedo( wxCommandEvent & );
-   void OnUndoReset( wxCommandEvent & );
+   void OnUndoPushedModified();
+   void OnUndoRedo();
+   void OnUndoReset();
 
    bool mbInitializingScrollbar{ false };
 
@@ -226,6 +226,7 @@ private:
 
 private:
 
+   Observer::Subscription mUndoSubscription;
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
 
    DECLARE_EVENT_TABLE()
