@@ -46,7 +46,9 @@ void DeepModel::LoadResampler()
    }
    catch (const std::exception &e)
    {
-      throw ModelException(XO("An error occurred while loading the resampler"), e.what());
+      throw ModelException {
+         XO("An error occurred while loading the resampler"), e.what()
+      };
    }
    
    mResampler = std::move(tmp);
@@ -69,7 +71,9 @@ void DeepModel::Load(const std::string &modelPath)
    }
    catch (const std::exception &e)
    {
-      throw ModelException(XO("An error occurred while loading model"), e.what());
+      throw ModelException{
+         XO("An error occurred while loading model"), e.what()
+      };
    }
 
    // now, move to mModel
@@ -95,7 +99,9 @@ void DeepModel::Load(std::istream &bytes)
    }
    catch (const std::exception &e)
    {
-      throw ModelException(XO("Error while loading model"), e.what());
+      throw ModelException{
+         XO("Error while loading model"), e.what()
+      };
    }
 
    // now, move to mModel
@@ -119,7 +125,9 @@ bool DeepModel::IsLoaded() const
 void DeepModel::Save(const std::string &modelPath) const
 {
    if (!mLoaded)
-      throw ModelException(XO("attempted save when no module was loaded."), "");
+      throw ModelException{
+         XO("attempted save when no module was loaded."), ""
+      };
 
    mModel->save(modelPath);
 }
@@ -134,8 +142,8 @@ torch::Tensor DeepModel::Resample(const torch::Tensor &waveform, int sampleRateI
                                   int sampleRateOut) const
 {
    if (!mLoaded) 
-      throw ModelException(XO("Attempted resample while is not loaded."
-                                       " Please call Load() first."), ""); 
+      throw ModelException{ XO("Attempted resample while is not loaded."
+                                       " Please call Load() first."), ""}; 
 
    // early exit if the sample rates are the same
    if (sampleRateIn == sampleRateOut)
@@ -153,7 +161,7 @@ torch::Tensor DeepModel::Resample(const torch::Tensor &waveform, int sampleRateI
    }
    catch (const std::exception &e)
    {
-      throw ModelException(XO("A libtorch error occured while resampling."), e.what());
+      throw ModelException{ XO("A libtorch error occured while resampling."), e.what()};
    }
 }
 
@@ -165,8 +173,8 @@ torch::jit::IValue DeepModel::Forward(const torch::Tensor &waveform) const
    torch::NoGradGuard NoGrad;
 
    if (!mLoaded) 
-      throw ModelException(XO("Attempted forward pass while model is not loaded."
-                                       " Please call Load() first."), ""); 
+      throw ModelException{ XO("Attempted forward pass while model is not loaded."
+                                       " Please call Load() first."), ""}; 
 
    // set up for jit model
    std::vector<torch::jit::IValue> inputs = {waveform};
@@ -178,7 +186,7 @@ torch::jit::IValue DeepModel::Forward(const torch::Tensor &waveform) const
    }
    catch (const std::exception &e)
    {
-      throw ModelException(XO("A libtorch error occurred during the forward pass"), e.what());
+      throw ModelException{ XO("A libtorch error occurred during the forward pass"), e.what()};
    }
 }
 
@@ -200,7 +208,7 @@ TensorWithTimestamps DeepModel::ToTimestamps(const torch::jit::IValue &output) c
    }
    catch (const std::exception &e)
    {
-      throw ModelException(XO("A libtorch error occurred while converting the model "
-                              "output to a tensor with timestamps."), e.what());
+      throw ModelException{ XO("A libtorch error occurred while converting the model "
+                              "output to a tensor with timestamps."), e.what()};
    }
 }
