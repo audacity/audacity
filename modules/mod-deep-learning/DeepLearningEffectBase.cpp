@@ -209,7 +209,7 @@ torch::Tensor DeepLearningEffectBase::BuildMonoTensor(WaveTrack *track, float *b
 {
    //Get the samples from the track and put them in the buffer
    if (!track->GetFloats(buffer, start, len))
-      throw std::runtime_error("An error occurred while copying samples to tensor buffer.");
+      throw ModelException { XO("An error occurred while copying samples to tensor buffer."), "" };
 
    // get tensor input from buffer
    torch::Tensor audio = torch::from_blob(buffer, len,
@@ -313,7 +313,9 @@ void DeepLearningEffectBase::TensorToTrack(torch::Tensor waveform, WaveTrack::Ho
                                        double tStart, double tEnd)
 {
    if (waveform.size(0) != 1)
-      throw ModelException(XO("Internal error: input waveform is not mono."), "");
+      throw ModelException {
+         XO("Internal error: input waveform is not mono."), ""
+      };
 
    // get the data pointer
    const void *data = waveform.contiguous().data_ptr<float>();

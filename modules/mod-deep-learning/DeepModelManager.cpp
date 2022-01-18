@@ -29,7 +29,7 @@ namespace {
    {
       wxFile file = wxFile(path.GetFullPath(), wxFile::read);
       if (!file.IsOpened())
-         throw ModelManagerException(XO("Failed to open file %s").Format(path.GetFullPath()));
+         throw ModelManagerException{ XO("Failed to open file %s").Format(path.GetFullPath()) };
 
       return static_cast<size_t>(file.Length());
    }
@@ -68,7 +68,7 @@ FilePath DeepModelManager::GetRepoDir(ModelCardHolder card) const
 DeepModelHolder DeepModelManager::GetModel(ModelCardHolder card) const
 {
    if (!IsInstalled(card))
-      throw ModelManagerException(XO("Model is not loaded."));
+      throw ModelManagerException{ XO("Model is not loaded.") };
 
    DeepModelHolder model = std::make_shared<DeepModel>();
    model->SetCard(card);
@@ -138,7 +138,7 @@ void DeepModelManager::Uninstall(ModelCardHolder card)
    if (!success)
    {
       wxTheApp->CallAfter([](){
-         throw ModelManagerException(XO("An error occurred while uninstalling the model."));
+         throw ModelManagerException{ XO("An error occurred while uninstalling the model.") };
       });
    }
    
@@ -170,7 +170,7 @@ void DeepModelManager::CancelInstall(ModelCardHolder card, bool error)
    {
       auto msg = XO("An error occurred while installing the model with repoID %s.").Format(repoid);
       wxLogError(msg.Translation());
-      throw ModelManagerException(msg);
+      throw ModelManagerException{ msg };
    }
 }
 
@@ -215,7 +215,7 @@ RepoIDList DeepModelManager::FetchRepos() const
       auto msg = XO("Failed to fetch available repositories from Huggingface.\n"
                    "HTTP code: %d").Format(httpCode);
       wxLogError(msg.Translation());
-      throw ModelManagerException(msg);
+      throw ModelManagerException{ msg };
    }
 
    Doc reposDoc;
@@ -234,7 +234,7 @@ RepoIDList DeepModelManager::FetchRepos() const
       auto msg = XO("Error parsing JSON reponse for fetching a list of deep model repositories.");
       wxLogError(msg.Translation());
       wxLogError("ModelCard error: %s", e.what());
-      throw ModelManagerException(msg);
+      throw ModelManagerException{ msg };
    }
 
    // iterate through list of repos and add them to our list
@@ -366,7 +366,7 @@ ModelCardHolder DeepModelManager::FetchCard(const std::string &repoID) const
       auto msg = XO("Failed to fetch model card with URL %s from Huggingface.\n"
                    "HTTP code: %d").Format(query, httpCode);
       wxLogError(msg.Translation());
-      throw ModelManagerException(msg);;
+      throw ModelManagerException{ msg };;
    }
 
    // may throw InvalidModelCardDocument if parsing fails
@@ -395,7 +395,7 @@ void DeepModelManager::FetchModelSize(ModelCardHolder card) const
          // throw if the model card is local but the modelPath doesn't exist
          auto msg = XO("Model card is local but the model file %s doesn't exist.").Format(modelPath.GetFullPath());
          wxLogError(msg.Translation());
-         throw ModelManagerException(msg);
+         throw ModelManagerException{ msg };
       }
    }
    else
@@ -426,7 +426,7 @@ void DeepModelManager::FetchModelSize(ModelCardHolder card) const
          auto msg = XO("Failed to fetch model size for model card with repo ID %s.\n"
                       "HTTP code: %d").Format(card->GetRepoID(), response->getHTTPCode());
          wxLogError(msg.Translation());
-         throw ModelManagerException(msg);
+         throw ModelManagerException{ msg };
       }
    }
 }

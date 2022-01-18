@@ -34,7 +34,7 @@ namespace validators
       if(!doc.IsObject())
       {
          if (required)
-            throw InvalidModelCardDocument(XO("The provided JSON document is not an object."));
+            throw InvalidModelCardDocument{ XO("The provided JSON document is not an object.") };
 
          return false;
       }
@@ -161,7 +161,7 @@ namespace parsers
       wxFile file = wxFile(path);
 
       if(!file.ReadAll(&docStr))
-         throw InvalidModelCardDocument(XO("Could not read file."));
+         throw InvalidModelCardDocument{ XO("Could not read file.") };
 
       return ParseString(audacity::ToUTF8(docStr));
    }
@@ -222,7 +222,7 @@ void ModelCard::SerializeToFile(const std::string &path) const
    TranslatableString msg = FileException::WriteFailureMessage(wxFileName(path));
 
    if (!file.Write(wxString(sb.GetString())))
-      throw InvalidModelCardDocument(XO("Could not serialize ModelCard to file. \n Message: %s").Format(wxString(path), msg));
+      throw InvalidModelCardDocument{ XO("Could not serialize ModelCard to file. \n Message: %s").Format(wxString(path), msg) };
 }
 
 void ModelCard::DeserializeFromFile(const std::string &path, const Doc& schema)
@@ -337,7 +337,7 @@ bool ModelCardCollection::Find(ModelCardHolder card) const
       return (*card) == (*a);
    };
 
-   return std::find_if(this->begin(), this->end(), predicate) != this->end();
+   return std::find_if(this->mCards.begin(), this->mCards.end(), predicate) != this->mCards.end();
 }
 
 bool ModelCardCollection::Insert(ModelCardHolder card)
