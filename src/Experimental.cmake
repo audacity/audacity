@@ -147,7 +147,7 @@ set( EXPERIMENTAL_OPTIONS_LIST
    #METER_LED_STYLE
 
    # Define to enable the device change handler
-   #DEVICE_CHANGE_HANDLER
+   DEVICE_CHANGE_HANDLER
 
    # Define for NEW noise reduction effect from Paul Licameli.
    NOISE_REDUCTION
