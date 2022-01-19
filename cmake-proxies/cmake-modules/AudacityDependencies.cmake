@@ -13,9 +13,32 @@ if( ${_OPT}conan_enabled )
 
     conan_check()
 
+    # Conan will fail to detect the compiler in case /usr/bin/cc or /usr/bin/cxx are passed
+    # CMake will set CC and CXX variables, breaking the correct detection of compiler.
+    # However, we can safely unset them before running Conan, because we only care for
+    # the build tools environment here
+    
+    if( DEFINED ENV{CC} )
+        set( OLD_CC $ENV{CC} )
+        unset( ENV{CC} )
+    endif()
+
+    if( DEFINED ENV{CXX} )
+        set( OLD_CXX $ENV{CXX} )
+        unset( ENV{CXX} )
+    endif()
+    
     execute_process(
        COMMAND ${CONAN_CMD} profile new audacity_build --detect --force
     )
+
+    if( DEFINED OLD_CC )
+        set( ENV{CC} ${OLD_CC} )
+    endif()
+
+    if( DEFINED OLD_CXX )
+        set( ENV{CXX} ${OLD_CXX} )
+    endif()
 
     conan_add_remote(NAME audacity
         URL ${CONAN_REMOTE}
