@@ -264,10 +264,6 @@ function ( _conan_install build_type )
         endforeach()
     endif()
 
-   if(MSVC)
-      list( APPEND settings SETTINGS_BUILD "compiler=msvc" "compiler.runtime=dynamic" )
-   endif()
-
    conan_cmake_install(PATH_OR_REFERENCE .
         ${CONAN_BUILD_MODE}
         PROFILE_BUILD audacity_build

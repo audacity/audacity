@@ -166,3 +166,9 @@ win/xaudacity.ico
 # AppImage
 linuxdeploy/*
 appimagetool/*
+
+.build.x64/
+
+.conan/
+
+.debug/
