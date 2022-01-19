@@ -1,18 +1,28 @@
 # Load Conan
 
+if ( ${_OPT}conan_allow_prebuilt_binaries )
+    set( CONAN_BUILD_MODE BUILD missing )
+    set( CONAN_REMOTE https://artifactory.local.crsib.me/artifactory/api/conan/audacity-binaries )
+else()
+    set( CONAN_BUILD_MODE BUILD all )
+    set( CONAN_REMOTE https://artifactory.local.crsib.me/artifactory/api/conan/audacity-recipes )
+endif()
+
 if( ${_OPT}conan_enabled )
     include( conan )
 
+    conan_check()
+
+    execute_process(
+       COMMAND ${CONAN_CMD} profile new audacity_build --detect --force
+    )
+
     conan_add_remote(NAME audacity
-        URL https://artifactory.audacityteam.org/artifactory/api/conan/conan-local
+        URL ${CONAN_REMOTE}
         VERIFY_SSL True
     )
-endif()
 
-if ( ${_OPT}conan_allow_prebuilt_binaries )
-    set ( CONAN_BUILD_MODE BUILD missing )
-else()
-    set( CONAN_BUILD_MODE BUILD all )
+    set(ENV{CONAN_REVISIONS_ENABLED} 1)
 endif()
 
 set( CONAN_BUILD_REQUIRES )
@@ -254,12 +264,16 @@ function ( _conan_install build_type )
         endforeach()
     endif()
 
+   if(MSVC)
+      list( APPEND settings SETTINGS_BUILD "compiler=msvc" "compiler.runtime=dynamic" )
+   endif()
 
-    conan_cmake_install(PATH_OR_REFERENCE .
+   conan_cmake_install(PATH_OR_REFERENCE .
         ${CONAN_BUILD_MODE}
-        PROFILE_BUILD default
+        PROFILE_BUILD audacity_build
         SETTINGS_HOST ${settings}
-    )
+        REMOTE audacity
+   )
 endfunction()
 
 macro( resolve_conan_dependencies )
