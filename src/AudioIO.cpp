@@ -1876,7 +1876,7 @@ void AudioIO::DrainRecordBuffers()
       // AudacityException::DelayedHandlerAction prevents redundant message
       // boxes.
       StopStream();
-      DefaultDelayedHandlerAction{}( pException );
+      DefaultDelayedHandlerAction( pException );
    };
 
    GuardedCall( [&] {
