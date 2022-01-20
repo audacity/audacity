@@ -845,6 +845,8 @@ bool NyquistEffect::Process()
       mDebugOutput = Verbatim( "%s" ).Format( std::cref( mDebugOutputStr ) );
 
       mCurTrack[0] = pRange ? *pRange->first : nullptr;
+      mCurTrack[1] = nullptr; // Need not be left uninitialized for mono->stereo
+      // overflow conversions to detect the condition and allocate it later.
       mCurNumChannels = 1;
       if ( (mT1 >= mT0) || bOnePassTool ) {
          if (bOnePassTool) {
@@ -1550,10 +1552,6 @@ bool NyquistEffect::ProcessOne()
    wxASSERT(rval == nyx_audio);
 
    int outChannels = nyx_get_audio_num_channels();
-   if (outChannels > (int)mCurNumChannels) {
-      Effect::MessageBox( XO("Nyquist returned too many audio channels.\n") );
-      return false;
-   }
 
    if (outChannels == -1) {
       Effect::MessageBox(
@@ -1566,15 +1564,34 @@ bool NyquistEffect::ProcessOne()
       return false;
    }
 
+   if (outChannels > (int)mCurNumChannels) {
+      Effect::MessageBox( XO("Nyquist returned too many audio channels.\n") );
+      // After nagging, this will create new "overflow" (stereo) track in
+      // the project. TODO: (1) make it a yes/no dlg box (2) no nag for
+      // auto-gen'd empty tracks being overflowed.
+      if (outChannels > 2) {
+         return false;
+      }
+   }
+
    std::shared_ptr<WaveTrack> outputTrack[2];
 
    double rate = mCurTrack[0]->GetRate();
+   auto numChansBoosted = mCurNumChannels;
    for (int i = 0; i < outChannels; i++) {
       if (outChannels == (int)mCurNumChannels) {
          rate = mCurTrack[i]->GetRate();
       }
 
-      outputTrack[i] = mCurTrack[i]->EmptyCopy();
+      if (mCurTrack[i] != nullptr) {
+         outputTrack[i] = mCurTrack[i]->EmptyCopy();
+      }
+      else {
+         ++numChansBoosted;
+         // Assumes there's at least one track. Ok because Effect inserts one.
+         outputTrack[i] = outputTrack[i - 1]->EmptyCopy();
+      }
+
       outputTrack[i]->SetRate( rate );
 
       // Clean the initial buffer states again for the get callbacks
@@ -1609,6 +1626,27 @@ bool NyquistEffect::ProcessOne()
          Effect::MessageBox( XO("Nyquist returned nil audio.\n") );
          return false;
       }
+   }
+
+   // Need add new Tracks to TrackList in the proj if chan overflow
+   // We'll make these use the exact outputTracks that were built above.
+   if (numChansBoosted > mCurNumChannels) {
+      for (size_t i = 0; i < numChansBoosted; i++) {
+         AddToOutputTracks(outputTrack[i]);
+         // defensive programming: pRange will go in an endless loop otherwise
+         outputTrack[i]->SetSelected(false);
+      }
+
+      if (numChansBoosted > 1) {
+         auto pTracks = outputTrack[0]->GetOwner();
+         auto left = outputTrack[0].get();
+         pTracks->MakeMultiChannelTrack(*left, numChansBoosted, true);
+         // ^^ Luckily the resulting track (group) is not selected by default,
+         // so pRange is skipping over it.
+      }
+
+      mProjectChanged = true;
+      return true;
    }
 
    for (size_t i = 0; i < mCurNumChannels; i++) {
