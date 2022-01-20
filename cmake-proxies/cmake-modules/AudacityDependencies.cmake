@@ -28,20 +28,16 @@ if( ${_OPT}conan_enabled )
         unset( ENV{CXX} )
     endif()
 
-    execute_process(
-       COMMAND ${CONAN_CMD} profile new audacity_build --detect --force
-    )
+    execute_process( COMMAND ${CONAN_CMD} profile new audacity_build --detect --force )
 
     # Conan will not detect compiler runtime
     if(MSVC)
        _get_msvc_ide_version(msvc_version_for_profile)
 
-       execute_process(
-         COMMAND ${CONAN_CMD} profile update settings.compiler="Visual Studio" audacity_build
-         COMMAND ${CONAN_CMD} profile update settings.compiler.version="${msvc_version_for_profile}" audacity_build
-         COMMAND ${CONAN_CMD} profile update settings.compiler.runtime=MD audacity_build
-         COMMAND ${CONAN_CMD} profile update settings.compiler.cppstd=17 audacity_build
-       )
+       execute_process( COMMAND ${CONAN_CMD} profile update settings.compiler="Visual Studio" audacity_build )
+       execute_process( COMMAND ${CONAN_CMD} profile update settings.compiler.version="${msvc_version_for_profile}" audacity_build )
+       execute_process( COMMAND ${CONAN_CMD} profile update settings.compiler.runtime=MD audacity_build )
+       execute_process( COMMAND ${CONAN_CMD} profile update settings.compiler.cppstd=17 audacity_build )
     endif()
 
     if( DEFINED OLD_CC )
