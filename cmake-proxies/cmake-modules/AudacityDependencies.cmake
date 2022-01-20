@@ -2,10 +2,10 @@
 
 if ( ${_OPT}conan_allow_prebuilt_binaries )
     set( CONAN_BUILD_MODE BUILD missing )
-    set( CONAN_REMOTE https://artifactory.local.crsib.me/artifactory/api/conan/audacity-binaries )
+    set( CONAN_REMOTE https://artifactory.audacityteam.org/artifactory/api/conan/audacity-binaries )
 else()
     set( CONAN_BUILD_MODE BUILD all )
-    set( CONAN_REMOTE https://artifactory.local.crsib.me/artifactory/api/conan/audacity-recipes )
+    set( CONAN_REMOTE https://artifactory.audacityteam.org/artifactory/api/conan/audacity-recipes )
 endif()
 
 if( ${_OPT}conan_enabled )
@@ -17,7 +17,7 @@ if( ${_OPT}conan_enabled )
     # CMake will set CC and CXX variables, breaking the correct detection of compiler.
     # However, we can safely unset them before running Conan, because we only care for
     # the build tools environment here
-    
+
     if( DEFINED ENV{CC} )
         set( OLD_CC $ENV{CC} )
         unset( ENV{CC} )
@@ -27,10 +27,22 @@ if( ${_OPT}conan_enabled )
         set( OLD_CXX $ENV{CXX} )
         unset( ENV{CXX} )
     endif()
-    
+
     execute_process(
        COMMAND ${CONAN_CMD} profile new audacity_build --detect --force
     )
+
+    # Conan will not detect compiler runtime
+    if(MSVC)
+       _get_msvc_ide_version(msvc_version_for_profile)
+
+       execute_process(
+         COMMAND ${CONAN_CMD} profile update settings.compiler="Visual Studio" audacity_build
+         COMMAND ${CONAN_CMD} profile update settings.compiler.version="${msvc_version_for_profile}" audacity_build
+         COMMAND ${CONAN_CMD} profile update settings.compiler.runtime=MD audacity_build
+         COMMAND ${CONAN_CMD} profile update settings.compiler.cppstd=17 audacity_build
+       )
+    endif()
 
     if( DEFINED OLD_CC )
         set( ENV{CC} ${OLD_CC} )
@@ -43,6 +55,13 @@ if( ${_OPT}conan_enabled )
     conan_add_remote(NAME audacity
         URL ${CONAN_REMOTE}
         VERIFY_SSL True
+        INDEX 0
+    )
+
+    conan_add_remote(NAME conan-center-cache
+        URL https://artifactory.audacityteam.org/artifactory/api/conan/conancenter
+        VERIFY_SSL True
+        INDEX 1
     )
 
     set(ENV{CONAN_REVISIONS_ENABLED} 1)
