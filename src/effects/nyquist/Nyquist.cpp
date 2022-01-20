@@ -1565,11 +1565,24 @@ bool NyquistEffect::ProcessOne()
    }
 
    if (outChannels > (int)mCurNumChannels) {
-      Effect::MessageBox( XO("Nyquist returned too many audio channels.\n") );
-      // After nagging, this will create new "overflow" (stereo) track in
-      // the project. TODO: (1) make it a yes/no dlg box (2) no nag for
-      // auto-gen'd empty tracks being overflowed.
+      // More than two channels returned still not supported.
       if (outChannels > 2) {
+         Effect::MessageBox( XO("Nyquist returned too many audio channels.\n") );
+         return false;
+      }
+      // Otherwise ask whether to create new "overflow" (stereo) track in
+      // the project.
+      // TODO: no nag/Q for Effect auto-gen'd empty tracks being overflowed.
+      auto uiChoice = Effect::MessageBox(
+         XO("Nyquist returned too many audio channels.\n").Join(
+            // We can't have custom strings on these old-school buttons, so
+            XO("Should these channels be placed in a new track?\n"
+               "(Choosing \"Cancel\" discards them altogether.)\n")),
+         wxOK|wxCANCEL|wxCENTRE );
+        // ^^ just wxYES_NO would remove the dlg X close button.
+        // And wxYES adds a "No" button all by itself leading to the
+        // infamous Yes-No-Cancel user conundrum.
+      if (uiChoice != wxOK) {
          return false;
       }
    }
