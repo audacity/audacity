@@ -295,8 +295,8 @@ function ( _conan_install build_type )
         # This line is required to workaround the conan bug #8025
         # https://github.com/conan-io/conan/issues/8025
         # Without it, libjpeg-turbo will fail to cross-compile on AppleSilicon macs
+        set(ENV{CONAN_CMAKE_SYSTEM_NAME} "Darwin")
         set(ENV{CONAN_CMAKE_SYSTEM_PROCESSOR} ${MACOS_ARCHITECTURE})
-        #list( APPEND settings ENV "CONAN_CMAKE_SYSTEM_PROCESSOR=${MACOS_ARCHITECTURE}")
     endif()
 
     if (build_type MATCHES "MinSizeRel|RelWithDebInfo")
