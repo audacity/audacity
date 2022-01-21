@@ -241,9 +241,11 @@ wxRect TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString
       auto truncatedTitle = TrackArt::TruncateText(dc, title, titleRect.GetWidth());
       if (!truncatedTitle.empty())
       {
-          auto hAlign = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft ? wxALIGN_RIGHT : wxALIGN_LEFT;
-          dc.DrawLabel(truncatedTitle, titleRect, hAlign | wxALIGN_CENTER_VERTICAL);
+         auto hAlign = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft ? wxALIGN_RIGHT : wxALIGN_LEFT;
+         dc.DrawLabel(truncatedTitle, titleRect, hAlign | wxALIGN_CENTER_VERTICAL);
       }
+      else
+         return { };
    }
    return titleRect;
 }
