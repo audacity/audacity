@@ -43,8 +43,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "widgets/AudacityMessageBox.h"
 
 
-wxDEFINE_EVENT(EVT_RECORDING_DROPOUT, RecordingDropoutEvent);
-
 static AudacityProject::AttachedObjects::RegisteredFactory
 sProjectAudioManagerKey {
    []( AudacityProject &project ) {
@@ -1070,10 +1068,8 @@ void ProjectAudioManager::OnAudioIOStopRecording()
          // dropouts.  We allow failure of this.
          auto gAudioIO = AudioIO::Get();
          auto &intervals = gAudioIO->LostCaptureIntervals();
-         if (intervals.size()) {
-            RecordingDropoutEvent evt{ intervals };
-            mProject.ProcessEvent(evt);
-         }
+         if (intervals.size())
+            Publish( RecordingDropoutEvent{ intervals } );
       }
    }
 }
