@@ -268,8 +268,10 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                     mTextEditHelper->Draw(context.dc, titleRect);
                 }
                 else
-                    TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);
-
+                {
+                    auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);
+                    mClipNameVisible = !titleRect.IsEmpty();
+                }
             }
         }
 
@@ -302,6 +304,10 @@ bool WaveTrackAffordanceControls::StartEditClipName(AudacityProject* project)
         {
             if (mTextEditHelper)
                 mTextEditHelper->Finish(project);
+
+            if(!mClipNameVisible)
+                //Clip name isn't visible, there is no point in showing editor then
+                return false;
 
             mEditedClip = lock;
             mTextEditHelper = MakeTextEditHelper(clip->GetName());
