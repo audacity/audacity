@@ -264,8 +264,8 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                 auto highlight = selected || affordanceRect.Contains(px, py);
                 if (mTextEditHelper && mEditedClip.lock() == clip)
                 {
-                    TrackArt::DrawClipAffordance(context.dc, affordanceRect, wxEmptyString, highlight, selected);
-                    mTextEditHelper->Draw(context.dc, TrackArt::GetAffordanceTitleRect(affordanceRect));
+                    auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, wxEmptyString, highlight, selected);
+                    mTextEditHelper->Draw(context.dc, titleRect);
                 }
                 else
                     TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);

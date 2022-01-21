@@ -21,11 +21,10 @@ namespace TrackArt {
 
    static constexpr int ClipFrameRadius{ 6 };
 
+   //Draws clip affordance and title string, if not empty.
+   //Returns clip's title rectangle
    AUDACITY_DLL_API
-   void DrawClipAffordance(wxDC& dc, const wxRect& affordanceRect, const wxString& title, bool highlight = false, bool selected = false);
-
-   AUDACITY_DLL_API
-   wxRect GetAffordanceTitleRect(const wxRect& affordanceRect);
+   wxRect DrawClipAffordance(wxDC& dc, const wxRect& affordanceRect, const wxString& title, bool highlight = false, bool selected = false);
 
    AUDACITY_DLL_API
    void DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected = false);

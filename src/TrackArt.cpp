@@ -24,6 +24,23 @@
 
 static constexpr int ClipSelectionStrokeSize{ 1 };//px
 
+namespace
+{
+   //Helper funciton that takes affordance rectangle as
+   //argument and returns rectangle to be used for title
+   //drawings
+   wxRect GetAffordanceTitleRect(const wxRect& rect)
+   {
+      constexpr int FrameThickness{ 1 };
+      return wxRect(
+         rect.GetLeft() + TrackArt::ClipFrameRadius,
+         rect.GetTop() + ClipSelectionStrokeSize + FrameThickness,
+         rect.GetWidth() - TrackArt::ClipFrameRadius * 2,
+         rect.GetHeight() - ClipSelectionStrokeSize - FrameThickness);
+   }
+
+}
+
 /// Takes a value between min and max and returns a value between
 /// height and 0
 /// \todo  Should this function move int GuiWaveTrack where it can
@@ -171,7 +188,7 @@ wxString TrackArt::TruncateText(wxDC& dc, const wxString& text, const int maxWid
    return wxEmptyString;
 }
 
-void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString& title, bool highlight, bool selected)
+wxRect TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString& title, bool highlight, bool selected)
 {
    //To make sure that roundings do not overlap each other
    auto clipFrameRadius = std::min(ClipFrameRadius, rect.width / 2);
@@ -214,13 +231,13 @@ void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString& 
       ), clipFrameRadius
    );
 
+   auto titleRect = hasClipRect ?
+      //avoid drawing text outside the clipping rectangle if possible
+      GetAffordanceTitleRect(rect.Intersect(clipRect)) :
+      GetAffordanceTitleRect(rect);
+
    if (!title.empty())
    {
-      auto titleRect = hasClipRect ?
-         //avoid drawing text outside the clipping rectangle if possible
-         TrackArt::GetAffordanceTitleRect(rect.Intersect(clipRect)) :
-         TrackArt::GetAffordanceTitleRect(rect);
-
       auto truncatedTitle = TrackArt::TruncateText(dc, title, titleRect.GetWidth());
       if (!truncatedTitle.empty())
       {
@@ -228,16 +245,7 @@ void TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString& 
           dc.DrawLabel(truncatedTitle, titleRect, hAlign | wxALIGN_CENTER_VERTICAL);
       }
    }
-}
-
-AUDACITY_DLL_API wxRect TrackArt::GetAffordanceTitleRect(const wxRect& rect)
-{
-    constexpr int FrameThickness{ 1 };
-    return wxRect(
-        rect.GetLeft() + ClipFrameRadius,
-        rect.GetTop() + ClipSelectionStrokeSize + FrameThickness,
-        rect.GetWidth() - ClipFrameRadius * 2,
-        rect.GetHeight() - ClipSelectionStrokeSize - FrameThickness);
+   return titleRect;
 }
 
 void TrackArt::DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected)
