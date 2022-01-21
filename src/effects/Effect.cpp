@@ -94,6 +94,9 @@ Effect::Effect()
    mProjectRate = QualitySettings::DefaultSampleRate.ReadWithDefault(44100);
 
    mIsBatch = false;
+
+   mNewTrack = NULL;
+   mNewOutputTrack = NULL;
 }
 
 Effect::~Effect()
@@ -988,6 +991,8 @@ bool Effect::DoEffect(double projectRate,
    wxASSERT(selectedRegion.duration() >= 0.0);
 
    mOutputTracks.reset();
+   mNewTrack = NULL;
+   mNewOutputTrack = NULL;
 
    mFactory = factory;
    mProjectRate = projectRate;
@@ -1034,6 +1039,7 @@ bool Effect::DoEffect(double projectRate,
    if ((GetType() == EffectTypeGenerate || GetPath() == NYQUIST_PROMPT_ID) && (mNumTracks == 0)) {
       newTrack = mTracks->Add(mFactory->NewWaveTrack());
       newTrack->SetSelected(true);
+      mNewTrack = newTrack; // used later by CopyInputTracks
    }
 
    mT0 = selectedRegion.t0();
@@ -1855,6 +1861,9 @@ void Effect::CopyInputTracks(bool allSyncLockSelected)
       Track *o = mOutputTracks->Add(aTrack->Duplicate());
       mIMap.push_back(aTrack);
       mOMap.push_back(o);
+      if (aTrack == mNewTrack) {
+         mNewOutputTrack = o;
+      }
    }
 }
 

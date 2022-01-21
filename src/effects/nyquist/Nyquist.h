@@ -275,6 +275,7 @@ private:
    size_t            mCurBufferLen[2];
 
    WaveTrack        *mOutputTrack[2];
+   bool              mDelNewOutputTrack {false};
 
    wxArrayString     mCategories;
 
