@@ -12,14 +12,23 @@
 #define __AUDACITY_REALTIMEEFFECTSTATE_H__
 
 #include <atomic>
+#include <functional>
+#include <memory>
 #include <vector>
 #include <cstddef>
+#include "ModuleInterface.h" // for PluginID
 
 class EffectProcessor;
 
 class RealtimeEffectState
 {
 public:
+   //! Type of hook function that application installs
+   using EffectFactory =
+      std::function<std::unique_ptr<EffectProcessor>(const PluginID &)>;
+   //! Install a factory, returning the previously installed
+   static EffectFactory InstallFactory(EffectFactory newFactory);
+
    explicit RealtimeEffectState( EffectProcessor &effect );
 
    EffectProcessor &GetEffect() const { return mEffect; }

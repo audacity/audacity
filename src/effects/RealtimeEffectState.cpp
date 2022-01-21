@@ -12,6 +12,25 @@
 
 #include "EffectInterface.h"
 
+#include "Effect.h"
+
+namespace {
+RealtimeEffectState::EffectFactory &getFactory()
+{
+   static RealtimeEffectState::EffectFactory sFactory;
+   return sFactory;
+}
+}
+
+auto RealtimeEffectState::InstallFactory(
+   RealtimeEffectState::EffectFactory newFactory) -> EffectFactory
+{
+   auto &factory = getFactory();
+   auto result = move(factory);
+   factory = move(newFactory);
+   return result;
+}
+
 RealtimeEffectState::RealtimeEffectState( EffectProcessor &effect )
    : mEffect{ effect }
 {

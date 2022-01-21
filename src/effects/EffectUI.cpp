@@ -1457,3 +1457,9 @@ void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 
    return;
 }
+
+//! Inject a factory for realtime effect states
+#include "RealtimeEffectState.h"
+static struct EffectFactoryInstaller { EffectFactoryInstaller() {
+   RealtimeEffectState::InstallFactory(&EffectManager::NewEffect);
+} } installer;
