@@ -34,6 +34,7 @@ struct AudioIOEvent;
 class AudacityCommand;
 class AudacityProject;
 class Effect;
+class RealtimeEffectState;
 
 class wxCheckBox;
 
@@ -97,6 +98,7 @@ private:
    wxWindow *mParent;
    Effect &mEffect;
    EffectUIClientInterface &mClient;
+   RealtimeEffectState *mpState{ nullptr };
 
    RegistryPaths mUserPresets;
    bool mInitialized;
