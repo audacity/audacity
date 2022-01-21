@@ -106,16 +106,7 @@ ProjectManager::ProjectManager( AudacityProject &project )
 
 ProjectManager::~ProjectManager() = default;
 
-// PRL:  This event type definition used to be in AudacityApp.h, which created
-// a bad compilation dependency.  The event was never emitted anywhere.  I
-// preserve it and its handler here but I move it to remove the dependency.
-// Asynchronous open
-wxDECLARE_EXPORTED_EVENT(AUDACITY_DLL_API,
-                         EVT_OPEN_AUDIO_FILE, wxCommandEvent);
-wxDEFINE_EVENT(EVT_OPEN_AUDIO_FILE, wxCommandEvent);
-
 BEGIN_EVENT_TABLE( ProjectManager, wxEvtHandler )
-   EVT_COMMAND(wxID_ANY, EVT_OPEN_AUDIO_FILE, ProjectManager::OnOpenAudioFile)
    EVT_TIMER(AudacityProjectTimerID, ProjectManager::OnTimer)
 END_EVENT_TABLE()
 
@@ -650,22 +641,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // Destroys this
    pSelf.reset();
-}
-
-// PRL: I preserve this handler function for an event that was never sent, but
-// I don't know the intention.
-void ProjectManager::OnOpenAudioFile(wxCommandEvent & event)
-{
-   const wxString &cmd = event.GetString();
-   if (!cmd.empty()) {
-      ProjectChooser chooser{ &mProject, true };
-      if (auto project = ProjectFileManager::OpenFile(
-            std::ref(chooser), cmd)) {
-         auto &window = GetProjectFrame( *project );
-         window.RequestUserAttention();
-         chooser.Commit();
-      }
-   }
 }
 
 // static method, can be called outside of a project

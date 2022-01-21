@@ -120,7 +120,6 @@ private:
    void OnReconnectionFailure(wxCommandEvent & event);
    void OnCloseWindow(wxCloseEvent & event);
    void OnTimer(wxTimerEvent & event);
-   void OnOpenAudioFile(wxCommandEvent & event);
    void OnStatusChange(StatusBarField field);
 
    void RestartTimer();
