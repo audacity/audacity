@@ -1457,3 +1457,8 @@ void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 
    return;
 }
+
+//! Inject a factory for realtime effect states
+#include "RealtimeEffectState.h"
+static
+RealtimeEffectState::EffectFactory::Scope scope{ &EffectManager::NewEffect };

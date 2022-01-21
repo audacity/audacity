@@ -12,14 +12,21 @@
 #define __AUDACITY_REALTIMEEFFECTSTATE_H__
 
 #include <atomic>
+#include <memory>
 #include <vector>
 #include <cstddef>
+#include "GlobalVariable.h"
+#include "ModuleInterface.h" // for PluginID
 
 class EffectProcessor;
 
 class RealtimeEffectState
 {
 public:
+   struct AUDACITY_DLL_API EffectFactory : GlobalHook<EffectFactory,
+      std::unique_ptr<EffectProcessor>(const PluginID &)
+   >{};
+
    explicit RealtimeEffectState( EffectProcessor &effect );
 
    EffectProcessor &GetEffect() const { return mEffect; }
