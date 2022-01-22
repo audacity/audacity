@@ -451,8 +451,12 @@ list( APPEND SOURCES
       effects/Paulstretch.h
       effects/Phaser.cpp
       effects/Phaser.h
+      effects/RealtimeEffectList.cpp
+      effects/RealtimeEffectList.h
       effects/RealtimeEffectManager.cpp
       effects/RealtimeEffectManager.h
+      effects/RealtimeEffectState.cpp
+      effects/RealtimeEffectState.h
       effects/Repair.cpp
       effects/Repair.h
       effects/Repeat.cpp

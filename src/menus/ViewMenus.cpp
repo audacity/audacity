@@ -16,9 +16,6 @@
 #include "../prefs/TracksPrefs.h"
 #include "../tracks/ui/TrackView.h"
 
-#ifdef EXPERIMENTAL_EFFECTS_RACK
-#include "../effects/EffectUI.h"
-#endif
 
 #include <wx/app.h>
 #include <wx/scrolbar.h>
@@ -352,14 +349,6 @@ void OnShowNameOverlay(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-void OnShowEffectsRack(const CommandContext &context )
-{
-   auto &rack = EffectRack::Get( context.project );
-   rack.Show( !rack.IsShown() );
-}
-#endif
-
 // Not a menu item, but a listener for events
 void OnUndoPushed( wxCommandEvent &evt )
 {
@@ -466,14 +455,6 @@ BaseItemSharedPtr ViewMenu()
          Command( wxT("ShowClipping"), XXO("&Show Clipping (on/off)"),
             FN(OnShowClipping), AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) )
-   #if defined(EXPERIMENTAL_EFFECTS_RACK)
-         ,
-         Command( wxT("ShowEffectsRack"), XXO("Show Effects Rack"),
-            FN(OnShowEffectsRack), AlwaysEnabledFlag,
-            Options{}.CheckTest( [](AudacityProject &project){
-               auto &rack = EffectRack::Get( project );
-               return rack.IsShown(); } ) )
-   #endif
       )
    ) ) };
    return menu;

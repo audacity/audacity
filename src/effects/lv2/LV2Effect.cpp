@@ -47,6 +47,7 @@
 #include <wx/intl.h>
 #include <wx/scrolwin.h>
 
+#include "AudacityException.h"
 #include "../../EffectHostInterface.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
@@ -1241,7 +1242,7 @@ bool LV2Effect::RealtimeSuspend()
    return true;
 }
 
-bool LV2Effect::RealtimeResume()
+bool LV2Effect::RealtimeResume() noexcept
 {
    mPositionSpeed = 1.0;
    mPositionFrame = 0.0;
@@ -1408,8 +1409,9 @@ size_t LV2Effect::RealtimeProcess(int group, float **inbuf, float **outbuf, size
    return numSamples;
 }
 
-bool LV2Effect::RealtimeProcessEnd()
+bool LV2Effect::RealtimeProcessEnd() noexcept
 {
+return GuardedCall<bool>([&]{
    // Nothing to do if we did process any samples
    if (mNumSamples == 0)
    {
@@ -1432,6 +1434,7 @@ bool LV2Effect::RealtimeProcessEnd()
    mNumSamples = 0;
 
    return true;
+});
 }
 
 int LV2Effect::ShowClientInterface(

@@ -549,7 +549,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    []( PopupMenuHandler &handler ) -> bool {
       auto &project =
          static_cast< WaveTrackMenuTable& >( handler ).mpData->project;
-      return RealtimeEffectManager::Get().RealtimeIsActive() &&
+      return RealtimeEffectManager::Get(project).RealtimeIsActive() &&
          ProjectAudioIO::Get( project ).IsAudioActive();
    };
 

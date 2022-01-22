@@ -404,7 +404,7 @@ bool Effect::RealtimeSuspend()
    return true;
 }
 
-bool Effect::RealtimeResume()
+bool Effect::RealtimeResume() noexcept
 {
    if (mClient)
       return mClient->RealtimeResume();
@@ -435,7 +435,7 @@ size_t Effect::RealtimeProcess(int group,
    return 0;
 }
 
-bool Effect::RealtimeProcessEnd()
+bool Effect::RealtimeProcessEnd() noexcept
 {
    if (mClient)
    {

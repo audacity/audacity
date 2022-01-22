@@ -18,6 +18,7 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffect.h"
+#include "AudacityException.h"
 #include "ModuleManager.h"
 #include "SampleCount.h"
 
@@ -1394,8 +1395,9 @@ bool AudioUnitEffect::RealtimeSuspend()
    return true;
 }
 
-bool AudioUnitEffect::RealtimeResume()
+bool AudioUnitEffect::RealtimeResume() noexcept
 {
+return GuardedCall<bool>([&]{
    if (!BypassEffect(false))
    {
       return false;
@@ -1410,6 +1412,7 @@ bool AudioUnitEffect::RealtimeResume()
    }
 
    return true;
+});
 }
 
 bool AudioUnitEffect::RealtimeProcessStart()
@@ -1426,7 +1429,7 @@ size_t AudioUnitEffect::RealtimeProcess(int group,
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
 }
 
-bool AudioUnitEffect::RealtimeProcessEnd()
+bool AudioUnitEffect::RealtimeProcessEnd() noexcept
 {
    return true;
 }
