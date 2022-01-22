@@ -1640,6 +1640,9 @@ bool NyquistEffect::ProcessOne()
       if (numChansBoosted > 1) {
          auto pTracks = outputTrack[0]->GetOwner();
          auto left = outputTrack[0].get();
+         left->SetOffset(mT0); // align the output clip(s) with the input selection
+         auto right = outputTrack[1].get();
+         right->SetOffset(mT0);
          pTracks->MakeMultiChannelTrack(*left, numChansBoosted, true);
          // ^^ Luckily the resulting track (group) is not selected by default,
          // so pRange is skipping over it.
