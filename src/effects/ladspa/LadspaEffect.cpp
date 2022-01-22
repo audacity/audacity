@@ -1029,7 +1029,7 @@ bool LadspaEffect::RealtimeSuspend()
    return true;
 }
 
-bool LadspaEffect::RealtimeResume()
+bool LadspaEffect::RealtimeResume() noexcept
 {
    return true;
 }
@@ -1059,7 +1059,7 @@ size_t LadspaEffect::RealtimeProcess(int group,
    return numSamples;
 }
 
-bool LadspaEffect::RealtimeProcessEnd()
+bool LadspaEffect::RealtimeProcessEnd() noexcept
 {
    return true;
 }

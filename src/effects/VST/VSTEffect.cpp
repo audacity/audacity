@@ -1534,14 +1534,16 @@ bool VSTEffect::RealtimeSuspend()
    return true;
 }
 
-bool VSTEffect::RealtimeResume()
+bool VSTEffect::RealtimeResume() noexcept
 {
+return GuardedCall<bool>([&]{
    PowerOn();
 
    for (const auto &slave : mSlaves)
       slave->PowerOn();
 
    return true;
+});
 }
 
 bool VSTEffect::RealtimeProcessStart()
@@ -1555,7 +1557,7 @@ size_t VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf, size
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
 }
 
-bool VSTEffect::RealtimeProcessEnd()
+bool VSTEffect::RealtimeProcessEnd() noexcept
 {
    return true;
 }

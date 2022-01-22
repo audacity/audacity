@@ -910,8 +910,8 @@ BaseItemSharedPtr GenerateMenu()
 
 static const ReservedCommandFlag
 &IsRealtimeNotActiveFlag() { static ReservedCommandFlag flag{
-   [](const AudacityProject &){
-      return !RealtimeEffectManager::Get().RealtimeIsActive();
+   [](const AudacityProject &project){
+      return !RealtimeEffectManager::Get(project).RealtimeIsActive();
    }
 }; return flag; }  //lll
 
