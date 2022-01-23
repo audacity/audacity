@@ -28,6 +28,7 @@ class RealtimeEffectState;
 class Track;
 
 namespace RealtimeEffects {
+   class InitializationScope;
    class SuspensionScope;
    class ProcessingScope;
 }
@@ -47,12 +48,6 @@ public:
 
    // Realtime effect processing
    bool IsActive() const noexcept;
-   //! Main thread begins to define a set of tracks for playback
-   void Initialize(double rate);
-   //! Main thread adds one track (passing the first of one or more channels)
-   void AddTrack(Track *track, unsigned chans, float rate);
-   //! Main thread cleans up after playback
-   void Finalize() noexcept;
    void Suspend();
    void Resume() noexcept;
    Latency GetLatency() const;
@@ -67,6 +62,14 @@ public:
    void RemoveState(RealtimeEffectList &states, RealtimeEffectState &state);
 
 private:
+
+   friend RealtimeEffects::InitializationScope;
+   //! Main thread begins to define a set of tracks for playback
+   void Initialize(double rate);
+   //! Main thread adds one track (passing the first of one or more channels)
+   void AddTrack(Track *track, unsigned chans, float rate);
+   //! Main thread cleans up after playback
+   void Finalize() noexcept;
 
    friend RealtimeEffects::ProcessingScope;
    void ProcessStart();
@@ -102,6 +105,35 @@ private:
 };
 
 namespace RealtimeEffects {
+//! Brackets processing setup and cleanup in the main thread
+class InitializationScope {
+public:
+   InitializationScope() {}
+   explicit InitializationScope(
+      std::weak_ptr<AudacityProject> wProject, double rate)
+      : mwProject{ move(wProject) }
+   {
+      if (auto pProject = mwProject.lock())
+         RealtimeEffectManager::Get(*pProject).Initialize(rate);
+   }
+   InitializationScope( InitializationScope &&other ) = default;
+   InitializationScope& operator=( InitializationScope &&other ) = default;
+   ~InitializationScope()
+   {
+      if (auto pProject = mwProject.lock())
+         RealtimeEffectManager::Get(*pProject).Finalize();
+   }
+
+   void AddTrack(Track *track, unsigned chans, float rate)
+   {
+      if (auto pProject = mwProject.lock())
+         RealtimeEffectManager::Get(*pProject).AddTrack(track, chans, rate);
+   }
+
+private:
+   std::weak_ptr<AudacityProject> mwProject;
+};
+
 //! Brackets one suspension of processing in the main thread
 class SuspensionScope {
 public:
