@@ -273,7 +273,7 @@ jobs:
       with:
         name: audacity-sources-${{ github.run_id }}+${{ env.GIT_HASH_SHORT }}
         path: |
-          build/package/*
-          !build/package/_CPack_Packages
+          .build.x64/package/*
+          !.build.x64/package/_CPack_Packages
         if-no-files-found: error
 
