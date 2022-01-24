@@ -1,0 +1,239 @@
+name: Build Audacity
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore: ["**/**.md", "**/**.dox2", "**/**.dox", "**/**.dox.in", "**/LICENSE.txt", "/.github/ISSUE_TEMPLATE/**", "INSTALL", "CHANGELOG.txt", ".editorconfig", ".git*"]
+
+  pull_request:
+    paths-ignore: ["**/**.md", "**/**.dox2", "**/**.dox", "**/**.dox.in", "**/LICENSE.txt", "/.github/ISSUE_TEMPLATE/**", "INSTALL", "CHANGELOG.txt", ".editorconfig", ".git*"]
+
+  workflow_dispatch:
+    inputs:
+      build_level:
+        description: "Build level to be used. Valid values are: alpha, beta, release"
+        required: false
+        default: 'alpha'
+        type: string
+      build_type:
+        description: 'Build type. Valid values are: Debug, Release, RelWithDebInfo, MinSizeRel'
+        required: false
+        default: RelWithDebInfo
+        type: string
+      configuration_types:
+        description: 'Build type. Valid values are: Debug, Release, RelWithDebInfo, MinSizeRel or any combination separated with a semicolon'
+        required: false
+        default: RelWithDebInfo
+        type: string
+      configure_cmake_options:
+        description: 'Additional CMake options for configuration'
+        required: false
+        default: ''
+        type: string
+
+  workflow_call:
+    inputs:
+      build_level:
+        description: "Build level to be used. Valid values are: alpha, beta, release"
+        required: false
+        default: 'alpha'
+        type: string
+      build_type:
+        description: 'Build type. Valid values are: Debug, Release, RelWithDebInfo, MinSizeRel'
+        required: false
+        default: RelWithDebInfo
+        type: string
+      configuration_types:
+        description: 'Build type. Valid values are: Debug, Release, RelWithDebInfo, MinSizeRel or any combination separated with a semicolon'
+        required: false
+        default: RelWithDebInfo
+        type: string
+      configure_cmake_options:
+        description: 'Additional CMake options for configuration'
+        required: false
+        default: ''
+        type: string
+    secrets:
+      APPLE_CERTIFICATE:
+        required: false
+      APPLE_CERTIFICATE_PASSWORD:
+        required: false
+      APPLE_CODESIGN_IDENTITY:
+        required: false
+      APPLE_NOTARIZATION_USER_NAME:
+        required: false
+      APPLE_NOTARIZATION_PASSWORD:
+        required: false
+      CRASH_REPORT_URL:
+        required: false
+      SENTRY_AUTH_TOKEN:
+        required: false
+      SENTRY_DSN_KEY:
+        required: false
+      SENTRY_HOST:
+        required: false
+      SENTRY_ORG_SLUG:
+        required: false
+      SENTRY_PROJECT:
+        required: false
+      SENTRY_PROJECT_SLUG:
+        required: false
+      WINDOWS_CERTIFICATE:
+        required: false
+      WINDOWS_CERTIFICATE_PASSWORD:
+        required: false
+
+env:
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
+  SENTRY_HOST: ${{ secrets.SENTRY_HOST }}
+  SENTRY_ORG_SLUG: ${{ secrets.SENTRY_ORG_SLUG }}
+  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+  SENTRY_PROJECT_SLUG: ${{ secrets.SENTRY_PROJECT_SLUG }}
+
+  ARTIFACTORY_SYMBOLS_URL: ${{ secrets.ARTIFACTORY_SYMBOLS_URL }}
+  ARTIFACTORY_SYMBOLS_KEY: ${{ secrets.ARTIFACTORY_SYMBOLS_KEY }}
+
+  CONAN_BINARIES_REMOTE: ${{ secrets.CONAN_BINARIES_REMOTE }}
+  CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
+  CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
+
+  BUILD_TYPE: ${{ (inputs && inputs.build_type) || (github.event.inputs && github.event.inputs.build_type) || 'RelWithDebInfo' }}
+  CONFIGURATION_TYPES: ${{ (inputs && inputs.configuration_types) || (github.event.inputs && github.event.inputs.configuration_types) || 'RelWithDebInfo' }}
+
+  CONFIGURE_CMAKE_OPTIONS: ${{ (inputs && inputs.configure_cmake_options) || (github.event.inputs && github.event.inputs.configure_cmake_options) || '' }}
+
+  BUILD_LEVEL: ${{ (inputs && inputs.build_level) || (github.event.inputs && github.event.inputs.build_level) || ((startsWith(github.ref, 'refs/heads/release-') && 'beta') || 'alpha') }}
+
+jobs:
+  build_linux:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - name: Ubuntu 18.04 AppImage (x86_64)
+          os: ubuntu-18.04
+          force_gcc11: false
+        - name: Ubuntu 20.04 AppImage (x86_64)
+          os: ubuntu-20.04
+          force_gcc11: false
+        - name: Ubuntu 20.04 AppImage (x86_64, gcc 11)
+          os: ubuntu-20.04
+          force_gcc11: true
+    steps:
+    - name: Checkout Audacity
+      uses: actions/checkout@v2
+    - name: Setup Dependencies
+      uses: crsib/audacity-actions/dependencies@v1
+      with:
+        force_gcc11: ${{ matrix.config.force_gcc11 }}
+    - name: Configure
+      uses: crsib/audacity-actions/configure@v1
+      with:
+        generator: Unix Makefiles
+        build_type: ${{ env.BUILD_TYPE }}
+        configuration_types: ${{ env.CONFIGURATION_TYPES }}
+        build_level: $${{ env.BUILD_LEVEL }}
+        cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
+    - name: Build
+      uses: crsib/audacity-actions/build@v1
+    - name: Package
+      uses: crsib/audacity-actions/package@v1
+
+  build_windows:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - name: Windows MSVC 2019 (x86)
+          os: windows-2019
+          arch: x32
+          generator: Visual Studio 16 2019
+        - name: Windows MSVC 2019 (x86_64)
+          os: windows-2019
+          arch: x64
+          generator: Visual Studio 16 2019
+        - name: Windows MSVC 2022 (x86)
+          os: windows-2022
+          arch: x32
+          generator: Visual Studio 17 2022
+        - name: Windows MSVC 2022 (x86_64)
+          os: windows-2019
+          arch: x64
+          generator: Visual Studio 17 2022
+    steps:
+    - name: Checkout Audacity
+      uses: actions/checkout@v2
+    - name: Setup Dependencies
+      uses: crsib/audacity-actions/dependencies@v1
+      with:
+        force_gcc11: ${{ matrix.config.force_gcc11 }}
+    - name: Configure
+      uses: crsib/audacity-actions/configure@v1
+      with:
+        generator: ${{ matrix.config.generator }}
+        build_type: ${{ env.BUILD_TYPE }}
+        configuration_types: ${{ env.CONFIGURATION_TYPES }}
+        build_level: $${{ env.BUILD_LEVEL }}
+        cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
+        windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
+        windows_certificate_password: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+    - name: Build
+      uses: crsib/audacity-actions/build@v1
+    - name: Package
+      uses: crsib/audacity-actions/package@v1
+  build_macos:
+    name: Build macOS (x86_64, arm64, universal)
+    runs-on: macos-11
+    steps:
+    - name: Install Apple codesigning certificates
+      uses: apple-actions/import-codesign-certs@v1
+      if: github.event_name == 'push' && github.repository_owner == 'audacity'
+      with:
+        p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
+        p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+    - name: Checkout Audacity
+      uses: actions/checkout@v2
+    - name: Setup Dependencies
+      uses: crsib/audacity-actions/dependencies@v1
+      with:
+        force_gcc11: ${{ matrix.config.force_gcc11 }}
+    - name: Configure x86_64
+      uses: crsib/audacity-actions/configure@v1
+      with:
+        generator: Xcode
+        build_type: ${{ env.BUILD_TYPE }}
+        configuration_types: ${{ env.CONFIGURATION_TYPES }}
+        build_level: $${{ env.BUILD_LEVEL }}
+        cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
+        apple_codesign_identity: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
+        apple_notarization_user_name: ${{ secrets.APPLE_NOTARIZATION_USER_NAME }}
+        apple_notarization_password: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
+        arch: x64
+    - name: Build x86_64
+      uses: crsib/audacity-actions/build@v1
+    - name: Configure arm64
+      uses: crsib/audacity-actions/configure@v1
+      with:
+        generator: Xcode
+        build_type: ${{ env.BUILD_TYPE }}
+        configuration_types: ${{ env.CONFIGURATION_TYPES }}
+        build_level: $${{ env.BUILD_LEVEL }}
+        cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
+        apple_codesign_identity: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
+        apple_notarization_user_name: ${{ secrets.APPLE_NOTARIZATION_USER_NAME }}
+        apple_notarization_password: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
+        arch: arm64
+        image_compiler: "${{ github.workspace }}/.build.x64/utils/RelWithDebInfo/image-compiler"
+    - name: Package
+      uses: crsib/audacity-actions/package@v1
+      with:
+        archs: |
+          x64
+          arm64
+
