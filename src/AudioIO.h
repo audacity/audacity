@@ -345,6 +345,10 @@ protected:
    RecordingSchedule mRecordingSchedule{};
    PlaybackSchedule mPlaybackSchedule;
 
+   struct TransportState;
+   //! Holds some state for duration of playback or recording
+   std::unique_ptr<TransportState> mpTransportState;
+
 private:
    /*!
     Privatize the inherited array but give access by Extensions().

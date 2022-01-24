@@ -142,6 +142,9 @@ AudioIO *AudioIO::Get()
    return static_cast< AudioIO* >( AudioIOBase::Get() );
 }
 
+struct AudioIoCallback::TransportState {
+};
+
 // static
 int AudioIoCallback::mNextStreamToken = 0;
 double AudioIoCallback::mCachedBestRateOut;
@@ -938,6 +941,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       }
    }
 
+   mpTransportState = std::make_unique<TransportState>();
+
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    AILASetStartTime();
 #endif
@@ -1271,6 +1276,8 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
          RealtimeEffectManager::Get(*pOwningProject).Finalize();
    }
 
+   mpTransportState.reset();
+
    mPlaybackBuffers.reset();
    mPlaybackMixers.clear();
    mCaptureBuffers.reset();
@@ -1422,6 +1429,8 @@ void AudioIO::StopStream()
       if (auto pOwningProject = mOwningProject.lock())
          RealtimeEffectManager::Get(*pOwningProject).Finalize();
    }
+
+   mpTransportState.reset();
 
    for( auto &ext : Extensions() )
       ext.StopOtherStream();
