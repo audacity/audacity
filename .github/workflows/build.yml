@@ -247,6 +247,7 @@ jobs:
           x64
           arm64
   sources:
+    name: Source Tarball
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout Audacity
@@ -266,7 +267,7 @@ jobs:
     - name: Package
       shell: bash
       run: |
-          cmake --build build --target package_source
+          cmake --build .build.x64 --target package_source
     - name: Upload sources
       uses: actions/upload-artifact@v2
       with:
