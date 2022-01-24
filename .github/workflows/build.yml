@@ -2,8 +2,6 @@ name: Build Audacity
 
 on:
   push:
-    branches:
-      - master
     paths-ignore: ["**/**.md", "**/**.dox2", "**/**.dox", "**/**.dox.in", "**/LICENSE.txt", "/.github/ISSUE_TEMPLATE/**", "INSTALL", "CHANGELOG.txt", ".editorconfig", ".git*"]
 
   pull_request:
