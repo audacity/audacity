@@ -117,12 +117,15 @@ jobs:
         - name: Ubuntu 18.04 AppImage (x86_64)
           os: ubuntu-18.04
           force_gcc11: false
+          postfix: '-18.04'
         - name: Ubuntu 20.04 AppImage (x86_64)
           os: ubuntu-20.04
           force_gcc11: false
+          postfix: '-20.04'
         - name: Ubuntu 20.04 AppImage (x86_64, gcc 11)
           os: ubuntu-20.04
           force_gcc11: true
+          postfix: '-20.04-gcc11'
     steps:
     - name: Checkout Audacity
       uses: actions/checkout@v2
@@ -142,6 +145,8 @@ jobs:
       uses: crsib/audacity-actions/build@v1
     - name: Package
       uses: crsib/audacity-actions/package@v1
+      with:
+        postfix: ${{ matrix.config.postfix }}
 
   build_windows:
     name: ${{ matrix.config.name }}
@@ -154,18 +159,22 @@ jobs:
           os: windows-2019
           arch: x32
           generator: Visual Studio 16 2019
+          postfix: '-msvc2019'
         - name: Windows MSVC 2019 (x86_64)
           os: windows-2019
           arch: x64
           generator: Visual Studio 16 2019
+          postfix: '-msvc2019'
         - name: Windows MSVC 2022 (x86)
           os: windows-2022
           arch: x32
           generator: Visual Studio 17 2022
+          postfix: '-msvc2022'
         - name: Windows MSVC 2022 (x86_64)
           os: windows-2022
           arch: x64
           generator: Visual Studio 17 2022
+          postfix: '-msvc2022'
     steps:
     - name: Checkout Audacity
       uses: actions/checkout@v2
@@ -187,6 +196,8 @@ jobs:
       uses: crsib/audacity-actions/build@v1
     - name: Package
       uses: crsib/audacity-actions/package@v1
+      with:
+        postfix: ${{ matrix.config.postfix }}
   build_macos:
     name: Build macOS (x86_64, arm64, universal)
     runs-on: macos-11
@@ -211,9 +222,6 @@ jobs:
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
         build_level: $${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
-        apple_codesign_identity: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
-        apple_notarization_user_name: ${{ secrets.APPLE_NOTARIZATION_USER_NAME }}
-        apple_notarization_password: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
         arch: x64
     - name: Build x86_64
       uses: crsib/audacity-actions/build@v1
@@ -225,15 +233,46 @@ jobs:
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
         build_level: $${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
-        apple_codesign_identity: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
-        apple_notarization_user_name: ${{ secrets.APPLE_NOTARIZATION_USER_NAME }}
-        apple_notarization_password: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
         arch: arm64
         image_compiler: "${{ github.workspace }}/.build.x64/utils/RelWithDebInfo/image-compiler"
+    - name: Build arm64
+      uses: crsib/audacity-actions/build@v1
     - name: Package
       uses: crsib/audacity-actions/package@v1
       with:
+        apple_codesign_identity: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
+        apple_notarization_user_name: ${{ secrets.APPLE_NOTARIZATION_USER_NAME }}
+        apple_notarization_password: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
         archs: |
           x64
           arm64
+  sources:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout Audacity
+      uses: actions/checkout@v2
+    - name: Setup Dependencies
+      uses: crsib/audacity-actions/dependencies@v1
+      with:
+        force_gcc11: ${{ matrix.config.force_gcc11 }}
+    - name: Configure
+      uses: crsib/audacity-actions/configure@v1
+      with:
+        generator: Unix Makefiles
+        build_type: ${{ env.BUILD_TYPE }}
+        configuration_types: ${{ env.CONFIGURATION_TYPES }}
+        build_level: $${{ env.BUILD_LEVEL }}
+        cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
+    - name: Package
+      shell: bash
+      run: |
+          cmake --build build --target package_source
+    - name: Upload sources
+      uses: actions/upload-artifact@v2
+      with:
+        name: audacity-sources-${{ github.run_id }}+${{ env.GIT_HASH_SHORT }}
+        path: |
+          build/package/*
+          !build/package/_CPack_Packages
+        if-no-files-found: error
 
