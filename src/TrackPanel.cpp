@@ -312,8 +312,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    auto theProject = GetProject();
    theProject->Bind(
       EVT_PROJECT_SETTINGS_CHANGE, &TrackPanel::OnProjectSettingsChange, this);
-   theProject->Bind(
-      EVT_TRACK_FOCUS_CHANGE, &TrackPanel::OnTrackFocusChange, this );
+   mFocusChangeSubscription = TrackFocus::Get(*theProject)
+      .Subscribe(*this, &TrackPanel::OnTrackFocusChange);
 
    mUndoSubscription = UndoManager::Get(*theProject)
       .Subscribe(*this, &TrackPanel::OnUndoReset);
@@ -1714,12 +1714,8 @@ void TrackPanel::SetFocusedCell()
    KeyboardCapture::Capture(this);
 }
 
-void TrackPanel::OnTrackFocusChange( wxCommandEvent &event )
+void TrackPanel::OnTrackFocusChange(TrackFocusChangeMessage)
 {
-   event.Skip();
-   auto cell = GetFocusedCell();
-
-   if (cell) {
+   if (auto cell = GetFocusedCell())
       Refresh( false );
-   }
 }
