@@ -55,6 +55,7 @@ effects from this one class.
 #include <wx/scrolwin.h>
 #include <wx/version.h>
 
+#include "AudacityException.h"
 #include "../../EffectHostInterface.h"
 #include "FileNames.h"
 #include "../../ShuttleGui.h"
@@ -1013,8 +1014,9 @@ bool LadspaEffect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool LadspaEffect::RealtimeFinalize()
+bool LadspaEffect::RealtimeFinalize() noexcept
 {
+return GuardedCall<bool>([&]{
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
    {
       FreeInstance(mSlaves[i]);
@@ -1022,6 +1024,7 @@ bool LadspaEffect::RealtimeFinalize()
    mSlaves.clear();
 
    return true;
+});
 }
 
 bool LadspaEffect::RealtimeSuspend()

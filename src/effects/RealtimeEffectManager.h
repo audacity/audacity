@@ -52,7 +52,7 @@ public:
    //! Main thread adds one track (passing the first of one or more channels)
    void AddTrack(Track *track, unsigned chans, float rate);
    //! Main thread cleans up after playback
-   void Finalize();
+   void Finalize() noexcept;
    void Suspend();
    void Resume() noexcept;
    Latency GetLatency() const;

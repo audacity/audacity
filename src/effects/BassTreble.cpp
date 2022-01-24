@@ -160,7 +160,7 @@ bool EffectBassTreble::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), floa
    return true;
 }
 
-bool EffectBassTreble::RealtimeFinalize()
+bool EffectBassTreble::RealtimeFinalize() noexcept
 {
    mSlaves.clear();
 

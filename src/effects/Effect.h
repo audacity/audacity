@@ -140,7 +140,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize() override;
+   bool RealtimeFinalize() noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
    bool RealtimeProcessStart() override;

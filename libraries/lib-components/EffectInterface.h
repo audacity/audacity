@@ -230,7 +230,7 @@ public:
 
    virtual bool RealtimeInitialize() = 0;
    virtual bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) = 0;
-   virtual bool RealtimeFinalize() = 0;
+   virtual bool RealtimeFinalize() noexcept = 0;
    virtual bool RealtimeSuspend() = 0;
    virtual bool RealtimeResume() noexcept = 0;
    virtual bool RealtimeProcessStart() = 0;

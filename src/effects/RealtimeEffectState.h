@@ -54,7 +54,7 @@ public:
    bool ProcessEnd();
    bool IsActive() const noexcept;
    //! Main thread cleans up playback
-   bool Finalize();
+   bool Finalize() noexcept;
 
    static const std::string &XMLTag();
    bool HandleXMLTag(

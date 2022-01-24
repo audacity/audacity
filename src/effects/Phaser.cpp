@@ -180,7 +180,7 @@ bool EffectPhaser::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool EffectPhaser::RealtimeFinalize()
+bool EffectPhaser::RealtimeFinalize() noexcept
 {
    mSlaves.clear();
 

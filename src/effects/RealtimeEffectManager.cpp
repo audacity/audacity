@@ -86,7 +86,7 @@ void RealtimeEffectManager::AddTrack(Track *track, unsigned chans, float rate)
    );
 }
 
-void RealtimeEffectManager::Finalize()
+void RealtimeEffectManager::Finalize() noexcept
 {
    // Assume it is now safe to clean up
    mLatency = std::chrono::microseconds(0);
