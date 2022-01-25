@@ -337,13 +337,14 @@ jobs:
               export -- "$@" && printf "%s\n" "$@" >> "${GITHUB_ENV}"
           }
 
-          gh_export GIT_HASH_SHORT="$(git show -s --format='%h')"
-
           cmake --build .build.x64 --target package_source
+
+          artifact_name=$(basename "$(ls .build.x64/package/*.tar.gz | head -n 1)" ".tar.gz")
+          gh_export SOURCES_ARTIFACT_NAME="${artifact_name}"
     - name: Upload sources
       uses: actions/upload-artifact@v2
       with:
-        name: audacity-sources-${{ github.run_id }}+${{ env.GIT_HASH_SHORT }}
+        name: ${{ env.SOURCES_ARTIFACT_NAME }}
         path: |
           .build.x64/package/*
           !.build.x64/package/_CPack_Packages
