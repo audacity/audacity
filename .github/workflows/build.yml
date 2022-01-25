@@ -285,6 +285,11 @@ jobs:
       run: |
         tar xf macos_intel.tar
         tar xf macos_arm64.tar
+    - uses: geekyeggo/delete-artifact@v1
+      with:
+        name: |
+          macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
+          macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
     - name: Install Apple codesigning certificates
       uses: apple-actions/import-codesign-certs@v1
       if: github.event_name == 'push' && github.repository_owner == 'audacity'
@@ -304,11 +309,7 @@ jobs:
         archs: |
           x64
           arm64
-    - uses: geekyeggo/delete-artifact@v1
-      with:
-        name: |
-          macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
-          macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+
   sources:
     name: Source Tarball
     runs-on: ubuntu-20.04
