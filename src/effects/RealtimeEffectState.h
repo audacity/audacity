@@ -53,6 +53,7 @@ public:
       unsigned chans,
       const float *const *inbuf, //!< chans input buffers
       float *const *outbuf, //!< chans output buffers
+      float *dummybuf, //!< one scratch buffer
       size_t numSamples);
    //! Worker thread finishes a batch of samples
    bool ProcessEnd();

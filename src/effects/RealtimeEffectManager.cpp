@@ -185,15 +185,19 @@ size_t RealtimeEffectManager::Process(Track *track,
    auto start = std::chrono::steady_clock::now();
 
    // Allocate the in and out buffer arrays
-   float **ibuf = (float **) alloca(chans * sizeof(float *));
-   float **obuf = (float **) alloca(chans * sizeof(float *));
+   const auto ibuf =
+      static_cast<float **>(alloca(chans * sizeof(float *)));
+   const auto obuf =
+      static_cast<float **>(alloca(chans * sizeof(float *)));
+   const auto scratch =
+      static_cast<float*>(alloca(numSamples * sizeof(float)));
 
    // And populate the input with the buffers we've been given while allocating
    // NEW output buffers
    for (unsigned int i = 0; i < chans; i++)
    {
       ibuf[i] = buffers[i];
-      obuf[i] = (float *) alloca(numSamples * sizeof(float));
+      obuf[i] = static_cast<float*>(alloca(numSamples * sizeof(float)));
    }
 
    // Now call each effect in the chain while swapping buffer pointers to feed the
@@ -206,7 +210,7 @@ size_t RealtimeEffectManager::Process(Track *track,
          if (bypassed)
             return;
 
-         state.Process(track, chans, ibuf, obuf, numSamples);
+         state.Process(track, chans, ibuf, obuf, scratch, numSamples);
          for (auto i = 0; i < chans; ++i)
             std::swap(ibuf[i], obuf[i]);
          called++;
