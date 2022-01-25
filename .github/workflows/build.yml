@@ -184,6 +184,7 @@ jobs:
       uses: crsib/audacity-actions/configure@v1
       with:
         generator: ${{ matrix.config.generator }}
+        arch: ${{ matrix.config.arch }}
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
         build_level: $${{ env.BUILD_LEVEL }}
@@ -271,6 +272,8 @@ jobs:
     runs-on: macos-11
     needs: [build_macos_intel, build_macos_arm64]
     steps:
+    - name: Checkout Audacity
+      uses: actions/checkout@v2
     - uses: actions/download-artifact@v2
       with:
         name: macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
@@ -282,7 +285,6 @@ jobs:
       run: |
         tar xf macos_intel.tar
         tar xf macos_arm64.tar
-        ls -R
     - name: Install Apple codesigning certificates
       uses: apple-actions/import-codesign-certs@v1
       if: github.event_name == 'push' && github.repository_owner == 'audacity'
