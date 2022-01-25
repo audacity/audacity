@@ -128,11 +128,11 @@ jobs:
     - name: Checkout Audacity
       uses: actions/checkout@v2
     - name: Setup Dependencies
-      uses: crsib/audacity-actions/dependencies@v1
+      uses: audacity/audacity-actions/dependencies@v1
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Configure
-      uses: crsib/audacity-actions/configure@v1
+      uses: audacity/audacity-actions/configure@v1
       with:
         generator: Unix Makefiles
         build_type: ${{ env.BUILD_TYPE }}
@@ -140,9 +140,9 @@ jobs:
         build_level: $${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
     - name: Build
-      uses: crsib/audacity-actions/build@v1
+      uses: audacity/audacity-actions/build@v1
     - name: Package
-      uses: crsib/audacity-actions/package@v1
+      uses: audacity/audacity-actions/package@v1
       with:
         postfix: ${{ matrix.config.postfix }}
 
@@ -177,11 +177,11 @@ jobs:
     - name: Checkout Audacity
       uses: actions/checkout@v2
     - name: Setup Dependencies
-      uses: crsib/audacity-actions/dependencies@v1
+      uses: audacity/audacity-actions/dependencies@v1
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Configure
-      uses: crsib/audacity-actions/configure@v1
+      uses: audacity/audacity-actions/configure@v1
       with:
         generator: ${{ matrix.config.generator }}
         arch: ${{ matrix.config.arch }}
@@ -192,9 +192,9 @@ jobs:
         windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
         windows_certificate_password: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
     - name: Build
-      uses: crsib/audacity-actions/build@v1
+      uses: audacity/audacity-actions/build@v1
     - name: Package
-      uses: crsib/audacity-actions/package@v1
+      uses: audacity/audacity-actions/package@v1
       with:
         postfix: ${{ matrix.config.postfix }}
   build_macos_intel:
@@ -204,11 +204,11 @@ jobs:
     - name: Checkout Audacity
       uses: actions/checkout@v2
     - name: Setup Dependencies
-      uses: crsib/audacity-actions/dependencies@v1
+      uses: audacity/audacity-actions/dependencies@v1
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Configure x86_64
-      uses: crsib/audacity-actions/configure@v1
+      uses: audacity/audacity-actions/configure@v1
       with:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
@@ -217,7 +217,7 @@ jobs:
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: x64
     - name: Build x86_64
-      uses: crsib/audacity-actions/build@v1
+      uses: audacity/audacity-actions/build@v1
     - name: 'Tar files'
       shell: bash
       run: tar cf macos_intel.tar .build.x64
@@ -232,11 +232,11 @@ jobs:
     - name: Checkout Audacity
       uses: actions/checkout@v2
     - name: Setup Dependencies
-      uses: crsib/audacity-actions/dependencies@v1
+      uses: audacity/audacity-actions/dependencies@v1
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Configure x86_64
-      uses: crsib/audacity-actions/configure@v1
+      uses: audacity/audacity-actions/configure@v1
       with:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
@@ -245,11 +245,11 @@ jobs:
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
         arch: x64
     - name: Build x86_64
-      uses: crsib/audacity-actions/build@v1
+      uses: audacity/audacity-actions/build@v1
       with:
         target: image-compiler
     - name: Configure arm64
-      uses: crsib/audacity-actions/configure@v1
+      uses: audacity/audacity-actions/configure@v1
       with:
         generator: Xcode
         build_type: ${{ env.BUILD_TYPE }}
@@ -259,7 +259,7 @@ jobs:
         arch: arm64
         image_compiler: "${{ github.workspace }}/.build.x64/utils/RelWithDebInfo/image-compiler"
     - name: Build arm64
-      uses: crsib/audacity-actions/build@v1
+      uses: audacity/audacity-actions/build@v1
     - name: 'Tar files'
       shell: bash
       run: tar cf macos_arm64.tar .build.arm64
@@ -297,7 +297,7 @@ jobs:
         p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
         p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
     - name: Package
-      uses: crsib/audacity-actions/package@v1
+      uses: audacity/audacity-actions/package@v1
       env:
         AUDACITY_BUILD_DIR: "${{ github.workspace }}/.build.x64"
         AUDACITY_BUILD_TYPE: ${{ env.BUILD_TYPE }}
@@ -317,11 +317,11 @@ jobs:
     - name: Checkout Audacity
       uses: actions/checkout@v2
     - name: Setup Dependencies
-      uses: crsib/audacity-actions/dependencies@v1
+      uses: audacity/audacity-actions/dependencies@v1
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
     - name: Configure
-      uses: crsib/audacity-actions/configure@v1
+      uses: audacity/audacity-actions/configure@v1
       with:
         generator: Unix Makefiles
         build_type: ${{ env.BUILD_TYPE }}
