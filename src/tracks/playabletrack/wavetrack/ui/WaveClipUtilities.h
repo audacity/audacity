@@ -12,6 +12,7 @@
 #define __AUDACITY_WAVE_CLIP_UTILITIES__
 
 #include <vector>
+#include <cstddef>
 
 class sampleCount;
 
