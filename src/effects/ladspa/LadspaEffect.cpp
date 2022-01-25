@@ -977,11 +977,13 @@ bool LadspaEffect::ProcessFinalize()
    return true;
 }
 
-size_t LadspaEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t LadspaEffect::ProcessBlock(
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (int i = 0; i < (int)mAudioIns; i++)
    {
-      mData->connect_port(mMaster, mInputPorts[i], inBlock[i]);
+      mData->connect_port(mMaster, mInputPorts[i],
+         const_cast<float*>(inBlock[i]));
    }
 
    for (int i = 0; i < (int)mAudioOuts; i++)
@@ -1043,13 +1045,12 @@ bool LadspaEffect::RealtimeProcessStart()
 }
 
 size_t LadspaEffect::RealtimeProcess(int group,
-                                          float **inbuf,
-                                          float **outbuf,
-                                          size_t numSamples)
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    for (int i = 0; i < (int)mAudioIns; i++)
    {
-      mData->connect_port(mSlaves[group], mInputPorts[i], inbuf[i]);
+      mData->connect_port(mSlaves[group], mInputPorts[i],
+         const_cast<float*>(inbuf[i]));
    }
 
    for (int i = 0; i < (int)mAudioOuts; i++)

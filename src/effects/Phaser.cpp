@@ -155,7 +155,8 @@ bool EffectPhaser::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
    return true;
 }
 
-size_t EffectPhaser::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectPhaser::ProcessBlock(
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
 }
@@ -188,9 +189,7 @@ bool EffectPhaser::RealtimeFinalize() noexcept
 }
 
 size_t EffectPhaser::RealtimeProcess(int group,
-                                          float **inbuf,
-                                          float **outbuf,
-                                          size_t numSamples)
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
 
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
@@ -393,9 +392,10 @@ void EffectPhaser::InstanceInit(EffectPhaserState & data, float sampleRate)
    return;
 }
 
-size_t EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectPhaser::InstanceProcess(EffectPhaserState & data,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ibuf = inBlock[0];
+   const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
    for (int j = data.laststages; j < mStages; j++)

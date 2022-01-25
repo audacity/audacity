@@ -1081,7 +1081,8 @@ bool LV2Effect::ProcessFinalize()
    return true;
 }
 
-size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
+size_t LV2Effect::ProcessBlock(
+   const float *const *inbuf, float *const *outbuf, size_t size)
 {
    wxASSERT(size <= ( size_t) mBlockSize);
 
@@ -1092,8 +1093,8 @@ size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
    for (auto & port : mAudioPorts)
    {
       lilv_instance_connect_port(instance,
-                                 port->mIndex,
-                                 (port->mIsInput ? inbuf[i++] : outbuf[o++]));
+         port->mIndex,
+         const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
    }
 
    // Transfer incoming events from the ring buffer to the event buffer for each
@@ -1340,7 +1341,8 @@ bool LV2Effect::RealtimeProcessStart()
    return true;
 }
 
-size_t LV2Effect::RealtimeProcess(int group, float **inbuf, float **outbuf, size_t numSamples)
+size_t LV2Effect::RealtimeProcess(int group,
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(group >= 0 && group < (int) mSlaves.size());
    wxASSERT(numSamples <= (size_t) mBlockSize);
@@ -1366,8 +1368,8 @@ size_t LV2Effect::RealtimeProcess(int group, float **inbuf, float **outbuf, size
       }
 
       lilv_instance_connect_port(instance,
-                                 port->mIndex,
-                                 (port->mIsInput ? inbuf[i++] : outbuf[o++]));
+         port->mIndex,
+         const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
    }
 
    mNumSamples = wxMax(numSamples, mNumSamples);

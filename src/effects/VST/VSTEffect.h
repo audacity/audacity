@@ -145,7 +145,8 @@ class VSTEffect final : public wxEvtHandler,
    bool IsReady();
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    bool ProcessFinalize() override;
-   size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
+   size_t ProcessBlock( const float *const *inBlock, float *const *outBlock,
+      size_t blockLen) override;
 
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
@@ -153,10 +154,8 @@ class VSTEffect final : public wxEvtHandler,
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
    bool RealtimeProcessStart() override;
-   size_t RealtimeProcess(int group,
-                                       float **inbuf,
-                                       float **outbuf,
-                                       size_t numSamples) override;
+   size_t RealtimeProcess(int group, const float *const *inbuf,
+      float *const *outbuf, size_t numSamples) override;
    bool RealtimeProcessEnd() noexcept override;
 
    int ShowClientInterface(
@@ -263,7 +262,8 @@ private:
 
    intptr_t callDispatcher(int opcode, int index,
                            intptr_t value, void *ptr, float opt) override;
-   void callProcessReplacing(float **inputs, float **outputs, int sampleframes);
+   void callProcessReplacing(
+      const float *const *inputs, float *const *outputs, int sampleframes);
    void callSetParameter(int index, float value);
    float callGetParameter(int index);
    void callSetProgram(int index);

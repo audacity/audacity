@@ -225,9 +225,10 @@ bool EffectScienFilter::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channe
    return true;
 }
 
-size_t EffectScienFilter::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectScienFilter::ProcessBlock(
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ibuf = inBlock[0];
+   const float *ibuf = inBlock[0];
    for (int iPair = 0; iPair < (mOrder + 1) / 2; iPair++)
    {
       mpBiquad[iPair].Process(ibuf, outBlock[0], blockLen);

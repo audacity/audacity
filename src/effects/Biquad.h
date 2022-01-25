@@ -19,7 +19,7 @@ struct Biquad
 {
    Biquad();
    void Reset();
-   void Process(float* pfIn, float* pfOut, int iNumSamples);
+   void Process(const float* pfIn, float* pfOut, int iNumSamples);
 
    enum
    {

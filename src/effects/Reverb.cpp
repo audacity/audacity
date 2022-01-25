@@ -218,9 +218,10 @@ bool EffectReverb::ProcessFinalize()
    return true;
 }
 
-size_t EffectReverb::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectReverb::ProcessBlock(
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ichans[2] = {NULL, NULL};
+   const float *ichans[2] = {NULL, NULL};
    float *ochans[2] = {NULL, NULL};
 
    for (unsigned int c = 0; c < mNumChans; c++)

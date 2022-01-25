@@ -233,7 +233,8 @@ bool EffectDistortion::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channel
    return true;
 }
 
-size_t EffectDistortion::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectDistortion::ProcessBlock(
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
 }
@@ -266,9 +267,7 @@ bool EffectDistortion::RealtimeFinalize() noexcept
 }
 
 size_t EffectDistortion::RealtimeProcess(int group,
-                                              float **inbuf,
-                                              float **outbuf,
-                                              size_t numSamples)
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
 
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
@@ -545,9 +544,10 @@ void EffectDistortion::InstanceInit(EffectDistortionState & data, float sampleRa
    return;
 }
 
-size_t EffectDistortion::InstanceProcess(EffectDistortionState& data, float** inBlock, float** outBlock, size_t blockLen)
+size_t EffectDistortion::InstanceProcess(EffectDistortionState& data,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ibuf = inBlock[0];
+   const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
    bool update = (mParams.mTableChoiceIndx == data.tablechoiceindx &&
