@@ -82,6 +82,7 @@ if( CMAKE_GENERATOR MATCHES "Makefiles|Ninja" )
       "/.idea"
       "/.*build.*"
       "/.conan"
+      "requirements.txt"
       "/\\\\.DS_Store"
    )
 endif()
