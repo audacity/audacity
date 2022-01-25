@@ -703,7 +703,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
       // Viewinfo.SelectedRegion
       else if (attr == "sel0")
       {
-         if (!value.TryGet(dValue) || (dValue < 0.0))
+         if (!value.TryGet(dValue))
          {
             return SetError(XO("Invalid project 'sel0' attribute."));
          }
@@ -712,7 +712,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
       }
       else if (attr == "sel1")
       {
-         if (!value.TryGet(dValue) || (dValue < 0.0))
+         if (!value.TryGet(dValue))
          {
             return SetError(XO("Invalid project 'sel1' attribute."));
          }
