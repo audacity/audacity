@@ -73,6 +73,7 @@ if( CMAKE_GENERATOR MATCHES "Makefiles|Ninja" )
    set( CPACK_SOURCE_GENERATOR "TGZ" )
    set( CPACK_AUDACITY_BUILD_DIR "${CMAKE_BINARY_DIR}")
 
+   set( CPACK_SOURCE_PACKAGE_FILE_NAME "audacity-sources-${CPACK_PACKAGE_VERSION}" )
    list( APPEND CPACK_PRE_BUILD_SCRIPTS "${CMAKE_SOURCE_DIR}/cmake-proxies/cmake-modules/CopySourceVariables.cmake" )
 
    set(CPACK_SOURCE_IGNORE_FILES
@@ -80,7 +81,7 @@ if( CMAKE_GENERATOR MATCHES "Makefiles|Ninja" )
       "/.vscode"
       "/.idea"
       "/.*build.*"
-      "/conan-home"
+      "/.conan"
       "/\\\\.DS_Store"
    )
 endif()
