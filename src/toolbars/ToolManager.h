@@ -21,6 +21,7 @@
 #include <wx/timer.h> // member variable
 
 #include "ClientData.h"
+#include "GlobalVariable.h"
 #include "ToolDock.h"
 
 #include "../commands/CommandFunctors.h"
@@ -55,8 +56,7 @@ class AUDACITY_DLL_API ToolManager final
 
  public:
    // a hook function to break dependency of ToolManager on ProjectWindow
-   using GetTopPanelHook = std::function< wxWindow*( wxWindow& ) >;
-   static GetTopPanelHook SetGetTopPanelHook( const GetTopPanelHook& );
+   using TopPanelHook = GlobalHook< ToolManager, wxWindow*( wxWindow& ) >;
 
    static ToolManager &Get( AudacityProject &project );
    static const ToolManager &Get( const AudacityProject &project );

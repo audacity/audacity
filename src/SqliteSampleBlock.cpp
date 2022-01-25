@@ -1009,17 +1009,7 @@ void SqliteSampleBlock::CalcSummary(Sizes sizes)
 }
 
 // Inject our database implementation at startup
-static struct Injector
+static SampleBlockFactory::Factory::Scope scope{ []( AudacityProject &project )
 {
-   Injector()
-   {
-      // Do this some time before the first project is created
-      (void) SampleBlockFactory::RegisterFactoryFactory(
-         []( AudacityProject &project )
-         {
-            return std::make_shared<SqliteSampleBlockFactory>( project );
-         }
-      );
-   }
-} injector;
- 
+   return std::make_shared<SqliteSampleBlockFactory>( project );
+} };

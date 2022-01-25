@@ -454,7 +454,7 @@ int Effect::ShowClientInterface(
    mUIDialog->Fit();
    mUIDialog->SetMinSize(mUIDialog->GetSize());
 
-   if( ::CallVetoDialogHook( mUIDialog ) )
+   if ( VetoDialogHook::Call( mUIDialog ) )
       return 0;
 
    if( SupportsRealtime() && !forceModal )

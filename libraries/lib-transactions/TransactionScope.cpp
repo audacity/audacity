@@ -12,33 +12,13 @@
 #include "InconsistencyException.h"
 #include <wx/log.h>
 
-namespace {
-TransactionScope::TransactionScopeImplFactory &GetFactory()
-{
-   static TransactionScope::TransactionScopeImplFactory theFactory;
-   return theFactory;
-}
-}
-
-auto TransactionScope::InstallImplementation(
-   TransactionScopeImplFactory factory) -> TransactionScopeImplFactory
-{
-   auto &theFactory = GetFactory();
-   auto result = theFactory;
-   theFactory = move(factory);
-   return result;
-}
-
 TransactionScopeImpl::~TransactionScopeImpl() = default;
 
 TransactionScope::TransactionScope(
    AudacityProject &project, const char *name)
 :  mName(name)
 {
-   auto &factory = GetFactory();
-   if (!factory)
-      return;
-   mpImpl = factory(project);
+   mpImpl = Factory::Call(project);
    if (!mpImpl)
       return;
 

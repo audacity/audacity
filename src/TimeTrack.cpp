@@ -354,23 +354,11 @@ void TimeTrack::testMe()
 }
 
 //! Installer of the time warper
-static struct WarpFunctionInstaller {
-   Mixer::WarpOptions::DefaultWarpFunction prevFunction;
-
-   static const BoundedEnvelope *Warp(const TrackList &list)
-   {
-      if (auto pTimeTrack = *list.Any<const TimeTrack>().begin())
-         return pTimeTrack->GetEnvelope();
-      else
-         return nullptr;
-   }
-
-   WarpFunctionInstaller()
-      : prevFunction{ Mixer::WarpOptions::SetDefaultWarpFunction(Warp) }
-   {}
-
-   ~WarpFunctionInstaller()
-   {
-      Mixer::WarpOptions::SetDefaultWarpFunction(prevFunction);
-   }
-} installer;
+static Mixer::WarpOptions::DefaultWarp::Scope installer{
+[](const TrackList &list) -> const BoundedEnvelope*
+{
+   if (auto pTimeTrack = *list.Any<const TimeTrack>().begin())
+      return pTimeTrack->GetEnvelope();
+   else
+      return nullptr;
+} };

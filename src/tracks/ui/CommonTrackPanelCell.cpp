@@ -24,23 +24,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "ViewInfo.h"
 #include "../../widgets/wxWidgetsWindowPlacement.h"
 
-namespace {
-   CommonTrackPanelCell::Hook &GetHook()
-   {
-      static CommonTrackPanelCell::Hook theHook;
-      return theHook;
-   }
-}
-
-auto CommonTrackPanelCell::InstallMouseWheelHook( const Hook &hook )
-   -> Hook
-{
-   auto &theHook = GetHook();
-   auto result = theHook;
-   theHook = hook;
-   return result;
-}
-
 CommonTrackPanelCell::~CommonTrackPanelCell()
 {
 }
@@ -125,7 +108,7 @@ unsigned CommonTrackPanelCell::DoContextMenu( const wxRect &rect,
 unsigned CommonTrackPanelCell::HandleWheelRotation
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
-   auto hook = GetHook();
+   auto &hook = MouseWheelHook::Get();
    return hook ? hook( evt, pProject ) : RefreshCode::Cancelled;
 }
 
