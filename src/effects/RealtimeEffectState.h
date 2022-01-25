@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <vector>
 #include <cstddef>
+#include "GlobalVariable.h"
 #include "ModuleInterface.h" // for PluginID
 #include "XMLTagHandler.h"
 
@@ -26,11 +27,9 @@ class Track;
 class RealtimeEffectState : public XMLTagHandler
 {
 public:
-   //! Type of hook function that application installs
-   using EffectFactory =
-      std::function<std::unique_ptr<EffectProcessor>(const PluginID &)>;
-   //! Install a factory, returning the previously installed
-   static EffectFactory InstallFactory(EffectFactory newFactory);
+   struct AUDACITY_DLL_API EffectFactory : GlobalHook<EffectFactory,
+      std::unique_ptr<EffectProcessor>(const PluginID &)
+   >{};
 
    explicit RealtimeEffectState(const PluginID & id);
    ~RealtimeEffectState();

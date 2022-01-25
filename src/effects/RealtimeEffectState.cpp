@@ -15,23 +15,6 @@
 
 #include "Effect.h"
 
-namespace {
-RealtimeEffectState::EffectFactory &getFactory()
-{
-   static RealtimeEffectState::EffectFactory sFactory;
-   return sFactory;
-}
-}
-
-auto RealtimeEffectState::InstallFactory(
-   RealtimeEffectState::EffectFactory newFactory) -> EffectFactory
-{
-   auto &factory = getFactory();
-   auto result = move(factory);
-   factory = move(newFactory);
-   return result;
-}
-
 RealtimeEffectState::RealtimeEffectState(const PluginID & id)
 {
    SetID(id);
@@ -53,10 +36,8 @@ void RealtimeEffectState::SetID(const PluginID & id)
 
 EffectProcessor *RealtimeEffectState::GetEffect()
 {
-   if (!mEffect) {
-      if (auto &factory = getFactory())
-         mEffect = factory(mID);
-   }
+   if (!mEffect)
+      mEffect = EffectFactory::Call(mID);
    return mEffect.get();
 }
 
