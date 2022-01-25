@@ -196,16 +196,10 @@ jobs:
       uses: crsib/audacity-actions/package@v1
       with:
         postfix: ${{ matrix.config.postfix }}
-  build_macos:
-    name: Build macOS (x86_64, arm64, universal)
+  build_macos_intel:
+    name: Build macOS (x86_64)
     runs-on: macos-11
     steps:
-    - name: Install Apple codesigning certificates
-      uses: apple-actions/import-codesign-certs@v1
-      if: github.event_name == 'push' && github.repository_owner == 'audacity'
-      with:
-        p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
-        p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
     - name: Checkout Audacity
       uses: actions/checkout@v2
     - name: Setup Dependencies
@@ -223,6 +217,36 @@ jobs:
         arch: x64
     - name: Build x86_64
       uses: crsib/audacity-actions/build@v1
+    - name: 'Tar files'
+      shell: bash
+      run: tar cf macos_intel.tar .build.x64
+    - uses: actions/upload-artifact@v2
+      with:
+        name: macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
+        path: macos_intel.tar
+  build_macos_arm64:
+    name: Build macOS (arm64)
+    runs-on: macos-11
+    steps:
+    - name: Checkout Audacity
+      uses: actions/checkout@v2
+    - name: Setup Dependencies
+      uses: crsib/audacity-actions/dependencies@v1
+      with:
+        force_gcc11: ${{ matrix.config.force_gcc11 }}
+    - name: Configure x86_64
+      uses: crsib/audacity-actions/configure@v1
+      with:
+        generator: Xcode
+        build_type: ${{ env.BUILD_TYPE }}
+        configuration_types: ${{ env.CONFIGURATION_TYPES }}
+        build_level: $${{ env.BUILD_LEVEL }}
+        cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
+        arch: x64
+    - name: Build x86_64
+      uses: crsib/audacity-actions/build@v1
+      with:
+        target: image-compiler
     - name: Configure arm64
       uses: crsib/audacity-actions/configure@v1
       with:
@@ -235,8 +259,42 @@ jobs:
         image_compiler: "${{ github.workspace }}/.build.x64/utils/RelWithDebInfo/image-compiler"
     - name: Build arm64
       uses: crsib/audacity-actions/build@v1
+    - name: 'Tar files'
+      shell: bash
+      run: tar cf macos_arm64.tar .build.arm64
+    - uses: actions/upload-artifact@v2
+      with:
+        name: macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+        path: macos_arm64.tar
+  package_macos:
+    name: Package macOS (x86_64, arm64, universal)
+    runs-on: macos-11
+    needs: [build_macos_intel, build_macos_arm64]
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
+    - uses: actions/download-artifact@v2
+      with:
+        name: macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
+    - name: Untar files
+      shell: bash
+      run: |
+        tar xf macos_intel.tar
+        tar xf macos_arm64.tar
+        ls -R
+    - name: Install Apple codesigning certificates
+      uses: apple-actions/import-codesign-certs@v1
+      if: github.event_name == 'push' && github.repository_owner == 'audacity'
+      with:
+        p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
+        p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
     - name: Package
       uses: crsib/audacity-actions/package@v1
+      env:
+        AUDACITY_BUILD_DIR: "${{ github.workspace }}/.build.x64"
+        AUDACITY_BUILD_TYPE: ${{ env.BUILD_TYPE }}
+        AUDACITY_BUILD_LEVEL: ${{ env.BUILD_LEVEL }}
       with:
         apple_codesign_identity: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
         apple_notarization_user_name: ${{ secrets.APPLE_NOTARIZATION_USER_NAME }}
@@ -244,6 +302,11 @@ jobs:
         archs: |
           x64
           arm64
+    - uses: geekyeggo/delete-artifact@v1
+      with:
+        name: |
+          macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
+          macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
   sources:
     name: Source Tarball
     runs-on: ubuntu-20.04
@@ -265,6 +328,14 @@ jobs:
     - name: Package
       shell: bash
       run: |
+          function gh_export()
+          {
+              [[ "${GITHUB_ENV-}" ]] || local -r GITHUB_ENV="/dev/null"
+              export -- "$@" && printf "%s\n" "$@" >> "${GITHUB_ENV}"
+          }
+
+          gh_export GIT_HASH_SHORT="$(git show -s --format='%h')"
+
           cmake --build .build.x64 --target package_source
     - name: Upload sources
       uses: actions/upload-artifact@v2
