@@ -379,12 +379,34 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       )
       if( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
          add_custom_command(
-	    TARGET ${TARGET}
+	         TARGET ${TARGET}
             COMMAND ${CMAKE_COMMAND}
-	       -D SRC="${_MODDIR}/${TARGET}.so"
+	            -D SRC="${_MODDIR}/${TARGET}.so"
                -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
                -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
             POST_BUILD )
+      elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
+         add_custom_command(
+            TARGET
+               ${TARGET}
+            COMMAND
+               ${CMAKE_COMMAND} -D SRC="${_MODDIR}/${TARGET}.dll"
+                              -D DST="${_EXEDIR}"
+                              -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>/"
+                              -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+            POST_BUILD
+         )
+      else()
+         add_custom_command(
+            TARGET
+               ${TARGET}
+            COMMAND
+               ${CMAKE_COMMAND} -D SRC="${_MODDIR}/${TARGET}.so"
+                              -D DST="${_PKGLIB}"
+                              -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
+                              -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+            POST_BUILD
+         )
       endif()
    else()
       set( ATTRIBUTES "shape=octagon" )
