@@ -21,7 +21,7 @@
  The variable is constructed when first used, regardless of the static
  initialization sequence of translation units.
 
- @tparam Tag distinguishes GlobalVariables with the same Type
+ @tparam Tag distinguishes GlobalVariables with the same Type; often a "CRTP" argument
  @tparam Type must be non-reference, and default-constructible if there is
  no initializer function; if const-qualified, that means Get() gives
  non-mutating access, but Set() and Scope{...} are still possible if Type is
@@ -33,6 +33,7 @@
 template <typename Tag, typename Type, Type (*initializer)() = nullptr,
    bool ScopedOnly = true>
 class GlobalVariable {
+   struct dummy{ explicit dummy(){} };
 public:
    using variable_type = GlobalVariable;
    using stored_type = Type;
@@ -41,14 +42,21 @@ public:
    //! Get the installed value
    static stored_type& Get()
    {
+      // Force generation of non-inline Assign, in case it needs dllexport linkage
+      &GlobalVariable::Assign;
       return Instance();
    }
 
    //! Move in a new value, move out and return the previous
-   /*! Won't compile unless ScopedOnly is false */
-   [[nodiscard]] static mutable_type Set(mutable_type replacement)
+   /*! Calls won't compile if ScopedOnly is true, though the function can
+    still be generated at compile time.  (std::enable_if_t doesn't work here) */
+   [[nodiscard]]
+   static auto Set(  std::conditional_t<ScopedOnly, dummy,
+      mutable_type> replacement)  -> std::conditional_t<ScopedOnly, void,
+         mutable_type>
    {
-      return Assign<!ScopedOnly>(std::move(replacement));
+      if constexpr (!ScopedOnly)
+         return Assign(std::move(replacement));
    }
 
    //! RAII guard for temporary installation of a value; movable
@@ -113,9 +121,6 @@ private:
    GlobalVariable() = delete;
 
    //! Generate the static variable
-#ifdef _WIN32
-   __declspec(dllexport)
-#endif
    static mutable_type &Instance()
    {
       static_assert(!std::is_reference_v<stored_type>);
@@ -129,9 +134,7 @@ private:
       }
    }
 
-   template<bool enable = true>
-   static auto Assign(mutable_type &&replacement)
-      -> std::enable_if_t<enable, mutable_type>
+   static mutable_type Assign(mutable_type &&replacement)
    {
       auto &instance = Instance();
       auto result = std::move(instance);
