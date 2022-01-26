@@ -589,10 +589,6 @@ endif()
 
 add_subdirectory( "help" )
 
-if(${_OPT}has_crashreports)
-   add_subdirectory( "crashreports" )
-endif()
-
 add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )
@@ -601,6 +597,10 @@ add_subdirectory( "modules" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
 add_subdirectory( "scripts" )
+
+if(${_OPT}has_crashreports)
+   add_subdirectory( "crashreports" )
+endif()
 
 # Generate config file
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
