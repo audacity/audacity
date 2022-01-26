@@ -2393,8 +2393,7 @@ bool AudioIoCallback::FillOutputBuffers(
    // ------ End of MEMORY ALLOCATION ---------------
 
 {
-   auto pProject = mOwningProject.lock();
-   RealtimeEffects::ProcessingScope scope{ pProject.get() };
+   RealtimeEffects::ProcessingScope scope{ mOwningProject };
 
    int chanCnt = 0;
 

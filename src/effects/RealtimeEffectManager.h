@@ -106,73 +106,54 @@ namespace RealtimeEffects {
 class SuspensionScope {
 public:
    SuspensionScope() {}
-   explicit SuspensionScope(AudacityProject *pProject)
-      : mpProject{ pProject }
+   explicit SuspensionScope(std::weak_ptr<AudacityProject> wProject)
+      : mwProject{ move(wProject) }
    {
-      if (mpProject)
-         RealtimeEffectManager::Get(*mpProject).Suspend();
+      
+      if (auto pProject = mwProject.lock())
+         RealtimeEffectManager::Get(*pProject).Suspend();
    }
-   SuspensionScope( SuspensionScope &&other )
-      : mpProject{ other.mpProject }
-   {
-      other.mpProject = nullptr;
-   }
-   SuspensionScope& operator=( SuspensionScope &&other )
-   {
-      auto pProject = other.mpProject;
-      other.mpProject = nullptr;
-      mpProject = pProject;
-      return *this;
-   }
+   SuspensionScope( SuspensionScope &&other ) = default;
+   SuspensionScope& operator=( SuspensionScope &&other ) = default;
    ~SuspensionScope()
    {
-      if (mpProject)
-         RealtimeEffectManager::Get(*mpProject).Resume();
+      if (auto pProject = mwProject.lock())
+         RealtimeEffectManager::Get(*pProject).Resume();
    }
 
 private:
-   AudacityProject *mpProject = nullptr;
+   std::weak_ptr<AudacityProject> mwProject;
 };
 
 //! Brackets one block of processing in one thread
 class ProcessingScope {
 public:
    ProcessingScope() {}
-   explicit ProcessingScope(AudacityProject *pProject)
-      : mpProject{ pProject }
+   explicit ProcessingScope(std::weak_ptr<AudacityProject> wProject)
+      : mwProject{ move(wProject) }
    {
-      if (mpProject)
-         RealtimeEffectManager::Get(*mpProject).ProcessStart();
+      if (auto pProject = mwProject.lock())
+         RealtimeEffectManager::Get(*pProject).ProcessStart();
    }
-   ProcessingScope( ProcessingScope &&other )
-      : mpProject{ other.mpProject }
-   {
-      other.mpProject = nullptr;
-   }
-   ProcessingScope& operator=( ProcessingScope &&other )
-   {
-      auto pProject = other.mpProject;
-      other.mpProject = nullptr;
-      mpProject = pProject;
-      return *this;
-   }
+   ProcessingScope( ProcessingScope &&other ) = default;
+   ProcessingScope& operator=( ProcessingScope &&other ) = default;
    ~ProcessingScope()
    {
-      if (mpProject)
-         RealtimeEffectManager::Get(*mpProject).ProcessEnd();
+      if (auto pProject = mwProject.lock())
+         RealtimeEffectManager::Get(*pProject).ProcessEnd();
    }
 
    size_t Process(Track *track, float **buffers, size_t numSamples)
    {
-      if (mpProject)
-         return RealtimeEffectManager::Get(*mpProject)
+      if (auto pProject = mwProject.lock())
+         return RealtimeEffectManager::Get(*pProject)
             .Process(track, buffers, numSamples);
       else
          return numSamples; // consider them trivially processed
    }
 
 private:
-   AudacityProject *mpProject = nullptr;
+   std::weak_ptr<AudacityProject> mwProject;
 };
 }
 
