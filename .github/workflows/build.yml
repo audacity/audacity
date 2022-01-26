@@ -104,6 +104,8 @@ env:
 
   BUILD_LEVEL: ${{ (inputs && inputs.build_level) || (github.event.inputs && github.event.inputs.build_level) || ((startsWith(github.ref, 'refs/heads/release-') && 'beta') || 'alpha') }}
 
+  CRASH_REPORT_URL: ${{ secrets.CRASH_REPORT_URL }}
+
 jobs:
   build_linux:
     name: ${{ matrix.config.name }}
