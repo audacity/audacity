@@ -17,6 +17,8 @@
 class wxDialog;
 
 //! Call before `Show`-ing certain dialogs; don't show if it returns true
-using VetoDialogHook = GlobalHook<struct VetoDialogHookTag, bool( wxDialog* )>;
+struct AUDACITY_DLL_API VetoDialogHook : GlobalHook<VetoDialogHook,
+   bool( wxDialog* )
+> {};
 
 #endif

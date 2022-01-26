@@ -63,8 +63,9 @@ class SAMPLE_TRACK_API Mixer {
     {
     public:
        //! Hook function for default time warp
-       using DefaultWarp =
-          GlobalHook<WarpOptions, const BoundedEnvelope*(const TrackList&)>;
+       struct SAMPLE_TRACK_API DefaultWarp : GlobalHook<DefaultWarp,
+          const BoundedEnvelope*(const TrackList&)
+       >{};
 
        //! Construct using the default warp function
        explicit WarpOptions(const TrackList &list);

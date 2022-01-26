@@ -31,9 +31,9 @@ class AUDACITY_DLL_API CommonTrackPanelCell /* not final */
 {
 public:
    // Function to dispatch mouse wheel events
-   using MouseWheelHook = GlobalHook< CommonTrackPanelCell,
+   struct AUDACITY_DLL_API MouseWheelHook : GlobalHook<MouseWheelHook,
       unsigned(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
-   >;
+   >{};
 
    CommonTrackPanelCell()
    {}

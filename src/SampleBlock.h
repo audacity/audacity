@@ -105,8 +105,9 @@ class SampleBlockFactory
 {
 public:
    //! Global factory of per-project factories of sample blocks
-   using Factory = GlobalHook<SampleBlockFactory,
-      SampleBlockFactoryPtr( AudacityProject& )>;
+   struct AUDACITY_DLL_API Factory : GlobalHook<Factory,
+      SampleBlockFactoryPtr( AudacityProject& )
+   >{};
 
    // Invoke the installed factory (throw an exception if none was installed)
    static SampleBlockFactoryPtr New( AudacityProject &project );
