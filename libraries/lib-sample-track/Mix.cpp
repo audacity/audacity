@@ -32,29 +32,8 @@
 #include "Resample.h"
 #include "float_cast.h"
 
-static Mixer::WarpOptions::DefaultWarpFunction &sDefaultWarpFunction()
-{
-   static Mixer::WarpOptions::DefaultWarpFunction f;
-   return f;
-}
-
-auto Mixer::WarpOptions::SetDefaultWarpFunction(DefaultWarpFunction newF)
-   -> DefaultWarpFunction
-{
-   auto &f = sDefaultWarpFunction();
-   auto result = move(f);
-   f = move(newF);
-   return result;
-}
-
-const BoundedEnvelope *Mixer::WarpOptions::DefaultWarp(const TrackList &list)
-{
-   auto &f = sDefaultWarpFunction();
-   return f ? f(list) : nullptr;
-}
-
 Mixer::WarpOptions::WarpOptions(const TrackList &list)
-: envelope(DefaultWarp(list)), minSpeed(0.0), maxSpeed(0.0)
+: envelope(DefaultWarp::Call(list)), minSpeed(0.0), maxSpeed(0.0)
 {
 }
 

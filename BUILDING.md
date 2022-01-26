@@ -117,7 +117,7 @@ To enable ASIO support, please select `audacity_has_asio_support=On` in CMake af
 2. Configure Audacity using CMake:
    ```
    $ mkdir build && cd build
-   $ cmake -GXcode -T buildsystem=1 ../audacity
+   $ cmake -GXcode ../audacity
    ```
 
 3. Open Audacity XCode project:
@@ -133,8 +133,17 @@ Alternatively, you can use **CLion**. If you chose to do so, open the directory 
 At the moment we only support **x86_64** builds. It is possible to build using AppleSilicon (AKA M1/arm64) hardware but **mad** and **id3tag** should be disabled:
 
 ```
-cmake -GXcode -T buildsystem=1 -Daudacity_use_mad="off" -Daudacity_use_id3tag=off ../audacity
+cmake -GXcode -Daudacity_use_mad="off" -Daudacity_use_id3tag=off ../audacity
 ```
+
+Before Audacity 3.2 only the XCode "legacy" build system was supported. In order to build older version please use:
+
+```
+   $ mkdir build && cd build
+   $ cmake -GXcode -T buildsystem=1 ../audacity
+```
+
+to configure Audacity. 
 
 ## Linux & Other OS
 
@@ -251,3 +260,38 @@ In order to reduce the space used by Conan cache, please run:
 ```
 $ conan remove "*" --src --builds --force
 ```
+
+### Selecting target architecture on macOS
+
+Starting with version 3.2.0, Audacity target architecture on macOS can be selected by passing `MACOS_ARCHITECTURE` to the CMake during the configuration.
+
+To build for Intel:
+
+```
+$ cmake -GXcode -DMACOS_ARCHITECTURE=x86_64 ../audacity
+```
+
+To build for AppleSilicon:
+
+```
+$ cmake -GXcode -DMACOS_ARCHITECTURE=arm64 ../audacity
+```
+
+The default build architecture is selected based on `CMAKE_HOST_SYSTEM_PROCESSOR` value.
+
+When cross-compiling from Intel to AppleSilicon, or if *Rosetta 2* is not installed on the AppleSilicon Mac, 
+a native Audacity version build directory is required, as Audacity needs a working `image-compiler`. 
+
+For example, to build ARM64 version of Audaicty on Intel Mac:
+
+```
+$ mkdir build.x64
+$ cmake -GXcode -DMACOS_ARCHITECTURE=x86_64 -B build.x64 -S ../audacity
+$ cmake --build build.x64 --config Release --target image-compiler
+$ mkdir build.arm64
+$ cmake -GXcode -DMACOS_ARCHITECTURE=arm64 -DIMAGE_COMPILER_EXECUTABLE=build.x64/utils/RelWithDebInfo/image-compiler -B build.arm64 -S ../audacity
+$ cmake --build build.arm64 --config Release
+```
+
+This will place ARM64 version into `build.arm64/Release/`.
+

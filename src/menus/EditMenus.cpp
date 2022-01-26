@@ -971,7 +971,7 @@ void OnPreferences(const CommandContext &context)
 
    GlobalPrefsDialog dialog(&GetProjectFrame( project ) /* parent */, &project );
 
-   if( ::CallVetoDialogHook( &dialog ) )
+   if( VetoDialogHook::Call( &dialog ) )
       return;
 
    if (!dialog.ShowModal()) {
