@@ -232,7 +232,8 @@ TagsEditorDialog::TagsEditorDialog(wxWindow * parent,
    Layout();
    Fit();
    Center();
-   SetSizeHints(GetSize());
+   wxSize sz = GetSize();
+   SetSizeHints(sz.x, std::min(sz.y, 600));
 
    // Restore the original tags because TransferDataToWindow() will be called again
    mLocal.Clear();
