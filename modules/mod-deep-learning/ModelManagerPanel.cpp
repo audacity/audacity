@@ -77,7 +77,7 @@ void ModelManagerPanel::PopulateOrExchange(ShuttleGui & S)
          mScroller->SetSize(size); 
          mScroller->SetMinSize(size); 
          // mScroller->SetMaxSize(size);
-         mScroller->SetWindowStyle(wxBORDER_SIMPLE);
+         mScroller->SetWindowStyle(wxBORDER_SIMPLE | wxTAB_TRAVERSAL);
          mScroller->SetScrollRate(0, 10);
 
          // this panel changes contents according to the card the
@@ -194,7 +194,7 @@ ManagerToolsPanel::ManagerToolsPanel(wxWindow *parent, ModelManagerPanel *panel)
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 
-   SetWindowStyle(wxBORDER_SIMPLE);
+   SetWindowStyle(wxBORDER_SIMPLE | wxTAB_TRAVERSAL);
    Layout();
    Refresh();
 }
