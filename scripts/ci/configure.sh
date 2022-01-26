@@ -33,6 +33,11 @@ elif [[ "${AUDACITY_CMAKE_GENERATOR}" == Xcode* ]]; then
         # skip unneeded configurations
         -D CMAKE_CONFIGURATION_TYPES="${AUDACITY_BUILD_TYPE}"
     )
+    case "${AUDACITY_ARCH_LABEL}" in
+    Intel)  cmake_args+=( -D MACOS_ARCHITECTURE=x86_64 ) ;;
+    AppleSilicon)  cmake_args+=( -D MACOS_ARCHITECTURE=arm64 ) ;;
+    *)      echo >&2 "$0: Unrecognised arch label '${AUDACITY_ARCH_LABEL}'" ; exit 1 ;;
+    esac
 fi
 
 if [[ -n "${APPLE_CODESIGN_IDENTITY-}" && "${OSTYPE}" == darwin* ]]; then
@@ -67,7 +72,7 @@ cmake "${cmake_args[@]}"
 
 if [[ "${OSTYPE}" == msys* ]]; then # Windows
     # On Windows, preserve PDB files before clearing the build cache
-    
+
     conanUnixPath=$(cygpath ${CONAN_USER_HOME})
     pdbOutputPath="${conanUnixPath}/pdbs"
 
@@ -76,7 +81,7 @@ if [[ "${OSTYPE}" == msys* ]]; then # Windows
     mkdir -p "${pdbOutputPath}"
     find "${conanUnixPath}/.conan" -name '*.pdb' '!' -name "vc14?.pdb" -type f | xargs -I % cp -v % ${pdbOutputPath}
 elif [[ "${OSTYPE}" == darwin* ]]; then # macOS
-    # On macOS - find all the .dylib files and generate dSYMs from them 
+    # On macOS - find all the .dylib files and generate dSYMs from them
     # in the same folder.
     # dsymutil requires *.o files, so we need to generate files before clearing
     # the build directories.

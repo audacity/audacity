@@ -58,7 +58,7 @@ function( gather_libs src )
       endforeach()
    elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
       message(STATUS "Checking ${src} for libraries...")
-      
+
       execute( output otool -L ${src} )
 
       set( libname "${src}" )
@@ -73,32 +73,34 @@ function( gather_libs src )
             message(STATUS "Checking out ${line}")
             set( lib "${WXWIN}/${dylib_name}" )
 
-            if( NOT lib STREQUAL "${src}" AND NOT line MATCHES "@executable" AND EXISTS "${lib}" )
+            if( NOT lib STREQUAL "${src}" AND NOT line MATCHES "@rpath" AND EXISTS "${lib}" )
                message(STATUS "\tProcessing ${lib}...")
 
                list( APPEND libs ${lib} )
 
                get_filename_component( refname "${lib}" NAME )
-               
+
                message(STATUS "\t\tAdding ${refname} to ${src}")
 
-               list( APPEND words "-change ${line} @executable_path/../Frameworks/${refname}" )
+               list( APPEND words "-change ${line} @rpath/${refname}" )
 
                if(
-	          # Don't do depth first search from modules: assume the fixup
-		  # of .dylib libraries was already done when this function
-		  # was visited for the executable
-	          NOT src MATCHES "\\.so$"
-	          AND NOT "${lib}" IN_LIST VISITED
-	        )
+	               # Don't do depth first search from modules: assume the fixup
+                  # of .dylib libraries was already done when this function
+                  # was visited for the executable
+                     NOT src MATCHES "\\.so$"
+                     AND NOT "${lib}" IN_LIST VISITED
+                  )
                   gather_libs( ${lib} )
-	       endif()
+	            endif()
             endif()
          endif()
       endforeach()
       if( words )
          # There is at least one dependency to rename
          list( PREPEND words "install_name_tool" )
+         list( APPEND words "-add_rpath @executable_path/../Frameworks")
+         list( APPEND words "-add_rpath @loader_path")
          list( APPEND words "${src}" )
          string( JOIN " " postcmd ${words} )
          list( APPEND postcmds "${postcmd}" )
@@ -116,7 +118,7 @@ function( gather_libs src )
          message (STATUS "\tChecking ${line}...")
 
          set(line "${WXWIN}/${line}")
-         
+
          if (EXISTS "${line}" AND NOT "${line}" IN_LIST VISITED)
             message (STATUS "\tAdding ${line}...")
 

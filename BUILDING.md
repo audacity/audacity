@@ -260,3 +260,38 @@ In order to reduce the space used by Conan cache, please run:
 ```
 $ conan remove "*" --src --builds --force
 ```
+
+### Selecting target architecture on macOS
+
+Starting with version 3.2.0, Audacity target architecture on macOS can be selected by passing `MACOS_ARCHITECTURE` to the CMake during the configuration.
+
+To build for Intel:
+
+```
+$ cmake -GXcode -DMACOS_ARCHITECTURE=x86_64 ../audacity
+```
+
+To build for AppleSilicon:
+
+```
+$ cmake -GXcode -DMACOS_ARCHITECTURE=arm64 ../audacity
+```
+
+The default build architecture is selected based on `CMAKE_HOST_SYSTEM_PROCESSOR` value.
+
+When cross-compiling from Intel to AppleSilicon, or if *Rosetta 2* is not installed on the AppleSilicon Mac, 
+a native Audacity version build directory is required, as Audacity needs a working `image-compiler`. 
+
+For example, to build ARM64 version of Audaicty on Intel Mac:
+
+```
+$ mkdir build.x64
+$ cmake -GXcode -DMACOS_ARCHITECTURE=x86_64 -B build.x64 -S ../audacity
+$ cmake --build build.x64 --config Release --target image-compiler
+$ mkdir build.arm64
+$ cmake -GXcode -DMACOS_ARCHITECTURE=arm64 -DIMAGE_COMPILER_EXECUTABLE=build.x64/utils/RelWithDebInfo/image-compiler -B build.arm64 -S ../audacity
+$ cmake --build build.arm64 --config Release
+```
+
+This will place ARM64 version into `build.arm64/Release/`.
+

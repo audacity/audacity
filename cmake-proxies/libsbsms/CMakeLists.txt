@@ -37,7 +37,9 @@ if( Threads_FOUND AND CMAKE_USE_PTHREADS_INIT )
    set( MULTITHREADED 1 )
 endif()
 
-set( ENABLE_SSE ${HAVE_SSE} )
+if(NOT APPLE OR MACOS_ARCHITECTURE STREQUAL "x86_64")
+   set( ENABLE_SSE ${HAVE_SSE} )
+endif()
 
 configure_file( config.h.in private/config.h )
 

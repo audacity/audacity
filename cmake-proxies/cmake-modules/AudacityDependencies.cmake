@@ -1,18 +1,66 @@
 # Load Conan
 
+if ( ${_OPT}conan_allow_prebuilt_binaries )
+    set( CONAN_BUILD_MODE BUILD missing )
+    set( CONAN_REMOTE https://artifactory.audacityteam.org/artifactory/api/conan/audacity-binaries )
+else()
+    set( CONAN_BUILD_MODE BUILD all )
+    set( CONAN_REMOTE https://artifactory.audacityteam.org/artifactory/api/conan/audacity-recipes )
+endif()
+
 if( ${_OPT}conan_enabled )
     include( conan )
 
-    conan_add_remote(NAME audacity
-        URL https://artifactory.audacityteam.org/artifactory/api/conan/conan-local
-        VERIFY_SSL True
-    )
-endif()
+    conan_check()
 
-if ( ${_OPT}conan_allow_prebuilt_binaries )
-    set ( CONAN_BUILD_MODE BUILD missing )
-else()
-    set( CONAN_BUILD_MODE BUILD all )
+    # Conan will fail to detect the compiler in case /usr/bin/cc or /usr/bin/cxx are passed
+    # CMake will set CC and CXX variables, breaking the correct detection of compiler.
+    # However, we can safely unset them before running Conan, because we only care for
+    # the build tools environment here
+
+    if( DEFINED ENV{CC} )
+        set( OLD_CC $ENV{CC} )
+        unset( ENV{CC} )
+    endif()
+
+    if( DEFINED ENV{CXX} )
+        set( OLD_CXX $ENV{CXX} )
+        unset( ENV{CXX} )
+    endif()
+
+    execute_process( COMMAND ${CONAN_CMD} profile new audacity_build --detect --force )
+
+    # Conan will not detect compiler runtime
+    if(MSVC)
+       _get_msvc_ide_version(msvc_version_for_profile)
+
+       execute_process( COMMAND ${CONAN_CMD} profile update settings.compiler="Visual Studio" audacity_build )
+       execute_process( COMMAND ${CONAN_CMD} profile update settings.compiler.version="${msvc_version_for_profile}" audacity_build )
+       execute_process( COMMAND ${CONAN_CMD} profile update settings.compiler.runtime=MD audacity_build )
+       execute_process( COMMAND ${CONAN_CMD} profile update settings.compiler.cppstd=17 audacity_build )
+    endif()
+
+    if( DEFINED OLD_CC )
+        set( ENV{CC} ${OLD_CC} )
+    endif()
+
+    if( DEFINED OLD_CXX )
+        set( ENV{CXX} ${OLD_CXX} )
+    endif()
+
+    conan_add_remote(NAME audacity
+        URL ${CONAN_REMOTE}
+        VERIFY_SSL True
+        INDEX 0
+    )
+
+    conan_add_remote(NAME conan-center-cache
+        URL https://artifactory.audacityteam.org/artifactory/api/conan/conancenter
+        VERIFY_SSL True
+        INDEX 1
+    )
+
+    set(ENV{CONAN_REVISIONS_ENABLED} 1)
 endif()
 
 set( CONAN_BUILD_REQUIRES )
@@ -233,14 +281,18 @@ function ( _conan_install build_type )
     conan_cmake_autodetect(settings BUILD_TYPE ${build_type})
 
     if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-        # TODO: Read the target CPU architecture from the CMake option
-        # We have no AppleSilicon support yet
-        list( APPEND settings "arch=x86_64" )
+        if( MACOS_ARCHITECTURE STREQUAL "x86_64" )
+            set( CONAN_MACOS_ARCHITECTURE "x86_64" )
+        else()
+            set( CONAN_MACOS_ARCHITECTURE "armv8" )
+        endif()
+        list( APPEND settings "arch=${CONAN_MACOS_ARCHITECTURE}" )
         list( APPEND settings "os.version=${CMAKE_OSX_DEPLOYMENT_TARGET}" )
         # This line is required to workaround the conan bug #8025
         # https://github.com/conan-io/conan/issues/8025
         # Without it, libjpeg-turbo will fail to cross-compile on AppleSilicon macs
-        list( APPEND settings ENV "CONAN_CMAKE_SYSTEM_PROCESSOR=x86_64")
+        set(ENV{CONAN_CMAKE_SYSTEM_NAME} "Darwin")
+        set(ENV{CONAN_CMAKE_SYSTEM_PROCESSOR} ${MACOS_ARCHITECTURE})
     endif()
 
     if (build_type MATCHES "MinSizeRel|RelWithDebInfo")
@@ -251,11 +303,12 @@ function ( _conan_install build_type )
         endforeach()
     endif()
 
-
-    conan_cmake_install(PATH_OR_REFERENCE .
+   conan_cmake_install(PATH_OR_REFERENCE .
         ${CONAN_BUILD_MODE}
-        SETTINGS ${settings}
-    )
+        PROFILE_BUILD audacity_build
+        SETTINGS_HOST ${settings}
+        #REMOTE audacity
+   )
 endfunction()
 
 macro( resolve_conan_dependencies )
