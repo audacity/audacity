@@ -34,10 +34,8 @@ if ( ${_OPT}use_zlib STREQUAL "system" )
    set( wx_zlib "sys" )
    # To prevent linking conflicts - we need to use system libpng as well.
    # wxWdigets will attempt to resolve it using find_package
-   find_required_package( PNG "libpng-dev" )
    set( wx_png "sys" )
    # And, for consistency
-   find_required_package( JPEG "libjpeg-turbo8-dev" )
    set( wx_jpeg "sys" )
 
    set( id3tag_zlib "system" )
@@ -80,6 +78,19 @@ add_conan_lib(
       # Probably this will be enabled in the future
       libjpeg-turbo:SIMD=False
 )
+
+# If we are building using Conan provided version of
+# wxWidgets, but against system libraries - ensure that required
+# Librries are installed.
+if(${_OPT}use_wxwidgets STREQUAL "local")
+   if (wx_png STREQUAL "sys")
+      find_required_package( PNG "libpng-dev" )
+   endif()
+
+   if (wx_jpeg STREQUAL "sys")
+      find_required_package( JPEG "libjpeg-turbo8-dev" )
+   endif()
+endif()
 
 add_conan_lib(
    libmp3lame
