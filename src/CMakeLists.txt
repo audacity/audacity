@@ -38,7 +38,9 @@ elseif( GIT_FOUND )
 else()
    # No Git installed and no version data is available.
    # Generate an empty file and let AboutDialog do the rest
-   file( WRITE "${_PRVDIR}/RevisionIdent.h" )
+   # WRITE, unlike TOUCH, will create any directories needed
+   # (see https://github.com/audacity/audacity/issues/2163)
+   file( WRITE "${_PRVDIR}/RevisionIdent.h" "" )
 endif()
 
 # Handle Audio Units option
@@ -1328,7 +1330,7 @@ else()
                           -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
-   
+
    add_executable(findlib ../linux/findlib.c)
    target_link_libraries(findlib ${CMAKE_DL_LIBS})
 endif()
