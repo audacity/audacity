@@ -15,21 +15,21 @@ public:
       , mProject{ project }
    {
       InitIntervals();
-      mpTrack->Bind(
-         EVT_LABELTRACK_PERMUTED, &LabelTrackShifter::OnLabelPermuted, this );
-      mpTrack->Bind(
-         EVT_LABELTRACK_ADDITION, &LabelTrackShifter::OnLabelAdded, this );
-      mpTrack->Bind(
-         EVT_LABELTRACK_DELETION, &LabelTrackShifter::OnLabelDeleted, this );
+      mSubscription = mpTrack->Subscribe([this](const LabelTrackEvent &e){
+         switch (e.type) {
+         case LabelTrackEvent::Permutation:
+            return OnLabelPermuted(e);
+         case LabelTrackEvent::Addition:
+            return OnLabelAdded(e);
+         case LabelTrackEvent::Deletion:
+            return OnLabelDeleted(e);
+         default:
+            return;
+         }
+      });
    }
    ~LabelTrackShifter() override
    {
-      mpTrack->Unbind(
-         EVT_LABELTRACK_PERMUTED, &LabelTrackShifter::OnLabelPermuted, this );
-      mpTrack->Unbind(
-         EVT_LABELTRACK_ADDITION, &LabelTrackShifter::OnLabelAdded, this );
-      mpTrack->Unbind(
-         EVT_LABELTRACK_DELETION, &LabelTrackShifter::OnLabelDeleted, this );
    }
    Track &GetTrack() const override { return *mpTrack; }
    
@@ -161,9 +161,8 @@ public:
    }
 
 private:
-   void OnLabelPermuted( LabelTrackEvent &e )
+   void OnLabelPermuted( const LabelTrackEvent &e )
    {
-      e.Skip();
       if ( e.mpTrack.lock() != mpTrack )
          return;
 
@@ -190,9 +189,8 @@ private:
       std::for_each(mMoving.begin(), mMoving.end(), update);
    }
 
-   void OnLabelAdded( LabelTrackEvent &e )
+   void OnLabelAdded( const LabelTrackEvent &e )
    {
-      e.Skip();
       if ( e.mpTrack.lock() != mpTrack )
          return;
 
@@ -215,9 +213,8 @@ private:
       std::for_each(mMoving.begin(), mMoving.end(), update);
    }
 
-   void OnLabelDeleted( LabelTrackEvent &e )
+   void OnLabelDeleted( const LabelTrackEvent e )
    {
-      e.Skip();
       if ( e.mpTrack.lock() != mpTrack )
          return;
 
@@ -243,6 +240,7 @@ private:
       std::for_each(mMoving.begin(), mMoving.end(), update);
    }
 
+   Observer::Subscription mSubscription;
    std::shared_ptr<LabelTrack> mpTrack;
    AudacityProject &mProject;
 };

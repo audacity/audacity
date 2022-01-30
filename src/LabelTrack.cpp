@@ -45,11 +45,6 @@ for drawing different aspects of the label and its text box.
 #include "TimeWarper.h"
 #include "widgets/AudacityMessageBox.h"
 
-wxDEFINE_EVENT(EVT_LABELTRACK_ADDITION, LabelTrackEvent);
-wxDEFINE_EVENT(EVT_LABELTRACK_DELETION, LabelTrackEvent);
-wxDEFINE_EVENT(EVT_LABELTRACK_PERMUTED, LabelTrackEvent);
-wxDEFINE_EVENT(EVT_LABELTRACK_SELECTION, LabelTrackEvent);
-
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    "labeltrack",
    LabelTrack::New
@@ -330,12 +325,9 @@ void LabelTrack::SetSelected( bool s )
 {
    bool selected = GetSelected();
    Track::SetSelected( s );
-   if ( selected != GetSelected() ) {
-      LabelTrackEvent evt{
-         EVT_LABELTRACK_SELECTION, SharedPointer<LabelTrack>(), {}, -1, -1
-      };
-      ProcessEvent( evt );
-   }
+   if ( selected != GetSelected() )
+      Publish({ LabelTrackEvent::Selection,
+         this->SharedPointer<LabelTrack>(), {}, -1, -1 });
 }
 
 double LabelTrack::GetOffset() const
@@ -962,10 +954,8 @@ int LabelTrack::AddLabel(const SelectedRegion &selectedRegion,
 
    mLabels.insert(mLabels.begin() + pos, l);
 
-   LabelTrackEvent evt{
-      EVT_LABELTRACK_ADDITION, SharedPointer<LabelTrack>(), title, -1, pos
-   };
-   ProcessEvent( evt );
+   Publish({ LabelTrackEvent::Addition,
+      this->SharedPointer<LabelTrack>(), title, -1, pos });
 
    return pos;
 }
@@ -977,10 +967,8 @@ void LabelTrack::DeleteLabel(int index)
    const auto title = iter->title;
    mLabels.erase(iter);
 
-   LabelTrackEvent evt{
-      EVT_LABELTRACK_DELETION, SharedPointer<LabelTrack>(), title, index, -1
-   };
-   ProcessEvent( evt );
+   Publish({ LabelTrackEvent::Deletion,
+      this->SharedPointer<LabelTrack>(), title, index, -1 });
 }
 
 /// Sorts the labels in order of their starting times.
@@ -1014,11 +1002,8 @@ void LabelTrack::SortLabels()
       );
 
       // Let listeners update their stored indices
-      LabelTrackEvent evt{
-         EVT_LABELTRACK_PERMUTED, SharedPointer<LabelTrack>(),
-         mLabels[j].title, i, j
-      };
-      ProcessEvent( evt );
+      Publish({ LabelTrackEvent::Permutation,
+         this->SharedPointer<LabelTrack>(), mLabels[j].title, i, j });
    }
 }
 
