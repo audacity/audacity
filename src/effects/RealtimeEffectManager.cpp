@@ -54,9 +54,6 @@ bool RealtimeEffectManager::IsActive() const noexcept
 
 void RealtimeEffectManager::Initialize(double rate)
 {
-   // The audio thread should not be running yet, but protect anyway
-   RealtimeEffects::SuspensionScope scope{ mProject.weak_from_this() };
-
    // Remember the rate
    mRate = rate;
 
@@ -91,10 +88,7 @@ void RealtimeEffectManager::AddTrack(Track *track, unsigned chans, float rate)
 
 void RealtimeEffectManager::Finalize()
 {
-   // Make sure nothing is going on
-   Suspend();
-
-   // It is now safe to clean up
+   // Assume it is now safe to clean up
    mLatency = std::chrono::microseconds(0);
 
    VisitAll([](auto &state, bool){ state.Finalize(); });
