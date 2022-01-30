@@ -280,9 +280,13 @@ RealtimeEffectManager::AddState(
       ? RealtimeEffectList::Get(*pLeader)
       : RealtimeEffectList::Get(mProject);
 
-   if (mActive && !pScope)
-      return nullptr;
-   RealtimeEffects::SuspensionScope scope{ mProject.weak_from_this() };
+   std::optional<RealtimeEffects::SuspensionScope> myScope;
+   if (mActive) {
+      if (pScope)
+         myScope.emplace(*pScope, mProject.weak_from_this());
+      else
+         return nullptr;
+   }
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 
@@ -320,9 +324,13 @@ void RealtimeEffectManager::RemoveState(
       ? RealtimeEffectList::Get(*pLeader)
       : RealtimeEffectList::Get(mProject);
 
-   if (mActive && !pScope)
-      return;
-   RealtimeEffects::SuspensionScope scope{ mProject.weak_from_this() };
+   std::optional<RealtimeEffects::SuspensionScope> myScope;
+   if (mActive) {
+      if (pScope)
+         myScope.emplace(*pScope, mProject.weak_from_this());
+      else
+         return;
+   }
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 

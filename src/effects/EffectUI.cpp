@@ -714,7 +714,7 @@ void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
    if (mEnabled)
       mSuspensionScope.reset();
    else
-      mSuspensionScope.emplace(mProject.weak_from_this());
+      mSuspensionScope.emplace(AudioIO::Get()->SuspensionScope());
 
    UpdateControls();
 }

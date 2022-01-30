@@ -425,6 +425,14 @@ void AudioIO::RemoveState(AudacityProject &project,
    RealtimeEffectManager::Get(project).RemoveState(pInit, pTrack, state);
 }
 
+RealtimeEffects::SuspensionScope AudioIO::SuspensionScope()
+{
+   if (mpTransportState && mpTransportState->mpRealtimeInitialization)
+      return RealtimeEffects::SuspensionScope{
+         *mpTransportState->mpRealtimeInitialization, mOwningProject };
+   return {};
+}
+
 void AudioIO::SetMixer(int inputSource, float recordVolume,
                        float playbackVolume)
 {
