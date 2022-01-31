@@ -51,11 +51,6 @@ bool RealtimeEffectManager::RealtimeIsActive() const noexcept
    return mStates.size() != 0;
 }
 
-bool RealtimeEffectManager::RealtimeIsSuspended() const noexcept
-{
-   return mSuspended;
-}
-
 void RealtimeEffectManager::RealtimeInitialize(double rate)
 {
    // The audio thread should not be running yet, but protect anyway
