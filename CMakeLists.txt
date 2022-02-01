@@ -86,7 +86,7 @@ cmake_policy( SET CMP0075 NEW )
 if( APPLE )
    # CMAKE_HOST_SYSTEM_PROCESSOR is empty before the project() command
    execute_process(
-      COMMAND arch
+      COMMAND uname -m
       OUTPUT_VARIABLE HOST_SYSTEM_PROCESSOR
       OUTPUT_STRIP_TRAILING_WHITESPACE
    )
