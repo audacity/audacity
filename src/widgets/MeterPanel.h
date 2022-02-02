@@ -16,6 +16,7 @@
 #ifndef __AUDACITY_METER_PANEL__
 #define __AUDACITY_METER_PANEL__
 
+#include <atomic>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/brush.h> // member variable
 #include <wx/defs.h>
@@ -82,9 +83,11 @@ class MeterUpdateQueue
    void Clear();
 
  private:
-   int              mStart;
-   int              mEnd;
-   size_t           mBufferSize;
+   // Align the two atomics to avoid false sharing
+   // mStart is written only by the reader, mEnd by the writer
+   NonInterfering< std::atomic<size_t> > mStart{ 0 }, mEnd{ 0 };
+
+   const size_t mBufferSize;
    ArrayOf<MeterUpdateMsg> mBuffer{mBufferSize};
 };
 
@@ -96,6 +99,7 @@ or playback.
 ************************************************************************/
 class AUDACITY_DLL_API MeterPanel final
    : public MeterPanelBase, private PrefsListener
+   , public NonInterferingBase
 {
    DECLARE_DYNAMIC_CLASS(MeterPanel)
 
