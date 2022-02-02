@@ -57,6 +57,9 @@ public:
       kRepeatNyquistPrompt = 0x10,
    };
 
+   /*! Create a new instance of an effect by its ID. */
+   static std::unique_ptr<Effect> NewEffect(const PluginID &ID);
+
    /** Get the singleton instance of the EffectManager. Probably not safe
        for multi-thread use. */
    static EffectManager & Get();

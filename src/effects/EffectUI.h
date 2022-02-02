@@ -16,10 +16,13 @@
 
 #include <wx/bitmap.h> // member variables
 
+#include <optional>
+
 #include "Identifier.h"
 #include "EffectHostInterface.h"
 #include "Observer.h"
 #include "PluginInterface.h"
+#include "effects/RealtimeEffectManager.h"
 
 struct AudioIOEvent;
 
@@ -31,6 +34,7 @@ struct AudioIOEvent;
 class AudacityCommand;
 class AudacityProject;
 class Effect;
+class RealtimeEffectState;
 
 class wxCheckBox;
 
@@ -86,7 +90,6 @@ private:
 
    void InitializeRealtime();
    void CleanupRealtime();
-   void Resume();
 
 private:
    Observer::Subscription mSubscription;
@@ -95,6 +98,7 @@ private:
    wxWindow *mParent;
    Effect &mEffect;
    EffectUIClientInterface &mClient;
+   RealtimeEffectState *mpState{ nullptr };
 
    RegistryPaths mUserPresets;
    bool mInitialized;
@@ -128,7 +132,7 @@ private:
    double mPlayPos;
 
    bool mDismissed{};
-   bool mNeedsResume{};
+   std::optional<RealtimeEffectManager::SuspensionScope> mSuspensionScope;
 
 #if wxDEBUG_LEVEL
    // Used only in an assertion
