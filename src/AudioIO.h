@@ -319,9 +319,6 @@ protected:
    void SetMixerOutputVol(float value) {
       mMixerOutputVol.store(value, std::memory_order_relaxed); }
 
-   bool                mUpdateMeters;
-   volatile bool       mUpdatingMeters;
-
    /*! Pointer is read by a worker thread but unchanging during playback.
     (Whether its overriding methods are race-free is not for AudioIO to ensure.)
     */
