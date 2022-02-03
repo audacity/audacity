@@ -22,10 +22,11 @@ if( NOT IMAGE_COMPILER_EXECUTABLE )
    add_custom_command(
       TARGET image-compiler
       COMMAND
-         ${CMAKE_COMMAND} -D SRC="$<TARGET_FILE:image-compiler>"
-                           -D DST="$<TARGET_FILE_DIR:image-compiler>"
-                           -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>/"
-                           -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+         ${CMAKE_COMMAND} 
+                        -D SRC="$<TARGET_FILE:image-compiler>"
+                        -D DST="$<TARGET_FILE_DIR:image-compiler>"
+                        -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>/"
+                        -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
       POST_BUILD
    )
 else()
