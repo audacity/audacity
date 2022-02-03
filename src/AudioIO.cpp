@@ -319,7 +319,6 @@ AudioIO::AudioIO()
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    mAILAActive = false;
 #endif
-   mStreamToken = 0;
 
    mLastPaError = paNoError;
 

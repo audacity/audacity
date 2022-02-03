@@ -299,7 +299,8 @@ public:
 
    wxLongLong          mLastPlaybackTimeMillis;
 
-   volatile double     mLastRecordingOffset;
+   //! Not (yet) used; should perhaps be atomic when it is
+   double              mLastRecordingOffset;
    PaError             mLastPaError;
 
 protected:

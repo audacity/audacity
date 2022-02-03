@@ -248,7 +248,8 @@ protected:
    /// True if audio playback is paused
    std::atomic<bool>   mPaused{ false };
 
-   volatile int        mStreamToken;
+   /*! Read by worker threads but unchanging during playback */
+   int                 mStreamToken{ 0 };
 
    /// Audio playback rate in samples per second
    double              mRate;
