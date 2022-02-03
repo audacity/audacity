@@ -234,8 +234,8 @@ void Track::SyncLockAdjust(double oldT1, double newT1)
 
 void PlayableTrack::Init( const PlayableTrack &orig )
 {
-   mMute = orig.mMute;
-   mSolo = orig.mSolo;
+   DoSetMute(orig.DoGetMute());
+   DoSetSolo(orig.DoGetSolo());
    AudioTrack::Init( orig );
 }
 
@@ -243,32 +243,52 @@ void PlayableTrack::Merge( const Track &orig )
 {
    auto pOrig = dynamic_cast<const PlayableTrack *>(&orig);
    wxASSERT( pOrig );
-   mMute = pOrig->mMute;
-   mSolo = pOrig->mSolo;
+   DoSetMute(pOrig->DoGetMute());
+   DoSetSolo(pOrig->DoGetSolo());
    AudioTrack::Merge( *pOrig );
 }
 
 void PlayableTrack::SetMute( bool m )
 {
-   if ( mMute != m ) {
-      mMute = m;
+   if ( DoGetMute() != m ) {
+      DoSetMute(m);
       Notify();
    }
 }
 
 void PlayableTrack::SetSolo( bool s  )
 {
-   if ( mSolo != s ) {
-      mSolo = s;
+   if ( DoGetSolo() != s ) {
+      DoSetSolo(s);
       Notify();
    }
+}
+
+bool PlayableTrack::DoGetMute() const
+{
+   return mMute.load(std::memory_order_relaxed);
+}
+
+void PlayableTrack::DoSetMute(bool value)
+{
+   mMute.store(value, std::memory_order_relaxed);
+}
+
+bool PlayableTrack::DoGetSolo() const
+{
+   return mSolo.load(std::memory_order_relaxed);
+}
+
+void PlayableTrack::DoSetSolo(bool value)
+{
+   mSolo.store(value, std::memory_order_relaxed);
 }
 
 // Serialize, not with tags of its own, but as attributes within a tag.
 void PlayableTrack::WriteXMLAttributes(XMLWriter &xmlFile) const
 {
-   xmlFile.WriteAttr(wxT("mute"), mMute);
-   xmlFile.WriteAttr(wxT("solo"), mSolo);
+   xmlFile.WriteAttr(wxT("mute"), DoGetMute());
+   xmlFile.WriteAttr(wxT("solo"), DoGetSolo());
    AudioTrack::WriteXMLAttributes(xmlFile);
 }
 
@@ -278,11 +298,11 @@ bool PlayableTrack::HandleXMLAttribute(const std::string_view &attr, const XMLAt
    long nValue;
 
    if (attr == "mute" && value.TryGet(nValue)) {
-      mMute = (nValue != 0);
+      DoSetMute(nValue != 0);
       return true;
    }
    else if (attr == "solo" && value.TryGet(nValue)) {
-      mSolo = (nValue != 0);
+      DoSetSolo(nValue != 0);
       return true;
    }
 
