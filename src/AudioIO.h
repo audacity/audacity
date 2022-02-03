@@ -267,7 +267,7 @@ public:
 
    std::vector<std::unique_ptr<Mixer>> mPlaybackMixers;
 
-   float               mMixerOutputVol { 1.0 };
+   std::atomic<float>  mMixerOutputVol{ 1.0 };
    static int          mNextStreamToken;
    double              mFactor;
    unsigned long       mMaxFramesOutput; // The actual number of frames output.
@@ -303,6 +303,11 @@ public:
    PaError             mLastPaError;
 
 protected:
+
+   float GetMixerOutputVol() {
+      return mMixerOutputVol.load(std::memory_order_relaxed); }
+   void SetMixerOutputVol(float value) {
+      mMixerOutputVol.store(value, std::memory_order_relaxed); }
 
    bool                mUpdateMeters;
    volatile bool       mUpdatingMeters;

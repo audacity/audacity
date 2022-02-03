@@ -325,7 +325,6 @@ AudioIO::AudioIO()
 
    mLastRecordingOffset = 0.0;
    mNumCaptureChannels = 0;
-   mPaused = false;
    mSilenceLevel = 0.0;
 
    mUpdateMeters = false;
@@ -367,7 +366,7 @@ AudioIO::AudioIO()
    mInputMixerWorks = false;
 #endif
 
-   mMixerOutputVol = AudioIOPlaybackVolume.Read();
+   SetMixerOutputVol(AudioIOPlaybackVolume.Read());
 
    mLastPlaybackTimeMillis = 0;
 }
@@ -436,8 +435,8 @@ RealtimeEffects::SuspensionScope AudioIO::SuspensionScope()
 void AudioIO::SetMixer(int inputSource, float recordVolume,
                        float playbackVolume)
 {
-   mMixerOutputVol = playbackVolume;
-   AudioIOPlaybackVolume.Write(mMixerOutputVol);
+   SetMixerOutputVol(playbackVolume);
+   AudioIOPlaybackVolume.Write(playbackVolume);
 
 #if defined(USE_PORTMIXER)
    PxMixer *mixer = mPortMixer;
@@ -456,7 +455,7 @@ void AudioIO::SetMixer(int inputSource, float recordVolume,
 void AudioIO::GetMixer(int *recordDevice, float *recordVolume,
                        float *playbackVolume)
 {
-   *playbackVolume = mMixerOutputVol;
+   *playbackVolume = GetMixerOutputVol();
 
 #if defined(USE_PORTMIXER)
 
@@ -1613,7 +1612,7 @@ void AudioIO::StopStream()
 
 void AudioIO::SetPaused(bool state)
 {
-   if (state != mPaused)
+   if (state != IsPaused())
    {
       if (auto pOwningProject = mOwningProject.lock()) {
          auto &em = RealtimeEffectManager::Get(*pOwningProject);
@@ -1624,7 +1623,7 @@ void AudioIO::SetPaused(bool state)
       }
    }
 
-   mPaused = state;
+   mPaused.store(state, std::memory_order_relaxed);
 }
 
 double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
@@ -2336,7 +2335,7 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
    const auto numPlaybackChannels = mNumPlaybackChannels;
 
    float gain = vt->GetChannelGain(chan);
-   if (drop || mForceFadeOut.load(std::memory_order_relaxed) || mPaused)
+   if (drop || mForceFadeOut.load(std::memory_order_relaxed) || IsPaused())
       gain = 0.0;
 
    // Output volume emulation: possibly copy meter samples, then
@@ -2348,7 +2347,7 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
 
    // DV: We use gain to emulate panning.
    // Let's keep the old behavior for panning.
-   gain *= ExpGain(mMixerOutputVol);
+   gain *= ExpGain(GetMixerOutputVol());
 
    float oldGain = vt->GetOldChannelGain(chan);
    if( gain != oldGain )
@@ -2889,7 +2888,7 @@ unsigned AudioIoCallback::CountSoloingTracks(){
 // fading out.
 bool AudioIoCallback::TrackShouldBeSilent( const WaveTrack &wt )
 {
-   return mPaused || (!wt.GetSolo() && (
+   return IsPaused() || (!wt.GetSolo() && (
       // Cut if somebody else is soloing
       mbHasSoloTracks ||
       // Cut if we're muted (and not soloing)
@@ -2972,7 +2971,7 @@ int AudioIoCallback::AudioCallback(
                              MAX(numCaptureChannels,numPlaybackChannels));
 
    bool bVolEmulationActive =
-      (outputBuffer && mMixerOutputVol != 1.0);
+      (outputBuffer && GetMixerOutputVol() != 1.0);
    // outputMeterFloats is the scratch pad for the output meter.
    // we can often reuse the existing outputBuffer and save on allocating
    // something new.
@@ -3019,7 +3018,7 @@ int AudioIoCallback::AudioCallback(
       outputMeterFloats);
 
    // Test for no track audio to play (because we are paused and have faded out)
-   if( mPaused &&  (( !mbMicroFades ) || AllTracksAlreadySilent() ))
+   if( IsPaused() &&  (( !mbMicroFades ) || AllTracksAlreadySilent() ))
       return mCallbackReturn;
 
    // To add track output to output (to play sound on speaker)
@@ -3104,7 +3103,7 @@ int AudioIoCallback::CallbackDoSeek()
 void AudioIoCallback::CallbackCheckCompletion(
    int &callbackReturn, unsigned long len)
 {
-   if (mPaused)
+   if (IsPaused())
       return;
 
    bool done =
