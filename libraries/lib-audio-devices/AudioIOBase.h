@@ -252,6 +252,7 @@ protected:
    int                 mStreamToken{ 0 };
 
    /// Audio playback rate in samples per second
+   /*! Read by worker threads but unchanging during playback */
    double              mRate;
 
    PaStream           *mPortStreamV19;

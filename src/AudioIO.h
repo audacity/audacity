@@ -262,6 +262,7 @@ public:
    ArrayOf<std::unique_ptr<Resample>> mResample;
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
    WaveTrackArray      mCaptureTracks;
+   /*! Read by worker threads but unchanging during playback */
    ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
    WaveTrackArray      mPlaybackTracks;
 
@@ -271,7 +272,8 @@ public:
    static int          mNextStreamToken;
    double              mFactor;
    unsigned long       mMaxFramesOutput; // The actual number of frames output.
-   bool                mbMicroFades; 
+   /*! Read by a worker thread but unchanging during playback */
+   bool                mbMicroFades;
 
    double              mSeek;
    PlaybackPolicy::Duration mPlaybackRingBufferSecs;
@@ -283,11 +285,15 @@ public:
    size_t              mPlaybackQueueMinimum;
 
    double              mMinCaptureSecsToCopy;
+   /*! Read by a worker thread but unchanging during playback */
    bool                mSoftwarePlaythrough;
    /// True if Sound Activated Recording is enabled
+   /*! Read by a worker thread but unchanging during playback */
    bool                mPauseRec;
    float               mSilenceLevel;
+   /*! Read by a worker thread but unchanging during playback */
    unsigned int        mNumCaptureChannels;
+   /*! Read by a worker thread but unchanging during playback */
    unsigned int        mNumPlaybackChannels;
    sampleFormat        mCaptureFormat;
    unsigned long long  mLostSamples{ 0 };
@@ -313,6 +319,9 @@ protected:
    bool                mUpdateMeters;
    volatile bool       mUpdatingMeters;
 
+   /*! Pointer is read by a worker thread but unchanging during playback.
+    (Whether its overriding methods are race-free is not for AudioIO to ensure.)
+    */
    std::weak_ptr< AudioIOListener > mListener;
 
    friend class AudioThread;
@@ -338,6 +347,7 @@ protected:
       { if (mRecordingException) wxAtomicDec( mRecordingException ); }
 
    std::vector< std::pair<double, double> > mLostCaptureIntervals;
+   /*! Read by a worker thread but unchanging during playback */
    bool mDetectDropouts{ true };
 
 public:
