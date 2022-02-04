@@ -292,7 +292,7 @@ public:
    sampleFormat        mCaptureFormat;
    unsigned long long  mLostSamples{ 0 };
    std::atomic<bool>   mAudioThreadShouldCallTrackBufferExchangeOnce;
-   volatile bool       mAudioThreadTrackBufferExchangeLoopRunning;
+   std::atomic<bool>   mAudioThreadTrackBufferExchangeLoopRunning;
    volatile bool       mAudioThreadTrackBufferExchangeLoopActive;
 
    std::atomic<bool>   mForceFadeOut{ false };

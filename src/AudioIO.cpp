@@ -311,7 +311,8 @@ AudioIO::AudioIO()
 
    mAudioThreadShouldCallTrackBufferExchangeOnce
       .store(false, std::memory_order_relaxed);
-   mAudioThreadTrackBufferExchangeLoopRunning = false;
+   mAudioThreadTrackBufferExchangeLoopRunning
+      .store(false, std::memory_order_relaxed);
    mAudioThreadTrackBufferExchangeLoopActive = false;
    mPortStreamV19 = NULL;
 
@@ -1042,7 +1043,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       // Probably not needed so urgently before portaudio thread start for usual
       // playback, since our ring buffers have been primed already with 4 sec
       // of audio, but then we might be scrubbing, so do it.
-      mAudioThreadTrackBufferExchangeLoopRunning = true;
+      mAudioThreadTrackBufferExchangeLoopRunning
+         .store(true, std::memory_order_relaxed);
       mForceFadeOut.store(false, std::memory_order_relaxed);
 
       // Now start the PortAudio stream!
@@ -1052,7 +1054,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       if( err != paNoError )
       {
          mStreamToken = 0;
-         mAudioThreadTrackBufferExchangeLoopRunning = false;
+         mAudioThreadTrackBufferExchangeLoopRunning
+           .store(false, std::memory_order_relaxed);
          if (pListener && mNumCaptureChannels > 0)
             pListener->OnAudioIOStopRecording();
          StartStreamCleanup();
@@ -1362,7 +1365,8 @@ void AudioIO::StopStream()
    wxPowerResource::Release(wxPOWER_RESOURCE_SCREEN);
 #endif
  
-   if( mAudioThreadTrackBufferExchangeLoopRunning )
+   if( mAudioThreadTrackBufferExchangeLoopRunning
+      .load(std::memory_order_relaxed) )
    {
       // PortAudio callback can use the information that we are stopping to fade
       // out the audio.  Give PortAudio callback a chance to do so.
@@ -1406,7 +1410,8 @@ void AudioIO::StopStream()
    // DV: Seems that Pa_CloseStream calls Pa_AbortStream internally,
    // at least for PortAudio 19.7.0+
 
-   mAudioThreadTrackBufferExchangeLoopRunning = false;
+   mAudioThreadTrackBufferExchangeLoopRunning
+      .store(false, std::memory_order_relaxed);
 
    // Audacity can deadlock if it tries to update meters while
    // we're stopping PortAudio (because the meter updating code
@@ -1744,7 +1749,8 @@ AudioThread::ExitCode AudioThread::Entry()
          gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce
             .store(false, std::memory_order_relaxed);
       }
-      else if( gAudioIO->mAudioThreadTrackBufferExchangeLoopRunning )
+      else if( gAudioIO->mAudioThreadTrackBufferExchangeLoopRunning
+         .load(std::memory_order_relaxed))
       {
          gAudioIO->TrackBufferExchange();
       }
@@ -3062,7 +3068,8 @@ int AudioIoCallback::CallbackDoSeek()
    const auto numPlaybackTracks = mPlaybackTracks.size();
 
    // Pause audio thread and wait for it to finish
-   mAudioThreadTrackBufferExchangeLoopRunning = false;
+   mAudioThreadTrackBufferExchangeLoopRunning
+      .store(false, std::memory_order_relaxed);
    while( mAudioThreadTrackBufferExchangeLoopActive )
    {
       using namespace std::chrono;
@@ -3104,7 +3111,8 @@ int AudioIoCallback::CallbackDoSeek()
    }
 
    // Reenable the audio thread
-   mAudioThreadTrackBufferExchangeLoopRunning = true;
+   mAudioThreadTrackBufferExchangeLoopRunning
+      .store(true, std::memory_order_relaxed);
 
    return paContinue;
 }
