@@ -83,6 +83,8 @@ void DevicePrefs::Populate()
 {
    // First any pre-processing for constructing the GUI.
    GetNamesAndLabels();
+   
+   Bind(wxEVT_ENTER_WINDOW, &DevicePrefs::OnToolbarEntry, this);
 
    // Get current setting for devices
    mPlayDevice = AudioIOPlaybackDevice.Read();
@@ -207,6 +209,11 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
    S.EndScroller();
 
+}
+
+void DevicePrefs::OnToolbarEntry(wxMouseEvent &event)
+{
+   DeviceManager::Instance()->Rescan();
 }
 
 void DevicePrefs::OnHost(wxCommandEvent & e)

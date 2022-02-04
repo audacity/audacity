@@ -207,6 +207,9 @@ void DeviceToolBar::Populate()
    mInputChannels->Bind(wxEVT_KILL_FOCUS,
                  &DeviceToolBar::OnFocus,
                  this);
+   Bind(wxEVT_ENTER_WINDOW,
+                 &DeviceToolBar::OnToolbarEntry,
+                 this);
 
    SetNames();
 
@@ -216,6 +219,11 @@ void DeviceToolBar::Populate()
 void DeviceToolBar::OnFocus(wxFocusEvent &event)
 {
    KeyboardCapture::OnFocus( *this, event );
+}
+
+void DeviceToolBar::OnToolbarEntry(wxMouseEvent &event)
+{
+   DeviceManager::Instance()->Rescan();
 }
 
 void DeviceToolBar::OnCaptureKey(wxCommandEvent &event)
@@ -707,6 +715,7 @@ void DeviceToolBar::ShowChannelsDialog()
 
 void DeviceToolBar::ShowComboDialog(wxChoice *combo, const TranslatableString &title)
 {
+   DeviceManager::Instance()->Rescan();
    if (!combo || combo->GetCount() == 0) {
       AudacityMessageBox( XO("Device information is not available.") );
       return;
