@@ -293,7 +293,7 @@ public:
    unsigned long long  mLostSamples{ 0 };
    std::atomic<bool>   mAudioThreadShouldCallTrackBufferExchangeOnce;
    std::atomic<bool>   mAudioThreadTrackBufferExchangeLoopRunning;
-   volatile bool       mAudioThreadTrackBufferExchangeLoopActive;
+   std::atomic<bool>   mAudioThreadTrackBufferExchangeLoopActive;
 
    std::atomic<bool>   mForceFadeOut{ false };
 

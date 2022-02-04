@@ -313,7 +313,8 @@ AudioIO::AudioIO()
       .store(false, std::memory_order_relaxed);
    mAudioThreadTrackBufferExchangeLoopRunning
       .store(false, std::memory_order_relaxed);
-   mAudioThreadTrackBufferExchangeLoopActive = false;
+   mAudioThreadTrackBufferExchangeLoopActive
+      .store(false, std::memory_order_relaxed);
    mPortStreamV19 = NULL;
 
    mNumPauseFrames = 0;
@@ -1741,7 +1742,8 @@ AudioThread::ExitCode AudioThread::Entry()
       const auto interval = schedule.GetPolicy().SleepInterval(schedule);
 
       // Set LoopActive outside the tests to avoid race condition
-      gAudioIO->mAudioThreadTrackBufferExchangeLoopActive = true;
+      gAudioIO->mAudioThreadTrackBufferExchangeLoopActive
+         .store(true, std::memory_order_relaxed);
       if( gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce
          .load(std::memory_order_relaxed) )
       {
@@ -1754,7 +1756,8 @@ AudioThread::ExitCode AudioThread::Entry()
       {
          gAudioIO->TrackBufferExchange();
       }
-      gAudioIO->mAudioThreadTrackBufferExchangeLoopActive = false;
+      gAudioIO->mAudioThreadTrackBufferExchangeLoopActive
+         .store(false, std::memory_order_relaxed);
 
       std::this_thread::sleep_until( loopPassStart + interval );
    }
@@ -3070,7 +3073,8 @@ int AudioIoCallback::CallbackDoSeek()
    // Pause audio thread and wait for it to finish
    mAudioThreadTrackBufferExchangeLoopRunning
       .store(false, std::memory_order_relaxed);
-   while( mAudioThreadTrackBufferExchangeLoopActive )
+   while( mAudioThreadTrackBufferExchangeLoopActive
+      .load(std::memory_order_relaxed ) )
    {
       using namespace std::chrono;
       std::this_thread::sleep_for(50ms);
