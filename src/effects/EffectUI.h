@@ -94,7 +94,7 @@ private:
 private:
    Observer::Subscription mSubscription;
 
-   AudacityProject *mProject;
+   AudacityProject &mProject;
    wxWindow *mParent;
    Effect &mEffect;
    EffectUIClientInterface &mClient;
