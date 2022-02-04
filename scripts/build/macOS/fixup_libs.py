@@ -57,7 +57,6 @@ class OtoolRunner:
             lines = [line.decode('utf-8').strip() for line in p.stdout.readlines()]
             for line_index in range(len(lines)):
                 if lines[line_index] == 'cmd LC_RPATH':
-                    print(f"\tFound RPATH command at line {line_index}");
                     rpath_match = re.match(r'path\s+(.*)\s+\(', lines[line_index + 2])
                     if rpath_match:
                         rpath = rpath_match.group(1)
@@ -67,7 +66,6 @@ class OtoolRunner:
             
         cache[file] = result
         return result
-
 
 
 def parse_args():
@@ -94,6 +92,7 @@ def parse_args():
 
     return args
 
+
 def collect_dependencies(runner, input_file):
     files = {}
 
@@ -113,6 +112,7 @@ def collect_dependencies(runner, input_file):
 
     return files
 
+
 def add_rpath(file, rpath):
     if rpath in file['rpath']:
         return []
@@ -122,7 +122,13 @@ def add_rpath(file, rpath):
 
 args = parse_args()
 
+print('============== fixup.libs.py')
+print(args)
+
+print('============================')
+
 otool = OtoolRunner(args['include_dirs'])
+
 files = collect_dependencies(otool, args['input'])
 
 for path in files:
@@ -130,7 +136,7 @@ for path in files:
 
     if path != args['input']:
         target_path = os.path.join(args['output'], path.split('/')[-1])
-        print(f"Copying {path} -> {target_path}")
+        print("Copying {} -> {}".format(path, target_path))
         shutil.copy2(path, target_path, follow_symlinks=True)
         path = target_path
     
@@ -140,7 +146,7 @@ for path in files:
 
     for dep in file['dependencies']:
         old_line = dep['line']
-        new_line = f"@rpath/{dep['name']}"
+        new_line = "@rpath/{}".format(dep['name'])
         if old_line != new_line:
             install_name_tool = install_name_tool + [
                 '-change', old_line, new_line
@@ -153,5 +159,5 @@ for path in files:
 
         install_name_tool.append(path)
 
-        print(f"Patching {path}");
+        print("Patching {}".format(path));
         subprocess.check_call(install_name_tool)
