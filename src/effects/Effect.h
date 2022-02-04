@@ -476,12 +476,6 @@ private:
    size_t mBufferSize;
    size_t mBlockSize;
    unsigned mNumChannels;
-
-public:
-   const static wxString kUserPresetIdent;
-   const static wxString kFactoryPresetIdent;
-   const static wxString kCurrentSettingsIdent;
-   const static wxString kFactoryDefaultsIdent;
 };
 
 // FIXME:

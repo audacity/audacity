@@ -69,6 +69,11 @@ class EffectProcessor;
 class AUDACITY_DLL_API EffectUIHostInterface : public EffectHostInterface
 {
 public:
+   const static wxString kUserPresetIdent;
+   const static wxString kFactoryPresetIdent;
+   const static wxString kCurrentSettingsIdent;
+   const static wxString kFactoryDefaultsIdent;
+
    EffectUIHostInterface &operator=(EffectUIHostInterface&) = delete;
    virtual ~EffectUIHostInterface();
 
