@@ -328,7 +328,7 @@ jobs:
         generator: Unix Makefiles
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
-        build_level: $${{ env.BUILD_LEVEL }}
+        build_level: ${{ env.BUILD_LEVEL }}
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
     - name: Package
       shell: bash

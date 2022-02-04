@@ -4,8 +4,8 @@ include /usr/share/dpkg/architecture.mk
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
-export CONAN_USER_HOME = $(shell pwd)/audacity-offline-dependencies/conan_home
-export PATH := $(shell pwd)/conan_env/bin:$(PATH)
+export CONAN_USER_HOME = $(shell pwd)/.offline/conan
+export PATH := $(shell pwd)/.venv/bin:$(PATH)
 
 %:
 	dh $@
@@ -32,8 +32,11 @@ execute_after_dh_auto_install:
 	rm debian/audacity/usr/share/doc/audacity/LICENSE.txt
 
 execute_before_dh_auto_configure:
-	python3 -m venv conan_env
-	conan_env/bin/pip3 install --no-index --find-links "./audacity-offline-dependencies/pip_cache" conan 
+	python3 -m venv .venv
+
+	.venv/bin/pip3 install --no-index --find-links .offline/pip setuptools wheel
+	.venv/bin/pip3 install --no-index --find-links .offline/pip Cython markupsafe
+	.venv/bin/pip3 install --no-index --find-links .offline/pip conan
 
 	mkdir -p ${CONAN_USER_HOME}
 

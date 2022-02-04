@@ -1,37 +1,35 @@
 #!/usr/bin/env bash
 
-set -euxo pipefail
+set -euo pipefail
 
-cmake_args=(
-    -D CMAKE_BUILD_TYPE=Release
+cp /work_dir/*.tar.gz ./
 
-    -D audacity_conan_allow_prebuilt_binaries=no
+sources=$(ls audacity-sources-*)
+version=$(echo ${sources} | sed -e 's/audacity-sources-//g' -e 's/.tar.gz//g' -e 's/-/./g' -e 's/\.[0-9]\++/.r/g')
 
-    -D audacity_lib_preference=system # Change the libs default to 'system'
-    -D audacity_obey_system_dependencies=On # And force it!
+echo "Audacity version: ${version}"
 
-    -D audacity_use_pch=no
+buildLevel=2
 
-    -D audacity_use_wxwidgets=local # wxWidgets 3.1 is not available
-
-    -D audacity_use_sbsms=local # sbsms is only available in AUR
-)
-
-if [[ $1 == "prepare" ]]; then
-    tar -xzf /work_dir/audacity-sources.tar.gz
-    
-    audacity/linux/packages/prepare_offline_dependencies.sh "${cmake_args[@]}"
-
-    cp audacity-offline-dependencies.tar.gz /work_dir/audacity-offline-dependencies-arch-linux.tar.gz
-elif [[ $1 == "build" ]]; then
-    tar -xzf /work_dir/audacity-sources.tar.gz
-    tar -xzf /work_dir/audacity-offline-dependencies-arch-linux.tar.gz
-
-    audacity/linux/packages/build_package.sh "${cmake_args[@]}"
-
-    cp audacity-linux_x86_64.tar.gz /work_dir/audacity-arch-linux_x86_64.tar.gz
-elif [[ $1 == "package" ]]; then
-    cp /work_dir/*.tar.gz ./
-    makepkg
-    cp *.zst /work_dir
+if [[ "${sources}" == *alpha* ]]; then
+    buildLevel=0
+elif [[ "${sources}" == *beta* ]]; then
+    buildLevel=1
 fi
+
+echo "Audacity build level: ${buildLevel}"
+
+deps=$(ls audacity-dependencies-*)
+
+sed -i -e "s|TMPL_AUDACITY_VERSION|${version}|g" PKGBUILD
+sed -i -e "s|TMPL_AUDACITY_SOURCES|${sources}|g" PKGBUILD
+sed -i -e "s|TMPL_AUDACITY_DEPENDENCIES|${deps}|g" PKGBUILD
+
+cat PKGBUILD
+
+makepkg
+
+ls -la /work_dir
+id
+
+cp *.zst /work_dir

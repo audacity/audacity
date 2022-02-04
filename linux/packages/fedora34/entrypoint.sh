@@ -1,41 +1,34 @@
 #!/usr/bin/env bash
 
-set -euxo pipefail
+set -euo pipefail
 
-cmake_args=(
-    -D CMAKE_BUILD_TYPE=Release
+mkdir -p rpmbuild/SOURCES
+cp /work_dir/*.tar.gz ./rpmbuild/SOURCES/
 
-    -D audacity_conan_enabled=Off
-    -D audacity_conan_allow_prebuilt_binaries=no
+sources=$(ls ./rpmbuild/SOURCES/audacity-sources-*)
+tar_dirname=$(basename ${sources} .tar.gz)
+version=$(echo ${tar_dirname} | sed -e 's/audacity-sources-//g' -e 's/.tar.gz//g' -e 's/-/./g' -e 's/\.[0-9]\++/.r/g')
 
-    -D audacity_lib_preference=system # Change the libs default to 'system'
-    -D audacity_obey_system_dependencies=On # And force it!
+echo "Audacity version: ${version}"
 
-    -D audacity_use_pch=no
+buildLevel=2
 
-    -D audacity_use_portsmf=local
-    -D audacity_use_sbsms=local 
-)
-
-if [[ $1 == "prepare" ]]; then
-    tar -xzf /work_dir/audacity-sources.tar.gz
-    
-    audacity/linux/packages/prepare_offline_dependencies.sh "${cmake_args[@]}"
-
-    cp audacity-offline-dependencies.tar.gz /work_dir/audacity-offline-dependencies-fedora34.tar.gz
-elif [[ $1 == "build" ]]; then
-    tar -xzf /work_dir/audacity-sources.tar.gz
-    tar -xzf /work_dir/audacity-offline-dependencies-fedora34.tar.gz
-
-    audacity/linux/packages/build_package.sh "${cmake_args[@]}"
-
-    cp audacity-linux_x86_64.tar.gz /work_dir/audacity-fedora34_x86_64.tar.gz
-elif [[ $1 == "package" ]]; then
-    mkdir -p rpmbuild/SOURCES
-    cp /work_dir/*.tar.gz ./rpmbuild/SOURCES/
-
-    rpmbuild -ba --rpmfcdebug audacity.spec
-
-    cp -rv ./rpmbuild/RPMS /work_dir
-    cp -rv ./rpmbuild/SRPMS /work_dir
+if [[ "${tar_dirname}" == *alpha* ]]; then
+    buildLevel=0
+elif [[ "${tar_dirname}" == *beta* ]]; then
+    buildLevel=1
 fi
+
+echo "Audacity build level: ${buildLevel}"
+
+#deps=$(ls ./rpmbuild/SOURCES/audacity-dependencies-*)
+
+sed -i -e "s|TMPL_AUDACITY_VERSION|${version}|g" audacity.spec
+sed -i -e "s|TMPL_AUDACITY_SOURCES|${sources}|g" audacity.spec
+sed -i -e "s|TMPL_AUDACITY_TAR_DIRNAME|${tar_dirname}|g" audacity.spec
+#sed -i -e "s|TMPL_AUDACITY_DEPENDENCIES|${deps}|g" audacity.spec
+
+rpmbuild -ba --rpmfcdebug audacity.spec
+
+cp -rv ./rpmbuild/RPMS /work_dir
+cp -rv ./rpmbuild/SRPMS /work_dir
