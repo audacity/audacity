@@ -382,6 +382,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 	         TARGET ${TARGET}
             COMMAND ${CMAKE_COMMAND}
 	            -D SRC="${_MODDIR}/${TARGET}.so"
+               -D DST="${_PKGLIB}"
                -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
                -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
             POST_BUILD )
