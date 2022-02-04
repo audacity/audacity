@@ -2643,7 +2643,8 @@ void AudioIoCallback::DrainInputBuffers(
    // enough from mCaptureBuffers; maybe it's CPU-bound, or maybe the
    // storage device it writes is too slow
    if (mDetectDropouts &&
-         ((mDetectUpstreamDropouts && inputError) ||
+         ((mDetectUpstreamDropouts.load(std::memory_order_relaxed)
+           && inputError) ||
          len < framesPerBuffer) ) {
       // Assume that any good partial buffer should be written leftmost
       // and zeroes will be padded after; label the zeroes.

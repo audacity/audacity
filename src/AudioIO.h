@@ -349,7 +349,7 @@ public:
 
    // Whether to check the error code passed to audacityAudioCallback to
    // detect more dropouts
-   bool mDetectUpstreamDropouts{ true };
+   std::atomic<bool> mDetectUpstreamDropouts{ true };
 
 protected:
    RecordingSchedule mRecordingSchedule{};
