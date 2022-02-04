@@ -54,16 +54,27 @@ public:
 
    //! Main thread appends a global or per-track effect
    /*!
+    @param pScope if realtime is active but scope is absent, there is no effect
     @param pTrack if null, then state is added to the global list
+    @param id identifies the effect
     @return if null, the given id was not found
     */
-   RealtimeEffectState *AddState(Track *pTrack, const PluginID & id);
-   //! Main thread safely removes an effect from a list
-   void RemoveState(RealtimeEffectList &states, RealtimeEffectState &state);
+   RealtimeEffectState *AddState(RealtimeEffects::InitializationScope *pScope,
+      Track *pTrack, const PluginID & id);
+
+   //! Main thread removes a global or per-track effect
+   /*!
+    @param pScope if realtime is active but scope is absent, there is no effect
+    @param pTrack if null, then state is added to the global list
+    @param state the state to be removed
+    */
+   /*! No effect if realtime is active but scope is not supplied */
+   void RemoveState(RealtimeEffects::InitializationScope *pScope,
+      Track *pTrack, RealtimeEffectState &state);
 
 private:
-
    friend RealtimeEffects::InitializationScope;
+
    //! Main thread begins to define a set of tracks for playback
    void Initialize(double rate);
    //! Main thread adds one track (passing the first of one or more channels)

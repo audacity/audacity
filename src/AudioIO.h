@@ -24,6 +24,7 @@
 #include <utility>
 #include <wx/atomic.h> // member variable
 
+#include "ModuleInterface.h" // for PluginID
 #include "Observer.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
@@ -33,6 +34,7 @@ class AudioIOBase;
 class AudioIO;
 class RingBuffer;
 class Mixer;
+class RealtimeEffectState;
 class Resample;
 class AudioThread;
 
@@ -42,6 +44,7 @@ class PlayableTrack;
 using PlayableTrackConstArray =
    std::vector < std::shared_ptr < const PlayableTrack > >;
 
+class Track;
 class WaveTrack;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
@@ -371,6 +374,14 @@ class AUDACITY_DLL_API AudioIO final
 public:
    // This might return null during application startup or shutdown
    static AudioIO *Get();
+
+   //! Forwards to RealtimeEffectManager::AddState with proper init scope
+   RealtimeEffectState *AddState(AudacityProject &project,
+      Track *pTrack, const PluginID & id);
+
+   //! Forwards to RealtimeEffectManager::RemoveState with proper init scope
+   void RemoveState(AudacityProject &project,
+      Track *pTrack, RealtimeEffectState &state);
 
    /** \brief Start up Portaudio for capture and recording as needed for
     * input monitoring and software playthrough only

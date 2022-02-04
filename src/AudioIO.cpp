@@ -404,6 +404,27 @@ AudioIO::~AudioIO()
    mThread.reset();
 }
 
+RealtimeEffectState *AudioIO::AddState(AudacityProject &project,
+   Track *pTrack, const PluginID & id)
+{
+   RealtimeEffects::InitializationScope *pInit = nullptr;
+   if (mpTransportState)
+      if (auto pProject = GetOwningProject(); pProject.get() == &project)
+         pInit = &*mpTransportState->mpRealtimeInitialization;
+   return RealtimeEffectManager::Get(project).AddState(pInit, pTrack, id);
+   return nullptr;
+}
+
+void AudioIO::RemoveState(AudacityProject &project,
+   Track *pTrack, RealtimeEffectState &state)
+{
+   RealtimeEffects::InitializationScope *pInit = nullptr;
+   if (mpTransportState)
+      if (auto pProject = GetOwningProject(); pProject.get() == &project)
+         pInit = &*mpTransportState->mpRealtimeInitialization;
+   RealtimeEffectManager::Get(project).RemoveState(pInit, pTrack, state);
+}
+
 void AudioIO::SetMixer(int inputSource, float recordVolume,
                        float playbackVolume)
 {

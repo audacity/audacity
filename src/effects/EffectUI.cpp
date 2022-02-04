@@ -1138,8 +1138,8 @@ void EffectUIHost::LoadUserPresets()
 void EffectUIHost::InitializeRealtime()
 {
    if (mSupportsRealtime && !mInitialized) {
-      mpState = RealtimeEffectManager::Get(mProject)
-         .AddState(nullptr, PluginManager::GetID(&mEffect));
+      mpState = AudioIO::Get()->AddState(mProject,
+         nullptr, PluginManager::GetID(&mEffect));
       /*
       ProjectHistory::Get(mProject).PushState(
          XO("Added %s effect").Format(mpState->GetEffect()->GetName()),
@@ -1166,9 +1166,7 @@ void EffectUIHost::CleanupRealtime()
 {
    if (mSupportsRealtime && mInitialized) {
       if (mpState) {
-         auto &list = RealtimeEffectList::Get(mProject);
-         RealtimeEffectManager::Get(mProject)
-            .RemoveState(list, *mpState);
+         AudioIO::Get()->RemoveState(mProject, nullptr, *mpState);
       /*
          ProjectHistory::Get(mProject).PushState(
             XO("Removed %s effect").Format(mpState->GetEffect()->GetName()),
