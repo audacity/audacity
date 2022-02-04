@@ -291,7 +291,7 @@ public:
    unsigned int        mNumPlaybackChannels;
    sampleFormat        mCaptureFormat;
    unsigned long long  mLostSamples{ 0 };
-   volatile bool       mAudioThreadShouldCallTrackBufferExchangeOnce;
+   std::atomic<bool>   mAudioThreadShouldCallTrackBufferExchangeOnce;
    volatile bool       mAudioThreadTrackBufferExchangeLoopRunning;
    volatile bool       mAudioThreadTrackBufferExchangeLoopActive;
 

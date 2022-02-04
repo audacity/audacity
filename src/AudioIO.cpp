@@ -309,7 +309,8 @@ AudioIO::AudioIO()
    // We have to ASSERT in the GUI thread, if we are to see it properly.
    wxASSERT( sizeof( short ) <= sizeof( float ));
 
-   mAudioThreadShouldCallTrackBufferExchangeOnce = false;
+   mAudioThreadShouldCallTrackBufferExchangeOnce
+      .store(false, std::memory_order_relaxed);
    mAudioThreadTrackBufferExchangeLoopRunning = false;
    mAudioThreadTrackBufferExchangeLoopActive = false;
    mPortStreamV19 = NULL;
@@ -996,9 +997,11 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    // so that they will have data in them when the stream starts.  Having the
    // audio thread call TrackBufferExchange here makes the code more predictable, since
    // TrackBufferExchange will ALWAYS get called from the Audio thread.
-   mAudioThreadShouldCallTrackBufferExchangeOnce = true;
+   mAudioThreadShouldCallTrackBufferExchangeOnce
+      .store(true, std::memory_order_relaxed);
 
-   while( mAudioThreadShouldCallTrackBufferExchangeOnce ) {
+   while( mAudioThreadShouldCallTrackBufferExchangeOnce
+      .load(std::memory_order_relaxed)) {
       using namespace std::chrono;
       auto interval = 50ms;
       if (options.playbackStreamPrimer) {
@@ -1459,9 +1462,10 @@ void AudioIO::StopStream()
       // to the target WaveTrack.  To do this, we ask the audio thread to
       // call TrackBufferExchange one last time (it normally would not do so since
       // Pa_GetStreamActive() would now return false
-      mAudioThreadShouldCallTrackBufferExchangeOnce = true;
-
-      while( mAudioThreadShouldCallTrackBufferExchangeOnce )
+      mAudioThreadShouldCallTrackBufferExchangeOnce
+         .store(true, std::memory_order_relaxed);
+      while( mAudioThreadShouldCallTrackBufferExchangeOnce
+         .load(std::memory_order_relaxed) )
       {
          //FIXME: Seems like this block of the UI thread isn't bounded,
          //but we cannot allow event handlers to see incompletely terminated
@@ -1733,10 +1737,12 @@ AudioThread::ExitCode AudioThread::Entry()
 
       // Set LoopActive outside the tests to avoid race condition
       gAudioIO->mAudioThreadTrackBufferExchangeLoopActive = true;
-      if( gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce )
+      if( gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce
+         .load(std::memory_order_relaxed) )
       {
          gAudioIO->TrackBufferExchange();
-         gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce = false;
+         gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce
+            .store(false, std::memory_order_relaxed);
       }
       else if( gAudioIO->mAudioThreadTrackBufferExchangeLoopRunning )
       {
@@ -1910,7 +1916,8 @@ void AudioIO::DrainRecordBuffers()
 
       double deltat = avail / mRate;
 
-      if (mAudioThreadShouldCallTrackBufferExchangeOnce ||
+      if (mAudioThreadShouldCallTrackBufferExchangeOnce
+          .load(std::memory_order_relaxed) ||
           deltat >= mMinCaptureSecsToCopy)
       {
          // This scope may combine many appendings of wave tracks,
@@ -3087,8 +3094,10 @@ int AudioIoCallback::CallbackDoSeek()
    mPlaybackSchedule.mTimeQueue.Prime(time);
 
    // Reload the ring buffers
-   mAudioThreadShouldCallTrackBufferExchangeOnce = true;
-   while( mAudioThreadShouldCallTrackBufferExchangeOnce )
+   mAudioThreadShouldCallTrackBufferExchangeOnce
+      .store(true, std::memory_order_relaxed);
+   while( mAudioThreadShouldCallTrackBufferExchangeOnce
+      .load(std::memory_order_relaxed) )
    {
       using namespace std::chrono;
       std::this_thread::sleep_for(50ms);
