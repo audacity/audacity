@@ -56,6 +56,42 @@ bool EffectDefinitionInterface::IsHiddenFromMenus()
    return false;
 }
 
+auto EffectDefinitionInterfaceEx::MakeSettings() const -> Settings
+{
+   // Temporary default implementation just saves self
+   // Cast away const! Capture pointer to self
+   return Settings( const_cast<EffectDefinitionInterfaceEx*>(this) );
+}
+
+bool EffectDefinitionInterfaceEx::SaveSettings(
+   const Settings &settings, CommandParameters & parms) const
+{
+   if (auto pEffect = FindMe(settings))
+      // Call through to old interface
+      return pEffect->GetAutomationParameters(parms);
+   else
+      return false;
+}
+
+bool EffectDefinitionInterfaceEx::LoadSettings(
+   CommandParameters & parms, Settings &settings) const
+{
+   if (auto pEffect = FindMe(settings))
+      // Call through to old interface
+      return pEffect->SetAutomationParameters(parms);
+   else
+      return false;
+}
+
+EffectDefinitionInterfaceEx *
+EffectDefinitionInterfaceEx::FindMe(const Settings &settings) const
+{
+   if (auto ppEffect = settings.cast<EffectDefinitionInterfaceEx*>();
+       ppEffect && *ppEffect == this)
+      return *ppEffect;
+   return nullptr;
+}
+
 //bool EffectDefinitionInterface::DefineParams(ShuttleParams & S)
 //{
 //   return false;

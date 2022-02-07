@@ -225,7 +225,7 @@ enum InfoKeys
 //! This object exists in a separate process, to validate a newly seen plug-in.
 /*! It needs to implement EffectDefinitionInterface but mostly just as stubs */
 class VSTSubProcess final : public wxProcess
-   , public EffectDefinitionInterface
+   , public EffectDefinitionInterfaceEx
 {
 public:
    VSTSubProcess()

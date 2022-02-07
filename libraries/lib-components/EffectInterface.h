@@ -46,6 +46,8 @@
 #include "ComponentInterfaceSymbol.h"
 #include "EffectAutomationParameters.h" // for command automation
 
+#include "TypedAny.h"
+
 class ShuttleGui;
 
 typedef enum EffectType : int
@@ -61,6 +63,11 @@ typedef enum EffectType : int
 
 using EffectFamilySymbol = ComponentInterfaceSymbol;
 
+//! Externalized state of a plug-in
+struct EffectSettings : audacity::TypedAny<EffectSettings> {
+   using TypedAny::TypedAny;
+};
+
 /*************************************************************************************//**
 
 \class EffectDefinitionInterface 
@@ -73,6 +80,8 @@ parameters.
 class COMPONENTS_API EffectDefinitionInterface  /* not final */ : public ComponentInterface
 {
 public:
+   using Settings = EffectSettings;
+
    //! A utility that strips spaces and CamelCases a name.
    static Identifier GetSquashedName(const Identifier &ident);
 
@@ -119,10 +128,10 @@ public:
    // functionality.
    //virtual bool DefineParams( ShuttleParams & S);
 
-   //! Save current settings into parms
-   virtual bool GetAutomationParameters(CommandParameters & parms) = 0;
-   //! Change settings to those stored in parms
-   virtual bool SetAutomationParameters(CommandParameters & parms) = 0;
+   /*! @name Old settings interface
+    Old interface for saving and loading non-externalized settings
+    */
+   //! @{
 
    //! Change settings to a user-named preset
    virtual bool LoadUserPreset(const RegistryPath & name) = 0;
@@ -131,10 +140,73 @@ public:
 
    //! Report names of factory presets
    virtual RegistryPaths GetFactoryPresets() = 0;
+
    //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
    virtual bool LoadFactoryPreset(int id) = 0;
    //! Change settings back to "factory default"
    virtual bool LoadFactoryDefaults() = 0;
+
+   //! @}
+
+   /*! @name settings
+    Interface for saving and loading externalized settings.
+    All methods are const!
+    */
+   //! @{
+   //! Produce an object holding new, independent settings
+   virtual Settings MakeSettings() const = 0;
+
+   //! Store settings as keys and values
+   /*!
+    @return true on success
+    */
+   virtual bool SaveSettings(
+      const Settings &settings, CommandParameters & parms) const = 0;
+
+   //! Restore settings from keys and values
+   /*!
+    @return true on success
+    */
+   virtual bool LoadSettings(
+      CommandParameters & parms, Settings &settings) const = 0;
+
+   //! @}
+};
+
+//! Extension of EffectDefinitionInterface with old system for settings
+/*!
+ (Default implementations of EffectDefinitionInterface methods for settings call
+ through to the old interface, violating const correctness.  This is meant to be
+ transitional only.)
+ */
+class COMPONENTS_API EffectDefinitionInterfaceEx  /* not final */
+   : public EffectDefinitionInterface
+{
+public:
+   /*! @name Old settings interface
+    Old interface for saving and loading non-externalized settings
+    */
+   //! @{
+   //! Save current settings into parms
+   virtual bool GetAutomationParameters(CommandParameters & parms) = 0;
+   //! Change settings to those stored in parms
+   virtual bool SetAutomationParameters(CommandParameters & parms) = 0;
+   //! @}
+
+   /*! @name settings
+    Default implementation of the nominally const methods call through to the
+    old non-const interface
+    */
+   //! @{
+   Settings MakeSettings() const override;
+   bool SaveSettings(
+      const Settings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      CommandParameters & parms, Settings &settings) const override;
+   //! @}
+
+private:
+   EffectDefinitionInterfaceEx *FindMe(const Settings &settings) const;
 };
 
 class wxDialog;
@@ -194,7 +266,7 @@ AudacityCommand.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectProcessor  /* not final */
-   : public EffectDefinitionInterface
+   : public EffectDefinitionInterfaceEx
 {
 public:
    virtual ~EffectProcessor();
