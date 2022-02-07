@@ -21,6 +21,7 @@
 #include "../ProjectHistory.h"
 #include "../ProjectWindowBase.h"
 #include "../TrackPanelAx.h"
+#include "RealtimeEffectList.h"
 #include "RealtimeEffectManager.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 
@@ -506,9 +507,8 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
    CleanupRealtime();
    
    Hide();
-   
-   if (mNeedsResume)
-      Resume();
+
+   mSuspensionScope.reset();
    mClient.CloseUI();
 
    Destroy();
@@ -708,35 +708,15 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    );
 }
 
-void EffectUIHost::Resume()
-{
-   if (!mClient.ValidateUI()) {
-      // If we're previewing we should still be able to stop playback
-      // so don't disable transport buttons.
-      //   mEffect->EnableApply(false);   // currently this would also disable transport buttons.
-      // The preferred behaviour is currently undecided, so for now
-      // just disallow enabling until settings are valid.
-      mEnabled = false;
-      mEnableCb->SetValue(mEnabled);
-      return;
-   }
-   RealtimeEffectManager::Get(*mProject).RealtimeResumeOne( mEffect );
-}
-
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
    mEnabled = mEnableCb->GetValue();
    
-   if (mEnabled) {
-      Resume();
-      mNeedsResume = false;
-   }
+   if (mEnabled)
+      mSuspensionScope.reset();
    else
-   {
-      RealtimeEffectManager::Get(*mProject).RealtimeSuspendOne( mEffect );
-      mNeedsResume = true;
-   }
-   
+      mSuspensionScope.emplace(mProject);
+
    UpdateControls();
 }
 
@@ -1158,10 +1138,16 @@ void EffectUIHost::LoadUserPresets()
 
 void EffectUIHost::InitializeRealtime()
 {
-   if (mSupportsRealtime && !mInitialized)
-   {
-      RealtimeEffectManager::Get(*mProject).RealtimeAddEffect(mEffect);
-      
+   if (mSupportsRealtime && !mInitialized) {
+      mpState = RealtimeEffectManager::Get(*mProject)
+         .AddState(nullptr, PluginManager::GetID(&mEffect));
+      /*
+      ProjectHistory::Get(mProject).PushState(
+         XO("Added %s effect").Format(mpState->GetEffect()->GetName()),
+         XO("Added Effect"),
+         UndoPush::NONE
+      );
+       */
       AudioIO::Get()->Subscribe([this](AudioIOEvent event){
          switch (event.type) {
          case AudioIOEvent::PLAYBACK:
@@ -1179,10 +1165,19 @@ void EffectUIHost::InitializeRealtime()
 
 void EffectUIHost::CleanupRealtime()
 {
-   if (mSupportsRealtime && mInitialized)
-   {
-      RealtimeEffectManager::Get(*mProject).RealtimeRemoveEffect(mEffect);
-      
+   if (mSupportsRealtime && mInitialized) {
+      if (mpState) {
+         auto &list = RealtimeEffectList::Get(*mProject);
+         RealtimeEffectManager::Get(*mProject)
+            .RemoveState(list, *mpState);
+      /*
+         ProjectHistory::Get(mProject).PushState(
+            XO("Removed %s effect").Format(mpState->GetEffect()->GetName()),
+            XO("Removed Effect"),
+            UndoPush::NONE
+         );
+       */
+      }
       mInitialized = false;
    }
 }
@@ -1484,3 +1479,37 @@ void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 
    return;
 }
+
+//! Inject a factory for realtime effect states
+#include "RealtimeEffectState.h"
+static
+RealtimeEffectState::EffectFactory::Scope scope{ &EffectManager::NewEffect };
+
+/* The following registration objects need a home at a higher level to avoid
+ dependency either way between WaveTrack or RealtimeEffectList, which need to
+ be in different libraries that do not depend either on the other.
+
+ WaveTrack, like AudacityProject, has a registry for attachment of serializable
+ data.  RealtimeEffectList exposes an interface for serialization.  This is
+ where we connect them.
+ */
+#include "RealtimeEffectList.h"
+static ProjectFileIORegistry::ObjectReaderEntry projectAccessor {
+   RealtimeEffectList::XMLTag(),
+   [](AudacityProject &project) { return &RealtimeEffectList::Get(project); }
+};
+
+static ProjectFileIORegistry::ObjectWriterEntry projectWriter {
+[](const AudacityProject &project, XMLWriter &xmlFile){
+   RealtimeEffectList::Get(project).WriteXML(xmlFile);
+} };
+
+static WaveTrackIORegistry::ObjectReaderEntry waveTrackAccessor {
+   RealtimeEffectList::XMLTag(),
+   [](WaveTrack &track) { return &RealtimeEffectList::Get(track); }
+};
+
+static WaveTrackIORegistry::ObjectWriterEntry waveTrackWriter {
+[](const WaveTrack &track, auto &xmlFile) {
+   RealtimeEffectList::Get(track).WriteXML(xmlFile);
+} };

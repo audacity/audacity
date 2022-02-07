@@ -1,7 +1,7 @@
 # Danish translation for Audacity
-# Copyright (C) 2015-2021 Audacity Team
+# Copyright (C) 2015-2022 Audacity Team
 # This file is distributed under the same license as the Audacity package.
-# Thomas Breinstrup <info@interlingua.dk>, 2012-2015+2021.
+# Thomas Breinstrup <info@interlingua.dk>, 2012-2015+2022.
 # scootergrisen, 2015-2020.
 # scootergrisen: Angående "...":
 # scootergrisen: "..." tilføjes automatisk til nogen strenge som ikke slutter med "..."
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.1.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2021-10-31 13:38+0100\n"
+"PO-Revision-Date: 2022-01-13 21:06+0100\n"
 "Last-Translator: Thomas Breinstrup\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -2010,7 +2010,7 @@ msgstr "MP3-konvertering"
 
 #: src/BatchCommands.cpp
 msgid "Fade Ends"
-msgstr "Opton slutninger"
+msgstr "Optoning og udtoning"
 
 #: src/BatchCommands.cpp
 msgid "Import Macro"
@@ -6711,11 +6711,11 @@ msgstr "Bas og diskant"
 
 #: src/effects/BassTreble.cpp
 msgid "Simple tone control effect"
-msgstr "Simpel tone-styringseffekt"
+msgstr "Simpel tonestyringseffekt"
 
 #: src/effects/BassTreble.cpp
 msgid "Tone controls"
-msgstr "Tone-styringer"
+msgstr "Tonestyring"
 
 #: src/effects/BassTreble.cpp
 msgid "Bass (dB):"
@@ -6747,7 +6747,7 @@ msgstr "Niveau"
 
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
-msgstr "&Sammenlås lydstyrke- og tone-styringer"
+msgstr "&Sammenkæd lydstyrke- og tonestyring"
 
 #: src/effects/ChangePitch.cpp
 msgid "Change Pitch"
@@ -6847,7 +6847,7 @@ msgstr "Ændring i procent"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
 msgid "&Use high quality stretching (slow)"
-msgstr "Brug &højkvalitetsstrækning (langsom)"
+msgstr "Br&ug strækning i høj kvalitet (langsom)"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "33⅓"
@@ -6879,7 +6879,7 @@ msgstr "Ændre sporets hastighed, samtidigt med at tonehøjden ændres"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Change Speed, affecting both Tempo and Pitch"
-msgstr "Justér hastighed - med ændring af både tempo og tonehøjde"
+msgstr "Justér hastighed – med ændring af både tempo og tonehøjde"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "&Speed Multiplier:"
@@ -6889,7 +6889,7 @@ msgstr "&Hastighedsforøgelse:"
 #. "vinyl" refers to old-fashioned phonograph records
 #: src/effects/ChangeSpeed.cpp
 msgid "Standard Vinyl rpm:"
-msgstr "Standard vinylplade o/min:"
+msgstr "Standard vinylplade omdrejn./min.:"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
@@ -7014,7 +7014,7 @@ msgstr "Fjern klik"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr "Fjern klik, er designet til at fjerne kliks fra lydspor"
+msgstr "Fjern klik, er designet til at fjerne klik fra lydspor"
 
 #: src/effects/ClickRemoval.cpp
 msgid "Algorithm not effective on this audio. Nothing changed."
@@ -7136,7 +7136,7 @@ msgstr "Udklingningstid"
 #. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/Compressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr "&Make-up-forstærkning til 0 dB efter komprimering"
+msgstr "&Korrigér forstærkning til 0 dB efter komprimering"
 
 #. i18n-hint: "Compress" here means reduce variations of sound volume,
 #. NOT related to file-size compression; Peaks means extremes in volume
@@ -7470,12 +7470,12 @@ msgstr "Hård begrænser 1413"
 #: src/effects/Distortion.cpp
 #, no-c-format
 msgid "Hard clip -12dB, 80% make-up gain"
-msgstr "Hård klip -12 dB, 80% make-up-forstærkning"
+msgstr "Hård klipning -12 dB, 80% korrigeret forstærkning"
 
 #: src/effects/Distortion.cpp
 #, no-c-format
 msgid "Soft clip -12dB, 80% make-up gain"
-msgstr "Blød klip -12 dB, 80% make-up-forstærkning"
+msgstr "Blød klipning -12 dB, 80% korrigeret forstærkning"
 
 #: src/effects/Distortion.cpp
 msgid "Fuzz Box"
@@ -7543,7 +7543,7 @@ msgstr "Fuldbølge-ensretter"
 
 #: src/effects/Distortion.cpp
 msgid "Full-wave Rectifier (DC blocked)"
-msgstr "Fuldbølge-ensretter (DC-blokeret)"
+msgstr "Fuldbølge-ensretter (jævnstrømsblokeret)"
 
 #: src/effects/Distortion.cpp
 msgid "Percussion Limiter"
@@ -7579,15 +7579,15 @@ msgstr "Forvrængningstype:"
 
 #: src/effects/Distortion.cpp
 msgid "DC blocking filter"
-msgstr "DC-blokeringsfilter"
+msgstr "Blokeringsfilter for jævnstrøm"
 
 #: src/effects/Distortion.cpp
 msgid "Threshold controls"
-msgstr "Tærskel-styringer"
+msgstr "Tærskelstyring"
 
 #: src/effects/Distortion.cpp
 msgid "Parameter controls"
-msgstr "Parameter-styringer"
+msgstr "Parameterstyring"
 
 #: src/effects/Distortion.cpp
 msgid "Clipping level"
@@ -7599,7 +7599,7 @@ msgstr "Drive"
 
 #: src/effects/Distortion.cpp
 msgid "Make-up Gain"
-msgstr "Make-up-forstærkning"
+msgstr "Korrigeret forstærkning"
 
 #: src/effects/Distortion.cpp
 msgid "Clipping threshold"
@@ -7675,7 +7675,7 @@ msgstr "DTMF-toner"
 
 #: src/effects/DtmfGen.cpp
 msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr "Genererer dobbelt-tone multi-frekvens (DTMF) toner, som dem der skabes af knapperne på en telefon"
+msgstr "Genererer dobbelttonemultifrekvens-toner (DTMF) som dem, der skabes af knapperne på en telefon"
 
 #: src/effects/DtmfGen.cpp
 msgid ""
@@ -8553,7 +8553,7 @@ msgstr "opfattet lydstyrke"
 
 #: src/effects/Loudness.cpp src/widgets/MeterPanel.cpp
 msgid "RMS"
-msgstr "RMS"
+msgstr "Effektiv værdi (RMS)"
 
 #: src/effects/Loudness.cpp
 msgid "Loudness Normalization"
@@ -8592,7 +8592,7 @@ msgstr "LUFS"
 
 #: src/effects/Loudness.cpp
 msgid "RMS dB"
-msgstr "RMS dB"
+msgstr "Effektiv værdi (RMS) i dB"
 
 #: src/effects/Loudness.cpp
 msgid "Normalize &stereo channels independently"
@@ -8910,15 +8910,15 @@ msgstr "Sætter spidspunktsamplituden på et eller flere spor"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset and Normalizing...\n"
-msgstr "Fjerner DC-forskydning og normaliserer...\n"
+msgstr "Fjerner jævnstrømsforskydning og normaliserer...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset...\n"
-msgstr "Fjerner DC-forskydning...\n"
+msgstr "Fjerner jævnstrømsforskydning...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Normalizing without removing DC offset...\n"
-msgstr "Normaliserer uden at fjerne DC-forskydning...\n"
+msgstr "Normaliserer uden at fjerne jævnstrømsforskydning...\n"
 
 #: src/effects/Normalize.cpp
 msgid "Not doing anything...\n"
@@ -8951,7 +8951,7 @@ msgstr "Bearbejder andet spor i stereopar: %s"
 
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
-msgstr "&Fjern DC-forskydning (centrér på 0,0 lodret)"
+msgstr "&Fjern jævnstrømsforskydning (centrér på 0,0 lodret)"
 
 #: src/effects/Normalize.cpp
 msgid "&Normalize peak amplitude to   "
@@ -10483,17 +10483,17 @@ msgstr "FFmpeg : FEJL - kan ikke tildele kontekst til outputformatet."
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
-msgstr "FFmpeg : FEJL - kan ikke føje lydstrøm til output-filen \"%s\"."
+msgstr "FFmpeg : FEJL - kan ikke føje lydstrøm til outputfilen \"%s\"."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
-msgstr "FFmpeg : FEJL - kan ikke åbne output-filen \"%s\" til skrivning. Fejlkoden er %d."
+msgstr "FFmpeg : FEJL - kan ikke åbne outputfilen \"%s\" til skrivning. Fejlkoden er %d."
 
 #: src/export/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
-msgstr "FFmpeg : FEJL - kan ikke skrive filhoveder til output-filen \"%s\". Fejlkoden er %d."
+msgstr "FFmpeg : FEJL - kan ikke skrive filhoveder til outputfilen \"%s\". Fejlkoden er %d."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: src/export/ExportFFmpeg.cpp
@@ -10551,7 +10551,7 @@ msgstr "FFmpeg : FEJL - for meget resterende data."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write last audio frame to output file."
-msgstr "FFmpeg : FEJL - kunne ikke skrive den sidste lydramme til output-fil."
+msgstr "FFmpeg : FEJL - kunne ikke skrive den sidste lydramme til outputfil."
 
 #: src/export/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - nAudioFrameSizeOut too large."
@@ -12178,6 +12178,9 @@ msgid ""
 "\n"
 "Inserting silence instead."
 msgstr ""
+"Projektfil mangler %s\n"
+"\n"
+"Der bliver indsat stilhed i stedet."
 
 #: src/import/ImportAUP.cpp
 msgid "Missing or invalid simpleblockfile 'len' attribute."
@@ -14379,23 +14382,23 @@ msgstr "&Fjern spor"
 
 #: src/menus/TrackMenus.cpp
 msgid "M&ute/Unmute"
-msgstr "&Mute/slå lyden til"
+msgstr "S&lå lyd fra/til"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Mute All Tracks"
-msgstr "&Mute alle spor"
+msgstr "&Slå lyd fra på alle spor"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Unmute All Tracks"
-msgstr "&Slå lyden til for alle spor"
+msgstr "Slå l&yden til for alle spor"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mut&e Tracks"
-msgstr "&Mute spor"
+msgstr "Slå lyd &fra på spor"
 
 #: src/menus/TrackMenus.cpp
 msgid "U&nmute Tracks"
-msgstr "&Slå sporenes lyd til"
+msgstr "Slå lyd &til på spor"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Pan"
@@ -14656,7 +14659,7 @@ msgstr "&Tidsindstillet optagelse..."
 
 #: src/menus/TransportMenus.cpp
 msgid "Punch and Rol&l Record"
-msgstr "&Slag-og-rul-optag"
+msgstr "&Punch and Roll-optag"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Looping"
@@ -15353,7 +15356,7 @@ msgstr "Indstillinger for brugerflade"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
-msgstr "-36 dB (fladt område til højamplitude-redigering)"
+msgstr "-36 dB (fladt område til højamplituderedigering)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-48 dB (PCM range of 8 bit samples)"
@@ -15438,7 +15441,7 @@ msgstr "&Bland system- og Audacity-tema"
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
-msgstr "Brug hovedsageligt venstre mod højre-layouts i RTL-sprog"
+msgstr "Brug hovedsageligt venstre mod højre-layout på venstre mod højre-sprog"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
@@ -16267,15 +16270,15 @@ msgstr "0 betyder endeløs"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Punch and Roll Recording"
-msgstr "Slag-og-rul-optagelse"
+msgstr "Punch and Roll-optagelse"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Pre-ro&ll:"
-msgstr "&Forrul:"
+msgstr "&Indtælling:"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
-msgstr "Kryds&fade:"
+msgstr "Over&toning:"
 
 #. i18n-hint: The name of a frequency scale in psychoacoustics
 #: src/prefs/SpectrogramSettings.cpp
@@ -16911,11 +16914,11 @@ msgstr "Optagelseskanaler"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
-msgstr "1 optagelseskanal (mono)"
+msgstr "1 optagekanal (mono)"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "2 (Stereo) Recording Channels"
-msgstr "2 optagelseskanaler (stereo)"
+msgstr "2 optagekanaler (stereo)"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "Select Recording Device"
@@ -17152,7 +17155,7 @@ msgstr "Længde og slutning af markering"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Length and Center of Selection"
-msgstr "Længde og center af markering"
+msgstr "Længde og midten af markering"
 
 #: src/toolbars/SelectionBar.cpp src/toolbars/SpectralSelectionBar.cpp
 msgid "Show"
@@ -17176,7 +17179,7 @@ msgstr "centreret"
 #: src/toolbars/SelectionBar.cpp
 #, c-format
 msgid "Snap Clicks/Selections to %s"
-msgstr "Fastgør kliks/markeringer til %s"
+msgstr "Fastgør klik/markeringer til %s"
 
 #. i18n-hint: %s is replaced e.g by one of 'Length', 'Center',
 #. 'Start', or 'End' (translated), to indicate that it will be
@@ -18182,7 +18185,7 @@ msgstr "Der er ingen tilgængelige opdateringer"
 
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "Check for Updates"
-msgstr "&Søg efter opdateringer"
+msgstr "Søg efter opdateringer"
 
 #. i18n-hint: %s is replaced with 'Preferences > Application'.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -18590,7 +18593,7 @@ msgstr "01000,01000,01000 datapunkter|#"
 #. * seconds and frames at 24 frames per second (commonly used for films)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + film frames (24 fps)"
-msgstr "tt:mm:ss + filmbilleder (24 billeder i sekundet)"
+msgstr "tt:mm:ss + filmbilledrammer (24 billeder i sekundet)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames at 24 frames per second. Change the 'h' to the abbreviation
@@ -18601,13 +18604,13 @@ msgstr "tt:mm:ss + filmbilleder (24 billeder i sekundet)"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>24 frames"
-msgstr "0100 t 060 m 060 s+>24 billeder"
+msgstr "0100 t 060 m 060 s+>24 billedrammer"
 
 #. i18n-hint: Name of time display format that shows time in frames (lots of
 #. * frames) at 24 frames per second (commonly used for films)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "film frames (24 fps)"
-msgstr "filmbilleder (24 billeder i sekundet)"
+msgstr "filmbilledrammer (24 billeder i sekundet)"
 
 #. i18n-hint: Format string for displaying time in frames at 24 frames per
 #. * second. Change the comma
@@ -18615,14 +18618,14 @@ msgstr "filmbilleder (24 billeder i sekundet)"
 #. * translate 'frames' and leave the rest alone
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000,01000 frames|24"
-msgstr "01000,01000 billeder|24"
+msgstr "01000,01000 billedrammer|24"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at NTSC TV drop-frame rate (used for American /
 #. * Japanese TV, and very odd)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + NTSC drop frames"
-msgstr "tt:mm:ss + NTSC drop frames"
+msgstr "tt:mm:ss + mistede NTSC-billedrammer"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
@@ -18632,14 +18635,14 @@ msgstr "tt:mm:ss + NTSC drop frames"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>30 frames|N"
-msgstr "0100 t 060 m 060 s+>30 billeder|N"
+msgstr "0100 t 060 m 060 s+>30 billedrammer|N"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at NTSC TV non-drop-frame rate (used for American /
 #. * Japanese TV, and doesn't quite match wall time
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + NTSC non-drop frames"
-msgstr "tt:mm:ss + NTSC non-drop frames"
+msgstr "tt:mm:ss + NTSC uden mistede billedrammer"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
@@ -18650,13 +18653,13 @@ msgstr "tt:mm:ss + NTSC non-drop frames"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>030 frames| .999000999"
-msgstr "0100 t 060 m 060 s+>030 billeder| .999000999"
+msgstr "0100 t 060 m 060 s+>030 billedrammer| .999000999"
 
 #. i18n-hint: Name of time display format that shows time in frames at NTSC
 #. * TV frame rate (used for American / Japanese TV
 #: src/widgets/NumericTextCtrl.cpp
 msgid "NTSC frames"
-msgstr "NTSC-billeder"
+msgstr "NTSC-billedrammer"
 
 #. i18n-hint: Format string for displaying time in frames with NTSC frames.
 #. * Change the comma
@@ -18665,13 +18668,13 @@ msgstr "NTSC-billeder"
 #. * rate!
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000,01000 frames|29.97002997"
-msgstr "01000,01000 billeder|29.97002997"
+msgstr "01000,01000 billedrammer|29.97002997"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at PAL TV frame rate (used for European TV)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + PAL frames (25 fps)"
-msgstr "tt:mm:ss + PAL-billeder (25 billeder i sekundet)"
+msgstr "tt:mm:ss + PAL-billedrammer (25 billeder i sekundet)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with PAL TV frames. Change the 'h' to the abbreviation
@@ -18681,13 +18684,13 @@ msgstr "tt:mm:ss + PAL-billeder (25 billeder i sekundet)"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>25 frames"
-msgstr "0100 t 060 m 060 s+>25 billeder"
+msgstr "0100 t 060 m 060 s+>25 billedrammer"
 
 #. i18n-hint: Name of time display format that shows time in frames at PAL
 #. * TV frame rate (used for European TV)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "PAL frames (25 fps)"
-msgstr "PAL-billeder (25 billeder i sekundet)"
+msgstr "PAL-billedrammer (25 billeder i sekundet)"
 
 #. i18n-hint: Format string for displaying time in frames with NTSC frames.
 #. * Change the comma
@@ -18695,13 +18698,13 @@ msgstr "PAL-billeder (25 billeder i sekundet)"
 #. * translate 'frames' and leave the rest alone.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000,01000 frames|25"
-msgstr "01000,01000 billeder|25"
+msgstr "01000,01000 billedrammer|25"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at CD Audio frame rate (75 frames per second)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "hh:mm:ss + CDDA frames (75 fps)"
-msgstr "tt:mm:ss + CDDA-billeder (75 billeder i sekundet)"
+msgstr "tt:mm:ss + CDDA-billedrammer (75 billeder i sekundet)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
@@ -18711,13 +18714,13 @@ msgstr "tt:mm:ss + CDDA-billeder (75 billeder i sekundet)"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+>75 frames"
-msgstr "0100 t 060 m 060 s+>75 billeder"
+msgstr "0100 t 060 m 060 s+>75 billedrammer"
 
 #. i18n-hint: Name of time display format that shows time in frames at CD
 #. * Audio frame rate (75 frames per second)
 #: src/widgets/NumericTextCtrl.cpp
 msgid "CDDA frames (75 fps)"
-msgstr "CDDA-billeder (75 billeder i sekundet)"
+msgstr "CDDA-billedrammer (75 billeder i sekundet)"
 
 #. i18n-hint: Format string for displaying time in frames with CD Audio
 #. * frames. Change the comma
@@ -18725,7 +18728,7 @@ msgstr "CDDA-billeder (75 billeder i sekundet)"
 #. * translate 'frames' and leave the rest alone
 #: src/widgets/NumericTextCtrl.cpp
 msgid "01000,01000 frames|75"
-msgstr "01000,01000 billeder|75"
+msgstr "01000,01000 billedrammer|75"
 
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
@@ -19093,11 +19096,11 @@ msgstr "Markeringen er for kort.~%Skal være større end 2 datapunkter."
 
 #: plug-ins/adjustable-fade.ny
 msgid "Adjustable Fade"
-msgstr "Justerbar fade"
+msgstr "Anvend overtoning"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Type"
-msgstr "Fadetype"
+msgstr "Type"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Up"
@@ -19117,11 +19120,11 @@ msgstr "S-kurve ned"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Mid-fade Adjust (%)"
-msgstr "Mid-fade justering (%)"
+msgstr "Justering midtvejs i udtoning (%)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Start/End as"
-msgstr "Begynder/slutter som"
+msgstr "Begyndelse/slutning som"
 
 #: plug-ins/adjustable-fade.ny
 msgid "% of Original"
@@ -19141,11 +19144,11 @@ msgstr "Slutning (eller begyndelse)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Handy Presets (override controls)"
-msgstr "Handy forudindstillinger (tilsidesæt styringer)"
+msgstr "Nyttige forudindstillinger (tilsidesætter styringer)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "None Selected"
-msgstr "Ingen markeret"
+msgstr "Ingen valgt"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Linear In"
@@ -19747,7 +19750,7 @@ msgstr "Hold (ms)"
 
 #: plug-ins/limiter.ny
 msgid "Apply Make-up Gain"
-msgstr "Anvend make-up-forstærkning"
+msgstr "Anvend korrigeret forstærkning"
 
 #: plug-ins/lowpass.ny
 msgid "Low-Pass Filter"
@@ -19970,11 +19973,11 @@ msgstr "Fejl.~%Ingen fil valgt."
 
 #: plug-ins/pluck.ny
 msgid "Pluck"
-msgstr "Pluck"
+msgstr "Guitarstreng"
 
 #: plug-ins/pluck.ny
 msgid "Generating pluck sound..."
-msgstr "Genererer pluck-lyd..."
+msgstr "Genererer guitarstrengelyd..."
 
 #: plug-ins/pluck.ny
 msgid "MIDI values for C notes: 36, 48, 60 [middle C], 72, 84, 96."
@@ -19982,11 +19985,11 @@ msgstr "MIDI-værdier til C-toner: 36, 48, 60 [mellem C], 72, 84, 96."
 
 #: plug-ins/pluck.ny
 msgid "David R.Sky"
-msgstr "David R.Sky"
+msgstr "David R. Sky"
 
 #: plug-ins/pluck.ny
 msgid "Pluck MIDI pitch"
-msgstr "MIDI-tonehøjde for pluck"
+msgstr "MIDI-tonehøjde for guitarstrengelyd"
 
 #: plug-ins/pluck.ny
 msgid "Fade-out type"
@@ -20284,7 +20287,7 @@ msgid ""
 msgstr ""
 "~a~%Samplingshastighed: ~a Hz. Samplingværdier på ~a-skala. ~a.~%~aLængde bearbejdet: ~a ~\n"
 "                        datapunkter, ~a sekunder.~%Spidspunktsamplitude: ~a (lineær) ~a dB. Uvægtet RMS: ~a dB.~%~\n"
-"                        DC-forskydning: ~a~a"
+"                        jævnstrømsforskydning: ~a~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -20331,7 +20334,7 @@ msgstr "<b>RMS</b> (uvægtet): &nbsp;&nbsp;~a dB."
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
-msgstr "<b>DC-forskydning:</b> &nbsp;&nbsp;~a"
+msgstr "<b>Jævnstrømsforskydning:</b> &nbsp;&nbsp;~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format

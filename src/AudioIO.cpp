@@ -919,25 +919,21 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    {
       if (auto pOwningProject = mOwningProject.lock()) {
          auto & em = RealtimeEffectManager::Get(*pOwningProject);
+
          // Setup for realtime playback at the rate of the realtime
          // stream, not the rate of the track.
-         em.RealtimeInitialize(mRate);
+         em.Initialize(mRate);
 
-         // The following adds a NEW effect processor for each logical track and the
-         // group determination should mimic what is done in audacityAudioCallback()
-         // when calling RealtimeProcess().
-         int group = 0;
+         // The following adds a new effect processor for each logical track.
          for (size_t i = 0, cnt = mPlaybackTracks.size(); i < cnt;)
          {
-            const WaveTrack *vt = mPlaybackTracks[i].get();
-
-            // TODO: more-than-two-channels
+            auto vt = mPlaybackTracks[i].get();
             unsigned chanCnt = TrackList::Channels(vt).size();
             i += chanCnt;
 
             // Setup for realtime playback at the rate of the realtime
             // stream, not the rate of the track.
-            em.RealtimeAddProcessor(group++, std::min(2u, chanCnt), mRate);
+            em.AddTrack(vt, std::min(mNumPlaybackChannels, chanCnt), mRate);
          }
       }
    }
@@ -1272,7 +1268,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    if (mNumPlaybackChannels > 0)
    {
       if (auto pOwningProject = mOwningProject.lock())
-         RealtimeEffectManager::Get(*pOwningProject).RealtimeFinalize();
+         RealtimeEffectManager::Get(*pOwningProject).Finalize();
    }
 
    mPlaybackBuffers.reset();
@@ -1357,7 +1353,7 @@ void AudioIO::StopStream()
    if (mNumPlaybackChannels > 0)
    {
       if (auto pOwningProject = mOwningProject.lock())
-         RealtimeEffectManager::Get(*pOwningProject).RealtimeFinalize();
+         RealtimeEffectManager::Get(*pOwningProject).Finalize();
    }
 
    //
@@ -1596,9 +1592,9 @@ void AudioIO::SetPaused(bool state)
       if (auto pOwningProject = mOwningProject.lock()) {
          auto &em = RealtimeEffectManager::Get(*pOwningProject);
          if (state)
-            em.RealtimeSuspend();
+            em.Suspend();
          else
-            em.RealtimeResume();
+            em.Resume();
       }
    }
 
@@ -2400,8 +2396,6 @@ bool AudioIoCallback::FillOutputBuffers(
    auto pProject = mOwningProject.lock();
    RealtimeEffectManager::ProcessScope scope{ pProject.get() };
 
-   bool selected = false;
-   int group = 0;
    int chanCnt = 0;
 
    // Choose a common size to take from all ring buffers
@@ -2441,7 +2435,6 @@ bool AudioIoCallback::FillOutputBuffers(
 
       if ( firstChannel )
       {
-         selected = vt->GetSelected();
          // IF mono THEN clear 'the other' channel.
          if ( lastChannel && (numPlaybackChannels>1)) {
             // TODO: more-than-two-channels
@@ -2495,38 +2488,45 @@ bool AudioIoCallback::FillOutputBuffers(
       // Last channel of a track seen now
       len = mMaxFramesOutput;
 
-      if( !dropQuickly && selected )
-         len = scope.Process(group, chanCnt, tempBufs, len);
-      group++;
+      // Do realtime effects
+      if( !dropQuickly && len > 0 ) {
+         scope.Process(chans[0], tempBufs, len);
+
+         // Mix the results with the existing output (software playthrough) and
+         // apply panning.  If post panning effects are desired, the panning would
+         // need to be be split out from the mixing and applied in a separate step.
+         for (auto c = 0; c < chanCnt; ++c)
+         {
+            // Our channels aren't silent.  We need to pass their data on.
+            //
+            // Note that there are two kinds of channel count.
+            // c and chanCnt are counting channels in the Tracks.
+            // chan (and numPlayBackChannels) is counting output channels on the device.
+            // chan = 0 is left channel
+            // chan = 1 is right channel.
+            //
+            // Each channel in the tracks can output to more than one channel on the device.
+            // For example mono channels output to both left and right output channels.
+            if (len > 0) for (int c = 0; c < chanCnt; c++)
+            {
+               vt = chans[c];
+
+               if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
+                     vt->GetChannelIgnoringPan() == Track::MonoChannel )
+                  AddToOutputChannel( 0, outputMeterFloats, outputFloats,
+                     tempBufs[c], drop, len, vt);
+
+               if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
+                     vt->GetChannelIgnoringPan() == Track::MonoChannel  )
+                  AddToOutputChannel( 1, outputMeterFloats, outputFloats,
+                     tempBufs[c], drop, len, vt);
+            }
+         }
+      }
 
       CallbackCheckCompletion(mCallbackReturn, len);
       if (dropQuickly) // no samples to process, they've been discarded
          continue;
-
-      // Our channels aren't silent.  We need to pass their data on.
-      //
-      // Note that there are two kinds of channel count.
-      // c and chanCnt are counting channels in the Tracks.
-      // chan (and numPlayBackChannels) is counting output channels on the device.
-      // chan = 0 is left channel
-      // chan = 1 is right channel.
-      //
-      // Each channel in the tracks can output to more than one channel on the device.
-      // For example mono channels output to both left and right output channels.
-      if (len > 0) for (int c = 0; c < chanCnt; c++)
-      {
-         vt = chans[c];
-
-         if (vt->GetChannelIgnoringPan() == Track::LeftChannel ||
-               vt->GetChannelIgnoringPan() == Track::MonoChannel )
-            AddToOutputChannel( 0, outputMeterFloats, outputFloats,
-               tempBufs[c], drop, len, vt);
-
-         if (vt->GetChannelIgnoringPan() == Track::RightChannel ||
-               vt->GetChannelIgnoringPan() == Track::MonoChannel  )
-            AddToOutputChannel( 1, outputMeterFloats, outputFloats,
-               tempBufs[c], drop, len, vt);
-      }
 
       chanCnt = 0;
    }

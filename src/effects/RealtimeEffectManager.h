@@ -15,13 +15,17 @@
 #include <chrono>
 #include <memory>
 #include <mutex>
+#include <unordered_map>
 #include <vector>
 
 #include "ClientData.h"
+#include "ModuleInterface.h" // for PluginID
 
 class AudacityProject;
 class EffectProcessor;
+class RealtimeEffectList;
 class RealtimeEffectState;
+class Track;
 
 class AUDACITY_DLL_API RealtimeEffectManager final
    : public ClientData::Base
@@ -37,18 +41,16 @@ public:
    static const RealtimeEffectManager & Get(const AudacityProject &project);
 
    // Realtime effect processing
-   bool RealtimeIsActive() const noexcept;
-   bool RealtimeIsSuspended() const noexcept;
-   void RealtimeAddEffect(EffectProcessor &effect);
-   void RealtimeRemoveEffect(EffectProcessor &effect);
-   void RealtimeInitialize(double rate);
-   void RealtimeAddProcessor(int group, unsigned chans, float rate);
-   void RealtimeFinalize();
-   void RealtimeSuspend();
-   void RealtimeSuspendOne( EffectProcessor &effect );
-   void RealtimeResume() noexcept;
-   void RealtimeResumeOne( EffectProcessor &effect );
-   Latency GetRealtimeLatency() const;
+   bool IsActive() const noexcept;
+   //! Main thread begins to define a set of tracks for playback
+   void Initialize(double rate);
+   //! Main thread adds one track (passing the first of one or more channels)
+   void AddTrack(Track *track, unsigned chans, float rate);
+   //! Main thread cleans up after playback
+   void Finalize();
+   void Suspend();
+   void Resume() noexcept;
+   Latency GetLatency() const;
 
    //! Object whose lifetime encompasses one suspension of processing in one thread
    class SuspensionScope {
@@ -57,7 +59,7 @@ public:
          : mpProject{ pProject }
       {
          if (mpProject)
-            Get(*mpProject).RealtimeSuspend();
+            Get(*mpProject).Suspend();
       }
       SuspensionScope( SuspensionScope &&other )
          : mpProject{ other.mpProject }
@@ -74,7 +76,7 @@ public:
       ~SuspensionScope()
       {
          if (mpProject)
-            Get(*mpProject).RealtimeResume();
+            Get(*mpProject).Resume();
       }
 
    private:
@@ -88,7 +90,7 @@ public:
          : mpProject{ pProject }
       {
          if (mpProject)
-            Get(*mpProject).RealtimeProcessStart();
+            Get(*mpProject).ProcessStart();
       }
       ProcessScope( ProcessScope &&other )
          : mpProject{ other.mpProject }
@@ -105,15 +107,14 @@ public:
       ~ProcessScope()
       {
          if (mpProject)
-            Get(*mpProject).RealtimeProcessEnd();
+            Get(*mpProject).ProcessEnd();
       }
 
-      size_t Process( int group,
-         unsigned chans, float **buffers, size_t numSamples)
+      size_t Process(Track *track, float **buffers, size_t numSamples)
       {
          if (mpProject)
             return Get(*mpProject)
-               .RealtimeProcess(group, chans, buffers, numSamples);
+               .Process(track, buffers, numSamples);
          else
             return numSamples; // consider them trivially processed
       }
@@ -122,23 +123,46 @@ public:
       AudacityProject *mpProject = nullptr;
    };
 
+   //! Main thread appends a global or per-track effect
+   /*!
+    @param pTrack if null, then state is added to the global list
+    @return if null, the given id was not found
+    */
+   RealtimeEffectState *AddState(Track *pTrack, const PluginID & id);
+   //! Main thread safely removes an effect from a list
+   void RemoveState(RealtimeEffectList &states, RealtimeEffectState &state);
+
 private:
-   void RealtimeProcessStart();
-   size_t RealtimeProcess(int group, unsigned chans, float **buffers, size_t numSamples);
-   void RealtimeProcessEnd() noexcept;
+   void ProcessStart();
+   size_t Process(Track *track, float **buffers, size_t numSamples);
+   void ProcessEnd() noexcept;
 
    RealtimeEffectManager(const RealtimeEffectManager&) = delete;
    RealtimeEffectManager &operator=(const RealtimeEffectManager&) = delete;
 
+   using StateVisitor =
+      std::function<void(RealtimeEffectState &state, bool bypassed)> ;
+
+   //! Visit the per-project states first, then states for leader if not null
+   void VisitGroup(Track *leader, StateVisitor func);
+
+   //! Visit the per-project states first, then all tracks from AddTrack
+   /*! Tracks are visited in unspecified order */
+   void VisitAll(StateVisitor func);
+
    AudacityProject &mProject;
 
    std::mutex mLock;
-   std::vector< std::unique_ptr<RealtimeEffectState> > mStates;
    Latency mLatency{ 0 };
+
+   double mRate;
+
    std::atomic<bool> mSuspended{ true };
    std::atomic<bool> mActive{ false };
-   std::vector<unsigned> mRealtimeChans;
-   std::vector<double> mRealtimeRates;
+
+   std::vector<Track *> mGroupLeaders;
+   std::unordered_map<Track *, unsigned> mChans;
+   std::unordered_map<Track *, double> mRates;
 };
 
 #endif

@@ -50,13 +50,33 @@ We build Audacity using XCode versions 12 and 13. However, it is likely possible
 
 We use GCC 9, but any C++17 compliant compiler should work.
 
-On Debian or Ubuntu, you can install everything required using the following commands:
+Here are the dependencies you need to install on various distribution families.
+
+#### Debian and Ubuntu
 
 ```
 $ sudo apt-get update
 $ sudo apt-get install -y build-essential cmake git python3-pip
 $ sudo pip3 install conan
 $ sudo apt-get install libgtk2.0-dev libasound2-dev libavformat-dev libjack-jackd2-dev uuid-dev
+```
+
+#### openSUSE
+
+```
+$ sudo zypper refresh
+$ sudo zypper install patterns-devel-C-C++-devel_C_C++ cmake git python3-pip \
+                      gtk2-devel ffmpeg-4-libavformat-devel libjack-devel uuid-devel libSM-devel
+$ sudo pip3 install conan
+```
+
+#### Fedora Workstation
+
+```
+$ sudo dnf update
+$ sudo dnf install gcc-c++ cmake git python3-pip \
+                   gtk2-devel gtk3-devel alsa-lib-devel jack-audio-connection-kit-devel uuid-devel libSM-devel
+$ sudo pip3 install conan
 ```
 
 ### Graphviz

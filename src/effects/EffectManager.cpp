@@ -864,3 +864,24 @@ const PluginID & EffectManager::GetEffectByIdentifier(const CommandID & strTarge
    return empty;
 }
 
+/* TODO:  fix the effect management so that repeated calls with the same ID
+ give Effect objects with independent state for effect settings.
+ */
+std::unique_ptr<Effect> EffectManager::NewEffect(const PluginID & ID)
+{
+   // Must have a "valid" ID
+   if (ID.empty())
+      return nullptr;
+
+   // This will instantiate the effect client if it hasn't already been done
+   // But it only makes a unique object for a given ID
+   auto ident = dynamic_cast<EffectDefinitionInterface *>(
+      PluginManager::Get().GetInstance(ID));
+
+   auto effect = std::make_unique<Effect>();
+   auto client = dynamic_cast<EffectUIClientInterface *>(ident);
+   if (client && effect->Startup(client))
+      return effect;
+   else
+      return nullptr;
+}
