@@ -18,8 +18,8 @@ configure_file("${CPACK_AUDACITY_SOURCE_DIR}/linux/ldd_recursive.pl" "${appdir}/
 file(COPY "${CPACK_AUDACITY_FINDLIB_LOCATION}/findlib" DESTINATION "${appdir}/bin/")
 
 execute_process(
-   COMMAND "linux/create_appimage.sh" "${appdir}" "${appimage}"
-   WORKING_DIRECTORY "${CPACK_AUDACITY_SOURCE_DIR}"
+   COMMAND "${CPACK_AUDACITY_SOURCE_DIR}/linux/create_appimage.sh" "${appdir}" "${appimage}"
+   WORKING_DIRECTORY "${CPACK_AUDACITY_BUILD_DIR}"
    RESULT_VARIABLE exit_status
 )
 
