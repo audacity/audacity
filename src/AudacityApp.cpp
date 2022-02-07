@@ -1222,9 +1222,23 @@ bool AudacityApp::OnInit()
    FileNames::AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
 
    wxString progPath = wxPathOnly(argv[0]);
+
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
    // Add the path to modules:
    FileNames::AddUniquePathToPathList(progPath + L"/lib/audacity", audacityPathList);
+
+#if !defined(__WXMSW__)
+   // On Unix systems, the common directory structure is
+   // .../bin
+   // .../lib
+   const wxString progParentPath = wxPathOnly(progPath);
+
+   if (!progParentPath.IsEmpty())
+   {
+      FileNames::AddUniquePathToPathList(progParentPath + L"/lib/audacity", audacityPathList);
+      FileNames::AddUniquePathToPathList(progParentPath + L"/lib", audacityPathList);
+   }
+#endif
 
    FileNames::AddUniquePathToPathList(FileNames::DataDir(), audacityPathList);
 
