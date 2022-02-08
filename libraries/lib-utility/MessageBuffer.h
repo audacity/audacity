@@ -17,7 +17,7 @@
 /*!
  This is not a queue: it is not necessary for each write to be read.
  Rather loss of a message is allowed:  writer may overwrite.
- Data must be default-constructible and either copyable or movable.
+ Data must be default-constructible and reassignable.
  */
 template<typename Data>
 class MessageBuffer {
@@ -35,10 +35,8 @@ public:
    //! Move data out (if available), or else copy it out
    Data Read();
    
-   //! Copy data in
-   void Write( const Data &data );
-   //! Move data in
-   void Write( Data &&data );
+   //! Reassign a slot by move or copy
+   template<typename Arg = Data&&> void Write( Arg &&arg );
 };
 
 template<typename Data>
@@ -80,7 +78,8 @@ Data MessageBuffer<Data>::Read()
 }
 
 template<typename Data>
-void MessageBuffer<Data>::Write( const Data &data )
+template<typename Arg>
+void MessageBuffer<Data>::Write( Arg &&arg )
 {
    // Whichever slot was last written, prefer to write the other.
    auto idx = mLastWrittenSlot.load( std::memory_order_relaxed );
@@ -92,26 +91,7 @@ void MessageBuffer<Data>::Write( const Data &data )
       wasBusy = mSlots[idx].mBusy.exchange( true, std::memory_order_acquire );
    } while ( wasBusy );
 
-   mSlots[idx].mData = data;
-   mLastWrittenSlot.store( idx, std::memory_order_relaxed );
-
-   mSlots[idx].mBusy.store( false, std::memory_order_release );
-}
-
-template<typename Data>
-void MessageBuffer<Data>::Write( Data &&data )
-{
-   // Whichever slot was last written, prefer to write the other.
-   auto idx = mLastWrittenSlot.load( std::memory_order_relaxed );
-   bool wasBusy = false;
-   do {
-      // This loop is unlikely to execute twice, but it might because the
-      // consumer thread is reading a slot.
-      idx = 1 - idx;
-      wasBusy = mSlots[idx].mBusy.exchange( true, std::memory_order_acquire );
-   } while ( wasBusy );
-
-   mSlots[idx].mData = std::move( data );
+   mSlots[idx].mData = std::forward<Arg>(arg);
    mLastWrittenSlot.store( idx, std::memory_order_relaxed );
 
    mSlots[idx].mBusy.store( false, std::memory_order_release );
