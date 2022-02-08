@@ -67,7 +67,7 @@ const PluginID & EffectManager::RegisterEffect(
    wxASSERT(uDefinition);
    const PluginID & ID =
       PluginManager::Get().RegisterPlugin(std::move(uDefinition), PluginTypeEffect);
-   mEffects[ID] = pEffect;
+   mEffects[ID] = { pEffect, {} };
    return ID;
 }
 
@@ -730,13 +730,39 @@ void EffectManager::SetBatchProcessing(const PluginID & ID, bool start)
 
 EffectUIHostInterface *EffectManager::GetEffect(const PluginID & ID)
 {
+   return DoGetEffect(ID).effect;
+}
+
+EffectSettings *EffectManager::GetDefaultSettings(const PluginID & ID)
+{
+   return GetEffectAndDefaultSettings(ID).second;
+}
+
+std::pair<EffectUIHostInterface *, EffectSettings *>
+EffectManager::GetEffectAndDefaultSettings(const PluginID & ID)
+{
+   auto &results = DoGetEffect(ID);
+   if (results.effect) {
+      auto &settings = results.settings;
+      if (!settings.has_value())
+         // Create on demand
+         settings = results.effect->GetDefinition().MakeSettings();
+      return {results.effect, &settings};
+   }
+   return {nullptr, nullptr};
+}
+
+EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
+{
+   static EffectAndDefaultSettings empty;
+
    // Must have a "valid" ID
    if (ID.empty())
-      return nullptr;
+      return empty;
 
    // If it is actually a command then refuse it (as an effect).
    if( mCommands.find( ID ) != mCommands.end() )
-      return nullptr;
+      return empty;
 
    if (auto iter = mEffects.find(ID); iter != mEffects.end())
       return iter->second;
@@ -748,12 +774,12 @@ EffectUIHostInterface *EffectManager::GetEffect(const PluginID & ID)
       if (auto effect = dynamic_cast<EffectUIHostInterface *>(instance);
           effect && effect->Startup(nullptr))
          // Self-hosting or "legacy" effect objects
-         return (mEffects[ID] = effect);
+         return (mEffects[ID] = { effect, {} });
       else if (auto client = dynamic_cast<EffectUIClientInterface *>(instance);
           client && (hostEffect = std::make_shared<Effect>())->Startup(client))
          // plugin that inherits only EffectUIClientInterface needs a host
          return (mEffects[ID] =
-            (mHostEffects[ID] = move(hostEffect)).get());
+            { (mHostEffects[ID] = move(hostEffect)).get(), {} });
       else {
          if ( !dynamic_cast<AudacityCommand *>(instance) )
             AudacityMessageBox(
@@ -762,7 +788,7 @@ EffectUIHostInterface *EffectManager::GetEffect(const PluginID & ID)
                   .Format( GetCommandName(ID) ),
                XO("Effect failed to initialize"));
 
-         return nullptr;
+         return empty;
       }
    }
 }
