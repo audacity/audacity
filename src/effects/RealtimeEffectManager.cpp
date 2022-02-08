@@ -70,6 +70,9 @@ void RealtimeEffectManager::Initialize(double rate)
    VisitGroup(nullptr, [rate](RealtimeEffectState &state, bool){
       state.Initialize(rate);
    });
+
+   // Leave suspended state
+   Resume();
 }
 
 void RealtimeEffectManager::AddTrack(Track *track, unsigned chans, float rate)
@@ -88,6 +91,9 @@ void RealtimeEffectManager::AddTrack(Track *track, unsigned chans, float rate)
 
 void RealtimeEffectManager::Finalize() noexcept
 {
+   // Reenter suspended state
+   Suspend();
+
    // Assume it is now safe to clean up
    mLatency = std::chrono::microseconds(0);
 

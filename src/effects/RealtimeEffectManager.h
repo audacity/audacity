@@ -74,6 +74,7 @@ public:
 
 private:
    friend RealtimeEffects::InitializationScope;
+   friend RealtimeEffects::SuspensionScope;
 
    //! Main thread begins to define a set of tracks for playback
    void Initialize(double rate);
@@ -152,9 +153,13 @@ public:
    explicit SuspensionScope(std::weak_ptr<AudacityProject> wProject)
       : mwProject{ move(wProject) }
    {
-      
-      if (auto pProject = mwProject.lock())
-         RealtimeEffectManager::Get(*pProject).Suspend();
+      if (auto pProject = mwProject.lock()) {
+         auto &manager = RealtimeEffectManager::Get(*pProject);
+         if (!manager.mSuspended)
+            manager.Suspend();
+         else
+            mwProject.reset();
+      }
    }
    SuspensionScope( SuspensionScope &&other ) = default;
    SuspensionScope& operator=( SuspensionScope &&other ) = default;
