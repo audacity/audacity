@@ -1,4 +1,4 @@
-audacity (3.0.3-1) UNRELEASED; urgency=medium
+audacity (TMPL_AUDACITY_VERSION) UNRELEASED; urgency=medium
 
   * Initial release. (Closes: #XXXXXX)
 

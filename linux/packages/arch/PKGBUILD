@@ -1,5 +1,5 @@
-pkgname=audacity-test
-pkgver=3.0.3
+pkgname=audacity
+pkgver=TMPL_AUDACITY_VERSION
 pkgrel=1
 pkgdesc="Audacity is an easy-to-use, multi-track audio editor and recorder"
 groups=(audio)
@@ -12,16 +12,16 @@ depends=(zlib
    alsa-lib
    gtk2
    expat
-   libid3tag 
+   libid3tag
    libogg
    libvorbis
    flac
    lame
    twolame
    libmad
-   libsndfile 
+   libsndfile
    jack
-   lilv 
+   lilv
    lv2
    portaudio
    portsmf
@@ -36,10 +36,9 @@ depends=(zlib
 )
 
 makedepends=(
-   git 
-   cmake 
+   git
+   cmake
    python-pip
-   ffmpeg
 )
 
 optdepends=('ffmpeg: additional import/export capabilities')
@@ -48,8 +47,8 @@ provides=(audacity audacity-test)
 conflicts=(audacity audacity-test)
 
 source=(
-  "audacity-sources.tar.gz"
-  "audacity-offline-dependencies-arch-linux.tar.gz"
+  "TMPL_AUDACITY_SOURCES"
+  "TMPL_AUDACITY_DEPENDENCIES"
 )
 
 md5sums=(
@@ -58,14 +57,16 @@ md5sums=(
 )
 
 build() {
-    depsDir=$(readlink -f ./audacity-offline-dependencies)
-    python3 -m venv conan_env
+    python3 -m venv .venv
+    source .venv/bin/activate
 
-    source conan_env/bin/activate
-    pip3 install --no-index --find-links "$depsDir/pip_cache" conan 
+    depsDir=$(readlink -f ./.offline)
 
-    export CONAN_USER_HOME="$depsDir/conan_home"
-    mkdir -p $CONAN_USER_HOME
+    pip3 install --no-index --find-links "$depsDir/pip" setuptools wheel
+    pip3 install --no-index --find-links "$depsDir/pip" Cython markupsafe
+    pip3 install --no-index --find-links "$depsDir/pip" conan
+
+    export CONAN_USER_HOME="$depsDir/conan"
 
     conan config home
     conan config init
@@ -87,7 +88,9 @@ build() {
         -D audacity_use_sbsms=local # sbsms is only available in AUR
     )
 
-    cmake -S audacity -B build "${cmake_args[@]}"
+    sourceDir=$(echo audacity-sources-*/)
+
+    cmake -S "${sourceDir}" -B build "${cmake_args[@]}"
     cmake --build build -- -j`nproc`
 }
 

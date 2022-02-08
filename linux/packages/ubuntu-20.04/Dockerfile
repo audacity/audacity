@@ -11,9 +11,9 @@ COPY ["entrypoint.sh", "/entrypoint.sh"]
 
 RUN useradd -m user
 
-COPY ["debian", "/home/user/audacity-3.0.3/debian"]
+COPY ["debian", "/home/user/debian"]
 
-RUN chown -R user /home/user/audacity-3.0.3
+RUN chown -R user /home/user/
 
 USER user
 WORKDIR /home/user

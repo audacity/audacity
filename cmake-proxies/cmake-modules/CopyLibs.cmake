@@ -62,7 +62,7 @@ function( gather_libs src )
       get_filename_component(dir ${CMAKE_SCRIPT_MODE_FILE} DIRECTORY)
 
       execute_process( COMMAND  
-         python 
+         python3 
          "${dir}/../../scripts/build/macOS/fixup_libs.py"
          -i ${WXWIN} 
          -o ${DST} 

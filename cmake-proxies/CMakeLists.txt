@@ -178,6 +178,14 @@ if( ${_OPT}has_asio_support )
    set( portaudio_enable_asio "portaudio:with_asio=True" )
 endif()
 
+if(UNIX AND NOT APPLE)
+   find_package(JACK QUIET)
+
+   if( NOT JACK_FOUND )
+      set( portaudio_disable_jack "portaudio:with_jack=False" )
+   endif()
+endif()
+
 add_conan_lib(
    PortAudio
    portaudio/19.7.0
@@ -189,6 +197,7 @@ add_conan_lib(
       # Audacity doesn't support WDM/KS (yet)
       portaudio:with_wdmks=False
       ${portaudio_enable_asio}
+      ${portaudio_disable_jack}
 )
 
 if( ${_OPT}has_networking )
