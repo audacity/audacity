@@ -624,6 +624,8 @@ if(${_OPT}has_crashreports)
    add_subdirectory( "crashreports" )
 endif()
 
+add_subdirectory( "tests/journals" )
+
 # Generate config file
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    configure_file( src/audacity_config.h.in src/private/configwin.h )
