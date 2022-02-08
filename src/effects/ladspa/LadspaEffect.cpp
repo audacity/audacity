@@ -1139,7 +1139,7 @@ bool LadspaEffect::SaveUserPreset(const RegistryPath & name)
    return SaveParameters(name);
 }
 
-RegistryPaths LadspaEffect::GetFactoryPresets()
+RegistryPaths LadspaEffect::GetFactoryPresets() const
 {
    return {};
 }

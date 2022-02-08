@@ -122,7 +122,7 @@ class VSTEffect final : public wxEvtHandler,
    bool LoadUserPreset(const RegistryPath & name) override;
    bool SaveUserPreset(const RegistryPath & name) override;
 
-   RegistryPaths GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
@@ -249,8 +249,8 @@ private:
    void PowerOn();
    void PowerOff();
 
-   int GetString(wxString & outstr, int opcode, int index = 0);
-   wxString GetString(int opcode, int index = 0);
+   int GetString(wxString & outstr, int opcode, int index = 0) const;
+   wxString GetString(int opcode, int index = 0) const;
    void SetString(int opcode, const wxString & str, int index = 0);
 
    // VST methods

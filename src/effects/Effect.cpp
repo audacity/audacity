@@ -543,7 +543,7 @@ bool Effect::SaveUserPreset(const RegistryPath & name)
       name, wxT("Parameters"), parms);
 }
 
-RegistryPaths Effect::GetFactoryPresets()
+RegistryPaths Effect::GetFactoryPresets() const
 {
    if (mClient)
    {

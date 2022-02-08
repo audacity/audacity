@@ -1625,7 +1625,7 @@ bool AudioUnitEffect::LoadFactoryDefaults()
    return LoadPreset(mHost->GetFactoryDefaultsGroup());
 }
 
-RegistryPaths AudioUnitEffect::GetFactoryPresets()
+RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 {
    OSStatus result;
    RegistryPaths presets;

@@ -492,7 +492,7 @@ FactoryPresets[] =
 
 
 
-RegistryPaths EffectEqualization::GetFactoryPresets()
+RegistryPaths EffectEqualization::GetFactoryPresets() const
 {
    RegistryPaths names;
 

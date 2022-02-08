@@ -421,8 +421,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
 
    mSupportsNominalBlockLength = false;
    mSupportsSampleRate = false;
-
-   mFactoryPresetsLoaded = false;
 }
 
 LV2Effect::~LV2Effect()
@@ -1651,7 +1649,7 @@ bool LV2Effect::SaveUserPreset(const RegistryPath &name)
    return SaveParameters(name);
 }
 
-RegistryPaths LV2Effect::GetFactoryPresets()
+RegistryPaths LV2Effect::GetFactoryPresets() const
 {
    if (mFactoryPresetsLoaded)
    {

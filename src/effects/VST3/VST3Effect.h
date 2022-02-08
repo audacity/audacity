@@ -71,8 +71,9 @@ class VST3Effect final : public EffectUIClientInterface
 
    std::vector<std::shared_ptr<VST3Effect>> mRealtimeGroupProcessors;
 
-   bool mRescanFactoryPresets { true };
-   RegistryPaths mFactoryPresets;
+   // Mutable cache fields computed once on demand
+   mutable bool mRescanFactoryPresets { true };
+   mutable RegistryPaths mFactoryPresets;
 
    size_t mUserBlockSize { 8192 };
    bool mUseLatency { true };
@@ -109,7 +110,7 @@ public:
    bool SetAutomationParameters(CommandParameters& parms) override;
    bool LoadUserPreset(const RegistryPath& name) override;
    bool SaveUserPreset(const RegistryPath& name) override;
-   RegistryPaths GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 

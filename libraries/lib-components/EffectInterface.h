@@ -138,9 +138,6 @@ public:
    //! Save current settings as a user-named preset
    virtual bool SaveUserPreset(const RegistryPath & name) = 0;
 
-   //! Report names of factory presets
-   virtual RegistryPaths GetFactoryPresets() = 0;
-
    //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
    virtual bool LoadFactoryPreset(int id) = 0;
    //! Change settings back to "factory default"
@@ -170,6 +167,8 @@ public:
    virtual bool LoadSettings(
       CommandParameters & parms, Settings &settings) const = 0;
 
+   //! Report names of factory presets
+   virtual RegistryPaths GetFactoryPresets() const = 0;
    //! @}
 };
 

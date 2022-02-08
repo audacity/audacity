@@ -450,7 +450,7 @@ bool VST3Effect::SaveUserPreset(const RegistryPath& name)
    return true;
 }
 
-RegistryPaths VST3Effect::GetFactoryPresets()
+RegistryPaths VST3Effect::GetFactoryPresets() const
 {
    if(!mRescanFactoryPresets)
       return mFactoryPresets;

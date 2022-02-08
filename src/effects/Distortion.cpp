@@ -319,7 +319,7 @@ bool EffectDistortion::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-RegistryPaths EffectDistortion::GetFactoryPresets()
+RegistryPaths EffectDistortion::GetFactoryPresets() const
 {
    RegistryPaths names;
 

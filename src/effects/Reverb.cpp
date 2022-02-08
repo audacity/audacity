@@ -336,7 +336,7 @@ bool EffectReverb::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-RegistryPaths EffectReverb::GetFactoryPresets()
+RegistryPaths EffectReverb::GetFactoryPresets() const
 {
    RegistryPaths names;
 
