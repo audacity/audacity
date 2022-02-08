@@ -51,6 +51,8 @@ StartupWMClass=Audacity
 Type=Application
 Categories=AudioVideo;Audio;AudioVideoEditing;
 
+Keywords=audio;editing;recorder;
+
 Exec=env UBUNTU_MENUPROXY=0 @AUDACITY_NAME@ %F
 StartupNotify=false
 Terminal=false
