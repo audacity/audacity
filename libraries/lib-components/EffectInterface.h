@@ -154,23 +154,6 @@ public:
    // functionality.
    //virtual bool DefineParams( ShuttleParams & S);
 
-   /*! @name Old settings interface
-    Old interface for saving and loading non-externalized settings
-    */
-   //! @{
-
-   //! Change settings to a user-named preset
-   virtual bool LoadUserPreset(const RegistryPath & name) = 0;
-   //! Save current settings as a user-named preset
-   virtual bool SaveUserPreset(const RegistryPath & name) = 0;
-
-   //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
-   virtual bool LoadFactoryPreset(int id) = 0;
-   //! Change settings back to "factory default"
-   virtual bool LoadFactoryDefaults() = 0;
-
-   //! @}
-
    /*! @name settings
     Interface for saving and loading externalized settings.
     All methods are const!
@@ -195,6 +178,18 @@ public:
 
    //! Report names of factory presets
    virtual RegistryPaths GetFactoryPresets() const = 0;
+
+   //! Change settings to a user-named preset
+   virtual bool LoadUserPreset(
+      const RegistryPath & name, Settings &settings) const = 0;
+   //! Save settings in the configuration file as a user-named preset
+   virtual bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const = 0;
+
+   //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
+   virtual bool LoadFactoryPreset(int id, Settings &settings) const = 0;
+   //! Change settings back to "factory default"
+   virtual bool LoadFactoryDefaults(Settings &settings) const = 0;
    //! @}
 };
 
@@ -203,6 +198,8 @@ public:
  (Default implementations of EffectDefinitionInterface methods for settings call
  through to the old interface, violating const correctness.  This is meant to be
  transitional only.)
+
+ This interface is not used by the EffectUIHost dialog.
  */
 class COMPONENTS_API EffectDefinitionInterfaceEx  /* not final */
    : public EffectDefinitionInterface
@@ -216,6 +213,16 @@ public:
    virtual bool GetAutomationParameters(CommandParameters & parms) = 0;
    //! Change settings to those stored in parms
    virtual bool SetAutomationParameters(CommandParameters & parms) = 0;
+
+   //! Change settings to a user-named preset
+   virtual bool LoadUserPreset(const RegistryPath & name) = 0;
+   //! Save current settings as a user-named preset
+   virtual bool SaveUserPreset(const RegistryPath & name) = 0;
+
+   //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
+   virtual bool LoadFactoryPreset(int id) = 0;
+   //! Change settings back to "factory default"
+   virtual bool LoadFactoryDefaults() = 0;
    //! @}
 
    /*! @name settings
@@ -228,6 +235,13 @@ public:
       const Settings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
       CommandParameters & parms, Settings &settings) const override;
+
+   bool LoadUserPreset(
+      const RegistryPath & name, Settings &settings) const override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const override;
+   bool LoadFactoryPreset(int id, Settings &settings) const override;
+   bool LoadFactoryDefaults(Settings &settings) const override;
    //! @}
 
 private:

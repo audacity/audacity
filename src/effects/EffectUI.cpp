@@ -556,7 +556,8 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    }
    
    // This will take care of calling TransferDataFromWindow() for an effect.
-   if (!mEffectUIHost.GetDefinition().SaveUserPreset(mEffectUIHost.GetCurrentSettingsGroup()))
+   if (!mEffectUIHost.GetDefinition().SaveUserPreset(
+      mEffectUIHost.GetCurrentSettingsGroup(), mpAccess->Get()))
    {
       return;
    }
@@ -882,16 +883,24 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
 {
    int preset = evt.GetId() - kUserPresetsID;
    
-   mEffectUIHost.GetDefinition()
-      .LoadUserPreset(mEffectUIHost.GetUserPresetsGroup(mUserPresets[preset]));
+   // Make mutable copy
+   auto settings = mpAccess->Get();
+   mEffectUIHost.GetDefinition().LoadUserPreset(
+      mEffectUIHost.GetUserPresetsGroup(mUserPresets[preset]), settings);
+   // Communicate change of settings
+   mpAccess->Set(std::move(settings));
    
    return;
 }
 
 void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
 {
+   // Make mutable copy
+   auto settings = mpAccess->Get();
    mEffectUIHost.GetDefinition()
-      .LoadFactoryPreset(evt.GetId() - kFactoryPresetsID);
+      .LoadFactoryPreset(evt.GetId() - kFactoryPresetsID, settings);
+   // Communicate change of settings
+   mpAccess->Set(std::move(settings));
    
    return;
 }
@@ -985,8 +994,8 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
          }
       }
       
-      mEffectUIHost.GetDefinition()
-         .SaveUserPreset(mEffectUIHost.GetUserPresetsGroup(name));
+      mEffectUIHost.GetDefinition().SaveUserPreset(
+         mEffectUIHost.GetUserPresetsGroup(name), mpAccess->Get());
       LoadUserPresets();
       
       break;
@@ -1022,8 +1031,11 @@ void EffectUIHost::OnOptions(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
 {
-   mEffectUIHost.GetDefinition().LoadFactoryDefaults();
-   
+   // Make mutable copy
+   auto settings = mpAccess->Get();
+   mEffectUIHost.GetDefinition().LoadFactoryDefaults(settings);
+   // Communicate change of settings
+   mpAccess->Set(std::move(settings));
    return;
 }
 
