@@ -1098,6 +1098,10 @@ list( APPEND LIBRARIES
       PortAudio::PortAudio
       sqlite
       $<$<BOOL:${${_OPT}has_crashreports}>:crashreports>
+      $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::base>
+      $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::pluginterfaces>
+      $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_hosting>
+      $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_common>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC>
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC++>

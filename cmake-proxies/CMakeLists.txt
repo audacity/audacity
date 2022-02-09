@@ -22,6 +22,14 @@ if(${_OPT}has_crashreports)
    add_conan_lib(breakpad breakpad/0.1 REQUIRED)
 endif()
 
+if(${_OPT}has_vst3)
+    add_conan_lib(
+        vst3sdk vst3sdk/3.7.3
+        REQUIRED
+        HAS_ONLY_DEBUG_RELEASE
+    )
+endif()
+
 set( wx_zlib "zlib" )
 
 set( wx_png "libpng" )
