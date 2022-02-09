@@ -163,7 +163,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
                    wxDefaultPosition, wxDefaultSize,
                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
-, mEffect{ effect }
+, mEffectUIHost{ effect }
 , mClient{ client }
 , mProject{ project }
 {
@@ -199,12 +199,12 @@ EffectUIHost::~EffectUIHost()
 
 bool EffectUIHost::TransferDataToWindow()
 {
-   return mEffect.TransferDataToWindow();
+   return mEffectUIHost.TransferDataToWindow();
 }
 
 bool EffectUIHost::TransferDataFromWindow()
 {
-   return mEffect.TransferDataFromWindow();
+   return mEffectUIHost.TransferDataFromWindow();
 }
 
 // ============================================================================
@@ -242,9 +242,9 @@ int EffectUIHost::ShowModal()
 
 wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
 {
-   mSupportsRealtime = mEffect.GetDefinition().SupportsRealtime();
+   mSupportsRealtime = mEffectUIHost.GetDefinition().SupportsRealtime();
    mIsGUI = mClient.IsGraphicalUI();
-   mIsBatch = mEffect.IsBatchProcessing();
+   mIsBatch = mEffectUIHost.IsBatchProcessing();
 
    int margin = 0;
 #if defined(__WXMAC__)
@@ -293,8 +293,8 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
                               wxALIGN_CENTER | wxTOP | wxBOTTOM );
             }
             else if (
-               (mEffect.GetDefinition().GetType() != EffectTypeAnalyze) &&
-               (mEffect.GetDefinition().GetType() != EffectTypeTool) )
+               (mEffectUIHost.GetDefinition().GetType() != EffectTypeAnalyze) &&
+               (mEffectUIHost.GetDefinition().GetType() != EffectTypeTool) )
             {
                mPlayToggleBtn = S.Id( kPlayID )
                   .ToolTip(XO("Preview effect"))
@@ -420,7 +420,7 @@ bool EffectUIHost::Initialize()
          const auto bar = BuildButtonBar( S.GetParent() );
 
          long buttons;
-         if ( mEffect.GetDefinition().ManualPage().empty() && mEffect.GetDefinition().HelpPage().empty()) {
+         if ( mEffectUIHost.GetDefinition().ManualPage().empty() && mEffectUIHost.GetDefinition().HelpPage().empty()) {
             buttons = eApplyButton | eCloseButton;
             this->SetAcceleratorTable(wxNullAcceleratorTable);
          }
@@ -436,7 +436,7 @@ bool EffectUIHost::Initialize()
             this->SetAcceleratorTable(accel);
          }
 
-         if (mEffect.GetDefinition().EnablesDebug())
+         if (mEffectUIHost.GetDefinition().EnablesDebug())
             buttons |= eDebugButton;
 
          S.AddStandardButtons(buttons, bar);
@@ -532,14 +532,14 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    
    // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
    if (!mIsBatch &&
-       mEffect.GetDefinition().GetType() != EffectTypeGenerate &&
-       mEffect.GetDefinition().GetType() != EffectTypeTool &&
+       mEffectUIHost.GetDefinition().GetType() != EffectTypeGenerate &&
+       mEffectUIHost.GetDefinition().GetType() != EffectTypeTool &&
        ViewInfo::Get( project ).selectedRegion.isPoint())
    {
       auto flags = AlwaysEnabledFlag;
       bool allowed =
       MenuManager::Get( project ).ReportIfActionNotAllowed(
-         mEffect.GetDefinition().GetName(),
+         mEffectUIHost.GetDefinition().GetName(),
          flags,
          WaveTracksSelectedFlag() | TimeSelectedFlag());
       if (!allowed)
@@ -552,7 +552,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    }
    
    // This will take care of calling TransferDataFromWindow() for an effect.
-   if (!mEffect.GetDefinition().SaveUserPreset(mEffect.GetCurrentSettingsGroup()))
+   if (!mEffectUIHost.GetDefinition().SaveUserPreset(mEffectUIHost.GetCurrentSettingsGroup()))
    {
       return;
    }
@@ -577,7 +577,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    // This is absolute hackage...but easy and I can't think of another way just now.
    //
    // It should callback to the EffectManager to kick off the processing
-   EffectUI::DoEffect(GetID(mEffect), context,
+   EffectUI::DoEffect(GetID(mEffectUIHost), context,
       EffectManager::kConfigured);
 }
 
@@ -601,14 +601,14 @@ void EffectUIHost::OnCancel(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnHelp(wxCommandEvent & WXUNUSED(event))
 {
-   if (mEffect.GetDefinition().GetFamily() == NYQUISTEFFECTS_FAMILY && (mEffect.GetDefinition().ManualPage().empty())) {
+   if (mEffectUIHost.GetDefinition().GetFamily() == NYQUISTEFFECTS_FAMILY && (mEffectUIHost.GetDefinition().ManualPage().empty())) {
       // Old ShowHelp required when there is no on-line manual.
       // Always use default web browser to allow full-featured HTML pages.
-      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect.GetDefinition().HelpPage(), wxEmptyString, true, true);
+      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffectUIHost.GetDefinition().HelpPage(), wxEmptyString, true, true);
    }
    else {
       // otherwise use the NEW ShowHelp
-      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffect.GetDefinition().ManualPage(), true);
+      HelpSystem::ShowHelp(FindWindow(wxID_HELP), mEffectUIHost.GetDefinition().ManualPage(), true);
    }
 }
 
@@ -656,7 +656,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    
    menu.AppendSeparator();
    
-   auto factory = mEffect.GetDefinition().GetFactoryPresets();
+   auto factory = mEffectUIHost.GetDefinition().GetFactoryPresets();
    
    {
       auto sub = std::make_unique<wxMenu>();
@@ -688,7 +688,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    {
       auto sub = std::make_unique<wxMenu>();
       
-      auto &definition = mEffect.GetDefinition();
+      auto &definition = mEffectUIHost.GetDefinition();
       sub->Append(kDummyID, wxString::Format(_("Type: %s"),
          ::wxGetTranslation( definition.GetFamily().Translation() )));
       sub->Append(kDummyID, wxString::Format(_("Name: %s"), definition.GetName().Translation()));
@@ -724,12 +724,12 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mSupportsRealtime)
    {
-      if (!mClient.ValidateUI() || !mEffect.TransferDataFromWindow())
+      if (!mClient.ValidateUI() || !mEffectUIHost.TransferDataFromWindow())
       {
          return;
       }
       
-      mEffect.Preview(false);
+      mEffectUIHost.Preview(false);
       
       return;
    }
@@ -870,14 +870,16 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
 {
    int preset = evt.GetId() - kUserPresetsID;
    
-   mEffect.GetDefinition().LoadUserPreset(mEffect.GetUserPresetsGroup(mUserPresets[preset]));
+   mEffectUIHost.GetDefinition()
+      .LoadUserPreset(mEffectUIHost.GetUserPresetsGroup(mUserPresets[preset]));
    
    return;
 }
 
 void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
 {
-   mEffect.GetDefinition().LoadFactoryPreset(evt.GetId() - kFactoryPresetsID);
+   mEffectUIHost.GetDefinition()
+      .LoadFactoryPreset(evt.GetId() - kFactoryPresetsID);
    
    return;
 }
@@ -892,9 +894,9 @@ void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
                                 wxICON_QUESTION | wxYES_NO);
    if (res == wxYES)
    {
-      RemoveConfigSubgroup(mEffect.GetDefinition(),
+      RemoveConfigSubgroup(mEffectUIHost.GetDefinition(),
          PluginSettings::Private,
-         mEffect.GetUserPresetsGroup(preset));
+         mEffectUIHost.GetUserPresetsGroup(preset));
    }
    
    LoadUserPresets();
@@ -971,7 +973,8 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
          }
       }
       
-      mEffect.GetDefinition().SaveUserPreset(mEffect.GetUserPresetsGroup(name));
+      mEffectUIHost.GetDefinition()
+         .SaveUserPreset(mEffectUIHost.GetUserPresetsGroup(name));
       LoadUserPresets();
       
       break;
@@ -1007,7 +1010,7 @@ void EffectUIHost::OnOptions(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
 {
-   mEffect.GetDefinition().LoadFactoryDefaults();
+   mEffectUIHost.GetDefinition().LoadFactoryDefaults();
    
    return;
 }
@@ -1063,8 +1066,8 @@ void EffectUIHost::UpdateControls()
    }
    
    mApplyBtn->Enable(!mCapturing);
-   if ((mEffect.GetDefinition().GetType() != EffectTypeAnalyze) &&
-       (mEffect.GetDefinition().GetType() != EffectTypeTool) )
+   if ((mEffectUIHost.GetDefinition().GetType() != EffectTypeAnalyze) &&
+       (mEffectUIHost.GetDefinition().GetType() != EffectTypeTool) )
    {
       (!mIsGUI ? mPlayToggleBtn : mPlayBtn)->Enable(!(mCapturing || mDisableTransport));
    }
@@ -1128,8 +1131,8 @@ void EffectUIHost::LoadUserPresets()
 {
    mUserPresets.clear();
    
-   GetConfigSubgroups(mEffect.GetDefinition(), PluginSettings::Private,
-      mEffect.GetUserPresetsGroup(wxEmptyString), mUserPresets);
+   GetConfigSubgroups(mEffectUIHost.GetDefinition(), PluginSettings::Private,
+      mEffectUIHost.GetUserPresetsGroup(wxEmptyString), mUserPresets);
    
    std::sort( mUserPresets.begin(), mUserPresets.end() );
    
@@ -1139,7 +1142,8 @@ void EffectUIHost::LoadUserPresets()
 void EffectUIHost::InitializeRealtime()
 {
    if (mSupportsRealtime && !mInitialized) {
-      mpState = AudioIO::Get()->AddState(mProject, nullptr, GetID(mEffect));
+      mpState =
+         AudioIO::Get()->AddState(mProject, nullptr, GetID(mEffectUIHost));
       /*
       ProjectHistory::Get(mProject).PushState(
          XO("Added %s effect").Format(mpState->GetEffect()->GetName()),

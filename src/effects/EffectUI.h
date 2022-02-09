@@ -95,7 +95,7 @@ private:
 
    AudacityProject &mProject;
    wxWindow *mParent;
-   EffectUIHostInterface &mEffect;
+   EffectUIHostInterface &mEffectUIHost;
    EffectUIClientInterface &mClient;
    RealtimeEffectState *mpState{ nullptr };
 
