@@ -64,6 +64,9 @@ MODULE_MANAGER_API bool GetConfigValue( EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group,
    const RegistryPath & key, ConfigReference var, ConfigConstReference value);
 
+MODULE_MANAGER_API bool HasConfigValue( EffectDefinitionInterface &ident,
+   ConfigurationType type,
+   const RegistryPath & group, const RegistryPath & key);
 
 // GetConfig with default value
 template<typename Value>

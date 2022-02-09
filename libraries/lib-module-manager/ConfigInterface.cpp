@@ -30,6 +30,15 @@ bool GetConfigSubgroups( EffectDefinitionInterface &ident,
       type, id, group, subgroups);
 }
 
+bool HasConfigValue( EffectDefinitionInterface &ident,
+   PluginSettings::ConfigurationType type,
+   const RegistryPath & group, const RegistryPath & key)
+{
+   auto &pluginManager = PluginManager::Get();
+   const auto &id = pluginManager.GetID(&ident);
+   return pluginManager.HasConfigValue(type, id, group, key);
+}
+
 bool GetConfigValue( EffectDefinitionInterface &ident,
    PluginSettings::ConfigurationType type,
    const RegistryPath & group, const RegistryPath & key,

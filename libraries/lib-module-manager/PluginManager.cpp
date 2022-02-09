@@ -505,6 +505,12 @@ bool PluginManager::GetConfigSubgroups(ConfigurationType type,
    return GetSubgroups(Group(type, ID, group), subgroups);
 }
 
+bool PluginManager::HasConfigValue(ConfigurationType type, const PluginID & ID,
+      const RegistryPath & group, const RegistryPath & key)
+{
+   return HasConfigValue(Key(type, ID, group, key));
+}
+
 bool PluginManager::GetConfigValue(ConfigurationType type, const PluginID & ID,
    const RegistryPath & group, const RegistryPath & key,
    ConfigReference var, ConfigConstReference defval)
@@ -1589,6 +1595,11 @@ bool PluginManager::GetSubgroups(const RegistryPath & group, RegistryPaths & sub
    GetSettings()->SetPath(path);
 
    return true;
+}
+
+bool PluginManager::HasConfigValue(const RegistryPath & key)
+{
+   return GetSettings()->Exists(key);
 }
 
 bool PluginManager::GetConfigValue(
