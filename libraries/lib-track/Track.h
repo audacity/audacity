@@ -12,6 +12,7 @@
 #ifndef __AUDACITY_TRACK__
 #define __AUDACITY_TRACK__
 
+#include <atomic>
 #include <utility>
 #include <vector>
 #include <list>
