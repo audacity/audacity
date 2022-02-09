@@ -34,8 +34,12 @@ void RealtimeEffectState::SetID(const PluginID & id)
 
 EffectProcessor *RealtimeEffectState::GetEffect()
 {
-   if (!mEffect)
+   if (!mEffect) {
       mEffect = EffectFactory::Call(mID);
+      if (mEffect)
+         // Also make EffectSettings
+         mSettings = mEffect->MakeSettings();
+   }
    return mEffect.get();
 }
 
@@ -344,7 +348,7 @@ void RealtimeEffectState::HandleXMLEndTag(const std::string_view &tag)
    if (tag == XMLTag()) {
       if (mEffect && !mParameters.empty()) {
          CommandParameters parms(mParameters);
-         mEffect->SetAutomationParameters(parms);
+         mEffect->LoadSettings(parms, mSettings);
       }
       mParameters.clear();
    }
@@ -367,7 +371,7 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
    xmlFile.WriteAttr(versionAttribute, XMLWriter::XMLEsc(mEffect->GetVersion()));
 
    CommandParameters cmdParms;
-   if (mEffect->GetAutomationParameters(cmdParms)) {
+   if (mEffect->SaveSettings(mSettings, cmdParms)) {
       xmlFile.StartTag(parametersAttribute);
 
       wxString entryName;

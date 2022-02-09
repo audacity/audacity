@@ -16,6 +16,7 @@
 #include <unordered_map>
 #include <vector>
 #include <cstddef>
+#include "EffectInterface.h"
 #include "GlobalVariable.h"
 #include "ModuleInterface.h" // for PluginID
 #include "XMLTagHandler.h"
@@ -72,6 +73,7 @@ private:
    PluginID mID;
    wxString mParameters;  // Used only during deserialization
    std::unique_ptr<EffectProcessor> mEffect;
+   EffectSettings mSettings;
 
    size_t mCurrentProcessor{ 0 };
    std::unordered_map<Track *, size_t> mGroups;
