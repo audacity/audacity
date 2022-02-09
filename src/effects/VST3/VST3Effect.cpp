@@ -13,6 +13,7 @@
 #include "VST3Effect.h"
 
 #include "AudacityException.h"
+#include "EffectHostInterface.h"
 
 #include <stdexcept>
 #include <wx/log.h>
@@ -23,9 +24,19 @@
 
 #include "internal/ComponentHandler.h"
 #include "internal/ParameterChanges.h"
+#include "internal/PlugFrame.h"
 #include "internal/ConnectionProxy.h"
 
+#include "widgets/NumericTextCtrl.h"
+#include "ShuttleGui.h"
 #include "VST3Utils.h"
+#ifdef __WXMSW__
+#include <ShlObj_core.h>
+#elif __WXGTK__
+#include "internal/x11/SocketWindow.h"
+#endif
+
+#include "ConfigInterface.h"
 
 namespace {
 
@@ -620,27 +631,91 @@ bool VST3Effect::RealtimeProcessEnd() noexcept
 
 int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal)
 {
+   if(!IsGraphicalUI())
+   {
+      //Restrict resize of the "plain" dialog
+      dialog.SetMaxSize(dialog.GetSize());
+      dialog.SetMinSize(dialog.GetSize());
+   }
+   if(forceModal)
+      return dialog.ShowModal();
+
+   dialog.Show();
    return 0;
 }
 
 bool VST3Effect::SetHost(EffectHostInterface* host)
 {
-   return false;
+   mEffectHost = host;
+   return true;
 }
 
 bool VST3Effect::IsGraphicalUI()
 {
-   return false;
+   return mPlugView != nullptr;
 }
 
 bool VST3Effect::PopulateUI(ShuttleGui& S)
 {
+   using namespace Steinberg;
+
+   mParent = S.GetParent();
+
+   if(mComponentHandler != nullptr)
+   {
+      SyncParameters();
+
+      auto parent = S.GetParent();
+      if(GetType() == EffectTypeGenerate)
+      {
+         auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+         auto controlsRoot = safenew wxWindow(parent, wxID_ANY);
+         if(!LoadVSTUI(controlsRoot))
+            VST3Utils::BuildPlainUI(controlsRoot, mEditController, mComponentHandler);
+         vSizer->Add(controlsRoot);
+
+         mDuration = safenew NumericTextCtrl(
+               parent, wxID_ANY,
+               NumericConverter::TIME,
+               mEffectHost->GetDurationFormat(),
+               mEffectHost->GetDuration(),
+               mSetup.sampleRate,
+               NumericTextCtrl::Options{}
+                  .AutoPos(true)
+            );
+         mDuration->SetName( XO("Duration") );
+
+         auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+         hSizer->Add(safenew wxStaticText(parent, wxID_ANY, _("Duration:")));
+         hSizer->AddSpacer(5);
+         hSizer->Add(mDuration);
+         vSizer->AddSpacer(10);
+         vSizer->Add(hSizer.release());
+
+         parent->SetMinSize(vSizer->CalcMin());
+         parent->SetSizer(vSizer.release());
+      }
+      else if(!LoadVSTUI(parent))
+      {
+         VST3Utils::BuildPlainUI(
+            parent,
+            mEditController,
+            mComponentHandler
+         );
+      }
+
+      return true;
+   }
    return false;
 }
 
 bool VST3Effect::ValidateUI()
 {
-   return false;
+   if (mDuration != nullptr)
+   {
+      mEffectHost->SetDuration(mDuration->GetValue());
+   }
+   return true;
 }
 
 bool VST3Effect::HideUI()
@@ -650,6 +725,14 @@ bool VST3Effect::HideUI()
 
 bool VST3Effect::CloseUI()
 {
+   mParent = nullptr;
+   if(mPlugView)
+   {
+      mPlugView->setFrame(nullptr);
+      mPlugView->removed();
+      mPlugView = nullptr;
+      return true;
+   }
    return false;
 }
 
@@ -675,6 +758,120 @@ bool VST3Effect::HasOptions()
 
 void VST3Effect::ShowOptions()
 {
+}
+
+void VST3Effect::OnEffectWindowResize(wxSizeEvent& evt)
+{
+   using namespace Steinberg;
+
+   if(!mPlugView)
+      return;
+
+   const auto window = static_cast<wxWindow*>(evt.GetEventObject());
+   const auto windowSize = evt.GetSize();
+
+   {
+      //Workaround to prevent dialog window resize when
+      //plugin window reaches its maximum size
+      auto root = wxGetTopLevelParent(window);
+      wxSize maxRootSize = root->GetMaxSize();
+
+      //remember the current dialog size as its new maximum size
+      if(window->GetMaxWidth() != -1 && windowSize.GetWidth() >= window->GetMaxWidth())
+         maxRootSize.SetWidth(root->GetSize().GetWidth());
+      if(window->GetMaxHeight() != -1 && windowSize.GetHeight() >= window->GetMaxHeight())
+         maxRootSize.SetHeight(root->GetSize().GetHeight());
+      root->SetMaxSize(maxRootSize);
+   }
+   
+   ViewRect plugViewSize { 0, 0, windowSize.x, windowSize.y };
+   mPlugView->checkSizeConstraint(&plugViewSize);
+   mPlugView->onSize(&plugViewSize);
+}
+
+bool VST3Effect::LoadVSTUI(wxWindow* parent)
+{
+   using namespace Steinberg;
+   if(mEditController == nullptr)
+      return false;
+
+   bool useGUI { true };
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+            wxT("UseGUI"),
+            useGUI,
+            useGUI);
+   if(!useGUI)
+      return false;
+
+   if(const auto view = owned (mEditController->createView (Vst::ViewType::kEditor))) 
+   {  
+      parent->Bind(wxEVT_SIZE, &VST3Effect::OnEffectWindowResize, this);
+
+      ViewRect defaultSize;
+      if(view->getSize(&defaultSize) == kResultOk)
+      {
+         if(view->canResize() == Steinberg::kResultTrue)
+         {
+            ViewRect minSize {0, 0, parent->GetMinWidth(), parent->GetMinHeight()};
+            ViewRect maxSize {0, 0, 10000, 10000};
+            if(view->checkSizeConstraint(&minSize) != kResultOk)
+               minSize = defaultSize;
+
+            if(view->checkSizeConstraint(&maxSize) != kResultOk)
+               maxSize = defaultSize;
+
+            //No need to accommodate the off-by-one error with Steinberg::ViewRect
+            //as we do it with wxRect
+
+            if(defaultSize.getWidth() < minSize.getWidth())
+               defaultSize.right = defaultSize.left + minSize.getWidth();
+            if(defaultSize.getWidth() > maxSize.getWidth())
+               defaultSize.right = defaultSize.left + maxSize.getWidth();
+
+            if(defaultSize.getHeight() < minSize.getHeight())
+               defaultSize.bottom = defaultSize.top + minSize.getHeight();
+            if(defaultSize.getHeight() > maxSize.getHeight())
+               defaultSize.bottom = defaultSize.top + maxSize.getHeight();
+
+            parent->SetMinSize({minSize.getWidth(), minSize.getHeight()});
+            parent->SetMaxSize({maxSize.getWidth(), maxSize.getHeight()});
+         }
+         else
+         {
+            parent->SetMinSize({defaultSize.getWidth(), defaultSize.getHeight()});
+            parent->SetMaxSize(parent->GetMinSize());
+         }
+
+         parent->SetSize({defaultSize.getWidth(), defaultSize.getHeight()});
+      }
+
+#if __WXGTK__
+      mPlugView = view;
+      safenew internal::x11::SocketWindow(parent, wxID_ANY, view);
+      return true;
+#else
+
+      static const auto platformType =
+#  if __WXMAC__
+         kPlatformTypeNSView;
+#  elif __WXMSW__
+         kPlatformTypeHWND;
+#  else
+#     error "Platform not supported"
+#  endif
+      auto plugFrame = owned(safenew internal::PlugFrame { parent });
+      view->setFrame(plugFrame);
+      if(view->attached(parent->GetHandle(), platformType) != kResultOk)
+         return false;
+
+      mPlugView = view;
+
+      return true;
+#endif
+
+      
+   }
+   return false;
 }
 
 void VST3Effect::SyncParameters()

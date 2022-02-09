@@ -15,6 +15,7 @@
 
 #include <wx/wx.h>
 
+#include <pluginterfaces/gui/iplugview.h>
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <public.sdk/source/vst/hosting/module.h>
 
@@ -57,8 +58,12 @@ class VST3Effect final : public EffectUIClientInterface
 
    Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mComponentConnectionProxy;
    Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mControllerConnectionProxy;
+   Steinberg::IPtr<Steinberg::IPlugView> mPlugView;
    Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
    Steinberg::IPtr<internal::ComponentHandler> mComponentHandler;
+   wxWindow* mParent { nullptr };
+   EffectHostInterface *mEffectHost;
+   NumericTextCtrl* mDuration { nullptr };
 
    //Holds pending parameter changes to be applied to multiple realtime effects.
    //Not used in the "offline" mode
@@ -140,5 +145,9 @@ public:
    void ShowOptions() override;
 
 private:
+   void OnEffectWindowResize(wxSizeEvent & evt);
+
+   bool LoadVSTUI(wxWindow* parent);
+
    void SyncParameters();
 };

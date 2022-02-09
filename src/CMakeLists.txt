@@ -534,12 +534,21 @@ list( APPEND SOURCES
          effects/VST3/internal/ParameterQueuePool.cpp
          effects/VST3/internal/ParameterValueQueue.h
          effects/VST3/internal/ParameterValueQueue.cpp
+         effects/VST3/internal/PlugFrame.h
+         effects/VST3/internal/PlugFrame.cpp
       >
+
       $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_WIN}>>:
          effects/VST3/module_win32.cpp
       >
       $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_GTK}>>:
          effects/VST3/module_linux.cpp
+         effects/VST3/internal/x11/RunLoop.h
+         effects/VST3/internal/x11/RunLoop.cpp
+         effects/VST3/internal/x11/PlugFrame.h
+         effects/VST3/internal/x11/PlugFrame.cpp
+         effects/VST3/internal/x11/SocketWindow.h
+         effects/VST3/internal/x11/SocketWindow.cpp
       >
       $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_MAC}>>:
          effects/VST3/module_mac.mm
