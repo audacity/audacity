@@ -517,6 +517,14 @@ list( APPEND SOURCES
          effects/VST/VSTControlOSX.mm
       >
 
+      $<$<BOOL:${${_OPT}has_vst3}>:
+         effects/VST3/VST3Effect.h
+         effects/VST3/VST3Effect.cpp
+         effects/VST3/VST3EffectsModule.h
+         effects/VST3/VST3EffectsModule.cpp
+         effects/VST3/VST3Utils.h
+         effects/VST3/VST3Utils.cpp
+      >
       $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_WIN}>>:
          effects/VST3/module_win32.cpp
       >
