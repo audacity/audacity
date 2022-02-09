@@ -12,8 +12,18 @@
 
 #include "VST3Effect.h"
 
+#include "AudacityException.h"
+
+#include <stdexcept>
+#include <wx/log.h>
+#include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <pluginterfaces/vst/ivsteditcontroller.h>
+#include <pluginterfaces/vst/ivstprocesscontext.h>
 #include <public.sdk/source/vst/hosting/hostclasses.h>
+
+#include "internal/ComponentHandler.h"
+#include "internal/ParameterChanges.h"
+#include "internal/ConnectionProxy.h"
 
 #include "VST3Utils.h"
 
@@ -94,6 +104,11 @@ VST3Effect::~VST3Effect()
 
    CloseUI();
    
+   if(mComponentConnectionProxy)
+      mComponentConnectionProxy->disconnect(FUnknownPtr<Vst::IConnectionPoint>(mEditController));
+   if(mControllerConnectionProxy)
+      mControllerConnectionProxy->disconnect(FUnknownPtr<Vst::IConnectionPoint>(mEffectComponent));
+
    if(mEditController)
    {
       mEditController->setComponentHandler(nullptr);
@@ -136,6 +151,24 @@ VST3Effect::VST3Effect(
    }
    else
       mEditController = editController;
+
+   if(mEditController)
+   {
+      mComponentHandler = owned(safenew internal::ComponentHandler);
+      mEditController->setComponentHandler(mComponentHandler);
+
+      auto componentConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEffectComponent };
+      auto controllerConnectionPoint = FUnknownPtr<Vst::IConnectionPoint>{ mEditController };
+
+      if (componentConnectionPoint && controllerConnectionPoint)
+      {
+         mComponentConnectionProxy = owned(safenew internal::ConnectionProxy(componentConnectionPoint));
+         mControllerConnectionProxy = owned(safenew internal::ConnectionProxy(controllerConnectionPoint));
+
+         mComponentConnectionProxy->connect(controllerConnectionPoint);
+         mControllerConnectionProxy->connect(componentConnectionPoint);
+      }
+   }
 }
 
 
@@ -250,17 +283,73 @@ bool VST3Effect::LoadFactoryPreset(int id)
 
 bool VST3Effect::LoadFactoryDefaults()
 {
-   return false;
+   using namespace Steinberg;
+   if(mComponentHandler == nullptr)
+      return false;
+
+   for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
+   {
+      Vst::ParameterInfo parameterInfo { };
+      if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
+      {
+         if(parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
+            continue;
+
+         if(mComponentHandler->beginEdit(parameterInfo.id) == kResultOk)
+         {
+            auto cleanup = finally([&]{
+               mComponentHandler->endEdit(parameterInfo.id);
+            });
+            mComponentHandler->performEdit(parameterInfo.id, parameterInfo.defaultNormalizedValue);
+         }
+         mEditController->setParamNormalized(parameterInfo.id, parameterInfo.defaultNormalizedValue);
+      }
+   }
+
+   return true;
+}
+
+namespace
+{
+   unsigned CountChannels(Steinberg::Vst::IComponent* component,
+      const Steinberg::Vst::MediaTypes mediaType, 
+      const Steinberg::Vst::BusDirection busDirection,
+      const Steinberg::Vst::BusType busType)
+   {
+      using namespace Steinberg;
+
+      unsigned channelsCount{0};
+
+      const auto busCount = component->getBusCount(mediaType, busDirection);
+      for(auto i = 0; i < busCount; ++i)
+      {
+         Vst::BusInfo busInfo;
+         if(component->getBusInfo(mediaType, busDirection, i, busInfo) == kResultOk)
+         {
+            if(busInfo.busType == busType)
+               channelsCount += busInfo.channelCount;
+         }
+      }
+      return channelsCount;
+   }
 }
 
 unsigned VST3Effect::GetAudioInCount()
 {
-   return 0;
+   return CountChannels(
+      mEffectComponent,
+      Steinberg::Vst::kAudio,
+      Steinberg::Vst::kInput,
+      Steinberg::Vst::kMain);
 }
 
 unsigned VST3Effect::GetAudioOutCount()
 {
-   return 0;
+   return CountChannels(
+      mEffectComponent,
+      Steinberg::Vst::kAudio,
+      Steinberg::Vst::kOutput,
+      Steinberg::Vst::kMain);
 }
 
 int VST3Effect::GetMidiInCount()
@@ -314,57 +403,219 @@ size_t VST3Effect::GetTailSize()
 
 bool VST3Effect::ProcessInitialize(sampleCount, ChannelNames)
 {
+   using namespace Steinberg;
+
+   if(mAudioProcessor->canProcessSampleSize(mSetup.symbolicSampleSize) ==kResultTrue &&
+      mAudioProcessor->setupProcessing(mSetup) == kResultOk)
+   {
+      if(mEffectComponent->setActive(true) == kResultOk)
+      {
+         SyncParameters();//will do nothing for realtime effect
+         mAudioProcessor->setProcessing(true);
+         mInitialDelay = static_cast<decltype(mInitialDelay)>(mAudioProcessor->getLatencySamples());
+         return true;
+      }
+   }
    return false;
 }
 
 bool VST3Effect::ProcessFinalize()
 {
-   return false;
+   using namespace Steinberg;
+
+   mAudioProcessor->setProcessing(false);
+   return mEffectComponent->setActive(false) == Steinberg::kResultOk;
+}
+
+namespace
+{
+   size_t VST3ProcessBlock(
+      Steinberg::Vst::IComponent* effect,
+      const Steinberg::Vst::ProcessSetup& setup,
+      const float* const* inBlock,
+      float* const* outBlock,
+      size_t blockLen,
+      Steinberg::Vst::IParameterChanges* inputParameterChanges)
+   {
+      using namespace Steinberg;
+      if(auto audioProcessor = FUnknownPtr<Vst::IAudioProcessor>(effect))
+      {
+         Vst::ProcessData data;
+         data.processMode = setup.processMode;
+         data.symbolicSampleSize = setup.symbolicSampleSize;
+         data.inputParameterChanges = inputParameterChanges;
+
+         static_assert(std::numeric_limits<decltype(blockLen)>::max()
+            >= std::numeric_limits<decltype(data.numSamples)>::max());
+
+         data.numSamples = static_cast<decltype(data.numSamples)>(std::min(
+            blockLen, 
+            static_cast<decltype(blockLen)>(setup.maxSamplesPerBlock)
+         ));
+
+         data.numInputs = effect->getBusCount(Vst::kAudio, Vst::kInput);
+         data.numOutputs = effect->getBusCount(Vst::kAudio, Vst::kOutput);
+
+         if(data.numInputs > 0)
+         {
+            int inputBlocksOffset {0};
+
+            data.inputs = static_cast<Vst::AudioBusBuffers*>(
+               alloca(sizeof(Vst::AudioBusBuffers) * data.numInputs));
+
+            for(int busIndex = 0; busIndex < data.numInputs; ++busIndex)
+            {
+               Vst::BusInfo busInfo { };
+               if(effect->getBusInfo(Vst::kAudio, Vst::kInput, busIndex, busInfo) != kResultOk)
+               {
+                  return 0;
+               }
+               if(busInfo.busType == Vst::kMain)
+               {
+                  data.inputs[busIndex].numChannels = busInfo.channelCount;
+                  data.inputs[busIndex].channelBuffers32 = const_cast<float**>(inBlock + inputBlocksOffset);
+                  inputBlocksOffset += busInfo.channelCount;
+               }
+               else
+               {
+                  //aux is not yet supported
+                  data.inputs[busIndex].numChannels = 0;
+                  data.inputs[busIndex].channelBuffers32 = nullptr;
+               }
+               data.inputs[busIndex].silenceFlags = 0UL;
+            }
+         }
+         if(data.numOutputs > 0)
+         {
+            int outputBlocksOffset {0};
+
+            data.outputs = static_cast<Vst::AudioBusBuffers*>(
+               alloca(sizeof(Vst::AudioBusBuffers) * data.numOutputs));
+            for(int busIndex = 0; busIndex < data.numOutputs; ++busIndex)
+            {
+               Vst::BusInfo busInfo { };
+               if(effect->getBusInfo(Vst::kAudio, Vst::kOutput, busIndex, busInfo) != kResultOk)
+               {
+                  return 0;
+               }
+               if(busInfo.busType == Vst::kMain)
+               {
+                  data.outputs[busIndex].numChannels = busInfo.channelCount;
+                  data.outputs[busIndex].channelBuffers32 = const_cast<float**>(outBlock + outputBlocksOffset);
+                  outputBlocksOffset += busInfo.channelCount;
+               }
+               else
+               {
+                  //aux is not yet supported
+                  data.outputs[busIndex].numChannels = 0;
+                  data.outputs[busIndex].channelBuffers32 = nullptr;
+               }
+               data.outputs[busIndex].silenceFlags = 0UL;
+            }
+         }
+      
+         const auto processResult = audioProcessor->process(data);
+      
+         return processResult == kResultOk ?
+            data.numSamples : 0;
+      }
+      return 0;
+   }
 }
 
 size_t VST3Effect::ProcessBlock(const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
-   return 0;
+   internal::ComponentHandler::PendingChangesPtr pendingChanges { nullptr };
+   if(mComponentHandler)
+      pendingChanges = mComponentHandler->getPendingChanges();
+   return VST3ProcessBlock(mEffectComponent.get(), mSetup, inBlock, outBlock, blockLen, pendingChanges.get());
 }
 
 bool VST3Effect::RealtimeInitialize()
 {
-   return false;
+   //reload current parameters form the editor into parameter queues
+   SyncParameters();
+   return true;
 }
 
 bool VST3Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
 {
+   using namespace Steinberg;
+
+   try
+   {
+      auto effect = std::make_unique<VST3Effect>(*this);
+      effect->mSetup.processMode = Vst::kRealtime;
+      effect->mSetup.sampleRate = sampleRate;
+      if(!effect->ProcessInitialize({0}, nullptr))
+         throw std::runtime_error { "VST3 realtime initialization failed" };
+
+      mRealtimeGroupProcessors.push_back(std::move(effect));
+      return true;
+   }
+   catch(std::exception& e)
+   {
+      //make_unique<> isn't likely to fail here since this effect instance
+      //somehow succeeded
+      wxLogError("Failed to add realtime processor: %s", e.what());
+   }
    return false;
 }
 
 bool VST3Effect::RealtimeFinalize() noexcept
 {
-   return false;
+   return GuardedCall<bool>([this]()
+   {
+      for(auto& processor : mRealtimeGroupProcessors)
+         processor->ProcessFinalize();
+
+      mRealtimeGroupProcessors.clear();
+      mPendingChanges.reset();
+      
+      return true;
+   });
 }
 
 bool VST3Effect::RealtimeSuspend()
 {
-   return false;
+   for(auto& effect : mRealtimeGroupProcessors)
+      effect->mAudioProcessor->setProcessing(false);
+   return true;
 }
 
 bool VST3Effect::RealtimeResume() noexcept
 {
-   return false;
+   return GuardedCall<bool>([this]()
+   {
+      for(auto& effect : mRealtimeGroupProcessors)
+         effect->mAudioProcessor->setProcessing(true);
+      return true;
+   });
 }
 
 bool VST3Effect::RealtimeProcessStart()
 {
-   return false;
+   assert(mPendingChanges == nullptr);
+
+   if(mComponentHandler != nullptr)
+      //Same parameter changes are used among all of the relatime processors
+      mPendingChanges = mComponentHandler->getPendingChanges();
+   return true;
 }
 
 size_t VST3Effect::RealtimeProcess(int group, const float* const* inBuf, float* const* outBuf, size_t numSamples)
 {
-   return 0;
+   auto& effect = mRealtimeGroupProcessors[group];
+   return VST3ProcessBlock(effect->mEffectComponent.get(), effect->mSetup, inBuf, outBuf, numSamples, mPendingChanges.get());
 }
 
 bool VST3Effect::RealtimeProcessEnd() noexcept
 {
-   return false;
+   return GuardedCall<bool>([this]()
+   {
+      mPendingChanges.reset();
+      return true;
+   });
 }
 
 int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal)
@@ -424,5 +675,28 @@ bool VST3Effect::HasOptions()
 
 void VST3Effect::ShowOptions()
 {
+}
 
+void VST3Effect::SyncParameters()
+{
+   using namespace Steinberg;
+
+   if(mComponentHandler != nullptr)
+   {
+      for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
+      {
+         Vst::ParameterInfo parameterInfo { };
+         if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
+         {
+            if(parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
+               continue;
+
+            if(mComponentHandler->beginEdit(parameterInfo.id) == kResultOk)
+            {
+               auto cleanup = finally([&]{ mComponentHandler->endEdit(parameterInfo.id); });
+               mComponentHandler->performEdit(parameterInfo.id, mEditController->getParamNormalized(parameterInfo.id));
+            }
+         }
+      }
+   }
 }

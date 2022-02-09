@@ -524,6 +524,16 @@ list( APPEND SOURCES
          effects/VST3/VST3EffectsModule.cpp
          effects/VST3/VST3Utils.h
          effects/VST3/VST3Utils.cpp
+         effects/VST3/internal/ComponentHandler.h
+         effects/VST3/internal/ComponentHandler.cpp
+         effects/VST3/internal/ConnectionProxy.h
+         effects/VST3/internal/ConnectionProxy.cpp
+         effects/VST3/internal/ParameterChanges.h
+         effects/VST3/internal/ParameterChanges.cpp
+         effects/VST3/internal/ParameterQueuePool.h
+         effects/VST3/internal/ParameterQueuePool.cpp
+         effects/VST3/internal/ParameterValueQueue.h
+         effects/VST3/internal/ParameterValueQueue.cpp
       >
       $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_WIN}>>:
          effects/VST3/module_win32.cpp

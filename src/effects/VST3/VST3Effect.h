@@ -19,6 +19,7 @@
 #include <public.sdk/source/vst/hosting/module.h>
 
 #include "EffectInterface.h"
+#include "internal/ComponentHandler.h"
 
 #include "SampleCount.h"
 
@@ -30,6 +31,7 @@ namespace Steinberg
    {
       class IComponent;
       class IEditController;
+      class IConnectionPoint;
    }
 }
 
@@ -53,7 +55,14 @@ class VST3Effect final : public EffectUIClientInterface
    //Since all of the realtime processors share same presets, following
    //fields are only initialized and assigned in the global effect instance
 
+   Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mComponentConnectionProxy;
+   Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mControllerConnectionProxy;
    Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
+   Steinberg::IPtr<internal::ComponentHandler> mComponentHandler;
+
+   //Holds pending parameter changes to be applied to multiple realtime effects.
+   //Not used in the "offline" mode
+   internal::ComponentHandler::PendingChangesPtr mPendingChanges;
 
    std::vector<std::shared_ptr<VST3Effect>> mRealtimeGroupProcessors;
 
@@ -129,4 +138,7 @@ public:
    void ImportPresets() override;
    bool HasOptions() override;
    void ShowOptions() override;
+
+private:
+   void SyncParameters();
 };
