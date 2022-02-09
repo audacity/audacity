@@ -540,9 +540,12 @@ private:
 
    sampleFormat  mFormat;
    int           mRate;
-   float         mGain;
-   float         mPan;
+   //! Atomic because it may be read by worker threads in playback
+   std::atomic<float> mGain{ 1.0f };
+   //! Atomic because it may be read by worker threads in playback
+   std::atomic<float> mPan{ 0.0f };
    int           mWaveColorIndex;
+   //! A memo used by PortAudio thread, doesn't need atomics:
    float         mOldGain[2];
 
 
@@ -559,17 +562,11 @@ private:
    mutable int           mLastdBRange;
    mutable std::vector <Location> mDisplayLocationsCache;
 
-   //
-   // Protected methods
-   //
-
 private:
+   void DoSetPan(float value);
+   void DoSetGain(float value);
 
    void PasteWaveTrack(double t0, const WaveTrack* other);
-
-   //
-   // Private variables
-   //
 
    SampleBlockFactoryPtr mpFactory;
 

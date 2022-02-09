@@ -876,14 +876,14 @@ class TRACK_API PlayableTrack /* not final */ : public AudioTrack
 public:
    PlayableTrack()
       : AudioTrack{} {}
-   PlayableTrack(const Track &orig) : AudioTrack{ orig } {}
+   PlayableTrack(const PlayableTrack &orig) : AudioTrack{ orig } {}
 
    static const TypeInfo &ClassTypeInfo();
 
-   bool GetMute    () const { return mMute;     }
-   bool GetSolo    () const { return mSolo;     }
-   bool GetNotMute () const { return !mMute;     }
-   bool GetNotSolo () const { return !mSolo;     }
+   bool GetMute    () const { return DoGetMute();     }
+   bool GetSolo    () const { return DoGetSolo();     }
+   bool GetNotMute () const { return !DoGetMute();     }
+   bool GetNotSolo () const { return !DoGetSolo();     }
    void SetMute    (bool m);
    void SetSolo    (bool s);
 
@@ -897,8 +897,16 @@ public:
    bool HandleXMLAttribute(const std::string_view &attr, const XMLAttributeValueView &value);
 
 protected:
-   bool                mMute { false };
-   bool                mSolo { false };
+   // These just abbreviate load and store with relaxed memory ordering
+   bool DoGetMute() const;
+   void DoSetMute(bool value);
+   bool DoGetSolo() const;
+   void DoSetSolo(bool value);
+
+   //! Atomic because it may be read by worker threads in playback
+   std::atomic<bool>  mMute { false };
+   //! Atomic because it may be read by worker threads in playback
+   std::atomic<bool>  mSolo { false };
 };
 
 ENUMERATE_TRACK_TYPE(PlayableTrack);

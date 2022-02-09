@@ -326,7 +326,7 @@ void AudioIOBase::SetPlaybackMeter(
 
 bool AudioIOBase::IsPaused() const
 {
-   return mPaused;
+   return mPaused.load(std::memory_order_relaxed);
 }
 
 bool AudioIOBase::IsBusy() const

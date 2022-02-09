@@ -593,9 +593,10 @@ void OnDetectUpstreamDropouts(const CommandContext &context)
    auto &commandManager = CommandManager::Get( project );
 
    auto gAudioIO = AudioIO::Get();
-   bool &setting = gAudioIO->mDetectUpstreamDropouts;
-   commandManager.Check(wxT("DetectUpstreamDropouts"), !setting);
-   setting = !setting;
+   auto &setting = gAudioIO->mDetectUpstreamDropouts;
+   auto oldValue = setting.load(std::memory_order_relaxed);
+   commandManager.Check(wxT("DetectUpstreamDropouts"), !oldValue);
+   setting.store(!oldValue, std::memory_order_relaxed);
 }
 
 void OnWriteJournal(const CommandContext &)
@@ -1155,7 +1156,8 @@ BaseItemSharedPtr ToolsMenu()
             AudioIONotBusyFlag(),
             Options{}.CheckTest(
                [](AudacityProject&){
-                  return AudioIO::Get()->mDetectUpstreamDropouts; } ) )
+                  return AudioIO::Get()->mDetectUpstreamDropouts
+                     .load(std::memory_order_relaxed); } ) )
       )
 #endif
 

@@ -309,9 +309,12 @@ AudioIO::AudioIO()
    // We have to ASSERT in the GUI thread, if we are to see it properly.
    wxASSERT( sizeof( short ) <= sizeof( float ));
 
-   mAudioThreadShouldCallTrackBufferExchangeOnce = false;
-   mAudioThreadTrackBufferExchangeLoopRunning = false;
-   mAudioThreadTrackBufferExchangeLoopActive = false;
+   mAudioThreadShouldCallTrackBufferExchangeOnce
+      .store(false, std::memory_order_relaxed);
+   mAudioThreadTrackBufferExchangeLoopRunning
+      .store(false, std::memory_order_relaxed);
+   mAudioThreadTrackBufferExchangeLoopActive
+      .store(false, std::memory_order_relaxed);
    mPortStreamV19 = NULL;
 
    mNumPauseFrames = 0;
@@ -319,13 +322,11 @@ AudioIO::AudioIO()
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    mAILAActive = false;
 #endif
-   mStreamToken = 0;
 
    mLastPaError = paNoError;
 
    mLastRecordingOffset = 0.0;
    mNumCaptureChannels = 0;
-   mPaused = false;
    mSilenceLevel = 0.0;
 
    mUpdateMeters = false;
@@ -367,7 +368,7 @@ AudioIO::AudioIO()
    mInputMixerWorks = false;
 #endif
 
-   mMixerOutputVol = AudioIOPlaybackVolume.Read();
+   SetMixerOutputVol(AudioIOPlaybackVolume.Read());
 
    mLastPlaybackTimeMillis = 0;
 }
@@ -436,8 +437,8 @@ RealtimeEffects::SuspensionScope AudioIO::SuspensionScope()
 void AudioIO::SetMixer(int inputSource, float recordVolume,
                        float playbackVolume)
 {
-   mMixerOutputVol = playbackVolume;
-   AudioIOPlaybackVolume.Write(mMixerOutputVol);
+   SetMixerOutputVol(playbackVolume);
+   AudioIOPlaybackVolume.Write(playbackVolume);
 
 #if defined(USE_PORTMIXER)
    PxMixer *mixer = mPortMixer;
@@ -456,7 +457,7 @@ void AudioIO::SetMixer(int inputSource, float recordVolume,
 void AudioIO::GetMixer(int *recordDevice, float *recordVolume,
                        float *playbackVolume)
 {
-   *playbackVolume = mMixerOutputVol;
+   *playbackVolume = GetMixerOutputVol();
 
 #if defined(USE_PORTMIXER)
 
@@ -998,9 +999,11 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    // so that they will have data in them when the stream starts.  Having the
    // audio thread call TrackBufferExchange here makes the code more predictable, since
    // TrackBufferExchange will ALWAYS get called from the Audio thread.
-   mAudioThreadShouldCallTrackBufferExchangeOnce = true;
+   mAudioThreadShouldCallTrackBufferExchangeOnce
+      .store(true, std::memory_order_relaxed);
 
-   while( mAudioThreadShouldCallTrackBufferExchangeOnce ) {
+   while( mAudioThreadShouldCallTrackBufferExchangeOnce
+      .load(std::memory_order_relaxed)) {
       using namespace std::chrono;
       auto interval = 50ms;
       if (options.playbackStreamPrimer) {
@@ -1041,7 +1044,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       // Probably not needed so urgently before portaudio thread start for usual
       // playback, since our ring buffers have been primed already with 4 sec
       // of audio, but then we might be scrubbing, so do it.
-      mAudioThreadTrackBufferExchangeLoopRunning = true;
+      mAudioThreadTrackBufferExchangeLoopRunning
+         .store(true, std::memory_order_relaxed);
       mForceFadeOut.store(false, std::memory_order_relaxed);
 
       // Now start the PortAudio stream!
@@ -1051,7 +1055,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       if( err != paNoError )
       {
          mStreamToken = 0;
-         mAudioThreadTrackBufferExchangeLoopRunning = false;
+         mAudioThreadTrackBufferExchangeLoopRunning
+           .store(false, std::memory_order_relaxed);
          if (pListener && mNumCaptureChannels > 0)
             pListener->OnAudioIOStopRecording();
          StartStreamCleanup();
@@ -1361,7 +1366,8 @@ void AudioIO::StopStream()
    wxPowerResource::Release(wxPOWER_RESOURCE_SCREEN);
 #endif
  
-   if( mAudioThreadTrackBufferExchangeLoopRunning )
+   if( mAudioThreadTrackBufferExchangeLoopRunning
+      .load(std::memory_order_relaxed) )
    {
       // PortAudio callback can use the information that we are stopping to fade
       // out the audio.  Give PortAudio callback a chance to do so.
@@ -1405,7 +1411,8 @@ void AudioIO::StopStream()
    // DV: Seems that Pa_CloseStream calls Pa_AbortStream internally,
    // at least for PortAudio 19.7.0+
 
-   mAudioThreadTrackBufferExchangeLoopRunning = false;
+   mAudioThreadTrackBufferExchangeLoopRunning
+      .store(false, std::memory_order_relaxed);
 
    // Audacity can deadlock if it tries to update meters while
    // we're stopping PortAudio (because the meter updating code
@@ -1461,9 +1468,10 @@ void AudioIO::StopStream()
       // to the target WaveTrack.  To do this, we ask the audio thread to
       // call TrackBufferExchange one last time (it normally would not do so since
       // Pa_GetStreamActive() would now return false
-      mAudioThreadShouldCallTrackBufferExchangeOnce = true;
-
-      while( mAudioThreadShouldCallTrackBufferExchangeOnce )
+      mAudioThreadShouldCallTrackBufferExchangeOnce
+         .store(true, std::memory_order_relaxed);
+      while( mAudioThreadShouldCallTrackBufferExchangeOnce
+         .load(std::memory_order_relaxed) )
       {
          //FIXME: Seems like this block of the UI thread isn't bounded,
          //but we cannot allow event handlers to see incompletely terminated
@@ -1613,7 +1621,7 @@ void AudioIO::StopStream()
 
 void AudioIO::SetPaused(bool state)
 {
-   if (state != mPaused)
+   if (state != IsPaused())
    {
       if (auto pOwningProject = mOwningProject.lock()) {
          auto &em = RealtimeEffectManager::Get(*pOwningProject);
@@ -1624,7 +1632,7 @@ void AudioIO::SetPaused(bool state)
       }
    }
 
-   mPaused = state;
+   mPaused.store(state, std::memory_order_relaxed);
 }
 
 double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
@@ -1734,17 +1742,22 @@ AudioThread::ExitCode AudioThread::Entry()
       const auto interval = schedule.GetPolicy().SleepInterval(schedule);
 
       // Set LoopActive outside the tests to avoid race condition
-      gAudioIO->mAudioThreadTrackBufferExchangeLoopActive = true;
-      if( gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce )
+      gAudioIO->mAudioThreadTrackBufferExchangeLoopActive
+         .store(true, std::memory_order_relaxed);
+      if( gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce
+         .load(std::memory_order_relaxed) )
       {
          gAudioIO->TrackBufferExchange();
-         gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce = false;
+         gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce
+            .store(false, std::memory_order_relaxed);
       }
-      else if( gAudioIO->mAudioThreadTrackBufferExchangeLoopRunning )
+      else if( gAudioIO->mAudioThreadTrackBufferExchangeLoopRunning
+         .load(std::memory_order_relaxed))
       {
          gAudioIO->TrackBufferExchange();
       }
-      gAudioIO->mAudioThreadTrackBufferExchangeLoopActive = false;
+      gAudioIO->mAudioThreadTrackBufferExchangeLoopActive
+         .store(false, std::memory_order_relaxed);
 
       std::this_thread::sleep_until( loopPassStart + interval );
    }
@@ -1912,7 +1925,8 @@ void AudioIO::DrainRecordBuffers()
 
       double deltat = avail / mRate;
 
-      if (mAudioThreadShouldCallTrackBufferExchangeOnce ||
+      if (mAudioThreadShouldCallTrackBufferExchangeOnce
+          .load(std::memory_order_relaxed) ||
           deltat >= mMinCaptureSecsToCopy)
       {
          // This scope may combine many appendings of wave tracks,
@@ -2336,7 +2350,7 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
    const auto numPlaybackChannels = mNumPlaybackChannels;
 
    float gain = vt->GetChannelGain(chan);
-   if (drop || mForceFadeOut.load(std::memory_order_relaxed) || mPaused)
+   if (drop || mForceFadeOut.load(std::memory_order_relaxed) || IsPaused())
       gain = 0.0;
 
    // Output volume emulation: possibly copy meter samples, then
@@ -2348,7 +2362,7 @@ void AudioIoCallback::AddToOutputChannel( unsigned int chan,
 
    // DV: We use gain to emulate panning.
    // Let's keep the old behavior for panning.
-   gain *= ExpGain(mMixerOutputVol);
+   gain *= ExpGain(GetMixerOutputVol());
 
    float oldGain = vt->GetOldChannelGain(chan);
    if( gain != oldGain )
@@ -2644,7 +2658,8 @@ void AudioIoCallback::DrainInputBuffers(
    // enough from mCaptureBuffers; maybe it's CPU-bound, or maybe the
    // storage device it writes is too slow
    if (mDetectDropouts &&
-         ((mDetectUpstreamDropouts && inputError) ||
+         ((mDetectUpstreamDropouts.load(std::memory_order_relaxed)
+           && inputError) ||
          len < framesPerBuffer) ) {
       // Assume that any good partial buffer should be written leftmost
       // and zeroes will be padded after; label the zeroes.
@@ -2889,7 +2904,7 @@ unsigned AudioIoCallback::CountSoloingTracks(){
 // fading out.
 bool AudioIoCallback::TrackShouldBeSilent( const WaveTrack &wt )
 {
-   return mPaused || (!wt.GetSolo() && (
+   return IsPaused() || (!wt.GetSolo() && (
       // Cut if somebody else is soloing
       mbHasSoloTracks ||
       // Cut if we're muted (and not soloing)
@@ -2972,7 +2987,7 @@ int AudioIoCallback::AudioCallback(
                              MAX(numCaptureChannels,numPlaybackChannels));
 
    bool bVolEmulationActive =
-      (outputBuffer && mMixerOutputVol != 1.0);
+      (outputBuffer && GetMixerOutputVol() != 1.0);
    // outputMeterFloats is the scratch pad for the output meter.
    // we can often reuse the existing outputBuffer and save on allocating
    // something new.
@@ -3019,7 +3034,7 @@ int AudioIoCallback::AudioCallback(
       outputMeterFloats);
 
    // Test for no track audio to play (because we are paused and have faded out)
-   if( mPaused &&  (( !mbMicroFades ) || AllTracksAlreadySilent() ))
+   if( IsPaused() &&  (( !mbMicroFades ) || AllTracksAlreadySilent() ))
       return mCallbackReturn;
 
    // To add track output to output (to play sound on speaker)
@@ -3056,8 +3071,10 @@ int AudioIoCallback::CallbackDoSeek()
    const auto numPlaybackTracks = mPlaybackTracks.size();
 
    // Pause audio thread and wait for it to finish
-   mAudioThreadTrackBufferExchangeLoopRunning = false;
-   while( mAudioThreadTrackBufferExchangeLoopActive )
+   mAudioThreadTrackBufferExchangeLoopRunning
+      .store(false, std::memory_order_relaxed);
+   while( mAudioThreadTrackBufferExchangeLoopActive
+      .load(std::memory_order_relaxed ) )
    {
       using namespace std::chrono;
       std::this_thread::sleep_for(50ms);
@@ -3088,15 +3105,18 @@ int AudioIoCallback::CallbackDoSeek()
    mPlaybackSchedule.mTimeQueue.Prime(time);
 
    // Reload the ring buffers
-   mAudioThreadShouldCallTrackBufferExchangeOnce = true;
-   while( mAudioThreadShouldCallTrackBufferExchangeOnce )
+   mAudioThreadShouldCallTrackBufferExchangeOnce
+      .store(true, std::memory_order_relaxed);
+   while( mAudioThreadShouldCallTrackBufferExchangeOnce
+      .load(std::memory_order_relaxed) )
    {
       using namespace std::chrono;
       std::this_thread::sleep_for(50ms);
    }
 
    // Reenable the audio thread
-   mAudioThreadTrackBufferExchangeLoopRunning = true;
+   mAudioThreadTrackBufferExchangeLoopRunning
+      .store(true, std::memory_order_relaxed);
 
    return paContinue;
 }
@@ -3104,7 +3124,7 @@ int AudioIoCallback::CallbackDoSeek()
 void AudioIoCallback::CallbackCheckCompletion(
    int &callbackReturn, unsigned long len)
 {
-   if (mPaused)
+   if (IsPaused())
       return;
 
    bool done =

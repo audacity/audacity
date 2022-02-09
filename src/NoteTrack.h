@@ -111,7 +111,8 @@ public:
    bool Shift(double t) /* not override */;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   float GetVelocity() const { return mVelocity; }
+   float GetVelocity() const {
+      return mVelocity.load(std::memory_order_relaxed); }
    void SetVelocity(float velocity);
 #endif
 
@@ -174,19 +175,30 @@ public:
    // Bitmask with all NUM_CHANNELS bits set
 #define ALL_CHANNELS (1 << NUM_CHANNELS) - 1
 #define CHANNEL_BIT(c) (1 << (c % NUM_CHANNELS))
-   bool IsVisibleChan(int c) const {
-      return (mVisibleChannels & CHANNEL_BIT(c)) != 0;
+   unsigned GetVisibleChannels() const {
+      return mVisibleChannels.load(std::memory_order_relaxed);
    }
-   void SetVisibleChan(int c) { mVisibleChannels |= CHANNEL_BIT(c); }
-   void ClearVisibleChan(int c) { mVisibleChannels &= ~CHANNEL_BIT(c); }
-   void ToggleVisibleChan(int c) { mVisibleChannels ^= CHANNEL_BIT(c); }
+   void SetVisibleChannels(unsigned value) {
+      mVisibleChannels.store(value, std::memory_order_relaxed);
+   }
+   bool IsVisibleChan(int c) const {
+      return (GetVisibleChannels() & CHANNEL_BIT(c)) != 0;
+   }
+   void SetVisibleChan(int c) {
+      mVisibleChannels.fetch_or(CHANNEL_BIT(c), std::memory_order_relaxed); }
+   void ClearVisibleChan(int c) {
+      mVisibleChannels.fetch_and(~CHANNEL_BIT(c), std::memory_order_relaxed); }
+   void ToggleVisibleChan(int c) {
+      mVisibleChannels.fetch_xor(CHANNEL_BIT(c), std::memory_order_relaxed); }
    // Solos the given channel.  If it's the only channel visible, all channels
    // are enabled; otherwise, it is set to the only visible channel.
    void SoloVisibleChan(int c) {
-      if (mVisibleChannels == CHANNEL_BIT(c))
-         mVisibleChannels = ALL_CHANNELS;
+      auto visibleChannels = 0u;
+      if (GetVisibleChannels() == CHANNEL_BIT(c))
+         visibleChannels = ALL_CHANNELS;
       else
-         mVisibleChannels = CHANNEL_BIT(c);
+         visibleChannels = CHANNEL_BIT(c);
+      mVisibleChannels.store(visibleChannels, std::memory_order_relaxed);
    }
 
    const TypeInfo &GetTypeInfo() const override;
@@ -198,6 +210,9 @@ public:
    Intervals GetIntervals() override;
 
  private:
+#ifdef EXPERIMENTAL_MIDI_OUT
+   void DoSetVelocity(float velocity);
+#endif
 
    void AddToDuration( double delta );
 
@@ -210,7 +225,8 @@ public:
    mutable long mSerializationLength;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
-   float mVelocity; // velocity offset
+   //! Atomic because it may be read by worker threads in playback
+   std::atomic<float> mVelocity{ 0.0f }; // velocity offset
 #endif
 
    int mBottomNote, mTopNote;
@@ -226,7 +242,8 @@ public:
    enum { MinPitch = 0, MaxPitch = 127 };
    static const float ZoomStep;
 
-   int mVisibleChannels; // bit set of visible channels
+   //! A bit set; atomic because it may be read by worker threads in playback
+   std::atomic<unsigned> mVisibleChannels{ ALL_CHANNELS };
 
    std::weak_ptr<StretchHandle> mStretchHandle;
 };
