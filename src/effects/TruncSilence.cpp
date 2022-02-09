@@ -68,6 +68,8 @@ static inline double enumToDB( int val ) { return -( 5.0 * val + 20.0 ); }
 
 const size_t Enums::NumDbChoices = WXSIZEOF(Enums::DbChoices);
 
+using Region = WaveTrack::Region;
+
 // Declaration of RegionList
 class RegionList : public std::list < Region > {};
 

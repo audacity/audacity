@@ -11,27 +11,20 @@
 #ifndef AUDACITY_VSTCONTROLGTK_H
 #define AUDACITY_VSTCONTROLGTK_H
 
-
-// Must include after ours since we have a lot of name collisions
-#define Region XRegion     // Conflicts with Audacity's Region structure
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
-#undef Success
-#undef Region
-
+#include <memory>
 #include "VSTControl.h"
 
 class VSTControl final : public VSTControlBase
 {
 public:
    VSTControl();
-   ~VSTControl();
+   virtual ~VSTControl();
 
-   bool Create(wxWindow *parent, VSTEffectLink *link);
+   bool Create(wxWindow *parent, VSTEffectLink *link) override;
 
 private:
-   Display *mXdisp;
-   Window mXwin;
+   struct Impl;
+   std::unique_ptr<Impl> mImpl;
 };
 
 #endif

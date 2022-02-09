@@ -19,6 +19,9 @@
 #include "../commands/CommandManager.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 
+using Region = WaveTrack::Region;
+using Regions = WaveTrack::Regions;
+
 // private helper classes and functions
 namespace {
 

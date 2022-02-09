@@ -13,29 +13,30 @@
 #include <wx/dynlib.h>
 #include <wx/sizer.h>
 
-#if 0
-static int trappedErrorCode = 0;
-static int X11TrapHandler(Display *, XErrorEvent *err)
+#include <gtk/gtk.h>
+#include <gdk/gdkx.h>
+
+struct VSTControl::Impl
 {
-    return 0;
-}
-#endif
+   Display *display { nullptr };
+   Window window { 0 };
+
+   ~Impl()
+   {
+      display = nullptr;
+      window = 0;
+   }
+};
 
 VSTControl::VSTControl()
-:  VSTControlBase()
 {
-   mXdisp = 0;
-   mXwin = 0;
+   
 }
 
 VSTControl::~VSTControl()
 {
-   if (mXwin)
-   {
-      mLink->callDispatcher(effEditClose, 0, (intptr_t)mXdisp, (void *)mXwin, 0.0);
-      mXdisp = 0;
-      mXwin = 0;
-   }
+   if (mImpl)
+      mLink->callDispatcher(effEditClose, 0, (intptr_t)mImpl->display, (void *)mImpl->window, 0.0);
 }
 
 bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
@@ -44,6 +45,8 @@ bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
    {
       return false;
    }
+
+   mImpl = std::make_unique<VSTControl::Impl>();
 
    VstRect *rect;
 
@@ -57,10 +60,10 @@ bool VSTControl::Create(wxWindow *parent, VSTEffectLink *link)
    }
 
    GdkWindow *gwin = gtk_widget_get_window(GTK_WIDGET(m_wxwindow));
-   mXdisp = GDK_WINDOW_XDISPLAY(gwin);
-   mXwin = GDK_WINDOW_XID(gwin);
+   mImpl->display = GDK_WINDOW_XDISPLAY(gwin);
+   mImpl->window = GDK_WINDOW_XID(gwin);
 
-   mLink->callDispatcher(effEditOpen, 0, (intptr_t)mXdisp, (void *)mXwin, 0.0);
+   mLink->callDispatcher(effEditOpen, 0, (intptr_t)mImpl->display, (void *)mImpl->window, 0.0);
 
    // Get the final bounds of the effect GUI
    mLink->callDispatcher(effEditGetRect, 0, 0, &rect, 0.0);
