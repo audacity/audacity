@@ -71,6 +71,9 @@ class VST3Effect final : public EffectUIClientInterface
 
    std::vector<std::shared_ptr<VST3Effect>> mRealtimeGroupProcessors;
 
+   bool mRescanFactoryPresets { true };
+   RegistryPaths mFactoryPresets;
+
    size_t mUserBlockSize { 8192 };
    bool mUseLatency { true };
    sampleCount mInitialDelay { 0 };
@@ -150,6 +153,8 @@ private:
    bool LoadVSTUI(wxWindow* parent);
 
    void SyncParameters();
+
+   bool LoadPreset(const wxString& path);
 
    void ReloadUserOptions();
 };

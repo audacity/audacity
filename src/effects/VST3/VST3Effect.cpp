@@ -15,12 +15,20 @@
 #include "AudacityException.h"
 #include "EffectHostInterface.h"
 
+#include "Base64.h"
+
+#include "BasicUI.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
+
 #include <stdexcept>
 #include <wx/log.h>
+#include <wx/stdpaths.h>
+#include <wx/regex.h>
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <pluginterfaces/vst/ivsteditcontroller.h>
 #include <pluginterfaces/vst/ivstprocesscontext.h>
 #include <public.sdk/source/vst/hosting/hostclasses.h>
+#include <public.sdk/source/vst/vstpresetfile.h>
 
 #include "internal/ComponentHandler.h"
 #include "internal/ParameterChanges.h"
@@ -28,7 +36,11 @@
 #include "internal/ConnectionProxy.h"
 
 #include "widgets/NumericTextCtrl.h"
+
+#include "SelectFile.h"
+
 #include "ShuttleGui.h"
+
 #include "VST3Utils.h"
 #include "VST3OptionsDialog.h"
 
@@ -48,6 +60,29 @@ Steinberg::Vst::IHostApplication& LocalContext()
    return localContext;
 }
 
+class PresetsBufferStream : public Steinberg::Vst::BufferStream
+{
+public:
+
+   static Steinberg::IPtr<PresetsBufferStream> fromString(const wxString& str)
+   {
+      Steinberg::Buffer buffer(str.size() / 4 * 3);
+      auto len = Base64::Decode(str, buffer);
+      wxASSERT(len <= buffer.getSize());
+      buffer.setSize(len);
+
+      auto result = owned(safenew PresetsBufferStream);
+      result->mBuffer.take(buffer);
+      return result;
+   }
+
+   wxString toString() const
+   {
+      return Base64::Encode(mBuffer, mBuffer.getSize());
+   }
+
+};
+
 void ActivateDefaultBuses(Steinberg::Vst::IComponent* component, const Steinberg::Vst::MediaType mediaType, const Steinberg::Vst::BusDirection direction, bool state)
 {
    using namespace Steinberg;
@@ -59,6 +94,48 @@ void ActivateDefaultBuses(Steinberg::Vst::IComponent* component, const Steinberg
       {
          component->activateBus(mediaType, direction, i, state ? 1 : 0);
       }
+}
+
+wxString GetFactoryPresetsBasePath()
+{
+#ifdef __WXMSW__
+   WCHAR commonFolderPath[MAX_PATH];
+   if(SHGetFolderPathW(NULL, CSIDL_COMMON_APPDATA, NULL, 0, commonFolderPath) == S_OK)
+   {
+      return wxString(commonFolderPath) + "\\VST3 Presets\\";
+   }
+   return {};
+#elif __WXMAC__
+   return wxString("Library/Audio/Presets/");
+#elif __WXGTK__
+   return wxString("/usr/local/share/vst3/presets/");
+#endif
+}
+
+wxString GetPresetsPath(const wxString& basePath, const VST3::Hosting::ClassInfo& effectClassInfo)
+{
+   wxRegEx fixName(R"([\\*?/:<>|])");
+   wxString companyName = wxString (effectClassInfo.vendor()).Trim();
+   wxString pluginName = wxString (effectClassInfo.name()).Trim();
+
+   fixName.ReplaceAll( &companyName, { "_" });
+   fixName.ReplaceAll( &pluginName, { "_" });
+
+   wxFileName result;
+   result.SetPath(basePath);
+   result.AppendDir(companyName);
+   result.AppendDir(pluginName);
+   auto path = result.GetPath();
+
+   return path;
+}
+
+wxString GetFactoryPresetsPath(const VST3::Hosting::ClassInfo& effectClassInfo)
+{
+   return GetPresetsPath(
+      GetFactoryPresetsBasePath(),
+      effectClassInfo
+   );
 }
 
 }
@@ -323,22 +400,85 @@ bool VST3Effect::SetAutomationParameters(CommandParameters& parms)
 
 bool VST3Effect::LoadUserPreset(const RegistryPath& name)
 {
-   return false;
+   using namespace Steinberg;
+
+   if(!mEditController)
+      return false;
+
+   if(!PluginSettings::HasConfigValue(*this, PluginSettings::Private, name, wxT("ProcessorState")))
+      return false;
+
+   wxString processorStateStr;
+   if(!GetConfig(*this, PluginSettings::Private, name, wxT("ProcessorState"), processorStateStr, wxEmptyString))
+      return false;
+   auto processorState = PresetsBufferStream::fromString(processorStateStr);
+   if(mEffectComponent->setState(processorState) != kResultOk)
+      return false;
+
+   if(PluginSettings::HasConfigValue(*this, PluginSettings::Private, name, wxT("ProcessorState")))
+   {
+      wxString controllerStateStr;
+      if(!GetConfig(*this, PluginSettings::Private, name, wxT("ControllerState"), controllerStateStr, wxEmptyString))
+         return false;
+      auto controllerState = PresetsBufferStream::fromString(controllerStateStr);
+
+      if(mEditController->setComponentState(processorState) != kResultOk ||
+         mEditController->setState(controllerState) != kResultOk)
+         return false;
+   }
+   SyncParameters();
+
+   return true;
 }
 
 bool VST3Effect::SaveUserPreset(const RegistryPath& name)
 {
-   return false;
+   using namespace Steinberg;
+
+   if(!mEditController)
+      return false;
+
+   auto processorState = owned(safenew PresetsBufferStream);
+   if(mEffectComponent->getState(processorState) != kResultOk)
+      return false;
+
+   SetConfig(*this, PluginSettings::Private, name, wxT("ProcessorState"), processorState->toString());
+
+   auto controllerState = owned(safenew PresetsBufferStream);
+   if(mEditController->getState(controllerState) == kResultOk)
+      SetConfig(*this, PluginSettings::Private, name, wxT("ControllerState"), controllerState->toString());
+
+   return true;
 }
 
 RegistryPaths VST3Effect::GetFactoryPresets()
 {
-   return { };
+   if(!mRescanFactoryPresets)
+      return mFactoryPresets;
+
+   wxArrayString paths;
+   wxDir::GetAllFiles(GetFactoryPresetsPath(mEffectClassInfo), &paths);
+
+   RegistryPaths result;
+   for(auto& path : paths)
+   {
+      wxFileName filename(path);
+      result.push_back(filename.GetName());
+   }
+   mFactoryPresets = std::move(result);
+   mRescanFactoryPresets = false;
+
+   return mFactoryPresets;
 }
 
 bool VST3Effect::LoadFactoryPreset(int id)
 {
-   return false;
+   if(id >= 0 && id < mFactoryPresets.size())
+   {
+      auto filename = wxFileName(GetFactoryPresetsPath(mEffectClassInfo), mFactoryPresets[id] + ".vstpreset");
+      return LoadPreset(filename.GetFullPath());
+   }
+   return true;
 }
 
 bool VST3Effect::LoadFactoryDefaults()
@@ -700,6 +840,8 @@ bool VST3Effect::SetHost(EffectHostInterface* host)
    if(host)
    {
       ReloadUserOptions();
+      if(!LoadUserPreset(host->GetCurrentSettingsGroup()))
+         LoadFactoryDefaults();
    }
    return true;
 }
@@ -792,17 +934,77 @@ bool VST3Effect::CloseUI()
 
 bool VST3Effect::CanExportPresets()
 {
-   return false;
+   return true;
 }
 
 void VST3Effect::ExportPresets()
 {
-   
+   using namespace Steinberg;
+
+   auto path = SelectFile(FileNames::Operation::Presets,
+      XO("Save VST3 Preset As:"),
+      wxEmptyString,
+      wxEmptyString,
+      wxT(".vstpreset"),
+      {
+        { XO("VST3 preset file"), { wxT("vstpreset") }, true }
+      },
+      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+      NULL);
+
+   if (path.empty())
+      return;
+
+   auto dialogPlacement = wxWidgetsWindowPlacement { mParent };
+
+   auto fileStream = owned(Vst::FileStream::open(path.c_str(), "wb"));
+   if(!fileStream)
+   {
+      BasicUI::ShowMessageBox(
+         //i18n-hint: VST3 preset export error
+         XO("Cannot open file"),
+         BasicUI::MessageBoxOptions()
+            .Caption(XO("Error"))
+            .Parent(&dialogPlacement)
+      );
+      return;
+   }
+
+   if(!Vst::PresetFile::savePreset(
+      fileStream,
+      FUID::fromTUID (mEffectClassInfo.ID().data()),
+      mEffectComponent.get(),
+      mEditController.get()))
+   {
+      BasicUI::ShowMessageBox(
+         XO("Failed to save VST3 preset to file"),
+         BasicUI::MessageBoxOptions()
+            .Caption(XO("Error"))
+            .Parent(&dialogPlacement)
+      );
+      return;
+   }
 }
 
 void VST3Effect::ImportPresets()
 {
-   
+   using namespace Steinberg;
+
+   auto path = SelectFile(FileNames::Operation::Presets,
+      XO("Load VST3 preset:"),
+      wxEmptyString,
+      wxEmptyString,
+      wxT(".vstpreset"),
+      {
+         { XO("VST3 preset file"), { wxT("vstpreset") }, true }
+      },
+      wxFD_OPEN | wxRESIZE_BORDER,
+      nullptr
+   );
+   if(path.empty())
+      return;
+
+   LoadPreset(path);
 }
 
 bool VST3Effect::HasOptions()
@@ -959,6 +1161,43 @@ void VST3Effect::SyncParameters()
       }
    }
 }
+
+bool VST3Effect::LoadPreset(const wxString& path)
+{
+   using namespace Steinberg;
+
+   auto dialogPlacement = wxWidgetsWindowPlacement { mParent };
+
+   auto fileStream = owned(Vst::FileStream::open(path.c_str(), "rb"));
+   if(!fileStream)
+   {
+      BasicUI::ShowMessageBox(
+         XO("Cannot open VST3 preset file %s").Format(path),
+         BasicUI::MessageBoxOptions()
+            .Caption(XO("Error"))
+            .Parent(&dialogPlacement)
+      );
+      return false;
+   }
+
+   if(!Vst::PresetFile::loadPreset(
+      fileStream,
+      FUID::fromTUID(mEffectClassInfo.ID().data()),
+      mEffectComponent.get(),
+      mEditController.get()))
+   {
+      BasicUI::ShowMessageBox(
+         XO("Unable to apply VST3 preset file %s").Format(path),
+         BasicUI::MessageBoxOptions()
+            .Caption(XO("Error"))
+            .Parent(&dialogPlacement)
+      );
+      return false;
+   }
+
+   return true;
+}
+
 void VST3Effect::ReloadUserOptions()
 {
    // Reinitialize configuration settings
