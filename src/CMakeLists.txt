@@ -517,6 +517,16 @@ list( APPEND SOURCES
          effects/VST/VSTControlOSX.mm
       >
 
+      $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_WIN}>>:
+         effects/VST3/module_win32.cpp
+      >
+      $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_GTK}>>:
+         effects/VST3/module_linux.cpp
+      >
+      $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_MAC}>>:
+         effects/VST3/module_mac.mm
+      >
+
       # Audio Unit Effects
 
       $<$<AND:$<BOOL:${USE_AUDIO_UNITS}>,$<BOOL:${wxIS_MAC}>>:
@@ -1232,6 +1242,13 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          COMPILE_FLAGS "-x objective-c++"
          SKIP_PRECOMPILE_HEADERS YES
    )
+   if(${_OPT}has_vst3 AND ${wxIS_MAC})
+      set_source_files_properties(
+         effects/VST3/module_mac.mm
+         PROPERTIES
+            COMPILE_FLAGS "-fobjc-arc"
+      )
+   endif()
 
    # Add our required frameworks
    list( APPEND LIBRARIES
