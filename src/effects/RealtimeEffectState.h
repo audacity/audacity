@@ -49,7 +49,12 @@ public:
    //! Worker thread begins a batch of samples
    bool ProcessStart();
    //! Worker thread processes part of a batch of samples
-   size_t Process(Track *track, unsigned chans, float **inbuf,  float **outbuf, size_t numSamples);
+   size_t Process(Track *track,
+      unsigned chans,
+      const float *const *inbuf, //!< chans input buffers
+      float *const *outbuf, //!< chans output buffers
+      float *dummybuf, //!< one scratch buffer
+      size_t numSamples);
    //! Worker thread finishes a batch of samples
    bool ProcessEnd();
    bool IsActive() const noexcept;

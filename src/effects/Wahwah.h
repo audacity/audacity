@@ -62,14 +62,13 @@ public:
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
-   size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
+   size_t ProcessBlock( const float *const *inBlock, float *const *outBlock,
+      size_t blockLen) override;
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize() noexcept override;
-   size_t RealtimeProcess(int group,
-                                       float **inbuf,
-                                       float **outbuf,
-                                       size_t numSamples) override;
+   size_t RealtimeProcess(int group, const float *const *inbuf,
+      float *const *outbuf, size_t numSamples) override;
    bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
@@ -82,7 +81,8 @@ private:
    // EffectWahwah implementation
 
    void InstanceInit(EffectWahwahState & data, float sampleRate);
-   size_t InstanceProcess(EffectWahwahState & data, float **inBlock, float **outBlock, size_t blockLen);
+   size_t InstanceProcess(EffectWahwahState & data,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen);
 
    void OnFreqSlider(wxCommandEvent & evt);
    void OnPhaseSlider(wxCommandEvent & evt);

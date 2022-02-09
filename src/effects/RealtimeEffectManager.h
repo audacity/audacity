@@ -85,7 +85,9 @@ private:
 
    friend RealtimeEffects::ProcessingScope;
    void ProcessStart();
-   size_t Process(Track *track, float **buffers, size_t numSamples);
+   /*! @copydoc ProcessScope::Process */
+   size_t Process(Track *track,
+      float *const *buffers, float *const *scratch, size_t numSamples);
    void ProcessEnd() noexcept;
 
    RealtimeEffectManager(const RealtimeEffectManager&) = delete;
@@ -195,11 +197,17 @@ public:
          RealtimeEffectManager::Get(*pProject).ProcessEnd();
    }
 
-   size_t Process(Track *track, float **buffers, size_t numSamples)
+   size_t Process(Track *track,
+      float *const *buffers, /*!< Assume as many buffers, as channels were
+         specified in the AddTrack call */
+      float *const *scratch, /*!< As many temporary buffers as in buffers,
+         plus one more */
+      size_t numSamples //!< length of each buffer
+   )
    {
       if (auto pProject = mwProject.lock())
          return RealtimeEffectManager::Get(*pProject)
-            .Process(track, buffers, numSamples);
+            .Process(track, buffers, scratch, numSamples);
       else
          return numSamples; // consider them trivially processed
    }

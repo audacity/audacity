@@ -40,7 +40,8 @@ public:
 
    unsigned GetAudioOutCount() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
-   size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
+   size_t ProcessBlock( const float *const *inBlock, float *const *outBlock,
+      size_t blockLen) override;
    bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation

@@ -110,7 +110,8 @@ unsigned EffectNoise::GetAudioOutCount()
    return 1;
 }
 
-size_t EffectNoise::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, size_t size)
+size_t EffectNoise::ProcessBlock(
+   const float *const *, float *const *outbuf, size_t size)
 {
    float *buffer = outbuf[0];
 

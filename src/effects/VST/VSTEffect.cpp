@@ -1449,7 +1449,8 @@ bool VSTEffect::ProcessFinalize()
    return true;
 }
 
-size_t VSTEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t VSTEffect::ProcessBlock(
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    // Only call the effect if there's something to do...some do not like zero-length block
    if (blockLen)
@@ -1553,7 +1554,8 @@ bool VSTEffect::RealtimeProcessStart()
    return true;
 }
 
-size_t VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf, size_t numSamples)
+size_t VSTEffect::RealtimeProcess(int group,
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
@@ -2559,10 +2561,12 @@ intptr_t VSTEffect::callDispatcher(int opcode,
    return mAEffect->dispatcher(mAEffect, opcode, index, value, ptr, opt);
 }
 
-void VSTEffect::callProcessReplacing(float **inputs,
-                                     float **outputs, int sampleframes)
+void VSTEffect::callProcessReplacing(const float *const *inputs,
+   float *const *outputs, int sampleframes)
 {
-   mAEffect->processReplacing(mAEffect, inputs, outputs, sampleframes);
+   mAEffect->processReplacing(mAEffect,
+      const_cast<float**>(inputs),
+      const_cast<float**>(outputs), sampleframes);
 }
 
 float VSTEffect::callGetParameter(int index)

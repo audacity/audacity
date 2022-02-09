@@ -265,6 +265,9 @@ public:
    /*! Read by worker threads but unchanging during playback */
    ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
    WaveTrackArray      mPlaybackTracks;
+   // Temporary buffers, each as large as the playback buffers
+   std::vector<SampleBuffer> mScratchBuffers;
+   std::vector<float *> mScratchPointers; //!< pointing into mScratchBuffers
 
    std::vector<std::unique_ptr<Mixer>> mPlaybackMixers;
 
@@ -565,6 +568,7 @@ private:
 
    //! First part of TrackBufferExchange
    void FillPlayBuffers();
+   void TransformPlayBuffers();
 
    //! Second part of TrackBufferExchange
    void DrainRecordBuffers();
