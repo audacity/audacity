@@ -213,3 +213,28 @@ wxString VST3Utils::ToWxString(const Steinberg::Vst::TChar* str)
    return { reinterpret_cast<const char*>(str), csConv };
 }
 
+wxString VST3Utils::MakeAutomationParameterKey(const Steinberg::Vst::ParameterInfo& parameterInfo)
+{
+   auto suffix = ToWxString(parameterInfo.shortTitle);
+   if(suffix.empty())
+      suffix = ToWxString(parameterInfo.title);
+
+   if(!suffix.empty())
+      return wxString::Format("%lu_", static_cast<unsigned long>(parameterInfo.id)) + suffix;
+
+   return wxString::Format("%lu", static_cast<unsigned long>(parameterInfo.id));
+}
+
+bool VST3Utils::ParseAutomationParameterKey(const wxString& key, Steinberg::Vst::ParamID& paramId)
+{
+   const auto pos = key.Find('_');
+   const auto idStr = pos == wxNOT_FOUND ? key : key.Left(pos);
+   unsigned long value { };
+   if(idStr.ToULong(&value))
+   {
+      paramId = static_cast<Steinberg::Vst::ParamID>(value);
+      return true;
+   }
+   return false;
+
+}

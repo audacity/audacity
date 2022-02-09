@@ -266,12 +266,59 @@ bool VST3Effect::SupportsAutomation()
 
 bool VST3Effect::GetAutomationParameters(CommandParameters& parms)
 {
-   return false;
+   if(mEditController == nullptr)
+      return false;
+
+   using namespace Steinberg;
+   
+   for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
+   {
+      Vst::ParameterInfo parameterInfo { };
+      if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
+      {
+         if(parameterInfo.flags & Vst::ParameterInfo::kCanAutomate)
+         {
+            parms.Write(
+               VST3Utils::MakeAutomationParameterKey(parameterInfo),
+               mEditController->getParamNormalized(parameterInfo.id)
+            );
+         }
+      }
+   }
+
+   return true;
 }
 
 bool VST3Effect::SetAutomationParameters(CommandParameters& parms)
 {
-   return false;
+   using namespace Steinberg;
+
+   if(mComponentHandler == nullptr)
+      return false;
+   
+   long index { };
+   wxString key;
+   if(parms.GetFirstEntry(key, index))
+   {
+      do
+      {
+         Steinberg::Vst::ParamID id;
+         Vst::ParamValue value;
+         if(VST3Utils::ParseAutomationParameterKey(key, id) && parms.Read(key, &value))
+         {
+            if(mComponentHandler->beginEdit(id) == kResultOk)
+            {
+               auto cleanup = finally([&]{
+                  mComponentHandler->endEdit(id);
+               });
+               mComponentHandler->performEdit(id, value);
+            }
+            mEditController->setParamNormalized(id, value);
+         }
+      } while(parms.GetNextEntry(key, index));
+   }
+
+   return true;
 }
 
 bool VST3Effect::LoadUserPreset(const RegistryPath& name)

@@ -59,4 +59,12 @@ public:
 
    static wxString ToWxString(const Steinberg::Vst::TChar* str);
 
+   //Builds a string key suitable to use as an Audacity macro param
+   //key, which is guaranteed to be unique, and most likely be in
+   //a human-readable form.
+   static wxString MakeAutomationParameterKey(const Steinberg::Vst::ParameterInfo& info);
+
+   //Attempts to extract a unique VST3 parameter id from the key.
+   //Returns true on success.
+   static bool ParseAutomationParameterKey(const wxString& key, Steinberg::Vst::ParamID& paramId);
 };
