@@ -258,7 +258,7 @@ bool EffectDistortion::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), floa
    return true;
 }
 
-bool EffectDistortion::RealtimeFinalize()
+bool EffectDistortion::RealtimeFinalize() noexcept
 {
    mSlaves.clear();
 

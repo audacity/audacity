@@ -386,7 +386,7 @@ bool Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
    return true;
 }
 
-bool Effect::RealtimeFinalize()
+bool Effect::RealtimeFinalize() noexcept
 {
    if (mClient)
    {

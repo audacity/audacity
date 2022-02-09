@@ -1194,8 +1194,9 @@ bool LV2Effect::RealtimeInitialize()
    return true;
 }
 
-bool LV2Effect::RealtimeFinalize()
+bool LV2Effect::RealtimeFinalize() noexcept
 {
+return GuardedCall<bool>([&]{
    for (auto & slave : mSlaves)
    {
       FreeInstance(slave);
@@ -1215,6 +1216,7 @@ bool LV2Effect::RealtimeFinalize()
 
    mMasterIn.reset();
    return true;
+});
 }
 
 bool LV2Effect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)

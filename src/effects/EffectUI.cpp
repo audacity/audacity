@@ -165,6 +165,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 , mEffect{ effect }
 , mClient{ client }
+, mProject{ project }
 {
 #if defined(__WXMAC__)
    // Make sure the effect window actually floats above the main window
@@ -176,8 +177,6 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    
    mParent = parent;
    mClient = client;
-   
-   mProject = &project;
    
    mInitialized = false;
    mSupportsRealtime = false;
@@ -383,7 +382,7 @@ bool EffectUIHost::Initialize()
 {
    {
       auto gAudioIO = AudioIO::Get();
-      mDisableTransport = !gAudioIO->IsAvailable(*mProject);
+      mDisableTransport = !gAudioIO->IsAvailable(mProject);
       mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
       mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
    }
@@ -519,7 +518,7 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnApply(wxCommandEvent & evt)
 {
-   auto &project = *mProject;
+   auto &project = mProject;
 
    // On wxGTK (wx2.8.12), the default action is still executed even if
    // the button is disabled.  This appears to affect all wxDialogs, not
@@ -715,7 +714,7 @@ void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
    if (mEnabled)
       mSuspensionScope.reset();
    else
-      mSuspensionScope.emplace(mProject);
+      mSuspensionScope.emplace(AudioIO::Get()->SuspensionScope());
 
    UpdateControls();
 }
@@ -738,12 +737,12 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
    {
       auto gAudioIO = AudioIO::Get();
       mPlayPos = gAudioIO->GetStreamTime();
-      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      auto &projectAudioManager = ProjectAudioManager::Get( mProject );
       projectAudioManager.Stop();
    }
    else
    {
-      auto &viewInfo = ViewInfo::Get( *mProject );
+      auto &viewInfo = ViewInfo::Get( mProject );
       const auto &selectedRegion = viewInfo.selectedRegion;
       const auto &playRegion = viewInfo.playRegion;
       if ( playRegion.Active() )
@@ -763,10 +762,10 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
          mPlayPos = mRegion.t1();
       }
       
-      auto &projectAudioManager = ProjectAudioManager::Get( *mProject );
+      auto &projectAudioManager = ProjectAudioManager::Get( mProject );
       projectAudioManager.PlayPlayRegion(
                                          SelectedRegion(mPlayPos, mRegion.t1()),
-                                         DefaultPlayOptions( *mProject ),
+                                         DefaultPlayOptions( mProject ),
                                          PlayMode::normalPlay );
    }
 }
@@ -820,7 +819,7 @@ void EffectUIHost::OnPlayback(AudioIOEvent evt)
 {
    if (evt.on)
    {
-      if (evt.pProject != mProject)
+      if (evt.pProject != &mProject)
       {
          mDisableTransport = true;
       }
@@ -837,7 +836,7 @@ void EffectUIHost::OnPlayback(AudioIOEvent evt)
    
    if (mPlaying)
    {
-      mRegion = ViewInfo::Get( *mProject ).selectedRegion;
+      mRegion = ViewInfo::Get( mProject ).selectedRegion;
       mPlayPos = mRegion.t0();
    }
    
@@ -848,7 +847,7 @@ void EffectUIHost::OnCapture(AudioIOEvent evt)
 {
    if (evt.on)
    {
-      if (evt.pProject != mProject)
+      if (evt.pProject != &mProject)
       {
          mDisableTransport = true;
       }
@@ -1139,8 +1138,8 @@ void EffectUIHost::LoadUserPresets()
 void EffectUIHost::InitializeRealtime()
 {
    if (mSupportsRealtime && !mInitialized) {
-      mpState = RealtimeEffectManager::Get(*mProject)
-         .AddState(nullptr, PluginManager::GetID(&mEffect));
+      mpState = AudioIO::Get()->AddState(mProject,
+         nullptr, PluginManager::GetID(&mEffect));
       /*
       ProjectHistory::Get(mProject).PushState(
          XO("Added %s effect").Format(mpState->GetEffect()->GetName()),
@@ -1167,9 +1166,7 @@ void EffectUIHost::CleanupRealtime()
 {
    if (mSupportsRealtime && mInitialized) {
       if (mpState) {
-         auto &list = RealtimeEffectList::Get(*mProject);
-         RealtimeEffectManager::Get(*mProject)
-            .RemoveState(list, *mpState);
+         AudioIO::Get()->RemoveState(mProject, nullptr, *mpState);
       /*
          ProjectHistory::Get(mProject).PushState(
             XO("Removed %s effect").Format(mpState->GetEffect()->GetName()),

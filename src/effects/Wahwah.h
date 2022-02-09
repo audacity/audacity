@@ -65,7 +65,7 @@ public:
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize() override;
+   bool RealtimeFinalize() noexcept override;
    size_t RealtimeProcess(int group,
                                        float **inbuf,
                                        float **outbuf,

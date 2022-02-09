@@ -142,6 +142,30 @@ AudioIO *AudioIO::Get()
    return static_cast< AudioIO* >( AudioIOBase::Get() );
 }
 
+struct AudioIoCallback::TransportState {
+   TransportState(std::weak_ptr<AudacityProject> wOwningProject,
+      const WaveTrackArray &playbackTracks,
+      unsigned numPlaybackChannels, double rate)
+   {
+      if (auto pOwningProject = wOwningProject.lock();
+          pOwningProject && numPlaybackChannels > 0) {
+         // Setup for realtime playback at the rate of the realtime
+         // stream, not the rate of the track.
+         mpRealtimeInitialization.emplace(move(wOwningProject), rate);
+         // The following adds a new effect processor for each logical track.
+         for (size_t i = 0, cnt = playbackTracks.size(); i < cnt;) {
+            auto vt = playbackTracks[i].get();
+            unsigned chanCnt = TrackList::Channels(vt).size();
+            i += chanCnt; // Visit leaders only
+            mpRealtimeInitialization->AddTrack(
+               vt, std::min(numPlaybackChannels, chanCnt), rate);
+         }
+      }
+   }
+
+   std::optional<RealtimeEffects::InitializationScope> mpRealtimeInitialization;
+};
+
 // static
 int AudioIoCallback::mNextStreamToken = 0;
 double AudioIoCallback::mCachedBestRateOut;
@@ -378,6 +402,35 @@ AudioIO::~AudioIO()
 
    mThread->Delete();
    mThread.reset();
+}
+
+RealtimeEffectState *AudioIO::AddState(AudacityProject &project,
+   Track *pTrack, const PluginID & id)
+{
+   RealtimeEffects::InitializationScope *pInit = nullptr;
+   if (mpTransportState)
+      if (auto pProject = GetOwningProject(); pProject.get() == &project)
+         pInit = &*mpTransportState->mpRealtimeInitialization;
+   return RealtimeEffectManager::Get(project).AddState(pInit, pTrack, id);
+   return nullptr;
+}
+
+void AudioIO::RemoveState(AudacityProject &project,
+   Track *pTrack, RealtimeEffectState &state)
+{
+   RealtimeEffects::InitializationScope *pInit = nullptr;
+   if (mpTransportState)
+      if (auto pProject = GetOwningProject(); pProject.get() == &project)
+         pInit = &*mpTransportState->mpRealtimeInitialization;
+   RealtimeEffectManager::Get(project).RemoveState(pInit, pTrack, state);
+}
+
+RealtimeEffects::SuspensionScope AudioIO::SuspensionScope()
+{
+   if (mpTransportState && mpTransportState->mpRealtimeInitialization)
+      return RealtimeEffects::SuspensionScope{
+         *mpTransportState->mpRealtimeInitialization, mOwningProject };
+   return {};
 }
 
 void AudioIO::SetMixer(int inputSource, float recordVolume,
@@ -915,28 +968,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
          return 0;
    }
 
-   if (mNumPlaybackChannels > 0)
-   {
-      if (auto pOwningProject = mOwningProject.lock()) {
-         auto & em = RealtimeEffectManager::Get(*pOwningProject);
-
-         // Setup for realtime playback at the rate of the realtime
-         // stream, not the rate of the track.
-         em.Initialize(mRate);
-
-         // The following adds a new effect processor for each logical track.
-         for (size_t i = 0, cnt = mPlaybackTracks.size(); i < cnt;)
-         {
-            auto vt = mPlaybackTracks[i].get();
-            unsigned chanCnt = TrackList::Channels(vt).size();
-            i += chanCnt;
-
-            // Setup for realtime playback at the rate of the realtime
-            // stream, not the rate of the track.
-            em.AddTrack(vt, std::min(mNumPlaybackChannels, chanCnt), mRate);
-         }
-      }
-   }
+   mpTransportState = std::make_unique<TransportState>( mOwningProject,
+      mPlaybackTracks, mNumPlaybackChannels, mRate);
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    AILASetStartTime();
@@ -1265,11 +1298,7 @@ bool AudioIO::AllocateBuffers(
 
 void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 {
-   if (mNumPlaybackChannels > 0)
-   {
-      if (auto pOwningProject = mOwningProject.lock())
-         RealtimeEffectManager::Get(*pOwningProject).Finalize();
-   }
+   mpTransportState.reset();
 
    mPlaybackBuffers.reset();
    mPlaybackMixers.clear();
@@ -1349,13 +1378,6 @@ void AudioIO::StopStream()
 
    wxMutexLocker locker(mSuspendAudioThread);
 
-   // No longer need effects processing
-   if (mNumPlaybackChannels > 0)
-   {
-      if (auto pOwningProject = mOwningProject.lock())
-         RealtimeEffectManager::Get(*pOwningProject).Finalize();
-   }
-
    //
    // We got here in one of two ways:
    //
@@ -1421,6 +1443,10 @@ void AudioIO::StopStream()
 
       mPortStreamV19 = NULL;
    }
+
+   // No longer need effects processing. This must be done after the stream is stopped
+   // to prevent the callback from being invoked after the effects are finalized.
+   mpTransportState.reset();
 
    for( auto &ext : Extensions() )
       ext.StopOtherStream();
@@ -2393,8 +2419,9 @@ bool AudioIoCallback::FillOutputBuffers(
    // ------ End of MEMORY ALLOCATION ---------------
 
 {
-   auto pProject = mOwningProject.lock();
-   RealtimeEffectManager::ProcessScope scope{ pProject.get() };
+   std::optional<RealtimeEffects::ProcessingScope> pScope;
+   if (mpTransportState && mpTransportState->mpRealtimeInitialization)
+      pScope.emplace( *mpTransportState->mpRealtimeInitialization, mOwningProject );
 
    int chanCnt = 0;
 
@@ -2490,7 +2517,8 @@ bool AudioIoCallback::FillOutputBuffers(
 
       // Do realtime effects
       if( !dropQuickly && len > 0 ) {
-         scope.Process(chans[0], tempBufs, len);
+         if (pScope)
+            pScope->Process(chans[0], tempBufs, len);
 
          // Mix the results with the existing output (software playthrough) and
          // apply panning.  If post panning effects are desired, the panning would

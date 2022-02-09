@@ -172,7 +172,7 @@ bool EffectWahwah::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool EffectWahwah::RealtimeFinalize()
+bool EffectWahwah::RealtimeFinalize() noexcept
 {
    mSlaves.clear();
 

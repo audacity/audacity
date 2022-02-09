@@ -268,7 +268,7 @@ bool RealtimeEffectState::IsActive() const noexcept
    return mSuspendCount == 0;
 }
 
-bool RealtimeEffectState::Finalize()
+bool RealtimeEffectState::Finalize() noexcept
 {
    mGroups.clear();
 

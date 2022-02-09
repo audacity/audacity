@@ -94,7 +94,7 @@ private:
 private:
    Observer::Subscription mSubscription;
 
-   AudacityProject *mProject;
+   AudacityProject &mProject;
    wxWindow *mParent;
    Effect &mEffect;
    EffectUIClientInterface &mClient;
@@ -132,7 +132,7 @@ private:
    double mPlayPos;
 
    bool mDismissed{};
-   std::optional<RealtimeEffectManager::SuspensionScope> mSuspensionScope;
+   std::optional<RealtimeEffects::SuspensionScope> mSuspensionScope;
 
 #if wxDEBUG_LEVEL
    // Used only in an assertion

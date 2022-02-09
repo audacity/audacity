@@ -54,9 +54,6 @@ bool RealtimeEffectManager::IsActive() const noexcept
 
 void RealtimeEffectManager::Initialize(double rate)
 {
-   // The audio thread should not be running yet, but protect anyway
-   SuspensionScope scope{ &mProject };
-
    // Remember the rate
    mRate = rate;
 
@@ -73,6 +70,9 @@ void RealtimeEffectManager::Initialize(double rate)
    VisitGroup(nullptr, [rate](RealtimeEffectState &state, bool){
       state.Initialize(rate);
    });
+
+   // Leave suspended state
+   Resume();
 }
 
 void RealtimeEffectManager::AddTrack(Track *track, unsigned chans, float rate)
@@ -89,12 +89,12 @@ void RealtimeEffectManager::AddTrack(Track *track, unsigned chans, float rate)
    );
 }
 
-void RealtimeEffectManager::Finalize()
+void RealtimeEffectManager::Finalize() noexcept
 {
-   // Make sure nothing is going on
+   // Reenter suspended state
    Suspend();
 
-   // It is now safe to clean up
+   // Assume it is now safe to clean up
    mLatency = std::chrono::microseconds(0);
 
    VisitAll([](auto &state, bool){ state.Finalize(); });
@@ -271,14 +271,22 @@ void RealtimeEffectManager::VisitAll(StateVisitor func)
 }
 
 RealtimeEffectState *
-RealtimeEffectManager::AddState(Track *pTrack, const PluginID & id)
+RealtimeEffectManager::AddState(
+   RealtimeEffects::InitializationScope *pScope,
+   Track *pTrack, const PluginID & id)
 {
    auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
    RealtimeEffectList &states = pLeader
       ? RealtimeEffectList::Get(*pLeader)
       : RealtimeEffectList::Get(mProject);
 
-   SuspensionScope scope{ &mProject };
+   std::optional<RealtimeEffects::SuspensionScope> myScope;
+   if (mActive) {
+      if (pScope)
+         myScope.emplace(*pScope, mProject.weak_from_this());
+      else
+         return nullptr;
+   }
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 
@@ -307,9 +315,22 @@ RealtimeEffectManager::AddState(Track *pTrack, const PluginID & id)
    return &state;
 }
 
-void RealtimeEffectManager::RemoveState(RealtimeEffectList &states, RealtimeEffectState &state)
+void RealtimeEffectManager::RemoveState(
+   RealtimeEffects::InitializationScope *pScope,
+   Track *pTrack, RealtimeEffectState &state)
 {
-   SuspensionScope scope{ &mProject };
+   auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
+   RealtimeEffectList &states = pLeader
+      ? RealtimeEffectList::Get(*pLeader)
+      : RealtimeEffectList::Get(mProject);
+
+   std::optional<RealtimeEffects::SuspensionScope> myScope;
+   if (mActive) {
+      if (pScope)
+         myScope.emplace(*pScope, mProject.weak_from_this());
+      else
+         return;
+   }
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 
