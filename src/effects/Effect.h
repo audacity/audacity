@@ -180,7 +180,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // EffectUIHostInterface implementation
 
    int ShowHostInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
+      const EffectDialogFactory &factory, EffectSettingsAccess &access,
+      bool forceModal = false) override;
    // The Effect class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
    void Preview(bool dryOnly) override;
@@ -191,9 +192,10 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool DoEffect( double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
       unsigned flags,
-      // Prompt the user for input only if these arguments are both not null.
+      // Prompt the user for input only if the next arguments are not all null.
       wxWindow *pParent,
-      const EffectDialogFactory &dialogFactory) override;
+      const EffectDialogFactory &dialogFactory,
+      const EffectSettingsAccessPtr &pAccess) override;
    bool Startup(EffectUIClientInterface *client) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
@@ -207,8 +209,10 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
       if( Values ) mPresetValues = *Values;
    }
 
+   //! Re-invoke DoEffect on another Effect object that implements the work
    bool Delegate( Effect &delegate,
-      wxWindow &parent, const EffectDialogFactory &factory );
+      wxWindow &parent, const EffectDialogFactory &factory,
+      const EffectSettingsAccessPtr &pSettings );
 
    // Display a message box, using effect's (translated) name as the prefix
    // for the title.

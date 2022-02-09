@@ -310,9 +310,14 @@ bool EffectManager::PromptUser(
 {
    bool result = false;
    if (auto effect = GetEffect(ID)) {
-      //! Show the effect dialog, only so that the user can choose settings.
-      result = effect->ShowHostInterface(
-         parent, factory, effect->IsBatchProcessing() ) != 0;
+      //! Show the effect dialog, only so that the user can choose settings,
+      //! for instance to define a macro.
+      auto pSettings = GetDefaultSettings(ID);
+      if (pSettings)
+         result = effect->ShowHostInterface(
+            parent, factory,
+            *std::make_shared<SimpleEffectSettingsAccess>(*pSettings),
+            effect->IsBatchProcessing() ) != 0;
       return result;
    }
 

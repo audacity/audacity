@@ -47,6 +47,7 @@
 #include "EffectAutomationParameters.h" // for command automation
 
 #include "TypedAny.h"
+#include <memory>
 
 class ShuttleGui;
 
@@ -72,7 +73,8 @@ struct EffectSettings : audacity::TypedAny<EffectSettings> {
 //! another thread; to be used in the main thread, only.
 /*! Updates are communicated atomically both ways.  The address of Get() should
  not be relied on as unchanging between calls. */
-class COMPONENTS_API EffectSettingsAccess {
+class COMPONENTS_API EffectSettingsAccess
+   : public std::enable_shared_from_this<EffectSettingsAccess> {
 public:
    virtual ~EffectSettingsAccess();
    virtual const EffectSettings &Get() = 0;

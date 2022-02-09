@@ -15,6 +15,7 @@
 #include "ComponentInterfaceSymbol.h"
 
 #include <functional>
+#include <memory>
 
 class EffectDefinitionInterface;
 
@@ -49,12 +50,14 @@ public:
 class wxDialog;
 class wxWindow;
 class EffectUIClientInterface;
-
+class EffectSettingsAccess;
 class EffectUIHostInterface;
-using EffectDialogFactory = std::function<
-   wxDialog* ( wxWindow &parent,
-      EffectUIHostInterface&, EffectUIClientInterface& )
->;
+
+//! Type of function that creates a dialog for an effect
+/*! The dialog may be modal or non-modal */
+using EffectDialogFactory = std::function< wxDialog* (
+   wxWindow &parent, EffectUIHostInterface &, EffectUIClientInterface &,
+   EffectSettingsAccess & ) >;
 
 class TrackList;
 class WaveTrackFactory;
@@ -69,6 +72,8 @@ class EffectProcessor;
 class AUDACITY_DLL_API EffectUIHostInterface : public EffectHostInterface
 {
 public:
+   using EffectSettingsAccessPtr = std::shared_ptr<EffectSettingsAccess>;
+
    const static wxString kUserPresetIdent;
    const static wxString kFactoryPresetIdent;
    const static wxString kCurrentSettingsIdent;
@@ -77,13 +82,19 @@ public:
    EffectUIHostInterface &operator=(EffectUIHostInterface&) = delete;
    virtual ~EffectUIHostInterface();
 
+   //! Usually applies factory to self and given access
    /*!
+    But there are a few unusual overrides for historical reasons
+
+    @param access is only guaranteed to have lifetime suitable for a modal
+    dialog, unless the dialog stores access.shared_from_this()
+
     @return 0 if destructive effect processing should not proceed (and there
     may be a non-modal dialog still opened); otherwise, modal dialog return code
     */
    virtual int ShowHostInterface(
       wxWindow &parent, const EffectDialogFactory &factory,
-      bool forceModal = false
+      EffectSettingsAccess &access, bool forceModal = false
    ) = 0;
 
    virtual void Preview(bool dryOnly) = 0;
@@ -91,16 +102,22 @@ public:
    virtual bool SetAutomationParametersFromString(const wxString & parms) = 0;
    virtual bool IsBatchProcessing() = 0;
    virtual void SetBatchProcessing(bool start) = 0;
-   // Returns true on success.  Will only operate on tracks that
-   // have the "selected" flag set to true, which is consistent with
-   // Audacity's standard UI.
-   // Create a user interface only if the supplied function is not null.
+   //! Create a user interface only if the supplied factory is not null.
+   /*!
+    Factory may be null because we "Repeat last effect" or apply a macro
+
+    Will only operate on tracks that have the "selected" flag set to true,
+    which is consistent with Audacity's standard UI.
+
+    @return true on success
+    */
    virtual bool DoEffect( double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
       unsigned flags,
-      // Prompt the user for input only if these arguments are both not null.
+      // Prompt the user for input only if the next arguments are not all null.
       wxWindow *pParent = nullptr,
-      const EffectDialogFactory &dialogFactory = {} ) = 0;
+      const EffectDialogFactory &dialogFactory = {},
+      const EffectSettingsAccessPtr &pAccess = nullptr) = 0;
    virtual bool Startup(EffectUIClientInterface *client) = 0;
 
    virtual bool TransferDataToWindow() = 0;

@@ -159,12 +159,16 @@ END_EVENT_TABLE()
 EffectUIHost::EffectUIHost(wxWindow *parent,
    AudacityProject &project,
    EffectUIHostInterface &effect,
-   EffectUIClientInterface &client)
+   EffectUIClientInterface &client,
+   EffectSettingsAccess &access)
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
                    wxDefaultPosition, wxDefaultSize,
                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 , mEffectUIHost{ effect }
 , mClient{ client }
+// Grab a pointer to the access object,
+// extending its lifetime while this remains:
+, mpAccess{ access.shared_from_this() }
 , mProject{ project }
 {
 #if defined(__WXMAC__)
@@ -1193,7 +1197,8 @@ void EffectUIHost::CleanupRealtime()
 
 wxDialog *EffectUI::DialogFactory( wxWindow &parent,
    EffectUIHostInterface &host,
-   EffectUIClientInterface &client)
+   EffectUIClientInterface &client,
+   EffectSettingsAccess &access)
 {
    // Make sure there is an associated project, whose lifetime will
    // govern the lifetime of the dialog, even when the dialog is
@@ -1203,7 +1208,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
       return nullptr;
 
    Destroy_ptr<EffectUIHost> dlg{
-      safenew EffectUIHost{ &parent, *project, host, client} };
+      safenew EffectUIHost{ &parent, *project, host, client, access } };
    
    if (dlg->Initialize())
    {
@@ -1289,6 +1294,9 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
 
    em.SetSkipStateFlag( false );
    if (auto effect = em.GetEffect(ID)) {
+      auto pSettings = em.GetDefaultSettings(ID);
+      const auto pAccess = pSettings
+         ? std::make_shared<SimpleEffectSettingsAccess>(*pSettings) : nullptr;
       success = effect->DoEffect(
          rate,
          &tracks,
@@ -1298,8 +1306,8 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
          &window,
          (flags & EffectManager::kConfigured) == 0
             ? DialogFactory
-            : nullptr
-      );
+            : nullptr,
+         pAccess);
    }
    else
       success = false;
