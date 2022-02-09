@@ -524,6 +524,8 @@ list( APPEND SOURCES
          effects/VST3/VST3EffectsModule.cpp
          effects/VST3/VST3Utils.h
          effects/VST3/VST3Utils.cpp
+         effects/VST3/VST3OptionsDialog.h
+         effects/VST3/VST3OptionsDialog.cpp
          effects/VST3/internal/ComponentHandler.h
          effects/VST3/internal/ComponentHandler.cpp
          effects/VST3/internal/ConnectionProxy.h

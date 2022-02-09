@@ -30,6 +30,8 @@
 #include "widgets/NumericTextCtrl.h"
 #include "ShuttleGui.h"
 #include "VST3Utils.h"
+#include "VST3OptionsDialog.h"
+
 #ifdef __WXMSW__
 #include <ShlObj_core.h>
 #elif __WXGTK__
@@ -647,6 +649,11 @@ int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool for
 bool VST3Effect::SetHost(EffectHostInterface* host)
 {
    mEffectHost = host;
+
+   if(host)
+   {
+      ReloadUserOptions();
+   }
    return true;
 }
 
@@ -753,11 +760,19 @@ void VST3Effect::ImportPresets()
 
 bool VST3Effect::HasOptions()
 {
-   return false;
+   return true;
 }
 
 void VST3Effect::ShowOptions()
 {
+   if(mEffectHost)
+   {
+      VST3OptionsDialog dlg(mParent, *mEffectHost, *this);
+      if (dlg.ShowModal())
+      {
+         ReloadUserOptions();
+      }
+   }
 }
 
 void VST3Effect::OnEffectWindowResize(wxSizeEvent& evt)
@@ -896,4 +911,16 @@ void VST3Effect::SyncParameters()
          }
       }
    }
+}
+void VST3Effect::ReloadUserOptions()
+{
+   // Reinitialize configuration settings
+   int userBlockSize;
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      wxT("BufferSize"), userBlockSize, 8192);
+   mUserBlockSize = std::max( 1, userBlockSize );
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      wxT("UseLatency"), mUseLatency, true);
+
+   SetBlockSize(mUserBlockSize);
 }

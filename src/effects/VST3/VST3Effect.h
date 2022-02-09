@@ -150,4 +150,6 @@ private:
    bool LoadVSTUI(wxWindow* parent);
 
    void SyncParameters();
+
+   void ReloadUserOptions();
 };
