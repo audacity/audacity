@@ -55,11 +55,6 @@ static const int kPlayID = 20102;
 static const int kRewindID = 20103;
 static const int kFFwdID = 20104;
 
-const wxString Effect::kUserPresetIdent = wxT("User Preset:");
-const wxString Effect::kFactoryPresetIdent = wxT("Factory Preset:");
-const wxString Effect::kCurrentSettingsIdent = wxT("<Current Settings>");
-const wxString Effect::kFactoryDefaultsIdent = wxT("<Factory Defaults>");
-
 using t2bHash = std::unordered_map< void*, bool >;
 
 Effect::Effect()
@@ -194,16 +189,6 @@ bool Effect::IsDefault()
    if (mClient)
    {
       return mClient->IsDefault();
-   }
-
-   return true;
-}
-
-bool Effect::IsLegacy()
-{
-   if (mClient)
-   {
-      return false;
    }
 
    return true;

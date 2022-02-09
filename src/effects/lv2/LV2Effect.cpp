@@ -48,6 +48,7 @@
 #include <wx/scrolwin.h>
 
 #include "AudacityException.h"
+#include "ConfigInterface.h"
 #include "../../EffectHostInterface.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
@@ -499,11 +500,6 @@ bool LV2Effect::IsInteractive()
 }
 
 bool LV2Effect::IsDefault()
-{
-   return false;
-}
-
-bool LV2Effect::IsLegacy()
 {
    return false;
 }

@@ -25,6 +25,7 @@ effects from this one class.
 
 #include "LadspaEffect.h"       // This class's header file
 #include "SampleCount.h"
+#include "ConfigInterface.h"
 
 #include <float.h>
 #include <thread>
@@ -704,11 +705,6 @@ bool LadspaEffect::IsInteractive()
 }
 
 bool LadspaEffect::IsDefault()
-{
-   return false;
-}
-
-bool LadspaEffect::IsLegacy()
 {
    return false;
 }

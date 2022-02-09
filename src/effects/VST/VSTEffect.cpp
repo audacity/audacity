@@ -279,11 +279,6 @@ public:
       return false;
    }
 
-   bool IsLegacy() override
-   {
-      return false;
-   }
-
    bool SupportsRealtime() override
    {
       return mType == EffectTypeProcess;
@@ -796,8 +791,6 @@ VSTEffectOptionsDialog::VSTEffectOptionsDialog(wxWindow * parent,
 , mHost{ host }
 , mEffect{ effect }
 {
-   mHost = host;
-
    GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
       wxT("BufferSize"), mBufferSize, 8192);
    GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
@@ -1283,11 +1276,6 @@ bool VSTEffect::IsInteractive()
 }
 
 bool VSTEffect::IsDefault()
-{
-   return false;
-}
-
-bool VSTEffect::IsLegacy()
 {
    return false;
 }
