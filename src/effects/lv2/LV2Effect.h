@@ -479,7 +479,6 @@ private:
    std::unique_ptr<LV2Wrapper> mProcess;
    std::vector<std::unique_ptr<LV2Wrapper>> mSlaves;
 
-   FloatBuffers mMasterIn;
    size_t mNumSamples;
    size_t mFramePos;
 

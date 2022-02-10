@@ -1127,7 +1127,6 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
 
 bool LV2Effect::RealtimeInitialize(EffectSettings &)
 {
-   mMasterIn.reinit(mAudioIn, (unsigned int) mBlockSize);
    for (auto & port : mCVPorts)
       port->mBuffer.reinit((unsigned) mBlockSize, port->mIsInput);
    mMaster->Activate();
@@ -1141,7 +1140,6 @@ return GuardedCall<bool>([&]{
    mMaster->Deactivate();
    for (auto & port : mCVPorts)
       port->mBuffer.reset();
-   mMasterIn.reset();
    return true;
 });
 }
@@ -1178,15 +1176,6 @@ bool LV2Effect::RealtimeResume()
 bool LV2Effect::RealtimeProcessStart(EffectSettings &)
 {
    using namespace LV2Symbols;
-   int i = 0;
-   for (auto & port : mAudioPorts)
-   {
-      if (port->mIsInput)
-      {
-         memset(mMasterIn[i++].get(), 0, mBlockSize * sizeof(float));
-      }
-   }
-
    mNumSamples = 0;
 
    // Transfer incoming events from the ring buffer to the event buffer for each
@@ -1282,14 +1271,6 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    int o = 0;
    for (auto & port : mAudioPorts)
    {
-      if (port->mIsInput)
-      {
-         for (decltype(numSamples) s = 0; s < numSamples; s++)
-         {
-            mMasterIn[i][s] += inbuf[i][s];
-         }
-      }
-
       lilv_instance_connect_port(instance,
          port->mIndex,
          const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
