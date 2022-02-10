@@ -64,7 +64,6 @@ is time to refresh some aspect of the screen.
 #include "TrackArt.h"
 #include "TrackPanelMouseEvent.h"
 #include "TrackPanelResizeHandle.h"
-//#define DEBUG_DRAW_TIMING 1
 
 #include "UndoManager.h"
 
@@ -79,6 +78,8 @@ is time to refresh some aspect of the screen.
 #include "TrackPanelAx.h"
 #include "TrackPanelResizerCell.h"
 #include "WaveTrack.h"
+
+#include "FrameStatistics.h"
 
 #include "tracks/ui/TrackControls.h"
 #include "tracks/ui/TrackView.h"
@@ -466,9 +467,8 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 {
    mLastDrawnSelectedRegion = mViewInfo->selectedRegion;
 
-#if DEBUG_DRAW_TIMING
-   wxStopWatch sw;
-#endif
+   auto sw =
+      FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::TrackPanel);
 
    {
       wxPaintDC dc(this);
@@ -504,12 +504,6 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
       dc.DestroyClippingRegion();
       DrawOverlays(true, &dc);
    }
-
-#if DEBUG_DRAW_TIMING
-   sw.Pause();
-   wxLogDebug(wxT("Total: %ld milliseconds"), sw.Time());
-   wxPrintf(wxT("Total: %ld milliseconds\n"), sw.Time());
-#endif
 }
 
 void TrackPanel::MakeParentRedrawScrollbars()
@@ -698,7 +692,7 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
    case WXK_PAGEDOWN:
       HandlePageDownKey();
       return;
-      
+
    default:
       // fall through to base class handler
       event.Skip();
@@ -950,7 +944,7 @@ void TrackPanel::UpdateTrackVRuler(Track *t)
       const auto subViews = view.GetSubViews( rect );
       if (subViews.empty())
          continue;
-   
+
       auto iter = subViews.begin(), end = subViews.end(), next = iter;
       auto yy = iter->first;
       wxSize vRulerSize{ 0, 0 };
@@ -1054,7 +1048,7 @@ void TrackPanel::VerticalScroll( float fracPosition){
    trackTop = range.sum( TrackView::GetChannelGroupHeight );
 
    int delta;
-   
+
    //Get the size of the trackpanel.
    int width, height;
    GetSize(&width, &height);
@@ -1184,7 +1178,7 @@ void DrawTrackName(
   The following classes define the subdivision of the area of the TrackPanel
   into cells with differing responses to mouse, keyboard, and scroll wheel
   events.
-  
+
   The classes defining the less inclusive areas are earlier, while those
   defining ever larger hierarchical groupings of cells are later.
 
@@ -1209,7 +1203,7 @@ void DrawTrackName(
   resize the channel views.
 
   Sixthly, divide each channel into one or more vertically stacked sub-views.
-  
+
   Lastly, split the area for each sub-view into a vertical ruler, and an area
   that displays the channel's own contents.
 
@@ -1234,7 +1228,7 @@ struct EmptyCell final : CommonTrackPanelCell {
       if ( iPass == TrackArtist::PassMargins ) {
          // Draw a margin area of TrackPanel
          auto dc = &context.dc;
-         
+
          AColor::TrackPanelBackground( dc, false );
          dc->DrawRectangle( rect );
       }
@@ -1371,9 +1365,9 @@ struct HorizontalGroup final : TrackPanelGroup {
 
    Refinement mRefinement;
 
-   HorizontalGroup(Refinement refinement) 
-      : mRefinement(std::move(refinement)) 
-   { 
+   HorizontalGroup(Refinement refinement)
+      : mRefinement(std::move(refinement))
+   {
    }
 
    Subdivision Children(const wxRect& /*rect*/) override
@@ -1524,15 +1518,15 @@ struct LabeledChannelGroup final : TrackPanelGroup {
             wxRect theRect = rect;
             auto &dc = context.dc;
             dc.SetBrush(*wxTRANSPARENT_BRUSH);
-            
+
             AColor::TrackFocusPen( &dc, 2 );
             dc.DrawRectangle(theRect);
             theRect.Deflate(1);
-            
+
             AColor::TrackFocusPen( &dc, 1 );
             dc.DrawRectangle(theRect);
             theRect.Deflate(1);
-            
+
             AColor::TrackFocusPen( &dc, 0 );
             dc.DrawRectangle(theRect);
          }

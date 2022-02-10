@@ -29,12 +29,15 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
 
+#include "FrameStatisticsDialog.h"
+
 #if defined(HAVE_UPDATES_CHECK)
 #include "update/UpdateManager.h"
 #endif
 
 // private helper classes and functions
-namespace {
+namespace
+{
 
 /** @brief Class which makes a dialog for displaying quick fixes to common issues.
  *
@@ -381,6 +384,11 @@ void OnMenuTree(const CommandContext &context)
       Verbatim("Menu Tree"), wxT("menutree.txt"), true );
 }
 
+void OnFrameStatistics(const CommandContext&)
+{
+   FrameStatisticsDialog::Show(true);
+}
+
 #if defined(HAVE_UPDATES_CHECK)
 void OnCheckForUpdates(const CommandContext &WXUNUSED(context))
 {
@@ -501,7 +509,12 @@ BaseItemSharedPtr HelpMenu()
             // Menu explorer.  Perhaps this should become a macro command
             Command( wxT("MenuTree"), Verbatim("Menu Tree..."),
                FN(OnMenuTree),
-               AlwaysEnabledFlag )
+               AlwaysEnabledFlag ),
+              
+            Command(
+                 wxT("FrameStatistics"), Verbatim("Frame Statistics..."),
+                 FN(OnFrameStatistics),
+                 AlwaysEnabledFlag)
       #endif
          )
    #ifndef __WXMAC__
