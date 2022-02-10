@@ -329,9 +329,6 @@ AudioIO::AudioIO()
    mNumCaptureChannels = 0;
    mSilenceLevel = 0.0;
 
-   mUpdateMeters = false;
-   mUpdatingMeters = false;
-
    mOutputMeter.reset();
 
    PaError err = Pa_Initialize();
@@ -1348,8 +1345,6 @@ void AudioIO::SetMeters()
       pInputMeter->Reset(mRate, true);
    if (auto pOutputMeter = mOutputMeter.lock())
       pOutputMeter->Reset(mRate, true);
-
-   mUpdateMeters = true;
 }
 
 void AudioIO::StopStream()
@@ -1427,19 +1422,6 @@ void AudioIO::StopStream()
 
    mAudioThreadTrackBufferExchangeLoopRunning
       .store(false, std::memory_order_relaxed);
-
-   // Audacity can deadlock if it tries to update meters while
-   // we're stopping PortAudio (because the meter updating code
-   // tries to grab a UI mutex while PortAudio tries to join a
-   // pthread).  So we tell the callback to stop updating meters,
-   // and wait until the callback has left this part of the code
-   // if it was already there.
-   mUpdateMeters = false;
-   while(mUpdatingMeters) {
-      ::wxSafeYield();
-      using namespace std::chrono;
-      std::this_thread::sleep_for(50ms);
-   }
 
    // Turn off HW playthrough if PortMixer is being used
 
@@ -2885,31 +2867,13 @@ void AudioIoCallback::SendVuInputMeterData(
    )
 {
    const auto numCaptureChannels = mNumCaptureChannels;
-
    auto pInputMeter = mInputMeter.lock();
    if ( !pInputMeter )
       return;
    if( pInputMeter->IsMeterDisabled())
       return;
-
-   // get here if meters are actually live , and being updated
-   /* It's critical that we don't update the meters while StopStream is
-      * trying to stop PortAudio, otherwise it can lead to a freeze.  We use
-      * two variables to synchronize:
-      *   mUpdatingMeters tells StopStream when the callback is about to enter
-      *     the code where it might update the meters, and
-      *   mUpdateMeters is how the rest of the code tells the callback when it
-      *     is allowed to actually do the updating.
-      * Note that mUpdatingMeters must be set first to avoid a race condition.
-      */
-   //TODO use atomics instead.
-   mUpdatingMeters = true;
-   if (mUpdateMeters) {
-         pInputMeter->UpdateDisplay(numCaptureChannels,
-                                    framesPerBuffer,
-                                    inputSamples);
-   }
-   mUpdatingMeters = false;
+   pInputMeter->UpdateDisplay(
+      numCaptureChannels, framesPerBuffer, inputSamples);
 }
 
 /* Send data to playback VU meter if applicable */
@@ -2926,22 +2890,8 @@ void AudioIoCallback::SendVuOutputMeterData(
       return;
    if( !outputMeterFloats) 
       return;
-
-   // Get here if playback meter is live
-   /* It's critical that we don't update the meters while StopStream is
-      * trying to stop PortAudio, otherwise it can lead to a freeze.  We use
-      * two variables to synchronize:
-      *  mUpdatingMeters tells StopStream when the callback is about to enter
-      *    the code where it might update the meters, and
-      *  mUpdateMeters is how the rest of the code tells the callback when it
-      *    is allowed to actually do the updating.
-      * Note that mUpdatingMeters must be set first to avoid a race condition.
-      */
-   mUpdatingMeters = true;
-   if (mUpdateMeters) {
-      pOutputMeter->UpdateDisplay(numPlaybackChannels,
-                                             framesPerBuffer,
-                                             outputMeterFloats);
+   pOutputMeter->UpdateDisplay(
+      numPlaybackChannels, framesPerBuffer, outputMeterFloats);
 
       //v Vaughan, 2011-02-25: Moved this update back to TrackPanel::OnTimer()
       //    as it helps with playback issues reported by Bill and noted on Bug 258.
@@ -2953,8 +2903,6 @@ void AudioIoCallback::SendVuOutputMeterData(
       //if (pMixerBoard)
       //   pMixerBoard->UpdateMeters(GetStreamTime(),
       //                              (pProj->GetControlToolBar()->GetLastPlayMode() == loopedPlay));
-   }
-   mUpdatingMeters = false;
 }
 
 unsigned AudioIoCallback::CountSoloingTracks(){
