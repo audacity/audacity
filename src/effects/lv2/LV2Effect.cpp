@@ -461,12 +461,9 @@ bool LV2Effect::InitializePlugin()
    // Set up some "objects" for lv2 with "virtual functions" (C-style)
    // To be set up later when making a dialog:
    mExtensionDataFeature = {};
-   {
-      LilvNode *pluginName = lilv_plugin_get_name(mPlug);
-      mExternalUIHost = {
-         LV2Effect::ui_closed, lilv_node_as_string(pluginName) };
-      lilv_node_free(pluginName);
-   }
+   mExternalUIHost = { LV2Effect::ui_closed,
+      lilv_node_as_string( LilvNodePtr{ lilv_plugin_get_name(mPlug) }.get() )
+   };
 
    // Construct null-terminated array of "features" describing our capabilities
    // to lv2, and validate
@@ -496,25 +493,23 @@ bool LV2Effect::InitializePlugin()
       return false;
 
    // Adjust the values in the block size features according to the plugin
-   if (auto minLength = lilv_world_get(
-      gWorld, lilv_plugin_get_uri(mPlug), node_MinBlockLength, nullptr)
-      ; lilv_node_is_int(minLength)
+   if (LilvNodePtr minLength{ lilv_world_get(gWorld,
+         lilv_plugin_get_uri(mPlug), node_MinBlockLength, nullptr) }
+      ; lilv_node_is_int(minLength.get())
    ){
-      if (auto value = lilv_node_as_int(minLength)
+      if (auto value = lilv_node_as_int(minLength.get())
          ; value >= 0
       )
          mMinBlockSize = std::max<size_t>(mMinBlockSize, value);
-      lilv_node_free(minLength);
    }
-   if (auto maxLength = lilv_world_get(
-      gWorld, lilv_plugin_get_uri(mPlug), node_MaxBlockLength, nullptr)
-      ; lilv_node_is_int(maxLength)
+   if (LilvNodePtr maxLength{ lilv_world_get(gWorld,
+         lilv_plugin_get_uri(mPlug), node_MaxBlockLength, nullptr) }
+      ; lilv_node_is_int(maxLength.get())
    ){
-      if (auto value = lilv_node_as_int(maxLength)
+      if (auto value = lilv_node_as_int(maxLength.get())
          ; value >= 1
       )
          mMaxBlockSize = std::min<size_t>(mMaxBlockSize, value);
-      lilv_node_free(maxLength);
    }
    mMaxBlockSize = std::max(mMaxBlockSize, mMinBlockSize);
 
@@ -549,18 +544,17 @@ bool LV2Effect::InitializePlugin()
 
       // Get the group to which this port belongs or default to the main group
       TranslatableString groupName{};
-      if (const auto group = lilv_port_get(mPlug, port, node_Group)) {
+      if (LilvNodePtr group{ lilv_port_get(mPlug, port, node_Group) }) {
          // lilv.h does not say whether return of lilv_world_get() needs to
          // be freed, but that is easily seen to be so from source
          auto groupMsg = LilvStringMove(
-            lilv_world_get(gWorld, group, node_Label, nullptr));
+            lilv_world_get(gWorld, group.get(), node_Label, nullptr));
          if (groupMsg.empty())
             groupMsg = LilvStringMove(
-               lilv_world_get(gWorld, group, node_Name, nullptr));
+               lilv_world_get(gWorld, group.get(), node_Name, nullptr));
          if (groupMsg.empty())
-            groupMsg = LilvString(group);
+            groupMsg = LilvString(group.get());
          groupName = Verbatim(groupMsg);
-         lilv_node_free(group);
       }
       else
          groupName = XO("Effect Settings");
@@ -569,7 +563,7 @@ bool LV2Effect::InitializePlugin()
       const auto latencyIndex = lilv_plugin_get_latency_port_index(mPlug);
 
       // Get the ports designation (must be freed)
-      const auto designation = lilv_port_get(mPlug, port, node_Designation);
+      LilvNodePtr designation{ lilv_port_get(mPlug, port, node_Designation) };
 
       // Check for audio ports
       if (lilv_port_is_a(mPlug, port, node_AudioPort)) {
@@ -589,14 +583,10 @@ bool LV2Effect::InitializePlugin()
          const auto controlPort = mControlPorts.back();
 
          // Get any unit descriptor
-         if (const auto unit = lilv_port_get(mPlug, port, node_Unit)) {
+         if (LilvNodePtr unit{ lilv_port_get(mPlug, port, node_Unit) })
             // Really should use lilv_world_get_symbol()
-            if (const auto symbol = lilv_world_get_symbol(gWorld, unit)) {
-               controlPort->mUnits = LilvString(symbol);
-               lilv_node_free(symbol);
-            }
-            lilv_node_free(unit);
-         }
+            if(LilvNodePtr symbol{ lilv_world_get_symbol(gWorld, unit.get()) })
+               controlPort->mUnits = LilvString(symbol.get());
 
          // Get the scale points
          const auto points = lilv_port_get_scale_points(mPlug, port);
@@ -660,15 +650,14 @@ bool LV2Effect::InitializePlugin()
          const auto atomPort = mAtomPorts.back();
 
          atomPort->mMinimumSize = 8192;
-         if (const auto min = lilv_port_get(mPlug, port, node_MinimumSize)
-            ; lilv_node_is_int(min)
+         if (LilvNodePtr min{ lilv_port_get(mPlug, port, node_MinimumSize) }
+            ; lilv_node_is_int(min.get())
          ){
-            if (auto value = lilv_node_as_int(min)
+            if (auto value = lilv_node_as_int(min.get())
                ; value > 0
             )
                atomPort->mMinimumSize =
                   std::max<uint32_t>(atomPort->mMinimumSize, value);
-            lilv_node_free(min);
          }
 
          atomPort->mBuffer.resize(atomPort->mMinimumSize);
@@ -683,7 +672,7 @@ bool LV2Effect::InitializePlugin()
             (isInput ? mMidiIn : mMidiOut) += 1;
          }
 
-         bool isControl = lilv_node_equals(designation, node_Control);
+         bool isControl = lilv_node_equals(designation.get(), node_Control);
          if (isInput) {
             if (!mControlIn || isControl)
                mControlIn = atomPort;
@@ -713,10 +702,6 @@ bool LV2Effect::InitializePlugin()
          else if (cvPort->mHasHi)
             cvPort->mDef = cvPort->mMax;
       }
-
-      // Free the designation node
-      if (designation)
-         lilv_node_free(designation);
    }
    }
 
@@ -1444,14 +1429,12 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
       return false;
    }
 
-   LilvNode *preset = lilv_new_uri(gWorld, mFactoryPresetUris[id].ToUTF8());
+   LilvNodePtr preset{ lilv_new_uri(gWorld, mFactoryPresetUris[id].ToUTF8()) };
    if (!preset)
-   {
       return false;
-   }
 
    LilvState *state =
-      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset);
+      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get());
    if (state)
    {
       lilv_state_restore(
@@ -1459,8 +1442,6 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
       lilv_state_free(state);
       TransferDataToWindow();
    }
-
-   lilv_node_free(preset);
 
    return state != NULL;
 }
@@ -1704,26 +1685,18 @@ bool LV2Effect::BuildFancy()
    LilvUIs *uis = lilv_plugin_get_uis(mPlug);
    if (uis)
    {
-      LilvNode *containerType = lilv_new_uri(gWorld, nativeType);
-      if (containerType)
-      {
-         LILV_FOREACH(uis, iter, uis)
-         {
+      if (LilvNodePtr containerType{ lilv_new_uri(gWorld, nativeType) }) {
+         LILV_FOREACH(uis, iter, uis) {
             ui = lilv_uis_get(uis, iter);
-            if (lilv_ui_is_supported(ui, suil_ui_supported, containerType, &uiType))
-            {
+            if (lilv_ui_is_supported(ui,
+               suil_ui_supported, containerType.get(), &uiType))
                break;
-            }
-            if (lilv_ui_is_a(ui, node_Gtk) || lilv_ui_is_a(ui, node_Gtk3))
-            {
+            if (lilv_ui_is_a(ui, node_Gtk) || lilv_ui_is_a(ui, node_Gtk3)) {
                uiType = node_Gtk;
                break;
             }
-
-            ui = NULL;
+            ui = nullptr;
          }
-
-         lilv_node_free(containerType);
       }
    }
 

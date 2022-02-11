@@ -604,8 +604,8 @@ inline wxString LilvString(const LilvNode *node)
 //! Name suggests C++ move semantics applied to `node`, but only C types used
 inline wxString LilvStringMove(LilvNode *node)
 {
+   LilvNodePtr temp{ node };
    wxString str = LilvString(node);
-   lilv_node_free(node);
    return str;
 };
 

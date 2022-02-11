@@ -215,7 +215,7 @@ PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface &)
    {
       const LilvPlugin *plug = lilv_plugins_get(plugs, i);
       const LilvNode *cls = lilv_plugin_class_get_uri(lilv_plugin_get_class(plug));
-      const LilvNode *name = lilv_plugin_get_name(plug);
+      LilvNodePtr name{ lilv_plugin_get_name(plug) };
 
       // Bypass unsupported plugin types
       using namespace LV2Symbols;
@@ -288,17 +288,11 @@ LV2EffectsModule::LoadPlugin(const PluginPath & path)
 const LilvPlugin *LV2EffectsModule::GetPlugin(const PluginPath & path)
 {
    using namespace LV2Symbols;
-   LilvNode *uri = lilv_new_uri(gWorld, path.ToUTF8());
-   if (!uri)
-   {
-      return NULL;
-   }
-
-   const LilvPlugin *plug = lilv_plugins_get_by_uri(lilv_world_get_all_plugins(gWorld), uri);
-
-   lilv_node_free(uri);
-
-   return plug;
+   if (LilvNodePtr uri{ lilv_new_uri(gWorld, path.ToUTF8()) })
+      // lilv.h says returns from the following two functions don't need freeing
+      return lilv_plugins_get_by_uri(
+         lilv_world_get_all_plugins(gWorld), uri.get());
+   return nullptr;
 }
 
 #endif
