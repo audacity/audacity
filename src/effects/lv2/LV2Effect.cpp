@@ -1253,7 +1253,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 
    mParent->PushEventHandler(this);
 
-   mSuilHost = NULL;
+   mSuilHost.reset();
    mSuilInstance.reset();
 
    mMaster = InitInstance(mSampleRate);
@@ -1327,11 +1327,7 @@ bool LV2Effect::CloseUI()
       mSuilInstance.reset();
    }
 
-   if (mSuilHost)
-   {
-      suil_host_free(mSuilHost);
-      mSuilHost = NULL;
-   }
+   mSuilHost.reset();
 
    mMaster.reset();
 
@@ -1740,12 +1736,9 @@ bool LV2Effect::BuildFancy()
    mNativeWinLastSize = wxDefaultSize;
 
    // Create the suil host
-   mSuilHost = suil_host_new(LV2Effect::suil_port_write_func,
-                             LV2Effect::suil_port_index_func,
-                             NULL,
-                             NULL);
-   if (!mSuilHost)
-   {
+   mSuilHost.reset(suil_host_new(LV2Effect::suil_port_write_func,
+      LV2Effect::suil_port_index_func, nullptr, nullptr));
+   if (!mSuilHost) {
       lilv_uis_free(uis);
       return false;
    }
@@ -1762,7 +1755,7 @@ bool LV2Effect::BuildFancy()
    char *bundlePath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui)), NULL);
    char *binaryPath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), NULL);
 
-   mSuilInstance.reset(suil_instance_new(mSuilHost, this, containerType,
+   mSuilInstance.reset(suil_instance_new(mSuilHost.get(), this, containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
       bundlePath, binaryPath, GetFeaturePointers().data()));
@@ -1778,8 +1771,7 @@ bool LV2Effect::BuildFancy()
       SetDllDirectory(NULL);
 #endif
 
-      suil_host_free(mSuilHost);
-      mSuilHost = NULL;
+      mSuilHost.reset();
 
       return false;
    }
