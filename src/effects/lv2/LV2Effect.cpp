@@ -1129,7 +1129,6 @@ bool LV2Effect::RealtimeInitialize(EffectSettings &)
 {
    for (auto & port : mCVPorts)
       port->mBuffer.reinit((unsigned) mBlockSize, port->mIsInput);
-   mMaster->Activate();
    return true;
 }
 
@@ -1137,7 +1136,6 @@ bool LV2Effect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    mSlaves.clear();
-   mMaster->Deactivate();
    for (auto & port : mCVPorts)
       port->mBuffer.reset();
    return true;
