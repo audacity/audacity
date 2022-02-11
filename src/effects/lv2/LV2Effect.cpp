@@ -586,13 +586,17 @@ bool LV2Effect::InitializePlugin()
                controlPort->mUnits = LilvString(symbol.get());
 
          // Get the scale points
-         const auto points = lilv_port_get_scale_points(mPlug, port);
-         LILV_FOREACH(scale_points, j, points) {
-            const auto point = lilv_scale_points_get(points, j);
-            controlPort->mScaleValues.push_back(lilv_node_as_float(lilv_scale_point_get_value(point)));
-            controlPort->mScaleLabels.push_back(LilvString(lilv_scale_point_get_label(point)));
+         {
+            LilvScalePointsPtr points{
+               lilv_port_get_scale_points(mPlug, port) };
+            LILV_FOREACH(scale_points, j, points.get()) {
+               const auto point = lilv_scale_points_get(points.get(), j);
+               controlPort->mScaleValues.push_back(
+                  lilv_node_as_float(lilv_scale_point_get_value(point)));
+               controlPort->mScaleLabels.push_back(
+                  LilvString(lilv_scale_point_get_label(point)));
+            }
          }
-         lilv_scale_points_free(points);
 
          // Collect the value and range info
          controlPort->mHasLo = !std::isnan(minimumVals[i]);
