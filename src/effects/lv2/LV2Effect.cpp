@@ -1254,7 +1254,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mParent->PushEventHandler(this);
 
    mSuilHost = NULL;
-   mSuilInstance = NULL;
+   mSuilInstance.reset();
 
    mMaster = InitInstance(mSampleRate);
    if (!mMaster) {
@@ -1320,12 +1320,11 @@ bool LV2Effect::CloseUI()
          mNativeWin = NULL;
       }
 
-      mUIIdleInterface = NULL;
-      mUIShowInterface = NULL;
-      mExternalWidget = NULL;
+      mUIIdleInterface = nullptr;
+      mUIShowInterface = nullptr;
+      mExternalWidget = nullptr;
 
-      suil_instance_free(mSuilInstance);
-      mSuilInstance = NULL;
+      mSuilInstance.reset();
    }
 
    if (mSuilHost)
@@ -1763,10 +1762,10 @@ bool LV2Effect::BuildFancy()
    char *bundlePath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui)), NULL);
    char *binaryPath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), NULL);
 
-   mSuilInstance = suil_instance_new(mSuilHost, this, containerType,
+   mSuilInstance.reset(suil_instance_new(mSuilHost, this, containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
-      bundlePath, binaryPath, GetFeaturePointers().data());
+      bundlePath, binaryPath, GetFeaturePointers().data()));
 
    lilv_free(binaryPath);
    lilv_free(bundlePath);
@@ -1789,7 +1788,8 @@ bool LV2Effect::BuildFancy()
    {
       mParent->SetMinSize(wxDefaultSize);
 
-      mExternalWidget = (LV2_External_UI_Widget *) suil_instance_get_widget(mSuilInstance);
+      mExternalWidget = static_cast<LV2_External_UI_Widget *>(
+         suil_instance_get_widget(mSuilInstance.get()));
       mTimer.SetOwner(this, ID_TIMER);
       mTimer.Start(20);
 
@@ -1797,7 +1797,8 @@ bool LV2Effect::BuildFancy()
    }
    else
    {
-      WXWidget widget = (WXWidget) suil_instance_get_widget(mSuilInstance);
+      const auto widget = static_cast<WXWidget>(
+         suil_instance_get_widget(mSuilInstance.get()));
 
 #if defined(__WXGTK__)
       // Needed by some plugins (e.g., Invada) to ensure the display is fully
@@ -1851,11 +1852,11 @@ bool LV2Effect::BuildFancy()
       mParent->SetSizerAndFit(vs.release());
    }
 
-   mUIIdleInterface = (LV2UI_Idle_Interface *)
-      suil_instance_extension_data(mSuilInstance, LV2_UI__idleInterface);
+   mUIIdleInterface = static_cast<const LV2UI_Idle_Interface *>(
+      suil_instance_extension_data(mSuilInstance.get(), LV2_UI__idleInterface));
 
-   mUIShowInterface = (LV2UI_Show_Interface *)
-      suil_instance_extension_data(mSuilInstance, LV2_UI__showInterface);
+   mUIShowInterface = static_cast<const LV2UI_Show_Interface *>(
+      suil_instance_extension_data(mSuilInstance.get(), LV2_UI__showInterface));
 
    if (mUIShowInterface)
    {
@@ -2191,20 +2192,10 @@ bool LV2Effect::TransferDataToWindow()
    if (mUseGUI)
    {
       if (mSuilInstance)
-      {
          for (auto & port : mControlPorts)
-         {
             if (port->mIsInput)
-            {
-               suil_instance_port_event(mSuilInstance,
-                                        port->mIndex,
-                                        sizeof(float),
-                                        0,
-                                        &port->mVal);
-            }
-         }
-      }
-
+               suil_instance_port_event(mSuilInstance.get(),
+                  port->mIndex, sizeof(float), 0, &port->mVal);
       return true;
    }
 
@@ -2359,7 +2350,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
 
    if (mUIIdleInterface)
    {
-      SuilHandle handle = suil_instance_get_handle(mSuilInstance);
+      const auto handle = suil_instance_get_handle(mSuilInstance.get());
       if (mUIIdleInterface->idle(handle))
       {
          if (mUIShowInterface)
@@ -2384,12 +2375,11 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
 
             if (size < mControlOut->mMinimumSize)
             {
-               zix_ring_read(ring, LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
-               suil_instance_port_event(mSuilInstance,
-                                        mControlOut->mIndex,
-                                        size,
-                                        LV2Symbols::urid_EventTransfer,
-                                        atom);
+               zix_ring_read(ring,
+                  LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
+               suil_instance_port_event(mSuilInstance.get(),
+                  mControlOut->mIndex, size,
+                  LV2Symbols::urid_EventTransfer, atom);
             }
             else
             {
@@ -2406,11 +2396,8 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       // Let UI know that a port's value has changed
       if (port->mVal != port->mLst)
       {
-         suil_instance_port_event(mSuilInstance,
-                                  port->mIndex,
-                                  sizeof(port->mVal),
-                                  0,
-                                  &port->mVal);
+         suil_instance_port_event(mSuilInstance.get(),
+            port->mIndex, sizeof(port->mVal), 0, &port->mVal);
          port->mLst = port->mVal;
       }
    }
