@@ -351,8 +351,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
 {
    mPlug = plug;
 
-   mMaster = NULL;
-   mProcess = NULL;
    mSuilInstance = NULL;
 
    mSampleRate = 44100;
@@ -366,7 +364,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
    mLatencyPort = -1;
    mLatencyDone = false;
    mRolling = false;
-   mActivated = false;
 
    mUIIdleInterface = NULL;
    mUIShowInterface = NULL;
@@ -1014,8 +1011,7 @@ bool LV2Effect::ProcessInitialize(
       port->mBuffer.reinit((unsigned) mBlockSize, port->mIsInput);
    }
 
-   lilv_instance_activate(mProcess->GetInstance());
-   mActivated = true;
+   mProcess->Activate();
 
    mLatencyDone = false;
 
@@ -1024,12 +1020,7 @@ bool LV2Effect::ProcessInitialize(
 
 bool LV2Effect::ProcessFinalize()
 {
-   if (mProcess)
-   {
-      FreeInstance(mProcess);
-      mProcess = NULL;
-   }
-
+   mProcess.reset();
    return true;
 }
 
@@ -1138,36 +1129,18 @@ bool LV2Effect::RealtimeInitialize(EffectSettings &)
 {
    mMasterIn.reinit(mAudioIn, (unsigned int) mBlockSize);
    for (auto & port : mCVPorts)
-   {
       port->mBuffer.reinit((unsigned) mBlockSize, port->mIsInput);
-   }
-
-   lilv_instance_activate(mMaster->GetInstance());
-   mActivated = true;
-
+   mMaster->Activate();
    return true;
 }
 
 bool LV2Effect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
-   for (auto & slave : mSlaves)
-   {
-      FreeInstance(slave);
-   }
    mSlaves.clear();
-
-   if (mActivated)
-   {
-      lilv_instance_deactivate(mMaster->GetInstance());
-      mActivated = false;
-   }
-
+   mMaster->Deactivate();
    for (auto & port : mCVPorts)
-   {
       port->mBuffer.reset();
-   }
-
    mMasterIn.reset();
    return true;
 });
@@ -1176,17 +1149,11 @@ return GuardedCall<bool>([&]{
 bool LV2Effect::RealtimeAddProcessor(
    EffectSettings &, unsigned, float sampleRate)
 {
-   LV2Wrapper *slave = InitInstance(sampleRate);
-   if (!slave)
-   {
+   auto pInstance = InitInstance(sampleRate);
+   if (!pInstance)
       return false;
-   }
-
-   mSlaves.push_back(slave);
-
-   lilv_instance_activate(slave->GetInstance());
-   mActivated = true;
-
+   pInstance->Activate();
+   mSlaves.push_back(move(pInstance));
    return true;
 }
 
@@ -1308,7 +1275,7 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
       return 0;
    }
 
-   LV2Wrapper *slave = mSlaves[group];
+   const auto slave = mSlaves[group].get();
    LilvInstance *instance = slave->GetInstance();
 
    int i = 0;
@@ -1495,8 +1462,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mSuilInstance = NULL;
 
    mMaster = InitInstance(mSampleRate);
-   if (mMaster == NULL)
-   {
+   if (!mMaster) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
    }
@@ -1573,11 +1539,7 @@ bool LV2Effect::CloseUI()
       mSuilHost = NULL;
    }
 
-   if (mMaster)
-   {
-      FreeInstance(mMaster);
-      mMaster = NULL;
-   }
+   mMaster.reset();
 
    mParent = NULL;
    mDialog = NULL;
@@ -1919,20 +1881,12 @@ bool LV2Effect::CheckOptions(const LilvNode *subject, const LilvNode *predicate,
    return supported;
 }
 
-LV2Wrapper *LV2Effect::InitInstance(float sampleRate)
+std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
 {
-   LV2Wrapper *wrapper = new LV2Wrapper(this);
-   if (wrapper == NULL)
-   {
-      return NULL;
-   }
-   
+   auto wrapper = std::make_unique<LV2Wrapper>(this);
    LilvInstance *instance = wrapper->Instantiate(mPlug, sampleRate, mFeatures);
    if (!instance)
-   {
-      delete wrapper;
-      return NULL;
-   }
+      return nullptr;
 
    wrapper->SetBlockSize();
    wrapper->SetSampleRate();
@@ -1983,11 +1937,6 @@ LV2Wrapper *LV2Effect::InitInstance(float sampleRate)
    }
 
    return wrapper;
-}
-
-void LV2Effect::FreeInstance(LV2Wrapper *wrapper)
-{
-   delete wrapper;
 }
 
 bool LV2Effect::BuildFancy()
@@ -3196,15 +3145,8 @@ LV2Wrapper::~LV2Wrapper()
          mRequests.Post({ 0, NULL });
          mThread.join();
       }
-
-      if (mEffect->mActivated)
-      {
-         lilv_instance_deactivate(mInstance);
-         mEffect->mActivated = false;
-      }
-
+      Deactivate();
       lilv_instance_free(mInstance);
-      mInstance = NULL;
    }
 }
 
@@ -3282,6 +3224,22 @@ LilvInstance *LV2Wrapper::Instantiate(const LilvPlugin *plugin,
       };
 
    return mInstance;
+}
+
+void LV2Wrapper::Activate()
+{
+   if (!mActivated) {
+      lilv_instance_activate(GetInstance());
+      mActivated = true;
+   }
+}
+
+void LV2Wrapper::Deactivate()
+{
+   if (mActivated) {
+      lilv_instance_deactivate(GetInstance());
+      mActivated = false;
+   }
 }
 
 LilvInstance *LV2Wrapper::GetInstance()

@@ -17,6 +17,7 @@
 
 class wxArrayString;
 
+#include <memory>
 #include <thread>
 #include <vector>
 
@@ -346,8 +347,7 @@ private:
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
-   LV2Wrapper *InitInstance(float sampleRate);
-   void FreeInstance(LV2Wrapper *wrapper);
+   std::unique_ptr<LV2Wrapper> InitInstance(float sampleRate);
 
    static uint32_t uri_to_id(LV2_URI_Map_Callback_Data callback_data,
                              const char *map,
@@ -474,11 +474,10 @@ private:
    int mLatencyPort;
    bool mLatencyDone;
    bool mRolling;
-   bool mActivated;
 
-   LV2Wrapper *mMaster;
-   LV2Wrapper *mProcess;
-   std::vector<LV2Wrapper *> mSlaves;
+   std::unique_ptr<LV2Wrapper> mMaster;
+   std::unique_ptr<LV2Wrapper> mProcess;
+   std::vector<std::unique_ptr<LV2Wrapper>> mSlaves;
 
    FloatBuffers mMasterIn;
    size_t mNumSamples;
@@ -586,6 +585,9 @@ public:
                              double sampleRrate,
                              std::vector<std::unique_ptr<LV2_Feature>> & features);
 
+   void Activate();
+   void Deactivate();
+
    void ThreadFunction();
 
    LilvInstance *GetInstance();
@@ -638,6 +640,7 @@ private:
    float mLatency;
    bool mFreeWheeling;
    bool mStopWorker;
+   bool mActivated{ false };
 };
 
 #endif
