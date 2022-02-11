@@ -1447,9 +1447,7 @@ void AudioIO::StopStream()
       mPortStreamV19 = NULL;
    }
 
-   // No longer need effects processing. This must be done after the stream is stopped
-   // to prevent the callback from being invoked after the effects are finalized.
-   mpTransportState.reset();
+   
 
    for( auto &ext : Extensions() )
       ext.StopOtherStream();
@@ -1553,6 +1551,12 @@ void AudioIO::StopStream()
             pListener->OnCommitRecording();
       }
    }
+
+
+   // No longer need effects processing. This must be done after the stream is stopped
+   // to prevent the callback from being invoked after the effects are finalized.
+   mpTransportState.reset();
+
 
    if (auto pInputMeter = mInputMeter.lock())
       pInputMeter->Reset(mRate, false);
