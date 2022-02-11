@@ -712,9 +712,9 @@ bool LV2Effect::InitializePlugin()
    mWantsOptionsInterface = false;
    mWantsWorkerInterface = false;
    mWantsStateInterface = false;
-   if (const auto extdata = lilv_plugin_get_extension_data(mPlug)) {
-      LILV_FOREACH(nodes, i, extdata) {
-         const auto node = lilv_nodes_get(extdata, i);
+   if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(mPlug) }) {
+      LILV_FOREACH(nodes, i, extdata.get()) {
+         const auto node = lilv_nodes_get(extdata.get(), i);
          const auto uri = lilv_node_as_string(node);
          if (strcmp(uri, LV2_OPTIONS__interface) == 0)
             mWantsOptionsInterface = true;
@@ -723,7 +723,6 @@ bool LV2Effect::InitializePlugin()
          else if (strcmp(uri, LV2_STATE__interface) == 0)
             mWantsStateInterface = true;
       }
-      lilv_nodes_free(extdata);
    }
 
    return true;
@@ -1374,37 +1373,25 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
 {
    using namespace LV2Symbols;
    if (mFactoryPresetsLoaded)
-   {
       return mFactoryPresetNames;
-   }
 
-   LilvNodes *presets = lilv_plugin_get_related(mPlug, node_Preset);
-   if (presets)
-   {
-      LILV_FOREACH(nodes, i, presets)
-      {
-         const LilvNode *preset = lilv_nodes_get(presets, i);
+   if (LilvNodesPtr presets{ lilv_plugin_get_related(mPlug, node_Preset) }) {
+      LILV_FOREACH(nodes, i, presets.get()) {
+         const auto preset = lilv_nodes_get(presets.get(), i);
 
          mFactoryPresetUris.push_back(LilvString(preset));
 
          lilv_world_load_resource(gWorld, preset);
 
-         LilvNodes *labels = lilv_world_find_nodes(gWorld, preset, node_Label, NULL);
-         if (labels)
-         {
-            const LilvNode *label = lilv_nodes_get_first(labels);
-
+         if (LilvNodesPtr labels{ lilv_world_find_nodes(gWorld, preset,
+            node_Label, nullptr) }) {
+            const auto label = lilv_nodes_get_first(labels.get());
             mFactoryPresetNames.push_back(LilvString(label));
-
-            lilv_nodes_free(labels);
          }
          else
-         {
-            mFactoryPresetNames.push_back(LilvString(preset).AfterLast(wxT('#')));
-         }
+            mFactoryPresetNames.push_back(
+               LilvString(preset).AfterLast(wxT('#')));
       }
-
-      lilv_nodes_free(presets);
    }
 
    mFactoryPresetsLoaded = true;
@@ -1552,10 +1539,10 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, bool required)
    using namespace LV2Symbols;
    bool supported = true;
    auto predicate = required ? node_RequiredFeature : node_OptionalFeature;
-   auto nodes = lilv_world_find_nodes(gWorld, subject, predicate, nullptr);
-   if (nodes) {
-      LILV_FOREACH(nodes, i, nodes) {
-         const auto node = lilv_nodes_get(nodes, i);
+   if (LilvNodesPtr nodes{
+      lilv_world_find_nodes(gWorld, subject, predicate, nullptr) }) {
+      LILV_FOREACH(nodes, i, nodes.get()) {
+         const auto node = lilv_nodes_get(nodes.get(), i);
          const auto uri = lilv_node_as_string(node);
          if ((strcmp(uri, LV2_UI__noUserResize) == 0) ||
              (strcmp(uri, LV2_UI__fixedSize) == 0))
@@ -1574,7 +1561,6 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, bool required)
             }
          }
       }
-      lilv_nodes_free(nodes);
    }
    return supported;
 }
@@ -1590,11 +1576,10 @@ bool LV2Effect::CheckOptions(const LilvNode *subject, bool required)
    bool supported = true;
    const auto predicate =
       required ? node_RequiredOption : node_SupportedOption;
-   LilvNodes *nodes =
-      lilv_world_find_nodes(gWorld, subject, predicate, nullptr);
-   if (nodes) {
-      LILV_FOREACH(nodes, i, nodes) {
-         const auto node = lilv_nodes_get(nodes, i);
+   if (LilvNodesPtr nodes{
+      lilv_world_find_nodes(gWorld, subject, predicate, nullptr) }) {
+      LILV_FOREACH(nodes, i, nodes.get()) {
+         const auto node = lilv_nodes_get(nodes.get(), i);
          const auto uri = lilv_node_as_string(node);
          const auto urid = URID_Map(uri);
          if (urid == urid_NominalBlockLength)
@@ -1612,7 +1597,6 @@ bool LV2Effect::CheckOptions(const LilvNode *subject, bool required)
             }
          }
       }
-      lilv_nodes_free(nodes);
    }
    return supported;
 }

@@ -47,6 +47,8 @@ class wxArrayString;
 
 #include <unordered_map>
 
+using LilvNodesPtr = Lilv_ptr<LilvNodes, lilv_nodes_free>;
+
 // We use deprecated LV2 interfaces to remain compatible with older
 // plug-ins, so disable warnings
 LV2_DISABLE_DEPRECATION_WARNINGS
