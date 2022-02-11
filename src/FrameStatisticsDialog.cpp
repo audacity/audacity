@@ -51,7 +51,14 @@ public:
 
       mStatisticsUpdated = FrameStatistics::Subscribe(
          [this](FrameStatistics::SectionID sectionID) {
-            SectionUpdated(sectionID);
+            constexpr auto timeout = std::chrono::milliseconds(300);
+            const auto now = std::chrono::steady_clock::now();
+
+            if ((now - mLastUpdate) > timeout)
+            {
+               SectionUpdated(sectionID);
+               mLastUpdate = now;
+            }
          });
    }
 
@@ -113,6 +120,8 @@ private:
    Section mSections[size_t(FrameStatistics::SectionID::Count)];
 
    Observer::Subscription mStatisticsUpdated;
+
+   std::chrono::steady_clock::time_point mLastUpdate;
 };
 
 Destroy_ptr<Dialog> sDialog;
