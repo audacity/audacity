@@ -69,6 +69,9 @@
 // Define a maximum block size in number of samples (not bytes)
 #define DEFAULT_BLOCKSIZE 1048576
 
+static inline void free_chars (char *p) { lilv_free(p); }
+using LilvCharsPtr = Lilv_ptr<char, free_chars>;
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // LV2EffectMeter
@@ -1738,22 +1741,25 @@ bool LV2Effect::BuildFancy()
 #if defined(__WXMSW__)
    // Plugins may have dependencies that need to be loaded from the same path
    // as the main DLL, so add this plugin's path to the DLL search order.
-   char *libPath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), NULL);
-   wxString path = wxPathOnly(libPath);
+   LilvCharsPtr libPath{
+      lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)),
+      nullptr)
+   };
+   const auto path = wxPathOnly(libPath.get());
    SetDllDirectory(path.c_str());
-   lilv_free(libPath);
 #endif
 
-   char *bundlePath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui)), NULL);
-   char *binaryPath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), NULL);
+   LilvCharsPtr bundlePath{
+      lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui)), nullptr)
+   };
+   LilvCharsPtr binaryPath{
+      lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), nullptr)
+   };
 
    mSuilInstance.reset(suil_instance_new(mSuilHost.get(), this, containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
-      bundlePath, binaryPath, GetFeaturePointers().data()));
-
-   lilv_free(binaryPath);
-   lilv_free(bundlePath);
+      bundlePath.get(), binaryPath.get(), GetFeaturePointers().data()));
 
    // Bail if the instance (no compatible UI) couldn't be created
    if (!mSuilInstance)
@@ -2737,10 +2743,9 @@ LV2Wrapper::LV2Wrapper(const LV2Effect &effect,
    // as the main DLL, so add this plugin's path to the DLL search order.
    const auto libNode = lilv_plugin_get_library_uri(plugin);
    const auto libUri = lilv_node_as_uri(libNode);
-   const auto libPath = lilv_file_uri_parse(libUri, nullptr);
-   const auto path = wxPathOnly(libPath);
+   LilvCharsPtr libPath{ lilv_file_uri_parse(libUri, nullptr) };
+   const auto path = wxPathOnly(libPath.get());
    SetDllDirectory(path.c_str());
-   lilv_free(libPath);
 #endif
 
    mInstance.reset(
