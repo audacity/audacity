@@ -131,22 +131,15 @@ public:
       mIsMidi = false;
       mWantsPosition = false;
       mMinimumSize = 1024;
-      mRing = NULL;
    }
-   virtual ~LV2AtomPort()
-   {
-      if (mRing)
-      {
-         zix_ring_free(mRing);
-      }
-   }
+   virtual ~LV2AtomPort() = default;
 
    uint32_t mMinimumSize;
    bool mIsMidi;
    bool mWantsPosition;
 
    std::vector<uint8_t> mBuffer;
-   ZixRing *mRing;
+   Lilv_ptr<ZixRing, zix_ring_free> mRing;
 };
 using LV2AtomPortPtr = std::shared_ptr<LV2AtomPort>;
 using LV2AtomPortArray = std::vector<LV2AtomPortPtr>;

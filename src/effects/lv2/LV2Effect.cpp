@@ -662,8 +662,8 @@ bool LV2Effect::InitializePlugin()
          }
 
          atomPort->mBuffer.resize(atomPort->mMinimumSize);
-         atomPort->mRing = zix_ring_new(atomPort->mMinimumSize);
-         zix_ring_mlock(atomPort->mRing);
+         atomPort->mRing.reset(zix_ring_new(atomPort->mMinimumSize));
+         zix_ring_mlock(atomPort->mRing.get());
 
          if (lilv_port_supports_event(mPlug, port, node_Position))
             atomPort->mWantsPosition = true;
@@ -891,7 +891,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
             lv2_atom_forge_pop(&mForge, &posFrame);
          }
 
-         ZixRing *ring = port->mRing;
+         const auto ring = port->mRing.get();
          LV2_Atom atom;
          while (zix_ring_read(ring, &atom, sizeof(atom)))
          {
@@ -1027,7 +1027,7 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
             lv2_atom_forge_pop(&mForge, &posFrame);
          }
 
-         ZixRing *ring = port->mRing;
+         const auto ring = port->mRing.get();
          LV2_Atom atom;
          while (zix_ring_read(ring, &atom, sizeof(atom)))
          {
@@ -1148,7 +1148,7 @@ return GuardedCall<bool>([&]{
    {
       if (!port->mIsInput)
       {
-         ZixRing *ring = port->mRing;
+         const auto ring = port->mRing.get();
 
          LV2_ATOM_SEQUENCE_FOREACH((LV2_Atom_Sequence *) port->mBuffer.data(), ev)
          {
@@ -1637,7 +1637,7 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
       if (!port->mIsInput)
          LV2_ATOM_SEQUENCE_FOREACH(
             reinterpret_cast<LV2_Atom_Sequence *>(port->mBuffer.data()), ev) {
-            zix_ring_write(port->mRing,
+            zix_ring_write(port->mRing.get(),
                &ev->body, ev->body.size + sizeof(LV2_Atom));
          }
 
@@ -2360,7 +2360,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
 
    if (mControlOut)
    {
-      ZixRing *ring = mControlOut->mRing;
+      const auto ring = mControlOut->mRing.get();
 
       LV2_Atom *atom = (LV2_Atom *) malloc(mControlOut->mMinimumSize);
       if (atom)
@@ -2611,7 +2611,7 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
    // Handle event transfers
    else if (protocol == LV2Symbols::urid_EventTransfer) {
       if (mControlIn && port_index == mControlIn->mIndex)
-         zix_ring_write(mControlIn->mRing, buffer, buffer_size);
+         zix_ring_write(mControlIn->mRing.get(), buffer, buffer_size);
    }
 }
 
