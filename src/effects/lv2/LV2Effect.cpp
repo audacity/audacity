@@ -2730,7 +2730,6 @@ LV2Wrapper::~LV2Wrapper()
          mThread.join();
       }
       Deactivate();
-      lilv_instance_free(mInstance);
    }
 }
 
@@ -2759,7 +2758,8 @@ LV2Wrapper::LV2Wrapper(const LV2Effect &effect,
    lilv_free(libPath);
 #endif
 
-   mInstance = lilv_plugin_instantiate(plugin, sampleRate, features.data());
+   mInstance.reset(
+      lilv_plugin_instantiate(plugin, sampleRate, features.data()));
 
 #if defined(__WXMSW__)
    SetDllDirectory(nullptr);
@@ -2768,15 +2768,15 @@ LV2Wrapper::LV2Wrapper(const LV2Effect &effect,
    if (!mInstance)
       return;
 
-   mHandle = lilv_instance_get_handle(mInstance);
+   mHandle = lilv_instance_get_handle(mInstance.get());
    mOptionsInterface = static_cast<const LV2_Options_Interface *>(
-      lilv_instance_get_extension_data(mInstance, LV2_OPTIONS__interface));
+      lilv_instance_get_extension_data(mInstance.get(), LV2_OPTIONS__interface));
    mStateInterface = static_cast<const LV2_State_Interface *>(
-      lilv_instance_get_extension_data(mInstance, LV2_STATE__interface));
+      lilv_instance_get_extension_data(mInstance.get(), LV2_STATE__interface));
    mWorkerInterface = static_cast<const LV2_Worker_Interface *>(
-      lilv_instance_get_extension_data(mInstance, LV2_WORKER__interface));
+      lilv_instance_get_extension_data(mInstance.get(), LV2_WORKER__interface));
    if (mEffect.mLatencyPort >= 0)
-      lilv_instance_connect_port(mInstance, mEffect.mLatencyPort, &mLatency);
+      lilv_instance_connect_port(mInstance.get(), mEffect.mLatencyPort, &mLatency);
    if (mWorkerInterface)
       mThread = std::thread{
          std::mem_fn( &LV2Wrapper::ThreadFunction ), std::ref(*this)
@@ -2801,7 +2801,7 @@ void LV2Wrapper::Deactivate()
 
 LilvInstance *LV2Wrapper::GetInstance() const
 {
-   return mInstance;
+   return mInstance.get();
 }
 
 LV2_Handle LV2Wrapper::GetHandle() const

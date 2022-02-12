@@ -47,6 +47,7 @@ class wxArrayString;
 
 #include <unordered_map>
 
+using LilvInstancePtr = Lilv_ptr<LilvInstance, lilv_instance_free>;
 using LilvNodesPtr = Lilv_ptr<LilvNodes, lilv_nodes_free>;
 using LilvScalePointsPtr = Lilv_ptr<LilvScalePoints, lilv_scale_points_free>;
 using SuilHostPtr = Lilv_ptr<SuilHost, suil_host_free>;
@@ -648,7 +649,7 @@ private:
    std::thread mThread;
 
    const LV2Effect &mEffect;
-   LilvInstance *mInstance{};
+   LilvInstancePtr mInstance;
    LV2_Handle mHandle{};
 
    wxMessageQueue<LV2Work> mRequests;
