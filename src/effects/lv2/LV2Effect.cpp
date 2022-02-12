@@ -1659,14 +1659,13 @@ bool LV2Effect::BuildFancy()
 #endif
 
    // Determine if the plugin has a supported UI
-   const LilvUI *ui = NULL;
-   const LilvNode *uiType = NULL;
-   LilvUIs *uis = lilv_plugin_get_uis(mPlug);
-   if (uis)
-   {
+   const LilvUI *ui = nullptr;
+   const LilvNode *uiType = nullptr;
+   LilvUIsPtr uis{ lilv_plugin_get_uis(mPlug) };
+   if (uis) {
       if (LilvNodePtr containerType{ lilv_new_uri(gWorld, nativeType) }) {
-         LILV_FOREACH(uis, iter, uis) {
-            ui = lilv_uis_get(uis, iter);
+         LILV_FOREACH(uis, iter, uis.get()) {
+            ui = lilv_uis_get(uis.get(), iter);
             if (lilv_ui_is_supported(ui,
                suil_ui_supported, containerType.get(), &uiType))
                break;
@@ -1680,11 +1679,9 @@ bool LV2Effect::BuildFancy()
    }
 
    // Check for other supported UIs
-   if (ui == NULL)
-   {
-      LILV_FOREACH(uis, iter, uis)
-      {
-         ui = lilv_uis_get(uis, iter);
+   if (!ui && uis) {
+      LILV_FOREACH(uis, iter, uis.get()) {
+         ui = lilv_uis_get(uis.get(), iter);
          if (lilv_ui_is_a(ui, node_ExternalUI) || lilv_ui_is_a(ui, node_ExternalUIOld))
          {
             uiType = node_ExternalUI;
@@ -1696,18 +1693,12 @@ bool LV2Effect::BuildFancy()
 
    // No usable UI found
    if (ui == NULL)
-   {
-      lilv_uis_free(uis);
       return false;
-   }
 
    const LilvNode *uinode = lilv_ui_get_uri(ui);
    lilv_world_load_resource(gWorld, uinode);
    if (!ValidateFeatures(uinode))
-   {
-      lilv_uis_free(uis);
       return false;
-   }
 
    const char *containerType;
 
@@ -1741,10 +1732,8 @@ bool LV2Effect::BuildFancy()
    // Create the suil host
    mSuilHost.reset(suil_host_new(LV2Effect::suil_port_write_func,
       LV2Effect::suil_port_index_func, nullptr, nullptr));
-   if (!mSuilHost) {
-      lilv_uis_free(uis);
+   if (!mSuilHost)
       return false;
-   }
 
 #if defined(__WXMSW__)
    // Plugins may have dependencies that need to be loaded from the same path
@@ -1765,7 +1754,6 @@ bool LV2Effect::BuildFancy()
 
    lilv_free(binaryPath);
    lilv_free(bundlePath);
-   lilv_uis_free(uis);
 
    // Bail if the instance (no compatible UI) couldn't be created
    if (!mSuilInstance)
@@ -1839,10 +1827,7 @@ bool LV2Effect::BuildFancy()
       }
 
       if (!si)
-      {
-         lilv_uis_free(uis);
          return false;
-      }
 
       mParent->SetSizerAndFit(vs.release());
    }

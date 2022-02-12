@@ -50,6 +50,7 @@ class wxArrayString;
 using LilvInstancePtr = Lilv_ptr<LilvInstance, lilv_instance_free>;
 using LilvNodesPtr = Lilv_ptr<LilvNodes, lilv_nodes_free>;
 using LilvScalePointsPtr = Lilv_ptr<LilvScalePoints, lilv_scale_points_free>;
+using LilvUIsPtr = Lilv_ptr<LilvUIs, lilv_uis_free>;
 using SuilHostPtr = Lilv_ptr<SuilHost, suil_host_free>;
 using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
 
