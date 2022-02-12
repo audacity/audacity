@@ -5,7 +5,7 @@
   @file LV2Symbols.h
 
   @brief Declare URI identifiers used in calls to the lv2 library and a mapping
-  of them to integers
+  of them to integers; also a smart pointer template for managing lv2 resources
 
   Paul Licameli split from LoadLV2.h
 
@@ -17,6 +17,18 @@
 #include <vector>
 #include "lilv/lilv.h"
 #include "MemoryX.h"
+
+//! Generate deleter classes for smart pointers to lv2 resources
+template<typename Type, void (*f)(Type*)>
+struct Lilv_deleter { void operator()(Type *p) noexcept { f(p); } };
+
+//! Generate classes of smart pointers to lv2 resources
+template<typename Type, void (*f)(Type*)>
+using Lilv_ptr = std::unique_ptr<Type, Lilv_deleter<Type, f>>;
+
+//! A smart pointer to LilvNode, which is essentially a variant type much used
+//! in the lv2 API
+using LilvNodePtr = Lilv_ptr<LilvNode, lilv_node_free>;
 
 #if !defined(LV2_CORE__MIDIPlugin)
 #define LV2_CORE__MIDIPlugin   LV2_CORE_PREFIX "MIDIPlugin"
@@ -150,7 +162,9 @@ LV2_URID Lookup_URI(URIDMap & map, const char *uri, bool add = true);
 
 // Declare the static LILV URI nodes
 #undef NODE
-#define NODE(n, u) extern LilvNode *node_##n;
+#define NODE(n, u) \
+   extern LilvNode *node_##n; \
+   extern LilvNodePtr unode_##n;
 NODELIST
 
 // Declare the static URIDs
