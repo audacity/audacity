@@ -26,6 +26,8 @@
 
 namespace LV2Symbols {
 
+using LilvWorldPtr = Lilv_ptr<LilvWorld, lilv_world_free>;
+static LilvWorldPtr uWorld;
 LilvWorld *gWorld = nullptr;
 
 // Define the static URI map
@@ -33,7 +35,9 @@ URIDMap gURIDMap;
 
 // Define the static LILV URI nodes
 #undef NODE
-#define NODE(n, u) LilvNode *node_##n = nullptr;
+#define NODE(n, u) \
+   LilvNode *node_##n = nullptr; \
+   LilvNodePtr unode_##n;
 NODELIST
 
 // Define the static URIDs
@@ -44,13 +48,16 @@ URIDLIST
 bool InitializeGWorld()
 {
    // Try to initialise Lilv, or return.
-   gWorld = lilv_world_new();
-   if (!gWorld)
+   uWorld.reset(lilv_world_new());
+   if (!uWorld)
       return false;
+   gWorld = uWorld.get();
 
    // Create LilvNodes for each of the URIs we need
    #undef NODE
-   #define NODE(n, u) node_##n = lilv_new_uri(gWorld, u);
+   #define NODE(n, u) \
+      unode_##n.reset(lilv_new_uri(gWorld, u)); \
+      node_##n = unode_##n.get();
    NODELIST
 
    // Generate URIDs
@@ -63,13 +70,6 @@ bool InitializeGWorld()
 
 void FinalizeGWorld()
 {
-   // Free the LilvNodes for each of the URIs we need
-   #undef NODE
-   #define NODE(n, u) \
-      lilv_node_free(node_##n);
-   NODELIST
-
-   lilv_world_free(gWorld);
    gWorld = nullptr;
 }
 
