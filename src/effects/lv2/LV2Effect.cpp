@@ -1416,17 +1416,16 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
    if (!preset)
       return false;
 
-   LilvState *state =
-      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get());
-   if (state)
-   {
+   using LilvStatePtr = Lilv_ptr<LilvState, lilv_state_free>;
+   if (LilvStatePtr state{
+      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get()) } ) {
       lilv_state_restore(
-         state, mMaster->GetInstance(), set_value_func, this, 0, nullptr);
-      lilv_state_free(state);
+         state.get(), mMaster->GetInstance(), set_value_func, this, 0, nullptr);
       TransferDataToWindow();
+      return true;
    }
-
-   return state != NULL;
+   else
+      return false;
 }
 
 bool LV2Effect::CanExportPresets()
