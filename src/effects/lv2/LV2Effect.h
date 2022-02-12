@@ -552,19 +552,20 @@ private:
    friend class LV2Wrapper;
 };
 
+//! Use when lilv.h comments "must not be freed" or we use the node elsewhere,
+//! or the node pointer is from iterating a LilvNodes collection
 inline wxString LilvString(const LilvNode *node)
 {
    return wxString::FromUTF8(lilv_node_as_string(node));
 };
 
-inline wxString LilvString(LilvNode *node, bool free)
+//! Use when lilv.h comments "Returned value must be freed by the caller."
+//! We free it in this function.
+//! Name suggests C++ move semantics applied to `node`, but only C types used
+inline wxString LilvStringMove(LilvNode *node)
 {
    wxString str = LilvString(node);
-   if (free)
-   {
-      lilv_node_free(node);
-   }
-
+   lilv_node_free(node);
    return str;
 };
 

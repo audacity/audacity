@@ -412,12 +412,12 @@ PluginPath LV2Effect::GetPath() const
 
 ComponentInterfaceSymbol LV2Effect::GetSymbol() const
 {
-   return LilvString(lilv_plugin_get_name(mPlug), true);
+   return LilvStringMove(lilv_plugin_get_name(mPlug));
 }
 
 VendorSymbol LV2Effect::GetVendor() const
 {
-   wxString vendor = LilvString(lilv_plugin_get_author_name(mPlug), true);
+   wxString vendor = LilvStringMove(lilv_plugin_get_author_name(mPlug));
 
    if (vendor.empty())
    {
@@ -631,16 +631,18 @@ bool LV2Effect::InitializePlugin()
 
       // Get the port name and symbol
       wxString symbol = LilvString(lilv_port_get_symbol(mPlug, port));
-      wxString name = LilvString(lilv_port_get_name(mPlug, port), true);
+      wxString name = LilvStringMove(lilv_port_get_name(mPlug, port));
 
       // Get the group to which this port belongs or default to the main group
       TranslatableString groupName{};
       if (auto group = lilv_port_get(mPlug, port, node_Group)) {
-         auto groupMsg = LilvString(lilv_world_get(
-            gWorld, group, node_Label, NULL), true);
+         // lilv.h does not say whether return of lilv_world_get() needs to
+         // be freed, but that is easily seen to be so from source
+         auto groupMsg = LilvStringMove(
+            lilv_world_get(gWorld, group, node_Label, nullptr));
          if (groupMsg.empty())
-            groupMsg = LilvString(lilv_world_get(
-               gWorld, group, node_Name, NULL), true);
+            groupMsg = LilvStringMove(
+               lilv_world_get(gWorld, group, node_Name, nullptr));
          if (groupMsg.empty())
             groupMsg = LilvString(group);
          groupName = Verbatim(groupMsg);
