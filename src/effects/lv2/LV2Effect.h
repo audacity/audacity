@@ -504,8 +504,11 @@ private:
    bool mLatencyDone{ false };
    bool mRolling{ false };
 
+   //! Holds lv2 library state needed for the user interface
    std::unique_ptr<LV2Wrapper> mMaster;
+   //! Holds lv2 library state for destructive processing
    std::unique_ptr<LV2Wrapper> mProcess;
+   //! Each holds lv2 library state for realtime processing of one track
    std::vector<std::unique_ptr<LV2Wrapper>> mSlaves;
 
    size_t mNumSamples{};
@@ -613,23 +616,18 @@ public:
    };
 
 public:
-   LV2Wrapper(LV2Effect &effect);
    //! May spawn a thread
-   LilvInstance *Instantiate(const LilvPlugin *plugin,
-                             double sampleRrate,
-                             std::vector<std::unique_ptr<LV2_Feature>> & features);
+   LV2Wrapper(LV2Effect &effect, const LilvPlugin *plugin, double sampleRate);
    //! If a thread was started, joins it
    ~LV2Wrapper();
    void Activate();
    void Deactivate();
-
-   LilvInstance *GetInstance();
-   LV2_Handle GetHandle();
-   float GetLatency();
+   LilvInstance *GetInstance() const;
+   LV2_Handle GetHandle() const;
+   float GetLatency() const;
    void SetFreeWheeling(bool enable);
    void SetSampleRate();
    void SetBlockSize();
-   void ConnectPorts(float **inbuf, float **outbuf);
    void ConsumeResponses();
    static LV2_Worker_Status schedule_work(LV2_Worker_Schedule_Handle handle,
                                           uint32_t size,
@@ -646,24 +644,24 @@ private:
    std::thread mThread;
 
    LV2Effect &mEffect;
-   LilvInstance *mInstance;
-   LV2_Handle mHandle;
+   LilvInstance *mInstance{};
+   LV2_Handle mHandle{};
 
    wxMessageQueue<LV2Work> mRequests;
    wxMessageQueue<LV2Work> mResponses;
 
    // Options extension
-   LV2_Options_Interface *mOptionsInterface;
+   const LV2_Options_Interface *mOptionsInterface{};
 
    // State extension
-   LV2_State_Interface *mStateInterface;
+   const LV2_State_Interface *mStateInterface{};
 
    // Worker extension
-   LV2_Worker_Interface *mWorkerInterface;
+   const LV2_Worker_Interface *mWorkerInterface{};
    // Another object with an explicit virtual function table
    LV2_Worker_Schedule mWorkerSchedule{ this, LV2Wrapper::schedule_work };
 
-   float mLatency;
+   float mLatency{ 0.0 };
 
    //! If true, do not spawn extra worker threads
    bool mFreeWheeling{ false };
