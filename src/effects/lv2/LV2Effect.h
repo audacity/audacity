@@ -33,11 +33,13 @@ class wxArrayString;
 #include "lv2/uri-map/uri-map.h"
 #include "lv2/worker/worker.h"
 #include <suil/suil.h>
+#include "lv2_external_ui.h"
 
+#include "EffectInterface.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
 
-#include "LoadLV2.h"
+#include "LV2Symbols.h"
 #include "NativeWindow.h"
 
 #include "zix/ring.h"

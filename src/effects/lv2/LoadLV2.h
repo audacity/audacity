@@ -18,10 +18,6 @@
 #include "lilv/lilv.h"
 
 #include "PluginProvider.h"
-#include "LV2Symbols.h"
-#include "EffectInterface.h"
-
-#include "lv2_external_ui.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
