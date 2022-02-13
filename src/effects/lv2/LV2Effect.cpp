@@ -533,12 +533,14 @@ bool LV2Effect::InitializePlugin()
    mExternalUIHost.plugin_human_id = lilv_node_as_string(pluginName);
    lilv_node_free(pluginName);
 
-   AddFeature(LV2_UI__noUserResize, NULL);
-   AddFeature(LV2_UI__fixedSize, NULL);
-   AddFeature(LV2_UI__idleInterface, NULL);
-   AddFeature(LV2_UI__makeResident, NULL);
-   AddFeature(LV2_BUF_SIZE__boundedBlockLength, NULL);
-   AddFeature(LV2_BUF_SIZE__fixedBlockLength, NULL);
+   // Construct null-terminated array of "features" describing our capabilities
+   // to lv2, and validate
+   AddFeature(LV2_UI__noUserResize, nullptr);
+   AddFeature(LV2_UI__fixedSize, nullptr);
+   AddFeature(LV2_UI__idleInterface, nullptr);
+   AddFeature(LV2_UI__makeResident, nullptr);
+   AddFeature(LV2_BUF_SIZE__boundedBlockLength, nullptr);
+   AddFeature(LV2_BUF_SIZE__fixedBlockLength, nullptr);
    AddFeature(LV2_OPTIONS__options, mOptions.data());
    AddFeature(LV2_URI_MAP_URI, &mUriMapFeature);
    AddFeature(LV2_URID__map, &mURIDMapFeature);
@@ -549,17 +551,15 @@ bool LV2Effect::InitializePlugin()
    AddFeature(LV2_EXTERNAL_UI__Host, &mExternalUIHost);
    AddFeature(LV2_EXTERNAL_UI_DEPRECATED_URI, &mExternalUIHost);
    // Some plugins specify this as a feature
-   AddFeature(LV2_EXTERNAL_UI__Widget, NULL);
-
-   mInstanceAccessFeature = AddFeature(LV2_INSTANCE_ACCESS_URI, NULL);
-   mParentFeature = AddFeature(LV2_UI__parent, NULL);
-
-   AddFeature(NULL, NULL);
-
+   AddFeature(LV2_EXTERNAL_UI__Widget, nullptr);
+   // Two features must be filled in later
+   mInstanceAccessFeature = mFeatures.size();
+   AddFeature(LV2_INSTANCE_ACCESS_URI, nullptr);
+   mParentFeature = mFeatures.size();
+   AddFeature(LV2_UI__parent, nullptr);
+   AddFeature(nullptr, nullptr);
    if (!ValidateFeatures(lilv_plugin_get_uri(mPlug)))
-   {
       return false;
-   }
 
    auto minLength = lilv_world_get(gWorld, lilv_plugin_get_uri(mPlug), node_MinBlockLength, NULL);
    if (minLength)
@@ -1722,82 +1722,51 @@ size_t LV2Effect::AddOption(LV2_URID key, uint32_t size, LV2_URID type, const vo
    return ndx;
 }
 
-LV2_Feature *LV2Effect::AddFeature(const char *uri, void *data)
+void LV2Effect::AddFeature(const char *uri, const void *data)
 {
-   size_t ndx = mFeatures.size();
-   mFeatures.resize(1 + ndx);
-
-   if (uri)
-   {
-      mFeatures[ndx].reset(safenew LV2_Feature);
-      mFeatures[ndx]->URI = uri;
-      mFeatures[ndx]->data = data;
-   }
-
-   return mFeatures[ndx].get();
+   mFeatures.emplace_back(uri
+      ? std::make_unique<LV2_Feature>(
+         // This casting to const is innocent
+         // We pass our "virtual function tables" or array of options, which the
+         // library presumably will not change
+         LV2_Feature{ uri, const_cast<void*>(data) })
+      : nullptr);
 }
 
 bool LV2Effect::ValidateFeatures(const LilvNode *subject)
 {
-   if (CheckFeatures(subject, LV2Symbols::node_RequiredFeature, true))
-   {
-      return CheckFeatures(subject, LV2Symbols::node_OptionalFeature, false);
-   }
-
-   return false;
+   return CheckFeatures(subject, true) && CheckFeatures(subject, false);
 }
 
-bool LV2Effect::CheckFeatures(const LilvNode *subject, const LilvNode *predicate, bool required)
+bool LV2Effect::CheckFeatures(const LilvNode *subject, bool required)
 {
+   using namespace LV2Symbols;
    bool supported = true;
-
-   LilvNodes *nodes =
-      lilv_world_find_nodes(LV2Symbols::gWorld, subject, predicate, nullptr);
-   if (nodes)
-   {
-      LILV_FOREACH(nodes, i, nodes)
-      {
-         const LilvNode *node = lilv_nodes_get(nodes, i);
-         const char *uri = lilv_node_as_string(node);
-
+   auto predicate = required ? node_RequiredFeature : node_OptionalFeature;
+   auto nodes = lilv_world_find_nodes(gWorld, subject, predicate, nullptr);
+   if (nodes) {
+      LILV_FOREACH(nodes, i, nodes) {
+         const auto node = lilv_nodes_get(nodes, i);
+         const auto uri = lilv_node_as_string(node);
          if ((strcmp(uri, LV2_UI__noUserResize) == 0) ||
              (strcmp(uri, LV2_UI__fixedSize) == 0))
-         {
             mNoResize = true;
-         }
-         else if (strcmp(uri, LV2_WORKER__schedule) == 0)
-         {
+         else if (strcmp(uri, LV2_WORKER__schedule) == 0) {
             /* Supported but handled in LV2Wrapper */
          }
-         else
-         {
-            supported = false;
-
-            for (auto & feature : mFeatures)
-            {
-               if (feature && strcmp(feature->URI, uri) == 0)
-               {
-                  supported = true;
-                  break;
-               }
-            }
-
-            if (!supported)
-            {
-               if (required)
-               {
-                  wxLogError(wxT("%s requires unsupported feature %s"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
-                  break;
-               }
-               supported = true;
+         else if (required) {
+            const auto end = mFeatures.end();
+            supported = (end != std::find_if(mFeatures.begin(), end,
+               [&](auto &pFeature){ return strcmp(pFeature->URI, uri) == 0; }));
+            if (!supported) {
+               wxLogError(wxT("%s requires unsupported feature %s"),
+                  lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
+               break;
             }
          }
       }
-
       lilv_nodes_free(nodes);
    }
-
-
    return supported;
 }
 
@@ -2005,7 +1974,7 @@ bool LV2Effect::BuildFancy()
    else
    {
       containerType = nativeType;
-      mParentFeature->data = mParent->GetHandle();
+      mFeatures[mParentFeature]->data = mParent->GetHandle();
 
 #if defined(__WXGTK__)
       // Make sure the parent has a window
@@ -2017,7 +1986,7 @@ bool LV2Effect::BuildFancy()
    }
 
    LilvInstance *instance = mMaster->GetInstance();
-   mInstanceAccessFeature->data = lilv_instance_get_handle(instance);
+   mFeatures[mInstanceAccessFeature]->data = lilv_instance_get_handle(instance);
    mExtensionDataFeature.data_access = lilv_instance_get_descriptor(instance)->extension_data;
 
    // Set before creating the UI instance so the initial size (if any) can be captured
@@ -2047,15 +2016,12 @@ bool LV2Effect::BuildFancy()
    char *bundlePath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui)), NULL);
    char *binaryPath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), NULL);
 
-   mSuilInstance = suil_instance_new(mSuilHost,
-                                     this,
-                                     containerType,
-                                     lilv_node_as_uri(lilv_plugin_get_uri(mPlug)),
-                                     lilv_node_as_uri(lilv_ui_get_uri(ui)),
-                                     lilv_node_as_uri(uiType),
-                                     bundlePath,
-                                     binaryPath,
-                                     reinterpret_cast<const LV2_Feature * const *>(mFeatures.data()));
+   mSuilInstance = suil_instance_new(mSuilHost, this, containerType,
+      lilv_node_as_uri(lilv_plugin_get_uri(mPlug)),
+      lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
+      bundlePath, binaryPath,
+      // harmless cast of an array of unique_ptr to array of pointers
+      reinterpret_cast<const LV2_Feature * const *>(mFeatures.data()));
 
    lilv_free(binaryPath);
    lilv_free(bundlePath);
@@ -3132,15 +3098,19 @@ LV2Wrapper::~LV2Wrapper()
 }
 
 LilvInstance *LV2Wrapper::Instantiate(const LilvPlugin *plugin,
-                                      double sampleRate,
-                                      std::vector<std::unique_ptr<LV2_Feature>> & features)
+   double sampleRate, std::vector<std::unique_ptr<LV2_Feature>> & features)
 {
    if (mEffect.mWantsWorkerInterface) {
+      // Append a feature to the array, only for the plugin instantiation
+      // (features are also used elsewhere to instantiate the UI in the
+      // suil_* functions)
+      // It informs the plugin how to send work to another thread
       // Remove terminator
       features.pop_back();
       mWorkerSchedule.handle = this;
       mWorkerSchedule.schedule_work = LV2Wrapper::schedule_work;
       mEffect.AddFeature(LV2_WORKER__schedule, &mWorkerSchedule);
+      // Re-add terminator
       mEffect.AddFeature(nullptr, nullptr);
    }
 
@@ -3155,9 +3125,9 @@ LilvInstance *LV2Wrapper::Instantiate(const LilvPlugin *plugin,
    lilv_free(libPath);
 #endif
 
-   mInstance = lilv_plugin_instantiate(plugin,
-                                       sampleRate,
-                                       reinterpret_cast<LV2_Feature **>(features.data()));
+   mInstance = lilv_plugin_instantiate(plugin, sampleRate,
+      // harmless cast of an array of unique_ptr to array of pointers
+      reinterpret_cast<LV2_Feature **>(features.data()));
 
 #if defined(__WXMSW__)
    SetDllDirectory(NULL);

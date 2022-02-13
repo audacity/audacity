@@ -377,9 +377,18 @@ private:
    bool ValidateOptions(const LilvNode *subject);
    bool CheckOptions(const LilvNode *subject, const LilvNode *predicate, bool required);
 
-   LV2_Feature *AddFeature(const char *uri, void *data);
+   void AddFeature(const char *uri, const void *data);
+   /*!
+    @param subject URI of the host or of the UI identifies a resource in lv2
+    @return whether all required features of subject are supported
+    */
    bool ValidateFeatures(const LilvNode *subject);
-   bool CheckFeatures(const LilvNode *subject, const LilvNode *predicate, bool required);
+   /*!
+    @param subject URI of the host or of the UI identifies a resource in lv2
+    @param required whether to check required or optional features of subject
+    @return true only if `!required` or else all checked features are supported
+    */
+   bool CheckFeatures(const LilvNode *subject, bool required);
 
    bool BuildFancy();
    bool BuildPlain(EffectSettingsAccess &access);
@@ -518,10 +527,14 @@ private:
    bool mSupportsNominalBlockLength;
    bool mSupportsSampleRate;
 
+   //! Extra indirection to the structs satisfies the interfaces
+   //! of suil_instance_new and lilv_plugin_instantiate
    std::vector<std::unique_ptr<LV2_Feature>> mFeatures;
 
-   LV2_Feature *mInstanceAccessFeature;
-   LV2_Feature *mParentFeature;
+   //! Index into m_features
+   size_t mInstanceAccessFeature{};
+   //! Index into m_features
+   size_t mParentFeature{};
    LV2_Feature *mWorkerScheduleFeature;
 
    bool mFreewheeling;
