@@ -1,41 +1,22 @@
-/**********************************************************************
+/*!********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  LoadLV2.h
+  @file LV2Symbols.h
 
-  Audacity(R) is copyright (c) 1999-2008 Audacity Team.
-  License: GPL v2 or later.  See License.txt.
+  @brief Declare URI identifiers used in calls to the lv2 library and a mapping
+  of them to integers
+
+  Paul Licameli split from LoadLV2.h
 
 *********************************************************************/
 
-#ifndef LV2EFFECTSMODULE_H
-#define LV2EFFECTSMODULE_H
+#ifndef LV2SYMBOLS_H
+#define LV2SYMBOLS_H
 
-#include <memory>
-
+#include <vector>
 #include "lilv/lilv.h"
-
-#include "lv2/core/lv2.h"
-#include "lv2/buf-size/buf-size.h"
-#include "lv2/data-access/data-access.h"
-#include "lv2/event/event.h"
-#include "lv2/instance-access/instance-access.h"
-#include "lv2/midi/midi.h"
-#include "lv2/parameters/parameters.h"
-#include "lv2/port-groups/port-groups.h"
-#include "lv2/port-props/port-props.h"
-#include "lv2/presets/presets.h"
-#include "lv2/resize-port/resize-port.h"
-#include "lv2/time/time.h"
-#include "lv2/uri-map/uri-map.h"
-#include "lv2/units/units.h"
-
-#include "PluginProvider.h"
-#include "EffectInterface.h"
-#include "PluginInterface.h"
-
-#include "lv2_external_ui.h"
+#include "MemoryX.h"
 
 #if !defined(LV2_CORE__MIDIPlugin)
 #define LV2_CORE__MIDIPlugin   LV2_CORE_PREFIX "MIDIPlugin"
@@ -154,53 +135,34 @@
    URID( Speed,                  LV2_TIME__speed                  ) \
    URID( Frame,                  LV2_TIME__frame                  )
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// LV2EffectsModule
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class LV2EffectsModule final : public PluginProvider
-{
-public:
-   LV2EffectsModule();
-   virtual ~LV2EffectsModule();
-
-   // ComponentInterface implementation
-
-   PluginPath GetPath() const override;
-   ComponentInterfaceSymbol GetSymbol() const override;
-   VendorSymbol GetVendor() const override;
-   wxString GetVersion() const override;
-   TranslatableString GetDescription() const override;
-
-   // PluginProvider implementation
-
-   bool Initialize() override;
-   void Terminate() override;
-   EffectFamilySymbol GetOptionalFamilySymbol() override;
-
-   const FileExtensions &GetFileExtensions() override;
-   FilePath InstallPath() override { return {}; }
-
-   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
-   unsigned DiscoverPluginsAtPath(
-      const PluginPath & path, TranslatableString &errMsg,
-      const RegistrationCallback &callback)
-         override;
-
-   bool IsPluginValid(const PluginPath & path, bool bFast) override;
-
-   std::unique_ptr<ComponentInterface>
-      LoadPlugin(const PluginPath & path) override;
-
-   // LV2EffectModule implementation
-
-private:
-   const LilvPlugin *GetPlugin(const PluginPath & path);
-};
+namespace LV2Symbols {
 
 extern LilvWorld *gWorld;
+
+using URIDMap = std::vector<MallocString<>>;
+
+//! Declare the global map of positive integers to URIs
+extern URIDMap gURIDMap;
+
+//! Do reverse lookup in a map of URIs to positive integers,
+//! returning 0 if not found and `!add`
+LV2_URID Lookup_URI(URIDMap & map, const char *uri, bool add = true);
+
+// Declare the static LILV URI nodes
+#undef NODE
+#define NODE(n, u) extern LilvNode *node_##n;
+NODELIST
+
+// Declare the static URIDs
+#undef URID
+#define URID(n, u) extern LV2_URID urid_##n;
+URIDLIST
+
+//! Call before any use of the constants defined in this file
+bool InitializeGWorld();
+//! Call at end of session
+void FinalizeGWorld();
+
+}
 
 #endif

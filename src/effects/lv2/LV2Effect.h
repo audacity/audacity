@@ -28,16 +28,10 @@ class wxArrayString;
 #include "lv2/atom/forge.h"
 #include "lv2/data-access/data-access.h"
 #include "lv2/log/log.h"
-#include "lv2/midi/midi.h"
 #include "lv2/options/options.h"
 #include "lv2/state/state.h"
-#include "lv2/time/time.h"
 #include "lv2/uri-map/uri-map.h"
-#include "lv2/urid/urid.h"
 #include "lv2/worker/worker.h"
-#include "lv2/ui/ui.h"
-
-#include <lilv/lilv.h>
 #include <suil/suil.h>
 
 #include "../../ShuttleGui.h"
@@ -46,7 +40,6 @@ class wxArrayString;
 #include "LoadLV2.h"
 #include "NativeWindow.h"
 
-#include "lv2_external_ui.h"
 #include "zix/ring.h"
 
 #include <unordered_map>
@@ -253,8 +246,6 @@ using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
 class LV2EffectSettingsDialog;
 class LV2Wrapper;
 
-using URIDMap = std::vector<MallocString<>>;
-
 class LV2Effect final : public wxEvtHandler,
                         public EffectUIClientInterface
 {
@@ -367,7 +358,6 @@ private:
                              const char *uri);
    static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
    LV2_URID URID_Map(const char *uri);
-   static LV2_URID Lookup_URI(URIDMap & map, const char *uri, bool add = true);
 
    static const char *urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid);
    const char *URID_Unmap(LV2_URID urid);
@@ -446,19 +436,8 @@ private:
 
 private:
  
-   // Declare the global and local URI maps
-   static URIDMap gURIDMap;
-   URIDMap mURIDMap;
-
-   // Declare the static LILV URI nodes
-#undef NODE
-#define NODE(n, u) static LilvNode *node_##n;
-   NODELIST
-
-   // Declare the static URIDs
-#undef URID
-#define URID(n, u) static LV2_URID urid_##n;
-   URIDLIST
+   // Declare local URI map
+   LV2Symbols::URIDMap mURIDMap;
 
    const LilvPlugin *mPlug;
 
