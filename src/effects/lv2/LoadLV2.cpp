@@ -225,7 +225,6 @@ PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface &)
           lilv_node_equals(cls, node_MathFunctions))
       {
          wxLogInfo(wxT("LV2 plugin '%s' has unsupported type '%s'"), lilv_node_as_string(lilv_plugin_get_uri(plug)), lilv_node_as_string(cls));
-         printf("LV2 plugin '%s' has unsupported type '%s'\n", lilv_node_as_string(lilv_plugin_get_uri(plug)), lilv_node_as_string(cls));
          continue;
       }
 
@@ -233,7 +232,6 @@ PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface &)
       if (!name || !lilv_plugin_get_port_by_index(plug, 0))
       {
          wxLogInfo(wxT("LV2 plugin '%s' is invalid"), lilv_node_as_string(lilv_plugin_get_uri(plug)));
-         printf("LV2 plugin '%s' is invalid\n", lilv_node_as_string(lilv_plugin_get_uri(plug)));
          continue;
       }
 

@@ -1887,7 +1887,6 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, const LilvNode *predicate
                if (required)
                {
                   wxLogError(wxT("%s requires unsupported feature %s"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
-                  printf(_("%s requires unsupported feature %s\n"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
                   break;
                }
                supported = true;
@@ -1952,7 +1951,6 @@ bool LV2Effect::CheckOptions(const LilvNode *subject, const LilvNode *predicate,
                if (required)
                {
                   wxLogError(wxT("%s requires unsupported option %s"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
-                  printf(_("%s requires unsupported option %s\n"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
                   break;
                }
                supported = true;
