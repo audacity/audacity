@@ -35,7 +35,7 @@ void Biquad::Reset()
    fPrevPrevOut = 0;
 }
 
-void Biquad::Process(float* pfIn, float* pfOut, int iNumSamples)
+void Biquad::Process(const float* pfIn, float* pfOut, int iNumSamples)
 {
    for (int i = 0; i < iNumSamples; i++)
       *pfOut++ = ProcessOne(*pfIn++);

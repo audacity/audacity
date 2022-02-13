@@ -147,7 +147,8 @@ bool EffectWahwah::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
    return true;
 }
 
-size_t EffectWahwah::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectWahwah::ProcessBlock(
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
 }
@@ -172,7 +173,7 @@ bool EffectWahwah::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool EffectWahwah::RealtimeFinalize()
+bool EffectWahwah::RealtimeFinalize() noexcept
 {
    mSlaves.clear();
 
@@ -180,9 +181,7 @@ bool EffectWahwah::RealtimeFinalize()
 }
 
 size_t EffectWahwah::RealtimeProcess(int group,
-                                          float **inbuf,
-                                          float **outbuf,
-                                          size_t numSamples)
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
 
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
@@ -361,9 +360,10 @@ void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate)
    data.outgain = DB_TO_LINEAR(mOutGain);
 }
 
-size_t EffectWahwah::InstanceProcess(EffectWahwahState & data, float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectWahwah::InstanceProcess(EffectWahwahState & data,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ibuf = inBlock[0];
+   const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
    double frequency, omega, sn, cs, alpha;
    double in, out;

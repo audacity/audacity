@@ -62,7 +62,6 @@ public:
    EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;
-   bool IsLegacy() override;
    bool SupportsRealtime() override;
    bool SupportsAutomation() override;
 
@@ -93,18 +92,17 @@ public:
 
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    bool ProcessFinalize() override;
-   size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
+   size_t ProcessBlock( const float *const *inBlock, float *const *outBlock,
+      size_t blockLen) override;
 
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize() override;
+   bool RealtimeFinalize() noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
    bool RealtimeProcessStart() override;
-   size_t RealtimeProcess(int group,
-                                       float **inbuf,
-                                       float **outbuf,
-                                       size_t numSamples) override;
+   size_t RealtimeProcess(int group, const float *const *inbuf,
+      float *const *outbuf, size_t numSamples) override;
    bool RealtimeProcessEnd() noexcept override;
 
    int ShowClientInterface(

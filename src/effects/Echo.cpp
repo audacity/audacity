@@ -124,9 +124,10 @@ bool EffectEcho::ProcessFinalize()
    return true;
 }
 
-size_t EffectEcho::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectEcho::ProcessBlock(
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ibuf = inBlock[0];
+   const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
    for (decltype(blockLen) i = 0; i < blockLen; i++, histPos++)

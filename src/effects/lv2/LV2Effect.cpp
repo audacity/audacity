@@ -48,6 +48,7 @@
 #include <wx/scrolwin.h>
 
 #include "AudacityException.h"
+#include "ConfigInterface.h"
 #include "../../EffectHostInterface.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
@@ -499,11 +500,6 @@ bool LV2Effect::IsInteractive()
 }
 
 bool LV2Effect::IsDefault()
-{
-   return false;
-}
-
-bool LV2Effect::IsLegacy()
 {
    return false;
 }
@@ -1081,7 +1077,8 @@ bool LV2Effect::ProcessFinalize()
    return true;
 }
 
-size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
+size_t LV2Effect::ProcessBlock(
+   const float *const *inbuf, float *const *outbuf, size_t size)
 {
    wxASSERT(size <= ( size_t) mBlockSize);
 
@@ -1092,8 +1089,8 @@ size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
    for (auto & port : mAudioPorts)
    {
       lilv_instance_connect_port(instance,
-                                 port->mIndex,
-                                 (port->mIsInput ? inbuf[i++] : outbuf[o++]));
+         port->mIndex,
+         const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
    }
 
    // Transfer incoming events from the ring buffer to the event buffer for each
@@ -1194,8 +1191,9 @@ bool LV2Effect::RealtimeInitialize()
    return true;
 }
 
-bool LV2Effect::RealtimeFinalize()
+bool LV2Effect::RealtimeFinalize() noexcept
 {
+return GuardedCall<bool>([&]{
    for (auto & slave : mSlaves)
    {
       FreeInstance(slave);
@@ -1215,6 +1213,7 @@ bool LV2Effect::RealtimeFinalize()
 
    mMasterIn.reset();
    return true;
+});
 }
 
 bool LV2Effect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
@@ -1338,7 +1337,8 @@ bool LV2Effect::RealtimeProcessStart()
    return true;
 }
 
-size_t LV2Effect::RealtimeProcess(int group, float **inbuf, float **outbuf, size_t numSamples)
+size_t LV2Effect::RealtimeProcess(int group,
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(group >= 0 && group < (int) mSlaves.size());
    wxASSERT(numSamples <= (size_t) mBlockSize);
@@ -1364,8 +1364,8 @@ size_t LV2Effect::RealtimeProcess(int group, float **inbuf, float **outbuf, size
       }
 
       lilv_instance_connect_port(instance,
-                                 port->mIndex,
-                                 (port->mIsInput ? inbuf[i++] : outbuf[o++]));
+         port->mIndex,
+         const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
    }
 
    mNumSamples = wxMax(numSamples, mNumSamples);

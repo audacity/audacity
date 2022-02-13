@@ -55,11 +55,6 @@ static const int kPlayID = 20102;
 static const int kRewindID = 20103;
 static const int kFFwdID = 20104;
 
-const wxString Effect::kUserPresetIdent = wxT("User Preset:");
-const wxString Effect::kFactoryPresetIdent = wxT("Factory Preset:");
-const wxString Effect::kCurrentSettingsIdent = wxT("<Current Settings>");
-const wxString Effect::kFactoryDefaultsIdent = wxT("<Factory Defaults>");
-
 using t2bHash = std::unordered_map< void*, bool >;
 
 Effect::Effect()
@@ -194,16 +189,6 @@ bool Effect::IsDefault()
    if (mClient)
    {
       return mClient->IsDefault();
-   }
-
-   return true;
-}
-
-bool Effect::IsLegacy()
-{
-   if (mClient)
-   {
-      return false;
    }
 
    return true;
@@ -353,7 +338,8 @@ bool Effect::ProcessFinalize()
    return true;
 }
 
-size_t Effect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t Effect::ProcessBlock(
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    if (mClient)
    {
@@ -386,7 +372,7 @@ bool Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
    return true;
 }
 
-bool Effect::RealtimeFinalize()
+bool Effect::RealtimeFinalize() noexcept
 {
    if (mClient)
    {
@@ -423,9 +409,7 @@ bool Effect::RealtimeProcessStart()
 }
 
 size_t Effect::RealtimeProcess(int group,
-                                    float **inbuf,
-                                    float **outbuf,
-                                    size_t numSamples)
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    if (mClient)
    {

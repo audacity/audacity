@@ -54,9 +54,6 @@ bool RealtimeEffectManager::IsActive() const noexcept
 
 void RealtimeEffectManager::Initialize(double rate)
 {
-   // The audio thread should not be running yet, but protect anyway
-   SuspensionScope scope{ &mProject };
-
    // Remember the rate
    mRate = rate;
 
@@ -73,6 +70,9 @@ void RealtimeEffectManager::Initialize(double rate)
    VisitGroup(nullptr, [rate](RealtimeEffectState &state, bool){
       state.Initialize(rate);
    });
+
+   // Leave suspended state
+   Resume();
 }
 
 void RealtimeEffectManager::AddTrack(Track *track, unsigned chans, float rate)
@@ -89,12 +89,12 @@ void RealtimeEffectManager::AddTrack(Track *track, unsigned chans, float rate)
    );
 }
 
-void RealtimeEffectManager::Finalize()
+void RealtimeEffectManager::Finalize() noexcept
 {
-   // Make sure nothing is going on
+   // Reenter suspended state
    Suspend();
 
-   // It is now safe to clean up
+   // Assume it is now safe to clean up
    mLatency = std::chrono::microseconds(0);
 
    VisitAll([](auto &state, bool){ state.Finalize(); });
@@ -167,8 +167,8 @@ void RealtimeEffectManager::ProcessStart()
 // This will be called in a different thread than the main GUI thread.
 //
 size_t RealtimeEffectManager::Process(Track *track,
-                                      float **buffers,
-                                      size_t numSamples)
+   float *const *buffers, float *const *scratch,
+   size_t numSamples)
 {
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
@@ -185,15 +185,17 @@ size_t RealtimeEffectManager::Process(Track *track,
    auto start = std::chrono::steady_clock::now();
 
    // Allocate the in and out buffer arrays
-   float **ibuf = (float **) alloca(chans * sizeof(float *));
-   float **obuf = (float **) alloca(chans * sizeof(float *));
+   const auto ibuf =
+      static_cast<float **>(alloca(chans * sizeof(float *)));
+   const auto obuf =
+      static_cast<float **>(alloca(chans * sizeof(float *)));
 
    // And populate the input with the buffers we've been given while allocating
    // NEW output buffers
    for (unsigned int i = 0; i < chans; i++)
    {
       ibuf[i] = buffers[i];
-      obuf[i] = (float *) alloca(numSamples * sizeof(float));
+      obuf[i] = scratch[i];
    }
 
    // Now call each effect in the chain while swapping buffer pointers to feed the
@@ -206,7 +208,7 @@ size_t RealtimeEffectManager::Process(Track *track,
          if (bypassed)
             return;
 
-         state.Process(track, chans, ibuf, obuf, numSamples);
+         state.Process(track, chans, ibuf, obuf, scratch[chans], numSamples);
          for (auto i = 0; i < chans; ++i)
             std::swap(ibuf[i], obuf[i]);
          called++;
@@ -271,14 +273,22 @@ void RealtimeEffectManager::VisitAll(StateVisitor func)
 }
 
 RealtimeEffectState *
-RealtimeEffectManager::AddState(Track *pTrack, const PluginID & id)
+RealtimeEffectManager::AddState(
+   RealtimeEffects::InitializationScope *pScope,
+   Track *pTrack, const PluginID & id)
 {
    auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
    RealtimeEffectList &states = pLeader
       ? RealtimeEffectList::Get(*pLeader)
       : RealtimeEffectList::Get(mProject);
 
-   SuspensionScope scope{ &mProject };
+   std::optional<RealtimeEffects::SuspensionScope> myScope;
+   if (mActive) {
+      if (pScope)
+         myScope.emplace(*pScope, mProject.weak_from_this());
+      else
+         return nullptr;
+   }
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 
@@ -307,9 +317,22 @@ RealtimeEffectManager::AddState(Track *pTrack, const PluginID & id)
    return &state;
 }
 
-void RealtimeEffectManager::RemoveState(RealtimeEffectList &states, RealtimeEffectState &state)
+void RealtimeEffectManager::RemoveState(
+   RealtimeEffects::InitializationScope *pScope,
+   Track *pTrack, RealtimeEffectState &state)
 {
-   SuspensionScope scope{ &mProject };
+   auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
+   RealtimeEffectList &states = pLeader
+      ? RealtimeEffectList::Get(*pLeader)
+      : RealtimeEffectList::Get(mProject);
+
+   std::optional<RealtimeEffects::SuspensionScope> myScope;
+   if (mActive) {
+      if (pScope)
+         myScope.emplace(*pScope, mProject.weak_from_this());
+      else
+         return;
+   }
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 

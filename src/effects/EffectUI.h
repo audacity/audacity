@@ -33,7 +33,6 @@ struct AudioIOEvent;
 
 class AudacityCommand;
 class AudacityProject;
-class Effect;
 class RealtimeEffectState;
 
 class wxCheckBox;
@@ -45,7 +44,7 @@ public:
    // constructors and destructors
    EffectUIHost(wxWindow *parent,
                 AudacityProject &project,
-                Effect &effect,
+                EffectUIHostInterface &effect,
                 EffectUIClientInterface &client);
    virtual ~EffectUIHost();
 
@@ -94,9 +93,9 @@ private:
 private:
    Observer::Subscription mSubscription;
 
-   AudacityProject *mProject;
+   AudacityProject &mProject;
    wxWindow *mParent;
-   Effect &mEffect;
+   EffectUIHostInterface &mEffectUIHost;
    EffectUIClientInterface &mClient;
    RealtimeEffectState *mpState{ nullptr };
 
@@ -132,7 +131,7 @@ private:
    double mPlayPos;
 
    bool mDismissed{};
-   std::optional<RealtimeEffectManager::SuspensionScope> mSuspensionScope;
+   std::optional<RealtimeEffects::SuspensionScope> mSuspensionScope;
 
 #if wxDEBUG_LEVEL
    // Used only in an assertion
@@ -147,7 +146,7 @@ class CommandContext;
 namespace  EffectUI {
 
    AUDACITY_DLL_API
-   wxDialog *DialogFactory( wxWindow &parent, EffectHostInterface &host,
+   wxDialog *DialogFactory( wxWindow &parent, EffectUIHostInterface &host,
       EffectUIClientInterface &client);
 
    /** Run an effect given the plugin ID */

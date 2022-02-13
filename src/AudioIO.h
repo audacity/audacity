@@ -24,6 +24,7 @@
 #include <utility>
 #include <wx/atomic.h> // member variable
 
+#include "ModuleInterface.h" // for PluginID
 #include "Observer.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
@@ -33,6 +34,7 @@ class AudioIOBase;
 class AudioIO;
 class RingBuffer;
 class Mixer;
+class RealtimeEffectState;
 class Resample;
 class AudioThread;
 
@@ -42,6 +44,7 @@ class PlayableTrack;
 using PlayableTrackConstArray =
    std::vector < std::shared_ptr < const PlayableTrack > >;
 
+class Track;
 class WaveTrack;
 using WaveTrackArray = std::vector < std::shared_ptr < WaveTrack > >;
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
@@ -49,6 +52,8 @@ using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 struct PaStreamCallbackTimeInfo;
 typedef unsigned long PaStreamCallbackFlags;
 typedef int PaError;
+
+namespace RealtimeEffects { class SuspensionScope; }
 
 bool ValidateDeviceNames();
 
@@ -257,16 +262,21 @@ public:
    ArrayOf<std::unique_ptr<Resample>> mResample;
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
    WaveTrackArray      mCaptureTracks;
+   /*! Read by worker threads but unchanging during playback */
    ArrayOf<std::unique_ptr<RingBuffer>> mPlaybackBuffers;
    WaveTrackArray      mPlaybackTracks;
+   // Temporary buffers, each as large as the playback buffers
+   std::vector<SampleBuffer> mScratchBuffers;
+   std::vector<float *> mScratchPointers; //!< pointing into mScratchBuffers
 
    std::vector<std::unique_ptr<Mixer>> mPlaybackMixers;
 
-   float               mMixerOutputVol { 1.0 };
+   std::atomic<float>  mMixerOutputVol{ 1.0 };
    static int          mNextStreamToken;
    double              mFactor;
    unsigned long       mMaxFramesOutput; // The actual number of frames output.
-   bool                mbMicroFades; 
+   /*! Read by a worker thread but unchanging during playback */
+   bool                mbMicroFades;
 
    double              mSeek;
    PlaybackPolicy::Duration mPlaybackRingBufferSecs;
@@ -278,30 +288,40 @@ public:
    size_t              mPlaybackQueueMinimum;
 
    double              mMinCaptureSecsToCopy;
+   /*! Read by a worker thread but unchanging during playback */
    bool                mSoftwarePlaythrough;
    /// True if Sound Activated Recording is enabled
+   /*! Read by a worker thread but unchanging during playback */
    bool                mPauseRec;
    float               mSilenceLevel;
+   /*! Read by a worker thread but unchanging during playback */
    unsigned int        mNumCaptureChannels;
+   /*! Read by a worker thread but unchanging during playback */
    unsigned int        mNumPlaybackChannels;
    sampleFormat        mCaptureFormat;
    unsigned long long  mLostSamples{ 0 };
-   volatile bool       mAudioThreadShouldCallTrackBufferExchangeOnce;
-   volatile bool       mAudioThreadTrackBufferExchangeLoopRunning;
-   volatile bool       mAudioThreadTrackBufferExchangeLoopActive;
+   std::atomic<bool>   mAudioThreadShouldCallTrackBufferExchangeOnce;
+   std::atomic<bool>   mAudioThreadTrackBufferExchangeLoopRunning;
+   std::atomic<bool>   mAudioThreadTrackBufferExchangeLoopActive;
 
    std::atomic<bool>   mForceFadeOut{ false };
 
    wxLongLong          mLastPlaybackTimeMillis;
 
-   volatile double     mLastRecordingOffset;
+   //! Not (yet) used; should perhaps be atomic when it is
+   double              mLastRecordingOffset;
    PaError             mLastPaError;
 
 protected:
 
-   bool                mUpdateMeters;
-   volatile bool       mUpdatingMeters;
+   float GetMixerOutputVol() {
+      return mMixerOutputVol.load(std::memory_order_relaxed); }
+   void SetMixerOutputVol(float value) {
+      mMixerOutputVol.store(value, std::memory_order_relaxed); }
 
+   /*! Pointer is read by a worker thread but unchanging during playback.
+    (Whether its overriding methods are race-free is not for AudioIO to ensure.)
+    */
    std::weak_ptr< AudioIOListener > mListener;
 
    friend class AudioThread;
@@ -327,6 +347,7 @@ protected:
       { if (mRecordingException) wxAtomicDec( mRecordingException ); }
 
    std::vector< std::pair<double, double> > mLostCaptureIntervals;
+   /*! Read by a worker thread but unchanging during playback */
    bool mDetectDropouts{ true };
 
 public:
@@ -339,11 +360,15 @@ public:
 
    // Whether to check the error code passed to audacityAudioCallback to
    // detect more dropouts
-   bool mDetectUpstreamDropouts{ true };
+   std::atomic<bool> mDetectUpstreamDropouts{ true };
 
 protected:
    RecordingSchedule mRecordingSchedule{};
    PlaybackSchedule mPlaybackSchedule;
+
+   struct TransportState;
+   //! Holds some state for duration of playback or recording
+   std::unique_ptr<TransportState> mpTransportState;
 
 private:
    /*!
@@ -367,6 +392,16 @@ class AUDACITY_DLL_API AudioIO final
 public:
    // This might return null during application startup or shutdown
    static AudioIO *Get();
+
+   //! Forwards to RealtimeEffectManager::AddState with proper init scope
+   RealtimeEffectState *AddState(AudacityProject &project,
+      Track *pTrack, const PluginID & id);
+
+   //! Forwards to RealtimeEffectManager::RemoveState with proper init scope
+   void RemoveState(AudacityProject &project,
+      Track *pTrack, RealtimeEffectState &state);
+
+   RealtimeEffects::SuspensionScope SuspensionScope();
 
    /** \brief Start up Portaudio for capture and recording as needed for
     * input monitoring and software playthrough only
@@ -530,6 +565,7 @@ private:
 
    //! First part of TrackBufferExchange
    void FillPlayBuffers();
+   void TransformPlayBuffers();
 
    //! Second part of TrackBufferExchange
    void DrainRecordBuffers();

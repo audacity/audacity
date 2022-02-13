@@ -21,6 +21,7 @@ set( SOURCES
    GlobalVariable.h
    MemoryX.cpp
    MemoryX.h
+   MessageBuffer.h
    ModuleConstants.cpp
    ModuleConstants.h
    MemoryStream.cpp

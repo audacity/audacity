@@ -25,6 +25,7 @@ effects from this one class.
 
 #include "LadspaEffect.h"       // This class's header file
 #include "SampleCount.h"
+#include "ConfigInterface.h"
 
 #include <float.h>
 #include <thread>
@@ -55,6 +56,7 @@ effects from this one class.
 #include <wx/scrolwin.h>
 #include <wx/version.h>
 
+#include "AudacityException.h"
 #include "../../EffectHostInterface.h"
 #include "FileNames.h"
 #include "../../ShuttleGui.h"
@@ -707,11 +709,6 @@ bool LadspaEffect::IsDefault()
    return false;
 }
 
-bool LadspaEffect::IsLegacy()
-{
-   return false;
-}
-
 bool LadspaEffect::SupportsRealtime()
 {
    return GetType() != EffectTypeGenerate;
@@ -976,11 +973,13 @@ bool LadspaEffect::ProcessFinalize()
    return true;
 }
 
-size_t LadspaEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t LadspaEffect::ProcessBlock(
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (int i = 0; i < (int)mAudioIns; i++)
    {
-      mData->connect_port(mMaster, mInputPorts[i], inBlock[i]);
+      mData->connect_port(mMaster, mInputPorts[i],
+         const_cast<float*>(inBlock[i]));
    }
 
    for (int i = 0; i < (int)mAudioOuts; i++)
@@ -1013,8 +1012,9 @@ bool LadspaEffect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool LadspaEffect::RealtimeFinalize()
+bool LadspaEffect::RealtimeFinalize() noexcept
 {
+return GuardedCall<bool>([&]{
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
    {
       FreeInstance(mSlaves[i]);
@@ -1022,6 +1022,7 @@ bool LadspaEffect::RealtimeFinalize()
    mSlaves.clear();
 
    return true;
+});
 }
 
 bool LadspaEffect::RealtimeSuspend()
@@ -1040,13 +1041,12 @@ bool LadspaEffect::RealtimeProcessStart()
 }
 
 size_t LadspaEffect::RealtimeProcess(int group,
-                                          float **inbuf,
-                                          float **outbuf,
-                                          size_t numSamples)
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    for (int i = 0; i < (int)mAudioIns; i++)
    {
-      mData->connect_port(mSlaves[group], mInputPorts[i], inbuf[i]);
+      mData->connect_port(mSlaves[group], mInputPorts[i],
+         const_cast<float*>(inbuf[i]));
    }
 
    for (int i = 0; i < (int)mAudioOuts; i++)

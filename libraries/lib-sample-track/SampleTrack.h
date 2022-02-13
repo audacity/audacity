@@ -27,6 +27,7 @@ public:
 
    virtual sampleFormat GetSampleFormat() const = 0;
 
+   /*! May be called from a worker thread */
    virtual ChannelType GetChannelIgnoringPan() const = 0;
 
    // Old gain is used in playback in linearly interpolating

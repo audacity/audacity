@@ -93,10 +93,6 @@ public:
    //! Whether the effect sorts "above the line" in the menus
    virtual bool IsDefault() = 0;
 
-   // This will go away when all Effects have been updated to the new
-   // interface.
-   virtual bool IsLegacy() = 0;
-
    //! Whether the effect supports realtime previewing (while audio is playing).
    virtual bool SupportsRealtime() = 0;
 
@@ -192,7 +188,7 @@ typedef enum
 
 \class EffectProcessor 
 
-\brief EffectClientInterface provides the ident interface to Effect, and is what makes
+\brief provides the ident interface to Effect, and is what makes
 Effect into a plug-in command.  It has functions for effect calculations that are not part of
 AudacityCommand.
 
@@ -226,15 +222,17 @@ public:
    virtual bool ProcessFinalize() /* noexcept */ = 0;
 
    //! Called for destructive, non-realtime effect computation
-   virtual size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) = 0;
+   virtual size_t ProcessBlock(
+      const float *const *inBlock, float *const *outBlock, size_t blockLen) = 0;
 
    virtual bool RealtimeInitialize() = 0;
    virtual bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) = 0;
-   virtual bool RealtimeFinalize() = 0;
+   virtual bool RealtimeFinalize() noexcept = 0;
    virtual bool RealtimeSuspend() = 0;
    virtual bool RealtimeResume() noexcept = 0;
    virtual bool RealtimeProcessStart() = 0;
-   virtual size_t RealtimeProcess(int group, float **inBuf, float **outBuf, size_t numSamples) = 0;
+   virtual size_t RealtimeProcess(int group,
+      const float *const *inBuf, float *const *outBuf, size_t numSamples) = 0;
    virtual bool RealtimeProcessEnd() noexcept = 0;
 };
 

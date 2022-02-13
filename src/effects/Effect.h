@@ -50,7 +50,6 @@ class AudacityProject;
 class LabelTrack;
 class NotifyingSelectedRegion;
 class SelectedRegion;
-class EffectUIHost;
 class Track;
 class TrackList;
 class WaveTrackFactory;
@@ -103,7 +102,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;
-   bool IsLegacy() override;
    bool SupportsRealtime() override;
    bool SupportsAutomation() override;
 
@@ -136,23 +134,21 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    bool ProcessFinalize() override;
-   size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
+   size_t ProcessBlock( const float *const *inBlock, float *const *outBlock,
+      size_t blockLen) override;
 
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize() override;
+   bool RealtimeFinalize() noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
    bool RealtimeProcessStart() override;
-   size_t RealtimeProcess(int group,
-                                       float **inbuf,
-                                       float **outbuf,
-                                       size_t numSamples) override;
+   size_t RealtimeProcess(int group, const float *const *inbuf,
+      float *const *outbuf, size_t numSamples) override;
    bool RealtimeProcessEnd() noexcept override;
 
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal = false) override;
-
 
    // EffectUIClientInterface implementation
 
@@ -181,12 +177,26 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    RegistryPath GetCurrentSettingsGroup() override;
    RegistryPath GetFactoryDefaultsGroup() override;
 
-   virtual wxString GetSavedStateGroup() /* not override? */;
-
    // EffectUIHostInterface implementation
 
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory, bool forceModal = false) override;
+   // The Effect class fully implements the Preview method for you.
+   // Only override it if you need to do preprocessing or cleanup.
+   void Preview(bool dryOnly) override;
+   bool GetAutomationParametersAsString(wxString & parms) override;
+   bool SetAutomationParametersFromString(const wxString & parms) override;
+   bool IsBatchProcessing() override;
+   void SetBatchProcessing(bool start) override;
+   bool DoEffect( double projectRate, TrackList *list,
+      WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
+      unsigned flags,
+      // Prompt the user for input only if these arguments are both not null.
+      wxWindow *pParent,
+      const EffectDialogFactory &dialogFactory) override;
+   bool Startup(EffectUIClientInterface *client) override;
+   bool TransferDataToWindow() override;
+   bool TransferDataFromWindow() override;
 
    // Effect implementation
 
@@ -196,26 +206,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
       if( Names ) mPresetNames = *Names;
       if( Values ) mPresetValues = *Values;
    }
-
-   // NEW virtuals
-   virtual bool Startup(EffectUIClientInterface *client);
-
-   virtual bool GetAutomationParametersAsString(wxString & parms);
-   virtual bool SetAutomationParametersFromString(const wxString & parms);
-
-   virtual bool IsBatchProcessing();
-   virtual void SetBatchProcessing(bool start);
-
-   // Returns true on success.  Will only operate on tracks that
-   // have the "selected" flag set to true, which is consistent with
-   // Audacity's standard UI.
-   // Create a user interface only if the supplied function is not null.
-   /* not virtual */ bool DoEffect( double projectRate, TrackList *list,
-      WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
-      // Prompt the user for input only if these arguments are both not null.
-      unsigned flags,
-      wxWindow *pParent = nullptr,
-      const EffectDialogFactory &dialogFactory = {} );
 
    bool Delegate( Effect &delegate,
       wxWindow &parent, const EffectDialogFactory &factory );
@@ -276,13 +266,7 @@ protected:
    // effects need to use a different input length, so override this method.
    virtual double CalcPreviewInputLength(double previewLength);
 
-   // The Effect class fully implements the Preview method for you.
-   // Only override it if you need to do preprocessing or cleanup.
-   virtual void Preview(bool dryOnly);
-
    virtual void PopulateOrExchange(ShuttleGui & S);
-   virtual bool TransferDataToWindow() /* not override */;
-   virtual bool TransferDataFromWindow() /* not override */;
 
    // No more virtuals!
 
@@ -443,6 +427,7 @@ protected:
  // Used only by the base Effect class
  //
  private:
+   wxString GetSavedStateGroup();
    double GetDefaultDuration();
 
    void CountWaveTracks();
@@ -491,14 +476,6 @@ private:
    size_t mBufferSize;
    size_t mBlockSize;
    unsigned mNumChannels;
-
-public:
-   const static wxString kUserPresetIdent;
-   const static wxString kFactoryPresetIdent;
-   const static wxString kCurrentSettingsIdent;
-   const static wxString kFactoryDefaultsIdent;
-
-   friend class EffectUIHost;
 };
 
 // FIXME:

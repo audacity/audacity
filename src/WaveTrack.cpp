@@ -153,8 +153,6 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
 
    mFormat = format;
    mRate = (int) rate;
-   mGain = 1.0;
-   mPan = 0.0;
    mOldGain[0] = 0.0;
    mOldGain[1] = 0.0;
    mWaveColorIndex = 0;
@@ -200,8 +198,8 @@ void WaveTrack::Init(const WaveTrack &orig)
    mFormat = orig.mFormat;
    mWaveColorIndex = orig.mWaveColorIndex;
    mRate = orig.mRate;
-   mGain = orig.mGain;
-   mPan = orig.mPan;
+   DoSetGain(orig.GetGain());
+   DoSetPan(orig.GetPan());
    mOldGain[0] = 0.0;
    mOldGain[1] = 0.0;
    SetDefaultName(orig.GetDefaultName());
@@ -238,8 +236,8 @@ void WaveTrack::Merge(const Track &orig)
 {
    orig.TypeSwitch( [&](const WaveTrack *pwt) {
       const WaveTrack &wt = *pwt;
-      mGain    = wt.mGain;
-      mPan     = wt.mPan;
+      DoSetGain(wt.GetGain());
+      DoSetPan(wt.GetPan());
       mDisplayMin = wt.mDisplayMin;
       mDisplayMax = wt.mDisplayMax;
       SetSpectrogramSettings(wt.mpSpectrumSettings
@@ -511,20 +509,30 @@ void WaveTrack::SetRate(double newRate)
 
 float WaveTrack::GetGain() const
 {
-   return mGain;
+   return mGain.load(std::memory_order_relaxed);
+}
+
+void WaveTrack::DoSetGain(float value)
+{
+   mGain.store(value, std::memory_order_relaxed);
 }
 
 void WaveTrack::SetGain(float newGain)
 {
-   if (mGain != newGain) {
-      mGain = newGain;
+   if (GetGain() != newGain) {
+      DoSetGain(newGain);
       Notify();
    }
 }
 
 float WaveTrack::GetPan() const
 {
-   return mPan;
+   return mPan.load(std::memory_order_relaxed);
+}
+
+void WaveTrack::DoSetPan(float value)
+{
+   mPan.store(value, std::memory_order_relaxed);
 }
 
 void WaveTrack::SetPan(float newPan)
@@ -534,8 +542,8 @@ void WaveTrack::SetPan(float newPan)
    else if (newPan < -1.0)
       newPan = -1.0;
 
-   if ( mPan != newPan ) {
-      mPan = newPan;
+   if ( GetPan() != newPan ) {
+      DoSetPan(newPan);
       Notify();
    }
 }
@@ -545,15 +553,17 @@ float WaveTrack::GetChannelGain(int channel) const
    float left = 1.0;
    float right = 1.0;
 
-   if (mPan < 0)
-      right = (mPan + 1.0);
-   else if (mPan > 0)
-      left = 1.0 - mPan;
+   const auto pan = GetPan();
+   if (pan < 0)
+      right = (pan + 1.0);
+   else if (pan > 0)
+      left = 1.0 - pan;
 
+   const auto gain = GetGain();
    if ((channel%2) == 0)
-      return left*mGain;
+      return left * gain;
    else
-      return right*mGain;
+      return right * gain;
 }
 
 float WaveTrack::GetOldChannelGain(int channel) const
@@ -1883,10 +1893,10 @@ bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
          else if (this->Track::HandleCommonXMLAttribute(attr, value))
             ;
          else if (attr == "gain" && value.TryGet(dblValue))
-            mGain = dblValue;
+            DoSetGain(dblValue);
          else if (attr == "pan" && value.TryGet(dblValue) &&
                   (dblValue >= -1.0) && (dblValue <= 1.0))
-            mPan = dblValue;
+            DoSetPan(dblValue);
          else if (attr == "channel")
          {
             if (!value.TryGet(nValue) ||
@@ -1965,8 +1975,8 @@ void WaveTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("linked"), static_cast<int>(GetLinkType()));
    this->WritableSampleTrack::WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("rate"), mRate);
-   xmlFile.WriteAttr(wxT("gain"), (double)mGain);
-   xmlFile.WriteAttr(wxT("pan"), (double)mPan);
+   xmlFile.WriteAttr(wxT("gain"), static_cast<double>(GetGain()));
+   xmlFile.WriteAttr(wxT("pan"), static_cast<double>(GetPan()));
    xmlFile.WriteAttr(wxT("colorindex"), mWaveColorIndex );
    xmlFile.WriteAttr(wxT("sampleformat"), static_cast<long>(mFormat) );
 

@@ -279,11 +279,6 @@ public:
       return false;
    }
 
-   bool IsLegacy() override
-   {
-      return false;
-   }
-
    bool SupportsRealtime() override
    {
       return mType == EffectTypeProcess;
@@ -796,8 +791,6 @@ VSTEffectOptionsDialog::VSTEffectOptionsDialog(wxWindow * parent,
 , mHost{ host }
 , mEffect{ effect }
 {
-   mHost = host;
-
    GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
       wxT("BufferSize"), mBufferSize, 8192);
    GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
@@ -1287,11 +1280,6 @@ bool VSTEffect::IsDefault()
    return false;
 }
 
-bool VSTEffect::IsLegacy()
-{
-   return false;
-}
-
 bool VSTEffect::SupportsRealtime()
 {
    return GetType() == EffectTypeProcess;
@@ -1449,7 +1437,8 @@ bool VSTEffect::ProcessFinalize()
    return true;
 }
 
-size_t VSTEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t VSTEffect::ProcessBlock(
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    // Only call the effect if there's something to do...some do not like zero-length block
    if (blockLen)
@@ -1515,13 +1504,15 @@ bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
    return slave->ProcessInitialize(0, NULL);
 }
 
-bool VSTEffect::RealtimeFinalize()
+bool VSTEffect::RealtimeFinalize() noexcept
 {
+return GuardedCall<bool>([&]{
    for (const auto &slave : mSlaves)
       slave->ProcessFinalize();
    mSlaves.clear();
 
    return ProcessFinalize();
+});
 }
 
 bool VSTEffect::RealtimeSuspend()
@@ -1551,7 +1542,8 @@ bool VSTEffect::RealtimeProcessStart()
    return true;
 }
 
-size_t VSTEffect::RealtimeProcess(int group, float **inbuf, float **outbuf, size_t numSamples)
+size_t VSTEffect::RealtimeProcess(int group,
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
@@ -2557,10 +2549,12 @@ intptr_t VSTEffect::callDispatcher(int opcode,
    return mAEffect->dispatcher(mAEffect, opcode, index, value, ptr, opt);
 }
 
-void VSTEffect::callProcessReplacing(float **inputs,
-                                     float **outputs, int sampleframes)
+void VSTEffect::callProcessReplacing(const float *const *inputs,
+   float *const *outputs, int sampleframes)
 {
-   mAEffect->processReplacing(mAEffect, inputs, outputs, sampleframes);
+   mAEffect->processReplacing(mAEffect,
+      const_cast<float**>(inputs),
+      const_cast<float**>(outputs), sampleframes);
 }
 
 float VSTEffect::callGetParameter(int index)

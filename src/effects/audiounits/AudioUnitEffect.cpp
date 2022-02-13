@@ -21,6 +21,7 @@
 #include "AudacityException.h"
 #include "ModuleManager.h"
 #include "SampleCount.h"
+#include "ConfigInterface.h"
 
 #include <wx/defs.h>
 #include <wx/base64.h>
@@ -951,11 +952,6 @@ bool AudioUnitEffect::IsDefault()
    return false;
 }
 
-bool AudioUnitEffect::IsLegacy()
-{
-   return false;
-}
-
 bool AudioUnitEffect::SupportsRealtime()
 {
    return GetType() == EffectTypeProcess;
@@ -1303,12 +1299,13 @@ bool AudioUnitEffect::ProcessFinalize()
    return true;
 }
 
-size_t AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t AudioUnitEffect::ProcessBlock(
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (size_t i = 0; i < mAudioIns; i++)
    {
       mInputList[0].mBuffers[i].mNumberChannels = 1;
-      mInputList[0].mBuffers[i].mData = inBlock[i];
+      mInputList[0].mBuffers[i].mData = const_cast<float*>(inBlock[i]);
       mInputList[0].mBuffers[i].mDataByteSize = sizeof(float) * blockLen;
    }
 
@@ -1367,14 +1364,16 @@ bool AudioUnitEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRat
    return pSlave->ProcessInitialize(0);
 }
 
-bool AudioUnitEffect::RealtimeFinalize()
+bool AudioUnitEffect::RealtimeFinalize() noexcept
 {
+return GuardedCall<bool>([&]{
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
    {
       mSlaves[i]->ProcessFinalize();
    }
    mSlaves.clear();
    return ProcessFinalize();
+});
 }
 
 bool AudioUnitEffect::RealtimeSuspend()
@@ -1421,9 +1420,7 @@ bool AudioUnitEffect::RealtimeProcessStart()
 }
 
 size_t AudioUnitEffect::RealtimeProcess(int group,
-                                        float **inbuf,
-                                        float **outbuf,
-                                        size_t numSamples)
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);

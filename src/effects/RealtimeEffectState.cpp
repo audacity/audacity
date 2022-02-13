@@ -134,10 +134,9 @@ bool RealtimeEffectState::ProcessStart()
 //! Visit the effect processors that were added in AddTrack
 /*! The iteration over channels in AddTrack and Process must be the same */
 size_t RealtimeEffectState::Process(Track *track,
-                                    unsigned chans,
-                                    float **inbuf,
-                                    float **outbuf,
-                                    size_t numSamples)
+   unsigned chans,
+   const float *const *inbuf, float *const *outbuf, float *dummybuf,
+   size_t numSamples)
 {
    if (!mEffect) {
       for (size_t ii = 0; ii < chans; ++ii)
@@ -156,9 +155,10 @@ size_t RealtimeEffectState::Process(Track *track,
    const auto numAudioIn = mEffect->GetAudioInCount();
    const auto numAudioOut = mEffect->GetAudioOutCount();
 
-   float **clientIn = (float **) alloca(numAudioIn * sizeof(float *));
-   float **clientOut = (float **) alloca(numAudioOut * sizeof(float *));
-   float *dummybuf = (float *) alloca(numSamples * sizeof(float));
+   const auto clientIn =
+      static_cast<const float **>(alloca(numAudioIn * sizeof(float *)));
+   const auto clientOut =
+      static_cast<float **>(alloca(numAudioOut * sizeof(float *)));
    decltype(numSamples) len = 0;
    auto ichans = chans;
    auto ochans = chans;
@@ -268,7 +268,7 @@ bool RealtimeEffectState::IsActive() const noexcept
    return mSuspendCount == 0;
 }
 
-bool RealtimeEffectState::Finalize()
+bool RealtimeEffectState::Finalize() noexcept
 {
    mGroups.clear();
 
