@@ -347,10 +347,8 @@ BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
    EVT_IDLE(LV2Effect::OnIdle)
 END_EVENT_TABLE()
 
-LV2Effect::LV2Effect(const LilvPlugin *plug)
+LV2Effect::LV2Effect(const LilvPlugin *plug) : mPlug{ plug }
 {
-   mPlug = plug;
-
    mSuilInstance = NULL;
 
    mSampleRate = 44100;
@@ -387,7 +385,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
    mResized = false;
 #endif
 
-   mExternalUIHost.plugin_human_id = NULL;
    mExternalWidget = NULL;
    mExternalUIClosed = false;
 
@@ -511,27 +508,15 @@ bool LV2Effect::InitializePlugin()
       return false;
    }
 
-   mUriMapFeature.callback_data = this;
-   mUriMapFeature.uri_to_id = LV2Effect::uri_to_id;
-
-   mURIDMapFeature.handle = this;
-   mURIDMapFeature.map = LV2Effect::urid_map;
-
-   mURIDUnmapFeature.handle = this;
-   mURIDUnmapFeature.unmap = LV2Effect::urid_unmap;
-
-   mUIResizeFeature.handle = this;
-   mUIResizeFeature.ui_resize = LV2Effect::ui_resize;
-
-   mLogFeature.handle = this;
-   mLogFeature.printf = LV2Effect::log_printf;
-   mLogFeature.vprintf = LV2Effect::log_vprintf;
-
-   mExternalUIHost.ui_closed = LV2Effect::ui_closed;
-
-   LilvNode *pluginName = lilv_plugin_get_name(mPlug);
-   mExternalUIHost.plugin_human_id = lilv_node_as_string(pluginName);
-   lilv_node_free(pluginName);
+   // Set up some "objects" for lv2 with "virtual functions" (C-style)
+   // To be set up later when making a dialog:
+   mExtensionDataFeature = {};
+   {
+      LilvNode *pluginName = lilv_plugin_get_name(mPlug);
+      mExternalUIHost = {
+         LV2Effect::ui_closed, lilv_node_as_string(pluginName) };
+      lilv_node_free(pluginName);
+   }
 
    // Construct null-terminated array of "features" describing our capabilities
    // to lv2, and validate
@@ -917,7 +902,7 @@ std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 
    mBlockSize = mUserBlockSize;
 
-   lv2_atom_forge_init(&mForge, &mURIDMapFeature);
+   lv2_atom_forge_init(&mForge, URIDMapFeature());
 
    return std::make_shared<Instance>(*this);
 }
@@ -1527,6 +1512,9 @@ bool LV2Effect::CloseUI()
    mParent = NULL;
    mDialog = NULL;
 
+   // Restore initial state
+   mExtensionDataFeature = {};
+
    return true;
 }
 
@@ -1616,13 +1604,13 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
       return false;
    }
 
-   LilvState *state = lilv_state_new_from_world(gWorld, &mURIDMapFeature, preset);
+   LilvState *state =
+      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset);
    if (state)
    {
-      lilv_state_restore(state, mMaster->GetInstance(), set_value_func, this, 0, NULL);
-
+      lilv_state_restore(
+         state, mMaster->GetInstance(), set_value_func, this, 0, nullptr);
       lilv_state_free(state);
-
       TransferDataToWindow();
    }
 
@@ -1987,7 +1975,8 @@ bool LV2Effect::BuildFancy()
 
    LilvInstance *instance = mMaster->GetInstance();
    mFeatures[mInstanceAccessFeature]->data = lilv_instance_get_handle(instance);
-   mExtensionDataFeature.data_access = lilv_instance_get_descriptor(instance)->extension_data;
+   mExtensionDataFeature =
+      { lilv_instance_get_descriptor(instance)->extension_data };
 
    // Set before creating the UI instance so the initial size (if any) can be captured
    mNativeWinInitialSize = wxDefaultSize;
@@ -2740,300 +2729,222 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
 // ============================================================================
 
 // static callback
-uint32_t LV2Effect::uri_to_id(LV2_URI_Map_Callback_Data callback_data,
-                              const char *WXUNUSED(map),
-                              const char *uri)
+uint32_t LV2Effect::uri_to_id(
+   LV2_URI_Map_Callback_Data callback_data, const char *, const char *uri)
 {
-   return ((LV2Effect *) callback_data)->URID_Map(uri);
+   return static_cast<LV2Effect *>(callback_data)->URID_Map(uri);
 }
 
 // static callback
 LV2_URID LV2Effect::urid_map(LV2_URID_Map_Handle handle, const char *uri)
 {
-   return ((LV2Effect *) handle)->URID_Map(uri);
+   return static_cast<LV2Effect *>(handle)->URID_Map(uri);
 }
 
 LV2_URID LV2Effect::URID_Map(const char *uri)
 {
    using namespace LV2Symbols;
-   LV2_URID urid;
-   
-   urid = Lookup_URI(gURIDMap, uri, false);
+   // Map global URIs to lower indices
+   auto urid = Lookup_URI(gURIDMap, uri, false);
    if (urid > 0)
-   {
       return urid;
-   }
-
+   // Map local URIs to higher indices
    urid = Lookup_URI(mURIDMap, uri);
    if (urid > 0)
-   {
       return urid + gURIDMap.size();
-   }
-
    return 0;
 }
 
 // static callback
 const char *LV2Effect::urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid)
 {
-   return ((LV2Effect *) handle)->URID_Unmap(urid);
+   return static_cast<LV2Effect *>(handle)->URID_Unmap(urid);
 }
 
 const char *LV2Effect::URID_Unmap(LV2_URID urid)
 {
    using namespace LV2Symbols;
-   if (urid > 0)
-   {
-      if (urid <= (LV2_URID) gURIDMap.size())
-      {
+   if (urid > 0) {
+      // Unmap lower indices to global URIs
+      if (urid <= static_cast<LV2_URID>(gURIDMap.size()))
          return mURIDMap[urid - 1].get();
-      }
-
+      // Unmap higher indices to local URIs
       urid -= gURIDMap.size();
-
-      if (urid <= (LV2_URID) mURIDMap.size())
-      {
+      if (urid <= static_cast<LV2_URID>(mURIDMap.size()))
          return mURIDMap[urid - 1].get();
-      }
    }
-
-   return NULL;
+   return nullptr;
 }
 
 // static callback
-int LV2Effect::log_printf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, ...)
+int LV2Effect::log_printf(
+   LV2_Log_Handle handle, LV2_URID type, const char *fmt, ...)
 {
    va_list ap;
    int len;
 
    va_start(ap, fmt);
-   len = ((LV2Effect *) handle)->LogVPrintf(type, fmt, ap);
+   len = static_cast<LV2Effect *>(handle)->LogVPrintf(type, fmt, ap);
    va_end(ap);
 
    return len;
 }
 
 // static callback
-int LV2Effect::log_vprintf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, va_list ap)
+int LV2Effect::log_vprintf(
+   LV2_Log_Handle handle, LV2_URID type, const char *fmt, va_list ap)
 {
-   return ((LV2Effect *) handle)->LogVPrintf(type, fmt, ap);
+   return static_cast<LV2Effect *>(handle)->LogVPrintf(type, fmt, ap);
 }
 
 int LV2Effect::LogVPrintf(LV2_URID type, const char *fmt, va_list ap)
 {
    using namespace LV2Symbols;
    long level = wxLOG_Error;
-
    if (type == urid_Error)
-   {
       level = wxLOG_Error;
-   }
    else if (type == urid_Note)
-   {
       level = wxLOG_Info;
-   }
    else if (type == urid_Trace)
-   {
       level = wxLOG_Trace;
-   }
    else if (type == urid_Warning)
-   {
       level = wxLOG_Warning;
-   }
    else
-   {
       level = wxLOG_Message;
-   }
-
-   char *msg = NULL;
-   int len = wxCRT_VsnprintfA(msg, 0, fmt, ap);
-
-   msg = (char *) malloc(len + 1);
-   if (msg)
-   {
-      wxCRT_VsnprintfA(msg, len, fmt, ap);
-
-      wxString text(msg);
-
-      wxLogGeneric(level, wxT("%s: %s"), GetSymbol().Msgid().Translation(), text);
-
-      free(msg);
-   }
-
+   int len = wxCRT_VsnprintfA(nullptr, 0, fmt, ap);
+   auto msg = std::make_unique<char[]>(len + 1);
+   wxCRT_VsnprintfA(msg.get(), len, fmt, ap);
+   wxString text(msg.get());
+   wxLogGeneric(level,
+      wxT("%s: %s"), GetSymbol().Msgid().Translation(), text);
    return len;
 }
 
 // static callback
 int LV2Effect::ui_resize(LV2UI_Feature_Handle handle, int width, int height)
 {
-   return ((LV2Effect *) handle)->UIResize(width, height);
+   return static_cast<LV2Effect *>(handle)->UIResize(width, height);
 }
 
 int LV2Effect::UIResize(int width, int height)
 {
    // Queue a wxSizeEvent to resize the plugins UI
-   if (mNativeWin)
-   {
-      wxSizeEvent sw(wxSize(width, height));
+   if (mNativeWin) {
+      wxSizeEvent sw{ wxSize{ width, height } };
       sw.SetEventObject(mNativeWin);
       mNativeWin->GetEventHandler()->AddPendingEvent(sw);
    }
-   // The window hasn't been created yet, so record the desired size
    else
-   {
-      mNativeWinInitialSize = wxSize(width, height);
-   }
-
+      // The window hasn't been created yet, so record the desired size
+      mNativeWinInitialSize = { width, height };
    return 0;
 }
 
 // static callback
 void LV2Effect::ui_closed(LV2UI_Controller controller)
 {
-   return ((LV2Effect *) controller)->UIClosed();
+   return static_cast<LV2Effect *>(controller)->UIClosed();
 }
 
 void LV2Effect::UIClosed()
 {
    mExternalUIClosed = true;
-
-   return;
 }
 
 // static callback
 void LV2Effect::suil_port_write_func(SuilController controller,
-                                     uint32_t port_index,
-                                     uint32_t buffer_size,
-                                     uint32_t protocol,
-                                     const void *buffer)
+   uint32_t port_index, uint32_t buffer_size, uint32_t protocol,
+   const void *buffer)
 {
-   ((LV2Effect *) controller)->SuilPortWrite(port_index, buffer_size, protocol, buffer);
+   static_cast<LV2Effect *>(controller)
+      ->SuilPortWrite(port_index, buffer_size, protocol, buffer);
 }
 
 void LV2Effect::SuilPortWrite(uint32_t port_index,
-                              uint32_t buffer_size,
-                              uint32_t protocol,
-                              const void *buffer)
+   uint32_t buffer_size, uint32_t protocol, const void *buffer)
 {
    // Handle implicit floats
-   if (protocol == 0 && buffer_size == sizeof(float))
-   {
-      auto it = mControlPortMap.find(port_index);
-      if (it != mControlPortMap.end())
-      {
-         it->second->mVal = *((const float *) buffer);
-      }
+   if (protocol == 0 && buffer_size == sizeof(float)) {
+      if (auto it = mControlPortMap.find(port_index);
+         it != mControlPortMap.end())
+         it->second->mVal = *static_cast<const float *>(buffer);
    }
    // Handle event transfers
-   else if (protocol == LV2Symbols::urid_EventTransfer)
-   {
+   else if (protocol == LV2Symbols::urid_EventTransfer) {
       if (mControlIn && port_index == mControlIn->mIndex)
-      {
          zix_ring_write(mControlIn->mRing, buffer, buffer_size);
-      }
    }
-
-   return;
 }
 
 // static callback
-uint32_t LV2Effect::suil_port_index_func(SuilController controller,
-                                         const char *port_symbol)
+uint32_t LV2Effect::suil_port_index_func(
+   SuilController controller, const char *port_symbol)
 {
-   return ((LV2Effect *) controller)->SuilPortIndex(port_symbol);
+   return static_cast<LV2Effect *>(controller)->SuilPortIndex(port_symbol);
 }
 
 uint32_t LV2Effect::SuilPortIndex(const char *port_symbol)
 {
-   for (size_t i = 0, cnt = lilv_plugin_get_num_ports(mPlug); i < cnt; i++)
-   {
-      const LilvPort *port = lilv_plugin_get_port_by_index(mPlug, i);
-      if (strcmp(port_symbol, lilv_node_as_string(lilv_port_get_symbol(mPlug, port))) == 0)
-      {
+   for (size_t i = 0, cnt = lilv_plugin_get_num_ports(mPlug); i < cnt; ++i) {
+      const auto port = lilv_plugin_get_port_by_index(mPlug, i);
+      if (strcmp(port_symbol,
+            lilv_node_as_string(lilv_port_get_symbol(mPlug, port))) == 0)
          return lilv_port_get_index(mPlug, port);
-      }
    }
-
    return LV2UI_INVALID_PORT_INDEX;
 }
 
 // static callback
-const void *LV2Effect::get_value_func(const char *port_symbol,
-                                      void *user_data,
-                                      uint32_t *size,
-                                      uint32_t *type)
+const void *LV2Effect::get_value_func(
+   const char *port_symbol, void *user_data, uint32_t *size, uint32_t *type)
 {
-   return ((LV2Effect *) user_data)->GetPortValue(port_symbol, size, type);
+   return static_cast<LV2Effect *>(user_data)
+      ->GetPortValue(port_symbol, size, type);
 }
 
-const void *LV2Effect::GetPortValue(const char *port_symbol,
-                                    uint32_t *size,
-                                    uint32_t *type)
+const void *LV2Effect::GetPortValue(
+   const char *port_symbol, uint32_t *size, uint32_t *type)
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
-
    for (auto & port : mControlPorts)
-   {
-      if (port->mSymbol == symbol)
-      {
+      if (port->mSymbol == symbol) {
          *size = sizeof(float);
          *type = LV2Symbols::urid_Float;
-         return (void *) &port->mVal;
+         return &port->mVal;
       }
-   }
-
    *size = 0;
    *type = 0;
-
-   return NULL;
+   return nullptr;
 }
 
 // static callback
-void LV2Effect::set_value_func(const char *port_symbol,
-                               void *user_data,
-                               const void *value,
-                               uint32_t size,
-                               uint32_t type)
+void LV2Effect::set_value_func(
+   const char *port_symbol, void *user_data,
+   const void *value, uint32_t size, uint32_t type)
 {
-   ((LV2Effect *) user_data)->SetPortValue(port_symbol, value, size, type);
+   static_cast<LV2Effect *>(user_data)
+      ->SetPortValue(port_symbol, value, size, type);
 }
 
-void LV2Effect::SetPortValue(const char *port_symbol,
-                             const void *value,
-                             uint32_t size,
-                             uint32_t type)
+void LV2Effect::SetPortValue(
+   const char *port_symbol, const void *value, uint32_t size, uint32_t type)
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
-
    for (auto & port : mControlPorts)
-   {
-      using namespace LV2Symbols;
-      if (port->mSymbol == symbol)
-      {
+      if (port->mSymbol == symbol) {
+         using namespace LV2Symbols;
          if (type == urid_Bool && size == sizeof(bool))
-         {
-            port->mVal = (float) (*((const bool *) value)) ? 1.0f : 0.0f;
-         }
+            port->mVal = *static_cast<const bool *>(value) ? 1.0f : 0.0f;
          else if (type == urid_Double && size == sizeof(double))
-         {
-            port->mVal = (float) (*((const double *) value));
-         }
+            port->mVal = *static_cast<const double *>(value);
          else if (type == urid_Float && size == sizeof(float))
-         {
-            port->mVal = (float) (*((const float *) value));
-         }
+            port->mVal = *static_cast<const float *>(value);
          else if (type == urid_Int && size == sizeof(int32_t))
-         {
-            port->mVal = (float) (*((const int32_t *) value));
-         }
+            port->mVal = *static_cast<const int32_t *>(value);
          else if (type == urid_Long && size == sizeof(int64_t))
-         {
-            port->mVal = (float) (*((const int64_t *) value));
-         }
-
+            port->mVal = *static_cast<const int64_t *>(value);
          break;
       }
-   }
 }
 
 #if defined(__WXGTK__)
@@ -3079,8 +2990,6 @@ LV2Wrapper::LV2Wrapper(LV2Effect &effect) : mEffect(effect)
    mOptionsInterface = NULL;
    mStateInterface = NULL;
    mWorkerInterface = NULL;
-   mWorkerSchedule = {};
-   mFreeWheeling = false;
    mLatency = 0.0;
 }
 
@@ -3107,8 +3016,6 @@ LilvInstance *LV2Wrapper::Instantiate(const LilvPlugin *plugin,
       // It informs the plugin how to send work to another thread
       // Remove terminator
       features.pop_back();
-      mWorkerSchedule.handle = this;
-      mWorkerSchedule.schedule_work = LV2Wrapper::schedule_work;
       mEffect.AddFeature(LV2_WORKER__schedule, &mWorkerSchedule);
       // Re-add terminator
       mEffect.AddFeature(nullptr, nullptr);
@@ -3198,6 +3105,7 @@ float LV2Wrapper::GetLatency()
    return mLatency;
 }
 
+// Where is this called?
 void LV2Wrapper::SetFreeWheeling(bool enable)
 {
    mFreeWheeling = enable;
@@ -3256,10 +3164,9 @@ void LV2Wrapper::ConsumeResponses()
 
 // static callback
 LV2_Worker_Status LV2Wrapper::schedule_work(LV2_Worker_Schedule_Handle handle,
-                                           uint32_t size,
-                                           const void *data)
+   uint32_t size, const void *data)
 {
-   return ((LV2Wrapper *) handle)->ScheduleWork(size, data);
+   return static_cast<LV2Wrapper *>(handle)->ScheduleWork(size, data);
 }
 
 LV2_Worker_Status LV2Wrapper::ScheduleWork(uint32_t size, const void *data)
@@ -3292,4 +3199,3 @@ LV2_Worker_Status LV2Wrapper::Respond(uint32_t size, const void *data)
 }
 
 #endif
-

@@ -439,12 +439,17 @@ private:
                      uint32_t size,
                      uint32_t type);
 
+   // lv2 functions require a pointer to non-const in places, but presumably
+   // have no need to mutate the members of this structure
+   LV2_URID_Map *URIDMapFeature() const
+   { return const_cast<LV2_URID_Map*>(&mURIDMapFeature); }
+
 private:
  
    // Declare local URI map
    LV2Symbols::URIDMap mURIDMap;
 
-   const LilvPlugin *mPlug;
+   const LilvPlugin *const mPlug;
 
    float mSampleRate;
    int mBlockSize;
@@ -507,13 +512,17 @@ private:
 
    bool mUseGUI;
 
-   // Features we support
-   LV2_URI_Map_Feature mUriMapFeature;
-   LV2_URID_Map mURIDMapFeature;
-   LV2_URID_Unmap mURIDUnmapFeature;
-   LV2UI_Resize mUIResizeFeature;
-   LV2_Log_Log mLogFeature;
-   LV2_Extension_Data_Feature mExtensionDataFeature;
+   // These objects contain C-style virtual function tables that we fill in
+   const LV2_URI_Map_Feature mUriMapFeature{
+      this, LV2Effect::uri_to_id }; // Features we support
+   const LV2_URID_Map mURIDMapFeature{ this, LV2Effect::urid_map };
+   const LV2_URID_Unmap mURIDUnmapFeature{ this, LV2Effect::urid_unmap };
+   const LV2UI_Resize mUIResizeFeature{ this, LV2Effect::ui_resize };
+   const LV2_Log_Log mLogFeature{
+      this, LV2Effect::log_printf, LV2Effect::log_vprintf };
+
+   // Not const, filled in when making a dialog
+   LV2_Extension_Data_Feature mExtensionDataFeature{};
 
    LV2_External_UI_Host mExternalUIHost;
    LV2_External_UI_Widget* mExternalWidget;
@@ -638,10 +647,13 @@ private:
 
    // Worker extension
    LV2_Worker_Interface *mWorkerInterface;
-   LV2_Worker_Schedule mWorkerSchedule;
+   // Another object with an explicit virtual function table
+   LV2_Worker_Schedule mWorkerSchedule{ this, LV2Wrapper::schedule_work };
 
    float mLatency;
-   bool mFreeWheeling;
+
+   //! If true, do not spawn extra worker threads
+   bool mFreeWheeling{ false };
 
    //! Written by main thread, read by worker, but atomic isn't needed because
    //! mRequests provides synchronization
