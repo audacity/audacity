@@ -517,6 +517,45 @@ list( APPEND SOURCES
          effects/VST/VSTControlOSX.mm
       >
 
+      $<$<BOOL:${${_OPT}has_vst3}>:
+         effects/VST3/VST3Effect.h
+         effects/VST3/VST3Effect.cpp
+         effects/VST3/VST3EffectsModule.h
+         effects/VST3/VST3EffectsModule.cpp
+         effects/VST3/VST3Utils.h
+         effects/VST3/VST3Utils.cpp
+         effects/VST3/VST3OptionsDialog.h
+         effects/VST3/VST3OptionsDialog.cpp
+         effects/VST3/internal/ComponentHandler.h
+         effects/VST3/internal/ComponentHandler.cpp
+         effects/VST3/internal/ConnectionProxy.h
+         effects/VST3/internal/ConnectionProxy.cpp
+         effects/VST3/internal/ParameterChanges.h
+         effects/VST3/internal/ParameterChanges.cpp
+         effects/VST3/internal/ParameterQueuePool.h
+         effects/VST3/internal/ParameterQueuePool.cpp
+         effects/VST3/internal/ParameterValueQueue.h
+         effects/VST3/internal/ParameterValueQueue.cpp
+         effects/VST3/internal/PlugFrame.h
+         effects/VST3/internal/PlugFrame.cpp
+      >
+
+      $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_WIN}>>:
+         effects/VST3/module_win32.cpp
+      >
+      $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_GTK}>>:
+         effects/VST3/module_linux.cpp
+         effects/VST3/internal/x11/RunLoop.h
+         effects/VST3/internal/x11/RunLoop.cpp
+         effects/VST3/internal/x11/PlugFrame.h
+         effects/VST3/internal/x11/PlugFrame.cpp
+         effects/VST3/internal/x11/SocketWindow.h
+         effects/VST3/internal/x11/SocketWindow.cpp
+      >
+      $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_MAC}>>:
+         effects/VST3/module_mac.mm
+      >
+
       # Audio Unit Effects
 
       $<$<AND:$<BOOL:${USE_AUDIO_UNITS}>,$<BOOL:${wxIS_MAC}>>:
@@ -1098,6 +1137,10 @@ list( APPEND LIBRARIES
       PortAudio::PortAudio
       sqlite
       $<$<BOOL:${${_OPT}has_crashreports}>:crashreports>
+      $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::base>
+      $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::pluginterfaces>
+      $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_hosting>
+      $<$<BOOL:${${_OPT}has_vst3}>:vst3sdk::sdk_common>
       $<$<BOOL:${USE_LIBID3TAG}>:libid3tag::libid3tag>
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC>
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC++>
@@ -1228,6 +1271,13 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          COMPILE_FLAGS "-x objective-c++"
          SKIP_PRECOMPILE_HEADERS YES
    )
+   if(${_OPT}has_vst3 AND ${wxIS_MAC})
+      set_source_files_properties(
+         effects/VST3/module_mac.mm
+         PROPERTIES
+            COMPILE_FLAGS "-fobjc-arc"
+      )
+   endif()
 
    # Add our required frameworks
    list( APPEND LIBRARIES

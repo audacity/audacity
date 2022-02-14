@@ -51,29 +51,29 @@ using WaveClipConstPointers = std::vector < const WaveClip* >;
 //
 #define WAVETRACK_MERGE_POINT_TOLERANCE 0.01
 
-/// \brief Structure to hold region of a wavetrack and a comparison function
-/// for sortability.
-struct Region
-{
-   Region() : start(0), end(0) {}
-   Region(double start_, double end_) : start(start_), end(end_) {}
-
-   double start, end;
-
-   //used for sorting
-   bool operator < (const Region &b) const
-   {
-      return this->start < b.start;
-   }
-};
-
-using Regions = std::vector < Region >;
-
 class Envelope;
 
 class AUDACITY_DLL_API WaveTrack final : public WritableSampleTrack
 {
 public:
+   /// \brief Structure to hold region of a wavetrack and a comparison function
+   /// for sortability.
+   struct Region
+   {
+      Region() : start(0), end(0) {}
+      Region(double start_, double end_) : start(start_), end(end_) {}
+
+      double start, end;
+
+      //used for sorting
+      bool operator < (const Region &b) const
+      {
+         return this->start < b.start;
+      }
+   };
+
+   using Regions = std::vector < Region >;
+
    static wxString GetDefaultAudioTrackNamePreference();
 
    //

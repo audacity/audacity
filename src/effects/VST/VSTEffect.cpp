@@ -91,6 +91,7 @@
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "XMLFileReader.h"
+#include "Base64.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../../widgets/WindowAccessible.h"
@@ -2306,7 +2307,7 @@ bool VSTEffect::LoadParameters(const RegistryPath & group)
    {
       ArrayOf<char> buf{ value.length() / 4 * 3 };
 
-      int len = VSTEffect::b64decode(value, buf.get());
+      int len = Base64::Decode(value, buf.get());
       if (len)
       {
          callSetChunk(true, len, buf.get(), &info);
@@ -2350,7 +2351,7 @@ bool VSTEffect::SaveParameters(const RegistryPath & group)
       }
 
       SetConfig(*this, PluginSettings::Private, group, wxT("Chunk"),
-         VSTEffect::b64encode(chunk, clen));
+         Base64::Encode(chunk, clen));
       return true;
    }
 
@@ -2622,137 +2623,6 @@ void VSTEffect::callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *
 
    for (const auto &slave : mSlaves)
       slave->callSetChunk(isPgm, len, buf, info);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Base64 en/decoding
-//
-// Original routines marked as public domain and found at:
-//
-// http://en.wikibooks.org/wiki/Algorithm_implementation/Miscellaneous/Base64
-//
-////////////////////////////////////////////////////////////////////////////////
-
-// Lookup table for encoding
-const static wxChar cset[] = wxT("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
-const static char padc = wxT('=');
-
-wxString VSTEffect::b64encode(const void *in, int len)
-{
-   unsigned char *p = (unsigned char *) in;
-   wxString out;
-
-   unsigned long temp;
-   for (int i = 0; i < len / 3; i++)
-   {
-      temp  = (*p++) << 16; //Convert to big endian
-      temp += (*p++) << 8;
-      temp += (*p++);
-      out += cset[(temp & 0x00FC0000) >> 18];
-      out += cset[(temp & 0x0003F000) >> 12];
-      out += cset[(temp & 0x00000FC0) >> 6];
-      out += cset[(temp & 0x0000003F)];
-   }
-
-   switch (len % 3)
-   {
-      case 1:
-         temp  = (*p++) << 16; //Convert to big endian
-         out += cset[(temp & 0x00FC0000) >> 18];
-         out += cset[(temp & 0x0003F000) >> 12];
-         out += padc;
-         out += padc;
-      break;
-
-      case 2:
-         temp  = (*p++) << 16; //Convert to big endian
-         temp += (*p++) << 8;
-         out += cset[(temp & 0x00FC0000) >> 18];
-         out += cset[(temp & 0x0003F000) >> 12];
-         out += cset[(temp & 0x00000FC0) >> 6];
-         out += padc;
-      break;
-   }
-
-   return out;
-}
-
-int VSTEffect::b64decode(const wxString &in, void *out)
-{
-   int len = in.length();
-   unsigned char *p = (unsigned char *) out;
-
-   if (len % 4)  //Sanity check
-   {
-      return 0;
-   }
-
-   int padding = 0;
-   if (len)
-   {
-      if (in[len - 1] == padc)
-      {
-         padding++;
-      }
-
-      if (in[len - 2] == padc)
-      {
-         padding++;
-      }
-   }
-
-   //const char *a = in.mb_str();
-   //Setup a vector to hold the result
-   unsigned long temp = 0; //Holds decoded quanta
-   int i = 0;
-   while (i < len)
-   {
-      for (int quantumPosition = 0; quantumPosition < 4; quantumPosition++)
-      {
-         unsigned char c = in[i];
-         temp <<= 6;
-
-         if (c >= 0x41 && c <= 0x5A)
-         {
-            temp |= c - 0x41;
-         }
-         else if (c >= 0x61 && c <= 0x7A)
-         {
-            temp |= c - 0x47;
-         }
-         else if (c >= 0x30 && c <= 0x39)
-         {
-            temp |= c + 0x04;
-         }
-         else if (c == 0x2B)
-         {
-            temp |= 0x3E;
-         }
-         else if (c == 0x2F)
-         {
-            temp |= 0x3F;
-         }
-         else if (c == padc)
-         {
-            switch (len - i)
-            {
-               case 1: //One pad character
-                  *p++ = (temp >> 16) & 0x000000FF;
-                  *p++ = (temp >> 8) & 0x000000FF;
-                  return p - (unsigned char *) out;
-               case 2: //Two pad characters
-                  *p++ = (temp >> 10) & 0x000000FF;
-                  return p - (unsigned char *) out;
-            }
-         }
-         i++;
-      }
-      *p++ = (temp >> 16) & 0x000000FF;
-      *p++ = (temp >> 8) & 0x000000FF;
-      *p++ = temp & 0x000000FF;
-   }
-
-   return p - (unsigned char *) out;
 }
 
 void VSTEffect::RemoveHandler()
@@ -3645,7 +3515,7 @@ void VSTEffect::SaveXML(const wxFileName & fn)
       if (clen != 0)
       {
          xmlFile.StartTag(wxT("chunk"));
-         xmlFile.WriteSubTree(VSTEffect::b64encode(chunk, clen) + wxT('\n'));
+         xmlFile.WriteSubTree(Base64::Encode(chunk, clen) + wxT('\n'));
          xmlFile.EndTag(wxT("chunk"));
       }
    }
@@ -3892,7 +3762,7 @@ void VSTEffect::HandleXMLEndTag(const std::string_view& tag)
       {
          ArrayOf<char> buf{ mChunk.length() / 4 * 3 };
 
-         int len = VSTEffect::b64decode(mChunk, buf.get());
+         int len = Base64::Decode(mChunk, buf.get());
          if (len)
          {
             callSetChunk(true, len, buf.get(), &mXMLInfo);

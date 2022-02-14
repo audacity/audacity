@@ -198,6 +198,9 @@ public:
       const RegistryPath & group,
       RegistryPaths & subgroups) override;
 
+   bool HasConfigValue(ConfigurationType type, const PluginID & ID,
+      const RegistryPath & group, const RegistryPath & key) override;
+
    bool GetConfigValue(ConfigurationType type, const PluginID & ID,
       const RegistryPath & group, const RegistryPath & key,
       ConfigReference var, ConfigConstReference defval) override;
@@ -304,6 +307,7 @@ private:
    bool HasGroup(const RegistryPath & group);
    bool GetSubgroups(const RegistryPath & group, RegistryPaths & subgroups);
 
+   bool HasConfigValue(const RegistryPath & key);
    bool GetConfigValue(const RegistryPath & key, ConfigReference var,
          ConfigConstReference defval);
    bool SetConfigValue(const RegistryPath & key, ConfigConstReference value);
@@ -318,8 +322,6 @@ private:
    // The PluginID must be kept unique.  Since the wxFileConfig class does not preserve
    // case, we use base64 encoding.
    wxString ConvertID(const PluginID & ID);
-   wxString b64encode(const void *in, int len);
-   int b64decode(const wxString &in, void *out);
 
 private:
    friend std::default_delete<PluginManager>;

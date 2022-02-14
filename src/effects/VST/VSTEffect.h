@@ -198,10 +198,6 @@ private:
    bool LoadParameters(const RegistryPath & group);
    bool SaveParameters(const RegistryPath & group);
 
-   // Base64 encoding and decoding
-   static wxString b64encode(const void *in, int len);
-   static int b64decode(const wxString &in, void *out);
-
    // Realtime
    unsigned GetChannelCount();
    void SetChannelCount(unsigned numChannels);

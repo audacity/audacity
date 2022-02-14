@@ -117,6 +117,9 @@ public:
    virtual bool GetConfigSubgroups(ConfigurationType type, const PluginID & ID,
       const RegistryPath & group, RegistryPaths & subgroups) = 0;
 
+   virtual bool HasConfigValue(ConfigurationType type, const PluginID & ID,
+      const RegistryPath & group, const RegistryPath & key) = 0;
+
    //! @pre var and defval wrap references to the same type (ignoring const)
    virtual bool GetConfigValue(ConfigurationType type, const PluginID & ID,
       const RegistryPath & group, const RegistryPath & key,
