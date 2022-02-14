@@ -50,15 +50,13 @@ public:
    int width;
    sampleCount *where;
    float *min, *max, *rms;
-   int* bl;
 
    std::vector<sampleCount> ownWhere;
    std::vector<float> ownMin, ownMax, ownRms;
-   std::vector<int> ownBl;
 
 public:
    WaveDisplay(int w)
-      : width(w), where(0), min(0), max(0), rms(0), bl(0)
+      : width(w), where(0), min(0), max(0), rms(0)
    {
    }
 
@@ -69,18 +67,15 @@ public:
       ownMin.resize(width);
       ownMax.resize(width);
       ownRms.resize(width);
-      ownBl.resize(width);
 
       where = &ownWhere[0];
       if (width > 0) {
          min = &ownMin[0];
          max = &ownMax[0];
          rms = &ownRms[0];
-         bl = &ownBl[0];
       }
       else {
          min = max = rms = 0;
-         bl = 0;
       }
    }
 

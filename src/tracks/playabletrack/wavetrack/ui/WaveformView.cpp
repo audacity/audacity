@@ -330,7 +330,7 @@ void DrawMinMaxRMS(
    TrackPanelDrawingContext &context, const wxRect & rect, const double env[],
    float zoomMin, float zoomMax,
    bool dB, float dBRange,
-   const float *min, const float *max, const float *rms, const int *bl,
+   const float *min, const float *max, const float *rms,
    bool muted)
 {
    auto &dc = context.dc;
@@ -351,15 +351,6 @@ void DrawMinMaxRMS(
    if (bShowClipping) {
       clipped.reinit( size_t(rect.width) );
    }
-
-   long pixAnimOffset = (long)fabs((double)(wxDateTime::Now().GetTicks() * -10)) +
-      wxDateTime::Now().GetMillisecond() / 100; //10 pixels a second
-
-   const auto ms = wxDateTime::Now().GetMillisecond();
-   const auto ticks = (long)fabs((double)(wxDateTime::Now().GetTicks() * -10));
-
-   bool drawStripes = true;
-   bool drawWaveform = true;
 
    const auto &muteSamplePen = artist->muteSamplePen;
    const auto &samplePen = artist->samplePen;
@@ -416,39 +407,8 @@ void DrawMinMaxRMS(
          r2[x0] = r1[x0];
       }
 
-      if (bl[x0] <= -1) {
-         if (drawStripes) {
-            // TODO:unify with buffer drawing.
-            dc.SetPen((bl[x0] % 2) ? muteSamplePen : samplePen);
-            for (int yy = 0; yy < rect.height / 25 + 1; ++yy) {
-               // we are drawing over the buffer, but I think DrawLine takes care of this.
-               AColor::Line(dc,
-                            xx,
-                            rect.y + 25 * yy + (x0 /*+pixAnimOffset*/) % 25,
-                            xx,
-                            rect.y + 25 * yy + (x0 /*+pixAnimOffset*/) % 25 + 6); //take the min so we don't draw past the edge
-            }
-         }
 
-         // draw a dummy waveform - some kind of sinusoid.  We want to animate it so the user knows it's a dummy.  Use the second's unit of a get time function.
-         // Lets use a triangle wave for now since it's easier - I don't want to use sin() or make a wavetable just for this.
-         if (drawWaveform) {
-            int triX;
-            dc.SetPen(samplePen);
-            triX = fabs((double)((x0 + pixAnimOffset) % (2 * rect.height)) - rect.height) + rect.height;
-            for (int yy = 0; yy < rect.height; ++yy) {
-               if ((yy + triX) % rect.height == 0) {
-                  dc.DrawPoint(xx, rect.y + yy);
-               }
-            }
-         }
-
-         // Restore the pen for remaining pixel columns!
-         dc.SetPen(muted ? muteSamplePen : samplePen);
-      }
-      else {
-         AColor::Line(dc, xx, rect.y + h2, xx, rect.y + h1);
-      }
+      AColor::Line(dc, xx, rect.y + h2, xx, rect.y + h1);
    }
 
    // Stroke rms over the min-max
@@ -458,9 +418,7 @@ void DrawMinMaxRMS(
    dc.SetPen(muted ? muteRmsPen : rmsPen);
    for (int x0 = 0; x0 < rect.width; ++x0) {
       int xx = rect.x + x0;
-      if (bl[x0] <= -1) {
-      }
-      else if (r1[x0] != r2[x0]) {
+      if (r1[x0] != r2[x0]) {
          AColor::Line(dc, xx, rect.y + r2[x0], xx, rect.y + r1[x0]);
       }
    }
@@ -819,7 +777,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
       wxASSERT(rectPortion.width >= 0);
 
       float *useMin = 0, *useMax = 0, *useRms = 0;
-      int *useBl = 0;
+
       WaveDisplay fisheyeDisplay(rectPortion.width);
       int skipped = 0, skippedLeft = 0, skippedRight = 0;
       if (true ||portion.inFisheye) {
@@ -859,7 +817,6 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             useMin = fisheyeDisplay.min;
             useMax = fisheyeDisplay.max;
             useRms = fisheyeDisplay.rms;
-            useBl = fisheyeDisplay.bl;
          }
       }
       else {
@@ -867,7 +824,6 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
          useMin = display.min + pos;
          useMax = display.max + pos;
          useRms = display.rms + pos;
-         useBl = display.bl + pos;
       }
 
       leftOffset += skippedLeft;
@@ -888,7 +844,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             DrawMinMaxRMS( context, rectPortion, env2,
                zoomMin, zoomMax,
                dB, dBRange,
-               useMin, useMax, useRms, useBl, muted );
+               useMin, useMax, useRms, muted );
          }
          else {
             bool highlight = false;
