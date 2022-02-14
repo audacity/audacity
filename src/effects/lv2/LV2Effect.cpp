@@ -495,38 +495,28 @@ bool LV2Effect::InitializePlugin()
    if (!ValidateFeatures(lilv_plugin_get_uri(mPlug)))
       return false;
 
-   auto minLength = lilv_world_get(gWorld, lilv_plugin_get_uri(mPlug), node_MinBlockLength, NULL);
-   if (minLength)
-   {
-      if (lilv_node_is_int(minLength))
-      {
-         int val = lilv_node_as_int(minLength);
-         if (mMinBlockSize < val)
-         {
-            mMinBlockSize = val;
-         }
-      }
+   // Adjust the values in the block size features according to the plugin
+   if (auto minLength = lilv_world_get(
+      gWorld, lilv_plugin_get_uri(mPlug), node_MinBlockLength, nullptr)
+      ; lilv_node_is_int(minLength)
+   ){
+      if (auto value = lilv_node_as_int(minLength)
+         ; value >= 0
+      )
+         mMinBlockSize = std::max<size_t>(mMinBlockSize, value);
       lilv_node_free(minLength);
    }
-
-   auto maxLength = lilv_world_get(gWorld, lilv_plugin_get_uri(mPlug), node_MaxBlockLength, NULL);
-   if (maxLength)
-   {
-      if (lilv_node_is_int(maxLength))
-      {
-         int val = lilv_node_as_int(maxLength);
-         if (mMaxBlockSize > val)
-         {
-            mMaxBlockSize = val;
-         }
-      }
+   if (auto maxLength = lilv_world_get(
+      gWorld, lilv_plugin_get_uri(mPlug), node_MaxBlockLength, nullptr)
+      ; lilv_node_is_int(maxLength)
+   ){
+      if (auto value = lilv_node_as_int(maxLength)
+         ; value >= 1
+      )
+         mMaxBlockSize = std::min<size_t>(mMaxBlockSize, value);
       lilv_node_free(maxLength);
    }
-
-   if (mMinBlockSize > mMaxBlockSize)
-   {
-      mMaxBlockSize = mMinBlockSize;
-   }
+   mMaxBlockSize = std::max(mMaxBlockSize, mMinBlockSize);
 
    auto numPorts = lilv_plugin_get_num_ports(mPlug);
 
@@ -893,27 +883,12 @@ void LV2Effect::SetSampleRate(double rate)
 
 size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
 {
-   mBlockSize = std::min(std::min(maxBlockSize, mUserBlockSize), mMaxBlockSize);
-
-   if (mBlockSize < mMinBlockSize)
-   {
-      mBlockSize = mMinBlockSize;
-   }
-   if (mBlockSize > mMaxBlockSize)
-   {
-      mBlockSize = mMaxBlockSize;
-   }
-
+   mBlockSize = std::max(mMinBlockSize,
+      std::min({maxBlockSize, mUserBlockSize, mMaxBlockSize}));
    if (mMaster)
-   {
       mMaster->SetBlockSize();
-   }
-
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-   {
+   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; ++i)
       mSlaves[i]->SetBlockSize();
-   }
-
    return mBlockSize;
 }
 
