@@ -730,27 +730,16 @@ bool LV2Effect::InitializePlugin()
    mWantsOptionsInterface = false;
    mWantsWorkerInterface = false;
    mWantsStateInterface = false;
-
-   LilvNodes *extdata = lilv_plugin_get_extension_data(mPlug);
-   if (extdata)
-   {
-      LILV_FOREACH(nodes, i, extdata)
-      {
-         const LilvNode *node = lilv_nodes_get(extdata, i);
-         const char *uri = lilv_node_as_string(node);
-
+   if (const auto extdata = lilv_plugin_get_extension_data(mPlug)) {
+      LILV_FOREACH(nodes, i, extdata) {
+         const auto node = lilv_nodes_get(extdata, i);
+         const auto uri = lilv_node_as_string(node);
          if (strcmp(uri, LV2_OPTIONS__interface) == 0)
-         {
             mWantsOptionsInterface = true;
-         }
          else if (strcmp(uri, LV2_WORKER__interface) == 0)
-         {
             mWantsWorkerInterface = true;
-         }
          else if (strcmp(uri, LV2_STATE__interface) == 0)
-         {
             mWantsStateInterface = true;
-         }
       }
       lilv_nodes_free(extdata);
    }
