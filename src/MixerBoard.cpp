@@ -1287,6 +1287,7 @@ void MixerBoard::LoadMusicalInstruments()
       {electric_piano_pno_key_xpm, wxT("electric_piano_pno_key")},
       {kick_xpm, wxT("kick")},
       {loop_xpm, wxT("loop")},
+      {mandolin, wxT("mandolin")},
       {organ_org_xpm, wxT("organ_org")},
       {perc_xpm, wxT("perc")},
       {sax_xpm, wxT("sax")},
