@@ -435,7 +435,7 @@ bool EffectReverb::Startup()
    return true;
 }
 
-void EffectReverb::PopulateOrExchange(ShuttleGui & S)
+void EffectReverb::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
 

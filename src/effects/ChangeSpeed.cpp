@@ -293,7 +293,7 @@ bool EffectChangeSpeed::Process()
    return bGoodResult;
 }
 
-void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
+void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    {
       wxString formatId;

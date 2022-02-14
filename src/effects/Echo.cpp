@@ -168,7 +168,7 @@ bool EffectEcho::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-void EffectEcho::PopulateOrExchange(ShuttleGui & S)
+void EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
 

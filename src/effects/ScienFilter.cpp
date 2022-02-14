@@ -370,7 +370,7 @@ bool EffectScienFilter::Init()
    return true;
 }
 
-void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
+void EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(5);
    S.SetSizerProportion(1);

@@ -107,7 +107,8 @@ public:
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,
       EffectSettingsAccess &access, bool forceModal = false) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+   void PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 

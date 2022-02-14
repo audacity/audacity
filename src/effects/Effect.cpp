@@ -576,7 +576,7 @@ bool Effect::LoadFactoryDefaults()
 
 // EffectUIClientInterface implementation
 
-bool Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
+bool Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
    mUIParent = parent;
@@ -584,7 +584,7 @@ bool Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 
 //   LoadUserPreset(GetCurrentSettingsGroup());
 
-   PopulateOrExchange(S);
+   PopulateOrExchange(S, access);
 
    mUIParent->SetMinSize(mUIParent->GetSizer()->GetMinSize());
 
@@ -1664,7 +1664,7 @@ void Effect::End()
 {
 }
 
-void Effect::PopulateOrExchange(ShuttleGui & WXUNUSED(S))
+void Effect::PopulateOrExchange(ShuttleGui &, EffectSettingsAccess &)
 {
    return;
 }

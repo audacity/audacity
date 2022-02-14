@@ -230,7 +230,7 @@ bool EffectNoise::Startup()
    return true;
 }
 
-void EffectNoise::PopulateOrExchange(ShuttleGui & S)
+void EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 

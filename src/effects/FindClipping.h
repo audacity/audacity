@@ -45,7 +45,8 @@ public:
    // Effect implementation
 
    bool Process() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+   void PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
@@ -58,6 +59,8 @@ private:
 private:
    int mStart;   ///< Using int rather than sampleCount because values are only ever small numbers
    int mStop;    ///< Using int rather than sampleCount because values are only ever small numbers
+   // To do: eliminate this
+   EffectSettingsAccessPtr mpAccess;
 };
 
 #endif // __AUDACITY_EFFECT_FINDCLIPPING__

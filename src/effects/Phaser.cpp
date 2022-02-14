@@ -246,7 +246,7 @@ bool EffectPhaser::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
+void EffectPhaser::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);

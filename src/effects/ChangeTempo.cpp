@@ -226,7 +226,7 @@ bool EffectChangeTempo::Process()
    return success;
 }
 
-void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
+void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    enum { precision = 2 };
 

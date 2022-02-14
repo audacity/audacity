@@ -1071,7 +1071,7 @@ int NyquistEffect::ShowHostInterface(
    return res;
 }
 
-void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
+void NyquistEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    if (mIsPrompt)
    {

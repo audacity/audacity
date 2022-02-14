@@ -352,7 +352,7 @@ bool EffectDistortion::LoadFactoryPreset(int id)
 
 // Effect implementation
 
-void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
+void EffectDistortion::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
    S.StartVerticalLay();

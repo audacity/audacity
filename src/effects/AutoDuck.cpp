@@ -424,7 +424,7 @@ bool EffectAutoDuck::Process()
    return !cancel;
 }
 
-void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
+void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.StartVerticalLay(true);

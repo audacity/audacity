@@ -532,7 +532,7 @@ void VampEffect::End()
    mPlugin.reset();
 }
 
-void VampEffect::PopulateOrExchange(ShuttleGui & S)
+void VampEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    Vamp::Plugin::ProgramList programs = mPlugin->getPrograms();
 

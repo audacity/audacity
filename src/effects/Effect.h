@@ -270,7 +270,8 @@ protected:
    // effects need to use a different input length, so override this method.
    virtual double CalcPreviewInputLength(double previewLength);
 
-   virtual void PopulateOrExchange(ShuttleGui & S);
+   virtual void PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access);
 
    // No more virtuals!
 

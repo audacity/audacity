@@ -242,7 +242,7 @@ TranslatableString RatioLabelFormat( int sliderValue, double value )
 
 }
 
-void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
+void EffectCompressor::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
 

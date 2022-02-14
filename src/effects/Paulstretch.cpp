@@ -196,7 +196,7 @@ bool EffectPaulstretch::Process()
 }
 
 
-void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S)
+void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
