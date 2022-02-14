@@ -374,8 +374,17 @@ private:
 #endif
 
    size_t AddOption(LV2_URID, uint32_t size, LV2_URID, const void *value);
+   /*!
+    @param subject URI of a plugin
+    @return whether all required features of subject are supported
+    */
    bool ValidateOptions(const LilvNode *subject);
-   bool CheckOptions(const LilvNode *subject, const LilvNode *predicate, bool required);
+   /*!
+    @param subject URI of a plugin
+    @param required whether to check required or optional features of subject
+    @return true only if `!required` or else all checked features are supported
+    */
+   bool CheckOptions(const LilvNode *subject, bool required);
 
    void AddFeature(const char *uri, const void *data);
    /*!

@@ -489,24 +489,20 @@ bool LV2Effect::InitializePlugin()
 {
    using namespace LV2Symbols;
 
+   // Construct the null-terminated array describing options, and validate it
    AddOption(urid_SequenceSize, sizeof(mSeqSize), urid_Int, &mSeqSize);
-   AddOption(urid_MinBlockLength, sizeof(mMinBlockSize), urid_Int, &mMinBlockSize);
-   AddOption(urid_MaxBlockLength, sizeof(mMaxBlockSize), urid_Int, &mMaxBlockSize);
-
+   AddOption(urid_MinBlockLength,
+      sizeof(mMinBlockSize), urid_Int, &mMinBlockSize);
+   AddOption(urid_MaxBlockLength,
+      sizeof(mMaxBlockSize), urid_Int, &mMaxBlockSize);
+   // Two options are reset later
    mBlockSizeOption = AddOption(urid_NominalBlockLength,
-                                sizeof(mBlockSize),
-                                urid_Int,
-                                &mBlockSize);
+      sizeof(mBlockSize), urid_Int, &mBlockSize);
    mSampleRateOption = AddOption(urid_SampleRate,
-                                 sizeof(mSampleRate),
-                                 urid_Float,
-                                 &mSampleRate);
-   AddOption(0, 0, 0, NULL);
-
+      sizeof(mSampleRate), urid_Float, &mSampleRate);
+   AddOption(0, 0, 0, nullptr);
    if (!ValidateOptions(lilv_plugin_get_uri(mPlug)))
-   {
       return false;
-   }
 
    // Set up some "objects" for lv2 with "virtual functions" (C-style)
    // To be set up later when making a dialog:
@@ -1693,20 +1689,11 @@ bool LV2Effect::SaveParameters(
 size_t LV2Effect::AddOption(LV2_URID key, uint32_t size, LV2_URID type, const void *value)
 {
    int ndx = mOptions.size();
-   mOptions.resize(1 + ndx);
-
-   memset(&mOptions[ndx], 0, sizeof(mOptions[ndx]));
-
    if (key != 0)
-   {
-      mOptions[ndx].context = LV2_OPTIONS_INSTANCE;
-      mOptions[ndx].subject = 0;
-      mOptions[ndx].key = key;
-      mOptions[ndx].size = size;
-      mOptions[ndx].type = type;
-      mOptions[ndx].value = value;
-   }
-
+      mOptions.emplace_back(LV2_Options_Option{
+         LV2_OPTIONS_INSTANCE, 0, key, size, type, value });
+   else
+      mOptions.emplace_back(LV2_Options_Option{});
    return ndx;
 }
 
@@ -1760,64 +1747,39 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, bool required)
 
 bool LV2Effect::ValidateOptions(const LilvNode *subject)
 {
-   if (CheckOptions(subject, LV2Symbols::node_RequiredOption, true))
-   {
-      return CheckOptions(subject, LV2Symbols::node_SupportedOption, false);
-   }
-
-   return false;
+   return CheckOptions(subject, true) && CheckOptions(subject, false);
 }
 
-bool LV2Effect::CheckOptions(const LilvNode *subject, const LilvNode *predicate, bool required)
+bool LV2Effect::CheckOptions(const LilvNode *subject, bool required)
 {
    using namespace LV2Symbols;
    bool supported = true;
-
-   LilvNodes *nodes = lilv_world_find_nodes(gWorld, subject, predicate, NULL);
-   if (nodes)
-   {
-      LILV_FOREACH(nodes, i, nodes)
-      {
-         const LilvNode *node = lilv_nodes_get(nodes, i);
-         const char *uri = lilv_node_as_string(node);
-         LV2_URID urid = URID_Map(uri);
-
+   const auto predicate =
+      required ? node_RequiredOption : node_SupportedOption;
+   LilvNodes *nodes =
+      lilv_world_find_nodes(gWorld, subject, predicate, nullptr);
+   if (nodes) {
+      LILV_FOREACH(nodes, i, nodes) {
+         const auto node = lilv_nodes_get(nodes, i);
+         const auto uri = lilv_node_as_string(node);
+         const auto urid = URID_Map(uri);
          if (urid == urid_NominalBlockLength)
-         {
             mSupportsNominalBlockLength = true;
-         }
          else if (urid == urid_SampleRate)
-         {
             mSupportsSampleRate = true;
-         }
-         else
-         {
-            supported = false;
-
-            for (auto & option : mOptions)
-            {
-               if (option.key == urid)
-               {
-                  supported = true;
-                  break;
-               }
-            }
-
-            if (!supported)
-            {
-               if (required)
-               {
-                  wxLogError(wxT("%s requires unsupported option %s"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
-                  break;
-               }
-               supported = true;
+         else if (required) {
+            const auto end = mOptions.end();
+            supported = (end != std::find_if(mOptions.begin(), end,
+               [&](const auto &option){ return option.key == urid; }));
+            if (!supported) {
+               wxLogError(wxT("%s requires unsupported option %s"),
+                  lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
+               break;
             }
          }
       }
-
       lilv_nodes_free(nodes);
    }
-
    return supported;
 }
 
@@ -3116,10 +3078,8 @@ void LV2Wrapper::SetSampleRate()
    if (mEffect.mSupportsSampleRate &&
       mOptionsInterface && mOptionsInterface->set
    ){
-      LV2_Options_Option options[2] = {};
-      memcpy(&options,
-         &mEffect.mOptions[mEffect.mSampleRateOption],
-         sizeof(mEffect.mOptions[0]));
+      LV2_Options_Option options[2]{
+         mEffect.mOptions[mEffect.mSampleRateOption], {} };
       mOptionsInterface->set(mHandle, options);
    }
 }
@@ -3129,10 +3089,8 @@ void LV2Wrapper::SetBlockSize()
    if (mEffect.mSupportsNominalBlockLength &&
       mOptionsInterface && mOptionsInterface->set
    ){
-      LV2_Options_Option options[2] = {};
-      memcpy(&options,
-         &mEffect.mOptions[mEffect.mBlockSizeOption],
-         sizeof(mEffect.mOptions[0]));
+      LV2_Options_Option options[2]{
+         mEffect.mOptions[mEffect.mBlockSizeOption], {} };
       mOptionsInterface->set(mHandle, options);
    }
 }
