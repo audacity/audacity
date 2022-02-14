@@ -163,7 +163,7 @@ class VSTEffect final : public wxEvtHandler,
    // EffectUIClientInterface implementation
 
    bool SetHost(EffectHostInterface *host) override;
-   bool PopulateUI(ShuttleGui &S) override;
+   bool PopulateUI(ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
    bool HideUI() override;

@@ -408,7 +408,7 @@ bool EffectUIHost::Initialize()
 
          // Let the client add things to the panel
          ShuttleGui S1{ uw.get(), eIsCreating };
-         if (!mClient.PopulateUI(S1))
+         if (!mClient.PopulateUI(S1, *mpAccess))
          {
             return false;
          }

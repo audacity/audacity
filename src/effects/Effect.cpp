@@ -576,7 +576,7 @@ bool Effect::LoadFactoryDefaults()
 
 // EffectUIClientInterface implementation
 
-bool Effect::PopulateUI(ShuttleGui &S)
+bool Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    auto parent = S.GetParent();
    mUIParent = parent;

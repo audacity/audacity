@@ -138,7 +138,7 @@ public:
    int ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal) override;
    bool SetHost(EffectHostInterface* host) override;
    bool IsGraphicalUI() override;
-   bool PopulateUI(ShuttleGui& S) override;
+   bool PopulateUI(ShuttleGui& S, EffectSettingsAccess &access) override;
    bool ValidateUI() override;
    bool HideUI() override;
    bool CloseUI() override;

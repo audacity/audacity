@@ -1656,7 +1656,7 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
+bool AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    // OSStatus result;
 

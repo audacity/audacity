@@ -1165,7 +1165,7 @@ bool LadspaEffect::LoadFactoryDefaults()
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool LadspaEffect::PopulateUI(ShuttleGui &S)
+bool LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    auto parent = S.GetParent();
 

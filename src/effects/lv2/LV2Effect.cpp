@@ -1519,7 +1519,7 @@ bool LV2Effect::SetAutomationParameters(CommandParameters &parms)
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool LV2Effect::PopulateUI(ShuttleGui &S)
+bool LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    auto parent = S.GetParent();
    mParent = parent;

@@ -850,7 +850,7 @@ bool VST3Effect::IsGraphicalUI()
    return mPlugView != nullptr;
 }
 
-bool VST3Effect::PopulateUI(ShuttleGui& S)
+bool VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &)
 {
    using namespace Steinberg;
 

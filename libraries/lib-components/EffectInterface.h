@@ -374,7 +374,7 @@ public:
    virtual bool IsGraphicalUI() = 0;
 
    //! Adds controls to a panel that is given as the parent window of `S`
-   virtual bool PopulateUI(ShuttleGui &S) = 0;
+   virtual bool PopulateUI(ShuttleGui &S, EffectSettingsAccess &access) = 0;
 
    virtual bool ValidateUI() = 0;
    virtual bool HideUI() = 0;
