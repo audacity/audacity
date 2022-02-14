@@ -22,6 +22,7 @@
 
 #include "MusicalInstruments/kick.xpm"
 #include "MusicalInstruments/loop.xpm"
+#include "MusicalInstruments/mandolin.xpm"
 #include "MusicalInstruments/organ_org.xpm"
 #include "MusicalInstruments/perc.xpm"
 
