@@ -69,9 +69,6 @@
 // Define a maximum block size in number of samples (not bytes)
 #define DEFAULT_BLOCKSIZE 1048576
 
-// Define a reasonable default sequence size in bytes
-#define DEFAULT_SEQSIZE 8192
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // LV2EffectMeter
@@ -187,9 +184,9 @@ public:
 
 private:
    EffectDefinitionInterface &mEffect;
-   int mBufferSize;
-   bool mUseLatency;
-   bool mUseGUI;
+   int mBufferSize{};
+   bool mUseLatency{};
+   bool mUseGUI{};
 
    DECLARE_EVENT_TABLE()
 };
@@ -349,49 +346,6 @@ END_EVENT_TABLE()
 
 LV2Effect::LV2Effect(const LilvPlugin *plug) : mPlug{ plug }
 {
-   mSuilInstance = NULL;
-
-   mSampleRate = 44100;
-   mBlockSize = DEFAULT_BLOCKSIZE;
-   mSeqSize = DEFAULT_SEQSIZE;
-
-   mMinBlockSize = 1;
-   mMaxBlockSize = mBlockSize;
-   mUserBlockSize = mBlockSize;
-
-   mLatencyPort = -1;
-   mLatencyDone = false;
-   mRolling = false;
-
-   mUIIdleInterface = NULL;
-   mUIShowInterface = NULL;
-
-   mAudioIn = 0;
-   mAudioOut = 0;
-   mMidiIn = 0;
-   mMidiOut = 0;
-
-   mControlIn.reset();
-   mControlOut.reset();
-
-   mPositionSpeed = 1.0;
-   mPositionFrame = 0.0;
-   
-   mNativeWin = NULL;
-   mNativeWinInitialSize = wxDefaultSize;
-   mNativeWinLastSize = wxDefaultSize;
-   mResizing = false;
-#if defined(__WXGTK__)
-   mResized = false;
-#endif
-
-   mExternalWidget = NULL;
-   mExternalUIClosed = false;
-
-   mNoResize = false;
-
-   mSupportsNominalBlockLength = false;
-   mSupportsSampleRate = false;
 }
 
 LV2Effect::~LV2Effect()
@@ -891,12 +845,12 @@ std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
    GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
       wxT("BufferSize"), userBlockSize, 8192);
    mUserBlockSize = std::max(1, userBlockSize);
+   mBlockSize = mUserBlockSize;
+
    GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
       wxT("UseLatency"), mUseLatency, true);
    GetConfig(*this, PluginSettings::Shared, wxT("Settings"), wxT("UseGUI"),
       mUseGUI, true);
-
-   mBlockSize = mUserBlockSize;
 
    lv2_atom_forge_init(&mForge, URIDMapFeature());
 
@@ -940,7 +894,7 @@ void LV2Effect::SetSampleRate(double rate)
 
 size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
 {
-   mBlockSize = std::min(std::min((int)maxBlockSize, mUserBlockSize), mMaxBlockSize);
+   mBlockSize = std::min(std::min(maxBlockSize, mUserBlockSize), mMaxBlockSize);
 
    if (mBlockSize < mMinBlockSize)
    {
@@ -971,12 +925,10 @@ size_t LV2Effect::GetBlockSize() const
 
 sampleCount LV2Effect::GetLatency()
 {
-   if (mUseLatency && mLatencyPort >= 0 && !mLatencyDone)
-   {
+   if (mUseLatency && mLatencyPort >= 0 && !mLatencyDone) {
       mLatencyDone = true;
       return sampleCount(mMaster->GetLatency());
    }
-
    return 0;
 }
 

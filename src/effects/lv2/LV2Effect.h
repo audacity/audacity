@@ -62,6 +62,9 @@ class NumericTextCtrl;
 
 // DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 
+// Define a maximum block size in number of samples (not bytes)
+#define DEFAULT_BLOCKSIZE 1048576
+
 class LV2Port
 {
 public:
@@ -247,6 +250,9 @@ using LV2ControlPortPtr = std::shared_ptr<LV2ControlPort>;
 using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
 
 class LV2Wrapper;
+
+// Define a reasonable default sequence size in bytes
+#define DEFAULT_SEQSIZE 8192
 
 class LV2Effect final : public StatefulPerTrackEffect
 {
@@ -460,26 +466,26 @@ private:
 
    const LilvPlugin *const mPlug;
 
-   float mSampleRate;
-   int mBlockSize;
-   int mSeqSize;
+   float mSampleRate{ 44100 };
+   size_t mBlockSize{ DEFAULT_BLOCKSIZE };
+   int mSeqSize{ DEFAULT_SEQSIZE };
 
-   int mMinBlockSize;
-   int mMaxBlockSize;
-   int mUserBlockSize;
+   size_t mMinBlockSize{ 1 };
+   size_t mMaxBlockSize{ mBlockSize };
+   size_t mUserBlockSize{ mBlockSize };
 
    std::unordered_map<uint32_t, LV2ControlPortPtr> mControlPortMap;
    LV2ControlPortArray mControlPorts;
 
    LV2AudioPortArray mAudioPorts;
-   unsigned mAudioIn;
-   unsigned mAudioOut;
+   unsigned mAudioIn{ 0 };
+   unsigned mAudioOut{ 0 };
 
    LV2AtomPortArray mAtomPorts;
    LV2AtomPortPtr mControlIn;
    LV2AtomPortPtr mControlOut;
-   unsigned mMidiIn;
-   unsigned mMidiOut;
+   unsigned mMidiIn{ 0 };
+   unsigned mMidiOut{ 0 };
 
    LV2CVPortArray mCVPorts;
    unsigned mCVIn;
@@ -488,38 +494,38 @@ private:
    std::unordered_map<TranslatableString, std::vector<int>> mGroupMap;
    TranslatableStrings mGroups;
 
-   bool mWantsOptionsInterface;
-   bool mWantsStateInterface;
-   bool mWantsWorkerInterface;
-   bool mNoResize;
+   bool mWantsOptionsInterface{ false };
+   bool mWantsStateInterface{ false };
+   bool mWantsWorkerInterface{ false };
+   bool mNoResize{ false };
 
-   bool mUseLatency;
-   int mLatencyPort;
-   bool mLatencyDone;
-   bool mRolling;
+   bool mUseLatency{ false };
+   int mLatencyPort{ -1 };
+   bool mLatencyDone{ false };
+   bool mRolling{ false };
 
    std::unique_ptr<LV2Wrapper> mMaster;
    std::unique_ptr<LV2Wrapper> mProcess;
    std::vector<std::unique_ptr<LV2Wrapper>> mSlaves;
 
-   size_t mNumSamples;
-   size_t mFramePos;
+   size_t mNumSamples{};
+   size_t mFramePos{};
 
    FloatBuffers mCVInBuffers;
    FloatBuffers mCVOutBuffers;
 
    // Position info
-   float mPositionSpeed;
-   float mPositionFrame;
+   float mPositionSpeed{ 1.0f };
+   float mPositionFrame{ 0.0f };
 
-   double mLength;
+   double mLength{};
 
    wxTimer mTimer;
 
    wxWeakRef<wxDialog> mDialog;
-   wxWindow *mParent;
+   wxWindow *mParent{};
 
-   bool mUseGUI;
+   bool mUseGUI{};
 
    // These objects contain C-style virtual function tables that we fill in
    const LV2_URI_Map_Feature mUriMapFeature{
@@ -533,17 +539,17 @@ private:
    // Not const, filled in when making a dialog
    LV2_Extension_Data_Feature mExtensionDataFeature{};
 
-   LV2_External_UI_Host mExternalUIHost;
-   LV2_External_UI_Widget* mExternalWidget;
-   bool mExternalUIClosed;
+   LV2_External_UI_Host mExternalUIHost{};
+   LV2_External_UI_Widget* mExternalWidget{};
+   bool mExternalUIClosed{ false };
 
-   LV2_Atom_Forge mForge;
+   LV2_Atom_Forge mForge{};
    
    std::vector<LV2_Options_Option> mOptions;
-   size_t mBlockSizeOption;
-   size_t mSampleRateOption;
-   bool mSupportsNominalBlockLength;
-   bool mSupportsSampleRate;
+   size_t mBlockSizeOption{};
+   size_t mSampleRateOption{};
+   bool mSupportsNominalBlockLength{ false };
+   bool mSupportsSampleRate{ false };
 
    //! Extra indirection to the structs satisfies the interfaces
    //! of suil_instance_new and lilv_plugin_instantiate
@@ -553,25 +559,23 @@ private:
    size_t mInstanceAccessFeature{};
    //! Index into m_features
    size_t mParentFeature{};
-   LV2_Feature *mWorkerScheduleFeature;
+   LV2_Feature *mWorkerScheduleFeature{};
 
-   bool mFreewheeling;
+   SuilHost *mSuilHost{};
+   SuilInstance *mSuilInstance{};
 
-   SuilHost *mSuilHost;
-   SuilInstance *mSuilInstance;
-
-   NativeWindow *mNativeWin;
-   wxSize mNativeWinInitialSize;
-   wxSize mNativeWinLastSize;
-   bool mResizing;
+   NativeWindow *mNativeWin{};
+   wxSize mNativeWinInitialSize{ wxDefaultSize };
+   wxSize mNativeWinLastSize{ wxDefaultSize };
+   bool mResizing{ false };
 #if defined(__WXGTK__)
-   bool mResized;
+   bool mResized{ false };
 #endif
 
-   LV2UI_Idle_Interface *mUIIdleInterface;
-   LV2UI_Show_Interface *mUIShowInterface;
+   const LV2UI_Idle_Interface *mUIIdleInterface{};
+   const LV2UI_Show_Interface *mUIShowInterface{};
 
-   NumericTextCtrl *mDuration;
+   NumericTextCtrl *mDuration{};
 
    // Mutable cache fields computed once on demand
    mutable bool mFactoryPresetsLoaded{ false };
