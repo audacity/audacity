@@ -9,6 +9,8 @@
 
 *********************************************************************/
 
+#ifndef __AUDACITY_LV2_EFFECT__
+#define __AUDACITY_LV2_EFFECT__
 
 
 #if USE_LV2
@@ -666,4 +668,5 @@ private:
    bool mStopWorker;
 };
 
+#endif
 #endif
