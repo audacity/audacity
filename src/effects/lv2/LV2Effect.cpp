@@ -50,7 +50,6 @@
 
 #include "AudacityException.h"
 #include "ConfigInterface.h"
-#include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/wxPanelWrapper.h"
@@ -179,7 +178,7 @@ void LV2EffectMeter::OnSize(wxSizeEvent &WXUNUSED(evt))
 class LV2EffectSettingsDialog final : public wxDialogWrapper
 {
 public:
-   LV2EffectSettingsDialog(wxWindow *parent, LV2Effect &effect);
+   LV2EffectSettingsDialog(wxWindow *parent, EffectDefinitionInterface &effect);
    virtual ~LV2EffectSettingsDialog();
 
    void PopulateOrExchange(ShuttleGui &S);
@@ -187,7 +186,7 @@ public:
    void OnOk(wxCommandEvent &evt);
 
 private:
-   LV2Effect &mEffect;
+   EffectDefinitionInterface &mEffect;
    int mBufferSize;
    bool mUseLatency;
    bool mUseGUI;
@@ -200,7 +199,7 @@ BEGIN_EVENT_TABLE(LV2EffectSettingsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 LV2EffectSettingsDialog::LV2EffectSettingsDialog(
-   wxWindow *parent, LV2Effect &effect)
+   wxWindow *parent, EffectDefinitionInterface &effect)
 :  wxDialogWrapper(parent, wxID_ANY, XO("LV2 Effect Settings"))
 , mEffect{ effect }
 {

@@ -245,7 +245,6 @@ public:
 using LV2ControlPortPtr = std::shared_ptr<LV2ControlPort>;
 using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
 
-class LV2EffectSettingsDialog;
 class LV2Wrapper;
 
 class LV2Effect final : public StatefulPerTrackEffect
@@ -553,8 +552,6 @@ private:
    DECLARE_EVENT_TABLE()
 
    friend class LV2Wrapper;
-   friend class LV2EffectSettingsDialog;
-   friend class LV2EffectsModule;
 };
 
 inline wxString LilvString(const LilvNode *node)
