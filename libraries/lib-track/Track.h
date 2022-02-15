@@ -247,7 +247,6 @@ private:
    TrackNodePointer mNode{};
    int            mIndex; //!< 0-based position of this track in its TrackList
    wxString       mName;
-   wxString       mDefaultName;
 
  private:
    bool           mSelected;
@@ -423,8 +422,6 @@ private:
 
    wxString GetName() const { return mName; }
    void SetName( const wxString &n );
-   wxString GetDefaultName() const { return mDefaultName; }
-   void SetDefaultName( const wxString &n ) { mDefaultName = n; }
 
    bool GetSelected() const { return mSelected; }
 

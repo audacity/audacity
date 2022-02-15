@@ -156,8 +156,7 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
    mOldGain[0] = 0.0;
    mOldGain[1] = 0.0;
    mWaveColorIndex = 0;
-   SetDefaultName(GetDefaultAudioTrackNamePreference());
-   SetName(GetDefaultName());
+   SetName(GetDefaultAudioTrackNamePreference());
    mDisplayMin = -1.0;
    mDisplayMax = 1.0;
    mSpectrumMin = mSpectrumMax = -1; // so values will default to settings
@@ -202,7 +201,6 @@ void WaveTrack::Init(const WaveTrack &orig)
    DoSetPan(orig.GetPan());
    mOldGain[0] = 0.0;
    mOldGain[1] = 0.0;
-   SetDefaultName(orig.GetDefaultName());
    SetName(orig.GetName());
    mDisplayMin = orig.mDisplayMin;
    mDisplayMax = orig.mDisplayMax;
