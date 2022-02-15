@@ -1,4 +1,4 @@
-/**********************************************************************
+/*!********************************************************************
 
   Audacity: A Digital Audio Editor
 
@@ -7,6 +7,20 @@
 **********************************************************************/
 #include "EffectInterface.h"
 #include <wx/tokenzr.h>
+
+EffectSettingsAccess::~EffectSettingsAccess() = default;
+
+SimpleEffectSettingsAccess::~SimpleEffectSettingsAccess() = default;
+
+const EffectSettings &SimpleEffectSettingsAccess::Get()
+{
+   return mSettings;
+}
+
+void SimpleEffectSettingsAccess::Set(EffectSettings &&settings)
+{
+   mSettings = std::move(settings);
+}
 
 Identifier EffectDefinitionInterface::GetSquashedName(const Identifier &ident)
 {

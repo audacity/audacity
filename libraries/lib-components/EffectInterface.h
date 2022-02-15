@@ -1,8 +1,8 @@
-/**********************************************************************
+/*!********************************************************************
 
    Audacity: A Digital Audio Editor
 
-   EffectInterface.h
+   @file EffectInterface.h
 
    Leland Lucius
 
@@ -66,6 +66,30 @@ using EffectFamilySymbol = ComponentInterfaceSymbol;
 //! Externalized state of a plug-in
 struct EffectSettings : audacity::TypedAny<EffectSettings> {
    using TypedAny::TypedAny;
+};
+
+//! Interface for accessing an EffectSettings that may change asynchronously in
+//! another thread; to be used in the main thread, only.
+/*! Updates are communicated atomically both ways.  The address of Get() should
+ not be relied on as unchanging between calls. */
+class COMPONENTS_API EffectSettingsAccess {
+public:
+   virtual ~EffectSettingsAccess();
+   virtual const EffectSettings &Get() = 0;
+   virtual void Set(EffectSettings &&settings) = 0;
+};
+
+//! Implementation of EffectSettings for cases where there is only one thread.
+class COMPONENTS_API SimpleEffectSettingsAccess final
+   : public EffectSettingsAccess {
+public:
+   explicit SimpleEffectSettingsAccess(EffectSettings &settings)
+      : mSettings{settings} {}
+   ~SimpleEffectSettingsAccess() override;
+   const EffectSettings &Get() override;
+   void Set(EffectSettings &&settings) override;
+private:
+   EffectSettings &mSettings;
 };
 
 /*************************************************************************************//**
