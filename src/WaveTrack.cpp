@@ -115,31 +115,21 @@ static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    WaveTrack::New
 };
 
-WaveTrack::Holder WaveTrackFactory::DuplicateWaveTrack(const WaveTrack &orig)
+std::shared_ptr<WaveTrack> WaveTrackFactory::Create()
 {
-   auto waveTrack = std::static_pointer_cast<WaveTrack>( orig.Duplicate() );
-
-   return waveTrack;
+   return Create(QualitySettings::SampleFormatChoice(), mRate.GetRate());
 }
 
-
-WaveTrack::Holder WaveTrackFactory::NewWaveTrack(sampleFormat format, double rate)
+std::shared_ptr<WaveTrack> WaveTrackFactory::Create(sampleFormat format, double rate)
 {
-   if (format == (sampleFormat)0)
-      format = QualitySettings::SampleFormatChoice();
-   if (rate == 0)
-      rate = mRate.GetRate();
-
-   auto waveTrack = std::make_shared<WaveTrack> ( mpFactory, format, rate );
-
-   return waveTrack;
+   return std::make_shared<WaveTrack>(mpFactory, format, rate);
 }
 
 WaveTrack *WaveTrack::New( AudacityProject &project )
 {
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &tracks = TrackList::Get( project );
-   auto result = tracks.Add(trackFactory.NewWaveTrack());
+   auto result = tracks.Add(trackFactory.Create());
    result->AttachedTrackObjects::BuildAll();
    return result;
 }
@@ -156,7 +146,6 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
    mOldGain[0] = 0.0;
    mOldGain[1] = 0.0;
    mWaveColorIndex = 0;
-   SetName(GetDefaultAudioTrackNamePreference());
    mDisplayMin = -1.0;
    mDisplayMax = 1.0;
    mSpectrumMin = mSpectrumMax = -1; // so values will default to settings
@@ -201,7 +190,6 @@ void WaveTrack::Init(const WaveTrack &orig)
    DoSetPan(orig.GetPan());
    mOldGain[0] = 0.0;
    mOldGain[1] = 0.0;
-   SetName(orig.GetName());
    mDisplayMin = orig.mDisplayMin;
    mDisplayMax = orig.mDisplayMax;
    mSpectrumMin = orig.mSpectrumMin;
