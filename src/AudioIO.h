@@ -57,6 +57,8 @@ namespace RealtimeEffects { class SuspensionScope; }
 
 bool ValidateDeviceNames();
 
+enum class Acknowledge { eNone = 0, eStart, eStop };
+
 /*!
  Emitted by the global AudioIO object when play, recording, or monitoring
  starts or stops
@@ -303,6 +305,9 @@ public:
    std::atomic<bool>   mAudioThreadShouldCallTrackBufferExchangeOnce;
    std::atomic<bool>   mAudioThreadTrackBufferExchangeLoopRunning;
    std::atomic<bool>   mAudioThreadTrackBufferExchangeLoopActive;
+      
+   std::atomic<Acknowledge>  mAudioThreadAcknowledge;
+
 
    std::atomic<bool>   mForceFadeOut{ false };
 
