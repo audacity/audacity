@@ -1,4 +1,4 @@
-/**********************************************************************
+/*!********************************************************************
  
  Audacity: A Digital Audio Editor
  
@@ -22,8 +22,8 @@
 template<typename Data>
 class MessageBuffer {
    struct UpdateSlot {
-      std::atomic<bool> mBusy{ false };
       Data mData;
+      std::atomic<bool> mBusy{ false };
    };
    NonInterfering<UpdateSlot> mSlots[2];
 
@@ -33,7 +33,11 @@ public:
    void Initialize();
 
    //! Move data out (if available), or else copy it out
-   Data Read();
+   /*!
+    @tparam Result is constructible from Data&& and forwards of other arguments
+   */
+   template<typename Result = Data, typename... ConstructorArgs>
+   Result Read(ConstructorArgs &&...args);
    
    //! Reassign a slot by move or copy
    template<typename Arg = Data&&> void Write( Arg &&arg );
@@ -56,7 +60,8 @@ void MessageBuffer<Data>::Initialize()
 }
 
 template<typename Data>
-Data MessageBuffer<Data>::Read()
+template<typename Result, typename... ConstructorArgs>
+Result MessageBuffer<Data>::Read(ConstructorArgs &&...args)
 {
    // Whichever slot was last written, prefer to read that.
    auto idx = mLastWrittenSlot.load( std::memory_order_relaxed );
@@ -70,7 +75,8 @@ Data MessageBuffer<Data>::Read()
    } while ( wasBusy );
 
    // Copy the slot
-   auto result = std::move( mSlots[idx].mData );
+   Result result(
+      std::move( mSlots[idx].mData ), std::forward<ConstructorArgs>(args)... );
 
    mSlots[idx].mBusy.store( false, std::memory_order_release );
 
