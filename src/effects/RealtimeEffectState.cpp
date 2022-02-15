@@ -11,7 +11,125 @@
 #include "RealtimeEffectState.h"
 
 #include "EffectInterface.h"
+#include "MessageBuffer.h"
 #include "PluginManager.h"
+
+//! Mediator of two-way inter-thread communication of changes of settings
+class RealtimeEffectState::AccessState : public NonInterferingBase {
+public:
+   AccessState(EffectProcessor &effect, EffectSettings &settings)
+      : mEffect{effect}
+      , mSettings{settings}
+   {
+   }
+
+   void Initialize(const EffectSettings &settings) {
+      // Initialize each message buffer with two copies of settings
+      mChannelToMain.Write(ToMainSlot{settings});
+      mChannelToMain.Write(ToMainSlot{settings});
+      mChannelFromMain.Write(FromMainSlot{settings});
+      mChannelFromMain.Write(FromMainSlot{settings});
+   }
+
+   const EffectSettings &MainRead() {
+      // Main thread clones the object in the std::any, then gives a reference
+      mChannelToMain.Read<ToMainSlot::Reader>(mMainThreadCache);
+      return mMainThreadCache;
+   }
+   void MainWrite(EffectSettings &&settings) {
+      // Main thread may simply swap new content into place
+      mChannelFromMain.Write(std::move(settings));
+   }
+
+   struct EffectAndSettings{
+      EffectProcessor &effect; const EffectSettings &settings; };
+   void WorkerRead() {
+      // Worker thread avoids memory allocation.  It copies the contents of any
+      mChannelFromMain.Read<FromMainSlot::Reader>(mEffect, mSettings);
+   }
+   void WorkerWrite() {
+      // Worker thread avoids memory allocation.  It copies the contents of any
+      mChannelToMain.Write(EffectAndSettings{mEffect, mSettings});
+   }
+
+private:
+   struct ToMainSlot {
+      // For initialization of the channel
+      ToMainSlot() = default;
+      explicit ToMainSlot(const EffectSettings &settings)
+         // Copy std::any
+         : mSettings{ settings }
+      {}
+      ToMainSlot &operator=(ToMainSlot &&) = default;
+
+      // Worker thread writes the slot
+      ToMainSlot& operator=(EffectAndSettings &&arg) {
+         // This happens during MessageBuffer's busying of the slot
+         arg.effect.CopySettingsContents(arg.settings, mSettings);
+         return *this;
+      }
+
+      // Main thread doesn't move out of the slot, but copies std::any
+      struct Reader { Reader(ToMainSlot &&slot, EffectSettings &settings) {
+         settings = slot.mSettings;
+      } };
+
+      EffectSettings mSettings;
+   };
+   MessageBuffer<ToMainSlot> mChannelToMain;
+
+   struct FromMainSlot {
+      // For initialization of the channel
+      FromMainSlot() = default;
+      explicit FromMainSlot(const EffectSettings &settings)
+         // Copy std::any
+         : mSettings{ settings }
+      {}
+      FromMainSlot &operator=(FromMainSlot &&) = default;
+
+      // Main thread writes the slot
+      FromMainSlot& operator=(EffectSettings &&settings) {
+         mSettings.swap(settings);
+         return *this;
+      }
+
+      // Worker thread reads the slot
+      struct Reader { Reader(FromMainSlot &&slot,
+         EffectProcessor &effect, EffectSettings &settings) {
+            // This happens during MessageBuffer's busying of the slot
+            effect.CopySettingsContents(slot.mSettings, settings);
+      } };
+
+      EffectSettings mSettings;
+   };
+   MessageBuffer<FromMainSlot> mChannelFromMain;
+
+   EffectProcessor &mEffect;
+   EffectSettings &mSettings;
+   EffectSettings mMainThreadCache;
+};
+
+//! Main thread's interface to inter-thread communication of changes of settings
+struct RealtimeEffectState::Access final : EffectSettingsAccess {
+   Access() = default;
+   explicit Access(std::weak_ptr<AccessState> wState)
+      : mwState{ move(wState) } {}
+   ~Access() override = default;
+   const EffectSettings &Get() override {
+      if (auto pState = mwState.lock())
+         return pState->MainRead();
+      else {
+         // Non-modal dialog may have outlived the RealtimeEffectState
+         static EffectSettings empty;
+         return empty;
+      }
+   }
+   void Set(EffectSettings &&settings) override {
+      if (auto pState = mwState.lock())
+         pState->MainWrite(std::move(settings));
+   }
+   std::weak_ptr<AccessState> mwState;
+};
 
 RealtimeEffectState::RealtimeEffectState(const PluginID & id)
 {
@@ -131,6 +249,11 @@ bool RealtimeEffectState::ProcessStart()
 {
    if (!mEffect)
       return false;
+
+   // Get state changes from the main thread
+   // But skip this if we never gave out Access, or it has expired
+   if (!mwAccess.expired())
+      mpAccessState->WorkerRead();
 
    return mEffect->RealtimeProcessStart(mSettings);
 }
@@ -264,7 +387,16 @@ bool RealtimeEffectState::ProcessEnd()
    if (!mEffect)
       return false;
 
-   return mEffect->RealtimeProcessEnd(mSettings);
+   auto result = mEffect->RealtimeProcessEnd(mSettings);
+   if (result && !mwAccess.expired())
+      // Some dialogs require communication back from the processor so that
+      // they can update their appearance in idle time, and some plug-in
+      // libraries (like lv2) require the host program to mediate the
+      // communication
+      // But skip this if we never gave out Access, or it has expired
+      mpAccessState->WorkerWrite();
+
+   return result;
 }
 
 bool RealtimeEffectState::IsActive() const noexcept
@@ -394,4 +526,22 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
    }
 
    xmlFile.EndTag(XMLTag());
+}
+
+std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
+{
+   if (!GetEffect())
+      // Effect not found!  Return a dummy
+      return std::make_shared<Access>();
+
+   // Initialize once in the lifetime of `this`
+   if (!mpAccessState)
+      mpAccessState = std::make_unique<AccessState>(*mEffect, mSettings);
+
+   // Reinitialize
+   mpAccessState->Initialize(mSettings);
+
+   auto result = std::make_shared<Access>(mpAccessState);
+   mwAccess = result;
+   return result;
 }

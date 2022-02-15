@@ -22,6 +22,7 @@
 #include "XMLTagHandler.h"
 
 class EffectProcessor;
+class EffectSettingsAccess;
 class Track;
 
 class RealtimeEffectState : public XMLTagHandler
@@ -69,11 +70,19 @@ public:
    XMLTagHandler *HandleXMLChild(const std::string_view &tag) override;
    void WriteXML(XMLWriter &xmlFile);
 
+   // Expose access so a dialog can be connected to this state
+   std::shared_ptr<EffectSettingsAccess> GetAccess();
+
 private:
    PluginID mID;
    wxString mParameters;  // Used only during deserialization
    std::unique_ptr<EffectProcessor> mEffect;
    EffectSettings mSettings;
+
+   struct Access;
+   struct AccessState;
+   std::shared_ptr<AccessState> mpAccessState; // Destroy before mSettings
+   std::weak_ptr<EffectSettingsAccess> mwAccess;
 
    size_t mCurrentProcessor{ 0 };
    std::unordered_map<Track *, size_t> mGroups;
