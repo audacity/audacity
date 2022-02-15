@@ -14,6 +14,8 @@ This library depends only on the wxBase subset of wxWidgets.
 ]]#
 
 set( SOURCES
+   Base64.h
+   Base64.cpp
    FutureStrings.h
    Identifier.cpp
    Identifier.h

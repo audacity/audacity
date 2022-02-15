@@ -237,6 +237,11 @@ cmake_dependent_option(
    Off
 )
 
+option(${_OPT}has_vst3
+    "Enable support for VST3 plug-ins in Audacity"
+    On
+)
+
 # Determine 32-bit or 64-bit target
 if( CMAKE_C_COMPILER_ID MATCHES "MSVC" AND CMAKE_VS_PLATFORM_NAME MATCHES "Win64|x64" )
    set( IS_64BIT ON )
@@ -379,6 +384,13 @@ if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( CMAKE_MACOSX_RPATH OFF )
    set( CMAKE_SKIP_BUILD_RPATH ON )
    set( CMAKE_SKIP_INSTALL_RPATH ON )
+endif()
+
+if( ${_OPT}has_vst3 AND CMAKE_CXX_COMPILER_ID MATCHES "GNU" )
+   #VST3 module_linux.cpp uses c++ fs features
+   #Once compiler minimum version is upgraded to 9.1+
+   #we don't need this option any more
+   list( APPEND CMAKE_REQUIRED_LIBRARIES -lstdc++fs )
 endif()
 
 # Add the math library (if found) to the list of required libraries

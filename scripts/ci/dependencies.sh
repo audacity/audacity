@@ -42,6 +42,8 @@ else # Linux & others
             libjack-jackd2-dev
             gettext
             python3-pip
+
+            libxcb-util-dev # VSD3 SDK
         )
         sudo apt-get update -y
         sudo apt-get install -y --no-install-recommends "${apt_packages[@]}"

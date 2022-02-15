@@ -96,7 +96,7 @@ public:
    //! Whether the effect supports realtime previewing (while audio is playing).
    virtual bool SupportsRealtime() = 0;
 
-   //! Whether the effect can be used without the UI, in a macro.
+   //! Whether the effect has any automatable controls.
    virtual bool SupportsAutomation() = 0;
 
    //! Whether the effect dialog should have a Debug button; default, always false.
