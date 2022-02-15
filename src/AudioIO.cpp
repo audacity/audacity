@@ -1463,9 +1463,9 @@ void AudioIO::StopStream()
       // call TrackBufferExchange one last time (it normally would not do so since
       // Pa_GetStreamActive() would now return false
       mAudioThreadShouldCallTrackBufferExchangeOnce
-         .store(true, std::memory_order_relaxed);
-      while( mAudioThreadShouldCallTrackBufferExchangeOnce
-         .load(std::memory_order_relaxed) )
+         .store(true, std::memory_order_release);
+      while (mAudioThreadShouldCallTrackBufferExchangeOnce
+         .load(std::memory_order_acquire))
       {
          //FIXME: Seems like this block of the UI thread isn't bounded,
          //but we cannot allow event handlers to see incompletely terminated
@@ -1473,21 +1473,29 @@ void AudioIO::StopStream()
          using namespace std::chrono;
          std::this_thread::sleep_for(50ms);
       }
+   }
 
-      //
-      // Everything is taken care of.  Now, just free all the resources
-      // we allocated in StartStream()
-      //
+   // No longer need effects processing. This must be done after the stream is stopped
+   // to prevent the callback from being invoked after the effects are finalized.
+   mpTransportState.reset();
 
-      if (mPlaybackTracks.size() > 0)
-      {
-         mPlaybackBuffers.reset();
-         mScratchBuffers.clear();
-         mScratchPointers.clear();
-         mPlaybackMixers.clear();
-         mPlaybackSchedule.mTimeQueue.Clear();
-      }
+   //
+   // Everything is taken care of.  Now, just free all the resources
+   // we allocated in StartStream()
+   //
 
+   if (mPlaybackTracks.size() > 0)
+   {
+      mPlaybackBuffers.reset();
+      mScratchBuffers.clear();
+      mScratchPointers.clear();
+      mPlaybackMixers.clear();
+      mPlaybackSchedule.mTimeQueue.Clear();
+   }
+
+
+   if (mStreamToken > 0)
+   {
       //
       // Offset all recorded tracks to account for latency
       //
@@ -1551,11 +1559,7 @@ void AudioIO::StopStream()
             pListener->OnCommitRecording();
       }
    }
-
-
-   // No longer need effects processing. This must be done after the stream is stopped
-   // to prevent the callback from being invoked after the effects are finalized.
-   mpTransportState.reset();
+      
 
 
    if (auto pInputMeter = mInputMeter.lock())
