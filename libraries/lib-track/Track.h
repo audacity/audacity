@@ -1329,6 +1329,14 @@ class TRACK_API TrackList final
    AudacityProject *GetOwner() { return mOwner; }
    const AudacityProject *GetOwner() const { return mOwner; }
 
+   /**
+    * \brief Returns string that contains baseTrackName,
+    * but is guaranteed to be unique among other tracks in that list.
+    * \param baseTrackName String to be put into the template
+    * \return Formatted string: "[baseTrackName] [N]"
+    */
+   wxString MakeUniqueTrackName(const wxString& baseTrackName) const;
+
    // Iteration
 
    // Hide the inherited begin() and end()
