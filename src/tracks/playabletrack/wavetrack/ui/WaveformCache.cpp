@@ -11,23 +11,15 @@
 #include "WaveformCache.h"
 
 #include <cmath>
+#include <cstring>
+
 #include "Sequence.h"
 #include "GetWaveDisplay.h"
 #include "WaveClipUtilities.h"
 
 class WaveCache {
 public:
-   WaveCache()
-      : dirty(-1)
-      , start(-1)
-      , pps(0)
-      , rate(-1)
-      , where(0)
-      , min(0)
-      , max(0)
-      , rms(0)
-   {
-   }
+   WaveCache() = default;
 
    WaveCache(size_t len_, double pixelsPerSecond, double rate_, double t0, int dirty_)
       : dirty(dirty_)
@@ -36,9 +28,7 @@ public:
       , pps(pixelsPerSecond)
       , rate(rate_)
       , where(1 + len)
-      , min(len)
-      , max(len)
-      , rms(len)
+      , columns(len)
    {
    }
 
@@ -46,15 +36,14 @@ public:
    {
    }
 
-   int          dirty;
+   int dirty { -1 };
    const size_t len { 0 }; // counts pixels, not samples
-   const double start;
-   const double pps;
-   const int    rate;
+   const double start { -1.0 };
+   const double pps { -1.0 };
+   const int rate { -1 };
+
    std::vector<sampleCount> where;
-   std::vector<float> min;
-   std::vector<float> max;
-   std::vector<float> rms;
+   std::vector<WaveDisplayColumn> columns;
 };
 
 //
@@ -68,24 +57,20 @@ bool WaveClipWaveformCache::GetWaveDisplay(
 {
    t0 += clip.GetTrimLeft();
 
-   const bool allocated = (display.where != 0);
+   const bool allocated = (display.where != nullptr);
 
    const size_t numPixels = (int)display.width;
 
    size_t p0 = 0;         // least column requiring computation
    size_t p1 = numPixels; // greatest column requiring computation, plus one
 
-   float *min;
-   float *max;
-   float *rms;
-   std::vector<sampleCount> *pWhere;
+   WaveDisplayColumn* columns = nullptr;
+   sampleCount* where = nullptr;
 
    if (allocated) {
       // assume ownWhere is filled.
-      min = &display.min[0];
-      max = &display.max[0];
-      rms = &display.rms[0];
-      pWhere = &display.ownWhere;
+      columns = display.columns;
+      where = display.where;
    }
    else {
       const double tstep = 1.0 / pixelsPerSecond;
@@ -109,10 +94,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
          mWaveCache->len >= numPixels) {
 
          // Satisfy the request completely from the cache
-         display.min = &mWaveCache->min[0];
-         display.max = &mWaveCache->max[0];
-         display.rms = &mWaveCache->rms[0];
-         display.where = &mWaveCache->where[0];
+         display.columns = mWaveCache->columns.data();
          return true;
       }
 
@@ -137,12 +119,11 @@ bool WaveClipWaveformCache::GetWaveDisplay(
          oldCache.reset(0);
 
       mWaveCache = std::make_unique<WaveCache>(numPixels, pixelsPerSecond, rate, t0, mDirty);
-      min = &mWaveCache->min[0];
-      max = &mWaveCache->max[0];
-      rms = &mWaveCache->rms[0];
-      pWhere = &mWaveCache->where;
+      columns = mWaveCache->columns.data();
+      where = mWaveCache->where.data();
 
-      fillWhere(*pWhere, numPixels, 0.0, correction,
+      fillWhere(
+         mWaveCache->where, numPixels, 0.0, correction,
          t0, rate, samplesPerPixel);
 
       // The range of pixels we must fetch from the Sequence:
@@ -157,18 +138,15 @@ bool WaveClipWaveformCache::GetWaveDisplay(
 
          // Copy what we can from the old cache.
          const int length = copyEnd - copyBegin;
-         const size_t sizeFloats = length * sizeof(float);
+         const size_t sizeFloats = length * sizeof(WaveDisplayColumn);
          const int srcIdx = (int)copyBegin + oldX0;
-         memcpy(&min[copyBegin], &oldCache->min[srcIdx], sizeFloats);
-         memcpy(&max[copyBegin], &oldCache->max[srcIdx], sizeFloats);
-         memcpy(&rms[copyBegin], &oldCache->rms[srcIdx], sizeFloats);
+
+         std::memcpy(&columns[copyBegin], &oldCache->columns[srcIdx], sizeFloats);
       }
    }
 
    if (p1 > p0) {
       // Cache was not used or did not satisfy the whole request
-      std::vector<sampleCount> &where = *pWhere;
-
       /* handle values in the append buffer */
 
       const auto sequence = clip.GetSequence();
@@ -190,10 +168,9 @@ bool WaveClipWaveformCache::GetWaveDisplay(
          sampleFormat seqFormat = sequence->GetSampleFormat();
          bool didUpdate = false;
          for(auto i = a; i < p1; i++) {
-            auto left = std::max(sampleCount{ 0 },
-                                 where[i] - numSamples);
-            auto right = std::min(sampleCount{ appendBufferLen },
-                                  where[i + 1] - numSamples);
+            auto left = std::max(sampleCount { 0 }, where[i] - numSamples);
+            auto right = std::min(
+               sampleCount { appendBufferLen }, where[i + 1] - numSamples);
 
             //wxCriticalSectionLocker locker(mAppendCriticalSection);
 
@@ -228,9 +205,9 @@ bool WaveClipWaveformCache::GetWaveDisplay(
                   sumsq += val * val;
                }
 
-               min[i] = theMin;
-               max[i] = theMax;
-               rms[i] = (float)sqrt(sumsq / len);
+               columns[i].min = theMin;
+               columns[i].max = theMax;
+               columns[i].rms = (float)sqrt(sumsq / len);
 
                didUpdate=true;
             }
@@ -244,11 +221,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       // Done with append buffer, now fetch the rest of the cache miss
       // from the sequence
       if (p1 > p0) {
-         if (!::GetWaveDisplay(*sequence, &min[p0],
-                                        &max[p0],
-                                        &rms[p0],
-                                        p1-p0,
-                                        &where[p0]))
+         if (!::GetWaveDisplay(*sequence, &where[p0], &columns[p0], p1 - p0))
          {
             return false;
          }
@@ -257,10 +230,8 @@ bool WaveClipWaveformCache::GetWaveDisplay(
 
    if (!allocated) {
       // Now report the results
-      display.min = min;
-      display.max = max;
-      display.rms = rms;
-      display.where = &(*pWhere)[0];
+      display.where = where;
+      display.columns = columns;
    }
 
    return true;

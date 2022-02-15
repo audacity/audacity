@@ -13,6 +13,7 @@
 
 #include <cstddef>
 class Sequence;
+struct WaveDisplayColumn;
 class sampleCount;
 
 // where is input, assumed to be nondecreasing, and its size is len + 1.
@@ -20,10 +21,9 @@ class sampleCount;
 // Each position in the output arrays corresponds to one column of pixels.
 // The column for pixel p covers samples from
 // where[p] up to (but excluding) where[p + 1].
-// bl is negative wherever data are not yet available.
 // Return true if successful.
-bool GetWaveDisplay(const Sequence &sequence,
-   float *min, float *max, float *rms,
-   size_t len, const sampleCount *where);
+bool GetWaveDisplay(
+   const Sequence& sequence, const sampleCount* where,
+   WaveDisplayColumn* columns, size_t len);
 
 #endif

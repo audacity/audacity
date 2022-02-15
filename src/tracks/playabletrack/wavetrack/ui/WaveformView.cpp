@@ -327,11 +327,9 @@ void FindWavePortions
 }
 
 void DrawMinMaxRMS(
-   TrackPanelDrawingContext &context, const wxRect & rect, const double env[],
-   float zoomMin, float zoomMax,
-   bool dB, float dBRange,
-   const float *min, const float *max, const float *rms,
-   bool muted)
+   TrackPanelDrawingContext& context, const wxRect& rect, const double env[],
+   float zoomMin, float zoomMax, bool dB, float dBRange,
+   const WaveDisplayColumn* columns, bool muted)
 {
    auto &dc = context.dc;
 
@@ -359,7 +357,7 @@ void DrawMinMaxRMS(
    for (int x0 = 0; x0 < rect.width; ++x0) {
       int xx = rect.x + x0;
       double v;
-      v = min[x0] * env[x0];
+      v = columns[x0].min * env[x0];
       if (clipped && bShowClipping && (v <= -MAX_AUDIO))
       {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
@@ -369,7 +367,7 @@ void DrawMinMaxRMS(
       h1 = GetWaveYPos(v, zoomMin, zoomMax,
                        rect.height, dB, true, dBRange, true);
 
-      v = max[x0] * env[x0];
+      v = columns[x0].max * env[x0];
       if (clipped && bShowClipping && (v >= MAX_AUDIO))
       {
          if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
@@ -392,9 +390,9 @@ void DrawMinMaxRMS(
       lasth1 = h1;
       lasth2 = h2;
 
-      r1[x0] = GetWaveYPos(-rms[x0] * env[x0], zoomMin, zoomMax,
+      r1[x0] = GetWaveYPos(-columns[x0].rms * env[x0], zoomMin, zoomMax,
                           rect.height, dB, true, dBRange, true);
-      r2[x0] = GetWaveYPos(rms[x0] * env[x0], zoomMin, zoomMax,
+      r2[x0] = GetWaveYPos(columns[x0].rms * env[x0], zoomMin, zoomMax,
                           rect.height, dB, true, dBRange, true);
       // Make sure the rms isn't larger than the waveform min/max
       if (r1[x0] > h1 - 1) {
@@ -776,11 +774,11 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
       rectPortion.Intersect(mid);
       wxASSERT(rectPortion.width >= 0);
 
-      float *useMin = 0, *useMax = 0, *useRms = 0;
+      WaveDisplayColumn* useColumns = nullptr;
 
       WaveDisplay fisheyeDisplay(rectPortion.width);
       int skipped = 0, skippedLeft = 0, skippedRight = 0;
-      if (true ||portion.inFisheye) {
+      if (portion.inFisheye) {
          if (!showIndividualSamples) {
             fisheyeDisplay.Allocate();
             const auto numSamples = clip->GetPlaySamplesCount();
@@ -807,23 +805,19 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             // where needs a sentinel
             if (jj > 0)
                fisheyeDisplay.where[jj - skippedLeft] =
-               1 + fisheyeDisplay.where[jj - skippedLeft - 1];
+                  1 + fisheyeDisplay.where[jj - skippedLeft - 1];
             fisheyeDisplay.width -= skipped;
             // Get a wave display for the fisheye, uncached.
             if (rectPortion.width > 0)
                if (!clipCache.GetWaveDisplay( *clip,
                      fisheyeDisplay, t0, -1.0)) // ignored
                   continue; // serious error.  just don't draw??
-            useMin = fisheyeDisplay.min;
-            useMax = fisheyeDisplay.max;
-            useRms = fisheyeDisplay.rms;
+            useColumns = fisheyeDisplay.columns;
          }
       }
       else {
          const int pos = leftOffset - params.hiddenLeftOffset;
-         useMin = display.min + pos;
-         useMax = display.max + pos;
-         useRms = display.rms + pos;
+         useColumns = display.columns + pos;
       }
 
       leftOffset += skippedLeft;
@@ -841,10 +835,9 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
 
                  env2, rectPortion.width, leftOffset, zoomInfo );
 
-            DrawMinMaxRMS( context, rectPortion, env2,
-               zoomMin, zoomMax,
-               dB, dBRange,
-               useMin, useMax, useRms, muted );
+            DrawMinMaxRMS(
+               context, rectPortion, env2, zoomMin, zoomMax, dB, dBRange,
+               useColumns, muted);
          }
          else {
             bool highlight = false;

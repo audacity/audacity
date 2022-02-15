@@ -17,6 +17,7 @@
 #include "SampleBlock.h"
 #include "SampleCount.h"
 #include "Sequence.h"
+#include "WaveClip.h"
 
 namespace {
 
@@ -61,9 +62,8 @@ struct MinMaxSumsq
 
 }
 
-bool GetWaveDisplay(const Sequence &sequence,
-   float *min, float *max, float *rms,
-   size_t len, const sampleCount *where)
+bool GetWaveDisplay(
+   const Sequence& sequence, const sampleCount* where, WaveDisplayColumn* columns, size_t len)
 {
    wxASSERT(len > 0);
    const auto s0 = std::max(sampleCount(0), where[0]);
@@ -156,7 +156,10 @@ bool GetWaveDisplay(const Sequence &sequence,
          wxASSERT(false);
          // Do some defense against this case anyway
          while (pixel < nextPixel) {
-            min[pixel] = max[pixel] = rms[pixel] = 0;
+            columns[pixel].min = {};
+            columns[pixel].max = {};
+            columns[pixel].rms = {};
+
             ++pixel;
          }
          continue;
@@ -196,11 +199,11 @@ bool GetWaveDisplay(const Sequence &sequence,
          if (diff > 0) {
             MinMaxSumsq values(temp.get(), diff, divisor);
             const int lastPixel = pixel - 1;
-            float &lastMin = min[lastPixel];
+            float &lastMin = columns[lastPixel].min;
             lastMin = std::min(lastMin, values.min);
-            float &lastMax = max[lastPixel];
+            float &lastMax = columns[lastPixel].max;
             lastMax = std::max(lastMax, values.max);
-            float &lastRms = rms[lastPixel];
+            float &lastRms = columns[lastPixel].rms;
             int lastNumSamples = lastRmsDenom * lastDivisor;
             lastRms = sqrt(
                (lastRms * lastRms * lastNumSamples + values.sumsq * divisor) /
@@ -238,10 +241,12 @@ bool GetWaveDisplay(const Sequence &sequence,
          MinMaxSumsq values(pv, std::max(0, rmsDenom), divisor);
 
          // Assign results
-         std::fill(&min[pixel], &min[pixelX], values.min);
-         std::fill(&max[pixel], &max[pixelX], values.max);
-         std::fill(&rms[pixel], &rms[pixelX], (float)sqrt(values.sumsq / rmsDenom));
+         WaveDisplayColumn column = { values.min, values.max,
+                                      (float)sqrt(values.sumsq / rmsDenom) };
 
+         for (auto col = pixel; col < pixelX; ++col)
+            columns[col] = column;
+         
          pixel = pixelX;
          filePosition = positionX;
       }
