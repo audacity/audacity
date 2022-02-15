@@ -66,7 +66,6 @@ void Track::Init(const Track &orig)
 {
    mId = orig.mId;
 
-   mDefaultName = orig.mDefaultName;
    mName = orig.mName;
 
    mSelected = orig.mSelected;

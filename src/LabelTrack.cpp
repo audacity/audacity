@@ -68,8 +68,7 @@ LabelTrack::LabelTrack():
    mClipLen(0.0),
    miLastLabel(-1)
 {
-   SetDefaultName(_("Label Track"));
-   SetName(GetDefaultName());
+   SetName(_("Label Track"));
 }
 
 LabelTrack::LabelTrack(const LabelTrack &orig) :

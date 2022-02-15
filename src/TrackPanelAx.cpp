@@ -36,8 +36,6 @@
 #include "LabelTrack.h"
 #include "NoteTrack.h"
 #include "TimeTrack.h"
-#include "WaveTrack.h"
-
 
 wxDEFINE_EVENT(EVT_TRACK_FOCUS_CHANGE, wxCommandEvent);
 
@@ -363,74 +361,70 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
          auto t = FindTrack( childId );
 
          if( t == NULL )
-         {
             return wxACC_FAIL;
-         }
-         else
+
+         name->Printf("%d %s", TrackNum(t), t->GetName());
+
+         if(dynamic_cast<LabelTrack*>(t.get()))
          {
-            *name = t->GetName();
-            if( *name == t->GetDefaultName() )
-            {
-               /* i18n-hint: The %d is replaced by the number of the track.*/
-               name->Printf(_("Track %d"), TrackNum( t ) );
-            }
-
-            t->TypeSwitch(
-               [&](const LabelTrack *) {
-                  /* i18n-hint: This is for screen reader software and indicates that
-                     this is a Label track.*/
-                  name->Append( wxT(" ") + wxString(_("Label Track")));
-               },
-               [&](const TimeTrack *) {
-                  /* i18n-hint: This is for screen reader software and indicates that
-                     this is a Time track.*/
-                  name->Append( wxT(" ") + wxString(_("Time Track")));
-               }
+            const auto trackNameLower = t->GetName().Lower();
+            //Prior to version 3.2 "Label Track" was the default
+            //name for label tracks, don't append type part to the
+            //text to avoid verbosity.
+            if(trackNameLower.Find(wxString(_("Label Track")).Lower()) == wxNOT_FOUND &&
+               trackNameLower.Find(LabelTrack::GetDefaultName().Lower()) == wxNOT_FOUND)
+               /* i18n-hint: This is for screen reader software and indicates that
+                  this is a Label track.*/
+               name->Append( wxT(" ") + wxString(_("Label Track")));
+         }
+         else if(dynamic_cast<TimeTrack*>(t.get()))
+         {
+            if(t->GetName().Lower().Find(TimeTrack::GetDefaultName().Lower()) == wxNOT_FOUND)
+               /* i18n-hint: This is for screen reader software and indicates that
+                  this is a Time track.*/
+               name->Append(wxT(" ") + wxString(_("Time Track")));
+         }
 #ifdef USE_MIDI
-                ,
-               [&](const NoteTrack *) {
-                  /* i18n-hint: This is for screen reader software and indicates that
-                     this is a Note track.*/
-                  name->Append( wxT(" ") + wxString(_("Note Track")));
-               }
+         else if(dynamic_cast<NoteTrack*>(t.get()))
+            /* i18n-hint: This is for screen reader software and indicates that
+               this is a Note track.*/
+            name->Append( wxT(" ") + wxString(_("Note Track")));
 #endif
-            );
 
-            // LLL: Remove these during "refactor"
-            auto pt = dynamic_cast<PlayableTrack *>(t.get());
-            if( pt && pt->GetMute() )
-            {
-               // The following comment also applies to the solo, selected,
-               // and synclockselected states.
-               // Many of translations of the strings with a leading space omitted
-               // the leading space. Therefore a space has been added using wxT(" ").
-               // Because screen readers won't be affected by multiple spaces, the
-               // leading spaces have not been removed, so that no NEW translations are needed.
-               /* i18n-hint: This is for screen reader software and indicates that
-                  this track is muted. (The mute button is on.)*/
-               name->Append( wxT(" ") + wxString(_( " Muted" )) );
-            }
+         // LLL: Remove these during "refactor"
+         auto pt = dynamic_cast<PlayableTrack *>(t.get());
+         if( pt && pt->GetMute() )
+         {
+            // The following comment also applies to the solo, selected,
+            // and synclockselected states.
+            // Many of translations of the strings with a leading space omitted
+            // the leading space. Therefore a space has been added using wxT(" ").
+            // Because screen readers won't be affected by multiple spaces, the
+            // leading spaces have not been removed, so that no NEW translations are needed.
+            /* i18n-hint: This is for screen reader software and indicates that
+               this track is muted. (The mute button is on.)*/
+            name->Append( wxT(" ") + wxString(_( " Muted" )) );
+         }
 
-            if( pt && pt->GetSolo() )
-            {
-               /* i18n-hint: This is for screen reader software and indicates that
-                  this track is soloed. (The Solo button is on.)*/
-               name->Append( wxT(" ") + wxString(_( " Soloed" )) );
-            }
-            if( t->GetSelected() )
-            {
-               /* i18n-hint: This is for screen reader software and indicates that
-                  this track is selected.*/
-               name->Append( wxT(" ") + wxString(_( " Selected" )) );
-            }
-            if (SyncLock::IsSyncLockSelected(t.get()))
-            {
-               /* i18n-hint: This is for screen reader software and indicates that
-                  this track is shown with a sync-locked icon.*/
-               // The absence of a dash between Sync and Locked is deliberate -
-               // if present, Jaws reads it as "dash".
-               name->Append( wxT(" ") + wxString(_( " Sync Locked" )) );
-            }
+         if( pt && pt->GetSolo() )
+         {
+            /* i18n-hint: This is for screen reader software and indicates that
+               this track is soloed. (The Solo button is on.)*/
+            name->Append( wxT(" ") + wxString(_( " Soloed" )) );
+         }
+         if( t->GetSelected() )
+         {
+            /* i18n-hint: This is for screen reader software and indicates that
+               this track is selected.*/
+            name->Append( wxT(" ") + wxString(_( " Selected" )) );
+         }
+         if (SyncLock::IsSyncLockSelected(t.get()))
+         {
+            /* i18n-hint: This is for screen reader software and indicates that
+               this track is shown with a sync-locked icon.*/
+            // The absence of a dash between Sync and Locked is deliberate -
+            // if present, Jaws reads it as "dash".
+            name->Append( wxT(" ") + wxString(_( " Sync Locked" )) );
          }
       }
    }
@@ -575,11 +569,9 @@ wxAccStatus TrackPanelAx::GetValue( int WXUNUSED(childId), wxString* WXUNUSED(st
       }
       else
       {
-         *strValue = t->GetName();
-         if( *strValue == t->GetDefaultName() )
-         {
-            strValue->Printf(_("Track %d"), TrackNum( t ) );
-         }
+         /* i18n-hint: The %d is replaced by the number of the track.*/
+         strValue->Printf(_("Track %d"), TrackNum(t));
+         strValue->Append(" " + t->GetName());
 
          // LLL: Remove these during "refactor"
          auto pt = dynamic_cast<PlayableTrack *>(t.get());
