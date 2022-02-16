@@ -27,7 +27,7 @@ public:
       , start(t0)
       , pps(pixelsPerSecond)
       , rate(rate_)
-      , where(1 + len)
+      , mapper(t0, rate, rate / pps)
       , columns(len)
    {
    }
@@ -42,7 +42,7 @@ public:
    const double pps { -1.0 };
    const int rate { -1 };
 
-   std::vector<sampleCount> where;
+   PixelSampleMapper mapper;
    std::vector<WaveDisplayColumn> columns;
 };
 
@@ -57,7 +57,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
 {
    t0 += clip.GetTrimLeft();
 
-   const bool allocated = (display.where != nullptr);
+   const bool allocated = display.mapper.IsValid();
 
    const size_t numPixels = (int)display.width;
 
@@ -65,12 +65,12 @@ bool WaveClipWaveformCache::GetWaveDisplay(
    size_t p1 = numPixels; // greatest column requiring computation, plus one
 
    WaveDisplayColumn* columns = nullptr;
-   sampleCount* where = nullptr;
+   PixelSampleMapper* mapper = nullptr;
 
    if (allocated) {
       // assume ownWhere is filled.
       columns = display.columns;
-      where = display.where;
+      mapper = &display.mapper;
    }
    else {
       const double tstep = 1.0 / pixelsPerSecond;
@@ -95,18 +95,23 @@ bool WaveClipWaveformCache::GetWaveDisplay(
 
          // Satisfy the request completely from the cache
          display.columns = mWaveCache->columns.data();
+         display.mapper = mWaveCache->mapper;
+
          return true;
       }
 
       std::unique_ptr<WaveCache> oldCache(std::move(mWaveCache));
 
+      mWaveCache = std::make_unique<WaveCache>(
+         numPixels, pixelsPerSecond, rate, t0, mDirty);
+
       int oldX0 = 0;
       double correction = 0.0;
       size_t copyBegin = 0, copyEnd = 0;
       if (match) {
-         findCorrection(oldCache->where, oldCache->len, numPixels,
-            t0, rate, samplesPerPixel,
-            oldX0, correction);
+         oldX0 = mWaveCache->mapper.applyCorrection(
+            oldCache->mapper, oldCache->len, numPixels);
+
          // Remember our first pixel maps to oldX0 in the old cache,
          // possibly out of bounds.
          // For what range of pixels can data be copied?
@@ -115,16 +120,12 @@ bool WaveClipWaveformCache::GetWaveDisplay(
             (int)oldCache->len - oldX0
          ));
       }
+
       if (!(copyEnd > copyBegin))
          oldCache.reset(0);
 
-      mWaveCache = std::make_unique<WaveCache>(numPixels, pixelsPerSecond, rate, t0, mDirty);
       columns = mWaveCache->columns.data();
-      where = mWaveCache->where.data();
-
-      fillWhere(
-         mWaveCache->where, numPixels, 0.0, correction,
-         t0, rate, samplesPerPixel);
+      mapper = &mWaveCache->mapper;
 
       // The range of pixels we must fetch from the Sequence:
       p0 = (copyBegin > 0) ? 0 : copyEnd;
@@ -156,7 +157,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       // Not all of the required columns might be in the sequence.
       // Some might be in the append buffer.
       for (; a < p1; ++a) {
-         if (where[a + 1] > numSamples)
+         if (mapper->GetFirstSample(a + 1) > numSamples)
             break;
       }
 
@@ -168,9 +169,9 @@ bool WaveClipWaveformCache::GetWaveDisplay(
          sampleFormat seqFormat = sequence->GetSampleFormat();
          bool didUpdate = false;
          for(auto i = a; i < p1; i++) {
-            auto left = std::max(sampleCount { 0 }, where[i] - numSamples);
+            auto left = std::max(sampleCount { 0 }, mapper->GetFirstSample(i) - numSamples);
             auto right = std::min(
-               sampleCount { appendBufferLen }, where[i + 1] - numSamples);
+               sampleCount { appendBufferLen }, mapper->GetFirstSample(i + 1) - numSamples);
 
             //wxCriticalSectionLocker locker(mAppendCriticalSection);
 
@@ -221,7 +222,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       // Done with append buffer, now fetch the rest of the cache miss
       // from the sequence
       if (p1 > p0) {
-         if (!::GetWaveDisplay(*sequence, &where[p0], &columns[p0], p1 - p0))
+         if (!::GetWaveDisplay(*sequence, *mapper, &columns[p0], p1 - p0))
          {
             return false;
          }
@@ -230,7 +231,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
 
    if (!allocated) {
       // Now report the results
-      display.where = where;
+      display.mapper = *mapper;
       display.columns = columns;
    }
 

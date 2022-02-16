@@ -63,10 +63,10 @@ struct MinMaxSumsq
 }
 
 bool GetWaveDisplay(
-   const Sequence& sequence, const sampleCount* where, WaveDisplayColumn* columns, size_t len)
+   const Sequence& sequence, const PixelSampleMapper& mapper, WaveDisplayColumn* columns, size_t len)
 {
    wxASSERT(len > 0);
-   const auto s0 = std::max(sampleCount(0), where[0]);
+   const auto s0 = std::max(sampleCount(0), mapper.GetFirstSample(0));
    const auto numSamples = sequence.GetNumSamples();
    if (s0 >= numSamples)
       // None of the samples asked for are in range. Abandon.
@@ -75,7 +75,7 @@ bool GetWaveDisplay(
    // In case where[len - 1] == where[len], raise the limit by one,
    // so we load at least one pixel for column len - 1
    // ... unless the mNumSamples ceiling applies, and then there are other defenses
-   const auto s1 = std::clamp(where[len], 1 + where[len - 1], numSamples);
+   const auto s1 = std::clamp(mapper.GetFirstSample(len), 1 + mapper.GetFirstSample(len - 1), numSamples);
    const auto maxSamples = sequence.GetMaxBlockSize();
    Floats temp{ maxSamples };
 
@@ -85,7 +85,7 @@ bool GetWaveDisplay(
    decltype(srcX) nextSrcX = 0;
    int lastRmsDenom = 0;
    int lastDivisor = 0;
-   auto whereNow = std::min(s1 - 1, where[0]);
+   auto whereNow = std::min(s1 - 1, mapper.GetFirstSample(0));
    decltype(whereNow) whereNext = 0;
    // Loop over block files, opening and reading and closing each
    // not more than once
@@ -118,7 +118,7 @@ bool GetWaveDisplay(
          // Taking min with s1 - 1, here and elsewhere, is another defense
          // to be sure the last pixel column gets at least one sample
          while (nextPixel < len &&
-                (whereNext = std::min(s1 - 1, where[nextPixel])) < nextSrcX)
+                (whereNext = std::min(s1 - 1, mapper.GetFirstSample(nextPixel))) < nextSrcX)
             ++nextPixel;
       }
       if (nextPixel == pixel)
@@ -227,7 +227,7 @@ bool GetWaveDisplay(
             filePosition ==
                (positionX = (
                   // s1 - 1 or where[pixelX] and start are in the same block
-                  (std::min(s1 - 1, where[pixelX]) - start) / divisor).as_size_t() )
+                  (std::min(s1 - 1, mapper.GetFirstSample(pixelX)) - start) / divisor).as_size_t() )
          )
             ++pixelX;
          if (pixelX >= nextPixel)

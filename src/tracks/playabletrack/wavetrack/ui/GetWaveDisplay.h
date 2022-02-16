@@ -14,7 +14,7 @@
 #include <cstddef>
 class Sequence;
 struct WaveDisplayColumn;
-class sampleCount;
+class PixelSampleMapper;
 
 // where is input, assumed to be nondecreasing, and its size is len + 1.
 // min, max, rms, and their lengths are len.
@@ -23,7 +23,7 @@ class sampleCount;
 // where[p] up to (but excluding) where[p + 1].
 // Return true if successful.
 bool GetWaveDisplay(
-   const Sequence& sequence, const sampleCount* where,
+   const Sequence& sequence, const PixelSampleMapper& mapper,
    WaveDisplayColumn* columns, size_t len);
 
 #endif

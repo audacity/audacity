@@ -787,7 +787,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             for (; jj < rectPortion.width; ++jj) {
                const double time =
                   zoomInfo.PositionToTime(jj, -leftOffset) - tOffset;
-               const auto sample = (sampleCount)floor(time * rate + 0.5);
+               const auto sample = sampleCount(time * rate + 0.5);
                if (sample < 0) {
                   ++rectPortion.x;
                   ++skippedLeft;
@@ -795,17 +795,19 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
                }
                if (sample >= numSamples)
                   break;
-               fisheyeDisplay.where[jj - skippedLeft] = sample;
             }
+
+            fisheyeDisplay.mapper.setCustomMapper(
+               [artist, leftOffset, tOffset, rate](uint32_t colum) {
+                  const double time =
+                     artist->pZoomInfo->PositionToTime(colum, -leftOffset) - tOffset;
+                  return sampleCount(time * rate + 0.5);
+               });
 
             skippedRight = rectPortion.width - jj;
             skipped = skippedRight + skippedLeft;
             rectPortion.width -= skipped;
 
-            // where needs a sentinel
-            if (jj > 0)
-               fisheyeDisplay.where[jj - skippedLeft] =
-                  1 + fisheyeDisplay.where[jj - skippedLeft - 1];
             fisheyeDisplay.width -= skipped;
             // Get a wave display for the fisheye, uncached.
             if (rectPortion.width > 0)
