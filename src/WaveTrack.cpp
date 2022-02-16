@@ -95,7 +95,7 @@ Track::LinkType ToLinkType(int value)
 
 }
 
-static auto DefaultName = XO("Audio Track");
+static auto DefaultName = XO("Audio");
 
 wxString WaveTrack::GetDefaultAudioTrackNamePreference()
 {
