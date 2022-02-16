@@ -1248,7 +1248,7 @@ bool LV2Effect::RealtimeResume() noexcept
    return true;
 }
 
-bool LV2Effect::RealtimeProcessStart()
+bool LV2Effect::RealtimeProcessStart(EffectSettings &)
 {
    int i = 0;
    for (auto & port : mAudioPorts)
@@ -1407,7 +1407,7 @@ size_t LV2Effect::RealtimeProcess(int group,
    return numSamples;
 }
 
-bool LV2Effect::RealtimeProcessEnd() noexcept
+bool LV2Effect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    // Nothing to do if we did process any samples

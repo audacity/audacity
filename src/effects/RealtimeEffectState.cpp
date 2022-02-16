@@ -132,7 +132,7 @@ bool RealtimeEffectState::ProcessStart()
    if (!mEffect)
       return false;
 
-   return mEffect->RealtimeProcessStart();
+   return mEffect->RealtimeProcessStart(mSettings);
 }
 
 //! Visit the effect processors that were added in AddTrack
@@ -264,7 +264,7 @@ bool RealtimeEffectState::ProcessEnd()
    if (!mEffect)
       return false;
 
-   return mEffect->RealtimeProcessEnd();
+   return mEffect->RealtimeProcessEnd(mSettings);
 }
 
 bool RealtimeEffectState::IsActive() const noexcept

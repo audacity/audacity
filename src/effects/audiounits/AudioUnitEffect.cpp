@@ -1414,7 +1414,7 @@ return GuardedCall<bool>([&]{
 });
 }
 
-bool AudioUnitEffect::RealtimeProcessStart()
+bool AudioUnitEffect::RealtimeProcessStart(EffectSettings &)
 {
    return true;
 }
@@ -1426,7 +1426,7 @@ size_t AudioUnitEffect::RealtimeProcess(int group,
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
 }
 
-bool AudioUnitEffect::RealtimeProcessEnd() noexcept
+bool AudioUnitEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return true;
 }

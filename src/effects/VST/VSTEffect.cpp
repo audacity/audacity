@@ -1538,7 +1538,7 @@ return GuardedCall<bool>([&]{
 });
 }
 
-bool VSTEffect::RealtimeProcessStart()
+bool VSTEffect::RealtimeProcessStart(EffectSettings &)
 {
    return true;
 }
@@ -1550,7 +1550,7 @@ size_t VSTEffect::RealtimeProcess(int group,
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
 }
 
-bool VSTEffect::RealtimeProcessEnd() noexcept
+bool VSTEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return true;
 }

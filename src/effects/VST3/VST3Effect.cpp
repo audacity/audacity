@@ -792,7 +792,7 @@ bool VST3Effect::RealtimeResume() noexcept
    });
 }
 
-bool VST3Effect::RealtimeProcessStart()
+bool VST3Effect::RealtimeProcessStart(EffectSettings &)
 {
    assert(mPendingChanges == nullptr);
 
@@ -808,7 +808,7 @@ size_t VST3Effect::RealtimeProcess(int group, const float* const* inBuf, float* 
    return VST3ProcessBlock(effect->mEffectComponent.get(), effect->mSetup, inBuf, outBuf, numSamples, mPendingChanges.get());
 }
 
-bool VST3Effect::RealtimeProcessEnd() noexcept
+bool VST3Effect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return GuardedCall<bool>([this]()
    {

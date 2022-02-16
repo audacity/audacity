@@ -131,9 +131,9 @@ public:
    bool RealtimeFinalize() noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
-   bool RealtimeProcessStart() override;
+   bool RealtimeProcessStart(EffectSettings &settings) override;
    size_t RealtimeProcess(int group, const float* const* inBuf, float* const* outBuf, size_t numSamples) override;
-   bool RealtimeProcessEnd() noexcept override;
+   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
    int ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal) override;
    bool SetHost(EffectHostInterface* host) override;

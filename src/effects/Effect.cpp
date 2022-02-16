@@ -398,11 +398,11 @@ bool Effect::RealtimeResume() noexcept
    return true;
 }
 
-bool Effect::RealtimeProcessStart()
+bool Effect::RealtimeProcessStart(EffectSettings &settings)
 {
    if (mClient)
    {
-      return mClient->RealtimeProcessStart();
+      return mClient->RealtimeProcessStart(settings);
    }
 
    return true;
@@ -419,11 +419,11 @@ size_t Effect::RealtimeProcess(int group,
    return 0;
 }
 
-bool Effect::RealtimeProcessEnd() noexcept
+bool Effect::RealtimeProcessEnd(EffectSettings &settings) noexcept
 {
    if (mClient)
    {
-      return mClient->RealtimeProcessEnd();
+      return mClient->RealtimeProcessEnd(settings);
    }
 
    return true;
