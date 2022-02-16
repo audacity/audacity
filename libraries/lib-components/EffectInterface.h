@@ -162,6 +162,21 @@ public:
    //! Produce an object holding new, independent settings
    virtual Settings MakeSettings() const = 0;
 
+   //! Update one settings object from another
+   /*!
+    This may run in a worker thread, and should avoid memory allocations.
+    Therefore do not copy the underlying std::any, but copy the contents of the
+    contained objects.
+
+    Assume that src and dst were created and previously modified only by `this`
+
+    @param src settings to copy from
+    @param dst settings to copy into
+    @return success
+    */
+   virtual bool CopySettingsContents(
+      const EffectSettings &src, EffectSettings &dst) const = 0;
+
    //! Store settings as keys and values
    /*!
     @return true on success
@@ -231,6 +246,8 @@ public:
     */
    //! @{
    Settings MakeSettings() const override;
+   bool CopySettingsContents(
+      const EffectSettings &src, EffectSettings &dst) const override;
    bool SaveSettings(
       const Settings &settings, CommandParameters & parms) const override;
    bool LoadSettings(

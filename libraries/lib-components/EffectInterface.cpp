@@ -77,6 +77,13 @@ auto EffectDefinitionInterfaceEx::MakeSettings() const -> Settings
    return Settings( const_cast<EffectDefinitionInterfaceEx*>(this) );
 }
 
+bool EffectDefinitionInterfaceEx::CopySettingsContents(
+   const EffectSettings &src, EffectSettings &dst) const
+{
+   //! No real copy, just a sanity check on common origin
+   return FindMe(src) && FindMe(dst);
+}
+
 bool EffectDefinitionInterfaceEx::SaveSettings(
    const Settings &settings, CommandParameters & parms) const
 {
