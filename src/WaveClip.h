@@ -19,6 +19,8 @@
 #include "XMLTagHandler.h"
 #include "SampleCount.h"
 
+#include "tracks/playabletrack/wavetrack/ui/WaveClipUtilities.h"
+
 #include <wx/longlong.h>
 
 #include <vector>
@@ -57,12 +59,10 @@ class WaveDisplay
 public:
    int width { 0 };
    WaveDisplayColumn* columns { nullptr };
-   sampleCount* where { nullptr };
-   // Index of the first sample in the sequence (not in a block!)
-   std::vector<sampleCount> ownWhere;
+   PixelSampleMapper mapper;
+
+private:
    std::vector<WaveDisplayColumn> ownColums;
-
-
 public:
    WaveDisplay(int w)
       : width(w)
@@ -72,10 +72,7 @@ public:
    // Create "own" arrays.
    void Allocate()
    {
-      ownWhere.resize(width + 1);
       ownColums.resize(width);
-
-      where = ownWhere.data();
 
       if (width > 0)
          columns = ownColums.data();
