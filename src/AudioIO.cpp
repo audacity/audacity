@@ -999,10 +999,10 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    // audio thread call TrackBufferExchange here makes the code more predictable, since
    // TrackBufferExchange will ALWAYS get called from the Audio thread.
    mAudioThreadShouldCallTrackBufferExchangeOnce
-      .store(true, std::memory_order_relaxed);
+      .store(true, std::memory_order_release);
 
    while( mAudioThreadShouldCallTrackBufferExchangeOnce
-      .load(std::memory_order_relaxed)) {
+      .load(std::memory_order_acquire)) {
       using namespace std::chrono;
       auto interval = 50ms;
       if (options.playbackStreamPrimer) {
@@ -1751,11 +1751,11 @@ AudioThread::ExitCode AudioThread::Entry()
       gAudioIO->mAudioThreadTrackBufferExchangeLoopActive
          .store(true, std::memory_order_relaxed);
       if( gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce
-         .load(std::memory_order_relaxed) )
+         .load(std::memory_order_acquire) )
       {
          gAudioIO->TrackBufferExchange();
          gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce
-            .store(false, std::memory_order_relaxed);
+            .store(false, std::memory_order_release);
       }
       else if( gAudioIO->mAudioThreadTrackBufferExchangeLoopRunning
          .load(std::memory_order_relaxed))
@@ -3138,9 +3138,9 @@ int AudioIoCallback::CallbackDoSeek()
 
    // Reload the ring buffers
    mAudioThreadShouldCallTrackBufferExchangeOnce
-      .store(true, std::memory_order_relaxed);
+      .store(true, std::memory_order_release);
    while( mAudioThreadShouldCallTrackBufferExchangeOnce
-      .load(std::memory_order_relaxed) )
+      .load(std::memory_order_acquire) )
    {
       using namespace std::chrono;
       std::this_thread::sleep_for(50ms);
