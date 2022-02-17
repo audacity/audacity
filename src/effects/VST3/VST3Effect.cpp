@@ -45,7 +45,7 @@
 #include "VST3OptionsDialog.h"
 
 #ifdef __WXMSW__
-#include <ShlObj_core.h>
+#include <shlobj.h>
 #elif __WXGTK__
 #include "internal/x11/SocketWindow.h"
 #endif
@@ -99,11 +99,10 @@ void ActivateDefaultBuses(Steinberg::Vst::IComponent* component, const Steinberg
 wxString GetFactoryPresetsBasePath()
 {
 #ifdef __WXMSW__
-   WCHAR commonFolderPath[MAX_PATH];
-   if(SHGetFolderPathW(NULL, CSIDL_COMMON_APPDATA, NULL, 0, commonFolderPath) == S_OK)
-   {
+   PWSTR commonFolderPath { nullptr };
+   auto cleanup = finally([&](){ CoTaskMemFree(commonFolderPath); });
+   if(SHGetKnownFolderPath(FOLDERID_ProgramData, KF_FLAG_DEFAULT , NULL, &commonFolderPath) == S_OK)
       return wxString(commonFolderPath) + "\\VST3 Presets\\";
-   }
    return {};
 #elif __WXMAC__
    return wxString("Library/Audio/Presets/");
