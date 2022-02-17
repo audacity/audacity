@@ -308,6 +308,19 @@ public:
       
    std::atomic<Acknowledge>  mAudioThreadAcknowledge;
 
+   // Sync start/stop of AudioThread processing
+   void StartAudioThreadAndWait();
+   void StopAudioThreadAndWait();
+
+   // Async start/stop + wait of AudioThread processing.
+   // Provided to allow more flexibility, however use with caution:
+   // never call Stop between Start and the wait for Started (and the converse)
+   void StartAudioThread();
+   void WaitForAudioThreadStarted();
+   void StopAudioThread();
+   void WaitForAudioThreadStopped();
+
+
 
    std::atomic<bool>   mForceFadeOut{ false };
 
