@@ -18,21 +18,24 @@
 #ifdef USE_WAVPACK
 
 #include "Export.h"
+#include "wxFileNameWrapper.h"
 #include "FileIO.h"
+#include "Prefs.h"
+#include "Mix.h"
 
 #include <wavpack.h>
 #include <wx/log.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
+#include <wx/stream.h>
 
 #include "../ShuttleGui.h"
 #include "../ProjectSettings.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/ProgressDialog.h"
-#include "wxFileNameWrapper.h"
+#include "Track.h"
+#include "ProjectRate.h"
 #include "../Tags.h"
-#include "Mix.h"
-#include "Prefs.h"
 
 //---------------------------------------------------------------------------
 // ExportWavPackOptions
@@ -148,6 +151,9 @@ void ExportWavPackOptions::PopulateOrExchange(ShuttleGui & S)
    bool hybridMode = false;
    bool createCorrectionFile = false;
 
+   gPrefs->Read(wxT("/FileFormats/WavPackHybridMode"), &hybridMode, 0);
+   gPrefs->Read(wxT("/FileFormats/WavPackCreateCorrectionFile"), &createCorrectionFile, 0);
+
    S.StartVerticalLay();
    {
       S.StartHorizontalLay(wxEXPAND);
@@ -224,7 +230,7 @@ public:
 
    ExportWavPack();
 
-   void OptionsCreate(ShuttleGui &S, int foramt) override;
+   void OptionsCreate(ShuttleGui &S, int format) override;
 
    ProgressResult Export(AudacityProject *project,
                std::unique_ptr<ProgressDialog> &pDialog,
@@ -262,11 +268,16 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
                        const Tags *metadata,
                        int WXUNUSED(subformat))
 {
-   WavpackConfig config;
-   WriteId outWvFile, outWvcFile;
+   WavpackConfig config = {0};
+   WriteId outWvFile = {NULL}, outWvcFile = {NULL};
    outWvFile.file = std::make_unique< FileIO >(fName, FileIO::Output);
 
-   double rate = ProjectSettings::Get( *project ).GetRate();
+   if (!outWvFile.file.get()->IsOpened()) {
+      AudacityMessageBox( XO("Unable to open target file for writing") );
+      return ProgressResult::Cancelled;
+   }
+   
+   double rate = ProjectRate::Get( *project ).GetRate();
    const auto &tracks = TrackList::Get( *project );
 
    int quality = gPrefs->Read(wxT("/FileFormats/WavPackEncodeQuality"), 1);
@@ -295,6 +306,7 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 
       if (createCorrectionFile) {
          config.flags |= CONFIG_CREATE_WVC;
+         outWvcFile.file = std::make_unique< FileIO >(fName.GetFullPath().Append("c"), FileIO::Output);
       }
    }
 
@@ -307,7 +319,8 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 // Samples to write per run
 #define SAMPLES_PER_RUN 8192u
 
-   ArrayOf<int32_t> wavpackBuffer{ SAMPLES_PER_RUN * numChannels };
+   uint32_t bufferSize = SAMPLES_PER_RUN * numChannels;
+   ArrayOf<int32_t> wavpackBuffer{ bufferSize };
    auto updateResult = ProgressResult::Success;
    {
       auto mixer = CreateMixer(tracks, selectionOnly,
@@ -323,31 +336,58 @@ ProgressResult ExportWavPack::Export(AudacityProject *project,
 
       while (updateResult == ProgressResult::Success) {
          auto samplesThisRun = mixer->Process(SAMPLES_PER_RUN);
-         if (samplesThisRun == 0) {
-            break;
-         } else {
-            for (size_t i = 0; i < numChannels; i++) {
-               samplePtr mixed = mixer->GetBuffer(i);
-               for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
-                  wavpackBuffer[j * numChannels + i] = ((int32_t *)mixed)[j];
-               }
-            }
 
-            if (!WavpackPackSamples(wpc, wavpackBuffer.get(), samplesThisRun)) {
-               updateResult = ProgressResult::Cancelled;
+         if (samplesThisRun == 0)
+            break;
+
+         char *mixed = (char *)(const char*)mixer->GetBuffer();
+         for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
+            for (size_t i = 0; i < numChannels; i++) {
+               int32_t value = *mixed++ & 0xff;
+               value += *mixed++ << 8;
+               wavpackBuffer[j*numChannels + i] = value;
             }
          }
+
+         if (!WavpackPackSamples(wpc, wavpackBuffer.get(), samplesThisRun))
+            updateResult = ProgressResult::Cancelled;
 
          if (updateResult == ProgressResult::Success)
             updateResult =
                progress.Update(mixer->MixGetCurrentTime() - t0, t1 - t0);
       }
    }
-   
+
    if (!WavpackFlushSamples(wpc)) {
       updateResult = ProgressResult::Cancelled;
+   } else {
+      if (metadata == NULL)
+         metadata = &Tags::Get( *project );
+
+      wxString n;
+      for (const auto &pair : metadata->GetRange()) {
+         n = pair.first;
+         const auto &v = pair.second;
+         if (n == TAG_YEAR) {
+            n = wxT("DATE");
+         }
+         WavpackAppendTagItem(wpc,
+                              (char *) (const char *) n.mb_str(wxConvUTF8),
+                              (char *) (const char *) v.mb_str(wxConvUTF8),
+                              (int) v.length());
+      }
+
+      if (!WavpackWriteTag(wpc)) {
+         // Not sure what to do
+      }
    }
+
    WavpackCloseFile(wpc);
+
+   if ( !outWvFile.file.get()->Close()
+      || ( outWvcFile.file && outWvcFile.file.get() && !outWvcFile.file.get()->Close())) {
+      updateResult = ProgressResult::Cancelled;
+   }
 
    return updateResult;
 }
@@ -363,17 +403,16 @@ int ExportWavPack::WriteBlock(void *id, void *data, int32_t length)
    if (outId->error)
       return FALSE;
 
-   if (outId && outId->file && data && length) {
-      if (!outId->file.get()->Write(data, length)) {
+   if (outId && outId->file && outId->file.get() && data && length) {
+      if ( outId->file.get()->Write(data, length).GetLastError() ) {
          outId->file = NULL;
          outId->error = 1;
          return FALSE;
-      }
-      else {
+      } else {
          outId->bytesWritten += length;
 
          if (!outId->firstBlockSize)
-               outId->firstBlockSize = bcount;
+               outId->firstBlockSize = length;
       }
    }
 
