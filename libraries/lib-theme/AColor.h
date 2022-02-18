@@ -50,6 +50,10 @@ class THEME_API AColor {
    static void Bevel(wxDC & dc, bool up, const wxRect & r);
    static void Bevel2
       (wxDC & dc, bool up, const wxRect & r, bool bSel=false, bool bHighlight = false);
+   /**
+    * \brief Draw a button that fills a given rect
+    */
+   static void ButtonStretch(wxDC& dc, bool up, const wxRect& r, bool selected = false, bool highlight = false);
    static void BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight = false);
    static wxColour Blend(const wxColour & c1, const wxColour & c2);
 
