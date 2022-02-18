@@ -193,7 +193,18 @@ cmd_option( ${_OPT}has_networking
    "Build networking features into Audacity"
    Off)
 
+include( CMakeDependentOption )
+
+cmake_dependent_option(
+   ${_OPT}has_tests
+   "Enables automated testing support"
+   On
+   "${_OPT}conan_enabled"
+   Off
+)
+
 include( AudacityDependencies )
+include( AudacityTesting )
 
 # Pull all the modules we'll need
 include( CheckCXXCompilerFlag )
@@ -202,7 +213,6 @@ include( CheckIncludeFiles )
 include( CheckLibraryExists )
 include( CheckSymbolExists )
 include( CheckTypeSize )
-include( CMakeDependentOption )
 include( CMakeDetermineASM_NASMCompiler )
 include( CMakePushCheckState )
 include( GNUInstallDirs )
