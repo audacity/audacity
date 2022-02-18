@@ -24,6 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/window.h>
 
+#include "ProjectWindow.h"
 MuteButtonHandle::MuteButtonHandle
 ( const std::shared_ptr<Track> &pTrack, const wxRect &rect )
    : ButtonHandle{ pTrack, rect }
@@ -149,8 +150,7 @@ EffectsButtonHandle::~EffectsButtonHandle()
 UIHandle::Result EffectsButtonHandle::CommitChanges
 (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
 {
-   // To do
-
+   ProjectWindow::Get(*pProject).ShowEffectsPanel(mpTrack.lock().get());
    return RefreshCode::RefreshNone;
 }
 
