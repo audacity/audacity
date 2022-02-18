@@ -40,10 +40,13 @@ void GetNarrowSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
    dest.width = rect.width - muteRect.width + TitleSoloBorderOverlap;
 }
 
-void GetEffectsHorizontalBounds( const wxRect & rect, wxRect &dest )
+void GetEffectsBounds( const wxRect & rect, wxRect &dest )
 {
-   dest.x = rect.x;
-   dest.width = rect.width;
+   constexpr int padding = 2;
+   dest.x = rect.x + padding;
+   dest.y = rect.y + padding;
+   dest.width = rect.width - padding * 2;
+   dest.height = rect.height - padding * 2;
 }
 
 void GetWideMuteSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
@@ -107,21 +110,15 @@ void MuteOrSoloDrawFunction
 
 void EffectsDrawFunction
 ( wxDC *dc, const wxRect &bev, const Track *pTrack, bool down, 
-  bool WXUNUSED(captured), bool hit )
-{
-   bool selected = true;
-   bool value = false;
-   
+  bool sel, bool hit )
+{   
    wxCoord textWidth, textHeight;
-   wxString str = XO("Effects").Translation();
+   const auto str = XO("Effects").Translation();
 
-   AColor::Bevel2(
-      *dc,
-      value == down,
-      bev,
-      selected, hit
-   );
+   const auto selected = pTrack ? pTrack->GetSelected() : true;
 
+   AColor::ButtonStretch(*dc, !down, bev, selected, hit);
+   
    TrackInfo::SetTrackInfoFont(dc);
    dc->GetTextExtent(str, &textWidth, &textHeight);
    dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
@@ -196,7 +193,7 @@ void EffectsDrawFunction
 
    wxRect bev = rect;
 
-   GetEffectsHorizontalBounds( rect, bev );
+   GetEffectsBounds( rect, bev );
    {
       auto target = dynamic_cast<EffectsButtonHandle*>( context.target.get() );
       bool hit = target && target->GetTrack().get() == pTrack;
@@ -245,14 +242,11 @@ void PlayableTrackControls::GetEffectsRect
 {
    auto &trackControl = static_cast<const CommonTrackControls&>(
       TrackControls::Get( *pTrack ) );
-   auto resultsE = TrackInfo::CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemEffects );
+   const auto resultsE = TrackInfo::CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemEffects );
+   dest.x = rect.x;
+   dest.y = rect.y + resultsE.first;
+   dest.width = rect.width;
    dest.height = resultsE.second;
-
-   int yEffects = resultsE.first;
-
-   GetEffectsHorizontalBounds( rect, dest );
-
-   dest.y = rect.y + yEffects;
 
 }
 
@@ -268,7 +262,7 @@ const TCPLines& PlayableTrackControls::StaticTCPLines()
          MuteAndSoloDrawFunction },
       } );
       playableTrackTCPLines.insert( playableTrackTCPLines.end(), {
-      { TCPLine::kItemEffects, kTrackInfoBtnSize + 1, 0,
+      { TCPLine::kItemEffects, kTrackEffectsBtnHeight + 1, 0,
          EffectsDrawFunction },
       } );
    } );
