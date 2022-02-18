@@ -88,8 +88,22 @@ class AUDACITY_DLL_API LabelTrack final
    , public wxEvtHandler
 {
  public:
+   static wxString GetDefaultName();
+
    // Construct and also build all attachments
    static LabelTrack *New(AudacityProject &project);
+
+   /**
+    * \brief Create a new LabelTrack with specified @p name and append it to the @p trackList
+    * \return New LabelTrack with custom name
+    */
+   static LabelTrack* Create(TrackList& trackList, const wxString& name);
+
+   /**
+    * \brief Create a new LabelTrack with unique default name and append it to the @p trackList
+    * \return New LabelTrack with unique default name
+    */
+   static LabelTrack* Create(TrackList& trackList);
 
    LabelTrack();
    LabelTrack(const LabelTrack &orig);

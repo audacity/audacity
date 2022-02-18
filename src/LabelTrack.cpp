@@ -55,6 +55,11 @@ static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    LabelTrack::New
 };
 
+wxString LabelTrack::GetDefaultName()
+{
+   return _("Labels");
+}
+
 LabelTrack *LabelTrack::New( AudacityProject &project )
 {
    auto &tracks = TrackList::Get( project );
@@ -63,12 +68,24 @@ LabelTrack *LabelTrack::New( AudacityProject &project )
    return result;
 }
 
+LabelTrack* LabelTrack::Create(TrackList& trackList, const wxString& name)
+{
+   auto track = std::make_shared<LabelTrack>();
+   track->SetName(name);
+   trackList.Add(track);
+   return track.get();
+}
+
+LabelTrack* LabelTrack::Create(TrackList& trackList)
+{
+   return Create(trackList, trackList.MakeUniqueTrackName(GetDefaultName()));
+}
+
 LabelTrack::LabelTrack():
    Track(),
    mClipLen(0.0),
    miLastLabel(-1)
 {
-   SetName(_("Label Track"));
 }
 
 LabelTrack::LabelTrack(const LabelTrack &orig) :

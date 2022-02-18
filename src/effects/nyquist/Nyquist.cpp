@@ -1530,8 +1530,11 @@ bool NyquistEffect::ProcessOne()
       unsigned int l;
       auto ltrack = * mOutputTracks->Any< LabelTrack >().begin();
       if (!ltrack) {
+         auto newTrack = std::make_shared<LabelTrack>();
+         //new track name should be unique among the names in the list of input tracks, not output
+         newTrack->SetName(inputTracks()->MakeUniqueTrackName(LabelTrack::GetDefaultName()));
          ltrack = static_cast<LabelTrack*>(
-            AddToOutputTracks(std::make_shared<LabelTrack>()));
+            AddToOutputTracks(newTrack));
       }
 
       for (l = 0; l < numLabels; l++) {
