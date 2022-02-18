@@ -69,6 +69,7 @@ class AUDACITY_DLL_API ProjectAudioManager final
    : public ClientData::Base
    , public AudioIOListener
    , public std::enable_shared_from_this< ProjectAudioManager >
+   , public wxEvtHandler
 {
 public:
    static ProjectAudioManager &Get( AudacityProject &project );
@@ -148,6 +149,8 @@ public:
 
    PlayMode GetLastPlayMode() const { return mLastPlayMode; }
 
+   void OnIdle(wxIdleEvent& evt);
+
 private:
    void SetPaused( bool value ) { mPaused = value; }
    void SetAppending( bool value ) { mAppending = value; }
@@ -174,6 +177,10 @@ private:
 
    //flag for cancellation of timer record.
    bool mTimerRecordCanceled{ false };
+
+   // flag for sound activated recording
+   std::atomic<bool> mSoundActivationCalled = false;
+
 
    bool mPaused{ false };
    bool mAppending{ false };

@@ -71,9 +71,14 @@ ProjectAudioManager::ProjectAudioManager( AudacityProject &project )
       registerStatusWidthFunction{ StatusWidthFunction };
    project.Bind( EVT_CHECKPOINT_FAILURE,
       &ProjectAudioManager::OnCheckpointFailure, this );
+
+   wxTheApp->Bind(wxEVT_IDLE, &ProjectAudioManager::OnIdle, this);
 }
 
-ProjectAudioManager::~ProjectAudioManager() = default;
+ProjectAudioManager::~ProjectAudioManager()
+{
+   wxTheApp->Unbind(wxEVT_IDLE, &ProjectAudioManager::OnIdle, this);
+}
 
 static TranslatableString FormatRate( int rate )
 {
@@ -1089,11 +1094,7 @@ void ProjectAudioManager::OnCommitRecording()
 
 void ProjectAudioManager::OnSoundActivationThreshold()
 {
-   auto &project = mProject;
-   auto gAudioIO = AudioIO::Get();
-   if ( gAudioIO && &project == gAudioIO->GetOwningProject().get() ) {
-      wxTheApp->CallAfter( [this]{ Pause(); } );
-   }
+   mSoundActivationCalled.store(true, std::memory_order::memory_order_relaxed);
 }
 
 void ProjectAudioManager::OnCheckpointFailure(wxCommandEvent &evt)
@@ -1288,6 +1289,27 @@ void ProjectAudioManager::DoPlayStopSelect()
       PlayCurrentRegion(false);
    }
 }
+
+
+void ProjectAudioManager::OnIdle(wxIdleEvent& evt)
+{
+   //static int n = 0;
+   //_RPT1(0, "ProjectAudioManager::OnIdle %d\n", n++);
+
+   if (mSoundActivationCalled.load(std::memory_order_acquire))
+   {
+      mSoundActivationCalled.store(false, std::memory_order_release);
+
+      auto& project = mProject;
+      auto gAudioIO = AudioIO::Get();
+      if (gAudioIO && &project == gAudioIO->GetOwningProject().get())
+      {
+         Pause();
+      }
+   }
+
+}
+
 
 #include "CommonCommandFlags.h"
 
