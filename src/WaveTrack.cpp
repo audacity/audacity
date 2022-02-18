@@ -1700,6 +1700,7 @@ void WaveTrack::Disjoin(double t0, double t1)
     * than remove the original clip when it is no longer has impacted regions
     */
    
+   WaveClipHolder lastClip = NULL;
    WaveClip *newClip;
    for( unsigned int i = 0; i < clipRegions.size(); i++ )
    {
@@ -1719,10 +1720,15 @@ void WaveTrack::Disjoin(double t0, double t1)
          newClip->Append((samplePtr)buffer.get(), floatSample, numSamples, 1);
          len -= numSamples;
       }
+      // Remove the original track if the next element is different, than the current
       if (i < clipRegions.size() - 1 && clipRegions.at(i).clip != clipRegions.at(i + 1).clip) {
          // we assume the regions are sequential, and they should be (!)
          // we can remove the original clip if the next one has a different clip
-         this->RemoveAndReturnClip(region.clip.get());
+         WaveClipHolder clipToRemove = RemoveAndReturnClip(region.clip.get());
+         clipToRemove.~shared_ptr();
+      } else if (i == clipRegions.size() - 1) {
+         // Remove the original clip if the end matches the end of the clip
+         Flush();
       }
    }
 
