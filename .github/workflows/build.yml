@@ -143,6 +143,11 @@ jobs:
         cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
     - name: Build
       uses: audacity/audacity-actions/build@v1
+    - name: Test
+      uses: GabrielBB/xvfb-action@v1
+      with:
+        run: ctest -C ${{ env.BUILD_TYPE }} --verbose
+        working-directory: ./.build.x64/
     - name: Package
       uses: audacity/audacity-actions/package@v1
       with:
@@ -195,6 +200,12 @@ jobs:
         windows_certificate_password: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
     - name: Build
       uses: audacity/audacity-actions/build@v1
+    - name: Test
+      shell: pwsh
+      run: |
+        pushd .build.${{ matrix.config.arch }}
+        ctest -C ${{ env.BUILD_TYPE }} --verbose
+        popd
     - name: Package
       uses: audacity/audacity-actions/package@v1
       with:
@@ -220,6 +231,12 @@ jobs:
         arch: x64
     - name: Build x86_64
       uses: audacity/audacity-actions/build@v1
+    - name: Test
+      shell: bash
+      run: |
+        pushd .build.x64
+        ctest -C ${{ env.BUILD_TYPE }} --verbose
+        popd
     - name: 'Tar files'
       shell: bash
       run: tar cf macos_intel.tar .build.x64
