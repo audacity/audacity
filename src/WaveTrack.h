@@ -231,6 +231,12 @@ private:
    void Disjoin(double t0, double t1) /* not override */;
 
    // May assume precondition: t0 <= t1
+   /*  Internal function to create a copy of the part of an existing clip
+   *   Will cause clip overlap, that needs to be taken care of by the caller!
+   */
+   WaveClip* CopyToNewClip(WaveClipHolder clip, double startTime, double endTime);
+
+   // May assume precondition: t0 <= t1
    void Trim(double t0, double t1) /* not override */;
 
    // May assume precondition: t0 <= t1

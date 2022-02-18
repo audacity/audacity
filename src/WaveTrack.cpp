@@ -1700,38 +1700,56 @@ void WaveTrack::Disjoin(double t0, double t1)
     * than remove the original clip when it is no longer has impacted regions
     */
    
-   WaveClipHolder lastClip = NULL;
+   double lastEndPos = -1;
    WaveClip *newClip;
-   for( unsigned int i = 0; i < clipRegions.size(); i++ )
+   for (unsigned int i = 0; i < clipRegions.size(); i++)
    {
-      const ClipRegion &region = clipRegions.at(i);
-
-      newClip = this->CreateClip(region.start);
-      auto start = region.clip->TimeToSamples(region.start);
-      auto end = region.clip->TimeToSamples(region.end);
-      auto len = (end - start);
-      // copy data in buffer size batches
-      for (decltype(len) done = 0; done < len; done += maxAtOnce)
+      const ClipRegion& region = clipRegions.at(i);
+      // There is no segment to be kept on the left
+      if (region.clip->GetPlayStartTime() == region.start)
       {
-         auto numSamples = limitSampleBufferSize(maxAtOnce, len - done); 
-
-         region.clip.get()->GetSamples((samplePtr)buffer.get(), floatSample, start+done,numSamples);
-
-         newClip->Append((samplePtr)buffer.get(), floatSample, numSamples, 1);
-         len -= numSamples;
+         // the region spans to the end of the clip, so we can just delete it
+         if (region.clip->GetPlayEndTime() == region.end) {
+            WaveClipHolder toRemove = RemoveAndReturnClip(region.clip.get());
+            toRemove.~shared_ptr();
+            continue;
+         }
       }
-      // Remove the original track if the next element is different, than the current
-      if (i < clipRegions.size() - 1 && clipRegions.at(i).clip != clipRegions.at(i + 1).clip) {
-         // we assume the regions are sequential, and they should be (!)
-         // we can remove the original clip if the next one has a different clip
-         WaveClipHolder clipToRemove = RemoveAndReturnClip(region.clip.get());
-         clipToRemove.~shared_ptr();
-      } else if (i == clipRegions.size() - 1) {
-         // Remove the original clip if the end matches the end of the clip
-         Flush();
+      // create the left clip
+      newClip = CopyToNewClip(region.clip, std::max(region.clip->GetPlayStartTime(),lastEndPos),region.start);
+
+      // lookahead to see if we are done with this clip
+      if ((i == clipRegions.size() - 1) || (region.clip!=clipRegions.at(i+1).clip)) {
+         // the region spans to the end of the clip, so we can just delete it
+         if (region.clip->GetPlayEndTime() != region.end) {
+            newClip = CopyToNewClip(region.clip, region.end, region.clip->GetPlayEndTime());
+         }
+         //remove the remainder of the clip
+         WaveClipHolder toRemove = RemoveAndReturnClip(region.clip.get());
+         toRemove.~shared_ptr();
       }
+      lastEndPos=region.end;
    }
+}
 
+WaveClip* WaveTrack::CopyToNewClip(WaveClipHolder clip, double startTime, double endTime) {
+   WaveClip* newClip = CreateClip(startTime);
+   const size_t maxAtOnce = 1048576;
+   Floats buffer{ maxAtOnce };
+   auto start = clip->TimeToSamples(startTime);
+   auto end = clip->TimeToSamples(endTime);
+
+   auto len = (end - start);
+   for (decltype(len) done = 0; done < len; done += maxAtOnce)
+   {
+      auto numSamples = limitSampleBufferSize(maxAtOnce, len - done);
+
+      clip->GetSamples((samplePtr)buffer.get(), floatSample, start + done,
+         numSamples);
+      newClip->Append((samplePtr)buffer.get(), floatSample, numSamples, 1);
+   }
+   Flush();
+   return newClip;
 }
 
 /*! @excsafety{Weak} */
