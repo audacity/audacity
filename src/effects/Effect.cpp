@@ -1839,11 +1839,10 @@ Track *Effect::AddToOutputTracks(const std::shared_ptr<Track> &t)
 Effect::AddedAnalysisTrack::AddedAnalysisTrack(Effect *pEffect, const wxString &name)
    : mpEffect(pEffect)
 {
-   LabelTrack::Holder pTrack{ std::make_shared<LabelTrack>() };
-   mpTrack = pTrack.get();
-   if (!name.empty())
-      pTrack->SetName(name);
-   pEffect->mTracks->Add( pTrack );
+   if(!name.empty())
+      mpTrack = LabelTrack::Create(*pEffect->mTracks, name);
+   else
+      mpTrack = LabelTrack::Create(*pEffect->mTracks);
 }
 
 Effect::AddedAnalysisTrack::AddedAnalysisTrack(AddedAnalysisTrack &&that)
