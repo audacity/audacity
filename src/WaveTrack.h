@@ -74,6 +74,19 @@ public:
 
    using Regions = std::vector < Region >;
 
+   /// \brief Structure to hold region of a wavetrack along with the
+   /// clip in it
+   struct ClipRegion
+   {
+      ClipRegion() : start(0), end(0), clip(NULL) {}
+      ClipRegion(double start_, double end_, WaveClipHolder clip_) : start(start_), end(end_), clip(clip_) {}
+
+      double start, end;
+      WaveClipHolder clip;
+   };
+
+   using ClipRegions = std::vector < ClipRegion >;
+
    static wxString GetDefaultAudioTrackNamePreference();
 
    //
