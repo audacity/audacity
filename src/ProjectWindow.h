@@ -21,6 +21,7 @@ class Track;
 
 class wxScrollBar;
 class wxPanel;
+class wxSplitterWindow;
 
 class ProjectWindow;
 void InitProjectWindow( ProjectWindow &window );
@@ -52,9 +53,28 @@ public:
    bool IsBeingDeleted() const { return mIsDeleting; }
    void SetIsBeingDeleted() { mIsDeleting = true; }
 
-   wxWindow *GetMainPage() { return mMainPage; }
-   wxPanel *GetMainPanel() { return mMainPanel; }
-   wxPanel *GetTopPanel() { return mTopPanel; }
+   /**
+    * \brief Effect window contains list off effects assigned to
+    * a selected track.
+    * \return Pointer to an effects side-panel window (not null)
+    */
+   wxWindow* GetEffectsWindow() noexcept;
+   /**
+    * \brief Track list window is the parent container for TrackPanel
+    * \return Pointer to a track list window (not null)
+    */
+   wxWindow* GetTrackListWindow() noexcept;
+   /**
+    * \brief Container is a parent window for both effects panel and
+    * track list windows
+    * \return Pointer to a container window (not null)
+    */
+   wxWindow* GetContainerWindow() noexcept;
+   /**
+    * \brief Top panel contains project-related controls and tools.
+    * \return Pointer to a top panel window (not null)
+    */
+   wxPanel *GetTopPanel() noexcept;
 
    void UpdateStatusWidths();
 
@@ -105,6 +125,9 @@ public:
    void ZoomAfterImport(Track *pTrack);
    double GetZoomOfToFit() const;
    void DoZoomFit();
+
+   void ShowEffectsPanel(Track* track = nullptr);
+   void HideEffectsPanel();
 
    void ApplyUpdatedTheme();
 
@@ -183,8 +206,10 @@ private:
    wxRect mNormalizedWindowState;
 
    wxPanel *mTopPanel{};
-   wxWindow * mMainPage{};
-   wxPanel * mMainPanel{};
+   wxSplitterWindow* mContainerWindow;
+   wxWindow* mEffectsWindow{};
+   wxWindow* mTrackListWindow{};
+   
    wxScrollBar *mHsbar{};
    wxScrollBar *mVsbar{};
 

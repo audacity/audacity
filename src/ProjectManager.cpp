@@ -183,10 +183,6 @@ void ProjectManager::SaveWindowSize()
    sbWindowRectAlreadySaved = true;
 }
 
-#ifdef EXPERIMENTAL_NOTEBOOK
-   extern void AddPages(   AudacityProject * pProj, GuiFactory & Factory,  wxNotebook  * pNotebook );
-#endif
-
 void InitProjectWindow( ProjectWindow &window )
 {
    auto &project = window.GetProject();
@@ -249,14 +245,13 @@ void InitProjectWindow( ProjectWindow &window )
    // irrespective of the order in which they were created.
    ToolManager::Get(project).GetTopDock()->MoveBeforeInTabOrder(&ruler);
 
-   const auto pPage = window.GetMainPage();
 
    wxBoxSizer *bs;
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       bs = ubs.get();
       bs->Add(topPanel, 0, wxEXPAND | wxALIGN_TOP);
-      bs->Add(pPage, 1, wxEXPAND);
+      bs->Add(window.GetContainerWindow(), 1, wxEXPAND);
       bs->Add( ToolManager::Get( project ).GetBotDock(), 0, wxEXPAND );
       window.SetAutoLayout(true);
       window.SetSizer(ubs.release());
@@ -270,9 +265,11 @@ void InitProjectWindow( ProjectWindow &window )
    //      will be given the focus even if we try to SetFocus().  By
    //      making the TrackPanel that first window, we resolve several
    //      keyboard focus problems.
-   pPage->MoveBeforeInTabOrder(topPanel);
+   window.GetContainerWindow()->MoveAfterInTabOrder(topPanel);
 
-   bs = (wxBoxSizer *)pPage->GetSizer();
+   const auto trackListWindow = window.GetTrackListWindow();
+
+   bs = static_cast<wxBoxSizer*>(trackListWindow->GetSizer());
 
    auto vsBar = &window.GetVerticalScrollBar();
    auto hsBar = &window.GetHorizontalScrollBar();
@@ -308,16 +305,8 @@ void InitProjectWindow( ProjectWindow &window )
    }
 
    // Lay it out
-   pPage->SetAutoLayout(true);
-   pPage->Layout();
-
-#ifdef EXPERIMENTAL_NOTEBOOK
-   AddPages(this, Factory, pNotebook);
-#endif
-
-   auto mainPanel = window.GetMainPanel();
-
-   mainPanel->Layout();
+   trackListWindow->SetAutoLayout(true);
+   trackListWindow->Layout();
 
    wxASSERT( trackPanel.GetProject() == &project );
 

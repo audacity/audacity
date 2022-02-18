@@ -136,8 +136,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # USE_MIDI must be defined in order for SCOREALIGN to work
    #SCOREALIGN
 
-   #NOTEBOOK
-
    #Automatically tries to find an acceptable input volume
    #AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 
