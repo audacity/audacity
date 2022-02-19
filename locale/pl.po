@@ -7,7 +7,7 @@
 # Aron <aron.plotnikowski@cryptolab.net>, 2013
 # Aron <aron.plotnikowski@cryptolab.net>, 2013
 # Grzegorz Pruchniakowski <gootector@o2.pl>, 2013
-# Grzegorz Pruchniakowski <gootector@o2.pl>, 2013-2021
+# Grzegorz Pruchniakowski <gootector@o2.pl>, 2013-2022
 # jacbob77 <jacbob77@tlen.pl>, 2012
 # jacbob77 <jacbob77@tlen.pl>, 2012
 # Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2012
@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Audacity\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-14 10:06-0400\n"
-"PO-Revision-Date: 2021-10-23 23:04+0000\n"
+"PO-Revision-Date: 2022-02-16 04:52+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/klyok/audacity/language/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -1945,7 +1945,7 @@ msgstr "&Edytuj parametry"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Use Preset"
-msgstr "&Użyj presetu"
+msgstr "&Użyj preseta"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Parameters"
@@ -9610,11 +9610,11 @@ msgstr "Nie można wczytać pliku preseta z \"%s\""
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Failed to encode preset from \"%s\""
-msgstr "Nie udało się zakodować presetu z \"%s\""
+msgstr "Nie udało się zakodować preseta z \"%s\""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Unable to store preset in config file"
-msgstr "Nie można zapisać presetu w pliku konfiguracyjnym"
+msgstr "Nie można zapisać preseta w pliku konfiguracyjnym"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -9622,7 +9622,7 @@ msgid ""
 "Could not import \"%s\" preset\n"
 "\n"
 "%s"
-msgstr "Nie można importować presetu \"%s\"\n\n%s"
+msgstr "Nie można importować preseta \"%s\"\n\n%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -9631,7 +9631,7 @@ msgstr "Eksportuj preset jednostki dźwiękowej jako %s:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Standard Audio Unit preset file"
-msgstr "Standardowy plik presetu jednostki dźwiękowej"
+msgstr "Standardowy plik preseta jednostki dźwiękowej"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -9639,7 +9639,7 @@ msgid ""
 "Could not export \"%s\" preset\n"
 "\n"
 "%s"
-msgstr "Nie można eksportować presetu \"%s\"\n\n%s"
+msgstr "Nie można eksportować preseta \"%s\"\n\n%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
@@ -9652,11 +9652,11 @@ msgstr "Importuj preset jednostki dźwiękowej jako %s:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to set preset name"
-msgstr "Nie udało się ustawić nazwy presetu"
+msgstr "Nie udało się ustawić nazwy preseta"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to retrieve preset content"
-msgstr "Nie udało się pobrać zawartości presetu"
+msgstr "Nie udało się pobrać zawartości preseta"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to convert property list to XML data"
@@ -9669,20 +9669,20 @@ msgstr "Dane XML są puste po konwersji"
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Failed to write XML preset to \"%s\""
-msgstr "Nie udało się zapisać presetu XML do \"%s\""
+msgstr "Nie udało się zapisać preseta XML do \"%s\""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to convert preset to internal format"
-msgstr "Nie udało się przekonwertować presetu na format wewnętrzny"
+msgstr "Nie udało się przekonwertować preseta na format wewnętrzny"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Failed to create property list for preset"
-msgstr "Nie udało się utworzyć listy właściwości dla presetu"
+msgstr "Nie udało się utworzyć listy właściwości dla preseta"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Failed to set class info for \"%s\" preset"
-msgstr "Nie udało się ustawić informacji o klasie dla presetu \"%s\""
+msgstr "Nie udało się ustawić informacji o klasie dla preseta \"%s\""
 
 #. i18n-hint: the name of an Apple audio software protocol
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol

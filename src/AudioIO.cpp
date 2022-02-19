@@ -999,10 +999,10 @@ int AudioIO::StartStream(const TransportTracks &tracks,
    // audio thread call TrackBufferExchange here makes the code more predictable, since
    // TrackBufferExchange will ALWAYS get called from the Audio thread.
    mAudioThreadShouldCallTrackBufferExchangeOnce
-      .store(true, std::memory_order_relaxed);
+      .store(true, std::memory_order_release);
 
    while( mAudioThreadShouldCallTrackBufferExchangeOnce
-      .load(std::memory_order_relaxed)) {
+      .load(std::memory_order_acquire)) {
       using namespace std::chrono;
       auto interval = 50ms;
       if (options.playbackStreamPrimer) {
@@ -1447,9 +1447,7 @@ void AudioIO::StopStream()
       mPortStreamV19 = NULL;
    }
 
-   // No longer need effects processing. This must be done after the stream is stopped
-   // to prevent the callback from being invoked after the effects are finalized.
-   mpTransportState.reset();
+   
 
    for( auto &ext : Extensions() )
       ext.StopOtherStream();
@@ -1465,9 +1463,9 @@ void AudioIO::StopStream()
       // call TrackBufferExchange one last time (it normally would not do so since
       // Pa_GetStreamActive() would now return false
       mAudioThreadShouldCallTrackBufferExchangeOnce
-         .store(true, std::memory_order_relaxed);
-      while( mAudioThreadShouldCallTrackBufferExchangeOnce
-         .load(std::memory_order_relaxed) )
+         .store(true, std::memory_order_release);
+      while (mAudioThreadShouldCallTrackBufferExchangeOnce
+         .load(std::memory_order_acquire))
       {
          //FIXME: Seems like this block of the UI thread isn't bounded,
          //but we cannot allow event handlers to see incompletely terminated
@@ -1475,21 +1473,29 @@ void AudioIO::StopStream()
          using namespace std::chrono;
          std::this_thread::sleep_for(50ms);
       }
+   }
 
-      //
-      // Everything is taken care of.  Now, just free all the resources
-      // we allocated in StartStream()
-      //
+   // No longer need effects processing. This must be done after the stream is stopped
+   // to prevent the callback from being invoked after the effects are finalized.
+   mpTransportState.reset();
 
-      if (mPlaybackTracks.size() > 0)
-      {
-         mPlaybackBuffers.reset();
-         mScratchBuffers.clear();
-         mScratchPointers.clear();
-         mPlaybackMixers.clear();
-         mPlaybackSchedule.mTimeQueue.Clear();
-      }
+   //
+   // Everything is taken care of.  Now, just free all the resources
+   // we allocated in StartStream()
+   //
 
+   if (mPlaybackTracks.size() > 0)
+   {
+      mPlaybackBuffers.reset();
+      mScratchBuffers.clear();
+      mScratchPointers.clear();
+      mPlaybackMixers.clear();
+      mPlaybackSchedule.mTimeQueue.Clear();
+   }
+
+
+   if (mStreamToken > 0)
+   {
       //
       // Offset all recorded tracks to account for latency
       //
@@ -1553,6 +1559,8 @@ void AudioIO::StopStream()
             pListener->OnCommitRecording();
       }
    }
+      
+
 
    if (auto pInputMeter = mInputMeter.lock())
       pInputMeter->Reset(mRate, false);
@@ -1743,11 +1751,11 @@ AudioThread::ExitCode AudioThread::Entry()
       gAudioIO->mAudioThreadTrackBufferExchangeLoopActive
          .store(true, std::memory_order_relaxed);
       if( gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce
-         .load(std::memory_order_relaxed) )
+         .load(std::memory_order_acquire) )
       {
          gAudioIO->TrackBufferExchange();
          gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce
-            .store(false, std::memory_order_relaxed);
+            .store(false, std::memory_order_release);
       }
       else if( gAudioIO->mAudioThreadTrackBufferExchangeLoopRunning
          .load(std::memory_order_relaxed))
@@ -3130,9 +3138,9 @@ int AudioIoCallback::CallbackDoSeek()
 
    // Reload the ring buffers
    mAudioThreadShouldCallTrackBufferExchangeOnce
-      .store(true, std::memory_order_relaxed);
+      .store(true, std::memory_order_release);
    while( mAudioThreadShouldCallTrackBufferExchangeOnce
-      .load(std::memory_order_relaxed) )
+      .load(std::memory_order_acquire) )
    {
       using namespace std::chrono;
       std::this_thread::sleep_for(50ms);

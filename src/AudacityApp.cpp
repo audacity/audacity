@@ -1350,10 +1350,6 @@ bool AudacityApp::OnInit()
       PopulatePreferences();
    }
 
-#if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
-   this->AssociateFileTypes();
-#endif
-
    theTheme.SetOnPreferredSystemAppearanceChanged([this](PreferredSystemAppearance appearance){
        SetPreferredSystemAppearance(appearance);
    });
@@ -1441,6 +1437,14 @@ bool AudacityApp::InitPart2()
       exit(1);
    }
 
+   wxString journalFileName;
+   const bool playingJournal = parser->Found("j", &journalFileName);
+
+#if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
+   if (!playingJournal)
+      this->AssociateFileTypes();
+#endif
+
    if (parser->Found(wxT("v")))
    {
       wxPrintf("Audacity v%s\n", AUDACITY_VERSION_STRING);
@@ -1459,9 +1463,8 @@ bool AudacityApp::InitPart2()
       Sequence::SetMaxDiskBlockSize(lval);
    }
 
-   wxString fileName;
-   if (parser->Found(wxT("j"), &fileName))
-      Journal::SetInputFileName( fileName );
+   if (playingJournal)
+      Journal::SetInputFileName( journalFileName );
 
    // BG: Create a temporary window to set as the top window
    wxImage logoimage((const char **)AudacityLogoWithName_xpm);
@@ -1562,7 +1565,8 @@ bool AudacityApp::InitPart2()
       project = ProjectManager::New();
    }
 
-   if( ProjectSettings::Get( *project ).GetShowSplashScreen() ){
+   if (!playingJournal && ProjectSettings::Get(*project).GetShowSplashScreen())
+   {
       // This may do a check-for-updates at every start up.
       // Mainly this is to tell users of ALPHAS who don't know that they have an ALPHA.
       // Disabled for now, after discussion.
@@ -1571,7 +1575,7 @@ bool AudacityApp::InitPart2()
    }
 
 #if defined(HAVE_UPDATES_CHECK)
-   UpdateManager::Start();
+   UpdateManager::Start(playingJournal);
 #endif
 
    #ifdef USE_FFMPEG
@@ -1594,9 +1598,12 @@ bool AudacityApp::InitPart2()
       //
       bool didRecoverAnything = false;
       // This call may reassign project (passed by reference)
-      if (!ShowAutoRecoveryDialogIfNeeded(project, &didRecoverAnything))
+      if (!playingJournal)
       {
-         QuitAudacity(true);
+         if (!ShowAutoRecoveryDialogIfNeeded(project, &didRecoverAnything))
+         {
+            QuitAudacity(true);
+         }
       }
 
       //

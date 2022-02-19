@@ -57,12 +57,12 @@ UpdateManager& UpdateManager::GetInstance()
     return updateManager;
 }
 
-void UpdateManager::Start()
+void UpdateManager::Start(bool suppressModal)
 {
     auto& instance = GetInstance();
 
     // Show the dialog only once. 
-    if (!prefUpdatesNoticeShown.Read())
+    if (!suppressModal && !prefUpdatesNoticeShown.Read())
     {
         // DefaultUpdatesCheckingFlag survives the "Reset Preferences"
         // action, so check, if the updates were previously disabled as well.
