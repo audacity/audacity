@@ -1,8 +1,8 @@
-/**********************************************************************
+/*!********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  AudioUnitEffect.cpp
+  @file AudioUnitEffect.cpp
 
   Dominic Mazzoni
   Leland Lucius

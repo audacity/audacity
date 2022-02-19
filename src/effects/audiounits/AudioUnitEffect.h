@@ -1,8 +1,8 @@
-/**********************************************************************
+/*!********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  AudioUnitEffect.h
+  @file AudioUnitEffect.h
 
   Dominic Mazzoni
   Leland Lucius
