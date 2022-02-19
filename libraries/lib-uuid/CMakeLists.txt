@@ -21,6 +21,6 @@ else()
     set( LIBRARIES PRIVATE libuuid::libuuid)
 endif()
 
-list( APPEND LIBRARIES PRIVATE lib-string-utils)
+list( APPEND LIBRARIES PRIVATE lib-string-utils lib-utility)
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "" )

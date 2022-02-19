@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <cstring>
 #include <cassert>
+#include "CFResources.h"
 
 #if defined(USE_UUID_CREATE)
 #   include <rpc.h>
@@ -92,9 +93,8 @@ Uuid Uuid::Generate()
 
    return uuid;
 #elif defined(USE_CFUUID)
-   CFUUIDRef newId = CFUUIDCreate(NULL);
-   CFUUIDBytes bytes = CFUUIDGetUUIDBytes(newId);
-   CFRelease(newId);
+   CFUUIDBytes bytes = CFUUIDGetUUIDBytes(
+      CF_ptr<CFUUIDRef>{ CFUUIDCreate(NULL) }.get());
 
    Uuid uuid;
 

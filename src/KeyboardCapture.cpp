@@ -11,6 +11,7 @@
 #include "KeyboardCapture.h"
 
 #if defined(__WXMAC__)
+#include "CFResources.h"
 #include <wx/textctrl.h>
 #include <AppKit/AppKit.h>
 #include <wx/osx/core/private.h>
@@ -349,13 +350,12 @@ private:
       c = [mEvent characters];
       chars = [c UTF8String];
 
-      TISInputSourceRef currentKeyboard = TISCopyCurrentKeyboardInputSource();
-      CFDataRef uchr = (CFDataRef)TISGetInputSourceProperty(currentKeyboard, kTISPropertyUnicodeKeyLayoutData);
-      CFRelease(currentKeyboard);
-      if (uchr == NULL)
-      {
+      auto uchr = static_cast<CFDataRef>(TISGetInputSourceProperty(
+         CF_ptr<TISInputSourceRef>{ TISCopyCurrentKeyboardInputSource() }
+            .get(),
+         kTISPropertyUnicodeKeyLayoutData));
+      if (!uchr)
          return chars;
-      }
 
       const UCKeyboardLayout *keyboardLayout = (const UCKeyboardLayout*)CFDataGetBytePtr(uchr);
       if (keyboardLayout == NULL)

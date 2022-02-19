@@ -22,6 +22,7 @@
 #include "ModuleManager.h"
 #include "SampleCount.h"
 #include "ConfigInterface.h"
+#include "CFResources.h"
 
 #include <wx/defs.h>
 #include <wx/base64.h>
@@ -90,15 +91,6 @@ BlackList[] =
    { 'appl', 'aumx', 'mxmx' },   // Apple: AUMatrixMixer
    { 'appl', 'aumx', 'smxr' },   // Apple: AUMixer
 };
-
-struct CFReleaser
-{
-   void operator () (const void *p) const
-   {
-      if (p) CFRelease(p);
-   }
-};
-template <typename T> using CFunique_ptr = std::unique_ptr<T, CFReleaser>;
 
 // Uncomment to include parameter IDs in the final name.  Only needed if it's
 // discovered that many effects have duplicate names.  It could even be done
@@ -418,10 +410,8 @@ void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
       {
          CFStringRef cfName{};
          result = AudioComponentCopyName(component, &cfName);
-         CFunique_ptr<const __CFString> uName{ cfName };
-
-         if (result == noErr)
-         {
+         CF_ptr<CFStringRef> uName{ cfName };
+         if (result == noErr) {
             wxString path;
 
             path.Printf(wxT("%-4.4s/%-4.4s/%-4.4s/%s"),
@@ -430,25 +420,20 @@ void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
                         FromOSType(found.componentSubType),
                         wxCFStringRef::AsString(cfName));
 
-            for (int i = 0; i < WXSIZEOF(BlackList); ++i)
-            {
+            for (int i = 0; i < WXSIZEOF(BlackList); ++i) {
                if (BlackList[i].componentType == found.componentType &&
                    BlackList[i].componentSubType == found.componentSubType &&
-                   BlackList[i].componentManufacturer == found.componentManufacturer)
-               {
+                   BlackList[i].componentManufacturer ==
+                      found.componentManufacturer) {
                   wxLogDebug(wxT("Blacklisted AU skipped: %s"), path);
                   result = !noErr;
                   break;
                }
             }
-
             if (result == noErr)
-            {
                effects.push_back(path);
-            }
          }
       }
-
       component = AudioComponentFindNext(component, &desc);
    }
 }
@@ -1584,7 +1569,7 @@ bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
    OSStatus result;
 
    // Retrieve the list of factory presets
-   CFArrayRef array{};
+   CF_ptr<CFArrayRef> array;
    UInt32 dataSize = sizeof(CFArrayRef);
    result = AudioUnitGetProperty(mUnit.get(),
                                  kAudioUnitProperty_FactoryPresets,
@@ -1592,18 +1577,11 @@ bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
                                  0,
                                  &array,
                                  &dataSize);
-   CFunique_ptr<const __CFArray> uarray { array };
-   if (result != noErr)
-   {
+   if (result != noErr || id < 0 || id >= CFArrayGetCount(array.get()))
       return false;
-   }
 
-   if (id < 0 || id >= CFArrayGetCount(array))
-   {
-      return false;
-   }
-
-   const AUPreset *preset = (const AUPreset *) CFArrayGetValueAtIndex(array, id);
+   const AUPreset *preset =
+      static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), id));
 
    result = AudioUnitSetProperty(mUnit.get(),
                                  kAudioUnitProperty_PresentPreset,
@@ -1633,7 +1611,7 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
    RegistryPaths presets;
 
    // Retrieve the list of factory presets
-   CFArrayRef array{};
+   CF_ptr<CFArrayRef> array;
    UInt32 dataSize = sizeof(CFArrayRef);
    result = AudioUnitGetProperty(mUnit.get(),
                                  kAudioUnitProperty_FactoryPresets,
@@ -1641,16 +1619,11 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
                                  0,
                                  &array,
                                  &dataSize);
-   CFunique_ptr<const __CFArray> uarray { array };
    if (result == noErr)
-   {
-      for (CFIndex i = 0, cnt = CFArrayGetCount(array); i < cnt; i++)
-      {
-         AUPreset *preset = (AUPreset *) CFArrayGetValueAtIndex(array, i);
-         presets.push_back(wxCFStringRef::AsString(preset->presetName));
-      }
-   }
-                        
+      for (CFIndex i = 0, cnt = CFArrayGetCount(array.get()); i < cnt; ++i)
+         presets.push_back(wxCFStringRef::AsString(
+            static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), i))
+               ->presetName));
    return presets;
 }
 
@@ -1926,40 +1899,33 @@ bool AudioUnitEffect::LoadPreset(
    const uint8_t *bufPtr = (uint8_t *) buf.GetData();
 
    // Create a CFData object that references the decoded preset
-   CFunique_ptr<const __CFData> data
-   {
+   CF_ptr<CFDataRef> data{
       CFDataCreateWithBytesNoCopy(kCFAllocatorDefault,
                                   bufPtr,
                                   bufLen,
                                   kCFAllocatorNull)
    };
-   if (!data)
-   {
+   if (!data) {
       wxLogError(wxT("Failed to convert \"%s\" preset to internal format"), group);
       return false;
    }
 
    // Convert it back to a property list.
-   CFPropertyListRef content
-   {
+   CF_ptr<CFPropertyListRef> content{
       CFPropertyListCreateWithData(kCFAllocatorDefault,
                                    data.get(),
                                    kCFPropertyListImmutable,
                                    NULL,
                                    NULL)
    };
-   if (!content)
-   {
+   if (!content) {
       wxLogError(wxT("Failed to create property list for \"%s\" preset"), group);
       return false;
    }
-   CFunique_ptr<char /* CFPropertyList */> ucontent { (char *) content };
 
    // See AUView::viewWillDraw
    if (mpControl)
-   {
       mpControl->ForceRedraw();
-   }
 
    // Finally, update the properties and parameters
    OSStatus result;
@@ -1969,8 +1935,7 @@ bool AudioUnitEffect::LoadPreset(
                                  0,
                                  &content,
                                  sizeof(content));
-   if (result != noErr)
-   {
+   if (result != noErr) {
       wxLogError(wxT("Failed to set class info for \"%s\" preset"), group);
       return false;
    }
@@ -2000,7 +1965,7 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
                         sizeof(preset));
 
    // Now retrieve the preset content
-   CFPropertyListRef content;
+   CF_ptr<CFPropertyListRef> content;
    UInt32 size = sizeof(content);
    AudioUnitGetProperty(mUnit.get(),
                         kAudioUnitProperty_ClassInfo,
@@ -2008,13 +1973,11 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
                         0,
                         &content,
                         &size);
-   CFunique_ptr<char /* CFPropertyList */> ucontent { (char *) content };
 
    // And convert it to serialized binary data
-   CFunique_ptr<const __CFData> data
-   {
+   CF_ptr<CFDataRef> data{
       CFPropertyListCreateData(kCFAllocatorDefault,
-                               content,
+                               content.get(),
                                PRESET_FORMAT,
                                0,
                                NULL)
@@ -2172,7 +2135,7 @@ bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
    OSStatus result;
 
    // Retrieve the class state from the source AU
-   CFPropertyListRef content;
+   CF_ptr<CFPropertyListRef> content;
    UInt32 size = sizeof(content);
    result = AudioUnitGetProperty(srcUnit,
                                  kAudioUnitProperty_ClassInfo,
@@ -2181,12 +2144,7 @@ bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
                                  &content,
                                  &size);
    if (result != noErr)
-   {
       return false;
-   }
-
-   // Make sure it get's freed
-   CFunique_ptr<char /* CFPropertyList */> ucontent { (char *) content };
 
    // Set the destination AUs state from the source AU's content
    result = AudioUnitSetProperty(dstUnit,
@@ -2237,7 +2195,7 @@ TranslatableString AudioUnitEffect::Export(const wxString & path) const
    }
 
    // Now retrieve the preset content
-   CFPropertyListRef content;
+   CF_ptr<CFPropertyListRef> content;
    UInt32 size = sizeof(content);
    result = AudioUnitGetProperty(mUnit.get(),
                                  kAudioUnitProperty_ClassInfo,
@@ -2245,25 +2203,19 @@ TranslatableString AudioUnitEffect::Export(const wxString & path) const
                                  0,
                                  &content,
                                  &size);
-   CFunique_ptr<char /* CFPropertyList */> ucontent { (char *) content };
-   if (result != noErr)
-   {
+   if (result)
       return XO("Failed to retrieve preset content");
-   }
 
    // And convert it to serialized XML data
-   CFunique_ptr<const __CFData> data
-   {
+   CF_ptr<CFDataRef> data{
       CFPropertyListCreateData(kCFAllocatorDefault,
-                               content,
+                               content.get(),
                                kCFPropertyListXMLFormat_v1_0,
                                0,
                                NULL)
    };
    if (!data)
-   {
       return XO("Failed to convert property list to XML data");
-   }
 
    // Nothing to do if we don't have any data
    SInt32 length = CFDataGetLength(data.get());
@@ -2301,8 +2253,7 @@ TranslatableString AudioUnitEffect::Import(const wxString & path)
    }
 
    // Create a CFData object that references the decoded preset
-   CFunique_ptr<const __CFData> data
-   {
+   CF_ptr<CFDataRef> data{
       CFDataCreateWithBytesNoCopy(kCFAllocatorDefault,
                                   (const UInt8 *) buf.GetData(),
                                   len,
@@ -2314,8 +2265,7 @@ TranslatableString AudioUnitEffect::Import(const wxString & path)
    }
 
    // Convert it back to a property list.
-   CFPropertyListRef content
-   {
+   CF_ptr<CFPropertyListRef> content{
       CFPropertyListCreateWithData(kCFAllocatorDefault,
                                    data.get(),
                                    kCFPropertyListImmutable,
@@ -2323,10 +2273,7 @@ TranslatableString AudioUnitEffect::Import(const wxString & path)
                                    NULL)
    };
    if (!content)
-   {
       return XO("Failed to create property list for preset");
-   }
-   CFunique_ptr<char /* CFPropertyList */> ucontent { (char *) content };
 
    // Finally, update the properties and parameters
    OSStatus result;
@@ -2337,9 +2284,7 @@ TranslatableString AudioUnitEffect::Import(const wxString & path)
                                  &content,
                                  sizeof(content));
    if (result != noErr)
-   {
       return XO("Failed to set class info for \"%s\" preset");
-   }
 
    // Notify interested parties of change and propagate to slaves
    Notify(mUnit.get(), kAUParameterListener_AnyParameter);
