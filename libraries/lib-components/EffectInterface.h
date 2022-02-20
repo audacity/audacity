@@ -206,6 +206,22 @@ public:
 
    //! Default is false
    virtual bool IsHiddenFromMenus() const;
+};
+
+/*************************************************************************************//**
+
+\class EffectSettingsManager
+
+\brief EffectSettingsManager is an EffectDefinitionInterface that adds a
+factory function for EffectSettings, and const functions for manipulating those
+settings.  This externalizes certain effect state.
+
+*******************************************************************************************/
+class COMPONENTS_API EffectSettingsManager  /* not final */
+   : public EffectDefinitionInterface
+{
+public:
+   virtual ~EffectSettingsManager();
 
    /*! @name settings
     Interface for saving and loading externalized settings.
@@ -265,11 +281,14 @@ public:
    virtual bool LoadFactoryDefaults(EffectSettings &settings) const = 0;
    //! @}
 
-   //! Visit settings, if defined.  false means no defined settings.
+   //! Visit settings (and maybe change them), if defined.
+   //! false means no defined settings.
    //! Default implementation returns false
    virtual bool VisitSettings(
-      SettingsVisitor &visitor, EffectSettings &settings);
-   //! Visit settings, if defined.  false means no defined settings.
+      SettingsVisitor &visitor, EffectSettings &settings); // TODO const
+
+   //! Visit settings (read-only), if defined.
+   //! false means no defined settings.
    //! Default implementation returns false
    virtual bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings) const;
@@ -372,7 +391,7 @@ AudacityCommand.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectProcessor  /* not final */
-   : public EffectDefinitionInterface
+   : public EffectSettingsManager
 {
 public:
    virtual ~EffectProcessor();

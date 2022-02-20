@@ -17,7 +17,7 @@
 #include <functional>
 #include <memory>
 
-class EffectDefinitionInterface;
+class EffectSettingsManager;
 
 class wxDialog;
 class wxWindow;
@@ -54,7 +54,7 @@ public:
    EffectPlugin &operator=(EffectPlugin&) = delete;
    virtual ~EffectPlugin();
 
-   virtual const EffectDefinitionInterface& GetDefinition() const = 0;
+   virtual const EffectSettingsManager& GetDefinition() const = 0;
 
    //! Usually applies factory to self and given access
    /*!

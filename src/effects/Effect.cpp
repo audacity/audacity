@@ -617,7 +617,7 @@ void Effect::ShowOptions()
 
 // EffectPlugin implementation
 
-const EffectDefinitionInterface& Effect::GetDefinition() const
+const EffectSettingsManager& Effect::GetDefinition() const
 {
    return *this;
 }

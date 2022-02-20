@@ -190,7 +190,7 @@ class AUDACITY_DLL_API Effect /* not final */
 
    // EffectPlugin implementation
 
-   const EffectDefinitionInterface& GetDefinition() const override;
+   const EffectSettingsManager& GetDefinition() const override;
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
 
    // EffectPlugin implementation

@@ -17,7 +17,7 @@
 //! Mediator of two-way inter-thread communication of changes of settings
 class RealtimeEffectState::AccessState : public NonInterferingBase {
 public:
-   AccessState(EffectProcessor &effect, EffectSettings &settings)
+   AccessState(const EffectSettingsManager &effect, EffectSettings &settings)
       : mEffect{effect}
       , mSettings{settings}
    {
@@ -42,7 +42,7 @@ public:
    }
 
    struct EffectAndSettings{
-      EffectProcessor &effect; const EffectSettings &settings; };
+      const EffectSettingsManager &effect; const EffectSettings &settings; };
    void WorkerRead() {
       // Worker thread avoids memory allocation.  It copies the contents of any
       mChannelFromMain.Read<FromMainSlot::Reader>(mEffect, mSettings);
@@ -97,7 +97,7 @@ private:
 
       // Worker thread reads the slot
       struct Reader { Reader(FromMainSlot &&slot,
-         EffectProcessor &effect, EffectSettings &settings) {
+         const EffectSettingsManager &effect, EffectSettings &settings) {
             // This happens during MessageBuffer's busying of the slot
             effect.CopySettingsContents(slot.mSettings, settings);
             settings.extra = slot.mSettings.extra;
@@ -107,7 +107,7 @@ private:
    };
    MessageBuffer<FromMainSlot> mChannelFromMain;
 
-   EffectProcessor &mEffect;
+   const EffectSettingsManager &mEffect;
    EffectSettings &mSettings;
    EffectSettings mMainThreadCache;
 };

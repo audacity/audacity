@@ -167,7 +167,7 @@ TranslatableString EffectManager::GetCommandTip(const PluginID & ID)
 
 void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags)
 {
-   const EffectDefinitionInterface *effect = nullptr;
+   const EffectSettingsManager *effect = nullptr;
    const EffectSettings *settings;
    AudacityCommand *command = nullptr;
 
@@ -776,23 +776,23 @@ EffectManager::GetEffectAndDefaultSettings(const PluginID & ID)
 
 namespace {
 void InitializePreset(
-   EffectDefinitionInterface &definition, EffectSettings &settings) {
+   EffectSettingsManager &manager, EffectSettings &settings) {
    bool haveDefaults;
-   GetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
+   GetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
       wxT("Initialized"), haveDefaults, false);
    if (!haveDefaults)
    {
-      definition.SaveUserPreset(FactoryDefaultsGroup(), settings);
-      SetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
+      manager.SaveUserPreset(FactoryDefaultsGroup(), settings);
+      SetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
          wxT("Initialized"), true);
    }
-   definition.LoadUserPreset(CurrentSettingsGroup(), settings);
+   manager.LoadUserPreset(CurrentSettingsGroup(), settings);
 }
 
 std::pair<ComponentInterface *, EffectSettings>
 LoadComponent(const PluginID &ID)
 {
-   if (auto result = dynamic_cast<EffectDefinitionInterface*>(
+   if (auto result = dynamic_cast<EffectSettingsManager*>(
       PluginManager::Get().Load(ID))) {
       auto settings = result->MakeSettings();
       InitializePreset(*result, settings);
