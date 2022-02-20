@@ -141,7 +141,7 @@ size_t EffectBassTreble::ProcessBlock(
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectBassTreble::RealtimeInitialize()
+bool EffectBassTreble::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -161,14 +161,14 @@ bool EffectBassTreble::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), floa
    return true;
 }
 
-bool EffectBassTreble::RealtimeFinalize() noexcept
+bool EffectBassTreble::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectBassTreble::RealtimeProcess(int group,
+size_t EffectBassTreble::RealtimeProcess(int group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);

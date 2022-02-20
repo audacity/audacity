@@ -147,14 +147,15 @@ class VSTEffect final : public wxEvtHandler,
    size_t ProcessBlock( const float *const *inBlock, float *const *outBlock,
       size_t blockLen) override;
 
-   bool RealtimeInitialize() override;
+   bool RealtimeInitialize(EffectSettings &settings) override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize() noexcept override;
+   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
    bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(int group, const float *const *inbuf,
-      float *const *outbuf, size_t numSamples) override;
+   size_t RealtimeProcess(int group,  EffectSettings &settings,
+      const float *const *inbuf, float *const *outbuf, size_t numSamples)
+      override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
    int ShowClientInterface(

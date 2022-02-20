@@ -994,7 +994,7 @@ size_t LadspaEffect::ProcessBlock(
    return blockLen;
 }
 
-bool LadspaEffect::RealtimeInitialize()
+bool LadspaEffect::RealtimeInitialize(EffectSettings &)
 {
    return true;
 }
@@ -1012,7 +1012,7 @@ bool LadspaEffect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool LadspaEffect::RealtimeFinalize() noexcept
+bool LadspaEffect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
@@ -1040,7 +1040,7 @@ bool LadspaEffect::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t LadspaEffect::RealtimeProcess(int group,
+size_t LadspaEffect::RealtimeProcess(int group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    for (int i = 0; i < (int)mAudioIns; i++)

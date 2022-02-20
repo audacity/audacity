@@ -153,7 +153,7 @@ size_t EffectWahwah::ProcessBlock(
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectWahwah::RealtimeInitialize()
+bool EffectWahwah::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -173,14 +173,14 @@ bool EffectWahwah::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool EffectWahwah::RealtimeFinalize() noexcept
+bool EffectWahwah::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectWahwah::RealtimeProcess(int group,
+size_t EffectWahwah::RealtimeProcess(int group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
 

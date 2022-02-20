@@ -353,14 +353,14 @@ public:
    virtual size_t ProcessBlock(
       const float *const *inBlock, float *const *outBlock, size_t blockLen) = 0;
 
-   virtual bool RealtimeInitialize() = 0;
+   virtual bool RealtimeInitialize(EffectSettings &settings) = 0;
    virtual bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) = 0;
-   virtual bool RealtimeFinalize() noexcept = 0;
+   virtual bool RealtimeFinalize(EffectSettings &settings) noexcept = 0;
    virtual bool RealtimeSuspend() = 0;
    virtual bool RealtimeResume() noexcept = 0;
    //! settings are possibly changed, since last call, by an asynchronous dialog
    virtual bool RealtimeProcessStart(EffectSettings &settings) = 0;
-   virtual size_t RealtimeProcess(int group,
+   virtual size_t RealtimeProcess(int group, EffectSettings &settings,
       const float *const *inBuf, float *const *outBuf, size_t numSamples) = 0;
    //! settings can be updated to let a dialog change appearance at idle
    virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept = 0;

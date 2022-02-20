@@ -730,7 +730,7 @@ size_t VST3Effect::ProcessBlock(const float* const* inBlock, float* const* outBl
    return VST3ProcessBlock(mEffectComponent.get(), mSetup, inBlock, outBlock, blockLen, pendingChanges.get());
 }
 
-bool VST3Effect::RealtimeInitialize()
+bool VST3Effect::RealtimeInitialize(EffectSettings &)
 {
    //reload current parameters form the editor into parameter queues
    SyncParameters();
@@ -761,7 +761,7 @@ bool VST3Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
    return false;
 }
 
-bool VST3Effect::RealtimeFinalize() noexcept
+bool VST3Effect::RealtimeFinalize(EffectSettings &) noexcept
 {
    return GuardedCall<bool>([this]()
    {
@@ -802,7 +802,8 @@ bool VST3Effect::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t VST3Effect::RealtimeProcess(int group, const float* const* inBuf, float* const* outBuf, size_t numSamples)
+size_t VST3Effect::RealtimeProcess(int group, EffectSettings &,
+   const float* const* inBuf, float* const* outBuf, size_t numSamples)
 {
    auto& effect = mRealtimeGroupProcessors[group];
    return VST3ProcessBlock(effect->mEffectComponent.get(), effect->mSetup, inBuf, outBuf, numSamples, mPendingChanges.get());

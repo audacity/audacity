@@ -349,12 +349,12 @@ size_t Effect::ProcessBlock(
    return 0;
 }
 
-bool Effect::RealtimeInitialize()
+bool Effect::RealtimeInitialize(EffectSettings &settings)
 {
    if (mClient)
    {
       mBlockSize = mClient->SetBlockSize(512);
-      return mClient->RealtimeInitialize();
+      return mClient->RealtimeInitialize(settings);
    }
 
    mBlockSize = 512;
@@ -372,13 +372,10 @@ bool Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
    return true;
 }
 
-bool Effect::RealtimeFinalize() noexcept
+bool Effect::RealtimeFinalize(EffectSettings &settings) noexcept
 {
    if (mClient)
-   {
-      return mClient->RealtimeFinalize();
-   }
-
+      return mClient->RealtimeFinalize(settings);
    return false;
 }
 
@@ -408,14 +405,12 @@ bool Effect::RealtimeProcessStart(EffectSettings &settings)
    return true;
 }
 
-size_t Effect::RealtimeProcess(int group,
+size_t Effect::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    if (mClient)
-   {
-      return mClient->RealtimeProcess(group, inbuf, outbuf, numSamples);
-   }
-
+      return mClient->
+         RealtimeProcess(group, settings, inbuf, outbuf, numSamples);
    return 0;
 }
 

@@ -161,7 +161,7 @@ size_t EffectPhaser::ProcessBlock(
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectPhaser::RealtimeInitialize()
+bool EffectPhaser::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -181,14 +181,14 @@ bool EffectPhaser::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool EffectPhaser::RealtimeFinalize() noexcept
+bool EffectPhaser::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectPhaser::RealtimeProcess(int group,
+size_t EffectPhaser::RealtimeProcess(int group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
 

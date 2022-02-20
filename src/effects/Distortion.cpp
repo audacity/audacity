@@ -239,7 +239,7 @@ size_t EffectDistortion::ProcessBlock(
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectDistortion::RealtimeInitialize()
+bool EffectDistortion::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -259,14 +259,14 @@ bool EffectDistortion::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), floa
    return true;
 }
 
-bool EffectDistortion::RealtimeFinalize() noexcept
+bool EffectDistortion::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectDistortion::RealtimeProcess(int group,
+size_t EffectDistortion::RealtimeProcess(int group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
 
