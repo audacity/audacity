@@ -1470,17 +1470,7 @@ void AudioIO::StopStream()
       // to the target WaveTrack.  To do this, we ask the audio thread to
       // call TrackBufferExchange one last time (it normally would not do so since
       // Pa_GetStreamActive() would now return false
-      mAudioThreadShouldCallTrackBufferExchangeOnce
-         .store(true, std::memory_order_release);
-      while (mAudioThreadShouldCallTrackBufferExchangeOnce
-         .load(std::memory_order_acquire))
-      {
-         //FIXME: Seems like this block of the UI thread isn't bounded,
-         //but we cannot allow event handlers to see incompletely terminated
-         //AudioIO state with wxYield (or similar functions)
-         using namespace std::chrono;
-         std::this_thread::sleep_for(50ms);
-      }
+      ProcessOnceAndWait();
    }
 
    // No longer need effects processing. This must be done after the stream is stopped
@@ -3188,14 +3178,7 @@ int AudioIoCallback::CallbackDoSeek()
    mPlaybackSchedule.mTimeQueue.Prime(time);
 
    // Reload the ring buffers
-   mAudioThreadShouldCallTrackBufferExchangeOnce
-      .store(true, std::memory_order_release);
-   while( mAudioThreadShouldCallTrackBufferExchangeOnce
-      .load(std::memory_order_acquire) )
-   {
-      using namespace std::chrono;
-      std::this_thread::sleep_for(50ms);
-   }
+   ProcessOnceAndWait();
 
    // Reenable the audio thread
    mAudioThreadTrackBufferExchangeLoopRunning
@@ -3272,6 +3255,19 @@ void AudioIoCallback::StopAudioThreadAndWait()
    WaitForAudioThreadStopped();
 }
 
+
+void AudioIoCallback::ProcessOnceAndWait(std::chrono::milliseconds sleepTime)
+{
+   mAudioThreadShouldCallTrackBufferExchangeOnce
+      .store(true, std::memory_order_release);
+
+   while (mAudioThreadShouldCallTrackBufferExchangeOnce
+      .load(std::memory_order_acquire))
+   {
+      using namespace std::chrono;
+      std::this_thread::sleep_for(sleepTime);
+   }
+}
 
 
 
