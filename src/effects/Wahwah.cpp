@@ -147,7 +147,7 @@ bool EffectWahwah::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
    return true;
 }
 
-size_t EffectWahwah::ProcessBlock(
+size_t EffectWahwah::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);

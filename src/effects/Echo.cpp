@@ -124,7 +124,7 @@ bool EffectEcho::ProcessFinalize()
    return true;
 }
 
-size_t EffectEcho::ProcessBlock(
+size_t EffectEcho::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];

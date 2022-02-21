@@ -123,7 +123,7 @@ unsigned EffectAmplify::GetAudioOutCount()
    return 1;
 }
 
-size_t EffectAmplify::ProcessBlock(
+size_t EffectAmplify::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (decltype(blockLen) i = 0; i < blockLen; i++)

@@ -134,8 +134,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    bool ProcessFinalize() override;
-   size_t ProcessBlock( const float *const *inBlock, float *const *outBlock,
-      size_t blockLen) override;
+   size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      override;
 
    bool RealtimeInitialize(EffectSettings &settings) override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
@@ -262,7 +263,7 @@ protected:
     and also GetLatency() to determine how many leading output samples to
     discard and how many extra samples to produce. */
    virtual bool Process(EffectSettings &settings);
-   virtual bool ProcessPass();
+   virtual bool ProcessPass(EffectSettings &settings);
    virtual bool InitPass1();
    virtual bool InitPass2();
 
@@ -443,16 +444,17 @@ protected:
    void CountWaveTracks();
 
    // Driver for client effects
-   bool ProcessTrack(int count,
-                     ChannelNames map,
-                     WaveTrack *left,
-                     WaveTrack *right,
-                     sampleCount start,
-                     sampleCount len,
-                     FloatBuffers &inBuffer,
-                     FloatBuffers &outBuffer,
-                     ArrayOf< float * > &inBufPos,
-                     ArrayOf< float *> &outBufPos);
+   bool ProcessTrack(EffectSettings &settings,
+      int count,
+      ChannelNames map,
+      WaveTrack *left,
+      WaveTrack *right,
+      sampleCount start,
+      sampleCount len,
+      FloatBuffers &inBuffer,
+      FloatBuffers &outBuffer,
+      ArrayOf< float * > &inBufPos,
+      ArrayOf< float *> &outBufPos);
 
  //
  // private data

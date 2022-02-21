@@ -350,7 +350,7 @@ public:
    virtual bool ProcessFinalize() /* noexcept */ = 0;
 
    //! Called for destructive, non-realtime effect computation
-   virtual size_t ProcessBlock(
+   virtual size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen) = 0;
 
    virtual bool RealtimeInitialize(EffectSettings &settings) = 0;

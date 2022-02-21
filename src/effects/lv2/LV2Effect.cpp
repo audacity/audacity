@@ -1075,7 +1075,7 @@ bool LV2Effect::ProcessFinalize()
    return true;
 }
 
-size_t LV2Effect::ProcessBlock(
+size_t LV2Effect::ProcessBlock(EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t size)
 {
    wxASSERT(size <= ( size_t) mBlockSize);

@@ -233,7 +233,7 @@ bool EffectDistortion::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channel
    return true;
 }
 
-size_t EffectDistortion::ProcessBlock(
+size_t EffectDistortion::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);

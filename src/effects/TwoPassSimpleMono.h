@@ -81,7 +81,7 @@ protected:
 private:
    bool ProcessOne(WaveTrack * t, WaveTrack * outTrack,
                    sampleCount start, sampleCount end);
-   bool ProcessPass() override;
+   bool ProcessPass(EffectSettings &settings) override;
 };
 
 #endif

@@ -218,7 +218,7 @@ bool EffectReverb::ProcessFinalize()
    return true;
 }
 
-size_t EffectReverb::ProcessBlock(
+size_t EffectReverb::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ichans[2] = {NULL, NULL};

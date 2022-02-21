@@ -135,7 +135,7 @@ bool EffectBassTreble::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channel
    return true;
 }
 
-size_t EffectBassTreble::ProcessBlock(
+size_t EffectBassTreble::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);

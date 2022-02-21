@@ -973,7 +973,7 @@ bool LadspaEffect::ProcessFinalize()
    return true;
 }
 
-size_t LadspaEffect::ProcessBlock(
+size_t LadspaEffect::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (int i = 0; i < (int)mAudioIns; i++)

@@ -722,7 +722,8 @@ namespace
    }
 }
 
-size_t VST3Effect::ProcessBlock(const float* const* inBlock, float* const* outBlock, size_t blockLen)
+size_t VST3Effect::ProcessBlock(EffectSettings &,
+   const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
    internal::ComponentHandler::PendingChangesPtr pendingChanges { nullptr };
    if(mComponentHandler)

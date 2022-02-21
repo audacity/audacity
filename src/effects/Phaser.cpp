@@ -155,7 +155,7 @@ bool EffectPhaser::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
    return true;
 }
 
-size_t EffectPhaser::ProcessBlock(
+size_t EffectPhaser::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return InstanceProcess(mMaster, inBlock, outBlock, blockLen);

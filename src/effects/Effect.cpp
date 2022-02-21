@@ -338,14 +338,11 @@ bool Effect::ProcessFinalize()
    return true;
 }
 
-size_t Effect::ProcessBlock(
+size_t Effect::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    if (mClient)
-   {
-      return mClient->ProcessBlock(inBlock, outBlock, blockLen);
-   }
-
+      return mClient->ProcessBlock(settings, inBlock, outBlock, blockLen);
    return 0;
 }
 
@@ -1121,7 +1118,7 @@ bool Effect::InitPass2()
    return false;
 }
 
-bool Effect::Process(EffectSettings &)
+bool Effect::Process(EffectSettings &settings)
 {
    CopyInputTracks(true);
    bool bGoodResult = true;
@@ -1134,11 +1131,11 @@ bool Effect::Process(EffectSettings &)
    mPass = 1;
    if (InitPass1())
    {
-      bGoodResult = ProcessPass();
+      bGoodResult = ProcessPass(settings);
       mPass = 2;
       if (bGoodResult && InitPass2())
       {
-         bGoodResult = ProcessPass();
+         bGoodResult = ProcessPass(settings);
       }
    }
 
@@ -1147,7 +1144,7 @@ bool Effect::Process(EffectSettings &)
    return bGoodResult;
 }
 
-bool Effect::ProcessPass()
+bool Effect::ProcessPass(EffectSettings &settings)
 {
    bool bGoodResult = true;
    bool isGenerator = GetType() == EffectTypeGenerate;
@@ -1273,7 +1270,7 @@ bool Effect::ProcessPass()
          }
 
          // Go process the track(s)
-         bGoodResult = ProcessTrack(
+         bGoodResult = ProcessTrack(settings,
             count, map, left, right, start, len,
             inBuffer, outBuffer, inBufPos, outBufPos);
          if (!bGoodResult)
@@ -1295,16 +1292,17 @@ bool Effect::ProcessPass()
    return bGoodResult;
 }
 
-bool Effect::ProcessTrack(int count,
-                          ChannelNames map,
-                          WaveTrack *left,
-                          WaveTrack *right,
-                          sampleCount start,
-                          sampleCount len,
-                          FloatBuffers &inBuffer,
-                          FloatBuffers &outBuffer,
-                          ArrayOf< float * > &inBufPos,
-                          ArrayOf< float *> &outBufPos)
+bool Effect::ProcessTrack(EffectSettings &settings,
+   int count,
+   ChannelNames map,
+   WaveTrack *left,
+   WaveTrack *right,
+   sampleCount start,
+   sampleCount len,
+   FloatBuffers &inBuffer,
+   FloatBuffers &outBuffer,
+   ArrayOf< float * > &inBufPos,
+   ArrayOf< float *> &outBufPos)
 {
    bool rc = true;
 
@@ -1463,7 +1461,8 @@ bool Effect::ProcessTrack(int count,
       decltype(curBlockSize) processed;
       try
       {
-         processed = ProcessBlock(inBufPos.get(), outBufPos.get(), curBlockSize);
+         processed =
+            ProcessBlock(settings, inBufPos.get(), outBufPos.get(), curBlockSize);
       }
       catch( const AudacityException & WXUNUSED(e) )
       {

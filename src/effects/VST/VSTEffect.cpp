@@ -1438,7 +1438,7 @@ bool VSTEffect::ProcessFinalize()
    return true;
 }
 
-size_t VSTEffect::ProcessBlock(
+size_t VSTEffect::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    // Only call the effect if there's something to do...some do not like zero-length block
@@ -1543,11 +1543,11 @@ bool VSTEffect::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t VSTEffect::RealtimeProcess(int group, EffectSettings &,
+size_t VSTEffect::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
-   return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
+   return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
 }
 
 bool VSTEffect::RealtimeProcessEnd(EffectSettings &) noexcept
