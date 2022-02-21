@@ -108,7 +108,7 @@ bool EffectFindClipping::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-bool EffectFindClipping::Process()
+bool EffectFindClipping::Process(EffectSettings &)
 {
    std::shared_ptr<AddedAnalysisTrack> addedTrack;
    std::optional<ModifiedAnalysisTrack> modifiedTrack;

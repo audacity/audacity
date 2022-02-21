@@ -126,7 +126,7 @@ public:
 
    bool Startup() override;
    bool Init() override;
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
 
    bool CloseUI() override;
    void PopulateOrExchange(

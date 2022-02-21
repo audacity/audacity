@@ -46,8 +46,8 @@
 #include "LoadEffects.h"
 
 #include "../WaveTrack.h"
-#include "../Prefs.h"
-#include "../FileNames.h"
+#include "Prefs.h"
+#include "FileNames.h"
 #include "../ShuttleGui.h"
 
 #include <math.h>
@@ -73,7 +73,7 @@
 #include <wx/valtext.h>
 
 
-#include "../PlatformCompatibility.h"
+#include "PlatformCompatibility.h"
 
 const ComponentInterfaceSymbol EffectNoiseRemoval::Symbol
 { XO("Noise Removal") };
@@ -161,11 +161,11 @@ bool EffectNoiseRemoval::CheckWhetherSkipEffect()
  the framework for managing settings of other effects. */
 int EffectNoiseRemoval::ShowHostInterface(
    wxWindow &parent, const EffectDialogFactory &,
-   EffectSettingsAccess &, //!< ignored!
+   EffectSettingsAccess &access,
    bool forceModal )
 {
    // to do: use forceModal correctly
-   NoiseRemovalDialog dlog(this, &parent);
+   NoiseRemovalDialog dlog(this, access, &parent);
    dlog.mSensitivity = mSensitivity;
    dlog.mGain = -mNoiseGain;
    dlog.mFreq = mFreqSmoothingHz;
@@ -213,7 +213,7 @@ int EffectNoiseRemoval::ShowHostInterface(
    return returnCode;
 }
 
-bool EffectNoiseRemoval::Process()
+bool EffectNoiseRemoval::Process(EffectSettings &)
 {
    Initialize();
 
@@ -644,9 +644,10 @@ BEGIN_EVENT_TABLE(NoiseRemovalDialog,wxDialogWrapper)
    EVT_TEXT(ID_TIME_TEXT, NoiseRemovalDialog::OnTimeText)
 END_EVENT_TABLE()
 
-NoiseRemovalDialog::NoiseRemovalDialog(EffectNoiseRemoval * effect,
-                                       wxWindow *parent)
+NoiseRemovalDialog::NoiseRemovalDialog(
+   EffectNoiseRemoval * effect, EffectSettingsAccess &access, wxWindow *parent)
    : EffectDialog( parent, XO("Noise Removal"), EffectTypeProcess)
+   , mAccess{ access }
 {
    m_pEffect = effect;
 
@@ -701,7 +702,7 @@ void NoiseRemovalDialog::OnPreview(wxCommandEvent & WXUNUSED(event))
       m_pEffect->mDoProfile = oldDoProfile;
    } );
 
-   m_pEffect->Preview( false );
+   m_pEffect->Preview(mAccess, false);
 }
 
 void NoiseRemovalDialog::OnRemoveNoise( wxCommandEvent & WXUNUSED(event))

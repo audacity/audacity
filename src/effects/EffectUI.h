@@ -98,6 +98,7 @@ private:
    wxWindow *mParent;
    EffectUIHostInterface &mEffectUIHost;
    EffectUIClientInterface &mClient;
+   //! @invariant not null
    const EffectUIHostInterface::EffectSettingsAccessPtr mpAccess;
    RealtimeEffectState *mpState{ nullptr };
 

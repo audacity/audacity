@@ -54,7 +54,7 @@ public:
 
    bool CheckWhetherSkipEffect() override;
    bool Startup() override;
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
    void PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;

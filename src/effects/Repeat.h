@@ -44,7 +44,7 @@ public:
 
    // Effect implementation
 
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
    void PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;

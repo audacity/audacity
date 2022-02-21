@@ -742,7 +742,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
          return;
       }
       
-      mEffectUIHost.Preview(false);
+      mEffectUIHost.Preview(*mpAccess, false);
       
       return;
    }
@@ -1305,24 +1305,24 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
    EffectManager & em = EffectManager::Get();
 
    em.SetSkipStateFlag( false );
+   success = false;
    if (auto effect = em.GetEffect(ID)) {
-      auto pSettings = em.GetDefaultSettings(ID);
-      const auto pAccess = pSettings
-         ? std::make_shared<SimpleEffectSettingsAccess>(*pSettings) : nullptr;
-      success = effect->DoEffect(
-         rate,
-         &tracks,
-         &trackFactory,
-         selectedRegion,
-         flags,
-         &window,
-         (flags & EffectManager::kConfigured) == 0
-            ? DialogFactory
-            : nullptr,
-         pAccess);
+      if (auto pSettings = em.GetDefaultSettings(ID)) {
+         const auto pAccess =
+            std::make_shared<SimpleEffectSettingsAccess>(*pSettings);
+         success = effect->DoEffect(*pSettings,
+            rate,
+            &tracks,
+            &trackFactory,
+            selectedRegion,
+            flags,
+            &window,
+            (flags & EffectManager::kConfigured) == 0
+               ? DialogFactory
+               : nullptr,
+            pAccess);
+      }
    }
-   else
-      success = false;
 
    if (!success)
       return false;

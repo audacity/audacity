@@ -35,7 +35,7 @@ public:
 
    // Effect implementation
 
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
 
 private:
    // EffectReverse implementation

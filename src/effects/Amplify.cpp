@@ -204,12 +204,12 @@ bool EffectAmplify::Init()
    return true;
 }
 
-void EffectAmplify::Preview(bool dryOnly)
+void EffectAmplify::Preview(EffectSettingsAccess &access, bool dryOnly)
 {
    auto cleanup1 = valueRestorer( mRatio );
    auto cleanup2 = valueRestorer( mPeak );
 
-   Effect::Preview(dryOnly);
+   Effect::Preview(access, dryOnly);
 }
 
 void EffectAmplify::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)

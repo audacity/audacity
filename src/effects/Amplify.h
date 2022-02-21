@@ -55,7 +55,7 @@ public:
    // Effect implementation
 
    bool Init() override;
-   void Preview(bool dryOnly) override;
+   void Preview(EffectSettingsAccess &access, bool dryOnly) override;
    void PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;

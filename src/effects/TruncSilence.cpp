@@ -321,7 +321,7 @@ bool EffectTruncSilence::Startup()
    return true;
 }
 
-bool EffectTruncSilence::Process()
+bool EffectTruncSilence::Process(EffectSettings &)
 {
    const bool success =
       mbIndependent

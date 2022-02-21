@@ -956,7 +956,11 @@ void Effect::SetBatchProcessing(bool start)
    }
 }
 
-bool Effect::DoEffect(double projectRate,
+// TODO:  Lift the possible user-prompting part out of this function, so that
+// the recursive paths into this function via Effect::Delegate are simplified,
+// and we don't have both EffectSettings and EffectSettingsAccessPtr
+// If pAccess is not null, settings should have come from its Get()
+bool Effect::DoEffect(EffectSettings &settings, double projectRate,
     TrackList *list,
     WaveTrackFactory *factory,
     NotifyingSelectedRegion &selectedRegion,
@@ -1078,9 +1082,7 @@ bool Effect::DoEffect(double projectRate,
       );
       auto vr = valueRestorer( mProgress, progress.get() );
 
-      {
-         returnVal = Process();
-      }
+      returnVal = Process(settings);
    }
 
    if (returnVal && (mT1 >= mT0 ))
@@ -1092,15 +1094,15 @@ bool Effect::DoEffect(double projectRate,
    return returnVal;
 }
 
-bool Effect::Delegate(
-   Effect &delegate, wxWindow &parent, const EffectDialogFactory &factory,
-   const EffectSettingsAccessPtr &pSettings )
+bool Effect::Delegate(Effect &delegate, EffectSettings &settings,
+   wxWindow &parent, const EffectDialogFactory &factory,
+   const EffectSettingsAccessPtr &pSettings)
 {
    NotifyingSelectedRegion region;
    region.setTimes( mT0, mT1 );
 
-   return delegate.DoEffect( mProjectRate, mTracks, mFactory,
-      region, mUIFlags, &parent, factory, pSettings );
+   return delegate.DoEffect(settings, mProjectRate, mTracks, mFactory,
+      region, mUIFlags, &parent, factory, pSettings);
 }
 
 // All legacy effects should have this overridden
@@ -1119,7 +1121,7 @@ bool Effect::InitPass2()
    return false;
 }
 
-bool Effect::Process()
+bool Effect::Process(EffectSettings &)
 {
    CopyInputTracks(true);
    bool bGoodResult = true;
@@ -2033,7 +2035,7 @@ double Effect::CalcPreviewInputLength(double previewLength)
    return previewLength;
 }
 
-void Effect::Preview(bool dryOnly)
+void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
 {
    if (mNumTracks == 0) { // nothing to preview
       return;
@@ -2169,7 +2171,9 @@ void Effect::Preview(bool dryOnly)
 
       auto vr2 = valueRestorer( mIsPreview, true );
 
-      success = Process();
+      auto settings = access.Get();
+      success = Process(settings);
+      access.Set(std::move(settings));
    }
 
    if (success)

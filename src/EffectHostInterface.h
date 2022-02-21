@@ -50,6 +50,7 @@ public:
 class wxDialog;
 class wxWindow;
 class EffectUIClientInterface;
+class EffectSettings;
 class EffectSettingsAccess;
 class EffectUIHostInterface;
 
@@ -97,13 +98,19 @@ public:
       EffectSettingsAccess &access, bool forceModal = false
    ) = 0;
 
-   virtual void Preview(bool dryOnly) = 0;
+   virtual void Preview(EffectSettingsAccess &access, bool dryOnly) = 0;
    virtual bool GetAutomationParametersAsString(wxString & parms) = 0;
    virtual bool SetAutomationParametersFromString(const wxString & parms) = 0;
    virtual bool IsBatchProcessing() = 0;
    virtual void SetBatchProcessing(bool start) = 0;
-   //! Create a user interface only if the supplied factory is not null.
+
+   //! Unfortunately complicated dual-use function
    /*!
+    Sometimes this is invoked only to do effect processing, as a delegate for
+    another effect, but sometimes also to put up a dialog prompting the user for
+    settings first.
+
+    Create a user interface only if the supplied factory is not null.
     Factory may be null because we "Repeat last effect" or apply a macro
 
     Will only operate on tracks that have the "selected" flag set to true,
@@ -111,13 +118,17 @@ public:
 
     @return true on success
     */
-   virtual bool DoEffect( double projectRate, TrackList *list,
+   virtual bool DoEffect(
+      EffectSettings &settings, //!< Always given; only for processing
+      double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
       unsigned flags,
       // Prompt the user for input only if the next arguments are not all null.
       wxWindow *pParent = nullptr,
       const EffectDialogFactory &dialogFactory = {},
-      const EffectSettingsAccessPtr &pAccess = nullptr) = 0;
+      const EffectSettingsAccessPtr &pAccess = nullptr
+         //!< Sometimes given; only for UI
+   ) = 0;
    virtual bool Startup(EffectUIClientInterface *client) = 0;
 
    virtual bool TransferDataToWindow() = 0;
