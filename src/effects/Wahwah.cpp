@@ -147,10 +147,10 @@ bool EffectWahwah::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
    return true;
 }
 
-size_t EffectWahwah::ProcessBlock(EffectSettings &,
+size_t EffectWahwah::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
 bool EffectWahwah::RealtimeInitialize(EffectSettings &)
@@ -180,11 +180,10 @@ bool EffectWahwah::RealtimeFinalize(EffectSettings &) noexcept
    return true;
 }
 
-size_t EffectWahwah::RealtimeProcess(int group, EffectSettings &,
+size_t EffectWahwah::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-
-   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
 
 bool EffectWahwah::DefineParams( ShuttleParams & S ){
@@ -360,7 +359,8 @@ void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate)
    data.outgain = DB_TO_LINEAR(mOutGain);
 }
 
-size_t EffectWahwah::InstanceProcess(EffectWahwahState & data,
+size_t EffectWahwah::InstanceProcess(EffectSettings &settings,
+   EffectWahwahState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];

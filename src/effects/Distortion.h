@@ -114,7 +114,8 @@ private:
    // EffectDistortion implementation
 
    void InstanceInit(EffectDistortionState & data, float sampleRate);
-   size_t InstanceProcess(EffectDistortionState & data,
+   size_t InstanceProcess(EffectSettings &settings,
+      EffectDistortionState & data,
       const float *const *inBlock, float *const *outBlock, size_t blockLen);
 
    // Control Handlers

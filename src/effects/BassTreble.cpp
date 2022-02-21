@@ -135,10 +135,10 @@ bool EffectBassTreble::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channel
    return true;
 }
 
-size_t EffectBassTreble::ProcessBlock(EffectSettings &,
+size_t EffectBassTreble::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
 bool EffectBassTreble::RealtimeInitialize(EffectSettings &)
@@ -168,11 +168,12 @@ bool EffectBassTreble::RealtimeFinalize(EffectSettings &) noexcept
    return true;
 }
 
-size_t EffectBassTreble::RealtimeProcess(int group, EffectSettings &,
+size_t EffectBassTreble::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
+
 bool EffectBassTreble::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mBass, Bass );
    S.SHUTTLE_PARAM( mTreble, Treble );
@@ -351,7 +352,8 @@ void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRa
 // EffectProcessor implementation
 
 
-size_t EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
+size_t EffectBassTreble::InstanceProcess(EffectSettings &settings,
+   EffectBassTrebleState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];

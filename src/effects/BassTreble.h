@@ -84,7 +84,8 @@ private:
    // EffectBassTreble implementation
 
    void InstanceInit(EffectBassTrebleState & data, float sampleRate);
-   size_t InstanceProcess(EffectBassTrebleState & data,
+   size_t InstanceProcess(EffectSettings &settings,
+      EffectBassTrebleState & data,
       const float *const *inBlock, float *const *outBlock, size_t blockLen);
 
    void Coefficients(double hz, double slope, double gain, double samplerate, int type,

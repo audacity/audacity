@@ -84,7 +84,7 @@ private:
    // EffectWahwah implementation
 
    void InstanceInit(EffectWahwahState & data, float sampleRate);
-   size_t InstanceProcess(EffectWahwahState & data,
+   size_t InstanceProcess(EffectSettings &settings, EffectWahwahState & data,
       const float *const *inBlock, float *const *outBlock, size_t blockLen);
 
    void OnFreqSlider(wxCommandEvent & evt);

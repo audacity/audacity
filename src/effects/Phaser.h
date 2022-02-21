@@ -87,7 +87,7 @@ private:
    // EffectPhaser implementation
 
    void InstanceInit(EffectPhaserState & data, float sampleRate);
-   size_t InstanceProcess(EffectPhaserState & data,
+   size_t InstanceProcess(EffectSettings &settings, EffectPhaserState & data,
       const float *const *inBlock, float *const *outBlock, size_t blockLen);
 
    void OnStagesSlider(wxCommandEvent & evt);
