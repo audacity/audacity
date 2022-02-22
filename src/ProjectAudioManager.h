@@ -13,6 +13,7 @@ Paul Licameli split from ProjectManager.h
 
 #include <memory>
 #include <vector>
+#include <atomic>
 
 #include "AudioIOListener.h" // to inherit
 #include "ClientData.h" // to inherit
@@ -134,10 +135,8 @@ public:
       bool newDefault = false, //!< See DefaultPlayOptions
       bool cutpreview = false);
 
-   void OnPause();
+   void OnPause(bool operateOnAudioIO = true);
    
-   // Pause - used by AudioIO to pause sound activate recording
-   void Pause();
 
    // Stop playing or recording
    void Stop(bool stopStream = true);

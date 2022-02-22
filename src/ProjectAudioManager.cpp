@@ -564,19 +564,6 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
       toolbar->EnableDisableButtons();
 }
 
-void ProjectAudioManager::Pause()
-{
-   auto &projectAudioManager = *this;
-   bool canStop = projectAudioManager.CanStopAudioStream();
-
-   if ( !canStop ) {
-      auto gAudioIO = AudioIO::Get();
-      gAudioIO->SetPaused(!gAudioIO->IsPaused());
-   }
-   else {
-      OnPause();
-   }
-}
 
 WaveTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
    AudacityProject &proj, bool selectedOnly, double targetRate)
@@ -978,7 +965,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
    return success;
 }
 
-void ProjectAudioManager::OnPause()
+void ProjectAudioManager::OnPause(bool operateOnAudioIO)
 {
    auto &projectAudioManager = *this;
    bool canStop = projectAudioManager.CanStopAudioStream();
@@ -1014,7 +1001,8 @@ void ProjectAudioManager::OnPause()
    else
 #endif
    {
-      gAudioIO->SetPaused(paused);
+      if (operateOnAudioIO)
+        gAudioIO->SetPaused(paused);
    }
 }
 
@@ -1094,6 +1082,15 @@ void ProjectAudioManager::OnCommitRecording()
 
 void ProjectAudioManager::OnSoundActivationThreshold()
 {
+   auto& project = mProject;
+   auto gAudioIO = AudioIO::Get();
+   if (gAudioIO && &project == gAudioIO->GetOwningProject().get())
+   {
+      // stop AudioIO asap (else we might get a small clip of recorded silence)
+      gAudioIO->SetPaused(!gAudioIO->IsPaused());      
+   }
+
+   // defer other things to do to a later handling of idle time
    mSoundActivationCalled.store(true, std::memory_order::memory_order_relaxed);
 }
 
@@ -1293,18 +1290,18 @@ void ProjectAudioManager::DoPlayStopSelect()
 
 void ProjectAudioManager::OnIdle(wxIdleEvent& evt)
 {
-   //static int n = 0;
-   //_RPT1(0, "ProjectAudioManager::OnIdle %d\n", n++);
-
    if (mSoundActivationCalled.load(std::memory_order_acquire))
    {
       mSoundActivationCalled.store(false, std::memory_order_release);
 
-      auto& project = mProject;
-      auto gAudioIO = AudioIO::Get();
-      if (gAudioIO && &project == gAudioIO->GetOwningProject().get())
+      auto& projectAudioManager = *this;
+      bool canStop = projectAudioManager.CanStopAudioStream();
+
+      if (canStop)
       {
-         Pause();
+         // because we already have called SetPaused on AudioIO in the call to 
+         // ::OnSoundActivationThreshold, we tell OnPause not to do it 
+         OnPause( /* operateOnAudioIO = */ false);
       }
    }
 
