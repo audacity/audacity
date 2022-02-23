@@ -408,10 +408,9 @@ bool EffectUIHost::Initialize()
 
          // Let the client add things to the panel
          ShuttleGui S1{ uw.get(), eIsCreating };
-         if (!mClient.PopulateUI(S1, *mpAccess))
-         {
+         mpValidator = mClient.PopulateUI(S1, *mpAccess);
+         if (!mpValidator)
             return false;
-         }
 
          S.Prop( 1 )
             .Position(wxEXPAND)
@@ -512,7 +511,7 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
    Hide();
 
    mSuspensionScope.reset();
-   mClient.CloseUI();
+   mpValidator.reset();
 
    Destroy();
 #if wxDEBUG_LEVEL
@@ -550,7 +549,7 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
          return;
    }
    
-   if (!mClient.ValidateUI())
+   if (!mpValidator->Validate())
    {
       return;
    }
@@ -737,7 +736,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mSupportsRealtime)
    {
-      if (!mClient.ValidateUI() || !mEffectUIHost.TransferDataFromWindow())
+      if (!mpValidator->Validate() || !mEffectUIHost.TransferDataFromWindow())
       {
          return;
       }

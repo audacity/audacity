@@ -101,6 +101,7 @@ private:
    //! @invariant not null
    const EffectUIHostInterface::EffectSettingsAccessPtr mpAccess;
    RealtimeEffectState *mpState{ nullptr };
+   std::unique_ptr<EffectUIValidator> mpValidator;
 
    RegistryPaths mUserPresets;
    bool mInitialized;

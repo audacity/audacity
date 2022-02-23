@@ -433,10 +433,17 @@ public:
    virtual bool IsGraphicalUI() = 0;
 
    //! Adds controls to a panel that is given as the parent window of `S`
-   virtual bool PopulateUI(ShuttleGui &S, EffectSettingsAccess &access) = 0;
+   /*!
+    @param S interface for adding controls to a panel in a dialog
+    @param access guaranteed to have a lifetime containing that of the returned
+    object
 
-   virtual bool ValidateUI() = 0;
-   virtual bool CloseUI() = 0;
+    @return null for failure; else an object invoked to retrieve values of UI
+    controls; it might also hold some state needed to implement event handlers
+    of the controls; it will exist only while the dialog continues to exist
+    */
+   virtual std::unique_ptr<EffectUIValidator> PopulateUI(
+      ShuttleGui &S, EffectSettingsAccess &access) = 0;
 
    virtual bool CanExportPresets() = 0;
    virtual void ExportPresets() = 0;
@@ -444,6 +451,11 @@ public:
 
    virtual bool HasOptions() = 0;
    virtual void ShowOptions() = 0;
+
+protected:
+   friend DefaultEffectUIValidator;
+   virtual bool ValidateUI() = 0;
+   virtual bool CloseUI() = 0;
 };
 
 #endif // __AUDACITY_EFFECTINTERFACE_H__

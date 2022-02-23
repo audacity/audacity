@@ -568,7 +568,8 @@ bool Effect::LoadFactoryDefaults()
 
 // EffectUIClientInterface implementation
 
-bool Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
+std::unique_ptr<EffectUIValidator>
+Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
    mUIParent = parent;
@@ -580,7 +581,7 @@ bool Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 
    mUIParent->SetMinSize(mUIParent->GetSizer()->GetMinSize());
 
-   return true;
+   return std::make_unique<DefaultEffectUIValidator>(*this);
 }
 
 bool Effect::IsGraphicalUI()
