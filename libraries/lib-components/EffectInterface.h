@@ -368,6 +368,46 @@ public:
 
 /*************************************************************************************//**
 
+\class EffectUIValidator
+
+\brief Interface for transferring values from a panel of effect controls
+
+*******************************************************************************************/
+class COMPONENTS_API EffectUIValidator /* not final */
+{
+public:
+   virtual ~EffectUIValidator();
+   //! Get settings data from the panel; may make error dialogs and return false
+   /*!
+    @return true only if panel settings are acceptable
+    */
+   virtual bool Validate() = 0;
+};
+
+/*************************************************************************************//**
+
+\class DefaultEffectUIValidator
+
+\brief Default implementation of EffectUIValidator invokes ValidateUI and CloseUI
+   methods of an EffectUIClientInterface
+
+ This is a transitional class; it should be eliminated when all effect classes
+ define their own associated subclasses of EffectUIValidator, which can hold
+ state only for the lifetime of a dialog, so the effect object need not hold it
+
+*******************************************************************************************/
+class COMPONENTS_API DefaultEffectUIValidator final : public EffectUIValidator
+{
+public:
+   explicit DefaultEffectUIValidator(EffectUIClientInterface &effect);
+   ~DefaultEffectUIValidator() override;
+   bool Validate() override;
+private:
+   EffectUIClientInterface &mEffect;
+};
+
+/*************************************************************************************//**
+
 \class EffectUIClientInterface
 
 \brief EffectUIClientInterface is an abstract base class to populate a UI and validate UI
