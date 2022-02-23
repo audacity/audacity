@@ -276,7 +276,12 @@ protected:
    // effects need to use a different input length, so override this method.
    virtual double CalcPreviewInputLength(double previewLength);
 
-   virtual void PopulateOrExchange(
+   //! Add controls to effect panel; always succeeds
+   /*!
+    @return if not null, then return it from Effect::PopulateUI instead of a
+    DefaultEffectUIValidator; default implementation returns null
+    */
+   virtual std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access);
 
    // No more virtuals!

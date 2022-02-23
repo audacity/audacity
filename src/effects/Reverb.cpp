@@ -435,7 +435,8 @@ bool EffectReverb::Startup()
    return true;
 }
 
-void EffectReverb::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectReverb::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
 
@@ -473,7 +474,7 @@ void EffectReverb::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    }
    S.EndHorizontalLay();
 
-   return;
+   return nullptr;
 }
 
 bool EffectReverb::TransferDataToWindow()

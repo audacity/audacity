@@ -55,7 +55,7 @@ public:
 
    bool Startup() override;
    bool Init() override;
-   void PopulateOrExchange(
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataFromWindow() override;
    bool TransferDataToWindow() override;

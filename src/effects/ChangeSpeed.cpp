@@ -293,7 +293,8 @@ bool EffectChangeSpeed::Process(EffectSettings &)
    return bGoodResult;
 }
 
-void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    {
       wxString formatId;
@@ -415,6 +416,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess 
       S.EndStatic();
    }
    S.EndVerticalLay();
+   return nullptr;
 }
 
 bool EffectChangeSpeed::TransferDataToWindow()

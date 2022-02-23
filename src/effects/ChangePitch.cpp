@@ -256,7 +256,8 @@ bool EffectChangePitch::CheckWhetherSkipEffect()
    return (m_dPercentChange == 0.0);
 }
 
-void EffectChangePitch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectChangePitch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    DeduceFrequencies(); // Set frequency-related control values based on sample.
 
@@ -383,7 +384,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess 
 
    }
    S.EndVerticalLay();
-   return;
+   return nullptr;
 }
 
 bool EffectChangePitch::TransferDataToWindow()

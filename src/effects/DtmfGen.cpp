@@ -326,7 +326,8 @@ bool EffectDtmf::Init()
    return true;
 }
 
-void EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    // dialog will be passed values from effect
    // Effect retrieves values from saved config
@@ -392,6 +393,7 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          S.AddVariableText(XO("%0.f ms").Format( dtmfSilence * 1000.0 ), false);
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
 bool EffectDtmf::TransferDataToWindow()

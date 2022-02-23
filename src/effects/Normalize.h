@@ -49,7 +49,7 @@ public:
    bool CheckWhetherSkipEffect() override;
    bool Startup() override;
    bool Process(EffectSettings &settings) override;
-   void PopulateOrExchange(
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;

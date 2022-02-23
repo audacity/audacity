@@ -230,7 +230,8 @@ bool EffectNoise::Startup()
    return true;
 }
 
-void EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
@@ -258,6 +259,7 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          .AddWindow(mNoiseDurationT);
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
 bool EffectNoise::TransferDataToWindow()

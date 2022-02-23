@@ -424,7 +424,8 @@ bool EffectAutoDuck::Process(EffectSettings &)
    return !cancel;
 }
 
-void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectAutoDuck::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.StartVerticalLay(true);
@@ -503,7 +504,7 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    }
    S.EndVerticalLay();
 
-   return;
+   return nullptr;
 }
 
 bool EffectAutoDuck::TransferDataToWindow()

@@ -240,7 +240,15 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
    return bGoodResult;
 }
 
-void EffectFindClipping::PopulateOrExchange(
+std::unique_ptr<EffectUIValidator>
+EffectFindClipping::PopulateOrExchange(
+   ShuttleGui & S, EffectSettingsAccess &access)
+{
+   DoPopulateOrExchange(S, access);
+   return nullptr;
+}
+
+void EffectFindClipping::DoPopulateOrExchange(
    ShuttleGui & S, EffectSettingsAccess &access)
 {
    mpAccess = access.shared_from_this();
@@ -261,7 +269,7 @@ bool EffectFindClipping::TransferDataToWindow()
 {
    ShuttleGui S(mUIParent, eIsSettingToDialog);
    // To do: eliminate this and just use validators for controls
-   PopulateOrExchange(S, *mpAccess);
+   DoPopulateOrExchange(S, *mpAccess);
 
    return true;
 }
@@ -275,7 +283,7 @@ bool EffectFindClipping::TransferDataFromWindow()
 
    ShuttleGui S(mUIParent, eIsGettingFromDialog);
    // To do: eliminate this and just use validators for controls
-   PopulateOrExchange(S, *mpAccess);
+   DoPopulateOrExchange(S, *mpAccess);
 
    return true;
 }

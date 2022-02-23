@@ -242,7 +242,8 @@ TranslatableString RatioLabelFormat( int sliderValue, double value )
 
 }
 
-void EffectCompressor::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectCompressor::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
 
@@ -357,6 +358,7 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &
                                     DEF_UsePeak);
    }
    S.EndHorizontalLay();
+   return nullptr;
 }
 
 bool EffectCompressor::TransferDataToWindow()

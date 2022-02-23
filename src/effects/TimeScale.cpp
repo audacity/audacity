@@ -200,7 +200,8 @@ bool EffectTimeScale::Process(EffectSettings &settings)
    return EffectSBSMS::Process(settings);
 }
 
-void EffectTimeScale::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectTimeScale::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);
@@ -306,7 +307,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    }
    S.EndMultiColumn();
 
-   return;
+   return nullptr;
 }
 
 bool EffectTimeScale::TransferDataToWindow()

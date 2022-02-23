@@ -532,7 +532,8 @@ void VampEffect::End()
    mPlugin.reset();
 }
 
-void VampEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+VampEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    Vamp::Plugin::ProgramList programs = mPlugin->getPrograms();
 
@@ -690,7 +691,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 
    scroller->SetScrollRate(0, 20);
 
-   return;
+   return nullptr;
 }
 
 bool VampEffect::TransferDataToWindow()

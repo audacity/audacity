@@ -358,7 +358,8 @@ bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-void EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    wxTextCtrl *t;
 
@@ -480,7 +481,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    }
    S.EndMultiColumn();
 
-   return;
+   return nullptr;
 }
 
 bool EffectToneGen::TransferDataToWindow()
