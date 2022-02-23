@@ -1503,11 +1503,6 @@ bool LadspaEffect::ValidateUI()
    return true;
 }
 
-bool LadspaEffect::HideUI()
-{
-   return true;
-}
-
 bool LadspaEffect::CloseUI()
 {
    mParent->RemoveEventHandler(this);

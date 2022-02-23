@@ -157,7 +157,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool PopulateUI(ShuttleGui &S, EffectSettingsAccess &access) final;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
-   bool HideUI() override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;

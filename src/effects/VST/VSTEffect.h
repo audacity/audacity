@@ -168,7 +168,6 @@ class VSTEffect final : public wxEvtHandler,
    bool PopulateUI(ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
-   bool HideUI() override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;

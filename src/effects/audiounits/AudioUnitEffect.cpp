@@ -1751,17 +1751,6 @@ bool AudioUnitEffect::CreatePlain(wxWindow *parent)
 }
 #endif
 
-bool AudioUnitEffect::HideUI()
-{
-#if 0
-   if (GetType() == EffectTypeAnalyze || mNumOutputControls > 0)
-   {
-      return false;
-   }
-#endif
-   return true;
-}
-
 bool AudioUnitEffect::CloseUI()
 {
 #ifdef __WXMAC__

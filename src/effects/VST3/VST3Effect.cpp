@@ -915,11 +915,6 @@ bool VST3Effect::ValidateUI()
    return true;
 }
 
-bool VST3Effect::HideUI()
-{
-   return true;
-}
-
 bool VST3Effect::CloseUI()
 {
    mParent = nullptr;

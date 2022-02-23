@@ -1582,14 +1582,6 @@ bool LV2Effect::ValidateUI()
    return true;
 }
 
-bool LV2Effect::HideUI()
-{
-#if 0
-   // Nothing to do yet
-#endif
-   return true;
-}
-
 bool LV2Effect::CloseUI()
 {
 #ifdef __WXMAC__

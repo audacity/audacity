@@ -1772,11 +1772,6 @@ bool VSTEffect::ValidateUI()
    return true;
 }
 
-bool VSTEffect::HideUI()
-{
-   return true;
-}
-
 bool VSTEffect::CloseUI()
 {
 #ifdef __WXMAC__

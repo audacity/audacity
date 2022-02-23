@@ -144,7 +144,6 @@ public:
    bool IsGraphicalUI() override;
    bool PopulateUI(ShuttleGui& S, EffectSettingsAccess &access) override;
    bool ValidateUI() override;
-   bool HideUI() override;
    bool CloseUI() override;
    bool CanExportPresets() override;
    void ExportPresets() override;

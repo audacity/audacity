@@ -593,11 +593,6 @@ bool Effect::ValidateUI()
    return mUIParent->Validate();
 }
 
-bool Effect::HideUI()
-{
-   return true;
-}
-
 bool Effect::CloseUI()
 {
    if (mUIParent)

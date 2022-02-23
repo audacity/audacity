@@ -396,7 +396,6 @@ public:
    virtual bool PopulateUI(ShuttleGui &S, EffectSettingsAccess &access) = 0;
 
    virtual bool ValidateUI() = 0;
-   virtual bool HideUI() = 0;
    virtual bool CloseUI() = 0;
 
    virtual bool CanExportPresets() = 0;
