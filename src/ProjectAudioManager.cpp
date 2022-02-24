@@ -535,7 +535,7 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
       gAudioIO->AILADisable();
    #endif
 
-   projectAudioManager.SetPaused( false );
+   projectAudioManager.SetPausedOff();
    //Make sure you tell gAudioIO to unpause
    gAudioIO->SetPaused( false );
 
@@ -559,19 +559,6 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
       toolbar->EnableDisableButtons();
 }
 
-void ProjectAudioManager::Pause()
-{
-   auto &projectAudioManager = *this;
-   bool canStop = projectAudioManager.CanStopAudioStream();
-
-   if ( !canStop ) {
-      auto gAudioIO = AudioIO::Get();
-      gAudioIO->SetPaused(!gAudioIO->IsPaused());
-   }
-   else {
-      OnPause();
-   }
-}
 
 WaveTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
    AudacityProject &proj, bool selectedOnly, double targetRate)
@@ -983,7 +970,7 @@ void ProjectAudioManager::OnPause()
    }
 
    bool paused = !projectAudioManager.Paused();
-   projectAudioManager.SetPaused( paused );
+   TogglePaused();
 
    auto gAudioIO = AudioIO::Get();
 
@@ -1012,6 +999,23 @@ void ProjectAudioManager::OnPause()
       gAudioIO->SetPaused(paused);
    }
 }
+
+
+void ProjectAudioManager::TogglePaused()
+{
+   mPaused.fetch_xor(1, std::memory_order::memory_order_relaxed);
+}
+
+void ProjectAudioManager::SetPausedOff()
+{
+   mPaused.store(0, std::memory_order::memory_order_relaxed);
+}
+
+bool ProjectAudioManager::Paused() const
+{
+   return mPaused.load(std::memory_order_relaxed) == 1;
+}
+
 
 void ProjectAudioManager::CancelRecording()
 {
@@ -1089,10 +1093,20 @@ void ProjectAudioManager::OnCommitRecording()
 
 void ProjectAudioManager::OnSoundActivationThreshold()
 {
-   auto &project = mProject;
+   auto& project = mProject;
    auto gAudioIO = AudioIO::Get();
-   if ( gAudioIO && &project == gAudioIO->GetOwningProject().get() ) {
-      wxTheApp->CallAfter( [this]{ Pause(); } );
+   if (gAudioIO && &project == gAudioIO->GetOwningProject().get())
+   {
+      bool canStop =  CanStopAudioStream();
+
+      gAudioIO->SetPaused(!gAudioIO->IsPaused());
+
+      if (canStop)
+      {
+         // Instead of calling ::OnPause here, we can simply do the only thing it does (i.e. toggling the pause state),
+         // because scrubbing can not happen while recording
+         TogglePaused();
+      }
    }
 }
 
