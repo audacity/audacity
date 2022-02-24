@@ -28,6 +28,7 @@ set( SOURCES
    MemoryStream.h
    Observer.cpp
    Observer.h
+   TypedAny.h
 )
 audacity_library( lib-utility "${SOURCES}" ""
    "" ""
