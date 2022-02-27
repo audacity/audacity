@@ -234,7 +234,7 @@ public:
 // When the module is builtin to Audacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -244,7 +244,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // ============================================================================
 // Register this as a builtin module
 // ============================================================================
-DECLARE_BUILTIN_MODULE(AudioUnitEffectsBuiltin);
+DECLARE_BUILTIN_PROVIDER(AudioUnitEffectsBuiltin);
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -292,7 +292,7 @@ TranslatableString AudioUnitEffectsModule::GetDescription() const
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 const FileExtensions &AudioUnitEffectsModule::GetFileExtensions()
@@ -322,13 +322,11 @@ EffectFamilySymbol AudioUnitEffectsModule::GetOptionalFamilySymbol()
 #endif
 }
 
-bool AudioUnitEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+void AudioUnitEffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
 {
-   // Nothing to be done here
-   return true;
 }
 
-PluginPaths AudioUnitEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths AudioUnitEffectsModule::FindModulePaths(PluginManagerInterface &)
 {
    PluginPaths effects;
 

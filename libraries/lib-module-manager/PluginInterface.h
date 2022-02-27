@@ -48,7 +48,7 @@
 #include "ModuleInterface.h"
 #include <variant>
 
-class ModuleInterface;
+class PluginProvider;
 
 namespace PluginSettings {
 
@@ -90,9 +90,9 @@ public:
    virtual ~PluginManagerInterface();
 
    static const PluginID &DefaultRegistrationCallback(
-      ModuleInterface *provider, ComponentInterface *ident );
+      PluginProvider *provider, ComponentInterface *ident );
    static const PluginID &AudacityCommandRegistrationCallback(
-      ModuleInterface *provider, ComponentInterface *ident );
+      PluginProvider *provider, ComponentInterface *ident );
 
    //! Was the plugin registry already populated for a path (maybe from loading the config file)?
    /*!
@@ -104,8 +104,8 @@ public:
       const PluginPath & path,
       const TranslatableString *pName = nullptr) = 0;
 
-   virtual const PluginID & RegisterPlugin(ModuleInterface *module) = 0;
-   virtual const PluginID & RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type) = 0;
+   virtual const PluginID & RegisterPlugin(PluginProvider *provider) = 0;
+   virtual const PluginID & RegisterPlugin(PluginProvider *provider, EffectDefinitionInterface *effect, int type) = 0;
 
    virtual void FindFilesInPathList(const wxString & pattern,
                                     const FilePaths & pathList,

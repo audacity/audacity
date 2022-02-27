@@ -31,14 +31,14 @@
 #include "widgets/AButton.h"
 
 
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
    return safenew VST3EffectsModule();
 }
 
-DECLARE_BUILTIN_MODULE(VST3Builtin);
+DECLARE_BUILTIN_PROVIDER(VST3Builtin);
 
 //Helper class used to find vst3 effects during folder traversal
 class VST3PluginTraverser final : public wxDirTraverser
@@ -143,12 +143,12 @@ FilePath VST3EffectsModule::InstallPath()
 #endif
 }
 
-bool VST3EffectsModule::AutoRegisterPlugins(PluginManagerInterface& pluginManager)
+void VST3EffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
 {
-   return false;
 }
 
-PluginPaths VST3EffectsModule::FindPluginPaths(PluginManagerInterface& pluginManager)
+PluginPaths
+VST3EffectsModule::FindModulePaths(PluginManagerInterface &)
 {
    //Note: The host recursively scans these folders at startup in this order (User/Global/Application).
    //https://developer.steinberg.help/display/VST/Plug-in+Locations

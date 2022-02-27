@@ -142,7 +142,7 @@ static uint32_t reinterpretAsUint32(float f)
 // declared static so as not to clash with other builtin modules.
 //
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
@@ -158,7 +158,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // executed to scan a VST effect in a different process.
 //
 // ============================================================================
-DECLARE_BUILTIN_MODULE(VSTBuiltin);
+DECLARE_BUILTIN_PROVIDER(VSTBuiltin);
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -355,7 +355,7 @@ TranslatableString VSTEffectsModule::GetDescription() const
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 bool VSTEffectsModule::Initialize()
@@ -393,13 +393,11 @@ FilePath VSTEffectsModule::InstallPath()
    return {};
 }
 
-bool VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
+void VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
 {
-   // We don't auto-register
-   return true;
 }
 
-PluginPaths VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths VSTEffectsModule::FindModulePaths(PluginManagerInterface & pm)
 {
    FilePaths pathList;
    FilePaths files;

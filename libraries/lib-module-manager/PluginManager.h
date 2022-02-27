@@ -183,9 +183,9 @@ public:
    bool IsPluginRegistered(
       const PluginPath &path, const TranslatableString *pSymbol) override;
 
-   const PluginID & RegisterPlugin(ModuleInterface *module) override;
-   const PluginID & RegisterPlugin(ModuleInterface *provider, ComponentInterface *command);
-   const PluginID & RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type) override;
+   const PluginID & RegisterPlugin(PluginProvider *provider) override;
+   const PluginID & RegisterPlugin(PluginProvider *provider, ComponentInterface *command);
+   const PluginID & RegisterPlugin(PluginProvider *provider, EffectDefinitionInterface *effect, int type) override;
 
    void FindFilesInPathList(const wxString & pattern,
                                     const FilePaths & pathList,
@@ -228,7 +228,7 @@ public:
 
    static PluginManager & Get();
 
-   static PluginID GetID(ModuleInterface *module);
+   static PluginID GetID(PluginProvider *provider);
    static PluginID GetID(ComponentInterface *command);
    static PluginID GetID(EffectDefinitionInterface *effect);
 

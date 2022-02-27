@@ -327,7 +327,7 @@ void PluginDescriptor::SetImporterExtensions( FileExtensions extensions )
 // ============================================================================
 
 const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
-   ModuleInterface *provider, ComponentInterface *pInterface )
+   PluginProvider *provider, ComponentInterface *pInterface )
 {
    EffectDefinitionInterface * pEInterface = dynamic_cast<EffectDefinitionInterface*>(pInterface);
    if( pEInterface )
@@ -340,7 +340,7 @@ const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
 }
 
 const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
-   ModuleInterface *provider, ComponentInterface *pInterface )
+   PluginProvider *provider, ComponentInterface *pInterface )
 {
    ComponentInterface * pCInterface = dynamic_cast<ComponentInterface*>(pInterface);
    if( pCInterface )
@@ -394,10 +394,11 @@ bool PluginManager::IsPluginRegistered(
    return false;
 }
 
-const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)
+const PluginID & PluginManager::RegisterPlugin(PluginProvider *provider)
 {
-   PluginDescriptor & plug = CreatePlugin(GetID(module), module, PluginTypeModule);
-   plug.SetEffectFamily(module->GetOptionalFamilySymbol().Internal());
+   PluginDescriptor & plug =
+      CreatePlugin(GetID(provider), provider, PluginTypeModule);
+   plug.SetEffectFamily(provider->GetOptionalFamilySymbol().Internal());
 
    plug.SetEnabled(true);
    plug.SetValid(true);
@@ -405,7 +406,8 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)
    return plug.GetID();
 }
 
-const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, ComponentInterface *command)
+const PluginID & PluginManager::RegisterPlugin(
+   PluginProvider *provider, ComponentInterface *command)
 {
    PluginDescriptor & plug = CreatePlugin(GetID(command), command, (PluginType)PluginTypeAudacityCommand);
 
@@ -417,7 +419,8 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Compon
    return plug.GetID();
 }
 
-const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type)
+const PluginID & PluginManager::RegisterPlugin(
+   PluginProvider *provider, EffectDefinitionInterface *effect, int type)
 {
    PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, (PluginType)type);
 
@@ -654,7 +657,7 @@ bool PluginManager::DropFile(const wxString &fileName)
    const wxFileName src{ fileName };
 
    for (auto &plug : PluginsOfType(PluginTypeModule)) {
-      auto module = static_cast<ModuleInterface *>
+      auto module = static_cast<PluginProvider *>
          (mm.CreateProviderInstance(plug.GetID(), plug.GetPath()));
       if (! module)
          continue;
@@ -713,7 +716,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             std::vector<PluginID> ids;
             std::vector<wxString> names;
             nPlugIns = module->DiscoverPluginsAtPath(dstPath, errMsg,
-               [&](ModuleInterface *provider, ComponentInterface *ident)
+               [&](PluginProvider *provider, ComponentInterface *ident)
                                                      -> const PluginID& {
                   // Register as by default, but also collecting the PluginIDs
                   // and names
@@ -1272,7 +1275,7 @@ void PluginManager::CheckForUpdates(bool bFast)
             // Collect plugin paths
             PluginPaths paths;
             if (auto provider = mm.CreateProviderInstance( plugID, plugPath ) )
-               paths = provider->FindPluginPaths( *this );
+               paths = provider->FindModulePaths( *this );
             for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
             {
                wxString path = paths[i].BeforeFirst(wxT(';'));;
@@ -1447,9 +1450,9 @@ ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
    }
 }
 
-PluginID PluginManager::GetID(ModuleInterface *module)
+PluginID PluginManager::GetID(PluginProvider *provider)
 {
-   return ModuleManager::GetID(module);
+   return ModuleManager::GetID(provider);
 }
 
 PluginID PluginManager::GetID(ComponentInterface *command)

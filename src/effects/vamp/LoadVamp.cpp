@@ -34,7 +34,7 @@ using namespace Vamp::HostExt;
 // When the module is builtin to Audacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -44,7 +44,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // ============================================================================
 // Register this as a builtin module
 // ============================================================================
-DECLARE_BUILTIN_MODULE(VampsEffectBuiltin);
+DECLARE_BUILTIN_PROVIDER(VampsEffectBuiltin);
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -91,7 +91,7 @@ TranslatableString VampEffectsModule::GetDescription() const
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 bool VampEffectsModule::Initialize()
@@ -121,12 +121,11 @@ const FileExtensions &VampEffectsModule::GetFileExtensions()
    return empty;
 }
 
-bool VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
+void VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
 {
-   return false;
 }
 
-PluginPaths VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
+PluginPaths VampEffectsModule::FindModulePaths(PluginManagerInterface &)
 {
    PluginPaths names;
 

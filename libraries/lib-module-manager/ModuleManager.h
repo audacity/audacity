@@ -23,7 +23,7 @@
 class wxArrayString;
 class wxDynamicLibrary;
 class ComponentInterface;
-class ModuleInterface;
+class PluginProvider;
 class wxWindow;
 using PluginID = wxString;
 class TranslatableString;
@@ -58,16 +58,15 @@ private:
    fnModuleDispatch mDispatch;
 };
 
-struct ModuleInterfaceDeleter {
-   void operator ()(ModuleInterface *pInterface) const;
+struct PluginProviderDeleter {
+   void operator ()(PluginProvider *pInterface) const;
 };
 
-using ModuleInterfaceHandle = std::unique_ptr<
-   ModuleInterface, ModuleInterfaceDeleter
+using PluginProviderHandle = std::unique_ptr<
+   PluginProvider, PluginProviderDeleter
 >;
 
-typedef std::map<wxString, ModuleInterfaceHandle> ModuleMap;
-typedef std::map<ModuleInterface *, std::unique_ptr<wxDynamicLibrary>> LibraryMap;
+typedef std::map<wxString, PluginProviderHandle> PluginProviderMap;
 
 class MODULE_MANAGER_API ModuleManager final
 {
@@ -83,7 +82,7 @@ public:
    // So config compatibility will break if it is changed across Audacity versions
    static wxString GetPluginTypeString();
 
-   static PluginID GetID(ModuleInterface *module);
+   static PluginID GetID(PluginProvider *provider);
 
 private:
    static void FindModules(FilePaths &files);
@@ -102,12 +101,12 @@ public:
 
    // Supports range-for iteration
    auto Providers() const
-   { return make_iterator_range(mDynModules.cbegin(), mDynModules.cend()); }
+   { return make_iterator_range(mProviders.cbegin(), mProviders.cend()); }
 
    bool RegisterEffectPlugin(const PluginID & provider, const PluginPath & path,
                        TranslatableString &errMsg);
 
-   ModuleInterface *CreateProviderInstance(
+   PluginProvider *CreateProviderInstance(
       const PluginID & provider, const PluginPath & path);
    std::unique_ptr<ComponentInterface>
       CreateInstance(const PluginID & provider, const PluginPath & path);
@@ -125,14 +124,14 @@ private:
    void InitializeBuiltins();
 
 private:
-   friend ModuleInterfaceDeleter;
+   friend PluginProviderDeleter;
    friend std::default_delete<ModuleManager>;
    static std::unique_ptr<ModuleManager> mInstance;
 
-   // Module objects, also called Providers, can each report availability of any
-   // number of Plug-Ins identified by "paths", and are also factories of
-   // ComponentInterface objects for each path:
-   ModuleMap mDynModules;
+   // Providers can each report availability of any number of Plug-Ins
+   // identified by "paths", and are also factories of ComponentInterface
+   // objects for each path
+   PluginProviderMap mProviders;
 
    // Other libraries that receive notifications of events described by
    // ModuleDispatchTypes:
@@ -140,14 +139,14 @@ private:
 };
 
 // ----------------------------------------------------------------------------
-// The module entry point prototype (a factory of ModuleInterface objects)
+// The module entry point prototype (a factory of PluginProvider objects)
 // ----------------------------------------------------------------------------
-using ModuleMain = ModuleInterface *(*)();
+using PluginProviderMain = PluginProvider *(*)();
 
 MODULE_MANAGER_API
-void RegisterProvider(ModuleMain rtn);
+void RegisterProvider(PluginProviderMain rtn);
 MODULE_MANAGER_API
-void UnregisterProvider(ModuleMain rtn);
+void UnregisterProvider(PluginProviderMain rtn);
 
 // Guarantee the registry exists before any registrations, so it will
 // be destroyed only after the un-registrations

@@ -28,7 +28,7 @@ namespace VST3
 /**
  * \brief VST3Effect factory.
  */
-class VST3EffectsModule final : public ModuleInterface
+class VST3EffectsModule final : public PluginProvider
 {
    //Holds weak pointers to the unique modules which were accessed
    //through VST3EffectsModule::GetModule() during the lifetime.
@@ -51,8 +51,8 @@ public:
    EffectFamilySymbol GetOptionalFamilySymbol() override;
    const FileExtensions& GetFileExtensions() override;
    FilePath InstallPath() override;
-   bool AutoRegisterPlugins(PluginManagerInterface& pluginManager) override;
-   PluginPaths FindPluginPaths(PluginManagerInterface& pluginManager) override;
+   void AutoRegisterPlugins(PluginManagerInterface& pluginManager) override;
+   PluginPaths FindModulePaths(PluginManagerInterface& pluginManager) override;
    unsigned DiscoverPluginsAtPath(const PluginPath& path, TranslatableString& errMsg,
       const RegistrationCallback& callback) override;
    bool IsPluginValid(const PluginPath& path, bool bFast) override;

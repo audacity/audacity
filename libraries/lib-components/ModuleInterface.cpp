@@ -7,4 +7,4 @@
 **********************************************************************/
 #include "ModuleInterface.h"
 
-ModuleInterface::~ModuleInterface() = default;
+PluginProvider::~PluginProvider() = default;

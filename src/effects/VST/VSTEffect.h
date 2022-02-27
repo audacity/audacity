@@ -389,13 +389,7 @@ private:
    friend class VSTEffectsModule;
 };
 
-///////////////////////////////////////////////////////////////////////////////
-///
-/// VSTEffectsModule is an Audacity ModuleInterface, in other words it 
-/// represents one plug in.
-///
-///////////////////////////////////////////////////////////////////////////////
-class VSTEffectsModule final : public ModuleInterface
+class VSTEffectsModule final : public PluginProvider
 {
 public:
    VSTEffectsModule();
@@ -409,7 +403,7 @@ public:
    wxString GetVersion() const override;
    TranslatableString GetDescription() const override;
 
-   // ModuleInterface implementation
+   // PluginProvider implementation
 
    bool Initialize() override;
    void Terminate() override;
@@ -418,8 +412,8 @@ public:
    const FileExtensions &GetFileExtensions() override;
    FilePath InstallPath() override;
 
-   bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindPluginPaths(PluginManagerInterface & pm) override;
+   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
+   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
    unsigned DiscoverPluginsAtPath(
       const PluginPath & path, TranslatableString &errMsg,
       const RegistrationCallback &callback)
