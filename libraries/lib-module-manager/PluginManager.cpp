@@ -65,12 +65,12 @@ PluginDescriptor::~PluginDescriptor()
 
 PluginDescriptor &PluginDescriptor::operator =(PluginDescriptor &&) = default;
 
-bool PluginDescriptor::IsInstantiated() const
+bool PluginDescriptor::IsLoaded() const
 {
    return mInstance != nullptr;
 }
 
-ComponentInterface *PluginDescriptor::GetInstance()
+ComponentInterface *PluginDescriptor::Load()
 {
    if (!mInstance)
    {
@@ -78,7 +78,8 @@ ComponentInterface *PluginDescriptor::GetInstance()
          mInstance = ModuleManager::Get().CreateProviderInstance(GetID(), GetPath());
       else
       {
-         muInstance = ModuleManager::Get().CreateInstance(GetProviderID(), GetPath());
+         muInstance =
+            ModuleManager::Get().LoadPlugin(GetProviderID(), GetPath());
          mInstance = muInstance.get();
       }
    }
@@ -86,7 +87,7 @@ ComponentInterface *PluginDescriptor::GetInstance()
    return mInstance;
 }
 
-void PluginDescriptor::SetInstance(std::unique_ptr<ComponentInterface> instance)
+void PluginDescriptor::Set(std::unique_ptr<ComponentInterface> instance)
 {
    muInstance = std::move(instance);
    mInstance = muInstance.get();
@@ -1323,7 +1324,7 @@ const PluginID & PluginManager::RegisterPlugin(
    plug.SetEffectRealtime(effect->SupportsRealtime());
    plug.SetEffectAutomatable(effect->SupportsAutomation());
 
-   plug.SetInstance(std::move(effect));
+   plug.Set(std::move(effect));
    plug.SetEffectLegacy(true);
    plug.SetEnabled(true);
    plug.SetValid(true);
@@ -1429,7 +1430,7 @@ const ComponentInterfaceSymbol & PluginManager::GetSymbol(const PluginID & ID)
       return iter->second.GetSymbol();
 }
 
-ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
+ComponentInterface *PluginManager::Load(const PluginID & ID)
 {
    if (auto iter = mPlugins.find(ID); iter == mPlugins.end())
       return nullptr;
@@ -1443,10 +1444,10 @@ ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
          if (auto iter2 = mPlugins.find(prov); iter2 == mPlugins.end())
             return nullptr;
          else
-            iter2->second.GetInstance();
+            iter2->second.Load();
       }
 
-      return plug.GetInstance();
+      return plug.Load();
    }
 }
 

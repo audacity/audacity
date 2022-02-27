@@ -192,7 +192,7 @@ bool BuiltinEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-BuiltinEffectsModule::CreateInstance(const PluginPath & path)
+BuiltinEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    return Instantiate(path);

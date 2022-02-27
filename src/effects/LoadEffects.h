@@ -70,7 +70,7 @@ public:
    bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
    std::unique_ptr<ComponentInterface>
-      CreateInstance(const PluginPath & path) override;
+      LoadPlugin(const PluginPath & path) override;
 
 private:
    // BuiltinEffectModule implementation

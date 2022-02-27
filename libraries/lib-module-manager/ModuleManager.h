@@ -109,7 +109,7 @@ public:
    PluginProvider *CreateProviderInstance(
       const PluginID & provider, const PluginPath & path);
    std::unique_ptr<ComponentInterface>
-      CreateInstance(const PluginID & provider, const PluginPath & path);
+      LoadPlugin(const PluginID & provider, const PluginPath & path);
 
    bool IsProviderValid(const PluginID & provider, const PluginPath & path);
    bool IsPluginValid(const PluginID & provider, const PluginPath & path, bool bFast);

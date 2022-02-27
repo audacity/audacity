@@ -195,7 +195,7 @@ bool BuiltinCommandsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-BuiltinCommandsModule::CreateInstance(const PluginPath & path)
+BuiltinCommandsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    return Instantiate(path);

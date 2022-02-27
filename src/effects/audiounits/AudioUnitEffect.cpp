@@ -381,7 +381,7 @@ bool AudioUnitEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-AudioUnitEffectsModule::CreateInstance(const PluginPath & path)
+AudioUnitEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    if (wxString name; auto component = FindAudioUnit(path, name))

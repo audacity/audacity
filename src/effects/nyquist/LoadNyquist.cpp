@@ -262,7 +262,7 @@ bool NyquistEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-NyquistEffectsModule::CreateInstance(const PluginPath & path)
+NyquistEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    auto effect = std::make_unique<NyquistEffect>(path);

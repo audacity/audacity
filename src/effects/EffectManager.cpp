@@ -774,19 +774,19 @@ EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
    else {
       std::shared_ptr<Effect> hostEffect;
       // This will instantiate the effect client if it hasn't already been done
-      const auto instance = PluginManager::Get().GetInstance(ID);
+      const auto component = PluginManager::Get().Load(ID);
 
-      if (auto effect = dynamic_cast<EffectUIHostInterface *>(instance);
+      if (auto effect = dynamic_cast<EffectUIHostInterface *>(component);
           effect && effect->Startup(nullptr))
          // Self-hosting or "legacy" effect objects
          return (mEffects[ID] = { effect, {} });
-      else if (auto client = dynamic_cast<EffectUIClientInterface *>(instance);
+      else if (auto client = dynamic_cast<EffectUIClientInterface *>(component);
           client && (hostEffect = std::make_shared<Effect>())->Startup(client))
          // plugin that inherits only EffectUIClientInterface needs a host
          return (mEffects[ID] =
             { (mHostEffects[ID] = move(hostEffect)).get(), {} });
       else {
-         if ( !dynamic_cast<AudacityCommand *>(instance) )
+         if ( !dynamic_cast<AudacityCommand *>(component) )
             AudacityMessageBox(
                XO(
 "Attempting to initialize the following effect failed:\n\n%s\n\nMore information may be available in 'Help > Diagnostics > Show Log'")
@@ -807,8 +807,9 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
    }
 
    if (mCommands.find(ID) == mCommands.end()) {
-      // This will instantiate the effect client if it hasn't already been done
-      auto command = dynamic_cast<AudacityCommand *>(PluginManager::Get().GetInstance(ID));
+      // This will instantiate the command if it hasn't already been done
+      auto command =
+         dynamic_cast<AudacityCommand *>(PluginManager::Get().Load(ID));
       if (command )//&& command->Startup(NULL))
       {
          command->Init();
@@ -860,11 +861,10 @@ EffectManager::NewEffect(const PluginID & ID)
 
    // This will instantiate the effect client if it hasn't already been done
    // But it only makes a unique object for a given ID
-   auto ident = dynamic_cast<EffectDefinitionInterface *>(
-      PluginManager::Get().GetInstance(ID));
+   auto component = PluginManager::Get().Load(ID);
 
    auto effect = std::make_unique<Effect>();
-   auto client = dynamic_cast<EffectUIClientInterface *>(ident);
+   auto client = dynamic_cast<EffectUIClientInterface *>(component);
    if (client && effect->Startup(client))
       return effect;
    else

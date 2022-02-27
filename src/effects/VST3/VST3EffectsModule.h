@@ -56,6 +56,7 @@ public:
    unsigned DiscoverPluginsAtPath(const PluginPath& path, TranslatableString& errMsg,
       const RegistrationCallback& callback) override;
    bool IsPluginValid(const PluginPath& path, bool bFast) override;
-   std::unique_ptr<ComponentInterface> CreateInstance(const PluginPath& path) override;
+   std::unique_ptr<ComponentInterface>
+      LoadPlugin(const PluginPath& path) override;
 
 };

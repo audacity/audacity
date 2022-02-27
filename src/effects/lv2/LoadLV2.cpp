@@ -302,7 +302,7 @@ bool LV2EffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-LV2EffectsModule::CreateInstance(const PluginPath & path)
+LV2EffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    if (auto plug = GetPlugin(path))

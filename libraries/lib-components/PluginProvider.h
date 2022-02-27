@@ -158,9 +158,12 @@ public:
    /*! @return true if the plug-in is still valid, otherwise false. */
    virtual bool IsPluginValid(const PluginPath & path, bool bFast) = 0;
 
-   //! Instantiate the plug-in at a previously discovered path
+   //! Load the plug-in at a path reported by DiscoverPluginsAtPath
+   /*!
+    @return smart pointer managing the later unloading
+    */
    virtual std::unique_ptr<ComponentInterface>
-      CreateInstance(const PluginPath & path) = 0;
+      LoadPlugin(const PluginPath & path) = 0;
 };
 
 // ----------------------------------------------------------------------------

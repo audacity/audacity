@@ -41,6 +41,8 @@ typedef enum : unsigned {
 } PluginType;
 
 // TODO:  Convert this to multiple derived classes
+//! Represents either a PluginProvider or a loaded plug-in and caches some
+//! information about it
 class MODULE_MANAGER_API PluginDescriptor
 {
 public:
@@ -48,7 +50,7 @@ public:
    PluginDescriptor &operator =(PluginDescriptor &&);
    virtual ~PluginDescriptor();
 
-   bool IsInstantiated() const;
+   bool IsLoaded() const;
 
    PluginType GetPluginType() const;
 
@@ -95,8 +97,9 @@ public:
 private:
    friend class PluginManager;
 
-   ComponentInterface *GetInstance();
-   void SetInstance(std::unique_ptr<ComponentInterface> instance);
+   // Load a plug-in, or locate a PluginProvider
+   ComponentInterface *Load();
+   void Set(std::unique_ptr<ComponentInterface> instance);
 
    void SetPluginType(PluginType type);
 
@@ -278,7 +281,7 @@ public:
    void EnablePlugin(const PluginID & ID, bool enable);
 
    const ComponentInterfaceSymbol & GetSymbol(const PluginID & ID);
-   ComponentInterface *GetInstance(const PluginID & ID);
+   ComponentInterface *Load(const PluginID & ID);
 
    void CheckForUpdates(bool bFast = false);
 

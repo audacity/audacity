@@ -508,14 +508,14 @@ PluginProvider *ModuleManager::CreateProviderInstance(const PluginID & providerI
    return nullptr;
 }
 
-std::unique_ptr<ComponentInterface> ModuleManager::CreateInstance(
+std::unique_ptr<ComponentInterface> ModuleManager::LoadPlugin(
    const PluginID & providerID, const PluginPath & path)
 {
    if (auto iter = mProviders.find(providerID);
        iter == mProviders.end())
       return nullptr;
    else
-      return iter->second->CreateInstance(path);
+      return iter->second->LoadPlugin(path);
 }
 
 bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),

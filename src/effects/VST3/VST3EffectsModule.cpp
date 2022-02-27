@@ -261,7 +261,8 @@ bool VST3EffectsModule::IsPluginValid(const PluginPath& path, bool bFast)
    return false;
 }
 
-std::unique_ptr<ComponentInterface> VST3EffectsModule::CreateInstance(const PluginPath& pluginPath)
+std::unique_ptr<ComponentInterface>
+VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
 {
    try
    {

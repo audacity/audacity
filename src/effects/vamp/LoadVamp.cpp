@@ -236,7 +236,7 @@ bool VampEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-VampEffectsModule::CreateInstance(const PluginPath & path)
+VampEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    int output;

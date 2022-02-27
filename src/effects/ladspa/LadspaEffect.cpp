@@ -334,7 +334,7 @@ bool LadspaEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-LadspaEffectsModule::CreateInstance(const PluginPath & path)
+LadspaEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the path is two words.

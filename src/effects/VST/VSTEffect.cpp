@@ -693,7 +693,7 @@ bool VSTEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-VSTEffectsModule::CreateInstance(const PluginPath & path)
+VSTEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
