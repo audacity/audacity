@@ -236,10 +236,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool EnableApply(bool enable = true);
    bool EnablePreview(bool enable = true);
 
- public:
-   // NEW virtuals
-   virtual bool Startup();
-
 //
 // protected virtual methods
 //

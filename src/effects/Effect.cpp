@@ -843,11 +843,6 @@ bool Effect::Startup(EffectUIClientInterface *client)
    }
    LoadUserPreset(GetCurrentSettingsGroup());
 
-   return Startup();
-}
-
-bool Effect::Startup()
-{
    return true;
 }
 

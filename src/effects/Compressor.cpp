@@ -175,39 +175,6 @@ bool EffectCompressor::SetAutomationParameters(CommandParameters & parms)
 
 // Effect Implementation
 
-bool EffectCompressor::Startup()
-{
-   wxString base = wxT("/Effects/Compressor/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      gPrefs->Read(base + wxT("ThresholdDB"), &mThresholdDB, -12.0f );
-      gPrefs->Read(base + wxT("NoiseFloorDB"), &mNoiseFloorDB, -40.0f );
-      gPrefs->Read(base + wxT("Ratio"), &mRatio, 2.0f );
-      gPrefs->Read(base + wxT("AttackTime"), &mAttackTime, 0.2f );
-      gPrefs->Read(base + wxT("DecayTime"), &mDecayTime, 1.0f );
-      gPrefs->Read(base + wxT("Normalize"), &mNormalize, true );
-      gPrefs->Read(base + wxT("UsePeak"), &mUsePeak, false );
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
 namespace {
 
 TranslatableString ThresholdFormat( int value )

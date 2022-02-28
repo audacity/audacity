@@ -131,41 +131,6 @@ bool EffectNormalize::CheckWhetherSkipEffect()
    return ((mGain == false) && (mDC == false));
 }
 
-bool EffectNormalize::Startup()
-{
-   wxString base = wxT("/Effects/Normalize/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      int boolProxy = gPrefs->Read(base + wxT("RemoveDcOffset"), 1);
-      mDC = (boolProxy == 1);
-      boolProxy = gPrefs->Read(base + wxT("Normalize"), 1);
-      mGain = (boolProxy == 1);
-      gPrefs->Read(base + wxT("Level"), &mPeakLevel, -1.0);
-      if(mPeakLevel > 0.0)  // this should never happen
-         mPeakLevel = -mPeakLevel;
-      boolProxy = gPrefs->Read(base + wxT("StereoIndependent"), 0L);
-      mStereoInd = (boolProxy == 1);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
 bool EffectNormalize::Process(EffectSettings &)
 {
    if (mGain == false && mDC == false)

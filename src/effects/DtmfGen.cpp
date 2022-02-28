@@ -291,35 +291,6 @@ bool EffectDtmf::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-bool EffectDtmf::Startup()
-{
-   wxString base = wxT("/Effects/DtmfGen/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      gPrefs->Read(base + wxT("String"), &dtmfSequence, wxT(SHORT_APP_NAME));
-      gPrefs->Read(base + wxT("DutyCycle"), &dtmfDutyCycle, 550L);
-      gPrefs->Read(base + wxT("Amplitude"), &dtmfAmplitude, 0.8f);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
 bool EffectDtmf::Init()
 {
    Recalculate();
