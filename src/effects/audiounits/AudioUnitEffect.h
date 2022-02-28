@@ -112,9 +112,12 @@ public:
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
+   bool MakeListener();
+
    // EffectUIClientInterface implementation
 
-   bool SetHost(EffectHostInterface *host) override;
+   bool InitializePlugin() override;
+   bool InitializeInstance(EffectHostInterface* host) override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -185,7 +188,7 @@ private:
    bool mSupportsMono;
    bool mSupportsStereo;
 
-   EffectHostInterface *mHost;
+   EffectHostInterface *mHost{};
    unsigned mAudioIns;
    unsigned mAudioOuts;
    bool mInteractive;

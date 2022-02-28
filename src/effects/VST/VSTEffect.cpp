@@ -714,7 +714,7 @@ VSTEffectsModule::LoadPlugin(const PluginPath & path)
 void VSTEffectsModule::Check(const wxChar *path)
 {
    VSTEffect effect(path);
-   if (effect.SetHost(NULL))
+   if (effect.InitializePlugin())
    {
       auto effectIDs = effect.GetEffectIDs();
       wxString out;
@@ -1145,7 +1145,6 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
 :  mPath(path),
    mMaster(master)
 {
-   mHost = NULL;
    mModule = NULL;
    mAEffect = NULL;
 
@@ -1293,10 +1292,8 @@ bool VSTEffect::SupportsAutomation() const
 // EffectProcessor Implementation
 // ============================================================================
 
-bool VSTEffect::SetHost(EffectHostInterface *host)
+bool VSTEffect::InitializePlugin()
 {
-   mHost = host;
-
    if (!mAEffect)
    {
       Load();
@@ -1314,6 +1311,12 @@ bool VSTEffect::SetHost(EffectHostInterface *host)
       return true;
    }
 
+   return true;
+}
+
+bool VSTEffect::InitializeInstance(EffectHostInterface *host)
+{
+   mHost = host;
    if (mHost)
    {
       int userBlockSize;

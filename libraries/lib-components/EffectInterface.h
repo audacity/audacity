@@ -432,7 +432,14 @@ public:
       wxWindow &parent, wxDialog &dialog, bool forceModal = false
    ) = 0;
 
-   virtual bool SetHost(EffectHostInterface *host) = 0;
+   /*!
+    @return true if successful
+    */
+   virtual bool InitializePlugin() = 0;
+   /*!
+    @return true if successful
+    */
+   virtual bool InitializeInstance(EffectHostInterface *host) = 0;
 
    virtual bool IsGraphicalUI() = 0;
 

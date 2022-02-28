@@ -282,7 +282,7 @@ unsigned LV2EffectsModule::DiscoverPluginsAtPath(
    if (plug)
    {
       LV2Effect effect(plug);
-      if (effect.SetHost(NULL))
+      if (effect.InitializePlugin())
       {
          if (callback)
             callback( this, &effect );

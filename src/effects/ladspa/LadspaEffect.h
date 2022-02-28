@@ -113,7 +113,8 @@ public:
 
    // EffectUIClientInterface implementation
 
-   bool SetHost(EffectHostInterface *host) override;
+   bool InitializePlugin() override;
+   bool InitializeInstance(EffectHostInterface* host) override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -148,7 +149,7 @@ private:
 
    wxString mPath;
    int mIndex;
-   EffectHostInterface *mHost;
+   EffectHostInterface *mHost{};
 
    wxDynamicLibrary mLib;
    const LADSPA_Descriptor *mData;

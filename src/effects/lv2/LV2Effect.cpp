@@ -515,10 +515,8 @@ bool LV2Effect::SupportsAutomation() const
 // ============================================================================
 // EffectProcessor Implementation
 // ============================================================================
-bool LV2Effect::SetHost(EffectHostInterface *host)
+bool LV2Effect::InitializePlugin()
 {
-   mHost = host;
-
    AddOption(urid_SequenceSize, sizeof(mSeqSize), urid_Int, &mSeqSize);
    AddOption(urid_MinBlockLength, sizeof(mMinBlockSize), urid_Int, &mMinBlockSize);
    AddOption(urid_MaxBlockLength, sizeof(mMaxBlockSize), urid_Int, &mMaxBlockSize);
@@ -928,7 +926,12 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
       lilv_nodes_free(extdata);
    }
 
-   // mHost will be null during registration
+   return true;
+}
+
+bool LV2Effect::InitializeInstance(EffectHostInterface *host)
+{
+   mHost = host;
    if (mHost)
    {
       int userBlockSize;

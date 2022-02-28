@@ -353,7 +353,7 @@ unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
    }
 
    AudioUnitEffect effect(path, name, component);
-   if (!effect.SetHost(NULL))
+   if (!effect.InitializePlugin())
    {
       // TODO:  Is it worth it to discriminate all the ways SetHost might
       // return false?
@@ -1007,12 +1007,10 @@ bool AudioUnitEffect::SupportsAutomation() const
 // EffectProcessor Implementation
 // ============================================================================
 
-bool AudioUnitEffect::SetHost(EffectHostInterface *host)
+bool AudioUnitEffect::InitializePlugin()
 {
    OSStatus result;
-   
-   mHost = host;
- 
+
    mSampleRate = 44100;
    result = AudioComponentInstanceNew(mComponent, &mUnit);
    if (!mUnit)
@@ -1034,7 +1032,22 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
                         &mBlockSize,
                         &dataSize);
 
-   // mHost will be null during registration
+   // Is this really needed here or can it be done in InitializeInstance()
+   // only?  I think it can, but this is more a conservative change for now,
+   // preserving what SetHost() did
+   return MakeListener();
+}
+
+bool AudioUnitEffect::InitializeInstance(EffectHostInterface *host)
+{
+   OSStatus result;
+
+   mHost = host;
+
+   if (mMaster)
+      // Do common steps
+      InitializePlugin();
+
    if (mHost)
    {
       GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -1053,11 +1066,18 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
       }
 
       LoadPreset(mHost->GetCurrentSettingsGroup());
-   } 
+   }
 
+   return true;
+}
+
+bool AudioUnitEffect::MakeListener()
+{
    if (!mMaster)
    {
-     result = AUEventListenerCreate(AudioUnitEffect::EventListenerCallback,
+      // Don't have a master -- so this IS the master.
+      OSStatus result;
+      result = AUEventListenerCreate(AudioUnitEffect::EventListenerCallback,
                                     this,
                                     (CFRunLoopRef)GetCFRunLoopFromEventLoop(GetCurrentEventLoop()),
                                     kCFRunLoopDefaultMode,
@@ -1344,7 +1364,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
-   if (!slave->SetHost(NULL))
+   if (!slave->InitializeInstance(nullptr))
    {
       return false;
    }

@@ -290,7 +290,7 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
 
          for (data = mainFn(index); data; data = mainFn(++index)) {
             LadspaEffect effect(path, index);
-            if (effect.SetHost(NULL)) {
+            if (effect.InitializePlugin()) {
                ++nLoaded;
                if (callback)
                   callback( this, &effect );
@@ -616,7 +616,6 @@ LadspaEffect::LadspaEffect(const wxString & path, int index)
    mIndex = index;
    mData = NULL;
 
-   mHost = NULL;
    mMaster = NULL;
    mReady = false;
 
@@ -720,10 +719,8 @@ bool LadspaEffect::SupportsAutomation() const
 // EffectProcessor Implementation
 // ============================================================================
 
-bool LadspaEffect::SetHost(EffectHostInterface *host)
+bool LadspaEffect::InitializePlugin()
 {
-   mHost = host;
-
    if (!Load())
    {
       return false;
@@ -862,8 +859,13 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
          }
       }
    }
+   return true;
+}
 
-   // mHost will be null during registration
+bool LadspaEffect::InitializeInstance(EffectHostInterface *host)
+{
+   mHost = host;
+
    if (mHost)
    {
       GetConfig(*this, PluginSettings::Shared, wxT("Options"),
