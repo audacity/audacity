@@ -276,8 +276,11 @@ VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
       const auto pluginFactory = module->getFactory();
       for(const auto& classInfo : pluginFactory.classInfos())
       {
-         if(effectUIDString == classInfo.ID().toString())
-            return std::make_unique<VST3Effect>(module, classInfo);
+         if(effectUIDString == classInfo.ID().toString()) {
+            auto result = std::make_unique<VST3Effect>(module, classInfo);
+            result->InitializePlugin();
+            return result;
+         }
       }
       throw std::runtime_error("effect UID not found");
    }

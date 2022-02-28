@@ -142,7 +142,7 @@ public:
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
    int ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal) override;
-   bool InitializePlugin() override;
+   bool InitializePlugin();
    bool InitializeInstance(EffectHostInterface* host) override;
    bool IsGraphicalUI() override;
    std::unique_ptr<EffectUIValidator> PopulateUI(

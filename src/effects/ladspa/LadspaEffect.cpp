@@ -343,7 +343,9 @@ LadspaEffectsModule::LoadPlugin(const PluginPath & path)
    long index;
    wxString realPath = path.BeforeFirst(wxT(';'));
    path.AfterFirst(wxT(';')).ToLong(&index);
-   return std::make_unique<LadspaEffect>(realPath, (int)index);
+   auto result = std::make_unique<LadspaEffect>(realPath, (int)index);
+   result->InitializePlugin();
+   return result;
 }
 
 FilePaths LadspaEffectsModule::GetSearchPaths()

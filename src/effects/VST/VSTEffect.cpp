@@ -697,7 +697,9 @@ VSTEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
-   return std::make_unique<VSTEffect>(path);
+   auto result = std::make_unique<VSTEffect>(path);
+   result->InitializePlugin();
+   return result;
 }
 
 // ============================================================================

@@ -165,9 +165,10 @@ class VSTEffect final : public wxEvtHandler,
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
+   bool InitializePlugin();
+
    // EffectUIClientInterface implementation
 
-   bool InitializePlugin() override;
    bool InitializeInstance(EffectHostInterface* host) override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;

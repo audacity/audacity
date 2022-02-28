@@ -216,13 +216,6 @@ bool Effect::SupportsAutomation() const
 
 // EffectProcessor implementation
 
-bool Effect::InitializePlugin()
-{
-   if (mClient)
-      return mClient->InitializePlugin();
-   return true;
-}
-
 bool Effect::InitializeInstance(EffectHostInterface *host)
 {
    if (mClient)
@@ -822,7 +815,7 @@ bool Effect::Startup(EffectUIClientInterface *client)
    mClient = client;
 
    // Set host so client startup can use our services
-   if (!(InitializePlugin() && InitializeInstance(this)))
+   if (!InitializeInstance(this))
    {
       // Bail if the client startup fails
       mClient = NULL;

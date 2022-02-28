@@ -384,8 +384,11 @@ std::unique_ptr<ComponentInterface>
 AudioUnitEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   if (wxString name; auto component = FindAudioUnit(path, name))
-      return std::make_unique<AudioUnitEffect>(path, name, component);
+   if (wxString name; auto component = FindAudioUnit(path, name)) {
+      auto result = std::make_unique<AudioUnitEffect>(path, name, component);
+      result->InitializePlugin();
+      return result;
+   }
    return nullptr;
 }
 

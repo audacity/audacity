@@ -117,7 +117,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectProcessor implementation
 
-   bool InitializePlugin() override;
    bool InitializeInstance(EffectHostInterface *host) override;
    
    unsigned GetAudioInCount() const override;

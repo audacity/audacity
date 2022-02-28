@@ -305,8 +305,11 @@ std::unique_ptr<ComponentInterface>
 LV2EffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   if (auto plug = GetPlugin(path))
-      return std::make_unique<LV2Effect>(plug);
+   if (auto plug = GetPlugin(path)) {
+      auto result = std::make_unique<LV2Effect>(plug);
+      result->InitializePlugin();
+      return result;
+   }
    return nullptr;
 }
 
