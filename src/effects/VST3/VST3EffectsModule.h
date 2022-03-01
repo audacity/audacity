@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include <memory>
 
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 
 namespace VST3
 {

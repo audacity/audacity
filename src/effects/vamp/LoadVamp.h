@@ -14,7 +14,7 @@
 
 #include <memory>
 
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 #include "EffectInterface.h"
 #include "PluginInterface.h"
 

@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_LOAD_COMMANDS__
 #define __AUDACITY_LOAD_COMMANDS__
 
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 
 #include <functional>
 #include <memory>

@@ -20,7 +20,7 @@ class NumericTextCtrl;
 #include <wx/weakref.h>
 
 #include "EffectInterface.h"
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 #include "PluginInterface.h"
 
 #include "ladspa.h"

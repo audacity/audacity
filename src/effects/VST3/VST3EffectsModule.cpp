@@ -25,7 +25,7 @@
 
 #include "wxArrayStringEx.h"
 #include "PluginInterface.h"
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 #include "VST3Effect.h"
 #include "VST3Utils.h"
 #include "widgets/AButton.h"

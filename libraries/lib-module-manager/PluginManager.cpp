@@ -29,7 +29,7 @@ for shared and private configs - which need to move out.
 #include <wx/tokenzr.h>
 
 #include "BasicUI.h"
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 
 #include "Internat.h" // for macro XO
 #include "FileNames.h"

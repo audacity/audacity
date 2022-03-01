@@ -2,9 +2,9 @@
 
   Audacity: A Digital Audio Editor
 
-  @file ModuleInterface.cpp
+  @file PluginProvider.cpp
 
 **********************************************************************/
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 
 PluginProvider::~PluginProvider() = default;

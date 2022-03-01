@@ -2,7 +2,7 @@
 
    Audacity: A Digital Audio Editor
 
-   @file ModuleInterface.h
+   @file PluginProvider.h
    @brief Generalized interface for discovery of plug-ins for one protocol
 
    Leland Lucius
@@ -40,8 +40,8 @@
    
 **********************************************************************/
 
-#ifndef __AUDACITY_MODULEINTERFACE_H__
-#define __AUDACITY_MODULEINTERFACE_H__
+#ifndef __AUDACITY_PLUGINPROVIDER_H__
+#define __AUDACITY_PLUGINPROVIDER_H__
 
 #include <functional>
 #include <memory>

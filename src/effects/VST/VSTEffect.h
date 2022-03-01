@@ -13,7 +13,7 @@
 #if USE_VST
 
 #include "EffectInterface.h"
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 #include "PluginInterface.h"
 
 #include "SampleFormat.h"

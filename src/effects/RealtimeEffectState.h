@@ -18,7 +18,7 @@
 #include <cstddef>
 #include "EffectInterface.h"
 #include "GlobalVariable.h"
-#include "ModuleInterface.h" // for PluginID
+#include "PluginProvider.h" // for PluginID
 #include "XMLTagHandler.h"
 
 class EffectProcessor;

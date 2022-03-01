@@ -22,7 +22,7 @@
 #include <AudioUnit/AudioUnitProperties.h>
 
 #include "EffectInterface.h"
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 #include "PluginInterface.h"
 
 #include "AUControl.h"

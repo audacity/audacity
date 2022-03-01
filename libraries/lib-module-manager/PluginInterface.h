@@ -45,7 +45,7 @@
 #include "EffectInterface.h"
 #include "ComponentInterface.h"
 #include "Identifier.h"
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 #include <variant>
 
 class PluginProvider;

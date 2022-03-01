@@ -24,7 +24,7 @@
 #include <utility>
 #include <wx/atomic.h> // member variable
 
-#include "ModuleInterface.h" // for PluginID
+#include "PluginProvider.h" // for PluginID
 #include "Observer.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
