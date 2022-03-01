@@ -205,7 +205,7 @@ AttachedWindows::RegisteredFactory sKey{
       auto &ruler = AdornedRulerPanel::Get( project );
       auto &viewInfo = ViewInfo::Get( project );
       auto &window = ProjectWindow::Get( project );
-      auto mainPage = window.GetMainPage();
+      auto mainPage = window.GetTrackListWindow();
       wxASSERT( mainPage ); // to justify safenew
 
       auto &tracks = TrackList::Get( project );
@@ -346,22 +346,16 @@ void TrackPanel::UpdatePrefs()
 /// goes with this track panel.
 AudacityProject * TrackPanel::GetProject() const
 {
-   //JKC casting away constness here.
-   //Do it in two stages in case 'this' is not a wxWindow.
-   //when the compiler will flag the error.
-   wxWindow const * const pConstWind = this;
-   wxWindow * pWind=(wxWindow*)pConstWind;
-#ifdef EXPERIMENTAL_NOTEBOOK
-   pWind = pWind->GetParent(); //Page
-   wxASSERT( pWind );
-   pWind = pWind->GetParent(); //Notebook
-   wxASSERT( pWind );
-#endif
-   pWind = pWind->GetParent(); //MainPanel
-   wxASSERT( pWind );
-   pWind = pWind->GetParent(); //ProjectWindow
-   wxASSERT( pWind );
-   return &static_cast<ProjectWindow*>( pWind )->GetProject();
+   auto window = GetParent();
+
+   while(window != nullptr)
+   {
+      if(const auto projectWindow = dynamic_cast<ProjectWindow*>(window))
+         return &projectWindow->GetProject();
+
+      window = window->GetParent();
+   }
+   return nullptr;
 }
 
 void TrackPanel::OnSize( wxSizeEvent &evt )

@@ -315,6 +315,9 @@ AudioIO::AudioIO()
       .store(false, std::memory_order_relaxed);
    mAudioThreadTrackBufferExchangeLoopActive
       .store(false, std::memory_order_relaxed);
+
+   mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_relaxed);
+
    mPortStreamV19 = NULL;
 
    mNumPauseFrames = 0;
@@ -1043,8 +1046,8 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       // Probably not needed so urgently before portaudio thread start for usual
       // playback, since our ring buffers have been primed already with 4 sec
       // of audio, but then we might be scrubbing, so do it.
-      mAudioThreadTrackBufferExchangeLoopRunning
-         .store(true, std::memory_order_relaxed);
+      StartAudioThread();
+
       mForceFadeOut.store(false, std::memory_order_relaxed);
 
       // Now start the PortAudio stream!
@@ -1054,8 +1057,9 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       if( err != paNoError )
       {
          mStreamToken = 0;
-         mAudioThreadTrackBufferExchangeLoopRunning
-           .store(false, std::memory_order_relaxed);
+
+         StopAudioThread();
+
          if (pListener && mNumCaptureChannels > 0)
             pListener->OnAudioIOStopRecording();
          StartStreamCleanup();
@@ -1420,8 +1424,7 @@ void AudioIO::StopStream()
    // DV: Seems that Pa_CloseStream calls Pa_AbortStream internally,
    // at least for PortAudio 19.7.0+
 
-   mAudioThreadTrackBufferExchangeLoopRunning
-      .store(false, std::memory_order_relaxed);
+   StopAudioThread();
 
    // Turn off HW playthrough if PortMixer is being used
 
@@ -1447,8 +1450,13 @@ void AudioIO::StopStream()
       mPortStreamV19 = NULL;
    }
 
-   
 
+
+   // We previously told AudioThread to stop processing, now let's
+   // be sure it has really stopped before resetting mpTransportState
+   WaitForAudioThreadStopped();
+
+   
    for( auto &ext : Extensions() )
       ext.StopOtherStream();
 
@@ -1462,17 +1470,7 @@ void AudioIO::StopStream()
       // to the target WaveTrack.  To do this, we ask the audio thread to
       // call TrackBufferExchange one last time (it normally would not do so since
       // Pa_GetStreamActive() would now return false
-      mAudioThreadShouldCallTrackBufferExchangeOnce
-         .store(true, std::memory_order_release);
-      while (mAudioThreadShouldCallTrackBufferExchangeOnce
-         .load(std::memory_order_acquire))
-      {
-         //FIXME: Seems like this block of the UI thread isn't bounded,
-         //but we cannot allow event handlers to see incompletely terminated
-         //AudioIO state with wxYield (or similar functions)
-         using namespace std::chrono;
-         std::this_thread::sleep_for(50ms);
-      }
+      ProcessOnceAndWait();
    }
 
    // No longer need effects processing. This must be done after the stream is stopped
@@ -1483,7 +1481,6 @@ void AudioIO::StopStream()
    // Everything is taken care of.  Now, just free all the resources
    // we allocated in StartStream()
    //
-
    if (mPlaybackTracks.size() > 0)
    {
       mPlaybackBuffers.reset();
@@ -1492,7 +1489,6 @@ void AudioIO::StopStream()
       mPlaybackMixers.clear();
       mPlaybackSchedule.mTimeQueue.Clear();
    }
-
 
    if (mStreamToken > 0)
    {
@@ -1738,6 +1734,8 @@ double AudioIO::GetStreamTime()
 
 AudioThread::ExitCode AudioThread::Entry()
 {
+   enum class State { eUndefined, eOnce, eLoopRunning, eDoNothing } lastState = State::eUndefined;
+
    AudioIO *gAudioIO;
    while( !TestDestroy() &&
       nullptr != ( gAudioIO = AudioIO::Get() ) )
@@ -1756,12 +1754,40 @@ AudioThread::ExitCode AudioThread::Entry()
          gAudioIO->TrackBufferExchange();
          gAudioIO->mAudioThreadShouldCallTrackBufferExchangeOnce
             .store(false, std::memory_order_release);
+
+         lastState = State::eOnce;
       }
       else if( gAudioIO->mAudioThreadTrackBufferExchangeLoopRunning
          .load(std::memory_order_relaxed))
       {
-         gAudioIO->TrackBufferExchange();
+         if (lastState != State::eLoopRunning)
+         {
+            // Main thread has told us to start - acknowledge that we do
+            gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStart,
+                                                    std::memory_order::memory_order_release);
+         }
+         lastState = State::eLoopRunning;
+
+         // We call the processing after raising the acknowledge flag, because the main thread
+         // only needs to know that the message was seen.
+         // 
+         // This is unlike the case with mAudioThreadShouldCallTrackBufferExchangeOnce where the
+         // store really means that the one-time exchange was done. 
+
+         gAudioIO->TrackBufferExchange();         
       }
+      else
+      {
+         if (lastState == State::eLoopRunning)
+         {
+            // Main thread has told us to stop; (actually: to neither process "once" nor "loop running")
+            // acknowledge that we received the order and that no more processing will be done.
+            gAudioIO->mAudioThreadAcknowledge.store(Acknowledge::eStop,
+                                                    std::memory_order::memory_order_release);
+         }
+         lastState = State::eDoNothing;
+      }
+
       gAudioIO->mAudioThreadTrackBufferExchangeLoopActive
          .store(false, std::memory_order_relaxed);
 
@@ -3092,6 +3118,10 @@ int AudioIoCallback::AudioCallback(
    return mCallbackReturn;
 }
 
+
+
+
+
 int AudioIoCallback::CallbackDoSeek()
 {
    const int token = mStreamToken;
@@ -3103,8 +3133,19 @@ int AudioIoCallback::CallbackDoSeek()
    const auto numPlaybackTracks = mPlaybackTracks.size();
 
    // Pause audio thread and wait for it to finish
+   // 
+   // [PM] the following 8 lines of code could be probably replaced by
+   // a single call to StopAudioThreadAndWait()
+   // 
+   // CAUTION: when trying the above, you must also replace the setting of the
+   // atomic before the return, with a call to StartAudioThread() 
+   // 
+   // If that works, then we can remove mAudioThreadTrackBufferExchangeLoopActive,
+   // as it will become unused; consequently, the AudioThread loop would get simpler too.
+   //
    mAudioThreadTrackBufferExchangeLoopRunning
       .store(false, std::memory_order_relaxed);
+
    while( mAudioThreadTrackBufferExchangeLoopActive
       .load(std::memory_order_relaxed ) )
    {
@@ -3137,14 +3178,7 @@ int AudioIoCallback::CallbackDoSeek()
    mPlaybackSchedule.mTimeQueue.Prime(time);
 
    // Reload the ring buffers
-   mAudioThreadShouldCallTrackBufferExchangeOnce
-      .store(true, std::memory_order_release);
-   while( mAudioThreadShouldCallTrackBufferExchangeOnce
-      .load(std::memory_order_acquire) )
-   {
-      using namespace std::chrono;
-      std::this_thread::sleep_for(50ms);
-   }
+   ProcessOnceAndWait();
 
    // Reenable the audio thread
    mAudioThreadTrackBufferExchangeLoopRunning
@@ -3175,6 +3209,67 @@ auto AudioIoCallback::AudioIOExtIterator::operator *() const -> AudioIOExt &
    // populates the array
    return *static_cast<AudioIOExt*>(mIterator->get());
 }
+
+
+void AudioIoCallback::StartAudioThread()
+{
+   mAudioThreadTrackBufferExchangeLoopRunning.store(true, std::memory_order_release);
+}
+
+void AudioIoCallback::WaitForAudioThreadStarted()
+{
+   while (mAudioThreadAcknowledge.load(std::memory_order_acquire) != Acknowledge::eStart)
+   {
+      using namespace std::chrono;
+      std::this_thread::sleep_for(50ms);
+   }
+   mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
+}
+
+
+void AudioIoCallback::StartAudioThreadAndWait()
+{
+   StartAudioThread();
+   WaitForAudioThreadStarted();
+}
+
+
+void AudioIoCallback::StopAudioThread()
+{
+   mAudioThreadTrackBufferExchangeLoopRunning.store(false, std::memory_order_release);
+}
+
+void AudioIoCallback::WaitForAudioThreadStopped()
+{
+   while (mAudioThreadAcknowledge.load(std::memory_order_acquire) != Acknowledge::eStop)
+   {
+      using namespace std::chrono;
+      std::this_thread::sleep_for(50ms);
+   }
+   mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_release);
+}
+
+void AudioIoCallback::StopAudioThreadAndWait()
+{
+   StopAudioThread();
+   WaitForAudioThreadStopped();
+}
+
+
+void AudioIoCallback::ProcessOnceAndWait(std::chrono::milliseconds sleepTime)
+{
+   mAudioThreadShouldCallTrackBufferExchangeOnce
+      .store(true, std::memory_order_release);
+
+   while (mAudioThreadShouldCallTrackBufferExchangeOnce
+      .load(std::memory_order_acquire))
+   {
+      using namespace std::chrono;
+      std::this_thread::sleep_for(sleepTime);
+   }
+}
+
+
 
 bool AudioIO::IsCapturing() const
 {

@@ -76,6 +76,84 @@ wxBrush AColor::spareBrush;
 wxPen AColor::uglyPen;
 wxBrush AColor::uglyBrush;
 
+namespace
+{
+   //Simplified variation of nine patch scale drawing
+   //https://en.wikipedia.org/wiki/9-slice_scaling
+   //Bitmap and rect expected to have at least 3px in both directions
+   void DrawNinePatch(wxDC& dc, wxBitmap& bitmap, const wxRect& r)
+   {
+      wxMemoryDC memDC;
+      memDC.SelectObject(bitmap);
+
+      // image slices
+
+      const auto uw0 = bitmap.GetWidth() / 2;
+      const auto uw1 = 1;
+      const auto uw2 = bitmap.GetWidth() - uw0 - uw1;
+
+      const auto vh0 = bitmap.GetHeight() / 2;
+      const auto vh1 = 1;
+      const auto vh2 = bitmap.GetHeight() - vh1 - vh0;
+
+      const auto u0 = 0;
+      const auto u1 = uw0;
+      const auto u2 = uw0 + uw1;
+
+      const auto v0 = 0;
+      const auto v1 = vh0;
+      const auto v2 = vh0 + vh1;
+
+      //Button geometry
+
+      const auto xw0 = std::min(uw0, r.width / 2);
+      const auto xw2 = std::min(uw2, r.width / 2);
+      const auto xw1 = r.width - xw0 - xw2;
+
+      const auto yh0 = std::min(vh0, r.height / 2);
+      const auto yh2 = std::min(vh2, r.height / 2);
+      const auto yh1 = r.height - yh0 - yh2;
+
+      const auto x0 = r.x;
+      const auto x1 = r.x + xw0;
+      const auto x2 = r.x + xw0 + xw1;
+
+      const auto y0 = r.y;
+      const auto y1 = r.y + yh0;
+      const auto y2 = r.y + yh0 + yh1;
+
+      dc.StretchBlit(x0, y0, xw0, yh0, &memDC, u0, v0, uw0, vh0, wxCOPY, true);
+      dc.StretchBlit(x1, y0, xw1, yh0, &memDC, u1, v0, uw1, vh0, wxCOPY, true);
+      dc.StretchBlit(x2, y0, xw2, yh0, &memDC, u2, v0, uw2, vh0, wxCOPY, true);
+
+      dc.StretchBlit(x0, y1, xw0, yh1, &memDC, u0, v1, uw0, vh1, wxCOPY, true);
+      dc.StretchBlit(x1, y1, xw1, yh1, &memDC, u1, v1, uw1, vh1, wxCOPY, true);
+      dc.StretchBlit(x2, y1, xw2, yh1, &memDC, u2, v1, uw2, vh1, wxCOPY, true);
+
+      dc.StretchBlit(x0, y2, xw0, yh2, &memDC, u0, v2, uw0, vh2, wxCOPY, true);
+      dc.StretchBlit(x1, y2, xw1, yh2, &memDC, u1, v2, uw1, vh2, wxCOPY, true);
+      dc.StretchBlit(x2, y2, xw2, yh2, &memDC, u2, v2, uw2, vh2, wxCOPY, true);
+   }
+
+   int GetButtonImageIndex(bool up, bool selected, bool highlight)
+   {
+      // There are eight button states in the TCP.
+      // A theme might not differentiate among them all.  That's up to 
+      // the theme designer.
+      //   Button highlighted (i.e. hovered over) or not.
+      //   Track selected or not
+      //   Button up or down.
+      // Highlight in most themes is lighter than not highlighted.
+      if ( highlight && selected)
+         return up ? bmpHiliteUpButtonExpandSel : bmpHiliteButtonExpandSel;
+      if ( highlight )
+         return up ? bmpHiliteUpButtonExpand : bmpHiliteButtonExpand;
+      if( selected )
+         return up ? bmpUpButtonExpandSel : bmpDownButtonExpandSel;
+      return up ? bmpUpButtonExpand : bmpDownButtonExpand;
+   }
+}
+
 //
 // Draw an upward or downward pointing arrow.
 //
@@ -204,31 +282,22 @@ void AColor::Bevel(wxDC & dc, bool up, const wxRect & r)
    AColor::Line(dc, r.x, r.y + r.height, r.x + r.width, r.y + r.height);
 }
 
-void AColor::Bevel2
-(wxDC & dc, bool up, const wxRect & r, bool bSel, bool bHighlight)
+void AColor::ButtonStretch(wxDC& dc, bool up, const wxRect& r, bool selected, bool highlight)
 {
-   int index = 0;
-   // There are eight button states in the TCP.
-   // A theme might not differentiate between them all.  That's up to 
-   // the theme designer.
-   //   Button highlighted (i.e. hovered over) or not.
-   //   Track selected or not
-   //   Button up or down.
-   // Highlight in most themes is lighter than not highlighted.
-   if ( bHighlight && bSel)
-      index = up ? bmpHiliteUpButtonExpandSel : bmpHiliteButtonExpandSel;
-   else if ( bHighlight )
-      index = up ? bmpHiliteUpButtonExpand : bmpHiliteButtonExpand;
-   else if( bSel )
-      index = up ? bmpUpButtonExpandSel : bmpDownButtonExpandSel;
-   else
-      index = up ? bmpUpButtonExpand : bmpDownButtonExpand;
+   DrawNinePatch(
+      dc,
+      theTheme.Bitmap(GetButtonImageIndex(up, selected, highlight)),
+      r
+   );
+}
 
-   wxBitmap & Bmp = theTheme.Bitmap( index );
+void AColor::Bevel2(wxDC & dc, bool up, const wxRect & r, bool bSel, bool bHighlight)
+{
+   auto& Bmp = theTheme.Bitmap( GetButtonImageIndex(up, bSel, bHighlight) );
    wxMemoryDC memDC;
    memDC.SelectObject(Bmp);
-   int h = wxMin( r.height, Bmp.GetHeight() );
 
+   int h = std::min(r.height, Bmp.GetHeight());
 
    dc.Blit( r.x,r.y,r.width/2, h, &memDC, 0, 0, wxCOPY, true );
    int r2 = r.width - r.width/2;
