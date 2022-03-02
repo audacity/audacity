@@ -754,7 +754,8 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
 }
 
 
-void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    wxASSERT(nActions == WXSIZEOF(kActionStrings));
 
@@ -828,11 +829,12 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess
          mIndependent = S.AddCheckBox(XXO("Trunc&ate tracks independently"),
             mbIndependent);
       }
-   S.EndMultiColumn();
-}
+      S.EndMultiColumn();
+   }
    S.EndStatic();
 
    UpdateUI();
+   return nullptr;
 }
 
 bool EffectTruncSilence::TransferDataToWindow()

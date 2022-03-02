@@ -1519,7 +1519,8 @@ bool LV2Effect::SetAutomationParameters(CommandParameters &parms)
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    auto parent = S.GetParent();
    mParent = parent;
@@ -1533,7 +1534,7 @@ bool LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
    if (mMaster == NULL)
    {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
-      return false;
+      return nullptr;
    }
 
    // Determine if the GUI editor is supposed to be used or not
@@ -1556,10 +1557,11 @@ bool LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 
    if (!mUseGUI)
    {
-      return BuildPlain();
+      if (!BuildPlain())
+         return nullptr;
    }
 
-   return true;
+   return std::make_unique<DefaultEffectUIValidator>(*this);
 }
 
 bool LV2Effect::IsGraphicalUI()
@@ -1579,14 +1581,6 @@ bool LV2Effect::ValidateUI()
       mHost->SetDuration(mDuration->GetValue());
    }
 
-   return true;
-}
-
-bool LV2Effect::HideUI()
-{
-#if 0
-   // Nothing to do yet
-#endif
    return true;
 }
 

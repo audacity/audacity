@@ -229,7 +229,8 @@ bool EffectWahwah::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-void EffectWahwah::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectWahwah::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);
@@ -306,6 +307,7 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          .AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
 bool EffectWahwah::TransferDataToWindow()

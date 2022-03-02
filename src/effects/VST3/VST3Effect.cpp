@@ -852,7 +852,8 @@ bool VST3Effect::IsGraphicalUI()
    return mPlugView != nullptr;
 }
 
-bool VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &)
 {
    using namespace Steinberg;
 
@@ -901,9 +902,9 @@ bool VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &)
          );
       }
 
-      return true;
+      return std::make_unique<DefaultEffectUIValidator>(*this);
    }
-   return false;
+   return nullptr;
 }
 
 bool VST3Effect::ValidateUI()
@@ -912,11 +913,6 @@ bool VST3Effect::ValidateUI()
    {
       mEffectHost->SetDuration(mDuration->GetValue());
    }
-   return true;
-}
-
-bool VST3Effect::HideUI()
-{
    return true;
 }
 

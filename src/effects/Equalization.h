@@ -129,7 +129,7 @@ public:
    bool Process(EffectSettings &settings) override;
 
    bool CloseUI() override;
-   void PopulateOrExchange(
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;

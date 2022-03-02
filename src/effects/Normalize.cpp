@@ -285,7 +285,8 @@ bool EffectNormalize::Process(EffectSettings &)
    return bGoodResult;
 }
 
-void EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    mCreating = true;
 
@@ -335,6 +336,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    }
    S.EndVerticalLay();
    mCreating = false;
+   return nullptr;
 }
 
 bool EffectNormalize::TransferDataToWindow()

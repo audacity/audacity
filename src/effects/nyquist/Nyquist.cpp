@@ -1074,7 +1074,8 @@ int NyquistEffect::ShowHostInterface(
    return res;
 }
 
-void NyquistEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+NyquistEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    if (mIsPrompt)
    {
@@ -1084,6 +1085,7 @@ void NyquistEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    {
       BuildEffectWindow(S);
    }
+   return nullptr;
 }
 
 bool NyquistEffect::EnablesDebug()

@@ -176,7 +176,8 @@ bool EffectRepeat::Process(EffectSettings &)
    return bGoodResult;
 }
 
-void EffectRepeat::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectRepeat::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartHorizontalLay(wxCENTER, false);
    {
@@ -195,6 +196,7 @@ void EffectRepeat::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
       mTotalTime = S.AddVariableText(XO("New selection length: dd:hh:mm:ss"));
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
 bool EffectRepeat::TransferDataToWindow()

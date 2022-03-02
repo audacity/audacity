@@ -168,7 +168,8 @@ bool EffectEcho::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-void EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
 
@@ -186,6 +187,7 @@ void EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          .AddTextBox(XXO("D&ecay factor:"), wxT(""), 10);
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
 bool EffectEcho::TransferDataToWindow()

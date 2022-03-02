@@ -1656,7 +1656,8 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    // OSStatus result;
 
@@ -1681,7 +1682,7 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
    {
       if (!CreatePlain(mParent))
       {
-         return false;
+         return nullptr;
       }
    }
    else
@@ -1690,12 +1691,12 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
       auto pControl = Destroy_ptr<AUControl>(safenew AUControl);
       if (!pControl)
       {
-         return false;
+         return nullptr;
       }
 
       if (!pControl->Create(container, mComponent, mUnit, mUIType == wxT("Full")))
       {
-         return false;
+         return nullptr;
       }
 
       {
@@ -1719,7 +1720,7 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
       mParent->PushEventHandler(this);
    }
 
-   return true;
+   return std::make_unique<DefaultEffectUIValidator>(*this);
 }
 
 bool AudioUnitEffect::IsGraphicalUI()
@@ -1750,17 +1751,6 @@ bool AudioUnitEffect::CreatePlain(wxWindow *parent)
    return false;
 }
 #endif
-
-bool AudioUnitEffect::HideUI()
-{
-#if 0
-   if (GetType() == EffectTypeAnalyze || mNumOutputControls > 0)
-   {
-      return false;
-   }
-#endif
-   return true;
-}
 
 bool AudioUnitEffect::CloseUI()
 {

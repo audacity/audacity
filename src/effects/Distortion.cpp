@@ -352,7 +352,8 @@ bool EffectDistortion::LoadFactoryPreset(int id)
 
 // Effect implementation
 
-void EffectDistortion::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectDistortion::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
    S.StartVerticalLay();
@@ -484,7 +485,7 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &
    }
    S.EndVerticalLay();
 
-   return;
+   return nullptr;
 }
 
 bool EffectDistortion::TransferDataToWindow()

@@ -196,7 +196,8 @@ bool EffectPaulstretch::Process(EffectSettings &)
 }
 
 
-void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectPaulstretch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
@@ -213,6 +214,7 @@ void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess 
          .AddTextBox(XXO("&Time Resolution (seconds):"), wxT(""), 10);
    }
    S.EndMultiColumn();
+   return nullptr;
 };
 
 bool EffectPaulstretch::TransferDataToWindow()

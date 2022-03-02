@@ -568,19 +568,26 @@ bool Effect::LoadFactoryDefaults()
 
 // EffectUIClientInterface implementation
 
-bool Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
+std::unique_ptr<EffectUIValidator>
+Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
    mUIParent = parent;
-   mUIParent->PushEventHandler(this);
 
 //   LoadUserPreset(GetCurrentSettingsGroup());
 
-   PopulateOrExchange(S, access);
+   // Let the effect subclass provide its own validator if it wants
+   auto result = PopulateOrExchange(S, access);
 
    mUIParent->SetMinSize(mUIParent->GetSizer()->GetMinSize());
 
-   return true;
+   if (!result) {
+      // No custom validator object?  Then use the default, which will pop
+      // the event handler when it is destroyed and invokes CloseUI
+      mUIParent->PushEventHandler(this);
+      result = std::make_unique<DefaultEffectUIValidator>(*this);
+   }
+   return result;
 }
 
 bool Effect::IsGraphicalUI()
@@ -591,11 +598,6 @@ bool Effect::IsGraphicalUI()
 bool Effect::ValidateUI()
 {
    return mUIParent->Validate();
-}
-
-bool Effect::HideUI()
-{
-   return true;
 }
 
 bool Effect::CloseUI()
@@ -1660,9 +1662,10 @@ void Effect::End()
 {
 }
 
-void Effect::PopulateOrExchange(ShuttleGui &, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+Effect::PopulateOrExchange(ShuttleGui &, EffectSettingsAccess &)
 {
-   return;
+   return nullptr;
 }
 
 bool Effect::TransferDataToWindow()

@@ -368,6 +368,46 @@ public:
 
 /*************************************************************************************//**
 
+\class EffectUIValidator
+
+\brief Interface for transferring values from a panel of effect controls
+
+*******************************************************************************************/
+class COMPONENTS_API EffectUIValidator /* not final */
+{
+public:
+   virtual ~EffectUIValidator();
+   //! Get settings data from the panel; may make error dialogs and return false
+   /*!
+    @return true only if panel settings are acceptable
+    */
+   virtual bool Validate() = 0;
+};
+
+/*************************************************************************************//**
+
+\class DefaultEffectUIValidator
+
+\brief Default implementation of EffectUIValidator invokes ValidateUI and CloseUI
+   methods of an EffectUIClientInterface
+
+ This is a transitional class; it should be eliminated when all effect classes
+ define their own associated subclasses of EffectUIValidator, which can hold
+ state only for the lifetime of a dialog, so the effect object need not hold it
+
+*******************************************************************************************/
+class COMPONENTS_API DefaultEffectUIValidator final : public EffectUIValidator
+{
+public:
+   explicit DefaultEffectUIValidator(EffectUIClientInterface &effect);
+   ~DefaultEffectUIValidator() override;
+   bool Validate() override;
+private:
+   EffectUIClientInterface &mEffect;
+};
+
+/*************************************************************************************//**
+
 \class EffectUIClientInterface
 
 \brief EffectUIClientInterface is an abstract base class to populate a UI and validate UI
@@ -393,11 +433,17 @@ public:
    virtual bool IsGraphicalUI() = 0;
 
    //! Adds controls to a panel that is given as the parent window of `S`
-   virtual bool PopulateUI(ShuttleGui &S, EffectSettingsAccess &access) = 0;
+   /*!
+    @param S interface for adding controls to a panel in a dialog
+    @param access guaranteed to have a lifetime containing that of the returned
+    object
 
-   virtual bool ValidateUI() = 0;
-   virtual bool HideUI() = 0;
-   virtual bool CloseUI() = 0;
+    @return null for failure; else an object invoked to retrieve values of UI
+    controls; it might also hold some state needed to implement event handlers
+    of the controls; it will exist only while the dialog continues to exist
+    */
+   virtual std::unique_ptr<EffectUIValidator> PopulateUI(
+      ShuttleGui &S, EffectSettingsAccess &access) = 0;
 
    virtual bool CanExportPresets() = 0;
    virtual void ExportPresets() = 0;
@@ -405,6 +451,11 @@ public:
 
    virtual bool HasOptions() = 0;
    virtual void ShowOptions() = 0;
+
+protected:
+   friend DefaultEffectUIValidator;
+   virtual bool ValidateUI() = 0;
+   virtual bool CloseUI() = 0;
 };
 
 #endif // __AUDACITY_EFFECTINTERFACE_H__

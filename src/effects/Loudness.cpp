@@ -288,7 +288,8 @@ bool EffectLoudness::Process(EffectSettings &)
    return bGoodResult;
 }
 
-void EffectLoudness::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectLoudness::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartVerticalLay(0);
    {
@@ -382,6 +383,7 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
       S.EndMultiColumn();
    }
    S.EndVerticalLay();
+   return nullptr;
 }
 
 bool EffectLoudness::TransferDataToWindow()

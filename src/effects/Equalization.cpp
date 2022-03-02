@@ -767,7 +767,8 @@ bool EffectEqualization::CloseUI()
    return Effect::CloseUI();
 }
 
-void EffectEqualization::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectEqualization::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    if ( (S.GetMode() == eIsCreating ) && !IsBatchProcessing() )
       LoadUserPreset(GetCurrentSettingsGroup());
@@ -1187,7 +1188,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess
    }
    ForceRecalc();
 
-   return;
+   return nullptr;
 }
 
 //

@@ -370,7 +370,8 @@ bool EffectScienFilter::Init()
    return true;
 }
 
-void EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(5);
    S.SetSizerProportion(1);
@@ -537,7 +538,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess 
    }
    S.EndMultiColumn();
 
-   return;
+   return nullptr;
 }
 
 //

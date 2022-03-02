@@ -154,10 +154,10 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectUIClientInterface implementation
 
-   bool PopulateUI(ShuttleGui &S, EffectSettingsAccess &access) final;
+   std::unique_ptr<EffectUIValidator> PopulateUI(
+      ShuttleGui &S, EffectSettingsAccess &access) final;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
-   bool HideUI() override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
@@ -276,7 +276,12 @@ protected:
    // effects need to use a different input length, so override this method.
    virtual double CalcPreviewInputLength(double previewLength);
 
-   virtual void PopulateOrExchange(
+   //! Add controls to effect panel; always succeeds
+   /*!
+    @return if not null, then return it from Effect::PopulateUI instead of a
+    DefaultEffectUIValidator; default implementation returns null
+    */
+   virtual std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access);
 
    // No more virtuals!

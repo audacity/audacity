@@ -142,9 +142,9 @@ public:
    int ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal) override;
    bool SetHost(EffectHostInterface* host) override;
    bool IsGraphicalUI() override;
-   bool PopulateUI(ShuttleGui& S, EffectSettingsAccess &access) override;
+   std::unique_ptr<EffectUIValidator> PopulateUI(
+      ShuttleGui &S, EffectSettingsAccess &access) override;
    bool ValidateUI() override;
-   bool HideUI() override;
    bool CloseUI() override;
    bool CanExportPresets() override;
    void ExportPresets() override;

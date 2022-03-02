@@ -50,7 +50,7 @@ public:
    bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
-   void PopulateOrExchange(
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;

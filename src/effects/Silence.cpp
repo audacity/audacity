@@ -65,7 +65,8 @@ EffectType EffectSilence::GetType()
 
 // Effect implementation
 
-void EffectSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartVerticalLay();
    {
@@ -88,7 +89,7 @@ void EffectSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    }
    S.EndVerticalLay();
 
-   return;
+   return nullptr;
 }
 
 bool EffectSilence::TransferDataToWindow()

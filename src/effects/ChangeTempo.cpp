@@ -226,7 +226,8 @@ bool EffectChangeTempo::Process(EffectSettings &settings)
    return success;
 }
 
-void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator>
+EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    enum { precision = 2 };
 
@@ -328,7 +329,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess 
    }
    S.EndVerticalLay();
 
-   return;
+   return nullptr;
 }
 
 bool EffectChangeTempo::TransferDataToWindow()

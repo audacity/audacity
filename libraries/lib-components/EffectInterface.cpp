@@ -160,4 +160,21 @@ EffectDefinitionInterfaceEx::FindMe(const Settings &settings) const
 
 EffectProcessor::~EffectProcessor() = default;
 
+EffectUIValidator::~EffectUIValidator() = default;
+
+DefaultEffectUIValidator::DefaultEffectUIValidator(
+   EffectUIClientInterface &effect)
+   : mEffect{effect}
+{}
+
+DefaultEffectUIValidator::~DefaultEffectUIValidator()
+{
+   mEffect.CloseUI();
+}
+
+bool DefaultEffectUIValidator::Validate()
+{
+   return mEffect.ValidateUI();
+}
+
 EffectUIClientInterface::~EffectUIClientInterface() = default;

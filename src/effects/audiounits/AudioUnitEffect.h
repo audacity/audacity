@@ -113,10 +113,10 @@ public:
    // EffectUIClientInterface implementation
 
    bool SetHost(EffectHostInterface *host) override;
-   bool PopulateUI(ShuttleGui &S, EffectSettingsAccess &access) override;
+   std::unique_ptr<EffectUIValidator> PopulateUI(
+      ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
    bool ValidateUI() override;
-   bool HideUI() override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
