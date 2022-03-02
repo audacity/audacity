@@ -75,9 +75,6 @@ Effect::Effect()
 
    mUIParent = NULL;
 
-   mNumAudioIn = 0;
-   mNumAudioOut = 0;
-
    mBufferSize = 0;
    mBlockSize = 0;
    mNumChannels = 0;
@@ -822,9 +819,6 @@ bool Effect::Startup(EffectUIClientInterface *client)
       return false;
    }
 
-   mNumAudioIn = GetAudioInCount();
-   mNumAudioOut = GetAudioOutCount();
-
    bool haveDefaults;
    GetConfig(GetDefinition(), PluginSettings::Private, GetFactoryDefaultsGroup(),
       wxT("Initialized"), haveDefaults, false);
@@ -1104,11 +1098,6 @@ bool Effect::Process(EffectSettings &settings)
    CopyInputTracks(true);
    bool bGoodResult = true;
 
-   // It's possible that the number of channels the effect expects changed based on
-   // the parameters (the Audacity Reverb effect does when the stereo width is 0).
-   mNumAudioIn = GetAudioInCount();
-   mNumAudioOut = GetAudioOutCount();
-
    mPass = 1;
    if (InitPass1())
    {
@@ -1141,7 +1130,12 @@ bool Effect::ProcessPass(EffectSettings &settings)
    int count = 0;
    bool clear = false;
 
-   const bool multichannel = mNumAudioIn > 1;
+   // It's possible that the number of channels the effect expects changed based on
+   // the parameters (the Audacity Reverb effect does when the stereo width is 0).
+   const auto numAudioIn = GetAudioInCount();
+   const auto numAudioOut = GetAudioOutCount();
+
+   const bool multichannel = numAudioIn > 1;
    auto range = multichannel
       ? mOutputTracks->Leaders()
       : mOutputTracks->Any();
@@ -1208,11 +1202,11 @@ bool Effect::ProcessPass(EffectSettings &settings)
          {
             // Always create the number of input buffers the client expects even if we don't have
             // the same number of channels.
-            inBufPos.reinit( mNumAudioIn );
-            inBuffer.reinit( mNumAudioIn, mBufferSize );
+            inBufPos.reinit( numAudioIn );
+            inBuffer.reinit( numAudioIn, mBufferSize );
 
             // We won't be using more than the first 2 buffers, so clear the rest (if any)
-            for (size_t i = 2; i < mNumAudioIn; i++)
+            for (size_t i = 2; i < numAudioIn; i++)
             {
                for (size_t j = 0; j < mBufferSize; j++)
                {
@@ -1222,26 +1216,26 @@ bool Effect::ProcessPass(EffectSettings &settings)
 
             // Always create the number of output buffers the client expects even if we don't have
             // the same number of channels.
-            outBufPos.reinit( mNumAudioOut );
+            outBufPos.reinit( numAudioOut );
             // Output buffers get an extra mBlockSize worth to give extra room if
             // the plugin adds latency
-            outBuffer.reinit( mNumAudioOut, mBufferSize + mBlockSize );
+            outBuffer.reinit( numAudioOut, mBufferSize + mBlockSize );
          }
 
          // (Re)Set the input buffer positions
-         for (size_t i = 0; i < mNumAudioIn; i++)
+         for (size_t i = 0; i < numAudioIn; i++)
          {
             inBufPos[i] = inBuffer[i].get();
          }
 
          // (Re)Set the output buffer positions
-         for (size_t i = 0; i < mNumAudioOut; i++)
+         for (size_t i = 0; i < numAudioOut; i++)
          {
             outBufPos[i] = outBuffer[i].get();
          }
 
          // Clear unused input buffers
-         if (!right && !clear && mNumAudioIn > 1)
+         if (!right && !clear && numAudioIn > 1)
          {
             for (size_t j = 0; j < mBufferSize; j++)
             {
@@ -1327,7 +1321,7 @@ bool Effect::ProcessTrack(EffectSettings &settings,
    decltype(mBufferSize) outputBufferCnt = 0;
    bool cleared = false;
 
-   auto chans = std::min<unsigned>(mNumAudioOut, mNumChannels);
+   auto chans = std::min<unsigned>(GetAudioOutCount(), mNumChannels);
 
    std::shared_ptr<WaveTrack> genLeft, genRight;
 

@@ -487,8 +487,6 @@ private:
 
    // For client driver
    EffectUIClientInterface *mClient;
-   size_t mNumAudioIn;
-   size_t mNumAudioOut;
 
    size_t mBufferSize;
    size_t mBlockSize;
