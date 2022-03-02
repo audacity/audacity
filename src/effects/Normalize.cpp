@@ -285,7 +285,7 @@ bool EffectNormalize::Process()
    return bGoodResult;
 }
 
-void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
+void EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    mCreating = true;
 

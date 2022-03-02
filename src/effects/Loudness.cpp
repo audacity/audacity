@@ -288,7 +288,7 @@ bool EffectLoudness::Process()
    return bGoodResult;
 }
 
-void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
+void EffectLoudness::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartVerticalLay(0);
    {

@@ -214,7 +214,7 @@ bool EffectBassTreble::CheckWhetherSkipEffect()
 
 // Effect implementation
 
-void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
+void EffectBassTreble::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);

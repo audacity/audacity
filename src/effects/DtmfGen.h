@@ -54,7 +54,8 @@ public:
 
    bool Startup() override;
    bool Init() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+   void PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataFromWindow() override;
    bool TransferDataToWindow() override;
 

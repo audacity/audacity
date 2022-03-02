@@ -492,7 +492,7 @@ FactoryPresets[] =
 
 
 
-RegistryPaths EffectEqualization::GetFactoryPresets()
+RegistryPaths EffectEqualization::GetFactoryPresets() const
 {
    RegistryPaths names;
 
@@ -767,7 +767,7 @@ bool EffectEqualization::CloseUI()
    return Effect::CloseUI();
 }
 
-void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
+void EffectEqualization::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    if ( (S.GetMode() == eIsCreating ) && !IsBatchProcessing() )
       LoadUserPreset(GetCurrentSettingsGroup());

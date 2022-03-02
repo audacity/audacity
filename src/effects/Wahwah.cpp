@@ -230,7 +230,7 @@ bool EffectWahwah::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
+void EffectWahwah::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);

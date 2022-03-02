@@ -71,8 +71,9 @@ class VST3Effect final : public EffectUIClientInterface
 
    std::vector<std::shared_ptr<VST3Effect>> mRealtimeGroupProcessors;
 
-   bool mRescanFactoryPresets { true };
-   RegistryPaths mFactoryPresets;
+   // Mutable cache fields computed once on demand
+   mutable bool mRescanFactoryPresets { true };
+   mutable RegistryPaths mFactoryPresets;
 
    size_t mUserBlockSize { 8192 };
    bool mUseLatency { true };
@@ -109,7 +110,7 @@ public:
    bool SetAutomationParameters(CommandParameters& parms) override;
    bool LoadUserPreset(const RegistryPath& name) override;
    bool SaveUserPreset(const RegistryPath& name) override;
-   RegistryPaths GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
@@ -130,14 +131,14 @@ public:
    bool RealtimeFinalize() noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
-   bool RealtimeProcessStart() override;
+   bool RealtimeProcessStart(EffectSettings &settings) override;
    size_t RealtimeProcess(int group, const float* const* inBuf, float* const* outBuf, size_t numSamples) override;
-   bool RealtimeProcessEnd() noexcept override;
+   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
    int ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal) override;
    bool SetHost(EffectHostInterface* host) override;
    bool IsGraphicalUI() override;
-   bool PopulateUI(ShuttleGui& S) override;
+   bool PopulateUI(ShuttleGui& S, EffectSettingsAccess &access) override;
    bool ValidateUI() override;
    bool HideUI() override;
    bool CloseUI() override;

@@ -59,7 +59,8 @@ public:
    bool CheckWhetherSkipEffect() override;
    bool Process() override;
    double CalcPreviewInputLength(double previewLength) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+   void PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 

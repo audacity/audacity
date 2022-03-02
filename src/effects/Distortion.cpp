@@ -319,7 +319,7 @@ bool EffectDistortion::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-RegistryPaths EffectDistortion::GetFactoryPresets()
+RegistryPaths EffectDistortion::GetFactoryPresets() const
 {
    RegistryPaths names;
 
@@ -352,7 +352,7 @@ bool EffectDistortion::LoadFactoryPreset(int id)
 
 // Effect implementation
 
-void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
+void EffectDistortion::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
    S.StartVerticalLay();

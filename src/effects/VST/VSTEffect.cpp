@@ -225,7 +225,7 @@ enum InfoKeys
 //! This object exists in a separate process, to validate a newly seen plug-in.
 /*! It needs to implement EffectDefinitionInterface but mostly just as stubs */
 class VSTSubProcess final : public wxProcess
-   , public EffectDefinitionInterface
+   , public EffectDefinitionInterfaceEx
 {
 public:
    VSTSubProcess()
@@ -296,7 +296,7 @@ public:
    bool LoadUserPreset(const RegistryPath &) override { return true; }
    bool SaveUserPreset(const RegistryPath &) override { return true; }
 
-   RegistryPaths GetFactoryPresets() override { return {}; }
+   RegistryPaths GetFactoryPresets() const override { return {}; }
    bool LoadFactoryPreset(int) override { return true; }
    bool LoadFactoryDefaults() override { return true; }
 
@@ -1538,7 +1538,7 @@ return GuardedCall<bool>([&]{
 });
 }
 
-bool VSTEffect::RealtimeProcessStart()
+bool VSTEffect::RealtimeProcessStart(EffectSettings &)
 {
    return true;
 }
@@ -1550,7 +1550,7 @@ size_t VSTEffect::RealtimeProcess(int group,
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
 }
 
-bool VSTEffect::RealtimeProcessEnd() noexcept
+bool VSTEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return true;
 }
@@ -1675,7 +1675,7 @@ bool VSTEffect::SaveUserPreset(const RegistryPath & name)
    return SaveParameters(name);
 }
 
-RegistryPaths VSTEffect::GetFactoryPresets()
+RegistryPaths VSTEffect::GetFactoryPresets() const
 {
    RegistryPaths progs;
 
@@ -1718,7 +1718,7 @@ bool VSTEffect::LoadFactoryDefaults()
 // EffectUIClientInterface implementation
 // ============================================================================
 
-bool VSTEffect::PopulateUI(ShuttleGui &S)
+bool VSTEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    auto parent = S.GetParent();
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
@@ -2512,20 +2512,20 @@ void VSTEffect::SetBufferDelay(int samples)
    return;
 }
 
-int VSTEffect::GetString(wxString & outstr, int opcode, int index)
+int VSTEffect::GetString(wxString & outstr, int opcode, int index) const
 {
    char buf[256];
 
    memset(buf, 0, sizeof(buf));
 
-   callDispatcher(opcode, index, 0, buf, 0.0);
+   const_cast<VSTEffect*>(this)->callDispatcher(opcode, index, 0, buf, 0.0);
 
    outstr = wxString::FromUTF8(buf);
 
    return 0;
 }
 
-wxString VSTEffect::GetString(int opcode, int index)
+wxString VSTEffect::GetString(int opcode, int index) const
 {
    wxString str;
 

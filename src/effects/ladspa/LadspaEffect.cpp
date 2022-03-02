@@ -1035,7 +1035,7 @@ bool LadspaEffect::RealtimeResume() noexcept
    return true;
 }
 
-bool LadspaEffect::RealtimeProcessStart()
+bool LadspaEffect::RealtimeProcessStart(EffectSettings &)
 {
    return true;
 }
@@ -1059,7 +1059,7 @@ size_t LadspaEffect::RealtimeProcess(int group,
    return numSamples;
 }
 
-bool LadspaEffect::RealtimeProcessEnd() noexcept
+bool LadspaEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return true;
 }
@@ -1139,7 +1139,7 @@ bool LadspaEffect::SaveUserPreset(const RegistryPath & name)
    return SaveParameters(name);
 }
 
-RegistryPaths LadspaEffect::GetFactoryPresets()
+RegistryPaths LadspaEffect::GetFactoryPresets() const
 {
    return {};
 }
@@ -1165,7 +1165,7 @@ bool LadspaEffect::LoadFactoryDefaults()
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool LadspaEffect::PopulateUI(ShuttleGui &S)
+bool LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    auto parent = S.GetParent();
 

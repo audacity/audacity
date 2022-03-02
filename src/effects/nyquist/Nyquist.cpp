@@ -1017,12 +1017,13 @@ finish:
 }
 
 int NyquistEffect::ShowHostInterface(
-   wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
+   wxWindow &parent, const EffectDialogFactory &factory,
+   EffectSettingsAccess &access, bool forceModal)
 {
    int res = wxID_APPLY;
    if (!(Effect::TestUIFlags(EffectManager::kRepeatNyquistPrompt) && mIsPrompt)) {
       // Show the normal (prompt or effect) interface
-      res = Effect::ShowHostInterface(parent, factory, forceModal);
+      res = Effect::ShowHostInterface(parent, factory, access, forceModal);
    }
 
 
@@ -1048,7 +1049,7 @@ int NyquistEffect::ShowHostInterface(
       effect.SetAutomationParameters(cp);
 
       // Show the normal (prompt or effect) interface
-      res = effect.ShowHostInterface(parent, factory, forceModal);
+      res = effect.ShowHostInterface(parent, factory, access, forceModal);
       if (res)
       {
          CommandParameters cp;
@@ -1060,7 +1061,9 @@ int NyquistEffect::ShowHostInterface(
    {
       effect.SetCommand(mInputCmd);
       effect.mDebug = (res == eDebugID);
-      res = Delegate(effect, parent, factory);
+      // Delegate to the Nyquist Prompt,
+      // which gets some Lisp from the user to interpret
+      res = Delegate(effect, parent, factory, access.shared_from_this());
       mT0 = effect.mT0;
       mT1 = effect.mT1;
    }
@@ -1068,7 +1071,7 @@ int NyquistEffect::ShowHostInterface(
    return res;
 }
 
-void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
+void NyquistEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    if (mIsPrompt)
    {

@@ -1414,7 +1414,7 @@ return GuardedCall<bool>([&]{
 });
 }
 
-bool AudioUnitEffect::RealtimeProcessStart()
+bool AudioUnitEffect::RealtimeProcessStart(EffectSettings &)
 {
    return true;
 }
@@ -1426,7 +1426,7 @@ size_t AudioUnitEffect::RealtimeProcess(int group,
    return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
 }
 
-bool AudioUnitEffect::RealtimeProcessEnd() noexcept
+bool AudioUnitEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return true;
 }
@@ -1625,7 +1625,7 @@ bool AudioUnitEffect::LoadFactoryDefaults()
    return LoadPreset(mHost->GetFactoryDefaultsGroup());
 }
 
-RegistryPaths AudioUnitEffect::GetFactoryPresets()
+RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 {
    OSStatus result;
    RegistryPaths presets;
@@ -1656,7 +1656,7 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets()
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
+bool AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    // OSStatus result;
 

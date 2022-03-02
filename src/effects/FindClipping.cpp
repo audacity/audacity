@@ -240,8 +240,10 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
    return bGoodResult;
 }
 
-void EffectFindClipping::PopulateOrExchange(ShuttleGui & S)
+void EffectFindClipping::PopulateOrExchange(
+   ShuttleGui & S, EffectSettingsAccess &access)
 {
+   mpAccess = access.shared_from_this();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       S.Validator<IntegerValidator<int>>(
@@ -258,7 +260,8 @@ void EffectFindClipping::PopulateOrExchange(ShuttleGui & S)
 bool EffectFindClipping::TransferDataToWindow()
 {
    ShuttleGui S(mUIParent, eIsSettingToDialog);
-   PopulateOrExchange(S);
+   // To do: eliminate this and just use validators for controls
+   PopulateOrExchange(S, *mpAccess);
 
    return true;
 }
@@ -271,7 +274,8 @@ bool EffectFindClipping::TransferDataFromWindow()
    }
 
    ShuttleGui S(mUIParent, eIsGettingFromDialog);
-   PopulateOrExchange(S);
+   // To do: eliminate this and just use validators for controls
+   PopulateOrExchange(S, *mpAccess);
 
    return true;
 }

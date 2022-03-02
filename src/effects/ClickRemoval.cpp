@@ -335,7 +335,7 @@ bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
    return bResult;
 }
 
-void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
+void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
    S.SetBorder(10);

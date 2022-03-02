@@ -421,8 +421,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
 
    mSupportsNominalBlockLength = false;
    mSupportsSampleRate = false;
-
-   mFactoryPresetsLoaded = false;
 }
 
 LV2Effect::~LV2Effect()
@@ -1250,7 +1248,7 @@ bool LV2Effect::RealtimeResume() noexcept
    return true;
 }
 
-bool LV2Effect::RealtimeProcessStart()
+bool LV2Effect::RealtimeProcessStart(EffectSettings &)
 {
    int i = 0;
    for (auto & port : mAudioPorts)
@@ -1409,7 +1407,7 @@ size_t LV2Effect::RealtimeProcess(int group,
    return numSamples;
 }
 
-bool LV2Effect::RealtimeProcessEnd() noexcept
+bool LV2Effect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    // Nothing to do if we did process any samples
@@ -1521,7 +1519,7 @@ bool LV2Effect::SetAutomationParameters(CommandParameters &parms)
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool LV2Effect::PopulateUI(ShuttleGui &S)
+bool LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    auto parent = S.GetParent();
    mParent = parent;
@@ -1651,7 +1649,7 @@ bool LV2Effect::SaveUserPreset(const RegistryPath &name)
    return SaveParameters(name);
 }
 
-RegistryPaths LV2Effect::GetFactoryPresets()
+RegistryPaths LV2Effect::GetFactoryPresets() const
 {
    if (mFactoryPresetsLoaded)
    {

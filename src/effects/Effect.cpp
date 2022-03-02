@@ -398,11 +398,11 @@ bool Effect::RealtimeResume() noexcept
    return true;
 }
 
-bool Effect::RealtimeProcessStart()
+bool Effect::RealtimeProcessStart(EffectSettings &settings)
 {
    if (mClient)
    {
-      return mClient->RealtimeProcessStart();
+      return mClient->RealtimeProcessStart(settings);
    }
 
    return true;
@@ -419,11 +419,11 @@ size_t Effect::RealtimeProcess(int group,
    return 0;
 }
 
-bool Effect::RealtimeProcessEnd() noexcept
+bool Effect::RealtimeProcessEnd(EffectSettings &settings) noexcept
 {
    if (mClient)
    {
-      return mClient->RealtimeProcessEnd();
+      return mClient->RealtimeProcessEnd(settings);
    }
 
    return true;
@@ -452,7 +452,8 @@ int Effect::ShowClientInterface(
 }
 
 int Effect::ShowHostInterface(wxWindow &parent,
-   const EffectDialogFactory &factory, bool forceModal)
+   const EffectDialogFactory &factory, EffectSettingsAccess &access,
+   bool forceModal)
 {
    if (!IsInteractive())
       // Effect without UI just proceeds quietly to apply it destructively.
@@ -474,7 +475,7 @@ int Effect::ShowHostInterface(wxWindow &parent,
    // populate it.  That factory function is called indirectly through a
    // std::function to avoid source code dependency cycles.
    const auto client = mClient ? mClient : this;
-   mHostUIDialog = factory(parent, *this, *client);
+   mHostUIDialog = factory(parent, *this, *client, access);
    if (!mHostUIDialog)
       return 0;
 
@@ -543,7 +544,7 @@ bool Effect::SaveUserPreset(const RegistryPath & name)
       name, wxT("Parameters"), parms);
 }
 
-RegistryPaths Effect::GetFactoryPresets()
+RegistryPaths Effect::GetFactoryPresets() const
 {
    if (mClient)
    {
@@ -575,7 +576,7 @@ bool Effect::LoadFactoryDefaults()
 
 // EffectUIClientInterface implementation
 
-bool Effect::PopulateUI(ShuttleGui &S)
+bool Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
    mUIParent = parent;
@@ -583,7 +584,7 @@ bool Effect::PopulateUI(ShuttleGui &S)
 
 //   LoadUserPreset(GetCurrentSettingsGroup());
 
-   PopulateOrExchange(S);
+   PopulateOrExchange(S, access);
 
    mUIParent->SetMinSize(mUIParent->GetSizer()->GetMinSize());
 
@@ -961,12 +962,13 @@ void Effect::SetBatchProcessing(bool start)
 }
 
 bool Effect::DoEffect(double projectRate,
-                      TrackList *list,
-                      WaveTrackFactory *factory,
-                      NotifyingSelectedRegion &selectedRegion,
-                      unsigned flags,
-                      wxWindow *pParent,
-                      const EffectDialogFactory &dialogFactory)
+    TrackList *list,
+    WaveTrackFactory *factory,
+    NotifyingSelectedRegion &selectedRegion,
+    unsigned flags,
+    wxWindow *pParent,
+    const EffectDialogFactory &dialogFactory,
+    const EffectSettingsAccessPtr &pAccess)
 {
    auto cleanup0 = valueRestorer(mUIFlags, flags);
    wxASSERT(selectedRegion.duration() >= 0.0);
@@ -1060,9 +1062,10 @@ bool Effect::DoEffect(double projectRate,
    // Prompting will be bypassed when applying an effect that has already
    // been configured, e.g. repeating the last effect on a different selection.
    // Prompting may call Effect::Preview
-   if ( pParent && dialogFactory &&
+   if ( pParent && dialogFactory && pAccess &&
       IsInteractive() &&
-      !ShowHostInterface( *pParent, dialogFactory, IsBatchProcessing() ) )
+      !ShowHostInterface(
+         *pParent, dialogFactory, *pAccess, IsBatchProcessing() ) )
    {
       return false;
    }
@@ -1095,13 +1098,14 @@ bool Effect::DoEffect(double projectRate,
 }
 
 bool Effect::Delegate(
-   Effect &delegate, wxWindow &parent, const EffectDialogFactory &factory )
+   Effect &delegate, wxWindow &parent, const EffectDialogFactory &factory,
+   const EffectSettingsAccessPtr &pSettings )
 {
    NotifyingSelectedRegion region;
    region.setTimes( mT0, mT1 );
 
    return delegate.DoEffect( mProjectRate, mTracks, mFactory,
-      region, mUIFlags, &parent, factory );
+      region, mUIFlags, &parent, factory, pSettings );
 }
 
 // All legacy effects should have this overridden
@@ -1660,7 +1664,7 @@ void Effect::End()
 {
 }
 
-void Effect::PopulateOrExchange(ShuttleGui & WXUNUSED(S))
+void Effect::PopulateOrExchange(ShuttleGui &, EffectSettingsAccess &)
 {
    return;
 }

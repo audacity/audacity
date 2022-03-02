@@ -66,8 +66,8 @@ void RealtimeEffectManager::Initialize(double rate)
    // initialize newly added effects
    mActive = true;
 
-   // Tell each effect of the master list to get ready for action
-   VisitGroup(nullptr, [rate](RealtimeEffectState &state, bool){
+   // Tell each state to get ready for action
+   VisitAll([rate](RealtimeEffectState &state, bool){
       state.Initialize(rate);
    });
 
@@ -75,16 +75,18 @@ void RealtimeEffectManager::Initialize(double rate)
    Resume();
 }
 
-void RealtimeEffectManager::AddTrack(Track *track, unsigned chans, float rate)
+void RealtimeEffectManager::AddTrack(Track &track, unsigned chans, float rate)
 {
-   auto leader = *track->GetOwner()->FindLeader(track);
+   auto leader = *track.GetOwner()->FindLeader(&track);
+   // This should never return a null
+   wxASSERT(leader);
    mGroupLeaders.push_back(leader);
    mChans.insert({leader, chans});
    mRates.insert({leader, rate});
 
-   VisitGroup(leader,
+   VisitGroup(*leader,
       [&](RealtimeEffectState & state, bool) {
-         state.AddTrack(leader, chans, rate);
+         state.AddTrack(*leader, chans, rate);
       }
    );
 }
@@ -121,7 +123,7 @@ void RealtimeEffectManager::Suspend()
    mSuspended = true;
 
    // And make sure the effects don't either
-   VisitGroup(nullptr, [](RealtimeEffectState &state, bool){
+   VisitAll([](RealtimeEffectState &state, bool){
       state.Suspend();
    });
 }
@@ -136,7 +138,7 @@ void RealtimeEffectManager::Resume() noexcept
       return;
 
    // Tell the effects to get ready for more action
-   VisitGroup(nullptr, [](RealtimeEffectState &state, bool){
+   VisitAll([](RealtimeEffectState &state, bool){
       state.Resume();
    });
 
@@ -156,7 +158,7 @@ void RealtimeEffectManager::ProcessStart()
    // have been suspended.
    if (!mSuspended)
    {
-      VisitGroup(nullptr, [](RealtimeEffectState &state, bool bypassed){
+      VisitAll([](RealtimeEffectState &state, bool bypassed){
          if (!bypassed)
             state.ProcessStart();
       });
@@ -166,7 +168,7 @@ void RealtimeEffectManager::ProcessStart()
 //
 // This will be called in a different thread than the main GUI thread.
 //
-size_t RealtimeEffectManager::Process(Track *track,
+size_t RealtimeEffectManager::Process(Track &track,
    float *const *buffers, float *const *scratch,
    size_t numSamples)
 {
@@ -178,7 +180,7 @@ size_t RealtimeEffectManager::Process(Track *track,
    if (mSuspended)
       return numSamples;
 
-   auto chans = mChans[track];
+   auto chans = mChans[&track];
 
    // Remember when we started so we can calculate the amount of latency we
    // are introducing
@@ -245,21 +247,20 @@ void RealtimeEffectManager::ProcessEnd() noexcept
    // have been suspended.
    if (!mSuspended)
    {
-      VisitGroup(nullptr, [](RealtimeEffectState &state, bool bypassed){
+      VisitAll([](RealtimeEffectState &state, bool bypassed){
          if (!bypassed)
             state.ProcessEnd();
       });
    }
 }
 
-void RealtimeEffectManager::VisitGroup(Track *leader, StateVisitor func)
+void RealtimeEffectManager::VisitGroup(Track &leader, StateVisitor func)
 {
    // Call the function for each effect on the master list
    RealtimeEffectList::Get(mProject).Visit(func);
 
    // Call the function for each effect on the track list
-   if (leader)
-     RealtimeEffectList::Get(*leader).Visit(func);
+   RealtimeEffectList::Get(leader).Visit(func);
 }
 
 void RealtimeEffectManager::VisitAll(StateVisitor func)
@@ -311,7 +312,7 @@ RealtimeEffectManager::AddState(
          auto chans = mChans[leader];
          auto rate = mRates[leader];
 
-         state.AddTrack(leader, chans, rate);
+         state.AddTrack(*leader, chans, rate);
       }
    }
    return &state;

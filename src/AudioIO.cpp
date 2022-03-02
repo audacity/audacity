@@ -154,11 +154,16 @@ struct AudioIoCallback::TransportState {
          mpRealtimeInitialization.emplace(move(wOwningProject), rate);
          // The following adds a new effect processor for each logical track.
          for (size_t i = 0, cnt = playbackTracks.size(); i < cnt;) {
+            // An array of non-nulls only should be given to us
             auto vt = playbackTracks[i].get();
+            if (!vt) {
+               wxASSERT(false);
+               continue;
+            }
             unsigned chanCnt = TrackList::Channels(vt).size();
             i += chanCnt; // Visit leaders only
             mpRealtimeInitialization->AddTrack(
-               vt, std::min(numPlaybackChannels, chanCnt), rate);
+               *vt, std::min(numPlaybackChannels, chanCnt), rate);
          }
       }
    }
@@ -1952,6 +1957,8 @@ void AudioIO::TransformPlayBuffers()
    const auto numPlaybackTracks = mPlaybackTracks.size();
    for (unsigned t = 0; t < numPlaybackTracks; ++t) {
       const auto vt = mPlaybackTracks[t].get();
+      if (!vt)
+         continue;
       if ( vt->IsLeader() ) {
          // vt is mono, or is the first of its group of channels
          const auto nChannels = std::min<size_t>(
@@ -1984,7 +1991,7 @@ void AudioIO::TransformPlayBuffers()
                pointers[iChannel++] = *scratch++;
 
             if (len && pScope)
-               pScope->Process(vt, &pointers[0], mScratchPointers.data(), len);
+               pScope->Process(*vt, &pointers[0], mScratchPointers.data(), len);
          }
       }
    }

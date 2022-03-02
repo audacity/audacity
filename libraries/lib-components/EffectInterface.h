@@ -1,8 +1,8 @@
-/**********************************************************************
+/*!********************************************************************
 
    Audacity: A Digital Audio Editor
 
-   EffectInterface.h
+   @file EffectInterface.h
 
    Leland Lucius
 
@@ -46,6 +46,9 @@
 #include "ComponentInterfaceSymbol.h"
 #include "EffectAutomationParameters.h" // for command automation
 
+#include "TypedAny.h"
+#include <memory>
+
 class ShuttleGui;
 
 typedef enum EffectType : int
@@ -61,6 +64,36 @@ typedef enum EffectType : int
 
 using EffectFamilySymbol = ComponentInterfaceSymbol;
 
+//! Externalized state of a plug-in
+struct EffectSettings : audacity::TypedAny<EffectSettings> {
+   using TypedAny::TypedAny;
+};
+
+//! Interface for accessing an EffectSettings that may change asynchronously in
+//! another thread; to be used in the main thread, only.
+/*! Updates are communicated atomically both ways.  The address of Get() should
+ not be relied on as unchanging between calls. */
+class COMPONENTS_API EffectSettingsAccess
+   : public std::enable_shared_from_this<EffectSettingsAccess> {
+public:
+   virtual ~EffectSettingsAccess();
+   virtual const EffectSettings &Get() = 0;
+   virtual void Set(EffectSettings &&settings) = 0;
+};
+
+//! Implementation of EffectSettings for cases where there is only one thread.
+class COMPONENTS_API SimpleEffectSettingsAccess final
+   : public EffectSettingsAccess {
+public:
+   explicit SimpleEffectSettingsAccess(EffectSettings &settings)
+      : mSettings{settings} {}
+   ~SimpleEffectSettingsAccess() override;
+   const EffectSettings &Get() override;
+   void Set(EffectSettings &&settings) override;
+private:
+   EffectSettings &mSettings;
+};
+
 /*************************************************************************************//**
 
 \class EffectDefinitionInterface 
@@ -73,6 +106,8 @@ parameters.
 class COMPONENTS_API EffectDefinitionInterface  /* not final */ : public ComponentInterface
 {
 public:
+   using Settings = EffectSettings;
+
    //! A utility that strips spaces and CamelCases a name.
    static Identifier GetSquashedName(const Identifier &ident);
 
@@ -119,6 +154,76 @@ public:
    // functionality.
    //virtual bool DefineParams( ShuttleParams & S);
 
+   /*! @name settings
+    Interface for saving and loading externalized settings.
+    All methods are const!
+    */
+   //! @{
+   //! Produce an object holding new, independent settings
+   virtual Settings MakeSettings() const = 0;
+
+   //! Update one settings object from another
+   /*!
+    This may run in a worker thread, and should avoid memory allocations.
+    Therefore do not copy the underlying std::any, but copy the contents of the
+    contained objects.
+
+    Assume that src and dst were created and previously modified only by `this`
+
+    @param src settings to copy from
+    @param dst settings to copy into
+    @return success
+    */
+   virtual bool CopySettingsContents(
+      const EffectSettings &src, EffectSettings &dst) const = 0;
+
+   //! Store settings as keys and values
+   /*!
+    @return true on success
+    */
+   virtual bool SaveSettings(
+      const Settings &settings, CommandParameters & parms) const = 0;
+
+   //! Restore settings from keys and values
+   /*!
+    @return true on success
+    */
+   virtual bool LoadSettings(
+      CommandParameters & parms, Settings &settings) const = 0;
+
+   //! Report names of factory presets
+   virtual RegistryPaths GetFactoryPresets() const = 0;
+
+   //! Change settings to a user-named preset
+   virtual bool LoadUserPreset(
+      const RegistryPath & name, Settings &settings) const = 0;
+   //! Save settings in the configuration file as a user-named preset
+   virtual bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const = 0;
+
+   //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
+   virtual bool LoadFactoryPreset(int id, Settings &settings) const = 0;
+   //! Change settings back to "factory default"
+   virtual bool LoadFactoryDefaults(Settings &settings) const = 0;
+   //! @}
+};
+
+//! Extension of EffectDefinitionInterface with old system for settings
+/*!
+ (Default implementations of EffectDefinitionInterface methods for settings call
+ through to the old interface, violating const correctness.  This is meant to be
+ transitional only.)
+
+ This interface is not used by the EffectUIHost dialog.
+ */
+class COMPONENTS_API EffectDefinitionInterfaceEx  /* not final */
+   : public EffectDefinitionInterface
+{
+public:
+   /*! @name Old settings interface
+    Old interface for saving and loading non-externalized settings
+    */
+   //! @{
    //! Save current settings into parms
    virtual bool GetAutomationParameters(CommandParameters & parms) = 0;
    //! Change settings to those stored in parms
@@ -129,12 +234,35 @@ public:
    //! Save current settings as a user-named preset
    virtual bool SaveUserPreset(const RegistryPath & name) = 0;
 
-   //! Report names of factory presets
-   virtual RegistryPaths GetFactoryPresets() = 0;
    //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
    virtual bool LoadFactoryPreset(int id) = 0;
    //! Change settings back to "factory default"
    virtual bool LoadFactoryDefaults() = 0;
+   //! @}
+
+   /*! @name settings
+    Default implementation of the nominally const methods call through to the
+    old non-const interface
+    */
+   //! @{
+   Settings MakeSettings() const override;
+   bool CopySettingsContents(
+      const EffectSettings &src, EffectSettings &dst) const override;
+   bool SaveSettings(
+      const Settings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      CommandParameters & parms, Settings &settings) const override;
+
+   bool LoadUserPreset(
+      const RegistryPath & name, Settings &settings) const override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const override;
+   bool LoadFactoryPreset(int id, Settings &settings) const override;
+   bool LoadFactoryDefaults(Settings &settings) const override;
+   //! @}
+
+private:
+   EffectDefinitionInterfaceEx *FindMe(const Settings &settings) const;
 };
 
 class wxDialog;
@@ -194,7 +322,7 @@ AudacityCommand.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectProcessor  /* not final */
-   : public EffectDefinitionInterface
+   : public EffectDefinitionInterfaceEx
 {
 public:
    virtual ~EffectProcessor();
@@ -230,10 +358,12 @@ public:
    virtual bool RealtimeFinalize() noexcept = 0;
    virtual bool RealtimeSuspend() = 0;
    virtual bool RealtimeResume() noexcept = 0;
-   virtual bool RealtimeProcessStart() = 0;
+   //! settings are possibly changed, since last call, by an asynchronous dialog
+   virtual bool RealtimeProcessStart(EffectSettings &settings) = 0;
    virtual size_t RealtimeProcess(int group,
       const float *const *inBuf, float *const *outBuf, size_t numSamples) = 0;
-   virtual bool RealtimeProcessEnd() noexcept = 0;
+   //! settings can be updated to let a dialog change appearance at idle
+   virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept = 0;
 };
 
 /*************************************************************************************//**
@@ -263,7 +393,7 @@ public:
    virtual bool IsGraphicalUI() = 0;
 
    //! Adds controls to a panel that is given as the parent window of `S`
-   virtual bool PopulateUI(ShuttleGui &S) = 0;
+   virtual bool PopulateUI(ShuttleGui &S, EffectSettingsAccess &access) = 0;
 
    virtual bool ValidateUI() = 0;
    virtual bool HideUI() = 0;

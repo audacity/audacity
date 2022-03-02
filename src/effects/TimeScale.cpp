@@ -200,7 +200,7 @@ bool EffectTimeScale::Process()
    return EffectSBSMS::Process();
 }
 
-void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
+void EffectTimeScale::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);

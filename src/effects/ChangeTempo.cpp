@@ -204,7 +204,8 @@ bool EffectChangeTempo::Process()
       EffectSBSMS proxy;
       proxy.mProxyEffectName = XO("High Quality Tempo Change");
       proxy.setParameters(tempoRatio, 1.0);
-      success = Delegate(proxy, *mUIParent, nullptr);
+      //! Already processing; don't make a dialog
+      success = Delegate(proxy, *mUIParent, nullptr, nullptr);
    }
    else
 #endif
@@ -225,7 +226,7 @@ bool EffectChangeTempo::Process()
    return success;
 }
 
-void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
+void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    enum { precision = 2 };
 

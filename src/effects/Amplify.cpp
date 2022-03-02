@@ -212,7 +212,7 @@ void EffectAmplify::Preview(bool dryOnly)
    Effect::Preview(dryOnly);
 }
 
-void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
+void EffectAmplify::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    enum{ precision = 3 }; // allow (a generous) 3 decimal  places for Amplification (dB)
 

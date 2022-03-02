@@ -450,7 +450,7 @@ bool VST3Effect::SaveUserPreset(const RegistryPath& name)
    return true;
 }
 
-RegistryPaths VST3Effect::GetFactoryPresets()
+RegistryPaths VST3Effect::GetFactoryPresets() const
 {
    if(!mRescanFactoryPresets)
       return mFactoryPresets;
@@ -792,7 +792,7 @@ bool VST3Effect::RealtimeResume() noexcept
    });
 }
 
-bool VST3Effect::RealtimeProcessStart()
+bool VST3Effect::RealtimeProcessStart(EffectSettings &)
 {
    assert(mPendingChanges == nullptr);
 
@@ -808,7 +808,7 @@ size_t VST3Effect::RealtimeProcess(int group, const float* const* inBuf, float* 
    return VST3ProcessBlock(effect->mEffectComponent.get(), effect->mSetup, inBuf, outBuf, numSamples, mPendingChanges.get());
 }
 
-bool VST3Effect::RealtimeProcessEnd() noexcept
+bool VST3Effect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return GuardedCall<bool>([this]()
    {
@@ -850,7 +850,7 @@ bool VST3Effect::IsGraphicalUI()
    return mPlugView != nullptr;
 }
 
-bool VST3Effect::PopulateUI(ShuttleGui& S)
+bool VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &)
 {
    using namespace Steinberg;
 

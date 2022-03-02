@@ -49,7 +49,8 @@ public:
    bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
-   void PopulateOrExchange(ShuttleGui & S) override;
+   void PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 

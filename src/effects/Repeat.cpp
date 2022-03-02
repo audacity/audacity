@@ -176,7 +176,7 @@ bool EffectRepeat::Process()
    return bGoodResult;
 }
 
-void EffectRepeat::PopulateOrExchange(ShuttleGui & S)
+void EffectRepeat::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartHorizontalLay(wxCENTER, false);
    {

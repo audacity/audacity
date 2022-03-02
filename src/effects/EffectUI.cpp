@@ -159,12 +159,16 @@ END_EVENT_TABLE()
 EffectUIHost::EffectUIHost(wxWindow *parent,
    AudacityProject &project,
    EffectUIHostInterface &effect,
-   EffectUIClientInterface &client)
+   EffectUIClientInterface &client,
+   EffectSettingsAccess &access)
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
                    wxDefaultPosition, wxDefaultSize,
                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 , mEffectUIHost{ effect }
 , mClient{ client }
+// Grab a pointer to the access object,
+// extending its lifetime while this remains:
+, mpAccess{ access.shared_from_this() }
 , mProject{ project }
 {
 #if defined(__WXMAC__)
@@ -404,7 +408,7 @@ bool EffectUIHost::Initialize()
 
          // Let the client add things to the panel
          ShuttleGui S1{ uw.get(), eIsCreating };
-         if (!mClient.PopulateUI(S1))
+         if (!mClient.PopulateUI(S1, *mpAccess))
          {
             return false;
          }
@@ -552,7 +556,8 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    }
    
    // This will take care of calling TransferDataFromWindow() for an effect.
-   if (!mEffectUIHost.GetDefinition().SaveUserPreset(mEffectUIHost.GetCurrentSettingsGroup()))
+   if (!mEffectUIHost.GetDefinition().SaveUserPreset(
+      mEffectUIHost.GetCurrentSettingsGroup(), mpAccess->Get()))
    {
       return;
    }
@@ -878,16 +883,24 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
 {
    int preset = evt.GetId() - kUserPresetsID;
    
-   mEffectUIHost.GetDefinition()
-      .LoadUserPreset(mEffectUIHost.GetUserPresetsGroup(mUserPresets[preset]));
+   // Make mutable copy
+   auto settings = mpAccess->Get();
+   mEffectUIHost.GetDefinition().LoadUserPreset(
+      mEffectUIHost.GetUserPresetsGroup(mUserPresets[preset]), settings);
+   // Communicate change of settings
+   mpAccess->Set(std::move(settings));
    
    return;
 }
 
 void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
 {
+   // Make mutable copy
+   auto settings = mpAccess->Get();
    mEffectUIHost.GetDefinition()
-      .LoadFactoryPreset(evt.GetId() - kFactoryPresetsID);
+      .LoadFactoryPreset(evt.GetId() - kFactoryPresetsID, settings);
+   // Communicate change of settings
+   mpAccess->Set(std::move(settings));
    
    return;
 }
@@ -981,8 +994,8 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
          }
       }
       
-      mEffectUIHost.GetDefinition()
-         .SaveUserPreset(mEffectUIHost.GetUserPresetsGroup(name));
+      mEffectUIHost.GetDefinition().SaveUserPreset(
+         mEffectUIHost.GetUserPresetsGroup(name), mpAccess->Get());
       LoadUserPresets();
       
       break;
@@ -1018,8 +1031,11 @@ void EffectUIHost::OnOptions(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
 {
-   mEffectUIHost.GetDefinition().LoadFactoryDefaults();
-   
+   // Make mutable copy
+   auto settings = mpAccess->Get();
+   mEffectUIHost.GetDefinition().LoadFactoryDefaults(settings);
+   // Communicate change of settings
+   mpAccess->Set(std::move(settings));
    return;
 }
 
@@ -1193,7 +1209,8 @@ void EffectUIHost::CleanupRealtime()
 
 wxDialog *EffectUI::DialogFactory( wxWindow &parent,
    EffectUIHostInterface &host,
-   EffectUIClientInterface &client)
+   EffectUIClientInterface &client,
+   EffectSettingsAccess &access)
 {
    // Make sure there is an associated project, whose lifetime will
    // govern the lifetime of the dialog, even when the dialog is
@@ -1203,7 +1220,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
       return nullptr;
 
    Destroy_ptr<EffectUIHost> dlg{
-      safenew EffectUIHost{ &parent, *project, host, client} };
+      safenew EffectUIHost{ &parent, *project, host, client, access } };
    
    if (dlg->Initialize())
    {
@@ -1289,6 +1306,9 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
 
    em.SetSkipStateFlag( false );
    if (auto effect = em.GetEffect(ID)) {
+      auto pSettings = em.GetDefaultSettings(ID);
+      const auto pAccess = pSettings
+         ? std::make_shared<SimpleEffectSettingsAccess>(*pSettings) : nullptr;
       success = effect->DoEffect(
          rate,
          &tracks,
@@ -1298,8 +1318,8 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
          &window,
          (flags & EffectManager::kConfigured) == 0
             ? DialogFactory
-            : nullptr
-      );
+            : nullptr,
+         pAccess);
    }
    else
       success = false;

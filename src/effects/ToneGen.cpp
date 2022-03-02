@@ -358,7 +358,7 @@ bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
+void EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    wxTextCtrl *t;
 

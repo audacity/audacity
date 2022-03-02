@@ -326,7 +326,7 @@ bool EffectDtmf::Init()
    return true;
 }
 
-void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
+void EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    // dialog will be passed values from effect
    // Effect retrieves values from saved config

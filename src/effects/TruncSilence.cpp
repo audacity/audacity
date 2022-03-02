@@ -754,7 +754,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
 }
 
 
-void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
+void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    wxASSERT(nActions == WXSIZEOF(kActionStrings));
 

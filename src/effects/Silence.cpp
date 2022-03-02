@@ -65,7 +65,7 @@ EffectType EffectSilence::GetType()
 
 // Effect implementation
 
-void EffectSilence::PopulateOrExchange(ShuttleGui & S)
+void EffectSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartVerticalLay();
    {
