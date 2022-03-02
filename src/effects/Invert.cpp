@@ -70,7 +70,7 @@ unsigned EffectInvert::GetAudioOutCount()
    return 1;
 }
 
-size_t EffectInvert::ProcessBlock(
+size_t EffectInvert::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];

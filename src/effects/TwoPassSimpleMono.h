@@ -22,7 +22,7 @@ class AUDACITY_DLL_API EffectTwoPassSimpleMono /* not final */ : public Effect
 public:
    // Effect implementation
 
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
 
 protected:
    // EffectTwoPassSimpleMono implementation
@@ -81,7 +81,7 @@ protected:
 private:
    bool ProcessOne(WaveTrack * t, WaveTrack * outTrack,
                    sampleCount start, sampleCount end);
-   bool ProcessPass() override;
+   bool ProcessPass(EffectSettings &settings) override;
 };
 
 #endif

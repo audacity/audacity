@@ -62,7 +62,7 @@ public:
    // Effect implementation
 
    bool Init() override;
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
    bool CheckWhetherSkipEffect() override;
    void PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;

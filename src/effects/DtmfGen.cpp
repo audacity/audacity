@@ -179,7 +179,7 @@ bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
    return true;
 }
 
-size_t EffectDtmf::ProcessBlock(
+size_t EffectDtmf::ProcessBlock(EffectSettings &,
    const float *const *, float *const *outbuf, size_t size)
 {
    float *buffer = outbuf[0];

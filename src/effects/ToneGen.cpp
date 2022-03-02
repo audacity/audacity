@@ -170,7 +170,7 @@ bool EffectToneGen::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNam
    return true;
 }
 
-size_t EffectToneGen::ProcessBlock(
+size_t EffectToneGen::ProcessBlock(EffectSettings &,
    const float *const *, float *const *outBlock, size_t blockLen)
 {
    float *buffer = outBlock[0];

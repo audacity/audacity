@@ -225,7 +225,7 @@ bool EffectScienFilter::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channe
    return true;
 }
 
-size_t EffectScienFilter::ProcessBlock(
+size_t EffectScienFilter::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];

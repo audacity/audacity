@@ -1075,7 +1075,7 @@ bool LV2Effect::ProcessFinalize()
    return true;
 }
 
-size_t LV2Effect::ProcessBlock(
+size_t LV2Effect::ProcessBlock(EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t size)
 {
    wxASSERT(size <= ( size_t) mBlockSize);
@@ -1175,7 +1175,7 @@ size_t LV2Effect::ProcessBlock(
    return size;
 }
 
-bool LV2Effect::RealtimeInitialize()
+bool LV2Effect::RealtimeInitialize(EffectSettings &)
 {
    mMasterIn.reinit(mAudioIn, (unsigned int) mBlockSize);
    for (auto & port : mCVPorts)
@@ -1189,7 +1189,7 @@ bool LV2Effect::RealtimeInitialize()
    return true;
 }
 
-bool LV2Effect::RealtimeFinalize() noexcept
+bool LV2Effect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    for (auto & slave : mSlaves)
@@ -1335,7 +1335,7 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t LV2Effect::RealtimeProcess(int group,
+size_t LV2Effect::RealtimeProcess(int group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(group >= 0 && group < (int) mSlaves.size());

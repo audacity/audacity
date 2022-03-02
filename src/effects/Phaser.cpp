@@ -155,13 +155,13 @@ bool EffectPhaser::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
    return true;
 }
 
-size_t EffectPhaser::ProcessBlock(
+size_t EffectPhaser::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectPhaser::RealtimeInitialize()
+bool EffectPhaser::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -181,19 +181,19 @@ bool EffectPhaser::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool EffectPhaser::RealtimeFinalize() noexcept
+bool EffectPhaser::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectPhaser::RealtimeProcess(int group,
+size_t EffectPhaser::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-
-   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
+
 bool EffectPhaser::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mStages,    Stages );
    S.SHUTTLE_PARAM( mDryWet,    DryWet );
@@ -392,7 +392,8 @@ void EffectPhaser::InstanceInit(EffectPhaserState & data, float sampleRate)
    return;
 }
 
-size_t EffectPhaser::InstanceProcess(EffectPhaserState & data,
+size_t EffectPhaser::InstanceProcess(EffectSettings &settings,
+   EffectPhaserState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];

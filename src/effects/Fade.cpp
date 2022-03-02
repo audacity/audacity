@@ -86,7 +86,7 @@ bool EffectFade::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
    return true;
 }
 
-size_t EffectFade::ProcessBlock(
+size_t EffectFade::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];

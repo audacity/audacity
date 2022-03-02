@@ -182,7 +182,7 @@ bool RealtimeEffectState::Initialize(double rate)
    mCurrentProcessor = 0;
    mGroups.clear();
    mEffect->SetSampleRate(rate);
-   return mEffect->RealtimeInitialize();
+   return mEffect->RealtimeInitialize(mSettings);
 }
 
 //! Set up processors to be visited repeatedly in Process.
@@ -364,7 +364,8 @@ size_t RealtimeEffectState::Process(Track &track,
       for (decltype(numSamples) block = 0; block < numSamples; block += blockSize)
       {
          auto cnt = std::min(numSamples - block, blockSize);
-         len += mEffect->RealtimeProcess(processor, clientIn, clientOut, cnt);
+         len += mEffect->RealtimeProcess(processor,
+            mSettings, clientIn, clientOut, cnt);
 
          for (size_t i = 0 ; i < numAudioIn; i++)
          {
@@ -411,7 +412,7 @@ bool RealtimeEffectState::Finalize() noexcept
    if (!mEffect)
       return false;
 
-   return mEffect->RealtimeFinalize();
+   return mEffect->RealtimeFinalize(mSettings);
 }
 
 const std::string &RealtimeEffectState::XMLTag()

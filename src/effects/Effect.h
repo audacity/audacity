@@ -134,17 +134,19 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
    bool ProcessFinalize() override;
-   size_t ProcessBlock( const float *const *inBlock, float *const *outBlock,
-      size_t blockLen) override;
+   size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      override;
 
-   bool RealtimeInitialize() override;
+   bool RealtimeInitialize(EffectSettings &settings) override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize() noexcept override;
+   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
    bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(int group, const float *const *inbuf,
-      float *const *outbuf, size_t numSamples) override;
+   size_t RealtimeProcess(int group,  EffectSettings &settings,
+      const float *const *inbuf, float *const *outbuf, size_t numSamples)
+      override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
    int ShowClientInterface(
@@ -184,18 +186,20 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
       bool forceModal = false) override;
    // The Effect class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
-   void Preview(bool dryOnly) override;
+   void Preview(EffectSettingsAccess &access, bool dryOnly) override;
    bool GetAutomationParametersAsString(wxString & parms) override;
    bool SetAutomationParametersFromString(const wxString & parms) override;
    bool IsBatchProcessing() override;
    void SetBatchProcessing(bool start) override;
-   bool DoEffect( double projectRate, TrackList *list,
+   bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
+      double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
       unsigned flags,
       // Prompt the user for input only if the next arguments are not all null.
       wxWindow *pParent,
       const EffectDialogFactory &dialogFactory,
-      const EffectSettingsAccessPtr &pAccess) override;
+      const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
+   ) override;
    bool Startup(EffectUIClientInterface *client) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
@@ -211,8 +215,10 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    //! Re-invoke DoEffect on another Effect object that implements the work
    bool Delegate( Effect &delegate,
+      EffectSettings &settings, //!< Always given; only for processing
       wxWindow &parent, const EffectDialogFactory &factory,
-      const EffectSettingsAccessPtr &pSettings );
+      const EffectSettingsAccessPtr &pSettings //!< Sometimes given; only for UI
+   );
 
    // Display a message box, using effect's (translated) name as the prefix
    // for the title.
@@ -256,8 +262,8 @@ protected:
     ProcessBlock(), and ProcessFinalize() methods of EffectProcessor,
     and also GetLatency() to determine how many leading output samples to
     discard and how many extra samples to produce. */
-   virtual bool Process();
-   virtual bool ProcessPass();
+   virtual bool Process(EffectSettings &settings);
+   virtual bool ProcessPass(EffectSettings &settings);
    virtual bool InitPass1();
    virtual bool InitPass2();
 
@@ -438,16 +444,17 @@ protected:
    void CountWaveTracks();
 
    // Driver for client effects
-   bool ProcessTrack(int count,
-                     ChannelNames map,
-                     WaveTrack *left,
-                     WaveTrack *right,
-                     sampleCount start,
-                     sampleCount len,
-                     FloatBuffers &inBuffer,
-                     FloatBuffers &outBuffer,
-                     ArrayOf< float * > &inBufPos,
-                     ArrayOf< float *> &outBufPos);
+   bool ProcessTrack(EffectSettings &settings,
+      int count,
+      ChannelNames map,
+      WaveTrack *left,
+      WaveTrack *right,
+      sampleCount start,
+      sampleCount len,
+      FloatBuffers &inBuffer,
+      FloatBuffers &outBuffer,
+      ArrayOf< float * > &inBufPos,
+      ArrayOf< float *> &outBufPos);
 
  //
  // private data

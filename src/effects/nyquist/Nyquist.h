@@ -103,7 +103,7 @@ public:
 
    bool Init() override;
    bool CheckWhetherSkipEffect() override;
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,
       EffectSettingsAccess &access, bool forceModal = false) override;

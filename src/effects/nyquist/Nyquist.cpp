@@ -641,7 +641,7 @@ bool NyquistEffect::CheckWhetherSkipEffect()
 
 static void RegisterFunctions();
 
-bool NyquistEffect::Process()
+bool NyquistEffect::Process(EffectSettings &)
 {
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
@@ -1063,7 +1063,10 @@ int NyquistEffect::ShowHostInterface(
       effect.mDebug = (res == eDebugID);
       // Delegate to the Nyquist Prompt,
       // which gets some Lisp from the user to interpret
-      res = Delegate(effect, parent, factory, access.shared_from_this());
+      auto settings = access.Get();
+      res = Delegate(effect, settings,
+         parent, factory, access.shared_from_this());
+      access.Set(std::move(settings));
       mT0 = effect.mT0;
       mT1 = effect.mT1;
    }

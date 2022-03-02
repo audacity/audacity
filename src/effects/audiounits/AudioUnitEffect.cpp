@@ -1299,7 +1299,7 @@ bool AudioUnitEffect::ProcessFinalize()
    return true;
 }
 
-size_t AudioUnitEffect::ProcessBlock(
+size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (size_t i = 0; i < mAudioIns; i++)
@@ -1336,7 +1336,7 @@ size_t AudioUnitEffect::ProcessBlock(
    return blockLen;
 }
 
-bool AudioUnitEffect::RealtimeInitialize()
+bool AudioUnitEffect::RealtimeInitialize(EffectSettings &)
 {
    return ProcessInitialize(0);
 }
@@ -1364,7 +1364,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRat
    return pSlave->ProcessInitialize(0);
 }
 
-bool AudioUnitEffect::RealtimeFinalize() noexcept
+bool AudioUnitEffect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
@@ -1419,11 +1419,11 @@ bool AudioUnitEffect::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t AudioUnitEffect::RealtimeProcess(int group,
+size_t AudioUnitEffect::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
-   return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
+   return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
 }
 
 bool AudioUnitEffect::RealtimeProcessEnd(EffectSettings &) noexcept

@@ -230,7 +230,7 @@ bool EffectChangeSpeed::Init()
    return true;
 }
 
-bool EffectChangeSpeed::Process()
+bool EffectChangeSpeed::Process(EffectSettings &)
 {
    // Similar to EffectSoundTouch::Process()
 

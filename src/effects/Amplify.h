@@ -48,14 +48,15 @@ public:
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
-   size_t ProcessBlock( const float *const *inBlock, float *const *outBlock,
-      size_t blockLen) override;
+   size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      override;
    bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
 
    bool Init() override;
-   void Preview(bool dryOnly) override;
+   void Preview(EffectSettingsAccess &access, bool dryOnly) override;
    void PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;

@@ -338,23 +338,20 @@ bool Effect::ProcessFinalize()
    return true;
 }
 
-size_t Effect::ProcessBlock(
+size_t Effect::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    if (mClient)
-   {
-      return mClient->ProcessBlock(inBlock, outBlock, blockLen);
-   }
-
+      return mClient->ProcessBlock(settings, inBlock, outBlock, blockLen);
    return 0;
 }
 
-bool Effect::RealtimeInitialize()
+bool Effect::RealtimeInitialize(EffectSettings &settings)
 {
    if (mClient)
    {
       mBlockSize = mClient->SetBlockSize(512);
-      return mClient->RealtimeInitialize();
+      return mClient->RealtimeInitialize(settings);
    }
 
    mBlockSize = 512;
@@ -372,13 +369,10 @@ bool Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
    return true;
 }
 
-bool Effect::RealtimeFinalize() noexcept
+bool Effect::RealtimeFinalize(EffectSettings &settings) noexcept
 {
    if (mClient)
-   {
-      return mClient->RealtimeFinalize();
-   }
-
+      return mClient->RealtimeFinalize(settings);
    return false;
 }
 
@@ -408,14 +402,12 @@ bool Effect::RealtimeProcessStart(EffectSettings &settings)
    return true;
 }
 
-size_t Effect::RealtimeProcess(int group,
+size_t Effect::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    if (mClient)
-   {
-      return mClient->RealtimeProcess(group, inbuf, outbuf, numSamples);
-   }
-
+      return mClient->
+         RealtimeProcess(group, settings, inbuf, outbuf, numSamples);
    return 0;
 }
 
@@ -961,7 +953,11 @@ void Effect::SetBatchProcessing(bool start)
    }
 }
 
-bool Effect::DoEffect(double projectRate,
+// TODO:  Lift the possible user-prompting part out of this function, so that
+// the recursive paths into this function via Effect::Delegate are simplified,
+// and we don't have both EffectSettings and EffectSettingsAccessPtr
+// If pAccess is not null, settings should have come from its Get()
+bool Effect::DoEffect(EffectSettings &settings, double projectRate,
     TrackList *list,
     WaveTrackFactory *factory,
     NotifyingSelectedRegion &selectedRegion,
@@ -1083,9 +1079,7 @@ bool Effect::DoEffect(double projectRate,
       );
       auto vr = valueRestorer( mProgress, progress.get() );
 
-      {
-         returnVal = Process();
-      }
+      returnVal = Process(settings);
    }
 
    if (returnVal && (mT1 >= mT0 ))
@@ -1097,15 +1091,15 @@ bool Effect::DoEffect(double projectRate,
    return returnVal;
 }
 
-bool Effect::Delegate(
-   Effect &delegate, wxWindow &parent, const EffectDialogFactory &factory,
-   const EffectSettingsAccessPtr &pSettings )
+bool Effect::Delegate(Effect &delegate, EffectSettings &settings,
+   wxWindow &parent, const EffectDialogFactory &factory,
+   const EffectSettingsAccessPtr &pSettings)
 {
    NotifyingSelectedRegion region;
    region.setTimes( mT0, mT1 );
 
-   return delegate.DoEffect( mProjectRate, mTracks, mFactory,
-      region, mUIFlags, &parent, factory, pSettings );
+   return delegate.DoEffect(settings, mProjectRate, mTracks, mFactory,
+      region, mUIFlags, &parent, factory, pSettings);
 }
 
 // All legacy effects should have this overridden
@@ -1124,7 +1118,7 @@ bool Effect::InitPass2()
    return false;
 }
 
-bool Effect::Process()
+bool Effect::Process(EffectSettings &settings)
 {
    CopyInputTracks(true);
    bool bGoodResult = true;
@@ -1137,11 +1131,11 @@ bool Effect::Process()
    mPass = 1;
    if (InitPass1())
    {
-      bGoodResult = ProcessPass();
+      bGoodResult = ProcessPass(settings);
       mPass = 2;
       if (bGoodResult && InitPass2())
       {
-         bGoodResult = ProcessPass();
+         bGoodResult = ProcessPass(settings);
       }
    }
 
@@ -1150,7 +1144,7 @@ bool Effect::Process()
    return bGoodResult;
 }
 
-bool Effect::ProcessPass()
+bool Effect::ProcessPass(EffectSettings &settings)
 {
    bool bGoodResult = true;
    bool isGenerator = GetType() == EffectTypeGenerate;
@@ -1276,7 +1270,7 @@ bool Effect::ProcessPass()
          }
 
          // Go process the track(s)
-         bGoodResult = ProcessTrack(
+         bGoodResult = ProcessTrack(settings,
             count, map, left, right, start, len,
             inBuffer, outBuffer, inBufPos, outBufPos);
          if (!bGoodResult)
@@ -1298,16 +1292,17 @@ bool Effect::ProcessPass()
    return bGoodResult;
 }
 
-bool Effect::ProcessTrack(int count,
-                          ChannelNames map,
-                          WaveTrack *left,
-                          WaveTrack *right,
-                          sampleCount start,
-                          sampleCount len,
-                          FloatBuffers &inBuffer,
-                          FloatBuffers &outBuffer,
-                          ArrayOf< float * > &inBufPos,
-                          ArrayOf< float *> &outBufPos)
+bool Effect::ProcessTrack(EffectSettings &settings,
+   int count,
+   ChannelNames map,
+   WaveTrack *left,
+   WaveTrack *right,
+   sampleCount start,
+   sampleCount len,
+   FloatBuffers &inBuffer,
+   FloatBuffers &outBuffer,
+   ArrayOf< float * > &inBufPos,
+   ArrayOf< float *> &outBufPos)
 {
    bool rc = true;
 
@@ -1466,7 +1461,8 @@ bool Effect::ProcessTrack(int count,
       decltype(curBlockSize) processed;
       try
       {
-         processed = ProcessBlock(inBufPos.get(), outBufPos.get(), curBlockSize);
+         processed =
+            ProcessBlock(settings, inBufPos.get(), outBufPos.get(), curBlockSize);
       }
       catch( const AudacityException & WXUNUSED(e) )
       {
@@ -2038,7 +2034,7 @@ double Effect::CalcPreviewInputLength(double previewLength)
    return previewLength;
 }
 
-void Effect::Preview(bool dryOnly)
+void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
 {
    if (mNumTracks == 0) { // nothing to preview
       return;
@@ -2174,7 +2170,9 @@ void Effect::Preview(bool dryOnly)
 
       auto vr2 = valueRestorer( mIsPreview, true );
 
-      success = Process();
+      auto settings = access.Get();
+      success = Process(settings);
+      access.Set(std::move(settings));
    }
 
    if (success)

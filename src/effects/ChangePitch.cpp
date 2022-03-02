@@ -210,7 +210,7 @@ bool EffectChangePitch::Init()
    return true;
 }
 
-bool EffectChangePitch::Process()
+bool EffectChangePitch::Process(EffectSettings &settings)
 {
 #if USE_SBSMS
    if (mUseSBSMS)
@@ -220,7 +220,7 @@ bool EffectChangePitch::Process()
       proxy.mProxyEffectName = XO("High Quality Pitch Change");
       proxy.setParameters(1.0, pitchRatio);
       //! Already processing; don't make a dialog
-      return Delegate(proxy, *mUIParent, nullptr, nullptr);
+      return Delegate(proxy, settings, *mUIParent, nullptr, nullptr);
    }
    else
 #endif
