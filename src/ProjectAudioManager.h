@@ -18,6 +18,8 @@ Paul Licameli split from ProjectManager.h
 #include "ClientData.h" // to inherit
 #include <wx/event.h> // to declare custom event type
 
+#include <atomic>
+
 constexpr int RATE_NOT_SELECTED{ -1 };
 
 class AudacityProject;
@@ -95,7 +97,7 @@ public:
    void SetTimerRecordCancelled() { mTimerRecordCanceled = true; }
    void ResetTimerRecordCancelled() { mTimerRecordCanceled = false; }
 
-   bool Paused() const { return mPaused; }
+   bool Paused() const;
 
    bool Playing() const;
 
@@ -135,8 +137,6 @@ public:
 
    void OnPause();
    
-   // Pause - used by AudioIO to pause sound activate recording
-   void Pause();
 
    // Stop playing or recording
    void Stop(bool stopStream = true);
@@ -149,7 +149,10 @@ public:
    PlayMode GetLastPlayMode() const { return mLastPlayMode; }
 
 private:
-   void SetPaused( bool value ) { mPaused = value; }
+
+   void TogglePaused();
+   void SetPausedOff();
+
    void SetAppending( bool value ) { mAppending = value; }
    void SetLooping( bool value ) { mLooping = value; }
    void SetCutting( bool value ) { mCutting = value; }
@@ -175,7 +178,10 @@ private:
    //flag for cancellation of timer record.
    bool mTimerRecordCanceled{ false };
 
-   bool mPaused{ false };
+   // Using int as the type for this atomic flag, allows us to toggle its value
+   // with an atomic operation.
+   std::atomic<int> mPaused{ 0 };
+
    bool mAppending{ false };
    bool mLooping{ false };
    bool mCutting{ false };
