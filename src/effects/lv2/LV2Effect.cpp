@@ -502,7 +502,7 @@ bool LV2Effect::IsDefault() const
    return false;
 }
 
-bool LV2Effect::SupportsRealtime()
+bool LV2Effect::SupportsRealtime() const
 {
    return GetType() == EffectTypeProcess;
 }

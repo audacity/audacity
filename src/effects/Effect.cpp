@@ -194,7 +194,7 @@ bool Effect::IsDefault() const
    return true;
 }
 
-bool Effect::SupportsRealtime()
+bool Effect::SupportsRealtime() const
 {
    if (mClient)
    {

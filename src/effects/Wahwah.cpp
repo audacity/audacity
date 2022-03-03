@@ -118,7 +118,7 @@ EffectType EffectWahwah::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectWahwah::SupportsRealtime()
+bool EffectWahwah::SupportsRealtime() const
 {
    return true;
 }

@@ -127,7 +127,7 @@ EffectType EffectPhaser::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectPhaser::SupportsRealtime()
+bool EffectPhaser::SupportsRealtime() const
 {
    return true;
 }

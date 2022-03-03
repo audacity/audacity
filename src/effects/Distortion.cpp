@@ -210,7 +210,7 @@ EffectType EffectDistortion::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectDistortion::SupportsRealtime()
+bool EffectDistortion::SupportsRealtime() const
 {
    return true;
 }

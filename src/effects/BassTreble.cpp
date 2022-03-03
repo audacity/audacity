@@ -110,7 +110,7 @@ EffectType EffectBassTreble::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectBassTreble::SupportsRealtime()
+bool EffectBassTreble::SupportsRealtime() const
 {
    return true;
 }

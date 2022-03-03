@@ -709,7 +709,7 @@ bool LadspaEffect::IsDefault() const
    return false;
 }
 
-bool LadspaEffect::SupportsRealtime()
+bool LadspaEffect::SupportsRealtime() const
 {
    return GetType() != EffectTypeGenerate;
 }

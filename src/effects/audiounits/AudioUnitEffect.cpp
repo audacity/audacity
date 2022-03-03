@@ -952,7 +952,7 @@ bool AudioUnitEffect::IsDefault() const
    return false;
 }
 
-bool AudioUnitEffect::SupportsRealtime()
+bool AudioUnitEffect::SupportsRealtime() const
 {
    return GetType() == EffectTypeProcess;
 }

@@ -315,7 +315,7 @@ bool VST3Effect::IsDefault() const
    return false;
 }
 
-bool VST3Effect::SupportsRealtime()
+bool VST3Effect::SupportsRealtime() const
 {
    return true;
 }

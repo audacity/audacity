@@ -129,7 +129,7 @@ public:
    virtual bool IsDefault() const = 0;
 
    //! Whether the effect supports realtime previewing (while audio is playing).
-   virtual bool SupportsRealtime() = 0;
+   virtual bool SupportsRealtime() const = 0;
 
    //! Whether the effect has any automatable controls.
    virtual bool SupportsAutomation() = 0;

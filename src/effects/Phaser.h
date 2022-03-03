@@ -56,7 +56,7 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool SupportsRealtime() override;
+   bool SupportsRealtime() const override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 

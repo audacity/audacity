@@ -274,7 +274,7 @@ public:
    EffectFamilySymbol GetFamily() const override;
    bool IsInteractive() const override;
    bool IsDefault() const override;
-   bool SupportsRealtime() override;
+   bool SupportsRealtime() const override;
    bool SupportsAutomation() override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;

@@ -280,7 +280,7 @@ public:
       return false;
    }
 
-   bool SupportsRealtime() override
+   bool SupportsRealtime() const override
    {
       return mType == EffectTypeProcess;
    }
@@ -1281,7 +1281,7 @@ bool VSTEffect::IsDefault() const
    return false;
 }
 
-bool VSTEffect::SupportsRealtime()
+bool VSTEffect::SupportsRealtime() const
 {
    return GetType() == EffectTypeProcess;
 }
