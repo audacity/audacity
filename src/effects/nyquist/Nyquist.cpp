@@ -1070,10 +1070,11 @@ int NyquistEffect::ShowHostInterface(
       effect.mDebug = (res == eDebugID);
       // Delegate to the Nyquist Prompt,
       // which gets some Lisp from the user to interpret
-      auto settings = access.Get();
-      res = Delegate(effect, settings,
-         parent, factory, access.shared_from_this());
-      access.Set(std::move(settings));
+
+      access.ModifySettings([&](EffectSettings &settings){
+         res = Delegate(effect, settings,
+            parent, factory, access.shared_from_this());
+      });
       mT0 = effect.mT0;
       mT1 = effect.mT1;
    }

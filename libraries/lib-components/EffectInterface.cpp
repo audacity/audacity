@@ -176,9 +176,9 @@ DefaultEffectUIValidator::~DefaultEffectUIValidator()
 bool DefaultEffectUIValidator::Validate()
 {
    bool result {};
-   auto settings = mAccess.Get();
-   result = mEffect.ValidateUI(settings);
-   mAccess.Set(std::move(settings));
+   mAccess.ModifySettings([&](EffectSettings &settings){
+      result = mEffect.ValidateUI(settings);
+   });
    return result;
 }
 

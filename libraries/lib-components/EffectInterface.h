@@ -79,6 +79,19 @@ public:
    virtual ~EffectSettingsAccess();
    virtual const EffectSettings &Get() = 0;
    virtual void Set(EffectSettings &&settings) = 0;
+
+   //! Do a correct read-modify-write of settings
+   /*!
+    @param function takes EffectSettings & and its return is ignored.
+    If it throws an exception, then the settings will not be updated.
+    Thus, a strong exception safety guarantee.
+    */
+   template<typename Function>
+   void ModifySettings(Function &&function) {
+      auto settings = this->Get();
+      std::forward<Function>(function)(settings);
+      this->Set(std::move(settings));
+   }
 };
 
 //! Implementation of EffectSettings for cases where there is only one thread.

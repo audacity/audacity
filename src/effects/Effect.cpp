@@ -2118,9 +2118,9 @@ void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
 
       auto vr2 = valueRestorer( mIsPreview, true );
 
-      auto settings = access.Get();
-      success = Process(settings);
-      access.Set(std::move(settings));
+      access.ModifySettings([&](EffectSettings &settings){
+         success = Process(settings);
+      });
    }
 
    if (success)

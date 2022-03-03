@@ -211,9 +211,9 @@ bool EffectUIHost::TransferDataFromWindow()
 {
    // Transfer-from takes non-const reference to settings
    bool result = true;
-   auto settings = mpAccess->Get();
-   result = mEffectUIHost.TransferDataFromWindow(settings);
-   mpAccess->Set(std::move(settings));
+   mpAccess->ModifySettings([&](EffectSettings &settings){
+      result = mEffectUIHost.TransferDataFromWindow(settings);
+   });
    return result;
 }
 
@@ -886,26 +886,21 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
 {
    int preset = evt.GetId() - kUserPresetsID;
    
-   // Make mutable copy
-   auto settings = mpAccess->Get();
-   mEffectUIHost.GetDefinition()
-      .LoadUserPreset(UserPresetsGroup(mUserPresets[preset]), settings);
-   TransferDataToWindow();
-   // Communicate change of settings
-   mpAccess->Set(std::move(settings));
-   
+   mpAccess->ModifySettings([&](EffectSettings &settings){
+      mEffectUIHost.GetDefinition()
+         .LoadUserPreset(UserPresetsGroup(mUserPresets[preset]), settings);
+      TransferDataToWindow();
+   });
    return;
 }
 
 void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
 {
-   // Make mutable copy
-   auto settings = mpAccess->Get();
-   mEffectUIHost.GetDefinition()
-      .LoadFactoryPreset(evt.GetId() - kFactoryPresetsID, settings);
-   TransferDataToWindow();
-   // Communicate change of settings
-   mpAccess->Set(std::move(settings));
+   mpAccess->ModifySettings([&](EffectSettings &settings){
+      mEffectUIHost.GetDefinition()
+         .LoadFactoryPreset(evt.GetId() - kFactoryPresetsID, settings);
+      TransferDataToWindow();
+   });
    return;
 }
 
@@ -1037,12 +1032,10 @@ void EffectUIHost::OnOptions(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
 {
-   // Make mutable copy
-   auto settings = mpAccess->Get();
-   mEffectUIHost.GetDefinition().LoadFactoryDefaults(settings);
-   TransferDataToWindow();
-   // Communicate change of settings
-   mpAccess->Set(std::move(settings));
+   mpAccess->ModifySettings([&](EffectSettings &settings){
+      mEffectUIHost.GetDefinition().LoadFactoryDefaults(settings);
+      TransferDataToWindow();
+   });
    return;
 }
 
@@ -1317,17 +1310,19 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
       if (auto pSettings = em.GetDefaultSettings(ID)) {
          const auto pAccess =
             std::make_shared<SimpleEffectSettingsAccess>(*pSettings);
-         success = effect->DoEffect(*pSettings,
-            rate,
-            &tracks,
-            &trackFactory,
-            selectedRegion,
-            flags,
-            &window,
-            (flags & EffectManager::kConfigured) == 0
-               ? DialogFactory
-               : nullptr,
-            pAccess);
+         pAccess->ModifySettings([&](EffectSettings &settings){
+            success = effect->DoEffect(settings,
+               rate,
+               &tracks,
+               &trackFactory,
+               selectedRegion,
+               flags,
+               &window,
+               (flags & EffectManager::kConfigured) == 0
+                  ? DialogFactory
+                  : nullptr,
+               pAccess);
+         });
       }
    }
 
