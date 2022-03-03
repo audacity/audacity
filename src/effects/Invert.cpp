@@ -60,7 +60,7 @@ bool EffectInvert::IsInteractive()
 
 // EffectProcessor implementation
 
-unsigned EffectInvert::GetAudioInCount()
+unsigned EffectInvert::GetAudioInCount() const
 {
    return 1;
 }

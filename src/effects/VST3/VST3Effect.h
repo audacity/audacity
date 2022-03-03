@@ -114,7 +114,7 @@ public:
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
-   unsigned GetAudioInCount() override;
+   unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() override;
    int GetMidiInCount() override;
    int GetMidiOutCount() override;

@@ -327,7 +327,7 @@ class COMPONENTS_API EffectProcessor  /* not final */
 public:
    virtual ~EffectProcessor();
 
-   virtual unsigned GetAudioInCount() = 0;
+   virtual unsigned GetAudioInCount() const = 0;
    virtual unsigned GetAudioOutCount() = 0;
 
    virtual int GetMidiInCount() = 0;

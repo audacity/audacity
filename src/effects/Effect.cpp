@@ -226,7 +226,7 @@ bool Effect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-unsigned Effect::GetAudioInCount()
+unsigned Effect::GetAudioInCount() const
 {
    if (mClient)
    {

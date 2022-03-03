@@ -81,7 +81,7 @@ EffectType EffectEcho::GetType()
 
 // EffectProcessor implementation
 
-unsigned EffectEcho::GetAudioInCount()
+unsigned EffectEcho::GetAudioInCount() const
 {
    return 1;
 }

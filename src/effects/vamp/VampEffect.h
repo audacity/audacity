@@ -62,7 +62,7 @@ public:
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
+   unsigned GetAudioInCount() const override;
 
    // Effect implementation
 

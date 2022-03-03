@@ -119,7 +119,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    bool SetHost(EffectHostInterface *host) override;
    
-   unsigned GetAudioInCount() override;
+   unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() override;
 
    int GetMidiInCount() override;

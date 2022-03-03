@@ -118,7 +118,7 @@ bool EffectBassTreble::SupportsRealtime()
 
 // EffectProcessor implementation
 
-unsigned EffectBassTreble::GetAudioInCount()
+unsigned EffectBassTreble::GetAudioInCount() const
 {
    return 1;
 }

@@ -961,7 +961,7 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-unsigned LV2Effect::GetAudioInCount()
+unsigned LV2Effect::GetAudioInCount() const
 {
    return mAudioIn;
 }

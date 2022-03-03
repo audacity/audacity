@@ -128,7 +128,7 @@ class VSTEffect final : public wxEvtHandler,
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
+   unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() override;
 
    int GetMidiInCount() override;

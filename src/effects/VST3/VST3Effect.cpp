@@ -533,7 +533,7 @@ namespace
    }
 }
 
-unsigned VST3Effect::GetAudioInCount()
+unsigned VST3Effect::GetAudioInCount() const
 {
    return CountChannels(
       mEffectComponent,

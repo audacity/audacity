@@ -1168,7 +1168,7 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-unsigned AudioUnitEffect::GetAudioInCount()
+unsigned AudioUnitEffect::GetAudioInCount() const
 {
    return mAudioIns;
 }

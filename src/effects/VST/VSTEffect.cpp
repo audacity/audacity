@@ -1344,7 +1344,7 @@ bool VSTEffect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-unsigned VSTEffect::GetAudioInCount()
+unsigned VSTEffect::GetAudioInCount() const
 {
    return mAudioIns;
 }

@@ -889,7 +889,7 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-unsigned LadspaEffect::GetAudioInCount()
+unsigned LadspaEffect::GetAudioInCount() const
 {
    return mAudioIns;
 }

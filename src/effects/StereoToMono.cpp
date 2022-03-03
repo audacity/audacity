@@ -64,7 +64,7 @@ bool EffectStereoToMono::IsInteractive()
 
 // EffectProcessor implementation
 
-unsigned EffectStereoToMono::GetAudioInCount()
+unsigned EffectStereoToMono::GetAudioInCount() const
 {
    return 2;
 }

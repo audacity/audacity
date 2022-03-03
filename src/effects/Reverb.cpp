@@ -163,7 +163,7 @@ EffectType EffectReverb::GetType()
 
 // EffectProcessor implementation
 
-unsigned EffectReverb::GetAudioInCount()
+unsigned EffectReverb::GetAudioInCount() const
 {
    return mParams.mStereoWidth ? 2 : 1;
 }

@@ -35,7 +35,7 @@ public:
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
+   unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
