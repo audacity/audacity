@@ -39,7 +39,7 @@ public:
    // Effect implementation
 
    bool Process(EffectSettings &settings) override;
-   bool IsHiddenFromMenus() override;
+   bool IsHiddenFromMenus() const override;
 
 private:
    // EffectStereoToMono implementation

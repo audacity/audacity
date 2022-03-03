@@ -144,7 +144,7 @@ public:
    virtual FilePath HelpPage() const;
 
    //! Default is false
-   virtual bool IsHiddenFromMenus();
+   virtual bool IsHiddenFromMenus() const;
 
    // Some effects will use define params to define what parameters they take.
    // If they do, they won't need to implement Get or SetAutomation parameters.

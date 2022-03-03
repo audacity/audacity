@@ -219,7 +219,7 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    return bResult;
 }
 
-bool EffectStereoToMono::IsHiddenFromMenus()
+bool EffectStereoToMono::IsHiddenFromMenus() const
 {
    return true;
 }

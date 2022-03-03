@@ -65,7 +65,7 @@ FilePath EffectDefinitionInterface::HelpPage() const
    return {};
 }
 
-bool EffectDefinitionInterface::IsHiddenFromMenus()
+bool EffectDefinitionInterface::IsHiddenFromMenus() const
 {
    return false;
 }
