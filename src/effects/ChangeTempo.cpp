@@ -173,7 +173,8 @@ bool EffectChangeTempo::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-double EffectChangeTempo::CalcPreviewInputLength(double previewLength)
+double EffectChangeTempo::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    return previewLength * (100.0 + m_PercentChange) / 100.0;
 }

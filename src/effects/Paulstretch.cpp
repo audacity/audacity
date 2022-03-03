@@ -157,7 +157,8 @@ bool EffectPaulstretch::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-double EffectPaulstretch::CalcPreviewInputLength(double previewLength)
+double EffectPaulstretch::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    // FIXME: Preview is currently at the project rate, but should really be
    // at the track rate (bugs 1284 and 852).

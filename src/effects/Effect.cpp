@@ -1347,7 +1347,7 @@ bool Effect::ProcessTrack(EffectSettings &settings,
    {
       if (mIsPreview) {
          gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
-         genDur = wxMin(mDuration, CalcPreviewInputLength(genDur));
+         genDur = std::min(mDuration, CalcPreviewInputLength(settings, genDur));
       }
       else {
          genDur = mDuration;
@@ -2019,7 +2019,8 @@ void Effect::CountWaveTracks()
    mNumGroups = mTracks->SelectedLeaders< const WaveTrack >().size();
 }
 
-double Effect::CalcPreviewInputLength(double previewLength)
+double Effect::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    return previewLength;
 }
@@ -2047,12 +2048,12 @@ void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
 
    const double rate = mProjectRate;
 
-   if (isNyquist && isGenerator) {
-      previewDuration = CalcPreviewInputLength(previewLen);
-   }
-   else {
-      previewDuration = wxMin(mDuration, CalcPreviewInputLength(previewLen));
-   }
+   const auto &settings = access.Get();
+   if (isNyquist && isGenerator)
+      previewDuration = CalcPreviewInputLength(settings, previewLen);
+   else
+      previewDuration =
+         std::min(mDuration, CalcPreviewInputLength(settings, previewLen));
 
    double t1 = mT0 + previewDuration;
 

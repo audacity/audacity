@@ -276,7 +276,8 @@ protected:
 
    // Most effects just use the previewLength, but time-stretching/compressing
    // effects need to use a different input length, so override this method.
-   virtual double CalcPreviewInputLength(double previewLength);
+   virtual double CalcPreviewInputLength(
+      const EffectSettings &settings, double previewLength);
 
    //! Add controls to effect panel; always succeeds
    /*!

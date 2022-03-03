@@ -27,7 +27,7 @@
 
 #include "../widgets/AudacityMessageBox.h"
 
-bool Generator::Process(EffectSettings &)
+bool Generator::Process(EffectSettings &settings)
 {
    if (GetDuration() < 0.0)
       return false;
@@ -71,7 +71,7 @@ bool Generator::Process(EffectSettings &)
             BeforeGenerate();
 
             // Fill it with data
-            if (!GenerateTrack(&*tmp, *track, ntrack))
+            if (!GenerateTrack(settings, &*tmp, *track, ntrack))
                bGoodResult = false;
             else {
                // Transfer the data from the temporary track to the actual one
@@ -116,9 +116,8 @@ bool Generator::Process(EffectSettings &)
    return bGoodResult;
 }
 
-bool BlockGenerator::GenerateTrack(WaveTrack *tmp,
-                                   const WaveTrack &track,
-                                   int ntrack)
+bool BlockGenerator::GenerateTrack(EffectSettings &,
+   WaveTrack *tmp, const WaveTrack &track, int ntrack)
 {
    bool bGoodResult = true;
    numSamples = track.TimeToLongSamples(GetDuration());

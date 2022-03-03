@@ -162,7 +162,8 @@ bool EffectTimeScale::Init()
    return true;
 }
 
-double EffectTimeScale::CalcPreviewInputLength(double previewLength)
+double EffectTimeScale::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    double inputLength = Effect::GetDuration();
    if(inputLength == 0.0) {

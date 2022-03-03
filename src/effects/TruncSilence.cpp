@@ -243,7 +243,8 @@ bool EffectTruncSilence::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-double EffectTruncSilence::CalcPreviewInputLength(double /* previewLength */)
+double EffectTruncSilence::CalcPreviewInputLength(
+   const EffectSettings &, double /* previewLength */)
 {
    double inputLength = mT1 - mT0;
    double minInputLength = inputLength;

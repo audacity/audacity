@@ -40,7 +40,8 @@ public:
 
    // Effect implementation
 
-   double CalcPreviewInputLength(double previewLength) override;
+   double CalcPreviewInputLength(
+      const EffectSettings &settings, double previewLength) override;
    bool Process(EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
