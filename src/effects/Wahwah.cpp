@@ -135,7 +135,8 @@ unsigned EffectWahwah::GetAudioOutCount()
    return 1;
 }
 
-bool EffectWahwah::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames chanMap)
+bool EffectWahwah::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    InstanceInit(mMaster, mSampleRate);
 
@@ -162,7 +163,8 @@ bool EffectWahwah::RealtimeInitialize(EffectSettings &)
    return true;
 }
 
-bool EffectWahwah::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool EffectWahwah::RealtimeAddProcessor(
+   EffectSettings &settings, unsigned, float sampleRate)
 {
    EffectWahwahState slave;
 

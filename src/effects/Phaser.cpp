@@ -144,7 +144,8 @@ unsigned EffectPhaser::GetAudioOutCount()
    return 1;
 }
 
-bool EffectPhaser::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames chanMap)
+bool EffectPhaser::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    InstanceInit(mMaster, mSampleRate);
    if (chanMap[0] == ChannelNameFrontRight)
@@ -170,7 +171,8 @@ bool EffectPhaser::RealtimeInitialize(EffectSettings &)
    return true;
 }
 
-bool EffectPhaser::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool EffectPhaser::RealtimeAddProcessor(
+   EffectSettings &, unsigned, float sampleRate)
 {
    EffectPhaserState slave;
 

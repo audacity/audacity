@@ -162,7 +162,8 @@ unsigned EffectToneGen::GetAudioOutCount()
    return 1;
 }
 
-bool EffectToneGen::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectToneGen::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    mPositionInCycles = 0.0;
    mSample = 0;

@@ -1043,7 +1043,8 @@ size_t LV2Effect::GetTailSize()
    return 0;
 }
 
-bool LV2Effect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool LV2Effect::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    mProcess = InitInstance(mSampleRate);
    if (!mProcess)
@@ -1214,7 +1215,8 @@ return GuardedCall<bool>([&]{
 });
 }
 
-bool LV2Effect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool LV2Effect::RealtimeAddProcessor(
+   EffectSettings &, unsigned, float sampleRate)
 {
    LV2Wrapper *slave = InitInstance(sampleRate);
    if (!slave)

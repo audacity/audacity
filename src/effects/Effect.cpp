@@ -318,13 +318,11 @@ size_t Effect::GetTailSize()
    return 0;
 }
 
-bool Effect::ProcessInitialize(sampleCount totalLen, ChannelNames chanMap)
+bool Effect::ProcessInitialize(
+   EffectSettings &settings, sampleCount totalLen, ChannelNames chanMap)
 {
    if (mClient)
-   {
-      return mClient->ProcessInitialize(totalLen, chanMap);
-   }
-
+      return mClient->ProcessInitialize(settings, totalLen, chanMap);
    return true;
 }
 
@@ -359,11 +357,12 @@ bool Effect::RealtimeInitialize(EffectSettings &settings)
    return false;
 }
 
-bool Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
+bool Effect::RealtimeAddProcessor(
+   EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    if (mClient)
    {
-      return mClient->RealtimeAddProcessor(numChannels, sampleRate);
+      return mClient->RealtimeAddProcessor(settings, numChannels, sampleRate);
    }
 
    return true;
@@ -1297,7 +1296,7 @@ bool Effect::ProcessTrack(EffectSettings &settings,
    bool rc = true;
 
    // Give the plugin a chance to initialize
-   if (!ProcessInitialize(len, map))
+   if (!ProcessInitialize(settings, len, map))
    {
       return false;
    }

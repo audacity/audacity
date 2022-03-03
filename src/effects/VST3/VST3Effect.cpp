@@ -600,7 +600,7 @@ size_t VST3Effect::GetTailSize()
    return 0;
 }
 
-bool VST3Effect::ProcessInitialize(sampleCount, ChannelNames)
+bool VST3Effect::ProcessInitialize(EffectSettings &, sampleCount, ChannelNames)
 {
    using namespace Steinberg;
 
@@ -738,7 +738,8 @@ bool VST3Effect::RealtimeInitialize(EffectSettings &)
    return true;
 }
 
-bool VST3Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
+bool VST3Effect::RealtimeAddProcessor(
+   EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    using namespace Steinberg;
 
@@ -747,7 +748,7 @@ bool VST3Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
       auto effect = std::make_unique<VST3Effect>(*this);
       effect->mSetup.processMode = Vst::kRealtime;
       effect->mSetup.sampleRate = sampleRate;
-      if(!effect->ProcessInitialize({0}, nullptr))
+      if(!effect->ProcessInitialize(settings, {0}, nullptr))
          throw std::runtime_error { "VST3 realtime initialization failed" };
 
       mRealtimeGroupProcessors.push_back(std::move(effect));

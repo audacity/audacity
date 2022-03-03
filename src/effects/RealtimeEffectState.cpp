@@ -238,7 +238,7 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
       }
 
       // Add a NEW processor
-      mEffect->RealtimeAddProcessor(gchans, rate);
+      mEffect->RealtimeAddProcessor(mSettings, gchans, rate);
       mCurrentProcessor++;
    }
 

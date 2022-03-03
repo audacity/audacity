@@ -91,7 +91,8 @@ unsigned EffectEcho::GetAudioOutCount()
    return 1;
 }
 
-bool EffectEcho::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectEcho::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames)
 {
    if (delay == 0.0)
    {

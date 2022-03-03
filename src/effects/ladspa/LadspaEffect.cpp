@@ -942,7 +942,8 @@ size_t LadspaEffect::GetTailSize()
    return 0;
 }
 
-bool LadspaEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool LadspaEffect::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    /* Instantiate the plugin */
    if (!mReady)
@@ -999,7 +1000,8 @@ bool LadspaEffect::RealtimeInitialize(EffectSettings &)
    return true;
 }
 
-bool LadspaEffect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool LadspaEffect::RealtimeAddProcessor(
+   EffectSettings &, unsigned, float sampleRate)
 {
    LADSPA_Handle slave = InitInstance(sampleRate);
    if (!slave)

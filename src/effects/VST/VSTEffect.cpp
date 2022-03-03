@@ -1403,7 +1403,13 @@ bool VSTEffect::IsReady()
    return mReady;
 }
 
-bool VSTEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool VSTEffect::ProcessInitialize(
+   EffectSettings &settings, sampleCount count, ChannelNames names)
+{
+   return DoProcessInitialize(count, names);
+}
+
+bool VSTEffect::DoProcessInitialize(sampleCount, ChannelNames)
 {
    // Initialize time info
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
@@ -1464,12 +1470,13 @@ void VSTEffect::SetChannelCount(unsigned numChannels)
    mNumChannels = numChannels;
 }
 
-bool VSTEffect::RealtimeInitialize(EffectSettings &)
+bool VSTEffect::RealtimeInitialize(EffectSettings &settings)
 {
-   return ProcessInitialize(0, NULL);
+   return ProcessInitialize(settings, 0, nullptr);
 }
 
-bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
+bool VSTEffect::RealtimeAddProcessor(
+   EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    mSlaves.push_back(std::make_unique<VSTEffect>(mPath, this));
    VSTEffect *const slave = mSlaves.back().get();
@@ -1502,7 +1509,7 @@ bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
       callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
    }
 
-   return slave->ProcessInitialize(0, NULL);
+   return slave->ProcessInitialize(settings, 0, nullptr);
 }
 
 bool VSTEffect::RealtimeFinalize(EffectSettings &) noexcept
@@ -1592,7 +1599,10 @@ int VSTEffect::ShowClientInterface(
    {
       mSampleRate = 44100;
       mBlockSize = 8192;
-      ProcessInitialize(0, NULL);
+      // No settings here!  Is this call really needed?  It appears to be
+      // redundant with later calls that reach process initialization from the
+      // dialog, either with the Apply or Play buttons.
+      DoProcessInitialize(0, nullptr);
    }
 
    // Remember the dialog with a weak pointer, but don't control its lifetime

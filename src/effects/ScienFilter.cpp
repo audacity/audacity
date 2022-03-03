@@ -217,7 +217,8 @@ unsigned EffectScienFilter::GetAudioOutCount()
    return 1;
 }
 
-bool EffectScienFilter::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectScienFilter::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    for (int iPair = 0; iPair < (mOrder + 1) / 2; iPair++)
       mpBiquad[iPair].Reset();

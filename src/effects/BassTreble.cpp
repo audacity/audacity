@@ -128,7 +128,8 @@ unsigned EffectBassTreble::GetAudioOutCount()
    return 1;
 }
 
-bool EffectBassTreble::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectBassTreble::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames)
 {
    InstanceInit(mMaster, mSampleRate);
 
@@ -150,7 +151,8 @@ bool EffectBassTreble::RealtimeInitialize(EffectSettings &)
    return true;
 }
 
-bool EffectBassTreble::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool EffectBassTreble::RealtimeAddProcessor(
+   EffectSettings &, unsigned, float sampleRate)
 {
    EffectBassTrebleState slave;
 

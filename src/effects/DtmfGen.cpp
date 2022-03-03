@@ -129,7 +129,8 @@ unsigned EffectDtmf::GetAudioOutCount()
    return 1;
 }
 
-bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectDtmf::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    if (dtmfNTones <= 0) {   // Bail if no DTFM sequence.
       ::Effect::MessageBox(
