@@ -123,7 +123,7 @@ unsigned EffectBassTreble::GetAudioInCount() const
    return 1;
 }
 
-unsigned EffectBassTreble::GetAudioOutCount()
+unsigned EffectBassTreble::GetAudioOutCount() const
 {
    return 1;
 }

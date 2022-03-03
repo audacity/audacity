@@ -222,7 +222,7 @@ unsigned EffectDistortion::GetAudioInCount() const
    return 1;
 }
 
-unsigned EffectDistortion::GetAudioOutCount()
+unsigned EffectDistortion::GetAudioOutCount() const
 {
    return 1;
 }

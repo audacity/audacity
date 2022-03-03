@@ -78,7 +78,7 @@ public:
    // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() override;
+   unsigned GetAudioOutCount() const override;
 
    int GetMidiInCount() override;
    int GetMidiOutCount() override;

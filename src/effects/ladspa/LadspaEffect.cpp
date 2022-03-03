@@ -894,7 +894,7 @@ unsigned LadspaEffect::GetAudioInCount() const
    return mAudioIns;
 }
 
-unsigned LadspaEffect::GetAudioOutCount()
+unsigned LadspaEffect::GetAudioOutCount() const
 {
    return mAudioOuts;
 }

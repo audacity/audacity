@@ -124,7 +124,7 @@ EffectType EffectDtmf::GetType()
 
 // EffectProcessor implementation
 
-unsigned EffectDtmf::GetAudioOutCount()
+unsigned EffectDtmf::GetAudioOutCount() const
 {
    return 1;
 }

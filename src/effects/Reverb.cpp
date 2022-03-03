@@ -168,7 +168,7 @@ unsigned EffectReverb::GetAudioInCount() const
    return mParams.mStereoWidth ? 2 : 1;
 }
 
-unsigned EffectReverb::GetAudioOutCount()
+unsigned EffectReverb::GetAudioOutCount() const
 {
    return mParams.mStereoWidth ? 2 : 1;
 }

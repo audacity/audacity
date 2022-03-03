@@ -69,7 +69,7 @@ unsigned EffectStereoToMono::GetAudioInCount() const
    return 2;
 }
 
-unsigned EffectStereoToMono::GetAudioOutCount()
+unsigned EffectStereoToMono::GetAudioOutCount() const
 {
    return 1;
 }

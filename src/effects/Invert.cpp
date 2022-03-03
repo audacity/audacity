@@ -65,7 +65,7 @@ unsigned EffectInvert::GetAudioInCount() const
    return 1;
 }
 
-unsigned EffectInvert::GetAudioOutCount()
+unsigned EffectInvert::GetAudioOutCount() const
 {
    return 1;
 }

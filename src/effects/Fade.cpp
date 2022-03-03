@@ -74,7 +74,7 @@ unsigned EffectFade::GetAudioInCount() const
    return 1;
 }
 
-unsigned EffectFade::GetAudioOutCount()
+unsigned EffectFade::GetAudioOutCount() const
 {
    return 1;
 }

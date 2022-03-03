@@ -1173,7 +1173,7 @@ unsigned AudioUnitEffect::GetAudioInCount() const
    return mAudioIns;
 }
 
-unsigned AudioUnitEffect::GetAudioOutCount()
+unsigned AudioUnitEffect::GetAudioOutCount() const
 {
    return mAudioOuts;
 }

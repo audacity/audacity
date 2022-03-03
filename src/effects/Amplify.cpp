@@ -118,7 +118,7 @@ unsigned EffectAmplify::GetAudioInCount() const
    return 1;
 }
 
-unsigned EffectAmplify::GetAudioOutCount()
+unsigned EffectAmplify::GetAudioOutCount() const
 {
    return 1;
 }

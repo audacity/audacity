@@ -212,7 +212,7 @@ unsigned EffectScienFilter::GetAudioInCount() const
    return 1;
 }
 
-unsigned EffectScienFilter::GetAudioOutCount()
+unsigned EffectScienFilter::GetAudioOutCount() const
 {
    return 1;
 }

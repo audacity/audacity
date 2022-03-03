@@ -1349,7 +1349,7 @@ unsigned VSTEffect::GetAudioInCount() const
    return mAudioIns;
 }
 
-unsigned VSTEffect::GetAudioOutCount()
+unsigned VSTEffect::GetAudioOutCount() const
 {
    return mAudioOuts;
 }

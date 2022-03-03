@@ -86,7 +86,7 @@ unsigned EffectEcho::GetAudioInCount() const
    return 1;
 }
 
-unsigned EffectEcho::GetAudioOutCount()
+unsigned EffectEcho::GetAudioOutCount() const
 {
    return 1;
 }

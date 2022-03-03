@@ -139,7 +139,7 @@ unsigned EffectPhaser::GetAudioInCount() const
    return 1;
 }
 
-unsigned EffectPhaser::GetAudioOutCount()
+unsigned EffectPhaser::GetAudioOutCount() const
 {
    return 1;
 }

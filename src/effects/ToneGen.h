@@ -38,7 +38,7 @@ public:
 
    // EffectProcessor implementation
 
-   unsigned GetAudioOutCount() override;
+   unsigned GetAudioOutCount() const override;
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,

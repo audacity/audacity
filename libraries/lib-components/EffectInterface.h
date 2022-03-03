@@ -328,7 +328,7 @@ public:
    virtual ~EffectProcessor();
 
    virtual unsigned GetAudioInCount() const = 0;
-   virtual unsigned GetAudioOutCount() = 0;
+   virtual unsigned GetAudioOutCount() const = 0;
 
    virtual int GetMidiInCount() = 0;
    virtual int GetMidiOutCount() = 0;

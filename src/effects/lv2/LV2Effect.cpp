@@ -966,7 +966,7 @@ unsigned LV2Effect::GetAudioInCount() const
    return mAudioIn;
 }
 
-unsigned LV2Effect::GetAudioOutCount()
+unsigned LV2Effect::GetAudioOutCount() const
 {
    return mAudioOut;
 }

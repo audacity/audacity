@@ -236,7 +236,7 @@ unsigned Effect::GetAudioInCount() const
    return 0;
 }
 
-unsigned Effect::GetAudioOutCount()
+unsigned Effect::GetAudioOutCount() const
 {
    if (mClient)
    {

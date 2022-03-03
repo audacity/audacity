@@ -157,7 +157,7 @@ EffectType EffectToneGen::GetType()
 
 // EffectProcessor implementation
 
-unsigned EffectToneGen::GetAudioOutCount()
+unsigned EffectToneGen::GetAudioOutCount() const
 {
    return 1;
 }

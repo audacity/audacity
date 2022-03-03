@@ -542,7 +542,7 @@ unsigned VST3Effect::GetAudioInCount() const
       Steinberg::Vst::kMain);
 }
 
-unsigned VST3Effect::GetAudioOutCount()
+unsigned VST3Effect::GetAudioOutCount() const
 {
    return CountChannels(
       mEffectComponent,

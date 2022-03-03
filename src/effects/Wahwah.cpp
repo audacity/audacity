@@ -130,7 +130,7 @@ unsigned EffectWahwah::GetAudioInCount() const
    return 1;
 }
 
-unsigned EffectWahwah::GetAudioOutCount()
+unsigned EffectWahwah::GetAudioOutCount() const
 {
    return 1;
 }
