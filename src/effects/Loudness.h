@@ -38,7 +38,7 @@ public:
 
    ComponentInterfaceSymbol  GetSymbol() const override;
    TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 

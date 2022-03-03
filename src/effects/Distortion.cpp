@@ -198,7 +198,7 @@ TranslatableString EffectDistortion::GetDescription() const
    return XO("Waveshaping distortion effect");
 }
 
-ManualPageID EffectDistortion::ManualPage()
+ManualPageID EffectDistortion::ManualPage() const
 {
    return L"Distortion";
 }

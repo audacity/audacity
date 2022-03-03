@@ -124,7 +124,7 @@ TranslatableString EffectChangeTempo::GetDescription() const
    return XO("Changes the tempo of a selection without changing its pitch");
 }
 
-ManualPageID EffectChangeTempo::ManualPage()
+ManualPageID EffectChangeTempo::ManualPage() const
 {
    return L"Change_Tempo";
 }

@@ -99,7 +99,7 @@ TranslatableString EffectAmplify::GetDescription() const
    return XO("Increases or decreases the volume of the audio you have selected");
 }
 
-ManualPageID EffectAmplify::ManualPage()
+ManualPageID EffectAmplify::ManualPage() const
 {
    return L"Amplify";
 }

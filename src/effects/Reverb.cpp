@@ -149,7 +149,7 @@ TranslatableString EffectReverb::GetDescription() const
    return XO("Adds ambience or a \"hall effect\"");
 }
 
-ManualPageID EffectReverb::ManualPage()
+ManualPageID EffectReverb::ManualPage() const
 {
    return L"Reverb";
 }

@@ -76,7 +76,7 @@ TranslatableString EffectRepeat::GetDescription() const
    return XO("Repeats the selection the specified number of times");
 }
 
-ManualPageID EffectRepeat::ManualPage()
+ManualPageID EffectRepeat::ManualPage() const
 {
    return L"Repeat";
 }

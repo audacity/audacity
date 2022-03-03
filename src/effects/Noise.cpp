@@ -91,7 +91,7 @@ TranslatableString EffectNoise::GetDescription() const
    return XO("Generates one of three different types of noise");
 }
 
-ManualPageID EffectNoise::ManualPage()
+ManualPageID EffectNoise::ManualPage() const
 {
    return L"Noise";
 }

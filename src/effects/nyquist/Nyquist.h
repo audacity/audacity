@@ -79,7 +79,7 @@ public:
    wxString GetVersion() const override;
    TranslatableString GetDescription() const override;
    
-   ManualPageID ManualPage() override;
+   ManualPageID ManualPage() const override;
    FilePath HelpPage() override;
 
    // EffectDefinitionInterface implementation

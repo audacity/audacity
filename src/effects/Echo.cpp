@@ -67,7 +67,7 @@ TranslatableString EffectEcho::GetDescription() const
    return XO("Repeats the selected audio again and again");
 }
 
-ManualPageID EffectEcho::ManualPage()
+ManualPageID EffectEcho::ManualPage() const
 {
    return L"Echo";
 }

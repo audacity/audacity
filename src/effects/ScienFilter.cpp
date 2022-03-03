@@ -192,7 +192,7 @@ TranslatableString EffectScienFilter::GetDescription() const
    return XO("Performs IIR filtering that emulates analog filters");
 }
 
-ManualPageID EffectScienFilter::ManualPage()
+ManualPageID EffectScienFilter::ManualPage() const
 {
    return L"Classic_Filters";
 }

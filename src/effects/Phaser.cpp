@@ -115,7 +115,7 @@ TranslatableString EffectPhaser::GetDescription() const
    return XO("Combines phase-shifted signals with the original signal");
 }
 
-ManualPageID EffectPhaser::ManualPage()
+ManualPageID EffectPhaser::ManualPage() const
 {
    return L"Phaser";
 }

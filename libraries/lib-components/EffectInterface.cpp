@@ -55,7 +55,7 @@ bool EffectDefinitionInterface::EnablesDebug() const
    return false;
 }
 
-ManualPageID EffectDefinitionInterface::ManualPage()
+ManualPageID EffectDefinitionInterface::ManualPage() const
 {
    return {};
 }

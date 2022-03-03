@@ -106,7 +106,7 @@ TranslatableString EffectWahwah::GetDescription() const
    return XO("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
 }
 
-ManualPageID EffectWahwah::ManualPage()
+ManualPageID EffectWahwah::ManualPage() const
 {
    return L"Wahwah";
 }

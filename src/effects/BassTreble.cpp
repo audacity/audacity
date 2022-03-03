@@ -98,7 +98,7 @@ TranslatableString EffectBassTreble::GetDescription() const
    return XO("Simple tone control effect");
 }
 
-ManualPageID EffectBassTreble::ManualPage()
+ManualPageID EffectBassTreble::ManualPage() const
 {
    return L"Bass_and_Treble";
 }

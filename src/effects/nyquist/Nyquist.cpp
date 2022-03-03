@@ -241,7 +241,7 @@ TranslatableString NyquistEffect::GetDescription() const
    return mCopyright;
 }
 
-ManualPageID NyquistEffect::ManualPage()
+ManualPageID NyquistEffect::ManualPage() const
 {
       return mIsPrompt
          ? wxString("Nyquist_Prompt")

@@ -150,7 +150,7 @@ TranslatableString EffectChangePitch::GetDescription() const
    return XO("Changes the pitch of a track without changing its tempo");
 }
 
-ManualPageID EffectChangePitch::ManualPage()
+ManualPageID EffectChangePitch::ManualPage() const
 {
    return L"Change_Pitch";
 }

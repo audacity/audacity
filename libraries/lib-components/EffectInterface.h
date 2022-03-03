@@ -138,7 +138,7 @@ public:
    virtual bool EnablesDebug() const;
 
    //! Name of a page in the Audacity alpha manual, default is empty
-   virtual ManualPageID ManualPage();
+   virtual ManualPageID ManualPage() const;
 
    //! Fully qualified local help file name, default is empty
    virtual FilePath HelpPage();

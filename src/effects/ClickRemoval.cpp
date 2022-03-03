@@ -93,7 +93,7 @@ TranslatableString EffectClickRemoval::GetDescription() const
    return XO("Click Removal is designed to remove clicks on audio tracks");
 }
 
-ManualPageID EffectClickRemoval::ManualPage()
+ManualPageID EffectClickRemoval::ManualPage() const
 {
    return L"Click_Removal";
 }
