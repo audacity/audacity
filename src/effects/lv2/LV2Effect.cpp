@@ -497,7 +497,7 @@ bool LV2Effect::IsInteractive() const
    return mControlPorts.size() != 0;
 }
 
-bool LV2Effect::IsDefault()
+bool LV2Effect::IsDefault() const
 {
    return false;
 }

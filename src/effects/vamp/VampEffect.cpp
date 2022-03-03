@@ -132,7 +132,7 @@ bool VampEffect::IsInteractive() const
    return mHasParameters;
 }
 
-bool VampEffect::IsDefault()
+bool VampEffect::IsDefault() const
 {
    return false;
 }

@@ -310,7 +310,7 @@ bool VST3Effect::IsInteractive() const
    return mEditController != nullptr;
 }
 
-bool VST3Effect::IsDefault()
+bool VST3Effect::IsDefault() const
 {
    return false;
 }

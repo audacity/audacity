@@ -88,7 +88,7 @@ public:
    EffectType GetClassification() const override;
    EffectFamilySymbol GetFamily() const override;
    bool IsInteractive() const override;
-   bool IsDefault() override;
+   bool IsDefault() const override;
    bool EnablesDebug() override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;

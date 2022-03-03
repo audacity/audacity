@@ -273,7 +273,7 @@ public:
    EffectType GetType() const override;
    EffectFamilySymbol GetFamily() const override;
    bool IsInteractive() const override;
-   bool IsDefault() override;
+   bool IsDefault() const override;
    bool SupportsRealtime() override;
    bool SupportsAutomation() override;
 

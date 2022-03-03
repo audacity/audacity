@@ -275,7 +275,7 @@ public:
       return mInteractive;
    }
 
-   bool IsDefault() override
+   bool IsDefault() const override
    {
       return false;
    }
@@ -1276,7 +1276,7 @@ bool VSTEffect::IsInteractive() const
    return mInteractive;
 }
 
-bool VSTEffect::IsDefault()
+bool VSTEffect::IsDefault() const
 {
    return false;
 }

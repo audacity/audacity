@@ -292,7 +292,7 @@ bool NyquistEffect::IsInteractive() const
    return mControls.size() != 0;
 }
 
-bool NyquistEffect::IsDefault()
+bool NyquistEffect::IsDefault() const
 {
    return mIsPrompt;
 }

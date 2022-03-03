@@ -184,7 +184,7 @@ bool Effect::IsInteractive() const
    return true;
 }
 
-bool Effect::IsDefault()
+bool Effect::IsDefault() const
 {
    if (mClient)
    {

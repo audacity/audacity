@@ -947,7 +947,7 @@ bool AudioUnitEffect::IsInteractive() const
    return mInteractive;
 }
 
-bool AudioUnitEffect::IsDefault()
+bool AudioUnitEffect::IsDefault() const
 {
    return false;
 }

@@ -704,7 +704,7 @@ bool LadspaEffect::IsInteractive() const
    return mInteractive;
 }
 
-bool LadspaEffect::IsDefault()
+bool LadspaEffect::IsDefault() const
 {
    return false;
 }
