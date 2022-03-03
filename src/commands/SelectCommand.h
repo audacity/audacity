@@ -31,7 +31,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Selects a time range.");};
+   TranslatableString GetDescription() const override {return XO("Selects a time range.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -57,7 +57,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Selects a frequency range.");};
+   TranslatableString GetDescription() const override {return XO("Selects a frequency range.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -80,7 +80,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Selects a range of tracks.");};
+   TranslatableString GetDescription() const override {return XO("Selects a range of tracks.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -104,7 +104,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Selects Audio.");};
+   TranslatableString GetDescription() const override {return XO("Selects Audio.");};
    bool DefineParams( ShuttleParams & S ) override { 
       return 
          mSelTime.DefineParams(S) &&  

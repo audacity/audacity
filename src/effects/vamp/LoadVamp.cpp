@@ -85,7 +85,7 @@ wxString VampEffectsModule::GetVersion() const
    return VAMPEFFECTS_VERSION;
 }
 
-TranslatableString VampEffectsModule::GetDescription()
+TranslatableString VampEffectsModule::GetDescription() const
 {
    return XO("Provides Vamp Effects support to Audacity");
 }

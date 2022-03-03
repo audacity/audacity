@@ -23,7 +23,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Does the demo action.");};
+   TranslatableString GetDescription() const override {return XO("Does the demo action.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;

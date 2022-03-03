@@ -102,7 +102,7 @@ wxString BuiltinEffectsModule::GetVersion() const
    return AUDACITY_VERSION_STRING;
 }
 
-TranslatableString BuiltinEffectsModule::GetDescription()
+TranslatableString BuiltinEffectsModule::GetDescription() const
 {
    return XO("Provides builtin effects to Audacity");
 }

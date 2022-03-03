@@ -38,7 +38,7 @@ ComponentInterfaceSymbol ImportExportPrefs::GetSymbol() const
    return IMPORT_EXPORT_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString ImportExportPrefs::GetDescription()
+TranslatableString ImportExportPrefs::GetDescription() const
 {
    return XO("Preferences for ImportExport");
 }

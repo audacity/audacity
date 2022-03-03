@@ -110,7 +110,7 @@ ComponentInterfaceSymbol EffectCompressor::GetSymbol() const
    return Symbol;
 }
 
-TranslatableString EffectCompressor::GetDescription()
+TranslatableString EffectCompressor::GetDescription() const
 {
    return XO("Compresses the dynamic range of audio");
 }

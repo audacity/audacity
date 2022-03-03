@@ -140,7 +140,7 @@ wxString LadspaEffectsModule::GetVersion() const
    return LADSPAEFFECTS_VERSION;
 }
 
-TranslatableString LadspaEffectsModule::GetDescription()
+TranslatableString LadspaEffectsModule::GetDescription() const
 {
    return XO("Provides LADSPA Effects");
 }
@@ -665,7 +665,7 @@ wxString LadspaEffect::GetVersion() const
    return _("n/a");
 }
 
-TranslatableString LadspaEffect::GetDescription()
+TranslatableString LadspaEffect::GetDescription() const
 {
    return Verbatim( LAT1CTOWX(mData->Copyright) );
 }

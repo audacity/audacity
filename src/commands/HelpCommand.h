@@ -31,7 +31,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Gives help on a command.");};
+   TranslatableString GetDescription() const override {return XO("Gives help on a command.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -51,7 +51,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("For comments in a macro.");};
+   TranslatableString GetDescription() const override {return XO("For comments in a macro.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override {

@@ -186,7 +186,7 @@ ComponentInterfaceSymbol EffectScienFilter::GetSymbol() const
    return Symbol;
 }
 
-TranslatableString EffectScienFilter::GetDescription()
+TranslatableString EffectScienFilter::GetDescription() const
 {
    /* i18n-hint: "infinite impulse response" */
    return XO("Performs IIR filtering that emulates analog filters");

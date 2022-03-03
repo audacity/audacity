@@ -49,7 +49,7 @@ public:
    //SetTrackStatusCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
+   TranslatableString GetDescription() const override {return XO("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
@@ -76,7 +76,7 @@ public:
    //SetTrackAudioCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
+   TranslatableString GetDescription() const override {return XO("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
@@ -105,7 +105,7 @@ public:
    //SetTrackVisualsCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
+   TranslatableString GetDescription() const override {return XO("Sets various values for a track.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
@@ -148,7 +148,7 @@ public:
    SetTrackCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
+   TranslatableString GetDescription() const override {return XO("Sets various values for a track.");};
    // AudacityCommand overrides
    ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#set_track";}
 

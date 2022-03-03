@@ -113,7 +113,7 @@ ComponentInterfaceSymbol EffectAutoDuck::GetSymbol() const
    return Symbol;
 }
 
-TranslatableString EffectAutoDuck::GetDescription()
+TranslatableString EffectAutoDuck::GetDescription() const
 {
    return XO("Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level");
 }

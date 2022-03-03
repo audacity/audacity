@@ -110,7 +110,7 @@ ComponentInterfaceSymbol EffectPhaser::GetSymbol() const
    return Symbol;
 }
 
-TranslatableString EffectPhaser::GetDescription()
+TranslatableString EffectPhaser::GetDescription() const
 {
    return XO("Combines phase-shifted signals with the original signal");
 }

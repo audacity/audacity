@@ -77,7 +77,7 @@ ComponentInterfaceSymbol MousePrefs::GetSymbol() const
    return MOUSE_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString MousePrefs::GetDescription()
+TranslatableString MousePrefs::GetDescription() const
 {
    return XO("Preferences for Mouse");
 }

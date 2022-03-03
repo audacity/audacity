@@ -79,7 +79,7 @@ ComponentInterfaceSymbol ExtImportPrefs::GetSymbol() const
    return EXT_IMPORT_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString ExtImportPrefs::GetDescription()
+TranslatableString ExtImportPrefs::GetDescription() const
 {
    return XO("Preferences for ExtImport");
 }

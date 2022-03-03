@@ -43,7 +43,7 @@ ComponentInterfaceSymbol EffectsPrefs::GetSymbol() const
    return EFFECTS_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString EffectsPrefs::GetDescription()
+TranslatableString EffectsPrefs::GetDescription() const
 {
    return XO("Preferences for Effects");
 }

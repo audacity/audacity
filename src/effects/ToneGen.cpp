@@ -134,7 +134,7 @@ ComponentInterfaceSymbol EffectToneGen::GetSymbol() const
       : EffectTone::Symbol;
 }
 
-TranslatableString EffectToneGen::GetDescription()
+TranslatableString EffectToneGen::GetDescription() const
 {
    return mChirp
       ? XO("Generates an ascending or descending tone of one of four types")

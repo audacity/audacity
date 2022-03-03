@@ -41,7 +41,7 @@ ComponentInterfaceSymbol EffectInvert::GetSymbol() const
    return Symbol;
 }
 
-TranslatableString EffectInvert::GetDescription()
+TranslatableString EffectInvert::GetDescription() const
 {
    return XO("Flips the audio samples upside-down, reversing their polarity");
 }

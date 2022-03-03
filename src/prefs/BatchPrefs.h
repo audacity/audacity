@@ -26,7 +26,7 @@ public:
    BatchPrefs(wxWindow * parent, wxWindowID winid);
    ~BatchPrefs();
    ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() override;
+   TranslatableString GetDescription() const override;
    ManualPageID HelpPageName() override;
 
    bool Commit() override;

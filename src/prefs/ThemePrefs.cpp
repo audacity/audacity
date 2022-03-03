@@ -93,7 +93,7 @@ ComponentInterfaceSymbol ThemePrefs::GetSymbol() const
    return THEME_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString ThemePrefs::GetDescription()
+TranslatableString ThemePrefs::GetDescription() const
 {
    return XO("Preferences for Theme");
 }

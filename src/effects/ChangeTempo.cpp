@@ -119,7 +119,7 @@ ComponentInterfaceSymbol EffectChangeTempo::GetSymbol() const
    return Symbol;
 }
 
-TranslatableString EffectChangeTempo::GetDescription()
+TranslatableString EffectChangeTempo::GetDescription() const
 {
    return XO("Changes the tempo of a selection without changing its pitch");
 }

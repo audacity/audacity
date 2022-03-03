@@ -458,7 +458,7 @@ wxString LV2Effect::GetVersion() const
    return wxT("1.0");
 }
 
-TranslatableString LV2Effect::GetDescription()
+TranslatableString LV2Effect::GetDescription() const
 {
    return XO("n/a");
 }

@@ -48,7 +48,7 @@ ComponentInterfaceSymbol EffectFade::GetSymbol() const
       : EffectFadeOut::Symbol;
 }
 
-TranslatableString EffectFade::GetDescription()
+TranslatableString EffectFade::GetDescription() const
 {
    return mFadeIn
       ? XO("Applies a linear fade-in to the selected audio")

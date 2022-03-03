@@ -86,7 +86,7 @@ ComponentInterfaceSymbol EffectNoise::GetSymbol() const
    return Symbol;
 }
 
-TranslatableString EffectNoise::GetDescription()
+TranslatableString EffectNoise::GetDescription() const
 {
    return XO("Generates one of three different types of noise");
 }

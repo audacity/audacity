@@ -50,7 +50,7 @@ ComponentInterfaceSymbol GUIPrefs::GetSymbol() const
    return GUI_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString GUIPrefs::GetDescription()
+TranslatableString GUIPrefs::GetDescription() const
 {
    return XO("Preferences for GUI");
 }

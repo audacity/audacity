@@ -119,7 +119,7 @@ ComponentInterfaceSymbol EffectChangeSpeed::GetSymbol() const
    return Symbol;
 }
 
-TranslatableString EffectChangeSpeed::GetDescription()
+TranslatableString EffectChangeSpeed::GetDescription() const
 {
    return XO("Changes the speed of a track, also changing its pitch");
 }

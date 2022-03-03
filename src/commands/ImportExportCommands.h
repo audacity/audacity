@@ -30,7 +30,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Imports from a file.");};
+   TranslatableString GetDescription() const override {return XO("Imports from a file.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -48,7 +48,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Exports to a file.");};
+   TranslatableString GetDescription() const override {return XO("Exports to a file.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;

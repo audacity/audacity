@@ -46,7 +46,7 @@ class RecordingPrefs final : public PrefsPanel
    RecordingPrefs(wxWindow * parent, wxWindowID winid);
    virtual ~RecordingPrefs();
    ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() override;
+   TranslatableString GetDescription() const override;
 
    bool Commit() override;
    ManualPageID HelpPageName() override;

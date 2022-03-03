@@ -107,7 +107,7 @@ wxString VampEffect::GetVersion() const
    return wxString::Format(wxT("%d"), mPlugin->getPluginVersion());
 }
 
-TranslatableString VampEffect::GetDescription()
+TranslatableString VampEffect::GetDescription() const
 {
    return Verbatim(
       wxString::FromUTF8(mPlugin->getCopyright().c_str()) );

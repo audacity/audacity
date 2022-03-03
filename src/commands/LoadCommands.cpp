@@ -104,7 +104,7 @@ wxString BuiltinCommandsModule::GetVersion() const
    return AUDACITY_VERSION_STRING;
 }
 
-TranslatableString BuiltinCommandsModule::GetDescription()
+TranslatableString BuiltinCommandsModule::GetDescription() const
 {
    return XO("Provides builtin commands to Audacity");
 }

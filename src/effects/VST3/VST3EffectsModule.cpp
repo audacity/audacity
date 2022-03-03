@@ -107,7 +107,7 @@ wxString VST3EffectsModule::GetVersion() const
    return AUDACITY_VERSION_STRING;
 }
 
-TranslatableString VST3EffectsModule::GetDescription()
+TranslatableString VST3EffectsModule::GetDescription() const
 {
    return XO("Adds the ability to use VST3 effects in Audacity.");
 }

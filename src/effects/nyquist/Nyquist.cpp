@@ -236,7 +236,7 @@ wxString NyquistEffect::GetVersion() const
    return mReleaseVersion.Translation();
 }
 
-TranslatableString NyquistEffect::GetDescription()
+TranslatableString NyquistEffect::GetDescription() const
 {
    return mCopyright;
 }

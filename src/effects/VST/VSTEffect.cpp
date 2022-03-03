@@ -255,7 +255,7 @@ public:
       return mVersion;
    }
 
-   TranslatableString GetDescription() override
+   TranslatableString GetDescription() const override
    {
       return mDescription;
    }
@@ -349,7 +349,7 @@ wxString VSTEffectsModule::GetVersion() const
    return AUDACITY_VERSION_STRING;
 }
 
-TranslatableString VSTEffectsModule::GetDescription()
+TranslatableString VSTEffectsModule::GetDescription() const
 {
    return XO("Adds the ability to use VST effects in Audacity.");
 }
@@ -1233,7 +1233,7 @@ wxString VSTEffect::GetVersion() const
    return version;
 }
 
-TranslatableString VSTEffect::GetDescription()
+TranslatableString VSTEffect::GetDescription() const
 {
    // VST does have a product string opcode and some effects return a short
    // description, but most do not or they just return the name again.  So,

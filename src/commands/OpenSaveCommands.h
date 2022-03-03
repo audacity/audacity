@@ -34,7 +34,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Opens a project.");};
+   TranslatableString GetDescription() const override {return XO("Opens a project.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -54,7 +54,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Saves a project.");};
+   TranslatableString GetDescription() const override {return XO("Saves a project.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -74,7 +74,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Saves a copy of current project.");};
+   TranslatableString GetDescription() const override {return XO("Saves a copy of current project.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -92,7 +92,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Saves the log contents.");};
+   TranslatableString GetDescription() const override {return XO("Saves the log contents.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
@@ -110,7 +110,7 @@ public:
 
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Clears the log contents.");};
+   TranslatableString GetDescription() const override {return XO("Clears the log contents.");};
    bool DefineParams( ShuttleParams & S ) override;
    bool PromptUser(wxWindow *parent) override;
    bool Apply(const CommandContext & context) override;

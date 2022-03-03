@@ -46,7 +46,7 @@ ComponentInterfaceSymbol ModulePrefs::GetSymbol() const
    return MODULE_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString ModulePrefs::GetDescription()
+TranslatableString ModulePrefs::GetDescription() const
 {
    return XO("Preferences for Module");
 }

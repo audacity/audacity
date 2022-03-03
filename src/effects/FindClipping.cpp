@@ -63,7 +63,7 @@ ComponentInterfaceSymbol EffectFindClipping::GetSymbol() const
    return Symbol;
 }
 
-TranslatableString EffectFindClipping::GetDescription()
+TranslatableString EffectFindClipping::GetDescription() const
 {
    return XO("Creates labels where clipping is detected");
 }

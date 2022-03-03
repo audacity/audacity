@@ -152,7 +152,7 @@ wxString Effect::GetVersion() const
    return AUDACITY_VERSION_STRING;
 }
 
-TranslatableString Effect::GetDescription()
+TranslatableString Effect::GetDescription() const
 {
    if (mClient)
    {

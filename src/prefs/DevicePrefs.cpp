@@ -69,7 +69,7 @@ ComponentInterfaceSymbol DevicePrefs::GetSymbol() const
    return DEVICE_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString DevicePrefs::GetDescription()
+TranslatableString DevicePrefs::GetDescription() const
 {
    return XO("Preferences for Device");
 }

@@ -27,7 +27,7 @@ public:
    DragCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Drags mouse from one place to another.");};
+   TranslatableString GetDescription() const override {return XO("Drags mouse from one place to another.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

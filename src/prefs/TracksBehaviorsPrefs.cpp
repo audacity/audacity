@@ -37,7 +37,7 @@ ComponentInterfaceSymbol TracksBehaviorsPrefs::GetSymbol() const
    return TRACKS_BEHAVIORS_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString TracksBehaviorsPrefs::GetDescription()
+TranslatableString TracksBehaviorsPrefs::GetDescription() const
 {
    return XO("Preferences for TracksBehaviors");
 }

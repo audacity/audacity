@@ -281,7 +281,7 @@ wxString VST3Effect::GetVersion() const
    return mEffectClassInfo.version();
 }
 
-TranslatableString VST3Effect::GetDescription()
+TranslatableString VST3Effect::GetDescription() const
 {
    //i18n-hint VST3 effect description string
    return XO("SubCategories: %s").Format( mEffectClassInfo.subCategoriesString() );

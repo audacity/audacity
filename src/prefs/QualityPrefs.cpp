@@ -52,7 +52,7 @@ ComponentInterfaceSymbol QualityPrefs::GetSymbol() const
    return QUALITY_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString QualityPrefs::GetDescription()
+TranslatableString QualityPrefs::GetDescription() const
 {
    return XO("Preferences for Quality");
 }

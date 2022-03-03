@@ -76,7 +76,7 @@ public:
 
    // This returns a translated string
    // Any verb should be present tense indicative, not imperative
-   virtual TranslatableString GetDescription() = 0;
+   virtual TranslatableString GetDescription() const = 0;
 
    // non-virtual convenience function
    TranslatableString GetName() const;

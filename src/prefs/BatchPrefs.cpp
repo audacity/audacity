@@ -40,7 +40,7 @@ ComponentInterfaceSymbol BatchPrefs::GetSymbol() const
    return BATCH_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString BatchPrefs::GetDescription()
+TranslatableString BatchPrefs::GetDescription() const
 {
    return XO("Preferences for Batch");
 }

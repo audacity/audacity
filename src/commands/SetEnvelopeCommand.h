@@ -26,7 +26,7 @@ public:
    SetEnvelopeCommand();
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Sets an envelope point position.");};
+   TranslatableString GetDescription() const override {return XO("Sets an envelope point position.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

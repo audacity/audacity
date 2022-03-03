@@ -28,7 +28,7 @@ class EffectsPrefs final : public PrefsPanel
    EffectsPrefs(wxWindow * parent, wxWindowID winid);
    ~EffectsPrefs();
    ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() override;
+   TranslatableString GetDescription() const override;
 
    bool Commit() override;
    ManualPageID HelpPageName() override;

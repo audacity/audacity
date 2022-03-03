@@ -348,7 +348,7 @@ ComponentInterfaceSymbol EffectEqualization::GetSymbol() const
    return EffectEqualization::Symbol;
 }
 
-TranslatableString EffectEqualization::GetDescription()
+TranslatableString EffectEqualization::GetDescription() const
 {
    return XO("Adjusts the volume levels of particular frequencies");
 }

@@ -286,7 +286,7 @@ wxString AudioUnitEffectsModule::GetVersion() const
    return AUDIOUNITEFFECTS_VERSION;
 }
 
-TranslatableString AudioUnitEffectsModule::GetDescription()
+TranslatableString AudioUnitEffectsModule::GetDescription() const
 {
    return XO("Provides Audio Unit Effects support to Audacity");
 }
@@ -907,7 +907,7 @@ wxString AudioUnitEffect::GetVersion() const
                            version & 0xff);
 }
 
-TranslatableString AudioUnitEffect::GetDescription()
+TranslatableString AudioUnitEffect::GetDescription() const
 {
    /* i18n-hint: Can mean "not available," "not applicable," "no answer" */
    return XO("n/a");

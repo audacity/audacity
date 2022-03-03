@@ -98,7 +98,7 @@ public:
    ComponentInterfaceSymbol GetSymbol() const override;
    VendorSymbol GetVendor() const override;
    wxString GetVersion() const override;
-   TranslatableString GetDescription() override;
+   TranslatableString GetDescription() const override;
 
    EffectType GetType() override;
    EffectFamilySymbol GetFamily() override;

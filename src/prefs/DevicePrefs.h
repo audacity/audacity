@@ -27,7 +27,7 @@ class DevicePrefs final : public PrefsPanel
    DevicePrefs(wxWindow * parent, wxWindowID winid);
    virtual ~DevicePrefs();
    ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() override;
+   TranslatableString GetDescription() const override;
 
    bool Commit() override;
    ManualPageID HelpPageName() override;

@@ -45,7 +45,7 @@ class SpectrumPrefs final : public PrefsPanel
       AudacityProject *pProject, WaveTrack *wt);
    virtual ~SpectrumPrefs();
    ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() override;
+   TranslatableString GetDescription() const override;
 
    void Preview() override;
    bool Commit() override;

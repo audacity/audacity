@@ -104,7 +104,7 @@ public:
    // ComponentInterface implementation
 
    ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() override;
+   TranslatableString GetDescription() const override;
    ManualPageID ManualPage() override;
    bool DefineParams( ShuttleParams & S ) override;
 

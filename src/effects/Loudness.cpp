@@ -88,7 +88,7 @@ ComponentInterfaceSymbol EffectLoudness::GetSymbol() const
    return Symbol;
 }
 
-TranslatableString EffectLoudness::GetDescription()
+TranslatableString EffectLoudness::GetDescription() const
 {
    return XO("Sets the loudness of one or more tracks");
 }
