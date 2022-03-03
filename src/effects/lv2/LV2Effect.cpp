@@ -1562,7 +1562,7 @@ LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 
    if (!mUseGUI)
    {
-      if (!BuildPlain())
+      if (!BuildPlain(access))
          return nullptr;
    }
 
@@ -2276,7 +2276,7 @@ bool LV2Effect::BuildFancy()
    return true;
 }
 
-bool LV2Effect::BuildPlain()
+bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 {
    int numCols = 5;
    wxSizer *innerSizer;
@@ -2312,10 +2312,11 @@ bool LV2Effect::BuildPlain()
 
             wxWindow *item = safenew wxStaticText(w, 0, _("&Duration:"));
             sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
+            auto &extra = access.Get().extra;
             mDuration = safenew
                NumericTextCtrl(w, ID_Duration,
                                NumericConverter::TIME,
-                               mHost->GetDurationFormat(),
+                               extra.GetDurationFormat(),
                                mHost->GetDuration(),
                                mSampleRate,
                                NumericTextCtrl::Options {}

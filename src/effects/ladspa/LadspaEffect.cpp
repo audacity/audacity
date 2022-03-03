@@ -1219,10 +1219,11 @@ LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
          {
             item = safenew wxStaticText(w, 0, _("Duration:"));
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
+            auto &extra = access.Get().extra;
             mDuration = safenew
                NumericTextCtrl(w, ID_Duration,
                   NumericConverter::TIME,
-                  mHost->GetDurationFormat(),
+                  extra.GetDurationFormat(),
                   mHost->GetDuration(),
                   mSampleRate,
                   NumericTextCtrl::Options{}

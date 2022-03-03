@@ -299,8 +299,10 @@ bool EffectDtmf::Init()
 }
 
 std::unique_ptr<EffectUIValidator>
-EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 {
+   auto &settings = access.Get();
+
    // dialog will be passed values from effect
    // Effect retrieves values from saved config
    // Dialog will take care of using them to initialize controls
@@ -326,10 +328,11 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          .AddTextBox(XXO("&Amplitude (0-1):"), wxT(""), 10);
 
       S.AddPrompt(XXO("&Duration:"));
+      auto &extra = settings.extra;
       mDtmfDurationT = safenew
          NumericTextCtrl(S.GetParent(), ID_Duration,
                          NumericConverter::TIME,
-                         GetDurationFormat(),
+                         extra.GetDurationFormat(),
                          GetDuration(),
                          mProjectRate,
                          NumericTextCtrl::Options{}

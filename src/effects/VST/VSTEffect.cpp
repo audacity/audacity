@@ -1757,7 +1757,7 @@ VSTEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
    }
    else
    {
-      BuildPlain();
+      BuildPlain(access);
    }
 
    return std::make_unique<DefaultEffectUIValidator>(*this, access);
@@ -2691,7 +2691,7 @@ void VSTEffect::BuildFancy()
    return;
 }
 
-void VSTEffect::BuildPlain()
+void VSTEffect::BuildPlain(EffectSettingsAccess &access)
 {
    wxASSERT(mParent); // To justify safenew
    wxScrolledWindow *const scroller = safenew wxScrolledWindow(mParent,
@@ -2733,10 +2733,11 @@ void VSTEffect::BuildPlain()
          {
             wxControl *item = safenew wxStaticText(scroller, 0, _("Duration:"));
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
+            auto &extra = access.Get().extra;
             mDuration = safenew
                NumericTextCtrl(scroller, ID_Duration,
                   NumericConverter::TIME,
-                  mHost->GetDurationFormat(),
+                  extra.GetDurationFormat(),
                   mHost->GetDuration(),
                   mSampleRate,
                   NumericTextCtrl::Options{}

@@ -38,7 +38,6 @@ public:
    virtual const EffectDefinitionInterface& GetDefinition() const = 0;
 
    virtual double GetDuration() = 0;
-   virtual NumericFormatSymbol GetDurationFormat() = 0;
    virtual void SetDuration(double seconds) = 0;
 };
 

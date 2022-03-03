@@ -173,7 +173,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    const EffectDefinitionInterface& GetDefinition() const override;
    double GetDuration() override;
-   NumericFormatSymbol GetDurationFormat() override;
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
    void SetDuration(double duration) override;
 
@@ -471,7 +470,6 @@ private:
    bool mPreviewFullSelection;
 
    double mDuration;
-   NumericFormatSymbol mDurationFormat;
 
    bool mIsPreview;
 

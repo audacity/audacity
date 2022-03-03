@@ -751,11 +751,6 @@ double Effect::GetDuration()
    return mDuration;
 }
 
-NumericFormatSymbol Effect::GetDurationFormat()
-{
-   return mDurationFormat;
-}
-
 NumericFormatSymbol Effect::GetSelectionFormat()
 {
    if( !IsBatchProcessing() && FindProject() )
@@ -978,9 +973,10 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
       mT1 = mT0 + mDuration;
    }
 
-   mDurationFormat = isSelection
+   // This is happening inside EffectSettingsAccess::ModifySettings
+   settings.extra.SetDurationFormat( isSelection
       ? NumericConverter::TimeAndSampleFormat()
-      : NumericConverter::DefaultSelectionFormat();
+      : NumericConverter::DefaultSelectionFormat() );
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mF0 = selectedRegion.f0();

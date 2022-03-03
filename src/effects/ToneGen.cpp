@@ -360,7 +360,7 @@ bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator>
-EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 {
    wxTextCtrl *t;
 
@@ -468,10 +468,11 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
       }
 
       S.AddPrompt(XXO("&Duration:"));
+      auto &extra = access.Get().extra;
       mToneDurationT = safenew
          NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,
-                         GetDurationFormat(),
+                         extra.GetDurationFormat(),
                          GetDuration(),
                          mProjectRate,
                          NumericTextCtrl::Options{}

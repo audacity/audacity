@@ -66,17 +66,18 @@ EffectType EffectSilence::GetType() const
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator>
-EffectSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+EffectSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 {
    S.StartVerticalLay();
    {
       S.StartHorizontalLay();
       {
          S.AddPrompt(XXO("&Duration:"));
+         auto &extra = access.Get().extra;
          mDurationT = safenew
             NumericTextCtrl(S.GetParent(), wxID_ANY,
                               NumericConverter::TIME,
-                              GetDurationFormat(),
+                              extra.GetDurationFormat(),
                               GetDuration(),
                                mProjectRate,
                                NumericTextCtrl::Options{}

@@ -222,7 +222,7 @@ private:
    void OnSave(wxCommandEvent & evt);
    void OnSettings(wxCommandEvent & evt);
 
-   void BuildPlain();
+   void BuildPlain(EffectSettingsAccess &access);
    void BuildFancy();
    wxSizer *BuildProgramBar();
    void RefreshParameters(int skip = -1);

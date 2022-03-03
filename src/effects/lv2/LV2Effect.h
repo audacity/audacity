@@ -385,7 +385,7 @@ private:
    bool CheckFeatures(const LilvNode *subject, const LilvNode *predicate, bool required);
 
    bool BuildFancy();
-   bool BuildPlain();
+   bool BuildPlain(EffectSettingsAccess &access);
 
    bool TransferDataToWindow() /* not override */;
    bool TransferDataFromWindow() /* not override */;

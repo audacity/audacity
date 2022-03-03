@@ -66,6 +66,13 @@ using EffectFamilySymbol = ComponentInterfaceSymbol;
 
 //! Non-polymorphic package of settings values common to many effects
 class EffectSettingsExtra final {
+public:
+   const NumericFormatSymbol& GetDurationFormat() const
+      { return mDurationFormat; }
+   void SetDurationFormat(const NumericFormatSymbol &durationFormat)
+      { mDurationFormat = durationFormat; }
+private:
+   NumericFormatSymbol mDurationFormat{};
 };
 
 //! Externalized state of a plug-in
