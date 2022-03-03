@@ -64,9 +64,20 @@ typedef enum EffectType : int
 
 using EffectFamilySymbol = ComponentInterfaceSymbol;
 
+//! Non-polymorphic package of settings values common to many effects
+class EffectSettingsExtra final {
+};
+
 //! Externalized state of a plug-in
 struct EffectSettings : audacity::TypedAny<EffectSettings> {
    using TypedAny::TypedAny;
+   EffectSettingsExtra extra;
+
+   void swap(EffectSettings &other)
+   {
+      TypedAny::swap(other);
+      std::swap(extra, other.extra);
+   }
 };
 
 //! Interface for accessing an EffectSettings that may change asynchronously in
