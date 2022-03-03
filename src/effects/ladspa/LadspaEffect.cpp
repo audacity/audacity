@@ -400,8 +400,8 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
 class LadspaEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   LadspaEffectOptionsDialog(wxWindow * parent,
-      EffectHostInterface &host, EffectDefinitionInterface &effect);
+   LadspaEffectOptionsDialog(
+      wxWindow * parent, EffectDefinitionInterface &effect);
    virtual ~LadspaEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -409,7 +409,6 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectHostInterface &mHost;
    EffectDefinitionInterface &mEffect;
    bool mUseLatency;
 
@@ -420,10 +419,9 @@ BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LadspaEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(wxWindow * parent,
-   EffectHostInterface &host, EffectDefinitionInterface &effect)
+LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(
+   wxWindow * parent, EffectDefinitionInterface &effect)
 : wxDialogWrapper(parent, wxID_ANY, XO("LADSPA Effect Options"))
-, mHost{ host }
 , mEffect{ effect }
 {
    GetConfig(mEffect,
@@ -875,16 +873,16 @@ bool LadspaEffect::InitializeInstance(EffectHostInterface *host)
 
       bool haveDefaults;
       GetConfig(*this, PluginSettings::Private,
-         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
          false);
       if (!haveDefaults)
       {
-         SaveParameters(mHost->GetFactoryDefaultsGroup());
+         SaveParameters(FactoryDefaultsGroup());
          SetConfig(*this, PluginSettings::Private,
-            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+            FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(mHost->GetCurrentSettingsGroup());
+      LoadParameters(CurrentSettingsGroup());
    }
 
    return true;
@@ -1154,7 +1152,7 @@ bool LadspaEffect::LoadFactoryPreset(int WXUNUSED(id))
 
 bool LadspaEffect::LoadFactoryDefaults()
 {
-   if (!LoadParameters(mHost->GetFactoryDefaultsGroup()))
+   if (!LoadParameters(FactoryDefaultsGroup()))
    {
       return false;
    }
@@ -1542,7 +1540,7 @@ bool LadspaEffect::HasOptions()
 
 void LadspaEffect::ShowOptions()
 {
-   LadspaEffectOptionsDialog dlg(mParent, *mHost, *this);
+   LadspaEffectOptionsDialog dlg(mParent, *this);
    if (dlg.ShowModal())
    {
       // Reinitialize configuration options

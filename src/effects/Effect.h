@@ -177,10 +177,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
    void SetDuration(double duration) override;
 
-   RegistryPath GetUserPresetsGroup(const RegistryPath & name) override;
-   RegistryPath GetCurrentSettingsGroup() override;
-   RegistryPath GetFactoryDefaultsGroup() override;
-
    // EffectUIHostInterface implementation
 
    int ShowHostInterface( wxWindow &parent,

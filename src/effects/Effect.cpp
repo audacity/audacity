@@ -556,7 +556,7 @@ bool Effect::LoadFactoryDefaults()
       return mClient->LoadFactoryDefaults();
    }
 
-   return LoadUserPreset(GetFactoryDefaultsGroup());
+   return LoadUserPreset(FactoryDefaultsGroup());
 }
 
 // EffectUIClientInterface implementation
@@ -567,7 +567,7 @@ Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
    auto parent = S.GetParent();
    mUIParent = parent;
 
-//   LoadUserPreset(GetCurrentSettingsGroup());
+//   LoadUserPreset(CurrentSettingsGroup());
 
    // Let the effect subclass provide its own validator if it wants
    auto result = PopulateOrExchange(S, access);
@@ -770,33 +770,12 @@ void Effect::SetDuration(double seconds)
    if (GetType() == EffectTypeGenerate)
    {
       SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
+         CurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
    }
 
    mDuration = seconds;
 
    return;
-}
-
-RegistryPath Effect::GetUserPresetsGroup(const RegistryPath & name)
-{
-   RegistryPath group = wxT("UserPresets");
-   if (!name.empty())
-   {
-      group += wxCONFIG_PATH_SEPARATOR + name;
-   }
-
-   return group;
-}
-
-RegistryPath Effect::GetCurrentSettingsGroup()
-{
-   return wxT("CurrentSettings");
-}
-
-RegistryPath Effect::GetFactoryDefaultsGroup()
-{
-   return wxT("FactoryDefaults");
 }
 
 wxString Effect::GetSavedStateGroup()
@@ -820,15 +799,15 @@ bool Effect::Startup(EffectUIClientInterface *client)
    }
 
    bool haveDefaults;
-   GetConfig(GetDefinition(), PluginSettings::Private, GetFactoryDefaultsGroup(),
+   GetConfig(GetDefinition(), PluginSettings::Private, FactoryDefaultsGroup(),
       wxT("Initialized"), haveDefaults, false);
    if (!haveDefaults)
    {
-      SaveUserPreset(GetFactoryDefaultsGroup());
-      SetConfig(GetDefinition(), PluginSettings::Private, GetFactoryDefaultsGroup(),
+      SaveUserPreset(FactoryDefaultsGroup());
+      SetConfig(GetDefinition(), PluginSettings::Private, FactoryDefaultsGroup(),
          wxT("Initialized"), true);
    }
-   LoadUserPreset(GetCurrentSettingsGroup());
+   LoadUserPreset(CurrentSettingsGroup());
 
    return true;
 }
@@ -857,7 +836,7 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
    if (preset.StartsWith(kUserPresetIdent))
    {
       preset.Replace(kUserPresetIdent, wxEmptyString, false);
-      success = LoadUserPreset(GetUserPresetsGroup(preset));
+      success = LoadUserPreset(UserPresetsGroup(preset));
    }
    else if (preset.StartsWith(kFactoryPresetIdent))
    {
@@ -868,12 +847,12 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
    else if (preset.StartsWith(kCurrentSettingsIdent))
    {
       preset.Replace(kCurrentSettingsIdent, wxEmptyString, false);
-      success = LoadUserPreset(GetCurrentSettingsGroup());
+      success = LoadUserPreset(CurrentSettingsGroup());
    }
    else if (preset.StartsWith(kFactoryDefaultsIdent))
    {
       preset.Replace(kFactoryDefaultsIdent, wxEmptyString, false);
-      success = LoadUserPreset(GetFactoryDefaultsGroup());
+      success = LoadUserPreset(FactoryDefaultsGroup());
    }
    else
    {
@@ -963,7 +942,7 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
    if (GetType() == EffectTypeGenerate)
    {
       GetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(),
+         CurrentSettingsGroup(),
          wxT("LastUsedDuration"), mDuration, GetDefaultDuration());
    }
 

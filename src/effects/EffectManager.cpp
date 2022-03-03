@@ -335,20 +335,20 @@ bool EffectManager::PromptUser(
 static bool HasCurrentSettings(EffectHostInterface &host)
 {
    return HasConfigGroup(host.GetDefinition(), PluginSettings::Private,
-      host.GetCurrentSettingsGroup());
+      CurrentSettingsGroup());
 }
 
 static bool HasFactoryDefaults(EffectHostInterface &host)
 {
    return HasConfigGroup(host.GetDefinition(), PluginSettings::Private,
-      host.GetFactoryDefaultsGroup());
+      FactoryDefaultsGroup());
 }
 
 static RegistryPaths GetUserPresets(EffectHostInterface &host)
 {
    RegistryPaths presets;
    GetConfigSubgroups(host.GetDefinition(), PluginSettings::Private,
-      host.GetUserPresetsGroup({}), presets);
+      UserPresetsGroup({}), presets);
    std::sort( presets.begin(), presets.end() );
    return presets;
 }

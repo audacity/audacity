@@ -502,8 +502,8 @@ OSType AudioUnitEffectsModule::ToOSType(const wxString & type)
 class AudioUnitEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   AudioUnitEffectOptionsDialog(wxWindow * parent,
-      EffectHostInterface &host, EffectDefinitionInterface &effect);
+   AudioUnitEffectOptionsDialog(
+      wxWindow * parent, EffectDefinitionInterface &effect);
    virtual ~AudioUnitEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -511,7 +511,6 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectHostInterface &mHost;
    EffectDefinitionInterface &mEffect;
 
    bool mUseLatency;
@@ -524,10 +523,9 @@ BEGIN_EVENT_TABLE(AudioUnitEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, AudioUnitEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(wxWindow * parent,
-   EffectHostInterface &host, EffectDefinitionInterface &effect)
+AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(
+   wxWindow * parent, EffectDefinitionInterface &effect)
 : wxDialogWrapper(parent, wxID_ANY, XO("Audio Unit Effect Options"))
-, mHost{ host }
 , mEffect{ effect }
 {
    GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
@@ -785,7 +783,7 @@ TranslatableString AudioUnitEffectImportDialog::Import(
    }
 
    // And write it to the config
-   wxString group = mEffect->mHost->GetUserPresetsGroup(name);
+   wxString group = UserPresetsGroup(name);
    if (!SetConfig(*mEffect,
       PluginSettings::Private, group, PRESET_KEY,
       parms))
@@ -1060,15 +1058,15 @@ bool AudioUnitEffect::InitializeInstance(EffectHostInterface *host)
 
       bool haveDefaults;
       GetConfig(*this, PluginSettings::Private,
-         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
+         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
       if (!haveDefaults)
       {
-         SavePreset(mHost->GetFactoryDefaultsGroup());
+         SavePreset(FactoryDefaultsGroup());
          SetConfig(*this, PluginSettings::Private,
-            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+            FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadPreset(mHost->GetCurrentSettingsGroup());
+      LoadPreset(CurrentSettingsGroup());
    }
 
    return true;
@@ -1645,7 +1643,7 @@ bool AudioUnitEffect::LoadFactoryPreset(int id)
 
 bool AudioUnitEffect::LoadFactoryDefaults()
 {
-   return LoadPreset(mHost->GetFactoryDefaultsGroup());
+   return LoadPreset(FactoryDefaultsGroup());
 }
 
 RegistryPaths AudioUnitEffect::GetFactoryPresets() const
@@ -1898,7 +1896,7 @@ bool AudioUnitEffect::HasOptions()
 
 void AudioUnitEffect::ShowOptions()
 {
-   AudioUnitEffectOptionsDialog dlg(mParent, *mHost, *this);
+   AudioUnitEffectOptionsDialog dlg(mParent, *this);
    if (dlg.ShowModal())
    {
       // Reinitialize configuration settings

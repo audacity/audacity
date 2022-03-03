@@ -626,13 +626,13 @@ bool NyquistEffect::Init()
       //(during this session).
       if (mFileName.GetModificationTime().IsLaterThan(mFileModified))
       {
-         SaveUserPreset(GetCurrentSettingsGroup());
+         SaveUserPreset(CurrentSettingsGroup());
 
          mMaxLen = NYQ_MAX_LEN;
          ParseFile();
          mFileModified = mFileName.GetModificationTime();
 
-         LoadUserPreset(GetCurrentSettingsGroup());
+         LoadUserPreset(CurrentSettingsGroup());
       }
    }
 

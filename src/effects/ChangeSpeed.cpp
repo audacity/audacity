@@ -257,13 +257,13 @@ EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    {
       wxString formatId;
       GetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(),
+         CurrentSettingsGroup(),
          wxT("TimeFormat"), formatId, mFormat.Internal());
       mFormat = NumericConverter::LookupFormat(
          NumericConverter::TIME, formatId );
    }
    GetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(),
+      CurrentSettingsGroup(),
       wxT("VinylChoice"), mFromVinyl, mFromVinyl);
 
    S.SetBorder(5);
@@ -424,9 +424,9 @@ bool EffectChangeSpeed::TransferDataFromWindow(EffectSettings &)
    m_PercentChange = exactPercent;
 
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
+      CurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
+      CurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
 
    return true;
 }
@@ -631,7 +631,7 @@ void EffectChangeSpeed::OnChoice_Vinyl(wxCommandEvent & WXUNUSED(evt))
    // Use this as the 'preferred' choice.
    if (mFromVinyl != kVinyl_NA) {
       SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
+         CurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
    }
 
    // If mFromVinyl & mToVinyl are set, then there's a NEW percent change.
@@ -742,7 +742,7 @@ void EffectChangeSpeed::Update_Vinyl()
          } else {
             // Use the last saved option.
             GetConfig(GetDefinition(), PluginSettings::Private,
-               GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, 0);
+               CurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, 0);
             mpChoice_FromVinyl->SetSelection(mFromVinyl);
             mpChoice_ToVinyl->SetSelection(mFromVinyl);
          }

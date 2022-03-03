@@ -465,4 +465,14 @@ protected:
    virtual bool CloseUI() = 0;
 };
 
+//! Component of a configuration key path
+COMPONENTS_API const RegistryPath &CurrentSettingsGroup();
+
+//! Component of a configuration key path
+COMPONENTS_API const RegistryPath &FactoryDefaultsGroup();
+
+//! Compute part of a registry path, given a name which may be empty
+COMPONENTS_API RegistryPath UserPresetsGroup(const RegistryPath & name);
+
 #endif // __AUDACITY_EFFECTINTERFACE_H__
+

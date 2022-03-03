@@ -847,7 +847,7 @@ bool VST3Effect::InitializeInstance(EffectHostInterface* host)
    if(host)
    {
       ReloadUserOptions();
-      if(!LoadUserPreset(host->GetCurrentSettingsGroup()))
+      if(!LoadUserPreset(CurrentSettingsGroup()))
          LoadFactoryDefaults();
    }
    return true;
@@ -1019,7 +1019,7 @@ void VST3Effect::ShowOptions()
 {
    if(mEffectHost)
    {
-      VST3OptionsDialog dlg(mParent, *mEffectHost, *this);
+      VST3OptionsDialog dlg(mParent, *this);
       if (dlg.ShowModal())
       {
          ReloadUserOptions();
