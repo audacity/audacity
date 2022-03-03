@@ -204,7 +204,7 @@ bool Effect::SupportsRealtime() const
    return false;
 }
 
-bool Effect::SupportsAutomation()
+bool Effect::SupportsAutomation() const
 {
    if (mClient)
    {

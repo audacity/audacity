@@ -285,7 +285,7 @@ public:
       return mType == EffectTypeProcess;
    }
 
-   bool SupportsAutomation() override
+   bool SupportsAutomation() const override
    {
       return mAutomatable;
    }
@@ -1286,7 +1286,7 @@ bool VSTEffect::SupportsRealtime() const
    return GetType() == EffectTypeProcess;
 }
 
-bool VSTEffect::SupportsAutomation()
+bool VSTEffect::SupportsAutomation() const
 {
    return mAutomatable;
 }

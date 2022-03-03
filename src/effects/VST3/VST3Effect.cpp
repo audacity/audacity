@@ -320,7 +320,7 @@ bool VST3Effect::SupportsRealtime() const
    return true;
 }
 
-bool VST3Effect::SupportsAutomation()
+bool VST3Effect::SupportsAutomation() const
 {
    if(mEditController == nullptr)
       return false;

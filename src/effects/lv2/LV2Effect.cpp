@@ -507,7 +507,7 @@ bool LV2Effect::SupportsRealtime() const
    return GetType() == EffectTypeProcess;
 }
 
-bool LV2Effect::SupportsAutomation()
+bool LV2Effect::SupportsAutomation() const
 {
    return true;
 }

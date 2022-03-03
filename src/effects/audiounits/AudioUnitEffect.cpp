@@ -957,7 +957,7 @@ bool AudioUnitEffect::SupportsRealtime() const
    return GetType() == EffectTypeProcess;
 }
 
-bool AudioUnitEffect::SupportsAutomation()
+bool AudioUnitEffect::SupportsAutomation() const
 {
    OSStatus result;
    UInt32 dataSize;

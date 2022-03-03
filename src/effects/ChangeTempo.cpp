@@ -136,7 +136,7 @@ EffectType EffectChangeTempo::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectChangeTempo::SupportsAutomation()
+bool EffectChangeTempo::SupportsAutomation() const
 {
    return true;
 }

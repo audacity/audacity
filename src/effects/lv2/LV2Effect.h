@@ -275,7 +275,7 @@ public:
    bool IsInteractive() const override;
    bool IsDefault() const override;
    bool SupportsRealtime() const override;
-   bool SupportsAutomation() override;
+   bool SupportsAutomation() const override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;

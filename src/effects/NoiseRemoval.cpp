@@ -130,7 +130,7 @@ EffectType EffectNoiseRemoval::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectNoiseRemoval::SupportsAutomation()
+bool EffectNoiseRemoval::SupportsAutomation() const
 {
    return false;
 }

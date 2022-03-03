@@ -714,7 +714,7 @@ bool LadspaEffect::SupportsRealtime() const
    return GetType() != EffectTypeGenerate;
 }
 
-bool LadspaEffect::SupportsAutomation()
+bool LadspaEffect::SupportsAutomation() const
 {
    return mNumInputControls > 0;
 }
