@@ -64,7 +64,7 @@ VampEffectsModule::~VampEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath VampEffectsModule::GetPath()
+PluginPath VampEffectsModule::GetPath() const
 {
    return {};
 }

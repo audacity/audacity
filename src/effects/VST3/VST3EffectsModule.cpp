@@ -87,7 +87,7 @@ std::shared_ptr<VST3::Hosting::Module> VST3EffectsModule::GetModule(const wxStri
    return module;
 }
 
-PluginPath VST3EffectsModule::GetPath()
+PluginPath VST3EffectsModule::GetPath() const
 {
    return {};
 }

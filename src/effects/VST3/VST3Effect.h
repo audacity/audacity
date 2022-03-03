@@ -94,7 +94,7 @@ public:
 
    ~VST3Effect() override;
 
-   PluginPath GetPath() override;
+   PluginPath GetPath() const override;
    ComponentInterfaceSymbol GetSymbol() const override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;

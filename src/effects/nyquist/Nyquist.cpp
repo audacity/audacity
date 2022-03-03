@@ -203,7 +203,7 @@ NyquistEffect::~NyquistEffect()
 
 // ComponentInterface implementation
 
-PluginPath NyquistEffect::GetPath()
+PluginPath NyquistEffect::GetPath() const
 {
    if (mIsPrompt)
       return NYQUIST_PROMPT_ID;

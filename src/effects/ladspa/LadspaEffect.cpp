@@ -116,7 +116,7 @@ LadspaEffectsModule::~LadspaEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath LadspaEffectsModule::GetPath()
+PluginPath LadspaEffectsModule::GetPath() const
 {
    return {};
 }
@@ -645,7 +645,7 @@ LadspaEffect::~LadspaEffect()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath LadspaEffect::GetPath()
+PluginPath LadspaEffect::GetPath() const
 {
    return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }

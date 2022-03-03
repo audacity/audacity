@@ -65,7 +65,7 @@ struct PrefsItemVisitor final : Registry::Visitor {
 };
 }
 
-PluginPath PrefsPanel::GetPath()
+PluginPath PrefsPanel::GetPath() const
 { return BUILTIN_PREFS_PANEL_PREFIX + GetSymbol().Internal(); }
 
 VendorSymbol PrefsPanel::GetVendor()

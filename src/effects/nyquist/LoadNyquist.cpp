@@ -93,7 +93,7 @@ NyquistEffectsModule::~NyquistEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath NyquistEffectsModule::GetPath()
+PluginPath NyquistEffectsModule::GetPath() const
 {
    return {};
 }

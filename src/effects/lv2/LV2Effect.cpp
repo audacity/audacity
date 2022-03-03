@@ -431,7 +431,7 @@ LV2Effect::~LV2Effect()
 // ComponentInterface Implementation
 // ============================================================================
 
-PluginPath LV2Effect::GetPath()
+PluginPath LV2Effect::GetPath() const
 {
    return LilvString(lilv_plugin_get_uri(mPlug));
 }

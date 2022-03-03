@@ -261,7 +261,7 @@ VST3Effect::VST3Effect(
 }
 
 
-PluginPath VST3Effect::GetPath()
+PluginPath VST3Effect::GetPath() const
 {
    return VST3Utils::MakePluginPathString( { mModule->getPath() }, mEffectClassInfo.ID().toString());
 }

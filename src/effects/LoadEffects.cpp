@@ -81,7 +81,7 @@ BuiltinEffectsModule::~BuiltinEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath BuiltinEffectsModule::GetPath()
+PluginPath BuiltinEffectsModule::GetPath() const
 {
    return {};
 }

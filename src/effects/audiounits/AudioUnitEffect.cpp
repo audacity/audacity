@@ -264,7 +264,7 @@ AudioUnitEffectsModule::~AudioUnitEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath AudioUnitEffectsModule::GetPath()
+PluginPath AudioUnitEffectsModule::GetPath() const
 {
    return {};
 }
@@ -880,7 +880,7 @@ AudioUnitEffect::~AudioUnitEffect()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath AudioUnitEffect::GetPath()
+PluginPath AudioUnitEffect::GetPath() const
 {
    return mPath;
 }

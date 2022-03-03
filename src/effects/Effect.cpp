@@ -112,7 +112,7 @@ EffectType Effect::GetType()
    return EffectTypeNone;
 }
 
-PluginPath Effect::GetPath()
+PluginPath Effect::GetPath() const
 {
    if (mClient)
    {

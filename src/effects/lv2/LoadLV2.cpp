@@ -90,7 +90,7 @@ LV2EffectsModule::~LV2EffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath LV2EffectsModule::GetPath()
+PluginPath LV2EffectsModule::GetPath() const
 {
    return {};
 }

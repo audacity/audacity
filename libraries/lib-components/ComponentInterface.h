@@ -64,7 +64,7 @@ public:
    virtual ~ComponentInterface();
 
    // These should return an untranslated value
-   virtual PluginPath GetPath() = 0;
+   virtual PluginPath GetPath() const = 0;
 
    // The internal string persists in configuration files
    // So config compatibility will break if it is changed across Audacity versions

@@ -235,7 +235,7 @@ public:
 
    // EffectDefinitionInterface implementation
 
-   PluginPath GetPath() override
+   PluginPath GetPath() const override
    {
       return mPath;
    }
@@ -328,7 +328,7 @@ VSTEffectsModule::~VSTEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath VSTEffectsModule::GetPath()
+PluginPath VSTEffectsModule::GetPath() const
 {
    return {};
 }
@@ -1199,7 +1199,7 @@ VSTEffect::~VSTEffect()
 // ComponentInterface Implementation
 // ============================================================================
 
-PluginPath VSTEffect::GetPath()
+PluginPath VSTEffect::GetPath() const
 {
    return mPath;
 }

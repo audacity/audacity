@@ -87,7 +87,7 @@ VampEffect::~VampEffect()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath VampEffect::GetPath()
+PluginPath VampEffect::GetPath() const
 {
    return mPath;
 }

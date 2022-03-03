@@ -83,7 +83,7 @@ BuiltinCommandsModule::~BuiltinCommandsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath BuiltinCommandsModule::GetPath()
+PluginPath BuiltinCommandsModule::GetPath() const
 {
    return {};
 }
