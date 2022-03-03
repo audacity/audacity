@@ -127,7 +127,7 @@ EffectFamilySymbol VampEffect::GetFamily() const
    return VAMPEFFECTS_FAMILY;
 }
 
-bool VampEffect::IsInteractive()
+bool VampEffect::IsInteractive() const
 {
    return mHasParameters;
 }

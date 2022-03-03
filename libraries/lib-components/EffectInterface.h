@@ -123,7 +123,7 @@ public:
    virtual EffectFamilySymbol GetFamily() const = 0;
 
    //! Whether the effect needs a dialog for entry of settings
-   virtual bool IsInteractive() = 0;
+   virtual bool IsInteractive() const = 0;
 
    //! Whether the effect sorts "above the line" in the menus
    virtual bool IsDefault() = 0;

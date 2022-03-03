@@ -66,7 +66,7 @@ EffectType EffectRepair::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectRepair::IsInteractive()
+bool EffectRepair::IsInteractive() const
 {
    return false;
 }

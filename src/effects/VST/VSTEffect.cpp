@@ -270,7 +270,7 @@ public:
       return mType;
    }
 
-   bool IsInteractive() override
+   bool IsInteractive() const override
    {
       return mInteractive;
    }
@@ -1271,7 +1271,7 @@ EffectFamilySymbol VSTEffect::GetFamily() const
    return VSTPLUGINTYPE;
 }
 
-bool VSTEffect::IsInteractive()
+bool VSTEffect::IsInteractive() const
 {
    return mInteractive;
 }

@@ -282,7 +282,7 @@ EffectFamilySymbol NyquistEffect::GetFamily() const
    return NYQUISTEFFECTS_FAMILY;
 }
 
-bool NyquistEffect::IsInteractive()
+bool NyquistEffect::IsInteractive() const
 {
    if (mIsPrompt)
    {

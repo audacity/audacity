@@ -492,7 +492,7 @@ EffectFamilySymbol LV2Effect::GetFamily() const
    return LV2EFFECTS_FAMILY;
 }
 
-bool LV2Effect::IsInteractive()
+bool LV2Effect::IsInteractive() const
 {
    return mControlPorts.size() != 0;
 }

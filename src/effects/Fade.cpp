@@ -62,7 +62,7 @@ EffectType EffectFade::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectFade::IsInteractive()
+bool EffectFade::IsInteractive() const
 {
    return false;
 }

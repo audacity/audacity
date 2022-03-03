@@ -53,7 +53,7 @@ EffectType EffectInvert::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectInvert::IsInteractive()
+bool EffectInvert::IsInteractive() const
 {
    return false;
 }

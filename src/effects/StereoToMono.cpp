@@ -57,7 +57,7 @@ EffectType EffectStereoToMono::GetType() const
    return EffectTypeHidden;
 }
 
-bool EffectStereoToMono::IsInteractive()
+bool EffectStereoToMono::IsInteractive() const
 {
    return false;
 }

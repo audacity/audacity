@@ -100,7 +100,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    EffectType GetType() const override;
    EffectFamilySymbol GetFamily() const override;
-   bool IsInteractive() override;
+   bool IsInteractive() const override;
    bool IsDefault() override;
    bool SupportsRealtime() override;
    bool SupportsAutomation() override;

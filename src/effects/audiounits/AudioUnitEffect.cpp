@@ -942,7 +942,7 @@ EffectFamilySymbol AudioUnitEffect::GetFamily() const
    return AUDIOUNITEFFECTS_FAMILY;
 }
 
-bool AudioUnitEffect::IsInteractive()
+bool AudioUnitEffect::IsInteractive() const
 {
    return mInteractive;
 }

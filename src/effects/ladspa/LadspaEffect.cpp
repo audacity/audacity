@@ -699,7 +699,7 @@ EffectFamilySymbol LadspaEffect::GetFamily() const
    return LADSPAEFFECTS_FAMILY;
 }
 
-bool LadspaEffect::IsInteractive()
+bool LadspaEffect::IsInteractive() const
 {
    return mInteractive;
 }

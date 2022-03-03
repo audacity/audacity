@@ -29,7 +29,7 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool IsInteractive() override;
+   bool IsInteractive() const override;
 
    // EffectProcessor implementation
 

@@ -305,7 +305,7 @@ EffectFamilySymbol VST3Effect::GetFamily() const
    return VST3Effect::GetFamilySymbol();
 }
 
-bool VST3Effect::IsInteractive()
+bool VST3Effect::IsInteractive() const
 {
    return mEditController != nullptr;
 }

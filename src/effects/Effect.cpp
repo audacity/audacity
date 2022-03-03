@@ -174,7 +174,7 @@ EffectFamilySymbol Effect::GetFamily() const
    return { wxT("Audacity"), XO("Built-in") };
 }
 
-bool Effect::IsInteractive()
+bool Effect::IsInteractive() const
 {
    if (mClient)
    {

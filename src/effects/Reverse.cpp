@@ -63,7 +63,7 @@ EffectType EffectReverse::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectReverse::IsInteractive()
+bool EffectReverse::IsInteractive() const
 {
    return false;
 }
