@@ -74,7 +74,7 @@ ManualPageID EffectEcho::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectEcho::GetType()
+EffectType EffectEcho::GetType() const
 {
    return EffectTypeProcess;
 }

@@ -34,7 +34,7 @@ public:
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
+   EffectType GetType() const override;
 
    // EffectProcessor implementation
 

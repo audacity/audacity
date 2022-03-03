@@ -122,7 +122,7 @@ ManualPageID EffectPhaser::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectPhaser::GetType()
+EffectType EffectPhaser::GetType() const
 {
    return EffectTypeProcess;
 }

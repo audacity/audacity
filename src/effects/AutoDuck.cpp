@@ -125,7 +125,7 @@ ManualPageID EffectAutoDuck::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectAutoDuck::GetType()
+EffectType EffectAutoDuck::GetType() const
 {
    return EffectTypeProcess;
 }

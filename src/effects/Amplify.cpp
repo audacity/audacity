@@ -106,7 +106,7 @@ ManualPageID EffectAmplify::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectAmplify::GetType()
+EffectType EffectAmplify::GetType() const
 {
    return EffectTypeProcess;
 }

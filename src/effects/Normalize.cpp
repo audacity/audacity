@@ -85,7 +85,7 @@ ManualPageID EffectNormalize::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNormalize::GetType()
+EffectType EffectNormalize::GetType() const
 {
    return EffectTypeProcess;
 }

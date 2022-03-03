@@ -113,7 +113,7 @@ ManualPageID EffectWahwah::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectWahwah::GetType()
+EffectType EffectWahwah::GetType() const
 {
    return EffectTypeProcess;
 }

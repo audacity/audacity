@@ -57,7 +57,7 @@ TranslatableString EffectFade::GetDescription() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectFade::GetType()
+EffectType EffectFade::GetType() const
 {
    return EffectTypeProcess;
 }

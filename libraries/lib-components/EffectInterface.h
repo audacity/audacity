@@ -114,7 +114,7 @@ public:
    virtual ~EffectDefinitionInterface();
 
    //! Type determines how it behaves.
-   virtual EffectType GetType() = 0;
+   virtual EffectType GetType() const = 0;
 
    //! Determines which menu it appears in; default same as GetType().
    virtual EffectType GetClassification();

@@ -432,7 +432,7 @@ TranslatableString EffectNoiseReduction::GetDescription() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNoiseReduction::GetType()
+EffectType EffectNoiseReduction::GetType() const
 {
    return EffectTypeProcess;
 }

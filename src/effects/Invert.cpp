@@ -48,7 +48,7 @@ TranslatableString EffectInvert::GetDescription() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectInvert::GetType()
+EffectType EffectInvert::GetType() const
 {
    return EffectTypeProcess;
 }

@@ -100,7 +100,7 @@ ManualPageID EffectLoudness::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectLoudness::GetType()
+EffectType EffectLoudness::GetType() const
 {
    return EffectTypeProcess;
 }

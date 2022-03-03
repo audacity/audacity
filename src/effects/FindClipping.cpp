@@ -75,7 +75,7 @@ ManualPageID EffectFindClipping::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectFindClipping::GetType()
+EffectType EffectFindClipping::GetType() const
 {
    return EffectTypeAnalyze;
 }

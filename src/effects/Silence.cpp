@@ -58,7 +58,7 @@ ManualPageID EffectSilence::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectSilence::GetType()
+EffectType EffectSilence::GetType() const
 {
    return EffectTypeGenerate;
 }

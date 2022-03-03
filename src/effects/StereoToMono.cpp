@@ -51,7 +51,7 @@ TranslatableString EffectStereoToMono::GetDescription() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectStereoToMono::GetType()
+EffectType EffectStereoToMono::GetType() const
 {
    // Really EffectTypeProcess, but this prevents it from showing in the Effect Menu
    return EffectTypeHidden;

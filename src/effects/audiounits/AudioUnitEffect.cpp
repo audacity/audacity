@@ -917,7 +917,7 @@ TranslatableString AudioUnitEffect::GetDescription() const
 // EffectDefinitionInterface implementation
 // ============================================================================
 
-EffectType AudioUnitEffect::GetType()
+EffectType AudioUnitEffect::GetType() const
 {
    if (mAudioIns == 0 && mAudioOuts == 0)
    {

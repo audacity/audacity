@@ -124,7 +124,7 @@ ManualPageID EffectPaulstretch::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectPaulstretch::GetType()
+EffectType EffectPaulstretch::GetType() const
 {
    return EffectTypeProcess;
 }

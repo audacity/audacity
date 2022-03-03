@@ -200,7 +200,7 @@ ManualPageID EffectScienFilter::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectScienFilter::GetType()
+EffectType EffectScienFilter::GetType() const
 {
    return EffectTypeProcess;
 }

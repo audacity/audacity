@@ -205,7 +205,7 @@ ManualPageID EffectDistortion::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectDistortion::GetType()
+EffectType EffectDistortion::GetType() const
 {
    return EffectTypeProcess;
 }

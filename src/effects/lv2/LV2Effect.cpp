@@ -467,7 +467,7 @@ TranslatableString LV2Effect::GetDescription() const
 // EffectDefinitionInterface Implementation
 // ============================================================================
 
-EffectType LV2Effect::GetType()
+EffectType LV2Effect::GetType() const
 {
    if (GetAudioInCount() == 0 && GetAudioOutCount() == 0)
    {

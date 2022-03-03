@@ -100,7 +100,7 @@ ManualPageID EffectClickRemoval::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectClickRemoval::GetType()
+EffectType EffectClickRemoval::GetType() const
 {
    return EffectTypeProcess;
 }

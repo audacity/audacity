@@ -265,7 +265,7 @@ public:
       return VSTPLUGINTYPE;
    }
 
-   EffectType GetType() override
+   EffectType GetType() const override
    {
       return mType;
    }
@@ -1245,7 +1245,7 @@ TranslatableString VSTEffect::GetDescription() const
 // EffectDefinitionInterface Implementation
 // ============================================================================
 
-EffectType VSTEffect::GetType()
+EffectType VSTEffect::GetType() const
 {
    if (mAudioIns == 0 && mAudioOuts == 0 && mMidiIns == 0 && mMidiOuts == 0)
    {

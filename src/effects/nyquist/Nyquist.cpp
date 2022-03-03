@@ -265,7 +265,7 @@ FilePath NyquistEffect::HelpPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType NyquistEffect::GetType()
+EffectType NyquistEffect::GetType() const
 {
    return mType;
 }

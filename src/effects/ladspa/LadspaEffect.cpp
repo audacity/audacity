@@ -674,7 +674,7 @@ TranslatableString LadspaEffect::GetDescription() const
 // EffectDefinitionInterface implementation
 // ============================================================================
 
-EffectType LadspaEffect::GetType()
+EffectType LadspaEffect::GetType() const
 {
    if (mAudioIns == 0 && mAudioOuts == 0)
    {

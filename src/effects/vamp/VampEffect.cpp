@@ -117,7 +117,7 @@ TranslatableString VampEffect::GetDescription() const
 // EffectDefinitionInterface implementation
 // ============================================================================
 
-EffectType VampEffect::GetType()
+EffectType VampEffect::GetType() const
 {
    return EffectTypeAnalyze;
 }

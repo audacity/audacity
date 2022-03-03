@@ -108,7 +108,7 @@ ManualPageID EffectTimeScale::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectTimeScale::GetType()
+EffectType EffectTimeScale::GetType() const
 {
    return EffectTypeProcess;
 }

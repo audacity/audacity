@@ -105,7 +105,7 @@ ManualPageID EffectBassTreble::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectBassTreble::GetType()
+EffectType EffectBassTreble::GetType() const
 {
    return EffectTypeProcess;
 }

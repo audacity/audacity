@@ -122,7 +122,7 @@ ManualPageID EffectCompressor::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectCompressor::GetType()
+EffectType EffectCompressor::GetType() const
 {
    return EffectTypeProcess;
 }

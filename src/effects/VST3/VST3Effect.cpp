@@ -287,7 +287,7 @@ TranslatableString VST3Effect::GetDescription() const
    return XO("SubCategories: %s").Format( mEffectClassInfo.subCategoriesString() );
 }
 
-EffectType VST3Effect::GetType()
+EffectType VST3Effect::GetType() const
 {
    using namespace Steinberg::Vst::PlugType;
    if(mEffectClassInfo.subCategoriesString() == kFxGenerator)

@@ -100,7 +100,7 @@ public:
    wxString GetVersion() const override;
    TranslatableString GetDescription() const override;
 
-   EffectType GetType() override;
+   EffectType GetType() const override;
    EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;

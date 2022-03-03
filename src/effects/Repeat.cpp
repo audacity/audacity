@@ -83,7 +83,7 @@ ManualPageID EffectRepeat::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectRepeat::GetType()
+EffectType EffectRepeat::GetType() const
 {
    return EffectTypeProcess;
 }

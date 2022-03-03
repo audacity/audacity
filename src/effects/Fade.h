@@ -26,7 +26,7 @@ public:
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
+   EffectType GetType() const override;
    bool IsInteractive() override;
 
    // EffectProcessor implementation

@@ -157,7 +157,7 @@ ManualPageID EffectChangePitch::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectChangePitch::GetType()
+EffectType EffectChangePitch::GetType() const
 {
    return EffectTypeProcess;
 }

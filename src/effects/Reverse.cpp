@@ -58,7 +58,7 @@ TranslatableString EffectReverse::GetDescription() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectReverse::GetType()
+EffectType EffectReverse::GetType() const
 {
    return EffectTypeProcess;
 }

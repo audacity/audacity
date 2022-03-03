@@ -178,7 +178,7 @@ ManualPageID EffectTruncSilence::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectTruncSilence::GetType()
+EffectType EffectTruncSilence::GetType() const
 {
    return EffectTypeProcess;
 }

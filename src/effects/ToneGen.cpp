@@ -150,7 +150,7 @@ ManualPageID EffectToneGen::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectToneGen::GetType()
+EffectType EffectToneGen::GetType() const
 {
    return EffectTypeGenerate;
 }

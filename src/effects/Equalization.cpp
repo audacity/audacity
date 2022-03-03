@@ -365,7 +365,7 @@ ManualPageID EffectEqualization::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectEqualization::GetType()
+EffectType EffectEqualization::GetType() const
 {
    return EffectTypeProcess;
 }

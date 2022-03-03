@@ -156,7 +156,7 @@ ManualPageID EffectReverb::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectReverb::GetType()
+EffectType EffectReverb::GetType() const
 {
    return EffectTypeProcess;
 }

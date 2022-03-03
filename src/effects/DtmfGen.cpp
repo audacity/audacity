@@ -117,7 +117,7 @@ ManualPageID EffectDtmf::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectDtmf::GetType()
+EffectType EffectDtmf::GetType() const
 {
    return EffectTypeGenerate;
 }

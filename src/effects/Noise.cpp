@@ -98,7 +98,7 @@ ManualPageID EffectNoise::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNoise::GetType()
+EffectType EffectNoise::GetType() const
 {
    return EffectTypeGenerate;
 }

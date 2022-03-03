@@ -132,7 +132,7 @@ ManualPageID EffectChangeSpeed::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectChangeSpeed::GetType()
+EffectType EffectChangeSpeed::GetType() const
 {
    return EffectTypeProcess;
 }

@@ -102,7 +102,7 @@ Effect::~Effect()
 
 // EffectDefinitionInterface implementation
 
-EffectType Effect::GetType()
+EffectType Effect::GetType() const
 {
    if (mClient)
    {

@@ -131,7 +131,7 @@ ManualPageID EffectChangeTempo::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectChangeTempo::GetType()
+EffectType EffectChangeTempo::GetType() const
 {
    return EffectTypeProcess;
 }

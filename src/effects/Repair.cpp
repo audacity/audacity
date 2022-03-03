@@ -61,7 +61,7 @@ TranslatableString EffectRepair::GetDescription() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectRepair::GetType()
+EffectType EffectRepair::GetType() const
 {
    return EffectTypeProcess;
 }
