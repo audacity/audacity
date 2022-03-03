@@ -40,7 +40,7 @@ ApplicationPrefs::~ApplicationPrefs()
 {
 }
 
-ComponentInterfaceSymbol ApplicationPrefs::GetSymbol()
+ComponentInterfaceSymbol ApplicationPrefs::GetSymbol() const
 {
    return s_ComponentInterfaceSymbol;
 }

@@ -86,7 +86,7 @@ PluginPath BuiltinEffectsModule::GetPath()
    return {};
 }
 
-ComponentInterfaceSymbol BuiltinEffectsModule::GetSymbol()
+ComponentInterfaceSymbol BuiltinEffectsModule::GetSymbol() const
 {
    return XO("Builtin Effects");
 }

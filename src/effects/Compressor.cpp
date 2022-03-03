@@ -105,7 +105,7 @@ EffectCompressor::~EffectCompressor()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectCompressor::GetSymbol()
+ComponentInterfaceSymbol EffectCompressor::GetSymbol() const
 {
    return Symbol;
 }

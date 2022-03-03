@@ -36,7 +36,7 @@ EffectInvert::~EffectInvert()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectInvert::GetSymbol()
+ComponentInterfaceSymbol EffectInvert::GetSymbol() const
 {
    return Symbol;
 }

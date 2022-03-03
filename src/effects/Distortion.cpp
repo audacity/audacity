@@ -188,7 +188,7 @@ EffectDistortion::~EffectDistortion()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectDistortion::GetSymbol()
+ComponentInterfaceSymbol EffectDistortion::GetSymbol() const
 {
    return Symbol;
 }

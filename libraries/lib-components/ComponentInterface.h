@@ -68,7 +68,7 @@ public:
 
    // The internal string persists in configuration files
    // So config compatibility will break if it is changed across Audacity versions
-   virtual ComponentInterfaceSymbol GetSymbol() = 0;
+   virtual ComponentInterfaceSymbol GetSymbol() const = 0;
 
    virtual VendorSymbol GetVendor() = 0;
 

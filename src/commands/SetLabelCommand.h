@@ -26,7 +26,7 @@ public:
 
    SetLabelCommand();
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
+   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() override {return XO("Sets various values for a label.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

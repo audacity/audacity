@@ -88,7 +88,7 @@ ThemePrefs::~ThemePrefs(void)
 {
 }
 
-ComponentInterfaceSymbol ThemePrefs::GetSymbol()
+ComponentInterfaceSymbol ThemePrefs::GetSymbol() const
 {
    return THEME_PREFS_PLUGIN_SYMBOL;
 }

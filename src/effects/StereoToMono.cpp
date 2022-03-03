@@ -39,7 +39,7 @@ EffectStereoToMono::~EffectStereoToMono()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectStereoToMono::GetSymbol()
+ComponentInterfaceSymbol EffectStereoToMono::GetSymbol() const
 {
    return Symbol;
 }

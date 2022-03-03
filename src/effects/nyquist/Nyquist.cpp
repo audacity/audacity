@@ -211,7 +211,7 @@ PluginPath NyquistEffect::GetPath()
    return mFileName.GetFullPath();
 }
 
-ComponentInterfaceSymbol NyquistEffect::GetSymbol()
+ComponentInterfaceSymbol NyquistEffect::GetSymbol() const
 {
    if (mIsPrompt)
       return { NYQUIST_PROMPT_ID, NYQUIST_PROMPT_NAME };

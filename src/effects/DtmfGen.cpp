@@ -100,7 +100,7 @@ EffectDtmf::~EffectDtmf()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectDtmf::GetSymbol()
+ComponentInterfaceSymbol EffectDtmf::GetSymbol() const
 {
    return Symbol;
 }

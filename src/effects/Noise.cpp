@@ -81,7 +81,7 @@ EffectNoise::~EffectNoise()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectNoise::GetSymbol()
+ComponentInterfaceSymbol EffectNoise::GetSymbol() const
 {
    return Symbol;
 }

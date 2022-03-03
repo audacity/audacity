@@ -32,7 +32,7 @@ TracksBehaviorsPrefs::~TracksBehaviorsPrefs()
 {
 }
 
-ComponentInterfaceSymbol TracksBehaviorsPrefs::GetSymbol()
+ComponentInterfaceSymbol TracksBehaviorsPrefs::GetSymbol() const
 {
    return TRACKS_BEHAVIORS_PREFS_PLUGIN_SYMBOL;
 }

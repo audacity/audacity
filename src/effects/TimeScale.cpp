@@ -91,7 +91,7 @@ EffectTimeScale::~EffectTimeScale()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectTimeScale::GetSymbol()
+ComponentInterfaceSymbol EffectTimeScale::GetSymbol() const
 {
    return Symbol;
 }

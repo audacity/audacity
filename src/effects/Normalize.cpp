@@ -68,7 +68,7 @@ EffectNormalize::~EffectNormalize()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectNormalize::GetSymbol()
+ComponentInterfaceSymbol EffectNormalize::GetSymbol() const
 {
    return Symbol;
 }

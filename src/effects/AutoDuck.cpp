@@ -108,7 +108,7 @@ EffectAutoDuck::~EffectAutoDuck()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectAutoDuck::GetSymbol()
+ComponentInterfaceSymbol EffectAutoDuck::GetSymbol() const
 {
    return Symbol;
 }

@@ -105,7 +105,7 @@ EffectPhaser::~EffectPhaser()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectPhaser::GetSymbol()
+ComponentInterfaceSymbol EffectPhaser::GetSymbol() const
 {
    return Symbol;
 }

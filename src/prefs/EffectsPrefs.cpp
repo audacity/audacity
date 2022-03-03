@@ -38,7 +38,7 @@ EffectsPrefs::~EffectsPrefs()
 {
 }
 
-ComponentInterfaceSymbol EffectsPrefs::GetSymbol()
+ComponentInterfaceSymbol EffectsPrefs::GetSymbol() const
 {
    return EFFECTS_PREFS_PLUGIN_SYMBOL;
 }

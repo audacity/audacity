@@ -66,7 +66,7 @@ EffectRepeat::~EffectRepeat()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectRepeat::GetSymbol()
+ComponentInterfaceSymbol EffectRepeat::GetSymbol() const
 {
    return Symbol;
 }

@@ -279,7 +279,7 @@ TracksPrefs::~TracksPrefs()
 {
 }
 
-ComponentInterfaceSymbol TracksPrefs::GetSymbol()
+ComponentInterfaceSymbol TracksPrefs::GetSymbol() const
 {
    return TRACKS_PREFS_PLUGIN_SYMBOL;
 }

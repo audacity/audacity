@@ -181,7 +181,7 @@ EffectScienFilter::~EffectScienFilter()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectScienFilter::GetSymbol()
+ComponentInterfaceSymbol EffectScienFilter::GetSymbol() const
 {
    return Symbol;
 }

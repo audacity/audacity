@@ -114,7 +114,7 @@ EffectChangeSpeed::~EffectChangeSpeed()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectChangeSpeed::GetSymbol()
+ComponentInterfaceSymbol EffectChangeSpeed::GetSymbol() const
 {
    return Symbol;
 }

@@ -56,7 +56,7 @@ WaveformPrefs::~WaveformPrefs()
 {
 }
 
-ComponentInterfaceSymbol WaveformPrefs::GetSymbol()
+ComponentInterfaceSymbol WaveformPrefs::GetSymbol() const
 {
    return WAVEFORM_PREFS_PLUGIN_SYMBOL;
 }

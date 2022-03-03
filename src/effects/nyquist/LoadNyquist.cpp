@@ -98,7 +98,7 @@ PluginPath NyquistEffectsModule::GetPath()
    return {};
 }
 
-ComponentInterfaceSymbol NyquistEffectsModule::GetSymbol()
+ComponentInterfaceSymbol NyquistEffectsModule::GetSymbol() const
 {
    return XO("Nyquist Effects");
 }

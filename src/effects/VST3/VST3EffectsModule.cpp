@@ -92,7 +92,7 @@ PluginPath VST3EffectsModule::GetPath()
    return {};
 }
 
-ComponentInterfaceSymbol VST3EffectsModule::GetSymbol()
+ComponentInterfaceSymbol VST3EffectsModule::GetSymbol() const
 {
    return XO("VST3 Effects");
 }

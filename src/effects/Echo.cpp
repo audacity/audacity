@@ -57,7 +57,7 @@ EffectEcho::~EffectEcho()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectEcho::GetSymbol()
+ComponentInterfaceSymbol EffectEcho::GetSymbol() const
 {
    return Symbol;
 }

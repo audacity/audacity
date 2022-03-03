@@ -140,7 +140,7 @@ EffectChangePitch::~EffectChangePitch()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectChangePitch::GetSymbol()
+ComponentInterfaceSymbol EffectChangePitch::GetSymbol() const
 {
    return Symbol;
 }

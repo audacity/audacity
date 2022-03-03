@@ -32,7 +32,7 @@ class AUDACITY_DLL_API ImportExportPrefs final : public PrefsPanel
 
    ImportExportPrefs(wxWindow * parent, wxWindowID winid);
    ~ImportExportPrefs();
-   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() override;
 
    bool Commit() override;

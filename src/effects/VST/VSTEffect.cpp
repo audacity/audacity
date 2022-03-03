@@ -240,7 +240,7 @@ public:
       return mPath;
    }
 
-   ComponentInterfaceSymbol GetSymbol() override
+   ComponentInterfaceSymbol GetSymbol() const override
    {
       return mName;
    }
@@ -333,7 +333,7 @@ PluginPath VSTEffectsModule::GetPath()
    return {};
 }
 
-ComponentInterfaceSymbol VSTEffectsModule::GetSymbol()
+ComponentInterfaceSymbol VSTEffectsModule::GetSymbol() const
 {
    return XO("VST Effects");
 }
@@ -1204,7 +1204,7 @@ PluginPath VSTEffect::GetPath()
    return mPath;
 }
 
-ComponentInterfaceSymbol VSTEffect::GetSymbol()
+ComponentInterfaceSymbol VSTEffect::GetSymbol() const
 {
    return mName;
 }

@@ -37,7 +37,7 @@ WarningsPrefs::~WarningsPrefs()
 {
 }
 
-ComponentInterfaceSymbol WarningsPrefs::GetSymbol()
+ComponentInterfaceSymbol WarningsPrefs::GetSymbol() const
 {
    return WARNINGS_PREFS_PLUGIN_SYMBOL;
 }

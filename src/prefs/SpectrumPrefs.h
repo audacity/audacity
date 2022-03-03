@@ -44,7 +44,7 @@ class SpectrumPrefs final : public PrefsPanel
    SpectrumPrefs(wxWindow * parent, wxWindowID winid,
       AudacityProject *pProject, WaveTrack *wt);
    virtual ~SpectrumPrefs();
-   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() override;
 
    void Preview() override;

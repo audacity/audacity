@@ -74,7 +74,7 @@ ExtImportPrefs::~ExtImportPrefs()
 {
 }
 
-ComponentInterfaceSymbol ExtImportPrefs::GetSymbol()
+ComponentInterfaceSymbol ExtImportPrefs::GetSymbol() const
 {
    return EXT_IMPORT_PREFS_PLUGIN_SYMBOL;
 }

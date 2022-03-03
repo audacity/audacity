@@ -339,7 +339,7 @@ EffectEqualization::~EffectEqualization()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectEqualization::GetSymbol()
+ComponentInterfaceSymbol EffectEqualization::GetSymbol() const
 {
    if( mOptions == kEqOptionGraphic )
       return EffectEqualizationGraphic::Symbol;

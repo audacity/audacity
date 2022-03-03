@@ -44,7 +44,7 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() override;
    ManualPageID ManualPage() override;
 

@@ -33,7 +33,7 @@ ImportExportPrefs::~ImportExportPrefs()
 {
 }
 
-ComponentInterfaceSymbol ImportExportPrefs::GetSymbol()
+ComponentInterfaceSymbol ImportExportPrefs::GetSymbol() const
 {
    return IMPORT_EXPORT_PREFS_PLUGIN_SYMBOL;
 }

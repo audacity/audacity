@@ -29,7 +29,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
+   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() override {return XO("Imports from a file.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -47,7 +47,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
+   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() override {return XO("Exports to a file.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

@@ -35,7 +35,7 @@ public:
    KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
       AudacityProject *pProject,
       const CommandID &name);
-   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() override;
 
    bool Commit() override;

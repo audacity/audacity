@@ -49,7 +49,7 @@ EffectRepair::~EffectRepair()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectRepair::GetSymbol()
+ComponentInterfaceSymbol EffectRepair::GetSymbol() const
 {
    return Symbol;
 }

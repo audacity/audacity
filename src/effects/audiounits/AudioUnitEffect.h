@@ -51,7 +51,7 @@ public:
    // ComponentInterface implementation
 
    PluginPath GetPath() override;
-   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    TranslatableString GetDescription() override;
@@ -231,7 +231,7 @@ public:
    // ComponentInterface implementation
 
    PluginPath GetPath() override;
-   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    TranslatableString GetDescription() override;

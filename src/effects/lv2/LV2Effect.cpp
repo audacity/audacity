@@ -436,7 +436,7 @@ PluginPath LV2Effect::GetPath()
    return LilvString(lilv_plugin_get_uri(mPlug));
 }
 
-ComponentInterfaceSymbol LV2Effect::GetSymbol()
+ComponentInterfaceSymbol LV2Effect::GetSymbol() const
 {
    return LilvString(lilv_plugin_get_name(mPlug), true);
 }

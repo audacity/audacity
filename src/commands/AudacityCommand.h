@@ -54,7 +54,7 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    //  virtual wxString GetFamily();
 
    //These two must be implemented by instances.
-   ComponentInterfaceSymbol GetSymbol() override = 0;
+   ComponentInterfaceSymbol GetSymbol() const override = 0;
    virtual TranslatableString GetDescription() override
    {wxFAIL_MSG( "Implement a Description for this command");return XO("FAIL");};
 

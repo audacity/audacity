@@ -28,7 +28,7 @@ public:
    WaveformPrefs(wxWindow * parent, wxWindowID winid,
       AudacityProject *pProject, WaveTrack *wt);
    virtual ~WaveformPrefs();
-   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() override;
    ManualPageID HelpPageName() override;
 

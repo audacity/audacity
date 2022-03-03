@@ -269,7 +269,7 @@ PluginPath AudioUnitEffectsModule::GetPath()
    return {};
 }
 
-ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol()
+ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol() const
 {
    /* i18n-hint: Audio Unit is the name of an Apple audio software protocol */
    return XO("Audio Unit Effects");
@@ -885,7 +885,7 @@ PluginPath AudioUnitEffect::GetPath()
    return mPath;
 }
 
-ComponentInterfaceSymbol AudioUnitEffect::GetSymbol()
+ComponentInterfaceSymbol AudioUnitEffect::GetSymbol() const
 {
    return mName;
 }

@@ -114,7 +114,7 @@ EffectChangeTempo::~EffectChangeTempo()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectChangeTempo::GetSymbol()
+ComponentInterfaceSymbol EffectChangeTempo::GetSymbol() const
 {
    return Symbol;
 }

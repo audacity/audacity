@@ -30,7 +30,7 @@ public:
    int mFormat;
 
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
+   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() override {return XO("Gives help on a command.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -50,7 +50,7 @@ public:
    int mFormat;
 
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
+   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() override {return XO("For comments in a macro.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;

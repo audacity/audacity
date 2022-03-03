@@ -83,7 +83,7 @@ EffectLoudness::~EffectLoudness()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectLoudness::GetSymbol()
+ComponentInterfaceSymbol EffectLoudness::GetSymbol() const
 {
    return Symbol;
 }

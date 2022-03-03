@@ -41,7 +41,7 @@ ModulePrefs::~ModulePrefs()
 {
 }
 
-ComponentInterfaceSymbol ModulePrefs::GetSymbol()
+ComponentInterfaceSymbol ModulePrefs::GetSymbol() const
 {
    return MODULE_PREFS_PLUGIN_SYMBOL;
 }

@@ -127,7 +127,7 @@ EffectToneGen::~EffectToneGen()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectToneGen::GetSymbol()
+ComponentInterfaceSymbol EffectToneGen::GetSymbol() const
 {
    return mChirp
       ? EffectChirp::Symbol

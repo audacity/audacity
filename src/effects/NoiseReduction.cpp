@@ -420,7 +420,7 @@ EffectNoiseReduction::~EffectNoiseReduction()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectNoiseReduction::GetSymbol()
+ComponentInterfaceSymbol EffectNoiseReduction::GetSymbol() const
 {
    return Symbol;
 }

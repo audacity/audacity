@@ -46,7 +46,7 @@ EffectReverse::~EffectReverse()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectReverse::GetSymbol()
+ComponentInterfaceSymbol EffectReverse::GetSymbol() const
 {
    return Symbol;
 }

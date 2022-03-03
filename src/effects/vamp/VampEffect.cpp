@@ -92,7 +92,7 @@ PluginPath VampEffect::GetPath()
    return mPath;
 }
 
-ComponentInterfaceSymbol VampEffect::GetSymbol()
+ComponentInterfaceSymbol VampEffect::GetSymbol() const
 {
    return mName;
 }

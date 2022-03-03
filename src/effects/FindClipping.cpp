@@ -58,7 +58,7 @@ EffectFindClipping::~EffectFindClipping()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectFindClipping::GetSymbol()
+ComponentInterfaceSymbol EffectFindClipping::GetSymbol() const
 {
    return Symbol;
 }

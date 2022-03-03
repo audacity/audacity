@@ -27,7 +27,7 @@ class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
  public:
    GUIPrefs(wxWindow * parent, wxWindowID winid);
    ~GUIPrefs();
-   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() override;
 
    bool Commit() override;

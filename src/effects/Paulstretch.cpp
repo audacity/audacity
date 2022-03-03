@@ -107,7 +107,7 @@ EffectPaulstretch::~EffectPaulstretch()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectPaulstretch::GetSymbol()
+ComponentInterfaceSymbol EffectPaulstretch::GetSymbol() const
 {
    return Symbol;
 }

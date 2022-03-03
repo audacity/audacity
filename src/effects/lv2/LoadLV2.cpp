@@ -95,7 +95,7 @@ PluginPath LV2EffectsModule::GetPath()
    return {};
 }
 
-ComponentInterfaceSymbol LV2EffectsModule::GetSymbol()
+ComponentInterfaceSymbol LV2EffectsModule::GetSymbol() const
 {
    return XO("LV2 Effects");
 }

@@ -69,7 +69,7 @@ PluginPath VampEffectsModule::GetPath()
    return {};
 }
 
-ComponentInterfaceSymbol VampEffectsModule::GetSymbol()
+ComponentInterfaceSymbol VampEffectsModule::GetSymbol() const
 {
    return XO("Vamp Effects");
 }

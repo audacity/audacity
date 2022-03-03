@@ -266,7 +266,7 @@ PluginPath VST3Effect::GetPath()
    return VST3Utils::MakePluginPathString( { mModule->getPath() }, mEffectClassInfo.ID().toString());
 }
 
-ComponentInterfaceSymbol VST3Effect::GetSymbol()
+ComponentInterfaceSymbol VST3Effect::GetSymbol() const
 {
    return wxString { mEffectClassInfo.name() };
 }

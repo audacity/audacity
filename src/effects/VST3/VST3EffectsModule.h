@@ -41,7 +41,7 @@ class VST3EffectsModule final : public ModuleInterface
 public:
 
    PluginPath GetPath() override;
-   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;
    TranslatableString GetDescription() override;

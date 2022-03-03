@@ -56,7 +56,7 @@ LibraryPrefs::~LibraryPrefs()
 {
 }
 
-ComponentInterfaceSymbol LibraryPrefs::GetSymbol()
+ComponentInterfaceSymbol LibraryPrefs::GetSymbol() const
 {
    return LIBRARY_PREFS_PLUGIN_SYMBOL;
 }

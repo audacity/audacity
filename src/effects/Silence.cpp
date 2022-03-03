@@ -40,7 +40,7 @@ EffectSilence::~EffectSilence()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectSilence::GetSymbol()
+ComponentInterfaceSymbol EffectSilence::GetSymbol() const
 {
    return Symbol;
 }

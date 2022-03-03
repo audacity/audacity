@@ -161,7 +161,7 @@ EffectTruncSilence::~EffectTruncSilence()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectTruncSilence::GetSymbol()
+ComponentInterfaceSymbol EffectTruncSilence::GetSymbol() const
 {
    return Symbol;
 }

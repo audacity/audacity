@@ -88,7 +88,7 @@ EffectAmplify::~EffectAmplify()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectAmplify::GetSymbol()
+ComponentInterfaceSymbol EffectAmplify::GetSymbol() const
 {
    return Symbol;
 }

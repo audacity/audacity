@@ -88,7 +88,7 @@ PluginPath BuiltinCommandsModule::GetPath()
    return {};
 }
 
-ComponentInterfaceSymbol BuiltinCommandsModule::GetSymbol()
+ComponentInterfaceSymbol BuiltinCommandsModule::GetSymbol() const
 {
    return XO("Builtin Commands");
 }

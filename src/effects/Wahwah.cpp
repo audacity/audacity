@@ -96,7 +96,7 @@ EffectWahwah::~EffectWahwah()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectWahwah::GetSymbol()
+ComponentInterfaceSymbol EffectWahwah::GetSymbol() const
 {
    return Symbol;
 }

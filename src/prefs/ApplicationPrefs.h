@@ -23,7 +23,7 @@ class ApplicationPrefs final : public PrefsPanel
  public:
    ApplicationPrefs(wxWindow * parent, wxWindowID winid);
    ~ApplicationPrefs();
-   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() override;
 
    bool Commit() override;

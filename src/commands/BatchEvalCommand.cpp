@@ -24,7 +24,7 @@ static CommandDirectory::RegisterType sRegisterType{
    std::make_unique<BatchEvalCommandType>()
 };
 
-ComponentInterfaceSymbol BatchEvalCommandType::BuildName()
+ComponentInterfaceSymbol BatchEvalCommandType::BuildName() const
 {
    return { wxT("BatchCommand"), XO("Batch Command") };
 }

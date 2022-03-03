@@ -88,7 +88,7 @@ EffectBassTreble::~EffectBassTreble()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectBassTreble::GetSymbol()
+ComponentInterfaceSymbol EffectBassTreble::GetSymbol() const
 {
    return Symbol;
 }

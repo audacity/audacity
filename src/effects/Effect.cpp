@@ -122,7 +122,7 @@ PluginPath Effect::GetPath()
    return BUILTIN_EFFECT_PREFIX + GetSymbol().Internal();
 }
 
-ComponentInterfaceSymbol Effect::GetSymbol()
+ComponentInterfaceSymbol Effect::GetSymbol() const
 {
    if (mClient)
    {

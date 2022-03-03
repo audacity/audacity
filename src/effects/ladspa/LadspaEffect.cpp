@@ -121,7 +121,7 @@ PluginPath LadspaEffectsModule::GetPath()
    return {};
 }
 
-ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol()
+ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol() const
 {
    /* i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
       (Application programming interface)
@@ -650,7 +650,7 @@ PluginPath LadspaEffect::GetPath()
    return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }
 
-ComponentInterfaceSymbol LadspaEffect::GetSymbol()
+ComponentInterfaceSymbol LadspaEffect::GetSymbol() const
 {
    return LAT1CTOWX(mData->Name);
 }

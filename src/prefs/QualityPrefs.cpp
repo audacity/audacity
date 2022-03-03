@@ -47,7 +47,7 @@ QualityPrefs::~QualityPrefs()
 {
 }
 
-ComponentInterfaceSymbol QualityPrefs::GetSymbol()
+ComponentInterfaceSymbol QualityPrefs::GetSymbol() const
 {
    return QUALITY_PREFS_PLUGIN_SYMBOL;
 }

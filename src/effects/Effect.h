@@ -90,7 +90,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    PluginPath GetPath() override;
 
-   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
 
    VendorSymbol GetVendor() override;
    wxString GetVersion() override;

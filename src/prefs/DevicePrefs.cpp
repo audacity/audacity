@@ -64,7 +64,7 @@ DevicePrefs::~DevicePrefs()
 }
 
 
-ComponentInterfaceSymbol DevicePrefs::GetSymbol()
+ComponentInterfaceSymbol DevicePrefs::GetSymbol() const
 {
    return DEVICE_PREFS_PLUGIN_SYMBOL;
 }

@@ -41,7 +41,7 @@ EffectFade::~EffectFade()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectFade::GetSymbol()
+ComponentInterfaceSymbol EffectFade::GetSymbol() const
 {
    return mFadeIn
       ? EffectFadeIn::Symbol

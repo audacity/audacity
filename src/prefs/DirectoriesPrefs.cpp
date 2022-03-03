@@ -154,7 +154,7 @@ DirectoriesPrefs::~DirectoriesPrefs()
 {
 }
 
-ComponentInterfaceSymbol DirectoriesPrefs::GetSymbol()
+ComponentInterfaceSymbol DirectoriesPrefs::GetSymbol() const
 {
    return DIRECTORIES_PREFS_PLUGIN_SYMBOL;
 }

@@ -83,7 +83,7 @@ EffectClickRemoval::~EffectClickRemoval()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectClickRemoval::GetSymbol()
+ComponentInterfaceSymbol EffectClickRemoval::GetSymbol() const
 {
    return Symbol;
 }

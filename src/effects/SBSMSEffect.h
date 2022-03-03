@@ -42,7 +42,7 @@ protected:
    // This supplies the abstract virtual function, but in fact this symbol
    // does not get used:  this class is either a temporary helper, or else
    // GetSymbol() is overridden further in derived classes.
-   ComponentInterfaceSymbol GetSymbol() override { return mProxyEffectName; }
+   ComponentInterfaceSymbol GetSymbol() const override { return mProxyEffectName; }
 
 private:
    bool ProcessLabelTrack(LabelTrack *track);
