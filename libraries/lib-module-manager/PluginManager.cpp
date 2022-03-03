@@ -1716,7 +1716,7 @@ wxString PluginManager::ConvertID(const PluginID & ID)
 
 // This is defined out-of-line here, to keep ComponentInterface free of other
 // #include directives.
-TranslatableString ComponentInterface::GetName()
+TranslatableString ComponentInterface::GetName() const
 {
    return GetSymbol().Msgid();
 }

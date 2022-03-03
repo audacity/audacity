@@ -79,7 +79,7 @@ public:
    virtual TranslatableString GetDescription() = 0;
 
    // non-virtual convenience function
-   TranslatableString GetName();
+   TranslatableString GetName() const;
 
    // Parameters, if defined.  false means no defined parameters.
    virtual bool DefineParams( ShuttleParams & WXUNUSED(S) ){ return false;};   
