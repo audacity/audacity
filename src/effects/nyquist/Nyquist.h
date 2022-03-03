@@ -85,7 +85,7 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   EffectType GetClassification() override;
+   EffectType GetClassification() const override;
    EffectFamilySymbol GetFamily() override;
    bool IsInteractive() override;
    bool IsDefault() override;

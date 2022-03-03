@@ -45,7 +45,7 @@ Identifier EffectDefinitionInterface::GetSquashedName(const Identifier &ident)
 
 EffectDefinitionInterface::~EffectDefinitionInterface() = default;
 
-EffectType EffectDefinitionInterface::GetClassification()
+EffectType EffectDefinitionInterface::GetClassification() const
 {
    return GetType();
 }

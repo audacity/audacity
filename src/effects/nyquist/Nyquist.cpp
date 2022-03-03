@@ -270,7 +270,7 @@ EffectType NyquistEffect::GetType() const
    return mType;
 }
 
-EffectType NyquistEffect::GetClassification()
+EffectType NyquistEffect::GetClassification() const
 {
    if (mIsTool)
       return EffectTypeTool;

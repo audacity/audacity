@@ -117,7 +117,7 @@ public:
    virtual EffectType GetType() const = 0;
 
    //! Determines which menu it appears in; default same as GetType().
-   virtual EffectType GetClassification();
+   virtual EffectType GetClassification() const;
 
    //! Report identifier and user-visible name of the effect protocol
    virtual EffectFamilySymbol GetFamily() = 0;
