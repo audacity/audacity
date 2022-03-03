@@ -194,7 +194,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    ParseFile();
 
    if (!mOK && mInitError.empty())
-      mInitError = XO("Ill-formed Nyquist plug-in header");
+      mInitError = XO("Ill-formed Nyquist plug-in header");   
 }
 
 NyquistEffect::~NyquistEffect()
@@ -248,19 +248,26 @@ ManualPageID NyquistEffect::ManualPage() const
          : mManPage;
 }
 
-FilePath NyquistEffect::HelpPage()
+
+std::pair<bool, FilePath> NyquistEffect::CheckHelpPage() const
 {
    auto paths = NyquistEffect::GetNyquistSearchPath();
    wxString fileName;
 
    for (size_t i = 0, cnt = paths.size(); i < cnt; i++) {
       fileName = wxFileName(paths[i] + wxT("/") + mHelpFile).GetFullPath();
-      if (wxFileExists(fileName)) {
-         mHelpFileExists = true;
-         return fileName;
+      if (wxFileExists(fileName))
+      {
+         return { true, fileName };
       }
    }
-   return wxEmptyString;
+   return { false, wxEmptyString };
+}
+
+
+FilePath NyquistEffect::HelpPage() const
+{
+   return mHelpPage;
 }
 
 // EffectDefinitionInterface implementation
@@ -2420,6 +2427,10 @@ or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .")
       return false;
       // Else just throw it at Nyquist to see what happens
    }
+
+   const auto helpStuff = CheckHelpPage();
+   mHelpFileExists = helpStuff.first;
+   mHelpPage       = helpStuff.second;
 
    return true;
 }

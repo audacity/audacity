@@ -141,7 +141,7 @@ public:
    virtual ManualPageID ManualPage() const;
 
    //! Fully qualified local help file name, default is empty
-   virtual FilePath HelpPage();
+   virtual FilePath HelpPage() const;
 
    //! Default is false
    virtual bool IsHiddenFromMenus();

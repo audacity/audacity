@@ -80,7 +80,7 @@ public:
    TranslatableString GetDescription() const override;
    
    ManualPageID ManualPage() const override;
-   FilePath HelpPage() override;
+   FilePath HelpPage() const override;
 
    // EffectDefinitionInterface implementation
 
@@ -200,6 +200,8 @@ private:
    bool validatePath(wxString path);
    wxString ToTimeFormat(double t);
 
+   std::pair<bool, FilePath> CheckHelpPage() const;
+
 private:
 
    wxString          mXlispPath;
@@ -241,6 +243,7 @@ private:
    wxString          mManPage;   // ONLY use if a help page exists in the manual.
    wxString          mHelpFile;
    bool              mHelpFileExists;
+   FilePath          mHelpPage;
    EffectType        mType;
    EffectType        mPromptType; // If a prompt, need to remember original type.
 

@@ -60,7 +60,7 @@ ManualPageID EffectDefinitionInterface::ManualPage() const
    return {};
 }
 
-FilePath EffectDefinitionInterface::HelpPage()
+FilePath EffectDefinitionInterface::HelpPage() const
 {
    return {};
 }
