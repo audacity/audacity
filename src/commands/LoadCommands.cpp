@@ -93,7 +93,7 @@ ComponentInterfaceSymbol BuiltinCommandsModule::GetSymbol() const
    return XO("Builtin Commands");
 }
 
-VendorSymbol BuiltinCommandsModule::GetVendor()
+VendorSymbol BuiltinCommandsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }

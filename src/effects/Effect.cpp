@@ -132,7 +132,7 @@ ComponentInterfaceSymbol Effect::GetSymbol() const
    return {};
 }
 
-VendorSymbol Effect::GetVendor()
+VendorSymbol Effect::GetVendor() const
 {
    if (mClient)
    {

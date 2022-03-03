@@ -441,7 +441,7 @@ ComponentInterfaceSymbol LV2Effect::GetSymbol() const
    return LilvString(lilv_plugin_get_name(mPlug), true);
 }
 
-VendorSymbol LV2Effect::GetVendor()
+VendorSymbol LV2Effect::GetVendor() const
 {
    wxString vendor = LilvString(lilv_plugin_get_author_name(mPlug), true);
 

@@ -245,7 +245,7 @@ public:
       return mName;
    }
 
-   VendorSymbol GetVendor() override
+   VendorSymbol GetVendor() const override
    {
       return { mVendor };
    }
@@ -338,7 +338,7 @@ ComponentInterfaceSymbol VSTEffectsModule::GetSymbol() const
    return XO("VST Effects");
 }
 
-VendorSymbol VSTEffectsModule::GetVendor()
+VendorSymbol VSTEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
@@ -1209,7 +1209,7 @@ ComponentInterfaceSymbol VSTEffect::GetSymbol() const
    return mName;
 }
 
-VendorSymbol VSTEffect::GetVendor()
+VendorSymbol VSTEffect::GetVendor() const
 {
    return { mVendor };
 }

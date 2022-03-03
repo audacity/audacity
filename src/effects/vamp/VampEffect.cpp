@@ -97,7 +97,7 @@ ComponentInterfaceSymbol VampEffect::GetSymbol() const
    return mName;
 }
 
-VendorSymbol VampEffect::GetVendor()
+VendorSymbol VampEffect::GetVendor() const
 {
    return { wxString::FromUTF8(mPlugin->getMaker().c_str()) };
 }

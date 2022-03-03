@@ -275,7 +275,7 @@ ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol() const
    return XO("Audio Unit Effects");
 }
 
-VendorSymbol AudioUnitEffectsModule::GetVendor()
+VendorSymbol AudioUnitEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
@@ -890,7 +890,7 @@ ComponentInterfaceSymbol AudioUnitEffect::GetSymbol() const
    return mName;
 }
 
-VendorSymbol AudioUnitEffect::GetVendor()
+VendorSymbol AudioUnitEffect::GetVendor() const
 {
    return { mVendor };
 }

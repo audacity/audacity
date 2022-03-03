@@ -271,7 +271,7 @@ ComponentInterfaceSymbol VST3Effect::GetSymbol() const
    return wxString { mEffectClassInfo.name() };
 }
 
-VendorSymbol VST3Effect::GetVendor()
+VendorSymbol VST3Effect::GetVendor() const
 {
    return wxString { mEffectClassInfo.vendor() };
 }

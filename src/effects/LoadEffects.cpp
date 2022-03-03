@@ -91,7 +91,7 @@ ComponentInterfaceSymbol BuiltinEffectsModule::GetSymbol() const
    return XO("Builtin Effects");
 }
 
-VendorSymbol BuiltinEffectsModule::GetVendor()
+VendorSymbol BuiltinEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }

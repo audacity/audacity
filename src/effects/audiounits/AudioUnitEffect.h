@@ -52,7 +52,7 @@ public:
 
    PluginPath GetPath() const override;
    ComponentInterfaceSymbol GetSymbol() const override;
-   VendorSymbol GetVendor() override;
+   VendorSymbol GetVendor() const override;
    wxString GetVersion() override;
    TranslatableString GetDescription() override;
 
@@ -232,7 +232,7 @@ public:
 
    PluginPath GetPath() const override;
    ComponentInterfaceSymbol GetSymbol() const override;
-   VendorSymbol GetVendor() override;
+   VendorSymbol GetVendor() const override;
    wxString GetVersion() override;
    TranslatableString GetDescription() override;
 

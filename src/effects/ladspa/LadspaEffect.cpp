@@ -129,7 +129,7 @@ ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol() const
    return XO("LADSPA Effects");
 }
 
-VendorSymbol LadspaEffectsModule::GetVendor()
+VendorSymbol LadspaEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
@@ -655,7 +655,7 @@ ComponentInterfaceSymbol LadspaEffect::GetSymbol() const
    return LAT1CTOWX(mData->Name);
 }
 
-VendorSymbol LadspaEffect::GetVendor()
+VendorSymbol LadspaEffect::GetVendor() const
 {
    return { LAT1CTOWX(mData->Maker) };
 }

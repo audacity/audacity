@@ -100,7 +100,7 @@ ComponentInterfaceSymbol LV2EffectsModule::GetSymbol() const
    return XO("LV2 Effects");
 }
 
-VendorSymbol LV2EffectsModule::GetVendor()
+VendorSymbol LV2EffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }

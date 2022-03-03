@@ -97,7 +97,7 @@ ComponentInterfaceSymbol VST3EffectsModule::GetSymbol() const
    return XO("VST3 Effects");
 }
 
-VendorSymbol VST3EffectsModule::GetVendor()
+VendorSymbol VST3EffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }

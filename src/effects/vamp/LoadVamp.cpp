@@ -74,7 +74,7 @@ ComponentInterfaceSymbol VampEffectsModule::GetSymbol() const
    return XO("Vamp Effects");
 }
 
-VendorSymbol VampEffectsModule::GetVendor()
+VendorSymbol VampEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }

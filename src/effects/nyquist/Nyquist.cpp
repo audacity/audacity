@@ -219,7 +219,7 @@ ComponentInterfaceSymbol NyquistEffect::GetSymbol() const
    return mName;
 }
 
-VendorSymbol NyquistEffect::GetVendor()
+VendorSymbol NyquistEffect::GetVendor() const
 {
    if (mIsPrompt)
    {
