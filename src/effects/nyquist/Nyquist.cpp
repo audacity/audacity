@@ -1088,7 +1088,7 @@ NyquistEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool NyquistEffect::EnablesDebug()
+bool NyquistEffect::EnablesDebug() const
 {
    return mDebugButton;
 }

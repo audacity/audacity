@@ -50,7 +50,7 @@ EffectType EffectDefinitionInterface::GetClassification() const
    return GetType();
 }
 
-bool EffectDefinitionInterface::EnablesDebug()
+bool EffectDefinitionInterface::EnablesDebug() const
 {
    return false;
 }

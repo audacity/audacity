@@ -135,7 +135,7 @@ public:
    virtual bool SupportsAutomation() const = 0;
 
    //! Whether the effect dialog should have a Debug button; default, always false.
-   virtual bool EnablesDebug();
+   virtual bool EnablesDebug() const;
 
    //! Name of a page in the Audacity alpha manual, default is empty
    virtual ManualPageID ManualPage();
