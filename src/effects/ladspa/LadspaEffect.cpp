@@ -694,7 +694,7 @@ EffectType LadspaEffect::GetType() const
    return EffectTypeProcess;
 }
 
-EffectFamilySymbol LadspaEffect::GetFamily()
+EffectFamilySymbol LadspaEffect::GetFamily() const
 {
    return LADSPAEFFECTS_FAMILY;
 }

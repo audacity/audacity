@@ -487,7 +487,7 @@ EffectType LV2Effect::GetType() const
    return EffectTypeProcess;
 }
 
-EffectFamilySymbol LV2Effect::GetFamily()
+EffectFamilySymbol LV2Effect::GetFamily() const
 {
    return LV2EFFECTS_FAMILY;
 }

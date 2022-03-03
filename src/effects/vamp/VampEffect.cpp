@@ -122,7 +122,7 @@ EffectType VampEffect::GetType() const
    return EffectTypeAnalyze;
 }
 
-EffectFamilySymbol VampEffect::GetFamily()
+EffectFamilySymbol VampEffect::GetFamily() const
 {
    return VAMPEFFECTS_FAMILY;
 }

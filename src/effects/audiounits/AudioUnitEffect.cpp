@@ -937,7 +937,7 @@ EffectType AudioUnitEffect::GetType() const
    return EffectTypeProcess;
 }
 
-EffectFamilySymbol AudioUnitEffect::GetFamily()
+EffectFamilySymbol AudioUnitEffect::GetFamily() const
 {
    return AUDIOUNITEFFECTS_FAMILY;
 }

@@ -120,7 +120,7 @@ public:
    virtual EffectType GetClassification() const;
 
    //! Report identifier and user-visible name of the effect protocol
-   virtual EffectFamilySymbol GetFamily() = 0;
+   virtual EffectFamilySymbol GetFamily() const = 0;
 
    //! Whether the effect needs a dialog for entry of settings
    virtual bool IsInteractive() = 0;

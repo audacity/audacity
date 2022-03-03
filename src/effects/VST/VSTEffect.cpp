@@ -260,7 +260,7 @@ public:
       return mDescription;
    }
 
-   EffectFamilySymbol GetFamily() override
+   EffectFamilySymbol GetFamily() const override
    {
       return VSTPLUGINTYPE;
    }
@@ -1266,7 +1266,7 @@ EffectType VSTEffect::GetType() const
 }
 
 
-EffectFamilySymbol VSTEffect::GetFamily()
+EffectFamilySymbol VSTEffect::GetFamily() const
 {
    return VSTPLUGINTYPE;
 }

@@ -277,7 +277,7 @@ EffectType NyquistEffect::GetClassification() const
    return mType;
 }
 
-EffectFamilySymbol NyquistEffect::GetFamily()
+EffectFamilySymbol NyquistEffect::GetFamily() const
 {
    return NYQUISTEFFECTS_FAMILY;
 }

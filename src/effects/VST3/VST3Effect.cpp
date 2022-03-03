@@ -300,7 +300,7 @@ EffectType VST3Effect::GetType() const
    return EffectTypeNone;
 }
 
-EffectFamilySymbol VST3Effect::GetFamily()
+EffectFamilySymbol VST3Effect::GetFamily() const
 {
    return VST3Effect::GetFamilySymbol();
 }

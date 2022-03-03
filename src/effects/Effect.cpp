@@ -162,7 +162,7 @@ TranslatableString Effect::GetDescription() const
    return {};
 }
 
-EffectFamilySymbol Effect::GetFamily()
+EffectFamilySymbol Effect::GetFamily() const
 {
    if (mClient)
    {

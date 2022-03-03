@@ -59,7 +59,7 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   EffectFamilySymbol GetFamily() override;
+   EffectFamilySymbol GetFamily() const override;
    bool IsInteractive() override;
    bool IsDefault() override;
    bool SupportsRealtime() override;
