@@ -104,7 +104,7 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
 
    virtual PluginPath GetPath() const;
    virtual VendorSymbol GetVendor() const;
-   virtual wxString GetVersion();
+   virtual wxString GetVersion() const;
 
    //virtual ComponentInterfaceSymbol GetSymbol();
    //virtual wxString GetDescription();

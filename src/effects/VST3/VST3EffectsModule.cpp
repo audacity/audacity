@@ -102,7 +102,7 @@ VendorSymbol VST3EffectsModule::GetVendor() const
    return XO("The Audacity Team");
 }
 
-wxString VST3EffectsModule::GetVersion()
+wxString VST3EffectsModule::GetVersion() const
 {
    return AUDACITY_VERSION_STRING;
 }

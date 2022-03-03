@@ -93,7 +93,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    ComponentInterfaceSymbol GetSymbol() const override;
 
    VendorSymbol GetVendor() const override;
-   wxString GetVersion() override;
+   wxString GetVersion() const override;
    TranslatableString GetDescription() override;
 
    // EffectDefinitionInterface implementation

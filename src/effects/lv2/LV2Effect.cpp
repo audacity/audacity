@@ -453,7 +453,7 @@ VendorSymbol LV2Effect::GetVendor() const
    return {vendor};
 }
 
-wxString LV2Effect::GetVersion()
+wxString LV2Effect::GetVersion() const
 {
    return wxT("1.0");
 }

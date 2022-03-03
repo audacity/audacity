@@ -105,7 +105,7 @@ VendorSymbol LV2EffectsModule::GetVendor() const
    return XO("The Audacity Team");
 }
 
-wxString LV2EffectsModule::GetVersion()
+wxString LV2EffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return LV2EFFECTS_VERSION;

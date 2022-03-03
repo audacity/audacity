@@ -71,7 +71,7 @@ PluginPath PrefsPanel::GetPath() const
 VendorSymbol PrefsPanel::GetVendor() const
 {  return XO("Audacity");}
 
-wxString PrefsPanel::GetVersion()
+wxString PrefsPanel::GetVersion() const
 {     return AUDACITY_VERSION_STRING;}
 
 PrefsPanel::Registration::Registration( const wxString &name,

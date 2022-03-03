@@ -96,7 +96,7 @@ VendorSymbol BuiltinEffectsModule::GetVendor() const
    return XO("The Audacity Team");
 }
 
-wxString BuiltinEffectsModule::GetVersion()
+wxString BuiltinEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return AUDACITY_VERSION_STRING;

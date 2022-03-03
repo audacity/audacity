@@ -134,7 +134,7 @@ VendorSymbol LadspaEffectsModule::GetVendor() const
    return XO("The Audacity Team");
 }
 
-wxString LadspaEffectsModule::GetVersion()
+wxString LadspaEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return LADSPAEFFECTS_VERSION;
@@ -660,7 +660,7 @@ VendorSymbol LadspaEffect::GetVendor() const
    return { LAT1CTOWX(mData->Maker) };
 }
 
-wxString LadspaEffect::GetVersion()
+wxString LadspaEffect::GetVersion() const
 {
    return _("n/a");
 }

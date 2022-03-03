@@ -102,7 +102,7 @@ VendorSymbol VampEffect::GetVendor() const
    return { wxString::FromUTF8(mPlugin->getMaker().c_str()) };
 }
 
-wxString VampEffect::GetVersion()
+wxString VampEffect::GetVersion() const
 {
    return wxString::Format(wxT("%d"), mPlugin->getPluginVersion());
 }

@@ -142,7 +142,7 @@ VendorSymbol Effect::GetVendor() const
    return XO("Audacity");
 }
 
-wxString Effect::GetVersion()
+wxString Effect::GetVersion() const
 {
    if (mClient)
    {

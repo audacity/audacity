@@ -250,7 +250,7 @@ public:
       return { mVendor };
    }
 
-   wxString GetVersion() override
+   wxString GetVersion() const override
    {
       return mVersion;
    }
@@ -343,7 +343,7 @@ VendorSymbol VSTEffectsModule::GetVendor() const
    return XO("The Audacity Team");
 }
 
-wxString VSTEffectsModule::GetVersion()
+wxString VSTEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return AUDACITY_VERSION_STRING;
@@ -1214,7 +1214,7 @@ VendorSymbol VSTEffect::GetVendor() const
    return { mVendor };
 }
 
-wxString VSTEffect::GetVersion()
+wxString VSTEffect::GetVersion() const
 {
    wxString version;
 

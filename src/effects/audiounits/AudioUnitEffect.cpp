@@ -280,7 +280,7 @@ VendorSymbol AudioUnitEffectsModule::GetVendor() const
    return XO("The Audacity Team");
 }
 
-wxString AudioUnitEffectsModule::GetVersion()
+wxString AudioUnitEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return AUDIOUNITEFFECTS_VERSION;
@@ -895,7 +895,7 @@ VendorSymbol AudioUnitEffect::GetVendor() const
    return { mVendor };
 }
 
-wxString AudioUnitEffect::GetVersion()
+wxString AudioUnitEffect::GetVersion() const
 {
    UInt32 version;
 

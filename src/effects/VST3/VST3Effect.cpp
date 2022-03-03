@@ -276,7 +276,7 @@ VendorSymbol VST3Effect::GetVendor() const
    return wxString { mEffectClassInfo.vendor() };
 }
 
-wxString VST3Effect::GetVersion()
+wxString VST3Effect::GetVersion() const
 {
    return mEffectClassInfo.version();
 }

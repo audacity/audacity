@@ -104,7 +104,7 @@ class VSTEffect final : public wxEvtHandler,
    PluginPath GetPath() const override;
    ComponentInterfaceSymbol GetSymbol() const override;
    VendorSymbol GetVendor() const override;
-   wxString GetVersion() override;
+   wxString GetVersion() const override;
    TranslatableString GetDescription() override;
 
    // EffectDefinitionInterface implementation
@@ -403,7 +403,7 @@ public:
    PluginPath GetPath() const override;
    ComponentInterfaceSymbol GetSymbol() const override;
    VendorSymbol GetVendor() const override;
-   wxString GetVersion() override;
+   wxString GetVersion() const override;
    TranslatableString GetDescription() override;
 
    // ModuleInterface implementation

@@ -229,7 +229,7 @@ VendorSymbol NyquistEffect::GetVendor() const
    return mAuthor;
 }
 
-wxString NyquistEffect::GetVersion()
+wxString NyquistEffect::GetVersion() const
 {
    // Are Nyquist version strings really supposed to be translatable?
    // See commit a06e561 which used XO for at least one of them

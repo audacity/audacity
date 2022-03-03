@@ -108,7 +108,7 @@ VendorSymbol NyquistEffectsModule::GetVendor() const
    return XO("The Audacity Team");
 }
 
-wxString NyquistEffectsModule::GetVersion()
+wxString NyquistEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return NYQUISTEFFECTS_VERSION;

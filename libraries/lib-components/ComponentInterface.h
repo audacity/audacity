@@ -72,7 +72,7 @@ public:
 
    virtual VendorSymbol GetVendor() const = 0;
 
-   virtual wxString GetVersion() = 0;
+   virtual wxString GetVersion() const = 0;
 
    // This returns a translated string
    // Any verb should be present tense indicative, not imperative
