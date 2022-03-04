@@ -757,6 +757,31 @@ EffectManager::GetEffectAndDefaultSettings(const PluginID & ID)
    return {nullptr, nullptr};
 }
 
+namespace {
+void InitializePreset(EffectDefinitionInterfaceEx &definition) {
+   bool haveDefaults;
+   GetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
+      wxT("Initialized"), haveDefaults, false);
+   if (!haveDefaults)
+   {
+      definition.SaveUserPreset(FactoryDefaultsGroup());
+      SetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
+         wxT("Initialized"), true);
+   }
+   definition.LoadUserPreset(CurrentSettingsGroup());
+}
+
+ComponentInterface *LoadComponent(const PluginID &ID)
+{
+   if (auto result = dynamic_cast<EffectDefinitionInterfaceEx*>(
+      PluginManager::Get().Load(ID))) {
+      InitializePreset(*result);
+      return result;
+   }
+   return nullptr;
+}
+}
+
 EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
 {
    static EffectAndDefaultSettings empty;
@@ -774,7 +799,9 @@ EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
    else {
       std::shared_ptr<Effect> hostEffect;
       // This will instantiate the effect client if it hasn't already been done
-      const auto component = PluginManager::Get().Load(ID);
+      const auto component = LoadComponent(ID);
+      if (!component)
+         return empty;
 
       if (auto effect = dynamic_cast<EffectUIHostInterface *>(component);
           effect && effect->Startup(nullptr))
@@ -861,7 +888,9 @@ EffectManager::NewEffect(const PluginID & ID)
 
    // This will instantiate the effect client if it hasn't already been done
    // But it only makes a unique object for a given ID
-   auto component = PluginManager::Get().Load(ID);
+   auto component = LoadComponent(ID);
+   if (!component)
+      return nullptr;
 
    auto effect = std::make_unique<Effect>();
    auto client = dynamic_cast<EffectUIClientInterface *>(component);

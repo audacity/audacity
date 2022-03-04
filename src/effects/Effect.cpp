@@ -798,17 +798,6 @@ bool Effect::Startup(EffectUIClientInterface *client)
       return false;
    }
 
-   bool haveDefaults;
-   GetConfig(GetDefinition(), PluginSettings::Private, FactoryDefaultsGroup(),
-      wxT("Initialized"), haveDefaults, false);
-   if (!haveDefaults)
-   {
-      SaveUserPreset(FactoryDefaultsGroup());
-      SetConfig(GetDefinition(), PluginSettings::Private, FactoryDefaultsGroup(),
-         wxT("Initialized"), true);
-   }
-   LoadUserPreset(CurrentSettingsGroup());
-
    return true;
 }
 
