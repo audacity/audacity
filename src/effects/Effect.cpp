@@ -851,12 +851,6 @@ bool Effect::Startup()
 bool Effect::GetAutomationParametersAsString(wxString & parms)
 {
    CommandParameters eap;
-
-   if (mUIDialog && !TransferDataFromWindow())
-   {
-      return false;
-   }
-
    ShuttleGetAutomation S;
    S.mpEap = &eap;
    if( DefineParams( S ) ){

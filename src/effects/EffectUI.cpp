@@ -554,12 +554,10 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       return;
    }
    
-   // This will take care of calling TransferDataFromWindow() for an effect.
-   if (!mEffectUIHost.GetDefinition().SaveUserPreset(
-      mEffectUIHost.GetCurrentSettingsGroup(), mpAccess->Get()))
-   {
+   if (!TransferDataFromWindow() ||
+       !mEffectUIHost.GetDefinition().SaveUserPreset(
+         mEffectUIHost.GetCurrentSettingsGroup(), mpAccess->Get()))
       return;
-   }
 
    if (IsModal())
    {
@@ -994,8 +992,9 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
          }
       }
       
-      mEffectUIHost.GetDefinition().SaveUserPreset(
-         mEffectUIHost.GetUserPresetsGroup(name), mpAccess->Get());
+      if (TransferDataFromWindow())
+         mEffectUIHost.GetDefinition().SaveUserPreset(
+            mEffectUIHost.GetUserPresetsGroup(name), mpAccess->Get());
       LoadUserPresets();
       
       break;
@@ -1018,7 +1017,8 @@ void EffectUIHost::OnExport(wxCommandEvent & WXUNUSED(evt))
 {
    // may throw
    // exceptions are handled in AudacityApp::OnExceptionInMainLoop
-   mClient.ExportPresets();
+   if (TransferDataFromWindow())
+     mClient.ExportPresets();
    
    return;
 }
