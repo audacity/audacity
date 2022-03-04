@@ -341,11 +341,6 @@ bool EffectDistortion::LoadFactoryPreset(int id)
    mParams = FactoryPresets[id].params;
    mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
 
-   if (mUIDialog)
-   {
-      TransferDataToWindow();
-   }
-
    return true;
 }
 

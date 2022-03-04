@@ -923,13 +923,7 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
       return true;
       //return false;
    }
-
-   if (!mUIDialog)
-   {
-      return true;
-   }
-
-   return TransferDataToWindow();
+   return true;
 }
 
 unsigned Effect::TestUIFlags(unsigned mask) {

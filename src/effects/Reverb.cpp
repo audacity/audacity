@@ -356,12 +356,6 @@ bool EffectReverb::LoadFactoryPreset(int id)
    }
 
    mParams = FactoryPresets[id].params;
-
-   if (mUIDialog)
-   {
-      TransferDataToWindow();
-   }
-
    return true;
 }
 
@@ -548,12 +542,3 @@ SpinSliderHandlers(DryGain)
 SpinSliderHandlers(StereoWidth)
 
 #undef SpinSliderHandlers
-
-void EffectReverb::SetTitle(const wxString & name)
-{
-   mUIDialog->SetTitle(
-      name.empty()
-         ? _("Reverb")
-         : wxString::Format( _("Reverb: %s"), name )
-   );
-}

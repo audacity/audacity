@@ -433,8 +433,6 @@ protected:
    // UI
    //! This smart pointer tracks the lifetime of the dialog
    wxWeakRef<wxDialog> mHostUIDialog;
-   //! This weak pointer may be the same as the above, or null
-   wxWeakRef<wxDialog> mUIDialog;
    wxWindow       *mUIParent;
    unsigned       mUIFlags{ 0 };
 
@@ -443,6 +441,9 @@ protected:
  // Used only by the base Effect class
  //
  private:
+   //! This weak pointer may be the same as the above, or null
+   wxWeakRef<wxDialog> mUIDialog;
+
    wxString GetSavedStateGroup();
    double GetDefaultDuration();
 

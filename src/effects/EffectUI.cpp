@@ -886,6 +886,7 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
    auto settings = mpAccess->Get();
    mEffectUIHost.GetDefinition().LoadUserPreset(
       mEffectUIHost.GetUserPresetsGroup(mUserPresets[preset]), settings);
+   TransferDataToWindow();
    // Communicate change of settings
    mpAccess->Set(std::move(settings));
    
@@ -898,9 +899,9 @@ void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
    auto settings = mpAccess->Get();
    mEffectUIHost.GetDefinition()
       .LoadFactoryPreset(evt.GetId() - kFactoryPresetsID, settings);
+   TransferDataToWindow();
    // Communicate change of settings
    mpAccess->Set(std::move(settings));
-   
    return;
 }
 
@@ -1006,6 +1007,7 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
 void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 {
    mClient.ImportPresets();
+   TransferDataToWindow();
    
    LoadUserPresets();
    
@@ -1033,6 +1035,7 @@ void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
    // Make mutable copy
    auto settings = mpAccess->Get();
    mEffectUIHost.GetDefinition().LoadFactoryDefaults(settings);
+   TransferDataToWindow();
    // Communicate change of settings
    mpAccess->Set(std::move(settings));
    return;

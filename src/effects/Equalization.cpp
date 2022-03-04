@@ -528,12 +528,6 @@ bool EffectEqualization::LoadFactoryPreset(int id)
    ShuttleSetAutomation S;
    S.SetForWriting( &eap );
    DefineParams( S );
-
-   if (mUIDialog)
-   {
-      TransferDataToWindow();
-   }
-
    return true;
 }
 
