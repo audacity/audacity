@@ -51,6 +51,10 @@ if( ${_OPT}has_tests )
       add_executable( ${test_executable_name} ${ADD_UNIT_TEST_SOURCES} "${CMAKE_SOURCE_DIR}/tests/Catch2Main.cpp")
       target_link_libraries( ${test_executable_name} ${ADD_UNIT_TEST_LIBRARIES} Catch2::Catch2 )
 
+      set( OPTIONS )
+      audacity_append_common_compiler_options( OPTIONS NO )
+      target_compile_options( ${test_executable_name} ${OPTIONS} )
+
       set_target_properties(
          ${test_executable_name}
          PROPERTIES
