@@ -35,6 +35,7 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../../prefs/WaveformSettings.h"
 
 #include "FrameStatistics.h"
+#include "waveform/WaveData.h"
 
 #include <wx/graphics.h>
 #include <wx/dc.h>
@@ -404,7 +405,6 @@ void DrawMinMaxRMS(
       if (r2[x0] > r1[x0]) {
          r2[x0] = r1[x0];
       }
-
 
       AColor::Line(dc, xx, rect.y + h2, xx, rect.y + h1);
    }

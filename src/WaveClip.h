@@ -44,45 +44,6 @@ using WaveClipHolder = std::shared_ptr< WaveClip >;
 using WaveClipHolders = std::vector < WaveClipHolder >;
 using WaveClipConstHolders = std::vector < std::shared_ptr< const WaveClip > >;
 
-
-// Data for sample blocks related to the column
-struct WaveDisplayColumn final
-{
-   float min;
-   float max;
-   float rms;
-};
-// A bundle of arrays needed for drawing waveforms.  The object may or may not
-// own the storage for those arrays.  If it does, it destroys them.
-class WaveDisplay
-{
-public:
-   int width { 0 };
-   WaveDisplayColumn* columns { nullptr };
-   PixelSampleMapper mapper;
-
-private:
-   std::vector<WaveDisplayColumn> ownColums;
-public:
-   WaveDisplay(int w)
-      : width(w)
-   {
-   }
-
-   // Create "own" arrays.
-   void Allocate()
-   {
-      ownColums.resize(width);
-
-      if (width > 0)
-         columns = ownColums.data();
-   }
-
-   ~WaveDisplay()
-   {
-   }
-};
-
 struct AUDACITY_DLL_API WaveClipListener
 {
    virtual ~WaveClipListener() = 0;

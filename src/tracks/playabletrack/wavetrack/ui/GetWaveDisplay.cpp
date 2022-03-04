@@ -18,6 +18,9 @@
 #include "SampleCount.h"
 #include "Sequence.h"
 #include "WaveClip.h"
+#include "PixelSampleMapper.h"
+
+#include "waveform/WaveData.h"
 
 namespace {
 

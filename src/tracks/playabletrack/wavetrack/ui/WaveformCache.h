@@ -13,15 +13,16 @@
 
 #include "WaveClip.h"
 
-class WaveCache;
+class WaveDisplay;
+class WaveDataCache;
 
 struct WaveClipWaveformCache final : WaveClipListener
 {
    WaveClipWaveformCache();
    ~WaveClipWaveformCache() override;
 
-   // Cache of values for drawing the waveform
-   std::unique_ptr<WaveCache> mWaveCache;
+   std::unique_ptr<WaveDataCache> mWaveDataCache;
+
    int mDirty { 0 };
 
    static WaveClipWaveformCache &Get( const WaveClip &clip );

@@ -1,0 +1,10 @@
+add_unit_test(
+   NAME
+      lib-graphics
+   SOURCES
+      GraphicsDataCacheTests.cpp
+   LIBRARIES
+      lib-graphics
+      lib-screen-geometry-interface
+      wxwidgets::base
+)

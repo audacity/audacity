@@ -87,6 +87,15 @@ void FrameStatistics::Section::AddEvent(Duration duration) noexcept
 FrameStatistics::Stopwatch
 FrameStatistics::CreateStopwatch(SectionID section) noexcept
 {
+   // New frame has started
+   if (section == SectionID::TrackPanel)
+   {
+      auto& instance = GetInstance();
+
+      instance.mSections[size_t(SectionID::WaveformView)] = {};
+      instance.mSections[size_t(SectionID::SpectrumView)] = {};
+   }
+
    return Stopwatch(section);
 }
 
