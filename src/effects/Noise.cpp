@@ -262,7 +262,7 @@ EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectNoise::TransferDataToWindow()
+bool EffectNoise::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -274,7 +274,7 @@ bool EffectNoise::TransferDataToWindow()
    return true;
 }
 
-bool EffectNoise::TransferDataFromWindow()
+bool EffectNoise::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

@@ -201,8 +201,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
       const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
    ) override;
    bool Startup(EffectUIClientInterface *client) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
    // Effect implementation
 

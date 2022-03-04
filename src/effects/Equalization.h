@@ -131,7 +131,7 @@ public:
    bool CloseUI() override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow() override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
 
 private:
    // EffectEqualization implementation

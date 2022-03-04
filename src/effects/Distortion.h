@@ -96,8 +96,8 @@ public:
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
 

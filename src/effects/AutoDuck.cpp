@@ -507,7 +507,7 @@ EffectAutoDuck::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectAutoDuck::TransferDataToWindow()
+bool EffectAutoDuck::TransferDataToWindow(const EffectSettings &)
 {
    return DoTransferDataToWindow();
 }
@@ -524,7 +524,7 @@ bool EffectAutoDuck::DoTransferDataToWindow()
    return true;
 }
 
-bool EffectAutoDuck::TransferDataFromWindow()
+bool EffectAutoDuck::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

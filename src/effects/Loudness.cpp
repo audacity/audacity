@@ -386,7 +386,7 @@ EffectLoudness::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectLoudness::TransferDataToWindow()
+bool EffectLoudness::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -399,7 +399,7 @@ bool EffectLoudness::TransferDataToWindow()
    return true;
 }
 
-bool EffectLoudness::TransferDataFromWindow()
+bool EffectLoudness::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

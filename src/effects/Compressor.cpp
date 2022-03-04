@@ -361,7 +361,7 @@ EffectCompressor::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectCompressor::TransferDataToWindow()
+bool EffectCompressor::TransferDataToWindow(const EffectSettings &)
 {
    mThresholdSlider->SetValue(lrint(mThresholdDB));
    mNoiseFloorSlider->SetValue(lrint(mNoiseFloorDB * SCL_NoiseFloor));
@@ -376,7 +376,7 @@ bool EffectCompressor::TransferDataToWindow()
    return true;
 }
 
-bool EffectCompressor::TransferDataFromWindow()
+bool EffectCompressor::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate())
    {

@@ -190,7 +190,7 @@ EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectEcho::TransferDataToWindow()
+bool EffectEcho::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -200,7 +200,7 @@ bool EffectEcho::TransferDataToWindow()
    return true;
 }
 
-bool EffectEcho::TransferDataFromWindow()
+bool EffectEcho::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

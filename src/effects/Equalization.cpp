@@ -1188,7 +1188,7 @@ EffectEqualization::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 //
 // Populate the window with relevant variables
 //
-bool EffectEqualization::TransferDataToWindow()
+bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 {
    // Set log or lin freq scale (affects interpolation as well)
    mLinFreq->SetValue( mLin );

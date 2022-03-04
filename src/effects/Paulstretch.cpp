@@ -217,7 +217,7 @@ EffectPaulstretch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 };
 
-bool EffectPaulstretch::TransferDataToWindow()
+bool EffectPaulstretch::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -227,7 +227,7 @@ bool EffectPaulstretch::TransferDataToWindow()
    return true;
 }
 
-bool EffectPaulstretch::TransferDataFromWindow()
+bool EffectPaulstretch::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

@@ -92,14 +92,14 @@ EffectSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectSilence::TransferDataToWindow()
+bool EffectSilence::TransferDataToWindow(const EffectSettings &)
 {
    mDurationT->SetValue(GetDuration());
 
    return true;
 }
 
-bool EffectSilence::TransferDataFromWindow()
+bool EffectSilence::TransferDataFromWindow(EffectSettings &)
 {
    SetDuration(mDurationT->GetValue());
 

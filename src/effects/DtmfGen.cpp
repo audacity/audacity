@@ -396,7 +396,7 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectDtmf::TransferDataToWindow()
+bool EffectDtmf::TransferDataToWindow(const EffectSettings &)
 {
    Recalculate();
 
@@ -414,7 +414,7 @@ bool EffectDtmf::TransferDataToWindow()
    return true;
 }
 
-bool EffectDtmf::TransferDataFromWindow()
+bool EffectDtmf::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

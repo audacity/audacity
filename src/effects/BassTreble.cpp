@@ -285,7 +285,7 @@ EffectBassTreble::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectBassTreble::TransferDataToWindow()
+bool EffectBassTreble::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -300,7 +300,7 @@ bool EffectBassTreble::TransferDataToWindow()
    return true;
 }
 
-bool EffectBassTreble::TransferDataFromWindow()
+bool EffectBassTreble::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

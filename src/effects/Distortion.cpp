@@ -483,7 +483,7 @@ EffectDistortion::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectDistortion::TransferDataToWindow()
+bool EffectDistortion::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -504,7 +504,7 @@ bool EffectDistortion::TransferDataToWindow()
    return true;
 }
 
-bool EffectDistortion::TransferDataFromWindow()
+bool EffectDistortion::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

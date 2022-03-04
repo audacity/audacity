@@ -339,7 +339,7 @@ EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectNormalize::TransferDataToWindow()
+bool EffectNormalize::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -351,7 +351,7 @@ bool EffectNormalize::TransferDataToWindow()
    return true;
 }
 
-bool EffectNormalize::TransferDataFromWindow()
+bool EffectNormalize::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

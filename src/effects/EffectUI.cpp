@@ -203,12 +203,18 @@ EffectUIHost::~EffectUIHost()
 
 bool EffectUIHost::TransferDataToWindow()
 {
-   return mEffectUIHost.TransferDataToWindow();
+   // Transfer-to takes const reference to settings
+   return mEffectUIHost.TransferDataToWindow(mpAccess->Get());
 }
 
 bool EffectUIHost::TransferDataFromWindow()
 {
-   return mEffectUIHost.TransferDataFromWindow();
+   // Transfer-from takes non-const reference to settings
+   bool result = true;
+   auto settings = mpAccess->Get();
+   result = mEffectUIHost.TransferDataFromWindow(settings);
+   mpAccess->Set(std::move(settings));
+   return result;
 }
 
 // ============================================================================
@@ -734,7 +740,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mSupportsRealtime)
    {
-      if (!mpValidator->Validate() || !mEffectUIHost.TransferDataFromWindow())
+      if (!mpValidator->Validate() || !TransferDataFromWindow())
       {
          return;
       }

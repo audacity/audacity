@@ -544,7 +544,7 @@ EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 //
 // Populate the window with relevant variables
 //
-bool EffectScienFilter::TransferDataToWindow()
+bool EffectScienFilter::TransferDataToWindow(const EffectSettings &)
 {
    mOrderIndex = mOrder - 1;
 
@@ -564,7 +564,7 @@ bool EffectScienFilter::TransferDataToWindow()
    return TransferGraphLimitsFromWindow();
 }
 
-bool EffectScienFilter::TransferDataFromWindow()
+bool EffectScienFilter::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

@@ -131,8 +131,8 @@ public:
    ) = 0;
    virtual bool Startup(EffectUIClientInterface *client) = 0;
 
-   virtual bool TransferDataToWindow() = 0;
-   virtual bool TransferDataFromWindow() = 0;
+   virtual bool TransferDataToWindow(const EffectSettings &settings) = 0;
+   virtual bool TransferDataFromWindow(EffectSettings &settings) = 0;
 };
 
 #endif

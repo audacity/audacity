@@ -837,7 +837,7 @@ EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectTruncSilence::TransferDataToWindow()
+bool EffectTruncSilence::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -847,7 +847,7 @@ bool EffectTruncSilence::TransferDataToWindow()
    return true;
 }
 
-bool EffectTruncSilence::TransferDataFromWindow()
+bool EffectTruncSilence::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

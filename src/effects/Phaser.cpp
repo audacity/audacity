@@ -340,7 +340,7 @@ EffectPhaser::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectPhaser::TransferDataToWindow()
+bool EffectPhaser::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -358,7 +358,7 @@ bool EffectPhaser::TransferDataToWindow()
    return true;
 }
 
-bool EffectPhaser::TransferDataFromWindow()
+bool EffectPhaser::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

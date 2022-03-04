@@ -419,7 +419,7 @@ EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectChangeSpeed::TransferDataToWindow()
+bool EffectChangeSpeed::TransferDataToWindow(const EffectSettings &)
 {
    mbLoopDetect = true;
 
@@ -455,7 +455,7 @@ bool EffectChangeSpeed::TransferDataToWindow()
    return true;
 }
 
-bool EffectChangeSpeed::TransferDataFromWindow()
+bool EffectChangeSpeed::TransferDataFromWindow(EffectSettings &)
 {
    // mUIParent->TransferDataFromWindow() loses some precision, so save and restore it.
    double exactPercent = m_PercentChange;

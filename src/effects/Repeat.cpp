@@ -199,7 +199,7 @@ EffectRepeat::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectRepeat::TransferDataToWindow()
+bool EffectRepeat::TransferDataToWindow(const EffectSettings &)
 {
    mRepeatCount->ChangeValue(wxString::Format(wxT("%d"), repeatCount));
 
@@ -208,7 +208,7 @@ bool EffectRepeat::TransferDataToWindow()
    return true;
 }
 
-bool EffectRepeat::TransferDataFromWindow()
+bool EffectRepeat::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate())
    {

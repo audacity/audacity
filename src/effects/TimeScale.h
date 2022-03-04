@@ -52,8 +52,8 @@ public:
    bool Process(EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
    double CalcPreviewInputLength(double previewLength) override;
 
 private:

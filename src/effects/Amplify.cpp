@@ -305,7 +305,7 @@ void EffectAmplify::ClampRatio()
    mNewPeak = LINEAR_TO_DB(mRatio * mPeak);
 }
 
-bool EffectAmplify::TransferDataToWindow()
+bool EffectAmplify::TransferDataToWindow(const EffectSettings &)
 {
    mAmpT->GetValidator()->TransferToWindow();
 
@@ -320,7 +320,7 @@ bool EffectAmplify::TransferDataToWindow()
    return true;
 }
 
-bool EffectAmplify::TransferDataFromWindow()
+bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

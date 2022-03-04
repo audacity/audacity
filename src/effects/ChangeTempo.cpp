@@ -332,7 +332,7 @@ EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectChangeTempo::TransferDataToWindow()
+bool EffectChangeTempo::TransferDataToWindow(const EffectSettings &)
 {
    // Reset from length because it can be changed by Preview
    m_FromLength = mT1 - mT0;
@@ -359,7 +359,7 @@ bool EffectChangeTempo::TransferDataToWindow()
    return true;
 }
 
-bool EffectChangeTempo::TransferDataFromWindow()
+bool EffectChangeTempo::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

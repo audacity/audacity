@@ -1656,12 +1656,12 @@ Effect::PopulateOrExchange(ShuttleGui &, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool Effect::TransferDataToWindow()
+bool Effect::TransferDataToWindow(const EffectSettings &)
 {
    return true;
 }
 
-bool Effect::TransferDataFromWindow()
+bool Effect::TransferDataFromWindow(EffectSettings &)
 {
    return true;
 }

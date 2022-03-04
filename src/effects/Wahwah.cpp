@@ -310,7 +310,7 @@ EffectWahwah::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectWahwah::TransferDataToWindow()
+bool EffectWahwah::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -327,7 +327,7 @@ bool EffectWahwah::TransferDataToWindow()
    return true;
 }
 
-bool EffectWahwah::TransferDataFromWindow()
+bool EffectWahwah::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

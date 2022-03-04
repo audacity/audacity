@@ -471,7 +471,7 @@ EffectReverb::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectReverb::TransferDataToWindow()
+bool EffectReverb::TransferDataToWindow(const EffectSettings &)
 {
 #define SetSpinSlider(n) \
    m ## n ## S->SetValue((int) mParams.m ## n); \
@@ -494,7 +494,7 @@ bool EffectReverb::TransferDataToWindow()
    return true;
 }
 
-bool EffectReverb::TransferDataFromWindow()
+bool EffectReverb::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate())
    {

@@ -310,7 +310,7 @@ EffectTimeScale::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectTimeScale::TransferDataToWindow()
+bool EffectTimeScale::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -323,7 +323,7 @@ bool EffectTimeScale::TransferDataToWindow()
    return true;
 }
 
-bool EffectTimeScale::TransferDataFromWindow()
+bool EffectTimeScale::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {
