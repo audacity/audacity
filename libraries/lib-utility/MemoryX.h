@@ -574,4 +574,16 @@ auto Visit(Visitor &&vis, Variant &&var)
       std::forward<Visitor>(vis), std::forward<Variant>(var) );
 }
 
+
+template <typename LType, typename RType>
+auto RoundUp(LType numerator, RType denominator) noexcept
+{
+   static_assert(std::is_integral_v<LType>);
+   static_assert(std::is_integral_v<RType>);
+
+   const auto result = numerator / denominator;
+
+   return result * denominator == numerator ? result : result + 1;
+}
+
 #endif // __AUDACITY_MEMORY_X_H__
