@@ -50,6 +50,13 @@ if( ${_OPT}has_tests )
 
       add_executable( ${test_executable_name} ${ADD_UNIT_TEST_SOURCES} "${CMAKE_SOURCE_DIR}/tests/Catch2Main.cpp")
       target_link_libraries( ${test_executable_name} ${ADD_UNIT_TEST_LIBRARIES} Catch2::Catch2 )
+      target_compile_definitions( ${test_executable_name}
+         PRIVATE
+            -DPROHIBITED==delete
+            -Dsafenew=new
+            -DUNIT_TEST
+            -DWXINTL_NO_GETTEXT_MACRO
+      )
 
       set_target_properties(
          ${test_executable_name}
