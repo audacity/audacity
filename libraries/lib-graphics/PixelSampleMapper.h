@@ -14,7 +14,9 @@
 #include <functional>
 #include <variant>
 
-class sampleCount;
+// Clang will fail to instantiate a variant if sampleCount is forward declared
+// It tries to instantiate std::invoke_result for some reason
+#include "SampleCount.h"
 
 class GRAPHICS_API PixelSampleMapper final
 {
@@ -45,6 +47,8 @@ public:
 private:
    struct LinearMapper final
    {
+      // Fixes GCC7 build issues (constructor required before non-static data member)
+      LinearMapper() noexcept {}
       double mInitialValue {};
       double mSamplesPerPixel {};
 
