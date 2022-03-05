@@ -49,6 +49,14 @@ private:
    {
       // Fixes GCC7 build issues (constructor required before non-static data member)
       LinearMapper() noexcept {}
+
+      LinearMapper(double initialValue, double samplesPerPixel) noexcept
+         : mInitialValue(initialValue)
+         , mSamplesPerPixel(samplesPerPixel)
+      {}
+
+      LinearMapper(const LinearMapper&) = default;
+
       double mInitialValue {};
       double mSamplesPerPixel {};
 
