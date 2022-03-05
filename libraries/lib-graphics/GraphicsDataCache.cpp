@@ -183,8 +183,8 @@ GraphicsDataCacheBase::PerformBaseLookup(
    std::advance(last, cacheItemsCount);
 
    return { it, last,
-            static_cast<size_t>(std::max(0LL, left - cacheLeftColumn)),
-            static_cast<size_t>(std::max(0LL, cacheRightColumn - right)) };
+            static_cast<size_t>(std::max(int64_t(0), left - cacheLeftColumn)),
+            static_cast<size_t>(std::max(int64_t(0), cacheRightColumn - right)) };
 }
 
 bool GraphicsDataCacheBase::CreateNewItems()

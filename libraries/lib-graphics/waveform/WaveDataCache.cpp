@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 
 
 WaveDataCache::WaveDataCache(DataProvider provider, double sampleRate)
@@ -139,7 +140,7 @@ WaveCacheSampleBlock::Summary WaveCacheSampleBlock::GetSummary(
 
    const float* data =
       static_cast<const float*>(static_cast<const void*>(mData.data()));
-   
+
    Summary summary = initializer;
 
    summary.SamplesCount = samplesCount;

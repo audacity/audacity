@@ -52,7 +52,7 @@ class GRAPHICS_API GraphicsDataCacheBase /* not final */
 {
 public:
    // Number of pixels in a single cache element
-   constexpr static uint32_t CacheElementWidth = 256; 
+   constexpr static uint32_t CacheElementWidth = 256;
 
    virtual ~GraphicsDataCacheBase() = default;
 
@@ -91,7 +91,7 @@ protected:
    //! This method is called, when the cache element should be evicted. Implementation may not deallocate the object.
    virtual void DisposeElement(GraphicsDataCacheElementBase* element) = 0;
 
-   //! This method is called on all elements matching the request that are not complete (i. e. IsComplete if false). 
+   //! This method is called on all elements matching the request that are not complete (i. e. IsComplete if false).
    virtual bool UpdateElement(
       const GraphicsDataCacheKey& key, GraphicsDataCacheElementBase& element) = 0;
 
@@ -210,7 +210,7 @@ private:
    const GraphicsDataCacheBase::BaseLookupResult mBaseLookup;
    GraphicsDataCacheBase::Lookup::const_iterator mIterator;
 
-   template <typename CacheElementType>
+   template <typename T>
    friend class GraphicsDataCache;
 };
 
@@ -225,7 +225,7 @@ public:
        : GraphicsDataCacheBase(sampleRate)
    {
    }
-   
+
    virtual ~GraphicsDataCache()
    {
       Invalidate();

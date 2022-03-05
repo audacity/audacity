@@ -11,6 +11,7 @@
 #include "PixelSampleMapper.h"
 
 #include <cassert>
+#include <cmath>
 
 #include "SampleCount.h"
 #include "MemoryX.h"

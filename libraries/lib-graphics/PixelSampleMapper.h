@@ -52,6 +52,6 @@ private:
 
       explicit operator bool() const noexcept;
    };
-
-   std::variant<LinearMapper, CustomMapper> mMapper;
+   // GCC 9.3.0 fails horribly if you do not initialize variant explicitly here
+   std::variant<LinearMapper, CustomMapper> mMapper { LinearMapper {} };
 };
