@@ -1794,12 +1794,10 @@ bool VSTEffect::IsGraphicalUI()
    return mGui;
 }
 
-bool VSTEffect::ValidateUI(EffectSettings &)
+bool VSTEffect::ValidateUI(EffectSettings &settings)
 {
    if (GetType() == EffectTypeGenerate)
-   {
-      mHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
 
    return true;
 }
@@ -2770,7 +2768,7 @@ void VSTEffect::BuildPlain(EffectSettingsAccess &access)
                NumericTextCtrl(scroller, ID_Duration,
                   NumericConverter::TIME,
                   extra.GetDurationFormat(),
-                  mHost->GetDuration(),
+                  extra.GetDuration(),
                   mSampleRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));

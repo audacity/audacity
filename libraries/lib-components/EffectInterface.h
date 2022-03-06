@@ -76,8 +76,13 @@ public:
       { return mDurationFormat; }
    void SetDurationFormat(const NumericFormatSymbol &durationFormat)
       { mDurationFormat = durationFormat; }
+
+   //! @return value is not negative
+   double GetDuration() const { return mDuration; }
+   void SetDuration(double value) { mDuration = std::max(0.0, value); }
 private:
    NumericFormatSymbol mDurationFormat{};
+   double mDuration{}; //!< @invariant non-negative
 };
 
 //! Externalized state of a plug-in

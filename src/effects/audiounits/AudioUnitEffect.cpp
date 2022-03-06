@@ -1757,13 +1757,11 @@ bool AudioUnitEffect::IsGraphicalUI()
    return mUIType != wxT("Plain");
 }
 
-bool AudioUnitEffect::ValidateUI(EffectSettings &)
+bool AudioUnitEffect::ValidateUI([[maybe_unused]] EffectSettings &settings)
 {
 #if 0
    if (GetType() == EffectTypeGenerate)
-   {
-      mHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
 #endif
    return true;
 }

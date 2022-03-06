@@ -114,9 +114,9 @@ bool EffectTimeScale::Init()
 }
 
 double EffectTimeScale::CalcPreviewInputLength(
-   const EffectSettings &, double previewLength)
+   const EffectSettings &settings, double previewLength)
 {
-   double inputLength = Effect::GetDuration();
+   double inputLength = settings.extra.GetDuration();
    if(inputLength == 0.0) {
       return 0.0;
    } else {
@@ -130,7 +130,7 @@ double EffectTimeScale::CalcPreviewInputLength(
 
 void EffectTimeScale::Preview(EffectSettingsAccess &access, bool dryOnly)
 {
-   previewSelectedDuration = Effect::GetDuration();
+   previewSelectedDuration = access.Get().extra.GetDuration();
    auto cleanup = valueRestorer( bPreview, true );
    Effect::Preview(access, dryOnly);
 }

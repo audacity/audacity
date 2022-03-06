@@ -191,9 +191,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // EffectHostInterface implementation
 
    const EffectDefinitionInterface& GetDefinition() const override;
-   double GetDuration() override;
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
-   void SetDuration(double duration) override;
 
    // EffectUIHostInterface implementation
 
@@ -491,8 +489,6 @@ private:
    bool mIsLinearEffect;
    bool mPreviewWithNotSelected;
    bool mPreviewFullSelection;
-
-   double mDuration;
 
    bool mIsPreview;
 

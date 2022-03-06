@@ -893,7 +893,7 @@ VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &access)
                parent, wxID_ANY,
                NumericConverter::TIME,
                extra.GetDurationFormat(),
-               mEffectHost->GetDuration(),
+               extra.GetDuration(),
                mSetup.sampleRate,
                NumericTextCtrl::Options{}
                   .AutoPos(true)
@@ -924,12 +924,10 @@ VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &access)
    return nullptr;
 }
 
-bool VST3Effect::ValidateUI(EffectSettings &)
+bool VST3Effect::ValidateUI(EffectSettings &settings)
 {
    if (mDuration != nullptr)
-   {
-      mEffectHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
    return true;
 }
 

@@ -1241,7 +1241,7 @@ LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
                NumericTextCtrl(w, ID_Duration,
                   NumericConverter::TIME,
                   extra.GetDurationFormat(),
-                  mHost->GetDuration(),
+                  extra.GetDuration(),
                   mSampleRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
@@ -1508,12 +1508,10 @@ bool LadspaEffect::IsGraphicalUI()
    return false;
 }
 
-bool LadspaEffect::ValidateUI(EffectSettings &)
+bool LadspaEffect::ValidateUI(EffectSettings &settings)
 {
    if (GetType() == EffectTypeGenerate)
-   {
-      mHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
 
    return true;
 }

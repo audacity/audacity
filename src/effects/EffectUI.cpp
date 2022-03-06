@@ -236,7 +236,7 @@ bool EffectUIHost::TransferDataFromWindow()
       if (result) {
          auto &definition = mEffectUIHost.GetDefinition();
          if (definition.GetType() == EffectTypeGenerate) {
-            const auto seconds = mEffectUIHost.GetDuration();
+            const auto seconds = settings.extra.GetDuration();
             SetConfig(definition, PluginSettings::Private,
                CurrentSettingsGroup(), EffectSettingsExtra::DurationKey(),
                seconds);

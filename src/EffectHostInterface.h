@@ -36,9 +36,6 @@ public:
    virtual ~EffectHostInterface();
 
    virtual const EffectDefinitionInterface& GetDefinition() const = 0;
-
-   virtual double GetDuration() = 0;
-   virtual void SetDuration(double seconds) = 0;
 };
 
 class wxDialog;

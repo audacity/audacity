@@ -37,12 +37,12 @@ const EffectParameterMethods& EffectDtmf::Parameters() const
    static CapturedParameters<EffectDtmf,
       Sequence, DutyCycle, Amplitude
    > parameters{
-      [](EffectDtmf &effect, EffectSettings &, Settings &s, bool updating){
+      [](EffectDtmf &, EffectSettings &es, Settings &s, bool updating){
          if (updating) {
             if (s.dtmfSequence.find_first_not_of(AllSymbols())
                 != wxString::npos)
                return false;
-            s.Recalculate(effect);
+            s.Recalculate(es);
          }
          return true;
       },
@@ -127,7 +127,7 @@ unsigned EffectDtmf::GetAudioOutCount() const
 }
 
 bool EffectDtmf::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames chanMap)
+   EffectSettings &settings, sampleCount, ChannelNames chanMap)
 {
    auto &dtmfSettings = mSettings;
    if (dtmfSettings.dtmfNTones <= 0) {   // Bail if no DTFM sequence.
@@ -137,7 +137,7 @@ bool EffectDtmf::ProcessInitialize(
 
       return false;
    }
-   double duration = GetDuration();
+   double duration = settings.extra.GetDuration();
 
    // all dtmf sequence durations in samples from seconds
    // MJS: Note that mDuration is in seconds but will have been quantised to the units of the TTC.
@@ -269,7 +269,7 @@ struct EffectDtmf::Validator
    void DoUpdateUI();
 
    void PopulateOrExchange(ShuttleGui & S,
-      const EffectSettings &settings, double duration, double projectRate);
+      const EffectSettings &settings, double projectRate);
    void OnSequence(wxCommandEvent & evt);
    void OnDuration(wxCommandEvent & evt);
    void OnDutyCycle(wxCommandEvent & evt);
@@ -285,7 +285,7 @@ struct EffectDtmf::Validator
 };
 
 void EffectDtmf::Validator::PopulateOrExchange(ShuttleGui & S,
-   const EffectSettings &settings, double duration, double projectRate)
+   const EffectSettings &settings, double projectRate)
 {
    // Hold a reference to special settings, still in the singleton Effect
    // object
@@ -330,7 +330,7 @@ void EffectDtmf::Validator::PopulateOrExchange(ShuttleGui & S,
          NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,
                          extra.GetDurationFormat(),
-                         duration,
+                         extra.GetDuration(),
                          projectRate,
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
@@ -381,7 +381,7 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
    auto &settings = access.Get();
    auto &dtmfSettings = mSettings;
    auto result = std::make_unique<Validator>(*this, access, dtmfSettings);
-   result->PopulateOrExchange(S, settings, GetDuration(), mProjectRate);
+   result->PopulateOrExchange(S, settings, mProjectRate);
    return result;
 }
 
@@ -390,7 +390,7 @@ bool EffectDtmf::Validator::UpdateUI()
    auto &dtmfSettings = mSettings;
    mDtmfDutyCycleS->SetValue(dtmfSettings.dtmfDutyCycle * DutyCycle.scale);
 
-   mDtmfDurationT->SetValue(GetEffect().GetDuration());
+   mDtmfDurationT->SetValue(mAccess.Get().extra.GetDuration());
 
    DoUpdateUI();
 
@@ -399,15 +399,16 @@ bool EffectDtmf::Validator::UpdateUI()
 
 bool EffectDtmf::Validator::ValidateUI()
 {
-   auto &dtmfSettings = mSettings;
-   auto &effect = GetEffect();
-   dtmfSettings.dtmfDutyCycle =
-      (double) mDtmfDutyCycleS->GetValue() / DutyCycle.scale;
-   effect.SetDuration(mDtmfDurationT->GetValue());
+   mAccess.ModifySettings([this](EffectSettings &settings){
+      auto &dtmfSettings = mSettings;
+      dtmfSettings.dtmfDutyCycle =
+         (double) mDtmfDutyCycleS->GetValue() / DutyCycle.scale;
+      settings.extra.SetDuration(mDtmfDurationT->GetValue());
 
-   // recalculate to make sure all values are up-to-date. This is especially
-   // important if the user did not change any values in the dialog
-   dtmfSettings.Recalculate(effect);
+      // recalculate to make sure all values are up-to-date. This is especially
+      // important if the user did not change any values in the dialog
+      dtmfSettings.Recalculate(settings);
+   });
 
    return true;
 }
@@ -416,8 +417,9 @@ bool EffectDtmf::Validator::ValidateUI()
 
 // Updates dtmfNTones, dtmfTone, dtmfSilence, and sometimes duration
 // They depend on dtmfSequence, dtmfDutyCycle, and duration
-void EffectDtmf::Settings::Recalculate(Effect &effect)
+void EffectDtmf::Settings::Recalculate(EffectSettings &settings)
 {
+   auto &extra = settings.extra;
    // remember that dtmfDutyCycle is in range (0.0-100.0)
 
    dtmfNTones = (int) dtmfSequence.length();
@@ -426,13 +428,13 @@ void EffectDtmf::Settings::Recalculate(Effect &effect)
       // no tones, all zero: don't do anything
       // this should take care of the case where user got an empty
       // dtmf sequence into the generator: track won't be generated
-      effect.SetDuration(0.0);
+      extra.SetDuration(0.0);
       dtmfTone = 0;
       dtmfSilence = 0;
    } else {
       if (dtmfNTones==1) {
         // single tone, as long as the sequence
-          dtmfTone = effect.GetDuration();
+          dtmfTone = extra.GetDuration();
           dtmfSilence = 0;
       } else {
          // Don't be fooled by the fact that you divide the sequence into dtmfNTones:
@@ -444,7 +446,7 @@ void EffectDtmf::Settings::Recalculate(Effect &effect)
          // which can be simplified in the one below.
          // Then just take the part that belongs to tone or silence.
          //
-         double slot = effect.GetDuration()
+         double slot = extra.GetDuration()
             / ((double)dtmfNTones + (dtmfDutyCycle / 100.0) - 1);
          dtmfTone = slot * (dtmfDutyCycle / 100.0); // seconds
          dtmfSilence = slot * (1.0 - (dtmfDutyCycle / 100.0)); // seconds
@@ -605,25 +607,31 @@ void EffectDtmf::Validator::DoUpdateUI()
 
 void EffectDtmf::Validator::OnSequence(wxCommandEvent & WXUNUSED(evt))
 {
-   auto &dtmfSettings = mSettings;
-   dtmfSettings.dtmfSequence = mDtmfSequenceT->GetValue();
-   dtmfSettings.Recalculate(GetEffect());
+   mAccess.ModifySettings([this](EffectSettings &settings){
+      auto &dtmfSettings = mSettings;
+      dtmfSettings.dtmfSequence = mDtmfSequenceT->GetValue();
+      dtmfSettings.Recalculate(settings);
+   });
    DoUpdateUI();
 }
 
 void EffectDtmf::Validator::OnDuration(wxCommandEvent & WXUNUSED(evt))
 {
-   auto &dtmfSettings = mSettings;
-   auto &effect = GetEffect();
-   effect.SetDuration(mDtmfDurationT->GetValue());
-   dtmfSettings.Recalculate(effect);
+   mAccess.ModifySettings([this](EffectSettings &settings){
+      auto &dtmfSettings = mSettings;
+      auto &effect = GetEffect();
+      settings.extra.SetDuration(mDtmfDurationT->GetValue());
+      dtmfSettings.Recalculate(settings);
+   });
    DoUpdateUI();
 }
 
 void EffectDtmf::Validator::OnDutyCycle(wxCommandEvent & evt)
 {
-   auto &dtmfSettings = mSettings;
-   dtmfSettings.dtmfDutyCycle = (double) evt.GetInt() / DutyCycle.scale;
-   dtmfSettings.Recalculate(GetEffect());
+   mAccess.ModifySettings([this, &evt](EffectSettings &settings){
+      auto &dtmfSettings = mSettings;
+      dtmfSettings.dtmfDutyCycle = (double) evt.GetInt() / DutyCycle.scale;
+      dtmfSettings.Recalculate(settings);
+   });
    DoUpdateUI();
 }

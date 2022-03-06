@@ -1560,12 +1560,10 @@ bool LV2Effect::IsGraphicalUI()
    return mUseGUI;
 }
 
-bool LV2Effect::ValidateUI(EffectSettings &)
+bool LV2Effect::ValidateUI(EffectSettings &settings)
 {
    if (GetType() == EffectTypeGenerate)
-   {
-      mHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
 
    return true;
 }
@@ -2320,7 +2318,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                NumericTextCtrl(w, ID_Duration,
                                NumericConverter::TIME,
                                extra.GetDurationFormat(),
-                               mHost->GetDuration(),
+                               extra.GetDuration(),
                                mSampleRate,
                                NumericTextCtrl::Options {}
             .AutoPos(true));

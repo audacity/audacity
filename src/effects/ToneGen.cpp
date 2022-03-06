@@ -380,7 +380,7 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
          NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,
                          extra.GetDurationFormat(),
-                         GetDuration(),
+                         extra.GetDuration(),
                          mProjectRate,
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
@@ -393,13 +393,13 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
    return nullptr;
 }
 
-bool EffectToneGen::TransferDataToWindow(const EffectSettings &)
+bool EffectToneGen::TransferDataToWindow(const EffectSettings &settings)
 {
-   mToneDurationT->SetValue(GetDuration());
+   mToneDurationT->SetValue(settings.extra.GetDuration());
    return true;
 }
 
-bool EffectToneGen::TransferDataFromWindow(EffectSettings &)
+bool EffectToneGen::TransferDataFromWindow(EffectSettings &settings)
 {
    if (!mChirp)
    {
@@ -407,7 +407,7 @@ bool EffectToneGen::TransferDataFromWindow(EffectSettings &)
       mAmplitude1 = mAmplitude0;
    }
 
-   SetDuration(mToneDurationT->GetValue());
+   settings.extra.SetDuration(mToneDurationT->GetValue());
 
    return true;
 }

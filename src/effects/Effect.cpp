@@ -64,7 +64,6 @@ Effect::Effect()
    mTracks = NULL;
    mT0 = 0.0;
    mT1 = 0.0;
-   mDuration = 0.0;
    mIsPreview = false;
    mIsLinearEffect = false;
    mPreviewWithNotSelected = false;
@@ -762,33 +761,11 @@ double Effect::GetDefaultDuration()
    return 30.0;
 }
 
-double Effect::GetDuration()
-{
-   if (mDuration < 0.0)
-   {
-      mDuration = 0.0;
-   }
-
-   return mDuration;
-}
-
 NumericFormatSymbol Effect::GetSelectionFormat()
 {
    if( !IsBatchProcessing() && FindProject() )
       return ProjectSettings::Get( *FindProject() ).GetSelectionFormat();
    return NumericConverter::HoursMinsSecondsFormat();
-}
-
-void Effect::SetDuration(double seconds)
-{
-   if (seconds < 0.0)
-   {
-      seconds = 0.0;
-   }
-
-   mDuration = seconds;
-
-   return;
 }
 
 wxString Effect::GetSavedStateGroup()
@@ -961,23 +938,23 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
 
    bool isSelection = false;
 
-   mDuration = 0.0;
+   auto duration = 0.0;
    if (GetType() == EffectTypeGenerate)
       GetConfig(GetDefinition(), PluginSettings::Private,
          CurrentSettingsGroup(),
-         EffectSettingsExtra::DurationKey(), mDuration, GetDefaultDuration());
+         EffectSettingsExtra::DurationKey(), duration, GetDefaultDuration());
 
    WaveTrack *newTrack{};
    bool success = false;
-   auto oldDuration = mDuration;
+   auto oldDuration = duration;
 
    auto cleanup = finally( [&] {
       if (!success) {
          if (newTrack) {
             mTracks->Remove(newTrack);
          }
-         // LastUsedDuration may have been modified by Preview.
-         SetDuration(oldDuration);
+         // On failure, restore the old duration setting
+         settings.extra.SetDuration(oldDuration);
       }
       else
          trans.Commit();
@@ -1004,9 +981,9 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
       // but we do need to make sure we have the right number of samples at the project rate
       double quantMT0 = QUANTIZED_TIME(mT0, mProjectRate);
       double quantMT1 = QUANTIZED_TIME(mT1, mProjectRate);
-      mDuration = quantMT1 - quantMT0;
+      duration = quantMT1 - quantMT0;
       isSelection = true;
-      mT1 = mT0 + mDuration;
+      mT1 = mT0 + duration;
    }
 
    // This is happening inside EffectSettingsAccess::ModifySettings
@@ -1014,6 +991,7 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
       ? NumericConverter::TimeAndSampleFormat()
       : NumericConverter::DefaultSelectionFormat();
    auto updater = [&](EffectSettings &settings) {
+      settings.extra.SetDuration(duration);
       settings.extra.SetDurationFormat( newFormat );
    };
    // Update our copy of settings; update the EffectSettingsAccess too,
@@ -1053,6 +1031,9 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
          // Retrieve again after the dialog modified settings
          settings = pAccess->Get();
    }
+
+   // If the dialog was shown, then it has been closed without errors or
+   // cancellation, and any change of duration has been saved in the config file
 
    bool returnVal = true;
    bool skipFlag = CheckWhetherSkipEffect();
@@ -1129,6 +1110,7 @@ bool Effect::Process(EffectSettings &settings)
 
 bool Effect::ProcessPass(EffectSettings &settings)
 {
+   const auto duration = settings.extra.GetDuration();
    bool bGoodResult = true;
    bool isGenerator = GetType() == EffectTypeGenerate;
 
@@ -1196,7 +1178,7 @@ bool Effect::ProcessPass(EffectSettings &settings)
             mSampleCnt = len;
          }
          else
-            mSampleCnt = left->TimeToLongSamples(mDuration);
+            mSampleCnt = left->TimeToLongSamples(duration);
 
          // Let the client know the sample rate
          SetSampleRate(left->GetRate());
@@ -1268,14 +1250,12 @@ bool Effect::ProcessPass(EffectSettings &settings)
       },
       [&](Track *t) {
          if (SyncLock::IsSyncLockSelected(t))
-            t->SyncLockAdjust(mT1, mT0 + mDuration);
+            t->SyncLockAdjust(mT1, mT0 + duration);
       }
    );
 
    if (bGoodResult && GetType() == EffectTypeGenerate)
-   {
-      mT1 = mT0 + mDuration;
-   }
+      mT1 = mT0 + duration;
 
    return bGoodResult;
 }
@@ -1344,13 +1324,13 @@ bool Effect::ProcessTrack(EffectSettings &settings,
    double genDur = 0;
    if (isGenerator)
    {
+      const auto duration = settings.extra.GetDuration();
       if (mIsPreview) {
          gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
-         genDur = std::min(mDuration, CalcPreviewInputLength(settings, genDur));
+         genDur = std::min(duration, CalcPreviewInputLength(settings, genDur));
       }
-      else {
-         genDur = mDuration;
-      }
+      else
+         genDur = duration;
 
       genLength = sampleCount((left->GetRate() * genDur) + 0.5);  // round to nearest sample
       delayRemaining = genLength;
@@ -2050,8 +2030,8 @@ void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
    if (isNyquist && isGenerator)
       previewDuration = CalcPreviewInputLength(settings, previewLen);
    else
-      previewDuration =
-         std::min(mDuration, CalcPreviewInputLength(settings, previewLen));
+      previewDuration = std::min(settings.extra.GetDuration(),
+         CalcPreviewInputLength(settings, previewLen));
 
    double t1 = mT0 + previewDuration;
 
