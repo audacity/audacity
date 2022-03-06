@@ -132,7 +132,6 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
 
 private:
    // EffectEqualization implementation
@@ -172,6 +171,7 @@ private:
    void WriteXML(XMLWriter &xmlFile) const;
 
    void UpdateCurves();
+   void UpdateRuler();
    void UpdateDraw();
 
    //void LayoutEQSliders();
