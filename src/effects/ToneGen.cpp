@@ -292,7 +292,7 @@ bool EffectToneGen::DefineParams( ShuttleParams & S ){
 
 
 //   double freqMax = (FindProject() ? FindProject()->GetRate() : 44100.0) / 2.0;
-//   mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);
+//   mFrequency[1] = std::clamp<double>(mFrequency[1], MIN_EndFreq, freqMax);
 
 
    return true;
@@ -352,7 +352,7 @@ bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
          ? ProjectRate::Get( *FindProject() ).GetRate()
          : 44100.0)
       / 2.0;
-   mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);
+   mFrequency[1] = std::clamp<double>(mFrequency[1], MIN_EndFreq, freqMax);
 
    return true;
 }

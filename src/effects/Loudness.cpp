@@ -156,9 +156,11 @@ bool EffectLoudness::Process(EffectSettings &)
    if(mNormalizeTo == kLoudness)
       // LU use 10*log10(...) instead of 20*log10(...)
       // so multiply level by 2 and use standard DB_TO_LINEAR macro.
-      mRatio = DB_TO_LINEAR(TrapDouble(mLUFSLevel*2, MIN_LUFSLevel, MAX_LUFSLevel));
+      mRatio = DB_TO_LINEAR(std::clamp<double>(
+         mLUFSLevel*2, MIN_LUFSLevel, MAX_LUFSLevel));
    else // RMS
-      mRatio = DB_TO_LINEAR(TrapDouble(mRMSLevel, MIN_RMSLevel, MAX_RMSLevel));
+      mRatio = DB_TO_LINEAR(std::clamp<double>(
+         mRMSLevel, MIN_RMSLevel, MAX_RMSLevel));
 
    // Iterate over each track
    this->CopyInputTracks(); // Set up mOutputTracks.

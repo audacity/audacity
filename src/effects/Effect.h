@@ -508,17 +508,6 @@ inline float TrapFloat(float x, float min, float max)
    return x;
 }
 
-inline double TrapDouble(double x, double min, double max)
-{
-   if (x <= min)
-      return min;
-
-   if (x >= max)
-      return max;
-
-   return x;
-}
-
 inline long TrapLong(long x, long min, long max)
 {
    if (x <= min)
