@@ -584,7 +584,7 @@ Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
       // No custom validator object?  Then use the default, which will pop
       // the event handler when it is destroyed and invokes CloseUI
       mUIParent->PushEventHandler(this);
-      result = std::make_unique<DefaultEffectUIValidator>(*this);
+      result = std::make_unique<DefaultEffectUIValidator>(*this, access);
    }
    return result;
 }
@@ -594,7 +594,7 @@ bool Effect::IsGraphicalUI()
    return false;
 }
 
-bool Effect::ValidateUI()
+bool Effect::ValidateUI(EffectSettings &)
 {
    return mUIParent->Validate();
 }

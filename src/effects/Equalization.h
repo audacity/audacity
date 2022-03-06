@@ -120,7 +120,7 @@ public:
 
    // EffectUIClientInterface implementation
 
-   bool ValidateUI() override;
+   bool ValidateUI(EffectSettings &) override;
 
    // Effect implementation
 

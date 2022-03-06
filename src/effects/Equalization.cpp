@@ -535,7 +535,7 @@ bool EffectEqualization::LoadFactoryPreset(int id)
 
 // EffectUIClientInterface implementation
 
-bool EffectEqualization::ValidateUI()
+bool EffectEqualization::ValidateUI(EffectSettings &)
 {
    // If editing a macro, we don't want to be using the unnamed curve so
    // we offer to save it.

@@ -1168,7 +1168,7 @@ bool LadspaEffect::LoadFactoryDefaults()
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator>
-LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
+LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
 
@@ -1483,7 +1483,7 @@ LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
    // And let the parent reduce to the NEW minimum if possible
    mParent->SetMinSize({ -1, -1 });
 
-   return std::make_unique<DefaultEffectUIValidator>(*this);
+   return std::make_unique<DefaultEffectUIValidator>(*this, access);
 }
 
 bool LadspaEffect::IsGraphicalUI()
@@ -1491,7 +1491,7 @@ bool LadspaEffect::IsGraphicalUI()
    return false;
 }
 
-bool LadspaEffect::ValidateUI()
+bool LadspaEffect::ValidateUI(EffectSettings &)
 {
    if (!mParent->Validate())
    {

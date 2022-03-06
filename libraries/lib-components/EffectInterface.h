@@ -401,11 +401,13 @@ public:
 class COMPONENTS_API DefaultEffectUIValidator final : public EffectUIValidator
 {
 public:
-   explicit DefaultEffectUIValidator(EffectUIClientInterface &effect);
+   DefaultEffectUIValidator(
+      EffectUIClientInterface &effect, EffectSettingsAccess &access);
    ~DefaultEffectUIValidator() override;
    bool Validate() override;
 private:
    EffectUIClientInterface &mEffect;
+   EffectSettingsAccess &mAccess;
 };
 
 /*************************************************************************************//**
@@ -456,7 +458,7 @@ public:
 
 protected:
    friend DefaultEffectUIValidator;
-   virtual bool ValidateUI() = 0;
+   virtual bool ValidateUI(EffectSettings &settings) = 0;
    virtual bool CloseUI() = 0;
 };
 

@@ -159,7 +159,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) final;
    bool IsGraphicalUI() override;
-   bool ValidateUI() override;
+   bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;

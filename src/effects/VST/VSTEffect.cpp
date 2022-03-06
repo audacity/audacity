@@ -1729,7 +1729,7 @@ bool VSTEffect::LoadFactoryDefaults()
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator>
-VSTEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
+VSTEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
@@ -1760,7 +1760,7 @@ VSTEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
       BuildPlain();
    }
 
-   return std::make_unique<DefaultEffectUIValidator>(*this);
+   return std::make_unique<DefaultEffectUIValidator>(*this, access);
 }
 
 bool VSTEffect::IsGraphicalUI()
@@ -1768,7 +1768,7 @@ bool VSTEffect::IsGraphicalUI()
    return mGui;
 }
 
-bool VSTEffect::ValidateUI()
+bool VSTEffect::ValidateUI(EffectSettings &)
 {
    if (!mParent->Validate() || !mParent->TransferDataFromWindow())
    {

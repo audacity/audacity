@@ -1659,7 +1659,7 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator>
-AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
+AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    // OSStatus result;
 
@@ -1722,7 +1722,7 @@ AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
       mParent->PushEventHandler(this);
    }
 
-   return std::make_unique<DefaultEffectUIValidator>(*this);
+   return std::make_unique<DefaultEffectUIValidator>(*this, access);
 }
 
 bool AudioUnitEffect::IsGraphicalUI()
@@ -1730,7 +1730,7 @@ bool AudioUnitEffect::IsGraphicalUI()
    return mUIType != wxT("Plain");
 }
 
-bool AudioUnitEffect::ValidateUI()
+bool AudioUnitEffect::ValidateUI(EffectSettings &)
 {
 #if 0
    if (!mParent->Validate())
