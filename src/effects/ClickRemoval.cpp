@@ -174,7 +174,7 @@ bool EffectClickRemoval::Startup()
    return true;
 }
 
-bool EffectClickRemoval::Process()
+bool EffectClickRemoval::Process(EffectSettings &)
 {
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
@@ -335,7 +335,8 @@ bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
    return bResult;
 }
 
-void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectClickRemoval::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
    S.SetBorder(10);
@@ -377,7 +378,7 @@ void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndMultiColumn();
 
-   return;
+   return nullptr;
 }
 
 bool EffectClickRemoval::TransferDataToWindow()

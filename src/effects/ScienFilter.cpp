@@ -225,7 +225,7 @@ bool EffectScienFilter::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channe
    return true;
 }
 
-size_t EffectScienFilter::ProcessBlock(
+size_t EffectScienFilter::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];
@@ -370,7 +370,8 @@ bool EffectScienFilter::Init()
    return true;
 }
 
-void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(5);
    S.SetSizerProportion(1);
@@ -537,7 +538,7 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndMultiColumn();
 
-   return;
+   return nullptr;
 }
 
 //

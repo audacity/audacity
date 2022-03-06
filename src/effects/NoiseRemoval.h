@@ -24,12 +24,14 @@ class wxSizer;
 class wxSlider;
 
 class Envelope;
+class EffectSettingsAccess;
 class WaveTrack;
 
 class wxRadioButton;
 class wxTextCtrl;
 
-#include "../RealFFTf.h"
+#include "RealFFTf.h"
+#include "SampleFormat.h"
 
 class EffectNoiseRemoval final : public Effect
 {
@@ -52,10 +54,11 @@ public:
    // Effect implementation
 
    int ShowHostInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
+      const EffectDialogFactory &factory,
+      EffectSettingsAccess &access, bool forceModal = false) override;
    bool Init() override;
    bool CheckWhetherSkipEffect() override;
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
    void End() override;
 
 private:
@@ -134,7 +137,7 @@ class NoiseRemovalDialog final : public EffectDialog
 {
 public:
    // constructors and destructors
-   NoiseRemovalDialog(EffectNoiseRemoval * effect,
+   NoiseRemovalDialog(EffectNoiseRemoval * effect, EffectSettingsAccess &access,
                       wxWindow *parent);
 
    wxSizer *MakeNoiseRemovalDialog(bool call_fit = true,
@@ -164,6 +167,7 @@ private:
  public:
 
    EffectNoiseRemoval * m_pEffect;
+   EffectSettingsAccess &mAccess;
 
    wxButton * m_pButton_GetProfile;
    wxButton * m_pButton_Preview;

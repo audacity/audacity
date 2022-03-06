@@ -110,7 +110,7 @@ unsigned EffectNoise::GetAudioOutCount()
    return 1;
 }
 
-size_t EffectNoise::ProcessBlock(
+size_t EffectNoise::ProcessBlock(EffectSettings &,
    const float *const *, float *const *outbuf, size_t size)
 {
    float *buffer = outbuf[0];
@@ -230,7 +230,8 @@ bool EffectNoise::Startup()
    return true;
 }
 
-void EffectNoise::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
@@ -258,6 +259,7 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
          .AddWindow(mNoiseDurationT);
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
 bool EffectNoise::TransferDataToWindow()

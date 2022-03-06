@@ -103,10 +103,12 @@ public:
 
    bool Init() override;
    bool CheckWhetherSkipEffect() override;
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
    int ShowHostInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+      const EffectDialogFactory &factory,
+      EffectSettingsAccess &access, bool forceModal = false) override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 

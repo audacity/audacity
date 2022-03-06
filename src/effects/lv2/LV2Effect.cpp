@@ -421,8 +421,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
 
    mSupportsNominalBlockLength = false;
    mSupportsSampleRate = false;
-
-   mFactoryPresetsLoaded = false;
 }
 
 LV2Effect::~LV2Effect()
@@ -1077,7 +1075,7 @@ bool LV2Effect::ProcessFinalize()
    return true;
 }
 
-size_t LV2Effect::ProcessBlock(
+size_t LV2Effect::ProcessBlock(EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t size)
 {
    wxASSERT(size <= ( size_t) mBlockSize);
@@ -1177,7 +1175,7 @@ size_t LV2Effect::ProcessBlock(
    return size;
 }
 
-bool LV2Effect::RealtimeInitialize()
+bool LV2Effect::RealtimeInitialize(EffectSettings &)
 {
    mMasterIn.reinit(mAudioIn, (unsigned int) mBlockSize);
    for (auto & port : mCVPorts)
@@ -1191,7 +1189,7 @@ bool LV2Effect::RealtimeInitialize()
    return true;
 }
 
-bool LV2Effect::RealtimeFinalize() noexcept
+bool LV2Effect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    for (auto & slave : mSlaves)
@@ -1250,7 +1248,7 @@ bool LV2Effect::RealtimeResume() noexcept
    return true;
 }
 
-bool LV2Effect::RealtimeProcessStart()
+bool LV2Effect::RealtimeProcessStart(EffectSettings &)
 {
    int i = 0;
    for (auto & port : mAudioPorts)
@@ -1337,7 +1335,7 @@ bool LV2Effect::RealtimeProcessStart()
    return true;
 }
 
-size_t LV2Effect::RealtimeProcess(int group,
+size_t LV2Effect::RealtimeProcess(int group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(group >= 0 && group < (int) mSlaves.size());
@@ -1409,7 +1407,7 @@ size_t LV2Effect::RealtimeProcess(int group,
    return numSamples;
 }
 
-bool LV2Effect::RealtimeProcessEnd() noexcept
+bool LV2Effect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    // Nothing to do if we did process any samples
@@ -1521,7 +1519,8 @@ bool LV2Effect::SetAutomationParameters(CommandParameters &parms)
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool LV2Effect::PopulateUI(ShuttleGui &S)
+std::unique_ptr<EffectUIValidator>
+LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    auto parent = S.GetParent();
    mParent = parent;
@@ -1535,7 +1534,7 @@ bool LV2Effect::PopulateUI(ShuttleGui &S)
    if (mMaster == NULL)
    {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
-      return false;
+      return nullptr;
    }
 
    // Determine if the GUI editor is supposed to be used or not
@@ -1558,10 +1557,11 @@ bool LV2Effect::PopulateUI(ShuttleGui &S)
 
    if (!mUseGUI)
    {
-      return BuildPlain();
+      if (!BuildPlain())
+         return nullptr;
    }
 
-   return true;
+   return std::make_unique<DefaultEffectUIValidator>(*this);
 }
 
 bool LV2Effect::IsGraphicalUI()
@@ -1581,14 +1581,6 @@ bool LV2Effect::ValidateUI()
       mHost->SetDuration(mDuration->GetValue());
    }
 
-   return true;
-}
-
-bool LV2Effect::HideUI()
-{
-#if 0
-   // Nothing to do yet
-#endif
    return true;
 }
 
@@ -1651,7 +1643,7 @@ bool LV2Effect::SaveUserPreset(const RegistryPath &name)
    return SaveParameters(name);
 }
 
-RegistryPaths LV2Effect::GetFactoryPresets()
+RegistryPaths LV2Effect::GetFactoryPresets() const
 {
    if (mFactoryPresetsLoaded)
    {

@@ -124,7 +124,7 @@ bool EffectEcho::ProcessFinalize()
    return true;
 }
 
-size_t EffectEcho::ProcessBlock(
+size_t EffectEcho::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];
@@ -168,7 +168,8 @@ bool EffectEcho::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-void EffectEcho::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
 
@@ -186,6 +187,7 @@ void EffectEcho::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(XXO("D&ecay factor:"), wxT(""), 10);
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
 bool EffectEcho::TransferDataToWindow()

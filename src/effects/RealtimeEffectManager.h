@@ -79,14 +79,14 @@ private:
    //! Main thread begins to define a set of tracks for playback
    void Initialize(double rate);
    //! Main thread adds one track (passing the first of one or more channels)
-   void AddTrack(Track *track, unsigned chans, float rate);
+   void AddTrack(Track &track, unsigned chans, float rate);
    //! Main thread cleans up after playback
    void Finalize() noexcept;
 
    friend RealtimeEffects::ProcessingScope;
    void ProcessStart();
    /*! @copydoc ProcessScope::Process */
-   size_t Process(Track *track,
+   size_t Process(Track &track,
       float *const *buffers, float *const *scratch, size_t numSamples);
    void ProcessEnd() noexcept;
 
@@ -97,7 +97,7 @@ private:
       std::function<void(RealtimeEffectState &state, bool bypassed)> ;
 
    //! Visit the per-project states first, then states for leader if not null
-   void VisitGroup(Track *leader, StateVisitor func);
+   void VisitGroup(Track &leader, StateVisitor func);
 
    //! Visit the per-project states first, then all tracks from AddTrack
    /*! Tracks are visited in unspecified order */
@@ -113,7 +113,7 @@ private:
    std::atomic<bool> mSuspended{ true };
    std::atomic<bool> mActive{ false };
 
-   std::vector<Track *> mGroupLeaders;
+   std::vector<Track *> mGroupLeaders; //!< all are non-null
    std::unordered_map<Track *, unsigned> mChans;
    std::unordered_map<Track *, double> mRates;
 };
@@ -138,7 +138,7 @@ public:
          RealtimeEffectManager::Get(*pProject).Finalize();
    }
 
-   void AddTrack(Track *track, unsigned chans, float rate)
+   void AddTrack(Track &track, unsigned chans, float rate)
    {
       if (auto pProject = mwProject.lock())
          RealtimeEffectManager::Get(*pProject).AddTrack(track, chans, rate);
@@ -197,7 +197,7 @@ public:
          RealtimeEffectManager::Get(*pProject).ProcessEnd();
    }
 
-   size_t Process(Track *track,
+   size_t Process(Track &track,
       float *const *buffers, /*!< Assume as many buffers, as channels were
          specified in the AddTrack call */
       float *const *scratch, /*!< As many temporary buffers as in buffers,

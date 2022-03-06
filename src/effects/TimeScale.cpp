@@ -176,14 +176,14 @@ double EffectTimeScale::CalcPreviewInputLength(double previewLength)
    }
 }
 
-void EffectTimeScale::Preview(bool dryOnly)
+void EffectTimeScale::Preview(EffectSettingsAccess &access, bool dryOnly)
 {
    previewSelectedDuration = Effect::GetDuration();
    auto cleanup = valueRestorer( bPreview, true );
-   Effect::Preview(dryOnly);
+   Effect::Preview(access, dryOnly);
 }
 
-bool EffectTimeScale::Process()
+bool EffectTimeScale::Process(EffectSettings &settings)
 {
    double pitchStart1 = PercentChangeToRatio(m_PitchPercentChangeStart);
    double pitchEnd1 = PercentChangeToRatio(m_PitchPercentChangeEnd);
@@ -197,10 +197,11 @@ bool EffectTimeScale::Process()
    }
    
    EffectSBSMS::setParameters(rateStart1,rateEnd1,pitchStart1,pitchEnd1,slideTypeRate,slideTypePitch,false,false,false);
-   return EffectSBSMS::Process();
+   return EffectSBSMS::Process(settings);
 }
 
-void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectTimeScale::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);
@@ -306,7 +307,7 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndMultiColumn();
 
-   return;
+   return nullptr;
 }
 
 bool EffectTimeScale::TransferDataToWindow()

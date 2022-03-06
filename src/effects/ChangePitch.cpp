@@ -210,7 +210,7 @@ bool EffectChangePitch::Init()
    return true;
 }
 
-bool EffectChangePitch::Process()
+bool EffectChangePitch::Process(EffectSettings &settings)
 {
 #if USE_SBSMS
    if (mUseSBSMS)
@@ -219,8 +219,8 @@ bool EffectChangePitch::Process()
       EffectSBSMS proxy;
       proxy.mProxyEffectName = XO("High Quality Pitch Change");
       proxy.setParameters(1.0, pitchRatio);
-
-      return Delegate(proxy, *mUIParent, nullptr);
+      //! Already processing; don't make a dialog
+      return Delegate(proxy, settings, *mUIParent, nullptr, nullptr);
    }
    else
 #endif
@@ -256,7 +256,8 @@ bool EffectChangePitch::CheckWhetherSkipEffect()
    return (m_dPercentChange == 0.0);
 }
 
-void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectChangePitch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    DeduceFrequencies(); // Set frequency-related control values based on sample.
 
@@ -383,7 +384,7 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
    }
    S.EndVerticalLay();
-   return;
+   return nullptr;
 }
 
 bool EffectChangePitch::TransferDataToWindow()

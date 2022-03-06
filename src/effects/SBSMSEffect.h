@@ -29,7 +29,7 @@ class TimeWarper;
 class EffectSBSMS /* not final */ : public Effect
 {
 public:
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
    void setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
                       SlideType rateSlideType, SlideType pitchSlideType,
                       bool bLinkRatePitch, bool bRateReferenceInput, bool bPitchReferenceInput);

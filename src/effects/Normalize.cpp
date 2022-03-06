@@ -166,7 +166,7 @@ bool EffectNormalize::Startup()
    return true;
 }
 
-bool EffectNormalize::Process()
+bool EffectNormalize::Process(EffectSettings &)
 {
    if (mGain == false && mDC == false)
       return true;
@@ -285,7 +285,8 @@ bool EffectNormalize::Process()
    return bGoodResult;
 }
 
-void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    mCreating = true;
 
@@ -335,6 +336,7 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndVerticalLay();
    mCreating = false;
+   return nullptr;
 }
 
 bool EffectNormalize::TransferDataToWindow()

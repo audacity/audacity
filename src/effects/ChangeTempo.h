@@ -57,9 +57,10 @@ public:
 
    bool Init() override;
    bool CheckWhetherSkipEffect() override;
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
    double CalcPreviewInputLength(double previewLength) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 

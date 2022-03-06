@@ -170,7 +170,7 @@ bool EffectToneGen::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNam
    return true;
 }
 
-size_t EffectToneGen::ProcessBlock(
+size_t EffectToneGen::ProcessBlock(EffectSettings &,
    const float *const *, float *const *outBlock, size_t blockLen)
 {
    float *buffer = outBlock[0];
@@ -358,7 +358,8 @@ bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    wxTextCtrl *t;
 
@@ -480,7 +481,7 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndMultiColumn();
 
-   return;
+   return nullptr;
 }
 
 bool EffectToneGen::TransferDataToWindow()

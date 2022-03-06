@@ -123,7 +123,7 @@ unsigned EffectAmplify::GetAudioOutCount()
    return 1;
 }
 
-size_t EffectAmplify::ProcessBlock(
+size_t EffectAmplify::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (decltype(blockLen) i = 0; i < blockLen; i++)
@@ -204,15 +204,16 @@ bool EffectAmplify::Init()
    return true;
 }
 
-void EffectAmplify::Preview(bool dryOnly)
+void EffectAmplify::Preview(EffectSettingsAccess &access, bool dryOnly)
 {
    auto cleanup1 = valueRestorer( mRatio );
    auto cleanup2 = valueRestorer( mPeak );
 
-   Effect::Preview(dryOnly);
+   Effect::Preview(access, dryOnly);
 }
 
-void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectAmplify::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    enum{ precision = 3 }; // allow (a generous) 3 decimal  places for Amplification (dB)
 
@@ -288,7 +289,7 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndVerticalLay();
 
-   return;
+   return nullptr;
 }
 
 bool EffectAmplify::TransferDataToWindow()

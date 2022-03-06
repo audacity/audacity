@@ -341,7 +341,7 @@ bool VampEffect::Init()
    return true;
 }
 
-bool VampEffect::Process()
+bool VampEffect::Process(EffectSettings &)
 {
    if (!mPlugin)
    {
@@ -532,7 +532,8 @@ void VampEffect::End()
    mPlugin.reset();
 }
 
-void VampEffect::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+VampEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    Vamp::Plugin::ProgramList programs = mPlugin->getPrograms();
 
@@ -690,7 +691,7 @@ void VampEffect::PopulateOrExchange(ShuttleGui & S)
 
    scroller->SetScrollRate(0, 20);
 
-   return;
+   return nullptr;
 }
 
 bool VampEffect::TransferDataToWindow()

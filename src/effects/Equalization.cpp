@@ -492,7 +492,7 @@ FactoryPresets[] =
 
 
 
-RegistryPaths EffectEqualization::GetFactoryPresets()
+RegistryPaths EffectEqualization::GetFactoryPresets() const
 {
    RegistryPaths names;
 
@@ -717,7 +717,7 @@ bool EffectEqualization::Init()
    return(true);
 }
 
-bool EffectEqualization::Process()
+bool EffectEqualization::Process(EffectSettings &)
 {
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    if(mEffectEqualization48x) {
@@ -767,7 +767,8 @@ bool EffectEqualization::CloseUI()
    return Effect::CloseUI();
 }
 
-void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectEqualization::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    if ( (S.GetMode() == eIsCreating ) && !IsBatchProcessing() )
       LoadUserPreset(GetCurrentSettingsGroup());
@@ -1187,7 +1188,7 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    }
    ForceRecalc();
 
-   return;
+   return nullptr;
 }
 
 //

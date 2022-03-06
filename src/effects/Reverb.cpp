@@ -218,7 +218,7 @@ bool EffectReverb::ProcessFinalize()
    return true;
 }
 
-size_t EffectReverb::ProcessBlock(
+size_t EffectReverb::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ichans[2] = {NULL, NULL};
@@ -336,7 +336,7 @@ bool EffectReverb::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-RegistryPaths EffectReverb::GetFactoryPresets()
+RegistryPaths EffectReverb::GetFactoryPresets() const
 {
    RegistryPaths names;
 
@@ -435,7 +435,8 @@ bool EffectReverb::Startup()
    return true;
 }
 
-void EffectReverb::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectReverb::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
 
@@ -473,7 +474,7 @@ void EffectReverb::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndHorizontalLay();
 
-   return;
+   return nullptr;
 }
 
 bool EffectReverb::TransferDataToWindow()

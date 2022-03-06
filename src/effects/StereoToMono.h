@@ -38,7 +38,7 @@ public:
 
    // Effect implementation
 
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
    bool IsHiddenFromMenus() override;
 
 private:

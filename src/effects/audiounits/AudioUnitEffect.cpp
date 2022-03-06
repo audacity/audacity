@@ -1299,7 +1299,7 @@ bool AudioUnitEffect::ProcessFinalize()
    return true;
 }
 
-size_t AudioUnitEffect::ProcessBlock(
+size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (size_t i = 0; i < mAudioIns; i++)
@@ -1336,7 +1336,7 @@ size_t AudioUnitEffect::ProcessBlock(
    return blockLen;
 }
 
-bool AudioUnitEffect::RealtimeInitialize()
+bool AudioUnitEffect::RealtimeInitialize(EffectSettings &)
 {
    return ProcessInitialize(0);
 }
@@ -1364,7 +1364,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRat
    return pSlave->ProcessInitialize(0);
 }
 
-bool AudioUnitEffect::RealtimeFinalize() noexcept
+bool AudioUnitEffect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
@@ -1414,19 +1414,19 @@ return GuardedCall<bool>([&]{
 });
 }
 
-bool AudioUnitEffect::RealtimeProcessStart()
+bool AudioUnitEffect::RealtimeProcessStart(EffectSettings &)
 {
    return true;
 }
 
-size_t AudioUnitEffect::RealtimeProcess(int group,
+size_t AudioUnitEffect::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
-   return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
+   return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
 }
 
-bool AudioUnitEffect::RealtimeProcessEnd() noexcept
+bool AudioUnitEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return true;
 }
@@ -1625,7 +1625,7 @@ bool AudioUnitEffect::LoadFactoryDefaults()
    return LoadPreset(mHost->GetFactoryDefaultsGroup());
 }
 
-RegistryPaths AudioUnitEffect::GetFactoryPresets()
+RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 {
    OSStatus result;
    RegistryPaths presets;
@@ -1656,7 +1656,8 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets()
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
+std::unique_ptr<EffectUIValidator>
+AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    // OSStatus result;
 
@@ -1681,7 +1682,7 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
    {
       if (!CreatePlain(mParent))
       {
-         return false;
+         return nullptr;
       }
    }
    else
@@ -1690,12 +1691,12 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
       auto pControl = Destroy_ptr<AUControl>(safenew AUControl);
       if (!pControl)
       {
-         return false;
+         return nullptr;
       }
 
       if (!pControl->Create(container, mComponent, mUnit, mUIType == wxT("Full")))
       {
-         return false;
+         return nullptr;
       }
 
       {
@@ -1719,7 +1720,7 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
       mParent->PushEventHandler(this);
    }
 
-   return true;
+   return std::make_unique<DefaultEffectUIValidator>(*this);
 }
 
 bool AudioUnitEffect::IsGraphicalUI()
@@ -1750,17 +1751,6 @@ bool AudioUnitEffect::CreatePlain(wxWindow *parent)
    return false;
 }
 #endif
-
-bool AudioUnitEffect::HideUI()
-{
-#if 0
-   if (GetType() == EffectTypeAnalyze || mNumOutputControls > 0)
-   {
-      return false;
-   }
-#endif
-   return true;
-}
 
 bool AudioUnitEffect::CloseUI()
 {

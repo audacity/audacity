@@ -30,7 +30,14 @@ class SelectedRegion;
 class wxString;
 typedef wxString PluginID;
 
-using EffectMap = std::unordered_map<wxString, EffectUIHostInterface *>;
+#include "EffectInterface.h"
+
+struct EffectAndDefaultSettings{
+   EffectUIHostInterface *effect{};
+   EffectSettings settings{};
+};
+
+using EffectMap = std::unordered_map<wxString, EffectAndDefaultSettings>;
 using AudacityCommandMap = std::unordered_map<wxString, AudacityCommand *>;
 using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<EffectUIHostInterface> >;
 
@@ -133,10 +140,19 @@ public:
 
    const PluginID & GetEffectByIdentifier(const CommandID & strTarget);
 
-   /** Return an effect by its ID. */
+   /*! Return an effect by its ID. */
    EffectUIHostInterface *GetEffect(const PluginID & ID);
 
+   /*! Get default settings by effect ID. */
+   EffectSettings *GetDefaultSettings(const PluginID & ID);
+
+   /*! Get effect and default settings by effect ID. */
+   std::pair<EffectUIHostInterface *, EffectSettings *>
+   GetEffectAndDefaultSettings(const PluginID & ID);
+
 private:
+   EffectAndDefaultSettings &DoGetEffect(const PluginID & ID);
+
    AudacityCommand *GetAudacityCommand(const PluginID & ID);
 
    EffectMap mEffects;

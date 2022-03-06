@@ -147,13 +147,13 @@ bool EffectWahwah::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
    return true;
 }
 
-size_t EffectWahwah::ProcessBlock(
+size_t EffectWahwah::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectWahwah::RealtimeInitialize()
+bool EffectWahwah::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -173,18 +173,17 @@ bool EffectWahwah::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool EffectWahwah::RealtimeFinalize() noexcept
+bool EffectWahwah::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectWahwah::RealtimeProcess(int group,
+size_t EffectWahwah::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-
-   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
 
 bool EffectWahwah::DefineParams( ShuttleParams & S ){
@@ -230,7 +229,8 @@ bool EffectWahwah::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectWahwah::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);
@@ -307,6 +307,7 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
          .AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
 bool EffectWahwah::TransferDataToWindow()
@@ -360,7 +361,8 @@ void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate)
    data.outgain = DB_TO_LINEAR(mOutGain);
 }
 
-size_t EffectWahwah::InstanceProcess(EffectWahwahState & data,
+size_t EffectWahwah::InstanceProcess(EffectSettings &settings,
+   EffectWahwahState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];

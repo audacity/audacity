@@ -16,11 +16,13 @@
 #include <unordered_map>
 #include <vector>
 #include <cstddef>
+#include "EffectInterface.h"
 #include "GlobalVariable.h"
 #include "ModuleInterface.h" // for PluginID
 #include "XMLTagHandler.h"
 
 class EffectProcessor;
+class EffectSettingsAccess;
 class Track;
 
 class RealtimeEffectState : public XMLTagHandler
@@ -45,11 +47,11 @@ public:
 
    //! Main thread sets up for playback
    bool Initialize(double rate);
-   bool AddTrack(Track *track, unsigned chans, float rate);
+   bool AddTrack(Track &track, unsigned chans, float rate);
    //! Worker thread begins a batch of samples
    bool ProcessStart();
    //! Worker thread processes part of a batch of samples
-   size_t Process(Track *track,
+   size_t Process(Track &track,
       unsigned chans,
       const float *const *inbuf, //!< chans input buffers
       float *const *outbuf, //!< chans output buffers
@@ -68,10 +70,19 @@ public:
    XMLTagHandler *HandleXMLChild(const std::string_view &tag) override;
    void WriteXML(XMLWriter &xmlFile);
 
+   // Expose access so a dialog can be connected to this state
+   std::shared_ptr<EffectSettingsAccess> GetAccess();
+
 private:
    PluginID mID;
    wxString mParameters;  // Used only during deserialization
    std::unique_ptr<EffectProcessor> mEffect;
+   EffectSettings mSettings;
+
+   struct Access;
+   struct AccessState;
+   std::shared_ptr<AccessState> mpAccessState; // Destroy before mSettings
+   std::weak_ptr<EffectSettingsAccess> mwAccess;
 
    size_t mCurrentProcessor{ 0 };
    std::unordered_map<Track *, size_t> mGroups;

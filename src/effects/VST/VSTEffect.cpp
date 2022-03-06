@@ -225,7 +225,7 @@ enum InfoKeys
 //! This object exists in a separate process, to validate a newly seen plug-in.
 /*! It needs to implement EffectDefinitionInterface but mostly just as stubs */
 class VSTSubProcess final : public wxProcess
-   , public EffectDefinitionInterface
+   , public EffectDefinitionInterfaceEx
 {
 public:
    VSTSubProcess()
@@ -296,7 +296,7 @@ public:
    bool LoadUserPreset(const RegistryPath &) override { return true; }
    bool SaveUserPreset(const RegistryPath &) override { return true; }
 
-   RegistryPaths GetFactoryPresets() override { return {}; }
+   RegistryPaths GetFactoryPresets() const override { return {}; }
    bool LoadFactoryPreset(int) override { return true; }
    bool LoadFactoryDefaults() override { return true; }
 
@@ -1438,7 +1438,7 @@ bool VSTEffect::ProcessFinalize()
    return true;
 }
 
-size_t VSTEffect::ProcessBlock(
+size_t VSTEffect::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    // Only call the effect if there's something to do...some do not like zero-length block
@@ -1464,7 +1464,7 @@ void VSTEffect::SetChannelCount(unsigned numChannels)
    mNumChannels = numChannels;
 }
 
-bool VSTEffect::RealtimeInitialize()
+bool VSTEffect::RealtimeInitialize(EffectSettings &)
 {
    return ProcessInitialize(0, NULL);
 }
@@ -1505,7 +1505,7 @@ bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
    return slave->ProcessInitialize(0, NULL);
 }
 
-bool VSTEffect::RealtimeFinalize() noexcept
+bool VSTEffect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    for (const auto &slave : mSlaves)
@@ -1538,19 +1538,19 @@ return GuardedCall<bool>([&]{
 });
 }
 
-bool VSTEffect::RealtimeProcessStart()
+bool VSTEffect::RealtimeProcessStart(EffectSettings &)
 {
    return true;
 }
 
-size_t VSTEffect::RealtimeProcess(int group,
+size_t VSTEffect::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
-   return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
+   return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
 }
 
-bool VSTEffect::RealtimeProcessEnd() noexcept
+bool VSTEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return true;
 }
@@ -1675,7 +1675,7 @@ bool VSTEffect::SaveUserPreset(const RegistryPath & name)
    return SaveParameters(name);
 }
 
-RegistryPaths VSTEffect::GetFactoryPresets()
+RegistryPaths VSTEffect::GetFactoryPresets() const
 {
    RegistryPaths progs;
 
@@ -1718,7 +1718,8 @@ bool VSTEffect::LoadFactoryDefaults()
 // EffectUIClientInterface implementation
 // ============================================================================
 
-bool VSTEffect::PopulateUI(ShuttleGui &S)
+std::unique_ptr<EffectUIValidator>
+VSTEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    auto parent = S.GetParent();
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
@@ -1749,7 +1750,7 @@ bool VSTEffect::PopulateUI(ShuttleGui &S)
       BuildPlain();
    }
 
-   return true;
+   return std::make_unique<DefaultEffectUIValidator>(*this);
 }
 
 bool VSTEffect::IsGraphicalUI()
@@ -1769,11 +1770,6 @@ bool VSTEffect::ValidateUI()
       mHost->SetDuration(mDuration->GetValue());
    }
 
-   return true;
-}
-
-bool VSTEffect::HideUI()
-{
    return true;
 }
 
@@ -2512,20 +2508,20 @@ void VSTEffect::SetBufferDelay(int samples)
    return;
 }
 
-int VSTEffect::GetString(wxString & outstr, int opcode, int index)
+int VSTEffect::GetString(wxString & outstr, int opcode, int index) const
 {
    char buf[256];
 
    memset(buf, 0, sizeof(buf));
 
-   callDispatcher(opcode, index, 0, buf, 0.0);
+   const_cast<VSTEffect*>(this)->callDispatcher(opcode, index, 0, buf, 0.0);
 
    outstr = wxString::FromUTF8(buf);
 
    return 0;
 }
 
-wxString VSTEffect::GetString(int opcode, int index)
+wxString VSTEffect::GetString(int opcode, int index) const
 {
    wxString str;
 

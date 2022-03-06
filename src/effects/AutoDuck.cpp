@@ -269,7 +269,7 @@ void EffectAutoDuck::End()
    mControlTrack = NULL;
 }
 
-bool EffectAutoDuck::Process()
+bool EffectAutoDuck::Process(EffectSettings &)
 {
    if (GetNumWaveTracks() == 0 || !mControlTrack)
       return false;
@@ -424,7 +424,8 @@ bool EffectAutoDuck::Process()
    return !cancel;
 }
 
-void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectAutoDuck::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.StartVerticalLay(true);
@@ -503,7 +504,7 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndVerticalLay();
 
-   return;
+   return nullptr;
 }
 
 bool EffectAutoDuck::TransferDataToWindow()

@@ -52,8 +52,9 @@ public:
    double CalcPreviewInputLength(double previewLength) override;
    bool Startup() override;
    bool Init() override;
-   bool Process() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+   bool Process(EffectSettings &settings) override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataFromWindow() override;
    bool TransferDataToWindow() override;
 

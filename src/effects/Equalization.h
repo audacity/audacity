@@ -115,7 +115,7 @@ public:
    bool SetAutomationParameters(CommandParameters & parms) override;
    bool LoadFactoryDefaults() override;
 
-   RegistryPaths GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
 
    // EffectUIClientInterface implementation
@@ -126,10 +126,11 @@ public:
 
    bool Startup() override;
    bool Init() override;
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
 
    bool CloseUI() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 

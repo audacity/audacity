@@ -973,7 +973,7 @@ bool LadspaEffect::ProcessFinalize()
    return true;
 }
 
-size_t LadspaEffect::ProcessBlock(
+size_t LadspaEffect::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (int i = 0; i < (int)mAudioIns; i++)
@@ -994,7 +994,7 @@ size_t LadspaEffect::ProcessBlock(
    return blockLen;
 }
 
-bool LadspaEffect::RealtimeInitialize()
+bool LadspaEffect::RealtimeInitialize(EffectSettings &)
 {
    return true;
 }
@@ -1012,7 +1012,7 @@ bool LadspaEffect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool LadspaEffect::RealtimeFinalize() noexcept
+bool LadspaEffect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
@@ -1035,12 +1035,12 @@ bool LadspaEffect::RealtimeResume() noexcept
    return true;
 }
 
-bool LadspaEffect::RealtimeProcessStart()
+bool LadspaEffect::RealtimeProcessStart(EffectSettings &)
 {
    return true;
 }
 
-size_t LadspaEffect::RealtimeProcess(int group,
+size_t LadspaEffect::RealtimeProcess(int group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    for (int i = 0; i < (int)mAudioIns; i++)
@@ -1059,7 +1059,7 @@ size_t LadspaEffect::RealtimeProcess(int group,
    return numSamples;
 }
 
-bool LadspaEffect::RealtimeProcessEnd() noexcept
+bool LadspaEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return true;
 }
@@ -1139,7 +1139,7 @@ bool LadspaEffect::SaveUserPreset(const RegistryPath & name)
    return SaveParameters(name);
 }
 
-RegistryPaths LadspaEffect::GetFactoryPresets()
+RegistryPaths LadspaEffect::GetFactoryPresets() const
 {
    return {};
 }
@@ -1165,7 +1165,8 @@ bool LadspaEffect::LoadFactoryDefaults()
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool LadspaEffect::PopulateUI(ShuttleGui &S)
+std::unique_ptr<EffectUIValidator>
+LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
 {
    auto parent = S.GetParent();
 
@@ -1480,7 +1481,7 @@ bool LadspaEffect::PopulateUI(ShuttleGui &S)
    // And let the parent reduce to the NEW minimum if possible
    mParent->SetMinSize({ -1, -1 });
 
-   return true;
+   return std::make_unique<DefaultEffectUIValidator>(*this);
 }
 
 bool LadspaEffect::IsGraphicalUI()
@@ -1500,11 +1501,6 @@ bool LadspaEffect::ValidateUI()
       mHost->SetDuration(mDuration->GetValue());
    }
 
-   return true;
-}
-
-bool LadspaEffect::HideUI()
-{
    return true;
 }
 

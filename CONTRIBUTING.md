@@ -2,7 +2,7 @@ There are several ways to contribute to Audacity:
 
 ## Developing
 
-Audacity is mostly coded in C++. You'll need to be somewhat comfortable in it to start contributing code. 
+Audacity is mostly coded in C++. You'll need to be at least somewhat comfortable in it to start contributing code. 
 
 If you want to develop Audacity: 
 

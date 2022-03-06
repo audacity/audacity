@@ -112,7 +112,7 @@ bool EffectRepeat::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-bool EffectRepeat::Process()
+bool EffectRepeat::Process(EffectSettings &)
 {
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.
@@ -176,7 +176,8 @@ bool EffectRepeat::Process()
    return bGoodResult;
 }
 
-void EffectRepeat::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectRepeat::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartHorizontalLay(wxCENTER, false);
    {
@@ -195,6 +196,7 @@ void EffectRepeat::PopulateOrExchange(ShuttleGui & S)
       mTotalTime = S.AddVariableText(XO("New selection length: dd:hh:mm:ss"));
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
 bool EffectRepeat::TransferDataToWindow()

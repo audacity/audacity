@@ -59,19 +59,22 @@ public:
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
    bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
-   size_t ProcessBlock( const float *const *inBlock, float *const *outBlock,
-      size_t blockLen) override;
-   bool RealtimeInitialize() override;
+   size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      override;
+   bool RealtimeInitialize(EffectSettings &settings) override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize() noexcept override;
-   size_t RealtimeProcess(int group, const float *const *inbuf,
-      float *const *outbuf, size_t numSamples) override;
+   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
+   size_t RealtimeProcess(int group,  EffectSettings &settings,
+      const float *const *inbuf, float *const *outbuf, size_t numSamples)
+      override;
    bool DefineParams( ShuttleParams & S ) override;
 
 
    // Effect Implementation
 
-   void PopulateOrExchange(ShuttleGui & S) override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
@@ -81,7 +84,8 @@ private:
    // EffectBassTreble implementation
 
    void InstanceInit(EffectBassTrebleState & data, float sampleRate);
-   size_t InstanceProcess(EffectBassTrebleState & data,
+   size_t InstanceProcess(EffectSettings &settings,
+      EffectBassTrebleState & data,
       const float *const *inBlock, float *const *outBlock, size_t blockLen);
 
    void Coefficients(double hz, double slope, double gain, double samplerate, int type,

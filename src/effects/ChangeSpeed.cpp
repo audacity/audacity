@@ -230,7 +230,7 @@ bool EffectChangeSpeed::Init()
    return true;
 }
 
-bool EffectChangeSpeed::Process()
+bool EffectChangeSpeed::Process(EffectSettings &)
 {
    // Similar to EffectSoundTouch::Process()
 
@@ -293,7 +293,8 @@ bool EffectChangeSpeed::Process()
    return bGoodResult;
 }
 
-void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    {
       wxString formatId;
@@ -415,6 +416,7 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       S.EndStatic();
    }
    S.EndVerticalLay();
+   return nullptr;
 }
 
 bool EffectChangeSpeed::TransferDataToWindow()

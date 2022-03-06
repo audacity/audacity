@@ -179,7 +179,7 @@ bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
    return true;
 }
 
-size_t EffectDtmf::ProcessBlock(
+size_t EffectDtmf::ProcessBlock(EffectSettings &,
    const float *const *, float *const *outbuf, size_t size)
 {
    float *buffer = outbuf[0];
@@ -326,7 +326,8 @@ bool EffectDtmf::Init()
    return true;
 }
 
-void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    // dialog will be passed values from effect
    // Effect retrieves values from saved config
@@ -392,6 +393,7 @@ void EffectDtmf::PopulateOrExchange(ShuttleGui & S)
          S.AddVariableText(XO("%0.f ms").Format( dtmfSilence * 1000.0 ), false);
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
 bool EffectDtmf::TransferDataToWindow()

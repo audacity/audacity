@@ -233,13 +233,13 @@ bool EffectDistortion::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channel
    return true;
 }
 
-size_t EffectDistortion::ProcessBlock(
+size_t EffectDistortion::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectDistortion::RealtimeInitialize()
+bool EffectDistortion::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -259,19 +259,19 @@ bool EffectDistortion::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), floa
    return true;
 }
 
-bool EffectDistortion::RealtimeFinalize() noexcept
+bool EffectDistortion::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectDistortion::RealtimeProcess(int group,
+size_t EffectDistortion::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-
-   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
+
 bool EffectDistortion::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_ENUM_PARAM( mParams.mTableChoiceIndx, TableTypeIndx,
       kTableTypeStrings, nTableTypes );
@@ -319,7 +319,7 @@ bool EffectDistortion::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-RegistryPaths EffectDistortion::GetFactoryPresets()
+RegistryPaths EffectDistortion::GetFactoryPresets() const
 {
    RegistryPaths names;
 
@@ -352,7 +352,8 @@ bool EffectDistortion::LoadFactoryPreset(int id)
 
 // Effect implementation
 
-void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectDistortion::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
    S.StartVerticalLay();
@@ -484,7 +485,7 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndVerticalLay();
 
-   return;
+   return nullptr;
 }
 
 bool EffectDistortion::TransferDataToWindow()
@@ -544,7 +545,8 @@ void EffectDistortion::InstanceInit(EffectDistortionState & data, float sampleRa
    return;
 }
 
-size_t EffectDistortion::InstanceProcess(EffectDistortionState& data,
+size_t EffectDistortion::InstanceProcess(EffectSettings &settings,
+   EffectDistortionState& data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];

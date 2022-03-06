@@ -170,7 +170,7 @@ bool EffectLoudness::Startup()
    return true;
 }
 
-bool EffectLoudness::Process()
+bool EffectLoudness::Process(EffectSettings &)
 {
    if(mNormalizeTo == kLoudness)
       // LU use 10*log10(...) instead of 20*log10(...)
@@ -288,7 +288,8 @@ bool EffectLoudness::Process()
    return bGoodResult;
 }
 
-void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectLoudness::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartVerticalLay(0);
    {
@@ -382,6 +383,7 @@ void EffectLoudness::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
    }
    S.EndVerticalLay();
+   return nullptr;
 }
 
 bool EffectLoudness::TransferDataToWindow()

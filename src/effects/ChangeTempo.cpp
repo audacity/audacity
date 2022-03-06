@@ -193,7 +193,7 @@ bool EffectChangeTempo::Init()
    return true;
 }
 
-bool EffectChangeTempo::Process()
+bool EffectChangeTempo::Process(EffectSettings &settings)
 {
    bool success = false;
 
@@ -204,7 +204,8 @@ bool EffectChangeTempo::Process()
       EffectSBSMS proxy;
       proxy.mProxyEffectName = XO("High Quality Tempo Change");
       proxy.setParameters(tempoRatio, 1.0);
-      success = Delegate(proxy, *mUIParent, nullptr);
+      //! Already processing; don't make a dialog
+      success = Delegate(proxy, settings, *mUIParent, nullptr, nullptr);
    }
    else
 #endif
@@ -225,7 +226,8 @@ bool EffectChangeTempo::Process()
    return success;
 }
 
-void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    enum { precision = 2 };
 
@@ -327,7 +329,7 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndVerticalLay();
 
-   return;
+   return nullptr;
 }
 
 bool EffectChangeTempo::TransferDataToWindow()

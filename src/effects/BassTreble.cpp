@@ -135,13 +135,13 @@ bool EffectBassTreble::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channel
    return true;
 }
 
-size_t EffectBassTreble::ProcessBlock(
+size_t EffectBassTreble::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectBassTreble::RealtimeInitialize()
+bool EffectBassTreble::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -161,18 +161,19 @@ bool EffectBassTreble::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), floa
    return true;
 }
 
-bool EffectBassTreble::RealtimeFinalize() noexcept
+bool EffectBassTreble::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectBassTreble::RealtimeProcess(int group,
+size_t EffectBassTreble::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
+
 bool EffectBassTreble::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mBass, Bass );
    S.SHUTTLE_PARAM( mTreble, Treble );
@@ -214,7 +215,8 @@ bool EffectBassTreble::CheckWhetherSkipEffect()
 
 // Effect implementation
 
-void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectBassTreble::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);
@@ -280,6 +282,7 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
    }
    S.EndStatic();
+   return nullptr;
 }
 
 bool EffectBassTreble::TransferDataToWindow()
@@ -351,7 +354,8 @@ void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRa
 // EffectProcessor implementation
 
 
-size_t EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
+size_t EffectBassTreble::InstanceProcess(EffectSettings &settings,
+   EffectBassTrebleState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];

@@ -211,7 +211,7 @@ public:
    Settings();
    ~Settings() {}
 
-   int PromptUser(EffectNoiseReduction *effect,
+   int PromptUser(EffectNoiseReduction *effect, EffectSettingsAccess &access,
       wxWindow &parent, bool bHasProfile, bool bAllowTwiddleSettings);
    bool PrefsIO(bool read);
    bool Validate(EffectNoiseReduction *effect) const;
@@ -346,8 +346,7 @@ class EffectNoiseReduction::Dialog final : public EffectDialog
 {
 public:
    // constructors and destructors
-   Dialog
-      (EffectNoiseReduction *effect,
+   Dialog(EffectNoiseReduction *effect, EffectSettingsAccess &access,
        Settings *settings,
        wxWindow *parent, bool bHasProfile,
        bool bAllowTwiddleSettings);
@@ -383,6 +382,8 @@ private:
    // data members
 
    EffectNoiseReduction *m_pEffect;
+   //! This dialog is modal, so mAccess will live long enough for it
+   EffectSettingsAccess &mAccess;
    EffectNoiseReduction::Settings *m_pSettings;
    EffectNoiseReduction::Settings mTempSettings;
 
@@ -447,12 +448,15 @@ bool EffectNoiseReduction::CheckWhetherSkipEffect()
 }
 
 //! An override still here for historical reasons, ignoring the factory
+//! and the access
 /*! We would like to make this effect behave more like others, but it does have
  its unusual two-pass nature.  First choose and analyze an example of noise,
  then apply noise reduction to another selection.  That is difficult to fit into
  the framework for managing settings of other effects. */
 int EffectNoiseReduction::ShowHostInterface(
-   wxWindow &parent, const EffectDialogFactory &, bool forceModal)
+   wxWindow &parent, const EffectDialogFactory &,
+   EffectSettingsAccess &access,
+   bool forceModal)
 {
    // to do: use forceModal correctly
 
@@ -460,16 +464,16 @@ int EffectNoiseReduction::ShowHostInterface(
 
    // We may want to twiddle the levels if we are setting
    // from an automation dialog
-   return mSettings->PromptUser(this, parent,
+   return mSettings->PromptUser(this, access, parent,
       bool(mStatistics), forceModal);
 }
 
-int EffectNoiseReduction::Settings::PromptUser
-(EffectNoiseReduction *effect, wxWindow &parent,
- bool bHasProfile, bool bAllowTwiddleSettings)
+int EffectNoiseReduction::Settings::PromptUser(EffectNoiseReduction *effect,
+   EffectSettingsAccess &access, wxWindow &parent,
+   bool bHasProfile, bool bAllowTwiddleSettings)
 {
-   EffectNoiseReduction::Dialog dlog
-      (effect, this, &parent, bHasProfile, bAllowTwiddleSettings);
+   EffectNoiseReduction::Dialog dlog(effect, access,
+      this, &parent, bHasProfile, bAllowTwiddleSettings);
 
    dlog.CentreOnParent();
    dlog.ShowModal();
@@ -621,7 +625,7 @@ EffectNoiseReduction::Worker::MyWindow::~MyWindow()
 {
 }
 
-bool EffectNoiseReduction::Process()
+bool EffectNoiseReduction::Process(EffectSettings &)
 {
    // This same code will either reduce noise or profile it
 
@@ -1352,12 +1356,13 @@ BEGIN_EVENT_TABLE(EffectNoiseReduction::Dialog, wxDialogWrapper)
 #endif
 END_EVENT_TABLE()
 
-EffectNoiseReduction::Dialog::Dialog
-(EffectNoiseReduction *effect,
- EffectNoiseReduction::Settings *settings,
- wxWindow *parent, bool bHasProfile, bool bAllowTwiddleSettings)
+EffectNoiseReduction::Dialog::Dialog(EffectNoiseReduction *effect,
+    EffectSettingsAccess &access,
+    EffectNoiseReduction::Settings *settings,
+    wxWindow *parent, bool bHasProfile, bool bAllowTwiddleSettings)
    : EffectDialog( parent, XO("Noise Reduction"), EffectTypeProcess,wxDEFAULT_DIALOG_STYLE, eHelpButton )
    , m_pEffect(effect)
+   , mAccess{access}
    , m_pSettings(settings) // point to
    , mTempSettings(*settings)  // copy
    , mbHasProfile(bHasProfile)
@@ -1485,7 +1490,7 @@ void EffectNoiseReduction::Dialog::OnPreview(wxCommandEvent & WXUNUSED(event))
    *m_pSettings = mTempSettings;
    m_pSettings->mDoProfile = false;
 
-   m_pEffect->Preview( false );
+   m_pEffect->Preview(mAccess, false);
 }
 
 void EffectNoiseReduction::Dialog::OnReduceNoise( wxCommandEvent & WXUNUSED(event))

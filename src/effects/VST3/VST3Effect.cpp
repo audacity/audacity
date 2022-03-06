@@ -450,7 +450,7 @@ bool VST3Effect::SaveUserPreset(const RegistryPath& name)
    return true;
 }
 
-RegistryPaths VST3Effect::GetFactoryPresets()
+RegistryPaths VST3Effect::GetFactoryPresets() const
 {
    if(!mRescanFactoryPresets)
       return mFactoryPresets;
@@ -722,7 +722,8 @@ namespace
    }
 }
 
-size_t VST3Effect::ProcessBlock(const float* const* inBlock, float* const* outBlock, size_t blockLen)
+size_t VST3Effect::ProcessBlock(EffectSettings &,
+   const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
    internal::ComponentHandler::PendingChangesPtr pendingChanges { nullptr };
    if(mComponentHandler)
@@ -730,7 +731,7 @@ size_t VST3Effect::ProcessBlock(const float* const* inBlock, float* const* outBl
    return VST3ProcessBlock(mEffectComponent.get(), mSetup, inBlock, outBlock, blockLen, pendingChanges.get());
 }
 
-bool VST3Effect::RealtimeInitialize()
+bool VST3Effect::RealtimeInitialize(EffectSettings &)
 {
    //reload current parameters form the editor into parameter queues
    SyncParameters();
@@ -761,7 +762,7 @@ bool VST3Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
    return false;
 }
 
-bool VST3Effect::RealtimeFinalize() noexcept
+bool VST3Effect::RealtimeFinalize(EffectSettings &) noexcept
 {
    return GuardedCall<bool>([this]()
    {
@@ -792,7 +793,7 @@ bool VST3Effect::RealtimeResume() noexcept
    });
 }
 
-bool VST3Effect::RealtimeProcessStart()
+bool VST3Effect::RealtimeProcessStart(EffectSettings &)
 {
    assert(mPendingChanges == nullptr);
 
@@ -802,13 +803,14 @@ bool VST3Effect::RealtimeProcessStart()
    return true;
 }
 
-size_t VST3Effect::RealtimeProcess(int group, const float* const* inBuf, float* const* outBuf, size_t numSamples)
+size_t VST3Effect::RealtimeProcess(int group, EffectSettings &,
+   const float* const* inBuf, float* const* outBuf, size_t numSamples)
 {
    auto& effect = mRealtimeGroupProcessors[group];
    return VST3ProcessBlock(effect->mEffectComponent.get(), effect->mSetup, inBuf, outBuf, numSamples, mPendingChanges.get());
 }
 
-bool VST3Effect::RealtimeProcessEnd() noexcept
+bool VST3Effect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return GuardedCall<bool>([this]()
    {
@@ -850,7 +852,8 @@ bool VST3Effect::IsGraphicalUI()
    return mPlugView != nullptr;
 }
 
-bool VST3Effect::PopulateUI(ShuttleGui& S)
+std::unique_ptr<EffectUIValidator>
+VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &)
 {
    using namespace Steinberg;
 
@@ -899,9 +902,9 @@ bool VST3Effect::PopulateUI(ShuttleGui& S)
          );
       }
 
-      return true;
+      return std::make_unique<DefaultEffectUIValidator>(*this);
    }
-   return false;
+   return nullptr;
 }
 
 bool VST3Effect::ValidateUI()
@@ -910,11 +913,6 @@ bool VST3Effect::ValidateUI()
    {
       mEffectHost->SetDuration(mDuration->GetValue());
    }
-   return true;
-}
-
-bool VST3Effect::HideUI()
-{
    return true;
 }
 
