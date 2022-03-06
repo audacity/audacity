@@ -63,6 +63,8 @@ public:
    bool TransferDataFromWindow() override;
 
 private:
+   void ClampRatio();
+
    // EffectAmplify implementation
 
    void OnAmpText(wxCommandEvent & evt);
