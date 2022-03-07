@@ -470,7 +470,7 @@ void FrequencyPlotDialog::Populate()
       S.AddSpace(5);
 
       // ----------------------------------------------------------------
-      // ROW 7: Function, Axix, Grids, Close
+      // ROW 7: Function, Axis, Grids, Close
       // ----------------------------------------------------------------
 
       S.AddSpace(5);
