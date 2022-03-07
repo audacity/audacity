@@ -80,7 +80,6 @@ namespace{ BuiltinEffectsModule::Registration< EffectDtmf > reg; }
 
 BEGIN_EVENT_TABLE(EffectDtmf, wxEvtHandler)
     EVT_TEXT(ID_Sequence, EffectDtmf::OnSequence)
-    EVT_TEXT(ID_DutyCycle, EffectDtmf::OnAmplitude)
     EVT_TEXT(ID_Duration, EffectDtmf::OnDuration)
     EVT_SLIDER(ID_DutyCycle, EffectDtmf::OnDutyCycle)
 END_EVENT_TABLE()
@@ -291,13 +290,6 @@ bool EffectDtmf::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-bool EffectDtmf::Init()
-{
-   Recalculate();
-
-   return true;
-}
-
 std::unique_ptr<EffectUIValidator>
 EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 {
@@ -373,8 +365,6 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 
 bool EffectDtmf::TransferDataToWindow(const EffectSettings &)
 {
-   Recalculate();
-
    if (!mUIParent->TransferDataToWindow())
    {
       return false;
@@ -408,6 +398,8 @@ bool EffectDtmf::TransferDataFromWindow(EffectSettings &)
 
 // EffectDtmf implementation
 
+// Updates dtmfNTones, dtmfTone, dtmfSilence, and sometimes duration
+// They depend on dtmfSequence, dtmfDutyCycle, and duration
 void EffectDtmf::Recalculate()
 {
    // remember that dtmfDutyCycle is in range (0.0-100.0)
@@ -595,15 +587,6 @@ void EffectDtmf::OnSequence(wxCommandEvent & WXUNUSED(evt))
    UpdateUI();
 }
 
-void EffectDtmf::OnAmplitude(wxCommandEvent & WXUNUSED(evt))
-{
-   if (!mDtmfAmplitudeT->GetValidator()->TransferFromWindow())
-   {
-      return;
-   }
-   Recalculate();
-   UpdateUI();
-}
 void EffectDtmf::OnDuration(wxCommandEvent & WXUNUSED(evt))
 {
    SetDuration(mDtmfDurationT->GetValue());

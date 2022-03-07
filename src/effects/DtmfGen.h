@@ -54,7 +54,6 @@ public:
 
    // Effect implementation
 
-   bool Init() override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
@@ -71,7 +70,6 @@ private:
    void UpdateUI();
 
    void OnSequence(wxCommandEvent & evt);
-   void OnAmplitude(wxCommandEvent & evt);
    void OnDuration(wxCommandEvent & evt);
    void OnDutyCycle(wxCommandEvent & evt);
 
@@ -93,7 +91,6 @@ private:
    double dtmfAmplitude;            // amplitude of dtmf tone sequence, restricted to (0-1)
 
    wxTextCtrl *mDtmfSequenceT;
-   wxTextCtrl *mDtmfAmplitudeT;
    wxSlider   *mDtmfDutyCycleS;
    NumericTextCtrl *mDtmfDurationT;
    wxStaticText *mDtmfToneT;
