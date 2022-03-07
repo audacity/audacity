@@ -3,7 +3,7 @@
 ;; Roger B. Dannenberg, May 2016
 ;;
 
-(setf *spec-plot-bw* 8000.0) ;; higest frequency to plot (default)
+(setf *spec-plot-bw* 8000.0) ;; highest frequency to plot (default)
 (setf *spec-plot-res* 20.0) ;; bin size (default)
 (setf *spec-plot-db* nil) ;; plot dB? (default)
 
