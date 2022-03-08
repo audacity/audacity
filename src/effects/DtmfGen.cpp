@@ -245,7 +245,7 @@ bool EffectDtmf::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectDtmf::SetAutomationParameters(CommandParameters & parms)
+bool EffectDtmf::SetAutomationParameters(const CommandParameters & parms)
 {
    auto &dtmfSettings = mSettings;
 

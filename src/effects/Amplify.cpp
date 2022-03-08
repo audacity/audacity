@@ -149,7 +149,7 @@ bool EffectAmplify::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectAmplify::SetAutomationParameters(CommandParameters & parms)
+bool EffectAmplify::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyFloat(Ratio);
    mRatio = Ratio;

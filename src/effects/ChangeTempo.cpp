@@ -156,7 +156,7 @@ bool EffectChangeTempo::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectChangeTempo::SetAutomationParameters(CommandParameters & parms)
+bool EffectChangeTempo::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyDouble(Percentage);
    m_PercentChange = Percentage;

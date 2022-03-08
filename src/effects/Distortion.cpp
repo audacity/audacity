@@ -300,7 +300,7 @@ bool EffectDistortion::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectDistortion::SetAutomationParameters(CommandParameters & parms)
+bool EffectDistortion::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyEnum(TableTypeIndx, kTableTypeStrings, nTableTypes);
    ReadAndVerifyBool(DCBlock);

@@ -191,7 +191,7 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool VampEffect::SetAutomationParameters(CommandParameters & parms)
+bool VampEffect::SetAutomationParameters(const CommandParameters & parms)
 {
    // First pass verifies values
    for (size_t p = 0, paramCount = mParameters.size(); p < paramCount; p++)

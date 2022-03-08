@@ -109,7 +109,7 @@ bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
+bool EffectNormalize::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyDouble(PeakLevel);
    ReadAndVerifyBool(ApplyGain);

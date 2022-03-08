@@ -136,7 +136,7 @@ bool EffectTimeScale::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectTimeScale::SetAutomationParameters(CommandParameters & parms)
+bool EffectTimeScale::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyDouble(RatePercentStart);
    ReadAndVerifyDouble(RatePercentEnd);

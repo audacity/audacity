@@ -194,7 +194,7 @@ bool EffectBassTreble::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectBassTreble::SetAutomationParameters(CommandParameters & parms)
+bool EffectBassTreble::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyDouble(Bass);
    ReadAndVerifyDouble(Treble);

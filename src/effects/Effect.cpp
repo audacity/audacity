@@ -487,7 +487,7 @@ bool Effect::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool Effect::SetAutomationParameters(CommandParameters & parms)
+bool Effect::SetAutomationParameters(const CommandParameters & parms)
 {
    if (mClient)
    {

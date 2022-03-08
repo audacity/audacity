@@ -1101,7 +1101,7 @@ bool LadspaEffect::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool LadspaEffect::SetAutomationParameters(CommandParameters & parms)
+bool LadspaEffect::SetAutomationParameters(const CommandParameters & parms)
 {
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {

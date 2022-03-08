@@ -144,7 +144,7 @@ bool EffectPaulstretch::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectPaulstretch::SetAutomationParameters(CommandParameters & parms)
+bool EffectPaulstretch::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyFloat(Amount);
    ReadAndVerifyFloat(Time);

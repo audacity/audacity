@@ -423,7 +423,7 @@ bool EffectEqualization::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectEqualization::SetAutomationParameters(CommandParameters & parms)
+bool EffectEqualization::SetAutomationParameters(const CommandParameters & parms)
 {
    // Pretty sure the interpolation name shouldn't have been interpreted when
    // specified in chains, but must keep it that way for compatibility.

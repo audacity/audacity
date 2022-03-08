@@ -58,7 +58,7 @@ public:
    bool IsDefault() const override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(const CommandParameters & parms) override;
 
    // EffectProcessor implementation
 

@@ -207,7 +207,7 @@ bool EffectTruncSilence::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectTruncSilence::SetAutomationParameters(CommandParameters & parms)
+bool EffectTruncSilence::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyDouble(Minimum);
    ReadAndVerifyDouble(Truncate);

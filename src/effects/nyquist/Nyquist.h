@@ -92,12 +92,12 @@ public:
    bool EnablesDebug() const override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(const CommandParameters & parms) override;
 
    // EffectProcessor implementation
 
    bool DefineParams( ShuttleParams & S ) override;
-   int SetLispVarsFromParameters(CommandParameters & parms, bool bTestOnly);
+   int SetLispVarsFromParameters(const CommandParameters & parms, bool bTestOnly);
 
    // Effect implementation
 

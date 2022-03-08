@@ -120,7 +120,7 @@ bool EffectClickRemoval::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectClickRemoval::SetAutomationParameters(CommandParameters & parms)
+bool EffectClickRemoval::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyInt(Threshold);
    ReadAndVerifyInt(Width);

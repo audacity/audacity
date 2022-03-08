@@ -189,7 +189,7 @@ bool EffectNoise::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectNoise::SetAutomationParameters(CommandParameters & parms)
+bool EffectNoise::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
    ReadAndVerifyDouble(Amp);

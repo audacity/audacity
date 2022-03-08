@@ -72,7 +72,7 @@ public:
    EffectType GetType() const override;
    bool SupportsRealtime() const override;
    bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(const CommandParameters & parms) override;
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
 
