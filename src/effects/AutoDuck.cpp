@@ -507,7 +507,12 @@ EffectAutoDuck::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectAutoDuck::TransferDataToWindow()
+bool EffectAutoDuck::TransferDataToWindow(const EffectSettings &)
+{
+   return DoTransferDataToWindow();
+}
+
+bool EffectAutoDuck::DoTransferDataToWindow()
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -519,7 +524,7 @@ bool EffectAutoDuck::TransferDataToWindow()
    return true;
 }
 
-bool EffectAutoDuck::TransferDataFromWindow()
+bool EffectAutoDuck::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {
@@ -955,7 +960,7 @@ void EffectAutoDuckPanel::OnMotion(wxMouseEvent & evt)
          case none:
             wxASSERT(false); // should not happen
          }
-         mEffect->TransferDataToWindow();
+         mEffect->DoTransferDataToWindow();
          Refresh(false);
       }
    }

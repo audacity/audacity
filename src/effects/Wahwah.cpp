@@ -135,7 +135,8 @@ unsigned EffectWahwah::GetAudioOutCount()
    return 1;
 }
 
-bool EffectWahwah::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames chanMap)
+bool EffectWahwah::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    InstanceInit(mMaster, mSampleRate);
 
@@ -162,7 +163,8 @@ bool EffectWahwah::RealtimeInitialize(EffectSettings &)
    return true;
 }
 
-bool EffectWahwah::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool EffectWahwah::RealtimeAddProcessor(
+   EffectSettings &settings, unsigned, float sampleRate)
 {
    EffectWahwahState slave;
 
@@ -310,7 +312,7 @@ EffectWahwah::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectWahwah::TransferDataToWindow()
+bool EffectWahwah::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -327,7 +329,7 @@ bool EffectWahwah::TransferDataToWindow()
    return true;
 }
 
-bool EffectWahwah::TransferDataFromWindow()
+bool EffectWahwah::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

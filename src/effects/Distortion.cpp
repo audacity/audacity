@@ -227,7 +227,8 @@ unsigned EffectDistortion::GetAudioOutCount()
    return 1;
 }
 
-bool EffectDistortion::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectDistortion::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    InstanceInit(mMaster, mSampleRate);
    return true;
@@ -248,7 +249,8 @@ bool EffectDistortion::RealtimeInitialize(EffectSettings &)
    return true;
 }
 
-bool EffectDistortion::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool EffectDistortion::RealtimeAddProcessor(
+   EffectSettings &, unsigned, float sampleRate)
 {
    EffectDistortionState slave;
 
@@ -340,11 +342,6 @@ bool EffectDistortion::LoadFactoryPreset(int id)
 
    mParams = FactoryPresets[id].params;
    mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
-
-   if (mUIDialog)
-   {
-      TransferDataToWindow();
-   }
 
    return true;
 }
@@ -488,7 +485,7 @@ EffectDistortion::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectDistortion::TransferDataToWindow()
+bool EffectDistortion::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -509,7 +506,7 @@ bool EffectDistortion::TransferDataToWindow()
    return true;
 }
 
-bool EffectDistortion::TransferDataFromWindow()
+bool EffectDistortion::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

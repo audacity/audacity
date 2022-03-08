@@ -162,7 +162,8 @@ unsigned EffectToneGen::GetAudioOutCount()
    return 1;
 }
 
-bool EffectToneGen::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectToneGen::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    mPositionInCycles = 0.0;
    mSample = 0;
@@ -484,7 +485,7 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectToneGen::TransferDataToWindow()
+bool EffectToneGen::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -496,7 +497,7 @@ bool EffectToneGen::TransferDataToWindow()
    return true;
 }
 
-bool EffectToneGen::TransferDataFromWindow()
+bool EffectToneGen::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

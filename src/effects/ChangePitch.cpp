@@ -387,7 +387,7 @@ EffectChangePitch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectChangePitch::TransferDataToWindow()
+bool EffectChangePitch::TransferDataToWindow(const EffectSettings &)
 {
    m_bLoopDetect = true;
 
@@ -416,7 +416,7 @@ bool EffectChangePitch::TransferDataToWindow()
    return true;
 }
 
-bool EffectChangePitch::TransferDataFromWindow()
+bool EffectChangePitch::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

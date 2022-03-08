@@ -162,7 +162,8 @@ bool EffectTimeScale::Init()
    return true;
 }
 
-double EffectTimeScale::CalcPreviewInputLength(double previewLength)
+double EffectTimeScale::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    double inputLength = Effect::GetDuration();
    if(inputLength == 0.0) {
@@ -310,7 +311,7 @@ EffectTimeScale::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectTimeScale::TransferDataToWindow()
+bool EffectTimeScale::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -323,7 +324,7 @@ bool EffectTimeScale::TransferDataToWindow()
    return true;
 }
 
-bool EffectTimeScale::TransferDataFromWindow()
+bool EffectTimeScale::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

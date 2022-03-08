@@ -92,23 +92,22 @@ EffectSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectSilence::TransferDataToWindow()
+bool EffectSilence::TransferDataToWindow(const EffectSettings &)
 {
    mDurationT->SetValue(GetDuration());
 
    return true;
 }
 
-bool EffectSilence::TransferDataFromWindow()
+bool EffectSilence::TransferDataFromWindow(EffectSettings &)
 {
    SetDuration(mDurationT->GetValue());
 
    return true;
 }
 
-bool EffectSilence::GenerateTrack(WaveTrack *tmp,
-                                  const WaveTrack & WXUNUSED(track),
-                                  int WXUNUSED(ntrack))
+bool EffectSilence::GenerateTrack(EffectSettings &,
+   WaveTrack *tmp, const WaveTrack &, int)
 {
    tmp->InsertSilence(0.0, GetDuration());
    return true;

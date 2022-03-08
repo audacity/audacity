@@ -157,7 +157,8 @@ bool EffectPaulstretch::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-double EffectPaulstretch::CalcPreviewInputLength(double previewLength)
+double EffectPaulstretch::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    // FIXME: Preview is currently at the project rate, but should really be
    // at the track rate (bugs 1284 and 852).
@@ -217,7 +218,7 @@ EffectPaulstretch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 };
 
-bool EffectPaulstretch::TransferDataToWindow()
+bool EffectPaulstretch::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -227,7 +228,7 @@ bool EffectPaulstretch::TransferDataToWindow()
    return true;
 }
 
-bool EffectPaulstretch::TransferDataFromWindow()
+bool EffectPaulstretch::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

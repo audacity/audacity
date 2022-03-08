@@ -39,13 +39,14 @@ public:
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 protected:
    // Generator implementation
 
-   bool GenerateTrack(WaveTrack *tmp, const WaveTrack &track, int ntrack) override;
+   bool GenerateTrack(EffectSettings &settings,
+      WaveTrack *tmp, const WaveTrack &track, int ntrack) override;
 
 private:
    NumericTextCtrl *mDurationT;

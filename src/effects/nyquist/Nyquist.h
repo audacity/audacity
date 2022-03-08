@@ -109,8 +109,8 @@ public:
       EffectSettingsAccess &access, bool forceModal = false) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(Settings &settings) override;
 
    // NyquistEffect implementation
    // For Nyquist Workbench support

@@ -265,7 +265,7 @@ void EffectFindClipping::DoPopulateOrExchange(
    S.EndMultiColumn();
 }
 
-bool EffectFindClipping::TransferDataToWindow()
+bool EffectFindClipping::TransferDataToWindow(const EffectSettings &)
 {
    ShuttleGui S(mUIParent, eIsSettingToDialog);
    // To do: eliminate this and just use validators for controls
@@ -274,7 +274,7 @@ bool EffectFindClipping::TransferDataToWindow()
    return true;
 }
 
-bool EffectFindClipping::TransferDataFromWindow()
+bool EffectFindClipping::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate())
    {

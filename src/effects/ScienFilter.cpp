@@ -217,7 +217,8 @@ unsigned EffectScienFilter::GetAudioOutCount()
    return 1;
 }
 
-bool EffectScienFilter::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectScienFilter::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    for (int iPair = 0; iPair < (mOrder + 1) / 2; iPair++)
       mpBiquad[iPair].Reset();
@@ -544,7 +545,7 @@ EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 //
 // Populate the window with relevant variables
 //
-bool EffectScienFilter::TransferDataToWindow()
+bool EffectScienFilter::TransferDataToWindow(const EffectSettings &)
 {
    mOrderIndex = mOrder - 1;
 
@@ -564,7 +565,7 @@ bool EffectScienFilter::TransferDataToWindow()
    return TransferGraphLimitsFromWindow();
 }
 
-bool EffectScienFilter::TransferDataFromWindow()
+bool EffectScienFilter::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

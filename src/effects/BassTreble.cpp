@@ -128,7 +128,8 @@ unsigned EffectBassTreble::GetAudioOutCount()
    return 1;
 }
 
-bool EffectBassTreble::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectBassTreble::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames)
 {
    InstanceInit(mMaster, mSampleRate);
 
@@ -150,7 +151,8 @@ bool EffectBassTreble::RealtimeInitialize(EffectSettings &)
    return true;
 }
 
-bool EffectBassTreble::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool EffectBassTreble::RealtimeAddProcessor(
+   EffectSettings &, unsigned, float sampleRate)
 {
    EffectBassTrebleState slave;
 
@@ -285,7 +287,7 @@ EffectBassTreble::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectBassTreble::TransferDataToWindow()
+bool EffectBassTreble::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -300,7 +302,7 @@ bool EffectBassTreble::TransferDataToWindow()
    return true;
 }
 
-bool EffectBassTreble::TransferDataFromWindow()
+bool EffectBassTreble::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

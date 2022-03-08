@@ -49,8 +49,8 @@ public:
       ShuttleGui & S, EffectSettingsAccess &access) override;
    void DoPopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access);
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
    // EffectFindCliping implementation

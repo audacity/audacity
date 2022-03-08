@@ -173,7 +173,8 @@ bool EffectChangeTempo::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-double EffectChangeTempo::CalcPreviewInputLength(double previewLength)
+double EffectChangeTempo::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    return previewLength * (100.0 + m_PercentChange) / 100.0;
 }
@@ -332,7 +333,7 @@ EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectChangeTempo::TransferDataToWindow()
+bool EffectChangeTempo::TransferDataToWindow(const EffectSettings &)
 {
    // Reset from length because it can be changed by Preview
    m_FromLength = mT1 - mT0;
@@ -359,7 +360,7 @@ bool EffectChangeTempo::TransferDataToWindow()
    return true;
 }
 
-bool EffectChangeTempo::TransferDataFromWindow()
+bool EffectChangeTempo::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

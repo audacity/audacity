@@ -1093,7 +1093,7 @@ bool NyquistEffect::EnablesDebug()
    return mDebugButton;
 }
 
-bool NyquistEffect::TransferDataToWindow()
+bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 {
    mUIParent->TransferDataToWindow();
 
@@ -1115,7 +1115,7 @@ bool NyquistEffect::TransferDataToWindow()
    return success;
 }
 
-bool NyquistEffect::TransferDataFromWindow()
+bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

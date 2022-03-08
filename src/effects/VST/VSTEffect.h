@@ -142,14 +142,17 @@ class VSTEffect final : public wxEvtHandler,
    size_t GetBlockSize() const override;
 
    bool IsReady();
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
+   bool DoProcessInitialize(sampleCount totalLen, ChannelNames chanMap);
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
    bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(EffectSettings &settings,
+      unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
@@ -168,7 +171,7 @@ class VSTEffect final : public wxEvtHandler,
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
-   bool ValidateUI() override;
+   bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;

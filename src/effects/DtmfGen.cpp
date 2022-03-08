@@ -129,7 +129,8 @@ unsigned EffectDtmf::GetAudioOutCount()
    return 1;
 }
 
-bool EffectDtmf::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectDtmf::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    if (dtmfNTones <= 0) {   // Bail if no DTFM sequence.
       ::Effect::MessageBox(
@@ -396,7 +397,7 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectDtmf::TransferDataToWindow()
+bool EffectDtmf::TransferDataToWindow(const EffectSettings &)
 {
    Recalculate();
 
@@ -414,7 +415,7 @@ bool EffectDtmf::TransferDataToWindow()
    return true;
 }
 
-bool EffectDtmf::TransferDataFromWindow()
+bool EffectDtmf::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

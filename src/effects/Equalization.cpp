@@ -528,12 +528,6 @@ bool EffectEqualization::LoadFactoryPreset(int id)
    ShuttleSetAutomation S;
    S.SetForWriting( &eap );
    DefineParams( S );
-
-   if (mUIDialog)
-   {
-      TransferDataToWindow();
-   }
-
    return true;
 }
 
@@ -541,7 +535,7 @@ bool EffectEqualization::LoadFactoryPreset(int id)
 
 // EffectUIClientInterface implementation
 
-bool EffectEqualization::ValidateUI()
+bool EffectEqualization::ValidateUI(EffectSettings &)
 {
    // If editing a macro, we don't want to be using the unnamed curve so
    // we offer to save it.
@@ -1194,7 +1188,7 @@ EffectEqualization::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 //
 // Populate the window with relevant variables
 //
-bool EffectEqualization::TransferDataToWindow()
+bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 {
    // Set log or lin freq scale (affects interpolation as well)
    mLinFreq->SetValue( mLin );
@@ -1205,13 +1199,9 @@ bool EffectEqualization::TransferDataToWindow()
 
    if( mMSlider )
       mMSlider->SetValue((mM - 1) / 2);
-   mM = 0;                        // force refresh in TransferDataFromWindow()
 
    mdBMinSlider->SetValue((int)mdBMin);
-   mdBMin = 0;                     // force refresh in TransferDataFromWindow()
-
    mdBMaxSlider->SetValue((int)mdBMax);
-   mdBMax = 0;                    // force refresh in TransferDataFromWindow()
 
    // Reload the curve names
    UpdateCurves();
@@ -1239,72 +1229,27 @@ bool EffectEqualization::TransferDataToWindow()
    if (!mDrawMode)
       UpdateGraphic();
 
-   TransferDataFromWindow();
-
    mUIParent->Layout();
    wxGetTopLevelParent(mUIParent)->Layout();
 
    return true;
 }
 
-//
-// Retrieve data from the window
-//
-bool EffectEqualization::TransferDataFromWindow()
+void EffectEqualization::UpdateRuler()
 {
-   wxString tip;
-
-   bool rr = false;
-   float dB = (float) mdBMinSlider->GetValue();
-   if (dB != mdBMin) {
-      rr = true;
-      mdBMin = dB;
-      tip.Printf(_("%d dB"), (int)mdBMin);
-      mdBMinSlider->SetToolTip(tip);
+   // Refresh ruler when values have changed
+   int w1, w2, h;
+   mdBRuler->ruler.GetMaxSize(&w1, &h);
+   mdBRuler->ruler.SetRange(mdBMax, mdBMin);
+   mdBRuler->ruler.GetMaxSize(&w2, &h);
+   if( w1 != w2 )   // Reduces flicker
+   {
+      mdBRuler->SetSize(wxSize(w2,h));
+      mFreqRuler->Refresh(false);
    }
+   mdBRuler->Refresh(false);
 
-   dB = (float) mdBMaxSlider->GetValue();
-   if (dB != mdBMax) {
-      rr = true;
-      mdBMax = dB;
-      tip.Printf(_("%d dB"), (int)mdBMax);
-      mdBMaxSlider->SetToolTip(tip);
-   }
-
-   // Refresh ruler if values have changed
-   if (rr) {
-      int w1, w2, h;
-      mdBRuler->ruler.GetMaxSize(&w1, &h);
-      mdBRuler->ruler.SetRange(mdBMax, mdBMin);
-      mdBRuler->ruler.GetMaxSize(&w2, &h);
-      if( w1 != w2 )   // Reduces flicker
-      {
-         mdBRuler->SetSize(wxSize(w2,h));
-         mFreqRuler->Refresh(false);
-      }
-      mdBRuler->Refresh(false);
-
-      mPanel->Refresh(false);
-   }
-
-   size_t m = DEF_FilterLength; // m must be odd.
-   if (mMSlider )
-      m = 2* mMSlider->GetValue()+1;
-   wxASSERT( (m & 1) ==1 );
-   if (m != mM) {
-      mM = m;
-      ForceRecalc();
-
-      if( mMSlider)
-      {
-         tip.Printf(wxT("%d"), (int)mM);
-         mMText->SetLabel(tip);
-         mMText->SetName(mMText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-         mMSlider->SetToolTip(tip);
-      }
-   }
-
-   return true;
+   mPanel->Refresh(false);
 }
 
 // EffectEqualization implementation
@@ -2892,18 +2837,44 @@ void EffectEqualization::OnGraphicMode(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnSliderM(wxCommandEvent & WXUNUSED(event))
 {
-   TransferDataFromWindow();
-   ForceRecalc();
+   size_t m = 2 * mMSlider->GetValue() + 1;
+   // Must be odd
+   wxASSERT( (m & 1) == 1 );
+
+   if (m != mM) {
+      mM = m;
+      wxString tip;
+      tip.Printf(wxT("%d"), (int)mM);
+      mMText->SetLabel(tip);
+      mMText->SetName(mMText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      mMSlider->SetToolTip(tip);
+
+      ForceRecalc();
+   }
 }
 
 void EffectEqualization::OnSliderDBMIN(wxCommandEvent & WXUNUSED(event))
 {
-   TransferDataFromWindow();
+   float dB = mdBMinSlider->GetValue();
+   if (dB != mdBMin) {
+      mdBMin = dB;
+      wxString tip;
+      tip.Printf(_("%d dB"), (int)mdBMin);
+      mdBMinSlider->SetToolTip(tip);
+      UpdateRuler();
+   }
 }
 
 void EffectEqualization::OnSliderDBMAX(wxCommandEvent & WXUNUSED(event))
 {
-   TransferDataFromWindow();
+   float dB = mdBMaxSlider->GetValue();
+   if (dB != mdBMax) {
+      mdBMax = dB;
+      wxString tip;
+      tip.Printf(_("%d dB"), (int)mdBMax);
+      mdBMaxSlider->SetToolTip(tip);
+      UpdateRuler();
+   }
 }
 
 //

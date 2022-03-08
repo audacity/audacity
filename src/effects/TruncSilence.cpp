@@ -243,7 +243,8 @@ bool EffectTruncSilence::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-double EffectTruncSilence::CalcPreviewInputLength(double /* previewLength */)
+double EffectTruncSilence::CalcPreviewInputLength(
+   const EffectSettings &, double /* previewLength */)
 {
    double inputLength = mT1 - mT0;
    double minInputLength = inputLength;
@@ -837,7 +838,7 @@ EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectTruncSilence::TransferDataToWindow()
+bool EffectTruncSilence::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -847,7 +848,7 @@ bool EffectTruncSilence::TransferDataToWindow()
    return true;
 }
 
-bool EffectTruncSilence::TransferDataFromWindow()
+bool EffectTruncSilence::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

@@ -132,14 +132,16 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
    bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(EffectSettings &settings,
+         unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
@@ -157,7 +159,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) final;
    bool IsGraphicalUI() override;
-   bool ValidateUI() override;
+   bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
@@ -201,8 +203,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
       const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
    ) override;
    bool Startup(EffectUIClientInterface *client) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
    // Effect implementation
 
@@ -274,7 +276,8 @@ protected:
 
    // Most effects just use the previewLength, but time-stretching/compressing
    // effects need to use a different input length, so override this method.
-   virtual double CalcPreviewInputLength(double previewLength);
+   virtual double CalcPreviewInputLength(
+      const EffectSettings &settings, double previewLength);
 
    //! Add controls to effect panel; always succeeds
    /*!
@@ -433,8 +436,6 @@ protected:
    // UI
    //! This smart pointer tracks the lifetime of the dialog
    wxWeakRef<wxDialog> mHostUIDialog;
-   //! This weak pointer may be the same as the above, or null
-   wxWeakRef<wxDialog> mUIDialog;
    wxWindow       *mUIParent;
    unsigned       mUIFlags{ 0 };
 
@@ -443,6 +444,9 @@ protected:
  // Used only by the base Effect class
  //
  private:
+   //! This weak pointer may be the same as the above, or null
+   wxWeakRef<wxDialog> mUIDialog;
+
    wxString GetSavedStateGroup();
    double GetDefaultDuration();
 

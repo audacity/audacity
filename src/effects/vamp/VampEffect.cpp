@@ -694,7 +694,7 @@ VampEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool VampEffect::TransferDataToWindow()
+bool VampEffect::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -706,7 +706,7 @@ bool VampEffect::TransferDataToWindow()
    return true;
 }
 
-bool VampEffect::TransferDataFromWindow()
+bool VampEffect::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

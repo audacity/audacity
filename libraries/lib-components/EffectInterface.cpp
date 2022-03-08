@@ -163,8 +163,9 @@ EffectProcessor::~EffectProcessor() = default;
 EffectUIValidator::~EffectUIValidator() = default;
 
 DefaultEffectUIValidator::DefaultEffectUIValidator(
-   EffectUIClientInterface &effect)
+   EffectUIClientInterface &effect, EffectSettingsAccess &access)
    : mEffect{effect}
+   , mAccess{access}
 {}
 
 DefaultEffectUIValidator::~DefaultEffectUIValidator()
@@ -174,7 +175,11 @@ DefaultEffectUIValidator::~DefaultEffectUIValidator()
 
 bool DefaultEffectUIValidator::Validate()
 {
-   return mEffect.ValidateUI();
+   bool result {};
+   auto settings = mAccess.Get();
+   result = mEffect.ValidateUI(settings);
+   mAccess.Set(std::move(settings));
+   return result;
 }
 
 EffectUIClientInterface::~EffectUIClientInterface() = default;

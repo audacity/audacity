@@ -180,7 +180,8 @@ bool EffectAmplify::LoadFactoryDefaults()
    }
    mCanClip = false;
 
-   return TransferDataToWindow();
+   ClampRatio();
+   return true;
 }
 
 // Effect implementation
@@ -292,7 +293,7 @@ EffectAmplify::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectAmplify::TransferDataToWindow()
+void EffectAmplify::ClampRatio()
 {
    // limit range of gain
    double dBInit = LINEAR_TO_DB(mRatio);
@@ -301,11 +302,15 @@ bool EffectAmplify::TransferDataToWindow()
       mRatio = DB_TO_LINEAR(dB);
 
    mAmp = LINEAR_TO_DB(mRatio);
+   mNewPeak = LINEAR_TO_DB(mRatio * mPeak);
+}
+
+bool EffectAmplify::TransferDataToWindow(const EffectSettings &)
+{
    mAmpT->GetValidator()->TransferToWindow();
 
    mAmpS->SetValue((int) (mAmp * SCL_Amp + 0.5f));
 
-   mNewPeak = LINEAR_TO_DB(mRatio * mPeak);
    mNewPeakT->GetValidator()->TransferToWindow();
 
    mClip->SetValue(mCanClip);
@@ -315,7 +320,7 @@ bool EffectAmplify::TransferDataToWindow()
    return true;
 }
 
-bool EffectAmplify::TransferDataFromWindow()
+bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {
@@ -330,6 +335,8 @@ bool EffectAmplify::TransferDataFromWindow()
    {
       mRatio = 1.0 / mPeak;
    }
+
+   ClampRatio();
 
    return true;
 }

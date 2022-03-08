@@ -123,13 +123,15 @@ public:
    size_t GetBlockSize() const override;
    sampleCount GetLatency() override;
    size_t GetTailSize() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap) override;
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
    bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(EffectSettings &settings,
+      unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
@@ -144,7 +146,7 @@ public:
    bool IsGraphicalUI() override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
-   bool ValidateUI() override;
+   bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
    bool CanExportPresets() override;
    void ExportPresets() override;

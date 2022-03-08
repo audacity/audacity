@@ -1043,7 +1043,8 @@ size_t LV2Effect::GetTailSize()
    return 0;
 }
 
-bool LV2Effect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool LV2Effect::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    mProcess = InitInstance(mSampleRate);
    if (!mProcess)
@@ -1214,7 +1215,8 @@ return GuardedCall<bool>([&]{
 });
 }
 
-bool LV2Effect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool LV2Effect::RealtimeAddProcessor(
+   EffectSettings &, unsigned, float sampleRate)
 {
    LV2Wrapper *slave = InitInstance(sampleRate);
    if (!slave)
@@ -1520,7 +1522,7 @@ bool LV2Effect::SetAutomationParameters(CommandParameters &parms)
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator>
-LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
+LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
    mParent = parent;
@@ -1561,7 +1563,7 @@ LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
          return nullptr;
    }
 
-   return std::make_unique<DefaultEffectUIValidator>(*this);
+   return std::make_unique<DefaultEffectUIValidator>(*this, access);
 }
 
 bool LV2Effect::IsGraphicalUI()
@@ -1569,7 +1571,7 @@ bool LV2Effect::IsGraphicalUI()
    return mUseGUI;
 }
 
-bool LV2Effect::ValidateUI()
+bool LV2Effect::ValidateUI(EffectSettings &)
 {
    if (!mParent->Validate() || !mParent->TransferDataFromWindow())
    {

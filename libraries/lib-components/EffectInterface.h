@@ -343,7 +343,8 @@ public:
    virtual size_t GetTailSize() = 0;
 
    //! Called for destructive, non-realtime effect computation
-   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) = 0;
+   virtual bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap = nullptr) = 0;
 
    //! Called for destructive, non-realtime effect computation
    // This may be called during stack unwinding:
@@ -354,7 +355,8 @@ public:
       const float *const *inBlock, float *const *outBlock, size_t blockLen) = 0;
 
    virtual bool RealtimeInitialize(EffectSettings &settings) = 0;
-   virtual bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) = 0;
+   virtual bool RealtimeAddProcessor(
+      EffectSettings &settings, unsigned numChannels, float sampleRate) = 0;
    virtual bool RealtimeFinalize(EffectSettings &settings) noexcept = 0;
    virtual bool RealtimeSuspend() = 0;
    virtual bool RealtimeResume() noexcept = 0;
@@ -399,11 +401,13 @@ public:
 class COMPONENTS_API DefaultEffectUIValidator final : public EffectUIValidator
 {
 public:
-   explicit DefaultEffectUIValidator(EffectUIClientInterface &effect);
+   DefaultEffectUIValidator(
+      EffectUIClientInterface &effect, EffectSettingsAccess &access);
    ~DefaultEffectUIValidator() override;
    bool Validate() override;
 private:
    EffectUIClientInterface &mEffect;
+   EffectSettingsAccess &mAccess;
 };
 
 /*************************************************************************************//**
@@ -454,7 +458,7 @@ public:
 
 protected:
    friend DefaultEffectUIValidator;
-   virtual bool ValidateUI() = 0;
+   virtual bool ValidateUI(EffectSettings &settings) = 0;
    virtual bool CloseUI() = 0;
 };
 

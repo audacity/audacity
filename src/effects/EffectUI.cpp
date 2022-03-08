@@ -203,12 +203,18 @@ EffectUIHost::~EffectUIHost()
 
 bool EffectUIHost::TransferDataToWindow()
 {
-   return mEffectUIHost.TransferDataToWindow();
+   // Transfer-to takes const reference to settings
+   return mEffectUIHost.TransferDataToWindow(mpAccess->Get());
 }
 
 bool EffectUIHost::TransferDataFromWindow()
 {
-   return mEffectUIHost.TransferDataFromWindow();
+   // Transfer-from takes non-const reference to settings
+   bool result = true;
+   auto settings = mpAccess->Get();
+   result = mEffectUIHost.TransferDataFromWindow(settings);
+   mpAccess->Set(std::move(settings));
+   return result;
 }
 
 // ============================================================================
@@ -554,12 +560,10 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       return;
    }
    
-   // This will take care of calling TransferDataFromWindow() for an effect.
-   if (!mEffectUIHost.GetDefinition().SaveUserPreset(
-      mEffectUIHost.GetCurrentSettingsGroup(), mpAccess->Get()))
-   {
+   if (!TransferDataFromWindow() ||
+       !mEffectUIHost.GetDefinition().SaveUserPreset(
+         mEffectUIHost.GetCurrentSettingsGroup(), mpAccess->Get()))
       return;
-   }
 
    if (IsModal())
    {
@@ -736,7 +740,7 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mSupportsRealtime)
    {
-      if (!mpValidator->Validate() || !mEffectUIHost.TransferDataFromWindow())
+      if (!mpValidator->Validate() || !TransferDataFromWindow())
       {
          return;
       }
@@ -886,6 +890,7 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
    auto settings = mpAccess->Get();
    mEffectUIHost.GetDefinition().LoadUserPreset(
       mEffectUIHost.GetUserPresetsGroup(mUserPresets[preset]), settings);
+   TransferDataToWindow();
    // Communicate change of settings
    mpAccess->Set(std::move(settings));
    
@@ -898,9 +903,9 @@ void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
    auto settings = mpAccess->Get();
    mEffectUIHost.GetDefinition()
       .LoadFactoryPreset(evt.GetId() - kFactoryPresetsID, settings);
+   TransferDataToWindow();
    // Communicate change of settings
    mpAccess->Set(std::move(settings));
-   
    return;
 }
 
@@ -993,8 +998,9 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
          }
       }
       
-      mEffectUIHost.GetDefinition().SaveUserPreset(
-         mEffectUIHost.GetUserPresetsGroup(name), mpAccess->Get());
+      if (TransferDataFromWindow())
+         mEffectUIHost.GetDefinition().SaveUserPreset(
+            mEffectUIHost.GetUserPresetsGroup(name), mpAccess->Get());
       LoadUserPresets();
       
       break;
@@ -1006,6 +1012,7 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
 void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 {
    mClient.ImportPresets();
+   TransferDataToWindow();
    
    LoadUserPresets();
    
@@ -1016,7 +1023,8 @@ void EffectUIHost::OnExport(wxCommandEvent & WXUNUSED(evt))
 {
    // may throw
    // exceptions are handled in AudacityApp::OnExceptionInMainLoop
-   mClient.ExportPresets();
+   if (TransferDataFromWindow())
+     mClient.ExportPresets();
    
    return;
 }
@@ -1033,6 +1041,7 @@ void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
    // Make mutable copy
    auto settings = mpAccess->Get();
    mEffectUIHost.GetDefinition().LoadFactoryDefaults(settings);
+   TransferDataToWindow();
    // Communicate change of settings
    mpAccess->Set(std::move(settings));
    return;

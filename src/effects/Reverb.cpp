@@ -175,7 +175,8 @@ unsigned EffectReverb::GetAudioOutCount()
 
 static size_t BLOCK = 16384;
 
-bool EffectReverb::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames chanMap)
+bool EffectReverb::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    bool isStereo = false;
    mNumChans = 1;
@@ -356,12 +357,6 @@ bool EffectReverb::LoadFactoryPreset(int id)
    }
 
    mParams = FactoryPresets[id].params;
-
-   if (mUIDialog)
-   {
-      TransferDataToWindow();
-   }
-
    return true;
 }
 
@@ -477,7 +472,7 @@ EffectReverb::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectReverb::TransferDataToWindow()
+bool EffectReverb::TransferDataToWindow(const EffectSettings &)
 {
 #define SetSpinSlider(n) \
    m ## n ## S->SetValue((int) mParams.m ## n); \
@@ -500,7 +495,7 @@ bool EffectReverb::TransferDataToWindow()
    return true;
 }
 
-bool EffectReverb::TransferDataFromWindow()
+bool EffectReverb::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate())
    {
@@ -548,12 +543,3 @@ SpinSliderHandlers(DryGain)
 SpinSliderHandlers(StereoWidth)
 
 #undef SpinSliderHandlers
-
-void EffectReverb::SetTitle(const wxString & name)
-{
-   mUIDialog->SetTitle(
-      name.empty()
-         ? _("Reverb")
-         : wxString::Format( _("Reverb: %s"), name )
-   );
-}

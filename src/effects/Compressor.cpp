@@ -361,7 +361,7 @@ EffectCompressor::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectCompressor::TransferDataToWindow()
+bool EffectCompressor::TransferDataToWindow(const EffectSettings &)
 {
    mThresholdSlider->SetValue(lrint(mThresholdDB));
    mNoiseFloorSlider->SetValue(lrint(mNoiseFloorDB * SCL_NoiseFloor));
@@ -376,13 +376,18 @@ bool EffectCompressor::TransferDataToWindow()
    return true;
 }
 
-bool EffectCompressor::TransferDataFromWindow()
+bool EffectCompressor::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate())
    {
       return false;
    }
+   return DoTransferDataFromWindow();
+}
 
+bool EffectCompressor::DoTransferDataFromWindow()
+{
+   // To do:  eliminate this by using control validators instead
    mThresholdDB = (double) mThresholdSlider->GetValue();
    mNoiseFloorDB = (double) mNoiseFloorSlider->GetValue() / SCL_NoiseFloor;
    mRatio = (double) mRatioSlider->GetValue() / SCL_Ratio;
@@ -664,7 +669,7 @@ float EffectCompressor::DoCompression(float value, double env)
 
 void EffectCompressor::OnSlider(wxCommandEvent & WXUNUSED(evt))
 {
-   TransferDataFromWindow();
+   DoTransferDataFromWindow();
    UpdateUI();
 }
 

@@ -1240,7 +1240,8 @@ size_t AudioUnitEffect::GetTailSize()
    return tailTime * mSampleRate;
 }
 
-bool AudioUnitEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool AudioUnitEffect::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    OSStatus result;
 
@@ -1336,12 +1337,13 @@ size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool AudioUnitEffect::RealtimeInitialize(EffectSettings &)
+bool AudioUnitEffect::RealtimeInitialize(EffectSettings &settings)
 {
-   return ProcessInitialize(0);
+   return ProcessInitialize(settings, 0, nullptr);
 }
 
-bool AudioUnitEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
+bool AudioUnitEffect::RealtimeAddProcessor(
+   EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
    if (!slave->SetHost(NULL))
@@ -1361,7 +1363,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRat
    auto pSlave = slave.get();
    mSlaves.push_back(std::move(slave));
 
-   return pSlave->ProcessInitialize(0);
+   return pSlave->ProcessInitialize(settings, 0, nullptr);
 }
 
 bool AudioUnitEffect::RealtimeFinalize(EffectSettings &) noexcept
@@ -1657,7 +1659,7 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator>
-AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
+AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    // OSStatus result;
 
@@ -1720,7 +1722,7 @@ AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
       mParent->PushEventHandler(this);
    }
 
-   return std::make_unique<DefaultEffectUIValidator>(*this);
+   return std::make_unique<DefaultEffectUIValidator>(*this, access);
 }
 
 bool AudioUnitEffect::IsGraphicalUI()
@@ -1728,7 +1730,7 @@ bool AudioUnitEffect::IsGraphicalUI()
    return mUIType != wxT("Plain");
 }
 
-bool AudioUnitEffect::ValidateUI()
+bool AudioUnitEffect::ValidateUI(EffectSettings &)
 {
 #if 0
    if (!mParent->Validate())

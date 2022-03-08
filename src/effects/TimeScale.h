@@ -52,9 +52,10 @@ public:
    bool Process(EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
-   double CalcPreviewInputLength(double previewLength) override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
+   double CalcPreviewInputLength(
+      const EffectSettings &settings, double previewLength) override;
 
 private:
    // EffectTimeScale implementation

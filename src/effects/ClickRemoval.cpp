@@ -381,7 +381,7 @@ EffectClickRemoval::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectClickRemoval::TransferDataToWindow()
+bool EffectClickRemoval::TransferDataToWindow(const EffectSettings &)
 {
    if (!mUIParent->TransferDataToWindow())
    {
@@ -391,7 +391,7 @@ bool EffectClickRemoval::TransferDataToWindow()
    return true;
 }
 
-bool EffectClickRemoval::TransferDataFromWindow()
+bool EffectClickRemoval::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
    {

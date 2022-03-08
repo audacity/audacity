@@ -318,13 +318,11 @@ size_t Effect::GetTailSize()
    return 0;
 }
 
-bool Effect::ProcessInitialize(sampleCount totalLen, ChannelNames chanMap)
+bool Effect::ProcessInitialize(
+   EffectSettings &settings, sampleCount totalLen, ChannelNames chanMap)
 {
    if (mClient)
-   {
-      return mClient->ProcessInitialize(totalLen, chanMap);
-   }
-
+      return mClient->ProcessInitialize(settings, totalLen, chanMap);
    return true;
 }
 
@@ -359,11 +357,12 @@ bool Effect::RealtimeInitialize(EffectSettings &settings)
    return false;
 }
 
-bool Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
+bool Effect::RealtimeAddProcessor(
+   EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    if (mClient)
    {
-      return mClient->RealtimeAddProcessor(numChannels, sampleRate);
+      return mClient->RealtimeAddProcessor(settings, numChannels, sampleRate);
    }
 
    return true;
@@ -585,7 +584,7 @@ Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
       // No custom validator object?  Then use the default, which will pop
       // the event handler when it is destroyed and invokes CloseUI
       mUIParent->PushEventHandler(this);
-      result = std::make_unique<DefaultEffectUIValidator>(*this);
+      result = std::make_unique<DefaultEffectUIValidator>(*this, access);
    }
    return result;
 }
@@ -595,7 +594,7 @@ bool Effect::IsGraphicalUI()
    return false;
 }
 
-bool Effect::ValidateUI()
+bool Effect::ValidateUI(EffectSettings &)
 {
    return mUIParent->Validate();
 }
@@ -851,12 +850,6 @@ bool Effect::Startup()
 bool Effect::GetAutomationParametersAsString(wxString & parms)
 {
    CommandParameters eap;
-
-   if (mUIDialog && !TransferDataFromWindow())
-   {
-      return false;
-   }
-
    ShuttleGetAutomation S;
    S.mpEap = &eap;
    if( DefineParams( S ) ){
@@ -923,13 +916,7 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
       return true;
       //return false;
    }
-
-   if (!mUIDialog)
-   {
-      return true;
-   }
-
-   return TransferDataToWindow();
+   return true;
 }
 
 unsigned Effect::TestUIFlags(unsigned mask) {
@@ -1309,7 +1296,7 @@ bool Effect::ProcessTrack(EffectSettings &settings,
    bool rc = true;
 
    // Give the plugin a chance to initialize
-   if (!ProcessInitialize(len, map))
+   if (!ProcessInitialize(settings, len, map))
    {
       return false;
    }
@@ -1360,7 +1347,7 @@ bool Effect::ProcessTrack(EffectSettings &settings,
    {
       if (mIsPreview) {
          gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
-         genDur = wxMin(mDuration, CalcPreviewInputLength(genDur));
+         genDur = std::min(mDuration, CalcPreviewInputLength(settings, genDur));
       }
       else {
          genDur = mDuration;
@@ -1668,12 +1655,12 @@ Effect::PopulateOrExchange(ShuttleGui &, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool Effect::TransferDataToWindow()
+bool Effect::TransferDataToWindow(const EffectSettings &)
 {
    return true;
 }
 
-bool Effect::TransferDataFromWindow()
+bool Effect::TransferDataFromWindow(EffectSettings &)
 {
    return true;
 }
@@ -2032,7 +2019,8 @@ void Effect::CountWaveTracks()
    mNumGroups = mTracks->SelectedLeaders< const WaveTrack >().size();
 }
 
-double Effect::CalcPreviewInputLength(double previewLength)
+double Effect::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    return previewLength;
 }
@@ -2060,12 +2048,12 @@ void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
 
    const double rate = mProjectRate;
 
-   if (isNyquist && isGenerator) {
-      previewDuration = CalcPreviewInputLength(previewLen);
-   }
-   else {
-      previewDuration = wxMin(mDuration, CalcPreviewInputLength(previewLen));
-   }
+   const auto &settings = access.Get();
+   if (isNyquist && isGenerator)
+      previewDuration = CalcPreviewInputLength(settings, previewLen);
+   else
+      previewDuration =
+         std::min(mDuration, CalcPreviewInputLength(settings, previewLen));
 
    double t1 = mT0 + previewDuration;
 
