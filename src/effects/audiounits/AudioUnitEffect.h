@@ -125,7 +125,7 @@ public:
    bool CloseUI() override;
 
    bool CanExportPresets() override;
-   void ExportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
    void ImportPresets() override;
 
    bool HasOptions() override;
@@ -137,7 +137,7 @@ private:
    bool SetRateAndChannels();
 
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
-   TranslatableString Export(const wxString & path);
+   TranslatableString Export(const wxString & path) const;
    TranslatableString Import(const wxString & path);
    void Notify(AudioUnit unit, AudioUnitParameterID parm);
 

@@ -1032,7 +1032,7 @@ void EffectUIHost::OnExport(wxCommandEvent & WXUNUSED(evt))
    // may throw
    // exceptions are handled in AudacityApp::OnExceptionInMainLoop
    if (TransferDataFromWindow())
-     mClient.ExportPresets();
+     mClient.ExportPresets(mpAccess->Get());
    
    return;
 }

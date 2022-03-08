@@ -1521,7 +1521,7 @@ bool LadspaEffect::CanExportPresets()
    return false;
 }
 
-void LadspaEffect::ExportPresets()
+void LadspaEffect::ExportPresets(const EffectSettings &) const
 {
 }
 

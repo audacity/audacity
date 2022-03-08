@@ -506,7 +506,7 @@ public:
       ShuttleGui &S, EffectSettingsAccess &access) = 0;
 
    virtual bool CanExportPresets() = 0;
-   virtual void ExportPresets() = 0;
+   virtual void ExportPresets(const EffectSettings &settings) const = 0;
    virtual void ImportPresets() = 0;
 
    virtual bool HasOptions() = 0;

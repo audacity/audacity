@@ -163,7 +163,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool CloseUI() override;
 
    bool CanExportPresets() override;
-   void ExportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
    void ImportPresets() override;
 
    bool HasOptions() override;

@@ -86,7 +86,7 @@
 #include "PlatformCompatibility.h"
 #include "../../SelectFile.h"
 #include "../../ShuttleGui.h"
-#include "../../effects/Effect.h"
+#include "../../EffectHostInterface.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/NumericTextCtrl.h"
@@ -1812,7 +1812,7 @@ bool VSTEffect::CanExportPresets()
 }
 
 // Throws exceptions rather than reporting errors.
-void VSTEffect::ExportPresets()
+void VSTEffect::ExportPresets(const EffectSettings &) const
 {
    wxString path;
 

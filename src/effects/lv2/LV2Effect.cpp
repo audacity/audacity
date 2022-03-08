@@ -1727,7 +1727,7 @@ bool LV2Effect::CanExportPresets()
    return false;
 }
 
-void LV2Effect::ExportPresets()
+void LV2Effect::ExportPresets(const EffectSettings &) const
 {
 }
 

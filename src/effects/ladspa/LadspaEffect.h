@@ -122,7 +122,7 @@ public:
    bool CloseUI() override;
 
    bool CanExportPresets() override;
-   void ExportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
    void ImportPresets() override;
 
    bool HasOptions() override;

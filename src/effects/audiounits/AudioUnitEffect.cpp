@@ -1794,7 +1794,7 @@ bool AudioUnitEffect::CanExportPresets()
    return true;
 }
 
-void AudioUnitEffect::ExportPresets()
+void AudioUnitEffect::ExportPresets(const EffectSettings &) const
 {
    // Generate the user domain path
    wxFileName fn;
@@ -2248,7 +2248,7 @@ void AudioUnitEffect::SetChannelCount(unsigned numChannels)
    mNumChannels = numChannels;
 }
 
-TranslatableString AudioUnitEffect::Export(const wxString & path)
+TranslatableString AudioUnitEffect::Export(const wxString & path) const
 {
    // Create the file
    wxFFile f(path, wxT("wb"));

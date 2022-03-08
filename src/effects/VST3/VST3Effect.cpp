@@ -941,7 +941,7 @@ bool VST3Effect::CanExportPresets()
    return true;
 }
 
-void VST3Effect::ExportPresets()
+void VST3Effect::ExportPresets(const EffectSettings &) const
 {
    using namespace Steinberg;
 

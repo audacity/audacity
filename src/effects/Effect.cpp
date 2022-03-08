@@ -618,7 +618,7 @@ static const FileNames::FileTypes &PresetTypes()
    return result;
 };
 
-void Effect::ExportPresets()
+void Effect::ExportPresets(const EffectSettings &) const
 {
    wxString params;
    GetAutomationParametersAsString(params);
