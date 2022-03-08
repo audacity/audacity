@@ -68,12 +68,12 @@ EffectNormalize::~EffectNormalize()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectNormalize::GetSymbol()
+ComponentInterfaceSymbol EffectNormalize::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectNormalize::GetDescription()
+TranslatableString EffectNormalize::GetDescription() const
 {
    return XO("Sets the peak amplitude of one or more tracks");
 }

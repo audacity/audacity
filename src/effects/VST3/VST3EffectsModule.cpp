@@ -87,27 +87,27 @@ std::shared_ptr<VST3::Hosting::Module> VST3EffectsModule::GetModule(const wxStri
    return module;
 }
 
-PluginPath VST3EffectsModule::GetPath()
+PluginPath VST3EffectsModule::GetPath() const
 {
    return {};
 }
 
-ComponentInterfaceSymbol VST3EffectsModule::GetSymbol()
+ComponentInterfaceSymbol VST3EffectsModule::GetSymbol() const
 {
    return XO("VST3 Effects");
 }
 
-VendorSymbol VST3EffectsModule::GetVendor()
+VendorSymbol VST3EffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
 
-wxString VST3EffectsModule::GetVersion()
+wxString VST3EffectsModule::GetVersion() const
 {
    return AUDACITY_VERSION_STRING;
 }
 
-TranslatableString VST3EffectsModule::GetDescription()
+TranslatableString VST3EffectsModule::GetDescription() const
 {
    return XO("Adds the ability to use VST3 effects in Audacity.");
 }

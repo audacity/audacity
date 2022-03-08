@@ -90,28 +90,28 @@ LV2EffectsModule::~LV2EffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath LV2EffectsModule::GetPath()
+PluginPath LV2EffectsModule::GetPath() const
 {
    return {};
 }
 
-ComponentInterfaceSymbol LV2EffectsModule::GetSymbol()
+ComponentInterfaceSymbol LV2EffectsModule::GetSymbol() const
 {
    return XO("LV2 Effects");
 }
 
-VendorSymbol LV2EffectsModule::GetVendor()
+VendorSymbol LV2EffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
 
-wxString LV2EffectsModule::GetVersion()
+wxString LV2EffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return LV2EFFECTS_VERSION;
 }
 
-TranslatableString LV2EffectsModule::GetDescription()
+TranslatableString LV2EffectsModule::GetDescription() const
 {
    return XO("Provides LV2 Effects support to Audacity");
 }

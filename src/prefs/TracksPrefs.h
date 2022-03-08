@@ -29,8 +29,8 @@ class AUDACITY_DLL_API TracksPrefs final : public PrefsPanel
  public:
    TracksPrefs(wxWindow * parent, wxWindowID winid);
    ~TracksPrefs();
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
 
    bool Commit() override;
    ManualPageID HelpPageName() override;

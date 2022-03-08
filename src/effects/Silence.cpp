@@ -40,12 +40,12 @@ EffectSilence::~EffectSilence()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectSilence::GetSymbol()
+ComponentInterfaceSymbol EffectSilence::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectSilence::GetDescription()
+TranslatableString EffectSilence::GetDescription() const
 {
    return XO("Creates audio of zero amplitude");
 }

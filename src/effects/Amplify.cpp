@@ -88,12 +88,12 @@ EffectAmplify::~EffectAmplify()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectAmplify::GetSymbol()
+ComponentInterfaceSymbol EffectAmplify::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectAmplify::GetDescription()
+TranslatableString EffectAmplify::GetDescription() const
 {
    // Note: This is useful only after ratio has been set.
    return XO("Increases or decreases the volume of the audio you have selected");

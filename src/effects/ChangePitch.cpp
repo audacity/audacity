@@ -140,12 +140,12 @@ EffectChangePitch::~EffectChangePitch()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectChangePitch::GetSymbol()
+ComponentInterfaceSymbol EffectChangePitch::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectChangePitch::GetDescription()
+TranslatableString EffectChangePitch::GetDescription() const
 {
    return XO("Changes the pitch of a track without changing its tempo");
 }

@@ -57,7 +57,7 @@ class SetWaveClipNameCommand : public AudacityCommand
 public:
     static const ComponentInterfaceSymbol Symbol;
 
-    ComponentInterfaceSymbol GetSymbol() override
+    ComponentInterfaceSymbol GetSymbol() const override
     {
         return Symbol;
     }

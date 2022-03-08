@@ -264,29 +264,29 @@ AudioUnitEffectsModule::~AudioUnitEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath AudioUnitEffectsModule::GetPath()
+PluginPath AudioUnitEffectsModule::GetPath() const
 {
    return {};
 }
 
-ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol()
+ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol() const
 {
    /* i18n-hint: Audio Unit is the name of an Apple audio software protocol */
    return XO("Audio Unit Effects");
 }
 
-VendorSymbol AudioUnitEffectsModule::GetVendor()
+VendorSymbol AudioUnitEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
 
-wxString AudioUnitEffectsModule::GetVersion()
+wxString AudioUnitEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return AUDIOUNITEFFECTS_VERSION;
 }
 
-TranslatableString AudioUnitEffectsModule::GetDescription()
+TranslatableString AudioUnitEffectsModule::GetDescription() const
 {
    return XO("Provides Audio Unit Effects support to Audacity");
 }
@@ -880,22 +880,22 @@ AudioUnitEffect::~AudioUnitEffect()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath AudioUnitEffect::GetPath()
+PluginPath AudioUnitEffect::GetPath() const
 {
    return mPath;
 }
 
-ComponentInterfaceSymbol AudioUnitEffect::GetSymbol()
+ComponentInterfaceSymbol AudioUnitEffect::GetSymbol() const
 {
    return mName;
 }
 
-VendorSymbol AudioUnitEffect::GetVendor()
+VendorSymbol AudioUnitEffect::GetVendor() const
 {
    return { mVendor };
 }
 
-wxString AudioUnitEffect::GetVersion()
+wxString AudioUnitEffect::GetVersion() const
 {
    UInt32 version;
 
@@ -907,7 +907,7 @@ wxString AudioUnitEffect::GetVersion()
                            version & 0xff);
 }
 
-TranslatableString AudioUnitEffect::GetDescription()
+TranslatableString AudioUnitEffect::GetDescription() const
 {
    /* i18n-hint: Can mean "not available," "not applicable," "no answer" */
    return XO("n/a");

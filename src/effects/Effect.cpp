@@ -112,7 +112,7 @@ EffectType Effect::GetType()
    return EffectTypeNone;
 }
 
-PluginPath Effect::GetPath()
+PluginPath Effect::GetPath() const
 {
    if (mClient)
    {
@@ -122,7 +122,7 @@ PluginPath Effect::GetPath()
    return BUILTIN_EFFECT_PREFIX + GetSymbol().Internal();
 }
 
-ComponentInterfaceSymbol Effect::GetSymbol()
+ComponentInterfaceSymbol Effect::GetSymbol() const
 {
    if (mClient)
    {
@@ -132,7 +132,7 @@ ComponentInterfaceSymbol Effect::GetSymbol()
    return {};
 }
 
-VendorSymbol Effect::GetVendor()
+VendorSymbol Effect::GetVendor() const
 {
    if (mClient)
    {
@@ -142,7 +142,7 @@ VendorSymbol Effect::GetVendor()
    return XO("Audacity");
 }
 
-wxString Effect::GetVersion()
+wxString Effect::GetVersion() const
 {
    if (mClient)
    {
@@ -152,7 +152,7 @@ wxString Effect::GetVersion()
    return AUDACITY_VERSION_STRING;
 }
 
-TranslatableString Effect::GetDescription()
+TranslatableString Effect::GetDescription() const
 {
    if (mClient)
    {

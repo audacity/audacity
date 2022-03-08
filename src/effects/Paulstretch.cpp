@@ -107,12 +107,12 @@ EffectPaulstretch::~EffectPaulstretch()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectPaulstretch::GetSymbol()
+ComponentInterfaceSymbol EffectPaulstretch::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectPaulstretch::GetDescription()
+TranslatableString EffectPaulstretch::GetDescription() const
 {
    return XO("Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
 }

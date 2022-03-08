@@ -139,12 +139,12 @@ EffectReverb::~EffectReverb()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectReverb::GetSymbol()
+ComponentInterfaceSymbol EffectReverb::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectReverb::GetDescription()
+TranslatableString EffectReverb::GetDescription() const
 {
    return XO("Adds ambience or a \"hall effect\"");
 }

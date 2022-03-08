@@ -96,12 +96,12 @@ EffectWahwah::~EffectWahwah()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectWahwah::GetSymbol()
+ComponentInterfaceSymbol EffectWahwah::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectWahwah::GetDescription()
+TranslatableString EffectWahwah::GetDescription() const
 {
    return XO("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
 }

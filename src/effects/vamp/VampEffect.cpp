@@ -87,27 +87,27 @@ VampEffect::~VampEffect()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath VampEffect::GetPath()
+PluginPath VampEffect::GetPath() const
 {
    return mPath;
 }
 
-ComponentInterfaceSymbol VampEffect::GetSymbol()
+ComponentInterfaceSymbol VampEffect::GetSymbol() const
 {
    return mName;
 }
 
-VendorSymbol VampEffect::GetVendor()
+VendorSymbol VampEffect::GetVendor() const
 {
    return { wxString::FromUTF8(mPlugin->getMaker().c_str()) };
 }
 
-wxString VampEffect::GetVersion()
+wxString VampEffect::GetVersion() const
 {
    return wxString::Format(wxT("%d"), mPlugin->getPluginVersion());
 }
 
-TranslatableString VampEffect::GetDescription()
+TranslatableString VampEffect::GetDescription() const
 {
    return Verbatim(
       wxString::FromUTF8(mPlugin->getCopyright().c_str()) );

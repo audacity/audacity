@@ -203,7 +203,7 @@ NyquistEffect::~NyquistEffect()
 
 // ComponentInterface implementation
 
-PluginPath NyquistEffect::GetPath()
+PluginPath NyquistEffect::GetPath() const
 {
    if (mIsPrompt)
       return NYQUIST_PROMPT_ID;
@@ -211,7 +211,7 @@ PluginPath NyquistEffect::GetPath()
    return mFileName.GetFullPath();
 }
 
-ComponentInterfaceSymbol NyquistEffect::GetSymbol()
+ComponentInterfaceSymbol NyquistEffect::GetSymbol() const
 {
    if (mIsPrompt)
       return { NYQUIST_PROMPT_ID, NYQUIST_PROMPT_NAME };
@@ -219,7 +219,7 @@ ComponentInterfaceSymbol NyquistEffect::GetSymbol()
    return mName;
 }
 
-VendorSymbol NyquistEffect::GetVendor()
+VendorSymbol NyquistEffect::GetVendor() const
 {
    if (mIsPrompt)
    {
@@ -229,14 +229,14 @@ VendorSymbol NyquistEffect::GetVendor()
    return mAuthor;
 }
 
-wxString NyquistEffect::GetVersion()
+wxString NyquistEffect::GetVersion() const
 {
    // Are Nyquist version strings really supposed to be translatable?
    // See commit a06e561 which used XO for at least one of them
    return mReleaseVersion.Translation();
 }
 
-TranslatableString NyquistEffect::GetDescription()
+TranslatableString NyquistEffect::GetDescription() const
 {
    return mCopyright;
 }

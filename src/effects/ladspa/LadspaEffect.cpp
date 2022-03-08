@@ -116,12 +116,12 @@ LadspaEffectsModule::~LadspaEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath LadspaEffectsModule::GetPath()
+PluginPath LadspaEffectsModule::GetPath() const
 {
    return {};
 }
 
-ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol()
+ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol() const
 {
    /* i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
       (Application programming interface)
@@ -129,18 +129,18 @@ ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol()
    return XO("LADSPA Effects");
 }
 
-VendorSymbol LadspaEffectsModule::GetVendor()
+VendorSymbol LadspaEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
 
-wxString LadspaEffectsModule::GetVersion()
+wxString LadspaEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return LADSPAEFFECTS_VERSION;
 }
 
-TranslatableString LadspaEffectsModule::GetDescription()
+TranslatableString LadspaEffectsModule::GetDescription() const
 {
    return XO("Provides LADSPA Effects");
 }
@@ -645,27 +645,27 @@ LadspaEffect::~LadspaEffect()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath LadspaEffect::GetPath()
+PluginPath LadspaEffect::GetPath() const
 {
    return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }
 
-ComponentInterfaceSymbol LadspaEffect::GetSymbol()
+ComponentInterfaceSymbol LadspaEffect::GetSymbol() const
 {
    return LAT1CTOWX(mData->Name);
 }
 
-VendorSymbol LadspaEffect::GetVendor()
+VendorSymbol LadspaEffect::GetVendor() const
 {
    return { LAT1CTOWX(mData->Maker) };
 }
 
-wxString LadspaEffect::GetVersion()
+wxString LadspaEffect::GetVersion() const
 {
    return _("n/a");
 }
 
-TranslatableString LadspaEffect::GetDescription()
+TranslatableString LadspaEffect::GetDescription() const
 {
    return Verbatim( LAT1CTOWX(mData->Copyright) );
 }

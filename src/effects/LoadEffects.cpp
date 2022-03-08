@@ -81,28 +81,28 @@ BuiltinEffectsModule::~BuiltinEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath BuiltinEffectsModule::GetPath()
+PluginPath BuiltinEffectsModule::GetPath() const
 {
    return {};
 }
 
-ComponentInterfaceSymbol BuiltinEffectsModule::GetSymbol()
+ComponentInterfaceSymbol BuiltinEffectsModule::GetSymbol() const
 {
    return XO("Builtin Effects");
 }
 
-VendorSymbol BuiltinEffectsModule::GetVendor()
+VendorSymbol BuiltinEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
 
-wxString BuiltinEffectsModule::GetVersion()
+wxString BuiltinEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return AUDACITY_VERSION_STRING;
 }
 
-TranslatableString BuiltinEffectsModule::GetDescription()
+TranslatableString BuiltinEffectsModule::GetDescription() const
 {
    return XO("Provides builtin effects to Audacity");
 }

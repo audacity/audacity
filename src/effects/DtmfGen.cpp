@@ -100,12 +100,12 @@ EffectDtmf::~EffectDtmf()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectDtmf::GetSymbol()
+ComponentInterfaceSymbol EffectDtmf::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectDtmf::GetDescription()
+TranslatableString EffectDtmf::GetDescription() const
 {
    return XO("Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones");
 }

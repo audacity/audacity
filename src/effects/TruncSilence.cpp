@@ -161,12 +161,12 @@ EffectTruncSilence::~EffectTruncSilence()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectTruncSilence::GetSymbol()
+ComponentInterfaceSymbol EffectTruncSilence::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectTruncSilence::GetDescription()
+TranslatableString EffectTruncSilence::GetDescription() const
 {
    return XO("Automatically reduces the length of passages where the volume is below a specified level");
 }

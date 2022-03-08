@@ -66,12 +66,12 @@ EffectRepeat::~EffectRepeat()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectRepeat::GetSymbol()
+ComponentInterfaceSymbol EffectRepeat::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectRepeat::GetDescription()
+TranslatableString EffectRepeat::GetDescription() const
 {
    return XO("Repeats the selection the specified number of times");
 }

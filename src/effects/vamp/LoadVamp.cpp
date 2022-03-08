@@ -64,28 +64,28 @@ VampEffectsModule::~VampEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath VampEffectsModule::GetPath()
+PluginPath VampEffectsModule::GetPath() const
 {
    return {};
 }
 
-ComponentInterfaceSymbol VampEffectsModule::GetSymbol()
+ComponentInterfaceSymbol VampEffectsModule::GetSymbol() const
 {
    return XO("Vamp Effects");
 }
 
-VendorSymbol VampEffectsModule::GetVendor()
+VendorSymbol VampEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
 
-wxString VampEffectsModule::GetVersion()
+wxString VampEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return VAMPEFFECTS_VERSION;
 }
 
-TranslatableString VampEffectsModule::GetDescription()
+TranslatableString VampEffectsModule::GetDescription() const
 {
    return XO("Provides Vamp Effects support to Audacity");
 }

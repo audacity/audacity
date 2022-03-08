@@ -339,7 +339,7 @@ EffectEqualization::~EffectEqualization()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectEqualization::GetSymbol()
+ComponentInterfaceSymbol EffectEqualization::GetSymbol() const
 {
    if( mOptions == kEqOptionGraphic )
       return EffectEqualizationGraphic::Symbol;
@@ -348,7 +348,7 @@ ComponentInterfaceSymbol EffectEqualization::GetSymbol()
    return EffectEqualization::Symbol;
 }
 
-TranslatableString EffectEqualization::GetDescription()
+TranslatableString EffectEqualization::GetDescription() const
 {
    return XO("Adjusts the volume levels of particular frequencies");
 }

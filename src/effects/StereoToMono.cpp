@@ -39,12 +39,12 @@ EffectStereoToMono::~EffectStereoToMono()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectStereoToMono::GetSymbol()
+ComponentInterfaceSymbol EffectStereoToMono::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectStereoToMono::GetDescription()
+TranslatableString EffectStereoToMono::GetDescription() const
 {
    return XO("Converts stereo tracks to mono");
 }

@@ -112,12 +112,12 @@ KeyConfigPrefs::KeyConfigPrefs(
    Bind(wxEVT_SHOW, &KeyConfigPrefs::OnShow, this);
 }
 
-ComponentInterfaceSymbol KeyConfigPrefs::GetSymbol()
+ComponentInterfaceSymbol KeyConfigPrefs::GetSymbol() const
 {
    return KEY_CONFIG_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString KeyConfigPrefs::GetDescription()
+TranslatableString KeyConfigPrefs::GetDescription() const
 {
    return XO("Preferences for KeyConfig");
 }

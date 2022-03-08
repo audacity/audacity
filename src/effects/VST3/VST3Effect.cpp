@@ -261,27 +261,27 @@ VST3Effect::VST3Effect(
 }
 
 
-PluginPath VST3Effect::GetPath()
+PluginPath VST3Effect::GetPath() const
 {
    return VST3Utils::MakePluginPathString( { mModule->getPath() }, mEffectClassInfo.ID().toString());
 }
 
-ComponentInterfaceSymbol VST3Effect::GetSymbol()
+ComponentInterfaceSymbol VST3Effect::GetSymbol() const
 {
    return wxString { mEffectClassInfo.name() };
 }
 
-VendorSymbol VST3Effect::GetVendor()
+VendorSymbol VST3Effect::GetVendor() const
 {
    return wxString { mEffectClassInfo.vendor() };
 }
 
-wxString VST3Effect::GetVersion()
+wxString VST3Effect::GetVersion() const
 {
    return mEffectClassInfo.version();
 }
 
-TranslatableString VST3Effect::GetDescription()
+TranslatableString VST3Effect::GetDescription() const
 {
    //i18n-hint VST3 effect description string
    return XO("SubCategories: %s").Format( mEffectClassInfo.subCategoriesString() );

@@ -63,9 +63,9 @@ AudacityCommand::~AudacityCommand()
 }
 
 
-PluginPath AudacityCommand::GetPath(){        return BUILTIN_GENERIC_COMMAND_PREFIX + GetSymbol().Internal(); }
-VendorSymbol AudacityCommand::GetVendor(){      return XO("Audacity");}
-wxString AudacityCommand::GetVersion(){     return AUDACITY_VERSION_STRING;}
+PluginPath AudacityCommand::GetPath() const {        return BUILTIN_GENERIC_COMMAND_PREFIX + GetSymbol().Internal(); }
+VendorSymbol AudacityCommand::GetVendor() const {      return XO("Audacity");}
+wxString AudacityCommand::GetVersion()  const {     return AUDACITY_VERSION_STRING;}
 
 
 bool AudacityCommand::Init(){

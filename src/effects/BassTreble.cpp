@@ -88,12 +88,12 @@ EffectBassTreble::~EffectBassTreble()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectBassTreble::GetSymbol()
+ComponentInterfaceSymbol EffectBassTreble::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectBassTreble::GetDescription()
+TranslatableString EffectBassTreble::GetDescription() const
 {
    return XO("Simple tone control effect");
 }

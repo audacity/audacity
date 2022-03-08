@@ -154,12 +154,12 @@ DirectoriesPrefs::~DirectoriesPrefs()
 {
 }
 
-ComponentInterfaceSymbol DirectoriesPrefs::GetSymbol()
+ComponentInterfaceSymbol DirectoriesPrefs::GetSymbol() const
 {
    return DIRECTORIES_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString DirectoriesPrefs::GetDescription()
+TranslatableString DirectoriesPrefs::GetDescription() const
 {
    return XO("Preferences for Directories");
 }

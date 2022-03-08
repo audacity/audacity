@@ -188,12 +188,12 @@ EffectDistortion::~EffectDistortion()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectDistortion::GetSymbol()
+ComponentInterfaceSymbol EffectDistortion::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectDistortion::GetDescription()
+TranslatableString EffectDistortion::GetDescription() const
 {
    return XO("Waveshaping distortion effect");
 }

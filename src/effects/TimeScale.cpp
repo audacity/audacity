@@ -91,12 +91,12 @@ EffectTimeScale::~EffectTimeScale()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectTimeScale::GetSymbol()
+ComponentInterfaceSymbol EffectTimeScale::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectTimeScale::GetDescription()
+TranslatableString EffectTimeScale::GetDescription() const
 {
    return XO("Allows continuous changes to the tempo and/or pitch");
 }

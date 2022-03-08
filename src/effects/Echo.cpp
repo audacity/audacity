@@ -57,12 +57,12 @@ EffectEcho::~EffectEcho()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectEcho::GetSymbol()
+ComponentInterfaceSymbol EffectEcho::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectEcho::GetDescription()
+TranslatableString EffectEcho::GetDescription() const
 {
    return XO("Repeats the selected audio again and again");
 }

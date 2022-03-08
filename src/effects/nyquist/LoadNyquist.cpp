@@ -93,28 +93,28 @@ NyquistEffectsModule::~NyquistEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath NyquistEffectsModule::GetPath()
+PluginPath NyquistEffectsModule::GetPath() const
 {
    return {};
 }
 
-ComponentInterfaceSymbol NyquistEffectsModule::GetSymbol()
+ComponentInterfaceSymbol NyquistEffectsModule::GetSymbol() const
 {
    return XO("Nyquist Effects");
 }
 
-VendorSymbol NyquistEffectsModule::GetVendor()
+VendorSymbol NyquistEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
 
-wxString NyquistEffectsModule::GetVersion()
+wxString NyquistEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return NYQUISTEFFECTS_VERSION;
 }
 
-TranslatableString NyquistEffectsModule::GetDescription()
+TranslatableString NyquistEffectsModule::GetDescription() const
 {
    return XO("Provides Nyquist Effects support to Audacity");
 }

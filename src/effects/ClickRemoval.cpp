@@ -83,12 +83,12 @@ EffectClickRemoval::~EffectClickRemoval()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectClickRemoval::GetSymbol()
+ComponentInterfaceSymbol EffectClickRemoval::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectClickRemoval::GetDescription()
+TranslatableString EffectClickRemoval::GetDescription() const
 {
    return XO("Click Removal is designed to remove clicks on audio tracks");
 }

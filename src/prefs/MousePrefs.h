@@ -24,8 +24,8 @@ class MousePrefs final : public PrefsPanel
  public:
    MousePrefs(wxWindow * parent, wxWindowID winid);
    ~MousePrefs();
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
 
    bool Commit() override;
    ManualPageID HelpPageName() override;

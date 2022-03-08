@@ -38,8 +38,8 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
    ManualPageID ManualPage() override;
 
    // EffectDefinitionInterface implementation

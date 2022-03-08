@@ -431,17 +431,17 @@ LV2Effect::~LV2Effect()
 // ComponentInterface Implementation
 // ============================================================================
 
-PluginPath LV2Effect::GetPath()
+PluginPath LV2Effect::GetPath() const
 {
    return LilvString(lilv_plugin_get_uri(mPlug));
 }
 
-ComponentInterfaceSymbol LV2Effect::GetSymbol()
+ComponentInterfaceSymbol LV2Effect::GetSymbol() const
 {
    return LilvString(lilv_plugin_get_name(mPlug), true);
 }
 
-VendorSymbol LV2Effect::GetVendor()
+VendorSymbol LV2Effect::GetVendor() const
 {
    wxString vendor = LilvString(lilv_plugin_get_author_name(mPlug), true);
 
@@ -453,12 +453,12 @@ VendorSymbol LV2Effect::GetVendor()
    return {vendor};
 }
 
-wxString LV2Effect::GetVersion()
+wxString LV2Effect::GetVersion() const
 {
    return wxT("1.0");
 }
 
-TranslatableString LV2Effect::GetDescription()
+TranslatableString LV2Effect::GetDescription() const
 {
    return XO("n/a");
 }
