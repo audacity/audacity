@@ -63,7 +63,7 @@ static const GUID DSIID_IKsPropertySet =
 typedef HRESULT (CALLBACK *GCO) (REFCLSID, REFIID, LPVOID *);
 
 // Apparently sometimes IKsPropertySet_Get succeeds and does not change
-// the value of WaveDeviceId.  So use a crazy device index (we cant use 
+// the value of WaveDeviceId.  So use a crazy device index (we can't use 
 // ((UINT) -1) because this is for the WAVE_MAPPER.
 // I believe the wave ids just start from zero so I think -111 is an acceptable value
 // I suspect this happens with USB Devices.
