@@ -102,9 +102,9 @@ class AUDACITY_DLL_API PrefsPanel /* not final */
    virtual bool Commit() = 0; // used to be called "Apply"
 
 
-   virtual PluginPath GetPath() const;
-   virtual VendorSymbol GetVendor() const;
-   virtual wxString GetVersion() const;
+   virtual PluginPath GetPath() const override;
+   virtual VendorSymbol GetVendor() const override;
+   virtual wxString GetVersion() const override;
 
    //virtual ComponentInterfaceSymbol GetSymbol();
    //virtual wxString GetDescription();
