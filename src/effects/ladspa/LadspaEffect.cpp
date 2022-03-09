@@ -1151,7 +1151,13 @@ bool LadspaEffect::LoadFactoryPreset(int WXUNUSED(id))
    return true;
 }
 
-bool LadspaEffect::LoadFactoryDefaults()
+bool LadspaEffect::LoadFactoryDefaults(EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<LadspaEffect*>(this)->DoLoadFactoryDefaults();
+}
+
+bool LadspaEffect::DoLoadFactoryDefaults()
 {
    if (!LoadParameters(FactoryDefaultsGroup()))
    {

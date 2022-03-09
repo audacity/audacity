@@ -169,11 +169,17 @@ EffectType EffectChangePitch::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectChangePitch::LoadFactoryDefaults()
+bool EffectChangePitch::LoadFactoryDefaults(EffectSettings &settings) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<EffectChangePitch&>(*this).DoLoadFactoryDefaults(settings);
+}
+
+bool EffectChangePitch::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    DeduceFrequencies();
 
-   return Effect::LoadFactoryDefaults();
+   return Effect::LoadFactoryDefaults(settings);
 }
 
 // Effect implementation

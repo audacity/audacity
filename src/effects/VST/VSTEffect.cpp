@@ -299,7 +299,7 @@ public:
 
    RegistryPaths GetFactoryPresets() const override { return {}; }
    bool LoadFactoryPreset(int) override { return true; }
-   bool LoadFactoryDefaults() override { return true; }
+   bool LoadFactoryDefaults(EffectSettings &) const override { return true; }
 
 public:
    wxString mPath;
@@ -1714,7 +1714,13 @@ bool VSTEffect::LoadFactoryPreset(int id)
    return true;
 }
 
-bool VSTEffect::LoadFactoryDefaults()
+bool VSTEffect::LoadFactoryDefaults(EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<VSTEffect*>(this)->DoLoadFactoryDefaults();
+}
+
+bool VSTEffect::DoLoadFactoryDefaults()
 {
    if (!LoadParameters(FactoryDefaultsGroup()))
    {

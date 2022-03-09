@@ -265,8 +265,6 @@ public:
 
    //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
    virtual bool LoadFactoryPreset(int id) = 0;
-   //! Change settings back to "factory default"
-   virtual bool LoadFactoryDefaults() = 0;
    //! @}
 
    /*! @name settings
@@ -285,7 +283,6 @@ public:
    bool LoadUserPreset(
       const RegistryPath & name, Settings &settings) const override;
    bool LoadFactoryPreset(int id, Settings &settings) const override;
-   bool LoadFactoryDefaults(Settings &settings) const override;
    //! @}
 
 private:

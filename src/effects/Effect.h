@@ -119,7 +119,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
+   bool LoadFactoryDefaults(Settings &settings) const override;
 
    // EffectProcessor implementation
 

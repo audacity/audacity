@@ -1713,7 +1713,13 @@ bool LV2Effect::LoadFactoryPreset(int id)
    return state != NULL;
 }
 
-bool LV2Effect::LoadFactoryDefaults()
+bool LV2Effect::LoadFactoryDefaults(EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<LV2Effect*>(this)->DoLoadFactoryDefaults();
+}
+
+bool LV2Effect::DoLoadFactoryDefaults()
 {
    if (!LoadParameters(FactoryDefaultsGroup()))
    {

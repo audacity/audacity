@@ -559,14 +559,14 @@ bool Effect::LoadFactoryPreset(int id)
    return true;
 }
 
-bool Effect::LoadFactoryDefaults()
+bool Effect::LoadFactoryDefaults(Settings &settings) const
 {
    if (mClient)
    {
-      return mClient->LoadFactoryDefaults();
+      return mClient->LoadFactoryDefaults(settings);
    }
 
-   return LoadUserPreset(FactoryDefaultsGroup());
+   return const_cast<Effect*>(this)->LoadUserPreset(FactoryDefaultsGroup());
 }
 
 // EffectUIClientInterface implementation

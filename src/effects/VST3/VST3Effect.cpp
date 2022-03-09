@@ -481,7 +481,13 @@ bool VST3Effect::LoadFactoryPreset(int id)
    return true;
 }
 
-bool VST3Effect::LoadFactoryDefaults()
+bool VST3Effect::LoadFactoryDefaults(EffectSettings &) const
+{
+   // To do: externalize state
+   return DoLoadFactoryDefaults();
+}
+
+bool VST3Effect::DoLoadFactoryDefaults() const
 {
    using namespace Steinberg;
    if(mComponentHandler == nullptr)
@@ -849,7 +855,7 @@ bool VST3Effect::InitializeInstance(EffectHostInterface* host)
    {
       ReloadUserOptions();
       if(!LoadUserPreset(CurrentSettingsGroup()))
-         LoadFactoryDefaults();
+         DoLoadFactoryDefaults();
    }
    return true;
 }

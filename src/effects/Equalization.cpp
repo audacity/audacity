@@ -413,8 +413,13 @@ bool EffectEqualization::VisitSettings( SettingsVisitor &S )
    return true;
 }
 
-// This function Apparently not used anymore.
-bool EffectEqualization::LoadFactoryDefaults()
+bool EffectEqualization::LoadFactoryDefaults(EffectSettings &settings) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<EffectEqualization&>(*this).DoLoadFactoryDefaults(settings);
+}
+
+bool EffectEqualization::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    mdBMin = dBMin.def;
    mdBMax = dBMax.def;
@@ -426,7 +431,7 @@ bool EffectEqualization::LoadFactoryDefaults()
    if( mOptions == kEqOptionGraphic)
       mDrawMode = false;
 
-   return Effect::LoadFactoryDefaults();
+   return Effect::LoadFactoryDefaults(settings);
 }
 
 // Constants determining who the prests are for.

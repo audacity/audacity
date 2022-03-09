@@ -152,7 +152,13 @@ size_t EffectAmplify::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool EffectAmplify::LoadFactoryDefaults()
+bool EffectAmplify::LoadFactoryDefaults(EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<EffectAmplify&>(*this).DoLoadFactoryDefaults();
+}
+
+bool EffectAmplify::DoLoadFactoryDefaults()
 {
    Init();
 

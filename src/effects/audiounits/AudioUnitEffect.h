@@ -74,7 +74,7 @@ public:
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
+   bool LoadFactoryDefaults(EffectSettings &settings) const override;
 
    // EffectProcessor implementation
 
