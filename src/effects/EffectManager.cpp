@@ -716,22 +716,20 @@ wxString EffectManager::GetDefaultPreset(const PluginID & ID)
    return preset;
 }
 
-void EffectManager::SetBatchProcessing(const PluginID & ID, bool start)
+void EffectManager::BatchProcessingOn(const PluginID & ID)
 {
-   auto effect = GetEffect(ID);
-   if (effect)
-   {
-      effect->SetBatchProcessing(start);
-      return;
-   }
+   if (auto effect = GetEffect(ID))
+      effect->SetBatchProcessing();
+   else if (auto command = GetAudacityCommand(ID))
+      command->SetBatchProcessing(true);
+}
 
-   AudacityCommand *command = GetAudacityCommand(ID);
-   if (command)
-   {
-      command->SetBatchProcessing(start);
-      return;
-   }
-
+void EffectManager::BatchProcessingOff(const PluginID & ID)
+{
+   if (auto effect = GetEffect(ID))
+      effect->UnsetBatchProcessing();
+   else if (auto command = GetAudacityCommand(ID))
+      command->SetBatchProcessing(false);
 }
 
 EffectUIHostInterface *EffectManager::GetEffect(const PluginID & ID)

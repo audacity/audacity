@@ -187,7 +187,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool GetAutomationParametersAsString(wxString & parms) const override;
    bool SetAutomationParametersFromString(const wxString & parms) override;
    bool IsBatchProcessing() const override;
-   void SetBatchProcessing(bool start) override;
+   void SetBatchProcessing() override;
+   void UnsetBatchProcessing() override;
    bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
       double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,

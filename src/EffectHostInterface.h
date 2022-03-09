@@ -96,7 +96,8 @@ public:
    virtual bool GetAutomationParametersAsString(wxString & parms) const = 0;
    virtual bool SetAutomationParametersFromString(const wxString & parms) = 0;
    virtual bool IsBatchProcessing() const = 0;
-   virtual void SetBatchProcessing(bool start) = 0;
+   virtual void SetBatchProcessing() = 0;
+   virtual void UnsetBatchProcessing() = 0;
 
    //! Unfortunately complicated dual-use function
    /*!

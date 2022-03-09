@@ -119,19 +119,26 @@ public:
    wxString GetDefaultPreset(const PluginID & ID);
 
 private:
-   void SetBatchProcessing(const PluginID & ID, bool start);
+   void BatchProcessingOn(const PluginID & ID);
+   void BatchProcessingOff(const PluginID & ID);
+   //! A custom deleter for std::unique_ptr
    struct UnsetBatchProcessing {
       PluginID mID;
       void operator () (EffectManager *p) const
-         { if(p) p->SetBatchProcessing(mID, false); }
+         { if(p) p->BatchProcessingOff(mID); }
    };
    using BatchProcessingScope =
       std::unique_ptr< EffectManager, UnsetBatchProcessing >;
 public:
-   // RAII for the function above
+   //! Begin a scope that ends when the returned object is destroyed
+   /*!
+    Within this scope, "batch" (i.e. macro) processing happens, and
+    Effects that are not yet stateless may change their state temporarily,
+    but it is restored afterward
+    */
    BatchProcessingScope SetBatchProcessing(const PluginID &ID)
    {
-      SetBatchProcessing(ID, true); return BatchProcessingScope{ this, {ID} };
+      BatchProcessingOn(ID); return BatchProcessingScope{ this, {ID} };
    }
 
    /** Allow effects to disable saving the state at run time */

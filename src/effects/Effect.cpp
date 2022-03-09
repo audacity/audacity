@@ -880,18 +880,19 @@ bool Effect::IsBatchProcessing() const
    return mIsBatch;
 }
 
-void Effect::SetBatchProcessing(bool start)
+void Effect::SetBatchProcessing()
 {
-   mIsBatch = start;
+   mIsBatch = true;
+   // Save effect's internal state in a special registry path
+   // just for this purpose
+   SaveUserPreset(GetSavedStateGroup());
+}
 
-   if (start)
-   {
-      SaveUserPreset(GetSavedStateGroup());
-   }
-   else
-   {
-      LoadUserPreset(GetSavedStateGroup());
-   }
+void Effect::UnsetBatchProcessing()
+{
+   mIsBatch = false;
+   // Restore effect's internal state from registry
+   LoadUserPreset(GetSavedStateGroup());
 }
 
 // TODO:  Lift the possible user-prompting part out of this function, so that

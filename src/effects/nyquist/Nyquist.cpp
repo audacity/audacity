@@ -1055,7 +1055,7 @@ int NyquistEffect::ShowHostInterface(
 
    if (IsBatchProcessing())
    {
-      effect.SetBatchProcessing(true);
+      effect.SetBatchProcessing();
       effect.SetCommand(mInputCmd);
 
       CommandParameters cp;
