@@ -734,7 +734,7 @@ void Effect::ShowOptions()
 
 // EffectHostInterface implementation
 
-EffectDefinitionInterface &Effect::GetDefinition()
+const EffectDefinitionInterface& Effect::GetDefinition()
 {
    return mClient ? *mClient : *this;
 }

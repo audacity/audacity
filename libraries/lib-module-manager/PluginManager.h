@@ -230,7 +230,7 @@ public:
 
    static PluginID GetID(ModuleInterface *module);
    static PluginID GetID(ComponentInterface *command);
-   static PluginID GetID(EffectDefinitionInterface *effect);
+   static PluginID GetID(const EffectDefinitionInterface* effect);
 
    // This string persists in configuration files
    // So config compatibility will break if it is changed across Audacity versions
