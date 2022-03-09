@@ -91,21 +91,21 @@ TranslatableString EffectNoise::GetDescription() const
    return XO("Generates one of three different types of noise");
 }
 
-ManualPageID EffectNoise::ManualPage()
+ManualPageID EffectNoise::ManualPage() const
 {
    return L"Noise";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNoise::GetType()
+EffectType EffectNoise::GetType() const
 {
    return EffectTypeGenerate;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectNoise::GetAudioOutCount()
+unsigned EffectNoise::GetAudioOutCount() const
 {
    return 1;
 }

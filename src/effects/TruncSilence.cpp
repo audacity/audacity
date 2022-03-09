@@ -171,14 +171,14 @@ TranslatableString EffectTruncSilence::GetDescription() const
    return XO("Automatically reduces the length of passages where the volume is below a specified level");
 }
 
-ManualPageID EffectTruncSilence::ManualPage()
+ManualPageID EffectTruncSilence::ManualPage() const
 {
    return L"Truncate_Silence";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectTruncSilence::GetType()
+EffectType EffectTruncSilence::GetType() const
 {
    return EffectTypeProcess;
 }

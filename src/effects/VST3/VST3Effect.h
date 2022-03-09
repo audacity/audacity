@@ -100,12 +100,12 @@ public:
    wxString GetVersion() const override;
    TranslatableString GetDescription() const override;
 
-   EffectType GetType() override;
-   EffectFamilySymbol GetFamily() override;
-   bool IsInteractive() override;
-   bool IsDefault() override;
-   bool SupportsRealtime() override;
-   bool SupportsAutomation() override;
+   EffectType GetType() const override;
+   EffectFamilySymbol GetFamily() const override;
+   bool IsInteractive() const override;
+   bool IsDefault() const override;
+   bool SupportsRealtime() const override;
+   bool SupportsAutomation() const override;
    bool GetAutomationParameters(CommandParameters& parms) override;
    bool SetAutomationParameters(CommandParameters& parms) override;
    bool LoadUserPreset(const RegistryPath& name) override;
@@ -114,8 +114,8 @@ public:
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
    int GetMidiInCount() override;
    int GetMidiOutCount() override;
    void SetSampleRate(double rate) override;

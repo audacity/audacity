@@ -467,7 +467,7 @@ TranslatableString LV2Effect::GetDescription() const
 // EffectDefinitionInterface Implementation
 // ============================================================================
 
-EffectType LV2Effect::GetType()
+EffectType LV2Effect::GetType() const
 {
    if (GetAudioInCount() == 0 && GetAudioOutCount() == 0)
    {
@@ -487,27 +487,27 @@ EffectType LV2Effect::GetType()
    return EffectTypeProcess;
 }
 
-EffectFamilySymbol LV2Effect::GetFamily()
+EffectFamilySymbol LV2Effect::GetFamily() const
 {
    return LV2EFFECTS_FAMILY;
 }
 
-bool LV2Effect::IsInteractive()
+bool LV2Effect::IsInteractive() const
 {
    return mControlPorts.size() != 0;
 }
 
-bool LV2Effect::IsDefault()
+bool LV2Effect::IsDefault() const
 {
    return false;
 }
 
-bool LV2Effect::SupportsRealtime()
+bool LV2Effect::SupportsRealtime() const
 {
    return GetType() == EffectTypeProcess;
 }
 
-bool LV2Effect::SupportsAutomation()
+bool LV2Effect::SupportsAutomation() const
 {
    return true;
 }
@@ -961,12 +961,12 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-unsigned LV2Effect::GetAudioInCount()
+unsigned LV2Effect::GetAudioInCount() const
 {
    return mAudioIn;
 }
 
-unsigned LV2Effect::GetAudioOutCount()
+unsigned LV2Effect::GetAudioOutCount() const
 {
    return mAudioOut;
 }

@@ -40,12 +40,12 @@ public:
 
    ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   bool SupportsAutomation() override;
+   EffectType GetType() const override;
+   bool SupportsAutomation() const override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 

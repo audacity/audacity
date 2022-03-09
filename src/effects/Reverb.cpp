@@ -149,26 +149,26 @@ TranslatableString EffectReverb::GetDescription() const
    return XO("Adds ambience or a \"hall effect\"");
 }
 
-ManualPageID EffectReverb::ManualPage()
+ManualPageID EffectReverb::ManualPage() const
 {
    return L"Reverb";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectReverb::GetType()
+EffectType EffectReverb::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectReverb::GetAudioInCount()
+unsigned EffectReverb::GetAudioInCount() const
 {
    return mParams.mStereoWidth ? 2 : 1;
 }
 
-unsigned EffectReverb::GetAudioOutCount()
+unsigned EffectReverb::GetAudioOutCount() const
 {
    return mParams.mStereoWidth ? 2 : 1;
 }

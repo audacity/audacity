@@ -260,32 +260,32 @@ public:
       return mDescription;
    }
 
-   EffectFamilySymbol GetFamily() override
+   EffectFamilySymbol GetFamily() const override
    {
       return VSTPLUGINTYPE;
    }
 
-   EffectType GetType() override
+   EffectType GetType() const override
    {
       return mType;
    }
 
-   bool IsInteractive() override
+   bool IsInteractive() const override
    {
       return mInteractive;
    }
 
-   bool IsDefault() override
+   bool IsDefault() const override
    {
       return false;
    }
 
-   bool SupportsRealtime() override
+   bool SupportsRealtime() const override
    {
       return mType == EffectTypeProcess;
    }
 
-   bool SupportsAutomation() override
+   bool SupportsAutomation() const override
    {
       return mAutomatable;
    }
@@ -1245,7 +1245,7 @@ TranslatableString VSTEffect::GetDescription() const
 // EffectDefinitionInterface Implementation
 // ============================================================================
 
-EffectType VSTEffect::GetType()
+EffectType VSTEffect::GetType() const
 {
    if (mAudioIns == 0 && mAudioOuts == 0 && mMidiIns == 0 && mMidiOuts == 0)
    {
@@ -1266,27 +1266,27 @@ EffectType VSTEffect::GetType()
 }
 
 
-EffectFamilySymbol VSTEffect::GetFamily()
+EffectFamilySymbol VSTEffect::GetFamily() const
 {
    return VSTPLUGINTYPE;
 }
 
-bool VSTEffect::IsInteractive()
+bool VSTEffect::IsInteractive() const
 {
    return mInteractive;
 }
 
-bool VSTEffect::IsDefault()
+bool VSTEffect::IsDefault() const
 {
    return false;
 }
 
-bool VSTEffect::SupportsRealtime()
+bool VSTEffect::SupportsRealtime() const
 {
    return GetType() == EffectTypeProcess;
 }
 
-bool VSTEffect::SupportsAutomation()
+bool VSTEffect::SupportsAutomation() const
 {
    return mAutomatable;
 }
@@ -1344,12 +1344,12 @@ bool VSTEffect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-unsigned VSTEffect::GetAudioInCount()
+unsigned VSTEffect::GetAudioInCount() const
 {
    return mAudioIns;
 }
 
-unsigned VSTEffect::GetAudioOutCount()
+unsigned VSTEffect::GetAudioOutCount() const
 {
    return mAudioOuts;
 }

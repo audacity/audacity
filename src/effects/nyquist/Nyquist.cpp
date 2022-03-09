@@ -194,7 +194,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    ParseFile();
 
    if (!mOK && mInitError.empty())
-      mInitError = XO("Ill-formed Nyquist plug-in header");
+      mInitError = XO("Ill-formed Nyquist plug-in header");   
 }
 
 NyquistEffect::~NyquistEffect()
@@ -241,48 +241,55 @@ TranslatableString NyquistEffect::GetDescription() const
    return mCopyright;
 }
 
-ManualPageID NyquistEffect::ManualPage()
+ManualPageID NyquistEffect::ManualPage() const
 {
       return mIsPrompt
          ? wxString("Nyquist_Prompt")
          : mManPage;
 }
 
-FilePath NyquistEffect::HelpPage()
+
+std::pair<bool, FilePath> NyquistEffect::CheckHelpPage() const
 {
    auto paths = NyquistEffect::GetNyquistSearchPath();
    wxString fileName;
 
    for (size_t i = 0, cnt = paths.size(); i < cnt; i++) {
       fileName = wxFileName(paths[i] + wxT("/") + mHelpFile).GetFullPath();
-      if (wxFileExists(fileName)) {
-         mHelpFileExists = true;
-         return fileName;
+      if (wxFileExists(fileName))
+      {
+         return { true, fileName };
       }
    }
-   return wxEmptyString;
+   return { false, wxEmptyString };
+}
+
+
+FilePath NyquistEffect::HelpPage() const
+{
+   return mHelpPage;
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType NyquistEffect::GetType()
+EffectType NyquistEffect::GetType() const
 {
    return mType;
 }
 
-EffectType NyquistEffect::GetClassification()
+EffectType NyquistEffect::GetClassification() const
 {
    if (mIsTool)
       return EffectTypeTool;
    return mType;
 }
 
-EffectFamilySymbol NyquistEffect::GetFamily()
+EffectFamilySymbol NyquistEffect::GetFamily() const
 {
    return NYQUISTEFFECTS_FAMILY;
 }
 
-bool NyquistEffect::IsInteractive()
+bool NyquistEffect::IsInteractive() const
 {
    if (mIsPrompt)
    {
@@ -292,7 +299,7 @@ bool NyquistEffect::IsInteractive()
    return mControls.size() != 0;
 }
 
-bool NyquistEffect::IsDefault()
+bool NyquistEffect::IsDefault() const
 {
    return mIsPrompt;
 }
@@ -1088,7 +1095,7 @@ NyquistEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool NyquistEffect::EnablesDebug()
+bool NyquistEffect::EnablesDebug() const
 {
    return mDebugButton;
 }
@@ -2420,6 +2427,10 @@ or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .")
       return false;
       // Else just throw it at Nyquist to see what happens
    }
+
+   const auto helpStuff = CheckHelpPage();
+   mHelpFileExists = helpStuff.first;
+   mHelpPage       = helpStuff.second;
 
    return true;
 }

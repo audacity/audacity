@@ -50,7 +50,7 @@ TranslatableString EffectSilence::GetDescription() const
    return XO("Creates audio of zero amplitude");
 }
 
-ManualPageID EffectSilence::ManualPage()
+ManualPageID EffectSilence::ManualPage() const
 {
    return L"Silence";
 }
@@ -58,7 +58,7 @@ ManualPageID EffectSilence::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectSilence::GetType()
+EffectType EffectSilence::GetType() const
 {
    return EffectTypeGenerate;
 }

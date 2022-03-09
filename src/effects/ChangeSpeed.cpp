@@ -124,7 +124,7 @@ TranslatableString EffectChangeSpeed::GetDescription() const
    return XO("Changes the speed of a track, also changing its pitch");
 }
 
-ManualPageID EffectChangeSpeed::ManualPage()
+ManualPageID EffectChangeSpeed::ManualPage() const
 {
    return L"Change_Speed";
 }
@@ -132,7 +132,7 @@ ManualPageID EffectChangeSpeed::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectChangeSpeed::GetType()
+EffectType EffectChangeSpeed::GetType() const
 {
    return EffectTypeProcess;
 }

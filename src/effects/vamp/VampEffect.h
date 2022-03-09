@@ -52,17 +52,17 @@ public:
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   EffectFamilySymbol GetFamily() override;
-   bool IsInteractive() override;
-   bool IsDefault() override;
+   EffectType GetType() const override;
+   EffectFamilySymbol GetFamily() const override;
+   bool IsInteractive() const override;
+   bool IsDefault() const override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
+   unsigned GetAudioInCount() const override;
 
    // Effect implementation
 

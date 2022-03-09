@@ -28,18 +28,18 @@ public:
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   bool IsInteractive() override;
+   EffectType GetType() const override;
+   bool IsInteractive() const override;
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
 
    // Effect implementation
 
    bool Process(EffectSettings &settings) override;
-   bool IsHiddenFromMenus() override;
+   bool IsHiddenFromMenus() const override;
 
 private:
    // EffectStereoToMono implementation

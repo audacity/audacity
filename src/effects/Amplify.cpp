@@ -99,26 +99,26 @@ TranslatableString EffectAmplify::GetDescription() const
    return XO("Increases or decreases the volume of the audio you have selected");
 }
 
-ManualPageID EffectAmplify::ManualPage()
+ManualPageID EffectAmplify::ManualPage() const
 {
    return L"Amplify";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectAmplify::GetType()
+EffectType EffectAmplify::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectAmplify::GetAudioInCount()
+unsigned EffectAmplify::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectAmplify::GetAudioOutCount()
+unsigned EffectAmplify::GetAudioOutCount() const
 {
    return 1;
 }

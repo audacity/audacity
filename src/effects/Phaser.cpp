@@ -115,31 +115,31 @@ TranslatableString EffectPhaser::GetDescription() const
    return XO("Combines phase-shifted signals with the original signal");
 }
 
-ManualPageID EffectPhaser::ManualPage()
+ManualPageID EffectPhaser::ManualPage() const
 {
    return L"Phaser";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectPhaser::GetType()
+EffectType EffectPhaser::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectPhaser::SupportsRealtime()
+bool EffectPhaser::SupportsRealtime() const
 {
    return true;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectPhaser::GetAudioInCount()
+unsigned EffectPhaser::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectPhaser::GetAudioOutCount()
+unsigned EffectPhaser::GetAudioOutCount() const
 {
    return 1;
 }

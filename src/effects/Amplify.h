@@ -35,19 +35,19 @@ public:
 
    ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
+   EffectType GetType() const override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
    bool LoadFactoryDefaults() override;
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;

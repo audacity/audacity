@@ -106,31 +106,31 @@ TranslatableString EffectWahwah::GetDescription() const
    return XO("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
 }
 
-ManualPageID EffectWahwah::ManualPage()
+ManualPageID EffectWahwah::ManualPage() const
 {
    return L"Wahwah";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectWahwah::GetType()
+EffectType EffectWahwah::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectWahwah::SupportsRealtime()
+bool EffectWahwah::SupportsRealtime() const
 {
    return true;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectWahwah::GetAudioInCount()
+unsigned EffectWahwah::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectWahwah::GetAudioOutCount()
+unsigned EffectWahwah::GetAudioOutCount() const
 {
    return 1;
 }

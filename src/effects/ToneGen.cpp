@@ -141,7 +141,7 @@ TranslatableString EffectToneGen::GetDescription() const
       : XO("Generates a constant frequency tone of one of four types");
 }
 
-ManualPageID EffectToneGen::ManualPage()
+ManualPageID EffectToneGen::ManualPage() const
 {
    return mChirp
       ? L"Chirp"
@@ -150,14 +150,14 @@ ManualPageID EffectToneGen::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectToneGen::GetType()
+EffectType EffectToneGen::GetType() const
 {
    return EffectTypeGenerate;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectToneGen::GetAudioOutCount()
+unsigned EffectToneGen::GetAudioOutCount() const
 {
    return 1;
 }

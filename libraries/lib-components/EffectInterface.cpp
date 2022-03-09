@@ -45,27 +45,27 @@ Identifier EffectDefinitionInterface::GetSquashedName(const Identifier &ident)
 
 EffectDefinitionInterface::~EffectDefinitionInterface() = default;
 
-EffectType EffectDefinitionInterface::GetClassification()
+EffectType EffectDefinitionInterface::GetClassification() const
 {
    return GetType();
 }
 
-bool EffectDefinitionInterface::EnablesDebug()
+bool EffectDefinitionInterface::EnablesDebug() const
 {
    return false;
 }
 
-ManualPageID EffectDefinitionInterface::ManualPage()
+ManualPageID EffectDefinitionInterface::ManualPage() const
 {
    return {};
 }
 
-FilePath EffectDefinitionInterface::HelpPage()
+FilePath EffectDefinitionInterface::HelpPage() const
 {
    return {};
 }
 
-bool EffectDefinitionInterface::IsHiddenFromMenus()
+bool EffectDefinitionInterface::IsHiddenFromMenus() const
 {
    return false;
 }

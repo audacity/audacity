@@ -101,14 +101,14 @@ TranslatableString EffectTimeScale::GetDescription() const
    return XO("Allows continuous changes to the tempo and/or pitch");
 }
 
-ManualPageID EffectTimeScale::ManualPage()
+ManualPageID EffectTimeScale::ManualPage() const
 {
    return L"Sliding_Stretch";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectTimeScale::GetType()
+EffectType EffectTimeScale::GetType() const
 {
    return EffectTypeProcess;
 }

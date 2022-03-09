@@ -117,14 +117,14 @@ TranslatableString EffectPaulstretch::GetDescription() const
    return XO("Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
 }
 
-ManualPageID EffectPaulstretch::ManualPage()
+ManualPageID EffectPaulstretch::ManualPage() const
 {
    return L"Paulstretch";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectPaulstretch::GetType()
+EffectType EffectPaulstretch::GetType() const
 {
    return EffectTypeProcess;
 }

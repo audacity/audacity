@@ -57,24 +57,24 @@ TranslatableString EffectFade::GetDescription() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectFade::GetType()
+EffectType EffectFade::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectFade::IsInteractive()
+bool EffectFade::IsInteractive() const
 {
    return false;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectFade::GetAudioInCount()
+unsigned EffectFade::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectFade::GetAudioOutCount()
+unsigned EffectFade::GetAudioOutCount() const
 {
    return 1;
 }

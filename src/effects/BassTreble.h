@@ -45,19 +45,19 @@ public:
 
    ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   bool SupportsRealtime() override;
+   EffectType GetType() const override;
+   bool SupportsRealtime() const override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,

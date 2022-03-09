@@ -51,25 +51,25 @@ TranslatableString EffectStereoToMono::GetDescription() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectStereoToMono::GetType()
+EffectType EffectStereoToMono::GetType() const
 {
    // Really EffectTypeProcess, but this prevents it from showing in the Effect Menu
    return EffectTypeHidden;
 }
 
-bool EffectStereoToMono::IsInteractive()
+bool EffectStereoToMono::IsInteractive() const
 {
    return false;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectStereoToMono::GetAudioInCount()
+unsigned EffectStereoToMono::GetAudioInCount() const
 {
    return 2;
 }
 
-unsigned EffectStereoToMono::GetAudioOutCount()
+unsigned EffectStereoToMono::GetAudioOutCount() const
 {
    return 1;
 }
@@ -219,7 +219,7 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    return bResult;
 }
 
-bool EffectStereoToMono::IsHiddenFromMenus()
+bool EffectStereoToMono::IsHiddenFromMenus() const
 {
    return true;
 }

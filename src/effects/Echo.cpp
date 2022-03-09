@@ -67,26 +67,26 @@ TranslatableString EffectEcho::GetDescription() const
    return XO("Repeats the selected audio again and again");
 }
 
-ManualPageID EffectEcho::ManualPage()
+ManualPageID EffectEcho::ManualPage() const
 {
    return L"Echo";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectEcho::GetType()
+EffectType EffectEcho::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectEcho::GetAudioInCount()
+unsigned EffectEcho::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectEcho::GetAudioOutCount()
+unsigned EffectEcho::GetAudioOutCount() const
 {
    return 1;
 }

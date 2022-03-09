@@ -115,14 +115,14 @@ TranslatableString EffectCompressor::GetDescription() const
    return XO("Compresses the dynamic range of audio");
 }
 
-ManualPageID EffectCompressor::ManualPage()
+ManualPageID EffectCompressor::ManualPage() const
 {
    return L"Compressor";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectCompressor::GetType()
+EffectType EffectCompressor::GetType() const
 {
    return EffectTypeProcess;
 }

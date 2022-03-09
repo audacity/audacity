@@ -114,37 +114,37 @@ public:
    virtual ~EffectDefinitionInterface();
 
    //! Type determines how it behaves.
-   virtual EffectType GetType() = 0;
+   virtual EffectType GetType() const = 0;
 
    //! Determines which menu it appears in; default same as GetType().
-   virtual EffectType GetClassification();
+   virtual EffectType GetClassification() const;
 
    //! Report identifier and user-visible name of the effect protocol
-   virtual EffectFamilySymbol GetFamily() = 0;
+   virtual EffectFamilySymbol GetFamily() const = 0;
 
    //! Whether the effect needs a dialog for entry of settings
-   virtual bool IsInteractive() = 0;
+   virtual bool IsInteractive() const = 0;
 
    //! Whether the effect sorts "above the line" in the menus
-   virtual bool IsDefault() = 0;
+   virtual bool IsDefault() const = 0;
 
    //! Whether the effect supports realtime previewing (while audio is playing).
-   virtual bool SupportsRealtime() = 0;
+   virtual bool SupportsRealtime() const = 0;
 
    //! Whether the effect has any automatable controls.
-   virtual bool SupportsAutomation() = 0;
+   virtual bool SupportsAutomation() const = 0;
 
    //! Whether the effect dialog should have a Debug button; default, always false.
-   virtual bool EnablesDebug();
+   virtual bool EnablesDebug() const;
 
    //! Name of a page in the Audacity alpha manual, default is empty
-   virtual ManualPageID ManualPage();
+   virtual ManualPageID ManualPage() const;
 
    //! Fully qualified local help file name, default is empty
-   virtual FilePath HelpPage();
+   virtual FilePath HelpPage() const;
 
    //! Default is false
-   virtual bool IsHiddenFromMenus();
+   virtual bool IsHiddenFromMenus() const;
 
    // Some effects will use define params to define what parameters they take.
    // If they do, they won't need to implement Get or SetAutomation parameters.
@@ -327,8 +327,8 @@ class COMPONENTS_API EffectProcessor  /* not final */
 public:
    virtual ~EffectProcessor();
 
-   virtual unsigned GetAudioInCount() = 0;
-   virtual unsigned GetAudioOutCount() = 0;
+   virtual unsigned GetAudioInCount() const = 0;
+   virtual unsigned GetAudioOutCount() const = 0;
 
    virtual int GetMidiInCount() = 0;
    virtual int GetMidiOutCount() = 0;

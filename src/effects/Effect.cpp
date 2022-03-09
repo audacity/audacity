@@ -102,7 +102,7 @@ Effect::~Effect()
 
 // EffectDefinitionInterface implementation
 
-EffectType Effect::GetType()
+EffectType Effect::GetType() const
 {
    if (mClient)
    {
@@ -162,7 +162,7 @@ TranslatableString Effect::GetDescription() const
    return {};
 }
 
-EffectFamilySymbol Effect::GetFamily()
+EffectFamilySymbol Effect::GetFamily() const
 {
    if (mClient)
    {
@@ -174,7 +174,7 @@ EffectFamilySymbol Effect::GetFamily()
    return { wxT("Audacity"), XO("Built-in") };
 }
 
-bool Effect::IsInteractive()
+bool Effect::IsInteractive() const
 {
    if (mClient)
    {
@@ -184,7 +184,7 @@ bool Effect::IsInteractive()
    return true;
 }
 
-bool Effect::IsDefault()
+bool Effect::IsDefault() const
 {
    if (mClient)
    {
@@ -194,7 +194,7 @@ bool Effect::IsDefault()
    return true;
 }
 
-bool Effect::SupportsRealtime()
+bool Effect::SupportsRealtime() const
 {
    if (mClient)
    {
@@ -204,7 +204,7 @@ bool Effect::SupportsRealtime()
    return false;
 }
 
-bool Effect::SupportsAutomation()
+bool Effect::SupportsAutomation() const
 {
    if (mClient)
    {
@@ -226,7 +226,7 @@ bool Effect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-unsigned Effect::GetAudioInCount()
+unsigned Effect::GetAudioInCount() const
 {
    if (mClient)
    {
@@ -236,7 +236,7 @@ unsigned Effect::GetAudioInCount()
    return 0;
 }
 
-unsigned Effect::GetAudioOutCount()
+unsigned Effect::GetAudioOutCount() const
 {
    if (mClient)
    {

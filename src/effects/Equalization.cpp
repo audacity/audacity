@@ -353,7 +353,7 @@ TranslatableString EffectEqualization::GetDescription() const
    return XO("Adjusts the volume levels of particular frequencies");
 }
 
-ManualPageID EffectEqualization::ManualPage()
+ManualPageID EffectEqualization::ManualPage() const
 {
    // Bug 2509: Must use _ and not space in names.
    if( mOptions == kEqOptionGraphic )
@@ -365,7 +365,7 @@ ManualPageID EffectEqualization::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectEqualization::GetType()
+EffectType EffectEqualization::GetType() const
 {
    return EffectTypeProcess;
 }

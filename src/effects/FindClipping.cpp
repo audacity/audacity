@@ -68,14 +68,14 @@ TranslatableString EffectFindClipping::GetDescription() const
    return XO("Creates labels where clipping is detected");
 }
 
-ManualPageID EffectFindClipping::ManualPage()
+ManualPageID EffectFindClipping::ManualPage() const
 {
    return L"Find_Clipping";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectFindClipping::GetType()
+EffectType EffectFindClipping::GetType() const
 {
    return EffectTypeAnalyze;
 }

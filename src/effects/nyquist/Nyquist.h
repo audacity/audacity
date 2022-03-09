@@ -79,17 +79,17 @@ public:
    wxString GetVersion() const override;
    TranslatableString GetDescription() const override;
    
-   ManualPageID ManualPage() override;
-   FilePath HelpPage() override;
+   ManualPageID ManualPage() const override;
+   FilePath HelpPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   EffectType GetClassification() override;
-   EffectFamilySymbol GetFamily() override;
-   bool IsInteractive() override;
-   bool IsDefault() override;
-   bool EnablesDebug() override;
+   EffectType GetType() const override;
+   EffectType GetClassification() const override;
+   EffectFamilySymbol GetFamily() const override;
+   bool IsInteractive() const override;
+   bool IsDefault() const override;
+   bool EnablesDebug() const override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -200,6 +200,8 @@ private:
    bool validatePath(wxString path);
    wxString ToTimeFormat(double t);
 
+   std::pair<bool, FilePath> CheckHelpPage() const;
+
 private:
 
    wxString          mXlispPath;
@@ -241,6 +243,7 @@ private:
    wxString          mManPage;   // ONLY use if a help page exists in the manual.
    wxString          mHelpFile;
    bool              mHelpFileExists;
+   FilePath          mHelpPage;
    EffectType        mType;
    EffectType        mPromptType; // If a prompt, need to remember original type.
 

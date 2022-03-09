@@ -192,7 +192,7 @@ TranslatableString EffectScienFilter::GetDescription() const
    return XO("Performs IIR filtering that emulates analog filters");
 }
 
-ManualPageID EffectScienFilter::ManualPage()
+ManualPageID EffectScienFilter::ManualPage() const
 {
    return L"Classic_Filters";
 }
@@ -200,19 +200,19 @@ ManualPageID EffectScienFilter::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectScienFilter::GetType()
+EffectType EffectScienFilter::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectScienFilter::GetAudioInCount()
+unsigned EffectScienFilter::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectScienFilter::GetAudioOutCount()
+unsigned EffectScienFilter::GetAudioOutCount() const
 {
    return 1;
 }

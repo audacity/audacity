@@ -287,7 +287,7 @@ TranslatableString VST3Effect::GetDescription() const
    return XO("SubCategories: %s").Format( mEffectClassInfo.subCategoriesString() );
 }
 
-EffectType VST3Effect::GetType()
+EffectType VST3Effect::GetType() const
 {
    using namespace Steinberg::Vst::PlugType;
    if(mEffectClassInfo.subCategoriesString() == kFxGenerator)
@@ -300,27 +300,27 @@ EffectType VST3Effect::GetType()
    return EffectTypeNone;
 }
 
-EffectFamilySymbol VST3Effect::GetFamily()
+EffectFamilySymbol VST3Effect::GetFamily() const
 {
    return VST3Effect::GetFamilySymbol();
 }
 
-bool VST3Effect::IsInteractive()
+bool VST3Effect::IsInteractive() const
 {
    return mEditController != nullptr;
 }
 
-bool VST3Effect::IsDefault()
+bool VST3Effect::IsDefault() const
 {
    return false;
 }
 
-bool VST3Effect::SupportsRealtime()
+bool VST3Effect::SupportsRealtime() const
 {
    return true;
 }
 
-bool VST3Effect::SupportsAutomation()
+bool VST3Effect::SupportsAutomation() const
 {
    if(mEditController == nullptr)
       return false;
@@ -533,7 +533,7 @@ namespace
    }
 }
 
-unsigned VST3Effect::GetAudioInCount()
+unsigned VST3Effect::GetAudioInCount() const
 {
    return CountChannels(
       mEffectComponent,
@@ -542,7 +542,7 @@ unsigned VST3Effect::GetAudioInCount()
       Steinberg::Vst::kMain);
 }
 
-unsigned VST3Effect::GetAudioOutCount()
+unsigned VST3Effect::GetAudioOutCount() const
 {
    return CountChannels(
       mEffectComponent,

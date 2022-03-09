@@ -78,14 +78,14 @@ TranslatableString EffectNormalize::GetDescription() const
    return XO("Sets the peak amplitude of one or more tracks");
 }
 
-ManualPageID EffectNormalize::ManualPage()
+ManualPageID EffectNormalize::ManualPage() const
 {
    return L"Normalize";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNormalize::GetType()
+EffectType EffectNormalize::GetType() const
 {
    return EffectTypeProcess;
 }

@@ -48,24 +48,24 @@ TranslatableString EffectInvert::GetDescription() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectInvert::GetType()
+EffectType EffectInvert::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectInvert::IsInteractive()
+bool EffectInvert::IsInteractive() const
 {
    return false;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectInvert::GetAudioInCount()
+unsigned EffectInvert::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectInvert::GetAudioOutCount()
+unsigned EffectInvert::GetAudioOutCount() const
 {
    return 1;
 }

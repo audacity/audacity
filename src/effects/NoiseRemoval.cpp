@@ -125,12 +125,12 @@ TranslatableString EffectNoiseRemoval::GetDescription() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNoiseRemoval::GetType()
+EffectType EffectNoiseRemoval::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectNoiseRemoval::SupportsAutomation()
+bool EffectNoiseRemoval::SupportsAutomation() const
 {
    return false;
 }

@@ -674,7 +674,7 @@ TranslatableString LadspaEffect::GetDescription() const
 // EffectDefinitionInterface implementation
 // ============================================================================
 
-EffectType LadspaEffect::GetType()
+EffectType LadspaEffect::GetType() const
 {
    if (mAudioIns == 0 && mAudioOuts == 0)
    {
@@ -694,27 +694,27 @@ EffectType LadspaEffect::GetType()
    return EffectTypeProcess;
 }
 
-EffectFamilySymbol LadspaEffect::GetFamily()
+EffectFamilySymbol LadspaEffect::GetFamily() const
 {
    return LADSPAEFFECTS_FAMILY;
 }
 
-bool LadspaEffect::IsInteractive()
+bool LadspaEffect::IsInteractive() const
 {
    return mInteractive;
 }
 
-bool LadspaEffect::IsDefault()
+bool LadspaEffect::IsDefault() const
 {
    return false;
 }
 
-bool LadspaEffect::SupportsRealtime()
+bool LadspaEffect::SupportsRealtime() const
 {
    return GetType() != EffectTypeGenerate;
 }
 
-bool LadspaEffect::SupportsAutomation()
+bool LadspaEffect::SupportsAutomation() const
 {
    return mNumInputControls > 0;
 }
@@ -889,12 +889,12 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-unsigned LadspaEffect::GetAudioInCount()
+unsigned LadspaEffect::GetAudioInCount() const
 {
    return mAudioIns;
 }
 
-unsigned LadspaEffect::GetAudioOutCount()
+unsigned LadspaEffect::GetAudioOutCount() const
 {
    return mAudioOuts;
 }

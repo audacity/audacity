@@ -93,14 +93,14 @@ TranslatableString EffectLoudness::GetDescription() const
    return XO("Sets the loudness of one or more tracks");
 }
 
-ManualPageID EffectLoudness::ManualPage()
+ManualPageID EffectLoudness::ManualPage() const
 {
    return L"Loudness_Normalization";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectLoudness::GetType()
+EffectType EffectLoudness::GetType() const
 {
    return EffectTypeProcess;
 }

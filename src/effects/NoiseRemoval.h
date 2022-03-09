@@ -48,8 +48,8 @@ public:
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   bool SupportsAutomation() override;
+   EffectType GetType() const override;
+   bool SupportsAutomation() const override;
 
    // Effect implementation
 

@@ -917,7 +917,7 @@ TranslatableString AudioUnitEffect::GetDescription() const
 // EffectDefinitionInterface implementation
 // ============================================================================
 
-EffectType AudioUnitEffect::GetType()
+EffectType AudioUnitEffect::GetType() const
 {
    if (mAudioIns == 0 && mAudioOuts == 0)
    {
@@ -937,27 +937,27 @@ EffectType AudioUnitEffect::GetType()
    return EffectTypeProcess;
 }
 
-EffectFamilySymbol AudioUnitEffect::GetFamily()
+EffectFamilySymbol AudioUnitEffect::GetFamily() const
 {
    return AUDIOUNITEFFECTS_FAMILY;
 }
 
-bool AudioUnitEffect::IsInteractive()
+bool AudioUnitEffect::IsInteractive() const
 {
    return mInteractive;
 }
 
-bool AudioUnitEffect::IsDefault()
+bool AudioUnitEffect::IsDefault() const
 {
    return false;
 }
 
-bool AudioUnitEffect::SupportsRealtime()
+bool AudioUnitEffect::SupportsRealtime() const
 {
    return GetType() == EffectTypeProcess;
 }
 
-bool AudioUnitEffect::SupportsAutomation()
+bool AudioUnitEffect::SupportsAutomation() const
 {
    OSStatus result;
    UInt32 dataSize;
@@ -1168,12 +1168,12 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-unsigned AudioUnitEffect::GetAudioInCount()
+unsigned AudioUnitEffect::GetAudioInCount() const
 {
    return mAudioIns;
 }
 
-unsigned AudioUnitEffect::GetAudioOutCount()
+unsigned AudioUnitEffect::GetAudioOutCount() const
 {
    return mAudioOuts;
 }

@@ -26,13 +26,13 @@ public:
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   bool IsInteractive() override;
+   EffectType GetType() const override;
+   bool IsInteractive() const override;
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,

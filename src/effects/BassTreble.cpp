@@ -98,19 +98,19 @@ TranslatableString EffectBassTreble::GetDescription() const
    return XO("Simple tone control effect");
 }
 
-ManualPageID EffectBassTreble::ManualPage()
+ManualPageID EffectBassTreble::ManualPage() const
 {
    return L"Bass_and_Treble";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectBassTreble::GetType()
+EffectType EffectBassTreble::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectBassTreble::SupportsRealtime()
+bool EffectBassTreble::SupportsRealtime() const
 {
    return true;
 }
@@ -118,12 +118,12 @@ bool EffectBassTreble::SupportsRealtime()
 
 // EffectProcessor implementation
 
-unsigned EffectBassTreble::GetAudioInCount()
+unsigned EffectBassTreble::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectBassTreble::GetAudioOutCount()
+unsigned EffectBassTreble::GetAudioOutCount() const
 {
    return 1;
 }

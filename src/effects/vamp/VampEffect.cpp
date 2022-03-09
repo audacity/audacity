@@ -117,22 +117,22 @@ TranslatableString VampEffect::GetDescription() const
 // EffectDefinitionInterface implementation
 // ============================================================================
 
-EffectType VampEffect::GetType()
+EffectType VampEffect::GetType() const
 {
    return EffectTypeAnalyze;
 }
 
-EffectFamilySymbol VampEffect::GetFamily()
+EffectFamilySymbol VampEffect::GetFamily() const
 {
    return VAMPEFFECTS_FAMILY;
 }
 
-bool VampEffect::IsInteractive()
+bool VampEffect::IsInteractive() const
 {
    return mHasParameters;
 }
 
-bool VampEffect::IsDefault()
+bool VampEffect::IsDefault() const
 {
    return false;
 }
@@ -140,7 +140,7 @@ bool VampEffect::IsDefault()
 
 // EffectProcessor implementation
 
-unsigned VampEffect::GetAudioInCount()
+unsigned VampEffect::GetAudioInCount() const
 {
    return mPlugin->getMaxChannelCount();
 }
