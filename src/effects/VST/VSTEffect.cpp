@@ -1874,7 +1874,7 @@ void VSTEffect::ExportPresets(const EffectSettings &) const
 //
 // Based on work by Sven Giermann
 //
-void VSTEffect::ImportPresets()
+void VSTEffect::ImportPresets(EffectSettings &)
 {
    wxString path;
 

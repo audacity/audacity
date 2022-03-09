@@ -1732,7 +1732,7 @@ void LV2Effect::ExportPresets(const EffectSettings &) const
 {
 }
 
-void LV2Effect::ImportPresets()
+void LV2Effect::ImportPresets(EffectSettings &)
 {
 }
 

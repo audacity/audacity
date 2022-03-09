@@ -1526,7 +1526,7 @@ void LadspaEffect::ExportPresets(const EffectSettings &) const
 {
 }
 
-void LadspaEffect::ImportPresets()
+void LadspaEffect::ImportPresets(EffectSettings &)
 {
 }
 

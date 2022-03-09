@@ -991,7 +991,7 @@ void VST3Effect::ExportPresets(const EffectSettings &) const
    }
 }
 
-void VST3Effect::ImportPresets()
+void VST3Effect::ImportPresets(EffectSettings &)
 {
    using namespace Steinberg;
 

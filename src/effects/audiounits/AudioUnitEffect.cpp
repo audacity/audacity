@@ -1843,7 +1843,7 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &) const
    }
 }
 
-void AudioUnitEffect::ImportPresets()
+void AudioUnitEffect::ImportPresets(EffectSettings &)
 {
    // Generate the user domain path
    wxFileName fn;

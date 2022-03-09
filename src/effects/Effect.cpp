@@ -676,7 +676,7 @@ void Effect::ExportPresets(const EffectSettings &settings) const
 
 }
 
-void Effect::ImportPresets()
+void Effect::ImportPresets(EffectSettings &)
 {
    wxString params;
 
