@@ -48,6 +48,7 @@
 
 #include "TypedAny.h"
 #include <memory>
+#include <wx/event.h>
 
 class ShuttleGui;
 
@@ -438,7 +439,10 @@ public:
  state only for the lifetime of a dialog, so the effect object need not hold it
 
 *******************************************************************************************/
-class COMPONENTS_API DefaultEffectUIValidator final : public EffectUIValidator
+class COMPONENTS_API DefaultEffectUIValidator
+   : public EffectUIValidator
+   // Inherit wxEvtHandler so that Un-Bind()-ing is automatic in the destructor
+   , wxEvtHandler
 {
 public:
    DefaultEffectUIValidator(
@@ -446,7 +450,15 @@ public:
    ~DefaultEffectUIValidator() override;
    //! Calls mEffect.ValidateUI()
    bool ValidateUI() override;
-private:
+protected:
+   // Convenience function template for binding event handler functions
+   template<typename EventTag, typename Class, typename Event>
+   void BindTo(
+      wxEvtHandler &src, const EventTag& eventType, void (Class::*pmf)(Event &))
+   {
+      src.Bind(eventType, pmf, static_cast<Class *>(this));
+   }
+
    EffectUIClientInterface &mEffect;
    EffectSettingsAccess &mAccess;
 };
