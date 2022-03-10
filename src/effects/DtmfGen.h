@@ -56,8 +56,6 @@ public:
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
    // EffectDtmf implementation
@@ -65,12 +63,6 @@ private:
    bool MakeDtmfTone(float *buffer, size_t len, float fs,
                      wxChar tone, sampleCount last,
                      sampleCount total, float amplitude);
-
-   void UpdateUI();
-
-   void OnSequence(wxCommandEvent & evt);
-   void OnDuration(wxCommandEvent & evt);
-   void OnDutyCycle(wxCommandEvent & evt);
 
 private:
    sampleCount numSamplesSequence;  // total number of samples to generate
@@ -100,15 +92,6 @@ public:
 
 private:
    Settings mSettings;
-
-   wxTextCtrl *mDtmfSequenceT;
-   wxSlider   *mDtmfDutyCycleS;
-   NumericTextCtrl *mDtmfDurationT;
-   wxStaticText *mDtmfToneT;
-   wxStaticText *mDtmfSilenceT;
-   wxStaticText *mDtmfDutyT;
-
-   DECLARE_EVENT_TABLE()
 };
 
 #endif

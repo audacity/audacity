@@ -30,14 +30,6 @@
 #include "../widgets/valnum.h"
 
 
-enum
-{
-   ID_Sequence,
-   ID_Amplitude,
-   ID_Duration,
-   ID_DutyCycle,
-};
-
 // Define keys, defaults, minimums, and maximums for the effect parameters
 //
 //     Name       Type        Key               Def                   Min      Max      Scale
@@ -70,12 +62,6 @@ const ComponentInterfaceSymbol EffectDtmf::Symbol
 { XO("DTMF Tones") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectDtmf > reg; }
-
-BEGIN_EVENT_TABLE(EffectDtmf, wxEvtHandler)
-    EVT_TEXT(ID_Sequence, EffectDtmf::OnSequence)
-    EVT_TEXT(ID_Duration, EffectDtmf::OnDuration)
-    EVT_SLIDER(ID_DutyCycle, EffectDtmf::OnDutyCycle)
-END_EVENT_TABLE()
 
 EffectDtmf::EffectDtmf()
 {
@@ -287,13 +273,50 @@ bool EffectDtmf::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-// Effect implementation
-
-std::unique_ptr<EffectUIValidator>
-EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
+namespace {
+// Event handler object
+struct MyValidator
+   : DefaultEffectUIValidator
 {
-   auto &settings = access.Get();
+   MyValidator(EffectUIClientInterface &effect,
+      EffectSettingsAccess &access, EffectDtmf::Settings &settings)
+      : DefaultEffectUIValidator{effect, access}
+      , mSettings{settings}
+   {}
+   virtual ~MyValidator() = default;
+
+   Effect &GetEffect() const { return static_cast<Effect&>(mEffect); }
+
+   bool ValidateUI() override;
+   bool UpdateUI() override;
+   void DoUpdateUI();
+
+   void PopulateOrExchange(ShuttleGui & S,
+      const EffectSettings &settings, double duration, double projectRate);
+   void OnSequence(wxCommandEvent & evt);
+   void OnDuration(wxCommandEvent & evt);
+   void OnDutyCycle(wxCommandEvent & evt);
+
+   EffectDtmf::Settings &mSettings;
+
+   wxTextCtrl *mDtmfSequenceT;
+   wxSlider   *mDtmfDutyCycleS;
+   NumericTextCtrl *mDtmfDurationT;
+   wxStaticText *mDtmfToneT;
+   wxStaticText *mDtmfSilenceT;
+   wxStaticText *mDtmfDutyT;
+};
+
+void MyValidator::PopulateOrExchange(ShuttleGui & S,
+   const EffectSettings &settings, double duration, double projectRate)
+{
+   // Hold a reference to special settings, still in the singleton Effect
+   // object
    auto &dtmfSettings = mSettings;
+
+   // Do NOT hold a reference to settings, but just use it to find some initial
+   // duration values.  (It came from EffectSettingsAccess so its stable address
+   // can't be relied on.)
 
    // dialog will be passed values from effect
    // Effect retrieves values from saved config
@@ -305,7 +328,8 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
    S.AddSpace(0, 5);
    S.StartMultiColumn(2, wxCENTER);
    {
-      mDtmfSequenceT = S.Id(ID_Sequence)
+      mDtmfSequenceT =
+      S
          .Validator([&dtmfSettings]{
             wxTextValidator vldDtmf(
                wxFILTER_INCLUDE_CHAR_LIST, &dtmfSettings.dtmfSequence);
@@ -313,8 +337,11 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
             return vldDtmf;
          })
          .AddTextBox(XXO("DTMF &sequence:"), wxT(""), 10);
+      BindTo(*mDtmfSequenceT, wxEVT_TEXT, &MyValidator::OnSequence);
 
-      S.Id(ID_Amplitude)
+      // A control with no event handler but the validator causes updates
+      // when TransferData functions are called
+      S
          .Validator<FloatingPointValidator<double>>(
             3, &dtmfSettings.dtmfAmplitude, NumValidatorStyle::NO_TRAILING_ZEROES,
             MIN_Amplitude, MAX_Amplitude)
@@ -323,24 +350,27 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
       S.AddPrompt(XXO("&Duration:"));
       auto &extra = settings.extra;
       mDtmfDurationT = safenew
-         NumericTextCtrl(S.GetParent(), ID_Duration,
+         NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,
                          extra.GetDurationFormat(),
-                         GetDuration(),
-                         mProjectRate,
+                         duration,
+                         projectRate,
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
       S.Name(XO("Duration"))
          .AddWindow(mDtmfDurationT);
+      BindTo(*mDtmfDurationT, wxEVT_TEXT, &MyValidator::OnDuration);
 
       S.AddFixedText(XO("&Tone/silence ratio:"), false);
-      mDtmfDutyCycleS = S.Id(ID_DutyCycle)
+      mDtmfDutyCycleS =
+      S
          .Style(wxSL_HORIZONTAL | wxEXPAND)
          .MinSize( { -1, -1 } )
          .AddSlider( {},
                      dtmfSettings.dtmfDutyCycle * SCL_DutyCycle,
                      MAX_DutyCycle * SCL_DutyCycle,
                      MIN_DutyCycle * SCL_DutyCycle);
+      BindTo(*mDtmfDutyCycleS, wxEVT_SLIDER, &MyValidator::OnDutyCycle);
    }
    S.EndMultiColumn();
 
@@ -364,31 +394,44 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
          .Format( dtmfSettings.dtmfSilence * 1000.0 ), false);
    }
    S.EndMultiColumn();
-   return nullptr;
+}
 }
 
-bool EffectDtmf::TransferDataToWindow(const EffectSettings &)
+// Effect implementation
+
+std::unique_ptr<EffectUIValidator>
+EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
+{
+   auto &settings = access.Get();
+   auto &dtmfSettings = mSettings;
+   auto result = std::make_unique<MyValidator>(*this, access, dtmfSettings);
+   result->PopulateOrExchange(S, settings, GetDuration(), mProjectRate);
+   return result;
+}
+
+bool MyValidator::UpdateUI()
 {
    auto &dtmfSettings = mSettings;
    mDtmfDutyCycleS->SetValue(dtmfSettings.dtmfDutyCycle * SCL_DutyCycle);
 
-   mDtmfDurationT->SetValue(GetDuration());
+   mDtmfDurationT->SetValue(GetEffect().GetDuration());
 
-   UpdateUI();
+   DoUpdateUI();
 
    return true;
 }
 
-bool EffectDtmf::TransferDataFromWindow(EffectSettings &)
+bool MyValidator::ValidateUI()
 {
    auto &dtmfSettings = mSettings;
+   auto &effect = GetEffect();
    dtmfSettings.dtmfDutyCycle =
       (double) mDtmfDutyCycleS->GetValue() / SCL_DutyCycle;
-   SetDuration(mDtmfDurationT->GetValue());
+   effect.SetDuration(mDtmfDurationT->GetValue());
 
    // recalculate to make sure all values are up-to-date. This is especially
    // important if the user did not change any values in the dialog
-   dtmfSettings.Recalculate(*this);
+   dtmfSettings.Recalculate(effect);
 
    return true;
 }
@@ -566,8 +609,9 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, size_t len, float fs, wxChar tone, 
    return true;
 }
 
-void EffectDtmf::UpdateUI(void)
+void MyValidator::DoUpdateUI()
 {
+   // Update some texts in response to controls
    auto &dtmfSettings = mSettings;
 
    mDtmfDutyT
@@ -583,26 +627,27 @@ void EffectDtmf::UpdateUI(void)
    mDtmfToneT->SetName(mDtmfToneT->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
-void EffectDtmf::OnSequence(wxCommandEvent & WXUNUSED(evt))
+void MyValidator::OnSequence(wxCommandEvent & WXUNUSED(evt))
 {
    auto &dtmfSettings = mSettings;
    dtmfSettings.dtmfSequence = mDtmfSequenceT->GetValue();
-   dtmfSettings.Recalculate(*this);
-   UpdateUI();
+   dtmfSettings.Recalculate(GetEffect());
+   DoUpdateUI();
 }
 
-void EffectDtmf::OnDuration(wxCommandEvent & WXUNUSED(evt))
+void MyValidator::OnDuration(wxCommandEvent & WXUNUSED(evt))
 {
    auto &dtmfSettings = mSettings;
-   SetDuration(mDtmfDurationT->GetValue());
-   dtmfSettings.Recalculate(*this);
-   UpdateUI();
+   auto &effect = GetEffect();
+   effect.SetDuration(mDtmfDurationT->GetValue());
+   dtmfSettings.Recalculate(effect);
+   DoUpdateUI();
 }
 
-void EffectDtmf::OnDutyCycle(wxCommandEvent & evt)
+void MyValidator::OnDutyCycle(wxCommandEvent & evt)
 {
    auto &dtmfSettings = mSettings;
    dtmfSettings.dtmfDutyCycle = (double) evt.GetInt() / SCL_DutyCycle;
-   dtmfSettings.Recalculate(*this);
-   UpdateUI();
+   dtmfSettings.Recalculate(GetEffect());
+   DoUpdateUI();
 }
