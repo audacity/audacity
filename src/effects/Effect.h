@@ -171,7 +171,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectHostInterface implementation
 
-   const EffectDefinitionInterface& GetDefinition() override;
+   const EffectDefinitionInterface& GetDefinition() const override;
    double GetDuration() override;
    NumericFormatSymbol GetDurationFormat() override;
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
