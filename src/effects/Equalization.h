@@ -124,7 +124,6 @@ public:
 
    // Effect implementation
 
-   bool Startup() override;
    bool Init() override;
    bool Process(EffectSettings &settings) override;
 

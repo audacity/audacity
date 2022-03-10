@@ -75,9 +75,6 @@ Effect::Effect()
 
    mUIParent = NULL;
 
-   mNumAudioIn = 0;
-   mNumAudioOut = 0;
-
    mBufferSize = 0;
    mBlockSize = 0;
    mNumChannels = 0;
@@ -216,13 +213,10 @@ bool Effect::SupportsAutomation() const
 
 // EffectProcessor implementation
 
-bool Effect::SetHost(EffectHostInterface *host)
+bool Effect::InitializeInstance(EffectHostInterface *host)
 {
    if (mClient)
-   {
-      return mClient->SetHost(host);
-   }
-
+      return mClient->InitializeInstance(host);
    return true;
 }
 
@@ -562,7 +556,7 @@ bool Effect::LoadFactoryDefaults()
       return mClient->LoadFactoryDefaults();
    }
 
-   return LoadUserPreset(GetFactoryDefaultsGroup());
+   return LoadUserPreset(FactoryDefaultsGroup());
 }
 
 // EffectUIClientInterface implementation
@@ -573,7 +567,7 @@ Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
    auto parent = S.GetParent();
    mUIParent = parent;
 
-//   LoadUserPreset(GetCurrentSettingsGroup());
+//   LoadUserPreset(CurrentSettingsGroup());
 
    // Let the effect subclass provide its own validator if it wants
    auto result = PopulateOrExchange(S, access);
@@ -776,33 +770,12 @@ void Effect::SetDuration(double seconds)
    if (GetType() == EffectTypeGenerate)
    {
       SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
+         CurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
    }
 
    mDuration = seconds;
 
    return;
-}
-
-RegistryPath Effect::GetUserPresetsGroup(const RegistryPath & name)
-{
-   RegistryPath group = wxT("UserPresets");
-   if (!name.empty())
-   {
-      group += wxCONFIG_PATH_SEPARATOR + name;
-   }
-
-   return group;
-}
-
-RegistryPath Effect::GetCurrentSettingsGroup()
-{
-   return wxT("CurrentSettings");
-}
-
-RegistryPath Effect::GetFactoryDefaultsGroup()
-{
-   return wxT("FactoryDefaults");
 }
 
 wxString Effect::GetSavedStateGroup()
@@ -818,32 +791,13 @@ bool Effect::Startup(EffectUIClientInterface *client)
    mClient = client;
 
    // Set host so client startup can use our services
-   if (!SetHost(this))
+   if (!InitializeInstance(this))
    {
       // Bail if the client startup fails
       mClient = NULL;
       return false;
    }
 
-   mNumAudioIn = GetAudioInCount();
-   mNumAudioOut = GetAudioOutCount();
-
-   bool haveDefaults;
-   GetConfig(GetDefinition(), PluginSettings::Private, GetFactoryDefaultsGroup(),
-      wxT("Initialized"), haveDefaults, false);
-   if (!haveDefaults)
-   {
-      SaveUserPreset(GetFactoryDefaultsGroup());
-      SetConfig(GetDefinition(), PluginSettings::Private, GetFactoryDefaultsGroup(),
-         wxT("Initialized"), true);
-   }
-   LoadUserPreset(GetCurrentSettingsGroup());
-
-   return Startup();
-}
-
-bool Effect::Startup()
-{
    return true;
 }
 
@@ -871,7 +825,7 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
    if (preset.StartsWith(kUserPresetIdent))
    {
       preset.Replace(kUserPresetIdent, wxEmptyString, false);
-      success = LoadUserPreset(GetUserPresetsGroup(preset));
+      success = LoadUserPreset(UserPresetsGroup(preset));
    }
    else if (preset.StartsWith(kFactoryPresetIdent))
    {
@@ -882,12 +836,12 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
    else if (preset.StartsWith(kCurrentSettingsIdent))
    {
       preset.Replace(kCurrentSettingsIdent, wxEmptyString, false);
-      success = LoadUserPreset(GetCurrentSettingsGroup());
+      success = LoadUserPreset(CurrentSettingsGroup());
    }
    else if (preset.StartsWith(kFactoryDefaultsIdent))
    {
       preset.Replace(kFactoryDefaultsIdent, wxEmptyString, false);
-      success = LoadUserPreset(GetFactoryDefaultsGroup());
+      success = LoadUserPreset(FactoryDefaultsGroup());
    }
    else
    {
@@ -977,7 +931,7 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
    if (GetType() == EffectTypeGenerate)
    {
       GetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(),
+         CurrentSettingsGroup(),
          wxT("LastUsedDuration"), mDuration, GetDefaultDuration());
    }
 
@@ -1112,11 +1066,6 @@ bool Effect::Process(EffectSettings &settings)
    CopyInputTracks(true);
    bool bGoodResult = true;
 
-   // It's possible that the number of channels the effect expects changed based on
-   // the parameters (the Audacity Reverb effect does when the stereo width is 0).
-   mNumAudioIn = GetAudioInCount();
-   mNumAudioOut = GetAudioOutCount();
-
    mPass = 1;
    if (InitPass1())
    {
@@ -1149,7 +1098,12 @@ bool Effect::ProcessPass(EffectSettings &settings)
    int count = 0;
    bool clear = false;
 
-   const bool multichannel = mNumAudioIn > 1;
+   // It's possible that the number of channels the effect expects changed based on
+   // the parameters (the Audacity Reverb effect does when the stereo width is 0).
+   const auto numAudioIn = GetAudioInCount();
+   const auto numAudioOut = GetAudioOutCount();
+
+   const bool multichannel = numAudioIn > 1;
    auto range = multichannel
       ? mOutputTracks->Leaders()
       : mOutputTracks->Any();
@@ -1216,11 +1170,11 @@ bool Effect::ProcessPass(EffectSettings &settings)
          {
             // Always create the number of input buffers the client expects even if we don't have
             // the same number of channels.
-            inBufPos.reinit( mNumAudioIn );
-            inBuffer.reinit( mNumAudioIn, mBufferSize );
+            inBufPos.reinit( numAudioIn );
+            inBuffer.reinit( numAudioIn, mBufferSize );
 
             // We won't be using more than the first 2 buffers, so clear the rest (if any)
-            for (size_t i = 2; i < mNumAudioIn; i++)
+            for (size_t i = 2; i < numAudioIn; i++)
             {
                for (size_t j = 0; j < mBufferSize; j++)
                {
@@ -1230,26 +1184,26 @@ bool Effect::ProcessPass(EffectSettings &settings)
 
             // Always create the number of output buffers the client expects even if we don't have
             // the same number of channels.
-            outBufPos.reinit( mNumAudioOut );
+            outBufPos.reinit( numAudioOut );
             // Output buffers get an extra mBlockSize worth to give extra room if
             // the plugin adds latency
-            outBuffer.reinit( mNumAudioOut, mBufferSize + mBlockSize );
+            outBuffer.reinit( numAudioOut, mBufferSize + mBlockSize );
          }
 
          // (Re)Set the input buffer positions
-         for (size_t i = 0; i < mNumAudioIn; i++)
+         for (size_t i = 0; i < numAudioIn; i++)
          {
             inBufPos[i] = inBuffer[i].get();
          }
 
          // (Re)Set the output buffer positions
-         for (size_t i = 0; i < mNumAudioOut; i++)
+         for (size_t i = 0; i < numAudioOut; i++)
          {
             outBufPos[i] = outBuffer[i].get();
          }
 
          // Clear unused input buffers
-         if (!right && !clear && mNumAudioIn > 1)
+         if (!right && !clear && numAudioIn > 1)
          {
             for (size_t j = 0; j < mBufferSize; j++)
             {
@@ -1335,7 +1289,7 @@ bool Effect::ProcessTrack(EffectSettings &settings,
    decltype(mBufferSize) outputBufferCnt = 0;
    bool cleared = false;
 
-   auto chans = std::min<unsigned>(mNumAudioOut, mNumChannels);
+   auto chans = std::min<unsigned>(GetAudioOutCount(), mNumChannels);
 
    std::shared_ptr<WaveTrack> genLeft, genRight;
 

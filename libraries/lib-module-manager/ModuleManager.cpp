@@ -19,7 +19,7 @@ i.e. an alternative to the usual interface, for Audacity.
 *//*******************************************************************/
 
 #include "ModuleManager.h"
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 
 #include "BasicUI.h"
 
@@ -173,29 +173,29 @@ void * Module::GetSymbol(const wxString &name)
 // The one and only ModuleManager
 std::unique_ptr<ModuleManager> ModuleManager::mInstance{};
 
-// Provide builtin modules a means to identify themselves
-using BuiltinModuleList = std::vector<ModuleMain>;
+// Give builtin providers a means to identify themselves
+using BuiltinProviderList = std::vector<PluginProviderMain>;
 namespace {
-   BuiltinModuleList &builtinModuleList()
+   BuiltinProviderList &builtinProviderList()
    {
-      static BuiltinModuleList theList;
+      static BuiltinProviderList theList;
       return theList;
    }
 }
 
-void RegisterProvider(ModuleMain moduleMain)
+void RegisterProvider(PluginProviderMain pluginProviderMain)
 {
-   auto &list = builtinModuleList();
-   if ( moduleMain )
-      list.push_back(moduleMain);
+   auto &list = builtinProviderList();
+   if ( pluginProviderMain )
+      list.push_back(pluginProviderMain);
 
    return;
 }
 
-void UnregisterProvider(ModuleMain moduleMain)
+void UnregisterProvider(PluginProviderMain pluginProviderMain)
 {
-   auto &list = builtinModuleList();
-   auto end = list.end(), iter = std::find(list.begin(), end, moduleMain);
+   auto &list = builtinProviderList();
+   auto end = list.end(), iter = std::find(list.begin(), end, pluginProviderMain);
    if (iter != end)
       list.erase(iter);
 }
@@ -210,8 +210,8 @@ ModuleManager::ModuleManager()
 
 ModuleManager::~ModuleManager()
 {
-   mDynModules.clear();
-   builtinModuleList().clear();
+   mProviders.clear();
+   builtinProviderList().clear();
 }
 
 // static
@@ -408,14 +408,14 @@ wxString ModuleManager::GetPluginTypeString()
    return L"Module";
 }
 
-PluginID ModuleManager::GetID(ModuleInterface *module)
+PluginID ModuleManager::GetID(PluginProvider *provider)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(),
                            wxEmptyString,
-                           module->GetVendor().Internal(),
-                           module->GetSymbol().Internal(),
-                           module->GetPath());
+                           provider->GetVendor().Internal(),
+                           provider->GetSymbol().Internal(),
+                           provider->GetPath());
 }
 
 bool ModuleManager::DiscoverProviders()
@@ -457,20 +457,16 @@ bool ModuleManager::DiscoverProviders()
 
 void ModuleManager::InitializeBuiltins()
 {
-   for (auto moduleMain : builtinModuleList())
+   for (auto pluginProviderMain : builtinProviderList())
    {
-      ModuleInterfaceHandle module {
-         moduleMain(), ModuleInterfaceDeleter{}
-      };
-
-      if (module && module->Initialize())
-      {
+      PluginProviderHandle provider{ pluginProviderMain(), PluginProviderDeleter{} };
+      if (provider && provider->Initialize()) {
          // Register the provider
-         ModuleInterface *pInterface = module.get();
+         auto pInterface = provider.get();
          auto id = GetID(pInterface);
 
          // Need to remember it 
-         mDynModules[id] = std::move(module);
+         mProviders[id] = std::move(provider);
       }
       else
       {
@@ -479,47 +475,47 @@ void ModuleManager::InitializeBuiltins()
    }
 }
 
-void ModuleInterfaceDeleter::operator() (ModuleInterface *pInterface) const
+void PluginProviderDeleter::operator() (PluginProvider *pInterface) const
 {
    if (pInterface)
    {
       pInterface->Terminate();
-      std::unique_ptr < ModuleInterface > { pInterface }; // DELETE it
+      std::unique_ptr < PluginProvider > { pInterface }; // DELETE it
    }
 }
 
 bool ModuleManager::RegisterEffectPlugin(const PluginID & providerID, const PluginPath & path, TranslatableString &errMsg)
 {
    errMsg = {};
-   if (mDynModules.find(providerID) == mDynModules.end())
+   if (mProviders.find(providerID) == mProviders.end())
    {
       return false;
    }
 
-   auto nFound = mDynModules[providerID]->DiscoverPluginsAtPath(path, errMsg, PluginManagerInterface::DefaultRegistrationCallback);
+   auto nFound = mProviders[providerID]->DiscoverPluginsAtPath(path, errMsg, PluginManagerInterface::DefaultRegistrationCallback);
 
    return nFound > 0;
 }
 
-ModuleInterface *ModuleManager::CreateProviderInstance(const PluginID & providerID,
+PluginProvider *ModuleManager::CreateProviderInstance(const PluginID & providerID,
                                                       const PluginPath & path)
 {
-   if (path.empty() && mDynModules.find(providerID) != mDynModules.end())
+   if (path.empty() && mProviders.find(providerID) != mProviders.end())
    {
-      return mDynModules[providerID].get();
+      return mProviders[providerID].get();
    }
 
    return nullptr;
 }
 
-std::unique_ptr<ComponentInterface> ModuleManager::CreateInstance(
+std::unique_ptr<ComponentInterface> ModuleManager::LoadPlugin(
    const PluginID & providerID, const PluginPath & path)
 {
-   if (auto iter = mDynModules.find(providerID);
-       iter == mDynModules.end())
+   if (auto iter = mProviders.find(providerID);
+       iter == mProviders.end())
       return nullptr;
    else
-      return iter->second->CreateInstance(path);
+      return iter->second->LoadPlugin(path);
 }
 
 bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
@@ -544,10 +540,10 @@ bool ModuleManager::IsPluginValid(const PluginID & providerID,
                                   const PluginPath & path,
                                   bool bFast)
 {
-   if (mDynModules.find(providerID) == mDynModules.end())
+   if (mProviders.find(providerID) == mProviders.end())
    {
       return false;
    }
 
-   return mDynModules[providerID]->IsPluginValid(path, bFast);
+   return mProviders[providerID]->IsPluginValid(path, bFast);
 }

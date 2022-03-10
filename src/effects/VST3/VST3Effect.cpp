@@ -835,14 +835,19 @@ int VST3Effect::ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool for
    return 0;
 }
 
-bool VST3Effect::SetHost(EffectHostInterface* host)
+bool VST3Effect::InitializePlugin()
+{
+   return true;
+}
+
+bool VST3Effect::InitializeInstance(EffectHostInterface* host)
 {
    mEffectHost = host;
 
    if(host)
    {
       ReloadUserOptions();
-      if(!LoadUserPreset(host->GetCurrentSettingsGroup()))
+      if(!LoadUserPreset(CurrentSettingsGroup()))
          LoadFactoryDefaults();
    }
    return true;
@@ -1014,7 +1019,7 @@ void VST3Effect::ShowOptions()
 {
    if(mEffectHost)
    {
-      VST3OptionsDialog dlg(mParent, *mEffectHost, *this);
+      VST3OptionsDialog dlg(mParent, *this);
       if (dlg.ShowModal())
       {
          ReloadUserOptions();

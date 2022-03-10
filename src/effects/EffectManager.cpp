@@ -335,20 +335,20 @@ bool EffectManager::PromptUser(
 static bool HasCurrentSettings(EffectHostInterface &host)
 {
    return HasConfigGroup(host.GetDefinition(), PluginSettings::Private,
-      host.GetCurrentSettingsGroup());
+      CurrentSettingsGroup());
 }
 
 static bool HasFactoryDefaults(EffectHostInterface &host)
 {
    return HasConfigGroup(host.GetDefinition(), PluginSettings::Private,
-      host.GetFactoryDefaultsGroup());
+      FactoryDefaultsGroup());
 }
 
 static RegistryPaths GetUserPresets(EffectHostInterface &host)
 {
    RegistryPaths presets;
    GetConfigSubgroups(host.GetDefinition(), PluginSettings::Private,
-      host.GetUserPresetsGroup({}), presets);
+      UserPresetsGroup({}), presets);
    std::sort( presets.begin(), presets.end() );
    return presets;
 }
@@ -757,6 +757,31 @@ EffectManager::GetEffectAndDefaultSettings(const PluginID & ID)
    return {nullptr, nullptr};
 }
 
+namespace {
+void InitializePreset(EffectDefinitionInterfaceEx &definition) {
+   bool haveDefaults;
+   GetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
+      wxT("Initialized"), haveDefaults, false);
+   if (!haveDefaults)
+   {
+      definition.SaveUserPreset(FactoryDefaultsGroup());
+      SetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
+         wxT("Initialized"), true);
+   }
+   definition.LoadUserPreset(CurrentSettingsGroup());
+}
+
+ComponentInterface *LoadComponent(const PluginID &ID)
+{
+   if (auto result = dynamic_cast<EffectDefinitionInterfaceEx*>(
+      PluginManager::Get().Load(ID))) {
+      InitializePreset(*result);
+      return result;
+   }
+   return nullptr;
+}
+}
+
 EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
 {
    static EffectAndDefaultSettings empty;
@@ -774,19 +799,21 @@ EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
    else {
       std::shared_ptr<Effect> hostEffect;
       // This will instantiate the effect client if it hasn't already been done
-      const auto instance = PluginManager::Get().GetInstance(ID);
+      const auto component = LoadComponent(ID);
+      if (!component)
+         return empty;
 
-      if (auto effect = dynamic_cast<EffectUIHostInterface *>(instance);
+      if (auto effect = dynamic_cast<EffectUIHostInterface *>(component);
           effect && effect->Startup(nullptr))
          // Self-hosting or "legacy" effect objects
          return (mEffects[ID] = { effect, {} });
-      else if (auto client = dynamic_cast<EffectUIClientInterface *>(instance);
+      else if (auto client = dynamic_cast<EffectUIClientInterface *>(component);
           client && (hostEffect = std::make_shared<Effect>())->Startup(client))
          // plugin that inherits only EffectUIClientInterface needs a host
          return (mEffects[ID] =
             { (mHostEffects[ID] = move(hostEffect)).get(), {} });
       else {
-         if ( !dynamic_cast<AudacityCommand *>(instance) )
+         if ( !dynamic_cast<AudacityCommand *>(component) )
             AudacityMessageBox(
                XO(
 "Attempting to initialize the following effect failed:\n\n%s\n\nMore information may be available in 'Help > Diagnostics > Show Log'")
@@ -807,9 +834,10 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
    }
 
    if (mCommands.find(ID) == mCommands.end()) {
-      // This will instantiate the effect client if it hasn't already been done
-      auto command = dynamic_cast<AudacityCommand *>(PluginManager::Get().GetInstance(ID));
-      if (command )//&& command->Startup(NULL))
+      // This will instantiate the command if it hasn't already been done
+      auto command =
+         dynamic_cast<AudacityCommand *>(PluginManager::Get().Load(ID));
+      if (command)
       {
          command->Init();
          mCommands[ID] = command;
@@ -860,11 +888,12 @@ EffectManager::NewEffect(const PluginID & ID)
 
    // This will instantiate the effect client if it hasn't already been done
    // But it only makes a unique object for a given ID
-   auto ident = dynamic_cast<EffectDefinitionInterface *>(
-      PluginManager::Get().GetInstance(ID));
+   auto component = LoadComponent(ID);
+   if (!component)
+      return nullptr;
 
    auto effect = std::make_unique<Effect>();
-   auto client = dynamic_cast<EffectUIClientInterface *>(ident);
+   auto client = dynamic_cast<EffectUIClientInterface *>(component);
    if (client && effect->Startup(client))
       return effect;
    else

@@ -271,57 +271,6 @@ double EffectTruncSilence::CalcPreviewInputLength(
 }
 
 
-bool EffectTruncSilence::Startup()
-{
-   wxString base = wxT("/Effects/TruncateSilence/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      int truncDbChoiceIndex = gPrefs->Read(base + wxT("DbChoiceIndex"), 4L);
-      if ((truncDbChoiceIndex < 0) || (truncDbChoiceIndex >= Enums::NumDbChoices))
-      {  // corrupted Prefs?
-         truncDbChoiceIndex = 4L;
-      }
-      mThresholdDB = enumToDB( truncDbChoiceIndex );
-      mActionIndex = gPrefs->Read(base + wxT("ProcessChoice"), 0L);
-      if ((mActionIndex < 0) || (mActionIndex > 1))
-      {  // corrupted Prefs?
-         mActionIndex = 0L;
-      }
-      gPrefs->Read(base + wxT("InitialAllowedSilence"), &mInitialAllowedSilence, 0.5);
-      if ((mInitialAllowedSilence < 0.001) || (mInitialAllowedSilence > 10000.0))
-      {  // corrupted Prefs?
-         mInitialAllowedSilence = 0.5;
-      }
-      gPrefs->Read(base + wxT("LongestAllowedSilence"), &mTruncLongestAllowedSilence, 0.5);
-      if ((mTruncLongestAllowedSilence < 0.0) || (mTruncLongestAllowedSilence > 10000.0))
-      {  // corrupted Prefs?
-         mTruncLongestAllowedSilence = 0.5;
-      }
-      gPrefs->Read(base + wxT("CompressPercent"), &mSilenceCompressPercent, 50.0);
-      if ((mSilenceCompressPercent < 0.0) || (mSilenceCompressPercent > 100.0))
-      {  // corrupted Prefs?
-         mSilenceCompressPercent = 50.0;
-      }
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-   }
-
-   // Do not migrate again
-   gPrefs->Write(base + wxT("Migrated"), true);
-
-   return true;
-}
-
 bool EffectTruncSilence::Process(EffectSettings &)
 {
    const bool success =

@@ -40,11 +40,6 @@ public:
    virtual double GetDuration() = 0;
    virtual NumericFormatSymbol GetDurationFormat() = 0;
    virtual void SetDuration(double seconds) = 0;
-
-   // Preset handling
-   virtual RegistryPath GetUserPresetsGroup(const RegistryPath & name) = 0;
-   virtual RegistryPath GetCurrentSettingsGroup() = 0;
-   virtual RegistryPath GetFactoryDefaultsGroup() = 0;
 };
 
 class wxDialog;

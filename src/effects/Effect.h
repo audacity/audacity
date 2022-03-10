@@ -117,7 +117,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectProcessor implementation
 
-   bool SetHost(EffectHostInterface *host) override;
+   bool InitializeInstance(EffectHostInterface *host) override;
    
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -177,10 +177,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
    void SetDuration(double duration) override;
 
-   RegistryPath GetUserPresetsGroup(const RegistryPath & name) override;
-   RegistryPath GetCurrentSettingsGroup() override;
-   RegistryPath GetFactoryDefaultsGroup() override;
-
    // EffectUIHostInterface implementation
 
    int ShowHostInterface( wxWindow &parent,
@@ -234,10 +230,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
  protected:
    bool EnableApply(bool enable = true);
    bool EnablePreview(bool enable = true);
-
- public:
-   // NEW virtuals
-   virtual bool Startup();
 
 //
 // protected virtual methods
@@ -491,8 +483,6 @@ private:
 
    // For client driver
    EffectUIClientInterface *mClient;
-   size_t mNumAudioIn;
-   size_t mNumAudioOut;
 
    size_t mBufferSize;
    size_t mBlockSize;

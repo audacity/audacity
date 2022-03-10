@@ -285,54 +285,6 @@ bool EffectScienFilter::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-bool EffectScienFilter::Startup()
-{
-   wxString base = wxT("/SciFilter/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-	   double dTemp;
-      gPrefs->Read(base + wxT("Order"), &mOrder, 1);
-      mOrder = wxMax (1, mOrder);
-      mOrder = wxMin (MAX_Order, mOrder);
-      gPrefs->Read(base + wxT("FilterType"), &mFilterType, 0);
-      mFilterType = wxMax (0, mFilterType);
-      mFilterType = wxMin (2, mFilterType);
-      gPrefs->Read(base + wxT("FilterSubtype"), &mFilterSubtype, 0);
-      mFilterSubtype = wxMax (0, mFilterSubtype);
-      mFilterSubtype = wxMin (1, mFilterSubtype);
-      gPrefs->Read(base + wxT("Cutoff"), &dTemp, 1000.0);
-      mCutoff = (float)dTemp;
-      mCutoff = wxMax (1, mCutoff);
-      mCutoff = wxMin (100000, mCutoff);
-      gPrefs->Read(base + wxT("Ripple"), &dTemp, 1.0);
-      mRipple = dTemp;
-      mRipple = wxMax (0, mRipple);
-      mRipple = wxMin (100, mRipple);
-      gPrefs->Read(base + wxT("StopbandRipple"), &dTemp, 30.0);
-      mStopbandRipple = dTemp;
-      mStopbandRipple = wxMax (0, mStopbandRipple);
-      mStopbandRipple = wxMin (100, mStopbandRipple);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
 bool EffectScienFilter::Init()
 {
    int selcount = 0;

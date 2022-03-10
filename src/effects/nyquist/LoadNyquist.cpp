@@ -63,7 +63,7 @@ const static wxChar *kShippedEffects[] =
 // When the module is builtin to Audacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -73,7 +73,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // ============================================================================
 // Register this as a builtin module
 // ============================================================================
-DECLARE_BUILTIN_MODULE(NyquistsEffectBuiltin);
+DECLARE_BUILTIN_PROVIDER(NyquistsEffectBuiltin);
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -120,7 +120,7 @@ TranslatableString NyquistEffectsModule::GetDescription() const
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 bool NyquistEffectsModule::Initialize()
@@ -172,7 +172,7 @@ FilePath NyquistEffectsModule::InstallPath()
    return FileNames::PlugInDir();
 }
 
-bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+void NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
@@ -215,12 +215,9 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
          }
       }
    }
-
-   // We still want to be called during the normal registration process
-   return false;
 }
 
-PluginPaths NyquistEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths NyquistEffectsModule::FindModulePaths(PluginManagerInterface & pm)
 {
    auto pathList = NyquistEffect::GetNyquistSearchPath();
    FilePaths files;
@@ -265,7 +262,7 @@ bool NyquistEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-NyquistEffectsModule::CreateInstance(const PluginPath & path)
+NyquistEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    auto effect = std::make_unique<NyquistEffect>(path);

@@ -71,7 +71,6 @@ public:
 
    // Effect implementation
 
-   bool Startup() override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

@@ -432,7 +432,10 @@ public:
       wxWindow &parent, wxDialog &dialog, bool forceModal = false
    ) = 0;
 
-   virtual bool SetHost(EffectHostInterface *host) = 0;
+   /*!
+    @return true if successful
+    */
+   virtual bool InitializeInstance(EffectHostInterface *host) = 0;
 
    virtual bool IsGraphicalUI() = 0;
 
@@ -462,4 +465,14 @@ protected:
    virtual bool CloseUI() = 0;
 };
 
+//! Component of a configuration key path
+COMPONENTS_API const RegistryPath &CurrentSettingsGroup();
+
+//! Component of a configuration key path
+COMPONENTS_API const RegistryPath &FactoryDefaultsGroup();
+
+//! Compute part of a registry path, given a name which may be empty
+COMPONENTS_API RegistryPath UserPresetsGroup(const RegistryPath & name);
+
 #endif // __AUDACITY_EFFECTINTERFACE_H__
+

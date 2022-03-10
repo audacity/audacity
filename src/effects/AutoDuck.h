@@ -46,7 +46,6 @@ public:
 
    // Effect implementation
 
-   bool Startup() override;
    bool Init() override;
    void End() override;
    bool Process(EffectSettings &settings) override;

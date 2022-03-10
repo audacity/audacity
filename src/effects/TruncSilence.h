@@ -54,7 +54,6 @@ public:
 
    double CalcPreviewInputLength(
       const EffectSettings &settings, double previewLength) override;
-   bool Startup() override;
 
    // Analyze a single track to find silences
    // If inputLength is not NULL we are calculating the minimum

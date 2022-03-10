@@ -51,7 +51,7 @@ void BuiltinEffectsModule::DoRegistration(
 // When the module is builtin to Audacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -61,7 +61,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // ============================================================================
 // Register this as a builtin module
 // ============================================================================
-DECLARE_BUILTIN_MODULE(BuiltinsEffectBuiltin);
+DECLARE_BUILTIN_PROVIDER(BuiltinsEffectBuiltin);
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -108,7 +108,7 @@ TranslatableString BuiltinEffectsModule::GetDescription() const
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 bool BuiltinEffectsModule::Initialize()
@@ -140,7 +140,7 @@ const FileExtensions &BuiltinEffectsModule::GetFileExtensions()
    return empty;
 }
 
-bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+void BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    TranslatableString ignoredErrMsg;
    for (const auto &pair : mEffects)
@@ -155,13 +155,11 @@ bool BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
             PluginManagerInterface::DefaultRegistrationCallback);
       }
    }
-
-   // We still want to be called during the normal registration process
-   return false;
 }
 
-PluginPaths BuiltinEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
+PluginPaths BuiltinEffectsModule::FindModulePaths(PluginManagerInterface &)
 {
+   // Not really libraries
    PluginPaths names;
    for ( const auto &pair : mEffects )
       names.push_back( pair.first );
@@ -172,6 +170,7 @@ unsigned BuiltinEffectsModule::DiscoverPluginsAtPath(
    const PluginPath & path, TranslatableString &errMsg,
    const RegistrationCallback &callback)
 {
+   // At most one
    errMsg = {};
    auto effect = Instantiate(path);
    if (effect)
@@ -193,7 +192,7 @@ bool BuiltinEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-BuiltinEffectsModule::CreateInstance(const PluginPath & path)
+BuiltinEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    return Instantiate(path);

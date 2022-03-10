@@ -13,7 +13,7 @@
 #if USE_VST
 
 #include "EffectInterface.h"
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 #include "PluginInterface.h"
 
 #include "SampleFormat.h"
@@ -165,9 +165,11 @@ class VSTEffect final : public wxEvtHandler,
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
+   bool InitializePlugin();
+
    // EffectUIClientInterface implementation
 
-   bool SetHost(EffectHostInterface *host) override;
+   bool InitializeInstance(EffectHostInterface* host) override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -281,7 +283,7 @@ private:
    using ModuleHandle = std::unique_ptr < char, ModuleDeleter > ;
 #endif
 
-   EffectHostInterface *mHost;
+   EffectHostInterface *mHost{};
    PluginID mID;
    PluginPath mPath;
    unsigned mAudioIns;
@@ -389,13 +391,7 @@ private:
    friend class VSTEffectsModule;
 };
 
-///////////////////////////////////////////////////////////////////////////////
-///
-/// VSTEffectsModule is an Audacity ModuleInterface, in other words it 
-/// represents one plug in.
-///
-///////////////////////////////////////////////////////////////////////////////
-class VSTEffectsModule final : public ModuleInterface
+class VSTEffectsModule final : public PluginProvider
 {
 public:
    VSTEffectsModule();
@@ -409,7 +405,7 @@ public:
    wxString GetVersion() const override;
    TranslatableString GetDescription() const override;
 
-   // ModuleInterface implementation
+   // PluginProvider implementation
 
    bool Initialize() override;
    void Terminate() override;
@@ -418,8 +414,8 @@ public:
    const FileExtensions &GetFileExtensions() override;
    FilePath InstallPath() override;
 
-   bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindPluginPaths(PluginManagerInterface & pm) override;
+   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
+   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
    unsigned DiscoverPluginsAtPath(
       const PluginPath & path, TranslatableString &errMsg,
       const RegistrationCallback &callback)
@@ -428,7 +424,7 @@ public:
    bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
    std::unique_ptr<ComponentInterface>
-      CreateInstance(const PluginPath & path) override;
+      LoadPlugin(const PluginPath & path) override;
 
    // VSTEffectModule implementation
 

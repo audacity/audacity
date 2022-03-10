@@ -19,10 +19,9 @@ BEGIN_EVENT_TABLE(VST3OptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, VST3OptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-VST3OptionsDialog::VST3OptionsDialog(wxWindow * parent,
-   EffectHostInterface &host, EffectDefinitionInterface &effect)
+VST3OptionsDialog::VST3OptionsDialog(
+   wxWindow * parent, EffectDefinitionInterface &effect)
 :  wxDialogWrapper(parent, wxID_ANY, XO("VST Effect Options"))
-, mHost{ host }
 , mEffect{ effect }
 {
    GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),

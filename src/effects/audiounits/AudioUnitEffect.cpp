@@ -234,7 +234,7 @@ public:
 // When the module is builtin to Audacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -244,7 +244,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // ============================================================================
 // Register this as a builtin module
 // ============================================================================
-DECLARE_BUILTIN_MODULE(AudioUnitEffectsBuiltin);
+DECLARE_BUILTIN_PROVIDER(AudioUnitEffectsBuiltin);
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -292,7 +292,7 @@ TranslatableString AudioUnitEffectsModule::GetDescription() const
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 const FileExtensions &AudioUnitEffectsModule::GetFileExtensions()
@@ -322,13 +322,11 @@ EffectFamilySymbol AudioUnitEffectsModule::GetOptionalFamilySymbol()
 #endif
 }
 
-bool AudioUnitEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+void AudioUnitEffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
 {
-   // Nothing to be done here
-   return true;
 }
 
-PluginPaths AudioUnitEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths AudioUnitEffectsModule::FindModulePaths(PluginManagerInterface &)
 {
    PluginPaths effects;
 
@@ -355,7 +353,7 @@ unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
    }
 
    AudioUnitEffect effect(path, name, component);
-   if (!effect.SetHost(NULL))
+   if (!effect.InitializePlugin())
    {
       // TODO:  Is it worth it to discriminate all the ways SetHost might
       // return false?
@@ -383,11 +381,14 @@ bool AudioUnitEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-AudioUnitEffectsModule::CreateInstance(const PluginPath & path)
+AudioUnitEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   if (wxString name; auto component = FindAudioUnit(path, name))
-      return std::make_unique<AudioUnitEffect>(path, name, component);
+   if (wxString name; auto component = FindAudioUnit(path, name)) {
+      auto result = std::make_unique<AudioUnitEffect>(path, name, component);
+      result->InitializePlugin();
+      return result;
+   }
    return nullptr;
 }
 
@@ -501,8 +502,8 @@ OSType AudioUnitEffectsModule::ToOSType(const wxString & type)
 class AudioUnitEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   AudioUnitEffectOptionsDialog(wxWindow * parent,
-      EffectHostInterface &host, EffectDefinitionInterface &effect);
+   AudioUnitEffectOptionsDialog(
+      wxWindow * parent, EffectDefinitionInterface &effect);
    virtual ~AudioUnitEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -510,7 +511,6 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectHostInterface &mHost;
    EffectDefinitionInterface &mEffect;
 
    bool mUseLatency;
@@ -523,10 +523,9 @@ BEGIN_EVENT_TABLE(AudioUnitEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, AudioUnitEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(wxWindow * parent,
-   EffectHostInterface &host, EffectDefinitionInterface &effect)
+AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(
+   wxWindow * parent, EffectDefinitionInterface &effect)
 : wxDialogWrapper(parent, wxID_ANY, XO("Audio Unit Effect Options"))
-, mHost{ host }
 , mEffect{ effect }
 {
    GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
@@ -784,7 +783,7 @@ TranslatableString AudioUnitEffectImportDialog::Import(
    }
 
    // And write it to the config
-   wxString group = mEffect->mHost->GetUserPresetsGroup(name);
+   wxString group = UserPresetsGroup(name);
    if (!SetConfig(*mEffect,
       PluginSettings::Private, group, PRESET_KEY,
       parms))
@@ -1009,12 +1008,10 @@ bool AudioUnitEffect::SupportsAutomation() const
 // EffectProcessor Implementation
 // ============================================================================
 
-bool AudioUnitEffect::SetHost(EffectHostInterface *host)
+bool AudioUnitEffect::InitializePlugin()
 {
    OSStatus result;
-   
-   mHost = host;
- 
+
    mSampleRate = 44100;
    result = AudioComponentInstanceNew(mComponent, &mUnit);
    if (!mUnit)
@@ -1036,7 +1033,22 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
                         &mBlockSize,
                         &dataSize);
 
-   // mHost will be null during registration
+   // Is this really needed here or can it be done in InitializeInstance()
+   // only?  I think it can, but this is more a conservative change for now,
+   // preserving what SetHost() did
+   return MakeListener();
+}
+
+bool AudioUnitEffect::InitializeInstance(EffectHostInterface *host)
+{
+   OSStatus result;
+
+   mHost = host;
+
+   if (mMaster)
+      // Do common steps
+      InitializePlugin();
+
    if (mHost)
    {
       GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -1046,20 +1058,27 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
 
       bool haveDefaults;
       GetConfig(*this, PluginSettings::Private,
-         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
+         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
       if (!haveDefaults)
       {
-         SavePreset(mHost->GetFactoryDefaultsGroup());
+         SavePreset(FactoryDefaultsGroup());
          SetConfig(*this, PluginSettings::Private,
-            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+            FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadPreset(mHost->GetCurrentSettingsGroup());
-   } 
+      LoadPreset(CurrentSettingsGroup());
+   }
 
+   return true;
+}
+
+bool AudioUnitEffect::MakeListener()
+{
    if (!mMaster)
    {
-     result = AUEventListenerCreate(AudioUnitEffect::EventListenerCallback,
+      // Don't have a master -- so this IS the master.
+      OSStatus result;
+      result = AUEventListenerCreate(AudioUnitEffect::EventListenerCallback,
                                     this,
                                     (CFRunLoopRef)GetCFRunLoopFromEventLoop(GetCurrentEventLoop()),
                                     kCFRunLoopDefaultMode,
@@ -1346,7 +1365,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
-   if (!slave->SetHost(NULL))
+   if (!slave->InitializeInstance(nullptr))
    {
       return false;
    }
@@ -1624,7 +1643,7 @@ bool AudioUnitEffect::LoadFactoryPreset(int id)
 
 bool AudioUnitEffect::LoadFactoryDefaults()
 {
-   return LoadPreset(mHost->GetFactoryDefaultsGroup());
+   return LoadPreset(FactoryDefaultsGroup());
 }
 
 RegistryPaths AudioUnitEffect::GetFactoryPresets() const
@@ -1877,7 +1896,7 @@ bool AudioUnitEffect::HasOptions()
 
 void AudioUnitEffect::ShowOptions()
 {
-   AudioUnitEffectOptionsDialog dlg(mParent, *mHost, *this);
+   AudioUnitEffectOptionsDialog dlg(mParent, *this);
    if (dlg.ShowModal())
    {
       // Reinitialize configuration settings

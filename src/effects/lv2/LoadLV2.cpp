@@ -57,7 +57,7 @@ Functions that find and load all LV2 plugins on the system.
 // When the module is builtin to Audacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -67,7 +67,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // ============================================================================
 // Register this as a builtin module
 // ============================================================================
-DECLARE_BUILTIN_MODULE(LV2sEffectBuiltin);
+DECLARE_BUILTIN_PROVIDER(LV2sEffectBuiltin);
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -117,7 +117,7 @@ TranslatableString LV2EffectsModule::GetDescription() const
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 bool LV2EffectsModule::Initialize()
@@ -231,12 +231,11 @@ const FileExtensions &LV2EffectsModule::GetFileExtensions()
    return empty;
 }
 
-bool LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
+void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
 {
-   return false;
 }
 
-PluginPaths LV2EffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
+PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface &)
 {
    // Retrieve data about all LV2 plugins
    const LilvPlugins *plugs = lilv_world_get_all_plugins(gWorld);
@@ -283,7 +282,7 @@ unsigned LV2EffectsModule::DiscoverPluginsAtPath(
    if (plug)
    {
       LV2Effect effect(plug);
-      if (effect.SetHost(NULL))
+      if (effect.InitializePlugin())
       {
          if (callback)
             callback( this, &effect );
@@ -303,11 +302,14 @@ bool LV2EffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-LV2EffectsModule::CreateInstance(const PluginPath & path)
+LV2EffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   if (auto plug = GetPlugin(path))
-      return std::make_unique<LV2Effect>(plug);
+   if (auto plug = GetPlugin(path)) {
+      auto result = std::make_unique<LV2Effect>(plug);
+      result->InitializePlugin();
+      return result;
+   }
    return nullptr;
 }
 

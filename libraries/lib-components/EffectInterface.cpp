@@ -183,3 +183,23 @@ bool DefaultEffectUIValidator::Validate()
 }
 
 EffectUIClientInterface::~EffectUIClientInterface() = default;
+
+const RegistryPath &CurrentSettingsGroup()
+{
+   static RegistryPath id{ "CurrentSettings" };
+   return id;
+}
+
+const RegistryPath &FactoryDefaultsGroup()
+{
+   static RegistryPath id{ "FactoryDefaults" };
+   return id;
+}
+
+RegistryPath UserPresetsGroup(const RegistryPath & name)
+{
+   RegistryPath group = wxT("UserPresets");
+   if (!name.empty())
+      group += wxCONFIG_PATH_SEPARATOR + name;
+   return group;
+}

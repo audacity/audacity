@@ -86,7 +86,7 @@ const static wxChar *kShippedEffects[] =
 // When the module is builtin to Audacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -96,7 +96,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // ============================================================================
 // Register this as a builtin module
 // ============================================================================
-DECLARE_BUILTIN_MODULE(LadspaBuiltin);
+DECLARE_BUILTIN_PROVIDER(LadspaBuiltin);
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -146,7 +146,7 @@ TranslatableString LadspaEffectsModule::GetDescription() const
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 bool LadspaEffectsModule::Initialize()
@@ -199,7 +199,7 @@ FilePath LadspaEffectsModule::InstallPath()
    return FileNames::PlugInDir();
 }
 
-bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+void LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
@@ -221,12 +221,9 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
          }
       }
    }
-
-   // We still want to be called during the normal registration process
-   return false;
 }
 
-PluginPaths LadspaEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths LadspaEffectsModule::FindModulePaths(PluginManagerInterface & pm)
 {
    auto pathList = GetSearchPaths();
    FilePaths files;
@@ -293,7 +290,7 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
 
          for (data = mainFn(index); data; data = mainFn(++index)) {
             LadspaEffect effect(path, index);
-            if (effect.SetHost(NULL)) {
+            if (effect.InitializePlugin()) {
                ++nLoaded;
                if (callback)
                   callback( this, &effect );
@@ -337,7 +334,7 @@ bool LadspaEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-LadspaEffectsModule::CreateInstance(const PluginPath & path)
+LadspaEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the path is two words.
@@ -346,7 +343,9 @@ LadspaEffectsModule::CreateInstance(const PluginPath & path)
    long index;
    wxString realPath = path.BeforeFirst(wxT(';'));
    path.AfterFirst(wxT(';')).ToLong(&index);
-   return std::make_unique<LadspaEffect>(realPath, (int)index);
+   auto result = std::make_unique<LadspaEffect>(realPath, (int)index);
+   result->InitializePlugin();
+   return result;
 }
 
 FilePaths LadspaEffectsModule::GetSearchPaths()
@@ -401,8 +400,8 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
 class LadspaEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   LadspaEffectOptionsDialog(wxWindow * parent,
-      EffectHostInterface &host, EffectDefinitionInterface &effect);
+   LadspaEffectOptionsDialog(
+      wxWindow * parent, EffectDefinitionInterface &effect);
    virtual ~LadspaEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -410,7 +409,6 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectHostInterface &mHost;
    EffectDefinitionInterface &mEffect;
    bool mUseLatency;
 
@@ -421,10 +419,9 @@ BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LadspaEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(wxWindow * parent,
-   EffectHostInterface &host, EffectDefinitionInterface &effect)
+LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(
+   wxWindow * parent, EffectDefinitionInterface &effect)
 : wxDialogWrapper(parent, wxID_ANY, XO("LADSPA Effect Options"))
-, mHost{ host }
 , mEffect{ effect }
 {
    GetConfig(mEffect,
@@ -619,7 +616,6 @@ LadspaEffect::LadspaEffect(const wxString & path, int index)
    mIndex = index;
    mData = NULL;
 
-   mHost = NULL;
    mMaster = NULL;
    mReady = false;
 
@@ -723,10 +719,8 @@ bool LadspaEffect::SupportsAutomation() const
 // EffectProcessor Implementation
 // ============================================================================
 
-bool LadspaEffect::SetHost(EffectHostInterface *host)
+bool LadspaEffect::InitializePlugin()
 {
-   mHost = host;
-
    if (!Load())
    {
       return false;
@@ -865,8 +859,13 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
          }
       }
    }
+   return true;
+}
 
-   // mHost will be null during registration
+bool LadspaEffect::InitializeInstance(EffectHostInterface *host)
+{
+   mHost = host;
+
    if (mHost)
    {
       GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -874,16 +873,16 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
 
       bool haveDefaults;
       GetConfig(*this, PluginSettings::Private,
-         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
          false);
       if (!haveDefaults)
       {
-         SaveParameters(mHost->GetFactoryDefaultsGroup());
+         SaveParameters(FactoryDefaultsGroup());
          SetConfig(*this, PluginSettings::Private,
-            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+            FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(mHost->GetCurrentSettingsGroup());
+      LoadParameters(CurrentSettingsGroup());
    }
 
    return true;
@@ -1153,7 +1152,7 @@ bool LadspaEffect::LoadFactoryPreset(int WXUNUSED(id))
 
 bool LadspaEffect::LoadFactoryDefaults()
 {
-   if (!LoadParameters(mHost->GetFactoryDefaultsGroup()))
+   if (!LoadParameters(FactoryDefaultsGroup()))
    {
       return false;
    }
@@ -1541,7 +1540,7 @@ bool LadspaEffect::HasOptions()
 
 void LadspaEffect::ShowOptions()
 {
-   LadspaEffectOptionsDialog dlg(mParent, *mHost, *this);
+   LadspaEffectOptionsDialog dlg(mParent, *this);
    if (dlg.ShowModal())
    {
       // Reinitialize configuration options

@@ -20,7 +20,7 @@ class NumericTextCtrl;
 #include <wx/weakref.h>
 
 #include "EffectInterface.h"
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 #include "PluginInterface.h"
 
 #include "ladspa.h"
@@ -110,10 +110,11 @@ public:
 
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
+   bool InitializePlugin();
 
    // EffectUIClientInterface implementation
 
-   bool SetHost(EffectHostInterface *host) override;
+   bool InitializeInstance(EffectHostInterface* host) override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -148,7 +149,7 @@ private:
 
    wxString mPath;
    int mIndex;
-   EffectHostInterface *mHost;
+   EffectHostInterface *mHost{};
 
    wxDynamicLibrary mLib;
    const LADSPA_Descriptor *mData;
@@ -202,7 +203,7 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LadspaEffectsModule final : public ModuleInterface
+class LadspaEffectsModule final : public PluginProvider
 {
 public:
    LadspaEffectsModule();
@@ -216,7 +217,7 @@ public:
    wxString GetVersion() const override;
    TranslatableString GetDescription() const override;
 
-   // ModuleInterface implementation
+   // PluginProvider implementation
 
    bool Initialize() override;
    void Terminate() override;
@@ -225,8 +226,8 @@ public:
    const FileExtensions &GetFileExtensions() override;
    FilePath InstallPath() override;
 
-   bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindPluginPaths(PluginManagerInterface & pm) override;
+   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
+   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
    unsigned DiscoverPluginsAtPath(
       const PluginPath & path, TranslatableString &errMsg,
       const RegistrationCallback &callback)
@@ -235,7 +236,7 @@ public:
    bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
    std::unique_ptr<ComponentInterface>
-      CreateInstance(const PluginPath & path) override;
+      LoadPlugin(const PluginPath & path) override;
 
    // LadspaEffectModule implementation
 

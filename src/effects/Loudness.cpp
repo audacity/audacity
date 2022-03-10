@@ -151,25 +151,6 @@ bool EffectLoudness::CheckWhetherSkipEffect()
    return false;
 }
 
-bool EffectLoudness::Startup()
-{
-   wxString base = wxT("/Effects/Loudness/");
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      mStereoInd = false;
-      mDualMono = DEF_DualMono;
-      mNormalizeTo = kLoudness;
-      mLUFSLevel = DEF_LUFSLevel;
-      mRMSLevel = DEF_RMSLevel;
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      gPrefs->Flush();
-   }
-   return true;
-}
-
 bool EffectLoudness::Process(EffectSettings &)
 {
    if(mNormalizeTo == kLoudness)

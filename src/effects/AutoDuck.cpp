@@ -178,39 +178,6 @@ bool EffectAutoDuck::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-bool EffectAutoDuck::Startup()
-{
-   wxString base = wxT("/Effects/AutoDuck/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      gPrefs->Read(base + wxT("DuckAmountDb"), &mDuckAmountDb, DEF_DuckAmountDb);
-      gPrefs->Read(base + wxT("InnerFadeDownLen"), &mInnerFadeDownLen, DEF_InnerFadeDownLen);
-      gPrefs->Read(base + wxT("InnerFadeUpLen"), &mInnerFadeUpLen, DEF_InnerFadeUpLen);
-      gPrefs->Read(base + wxT("OuterFadeDownLen"), &mOuterFadeDownLen, DEF_OuterFadeDownLen);
-      gPrefs->Read(base + wxT("OuterFadeUpLen"), &mOuterFadeUpLen, DEF_OuterFadeUpLen);
-      gPrefs->Read(base + wxT("ThresholdDb"), &mThresholdDb, DEF_ThresholdDb);
-      gPrefs->Read(base + wxT("MaximumPause"), &mMaximumPause, DEF_MaximumPause);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-      
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
 bool EffectAutoDuck::Init()
 {
    mControlTrack = NULL;

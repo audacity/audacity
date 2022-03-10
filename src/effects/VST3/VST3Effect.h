@@ -62,7 +62,7 @@ class VST3Effect final : public EffectUIClientInterface
    Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
    Steinberg::IPtr<internal::ComponentHandler> mComponentHandler;
    wxWindow* mParent { nullptr };
-   EffectHostInterface *mEffectHost;
+   EffectHostInterface *mEffectHost{};
    NumericTextCtrl* mDuration { nullptr };
 
    //Holds pending parameter changes to be applied to multiple realtime effects.
@@ -142,7 +142,8 @@ public:
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
    int ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal) override;
-   bool SetHost(EffectHostInterface* host) override;
+   bool InitializePlugin();
+   bool InitializeInstance(EffectHostInterface* host) override;
    bool IsGraphicalUI() override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;

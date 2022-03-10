@@ -180,49 +180,6 @@ double EffectChangeSpeed::CalcPreviewInputLength(
    return previewLength * (100.0 + m_PercentChange) / 100.0;
 }
 
-bool EffectChangeSpeed::Startup()
-{
-   wxString base = wxT("/Effects/ChangeSpeed/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      // Retrieve last used control values
-      gPrefs->Read(base + wxT("PercentChange"), &m_PercentChange, 0);
-
-      wxString format;
-      gPrefs->Read(base + wxT("TimeFormat"), &format, wxString{});
-      mFormat = NumericConverter::LookupFormat( NumericConverter::TIME, format );
-
-      gPrefs->Read(base + wxT("VinylChoice"), &mFromVinyl, 0);
-      if (mFromVinyl == kVinyl_NA)
-      {
-         mFromVinyl = kVinyl_33AndAThird;
-      }
-
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
 bool EffectChangeSpeed::Init()
 {
    // The selection might have changed since the last time EffectChangeSpeed
@@ -300,13 +257,13 @@ EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    {
       wxString formatId;
       GetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(),
+         CurrentSettingsGroup(),
          wxT("TimeFormat"), formatId, mFormat.Internal());
       mFormat = NumericConverter::LookupFormat(
          NumericConverter::TIME, formatId );
    }
    GetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(),
+      CurrentSettingsGroup(),
       wxT("VinylChoice"), mFromVinyl, mFromVinyl);
 
    S.SetBorder(5);
@@ -467,9 +424,9 @@ bool EffectChangeSpeed::TransferDataFromWindow(EffectSettings &)
    m_PercentChange = exactPercent;
 
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
+      CurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
+      CurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
 
    return true;
 }
@@ -674,7 +631,7 @@ void EffectChangeSpeed::OnChoice_Vinyl(wxCommandEvent & WXUNUSED(evt))
    // Use this as the 'preferred' choice.
    if (mFromVinyl != kVinyl_NA) {
       SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
+         CurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
    }
 
    // If mFromVinyl & mToVinyl are set, then there's a NEW percent change.
@@ -785,7 +742,7 @@ void EffectChangeSpeed::Update_Vinyl()
          } else {
             // Use the last saved option.
             GetConfig(GetDefinition(), PluginSettings::Private,
-               GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, 0);
+               CurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, 0);
             mpChoice_FromVinyl->SetSelection(mFromVinyl);
             mpChoice_ToVinyl->SetSelection(mFromVinyl);
          }

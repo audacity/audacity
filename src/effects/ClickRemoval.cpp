@@ -138,42 +138,6 @@ bool EffectClickRemoval::CheckWhetherSkipEffect()
    return ((mClickWidth == 0) || (mThresholdLevel == 0));
 }
 
-bool EffectClickRemoval::Startup()
-{
-   wxString base = wxT("/Effects/ClickRemoval/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      mThresholdLevel = gPrefs->Read(base + wxT("ClickThresholdLevel"), 200);
-      if ((mThresholdLevel < MIN_Threshold) || (mThresholdLevel > MAX_Threshold))
-      {  // corrupted Prefs?
-         mThresholdLevel = 0;  //Off-skip
-      }
-      mClickWidth = gPrefs->Read(base + wxT("ClickWidth"), 20);
-      if ((mClickWidth < MIN_Width) || (mClickWidth > MAX_Width))
-      {  // corrupted Prefs?
-         mClickWidth = 0;  //Off-skip
-      }
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
 bool EffectClickRemoval::Process(EffectSettings &)
 {
    this->CopyInputTracks(); // Set up mOutputTracks.

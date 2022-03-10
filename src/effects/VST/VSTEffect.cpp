@@ -142,7 +142,7 @@ static uint32_t reinterpretAsUint32(float f)
 // declared static so as not to clash with other builtin modules.
 //
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
@@ -158,7 +158,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // executed to scan a VST effect in a different process.
 //
 // ============================================================================
-DECLARE_BUILTIN_MODULE(VSTBuiltin);
+DECLARE_BUILTIN_PROVIDER(VSTBuiltin);
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -355,7 +355,7 @@ TranslatableString VSTEffectsModule::GetDescription() const
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 bool VSTEffectsModule::Initialize()
@@ -393,13 +393,11 @@ FilePath VSTEffectsModule::InstallPath()
    return {};
 }
 
-bool VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
+void VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
 {
-   // We don't auto-register
-   return true;
 }
 
-PluginPaths VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths VSTEffectsModule::FindModulePaths(PluginManagerInterface & pm)
 {
    FilePaths pathList;
    FilePaths files;
@@ -695,11 +693,13 @@ bool VSTEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-VSTEffectsModule::CreateInstance(const PluginPath & path)
+VSTEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
-   return std::make_unique<VSTEffect>(path);
+   auto result = std::make_unique<VSTEffect>(path);
+   result->InitializePlugin();
+   return result;
 }
 
 // ============================================================================
@@ -716,7 +716,7 @@ VSTEffectsModule::CreateInstance(const PluginPath & path)
 void VSTEffectsModule::Check(const wxChar *path)
 {
    VSTEffect effect(path);
-   if (effect.SetHost(NULL))
+   if (effect.InitializePlugin())
    {
       auto effectIDs = effect.GetEffectIDs();
       wxString out;
@@ -764,8 +764,7 @@ void VSTEffectsModule::Check(const wxChar *path)
 class VSTEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   VSTEffectOptionsDialog(wxWindow * parent,
-      EffectHostInterface &host, EffectDefinitionInterface &effect);
+   VSTEffectOptionsDialog(wxWindow * parent, EffectDefinitionInterface &effect);
    virtual ~VSTEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -773,7 +772,6 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectHostInterface &mHost;
    EffectDefinitionInterface &mEffect;
    int mBufferSize;
    bool mUseLatency;
@@ -786,10 +784,9 @@ BEGIN_EVENT_TABLE(VSTEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, VSTEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-VSTEffectOptionsDialog::VSTEffectOptionsDialog(wxWindow * parent,
-   EffectHostInterface &host, EffectDefinitionInterface &effect)
+VSTEffectOptionsDialog::VSTEffectOptionsDialog(
+   wxWindow * parent, EffectDefinitionInterface &effect)
 :  wxDialogWrapper(parent, wxID_ANY, XO("VST Effect Options"))
-, mHost{ host }
 , mEffect{ effect }
 {
    GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
@@ -1147,7 +1144,6 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
 :  mPath(path),
    mMaster(master)
 {
-   mHost = NULL;
    mModule = NULL;
    mAEffect = NULL;
 
@@ -1295,10 +1291,8 @@ bool VSTEffect::SupportsAutomation() const
 // EffectProcessor Implementation
 // ============================================================================
 
-bool VSTEffect::SetHost(EffectHostInterface *host)
+bool VSTEffect::InitializePlugin()
 {
-   mHost = host;
-
    if (!mAEffect)
    {
       Load();
@@ -1316,6 +1310,12 @@ bool VSTEffect::SetHost(EffectHostInterface *host)
       return true;
    }
 
+   return true;
+}
+
+bool VSTEffect::InitializeInstance(EffectHostInterface *host)
+{
+   mHost = host;
    if (mHost)
    {
       int userBlockSize;
@@ -1329,16 +1329,16 @@ bool VSTEffect::SetHost(EffectHostInterface *host)
 
       bool haveDefaults;
       GetConfig(*this, PluginSettings::Private,
-         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
          false);
       if (!haveDefaults)
       {
-         SaveParameters(mHost->GetFactoryDefaultsGroup());
+         SaveParameters(FactoryDefaultsGroup());
          SetConfig(*this, PluginSettings::Private,
-            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+            FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(mHost->GetCurrentSettingsGroup());
+      LoadParameters(CurrentSettingsGroup());
    }
 
    return true;
@@ -1714,7 +1714,7 @@ bool VSTEffect::LoadFactoryPreset(int id)
 
 bool VSTEffect::LoadFactoryDefaults()
 {
-   if (!LoadParameters(mHost->GetFactoryDefaultsGroup()))
+   if (!LoadParameters(FactoryDefaultsGroup()))
    {
       return false;
    }
@@ -1951,7 +1951,7 @@ bool VSTEffect::HasOptions()
 
 void VSTEffect::ShowOptions()
 {
-   VSTEffectOptionsDialog dlg(mParent, *mHost, *this);
+   VSTEffectOptionsDialog dlg(mParent, *this);
    if (dlg.ShowModal())
    {
       // Reinitialize configuration settings

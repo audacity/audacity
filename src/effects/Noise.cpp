@@ -202,34 +202,6 @@ bool EffectNoise::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-bool EffectNoise::Startup()
-{
-   wxString base = wxT("/Effects/Noise/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      gPrefs->Read(base + wxT("Type"), &mType, 0L);
-      gPrefs->Read(base + wxT("Amplitude"), &mAmp, 0.8f);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
 std::unique_ptr<EffectUIValidator>
 EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {

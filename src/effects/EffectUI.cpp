@@ -561,8 +561,8 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    }
    
    if (!TransferDataFromWindow() ||
-       !mEffectUIHost.GetDefinition().SaveUserPreset(
-         mEffectUIHost.GetCurrentSettingsGroup(), mpAccess->Get()))
+       !mEffectUIHost.GetDefinition()
+         .SaveUserPreset(CurrentSettingsGroup(), mpAccess->Get()))
       return;
 
    if (IsModal())
@@ -888,8 +888,8 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
    
    // Make mutable copy
    auto settings = mpAccess->Get();
-   mEffectUIHost.GetDefinition().LoadUserPreset(
-      mEffectUIHost.GetUserPresetsGroup(mUserPresets[preset]), settings);
+   mEffectUIHost.GetDefinition()
+      .LoadUserPreset(UserPresetsGroup(mUserPresets[preset]), settings);
    TransferDataToWindow();
    // Communicate change of settings
    mpAccess->Set(std::move(settings));
@@ -920,8 +920,7 @@ void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
    if (res == wxYES)
    {
       RemoveConfigSubgroup(mEffectUIHost.GetDefinition(),
-         PluginSettings::Private,
-         mEffectUIHost.GetUserPresetsGroup(preset));
+         PluginSettings::Private, UserPresetsGroup(preset));
    }
    
    LoadUserPresets();
@@ -999,8 +998,8 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
       }
       
       if (TransferDataFromWindow())
-         mEffectUIHost.GetDefinition().SaveUserPreset(
-            mEffectUIHost.GetUserPresetsGroup(name), mpAccess->Get());
+         mEffectUIHost.GetDefinition()
+            .SaveUserPreset(UserPresetsGroup(name), mpAccess->Get());
       LoadUserPresets();
       
       break;
@@ -1163,8 +1162,8 @@ void EffectUIHost::LoadUserPresets()
 {
    mUserPresets.clear();
    
-   GetConfigSubgroups(mEffectUIHost.GetDefinition(), PluginSettings::Private,
-      mEffectUIHost.GetUserPresetsGroup(wxEmptyString), mUserPresets);
+   GetConfigSubgroups(mEffectUIHost.GetDefinition(),
+      PluginSettings::Private, UserPresetsGroup(wxEmptyString), mUserPresets);
    
    std::sort( mUserPresets.begin(), mUserPresets.end() );
    

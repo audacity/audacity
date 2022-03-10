@@ -263,13 +263,13 @@ EffectEqualization::EffectEqualization(int Options)
    mCurveName = DEF_CurveName;
 
    GetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin, DEF_dBMin);
+      CurrentSettingsGroup(), wxT("dBMin"), mdBMin, DEF_dBMin);
    GetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax, DEF_dBMax);
+      CurrentSettingsGroup(), wxT("dBMax"), mdBMax, DEF_dBMax);
    GetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
+      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
    GetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
+      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
 
    mLogEnvelope = std::make_unique<Envelope>
       (false,
@@ -306,7 +306,7 @@ EffectEqualization::EffectEqualization(int Options)
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    bool useSSE;
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("/SSE/GUI"), useSSE, false);
+   GetPrivateConfig(CurrentSettingsGroup(), wxT("/SSE/GUI"), useSSE, false);
    if(useSSE && !mEffectEqualization48x)
       mEffectEqualization48x = std::make_unique<EffectEqualization48x>();
    else if(!useSSE)
@@ -574,13 +574,13 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
    SaveCurves();
 
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin);
+      CurrentSettingsGroup(), wxT("dBMin"), mdBMin);
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax);
+      CurrentSettingsGroup(), wxT("dBMax"), mdBMax);
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
+      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
+      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
 
    return true;
 }
@@ -595,70 +595,6 @@ wxString EffectEqualization::GetPrefsPrefix()
    else if( mOptions == kEqOptionCurve )
       base = wxT("/Effects/FilterCurve/");
    return base;
-}
-
-
-bool EffectEqualization::Startup()
-{
-   wxString base = GetPrefsPrefix();
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      // These get saved to the current preset
-      int filterLength;
-      gPrefs->Read(base + wxT("FilterLength"), &filterLength, 4001);
-      mM = std::max(0, filterLength);
-      if ((mM < 21) || (mM > 8191)) {  // corrupted Prefs?
-         mM = 4001;  //default
-      }
-      gPrefs->Read(base + wxT("CurveName"), &mCurveName, wxT("unnamed"));
-      gPrefs->Read(base + wxT("Lin"), &mLin, false);
-      gPrefs->Read(base + wxT("Interp"), &mInterp, 0);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // These persist across preset changes
-      double dBMin;
-      gPrefs->Read(base + wxT("dBMin"), &dBMin, -30.0);
-      if ((dBMin < -120) || (dBMin > -10)) {  // corrupted Prefs?
-         dBMin = -30;  //default
-      }
-      mdBMin = dBMin;
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin);
-
-      double dBMax;
-      gPrefs->Read(base + wxT("dBMax"), &dBMax, 30.);
-      if ((dBMax < 0) || (dBMax > 60)) {  // corrupted Prefs?
-         dBMax = 30;  //default
-      }
-      mdBMax = dBMax;
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax);
-
-      gPrefs->Read(base + wxT("DrawMode"), &mDrawMode, true);
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
-
-      gPrefs->Read(base + wxT("DrawGrid"), &mDrawGrid, true);
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
 }
 
 bool EffectEqualization::Init()
@@ -765,7 +701,7 @@ std::unique_ptr<EffectUIValidator>
 EffectEqualization::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    if ( (S.GetMode() == eIsCreating ) && !IsBatchProcessing() )
-      LoadUserPreset(GetCurrentSettingsGroup());
+      LoadUserPreset(CurrentSettingsGroup());
 
    //LoadCurves();
 
