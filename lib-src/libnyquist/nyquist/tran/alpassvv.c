@@ -115,7 +115,7 @@ void alpassvv_nnn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) *feedback_ptr_reg++;
@@ -235,7 +235,7 @@ void alpassvv_nns_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) (feedback_scale_reg * *feedback_ptr_reg++);
@@ -372,7 +372,7 @@ void alpassvv_nni_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) 
@@ -517,7 +517,7 @@ void alpassvv_nnr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) feedback_val;
@@ -655,7 +655,7 @@ void alpassvv_nin_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) *feedback_ptr_reg++;
@@ -796,7 +796,7 @@ void alpassvv_nis_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) (feedback_scale_reg * *feedback_ptr_reg++);
@@ -949,7 +949,7 @@ void alpassvv_nii_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) 
@@ -1109,7 +1109,7 @@ void alpassvv_nir_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) feedback_val;
@@ -1254,7 +1254,7 @@ void alpassvv_nrn_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) *feedback_ptr_reg++;
@@ -1398,7 +1398,7 @@ void alpassvv_nrs_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) (feedback_scale_reg * *feedback_ptr_reg++);
@@ -1554,7 +1554,7 @@ void alpassvv_nri_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) 
@@ -1718,7 +1718,7 @@ void alpassvv_nrr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
             {
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) feedback_val;
