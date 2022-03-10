@@ -1077,10 +1077,13 @@ int NyquistEffect::ShowHostInterface(
       // Delegate to the Nyquist Prompt,
       // which gets some Lisp from the user to interpret
 
-      access.ModifySettings([&](EffectSettings &settings){
-         res = Delegate(effect, settings,
-            parent, factory, access.shared_from_this());
-      });
+      // No need to read-modify-write the Settings, 
+      // just use a throwaway temp Settings
+
+      auto newSettings = effect.MakeSettings();
+      auto newAccess = std::make_shared<SimpleEffectSettingsAccess>(newSettings);
+      res = Delegate(effect, newSettings,
+         parent, factory, newAccess);
       mT0 = effect.mT0;
       mT1 = effect.mT1;
    }
