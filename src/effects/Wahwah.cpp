@@ -329,16 +329,6 @@ bool EffectWahwah::TransferDataToWindow(const EffectSettings &)
    return true;
 }
 
-bool EffectWahwah::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
 // EffectWahwah implementation
 
 void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate)

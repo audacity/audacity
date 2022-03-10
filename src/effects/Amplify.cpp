@@ -322,11 +322,6 @@ bool EffectAmplify::TransferDataToWindow(const EffectSettings &)
 
 bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    mRatio = DB_TO_LINEAR(std::clamp<double>(
       mAmp * SCL_Amp, MIN_Amp * SCL_Amp, MAX_Amp * SCL_Amp) / SCL_Amp);
 

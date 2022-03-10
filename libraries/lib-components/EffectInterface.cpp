@@ -173,7 +173,7 @@ DefaultEffectUIValidator::~DefaultEffectUIValidator()
    mEffect.CloseUI();
 }
 
-bool DefaultEffectUIValidator::Validate()
+bool DefaultEffectUIValidator::ValidateUI()
 {
    bool result {};
    mAccess.ModifySettings([&](EffectSettings &settings){

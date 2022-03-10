@@ -500,11 +500,6 @@ bool EffectToneGen::TransferDataToWindow(const EffectSettings &)
 
 bool EffectToneGen::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    if (!mChirp)
    {
       mFrequency[1] = mFrequency[0];

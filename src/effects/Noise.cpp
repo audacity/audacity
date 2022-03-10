@@ -249,12 +249,6 @@ bool EffectNoise::TransferDataToWindow(const EffectSettings &)
 
 bool EffectNoise::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    SetDuration(mNoiseDurationT->GetValue());
-
    return true;
 }

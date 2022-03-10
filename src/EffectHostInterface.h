@@ -126,6 +126,8 @@ public:
    virtual bool Startup(EffectUIClientInterface *client) = 0;
 
    virtual bool TransferDataToWindow(const EffectSettings &settings) = 0;
+
+   //! Update the given settings from controls
    virtual bool TransferDataFromWindow(EffectSettings &settings) = 0;
 };
 

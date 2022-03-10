@@ -388,7 +388,6 @@ private:
    bool BuildPlain(EffectSettingsAccess &access);
 
    bool TransferDataToWindow() /* not override */;
-   bool TransferDataFromWindow() /* not override */;
    void SetSlider(const LV2ControlPortPtr & port);
 
    void OnTrigger(wxCommandEvent & evt);

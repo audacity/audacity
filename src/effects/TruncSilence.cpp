@@ -799,13 +799,7 @@ bool EffectTruncSilence::TransferDataToWindow(const EffectSettings &)
 
 bool EffectTruncSilence::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    mbIndependent = mIndependent->IsChecked();
-
    return true;
 }
 

@@ -414,7 +414,7 @@ public:
    /*!
     @return true only if panel settings are acceptable
     */
-   virtual bool Validate() = 0;
+   virtual bool ValidateUI() = 0;
 };
 
 /*************************************************************************************//**
@@ -435,7 +435,8 @@ public:
    DefaultEffectUIValidator(
       EffectUIClientInterface &effect, EffectSettingsAccess &access);
    ~DefaultEffectUIValidator() override;
-   bool Validate() override;
+   //! Calls mEffect.ValidateUI()
+   bool ValidateUI() override;
 private:
    EffectUIClientInterface &mEffect;
    EffectSettingsAccess &mAccess;

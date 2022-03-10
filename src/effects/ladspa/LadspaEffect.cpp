@@ -1493,11 +1493,6 @@ bool LadspaEffect::IsGraphicalUI()
 
 bool LadspaEffect::ValidateUI(EffectSettings &)
 {
-   if (!mParent->Validate())
-   {
-      return false;
-   }
-
    if (GetType() == EffectTypeGenerate)
    {
       mHost->SetDuration(mDuration->GetValue());

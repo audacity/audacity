@@ -177,6 +177,9 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 #endif
    
    SetName( effect.GetDefinition().GetName() );
+
+   // This style causes Validate() and TransferDataFromWindow() to visit
+   // sub-windows recursively, applying any wxValidators
    SetExtraStyle(GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
    
    mParent = parent;
@@ -209,9 +212,22 @@ bool EffectUIHost::TransferDataToWindow()
 
 bool EffectUIHost::TransferDataFromWindow()
 {
+   //! Do validations of any wxValidator objects
+   if (!wxDialogWrapper::Validate())
+      return false;
+
+   //! Do transfers of any wxValidator objects
+   if (!wxDialogWrapper::TransferDataFromWindow())
+      return false;
+
+   //! Do other custom validation and transfer actions
+   if (!mpValidator->ValidateUI())
+      return false;
+   
    // Transfer-from takes non-const reference to settings
    bool result = true;
    mpAccess->ModifySettings([&](EffectSettings &settings){
+      // Allow other transfers, and reassignment of settings
       result = mEffectUIHost.TransferDataFromWindow(settings);
    });
    return result;
@@ -555,11 +571,6 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
          return;
    }
    
-   if (!mpValidator->Validate())
-   {
-      return;
-   }
-   
    if (!TransferDataFromWindow() ||
        !mEffectUIHost.GetDefinition()
          .SaveUserPreset(CurrentSettingsGroup(), mpAccess->Get()))
@@ -740,10 +751,8 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
 {
    if (!mSupportsRealtime)
    {
-      if (!mpValidator->Validate() || !TransferDataFromWindow())
-      {
+      if (!TransferDataFromWindow())
          return;
-      }
       
       mEffectUIHost.Preview(*mpAccess, false);
       

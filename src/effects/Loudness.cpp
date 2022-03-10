@@ -382,15 +382,6 @@ bool EffectLoudness::TransferDataToWindow(const EffectSettings &)
    return true;
 }
 
-bool EffectLoudness::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-   return true;
-}
-
 // EffectLoudness implementation
 
 /// Get required buffer size for the largest whole track and allocate buffers.

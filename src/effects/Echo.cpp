@@ -200,14 +200,3 @@ bool EffectEcho::TransferDataToWindow(const EffectSettings &)
 
    return true;
 }
-
-bool EffectEcho::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-

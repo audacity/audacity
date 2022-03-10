@@ -228,16 +228,6 @@ bool EffectPaulstretch::TransferDataToWindow(const EffectSettings &)
    return true;
 }
 
-bool EffectPaulstretch::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
 // EffectPaulstretch implementation
 
 void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))

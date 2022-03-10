@@ -1576,11 +1576,6 @@ bool LV2Effect::IsGraphicalUI()
 
 bool LV2Effect::ValidateUI(EffectSettings &)
 {
-   if (!mParent->Validate() || !mParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    if (GetType() == EffectTypeGenerate)
    {
       mHost->SetDuration(mDuration->GetValue());
@@ -2649,16 +2644,6 @@ bool LV2Effect::TransferDataToWindow()
    }
 
    if (mParent && !mParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
-bool LV2Effect::TransferDataFromWindow()
-{
-   if (!mParent->Validate() || !mParent->TransferDataFromWindow())
    {
       return false;
    }

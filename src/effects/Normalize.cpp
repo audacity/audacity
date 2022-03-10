@@ -317,16 +317,6 @@ bool EffectNormalize::TransferDataToWindow(const EffectSettings &)
    return true;
 }
 
-bool EffectNormalize::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
 // EffectNormalize implementation
 
 bool EffectNormalize::AnalyseTrack(const WaveTrack * track, const TranslatableString &msg,

@@ -362,11 +362,6 @@ bool EffectPhaser::TransferDataToWindow(const EffectSettings &)
 
 bool EffectPhaser::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    if (mStages & 1)    // must be even
    {
       mStages &= ~1;

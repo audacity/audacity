@@ -491,16 +491,6 @@ bool EffectAutoDuck::DoTransferDataToWindow()
    return true;
 }
 
-bool EffectAutoDuck::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
 // EffectAutoDuck implementation
 
 // this currently does an exponential fade

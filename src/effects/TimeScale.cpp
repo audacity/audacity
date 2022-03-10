@@ -324,16 +324,6 @@ bool EffectTimeScale::TransferDataToWindow(const EffectSettings &)
    return true;
 }
 
-bool EffectTimeScale::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
 inline double EffectTimeScale::PercentChangeToRatio(double percentChange)
 {
    return 1.0 + percentChange / 100.0;

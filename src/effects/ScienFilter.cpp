@@ -519,11 +519,6 @@ bool EffectScienFilter::TransferDataToWindow(const EffectSettings &)
 
 bool EffectScienFilter::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    mOrder = mOrderIndex + 1;
 
    CalcFilter();

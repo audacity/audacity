@@ -429,11 +429,6 @@ bool EffectReverb::TransferDataToWindow(const EffectSettings &)
 
 bool EffectReverb::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate())
-   {
-      return false;
-   }
-
    mParams.mRoomSize = mRoomSizeS->GetValue();
    mParams.mPreDelay = mPreDelayS->GetValue();
    mParams.mReverberance = mReverberanceS->GetValue();

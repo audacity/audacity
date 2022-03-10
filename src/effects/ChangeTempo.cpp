@@ -360,16 +360,6 @@ bool EffectChangeTempo::TransferDataToWindow(const EffectSettings &)
    return true;
 }
 
-bool EffectChangeTempo::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
 // handler implementations for EffectChangeTempo
 
 void EffectChangeTempo::OnText_PercentChange(wxCommandEvent & WXUNUSED(evt))

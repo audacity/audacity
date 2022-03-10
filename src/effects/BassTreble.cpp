@@ -302,17 +302,6 @@ bool EffectBassTreble::TransferDataToWindow(const EffectSettings &)
    return true;
 }
 
-bool EffectBassTreble::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
-
 // EffectBassTreble implementation
 
 void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRate)

@@ -355,16 +355,6 @@ bool EffectClickRemoval::TransferDataToWindow(const EffectSettings &)
    return true;
 }
 
-bool EffectClickRemoval::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
 void EffectClickRemoval::OnWidthText(wxCommandEvent & WXUNUSED(evt))
 {
    mWidthT->GetValidator()->TransferFromWindow();

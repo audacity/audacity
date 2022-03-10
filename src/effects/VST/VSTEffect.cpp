@@ -1770,11 +1770,6 @@ bool VSTEffect::IsGraphicalUI()
 
 bool VSTEffect::ValidateUI(EffectSettings &)
 {
-   if (!mParent->Validate() || !mParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    if (GetType() == EffectTypeGenerate)
    {
       mHost->SetDuration(mDuration->GetValue());

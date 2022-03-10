@@ -590,7 +590,7 @@ bool Effect::IsGraphicalUI()
 
 bool Effect::ValidateUI(EffectSettings &)
 {
-   return mUIParent->Validate();
+   return true;
 }
 
 bool Effect::CloseUI()

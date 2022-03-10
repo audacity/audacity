@@ -388,11 +388,6 @@ bool EffectDtmf::TransferDataToWindow(const EffectSettings &)
 bool EffectDtmf::TransferDataFromWindow(EffectSettings &)
 {
    auto &dtmfSettings = mSettings;
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    dtmfSettings.dtmfDutyCycle =
       (double) mDtmfDutyCycleS->GetValue() / SCL_DutyCycle;
    SetDuration(mDtmfDurationT->GetValue());

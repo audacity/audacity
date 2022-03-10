@@ -706,16 +706,6 @@ bool VampEffect::TransferDataToWindow(const EffectSettings &)
    return true;
 }
 
-bool VampEffect::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
 // VampEffect implementation
 
 void VampEffect::AddFeatures(LabelTrack *ltrack,
