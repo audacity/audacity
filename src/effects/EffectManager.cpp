@@ -168,7 +168,8 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
 {
    ComponentInterface *command = nullptr;
    if (auto effect = GetEffect(ID))
-      command = &effect->GetDefinition();
+      // Fixing this will be a large and difficult thing, so for the time being we only cast the constness away
+      command = const_cast<EffectDefinitionInterface*>(&effect->GetDefinition());
    if( !command )
       command = GetAudacityCommand( ID );
    if( !command )

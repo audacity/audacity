@@ -1466,7 +1466,7 @@ PluginID PluginManager::GetID(ComponentInterface *command)
                            command->GetPath());
 }
 
-PluginID PluginManager::GetID(EffectDefinitionInterface *effect)
+PluginID PluginManager::GetID(const EffectDefinitionInterface* effect)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeEffect),

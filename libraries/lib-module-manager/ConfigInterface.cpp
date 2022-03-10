@@ -11,7 +11,7 @@
 
 namespace PluginSettings {
 
-bool HasConfigGroup( EffectDefinitionInterface &ident,
+bool HasConfigGroup( const EffectDefinitionInterface &ident,
    PluginSettings::ConfigurationType type,
    const RegistryPath & group)
 {
@@ -20,7 +20,7 @@ bool HasConfigGroup( EffectDefinitionInterface &ident,
    return pluginManager.HasConfigGroup(type, id, group);
 }
 
-bool GetConfigSubgroups( EffectDefinitionInterface &ident,
+bool GetConfigSubgroups( const EffectDefinitionInterface &ident,
    PluginSettings::ConfigurationType type,
    const RegistryPath & group, RegistryPaths &subgroups)
 {
@@ -39,7 +39,7 @@ bool HasConfigValue( EffectDefinitionInterface &ident,
    return pluginManager.HasConfigValue(type, id, group, key);
 }
 
-bool GetConfigValue( EffectDefinitionInterface &ident,
+bool GetConfigValue( const EffectDefinitionInterface& ident,
    PluginSettings::ConfigurationType type,
    const RegistryPath & group, const RegistryPath & key,
    ConfigReference var, ConfigConstReference defval)
@@ -49,7 +49,7 @@ bool GetConfigValue( EffectDefinitionInterface &ident,
    return pluginManager.GetConfigValue(type, id, group, key, var, defval);
 }
 
-bool SetConfigValue( EffectDefinitionInterface &ident,
+bool SetConfigValue( const EffectDefinitionInterface& ident,
    PluginSettings::ConfigurationType type,
    const RegistryPath & group, const RegistryPath & key,
    ConfigConstReference value)
@@ -59,7 +59,7 @@ bool SetConfigValue( EffectDefinitionInterface &ident,
    return pluginManager.SetConfigValue(type, id, group, key, value);
 }
 
-bool RemoveConfigSubgroup( EffectDefinitionInterface &ident,
+bool RemoveConfigSubgroup( const EffectDefinitionInterface &ident,
       PluginSettings::ConfigurationType type,
    const RegistryPath & group)
 {

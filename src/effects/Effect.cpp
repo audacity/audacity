@@ -728,9 +728,12 @@ void Effect::ShowOptions()
 
 // EffectHostInterface implementation
 
-EffectDefinitionInterface &Effect::GetDefinition()
+const EffectDefinitionInterface& Effect::GetDefinition() const
 {
-   return mClient ? *mClient : *this;
+   if (mClient)
+      return *mClient;
+   else
+      return *this;
 }
 
 double Effect::GetDefaultDuration()

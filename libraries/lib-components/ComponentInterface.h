@@ -82,7 +82,7 @@ public:
    TranslatableString GetName() const;
 
    // Parameters, if defined.  false means no defined parameters.
-   virtual bool DefineParams( ShuttleParams & WXUNUSED(S) ){ return false;};   
+   virtual bool DefineParams( ShuttleParams & WXUNUSED(S) ) { return false;};   
 };
 
 #endif // __AUDACITY_IDENTINTERFACE_H__
