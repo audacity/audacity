@@ -410,11 +410,20 @@ class COMPONENTS_API EffectUIValidator /* not final */
 {
 public:
    virtual ~EffectUIValidator();
+
    //! Get settings data from the panel; may make error dialogs and return false
    /*!
     @return true only if panel settings are acceptable
     */
    virtual bool ValidateUI() = 0;
+
+   //! Update appearance of the panel for changes in settings
+   /*!
+    Default implementation does nothing, returns true
+
+    @return true if successful
+    */
+   virtual bool UpdateUI();
 };
 
 /*************************************************************************************//**

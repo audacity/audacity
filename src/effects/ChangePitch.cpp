@@ -391,11 +391,6 @@ bool EffectChangePitch::TransferDataToWindow(const EffectSettings &)
 {
    m_bLoopDetect = true;
 
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    Calc_SemitonesChange_fromPercentChange();
    Calc_ToPitch(); // Call *after* m_dSemitonesChange is updated.
    Calc_ToFrequency();

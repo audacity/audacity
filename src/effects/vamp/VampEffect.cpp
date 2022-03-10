@@ -696,13 +696,7 @@ VampEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 
 bool VampEffect::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    UpdateFromPlugin();
-
    return true;
 }
 

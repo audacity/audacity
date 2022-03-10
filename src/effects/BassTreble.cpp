@@ -289,16 +289,10 @@ EffectBassTreble::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 
 bool EffectBassTreble::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mBassS->SetValue((int) (mBass * SCL_Bass));
    mTrebleS->SetValue((int) mTreble *SCL_Treble);
    mGainS->SetValue((int) mGain * SCL_Gain);
    mLinkCheckBox->SetValue(mLink);
-
    return true;
 }
 

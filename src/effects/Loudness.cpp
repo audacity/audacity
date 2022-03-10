@@ -371,11 +371,6 @@ EffectLoudness::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 
 bool EffectLoudness::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    // adjust controls which depend on mchoice
    wxCommandEvent dummy;
    OnChoice(dummy);

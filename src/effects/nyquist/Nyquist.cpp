@@ -1103,8 +1103,6 @@ bool NyquistEffect::EnablesDebug() const
 
 bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 {
-   mUIParent->TransferDataToWindow();
-
    bool success;
    if (mIsPrompt)
    {

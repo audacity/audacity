@@ -340,11 +340,6 @@ bool EffectChangeTempo::TransferDataToWindow(const EffectSettings &)
 
    m_bLoopDetect = true;
 
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    // percent change controls
    Update_Slider_PercentChange();
    Update_Text_ToBPM();

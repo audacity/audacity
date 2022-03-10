@@ -501,11 +501,6 @@ bool EffectScienFilter::TransferDataToWindow(const EffectSettings &)
 {
    mOrderIndex = mOrder - 1;
 
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mdBMinSlider->SetValue((int) mdBMin);
    mdBMin = 0.0;                     // force refresh in TransferGraphLimitsFromWindow()
 

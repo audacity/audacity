@@ -381,11 +381,6 @@ bool EffectChangeSpeed::TransferDataToWindow(const EffectSettings &)
 {
    mbLoopDetect = true;
 
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    if (mFromVinyl == kVinyl_NA)
    {
       mFromVinyl = kVinyl_33AndAThird;

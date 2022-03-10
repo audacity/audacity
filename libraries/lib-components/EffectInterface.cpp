@@ -162,6 +162,11 @@ EffectProcessor::~EffectProcessor() = default;
 
 EffectUIValidator::~EffectUIValidator() = default;
 
+bool EffectUIValidator::UpdateUI()
+{
+   return true;
+}
+
 DefaultEffectUIValidator::DefaultEffectUIValidator(
    EffectUIClientInterface &effect, EffectSettingsAccess &access)
    : mEffect{effect}

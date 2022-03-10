@@ -314,11 +314,6 @@ EffectWahwah::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 
 bool EffectWahwah::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mFreqS->SetValue((int) (mFreq * SCL_Freq));
    mPhaseS->SetValue((int) (mPhase * SCL_Phase));
    mDepthS->SetValue((int) (mDepth * SCL_Depth));

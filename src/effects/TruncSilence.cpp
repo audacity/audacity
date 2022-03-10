@@ -787,16 +787,6 @@ EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectTruncSilence::TransferDataToWindow(const EffectSettings &)
-{
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
 bool EffectTruncSilence::TransferDataFromWindow(EffectSettings &)
 {
    mbIndependent = mIndependent->IsChecked();

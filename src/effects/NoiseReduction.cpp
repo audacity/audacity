@@ -1644,10 +1644,6 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 
 bool EffectNoiseReduction::Dialog::TransferDataToWindow()
 {
-   // Do the choice controls:
-   if (!EffectDialog::TransferDataToWindow())
-      return false;
-
    for (int id = FIRST_SLIDER; id < END_OF_SLIDERS; id += 2) {
       wxSlider* slider =
          static_cast<wxSlider*>(wxWindow::FindWindowById(id, this));

@@ -488,13 +488,7 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 
 bool EffectToneGen::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mToneDurationT->SetValue(GetDuration());
-
    return true;
 }
 

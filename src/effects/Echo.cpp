@@ -190,13 +190,3 @@ EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    S.EndMultiColumn();
    return nullptr;
 }
-
-bool EffectEcho::TransferDataToWindow(const EffectSettings &)
-{
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
-}

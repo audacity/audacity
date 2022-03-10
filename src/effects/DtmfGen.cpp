@@ -370,12 +370,6 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 bool EffectDtmf::TransferDataToWindow(const EffectSettings &)
 {
    auto &dtmfSettings = mSettings;
-
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mDtmfDutyCycleS->SetValue(dtmfSettings.dtmfDutyCycle * SCL_DutyCycle);
 
    mDtmfDurationT->SetValue(GetDuration());

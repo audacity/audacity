@@ -481,13 +481,7 @@ bool EffectAutoDuck::TransferDataToWindow(const EffectSettings &)
 
 bool EffectAutoDuck::DoTransferDataToWindow()
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mPanel->Refresh(false);
-
    return true;
 }
 

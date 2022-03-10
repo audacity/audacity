@@ -125,6 +125,7 @@ public:
    ) = 0;
    virtual bool Startup(EffectUIClientInterface *client) = 0;
 
+   //! Update controls for the settings
    virtual bool TransferDataToWindow(const EffectSettings &settings) = 0;
 
    //! Update the given settings from controls
