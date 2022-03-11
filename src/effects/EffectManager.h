@@ -154,6 +154,9 @@ public:
    EffectSettings *GetDefaultSettings(const PluginID & ID);
 
    /*! Get effect and default settings by effect ID. */
+   /*!
+    @return if first member is not null, then the second is not null
+    */
    std::pair<EffectUIHostInterface *, EffectSettings *>
    GetEffectAndDefaultSettings(const PluginID & ID);
 

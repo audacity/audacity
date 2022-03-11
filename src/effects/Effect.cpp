@@ -523,7 +523,7 @@ bool Effect::SaveUserPreset(
    }
 
    wxString parms;
-   if (!GetAutomationParametersAsString(parms))
+   if (!GetAutomationParametersAsString(settings, parms))
       return false;
 
    return SetConfig(GetDefinition(), PluginSettings::Private,
@@ -619,10 +619,10 @@ static const FileNames::FileTypes &PresetTypes()
    return result;
 };
 
-void Effect::ExportPresets(const EffectSettings &) const
+void Effect::ExportPresets(const EffectSettings &settings) const
 {
    wxString params;
-   GetAutomationParametersAsString(params);
+   GetAutomationParametersAsString(settings, params);
    auto commandId = GetSquashedName(GetSymbol().Internal());
    params =  commandId.GET() + ":" + params;
 
@@ -800,11 +800,13 @@ bool Effect::Startup(EffectUIClientInterface *client)
    return true;
 }
 
-bool Effect::GetAutomationParametersAsString(wxString & parms) const
+bool Effect::GetAutomationParametersAsString(
+   const EffectSettings &, wxString & parms) const
 {
    CommandParameters eap;
    ShuttleGetAutomation S;
    S.mpEap = &eap;
+   // To do: fix const_cast in use of DefineParams, and pass settings
    if( const_cast<Effect*>(this)->DefineParams( S ) ){
       ;// got eap value using DefineParams.
    }

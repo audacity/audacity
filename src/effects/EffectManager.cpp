@@ -233,12 +233,15 @@ bool EffectManager::SupportsAutomation(const PluginID & ID)
    return false;
 }
 
+// This function is used only in the macro programming user interface
 wxString EffectManager::GetEffectParameters(const PluginID & ID)
 {
-   if (auto effect = GetEffect(ID)) {
+   auto pair = GetEffectAndDefaultSettings(ID);
+   if (auto effect = pair.first) {
+      assert(pair.second);
       wxString parms;
 
-      effect->GetAutomationParametersAsString(parms);
+      effect->GetAutomationParametersAsString(*pair.second, parms);
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
