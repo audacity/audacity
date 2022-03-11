@@ -199,7 +199,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    void Preview(EffectSettingsAccess &access, bool dryOnly) override;
    bool GetAutomationParametersAsString(
       const EffectSettings &settings, wxString & parms) const override;
-   bool SetAutomationParametersFromString(const wxString & parms) const override;
+   bool SetAutomationParametersFromString(
+      const wxString & parms, EffectSettings &settings) const override;
    bool IsBatchProcessing() const override;
    void SetBatchProcessing() override;
    void UnsetBatchProcessing() override;

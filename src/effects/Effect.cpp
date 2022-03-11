@@ -521,7 +521,7 @@ bool Effect::LoadUserPreset(
       name, wxT("Parameters"), parms))
       return false;
 
-   return SetAutomationParametersFromString(parms);
+   return SetAutomationParametersFromString(parms, settings);
 }
 
 bool Effect::SaveUserPreset(
@@ -674,7 +674,7 @@ void Effect::ExportPresets(const EffectSettings &settings) const
 
 }
 
-void Effect::ImportPresets(EffectSettings &)
+void Effect::ImportPresets(EffectSettings &settings)
 {
    wxString params;
 
@@ -717,7 +717,7 @@ void Effect::ImportPresets(EffectSettings &)
             }
             return;
          }
-         SetAutomationParametersFromString(params);
+         SetAutomationParametersFromString(params, settings);
       }
    }
 
@@ -826,36 +826,45 @@ bool Effect::GetAutomationParametersAsString(
    return eap.GetParameters(parms);
 }
 
-bool Effect::SetAutomationParametersFromString(const wxString & parms) const
+bool Effect::SetAutomationParametersFromString(
+   const wxString & parms, EffectSettings &settings) const
 {
-   EffectSettings DUMMY; // TODO remove this and pass Settings as argument
-
+   // If the string starts with one of certain significant substrings,
+   // then the rest of the string is reinterpreted as part of a registry key,
+   // and a user or factory preset is then loaded.
+   // (Where did these prefixes come from?  See EffectPresetsDialog; and
+   // ultimately the uses of it by EffectManager::GetPreset, which is used by
+   // the macro management dialog)
    wxString preset = parms;
    bool success = false;
    if (preset.StartsWith(kUserPresetIdent))
    {
       preset.Replace(kUserPresetIdent, wxEmptyString, false);
-      success = LoadUserPreset(UserPresetsGroup(preset), DUMMY);
+      success = LoadUserPreset(UserPresetsGroup(preset), settings);
    }
    else if (preset.StartsWith(kFactoryPresetIdent))
    {
       preset.Replace(kFactoryPresetIdent, wxEmptyString, false);
       auto presets = GetFactoryPresets();
       success = LoadFactoryPreset(
-         make_iterator_range( presets ).index( preset ), DUMMY );
+         make_iterator_range( presets ).index( preset ), settings );
    }
    else if (preset.StartsWith(kCurrentSettingsIdent))
    {
       preset.Replace(kCurrentSettingsIdent, wxEmptyString, false);
-      success = LoadUserPreset(CurrentSettingsGroup(), DUMMY);
+      success = LoadUserPreset(CurrentSettingsGroup(), settings);
    }
    else if (preset.StartsWith(kFactoryDefaultsIdent))
    {
       preset.Replace(kFactoryDefaultsIdent, wxEmptyString, false);
-      success = LoadUserPreset(FactoryDefaultsGroup(), DUMMY);
+      success = LoadUserPreset(FactoryDefaultsGroup(), settings);
    }
    else
    {
+      // If the string did not start with any of the significant substrings,
+      // then use VisitSettings or SetAutomationParameters to reinterpret it,
+      // or use SetAutomationParameters.
+      // This interprets what was written by GetAutomationParameters, above.
       CommandParameters eap(parms);
       ShuttleSetAutomation S;
       S.SetForValidating( &eap );

@@ -293,10 +293,10 @@ bool EffectManager::SetEffectParameters(
       if (eap.HasEntry(wxT("Use Preset")))
       {
          return effect->SetAutomationParametersFromString(
-            eap.Read(wxT("Use Preset")));
+            eap.Read(wxT("Use Preset")), settings);
       }
 
-      return effect->SetAutomationParametersFromString(params);
+      return effect->SetAutomationParametersFromString(params, settings);
    }
    AudacityCommand *command = GetAudacityCommand(ID);
    
