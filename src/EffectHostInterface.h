@@ -19,25 +19,6 @@
 
 class EffectDefinitionInterface;
 
-/*************************************************************************************//**
-
-\class EffectHostInterface 
-
-\brief EffectHostInterface is a decorator of a EffectUIClientInterface.  It adds 
-virtual (abstract) functions to get presets and actually apply the effect.  It uses
-ConfigClientInterface to add Getters/setters for private and shared configs. 
-
-*******************************************************************************************/
-class AUDACITY_DLL_API EffectHostInterface
-{
-public:
-   EffectHostInterface &operator=(EffectHostInterface&) = delete;
-
-   virtual ~EffectHostInterface();
-
-   virtual const EffectDefinitionInterface& GetDefinition() const = 0;
-};
-
 class wxDialog;
 class wxWindow;
 class EffectUIClientInterface;
@@ -59,9 +40,9 @@ class EffectProcessor;
 /*************************************************************************************//**
 
 \class EffectUIHostInterface
-@brief extends EffectHostInterface with UI-related services
+@brief UI-related services
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectUIHostInterface : public EffectHostInterface
+class AUDACITY_DLL_API EffectUIHostInterface
 {
 public:
    using EffectSettingsAccessPtr = std::shared_ptr<EffectSettingsAccess>;
@@ -73,6 +54,8 @@ public:
 
    EffectUIHostInterface &operator=(EffectUIHostInterface&) = delete;
    virtual ~EffectUIHostInterface();
+
+   virtual const EffectDefinitionInterface& GetDefinition() const = 0;
 
    //! Usually applies factory to self and given access
    /*!

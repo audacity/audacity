@@ -352,19 +352,19 @@ bool EffectManager::PromptUser(
    return result;
 }
 
-static bool HasCurrentSettings(EffectHostInterface &host)
+static bool HasCurrentSettings(EffectUIHostInterface &host)
 {
    return HasConfigGroup(host.GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup());
 }
 
-static bool HasFactoryDefaults(EffectHostInterface &host)
+static bool HasFactoryDefaults(EffectUIHostInterface &host)
 {
    return HasConfigGroup(host.GetDefinition(), PluginSettings::Private,
       FactoryDefaultsGroup());
 }
 
-static RegistryPaths GetUserPresets(EffectHostInterface &host)
+static RegistryPaths GetUserPresets(EffectUIHostInterface &host)
 {
    RegistryPaths presets;
    GetConfigSubgroups(host.GetDefinition(), PluginSettings::Private,

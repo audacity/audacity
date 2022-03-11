@@ -9,8 +9,6 @@
 **********************************************************************/
 #include "EffectHostInterface.h"
 
-EffectHostInterface::~EffectHostInterface() = default;
-
 EffectUIHostInterface::~EffectUIHostInterface() = default;
 
 const wxString EffectUIHostInterface::kUserPresetIdent = wxT("User Preset:");

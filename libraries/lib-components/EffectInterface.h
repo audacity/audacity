@@ -282,9 +282,6 @@ class wxWindow;
 
 class EffectUIClientInterface;
 
-// Incomplete type not defined in libraries -- TODO clean that up:
-class EffectHostInterface;
-
 class sampleCount;
 
 // ----------------------------------------------------------------------------
@@ -468,8 +465,7 @@ public:
    /*!
     @return true if successful
     */
-   virtual bool InitializeInstance(
-      EffectHostInterface *host, EffectSettings &settings) = 0;
+   virtual bool InitializeInstance(EffectSettings &settings) = 0;
 
    virtual bool IsGraphicalUI() = 0;
 

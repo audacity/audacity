@@ -130,8 +130,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectProcessor implementation
 
-   bool InitializeInstance(
-      EffectHostInterface *host, EffectSettings &settings) override;
+   bool InitializeInstance(EffectSettings &settings) override;
    
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -188,7 +187,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool HasOptions() override;
    void ShowOptions() override;
 
-   // EffectHostInterface implementation
+   // EffectUIHostInterface implementation
 
    const EffectDefinitionInterface& GetDefinition() const override;
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar

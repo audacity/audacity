@@ -330,8 +330,7 @@ public:
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(
-      EffectHostInterface *host, EffectSettings &settings) override;
+   bool InitializeInstance(EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -442,8 +441,6 @@ private:
    LV2Symbols::URIDMap mURIDMap;
 
    const LilvPlugin *mPlug;
-
-   EffectHostInterface *mHost;
 
    float mSampleRate;
    int mBlockSize;

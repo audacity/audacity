@@ -86,7 +86,6 @@
 #include "PlatformCompatibility.h"
 #include "../../SelectFile.h"
 #include "../../ShuttleGui.h"
-#include "../../EffectHostInterface.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/NumericTextCtrl.h"
@@ -1317,34 +1316,29 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
-bool VSTEffect::InitializeInstance(
-   EffectHostInterface *host, EffectSettings &settings)
+bool VSTEffect::InitializeInstance(EffectSettings &settings)
 {
-   mHost = host;
-   if (mHost)
+   int userBlockSize;
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      wxT("BufferSize"), userBlockSize, 8192);
+   mUserBlockSize = std::max( 1, userBlockSize );
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      wxT("UseLatency"), mUseLatency, true);
+
+   mBlockSize = mUserBlockSize;
+
+   bool haveDefaults;
+   GetConfig(*this, PluginSettings::Private,
+      FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+      false);
+   if (!haveDefaults)
    {
-      int userBlockSize;
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("BufferSize"), userBlockSize, 8192);
-      mUserBlockSize = std::max( 1, userBlockSize );
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("UseLatency"), mUseLatency, true);
-
-      mBlockSize = mUserBlockSize;
-
-      bool haveDefaults;
-      GetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
-         false);
-      if (!haveDefaults)
-      {
-         SaveParameters(FactoryDefaultsGroup(), settings);
-         SetConfig(*this, PluginSettings::Private,
-            FactoryDefaultsGroup(), wxT("Initialized"), true);
-      }
-
-      LoadParameters(CurrentSettingsGroup(), settings);
+      SaveParameters(FactoryDefaultsGroup(), settings);
+      SetConfig(*this, PluginSettings::Private,
+         FactoryDefaultsGroup(), wxT("Initialized"), true);
    }
+
+   LoadParameters(CurrentSettingsGroup(), settings);
    return true;
 }
 

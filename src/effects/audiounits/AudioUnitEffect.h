@@ -121,8 +121,7 @@ public:
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(
-      EffectHostInterface *host, EffectSettings &settings) override;
+   bool InitializeInstance(EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -193,7 +192,6 @@ private:
    bool mSupportsMono;
    bool mSupportsStereo;
 
-   EffectHostInterface *mHost{};
    unsigned mAudioIns;
    unsigned mAudioOuts;
    bool mInteractive;
