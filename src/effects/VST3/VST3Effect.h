@@ -108,13 +108,13 @@ public:
    bool SupportsAutomation() const override;
    bool GetAutomationParameters(CommandParameters& parms) const override;
    bool SetAutomationParameters(const CommandParameters& parms) override;
-   bool LoadUserPreset(const RegistryPath& name) override;
+   bool LoadUserPreset(
+      const RegistryPath & name, Settings &settings) const override;
    bool SaveUserPreset(
       const RegistryPath & name, const Settings &settings) const override;
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool LoadFactoryDefaults(EffectSettings &) const override;
-   bool DoLoadFactoryDefaults() const;
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -163,7 +163,7 @@ private:
 
    bool LoadVSTUI(wxWindow* parent);
 
-   void SyncParameters();
+   void SyncParameters(EffectSettings &) const;
 
    bool LoadPreset(const wxString& path);
 

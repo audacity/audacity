@@ -259,9 +259,6 @@ public:
    virtual bool GetAutomationParameters(CommandParameters & parms) const = 0;
    //! Change settings to those stored in parms
    virtual bool SetAutomationParameters(const CommandParameters & parms) = 0;
-
-   //! Change settings to a user-named preset
-   virtual bool LoadUserPreset(const RegistryPath & name) = 0;
    //! @}
 
    /*! @name settings
@@ -276,9 +273,6 @@ public:
       const Settings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
       CommandParameters & parms, Settings &settings) const override;
-
-   bool LoadUserPreset(
-      const RegistryPath & name, Settings &settings) const override;
    //! @}
 
 private:

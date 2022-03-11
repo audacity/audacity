@@ -293,7 +293,8 @@ public:
    bool GetAutomationParameters(CommandParameters &) const override { return true; }
    bool SetAutomationParameters(const CommandParameters &) override { return true; }
 
-   bool LoadUserPreset(const RegistryPath &) override { return true; }
+   bool LoadUserPreset(const RegistryPath &, Settings &) const override
+      { return true; }
    bool SaveUserPreset(const RegistryPath &, const Settings &) const override
       { return true; }
 
@@ -1668,8 +1669,14 @@ bool VSTEffect::SetAutomationParameters(const CommandParameters & parms)
    return true;
 }
 
+bool VSTEffect::LoadUserPreset(
+   const RegistryPath & name, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<VSTEffect*>(this)->DoLoadUserPreset(name);
+}
 
-bool VSTEffect::LoadUserPreset(const RegistryPath & name)
+bool VSTEffect::DoLoadUserPreset(const RegistryPath & name)
 {
    if (!LoadParameters(name))
    {

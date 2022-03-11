@@ -280,15 +280,20 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
    return wxEmptyString;
 }
 
-bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & params)
+// This function is used only in the macro programming user interface
+bool EffectManager::SetEffectParameters(
+   const PluginID & ID, const wxString & params)
 {
-   if (auto effect = GetEffect(ID)) {
+   auto pair = GetEffectAndDefaultSettings(ID);
+   if (auto effect = pair.first) {
+      auto &settings = *pair.second;
       CommandParameters eap(params);
 
+      // Check first for what GetDefaultPreset() might have written
       if (eap.HasEntry(wxT("Use Preset")))
       {
-         return effect
-            ->SetAutomationParametersFromString(eap.Read(wxT("Use Preset")));
+         return effect->SetAutomationParametersFromString(
+            eap.Read(wxT("Use Preset")));
       }
 
       return effect->SetAutomationParametersFromString(params);
@@ -301,6 +306,7 @@ bool EffectManager::SetEffectParameters(const PluginID & ID, const wxString & pa
       command->Init(); 
       CommandParameters eap(params);
 
+      // Check first for what GetDefaultPreset() might have written
       if (eap.HasEntry(wxT("Use Preset")))
       {
          return command
@@ -651,6 +657,7 @@ void EffectPresetsDialog::OnCancel(wxCommandEvent & WXUNUSED(evt))
 
 }
 
+// This function is used only in the macro programming user interface
 wxString EffectManager::GetPreset(const PluginID & ID, const wxString & params, wxWindow * parent)
 {
    auto effect = GetEffect(ID);
@@ -696,6 +703,7 @@ wxString EffectManager::GetPreset(const PluginID & ID, const wxString & params, 
    return preset;
 }
 
+// This function is used only in the macro programming user interface
 wxString EffectManager::GetDefaultPreset(const PluginID & ID)
 {
    auto effect = GetEffect(ID);
@@ -774,7 +782,7 @@ void InitializePreset(
       SetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
          wxT("Initialized"), true);
    }
-   definition.LoadUserPreset(CurrentSettingsGroup());
+   definition.LoadUserPreset(CurrentSettingsGroup(), settings);
 }
 
 std::pair<ComponentInterface *, EffectSettings>

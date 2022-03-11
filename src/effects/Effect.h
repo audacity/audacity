@@ -113,7 +113,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool GetAutomationParameters(CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
-   bool LoadUserPreset(const RegistryPath & name) override;
+   bool LoadUserPreset(
+      const RegistryPath & name, Settings &settings) const override;
    bool SaveUserPreset(
       const RegistryPath & name, const Settings &settings) const override;
 
@@ -198,7 +199,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    void Preview(EffectSettingsAccess &access, bool dryOnly) override;
    bool GetAutomationParametersAsString(
       const EffectSettings &settings, wxString & parms) const override;
-   bool SetAutomationParametersFromString(const wxString & parms) override;
+   bool SetAutomationParametersFromString(const wxString & parms) const override;
    bool IsBatchProcessing() const override;
    void SetBatchProcessing() override;
    void UnsetBatchProcessing() override;

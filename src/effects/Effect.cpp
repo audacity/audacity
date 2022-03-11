@@ -507,19 +507,19 @@ bool Effect::SetAutomationParameters(const CommandParameters & parms)
    return Parameters().Set( *this, parms );
 }
 
-bool Effect::LoadUserPreset(const RegistryPath & name)
+bool Effect::LoadUserPreset(
+   const RegistryPath & name, EffectSettings &settings) const
 {
    if (mClient)
-   {
-      return mClient->LoadUserPreset(name);
-   }
+      // Call through to third party effects
+      return mClient->LoadUserPreset(name, settings);
 
+   // Find one string in the registry and then reinterpret it
+   // as complete settings
    wxString parms;
    if (!GetConfig(GetDefinition(), PluginSettings::Private,
       name, wxT("Parameters"), parms))
-   {
       return false;
-   }
 
    return SetAutomationParametersFromString(parms);
 }
@@ -528,10 +528,10 @@ bool Effect::SaveUserPreset(
    const RegistryPath & name, const EffectSettings &settings) const
 {
    if (mClient)
-   {
+      // Call through to third party effects
       return mClient->SaveUserPreset(name, settings);
-   }
 
+   // Save all settings as a single string value in the registry
    wxString parms;
    if (!GetAutomationParametersAsString(settings, parms))
       return false;
@@ -564,7 +564,7 @@ bool Effect::LoadFactoryDefaults(Settings &settings) const
       return mClient->LoadFactoryDefaults(settings);
    }
 
-   return const_cast<Effect*>(this)->LoadUserPreset(FactoryDefaultsGroup());
+   return LoadUserPreset(FactoryDefaultsGroup(), settings);
 }
 
 // EffectUIClientInterface implementation
@@ -826,15 +826,16 @@ bool Effect::GetAutomationParametersAsString(
    return eap.GetParameters(parms);
 }
 
-bool Effect::SetAutomationParametersFromString(const wxString & parms)
+bool Effect::SetAutomationParametersFromString(const wxString & parms) const
 {
    EffectSettings DUMMY; // TODO remove this and pass Settings as argument
+
    wxString preset = parms;
    bool success = false;
    if (preset.StartsWith(kUserPresetIdent))
    {
       preset.Replace(kUserPresetIdent, wxEmptyString, false);
-      success = LoadUserPreset(UserPresetsGroup(preset));
+      success = LoadUserPreset(UserPresetsGroup(preset), DUMMY);
    }
    else if (preset.StartsWith(kFactoryPresetIdent))
    {
@@ -846,12 +847,12 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
    else if (preset.StartsWith(kCurrentSettingsIdent))
    {
       preset.Replace(kCurrentSettingsIdent, wxEmptyString, false);
-      success = LoadUserPreset(CurrentSettingsGroup());
+      success = LoadUserPreset(CurrentSettingsGroup(), DUMMY);
    }
    else if (preset.StartsWith(kFactoryDefaultsIdent))
    {
       preset.Replace(kFactoryDefaultsIdent, wxEmptyString, false);
-      success = LoadUserPreset(FactoryDefaultsGroup());
+      success = LoadUserPreset(FactoryDefaultsGroup(), DUMMY);
    }
    else
    {
@@ -859,15 +860,16 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
       ShuttleSetAutomation S;
       S.SetForValidating( &eap );
       // VisitSettings returns false if not defined for this effect.
-      if( !VisitSettings(S) )
+      // To do: fix const_cast in use of VisitSettings
+      if ( !const_cast<Effect*>(this)->VisitSettings( S ) )
          // the old method...
-         success = SetAutomationParameters(eap);
+         success = const_cast<Effect*>(this)->SetAutomationParameters(eap);
       else if( !S.bOK )
          success = false;
       else{
          success = true;
          S.SetForWriting( &eap );
-         VisitSettings(S);
+         const_cast<Effect*>(this)->VisitSettings( S );
       }
    }
 
@@ -907,7 +909,10 @@ void Effect::UnsetBatchProcessing()
 {
    mIsBatch = false;
    // Restore effect's internal state from registry
-   LoadUserPreset(GetSavedStateGroup());
+   // If effect is not stateful, this call doesn't really matter, and the
+   // settings object is a dummy
+   auto dummySettings = MakeSettings();
+   LoadUserPreset(GetSavedStateGroup(), dummySettings);
 }
 
 // TODO:  Lift the possible user-prompting part out of this function, so that

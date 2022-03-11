@@ -1124,7 +1124,14 @@ bool LadspaEffect::SetAutomationParameters(const CommandParameters & parms)
    return true;
 }
 
-bool LadspaEffect::LoadUserPreset(const RegistryPath & name)
+bool LadspaEffect::LoadUserPreset(
+   const RegistryPath & name, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<LadspaEffect*>(this)->DoLoadUserPreset(name);
+}
+
+bool LadspaEffect::DoLoadUserPreset(const RegistryPath & name)
 {
    if (!LoadParameters(name))
    {

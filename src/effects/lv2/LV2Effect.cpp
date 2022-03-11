@@ -1628,7 +1628,14 @@ bool LV2Effect::CloseUI()
    return true;
 }
 
-bool LV2Effect::LoadUserPreset(const RegistryPath &name)
+bool LV2Effect::LoadUserPreset(
+   const RegistryPath &name, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<LV2Effect*>(this)->DoLoadUserPreset(name);
+}
+
+bool LV2Effect::DoLoadUserPreset(const RegistryPath &name)
 {
    if (!LoadParameters(name))
    {

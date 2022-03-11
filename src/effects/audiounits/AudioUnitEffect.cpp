@@ -1591,9 +1591,11 @@ bool AudioUnitEffect::SetAutomationParameters(const CommandParameters & parms)
    return true;
 }
 
-bool AudioUnitEffect::LoadUserPreset(const RegistryPath & name)
+bool AudioUnitEffect::LoadUserPreset(
+   const RegistryPath & name, EffectSettings &) const
 {
-   return LoadPreset(name);
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<AudioUnitEffect*>(this)->LoadPreset(name);
 }
 
 bool AudioUnitEffect::SaveUserPreset(

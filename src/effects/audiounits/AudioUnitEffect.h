@@ -68,7 +68,8 @@ public:
    bool GetAutomationParameters(CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
-   bool LoadUserPreset(const RegistryPath & name) override;
+   bool LoadUserPreset(
+      const RegistryPath & name, Settings &settings) const override;
    bool SaveUserPreset(
       const RegistryPath & name, const Settings &settings) const override;
 

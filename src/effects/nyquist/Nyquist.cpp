@@ -642,7 +642,7 @@ bool NyquistEffect::Init()
          ParseFile();
          mFileModified = mFileName.GetModificationTime();
 
-         LoadUserPreset(CurrentSettingsGroup());
+         LoadUserPreset(CurrentSettingsGroup(), dummySettings);
       }
    }
 

@@ -95,7 +95,7 @@ public:
    virtual void Preview(EffectSettingsAccess &access, bool dryOnly) = 0;
    virtual bool GetAutomationParametersAsString(
       const EffectSettings &settings, wxString & parms) const = 0;
-   virtual bool SetAutomationParametersFromString(const wxString & parms) = 0;
+   virtual bool SetAutomationParametersFromString(const wxString & parms) const = 0;
    virtual bool IsBatchProcessing() const = 0;
    virtual void SetBatchProcessing() = 0;
    virtual void UnsetBatchProcessing() = 0;
