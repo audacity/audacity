@@ -285,7 +285,8 @@ public:
       const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   bool DoLoadFactoryPreset(int id);
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
    bool DoLoadFactoryDefaults();
 

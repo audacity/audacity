@@ -1685,7 +1685,13 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
    return mFactoryPresetNames;
 }
 
-bool LV2Effect::LoadFactoryPreset(int id)
+bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<LV2Effect*>(this)->DoLoadFactoryPreset(id);
+}
+
+bool LV2Effect::DoLoadFactoryPreset(int id)
 {
    if (id < 0 || id >= (int) mFactoryPresetUris.size())
    {

@@ -298,7 +298,7 @@ public:
       { return true; }
 
    RegistryPaths GetFactoryPresets() const override { return {}; }
-   bool LoadFactoryPreset(int) override { return true; }
+   bool LoadFactoryPreset(int, EffectSettings &) const override { return true; }
    bool LoadFactoryDefaults(EffectSettings &) const override { return true; }
 
 public:
@@ -1705,7 +1705,13 @@ RegistryPaths VSTEffect::GetFactoryPresets() const
    return progs;
 }
 
-bool VSTEffect::LoadFactoryPreset(int id)
+bool VSTEffect::LoadFactoryPreset(int id, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<VSTEffect*>(this)->DoLoadFactoryPreset(id);
+}
+
+bool VSTEffect::DoLoadFactoryPreset(int id)
 {
    callSetProgram(id);
 

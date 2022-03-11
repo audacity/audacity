@@ -476,7 +476,7 @@ RegistryPaths EffectEqualization::GetFactoryPresets() const
    return names;
 }
 
-bool EffectEqualization::LoadFactoryPreset(int id)
+bool EffectEqualization::LoadFactoryPreset(int id, EffectSettings &) const
 {
    int index = -1;
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
@@ -497,7 +497,8 @@ bool EffectEqualization::LoadFactoryPreset(int id)
    CommandParameters eap(params);
    ShuttleSetAutomation S;
    S.SetForWriting( &eap );
-   VisitSettings(S);
+   // To do: externalize state so const_cast isn't needed
+   const_cast<EffectEqualization*>(this)->VisitSettings( S );
    return true;
 }
 

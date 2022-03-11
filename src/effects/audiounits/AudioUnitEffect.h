@@ -73,7 +73,7 @@ public:
       const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
 
    // EffectProcessor implementation
@@ -140,7 +140,7 @@ private:
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
    TranslatableString Export(const wxString & path) const;
    TranslatableString Import(const wxString & path);
-   void Notify(AudioUnit unit, AudioUnitParameterID parm);
+   void Notify(AudioUnit unit, AudioUnitParameterID parm) const;
 
    // Realtime
    unsigned GetChannelCount();

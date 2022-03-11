@@ -471,12 +471,13 @@ RegistryPaths VST3Effect::GetFactoryPresets() const
    return mFactoryPresets;
 }
 
-bool VST3Effect::LoadFactoryPreset(int id)
+bool VST3Effect::LoadFactoryPreset(int id, EffectSettings &) const
 {
    if(id >= 0 && id < mFactoryPresets.size())
    {
       auto filename = wxFileName(GetFactoryPresetsPath(mEffectClassInfo), mFactoryPresets[id] + ".vstpreset");
-      return LoadPreset(filename.GetFullPath());
+      // To do: externalize state so const_cast isn't needed
+      return const_cast<VST3Effect*>(this)->LoadPreset(filename.GetFullPath());
    }
    return true;
 }

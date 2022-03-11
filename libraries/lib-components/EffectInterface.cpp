@@ -119,16 +119,6 @@ bool EffectDefinitionInterfaceEx::LoadUserPreset(
       return false;
 }
 
-bool EffectDefinitionInterfaceEx::LoadFactoryPreset(
-   int id, Settings &settings) const
-{
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->LoadFactoryPreset(id);
-   else
-      return false;
-}
-
 EffectDefinitionInterfaceEx *
 EffectDefinitionInterfaceEx::FindMe(const Settings &settings) const
 {

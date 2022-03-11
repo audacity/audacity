@@ -1146,7 +1146,7 @@ RegistryPaths LadspaEffect::GetFactoryPresets() const
    return {};
 }
 
-bool LadspaEffect::LoadFactoryPreset(int WXUNUSED(id))
+bool LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
 {
    return true;
 }

@@ -1601,7 +1601,7 @@ bool AudioUnitEffect::SaveUserPreset(
    return SavePreset(name);
 }
 
-bool AudioUnitEffect::LoadFactoryPreset(int id)
+bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
 {
    OSStatus result;
 
@@ -2391,7 +2391,7 @@ TranslatableString AudioUnitEffect::Import(const wxString & path)
    return {};
 }
 
-void AudioUnitEffect::Notify(AudioUnit unit, AudioUnitParameterID parm)
+void AudioUnitEffect::Notify(AudioUnit unit, AudioUnitParameterID parm) const
 {
    // Notify any interested parties
    AudioUnitParameter aup = {};

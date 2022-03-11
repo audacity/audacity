@@ -261,7 +261,13 @@ RegistryPaths EffectDistortion::GetFactoryPresets() const
    return names;
 }
 
-bool EffectDistortion::LoadFactoryPreset(int id)
+bool EffectDistortion::LoadFactoryPreset(int id, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<EffectDistortion*>(this)->DoLoadFactoryPreset(id);
+}
+
+bool EffectDistortion::DoLoadFactoryPreset(int id)
 {
    if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
    {

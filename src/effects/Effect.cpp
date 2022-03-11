@@ -549,13 +549,10 @@ RegistryPaths Effect::GetFactoryPresets() const
    return {};
 }
 
-bool Effect::LoadFactoryPreset(int id)
+bool Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    if (mClient)
-   {
-      return mClient->LoadFactoryPreset(id);
-   }
-
+      return mClient->LoadFactoryPreset(id, settings);
    return true;
 }
 
@@ -830,6 +827,7 @@ bool Effect::GetAutomationParametersAsString(
 
 bool Effect::SetAutomationParametersFromString(const wxString & parms)
 {
+   EffectSettings DUMMY; // TODO remove this and pass Settings as argument
    wxString preset = parms;
    bool success = false;
    if (preset.StartsWith(kUserPresetIdent))
@@ -841,7 +839,8 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
    {
       preset.Replace(kFactoryPresetIdent, wxEmptyString, false);
       auto presets = GetFactoryPresets();
-      success = LoadFactoryPreset( make_iterator_range( presets ).index( preset ) );
+      success = LoadFactoryPreset(
+         make_iterator_range( presets ).index( preset ), DUMMY );
    }
    else if (preset.StartsWith(kCurrentSettingsIdent))
    {
