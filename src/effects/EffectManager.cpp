@@ -748,14 +748,10 @@ std::pair<EffectUIHostInterface *, EffectSettings *>
 EffectManager::GetEffectAndDefaultSettings(const PluginID & ID)
 {
    auto &results = DoGetEffect(ID);
-   if (results.effect) {
-      auto &settings = results.settings;
-      if (!settings.has_value())
-         // Create on demand
-         settings = results.effect->GetDefinition().MakeSettings();
-      return {results.effect, &settings};
-   }
-   return {nullptr, nullptr};
+   if (results.effect)
+      return {results.effect, &results.settings};
+   else
+      return {nullptr, nullptr};
 }
 
 namespace {
@@ -772,14 +768,15 @@ void InitializePreset(EffectDefinitionInterfaceEx &definition) {
    definition.LoadUserPreset(CurrentSettingsGroup());
 }
 
-ComponentInterface *LoadComponent(const PluginID &ID)
+std::pair<ComponentInterface *, EffectSettings>
+LoadComponent(const PluginID &ID)
 {
    if (auto result = dynamic_cast<EffectDefinitionInterfaceEx*>(
       PluginManager::Get().Load(ID))) {
       InitializePreset(*result);
-      return result;
+      return { result, result->MakeSettings() };
    }
-   return nullptr;
+   return { nullptr, {} };
 }
 }
 
@@ -800,19 +797,20 @@ EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
    else {
       std::shared_ptr<Effect> hostEffect;
       // This will instantiate the effect client if it hasn't already been done
-      const auto component = LoadComponent(ID);
+      auto [component, settings] = LoadComponent(ID);
       if (!component)
          return empty;
 
       if (auto effect = dynamic_cast<EffectUIHostInterface *>(component);
           effect && effect->Startup(nullptr))
          // Self-hosting or "legacy" effect objects
-         return (mEffects[ID] = { effect, {} });
+         return (mEffects[ID] = { effect, std::move(settings) });
       else if (auto client = dynamic_cast<EffectUIClientInterface *>(component);
           client && (hostEffect = std::make_shared<Effect>())->Startup(client))
          // plugin that inherits only EffectUIClientInterface needs a host
          return (mEffects[ID] =
-            { (mHostEffects[ID] = move(hostEffect)).get(), {} });
+            { (mHostEffects[ID] = move(hostEffect)).get(),
+              std::move(settings) });
       else {
          if ( !dynamic_cast<AudacityCommand *>(component) )
             AudacityMessageBox(
@@ -889,7 +887,10 @@ EffectManager::NewEffect(const PluginID & ID)
 
    // This will instantiate the effect client if it hasn't already been done
    // But it only makes a unique object for a given ID
-   auto component = LoadComponent(ID);
+
+   // This makes a settings object too that is just discarded
+   // But this will ultimately be rewritten
+   auto [component, settings] = LoadComponent(ID);
    if (!component)
       return nullptr;
 
