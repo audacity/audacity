@@ -806,9 +806,9 @@ bool Effect::GetAutomationParametersAsString(
    CommandParameters eap;
    ShuttleGetAutomation S;
    S.mpEap = &eap;
-   // To do: fix const_cast in use of DefineParams, and pass settings
+   // To do: fix const_cast in use of VisitSettings, and pass settings
    if( const_cast<Effect*>(this)->VisitSettings( S ) ){
-      ;// got eap value using DefineParams.
+      ;// got eap value using VisitSettings.
    }
    // Won't be needed in future
    else if (!GetAutomationParameters(eap))
