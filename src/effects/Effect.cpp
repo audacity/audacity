@@ -2166,7 +2166,7 @@ void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
 }
 
 int Effect::MessageBox( const TranslatableString& message,
-   long style, const TranslatableString &titleStr)
+   long style, const TranslatableString &titleStr) const
 {
    auto title = titleStr.empty()
       ? GetName()

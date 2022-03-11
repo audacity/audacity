@@ -222,7 +222,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    enum : long { DefaultMessageBoxStyle = wxOK | wxCENTRE };
    int MessageBox(const TranslatableString& message,
                   long style = DefaultMessageBoxStyle,
-                  const TranslatableString& titleStr = {});
+                  const TranslatableString& titleStr = {}) const;
 
    static void IncEffectCounter(){ nEffectsDone++;};
 
