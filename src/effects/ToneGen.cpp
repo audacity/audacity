@@ -298,7 +298,7 @@ bool EffectToneGen::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectToneGen::GetAutomationParameters(CommandParameters & parms)
+bool EffectToneGen::GetAutomationParameters(CommandParameters & parms) const
 {
    if (mChirp)
    {

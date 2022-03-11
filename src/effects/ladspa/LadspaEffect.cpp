@@ -1083,7 +1083,7 @@ int LadspaEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool LadspaEffect::GetAutomationParameters(CommandParameters & parms)
+bool LadspaEffect::GetAutomationParameters(CommandParameters & parms) const
 {
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {

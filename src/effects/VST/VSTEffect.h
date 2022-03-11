@@ -116,7 +116,7 @@ class VSTEffect final : public wxEvtHandler,
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool GetAutomationParameters(CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    bool LoadUserPreset(const RegistryPath & name) override;
@@ -203,7 +203,7 @@ private:
 
    // Parameter loading and saving
    bool LoadParameters(const RegistryPath & group);
-   bool SaveParameters(const RegistryPath & group);
+   bool SaveParameters(const RegistryPath & group) const;
 
    // Realtime
    unsigned GetChannelCount();

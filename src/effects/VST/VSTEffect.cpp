@@ -290,7 +290,7 @@ public:
       return mAutomatable;
    }
 
-   bool GetAutomationParameters(CommandParameters &) override { return true; }
+   bool GetAutomationParameters(CommandParameters &) const override { return true; }
    bool SetAutomationParameters(const CommandParameters &) override { return true; }
 
    bool LoadUserPreset(const RegistryPath &) override { return true; }
@@ -1618,7 +1618,7 @@ int VSTEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool VSTEffect::GetAutomationParameters(CommandParameters & parms)
+bool VSTEffect::GetAutomationParameters(CommandParameters & parms) const
 {
    for (int i = 0; i < mAEffect->numParams; i++)
    {
@@ -2333,7 +2333,7 @@ bool VSTEffect::LoadParameters(const RegistryPath & group)
    return SetAutomationParameters(eap);
 }
 
-bool VSTEffect::SaveParameters(const RegistryPath & group)
+bool VSTEffect::SaveParameters(const RegistryPath & group) const
 {
    SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"),
       mAEffect->uniqueID);
@@ -2345,7 +2345,7 @@ bool VSTEffect::SaveParameters(const RegistryPath & group)
    if (mAEffect->flags & effFlagsProgramChunks)
    {
       void *chunk = NULL;
-      int clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+      int clen = (int) constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
       if (clen <= 0)
       {
          return false;

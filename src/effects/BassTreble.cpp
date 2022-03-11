@@ -184,7 +184,7 @@ bool EffectBassTreble::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectBassTreble::GetAutomationParameters(CommandParameters & parms)
+bool EffectBassTreble::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Bass, mBass);
    parms.Write(KEY_Treble, mTreble);

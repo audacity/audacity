@@ -1466,7 +1466,7 @@ int AudioUnitEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms)
+bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms) const
 {
    OSStatus result;
    UInt32 dataSize;

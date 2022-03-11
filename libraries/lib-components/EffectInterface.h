@@ -257,7 +257,7 @@ public:
     */
    //! @{
    //! Save current settings into parms
-   virtual bool GetAutomationParameters(CommandParameters & parms) = 0;
+   virtual bool GetAutomationParameters(CommandParameters & parms) const = 0;
    //! Change settings to those stored in parms
    virtual bool SetAutomationParameters(const CommandParameters & parms) = 0;
 

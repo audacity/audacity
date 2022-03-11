@@ -143,7 +143,7 @@ bool EffectChangeSpeed::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectChangeSpeed::GetAutomationParameters(CommandParameters & parms)
+bool EffectChangeSpeed::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Percentage, m_PercentChange);
 

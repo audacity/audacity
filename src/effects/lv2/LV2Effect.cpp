@@ -1464,7 +1464,7 @@ int LV2Effect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool LV2Effect::GetAutomationParameters(CommandParameters &parms)
+bool LV2Effect::GetAutomationParameters(CommandParameters &parms) const
 {
    for (auto & port : mControlPorts)
    {

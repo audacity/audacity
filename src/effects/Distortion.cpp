@@ -286,7 +286,7 @@ bool EffectDistortion::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectDistortion::GetAutomationParameters(CommandParameters & parms)
+bool EffectDistortion::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_TableTypeIndx,
                kTableTypeStrings[mParams.mTableChoiceIndx].Internal());

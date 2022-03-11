@@ -139,7 +139,7 @@ bool EffectCompressor::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectCompressor::GetAutomationParameters(CommandParameters & parms)
+bool EffectCompressor::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Threshold, mThresholdDB);
    parms.Write(KEY_NoiseFloor, mNoiseFloorDB);

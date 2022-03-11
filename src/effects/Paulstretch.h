@@ -31,7 +31,7 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool GetAutomationParameters(CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    // EffectProcessor implementation

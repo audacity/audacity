@@ -105,7 +105,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool GetAutomationParameters(CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    bool LoadUserPreset(const RegistryPath & name) override;

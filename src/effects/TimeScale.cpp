@@ -124,7 +124,7 @@ bool EffectTimeScale::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectTimeScale::GetAutomationParameters(CommandParameters & parms)
+bool EffectTimeScale::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_RatePercentStart, m_RatePercentChangeStart);
    parms.Write(KEY_RatePercentEnd, m_RatePercentChangeEnd);

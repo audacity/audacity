@@ -169,7 +169,7 @@ bool EffectChangePitch::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectChangePitch::GetAutomationParameters(CommandParameters & parms)
+bool EffectChangePitch::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Percentage, m_dPercentChange);
    parms.Write(KEY_UseSBSMS, mUseSBSMS);

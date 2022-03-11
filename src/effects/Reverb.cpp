@@ -294,7 +294,7 @@ bool EffectReverb::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectReverb::GetAutomationParameters(CommandParameters & parms)
+bool EffectReverb::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_RoomSize, mParams.mRoomSize);
    parms.Write(KEY_PreDelay, mParams.mPreDelay);

@@ -372,7 +372,7 @@ bool NyquistEffect::DefineParams( ShuttleParams & S )
    return true;
 }
 
-bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
+bool NyquistEffect::GetAutomationParameters(CommandParameters & parms) const
 {
    if (mIsPrompt)
    {
@@ -384,7 +384,7 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
 
    for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
    {
-      NyqControl & ctrl = mControls[c];
+      const NyqControl & ctrl = mControls[c];
       double d = ctrl.val;
 
       if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
@@ -414,7 +414,7 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
       else if (ctrl.type == NYQ_CTRL_FILE)
       {
          // Convert the given path string to platform-dependent equivalent
-         resolveFilePath(ctrl.valStr);
+         resolveFilePath(const_cast<wxString&>(ctrl.valStr));
          parms.Write(ctrl.var, ctrl.valStr);
       }
    }

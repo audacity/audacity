@@ -195,7 +195,7 @@ bool EffectTruncSilence::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectTruncSilence::GetAutomationParameters(CommandParameters & parms)
+bool EffectTruncSilence::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Threshold, mThresholdDB);
    parms.Write(KEY_ActIndex, kActionStrings[mActionIndex].Internal());

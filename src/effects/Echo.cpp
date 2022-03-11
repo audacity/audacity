@@ -150,7 +150,7 @@ bool EffectEcho::DefineParams( ShuttleParams & S ){
 }
 
 
-bool EffectEcho::GetAutomationParameters(CommandParameters & parms)
+bool EffectEcho::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.WriteFloat(KEY_Delay, delay);
    parms.WriteFloat(KEY_Decay, decay);

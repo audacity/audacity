@@ -477,7 +477,7 @@ int Effect::ShowHostInterface(wxWindow &parent,
    return result;
 }
 
-bool Effect::GetAutomationParameters(CommandParameters & parms)
+bool Effect::GetAutomationParameters(CommandParameters & parms) const
 {
    if (mClient)
    {
