@@ -232,10 +232,10 @@ private:
    bool LoadFXP(const wxFileName & fn);
    bool LoadXML(const wxFileName & fn);
    bool LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bool dryrun);
-   void SaveFXB(const wxFileName & fn);
-   void SaveFXP(const wxFileName & fn);
-   void SaveXML(const wxFileName & fn);
-   void SaveFXProgram(wxMemoryBuffer & buf, int index);
+   void SaveFXB(const wxFileName & fn) const;
+   void SaveFXP(const wxFileName & fn) const;
+   void SaveXML(const wxFileName & fn) const;
+   void SaveFXProgram(wxMemoryBuffer & buf, int index) const;
 
    bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
    void HandleXMLEndTag(const std::string_view& tag) override;
@@ -264,10 +264,12 @@ private:
 
    intptr_t callDispatcher(int opcode, int index,
                            intptr_t value, void *ptr, float opt) override;
+   intptr_t constCallDispatcher(int opcode, int index,
+                           intptr_t value, void *ptr, float opt) const;
    void callProcessReplacing(
       const float *const *inputs, float *const *outputs, int sampleframes);
    void callSetParameter(int index, float value);
-   float callGetParameter(int index);
+   float callGetParameter(int index) const;
    void callSetProgram(int index);
    void callSetChunk(bool isPgm, int len, void *buf);
    void callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *info);
