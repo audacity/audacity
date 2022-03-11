@@ -30,7 +30,6 @@ class NumericTextCtrl;
 class VSTControl;
 #include "VSTControl.h"
 
-#define VSTCMDKEY wxT("-checkvst")
 /* i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
    developed by Steinberg GmbH */
 #define VSTPLUGINTYPE XO("VST")
@@ -427,10 +426,6 @@ public:
 
    std::unique_ptr<ComponentInterface>
       LoadPlugin(const PluginPath & path) override;
-
-   // VSTEffectModule implementation
-
-   static void Check(const wxChar *path);
 };
 
 #endif // USE_VST

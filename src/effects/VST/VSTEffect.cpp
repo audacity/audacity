@@ -165,146 +165,7 @@ DECLARE_BUILTIN_PROVIDER(VSTBuiltin);
 /// Auto created at program start up, this initialises VST.
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class VSTSubEntry final : public wxModule
-{
-public:
-   bool OnInit()
-   {
-      // Have we been started to check a plugin?
-      if (wxTheApp && wxTheApp->argc == 3 && wxStrcmp(wxTheApp->argv[1], VSTCMDKEY) == 0)
-      {
-         // NOTE:  This can really hide failures, which is what we want for those pesky
-         //        VSTs that are bad or that our support isn't correct.  But, it can also
-         //        hide Audacity failures in the subprocess, so if you're having an unruley
-         //        VST or odd Audacity failures, comment it out and you might get more info.
-         //wxHandleFatalExceptions();
-         VSTEffectsModule::Check(wxTheApp->argv[2]);
 
-         // Returning false causes default processing to display a message box, but we don't
-         // want that so disable logging.
-         wxLog::EnableLogging(false);
-
-         return false;
-      }
-
-      return true;
-   };
-
-   void OnExit() {};
-
-   DECLARE_DYNAMIC_CLASS(VSTSubEntry)
-};
-IMPLEMENT_DYNAMIC_CLASS(VSTSubEntry, wxModule);
-
-//----------------------------------------------------------------------------
-// VSTSubProcess
-//----------------------------------------------------------------------------
-#define OUTPUTKEY wxT("<VSTLOADCHK>-")
-enum InfoKeys
-{
-   kKeySubIDs,
-   kKeyBegin,
-   kKeyName,
-   kKeyPath,
-   kKeyVendor,
-   kKeyVersion,
-   kKeyDescription,
-   kKeyEffectType,
-   kKeyInteractive,
-   kKeyAutomatable,
-   kKeyEnd
-};
-
-
-///////////////////////////////////////////////////////////////////////////////
-///
-/// Information about one VST effect.
-///
-///////////////////////////////////////////////////////////////////////////////
-//! This object exists in a separate process, to validate a newly seen plug-in.
-/*! It needs to implement EffectDefinitionInterface but mostly just as stubs */
-class VSTSubProcess final : public wxProcess
-   , public EffectDefinitionInterface
-{
-public:
-   VSTSubProcess()
-   {
-      Redirect();
-   }
-
-   // EffectDefinitionInterface implementation
-
-   PluginPath GetPath() const override
-   {
-      return mPath;
-   }
-
-   ComponentInterfaceSymbol GetSymbol() const override
-   {
-      return mName;
-   }
-
-   VendorSymbol GetVendor() const override
-   {
-      return { mVendor };
-   }
-
-   wxString GetVersion() const override
-   {
-      return mVersion;
-   }
-
-   TranslatableString GetDescription() const override
-   {
-      return mDescription;
-   }
-
-   EffectFamilySymbol GetFamily() const override
-   {
-      return VSTPLUGINTYPE;
-   }
-
-   EffectType GetType() const override
-   {
-      return mType;
-   }
-
-   bool IsInteractive() const override
-   {
-      return mInteractive;
-   }
-
-   bool IsDefault() const override
-   {
-      return false;
-   }
-
-   bool SupportsRealtime() const override
-   {
-      return mType == EffectTypeProcess;
-   }
-
-   bool SupportsAutomation() const override
-   {
-      return mAutomatable;
-   }
-
-public:
-   wxString mPath;
-   wxString mName;
-   wxString mVendor;
-   wxString mVersion;
-   TranslatableString mDescription;
-   EffectType mType;
-   bool mInteractive;
-   bool mAutomatable;
-};
-
-// ============================================================================
-//
-// VSTEffectsModule
-//
-// ============================================================================
 VSTEffectsModule::VSTEffectsModule()
 {
 }
@@ -499,178 +360,26 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    const PluginPath & path, TranslatableString &errMsg,
    const RegistrationCallback &callback)
 {
-   bool error = false;
-   unsigned nFound = 0;
-   errMsg = {};
-   // TODO:  Fix this for external usage
-   const auto &cmdpath = PlatformCompatibility::GetExecutablePath();
-
-   wxString effectIDs = wxT("0;");
-   wxStringTokenizer effectTzr(effectIDs, wxT(";"));
-
-   std::optional<ProgressDialog> progress{};
-   size_t idCnt = 0;
-   size_t idNdx = 0;
-
-   bool cont = true;
-
-   while (effectTzr.HasMoreTokens() && cont)
+   VSTEffect effect(path);
+   if(effect.InitializePlugin())
    {
-      wxString effectID = effectTzr.GetNextToken();
-
-      wxString cmd;
-      cmd.Printf(wxT("\"%s\" %s \"%s;%s\""), cmdpath, VSTCMDKEY, path, effectID);
-
-      VSTSubProcess proc;
-      try
+      const auto effectIDs = effect.GetEffectIDs();
+      if(!effectIDs.empty())
       {
-         int flags = wxEXEC_SYNC | wxEXEC_NODISABLE;
-#if defined(__WXMSW__)
-         flags += wxEXEC_NOHIDE;
-#endif
-         wxExecute(cmd, flags, &proc);
-      }
-      catch (...)
-      {
-         wxLogMessage(wxT("VST plugin registration failed for %s\n"), path);
-         error = true;
+         for(auto id : effectIDs)
+         {
+            VSTEffect subeffect(wxString::Format("%s;%d", path, id));
+            if(callback)
+               callback(this, &subeffect);
+         }
+         return effectIDs.size();
       }
 
-      wxString output;
-      wxStringOutputStream ss(&output);
-      proc.GetInputStream()->Read(ss);
-
-      int keycount = 0;
-      bool haveBegin = false;
-      wxStringTokenizer tzr(output, wxT("\n"));
-      while (tzr.HasMoreTokens())
-      {
-         wxString line = tzr.GetNextToken();
-
-         // Our output may follow any output the plugin may have written.
-         if (!line.StartsWith(OUTPUTKEY))
-         {
-            continue;
-         }
-
-         long key;
-         if (!line.Mid(wxStrlen(OUTPUTKEY)).BeforeFirst(wxT('=')).ToLong(&key))
-         {
-            continue;
-         }
-         wxString val = line.AfterFirst(wxT('=')).BeforeFirst(wxT('\r'));
-
-         switch (key)
-         {
-            case kKeySubIDs:
-               effectIDs = val;
-               effectTzr.Reinit(effectIDs);
-               idCnt = effectTzr.CountTokens();
-               if (idCnt > 3)
-               {
-                  progress.emplace( XO("Scanning Shell VST"),
-                        XO("Registering %d of %d: %-64.64s")
-                           .Format( 0, idCnt, proc.GetSymbol().Translation())
-                                   /*
-                        , wxPD_APP_MODAL |
-                           wxPD_AUTO_HIDE |
-                           wxPD_CAN_ABORT |
-                           wxPD_ELAPSED_TIME |
-                           wxPD_ESTIMATED_TIME |
-                           wxPD_REMAINING_TIME
-                                    */
-                  );
-                  progress->Show();
-               }
-            break;
-
-            case kKeyBegin:
-               haveBegin = true;
-               keycount++;
-            break;
-
-            case kKeyName:
-               proc.mName = val;
-               keycount++;
-            break;
-
-            case kKeyPath:
-               proc.mPath = val;
-               keycount++;
-            break;
-
-            case kKeyVendor:
-               proc.mVendor = val;
-               keycount++;
-            break;
-
-            case kKeyVersion:
-               proc.mVersion = val;
-               keycount++;
-            break;
-
-            case kKeyDescription:
-               proc.mDescription = Verbatim( val );
-               keycount++;
-            break;
-
-            case kKeyEffectType:
-               long type;
-               val.ToLong(&type);
-               proc.mType = (EffectType) type;
-               keycount++;
-            break;
-
-            case kKeyInteractive:
-               proc.mInteractive = val == wxT("1");
-               keycount++;
-            break;
-
-            case kKeyAutomatable:
-               proc.mAutomatable = val == wxT("1");
-               keycount++;
-            break;
-
-            case kKeyEnd:
-            {
-               if (!haveBegin || ++keycount != kKeyEnd)
-               {
-                  keycount = 0;
-                  haveBegin = false;
-                  continue;
-               }
-
-               bool skip = false;
-               if (progress)
-               {
-                  idNdx++;
-                  auto result = progress->Update((int)idNdx, (int)idCnt,
-                     XO("Registering %d of %d: %-64.64s")
-                        .Format( idNdx, idCnt, proc.GetSymbol().Translation() ));
-                  cont = (result == ProgressResult::Success);
-               }
-
-               if (!skip && cont)
-               {
-                  if (callback)
-                     callback( this, &proc );
-                  ++nFound;
-               }
-            }
-            break;
-
-            default:
-               keycount = 0;
-               haveBegin = false;
-            break;
-         }
-      }
+      if(callback)
+         callback(this, &effect);
+      return 1;
    }
-
-   if (error)
-      errMsg = XO("Could not load the library");
-
-   return nFound;
+   return 0;
 }
 
 bool VSTEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
@@ -698,51 +407,6 @@ VSTEffectsModule::LoadPlugin(const PluginPath & path)
 // ============================================================================
 // VSTEffectsModule implementation
 // ============================================================================
-
-// static
-//
-// Called from reinvokation of Audacity or DLL to check in a separate process
-void VSTEffectsModule::Check(const wxChar *path)
-{
-   VSTEffect effect(path);
-   if (effect.InitializePlugin())
-   {
-      auto effectIDs = effect.GetEffectIDs();
-      wxString out;
-
-      if (effectIDs.size() > 0)
-      {
-         wxString subids;
-
-         for (size_t i = 0, cnt = effectIDs.size(); i < cnt; i++)
-         {
-            subids += wxString::Format(wxT("%d;"), effectIDs[i]);
-         }
-
-         out = wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeySubIDs, subids.RemoveLast());
-      }
-      else
-      {
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyBegin, wxEmptyString);
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyPath, effect.GetPath());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyName, effect.GetSymbol().Internal());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVendor,
-                                 effect.GetVendor().Internal());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyVersion, effect.GetVersion());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyDescription, effect.GetDescription().Translation());
-         out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyEffectType, effect.GetType());
-         out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyInteractive, effect.IsInteractive());
-         out += wxString::Format(wxT("%s%d=%d\n"), OUTPUTKEY, kKeyAutomatable, effect.SupportsAutomation());
-         out += wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeyEnd, wxEmptyString);
-      }
-
-      // We want to output info in one chunk to prevent output
-      // from the effect intermixing with the info
-      const wxCharBuffer buf = out.ToUTF8();
-      fwrite(buf, 1, strlen(buf), stdout);
-      fflush(stdout);
-   }
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
