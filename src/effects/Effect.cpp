@@ -799,12 +799,12 @@ bool Effect::Startup(EffectUIClientInterface *client)
    return true;
 }
 
-bool Effect::GetAutomationParametersAsString(wxString & parms)
+bool Effect::GetAutomationParametersAsString(wxString & parms) const
 {
    CommandParameters eap;
    ShuttleGetAutomation S;
    S.mpEap = &eap;
-   if( DefineParams( S ) ){
+   if( const_cast<Effect*>(this)->DefineParams( S ) ){
       ;// got eap value using DefineParams.
    }
    // Won't be needed in future
