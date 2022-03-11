@@ -514,11 +514,12 @@ bool Effect::LoadUserPreset(const RegistryPath & name)
    return SetAutomationParametersFromString(parms);
 }
 
-bool Effect::SaveUserPreset(const RegistryPath & name)
+bool Effect::SaveUserPreset(
+   const RegistryPath & name, const EffectSettings &settings) const
 {
    if (mClient)
    {
-      return mClient->SaveUserPreset(name);
+      return mClient->SaveUserPreset(name, settings);
    }
 
    wxString parms;
@@ -885,7 +886,10 @@ void Effect::SetBatchProcessing()
    mIsBatch = true;
    // Save effect's internal state in a special registry path
    // just for this purpose
-   SaveUserPreset(GetSavedStateGroup());
+   // If effect is not stateful, this step doesn't really matter, and the
+   // settings object is a dummy
+   auto dummySettings = MakeSettings();
+   SaveUserPreset(GetSavedStateGroup(), dummySettings);
 }
 
 void Effect::UnsetBatchProcessing()

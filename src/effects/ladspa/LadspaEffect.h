@@ -68,7 +68,8 @@ public:
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
@@ -135,7 +136,7 @@ private:
    void Unload();
 
    bool LoadParameters(const RegistryPath & group);
-   bool SaveParameters(const RegistryPath & group);
+   bool SaveParameters(const RegistryPath & group) const;
 
    LADSPA_Handle InitInstance(float sampleRate);
    void FreeInstance(LADSPA_Handle handle);

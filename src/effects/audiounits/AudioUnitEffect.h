@@ -69,7 +69,8 @@ public:
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
@@ -168,7 +169,7 @@ private:
    void GetChannelCounts();
 
    bool LoadPreset(const RegistryPath & group);
-   bool SavePreset(const RegistryPath & group);
+   bool SavePreset(const RegistryPath & group) const;
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
    bool CreatePlain(wxWindow *parent);

@@ -753,13 +753,14 @@ EffectManager::GetEffectAndDefaultSettings(const PluginID & ID)
 }
 
 namespace {
-void InitializePreset(EffectDefinitionInterfaceEx &definition) {
+void InitializePreset(
+   EffectDefinitionInterfaceEx &definition, EffectSettings &settings) {
    bool haveDefaults;
    GetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
       wxT("Initialized"), haveDefaults, false);
    if (!haveDefaults)
    {
-      definition.SaveUserPreset(FactoryDefaultsGroup());
+      definition.SaveUserPreset(FactoryDefaultsGroup(), settings);
       SetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
          wxT("Initialized"), true);
    }
@@ -771,8 +772,9 @@ LoadComponent(const PluginID &ID)
 {
    if (auto result = dynamic_cast<EffectDefinitionInterfaceEx*>(
       PluginManager::Get().Load(ID))) {
-      InitializePreset(*result);
-      return { result, result->MakeSettings() };
+      auto settings = result->MakeSettings();
+      InitializePreset(*result, settings);
+      return { result, std::move(settings) };
    }
    return { nullptr, {} };
 }

@@ -1638,7 +1638,8 @@ bool LV2Effect::LoadUserPreset(const RegistryPath &name)
    return TransferDataToWindow();
 }
 
-bool LV2Effect::SaveUserPreset(const RegistryPath &name)
+bool LV2Effect::SaveUserPreset(
+   const RegistryPath &name, const EffectSettings &) const
 {
    return SaveParameters(name);
 }
@@ -1777,7 +1778,7 @@ bool LV2Effect::LoadParameters(const RegistryPath &group)
    return SetAutomationParameters(eap);
 }
 
-bool LV2Effect::SaveParameters(const RegistryPath &group)
+bool LV2Effect::SaveParameters(const RegistryPath &group) const
 {
    CommandParameters eap;
    if (!GetAutomationParameters(eap))

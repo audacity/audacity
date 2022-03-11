@@ -633,7 +633,10 @@ bool NyquistEffect::Init()
       //(during this session).
       if (mFileName.GetModificationTime().IsLaterThan(mFileModified))
       {
-         SaveUserPreset(CurrentSettingsGroup());
+         // If the effect has internal state, save and restore it.
+         // If the effect is stateless, saving and restoring don't matter.
+         auto dummySettings = MakeSettings();
+         SaveUserPreset(CurrentSettingsGroup(), dummySettings);
 
          mMaxLen = NYQ_MAX_LEN;
          ParseFile();

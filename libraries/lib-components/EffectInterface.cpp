@@ -114,16 +114,6 @@ bool EffectDefinitionInterfaceEx::LoadUserPreset(
       return false;
 }
 
-bool EffectDefinitionInterfaceEx::SaveUserPreset(
-   const RegistryPath & name, const Settings &settings) const
-{
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->SaveUserPreset(name);
-   else
-      return false;
-}
-
 bool EffectDefinitionInterfaceEx::LoadFactoryPreset(
    int id, Settings &settings) const
 {

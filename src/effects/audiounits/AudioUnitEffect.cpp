@@ -1595,7 +1595,8 @@ bool AudioUnitEffect::LoadUserPreset(const RegistryPath & name)
    return LoadPreset(name);
 }
 
-bool AudioUnitEffect::SaveUserPreset(const RegistryPath & name)
+bool AudioUnitEffect::SaveUserPreset(
+   const RegistryPath & name, const EffectSettings &) const
 {
    return SavePreset(name);
 }
@@ -2007,7 +2008,7 @@ bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
    return true;
 }
 
-bool AudioUnitEffect::SavePreset(const RegistryPath & group)
+bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
 {
    // First set the name of the preset
    wxCFStringRef cfname(wxFileNameFromPath(group));

@@ -430,7 +430,8 @@ bool VST3Effect::LoadUserPreset(const RegistryPath& name)
    return true;
 }
 
-bool VST3Effect::SaveUserPreset(const RegistryPath& name)
+bool VST3Effect::SaveUserPreset(
+   const RegistryPath& name, const EffectSettings &) const
 {
    using namespace Steinberg;
 

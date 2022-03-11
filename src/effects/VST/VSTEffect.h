@@ -120,7 +120,8 @@ class VSTEffect final : public wxEvtHandler,
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;

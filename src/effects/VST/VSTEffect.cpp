@@ -294,7 +294,8 @@ public:
    bool SetAutomationParameters(const CommandParameters &) override { return true; }
 
    bool LoadUserPreset(const RegistryPath &) override { return true; }
-   bool SaveUserPreset(const RegistryPath &) override { return true; }
+   bool SaveUserPreset(const RegistryPath &, const Settings &) const override
+      { return true; }
 
    RegistryPaths GetFactoryPresets() const override { return {}; }
    bool LoadFactoryPreset(int) override { return true; }
@@ -1680,7 +1681,8 @@ bool VSTEffect::LoadUserPreset(const RegistryPath & name)
    return true;
 }
 
-bool VSTEffect::SaveUserPreset(const RegistryPath & name)
+bool VSTEffect::SaveUserPreset(
+   const RegistryPath & name, const EffectSettings &) const
 {
    return SaveParameters(name);
 }

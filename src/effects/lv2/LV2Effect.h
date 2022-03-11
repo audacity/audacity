@@ -281,7 +281,8 @@ public:
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
@@ -346,7 +347,7 @@ public:
 
 private:
    bool LoadParameters(const RegistryPath & group);
-   bool SaveParameters(const RegistryPath & group);
+   bool SaveParameters(const RegistryPath & group) const;
 
    LV2Wrapper *InitInstance(float sampleRate);
    void FreeInstance(LV2Wrapper *wrapper);

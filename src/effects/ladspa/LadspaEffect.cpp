@@ -1135,7 +1135,8 @@ bool LadspaEffect::LoadUserPreset(const RegistryPath & name)
    return true;
 }
 
-bool LadspaEffect::SaveUserPreset(const RegistryPath & name)
+bool LadspaEffect::SaveUserPreset(
+   const RegistryPath & name, const EffectSettings &) const
 {
    return SaveParameters(name);
 }
@@ -1614,7 +1615,7 @@ bool LadspaEffect::LoadParameters(const RegistryPath & group)
    return SetAutomationParameters(eap);
 }
 
-bool LadspaEffect::SaveParameters(const RegistryPath & group)
+bool LadspaEffect::SaveParameters(const RegistryPath & group) const
 {
    CommandParameters eap;
    if (!GetAutomationParameters(eap))
