@@ -875,7 +875,7 @@ unsigned Effect::TestUIFlags(unsigned mask) {
    return mask & mUIFlags;
 }
 
-bool Effect::IsBatchProcessing()
+bool Effect::IsBatchProcessing() const
 {
    return mIsBatch;
 }
