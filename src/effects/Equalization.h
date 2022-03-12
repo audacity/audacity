@@ -19,6 +19,7 @@
 
 #include "Effect.h"
 #include "RealFFTf.h"
+#include "../ShuttleAutomation.h"
 
 // Flags to specialise the UI
 const int kEqOptionGraphic =1;
@@ -95,6 +96,8 @@ class EffectEqualization : public Effect,
                            public XMLTagHandler
 {
 public:
+   static inline EffectEqualization *
+   FetchParameters(EffectEqualization &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectEqualization(int Options = kEqLegacy);
@@ -111,8 +114,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
    bool LoadFactoryDefaults() override;
 
    RegistryPaths GetFactoryPresets() const override;
@@ -273,6 +274,8 @@ public: // TODO remove
    wxRadioButton *mMathProcessingType[5]; // default, sse, sse threaded, AVX, AVX threaded (note AVX is not implemented yet
    wxBoxSizer *szrM;
 #endif
+
+   const EffectParameterMethods& Parameters() const override;
 
    DECLARE_EVENT_TABLE()
 

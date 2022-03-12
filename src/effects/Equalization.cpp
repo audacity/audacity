@@ -177,6 +177,7 @@ static const double kThirdOct[] =
 };
 
 namespace {
+// Not all of these are visited now
 EffectParameter FilterLength{ &EffectEqualization::mM,
    L"FilterLength",        8191,    21,      8191,    0      };
 EffectParameter CurveName{ &EffectEqualization::mCurveName,
@@ -193,6 +194,27 @@ EffectParameter dBMin{ &EffectEqualization::mdBMin,
    L"",                   -30.0f,   -120.0,  -10.0,   0      };
 EffectParameter dBMax{ &EffectEqualization::mdBMax,
    L"",                   30.0f,    0.0,     60.0,    0      };
+}
+const EffectParameterMethods& EffectEqualization::Parameters() const
+{
+   static CapturedParameters<EffectEqualization> parameters {
+      [](EffectEqualization &, EffectEqualization &effect, bool updating){
+         if (updating) {
+            if (effect.mInterp >= nInterpolations)
+               effect.mInterp -= nInterpolations;
+            effect.mEnvelope =
+               (effect.mLin ? effect.mLinEnvelope : effect.mLogEnvelope).get();
+         }
+         return true;
+      },
+      FilterLength,
+      // CurveName,
+      InterpLin,
+      // Pretty sure the interpolation name shouldn't have been interpreted when
+      // specified in chains, but must keep it that way for compatibility.
+      InterpMeth
+   };
+   return parameters;
 }
 
 ///----------------------------------------------------------------------------
@@ -253,6 +275,8 @@ EffectEqualization::EffectEqualization(int Options)
    , mFilterFuncR{ windowSize }
    , mFilterFuncI{ windowSize }
 {
+   Parameters().Reset(*this);
+
    mOptions = Options;
    mGraphic = NULL;
    mDraw = NULL;
@@ -264,9 +288,6 @@ EffectEqualization::EffectEqualization(int Options)
 
    SetLinearEffectFlag(true);
 
-   mM = FilterLength.def;
-   mLin = InterpLin.def;
-   mInterp = InterpMeth.def;
    mCurveName = CurveName.def;
 
    GetConfig(GetDefinition(), PluginSettings::Private,
@@ -378,11 +399,9 @@ EffectType EffectEqualization::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectEqualization::VisitSettings(SettingsVisitor & S){
-   S.SHUTTLE_PARAM( mM, FilterLength );
-   //S.SHUTTLE_PARAM( mCurveName, CurveName);
-   S.SHUTTLE_PARAM( mLin, InterpLin);
-   S.SHUTTLE_PARAM( mInterp, InterpMeth );
+bool EffectEqualization::VisitSettings( SettingsVisitor &S )
+{
+   Effect::VisitSettings(S);
 
    // if saving the preferences...
    if( dynamic_cast<ShuttleGetAutomation*>(&S))
@@ -416,41 +435,6 @@ bool EffectEqualization::VisitSettings(SettingsVisitor & S){
       }
       setCurve( 0 );
    }
-
-   return true;
-}
-
-bool EffectEqualization::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(FilterLength.key, (unsigned long)mM);
-   //parms.Write(CurveName.key, mCurveName);
-   parms.Write(InterpLin.key, mLin);
-   parms.WriteEnum(InterpMeth.key, mInterp, kInterpStrings, nInterpolations);
-
-   return true;
-}
-
-bool EffectEqualization::SetAutomationParameters(const CommandParameters & parms)
-{
-   // Pretty sure the interpolation name shouldn't have been interpreted when
-   // specified in chains, but must keep it that way for compatibility.
-
-   ReadParam(FilterLength);
-   //ReadParam(CurveName);
-   ReadParam(InterpLin);
-   ReadAndVerifyEnum(InterpMeth, kInterpStrings, nInterpolations);
-
-   mM = FilterLength;
-   //mCurveName = CurveName;
-   mLin = InterpLin;
-   mInterp = InterpMeth;
-
-   if (InterpMeth >= nInterpolations)
-   {
-      InterpMeth.cache -= nInterpolations;
-   }
-
-   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();
 
    return true;
 }
