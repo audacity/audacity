@@ -18,6 +18,7 @@
 #define __AUDACITY_EFFECT_TRUNC_SILENCE__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class ShuttleGui;
 class wxChoice;
@@ -29,6 +30,8 @@ class RegionList;
 class EffectTruncSilence final : public Effect
 {
 public:
+   static inline EffectTruncSilence *
+   FetchParameters(EffectTruncSilence &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectTruncSilence();
@@ -43,12 +46,7 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -109,6 +107,7 @@ public: // TODO remove
    wxTextCtrl *mSilenceCompressPercentT;
    wxCheckBox *mIndependent;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 };
 

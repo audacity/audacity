@@ -31,7 +31,6 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "../ProjectSettings.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../SyncLock.h"
 #include "../WaveTrack.h"
@@ -108,6 +107,13 @@ EffectParameter Compress{ &EffectTruncSilence::mSilenceCompressPercent,
 EffectParameter Independent{ &EffectTruncSilence::mbIndependent,
    L"Independent", false,     false,   true,                      1  };
 }
+const EffectParameterMethods& EffectTruncSilence::Parameters() const
+{
+   static CapturedParameters<EffectTruncSilence> parameters {
+      Threshold, ActIndex, Minimum, Truncate, Compress, Independent
+   };
+   return parameters;
+}
 
 static const size_t DEF_BlendFrameCount = 100;
 
@@ -130,12 +136,7 @@ END_EVENT_TABLE()
 
 EffectTruncSilence::EffectTruncSilence()
 {
-   mInitialAllowedSilence = Minimum.def;
-   mTruncLongestAllowedSilence = Truncate.def;
-   mSilenceCompressPercent = Compress.def;
-   mThresholdDB = Threshold.def;
-   mActionIndex = ActIndex.def;
-   mbIndependent = Independent.def;
+   Parameters().Reset(*this);
 
    SetLinearEffectFlag(false);
 
@@ -180,39 +181,20 @@ EffectType EffectTruncSilence::GetType() const
 
 // EffectProcessor implementation
 
-bool EffectTruncSilence::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( mThresholdDB, Threshold );
-   S.SHUTTLE_PARAM( mActionIndex, ActIndex );
-   S.SHUTTLE_PARAM( mInitialAllowedSilence, Minimum );
-   S.SHUTTLE_PARAM( mTruncLongestAllowedSilence, Truncate );
-   S.SHUTTLE_PARAM( mSilenceCompressPercent, Compress );
-   S.SHUTTLE_PARAM( mbIndependent, Independent );
-   return true;
-}
-
-bool EffectTruncSilence::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(Threshold.key, mThresholdDB);
-   parms.Write(ActIndex.key, kActionStrings[mActionIndex].Internal());
-   parms.Write(Minimum.key, mInitialAllowedSilence);
-   parms.Write(Truncate.key, mTruncLongestAllowedSilence);
-   parms.Write(Compress.key, mSilenceCompressPercent);
-   parms.Write(Independent.key, mbIndependent);
-
-   return true;
-}
-
 bool EffectTruncSilence::SetAutomationParameters(const CommandParameters & parms)
 {
-   ReadParam(Minimum);
-   ReadParam(Truncate);
-   ReadParam(Compress);
+   Effect::SetAutomationParameters(parms);
+
+   // A bit of special treatment for two parameters
 
    // This control migrated from a choice to a text box in version 2.3.0
    double myThreshold {};
    bool newParams = [&] {
-      ReadParam(Threshold); // macro may return false
-      myThreshold = Threshold;
+      double temp;
+      if (!parms.ReadAndVerify(Threshold.key,
+         &temp, Threshold.def, Threshold.min, Threshold.max))
+         return false;
+      myThreshold = temp;
       return true;
    } ();
 
@@ -232,14 +214,7 @@ bool EffectTruncSilence::SetAutomationParameters(const CommandParameters & parms
          return false;
       mActionIndex = temp;
    }
-   ReadParam(Independent);
-
-   mInitialAllowedSilence = Minimum;
-   mTruncLongestAllowedSilence = Truncate;
-   mSilenceCompressPercent = Compress;
    mThresholdDB = myThreshold;
-   mbIndependent = Independent;
-
    return true;
 }
 
