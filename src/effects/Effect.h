@@ -530,14 +530,4 @@ inline long TrapLong(long x, long min, long max)
    return x;
 }
 
-// Helper macros for defining, reading and verifying effect parameters
-
-#define ReadParam(name) \
-   if (!parms.ReadAndVerify(name.key, &name.cache, name.def, name.min, name.max)) \
-      return false;
-
-#define ReadAndVerifyEnum(name, list, listSize) \
-   if (!parms.ReadAndVerify(name.key, &name.cache, name.def, list, listSize)) \
-      return false;
-
 #endif

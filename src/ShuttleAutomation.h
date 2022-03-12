@@ -223,10 +223,11 @@ private:
       const CommandParameters &parms,
       const EffectParameter< Params, Member, Type > &param) {
       // Deserialize and assign one variable (or fail)
-      if (!parms.ReadAndVerify(param.key, &param.cache, param.def,
+      Type temp;
+      if (!parms.ReadAndVerify(param.key, &temp, param.def,
          param.min, param.max))
          return false;
-      structure.*(param.mem) = param;
+      structure.*(param.mem) = temp;
       return true;
    }
    // More specific overload for enumeration parameters
@@ -235,10 +236,11 @@ private:
       const CommandParameters &parms,
       const EnumParameter<Params, Member> &param) {
       // Deserialize and assign one enumeration variable (or fail)
-      if (!parms.ReadAndVerify(param.key, &param.cache, param.def,
+      int temp;
+      if (!parms.ReadAndVerify(param.key, &temp, param.def,
          param.symbols, param.nSymbols))
          return false;
-      structure.*(param.mem) = param;
+      structure.*(param.mem) = temp;
       return true;
    }
    template<typename... Args>

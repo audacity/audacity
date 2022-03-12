@@ -29,11 +29,6 @@ template<
    const Type min{};          //!< Minimum value
    const Type max{};          //!< Maximum value
    const Type scale{};        //!< Scaling factor, for slider control
-   mutable Type cache{};      //!< Holds the value in preferences
-
-   //! Allows this object on the right hand side of an assignment to a variable
-   //! of type Type
-   inline operator const Type& () const { return cache; }
 };
 
 // Deduction guides
@@ -57,7 +52,7 @@ struct EnumParameter : EffectParameter<Structure, Member, int>
       const wxChar *key, int def, int min, int max, int scale,
       const EnumValueSymbol *symbols_, size_t nSymbols_ )
       : EffectParameter<Structure, Member, int>{
-         mem, key, def, min, max, scale, {} }
+         mem, key, def, min, max, scale }
       , symbols{ symbols_ }
       , nSymbols{ nSymbols_ }
    {}
@@ -152,15 +147,6 @@ public:
       wxString vscl = {} );
    virtual void DefineEnum( Arg<int> var, const wxChar * key, int vdefault,
       const EnumValueSymbol strings[], size_t nStrings );
-
-   template< typename Structure, typename Member, typename Var, typename Type >
-   void SHUTTLE_PARAM( Var &var,
-      const EffectParameter< Structure, Member, Type > &name )
-   { Define( var, name.key, name.def, name.min, name.max, name.scale ); }
-
-   template< typename Structure, typename Member >
-   void SHUTTLE_PARAM( int &var, const EnumParameter<Structure, Member> &name )
-   { DefineEnum( var, name.key, name.def, name.symbols, name.nSymbols ); }
 };
 
 extern template class AUDACITY_DLL_API SettingsVisitorBase<false>;
