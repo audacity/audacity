@@ -10,6 +10,11 @@ GenericName[el]=Επεξεργαστής ήχου
 GenericName[es]=Editor de audio
 GenericName[fr]=Éditeur audio
 GenericName[hi]=ध्वनि संपादक
+GenericName[gu]=ધ્વનિ સંપાદક
+GenericName[kn]=ಧ್ವನಿ ಸಂಪಾದಕ
+GenericName[it]=editore di suoni
+GenericName[ta]=ஒலி ஆசிரியர்
+GenericName[la]=sonus editor
 GenericName[ja]=音声編集ソフト
 GenericName[ko]=오디오 편집기
 GenericName[lt]=Garsų rengyklė
@@ -22,6 +27,7 @@ GenericName[tr]=Ses Düzenleyici
 GenericName[uk]=Редактор звукових файлів
 GenericName[zh_CN]=音频编辑器
 GenericName[zh_TW]=音訊編輯器
+
 Comment=Record and edit audio files
 Comment[ar]=سجل و حرر ملفات صوت
 Comment[ca]=Enregistreu i editeu els fitxers d'àudio
@@ -50,6 +56,8 @@ StartupWMClass=Audacity
 
 Type=Application
 Categories=AudioVideo;Audio;AudioVideoEditing;
+
+Keywords=sound;music editing ; voice channel ; frequency ;modulation ; audio trim; clipping  ; noise reduction ; multi track audio editor ; edit ;mixing;WAV;AIFF;FLAC;MP2;MP3;
 
 Exec=env UBUNTU_MENUPROXY=0 @AUDACITY_NAME@ %F
 StartupNotify=false
