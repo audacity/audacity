@@ -178,21 +178,21 @@ static const double kThirdOct[] =
 
 namespace {
 // Not all of these are visited now
-EffectParameter FilterLength{ &EffectEqualization::mM,
+static constexpr EffectParameter FilterLength{ &EffectEqualization::mM,
    L"FilterLength",        8191,    21,      8191,    0      };
-EffectParameter CurveName{ &EffectEqualization::mCurveName,
+static constexpr EffectParameter CurveName{ &EffectEqualization::mCurveName,
    L"CurveName",           L"unnamed", L"", L"", L""};
-EffectParameter InterpLin{ &EffectEqualization::mLin,
+static constexpr EffectParameter InterpLin{ &EffectEqualization::mLin,
    L"InterpolateLin",      false,   false,   true,    false  };
-EnumParameter InterpMeth{ &EffectEqualization::mInterp,
+static constexpr EnumParameter InterpMeth{ &EffectEqualization::mInterp,
    L"InterpolationMethod", 0,       0,       0,       0, kInterpStrings, nInterpolations      };
-EffectParameter DrawMode{ &EffectEqualization::mDrawMode,
+static constexpr EffectParameter DrawMode{ &EffectEqualization::mDrawMode,
    L"",                   true,    false,   true,    false  };
-EffectParameter DrawGrid{ &EffectEqualization::mDrawGrid,
+static constexpr EffectParameter DrawGrid{ &EffectEqualization::mDrawGrid,
    L"",                   true,    false,   true,    false  };
-EffectParameter dBMin{ &EffectEqualization::mdBMin,
+static constexpr EffectParameter dBMin{ &EffectEqualization::mdBMin,
    L"",                   -30.0f,   -120.0,  -10.0,   0      };
-EffectParameter dBMax{ &EffectEqualization::mdBMax,
+static constexpr EffectParameter dBMax{ &EffectEqualization::mdBMax,
    L"",                   30.0f,    0.0,     60.0,    0      };
 }
 const EffectParameterMethods& EffectEqualization::Parameters() const

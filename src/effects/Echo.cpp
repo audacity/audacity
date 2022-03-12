@@ -32,9 +32,9 @@
 #include "../widgets/valnum.h"
 
 namespace {
-EffectParameter Delay{ &EffectEcho::delay,
+static constexpr EffectParameter Delay{ &EffectEcho::delay,
    L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f };
-EffectParameter Decay{ &EffectEcho::decay,
+static constexpr EffectParameter Decay{ &EffectEcho::decay,
    L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f };
 }
 const EffectParameterMethods& EffectEcho::Parameters() const

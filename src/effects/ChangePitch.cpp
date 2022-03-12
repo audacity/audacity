@@ -70,9 +70,9 @@ enum {
 // Soundtouch is not reasonable below -99% or above 3000%.
 
 namespace {
-EffectParameter Percentage{ &EffectChangePitch::m_dPercentChange,
+static constexpr EffectParameter Percentage{ &EffectChangePitch::m_dPercentChange,
    L"Percentage", 0.0,  -99.0,   3000.0,  1  };
-EffectParameter UseSBSMS{ &EffectChangePitch::mUseSBSMS,
+static constexpr EffectParameter UseSBSMS{ &EffectChangePitch::mUseSBSMS,
    L"SBSMS",     false, false,   true,    1  };
 }
 const EffectParameterMethods& EffectChangePitch::Parameters() const

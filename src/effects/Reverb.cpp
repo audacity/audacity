@@ -45,25 +45,25 @@ enum
 };
 
 namespace {
-EffectParameter RoomSize{ &EffectReverb::Params::mRoomSize,
+static constexpr EffectParameter RoomSize{ &EffectReverb::Params::mRoomSize,
    L"RoomSize",      75.0,      0,       100,  1  };
-EffectParameter PreDelay{ &EffectReverb::Params::mPreDelay,
+static constexpr EffectParameter PreDelay{ &EffectReverb::Params::mPreDelay,
    L"Delay",         10.0,      0,       200,  1  };
-EffectParameter Reverberance{ &EffectReverb::Params::mReverberance,
+static constexpr EffectParameter Reverberance{ &EffectReverb::Params::mReverberance,
    L"Reverberance",  50.0,      0,       100,  1  };
-EffectParameter HfDamping{ &EffectReverb::Params::mHfDamping,
+static constexpr EffectParameter HfDamping{ &EffectReverb::Params::mHfDamping,
    L"HfDamping",     50.0,      0,       100,  1  };
-EffectParameter ToneLow{ &EffectReverb::Params::mToneLow,
+static constexpr EffectParameter ToneLow{ &EffectReverb::Params::mToneLow,
    L"ToneLow",       100.0,     0,       100,  1  };
-EffectParameter ToneHigh{ &EffectReverb::Params::mToneHigh,
+static constexpr EffectParameter ToneHigh{ &EffectReverb::Params::mToneHigh,
    L"ToneHigh",      100.0,     0,       100,  1  };
-EffectParameter WetGain{ &EffectReverb::Params::mWetGain,
+static constexpr EffectParameter WetGain{ &EffectReverb::Params::mWetGain,
    L"WetGain",       -1.0,      -20,     10,   1  };
-EffectParameter DryGain{ &EffectReverb::Params::mDryGain,
+static constexpr EffectParameter DryGain{ &EffectReverb::Params::mDryGain,
    L"DryGain",       -1.0,      -20,     10,   1  };
-EffectParameter StereoWidth{ &EffectReverb::Params::mStereoWidth,
+static constexpr EffectParameter StereoWidth{ &EffectReverb::Params::mStereoWidth,
    L"StereoWidth",   100.0,     0,       100,  1  };
-EffectParameter WetOnly{ &EffectReverb::Params::mWetOnly,
+static constexpr EffectParameter WetOnly{ &EffectReverb::Params::mWetOnly,
    L"WetOnly",       false,   false,   true, 1  };
 }
 const EffectParameterMethods& EffectReverb::Parameters() const

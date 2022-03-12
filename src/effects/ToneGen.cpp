@@ -70,21 +70,21 @@ static const EnumValueSymbol kWaveStrings[nWaveforms] =
 
 namespace {
 // Yes, mFrequency0 and mAmplitude0 are each associated with more than one
-EffectParameter StartFreq{ &EffectToneGen::mFrequency0,
+static constexpr EffectParameter StartFreq{ &EffectToneGen::mFrequency0,
    L"StartFreq",     440.0,   1.0,     DBL_MAX,                1  };
-EffectParameter EndFreq{ &EffectToneGen::mFrequency1,
+static constexpr EffectParameter EndFreq{ &EffectToneGen::mFrequency1,
    L"EndFreq",       1320.0,  1.0,     DBL_MAX,                1  };
-EffectParameter StartAmp{ &EffectToneGen::mAmplitude0,
+static constexpr EffectParameter StartAmp{ &EffectToneGen::mAmplitude0,
    L"StartAmp",      0.8,     0.0,     1.0,                    1  };
-EffectParameter EndAmp{ &EffectToneGen::mAmplitude1,
+static constexpr EffectParameter EndAmp{ &EffectToneGen::mAmplitude1,
    L"EndAmp",        0.1,     0.0,     1.0,                    1  };
-EffectParameter Frequency{ &EffectToneGen::mFrequency0,
+static constexpr EffectParameter Frequency{ &EffectToneGen::mFrequency0,
    L"Frequency",     440.0,   1.0,     DBL_MAX,                1  };
-EffectParameter Amplitude{ &EffectToneGen::mAmplitude0,
+static constexpr EffectParameter Amplitude{ &EffectToneGen::mAmplitude0,
    L"Amplitude",     0.8,     0.0,     1.0,                    1  };
-EnumParameter Waveform{ &EffectToneGen::mWaveform,
+static constexpr EnumParameter Waveform{ &EffectToneGen::mWaveform,
    L"Waveform",      0,       0,       nWaveforms - 1,      1, kWaveStrings, nWaveforms  };
-EnumParameter Interp{ &EffectToneGen::mInterpolation,
+static constexpr EnumParameter Interp{ &EffectToneGen::mInterpolation,
    L"Interpolation", 0,       0,       nInterpolations - 1, 1, kInterStrings, nInterpolations  };
 }
 const EffectParameterMethods& EffectToneGen::Parameters() const

@@ -48,9 +48,9 @@ enum
 };
 
 namespace {
-EffectParameter Threshold{ &EffectClickRemoval::mThresholdLevel,
+static constexpr EffectParameter Threshold{ &EffectClickRemoval::mThresholdLevel,
    L"Threshold",  200,     0,       900,     1  };
-EffectParameter Width{ &EffectClickRemoval::mClickWidth,
+static constexpr EffectParameter Width{ &EffectClickRemoval::mClickWidth,
    L"Width",      20,      0,       40,      1  };
 }
 const EffectParameterMethods& EffectClickRemoval::Parameters() const

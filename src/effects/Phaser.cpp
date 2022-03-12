@@ -43,19 +43,19 @@ enum
 };
 
 namespace {
-EffectParameter Stages{ &EffectPhaser::mStages,
+static constexpr EffectParameter Stages{ &EffectPhaser::mStages,
    L"Stages",     2,    2,    NUM_STAGES, 1  };
-EffectParameter DryWet{ &EffectPhaser::mDryWet,
+static constexpr EffectParameter DryWet{ &EffectPhaser::mDryWet,
    L"DryWet",     128,  0,    255,        1  };
-EffectParameter Freq{ &EffectPhaser::mFreq,
+static constexpr EffectParameter Freq{ &EffectPhaser::mFreq,
    L"Freq",       0.4,  0.001,4.0,        10.0 };
-EffectParameter Phase{ &EffectPhaser::mPhase,
+static constexpr EffectParameter Phase{ &EffectPhaser::mPhase,
    L"Phase",      0.0,  0.0,  360.0,      1  };
-EffectParameter Depth{ &EffectPhaser::mDepth,
+static constexpr EffectParameter Depth{ &EffectPhaser::mDepth,
    L"Depth",      100,  0,    255,        1  };
-EffectParameter Feedback{ &EffectPhaser::mFeedback,
+static constexpr EffectParameter Feedback{ &EffectPhaser::mFeedback,
    L"Feedback",   0,    -100, 100,        1  };
-EffectParameter OutGain{ &EffectPhaser::mOutGain,
+static constexpr EffectParameter OutGain{ &EffectPhaser::mOutGain,
    L"Gain",      -6.0,    -30.0,    30.0,    1   };
 }
 const EffectParameterMethods& EffectPhaser::Parameters() const

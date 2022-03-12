@@ -65,7 +65,7 @@ static const TranslatableStrings kVinylStrings{
 // Soundtouch is not reasonable below -99% or above 3000%.
 
 namespace {
-EffectParameter Percentage{ &EffectChangeSpeed::m_PercentChange,
+static constexpr EffectParameter Percentage{ &EffectChangeSpeed::m_PercentChange,
    L"Percentage",    0.0,  -99.0,   4900.0,  1  };
 }
 const EffectParameterMethods& EffectChangeSpeed::Parameters() const

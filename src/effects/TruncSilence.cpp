@@ -94,17 +94,17 @@ static CommandParameters::ObsoleteMap kObsoleteActions[] = {
 static const size_t nObsoleteActions = WXSIZEOF( kObsoleteActions );
 
 namespace {
-EffectParameter Threshold{ &EffectTruncSilence::mThresholdDB,
+static constexpr EffectParameter Threshold{ &EffectTruncSilence::mThresholdDB,
    L"Threshold",  -20.0,      -80.0,   -20.0,                     1  };
-EnumParameter ActIndex{ &EffectTruncSilence::mActionIndex,
+static constexpr EnumParameter ActIndex{ &EffectTruncSilence::mActionIndex,
    L"Action",     (int)kTruncate,  0,       nActions - 1,           1, kActionStrings, nActions };
-EffectParameter Minimum{ &EffectTruncSilence::mInitialAllowedSilence,
+static constexpr EffectParameter Minimum{ &EffectTruncSilence::mInitialAllowedSilence,
    L"Minimum",    0.5,        0.001,   10000.0,                   1  };
-EffectParameter Truncate{ &EffectTruncSilence::mTruncLongestAllowedSilence,
+static constexpr EffectParameter Truncate{ &EffectTruncSilence::mTruncLongestAllowedSilence,
    L"Truncate",   0.5,        0.0,     10000.0,                   1  };
-EffectParameter Compress{ &EffectTruncSilence::mSilenceCompressPercent,
+static constexpr EffectParameter Compress{ &EffectTruncSilence::mSilenceCompressPercent,
    L"Compress",   50.0,       0.0,     99.9,                      1  };
-EffectParameter Independent{ &EffectTruncSilence::mbIndependent,
+static constexpr EffectParameter Independent{ &EffectTruncSilence::mbIndependent,
    L"Independent", false,     false,   true,                      1  };
 }
 const EffectParameterMethods& EffectTruncSilence::Parameters() const

@@ -35,9 +35,9 @@
 #include "../WaveTrack.h"
 
 namespace {
-EffectParameter Amount{ &EffectPaulstretch::mAmount,
+static constexpr EffectParameter Amount{ &EffectPaulstretch::mAmount,
    L"Stretch Factor",   10.0f,    1.0,     FLT_MAX, 1   };
-EffectParameter Time{ &EffectPaulstretch::mTime_resolution,
+static constexpr EffectParameter Time{ &EffectPaulstretch::mTime_resolution,
    L"Time Resolution",  0.25f,   0.00099f,  FLT_MAX, 1   };
 }
 const EffectParameterMethods& EffectPaulstretch::Parameters() const

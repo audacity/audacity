@@ -34,13 +34,13 @@
 #include "../widgets/ProgressDialog.h"
 
 namespace {
-EffectParameter PeakLevel{ &EffectNormalize::mPeakLevel,
+static constexpr EffectParameter PeakLevel{ &EffectNormalize::mPeakLevel,
    L"PeakLevel",           -1.0,    -145.0,  0.0,  1  };
-EffectParameter RemoveDC{ &EffectNormalize::mDC,
+static constexpr EffectParameter RemoveDC{ &EffectNormalize::mDC,
    L"RemoveDcOffset",      true,    false,   true, 1  };
-EffectParameter ApplyGain{ &EffectNormalize::mGain,
+static constexpr EffectParameter ApplyGain{ &EffectNormalize::mGain,
    L"ApplyGain",           true,    false,   true, 1  };
-EffectParameter StereoInd{ &EffectNormalize::mStereoInd,
+static constexpr EffectParameter StereoInd{ &EffectNormalize::mStereoInd,
    L"StereoIndependent",   false,   false,   true, 1  };
 }
 const EffectParameterMethods& EffectNormalize::Parameters() const

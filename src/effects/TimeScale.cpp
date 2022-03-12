@@ -38,17 +38,17 @@ enum
 };
 
 namespace {
-EffectParameter RatePercentStart{ &EffectTimeScale::m_RatePercentChangeStart,
+static constexpr EffectParameter RatePercentStart{ &EffectTimeScale::m_RatePercentChangeStart,
    L"RatePercentChangeStart",  0.0,  -90.0,   500,   1  };
-EffectParameter RatePercentEnd{ &EffectTimeScale::m_RatePercentChangeEnd,
+static constexpr EffectParameter RatePercentEnd{ &EffectTimeScale::m_RatePercentChangeEnd,
    L"RatePercentChangeEnd",    0.0,  -90.0,   500,   1  };
-EffectParameter HalfStepsStart{ &EffectTimeScale::m_PitchHalfStepsStart,
+static constexpr EffectParameter HalfStepsStart{ &EffectTimeScale::m_PitchHalfStepsStart,
    L"PitchHalfStepsStart",     0.0,  -12.0,   12.0,  1  };
-EffectParameter HalfStepsEnd{ &EffectTimeScale::m_PitchHalfStepsEnd,
+static constexpr EffectParameter HalfStepsEnd{ &EffectTimeScale::m_PitchHalfStepsEnd,
    L"PitchHalfStepsEnd",       0.0,  -12.0,   12.0,  1  };
-EffectParameter PitchPercentStart{ &EffectTimeScale::m_PitchPercentChangeStart,
+static constexpr EffectParameter PitchPercentStart{ &EffectTimeScale::m_PitchPercentChangeStart,
    L"PitchPercentChangeStart", 0.0,  -50.0,   100.0, 1  };
-EffectParameter PitchPercentEnd{ &EffectTimeScale::m_PitchPercentChangeEnd,
+static constexpr EffectParameter PitchPercentEnd{ &EffectTimeScale::m_PitchPercentChangeEnd,
    L"PitchPercentChangeEnd",   0.0,  -50.0,   100.0, 1  };
 }
 const EffectParameterMethods& EffectTimeScale::Parameters() const

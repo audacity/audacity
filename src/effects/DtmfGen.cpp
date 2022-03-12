@@ -32,11 +32,11 @@
 namespace {
 wxString AllSymbols();
 
-EffectParameter Sequence{ &EffectDtmf::Settings::dtmfSequence,
+static constexpr EffectParameter Sequence{ &EffectDtmf::Settings::dtmfSequence,
    L"Sequence",   EffectDtmf::Settings::DefaultSequence, L"", L"", L""};
-EffectParameter DutyCycle{ &EffectDtmf::Settings::dtmfDutyCycle,
+static constexpr EffectParameter DutyCycle{ &EffectDtmf::Settings::dtmfDutyCycle,
    L"Duty Cycle", EffectDtmf::Settings::DefaultDutyCycle, 0.0,     100.0,   10.0   };
-EffectParameter Amplitude{ &EffectDtmf::Settings::dtmfAmplitude,
+static constexpr EffectParameter Amplitude{ &EffectDtmf::Settings::dtmfAmplitude,
    L"Amplitude",  EffectDtmf::Settings::DefaultAmplitude, 0.001,   1.0,     1      };
 }
 const EffectParameterMethods& EffectDtmf::Parameters() const

@@ -41,17 +41,17 @@ enum
 };
 
 namespace {
-EffectParameter Freq{ &EffectWahwah::mFreq,
+static constexpr EffectParameter Freq{ &EffectWahwah::mFreq,
    L"Freq",       1.5,     0.1,     4.0,     10  };
-EffectParameter Phase{ &EffectWahwah::mPhase,
+static constexpr EffectParameter Phase{ &EffectWahwah::mPhase,
    L"Phase",      0.0,     0.0,     360.0,   1   };
-EffectParameter Depth{ &EffectWahwah::mDepth,
+static constexpr EffectParameter Depth{ &EffectWahwah::mDepth,
    L"Depth",      70,      0,       100,     1   }; // scaled to 0-1 before processing
-EffectParameter Res{ &EffectWahwah::mRes,
+static constexpr EffectParameter Res{ &EffectWahwah::mRes,
    L"Resonance",  2.5,     0.1,     10.0,    10  };
-EffectParameter FreqOfs{ &EffectWahwah::mFreqOfs,
+static constexpr EffectParameter FreqOfs{ &EffectWahwah::mFreqOfs,
    L"Offset",     30,      0,       100,     1   }; // scaled to 0-1 before processing
-EffectParameter OutGain{ &EffectWahwah::mOutGain,
+static constexpr EffectParameter OutGain{ &EffectWahwah::mOutGain,
    L"Gain",      -6.0,    -30.0,    30.0,    1   };
 }
 const EffectParameterMethods& EffectWahwah::Parameters() const

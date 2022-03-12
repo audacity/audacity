@@ -57,19 +57,19 @@ enum
 };
 
 namespace {
-EffectParameter Threshold{ &EffectCompressor::mThreshold,
+static constexpr EffectParameter Threshold{ &EffectCompressor::mThreshold,
    L"Threshold",     -12.0,   -60.0,   -1.0,    1   };
-EffectParameter NoiseFloor{ &EffectCompressor::mNoiseFloor,
+static constexpr EffectParameter NoiseFloor{ &EffectCompressor::mNoiseFloor,
    L"NoiseFloor",    -40.0,   -80.0,   -20.0,   0.2   };
-EffectParameter Ratio{ &EffectCompressor::mRatio,
+static constexpr EffectParameter Ratio{ &EffectCompressor::mRatio,
    L"Ratio",         2.0,     1.1,     10.0,    10  };
-EffectParameter AttackTime{ &EffectCompressor::mAttackTime,
+static constexpr EffectParameter AttackTime{ &EffectCompressor::mAttackTime,
    L"AttackTime",    0.2,     0.1,     5.0,     100 };
-EffectParameter ReleaseTime{ &EffectCompressor::mDecayTime,
+static constexpr EffectParameter ReleaseTime{ &EffectCompressor::mDecayTime,
    L"ReleaseTime",   1.0,     1.0,     30.0,    10  };
-EffectParameter Normalize{ &EffectCompressor::mNormalize,
+static constexpr EffectParameter Normalize{ &EffectCompressor::mNormalize,
    L"Normalize",     true,    false,   true,    1   };
-EffectParameter UsePeak{ &EffectCompressor::mUsePeak,
+static constexpr EffectParameter UsePeak{ &EffectCompressor::mUsePeak,
    L"UsePeak",       false,   false,   true,    1   };
 }
 const EffectParameterMethods& EffectCompressor::Parameters() const

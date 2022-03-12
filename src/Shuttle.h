@@ -49,7 +49,7 @@ EffectParameter(Member Structure::*const mem,
 template<typename Structure, typename Member>
 struct EnumParameter : EffectParameter<Structure, Member, int>
 {
-   EnumParameter(Member Structure::*const mem,
+   constexpr EnumParameter(Member Structure::*const mem,
       const wxChar *key, int def, int min, int max, int scale,
       const EnumValueSymbol *symbols_, size_t nSymbols_ )
       : EffectParameter<Structure, Member, int>{
