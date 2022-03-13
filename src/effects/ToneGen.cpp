@@ -107,10 +107,10 @@ EffectToneGen::EffectToneGen(bool isChirp)
    mChirp = isChirp;
 
    mWaveform = DEF_Waveform;
-   mFrequency[0] = DEF_StartFreq;
-   mFrequency[1] = DEF_EndFreq;
-   mAmplitude[0] = DEF_StartAmp;
-   mAmplitude[1] = DEF_EndAmp;
+   mFrequency0 = DEF_StartFreq;
+   mFrequency1 = DEF_EndFreq;
+   mAmplitude0 = DEF_StartAmp;
+   mAmplitude1 = DEF_EndAmp;
    mInterpolation = DEF_Interp;
 
    // Chirp varies over time so must use selected duration.
@@ -189,8 +189,8 @@ size_t EffectToneGen::ProcessBlock(EffectSettings &,
    auto doubleSampleCount = mSampleCnt.as_double();
    auto doubleSample = mSample.as_double();
    double amplitudeQuantum =
-      (mAmplitude[1] - mAmplitude[0]) / doubleSampleCount;
-   BlendedAmplitude = mAmplitude[0] +
+      (mAmplitude1 - mAmplitude0) / doubleSampleCount;
+   BlendedAmplitude = mAmplitude0 +
       amplitudeQuantum * doubleSample;
 
    // precalculations:
@@ -201,8 +201,8 @@ size_t EffectToneGen::ProcessBlock(EffectSettings &,
    if (mInterpolation == kLogarithmic)
    {
       // this for log interpolation
-      mLogFrequency[0] = log10(mFrequency[0]);
-      mLogFrequency[1] = log10(mFrequency[1]);
+      mLogFrequency[0] = log10(mFrequency0);
+      mLogFrequency[1] = log10(mFrequency1);
       // calculate delta, and reposition from where we left
       frequencyQuantum = (mLogFrequency[1] - mLogFrequency[0]) / doubleSampleCount;
       BlendedLogFrequency = mLogFrequency[0] + frequencyQuantum * doubleSample;
@@ -211,8 +211,8 @@ size_t EffectToneGen::ProcessBlock(EffectSettings &,
    else
    {
       // this for regular case, linear interpolation
-      frequencyQuantum = (mFrequency[1] - mFrequency[0]) / doubleSampleCount;
-      BlendedFrequency = mFrequency[0] + frequencyQuantum * doubleSample;
+      frequencyQuantum = (mFrequency1 - mFrequency0) / doubleSampleCount;
+      BlendedFrequency = mFrequency0 + frequencyQuantum * doubleSample;
    }
 
    // synth loop
@@ -275,24 +275,24 @@ size_t EffectToneGen::ProcessBlock(EffectSettings &,
 
 bool EffectToneGen::VisitSettings( SettingsVisitor & S ){
    if( mChirp ){
-      S.SHUTTLE_PARAM( mFrequency[0], StartFreq  );
-      S.SHUTTLE_PARAM( mFrequency[1], EndFreq  );
-      S.SHUTTLE_PARAM( mAmplitude[0], StartAmp  );
-      S.SHUTTLE_PARAM( mAmplitude[1], EndAmp  );
+      S.SHUTTLE_PARAM( mFrequency0, StartFreq  );
+      S.SHUTTLE_PARAM( mFrequency1, EndFreq  );
+      S.SHUTTLE_PARAM( mAmplitude0, StartAmp  );
+      S.SHUTTLE_PARAM( mAmplitude1, EndAmp  );
    } else {
-      S.SHUTTLE_PARAM( mFrequency[0], Frequency  );
-      S.SHUTTLE_PARAM( mAmplitude[0], Amplitude );
+      S.SHUTTLE_PARAM( mFrequency0, Frequency  );
+      S.SHUTTLE_PARAM( mAmplitude0, Amplitude );
       // Slightly hacky way to set freq and ampl
       // since we do this whatever query to params was made.
-      mFrequency[1] = mFrequency[0];
-      mAmplitude[1] = mAmplitude[0];
+      mFrequency1 = mFrequency0;
+      mAmplitude1 = mAmplitude0;
    }
    S.SHUTTLE_ENUM_PARAM( mWaveform, Waveform, kWaveStrings, nWaveforms  );
    S.SHUTTLE_ENUM_PARAM( mInterpolation, Interp, kInterStrings, nInterpolations  );
 
 
 //   double freqMax = (FindProject() ? FindProject()->GetRate() : 44100.0) / 2.0;
-//   mFrequency[1] = std::clamp<double>(mFrequency[1], MIN_EndFreq, freqMax);
+//   mFrequency1 = std::clamp<double>(mFrequency[1], MIN_EndFreq, freqMax);
 
 
    return true;
@@ -302,15 +302,15 @@ bool EffectToneGen::GetAutomationParameters(CommandParameters & parms) const
 {
    if (mChirp)
    {
-      parms.Write(KEY_StartFreq, mFrequency[0]);
-      parms.Write(KEY_EndFreq, mFrequency[1]);
-      parms.Write(KEY_StartAmp, mAmplitude[0]);
-      parms.Write(KEY_EndAmp, mAmplitude[1]);
+      parms.Write(KEY_StartFreq, mFrequency0);
+      parms.Write(KEY_EndFreq, mFrequency1);
+      parms.Write(KEY_StartAmp, mAmplitude0);
+      parms.Write(KEY_EndAmp, mAmplitude1);
    }
    else
    {
-      parms.Write(KEY_Frequency, mFrequency[0]);
-      parms.Write(KEY_Amplitude, mAmplitude[0]);
+      parms.Write(KEY_Frequency, mFrequency0);
+      parms.Write(KEY_Amplitude, mAmplitude0);
    }
 
    parms.Write(KEY_Waveform, kWaveStrings[mWaveform].Internal());
@@ -329,19 +329,19 @@ bool EffectToneGen::SetAutomationParameters(const CommandParameters & parms)
       ReadAndVerifyDouble(EndFreq);
       ReadAndVerifyDouble(StartAmp);
       ReadAndVerifyDouble(EndAmp);
-      mFrequency[0] = StartFreq;
-      mFrequency[1] = EndFreq;
-      mAmplitude[0] = StartAmp;
-      mAmplitude[1] = EndAmp;
+      mFrequency0 = StartFreq;
+      mFrequency1 = EndFreq;
+      mAmplitude0 = StartAmp;
+      mAmplitude1 = EndAmp;
    }
    else
    {
       ReadAndVerifyDouble(Frequency);
       ReadAndVerifyDouble(Amplitude);
-      mFrequency[0] = Frequency;
-      mFrequency[1] = Frequency;
-      mAmplitude[0] = Amplitude;
-      mAmplitude[1] = Amplitude;
+      mFrequency0 = Frequency;
+      mFrequency1 = Frequency;
+      mAmplitude0 = Amplitude;
+      mAmplitude1 = Amplitude;
    }
 
    mWaveform = Waveform;
@@ -352,7 +352,7 @@ bool EffectToneGen::SetAutomationParameters(const CommandParameters & parms)
          ? ProjectRate::Get( *FindProject() ).GetRate()
          : 44100.0)
       / 2.0;
-   mFrequency[1] = std::clamp<double>(mFrequency[1], MIN_EndFreq, freqMax);
+   mFrequency1 = std::clamp<double>(mFrequency1, MIN_EndFreq, freqMax);
 
    return true;
 }
@@ -396,7 +396,7 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
             {
                t = S.Name(XO("Frequency Hertz Start"))
                   .Validator<FloatingPointValidator<double>>(
-                     6, &mFrequency[0],
+                     6, &mFrequency0,
                      NumValidatorStyle::NO_TRAILING_ZEROES,
                      MIN_StartFreq,
                      mProjectRate / 2.0
@@ -409,7 +409,7 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
             {
                t = S.Name(XO("Frequency Hertz End"))
                   .Validator<FloatingPointValidator<double>>(
-                     6, &mFrequency[1],
+                     6, &mFrequency1,
                      NumValidatorStyle::NO_TRAILING_ZEROES,
                      MIN_EndFreq,
                      mProjectRate / 2.0
@@ -427,7 +427,7 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
             {
                t = S.Name(XO("Amplitude Start"))
                   .Validator<FloatingPointValidator<double>>(
-                     6, &mAmplitude[0], NumValidatorStyle::NO_TRAILING_ZEROES,
+                     6, &mAmplitude0, NumValidatorStyle::NO_TRAILING_ZEROES,
                      MIN_StartAmp, MAX_StartAmp
                   )
                   .AddTextBox( {}, wxT(""), 12);
@@ -438,7 +438,7 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
             {
                t = S.Name(XO("Amplitude End"))
                   .Validator<FloatingPointValidator<double>>(
-                     6, &mAmplitude[1], NumValidatorStyle::NO_TRAILING_ZEROES,
+                     6, &mAmplitude1, NumValidatorStyle::NO_TRAILING_ZEROES,
                      MIN_EndAmp, MAX_EndAmp
                   )
                   .AddTextBox( {}, wxT(""), 12);
@@ -454,14 +454,14 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
       else
       {
          t = S.Validator<FloatingPointValidator<double>>(
-               6, &mFrequency[0], NumValidatorStyle::NO_TRAILING_ZEROES,
+               6, &mFrequency0, NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Frequency,
                mProjectRate / 2.0
             )
             .AddTextBox(XXO("&Frequency (Hz):"), wxT(""), 12);
 
          t = S.Validator<FloatingPointValidator<double>>(
-               6, &mAmplitude[0], NumValidatorStyle::NO_TRAILING_ZEROES,
+               6, &mAmplitude0, NumValidatorStyle::NO_TRAILING_ZEROES,
                MIN_Amplitude, MAX_Amplitude
             )
             .AddTextBox(XXO("&Amplitude (0-1):"), wxT(""), 12);
@@ -496,8 +496,8 @@ bool EffectToneGen::TransferDataFromWindow(EffectSettings &)
 {
    if (!mChirp)
    {
-      mFrequency[1] = mFrequency[0];
-      mAmplitude[1] = mAmplitude[0];
+      mFrequency1 = mFrequency0;
+      mAmplitude1 = mAmplitude0;
    }
 
    SetDuration(mToneDurationT->GetValue());

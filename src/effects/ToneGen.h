@@ -70,8 +70,10 @@ private:
    // Tone and Chirp would share the same parameters.
    int mWaveform;
    int mInterpolation;
-   double mFrequency[2];
-   double mAmplitude[2];
+   double mFrequency0;
+   double mFrequency1;
+   double mAmplitude0;
+   double mAmplitude1;
    double mLogFrequency[2];
 
    NumericTextCtrl *mToneDurationT;
