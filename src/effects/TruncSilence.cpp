@@ -104,9 +104,6 @@ static const size_t nObsoleteActions = WXSIZEOF( kObsoleteActions );
 //
 //     Name       Type     Key               Def         Min      Max                        Scale
 
-// This one is legacy and is intentionally not reported by VisitSettings:
-Param( DbIndex,   int,     wxT("Db"),         0,          0,       Enums::NumDbChoices - 1,   1  );
-
 Param( Threshold, double,  wxT("Threshold"),  -20.0,      -80.0,   -20.0,                     1  );
 Param( ActIndex,  int,     wxT("Action"),     kTruncate,  0,       nActions - 1,           1  );
 Param( Minimum,   double,  wxT("Minimum"),    0.5,        0.001,   10000.0,                   1  );
@@ -222,20 +219,27 @@ bool EffectTruncSilence::SetAutomationParameters(const CommandParameters & parms
    } ();
 
    if ( !newParams ) {
+      int temp;
       // Use legacy param:
-      ReadAndVerifyEnum(DbIndex, Enums::DbChoices, Enums::NumDbChoices);
-      myThreshold = enumToDB( DbIndex );
+      if (!parms.ReadAndVerify(L"Db", &temp, 0,
+         Enums::DbChoices, Enums::NumDbChoices))
+         return false;
+      myThreshold = enumToDB( temp );
    }
 
-   ReadAndVerifyEnumWithObsoletes(ActIndex, kActionStrings, nActions,
-                                  kObsoleteActions, nObsoleteActions);
+   {
+      int temp;
+      if (!parms.ReadAndVerify( KEY_ActIndex, &temp, DEF_ActIndex,
+         kActionStrings, nActions, kObsoleteActions, nObsoleteActions))
+         return false;
+      mActionIndex = temp;
+   }
    ReadAndVerifyBool(Independent);
 
    mInitialAllowedSilence = Minimum;
    mTruncLongestAllowedSilence = Truncate;
    mSilenceCompressPercent = Compress;
    mThresholdDB = myThreshold;
-   mActionIndex = ActIndex;
    mbIndependent = Independent;
 
    return true;
