@@ -163,9 +163,9 @@ private:
    // sometimes with two overloads, and variadic functions that use
    // fold expressions that apply to the sequence of parameters.
 
-   template< typename Member, typename Type >
+   template< typename Member, typename Type, typename Value >
    static void ResetOne(Params &structure,
-      const EffectParameter< Params, Member, Type > &param) {
+      const EffectParameter< Params, Member, Type, Value > &param) {
       // Do one assignment of the default value
       structure.*(param.mem) = param.def;
    }
@@ -178,9 +178,9 @@ private:
          This.PostSetFn(static_cast<EffectType&>(effect), structure, false);
    }
 
-   template< typename Member, typename Type >
+   template< typename Member, typename Type, typename Value >
    static void VisitOne(Params &structure, SettingsVisitor &S,
-      const EffectParameter< Params, Member, Type > &param) {
+      const EffectParameter< Params, Member, Type, Value > &param) {
       // Visit one variable
       S.Define( structure.*(param.mem),
          param.key, param.def, param.min, param.max, param.scale );
@@ -198,11 +198,11 @@ private:
       (VisitOne(structure, S, args), ...);
    }
 
-   template< typename Member, typename Type >
+   template< typename Member, typename Type, typename Value >
    static void GetOne(const Params &structure, CommandParameters & parms,
-      const EffectParameter< Params, Member, Type > &param) {
+      const EffectParameter< Params, Member, Type, Value > &param) {
       // Serialize one variable
-      parms.Write( param.key, static_cast<Type>(structure.*(param.mem)) );
+      parms.Write( param.key, static_cast<Value>(structure.*(param.mem)) );
    }
    // More specific overload for enumeration parameters
    template< typename Member >
@@ -218,12 +218,12 @@ private:
       (GetOne(structure, parms, args), ...);
    }
 
-   template< typename Member, typename Type >
+   template< typename Member, typename Type, typename Value >
    static bool SetOne(Params &structure,
       const CommandParameters &parms,
-      const EffectParameter< Params, Member, Type > &param) {
+      const EffectParameter< Params, Member, Type, Value > &param) {
       // Deserialize and assign one variable (or fail)
-      Type temp;
+      Value temp;
       if (!parms.ReadAndVerify(param.key, &temp, param.def,
          param.min, param.max))
          return false;

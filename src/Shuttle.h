@@ -21,7 +21,8 @@ class WrappedType;
 template<
    typename Structure, //!< Structure holding the parameter
    typename Member, //!< Often the same as Type
-   typename Type //!< Type of the given default value
+   typename Type, //!< Type of the given default value
+   typename Value = Type //!< A type constructible from the default
 > struct EffectParameter {
    Member Structure::*const mem{}; //!< Member holding the parameter
    const wxChar *const key{}; //!< Identifier in configuration file
@@ -43,7 +44,7 @@ template<typename Structure, typename Member,
    typename Char, size_t N, typename... Args>
 EffectParameter(Member Structure::*const mem,
    const wxChar *key, const Char (&def)[N], Args...)
-      -> EffectParameter<Structure, Member, wxString>;
+      -> EffectParameter<Structure, Member, const Char *, wxString>;
 
 template<typename Structure, typename Member>
 struct EnumParameter : EffectParameter<Structure, Member, int>
