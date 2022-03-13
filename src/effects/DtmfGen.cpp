@@ -41,7 +41,9 @@ EffectParameter Amplitude{ &EffectDtmf::Settings::dtmfAmplitude,
 }
 const EffectParameterMethods& EffectDtmf::Parameters() const
 {
-   static CapturedParameters<EffectDtmf> parameters{
+   static CapturedParameters<EffectDtmf,
+      Sequence, DutyCycle, Amplitude
+   > parameters{
       [](EffectDtmf &effect, Settings &s, bool updating){
          if (updating) {
             if (s.dtmfSequence.find_first_not_of(AllSymbols())
@@ -51,7 +53,6 @@ const EffectParameterMethods& EffectDtmf::Parameters() const
          }
          return true;
       },
-      Sequence, DutyCycle, Amplitude
    };
    return parameters;
 }

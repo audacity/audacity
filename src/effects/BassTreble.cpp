@@ -53,9 +53,9 @@ EffectParameter Link{ &EffectBassTreble::mLink,
 }
 const EffectParameterMethods& EffectBassTreble::Parameters() const
 {
-   static CapturedParameters<EffectBassTreble> parameters{
+   static CapturedParameters<EffectBassTreble,
       Bass, Treble, Gain, Link
-   };
+   > parameters;
    return parameters;
 }
 

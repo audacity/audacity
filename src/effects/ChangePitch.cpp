@@ -77,16 +77,17 @@ EffectParameter UseSBSMS{ &EffectChangePitch::mUseSBSMS,
 }
 const EffectParameterMethods& EffectChangePitch::Parameters() const
 {
-   static CapturedParameters<EffectChangePitch> parameters{
+   static CapturedParameters<EffectChangePitch,
+      // Vaughan, 2013-06: Long lost to history, I don't see why m_dPercentChange was chosen to be shuttled.
+      // Only m_dSemitonesChange is used in Process().
+      // PRL 2022: but that is so only when USE_SBSMS is not defined
+      Percentage, UseSBSMS
+   > parameters{
       [](EffectChangePitch &, EffectChangePitch &e, bool updating){
          if (updating)
             e.Calc_SemitonesChange_fromPercentChange();
          return true;
       },
-      // Vaughan, 2013-06: Long lost to history, I don't see why m_dPercentChange was chosen to be shuttled.
-      // Only m_dSemitonesChange is used in Process().
-      // PRL 2022: but that is so only when USE_SBSMS is not defined
-      Percentage, UseSBSMS
    };
    return parameters;
 }

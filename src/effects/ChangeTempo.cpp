@@ -69,9 +69,9 @@ EffectParameter UseSBSMS{ &EffectChangeTempo::mUseSBSMS,
 }
 const EffectParameterMethods& EffectChangeTempo::Parameters() const
 {
-   static CapturedParameters<EffectChangeTempo> parameters{
+   static CapturedParameters<EffectChangeTempo,
       Percentage, UseSBSMS
-   };
+   > parameters;
    return parameters;
 }
 

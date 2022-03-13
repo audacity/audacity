@@ -109,9 +109,9 @@ EffectParameter Independent{ &EffectTruncSilence::mbIndependent,
 }
 const EffectParameterMethods& EffectTruncSilence::Parameters() const
 {
-   static CapturedParameters<EffectTruncSilence> parameters {
+   static CapturedParameters<EffectTruncSilence,
       Threshold, ActIndex, Minimum, Truncate, Compress, Independent
-   };
+   > parameters;
    return parameters;
 }
 

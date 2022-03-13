@@ -135,7 +135,9 @@ EffectParameter Stopband{ &EffectScienFilter::mStopbandRipple,
 }
 const EffectParameterMethods& EffectScienFilter::Parameters() const
 {
-   static CapturedParameters<EffectScienFilter> parameters{
+   static CapturedParameters<EffectScienFilter,
+      Type, Subtype, Order, Cutoff, Passband, Stopband
+   > parameters{
       [](EffectScienFilter &, EffectScienFilter &e, bool updating){
          if (updating) {
             e.mOrderIndex = e.mOrder - 1;
@@ -143,7 +145,6 @@ const EffectParameterMethods& EffectScienFilter::Parameters() const
          }
          return true;
       },
-      Type, Subtype, Order, Cutoff, Passband, Stopband
    };
    return parameters;
 }

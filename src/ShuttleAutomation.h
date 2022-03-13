@@ -29,7 +29,7 @@ public:
    virtual bool Set(Effect &effect, const CommandParameters & parms) const = 0;
 };
 
-//! Generates EffectParameterMethods overrides from variadic arguments.
+//! Generates EffectParameterMethods overrides from variadic template arguments.
 /*!
 For each effect parameter, the function...
    Reset resets it to a default
@@ -45,8 +45,12 @@ the end of Reset or Set, and returning a value for Set.
     expected to define a public static member function FetchParameters,
     taking EffectType & and EffectSettings &,
     and returning a pointer to something that holds the parameters
+ @tparam Parameters a pack of non-type template parameters, whose types are
+    specializations of the class template EffectParameter
+
+ TODO in C++20: could use simply `auto ...Parameters` if they are `constexpr`
 */
-template <typename EffectType>
+template <typename EffectType, const auto &...Parameters>
 class CapturedParameters : public EffectParameterMethods {
 public:
    using Params = std::remove_pointer_t< decltype(
@@ -64,102 +68,56 @@ public:
    using PostSetFunction =
       std::function< bool(EffectType&, Params &, bool) >;
 
-   template< typename ...Args >
-   // Arguments are references to EffectParameter structures
-   CapturedParameters(const Args &...args)
-      // Delegate to the other constructor
-      : CapturedParameters( PostSetFunction{}, args... ) {}
+   // Constructors
 
-   template< typename Fn, typename ...Args,
-      // Require that the first argument be callable with appropriate arguments,
-      // making this constructor the more specific overload when it applies
+   CapturedParameters() {}
+
+   template< typename Fn,
+      // Require that the argument be callable with appropriate arguments
       typename = decltype( std::declval<Fn>()(
          std::declval<EffectType &>(), std::declval<Params &>(), true) )
    >
-   // Like the previous, but with an extra first argument,
+   // Like the previous, but with an argument,
    // which is called at the end of Reset or Set.  Its return value is
    // ignored in Reset() and passed as the result of Set.
-   CapturedParameters(Fn &&PostSet, const Args &...args)
-   {
-      PostSetFn = std::forward<Fn>(PostSet);
-      // Capture the variadic arguments in lambdas that do the work
-      // for the virtual functions
-      ResetFn = [&args...](Effect &effect, Params &structure,
-         const CapturedParameters &This)
-            { DoReset(effect, structure, This, args...); };
-      VisitFn = [&args...](Params &structure, SettingsVisitor &S)
-         { DoVisit(structure, S, args...); };
-      GetFn = [&args...](const Params &structure, CommandParameters &parms)
-         { DoGet(structure, parms, args...); };
-      SetFn = [&args...](Effect &effect, Params &structure,
-         const CapturedParameters &This, const CommandParameters &parms)
-            { return DoSet(effect, structure, This, parms, args...); };
-   }
+   explicit CapturedParameters(Fn &&PostSet)
+      : PostSetFn{ std::forward<Fn>(PostSet) }
+   {}
 
    void Reset(Effect &effect) const override {
-      if (ResetFn) {
-         EffectSettings dummy;
-         if (auto pStruct = EffectType::FetchParameters(
-            static_cast<EffectType&>(effect), dummy))
-            ResetFn(effect, *pStruct, *this);
-      }
+      EffectSettings dummy;
+      if (auto pStruct = EffectType::FetchParameters(
+         static_cast<EffectType&>(effect), dummy))
+         DoReset(effect, *pStruct, *this);
    }
    void Visit(Effect &effect, SettingsVisitor & S) const override {
-      if (VisitFn) {
-         EffectSettings dummy;
-         if (auto pStruct = EffectType::FetchParameters(
-            static_cast<EffectType&>(effect), dummy))
-            VisitFn(*pStruct, S);
-      }
+      EffectSettings dummy;
+      if (auto pStruct = EffectType::FetchParameters(
+         static_cast<EffectType&>(effect), dummy))
+         DoVisit(*pStruct, S);
    }
    void Get(const Effect &effect, CommandParameters & parms) const override {
-      if (GetFn) {
-         EffectSettings dummy;
-         // const_cast the effect...
-         auto &nonconstEffect = const_cast<Effect &>(effect);
-         // ... but only to fetch the structure and pass it as const &
-         if (auto pStruct = EffectType::FetchParameters(
-            static_cast<EffectType&>(nonconstEffect), dummy))
-            GetFn(*pStruct, parms);
-      }
+      EffectSettings dummy;
+      // const_cast the effect...
+      auto &nonconstEffect = const_cast<Effect &>(effect);
+      // ... but only to fetch the structure and pass it as const &
+      if (auto pStruct = EffectType::FetchParameters(
+         static_cast<EffectType&>(nonconstEffect), dummy))
+         DoGet(*pStruct, parms);
    }
    bool Set(Effect &effect, const CommandParameters & parms) const override {
-      if (SetFn) {
-         EffectSettings dummy;
-         if (auto pStruct = EffectType::FetchParameters(
-            static_cast<EffectType&>(effect), dummy))
-            return SetFn(effect, *pStruct, *this, parms);
-         else
-            return false;
-      }
-      return true;
+      EffectSettings dummy;
+      if (auto pStruct = EffectType::FetchParameters(
+         static_cast<EffectType&>(effect), dummy))
+         return DoSet(effect, *pStruct, *this, parms);
+      else
+         return false;
    }
 
 private:
-   // Signatures of the lambdas that capture the arguments
-   using ResetFunction = std::function<
-      // When all effects become stateless, the first argument won't be needed
-      void(Effect &effect, Params &structure,
-         const CapturedParameters &This) >;
-   using VisitFunction = std::function<
-      void(Params &structure, SettingsVisitor & S) >;
-   using GetFunction = std::function<
-      void(const Params &structure, CommandParameters & parms) >;
-   // Returns true if successful:
-   using SetFunction = std::function<
-      // When all effects become stateless, the first argument won't be needed
-      bool(Effect &effect, Params &structure,
-         const CapturedParameters &This, const CommandParameters & parms) >;
-
-   ResetFunction ResetFn;
-   VisitFunction VisitFn;
-   GetFunction GetFn;
-   SetFunction SetFn;
-
    PostSetFunction PostSetFn;
 
-   // Function templates to generate the bodies of the lambdas in the
-   // constructor.  There are functions to treat individual parameters,
+   // Function templates.  There are functions to treat individual parameters,
    // sometimes with two overloads, and variadic functions that use
    // fold expressions that apply to the sequence of parameters.
 
@@ -169,10 +127,9 @@ private:
       // Do one assignment of the default value
       structure.*(param.mem) = param.def;
    }
-   template<typename... Args>
    static void DoReset(Effect &effect, Params &structure,
-      const CapturedParameters &This, Args &...args) {
-      (ResetOne(structure, args), ...);
+      const CapturedParameters &This) {
+      (ResetOne(structure, Parameters), ...);
       // Call the post-set function after all other assignments
       if (This.PostSetFn)
          This.PostSetFn(static_cast<EffectType&>(effect), structure, false);
@@ -193,9 +150,8 @@ private:
       S.DefineEnum( structure.*(param.mem),
          param.key, param.def, param.symbols, param.nSymbols );
    }
-   template<typename... Args>
-   static void DoVisit(Params &structure, SettingsVisitor &S, Args &...args) {
-      (VisitOne(structure, S, args), ...);
+   static void DoVisit(Params &structure, SettingsVisitor &S) {
+      (VisitOne(structure, S, Parameters), ...);
    }
 
    template< typename Member, typename Type, typename Value >
@@ -212,10 +168,8 @@ private:
       parms.Write(
          param.key, param.symbols[ structure.*(param.mem) ].Internal() );
    }
-   template<typename... Args>
-   static void DoGet(const Params &structure, CommandParameters &parms,
-      Args &...args) {
-      (GetOne(structure, parms, args), ...);
+   static void DoGet(const Params &structure, CommandParameters &parms) {
+      (GetOne(structure, parms, Parameters), ...);
    }
 
    template< typename Member, typename Type, typename Value >
@@ -243,11 +197,9 @@ private:
       structure.*(param.mem) = temp;
       return true;
    }
-   template<typename... Args>
    static bool DoSet(Effect &effect, Params &structure,
-      const CapturedParameters &This, const CommandParameters &parms,
-      Args &...args) {
-      if (!(SetOne(structure, parms, args) && ...))
+      const CapturedParameters &This, const CommandParameters &parms) {
+      if (!(SetOne(structure, parms, Parameters) && ...))
          return false;
       // Call the post-set function after all other assignments, or return
       // true if no function was given

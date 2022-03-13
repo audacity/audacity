@@ -68,10 +68,10 @@ EffectParameter WetOnly{ &EffectReverb::Params::mWetOnly,
 }
 const EffectParameterMethods& EffectReverb::Parameters() const
 {
-   static CapturedParameters<EffectReverb> parameters{
+   static CapturedParameters<EffectReverb,
       RoomSize, PreDelay, Reverberance, HfDamping, ToneLow, ToneHigh,
       WetGain, DryGain, StereoWidth, WetOnly
-   };
+   > parameters;
    return parameters;
 }
 

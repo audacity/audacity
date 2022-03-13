@@ -55,9 +55,9 @@ EffectParameter Width{ &EffectClickRemoval::mClickWidth,
 }
 const EffectParameterMethods& EffectClickRemoval::Parameters() const
 {
-   static CapturedParameters<EffectClickRemoval> parameters{
+   static CapturedParameters<EffectClickRemoval,
       Threshold, Width
-   };
+   > parameters;
    return parameters;
 }
 

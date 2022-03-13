@@ -56,9 +56,9 @@ EffectParameter OutGain{ &EffectWahwah::mOutGain,
 }
 const EffectParameterMethods& EffectWahwah::Parameters() const
 {
-   static CapturedParameters<EffectWahwah> parameters{
+   static CapturedParameters<EffectWahwah,
       Freq, Phase, Depth, Res, FreqOfs, OutGain
-   };
+   > parameters;
    return parameters;
 }
 

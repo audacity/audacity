@@ -70,9 +70,9 @@ EffectParameter Percentage{ &EffectChangeSpeed::m_PercentChange,
 }
 const EffectParameterMethods& EffectChangeSpeed::Parameters() const
 {
-   static CapturedParameters<EffectChangeSpeed> parameters{
+   static CapturedParameters<EffectChangeSpeed,
       Percentage
-   };
+   > parameters;
    return parameters;
 }
 

@@ -58,19 +58,20 @@ EffectParameter Clipping{ &EffectAmplify::mCanClip,
 }
 const EffectParameterMethods& EffectAmplify::Parameters() const
 {
-   static CapturedParameters<EffectAmplify> parameters{
+   static CapturedParameters<EffectAmplify,
       // Interactive case
       Ratio, Clipping
-   };
+   > parameters;
 
-   static CapturedParameters<EffectAmplify> batchParameters{
+   static CapturedParameters<EffectAmplify,
+      Ratio
+   > batchParameters{
       // If invoking Amplify from a macro, mCanClip is not a parameter
       // but is always true
       [](EffectAmplify &, EffectAmplify &e, bool) {
          e.mCanClip = true;
          return true;
       },
-      Ratio
    };
 
    // Parameters differ depending on batch mode.  Option to disable clipping

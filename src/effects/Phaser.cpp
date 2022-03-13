@@ -60,13 +60,14 @@ EffectParameter OutGain{ &EffectPhaser::mOutGain,
 }
 const EffectParameterMethods& EffectPhaser::Parameters() const
 {
-   static CapturedParameters<EffectPhaser> parameters{
+   static CapturedParameters<EffectPhaser,
+      Stages, DryWet, Freq, Phase, Depth, Feedback, OutGain
+   > parameters{
       [](EffectPhaser &, EffectPhaser &e, bool updating){
          if (updating)
             e.mStages &= ~1; // must be even, but don't complain about it
          return true;
       },
-      Stages, DryWet, Freq, Phase, Depth, Feedback, OutGain
    };
    return parameters;
 }

@@ -42,9 +42,9 @@ EffectParameter Stop{ &EffectFindClipping::mStop,
 }
 const EffectParameterMethods& EffectFindClipping::Parameters() const
 {
-   static CapturedParameters<EffectFindClipping> parameters{
+   static CapturedParameters<EffectFindClipping,
       Start, Stop
-   };
+   > parameters;
    return parameters;
 }
 

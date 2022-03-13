@@ -53,10 +53,10 @@ EffectParameter PitchPercentEnd{ &EffectTimeScale::m_PitchPercentChangeEnd,
 }
 const EffectParameterMethods& EffectTimeScale::Parameters() const
 {
-   static CapturedParameters<EffectTimeScale> parameters{
+   static CapturedParameters<EffectTimeScale,
       RatePercentStart, RatePercentEnd, HalfStepsStart, HalfStepsEnd,
       PitchPercentStart, PitchPercentEnd
-   };
+   > parameters;
    return parameters;
 }
 

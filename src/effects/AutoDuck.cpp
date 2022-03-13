@@ -53,12 +53,13 @@ EffectParameter ThresholdDb{ &EffectAutoDuck::mThresholdDb,
 EffectParameter MaximumPause{ &EffectAutoDuck::mMaximumPause,
    L"MaximumPause",     1.0,     0.0,     DBL_MAX, 1  };
 }
+
 const EffectParameterMethods& EffectAutoDuck::Parameters() const
 {
-   static CapturedParameters<EffectAutoDuck> parameters{
+   static CapturedParameters<EffectAutoDuck,
       DuckAmountDb, InnerFadeDownLen, InnerFadeUpLen, OuterFadeDownLen,
       OuterFadeUpLen, ThresholdDb, MaximumPause
-   };
+   > parameters;
    return parameters;
 }
 

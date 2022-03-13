@@ -74,12 +74,12 @@ EffectParameter UsePeak{ &EffectCompressor::mUsePeak,
 }
 const EffectParameterMethods& EffectCompressor::Parameters() const
 {
-   static CapturedParameters<EffectCompressor> parameters{
+   static CapturedParameters<EffectCompressor,
       Threshold, NoiseFloor, Ratio, // positive number > 1.0
       AttackTime, // seconds
       ReleaseTime, // seconds
       Normalize, UsePeak
-   };
+   > parameters;
    return parameters;
 }
 

@@ -45,9 +45,9 @@ EffectParameter StereoInd{ &EffectNormalize::mStereoInd,
 }
 const EffectParameterMethods& EffectNormalize::Parameters() const
 {
-   static CapturedParameters<EffectNormalize> parameters{
+   static CapturedParameters<EffectNormalize,
       PeakLevel, ApplyGain, RemoveDC, StereoInd
-   };
+   > parameters;
    return parameters;
 }
 

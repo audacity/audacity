@@ -42,9 +42,9 @@ EffectParameter Time{ &EffectPaulstretch::mTime_resolution,
 }
 const EffectParameterMethods& EffectPaulstretch::Parameters() const
 {
-   static CapturedParameters<EffectPaulstretch> parameters{
+   static CapturedParameters<EffectPaulstretch,
       Amount, Time
-   };
+   > parameters;
    return parameters;
 }
 

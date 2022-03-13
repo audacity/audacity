@@ -44,9 +44,9 @@ EffectParameter Count{ &EffectRepeat::repeatCount,
 }
 const EffectParameterMethods& EffectRepeat::Parameters() const
 {
-   static CapturedParameters<EffectRepeat> parameters{
+   static CapturedParameters<EffectRepeat,
       Count
-   };
+   > parameters;
    return parameters;
 }
 

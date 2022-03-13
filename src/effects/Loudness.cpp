@@ -60,9 +60,9 @@ EffectParameter NormalizeTo{ &EffectLoudness::mNormalizeTo,
 }
 const EffectParameterMethods& EffectLoudness::Parameters() const
 {
-   static CapturedParameters<EffectLoudness> parameters{
+   static CapturedParameters<EffectLoudness,
       StereoInd, LUFSLevel, RMSLevel, DualMono, NormalizeTo
-   };
+   > parameters;
    return parameters;
 }
 

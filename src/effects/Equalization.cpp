@@ -197,7 +197,14 @@ EffectParameter dBMax{ &EffectEqualization::mdBMax,
 }
 const EffectParameterMethods& EffectEqualization::Parameters() const
 {
-   static CapturedParameters<EffectEqualization> parameters {
+   static CapturedParameters<EffectEqualization,
+      FilterLength,
+      // CurveName,
+      InterpLin,
+      // Pretty sure the interpolation name shouldn't have been interpreted when
+      // specified in chains, but must keep it that way for compatibility.
+      InterpMeth
+   > parameters {
       [](EffectEqualization &, EffectEqualization &effect, bool updating){
          if (updating) {
             if (effect.mInterp >= nInterpolations)
@@ -206,13 +213,7 @@ const EffectParameterMethods& EffectEqualization::Parameters() const
                (effect.mLin ? effect.mLinEnvelope : effect.mLogEnvelope).get();
          }
          return true;
-      },
-      FilterLength,
-      // CurveName,
-      InterpLin,
-      // Pretty sure the interpolation name shouldn't have been interpreted when
-      // specified in chains, but must keep it that way for compatibility.
-      InterpMeth
+      }
    };
    return parameters;
 }

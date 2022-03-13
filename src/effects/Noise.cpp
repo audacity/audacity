@@ -57,9 +57,9 @@ EffectParameter Amp{ &EffectNoise::mAmp,
 }
 const EffectParameterMethods& EffectNoise::Parameters() const
 {
-   static CapturedParameters<EffectNoise> parameters{
+   static CapturedParameters<EffectNoise,
       Type, Amp
-   };
+   > parameters;
    return parameters;
 }
 

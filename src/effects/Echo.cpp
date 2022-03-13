@@ -39,9 +39,9 @@ EffectParameter Decay{ &EffectEcho::decay,
 }
 const EffectParameterMethods& EffectEcho::Parameters() const
 {
-   static CapturedParameters<EffectEcho> parameters{
+   static CapturedParameters<EffectEcho,
       Delay, Decay
-   };
+   > parameters;
    return parameters;
 }
 

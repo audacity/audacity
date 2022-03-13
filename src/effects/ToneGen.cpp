@@ -95,14 +95,12 @@ const EffectParameterMethods& EffectToneGen::Parameters() const
          e.PostSet();
       return true;
    };
-   static CapturedParameters<EffectToneGen> chirpParameters{
-      postSet,
+   static CapturedParameters<EffectToneGen,
       StartFreq, EndFreq, StartAmp, EndAmp, Waveform, Interp
-   };
-   static CapturedParameters<EffectToneGen> toneParameters{
-      postSet,
+   > chirpParameters{ postSet };
+   static CapturedParameters<EffectToneGen,
       Frequency, Amplitude, Waveform, Interp
-   };
+   > toneParameters{ postSet };
    if (mChirp)
       return chirpParameters;
    else
