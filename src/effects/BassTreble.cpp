@@ -43,10 +43,14 @@ enum
 };
 
 namespace {
-EffectParameter Bass{      L"Bass",          0.0,     -30.0,   30.0,    1  };
-EffectParameter Treble{    L"Treble",        0.0,     -30.0,   30.0,    1  };
-EffectParameter Gain{      L"Gain",          0.0,     -30.0,   30.0,    1  };
-EffectParameter Link{      L"Link Sliders",  false,    false,  true,    1  };
+EffectParameter Bass{ &EffectBassTreble::mBass,
+   L"Bass",          0.0,     -30.0,   30.0,    1  };
+EffectParameter Treble{ &EffectBassTreble::mTreble,
+   L"Treble",        0.0,     -30.0,   30.0,    1  };
+EffectParameter Gain{ &EffectBassTreble::mGain,
+   L"Gain",          0.0,     -30.0,   30.0,    1  };
+EffectParameter Link{ &EffectBassTreble::mLink,
+   L"Link Sliders",  false,    false,  true,    1  };
 }
 
 // Used to communicate the type of the filter.

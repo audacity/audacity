@@ -58,7 +58,7 @@ private:
    bool ProcessOne(LabelTrack *lt, int count, const WaveTrack * wt,
                    sampleCount start, sampleCount len);
 
-private:
+public: // TODO remove
    int mStart;   ///< Using int rather than sampleCount because values are only ever small numbers
    int mStop;    ///< Using int rather than sampleCount because values are only ever small numbers
    // To do: eliminate this

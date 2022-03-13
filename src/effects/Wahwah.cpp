@@ -42,12 +42,18 @@ enum
 };
 
 namespace {
-EffectParameter Freq{      L"Freq",       1.5,     0.1,     4.0,     10  };
-EffectParameter Phase{     L"Phase",      0.0,     0.0,     360.0,   1   };
-EffectParameter Depth{     L"Depth",      70,      0,       100,     1   }; // scaled to 0-1 before processing
-EffectParameter Res{       L"Resonance",  2.5,     0.1,     10.0,    10  };
-EffectParameter FreqOfs{   L"Offset",     30,      0,       100,     1   }; // scaled to 0-1 before processing
-EffectParameter OutGain{   L"Gain",      -6.0,    -30.0,    30.0,    1   };
+EffectParameter Freq{ &EffectWahwah::mFreq,
+   L"Freq",       1.5,     0.1,     4.0,     10  };
+EffectParameter Phase{ &EffectWahwah::mPhase,
+   L"Phase",      0.0,     0.0,     360.0,   1   };
+EffectParameter Depth{ &EffectWahwah::mDepth,
+   L"Depth",      70,      0,       100,     1   }; // scaled to 0-1 before processing
+EffectParameter Res{ &EffectWahwah::mRes,
+   L"Resonance",  2.5,     0.1,     10.0,    10  };
+EffectParameter FreqOfs{ &EffectWahwah::mFreqOfs,
+   L"Offset",     30,      0,       100,     1   }; // scaled to 0-1 before processing
+EffectParameter OutGain{ &EffectWahwah::mOutGain,
+   L"Gain",      -6.0,    -30.0,    30.0,    1   };
 }
 
 // How many samples are processed before recomputing the lfo value again

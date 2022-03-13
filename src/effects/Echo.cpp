@@ -33,8 +33,10 @@
 #include "../widgets/valnum.h"
 
 namespace {
-EffectParameter Delay{  L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f };
-EffectParameter Decay{  L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f };
+EffectParameter Delay{ &EffectEcho::delay,
+   L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f };
+EffectParameter Decay{ &EffectEcho::decay,
+   L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f };
 }
 
 const ComponentInterfaceSymbol EffectEcho::Symbol

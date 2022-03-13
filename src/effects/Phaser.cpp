@@ -44,13 +44,20 @@ enum
 };
 
 namespace {
-EffectParameter Stages{    L"Stages",     2,    2,    NUM_STAGES, 1  };
-EffectParameter DryWet{    L"DryWet",     128,  0,    255,        1  };
-EffectParameter Freq{      L"Freq",       0.4,  0.001,4.0,        10.0 };
-EffectParameter Phase{     L"Phase",      0.0,  0.0,  360.0,      1  };
-EffectParameter Depth{     L"Depth",      100,  0,    255,        1  };
-EffectParameter Feedback{  L"Feedback",   0,    -100, 100,        1  };
-EffectParameter OutGain{   L"Gain",      -6.0,    -30.0,    30.0,    1   };
+EffectParameter Stages{ &EffectPhaser::mStages,
+   L"Stages",     2,    2,    NUM_STAGES, 1  };
+EffectParameter DryWet{ &EffectPhaser::mDryWet,
+   L"DryWet",     128,  0,    255,        1  };
+EffectParameter Freq{ &EffectPhaser::mFreq,
+   L"Freq",       0.4,  0.001,4.0,        10.0 };
+EffectParameter Phase{ &EffectPhaser::mPhase,
+   L"Phase",      0.0,  0.0,  360.0,      1  };
+EffectParameter Depth{ &EffectPhaser::mDepth,
+   L"Depth",      100,  0,    255,        1  };
+EffectParameter Feedback{ &EffectPhaser::mFeedback,
+   L"Feedback",   0,    -100, 100,        1  };
+EffectParameter OutGain{ &EffectPhaser::mOutGain,
+   L"Gain",      -6.0,    -30.0,    30.0,    1   };
 }
 
 //

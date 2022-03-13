@@ -36,8 +36,10 @@
 #include "../WaveTrack.h"
 
 namespace {
-EffectParameter Amount{ L"Stretch Factor",   10.0f,    1.0,     FLT_MAX, 1   };
-EffectParameter Time{   L"Time Resolution",  0.25f,   0.00099f,  FLT_MAX, 1   };
+EffectParameter Amount{ &EffectPaulstretch::mAmount,
+   L"Stretch Factor",   10.0f,    1.0,     FLT_MAX, 1   };
+EffectParameter Time{ &EffectPaulstretch::mTime_resolution,
+   L"Time Resolution",  0.25f,   0.00099f,  FLT_MAX, 1   };
 }
 
 /// \brief Class that helps EffectPaulStretch.  It does the FFTs and inner loop 

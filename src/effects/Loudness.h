@@ -78,6 +78,7 @@ private:
    void UpdateUI();
 
 private:
+public: // TODO remove
    bool   mStereoInd;
    double mLUFSLevel;
    double mRMSLevel;

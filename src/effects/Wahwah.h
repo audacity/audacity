@@ -102,7 +102,7 @@ private:
    void OnFreqOffText(wxCommandEvent & evt);
    void OnGainText(wxCommandEvent & evt);
 
-private:
+public: // TODO remove
    EffectWahwahState mMaster;
    std::vector<EffectWahwahState> mSlaves;
 

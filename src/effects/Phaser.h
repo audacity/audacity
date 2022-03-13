@@ -119,7 +119,7 @@ private:
                                -100 = -100% FeedBack)
 */
 
-private:
+public: // TODO remove
    EffectPhaserState mMaster;
    std::vector<EffectPhaserState> mSlaves;
 

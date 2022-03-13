@@ -57,7 +57,7 @@ public:
 private:
    // EffectEcho implementation
 
-private:
+public: // TODO remove
    double delay;
    double decay;
    Floats history;

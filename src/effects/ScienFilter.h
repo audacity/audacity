@@ -89,7 +89,7 @@ private:
    void OnSliderDBMAX( wxCommandEvent & evt );
    void OnSliderDBMIN( wxCommandEvent & evt );
 
-private:
+public: // TODO remove
    float mCutoff;
    float mRipple;
    float mStopbandRipple;

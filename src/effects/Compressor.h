@@ -76,6 +76,7 @@ private:
    void UpdateUI();
 
 private:
+public: // TODO remove
    double    mRMSSum;
    size_t    mCircleSize;
    size_t    mCirclePos;

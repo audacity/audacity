@@ -49,9 +49,12 @@ enum
 };
 
 namespace {
-EffectParameter Ratio{     L"Ratio",            0.9f,       0.003162f,  316.227766f,   1.0f  };
-EffectParameter Amp{       L"",                -0.91515f,  -50.0f,     50.0f,         10.0f };
-EffectParameter Clipping{  L"AllowClipping",    false,    false,  true,    1  };
+EffectParameter Ratio{ &EffectAmplify::mRatio,
+   L"Ratio",            0.9f,       0.003162f,  316.227766f,   1.0f  };
+EffectParameter Amp{ &EffectAmplify::mAmp,
+   L"",                -0.91515f,  -50.0f,     50.0f,         10.0f };
+EffectParameter Clipping{ &EffectAmplify::mCanClip,
+   L"AllowClipping",    false,    false,  true,    1  };
 }
 
 //

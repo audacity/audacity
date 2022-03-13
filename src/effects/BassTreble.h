@@ -105,6 +105,7 @@ private:
    void UpdateGain(double oldVal, int control );
 
 private:
+public: // TODO remove
    EffectBassTrebleState mMaster;
    std::vector<EffectBassTrebleState> mSlaves;
 

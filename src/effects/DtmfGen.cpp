@@ -31,9 +31,12 @@
 
 
 namespace {
-EffectParameter Sequence{     L"Sequence",   EffectDtmf::Settings::DefaultSequence, L"", L"", L""};
-EffectParameter DutyCycle{    L"Duty Cycle", EffectDtmf::Settings::DefaultDutyCycle, 0.0,     100.0,   10.0   };
-EffectParameter Amplitude{    L"Amplitude",  EffectDtmf::Settings::DefaultAmplitude, 0.001,   1.0,     1      };
+EffectParameter Sequence{ &EffectDtmf::Settings::dtmfSequence,
+   L"Sequence",   EffectDtmf::Settings::DefaultSequence, L"", L"", L""};
+EffectParameter DutyCycle{ &EffectDtmf::Settings::dtmfDutyCycle,
+   L"Duty Cycle", EffectDtmf::Settings::DefaultDutyCycle, 0.0,     100.0,   10.0   };
+EffectParameter Amplitude{ &EffectDtmf::Settings::dtmfAmplitude,
+   L"Amplitude",  EffectDtmf::Settings::DefaultAmplitude, 0.001,   1.0,     1      };
 }
 
 static const double kFadeInOut = 250.0; // used for fadein/out needed to remove clicking noise

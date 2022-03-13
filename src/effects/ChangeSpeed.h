@@ -81,6 +81,7 @@ private:
    void UpdateUI();                    // Enable / disable OK / preview.
 
 private:
+public: // TODO remove
    // track related
    int    mCurTrackNum;
    double mMaxNewLength;

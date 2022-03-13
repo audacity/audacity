@@ -76,6 +76,7 @@ private:
 private:
    double mPeak;
 
+public: // TODO remove
    double mRatio;
    double mRatioClip;   // maximum value of mRatio which does not cause clipping
    double mAmp;

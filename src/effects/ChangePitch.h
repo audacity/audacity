@@ -114,6 +114,7 @@ private:
    void Update_Slider_PercentChange(); // Update control per current m_dPercentChange.
 
 private:
+public: // TODO remove
    bool mUseSBSMS;
    // effect parameters
    int    m_nFromPitch;          // per PitchIndex()

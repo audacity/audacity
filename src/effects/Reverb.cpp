@@ -46,16 +46,26 @@ enum
 };
 
 namespace {
-EffectParameter RoomSize{ L"RoomSize",      75.0,      0,       100,  1  };
-EffectParameter PreDelay{ L"Delay",         10.0,      0,       200,  1  };
-EffectParameter Reverberance{ L"Reverberance",  50.0,      0,       100,  1  };
-EffectParameter HfDamping{ L"HfDamping",     50.0,      0,       100,  1  };
-EffectParameter ToneLow{  L"ToneLow",       100.0,     0,       100,  1  };
-EffectParameter ToneHigh{ L"ToneHigh",      100.0,     0,       100,  1  };
-EffectParameter WetGain{  L"WetGain",       -1.0,      -20,     10,   1  };
-EffectParameter DryGain{  L"DryGain",       -1.0,      -20,     10,   1  };
-EffectParameter StereoWidth{ L"StereoWidth",   100.0,     0,       100,  1  };
-EffectParameter WetOnly{  L"WetOnly",       false,   false,   true, 1  };
+EffectParameter RoomSize{ &EffectReverb::Params::mRoomSize,
+   L"RoomSize",      75.0,      0,       100,  1  };
+EffectParameter PreDelay{ &EffectReverb::Params::mPreDelay,
+   L"Delay",         10.0,      0,       200,  1  };
+EffectParameter Reverberance{ &EffectReverb::Params::mReverberance,
+   L"Reverberance",  50.0,      0,       100,  1  };
+EffectParameter HfDamping{ &EffectReverb::Params::mHfDamping,
+   L"HfDamping",     50.0,      0,       100,  1  };
+EffectParameter ToneLow{ &EffectReverb::Params::mToneLow,
+   L"ToneLow",       100.0,     0,       100,  1  };
+EffectParameter ToneHigh{ &EffectReverb::Params::mToneHigh,
+   L"ToneHigh",      100.0,     0,       100,  1  };
+EffectParameter WetGain{ &EffectReverb::Params::mWetGain,
+   L"WetGain",       -1.0,      -20,     10,   1  };
+EffectParameter DryGain{ &EffectReverb::Params::mDryGain,
+   L"DryGain",       -1.0,      -20,     10,   1  };
+EffectParameter StereoWidth{ &EffectReverb::Params::mStereoWidth,
+   L"StereoWidth",   100.0,     0,       100,  1  };
+EffectParameter WetOnly{ &EffectReverb::Params::mWetOnly,
+   L"WetOnly",       false,   false,   true, 1  };
 }
 
 static const struct

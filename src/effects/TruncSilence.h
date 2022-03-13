@@ -91,7 +91,7 @@ private:
       (const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
        double &totalCutLen);
 
-private:
+public: // TODO remove
 
    double mThresholdDB {} ;
    int mActionIndex;

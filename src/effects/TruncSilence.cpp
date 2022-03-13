@@ -95,12 +95,18 @@ static CommandParameters::ObsoleteMap kObsoleteActions[] = {
 static const size_t nObsoleteActions = WXSIZEOF( kObsoleteActions );
 
 namespace {
-EffectParameter Threshold{ L"Threshold",  -20.0,      -80.0,   -20.0,                     1  };
-EnumParameter ActIndex{    L"Action",     (int)kTruncate,  0,       nActions - 1,           1, kActionStrings, nActions };
-EffectParameter Minimum{   L"Minimum",    0.5,        0.001,   10000.0,                   1  };
-EffectParameter Truncate{  L"Truncate",   0.5,        0.0,     10000.0,                   1  };
-EffectParameter Compress{  L"Compress",   50.0,       0.0,     99.9,                      1  };
-EffectParameter Independent{L"Independent", false,     false,   true,                      1  };
+EffectParameter Threshold{ &EffectTruncSilence::mThresholdDB,
+   L"Threshold",  -20.0,      -80.0,   -20.0,                     1  };
+EnumParameter ActIndex{ &EffectTruncSilence::mActionIndex,
+   L"Action",     (int)kTruncate,  0,       nActions - 1,           1, kActionStrings, nActions };
+EffectParameter Minimum{ &EffectTruncSilence::mInitialAllowedSilence,
+   L"Minimum",    0.5,        0.001,   10000.0,                   1  };
+EffectParameter Truncate{ &EffectTruncSilence::mTruncLongestAllowedSilence,
+   L"Truncate",   0.5,        0.0,     10000.0,                   1  };
+EffectParameter Compress{ &EffectTruncSilence::mSilenceCompressPercent,
+   L"Compress",   50.0,       0.0,     99.9,                      1  };
+EffectParameter Independent{ &EffectTruncSilence::mbIndependent,
+   L"Independent", false,     false,   true,                      1  };
 }
 
 static const size_t DEF_BlendFrameCount = 100;

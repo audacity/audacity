@@ -54,7 +54,7 @@ private:
 
    bool ProcessOne(WaveTrack *track, double t0, double t1, int count);
 
-private:
+public: // TODO remove
    float mAmount;
    float mTime_resolution;  //seconds
    double m_t1;

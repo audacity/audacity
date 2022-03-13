@@ -49,8 +49,10 @@ enum
 };
 
 namespace {
-EffectParameter Threshold{ L"Threshold",  200,     0,       900,     1  };
-EffectParameter Width{     L"Width",      20,      0,       40,      1  };
+EffectParameter Threshold{ &EffectClickRemoval::mThresholdLevel,
+   L"Threshold",  200,     0,       900,     1  };
+EffectParameter Width{ &EffectClickRemoval::mClickWidth,
+   L"Width",      20,      0,       40,      1  };
 }
 
 const ComponentInterfaceSymbol EffectClickRemoval::Symbol

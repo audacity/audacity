@@ -82,7 +82,7 @@ private:
    void Update_Slider_RatePercentChangeStart();
    void Update_Slider_RatePercentChangeEnd();
 
-private:
+public: // TODO remove
    bool bPreview;
    double previewSelectedDuration;
    SlideType slideTypeRate;

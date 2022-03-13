@@ -121,12 +121,18 @@ static const EnumValueSymbol kSubTypeStrings[nSubTypes] =
 static_assert(nSubTypes == WXSIZEOF(kSubTypeStrings), "size mismatch");
 
 namespace {
-EnumParameter Type{        L"FilterType",       kButterworth,  0,    nTypes - 1,    1, kTypeStrings, nTypes  };
-EnumParameter Subtype{     L"FilterSubtype",    kLowPass,      0,    nSubTypes - 1, 1, kSubTypeStrings, nSubTypes  };
-EffectParameter Order{     L"Order",            1,             1,    10,               1  };
-EffectParameter Cutoff{    L"Cutoff",           1000.0f,        1.0,  FLT_MAX,          1  };
-EffectParameter Passband{  L"PassbandRipple",   1.0f,           0.0,  100.0,            1  };
-EffectParameter Stopband{  L"StopbandRipple",   30.0f,          0.0,  100.0,            1  };
+EnumParameter Type{ &EffectScienFilter::mFilterType,
+   L"FilterType",       kButterworth,  0,    nTypes - 1,    1, kTypeStrings, nTypes  };
+EnumParameter Subtype{ &EffectScienFilter::mFilterSubtype,
+   L"FilterSubtype",    kLowPass,      0,    nSubTypes - 1, 1, kSubTypeStrings, nSubTypes  };
+EffectParameter Order{ &EffectScienFilter::mOrder,
+   L"Order",            1,             1,    10,               1  };
+EffectParameter Cutoff{ &EffectScienFilter::mCutoff,
+   L"Cutoff",           1000.0f,        1.0,  FLT_MAX,          1  };
+EffectParameter Passband{ &EffectScienFilter::mRipple,
+   L"PassbandRipple",   1.0f,           0.0,  100.0,            1  };
+EffectParameter Stopband{ &EffectScienFilter::mStopbandRipple,
+   L"StopbandRipple",   30.0f,          0.0,  100.0,            1  };
 }
 
 //----------------------------------------------------------------------------

@@ -202,7 +202,7 @@ private:
    void OnBench( wxCommandEvent & event );
 #endif
 
-private:
+public: // TODO remove
    int mOptions;
    HFFT hFFT;
    Floats mFFTBuffer, mFilterFuncR, mFilterFuncI;

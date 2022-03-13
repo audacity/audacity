@@ -39,13 +39,20 @@
 #include "../widgets/AudacityMessageBox.h"
 
 namespace {
-EffectParameter DuckAmountDb{       L"DuckAmountDb",     -12.0,   -24.0,   0.0,     1  };
-EffectParameter InnerFadeDownLen{   L"InnerFadeDownLen", 0.0,     0.0,     3.0,     1  };
-EffectParameter InnerFadeUpLen{     L"InnerFadeUpLen",   0.0,     0.0,     3.0,     1  };
-EffectParameter OuterFadeDownLen{   L"OuterFadeDownLen", 0.5,     0.0,     3.0,     1  };
-EffectParameter OuterFadeUpLen{     L"OuterFadeUpLen",   0.5,     0.0,     3.0,     1  };
-EffectParameter ThresholdDb{        L"ThresholdDb",      -30.0,   -100.0,  0.0,     1  };
-EffectParameter MaximumPause{       L"MaximumPause",     1.0,     0.0,     DBL_MAX, 1  };
+EffectParameter DuckAmountDb{ &EffectAutoDuck::mDuckAmountDb,
+   L"DuckAmountDb",     -12.0,   -24.0,   0.0,     1  };
+EffectParameter InnerFadeDownLen{ &EffectAutoDuck::mInnerFadeDownLen,
+   L"InnerFadeDownLen", 0.0,     0.0,     3.0,     1  };
+EffectParameter InnerFadeUpLen{ &EffectAutoDuck::mInnerFadeUpLen,
+   L"InnerFadeUpLen",   0.0,     0.0,     3.0,     1  };
+EffectParameter OuterFadeDownLen{ &EffectAutoDuck::mOuterFadeDownLen,
+   L"OuterFadeDownLen", 0.5,     0.0,     3.0,     1  };
+EffectParameter OuterFadeUpLen{ &EffectAutoDuck::mOuterFadeUpLen,
+   L"OuterFadeUpLen",   0.5,     0.0,     3.0,     1  };
+EffectParameter ThresholdDb{ &EffectAutoDuck::mThresholdDb,
+   L"ThresholdDb",      -30.0,   -100.0,  0.0,     1  };
+EffectParameter MaximumPause{ &EffectAutoDuck::mMaximumPause,
+   L"MaximumPause",     1.0,     0.0,     DBL_MAX, 1  };
 }
 
 /*

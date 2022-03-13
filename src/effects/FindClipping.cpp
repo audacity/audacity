@@ -36,8 +36,10 @@
 #include "../WaveTrack.h"
 
 namespace {
-EffectParameter Start{ L"Duty Cycle Start",  3,    1,    INT_MAX, 1   };
-EffectParameter Stop{  L"Duty Cycle End",    3,    1,    INT_MAX, 1   };
+EffectParameter Start{ &EffectFindClipping::mStart,
+   L"Duty Cycle Start",  3,    1,    INT_MAX, 1   };
+EffectParameter Stop{ &EffectFindClipping::mStop,
+   L"Duty Cycle End",    3,    1,    INT_MAX, 1   };
 }
 
 const ComponentInterfaceSymbol EffectFindClipping::Symbol

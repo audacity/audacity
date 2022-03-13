@@ -62,6 +62,7 @@ private:
    void OnValueChanged(wxCommandEvent & evt);
 
 private:
+public: // TODO remove
    double mDuckAmountDb;
    double mInnerFadeDownLen;
    double mInnerFadeUpLen;

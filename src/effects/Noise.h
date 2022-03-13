@@ -56,7 +56,7 @@ public:
 private:
    // EffectNoise implementation
 
-private:
+public: // TODO remove
    int mType;
    double mAmp;
 

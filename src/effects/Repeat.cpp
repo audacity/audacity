@@ -40,7 +40,8 @@
 #include "LoadEffects.h"
 
 namespace {
-EffectParameter Count{L"Count",       1,  1,    INT_MAX,  1  };
+EffectParameter Count{ &EffectRepeat::repeatCount,
+   L"Count",1,  1,    INT_MAX,  1  };
 }
 
 const ComponentInterfaceSymbol EffectRepeat::Symbol

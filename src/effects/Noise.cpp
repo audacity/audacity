@@ -51,8 +51,10 @@ static const EnumValueSymbol kTypeStrings[nTypes] =
 };
 
 namespace {
-EnumParameter Type{     L"Type",       kWhite,  0,    nTypes - 1, 1, kTypeStrings, nTypes  };
-EffectParameter Amp{    L"Amplitude",  0.8,     0.0,  1.0,           1  };
+EnumParameter Type{ &EffectNoise::mType,
+   L"Type",       kWhite,  0,    nTypes - 1, 1, kTypeStrings, nTypes  };
+EffectParameter Amp{ &EffectNoise::mAmp,
+   L"Amplitude",  0.8,     0.0,  1.0,           1  };
 }
 
 //

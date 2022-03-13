@@ -68,6 +68,7 @@ private:
    void UpdateUI();
 
 private:
+public: // TODO remove
    double mPeakLevel;
    bool   mGain;
    bool   mDC;

@@ -63,8 +63,10 @@ enum
 // Soundtouch is not reasonable below -99% or above 3000%.
 
 namespace {
-EffectParameter Percentage{   L"Percentage", 0.0,  -95.0,   3000.0,  1  };
-EffectParameter UseSBSMS{     L"SBSMS",     false, false,   true,    1  };
+EffectParameter Percentage{ &EffectChangeTempo::m_PercentChange,
+   L"Percentage", 0.0,  -95.0,   3000.0,  1  };
+EffectParameter UseSBSMS{ &EffectChangeTempo::mUseSBSMS,
+   L"SBSMS",     false, false,   true,    1  };
 }
 
 // We warp the slider to go up to 400%, but user can enter higher values.

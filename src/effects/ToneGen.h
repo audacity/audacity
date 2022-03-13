@@ -58,7 +58,7 @@ private:
 
    void OnControlUpdate(wxCommandEvent & evt);
 
-private:
+public: // TODO remove
    bool mChirp;
 
    // mSample is an external placeholder to remember the last "buffer"

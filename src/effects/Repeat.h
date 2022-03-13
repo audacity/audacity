@@ -56,7 +56,7 @@ private:
    void OnRepeatTextChange(wxCommandEvent & evt);
    void DisplayNewTime();
 
-private:
+public: // TODO remove
    int repeatCount;
 
    wxTextCtrl   *mRepeatCount;
