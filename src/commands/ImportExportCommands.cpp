@@ -84,7 +84,7 @@ void ExportCommand::PopulateOrExchange(ShuttleGui & S)
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.TieTextBox(XXO("File Name:"),mFileName);
+      S.TieTextBox(XXO("File Name:"), mFileName, mFileName.length());
       S.TieTextBox(XXO("Number of Channels:"),mnChannels);
    }
    S.EndMultiColumn();
