@@ -219,6 +219,11 @@ bool AudacityCommand::TransferDataFromWindow()
    return true;
 }
 
+bool AudacityCommand::DefineParams( ShuttleParams & )
+{
+   return false;
+}
+
 int AudacityCommand::MessageBox(
    const TranslatableString& message, long style,
    const TranslatableString &titleStr)

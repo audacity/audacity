@@ -51,6 +51,7 @@
 #include <wx/event.h>
 
 class ShuttleGui;
+class ShuttleParams;
 
 typedef enum EffectType : int
 {
@@ -178,14 +179,6 @@ public:
    //! Default is false
    virtual bool IsHiddenFromMenus() const;
 
-   // Some effects will use define params to define what parameters they take.
-   // If they do, they won't need to implement Get or SetAutomation parameters.
-   // since the Effect class can do it.  Or at least that is how things happen
-   // in AudacityCommand.  IF we do the same in class Effect, then Effect maybe
-   // should derive by some route from AudacityCommand to pick up that
-   // functionality.
-   //virtual bool DefineParams( ShuttleParams & S);
-
    /*! @name settings
     Interface for saving and loading externalized settings.
     All methods are const!
@@ -238,6 +231,10 @@ public:
    //! Change settings back to "factory default"
    virtual bool LoadFactoryDefaults(Settings &settings) const = 0;
    //! @}
+
+   //! Parameters, if defined.  false means no defined parameters.
+   //! Default implementation returns false
+   virtual bool DefineParams( ShuttleParams & );
 };
 
 //! Extension of EffectDefinitionInterface with old system for settings

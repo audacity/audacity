@@ -33,6 +33,7 @@ class AudacityCommand;
 class AudacityProject;
 class CommandContext;
 class ProgressDialog;
+class ShuttleParams;
 
 
 class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
@@ -115,6 +116,10 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    virtual void PopulateOrExchange(ShuttleGui & WXUNUSED(S)){return;};
    virtual bool TransferDataToWindow();
    virtual bool TransferDataFromWindow();
+
+   //! Parameters, if defined.  false means no defined parameters.
+   //! Default implementation returns false
+   virtual bool DefineParams( ShuttleParams & );
 
 protected:
 
