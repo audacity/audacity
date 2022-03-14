@@ -47,7 +47,7 @@ extern void RegisterCompareAudio( Registrar & R){
 
 }
 
-bool CompareAudioCommand::VisitSettings( ShuttleParams & S ){
+bool CompareAudioCommand::VisitSettings( SettingsVisitor & S ){
    S.Define( errorThreshold,  wxT("Threshold"),   0.0f,  0.0f,    0.01f,    1.0f );
    return true;
 }

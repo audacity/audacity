@@ -106,7 +106,7 @@ EffectType EffectLoudness::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectLoudness::VisitSettings( ShuttleParams & S )
+bool EffectLoudness::VisitSettings( SettingsVisitor & S )
 {
    S.SHUTTLE_PARAM( mStereoInd, StereoInd );
    S.SHUTTLE_PARAM( mLUFSLevel, LUFSLevel );

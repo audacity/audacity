@@ -53,30 +53,41 @@ public:
 
 class CommandParameters;
 /**************************************************************************//**
-\brief Shuttle that deals with parameters.  This is a base class with lots of
+\brief Visitor of effect or command parameters.  This is a base class with lots of
 virtual functions that do nothing by default.
 Unrelated to class Shuttle.
 ********************************************************************************/
-class AUDACITY_DLL_API ShuttleParams /* not final */
+class AUDACITY_DLL_API SettingsVisitor /* not final */
 {
 public:
    wxString mParams;
-   bool *pOptionalFlag;
-   CommandParameters * mpEap;
-   ShuttleParams() { mpEap = NULL; pOptionalFlag = NULL; }
-   virtual ~ShuttleParams() {}
+   bool *pOptionalFlag{};
+   CommandParameters * mpEap{};
+
+   SettingsVisitor() {}
+   virtual ~SettingsVisitor();
+
    bool ShouldSet();
-   virtual ShuttleParams & Optional( bool & WXUNUSED(var) ){ pOptionalFlag = NULL;return *this;};
-   virtual ShuttleParams & OptionalY( bool & var ){ return Optional( var );};
-   virtual ShuttleParams & OptionalN( bool & var ){ return Optional( var );};
-   virtual void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin=false, const bool vmax=false, const bool vscl=false );
-   virtual void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 );
-   virtual void Define( int & var,      const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 );
-   virtual void Define( float & var,    const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl=1.0f );
-   virtual void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl=1.0f );
-   virtual void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl=1.0f );
-   virtual void Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin = {}, const wxString vmax = {}, const wxString vscl = {} );
-   virtual void DefineEnum( int &var, const wxChar * key, const int vdefault,
+   virtual SettingsVisitor & Optional( bool & var );
+   virtual SettingsVisitor & OptionalY( bool & var );
+   virtual SettingsVisitor & OptionalN( bool & var );
+   virtual void Define( bool & var, const wxChar * key, bool vdefault,
+      bool vmin = false, bool vmax = false, bool vscl = false );
+   virtual void Define( size_t & var, const wxChar * key, int vdefault,
+      int vmin = 0, int vmax = 100000, int vscl = 1 );
+   virtual void Define( int & var, const wxChar * key, int vdefault,
+      int vmin = 0, int vmax = 100000, int vscl = 1 );
+   virtual void Define( float & var, const wxChar * key, float vdefault,
+      float vmin, float vmax, float vscl = 1.0f );
+   virtual void Define( double & var, const wxChar * key, float vdefault,
+      float vmin, float vmax, float vscl = 1.0f );
+   virtual void Define( double & var, const wxChar * key, double vdefault,
+      double vmin, double vmax, double vscl = 1.0f );
+   virtual void Define( wxString &var, const wxChar * key,
+      wxString vdefault,
+      wxString vmin = {}, wxString vmax = {},
+      wxString vscl = {} );
+   virtual void DefineEnum( int &var, const wxChar * key, int vdefault,
       const EnumValueSymbol strings[], size_t nStrings );
 };
 

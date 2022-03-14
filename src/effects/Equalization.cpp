@@ -371,7 +371,7 @@ EffectType EffectEqualization::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectEqualization::VisitSettings( ShuttleParams & S ){
+bool EffectEqualization::VisitSettings(SettingsVisitor & S){
    S.SHUTTLE_PARAM( mM, FilterLength );
    //S.SHUTTLE_PARAM( mCurveName, CurveName);
    S.SHUTTLE_PARAM( mLin, InterpLin);

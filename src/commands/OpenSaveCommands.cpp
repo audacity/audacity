@@ -34,7 +34,7 @@ const ComponentInterfaceSymbol OpenProjectCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< OpenProjectCommand > reg; }
 
-bool OpenProjectCommand::VisitSettings( ShuttleParams & S ){
+bool OpenProjectCommand::VisitSettings( SettingsVisitor & S ){
    S.Define( mFileName, wxT("Filename"),  "test.aup3" );
    S.OptionalN(bHasAddToHistory).Define( mbAddToHistory, wxT("AddToHistory"),  false );
    return true;
@@ -83,7 +83,7 @@ const ComponentInterfaceSymbol SaveProjectCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< SaveProjectCommand > reg2; }
 
-bool SaveProjectCommand::VisitSettings( ShuttleParams & S ){
+bool SaveProjectCommand::VisitSettings( SettingsVisitor & S ){
    S.Define( mFileName, wxT("Filename"),  "name.aup3" );
    S.Define( mbAddToHistory, wxT("AddToHistory"),  false );
    return true;
@@ -115,7 +115,7 @@ const ComponentInterfaceSymbol SaveCopyCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< SaveCopyCommand > reg3; }
 
-bool SaveCopyCommand::VisitSettings( ShuttleParams & S ){
+bool SaveCopyCommand::VisitSettings( SettingsVisitor & S ){
    S.Define( mFileName, wxT("Filename"),  "name.aup3" );
    return true;
 }
@@ -142,7 +142,7 @@ const ComponentInterfaceSymbol SaveLogCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< SaveLogCommand > reg4; }
 
-bool SaveLogCommand::VisitSettings(ShuttleParams & S)
+bool SaveLogCommand::VisitSettings(SettingsVisitor & S)
 {
    S.Define( mFileName, wxT("Filename"),  "log.txt" );
    return true;
@@ -170,7 +170,7 @@ const ComponentInterfaceSymbol ClearLogCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< ClearLogCommand > reg5; }
 
-bool ClearLogCommand::VisitSettings(ShuttleParams & S)
+bool ClearLogCommand::VisitSettings(SettingsVisitor & S)
 {
    return true;
 }

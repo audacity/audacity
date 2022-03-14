@@ -106,7 +106,7 @@ public:
    ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() const override;
    ManualPageID ManualPage() const override;
-   bool VisitSettings(ShuttleParams & S) override;
+   bool VisitSettings(SettingsVisitor & S) override;
 
    // EffectDefinitionInterface implementation
 

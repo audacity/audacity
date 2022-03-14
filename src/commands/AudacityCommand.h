@@ -33,7 +33,7 @@ class AudacityCommand;
 class AudacityProject;
 class CommandContext;
 class ProgressDialog;
-class ShuttleParams;
+class SettingsVisitor;
 
 
 class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
@@ -119,7 +119,7 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
 
    //! Visit settings, if defined.  false means no defined settings.
    //! Default implementation returns false
-   virtual bool VisitSettings( ShuttleParams & );
+   virtual bool VisitSettings( SettingsVisitor & );
 
 protected:
 

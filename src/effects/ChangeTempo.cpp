@@ -142,7 +142,7 @@ bool EffectChangeTempo::SupportsAutomation() const
 }
 
 // EffectProcessor implementation
-bool EffectChangeTempo::VisitSettings( ShuttleParams & S ){
+bool EffectChangeTempo::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_PARAM( m_PercentChange, Percentage );
    S.SHUTTLE_PARAM( mUseSBSMS, UseSBSMS );
    return true;

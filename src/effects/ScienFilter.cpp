@@ -238,7 +238,7 @@ size_t EffectScienFilter::ProcessBlock(EffectSettings &,
 
    return blockLen;
 }
-bool EffectScienFilter::VisitSettings( ShuttleParams & S ){
+bool EffectScienFilter::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_ENUM_PARAM( mFilterType, Type, kTypeStrings, nTypes );
    S.SHUTTLE_ENUM_PARAM( mFilterSubtype, Subtype, kSubTypeStrings, nSubTypes );
    S.SHUTTLE_PARAM( mOrder, Order );

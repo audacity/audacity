@@ -131,7 +131,7 @@ EffectType EffectAutoDuck::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectAutoDuck::VisitSettings( ShuttleParams & S ){
+bool EffectAutoDuck::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_PARAM(  mDuckAmountDb, DuckAmountDb);
    S.SHUTTLE_PARAM(  mInnerFadeDownLen, InnerFadeDownLen);
    S.SHUTTLE_PARAM(  mInnerFadeUpLen, InnerFadeUpLen);

@@ -44,7 +44,7 @@ GetTrackInfoCommand::GetTrackInfoCommand()
    mInfoType = 0;
 }
 
-bool GetTrackInfoCommand::VisitSettings( ShuttleParams & S ){ 
+bool GetTrackInfoCommand::VisitSettings( SettingsVisitor & S ){ 
    S.DefineEnum( mInfoType, wxT("Type"), 0, kTypes, nTypes );
    
    return true;

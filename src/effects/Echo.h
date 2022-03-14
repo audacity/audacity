@@ -48,7 +48,7 @@ public:
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-   bool VisitSettings( ShuttleParams & S ) override;
+   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(

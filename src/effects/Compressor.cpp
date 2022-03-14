@@ -128,7 +128,7 @@ EffectType EffectCompressor::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectCompressor::VisitSettings( ShuttleParams & S ){
+bool EffectCompressor::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_PARAM( mThresholdDB, Threshold );
    S.SHUTTLE_PARAM( mNoiseFloorDB, NoiseFloor );
    S.SHUTTLE_PARAM( mRatio, Ratio);

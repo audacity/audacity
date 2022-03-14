@@ -96,7 +96,7 @@ public:
 
    // EffectProcessor implementation
 
-   bool VisitSettings( ShuttleParams & S ) override;
+   bool VisitSettings( SettingsVisitor & S ) override;
    int SetLispVarsFromParameters(const CommandParameters & parms, bool bTestOnly);
 
    // Effect implementation

@@ -32,7 +32,7 @@ public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() const override {return XO("Selects a time range.");};
-   bool VisitSettings( ShuttleParams & S ) override;
+   bool VisitSettings( SettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
 
@@ -58,7 +58,7 @@ public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() const override {return XO("Selects a frequency range.");};
-   bool VisitSettings( ShuttleParams & S ) override;
+   bool VisitSettings( SettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
 
@@ -81,7 +81,7 @@ public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() const override {return XO("Selects a range of tracks.");};
-   bool VisitSettings( ShuttleParams & S ) override;
+   bool VisitSettings( SettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    bool Apply(const CommandContext & context) override;
    // AudacityCommand overrides
@@ -105,7 +105,7 @@ public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() const override {return XO("Selects Audio.");};
-   bool VisitSettings( ShuttleParams & S ) override { 
+   bool VisitSettings( SettingsVisitor & S ) override { 
       return 
          mSelTime.VisitSettings(S) &&  
          mSelFreq.VisitSettings(S) &&

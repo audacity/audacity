@@ -106,7 +106,7 @@ EffectType EffectClickRemoval::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectClickRemoval::VisitSettings( ShuttleParams & S ){
+bool EffectClickRemoval::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_PARAM( mThresholdLevel, Threshold );
    S.SHUTTLE_PARAM( mClickWidth, Width );
    return true;

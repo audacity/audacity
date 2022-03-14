@@ -12,7 +12,7 @@
 #include "EffectAutomationParameters.h" // for command automation
 
 // ShuttleGetAutomation gets from the shuttle into typically a string.
-ShuttleParams & ShuttleGetAutomation::Optional( bool & var ){
+SettingsVisitor & ShuttleGetAutomation::Optional( bool & var ){
    pOptionalFlag = &var;
    return *this;
 };
@@ -69,7 +69,7 @@ void ShuttleGetAutomation::DefineEnum( int &var, const wxChar * key, const int v
 
 
 
-ShuttleParams & ShuttleSetAutomation::Optional( bool & var ){
+SettingsVisitor & ShuttleSetAutomation::Optional( bool & var ){
    pOptionalFlag = &var;
    return *this;
 };

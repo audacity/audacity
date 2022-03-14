@@ -18,7 +18,7 @@ bool ShuttleGetDefinition::IsOptional(){
 }
 
 // Definition distinguishes optional from not.
-ShuttleParams & ShuttleGetDefinition::Optional( bool & var ){
+SettingsVisitor & ShuttleGetDefinition::Optional( bool & var ){
    pOptionalFlag = &var;
    return *this;
 };

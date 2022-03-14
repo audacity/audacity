@@ -219,7 +219,7 @@ bool AudacityCommand::TransferDataFromWindow()
    return true;
 }
 
-bool AudacityCommand::VisitSettings( ShuttleParams & )
+bool AudacityCommand::VisitSettings( SettingsVisitor & )
 {
    return false;
 }

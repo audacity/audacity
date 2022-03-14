@@ -30,7 +30,7 @@ const ComponentInterfaceSymbol GetPreferenceCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< GetPreferenceCommand > reg; }
 
-bool GetPreferenceCommand::VisitSettings( ShuttleParams & S ){
+bool GetPreferenceCommand::VisitSettings( SettingsVisitor & S ){
    S.Define( mName, wxT("Name"),   wxT("") );
    return true;
 }
@@ -62,7 +62,7 @@ const ComponentInterfaceSymbol SetPreferenceCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< SetPreferenceCommand > reg2; }
 
-bool SetPreferenceCommand::VisitSettings( ShuttleParams & S ){
+bool SetPreferenceCommand::VisitSettings( SettingsVisitor & S ){
    S.Define(    mName,   wxT("Name"),    wxT("") );
    S.Define(   mValue,   wxT("Value"),   wxT("") );
    S.Define( mbReload,   wxT("Reload"),  false );

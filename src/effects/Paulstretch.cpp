@@ -130,7 +130,7 @@ EffectType EffectPaulstretch::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectPaulstretch::VisitSettings( ShuttleParams & S ){
+bool EffectPaulstretch::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_PARAM( mAmount, Amount );
    S.SHUTTLE_PARAM( mTime_resolution, Time );
    return true;

@@ -83,7 +83,7 @@ public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() const override {return XO("Takes screenshots.");};
-   bool VisitSettings( ShuttleParams & S ) override;
+   bool VisitSettings( SettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides

@@ -67,7 +67,7 @@ bool SetTrackBase::ApplyInner( const CommandContext &context, Track *t  )
 };
 
 
-bool SetTrackBase::VisitSettings( ShuttleParams & S)
+bool SetTrackBase::VisitSettings( SettingsVisitor & S)
 {
    static_cast<void>(S);
 #ifdef USE_OWN_TRACK_SELECTION
@@ -127,7 +127,7 @@ const ComponentInterfaceSymbol SetTrackStatusCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< SetTrackStatusCommand > reg; }
 
-bool SetTrackStatusCommand::VisitSettings( ShuttleParams & S ){
+bool SetTrackStatusCommand::VisitSettings( SettingsVisitor & S ){
    SetTrackBase::VisitSettings( S );
    S.OptionalN( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       _("Unnamed") );
    // There is also a select command.  This is an alternative.
@@ -189,7 +189,7 @@ const ComponentInterfaceSymbol SetTrackAudioCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< SetTrackAudioCommand > reg2; }
 
-bool SetTrackAudioCommand::VisitSettings( ShuttleParams & S ){ 
+bool SetTrackAudioCommand::VisitSettings( SettingsVisitor & S ){ 
    SetTrackBase::VisitSettings( S );
    S.OptionalN( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
    S.OptionalN( bHasSolo           ).Define(     bSolo,           wxT("Solo"),       false );
@@ -303,7 +303,7 @@ static EnumValueSymbols DiscoverSubViewTypes()
    return result;
 }
 
-bool SetTrackVisualsCommand::VisitSettings( ShuttleParams & S ){ 
+bool SetTrackVisualsCommand::VisitSettings( SettingsVisitor & S ){ 
    SetTrackBase::VisitSettings( S );
    S.OptionalN( bHasHeight         ).Define(     mHeight,         wxT("Height"),     120, 44, 2000 );
 

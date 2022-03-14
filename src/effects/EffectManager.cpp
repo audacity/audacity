@@ -177,7 +177,8 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
    if ( !effect && !command )
       return;
 
-   ShuttleParams NullShuttle;
+   SettingsVisitor NullShuttle;
+
    // Test if it defines any parameters at all.
    bool bHasParams = command
       ? command->VisitSettings( NullShuttle )

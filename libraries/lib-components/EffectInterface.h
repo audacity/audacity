@@ -51,7 +51,7 @@
 #include <wx/event.h>
 
 class ShuttleGui;
-class ShuttleParams;
+class SettingsVisitor;
 
 typedef enum EffectType : int
 {
@@ -234,7 +234,7 @@ public:
 
    //! Visit settings, if defined.  false means no defined settings.
    //! Default implementation returns false
-   virtual bool VisitSettings( ShuttleParams & );
+   virtual bool VisitSettings( SettingsVisitor & );
 };
 
 //! Extension of EffectDefinitionInterface with old system for settings

@@ -14,12 +14,12 @@
 #include "Shuttle.h"
 
 /**************************************************************************//**
-\brief Shuttle that gets parameter values into a string.
+\brief SettingsVisitor that gets parameter values into a string.
 ********************************************************************************/
-class AUDACITY_DLL_API ShuttleGetAutomation final : public ShuttleParams
+class AUDACITY_DLL_API ShuttleGetAutomation final : public SettingsVisitor
 {
 public:
-   ShuttleParams & Optional( bool & var ) override;
+   SettingsVisitor & Optional( bool & var ) override;
    void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl ) override;
    void Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
    void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
@@ -32,15 +32,15 @@ public:
 };
 
 /**************************************************************************//**
-\brief Shuttle that sets parameters to a value (from a string)
+\brief SettingsVisitor that sets parameters to a value (from a string)
 ********************************************************************************/
-class AUDACITY_DLL_API ShuttleSetAutomation final : public ShuttleParams
+class AUDACITY_DLL_API ShuttleSetAutomation final : public SettingsVisitor
 {
 public:
    ShuttleSetAutomation(){ bWrite = false; bOK = false;};
    bool bOK;
    bool bWrite;
-   ShuttleParams & Optional( bool & var ) override;
+   SettingsVisitor & Optional( bool & var ) override;
    bool CouldGet(const wxString &key);
    void SetForValidating( CommandParameters * pEap){ mpEap=pEap; bOK=true;bWrite=false;};
    void SetForWriting(CommandParameters * pEap){ mpEap=pEap;bOK=true;bWrite=true;};
@@ -56,15 +56,15 @@ public:
 };
 
 /**************************************************************************//**
-\brief Shuttle that sets parameters to their default values.
+\brief SettingsVisitor that sets parameters to their default values.
 ********************************************************************************/
-class ShuttleDefaults final : public ShuttleParams
+class ShuttleDefaults final : public SettingsVisitor
 {
 public:
    wxString Result;
-   virtual ShuttleParams & Optional( bool & var )override{  var = true; pOptionalFlag = NULL;return *this;};
-   virtual ShuttleParams & OptionalY( bool & var )override{ var = true; pOptionalFlag = NULL;return *this;};
-   virtual ShuttleParams & OptionalN( bool & var )override{ var = false;pOptionalFlag = NULL;return *this;};
+   virtual SettingsVisitor & Optional( bool & var )override{  var = true; pOptionalFlag = NULL;return *this;};
+   virtual SettingsVisitor & OptionalY( bool & var )override{ var = true; pOptionalFlag = NULL;return *this;};
+   virtual SettingsVisitor & OptionalN( bool & var )override{ var = false;pOptionalFlag = NULL;return *this;};
 
    void Define( bool & var,          const wxChar * WXUNUSED(key),  const bool     vdefault,
       const bool     WXUNUSED(vmin), const bool     WXUNUSED(vmax), const bool     WXUNUSED(vscl) )

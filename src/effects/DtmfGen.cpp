@@ -226,7 +226,7 @@ size_t EffectDtmf::ProcessBlock(EffectSettings &,
 
    return processed;
 }
-bool EffectDtmf::VisitSettings( ShuttleParams & S ){
+bool EffectDtmf::VisitSettings( SettingsVisitor & S ){
    auto &dtmfSettings = mSettings;
 
    S.SHUTTLE_PARAM( dtmfSettings.dtmfSequence, Sequence );

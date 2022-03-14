@@ -185,7 +185,7 @@ EffectType EffectTruncSilence::GetType() const
 
 // EffectProcessor implementation
 
-bool EffectTruncSilence::VisitSettings( ShuttleParams & S ){
+bool EffectTruncSilence::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_PARAM( mThresholdDB, Threshold );
    S.SHUTTLE_ENUM_PARAM( mActionIndex, ActIndex, kActionStrings, nActions );
    S.SHUTTLE_PARAM( mInitialAllowedSilence, Minimum );

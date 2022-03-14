@@ -315,34 +315,59 @@ bool ShuttleCli::ExchangeWithMaster(const wxString & Name)
 // on the pOptionalFlag.  They 'use it up' and clear it down for the next parameter.
 
 
+SettingsVisitor::~SettingsVisitor() = default;
+
+SettingsVisitor &SettingsVisitor::Optional( [[maybe_unused]] bool & var )
+{
+   pOptionalFlag = nullptr;
+   return *this;
+}
+
+SettingsVisitor &SettingsVisitor::OptionalY( bool & var )
+{
+   return Optional( var );
+}
+
+SettingsVisitor &SettingsVisitor::OptionalN( bool & var )
+{
+   return Optional( var );
+}
+
 // Tests for parameter being optional.
 // Prepares for next parameter by clearing the pointer.
 // Reports on whether the parameter should be set, i.e. should set 
 // if it was chosen to be set, or was not optional.
-bool ShuttleParams::ShouldSet(){
+bool SettingsVisitor::ShouldSet()
+{
    if( !pOptionalFlag )
       return true;
    bool result = *pOptionalFlag;
    pOptionalFlag = NULL;
    return result;
 }
+
 // These are functions to override.  They do nothing.
-void ShuttleParams::Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl){;};
-void ShuttleParams::Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ){;};
-void ShuttleParams::Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ){;};
-void ShuttleParams::Define( float & var,    const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ){;};
-void ShuttleParams::Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ){;};
-void ShuttleParams::Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ){;};
-void ShuttleParams::Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ){;};
-void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const EnumValueSymbol strings[], size_t nStrings ){;};
-
-
-
-/*
-void ShuttleParams::DefineEnum( int &var, const wxChar * key, const int vdefault, const EnumValueSymbol strings[], size_t nStrings )
-{
-}
-*/
+void SettingsVisitor::Define(bool &, const wxChar *, bool, bool, bool, bool)
+{}
+void SettingsVisitor::Define(size_t &, const wxChar *, int, int, int, int)
+{}
+void SettingsVisitor::Define(int &, const wxChar *, int, int, int, int)
+{}
+void SettingsVisitor::Define(
+   float &, const wxChar *, float, float, float, float)
+{}
+void SettingsVisitor::Define(
+   double &, const wxChar *, float, float, float, float )
+{}
+void SettingsVisitor::Define(
+   double &, const wxChar *, double, double, double, double)
+{}
+void SettingsVisitor::Define(
+   wxString &, const wxChar *, wxString, wxString, wxString, wxString)
+{}
+void SettingsVisitor::DefineEnum(
+   int &, const wxChar *, int, const EnumValueSymbol [], size_t)
+{}
 
 #ifdef _MSC_VER
 // If this is compiled with MSVC (Visual Studio)

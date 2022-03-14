@@ -56,7 +56,7 @@ static const EnumValueSymbol kCoordTypeStrings[nCoordTypes] =
 };
 
 
-bool DragCommand::VisitSettings( ShuttleParams & S ){ 
+bool DragCommand::VisitSettings( SettingsVisitor & S ){ 
    S.OptionalN( bHasId         ).Define(     mId,          wxT("Id"),         11000.0, -100000.0, 1000000.0);
    S.OptionalY( bHasWinName    ).Define(     mWinName,     wxT("Window"),     "Timeline");
    S.OptionalY( bHasFromX      ).Define(     mFromX,       wxT("FromX"),      200.0, 0.0, 1000000.0);

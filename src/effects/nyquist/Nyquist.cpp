@@ -305,7 +305,7 @@ bool NyquistEffect::IsDefault() const
 }
 
 // EffectProcessor implementation
-bool NyquistEffect::VisitSettings(ShuttleParams & S)
+bool NyquistEffect::VisitSettings(SettingsVisitor & S)
 {
    // For now we assume Nyquist can do get and set better than VisitSettings can,
    // And so we ONLY use it for getting the signature.

@@ -41,7 +41,7 @@ SetProjectCommand::SetProjectCommand()
 }
 
 
-bool SetProjectCommand::VisitSettings( ShuttleParams & S ){ 
+bool SetProjectCommand::VisitSettings( SettingsVisitor & S ){ 
    S.OptionalN( bHasName        ).Define(     mName,        wxT("Name"),       _("Project") );
    S.OptionalN( bHasRate        ).Define(     mRate,        wxT("Rate"),       44100.0, 1.0, 1000000.0);
    S.OptionalY( bHasSizing      ).Define(     mPosX,        wxT("X"),          10.0, 0.0, 2000.0);
