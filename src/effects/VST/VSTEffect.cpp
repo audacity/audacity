@@ -86,7 +86,7 @@
 #include "PlatformCompatibility.h"
 #include "../../SelectFile.h"
 #include "../../ShuttleGui.h"
-#include "../../effects/Effect.h"
+#include "../../EffectHostInterface.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/NumericTextCtrl.h"
@@ -290,11 +290,12 @@ public:
       return mAutomatable;
    }
 
-   bool GetAutomationParameters(CommandParameters &) override { return true; }
+   bool GetAutomationParameters(CommandParameters &) const override { return true; }
    bool SetAutomationParameters(const CommandParameters &) override { return true; }
 
    bool LoadUserPreset(const RegistryPath &) override { return true; }
-   bool SaveUserPreset(const RegistryPath &) override { return true; }
+   bool SaveUserPreset(const RegistryPath &, const Settings &) const override
+      { return true; }
 
    RegistryPaths GetFactoryPresets() const override { return {}; }
    bool LoadFactoryPreset(int) override { return true; }
@@ -1618,7 +1619,7 @@ int VSTEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool VSTEffect::GetAutomationParameters(CommandParameters & parms)
+bool VSTEffect::GetAutomationParameters(CommandParameters & parms) const
 {
    for (int i = 0; i < mAEffect->numParams; i++)
    {
@@ -1680,7 +1681,8 @@ bool VSTEffect::LoadUserPreset(const RegistryPath & name)
    return true;
 }
 
-bool VSTEffect::SaveUserPreset(const RegistryPath & name)
+bool VSTEffect::SaveUserPreset(
+   const RegistryPath & name, const EffectSettings &) const
 {
    return SaveParameters(name);
 }
@@ -1812,7 +1814,7 @@ bool VSTEffect::CanExportPresets()
 }
 
 // Throws exceptions rather than reporting errors.
-void VSTEffect::ExportPresets()
+void VSTEffect::ExportPresets(const EffectSettings &) const
 {
    wxString path;
 
@@ -2333,7 +2335,7 @@ bool VSTEffect::LoadParameters(const RegistryPath & group)
    return SetAutomationParameters(eap);
 }
 
-bool VSTEffect::SaveParameters(const RegistryPath & group)
+bool VSTEffect::SaveParameters(const RegistryPath & group) const
 {
    SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"),
       mAEffect->uniqueID);
@@ -2345,7 +2347,7 @@ bool VSTEffect::SaveParameters(const RegistryPath & group)
    if (mAEffect->flags & effFlagsProgramChunks)
    {
       void *chunk = NULL;
-      int clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+      int clen = (int) constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
       if (clen <= 0)
       {
          return false;
@@ -2519,7 +2521,8 @@ int VSTEffect::GetString(wxString & outstr, int opcode, int index) const
 
    memset(buf, 0, sizeof(buf));
 
-   const_cast<VSTEffect*>(this)->callDispatcher(opcode, index, 0, buf, 0.0);
+   // Assume we are passed a read-only dispatcher function code
+   constCallDispatcher(opcode, index, 0, buf, 0.0);
 
    outstr = wxString::FromUTF8(buf);
 
@@ -2551,6 +2554,14 @@ intptr_t VSTEffect::callDispatcher(int opcode,
    return mAEffect->dispatcher(mAEffect, opcode, index, value, ptr, opt);
 }
 
+intptr_t VSTEffect::constCallDispatcher(int opcode,
+   int index, intptr_t value, void *ptr, float opt) const
+{
+   // Assume we are passed a read-only dispatcher function code
+   return const_cast<VSTEffect*>(this)
+      ->callDispatcher(opcode, index, value, ptr, opt);
+}
+
 void VSTEffect::callProcessReplacing(const float *const *inputs,
    float *const *outputs, int sampleframes)
 {
@@ -2559,7 +2570,7 @@ void VSTEffect::callProcessReplacing(const float *const *inputs,
       const_cast<float**>(outputs), sampleframes);
 }
 
-float VSTEffect::callGetParameter(int index)
+float VSTEffect::callGetParameter(int index) const
 {
    return mAEffect->getParameter(mAEffect, index);
 }
@@ -3309,7 +3320,7 @@ bool VSTEffect::LoadXML(const wxFileName & fn)
    return true;
 }
 
-void VSTEffect::SaveFXB(const wxFileName & fn)
+void VSTEffect::SaveFXB(const wxFileName & fn) const
 {
    // Create/Open the file
    const wxString fullPath{fn.GetFullPath()};
@@ -3336,7 +3347,8 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
    {
       subType = CCONST('F', 'B', 'C', 'h');
 
-      chunkSize = callDispatcher(effGetChunk, 0, 0, &chunkPtr, 0.0);
+      // read-only dispatcher function
+      chunkSize = constCallDispatcher(effGetChunk, 0, 0, &chunkPtr, 0.0);
       dataSize += 4 + chunkSize;
    }
    else
@@ -3396,7 +3408,7 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
    return;
 }
 
-void VSTEffect::SaveFXP(const wxFileName & fn)
+void VSTEffect::SaveFXP(const wxFileName & fn) const
 {
    // Create/Open the file
    const wxString fullPath{ fn.GetFullPath() };
@@ -3413,7 +3425,8 @@ void VSTEffect::SaveFXP(const wxFileName & fn)
 
    wxMemoryBuffer buf;
 
-   int ndx = callDispatcher(effGetProgram, 0, 0, NULL, 0.0);
+   // read-only dispatcher function
+   int ndx = constCallDispatcher(effGetProgram, 0, 0, NULL, 0.0);
    SaveFXProgram(buf, ndx);
 
    f.Write(buf.GetData(), buf.GetDataLen());
@@ -3431,7 +3444,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn)
    return;
 }
 
-void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
+void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index) const
 {
    wxInt32 subType;
    void *chunkPtr;
@@ -3440,7 +3453,8 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
    char progName[28];
    wxInt32 tab[7];
 
-   callDispatcher(effGetProgramNameIndexed, index, 0, &progName, 0.0);
+   // read-only dispatcher function
+   constCallDispatcher(effGetProgramNameIndexed, index, 0, &progName, 0.0);
    progName[27] = '\0';
    chunkSize = strlen(progName);
    memset(&progName[chunkSize], 0, sizeof(progName) - chunkSize);
@@ -3449,7 +3463,8 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
    {
       subType = CCONST('F', 'P', 'C', 'h');
 
-      chunkSize = callDispatcher(effGetChunk, 1, 0, &chunkPtr, 0.0);
+      // read-only dispatcher function
+      chunkSize = constCallDispatcher(effGetChunk, 1, 0, &chunkPtr, 0.0);
       dataSize += 4 + chunkSize;
    }
    else
@@ -3490,7 +3505,7 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
 }
 
 // Throws exceptions rather than giving error return.
-void VSTEffect::SaveXML(const wxFileName & fn)
+void VSTEffect::SaveXML(const wxFileName & fn) const
 // may throw
 {
    XMLFileWriter xmlFile{ fn.GetFullPath(), XO("Error Saving Effect Presets") };
@@ -3513,7 +3528,8 @@ void VSTEffect::SaveXML(const wxFileName & fn)
    {
       void *chunk = NULL;
 
-      clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+      // read-only dispatcher function
+      clen = (int) constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
       if (clen != 0)
       {
          xmlFile.StartTag(wxT("chunk"));

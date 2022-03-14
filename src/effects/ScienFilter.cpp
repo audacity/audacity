@@ -248,7 +248,7 @@ bool EffectScienFilter::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectScienFilter::GetAutomationParameters(CommandParameters & parms)
+bool EffectScienFilter::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Type, kTypeStrings[mFilterType].Internal());
    parms.Write(KEY_Subtype, kSubTypeStrings[mFilterSubtype].Internal());

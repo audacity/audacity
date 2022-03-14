@@ -116,11 +116,12 @@ class VSTEffect final : public wxEvtHandler,
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool GetAutomationParameters(CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
@@ -177,7 +178,7 @@ class VSTEffect final : public wxEvtHandler,
    bool CloseUI() override;
 
    bool CanExportPresets() override;
-   void ExportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
    void ImportPresets() override;
 
    bool HasOptions() override;
@@ -203,7 +204,7 @@ private:
 
    // Parameter loading and saving
    bool LoadParameters(const RegistryPath & group);
-   bool SaveParameters(const RegistryPath & group);
+   bool SaveParameters(const RegistryPath & group) const;
 
    // Realtime
    unsigned GetChannelCount();
@@ -232,10 +233,10 @@ private:
    bool LoadFXP(const wxFileName & fn);
    bool LoadXML(const wxFileName & fn);
    bool LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bool dryrun);
-   void SaveFXB(const wxFileName & fn);
-   void SaveFXP(const wxFileName & fn);
-   void SaveXML(const wxFileName & fn);
-   void SaveFXProgram(wxMemoryBuffer & buf, int index);
+   void SaveFXB(const wxFileName & fn) const;
+   void SaveFXP(const wxFileName & fn) const;
+   void SaveXML(const wxFileName & fn) const;
+   void SaveFXProgram(wxMemoryBuffer & buf, int index) const;
 
    bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
    void HandleXMLEndTag(const std::string_view& tag) override;
@@ -264,10 +265,12 @@ private:
 
    intptr_t callDispatcher(int opcode, int index,
                            intptr_t value, void *ptr, float opt) override;
+   intptr_t constCallDispatcher(int opcode, int index,
+                           intptr_t value, void *ptr, float opt) const;
    void callProcessReplacing(
       const float *const *inputs, float *const *outputs, int sampleframes);
    void callSetParameter(int index, float value);
-   float callGetParameter(int index);
+   float callGetParameter(int index) const;
    void callSetProgram(int index);
    void callSetChunk(bool isPgm, int len, void *buf);
    void callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *info);

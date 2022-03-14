@@ -94,7 +94,7 @@ bool EffectRepeat::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectRepeat::GetAutomationParameters(CommandParameters & parms)
+bool EffectRepeat::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Count, repeatCount);
 

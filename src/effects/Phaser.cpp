@@ -207,7 +207,7 @@ bool EffectPhaser::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectPhaser::GetAutomationParameters(CommandParameters & parms)
+bool EffectPhaser::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Stages, mStages);
    parms.Write(KEY_DryWet, mDryWet);

@@ -99,7 +99,7 @@ bool EffectNormalize::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
+bool EffectNormalize::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_PeakLevel, mPeakLevel);
    parms.Write(KEY_ApplyGain, mGain);

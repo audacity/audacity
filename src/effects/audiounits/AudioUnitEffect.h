@@ -65,11 +65,12 @@ public:
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool GetAutomationParameters(CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
@@ -125,7 +126,7 @@ public:
    bool CloseUI() override;
 
    bool CanExportPresets() override;
-   void ExportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
    void ImportPresets() override;
 
    bool HasOptions() override;
@@ -137,7 +138,7 @@ private:
    bool SetRateAndChannels();
 
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
-   TranslatableString Export(const wxString & path);
+   TranslatableString Export(const wxString & path) const;
    TranslatableString Import(const wxString & path);
    void Notify(AudioUnit unit, AudioUnitParameterID parm);
 
@@ -168,7 +169,7 @@ private:
    void GetChannelCounts();
 
    bool LoadPreset(const RegistryPath & group);
-   bool SavePreset(const RegistryPath & group);
+   bool SavePreset(const RegistryPath & group) const;
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
    bool CreatePlain(wxWindow *parent);

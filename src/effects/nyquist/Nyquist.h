@@ -91,7 +91,7 @@ public:
    bool IsDefault() const override;
    bool EnablesDebug() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool GetAutomationParameters(CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    // EffectProcessor implementation
@@ -184,7 +184,7 @@ private:
                            wxString *pExtraString = nullptr);
    static wxString UnQuote(const wxString &s, bool allowParens = true,
                            wxString *pExtraString = nullptr);
-   double GetCtrlValue(const wxString &s);
+   static double GetCtrlValue(const wxString &s);
 
    void OnLoad(wxCommandEvent & evt);
    void OnSave(wxCommandEvent & evt);
@@ -196,7 +196,7 @@ private:
    void OnTime(wxCommandEvent & evt);
    void OnFileButton(wxCommandEvent & evt);
 
-   void resolveFilePath(wxString & path, FileExtension extension = {});
+   static void resolveFilePath(wxString & path, FileExtension extension = {});
    bool validatePath(wxString path);
    wxString ToTimeFormat(double t);
 

@@ -477,7 +477,7 @@ int Effect::ShowHostInterface(wxWindow &parent,
    return result;
 }
 
-bool Effect::GetAutomationParameters(CommandParameters & parms)
+bool Effect::GetAutomationParameters(CommandParameters & parms) const
 {
    if (mClient)
    {
@@ -514,15 +514,16 @@ bool Effect::LoadUserPreset(const RegistryPath & name)
    return SetAutomationParametersFromString(parms);
 }
 
-bool Effect::SaveUserPreset(const RegistryPath & name)
+bool Effect::SaveUserPreset(
+   const RegistryPath & name, const EffectSettings &settings) const
 {
    if (mClient)
    {
-      return mClient->SaveUserPreset(name);
+      return mClient->SaveUserPreset(name, settings);
    }
 
    wxString parms;
-   if (!GetAutomationParametersAsString(parms))
+   if (!GetAutomationParametersAsString(settings, parms))
       return false;
 
    return SetConfig(GetDefinition(), PluginSettings::Private,
@@ -618,10 +619,10 @@ static const FileNames::FileTypes &PresetTypes()
    return result;
 };
 
-void Effect::ExportPresets()
+void Effect::ExportPresets(const EffectSettings &settings) const
 {
    wxString params;
-   GetAutomationParametersAsString(params);
+   GetAutomationParametersAsString(settings, params);
    auto commandId = GetSquashedName(GetSymbol().Internal());
    params =  commandId.GET() + ":" + params;
 
@@ -799,12 +800,14 @@ bool Effect::Startup(EffectUIClientInterface *client)
    return true;
 }
 
-bool Effect::GetAutomationParametersAsString(wxString & parms)
+bool Effect::GetAutomationParametersAsString(
+   const EffectSettings &, wxString & parms) const
 {
    CommandParameters eap;
    ShuttleGetAutomation S;
    S.mpEap = &eap;
-   if( DefineParams( S ) ){
+   // To do: fix const_cast in use of DefineParams, and pass settings
+   if( const_cast<Effect*>(this)->DefineParams( S ) ){
       ;// got eap value using DefineParams.
    }
    // Won't be needed in future
@@ -875,23 +878,27 @@ unsigned Effect::TestUIFlags(unsigned mask) {
    return mask & mUIFlags;
 }
 
-bool Effect::IsBatchProcessing()
+bool Effect::IsBatchProcessing() const
 {
    return mIsBatch;
 }
 
-void Effect::SetBatchProcessing(bool start)
+void Effect::SetBatchProcessing()
 {
-   mIsBatch = start;
+   mIsBatch = true;
+   // Save effect's internal state in a special registry path
+   // just for this purpose
+   // If effect is not stateful, this step doesn't really matter, and the
+   // settings object is a dummy
+   auto dummySettings = MakeSettings();
+   SaveUserPreset(GetSavedStateGroup(), dummySettings);
+}
 
-   if (start)
-   {
-      SaveUserPreset(GetSavedStateGroup());
-   }
-   else
-   {
-      LoadUserPreset(GetSavedStateGroup());
-   }
+void Effect::UnsetBatchProcessing()
+{
+   mIsBatch = false;
+   // Restore effect's internal state from registry
+   LoadUserPreset(GetSavedStateGroup());
 }
 
 // TODO:  Lift the possible user-prompting part out of this function, so that
@@ -2166,7 +2173,7 @@ void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
 }
 
 int Effect::MessageBox( const TranslatableString& message,
-   long style, const TranslatableString &titleStr)
+   long style, const TranslatableString &titleStr) const
 {
    auto title = titleStr.empty()
       ? GetName()

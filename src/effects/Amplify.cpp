@@ -140,7 +140,7 @@ bool EffectAmplify::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectAmplify::GetAutomationParameters(CommandParameters & parms)
+bool EffectAmplify::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.WriteFloat(KEY_Ratio, mRatio);
    if (!IsBatchProcessing())

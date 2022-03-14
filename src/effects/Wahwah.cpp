@@ -198,7 +198,7 @@ bool EffectWahwah::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectWahwah::GetAutomationParameters(CommandParameters & parms)
+bool EffectWahwah::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Freq, mFreq);
    parms.Write(KEY_Phase, mPhase);

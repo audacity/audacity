@@ -233,12 +233,15 @@ bool EffectManager::SupportsAutomation(const PluginID & ID)
    return false;
 }
 
+// This function is used only in the macro programming user interface
 wxString EffectManager::GetEffectParameters(const PluginID & ID)
 {
-   if (auto effect = GetEffect(ID)) {
+   auto pair = GetEffectAndDefaultSettings(ID);
+   if (auto effect = pair.first) {
+      assert(pair.second);
       wxString parms;
 
-      effect->GetAutomationParametersAsString(parms);
+      effect->GetAutomationParametersAsString(*pair.second, parms);
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
@@ -716,22 +719,20 @@ wxString EffectManager::GetDefaultPreset(const PluginID & ID)
    return preset;
 }
 
-void EffectManager::SetBatchProcessing(const PluginID & ID, bool start)
+void EffectManager::BatchProcessingOn(const PluginID & ID)
 {
-   auto effect = GetEffect(ID);
-   if (effect)
-   {
-      effect->SetBatchProcessing(start);
-      return;
-   }
+   if (auto effect = GetEffect(ID))
+      effect->SetBatchProcessing();
+   else if (auto command = GetAudacityCommand(ID))
+      command->SetBatchProcessing(true);
+}
 
-   AudacityCommand *command = GetAudacityCommand(ID);
-   if (command)
-   {
-      command->SetBatchProcessing(start);
-      return;
-   }
-
+void EffectManager::BatchProcessingOff(const PluginID & ID)
+{
+   if (auto effect = GetEffect(ID))
+      effect->UnsetBatchProcessing();
+   else if (auto command = GetAudacityCommand(ID))
+      command->SetBatchProcessing(false);
 }
 
 EffectUIHostInterface *EffectManager::GetEffect(const PluginID & ID)
@@ -748,38 +749,37 @@ std::pair<EffectUIHostInterface *, EffectSettings *>
 EffectManager::GetEffectAndDefaultSettings(const PluginID & ID)
 {
    auto &results = DoGetEffect(ID);
-   if (results.effect) {
-      auto &settings = results.settings;
-      if (!settings.has_value())
-         // Create on demand
-         settings = results.effect->GetDefinition().MakeSettings();
-      return {results.effect, &settings};
-   }
-   return {nullptr, nullptr};
+   if (results.effect)
+      return {results.effect, &results.settings};
+   else
+      return {nullptr, nullptr};
 }
 
 namespace {
-void InitializePreset(EffectDefinitionInterfaceEx &definition) {
+void InitializePreset(
+   EffectDefinitionInterfaceEx &definition, EffectSettings &settings) {
    bool haveDefaults;
    GetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
       wxT("Initialized"), haveDefaults, false);
    if (!haveDefaults)
    {
-      definition.SaveUserPreset(FactoryDefaultsGroup());
+      definition.SaveUserPreset(FactoryDefaultsGroup(), settings);
       SetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
          wxT("Initialized"), true);
    }
    definition.LoadUserPreset(CurrentSettingsGroup());
 }
 
-ComponentInterface *LoadComponent(const PluginID &ID)
+std::pair<ComponentInterface *, EffectSettings>
+LoadComponent(const PluginID &ID)
 {
    if (auto result = dynamic_cast<EffectDefinitionInterfaceEx*>(
       PluginManager::Get().Load(ID))) {
-      InitializePreset(*result);
-      return result;
+      auto settings = result->MakeSettings();
+      InitializePreset(*result, settings);
+      return { result, std::move(settings) };
    }
-   return nullptr;
+   return { nullptr, {} };
 }
 }
 
@@ -800,19 +800,20 @@ EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
    else {
       std::shared_ptr<Effect> hostEffect;
       // This will instantiate the effect client if it hasn't already been done
-      const auto component = LoadComponent(ID);
+      auto [component, settings] = LoadComponent(ID);
       if (!component)
          return empty;
 
       if (auto effect = dynamic_cast<EffectUIHostInterface *>(component);
           effect && effect->Startup(nullptr))
          // Self-hosting or "legacy" effect objects
-         return (mEffects[ID] = { effect, {} });
+         return (mEffects[ID] = { effect, std::move(settings) });
       else if (auto client = dynamic_cast<EffectUIClientInterface *>(component);
           client && (hostEffect = std::make_shared<Effect>())->Startup(client))
          // plugin that inherits only EffectUIClientInterface needs a host
          return (mEffects[ID] =
-            { (mHostEffects[ID] = move(hostEffect)).get(), {} });
+            { (mHostEffects[ID] = move(hostEffect)).get(),
+              std::move(settings) });
       else {
          if ( !dynamic_cast<AudacityCommand *>(component) )
             AudacityMessageBox(
@@ -889,7 +890,10 @@ EffectManager::NewEffect(const PluginID & ID)
 
    // This will instantiate the effect client if it hasn't already been done
    // But it only makes a unique object for a given ID
-   auto component = LoadComponent(ID);
+
+   // This makes a settings object too that is just discarded
+   // But this will ultimately be rewritten
+   auto [component, settings] = LoadComponent(ID);
    if (!component)
       return nullptr;
 

@@ -105,11 +105,12 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
+   bool GetAutomationParameters(CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
@@ -163,7 +164,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool CloseUI() override;
 
    bool CanExportPresets() override;
-   void ExportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
    void ImportPresets() override;
 
    bool HasOptions() override;
@@ -184,10 +185,12 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // The Effect class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
    void Preview(EffectSettingsAccess &access, bool dryOnly) override;
-   bool GetAutomationParametersAsString(wxString & parms) override;
+   bool GetAutomationParametersAsString(
+      const EffectSettings &settings, wxString & parms) const override;
    bool SetAutomationParametersFromString(const wxString & parms) override;
-   bool IsBatchProcessing() override;
-   void SetBatchProcessing(bool start) override;
+   bool IsBatchProcessing() const override;
+   void SetBatchProcessing() override;
+   void UnsetBatchProcessing() override;
    bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
       double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
@@ -222,7 +225,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    enum : long { DefaultMessageBoxStyle = wxOK | wxCENTRE };
    int MessageBox(const TranslatableString& message,
                   long style = DefaultMessageBoxStyle,
-                  const TranslatableString& titleStr = {});
+                  const TranslatableString& titleStr = {}) const;
 
    static void IncEffectCounter(){ nEffectsDone++;};
 

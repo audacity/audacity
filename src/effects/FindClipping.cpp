@@ -87,7 +87,7 @@ bool EffectFindClipping::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectFindClipping::GetAutomationParameters(CommandParameters & parms)
+bool EffectFindClipping::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Start, mStart);
    parms.Write(KEY_Stop, mStop);

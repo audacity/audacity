@@ -413,7 +413,7 @@ bool EffectEqualization::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectEqualization::GetAutomationParameters(CommandParameters & parms)
+bool EffectEqualization::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_FilterLength, (unsigned long)mM);
    //parms.Write(KEY_CurveName, mCurveName);

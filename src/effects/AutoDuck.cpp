@@ -142,7 +142,7 @@ bool EffectAutoDuck::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectAutoDuck::GetAutomationParameters(CommandParameters & parms)
+bool EffectAutoDuck::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_DuckAmountDb, mDuckAmountDb);
    parms.Write(KEY_InnerFadeDownLen, mInnerFadeDownLen);

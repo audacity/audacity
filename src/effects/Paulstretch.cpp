@@ -136,7 +136,7 @@ bool EffectPaulstretch::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectPaulstretch::GetAutomationParameters(CommandParameters & parms)
+bool EffectPaulstretch::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.WriteFloat(KEY_Amount, mAmount);
    parms.WriteFloat(KEY_Time, mTime_resolution);

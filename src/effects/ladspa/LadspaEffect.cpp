@@ -1083,7 +1083,7 @@ int LadspaEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool LadspaEffect::GetAutomationParameters(CommandParameters & parms)
+bool LadspaEffect::GetAutomationParameters(CommandParameters & parms) const
 {
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {
@@ -1135,7 +1135,8 @@ bool LadspaEffect::LoadUserPreset(const RegistryPath & name)
    return true;
 }
 
-bool LadspaEffect::SaveUserPreset(const RegistryPath & name)
+bool LadspaEffect::SaveUserPreset(
+   const RegistryPath & name, const EffectSettings &) const
 {
    return SaveParameters(name);
 }
@@ -1521,7 +1522,7 @@ bool LadspaEffect::CanExportPresets()
    return false;
 }
 
-void LadspaEffect::ExportPresets()
+void LadspaEffect::ExportPresets(const EffectSettings &) const
 {
 }
 
@@ -1614,7 +1615,7 @@ bool LadspaEffect::LoadParameters(const RegistryPath & group)
    return SetAutomationParameters(eap);
 }
 
-bool LadspaEffect::SaveParameters(const RegistryPath & group)
+bool LadspaEffect::SaveParameters(const RegistryPath & group) const
 {
    CommandParameters eap;
    if (!GetAutomationParameters(eap))

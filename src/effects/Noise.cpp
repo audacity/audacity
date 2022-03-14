@@ -181,7 +181,7 @@ bool EffectNoise::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectNoise::GetAutomationParameters(CommandParameters & parms)
+bool EffectNoise::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Type, kTypeStrings[mType].Internal());
    parms.Write(KEY_Amp, mAmp);

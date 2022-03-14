@@ -93,10 +93,12 @@ public:
    ) = 0;
 
    virtual void Preview(EffectSettingsAccess &access, bool dryOnly) = 0;
-   virtual bool GetAutomationParametersAsString(wxString & parms) = 0;
+   virtual bool GetAutomationParametersAsString(
+      const EffectSettings &settings, wxString & parms) const = 0;
    virtual bool SetAutomationParametersFromString(const wxString & parms) = 0;
-   virtual bool IsBatchProcessing() = 0;
-   virtual void SetBatchProcessing(bool start) = 0;
+   virtual bool IsBatchProcessing() const = 0;
+   virtual void SetBatchProcessing() = 0;
+   virtual void UnsetBatchProcessing() = 0;
 
    //! Unfortunately complicated dual-use function
    /*!

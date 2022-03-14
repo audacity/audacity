@@ -257,14 +257,12 @@ public:
     */
    //! @{
    //! Save current settings into parms
-   virtual bool GetAutomationParameters(CommandParameters & parms) = 0;
+   virtual bool GetAutomationParameters(CommandParameters & parms) const = 0;
    //! Change settings to those stored in parms
    virtual bool SetAutomationParameters(const CommandParameters & parms) = 0;
 
    //! Change settings to a user-named preset
    virtual bool LoadUserPreset(const RegistryPath & name) = 0;
-   //! Save current settings as a user-named preset
-   virtual bool SaveUserPreset(const RegistryPath & name) = 0;
 
    //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
    virtual bool LoadFactoryPreset(int id) = 0;
@@ -287,8 +285,6 @@ public:
 
    bool LoadUserPreset(
       const RegistryPath & name, Settings &settings) const override;
-   bool SaveUserPreset(
-      const RegistryPath & name, const Settings &settings) const override;
    bool LoadFactoryPreset(int id, Settings &settings) const override;
    bool LoadFactoryDefaults(Settings &settings) const override;
    //! @}
@@ -506,7 +502,7 @@ public:
       ShuttleGui &S, EffectSettingsAccess &access) = 0;
 
    virtual bool CanExportPresets() = 0;
-   virtual void ExportPresets() = 0;
+   virtual void ExportPresets(const EffectSettings &settings) const = 0;
    virtual void ImportPresets() = 0;
 
    virtual bool HasOptions() = 0;

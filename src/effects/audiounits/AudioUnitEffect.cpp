@@ -1466,7 +1466,7 @@ int AudioUnitEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms)
+bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms) const
 {
    OSStatus result;
    UInt32 dataSize;
@@ -1595,7 +1595,8 @@ bool AudioUnitEffect::LoadUserPreset(const RegistryPath & name)
    return LoadPreset(name);
 }
 
-bool AudioUnitEffect::SaveUserPreset(const RegistryPath & name)
+bool AudioUnitEffect::SaveUserPreset(
+   const RegistryPath & name, const EffectSettings &) const
 {
    return SavePreset(name);
 }
@@ -1794,7 +1795,7 @@ bool AudioUnitEffect::CanExportPresets()
    return true;
 }
 
-void AudioUnitEffect::ExportPresets()
+void AudioUnitEffect::ExportPresets(const EffectSettings &) const
 {
    // Generate the user domain path
    wxFileName fn;
@@ -2007,7 +2008,7 @@ bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
    return true;
 }
 
-bool AudioUnitEffect::SavePreset(const RegistryPath & group)
+bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
 {
    // First set the name of the preset
    wxCFStringRef cfname(wxFileNameFromPath(group));
@@ -2248,7 +2249,7 @@ void AudioUnitEffect::SetChannelCount(unsigned numChannels)
    mNumChannels = numChannels;
 }
 
-TranslatableString AudioUnitEffect::Export(const wxString & path)
+TranslatableString AudioUnitEffect::Export(const wxString & path) const
 {
    // Create the file
    wxFFile f(path, wxT("wb"));

@@ -148,7 +148,7 @@ bool EffectChangeTempo::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectChangeTempo::GetAutomationParameters(CommandParameters & parms)
+bool EffectChangeTempo::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Percentage, m_PercentChange);
    parms.Write(KEY_UseSBSMS, mUseSBSMS);

@@ -106,10 +106,11 @@ public:
    bool IsDefault() const override;
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
-   bool GetAutomationParameters(CommandParameters& parms) override;
+   bool GetAutomationParameters(CommandParameters& parms) const override;
    bool SetAutomationParameters(const CommandParameters& parms) override;
    bool LoadUserPreset(const RegistryPath& name) override;
-   bool SaveUserPreset(const RegistryPath& name) override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const override;
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
@@ -150,7 +151,7 @@ public:
    bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
    bool CanExportPresets() override;
-   void ExportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
    void ImportPresets() override;
    bool HasOptions() override;
    void ShowOptions() override;

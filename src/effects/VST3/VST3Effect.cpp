@@ -340,7 +340,7 @@ bool VST3Effect::SupportsAutomation() const
    return false;
 }
 
-bool VST3Effect::GetAutomationParameters(CommandParameters& parms)
+bool VST3Effect::GetAutomationParameters(CommandParameters& parms) const
 {
    if(mEditController == nullptr)
       return false;
@@ -430,7 +430,8 @@ bool VST3Effect::LoadUserPreset(const RegistryPath& name)
    return true;
 }
 
-bool VST3Effect::SaveUserPreset(const RegistryPath& name)
+bool VST3Effect::SaveUserPreset(
+   const RegistryPath& name, const EffectSettings &) const
 {
    using namespace Steinberg;
 
@@ -941,7 +942,7 @@ bool VST3Effect::CanExportPresets()
    return true;
 }
 
-void VST3Effect::ExportPresets()
+void VST3Effect::ExportPresets(const EffectSettings &) const
 {
    using namespace Steinberg;
 

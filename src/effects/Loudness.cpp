@@ -116,7 +116,7 @@ bool EffectLoudness::DefineParams( ShuttleParams & S )
    return true;
 }
 
-bool EffectLoudness::GetAutomationParameters(CommandParameters & parms)
+bool EffectLoudness::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_StereoInd, mStereoInd);
    parms.Write(KEY_LUFSLevel, mLUFSLevel);

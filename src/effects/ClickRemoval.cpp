@@ -112,7 +112,7 @@ bool EffectClickRemoval::DefineParams( ShuttleParams & S ){
    return true;
 }
 
-bool EffectClickRemoval::GetAutomationParameters(CommandParameters & parms)
+bool EffectClickRemoval::GetAutomationParameters(CommandParameters & parms) const
 {
    parms.Write(KEY_Threshold, mThresholdLevel);
    parms.Write(KEY_Width, mClickWidth);

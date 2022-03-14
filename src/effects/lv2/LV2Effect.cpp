@@ -1464,7 +1464,7 @@ int LV2Effect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool LV2Effect::GetAutomationParameters(CommandParameters &parms)
+bool LV2Effect::GetAutomationParameters(CommandParameters &parms) const
 {
    for (auto & port : mControlPorts)
    {
@@ -1638,7 +1638,8 @@ bool LV2Effect::LoadUserPreset(const RegistryPath &name)
    return TransferDataToWindow();
 }
 
-bool LV2Effect::SaveUserPreset(const RegistryPath &name)
+bool LV2Effect::SaveUserPreset(
+   const RegistryPath &name, const EffectSettings &) const
 {
    return SaveParameters(name);
 }
@@ -1727,7 +1728,7 @@ bool LV2Effect::CanExportPresets()
    return false;
 }
 
-void LV2Effect::ExportPresets()
+void LV2Effect::ExportPresets(const EffectSettings &) const
 {
 }
 
@@ -1777,7 +1778,7 @@ bool LV2Effect::LoadParameters(const RegistryPath &group)
    return SetAutomationParameters(eap);
 }
 
-bool LV2Effect::SaveParameters(const RegistryPath &group)
+bool LV2Effect::SaveParameters(const RegistryPath &group) const
 {
    CommandParameters eap;
    if (!GetAutomationParameters(eap))
