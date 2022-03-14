@@ -807,7 +807,7 @@ bool Effect::GetAutomationParametersAsString(
    ShuttleGetAutomation S;
    S.mpEap = &eap;
    // To do: fix const_cast in use of DefineParams, and pass settings
-   if( const_cast<Effect*>(this)->DefineParams( S ) ){
+   if( const_cast<Effect*>(this)->VisitSettings( S ) ){
       ;// got eap value using DefineParams.
    }
    // Won't be needed in future
@@ -849,8 +849,8 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
       CommandParameters eap(parms);
       ShuttleSetAutomation S;
       S.SetForValidating( &eap );
-      // DefineParams returns false if not defined for this effect.
-      if( !DefineParams( S ) )
+      // VisitSettings returns false if not defined for this effect.
+      if( !VisitSettings(S) )
          // the old method...
          success = SetAutomationParameters(eap);
       else if( !S.bOK )
@@ -858,7 +858,7 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
       else{
          success = true;
          S.SetForWriting( &eap );
-         DefineParams( S );
+         VisitSettings(S);
       }
    }
 

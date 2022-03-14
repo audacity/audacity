@@ -280,7 +280,7 @@ size_t EffectReverb::ProcessBlock(EffectSettings &,
 
    return blockLen;
 }
-bool EffectReverb::DefineParams( ShuttleParams & S ){
+bool EffectReverb::VisitSettings( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mParams.mRoomSize,       RoomSize );
    S.SHUTTLE_PARAM( mParams.mPreDelay,       PreDelay );
    S.SHUTTLE_PARAM( mParams.mReverberance,   Reverberance );

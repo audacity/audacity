@@ -180,8 +180,8 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
    ShuttleParams NullShuttle;
    // Test if it defines any parameters at all.
    bool bHasParams = command
-      ? command->DefineParams( NullShuttle )
-      : effect ->DefineParams( NullShuttle );
+      ? command->VisitSettings( NullShuttle )
+      : effect->VisitSettings( NullShuttle );
    if ( (flags == 0) && !bHasParams )
       return;
 
@@ -197,8 +197,8 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
       S.StartField( "params" );
       S.StartArray();
       command
-         ? command->DefineParams( S )
-         : effect ->DefineParams( S );
+         ? command->VisitSettings( S )
+         : effect->VisitSettings( S );
       S.EndArray();
       S.EndField();
    }

@@ -28,7 +28,7 @@ public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() const override {return XO("Gets track values as JSON.");};
-   bool DefineParams( ShuttleParams & S ) override;
+   bool VisitSettings( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides

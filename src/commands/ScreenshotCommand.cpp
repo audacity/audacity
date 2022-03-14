@@ -110,7 +110,7 @@ ScreenshotCommand::ScreenshotCommand()
    static VetoDialogHook::Scope scope{ MayCapture };
 }
 
-bool ScreenshotCommand::DefineParams( ShuttleParams & S ){
+bool ScreenshotCommand::VisitSettings( ShuttleParams & S ){
    S.Define(                               mPath,        wxT("Path"),         wxT(""));
    S.DefineEnum(                           mWhat,        wxT("CaptureWhat"),  kwindow,kCaptureWhatStrings, nCaptureWhats );
    S.DefineEnum(                           mBack,        wxT("Background"),   kNone, kBackgroundStrings, nBackgrounds );

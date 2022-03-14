@@ -196,7 +196,7 @@ size_t EffectPhaser::RealtimeProcess(int group, EffectSettings &settings,
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
 
-bool EffectPhaser::DefineParams( ShuttleParams & S ){
+bool EffectPhaser::VisitSettings( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mStages,    Stages );
    S.SHUTTLE_PARAM( mDryWet,    DryWet );
    S.SHUTTLE_PARAM( mFreq,      Freq );

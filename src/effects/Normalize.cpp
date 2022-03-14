@@ -91,7 +91,7 @@ EffectType EffectNormalize::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectNormalize::DefineParams( ShuttleParams & S ){
+bool EffectNormalize::VisitSettings( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mPeakLevel, PeakLevel );
    S.SHUTTLE_PARAM( mGain, ApplyGain );
    S.SHUTTLE_PARAM( mDC, RemoveDC );

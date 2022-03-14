@@ -274,7 +274,7 @@ size_t EffectDistortion::RealtimeProcess(int group, EffectSettings &settings,
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
 
-bool EffectDistortion::DefineParams( ShuttleParams & S ){
+bool EffectDistortion::VisitSettings( ShuttleParams & S ){
    S.SHUTTLE_ENUM_PARAM( mParams.mTableChoiceIndx, TableTypeIndx,
       kTableTypeStrings, nTableTypes );
    S.SHUTTLE_PARAM( mParams.mDCBlock,       DCBlock       );

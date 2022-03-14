@@ -81,7 +81,7 @@ EffectType EffectFindClipping::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectFindClipping::DefineParams( ShuttleParams & S ){
+bool EffectFindClipping::VisitSettings( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mStart, Start );
    S.SHUTTLE_PARAM( mStop, Stop );
    return true;

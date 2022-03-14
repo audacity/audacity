@@ -104,7 +104,7 @@ static const EnumValueSymbol kFormats[nFormats] =
 
 
 
-bool GetInfoCommand::DefineParams( ShuttleParams & S ){
+bool GetInfoCommand::VisitSettings( ShuttleParams & S ){
    S.DefineEnum( mInfoType, wxT("Type"), 0, kTypes, nTypes );
    S.DefineEnum( mFormat, wxT("Format"), 0, kFormats, nFormats );
    return true;

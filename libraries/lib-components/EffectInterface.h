@@ -232,9 +232,9 @@ public:
    virtual bool LoadFactoryDefaults(Settings &settings) const = 0;
    //! @}
 
-   //! Parameters, if defined.  false means no defined parameters.
+   //! Visit settings, if defined.  false means no defined settings.
    //! Default implementation returns false
-   virtual bool DefineParams( ShuttleParams & );
+   virtual bool VisitSettings( ShuttleParams & );
 };
 
 //! Extension of EffectDefinitionInterface with old system for settings

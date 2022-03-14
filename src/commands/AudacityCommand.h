@@ -117,9 +117,9 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    virtual bool TransferDataToWindow();
    virtual bool TransferDataFromWindow();
 
-   //! Parameters, if defined.  false means no defined parameters.
+   //! Visit settings, if defined.  false means no defined settings.
    //! Default implementation returns false
-   virtual bool DefineParams( ShuttleParams & );
+   virtual bool VisitSettings( ShuttleParams & );
 
 protected:
 

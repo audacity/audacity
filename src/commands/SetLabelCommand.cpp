@@ -39,7 +39,7 @@ SetLabelCommand::SetLabelCommand()
 }
 
 
-bool SetLabelCommand::DefineParams( ShuttleParams & S ){ 
+bool SetLabelCommand::VisitSettings( ShuttleParams & S ){ 
    S.Define(    mLabelIndex,                            wxT("Label"), 0, 0, 100 );
    S.OptionalY( bHasText       ).Define(  mText,        wxT("Text"),       wxT("empty") );
    S.OptionalY( bHasT0         ).Define(  mT0,          wxT("Start"),      0.0, 0.0, 100000.0);

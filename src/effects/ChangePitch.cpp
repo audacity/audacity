@@ -163,7 +163,7 @@ EffectType EffectChangePitch::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectChangePitch::DefineParams( ShuttleParams & S ){
+bool EffectChangePitch::VisitSettings( ShuttleParams & S ){
    S.SHUTTLE_PARAM( m_dPercentChange, Percentage );
    S.SHUTTLE_PARAM( mUseSBSMS, UseSBSMS );
    return true;

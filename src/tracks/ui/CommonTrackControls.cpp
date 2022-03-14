@@ -194,7 +194,7 @@ public:
    ComponentInterfaceSymbol GetSymbol() const override
    { return Symbol; }
    //TranslatableString GetDescription() override {return XO("Sets the track name.");};
-   //bool DefineParams( ShuttleParams & S ) override;
+   //bool VisitSettings( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
    //bool Apply(const CommandContext & context) override;
 

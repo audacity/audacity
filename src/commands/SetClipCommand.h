@@ -27,7 +27,7 @@ public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() const override {return XO("Sets various values for a clip.");};
-   bool DefineParams( ShuttleParams & S ) override;
+   bool VisitSettings( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides

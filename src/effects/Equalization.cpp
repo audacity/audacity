@@ -371,7 +371,7 @@ EffectType EffectEqualization::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectEqualization::DefineParams( ShuttleParams & S ){
+bool EffectEqualization::VisitSettings( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mM, FilterLength );
    //S.SHUTTLE_PARAM( mCurveName, CurveName);
    S.SHUTTLE_PARAM( mLin, InterpLin);
@@ -527,7 +527,7 @@ bool EffectEqualization::LoadFactoryPreset(int id)
    CommandParameters eap(params);
    ShuttleSetAutomation S;
    S.SetForWriting( &eap );
-   DefineParams( S );
+   VisitSettings(S);
    return true;
 }
 

@@ -138,7 +138,7 @@ EffectType EffectChangeSpeed::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectChangeSpeed::DefineParams( ShuttleParams & S ){
+bool EffectChangeSpeed::VisitSettings( ShuttleParams & S ){
    S.SHUTTLE_PARAM( m_PercentChange, Percentage );
    return true;
 }

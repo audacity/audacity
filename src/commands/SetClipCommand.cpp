@@ -52,7 +52,7 @@ static const EnumValueSymbol kColourStrings[nColours] =
 };
 
 
-bool SetClipCommand::DefineParams( ShuttleParams & S ){ 
+bool SetClipCommand::VisitSettings( ShuttleParams & S ){ 
    S.OptionalY( bHasContainsTime   ).Define(     mContainsTime,   wxT("At"),         0.0, 0.0, 100000.0 );
    S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0, kColourStrings, nColours );
    // Allowing a negative start time is not a mistake.

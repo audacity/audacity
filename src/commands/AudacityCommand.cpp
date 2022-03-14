@@ -73,7 +73,7 @@ bool AudacityCommand::Init(){
       return true;
    mNeedsInit = false;
    ShuttleDefaults DefaultSettingShuttle;
-   return DefineParams( DefaultSettingShuttle );
+   return VisitSettings( DefaultSettingShuttle );
 }
 
 bool AudacityCommand::ShowInterface(wxWindow *parent, bool WXUNUSED(forceModal))
@@ -128,7 +128,7 @@ bool AudacityCommand::GetAutomationParametersAsString(wxString & parms)
 
    ShuttleGetAutomation S;
    S.mpEap = &eap;
-   bool bResult = DefineParams( S );
+   bool bResult = VisitSettings( S );
    wxASSERT_MSG( bResult, "You did not define DefineParameters() for this command" );
    static_cast<void>(bResult); // fix unused variable warning in release mode
 
@@ -143,7 +143,7 @@ bool AudacityCommand::SetAutomationParametersFromString(const wxString & parms)
    ShuttleSetAutomation S;
 
    S.SetForWriting( &eap );
-   bool bResult = DefineParams( S );
+   bool bResult = VisitSettings( S );
    wxASSERT_MSG( bResult, "You did not define DefineParameters() for this command" );
    static_cast<void>(bResult); // fix unused variable warning in release mode
    if (!S.bOK)
@@ -219,7 +219,7 @@ bool AudacityCommand::TransferDataFromWindow()
    return true;
 }
 
-bool AudacityCommand::DefineParams( ShuttleParams & )
+bool AudacityCommand::VisitSettings( ShuttleParams & )
 {
    return false;
 }

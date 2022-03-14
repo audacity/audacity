@@ -52,7 +52,7 @@ static const EnumValueSymbol kFormats[nFormats] =
 };
 
 
-bool HelpCommand::DefineParams( ShuttleParams & S ){
+bool HelpCommand::VisitSettings( ShuttleParams & S ){
    S.Define( mCommandName, wxT("Command"),  "Help" );
    S.DefineEnum( mFormat, wxT("Format"), 0, kFormats, nFormats );
    return true;
@@ -107,7 +107,7 @@ bool HelpCommand::ApplyInner(const CommandContext & context){
    return true;
 }
 
-bool CommentCommand::DefineParams( ShuttleParams & S ){
+bool CommentCommand::VisitSettings( ShuttleParams & S ){
    S.Define( mComment, wxT("_"),  "" );
    return true;
 }

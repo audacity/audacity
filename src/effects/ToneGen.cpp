@@ -273,7 +273,7 @@ size_t EffectToneGen::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool EffectToneGen::DefineParams( ShuttleParams & S ){
+bool EffectToneGen::VisitSettings( ShuttleParams & S ){
    if( mChirp ){
       S.SHUTTLE_PARAM( mFrequency[0], StartFreq  );
       S.SHUTTLE_PARAM( mFrequency[1], EndFreq  );

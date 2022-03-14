@@ -188,7 +188,7 @@ size_t EffectWahwah::RealtimeProcess(int group, EffectSettings &settings,
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
 
-bool EffectWahwah::DefineParams( ShuttleParams & S ){
+bool EffectWahwah::VisitSettings( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mFreq, Freq );
    S.SHUTTLE_PARAM( mPhase, Phase );
    S.SHUTTLE_PARAM( mDepth, Depth );

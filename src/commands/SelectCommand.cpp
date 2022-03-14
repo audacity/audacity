@@ -63,7 +63,7 @@ static const EnumValueSymbol kRelativeTo[nRelativeTos] =
    { wxT("SelectionEnd"), XO("Selection End") }
 };
 
-bool SelectTimeCommand::DefineParams( ShuttleParams & S ){
+bool SelectTimeCommand::VisitSettings( ShuttleParams & S ){
    // Allow selection down to -ve 100seconds.
    // Typically used to expand/contract selections by a small amount.
    S.OptionalY( bHasT0           ).Define( mT0, wxT("Start"), 0.0, -100.0, (double)FLT_MAX);
@@ -147,7 +147,7 @@ const ComponentInterfaceSymbol SelectFrequenciesCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< SelectFrequenciesCommand > reg2; }
 
-bool SelectFrequenciesCommand::DefineParams( ShuttleParams & S ){
+bool SelectFrequenciesCommand::VisitSettings( ShuttleParams & S ){
    S.OptionalN( bHasTop ).Define(    mTop,    wxT("High"), 0.0, 0.0, (double)FLT_MAX);
    S.OptionalN( bHasBottom ).Define( mBottom, wxT("Low"),  0.0, 0.0, (double)FLT_MAX);
    return true;
@@ -197,7 +197,7 @@ static const EnumValueSymbol kModes[nModes] =
    { XO("Remove") },
 };
 
-bool SelectTracksCommand::DefineParams( ShuttleParams & S ){
+bool SelectTracksCommand::VisitSettings( ShuttleParams & S ){
    S.OptionalN( bHasFirstTrack).Define( mFirstTrack, wxT("Track"), 0.0, 0.0, 100.0);
    S.OptionalN( bHasNumTracks ).Define( mNumTracks,  wxT("TrackCount"),  1.0, 0.0, 100.0);
    S.OptionalY( bHasMode      ).DefineEnum( mMode,   wxT("Mode"), 0, kModes, nModes );

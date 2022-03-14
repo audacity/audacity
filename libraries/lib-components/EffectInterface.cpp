@@ -70,7 +70,7 @@ bool EffectDefinitionInterface::IsHiddenFromMenus() const
    return false;
 }
 
-bool EffectDefinitionInterface::DefineParams( ShuttleParams & )
+bool EffectDefinitionInterface::VisitSettings( ShuttleParams & )
 {
    return false;
 }
