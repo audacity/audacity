@@ -421,8 +421,13 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
+bool NyquistEffect::SetAutomationParameters(const CommandParameters & parms)
 {
+   // Due to a constness problem that happens when using the prompt, we need
+   // to be ready to switch the params to a local instance.
+   const CommandParameters* pParms = &parms;
+   CommandParameters localParms;
+
    if (mIsPrompt)
    {
       parms.Read(KEY_Command, &mInputCmd, wxEmptyString);
@@ -435,7 +440,8 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
 
       if (!mParameters.empty())
       {
-         parms.SetParameters(mParameters);
+         pParms = &localParms;
+         localParms.SetParameters(mParameters);
       }
 
       if (!IsBatchProcessing())
@@ -464,12 +470,12 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
    // When batch processing, we just ignore missing/bad parameters.
    // We'll end up using defaults in those cases.
    if (!IsBatchProcessing()) {
-      badCount = SetLispVarsFromParameters(parms, kTestOnly);
+      badCount = SetLispVarsFromParameters(*pParms, kTestOnly);
       if (badCount > 0)
          return false;
    }
 
-   badCount = SetLispVarsFromParameters(parms, kTestAndSet);
+   badCount = SetLispVarsFromParameters(*pParms, kTestAndSet);
    // We never do anything with badCount here.
    // It might be non zero, for missing parameters, and we allow that,
    // and don't distinguish that from an out-of-range value.
@@ -480,7 +486,7 @@ bool NyquistEffect::SetAutomationParameters(CommandParameters & parms)
 // returns the number of bad settings.
 // We can run this just testing for bad values, or actually setting when
 // the values are good.
-int NyquistEffect::SetLispVarsFromParameters(CommandParameters & parms, bool bTestOnly)
+int NyquistEffect::SetLispVarsFromParameters(const CommandParameters & parms, bool bTestOnly)
 {
    int badCount = 0;
    // First pass verifies values
@@ -1071,10 +1077,13 @@ int NyquistEffect::ShowHostInterface(
       // Delegate to the Nyquist Prompt,
       // which gets some Lisp from the user to interpret
 
-      access.ModifySettings([&](EffectSettings &settings){
-         res = Delegate(effect, settings,
-            parent, factory, access.shared_from_this());
-      });
+      // No need to read-modify-write the Settings, 
+      // just use a throwaway temp Settings
+
+      auto newSettings = effect.MakeSettings();
+      auto newAccess = std::make_shared<SimpleEffectSettingsAccess>(newSettings);
+      res = Delegate(effect, newSettings,
+         parent, factory, newAccess);
       mT0 = effect.mT0;
       mT1 = effect.mT1;
    }

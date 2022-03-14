@@ -52,7 +52,7 @@ public:
 
    EffectType GetType() const override;
    bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   bool SetAutomationParameters(const CommandParameters & parms) override;
    bool LoadFactoryDefaults() override;
 
    // EffectProcessor implementation

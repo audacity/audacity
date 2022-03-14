@@ -1529,7 +1529,7 @@ bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool AudioUnitEffect::SetAutomationParameters(CommandParameters & parms)
+bool AudioUnitEffect::SetAutomationParameters(const CommandParameters & parms)
 {
    OSStatus result;
    UInt32 dataSize;

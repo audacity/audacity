@@ -210,7 +210,7 @@ bool EffectWahwah::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectWahwah::SetAutomationParameters(CommandParameters & parms)
+bool EffectWahwah::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyDouble(Freq);
    ReadAndVerifyDouble(Phase);

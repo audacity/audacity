@@ -107,7 +107,7 @@ public:
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
    bool GetAutomationParameters(CommandParameters& parms) override;
-   bool SetAutomationParameters(CommandParameters& parms) override;
+   bool SetAutomationParameters(const CommandParameters& parms) override;
    bool LoadUserPreset(const RegistryPath& name) override;
    bool SaveUserPreset(const RegistryPath& name) override;
    RegistryPaths GetFactoryPresets() const override;

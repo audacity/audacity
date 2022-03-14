@@ -1480,7 +1480,7 @@ bool LV2Effect::GetAutomationParameters(CommandParameters &parms)
    return true;
 }
 
-bool LV2Effect::SetAutomationParameters(CommandParameters &parms)
+bool LV2Effect::SetAutomationParameters(const CommandParameters &parms)
 {
    // First pass validates values
    for (auto & port : mControlPorts)

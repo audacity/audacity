@@ -260,7 +260,7 @@ bool EffectScienFilter::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectScienFilter::SetAutomationParameters(CommandParameters & parms)
+bool EffectScienFilter::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
    ReadAndVerifyEnum(Subtype, kSubTypeStrings, nSubTypes);

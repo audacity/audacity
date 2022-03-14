@@ -319,7 +319,7 @@ bool EffectToneGen::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
+bool EffectToneGen::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyEnum(Waveform,  kWaveStrings, nWaveforms);
    ReadAndVerifyEnum(Interp, kInterStrings, nInterpolations);

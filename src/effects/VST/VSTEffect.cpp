@@ -291,7 +291,7 @@ public:
    }
 
    bool GetAutomationParameters(CommandParameters &) override { return true; }
-   bool SetAutomationParameters(CommandParameters &) override { return true; }
+   bool SetAutomationParameters(const CommandParameters &) override { return true; }
 
    bool LoadUserPreset(const RegistryPath &) override { return true; }
    bool SaveUserPreset(const RegistryPath &) override { return true; }
@@ -1638,7 +1638,7 @@ bool VSTEffect::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool VSTEffect::SetAutomationParameters(CommandParameters & parms)
+bool VSTEffect::SetAutomationParameters(const CommandParameters & parms)
 {
    callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    for (int i = 0; i < mAEffect->numParams; i++)

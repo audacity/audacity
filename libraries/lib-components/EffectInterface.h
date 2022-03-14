@@ -259,7 +259,7 @@ public:
    //! Save current settings into parms
    virtual bool GetAutomationParameters(CommandParameters & parms) = 0;
    //! Change settings to those stored in parms
-   virtual bool SetAutomationParameters(CommandParameters & parms) = 0;
+   virtual bool SetAutomationParameters(const CommandParameters & parms) = 0;
 
    //! Change settings to a user-named preset
    virtual bool LoadUserPreset(const RegistryPath & name) = 0;

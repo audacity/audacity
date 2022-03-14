@@ -310,7 +310,7 @@ bool EffectReverb::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectReverb::SetAutomationParameters(CommandParameters & parms)
+bool EffectReverb::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyDouble(RoomSize);
    ReadAndVerifyDouble(PreDelay);

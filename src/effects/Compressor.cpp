@@ -152,7 +152,7 @@ bool EffectCompressor::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectCompressor::SetAutomationParameters(CommandParameters & parms)
+bool EffectCompressor::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyDouble(Threshold);
    ReadAndVerifyDouble(NoiseFloor);

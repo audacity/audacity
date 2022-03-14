@@ -177,7 +177,7 @@ bool EffectChangePitch::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectChangePitch::SetAutomationParameters(CommandParameters & parms)
+bool EffectChangePitch::SetAutomationParameters(const CommandParameters & parms)
 {
    // Vaughan, 2013-06: Long lost to history, I don't see why m_dPercentChange was chosen to be shuttled.
    // Only m_dSemitonesChange is used in Process().

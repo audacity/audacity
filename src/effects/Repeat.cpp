@@ -101,7 +101,7 @@ bool EffectRepeat::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectRepeat::SetAutomationParameters(CommandParameters & parms)
+bool EffectRepeat::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyInt(Count);
 

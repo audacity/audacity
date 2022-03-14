@@ -220,7 +220,7 @@ bool EffectPhaser::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectPhaser::SetAutomationParameters(CommandParameters & parms)
+bool EffectPhaser::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyInt(Stages);
    ReadAndVerifyInt(DryWet);

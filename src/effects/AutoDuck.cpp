@@ -155,7 +155,7 @@ bool EffectAutoDuck::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool EffectAutoDuck::SetAutomationParameters(CommandParameters & parms)
+bool EffectAutoDuck::SetAutomationParameters(const CommandParameters & parms)
 {
    ReadAndVerifyDouble(DuckAmountDb);
    ReadAndVerifyDouble(InnerFadeDownLen);
