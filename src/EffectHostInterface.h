@@ -38,7 +38,6 @@ public:
    virtual const EffectDefinitionInterface& GetDefinition() const = 0;
 
    virtual double GetDuration() = 0;
-   virtual NumericFormatSymbol GetDurationFormat() = 0;
    virtual void SetDuration(double seconds) = 0;
 };
 
@@ -126,7 +125,10 @@ public:
    ) = 0;
    virtual bool Startup(EffectUIClientInterface *client) = 0;
 
+   //! Update controls for the settings
    virtual bool TransferDataToWindow(const EffectSettings &settings) = 0;
+
+   //! Update the given settings from controls
    virtual bool TransferDataFromWindow(EffectSettings &settings) = 0;
 };
 

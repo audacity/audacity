@@ -340,11 +340,6 @@ bool EffectChangeTempo::TransferDataToWindow(const EffectSettings &)
 
    m_bLoopDetect = true;
 
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    // percent change controls
    Update_Slider_PercentChange();
    Update_Text_ToBPM();
@@ -356,16 +351,6 @@ bool EffectChangeTempo::TransferDataToWindow(const EffectSettings &)
    m_pTextCtrl_ToLength->SetName(
       wxString::Format( _("Length in seconds from %s, to"),
          m_pTextCtrl_FromLength->GetValue() ) );
-
-   return true;
-}
-
-bool EffectChangeTempo::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
 
    return true;
 }

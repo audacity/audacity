@@ -1752,11 +1752,6 @@ bool AudioUnitEffect::IsGraphicalUI()
 bool AudioUnitEffect::ValidateUI(EffectSettings &)
 {
 #if 0
-   if (!mParent->Validate())
-   {
-      return false;
-   }
-
    if (GetType() == EffectTypeGenerate)
    {
       mHost->SetDuration(mDuration->GetValue());

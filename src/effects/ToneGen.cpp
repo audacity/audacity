@@ -292,7 +292,7 @@ bool EffectToneGen::DefineParams( ShuttleParams & S ){
 
 
 //   double freqMax = (FindProject() ? FindProject()->GetRate() : 44100.0) / 2.0;
-//   mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);
+//   mFrequency[1] = std::clamp<double>(mFrequency[1], MIN_EndFreq, freqMax);
 
 
    return true;
@@ -352,7 +352,7 @@ bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
          ? ProjectRate::Get( *FindProject() ).GetRate()
          : 44100.0)
       / 2.0;
-   mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);
+   mFrequency[1] = std::clamp<double>(mFrequency[1], MIN_EndFreq, freqMax);
 
    return true;
 }
@@ -360,7 +360,7 @@ bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator>
-EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 {
    wxTextCtrl *t;
 
@@ -468,10 +468,11 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
       }
 
       S.AddPrompt(XXO("&Duration:"));
+      auto &extra = access.Get().extra;
       mToneDurationT = safenew
          NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,
-                         GetDurationFormat(),
+                         extra.GetDurationFormat(),
                          GetDuration(),
                          mProjectRate,
                          NumericTextCtrl::Options{}
@@ -487,23 +488,12 @@ EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 
 bool EffectToneGen::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mToneDurationT->SetValue(GetDuration());
-
    return true;
 }
 
 bool EffectToneGen::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    if (!mChirp)
    {
       mFrequency[1] = mFrequency[0];

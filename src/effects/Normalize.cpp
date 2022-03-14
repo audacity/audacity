@@ -140,7 +140,8 @@ bool EffectNormalize::Process(EffectSettings &)
    if( mGain )
    {
       // same value used for all tracks
-      ratio = DB_TO_LINEAR(TrapDouble(mPeakLevel, MIN_PeakLevel, MAX_PeakLevel));
+      ratio = DB_TO_LINEAR(std::clamp<double>(
+         mPeakLevel, MIN_PeakLevel, MAX_PeakLevel));
    }
    else {
       ratio = 1.0;
@@ -306,23 +307,7 @@ EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 
 bool EffectNormalize::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    UpdateUI();
-
-   return true;
-}
-
-bool EffectNormalize::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    return true;
 }
 

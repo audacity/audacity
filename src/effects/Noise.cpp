@@ -203,7 +203,7 @@ bool EffectNoise::SetAutomationParameters(CommandParameters & parms)
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator>
-EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 {
    wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
@@ -218,10 +218,11 @@ EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          .AddTextBox(XXO("&Amplitude (0-1):"), wxT(""), 12);
 
       S.AddPrompt(XXO("&Duration:"));
+      auto &extra = access.Get().extra;
       mNoiseDurationT = safenew
          NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,
-                         GetDurationFormat(),
+                         extra.GetDurationFormat(),
                          GetDuration(),
                          mProjectRate,
                          NumericTextCtrl::Options{}
@@ -236,11 +237,6 @@ EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 
 bool EffectNoise::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mNoiseDurationT->SetValue(GetDuration());
 
    return true;
@@ -248,12 +244,6 @@ bool EffectNoise::TransferDataToWindow(const EffectSettings &)
 
 bool EffectNoise::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    SetDuration(mNoiseDurationT->GetValue());
-
    return true;
 }

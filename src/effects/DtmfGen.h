@@ -54,11 +54,8 @@ public:
 
    // Effect implementation
 
-   bool Init() override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
    // EffectDtmf implementation
@@ -66,14 +63,6 @@ private:
    bool MakeDtmfTone(float *buffer, size_t len, float fs,
                      wxChar tone, sampleCount last,
                      sampleCount total, float amplitude);
-   void Recalculate();
-
-   void UpdateUI();
-
-   void OnSequence(wxCommandEvent & evt);
-   void OnAmplitude(wxCommandEvent & evt);
-   void OnDuration(wxCommandEvent & evt);
-   void OnDutyCycle(wxCommandEvent & evt);
 
 private:
    sampleCount numSamplesSequence;  // total number of samples to generate
@@ -85,22 +74,24 @@ private:
    bool isTone;                     // true if block is tone, otherwise silence
    int curSeqPos;                   // index into dtmf tone string
 
-   wxString dtmfSequence;             // dtmf tone string
-   int    dtmfNTones;               // total number of tones to generate
-   double dtmfTone;                 // duration of a single tone in ms
-   double dtmfSilence;              // duration of silence between tones in ms
-   double dtmfDutyCycle;            // ratio of dtmfTone/(dtmfTone+dtmfSilence)
-   double dtmfAmplitude;            // amplitude of dtmf tone sequence, restricted to (0-1)
+public:
+   struct Settings {
+      static constexpr auto DefaultSequence = "audacity";
+      static constexpr double DefaultDutyCycle = 55.0;
+      static constexpr double DefaultAmplitude = 0.8;
 
-   wxTextCtrl *mDtmfSequenceT;
-   wxTextCtrl *mDtmfAmplitudeT;
-   wxSlider   *mDtmfDutyCycleS;
-   NumericTextCtrl *mDtmfDurationT;
-   wxStaticText *mDtmfToneT;
-   wxStaticText *mDtmfSilenceT;
-   wxStaticText *mDtmfDutyT;
+      wxString dtmfSequence{DefaultSequence}; // dtmf tone string
+      int    dtmfNTones = dtmfSequence.length(); // total number of tones to generate
+      double dtmfTone{};               // duration of a single tone in ms
+      double dtmfSilence{};            // duration of silence between tones in ms
+      double dtmfDutyCycle{DefaultDutyCycle}; // ratio of dtmfTone/(dtmfTone+dtmfSilence)
+      double dtmfAmplitude{DefaultAmplitude}; // amplitude of dtmf tone sequence, restricted to (0-1)
 
-   DECLARE_EVENT_TABLE()
+      void Recalculate(Effect &effect);
+   };
+
+private:
+   Settings mSettings;
 };
 
 #endif

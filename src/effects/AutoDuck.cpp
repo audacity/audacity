@@ -481,23 +481,7 @@ bool EffectAutoDuck::TransferDataToWindow(const EffectSettings &)
 
 bool EffectAutoDuck::DoTransferDataToWindow()
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mPanel->Refresh(false);
-
-   return true;
-}
-
-bool EffectAutoDuck::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    return true;
 }
 
@@ -906,23 +890,28 @@ void EffectAutoDuckPanel::OnMotion(wxMouseEvent & evt)
          {
          case outerFadeDown:
             newValue = ((double)(FADE_DOWN_START - evt.GetX())) / FADE_SCALE;
-            mEffect->mOuterFadeDownLen = TrapDouble(newValue, MIN_OuterFadeDownLen, MAX_OuterFadeDownLen);
+            mEffect->mOuterFadeDownLen =
+               std::clamp<double>(newValue, MIN_OuterFadeDownLen, MAX_OuterFadeDownLen);
             break;
          case outerFadeUp:
             newValue = ((double)(evt.GetX() - FADE_UP_START)) / FADE_SCALE;
-            mEffect->mOuterFadeUpLen = TrapDouble(newValue, MIN_OuterFadeUpLen, MAX_OuterFadeUpLen);
+            mEffect->mOuterFadeUpLen =
+               std::clamp<double>(newValue, MIN_OuterFadeUpLen, MAX_OuterFadeUpLen);
             break;
          case innerFadeDown:
             newValue = ((double)(evt.GetX() - FADE_DOWN_START)) / FADE_SCALE;
-            mEffect->mInnerFadeDownLen = TrapDouble(newValue, MIN_InnerFadeDownLen, MAX_InnerFadeDownLen);
+            mEffect->mInnerFadeDownLen =
+               std::clamp<double>(newValue, MIN_InnerFadeDownLen, MAX_InnerFadeDownLen);
             break;
          case innerFadeUp:
             newValue = ((double)(FADE_UP_START - evt.GetX())) / FADE_SCALE;
-            mEffect->mInnerFadeUpLen = TrapDouble(newValue, MIN_InnerFadeUpLen, MAX_InnerFadeUpLen);
+            mEffect->mInnerFadeUpLen =
+               std::clamp<double>(newValue, MIN_InnerFadeUpLen, MAX_InnerFadeUpLen);
             break;
          case duckAmount:
             newValue = ((double)(DUCK_AMOUNT_START - evt.GetY())) / DUCK_AMOUNT_SCALE;
-            mEffect->mDuckAmountDb = TrapDouble(newValue, MIN_DuckAmountDb, MAX_DuckAmountDb);
+            mEffect->mDuckAmountDb =
+               std::clamp<double>(newValue, MIN_DuckAmountDb, MAX_DuckAmountDb);
             break;
          case none:
             wxASSERT(false); // should not happen

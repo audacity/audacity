@@ -590,7 +590,7 @@ bool Effect::IsGraphicalUI()
 
 bool Effect::ValidateUI(EffectSettings &)
 {
-   return mUIParent->Validate();
+   return true;
 }
 
 bool Effect::CloseUI()
@@ -749,11 +749,6 @@ double Effect::GetDuration()
    }
 
    return mDuration;
-}
-
-NumericFormatSymbol Effect::GetDurationFormat()
-{
-   return mDurationFormat;
 }
 
 NumericFormatSymbol Effect::GetSelectionFormat()
@@ -978,9 +973,10 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
       mT1 = mT0 + mDuration;
    }
 
-   mDurationFormat = isSelection
+   // This is happening inside EffectSettingsAccess::ModifySettings
+   settings.extra.SetDurationFormat( isSelection
       ? NumericConverter::TimeAndSampleFormat()
-      : NumericConverter::DefaultSelectionFormat();
+      : NumericConverter::DefaultSelectionFormat() );
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mF0 = selectedRegion.f0();
@@ -2118,9 +2114,9 @@ void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
 
       auto vr2 = valueRestorer( mIsPreview, true );
 
-      auto settings = access.Get();
-      success = Process(settings);
-      access.Set(std::move(settings));
+      access.ModifySettings([&](EffectSettings &settings){
+         success = Process(settings);
+      });
    }
 
    if (success)

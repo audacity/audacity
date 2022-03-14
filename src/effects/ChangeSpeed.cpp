@@ -381,11 +381,6 @@ bool EffectChangeSpeed::TransferDataToWindow(const EffectSettings &)
 {
    mbLoopDetect = true;
 
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    if (mFromVinyl == kVinyl_NA)
    {
       mFromVinyl = kVinyl_33AndAThird;
@@ -417,10 +412,6 @@ bool EffectChangeSpeed::TransferDataFromWindow(EffectSettings &)
 {
    // mUIParent->TransferDataFromWindow() loses some precision, so save and restore it.
    double exactPercent = m_PercentChange;
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
    m_PercentChange = exactPercent;
 
    SetConfig(GetDefinition(), PluginSettings::Private,
@@ -789,7 +780,7 @@ void EffectChangeSpeed::Update_TimeCtrl_ToLength()
    // Negative times do not make sense.
    // 359999 = 99h:59m:59s which is a little less disturbing than overflow characters
    // though it may still look a bit strange with some formats.
-   mToLength = TrapDouble(mToLength, 0.0, 359999.0);
+   mToLength = std::clamp<double>(mToLength, 0.0, 359999.0);
    mpToLengthCtrl->SetValue(mToLength);
 }
 

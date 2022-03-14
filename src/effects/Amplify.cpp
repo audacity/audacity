@@ -297,7 +297,7 @@ void EffectAmplify::ClampRatio()
 {
    // limit range of gain
    double dBInit = LINEAR_TO_DB(mRatio);
-   double dB = TrapDouble(dBInit, MIN_Amp, MAX_Amp);
+   double dB = std::clamp<double>(dBInit, MIN_Amp, MAX_Amp);
    if (dB != dBInit)
       mRatio = DB_TO_LINEAR(dB);
 
@@ -322,12 +322,8 @@ bool EffectAmplify::TransferDataToWindow(const EffectSettings &)
 
 bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   mRatio = DB_TO_LINEAR(TrapDouble(mAmp * SCL_Amp, MIN_Amp * SCL_Amp, MAX_Amp * SCL_Amp) / SCL_Amp);
+   mRatio = DB_TO_LINEAR(std::clamp<double>(
+      mAmp * SCL_Amp, MIN_Amp * SCL_Amp, MAX_Amp * SCL_Amp) / SCL_Amp);
 
    mCanClip = mClip->GetValue();
 
@@ -356,7 +352,8 @@ void EffectAmplify::OnAmpText(wxCommandEvent & WXUNUSED(evt))
       return;
    }
 
-   mRatio = DB_TO_LINEAR(TrapDouble(mAmp * SCL_Amp, MIN_Amp * SCL_Amp, MAX_Amp * SCL_Amp) / SCL_Amp);
+   mRatio = DB_TO_LINEAR(std::clamp<double>(
+      mAmp * SCL_Amp, MIN_Amp * SCL_Amp, MAX_Amp * SCL_Amp) / SCL_Amp);
 
    mAmpS->SetValue((int) (LINEAR_TO_DB(mRatio) * SCL_Amp + 0.5));
 
@@ -380,7 +377,7 @@ void EffectAmplify::OnPeakText(wxCommandEvent & WXUNUSED(evt))
       mRatio = DB_TO_LINEAR(mNewPeak) / mPeak;
 
    double ampInit = LINEAR_TO_DB(mRatio);
-   mAmp = TrapDouble(ampInit, MIN_Amp, MAX_Amp);
+   mAmp = std::clamp<double>(ampInit, MIN_Amp, MAX_Amp);
    if (mAmp != ampInit)
       mRatio = DB_TO_LINEAR(mAmp);
 
@@ -394,10 +391,10 @@ void EffectAmplify::OnPeakText(wxCommandEvent & WXUNUSED(evt))
 void EffectAmplify::OnAmpSlider(wxCommandEvent & evt)
 {
    double dB = evt.GetInt() / SCL_Amp;
-   mRatio = DB_TO_LINEAR(TrapDouble(dB, MIN_Amp, MAX_Amp));
+   mRatio = DB_TO_LINEAR(std::clamp<double>(dB, MIN_Amp, MAX_Amp));
 
    double dB2 = (evt.GetInt() - 1) / SCL_Amp;
-   double ratio2 = DB_TO_LINEAR(TrapDouble(dB2, MIN_Amp, MAX_Amp));
+   double ratio2 = DB_TO_LINEAR(std::clamp<double>(dB2, MIN_Amp, MAX_Amp));
 
    if (!mClip->GetValue() && mRatio * mPeak > 1.0 && ratio2 * mPeak < 1.0)
    {

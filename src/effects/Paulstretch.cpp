@@ -218,26 +218,6 @@ EffectPaulstretch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 };
 
-bool EffectPaulstretch::TransferDataToWindow(const EffectSettings &)
-{
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
-bool EffectPaulstretch::TransferDataFromWindow(EffectSettings &)
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
 // EffectPaulstretch implementation
 
 void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))

@@ -487,11 +487,6 @@ EffectDistortion::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 
 bool EffectDistortion::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mThresholdS->SetValue((int) (mThreshold * SCL_Threshold_dB + 0.5));
    mDCBlockCheckBox->SetValue(mParams.mDCBlock);
    mNoiseFloorS->SetValue((int) mParams.mNoiseFloor + 0.5);
@@ -508,13 +503,7 @@ bool EffectDistortion::TransferDataToWindow(const EffectSettings &)
 
 bool EffectDistortion::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
-
    return true;
 }
 

@@ -48,6 +48,7 @@
 
 #include "TypedAny.h"
 #include <memory>
+#include <wx/event.h>
 
 class ShuttleGui;
 
@@ -64,9 +65,27 @@ typedef enum EffectType : int
 
 using EffectFamilySymbol = ComponentInterfaceSymbol;
 
+//! Non-polymorphic package of settings values common to many effects
+class EffectSettingsExtra final {
+public:
+   const NumericFormatSymbol& GetDurationFormat() const
+      { return mDurationFormat; }
+   void SetDurationFormat(const NumericFormatSymbol &durationFormat)
+      { mDurationFormat = durationFormat; }
+private:
+   NumericFormatSymbol mDurationFormat{};
+};
+
 //! Externalized state of a plug-in
 struct EffectSettings : audacity::TypedAny<EffectSettings> {
    using TypedAny::TypedAny;
+   EffectSettingsExtra extra;
+
+   void swap(EffectSettings &other)
+   {
+      TypedAny::swap(other);
+      std::swap(extra, other.extra);
+   }
 };
 
 //! Interface for accessing an EffectSettings that may change asynchronously in
@@ -79,6 +98,19 @@ public:
    virtual ~EffectSettingsAccess();
    virtual const EffectSettings &Get() = 0;
    virtual void Set(EffectSettings &&settings) = 0;
+
+   //! Do a correct read-modify-write of settings
+   /*!
+    @param function takes EffectSettings & and its return is ignored.
+    If it throws an exception, then the settings will not be updated.
+    Thus, a strong exception safety guarantee.
+    */
+   template<typename Function>
+   void ModifySettings(Function &&function) {
+      auto settings = this->Get();
+      std::forward<Function>(function)(settings);
+      this->Set(std::move(settings));
+   }
 };
 
 //! Implementation of EffectSettings for cases where there is only one thread.
@@ -379,11 +411,20 @@ class COMPONENTS_API EffectUIValidator /* not final */
 {
 public:
    virtual ~EffectUIValidator();
+
    //! Get settings data from the panel; may make error dialogs and return false
    /*!
     @return true only if panel settings are acceptable
     */
-   virtual bool Validate() = 0;
+   virtual bool ValidateUI() = 0;
+
+   //! Update appearance of the panel for changes in settings
+   /*!
+    Default implementation does nothing, returns true
+
+    @return true if successful
+    */
+   virtual bool UpdateUI();
 };
 
 /*************************************************************************************//**
@@ -398,14 +439,26 @@ public:
  state only for the lifetime of a dialog, so the effect object need not hold it
 
 *******************************************************************************************/
-class COMPONENTS_API DefaultEffectUIValidator final : public EffectUIValidator
+class COMPONENTS_API DefaultEffectUIValidator
+   : public EffectUIValidator
+   // Inherit wxEvtHandler so that Un-Bind()-ing is automatic in the destructor
+   , wxEvtHandler
 {
 public:
    DefaultEffectUIValidator(
       EffectUIClientInterface &effect, EffectSettingsAccess &access);
    ~DefaultEffectUIValidator() override;
-   bool Validate() override;
-private:
+   //! Calls mEffect.ValidateUI()
+   bool ValidateUI() override;
+protected:
+   // Convenience function template for binding event handler functions
+   template<typename EventTag, typename Class, typename Event>
+   void BindTo(
+      wxEvtHandler &src, const EventTag& eventType, void (Class::*pmf)(Event &))
+   {
+      src.Bind(eventType, pmf, static_cast<Class *>(this));
+   }
+
    EffectUIClientInterface &mEffect;
    EffectSettingsAccess &mAccess;
 };

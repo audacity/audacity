@@ -344,11 +344,6 @@ EffectPhaser::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 
 bool EffectPhaser::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mStagesS->SetValue((int) (mStages * SCL_Stages));
    mDryWetS->SetValue((int) (mDryWet * SCL_DryWet));
    mFreqS->SetValue((int) (mFreq * SCL_Freq));
@@ -362,11 +357,6 @@ bool EffectPhaser::TransferDataToWindow(const EffectSettings &)
 
 bool EffectPhaser::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    if (mStages & 1)    // must be even
    {
       mStages &= ~1;

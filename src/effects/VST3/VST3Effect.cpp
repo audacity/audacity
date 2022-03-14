@@ -878,10 +878,11 @@ VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &access)
             VST3Utils::BuildPlainUI(controlsRoot, mEditController, mComponentHandler);
          vSizer->Add(controlsRoot);
 
+         auto &extra = access.Get().extra;
          mDuration = safenew NumericTextCtrl(
                parent, wxID_ANY,
                NumericConverter::TIME,
-               mEffectHost->GetDurationFormat(),
+               extra.GetDurationFormat(),
                mEffectHost->GetDuration(),
                mSetup.sampleRate,
                NumericTextCtrl::Options{}
