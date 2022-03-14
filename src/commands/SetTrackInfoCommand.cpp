@@ -66,8 +66,8 @@ bool SetTrackBase::ApplyInner( const CommandContext &context, Track *t  )
       return true;
 };
 
-
-bool SetTrackBase::VisitSettings( SettingsVisitor & S)
+template<bool Const>
+bool SetTrackBase::VisitSettings( SettingsVisitorBase<Const> & S)
 {
    static_cast<void>(S);
 #ifdef USE_OWN_TRACK_SELECTION
@@ -76,6 +76,12 @@ bool SetTrackBase::VisitSettings( SettingsVisitor & S)
 #endif
    return true;
 }
+
+bool SetTrackBase::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool SetTrackBase::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 void SetTrackBase::PopulateOrExchange(ShuttleGui & S)
 {
@@ -127,7 +133,8 @@ const ComponentInterfaceSymbol SetTrackStatusCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< SetTrackStatusCommand > reg; }
 
-bool SetTrackStatusCommand::VisitSettings( SettingsVisitor & S ){
+template<bool Const>
+bool SetTrackStatusCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    SetTrackBase::VisitSettings( S );
    S.OptionalN( bHasTrackName      ).Define(     mTrackName,      wxT("Name"),       _("Unnamed") );
    // There is also a select command.  This is an alternative.
@@ -135,6 +142,12 @@ bool SetTrackStatusCommand::VisitSettings( SettingsVisitor & S ){
    S.OptionalN( bHasFocused        ).Define(     bFocused,        wxT("Focused"),    false );
    return true;
 };
+
+bool SetTrackStatusCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool SetTrackStatusCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 void SetTrackStatusCommand::PopulateOrExchange(ShuttleGui & S)
 {
@@ -189,7 +202,8 @@ const ComponentInterfaceSymbol SetTrackAudioCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< SetTrackAudioCommand > reg2; }
 
-bool SetTrackAudioCommand::VisitSettings( SettingsVisitor & S ){ 
+template<bool Const>
+bool SetTrackAudioCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    SetTrackBase::VisitSettings( S );
    S.OptionalN( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
    S.OptionalN( bHasSolo           ).Define(     bSolo,           wxT("Solo"),       false );
@@ -198,6 +212,12 @@ bool SetTrackAudioCommand::VisitSettings( SettingsVisitor & S ){
    S.OptionalN( bHasPan            ).Define(     mPan,            wxT("Pan"),        0.0, -100.0, 100.0);
    return true;
 };
+
+bool SetTrackAudioCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool SetTrackAudioCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 void SetTrackAudioCommand::PopulateOrExchange(ShuttleGui & S)
 {
@@ -303,7 +323,8 @@ static EnumValueSymbols DiscoverSubViewTypes()
    return result;
 }
 
-bool SetTrackVisualsCommand::VisitSettings( SettingsVisitor & S ){ 
+template<bool Const>
+bool SetTrackVisualsCommand::VisitSettings( SettingsVisitorBase<Const> & S ){ 
    SetTrackBase::VisitSettings( S );
    S.OptionalN( bHasHeight         ).Define(     mHeight,         wxT("Height"),     120, 44, 2000 );
 
@@ -326,6 +347,12 @@ bool SetTrackVisualsCommand::VisitSettings( SettingsVisitor & S ){
 
    return true;
 };
+
+bool SetTrackVisualsCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool SetTrackVisualsCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
 {
@@ -463,4 +490,9 @@ SetTrackCommand::SetTrackCommand()
    mSetAudio.mbPromptForTracks = false;
    mSetVisuals.mbPromptForTracks = false;
 }
+
+bool SetTrackCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+bool SetTrackCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 

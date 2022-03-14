@@ -102,13 +102,18 @@ static const EnumValueSymbol kFormats[nFormats] =
    { XO("Brief") }
 };
 
-
-
-bool GetInfoCommand::VisitSettings( SettingsVisitor & S ){
+template<bool Const>
+bool GetInfoCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    S.DefineEnum( mInfoType, wxT("Type"), 0, kTypes, nTypes );
    S.DefineEnum( mFormat, wxT("Format"), 0, kFormats, nFormats );
    return true;
 }
+
+bool GetInfoCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool GetInfoCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 void GetInfoCommand::PopulateOrExchange(ShuttleGui & S)
 {

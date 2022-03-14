@@ -120,6 +120,9 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    //! Visit settings, if defined.  false means no defined settings.
    //! Default implementation returns false
    virtual bool VisitSettings( SettingsVisitor & );
+   //! Visit settings, if defined.  false means no defined settings.
+   //! Default implementation returns false
+   virtual bool VisitSettings( ConstSettingsVisitor & );
 
 protected:
 

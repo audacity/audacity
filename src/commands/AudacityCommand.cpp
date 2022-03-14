@@ -224,6 +224,11 @@ bool AudacityCommand::VisitSettings( SettingsVisitor & )
    return false;
 }
 
+bool AudacityCommand::VisitSettings( ConstSettingsVisitor & )
+{
+   return false;
+}
+
 int AudacityCommand::MessageBox(
    const TranslatableString& message, long style,
    const TranslatableString &titleStr)
