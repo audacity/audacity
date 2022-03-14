@@ -267,6 +267,40 @@ add_conan_lib(
       portmidi:shared=True
 )
 
+if(${_OPT}enable_experimental_qt_support)
+   add_conan_lib(
+      libjpeg-turbo
+      libjpeg-turbo/2.1.2
+      ALLOW_FIND_PACKAGE
+      CONAN_OPTIONS
+         libjpeg-turbo:SIMD=False
+   )
+
+   add_conan_lib(
+      Qt5
+      qt/5.15.2@audacity/testing
+      REQUIRED
+      FIND_PACKAGE_OPTIONS
+         COMPONENTS Widgets Quick Core Gui Qml
+      HAS_ONLY_DEBUG_RELEASE
+      CONAN_OPTIONS
+         qt:shared=True
+         qt:with_harfbuzz=True
+         qt:with_libjpeg=libjpeg-turbo
+         qt:openssl=False
+         qt:with_pq=False
+         qt:with_mysql=False
+         qt:with_odbc=False
+         qt:with_sqlite3=False
+         qt:with_openal=False
+         qt:multiconfiguration=False
+         qt:qtdeclarative=True
+         qt:qtquickcontrols2=True
+         qt:qtquickcontrols=True
+         harfbuzz:with_glib=False
+   )
+endif()
+
 set_conan_vars_to_parent()
 
 # Required libraries

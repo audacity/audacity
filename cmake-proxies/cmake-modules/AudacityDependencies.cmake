@@ -63,7 +63,7 @@ if( ${_OPT}conan_enabled )
     set(ENV{CONAN_REVISIONS_ENABLED} 1)
 endif()
 
-set( CONAN_BUILD_REQUIRES )
+set( CONAN_BUILD_REQUIRES zlib/1.2.11 )
 set( CONAN_REQUIRES )
 set( CONAN_PACKAGE_OPTIONS )
 set( CONAN_ONLY_DEBUG_RELEASE )
@@ -242,9 +242,11 @@ function (add_conan_lib package conan_package_name )
     list( APPEND CONAN_PACKAGE_OPTIONS ${conan_package_options} )
     list( APPEND CONAN_RESOLVE_LIST ${package} )
 
+    string( REGEX MATCH "[a-zA-Z0-9-_]+" conan_settings_name ${conan_package_name} )
+
     if ( only_debug_release )
         message( STATUS "${package} only has Debug and Release versions" )
-        list( APPEND CONAN_ONLY_DEBUG_RELEASE ${package})
+        list( APPEND CONAN_ONLY_DEBUG_RELEASE ${conan_settings_name})
     endif()
 
     set( CONAN_REQUIRES           ${CONAN_REQUIRES}           PARENT_SCOPE )
@@ -264,17 +266,27 @@ macro( set_conan_vars_to_parent )
 endmacro()
 
 function ( _conan_install build_type )
-    conan_cmake_configure (
-        REQUIRES ${CONAN_REQUIRES}
-        GENERATORS cmake_find_package_multi
-        BUILD_REQUIRES ${CONAN_BUILD_REQUIRES}
-        ${CONAN_CONFIG_OPTIONS}
-        IMPORTS "bin, *.dll -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
-        IMPORTS "lib, *.dll -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
-        IMPORTS "lib, *.dylib -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
-        IMPORTS "lib, *.so* -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
-        OPTIONS ${CONAN_PACKAGE_OPTIONS}
-    )
+   if(WIN32)
+      set(QT_PLUGINS_DIR "./bin/qt/${build_type}")
+   elseif(APPLE)
+      set(QT_PLUGINS_DIR "./bin/qt/${build_type}/QAudacity.app/Contents/PlugIns")
+   else()
+      set(QT_PLUGINS_DIR "./bin/qt/${build_type}/lib/qaudacity/qt")
+   endif()
+
+   conan_cmake_configure (
+      REQUIRES ${CONAN_REQUIRES}
+      GENERATORS cmake_find_package_multi
+      BUILD_REQUIRES ${CONAN_BUILD_REQUIRES}
+      ${CONAN_CONFIG_OPTIONS}
+      IMPORTS "bin/archdatadir/plugins, * -> ${QT_PLUGINS_DIR}"
+      IMPORTS "bin/archdatadir/qml, * -> ${QT_PLUGINS_DIR}/qml"
+      IMPORTS "bin, *.dll -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
+      IMPORTS "lib, *.dll -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
+      IMPORTS "lib, *.dylib -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
+      IMPORTS "lib, *.so* -> ./${_SHARED_PROXY_BASE}/${build_type} @ keep_path=False"
+      OPTIONS ${CONAN_PACKAGE_OPTIONS}
+   )
 
     message(STATUS "Configuring packages for ${build_type}")
 

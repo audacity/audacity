@@ -193,6 +193,10 @@ cmd_option( ${_OPT}has_networking
    "Build networking features into Audacity"
    Off)
 
+cmd_option( ${_OPT}enable_experimental_qt_support
+   "Enable experimental Qt support"
+   Off)
+
 include( CMakeDependentOption )
 
 cmake_dependent_option(
@@ -615,6 +619,11 @@ add_subdirectory( "images" )
 add_subdirectory( "libraries" )
 add_subdirectory( "locale" )
 add_subdirectory( "src" )
+
+if( ${_OPT}enable_experimental_qt_support )
+   add_subdirectory( "src/qt" )
+endif()
+
 add_subdirectory( "modules" )
 add_subdirectory( "nyquist" )
 add_subdirectory( "plug-ins" )
