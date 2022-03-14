@@ -49,7 +49,7 @@ struct LogWindowUpdater : public PrefsListener
    void UpdatePrefs() override;
 };
 // Unique PrefsListener can't be statically constructed before the application
-// object initializes, so use Optional
+// object initializes, so use optional
 std::optional<LogWindowUpdater> pUpdater;
 
 void OnCloseWindow(wxCloseEvent & e);
@@ -173,6 +173,11 @@ void LogWindow::Show(bool show)
       // Initial flush populates sText
       pLogger->Flush();
    }
+}
+
+void LogWindow::Destroy()
+{
+   sFrame.reset();
 }
 
 namespace {

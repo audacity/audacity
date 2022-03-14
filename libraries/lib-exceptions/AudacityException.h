@@ -120,24 +120,24 @@ private:
 
 
 //! A default template parameter for @ref GuardedCall
-struct DefaultDelayedHandlerAction
+inline void DefaultDelayedHandlerAction(AudacityException *pException)
 {
-   void operator () (AudacityException *pException) const
-   {
-      if ( pException )
-         pException->DelayedHandlerAction();
-   }
-};
+   if ( pException )
+      pException->DelayedHandlerAction();
+}
 
 //! A default template parameter for @ref GuardedCall<R>
 /*! @tparam R return type from GuardedCall (or convertible to it) */
 template <typename R> struct SimpleGuard
 {
    explicit SimpleGuard(
-      R value //!< The value to return from GurdedCall when an exception is handled
+      const R &value //!< The value to return from GuardedCall when an exception is handled
    )
-      : m_value{ value } {}
-   R operator () ( AudacityException * ) const { return m_value; }
+      noexcept(noexcept( R{ std::declval<const R&>() } ))
+         : m_value{ value } {}
+   R operator () ( AudacityException * ) const
+      noexcept(noexcept( R{ std::declval<R>() } ))
+         { return m_value; }
    const R m_value;
 };
 
@@ -146,10 +146,10 @@ template<> struct SimpleGuard<bool>
 {
    explicit SimpleGuard(
       bool value //!< The value to return from @ref GaurdedCall when an exception is handled
-   )
+   ) noexcept
       : m_value{ value } {}
-   bool operator () ( AudacityException * ) const { return m_value; }
-   static SimpleGuard Default()
+   bool operator () ( AudacityException * ) const noexcept { return m_value; }
+   static SimpleGuard Default() noexcept
       { return SimpleGuard{ false }; }
    const bool m_value;
 };
@@ -157,18 +157,19 @@ template<> struct SimpleGuard<bool>
 //! Specialization of SimpleGuard, also defining a default value
 template<> struct SimpleGuard<void>
 {
-   SimpleGuard() {}
-   void operator () ( AudacityException * ) const {}
-   static SimpleGuard Default() { return {}; }
+   SimpleGuard() noexcept {}
+   void operator () ( AudacityException * ) const noexcept {}
+   static SimpleGuard Default() noexcept { return {}; }
 };
 
 //! Convert a value to a handler function returning that value, suitable for @ref GuardedCall<R>
 template < typename R >
 SimpleGuard< R > MakeSimpleGuard( R value )
-{ return SimpleGuard< R >{ value }; }
+   noexcept(noexcept( SimpleGuard< R >{ value } ))
+      { return SimpleGuard< R >{ value }; }
 
 //! Convert a value to a no-op handler function, suitable for @ref GuardedCall<void>
-inline SimpleGuard< void > MakeSimpleGuard() { return {}; }
+inline SimpleGuard< void > MakeSimpleGuard() noexcept { return {}; }
 
 /*!
   Executes a given function (typically a lamba), in any thread.
@@ -189,28 +190,39 @@ inline SimpleGuard< void > MakeSimpleGuard() { return {}; }
   return value is converted to @b R
   @tparam F3 deduced type of delayed handler function, if a nondefault argument is given;
   takes pointer to AudacityException, return value is unused
+
+  @throws nothing, when handler throws nothing and delayedHandler is defaulted
  */
 template <
    typename R = void,
 
    typename F1, // function object with signature R()
 
-   typename F2 = SimpleGuard< R > // function object
+   typename F2 = SimpleGuard< R >, // function object
       // with signature R( AudacityException * )
+
+   typename F3 = void (*)(AudacityException *pException)
 >
 //! Execute some code on any thread; catch any AudacityException; enqueue error report on the main thread
 R GuardedCall(
    const F1 &body, //!< typically a lambda
    const F2 &handler = F2::Default(), //!< default just returns false or void; see also @ref MakeSimpleGuard
-   std::function<void(AudacityException*)> delayedHandler
-      = DefaultDelayedHandlerAction{} /*!<called later in the main thread,
-                                       passing it a stored exception; usually defaulted */
+   F3 delayedHandler = DefaultDelayedHandlerAction /*!< called later in the
+      main thread, passing it a stored exception; usually defaulted */
 )
+noexcept(
+   noexcept( handler( std::declval<AudacityException*>() ) ) &&
+   noexcept( handler( nullptr ) ) &&
+   noexcept(
+      std::function<void(AudacityException*)>{std::move(delayedHandler)} ) )
 {
    try { return body(); }
    catch ( AudacityException &e ) {
 
-      auto end = finally([&]{
+      auto end = finally( [&]()
+      noexcept(noexcept(
+         std::function<void(AudacityException*)>{
+            std::move(delayedHandler)} )) {
          // At this point, e is the "current" exception, but not "uncaught"
          // unless it was rethrown by handler.  handler might also throw some
          // other exception object.

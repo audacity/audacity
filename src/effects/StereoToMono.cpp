@@ -19,7 +19,7 @@
 
 #include <wx/intl.h>
 
-#include "../Mix.h"
+#include "Mix.h"
 #include "Project.h"
 #include "../WaveTrack.h"
 #include "../widgets/ProgressDialog.h"
@@ -39,44 +39,44 @@ EffectStereoToMono::~EffectStereoToMono()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectStereoToMono::GetSymbol()
+ComponentInterfaceSymbol EffectStereoToMono::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectStereoToMono::GetDescription()
+TranslatableString EffectStereoToMono::GetDescription() const
 {
    return XO("Converts stereo tracks to mono");
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectStereoToMono::GetType()
+EffectType EffectStereoToMono::GetType() const
 {
    // Really EffectTypeProcess, but this prevents it from showing in the Effect Menu
    return EffectTypeHidden;
 }
 
-bool EffectStereoToMono::IsInteractive()
+bool EffectStereoToMono::IsInteractive() const
 {
    return false;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectStereoToMono::GetAudioInCount()
+unsigned EffectStereoToMono::GetAudioInCount() const
 {
    return 2;
 }
 
-unsigned EffectStereoToMono::GetAudioOutCount()
+unsigned EffectStereoToMono::GetAudioOutCount() const
 {
    return 1;
 }
 
 // Effect implementation
 
-bool EffectStereoToMono::Process()
+bool EffectStereoToMono::Process(EffectSettings &)
 {
    // Do not use mWaveTracks here.  We will possibly DELETE tracks,
    // so we must use the "real" tracklist.
@@ -174,9 +174,9 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    auto start = wxMin(left->GetStartTime(), right->GetStartTime());
    auto end = wxMax(left->GetEndTime(), right->GetEndTime());
 
-   WaveTrackConstArray tracks;
-   tracks.push_back(left->SharedPointer< const WaveTrack >());
-   tracks.push_back(right->SharedPointer< const WaveTrack >());
+   SampleTrackConstArray tracks;
+   tracks.push_back(left->SharedPointer< const SampleTrack >());
+   tracks.push_back(right->SharedPointer< const SampleTrack >());
 
    Mixer mixer(tracks,
                true,                // Throw to abort mix-and-render if read fails:
@@ -219,7 +219,7 @@ bool EffectStereoToMono::ProcessOne(sampleCount & curTime, sampleCount totalTime
    return bResult;
 }
 
-bool EffectStereoToMono::IsHiddenFromMenus()
+bool EffectStereoToMono::IsHiddenFromMenus() const
 {
    return true;
 }

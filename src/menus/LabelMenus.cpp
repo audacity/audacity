@@ -8,7 +8,8 @@
 #include "../ProjectAudioIO.h"
 #include "../ProjectHistory.h"
 #include "../ProjectSettings.h"
-#include "../SelectFile.h"
+#include "../ProjectWindow.h"
+#include "../SelectUtilities.h"
 #include "../SyncLock.h"
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
@@ -17,6 +18,9 @@
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
+
+using Region = WaveTrack::Region;
+using Regions = WaveTrack::Regions;
 
 // private helper classes and functions
 namespace {
@@ -657,6 +661,7 @@ void OnDisjoinLabels(const CommandContext &context)
       track->TypeSwitch(
          [&](WaveTrack *t)
          {
+            wxBusyCursor busy;
             t->Disjoin(t0, t1);
          }
       );
@@ -670,6 +675,25 @@ void OnDisjoinLabels(const CommandContext &context)
       XO( "Detached labeled audio regions" ),
       /* i18n-hint: (verb)*/
       XO( "Detach Labeled Audio" ) );
+}
+
+void OnNewLabelTrack(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &tracks = TrackList::Get( project );
+   auto &window = ProjectWindow::Get( project );
+
+   auto t = tracks.Add( std::make_shared<LabelTrack>() );
+
+   SelectUtilities::SelectNone( project );
+
+   t->SetSelected(true);
+
+   ProjectHistory::Get( project )
+      .PushState(XO("Created new label track"), XO("New Track"));
+
+   TrackFocus::Get(project).Set(t);
+   t->EnsureVisible();
 }
 
 }; // struct Handler
@@ -795,6 +819,12 @@ AttachedItem sAttachment1{
    Shared( LabelEditMenus() )
 };
 
-}
+AttachedItem sAttachment2{ wxT("Tracks/Add/Add"),
+   ( FinderScope{ findCommandHandler },
+   Command( wxT("NewLabelTrack"), XXO("&Label Track"),
+      FN(OnNewLabelTrack), AudioIONotBusyFlag() )
+   )
+};
 
+}
 #undef FN

@@ -88,42 +88,43 @@ EffectAmplify::~EffectAmplify()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectAmplify::GetSymbol()
+ComponentInterfaceSymbol EffectAmplify::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectAmplify::GetDescription()
+TranslatableString EffectAmplify::GetDescription() const
 {
    // Note: This is useful only after ratio has been set.
    return XO("Increases or decreases the volume of the audio you have selected");
 }
 
-ManualPageID EffectAmplify::ManualPage()
+ManualPageID EffectAmplify::ManualPage() const
 {
    return L"Amplify";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectAmplify::GetType()
+EffectType EffectAmplify::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectAmplify::GetAudioInCount()
+unsigned EffectAmplify::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectAmplify::GetAudioOutCount()
+unsigned EffectAmplify::GetAudioOutCount() const
 {
    return 1;
 }
 
-size_t EffectAmplify::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectAmplify::ProcessBlock(EffectSettings &,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (decltype(blockLen) i = 0; i < blockLen; i++)
    {
@@ -179,7 +180,8 @@ bool EffectAmplify::LoadFactoryDefaults()
    }
    mCanClip = false;
 
-   return TransferDataToWindow();
+   ClampRatio();
+   return true;
 }
 
 // Effect implementation
@@ -203,15 +205,16 @@ bool EffectAmplify::Init()
    return true;
 }
 
-void EffectAmplify::Preview(bool dryOnly)
+void EffectAmplify::Preview(EffectSettingsAccess &access, bool dryOnly)
 {
    auto cleanup1 = valueRestorer( mRatio );
    auto cleanup2 = valueRestorer( mPeak );
 
-   Effect::Preview(dryOnly);
+   Effect::Preview(access, dryOnly);
 }
 
-void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectAmplify::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    enum{ precision = 3 }; // allow (a generous) 3 decimal  places for Amplification (dB)
 
@@ -287,23 +290,27 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndVerticalLay();
 
-   return;
+   return nullptr;
 }
 
-bool EffectAmplify::TransferDataToWindow()
+void EffectAmplify::ClampRatio()
 {
    // limit range of gain
    double dBInit = LINEAR_TO_DB(mRatio);
-   double dB = TrapDouble(dBInit, MIN_Amp, MAX_Amp);
+   double dB = std::clamp<double>(dBInit, MIN_Amp, MAX_Amp);
    if (dB != dBInit)
       mRatio = DB_TO_LINEAR(dB);
 
    mAmp = LINEAR_TO_DB(mRatio);
+   mNewPeak = LINEAR_TO_DB(mRatio * mPeak);
+}
+
+bool EffectAmplify::TransferDataToWindow(const EffectSettings &)
+{
    mAmpT->GetValidator()->TransferToWindow();
 
    mAmpS->SetValue((int) (mAmp * SCL_Amp + 0.5f));
 
-   mNewPeak = LINEAR_TO_DB(mRatio * mPeak);
    mNewPeakT->GetValidator()->TransferToWindow();
 
    mClip->SetValue(mCanClip);
@@ -313,14 +320,10 @@ bool EffectAmplify::TransferDataToWindow()
    return true;
 }
 
-bool EffectAmplify::TransferDataFromWindow()
+bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   mRatio = DB_TO_LINEAR(TrapDouble(mAmp * SCL_Amp, MIN_Amp * SCL_Amp, MAX_Amp * SCL_Amp) / SCL_Amp);
+   mRatio = DB_TO_LINEAR(std::clamp<double>(
+      mAmp * SCL_Amp, MIN_Amp * SCL_Amp, MAX_Amp * SCL_Amp) / SCL_Amp);
 
    mCanClip = mClip->GetValue();
 
@@ -328,6 +331,8 @@ bool EffectAmplify::TransferDataFromWindow()
    {
       mRatio = 1.0 / mPeak;
    }
+
+   ClampRatio();
 
    return true;
 }
@@ -347,7 +352,8 @@ void EffectAmplify::OnAmpText(wxCommandEvent & WXUNUSED(evt))
       return;
    }
 
-   mRatio = DB_TO_LINEAR(TrapDouble(mAmp * SCL_Amp, MIN_Amp * SCL_Amp, MAX_Amp * SCL_Amp) / SCL_Amp);
+   mRatio = DB_TO_LINEAR(std::clamp<double>(
+      mAmp * SCL_Amp, MIN_Amp * SCL_Amp, MAX_Amp * SCL_Amp) / SCL_Amp);
 
    mAmpS->SetValue((int) (LINEAR_TO_DB(mRatio) * SCL_Amp + 0.5));
 
@@ -371,7 +377,7 @@ void EffectAmplify::OnPeakText(wxCommandEvent & WXUNUSED(evt))
       mRatio = DB_TO_LINEAR(mNewPeak) / mPeak;
 
    double ampInit = LINEAR_TO_DB(mRatio);
-   mAmp = TrapDouble(ampInit, MIN_Amp, MAX_Amp);
+   mAmp = std::clamp<double>(ampInit, MIN_Amp, MAX_Amp);
    if (mAmp != ampInit)
       mRatio = DB_TO_LINEAR(mAmp);
 
@@ -385,10 +391,10 @@ void EffectAmplify::OnPeakText(wxCommandEvent & WXUNUSED(evt))
 void EffectAmplify::OnAmpSlider(wxCommandEvent & evt)
 {
    double dB = evt.GetInt() / SCL_Amp;
-   mRatio = DB_TO_LINEAR(TrapDouble(dB, MIN_Amp, MAX_Amp));
+   mRatio = DB_TO_LINEAR(std::clamp<double>(dB, MIN_Amp, MAX_Amp));
 
    double dB2 = (evt.GetInt() - 1) / SCL_Amp;
-   double ratio2 = DB_TO_LINEAR(TrapDouble(dB2, MIN_Amp, MAX_Amp));
+   double ratio2 = DB_TO_LINEAR(std::clamp<double>(dB2, MIN_Amp, MAX_Amp));
 
    if (!mClip->GetValue() && mRatio * mPeak > 1.0 && ratio2 * mPeak < 1.0)
    {

@@ -13,6 +13,7 @@
 #include <wx/string.h>
 #include <wx/dynlib.h>
 #include <wx/log.h>
+#include <wx/utils.h>
 
 #if defined(__WXMSW__)
 #  include <wx/buffer.h>
@@ -82,13 +83,13 @@ struct EnvSetter final
    static const wxString VariableName;
    static const wxString Separator;
 
-   EnvSetter()
+   explicit EnvSetter(bool fromUserPathOnly)
    {
       ValueExisted = wxGetEnv(VariableName, &OldValue);
 
       wxString value;
 
-      for (const wxString& path : FFmpegFunctions::GetSearchPaths())
+      for (const wxString& path : FFmpegFunctions::GetSearchPaths(fromUserPathOnly))
       {
          if (!value.empty())
             value += Separator;
@@ -148,7 +149,7 @@ struct FFmpegFunctions::Private final
    AVCodecFactories  CodecFactories;
    AVUtilFactories   UtilFactories;
 
-   std::shared_ptr<wxDynamicLibrary> LibraryWithSymbol(const char* symbol) const
+   std::shared_ptr<wxDynamicLibrary> LibraryWithSymbol(const char* symbol, bool fromUserPathOnly) const
    {
       if (AVFormatLibrary->HasSymbol(symbol))
          return AVFormatLibrary;
@@ -163,21 +164,21 @@ struct FFmpegFunctions::Private final
       if (path.empty())
          return nullptr;
 
-      return LoadLibrary(wxFileNameFromPath(path));
+      return LoadLibrary(wxFileNameFromPath(path), fromUserPathOnly);
    }
 
-   bool Load(FFmpegFunctions& functions, const wxString& path)
+   bool Load(FFmpegFunctions& functions, const wxString& path, bool fromUserPathOnly)
    {
       // We start by loading AVFormat
-      AVFormatLibrary = LoadLibrary(path);
+      AVFormatLibrary = LoadLibrary(path, fromUserPathOnly);
 
       if (AVFormatLibrary == nullptr)
          return false;
 
-      if ((AVCodecLibrary = LibraryWithSymbol("avcodec_version")) == nullptr)
+      if ((AVCodecLibrary = LibraryWithSymbol("avcodec_version", fromUserPathOnly)) == nullptr)
          return false;
 
-      if ((AVUtilLibrary = LibraryWithSymbol("avutil_version")) == nullptr)
+      if ((AVUtilLibrary = LibraryWithSymbol("avutil_version", fromUserPathOnly)) == nullptr)
          return false;
 
       if (
@@ -218,12 +219,12 @@ struct FFmpegFunctions::Private final
       return true;
    }
 
-   std::shared_ptr<wxDynamicLibrary> LoadLibrary(const wxString& libraryName) const
+   std::shared_ptr<wxDynamicLibrary> LoadLibrary(const wxString& libraryName, bool fromUserPathOnly) const
    {
 #if defined(__WXMAC__)
       // On macOS dyld reads environment only when application starts.
       // Let's emulate the process manually
-      for(const wxString& path : FFmpegFunctions::GetSearchPaths())
+      for (const wxString& path : FFmpegFunctions::GetSearchPaths(fromUserPathOnly))
       {
          const wxString fullName = wxFileName(path, libraryName).GetFullPath();
 
@@ -259,7 +260,7 @@ FFmpegFunctions::~FFmpegFunctions()
 {
 }
 
-std::shared_ptr<FFmpegFunctions> FFmpegFunctions::Load()
+std::shared_ptr<FFmpegFunctions> FFmpegFunctions::Load(bool fromUserPathOnly)
 {
    static std::weak_ptr<FFmpegFunctions> weakFunctions;
 
@@ -275,14 +276,14 @@ std::shared_ptr<FFmpegFunctions> FFmpegFunctions::Load()
       FFmpegAPIResolver::Get().GetSuportedAVFormatVersions();
 
 #if !defined(__WXMAC__)
-   EnvSetter envSetter;
+   EnvSetter envSetter(fromUserPathOnly);
 #endif
 
    for (int version : supportedVersions)
    {
       for (const wxString& path : BuildAVFormatPaths(version))
       {
-         if (ffmpeg->mPrivate->Load(*ffmpeg, path))
+         if (ffmpeg->mPrivate->Load(*ffmpeg, path, fromUserPathOnly))
          {
             weakFunctions = ffmpeg;
             return ffmpeg;
@@ -295,14 +296,25 @@ std::shared_ptr<FFmpegFunctions> FFmpegFunctions::Load()
 
 StringSetting AVFormatPath { L"/FFmpeg/FFmpegLibPath", L"" };
 
-std::vector<wxString> FFmpegFunctions::GetSearchPaths()
+std::vector<wxString> FFmpegFunctions::GetSearchPaths(bool fromUserPathOnly)
 {
    std::vector<wxString> paths;
 
    const wxString userAVFormatFullPath = AVFormatPath.Read();
 
    if (!userAVFormatFullPath.empty())
-      paths.emplace_back(wxPathOnly(userAVFormatFullPath));
+   {
+      // For some directories, wxPathOnly will fail.
+      // For example, if path is `c:\ffmpeg-4.4`
+      // wxPathOnly will return `c:\`
+      if (wxDirExists(userAVFormatFullPath))
+         paths.emplace_back(userAVFormatFullPath);
+      else
+         paths.emplace_back(wxPathOnly(userAVFormatFullPath));
+   }
+
+   if (fromUserPathOnly)
+      return paths;
 
 #if defined(__WXMSW__)
    wxRegKey reg(wxT("HKEY_LOCAL_MACHINE\\Software\\FFmpeg for Audacity"));

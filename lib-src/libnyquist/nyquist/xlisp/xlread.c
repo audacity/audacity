@@ -185,13 +185,14 @@ int xlload(const char *fname, int vflag, int pflag)
 
     /* read, evaluate and possibly print each expression in the file */
     xlbegin(&cntxt,CF_ERROR,s_true);
-    if (_setjmp(cntxt.c_jmpbuf))
+    if (_setjmp(cntxt.c_jmpbuf)) {
         sts = FALSE;
         #ifdef DEBUG_INPUT
             if (read_by_xlisp) {
 		fprintf(read_by_xlisp, ";;;;xlload: catch longjump, back to %s\n", fullname);
             }
         #endif
+    }
     else {
         #ifdef DEBUG_INPUT
             if (read_by_xlisp) {
@@ -277,14 +278,14 @@ int xlread(LVAL fptr, LVAL *pval, int rflag)
     int sts;
 
     /* read an expression */
-    while ((sts = readone(fptr,pval)) == FALSE)
+    while ((sts = readone(fptr,pval)) == FALSE) {
 #ifdef DEBUG_INPUT
     if (debug_input_fp) {
         int c = getc(debug_input_fp);
         ungetc(c, debug_input_fp);
     }
 #endif
-        ;
+    }
 
     /* return status */
     return (sts == EOF ? FALSE : TRUE);

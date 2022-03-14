@@ -18,6 +18,8 @@
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../ProjectHistory.h"
 
+#include <wx/event.h>
+
 WaveTrackAffordanceHandle::WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, const std::shared_ptr<WaveClip>& target)
    : AffordanceHandle(track), mTarget(target)
 { }
@@ -32,8 +34,8 @@ UIHandle::Result WaveTrackAffordanceHandle::Click(const TrackPanelMouseEvent& ev
       if (affordanceControl)
       {
          result |= affordanceControl->OnAffordanceClick(event, project);
-         if (!event.event.GetSkipped())
-            return result;
+         if (!event.event.GetSkipped())//event is "consumed"
+            return result | RefreshCode::Cancelled;
          event.event.Skip(false);
       }
    }

@@ -62,7 +62,7 @@ array of Ruler::Label.
 
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "../Envelope.h"
+#include "Envelope.h"
 #include "NumberScale.h"
 #include "Theme.h"
 #include "ViewInfo.h"

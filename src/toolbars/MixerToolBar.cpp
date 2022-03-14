@@ -23,7 +23,6 @@
 #include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
-#include <wx/app.h>
 #include <wx/choice.h>
 #include <wx/event.h>
 #include <wx/intl.h>
@@ -132,19 +131,15 @@ void MixerToolBar::Populate()
    Add(2, -1);
 
    // Listen for capture events
-   wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
-                  &MixerToolBar::OnAudioCapture,
-                  this);
+   mSubscription = AudioIO::Get()
+      ->Subscribe(*this, &MixerToolBar::OnAudioCapture);
 }
 
-void MixerToolBar::OnAudioCapture(wxCommandEvent & event)
+void MixerToolBar::OnAudioCapture(AudioIOEvent event)
 {
-   event.Skip();
-
-   AudacityProject *p = &mProject;
-   if ((AudacityProject *) event.GetEventObject() != p)
+   if (event.type == AudioIOEvent::CAPTURE && event.pProject != &mProject)
    {
-      mEnabled = !event.GetInt();
+      mEnabled = !event.on;
       mInputSlider->Enable(mEnabled);
       mOutputSlider->Enable(mEnabled);
    }

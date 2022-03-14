@@ -81,36 +81,37 @@ EffectNoise::~EffectNoise()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectNoise::GetSymbol()
+ComponentInterfaceSymbol EffectNoise::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectNoise::GetDescription()
+TranslatableString EffectNoise::GetDescription() const
 {
    return XO("Generates one of three different types of noise");
 }
 
-ManualPageID EffectNoise::ManualPage()
+ManualPageID EffectNoise::ManualPage() const
 {
    return L"Noise";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNoise::GetType()
+EffectType EffectNoise::GetType() const
 {
    return EffectTypeGenerate;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectNoise::GetAudioOutCount()
+unsigned EffectNoise::GetAudioOutCount() const
 {
    return 1;
 }
 
-size_t EffectNoise::ProcessBlock(float **WXUNUSED(inbuf), float **outbuf, size_t size)
+size_t EffectNoise::ProcessBlock(EffectSettings &,
+   const float *const *, float *const *outbuf, size_t size)
 {
    float *buffer = outbuf[0];
 
@@ -201,35 +202,8 @@ bool EffectNoise::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-bool EffectNoise::Startup()
-{
-   wxString base = wxT("/Effects/Noise/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      gPrefs->Read(base + wxT("Type"), &mType, 0L);
-      gPrefs->Read(base + wxT("Amplitude"), &mAmp, 0.8f);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
-void EffectNoise::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 {
    wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
@@ -244,10 +218,11 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(XXO("&Amplitude (0-1):"), wxT(""), 12);
 
       S.AddPrompt(XXO("&Duration:"));
+      auto &extra = access.Get().extra;
       mNoiseDurationT = safenew
          NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,
-                         GetDurationFormat(),
+                         extra.GetDurationFormat(),
                          GetDuration(),
                          mProjectRate,
                          NumericTextCtrl::Options{}
@@ -257,28 +232,18 @@ void EffectNoise::PopulateOrExchange(ShuttleGui & S)
          .AddWindow(mNoiseDurationT);
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
-bool EffectNoise::TransferDataToWindow()
+bool EffectNoise::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mNoiseDurationT->SetValue(GetDuration());
 
    return true;
 }
 
-bool EffectNoise::TransferDataFromWindow()
+bool EffectNoise::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    SetDuration(mNoiseDurationT->GetValue());
-
    return true;
 }

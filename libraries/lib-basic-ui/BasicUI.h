@@ -160,6 +160,9 @@ public:
       unsigned long long numerator,
       unsigned long long denominator,
       const TranslatableString &message = {}) = 0;
+
+   //! Change an existing dialog's message
+   virtual void SetMessage(const TranslatableString & message) = 0;
 };
 
 //! Abstraction of a progress dialog with undefined time-to-completion estimate
@@ -199,6 +202,11 @@ public:
    DoMakeGenericProgress(const WindowPlacement &placement,
       const TranslatableString &title,
       const TranslatableString &message) = 0;
+   virtual int DoMultiDialog(const TranslatableString &message,
+      const TranslatableString &title,
+      const TranslatableStrings &buttons,
+      const ManualPageID &helpPage,
+      const TranslatableString &boxMsg, bool log) = 0;
 };
 
 //! Fetch the global instance, or nullptr if none is yet installed
@@ -286,6 +294,28 @@ inline std::unique_ptr<GenericProgressDialog> MakeGenericProgress(
       return p->DoMakeGenericProgress(placement, title, message);
    else
       return nullptr;
+}
+
+//! Display a dialog with radio buttons.
+/*!
+ @return zero-based index of the chosen button, or -1 if Services not installed.
+ @param message main message in the dialog
+ @param title dialog title
+ @param buttons labels for individual radio buttons
+ @param boxMsg label for the group of buttons
+ @param helpPage identifies a manual page
+ @param log whether to add a "Show Log for Details" push button
+ */
+inline int ShowMultiDialog(const TranslatableString &message,
+   const TranslatableString &title,
+   const TranslatableStrings &buttons,
+   const ManualPageID &helpPage,
+   const TranslatableString &boxMsg, bool log)
+{
+   if (auto p = Get())
+      return p->DoMultiDialog(message, title, buttons, helpPage, boxMsg, log);
+   else
+      return -1;
 }
 
 //! @}

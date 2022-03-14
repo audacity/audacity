@@ -26,7 +26,7 @@ with names like mod-script-pipe that add NEW features.
 #include "../ShuttleGui.h"
 
 #include "Prefs.h"
-#include "../ModuleSettings.h"
+#include "ModuleSettings.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -41,12 +41,12 @@ ModulePrefs::~ModulePrefs()
 {
 }
 
-ComponentInterfaceSymbol ModulePrefs::GetSymbol()
+ComponentInterfaceSymbol ModulePrefs::GetSymbol() const
 {
    return MODULE_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString ModulePrefs::GetDescription()
+TranslatableString ModulePrefs::GetDescription() const
 {
    return XO("Preferences for Module");
 }

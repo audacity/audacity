@@ -39,6 +39,7 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/display.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
+#include <wx/splitter.h>
 
 // Returns the screen containing a rectangle, or -1 if none does.
 int ScreenContaining( wxRect & r ){
@@ -356,19 +357,11 @@ END_EVENT_TABLE()
 // Common mouse wheel handling in track panel cells, moved here to avoid
 // compilation dependencies on Track, TrackPanel, and Scrubbing at low levels
 // which made cycles
-static struct MouseWheelHandler {
-
-MouseWheelHandler()
-{
-   CommonTrackPanelCell::InstallMouseWheelHook( *this );
-}
-
+static CommonTrackPanelCell::MouseWheelHook::Scope scope{
 // Need a bit of memory from one call to the next
-mutable double mVertScrollRemainder = 0.0;
-
-unsigned operator()
-   ( const TrackPanelMouseEvent &evt, AudacityProject *pProject ) const
-{
+[mVertScrollRemainder = 0.0](
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject )
+mutable -> unsigned {
    using namespace RefreshCode;
 
    if ( TrackList::Get( *pProject ).empty() )
@@ -495,9 +488,7 @@ unsigned operator()
    }
 
    return result;
-}
-
-} sMouseWheelHandler;
+} };
 
 AttachedWindows::RegisteredFactory sProjectWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
@@ -570,13 +561,6 @@ enum {
    NextID,
 };
 
-//If you want any of these files, ask JKC.  They are not
-//yet checked in to Audacity SVN as of 12-Feb-2010
-#ifdef EXPERIMENTAL_NOTEBOOK
-   #include "GuiFactory.h"
-   #include "APanel.h"
-#endif
-
 ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
                                  const wxPoint & pos,
                                  const wxSize & size, AudacityProject &project)
@@ -605,44 +589,31 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mTopPanel->SetBackgroundColour(theTheme.Colour( clrMedium ));
 #endif
 
-   wxWindow    * pPage;
+   auto container = safenew wxSplitterWindow(this, wxID_ANY,
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxNO_BORDER | wxSP_LIVE_UPDATE);
+   container->Bind(wxEVT_SPLITTER_DOUBLECLICKED, [](wxSplitterEvent& event){
+      //"The default behaviour is to unsplit the window"
+      event.Veto();//do noting instead
+   });
+   mContainerWindow = container;
 
-#ifdef EXPERIMENTAL_NOTEBOOK
-   // We are using a notebook (tabbed panel), so we create the notebook and add pages.
-   GuiFactory Factory;
-   wxNotebook  * pNotebook;
-   mMainPanel = Factory.AddPanel(
-      this, wxPoint( left, top ), wxSize( width, height ) );
-   pNotebook  = Factory.AddNotebook( mMainPanel );
-   /* i18n-hint: This is an experimental feature where the main panel in
-      Audacity is put on a notebook tab, and this is the name on that tab.
-      Other tabs in that notebook may have instruments, patch panels etc.*/
-   pPage = Factory.AddPage( pNotebook, _("Main Mix"));
-#else
-   // Not using a notebook, so we place the track panel inside another panel,
-   // this keeps the notebook code and normal code consistent and also
-   // paves the way for adding additional windows inside the track panel.
-   mMainPanel = safenew wxPanelWrapper(this, -1,
+   mTrackListWindow = safenew wxPanelWrapper(mContainerWindow, wxID_ANY,
       wxDefaultPosition,
       wxDefaultSize,
       wxNO_BORDER);
-   mMainPanel->SetSizer( safenew wxBoxSizer(wxVERTICAL) );
-   mMainPanel->SetLabel("Main Panel");// Not localised.
-   pPage = mMainPanel;
-   // Set the colour here to the track panel background to avoid
-   // flicker when Audacity starts up.
-   // However, that leads to areas next to the horizontal scroller
-   // being painted in background colour and not scroller background
-   // colour, so suppress this for now.
-   //pPage->SetBackgroundColour( theTheme.Colour( clrDark ));
-#endif
-   pPage->SetLayoutDirection(wxLayout_LeftToRight);
+   mTrackListWindow->SetSizer( safenew wxBoxSizer(wxVERTICAL) );
+   mTrackListWindow->SetLabel("Main Panel");// Not localized.
+   mTrackListWindow->SetLayoutDirection(wxLayout_LeftToRight);
+
+   mEffectsWindow = safenew wxWindow(mContainerWindow, wxID_ANY, wxDefaultPosition, wxSize(250, 20));
+   mEffectsWindow->Hide();//initially hidden
+   mContainerWindow->Initialize(mTrackListWindow);
 
 #ifdef EXPERIMENTAL_DA2
-   pPage->SetBackgroundColour(theTheme.Colour( clrMedium ));
+   mTrackListWindow->SetBackgroundColour(theTheme.Colour( clrMedium ));
 #endif
-
-   mMainPage = pPage;
 
    mPlaybackScroller = std::make_unique<PlaybackScroller>( &project );
 
@@ -655,8 +626,8 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    //      creating the scrollbars after the TrackPanel, we resolve
    //      several focus problems.
 
-   mHsbar = safenew ScrollBar(pPage, HSBarID, wxSB_HORIZONTAL);
-   mVsbar = safenew ScrollBar(pPage, VSBarID, wxSB_VERTICAL);
+   mHsbar = safenew ScrollBar(mTrackListWindow, HSBarID, wxSB_HORIZONTAL);
+   mVsbar = safenew ScrollBar(mTrackListWindow, VSBarID, wxSB_VERTICAL);
 #if wxUSE_ACCESSIBILITY
    // so that name can be set on a standard control
    mHsbar->SetAccessible(safenew WindowAccessible(mHsbar));
@@ -1228,6 +1199,28 @@ bool ProjectWindow::IsIconized() const
    return mIconized;
 }
 
+wxWindow* ProjectWindow::GetEffectsWindow() noexcept
+{
+   return mEffectsWindow;
+}
+
+wxWindow* ProjectWindow::GetTrackListWindow() noexcept
+{
+   return mTrackListWindow;
+}
+
+wxWindow* ProjectWindow::GetContainerWindow() noexcept
+{
+   return mContainerWindow;
+}
+
+wxPanel* ProjectWindow::GetTopPanel() noexcept
+{
+   return mTopPanel;
+}
+
+
+
 void ProjectWindow::UpdateStatusWidths()
 {
    enum { nWidths = nStatusBarFields + 1 };
@@ -1664,22 +1657,16 @@ void ProjectWindow::TP_HandleResize()
 ProjectWindow::PlaybackScroller::PlaybackScroller(AudacityProject *project)
 : mProject(project)
 {
-   mProject->Bind(EVT_TRACK_PANEL_TIMER,
-      &PlaybackScroller::OnTimer,
-      this);
 }
 
-void ProjectWindow::PlaybackScroller::OnTimer(wxCommandEvent &event)
+void ProjectWindow::PlaybackScroller::OnTimer()
 {
-   // Let other listeners get the notification
-   event.Skip();
-
    auto gAudioIO = AudioIO::Get();
    mRecentStreamTime = gAudioIO->GetStreamTime();
 
    auto cleanup = finally([&]{
       // Propagate the message to other listeners bound to this
-      this->SafelyProcessEvent( event );
+      this->Publish({});
    });
 
    if(!ProjectAudioIO::Get( *mProject ).IsAudioActive())
@@ -1855,11 +1842,29 @@ void ProjectWindow::DoZoomFit()
    window.TP_ScrollWindow(start);
 }
 
-static struct InstallTopPanelHook{ InstallTopPanelHook() {
-   ToolManager::SetGetTopPanelHook(
-      []( wxWindow &window ){
-         auto pProjectWindow = dynamic_cast< ProjectWindow* >( &window );
-         return pProjectWindow ? pProjectWindow->GetTopPanel() : nullptr;
-      }
-   );
-}} installTopPanelHook;
+void ProjectWindow::ShowEffectsPanel(Track* track)
+{
+   if(track == nullptr)
+      return;
+
+   if(mContainerWindow->GetWindow1() != mEffectsWindow)
+   {
+      //Restore previous effects window size
+      mContainerWindow->SplitVertically(
+         mEffectsWindow,
+         mTrackListWindow,
+         mEffectsWindow->GetSize().GetWidth());
+   }
+}
+
+void ProjectWindow::HideEffectsPanel()
+{
+   mContainerWindow->Unsplit(mEffectsWindow);
+   Layout();
+}
+
+static ToolManager::TopPanelHook::Scope scope {
+[]( wxWindow &window ){
+   auto pProjectWindow = dynamic_cast< ProjectWindow* >( &window );
+   return pProjectWindow ? pProjectWindow->GetTopPanel() : nullptr;
+} };

@@ -5,7 +5,7 @@
    ExportFFmpegDialogs.cpp
 
    Audacity(R) is copyright (c) 1999-2010 Audacity Team.
-   License: GPL v2.  See License.txt.
+   License: GPL v2 or later.  See License.txt.
 
    LRN
 
@@ -62,7 +62,7 @@
 
 #include "../widgets/FileDialog/FileDialog.h"
 
-#include "../Mix.h"
+#include "Mix.h"
 #include "../Tags.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/HelpSystem.h"
@@ -1603,7 +1603,7 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
 
 /// AAC profiles
 // The FF_PROFILE_* enumeration is defined in the ffmpeg library
-// PRL:  I cant find where this preference is used!
+// PRL:  I can't find where this preference is used!
 ChoiceSetting AACProfiles { wxT("/FileFormats/FFmpegAACProfile"),
    {
       {wxT("1") /*FF_PROFILE_AAC_LOW*/, XO("LC")},

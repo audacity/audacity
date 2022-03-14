@@ -49,8 +49,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackAffordanceHandle.h"
 #include "WaveClipTrimHandle.h"
 
-namespace {
-
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
@@ -692,7 +690,6 @@ private:
    size_t mMySubView{};
 };
 
-}
 
 std::pair<
    bool, // if true, hit-testing is finished
@@ -1546,7 +1543,7 @@ namespace
 }
 
 ClipParameters::ClipParameters
-   (bool spectrum, const WaveTrack *track, const WaveClip *clip, const wxRect &rect,
+   (bool spectrum, const SampleTrack *track, const WaveClip *clip, const wxRect &rect,
    const SelectedRegion &selectedRegion, const ZoomInfo &zoomInfo)
 {
    tOffset = clip->GetPlayStartTime();

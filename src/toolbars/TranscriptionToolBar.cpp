@@ -29,7 +29,7 @@
 #include <wx/intl.h>
 #endif // WX_PRECOMP
 
-#include "../Envelope.h"
+#include "Envelope.h"
 
 #include "AllThemeResources.h"
 #include "../AudioIO.h"
@@ -37,9 +37,9 @@
 #include "../KeyboardCapture.h"
 #include "NoteTrack.h"
 #include "Project.h"
+#include "../ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
-#include "../ProjectSettings.h"
-#include "../Envelope.h"
+#include "Envelope.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../widgets/AButton.h"
@@ -157,7 +157,7 @@ void TranscriptionToolBar::Create(wxWindow * parent)
 void TranscriptionToolBar::SetPlaySpeed( double value )
 {
    mPlaySpeed = value;
-   ProjectSettings::Get( mProject ).SetPlaySpeed( GetPlaySpeed() );
+   ProjectAudioIO::Get( mProject ).SetPlaySpeed( GetPlaySpeed() );
 }
 
 /// This is a convenience function that allows for button creation in
@@ -491,11 +491,10 @@ void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
    if ( TrackList::Get( *p ).Any< NoteTrack >() )
       bFixedSpeedPlay = true;
 
-   // Scrubbing only supports straight through play.
-   // So if newDefault or cutPreview, we have to fall back to fixed speed.
+   // If cutPreview, we have to fall back to fixed speed.
    if (newDefault)
       cutPreview = false;
-   bFixedSpeedPlay = bFixedSpeedPlay || newDefault || cutPreview;
+   bFixedSpeedPlay = bFixedSpeedPlay || cutPreview;
    if (bFixedSpeedPlay)
    {
       // Create a BoundedEnvelope if we haven't done so already
@@ -528,11 +527,12 @@ void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
    // Start playing
    if (playRegion.GetStart() < 0)
       return;
-   if (bFixedSpeedPlay)
+
    {
       auto options = DefaultPlayOptions( *p, newDefault );
       // No need to set cutPreview options.
-      options.envelope = mEnvelope.get();
+      options.envelope = bFixedSpeedPlay ? mEnvelope.get() : nullptr;
+      options.variableSpeed = !bFixedSpeedPlay;
       auto mode =
          cutPreview ? PlayMode::cutPreviewPlay
          : newDefault ? PlayMode::loopedPlay
@@ -542,16 +542,10 @@ void TranscriptionToolBar::PlayAtSpeed(bool newDefault, bool cutPreview)
             options,
             mode);
    }
-   else
-   {
-      auto &scrubber = Scrubber::Get( *p );
-      scrubber.StartSpeedPlay(GetPlaySpeed(),
-         playRegion.GetStart(), playRegion.GetEnd());
-   }
 }
 
 // Come here from button clicks only
-void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & event)
 {
    auto button = mButtons[TTB_PlaySpeed];
 
@@ -559,6 +553,7 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & WXUNUSED(event))
    const bool cutPreview = mButtons[TTB_PlaySpeed]->WasControlDown();
    const bool looped = !cutPreview &&
       !button->WasShiftDown();
+   OnSpeedSlider(event);
    PlayAtSpeed(looped, cutPreview);
 }
 

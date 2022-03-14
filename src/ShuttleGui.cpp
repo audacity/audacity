@@ -98,6 +98,7 @@ for registering for changes.
 
 
 
+#include "MemoryX.h"
 #include "Prefs.h"
 #include "ShuttlePrefs.h"
 #include "Theme.h"

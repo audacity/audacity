@@ -14,9 +14,9 @@ Paul Licameli
 
 #include <utility>
 #include <vector>
-#include <wx/event.h> // to declare custom event type
 #include "ClientData.h" // to inherit
 #include "Prefs.h"
+#include "Observer.h"
 
 class AudacityProject;
 class wxWindow;
@@ -29,20 +29,10 @@ enum StatusBarField : int {
    nStatusBarFields = 3
 };
 
-struct PROJECT_API ProjectStatusEvent final : wxEvent{
-   explicit ProjectStatusEvent( StatusBarField field );
-   ~ProjectStatusEvent() override;
-   wxEvent *Clone() const override;
-   StatusBarField mField;
-};
-
-// Type of event emitted by the project when its status message is set
-wxDECLARE_EXPORTED_EVENT(PROJECT_API,
-                         EVT_PROJECT_STATUS_UPDATE, ProjectStatusEvent);
-
 class PROJECT_API ProjectStatus final
    : public ClientData::Base
    , public PrefsListener
+   , public Observer::Publisher<StatusBarField>
 {
 public:
    static ProjectStatus &Get( AudacityProject &project );

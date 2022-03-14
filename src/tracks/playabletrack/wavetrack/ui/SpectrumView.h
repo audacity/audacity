@@ -32,11 +32,11 @@ private:
 public:
     SpectralData(double sr)
     :mSampleRate(sr)
+    ,mWindowSize( 2048 )
+    ,mHopSize ( mWindowSize / 4 )
     // Set start and end in reverse for comparison during data addition
     ,mStartSample(std::numeric_limits<long long>::max())
     ,mEndSample( 0 )
-    ,mWindowSize( 2048 )
-    ,mHopSize ( mWindowSize / 4 )
     {}
     SpectralData(const SpectralData& src) = delete;
 

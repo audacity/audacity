@@ -38,7 +38,7 @@ This class now lists
 #include "../LabelTrack.h"
 #include "../NoteTrack.h"
 #include "../TimeTrack.h"
-#include "../Envelope.h"
+#include "Envelope.h"
 
 #include "SelectCommand.h"
 #include "../ShuttleGui.h"
@@ -46,7 +46,7 @@ This class now lists
 
 #include "../prefs/PrefsDialog.h"
 #include "../Shuttle.h"
-#include "../PluginManager.h"
+#include "PluginManager.h"
 #include "../tracks/ui/TrackView.h"
 #include "../ShuttleGui.h"
 

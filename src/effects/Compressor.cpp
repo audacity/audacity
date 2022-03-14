@@ -105,24 +105,24 @@ EffectCompressor::~EffectCompressor()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectCompressor::GetSymbol()
+ComponentInterfaceSymbol EffectCompressor::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectCompressor::GetDescription()
+TranslatableString EffectCompressor::GetDescription() const
 {
    return XO("Compresses the dynamic range of audio");
 }
 
-ManualPageID EffectCompressor::ManualPage()
+ManualPageID EffectCompressor::ManualPage() const
 {
    return L"Compressor";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectCompressor::GetType()
+EffectType EffectCompressor::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -175,39 +175,6 @@ bool EffectCompressor::SetAutomationParameters(CommandParameters & parms)
 
 // Effect Implementation
 
-bool EffectCompressor::Startup()
-{
-   wxString base = wxT("/Effects/Compressor/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      gPrefs->Read(base + wxT("ThresholdDB"), &mThresholdDB, -12.0f );
-      gPrefs->Read(base + wxT("NoiseFloorDB"), &mNoiseFloorDB, -40.0f );
-      gPrefs->Read(base + wxT("Ratio"), &mRatio, 2.0f );
-      gPrefs->Read(base + wxT("AttackTime"), &mAttackTime, 0.2f );
-      gPrefs->Read(base + wxT("DecayTime"), &mDecayTime, 1.0f );
-      gPrefs->Read(base + wxT("Normalize"), &mNormalize, true );
-      gPrefs->Read(base + wxT("UsePeak"), &mUsePeak, false );
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
 namespace {
 
 TranslatableString ThresholdFormat( int value )
@@ -242,7 +209,8 @@ TranslatableString RatioLabelFormat( int sliderValue, double value )
 
 }
 
-void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectCompressor::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
 
@@ -357,9 +325,10 @@ void EffectCompressor::PopulateOrExchange(ShuttleGui & S)
                                     DEF_UsePeak);
    }
    S.EndHorizontalLay();
+   return nullptr;
 }
 
-bool EffectCompressor::TransferDataToWindow()
+bool EffectCompressor::TransferDataToWindow(const EffectSettings &)
 {
    mThresholdSlider->SetValue(lrint(mThresholdDB));
    mNoiseFloorSlider->SetValue(lrint(mNoiseFloorDB * SCL_NoiseFloor));
@@ -374,13 +343,14 @@ bool EffectCompressor::TransferDataToWindow()
    return true;
 }
 
-bool EffectCompressor::TransferDataFromWindow()
+bool EffectCompressor::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate())
-   {
-      return false;
-   }
+   return DoTransferDataFromWindow();
+}
 
+bool EffectCompressor::DoTransferDataFromWindow()
+{
+   // To do:  eliminate this by using control validators instead
    mThresholdDB = (double) mThresholdSlider->GetValue();
    mNoiseFloorDB = (double) mNoiseFloorSlider->GetValue() / SCL_NoiseFloor;
    mRatio = (double) mRatioSlider->GetValue() / SCL_Ratio;
@@ -662,7 +632,7 @@ float EffectCompressor::DoCompression(float value, double env)
 
 void EffectCompressor::OnSlider(wxCommandEvent & WXUNUSED(evt))
 {
-   TransferDataFromWindow();
+   DoTransferDataFromWindow();
    UpdateUI();
 }
 

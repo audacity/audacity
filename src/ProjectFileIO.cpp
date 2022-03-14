@@ -1361,7 +1361,8 @@ bool ProjectFileIO::RenameOrWarn(const FilePath &src, const FilePath &dst)
    // Wait for the checkpoints to end
    while (!done)
    {
-      wxMilliSleep(50);
+      using namespace std::chrono;
+      std::this_thread::sleep_for(50ms);
       pd->Pulse();
    }
    thread.join();
@@ -2301,7 +2302,8 @@ bool ProjectFileIO::SaveProject(
          // Wait for the checkpoints to end
          while (!done)
          {
-            wxMilliSleep(50);
+            using namespace std::chrono;
+            std::this_thread::sleep_for(50ms);
             pd->Pulse();
          }
          thread.join();

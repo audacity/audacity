@@ -58,24 +58,24 @@ EffectFindClipping::~EffectFindClipping()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectFindClipping::GetSymbol()
+ComponentInterfaceSymbol EffectFindClipping::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectFindClipping::GetDescription()
+TranslatableString EffectFindClipping::GetDescription() const
 {
    return XO("Creates labels where clipping is detected");
 }
 
-ManualPageID EffectFindClipping::ManualPage()
+ManualPageID EffectFindClipping::ManualPage() const
 {
    return L"Find_Clipping";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectFindClipping::GetType()
+EffectType EffectFindClipping::GetType() const
 {
    return EffectTypeAnalyze;
 }
@@ -108,10 +108,10 @@ bool EffectFindClipping::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-bool EffectFindClipping::Process()
+bool EffectFindClipping::Process(EffectSettings &)
 {
    std::shared_ptr<AddedAnalysisTrack> addedTrack;
-   Optional<ModifiedAnalysisTrack> modifiedTrack;
+   std::optional<ModifiedAnalysisTrack> modifiedTrack;
    const wxString name{ _("Clipping") };
 
    auto clt = *inputTracks()->Any< const LabelTrack >().find_if(
@@ -240,8 +240,18 @@ bool EffectFindClipping::ProcessOne(LabelTrack * lt,
    return bGoodResult;
 }
 
-void EffectFindClipping::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectFindClipping::PopulateOrExchange(
+   ShuttleGui & S, EffectSettingsAccess &access)
 {
+   DoPopulateOrExchange(S, access);
+   return nullptr;
+}
+
+void EffectFindClipping::DoPopulateOrExchange(
+   ShuttleGui & S, EffectSettingsAccess &access)
+{
+   mpAccess = access.shared_from_this();
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       S.Validator<IntegerValidator<int>>(
@@ -255,23 +265,20 @@ void EffectFindClipping::PopulateOrExchange(ShuttleGui & S)
    S.EndMultiColumn();
 }
 
-bool EffectFindClipping::TransferDataToWindow()
+bool EffectFindClipping::TransferDataToWindow(const EffectSettings &)
 {
    ShuttleGui S(mUIParent, eIsSettingToDialog);
-   PopulateOrExchange(S);
+   // To do: eliminate this and just use validators for controls
+   DoPopulateOrExchange(S, *mpAccess);
 
    return true;
 }
 
-bool EffectFindClipping::TransferDataFromWindow()
+bool EffectFindClipping::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate())
-   {
-      return false;
-   }
-
    ShuttleGui S(mUIParent, eIsGettingFromDialog);
-   PopulateOrExchange(S);
+   // To do: eliminate this and just use validators for controls
+   DoPopulateOrExchange(S, *mpAccess);
 
    return true;
 }

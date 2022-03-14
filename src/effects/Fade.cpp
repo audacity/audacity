@@ -41,14 +41,14 @@ EffectFade::~EffectFade()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectFade::GetSymbol()
+ComponentInterfaceSymbol EffectFade::GetSymbol() const
 {
    return mFadeIn
       ? EffectFadeIn::Symbol
       : EffectFadeOut::Symbol;
 }
 
-TranslatableString EffectFade::GetDescription()
+TranslatableString EffectFade::GetDescription() const
 {
    return mFadeIn
       ? XO("Applies a linear fade-in to the selected audio")
@@ -57,38 +57,40 @@ TranslatableString EffectFade::GetDescription()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectFade::GetType()
+EffectType EffectFade::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectFade::IsInteractive()
+bool EffectFade::IsInteractive() const
 {
    return false;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectFade::GetAudioInCount()
+unsigned EffectFade::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectFade::GetAudioOutCount()
+unsigned EffectFade::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectFade::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectFade::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    mSample = 0;
 
    return true;
 }
 
-size_t EffectFade::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectFade::ProcessBlock(EffectSettings &,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ibuf = inBlock[0];
+   const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
    if (mFadeIn)

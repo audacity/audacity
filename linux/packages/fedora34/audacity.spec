@@ -5,15 +5,15 @@
 
 Name: audacity
 
-Version: 3.0~test
+Version: TMPL_AUDACITY_VERSION
 Release: 0%{?dist}
 Summary: Multitrack audio editor
 License: GPLv2
 URL:     https://www.audacityteam.org/
 
-Source0: audacity-sources.tar.gz
+Source0: TMPL_AUDACITY_SOURCES
 
-%define tartopdir audacity
+%define tartopdir TMPL_AUDACITY_TAR_DIRNAME
 
 BuildRequires: cmake
 BuildRequires: gettext-devel

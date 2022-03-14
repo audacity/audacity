@@ -27,6 +27,9 @@ public:
       const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton,
       const Track *pTrack);
 
+   static void GetEffectsRect(
+      const wxRect & rect, wxRect & dest, const Track *pTrack);
+
    using CommonTrackControls::CommonTrackControls;
 };
 

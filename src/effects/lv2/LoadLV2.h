@@ -5,7 +5,7 @@
   LoadLV2.h
 
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
-  License: GPL v2.  See License.txt.
+  License: GPL v2 or later.  See License.txt.
 
 *********************************************************************/
 
@@ -31,7 +31,7 @@
 #include "lv2/uri-map/uri-map.h"
 #include "lv2/units/units.h"
 
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 #include "EffectInterface.h"
 #include "PluginInterface.h"
 
@@ -160,7 +160,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class LV2EffectsModule final : public ModuleInterface
+class LV2EffectsModule final : public PluginProvider
 {
 public:
    LV2EffectsModule();
@@ -168,13 +168,13 @@ public:
 
    // ComponentInterface implementation
 
-   PluginPath GetPath() override;
-   ComponentInterfaceSymbol GetSymbol() override;
-   VendorSymbol GetVendor() override;
-   wxString GetVersion() override;
-   TranslatableString GetDescription() override;
+   PluginPath GetPath() const override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   VendorSymbol GetVendor() const override;
+   wxString GetVersion() const override;
+   TranslatableString GetDescription() const override;
 
-   // ModuleInterface implementation
+   // PluginProvider implementation
 
    bool Initialize() override;
    void Terminate() override;
@@ -183,8 +183,8 @@ public:
    const FileExtensions &GetFileExtensions() override;
    FilePath InstallPath() override { return {}; }
 
-   bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindPluginPaths(PluginManagerInterface & pm) override;
+   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
+   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
    unsigned DiscoverPluginsAtPath(
       const PluginPath & path, TranslatableString &errMsg,
       const RegistrationCallback &callback)
@@ -193,7 +193,7 @@ public:
    bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
    std::unique_ptr<ComponentInterface>
-      CreateInstance(const PluginPath & path) override;
+      LoadPlugin(const PluginPath & path) override;
 
    // LV2EffectModule implementation
 

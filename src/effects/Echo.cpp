@@ -57,41 +57,42 @@ EffectEcho::~EffectEcho()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectEcho::GetSymbol()
+ComponentInterfaceSymbol EffectEcho::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectEcho::GetDescription()
+TranslatableString EffectEcho::GetDescription() const
 {
    return XO("Repeats the selected audio again and again");
 }
 
-ManualPageID EffectEcho::ManualPage()
+ManualPageID EffectEcho::ManualPage() const
 {
    return L"Echo";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectEcho::GetType()
+EffectType EffectEcho::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectEcho::GetAudioInCount()
+unsigned EffectEcho::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectEcho::GetAudioOutCount()
+unsigned EffectEcho::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectEcho::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectEcho::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames)
 {
    if (delay == 0.0)
    {
@@ -124,9 +125,10 @@ bool EffectEcho::ProcessFinalize()
    return true;
 }
 
-size_t EffectEcho::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectEcho::ProcessBlock(EffectSettings &,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ibuf = inBlock[0];
+   const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
    for (decltype(blockLen) i = 0; i < blockLen; i++, histPos++)
@@ -167,7 +169,8 @@ bool EffectEcho::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-void EffectEcho::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
 
@@ -185,25 +188,5 @@ void EffectEcho::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(XXO("D&ecay factor:"), wxT(""), 10);
    }
    S.EndMultiColumn();
+   return nullptr;
 }
-
-bool EffectEcho::TransferDataToWindow()
-{
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
-bool EffectEcho::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-

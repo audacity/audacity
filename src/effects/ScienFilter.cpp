@@ -181,18 +181,18 @@ EffectScienFilter::~EffectScienFilter()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectScienFilter::GetSymbol()
+ComponentInterfaceSymbol EffectScienFilter::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectScienFilter::GetDescription()
+TranslatableString EffectScienFilter::GetDescription() const
 {
    /* i18n-hint: "infinite impulse response" */
    return XO("Performs IIR filtering that emulates analog filters");
 }
 
-ManualPageID EffectScienFilter::ManualPage()
+ManualPageID EffectScienFilter::ManualPage() const
 {
    return L"Classic_Filters";
 }
@@ -200,24 +200,25 @@ ManualPageID EffectScienFilter::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectScienFilter::GetType()
+EffectType EffectScienFilter::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectScienFilter::GetAudioInCount()
+unsigned EffectScienFilter::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectScienFilter::GetAudioOutCount()
+unsigned EffectScienFilter::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectScienFilter::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectScienFilter::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    for (int iPair = 0; iPair < (mOrder + 1) / 2; iPair++)
       mpBiquad[iPair].Reset();
@@ -225,9 +226,10 @@ bool EffectScienFilter::ProcessInitialize(sampleCount WXUNUSED(totalLen), Channe
    return true;
 }
 
-size_t EffectScienFilter::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectScienFilter::ProcessBlock(EffectSettings &,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ibuf = inBlock[0];
+   const float *ibuf = inBlock[0];
    for (int iPair = 0; iPair < (mOrder + 1) / 2; iPair++)
    {
       mpBiquad[iPair].Process(ibuf, outBlock[0], blockLen);
@@ -283,54 +285,6 @@ bool EffectScienFilter::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-bool EffectScienFilter::Startup()
-{
-   wxString base = wxT("/SciFilter/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-	   double dTemp;
-      gPrefs->Read(base + wxT("Order"), &mOrder, 1);
-      mOrder = wxMax (1, mOrder);
-      mOrder = wxMin (MAX_Order, mOrder);
-      gPrefs->Read(base + wxT("FilterType"), &mFilterType, 0);
-      mFilterType = wxMax (0, mFilterType);
-      mFilterType = wxMin (2, mFilterType);
-      gPrefs->Read(base + wxT("FilterSubtype"), &mFilterSubtype, 0);
-      mFilterSubtype = wxMax (0, mFilterSubtype);
-      mFilterSubtype = wxMin (1, mFilterSubtype);
-      gPrefs->Read(base + wxT("Cutoff"), &dTemp, 1000.0);
-      mCutoff = (float)dTemp;
-      mCutoff = wxMax (1, mCutoff);
-      mCutoff = wxMin (100000, mCutoff);
-      gPrefs->Read(base + wxT("Ripple"), &dTemp, 1.0);
-      mRipple = dTemp;
-      mRipple = wxMax (0, mRipple);
-      mRipple = wxMin (100, mRipple);
-      gPrefs->Read(base + wxT("StopbandRipple"), &dTemp, 30.0);
-      mStopbandRipple = dTemp;
-      mStopbandRipple = wxMax (0, mStopbandRipple);
-      mStopbandRipple = wxMin (100, mStopbandRipple);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
 bool EffectScienFilter::Init()
 {
    int selcount = 0;
@@ -369,7 +323,8 @@ bool EffectScienFilter::Init()
    return true;
 }
 
-void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(5);
    S.SetSizerProportion(1);
@@ -536,20 +491,15 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndMultiColumn();
 
-   return;
+   return nullptr;
 }
 
 //
 // Populate the window with relevant variables
 //
-bool EffectScienFilter::TransferDataToWindow()
+bool EffectScienFilter::TransferDataToWindow(const EffectSettings &)
 {
    mOrderIndex = mOrder - 1;
-
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
 
    mdBMinSlider->SetValue((int) mdBMin);
    mdBMin = 0.0;                     // force refresh in TransferGraphLimitsFromWindow()
@@ -562,13 +512,8 @@ bool EffectScienFilter::TransferDataToWindow()
    return TransferGraphLimitsFromWindow();
 }
 
-bool EffectScienFilter::TransferDataFromWindow()
+bool EffectScienFilter::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    mOrder = mOrderIndex + 1;
 
    CalcFilter();

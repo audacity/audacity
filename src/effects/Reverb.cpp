@@ -2,7 +2,7 @@
 
    Audacity: A Digital Audio Editor
    Audacity(R) is copyright (c) 1999-2013 Audacity Team.
-   License: GPL v2.  See License.txt.
+   License: GPL v2 or later.  See License.txt.
 
    Reverb.cpp
    Rob Sykes, Vaughan Johnson
@@ -139,43 +139,44 @@ EffectReverb::~EffectReverb()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectReverb::GetSymbol()
+ComponentInterfaceSymbol EffectReverb::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectReverb::GetDescription()
+TranslatableString EffectReverb::GetDescription() const
 {
    return XO("Adds ambience or a \"hall effect\"");
 }
 
-ManualPageID EffectReverb::ManualPage()
+ManualPageID EffectReverb::ManualPage() const
 {
    return L"Reverb";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectReverb::GetType()
+EffectType EffectReverb::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectReverb::GetAudioInCount()
+unsigned EffectReverb::GetAudioInCount() const
 {
    return mParams.mStereoWidth ? 2 : 1;
 }
 
-unsigned EffectReverb::GetAudioOutCount()
+unsigned EffectReverb::GetAudioOutCount() const
 {
    return mParams.mStereoWidth ? 2 : 1;
 }
 
 static size_t BLOCK = 16384;
 
-bool EffectReverb::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames chanMap)
+bool EffectReverb::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    bool isStereo = false;
    mNumChans = 1;
@@ -218,9 +219,10 @@ bool EffectReverb::ProcessFinalize()
    return true;
 }
 
-size_t EffectReverb::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectReverb::ProcessBlock(EffectSettings &,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ichans[2] = {NULL, NULL};
+   const float *ichans[2] = {NULL, NULL};
    float *ochans[2] = {NULL, NULL};
 
    for (unsigned int c = 0; c < mNumChans; c++)
@@ -335,7 +337,7 @@ bool EffectReverb::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-RegistryPaths EffectReverb::GetFactoryPresets()
+RegistryPaths EffectReverb::GetFactoryPresets() const
 {
    RegistryPaths names;
 
@@ -355,86 +357,13 @@ bool EffectReverb::LoadFactoryPreset(int id)
    }
 
    mParams = FactoryPresets[id].params;
-
-   if (mUIDialog)
-   {
-      TransferDataToWindow();
-   }
-
    return true;
 }
 
 // Effect implementation
 
-bool EffectReverb::Startup()
-{
-   wxString base = wxT("/Effects/Reverb/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      gPrefs->Read(base + wxT("RoomSize"), &mParams.mRoomSize, DEF_RoomSize);
-      gPrefs->Read(base + wxT("Delay"), &mParams.mPreDelay, DEF_PreDelay);
-      gPrefs->Read(base + wxT("Reverberance"), &mParams.mReverberance, DEF_Reverberance);
-      gPrefs->Read(base + wxT("HfDamping"), &mParams.mHfDamping, DEF_HfDamping);
-      gPrefs->Read(base + wxT("ToneLow"), &mParams.mToneLow, DEF_ToneLow);
-      gPrefs->Read(base + wxT("ToneHigh"), &mParams.mToneHigh, DEF_ToneHigh);
-      gPrefs->Read(base + wxT("WetGain"), &mParams.mWetGain, DEF_WetGain);
-      gPrefs->Read(base + wxT("DryGain"), &mParams.mDryGain, DEF_DryGain);
-      gPrefs->Read(base + wxT("StereoWidth"), &mParams.mStereoWidth, DEF_StereoWidth);
-      gPrefs->Read(base + wxT("WetOnly"), &mParams.mWetOnly, DEF_WetOnly);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-   }
-
-   // Load the previous user presets
-   for (int i = 0; i < 10; i++)
-   {
-      wxString path = base + wxString::Format(wxT("%d/"), i);
-      if (gPrefs->Exists(path))
-      {
-         Params save = mParams;
-         wxString name;
-
-         gPrefs->Read(path + wxT("RoomSize"), &mParams.mRoomSize, DEF_RoomSize);
-         gPrefs->Read(path + wxT("Delay"), &mParams.mPreDelay, DEF_PreDelay);
-         gPrefs->Read(path + wxT("Reverberance"), &mParams.mReverberance, DEF_Reverberance);
-         gPrefs->Read(path + wxT("HfDamping"), &mParams.mHfDamping, DEF_HfDamping);
-         gPrefs->Read(path + wxT("ToneLow"), &mParams.mToneLow, DEF_ToneLow);
-         gPrefs->Read(path + wxT("ToneHigh"), &mParams.mToneHigh, DEF_ToneHigh);
-         gPrefs->Read(path + wxT("WetGain"), &mParams.mWetGain, DEF_WetGain);
-         gPrefs->Read(path + wxT("DryGain"), &mParams.mDryGain, DEF_DryGain);
-         gPrefs->Read(path + wxT("StereoWidth"), &mParams.mStereoWidth, DEF_StereoWidth);
-         gPrefs->Read(path + wxT("WetOnly"), &mParams.mWetOnly, DEF_WetOnly);
-         gPrefs->Read(path + wxT("name"), &name, wxEmptyString);
-      
-         if (!name.empty())
-         {
-            name.Prepend(wxT(" - "));
-         }
-         name.Prepend(wxString::Format(wxT("Settings%d"), i));
-
-         SaveUserPreset(GetUserPresetsGroup(name));
-
-         mParams = save;
-      }
-   }
-
-   return true;
-}
-
-void EffectReverb::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectReverb::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
 
@@ -472,10 +401,10 @@ void EffectReverb::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndHorizontalLay();
 
-   return;
+   return nullptr;
 }
 
-bool EffectReverb::TransferDataToWindow()
+bool EffectReverb::TransferDataToWindow(const EffectSettings &)
 {
 #define SetSpinSlider(n) \
    m ## n ## S->SetValue((int) mParams.m ## n); \
@@ -498,13 +427,8 @@ bool EffectReverb::TransferDataToWindow()
    return true;
 }
 
-bool EffectReverb::TransferDataFromWindow()
+bool EffectReverb::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate())
-   {
-      return false;
-   }
-
    mParams.mRoomSize = mRoomSizeS->GetValue();
    mParams.mPreDelay = mPreDelayS->GetValue();
    mParams.mReverberance = mReverberanceS->GetValue();
@@ -546,12 +470,3 @@ SpinSliderHandlers(DryGain)
 SpinSliderHandlers(StereoWidth)
 
 #undef SpinSliderHandlers
-
-void EffectReverb::SetTitle(const wxString & name)
-{
-   mUIDialog->SetTitle(
-      name.empty()
-         ? _("Reverb")
-         : wxString::Format( _("Reverb: %s"), name )
-   );
-}

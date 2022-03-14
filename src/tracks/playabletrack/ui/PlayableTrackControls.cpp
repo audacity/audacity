@@ -18,6 +18,7 @@ Paul Licameli split from TrackInfo.cpp
 #include "../../../TrackInfo.h"
 #include "../../../TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
+#include "../../../effects/RealtimeEffectManager.h"
 
 #include <wx/dc.h>
 
@@ -37,6 +38,15 @@ void GetNarrowSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
    GetNarrowMuteHorizontalBounds( rect, muteRect );
    dest.x = rect.x + muteRect.width;
    dest.width = rect.width - muteRect.width + TitleSoloBorderOverlap;
+}
+
+void GetEffectsBounds( const wxRect & rect, wxRect &dest )
+{
+   constexpr int padding = 2;
+   dest.x = rect.x + padding;
+   dest.y = rect.y + padding;
+   dest.width = rect.width - padding * 2;
+   dest.height = rect.height - padding * 2;
 }
 
 void GetWideMuteSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
@@ -93,6 +103,22 @@ void MuteOrSoloDrawFunction
       selected, hit
    );
 
+   TrackInfo::SetTrackInfoFont(dc);
+   dc->GetTextExtent(str, &textWidth, &textHeight);
+   dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
+}
+
+void EffectsDrawFunction
+( wxDC *dc, const wxRect &bev, const Track *pTrack, bool down, 
+  bool sel, bool hit )
+{   
+   wxCoord textWidth, textHeight;
+   const auto str = XO("Effects").Translation();
+
+   const auto selected = pTrack ? pTrack->GetSelected() : true;
+
+   AColor::ButtonStretch(*dc, !down, bev, selected, hit);
+   
    TrackInfo::SetTrackInfoFont(dc);
    dc->GetTextExtent(str, &textWidth, &textHeight);
    dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
@@ -158,6 +184,24 @@ void MuteAndSoloDrawFunction
       MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true, hit );
    }
 }
+
+void EffectsDrawFunction
+( TrackPanelDrawingContext &context,
+  const wxRect &rect, const Track *pTrack )
+{
+   auto dc = &context.dc;
+
+   wxRect bev = rect;
+
+   GetEffectsBounds( rect, bev );
+   {
+      auto target = dynamic_cast<EffectsButtonHandle*>( context.target.get() );
+      bool hit = target && target->GetTrack().get() == pTrack;
+      bool captured = hit && target->IsClicked();
+      bool down = captured && bev.Contains( context.lastState.GetPosition());
+      EffectsDrawFunction( dc, bev, pTrack, down, captured, hit );
+   }
+}
 }
 
 void PlayableTrackControls::GetMuteSoloRect
@@ -193,6 +237,18 @@ void PlayableTrackControls::GetMuteSoloRect
 
 }
 
+void PlayableTrackControls::GetEffectsRect
+(const wxRect & rect, wxRect & dest, const Track *pTrack)
+{
+   auto &trackControl = static_cast<const CommonTrackControls&>(
+      TrackControls::Get( *pTrack ) );
+   const auto resultsE = TrackInfo::CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemEffects );
+   dest.x = rect.x;
+   dest.y = rect.y + resultsE.first;
+   dest.width = rect.width;
+   dest.height = resultsE.second;
+
+}
 
 #include <mutex>
 const TCPLines& PlayableTrackControls::StaticTCPLines()
@@ -202,17 +258,12 @@ const TCPLines& PlayableTrackControls::StaticTCPLines()
    std::call_once( flag, []{
       playableTrackTCPLines = CommonTrackControls::StaticTCPLines();
       playableTrackTCPLines.insert( playableTrackTCPLines.end(), {
-   #ifdef EXPERIMENTAL_DA
-         // DA: Has Mute and Solo on separate lines.
-         { TCPLine::kItemMute, kTrackInfoBtnSize + 1, 1,
-           WideMuteDrawFunction },
-         { TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
-           WideSoloDrawFunction },
-   #else
-         { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
-           MuteAndSoloDrawFunction },
-   #endif
-
+      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
+         MuteAndSoloDrawFunction },
+      } );
+      playableTrackTCPLines.insert( playableTrackTCPLines.end(), {
+      { TCPLine::kItemEffects, kTrackEffectsBtnHeight + 1, 0,
+         EffectsDrawFunction },
       } );
    } );
    return playableTrackTCPLines;

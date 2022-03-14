@@ -27,8 +27,8 @@ class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
  public:
    GUIPrefs(wxWindow * parent, wxWindowID winid);
    ~GUIPrefs();
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
 
    bool Commit() override;
    ManualPageID HelpPageName() override;
@@ -39,10 +39,6 @@ class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
       wxArrayStringEx *pCodes,
       int *pDefaultRangeIndex = nullptr
    );
-
-   // If no input language given, defaults to system language.
-   // Returns the language actually used which is not lang if lang cannot be found.
-   static wxString SetLang( const wxString & lang );
 
  private:
    void Populate();

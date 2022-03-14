@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "TrackView.h"
 
-#include "../../Envelope.h"
+#include "Envelope.h"
 #include "../../EnvelopeEditor.h"
 #include "../../HitTestResult.h"
 #include "../../prefs/WaveformSettings.h"
@@ -21,11 +21,13 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../ProjectHistory.h"
 #include "../../RefreshCode.h"
 #include "../../TimeTrack.h"
-#include "../../TrackArtist.h"
+#include "../../TrackArt.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
 #include "../../WaveTrack.h"
 #include "../../../images/Cursors.h"
+
+#include <wx/event.h>
 
 EnvelopeHandle::EnvelopeHandle( Envelope *pEnvelope )
    : mEnvelope{ pEnvelope }

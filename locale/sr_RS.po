@@ -12283,7 +12283,7 @@ msgstr "Не могу да поставим стање тока на паузи�
 #: src/import/ImportGStreamer.cpp
 #, c-format
 msgid "Index[%02d], Type[%s], Channels[%d], Rate[%d]"
-msgstr "Индекс[%02x] Врста[%s], Број канала[%d], Проток[%d]"
+msgstr "Индекс[%02d] Врста[%s], Број канала[%d], Проток[%d]"
 
 #: src/import/ImportGStreamer.cpp
 msgid "File doesn't contain any audio streams."

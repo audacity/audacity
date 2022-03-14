@@ -114,17 +114,17 @@ EffectChangeSpeed::~EffectChangeSpeed()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectChangeSpeed::GetSymbol()
+ComponentInterfaceSymbol EffectChangeSpeed::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectChangeSpeed::GetDescription()
+TranslatableString EffectChangeSpeed::GetDescription() const
 {
    return XO("Changes the speed of a track, also changing its pitch");
 }
 
-ManualPageID EffectChangeSpeed::ManualPage()
+ManualPageID EffectChangeSpeed::ManualPage() const
 {
    return L"Change_Speed";
 }
@@ -132,7 +132,7 @@ ManualPageID EffectChangeSpeed::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectChangeSpeed::GetType()
+EffectType EffectChangeSpeed::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -174,52 +174,10 @@ bool EffectChangeSpeed::CheckWhetherSkipEffect()
    return (m_PercentChange == 0.0);
 }
 
-double EffectChangeSpeed::CalcPreviewInputLength(double previewLength)
+double EffectChangeSpeed::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    return previewLength * (100.0 + m_PercentChange) / 100.0;
-}
-
-bool EffectChangeSpeed::Startup()
-{
-   wxString base = wxT("/Effects/ChangeSpeed/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      // Retrieve last used control values
-      gPrefs->Read(base + wxT("PercentChange"), &m_PercentChange, 0);
-
-      wxString format;
-      gPrefs->Read(base + wxT("TimeFormat"), &format, wxString{});
-      mFormat = NumericConverter::LookupFormat( NumericConverter::TIME, format );
-
-      gPrefs->Read(base + wxT("VinylChoice"), &mFromVinyl, 0);
-      if (mFromVinyl == kVinyl_NA)
-      {
-         mFromVinyl = kVinyl_33AndAThird;
-      }
-
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
 }
 
 bool EffectChangeSpeed::Init()
@@ -230,7 +188,7 @@ bool EffectChangeSpeed::Init()
    return true;
 }
 
-bool EffectChangeSpeed::Process()
+bool EffectChangeSpeed::Process(EffectSettings &)
 {
    // Similar to EffectSoundTouch::Process()
 
@@ -293,18 +251,19 @@ bool EffectChangeSpeed::Process()
    return bGoodResult;
 }
 
-void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    {
       wxString formatId;
       GetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(),
+         CurrentSettingsGroup(),
          wxT("TimeFormat"), formatId, mFormat.Internal());
       mFormat = NumericConverter::LookupFormat(
          NumericConverter::TIME, formatId );
    }
    GetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(),
+      CurrentSettingsGroup(),
       wxT("VinylChoice"), mFromVinyl, mFromVinyl);
 
    S.SetBorder(5);
@@ -415,16 +374,12 @@ void EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S)
       S.EndStatic();
    }
    S.EndVerticalLay();
+   return nullptr;
 }
 
-bool EffectChangeSpeed::TransferDataToWindow()
+bool EffectChangeSpeed::TransferDataToWindow(const EffectSettings &)
 {
    mbLoopDetect = true;
-
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
 
    if (mFromVinyl == kVinyl_NA)
    {
@@ -453,20 +408,16 @@ bool EffectChangeSpeed::TransferDataToWindow()
    return true;
 }
 
-bool EffectChangeSpeed::TransferDataFromWindow()
+bool EffectChangeSpeed::TransferDataFromWindow(EffectSettings &)
 {
    // mUIParent->TransferDataFromWindow() loses some precision, so save and restore it.
    double exactPercent = m_PercentChange;
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
    m_PercentChange = exactPercent;
 
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
+      CurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
+      CurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
 
    return true;
 }
@@ -671,7 +622,7 @@ void EffectChangeSpeed::OnChoice_Vinyl(wxCommandEvent & WXUNUSED(evt))
    // Use this as the 'preferred' choice.
    if (mFromVinyl != kVinyl_NA) {
       SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
+         CurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl);
    }
 
    // If mFromVinyl & mToVinyl are set, then there's a NEW percent change.
@@ -782,7 +733,7 @@ void EffectChangeSpeed::Update_Vinyl()
          } else {
             // Use the last saved option.
             GetConfig(GetDefinition(), PluginSettings::Private,
-               GetCurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, 0);
+               CurrentSettingsGroup(), wxT("VinylChoice"), mFromVinyl, 0);
             mpChoice_FromVinyl->SetSelection(mFromVinyl);
             mpChoice_ToVinyl->SetSelection(mFromVinyl);
          }
@@ -829,7 +780,7 @@ void EffectChangeSpeed::Update_TimeCtrl_ToLength()
    // Negative times do not make sense.
    // 359999 = 99h:59m:59s which is a little less disturbing than overflow characters
    // though it may still look a bit strange with some formats.
-   mToLength = TrapDouble(mToLength, 0.0, 359999.0);
+   mToLength = std::clamp<double>(mToLength, 0.0, 359999.0);
    mpToLengthCtrl->SetValue(mToLength);
 }
 

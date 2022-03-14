@@ -6,7 +6,7 @@
 
   Created by Michael Chinen (mchinen) on 2/12/11
   Audacity(R) is copyright (c) 1999-2011 Audacity Team.
-  License: GPL v2.  See License.txt.
+  License: GPL v2 or later.  See License.txt.
 
 ******************************************************************//**
 
@@ -21,16 +21,9 @@
 #include <chrono>
 #include <vector>
 
-#include <wx/event.h> // to declare a custom event type
 #include <wx/string.h> // member variables
 
-#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 #include "DeviceChange.h"
-#endif
-
-// Event sent to the application
-wxDECLARE_EXPORTED_EVENT(AUDIO_DEVICES_API,
-                         EVT_RESCANNED_DEVICES, wxEvent);
 
 typedef struct DeviceSourceMap {
    int deviceIndex;
@@ -50,7 +43,7 @@ class AUDIO_DEVICES_API DeviceManager final
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER) && defined(HAVE_DEVICE_CHANGE)
 : public DeviceChangeHandler
 #else
-: public wxEvtHandler
+: public DeviceChangeMessagePublisher
 #endif
 {
  public:
@@ -62,7 +55,7 @@ class AUDIO_DEVICES_API DeviceManager final
    void Rescan();
 
    // Time since devices scanned in seconds.
-   float GetTimeSinceRescan();
+   std::chrono::duration<float> GetTimeSinceRescan();
 
    DeviceSourceMap* GetDefaultOutputDevice(int hostIndex);
    DeviceSourceMap* GetDefaultInputDevice(int hostIndex);

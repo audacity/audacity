@@ -65,8 +65,7 @@ public:
    // Values retrievable from GetInt() of the event for settings change
    enum EventCode : int {
       ChangedSyncLock,
-      ChangedProjectRate,
-      ChangedTool
+      ChangedTool,
    };
 
    explicit ProjectSettings( AudacityProject &project );
@@ -102,13 +101,7 @@ public:
 
    void SetOvertones(bool isSelected) { mbOvertones = isSelected; }
    bool IsOvertones() const { return mbOvertones; }
-
-   // Speed play
-   double GetPlaySpeed() const {
-      return mPlaySpeed.load( std::memory_order_relaxed ); }
-   void SetPlaySpeed( double value ) {
-      mPlaySpeed.store( value, std::memory_order_relaxed ); }
-
+   
    // Selection Format
    void SetSelectionFormat(const NumericFormatSymbol & format);
    const NumericFormatSymbol & GetSelectionFormat() const;
@@ -142,10 +135,6 @@ private:
    NumericFormatSymbol mAudioTimeFormat;
 
    wxString mSoloPref;
-
-   // This is atomic because scrubber may read it in a separate thread from
-   // the main
-   std::atomic<double> mPlaySpeed{};
 
    int mSnapTo;
 

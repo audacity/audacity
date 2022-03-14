@@ -25,8 +25,10 @@ effects from this one class.
 
 #include "LadspaEffect.h"       // This class's header file
 #include "SampleCount.h"
+#include "ConfigInterface.h"
 
 #include <float.h>
+#include <thread>
 
 #if !defined(__WXMSW__)
 #include <dlfcn.h>
@@ -54,13 +56,14 @@ effects from this one class.
 #include <wx/scrolwin.h>
 #include <wx/version.h>
 
+#include "AudacityException.h"
 #include "../../EffectHostInterface.h"
 #include "FileNames.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/wxPanelWrapper.h"
-#include "../../ModuleManager.h"
+#include "ModuleManager.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "../../widgets/WindowAccessible.h"
@@ -83,7 +86,7 @@ const static wxChar *kShippedEffects[] =
 // When the module is builtin to Audacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -93,7 +96,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // ============================================================================
 // Register this as a builtin module
 // ============================================================================
-DECLARE_BUILTIN_MODULE(LadspaBuiltin);
+DECLARE_BUILTIN_PROVIDER(LadspaBuiltin);
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -113,12 +116,12 @@ LadspaEffectsModule::~LadspaEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath LadspaEffectsModule::GetPath()
+PluginPath LadspaEffectsModule::GetPath() const
 {
    return {};
 }
 
-ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol()
+ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol() const
 {
    /* i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
       (Application programming interface)
@@ -126,24 +129,24 @@ ComponentInterfaceSymbol LadspaEffectsModule::GetSymbol()
    return XO("LADSPA Effects");
 }
 
-VendorSymbol LadspaEffectsModule::GetVendor()
+VendorSymbol LadspaEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
 
-wxString LadspaEffectsModule::GetVersion()
+wxString LadspaEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return LADSPAEFFECTS_VERSION;
 }
 
-TranslatableString LadspaEffectsModule::GetDescription()
+TranslatableString LadspaEffectsModule::GetDescription() const
 {
    return XO("Provides LADSPA Effects");
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 bool LadspaEffectsModule::Initialize()
@@ -196,7 +199,7 @@ FilePath LadspaEffectsModule::InstallPath()
    return FileNames::PlugInDir();
 }
 
-bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+void LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
@@ -218,12 +221,9 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
          }
       }
    }
-
-   // We still want to be called during the normal registration process
-   return false;
 }
 
-PluginPaths LadspaEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths LadspaEffectsModule::FindModulePaths(PluginManagerInterface & pm)
 {
    auto pathList = GetSearchPaths();
    FilePaths files;
@@ -290,7 +290,7 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
 
          for (data = mainFn(index); data; data = mainFn(++index)) {
             LadspaEffect effect(path, index);
-            if (effect.SetHost(NULL)) {
+            if (effect.InitializePlugin()) {
                ++nLoaded;
                if (callback)
                   callback( this, &effect );
@@ -309,7 +309,8 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
       // dependent multi-threading bug in the Amplio2 library itself, in case the unload of the .dll
       // comes too soon after the load.  I saw the bug in Release builds but not Debug.
       // A sleep of even 1 ms was enough to fix the problem for me, but let's be even more generous.
-      ::wxMilliSleep(10);
+      using namespace std::chrono;
+      std::this_thread::sleep_for(10ms);
       lib.Unload();
    }
 #else
@@ -333,7 +334,7 @@ bool LadspaEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-LadspaEffectsModule::CreateInstance(const PluginPath & path)
+LadspaEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the path is two words.
@@ -342,7 +343,9 @@ LadspaEffectsModule::CreateInstance(const PluginPath & path)
    long index;
    wxString realPath = path.BeforeFirst(wxT(';'));
    path.AfterFirst(wxT(';')).ToLong(&index);
-   return std::make_unique<LadspaEffect>(realPath, (int)index);
+   auto result = std::make_unique<LadspaEffect>(realPath, (int)index);
+   result->InitializePlugin();
+   return result;
 }
 
 FilePaths LadspaEffectsModule::GetSearchPaths()
@@ -397,8 +400,8 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
 class LadspaEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   LadspaEffectOptionsDialog(wxWindow * parent,
-      EffectHostInterface &host, EffectDefinitionInterface &effect);
+   LadspaEffectOptionsDialog(
+      wxWindow * parent, EffectDefinitionInterface &effect);
    virtual ~LadspaEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -406,7 +409,6 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectHostInterface &mHost;
    EffectDefinitionInterface &mEffect;
    bool mUseLatency;
 
@@ -417,10 +419,9 @@ BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LadspaEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(wxWindow * parent,
-   EffectHostInterface &host, EffectDefinitionInterface &effect)
+LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(
+   wxWindow * parent, EffectDefinitionInterface &effect)
 : wxDialogWrapper(parent, wxID_ANY, XO("LADSPA Effect Options"))
-, mHost{ host }
 , mEffect{ effect }
 {
    GetConfig(mEffect,
@@ -615,7 +616,6 @@ LadspaEffect::LadspaEffect(const wxString & path, int index)
    mIndex = index;
    mData = NULL;
 
-   mHost = NULL;
    mMaster = NULL;
    mReady = false;
 
@@ -641,27 +641,27 @@ LadspaEffect::~LadspaEffect()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath LadspaEffect::GetPath()
+PluginPath LadspaEffect::GetPath() const
 {
    return wxString::Format(wxT("%s;%d"), mPath, mIndex);
 }
 
-ComponentInterfaceSymbol LadspaEffect::GetSymbol()
+ComponentInterfaceSymbol LadspaEffect::GetSymbol() const
 {
    return LAT1CTOWX(mData->Name);
 }
 
-VendorSymbol LadspaEffect::GetVendor()
+VendorSymbol LadspaEffect::GetVendor() const
 {
    return { LAT1CTOWX(mData->Maker) };
 }
 
-wxString LadspaEffect::GetVersion()
+wxString LadspaEffect::GetVersion() const
 {
    return _("n/a");
 }
 
-TranslatableString LadspaEffect::GetDescription()
+TranslatableString LadspaEffect::GetDescription() const
 {
    return Verbatim( LAT1CTOWX(mData->Copyright) );
 }
@@ -670,7 +670,7 @@ TranslatableString LadspaEffect::GetDescription()
 // EffectDefinitionInterface implementation
 // ============================================================================
 
-EffectType LadspaEffect::GetType()
+EffectType LadspaEffect::GetType() const
 {
    if (mAudioIns == 0 && mAudioOuts == 0)
    {
@@ -690,32 +690,27 @@ EffectType LadspaEffect::GetType()
    return EffectTypeProcess;
 }
 
-EffectFamilySymbol LadspaEffect::GetFamily()
+EffectFamilySymbol LadspaEffect::GetFamily() const
 {
    return LADSPAEFFECTS_FAMILY;
 }
 
-bool LadspaEffect::IsInteractive()
+bool LadspaEffect::IsInteractive() const
 {
    return mInteractive;
 }
 
-bool LadspaEffect::IsDefault()
+bool LadspaEffect::IsDefault() const
 {
    return false;
 }
 
-bool LadspaEffect::IsLegacy()
-{
-   return false;
-}
-
-bool LadspaEffect::SupportsRealtime()
+bool LadspaEffect::SupportsRealtime() const
 {
    return GetType() != EffectTypeGenerate;
 }
 
-bool LadspaEffect::SupportsAutomation()
+bool LadspaEffect::SupportsAutomation() const
 {
    return mNumInputControls > 0;
 }
@@ -724,10 +719,8 @@ bool LadspaEffect::SupportsAutomation()
 // EffectProcessor Implementation
 // ============================================================================
 
-bool LadspaEffect::SetHost(EffectHostInterface *host)
+bool LadspaEffect::InitializePlugin()
 {
-   mHost = host;
-
    if (!Load())
    {
       return false;
@@ -866,8 +859,13 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
          }
       }
    }
+   return true;
+}
 
-   // mHost will be null during registration
+bool LadspaEffect::InitializeInstance(EffectHostInterface *host)
+{
+   mHost = host;
+
    if (mHost)
    {
       GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -875,27 +873,27 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
 
       bool haveDefaults;
       GetConfig(*this, PluginSettings::Private,
-         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
          false);
       if (!haveDefaults)
       {
-         SaveParameters(mHost->GetFactoryDefaultsGroup());
+         SaveParameters(FactoryDefaultsGroup());
          SetConfig(*this, PluginSettings::Private,
-            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+            FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(mHost->GetCurrentSettingsGroup());
+      LoadParameters(CurrentSettingsGroup());
    }
 
    return true;
 }
 
-unsigned LadspaEffect::GetAudioInCount()
+unsigned LadspaEffect::GetAudioInCount() const
 {
    return mAudioIns;
 }
 
-unsigned LadspaEffect::GetAudioOutCount()
+unsigned LadspaEffect::GetAudioOutCount() const
 {
    return mAudioOuts;
 }
@@ -943,7 +941,8 @@ size_t LadspaEffect::GetTailSize()
    return 0;
 }
 
-bool LadspaEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool LadspaEffect::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    /* Instantiate the plugin */
    if (!mReady)
@@ -974,11 +973,13 @@ bool LadspaEffect::ProcessFinalize()
    return true;
 }
 
-size_t LadspaEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t LadspaEffect::ProcessBlock(EffectSettings &,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (int i = 0; i < (int)mAudioIns; i++)
    {
-      mData->connect_port(mMaster, mInputPorts[i], inBlock[i]);
+      mData->connect_port(mMaster, mInputPorts[i],
+         const_cast<float*>(inBlock[i]));
    }
 
    for (int i = 0; i < (int)mAudioOuts; i++)
@@ -993,12 +994,13 @@ size_t LadspaEffect::ProcessBlock(float **inBlock, float **outBlock, size_t bloc
    return blockLen;
 }
 
-bool LadspaEffect::RealtimeInitialize()
+bool LadspaEffect::RealtimeInitialize(EffectSettings &)
 {
    return true;
 }
 
-bool LadspaEffect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool LadspaEffect::RealtimeAddProcessor(
+   EffectSettings &, unsigned, float sampleRate)
 {
    LADSPA_Handle slave = InitInstance(sampleRate);
    if (!slave)
@@ -1011,8 +1013,9 @@ bool LadspaEffect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool LadspaEffect::RealtimeFinalize()
+bool LadspaEffect::RealtimeFinalize(EffectSettings &) noexcept
 {
+return GuardedCall<bool>([&]{
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
    {
       FreeInstance(mSlaves[i]);
@@ -1020,6 +1023,7 @@ bool LadspaEffect::RealtimeFinalize()
    mSlaves.clear();
 
    return true;
+});
 }
 
 bool LadspaEffect::RealtimeSuspend()
@@ -1027,24 +1031,23 @@ bool LadspaEffect::RealtimeSuspend()
    return true;
 }
 
-bool LadspaEffect::RealtimeResume()
+bool LadspaEffect::RealtimeResume() noexcept
 {
    return true;
 }
 
-bool LadspaEffect::RealtimeProcessStart()
+bool LadspaEffect::RealtimeProcessStart(EffectSettings &)
 {
    return true;
 }
 
-size_t LadspaEffect::RealtimeProcess(int group,
-                                          float **inbuf,
-                                          float **outbuf,
-                                          size_t numSamples)
+size_t LadspaEffect::RealtimeProcess(int group, EffectSettings &,
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    for (int i = 0; i < (int)mAudioIns; i++)
    {
-      mData->connect_port(mSlaves[group], mInputPorts[i], inbuf[i]);
+      mData->connect_port(mSlaves[group], mInputPorts[i],
+         const_cast<float*>(inbuf[i]));
    }
 
    for (int i = 0; i < (int)mAudioOuts; i++)
@@ -1057,7 +1060,7 @@ size_t LadspaEffect::RealtimeProcess(int group,
    return numSamples;
 }
 
-bool LadspaEffect::RealtimeProcessEnd()
+bool LadspaEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return true;
 }
@@ -1137,7 +1140,7 @@ bool LadspaEffect::SaveUserPreset(const RegistryPath & name)
    return SaveParameters(name);
 }
 
-RegistryPaths LadspaEffect::GetFactoryPresets()
+RegistryPaths LadspaEffect::GetFactoryPresets() const
 {
    return {};
 }
@@ -1149,7 +1152,7 @@ bool LadspaEffect::LoadFactoryPreset(int WXUNUSED(id))
 
 bool LadspaEffect::LoadFactoryDefaults()
 {
-   if (!LoadParameters(mHost->GetFactoryDefaultsGroup()))
+   if (!LoadParameters(FactoryDefaultsGroup()))
    {
       return false;
    }
@@ -1163,7 +1166,8 @@ bool LadspaEffect::LoadFactoryDefaults()
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool LadspaEffect::PopulateUI(ShuttleGui &S)
+std::unique_ptr<EffectUIValidator>
+LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
 
@@ -1215,10 +1219,11 @@ bool LadspaEffect::PopulateUI(ShuttleGui &S)
          {
             item = safenew wxStaticText(w, 0, _("Duration:"));
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
+            auto &extra = access.Get().extra;
             mDuration = safenew
                NumericTextCtrl(w, ID_Duration,
                   NumericConverter::TIME,
-                  mHost->GetDurationFormat(),
+                  extra.GetDurationFormat(),
                   mHost->GetDuration(),
                   mSampleRate,
                   NumericTextCtrl::Options{}
@@ -1478,7 +1483,7 @@ bool LadspaEffect::PopulateUI(ShuttleGui &S)
    // And let the parent reduce to the NEW minimum if possible
    mParent->SetMinSize({ -1, -1 });
 
-   return true;
+   return std::make_unique<DefaultEffectUIValidator>(*this, access);
 }
 
 bool LadspaEffect::IsGraphicalUI()
@@ -1486,23 +1491,13 @@ bool LadspaEffect::IsGraphicalUI()
    return false;
 }
 
-bool LadspaEffect::ValidateUI()
+bool LadspaEffect::ValidateUI(EffectSettings &)
 {
-   if (!mParent->Validate())
-   {
-      return false;
-   }
-
    if (GetType() == EffectTypeGenerate)
    {
       mHost->SetDuration(mDuration->GetValue());
    }
 
-   return true;
-}
-
-bool LadspaEffect::HideUI()
-{
    return true;
 }
 
@@ -1541,7 +1536,7 @@ bool LadspaEffect::HasOptions()
 
 void LadspaEffect::ShowOptions()
 {
-   LadspaEffectOptionsDialog dlg(mParent, *mHost, *this);
+   LadspaEffectOptionsDialog dlg(mParent, *this);
    if (dlg.ShowModal())
    {
       // Reinitialize configuration options

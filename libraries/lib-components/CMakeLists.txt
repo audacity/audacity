@@ -6,9 +6,9 @@ for storing as a configuration file value) with a user-visible translatable
 string.  It serves to "name" various things.
 
 CommandParameters, for write and reading key-value pairs to and from strings.
-]]#
+]]
 
-list( APPEND SOURCES
+set( SOURCES
    ComponentInterface.cpp
    ComponentInterface.h
    ComponentInterfaceSymbol.h
@@ -16,10 +16,15 @@ list( APPEND SOURCES
    EffectAutomationParameters.h
    EffectInterface.cpp
    EffectInterface.h
-   ModuleInterface.cpp
-   ModuleInterface.h
+   PluginProvider.cpp
+   PluginProvider.h
 )
-audacity_library( lib-components "${SOURCES}"
-   "lib-strings-interface;PRIVATE;wxBase"
+set( LIBRARIES
+   lib-strings-interface
+   lib-utility
+   PRIVATE
+   wxBase
+)
+audacity_library( lib-components "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

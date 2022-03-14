@@ -16,6 +16,7 @@ Paul Licameli
 #endif
 #include "widgets/AudacityMessageBox.h"
 #include "ProgressDialog.h"
+#include "MultiDialog.h"
 #include <wx/app.h>
 #include <wx/progdlg.h>
 #include <wx/windowptr.h>
@@ -34,6 +35,17 @@ void wxWidgetsBasicUI::DoYield()
    wxTheApp->Yield();
 }
 
+static void DoYieldOnMac()
+{
+#ifdef __WXMAC__
+   // Issue2545: First yield to destroy progress dialogs that (since
+   // 881ee94) now have delayed destruction.  Otherwise, modal dialog
+   // event loops on Mac are messed up and the message box can't be
+   // dismissed.
+   wxTheApp->Yield();
+#endif
+}
+
 void wxWidgetsBasicUI::DoShowErrorDialog(
    const BasicUI::WindowPlacement &placement,
    const TranslatableString &dlogTitle,
@@ -41,6 +53,8 @@ void wxWidgetsBasicUI::DoShowErrorDialog(
    const ManualPageID &helpPage,
    const BasicUI::ErrorDialogOptions &options)
 {
+   DoYieldOnMac();
+
    using namespace BasicUI;
    bool modal = true;
    auto parent = wxWidgetsWindowPlacement::GetParent(placement);
@@ -87,6 +101,8 @@ wxWidgetsBasicUI::DoMessageBox(
    const TranslatableString &message,
    MessageBoxOptions options)
 {
+   DoYieldOnMac();
+
    // Compute the style argument to pass to wxWidgets
    long style = 0;
    switch (options.iconStyle) {
@@ -170,6 +186,10 @@ struct MyProgressDialog : BasicUI::ProgressDialog {
    {
       return mpDialog->Update(numerator, denominator, message);
    }
+   virtual void SetMessage(const TranslatableString & message) override
+   {
+      mpDialog->SetMessage(message);
+   }
 };
 }
 
@@ -179,6 +199,7 @@ wxWidgetsBasicUI::DoMakeProgress(const TranslatableString & title,
    unsigned flags,
    const TranslatableString &remainingLabelText)
 {
+   DoYieldOnMac();
    unsigned options = 0;
    if (~(flags & ProgressShowStop))
       options |= pdlgHideStopButton;
@@ -222,6 +243,17 @@ wxWidgetsBasicUI::DoMakeGenericProgress(
    const TranslatableString &title,
    const TranslatableString &message)
 {
+   DoYieldOnMac();
    return std::make_unique<MyGenericProgress>(
       title, message, wxWidgetsWindowPlacement::GetParent(placement));
+}
+
+int wxWidgetsBasicUI::DoMultiDialog(const TranslatableString &message,
+   const TranslatableString &title,
+   const TranslatableStrings &buttons,
+   const ManualPageID &helpPage,
+   const TranslatableString &boxMsg, bool log)
+{
+   DoYieldOnMac();
+   return ::ShowMultiDialog(message, title, buttons, helpPage, boxMsg, log);
 }

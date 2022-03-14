@@ -266,7 +266,8 @@ bool DBConnection::Close()
       // Wait for the checkpoints to end
       while (mCheckpointPending || mCheckpointActive)
       {
-         wxMilliSleep(50);
+         using namespace std::chrono;
+         std::this_thread::sleep_for(50ms);
          pd->Pulse();
       }
    }
@@ -600,16 +601,15 @@ struct DBConnectionTransactionScopeImpl final : TransactionScopeImpl {
    DBConnection &mConnection;
 };
 
-static struct Installer{ Installer() { TransactionScope::InstallImplementation(
-   [](AudacityProject &project) -> std::unique_ptr<TransactionScopeImpl> {
-      auto &connectionPtr = ConnectionPtr::Get(project);
-      if (auto pConnection = connectionPtr.mpConnection.get())
-         return
-            std::make_unique<DBConnectionTransactionScopeImpl>(*pConnection);
-      else
-         return nullptr;
-   }
-); } } installer;
+static TransactionScope::Factory::Scope scope {
+[](AudacityProject &project) -> std::unique_ptr<TransactionScopeImpl> {
+   auto &connectionPtr = ConnectionPtr::Get(project);
+   if (auto pConnection = connectionPtr.mpConnection.get())
+      return
+         std::make_unique<DBConnectionTransactionScopeImpl>(*pConnection);
+   else
+      return nullptr;
+} };
 
 DBConnectionTransactionScopeImpl::~DBConnectionTransactionScopeImpl() = default;
 

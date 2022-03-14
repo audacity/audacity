@@ -13,34 +13,21 @@
 
 #include <utility>
 #include <vector>
-#include <wx/event.h> // inherit wxEvtHandler
 #include <wx/weakref.h> // member variable
 #include "SelectedRegion.h"
 #include <memory>
+#include "Observer.h"
 #include "Prefs.h"
 #include "XMLMethodRegistry.h"
 #include "ZoomInfo.h" // to inherit
 
-
-class NotifyingSelectedRegion;
-
-struct SelectedRegionEvent : public wxEvent
-{
-   SelectedRegionEvent( wxEventType commandType,
-                       NotifyingSelectedRegion *pRegion );
-
-   wxEvent *Clone() const override;
-
-   wxWeakRef< NotifyingSelectedRegion > pRegion;
-};
-
-// To do:  distinguish time changes from frequency changes perhaps?
-wxDECLARE_EXPORTED_EVENT( SCREEN_GEOMETRY_API,
-                          EVT_SELECTED_REGION_CHANGE, SelectedRegionEvent );
+struct NotifyingSelectedRegionMessage : Observer::Message {};
 
 // This heavyweight wrapper of the SelectedRegion structure emits events
 // on mutating operations, that other classes can listen for.
-class SCREEN_GEOMETRY_API NotifyingSelectedRegion : public wxEvtHandler
+class SCREEN_GEOMETRY_API NotifyingSelectedRegion
+   : public Observer::Publisher<NotifyingSelectedRegionMessage>
+   , public wxTrackable
 {
 public:
    // Expose SelectedRegion's const accessors
@@ -106,26 +93,17 @@ enum : int {
 
 enum : int {
    kTrackInfoBtnSize = 18, // widely used dimension, usually height
+   kTrackEffectsBtnHeight = 28,
    kTrackInfoSliderHeight = 25,
    kTrackInfoSliderWidth = 84,
    kTrackInfoSliderAllowance = 5,
    kTrackInfoSliderExtra = 5,
 };
 
-class PlayRegion;
+struct PlayRegionMessage : Observer::Message {};
 
-struct PlayRegionEvent : public wxEvent
-{
-   PlayRegionEvent( wxEventType commandType, PlayRegion *pRegion );
-   wxEvent *Clone() const override;
-
-   wxWeakRef< PlayRegion > pRegion;
-};
-
-wxDECLARE_EXPORTED_EVENT( SCREEN_GEOMETRY_API,
-   EVT_PLAY_REGION_CHANGE, PlayRegionEvent );
-
-class SCREEN_GEOMETRY_API PlayRegion : public wxEvtHandler
+class SCREEN_GEOMETRY_API PlayRegion
+   : public Observer::Publisher<PlayRegionMessage>
 {
 public:
    PlayRegion() = default;
@@ -207,7 +185,7 @@ private:
 extern SCREEN_GEOMETRY_API const TranslatableString LoopToggleText;
 
 class SCREEN_GEOMETRY_API ViewInfo final
-   : public wxEvtHandler, public ZoomInfo
+   : public ZoomInfo
 {
 public:
    static ViewInfo &Get( AudacityProject &project );

@@ -29,8 +29,8 @@ class AUDACITY_DLL_API TracksPrefs final : public PrefsPanel
  public:
    TracksPrefs(wxWindow * parent, wxWindowID winid);
    ~TracksPrefs();
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
 
    bool Commit() override;
    ManualPageID HelpPageName() override;
@@ -41,8 +41,6 @@ class AUDACITY_DLL_API TracksPrefs final : public PrefsPanel
    static double GetPinnedHeadPositionPreference();
    static void SetPinnedHeadPositionPreference(double value, bool flush = false);
    
-   static wxString GetDefaultAudioTrackNamePreference();
-
    static WaveTrackViewConstants::Display ViewModeChoice();
    static WaveformSettings::ScaleTypeValues WaveformScaleChoice();
    static WaveTrackViewConstants::SampleDisplay SampleViewChoice();

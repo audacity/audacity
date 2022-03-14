@@ -5,7 +5,7 @@
   EffectManager.h
 
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
-  License: GPL v2.  See License.txt.
+  License: GPL v2 or later.  See License.txt.
 
 **********************************************************************/
 
@@ -25,23 +25,24 @@ class AudacityProject;
 class CommandContext;
 class CommandMessageTarget;
 class ComponentInterfaceSymbol;
-class Effect;
 class TrackList;
 class SelectedRegion;
 class wxString;
 typedef wxString PluginID;
 
-using EffectMap = std::unordered_map<wxString, Effect *>;
-using AudacityCommandMap = std::unordered_map<wxString, AudacityCommand *>;
-using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<Effect> >;
+#include "EffectInterface.h"
 
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-class EffectRack;
-#endif
+struct EffectAndDefaultSettings{
+   EffectUIHostInterface *effect{};
+   EffectSettings settings{};
+};
+
+using EffectMap = std::unordered_map<wxString, EffectAndDefaultSettings>;
+using AudacityCommandMap = std::unordered_map<wxString, AudacityCommand *>;
+using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<EffectUIHostInterface> >;
+
 class AudacityCommand;
 
-
-class NotifyingSelectedRegion;
 
 class AUDACITY_DLL_API EffectManager
 {
@@ -62,6 +63,9 @@ public:
       kRepeatNyquistPrompt = 0x10,
    };
 
+   /*! Create a new instance of an effect by its ID. */
+   static std::unique_ptr<EffectProcessor> NewEffect(const PluginID &ID);
+
    /** Get the singleton instance of the EffectManager. Probably not safe
        for multi-thread use. */
    static EffectManager & Get();
@@ -77,8 +81,9 @@ public:
    virtual ~EffectManager();
 
    //! Here solely for the purpose of Nyquist Workbench until a better solution is devised.
-   /** Register an effect so it can be executed. */
-   const PluginID & RegisterEffect(std::unique_ptr<Effect> uEffect);
+   /** Register an effect so it can be executed.
+     uEffect is expected to be a self-hosting Nyquist effect */
+   const PluginID & RegisterEffect(std::unique_ptr<EffectUIHostInterface> uEffect);
    //! Used only by Nyquist Workbench module
    void UnregisterEffect(const PluginID & ID);
 
@@ -135,10 +140,19 @@ public:
 
    const PluginID & GetEffectByIdentifier(const CommandID & strTarget);
 
-   /** Return an effect by its ID. */
-   Effect *GetEffect(const PluginID & ID);
+   /*! Return an effect by its ID. */
+   EffectUIHostInterface *GetEffect(const PluginID & ID);
+
+   /*! Get default settings by effect ID. */
+   EffectSettings *GetDefaultSettings(const PluginID & ID);
+
+   /*! Get effect and default settings by effect ID. */
+   std::pair<EffectUIHostInterface *, EffectSettings *>
+   GetEffectAndDefaultSettings(const PluginID & ID);
 
 private:
+   EffectAndDefaultSettings &DoGetEffect(const PluginID & ID);
+
    AudacityCommand *GetAudacityCommand(const PluginID & ID);
 
    EffectMap mEffects;
@@ -150,11 +164,6 @@ private:
    // Set true if we want to skip pushing state 
    // after processing at effect run time.
    bool mSkipStateFlag;
-
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-   friend class EffectRack;
-#endif
-
 };
 
 #endif

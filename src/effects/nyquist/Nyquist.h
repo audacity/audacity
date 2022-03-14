@@ -73,23 +73,23 @@ public:
 
    // ComponentInterface implementation
 
-   PluginPath GetPath() override;
-   ComponentInterfaceSymbol GetSymbol() override;
-   VendorSymbol GetVendor() override;
-   wxString GetVersion() override;
-   TranslatableString GetDescription() override;
+   PluginPath GetPath() const override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   VendorSymbol GetVendor() const override;
+   wxString GetVersion() const override;
+   TranslatableString GetDescription() const override;
    
-   ManualPageID ManualPage() override;
-   FilePath HelpPage() override;
+   ManualPageID ManualPage() const override;
+   FilePath HelpPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   EffectType GetClassification() override;
-   EffectFamilySymbol GetFamily() override;
-   bool IsInteractive() override;
-   bool IsDefault() override;
-   bool EnablesDebug() override;
+   EffectType GetType() const override;
+   EffectType GetClassification() const override;
+   EffectFamilySymbol GetFamily() const override;
+   bool IsInteractive() const override;
+   bool IsDefault() const override;
+   bool EnablesDebug() const override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -103,12 +103,14 @@ public:
 
    bool Init() override;
    bool CheckWhetherSkipEffect() override;
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
    int ShowHostInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, bool forceModal = false) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+      const EffectDialogFactory &factory,
+      EffectSettingsAccess &access, bool forceModal = false) override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(Settings &settings) override;
 
    // NyquistEffect implementation
    // For Nyquist Workbench support
@@ -198,6 +200,8 @@ private:
    bool validatePath(wxString path);
    wxString ToTimeFormat(double t);
 
+   std::pair<bool, FilePath> CheckHelpPage() const;
+
 private:
 
    wxString          mXlispPath;
@@ -239,6 +243,7 @@ private:
    wxString          mManPage;   // ONLY use if a help page exists in the manual.
    wxString          mHelpFile;
    bool              mHelpFileExists;
+   FilePath          mHelpPage;
    EffectType        mType;
    EffectType        mPromptType; // If a prompt, need to remember original type.
 

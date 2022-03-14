@@ -127,21 +127,21 @@ EffectToneGen::~EffectToneGen()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectToneGen::GetSymbol()
+ComponentInterfaceSymbol EffectToneGen::GetSymbol() const
 {
    return mChirp
       ? EffectChirp::Symbol
       : EffectTone::Symbol;
 }
 
-TranslatableString EffectToneGen::GetDescription()
+TranslatableString EffectToneGen::GetDescription() const
 {
    return mChirp
       ? XO("Generates an ascending or descending tone of one of four types")
       : XO("Generates a constant frequency tone of one of four types");
 }
 
-ManualPageID EffectToneGen::ManualPage()
+ManualPageID EffectToneGen::ManualPage() const
 {
    return mChirp
       ? L"Chirp"
@@ -150,19 +150,20 @@ ManualPageID EffectToneGen::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectToneGen::GetType()
+EffectType EffectToneGen::GetType() const
 {
    return EffectTypeGenerate;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectToneGen::GetAudioOutCount()
+unsigned EffectToneGen::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectToneGen::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectToneGen::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    mPositionInCycles = 0.0;
    mSample = 0;
@@ -170,7 +171,8 @@ bool EffectToneGen::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNam
    return true;
 }
 
-size_t EffectToneGen::ProcessBlock(float **WXUNUSED(inBlock), float **outBlock, size_t blockLen)
+size_t EffectToneGen::ProcessBlock(EffectSettings &,
+   const float *const *, float *const *outBlock, size_t blockLen)
 {
    float *buffer = outBlock[0];
    double throwaway = 0;        //passed to modf but never used
@@ -290,7 +292,7 @@ bool EffectToneGen::DefineParams( ShuttleParams & S ){
 
 
 //   double freqMax = (FindProject() ? FindProject()->GetRate() : 44100.0) / 2.0;
-//   mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);
+//   mFrequency[1] = std::clamp<double>(mFrequency[1], MIN_EndFreq, freqMax);
 
 
    return true;
@@ -350,14 +352,15 @@ bool EffectToneGen::SetAutomationParameters(CommandParameters & parms)
          ? ProjectRate::Get( *FindProject() ).GetRate()
          : 44100.0)
       / 2.0;
-   mFrequency[1] = TrapDouble(mFrequency[1], MIN_EndFreq, freqMax);
+   mFrequency[1] = std::clamp<double>(mFrequency[1], MIN_EndFreq, freqMax);
 
    return true;
 }
 
 // Effect implementation
 
-void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 {
    wxTextCtrl *t;
 
@@ -465,10 +468,11 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
       }
 
       S.AddPrompt(XXO("&Duration:"));
+      auto &extra = access.Get().extra;
       mToneDurationT = safenew
          NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,
-                         GetDurationFormat(),
+                         extra.GetDurationFormat(),
                          GetDuration(),
                          mProjectRate,
                          NumericTextCtrl::Options{}
@@ -479,28 +483,17 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndMultiColumn();
 
-   return;
+   return nullptr;
 }
 
-bool EffectToneGen::TransferDataToWindow()
+bool EffectToneGen::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mToneDurationT->SetValue(GetDuration());
-
    return true;
 }
 
-bool EffectToneGen::TransferDataFromWindow()
+bool EffectToneGen::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    if (!mChirp)
    {
       mFrequency[1] = mFrequency[0];

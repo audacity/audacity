@@ -50,8 +50,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/WindowAccessible.h"
 
 #include <wx/app.h>
-#include <wx/dataobj.h>
-#include <wx/dnd.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
 
@@ -83,8 +81,8 @@ ProjectManager::ProjectManager( AudacityProject &project )
 {
    auto &window = ProjectWindow::Get( mProject );
    window.Bind( wxEVT_CLOSE_WINDOW, &ProjectManager::OnCloseWindow, this );
-   mProject.Bind(EVT_PROJECT_STATUS_UPDATE,
-      &ProjectManager::OnStatusChange, this);
+   mSubscription = ProjectStatus::Get(mProject)
+      .Subscribe(*this, &ProjectManager::OnStatusChange);
    project.Bind( EVT_RECONNECTION_FAILURE,
       &ProjectManager::OnReconnectionFailure, this );
 }
@@ -185,178 +183,6 @@ void ProjectManager::SaveWindowSize()
    sbWindowRectAlreadySaved = true;
 }
 
-#if wxUSE_DRAG_AND_DROP
-class FileObject final : public wxFileDataObject
-{
-public:
-   FileObject()
-   {
-   }
-
-   bool IsSupportedFormat(const wxDataFormat & format, Direction WXUNUSED(dir = Get)) const
-      // PRL:  This function does NOT override any inherited virtual!  What does it do?
-   {
-      if (format.GetType() == wxDF_FILENAME) {
-         return true;
-      }
-
-#if defined(__WXMAC__)
-#if !wxCHECK_VERSION(3, 0, 0)
-      if (format.GetFormatId() == kDragPromisedFlavorFindFile) {
-         return true;
-      }
-#endif
-#endif
-
-      return false;
-   }
-};
-
-class DropTarget final : public wxFileDropTarget
-{
-public:
-   DropTarget(AudacityProject *proj)
-   {
-      mProject = proj;
-
-      // SetDataObject takes ownership
-      SetDataObject(safenew FileObject());
-   }
-
-   ~DropTarget()
-   {
-   }
-
-#if defined(__WXMAC__)
-#if !wxCHECK_VERSION(3, 0, 0)
-   bool GetData() override
-   {
-      bool foundSupported = false;
-      bool firstFileAdded = false;
-      OSErr result;
-
-      UInt16 items = 0;
-      CountDragItems((DragReference)m_currentDrag, &items);
-
-      for (UInt16 index = 1; index <= items; index++) {
-
-         DragItemRef theItem = 0;
-         GetDragItemReferenceNumber((DragReference)m_currentDrag, index, &theItem);
-
-         UInt16 flavors = 0;
-         CountDragItemFlavors((DragReference)m_currentDrag, theItem , &flavors ) ;
-
-         for (UInt16 flavor = 1 ;flavor <= flavors; flavor++) {
-
-            FlavorType theType = 0;
-            result = GetFlavorType((DragReference)m_currentDrag, theItem, flavor, &theType);
-            if (theType != kDragPromisedFlavorFindFile && theType != kDragFlavorTypeHFS) {
-               continue;
-            }
-            foundSupported = true;
-
-            Size dataSize = 0;
-            GetFlavorDataSize((DragReference)m_currentDrag, theItem, theType, &dataSize);
-
-            ArrayOf<char> theData{ dataSize };
-            GetFlavorData((DragReference)m_currentDrag, theItem, theType, (void*) theData.get(), &dataSize, 0L);
-
-            wxString name;
-            if (theType == kDragPromisedFlavorFindFile) {
-               name = wxMacFSSpec2MacFilename((FSSpec *)theData.get());
-            }
-            else if (theType == kDragFlavorTypeHFS) {
-               name = wxMacFSSpec2MacFilename(&((HFSFlavor *)theData.get())->fileSpec);
-            }
-
-            if (!firstFileAdded) {
-               // reset file list
-               ((wxFileDataObject*)GetDataObject())->SetData(0, "");
-               firstFileAdded = true;
-            }
-
-            ((wxFileDataObject*)GetDataObject())->AddFile(name);
-
-            // We only want to process one flavor
-            break;
-         }
-      }
-      return foundSupported;
-   }
-#endif
-
-   bool OnDrop(wxCoord x, wxCoord y) override
-   {
-      // bool foundSupported = false;
-#if !wxCHECK_VERSION(3, 0, 0)
-      bool firstFileAdded = false;
-      OSErr result;
-
-      UInt16 items = 0;
-      CountDragItems((DragReference)m_currentDrag, &items);
-
-      for (UInt16 index = 1; index <= items; index++) {
-
-         DragItemRef theItem = 0;
-         GetDragItemReferenceNumber((DragReference)m_currentDrag, index, &theItem);
-
-         UInt16 flavors = 0;
-         CountDragItemFlavors((DragReference)m_currentDrag, theItem , &flavors ) ;
-
-         for (UInt16 flavor = 1 ;flavor <= flavors; flavor++) {
-
-            FlavorType theType = 0;
-            result = GetFlavorType((DragReference)m_currentDrag, theItem, flavor, &theType);
-            if (theType != kDragPromisedFlavorFindFile && theType != kDragFlavorTypeHFS) {
-               continue;
-            }
-            return true;
-         }
-      }
-#endif
-      return CurrentDragHasSupportedFormat();
-   }
-
-#endif
-
-   bool OnDropFiles(wxCoord WXUNUSED(x), wxCoord WXUNUSED(y), const wxArrayString& filenames) override
-   {
-      // Experiment shows that this function can be reached while there is no
-      // catch block above in wxWidgets.  So stop all exceptions here.
-      return GuardedCall< bool > ( [&] {
-         wxArrayString sortednames(filenames);
-         sortednames.Sort(FileNames::CompareNoCase);
-
-         auto cleanup = finally( [&] {
-            ProjectWindow::Get( *mProject ).HandleResize(); // Adjust scrollers for NEW track sizes.
-         } );
-
-         for (const auto &name : sortednames) {
-#ifdef USE_MIDI
-            if (FileNames::IsMidi(name))
-               DoImportMIDI( *mProject, name );
-            else
-#endif
-               ProjectFileManager::Get( *mProject ).Import(name);
-         }
-
-         auto &window = ProjectWindow::Get( *mProject );
-         window.ZoomAfterImport(nullptr);
-
-         return true;
-      } );
-   }
-
-private:
-   AudacityProject *mProject;
-};
-
-#endif
-
-#ifdef EXPERIMENTAL_NOTEBOOK
-   extern void AddPages(   AudacityProject * pProj, GuiFactory & Factory,  wxNotebook  * pNotebook );
-#endif
-
 void InitProjectWindow( ProjectWindow &window )
 {
    auto &project = window.GetProject();
@@ -419,14 +245,13 @@ void InitProjectWindow( ProjectWindow &window )
    // irrespective of the order in which they were created.
    ToolManager::Get(project).GetTopDock()->MoveBeforeInTabOrder(&ruler);
 
-   const auto pPage = window.GetMainPage();
 
    wxBoxSizer *bs;
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       bs = ubs.get();
       bs->Add(topPanel, 0, wxEXPAND | wxALIGN_TOP);
-      bs->Add(pPage, 1, wxEXPAND);
+      bs->Add(window.GetContainerWindow(), 1, wxEXPAND);
       bs->Add( ToolManager::Get( project ).GetBotDock(), 0, wxEXPAND );
       window.SetAutoLayout(true);
       window.SetSizer(ubs.release());
@@ -440,9 +265,11 @@ void InitProjectWindow( ProjectWindow &window )
    //      will be given the focus even if we try to SetFocus().  By
    //      making the TrackPanel that first window, we resolve several
    //      keyboard focus problems.
-   pPage->MoveBeforeInTabOrder(topPanel);
+   window.GetContainerWindow()->MoveAfterInTabOrder(topPanel);
 
-   bs = (wxBoxSizer *)pPage->GetSizer();
+   const auto trackListWindow = window.GetTrackListWindow();
+
+   bs = static_cast<wxBoxSizer*>(trackListWindow->GetSizer());
 
    auto vsBar = &window.GetVerticalScrollBar();
    auto hsBar = &window.GetHorizontalScrollBar();
@@ -478,16 +305,8 @@ void InitProjectWindow( ProjectWindow &window )
    }
 
    // Lay it out
-   pPage->SetAutoLayout(true);
-   pPage->Layout();
-
-#ifdef EXPERIMENTAL_NOTEBOOK
-   AddPages(this, Factory, pNotebook);
-#endif
-
-   auto mainPanel = window.GetMainPanel();
-
-   mainPanel->Layout();
+   trackListWindow->SetAutoLayout(true);
+   trackListWindow->Layout();
 
    wxASSERT( trackPanel.GetProject() == &project );
 
@@ -576,16 +395,7 @@ AudacityProject *ProjectManager::New()
    SpectralSelectionBar::Get( project ).SetListener( &projectSelectionManager );
 #endif
    TimeToolBar::Get( project ).SetListener( &projectSelectionManager );
-   
-#if wxUSE_DRAG_AND_DROP
-   // We can import now, so become a drag target
-   //   SetDropTarget(safenew AudacityDropTarget(this));
-   //   mTrackPanel->SetDropTarget(safenew AudacityDropTarget(this));
-   
-   // SetDropTarget takes ownership
-   TrackPanel::Get( project ).SetDropTarget( safenew DropTarget( &project ) );
-#endif
-   
+      
    //Set the NEW project as active:
    SetActiveProject(p);
    
@@ -981,9 +791,9 @@ void ProjectManager::ResetProjectToEmpty() {
 
    WaveTrackFactory::Reset( project );
 
-   projectHistory.SetDirty( false );
-   auto &undoManager = UndoManager::Get( project );
-   undoManager.ClearStates();
+   // InitialState will reset UndoManager
+   projectHistory.InitialState();
+   projectHistory.SetDirty(false);
 
    projectFileManager.CloseProject();
    projectFileManager.OpenProject();
@@ -1025,10 +835,8 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
    RestartTimer();
 }
 
-void ProjectManager::OnStatusChange( ProjectStatusEvent &evt )
+void ProjectManager::OnStatusChange(StatusBarField field)
 {
-   evt.Skip();
-
    auto &project = mProject;
 
    // Be careful to null-check the window.  We might get to this function
@@ -1041,7 +849,6 @@ void ProjectManager::OnStatusChange( ProjectStatusEvent &evt )
 
    window.UpdateStatusWidths();
 
-   auto field = evt.mField;
    const auto &msg = ProjectStatus::Get( project ).Get( field );
    SetStatusText( msg, field );
    

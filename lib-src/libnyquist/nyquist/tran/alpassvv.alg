@@ -29,7 +29,7 @@
 (INNER-LOOP "{
              /* compute where to read y, we want y to be delay_snd samples
              * after delay_ptr, where we write the new sample. First, 
-             * conver from seconds to samples. Note: don't use actual sound_type
+             * convert from seconds to samples. Note: don't use actual sound_type
              * names in comments! The translator isn't smart enough.
              */
             register sample_type fb = (sample_type) feedback;

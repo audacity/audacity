@@ -23,23 +23,23 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   bool IsInteractive() override;
+   EffectType GetType() const override;
+   bool IsInteractive() const override;
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
 
    // Effect implementation
 
-   bool Process() override;
-   bool IsHiddenFromMenus() override;
+   bool Process(EffectSettings &settings) override;
+   bool IsHiddenFromMenus() const override;
 
 private:
    // EffectStereoToMono implementation

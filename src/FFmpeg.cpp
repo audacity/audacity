@@ -5,7 +5,7 @@ Audacity: A Digital Audio Editor
 FFmpeg.cpp
 
 Audacity(R) is copyright (c) 1999-2009 Audacity Team.
-License: GPL v2.  See License.txt.
+License: GPL v2 or later.  See License.txt.
 
 ******************************************************************//**
 
@@ -116,7 +116,7 @@ public:
    FindFFmpegDialog(wxWindow *parent, const wxString &path, const wxString &name)
        : wxDialogWrapper(parent, wxID_ANY, XO("Locate FFmpeg"))
        , mName(name)
-       , mFullPath(path, name)
+       , mFullPath(path, {})
    {
       SetName();
 
@@ -183,7 +183,7 @@ public:
 #   if defined(__WXMSW__)
          { XO("Only avformat.dll"), { wxT("avformat-*.dll") } },
 #   elif defined(__WXMAC__)
-         { XO("Only ffmpeg.*.dylib"), { wxT("ffmpeg.*.dylib") } },
+         { XO("Only ffmpeg.*.dylib"), { wxT("ffmpeg.*.dylib"), wxT("libavformat.*.dylib") } },
 #   else
          { XO("Only libavformat.so"), { wxT("libavformat.so.*") } },
 #   endif
@@ -222,7 +222,12 @@ public:
 
    void UpdatePath()
    {
-      mFullPath = mPathText->GetValue();
+      const wxString path = mPathText->GetValue();
+
+      if (wxDirExists(path))
+         mFullPath = wxFileName(path, {}, wxPATH_NATIVE);
+      else
+         mFullPath = mPathText->GetValue();
    }
 
    wxString GetLibPath()
@@ -302,22 +307,21 @@ BEGIN_EVENT_TABLE(FFmpegNotFoundDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, FFmpegNotFoundDialog::OnOk)
 END_EVENT_TABLE()
 
-
 bool FindFFmpegLibs(wxWindow* parent)
 {
    wxString path;
 
 #if defined(__WXMSW__)
-   const wxString name = wxT("avformat-*.dll");
+   const wxString name = wxT("avformat.dll");
 #elif defined(__WXMAC__)
-   const wxString name = wxT("ffmpeg.*.64bit.dylib");
+   const wxString name = wxT("ffmpeg.64bit.dylib");
 #else
-   const wxString name = wxT("libavformat.so.*");
+   const wxString name = wxT("libavformat.so");
 #endif
 
    wxLogMessage(wxT("Looking for FFmpeg libraries..."));
 
-   auto searchPaths = FFmpegFunctions::GetSearchPaths();
+   auto searchPaths = FFmpegFunctions::GetSearchPaths(false);
 
    if (!searchPaths.empty())
       path = searchPaths.front();
@@ -331,17 +335,26 @@ bool FindFFmpegLibs(wxWindow* parent)
 
    path = fd.GetLibPath();
 
+   const wxFileName fileName(path);
+
+   if (fileName.FileExists())
+      path = fileName.GetPath();
+
    wxLogMessage(wxT("User-specified path = '%s'"), path);
 
-   if (!::wxFileExists(path)) {
-      wxLogError(wxT("User-specified file does not exist. Failed to find FFmpeg libraries."));
+   SettingTransaction transaction;
+   AVFormatPath.Write(path);
+
+   // Try to load FFmpeg from the user provided path
+   if (!FFmpegFunctions::Load(true))
+   {
+      wxLogError(wxT("User-specified path does not contain FFmpeg libraries."));
       return false;
    }
 
-   wxLogMessage(wxT("User-specified FFmpeg file exists. Success."));
+   transaction.Commit();
 
-   AVFormatPath.Write(path);
-   gPrefs->Flush();
+   wxLogMessage(wxT("User-specified FFmpeg file exists. Success."));
 
    return true;
 }

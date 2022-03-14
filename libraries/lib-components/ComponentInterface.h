@@ -64,25 +64,25 @@ public:
    virtual ~ComponentInterface();
 
    // These should return an untranslated value
-   virtual PluginPath GetPath() = 0;
+   virtual PluginPath GetPath() const = 0;
 
    // The internal string persists in configuration files
    // So config compatibility will break if it is changed across Audacity versions
-   virtual ComponentInterfaceSymbol GetSymbol() = 0;
+   virtual ComponentInterfaceSymbol GetSymbol() const = 0;
 
-   virtual VendorSymbol GetVendor() = 0;
+   virtual VendorSymbol GetVendor() const = 0;
 
-   virtual wxString GetVersion() = 0;
+   virtual wxString GetVersion() const = 0;
 
    // This returns a translated string
    // Any verb should be present tense indicative, not imperative
-   virtual TranslatableString GetDescription() = 0;
+   virtual TranslatableString GetDescription() const = 0;
 
    // non-virtual convenience function
-   TranslatableString GetName();
+   TranslatableString GetName() const;
 
    // Parameters, if defined.  false means no defined parameters.
-   virtual bool DefineParams( ShuttleParams & WXUNUSED(S) ){ return false;};   
+   virtual bool DefineParams( ShuttleParams & WXUNUSED(S) ) { return false;};   
 };
 
 #endif // __AUDACITY_IDENTINTERFACE_H__

@@ -27,24 +27,26 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-   ManualPageID ManualPage() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
+   EffectType GetType() const override;
 
    // Effect implementation
 
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 protected:
    // Generator implementation
 
-   bool GenerateTrack(WaveTrack *tmp, const WaveTrack &track, int ntrack) override;
+   bool GenerateTrack(EffectSettings &settings,
+      WaveTrack *tmp, const WaveTrack &track, int ntrack) override;
 
 private:
    NumericTextCtrl *mDurationT;

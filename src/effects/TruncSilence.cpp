@@ -68,6 +68,8 @@ static inline double enumToDB( int val ) { return -( 5.0 * val + 20.0 ); }
 
 const size_t Enums::NumDbChoices = WXSIZEOF(Enums::DbChoices);
 
+using Region = WaveTrack::Region;
+
 // Declaration of RegionList
 class RegionList : public std::list < Region > {};
 
@@ -159,24 +161,24 @@ EffectTruncSilence::~EffectTruncSilence()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectTruncSilence::GetSymbol()
+ComponentInterfaceSymbol EffectTruncSilence::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectTruncSilence::GetDescription()
+TranslatableString EffectTruncSilence::GetDescription() const
 {
    return XO("Automatically reduces the length of passages where the volume is below a specified level");
 }
 
-ManualPageID EffectTruncSilence::ManualPage()
+ManualPageID EffectTruncSilence::ManualPage() const
 {
    return L"Truncate_Silence";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectTruncSilence::GetType()
+EffectType EffectTruncSilence::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -241,7 +243,8 @@ bool EffectTruncSilence::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-double EffectTruncSilence::CalcPreviewInputLength(double /* previewLength */)
+double EffectTruncSilence::CalcPreviewInputLength(
+   const EffectSettings &, double /* previewLength */)
 {
    double inputLength = mT1 - mT0;
    double minInputLength = inputLength;
@@ -268,58 +271,7 @@ double EffectTruncSilence::CalcPreviewInputLength(double /* previewLength */)
 }
 
 
-bool EffectTruncSilence::Startup()
-{
-   wxString base = wxT("/Effects/TruncateSilence/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      int truncDbChoiceIndex = gPrefs->Read(base + wxT("DbChoiceIndex"), 4L);
-      if ((truncDbChoiceIndex < 0) || (truncDbChoiceIndex >= Enums::NumDbChoices))
-      {  // corrupted Prefs?
-         truncDbChoiceIndex = 4L;
-      }
-      mThresholdDB = enumToDB( truncDbChoiceIndex );
-      mActionIndex = gPrefs->Read(base + wxT("ProcessChoice"), 0L);
-      if ((mActionIndex < 0) || (mActionIndex > 1))
-      {  // corrupted Prefs?
-         mActionIndex = 0L;
-      }
-      gPrefs->Read(base + wxT("InitialAllowedSilence"), &mInitialAllowedSilence, 0.5);
-      if ((mInitialAllowedSilence < 0.001) || (mInitialAllowedSilence > 10000.0))
-      {  // corrupted Prefs?
-         mInitialAllowedSilence = 0.5;
-      }
-      gPrefs->Read(base + wxT("LongestAllowedSilence"), &mTruncLongestAllowedSilence, 0.5);
-      if ((mTruncLongestAllowedSilence < 0.0) || (mTruncLongestAllowedSilence > 10000.0))
-      {  // corrupted Prefs?
-         mTruncLongestAllowedSilence = 0.5;
-      }
-      gPrefs->Read(base + wxT("CompressPercent"), &mSilenceCompressPercent, 50.0);
-      if ((mSilenceCompressPercent < 0.0) || (mSilenceCompressPercent > 100.0))
-      {  // corrupted Prefs?
-         mSilenceCompressPercent = 50.0;
-      }
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-   }
-
-   // Do not migrate again
-   gPrefs->Write(base + wxT("Migrated"), true);
-
-   return true;
-}
-
-bool EffectTruncSilence::Process()
+bool EffectTruncSilence::Process(EffectSettings &)
 {
    const bool success =
       mbIndependent
@@ -752,7 +704,8 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
 }
 
 
-void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    wxASSERT(nActions == WXSIZEOF(kActionStrings));
 
@@ -826,32 +779,17 @@ void EffectTruncSilence::PopulateOrExchange(ShuttleGui & S)
          mIndependent = S.AddCheckBox(XXO("Trunc&ate tracks independently"),
             mbIndependent);
       }
-   S.EndMultiColumn();
-}
+      S.EndMultiColumn();
+   }
    S.EndStatic();
 
    UpdateUI();
+   return nullptr;
 }
 
-bool EffectTruncSilence::TransferDataToWindow()
+bool EffectTruncSilence::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
-bool EffectTruncSilence::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    mbIndependent = mIndependent->IsChecked();
-
    return true;
 }
 

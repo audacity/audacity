@@ -29,8 +29,8 @@
 #include "Dither.h"
 
 RingBuffer::RingBuffer(sampleFormat format, size_t size)
-   : mFormat{ format }
-   , mBufferSize{ std::max<size_t>(size, 64) }
+   : mBufferSize{ std::max<size_t>(size, 64) }
+   , mFormat{ format }
    , mBuffer{ mBufferSize, mFormat }
 {
 }
@@ -54,6 +54,7 @@ size_t RingBuffer::Free( size_t start, size_t end )
 
 //
 // For the writer only:
+// Only writer reads or writes mWritten
 // Only writer writes the end, so it can read it again relaxed
 // And it reads the start written by reader, with acquire order,
 // so that any reading done in Get() happens-before any reuse of the space.
@@ -62,8 +63,7 @@ size_t RingBuffer::Free( size_t start, size_t end )
 size_t RingBuffer::AvailForPut()
 {
    auto start = mStart.load( std::memory_order_relaxed );
-   auto end = mEnd.load( std::memory_order_relaxed );
-   return Free( start, end );
+   return Free( start, mWritten );
 
    // Reader might increase the available free space after return, but will
    // never decrease it, so writer can safely assume this much at least
@@ -73,7 +73,7 @@ size_t RingBuffer::Put(constSamplePtr buffer, sampleFormat format,
                     size_t samplesToCopy, size_t padding)
 {
    auto start = mStart.load( std::memory_order_acquire );
-   auto end = mEnd.load( std::memory_order_relaxed );
+   auto end = mWritten;
    const auto free = Free( start, end );
    samplesToCopy = std::min( samplesToCopy, free );
    padding = std::min( padding, free - samplesToCopy );
@@ -102,9 +102,7 @@ size_t RingBuffer::Put(constSamplePtr buffer, sampleFormat format,
       copied += block;
    }
 
-   // Atomically update the end pointer with release, so the nonatomic writes
-   // just done to the buffer don't get reordered after
-   mEnd.store(pos, std::memory_order_release);
+   mWritten = pos;
 
    return copied;
 }
@@ -112,7 +110,7 @@ size_t RingBuffer::Put(constSamplePtr buffer, sampleFormat format,
 size_t RingBuffer::Clear(sampleFormat format, size_t samplesToClear)
 {
    auto start = mStart.load( std::memory_order_acquire );
-   auto end = mEnd.load( std::memory_order_relaxed );
+   auto end = mWritten;
    samplesToClear = std::min( samplesToClear, Free( start, end ) );
    size_t cleared = 0;
    auto pos = end;
@@ -127,11 +125,39 @@ size_t RingBuffer::Clear(sampleFormat format, size_t samplesToClear)
       cleared += block;
    }
 
-   // Atomically update the end pointer with release, so the nonatomic writes
-   // just done to the buffer don't get reordered after
-   mEnd.store(pos, std::memory_order_release);
+   mWritten = pos;
 
    return cleared;
+}
+
+std::pair<samplePtr, size_t> RingBuffer::GetUnflushed(unsigned iBlock)
+{
+   // This function is called by the writer
+
+   // Find total number of samples unflushed:
+   auto end = mEnd.load(std::memory_order_relaxed);
+   const size_t size = Filled(end, mWritten);
+
+   // How many in the first part:
+   const size_t size0 = std::min(size, mBufferSize - end);
+   // How many wrap around the ring buffer:
+   const size_t size1 = size - size0;
+
+   if (iBlock == 0)
+      return {
+         size0 ? mBuffer.ptr() + end * SAMPLE_SIZE(mFormat) : nullptr,
+         size0 };
+   else
+      return {
+         size1 ? mBuffer.ptr() : nullptr,
+         size1 };
+}
+
+void RingBuffer::Flush()
+{
+   // Atomically update the end pointer with release, so the nonatomic writes
+   // just done to the buffer don't get reordered after
+   mEnd.store(mWritten, std::memory_order_release);
 }
 
 //

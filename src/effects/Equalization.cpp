@@ -88,11 +88,11 @@
 #include <wx/utils.h>
 
 #include "AColor.h"
-#include "../Shuttle.h"
+#include "../ShuttleAutomation.h"
 #include "../ShuttleGui.h"
 #include "PlatformCompatibility.h"
 #include "FileNames.h"
-#include "../Envelope.h"
+#include "Envelope.h"
 #include "../EnvelopeEditor.h"
 #include "FFT.h"
 #include "Prefs.h"
@@ -263,13 +263,13 @@ EffectEqualization::EffectEqualization(int Options)
    mCurveName = DEF_CurveName;
 
    GetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin, DEF_dBMin);
+      CurrentSettingsGroup(), wxT("dBMin"), mdBMin, DEF_dBMin);
    GetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax, DEF_dBMax);
+      CurrentSettingsGroup(), wxT("dBMax"), mdBMax, DEF_dBMax);
    GetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
+      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
    GetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
+      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
 
    mLogEnvelope = std::make_unique<Envelope>
       (false,
@@ -306,7 +306,7 @@ EffectEqualization::EffectEqualization(int Options)
 
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    bool useSSE;
-   GetPrivateConfig(GetCurrentSettingsGroup(), wxT("/SSE/GUI"), useSSE, false);
+   GetPrivateConfig(CurrentSettingsGroup(), wxT("/SSE/GUI"), useSSE, false);
    if(useSSE && !mEffectEqualization48x)
       mEffectEqualization48x = std::make_unique<EffectEqualization48x>();
    else if(!useSSE)
@@ -339,7 +339,7 @@ EffectEqualization::~EffectEqualization()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectEqualization::GetSymbol()
+ComponentInterfaceSymbol EffectEqualization::GetSymbol() const
 {
    if( mOptions == kEqOptionGraphic )
       return EffectEqualizationGraphic::Symbol;
@@ -348,12 +348,12 @@ ComponentInterfaceSymbol EffectEqualization::GetSymbol()
    return EffectEqualization::Symbol;
 }
 
-TranslatableString EffectEqualization::GetDescription()
+TranslatableString EffectEqualization::GetDescription() const
 {
    return XO("Adjusts the volume levels of particular frequencies");
 }
 
-ManualPageID EffectEqualization::ManualPage()
+ManualPageID EffectEqualization::ManualPage() const
 {
    // Bug 2509: Must use _ and not space in names.
    if( mOptions == kEqOptionGraphic )
@@ -365,7 +365,7 @@ ManualPageID EffectEqualization::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectEqualization::GetType()
+EffectType EffectEqualization::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -492,7 +492,7 @@ FactoryPresets[] =
 
 
 
-RegistryPaths EffectEqualization::GetFactoryPresets()
+RegistryPaths EffectEqualization::GetFactoryPresets() const
 {
    RegistryPaths names;
 
@@ -528,12 +528,6 @@ bool EffectEqualization::LoadFactoryPreset(int id)
    ShuttleSetAutomation S;
    S.SetForWriting( &eap );
    DefineParams( S );
-
-   if (mUIDialog)
-   {
-      TransferDataToWindow();
-   }
-
    return true;
 }
 
@@ -541,7 +535,7 @@ bool EffectEqualization::LoadFactoryPreset(int id)
 
 // EffectUIClientInterface implementation
 
-bool EffectEqualization::ValidateUI()
+bool EffectEqualization::ValidateUI(EffectSettings &)
 {
    // If editing a macro, we don't want to be using the unnamed curve so
    // we offer to save it.
@@ -580,13 +574,13 @@ bool EffectEqualization::ValidateUI()
    SaveCurves();
 
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin);
+      CurrentSettingsGroup(), wxT("dBMin"), mdBMin);
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax);
+      CurrentSettingsGroup(), wxT("dBMax"), mdBMax);
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
+      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
    SetConfig(GetDefinition(), PluginSettings::Private,
-      GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
+      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
 
    return true;
 }
@@ -601,70 +595,6 @@ wxString EffectEqualization::GetPrefsPrefix()
    else if( mOptions == kEqOptionCurve )
       base = wxT("/Effects/FilterCurve/");
    return base;
-}
-
-
-bool EffectEqualization::Startup()
-{
-   wxString base = GetPrefsPrefix();
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      // These get saved to the current preset
-      int filterLength;
-      gPrefs->Read(base + wxT("FilterLength"), &filterLength, 4001);
-      mM = std::max(0, filterLength);
-      if ((mM < 21) || (mM > 8191)) {  // corrupted Prefs?
-         mM = 4001;  //default
-      }
-      gPrefs->Read(base + wxT("CurveName"), &mCurveName, wxT("unnamed"));
-      gPrefs->Read(base + wxT("Lin"), &mLin, false);
-      gPrefs->Read(base + wxT("Interp"), &mInterp, 0);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // These persist across preset changes
-      double dBMin;
-      gPrefs->Read(base + wxT("dBMin"), &dBMin, -30.0);
-      if ((dBMin < -120) || (dBMin > -10)) {  // corrupted Prefs?
-         dBMin = -30;  //default
-      }
-      mdBMin = dBMin;
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("dBMin"), mdBMin);
-
-      double dBMax;
-      gPrefs->Read(base + wxT("dBMax"), &dBMax, 30.);
-      if ((dBMax < 0) || (dBMax > 60)) {  // corrupted Prefs?
-         dBMax = 30;  //default
-      }
-      mdBMax = dBMax;
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("dBMax"), mdBMax);
-
-      gPrefs->Read(base + wxT("DrawMode"), &mDrawMode, true);
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
-
-      gPrefs->Read(base + wxT("DrawGrid"), &mDrawGrid, true);
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
 }
 
 bool EffectEqualization::Init()
@@ -717,7 +647,7 @@ bool EffectEqualization::Init()
    return(true);
 }
 
-bool EffectEqualization::Process()
+bool EffectEqualization::Process(EffectSettings &)
 {
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    if(mEffectEqualization48x) {
@@ -767,10 +697,11 @@ bool EffectEqualization::CloseUI()
    return Effect::CloseUI();
 }
 
-void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectEqualization::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    if ( (S.GetMode() == eIsCreating ) && !IsBatchProcessing() )
-      LoadUserPreset(GetCurrentSettingsGroup());
+      LoadUserPreset(CurrentSettingsGroup());
 
    //LoadCurves();
 
@@ -1187,13 +1118,13 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
    }
    ForceRecalc();
 
-   return;
+   return nullptr;
 }
 
 //
 // Populate the window with relevant variables
 //
-bool EffectEqualization::TransferDataToWindow()
+bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
 {
    // Set log or lin freq scale (affects interpolation as well)
    mLinFreq->SetValue( mLin );
@@ -1204,13 +1135,9 @@ bool EffectEqualization::TransferDataToWindow()
 
    if( mMSlider )
       mMSlider->SetValue((mM - 1) / 2);
-   mM = 0;                        // force refresh in TransferDataFromWindow()
 
    mdBMinSlider->SetValue((int)mdBMin);
-   mdBMin = 0;                     // force refresh in TransferDataFromWindow()
-
    mdBMaxSlider->SetValue((int)mdBMax);
-   mdBMax = 0;                    // force refresh in TransferDataFromWindow()
 
    // Reload the curve names
    UpdateCurves();
@@ -1238,72 +1165,27 @@ bool EffectEqualization::TransferDataToWindow()
    if (!mDrawMode)
       UpdateGraphic();
 
-   TransferDataFromWindow();
-
    mUIParent->Layout();
    wxGetTopLevelParent(mUIParent)->Layout();
 
    return true;
 }
 
-//
-// Retrieve data from the window
-//
-bool EffectEqualization::TransferDataFromWindow()
+void EffectEqualization::UpdateRuler()
 {
-   wxString tip;
-
-   bool rr = false;
-   float dB = (float) mdBMinSlider->GetValue();
-   if (dB != mdBMin) {
-      rr = true;
-      mdBMin = dB;
-      tip.Printf(_("%d dB"), (int)mdBMin);
-      mdBMinSlider->SetToolTip(tip);
+   // Refresh ruler when values have changed
+   int w1, w2, h;
+   mdBRuler->ruler.GetMaxSize(&w1, &h);
+   mdBRuler->ruler.SetRange(mdBMax, mdBMin);
+   mdBRuler->ruler.GetMaxSize(&w2, &h);
+   if( w1 != w2 )   // Reduces flicker
+   {
+      mdBRuler->SetSize(wxSize(w2,h));
+      mFreqRuler->Refresh(false);
    }
+   mdBRuler->Refresh(false);
 
-   dB = (float) mdBMaxSlider->GetValue();
-   if (dB != mdBMax) {
-      rr = true;
-      mdBMax = dB;
-      tip.Printf(_("%d dB"), (int)mdBMax);
-      mdBMaxSlider->SetToolTip(tip);
-   }
-
-   // Refresh ruler if values have changed
-   if (rr) {
-      int w1, w2, h;
-      mdBRuler->ruler.GetMaxSize(&w1, &h);
-      mdBRuler->ruler.SetRange(mdBMax, mdBMin);
-      mdBRuler->ruler.GetMaxSize(&w2, &h);
-      if( w1 != w2 )   // Reduces flicker
-      {
-         mdBRuler->SetSize(wxSize(w2,h));
-         mFreqRuler->Refresh(false);
-      }
-      mdBRuler->Refresh(false);
-
-      mPanel->Refresh(false);
-   }
-
-   size_t m = DEF_FilterLength; // m must be odd.
-   if (mMSlider )
-      m = 2* mMSlider->GetValue()+1;
-   wxASSERT( (m & 1) ==1 );
-   if (m != mM) {
-      mM = m;
-      ForceRecalc();
-
-      if( mMSlider)
-      {
-         tip.Printf(wxT("%d"), (int)mM);
-         mMText->SetLabel(tip);
-         mMText->SetName(mMText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
-         mMSlider->SetToolTip(tip);
-      }
-   }
-
-   return true;
+   mPanel->Refresh(false);
 }
 
 // EffectEqualization implementation
@@ -2891,18 +2773,44 @@ void EffectEqualization::OnGraphicMode(wxCommandEvent & WXUNUSED(event))
 
 void EffectEqualization::OnSliderM(wxCommandEvent & WXUNUSED(event))
 {
-   TransferDataFromWindow();
-   ForceRecalc();
+   size_t m = 2 * mMSlider->GetValue() + 1;
+   // Must be odd
+   wxASSERT( (m & 1) == 1 );
+
+   if (m != mM) {
+      mM = m;
+      wxString tip;
+      tip.Printf(wxT("%d"), (int)mM);
+      mMText->SetLabel(tip);
+      mMText->SetName(mMText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+      mMSlider->SetToolTip(tip);
+
+      ForceRecalc();
+   }
 }
 
 void EffectEqualization::OnSliderDBMIN(wxCommandEvent & WXUNUSED(event))
 {
-   TransferDataFromWindow();
+   float dB = mdBMinSlider->GetValue();
+   if (dB != mdBMin) {
+      mdBMin = dB;
+      wxString tip;
+      tip.Printf(_("%d dB"), (int)mdBMin);
+      mdBMinSlider->SetToolTip(tip);
+      UpdateRuler();
+   }
 }
 
 void EffectEqualization::OnSliderDBMAX(wxCommandEvent & WXUNUSED(event))
 {
-   TransferDataFromWindow();
+   float dB = mdBMaxSlider->GetValue();
+   if (dB != mdBMax) {
+      mdBMax = dB;
+      wxString tip;
+      tip.Printf(_("%d dB"), (int)mdBMax);
+      mdBMaxSlider->SetToolTip(tip);
+      UpdateRuler();
+   }
 }
 
 //

@@ -55,8 +55,7 @@ struct ScrubQueue : NonInterferingBase
          // Make some initial silence. This is not needed in the case of
          // keyboard scrubbing or play-at-speed, because the initial speed
          // is known when this function is called the first time.
-         if ( !(message.options.isKeyboardScrubbing ||
-            message.options.isPlayingAtSpeed) ) {
+         if ( !(message.options.isKeyboardScrubbing) ) {
             mData.mS0 = mData.mS1 = s0Init;
             mData.mGoal = -1;
             mData.mDuration = duration = inDuration;
@@ -64,8 +63,7 @@ struct ScrubQueue : NonInterferingBase
          }
       }
 
-      if (mStarted || message.options.isKeyboardScrubbing ||
-         message.options.isPlayingAtSpeed) {
+      if (mStarted || message.options.isKeyboardScrubbing) {
          Data newData;
          inDuration += mAccumulatedSeekDuration;
 
@@ -221,7 +219,7 @@ private:
             // When playback follows a fast mouse movement by "stuttering"
             // at maximum playback, don't make stutters too short to be useful.
             if (options.adjustStart &&
-                duration < llrint( options.minStutterTime * rate ) )
+                duration < llrint( options.minStutterTime.count() * rate ) )
                return false;
 
             sampleCount minSample { llrint(options.minTime * rate) };
@@ -326,6 +324,7 @@ Mixer::WarpOptions ScrubbingPlaybackPolicy::MixerWarpOptions(PlaybackSchedule &)
 PlaybackPolicy::BufferTimes
 ScrubbingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
 {
+   using namespace std::chrono;
    return {
       // For useful scrubbing, we can't run too far ahead without checking
       // mouse input, so make fillings more and shorter.
@@ -340,7 +339,7 @@ ScrubbingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
       2 * mOptions.minStutterTime,
 
       // Same as for default policy
-      10.0
+      10.0s
    };
 }
 
@@ -353,17 +352,13 @@ bool ScrubbingPlaybackPolicy::AllowSeek( PlaybackSchedule & )
 bool ScrubbingPlaybackPolicy::Done(
    PlaybackSchedule &schedule, unsigned long )
 {
-   if (mOptions.isPlayingAtSpeed)
-      // some leftover length allowed in this case; ignore outputFrames
-      return PlaybackPolicy::Done(schedule, 0);
-   else
-      return false;
+   return false;
 }
 
 std::chrono::milliseconds
 ScrubbingPlaybackPolicy::SleepInterval( PlaybackSchedule & )
 {
-   return std::chrono::milliseconds{ ScrubPollInterval_ms };
+   return ScrubPollInterval;
 }
 
 PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
@@ -451,9 +446,7 @@ bool ScrubbingPlaybackPolicy::RepositionPlayback(
          if (!mSilentScrub)
          {
             for (auto &pMixer : playbackMixers) {
-               if (mOptions.isPlayingAtSpeed)
-                  pMixer->SetSpeedForPlayAtSpeed(mScrubSpeed);
-               else if (mOptions.isKeyboardScrubbing)
+               if (mOptions.isKeyboardScrubbing)
                   pMixer->SetSpeedForKeyboardScrubbing(mScrubSpeed, startTime);
                else
                   pMixer->SetTimesAndSpeed(

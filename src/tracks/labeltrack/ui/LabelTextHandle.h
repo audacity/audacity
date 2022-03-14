@@ -16,7 +16,6 @@ Paul Licameli split from TrackPanel.cpp
 
 class wxMouseState;
 class LabelTrack;
-class NotifyingSelectedRegion;
 class SelectionStateChanger;
 class ZoomInfo;
 

@@ -2,7 +2,7 @@
 
    Audacity: A Digital Audio Editor
    Audacity(R) is copyright (c) 1999-2013 Audacity Team.
-   License: GPL v2.  See License.txt.
+   License: GPL v2 or later.  See License.txt.
 
    Reverb.h
    Rob Sykes, Vaughan Johnson
@@ -45,38 +45,39 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-   ManualPageID ManualPage() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
+   EffectType GetType() const override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
-   RegistryPaths GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
-   size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
+   size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      override;
    bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
 
-   bool Startup() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
    // EffectReverb implementation
-
-   void SetTitle(const wxString & name = {});
 
 #define SpinSliderHandlers(n) \
    void On ## n ## Slider(wxCommandEvent & evt); \

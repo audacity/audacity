@@ -136,20 +136,12 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # USE_MIDI must be defined in order for SCOREALIGN to work
    #SCOREALIGN
 
-   #NOTEBOOK
-
    #Automatically tries to find an acceptable input volume
    #AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 
    # Module prefs provides a panel in prefs where users can choose which modules
    # to enable.
    MODULE_PREFS
-
-   # Define to allow realtime processing in Audacity effects that have been converted.
-   REALTIME_AUDACITY_EFFECTS
-
-   # Define to include the effects rack (such as it is).
-   #EFFECTS_RACK
 
    # Define to make the meters look like a row of LEDs
    #METER_LED_STYLE

@@ -7,7 +7,7 @@
   James Crook
 
   Audacity is free software.
-  License: GPL v2 - see LICENSE.txt
+  License: GPL v2 or later - see LICENSE.txt
 
 ********************************************************************//**
 

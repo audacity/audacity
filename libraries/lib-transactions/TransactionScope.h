@@ -10,6 +10,7 @@
 #ifndef __AUDACITY_TRANSACTION_SCOPE__
 #define __AUDACITY_TRANSACTION_SCOPE__
 
+#include "GlobalVariable.h"
 class AudacityProject;
 #include <functional>
 #include <memory>
@@ -27,12 +28,9 @@ class TRANSACTIONS_API TransactionScope
 {
 public:
    //! Type of function supplying implementation of steps
-   using TransactionScopeImplFactory = std::function<
-      std::unique_ptr<TransactionScopeImpl>(AudacityProject &) >;
-
-   //! Installs global factory; returns previously installed factory
-   static TransactionScopeImplFactory
-   InstallImplementation(TransactionScopeImplFactory factory);
+   struct TRANSACTIONS_API Factory : GlobalHook<Factory,
+      std::unique_ptr<TransactionScopeImpl>(AudacityProject &)
+   > {};
 
    //! Construct from a project
    /*!

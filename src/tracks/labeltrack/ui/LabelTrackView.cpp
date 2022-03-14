@@ -30,6 +30,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../RefreshCode.h"
 #include "../../../SyncLock.h"
 #include "Theme.h"
+#include "../../../TrackArt.h"
 #include "../../../TrackArtist.h"
 #include "../../../TrackPanelAx.h"
 #include "../../../TrackPanel.h"
@@ -1768,6 +1769,7 @@ bool LabelTrackView::DoKeyDown(
                mInitialCursorPos = mCurrentCursorPos;
                //Set the selection region to be equal to the selection bounds of the tabbed-to label.
                newSel = labelStruct.selectedRegion;
+               ProjectWindow::Get(project).ScrollIntoView(labelStruct.selectedRegion.t0());
                // message for screen reader
                /* i18n-hint:
                   String is replaced by the name of a label,

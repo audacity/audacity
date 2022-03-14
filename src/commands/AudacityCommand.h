@@ -45,22 +45,17 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    AudacityCommand();
    virtual ~AudacityCommand();
    
-   // Type of a registered function that, if it returns true,
-   // causes ShowInterface to return early without making any dialog
-   using VetoDialogHook = bool (*) ( wxDialog* );
-   static VetoDialogHook SetVetoDialogHook( VetoDialogHook hook );
-
    // ComponentInterface implementation
 
    //These four can be defaulted....
-   PluginPath GetPath() override;
-   VendorSymbol GetVendor() override;
-   wxString GetVersion() override;
+   PluginPath GetPath() const override;
+   VendorSymbol GetVendor() const override;
+   wxString GetVersion() const override;
    //  virtual wxString GetFamily();
 
    //These two must be implemented by instances.
-   ComponentInterfaceSymbol GetSymbol() override = 0;
-   virtual TranslatableString GetDescription() override
+   ComponentInterfaceSymbol GetSymbol() const override = 0;
+   virtual TranslatableString GetDescription() const override
    {wxFAIL_MSG( "Implement a Description for this command");return XO("FAIL");};
 
    // Name of page in the Audacity alpha manual

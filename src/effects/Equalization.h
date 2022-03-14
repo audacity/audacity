@@ -103,35 +103,34 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-   ManualPageID ManualPage() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
    bool DefineParams( ShuttleParams & S ) override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
+   EffectType GetType() const override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
    bool LoadFactoryDefaults() override;
 
-   RegistryPaths GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
 
    // EffectUIClientInterface implementation
 
-   bool ValidateUI() override;
+   bool ValidateUI(EffectSettings &) override;
 
    // Effect implementation
 
-   bool Startup() override;
    bool Init() override;
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
 
    bool CloseUI() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
 
 private:
    // EffectEqualization implementation
@@ -171,6 +170,7 @@ private:
    void WriteXML(XMLWriter &xmlFile) const;
 
    void UpdateCurves();
+   void UpdateRuler();
    void UpdateDraw();
 
    //void LayoutEQSliders();

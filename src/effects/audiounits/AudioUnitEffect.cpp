@@ -18,8 +18,10 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffect.h"
-#include "../../ModuleManager.h"
+#include "AudacityException.h"
+#include "ModuleManager.h"
 #include "SampleCount.h"
+#include "ConfigInterface.h"
 
 #include <wx/defs.h>
 #include <wx/base64.h>
@@ -232,7 +234,7 @@ public:
 // When the module is builtin to Audacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -242,7 +244,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // ============================================================================
 // Register this as a builtin module
 // ============================================================================
-DECLARE_BUILTIN_MODULE(AudioUnitEffectsBuiltin);
+DECLARE_BUILTIN_PROVIDER(AudioUnitEffectsBuiltin);
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -262,35 +264,35 @@ AudioUnitEffectsModule::~AudioUnitEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath AudioUnitEffectsModule::GetPath()
+PluginPath AudioUnitEffectsModule::GetPath() const
 {
    return {};
 }
 
-ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol()
+ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol() const
 {
    /* i18n-hint: Audio Unit is the name of an Apple audio software protocol */
    return XO("Audio Unit Effects");
 }
 
-VendorSymbol AudioUnitEffectsModule::GetVendor()
+VendorSymbol AudioUnitEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
 
-wxString AudioUnitEffectsModule::GetVersion()
+wxString AudioUnitEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return AUDIOUNITEFFECTS_VERSION;
 }
 
-TranslatableString AudioUnitEffectsModule::GetDescription()
+TranslatableString AudioUnitEffectsModule::GetDescription() const
 {
    return XO("Provides Audio Unit Effects support to Audacity");
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 const FileExtensions &AudioUnitEffectsModule::GetFileExtensions()
@@ -320,13 +322,11 @@ EffectFamilySymbol AudioUnitEffectsModule::GetOptionalFamilySymbol()
 #endif
 }
 
-bool AudioUnitEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
+void AudioUnitEffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
 {
-   // Nothing to be done here
-   return true;
 }
 
-PluginPaths AudioUnitEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths AudioUnitEffectsModule::FindModulePaths(PluginManagerInterface &)
 {
    PluginPaths effects;
 
@@ -353,7 +353,7 @@ unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
    }
 
    AudioUnitEffect effect(path, name, component);
-   if (!effect.SetHost(NULL))
+   if (!effect.InitializePlugin())
    {
       // TODO:  Is it worth it to discriminate all the ways SetHost might
       // return false?
@@ -381,11 +381,14 @@ bool AudioUnitEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-AudioUnitEffectsModule::CreateInstance(const PluginPath & path)
+AudioUnitEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   if (wxString name; auto component = FindAudioUnit(path, name))
-      return std::make_unique<AudioUnitEffect>(path, name, component);
+   if (wxString name; auto component = FindAudioUnit(path, name)) {
+      auto result = std::make_unique<AudioUnitEffect>(path, name, component);
+      result->InitializePlugin();
+      return result;
+   }
    return nullptr;
 }
 
@@ -499,8 +502,8 @@ OSType AudioUnitEffectsModule::ToOSType(const wxString & type)
 class AudioUnitEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   AudioUnitEffectOptionsDialog(wxWindow * parent,
-      EffectHostInterface &host, EffectDefinitionInterface &effect);
+   AudioUnitEffectOptionsDialog(
+      wxWindow * parent, EffectDefinitionInterface &effect);
    virtual ~AudioUnitEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -508,7 +511,6 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectHostInterface &mHost;
    EffectDefinitionInterface &mEffect;
 
    bool mUseLatency;
@@ -521,10 +523,9 @@ BEGIN_EVENT_TABLE(AudioUnitEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, AudioUnitEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(wxWindow * parent,
-   EffectHostInterface &host, EffectDefinitionInterface &effect)
+AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(
+   wxWindow * parent, EffectDefinitionInterface &effect)
 : wxDialogWrapper(parent, wxID_ANY, XO("Audio Unit Effect Options"))
-, mHost{ host }
 , mEffect{ effect }
 {
    GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
@@ -782,7 +783,7 @@ TranslatableString AudioUnitEffectImportDialog::Import(
    }
 
    // And write it to the config
-   wxString group = mEffect->mHost->GetUserPresetsGroup(name);
+   wxString group = UserPresetsGroup(name);
    if (!SetConfig(*mEffect,
       PluginSettings::Private, group, PRESET_KEY,
       parms))
@@ -878,22 +879,22 @@ AudioUnitEffect::~AudioUnitEffect()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath AudioUnitEffect::GetPath()
+PluginPath AudioUnitEffect::GetPath() const
 {
    return mPath;
 }
 
-ComponentInterfaceSymbol AudioUnitEffect::GetSymbol()
+ComponentInterfaceSymbol AudioUnitEffect::GetSymbol() const
 {
    return mName;
 }
 
-VendorSymbol AudioUnitEffect::GetVendor()
+VendorSymbol AudioUnitEffect::GetVendor() const
 {
    return { mVendor };
 }
 
-wxString AudioUnitEffect::GetVersion()
+wxString AudioUnitEffect::GetVersion() const
 {
    UInt32 version;
 
@@ -905,7 +906,7 @@ wxString AudioUnitEffect::GetVersion()
                            version & 0xff);
 }
 
-TranslatableString AudioUnitEffect::GetDescription()
+TranslatableString AudioUnitEffect::GetDescription() const
 {
    /* i18n-hint: Can mean "not available," "not applicable," "no answer" */
    return XO("n/a");
@@ -915,7 +916,7 @@ TranslatableString AudioUnitEffect::GetDescription()
 // EffectDefinitionInterface implementation
 // ============================================================================
 
-EffectType AudioUnitEffect::GetType()
+EffectType AudioUnitEffect::GetType() const
 {
    if (mAudioIns == 0 && mAudioOuts == 0)
    {
@@ -935,32 +936,27 @@ EffectType AudioUnitEffect::GetType()
    return EffectTypeProcess;
 }
 
-EffectFamilySymbol AudioUnitEffect::GetFamily()
+EffectFamilySymbol AudioUnitEffect::GetFamily() const
 {
    return AUDIOUNITEFFECTS_FAMILY;
 }
 
-bool AudioUnitEffect::IsInteractive()
+bool AudioUnitEffect::IsInteractive() const
 {
    return mInteractive;
 }
 
-bool AudioUnitEffect::IsDefault()
+bool AudioUnitEffect::IsDefault() const
 {
    return false;
 }
 
-bool AudioUnitEffect::IsLegacy()
-{
-   return false;
-}
-
-bool AudioUnitEffect::SupportsRealtime()
+bool AudioUnitEffect::SupportsRealtime() const
 {
    return GetType() == EffectTypeProcess;
 }
 
-bool AudioUnitEffect::SupportsAutomation()
+bool AudioUnitEffect::SupportsAutomation() const
 {
    OSStatus result;
    UInt32 dataSize;
@@ -1012,12 +1008,10 @@ bool AudioUnitEffect::SupportsAutomation()
 // EffectProcessor Implementation
 // ============================================================================
 
-bool AudioUnitEffect::SetHost(EffectHostInterface *host)
+bool AudioUnitEffect::InitializePlugin()
 {
    OSStatus result;
-   
-   mHost = host;
- 
+
    mSampleRate = 44100;
    result = AudioComponentInstanceNew(mComponent, &mUnit);
    if (!mUnit)
@@ -1039,7 +1033,22 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
                         &mBlockSize,
                         &dataSize);
 
-   // mHost will be null during registration
+   // Is this really needed here or can it be done in InitializeInstance()
+   // only?  I think it can, but this is more a conservative change for now,
+   // preserving what SetHost() did
+   return MakeListener();
+}
+
+bool AudioUnitEffect::InitializeInstance(EffectHostInterface *host)
+{
+   OSStatus result;
+
+   mHost = host;
+
+   if (mMaster)
+      // Do common steps
+      InitializePlugin();
+
    if (mHost)
    {
       GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -1049,20 +1058,27 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
 
       bool haveDefaults;
       GetConfig(*this, PluginSettings::Private,
-         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
+         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
       if (!haveDefaults)
       {
-         SavePreset(mHost->GetFactoryDefaultsGroup());
+         SavePreset(FactoryDefaultsGroup());
          SetConfig(*this, PluginSettings::Private,
-            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+            FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadPreset(mHost->GetCurrentSettingsGroup());
-   } 
+      LoadPreset(CurrentSettingsGroup());
+   }
 
+   return true;
+}
+
+bool AudioUnitEffect::MakeListener()
+{
    if (!mMaster)
    {
-     result = AUEventListenerCreate(AudioUnitEffect::EventListenerCallback,
+      // Don't have a master -- so this IS the master.
+      OSStatus result;
+      result = AUEventListenerCreate(AudioUnitEffect::EventListenerCallback,
                                     this,
                                     (CFRunLoopRef)GetCFRunLoopFromEventLoop(GetCurrentEventLoop()),
                                     kCFRunLoopDefaultMode,
@@ -1171,12 +1187,12 @@ bool AudioUnitEffect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-unsigned AudioUnitEffect::GetAudioInCount()
+unsigned AudioUnitEffect::GetAudioInCount() const
 {
    return mAudioIns;
 }
 
-unsigned AudioUnitEffect::GetAudioOutCount()
+unsigned AudioUnitEffect::GetAudioOutCount() const
 {
    return mAudioOuts;
 }
@@ -1243,7 +1259,8 @@ size_t AudioUnitEffect::GetTailSize()
    return tailTime * mSampleRate;
 }
 
-bool AudioUnitEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool AudioUnitEffect::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    OSStatus result;
 
@@ -1302,12 +1319,13 @@ bool AudioUnitEffect::ProcessFinalize()
    return true;
 }
 
-size_t AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (size_t i = 0; i < mAudioIns; i++)
    {
       mInputList[0].mBuffers[i].mNumberChannels = 1;
-      mInputList[0].mBuffers[i].mData = inBlock[i];
+      mInputList[0].mBuffers[i].mData = const_cast<float*>(inBlock[i]);
       mInputList[0].mBuffers[i].mDataByteSize = sizeof(float) * blockLen;
    }
 
@@ -1338,17 +1356,16 @@ size_t AudioUnitEffect::ProcessBlock(float **inBlock, float **outBlock, size_t b
    return blockLen;
 }
 
-bool AudioUnitEffect::RealtimeInitialize()
+bool AudioUnitEffect::RealtimeInitialize(EffectSettings &settings)
 {
-   mMasterIn.reinit(mAudioIns, mBlockSize, true);
-   mMasterOut.reinit(mAudioOuts, mBlockSize);
-   return ProcessInitialize(0);
+   return ProcessInitialize(settings, 0, nullptr);
 }
 
-bool AudioUnitEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
+bool AudioUnitEffect::RealtimeAddProcessor(
+   EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
-   if (!slave->SetHost(NULL))
+   if (!slave->InitializeInstance(nullptr))
    {
       return false;
    }
@@ -1365,21 +1382,19 @@ bool AudioUnitEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRat
    auto pSlave = slave.get();
    mSlaves.push_back(std::move(slave));
 
-   return pSlave->ProcessInitialize(0);
+   return pSlave->ProcessInitialize(settings, 0, nullptr);
 }
 
-bool AudioUnitEffect::RealtimeFinalize()
+bool AudioUnitEffect::RealtimeFinalize(EffectSettings &) noexcept
 {
+return GuardedCall<bool>([&]{
    for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
    {
       mSlaves[i]->ProcessFinalize();
    }
    mSlaves.clear();
-
-   mMasterIn.reset();
-   mMasterOut.reset();
-
    return ProcessFinalize();
+});
 }
 
 bool AudioUnitEffect::RealtimeSuspend()
@@ -1400,8 +1415,9 @@ bool AudioUnitEffect::RealtimeSuspend()
    return true;
 }
 
-bool AudioUnitEffect::RealtimeResume()
+bool AudioUnitEffect::RealtimeResume() noexcept
 {
+return GuardedCall<bool>([&]{
    if (!BypassEffect(false))
    {
       return false;
@@ -1416,45 +1432,23 @@ bool AudioUnitEffect::RealtimeResume()
    }
 
    return true;
+});
 }
 
-bool AudioUnitEffect::RealtimeProcessStart()
+bool AudioUnitEffect::RealtimeProcessStart(EffectSettings &)
 {
-   for (size_t i = 0; i < mAudioIns; i++)
-   {
-      memset(mMasterIn[i].get(), 0, mBlockSize * sizeof(float));
-   }
-
-   mNumSamples = 0;
-
    return true;
 }
 
-size_t AudioUnitEffect::RealtimeProcess(int group,
-                                        float **inbuf,
-                                        float **outbuf,
-                                        size_t numSamples)
+size_t AudioUnitEffect::RealtimeProcess(int group, EffectSettings &settings,
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
-
-   for (size_t c = 0; c < mAudioIns; c++)
-   {
-      for (decltype(numSamples) s = 0; s < numSamples; s++)
-      {
-         mMasterIn[c][s] += inbuf[c][s];
-      }
-   }
-   mNumSamples = wxMax(numSamples, mNumSamples);
-
-   return mSlaves[group]->ProcessBlock(inbuf, outbuf, numSamples);
+   return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
 }
 
-bool AudioUnitEffect::RealtimeProcessEnd()
+bool AudioUnitEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
-   ProcessBlock(reinterpret_cast<float**>(mMasterIn.get()),
-                reinterpret_cast<float**>(mMasterOut.get()),
-                mNumSamples);
-
    return true;
 }
 
@@ -1649,10 +1643,10 @@ bool AudioUnitEffect::LoadFactoryPreset(int id)
 
 bool AudioUnitEffect::LoadFactoryDefaults()
 {
-   return LoadPreset(mHost->GetFactoryDefaultsGroup());
+   return LoadPreset(FactoryDefaultsGroup());
 }
 
-RegistryPaths AudioUnitEffect::GetFactoryPresets()
+RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 {
    OSStatus result;
    RegistryPaths presets;
@@ -1683,7 +1677,8 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets()
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
+std::unique_ptr<EffectUIValidator>
+AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    // OSStatus result;
 
@@ -1708,7 +1703,7 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
    {
       if (!CreatePlain(mParent))
       {
-         return false;
+         return nullptr;
       }
    }
    else
@@ -1717,12 +1712,12 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
       auto pControl = Destroy_ptr<AUControl>(safenew AUControl);
       if (!pControl)
       {
-         return false;
+         return nullptr;
       }
 
       if (!pControl->Create(container, mComponent, mUnit, mUIType == wxT("Full")))
       {
-         return false;
+         return nullptr;
       }
 
       {
@@ -1746,7 +1741,7 @@ bool AudioUnitEffect::PopulateUI(ShuttleGui &S)
       mParent->PushEventHandler(this);
    }
 
-   return true;
+   return std::make_unique<DefaultEffectUIValidator>(*this, access);
 }
 
 bool AudioUnitEffect::IsGraphicalUI()
@@ -1754,14 +1749,9 @@ bool AudioUnitEffect::IsGraphicalUI()
    return mUIType != wxT("Plain");
 }
 
-bool AudioUnitEffect::ValidateUI()
+bool AudioUnitEffect::ValidateUI(EffectSettings &)
 {
 #if 0
-   if (!mParent->Validate())
-   {
-      return false;
-   }
-
    if (GetType() == EffectTypeGenerate)
    {
       mHost->SetDuration(mDuration->GetValue());
@@ -1777,17 +1767,6 @@ bool AudioUnitEffect::CreatePlain(wxWindow *parent)
    return false;
 }
 #endif
-
-bool AudioUnitEffect::HideUI()
-{
-#if 0
-   if (GetType() == EffectTypeAnalyze || mNumOutputControls > 0)
-   {
-      return false;
-   }
-#endif
-   return true;
-}
 
 bool AudioUnitEffect::CloseUI()
 {
@@ -1912,7 +1891,7 @@ bool AudioUnitEffect::HasOptions()
 
 void AudioUnitEffect::ShowOptions()
 {
-   AudioUnitEffectOptionsDialog dlg(mParent, *mHost, *this);
+   AudioUnitEffectOptionsDialog dlg(mParent, *this);
    if (dlg.ShowModal())
    {
       // Reinitialize configuration settings

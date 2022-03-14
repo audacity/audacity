@@ -91,24 +91,24 @@ EffectTimeScale::~EffectTimeScale()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectTimeScale::GetSymbol()
+ComponentInterfaceSymbol EffectTimeScale::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectTimeScale::GetDescription()
+TranslatableString EffectTimeScale::GetDescription() const
 {
    return XO("Allows continuous changes to the tempo and/or pitch");
 }
 
-ManualPageID EffectTimeScale::ManualPage()
+ManualPageID EffectTimeScale::ManualPage() const
 {
    return L"Sliding_Stretch";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectTimeScale::GetType()
+EffectType EffectTimeScale::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -162,7 +162,8 @@ bool EffectTimeScale::Init()
    return true;
 }
 
-double EffectTimeScale::CalcPreviewInputLength(double previewLength)
+double EffectTimeScale::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    double inputLength = Effect::GetDuration();
    if(inputLength == 0.0) {
@@ -176,14 +177,14 @@ double EffectTimeScale::CalcPreviewInputLength(double previewLength)
    }
 }
 
-void EffectTimeScale::Preview(bool dryOnly)
+void EffectTimeScale::Preview(EffectSettingsAccess &access, bool dryOnly)
 {
    previewSelectedDuration = Effect::GetDuration();
    auto cleanup = valueRestorer( bPreview, true );
-   Effect::Preview(dryOnly);
+   Effect::Preview(access, dryOnly);
 }
 
-bool EffectTimeScale::Process()
+bool EffectTimeScale::Process(EffectSettings &settings)
 {
    double pitchStart1 = PercentChangeToRatio(m_PitchPercentChangeStart);
    double pitchEnd1 = PercentChangeToRatio(m_PitchPercentChangeEnd);
@@ -197,10 +198,11 @@ bool EffectTimeScale::Process()
    }
    
    EffectSBSMS::setParameters(rateStart1,rateEnd1,pitchStart1,pitchEnd1,slideTypeRate,slideTypePitch,false,false,false);
-   return EffectSBSMS::Process();
+   return EffectSBSMS::Process(settings);
 }
 
-void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectTimeScale::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);
@@ -306,28 +308,13 @@ void EffectTimeScale::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndMultiColumn();
 
-   return;
+   return nullptr;
 }
 
-bool EffectTimeScale::TransferDataToWindow()
+bool EffectTimeScale::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    Update_Slider_RatePercentChangeStart();
    Update_Slider_RatePercentChangeEnd();
-
-   return true;
-}
-
-bool EffectTimeScale::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
 
    return true;
 }

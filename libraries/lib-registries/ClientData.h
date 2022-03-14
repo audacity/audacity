@@ -315,8 +315,8 @@ public:
    //! @copydoc Get
    /*! const overload returns const references only. */
    template< typename Subclass = const ClientData >
-   auto Get( const RegisteredFactory &key ) const -> typename
-      std::enable_if< std::is_const< Subclass >::value, Subclass & >::type
+   auto Get( const RegisteredFactory &key ) const ->
+      std::enable_if_t< std::is_const< Subclass >::value, Subclass & >
    {
       auto data = GetData();
       return DoGet< Subclass >( data, key );
@@ -339,8 +339,8 @@ public:
    //! @copydoc Find
    /*! const overload returns pointers to const only. */
    template< typename Subclass = const ClientData >
-   auto Find( const RegisteredFactory &key ) const -> typename
-      std::enable_if< std::is_const< Subclass >::value, Subclass * >::type
+   auto Find( const RegisteredFactory &key ) const ->
+      std::enable_if_t< std::is_const< Subclass >::value, Subclass * >
    {
       auto data = GetData();
       return DoFind< Subclass >( data, key );

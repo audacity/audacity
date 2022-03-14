@@ -29,7 +29,7 @@ class TimeWarper;
 class EffectSBSMS /* not final */ : public Effect
 {
 public:
-   bool Process() override;
+   bool Process(EffectSettings &settings) override;
    void setParameters(double rateStart, double rateEnd, double pitchStart, double pitchEnd,
                       SlideType rateSlideType, SlideType pitchSlideType,
                       bool bLinkRatePitch, bool bRateReferenceInput, bool bPitchReferenceInput);
@@ -42,7 +42,7 @@ protected:
    // This supplies the abstract virtual function, but in fact this symbol
    // does not get used:  this class is either a temporary helper, or else
    // GetSymbol() is overridden further in derived classes.
-   ComponentInterfaceSymbol GetSymbol() override { return mProxyEffectName; }
+   ComponentInterfaceSymbol GetSymbol() const override { return mProxyEffectName; }
 
 private:
    bool ProcessLabelTrack(LabelTrack *track);

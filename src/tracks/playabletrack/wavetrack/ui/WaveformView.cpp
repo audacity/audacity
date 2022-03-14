@@ -11,6 +11,7 @@ Paul Licameli split from WaveTrackView.cpp
 
 #include "WaveformView.h"
 
+#include "WaveformCache.h"
 #include "WaveformVRulerControls.h"
 #include "WaveTrackView.h"
 #include "WaveTrackViewConstants.h"
@@ -19,11 +20,12 @@ Paul Licameli split from WaveTrackView.cpp
 #include "../../../ui/EnvelopeHandle.h"
 #include "../../../ui/TimeShiftHandle.h"
 #include "AColor.h"
-#include "../../../../Envelope.h"
+#include "Envelope.h"
 #include "../../../../EnvelopeEditor.h"
 #include "../../../../ProjectSettings.h"
 #include "SelectedRegion.h"
 #include "../../../../SyncLock.h"
+#include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
@@ -731,7 +733,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
 
    std::vector<double> vEnv(mid.width);
    double *const env = &vEnv[0];
-   Envelope::GetValues( *clip->GetEnvelope(),
+   CommonTrackView::GetEnvelopeValues( *clip->GetEnvelope(),
        tOffset,
 
         // PRL: change back to make envelope evaluate only at sample times
@@ -776,6 +778,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    // Require at least 3 pixels per sample for drawing the draggable points.
    const double threshold2 = 3 * rate;
 
+   auto &clipCache = WaveClipWaveformCache::Get(*clip);
+
    {
       bool showIndividualSamples = false;
       for (unsigned ii = 0; !showIndividualSamples && ii < nPortions; ++ii) {
@@ -795,7 +799,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
          // fisheye moves over the background, there is then less to do when
          // redrawing.
 
-         if (!clip->GetWaveDisplay(display,t0, pps))
+         if (!clipCache.GetWaveDisplay( *clip, display,
+            t0, pps))
             return;
       }
    }
@@ -845,7 +850,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             fisheyeDisplay.width -= skipped;
             // Get a wave display for the fisheye, uncached.
             if (rectPortion.width > 0)
-               if (!clip->GetWaveDisplay(
+               if (!clipCache.GetWaveDisplay( *clip,
                      fisheyeDisplay, t0, -1.0)) // ignored
                   continue; // serious error.  just don't draw??
             useMin = fisheyeDisplay.min;
@@ -868,7 +873,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
          if (!showIndividualSamples) {
             std::vector<double> vEnv2(rectPortion.width);
             double *const env2 = &vEnv2[0];
-            Envelope::GetValues( *clip->GetEnvelope(),
+            CommonTrackView::GetEnvelopeValues( *clip->GetEnvelope(),
                 tOffset,
 
                  // PRL: change back to make envelope evaluate only at sample times

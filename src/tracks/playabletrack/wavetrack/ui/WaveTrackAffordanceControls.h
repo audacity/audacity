@@ -11,8 +11,8 @@
 #pragma once
 
 #include <wx/font.h>
-#include <wx/event.h>
 
+#include "Observer.h"
 #include "../../../ui/CommonTrackPanelCell.h"
 #include "../../../ui/TextEditHelper.h"
 
@@ -33,7 +33,6 @@ class TrackList;
 class AUDACITY_DLL_API WaveTrackAffordanceControls : 
     public CommonTrackCell,
     public TextEditDelegate,
-    public wxEvtHandler,
     public std::enable_shared_from_this<WaveTrackAffordanceControls>
 {
     std::weak_ptr<WaveClip> mFocusClip;
@@ -47,6 +46,9 @@ class AUDACITY_DLL_API WaveTrackAffordanceControls :
     std::shared_ptr<TextEditHelper> mTextEditHelper;
 
     wxFont mClipNameFont;
+
+    //Helper flag, checked when text editing is triggered (and dialog-edit option is disabled)
+    bool mClipNameVisible { false };
 
 public:
     WaveTrackAffordanceControls(const std::shared_ptr<Track>& pTrack);
@@ -95,9 +97,11 @@ public:
 private:
     void ResetClipNameEdit();
 
-    void OnTrackChanged(TrackListEvent& evt);
+    void OnTrackChanged(const TrackListEvent& evt);
 
     unsigned ExitTextEditing();
 
     std::shared_ptr<TextEditHelper> MakeTextEditHelper(const wxString& text);
+
+    Observer::Subscription mSubscription;
 };

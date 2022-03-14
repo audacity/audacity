@@ -21,13 +21,13 @@
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
-#include "../commands/ScreenshotCommand.h"
-#include "../effects/TimeWarper.h"
+#include "TimeWarper.h"
 #include "../export/Export.h"
 #include "../prefs/PrefsDialog.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../widgets/AudacityMessageBox.h"
+#include "../widgets/VetoDialogHook.h"
 
 // private helper classes and functions
 namespace {
@@ -971,7 +971,7 @@ void OnPreferences(const CommandContext &context)
 
    GlobalPrefsDialog dialog(&GetProjectFrame( project ) /* parent */, &project );
 
-   if( ScreenshotCommand::MayCapture( &dialog ) )
+   if( VetoDialogHook::Call( &dialog ) )
       return;
 
    if (!dialog.ShowModal()) {

@@ -35,7 +35,7 @@ void Biquad::Reset()
    fPrevPrevOut = 0;
 }
 
-void Biquad::Process(float* pfIn, float* pfOut, int iNumSamples)
+void Biquad::Process(const float* pfIn, float* pfOut, int iNumSamples)
 {
    for (int i = 0; i < iNumSamples; i++)
       *pfOut++ = ProcessOne(*pfIn++);
@@ -135,7 +135,7 @@ ArrayOf<Biquad> Biquad::CalcButterworthFilter(int order, double fn, double fc, i
    pBiquad[0].fNumerCoeffs [B1] *= fDCPoleDistSqr / (1 << order);
    pBiquad[0].fNumerCoeffs [B2] *= fDCPoleDistSqr / (1 << order);
 
-   return std::move(pBiquad);
+   return pBiquad;
 }
 
 // order: filter order
@@ -217,7 +217,7 @@ ArrayOf<Biquad> Biquad::CalcChebyshevType1Filter(int order, double fn, double fc
       pBiquad[(order-1)/2].fDenomCoeffs [A1] = -fZPoleX;
       pBiquad[(order-1)/2].fDenomCoeffs [A2] = 0;
    }
-   return std::move(pBiquad);
+   return pBiquad;
 }
 
 // order: filter order
@@ -302,7 +302,7 @@ ArrayOf<Biquad> Biquad::CalcChebyshevType2Filter(int order, double fn, double fc
       pBiquad[iPair].fDenomCoeffs [A1] = -fZPoleX;
       pBiquad[iPair].fDenomCoeffs [A2] = 0;
    }
-   return std::move(pBiquad);
+   return pBiquad;
 }
 
 void Biquad::ComplexDiv (double fNumerR, double fNumerI, double fDenomR, double fDenomI,

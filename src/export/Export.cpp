@@ -62,7 +62,7 @@
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"
 #include "../ShuttleGui.h"
-#include "../Tags.h"
+#include "../TagsEditor.h"
 #include "Theme.h"
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
@@ -227,7 +227,7 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
          double outRate, sampleFormat outFormat,
          MixerSpec *mixerSpec)
 {
-   WaveTrackConstArray inputTracks;
+   SampleTrackConstArray inputTracks;
 
    bool anySolo = !(( tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo ).empty());
 
@@ -236,7 +236,7 @@ std::unique_ptr<Mixer> ExportPlugin::CreateMixer(const TrackList &tracks,
       - ( anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
    for (auto pTrack: range)
       inputTracks.push_back(
-         pTrack->SharedPointer< const WaveTrack >() );
+         pTrack->SharedPointer< const SampleTrack >() );
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(inputTracks,
                   // Throw, to stop exporting, if read fails:
@@ -410,7 +410,8 @@ bool Exporter::DoEditMetadata(AudacityProject &project,
    // BEFORE doing any editing of it!
    auto newTags = tags.Duplicate();
 
-   if (newTags->ShowEditDialog(&GetProjectFrame( project ), title, force)) {
+   if (TagsEditorDialog::ShowEditDialog(
+      *newTags, &GetProjectFrame( project ), title, force)) {
       if (tags != *newTags) {
          // Commit the change to project state only now.
          Tags::Set( project, newTags );
@@ -575,7 +576,7 @@ bool Exporter::ExamineTracks()
          message = XO("All audio is muted.");
       ShowExportErrorDialog(
          ":576",
-         message);
+         message, AudacityExportCaptionStr(), false);
       return false;
    }
 
@@ -1518,14 +1519,15 @@ TranslatableString AudacityExportMessageStr()
 // we need from them is that they be distinct.
 void ShowExportErrorDialog(wxString ErrorCode,
    TranslatableString message,
-   const TranslatableString& caption)
+   const TranslatableString& caption,
+   bool allowReporting)
 {
    using namespace BasicUI;
    ShowErrorDialog( {},
       caption,
       message.Format( ErrorCode ),
       "Error:_Unable_to_export", // URL.
-      ErrorDialogOptions{ ErrorDialogType::ModalErrorReport } );
+      ErrorDialogOptions { allowReporting ? ErrorDialogType::ModalErrorReport : ErrorDialogType::ModalError });
 }
 
 void ShowDiskFullExportErrorDialog(const wxFileNameWrapper &fileName)

@@ -96,50 +96,47 @@ EffectWahwah::~EffectWahwah()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectWahwah::GetSymbol()
+ComponentInterfaceSymbol EffectWahwah::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectWahwah::GetDescription()
+TranslatableString EffectWahwah::GetDescription() const
 {
    return XO("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
 }
 
-ManualPageID EffectWahwah::ManualPage()
+ManualPageID EffectWahwah::ManualPage() const
 {
    return L"Wahwah";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectWahwah::GetType()
+EffectType EffectWahwah::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectWahwah::SupportsRealtime()
+bool EffectWahwah::SupportsRealtime() const
 {
-#if defined(EXPERIMENTAL_REALTIME_AUDACITY_EFFECTS)
    return true;
-#else
-   return false;
-#endif
 }
 
 // EffectProcessor implementation
 
-unsigned EffectWahwah::GetAudioInCount()
+unsigned EffectWahwah::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectWahwah::GetAudioOutCount()
+unsigned EffectWahwah::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectWahwah::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames chanMap)
+bool EffectWahwah::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    InstanceInit(mMaster, mSampleRate);
 
@@ -151,12 +148,13 @@ bool EffectWahwah::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
    return true;
 }
 
-size_t EffectWahwah::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectWahwah::ProcessBlock(EffectSettings &settings,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectWahwah::RealtimeInitialize()
+bool EffectWahwah::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -165,7 +163,8 @@ bool EffectWahwah::RealtimeInitialize()
    return true;
 }
 
-bool EffectWahwah::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool EffectWahwah::RealtimeAddProcessor(
+   EffectSettings &settings, unsigned, float sampleRate)
 {
    EffectWahwahState slave;
 
@@ -176,20 +175,17 @@ bool EffectWahwah::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool EffectWahwah::RealtimeFinalize()
+bool EffectWahwah::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectWahwah::RealtimeProcess(int group,
-                                          float **inbuf,
-                                          float **outbuf,
-                                          size_t numSamples)
+size_t EffectWahwah::RealtimeProcess(int group, EffectSettings &settings,
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-
-   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
 
 bool EffectWahwah::DefineParams( ShuttleParams & S ){
@@ -235,7 +231,8 @@ bool EffectWahwah::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectWahwah::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);
@@ -312,31 +309,17 @@ void EffectWahwah::PopulateOrExchange(ShuttleGui & S)
          .AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
-bool EffectWahwah::TransferDataToWindow()
+bool EffectWahwah::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mFreqS->SetValue((int) (mFreq * SCL_Freq));
    mPhaseS->SetValue((int) (mPhase * SCL_Phase));
    mDepthS->SetValue((int) (mDepth * SCL_Depth));
    mResS->SetValue((int) (mRes * SCL_Res));
    mFreqOfsS->SetValue((int) (mFreqOfs * SCL_FreqOfs));
    mOutGainS->SetValue((int) (mOutGain * SCL_OutGain));
-
-   return true;
-}
-
-bool EffectWahwah::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
 
    return true;
 }
@@ -365,9 +348,11 @@ void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate)
    data.outgain = DB_TO_LINEAR(mOutGain);
 }
 
-size_t EffectWahwah::InstanceProcess(EffectWahwahState & data, float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectWahwah::InstanceProcess(EffectSettings &settings,
+   EffectWahwahState & data,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ibuf = inBlock[0];
+   const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
    double frequency, omega, sn, cs, alpha;
    double in, out;

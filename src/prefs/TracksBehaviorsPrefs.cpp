@@ -20,6 +20,7 @@
 
 #include "Prefs.h"
 #include "../ShuttleGui.h"
+#include "../WaveTrack.h"
 
 TracksBehaviorsPrefs::TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: i.e. the behaviors of tracks */
@@ -32,12 +33,12 @@ TracksBehaviorsPrefs::~TracksBehaviorsPrefs()
 {
 }
 
-ComponentInterfaceSymbol TracksBehaviorsPrefs::GetSymbol()
+ComponentInterfaceSymbol TracksBehaviorsPrefs::GetSymbol() const
 {
    return TRACKS_BEHAVIORS_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString TracksBehaviorsPrefs::GetDescription()
+TranslatableString TracksBehaviorsPrefs::GetDescription() const
 {
    return XO("Preferences for TracksBehaviors");
 }
@@ -83,9 +84,9 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XXO("Enable &dragging selection edges"),
                     {wxT("/GUI/AdjustSelectionEdges"),
                      true});
-      S.TieCheckBox(XXO("Editing a clip can &move other clips"),
-                    {wxT("/GUI/EditClipCanMove"),
-                     false});
+      S
+         .TieCheckBox(XXO("Editing a clip can &move other clips"),
+            EditClipsCanMove);
       S.TieCheckBox(XXO("\"Move track focus\" c&ycles repeatedly through tracks"),
                     {wxT("/GUI/CircularTrackNavigation"),
                      false});
@@ -134,19 +135,4 @@ PrefsPanel::Registration sAttachment{ "TracksBehaviors",
    // Place it at a lower tree level
    { "Tracks" }
 };
-}
-
-// Bug 825 is essentially that SyncLock requires EditClipsCanMove.
-// SyncLock needs rethinking, but meanwhile this function
-// fixes the issues of Bug 825 by allowing clips to move when in
-// SyncLock.
-bool GetEditClipsCanMove()
-{
-   bool mIsSyncLocked;
-   gPrefs->Read(wxT("/GUI/SyncLockTracks"), &mIsSyncLocked, false);
-   if( mIsSyncLocked )
-      return true;
-   bool editClipsCanMove;
-   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipsCanMove, false);
-   return editClipsCanMove;
 }

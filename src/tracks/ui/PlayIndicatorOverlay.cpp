@@ -145,17 +145,12 @@ static const AudacityProject::AttachedObjects::RegisteredFactory sOverlayKey{
 PlayIndicatorOverlay::PlayIndicatorOverlay(AudacityProject *project)
 : PlayIndicatorOverlayBase(project, true)
 {
-   ProjectWindow::Get( *mProject ).GetPlaybackScroller().Bind(
-      EVT_TRACK_PANEL_TIMER,
-      &PlayIndicatorOverlay::OnTimer,
-      this);
+   mSubscription = ProjectWindow::Get( *mProject )
+      .GetPlaybackScroller().Subscribe( *this, &PlayIndicatorOverlay::OnTimer );
 }
 
-void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
+void PlayIndicatorOverlay::OnTimer(Observer::Message)
 {
-   // Let other listeners get the notification
-   event.Skip();
-
    // Ensure that there is an overlay attached to the ruler
    if (!mPartner) {
       auto &ruler = AdornedRulerPanel::Get( *mProject );
@@ -190,7 +185,9 @@ void PlayIndicatorOverlay::OnTimer(wxCommandEvent &event)
 
       // Use a small tolerance to avoid flicker of play head pinned all the way
       // left or right
-      const auto tolerance = pinned ? 1.5 * kTimerInterval / 1000.0 : 0;
+      const auto tolerance = pinned
+         ? 1.5 * std::chrono::duration<double>{kTimerInterval}.count()
+         : 0;
       bool onScreen = playPos >= 0.0 &&
          between_incexc(viewInfo.h - tolerance,
          playPos,

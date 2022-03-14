@@ -15,8 +15,8 @@
 #include <wx/defs.h>
 
 #include "export/Export.h"
-#include "commands/CommandFlag.h"
 #include "ComponentInterface.h" // for ComponentInterfaceSymbol
+#include "PluginProvider.h" // for PluginID
 
 class wxArrayString;
 class Effect;
@@ -63,9 +63,6 @@ class MacroCommands final {
  public:
    bool ApplyMacro( const MacroCommandsCatalog &catalog,
       const wxString & filename = {});
-   static bool HandleTextualCommand( CommandManager &commandManager,
-      const CommandID & Str,
-      const CommandContext & context, CommandFlag flags, bool alwaysEnabled);
    bool ApplyCommand( const TranslatableString &friendlyCommand,
       const CommandID & command, const wxString & params,
       CommandContext const * pContext=NULL );

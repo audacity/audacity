@@ -379,12 +379,35 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       )
       if( CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin" )
          add_custom_command(
-	    TARGET ${TARGET}
+	         TARGET ${TARGET}
             COMMAND ${CMAKE_COMMAND}
-	       -D SRC="${_MODDIR}/${TARGET}.so"
+	            -D SRC="${_MODDIR}/${TARGET}.so"
+               -D DST="${_PKGLIB}"
                -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
                -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
             POST_BUILD )
+      elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
+         add_custom_command(
+            TARGET
+               ${TARGET}
+            COMMAND
+               ${CMAKE_COMMAND} -D SRC="${_MODDIR}/${TARGET}.dll"
+                              -D DST="${_EXEDIR}"
+                              -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>/"
+                              -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+            POST_BUILD
+         )
+      else()
+         add_custom_command(
+            TARGET
+               ${TARGET}
+            COMMAND
+               ${CMAKE_COMMAND} -D SRC="${_MODDIR}/${TARGET}.so"
+                              -D DST="${_PKGLIB}"
+                              -D WXWIN="${_SHARED_PROXY_BASE_PATH}/$<CONFIG>"
+                              -P ${AUDACITY_MODULE_PATH}/CopyLibs.cmake
+            POST_BUILD
+         )
       endif()
    else()
       set( ATTRIBUTES "shape=octagon" )
@@ -486,9 +509,6 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
    # collect dependency information
    list( APPEND GRAPH_EDGES "\"${TARGET}\" [${ATTRIBUTES}]" )
-   if (NOT LIBTYPE STREQUAL "MODULE")
-      list( APPEND GRAPH_EDGES "\"Audacity\" -> \"${TARGET}\"" )
-   endif ()
    set(ACCESS PUBLIC PRIVATE INTERFACE)
    foreach( IMPORT ${IMPORT_TARGETS} )
       if(IMPORT IN_LIST ACCESS)
@@ -498,6 +518,11 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
       list( APPEND GRAPH_EDGES "\"${TARGET}\" -> \"${IMPORT}\"" )
    endforeach()
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+
+   # collect unit test targets if they are present
+   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests")
+      add_subdirectory(tests)
+   endif()
 endfunction()
 
 # Set up for defining a module target.
@@ -544,9 +569,6 @@ macro( audacity_library NAME SOURCES IMPORT_TARGETS
       "SHARED"
    )
    set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
-   # Collect list of libraries for the executable to declare dependency on
-   list( APPEND AUDACITY_LIBRARIES "${NAME}" )
-   set( AUDACITY_LIBRARIES "${AUDACITY_LIBRARIES}" PARENT_SCOPE )
 endmacro()
 
 # A special macro for header only libraries
@@ -560,9 +582,6 @@ macro( audacity_header_only_library NAME SOURCES IMPORT_TARGETS
    target_sources( ${NAME} INTERFACE ${SOURCES})
    target_link_libraries( ${NAME} INTERFACE ${IMPORT_TARGETS} )
    target_compile_definitions( ${NAME} INTERFACE ${ADDITIONAL_DEFINES} )
-
-   list( APPEND AUDACITY_LIBRARIES "${NAME}" )
-   set( AUDACITY_LIBRARIES "${AUDACITY_LIBRARIES}" PARENT_SCOPE )
 endmacro()
 
 #

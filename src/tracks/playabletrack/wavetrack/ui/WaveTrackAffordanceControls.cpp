@@ -19,6 +19,7 @@
 #include "../../../../commands/CommandFunctors.h"
 #include "../../../../commands/CommandManager.h"
 #include "../../../../TrackPanelMouseEvent.h"
+#include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelResizeHandle.h"
@@ -56,7 +57,7 @@ class SetWaveClipNameCommand : public AudacityCommand
 public:
     static const ComponentInterfaceSymbol Symbol;
 
-    ComponentInterfaceSymbol GetSymbol() override
+    ComponentInterfaceSymbol GetSymbol() const override
     {
         return Symbol;
     }
@@ -138,9 +139,8 @@ WaveTrackAffordanceControls::WaveTrackAffordanceControls(const std::shared_ptr<T
 {
     if (auto trackList = pTrack->GetOwner())
     {
-        trackList->Bind(EVT_TRACKLIST_SELECTION_CHANGE,
-            &WaveTrackAffordanceControls::OnTrackChanged,
-            this);
+        mSubscription = trackList->Subscribe(
+            *this, &WaveTrackAffordanceControls::OnTrackChanged);
     }
 }
 
@@ -153,12 +153,12 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
 
     const auto rect = state.rect;
 
-    const auto track = FindTrack();
+    auto track = std::static_pointer_cast<WaveTrack>(FindTrack());
 
     {
         auto handle = WaveClipTrimHandle::HitAnywhere(
             mClipTrimHandle,
-            std::static_pointer_cast<WaveTrack>(track).get(),
+            track,
             pProject,
             state);
 
@@ -264,12 +264,14 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                 auto highlight = selected || affordanceRect.Contains(px, py);
                 if (mTextEditHelper && mEditedClip.lock() == clip)
                 {
-                    TrackArt::DrawClipAffordance(context.dc, affordanceRect, wxEmptyString, highlight, selected);
-                    mTextEditHelper->Draw(context.dc, TrackArt::GetAffordanceTitleRect(affordanceRect));
+                    auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, wxEmptyString, highlight, selected);
+                    mTextEditHelper->Draw(context.dc, titleRect);
                 }
                 else
-                    TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);
-
+                {
+                    auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);
+                    mClipNameVisible = !titleRect.IsEmpty();
+                }
             }
         }
 
@@ -296,8 +298,6 @@ bool WaveTrackAffordanceControls::StartEditClipName(AudacityProject* project)
                 clip->SetName(Command.mName);
                 ProjectHistory::Get(*project).PushState(XO("Modified Clip Name"),
                     XO("Clip Name Edit"));
-
-                return true;
             }
         }
         else
@@ -305,10 +305,14 @@ bool WaveTrackAffordanceControls::StartEditClipName(AudacityProject* project)
             if (mTextEditHelper)
                 mTextEditHelper->Finish(project);
 
+            if(!mClipNameVisible)
+                //Clip name isn't visible, there is no point in showing editor then
+                return false;
+
             mEditedClip = lock;
             mTextEditHelper = MakeTextEditHelper(clip->GetName());
-            return true;
         }
+        return true;
     }
     return false;
 }
@@ -440,10 +444,10 @@ void WaveTrackAffordanceControls::ResetClipNameEdit()
     mEditedClip.reset();
 }
 
-void WaveTrackAffordanceControls::OnTrackChanged(TrackListEvent& evt)
+void WaveTrackAffordanceControls::OnTrackChanged(const TrackListEvent& evt)
 {
-    evt.Skip();
-    ExitTextEditing();
+    if (evt.mType == TrackListEvent::SELECTION_CHANGE)
+       ExitTextEditing();
 }
 
 unsigned WaveTrackAffordanceControls::ExitTextEditing()
@@ -541,8 +545,8 @@ unsigned WaveTrackAffordanceControls::OnAffordanceClick(const TrackPanelMouseEve
             if (affordanceRect.Contains(event.event.GetPosition()) &&
                 StartEditClipName(project))
             {
-                event.event.Skip();
-                return RefreshCode::RefreshCell | RefreshCode::Cancelled;
+                event.event.Skip(false);
+                return RefreshCode::RefreshCell;
             }
         }
     }

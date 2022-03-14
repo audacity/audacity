@@ -17,6 +17,8 @@
 
 #include "PrefsDialog.h"
 
+#include <thread>
+
 #include <wx/app.h>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
@@ -587,6 +589,8 @@ PrefsDialog::PrefsDialog(
    // Center after all that resizing, but make sure it doesn't end up
    // off-screen
    CentreOnParent();
+
+   mTransaction = std::make_unique< SettingTransaction >();
 }
 
 PrefsDialog::~PrefsDialog()
@@ -753,8 +757,10 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       if (gAudioIO->IsMonitoring())
       {
          gAudioIO->StopStream();
-         while (gAudioIO->IsBusy())
-            wxMilliSleep(100);
+         while (gAudioIO->IsBusy()) {
+            using namespace std::chrono;
+            std::this_thread::sleep_for(100ms);
+         }
       }
       gAudioIO->HandleDeviceChange();
    }
@@ -768,6 +774,8 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    //      not cause MenuCreator::RebuildMenuBar() to be executed.
 
    PrefsListener::Broadcast();
+
+   mTransaction->Commit();
 
    if( IsModal() )
       EndModal(true);

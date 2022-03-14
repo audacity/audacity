@@ -2,7 +2,7 @@
 
    Audacity - A Digital Audio Editor
    Copyright 1999-2018 Audacity Team
-   License: GPL v2 - see LICENSE.txt
+   License: GPL v2 or later - see LICENSE.txt
 
    Dominic Mazzoni
    Dan Horgan
@@ -81,8 +81,8 @@ public:
 
    ScreenshotCommand();
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Takes screenshots.");};
+   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
+   TranslatableString GetDescription() const override {return XO("Takes screenshots.");};
    bool DefineParams( ShuttleParams & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 

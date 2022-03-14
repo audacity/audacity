@@ -12,14 +12,15 @@
 #ifndef __AUDACITY_TRACK__
 #define __AUDACITY_TRACK__
 
+#include <atomic>
 #include <utility>
 #include <vector>
 #include <list>
 #include <functional>
-#include <wx/event.h> // to inherit wxEvent
 #include <wx/longlong.h>
 
 #include "ClientData.h"
+#include "Observer.h"
 // TrackAttachment needs to be a complete type for the Windows build, though
 // not the others, so there is a nested include here:
 #include "TrackAttachment.h"
@@ -281,10 +282,10 @@ private:
    }
 
    template<typename Subclass = const Track>
-   inline auto SharedPointer() const -> typename
-      std::enable_if<
-         std::is_const<Subclass>::value, std::shared_ptr<Subclass>
-      >::type
+   inline auto SharedPointer() const ->
+      std::enable_if_t<
+         std::is_const_v<Subclass>, std::shared_ptr<Subclass>
+      >
    {
       // shared_from_this is injected into class scope by base class
       // std::enable_shared_from_this<Track>
@@ -643,7 +644,7 @@ private:
 
          //! Whether upcast of ArgumentType* to first BaseClass* works
          static constexpr bool Compatible =
-            std::is_base_of<BaseClass, ArgumentType>::value;
+            std::is_base_of_v<BaseClass, ArgumentType>;
          //! undefined function used in decltype only to compute a type, using other overloads
          template< typename Function, typename ...Functions >
             static auto test()
@@ -824,9 +825,9 @@ public:
    virtual double GetStartTime() const = 0;
    virtual double GetEndTime() const = 0;
 
-   // Send an event to listeners when state of the track changes
+   // Send a notification to subscribers when state of the track changes
    // To do: define values for the argument to distinguish different parts
-   // of the state, perhaps with wxNewId
+   // of the state
    void Notify( int code = -1 );
 
    // An always-true predicate useful for defining iterators
@@ -876,14 +877,14 @@ class TRACK_API PlayableTrack /* not final */ : public AudioTrack
 public:
    PlayableTrack()
       : AudioTrack{} {}
-   PlayableTrack(const Track &orig) : AudioTrack{ orig } {}
+   PlayableTrack(const PlayableTrack &orig) : AudioTrack{ orig } {}
 
    static const TypeInfo &ClassTypeInfo();
 
-   bool GetMute    () const { return mMute;     }
-   bool GetSolo    () const { return mSolo;     }
-   bool GetNotMute () const { return !mMute;     }
-   bool GetNotSolo () const { return !mSolo;     }
+   bool GetMute    () const { return DoGetMute();     }
+   bool GetSolo    () const { return DoGetSolo();     }
+   bool GetNotMute () const { return !DoGetMute();     }
+   bool GetNotSolo () const { return !DoGetSolo();     }
    void SetMute    (bool m);
    void SetSolo    (bool s);
 
@@ -897,8 +898,16 @@ public:
    bool HandleXMLAttribute(const std::string_view &attr, const XMLAttributeValueView &value);
 
 protected:
-   bool                mMute { false };
-   bool                mSolo { false };
+   // These just abbreviate load and store with relaxed memory ordering
+   bool DoGetMute() const;
+   void DoSetMute(bool value);
+   bool DoGetSolo() const;
+   void DoSetSolo(bool value);
+
+   //! Atomic because it may be read by worker threads in playback
+   std::atomic<bool>  mMute { false };
+   //! Atomic because it may be read by worker threads in playback
+   std::atomic<bool>  mSolo { false };
 };
 
 ENUMERATE_TRACK_TYPE(PlayableTrack);
@@ -928,8 +937,7 @@ template<typename T>
 This overload for const pointers can cast only to other const pointer types. */
 template<typename T>
    inline std::enable_if_t<
-      std::is_pointer_v<T> &&
-         std::is_const_v< std::remove_pointer_t< T > >,
+      std::is_pointer_v<T> && std::is_const_v< std::remove_pointer_t< T > >,
       T
    >
       track_cast(const Track *track)
@@ -959,15 +967,8 @@ template <
 {
 public:
    //! Type of predicate taking pointer to const TrackType
-   /*! @todo C++14:  simplify away ::type */
    using FunctionType = std::function< bool(
-      typename std::add_pointer<
-         typename std::add_const<
-            typename std::remove_pointer<
-               TrackType
-            >::type
-         >::type
-      >::type
+      std::add_pointer_t< std::add_const_t< std::remove_pointer_t<TrackType> > >
    ) >;
 
    //! Constructor, usually not called directly except by methods of TrackList
@@ -999,12 +1000,12 @@ public:
    satisfies the type constraint, or to the end */
    template < typename TrackType2 >
       auto Filter() const
-         -> typename std::enable_if<
-            std::is_base_of< TrackType, TrackType2 >::value &&
-               (!std::is_const<TrackType>::value ||
-                 std::is_const<TrackType2>::value),
+         -> std::enable_if_t<
+            std::is_base_of_v< TrackType, TrackType2 > &&
+               (!std::is_const_v<TrackType> ||
+                 std::is_const_v<TrackType2>),
             TrackIter< TrackType2 >
-         >::type
+         >
    {
       return { this->mBegin, this->mIter, this->mEnd, this->mPred };
    }
@@ -1244,66 +1245,52 @@ template <
 
 
 //! Notification of changes in individual tracks of TrackList, or of TrackList's composition
-struct TrackListEvent : public wxEvent
+struct TrackListEvent
 {
-   explicit
-   TrackListEvent(
-      wxEventType commandType,
-      const std::weak_ptr<Track> &pTrack = {}, int code = -1)
-   : wxEvent{ 0, commandType }
-   , mpTrack{ pTrack }
-   , mCode{ code }
+   enum Type {
+      //! Posted when the set of selected tracks changes.
+      SELECTION_CHANGE,
+
+      //! Posted when certain fields of a track change.
+      TRACK_DATA_CHANGE,
+
+      //! Posted when a track needs to be scrolled into view.
+      TRACK_REQUEST_VISIBLE,
+
+      //! Posted when tracks are reordered but otherwise unchanged.
+      /*! mpTrack points to the moved track that is earliest in the New ordering. */
+      PERMUTED,
+
+      //! Posted when some track changed its height.
+      RESIZING,
+
+      //! Posted when a track has been added to a tracklist.  Also posted when one track replaces another
+      ADDITION,
+
+      //! Posted when a track has been deleted from a tracklist. Also posted when one track replaces another
+      /*! mpTrack points to the first track after the deletion, if there is one. */
+      DELETION,
+   };
+
+   TrackListEvent( Type type,
+      const std::weak_ptr<Track> &pTrack = {}, int extra = -1)
+      : mType{ type }
+      , mpTrack{ pTrack }
+      , mExtra{ extra }
    {}
 
    TrackListEvent( const TrackListEvent& ) = default;
 
-   wxEvent *Clone() const override {
-      // wxWidgets will own the event object
-      return safenew TrackListEvent(*this); }
-
-   std::weak_ptr<Track> mpTrack;
-   int mCode;
-
-   void SetInt( int extra ) { mExtra = extra; }
-   int GetInt() const { return mExtra; }
-   int mExtra = 0;
+   const Type mType;
+   const std::weak_ptr<Track> mpTrack;
+   const int mExtra;
 };
-
-//! Posted when the set of selected tracks changes.
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_SELECTION_CHANGE, TrackListEvent);
-
-//! Posted when certain fields of a track change.
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_TRACK_DATA_CHANGE, TrackListEvent);
-
-//! Posted when a track needs to be scrolled into view.
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_TRACK_REQUEST_VISIBLE, TrackListEvent);
-
-//! Posted when tracks are reordered but otherwise unchanged.
-/*! mpTrack points to the moved track that is earliest in the New ordering. */
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_PERMUTED, TrackListEvent);
-
-//! Posted when some track changed its height.
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_RESIZING, TrackListEvent);
-
-//! Posted when a track has been added to a tracklist.  Also posted when one track replaces another
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_ADDITION, TrackListEvent);
-
-//! Posted when a track has been deleted from a tracklist. Also posted when one track replaces another
-/*! mpTrack points to the first track after the deletion, if there is one. */
-wxDECLARE_EXPORTED_EVENT(TRACK_API,
-                         EVT_TRACKLIST_DELETION, TrackListEvent);
 
 /*! @brief A flat linked list of tracks supporting Add,  Remove,
  * Clear, and Contains, serialization of the list of tracks, event notifications
  */
 class TRACK_API TrackList final
-   : public wxEvtHandler
+   : public Observer::Publisher<TrackListEvent>
    , public ListOfTracks
    , public std::enable_shared_from_this<TrackList>
    , public ClientData::Base
@@ -1373,9 +1360,9 @@ class TRACK_API TrackList final
    /*! const overload will only produce iterators over const TrackType */
    template < typename TrackType = const Track >
       auto Find(const Track *pTrack) const
-         -> typename std::enable_if< std::is_const<TrackType>::value,
+         -> std::enable_if_t< std::is_const_v<TrackType>,
             TrackIter< TrackType >
-         >::type
+         >
    {
       if (!pTrack || pTrack->GetOwner().get() != this)
          return EndIterator<TrackType>();
@@ -1406,9 +1393,9 @@ class TRACK_API TrackList final
 
    template < typename TrackType = const Track >
       auto Any() const
-         -> typename std::enable_if< std::is_const<TrackType>::value,
+         -> std::enable_if_t< std::is_const_v<TrackType>,
             TrackIterRange< TrackType >
-         >::type
+         >
    {
       return Tracks< TrackType >();
    }
@@ -1423,9 +1410,9 @@ class TRACK_API TrackList final
 
    template < typename TrackType = const Track >
       auto Selected() const
-         -> typename std::enable_if< std::is_const<TrackType>::value,
+         -> std::enable_if_t< std::is_const_v<TrackType>,
             TrackIterRange< TrackType >
-         >::type
+         >
    {
       return Tracks< TrackType >( &Track::IsSelected );
    }
@@ -1440,9 +1427,9 @@ class TRACK_API TrackList final
 
    template < typename TrackType = const Track >
       auto Leaders() const
-         -> typename std::enable_if< std::is_const<TrackType>::value,
+         -> std::enable_if_t< std::is_const_v<TrackType>,
             TrackIterRange< TrackType >
-         >::type
+         >
    {
       return Tracks< TrackType >( &Track::IsLeader );
    }
@@ -1457,9 +1444,9 @@ class TRACK_API TrackList final
 
    template < typename TrackType = const Track >
       auto SelectedLeaders() const
-         -> typename std::enable_if< std::is_const<TrackType>::value,
+         -> std::enable_if_t< std::is_const_v<TrackType>,
             TrackIterRange< TrackType >
-         >::type
+         >
    {
       return Tracks< TrackType >( &Track::IsSelectedLeader );
    }
@@ -1601,9 +1588,9 @@ private:
          typename TrackIterRange< TrackType >::iterator::FunctionType
    >
       auto Tracks( const Pred &pred = {} ) const
-         -> typename std::enable_if< std::is_const<TrackType>::value,
+         -> std::enable_if_t< std::is_const_v<TrackType>,
             TrackIterRange< TrackType >
-         >::type
+         >
    {
       auto b = const_cast<TrackList*>(this)->getBegin();
       auto e = const_cast<TrackList*>(this)->getEnd();
@@ -1665,6 +1652,7 @@ private:
    }
 
    void RecalcPositions(TrackNodePointer node);
+   void QueueEvent(TrackListEvent event);
    void SelectionEvent( const std::shared_ptr<Track> &pTrack );
    void PermutationEvent(TrackNodePointer node);
    void DataEvent( const std::shared_ptr<Track> &pTrack, int code );

@@ -165,19 +165,8 @@ foreach( pair
       OUTPUT_VARIABLE THEME_FILES )
    set( arguments ${CMAKE_CURRENT_SOURCE_DIR} ${theme} )
 
-   if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-      # Need a shell invocation that sets DYLD_LIBRARY_PATH environment variable
-      string( JOIN " " argument_string
-         DYLD_LIBRARY_PATH=${_SHARED_PROXY_BASE_PATH}/$<CONFIG>/
-         $<TARGET_FILE:image-compiler>
-         ${arguments} )
-      set( command sh -v -c "${argument_string}" )
-   else ()
-      set( command image-compiler ${arguments} )
-   endif ()
-
    add_custom_command( OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/${filename}.h"
-      COMMAND ${command}
+      COMMAND image-compiler ${arguments}
       DEPENDS ${THEME_FILES}
       COMMENT "Generating ${filename}.h..."
    )

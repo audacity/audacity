@@ -14,6 +14,7 @@
 
 
 
+#include "ClientData.h"
 #include "SampleFormat.h"
 #include "XMLTagHandler.h"
 #include "SampleCount.h"
@@ -31,92 +32,8 @@ class SampleBlock;
 class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 class Sequence;
-class SpectrogramSettings;
-class WaveCache;
-class WaveTrackCache;
 class wxFileNameWrapper;
-
-class AUDACITY_DLL_API SpecCache {
-public:
-
-   // Make invalid cache
-   SpecCache()
-      : algorithm(-1)
-      , pps(-1.0)
-      , start(-1.0)
-      , windowType(-1)
-      , frequencyGain(-1)
-      , dirty(-1)
-   {
-   }
-
-   ~SpecCache()
-   {
-   }
-
-   bool Matches(int dirty_, double pixelsPerSecond,
-      const SpectrogramSettings &settings, double rate) const;
-
-   // Calculate one column of the spectrum
-   bool CalculateOneSpectrum
-      (const SpectrogramSettings &settings,
-       WaveTrackCache &waveTrackCache,
-       const int xx, sampleCount numSamples,
-       double offset, double rate, double pixelsPerSecond,
-       int lowerBoundX, int upperBoundX,
-       const std::vector<float> &gainFactors,
-       float* __restrict scratch,
-       float* __restrict out) const;
-
-   // Grow the cache while preserving the (possibly now invalid!) contents
-   void Grow(size_t len_, const SpectrogramSettings& settings,
-               double pixelsPerSecond, double start_);
-
-   // Calculate the dirty columns at the begin and end of the cache
-   void Populate
-      (const SpectrogramSettings &settings, WaveTrackCache &waveTrackCache,
-       int copyBegin, int copyEnd, size_t numPixels,
-       sampleCount numSamples,
-       double offset, double rate, double pixelsPerSecond);
-
-   size_t       len { 0 }; // counts pixels, not samples
-   int          algorithm;
-   double       pps;
-   double       leftTrim{ .0 };
-   double       rightTrim{ .0 };
-   double       start;
-   int          windowType;
-   size_t       windowSize { 0 };
-   unsigned     zeroPaddingFactor { 0 };
-   int          frequencyGain;
-   std::vector<float> freq;
-   std::vector<sampleCount> where;
-
-   int          dirty;
-};
-
-class SpecPxCache {
-public:
-   SpecPxCache(size_t cacheLen)
-      : len{ cacheLen }
-      , values{ len }
-   {
-      valid = false;
-      scaleType = 0;
-      range = gain = -1;
-      minFreq = maxFreq = -1;
-   }
-
-   size_t  len;
-   Floats values;
-   bool         valid;
-
-   int scaleType;
-   int range;
-   int gain;
-   int minFreq;
-   int maxFreq;
-};
+namespace BasicUI { class ProgressDialog; }
 
 class WaveClip;
 
@@ -172,7 +89,15 @@ public:
    }
 };
 
+struct AUDACITY_DLL_API WaveClipListener
+{
+   virtual ~WaveClipListener() = 0;
+   virtual void MarkChanged() = 0;
+   virtual void Invalidate() = 0;
+};
+
 class AUDACITY_DLL_API WaveClip final : public XMLTagHandler
+   , public ClientData::Site< WaveClip, WaveClipListener >
 {
 private:
    // It is an error to copy a WaveClip without specifying the
@@ -182,6 +107,8 @@ private:
    WaveClip& operator= (const WaveClip&) PROHIBITED;
 
 public:
+   using Caches = Site< WaveClip, WaveClipListener >;
+
    // typical constructor
    WaveClip(const SampleBlockFactoryPtr &factory, sampleFormat format,
       int rate, int colourIndex);
@@ -216,7 +143,7 @@ public:
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
-   void Resample(int rate, ProgressDialog *progress = NULL);
+   void Resample(int rate, BasicUI::ProgressDialog *progress = NULL);
 
    void SetColourIndex( int index ){ mColourIndex = index;};
    int GetColourIndex( ) const { return mColourIndex;};
@@ -290,18 +217,10 @@ public:
     * called automatically when WaveClip has a chance to know that something
     * has changed, like when member functions SetSamples() etc. are called. */
    /*! @excsafety{No-fail} */
-   void MarkChanged()
-      { mDirty++; }
+   void MarkChanged();
 
    /** Getting high-level data for screen display and clipping
     * calculations and Contrast */
-   bool GetWaveDisplay(WaveDisplay &display,
-                       double t0, double pixelsPerSecond) const;
-   bool GetSpectrogram(WaveTrackCache &cache,
-                       const float *& spectrogram,
-                       const sampleCount *& where,
-                       size_t numPixels,
-                       double t0, double pixelsPerSecond) const;
    std::pair<float, float> GetMinMax(
       double t0, double t1, bool mayThrow = true) const;
    float GetRMS(double t0, double t1, bool mayThrow = true) const;
@@ -380,9 +299,6 @@ public:
    void CloseLock(); //should be called when the project closes.
    // not balanced by unlocking calls.
 
-   ///Delete the wave cache - force redraw.  Thread-safe
-   void ClearWaveCache();
-
    //
    // XMLTagHandler callback methods for loading and saving
    //
@@ -408,9 +324,8 @@ public:
    //! Silences the 'length' amount of samples starting from 'offset'(relative to the play start)
    void SetSilence(sampleCount offset, sampleCount length);
 
-public:
-   // Cache of values to colour pixels of Spectrogram - used by TrackArtist
-   mutable std::unique_ptr<SpecPxCache> mSpecPxCache;
+   const SampleBuffer &GetAppendBuffer() const { return mAppendBuffer; }
+   size_t GetAppendBufferLen() const { return mAppendBufferLen; }
 
 protected:
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
@@ -424,14 +339,11 @@ protected:
    double mTrimRight{ 0 };
 
    int mRate;
-   int mDirty { 0 };
    int mColourIndex;
 
    std::unique_ptr<Sequence> mSequence;
    std::unique_ptr<Envelope> mEnvelope;
 
-   mutable std::unique_ptr<WaveCache> mWaveCache;
-   mutable std::unique_ptr<SpecCache> mSpecCache;
    SampleBuffer  mAppendBuffer {};
    size_t        mAppendBufferLen { 0 };
 

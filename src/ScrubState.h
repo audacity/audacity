@@ -25,10 +25,9 @@ struct ScrubbingOptions {
    double minTime {};
 
    bool bySpeed {};
-   bool isPlayingAtSpeed{};
    bool isKeyboardScrubbing{};
 
-   double delay {};
+   PlaybackPolicy::Duration delay {};
 
    // Initial and limiting values for the speed of a scrub interval:
    double initSpeed { 1.0 };
@@ -38,7 +37,7 @@ struct ScrubbingOptions {
 
    // When maximum speed scrubbing skips to follow the mouse,
    // this is the minimum amount of playback allowed at the maximum speed:
-   double minStutterTime {};
+   PlaybackPolicy::Duration minStutterTime {};
 
    static double MaxAllowedScrubSpeed()
    { return 32.0; } // Is five octaves enough for your amusement?
@@ -107,6 +106,6 @@ struct ScrubState
    static double GetLastScrubTime();
 };
 
-static constexpr unsigned ScrubPollInterval_ms = 50;
+static constexpr auto ScrubPollInterval = std::chrono::milliseconds{50};
 
 #endif

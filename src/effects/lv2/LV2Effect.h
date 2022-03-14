@@ -5,7 +5,7 @@
   LV2Effect.h
 
   Audacity(R) is copyright (c) 1999-2013 Audacity Team.
-  License: GPL v2.  See License.txt.
+  License: GPL v2 or later.  See License.txt.
 
 *********************************************************************/
 
@@ -262,21 +262,20 @@ public:
 
    // ComponentInterface implementation
 
-   PluginPath GetPath() override;
-   ComponentInterfaceSymbol GetSymbol() override;
-   VendorSymbol GetVendor() override;
-   wxString GetVersion() override;
-   TranslatableString GetDescription() override;
+   PluginPath GetPath() const override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   VendorSymbol GetVendor() const override;
+   wxString GetVersion() const override;
+   TranslatableString GetDescription() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   EffectFamilySymbol GetFamily() override;
-   bool IsInteractive() override;
-   bool IsDefault() override;
-   bool IsLegacy() override;
-   bool SupportsRealtime() override;
-   bool SupportsAutomation() override;
+   EffectType GetType() const override;
+   EffectFamilySymbol GetFamily() const override;
+   bool IsInteractive() const override;
+   bool IsDefault() const override;
+   bool SupportsRealtime() const override;
+   bool SupportsAutomation() const override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -284,14 +283,14 @@ public:
    bool LoadUserPreset(const RegistryPath & name) override;
    bool SaveUserPreset(const RegistryPath & name) override;
 
-   RegistryPaths GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
 
    int GetMidiInCount() override;
    int GetMidiOutCount() override;
@@ -303,29 +302,37 @@ public:
    sampleCount GetLatency() override;
    size_t GetTailSize() override;
 
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
-   size_t ProcessBlock(float **inbuf, float **outbuf, size_t size) override;
+   size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      override;
 
-   bool RealtimeInitialize() override;
-   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize() override;
+   bool RealtimeInitialize(EffectSettings &settings) override;
+   bool RealtimeAddProcessor(EffectSettings &settings,
+      unsigned numChannels, float sampleRate) override;
+   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
-   bool RealtimeResume() override;
-   bool RealtimeProcessStart() override;
-   size_t RealtimeProcess(int group, float **inbuf, float **outbuf, size_t numSamples) override;
-   bool RealtimeProcessEnd() override;
+   bool RealtimeResume() noexcept override;
+   bool RealtimeProcessStart(EffectSettings &settings) override;
+   size_t RealtimeProcess(int group,  EffectSettings &settings,
+      const float *const *inbuf, float *const *outbuf, size_t numSamples)
+      override;
+   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
+   bool InitializePlugin();
+
    // EffectUIClientInterface implementation
 
-   bool SetHost(EffectHostInterface *host) override;
-   bool PopulateUI(ShuttleGui &S) override;
+   bool InitializeInstance(EffectHostInterface* host) override;
+   std::unique_ptr<EffectUIValidator> PopulateUI(
+      ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
-   bool ValidateUI() override;
-   bool HideUI() override;
+   bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
@@ -378,10 +385,9 @@ private:
    bool CheckFeatures(const LilvNode *subject, const LilvNode *predicate, bool required);
 
    bool BuildFancy();
-   bool BuildPlain();
+   bool BuildPlain(EffectSettingsAccess &access);
 
    bool TransferDataToWindow() /* not override */;
-   bool TransferDataFromWindow() /* not override */;
    void SetSlider(const LV2ControlPortPtr & port);
 
    void OnTrigger(wxCommandEvent & evt);
@@ -490,7 +496,7 @@ private:
    LV2Wrapper *mProcess;
    std::vector<LV2Wrapper *> mSlaves;
 
-   FloatBuffers mMasterIn, mMasterOut;
+   FloatBuffers mMasterIn;
    size_t mNumSamples;
    size_t mFramePos;
 
@@ -554,9 +560,10 @@ private:
 
    NumericTextCtrl *mDuration;
 
-   bool mFactoryPresetsLoaded;
-   RegistryPaths mFactoryPresetNames;
-   wxArrayString mFactoryPresetUris;
+   // Mutable cache fields computed once on demand
+   mutable bool mFactoryPresetsLoaded{ false };
+   mutable RegistryPaths mFactoryPresetNames;
+   mutable wxArrayString mFactoryPresetUris;
 
    DECLARE_EVENT_TABLE()
 

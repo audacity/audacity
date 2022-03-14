@@ -2,7 +2,7 @@
 
    Audacity - A Digital Audio Editor
    Copyright 1999-2018 Audacity Team
-   License: GPL v2 - see LICENSE.txt
+   License: GPL v2 or later - see LICENSE.txt
 
    Dominic Mazzoni
    Dan Horgan
@@ -21,6 +21,7 @@ small calculations of rectangles.
 #include "ScreenshotCommand.h"
 
 #include <mutex>
+#include <thread>
 
 #include "LoadCommands.h"
 #include "Project.h"
@@ -33,17 +34,17 @@ small calculations of rectangles.
 #include <wx/valgen.h>
 
 #include "../AdornedRulerPanel.h"
-#include "../BatchCommands.h"
 #include "../TrackPanel.h"
-#include "../effects/Effect.h"
 #include "../toolbars/ToolManager.h"
 #include "Prefs.h"
 #include "../ProjectWindow.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "Track.h"
+#include "../widgets/VetoDialogHook.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
+#include "CommandDispatch.h"
 
 const ComponentInterfaceSymbol ScreenshotCommand::Symbol
 { XO("Screenshot") };
@@ -106,11 +107,7 @@ ScreenshotCommand::ScreenshotCommand()
    mbBringToTop=true;
    mIgnore=NULL;
    
-   static std::once_flag flag;
-   std::call_once( flag, []{
-      AudacityCommand::SetVetoDialogHook( MayCapture );
-      Effect::SetVetoDialogHook( MayCapture );
-   });
+   static VetoDialogHook::Scope scope{ MayCapture };
 }
 
 bool ScreenshotCommand::DefineParams( ShuttleParams & S ){
@@ -199,14 +196,13 @@ wxRect ScreenshotCommand::GetBackgroundRect()
 
 static void Yield()
 {
+   using namespace std::chrono;
    int cnt;
-   for (cnt = 10; cnt && !wxTheApp->Yield(true); cnt--) {
-      wxMilliSleep(10);
-   }
-   wxMilliSleep(200);
-   for (cnt = 10; cnt && !wxTheApp->Yield(true); cnt--) {
-      wxMilliSleep(10);
-   }
+   for (cnt = 10; cnt && !wxTheApp->Yield(true); cnt--)
+      std::this_thread::sleep_for(10ms);
+   std::this_thread::sleep_for(200ms);
+   for (cnt = 10; cnt && !wxTheApp->Yield(true); cnt--)
+      std::this_thread::sleep_for(10ms);
 }
 
 bool ScreenshotCommand::Capture(
@@ -356,6 +352,7 @@ void ScreenshotCommand::CaptureWindowOnIdle(
    const CommandContext & context,
    wxWindow * pWin )
 {
+   using namespace std::chrono;
    wxDialog * pDlg = dynamic_cast<wxDialog*>(pWin);
    if( !pDlg ){
       wxLogDebug("Event from bogus dlg" );
@@ -375,7 +372,7 @@ void ScreenshotCommand::CaptureWindowOnIdle(
    wxLogDebug("Taking screenshot of window %s (%i,%i,%i,%i)", Name, 
          Pos.x, Pos.y, Siz.x, Siz.y );
    // This delay is needed, as dialogs take a moment or two to fade in.
-   wxMilliSleep( 400 );
+   std::this_thread::sleep_for(400ms);
    // JKC: The border of 7 pixels was determined from a trial capture and then measuring
    // in the GIMP.  I'm unsure where the border comes from.
    Capture( context, Name, pDlg, wxRect((int)Pos.x+7, (int)Pos.y, (int)Siz.x-14, (int)Siz.y-7) );
@@ -387,7 +384,9 @@ void ScreenshotCommand::CaptureWindowOnIdle(
 
 void ScreenshotCommand::CapturePreferences( 
    const CommandContext & context,
-   AudacityProject * pProject, const wxString &FileName ){
+   AudacityProject * pProject, const wxString &FileName )
+{
+   using namespace std::chrono;
    (void)&FileName;//compiler food.
    (void)&context;
    CommandManager &commandManager = CommandManager::Get( *pProject );
@@ -409,7 +408,7 @@ void ScreenshotCommand::CapturePreferences(
       gPrefs->Flush();
       CommandID Command{ wxT("Preferences") };
       const CommandContext projectContext( *pProject );
-      if( !MacroCommands::HandleTextualCommand( commandManager,
+      if( !::HandleTextualCommand( commandManager,
          Command, projectContext, AlwaysEnabledFlag, true ) )
       {
          // using GET in a log message for devs' eyes only
@@ -417,7 +416,7 @@ void ScreenshotCommand::CapturePreferences(
       }
       // This sleep is not needed, but gives user a chance to see the
       // dialogs as they whizz by.
-      wxMilliSleep( 200 );
+      std::this_thread::sleep_for(200ms);
    }
 }
 
@@ -553,7 +552,9 @@ void ScreenshotCommand::CaptureScriptables(
 
 
 void ScreenshotCommand::CaptureCommands( 
-   const CommandContext & context, const wxArrayStringEx & Commands ){
+   const CommandContext & context, const wxArrayStringEx & Commands )
+{
+   using namespace std::chrono;
    AudacityProject * pProject = &context.project;
    CommandManager &manager = CommandManager::Get( *pProject );
    wxString Str;
@@ -577,7 +578,7 @@ void ScreenshotCommand::CaptureCommands(
       }
       // This particular sleep is not needed, but gives user a chance to see the
       // dialogs as they whizz by.
-      wxMilliSleep( 200 );
+      std::this_thread::sleep_for(200ms);
    }
 }
 

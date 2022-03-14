@@ -107,24 +107,24 @@ EffectPaulstretch::~EffectPaulstretch()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectPaulstretch::GetSymbol()
+ComponentInterfaceSymbol EffectPaulstretch::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectPaulstretch::GetDescription()
+TranslatableString EffectPaulstretch::GetDescription() const
 {
    return XO("Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
 }
 
-ManualPageID EffectPaulstretch::ManualPage()
+ManualPageID EffectPaulstretch::ManualPage() const
 {
    return L"Paulstretch";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectPaulstretch::GetType()
+EffectType EffectPaulstretch::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -157,7 +157,8 @@ bool EffectPaulstretch::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-double EffectPaulstretch::CalcPreviewInputLength(double previewLength)
+double EffectPaulstretch::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    // FIXME: Preview is currently at the project rate, but should really be
    // at the track rate (bugs 1284 and 852).
@@ -170,7 +171,7 @@ double EffectPaulstretch::CalcPreviewInputLength(double previewLength)
 }
 
 
-bool EffectPaulstretch::Process()
+bool EffectPaulstretch::Process(EffectSettings &)
 {
    CopyInputTracks();
    m_t1=mT1;
@@ -196,7 +197,8 @@ bool EffectPaulstretch::Process()
 }
 
 
-void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectPaulstretch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
@@ -213,27 +215,8 @@ void EffectPaulstretch::PopulateOrExchange(ShuttleGui & S)
          .AddTextBox(XXO("&Time Resolution (seconds):"), wxT(""), 10);
    }
    S.EndMultiColumn();
+   return nullptr;
 };
-
-bool EffectPaulstretch::TransferDataToWindow()
-{
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
-bool EffectPaulstretch::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
 
 // EffectPaulstretch implementation
 

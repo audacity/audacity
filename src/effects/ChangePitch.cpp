@@ -2,7 +2,7 @@
 
    Audacity: A Digital Audio Editor
    Audacity(R) is copyright (c) 1999-2013 Audacity Team.
-   License: GPL v2.  See License.txt.
+   License: GPL v2 or later.  See License.txt.
 
   ChangePitch.cpp
   Vaughan Johnson, Dominic Mazzoni, Steve Daulton
@@ -140,24 +140,24 @@ EffectChangePitch::~EffectChangePitch()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectChangePitch::GetSymbol()
+ComponentInterfaceSymbol EffectChangePitch::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectChangePitch::GetDescription()
+TranslatableString EffectChangePitch::GetDescription() const
 {
    return XO("Changes the pitch of a track without changing its tempo");
 }
 
-ManualPageID EffectChangePitch::ManualPage()
+ManualPageID EffectChangePitch::ManualPage() const
 {
    return L"Change_Pitch";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectChangePitch::GetType()
+EffectType EffectChangePitch::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -210,7 +210,7 @@ bool EffectChangePitch::Init()
    return true;
 }
 
-bool EffectChangePitch::Process()
+bool EffectChangePitch::Process(EffectSettings &settings)
 {
 #if USE_SBSMS
    if (mUseSBSMS)
@@ -219,8 +219,8 @@ bool EffectChangePitch::Process()
       EffectSBSMS proxy;
       proxy.mProxyEffectName = XO("High Quality Pitch Change");
       proxy.setParameters(1.0, pitchRatio);
-
-      return Delegate(proxy, *mUIParent, nullptr);
+      //! Already processing; don't make a dialog
+      return Delegate(proxy, settings, *mUIParent, nullptr, nullptr);
    }
    else
 #endif
@@ -256,7 +256,8 @@ bool EffectChangePitch::CheckWhetherSkipEffect()
    return (m_dPercentChange == 0.0);
 }
 
-void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectChangePitch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    DeduceFrequencies(); // Set frequency-related control values based on sample.
 
@@ -383,17 +384,12 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
    }
    S.EndVerticalLay();
-   return;
+   return nullptr;
 }
 
-bool EffectChangePitch::TransferDataToWindow()
+bool EffectChangePitch::TransferDataToWindow(const EffectSettings &)
 {
    m_bLoopDetect = true;
-
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
 
    Calc_SemitonesChange_fromPercentChange();
    Calc_ToPitch(); // Call *after* m_dSemitonesChange is updated.
@@ -415,13 +411,8 @@ bool EffectChangePitch::TransferDataToWindow()
    return true;
 }
 
-bool EffectChangePitch::TransferDataFromWindow()
+bool EffectChangePitch::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    // from/to pitch controls
    m_nFromPitch = m_pChoice_FromPitch->GetSelection();
    m_nFromOctave = m_pSpin_FromOctave->GetValue();

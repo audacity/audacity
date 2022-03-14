@@ -2,7 +2,7 @@
 
    Audacity: A Digital Audio Editor
    Audacity(R) is copyright (c) 1999-2016 Audacity Team.
-   License: GPL v2.  See License.txt.
+   License: GPL v2 or later.  See License.txt.
 
    BassTreble.cpp
    Steve Daulton
@@ -88,63 +88,61 @@ EffectBassTreble::~EffectBassTreble()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectBassTreble::GetSymbol()
+ComponentInterfaceSymbol EffectBassTreble::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectBassTreble::GetDescription()
+TranslatableString EffectBassTreble::GetDescription() const
 {
    return XO("Simple tone control effect");
 }
 
-ManualPageID EffectBassTreble::ManualPage()
+ManualPageID EffectBassTreble::ManualPage() const
 {
    return L"Bass_and_Treble";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectBassTreble::GetType()
+EffectType EffectBassTreble::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectBassTreble::SupportsRealtime()
+bool EffectBassTreble::SupportsRealtime() const
 {
-#if defined(EXPERIMENTAL_REALTIME_AUDACITY_EFFECTS)
    return true;
-#else
-   return false;
-#endif
 }
 
 
 // EffectProcessor implementation
 
-unsigned EffectBassTreble::GetAudioInCount()
+unsigned EffectBassTreble::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectBassTreble::GetAudioOutCount()
+unsigned EffectBassTreble::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectBassTreble::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectBassTreble::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames)
 {
    InstanceInit(mMaster, mSampleRate);
 
    return true;
 }
 
-size_t EffectBassTreble::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectBassTreble::ProcessBlock(EffectSettings &settings,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectBassTreble::RealtimeInitialize()
+bool EffectBassTreble::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -153,7 +151,8 @@ bool EffectBassTreble::RealtimeInitialize()
    return true;
 }
 
-bool EffectBassTreble::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool EffectBassTreble::RealtimeAddProcessor(
+   EffectSettings &, unsigned, float sampleRate)
 {
    EffectBassTrebleState slave;
 
@@ -164,20 +163,19 @@ bool EffectBassTreble::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), floa
    return true;
 }
 
-bool EffectBassTreble::RealtimeFinalize()
+bool EffectBassTreble::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectBassTreble::RealtimeProcess(int group,
-                                              float **inbuf,
-                                              float **outbuf,
-                                              size_t numSamples)
+size_t EffectBassTreble::RealtimeProcess(int group, EffectSettings &settings,
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
+
 bool EffectBassTreble::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mBass, Bass );
    S.SHUTTLE_PARAM( mTreble, Treble );
@@ -219,7 +217,8 @@ bool EffectBassTreble::CheckWhetherSkipEffect()
 
 // Effect implementation
 
-void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectBassTreble::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);
@@ -285,33 +284,17 @@ void EffectBassTreble::PopulateOrExchange(ShuttleGui & S)
       S.EndMultiColumn();
    }
    S.EndStatic();
+   return nullptr;
 }
 
-bool EffectBassTreble::TransferDataToWindow()
+bool EffectBassTreble::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mBassS->SetValue((int) (mBass * SCL_Bass));
    mTrebleS->SetValue((int) mTreble *SCL_Treble);
    mGainS->SetValue((int) mGain * SCL_Gain);
    mLinkCheckBox->SetValue(mLink);
-
    return true;
 }
-
-bool EffectBassTreble::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
 
 // EffectBassTreble implementation
 
@@ -356,12 +339,11 @@ void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRa
 // EffectProcessor implementation
 
 
-size_t EffectBassTreble::InstanceProcess(EffectBassTrebleState & data,
-                                              float **inBlock,
-                                              float **outBlock,
-                                              size_t blockLen)
+size_t EffectBassTreble::InstanceProcess(EffectSettings &settings,
+   EffectBassTrebleState & data,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ibuf = inBlock[0];
+   const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
    // Set value to ensure correct rounding

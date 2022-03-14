@@ -66,24 +66,24 @@ EffectRepeat::~EffectRepeat()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectRepeat::GetSymbol()
+ComponentInterfaceSymbol EffectRepeat::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectRepeat::GetDescription()
+TranslatableString EffectRepeat::GetDescription() const
 {
    return XO("Repeats the selection the specified number of times");
 }
 
-ManualPageID EffectRepeat::ManualPage()
+ManualPageID EffectRepeat::ManualPage() const
 {
    return L"Repeat";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectRepeat::GetType()
+EffectType EffectRepeat::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -112,7 +112,7 @@ bool EffectRepeat::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-bool EffectRepeat::Process()
+bool EffectRepeat::Process(EffectSettings &)
 {
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.
@@ -176,7 +176,8 @@ bool EffectRepeat::Process()
    return bGoodResult;
 }
 
-void EffectRepeat::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectRepeat::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartHorizontalLay(wxCENTER, false);
    {
@@ -195,9 +196,10 @@ void EffectRepeat::PopulateOrExchange(ShuttleGui & S)
       mTotalTime = S.AddVariableText(XO("New selection length: dd:hh:mm:ss"));
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
-bool EffectRepeat::TransferDataToWindow()
+bool EffectRepeat::TransferDataToWindow(const EffectSettings &)
 {
    mRepeatCount->ChangeValue(wxString::Format(wxT("%d"), repeatCount));
 
@@ -206,13 +208,8 @@ bool EffectRepeat::TransferDataToWindow()
    return true;
 }
 
-bool EffectRepeat::TransferDataFromWindow()
+bool EffectRepeat::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate())
-   {
-      return false;
-   }
-
    long l;
 
    mRepeatCount->GetValue().ToLong(&l);

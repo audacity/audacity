@@ -114,29 +114,29 @@ EffectChangeTempo::~EffectChangeTempo()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectChangeTempo::GetSymbol()
+ComponentInterfaceSymbol EffectChangeTempo::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectChangeTempo::GetDescription()
+TranslatableString EffectChangeTempo::GetDescription() const
 {
    return XO("Changes the tempo of a selection without changing its pitch");
 }
 
-ManualPageID EffectChangeTempo::ManualPage()
+ManualPageID EffectChangeTempo::ManualPage() const
 {
    return L"Change_Tempo";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectChangeTempo::GetType()
+EffectType EffectChangeTempo::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectChangeTempo::SupportsAutomation()
+bool EffectChangeTempo::SupportsAutomation() const
 {
    return true;
 }
@@ -173,7 +173,8 @@ bool EffectChangeTempo::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-double EffectChangeTempo::CalcPreviewInputLength(double previewLength)
+double EffectChangeTempo::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    return previewLength * (100.0 + m_PercentChange) / 100.0;
 }
@@ -193,7 +194,7 @@ bool EffectChangeTempo::Init()
    return true;
 }
 
-bool EffectChangeTempo::Process()
+bool EffectChangeTempo::Process(EffectSettings &settings)
 {
    bool success = false;
 
@@ -204,7 +205,8 @@ bool EffectChangeTempo::Process()
       EffectSBSMS proxy;
       proxy.mProxyEffectName = XO("High Quality Tempo Change");
       proxy.setParameters(tempoRatio, 1.0);
-      success = Delegate(proxy, *mUIParent, nullptr);
+      //! Already processing; don't make a dialog
+      success = Delegate(proxy, settings, *mUIParent, nullptr, nullptr);
    }
    else
 #endif
@@ -225,7 +227,8 @@ bool EffectChangeTempo::Process()
    return success;
 }
 
-void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    enum { precision = 2 };
 
@@ -327,20 +330,15 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndVerticalLay();
 
-   return;
+   return nullptr;
 }
 
-bool EffectChangeTempo::TransferDataToWindow()
+bool EffectChangeTempo::TransferDataToWindow(const EffectSettings &)
 {
    // Reset from length because it can be changed by Preview
    m_FromLength = mT1 - mT0;
 
    m_bLoopDetect = true;
-
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
 
    // percent change controls
    Update_Slider_PercentChange();
@@ -353,16 +351,6 @@ bool EffectChangeTempo::TransferDataToWindow()
    m_pTextCtrl_ToLength->SetName(
       wxString::Format( _("Length in seconds from %s, to"),
          m_pTextCtrl_FromLength->GetValue() ) );
-
-   return true;
-}
-
-bool EffectChangeTempo::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
 
    return true;
 }

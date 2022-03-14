@@ -5,7 +5,7 @@
   LV2Effect.cpp
 
   Audacity(R) is copyright (c) 1999-2008 Audacity Team.
-  License: GPL v2.  See License.txt.
+  License: GPL v2 or later.  See License.txt.
 
 **********************************************************************/
 
@@ -47,6 +47,8 @@
 #include <wx/intl.h>
 #include <wx/scrolwin.h>
 
+#include "AudacityException.h"
+#include "ConfigInterface.h"
 #include "../../EffectHostInterface.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
@@ -419,8 +421,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
 
    mSupportsNominalBlockLength = false;
    mSupportsSampleRate = false;
-
-   mFactoryPresetsLoaded = false;
 }
 
 LV2Effect::~LV2Effect()
@@ -431,17 +431,17 @@ LV2Effect::~LV2Effect()
 // ComponentInterface Implementation
 // ============================================================================
 
-PluginPath LV2Effect::GetPath()
+PluginPath LV2Effect::GetPath() const
 {
    return LilvString(lilv_plugin_get_uri(mPlug));
 }
 
-ComponentInterfaceSymbol LV2Effect::GetSymbol()
+ComponentInterfaceSymbol LV2Effect::GetSymbol() const
 {
    return LilvString(lilv_plugin_get_name(mPlug), true);
 }
 
-VendorSymbol LV2Effect::GetVendor()
+VendorSymbol LV2Effect::GetVendor() const
 {
    wxString vendor = LilvString(lilv_plugin_get_author_name(mPlug), true);
 
@@ -453,12 +453,12 @@ VendorSymbol LV2Effect::GetVendor()
    return {vendor};
 }
 
-wxString LV2Effect::GetVersion()
+wxString LV2Effect::GetVersion() const
 {
    return wxT("1.0");
 }
 
-TranslatableString LV2Effect::GetDescription()
+TranslatableString LV2Effect::GetDescription() const
 {
    return XO("n/a");
 }
@@ -467,7 +467,7 @@ TranslatableString LV2Effect::GetDescription()
 // EffectDefinitionInterface Implementation
 // ============================================================================
 
-EffectType LV2Effect::GetType()
+EffectType LV2Effect::GetType() const
 {
    if (GetAudioInCount() == 0 && GetAudioOutCount() == 0)
    {
@@ -487,32 +487,27 @@ EffectType LV2Effect::GetType()
    return EffectTypeProcess;
 }
 
-EffectFamilySymbol LV2Effect::GetFamily()
+EffectFamilySymbol LV2Effect::GetFamily() const
 {
    return LV2EFFECTS_FAMILY;
 }
 
-bool LV2Effect::IsInteractive()
+bool LV2Effect::IsInteractive() const
 {
    return mControlPorts.size() != 0;
 }
 
-bool LV2Effect::IsDefault()
+bool LV2Effect::IsDefault() const
 {
    return false;
 }
 
-bool LV2Effect::IsLegacy()
-{
-   return false;
-}
-
-bool LV2Effect::SupportsRealtime()
+bool LV2Effect::SupportsRealtime() const
 {
    return GetType() == EffectTypeProcess;
 }
 
-bool LV2Effect::SupportsAutomation()
+bool LV2Effect::SupportsAutomation() const
 {
    return true;
 }
@@ -520,10 +515,8 @@ bool LV2Effect::SupportsAutomation()
 // ============================================================================
 // EffectProcessor Implementation
 // ============================================================================
-bool LV2Effect::SetHost(EffectHostInterface *host)
+bool LV2Effect::InitializePlugin()
 {
-   mHost = host;
-
    AddOption(urid_SequenceSize, sizeof(mSeqSize), urid_Int, &mSeqSize);
    AddOption(urid_MinBlockLength, sizeof(mMinBlockSize), urid_Int, &mMinBlockSize);
    AddOption(urid_MaxBlockLength, sizeof(mMaxBlockSize), urid_Int, &mMaxBlockSize);
@@ -933,7 +926,12 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
       lilv_nodes_free(extdata);
    }
 
-   // mHost will be null during registration
+   return true;
+}
+
+bool LV2Effect::InitializeInstance(EffectHostInterface *host)
+{
+   mHost = host;
    if (mHost)
    {
       int userBlockSize;
@@ -949,16 +947,16 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
 
       bool haveDefaults;
       GetConfig(*this, PluginSettings::Private,
-         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
          false);
       if (!haveDefaults)
       {
-         SaveParameters(mHost->GetFactoryDefaultsGroup());
+         SaveParameters(FactoryDefaultsGroup());
          SetConfig(*this, PluginSettings::Private,
-            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+            FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(mHost->GetCurrentSettingsGroup());
+      LoadParameters(CurrentSettingsGroup());
    }
 
    lv2_atom_forge_init(&mForge, &mURIDMapFeature);
@@ -966,12 +964,12 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
    return true;
 }
 
-unsigned LV2Effect::GetAudioInCount()
+unsigned LV2Effect::GetAudioInCount() const
 {
    return mAudioIn;
 }
 
-unsigned LV2Effect::GetAudioOutCount()
+unsigned LV2Effect::GetAudioOutCount() const
 {
    return mAudioOut;
 }
@@ -1048,7 +1046,8 @@ size_t LV2Effect::GetTailSize()
    return 0;
 }
 
-bool LV2Effect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool LV2Effect::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    mProcess = InitInstance(mSampleRate);
    if (!mProcess)
@@ -1080,7 +1079,8 @@ bool LV2Effect::ProcessFinalize()
    return true;
 }
 
-size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
+size_t LV2Effect::ProcessBlock(EffectSettings &,
+   const float *const *inbuf, float *const *outbuf, size_t size)
 {
    wxASSERT(size <= ( size_t) mBlockSize);
 
@@ -1091,8 +1091,8 @@ size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
    for (auto & port : mAudioPorts)
    {
       lilv_instance_connect_port(instance,
-                                 port->mIndex,
-                                 (port->mIsInput ? inbuf[i++] : outbuf[o++]));
+         port->mIndex,
+         const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
    }
 
    // Transfer incoming events from the ring buffer to the event buffer for each
@@ -1179,11 +1179,9 @@ size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
    return size;
 }
 
-bool LV2Effect::RealtimeInitialize()
+bool LV2Effect::RealtimeInitialize(EffectSettings &)
 {
    mMasterIn.reinit(mAudioIn, (unsigned int) mBlockSize);
-   mMasterOut.reinit(mAudioOut, (unsigned int) mBlockSize);
-
    for (auto & port : mCVPorts)
    {
       port->mBuffer.reinit((unsigned) mBlockSize, port->mIsInput);
@@ -1195,8 +1193,9 @@ bool LV2Effect::RealtimeInitialize()
    return true;
 }
 
-bool LV2Effect::RealtimeFinalize()
+bool LV2Effect::RealtimeFinalize(EffectSettings &) noexcept
 {
+return GuardedCall<bool>([&]{
    for (auto & slave : mSlaves)
    {
       FreeInstance(slave);
@@ -1215,12 +1214,12 @@ bool LV2Effect::RealtimeFinalize()
    }
 
    mMasterIn.reset();
-   mMasterOut.reset();
-
    return true;
+});
 }
 
-bool LV2Effect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool LV2Effect::RealtimeAddProcessor(
+   EffectSettings &, unsigned, float sampleRate)
 {
    LV2Wrapper *slave = InitInstance(sampleRate);
    if (!slave)
@@ -1245,7 +1244,7 @@ bool LV2Effect::RealtimeSuspend()
    return true;
 }
 
-bool LV2Effect::RealtimeResume()
+bool LV2Effect::RealtimeResume() noexcept
 {
    mPositionSpeed = 1.0;
    mPositionFrame = 0.0;
@@ -1254,7 +1253,7 @@ bool LV2Effect::RealtimeResume()
    return true;
 }
 
-bool LV2Effect::RealtimeProcessStart()
+bool LV2Effect::RealtimeProcessStart(EffectSettings &)
 {
    int i = 0;
    for (auto & port : mAudioPorts)
@@ -1341,7 +1340,8 @@ bool LV2Effect::RealtimeProcessStart()
    return true;
 }
 
-size_t LV2Effect::RealtimeProcess(int group, float **inbuf, float **outbuf, size_t numSamples)
+size_t LV2Effect::RealtimeProcess(int group, EffectSettings &,
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(group >= 0 && group < (int) mSlaves.size());
    wxASSERT(numSamples <= (size_t) mBlockSize);
@@ -1367,8 +1367,8 @@ size_t LV2Effect::RealtimeProcess(int group, float **inbuf, float **outbuf, size
       }
 
       lilv_instance_connect_port(instance,
-                                 port->mIndex,
-                                 (port->mIsInput ? inbuf[i++] : outbuf[o++]));
+         port->mIndex,
+         const_cast<float*>(port->mIsInput ? inbuf[i++] : outbuf[o++]));
    }
 
    mNumSamples = wxMax(numSamples, mNumSamples);
@@ -1412,26 +1412,13 @@ size_t LV2Effect::RealtimeProcess(int group, float **inbuf, float **outbuf, size
    return numSamples;
 }
 
-bool LV2Effect::RealtimeProcessEnd()
+bool LV2Effect::RealtimeProcessEnd(EffectSettings &) noexcept
 {
+return GuardedCall<bool>([&]{
    // Nothing to do if we did process any samples
    if (mNumSamples == 0)
    {
       return true;
-   }
-
-   int i = 0;
-   int o = 0;
-   for (auto & port : mAudioPorts)
-   {
-      lilv_instance_connect_port(mMaster->GetInstance(),
-                                 port->mIndex,
-                                 (port->mIsInput ? mMasterIn[i++].get() : mMasterOut[o++].get()));
-   }
-
-   if (mRolling)
-   {
-      lilv_instance_run(mMaster->GetInstance(), mNumSamples);
    }
 
    for (auto & port : mAtomPorts)
@@ -1450,6 +1437,7 @@ bool LV2Effect::RealtimeProcessEnd()
    mNumSamples = 0;
 
    return true;
+});
 }
 
 int LV2Effect::ShowClientInterface(
@@ -1536,7 +1524,8 @@ bool LV2Effect::SetAutomationParameters(CommandParameters &parms)
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-bool LV2Effect::PopulateUI(ShuttleGui &S)
+std::unique_ptr<EffectUIValidator>
+LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
    mParent = parent;
@@ -1550,7 +1539,7 @@ bool LV2Effect::PopulateUI(ShuttleGui &S)
    if (mMaster == NULL)
    {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
-      return false;
+      return nullptr;
    }
 
    // Determine if the GUI editor is supposed to be used or not
@@ -1573,10 +1562,11 @@ bool LV2Effect::PopulateUI(ShuttleGui &S)
 
    if (!mUseGUI)
    {
-      return BuildPlain();
+      if (!BuildPlain(access))
+         return nullptr;
    }
 
-   return true;
+   return std::make_unique<DefaultEffectUIValidator>(*this, access);
 }
 
 bool LV2Effect::IsGraphicalUI()
@@ -1584,26 +1574,13 @@ bool LV2Effect::IsGraphicalUI()
    return mUseGUI;
 }
 
-bool LV2Effect::ValidateUI()
+bool LV2Effect::ValidateUI(EffectSettings &)
 {
-   if (!mParent->Validate() || !mParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    if (GetType() == EffectTypeGenerate)
    {
       mHost->SetDuration(mDuration->GetValue());
    }
 
-   return true;
-}
-
-bool LV2Effect::HideUI()
-{
-#if 0
-   // Nothing to do yet
-#endif
    return true;
 }
 
@@ -1666,7 +1643,7 @@ bool LV2Effect::SaveUserPreset(const RegistryPath &name)
    return SaveParameters(name);
 }
 
-RegistryPaths LV2Effect::GetFactoryPresets()
+RegistryPaths LV2Effect::GetFactoryPresets() const
 {
    if (mFactoryPresetsLoaded)
    {
@@ -1737,7 +1714,7 @@ bool LV2Effect::LoadFactoryPreset(int id)
 
 bool LV2Effect::LoadFactoryDefaults()
 {
-   if (!LoadParameters(mHost->GetFactoryDefaultsGroup()))
+   if (!LoadParameters(FactoryDefaultsGroup()))
    {
       return false;
    }
@@ -2294,7 +2271,7 @@ bool LV2Effect::BuildFancy()
    return true;
 }
 
-bool LV2Effect::BuildPlain()
+bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 {
    int numCols = 5;
    wxSizer *innerSizer;
@@ -2330,10 +2307,11 @@ bool LV2Effect::BuildPlain()
 
             wxWindow *item = safenew wxStaticText(w, 0, _("&Duration:"));
             sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
+            auto &extra = access.Get().extra;
             mDuration = safenew
                NumericTextCtrl(w, ID_Duration,
                                NumericConverter::TIME,
-                               mHost->GetDurationFormat(),
+                               extra.GetDurationFormat(),
                                mHost->GetDuration(),
                                mSampleRate,
                                NumericTextCtrl::Options {}
@@ -2666,16 +2644,6 @@ bool LV2Effect::TransferDataToWindow()
    }
 
    if (mParent && !mParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
-bool LV2Effect::TransferDataFromWindow()
-{
-   if (!mParent->Validate() || !mParent->TransferDataFromWindow())
    {
       return false;
    }

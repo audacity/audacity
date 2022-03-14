@@ -48,7 +48,6 @@
 #endif
 
 #include "AllThemeResources.h"
-#include "../BatchCommands.h"
 #include "ImageManipulation.h"
 #include "../Menus.h"
 #include "Prefs.h"
@@ -58,6 +57,7 @@
 
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
+#include "../commands/CommandDispatch.h"
 
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
 
@@ -191,12 +191,6 @@ void EditToolBar::Populate()
    mButtons[ETBSyncLockID]->PushDown();
 #endif
 
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-   AddSeparator();
-   AddButton(this, bmpEditEffects, bmpEditEffects, bmpEditEffects, ETBEffectsID,
-      XO("Show Effects Rack"), true);
-#endif
-
    RegenerateTooltips();
 }
 
@@ -246,10 +240,6 @@ static const struct Entry {
 #endif 
    { ETBZoomSelID,  wxT("ZoomSel"),     XO("Fit selection to width")  },
    { ETBZoomFitID,  wxT("FitInWindow"), XO("Fit project to width")  },
-
-#if defined(EXPERIMENTAL_EFFECTS_RACK)
-   { ETBEffectsID,  wxT("ShowEffectsRack"), XO("Open Effects Rack")  },
-#endif
 };
 
 
@@ -299,7 +289,7 @@ void EditToolBar::OnButton(wxCommandEvent &event)
 
    auto flags = MenuManager::Get(*p).GetUpdateFlags();
    const CommandContext context( *p );
-   MacroCommands::HandleTextualCommand( cm,
+   ::HandleTextualCommand( cm,
       EditToolbarButtonList[id].commandName, context, flags, false);
 
 #if defined(__WXMAC__)

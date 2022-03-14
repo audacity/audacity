@@ -61,6 +61,7 @@
 #include "Internat.h"
 #include "MemoryX.h"
 #include "BasicUI.h"
+#include "Observer.h"
 
 BoolSetting DefaultUpdatesCheckingFlag{
     L"/Update/DefaultUpdatesChecking", true };
@@ -70,45 +71,41 @@ std::unique_ptr<FileConfig> ugPrefs {};
 FileConfig *gPrefs = nullptr;
 int gMenusDirty = 0;
 
-struct MyEvent;
-wxDECLARE_EVENT(EVT_PREFS_UPDATE, MyEvent);
-
-struct MyEvent : wxEvent
-{
-public:
-   explicit MyEvent(int id) : wxEvent{ 0, EVT_PREFS_UPDATE }, mId{id} {}
-   virtual wxEvent *Clone() const override { return new MyEvent{mId}; }
-   int mId;
-};
-
-wxDEFINE_EVENT(EVT_PREFS_UPDATE, MyEvent);
-
-struct PrefsListener::Impl : wxEvtHandler
+struct PrefsListener::Impl
 {
    Impl( PrefsListener &owner );
    ~Impl();
-   void OnEvent(wxEvent&);
+   void OnEvent(int id);
    PrefsListener &mOwner;
+   Observer::Subscription mSubscription;
 };
 
-static wxEvtHandler &hub()
+namespace {
+
+struct Hub : Observer::Publisher<int>
 {
-   static wxEvtHandler theHub;
+   using Publisher::Publish;
+};
+
+static Hub &hub()
+{
+   static Hub theHub;
    return theHub;
+}
+
 }
 
 void PrefsListener::Broadcast(int id)
 {
    BasicUI::CallAfter([id]{
-      MyEvent event{ id };
-      hub().ProcessEvent(event);
+      hub().Publish(id);
    });
 }
 
 PrefsListener::Impl::Impl( PrefsListener &owner )
    : mOwner{ owner }
 {
-   hub().Bind(EVT_PREFS_UPDATE, &PrefsListener::Impl::OnEvent, this);
+   mSubscription = hub().Subscribe(*this, &Impl::OnEvent);
 }
 
 PrefsListener::Impl::~Impl()
@@ -128,10 +125,8 @@ void PrefsListener::UpdateSelectedPrefs( int )
 {
 }
 
-void PrefsListener::Impl::OnEvent( wxEvent &evt )
+void PrefsListener::Impl::OnEvent( int id )
 {
-   evt.Skip();
-   auto id = evt.GetId();
    if (id <= 0)
       mOwner.UpdatePrefs();
    else
@@ -232,6 +227,52 @@ void FinishPreferences()
       ugPrefs.reset();
       gPrefs = NULL;
    }
+}
+
+SettingScope *SettingScope::sCurrent = nullptr;
+
+SettingScope::SettingScope()
+{
+   if ( sCurrent )
+      // nesting of transactions is not supported
+      wxASSERT( false );
+   else
+      sCurrent = this;
+}
+
+SettingScope::~SettingScope() noexcept
+{
+   if ( sCurrent == this ) {
+      if ( !mCommitted )
+         for ( auto pSetting : mPending )
+            pSetting->Rollback();
+      sCurrent = nullptr;
+   }
+}
+
+// static
+auto SettingScope::Add( TransactionalSettingBase &setting ) -> AddResult
+{
+   if ( !sCurrent || sCurrent->mCommitted )
+      return NotAdded;
+   return sCurrent->mPending.insert( &setting ).second
+      ? Added
+      : PreviouslyAdded;
+}
+
+bool SettingTransaction::Commit()
+{
+   if ( sCurrent == this && !mCommitted ) {
+      for ( auto pSetting : mPending )
+         if ( !pSetting->Commit() )
+            return false;
+      if ( gPrefs->Flush() ) {
+         mPending.clear();
+         mCommitted = true;
+         return true;
+      }
+   }
+   return false;
 }
 
 //////////

@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "TimeTrackVRulerControls.h"
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "../../../Envelope.h"
+#include "Envelope.h"
 #include "../../../EnvelopeEditor.h"
 #include "../../../HitTestResult.h"
 #include "Theme.h"
@@ -105,7 +105,7 @@ void DrawHorzRulerAndCurve
    ruler.Draw(dc, track.GetEnvelope());
    
    Doubles envValues{ size_t(mid.width) };
-   Envelope::GetValues( *track.GetEnvelope(),
+   CommonTrackView::GetEnvelopeValues( *track.GetEnvelope(),
     0, 0, envValues.get(), mid.width, 0, zoomInfo );
    
    wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;

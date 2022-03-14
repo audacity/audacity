@@ -49,31 +49,31 @@ EffectRepair::~EffectRepair()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectRepair::GetSymbol()
+ComponentInterfaceSymbol EffectRepair::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectRepair::GetDescription()
+TranslatableString EffectRepair::GetDescription() const
 {
    return XO("Sets the peak amplitude of a one or more tracks");
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectRepair::GetType()
+EffectType EffectRepair::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectRepair::IsInteractive()
+bool EffectRepair::IsInteractive() const
 {
    return false;
 }
 
 // Effect implementation
 
-bool EffectRepair::Process()
+bool EffectRepair::Process(EffectSettings &)
 {
    //v This may be too much copying for EffectRepair. To support Cancel, may be able to copy much less.
    //  But for now, Cancel isn't supported without this.

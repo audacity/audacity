@@ -11,9 +11,7 @@
 #ifndef __AUDACITY_TRACK_PANEL__
 #define __AUDACITY_TRACK_PANEL__
 
-
-
-
+#include <chrono>
 #include <vector>
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -25,11 +23,14 @@
 #include "SelectedRegion.h"
 
 #include "CellularPanel.h"
+#include "Observer.h"
 
 #include "commands/CommandManagerWindowClasses.h"
 
 
 class wxRect;
+
+struct AudioIOEvent;
 
 // All cells of the TrackPanel are subclasses of this
 class CommonTrackPanelCell;
@@ -53,9 +54,7 @@ struct TrackPanelDrawingContext;
 
 enum class UndoPush : unsigned char;
 
-enum {
-   kTimerInterval = 50, // milliseconds
-};
+static constexpr auto  kTimerInterval = std::chrono::milliseconds{50};
 
 const int DragThreshold = 3;// Anything over 3 pixels is a drag, else a click.
 
@@ -82,15 +81,15 @@ class AUDACITY_DLL_API TrackPanel final
 
    void UpdatePrefs() override;
 
-   void OnAudioIO(wxCommandEvent & evt);
+   void OnAudioIO(AudioIOEvent);
 
    void OnPaint(wxPaintEvent & event);
    void OnMouseEvent(wxMouseEvent & event);
    void OnKeyDown(wxKeyEvent & event);
 
-   void OnTrackListResizing(TrackListEvent & event);
-   void OnTrackListDeletion(wxEvent & event);
-   void OnEnsureVisible(TrackListEvent & event);
+   void OnTrackListResizing(const TrackListEvent &event);
+   void OnTrackListDeletion();
+   void OnEnsureVisible(const TrackListEvent & event);
    void UpdateViewIfNoTracks(); // Call this to update mViewInfo, etc, after track(s) removal, before Refresh().
 
    double GetMostRecentXPos();
@@ -185,6 +184,9 @@ public:
 public:
 
 protected:
+   Observer::Subscription mTrackListScubscription,
+      mAudioIOScubscription;
+
    TrackPanelListener *mListener;
 
    std::shared_ptr<TrackList> mTracks;

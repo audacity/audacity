@@ -38,7 +38,7 @@ public:
          // Awful hack number 1 makes gcc 5 choke
          enum : size_t { Size = sizeof(*this) };
          // Do it bitwise.
-         // std::aligned_storage<Size>::type buffer;
+         // std::aligned_storage_t<Size> buffer;
          char buffer[Size];
          memcpy(&buffer, this, Size);
          memcpy(this, &that, Size);

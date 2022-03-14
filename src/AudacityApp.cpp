@@ -112,12 +112,13 @@ It handles initialization and termination by subclassing wxApp.
 #include "FFT.h"
 #include "widgets/AudacityMessageBox.h"
 #include "prefs/DirectoriesPrefs.h"
-#include "prefs/GUIPrefs.h"
+#include "prefs/GUISettings.h"
 #include "tracks/ui/Scrubbing.h"
 #include "FileConfig.h"
 #include "widgets/FileHistory.h"
 #include "update/UpdateManager.h"
 #include "widgets/wxWidgetsBasicUI.h"
+#include "LogWindow.h"
 
 #ifdef HAS_NETWORKING
 #include "NetworkManager.h"
@@ -233,7 +234,7 @@ void PopulatePreferences()
       langCode =
          Languages::GetSystemLanguageCode(FileNames::AudacityPathList());
 
-   langCode = GUIPrefs::SetLang( langCode );
+   langCode = GUISettings::SetLang( langCode );
 
    // User requested that the preferences be completely reset
    if (resetPrefs)
@@ -495,6 +496,13 @@ static void QuitAudacity(bool bForce)
    CloseScoreAlignDialog();
 #endif
    CloseScreenshotTools();
+
+   // Logger window is always destroyed on macOS,
+   // on other platforms - it prevents the runloop
+   // termination when exiting is requested
+   #if !defined(__WXMAC__)
+   LogWindow::Destroy();
+   #endif
 
    //print out profile if we have one by deleting it
    //temporarily commented out till it is added to all projects
@@ -1214,9 +1222,23 @@ bool AudacityApp::OnInit()
    FileNames::AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
 
    wxString progPath = wxPathOnly(argv[0]);
+
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
    // Add the path to modules:
    FileNames::AddUniquePathToPathList(progPath + L"/lib/audacity", audacityPathList);
+
+#if !defined(__WXMSW__)
+   // On Unix systems, the common directory structure is
+   // .../bin
+   // .../lib
+   const wxString progParentPath = wxPathOnly(progPath);
+
+   if (!progParentPath.IsEmpty())
+   {
+      FileNames::AddUniquePathToPathList(progParentPath + L"/lib/audacity", audacityPathList);
+      FileNames::AddUniquePathToPathList(progParentPath + L"/lib", audacityPathList);
+   }
+#endif
 
    FileNames::AddUniquePathToPathList(FileNames::DataDir(), audacityPathList);
 
@@ -1328,10 +1350,6 @@ bool AudacityApp::OnInit()
       PopulatePreferences();
    }
 
-#if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
-   this->AssociateFileTypes();
-#endif
-
    theTheme.SetOnPreferredSystemAppearanceChanged([this](PreferredSystemAppearance appearance){
        SetPreferredSystemAppearance(appearance);
    });
@@ -1406,7 +1424,8 @@ bool AudacityApp::InitPart2()
    ModuleManager::Get().Initialize();
 
    // Initialize the PluginManager
-   PluginManager::Get().Initialize();
+   PluginManager::Get().Initialize( [](const FilePath &localFileName){
+      return AudacityFileConfig::Create({}, {}, localFileName); } );
 
    // Parse command line and handle options that might require
    // immediate exit...no need to initialize all of the audio
@@ -1417,6 +1436,14 @@ bool AudacityApp::InitPart2()
       // Either user requested help or a parsing error occurred
       exit(1);
    }
+
+   wxString journalFileName;
+   const bool playingJournal = parser->Found("j", &journalFileName);
+
+#if defined(__WXMSW__) && !defined(__WXUNIVERSAL__) && !defined(__CYGWIN__)
+   if (!playingJournal)
+      this->AssociateFileTypes();
+#endif
 
    if (parser->Found(wxT("v")))
    {
@@ -1436,9 +1463,8 @@ bool AudacityApp::InitPart2()
       Sequence::SetMaxDiskBlockSize(lval);
    }
 
-   wxString fileName;
-   if (parser->Found(wxT("j"), &fileName))
-      Journal::SetInputFileName( fileName );
+   if (playingJournal)
+      Journal::SetInputFileName( journalFileName );
 
    // BG: Create a temporary window to set as the top window
    wxImage logoimage((const char **)AudacityLogoWithName_xpm);
@@ -1539,7 +1565,8 @@ bool AudacityApp::InitPart2()
       project = ProjectManager::New();
    }
 
-   if( ProjectSettings::Get( *project ).GetShowSplashScreen() ){
+   if (!playingJournal && ProjectSettings::Get(*project).GetShowSplashScreen())
+   {
       // This may do a check-for-updates at every start up.
       // Mainly this is to tell users of ALPHAS who don't know that they have an ALPHA.
       // Disabled for now, after discussion.
@@ -1548,7 +1575,7 @@ bool AudacityApp::InitPart2()
    }
 
 #if defined(HAVE_UPDATES_CHECK)
-   UpdateManager::Start();
+   UpdateManager::Start(playingJournal);
 #endif
 
    #ifdef USE_FFMPEG
@@ -1571,9 +1598,12 @@ bool AudacityApp::InitPart2()
       //
       bool didRecoverAnything = false;
       // This call may reassign project (passed by reference)
-      if (!ShowAutoRecoveryDialogIfNeeded(project, &didRecoverAnything))
+      if (!playingJournal)
       {
-         QuitAudacity(true);
+         if (!ShowAutoRecoveryDialogIfNeeded(project, &didRecoverAnything))
+         {
+            QuitAudacity(true);
+         }
       }
 
       //
@@ -1604,7 +1634,8 @@ bool AudacityApp::InitPart2()
    mTimer.Start(200);
 
 #ifdef EXPERIMENTAL_EASY_CHANGE_KEY_BINDINGS
-   CommandManager::SetMenuHook( [](const CommandID &id){
+   static CommandManager::GlobalMenuHook::Scope scope{
+   [](const CommandID &id){
       if (::wxGetMouseState().ShiftDown()) {
          // Only want one page of the preferences
          PrefsPanel::Factories factories;
@@ -1619,7 +1650,7 @@ bool AudacityApp::InitPart2()
       }
       else
          return false;
-   } );
+   } };
 #endif
 
 #if defined(__WXMAC__)
@@ -1896,7 +1927,8 @@ bool AudacityApp::CreateSingleInstanceChecker(const wxString &dir)
                return false;
          }
 
-         wxMilliSleep(10);
+         using namespace std::chrono;
+         std::this_thread::sleep_for(10ms);
       }
       // There is another copy of Audacity running.  Force quit.
 

@@ -2,7 +2,7 @@
 
    Audacity - A Digital Audio Editor
    Copyright 1999-2009 Audacity Team
-   License: GPL v2 - see LICENSE.txt
+   License: GPL v2 or later - see LICENSE.txt
 
    Dan Horgan
 
@@ -230,8 +230,8 @@ private:
    wxString mBuffer;
 public:
    ResponseTarget()
-      : mBuffer(wxEmptyString),
-        mSemaphore(0, 1)
+      : mSemaphore(0, 1),
+        mBuffer(wxEmptyString)
    { 
       // Cater for handling long responses quickly.
       mBuffer.Alloc(40000);

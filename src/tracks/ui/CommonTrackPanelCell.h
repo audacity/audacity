@@ -18,6 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <memory>
 #include <functional>
 #include "ComponentInterfaceSymbol.h"
+#include "GlobalVariable.h"
 
 #include "XMLTagHandler.h"
 
@@ -29,12 +30,10 @@ class AUDACITY_DLL_API CommonTrackPanelCell /* not final */
    : public TrackPanelCell
 {
 public:
-   // Type of function to dispatch mouse wheel events
-   using Hook = std::function<
+   // Function to dispatch mouse wheel events
+   struct AUDACITY_DLL_API MouseWheelHook : GlobalHook<MouseWheelHook,
       unsigned(const TrackPanelMouseEvent &evt, AudacityProject *pProject)
-   >;
-   // Install a dispatcher function, returning the previous function
-   static Hook InstallMouseWheelHook( const Hook &hook );
+   >{};
 
    CommonTrackPanelCell()
    {}

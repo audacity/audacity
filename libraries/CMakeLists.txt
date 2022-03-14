@@ -25,6 +25,8 @@ set( LIBRARIES
    lib-theme-resources
    lib-track
    lib-transactions
+   lib-sample-track
+   lib-module-manager
 )
 
 if ( ${_OPT}has_networking )
@@ -41,4 +43,3 @@ foreach( LIBRARY ${LIBRARIES} )
 endforeach()
 
 set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
-set( AUDACITY_LIBRARIES "${AUDACITY_LIBRARIES}" PARENT_SCOPE )

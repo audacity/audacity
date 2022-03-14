@@ -188,61 +188,59 @@ EffectDistortion::~EffectDistortion()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectDistortion::GetSymbol()
+ComponentInterfaceSymbol EffectDistortion::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectDistortion::GetDescription()
+TranslatableString EffectDistortion::GetDescription() const
 {
    return XO("Waveshaping distortion effect");
 }
 
-ManualPageID EffectDistortion::ManualPage()
+ManualPageID EffectDistortion::ManualPage() const
 {
    return L"Distortion";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectDistortion::GetType()
+EffectType EffectDistortion::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectDistortion::SupportsRealtime()
+bool EffectDistortion::SupportsRealtime() const
 {
-#if defined(EXPERIMENTAL_REALTIME_AUDACITY_EFFECTS)
    return true;
-#else
-   return false;
-#endif
 }
 
 // EffectProcessor implementation
 
-unsigned EffectDistortion::GetAudioInCount()
+unsigned EffectDistortion::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectDistortion::GetAudioOutCount()
+unsigned EffectDistortion::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectDistortion::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectDistortion::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    InstanceInit(mMaster, mSampleRate);
    return true;
 }
 
-size_t EffectDistortion::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectDistortion::ProcessBlock(EffectSettings &settings,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectDistortion::RealtimeInitialize()
+bool EffectDistortion::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -251,7 +249,8 @@ bool EffectDistortion::RealtimeInitialize()
    return true;
 }
 
-bool EffectDistortion::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool EffectDistortion::RealtimeAddProcessor(
+   EffectSettings &, unsigned, float sampleRate)
 {
    EffectDistortionState slave;
 
@@ -262,21 +261,19 @@ bool EffectDistortion::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), floa
    return true;
 }
 
-bool EffectDistortion::RealtimeFinalize()
+bool EffectDistortion::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectDistortion::RealtimeProcess(int group,
-                                              float **inbuf,
-                                              float **outbuf,
-                                              size_t numSamples)
+size_t EffectDistortion::RealtimeProcess(int group, EffectSettings &settings,
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-
-   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
+
 bool EffectDistortion::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_ENUM_PARAM( mParams.mTableChoiceIndx, TableTypeIndx,
       kTableTypeStrings, nTableTypes );
@@ -324,7 +321,7 @@ bool EffectDistortion::SetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-RegistryPaths EffectDistortion::GetFactoryPresets()
+RegistryPaths EffectDistortion::GetFactoryPresets() const
 {
    RegistryPaths names;
 
@@ -346,18 +343,14 @@ bool EffectDistortion::LoadFactoryPreset(int id)
    mParams = FactoryPresets[id].params;
    mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
 
-   if (mUIDialog)
-   {
-      TransferDataToWindow();
-   }
-
    return true;
 }
 
 
 // Effect implementation
 
-void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectDistortion::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
    S.StartVerticalLay();
@@ -489,16 +482,11 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndVerticalLay();
 
-   return;
+   return nullptr;
 }
 
-bool EffectDistortion::TransferDataToWindow()
+bool EffectDistortion::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mThresholdS->SetValue((int) (mThreshold * SCL_Threshold_dB + 0.5));
    mDCBlockCheckBox->SetValue(mParams.mDCBlock);
    mNoiseFloorS->SetValue((int) mParams.mNoiseFloor + 0.5);
@@ -513,15 +501,9 @@ bool EffectDistortion::TransferDataToWindow()
    return true;
 }
 
-bool EffectDistortion::TransferDataFromWindow()
+bool EffectDistortion::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    mThreshold = DB_TO_LINEAR(mParams.mThreshold_dB);
-
    return true;
 }
 
@@ -549,9 +531,11 @@ void EffectDistortion::InstanceInit(EffectDistortionState & data, float sampleRa
    return;
 }
 
-size_t EffectDistortion::InstanceProcess(EffectDistortionState& data, float** inBlock, float** outBlock, size_t blockLen)
+size_t EffectDistortion::InstanceProcess(EffectSettings &settings,
+   EffectDistortionState& data,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ibuf = inBlock[0];
+   const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
    bool update = (mParams.mTableChoiceIndx == data.tablechoiceindx &&

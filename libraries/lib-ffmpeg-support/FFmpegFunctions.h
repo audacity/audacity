@@ -86,12 +86,12 @@ struct FFMPEG_SUPPORT_API FFmpegFunctions :
    FFmpegFunctions();
    ~FFmpegFunctions();
 
-   static std::shared_ptr<FFmpegFunctions> Load();
+   static std::shared_ptr<FFmpegFunctions> Load(bool fromUserPathOnly = false);
 
    AVCodecIDFwd (*GetAVCodecID)(AudacityAVCodecID) = nullptr;
    AudacityAVCodecID (*GetAudacityCodecID)(AVCodecIDFwd) = nullptr;
 
-   static std::vector<wxString> GetSearchPaths();
+   static std::vector<wxString> GetSearchPaths(bool fromUserPathOnly);
 
    std::unique_ptr<AVIOContextWrapper> CreateAVIOContext() const;
    std::unique_ptr<AVFormatContextWrapper> CreateAVFormatContext() const;

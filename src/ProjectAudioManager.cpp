@@ -19,9 +19,9 @@ Paul Licameli split from ProjectManager.cpp
 #include "AudioIO.h"
 #include "BasicUI.h"
 #include "CommonCommandFlags.h"
-#include "LabelTrack.h"
 #include "Menus.h"
 #include "Meter.h"
+#include "Mix.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectFileIO.h"
@@ -31,7 +31,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectStatus.h"
 #include "ProjectWindows.h"
 #include "ScrubState.h"
-#include "TimeTrack.h"
 #include "TrackPanelAx.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -41,9 +40,10 @@ Paul Licameli split from ProjectManager.cpp
 #include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/TrackView.h"
 #include "widgets/MeterPanelBase.h"
-#include "widgets/Warning.h"
 #include "widgets/AudacityMessageBox.h"
 
+
+wxDEFINE_EVENT(EVT_RECORDING_DROPOUT, RecordingDropoutEvent);
 
 static AudacityProject::AttachedObjects::RegisteredFactory
 sProjectAudioManagerKey {
@@ -419,7 +419,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
             std::swap(tcp0, tcp1);
          AudioIOStartStreamOptions myOptions = options;
          myOptions.policyFactory =
-            [tless, diff]() -> std::unique_ptr<PlaybackPolicy> {
+            [tless, diff](auto&) -> std::unique_ptr<PlaybackPolicy> {
                return std::make_unique<CutPreviewPlaybackPolicy>(tless, diff);
             };
          token = gAudioIO->StartStream(
@@ -535,7 +535,7 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
       gAudioIO->AILADisable();
    #endif
 
-   projectAudioManager.SetPaused( false );
+   projectAudioManager.SetPausedOff();
    //Make sure you tell gAudioIO to unpause
    gAudioIO->SetPaused( false );
 
@@ -559,19 +559,6 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
       toolbar->EnableDisableButtons();
 }
 
-void ProjectAudioManager::Pause()
-{
-   auto &projectAudioManager = *this;
-   bool canStop = projectAudioManager.CanStopAudioStream();
-
-   if ( !canStop ) {
-      auto gAudioIO = AudioIO::Get();
-      gAudioIO->SetPaused(!gAudioIO->IsPaused());
-   }
-   else {
-      OnPause();
-   }
-}
 
 WaveTrackArray ProjectAudioManager::ChooseExistingRecordingTracks(
    AudacityProject &proj, bool selectedOnly, double targetRate)
@@ -874,7 +861,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
          gPrefs->Read(wxT("/GUI/TrackNames/DateStamp"), &useDateStamp, false);
          gPrefs->Read(wxT("/GUI/TrackNames/TimeStamp"), &useTimeStamp, false);
-         defaultTrackName = TracksPrefs::GetDefaultAudioTrackNamePreference();
+         defaultTrackName = WaveTrack::GetDefaultAudioTrackNamePreference();
          gPrefs->Read(wxT("/GUI/TrackNames/RecodingTrackName"), &defaultRecordingTrackName, defaultTrackName);
 
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
@@ -983,7 +970,7 @@ void ProjectAudioManager::OnPause()
    }
 
    bool paused = !projectAudioManager.Paused();
-   projectAudioManager.SetPaused( paused );
+   TogglePaused();
 
    auto gAudioIO = AudioIO::Get();
 
@@ -1012,6 +999,23 @@ void ProjectAudioManager::OnPause()
       gAudioIO->SetPaused(paused);
    }
 }
+
+
+void ProjectAudioManager::TogglePaused()
+{
+   mPaused.fetch_xor(1, std::memory_order::memory_order_relaxed);
+}
+
+void ProjectAudioManager::SetPausedOff()
+{
+   mPaused.store(0, std::memory_order::memory_order_relaxed);
+}
+
+bool ProjectAudioManager::Paused() const
+{
+   return mPaused.load(std::memory_order_relaxed) == 1;
+}
+
 
 void ProjectAudioManager::CancelRecording()
 {
@@ -1042,7 +1046,6 @@ void ProjectAudioManager::OnAudioIOStopRecording()
    auto &project = mProject;
    auto &projectAudioIO = ProjectAudioIO::Get( project );
    auto &projectFileIO = ProjectFileIO::Get( project );
-   auto &window = GetProjectFrame( project );
 
    // Only push state if we were capturing and not monitoring
    if (projectAudioIO.GetAudioIOToken() > 0)
@@ -1065,44 +1068,11 @@ void ProjectAudioManager::OnAudioIOStopRecording()
 
          // Now, we may add a label track to give information about
          // dropouts.  We allow failure of this.
-         auto &tracks = TrackList::Get( project );
          auto gAudioIO = AudioIO::Get();
          auto &intervals = gAudioIO->LostCaptureIntervals();
          if (intervals.size()) {
-            // Make a track with labels for recording errors
-            auto uTrack = std::make_shared<LabelTrack>();
-            auto pTrack = uTrack.get();
-            tracks.Add( uTrack );
-            /* i18n-hint:  A name given to a track, appearing as its menu button.
-             The translation should be short or else it will not display well.
-             At most, about 11 Latin characters.
-             Dropout is a loss of a short sequence of audio sample data from the
-             recording */
-            pTrack->SetName(_("Dropouts"));
-            long counter = 1;
-            for (auto &interval : intervals)
-               pTrack->AddLabel(
-                  SelectedRegion{ interval.first,
-                     interval.first + interval.second },
-                  wxString::Format(wxT("%ld"), counter++));
-
-            history.ModifyState( true ); // this might fail and throw
-
-            // CallAfter so that we avoid any problems of yielding
-            // to the event loop while still inside the timer callback,
-            // entering StopStream() recursively
-            wxTheApp->CallAfter( [&] {
-               ShowWarningDialog(&window, wxT("DropoutDetected"), XO("\
-Recorded audio was lost at the labeled locations. Possible causes:\n\
-\n\
-Other applications are competing with Audacity for processor time\n\
-\n\
-You are saving directly to a slow external storage device\n\
-"
-                  ),
-                  false,
-                  XXO("Turn off dropout detection"));
-            });
+            RecordingDropoutEvent evt{ intervals };
+            mProject.ProcessEvent(evt);
          }
       }
    }
@@ -1123,10 +1093,20 @@ void ProjectAudioManager::OnCommitRecording()
 
 void ProjectAudioManager::OnSoundActivationThreshold()
 {
-   auto &project = mProject;
+   auto& project = mProject;
    auto gAudioIO = AudioIO::Get();
-   if ( gAudioIO && &project == gAudioIO->GetOwningProject().get() ) {
-      wxTheApp->CallAfter( [this]{ Pause(); } );
+   if (gAudioIO && &project == gAudioIO->GetOwningProject().get())
+   {
+      bool canStop =  CanStopAudioStream();
+
+      gAudioIO->SetPaused(!gAudioIO->IsPaused());
+
+      if (canStop)
+      {
+         // Instead of calling ::OnPause here, we can simply do the only thing it does (i.e. toggling the pause state),
+         // because scrubbing can not happen while recording
+         TogglePaused();
+      }
    }
 }
 
@@ -1182,8 +1162,7 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
       ProjectRate::Get( project ).GetRate() };
    options.captureMeter = projectAudioIO.GetCaptureMeter();
    options.playbackMeter = projectAudioIO.GetPlaybackMeter();
-   auto timeTrack = *TrackList::Get( project ).Any<TimeTrack>().begin();
-   options.envelope = timeTrack ? timeTrack->GetEnvelope() : nullptr;
+   options.envelope = Mixer::WarpOptions::DefaultWarp::Call(TrackList::Get(project));
    options.listener = ProjectAudioManager::Get( project ).shared_from_this();
    
    bool loopEnabled = ViewInfo::Get(project).playRegion.Active();
@@ -1192,9 +1171,14 @@ DefaultPlayOptions( AudacityProject &project, bool newDefault )
    if (newDefault) {
       const double trackEndTime = TrackList::Get(project).GetEndTime();
       const double loopEndTime = ViewInfo::Get(project).playRegion.GetEnd();
-      options.policyFactory = [trackEndTime, loopEndTime, loopEnabled]() -> std::unique_ptr<PlaybackPolicy> {
-         return std::make_unique<NewDefaultPlaybackPolicy>(
-            trackEndTime, loopEndTime, loopEnabled); };
+      options.policyFactory = [&project, trackEndTime, loopEndTime](
+         const AudioIOStartStreamOptions &options)
+            -> std::unique_ptr<PlaybackPolicy>
+      {
+         return std::make_unique<NewDefaultPlaybackPolicy>( project,
+            trackEndTime, loopEndTime,
+            options.loopEnabled, options.variableSpeed);
+      };
 
       // Start play from left edge of selection
       options.pStartTime.emplace(ViewInfo::Get(project).selectedRegion.t0());

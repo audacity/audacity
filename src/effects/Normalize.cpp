@@ -68,24 +68,24 @@ EffectNormalize::~EffectNormalize()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectNormalize::GetSymbol()
+ComponentInterfaceSymbol EffectNormalize::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectNormalize::GetDescription()
+TranslatableString EffectNormalize::GetDescription() const
 {
    return XO("Sets the peak amplitude of one or more tracks");
 }
 
-ManualPageID EffectNormalize::ManualPage()
+ManualPageID EffectNormalize::ManualPage() const
 {
    return L"Normalize";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNormalize::GetType()
+EffectType EffectNormalize::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -131,42 +131,7 @@ bool EffectNormalize::CheckWhetherSkipEffect()
    return ((mGain == false) && (mDC == false));
 }
 
-bool EffectNormalize::Startup()
-{
-   wxString base = wxT("/Effects/Normalize/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      int boolProxy = gPrefs->Read(base + wxT("RemoveDcOffset"), 1);
-      mDC = (boolProxy == 1);
-      boolProxy = gPrefs->Read(base + wxT("Normalize"), 1);
-      mGain = (boolProxy == 1);
-      gPrefs->Read(base + wxT("Level"), &mPeakLevel, -1.0);
-      if(mPeakLevel > 0.0)  // this should never happen
-         mPeakLevel = -mPeakLevel;
-      boolProxy = gPrefs->Read(base + wxT("StereoIndependent"), 0L);
-      mStereoInd = (boolProxy == 1);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
-bool EffectNormalize::Process()
+bool EffectNormalize::Process(EffectSettings &)
 {
    if (mGain == false && mDC == false)
       return true;
@@ -175,7 +140,8 @@ bool EffectNormalize::Process()
    if( mGain )
    {
       // same value used for all tracks
-      ratio = DB_TO_LINEAR(TrapDouble(mPeakLevel, MIN_PeakLevel, MAX_PeakLevel));
+      ratio = DB_TO_LINEAR(std::clamp<double>(
+         mPeakLevel, MIN_PeakLevel, MAX_PeakLevel));
    }
    else {
       ratio = 1.0;
@@ -285,7 +251,8 @@ bool EffectNormalize::Process()
    return bGoodResult;
 }
 
-void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    mCreating = true;
 
@@ -335,27 +302,12 @@ void EffectNormalize::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndVerticalLay();
    mCreating = false;
+   return nullptr;
 }
 
-bool EffectNormalize::TransferDataToWindow()
+bool EffectNormalize::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    UpdateUI();
-
-   return true;
-}
-
-bool EffectNormalize::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    return true;
 }
 

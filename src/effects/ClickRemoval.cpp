@@ -83,24 +83,24 @@ EffectClickRemoval::~EffectClickRemoval()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectClickRemoval::GetSymbol()
+ComponentInterfaceSymbol EffectClickRemoval::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectClickRemoval::GetDescription()
+TranslatableString EffectClickRemoval::GetDescription() const
 {
    return XO("Click Removal is designed to remove clicks on audio tracks");
 }
 
-ManualPageID EffectClickRemoval::ManualPage()
+ManualPageID EffectClickRemoval::ManualPage() const
 {
    return L"Click_Removal";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectClickRemoval::GetType()
+EffectType EffectClickRemoval::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -138,43 +138,7 @@ bool EffectClickRemoval::CheckWhetherSkipEffect()
    return ((mClickWidth == 0) || (mThresholdLevel == 0));
 }
 
-bool EffectClickRemoval::Startup()
-{
-   wxString base = wxT("/Effects/ClickRemoval/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      mThresholdLevel = gPrefs->Read(base + wxT("ClickThresholdLevel"), 200);
-      if ((mThresholdLevel < MIN_Threshold) || (mThresholdLevel > MAX_Threshold))
-      {  // corrupted Prefs?
-         mThresholdLevel = 0;  //Off-skip
-      }
-      mClickWidth = gPrefs->Read(base + wxT("ClickWidth"), 20);
-      if ((mClickWidth < MIN_Width) || (mClickWidth > MAX_Width))
-      {  // corrupted Prefs?
-         mClickWidth = 0;  //Off-skip
-      }
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
-bool EffectClickRemoval::Process()
+bool EffectClickRemoval::Process(EffectSettings &)
 {
    this->CopyInputTracks(); // Set up mOutputTracks.
    bool bGoodResult = true;
@@ -335,7 +299,8 @@ bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
    return bResult;
 }
 
-void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectClickRemoval::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
    S.SetBorder(10);
@@ -377,27 +342,7 @@ void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndMultiColumn();
 
-   return;
-}
-
-bool EffectClickRemoval::TransferDataToWindow()
-{
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
-bool EffectClickRemoval::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
+   return nullptr;
 }
 
 void EffectClickRemoval::OnWidthText(wxCommandEvent & WXUNUSED(evt))

@@ -6,7 +6,7 @@
 #include "../CommonCommandFlags.h"
 #include "../Journal.h"
 #include "../Menus.h"
-#include "../PluginManager.h"
+#include "PluginManager.h"
 #include "../PluginRegistrationDialog.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -20,7 +20,6 @@
 #include "../UndoManager.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
-#include "../commands/ScreenshotCommand.h"
 #include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
 #include "../effects/RealtimeEffectManager.h"
@@ -320,7 +319,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    EffectManager & em = EffectManager::Get();
    for (auto &plugin : pm.EffectsOfType(type)) {
       auto plug = &plugin;
-      if( plug->IsInstantiated() && em.IsHidden(plug->GetID()) )
+      if( plug->IsLoaded() && em.IsHidden(plug->GetID()) )
          continue;
       if ( !plug->IsEnabled() ){
          ;// don't add to menus!
@@ -594,9 +593,10 @@ void OnDetectUpstreamDropouts(const CommandContext &context)
    auto &commandManager = CommandManager::Get( project );
 
    auto gAudioIO = AudioIO::Get();
-   bool &setting = gAudioIO->mDetectUpstreamDropouts;
-   commandManager.Check(wxT("DetectUpstreamDropouts"), !setting);
-   setting = !setting;
+   auto &setting = gAudioIO->mDetectUpstreamDropouts;
+   auto oldValue = setting.load(std::memory_order_relaxed);
+   commandManager.Check(wxT("DetectUpstreamDropouts"), !oldValue);
+   setting.store(!oldValue, std::memory_order_relaxed);
 }
 
 void OnWriteJournal(const CommandContext &)
@@ -910,8 +910,8 @@ BaseItemSharedPtr GenerateMenu()
 
 static const ReservedCommandFlag
 &IsRealtimeNotActiveFlag() { static ReservedCommandFlag flag{
-   [](const AudacityProject &){
-      return !RealtimeEffectManager::Get().RealtimeIsActive();
+   [](const AudacityProject &project){
+      return !RealtimeEffectManager::Get(project).IsActive();
    }
 }; return flag; }  //lll
 
@@ -1156,7 +1156,8 @@ BaseItemSharedPtr ToolsMenu()
             AudioIONotBusyFlag(),
             Options{}.CheckTest(
                [](AudacityProject&){
-                  return AudioIO::Get()->mDetectUpstreamDropouts; } ) )
+                  return AudioIO::Get()->mDetectUpstreamDropouts
+                     .load(std::memory_order_relaxed); } ) )
       )
 #endif
 

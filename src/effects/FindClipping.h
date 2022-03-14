@@ -28,13 +28,13 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-   ManualPageID ManualPage() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
+   EffectType GetType() const override;
 
    // EffectProcessor implementation
 
@@ -44,10 +44,13 @@ public:
 
    // Effect implementation
 
-   bool Process() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool Process(EffectSettings &settings) override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
+   void DoPopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access);
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
    // EffectFindCliping implementation
@@ -58,6 +61,8 @@ private:
 private:
    int mStart;   ///< Using int rather than sampleCount because values are only ever small numbers
    int mStop;    ///< Using int rather than sampleCount because values are only ever small numbers
+   // To do: eliminate this
+   EffectSettingsAccessPtr mpAccess;
 };
 
 #endif // __AUDACITY_EFFECT_FINDCLIPPING__

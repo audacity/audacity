@@ -59,9 +59,10 @@ effects from this one class.
 #include "../../NoteTrack.h"
 #include "../../TimeTrack.h"
 #include "../../prefs/SpectrogramSettings.h"
-#include "../../PluginManager.h"
+#include "PluginManager.h"
 #include "Project.h"
 #include "ProjectRate.h"
+#include "../../ShuttleAutomation.h"
 #include "../../ShuttleGetDefinition.h"
 #include "../../ShuttleGui.h"
 #include "TempDirectory.h"
@@ -193,7 +194,7 @@ NyquistEffect::NyquistEffect(const wxString &fName)
    ParseFile();
 
    if (!mOK && mInitError.empty())
-      mInitError = XO("Ill-formed Nyquist plug-in header");
+      mInitError = XO("Ill-formed Nyquist plug-in header");   
 }
 
 NyquistEffect::~NyquistEffect()
@@ -202,7 +203,7 @@ NyquistEffect::~NyquistEffect()
 
 // ComponentInterface implementation
 
-PluginPath NyquistEffect::GetPath()
+PluginPath NyquistEffect::GetPath() const
 {
    if (mIsPrompt)
       return NYQUIST_PROMPT_ID;
@@ -210,7 +211,7 @@ PluginPath NyquistEffect::GetPath()
    return mFileName.GetFullPath();
 }
 
-ComponentInterfaceSymbol NyquistEffect::GetSymbol()
+ComponentInterfaceSymbol NyquistEffect::GetSymbol() const
 {
    if (mIsPrompt)
       return { NYQUIST_PROMPT_ID, NYQUIST_PROMPT_NAME };
@@ -218,7 +219,7 @@ ComponentInterfaceSymbol NyquistEffect::GetSymbol()
    return mName;
 }
 
-VendorSymbol NyquistEffect::GetVendor()
+VendorSymbol NyquistEffect::GetVendor() const
 {
    if (mIsPrompt)
    {
@@ -228,60 +229,67 @@ VendorSymbol NyquistEffect::GetVendor()
    return mAuthor;
 }
 
-wxString NyquistEffect::GetVersion()
+wxString NyquistEffect::GetVersion() const
 {
    // Are Nyquist version strings really supposed to be translatable?
    // See commit a06e561 which used XO for at least one of them
    return mReleaseVersion.Translation();
 }
 
-TranslatableString NyquistEffect::GetDescription()
+TranslatableString NyquistEffect::GetDescription() const
 {
    return mCopyright;
 }
 
-ManualPageID NyquistEffect::ManualPage()
+ManualPageID NyquistEffect::ManualPage() const
 {
       return mIsPrompt
          ? wxString("Nyquist_Prompt")
          : mManPage;
 }
 
-FilePath NyquistEffect::HelpPage()
+
+std::pair<bool, FilePath> NyquistEffect::CheckHelpPage() const
 {
    auto paths = NyquistEffect::GetNyquistSearchPath();
    wxString fileName;
 
    for (size_t i = 0, cnt = paths.size(); i < cnt; i++) {
       fileName = wxFileName(paths[i] + wxT("/") + mHelpFile).GetFullPath();
-      if (wxFileExists(fileName)) {
-         mHelpFileExists = true;
-         return fileName;
+      if (wxFileExists(fileName))
+      {
+         return { true, fileName };
       }
    }
-   return wxEmptyString;
+   return { false, wxEmptyString };
+}
+
+
+FilePath NyquistEffect::HelpPage() const
+{
+   return mHelpPage;
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType NyquistEffect::GetType()
+EffectType NyquistEffect::GetType() const
 {
    return mType;
 }
 
-EffectType NyquistEffect::GetClassification()
+EffectType NyquistEffect::GetClassification() const
 {
    if (mIsTool)
       return EffectTypeTool;
    return mType;
 }
 
-EffectFamilySymbol NyquistEffect::GetFamily()
+EffectFamilySymbol NyquistEffect::GetFamily() const
 {
    return NYQUISTEFFECTS_FAMILY;
 }
 
-bool NyquistEffect::IsInteractive()
+bool NyquistEffect::IsInteractive() const
 {
    if (mIsPrompt)
    {
@@ -291,7 +299,7 @@ bool NyquistEffect::IsInteractive()
    return mControls.size() != 0;
 }
 
-bool NyquistEffect::IsDefault()
+bool NyquistEffect::IsDefault() const
 {
    return mIsPrompt;
 }
@@ -618,13 +626,13 @@ bool NyquistEffect::Init()
       //(during this session).
       if (mFileName.GetModificationTime().IsLaterThan(mFileModified))
       {
-         SaveUserPreset(GetCurrentSettingsGroup());
+         SaveUserPreset(CurrentSettingsGroup());
 
          mMaxLen = NYQ_MAX_LEN;
          ParseFile();
          mFileModified = mFileName.GetModificationTime();
 
-         LoadUserPreset(GetCurrentSettingsGroup());
+         LoadUserPreset(CurrentSettingsGroup());
       }
    }
 
@@ -640,7 +648,7 @@ bool NyquistEffect::CheckWhetherSkipEffect()
 
 static void RegisterFunctions();
 
-bool NyquistEffect::Process()
+bool NyquistEffect::Process(EffectSettings &)
 {
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
@@ -825,7 +833,7 @@ bool NyquistEffect::Process()
          XO("Nyquist Error") );
    }
 
-   Optional<TrackIterRange<WaveTrack>> pRange;
+   std::optional<TrackIterRange<WaveTrack>> pRange;
    if (!bOnePassTool)
       pRange.emplace(mOutputTracks->Selected< WaveTrack >() + &Track::IsLeader);
 
@@ -1016,12 +1024,13 @@ finish:
 }
 
 int NyquistEffect::ShowHostInterface(
-   wxWindow &parent, const EffectDialogFactory &factory, bool forceModal)
+   wxWindow &parent, const EffectDialogFactory &factory,
+   EffectSettingsAccess &access, bool forceModal)
 {
    int res = wxID_APPLY;
    if (!(Effect::TestUIFlags(EffectManager::kRepeatNyquistPrompt) && mIsPrompt)) {
       // Show the normal (prompt or effect) interface
-      res = Effect::ShowHostInterface(parent, factory, forceModal);
+      res = Effect::ShowHostInterface(parent, factory, access, forceModal);
    }
 
 
@@ -1047,7 +1056,7 @@ int NyquistEffect::ShowHostInterface(
       effect.SetAutomationParameters(cp);
 
       // Show the normal (prompt or effect) interface
-      res = effect.ShowHostInterface(parent, factory, forceModal);
+      res = effect.ShowHostInterface(parent, factory, access, forceModal);
       if (res)
       {
          CommandParameters cp;
@@ -1059,7 +1068,13 @@ int NyquistEffect::ShowHostInterface(
    {
       effect.SetCommand(mInputCmd);
       effect.mDebug = (res == eDebugID);
-      res = Delegate(effect, parent, factory);
+      // Delegate to the Nyquist Prompt,
+      // which gets some Lisp from the user to interpret
+
+      access.ModifySettings([&](EffectSettings &settings){
+         res = Delegate(effect, settings,
+            parent, factory, access.shared_from_this());
+      });
       mT0 = effect.mT0;
       mT1 = effect.mT1;
    }
@@ -1067,7 +1082,8 @@ int NyquistEffect::ShowHostInterface(
    return res;
 }
 
-void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+NyquistEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    if (mIsPrompt)
    {
@@ -1077,17 +1093,16 @@ void NyquistEffect::PopulateOrExchange(ShuttleGui & S)
    {
       BuildEffectWindow(S);
    }
+   return nullptr;
 }
 
-bool NyquistEffect::EnablesDebug()
+bool NyquistEffect::EnablesDebug() const
 {
    return mDebugButton;
 }
 
-bool NyquistEffect::TransferDataToWindow()
+bool NyquistEffect::TransferDataToWindow(const EffectSettings &)
 {
-   mUIParent->TransferDataToWindow();
-
    bool success;
    if (mIsPrompt)
    {
@@ -1106,13 +1121,8 @@ bool NyquistEffect::TransferDataToWindow()
    return success;
 }
 
-bool NyquistEffect::TransferDataFromWindow()
+bool NyquistEffect::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    if (mIsPrompt)
    {
       return TransferDataFromPromptWindow();
@@ -2411,6 +2421,10 @@ or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .")
       return false;
       // Else just throw it at Nyquist to see what happens
    }
+
+   const auto helpStuff = CheckHelpPage();
+   mHelpFileExists = helpStuff.first;
+   mHelpPage       = helpStuff.second;
 
    return true;
 }

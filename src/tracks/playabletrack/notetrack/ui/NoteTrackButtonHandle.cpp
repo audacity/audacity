@@ -21,6 +21,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackInfo.h"
 
+#include <wx/event.h>
+
 NoteTrackButtonHandle::NoteTrackButtonHandle
 ( const std::shared_ptr<NoteTrack> &pTrack,
   int channel, const wxRect &rect )

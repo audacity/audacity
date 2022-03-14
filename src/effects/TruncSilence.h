@@ -36,13 +36,13 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-   ManualPageID ManualPage() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
+   EffectType GetType() const override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 
@@ -52,8 +52,8 @@ public:
 
    // Effect implementation
 
-   double CalcPreviewInputLength(double previewLength) override;
-   bool Startup() override;
+   double CalcPreviewInputLength(
+      const EffectSettings &settings, double previewLength) override;
 
    // Analyze a single track to find silences
    // If inputLength is not NULL we are calculating the minimum
@@ -67,10 +67,10 @@ public:
                         double* inputLength = NULL,
                         double* minInputLength = NULL);
 
-   bool Process() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool Process(EffectSettings &settings) override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
    // EffectTruncSilence implementation

@@ -22,7 +22,7 @@
 #include <AudioUnit/AudioUnitProperties.h>
 
 #include "EffectInterface.h"
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 #include "PluginInterface.h"
 
 #include "AUControl.h"
@@ -50,21 +50,20 @@ public:
 
    // ComponentInterface implementation
 
-   PluginPath GetPath() override;
-   ComponentInterfaceSymbol GetSymbol() override;
-   VendorSymbol GetVendor() override;
-   wxString GetVersion() override;
-   TranslatableString GetDescription() override;
+   PluginPath GetPath() const override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   VendorSymbol GetVendor() const override;
+   wxString GetVersion() const override;
+   TranslatableString GetDescription() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   EffectFamilySymbol GetFamily() override;
-   bool IsInteractive() override;
-   bool IsDefault() override;
-   bool IsLegacy() override;
-   bool SupportsRealtime() override;
-   bool SupportsAutomation() override;
+   EffectType GetType() const override;
+   EffectFamilySymbol GetFamily() const override;
+   bool IsInteractive() const override;
+   bool IsDefault() const override;
+   bool SupportsRealtime() const override;
+   bool SupportsAutomation() const override;
 
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
@@ -72,14 +71,14 @@ public:
    bool LoadUserPreset(const RegistryPath & name) override;
    bool SaveUserPreset(const RegistryPath & name) override;
 
-   RegistryPaths GetFactoryPresets() override;
+   RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
    bool LoadFactoryDefaults() override;
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
 
    int GetMidiInCount() override;
    int GetMidiOutCount() override;
@@ -91,32 +90,38 @@ public:
    sampleCount GetLatency() override;
    size_t GetTailSize() override;
 
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
-   size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
+   size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      override;
 
-   bool RealtimeInitialize() override;
-   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize() override;
+   bool RealtimeInitialize(EffectSettings &settings) override;
+   bool RealtimeAddProcessor(EffectSettings &settings,
+      unsigned numChannels, float sampleRate) override;
+   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
-   bool RealtimeResume() override;
-   bool RealtimeProcessStart() override;
-   size_t RealtimeProcess(int group,
-                                       float **inbuf,
-                                       float **outbuf,
-                                       size_t numSamples) override;
-   bool RealtimeProcessEnd() override;
+   bool RealtimeResume() noexcept override;
+   bool RealtimeProcessStart(EffectSettings &settings) override;
+   size_t RealtimeProcess(int group,  EffectSettings &settings,
+      const float *const *inbuf, float *const *outbuf, size_t numSamples)
+      override;
+   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
+   bool MakeListener();
+   bool InitializePlugin();
+
    // EffectUIClientInterface implementation
 
-   bool SetHost(EffectHostInterface *host) override;
-   bool PopulateUI(ShuttleGui &S) override;
+   bool InitializeInstance(EffectHostInterface* host) override;
+   std::unique_ptr<EffectUIValidator> PopulateUI(
+      ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
-   bool ValidateUI() override;
-   bool HideUI() override;
+   bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
@@ -183,7 +188,7 @@ private:
    bool mSupportsMono;
    bool mSupportsStereo;
 
-   EffectHostInterface *mHost;
+   EffectHostInterface *mHost{};
    unsigned mAudioIns;
    unsigned mAudioOuts;
    bool mInteractive;
@@ -207,8 +212,6 @@ private:
    AudioUnitEffect *mMaster;     // non-NULL if a slave
    AudioUnitEffectArray mSlaves;
    unsigned mNumChannels;
-   ArraysOf<float> mMasterIn, mMasterOut;
-   size_t mNumSamples;
 
    AUEventListenerRef mEventListenerRef;
 
@@ -224,7 +227,7 @@ private:
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-class AudioUnitEffectsModule final : public ModuleInterface
+class AudioUnitEffectsModule final : public PluginProvider
 {
 public:
    AudioUnitEffectsModule();
@@ -232,13 +235,13 @@ public:
 
    // ComponentInterface implementation
 
-   PluginPath GetPath() override;
-   ComponentInterfaceSymbol GetSymbol() override;
-   VendorSymbol GetVendor() override;
-   wxString GetVersion() override;
-   TranslatableString GetDescription() override;
+   PluginPath GetPath() const override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   VendorSymbol GetVendor() const override;
+   wxString GetVersion() const override;
+   TranslatableString GetDescription() const override;
 
-   // ModuleInterface implementation
+   // PluginProvider implementation
 
    bool Initialize() override;
    void Terminate() override;
@@ -247,8 +250,8 @@ public:
    const FileExtensions &GetFileExtensions() override;
    FilePath InstallPath() override { return {}; }
 
-   bool AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindPluginPaths(PluginManagerInterface & pm) override;
+   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
+   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
    unsigned DiscoverPluginsAtPath(
       const PluginPath & path, TranslatableString &errMsg,
       const RegistrationCallback &callback)
@@ -257,7 +260,7 @@ public:
    bool IsPluginValid(const PluginPath & path, bool bFast) override;
 
    std::unique_ptr<ComponentInterface>
-      CreateInstance(const PluginPath & path) override;
+      LoadPlugin(const PluginPath & path) override;
 
    // AudioUnitEffectModule implementation
 

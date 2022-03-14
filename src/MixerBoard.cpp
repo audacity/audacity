@@ -46,7 +46,7 @@
 #include "ProjectWindows.h"
 #include "SelectUtilities.h"
 #include "Theme.h"
-#include "TrackPanel.h" // for EVT_TRACK_PANEL_TIMER
+#include "TrackPanel.h"
 #include "TrackUtilities.h"
 #include "UndoManager.h"
 #include "WaveTrack.h"
@@ -922,34 +922,27 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
    mTracks = &TrackList::Get( *mProject );
 
    // Events from the project don't propagate directly to this other frame, so...
-   mProject->Bind(EVT_TRACK_PANEL_TIMER,
-      &MixerBoard::OnTimer,
-      this);
+   mPlaybackScrollerSubscription =
+   ProjectWindow::Get( *mProject ).GetPlaybackScroller()
+      .Subscribe(*this, &MixerBoard::OnTimer);
 
-   mTracks->Bind(EVT_TRACKLIST_SELECTION_CHANGE,
-      &MixerBoard::OnTrackChanged,
-      this);
+   mTrackPanelSubscription =
+   mTracks->Subscribe([this](const TrackListEvent &event){
+      switch (event.mType) {
+      case TrackListEvent::SELECTION_CHANGE:
+      case TrackListEvent::TRACK_DATA_CHANGE:
+         OnTrackChanged(event); break;
+      case TrackListEvent::PERMUTED:
+      case TrackListEvent::ADDITION:
+      case TrackListEvent::DELETION:
+         OnTrackSetChanged(); break;
+      default:
+         break;
+      }
+   });
 
-   mTracks->Bind(EVT_TRACKLIST_PERMUTED,
-      &MixerBoard::OnTrackSetChanged,
-      this);
-
-   mTracks->Bind(EVT_TRACKLIST_ADDITION,
-      &MixerBoard::OnTrackSetChanged,
-      this);
-
-   mTracks->Bind(EVT_TRACKLIST_DELETION,
-      &MixerBoard::OnTrackSetChanged,
-      this);
-
-   mTracks->Bind(EVT_TRACKLIST_TRACK_DATA_CHANGE,
-      &MixerBoard::OnTrackChanged,
-      this);
-
-   wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
-      wxCommandEventHandler(MixerBoard::OnStartStop),
-      NULL,
-      this);
+   mAudioIOSubscription =
+      AudioIO::Get()->Subscribe(*this, &MixerBoard::OnStartStop);
 }
 
 
@@ -1345,7 +1338,7 @@ void MixerBoard::OnSize(wxSizeEvent &evt)
    this->RefreshTrackClusters(true);
 }
 
-void MixerBoard::OnTimer(wxCommandEvent &event)
+void MixerBoard::OnTimer(Observer::Message)
 {
    // PRL 12 Jul 2015:  Moved the below (with comments) out of TrackPanel::OnTimer.
 
@@ -1368,15 +1361,10 @@ void MixerBoard::OnTimer(wxCommandEvent &event)
             == PlayMode::loopedPlay)
       );
    }
-
-   // Let other listeners get the notification
-   event.Skip();
 }
 
-void MixerBoard::OnTrackChanged(TrackListEvent &evt)
+void MixerBoard::OnTrackChanged(const TrackListEvent &evt)
 {
-   evt.Skip();
-
    auto pTrack = evt.mpTrack.lock();
    auto pPlayable = dynamic_cast<PlayableTrack*>( pTrack.get() );
    if ( pPlayable ) {
@@ -1387,19 +1375,17 @@ void MixerBoard::OnTrackChanged(TrackListEvent &evt)
    }
 }
 
-void MixerBoard::OnTrackSetChanged(wxEvent &evt)
+void MixerBoard::OnTrackSetChanged()
 {
-   evt.Skip();
    mUpToDate = false;
    UpdateTrackClusters();
    Refresh();
 }
 
-void MixerBoard::OnStartStop(wxCommandEvent &evt)
+void MixerBoard::OnStartStop(AudioIOEvent evt)
 {
-   evt.Skip();
-   bool start = evt.GetInt();
-   ResetMeters( start );
+   if (evt.type == AudioIOEvent::PLAYBACK)
+      ResetMeters( evt.on );
 }
 
 // class MixerBoardFrame

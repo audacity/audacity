@@ -23,6 +23,7 @@
 #include <wx/intl.h>
 #include "widgets/Ruler.h"
 #include "Envelope.h"
+#include "Mix.h"
 #include "Project.h"
 #include "ProjectRate.h"
 #include "ViewInfo.h"
@@ -352,3 +353,12 @@ void TimeTrack::testMe()
      }*/
 }
 
+//! Installer of the time warper
+static Mixer::WarpOptions::DefaultWarp::Scope installer{
+[](const TrackList &list) -> const BoundedEnvelope*
+{
+   if (auto pTimeTrack = *list.Any<const TimeTrack>().begin())
+      return pTimeTrack->GetEnvelope();
+   else
+      return nullptr;
+} };

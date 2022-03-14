@@ -43,7 +43,6 @@
 #include <algorithm>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/wxcrtvararg.h>
-#include <wx/app.h>
 #include <wx/defs.h>
 #include <wx/dialog.h>
 #include <wx/dcbuffer.h>
@@ -189,8 +188,7 @@ wxString MeterUpdateMsg::toStringIfClipped()
 //
 // The MeterPanel passes itself messages via this queue so that it can
 // communicate between the audio thread and the GUI thread.
-// This class is as simple as possible in order to be thread-safe
-// without needing mutexes.
+// This class uses lock-free synchronization with atomics.
 //
 
 MeterUpdateQueue::MeterUpdateQueue(size_t maxLen):
@@ -206,17 +204,19 @@ MeterUpdateQueue::~MeterUpdateQueue()
 
 void MeterUpdateQueue::Clear()
 {
-   mStart = 0;
-   mEnd = 0;
+   mStart.store(0);
+   mEnd.store(0);
 }
 
 // Add a message to the end of the queue.  Return false if the
 // queue was full.
 bool MeterUpdateQueue::Put(MeterUpdateMsg &msg)
 {
+   auto start = mStart.load(std::memory_order_acquire);
+   auto end = mEnd.load(std::memory_order_relaxed);
    // mStart can be greater than mEnd because it is all mod mBufferSize
-   wxASSERT( (mEnd + mBufferSize - mStart) >= 0 );
-   int len = (mEnd + mBufferSize - mStart) % mBufferSize;
+   assert( (end + mBufferSize - start) >= 0 );
+   int len = (end + mBufferSize - start) % mBufferSize;
 
    // Never completely fill the queue, because then the
    // state is ambiguous (mStart==mEnd)
@@ -225,8 +225,8 @@ bool MeterUpdateQueue::Put(MeterUpdateMsg &msg)
 
    //wxLogDebug(wxT("Put: %s"), msg.toString());
 
-   mBuffer[mEnd] = msg;
-   mEnd = (mEnd+1)%mBufferSize;
+   mBuffer[end] = msg;
+   mEnd.store((end + 1) % mBufferSize, std::memory_order_release);
 
    return true;
 }
@@ -235,13 +235,15 @@ bool MeterUpdateQueue::Put(MeterUpdateMsg &msg)
 // Return false if the queue was empty.
 bool MeterUpdateQueue::Get(MeterUpdateMsg &msg)
 {
-   int len = (mEnd + mBufferSize - mStart) % mBufferSize;
+   auto start = mStart.load(std::memory_order_relaxed);
+   auto end = mEnd.load(std::memory_order_acquire);
+   int len = (end + mBufferSize - start) % mBufferSize;
 
    if (len == 0)
       return false;
 
-   msg = mBuffer[mStart];
-   mStart = (mStart+1)%mBufferSize;
+   msg = mBuffer[start];
+   mStart.store((start + 1) % mBufferSize, std::memory_order_release);
 
    return true;
 }
@@ -295,7 +297,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
              float fDecayRate /*= 60.0f*/)
 : MeterPanelBase(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
    mProject(project),
-   mQueue(1024),
+   mQueue{ 1024 },
    mWidth(size.x),
    mHeight(size.y),
    mIsInput(isInput),
@@ -348,14 +350,10 @@ MeterPanel::MeterPanel(AudacityProject *project,
    mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxPENSTYLE_SOLID);
    mDisabledPen = wxPen(theTheme.Colour( clrMeterDisabledPen), 1, wxPENSTYLE_SOLID);
 
-   if (mIsInput) {
-      wxTheApp->Bind(EVT_AUDIOIO_MONITOR,
-                        &MeterPanel::OnAudioIOStatus,
-                        this);
-      wxTheApp->Bind(EVT_AUDIOIO_CAPTURE,
-                        &MeterPanel::OnAudioIOStatus,
-                        this);
+   mSubscription = AudioIO::Get()
+      ->Subscribe(*this, &MeterPanel::OnAudioIOStatus);
 
+   if (mIsInput) {
       mPen       = wxPen(   theTheme.Colour( clrMeterInputPen         ), 1, wxPENSTYLE_SOLID);
       mBrush     = wxBrush( theTheme.Colour( clrMeterInputBrush       ), wxBRUSHSTYLE_SOLID);
       mRMSBrush  = wxBrush( theTheme.Colour( clrMeterInputRMSBrush    ), wxBRUSHSTYLE_SOLID);
@@ -364,11 +362,6 @@ MeterPanel::MeterPanel(AudacityProject *project,
 //      mDarkPen   = wxPen(   theTheme.Colour( clrMeterInputDarkPen     ), 1, wxSOLID);
    }
    else {
-      // Register for AudioIO events
-      wxTheApp->Bind(EVT_AUDIOIO_PLAYBACK,
-                        &MeterPanel::OnAudioIOStatus,
-                        this);
-
       mPen       = wxPen(   theTheme.Colour( clrMeterOutputPen        ), 1, wxPENSTYLE_SOLID);
       mBrush     = wxBrush( theTheme.Colour( clrMeterOutputBrush      ), wxBRUSHSTYLE_SOLID);
       mRMSBrush  = wxBrush( theTheme.Colour( clrMeterOutputRMSBrush   ), wxBRUSHSTYLE_SOLID);
@@ -1912,16 +1905,16 @@ void MeterPanel::StopMonitoring(){
    } 
 }
 
-void MeterPanel::OnAudioIOStatus(wxCommandEvent &evt)
+void MeterPanel::OnAudioIOStatus(AudioIOEvent evt)
 {
-   evt.Skip();
-   AudacityProject *p = (AudacityProject *) evt.GetEventObject();
+   if (!mIsInput != (evt.type == AudioIOEvent::PLAYBACK))
+      return;
 
-   mActive = (evt.GetInt() != 0) && (p == mProject);
-
+   AudacityProject *p = evt.pProject;
+   mActive = evt.on && (p == mProject);
    if( mActive ){
       mTimer.Start(1000 / mMeterRefreshRate);
-      if (evt.GetEventType() == EVT_AUDIOIO_MONITOR)
+      if (evt.type == AudioIOEvent::MONITOR)
          mMonitoring = mActive;
    } else {
       mTimer.Stop();

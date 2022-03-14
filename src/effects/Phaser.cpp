@@ -105,50 +105,47 @@ EffectPhaser::~EffectPhaser()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectPhaser::GetSymbol()
+ComponentInterfaceSymbol EffectPhaser::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectPhaser::GetDescription()
+TranslatableString EffectPhaser::GetDescription() const
 {
    return XO("Combines phase-shifted signals with the original signal");
 }
 
-ManualPageID EffectPhaser::ManualPage()
+ManualPageID EffectPhaser::ManualPage() const
 {
    return L"Phaser";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectPhaser::GetType()
+EffectType EffectPhaser::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectPhaser::SupportsRealtime()
+bool EffectPhaser::SupportsRealtime() const
 {
-#if defined(EXPERIMENTAL_REALTIME_AUDACITY_EFFECTS)
    return true;
-#else
-   return false;
-#endif
 }
 
 // EffectProcessor implementation
 
-unsigned EffectPhaser::GetAudioInCount()
+unsigned EffectPhaser::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectPhaser::GetAudioOutCount()
+unsigned EffectPhaser::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectPhaser::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames chanMap)
+bool EffectPhaser::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    InstanceInit(mMaster, mSampleRate);
    if (chanMap[0] == ChannelNameFrontRight)
@@ -159,12 +156,13 @@ bool EffectPhaser::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelName
    return true;
 }
 
-size_t EffectPhaser::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectPhaser::ProcessBlock(EffectSettings &settings,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return InstanceProcess(mMaster, inBlock, outBlock, blockLen);
+   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectPhaser::RealtimeInitialize()
+bool EffectPhaser::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -173,7 +171,8 @@ bool EffectPhaser::RealtimeInitialize()
    return true;
 }
 
-bool EffectPhaser::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sampleRate)
+bool EffectPhaser::RealtimeAddProcessor(
+   EffectSettings &, unsigned, float sampleRate)
 {
    EffectPhaserState slave;
 
@@ -184,21 +183,19 @@ bool EffectPhaser::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
    return true;
 }
 
-bool EffectPhaser::RealtimeFinalize()
+bool EffectPhaser::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectPhaser::RealtimeProcess(int group,
-                                          float **inbuf,
-                                          float **outbuf,
-                                          size_t numSamples)
+size_t EffectPhaser::RealtimeProcess(int group, EffectSettings &settings,
+   const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-
-   return InstanceProcess(mSlaves[group], inbuf, outbuf, numSamples);
+   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
+
 bool EffectPhaser::DefineParams( ShuttleParams & S ){
    S.SHUTTLE_PARAM( mStages,    Stages );
    S.SHUTTLE_PARAM( mDryWet,    DryWet );
@@ -251,7 +248,8 @@ bool EffectPhaser::SetAutomationParameters(CommandParameters & parms)
 
 // Effect implementation
 
-void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
+std::unique_ptr<EffectUIValidator>
+EffectPhaser::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);
@@ -341,15 +339,11 @@ void EffectPhaser::PopulateOrExchange(ShuttleGui & S)
          .AddSlider( {}, DEF_OutGain * SCL_OutGain, MAX_OutGain * SCL_OutGain, MIN_OutGain * SCL_OutGain);
    }
    S.EndMultiColumn();
+   return nullptr;
 }
 
-bool EffectPhaser::TransferDataToWindow()
+bool EffectPhaser::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mStagesS->SetValue((int) (mStages * SCL_Stages));
    mDryWetS->SetValue((int) (mDryWet * SCL_DryWet));
    mFreqS->SetValue((int) (mFreq * SCL_Freq));
@@ -361,13 +355,8 @@ bool EffectPhaser::TransferDataToWindow()
    return true;
 }
 
-bool EffectPhaser::TransferDataFromWindow()
+bool EffectPhaser::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    if (mStages & 1)    // must be even
    {
       mStages &= ~1;
@@ -397,9 +386,11 @@ void EffectPhaser::InstanceInit(EffectPhaserState & data, float sampleRate)
    return;
 }
 
-size_t EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectPhaser::InstanceProcess(EffectSettings &settings,
+   EffectPhaserState & data,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   float *ibuf = inBlock[0];
+   const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
    for (int j = data.laststages; j < mStages; j++)

@@ -46,43 +46,47 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-   ManualPageID ManualPage() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   bool SupportsRealtime() override;
+   EffectType GetType() const override;
+   bool SupportsRealtime() const override;
    bool GetAutomationParameters(CommandParameters & parms) override;
    bool SetAutomationParameters(CommandParameters & parms) override;
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
-   size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
-   bool RealtimeInitialize() override;
-   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize() override;
-   size_t RealtimeProcess(int group,
-                                       float **inbuf,
-                                       float **outbuf,
-                                       size_t numSamples) override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
+   size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      override;
+   bool RealtimeInitialize(EffectSettings &settings) override;
+   bool RealtimeAddProcessor(EffectSettings &settings,
+      unsigned numChannels, float sampleRate) override;
+   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
+   size_t RealtimeProcess(int group,  EffectSettings &settings,
+      const float *const *inbuf, float *const *outbuf, size_t numSamples)
+      override;
    bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
 
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectSettingsAccess &access) override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
 
 private:
    // EffectWahwah implementation
 
    void InstanceInit(EffectWahwahState & data, float sampleRate);
-   size_t InstanceProcess(EffectWahwahState & data, float **inBlock, float **outBlock, size_t blockLen);
+   size_t InstanceProcess(EffectSettings &settings, EffectWahwahState & data,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen);
 
    void OnFreqSlider(wxCommandEvent & evt);
    void OnPhaseSlider(wxCommandEvent & evt);

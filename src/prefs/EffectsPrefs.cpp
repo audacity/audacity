@@ -24,7 +24,7 @@
 #include <wx/defs.h>
 
 #include "Languages.h"
-#include "../PluginManager.h"
+#include "PluginManager.h"
 #include "Prefs.h"
 #include "../ShuttleGui.h"
 
@@ -38,12 +38,12 @@ EffectsPrefs::~EffectsPrefs()
 {
 }
 
-ComponentInterfaceSymbol EffectsPrefs::GetSymbol()
+ComponentInterfaceSymbol EffectsPrefs::GetSymbol() const
 {
    return EFFECTS_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString EffectsPrefs::GetDescription()
+TranslatableString EffectsPrefs::GetDescription() const
 {
    return XO("Preferences for Effects");
 }
