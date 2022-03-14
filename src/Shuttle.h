@@ -11,6 +11,8 @@
 #ifndef __AUDACITY_SHUTTLE__
 #define __AUDACITY_SHUTTLE__
 
+#include <type_traits>
+
 #include "ComponentInterfaceSymbol.h"
 
 class ComponentInterfaceSymbol;
@@ -56,40 +58,54 @@ class CommandParameters;
 \brief Visitor of effect or command parameters.  This is a base class with lots of
 virtual functions that do nothing by default.
 Unrelated to class Shuttle.
+
+@tparam Const if true, then visited settings are not modifiable.
 ********************************************************************************/
-class AUDACITY_DLL_API SettingsVisitor /* not final */
+template<bool Const>
+class SettingsVisitorBase /* not final */
 {
 public:
+   // By-value argument for const visitor, otherwise reference
+   template<typename T> using Ref = std::conditional_t<Const, const T&, T&>;
+   // const-reference argument for const visitor, otherwise reference
+   template<typename T> using Arg = std::conditional_t<Const, T, T&>;
+
    wxString mParams;
-   bool *pOptionalFlag{};
+   std::conditional_t<Const, const bool, bool> *pOptionalFlag{};
    CommandParameters * mpEap{};
 
-   SettingsVisitor() {}
-   virtual ~SettingsVisitor();
+   SettingsVisitorBase() {}
+   virtual ~SettingsVisitorBase();
 
    bool ShouldSet();
-   virtual SettingsVisitor & Optional( bool & var );
-   virtual SettingsVisitor & OptionalY( bool & var );
-   virtual SettingsVisitor & OptionalN( bool & var );
-   virtual void Define( bool & var, const wxChar * key, bool vdefault,
+   virtual SettingsVisitorBase &Optional( Ref<bool> var );
+   virtual SettingsVisitorBase &OptionalY( Ref<bool> var );
+   virtual SettingsVisitorBase &OptionalN( Ref<bool> var );
+   virtual void Define( Arg<bool> var, const wxChar * key, bool vdefault,
       bool vmin = false, bool vmax = false, bool vscl = false );
-   virtual void Define( size_t & var, const wxChar * key, int vdefault,
+   virtual void Define( Arg<size_t> var, const wxChar * key, int vdefault,
       int vmin = 0, int vmax = 100000, int vscl = 1 );
-   virtual void Define( int & var, const wxChar * key, int vdefault,
+   virtual void Define( Arg<int> var, const wxChar * key, int vdefault,
       int vmin = 0, int vmax = 100000, int vscl = 1 );
-   virtual void Define( float & var, const wxChar * key, float vdefault,
+   virtual void Define( Arg<float> var, const wxChar * key, float vdefault,
       float vmin, float vmax, float vscl = 1.0f );
-   virtual void Define( double & var, const wxChar * key, float vdefault,
+   virtual void Define( Arg<double> var, const wxChar * key, float vdefault,
       float vmin, float vmax, float vscl = 1.0f );
-   virtual void Define( double & var, const wxChar * key, double vdefault,
+   virtual void Define( Arg<double> var, const wxChar * key, double vdefault,
       double vmin, double vmax, double vscl = 1.0f );
-   virtual void Define( wxString &var, const wxChar * key,
+   virtual void Define( Ref<wxString> var, const wxChar * key,
       wxString vdefault,
       wxString vmin = {}, wxString vmax = {},
       wxString vscl = {} );
-   virtual void DefineEnum( int &var, const wxChar * key, int vdefault,
+   virtual void DefineEnum( Arg<int> var, const wxChar * key, int vdefault,
       const EnumValueSymbol strings[], size_t nStrings );
 };
+
+extern template class AUDACITY_DLL_API SettingsVisitorBase<false>;
+extern template class AUDACITY_DLL_API SettingsVisitorBase<true>;
+
+using SettingsVisitor = SettingsVisitorBase<false>;
+using ConstSettingsVisitor = SettingsVisitorBase<true>;
 
 #define SHUTTLE_PARAM( var, name ) \
   Define( var, KEY_ ## name, DEF_ ## name, MIN_ ## name, MAX_ ## name, SCL_ ## name )

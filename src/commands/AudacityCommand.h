@@ -22,6 +22,7 @@
 
 #include "ComponentInterface.h"
 #include "EffectAutomationParameters.h" // for command automation
+#include "EffectInterface.h" // for SettingsVisitor type alias
 
 #include "Registrar.h"
 
@@ -33,7 +34,6 @@ class AudacityCommand;
 class AudacityProject;
 class CommandContext;
 class ProgressDialog;
-class SettingsVisitor;
 
 
 class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,

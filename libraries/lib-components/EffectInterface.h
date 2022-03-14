@@ -51,7 +51,9 @@
 #include <wx/event.h>
 
 class ShuttleGui;
-class SettingsVisitor;
+template<bool Const> class SettingsVisitorBase;
+using SettingsVisitor = SettingsVisitorBase<false>;
+using ConstSettingsVisitor = SettingsVisitorBase<true>;
 
 typedef enum EffectType : int
 {
