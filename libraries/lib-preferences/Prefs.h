@@ -29,6 +29,9 @@
 #ifndef __AUDACITY_PREFS__
 #define __AUDACITY_PREFS__
 
+#include <functional>
+#include <set>
+
 // Increment this every time the prefs need to be reset
 // the first part (before the r) indicates the version the reset took place
 // the second part (after the r) indicates the number of times the prefs have been reset within the same version
@@ -81,13 +84,68 @@ protected:
    const RegistryPath mPath;
 };
 
-//! Class template adds an in-memory cache of a value to SettingBase.
-template< typename T >
-class CachingSettingBase : public SettingBase
+class TransactionalSettingBase : public SettingBase
 {
 public:
+   using SettingBase::SettingBase;
+
+   //! @return true iff successful
+   virtual bool Commit() = 0;
+   virtual void Rollback() noexcept = 0;
+};
+
+//! Makes temporary changes to preferences, then rolls them back at destruction
+/*! Nesting of SettingScope is not supported. No copy or move. */
+class PREFERENCES_API SettingScope /* not final */
+{
+public:
+   SettingScope();
+   ~SettingScope() noexcept;
+   SettingScope(const SettingScope&) = delete;
+   SettingScope &operator=(const SettingScope&) = delete;
+
+   /*!
+    @return `NotAdded` if there is no pending (and uncommitted) scope;
+    `PreviouslyAdded` if there is one, but the given setting object was
+    already added since it began;
+    else `Added`
+    */
+   enum AddResult{ NotAdded, Added, PreviouslyAdded };
+   static AddResult Add( TransactionalSettingBase& setting );
+
+protected:
+   static SettingScope *sCurrent;
+   std::set< TransactionalSettingBase * > mPending;
+   bool mCommitted = false;
+};
+
+//! Extend SettingScope with Commit() which flushes updates in a batch
+/*! Construct one; then write to some Setting objects; then Commit() before
+ destruction to keep the changes, or else the destructor rolls them back.
+
+ Flushes preferences on successful commit.
+
+ Nesting of SettingTransaction is not supported. No copy or move. */
+class PREFERENCES_API SettingTransaction final : public SettingScope
+{
+public:
+   //! @return true if successful
+   /*! It is unlikely to return false, but in that case an unflushed, partial
+    write of changes to the config file may have happened */
+   bool Commit();
+};
+
+/*! @brief Class template adds an in-memory cache of a value to SettingBase
+ and support for SettingTransaction
+ */
+template< typename T >
+class CachingSettingBase : public TransactionalSettingBase
+{
+public:
+   using TransactionalSettingBase::TransactionalSettingBase;
    explicit CachingSettingBase( const SettingBase &path )
-      : SettingBase{ path } {}
+      : TransactionalSettingBase{ path.GetPath() } {}
+
 protected:
    CachingSettingBase( const CachingSettingBase & ) = default;
    mutable T mCurrentValue{};
@@ -170,18 +228,42 @@ public:
    //! Write value to config and return true if successful
    bool Write( const T &value )
    {
-      const auto config = this->GetConfig();
-      if ( config ) {
-         this->mCurrentValue = value;
-         return DoWrite();
+      switch ( SettingScope::Add( *this ) ) {
+         // Eager writes, but not flushed, when there is no transaction
+         default:
+         case SettingTransaction::NotAdded: {
+            const auto config = this->GetConfig();
+            if ( config ) {
+               this->mCurrentValue = value;
+               return DoWrite();
+            }
+            return false;
+         }
+
+         // Deferred writes, with flush, if there is a commit later
+         case SettingTransaction::Added:
+            this->mPreviousValue = Read();
+            [[fallthrough]];
+         case SettingTransaction::PreviouslyAdded:
+            this->mCurrentValue = value;
+            return true;
       }
-      return false;
    }
 
    //! Reset to the default value
    bool Reset()
    {
       return Write( GetDefault() );
+   }
+
+   bool Commit() override
+   {
+      return DoWrite();
+   }
+
+   void Rollback() noexcept override
+   {
+      this->mCurrentValue = this->mPreviousValue;
    }
 
 protected:
@@ -194,8 +276,9 @@ protected:
          config ? config->Write( this->mPath, this->mCurrentValue ) : false;
    }
 
-   mutable T mDefaultValue{};
    const DefaultValueFunction mFunction;
+   mutable T mDefaultValue{};
+   T mPreviousValue{};
 };
 
 //! This specialization of Setting for bool adds a Toggle method to negate the saved value

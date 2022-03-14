@@ -633,6 +633,10 @@ class AUDACITY_DLL_API WaveTrackFactory final
       double rate = 0);
 };
 
+extern AUDACITY_DLL_API BoolSetting
+     EditClipsCanMove
+;
+
 extern AUDACITY_DLL_API StringSetting AudioTrackNameSetting;
 
 AUDACITY_DLL_API bool GetEditClipsCanMove();

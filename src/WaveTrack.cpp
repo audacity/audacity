@@ -1390,11 +1390,8 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
       if (IsEmpty(oldT1, oldT1))
       {
          // Check if clips can move
-         bool clipsCanMove = true;
-         gPrefs->Read(wxT("/GUI/EditClipCanMove"), &clipsCanMove);
-         if (clipsCanMove) {
+         if (EditClipsCanMove.Read()) {
             auto tmp = Cut (oldT1, GetEndTime() + 1.0/GetRate());
-
             Paste(newT1, tmp.get());
          }
          return;
@@ -2869,8 +2866,10 @@ bool GetEditClipsCanMove()
    if( mIsSyncLocked )
       return true;
    bool editClipsCanMove;
-   gPrefs->Read(wxT("/GUI/EditClipCanMove"), &editClipsCanMove, false);
-   return editClipsCanMove;
+   return EditClipsCanMove.Read();
 }
+
+BoolSetting EditClipsCanMove{
+   L"/GUI/EditClipCanMove",         false  };
 
 DEFINE_XML_METHOD_REGISTRY( WaveTrackIORegistry );

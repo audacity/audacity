@@ -229,6 +229,52 @@ void FinishPreferences()
    }
 }
 
+SettingScope *SettingScope::sCurrent = nullptr;
+
+SettingScope::SettingScope()
+{
+   if ( sCurrent )
+      // nesting of transactions is not supported
+      wxASSERT( false );
+   else
+      sCurrent = this;
+}
+
+SettingScope::~SettingScope() noexcept
+{
+   if ( sCurrent == this ) {
+      if ( !mCommitted )
+         for ( auto pSetting : mPending )
+            pSetting->Rollback();
+      sCurrent = nullptr;
+   }
+}
+
+// static
+auto SettingScope::Add( TransactionalSettingBase &setting ) -> AddResult
+{
+   if ( !sCurrent || sCurrent->mCommitted )
+      return NotAdded;
+   return sCurrent->mPending.insert( &setting ).second
+      ? Added
+      : PreviouslyAdded;
+}
+
+bool SettingTransaction::Commit()
+{
+   if ( sCurrent == this && !mCommitted ) {
+      for ( auto pSetting : mPending )
+         if ( !pSetting->Commit() )
+            return false;
+      if ( gPrefs->Flush() ) {
+         mPending.clear();
+         mCommitted = true;
+         return true;
+      }
+   }
+   return false;
+}
+
 //////////
 EnumValueSymbols::EnumValueSymbols(
    ByColumns_t,
