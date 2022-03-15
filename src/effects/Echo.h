@@ -14,6 +14,7 @@
 
 #include "Effect.h"
 #include "../ShuttleAutomation.h"
+#include <float.h> // for FLT_MAX
 
 class ShuttleGui;
 
@@ -57,7 +58,6 @@ public:
 private:
    // EffectEcho implementation
 
-public: // TODO remove
    double delay;
    double decay;
    Floats history;
@@ -65,6 +65,11 @@ public: // TODO remove
    size_t histLen;
 
    const EffectParameterMethods& Parameters() const override;
+
+static constexpr EffectParameter Delay{ &EffectEcho::delay,
+   L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f };
+static constexpr EffectParameter Decay{ &EffectEcho::decay,
+   L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f };
 };
 
 #endif // __AUDACITY_EFFECT_ECHO__

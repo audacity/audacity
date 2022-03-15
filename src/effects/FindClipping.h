@@ -55,13 +55,17 @@ private:
    bool ProcessOne(LabelTrack *lt, int count, const WaveTrack * wt,
                    sampleCount start, sampleCount len);
 
-public: // TODO remove
    int mStart;   ///< Using int rather than sampleCount because values are only ever small numbers
    int mStop;    ///< Using int rather than sampleCount because values are only ever small numbers
    // To do: eliminate this
    EffectSettingsAccessPtr mpAccess;
 
    const EffectParameterMethods& Parameters() const override;
+
+static constexpr EffectParameter Start{ &EffectFindClipping::mStart,
+   L"Duty Cycle Start",  3,    1,    INT_MAX, 1   };
+static constexpr EffectParameter Stop{ &EffectFindClipping::mStop,
+   L"Duty Cycle End",    3,    1,    INT_MAX, 1   };
 };
 
 #endif // __AUDACITY_EFFECT_FINDCLIPPING__

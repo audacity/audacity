@@ -146,20 +146,12 @@ enum
    ID_Slider,   // needs to come last
 };
 
-enum kInterpolations
-{
-   kBspline,
-   kCosine,
-   kCubic,
-   nInterpolations
-};
-
 // Increment whenever EQCurves.xml is updated
 #define EQCURVES_VERSION   1
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
-static const EnumValueSymbol kInterpStrings[nInterpolations] =
+const EnumValueSymbol EffectEqualization::kInterpStrings[nInterpolations] =
 {
    // These are acceptable dual purpose internal/visible names
 
@@ -176,25 +168,6 @@ static const double kThirdOct[] =
    2500., 3150., 4000., 5000., 6300., 8000., 10000., 12500., 16000., 20000.,
 };
 
-namespace {
-// Not all of these are visited now
-static constexpr EffectParameter FilterLength{ &EffectEqualization::mM,
-   L"FilterLength",        8191,    21,      8191,    0      };
-static constexpr EffectParameter CurveName{ &EffectEqualization::mCurveName,
-   L"CurveName",           L"unnamed", L"", L"", L""};
-static constexpr EffectParameter InterpLin{ &EffectEqualization::mLin,
-   L"InterpolateLin",      false,   false,   true,    false  };
-static constexpr EnumParameter InterpMeth{ &EffectEqualization::mInterp,
-   L"InterpolationMethod", 0,       0,       0,       0, kInterpStrings, nInterpolations      };
-static constexpr EffectParameter DrawMode{ &EffectEqualization::mDrawMode,
-   L"",                   true,    false,   true,    false  };
-static constexpr EffectParameter DrawGrid{ &EffectEqualization::mDrawGrid,
-   L"",                   true,    false,   true,    false  };
-static constexpr EffectParameter dBMin{ &EffectEqualization::mdBMin,
-   L"",                   -30.0f,   -120.0,  -10.0,   0      };
-static constexpr EffectParameter dBMax{ &EffectEqualization::mdBMax,
-   L"",                   30.0f,    0.0,     60.0,    0      };
-}
 const EffectParameterMethods& EffectEqualization::Parameters() const
 {
    static CapturedParameters<EffectEqualization,

@@ -91,9 +91,18 @@ public:
       void Recalculate(Effect &effect);
    };
 
+   struct Validator;
+
 private:
    Settings mSettings;
    const EffectParameterMethods& Parameters() const override;
+
+static constexpr EffectParameter Sequence{ &Settings::dtmfSequence,
+   L"Sequence",   Settings::DefaultSequence, L"", L"", L""};
+static constexpr EffectParameter DutyCycle{ &Settings::dtmfDutyCycle,
+   L"Duty Cycle", Settings::DefaultDutyCycle, 0.0,     100.0,   10.0   };
+static constexpr EffectParameter Amplitude{ &Settings::dtmfAmplitude,
+   L"Amplitude",  Settings::DefaultAmplitude, 0.001,   1.0,     1      };
 };
 
 #endif

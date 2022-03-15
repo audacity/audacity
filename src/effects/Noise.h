@@ -56,7 +56,6 @@ public:
 private:
    // EffectNoise implementation
 
-public: // TODO remove
    int mType;
    double mAmp;
 
@@ -65,6 +64,20 @@ public: // TODO remove
    NumericTextCtrl *mNoiseDurationT;
 
    const EffectParameterMethods& Parameters() const override;
+
+   enum kTypes
+   {
+      kWhite,
+      kPink,
+      kBrownian,
+      nTypes
+   };
+   static const EnumValueSymbol kTypeStrings[nTypes];
+
+static constexpr EnumParameter Type{ &EffectNoise::mType,
+   L"Type",       kWhite,  0,    nTypes - 1, 1, kTypeStrings, nTypes  };
+static constexpr EffectParameter Amp{ &EffectNoise::mAmp,
+   L"Amplitude",  0.8,     0.0,  1.0,           1  };
 };
 
 #endif

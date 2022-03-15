@@ -102,7 +102,6 @@ private:
    void OnFreqOffText(wxCommandEvent & evt);
    void OnGainText(wxCommandEvent & evt);
 
-public: // TODO remove
    EffectWahwahState mMaster;
    std::vector<EffectWahwahState> mSlaves;
 
@@ -141,7 +140,19 @@ public: // TODO remove
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Freq{ &EffectWahwah::mFreq,
+   L"Freq",       1.5,     0.1,     4.0,     10  };
+static constexpr EffectParameter Phase{ &EffectWahwah::mPhase,
+   L"Phase",      0.0,     0.0,     360.0,   1   };
+static constexpr EffectParameter Depth{ &EffectWahwah::mDepth,
+   L"Depth",      70,      0,       100,     1   }; // scaled to 0-1 before processing
+static constexpr EffectParameter Res{ &EffectWahwah::mRes,
+   L"Resonance",  2.5,     0.1,     10.0,    10  };
+static constexpr EffectParameter FreqOfs{ &EffectWahwah::mFreqOfs,
+   L"Offset",     30,      0,       100,     1   }; // scaled to 0-1 before processing
+static constexpr EffectParameter OutGain{ &EffectWahwah::mOutGain,
+   L"Gain",      -6.0,    -30.0,    30.0,    1   };
 };
 
 #endif
-

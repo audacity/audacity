@@ -31,13 +31,6 @@
 
 namespace {
 wxString AllSymbols();
-
-static constexpr EffectParameter Sequence{ &EffectDtmf::Settings::dtmfSequence,
-   L"Sequence",   EffectDtmf::Settings::DefaultSequence, L"", L"", L""};
-static constexpr EffectParameter DutyCycle{ &EffectDtmf::Settings::dtmfDutyCycle,
-   L"Duty Cycle", EffectDtmf::Settings::DefaultDutyCycle, 0.0,     100.0,   10.0   };
-static constexpr EffectParameter Amplitude{ &EffectDtmf::Settings::dtmfAmplitude,
-   L"Amplitude",  EffectDtmf::Settings::DefaultAmplitude, 0.001,   1.0,     1      };
 }
 const EffectParameterMethods& EffectDtmf::Parameters() const
 {
@@ -258,17 +251,16 @@ size_t EffectDtmf::ProcessBlock(EffectSettings &,
    return processed;
 }
 
-namespace {
 // Event handler object
-struct MyValidator
+struct EffectDtmf::Validator
    : DefaultEffectUIValidator
 {
-   MyValidator(EffectUIClientInterface &effect,
+   Validator(EffectUIClientInterface &effect,
       EffectSettingsAccess &access, EffectDtmf::Settings &settings)
       : DefaultEffectUIValidator{effect, access}
       , mSettings{settings}
    {}
-   virtual ~MyValidator() = default;
+   virtual ~Validator() = default;
 
    Effect &GetEffect() const { return static_cast<Effect&>(mEffect); }
 
@@ -292,7 +284,7 @@ struct MyValidator
    wxStaticText *mDtmfDutyT;
 };
 
-void MyValidator::PopulateOrExchange(ShuttleGui & S,
+void EffectDtmf::Validator::PopulateOrExchange(ShuttleGui & S,
    const EffectSettings &settings, double duration, double projectRate)
 {
    // Hold a reference to special settings, still in the singleton Effect
@@ -322,7 +314,7 @@ void MyValidator::PopulateOrExchange(ShuttleGui & S,
             return vldDtmf;
          })
          .AddTextBox(XXO("DTMF &sequence:"), wxT(""), 10);
-      BindTo(*mDtmfSequenceT, wxEVT_TEXT, &MyValidator::OnSequence);
+      BindTo(*mDtmfSequenceT, wxEVT_TEXT, &Validator::OnSequence);
 
       // A control with no event handler but the validator causes updates
       // when TransferData functions are called
@@ -344,7 +336,7 @@ void MyValidator::PopulateOrExchange(ShuttleGui & S,
                             .AutoPos(true));
       S.Name(XO("Duration"))
          .AddWindow(mDtmfDurationT);
-      BindTo(*mDtmfDurationT, wxEVT_TEXT, &MyValidator::OnDuration);
+      BindTo(*mDtmfDurationT, wxEVT_TEXT, &Validator::OnDuration);
 
       S.AddFixedText(XO("&Tone/silence ratio:"), false);
       mDtmfDutyCycleS =
@@ -355,7 +347,7 @@ void MyValidator::PopulateOrExchange(ShuttleGui & S,
                      dtmfSettings.dtmfDutyCycle * DutyCycle.scale,
                      DutyCycle.max * DutyCycle.scale,
                      DutyCycle.min * DutyCycle.scale);
-      BindTo(*mDtmfDutyCycleS, wxEVT_SLIDER, &MyValidator::OnDutyCycle);
+      BindTo(*mDtmfDutyCycleS, wxEVT_SLIDER, &Validator::OnDutyCycle);
    }
    S.EndMultiColumn();
 
@@ -380,7 +372,6 @@ void MyValidator::PopulateOrExchange(ShuttleGui & S,
    }
    S.EndMultiColumn();
 }
-}
 
 // Effect implementation
 
@@ -389,12 +380,12 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 {
    auto &settings = access.Get();
    auto &dtmfSettings = mSettings;
-   auto result = std::make_unique<MyValidator>(*this, access, dtmfSettings);
+   auto result = std::make_unique<Validator>(*this, access, dtmfSettings);
    result->PopulateOrExchange(S, settings, GetDuration(), mProjectRate);
    return result;
 }
 
-bool MyValidator::UpdateUI()
+bool EffectDtmf::Validator::UpdateUI()
 {
    auto &dtmfSettings = mSettings;
    mDtmfDutyCycleS->SetValue(dtmfSettings.dtmfDutyCycle * DutyCycle.scale);
@@ -406,7 +397,7 @@ bool MyValidator::UpdateUI()
    return true;
 }
 
-bool MyValidator::ValidateUI()
+bool EffectDtmf::Validator::ValidateUI()
 {
    auto &dtmfSettings = mSettings;
    auto &effect = GetEffect();
@@ -594,7 +585,7 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, size_t len, float fs, wxChar tone, 
    return true;
 }
 
-void MyValidator::DoUpdateUI()
+void EffectDtmf::Validator::DoUpdateUI()
 {
    // Update some texts in response to controls
    auto &dtmfSettings = mSettings;
@@ -612,7 +603,7 @@ void MyValidator::DoUpdateUI()
    mDtmfToneT->SetName(mDtmfToneT->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
-void MyValidator::OnSequence(wxCommandEvent & WXUNUSED(evt))
+void EffectDtmf::Validator::OnSequence(wxCommandEvent & WXUNUSED(evt))
 {
    auto &dtmfSettings = mSettings;
    dtmfSettings.dtmfSequence = mDtmfSequenceT->GetValue();
@@ -620,7 +611,7 @@ void MyValidator::OnSequence(wxCommandEvent & WXUNUSED(evt))
    DoUpdateUI();
 }
 
-void MyValidator::OnDuration(wxCommandEvent & WXUNUSED(evt))
+void EffectDtmf::Validator::OnDuration(wxCommandEvent & WXUNUSED(evt))
 {
    auto &dtmfSettings = mSettings;
    auto &effect = GetEffect();
@@ -629,7 +620,7 @@ void MyValidator::OnDuration(wxCommandEvent & WXUNUSED(evt))
    DoUpdateUI();
 }
 
-void MyValidator::OnDutyCycle(wxCommandEvent & evt)
+void EffectDtmf::Validator::OnDutyCycle(wxCommandEvent & evt)
 {
    auto &dtmfSettings = mSettings;
    dtmfSettings.dtmfDutyCycle = (double) evt.GetInt() / DutyCycle.scale;

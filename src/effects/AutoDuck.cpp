@@ -21,7 +21,6 @@
 #include "LoadEffects.h"
 
 #include <math.h>
-#include <float.h>
 
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
@@ -36,23 +35,6 @@
 
 #include "../WaveTrack.h"
 #include "../widgets/AudacityMessageBox.h"
-
-namespace {
-static constexpr EffectParameter DuckAmountDb{ &EffectAutoDuck::mDuckAmountDb,
-   L"DuckAmountDb",     -12.0,   -24.0,   0.0,     1  };
-static constexpr EffectParameter InnerFadeDownLen{ &EffectAutoDuck::mInnerFadeDownLen,
-   L"InnerFadeDownLen", 0.0,     0.0,     3.0,     1  };
-static constexpr EffectParameter InnerFadeUpLen{ &EffectAutoDuck::mInnerFadeUpLen,
-   L"InnerFadeUpLen",   0.0,     0.0,     3.0,     1  };
-static constexpr EffectParameter OuterFadeDownLen{ &EffectAutoDuck::mOuterFadeDownLen,
-   L"OuterFadeDownLen", 0.5,     0.0,     3.0,     1  };
-static constexpr EffectParameter OuterFadeUpLen{ &EffectAutoDuck::mOuterFadeUpLen,
-   L"OuterFadeUpLen",   0.5,     0.0,     3.0,     1  };
-static constexpr EffectParameter ThresholdDb{ &EffectAutoDuck::mThresholdDb,
-   L"ThresholdDb",      -30.0,   -100.0,  0.0,     1  };
-static constexpr EffectParameter MaximumPause{ &EffectAutoDuck::mMaximumPause,
-   L"MaximumPause",     1.0,     0.0,     DBL_MAX, 1  };
-}
 
 const EffectParameterMethods& EffectAutoDuck::Parameters() const
 {
@@ -361,7 +343,7 @@ EffectAutoDuck::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    {
       S.AddSpace(0, 5);
 
-      mPanel = safenew EffectAutoDuckPanel(S.GetParent(), wxID_ANY, this);
+      mPanel = safenew EffectAutoDuck::Panel(S.GetParent(), wxID_ANY, this);
       S.AddWindow(mPanel);
 
       S.AddSpace(0, 5);
@@ -513,7 +495,7 @@ void EffectAutoDuck::OnValueChanged(wxCommandEvent & WXUNUSED(evt))
 }
 
 /*
- * EffectAutoDuckPanel implementation
+ * EffectAutoDuck::Panel implementation
  */
 
 #define CONTROL_POINT_REGION 10 // pixel distance to click on a control point
@@ -538,16 +520,16 @@ static int GetDistance(const wxPoint& first, const wxPoint& second)
       return distanceY;
 }
 
-BEGIN_EVENT_TABLE(EffectAutoDuckPanel, wxPanelWrapper)
-   EVT_PAINT(EffectAutoDuckPanel::OnPaint)
-   EVT_MOUSE_CAPTURE_CHANGED(EffectAutoDuckPanel::OnMouseCaptureChanged)
-   EVT_MOUSE_CAPTURE_LOST(EffectAutoDuckPanel::OnMouseCaptureLost)
-   EVT_LEFT_DOWN(EffectAutoDuckPanel::OnLeftDown)
-   EVT_LEFT_UP(EffectAutoDuckPanel::OnLeftUp)
-   EVT_MOTION(EffectAutoDuckPanel::OnMotion)
+BEGIN_EVENT_TABLE(EffectAutoDuck::Panel, wxPanelWrapper)
+   EVT_PAINT(EffectAutoDuck::Panel::OnPaint)
+   EVT_MOUSE_CAPTURE_CHANGED(EffectAutoDuck::Panel::OnMouseCaptureChanged)
+   EVT_MOUSE_CAPTURE_LOST(EffectAutoDuck::Panel::OnMouseCaptureLost)
+   EVT_LEFT_DOWN(EffectAutoDuck::Panel::OnLeftDown)
+   EVT_LEFT_UP(EffectAutoDuck::Panel::OnLeftUp)
+   EVT_MOTION(EffectAutoDuck::Panel::OnMotion)
 END_EVENT_TABLE()
 
-EffectAutoDuckPanel::EffectAutoDuckPanel(
+EffectAutoDuck::Panel::Panel(
    wxWindow *parent, wxWindowID winid, EffectAutoDuck *effect)
 :  wxPanelWrapper(parent, winid, wxDefaultPosition, wxSize(600, 300))
 {
@@ -559,13 +541,13 @@ EffectAutoDuckPanel::EffectAutoDuckPanel(
    ResetControlPoints();
 }
 
-EffectAutoDuckPanel::~EffectAutoDuckPanel()
+EffectAutoDuck::Panel::~Panel()
 {
    if(HasCapture())
       ReleaseMouse();
 }
 
-void EffectAutoDuckPanel::ResetControlPoints()
+void EffectAutoDuck::Panel::ResetControlPoints()
 {
    mControlPoints[innerFadeDown] = wxPoint(-100,-100);
    mControlPoints[innerFadeUp] = wxPoint(-100,-100);
@@ -574,7 +556,7 @@ void EffectAutoDuckPanel::ResetControlPoints()
    mControlPoints[duckAmount] = wxPoint(-100,-100);
 }
 
-void EffectAutoDuckPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
+void EffectAutoDuck::Panel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    int clientWidth, clientHeight;
    GetSize(&clientWidth, &clientHeight);
@@ -737,14 +719,14 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    dc.SelectObject(wxNullBitmap);
 }
 
-void EffectAutoDuckPanel::OnMouseCaptureChanged(
+void EffectAutoDuck::Panel::OnMouseCaptureChanged(
    wxMouseCaptureChangedEvent & WXUNUSED(evt))
 {
    SetCursor(wxNullCursor);
    mCurrentControlPoint = none;
 }
 
-void EffectAutoDuckPanel::OnMouseCaptureLost(
+void EffectAutoDuck::Panel::OnMouseCaptureLost(
    wxMouseCaptureLostEvent & WXUNUSED(evt))
 {
    mCurrentControlPoint = none;
@@ -755,8 +737,8 @@ void EffectAutoDuckPanel::OnMouseCaptureLost(
    }
 }
 
-EffectAutoDuckPanel::EControlPoint
-   EffectAutoDuckPanel::GetNearestControlPoint(const wxPoint & pt)
+EffectAutoDuck::Panel::EControlPoint
+   EffectAutoDuck::Panel::GetNearestControlPoint(const wxPoint & pt)
 {
    int dist[AUTO_DUCK_PANEL_NUM_CONTROL_POINTS];
    int i;
@@ -775,7 +757,7 @@ EffectAutoDuckPanel::EControlPoint
       return none;
 }
 
-void EffectAutoDuckPanel::OnLeftDown(wxMouseEvent & evt)
+void EffectAutoDuck::Panel::OnLeftDown(wxMouseEvent & evt)
 {
    EControlPoint nearest = GetNearestControlPoint(evt.GetPosition());
 
@@ -795,7 +777,7 @@ void EffectAutoDuckPanel::OnLeftDown(wxMouseEvent & evt)
    }
 }
 
-void EffectAutoDuckPanel::OnLeftUp(wxMouseEvent & WXUNUSED(evt))
+void EffectAutoDuck::Panel::OnLeftUp(wxMouseEvent & WXUNUSED(evt))
 {
    if (mCurrentControlPoint != none)
    {
@@ -804,7 +786,7 @@ void EffectAutoDuckPanel::OnLeftUp(wxMouseEvent & WXUNUSED(evt))
    }
 }
 
-void EffectAutoDuckPanel::OnMotion(wxMouseEvent & evt)
+void EffectAutoDuck::Panel::OnMotion(wxMouseEvent & evt)
 {
    switch (GetNearestControlPoint(evt.GetPosition()))
    {

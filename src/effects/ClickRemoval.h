@@ -63,7 +63,6 @@ private:
    void OnThreshSlider(wxCommandEvent & evt);
 
 private:
-public: // TODO remove
    Envelope *mEnvelope;
 
    bool mbDidSomething; // This effect usually does nothing on real-world data.
@@ -79,6 +78,11 @@ public: // TODO remove
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Threshold{ &EffectClickRemoval::mThresholdLevel,
+   L"Threshold",  200,     0,       900,     1  };
+static constexpr EffectParameter Width{ &EffectClickRemoval::mClickWidth,
+   L"Width",      20,      0,       40,      1  };
 };
 
 #endif

@@ -65,7 +65,6 @@ private:
    void UpdateUI();
 
 private:
-public: // TODO remove
    double mPeakLevel;
    bool   mGain;
    bool   mDC;
@@ -86,6 +85,15 @@ public: // TODO remove
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter PeakLevel{ &EffectNormalize::mPeakLevel,
+   L"PeakLevel",           -1.0,    -145.0,  0.0,  1  };
+static constexpr EffectParameter RemoveDC{ &EffectNormalize::mDC,
+   L"RemoveDcOffset",      true,    false,   true, 1  };
+static constexpr EffectParameter ApplyGain{ &EffectNormalize::mGain,
+   L"ApplyGain",           true,    false,   true, 1  };
+static constexpr EffectParameter StereoInd{ &EffectNormalize::mStereoInd,
+   L"StereoIndependent",   false,   false,   true, 1  };
 };
 
 #endif

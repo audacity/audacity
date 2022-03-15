@@ -30,6 +30,13 @@ class ShuttleGui;
 class EffectLoudness final : public Effect
 {
 public:
+   enum kNormalizeTargets
+   {
+      kLoudness,
+      kRMS,
+      nAlgos
+   };
+
    static inline EffectLoudness *
    FetchParameters(EffectLoudness &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
@@ -75,7 +82,6 @@ private:
    void UpdateUI();
 
 private:
-public: // TODO remove
    bool   mStereoInd;
    double mLUFSLevel;
    double mRMSLevel;
@@ -108,6 +114,17 @@ public: // TODO remove
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter StereoInd{ &EffectLoudness::mStereoInd,
+   L"StereoIndependent",   false,      false,   true,     1  };
+static constexpr EffectParameter LUFSLevel{ &EffectLoudness::mLUFSLevel,
+   L"LUFSLevel",           -23.0,      -145.0,  0.0,      1  };
+static constexpr EffectParameter RMSLevel{ &EffectLoudness::mRMSLevel,
+   L"RMSLevel",            -20.0,      -145.0,  0.0,      1  };
+static constexpr EffectParameter DualMono{ &EffectLoudness::mDualMono,
+   L"DualMono",            true,       false,   true,     1  };
+static constexpr EffectParameter NormalizeTo{ &EffectLoudness::mNormalizeTo,
+   L"NormalizeTo",         (int)kLoudness , 0    ,   nAlgos-1, 1  };
 };
 
 #endif

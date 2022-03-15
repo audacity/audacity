@@ -80,7 +80,6 @@ private:
    void UpdateUI();                    // Enable / disable OK / preview.
 
 private:
-public: // TODO remove
    // track related
    int    mCurTrackNum;
    double mMaxNewLength;
@@ -116,6 +115,9 @@ public: // TODO remove
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Percentage{ &EffectChangeSpeed::m_PercentChange,
+   L"Percentage",    0.0,  -99.0,   4900.0,  1  };
 };
 
 #endif // __AUDACITY_EFFECT_CHANGESPEED__

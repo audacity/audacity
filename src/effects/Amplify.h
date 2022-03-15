@@ -76,7 +76,6 @@ private:
 private:
    double mPeak;
 
-public: // TODO remove
    double mRatio;
    double mRatioClip;   // maximum value of mRatio which does not cause clipping
    double mAmp;
@@ -91,6 +90,14 @@ public: // TODO remove
    const EffectParameterMethods& Parameters() const override;
 
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Ratio{ &EffectAmplify::mRatio,
+   L"Ratio",            0.9f,       0.003162f,  316.227766f,   1.0f  };
+// Amp is not saved in settings!
+static constexpr EffectParameter Amp{ &EffectAmplify::mAmp,
+   L"",                -0.91515f,  -50.0f,     50.0f,         10.0f };
+static constexpr EffectParameter Clipping{ &EffectAmplify::mCanClip,
+   L"AllowClipping",    false,    false,  true,    1  };
 };
 
 #endif // __AUDACITY_EFFECT_AMPLIFY__

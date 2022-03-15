@@ -203,7 +203,6 @@ private:
    void OnBench( wxCommandEvent & event );
 #endif
 
-public: // TODO remove
    int mOptions;
    HFFT hFFT;
    Floats mFFTBuffer, mFilterFuncR, mFilterFuncI;
@@ -281,6 +280,33 @@ public: // TODO remove
 
    friend class EqualizationPanel;
    friend class EditCurvesDialog;
+
+   enum kInterpolations
+   {
+      kBspline,
+      kCosine,
+      kCubic,
+      nInterpolations
+   };
+   static const EnumValueSymbol kInterpStrings[nInterpolations];
+
+// Not all of these are visited now
+static constexpr EffectParameter FilterLength{ &EffectEqualization::mM,
+   L"FilterLength",        8191,    21,      8191,    0      };
+static constexpr EffectParameter CurveName{ &EffectEqualization::mCurveName,
+   L"CurveName",           L"unnamed", L"", L"", L""};
+static constexpr EffectParameter InterpLin{ &EffectEqualization::mLin,
+   L"InterpolateLin",      false,   false,   true,    false  };
+static constexpr EnumParameter InterpMeth{ &EffectEqualization::mInterp,
+   L"InterpolationMethod", 0,       0,       0,       0, kInterpStrings, nInterpolations      };
+static constexpr EffectParameter DrawMode{ &EffectEqualization::mDrawMode,
+   L"",                   true,    false,   true,    false  };
+static constexpr EffectParameter DrawGrid{ &EffectEqualization::mDrawGrid,
+   L"",                   true,    false,   true,    false  };
+static constexpr EffectParameter dBMin{ &EffectEqualization::mdBMin,
+   L"",                   -30.0f,   -120.0,  -10.0,   0      };
+static constexpr EffectParameter dBMax{ &EffectEqualization::mdBMax,
+   L"",                   30.0f,    0.0,     60.0,    0      };
 };
 
 class EffectEqualizationCurve final : public EffectEqualization

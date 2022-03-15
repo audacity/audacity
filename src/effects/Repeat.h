@@ -53,7 +53,6 @@ private:
    void OnRepeatTextChange(wxCommandEvent & evt);
    void DisplayNewTime();
 
-public: // TODO remove
    int repeatCount;
 
    wxTextCtrl   *mRepeatCount;
@@ -62,6 +61,9 @@ public: // TODO remove
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Count{ &EffectRepeat::repeatCount,
+   L"Count",1,  1,    INT_MAX,  1  };
 };
 
 #endif

@@ -13,10 +13,10 @@
 
 #include "Effect.h"
 #include "../ShuttleAutomation.h"
+#include <float.h> // for DBL_MAX
 
 class wxBitmap;
 class wxTextCtrl;
-class EffectAutoDuckPanel;
 class ShuttleGui;
 
 #define AUTO_DUCK_PANEL_NUM_CONTROL_POINTS 5
@@ -59,7 +59,6 @@ private:
    void OnValueChanged(wxCommandEvent & evt);
 
 private:
-public: // TODO remove
    double mDuckAmountDb;
    double mInnerFadeDownLen;
    double mInnerFadeUpLen;
@@ -77,20 +76,35 @@ public: // TODO remove
    wxTextCtrl *mOuterFadeUpLenBox;
    wxTextCtrl *mThresholdDbBox;
    wxTextCtrl *mMaximumPauseBox;
-   EffectAutoDuckPanel *mPanel;
+
+   class Panel;
+   Panel *mPanel;
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 
-   friend class EffectAutoDuckPanel;
+static constexpr EffectParameter DuckAmountDb{ &EffectAutoDuck::mDuckAmountDb,
+   L"DuckAmountDb",     -12.0,   -24.0,   0.0,     1  };
+static constexpr EffectParameter InnerFadeDownLen{ &EffectAutoDuck::mInnerFadeDownLen,
+   L"InnerFadeDownLen", 0.0,     0.0,     3.0,     1  };
+static constexpr EffectParameter InnerFadeUpLen{ &EffectAutoDuck::mInnerFadeUpLen,
+   L"InnerFadeUpLen",   0.0,     0.0,     3.0,     1  };
+static constexpr EffectParameter OuterFadeDownLen{ &EffectAutoDuck::mOuterFadeDownLen,
+   L"OuterFadeDownLen", 0.5,     0.0,     3.0,     1  };
+static constexpr EffectParameter OuterFadeUpLen{ &EffectAutoDuck::mOuterFadeUpLen,
+   L"OuterFadeUpLen",   0.5,     0.0,     3.0,     1  };
+static constexpr EffectParameter ThresholdDb{ &EffectAutoDuck::mThresholdDb,
+   L"ThresholdDb",      -30.0,   -100.0,  0.0,     1  };
+static constexpr EffectParameter MaximumPause{ &EffectAutoDuck::mMaximumPause,
+   L"MaximumPause",     1.0,     0.0,     DBL_MAX, 1  };
 };
 
-class EffectAutoDuckPanel final : public wxPanelWrapper
+class EffectAutoDuck::Panel final : public wxPanelWrapper
 {
 public:
-   EffectAutoDuckPanel(
+   Panel(
       wxWindow *parent, wxWindowID winid, EffectAutoDuck *effect);
-   virtual ~EffectAutoDuckPanel();
+   virtual ~Panel();
 
 private:
    enum EControlPoint

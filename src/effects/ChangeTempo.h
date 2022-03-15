@@ -78,7 +78,6 @@ private:
    void Update_Text_ToLength(); // Use m_FromLength & m_PercentChange to set NEW m_ToLength & control.
 
 private:
-public: // TODO remove
    bool           mUseSBSMS;
    double         m_PercentChange;  // percent change to apply to tempo
                                     // -100% is meaningless, but sky's the upper limit
@@ -103,6 +102,11 @@ public: // TODO remove
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Percentage{ &EffectChangeTempo::m_PercentChange,
+   L"Percentage", 0.0,  -95.0,   3000.0,  1  };
+static constexpr EffectParameter UseSBSMS{ &EffectChangeTempo::mUseSBSMS,
+   L"SBSMS",     false, false,   true,    1  };
 };
 
 #endif // __AUDACITY_EFFECT_CHANGETEMPO__

@@ -38,10 +38,6 @@
 
 #include "LoadEffects.h"
 
-namespace {
-static constexpr EffectParameter Count{ &EffectRepeat::repeatCount,
-   L"Count",1,  1,    INT_MAX,  1  };
-}
 const EffectParameterMethods& EffectRepeat::Parameters() const
 {
    static CapturedParameters<EffectRepeat,

@@ -19,6 +19,7 @@ Vaughan Johnson (Preview)
 
 #include "Effect.h"
 #include "../ShuttleAutomation.h"
+#include <float.h> // for FLT_MAX
 
 class wxBitmap;
 class wxChoice;
@@ -89,7 +90,6 @@ private:
    void OnSliderDBMAX( wxCommandEvent & evt );
    void OnSliderDBMIN( wxCommandEvent & evt );
 
-public: // TODO remove
    float mCutoff;
    float mRipple;
    float mStopbandRipple;
@@ -131,6 +131,38 @@ public: // TODO remove
    DECLARE_EVENT_TABLE()
 
    friend class EffectScienFilterPanel;
+
+   enum kSubTypes
+   {
+      kLowPass  = Biquad::kLowPass,
+      kHighPass = Biquad::kHighPass,
+      nSubTypes = Biquad::nSubTypes
+   };
+   static const EnumValueSymbol kSubTypeStrings[nSubTypes];
+
+   enum kTypes
+   {
+      kButterworth,
+      kChebyshevTypeI,
+      kChebyshevTypeII,
+      nTypes
+   };
+   static const EnumValueSymbol kTypeStrings[nTypes];
+
+   static_assert(nSubTypes == WXSIZEOF(kSubTypeStrings), "size mismatch");
+
+static constexpr EnumParameter Type{ &EffectScienFilter::mFilterType,
+   L"FilterType",       kButterworth,  0,    nTypes - 1,    1, kTypeStrings, nTypes  };
+static constexpr EnumParameter Subtype{ &EffectScienFilter::mFilterSubtype,
+   L"FilterSubtype",    kLowPass,      0,    nSubTypes - 1, 1, kSubTypeStrings, nSubTypes  };
+static constexpr EffectParameter Order{ &EffectScienFilter::mOrder,
+   L"Order",            1,             1,    10,               1  };
+static constexpr EffectParameter Cutoff{ &EffectScienFilter::mCutoff,
+   L"Cutoff",           1000.0f,        1.0,  FLT_MAX,          1  };
+static constexpr EffectParameter Passband{ &EffectScienFilter::mRipple,
+   L"PassbandRipple",   1.0f,           0.0,  100.0,            1  };
+static constexpr EffectParameter Stopband{ &EffectScienFilter::mStopbandRipple,
+   L"StopbandRipple",   30.0f,          0.0,  100.0,            1  };
 };
 
 class EffectScienFilterPanel final : public wxPanelWrapper

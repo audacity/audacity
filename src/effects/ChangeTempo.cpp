@@ -61,12 +61,6 @@ enum
 
 // Soundtouch is not reasonable below -99% or above 3000%.
 
-namespace {
-static constexpr EffectParameter Percentage{ &EffectChangeTempo::m_PercentChange,
-   L"Percentage", 0.0,  -95.0,   3000.0,  1  };
-static constexpr EffectParameter UseSBSMS{ &EffectChangeTempo::mUseSBSMS,
-   L"SBSMS",     false, false,   true,    1  };
-}
 const EffectParameterMethods& EffectChangeTempo::Parameters() const
 {
    static CapturedParameters<EffectChangeTempo,

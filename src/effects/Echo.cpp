@@ -23,20 +23,12 @@
 #include "Echo.h"
 #include "LoadEffects.h"
 
-#include <float.h>
-
 #include <wx/intl.h>
 
 #include "../ShuttleGui.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 
-namespace {
-static constexpr EffectParameter Delay{ &EffectEcho::delay,
-   L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f };
-static constexpr EffectParameter Decay{ &EffectEcho::decay,
-   L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f };
-}
 const EffectParameterMethods& EffectEcho::Parameters() const
 {
    static CapturedParameters<EffectEcho,

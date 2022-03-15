@@ -89,8 +89,6 @@ private:
       (const RegionList &silences, unsigned iGroup, unsigned nGroups, Track *firstTrack, Track *lastTrack,
        double &totalCutLen);
 
-public: // TODO remove
-
    double mThresholdDB {} ;
    int mActionIndex;
    double mInitialAllowedSilence;
@@ -109,6 +107,28 @@ public: // TODO remove
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+   enum kActions
+   {
+      kTruncate,
+      kCompress,
+      nActions
+   };
+
+   static const EnumValueSymbol kActionStrings[nActions];
+
+static constexpr EffectParameter Threshold{ &EffectTruncSilence::mThresholdDB,
+   L"Threshold",  -20.0,      -80.0,   -20.0,                     1  };
+static constexpr EnumParameter ActIndex{ &EffectTruncSilence::mActionIndex,
+   L"Action",     (int)kTruncate,  0,       nActions - 1,           1, kActionStrings, nActions };
+static constexpr EffectParameter Minimum{ &EffectTruncSilence::mInitialAllowedSilence,
+   L"Minimum",    0.5,        0.001,   10000.0,                   1  };
+static constexpr EffectParameter Truncate{ &EffectTruncSilence::mTruncLongestAllowedSilence,
+   L"Truncate",   0.5,        0.0,     10000.0,                   1  };
+static constexpr EffectParameter Compress{ &EffectTruncSilence::mSilenceCompressPercent,
+   L"Compress",   50.0,       0.0,     99.9,                      1  };
+static constexpr EffectParameter Independent{ &EffectTruncSilence::mbIndependent,
+   L"Independent", false,     false,   true,                      1  };
 };
 
 #endif

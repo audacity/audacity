@@ -12,6 +12,7 @@
 
 #include "Effect.h"
 #include "../ShuttleAutomation.h"
+#include <float.h> // for FLT_MAX
 
 class ShuttleGui;
 
@@ -51,13 +52,17 @@ private:
 
    bool ProcessOne(WaveTrack *track, double t0, double t1, int count);
 
-public: // TODO remove
    float mAmount;
    float mTime_resolution;  //seconds
    double m_t1;
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Amount{ &EffectPaulstretch::mAmount,
+   L"Stretch Factor",   10.0f,    1.0,     FLT_MAX, 1   };
+static constexpr EffectParameter Time{ &EffectPaulstretch::mTime_resolution,
+   L"Time Resolution",  0.25f,   0.00099f,  FLT_MAX, 1   };
 };
 
 #endif

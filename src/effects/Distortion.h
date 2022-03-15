@@ -216,6 +216,40 @@ private:
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+   enum kTableType
+   {
+      kHardClip,
+      kSoftClip,
+      kHalfSinCurve,
+      kExpCurve,
+      kLogCurve,
+      kCubic,
+      kEvenHarmonics,
+      kSinCurve,
+      kLeveller,
+      kRectifier,
+      kHardLimiter,
+      nTableTypes
+   };
+
+   static const EnumValueSymbol kTableTypeStrings[nTableTypes];
+
+// (Note: 'Repeats' is the total number of times the effect is applied.)
+static constexpr EnumParameter TableTypeIndx{ &EffectDistortion::Params::mTableChoiceIndx,
+   L"Type",           0,       0,      nTableTypes-1,    1, kTableTypeStrings, nTableTypes    };
+static constexpr EffectParameter DCBlock{ &EffectDistortion::Params::mDCBlock,
+   L"DC Block",      false,   false,   true,                1    };
+static constexpr EffectParameter Threshold_dB{ &EffectDistortion::Params::mThreshold_dB,
+   L"Threshold dB",  -6.0,  -100.0,     0.0,             1000.0f };
+static constexpr EffectParameter NoiseFloor{ &EffectDistortion::Params::mNoiseFloor,
+   L"Noise Floor",   -70.0,  -80.0,   -20.0,                1    };
+static constexpr EffectParameter Param1{ &EffectDistortion::Params::mParam1,
+   L"Parameter 1",    50.0,    0.0,   100.0,                1    };
+static constexpr EffectParameter Param2{ &EffectDistortion::Params::mParam2,
+   L"Parameter 2",    50.0,    0.0,   100.0,                1    };
+static constexpr EffectParameter Repeats{ &EffectDistortion::Params::mRepeats,
+   L"Repeats",        1,       0,       5,                  1    };
 };
 
 #endif

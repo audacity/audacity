@@ -21,7 +21,6 @@
 #include <algorithm>
 
 #include <math.h>
-#include <float.h>
 
 #include <wx/intl.h>
 #include <wx/valgen.h>
@@ -34,12 +33,6 @@
 
 #include "../WaveTrack.h"
 
-namespace {
-static constexpr EffectParameter Amount{ &EffectPaulstretch::mAmount,
-   L"Stretch Factor",   10.0f,    1.0,     FLT_MAX, 1   };
-static constexpr EffectParameter Time{ &EffectPaulstretch::mTime_resolution,
-   L"Time Resolution",  0.25f,   0.00099f,  FLT_MAX, 1   };
-}
 const EffectParameterMethods& EffectPaulstretch::Parameters() const
 {
    static CapturedParameters<EffectPaulstretch,

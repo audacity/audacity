@@ -44,23 +44,7 @@
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
-enum kTableType
-{
-   kHardClip,
-   kSoftClip,
-   kHalfSinCurve,
-   kExpCurve,
-   kLogCurve,
-   kCubic,
-   kEvenHarmonics,
-   kSinCurve,
-   kLeveller,
-   kRectifier,
-   kHardLimiter,
-   nTableTypes
-};
-
-static const EnumValueSymbol kTableTypeStrings[nTableTypes] =
+const EnumValueSymbol EffectDistortion::kTableTypeStrings[nTableTypes] =
 {
    { XO("Hard Clipping") },
    { XO("Soft Clipping") },
@@ -75,23 +59,6 @@ static const EnumValueSymbol kTableTypeStrings[nTableTypes] =
    { XO("Hard Limiter 1413") }
 };
 
-namespace {
-// (Note: 'Repeats' is the total number of times the effect is applied.)
-static constexpr EnumParameter TableTypeIndx{ &EffectDistortion::Params::mTableChoiceIndx,
-   L"Type",           0,       0,      nTableTypes-1,    1, kTableTypeStrings, nTableTypes    };
-static constexpr EffectParameter DCBlock{ &EffectDistortion::Params::mDCBlock,
-   L"DC Block",      false,   false,   true,                1    };
-static constexpr EffectParameter Threshold_dB{ &EffectDistortion::Params::mThreshold_dB,
-   L"Threshold dB",  -6.0,  -100.0,     0.0,             1000.0f };
-static constexpr EffectParameter NoiseFloor{ &EffectDistortion::Params::mNoiseFloor,
-   L"Noise Floor",   -70.0,  -80.0,   -20.0,                1    };
-static constexpr EffectParameter Param1{ &EffectDistortion::Params::mParam1,
-   L"Parameter 1",    50.0,    0.0,   100.0,                1    };
-static constexpr EffectParameter Param2{ &EffectDistortion::Params::mParam2,
-   L"Parameter 2",    50.0,    0.0,   100.0,                1    };
-static constexpr EffectParameter Repeats{ &EffectDistortion::Params::mRepeats,
-   L"Repeats",        1,       0,       5,                  1    };
-}
 const EffectParameterMethods& EffectDistortion::Parameters() const
 {
    static CapturedParameters<EffectDistortion,
@@ -108,8 +75,6 @@ const EffectParameterMethods& EffectDistortion::Parameters() const
 
 // How many samples are processed before recomputing the lookup table again
 #define skipsamples 1000
-
-const double MIN_Threshold_Linear DB_TO_LINEAR(Threshold_dB.min);
 
 static const struct
 {
@@ -594,6 +559,8 @@ void EffectDistortion::OnThresholdText(wxCommandEvent& /*evt*/)
 
 void EffectDistortion::OnThresholdSlider(wxCommandEvent& evt)
 {
+   static const double MIN_Threshold_Linear = DB_TO_LINEAR(Threshold_dB.min);
+
    mThreshold = (double) evt.GetInt() / Threshold_dB.scale;
    mParams.mThreshold_dB = wxMax(LINEAR_TO_DB(mThreshold), Threshold_dB.min);
    mThreshold = std::max(MIN_Threshold_Linear, mThreshold);

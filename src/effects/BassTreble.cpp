@@ -41,16 +41,6 @@ enum
    ID_Link
 };
 
-namespace {
-static constexpr EffectParameter Bass{ &EffectBassTreble::mBass,
-   L"Bass",          0.0,     -30.0,   30.0,    1  };
-static constexpr EffectParameter Treble{ &EffectBassTreble::mTreble,
-   L"Treble",        0.0,     -30.0,   30.0,    1  };
-static constexpr EffectParameter Gain{ &EffectBassTreble::mGain,
-   L"Gain",          0.0,     -30.0,   30.0,    1  };
-static constexpr EffectParameter Link{ &EffectBassTreble::mLink,
-   L"Link Sliders",  false,    false,  true,    1  };
-}
 const EffectParameterMethods& EffectBassTreble::Parameters() const
 {
    static CapturedParameters<EffectBassTreble,

@@ -113,7 +113,6 @@ private:
    void Update_Slider_PercentChange(); // Update control per current m_dPercentChange.
 
 private:
-public: // TODO remove
    bool mUseSBSMS;
    // effect parameters
    int    m_nFromPitch;          // per PitchIndex()
@@ -149,6 +148,11 @@ public: // TODO remove
 
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Percentage{ &EffectChangePitch::m_dPercentChange,
+   L"Percentage", 0.0,  -99.0,   3000.0,  1  };
+static constexpr EffectParameter UseSBSMS{ &EffectChangePitch::mUseSBSMS,
+   L"SBSMS",     false, false,   true,    1  };
 };
 
 #endif // __AUDACITY_EFFECT_CHANGEPITCH__

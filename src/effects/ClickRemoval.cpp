@@ -47,12 +47,6 @@ enum
    ID_Width
 };
 
-namespace {
-static constexpr EffectParameter Threshold{ &EffectClickRemoval::mThresholdLevel,
-   L"Threshold",  200,     0,       900,     1  };
-static constexpr EffectParameter Width{ &EffectClickRemoval::mClickWidth,
-   L"Width",      20,      0,       40,      1  };
-}
 const EffectParameterMethods& EffectClickRemoval::Parameters() const
 {
    static CapturedParameters<EffectClickRemoval,

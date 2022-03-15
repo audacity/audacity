@@ -23,7 +23,6 @@ frequency changes smoothly during the tone.
 #include "LoadEffects.h"
 
 #include <math.h>
-#include <float.h>
 
 #include <wx/choice.h>
 #include <wx/intl.h>
@@ -35,31 +34,14 @@ frequency changes smoothly during the tone.
 #include "../widgets/valnum.h"
 #include "../widgets/NumericTextCtrl.h"
 
-enum kInterpolations
-{
-   kLinear,
-   kLogarithmic,
-   nInterpolations
-};
-
-static const EnumValueSymbol kInterStrings[nInterpolations] =
+const EnumValueSymbol EffectToneGen::kInterStrings[nInterpolations] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Linear") },
    { XO("Logarithmic") }
 };
 
-enum kWaveforms
-{
-   kSine,
-   kSquare,
-   kSawtooth,
-   kSquareNoAlias,
-   kTriangle,
-   nWaveforms
-};
-
-static const EnumValueSymbol kWaveStrings[nWaveforms] =
+const EnumValueSymbol EffectToneGen::kWaveStrings[nWaveforms] =
 {
    { XO("Sine") },
    { XO("Square") },
@@ -68,25 +50,6 @@ static const EnumValueSymbol kWaveStrings[nWaveforms] =
    { XC("Triangle", "waveform") }
 };
 
-namespace {
-// Yes, mFrequency0 and mAmplitude0 are each associated with more than one
-static constexpr EffectParameter StartFreq{ &EffectToneGen::mFrequency0,
-   L"StartFreq",     440.0,   1.0,     DBL_MAX,                1  };
-static constexpr EffectParameter EndFreq{ &EffectToneGen::mFrequency1,
-   L"EndFreq",       1320.0,  1.0,     DBL_MAX,                1  };
-static constexpr EffectParameter StartAmp{ &EffectToneGen::mAmplitude0,
-   L"StartAmp",      0.8,     0.0,     1.0,                    1  };
-static constexpr EffectParameter EndAmp{ &EffectToneGen::mAmplitude1,
-   L"EndAmp",        0.1,     0.0,     1.0,                    1  };
-static constexpr EffectParameter Frequency{ &EffectToneGen::mFrequency0,
-   L"Frequency",     440.0,   1.0,     DBL_MAX,                1  };
-static constexpr EffectParameter Amplitude{ &EffectToneGen::mAmplitude0,
-   L"Amplitude",     0.8,     0.0,     1.0,                    1  };
-static constexpr EnumParameter Waveform{ &EffectToneGen::mWaveform,
-   L"Waveform",      0,       0,       nWaveforms - 1,      1, kWaveStrings, nWaveforms  };
-static constexpr EnumParameter Interp{ &EffectToneGen::mInterpolation,
-   L"Interpolation", 0,       0,       nInterpolations - 1, 1, kInterStrings, nInterpolations  };
-}
 const EffectParameterMethods& EffectToneGen::Parameters() const
 {
    static const auto postSet =

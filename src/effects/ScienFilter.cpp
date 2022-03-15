@@ -37,7 +37,6 @@ a graph for EffectScienFilter.
 #include "LoadEffects.h"
 
 #include <math.h>
-#include <float.h>
 
 #include <wx/setup.h> // for wxUSE_* macros
 
@@ -85,15 +84,7 @@ enum
    ID_StopbandRipple
 };
 
-enum kTypes
-{
-   kButterworth,
-   kChebyshevTypeI,
-   kChebyshevTypeII,
-   nTypes
-};
-
-static const EnumValueSymbol kTypeStrings[nTypes] =
+const EnumValueSymbol EffectScienFilter::kTypeStrings[nTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    { XO("Butterworth") },
@@ -103,36 +94,13 @@ static const EnumValueSymbol kTypeStrings[nTypes] =
    { XO("Chebyshev Type II") }
 };
 
-enum kSubTypes
-{
-   kLowPass  = Biquad::kLowPass,
-   kHighPass = Biquad::kHighPass,
-   nSubTypes = Biquad::nSubTypes
-};
-
-static const EnumValueSymbol kSubTypeStrings[nSubTypes] =
+const EnumValueSymbol EffectScienFilter::kSubTypeStrings[nSubTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Lowpass") },
    { XO("Highpass") }
 };
 
-static_assert(nSubTypes == WXSIZEOF(kSubTypeStrings), "size mismatch");
-
-namespace {
-static constexpr EnumParameter Type{ &EffectScienFilter::mFilterType,
-   L"FilterType",       kButterworth,  0,    nTypes - 1,    1, kTypeStrings, nTypes  };
-static constexpr EnumParameter Subtype{ &EffectScienFilter::mFilterSubtype,
-   L"FilterSubtype",    kLowPass,      0,    nSubTypes - 1, 1, kSubTypeStrings, nSubTypes  };
-static constexpr EffectParameter Order{ &EffectScienFilter::mOrder,
-   L"Order",            1,             1,    10,               1  };
-static constexpr EffectParameter Cutoff{ &EffectScienFilter::mCutoff,
-   L"Cutoff",           1000.0f,        1.0,  FLT_MAX,          1  };
-static constexpr EffectParameter Passband{ &EffectScienFilter::mRipple,
-   L"PassbandRipple",   1.0f,           0.0,  100.0,            1  };
-static constexpr EffectParameter Stopband{ &EffectScienFilter::mStopbandRipple,
-   L"StopbandRipple",   30.0f,          0.0,  100.0,            1  };
-}
 const EffectParameterMethods& EffectScienFilter::Parameters() const
 {
    static CapturedParameters<EffectScienFilter,

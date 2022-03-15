@@ -29,15 +29,7 @@
 #include "../widgets/valnum.h"
 #include "../widgets/NumericTextCtrl.h"
 
-enum kTypes
-{
-   kWhite,
-   kPink,
-   kBrownian,
-   nTypes
-};
-
-static const EnumValueSymbol kTypeStrings[nTypes] =
+const EnumValueSymbol EffectNoise::kTypeStrings[nTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    /* i18n-hint: not a color, but "white noise" having a uniform spectrum  */
@@ -49,12 +41,6 @@ static const EnumValueSymbol kTypeStrings[nTypes] =
    { XC("Brownian", "noise") }
 };
 
-namespace {
-static constexpr EnumParameter Type{ &EffectNoise::mType,
-   L"Type",       kWhite,  0,    nTypes - 1, 1, kTypeStrings, nTypes  };
-static constexpr EffectParameter Amp{ &EffectNoise::mAmp,
-   L"Amplitude",  0.8,     0.0,  1.0,           1  };
-}
 const EffectParameterMethods& EffectNoise::Parameters() const
 {
    static CapturedParameters<EffectNoise,

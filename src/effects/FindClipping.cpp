@@ -34,12 +34,6 @@
 #include "../LabelTrack.h"
 #include "../WaveTrack.h"
 
-namespace {
-static constexpr EffectParameter Start{ &EffectFindClipping::mStart,
-   L"Duty Cycle Start",  3,    1,    INT_MAX, 1   };
-static constexpr EffectParameter Stop{ &EffectFindClipping::mStop,
-   L"Duty Cycle End",    3,    1,    INT_MAX, 1   };
-}
 const EffectParameterMethods& EffectFindClipping::Parameters() const
 {
    static CapturedParameters<EffectFindClipping,
