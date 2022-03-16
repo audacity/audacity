@@ -24,7 +24,9 @@ class AUDACITY_DLL_API EffectParameterMethods {
 public:
    virtual ~EffectParameterMethods();
    virtual void Reset(Effect &effect) const = 0;
-   virtual void Visit(Effect &effect, SettingsVisitor & S) const = 0;
+   virtual void Visit(Effect &effect, SettingsVisitor &visitor) const = 0;
+   virtual void Visit(
+      const Effect &effect, ConstSettingsVisitor &visitor) const = 0;
    virtual void Get(const Effect &effect, CommandParameters & parms) const = 0;
    virtual bool Set(Effect &effect, const CommandParameters & parms) const = 0;
 };
@@ -33,7 +35,8 @@ public:
 /*!
 For each effect parameter, the function...
    Reset resets it to a default
-   Visit visits it with a SettingsVisitor object
+   Visit visits it with a SettingsVisitor object; there are overloads taking
+      SettingsVisitor and ConstSettingsVisitor
    Get serializes it to a string
    Set deserializes it from a string and returns a success flag (if there is
       failure, parameters might not all be unchanged)
@@ -90,11 +93,22 @@ public:
          static_cast<EffectType&>(effect), dummy))
          DoReset(effect, *pStruct, *this);
    }
-   void Visit(Effect &effect, SettingsVisitor & S) const override {
+   void Visit(Effect &effect, SettingsVisitor &visitor)
+      const override {
       EffectSettings dummy;
       if (auto pStruct = EffectType::FetchParameters(
          static_cast<EffectType&>(effect), dummy))
-         DoVisit(*pStruct, S);
+         DoVisit<false>(*pStruct, visitor);
+   }
+   void Visit(const Effect &effect, ConstSettingsVisitor &visitor)
+      const override {
+      EffectSettings dummy;
+      // const_cast the effect...
+      auto &nonconstEffect = const_cast<Effect&>(effect);
+      // ... but only to fetch the structure and pass it as const &
+      if (auto pStruct = EffectType::FetchParameters(
+         static_cast<EffectType&>(nonconstEffect), dummy))
+         DoVisit(*pStruct, visitor);
    }
    void Get(const Effect &effect, CommandParameters & parms) const override {
       EffectSettings dummy;
@@ -135,23 +149,27 @@ private:
          This.PostSetFn(static_cast<EffectType&>(effect), structure, false);
    }
 
-   template< typename Member, typename Type, typename Value >
-   static void VisitOne(Params &structure, SettingsVisitor &S,
+   template< bool Const, typename Member, typename Type, typename Value >
+   static void VisitOne(Params &structure, SettingsVisitorBase<Const> &visitor,
       const EffectParameter< Params, Member, Type, Value > &param) {
       // Visit one variable
-      S.Define( structure.*(param.mem),
-         param.key, param.def, param.min, param.max, param.scale );
+      visitor.Define( structure.*(param.mem), param.key,
+         static_cast<Member>(param.def),
+         static_cast<Member>(param.min),
+         static_cast<Member>(param.max),
+         static_cast<Member>(param.scale) );
    }
    // More specific overload for enumeration parameters
-   template< typename Member >
-   static void VisitOne(Params &structure, SettingsVisitor &S,
+   template< bool Const, typename Member >
+   static void VisitOne(Params &structure, SettingsVisitorBase<Const> &visitor,
       const EnumParameter<Params, Member> &param) {
       // Visit one enumeration variable, passing the table of names
-      S.DefineEnum( structure.*(param.mem),
+      visitor.DefineEnum( structure.*(param.mem),
          param.key, param.def, param.symbols, param.nSymbols );
    }
-   static void DoVisit(Params &structure, SettingsVisitor &S) {
-      (VisitOne(structure, S, Parameters), ...);
+   template<bool Const>
+   static void DoVisit(Params &structure, SettingsVisitorBase<Const> &visitor) {
+      (VisitOne<Const>(structure, visitor, Parameters), ...);
    }
 
    template< typename Member, typename Type, typename Value >
@@ -211,26 +229,26 @@ private:
 /**************************************************************************//**
 \brief SettingsVisitor that gets parameter values into a string.
 ********************************************************************************/
-class AUDACITY_DLL_API ShuttleGetAutomation final : public SettingsVisitor
+class AUDACITY_DLL_API ShuttleGetAutomation final : public ConstSettingsVisitor
 {
 public:
-   SettingsVisitor & Optional( bool & var ) override;
-   void Define( bool & var, const wxChar * key, bool vdefault,
-      bool vmin, bool vmax, bool vscl ) override;
-   void Define( int & var, const wxChar * key, int vdefault,
-      int vmin, int vmax, int vscl ) override;
-   void Define( size_t & var, const wxChar * key, int vdefault,
-      int vmin, int vmax, int vscl ) override;
-   void Define( float & var, const wxChar * key, float vdefault,
-      float vmin, float vmax, float vscl ) override;
-   void Define( double & var, const wxChar * key, float vdefault,
-      float vmin, float vmax, float vscl ) override;
-   void Define( double & var, const wxChar * key, double vdefault,
-      double vmin, double vmax, double vscl ) override;
-   void Define( wxString &var,  const wxChar * key, wxString vdefault,
-      wxString vmin, wxString vmax, wxString vscl ) override;
-   void DefineEnum( int &var, const wxChar * key, int vdefault,
-      const EnumValueSymbol strings[], size_t nStrings ) override;
+   ConstSettingsVisitor & Optional(const bool & var) override;
+   void Define(bool var, const wxChar * key, bool vdefault,
+      bool vmin, bool vmax, bool vscl) override;
+   void Define(int var, const wxChar * key, int vdefault,
+      int vmin, int vmax, int vscl) override;
+   void Define(size_t var, const wxChar * key, int vdefault,
+      int vmin, int vmax, int vscl) override;
+   void Define(float var, const wxChar * key, float vdefault,
+      float vmin, float vmax, float vscl) override;
+   void Define(double var, const wxChar * key, float vdefault,
+      float vmin, float vmax, float vscl) override;
+   void Define(double var, const wxChar * key, double vdefault,
+      double vmin, double vmax, double vscl) override;
+   void Define(const wxString &var,  const wxChar * key, wxString vdefault,
+      wxString vmin, wxString vmax, wxString vscl) override;
+   void DefineEnum(int var, const wxChar * key, int vdefault,
+      const EnumValueSymbol strings[], size_t nStrings) override;
 };
 
 /**************************************************************************//**

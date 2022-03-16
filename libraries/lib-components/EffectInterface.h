@@ -236,7 +236,12 @@ public:
 
    //! Visit settings, if defined.  false means no defined settings.
    //! Default implementation returns false
-   virtual bool VisitSettings( SettingsVisitor & );
+   virtual bool VisitSettings(
+      SettingsVisitor &visitor, EffectSettings &settings);
+   //! Visit settings, if defined.  false means no defined settings.
+   //! Default implementation returns false
+   virtual bool VisitSettings(
+      ConstSettingsVisitor &visitor, const EffectSettings &settings);
 };
 
 //! Extension of EffectDefinitionInterface with old system for settings

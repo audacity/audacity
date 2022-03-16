@@ -109,7 +109,11 @@ public:
    ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() const override;
    ManualPageID ManualPage() const override;
-   bool VisitSettings(SettingsVisitor & S) override;
+   bool VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
+      override;
+   bool VisitSettings(
+      ConstSettingsVisitor &visitor, const EffectSettings &settings)
+      override;
 
    // EffectDefinitionInterface implementation
 

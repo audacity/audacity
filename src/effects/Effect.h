@@ -93,7 +93,11 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // ComponentInterface implementation
 
    PluginPath GetPath() const override;
-   bool VisitSettings( SettingsVisitor & ) override;
+   bool VisitSettings(
+      SettingsVisitor &visitor, EffectSettings &settings) override;
+   bool VisitSettings(
+      ConstSettingsVisitor &visitor, const EffectSettings &settings)
+      override;
 
    ComponentInterfaceSymbol GetSymbol() const override;
 

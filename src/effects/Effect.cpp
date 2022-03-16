@@ -484,11 +484,20 @@ int Effect::ShowHostInterface(wxWindow &parent,
    return result;
 }
 
-bool Effect::VisitSettings( SettingsVisitor &S )
+bool Effect::VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
 {
    if (mClient)
-      return mClient->VisitSettings( S );
-   Parameters().Visit( *this, S );
+      return mClient->VisitSettings(visitor, settings);
+   Parameters().Visit(*this, visitor);
+   return true;
+}
+
+bool Effect::VisitSettings(
+   ConstSettingsVisitor &visitor, const EffectSettings &settings)
+{
+   if (mClient)
+      return mClient->VisitSettings(visitor, settings);
+   Parameters().Visit(*this, visitor);
    return true;
 }
 
@@ -818,7 +827,7 @@ bool Effect::SaveSettingsAsString(
    ShuttleGetAutomation S;
    S.mpEap = &eap;
    // To do: fix const_cast in use of VisitSettings, and pass settings
-   if( const_cast<Effect*>(this)->VisitSettings( S ) ){
+   if( const_cast<Effect*>(this)->VisitSettings( S, settings ) ){
       ;// got eap value using VisitSettings.
    }
    // Won't be needed in future
@@ -874,7 +883,7 @@ bool Effect::LoadSettingsFromString(
       S.SetForValidating( &eap );
       // VisitSettings returns false if not defined for this effect.
       // To do: fix const_cast in use of VisitSettings
-      if ( !const_cast<Effect*>(this)->VisitSettings( S ) )
+      if ( !const_cast<Effect*>(this)->VisitSettings(S, settings) )
          // the old method...
          success = LoadSettings(eap, settings);
       else if( !S.bOK )
@@ -882,7 +891,7 @@ bool Effect::LoadSettingsFromString(
       else{
          success = true;
          S.SetForWriting( &eap );
-         const_cast<Effect*>(this)->VisitSettings( S );
+         const_cast<Effect*>(this)->VisitSettings(S, settings);
       }
    }
 

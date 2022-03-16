@@ -100,7 +100,11 @@ public:
 
    // EffectProcessor implementation
 
-   bool VisitSettings( SettingsVisitor & S ) override;
+   bool VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
+      override;
+   bool VisitSettings(
+      ConstSettingsVisitor &visitor, const EffectSettings &settings)
+      override;
    int SetLispVarsFromParameters(const CommandParameters & parms, bool bTestOnly);
 
    // Effect implementation

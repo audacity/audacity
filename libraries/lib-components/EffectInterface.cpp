@@ -70,7 +70,14 @@ bool EffectDefinitionInterface::IsHiddenFromMenus() const
    return false;
 }
 
-bool EffectDefinitionInterface::VisitSettings( SettingsVisitor & )
+bool EffectDefinitionInterface::VisitSettings(
+   SettingsVisitor &, EffectSettings &)
+{
+   return false;
+}
+
+bool EffectDefinitionInterface::VisitSettings(
+   ConstSettingsVisitor &, const EffectSettings &)
 {
    return false;
 }
