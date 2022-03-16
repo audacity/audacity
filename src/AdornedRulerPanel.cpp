@@ -1221,7 +1221,7 @@ AttachedWindows::RegisteredFactory sKey{
    auto &viewInfo = ViewInfo::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   return safenew AdornedRulerPanel( &project, window.GetTopPanel(),
+   return safenew AdornedRulerPanel( &project, window.GetTrackListWindow(),
       wxID_ANY,
       wxDefaultPosition,
       wxSize( -1, AdornedRulerPanel::GetRulerHeight(false) ),
