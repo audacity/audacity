@@ -251,13 +251,6 @@ class COMPONENTS_API EffectDefinitionInterfaceEx  /* not final */
    : public EffectDefinitionInterface
 {
 public:
-   /*! @name Old settings interface
-    Old interface for saving and loading non-externalized settings
-    */
-   //! @{
-   virtual bool SetAutomationParameters(const CommandParameters & parms) = 0;
-   //! @}
-
    /*! @name settings
     Default implementation of the nominally const methods call through to the
     old non-const interface
@@ -266,8 +259,6 @@ public:
    Settings MakeSettings() const override;
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst) const override;
-   bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
    //! @}
 
 private:

@@ -883,9 +883,8 @@ bool LadspaEffect::InitializeInstance(
             FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(CurrentSettingsGroup());
+      LoadParameters(CurrentSettingsGroup(), settings);
    }
-
    return true;
 }
 
@@ -1103,7 +1102,8 @@ bool LadspaEffect::SaveSettings(
    return true;
 }
 
-bool LadspaEffect::SetAutomationParameters(const CommandParameters & parms)
+bool LadspaEffect::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
 {
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {
@@ -1126,15 +1126,16 @@ bool LadspaEffect::SetAutomationParameters(const CommandParameters & parms)
 }
 
 bool LadspaEffect::LoadUserPreset(
-   const RegistryPath & name, EffectSettings &) const
+   const RegistryPath & name, EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<LadspaEffect*>(this)->DoLoadUserPreset(name);
+   return const_cast<LadspaEffect*>(this)->DoLoadUserPreset(name, settings);
 }
 
-bool LadspaEffect::DoLoadUserPreset(const RegistryPath & name)
+bool LadspaEffect::DoLoadUserPreset(
+   const RegistryPath & name, EffectSettings &settings)
 {
-   if (!LoadParameters(name))
+   if (!LoadParameters(name, settings))
    {
       return false;
    }
@@ -1160,15 +1161,15 @@ bool LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
    return true;
 }
 
-bool LadspaEffect::LoadFactoryDefaults(EffectSettings &) const
+bool LadspaEffect::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<LadspaEffect*>(this)->DoLoadFactoryDefaults();
+   return const_cast<LadspaEffect*>(this)->DoLoadFactoryDefaults(settings);
 }
 
-bool LadspaEffect::DoLoadFactoryDefaults()
+bool LadspaEffect::DoLoadFactoryDefaults(EffectSettings &settings)
 {
-   if (!LoadParameters(FactoryDefaultsGroup()))
+   if (!LoadParameters(FactoryDefaultsGroup(), settings))
    {
       return false;
    }
@@ -1612,7 +1613,8 @@ void LadspaEffect::Unload()
    }
 }
 
-bool LadspaEffect::LoadParameters(const RegistryPath & group)
+bool LadspaEffect::LoadParameters(
+   const RegistryPath & group, EffectSettings &settings)
 {
    wxString parms;
    if (!GetConfig(*this, PluginSettings::Private, group, wxT("Parameters"),
@@ -1627,7 +1629,7 @@ bool LadspaEffect::LoadParameters(const RegistryPath & group)
       return false;
    }
 
-   return SetAutomationParameters(eap);
+   return LoadSettings(eap, settings);
 }
 
 bool LadspaEffect::SaveParameters(

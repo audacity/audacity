@@ -118,11 +118,12 @@ class VSTEffect final : public wxEvtHandler,
 
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
+   bool LoadSettings(
+      const CommandParameters & parms, Settings &settings) const override;
 
    bool LoadUserPreset(
       const RegistryPath & name, Settings &settings) const override;
-   bool DoLoadUserPreset(const RegistryPath & name);
+   bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
    bool SaveUserPreset(
       const RegistryPath & name, const Settings &settings) const override;
 
@@ -130,7 +131,7 @@ class VSTEffect final : public wxEvtHandler,
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool DoLoadFactoryPreset(int id);
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
-   bool DoLoadFactoryDefaults();
+   bool DoLoadFactoryDefaults(EffectSettings &settings);
 
    // EffectProcessor implementation
 
@@ -209,7 +210,7 @@ private:
    std::vector<int> GetEffectIDs();
 
    // Parameter loading and saving
-   bool LoadParameters(const RegistryPath & group);
+   bool LoadParameters(const RegistryPath & group, EffectSettings &settings);
    bool SaveParameters(
        const RegistryPath & group, const EffectSettings &settings) const;
 

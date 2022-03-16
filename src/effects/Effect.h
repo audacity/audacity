@@ -112,7 +112,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
+   bool LoadSettings(
+      const CommandParameters & parms, Settings &settings) const override;
 
    bool LoadUserPreset(
       const RegistryPath & name, Settings &settings) const override;
@@ -139,9 +140,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
+   size_t GetBlockSize() const override;  
 
-   // VisitSettings(), SaveSettings(), and SetAutomationParameters()
+   // VisitSettings(), SaveSettings(), and LoadSettings()
    // use the functions of EffectParameterMethods.  By default, this function
    // defines an empty list of parameters.
    virtual const EffectParameterMethods &Parameters() const;

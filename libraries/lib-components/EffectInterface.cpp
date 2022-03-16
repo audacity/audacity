@@ -89,16 +89,6 @@ bool EffectDefinitionInterfaceEx::CopySettingsContents(
    return FindMe(src) && FindMe(dst);
 }
 
-bool EffectDefinitionInterfaceEx::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
-{
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->SetAutomationParameters(parms);
-   else
-      return false;
-}
-
 EffectDefinitionInterfaceEx *
 EffectDefinitionInterfaceEx::FindMe(const Settings &settings) const
 {

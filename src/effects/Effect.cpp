@@ -501,11 +501,14 @@ bool Effect::SaveSettings(
    return true;
 }
 
-bool Effect::SetAutomationParameters(const CommandParameters & parms)
+bool Effect::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
 {
    if (mClient)
-      return mClient->SetAutomationParameters(parms);
-   return Parameters().Set( *this, parms );
+      return mClient->LoadSettings(parms, settings);
+   // The first argument, and with it the const_cast, will disappear when
+   // all built-in effects are stateless.
+   return Parameters().Set( *const_cast<Effect*>(this), parms );
 }
 
 bool Effect::LoadUserPreset(
@@ -863,8 +866,8 @@ bool Effect::SetAutomationParametersFromString(
    else
    {
       // If the string did not start with any of the significant substrings,
-      // then use VisitSettings or SetAutomationParameters to reinterpret it,
-      // or use SetAutomationParameters.
+      // then use VisitSettings or LoadSettings to reinterpret it,
+      // or use LoadSettings.
       // This interprets what was written by SaveSettings, above.
       CommandParameters eap(parms);
       ShuttleSetAutomation S;
@@ -873,7 +876,7 @@ bool Effect::SetAutomationParametersFromString(
       // To do: fix const_cast in use of VisitSettings
       if ( !const_cast<Effect*>(this)->VisitSettings( S ) )
          // the old method...
-         success = const_cast<Effect*>(this)->SetAutomationParameters(eap);
+         success = LoadSettings(eap, settings);
       else if( !S.bOK )
          success = false;
       else{

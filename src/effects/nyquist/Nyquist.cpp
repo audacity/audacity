@@ -318,7 +318,7 @@ bool NyquistEffect::VisitSettings(SettingsVisitor & S)
    }
    auto pSa = dynamic_cast<ShuttleSetAutomation*>(&S);
    if( pSa ){
-      SetAutomationParameters( *(pSa->mpEap) );
+      LoadSettings(*pSa->mpEap, DUMMY);
       return true;
    }
    auto pSd  = dynamic_cast<ShuttleGetDefinition*>(&S);
@@ -425,7 +425,15 @@ bool NyquistEffect::SaveSettings(
    return true;
 }
 
-bool NyquistEffect::SetAutomationParameters(const CommandParameters & parms)
+bool NyquistEffect::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<NyquistEffect*>(this)->DoLoadSettings(parms, settings);
+}
+
+bool NyquistEffect::DoLoadSettings(
+   const CommandParameters & parms, Settings &settings)
 {
    // Due to a constness problem that happens when using the prompt, we need
    // to be ready to switch the params to a local instance.
@@ -1069,10 +1077,11 @@ int NyquistEffect::ShowHostInterface(
 
       CommandParameters cp;
       cp.SetParameters(mParameters);
-      effect.SetAutomationParameters(cp);
+      effect.LoadSettings(cp, newSettings);
 
       // Show the normal (prompt or effect) interface
-      res = effect.ShowHostInterface(parent, factory, access, forceModal);
+      auto newAccess = std::make_shared<SimpleEffectSettingsAccess>(newSettings);
+      res = effect.ShowHostInterface(parent, factory, *newAccess, forceModal);
       if (res)
       {
          CommandParameters cp;

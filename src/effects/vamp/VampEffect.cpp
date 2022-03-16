@@ -192,7 +192,8 @@ bool VampEffect::SaveSettings(
    return true;
 }
 
-bool VampEffect::SetAutomationParameters(const CommandParameters & parms)
+bool VampEffect::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
 {
    // First pass verifies values
    for (size_t p = 0, paramCount = mParameters.size(); p < paramCount; p++)

@@ -366,7 +366,8 @@ bool VST3Effect::SaveSettings(
    return true;
 }
 
-bool VST3Effect::SetAutomationParameters(const CommandParameters& parms)
+bool VST3Effect::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
 {
    using namespace Steinberg;
 
