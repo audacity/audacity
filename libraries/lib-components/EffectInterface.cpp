@@ -90,7 +90,7 @@ bool EffectDefinitionInterfaceEx::CopySettingsContents(
 }
 
 bool EffectDefinitionInterfaceEx::LoadSettings(
-   CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, Settings &settings) const
 {
    if (auto pEffect = FindMe(settings))
       // Call through to old interface

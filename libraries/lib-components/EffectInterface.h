@@ -216,7 +216,7 @@ public:
     @return true on success
     */
    virtual bool LoadSettings(
-      CommandParameters & parms, Settings &settings) const = 0;
+      const CommandParameters & parms, Settings &settings) const = 0;
 
    //! Report names of factory presets
    virtual RegistryPaths GetFactoryPresets() const = 0;
@@ -267,7 +267,7 @@ public:
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst) const override;
    bool LoadSettings(
-      CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, Settings &settings) const override;
    //! @}
 
 private:
