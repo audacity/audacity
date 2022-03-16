@@ -66,10 +66,22 @@ private:
 
    const EffectParameterMethods& Parameters() const override;
 
+#if 0
+   // TODO simplify like this in C++20
+   using ParametersType = CapturedParameters<EffectEcho,
+        EffectParameter{
+         &EffectEcho::delay, L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f }
+      , EffectParameter{
+         &EffectEcho::decay, L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f }
+   >;
+#else
+
 static constexpr EffectParameter Delay{ &EffectEcho::delay,
    L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f };
 static constexpr EffectParameter Decay{ &EffectEcho::decay,
    L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f };
+
+#endif
 };
 
 #endif // __AUDACITY_EFFECT_ECHO__
