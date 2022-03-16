@@ -1314,7 +1314,7 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
-bool VSTEffect::InitializeInstance(EffectHostInterface *host)
+bool VSTEffect::InitializeInstance(EffectHostInterface *host, EffectSettings &)
 {
    mHost = host;
    if (mHost)

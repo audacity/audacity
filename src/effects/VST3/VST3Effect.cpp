@@ -848,7 +848,7 @@ bool VST3Effect::InitializePlugin()
    return true;
 }
 
-bool VST3Effect::InitializeInstance(EffectHostInterface* host)
+bool VST3Effect::InitializeInstance(EffectHostInterface* host, EffectSettings &)
 {
    mEffectHost = host;
 

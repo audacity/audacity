@@ -812,11 +812,12 @@ EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
          return empty;
 
       if (auto effect = dynamic_cast<EffectUIHostInterface *>(component);
-          effect && effect->Startup(nullptr))
+          effect && effect->Startup(nullptr, settings))
          // Self-hosting or "legacy" effect objects
          return (mEffects[ID] = { effect, std::move(settings) });
       else if (auto client = dynamic_cast<EffectUIClientInterface *>(component);
-          client && (hostEffect = std::make_shared<Effect>())->Startup(client))
+          client &&
+         (hostEffect = std::make_shared<Effect>())->Startup(client, settings))
          // plugin that inherits only EffectUIClientInterface needs a host
          return (mEffects[ID] =
             { (mHostEffects[ID] = move(hostEffect)).get(),
@@ -900,13 +901,13 @@ EffectManager::NewEffect(const PluginID & ID)
 
    // This makes a settings object too that is just discarded
    // But this will ultimately be rewritten
-   auto [component, settings] = LoadComponent(ID);
+   auto [component, dummySettings] = LoadComponent(ID);
    if (!component)
       return nullptr;
 
    auto effect = std::make_unique<Effect>();
    auto client = dynamic_cast<EffectUIClientInterface *>(component);
-   if (client && effect->Startup(client))
+   if (client && effect->Startup(client, dummySettings))
       return effect;
    else
       return nullptr;

@@ -125,7 +125,8 @@ public:
       const EffectSettingsAccessPtr &pAccess = nullptr
          //!< Sometimes given; only for UI
    ) = 0;
-   virtual bool Startup(EffectUIClientInterface *client) = 0;
+   virtual bool Startup(
+      EffectUIClientInterface *client, EffectSettings &settings) = 0;
 
    //! Update controls for the settings
    virtual bool TransferDataToWindow(const EffectSettings &settings) = 0;

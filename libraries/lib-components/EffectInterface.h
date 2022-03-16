@@ -476,7 +476,8 @@ public:
    /*!
     @return true if successful
     */
-   virtual bool InitializeInstance(EffectHostInterface *host) = 0;
+   virtual bool InitializeInstance(
+      EffectHostInterface *host, EffectSettings &settings) = 0;
 
    virtual bool IsGraphicalUI() = 0;
 

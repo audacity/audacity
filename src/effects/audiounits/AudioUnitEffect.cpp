@@ -1039,7 +1039,8 @@ bool AudioUnitEffect::InitializePlugin()
    return MakeListener();
 }
 
-bool AudioUnitEffect::InitializeInstance(EffectHostInterface *host)
+bool AudioUnitEffect::InitializeInstance(
+   EffectHostInterface *host, EffectSettings &)
 {
    OSStatus result;
 
@@ -1365,7 +1366,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
-   if (!slave->InitializeInstance(nullptr))
+   if (!slave->InitializeInstance(nullptr, settings))
    {
       return false;
    }

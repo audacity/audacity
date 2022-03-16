@@ -123,7 +123,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectProcessor implementation
 
-   bool InitializeInstance(EffectHostInterface *host) override;
+   bool InitializeInstance(
+      EffectHostInterface *host, EffectSettings &settings) override;
    
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -210,7 +211,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
       const EffectDialogFactory &dialogFactory,
       const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
    ) override;
-   bool Startup(EffectUIClientInterface *client) override;
+   bool Startup(
+      EffectUIClientInterface *client, EffectSettings &settings) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 

@@ -862,7 +862,8 @@ bool LadspaEffect::InitializePlugin()
    return true;
 }
 
-bool LadspaEffect::InitializeInstance(EffectHostInterface *host)
+bool LadspaEffect::InitializeInstance(
+   EffectHostInterface *host, EffectSettings &)
 {
    mHost = host;
 

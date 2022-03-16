@@ -213,10 +213,11 @@ bool Effect::SupportsAutomation() const
 
 // EffectProcessor implementation
 
-bool Effect::InitializeInstance(EffectHostInterface *host)
+bool Effect::InitializeInstance(
+   EffectHostInterface *host, EffectSettings &settings)
 {
    if (mClient)
-      return mClient->InitializeInstance(host);
+      return mClient->InitializeInstance(host, settings);
    return true;
 }
 
@@ -790,13 +791,13 @@ wxString Effect::GetSavedStateGroup()
 
 // Effect implementation
 
-bool Effect::Startup(EffectUIClientInterface *client)
+bool Effect::Startup(EffectUIClientInterface *client, EffectSettings &settings)
 {
    // Let destructor know we need to be shutdown
    mClient = client;
 
    // Set host so client startup can use our services
-   if (!InitializeInstance(this))
+   if (!InitializeInstance(this, settings))
    {
       // Bail if the client startup fails
       mClient = NULL;

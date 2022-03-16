@@ -929,7 +929,7 @@ bool LV2Effect::InitializePlugin()
    return true;
 }
 
-bool LV2Effect::InitializeInstance(EffectHostInterface *host)
+bool LV2Effect::InitializeInstance(EffectHostInterface *host, EffectSettings &)
 {
    mHost = host;
    if (mHost)
