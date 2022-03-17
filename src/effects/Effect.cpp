@@ -493,7 +493,7 @@ bool Effect::VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
 }
 
 bool Effect::VisitSettings(
-   ConstSettingsVisitor &visitor, const EffectSettings &settings)
+   ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
    if (mClient)
       return mClient->VisitSettings(visitor, settings);
@@ -826,8 +826,7 @@ bool Effect::SaveSettingsAsString(
    CommandParameters eap;
    ShuttleGetAutomation S;
    S.mpEap = &eap;
-   // To do: fix const_cast in use of VisitSettings, and pass settings
-   if( const_cast<Effect*>(this)->VisitSettings( S, settings ) ){
+   if( VisitSettings( S, settings ) ){
       ;// got eap value using VisitSettings.
    }
    // Won't be needed in future

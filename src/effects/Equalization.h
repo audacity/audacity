@@ -113,7 +113,7 @@ public:
       override;
    bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings)
-      override;
+      const override;
 
    // EffectDefinitionInterface implementation
 

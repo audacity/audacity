@@ -138,7 +138,8 @@ read-only information about effect properties, and getting and setting of
 parameters.
 
 *******************************************************************************************/
-class COMPONENTS_API EffectDefinitionInterface  /* not final */ : public ComponentInterface
+class COMPONENTS_API EffectDefinitionInterface  /* not final */
+   : public ComponentInterface
 {
 public:
    using Settings = EffectSettings;
@@ -241,7 +242,7 @@ public:
    //! Visit settings, if defined.  false means no defined settings.
    //! Default implementation returns false
    virtual bool VisitSettings(
-      ConstSettingsVisitor &visitor, const EffectSettings &settings);
+      ConstSettingsVisitor &visitor, const EffectSettings &settings) const;
 };
 
 //! Extension of EffectDefinitionInterface with old system for settings

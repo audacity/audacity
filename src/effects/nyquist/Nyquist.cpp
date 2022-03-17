@@ -314,7 +314,7 @@ bool NyquistEffect::VisitSettings(
 }
 
 bool NyquistEffect::VisitSettings(
-   ConstSettingsVisitor &visitor, const EffectSettings &settings)
+   ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
    // For now we assume Nyquist can do get and set better than VisitSettings can,
    // And so we ONLY use it for getting the signature.

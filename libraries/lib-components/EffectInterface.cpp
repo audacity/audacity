@@ -77,7 +77,7 @@ bool EffectDefinitionInterface::VisitSettings(
 }
 
 bool EffectDefinitionInterface::VisitSettings(
-   ConstSettingsVisitor &, const EffectSettings &)
+   ConstSettingsVisitor &, const EffectSettings &) const
 {
    return false;
 }

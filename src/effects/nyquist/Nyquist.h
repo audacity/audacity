@@ -104,7 +104,7 @@ public:
       override;
    bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings)
-      override;
+      const override;
    int SetLispVarsFromParameters(const CommandParameters & parms, bool bTestOnly);
 
    // Effect implementation

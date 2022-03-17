@@ -97,7 +97,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
       SettingsVisitor &visitor, EffectSettings &settings) override;
    bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings)
-      override;
+      const override;
 
    ComponentInterfaceSymbol GetSymbol() const override;
 

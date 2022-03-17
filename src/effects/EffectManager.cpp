@@ -166,13 +166,12 @@ TranslatableString EffectManager::GetCommandTip(const PluginID & ID)
 
 void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags)
 {
-   EffectDefinitionInterface *effect = nullptr;
+   const EffectDefinitionInterface *effect = nullptr;
    const EffectSettings *settings;
    AudacityCommand *command = nullptr;
 
    if (auto [edi, pSettings] = GetEffectAndDefaultSettings(ID); edi) {
-      // Fixing this will be a large and difficult thing, so for the time being we only cast the constness away
-      effect = const_cast<EffectDefinitionInterface*>(&edi->GetDefinition());
+      effect = &edi->GetDefinition();
       assert(settings);
       settings = pSettings;
    }
