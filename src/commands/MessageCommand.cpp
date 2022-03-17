@@ -26,10 +26,17 @@ const ComponentInterfaceSymbol MessageCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< MessageCommand > reg; }
 
-bool MessageCommand::DefineParams( ShuttleParams & S ){
-   S.Define( mMessage, wxT("Text"),  "Some message" );
+template<bool Const>
+bool MessageCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
+   S.Define( mMessage, wxT("Text"), wxString{"Some message"} );
    return true;
 }
+
+bool MessageCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool MessageCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 void MessageCommand::PopulateOrExchange(ShuttleGui & S)
 {

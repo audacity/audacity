@@ -70,6 +70,11 @@ bool EffectDefinitionInterface::IsHiddenFromMenus() const
    return false;
 }
 
+bool EffectDefinitionInterface::VisitSettings( SettingsVisitor & )
+{
+   return false;
+}
+
 auto EffectDefinitionInterfaceEx::MakeSettings() const -> Settings
 {
    // Temporary default implementation just saves self
@@ -142,11 +147,6 @@ EffectDefinitionInterfaceEx::FindMe(const Settings &settings) const
       return *ppEffect;
    return nullptr;
 }
-
-//bool EffectDefinitionInterface::DefineParams(ShuttleParams & S)
-//{
-//   return false;
-//}
 
 EffectProcessor::~EffectProcessor() = default;
 

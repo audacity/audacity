@@ -166,19 +166,24 @@ TranslatableString EffectManager::GetCommandTip(const PluginID & ID)
 
 void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags)
 {
-   ComponentInterface *command = nullptr;
-   if (auto effect = GetEffect(ID))
+   EffectDefinitionInterface *effect = nullptr;
+   AudacityCommand *command = nullptr;
+
+   if (auto edi = GetEffect(ID))
       // Fixing this will be a large and difficult thing, so for the time being we only cast the constness away
-      command = const_cast<EffectDefinitionInterface*>(&effect->GetDefinition());
-   if( !command )
+      effect = const_cast<EffectDefinitionInterface*>(&edi->GetDefinition());
+   else
       command = GetAudacityCommand( ID );
-   if( !command )
+   if ( !effect && !command )
       return;
 
-   ShuttleParams NullShuttle;
+   SettingsVisitor NullShuttle;
+
    // Test if it defines any parameters at all.
-   bool bHasParams = command->DefineParams( NullShuttle );
-   if( (flags ==0) && !bHasParams )
+   bool bHasParams = command
+      ? command->VisitSettings( NullShuttle )
+      : effect->VisitSettings( NullShuttle );
+   if ( (flags == 0) && !bHasParams )
       return;
 
    // This is capturing the output context into the shuttle.
@@ -189,10 +194,12 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
    // to (more sophisticated) users
    S.AddItem( GetCommandIdentifier( ID ).GET(), "id" );
    S.AddItem( GetCommandName( ID ).Translation(), "name" );
-   if( bHasParams ){
+   if ( bHasParams ) {
       S.StartField( "params" );
       S.StartArray();
-      command->DefineParams( S );
+      command
+         ? command->VisitSettings( S )
+         : effect->VisitSettings( S );
       S.EndArray();
       S.EndField();
    }

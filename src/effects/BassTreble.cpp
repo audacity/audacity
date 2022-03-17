@@ -176,7 +176,7 @@ size_t EffectBassTreble::RealtimeProcess(int group, EffectSettings &settings,
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
 
-bool EffectBassTreble::DefineParams( ShuttleParams & S ){
+bool EffectBassTreble::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_PARAM( mBass, Bass );
    S.SHUTTLE_PARAM( mTreble, Treble );
    S.SHUTTLE_PARAM( mGain, Gain );

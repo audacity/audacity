@@ -40,7 +40,7 @@ public:
 
    // EffectProcessor implementation
 
-   bool DefineParams( ShuttleParams & S ) override;
+   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 

@@ -133,7 +133,7 @@ size_t EffectAmplify::ProcessBlock(EffectSettings &,
 
    return blockLen;
 }
-bool EffectAmplify::DefineParams( ShuttleParams & S ){
+bool EffectAmplify::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_PARAM( mRatio, Ratio );
    if (!IsBatchProcessing())
       S.SHUTTLE_PARAM( mCanClip, Clipping );

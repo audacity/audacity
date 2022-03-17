@@ -38,7 +38,7 @@ public:
 
    // EffectProcessor implementation
 
-   bool DefineParams( ShuttleParams & S ) override;
+   bool VisitSettings( SettingsVisitor & S ) override;
    bool GetAutomationParameters(CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 

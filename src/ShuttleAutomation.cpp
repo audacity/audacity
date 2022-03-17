@@ -12,7 +12,7 @@
 #include "EffectAutomationParameters.h" // for command automation
 
 // ShuttleGetAutomation gets from the shuttle into typically a string.
-ShuttleParams & ShuttleGetAutomation::Optional( bool & var ){
+SettingsVisitor & ShuttleGetAutomation::Optional( bool & var ){
    pOptionalFlag = &var;
    return *this;
 };
@@ -69,7 +69,7 @@ void ShuttleGetAutomation::DefineEnum( int &var, const wxChar * key, const int v
 
 
 
-ShuttleParams & ShuttleSetAutomation::Optional( bool & var ){
+SettingsVisitor & ShuttleSetAutomation::Optional( bool & var ){
    pOptionalFlag = &var;
    return *this;
 };
@@ -180,4 +180,73 @@ void ShuttleSetAutomation::DefineEnum( int &var, const wxChar * key, const int v
    bOK = mpEap->ReadAndVerify(key, &temp, vdefault, strings, nStrings);
    if( bWrite && bOK)
       var = temp;
+}
+
+SettingsVisitor &ShuttleDefaults::Optional( bool & var )
+{
+   var = true;
+   pOptionalFlag = nullptr;
+   return *this;
+}
+
+SettingsVisitor &ShuttleDefaults::OptionalY( bool & var )
+{
+   var = true;
+   pOptionalFlag = nullptr;
+   return *this;
+}
+
+SettingsVisitor &ShuttleDefaults::OptionalN( bool & var )
+{
+   var = false;
+   pOptionalFlag = nullptr;
+   return *this;
+}
+
+void ShuttleDefaults::Define(bool & var, const wxChar *, bool vdefault,
+   bool, bool, bool)
+{
+   var = vdefault;
+}
+
+void ShuttleDefaults::Define(int & var, const wxChar *, int vdefault,
+   int, int, int)
+{
+   var = vdefault;
+}
+
+void ShuttleDefaults::Define(size_t & var, const wxChar *, int vdefault,
+   int, int, int)
+{
+   var = vdefault;
+}
+
+void ShuttleDefaults::Define(float & var, const wxChar *, float vdefault,
+   float, float, float)
+{
+   var = vdefault;
+}
+
+void ShuttleDefaults::Define(double & var, const wxChar *, float vdefault,
+   float, float, float)
+{
+   var = vdefault;
+}
+
+void ShuttleDefaults::Define(double & var, const wxChar *,  double   vdefault,
+   double, double, double)
+{
+   var = vdefault;
+}
+
+void ShuttleDefaults::Define(wxString &var, const wxChar *, wxString vdefault,
+   wxString, wxString, wxString)
+{
+   var = vdefault;
+}
+
+void ShuttleDefaults::DefineEnum(int &var, const wxChar *, int vdefault,
+   const EnumValueSymbol [], size_t)
+{
+   var = vdefault;
 }

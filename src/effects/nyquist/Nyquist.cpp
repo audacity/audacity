@@ -305,9 +305,9 @@ bool NyquistEffect::IsDefault() const
 }
 
 // EffectProcessor implementation
-bool NyquistEffect::DefineParams( ShuttleParams & S )
+bool NyquistEffect::VisitSettings(SettingsVisitor & S)
 {
-   // For now we assume Nyquist can do get and set better than DefineParams can,
+   // For now we assume Nyquist can do get and set better than VisitSettings can,
    // And so we ONLY use it for getting the signature.
    auto pGa = dynamic_cast<ShuttleGetAutomation*>(&S);
    if( pGa ){

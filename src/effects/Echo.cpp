@@ -143,7 +143,7 @@ size_t EffectEcho::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool EffectEcho::DefineParams( ShuttleParams & S ){
+bool EffectEcho::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_PARAM( delay, Delay );
    S.SHUTTLE_PARAM( decay, Decay );
    return true;

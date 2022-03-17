@@ -104,7 +104,7 @@ static const size_t nObsoleteActions = WXSIZEOF( kObsoleteActions );
 //
 //     Name       Type     Key               Def         Min      Max                        Scale
 
-// This one is legacy and is intentionally not reported by DefineParams:
+// This one is legacy and is intentionally not reported by VisitSettings:
 Param( DbIndex,   int,     wxT("Db"),         0,          0,       Enums::NumDbChoices - 1,   1  );
 
 Param( Threshold, double,  wxT("Threshold"),  -20.0,      -80.0,   -20.0,                     1  );
@@ -185,7 +185,7 @@ EffectType EffectTruncSilence::GetType() const
 
 // EffectProcessor implementation
 
-bool EffectTruncSilence::DefineParams( ShuttleParams & S ){
+bool EffectTruncSilence::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_PARAM( mThresholdDB, Threshold );
    S.SHUTTLE_ENUM_PARAM( mActionIndex, ActIndex, kActionStrings, nActions );
    S.SHUTTLE_PARAM( mInitialAllowedSilence, Minimum );

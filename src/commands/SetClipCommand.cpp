@@ -52,7 +52,8 @@ static const EnumValueSymbol kColourStrings[nColours] =
 };
 
 
-bool SetClipCommand::DefineParams( ShuttleParams & S ){ 
+template<bool Const>
+bool SetClipCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    S.OptionalY( bHasContainsTime   ).Define(     mContainsTime,   wxT("At"),         0.0, 0.0, 100000.0 );
    S.OptionalN( bHasColour         ).DefineEnum( mColour,         wxT("Color"),      kColour0, kColourStrings, nColours );
    // Allowing a negative start time is not a mistake.
@@ -60,6 +61,11 @@ bool SetClipCommand::DefineParams( ShuttleParams & S ){
    S.OptionalN( bHasT0             ).Define(     mT0,             wxT("Start"),      0.0, -5.0, 1000000.0);
    return true;
 };
+bool SetClipCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool SetClipCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 void SetClipCommand::PopulateOrExchange(ShuttleGui & S)
 {

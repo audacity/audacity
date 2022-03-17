@@ -76,7 +76,7 @@ public:
    size_t RealtimeProcess(int group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;
-   bool DefineParams( ShuttleParams & S ) override;
+   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 

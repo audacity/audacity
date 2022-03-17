@@ -89,7 +89,7 @@ EffectType EffectRepeat::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectRepeat::DefineParams( ShuttleParams & S ){
+bool EffectRepeat::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_PARAM( repeatCount, Count );
    return true;
 }

@@ -28,7 +28,9 @@ public:
    SetTrackBase();
    bool Apply(const CommandContext & context) override;
    virtual bool ApplyInner( const CommandContext &context, Track *t  );
-   virtual bool DefineParams( ShuttleParams & S ) override;
+   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
+   bool VisitSettings( SettingsVisitor & S ) override;
+   bool VisitSettings( ConstSettingsVisitor & S ) override;
    virtual void PopulateOrExchange(ShuttleGui & S) override;
 
    int mTrackIndex;
@@ -50,7 +52,9 @@ public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() const override {return XO("Sets various values for a track.");};
-   bool DefineParams( ShuttleParams & S ) override;
+   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
+   bool VisitSettings( SettingsVisitor & S ) override;
+   bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
@@ -77,7 +81,9 @@ public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() const override {return XO("Sets various values for a track.");};
-   bool DefineParams( ShuttleParams & S ) override;
+   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
+   bool VisitSettings( SettingsVisitor & S ) override;
+   bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
@@ -106,7 +112,9 @@ public:
    // ComponentInterface overrides
    ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
    TranslatableString GetDescription() const override {return XO("Sets various values for a track.");};
-   bool DefineParams( ShuttleParams & S ) override;
+   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
+   bool VisitSettings( SettingsVisitor & S ) override;
+   bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
@@ -154,13 +162,15 @@ public:
 
 public:
 
-   bool DefineParams( ShuttleParams & S ) override { 
+   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S ) {
       return 
-         SetTrackBase::DefineParams(S) &&
-         mSetStatus.DefineParams(S) &&  
-         mSetAudio.DefineParams(S) &&
-         mSetVisuals.DefineParams(S);
+         SetTrackBase::VisitSettings(S) &&
+         mSetStatus.VisitSettings(S) &&  
+         mSetAudio.VisitSettings(S) &&
+         mSetVisuals.VisitSettings(S);
    };
+   bool VisitSettings( SettingsVisitor & S ) override;
+   bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override {
       SetTrackBase::PopulateOrExchange( S );
       mSetStatus.PopulateOrExchange(S);

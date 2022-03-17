@@ -114,7 +114,7 @@ EffectType EffectTimeScale::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectTimeScale::DefineParams( ShuttleParams & S ){
+bool EffectTimeScale::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_PARAM( m_RatePercentChangeStart,  RatePercentStart );
    S.SHUTTLE_PARAM( m_RatePercentChangeEnd,    RatePercentEnd );
    S.SHUTTLE_PARAM( m_PitchHalfStepsStart,     HalfStepsStart );

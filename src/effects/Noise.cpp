@@ -175,7 +175,7 @@ size_t EffectNoise::ProcessBlock(EffectSettings &,
 
    return size;
 }
-bool EffectNoise::DefineParams( ShuttleParams & S ){
+bool EffectNoise::VisitSettings( SettingsVisitor & S ){
    S.SHUTTLE_ENUM_PARAM( mType, Type, kTypeStrings, nTypes );
    S.SHUTTLE_PARAM( mAmp, Amp );
    return true;

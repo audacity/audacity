@@ -49,8 +49,6 @@
 class ComponentInterfaceSymbol;
 using VendorSymbol = ComponentInterfaceSymbol;
 
-class ShuttleParams;
-
 /**************************************************************************//**
 
 \brief ComponentInterface provides name / vendor / version functions to identify
@@ -80,9 +78,6 @@ public:
 
    // non-virtual convenience function
    TranslatableString GetName() const;
-
-   // Parameters, if defined.  false means no defined parameters.
-   virtual bool DefineParams( ShuttleParams & WXUNUSED(S) ) { return false;};   
 };
 
 #endif // __AUDACITY_IDENTINTERFACE_H__
