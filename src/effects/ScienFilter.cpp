@@ -106,7 +106,8 @@ const EffectParameterMethods& EffectScienFilter::Parameters() const
    static CapturedParameters<EffectScienFilter,
       Type, Subtype, Order, Cutoff, Passband, Stopband
    > parameters{
-      [](EffectScienFilter &, EffectScienFilter &e, bool updating){
+      [](EffectScienFilter &, EffectSettings &, EffectScienFilter &e,
+         bool updating){
          if (updating) {
             e.mOrderIndex = e.mOrder - 1;
             e.CalcFilter();

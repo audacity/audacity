@@ -53,7 +53,7 @@ const EnumValueSymbol EffectToneGen::kWaveStrings[nWaveforms] =
 const EffectParameterMethods& EffectToneGen::Parameters() const
 {
    static const auto postSet =
-   [](EffectToneGen &, EffectToneGen &e, bool updating) {
+   [](EffectToneGen &, EffectSettings &, EffectToneGen &e, bool updating) {
       if (updating)
          e.PostSet();
       return true;

@@ -178,7 +178,8 @@ const EffectParameterMethods& EffectEqualization::Parameters() const
       // specified in chains, but must keep it that way for compatibility.
       InterpMeth
    > parameters {
-      [](EffectEqualization &, EffectEqualization &effect, bool updating){
+      [](EffectEqualization &, EffectSettings &, EffectEqualization &effect,
+         bool updating){
          if (updating) {
             if (effect.mInterp >= nInterpolations)
                effect.mInterp -= nInterpolations;

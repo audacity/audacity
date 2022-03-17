@@ -72,7 +72,7 @@ public:
    // Returns true if successful, but that is ignored when resetting
    // When all effects become stateless, EffectType argument won't be needed
    using PostSetFunction =
-      std::function< bool(EffectType&, Params &, bool) >;
+      std::function< bool(EffectType&, EffectSettings &, Params &, bool) >;
 
    // Constructors
 
@@ -81,7 +81,8 @@ public:
    template< typename Fn,
       // Require that the argument be callable with appropriate arguments
       typename = decltype( std::declval<Fn>()(
-         std::declval<EffectType &>(), std::declval<Params &>(), true) )
+         std::declval<EffectType &>(), std::declval<EffectSettings &>(),
+         std::declval<Params &>(), true) )
    >
    // Like the previous, but with an argument,
    // which is called at the end of Reset or Set.  Its return value is
@@ -94,7 +95,7 @@ public:
       EffectSettings dummy;
       if (auto pStruct = EffectType::FetchParameters(
          static_cast<EffectType&>(effect), dummy))
-         DoReset(effect, *pStruct, *this);
+         DoReset(effect, dummy, *pStruct, *this);
    }
    void Visit(Effect &effect,
       SettingsVisitor &visitor, EffectSettings &settings)
@@ -130,7 +131,7 @@ public:
       EffectSettings &settings) const override {
       if (auto pStruct = EffectType::FetchParameters(
          static_cast<EffectType&>(effect), settings))
-         return DoSet(effect, *pStruct, *this, parms);
+         return DoSet(effect, settings, *pStruct, *this, parms);
       else
          return false;
    }
@@ -148,12 +149,14 @@ private:
       // Do one assignment of the default value
       structure.*(param.mem) = param.def;
    }
-   static void DoReset(Effect &effect, Params &structure,
+   static void DoReset(Effect &effect, EffectSettings settings,
+      Params &structure,
       const CapturedParameters &This) {
       (ResetOne(structure, Parameters), ...);
       // Call the post-set function after all other assignments
       if (This.PostSetFn)
-         This.PostSetFn(static_cast<EffectType&>(effect), structure, false);
+         This.PostSetFn(
+            static_cast<EffectType&>(effect), settings, structure, false);
    }
 
    template< bool Const, typename Member, typename Type, typename Value >
@@ -222,14 +225,16 @@ private:
       structure.*(param.mem) = temp;
       return true;
    }
-   static bool DoSet(Effect &effect, Params &structure,
+   static bool DoSet(Effect &effect,
+      EffectSettings &settings, Params &structure,
       const CapturedParameters &This, const CommandParameters &parms) {
       if (!(SetOne(structure, parms, Parameters) && ...))
          return false;
       // Call the post-set function after all other assignments, or return
       // true if no function was given
       return !This.PostSetFn ||
-         This.PostSetFn(static_cast<EffectType&>(effect), structure, true);
+         This.PostSetFn(
+            static_cast<EffectType&>(effect), settings, structure, true);
    }
 };
 

@@ -59,7 +59,7 @@ const EffectParameterMethods& EffectAmplify::Parameters() const
    > batchParameters{
       // If invoking Amplify from a macro, mCanClip is not a parameter
       // but is always true
-      [](EffectAmplify &, EffectAmplify &e, bool) {
+      [](EffectAmplify &, EffectSettings &, EffectAmplify &e, bool) {
          e.mCanClip = true;
          return true;
       },

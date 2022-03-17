@@ -77,7 +77,8 @@ const EffectParameterMethods& EffectChangePitch::Parameters() const
       // PRL 2022: but that is so only when USE_SBSMS is not defined
       Percentage, UseSBSMS
    > parameters{
-      [](EffectChangePitch &, EffectChangePitch &e, bool updating){
+      [](EffectChangePitch &, EffectSettings &,
+         EffectChangePitch &e, bool updating){
          if (updating)
             e.Calc_SemitonesChange_fromPercentChange();
          return true;
