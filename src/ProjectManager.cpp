@@ -216,7 +216,6 @@ void InitProjectWindow( ProjectWindow &window )
    // Near as I can tell, this is only a problem under Windows.
    //
 
-
    //
    // Create the ToolDock
    //
@@ -361,6 +360,13 @@ AudacityProject *ProjectManager::New()
    auto &projectHistory = ProjectHistory::Get( project );
    auto &projectManager = Get( project );
    auto &window = ProjectWindow::Get( *p );
+
+   // Issue #2569
+   // There is a dependency on the order of initialisation.
+   // The menus must be created, and registered, before
+   // InitProjectWindows can UpdateMenus.
+   MenuManager::Get(project).CreateMenusAndCommands(project);
+
    InitProjectWindow( window );
 
    // wxGTK3 seems to need to require creating the window using default position
@@ -372,8 +378,6 @@ AudacityProject *ProjectManager::New()
    // This may report an error.
    projectFileManager.OpenNewProject();
 
-   MenuManager::Get( project ).CreateMenusAndCommands( project );
-   
    projectHistory.InitialState();
    projectManager.RestartTimer();
    
