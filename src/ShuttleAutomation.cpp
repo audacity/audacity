@@ -9,7 +9,7 @@
 **********************************************************************/
 
 #include "ShuttleAutomation.h"
-#include "EffectAutomationParameters.h" // for command automation
+#include "EffectAutomationParameters.h"
 
 EffectParameterMethods::~EffectParameterMethods() = default;
 
@@ -79,7 +79,7 @@ SettingsVisitor & ShuttleSetAutomation::Optional( bool & var ){
 // Tests for parameter being optional.
 // Prepares for next parameter by clearing the pointer.
 // If the parameter is optional, finds out if it was actually provided.
-// i.e. could it be got from automation?
+// i.e. could it be got from a macro?
 // The result goes into the flag variable, so we typically ignore the result.
 bool ShuttleSetAutomation::CouldGet( const wxString &key ){
    // Not optional?  Can get as we will get the default, at worst.

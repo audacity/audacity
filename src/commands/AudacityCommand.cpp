@@ -117,7 +117,7 @@ wxDialog *AudacityCommand::CreateUI(wxWindow *parent, AudacityCommand * WXUNUSED
    return NULL;
 }
 
-bool AudacityCommand::GetAutomationParametersAsString(wxString & parms)
+bool AudacityCommand::SaveSettingsAsString(wxString & parms)
 {
    CommandParameters eap;
 
@@ -135,7 +135,7 @@ bool AudacityCommand::GetAutomationParametersAsString(wxString & parms)
    return eap.GetParameters(parms);
 }
 
-bool AudacityCommand::SetAutomationParametersFromString(const wxString & parms)
+bool AudacityCommand::LoadSettingsFromString(const wxString & parms)
 {
    wxString preset = parms;
 

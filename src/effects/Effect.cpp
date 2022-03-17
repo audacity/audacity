@@ -525,7 +525,7 @@ bool Effect::LoadUserPreset(
       name, wxT("Parameters"), parms))
       return false;
 
-   return SetAutomationParametersFromString(parms, settings);
+   return LoadSettingsFromString(parms, settings);
 }
 
 bool Effect::SaveUserPreset(
@@ -537,7 +537,7 @@ bool Effect::SaveUserPreset(
 
    // Save all settings as a single string value in the registry
    wxString parms;
-   if (!GetAutomationParametersAsString(settings, parms))
+   if (!SaveSettingsAsString(settings, parms))
       return false;
 
    return SetConfig(GetDefinition(), PluginSettings::Private,
@@ -633,7 +633,7 @@ static const FileNames::FileTypes &PresetTypes()
 void Effect::ExportPresets(const EffectSettings &settings) const
 {
    wxString params;
-   GetAutomationParametersAsString(settings, params);
+   SaveSettingsAsString(settings, params);
    auto commandId = GetSquashedName(GetSymbol().Internal());
    params =  commandId.GET() + ":" + params;
 
@@ -721,7 +721,7 @@ void Effect::ImportPresets(EffectSettings &settings)
             }
             return;
          }
-         SetAutomationParametersFromString(params, settings);
+         LoadSettingsFromString(params, settings);
       }
    }
 
@@ -811,7 +811,7 @@ bool Effect::Startup(EffectUIClientInterface *client, EffectSettings &settings)
    return true;
 }
 
-bool Effect::GetAutomationParametersAsString(
+bool Effect::SaveSettingsAsString(
    const EffectSettings &settings, wxString & parms) const
 {
    CommandParameters eap;
@@ -830,7 +830,7 @@ bool Effect::GetAutomationParametersAsString(
    return eap.GetParameters(parms);
 }
 
-bool Effect::SetAutomationParametersFromString(
+bool Effect::LoadSettingsFromString(
    const wxString & parms, EffectSettings &settings) const
 {
    // If the string starts with one of certain significant substrings,

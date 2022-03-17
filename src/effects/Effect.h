@@ -199,9 +199,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // The Effect class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
    void Preview(EffectSettingsAccess &access, bool dryOnly) override;
-   bool GetAutomationParametersAsString(
+   bool SaveSettingsAsString(
       const EffectSettings &settings, wxString & parms) const override;
-   bool SetAutomationParametersFromString(
+   bool LoadSettingsFromString(
       const wxString & parms, EffectSettings &settings) const override;
    bool IsBatchProcessing() const override;
    void SetBatchProcessing() override;

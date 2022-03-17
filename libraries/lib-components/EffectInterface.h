@@ -44,7 +44,7 @@
 
 #include "ComponentInterface.h"
 #include "ComponentInterfaceSymbol.h"
-#include "EffectAutomationParameters.h" // for command automation
+#include "EffectAutomationParameters.h"
 
 #include "TypedAny.h"
 #include <memory>
