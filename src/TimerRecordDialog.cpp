@@ -403,7 +403,7 @@ void TimerRecordDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 
    // MY: Estimate here if we have enough disk space to
    // complete this Timer Recording.
-   // If we dont think there is enough space then ask the user
+   // If we don't think there is enough space then ask the user
    // if they want to continue.
    // We don't stop the user from starting the recording 
    // as its possible that they plan to free up some
