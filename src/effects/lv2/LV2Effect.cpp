@@ -929,7 +929,8 @@ bool LV2Effect::InitializePlugin()
    return true;
 }
 
-bool LV2Effect::InitializeInstance(EffectHostInterface *host, EffectSettings &)
+bool LV2Effect::InitializeInstance(
+   EffectHostInterface *host, EffectSettings &settings)
 {
    mHost = host;
    if (mHost)
@@ -951,7 +952,7 @@ bool LV2Effect::InitializeInstance(EffectHostInterface *host, EffectSettings &)
          false);
       if (!haveDefaults)
       {
-         SaveParameters(FactoryDefaultsGroup());
+         SaveParameters(FactoryDefaultsGroup(), settings);
          SetConfig(*this, PluginSettings::Private,
             FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
@@ -1464,7 +1465,8 @@ int LV2Effect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool LV2Effect::GetAutomationParameters(CommandParameters &parms) const
+bool LV2Effect::SaveSettings(
+   const EffectSettings &, CommandParameters & parms) const
 {
    for (auto & port : mControlPorts)
    {
@@ -1646,9 +1648,9 @@ bool LV2Effect::DoLoadUserPreset(const RegistryPath &name)
 }
 
 bool LV2Effect::SaveUserPreset(
-   const RegistryPath &name, const EffectSettings &) const
+   const RegistryPath &name, const EffectSettings &settings) const
 {
-   return SaveParameters(name);
+   return SaveParameters(name, settings);
 }
 
 RegistryPaths LV2Effect::GetFactoryPresets() const
@@ -1797,10 +1799,11 @@ bool LV2Effect::LoadParameters(const RegistryPath &group)
    return SetAutomationParameters(eap);
 }
 
-bool LV2Effect::SaveParameters(const RegistryPath &group) const
+bool LV2Effect::SaveParameters(
+   const RegistryPath &group, const EffectSettings &settings) const
 {
    CommandParameters eap;
-   if (!GetAutomationParameters(eap))
+   if (!SaveSettings(settings, eap))
    {
       return false;
    }

@@ -57,7 +57,8 @@ public:
    bool IsInteractive() const override;
    bool IsDefault() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) const override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    // EffectProcessor implementation

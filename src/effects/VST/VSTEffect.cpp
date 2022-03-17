@@ -290,7 +290,8 @@ public:
       return mAutomatable;
    }
 
-   bool GetAutomationParameters(CommandParameters &) const override { return true; }
+   bool SaveSettings(const EffectSettings &, CommandParameters &) const override
+      { return true; }
    bool SetAutomationParameters(const CommandParameters &) override { return true; }
 
    bool LoadUserPreset(const RegistryPath &, Settings &) const override
@@ -1315,7 +1316,8 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
-bool VSTEffect::InitializeInstance(EffectHostInterface *host, EffectSettings &)
+bool VSTEffect::InitializeInstance(
+   EffectHostInterface *host, EffectSettings &settings)
 {
    mHost = host;
    if (mHost)
@@ -1335,7 +1337,7 @@ bool VSTEffect::InitializeInstance(EffectHostInterface *host, EffectSettings &)
          false);
       if (!haveDefaults)
       {
-         SaveParameters(FactoryDefaultsGroup());
+         SaveParameters(FactoryDefaultsGroup(), settings);
          SetConfig(*this, PluginSettings::Private,
             FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
@@ -1620,7 +1622,8 @@ int VSTEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool VSTEffect::GetAutomationParameters(CommandParameters & parms) const
+bool VSTEffect::SaveSettings(
+   const EffectSettings &, CommandParameters & parms) const
 {
    for (int i = 0; i < mAEffect->numParams; i++)
    {
@@ -1689,9 +1692,9 @@ bool VSTEffect::DoLoadUserPreset(const RegistryPath & name)
 }
 
 bool VSTEffect::SaveUserPreset(
-   const RegistryPath & name, const EffectSettings &) const
+   const RegistryPath & name, const EffectSettings &settings) const
 {
-   return SaveParameters(name);
+   return SaveParameters(name, settings);
 }
 
 RegistryPaths VSTEffect::GetFactoryPresets() const
@@ -2354,7 +2357,8 @@ bool VSTEffect::LoadParameters(const RegistryPath & group)
    return SetAutomationParameters(eap);
 }
 
-bool VSTEffect::SaveParameters(const RegistryPath & group) const
+bool VSTEffect::SaveParameters(
+   const RegistryPath & group, const EffectSettings &settings) const
 {
    SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"),
       mAEffect->uniqueID);
@@ -2378,7 +2382,7 @@ bool VSTEffect::SaveParameters(const RegistryPath & group) const
    }
 
    CommandParameters eap;
-   if (!GetAutomationParameters(eap))
+   if (!SaveSettings(settings, eap))
    {
       return false;
    }

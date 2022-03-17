@@ -863,7 +863,7 @@ bool LadspaEffect::InitializePlugin()
 }
 
 bool LadspaEffect::InitializeInstance(
-   EffectHostInterface *host, EffectSettings &)
+   EffectHostInterface *host, EffectSettings &settings)
 {
    mHost = host;
 
@@ -878,7 +878,7 @@ bool LadspaEffect::InitializeInstance(
          false);
       if (!haveDefaults)
       {
-         SaveParameters(FactoryDefaultsGroup());
+         SaveParameters(FactoryDefaultsGroup(), settings);
          SetConfig(*this, PluginSettings::Private,
             FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
@@ -1084,7 +1084,8 @@ int LadspaEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool LadspaEffect::GetAutomationParameters(CommandParameters & parms) const
+bool LadspaEffect::SaveSettings(
+   const EffectSettings &, CommandParameters & parms) const
 {
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {
@@ -1144,9 +1145,9 @@ bool LadspaEffect::DoLoadUserPreset(const RegistryPath & name)
 }
 
 bool LadspaEffect::SaveUserPreset(
-   const RegistryPath & name, const EffectSettings &) const
+   const RegistryPath & name, const EffectSettings &settings) const
 {
-   return SaveParameters(name);
+   return SaveParameters(name, settings);
 }
 
 RegistryPaths LadspaEffect::GetFactoryPresets() const
@@ -1629,10 +1630,11 @@ bool LadspaEffect::LoadParameters(const RegistryPath & group)
    return SetAutomationParameters(eap);
 }
 
-bool LadspaEffect::SaveParameters(const RegistryPath & group) const
+bool LadspaEffect::SaveParameters(
+   const RegistryPath & group, const EffectSettings &settings) const
 {
    CommandParameters eap;
-   if (!GetAutomationParameters(eap))
+   if (!SaveSettings(settings, eap))
    {
       return false;
    }

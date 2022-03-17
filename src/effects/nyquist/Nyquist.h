@@ -91,7 +91,8 @@ public:
    bool IsDefault() const override;
    bool EnablesDebug() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) const override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    // EffectProcessor implementation

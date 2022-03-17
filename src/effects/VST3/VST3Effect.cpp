@@ -340,7 +340,8 @@ bool VST3Effect::SupportsAutomation() const
    return false;
 }
 
-bool VST3Effect::GetAutomationParameters(CommandParameters& parms) const
+bool VST3Effect::SaveSettings(
+   const EffectSettings &, CommandParameters & parms) const
 {
    if(mEditController == nullptr)
       return false;

@@ -277,7 +277,8 @@ public:
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) const override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    bool LoadUserPreset(
@@ -352,7 +353,8 @@ public:
 
 private:
    bool LoadParameters(const RegistryPath & group);
-   bool SaveParameters(const RegistryPath & group) const;
+   bool SaveParameters(
+      const RegistryPath & group, const EffectSettings &settings) const;
 
    LV2Wrapper *InitInstance(float sampleRate);
    void FreeInstance(LV2Wrapper *wrapper);

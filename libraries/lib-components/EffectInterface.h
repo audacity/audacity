@@ -255,9 +255,6 @@ public:
     Old interface for saving and loading non-externalized settings
     */
    //! @{
-   //! Save current settings into parms
-   virtual bool GetAutomationParameters(CommandParameters & parms) const = 0;
-   //! Change settings to those stored in parms
    virtual bool SetAutomationParameters(const CommandParameters & parms) = 0;
    //! @}
 
@@ -269,8 +266,6 @@ public:
    Settings MakeSettings() const override;
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst) const override;
-   bool SaveSettings(
-      const Settings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
       CommandParameters & parms, Settings &settings) const override;
    //! @}

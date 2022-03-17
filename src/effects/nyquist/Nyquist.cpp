@@ -307,11 +307,13 @@ bool NyquistEffect::IsDefault() const
 // EffectProcessor implementation
 bool NyquistEffect::VisitSettings(SettingsVisitor & S)
 {
+   EffectSettings DUMMY;
+
    // For now we assume Nyquist can do get and set better than VisitSettings can,
    // And so we ONLY use it for getting the signature.
    auto pGa = dynamic_cast<ShuttleGetAutomation*>(&S);
    if( pGa ){
-      GetAutomationParameters( *(pGa->mpEap) );
+      SaveSettings(DUMMY, *pGa->mpEap);
       return true;
    }
    auto pSa = dynamic_cast<ShuttleSetAutomation*>(&S);
@@ -372,7 +374,8 @@ bool NyquistEffect::VisitSettings(SettingsVisitor & S)
    return true;
 }
 
-bool NyquistEffect::GetAutomationParameters(CommandParameters & parms) const
+bool NyquistEffect::SaveSettings(
+   const EffectSettings &, CommandParameters & parms) const
 {
    if (mIsPrompt)
    {
@@ -1058,6 +1061,9 @@ int NyquistEffect::ShowHostInterface(
 
    if (IsBatchProcessing())
    {
+      // Must give effect its own settings to interpret, not those in access
+      auto newSettings = effect.MakeSettings();
+
       effect.SetBatchProcessing();
       effect.SetCommand(mInputCmd);
 
@@ -1070,7 +1076,7 @@ int NyquistEffect::ShowHostInterface(
       if (res)
       {
          CommandParameters cp;
-         effect.GetAutomationParameters(cp);
+         effect.SaveSettings(newSettings, cp);
          cp.GetParameters(mParameters);
       }
    }

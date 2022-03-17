@@ -64,7 +64,8 @@ public:
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) const override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
    bool LoadUserPreset(
@@ -140,7 +141,8 @@ private:
    void Unload();
 
    bool LoadParameters(const RegistryPath & group);
-   bool SaveParameters(const RegistryPath & group) const;
+   bool SaveParameters(
+      const RegistryPath & group, const EffectSettings &settings) const;
 
    LADSPA_Handle InitInstance(float sampleRate);
    void FreeInstance(LADSPA_Handle handle);

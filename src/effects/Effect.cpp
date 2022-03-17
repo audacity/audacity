@@ -492,10 +492,11 @@ bool Effect::VisitSettings( SettingsVisitor &S )
    return true;
 }
 
-bool Effect::GetAutomationParameters(CommandParameters & parms) const
+bool Effect::SaveSettings(
+   const EffectSettings &settings, CommandParameters & parms) const
 {
    if (mClient)
-      return mClient->GetAutomationParameters(parms);
+      return mClient->SaveSettings(settings, parms);
    Parameters().Get( *this, parms );
    return true;
 }
@@ -808,7 +809,7 @@ bool Effect::Startup(EffectUIClientInterface *client, EffectSettings &settings)
 }
 
 bool Effect::GetAutomationParametersAsString(
-   const EffectSettings &, wxString & parms) const
+   const EffectSettings &settings, wxString & parms) const
 {
    CommandParameters eap;
    ShuttleGetAutomation S;
@@ -818,7 +819,7 @@ bool Effect::GetAutomationParametersAsString(
       ;// got eap value using VisitSettings.
    }
    // Won't be needed in future
-   else if (!GetAutomationParameters(eap))
+   else if (!SaveSettings(settings, eap))
    {
       return false;
    }
@@ -864,7 +865,7 @@ bool Effect::SetAutomationParametersFromString(
       // If the string did not start with any of the significant substrings,
       // then use VisitSettings or SetAutomationParameters to reinterpret it,
       // or use SetAutomationParameters.
-      // This interprets what was written by GetAutomationParameters, above.
+      // This interprets what was written by SaveSettings, above.
       CommandParameters eap(parms);
       ShuttleSetAutomation S;
       S.SetForValidating( &eap );
