@@ -24,11 +24,14 @@ class AUDACITY_DLL_API EffectParameterMethods {
 public:
    virtual ~EffectParameterMethods();
    virtual void Reset(Effect &effect) const = 0;
-   virtual void Visit(Effect &effect, SettingsVisitor &visitor) const = 0;
-   virtual void Visit(
-      const Effect &effect, ConstSettingsVisitor &visitor) const = 0;
-   virtual void Get(const Effect &effect, CommandParameters & parms) const = 0;
-   virtual bool Set(Effect &effect, const CommandParameters & parms) const = 0;
+   virtual void Visit(Effect &effect,
+      SettingsVisitor &visitor, EffectSettings &settings) const = 0;
+   virtual void Visit(const Effect &effect,
+      ConstSettingsVisitor &visitor, const EffectSettings &settings) const = 0;
+   virtual void Get(const Effect &effect, const EffectSettings &settings,
+      CommandParameters & parms) const = 0;
+   virtual bool Set(Effect &effect,
+      const CommandParameters & parms, EffectSettings &settings) const = 0;
 };
 
 //! Generates EffectParameterMethods overrides from variadic template arguments.
@@ -93,36 +96,40 @@ public:
          static_cast<EffectType&>(effect), dummy))
          DoReset(effect, *pStruct, *this);
    }
-   void Visit(Effect &effect, SettingsVisitor &visitor)
+   void Visit(Effect &effect,
+      SettingsVisitor &visitor, EffectSettings &settings)
       const override {
-      EffectSettings dummy;
       if (auto pStruct = EffectType::FetchParameters(
-         static_cast<EffectType&>(effect), dummy))
+         static_cast<EffectType&>(effect), settings))
          DoVisit<false>(*pStruct, visitor);
    }
-   void Visit(const Effect &effect, ConstSettingsVisitor &visitor)
+   void Visit(const Effect &effect,
+      ConstSettingsVisitor &visitor, const EffectSettings &settings)
       const override {
-      EffectSettings dummy;
       // const_cast the effect...
       auto &nonconstEffect = const_cast<Effect&>(effect);
+      // ... and the settings ...
+      auto &nonconstSettings = const_cast<EffectSettings&>(settings);
       // ... but only to fetch the structure and pass it as const &
       if (auto pStruct = EffectType::FetchParameters(
-         static_cast<EffectType&>(nonconstEffect), dummy))
+         static_cast<EffectType&>(nonconstEffect), nonconstSettings))
          DoVisit(*pStruct, visitor);
    }
-   void Get(const Effect &effect, CommandParameters & parms) const override {
-      EffectSettings dummy;
+   void Get(const Effect &effect, const EffectSettings &settings,
+      CommandParameters & parms) const override {
       // const_cast the effect...
       auto &nonconstEffect = const_cast<Effect &>(effect);
+      // ... and the settings ...
+      auto &nonconstSettings = const_cast<EffectSettings&>(settings);
       // ... but only to fetch the structure and pass it as const &
       if (auto pStruct = EffectType::FetchParameters(
-         static_cast<EffectType&>(nonconstEffect), dummy))
+         static_cast<EffectType&>(nonconstEffect), nonconstSettings))
          DoGet(*pStruct, parms);
    }
-   bool Set(Effect &effect, const CommandParameters & parms) const override {
-      EffectSettings dummy;
+   bool Set(Effect &effect, const CommandParameters & parms,
+      EffectSettings &settings) const override {
       if (auto pStruct = EffectType::FetchParameters(
-         static_cast<EffectType&>(effect), dummy))
+         static_cast<EffectType&>(effect), settings))
          return DoSet(effect, *pStruct, *this, parms);
       else
          return false;

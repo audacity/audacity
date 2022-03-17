@@ -488,7 +488,7 @@ bool Effect::VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
 {
    if (mClient)
       return mClient->VisitSettings(visitor, settings);
-   Parameters().Visit(*this, visitor);
+   Parameters().Visit(*this, visitor, settings);
    return true;
 }
 
@@ -497,7 +497,7 @@ bool Effect::VisitSettings(
 {
    if (mClient)
       return mClient->VisitSettings(visitor, settings);
-   Parameters().Visit(*this, visitor);
+   Parameters().Visit(*this, visitor, settings);
    return true;
 }
 
@@ -506,7 +506,7 @@ bool Effect::SaveSettings(
 {
    if (mClient)
       return mClient->SaveSettings(settings, parms);
-   Parameters().Get( *this, parms );
+   Parameters().Get( *this, settings, parms );
    return true;
 }
 
@@ -517,7 +517,7 @@ bool Effect::LoadSettings(
       return mClient->LoadSettings(parms, settings);
    // The first argument, and with it the const_cast, will disappear when
    // all built-in effects are stateless.
-   return Parameters().Set( *const_cast<Effect*>(this), parms );
+   return Parameters().Set( *const_cast<Effect*>(this), parms, settings );
 }
 
 bool Effect::LoadUserPreset(
