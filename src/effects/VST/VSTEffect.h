@@ -12,7 +12,7 @@
 
 #if USE_VST
 
-#include "EffectInterface.h"
+#include "../Effect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
@@ -90,10 +90,10 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 /// audio processing via a VSTEffectLink
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class VSTEffect final : public wxEvtHandler,
-                  public EffectUIClientInterface,
-                  public XMLTagHandler,
-                  public VSTEffectLink
+class VSTEffect final
+   : public Effect
+   , public XMLTagHandler
+   , public VSTEffectLink
 {
  public:
    VSTEffect(const PluginPath & path, VSTEffect *master = NULL);

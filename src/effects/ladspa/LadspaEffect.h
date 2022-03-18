@@ -19,7 +19,7 @@ class NumericTextCtrl;
 #include <wx/event.h> // to inherit
 #include <wx/weakref.h>
 
-#include "EffectInterface.h"
+#include "../Effect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
@@ -40,8 +40,7 @@ class NumericTextCtrl;
 
 class LadspaEffectMeter;
 
-class LadspaEffect final : public wxEvtHandler,
-                     public EffectUIClientInterface
+class LadspaEffect final : public Effect
 {
 public:
    LadspaEffect(const wxString & path, int index);

@@ -19,7 +19,7 @@
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <public.sdk/source/vst/hosting/module.h>
 
-#include "EffectInterface.h"
+#include "../Effect.h"
 #include "internal/ComponentHandler.h"
 
 #include "SampleCount.h"
@@ -41,7 +41,7 @@ class ParameterChangesProvider;
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
-class VST3Effect final : public EffectUIClientInterface
+class VST3Effect final : public Effect
 {
    //Keep strong reference to a module while effect is alive
    std::shared_ptr<VST3::Hosting::Module> mModule;

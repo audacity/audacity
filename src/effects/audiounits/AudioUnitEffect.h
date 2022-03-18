@@ -21,7 +21,7 @@
 #include <AudioUnit/AudioUnit.h>
 #include <AudioUnit/AudioUnitProperties.h>
 
-#include "EffectInterface.h"
+#include "../Effect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
@@ -38,8 +38,7 @@ using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
 
-class AudioUnitEffect : public wxEvtHandler,
-                        public EffectUIClientInterface
+class AudioUnitEffect final : public Effect
 {
 public:
    AudioUnitEffect(const PluginPath & path,
