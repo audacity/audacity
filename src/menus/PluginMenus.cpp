@@ -42,19 +42,19 @@ AttachedWindows::RegisteredFactory sMacrosWindowKey{
 };
 
 bool ShowManager(
-   PluginManager &pm, wxWindow *parent, EffectType type)
+   PluginManager &pm, wxWindow *parent)
 {
    pm.CheckForUpdates();
 
-   PluginRegistrationDialog dlg(parent, type);
+   PluginRegistrationDialog dlg(parent);
    return dlg.ShowModal() == wxID_OK;
 }
 
-void DoManagePluginsMenu(AudacityProject &project, EffectType type)
+void DoManagePluginsMenu(AudacityProject &project)
 {
    auto &window = GetProjectFrame( project );
    auto &pm = PluginManager::Get();
-   if (ShowManager(pm, &window, type))
+   if (ShowManager(pm, &window))
       MenuCreator::RebuildAllMenuBars();
 }
 
@@ -441,7 +441,7 @@ void OnResetConfig(const CommandContext &context)
 void OnManageGenerators(const CommandContext &context)
 {
    auto &project = context.project;
-   DoManagePluginsMenu(project, EffectTypeGenerate);
+   DoManagePluginsMenu(project);
 }
 
 void OnEffect(const CommandContext &context)
@@ -453,7 +453,7 @@ void OnEffect(const CommandContext &context)
 void OnManageEffects(const CommandContext &context)
 {
    auto &project = context.project;
-   DoManagePluginsMenu(project, EffectTypeProcess);
+   DoManagePluginsMenu(project);
 }
 
 void OnAnalyzer2(wxCommandEvent& evt) { return; }
@@ -529,13 +529,13 @@ void OnRepeatLastTool(const CommandContext& context)
 void OnManageAnalyzers(const CommandContext &context)
 {
    auto &project = context.project;
-   DoManagePluginsMenu(project, EffectTypeAnalyze);
+   DoManagePluginsMenu(project);
 }
 
 void OnManageTools(const CommandContext &context )
 {
    auto &project = context.project;
-   DoManagePluginsMenu(project, EffectTypeTool);
+   DoManagePluginsMenu(project);
 }
 
 void OnManageMacros(const CommandContext &context )
