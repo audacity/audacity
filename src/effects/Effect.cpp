@@ -59,8 +59,6 @@ using t2bHash = std::unordered_map< void*, bool >;
 
 Effect::Effect()
 {
-   mClient = NULL;
-
    mTracks = NULL;
    mT0 = 0.0;
    mT1 = 0.0;
@@ -96,75 +94,42 @@ Effect::~Effect()
       mHostUIDialog->Close();
 }
 
-// EffectDefinitionInterface implementation
-
-EffectType Effect::GetType() const
-{
-   if (mClient)
-   {
-      return mClient->GetType();
-   }
-
-   return EffectTypeNone;
-}
+// ComponentInterface implementation
 
 PluginPath Effect::GetPath() const
 {
-   if (mClient)
-   {
-      return mClient->GetPath();
-   }
-
    return BUILTIN_EFFECT_PREFIX + GetSymbol().Internal();
 }
 
 ComponentInterfaceSymbol Effect::GetSymbol() const
 {
-   if (mClient)
-   {
-      return mClient->GetSymbol();
-   }
-
    return {};
 }
 
 VendorSymbol Effect::GetVendor() const
 {
-   if (mClient)
-   {
-      return mClient->GetVendor();
-   }
-
    return XO("Audacity");
 }
 
 wxString Effect::GetVersion() const
 {
-   if (mClient)
-   {
-      return mClient->GetVersion();
-   }
-
    return AUDACITY_VERSION_STRING;
 }
 
 TranslatableString Effect::GetDescription() const
 {
-   if (mClient)
-   {
-      return mClient->GetDescription();
-   }
-
    return {};
+}
+
+// EffectDefinitionInterface implementation
+
+EffectType Effect::GetType() const
+{
+   return EffectTypeNone;
 }
 
 EffectFamilySymbol Effect::GetFamily() const
 {
-   if (mClient)
-   {
-      return mClient->GetFamily();
-   }
-
    // Unusually, the internal and visible strings differ for the built-in
    // effect family.
    return { wxT("Audacity"), XO("Built-in") };
@@ -172,41 +137,21 @@ EffectFamilySymbol Effect::GetFamily() const
 
 bool Effect::IsInteractive() const
 {
-   if (mClient)
-   {
-      return mClient->IsInteractive();
-   }
-
    return true;
 }
 
 bool Effect::IsDefault() const
 {
-   if (mClient)
-   {
-      return mClient->IsDefault();
-   }
-
    return true;
 }
 
 bool Effect::SupportsRealtime() const
 {
-   if (mClient)
-   {
-      return mClient->SupportsRealtime();
-   }
-
    return false;
 }
 
 bool Effect::SupportsAutomation() const
 {
-   if (mClient)
-   {
-      return mClient->SupportsAutomation();
-   }
-
    return true;
 }
 
@@ -214,100 +159,52 @@ bool Effect::SupportsAutomation() const
 
 bool Effect::InitializeInstance(EffectSettings &settings)
 {
-   if (mClient)
-      return mClient->InitializeInstance(settings);
    return true;
 }
 
 unsigned Effect::GetAudioInCount() const
 {
-   if (mClient)
-   {
-      return mClient->GetAudioInCount();
-   }
-
    return 0;
 }
 
 unsigned Effect::GetAudioOutCount() const
 {
-   if (mClient)
-   {
-      return mClient->GetAudioOutCount();
-   }
-
    return 0;
 }
 
 int Effect::GetMidiInCount()
 {
-   if (mClient)
-   {
-      return mClient->GetMidiInCount();
-   }
-
    return 0;
 }
 
 int Effect::GetMidiOutCount()
 {
-   if (mClient)
-   {
-      return mClient->GetMidiOutCount();
-   }
-
    return 0;
 }
 
 void Effect::SetSampleRate(double rate)
 {
-   if (mClient)
-   {
-      mClient->SetSampleRate(rate);
-   }
-
    mSampleRate = rate;
 }
 
 size_t Effect::SetBlockSize(size_t maxBlockSize)
 {
-   if (mClient)
-   {
-      return mClient->SetBlockSize(maxBlockSize);
-   }
-
    mBlockSize = maxBlockSize;
-
    return mBlockSize;
 }
 
 size_t Effect::GetBlockSize() const
 {
-   if (mClient)
-   {
-      return mClient->GetBlockSize();
-   }
-
    return mBlockSize;
 }
 
 sampleCount Effect::GetLatency()
 {
-   if (mClient)
-   {
-      return mClient->GetLatency();
-   }
-
    return 0;
 }
 
 size_t Effect::GetTailSize()
 {
-   if (mClient)
-   {
-      return mClient->GetTailSize();
-   }
-
    return 0;
 }
 
@@ -320,96 +217,59 @@ const EffectParameterMethods &Effect::Parameters() const
 bool Effect::ProcessInitialize(
    EffectSettings &settings, sampleCount totalLen, ChannelNames chanMap)
 {
-   if (mClient)
-      return mClient->ProcessInitialize(settings, totalLen, chanMap);
    return true;
 }
 
 bool Effect::ProcessFinalize()
 {
-   if (mClient)
-   {
-      return mClient->ProcessFinalize();
-   }
-
    return true;
 }
 
 size_t Effect::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   if (mClient)
-      return mClient->ProcessBlock(settings, inBlock, outBlock, blockLen);
    return 0;
 }
 
 bool Effect::RealtimeInitialize(EffectSettings &settings)
 {
-   if (mClient)
-      return mClient->RealtimeInitialize(settings);
    return false;
 }
 
 bool Effect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
-   if (mClient)
-   {
-      return mClient->RealtimeAddProcessor(settings, numChannels, sampleRate);
-   }
-
    return true;
 }
 
 bool Effect::RealtimeFinalize(EffectSettings &settings) noexcept
 {
-   if (mClient)
-      return mClient->RealtimeFinalize(settings);
    return false;
 }
 
 bool Effect::RealtimeSuspend()
 {
-   if (mClient)
-      return mClient->RealtimeSuspend();
-
    return true;
 }
 
 bool Effect::RealtimeResume() noexcept
 {
-   if (mClient)
-      return mClient->RealtimeResume();
-
    return true;
 }
 
 bool Effect::RealtimeProcessStart(EffectSettings &settings)
 {
-   if (mClient)
-   {
-      return mClient->RealtimeProcessStart(settings);
-   }
-
    return true;
 }
 
 size_t Effect::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-   if (mClient)
-      return mClient->
-         RealtimeProcess(group, settings, inbuf, outbuf, numSamples);
    return 0;
 }
 
 bool Effect::RealtimeProcessEnd(EffectSettings &settings) noexcept
 {
-   if (mClient)
-   {
-      return mClient->RealtimeProcessEnd(settings);
-   }
-
    return true;
 }
 
@@ -458,7 +318,7 @@ int Effect::ShowHostInterface(wxWindow &parent,
    // The usual factory lets the client (which is this, when self-hosting)
    // populate it.  That factory function is called indirectly through a
    // std::function to avoid source code dependency cycles.
-   const auto client = mClient ? mClient : this;
+   EffectUIClientInterface *const client = this;
    mHostUIDialog = factory(parent, *this, *client, access);
    if (!mHostUIDialog)
       return 0;
@@ -478,8 +338,6 @@ int Effect::ShowHostInterface(wxWindow &parent,
 
 bool Effect::VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
 {
-   if (mClient)
-      return mClient->VisitSettings(visitor, settings);
    Parameters().Visit(*this, visitor, settings);
    return true;
 }
@@ -487,8 +345,6 @@ bool Effect::VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
 bool Effect::VisitSettings(
    ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
-   if (mClient)
-      return mClient->VisitSettings(visitor, settings);
    Parameters().Visit(*this, visitor, settings);
    return true;
 }
@@ -496,8 +352,6 @@ bool Effect::VisitSettings(
 bool Effect::SaveSettings(
    const EffectSettings &settings, CommandParameters & parms) const
 {
-   if (mClient)
-      return mClient->SaveSettings(settings, parms);
    Parameters().Get( *this, settings, parms );
    return true;
 }
@@ -505,8 +359,6 @@ bool Effect::SaveSettings(
 bool Effect::LoadSettings(
    const CommandParameters & parms, Settings &settings) const
 {
-   if (mClient)
-      return mClient->LoadSettings(parms, settings);
    // The first argument, and with it the const_cast, will disappear when
    // all built-in effects are stateless.
    return Parameters().Set( *const_cast<Effect*>(this), parms, settings );
@@ -515,10 +367,6 @@ bool Effect::LoadSettings(
 bool Effect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
 {
-   if (mClient)
-      // Call through to third party effects
-      return mClient->LoadUserPreset(name, settings);
-
    // Find one string in the registry and then reinterpret it
    // as complete settings
    wxString parms;
@@ -532,10 +380,6 @@ bool Effect::LoadUserPreset(
 bool Effect::SaveUserPreset(
    const RegistryPath & name, const EffectSettings &settings) const
 {
-   if (mClient)
-      // Call through to third party effects
-      return mClient->SaveUserPreset(name, settings);
-
    // Save all settings as a single string value in the registry
    wxString parms;
    if (!SaveSettingsAsString(settings, parms))
@@ -547,28 +391,16 @@ bool Effect::SaveUserPreset(
 
 RegistryPaths Effect::GetFactoryPresets() const
 {
-   if (mClient)
-   {
-      return mClient->GetFactoryPresets();
-   }
-
    return {};
 }
 
 bool Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
-   if (mClient)
-      return mClient->LoadFactoryPreset(id, settings);
    return true;
 }
 
 bool Effect::LoadFactoryDefaults(Settings &settings) const
 {
-   if (mClient)
-   {
-      return mClient->LoadFactoryDefaults(settings);
-   }
-
    return LoadUserPreset(FactoryDefaultsGroup(), settings);
 }
 
@@ -743,10 +575,7 @@ void Effect::ShowOptions()
 
 const EffectDefinitionInterface& Effect::GetDefinition() const
 {
-   if (mClient)
-      return *mClient;
-   else
-      return *this;
+   return *this;
 }
 
 double Effect::GetDefaultDuration()
@@ -767,22 +596,6 @@ wxString Effect::GetSavedStateGroup()
 }
 
 // Effect implementation
-
-bool Effect::Startup(EffectUIClientInterface *client, EffectSettings &settings)
-{
-   // Let destructor know we need to be shutdown
-   mClient = client;
-
-   // Set host so client startup can use our services
-   if (!InitializeInstance(settings))
-   {
-      // Bail if the client startup fails
-      mClient = NULL;
-      return false;
-   }
-
-   return true;
-}
 
 bool Effect::SaveSettingsAsString(
    const EffectSettings &settings, wxString & parms) const

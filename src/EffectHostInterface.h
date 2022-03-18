@@ -106,14 +106,17 @@ public:
       const EffectSettingsAccessPtr &pAccess = nullptr
          //!< Sometimes given; only for UI
    ) = 0;
-   virtual bool Startup(
-      EffectUIClientInterface *client, EffectSettings &settings) = 0;
 
    //! Update controls for the settings
    virtual bool TransferDataToWindow(const EffectSettings &settings) = 0;
 
    //! Update the given settings from controls
    virtual bool TransferDataFromWindow(EffectSettings &settings) = 0;
+
+   /*!
+    @return true if successful
+    */
+   virtual bool InitializeInstance(EffectSettings &settings) = 0;
 };
 
 #endif

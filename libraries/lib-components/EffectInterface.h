@@ -462,11 +462,6 @@ public:
       wxWindow &parent, wxDialog &dialog, bool forceModal = false
    ) = 0;
 
-   /*!
-    @return true if successful
-    */
-   virtual bool InitializeInstance(EffectSettings &settings) = 0;
-
    virtual bool IsGraphicalUI() = 0;
 
    //! Adds controls to a panel that is given as the parent window of `S`

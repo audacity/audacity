@@ -823,16 +823,14 @@ EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
          return empty;
 
       if (auto effect = dynamic_cast<EffectUIHostInterface *>(component);
-          effect && effect->Startup(nullptr, settings))
-         // Self-hosting or "legacy" effect objects
+          effect && effect->InitializeInstance(settings))
          return (mEffects[ID] = { effect, std::move(settings) });
-      else if (auto client = dynamic_cast<EffectUIClientInterface *>(component);
-          client &&
-         (hostEffect = std::make_shared<Effect>())->Startup(client, settings))
-         // plugin that inherits only EffectUIClientInterface needs a host
-         return (mEffects[ID] =
-            { (mHostEffects[ID] = move(hostEffect)).get(),
-              std::move(settings) });
+      else if (auto client = dynamic_cast<EffectUIClientInterface *>(component)) {
+         // Nothing inherits EffectUIClientInterface now that does not also
+         // inherit EffectUIHostInterface
+         wxASSERT(false);
+         return empty;
+      }
       else {
          if ( !dynamic_cast<AudacityCommand *>(component) )
             AudacityMessageBox(
@@ -900,26 +898,11 @@ const PluginID & EffectManager::GetEffectByIdentifier(const CommandID & strTarge
 /* TODO:  fix the effect management so that repeated calls with the same ID
  give Effect objects with independent state for effect settings.
  */
-std::unique_ptr<EffectProcessor>
+EffectProcessor *
 EffectManager::NewEffect(const PluginID & ID)
 {
    // Must have a "valid" ID
    if (ID.empty())
       return nullptr;
-
-   // This will instantiate the effect client if it hasn't already been done
-   // But it only makes a unique object for a given ID
-
-   // This makes a settings object too that is just discarded
-   // But this will ultimately be rewritten
-   auto [component, dummySettings] = LoadComponent(ID);
-   if (!component)
-      return nullptr;
-
-   auto effect = std::make_unique<Effect>();
-   auto client = dynamic_cast<EffectUIClientInterface *>(component);
-   if (client && effect->Startup(client, dummySettings))
-      return effect;
-   else
-      return nullptr;
+   return dynamic_cast<EffectUIClientInterface *>(Get().GetEffect(ID));
 }

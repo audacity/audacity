@@ -64,7 +64,7 @@ public:
    };
 
    /*! Create a new instance of an effect by its ID. */
-   static std::unique_ptr<EffectProcessor> NewEffect(const PluginID &ID);
+   static EffectProcessor *NewEffect(const PluginID &ID);
 
    /** Get the singleton instance of the EffectManager. Probably not safe
        for multi-thread use. */

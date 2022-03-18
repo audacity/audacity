@@ -161,7 +161,7 @@ EffectProcessor *RealtimeEffectState::GetEffect()
          // Also make EffectSettings
          mSettings = mEffect->MakeSettings();
    }
-   return mEffect.get();
+   return mEffect;
 }
 
 bool RealtimeEffectState::Suspend()
@@ -441,7 +441,7 @@ bool RealtimeEffectState::HandleXMLTag(
 {
    if (tag == XMLTag()) {
       mParameters.clear();
-      mEffect.reset();
+      mEffect = nullptr;
       mID.clear();
 
       for (auto pair : attrs) {
@@ -508,7 +508,8 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
       return;
 
    xmlFile.StartTag(XMLTag());
-   xmlFile.WriteAttr(idAttribute, XMLWriter::XMLEsc(PluginManager::GetID(mEffect.get())));
+   xmlFile.WriteAttr(
+      idAttribute, XMLWriter::XMLEsc(PluginManager::GetID(mEffect)));
    xmlFile.WriteAttr(versionAttribute, XMLWriter::XMLEsc(mEffect->GetVersion()));
 
    CommandParameters cmdParms;

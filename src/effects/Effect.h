@@ -175,7 +175,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // EffectUIClientInterface implementation
 
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectSettingsAccess &access);
+      ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
@@ -216,8 +216,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
       const EffectDialogFactory &dialogFactory,
       const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
    ) override;
-   bool Startup(
-      EffectUIClientInterface *client, EffectSettings &settings) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
@@ -496,9 +494,6 @@ private:
 
    int mNumTracks; //v This is really mNumWaveTracks, per CountWaveTracks() and GetNumWaveTracks().
    int mNumGroups;
-
-   // For client driver
-   EffectUIClientInterface *mClient;
 
    size_t mBufferSize;
    size_t mBlockSize;

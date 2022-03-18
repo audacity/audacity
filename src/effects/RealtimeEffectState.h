@@ -29,7 +29,7 @@ class RealtimeEffectState : public XMLTagHandler
 {
 public:
    struct AUDACITY_DLL_API EffectFactory : GlobalHook<EffectFactory,
-      std::unique_ptr<EffectProcessor>(const PluginID &)
+      EffectProcessor*(const PluginID &)
    >{};
 
    explicit RealtimeEffectState(const PluginID & id);
@@ -76,7 +76,7 @@ public:
 private:
    PluginID mID;
    wxString mParameters;  // Used only during deserialization
-   std::unique_ptr<EffectProcessor> mEffect;
+   EffectProcessor *mEffect;
    EffectSettings mSettings;
 
    struct Access;
