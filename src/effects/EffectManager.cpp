@@ -107,6 +107,9 @@ TranslatableString EffectManager::GetCommandName(const PluginID & ID)
 
 TranslatableString EffectManager::GetEffectFamilyName(const PluginID & ID)
 {
+   if(auto description = PluginManager::Get().GetPlugin(ID))
+      return TranslatableString { description->GetEffectFamily(), {} };
+
    auto effect = GetEffect(ID);
    if (effect)
       return effect->GetDefinition().GetFamily().Msgid();
@@ -115,6 +118,9 @@ TranslatableString EffectManager::GetEffectFamilyName(const PluginID & ID)
 
 TranslatableString EffectManager::GetVendorName(const PluginID & ID)
 {
+   if(auto description = PluginManager::Get().GetPlugin(ID))
+      return TranslatableString { description->GetVendor(), {} };
+   
    auto effect = GetEffect(ID);
    if (effect)
       return effect->GetDefinition().GetVendor().Msgid();
