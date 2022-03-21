@@ -37,7 +37,6 @@ a graph for EffectScienFilter.
 #include "LoadEffects.h"
 
 #include <math.h>
-#include <float.h>
 
 #include <wx/setup.h> // for wxUSE_* macros
 
@@ -57,7 +56,6 @@ a graph for EffectScienFilter.
 #include "PlatformCompatibility.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "Theme.h"
 #include "../WaveTrack.h"
@@ -86,15 +84,7 @@ enum
    ID_StopbandRipple
 };
 
-enum kTypes
-{
-   kButterworth,
-   kChebyshevTypeI,
-   kChebyshevTypeII,
-   nTypes
-};
-
-static const EnumValueSymbol kTypeStrings[nTypes] =
+const EnumValueSymbol EffectScienFilter::kTypeStrings[nTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    { XO("Butterworth") },
@@ -104,31 +94,28 @@ static const EnumValueSymbol kTypeStrings[nTypes] =
    { XO("Chebyshev Type II") }
 };
 
-enum kSubTypes
-{
-   kLowPass  = Biquad::kLowPass,
-   kHighPass = Biquad::kHighPass,
-   nSubTypes = Biquad::nSubTypes
-};
-
-static const EnumValueSymbol kSubTypeStrings[nSubTypes] =
+const EnumValueSymbol EffectScienFilter::kSubTypeStrings[nSubTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Lowpass") },
    { XO("Highpass") }
 };
 
-static_assert(nSubTypes == WXSIZEOF(kSubTypeStrings), "size mismatch");
-
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name       Type     Key                     Def            Min   Max               Scale
-Param( Type,      int,     wxT("FilterType"),       kButterworth,  0,    nTypes - 1,    1  );
-Param( Subtype,   int,     wxT("FilterSubtype"),    kLowPass,      0,    nSubTypes - 1, 1  );
-Param( Order,     int,     wxT("Order"),            1,             1,    10,               1  );
-Param( Cutoff,    float,   wxT("Cutoff"),           1000.0,        1.0,  FLT_MAX,          1  );
-Param( Passband,  float,   wxT("PassbandRipple"),   1.0,           0.0,  100.0,            1  );
-Param( Stopband,  float,   wxT("StopbandRipple"),   30.0,          0.0,  100.0,            1  );
+const EffectParameterMethods& EffectScienFilter::Parameters() const
+{
+   static CapturedParameters<EffectScienFilter,
+      Type, Subtype, Order, Cutoff, Passband, Stopband
+   > parameters{
+      [](EffectScienFilter &, EffectScienFilter &e, bool updating){
+         if (updating) {
+            e.mOrderIndex = e.mOrder - 1;
+            e.CalcFilter();
+         }
+         return true;
+      },
+   };
+   return parameters;
+}
 
 //----------------------------------------------------------------------------
 // EffectScienFilter
@@ -157,13 +144,7 @@ END_EVENT_TABLE()
 
 EffectScienFilter::EffectScienFilter()
 {
-   mOrder = DEF_Order;
-   mFilterType = DEF_Type;
-   mFilterSubtype = DEF_Subtype;
-   mCutoff = DEF_Cutoff;
-   mRipple = DEF_Passband;
-   mStopbandRipple = DEF_Stopband;
-
+   Parameters().Reset(*this);
    SetLinearEffectFlag(true);
 
    mOrderIndex = mOrder - 1;
@@ -237,50 +218,6 @@ size_t EffectScienFilter::ProcessBlock(EffectSettings &,
    }
 
    return blockLen;
-}
-bool EffectScienFilter::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_ENUM_PARAM( mFilterType, Type, kTypeStrings, nTypes );
-   S.SHUTTLE_ENUM_PARAM( mFilterSubtype, Subtype, kSubTypeStrings, nSubTypes );
-   S.SHUTTLE_PARAM( mOrder, Order );
-   S.SHUTTLE_PARAM( mCutoff, Cutoff );
-   S.SHUTTLE_PARAM( mRipple, Passband );
-   S.SHUTTLE_PARAM( mStopbandRipple, Stopband );
-   return true;
-}
-
-bool EffectScienFilter::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(KEY_Type, kTypeStrings[mFilterType].Internal());
-   parms.Write(KEY_Subtype, kSubTypeStrings[mFilterSubtype].Internal());
-   parms.Write(KEY_Order, mOrder);
-   parms.WriteFloat(KEY_Cutoff, mCutoff);
-   parms.WriteFloat(KEY_Passband, mRipple);
-   parms.WriteFloat(KEY_Stopband, mStopbandRipple);
-
-   return true;
-}
-
-bool EffectScienFilter::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
-   ReadAndVerifyEnum(Subtype, kSubTypeStrings, nSubTypes);
-   ReadAndVerifyInt(Order);
-   ReadAndVerifyFloat(Cutoff);
-   ReadAndVerifyFloat(Passband);
-   ReadAndVerifyFloat(Stopband);
-
-   mFilterType = Type;
-   mFilterSubtype = Subtype;
-   mOrder = Order;
-   mCutoff = Cutoff;
-   mRipple = Passband;
-   mStopbandRipple = Stopband;
-
-   mOrderIndex = mOrder - 1;
-
-   CalcFilter();
-
-   return true;
 }
 
 // Effect implementation
@@ -453,8 +390,8 @@ EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
             .Name(XO("Passband Ripple (dB)"))
             .Validator<FloatingPointValidator<float>>(
                1, &mRipple, NumValidatorStyle::DEFAULT,
-               MIN_Passband, MAX_Passband)
-            .AddTextBox( {}, wxT(""), 10);
+               Passband.min, Passband.max)
+            .AddTextBox( {}, L"", 10);
          mRippleCtlU = S.AddVariableText(XO("dB"),
             false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
@@ -469,8 +406,8 @@ EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
             .Name(XO("Cutoff (Hz)"))
             .Validator<FloatingPointValidator<float>>(
                1, &mCutoff, NumValidatorStyle::DEFAULT,
-               MIN_Cutoff, mNyquist - 1)
-            .AddTextBox(XXO("C&utoff:"), wxT(""), 10);
+               Cutoff.min, mNyquist - 1)
+            .AddTextBox(XXO("C&utoff:"), L"", 10);
          S.AddUnits(XO("Hz"));
 
          mStopbandRippleCtlP =
@@ -480,8 +417,8 @@ EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
             .Name(XO("Minimum S&topband Attenuation (dB)"))
             .Validator<FloatingPointValidator<float>>(
                1, &mStopbandRipple, NumValidatorStyle::DEFAULT,
-               MIN_Stopband, MAX_Stopband)
-            .AddTextBox( {}, wxT(""), 10);
+               Stopband.min, Stopband.max)
+            .AddTextBox( {}, L"", 10);
          mStopbandRippleCtlU =
             S.AddVariableText(XO("dB"),
             false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);

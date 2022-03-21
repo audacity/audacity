@@ -18,6 +18,55 @@
 class ComponentInterfaceSymbol;
 class WrappedType;
 
+template<
+   typename Structure, //!< Structure holding the parameter
+   typename Member, //!< Often the same as Type
+   typename Type, //!< Type of the given default value
+   typename Value = Type //!< A type constructible from the default
+> struct EffectParameter {
+   Member Structure::*const mem{}; //!< Member holding the parameter
+   const wxChar *const key{}; //!< Identifier in configuration file
+   const Type def{};          //!< Default value
+   const Type min{};          //!< Minimum value
+   const Type max{};          //!< Maximum value
+   const Type scale{};        //!< Scaling factor, for slider control
+};
+
+// Deduction guides
+// Type of def chooses the parameter type; others just need to be convertible
+template<typename Structure, typename Member,
+   typename Type, typename... Args>
+EffectParameter(Member Structure::*const mem,
+   const wxChar *key, const Type &def, Args...)
+      -> EffectParameter<Structure, Member, Type>;
+// Deduce string type from string literal
+template<typename Structure, typename Member,
+   typename Char, size_t N, typename... Args>
+EffectParameter(Member Structure::*const mem,
+   const wxChar *key, const Char (&def)[N], Args...)
+      -> EffectParameter<Structure, Member, const Char *, wxString>;
+
+template<typename Structure, typename Member>
+struct EnumParameter : EffectParameter<Structure, Member, int>
+{
+   constexpr EnumParameter(Member Structure::*const mem,
+      const wxChar *key, int def, int min, int max, int scale,
+      const EnumValueSymbol *symbols_, size_t nSymbols_ )
+      : EffectParameter<Structure, Member, int>{
+         mem, key, def, min, max, scale }
+      , symbols{ symbols_ }
+      , nSymbols{ nSymbols_ }
+   {}
+
+   const EnumValueSymbol *const symbols;
+   const size_t nSymbols;
+};
+
+// Deduction guide
+template<typename Structure, typename Member, typename... Args>
+EnumParameter(Member Structure::*const mem, Args...)
+   -> EnumParameter<Structure, Member>;
+
 class Shuttle /* not final */ {
  public:
    // constructors and destructors
@@ -106,11 +155,5 @@ extern template class AUDACITY_DLL_API SettingsVisitorBase<true>;
 
 using SettingsVisitor = SettingsVisitorBase<false>;
 using ConstSettingsVisitor = SettingsVisitorBase<true>;
-
-#define SHUTTLE_PARAM( var, name ) \
-  Define( var, KEY_ ## name, DEF_ ## name, MIN_ ## name, MAX_ ## name, SCL_ ## name )
-
-#define SHUTTLE_ENUM_PARAM( var, name, strings, nStrings ) \
-  DefineEnum( var, KEY_ ## name, DEF_ ## name, strings, nStrings )
 
 #endif

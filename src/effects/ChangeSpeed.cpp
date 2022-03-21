@@ -26,7 +26,6 @@
 #include "../LabelTrack.h"
 #include "Prefs.h"
 #include "Resample.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../SyncLock.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -65,10 +64,13 @@ static const TranslatableStrings kVinylStrings{
 
 // Soundtouch is not reasonable below -99% or above 3000%.
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name          Type     Key               Def   Min      Max      Scale
-Param( Percentage,   double,  wxT("Percentage"), 0.0,  -99.0,   4900.0,  1  );
+const EffectParameterMethods& EffectChangeSpeed::Parameters() const
+{
+   static CapturedParameters<EffectChangeSpeed,
+      Percentage
+   > parameters;
+   return parameters;
+}
 
 // We warp the slider to go up to 400%, but user can enter higher values
 static const double kSliderMax = 100.0;         // warped above zero to actually go up to 400%
@@ -95,8 +97,7 @@ END_EVENT_TABLE()
 
 EffectChangeSpeed::EffectChangeSpeed()
 {
-   // effect parameters
-   m_PercentChange = DEF_Percentage;
+   Parameters().Reset(*this);
 
    mFromVinyl = kVinyl_33AndAThird;
    mToVinyl = kVinyl_33AndAThird;
@@ -135,28 +136,6 @@ ManualPageID EffectChangeSpeed::ManualPage() const
 EffectType EffectChangeSpeed::GetType() const
 {
    return EffectTypeProcess;
-}
-
-// EffectProcessor implementation
-bool EffectChangeSpeed::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( m_PercentChange, Percentage );
-   return true;
-}
-
-bool EffectChangeSpeed::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(KEY_Percentage, m_PercentChange);
-
-   return true;
-}
-
-bool EffectChangeSpeed::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadAndVerifyDouble(Percentage);
-
-   m_PercentChange = Percentage;
-
-   return true;
 }
 
 bool EffectChangeSpeed::LoadFactoryDefaults()
@@ -281,17 +260,15 @@ EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
             .Validator<FloatingPointValidator<double>>(
                3, &mMultiplier,
                NumValidatorStyle::THREE_TRAILING_ZEROES,
-               MIN_Percentage / 100.0, ((MAX_Percentage / 100.0) + 1)
-            )
-            .AddTextBox(XXO("&Speed Multiplier:"), wxT(""), 12);
+               Percentage.min / 100.0, ((Percentage.max / 100.0) + 1) )
+            .AddTextBox(XXO("&Speed Multiplier:"), L"", 12);
 
          mpTextCtrl_PercentChange = S.Id(ID_PercentChange)
             .Validator<FloatingPointValidator<double>>(
                3, &m_PercentChange,
                NumValidatorStyle::THREE_TRAILING_ZEROES,
-               MIN_Percentage, MAX_Percentage
-            )
-            .AddTextBox(XXO("Percent C&hange:"), wxT(""), 12);
+               Percentage.min, Percentage.max )
+            .AddTextBox(XXO("Percent C&hange:"), L"", 12);
       }
       S.EndMultiColumn();
 
@@ -301,7 +278,7 @@ EffectChangeSpeed::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          mpSlider_PercentChange = S.Id(ID_PercentChange)
             .Name(XO("Percent Change"))
             .Style(wxSL_HORIZONTAL)
-            .AddSlider( {}, 0, (int)kSliderMax, (int)MIN_Percentage);
+            .AddSlider( {}, 0, (int)kSliderMax, (int)Percentage.min);
       }
       S.EndHorizontalLay();
 
@@ -704,7 +681,7 @@ void EffectChangeSpeed::Update_Text_Multiplier()
 void EffectChangeSpeed::Update_Slider_PercentChange()
 // Update Slider Percent control from percent change.
 {
-   auto unwarped = std::min<double>(m_PercentChange, MAX_Percentage);
+   auto unwarped = std::min<double>(m_PercentChange, Percentage.max);
    if (unwarped > 0.0)
       // Un-warp values above zero to actually go up to kSliderMax.
       unwarped = pow(m_PercentChange, (1.0 / kSliderWarp));
@@ -787,5 +764,5 @@ void EffectChangeSpeed::Update_TimeCtrl_ToLength()
 void EffectChangeSpeed::UpdateUI()
 // Disable OK and Preview if not in sensible range.
 {
-   EnableApply(m_PercentChange >= MIN_Percentage && m_PercentChange <= MAX_Percentage);
+   EnableApply(m_PercentChange >= Percentage.min && m_PercentChange <= Percentage.max);
 }

@@ -14,6 +14,7 @@
 
 #include "Effect.h"
 #include "Biquad.h"
+#include "../ShuttleAutomation.h"
 
 class wxCheckBox;
 class wxStaticText;
@@ -23,6 +24,8 @@ class ShuttleGui;
 class EffectNormalize final : public Effect
 {
 public:
+   static inline EffectNormalize *
+   FetchParameters(EffectNormalize &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectNormalize();
@@ -37,12 +40,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -86,8 +83,17 @@ private:
    wxCheckBox *mStereoIndCheckBox;
    bool mCreating;
 
-
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter PeakLevel{ &EffectNormalize::mPeakLevel,
+   L"PeakLevel",           -1.0,    -145.0,  0.0,  1  };
+static constexpr EffectParameter RemoveDC{ &EffectNormalize::mDC,
+   L"RemoveDcOffset",      true,    false,   true, 1  };
+static constexpr EffectParameter ApplyGain{ &EffectNormalize::mGain,
+   L"ApplyGain",           true,    false,   true, 1  };
+static constexpr EffectParameter StereoInd{ &EffectNormalize::mStereoInd,
+   L"StereoIndependent",   false,   false,   true, 1  };
 };
 
 #endif

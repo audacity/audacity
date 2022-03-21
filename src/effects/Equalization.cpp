@@ -146,20 +146,12 @@ enum
    ID_Slider,   // needs to come last
 };
 
-enum kInterpolations
-{
-   kBspline,
-   kCosine,
-   kCubic,
-   nInterpolations
-};
-
 // Increment whenever EQCurves.xml is updated
 #define EQCURVES_VERSION   1
 #define EQCURVES_REVISION  0
 #define UPDATE_ALL 0 // 0 = merge NEW presets only, 1 = Update all factory presets.
 
-static const EnumValueSymbol kInterpStrings[nInterpolations] =
+const EnumValueSymbol EffectEqualization::kInterpStrings[nInterpolations] =
 {
    // These are acceptable dual purpose internal/visible names
 
@@ -176,17 +168,28 @@ static const double kThirdOct[] =
    2500., 3150., 4000., 5000., 6300., 8000., 10000., 12500., 16000., 20000.,
 };
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name          Type        Key                     Def      Min      Max      Scale
-Param( FilterLength, int,     wxT("FilterLength"),        8191,    21,      8191,    0      );
-Param( CurveName,    wxChar*, wxT("CurveName"),           wxT("unnamed"), wxT(""), wxT(""), wxT(""));
-Param( InterpLin,    bool,    wxT("InterpolateLin"),      false,   false,   true,    false  );
-Param( InterpMeth,   int,     wxT("InterpolationMethod"), 0,       0,       0,       0      );
-Param( DrawMode,     bool,    wxT(""),                   true,    false,   true,    false  );
-Param( DrawGrid,     bool,    wxT(""),                   true,    false,   true,    false  );
-Param( dBMin,        float,   wxT(""),                   -30.0,   -120.0,  -10.0,   0      );
-Param( dBMax,        float,   wxT(""),                   30.0,    0.0,     60.0,    0      );
+const EffectParameterMethods& EffectEqualization::Parameters() const
+{
+   static CapturedParameters<EffectEqualization,
+      FilterLength,
+      // CurveName,
+      InterpLin,
+      // Pretty sure the interpolation name shouldn't have been interpreted when
+      // specified in chains, but must keep it that way for compatibility.
+      InterpMeth
+   > parameters {
+      [](EffectEqualization &, EffectEqualization &effect, bool updating){
+         if (updating) {
+            if (effect.mInterp >= nInterpolations)
+               effect.mInterp -= nInterpolations;
+            effect.mEnvelope =
+               (effect.mLin ? effect.mLinEnvelope : effect.mLogEnvelope).get();
+         }
+         return true;
+      }
+   };
+   return parameters;
+}
 
 ///----------------------------------------------------------------------------
 // EffectEqualization
@@ -246,6 +249,8 @@ EffectEqualization::EffectEqualization(int Options)
    , mFilterFuncR{ windowSize }
    , mFilterFuncI{ windowSize }
 {
+   Parameters().Reset(*this);
+
    mOptions = Options;
    mGraphic = NULL;
    mDraw = NULL;
@@ -257,29 +262,26 @@ EffectEqualization::EffectEqualization(int Options)
 
    SetLinearEffectFlag(true);
 
-   mM = DEF_FilterLength;
-   mLin = DEF_InterpLin;
-   mInterp = DEF_InterpMeth;
-   mCurveName = DEF_CurveName;
+   mCurveName = CurveName.def;
 
    GetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("dBMin"), mdBMin, DEF_dBMin);
+      CurrentSettingsGroup(), wxT("dBMin"), mdBMin, dBMin.def);
    GetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("dBMax"), mdBMax, DEF_dBMax);
+      CurrentSettingsGroup(), wxT("dBMax"), mdBMax, dBMax.def);
    GetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DEF_DrawMode);
+      CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode, DrawMode.def);
    GetConfig(GetDefinition(), PluginSettings::Private,
-      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DEF_DrawGrid);
+      CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid, DrawGrid.def);
 
    mLogEnvelope = std::make_unique<Envelope>
       (false,
-       MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
+       dBMin.min, dBMax.max, // MB: this is the highest possible range
        0.0);
    mLogEnvelope->SetTrackLen(1.0);
 
    mLinEnvelope = std::make_unique<Envelope>
       (false,
-       MIN_dBMin, MAX_dBMax, // MB: this is the highest possible range
+       dBMin.min, dBMax.max, // MB: this is the highest possible range
        0.0);
    mLinEnvelope->SetTrackLen(1.0);
 
@@ -371,11 +373,9 @@ EffectType EffectEqualization::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectEqualization::VisitSettings(SettingsVisitor & S){
-   S.SHUTTLE_PARAM( mM, FilterLength );
-   //S.SHUTTLE_PARAM( mCurveName, CurveName);
-   S.SHUTTLE_PARAM( mLin, InterpLin);
-   S.SHUTTLE_ENUM_PARAM( mInterp, InterpMeth, kInterpStrings, nInterpolations );
+bool EffectEqualization::VisitSettings( SettingsVisitor &S )
+{
+   Effect::VisitSettings(S);
 
    // if saving the preferences...
    if( dynamic_cast<ShuttleGetAutomation*>(&S))
@@ -413,48 +413,13 @@ bool EffectEqualization::VisitSettings(SettingsVisitor & S){
    return true;
 }
 
-bool EffectEqualization::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(KEY_FilterLength, (unsigned long)mM);
-   //parms.Write(KEY_CurveName, mCurveName);
-   parms.Write(KEY_InterpLin, mLin);
-   parms.WriteEnum(KEY_InterpMeth, mInterp, kInterpStrings, nInterpolations);
-
-   return true;
-}
-
-bool EffectEqualization::SetAutomationParameters(const CommandParameters & parms)
-{
-   // Pretty sure the interpolation name shouldn't have been interpreted when
-   // specified in chains, but must keep it that way for compatibility.
-
-   ReadAndVerifyInt(FilterLength);
-   //ReadAndVerifyString(CurveName);
-   ReadAndVerifyBool(InterpLin);
-   ReadAndVerifyEnum(InterpMeth, kInterpStrings, nInterpolations);
-
-   mM = FilterLength;
-   //mCurveName = CurveName;
-   mLin = InterpLin;
-   mInterp = InterpMeth;
-
-   if (InterpMeth >= nInterpolations)
-   {
-      InterpMeth -= nInterpolations;
-   }
-
-   mEnvelope = (mLin ? mLinEnvelope : mLogEnvelope).get();
-
-   return true;
-}
-
 // This function Apparently not used anymore.
 bool EffectEqualization::LoadFactoryDefaults()
 {
-   mdBMin = DEF_dBMin;
-   mdBMax = DEF_dBMax;
-   mDrawMode = DEF_DrawMode;
-   mDrawGrid = DEF_DrawGrid;
+   mdBMin = dBMin.def;
+   mdBMax = dBMax.def;
+   mDrawMode = DrawMode.def;
+   mDrawGrid = DrawGrid.def;
 
    if( mOptions == kEqOptionCurve)
       mDrawMode = true;

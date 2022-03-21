@@ -28,19 +28,18 @@
 
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "../widgets/ProgressDialog.h"
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name         Type     Key                        Def      Min      Max   Scale
-Param( PeakLevel,   double,  wxT("PeakLevel"),           -1.0,    -145.0,  0.0,  1  );
-Param( RemoveDC,    bool,    wxT("RemoveDcOffset"),      true,    false,   true, 1  );
-Param( ApplyGain,   bool,    wxT("ApplyGain"),           true,    false,   true, 1  );
-Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,   false,   true, 1  );
+const EffectParameterMethods& EffectNormalize::Parameters() const
+{
+   static CapturedParameters<EffectNormalize,
+      PeakLevel, ApplyGain, RemoveDC, StereoInd
+   > parameters;
+   return parameters;
+}
 
 const ComponentInterfaceSymbol EffectNormalize::Symbol
 { XO("Normalize") };
@@ -54,11 +53,7 @@ END_EVENT_TABLE()
 
 EffectNormalize::EffectNormalize()
 {
-   mPeakLevel = DEF_PeakLevel;
-   mDC = DEF_RemoveDC;
-   mGain = DEF_ApplyGain;
-   mStereoInd = DEF_StereoInd;
-
+   Parameters().Reset(*this);
    SetLinearEffectFlag(false);
 }
 
@@ -90,40 +85,6 @@ EffectType EffectNormalize::GetType() const
    return EffectTypeProcess;
 }
 
-// EffectProcessor implementation
-bool EffectNormalize::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_PARAM( mPeakLevel, PeakLevel );
-   S.SHUTTLE_PARAM( mGain, ApplyGain );
-   S.SHUTTLE_PARAM( mDC, RemoveDC );
-   S.SHUTTLE_PARAM( mStereoInd, StereoInd );
-   return true;
-}
-
-bool EffectNormalize::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(KEY_PeakLevel, mPeakLevel);
-   parms.Write(KEY_ApplyGain, mGain);
-   parms.Write(KEY_RemoveDC, mDC);
-   parms.Write(KEY_StereoInd, mStereoInd);
-
-   return true;
-}
-
-bool EffectNormalize::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadAndVerifyDouble(PeakLevel);
-   ReadAndVerifyBool(ApplyGain);
-   ReadAndVerifyBool(RemoveDC);
-   ReadAndVerifyBool(StereoInd);
-
-   mPeakLevel = PeakLevel;
-   mGain = ApplyGain;
-   mDC = RemoveDC;
-   mStereoInd = StereoInd;
-
-   return true;
-}
-
 // Effect implementation
 
 bool EffectNormalize::CheckWhetherSkipEffect()
@@ -140,8 +101,7 @@ bool EffectNormalize::Process(EffectSettings &)
    if( mGain )
    {
       // same value used for all tracks
-      ratio = DB_TO_LINEAR(std::clamp<double>(
-         mPeakLevel, MIN_PeakLevel, MAX_PeakLevel));
+      ratio = DB_TO_LINEAR(std::clamp<double>(mPeakLevel, PeakLevel.min, PeakLevel.max));
    }
    else {
       ratio = 1.0;
@@ -280,10 +240,9 @@ EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
                      2,
                      &mPeakLevel,
                      NumValidatorStyle::ONE_TRAILING_ZERO,
-                     MIN_PeakLevel,
-                     MAX_PeakLevel
-                  )
-                  .AddTextBox( {}, wxT(""), 10);
+                     PeakLevel.min,
+                     PeakLevel.max )
+                  .AddTextBox( {}, L"", 10);
                mLeveldB = S.AddVariableText(XO("dB"), false,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                mWarning = S.AddVariableText( {}, false,

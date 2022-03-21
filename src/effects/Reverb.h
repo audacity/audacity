@@ -13,6 +13,7 @@
 #define __AUDACITY_EFFECT_REVERB__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxCheckBox;
 class wxSlider;
@@ -24,6 +25,9 @@ struct Reverb_priv_t;
 class EffectReverb final : public Effect
 {
 public:
+   struct Params;
+   static inline Params *
+   FetchParameters(EffectReverb &e, EffectSettings &) { return &e.mParams; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectReverb();
@@ -52,8 +56,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id) override;
 
@@ -67,7 +69,6 @@ public:
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -121,7 +122,29 @@ private:
 
    wxCheckBox  *mWetOnlyC;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter RoomSize{ &EffectReverb::Params::mRoomSize,
+   L"RoomSize",      75.0,      0,       100,  1  };
+static constexpr EffectParameter PreDelay{ &EffectReverb::Params::mPreDelay,
+   L"Delay",         10.0,      0,       200,  1  };
+static constexpr EffectParameter Reverberance{ &EffectReverb::Params::mReverberance,
+   L"Reverberance",  50.0,      0,       100,  1  };
+static constexpr EffectParameter HfDamping{ &EffectReverb::Params::mHfDamping,
+   L"HfDamping",     50.0,      0,       100,  1  };
+static constexpr EffectParameter ToneLow{ &EffectReverb::Params::mToneLow,
+   L"ToneLow",       100.0,     0,       100,  1  };
+static constexpr EffectParameter ToneHigh{ &EffectReverb::Params::mToneHigh,
+   L"ToneHigh",      100.0,     0,       100,  1  };
+static constexpr EffectParameter WetGain{ &EffectReverb::Params::mWetGain,
+   L"WetGain",       -1.0,      -20,     10,   1  };
+static constexpr EffectParameter DryGain{ &EffectReverb::Params::mDryGain,
+   L"DryGain",       -1.0,      -20,     10,   1  };
+static constexpr EffectParameter StereoWidth{ &EffectReverb::Params::mStereoWidth,
+   L"StereoWidth",   100.0,     0,       100,  1  };
+static constexpr EffectParameter WetOnly{ &EffectReverb::Params::mWetOnly,
+   L"WetOnly",       false,   false,   true, 1  };
 };
 
 #endif

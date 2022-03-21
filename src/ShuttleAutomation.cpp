@@ -11,6 +11,8 @@
 #include "ShuttleAutomation.h"
 #include "EffectAutomationParameters.h" // for command automation
 
+EffectParameterMethods::~EffectParameterMethods() = default;
+
 // ShuttleGetAutomation gets from the shuttle into typically a string.
 SettingsVisitor & ShuttleGetAutomation::Optional( bool & var ){
    pOptionalFlag = &var;

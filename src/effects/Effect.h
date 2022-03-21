@@ -47,6 +47,7 @@ class AudacityCommand;
 namespace BasicUI { class ProgressDialog; }
 
 class AudacityProject;
+class EffectParameterMethods;
 class LabelTrack;
 class NotifyingSelectedRegion;
 class SelectedRegion;
@@ -81,6 +82,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
  // apply the effect to one or more tracks.
  //
  public:
+   static inline Effect *FetchParameters(Effect &e, EffectSettings &)
+   { return &e; }
+
    // The constructor is called once by each subclass at the beginning of the program.
    // Avoid allocating memory or doing time-consuming processing here.
    Effect();
@@ -89,6 +93,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // ComponentInterface implementation
 
    PluginPath GetPath() const override;
+   bool VisitSettings( SettingsVisitor & ) override;
 
    ComponentInterfaceSymbol GetSymbol() const override;
 
@@ -132,6 +137,11 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
+
+   // VisitSettings(), GetAutomationParameters(), and SetAutomationParameters()
+   // use the functions of EffectParameterMethods.  By default, this function
+   // defines an empty list of parameters.
+   virtual const EffectParameterMethods &Parameters() const;
 
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;
@@ -519,57 +529,5 @@ inline long TrapLong(long x, long min, long max)
 
    return x;
 }
-
-// Helper macros for defining, reading and verifying effect parameters
-
-#define Param(name, type, key, def, min, max, scale) \
-   static const wxChar * KEY_ ## name = (key); \
-   static const type DEF_ ## name = (def); \
-   static const type MIN_ ## name = (min); \
-   static const type MAX_ ## name = (max); \
-   static const type SCL_ ## name = (scale);
-
-#define PBasic(name, type, key, def) \
-   static const wxChar * KEY_ ## name = (key); \
-   static const type DEF_ ## name = (def);
-
-#define PRange(name, type, key, def, min, max) \
-   PBasic(name, type, key, def); \
-   static const type MIN_ ## name = (min); \
-   static const type MAX_ ## name = (max);
-
-#define PScale(name, type, key, def, min, max, scale) \
-   PRange(name, type, key, def, min, max); \
-   static const type SCL_ ## name = (scale);
-
-#define ReadParam(type, name) \
-   type name = DEF_ ## name; \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, MIN_ ## name, MAX_ ## name)) \
-      return false;
-
-#define ReadBasic(type, name) \
-   type name; \
-   wxUnusedVar(MIN_ ##name); \
-   wxUnusedVar(MAX_ ##name); \
-   wxUnusedVar(SCL_ ##name); \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name)) \
-      return false;
-
-#define ReadAndVerifyEnum(name, list, listSize) \
-   int name; \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, list, listSize)) \
-      return false;
-
-#define ReadAndVerifyEnumWithObsoletes(name, list, listSize, obsoleteList, nObsolete) \
-   int name; \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, \
-                            list, listSize, obsoleteList, nObsolete)) \
-      return false;
-
-#define ReadAndVerifyInt(name) ReadParam(int, name)
-#define ReadAndVerifyDouble(name) ReadParam(double, name)
-#define ReadAndVerifyFloat(name) ReadParam(float, name)
-#define ReadAndVerifyBool(name) ReadBasic(bool, name)
-#define ReadAndVerifyString(name) ReadBasic(wxString, name)
 
 #endif

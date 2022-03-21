@@ -25,20 +25,11 @@
 #include <wx/valgen.h>
 
 #include "Prefs.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "../widgets/NumericTextCtrl.h"
 
-enum kTypes
-{
-   kWhite,
-   kPink,
-   kBrownian,
-   nTypes
-};
-
-static const EnumValueSymbol kTypeStrings[nTypes] =
+const EnumValueSymbol EffectNoise::kTypeStrings[nTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    /* i18n-hint: not a color, but "white noise" having a uniform spectrum  */
@@ -50,11 +41,13 @@ static const EnumValueSymbol kTypeStrings[nTypes] =
    { XC("Brownian", "noise") }
 };
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name    Type     Key               Def      Min   Max            Scale
-Param( Type,   int,     wxT("Type"),       kWhite,  0,    nTypes - 1, 1  );
-Param( Amp,    double,  wxT("Amplitude"),  0.8,     0.0,  1.0,           1  );
+const EffectParameterMethods& EffectNoise::Parameters() const
+{
+   static CapturedParameters<EffectNoise,
+      Type, Amp
+   > parameters;
+   return parameters;
+}
 
 //
 // EffectNoise
@@ -65,10 +58,10 @@ const ComponentInterfaceSymbol EffectNoise::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectNoise > reg; }
 
+
 EffectNoise::EffectNoise()
 {
-   mType = DEF_Type;
-   mAmp = DEF_Amp;
+   Parameters().Reset(*this);
 
    SetLinearEffectFlag(true);
 
@@ -175,30 +168,6 @@ size_t EffectNoise::ProcessBlock(EffectSettings &,
 
    return size;
 }
-bool EffectNoise::VisitSettings( SettingsVisitor & S ){
-   S.SHUTTLE_ENUM_PARAM( mType, Type, kTypeStrings, nTypes );
-   S.SHUTTLE_PARAM( mAmp, Amp );
-   return true;
-}
-
-bool EffectNoise::GetAutomationParameters(CommandParameters & parms) const
-{
-   parms.Write(KEY_Type, kTypeStrings[mType].Internal());
-   parms.Write(KEY_Amp, mAmp);
-
-   return true;
-}
-
-bool EffectNoise::SetAutomationParameters(const CommandParameters & parms)
-{
-   ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
-   ReadAndVerifyDouble(Amp);
-
-   mType = Type;
-   mAmp = Amp;
-
-   return true;
-}
 
 // Effect implementation
 
@@ -212,10 +181,10 @@ EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
       S.Validator<wxGenericValidator>(&mType)
          .AddChoice(XXO("&Noise type:"), Msgids(kTypeStrings, nTypes));
 
-      S.Validator<FloatingPointValidator<double>>(
-            6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES, MIN_Amp, MAX_Amp
-         )
-         .AddTextBox(XXO("&Amplitude (0-1):"), wxT(""), 12);
+      S
+         .Validator<FloatingPointValidator<double>>(
+            6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES, Amp.min, Amp.max )
+         .AddTextBox(XXO("&Amplitude (0-1):"), L"", 12);
 
       S.AddPrompt(XXO("&Duration:"));
       auto &extra = access.Get().extra;

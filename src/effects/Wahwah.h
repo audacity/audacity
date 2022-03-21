@@ -17,6 +17,7 @@
 #define __AUDACITY_EFFECT_WAHWAH__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxTextCtrl;
@@ -39,6 +40,8 @@ public:
 class EffectWahwah final : public Effect
 {
 public:
+   static inline EffectWahwah *
+   FetchParameters(EffectWahwah &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectWahwah();
@@ -54,8 +57,6 @@ public:
 
    EffectType GetType() const override;
    bool SupportsRealtime() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
 
    // EffectProcessor implementation
 
@@ -73,7 +74,6 @@ public:
    size_t RealtimeProcess(int group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -102,7 +102,6 @@ private:
    void OnFreqOffText(wxCommandEvent & evt);
    void OnGainText(wxCommandEvent & evt);
 
-private:
    EffectWahwahState mMaster;
    std::vector<EffectWahwahState> mSlaves;
 
@@ -139,8 +138,21 @@ private:
    wxSlider *mFreqOfsS;
    wxSlider *mOutGainS;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Freq{ &EffectWahwah::mFreq,
+   L"Freq",       1.5,     0.1,     4.0,     10  };
+static constexpr EffectParameter Phase{ &EffectWahwah::mPhase,
+   L"Phase",      0.0,     0.0,     360.0,   1   };
+static constexpr EffectParameter Depth{ &EffectWahwah::mDepth,
+   L"Depth",      70,      0,       100,     1   }; // scaled to 0-1 before processing
+static constexpr EffectParameter Res{ &EffectWahwah::mRes,
+   L"Resonance",  2.5,     0.1,     10.0,    10  };
+static constexpr EffectParameter FreqOfs{ &EffectWahwah::mFreqOfs,
+   L"Offset",     30,      0,       100,     1   }; // scaled to 0-1 before processing
+static constexpr EffectParameter OutGain{ &EffectWahwah::mOutGain,
+   L"Gain",      -6.0,    -30.0,    30.0,    1   };
 };
 
 #endif
-

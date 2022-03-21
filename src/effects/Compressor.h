@@ -12,6 +12,7 @@
 #define __AUDACITY_EFFECT_COMPRESSOR__
 
 #include "TwoPassSimpleMono.h"
+#include "../ShuttleAutomation.h"
 
 class wxCheckBox;
 class wxSlider;
@@ -25,6 +26,9 @@ using Doubles = ArrayOf<double>;
 class EffectCompressor final : public EffectTwoPassSimpleMono
 {
 public:
+   static inline EffectCompressor *
+   FetchParameters(EffectCompressor &e, EffectSettings &) { return &e; }
+
    static const ComponentInterfaceSymbol Symbol;
 
    EffectCompressor();
@@ -39,12 +43,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool VisitSettings( SettingsVisitor & S ) override;
 
    // Effect implementation
 
@@ -128,7 +126,23 @@ private:
    wxCheckBox *mGainCheckBox;
    wxCheckBox *mPeakCheckBox;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Threshold{ &EffectCompressor::mThreshold,
+   L"Threshold",     -12.0,   -60.0,   -1.0,    1   };
+static constexpr EffectParameter NoiseFloor{ &EffectCompressor::mNoiseFloor,
+   L"NoiseFloor",    -40.0,   -80.0,   -20.0,   0.2   };
+static constexpr EffectParameter Ratio{ &EffectCompressor::mRatio,
+   L"Ratio",         2.0,     1.1,     10.0,    10  };
+static constexpr EffectParameter AttackTime{ &EffectCompressor::mAttackTime,
+   L"AttackTime",    0.2,     0.1,     5.0,     100 };
+static constexpr EffectParameter ReleaseTime{ &EffectCompressor::mDecayTime,
+   L"ReleaseTime",   1.0,     1.0,     30.0,    10  };
+static constexpr EffectParameter Normalize{ &EffectCompressor::mNormalize,
+   L"Normalize",     true,    false,   true,    1   };
+static constexpr EffectParameter UsePeak{ &EffectCompressor::mUsePeak,
+   L"UsePeak",       false,   false,   true,    1   };
 };
 
 class EffectCompressorPanel final : public wxPanelWrapper
