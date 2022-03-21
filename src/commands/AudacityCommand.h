@@ -21,7 +21,7 @@
 #include "../widgets/wxPanelWrapper.h" // to inherit
 
 #include "ComponentInterface.h"
-#include "EffectAutomationParameters.h" // for command automation
+#include "EffectAutomationParameters.h"
 #include "EffectInterface.h" // for SettingsVisitor type alias
 
 #include "Registrar.h"
@@ -70,8 +70,8 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
 
    wxDialog *CreateUI(wxWindow *parent, AudacityCommand *client);
 
-   bool GetAutomationParametersAsString(wxString & parms);
-   bool SetAutomationParametersFromString(const wxString & parms);
+   bool SaveSettingsAsString(wxString & parms);
+   bool LoadSettingsFromString(const wxString & parms);
 
    bool DoAudacityCommand(wxWindow *parent, const CommandContext & context,bool shouldPrompt = true);
 
@@ -103,7 +103,7 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    virtual bool PromptUser(wxWindow *parent);
 
    // Check whether command should be skipped
-   // Typically this is only useful in automation, for example
+   // Typically this is only useful in macros, for example
    // detecting that zero noise reduction is to be done,
    // or that normalisation is being done without Dc bias shift
    // or amplitude modification

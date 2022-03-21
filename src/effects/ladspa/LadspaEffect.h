@@ -64,19 +64,21 @@ public:
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      const CommandParameters & parms, Settings &settings) const override;
 
    bool LoadUserPreset(
       const RegistryPath & name, Settings &settings) const override;
-   bool DoLoadUserPreset(const RegistryPath & name);
+   bool DoLoadUserPreset(const RegistryPath & name, Settings &settings);
    bool SaveUserPreset(
       const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
-   bool DoLoadFactoryDefaults();
+   bool DoLoadFactoryDefaults(EffectSettings &settings);
 
    // EffectProcessor implementation
 
@@ -139,8 +141,9 @@ private:
    bool Load();
    void Unload();
 
-   bool LoadParameters(const RegistryPath & group);
-   bool SaveParameters(const RegistryPath & group) const;
+   bool LoadParameters(const RegistryPath & group, EffectSettings &settings);
+   bool SaveParameters(
+      const RegistryPath & group, const EffectSettings &settings) const;
 
    LADSPA_Handle InitInstance(float sampleRate);
    void FreeInstance(LADSPA_Handle handle);

@@ -305,74 +305,72 @@ bool NyquistEffect::IsDefault() const
 }
 
 // EffectProcessor implementation
-bool NyquistEffect::VisitSettings(SettingsVisitor & S)
+bool NyquistEffect::VisitSettings(
+   SettingsVisitor &visitor, EffectSettings &settings)
+{
+   if (auto pSa = dynamic_cast<ShuttleSetAutomation*>(&visitor))
+      LoadSettings(*pSa->mpEap, settings);
+   return true;
+}
+
+bool NyquistEffect::VisitSettings(
+   ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
    // For now we assume Nyquist can do get and set better than VisitSettings can,
    // And so we ONLY use it for getting the signature.
-   auto pGa = dynamic_cast<ShuttleGetAutomation*>(&S);
-   if( pGa ){
-      GetAutomationParameters( *(pGa->mpEap) );
+   if (auto pGa = dynamic_cast<ShuttleGetAutomation*>(&visitor)) {
+      SaveSettings(settings, *pGa->mpEap);
       return true;
    }
-   auto pSa = dynamic_cast<ShuttleSetAutomation*>(&S);
-   if( pSa ){
-      SetAutomationParameters( *(pSa->mpEap) );
+   else if (auto pSd = dynamic_cast<ShuttleGetDefinition*>(&visitor);
+       !pSd)
+      // must be the NullShuttle
       return true;
-   }
-   auto pSd  = dynamic_cast<ShuttleGetDefinition*>(&S);
-   if( pSd == nullptr )
-      return true;
-   //wxASSERT( pSd );
 
+   // Get the "definition," only for the help or info commands
    if (mExternal)
       return true;
 
-   if (mIsPrompt)
-   {
-      S.Define( mInputCmd, KEY_Command, "" );
-      S.Define( mParameters, KEY_Parameters, "" );
+   if (mIsPrompt) {
+      visitor.Define( mInputCmd, KEY_Command, wxString{} );
+      visitor.Define( mParameters, KEY_Parameters, wxString{} );
       return true;
    }
 
-   for (size_t c = 0, cnt = mControls.size(); c < cnt; c++)
-   {
-      NyqControl & ctrl = mControls[c];
+   for (const auto &ctrl : mControls) {
       double d = ctrl.val;
 
       if (d == UNINITIALIZED_CONTROL && ctrl.type != NYQ_CTRL_STRING)
-      {
          d = GetCtrlValue(ctrl.valStr);
-      }
 
       if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT ||
           ctrl.type == NYQ_CTRL_TIME)
-      {
-         S.Define( d, static_cast<const wxChar*>( ctrl.var.c_str() ), (double)0.0, ctrl.low, ctrl.high, 1.0);
-      }
-      else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT)
-      {
-         int x=d;
-         S.Define( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0, ctrl.low, ctrl.high, 1);
+         visitor.Define( d, static_cast<const wxChar*>( ctrl.var.c_str() ),
+            (double)0.0, ctrl.low, ctrl.high, 1.0);
+      else if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT) {
+         int x = d;
+         visitor.Define( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0,
+            static_cast<int>(ctrl.low), static_cast<int>(ctrl.high), 1);
          //parms.Write(ctrl.var, (int) d);
       }
-      else if (ctrl.type == NYQ_CTRL_CHOICE)
-      {
+      else if (ctrl.type == NYQ_CTRL_CHOICE) {
          // untranslated
-         int x=d;
+         int x = d;
          //parms.WriteEnum(ctrl.var, (int) d, choices);
-         S.DefineEnum( x, static_cast<const wxChar*>( ctrl.var.c_str() ), 0,
-                       ctrl.choices.data(), ctrl.choices.size() );
+         visitor.DefineEnum( x, static_cast<const wxChar*>( ctrl.var.c_str() ),
+            0, ctrl.choices.data(), ctrl.choices.size() );
       }
-      else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE)
-      {
-         S.Define( ctrl.valStr, ctrl.var, "" , ctrl.lowStr, ctrl.highStr );
+      else if (ctrl.type == NYQ_CTRL_STRING || ctrl.type == NYQ_CTRL_FILE) {
+         visitor.Define( ctrl.valStr, ctrl.var,
+            wxString{}, ctrl.lowStr, ctrl.highStr );
          //parms.Write(ctrl.var, ctrl.valStr);
       }
    }
    return true;
 }
 
-bool NyquistEffect::GetAutomationParameters(CommandParameters & parms) const
+bool NyquistEffect::SaveSettings(
+   const EffectSettings &, CommandParameters & parms) const
 {
    if (mIsPrompt)
    {
@@ -422,7 +420,15 @@ bool NyquistEffect::GetAutomationParameters(CommandParameters & parms) const
    return true;
 }
 
-bool NyquistEffect::SetAutomationParameters(const CommandParameters & parms)
+bool NyquistEffect::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<NyquistEffect*>(this)->DoLoadSettings(parms, settings);
+}
+
+bool NyquistEffect::DoLoadSettings(
+   const CommandParameters & parms, Settings &settings)
 {
    // Due to a constness problem that happens when using the prompt, we need
    // to be ready to switch the params to a local instance.
@@ -1058,19 +1064,23 @@ int NyquistEffect::ShowHostInterface(
 
    if (IsBatchProcessing())
    {
+      // Must give effect its own settings to interpret, not those in access
+      auto newSettings = effect.MakeSettings();
+
       effect.SetBatchProcessing();
       effect.SetCommand(mInputCmd);
 
       CommandParameters cp;
       cp.SetParameters(mParameters);
-      effect.SetAutomationParameters(cp);
+      effect.LoadSettings(cp, newSettings);
 
       // Show the normal (prompt or effect) interface
-      res = effect.ShowHostInterface(parent, factory, access, forceModal);
+      auto newAccess = std::make_shared<SimpleEffectSettingsAccess>(newSettings);
+      res = effect.ShowHostInterface(parent, factory, *newAccess, forceModal);
       if (res)
       {
          CommandParameters cp;
-         effect.GetAutomationParameters(cp);
+         effect.SaveSettings(newSettings, cp);
          cp.GetParameters(mParameters);
       }
    }

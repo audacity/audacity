@@ -93,7 +93,11 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // ComponentInterface implementation
 
    PluginPath GetPath() const override;
-   bool VisitSettings( SettingsVisitor & ) override;
+   bool VisitSettings(
+      SettingsVisitor &visitor, EffectSettings &settings) override;
+   bool VisitSettings(
+      ConstSettingsVisitor &visitor, const EffectSettings &settings)
+      const override;
 
    ComponentInterfaceSymbol GetSymbol() const override;
 
@@ -110,8 +114,10 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      const CommandParameters & parms, Settings &settings) const override;
 
    bool LoadUserPreset(
       const RegistryPath & name, Settings &settings) const override;
@@ -138,9 +144,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
+   size_t GetBlockSize() const override;  
 
-   // VisitSettings(), GetAutomationParameters(), and SetAutomationParameters()
+   // VisitSettings(), SaveSettings(), and LoadSettings()
    // use the functions of EffectParameterMethods.  By default, this function
    // defines an empty list of parameters.
    virtual const EffectParameterMethods &Parameters() const;
@@ -197,9 +203,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // The Effect class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
    void Preview(EffectSettingsAccess &access, bool dryOnly) override;
-   bool GetAutomationParametersAsString(
+   bool SaveSettingsAsString(
       const EffectSettings &settings, wxString & parms) const override;
-   bool SetAutomationParametersFromString(
+   bool LoadSettingsFromString(
       const wxString & parms, EffectSettings &settings) const override;
    bool IsBatchProcessing() const override;
    void SetBatchProcessing() override;

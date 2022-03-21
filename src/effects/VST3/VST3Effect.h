@@ -106,8 +106,10 @@ public:
    bool IsDefault() const override;
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
-   bool GetAutomationParameters(CommandParameters& parms) const override;
-   bool SetAutomationParameters(const CommandParameters& parms) override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      const CommandParameters & parms, Settings &settings) const override;
    bool LoadUserPreset(
       const RegistryPath & name, Settings &settings) const override;
    bool SaveUserPreset(

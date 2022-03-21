@@ -65,8 +65,10 @@ public:
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      const CommandParameters & parms, Settings &settings) const override;
 
    bool LoadUserPreset(
       const RegistryPath & name, Settings &settings) const override;
@@ -170,7 +172,7 @@ private:
 
    void GetChannelCounts();
 
-   bool LoadPreset(const RegistryPath & group);
+   bool LoadPreset(const RegistryPath & group, EffectSettings &settings);
    bool SavePreset(const RegistryPath & group) const;
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)

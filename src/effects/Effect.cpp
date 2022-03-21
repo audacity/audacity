@@ -484,27 +484,40 @@ int Effect::ShowHostInterface(wxWindow &parent,
    return result;
 }
 
-bool Effect::VisitSettings( SettingsVisitor &S )
+bool Effect::VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
 {
    if (mClient)
-      return mClient->VisitSettings( S );
-   Parameters().Visit( *this, S );
+      return mClient->VisitSettings(visitor, settings);
+   Parameters().Visit(*this, visitor, settings);
    return true;
 }
 
-bool Effect::GetAutomationParameters(CommandParameters & parms) const
+bool Effect::VisitSettings(
+   ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
    if (mClient)
-      return mClient->GetAutomationParameters(parms);
-   Parameters().Get( *this, parms );
+      return mClient->VisitSettings(visitor, settings);
+   Parameters().Visit(*this, visitor, settings);
    return true;
 }
 
-bool Effect::SetAutomationParameters(const CommandParameters & parms)
+bool Effect::SaveSettings(
+   const EffectSettings &settings, CommandParameters & parms) const
 {
    if (mClient)
-      return mClient->SetAutomationParameters(parms);
-   return Parameters().Set( *this, parms );
+      return mClient->SaveSettings(settings, parms);
+   Parameters().Get( *this, settings, parms );
+   return true;
+}
+
+bool Effect::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
+{
+   if (mClient)
+      return mClient->LoadSettings(parms, settings);
+   // The first argument, and with it the const_cast, will disappear when
+   // all built-in effects are stateless.
+   return Parameters().Set( *const_cast<Effect*>(this), parms, settings );
 }
 
 bool Effect::LoadUserPreset(
@@ -521,7 +534,7 @@ bool Effect::LoadUserPreset(
       name, wxT("Parameters"), parms))
       return false;
 
-   return SetAutomationParametersFromString(parms, settings);
+   return LoadSettingsFromString(parms, settings);
 }
 
 bool Effect::SaveUserPreset(
@@ -533,7 +546,7 @@ bool Effect::SaveUserPreset(
 
    // Save all settings as a single string value in the registry
    wxString parms;
-   if (!GetAutomationParametersAsString(settings, parms))
+   if (!SaveSettingsAsString(settings, parms))
       return false;
 
    return SetConfig(GetDefinition(), PluginSettings::Private,
@@ -629,7 +642,7 @@ static const FileNames::FileTypes &PresetTypes()
 void Effect::ExportPresets(const EffectSettings &settings) const
 {
    wxString params;
-   GetAutomationParametersAsString(settings, params);
+   SaveSettingsAsString(settings, params);
    auto commandId = GetSquashedName(GetSymbol().Internal());
    params =  commandId.GET() + ":" + params;
 
@@ -717,7 +730,7 @@ void Effect::ImportPresets(EffectSettings &settings)
             }
             return;
          }
-         SetAutomationParametersFromString(params, settings);
+         LoadSettingsFromString(params, settings);
       }
    }
 
@@ -807,18 +820,17 @@ bool Effect::Startup(EffectUIClientInterface *client, EffectSettings &settings)
    return true;
 }
 
-bool Effect::GetAutomationParametersAsString(
-   const EffectSettings &, wxString & parms) const
+bool Effect::SaveSettingsAsString(
+   const EffectSettings &settings, wxString & parms) const
 {
    CommandParameters eap;
    ShuttleGetAutomation S;
    S.mpEap = &eap;
-   // To do: fix const_cast in use of VisitSettings, and pass settings
-   if( const_cast<Effect*>(this)->VisitSettings( S ) ){
+   if( VisitSettings( S, settings ) ){
       ;// got eap value using VisitSettings.
    }
    // Won't be needed in future
-   else if (!GetAutomationParameters(eap))
+   else if (!SaveSettings(settings, eap))
    {
       return false;
    }
@@ -826,7 +838,7 @@ bool Effect::GetAutomationParametersAsString(
    return eap.GetParameters(parms);
 }
 
-bool Effect::SetAutomationParametersFromString(
+bool Effect::LoadSettingsFromString(
    const wxString & parms, EffectSettings &settings) const
 {
    // If the string starts with one of certain significant substrings,
@@ -862,23 +874,23 @@ bool Effect::SetAutomationParametersFromString(
    else
    {
       // If the string did not start with any of the significant substrings,
-      // then use VisitSettings or SetAutomationParameters to reinterpret it,
-      // or use SetAutomationParameters.
-      // This interprets what was written by GetAutomationParameters, above.
+      // then use VisitSettings or LoadSettings to reinterpret it,
+      // or use LoadSettings.
+      // This interprets what was written by SaveSettings, above.
       CommandParameters eap(parms);
       ShuttleSetAutomation S;
       S.SetForValidating( &eap );
       // VisitSettings returns false if not defined for this effect.
       // To do: fix const_cast in use of VisitSettings
-      if ( !const_cast<Effect*>(this)->VisitSettings( S ) )
+      if ( !const_cast<Effect*>(this)->VisitSettings(S, settings) )
          // the old method...
-         success = const_cast<Effect*>(this)->SetAutomationParameters(eap);
+         success = LoadSettings(eap, settings);
       else if( !S.bOK )
          success = false;
       else{
          success = true;
          S.SetForWriting( &eap );
-         const_cast<Effect*>(this)->VisitSettings( S );
+         const_cast<Effect*>(this)->VisitSettings(S, settings);
       }
    }
 

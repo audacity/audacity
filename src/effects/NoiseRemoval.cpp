@@ -175,7 +175,7 @@ int EffectNoiseRemoval::ShowHostInterface(
    dlog.mKeepNoise->SetValue(mbLeaveNoise);
 
    // We may want to twiddle the levels if we are setting
-   // from an automation dialog
+   // from a macro editing dialog
    bool bAllowTwiddleSettings = forceModal;
 
    if (mHasProfile || bAllowTwiddleSettings) {

@@ -929,7 +929,8 @@ bool LV2Effect::InitializePlugin()
    return true;
 }
 
-bool LV2Effect::InitializeInstance(EffectHostInterface *host, EffectSettings &)
+bool LV2Effect::InitializeInstance(
+   EffectHostInterface *host, EffectSettings &settings)
 {
    mHost = host;
    if (mHost)
@@ -951,12 +952,12 @@ bool LV2Effect::InitializeInstance(EffectHostInterface *host, EffectSettings &)
          false);
       if (!haveDefaults)
       {
-         SaveParameters(FactoryDefaultsGroup());
+         SaveParameters(FactoryDefaultsGroup(), settings);
          SetConfig(*this, PluginSettings::Private,
             FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(CurrentSettingsGroup());
+      LoadParameters(CurrentSettingsGroup(), settings);
    }
 
    lv2_atom_forge_init(&mForge, &mURIDMapFeature);
@@ -1464,7 +1465,8 @@ int LV2Effect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool LV2Effect::GetAutomationParameters(CommandParameters &parms) const
+bool LV2Effect::SaveSettings(
+   const EffectSettings &, CommandParameters & parms) const
 {
    for (auto & port : mControlPorts)
    {
@@ -1480,7 +1482,8 @@ bool LV2Effect::GetAutomationParameters(CommandParameters &parms) const
    return true;
 }
 
-bool LV2Effect::SetAutomationParameters(const CommandParameters &parms)
+bool LV2Effect::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
 {
    // First pass validates values
    for (auto & port : mControlPorts)
@@ -1629,15 +1632,16 @@ bool LV2Effect::CloseUI()
 }
 
 bool LV2Effect::LoadUserPreset(
-   const RegistryPath &name, EffectSettings &) const
+   const RegistryPath &name, EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<LV2Effect*>(this)->DoLoadUserPreset(name);
+   return const_cast<LV2Effect*>(this)->DoLoadUserPreset(name, settings);
 }
 
-bool LV2Effect::DoLoadUserPreset(const RegistryPath &name)
+bool LV2Effect::DoLoadUserPreset(
+   const RegistryPath &name, EffectSettings &settings)
 {
-   if (!LoadParameters(name))
+   if (!LoadParameters(name, settings))
    {
       return false;
    }
@@ -1646,9 +1650,9 @@ bool LV2Effect::DoLoadUserPreset(const RegistryPath &name)
 }
 
 bool LV2Effect::SaveUserPreset(
-   const RegistryPath &name, const EffectSettings &) const
+   const RegistryPath &name, const EffectSettings &settings) const
 {
-   return SaveParameters(name);
+   return SaveParameters(name, settings);
 }
 
 RegistryPaths LV2Effect::GetFactoryPresets() const
@@ -1726,15 +1730,15 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
    return state != NULL;
 }
 
-bool LV2Effect::LoadFactoryDefaults(EffectSettings &) const
+bool LV2Effect::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<LV2Effect*>(this)->DoLoadFactoryDefaults();
+   return const_cast<LV2Effect*>(this)->DoLoadFactoryDefaults(settings);
 }
 
-bool LV2Effect::DoLoadFactoryDefaults()
+bool LV2Effect::DoLoadFactoryDefaults(EffectSettings &settings)
 {
-   if (!LoadParameters(FactoryDefaultsGroup()))
+   if (!LoadParameters(FactoryDefaultsGroup(), settings))
    {
       return false;
    }
@@ -1779,7 +1783,8 @@ void LV2Effect::ShowOptions()
 // LV2Effect Implementation
 // ============================================================================
 
-bool LV2Effect::LoadParameters(const RegistryPath &group)
+bool LV2Effect::LoadParameters(
+   const RegistryPath &group, EffectSettings &settings)
 {
    wxString parms;
    if (!GetConfig(*this,
@@ -1794,22 +1799,19 @@ bool LV2Effect::LoadParameters(const RegistryPath &group)
       return false;
    }
 
-   return SetAutomationParameters(eap);
+   return LoadSettings(eap, settings);
 }
 
-bool LV2Effect::SaveParameters(const RegistryPath &group) const
+bool LV2Effect::SaveParameters(
+   const RegistryPath &group, const EffectSettings &settings) const
 {
    CommandParameters eap;
-   if (!GetAutomationParameters(eap))
-   {
+   if (!SaveSettings(settings, eap))
       return false;
-   }
 
    wxString parms;
    if (!eap.GetParameters(parms))
-   {
       return false;
-   }
 
    return SetConfig(*this,
       PluginSettings::Private, group, wxT("Parameters"), parms);

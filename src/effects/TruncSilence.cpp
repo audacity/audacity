@@ -160,9 +160,10 @@ EffectType EffectTruncSilence::GetType() const
 
 // EffectProcessor implementation
 
-bool EffectTruncSilence::SetAutomationParameters(const CommandParameters & parms)
+bool EffectTruncSilence::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
 {
-   Effect::SetAutomationParameters(parms);
+   Effect::LoadSettings(parms, settings);
 
    // A bit of special treatment for two parameters
 
@@ -191,9 +192,12 @@ bool EffectTruncSilence::SetAutomationParameters(const CommandParameters & parms
       if (!parms.ReadAndVerify( ActIndex.key, &temp, ActIndex.def,
          kActionStrings, nActions, kObsoleteActions, nObsoleteActions))
          return false;
-      mActionIndex = temp;
+   
+      // TODO:  fix this when settings are really externalized
+      const_cast<int&>(mActionIndex) = temp;
    }
-   mThresholdDB = myThreshold;
+   // TODO:  fix this when settings are really externalized
+   const_cast<double&>(mThresholdDB) = myThreshold;
    return true;
 }
 

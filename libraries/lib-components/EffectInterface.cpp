@@ -70,7 +70,14 @@ bool EffectDefinitionInterface::IsHiddenFromMenus() const
    return false;
 }
 
-bool EffectDefinitionInterface::VisitSettings( SettingsVisitor & )
+bool EffectDefinitionInterface::VisitSettings(
+   SettingsVisitor &, EffectSettings &)
+{
+   return false;
+}
+
+bool EffectDefinitionInterface::VisitSettings(
+   ConstSettingsVisitor &, const EffectSettings &) const
 {
    return false;
 }
@@ -87,26 +94,6 @@ bool EffectDefinitionInterfaceEx::CopySettingsContents(
 {
    //! No real copy, just a sanity check on common origin
    return FindMe(src) && FindMe(dst);
-}
-
-bool EffectDefinitionInterfaceEx::SaveSettings(
-   const Settings &settings, CommandParameters & parms) const
-{
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->GetAutomationParameters(parms);
-   else
-      return false;
-}
-
-bool EffectDefinitionInterfaceEx::LoadSettings(
-   CommandParameters & parms, Settings &settings) const
-{
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->SetAutomationParameters(parms);
-   else
-      return false;
 }
 
 EffectDefinitionInterfaceEx *

@@ -24,16 +24,22 @@ class AUDACITY_DLL_API EffectParameterMethods {
 public:
    virtual ~EffectParameterMethods();
    virtual void Reset(Effect &effect) const = 0;
-   virtual void Visit(Effect &effect, SettingsVisitor & S) const = 0;
-   virtual void Get(const Effect &effect, CommandParameters & parms) const = 0;
-   virtual bool Set(Effect &effect, const CommandParameters & parms) const = 0;
+   virtual void Visit(Effect &effect,
+      SettingsVisitor &visitor, EffectSettings &settings) const = 0;
+   virtual void Visit(const Effect &effect,
+      ConstSettingsVisitor &visitor, const EffectSettings &settings) const = 0;
+   virtual void Get(const Effect &effect, const EffectSettings &settings,
+      CommandParameters & parms) const = 0;
+   virtual bool Set(Effect &effect,
+      const CommandParameters & parms, EffectSettings &settings) const = 0;
 };
 
 //! Generates EffectParameterMethods overrides from variadic template arguments.
 /*!
 For each effect parameter, the function...
    Reset resets it to a default
-   Visit visits it with a SettingsVisitor object
+   Visit visits it with a SettingsVisitor object; there are overloads taking
+      SettingsVisitor and ConstSettingsVisitor
    Get serializes it to a string
    Set deserializes it from a string and returns a success flag (if there is
       failure, parameters might not all be unchanged)
@@ -66,7 +72,7 @@ public:
    // Returns true if successful, but that is ignored when resetting
    // When all effects become stateless, EffectType argument won't be needed
    using PostSetFunction =
-      std::function< bool(EffectType&, Params &, bool) >;
+      std::function< bool(EffectType&, EffectSettings &, Params &, bool) >;
 
    // Constructors
 
@@ -75,7 +81,8 @@ public:
    template< typename Fn,
       // Require that the argument be callable with appropriate arguments
       typename = decltype( std::declval<Fn>()(
-         std::declval<EffectType &>(), std::declval<Params &>(), true) )
+         std::declval<EffectType &>(), std::declval<EffectSettings &>(),
+         std::declval<Params &>(), true) )
    >
    // Like the previous, but with an argument,
    // which is called at the end of Reset or Set.  Its return value is
@@ -88,28 +95,43 @@ public:
       EffectSettings dummy;
       if (auto pStruct = EffectType::FetchParameters(
          static_cast<EffectType&>(effect), dummy))
-         DoReset(effect, *pStruct, *this);
+         DoReset(effect, dummy, *pStruct, *this);
    }
-   void Visit(Effect &effect, SettingsVisitor & S) const override {
-      EffectSettings dummy;
+   void Visit(Effect &effect,
+      SettingsVisitor &visitor, EffectSettings &settings)
+      const override {
       if (auto pStruct = EffectType::FetchParameters(
-         static_cast<EffectType&>(effect), dummy))
-         DoVisit(*pStruct, S);
+         static_cast<EffectType&>(effect), settings))
+         DoVisit<false>(*pStruct, visitor);
    }
-   void Get(const Effect &effect, CommandParameters & parms) const override {
-      EffectSettings dummy;
+   void Visit(const Effect &effect,
+      ConstSettingsVisitor &visitor, const EffectSettings &settings)
+      const override {
       // const_cast the effect...
-      auto &nonconstEffect = const_cast<Effect &>(effect);
+      auto &nonconstEffect = const_cast<Effect&>(effect);
+      // ... and the settings ...
+      auto &nonconstSettings = const_cast<EffectSettings&>(settings);
       // ... but only to fetch the structure and pass it as const &
       if (auto pStruct = EffectType::FetchParameters(
-         static_cast<EffectType&>(nonconstEffect), dummy))
+         static_cast<EffectType&>(nonconstEffect), nonconstSettings))
+         DoVisit(*pStruct, visitor);
+   }
+   void Get(const Effect &effect, const EffectSettings &settings,
+      CommandParameters & parms) const override {
+      // const_cast the effect...
+      auto &nonconstEffect = const_cast<Effect &>(effect);
+      // ... and the settings ...
+      auto &nonconstSettings = const_cast<EffectSettings&>(settings);
+      // ... but only to fetch the structure and pass it as const &
+      if (auto pStruct = EffectType::FetchParameters(
+         static_cast<EffectType&>(nonconstEffect), nonconstSettings))
          DoGet(*pStruct, parms);
    }
-   bool Set(Effect &effect, const CommandParameters & parms) const override {
-      EffectSettings dummy;
+   bool Set(Effect &effect, const CommandParameters & parms,
+      EffectSettings &settings) const override {
       if (auto pStruct = EffectType::FetchParameters(
-         static_cast<EffectType&>(effect), dummy))
-         return DoSet(effect, *pStruct, *this, parms);
+         static_cast<EffectType&>(effect), settings))
+         return DoSet(effect, settings, *pStruct, *this, parms);
       else
          return false;
    }
@@ -127,31 +149,37 @@ private:
       // Do one assignment of the default value
       structure.*(param.mem) = param.def;
    }
-   static void DoReset(Effect &effect, Params &structure,
+   static void DoReset(Effect &effect, EffectSettings settings,
+      Params &structure,
       const CapturedParameters &This) {
       (ResetOne(structure, Parameters), ...);
       // Call the post-set function after all other assignments
       if (This.PostSetFn)
-         This.PostSetFn(static_cast<EffectType&>(effect), structure, false);
+         This.PostSetFn(
+            static_cast<EffectType&>(effect), settings, structure, false);
    }
 
-   template< typename Member, typename Type, typename Value >
-   static void VisitOne(Params &structure, SettingsVisitor &S,
+   template< bool Const, typename Member, typename Type, typename Value >
+   static void VisitOne(Params &structure, SettingsVisitorBase<Const> &visitor,
       const EffectParameter< Params, Member, Type, Value > &param) {
       // Visit one variable
-      S.Define( structure.*(param.mem),
-         param.key, param.def, param.min, param.max, param.scale );
+      visitor.Define( structure.*(param.mem), param.key,
+         static_cast<Member>(param.def),
+         static_cast<Member>(param.min),
+         static_cast<Member>(param.max),
+         static_cast<Member>(param.scale) );
    }
    // More specific overload for enumeration parameters
-   template< typename Member >
-   static void VisitOne(Params &structure, SettingsVisitor &S,
+   template< bool Const, typename Member >
+   static void VisitOne(Params &structure, SettingsVisitorBase<Const> &visitor,
       const EnumParameter<Params, Member> &param) {
       // Visit one enumeration variable, passing the table of names
-      S.DefineEnum( structure.*(param.mem),
+      visitor.DefineEnum( structure.*(param.mem),
          param.key, param.def, param.symbols, param.nSymbols );
    }
-   static void DoVisit(Params &structure, SettingsVisitor &S) {
-      (VisitOne(structure, S, Parameters), ...);
+   template<bool Const>
+   static void DoVisit(Params &structure, SettingsVisitorBase<Const> &visitor) {
+      (VisitOne<Const>(structure, visitor, Parameters), ...);
    }
 
    template< typename Member, typename Type, typename Value >
@@ -197,40 +225,42 @@ private:
       structure.*(param.mem) = temp;
       return true;
    }
-   static bool DoSet(Effect &effect, Params &structure,
+   static bool DoSet(Effect &effect,
+      EffectSettings &settings, Params &structure,
       const CapturedParameters &This, const CommandParameters &parms) {
       if (!(SetOne(structure, parms, Parameters) && ...))
          return false;
       // Call the post-set function after all other assignments, or return
       // true if no function was given
       return !This.PostSetFn ||
-         This.PostSetFn(static_cast<EffectType&>(effect), structure, true);
+         This.PostSetFn(
+            static_cast<EffectType&>(effect), settings, structure, true);
    }
 };
 
 /**************************************************************************//**
 \brief SettingsVisitor that gets parameter values into a string.
 ********************************************************************************/
-class AUDACITY_DLL_API ShuttleGetAutomation final : public SettingsVisitor
+class AUDACITY_DLL_API ShuttleGetAutomation final : public ConstSettingsVisitor
 {
 public:
-   SettingsVisitor & Optional( bool & var ) override;
-   void Define( bool & var, const wxChar * key, bool vdefault,
-      bool vmin, bool vmax, bool vscl ) override;
-   void Define( int & var, const wxChar * key, int vdefault,
-      int vmin, int vmax, int vscl ) override;
-   void Define( size_t & var, const wxChar * key, int vdefault,
-      int vmin, int vmax, int vscl ) override;
-   void Define( float & var, const wxChar * key, float vdefault,
-      float vmin, float vmax, float vscl ) override;
-   void Define( double & var, const wxChar * key, float vdefault,
-      float vmin, float vmax, float vscl ) override;
-   void Define( double & var, const wxChar * key, double vdefault,
-      double vmin, double vmax, double vscl ) override;
-   void Define( wxString &var,  const wxChar * key, wxString vdefault,
-      wxString vmin, wxString vmax, wxString vscl ) override;
-   void DefineEnum( int &var, const wxChar * key, int vdefault,
-      const EnumValueSymbol strings[], size_t nStrings ) override;
+   ConstSettingsVisitor & Optional(const bool & var) override;
+   void Define(bool var, const wxChar * key, bool vdefault,
+      bool vmin, bool vmax, bool vscl) override;
+   void Define(int var, const wxChar * key, int vdefault,
+      int vmin, int vmax, int vscl) override;
+   void Define(size_t var, const wxChar * key, int vdefault,
+      int vmin, int vmax, int vscl) override;
+   void Define(float var, const wxChar * key, float vdefault,
+      float vmin, float vmax, float vscl) override;
+   void Define(double var, const wxChar * key, float vdefault,
+      float vmin, float vmax, float vscl) override;
+   void Define(double var, const wxChar * key, double vdefault,
+      double vmin, double vmax, double vscl) override;
+   void Define(const wxString &var,  const wxChar * key, wxString vdefault,
+      wxString vmin, wxString vmax, wxString vscl) override;
+   void DefineEnum(int var, const wxChar * key, int vdefault,
+      const EnumValueSymbol strings[], size_t nStrings) override;
 };
 
 /**************************************************************************//**

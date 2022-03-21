@@ -37,7 +37,7 @@ const EffectParameterMethods& EffectDtmf::Parameters() const
    static CapturedParameters<EffectDtmf,
       Sequence, DutyCycle, Amplitude
    > parameters{
-      [](EffectDtmf &effect, Settings &s, bool updating){
+      [](EffectDtmf &effect, EffectSettings &, Settings &s, bool updating){
          if (updating) {
             if (s.dtmfSequence.find_first_not_of(AllSymbols())
                 != wxString::npos)

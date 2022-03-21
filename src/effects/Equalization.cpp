@@ -178,7 +178,8 @@ const EffectParameterMethods& EffectEqualization::Parameters() const
       // specified in chains, but must keep it that way for compatibility.
       InterpMeth
    > parameters {
-      [](EffectEqualization &, EffectEqualization &effect, bool updating){
+      [](EffectEqualization &, EffectSettings &, EffectEqualization &effect,
+         bool updating){
          if (updating) {
             if (effect.mInterp >= nInterpolations)
                effect.mInterp -= nInterpolations;
@@ -373,25 +374,34 @@ EffectType EffectEqualization::GetType() const
 }
 
 // EffectProcessor implementation
-bool EffectEqualization::VisitSettings( SettingsVisitor &S )
+bool EffectEqualization::VisitSettings(
+   ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
-   Effect::VisitSettings(S);
+   Effect::VisitSettings(visitor, settings);
 
-   // if saving the preferences...
-   if( dynamic_cast<ShuttleGetAutomation*>(&S))
-   {
+   // Curve point parameters -- how many isn't known statically
+   if( dynamic_cast<ShuttleGetAutomation*>(&visitor)) {
       int numPoints = mCurves[ 0 ].points.size();
       int point;
       for( point = 0; point < numPoints; point++ )
       {
          const wxString nameFreq = wxString::Format("f%i",point);
          const wxString nameVal = wxString::Format("v%i",point);
-         S.Define( mCurves[ 0 ].points[ point ].Freq,  nameFreq, 0.0,  0.0, 0.0, 0.0 );
-         S.Define( mCurves[ 0 ].points[ point ].dB,    nameVal,  0.0, 0.0, 0.0, 0.0 );
+         visitor.Define( mCurves[ 0 ].points[ point ].Freq, nameFreq,
+            0.0, 0.0, 0.0, 0.0 );
+         visitor.Define( mCurves[ 0 ].points[ point ].dB, nameVal,
+            0.0, 0.0, 0.0, 0.0 );
       }
-
    }
-   else
+   return true;
+}
+
+bool EffectEqualization::VisitSettings(
+   SettingsVisitor &visitor, EffectSettings &settings)
+{
+   Effect::VisitSettings(visitor, settings);
+
+   // Curve point parameters -- how many isn't known statically
    {
       mCurves[0].points.clear();
    
@@ -401,15 +411,14 @@ bool EffectEqualization::VisitSettings( SettingsVisitor &S )
          const wxString nameVal = wxString::Format("v%i",i);
          double f = -1000.0;
          double d = 0.0;
-         S.Define( f,  nameFreq, 0.0,  -10000.0, 1000000.0, 0.0 );
-         S.Define( d, nameVal,  0.0, -10000.0, 10000.0, 0.0 );
+         visitor.Define( f, nameFreq, 0.0,  -10000.0, 1000000.0, 0.0 );
+         visitor.Define( d, nameVal,  0.0, -10000.0, 10000.0, 0.0 );
          if( f <= 0.0 )
             break;
          mCurves[0].points.push_back( EQPoint( f,d ));
       }
       setCurve( 0 );
    }
-
    return true;
 }
 
@@ -476,7 +485,7 @@ RegistryPaths EffectEqualization::GetFactoryPresets() const
    return names;
 }
 
-bool EffectEqualization::LoadFactoryPreset(int id, EffectSettings &) const
+bool EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    int index = -1;
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
@@ -498,7 +507,7 @@ bool EffectEqualization::LoadFactoryPreset(int id, EffectSettings &) const
    ShuttleSetAutomation S;
    S.SetForWriting( &eap );
    // To do: externalize state so const_cast isn't needed
-   const_cast<EffectEqualization*>(this)->VisitSettings( S );
+   const_cast<EffectEqualization*>(this)->VisitSettings(S, settings);
    return true;
 }
 

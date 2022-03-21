@@ -166,23 +166,26 @@ TranslatableString EffectManager::GetCommandTip(const PluginID & ID)
 
 void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags)
 {
-   EffectDefinitionInterface *effect = nullptr;
+   const EffectDefinitionInterface *effect = nullptr;
+   const EffectSettings *settings;
    AudacityCommand *command = nullptr;
 
-   if (auto edi = GetEffect(ID))
-      // Fixing this will be a large and difficult thing, so for the time being we only cast the constness away
-      effect = const_cast<EffectDefinitionInterface*>(&edi->GetDefinition());
+   if (auto [edi, pSettings] = GetEffectAndDefaultSettings(ID); edi) {
+      effect = &edi->GetDefinition();
+      assert(settings);
+      settings = pSettings;
+   }
    else
       command = GetAudacityCommand( ID );
    if ( !effect && !command )
       return;
 
-   SettingsVisitor NullShuttle;
+   ConstSettingsVisitor NullShuttle;
 
    // Test if it defines any parameters at all.
    bool bHasParams = command
       ? command->VisitSettings( NullShuttle )
-      : effect->VisitSettings( NullShuttle );
+      : effect->VisitSettings( NullShuttle, *settings );
    if ( (flags == 0) && !bHasParams )
       return;
 
@@ -199,7 +202,7 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
       S.StartArray();
       command
          ? command->VisitSettings( S )
-         : effect->VisitSettings( S );
+         : effect->VisitSettings( S, *settings );
       S.EndArray();
       S.EndField();
    }
@@ -248,7 +251,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
       assert(pair.second);
       wxString parms;
 
-      effect->GetAutomationParametersAsString(*pair.second, parms);
+      effect->SaveSettingsAsString(*pair.second, parms);
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
@@ -266,7 +269,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
    {
       wxString parms;
 
-      command->GetAutomationParametersAsString(parms);
+      command->SaveSettingsAsString(parms);
 
       // Some effects don't have automatable parameters and will not return
       // anything, so try to get the active preset (current or factory).
@@ -292,11 +295,11 @@ bool EffectManager::SetEffectParameters(
       // Check first for what GetDefaultPreset() might have written
       if (eap.HasEntry(wxT("Use Preset")))
       {
-         return effect->SetAutomationParametersFromString(
+         return effect->LoadSettingsFromString(
             eap.Read(wxT("Use Preset")), settings);
       }
 
-      return effect->SetAutomationParametersFromString(params, settings);
+      return effect->LoadSettingsFromString(params, settings);
    }
    AudacityCommand *command = GetAudacityCommand(ID);
    
@@ -310,10 +313,10 @@ bool EffectManager::SetEffectParameters(
       if (eap.HasEntry(wxT("Use Preset")))
       {
          return command
-            ->SetAutomationParametersFromString(eap.Read(wxT("Use Preset")));
+            ->LoadSettingsFromString(eap.Read(wxT("Use Preset")));
       }
 
-      return command->SetAutomationParametersFromString(params);
+      return command->LoadSettingsFromString(params);
    }
    return false;
 }

@@ -290,8 +290,10 @@ public:
       return mAutomatable;
    }
 
-   bool GetAutomationParameters(CommandParameters &) const override { return true; }
-   bool SetAutomationParameters(const CommandParameters &) override { return true; }
+   bool SaveSettings(const EffectSettings &, CommandParameters &) const override
+      { return true; }
+   bool LoadSettings(const CommandParameters &, Settings &) const override
+      { return true; }
 
    bool LoadUserPreset(const RegistryPath &, Settings &) const override
       { return true; }
@@ -1315,7 +1317,8 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
-bool VSTEffect::InitializeInstance(EffectHostInterface *host, EffectSettings &)
+bool VSTEffect::InitializeInstance(
+   EffectHostInterface *host, EffectSettings &settings)
 {
    mHost = host;
    if (mHost)
@@ -1335,14 +1338,13 @@ bool VSTEffect::InitializeInstance(EffectHostInterface *host, EffectSettings &)
          false);
       if (!haveDefaults)
       {
-         SaveParameters(FactoryDefaultsGroup());
+         SaveParameters(FactoryDefaultsGroup(), settings);
          SetConfig(*this, PluginSettings::Private,
             FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(CurrentSettingsGroup());
+      LoadParameters(CurrentSettingsGroup(), settings);
    }
-
    return true;
 }
 
@@ -1620,7 +1622,8 @@ int VSTEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool VSTEffect::GetAutomationParameters(CommandParameters & parms) const
+bool VSTEffect::SaveSettings(
+   const EffectSettings &, CommandParameters & parms) const
 {
    for (int i = 0; i < mAEffect->numParams; i++)
    {
@@ -1640,9 +1643,10 @@ bool VSTEffect::GetAutomationParameters(CommandParameters & parms) const
    return true;
 }
 
-bool VSTEffect::SetAutomationParameters(const CommandParameters & parms)
+bool VSTEffect::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
 {
-   callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+   constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    for (int i = 0; i < mAEffect->numParams; i++)
    {
       wxString name = GetString(effGetParamName, i);
@@ -1659,26 +1663,27 @@ bool VSTEffect::SetAutomationParameters(const CommandParameters & parms)
 
       if (d >= -1.0 && d <= 1.0)
       {
-         callSetParameter(i, d);
+         const_cast<VSTEffect*>(this)->callSetParameter(i, d);
          for (const auto &slave : mSlaves)
             slave->callSetParameter(i, d);
       }
    }
-   callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+   constCallDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 
    return true;
 }
 
 bool VSTEffect::LoadUserPreset(
-   const RegistryPath & name, EffectSettings &) const
+   const RegistryPath & name, EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<VSTEffect*>(this)->DoLoadUserPreset(name);
+   return const_cast<VSTEffect*>(this)->DoLoadUserPreset(name, settings);
 }
 
-bool VSTEffect::DoLoadUserPreset(const RegistryPath & name)
+bool VSTEffect::DoLoadUserPreset(
+   const RegistryPath & name, EffectSettings &settings)
 {
-   if (!LoadParameters(name))
+   if (!LoadParameters(name, settings))
    {
       return false;
    }
@@ -1689,9 +1694,9 @@ bool VSTEffect::DoLoadUserPreset(const RegistryPath & name)
 }
 
 bool VSTEffect::SaveUserPreset(
-   const RegistryPath & name, const EffectSettings &) const
+   const RegistryPath & name, const EffectSettings &settings) const
 {
-   return SaveParameters(name);
+   return SaveParameters(name, settings);
 }
 
 RegistryPaths VSTEffect::GetFactoryPresets() const
@@ -1727,15 +1732,15 @@ bool VSTEffect::DoLoadFactoryPreset(int id)
    return true;
 }
 
-bool VSTEffect::LoadFactoryDefaults(EffectSettings &) const
+bool VSTEffect::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<VSTEffect*>(this)->DoLoadFactoryDefaults();
+   return const_cast<VSTEffect*>(this)->DoLoadFactoryDefaults(settings);
 }
 
-bool VSTEffect::DoLoadFactoryDefaults()
+bool VSTEffect::DoLoadFactoryDefaults(EffectSettings &settings)
 {
-   if (!LoadParameters(FactoryDefaultsGroup()))
+   if (!LoadParameters(FactoryDefaultsGroup(), settings))
    {
       return false;
    }
@@ -2305,7 +2310,8 @@ std::vector<int> VSTEffect::GetEffectIDs()
    return effectIDs;
 }
 
-bool VSTEffect::LoadParameters(const RegistryPath & group)
+bool VSTEffect::LoadParameters(
+   const RegistryPath & group, EffectSettings &settings)
 {
    wxString value;
 
@@ -2351,10 +2357,11 @@ bool VSTEffect::LoadParameters(const RegistryPath & group)
       return false;
    }
 
-   return SetAutomationParameters(eap);
+   return LoadSettings(eap, settings);
 }
 
-bool VSTEffect::SaveParameters(const RegistryPath & group) const
+bool VSTEffect::SaveParameters(
+   const RegistryPath & group, const EffectSettings &settings) const
 {
    SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"),
       mAEffect->uniqueID);
@@ -2378,7 +2385,7 @@ bool VSTEffect::SaveParameters(const RegistryPath & group) const
    }
 
    CommandParameters eap;
-   if (!GetAutomationParameters(eap))
+   if (!SaveSettings(settings, eap))
    {
       return false;
    }

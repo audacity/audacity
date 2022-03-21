@@ -44,7 +44,7 @@
 
 #include "ComponentInterface.h"
 #include "ComponentInterfaceSymbol.h"
-#include "EffectAutomationParameters.h" // for command automation
+#include "EffectAutomationParameters.h"
 
 #include "TypedAny.h"
 #include <memory>
@@ -138,7 +138,8 @@ read-only information about effect properties, and getting and setting of
 parameters.
 
 *******************************************************************************************/
-class COMPONENTS_API EffectDefinitionInterface  /* not final */ : public ComponentInterface
+class COMPONENTS_API EffectDefinitionInterface  /* not final */
+   : public ComponentInterface
 {
 public:
    using Settings = EffectSettings;
@@ -216,7 +217,7 @@ public:
     @return true on success
     */
    virtual bool LoadSettings(
-      CommandParameters & parms, Settings &settings) const = 0;
+      const CommandParameters & parms, Settings &settings) const = 0;
 
    //! Report names of factory presets
    virtual RegistryPaths GetFactoryPresets() const = 0;
@@ -236,7 +237,12 @@ public:
 
    //! Visit settings, if defined.  false means no defined settings.
    //! Default implementation returns false
-   virtual bool VisitSettings( SettingsVisitor & );
+   virtual bool VisitSettings(
+      SettingsVisitor &visitor, EffectSettings &settings);
+   //! Visit settings, if defined.  false means no defined settings.
+   //! Default implementation returns false
+   virtual bool VisitSettings(
+      ConstSettingsVisitor &visitor, const EffectSettings &settings) const;
 };
 
 //! Extension of EffectDefinitionInterface with old system for settings
@@ -251,16 +257,6 @@ class COMPONENTS_API EffectDefinitionInterfaceEx  /* not final */
    : public EffectDefinitionInterface
 {
 public:
-   /*! @name Old settings interface
-    Old interface for saving and loading non-externalized settings
-    */
-   //! @{
-   //! Save current settings into parms
-   virtual bool GetAutomationParameters(CommandParameters & parms) const = 0;
-   //! Change settings to those stored in parms
-   virtual bool SetAutomationParameters(const CommandParameters & parms) = 0;
-   //! @}
-
    /*! @name settings
     Default implementation of the nominally const methods call through to the
     old non-const interface
@@ -269,10 +265,6 @@ public:
    Settings MakeSettings() const override;
    bool CopySettingsContents(
       const EffectSettings &src, EffectSettings &dst) const override;
-   bool SaveSettings(
-      const Settings &settings, CommandParameters & parms) const override;
-   bool LoadSettings(
-      CommandParameters & parms, Settings &settings) const override;
    //! @}
 
 private:

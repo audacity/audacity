@@ -463,7 +463,7 @@ int EffectNoiseReduction::ShowHostInterface(
    // Doesn't use the factory but substitutes its own dialog
 
    // We may want to twiddle the levels if we are setting
-   // from an automation dialog
+   // from a macro editing dialog
    return mSettings->PromptUser(this, access, parent,
       bool(mStatistics), forceModal);
 }

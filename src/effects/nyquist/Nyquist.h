@@ -91,12 +91,20 @@ public:
    bool IsDefault() const override;
    bool EnablesDebug() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) const override;
-   bool SetAutomationParameters(const CommandParameters & parms) override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      const CommandParameters & parms, Settings &settings) const override;
+   bool DoLoadSettings(
+      const CommandParameters & parms, Settings &settings);
 
    // EffectProcessor implementation
 
-   bool VisitSettings( SettingsVisitor & S ) override;
+   bool VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
+      override;
+   bool VisitSettings(
+      ConstSettingsVisitor &visitor, const EffectSettings &settings)
+      const override;
    int SetLispVarsFromParameters(const CommandParameters & parms, bool bTestOnly);
 
    // Effect implementation

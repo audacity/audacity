@@ -1040,7 +1040,7 @@ bool AudioUnitEffect::InitializePlugin()
 }
 
 bool AudioUnitEffect::InitializeInstance(
-   EffectHostInterface *host, EffectSettings &)
+   EffectHostInterface *host, EffectSettings &settings)
 {
    OSStatus result;
 
@@ -1067,7 +1067,7 @@ bool AudioUnitEffect::InitializeInstance(
             FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadPreset(CurrentSettingsGroup());
+      LoadPreset(CurrentSettingsGroup(), settings);
    }
 
    return true;
@@ -1467,7 +1467,8 @@ int AudioUnitEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms) const
+bool AudioUnitEffect::SaveSettings(
+   const EffectSettings &, CommandParameters & parms) const
 {
    OSStatus result;
    UInt32 dataSize;
@@ -1530,7 +1531,8 @@ bool AudioUnitEffect::GetAutomationParameters(CommandParameters & parms) const
    return true;
 }
 
-bool AudioUnitEffect::SetAutomationParameters(const CommandParameters & parms)
+bool AudioUnitEffect::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
 {
    OSStatus result;
    UInt32 dataSize;
@@ -1592,10 +1594,10 @@ bool AudioUnitEffect::SetAutomationParameters(const CommandParameters & parms)
 }
 
 bool AudioUnitEffect::LoadUserPreset(
-   const RegistryPath & name, EffectSettings &) const
+   const RegistryPath & name, EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<AudioUnitEffect*>(this)->LoadPreset(name);
+   return const_cast<AudioUnitEffect*>(this)->LoadPreset(name, settings);
 }
 
 bool AudioUnitEffect::SaveUserPreset(
@@ -1645,10 +1647,11 @@ bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
    return result == noErr;
 }
 
-bool AudioUnitEffect::LoadFactoryDefaults(EffectSettings &) const
+bool AudioUnitEffect::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<AudioUnitEffect*>(this)->LoadPreset(FactoryDefaultsGroup());
+   return const_cast<AudioUnitEffect*>(this)
+      ->LoadPreset(FactoryDefaultsGroup(), settings);
 }
 
 RegistryPaths AudioUnitEffect::GetFactoryPresets() const
@@ -1911,7 +1914,8 @@ void AudioUnitEffect::ShowOptions()
 // AudioUnitEffect Implementation
 // ============================================================================
 
-bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
+bool AudioUnitEffect::LoadPreset(
+   const RegistryPath & group, EffectSettings &settings)
 {
    wxString parms;
 
@@ -1923,7 +1927,7 @@ bool AudioUnitEffect::LoadPreset(const RegistryPath & group)
       CommandParameters eap;
       if (eap.SetParameters(parms))
       {
-         if (SetAutomationParameters(eap))
+         if (LoadSettings(eap, settings))
          {
             if (SavePreset(group))
             {

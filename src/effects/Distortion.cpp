@@ -64,7 +64,8 @@ const EffectParameterMethods& EffectDistortion::Parameters() const
    static CapturedParameters<EffectDistortion,
       TableTypeIndx, DCBlock, Threshold_dB, NoiseFloor, Param1, Param2, Repeats
    > parameters{
-      [](EffectDistortion &e, Params &p, bool updating) {
+      [](EffectDistortion &e, EffectSettings &settings, Params &p,
+         bool updating) {
          if (!updating)
             e.mThreshold = DB_TO_LINEAR(p.mThreshold_dB);
          return true;
