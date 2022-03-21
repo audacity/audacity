@@ -413,8 +413,13 @@ bool EffectEqualization::VisitSettings( SettingsVisitor &S )
    return true;
 }
 
-// This function Apparently not used anymore.
-bool EffectEqualization::LoadFactoryDefaults()
+bool EffectEqualization::LoadFactoryDefaults(EffectSettings &settings) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<EffectEqualization&>(*this).DoLoadFactoryDefaults(settings);
+}
+
+bool EffectEqualization::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    mdBMin = dBMin.def;
    mdBMax = dBMax.def;
@@ -426,7 +431,7 @@ bool EffectEqualization::LoadFactoryDefaults()
    if( mOptions == kEqOptionGraphic)
       mDrawMode = false;
 
-   return Effect::LoadFactoryDefaults();
+   return Effect::LoadFactoryDefaults(settings);
 }
 
 // Constants determining who the prests are for.
@@ -471,7 +476,7 @@ RegistryPaths EffectEqualization::GetFactoryPresets() const
    return names;
 }
 
-bool EffectEqualization::LoadFactoryPreset(int id)
+bool EffectEqualization::LoadFactoryPreset(int id, EffectSettings &) const
 {
    int index = -1;
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
@@ -492,7 +497,8 @@ bool EffectEqualization::LoadFactoryPreset(int id)
    CommandParameters eap(params);
    ShuttleSetAutomation S;
    S.SetForWriting( &eap );
-   VisitSettings(S);
+   // To do: externalize state so const_cast isn't needed
+   const_cast<EffectEqualization*>(this)->VisitSettings( S );
    return true;
 }
 
@@ -663,10 +669,13 @@ bool EffectEqualization::CloseUI()
 }
 
 std::unique_ptr<EffectUIValidator>
-EffectEqualization::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+EffectEqualization::PopulateOrExchange(
+   ShuttleGui & S, EffectSettingsAccess &access)
 {
    if ( (S.GetMode() == eIsCreating ) && !IsBatchProcessing() )
-      LoadUserPreset(CurrentSettingsGroup());
+      access.ModifySettings([&](EffectSettings &settings){
+         LoadUserPreset(CurrentSettingsGroup(), settings);
+      });
 
    //LoadCurves();
 

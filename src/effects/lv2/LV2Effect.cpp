@@ -929,7 +929,7 @@ bool LV2Effect::InitializePlugin()
    return true;
 }
 
-bool LV2Effect::InitializeInstance(EffectHostInterface *host)
+bool LV2Effect::InitializeInstance(EffectHostInterface *host, EffectSettings &)
 {
    mHost = host;
    if (mHost)
@@ -1628,7 +1628,14 @@ bool LV2Effect::CloseUI()
    return true;
 }
 
-bool LV2Effect::LoadUserPreset(const RegistryPath &name)
+bool LV2Effect::LoadUserPreset(
+   const RegistryPath &name, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<LV2Effect*>(this)->DoLoadUserPreset(name);
+}
+
+bool LV2Effect::DoLoadUserPreset(const RegistryPath &name)
 {
    if (!LoadParameters(name))
    {
@@ -1685,7 +1692,13 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
    return mFactoryPresetNames;
 }
 
-bool LV2Effect::LoadFactoryPreset(int id)
+bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<LV2Effect*>(this)->DoLoadFactoryPreset(id);
+}
+
+bool LV2Effect::DoLoadFactoryPreset(int id)
 {
    if (id < 0 || id >= (int) mFactoryPresetUris.size())
    {
@@ -1713,7 +1726,13 @@ bool LV2Effect::LoadFactoryPreset(int id)
    return state != NULL;
 }
 
-bool LV2Effect::LoadFactoryDefaults()
+bool LV2Effect::LoadFactoryDefaults(EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<LV2Effect*>(this)->DoLoadFactoryDefaults();
+}
+
+bool LV2Effect::DoLoadFactoryDefaults()
 {
    if (!LoadParameters(FactoryDefaultsGroup()))
    {
@@ -1732,7 +1751,7 @@ void LV2Effect::ExportPresets(const EffectSettings &) const
 {
 }
 
-void LV2Effect::ImportPresets()
+void LV2Effect::ImportPresets(EffectSettings &)
 {
 }
 

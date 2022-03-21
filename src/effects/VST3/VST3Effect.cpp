@@ -397,7 +397,8 @@ bool VST3Effect::SetAutomationParameters(const CommandParameters& parms)
    return true;
 }
 
-bool VST3Effect::LoadUserPreset(const RegistryPath& name)
+bool VST3Effect::LoadUserPreset(
+   const RegistryPath& name, EffectSettings &settings) const
 {
    using namespace Steinberg;
 
@@ -425,7 +426,7 @@ bool VST3Effect::LoadUserPreset(const RegistryPath& name)
          mEditController->setState(controllerState) != kResultOk)
          return false;
    }
-   SyncParameters();
+   SyncParameters(settings);
 
    return true;
 }
@@ -471,17 +472,18 @@ RegistryPaths VST3Effect::GetFactoryPresets() const
    return mFactoryPresets;
 }
 
-bool VST3Effect::LoadFactoryPreset(int id)
+bool VST3Effect::LoadFactoryPreset(int id, EffectSettings &) const
 {
    if(id >= 0 && id < mFactoryPresets.size())
    {
       auto filename = wxFileName(GetFactoryPresetsPath(mEffectClassInfo), mFactoryPresets[id] + ".vstpreset");
-      return LoadPreset(filename.GetFullPath());
+      // To do: externalize state so const_cast isn't needed
+      return const_cast<VST3Effect*>(this)->LoadPreset(filename.GetFullPath());
    }
    return true;
 }
 
-bool VST3Effect::LoadFactoryDefaults()
+bool VST3Effect::LoadFactoryDefaults(EffectSettings &) const
 {
    using namespace Steinberg;
    if(mComponentHandler == nullptr)
@@ -601,7 +603,8 @@ size_t VST3Effect::GetTailSize()
    return 0;
 }
 
-bool VST3Effect::ProcessInitialize(EffectSettings &, sampleCount, ChannelNames)
+bool VST3Effect::ProcessInitialize(
+   EffectSettings &settings, sampleCount, ChannelNames)
 {
    using namespace Steinberg;
 
@@ -610,7 +613,7 @@ bool VST3Effect::ProcessInitialize(EffectSettings &, sampleCount, ChannelNames)
    {
       if(mEffectComponent->setActive(true) == kResultOk)
       {
-         SyncParameters();//will do nothing for realtime effect
+         SyncParameters(settings);//will do nothing for realtime effect
          mAudioProcessor->setProcessing(true);
          mInitialDelay = static_cast<decltype(mInitialDelay)>(mAudioProcessor->getLatencySamples());
          return true;
@@ -732,10 +735,10 @@ size_t VST3Effect::ProcessBlock(EffectSettings &,
    return VST3ProcessBlock(mEffectComponent.get(), mSetup, inBlock, outBlock, blockLen, pendingChanges.get());
 }
 
-bool VST3Effect::RealtimeInitialize(EffectSettings &)
+bool VST3Effect::RealtimeInitialize(EffectSettings &settings)
 {
    //reload current parameters form the editor into parameter queues
-   SyncParameters();
+   SyncParameters(settings);
    return true;
 }
 
@@ -841,15 +844,16 @@ bool VST3Effect::InitializePlugin()
    return true;
 }
 
-bool VST3Effect::InitializeInstance(EffectHostInterface* host)
+bool VST3Effect::InitializeInstance(
+   EffectHostInterface* host, EffectSettings &settings)
 {
    mEffectHost = host;
 
    if(host)
    {
       ReloadUserOptions();
-      if(!LoadUserPreset(CurrentSettingsGroup()))
-         LoadFactoryDefaults();
+      if(!LoadUserPreset(CurrentSettingsGroup(), settings))
+         LoadFactoryDefaults(settings);
    }
    return true;
 }
@@ -868,7 +872,10 @@ VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &access)
 
    if(mComponentHandler != nullptr)
    {
-      SyncParameters();
+      // PRL:  Is this sync really needed?
+      access.ModifySettings([&](EffectSettings &settings){
+         SyncParameters(settings);
+      });
 
       auto parent = S.GetParent();
       if(GetType() == EffectTypeGenerate)
@@ -991,7 +998,7 @@ void VST3Effect::ExportPresets(const EffectSettings &) const
    }
 }
 
-void VST3Effect::ImportPresets()
+void VST3Effect::ImportPresets(EffectSettings &)
 {
    using namespace Steinberg;
 
@@ -1143,7 +1150,8 @@ bool VST3Effect::LoadVSTUI(wxWindow* parent)
    return false;
 }
 
-void VST3Effect::SyncParameters()
+// Transfers data from the dialog
+void VST3Effect::SyncParameters(EffectSettings &) const
 {
    using namespace Steinberg;
 

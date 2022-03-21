@@ -293,13 +293,14 @@ public:
    bool GetAutomationParameters(CommandParameters &) const override { return true; }
    bool SetAutomationParameters(const CommandParameters &) override { return true; }
 
-   bool LoadUserPreset(const RegistryPath &) override { return true; }
+   bool LoadUserPreset(const RegistryPath &, Settings &) const override
+      { return true; }
    bool SaveUserPreset(const RegistryPath &, const Settings &) const override
       { return true; }
 
    RegistryPaths GetFactoryPresets() const override { return {}; }
-   bool LoadFactoryPreset(int) override { return true; }
-   bool LoadFactoryDefaults() override { return true; }
+   bool LoadFactoryPreset(int, EffectSettings &) const override { return true; }
+   bool LoadFactoryDefaults(EffectSettings &) const override { return true; }
 
 public:
    wxString mPath;
@@ -1314,7 +1315,7 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
-bool VSTEffect::InitializeInstance(EffectHostInterface *host)
+bool VSTEffect::InitializeInstance(EffectHostInterface *host, EffectSettings &)
 {
    mHost = host;
    if (mHost)
@@ -1668,8 +1669,14 @@ bool VSTEffect::SetAutomationParameters(const CommandParameters & parms)
    return true;
 }
 
+bool VSTEffect::LoadUserPreset(
+   const RegistryPath & name, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<VSTEffect*>(this)->DoLoadUserPreset(name);
+}
 
-bool VSTEffect::LoadUserPreset(const RegistryPath & name)
+bool VSTEffect::DoLoadUserPreset(const RegistryPath & name)
 {
    if (!LoadParameters(name))
    {
@@ -1705,7 +1712,13 @@ RegistryPaths VSTEffect::GetFactoryPresets() const
    return progs;
 }
 
-bool VSTEffect::LoadFactoryPreset(int id)
+bool VSTEffect::LoadFactoryPreset(int id, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<VSTEffect*>(this)->DoLoadFactoryPreset(id);
+}
+
+bool VSTEffect::DoLoadFactoryPreset(int id)
 {
    callSetProgram(id);
 
@@ -1714,7 +1727,13 @@ bool VSTEffect::LoadFactoryPreset(int id)
    return true;
 }
 
-bool VSTEffect::LoadFactoryDefaults()
+bool VSTEffect::LoadFactoryDefaults(EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<VSTEffect*>(this)->DoLoadFactoryDefaults();
+}
+
+bool VSTEffect::DoLoadFactoryDefaults()
 {
    if (!LoadParameters(FactoryDefaultsGroup()))
    {
@@ -1874,7 +1893,7 @@ void VSTEffect::ExportPresets(const EffectSettings &) const
 //
 // Based on work by Sven Giermann
 //
-void VSTEffect::ImportPresets()
+void VSTEffect::ImportPresets(EffectSettings &)
 {
    wxString path;
 

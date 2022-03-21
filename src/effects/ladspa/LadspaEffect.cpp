@@ -862,7 +862,8 @@ bool LadspaEffect::InitializePlugin()
    return true;
 }
 
-bool LadspaEffect::InitializeInstance(EffectHostInterface *host)
+bool LadspaEffect::InitializeInstance(
+   EffectHostInterface *host, EffectSettings &)
 {
    mHost = host;
 
@@ -1123,7 +1124,14 @@ bool LadspaEffect::SetAutomationParameters(const CommandParameters & parms)
    return true;
 }
 
-bool LadspaEffect::LoadUserPreset(const RegistryPath & name)
+bool LadspaEffect::LoadUserPreset(
+   const RegistryPath & name, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<LadspaEffect*>(this)->DoLoadUserPreset(name);
+}
+
+bool LadspaEffect::DoLoadUserPreset(const RegistryPath & name)
 {
    if (!LoadParameters(name))
    {
@@ -1146,12 +1154,18 @@ RegistryPaths LadspaEffect::GetFactoryPresets() const
    return {};
 }
 
-bool LadspaEffect::LoadFactoryPreset(int WXUNUSED(id))
+bool LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
 {
    return true;
 }
 
-bool LadspaEffect::LoadFactoryDefaults()
+bool LadspaEffect::LoadFactoryDefaults(EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<LadspaEffect*>(this)->DoLoadFactoryDefaults();
+}
+
+bool LadspaEffect::DoLoadFactoryDefaults()
 {
    if (!LoadParameters(FactoryDefaultsGroup()))
    {
@@ -1526,7 +1540,7 @@ void LadspaEffect::ExportPresets(const EffectSettings &) const
 {
 }
 
-void LadspaEffect::ImportPresets()
+void LadspaEffect::ImportPresets(EffectSettings &)
 {
 }
 

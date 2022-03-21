@@ -1039,7 +1039,8 @@ bool AudioUnitEffect::InitializePlugin()
    return MakeListener();
 }
 
-bool AudioUnitEffect::InitializeInstance(EffectHostInterface *host)
+bool AudioUnitEffect::InitializeInstance(
+   EffectHostInterface *host, EffectSettings &)
 {
    OSStatus result;
 
@@ -1365,7 +1366,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
-   if (!slave->InitializeInstance(nullptr))
+   if (!slave->InitializeInstance(nullptr, settings))
    {
       return false;
    }
@@ -1590,9 +1591,11 @@ bool AudioUnitEffect::SetAutomationParameters(const CommandParameters & parms)
    return true;
 }
 
-bool AudioUnitEffect::LoadUserPreset(const RegistryPath & name)
+bool AudioUnitEffect::LoadUserPreset(
+   const RegistryPath & name, EffectSettings &) const
 {
-   return LoadPreset(name);
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<AudioUnitEffect*>(this)->LoadPreset(name);
 }
 
 bool AudioUnitEffect::SaveUserPreset(
@@ -1601,7 +1604,7 @@ bool AudioUnitEffect::SaveUserPreset(
    return SavePreset(name);
 }
 
-bool AudioUnitEffect::LoadFactoryPreset(int id)
+bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
 {
    OSStatus result;
 
@@ -1642,9 +1645,10 @@ bool AudioUnitEffect::LoadFactoryPreset(int id)
    return result == noErr;
 }
 
-bool AudioUnitEffect::LoadFactoryDefaults()
+bool AudioUnitEffect::LoadFactoryDefaults(EffectSettings &) const
 {
-   return LoadPreset(FactoryDefaultsGroup());
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<AudioUnitEffect*>(this)->LoadPreset(FactoryDefaultsGroup());
 }
 
 RegistryPaths AudioUnitEffect::GetFactoryPresets() const
@@ -1843,7 +1847,7 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &) const
    }
 }
 
-void AudioUnitEffect::ImportPresets()
+void AudioUnitEffect::ImportPresets(EffectSettings &)
 {
    // Generate the user domain path
    wxFileName fn;
@@ -2390,7 +2394,7 @@ TranslatableString AudioUnitEffect::Import(const wxString & path)
    return {};
 }
 
-void AudioUnitEffect::Notify(AudioUnit unit, AudioUnitParameterID parm)
+void AudioUnitEffect::Notify(AudioUnit unit, AudioUnitParameterID parm) const
 {
    // Notify any interested parties
    AudioUnitParameter aup = {};

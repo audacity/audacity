@@ -95,7 +95,8 @@ public:
    virtual void Preview(EffectSettingsAccess &access, bool dryOnly) = 0;
    virtual bool GetAutomationParametersAsString(
       const EffectSettings &settings, wxString & parms) const = 0;
-   virtual bool SetAutomationParametersFromString(const wxString & parms) = 0;
+   virtual bool SetAutomationParametersFromString(
+      const wxString & parms, EffectSettings &settings) const = 0;
    virtual bool IsBatchProcessing() const = 0;
    virtual void SetBatchProcessing() = 0;
    virtual void UnsetBatchProcessing() = 0;
@@ -125,7 +126,8 @@ public:
       const EffectSettingsAccessPtr &pAccess = nullptr
          //!< Sometimes given; only for UI
    ) = 0;
-   virtual bool Startup(EffectUIClientInterface *client) = 0;
+   virtual bool Startup(
+      EffectUIClientInterface *client, EffectSettings &settings) = 0;
 
    //! Update controls for the settings
    virtual bool TransferDataToWindow(const EffectSettings &settings) = 0;

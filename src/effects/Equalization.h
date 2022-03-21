@@ -114,10 +114,11 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool LoadFactoryDefaults() override;
+   bool LoadFactoryDefaults(EffectSettings &settings) const override;
+   bool DoLoadFactoryDefaults(EffectSettings &settings);
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
 
    // EffectUIClientInterface implementation
 

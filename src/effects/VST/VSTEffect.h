@@ -119,13 +119,17 @@ class VSTEffect final : public wxEvtHandler,
    bool GetAutomationParameters(CommandParameters & parms) const override;
    bool SetAutomationParameters(const CommandParameters & parms) override;
 
-   bool LoadUserPreset(const RegistryPath & name) override;
+   bool LoadUserPreset(
+      const RegistryPath & name, Settings &settings) const override;
+   bool DoLoadUserPreset(const RegistryPath & name);
    bool SaveUserPreset(
       const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   bool DoLoadFactoryPreset(int id);
+   bool LoadFactoryDefaults(EffectSettings &settings) const override;
+   bool DoLoadFactoryDefaults();
 
    // EffectProcessor implementation
 
@@ -170,7 +174,8 @@ class VSTEffect final : public wxEvtHandler,
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(EffectHostInterface* host) override;
+   bool InitializeInstance(
+      EffectHostInterface *host, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -179,7 +184,7 @@ class VSTEffect final : public wxEvtHandler,
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
-   void ImportPresets() override;
+   void ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;

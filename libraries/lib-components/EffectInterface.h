@@ -259,14 +259,6 @@ public:
    virtual bool GetAutomationParameters(CommandParameters & parms) const = 0;
    //! Change settings to those stored in parms
    virtual bool SetAutomationParameters(const CommandParameters & parms) = 0;
-
-   //! Change settings to a user-named preset
-   virtual bool LoadUserPreset(const RegistryPath & name) = 0;
-
-   //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
-   virtual bool LoadFactoryPreset(int id) = 0;
-   //! Change settings back to "factory default"
-   virtual bool LoadFactoryDefaults() = 0;
    //! @}
 
    /*! @name settings
@@ -281,11 +273,6 @@ public:
       const Settings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
       CommandParameters & parms, Settings &settings) const override;
-
-   bool LoadUserPreset(
-      const RegistryPath & name, Settings &settings) const override;
-   bool LoadFactoryPreset(int id, Settings &settings) const override;
-   bool LoadFactoryDefaults(Settings &settings) const override;
    //! @}
 
 private:
@@ -483,7 +470,8 @@ public:
    /*!
     @return true if successful
     */
-   virtual bool InitializeInstance(EffectHostInterface *host) = 0;
+   virtual bool InitializeInstance(
+      EffectHostInterface *host, EffectSettings &settings) = 0;
 
    virtual bool IsGraphicalUI() = 0;
 
@@ -502,7 +490,7 @@ public:
 
    virtual bool CanExportPresets() = 0;
    virtual void ExportPresets(const EffectSettings &settings) const = 0;
-   virtual void ImportPresets() = 0;
+   virtual void ImportPresets(EffectSettings &settings) = 0;
 
    virtual bool HasOptions() = 0;
    virtual void ShowOptions() = 0;

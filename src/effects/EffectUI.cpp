@@ -1019,11 +1019,12 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 {
-   mClient.ImportPresets();
-   TransferDataToWindow();
-   
+   mpAccess->ModifySettings([&](EffectSettings &settings){
+      mClient.ImportPresets(settings);
+      TransferDataToWindow();
+   });
    LoadUserPresets();
-   
+
    return;
 }
 

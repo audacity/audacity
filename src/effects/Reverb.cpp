@@ -277,7 +277,13 @@ RegistryPaths EffectReverb::GetFactoryPresets() const
    return names;
 }
 
-bool EffectReverb::LoadFactoryPreset(int id)
+bool EffectReverb::LoadFactoryPreset(int id, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<EffectReverb*>(this)->DoLoadFactoryPreset(id);
+}
+
+bool EffectReverb::DoLoadFactoryPreset(int id)
 {
    if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
    {
