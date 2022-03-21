@@ -418,7 +418,6 @@ RealtimeEffectState *AudioIO::AddState(AudacityProject &project,
       if (auto pProject = GetOwningProject(); pProject.get() == &project)
          pInit = &*mpTransportState->mpRealtimeInitialization;
    return RealtimeEffectManager::Get(project).AddState(pInit, pTrack, id);
-   return nullptr;
 }
 
 void AudioIO::RemoveState(AudacityProject &project,
