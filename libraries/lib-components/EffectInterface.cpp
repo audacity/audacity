@@ -8,6 +8,12 @@
 #include "EffectInterface.h"
 #include <wx/tokenzr.h>
 
+const RegistryPath &EffectSettingsExtra::DurationKey()
+{
+   static wxString key("LastUsedDuration");
+   return key;
+}
+
 EffectSettingsAccess::~EffectSettingsAccess() = default;
 
 SimpleEffectSettingsAccess::~SimpleEffectSettingsAccess() = default;

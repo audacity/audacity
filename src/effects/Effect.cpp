@@ -786,12 +786,6 @@ void Effect::SetDuration(double seconds)
       seconds = 0.0;
    }
 
-   if (GetType() == EffectTypeGenerate)
-   {
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         CurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
-   }
-
    mDuration = seconds;
 
    return;
@@ -969,11 +963,9 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
 
    mDuration = 0.0;
    if (GetType() == EffectTypeGenerate)
-   {
       GetConfig(GetDefinition(), PluginSettings::Private,
          CurrentSettingsGroup(),
-         wxT("LastUsedDuration"), mDuration, GetDefaultDuration());
-   }
+         EffectSettingsExtra::DurationKey(), mDuration, GetDefaultDuration());
 
    WaveTrack *newTrack{};
    bool success = false;

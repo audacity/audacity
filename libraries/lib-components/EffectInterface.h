@@ -69,8 +69,9 @@ typedef enum EffectType : int
 using EffectFamilySymbol = ComponentInterfaceSymbol;
 
 //! Non-polymorphic package of settings values common to many effects
-class EffectSettingsExtra final {
+class COMPONENTS_API EffectSettingsExtra final {
 public:
+   static const RegistryPath &DurationKey();
    const NumericFormatSymbol& GetDurationFormat() const
       { return mDurationFormat; }
    void SetDurationFormat(const NumericFormatSymbol &durationFormat)
