@@ -84,6 +84,7 @@ supports PulseAudio, OSS and ALSA under Linux.
     -D audacity_use_pch=no \
     -D audacity_use_portsmf=local \
     -D audacity_use_sbsms=local \
+    -D audacity_has_vst3=Off \
 
 %cmake_build
 
