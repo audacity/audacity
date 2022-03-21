@@ -346,13 +346,7 @@ size_t Effect::ProcessBlock(EffectSettings &settings,
 bool Effect::RealtimeInitialize(EffectSettings &settings)
 {
    if (mClient)
-   {
-      mBlockSize = mClient->SetBlockSize(512);
       return mClient->RealtimeInitialize(settings);
-   }
-
-   mBlockSize = 512;
-
    return false;
 }
 

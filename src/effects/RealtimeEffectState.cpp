@@ -185,6 +185,11 @@ bool RealtimeEffectState::Initialize(double rate)
    mCurrentProcessor = 0;
    mGroups.clear();
    mEffect->SetSampleRate(rate);
+
+   // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
+   // number was important
+   mEffect->SetBlockSize(512);
+
    return mEffect->RealtimeInitialize(mSettings);
 }
 
