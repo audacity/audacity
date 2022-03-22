@@ -420,11 +420,10 @@ Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
    mUIParent->SetMinSize(mUIParent->GetSizer()->GetMinSize());
 
    if (!result) {
-      // No custom validator object?  Then use the default, which will pop
-      // the event handler when it is destroyed and invokes CloseUI
-      mUIParent->PushEventHandler(this);
+      // No custom validator object?  Then use the default
       result = std::make_unique<DefaultEffectUIValidator>(*this, access);
    }
+   mUIParent->PushEventHandler(this);
    return result;
 }
 
