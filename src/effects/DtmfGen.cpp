@@ -124,17 +124,49 @@ unsigned EffectDtmf::GetAudioOutCount() const
    return 1;
 }
 
-bool EffectDtmf::ProcessInitialize(
-   EffectSettings &settings, sampleCount, ChannelNames chanMap)
+//! Temporary state of the computation
+struct EffectDtmf::Instance
+   : public PerTrackEffect::Instance
+   , public EffectInstanceWithBlockSize
+{
+   Instance(const PerTrackEffect &effect, double t0)
+      : PerTrackEffect::Instance{ effect }
+      , mT0{ t0 }
+   {}
+
+   void SetSampleRate(double rate) override { mSampleRate = rate; }
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
+   size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen)
+   override;
+
+   const double mT0;
+   double mSampleRate{};
+
+   sampleCount numSamplesSequence;  // total number of samples to generate
+   sampleCount numSamplesTone;      // number of samples in a tone block
+   sampleCount numSamplesSilence;   // number of samples in a silence block
+   sampleCount diff;                // number of extra samples to redistribute
+   sampleCount numRemaining;        // number of samples left to produce in the current block
+   sampleCount curTonePos;          // position in tone to start the wave
+   bool isTone;                     // true if block is tone, otherwise silence
+   int curSeqPos;                   // index into dtmf tone string
+};
+
+bool EffectDtmf::Instance::ProcessInitialize(
+   EffectSettings &settings, sampleCount, ChannelNames)
 {
    auto &dtmfSettings = GetSettings(settings);
    if (dtmfSettings.dtmfNTones == 0) {   // Bail if no DTFM sequence.
-      ::Effect::MessageBox(
+      // TODO:  don't use mProcessor for this
+      mProcessor.MessageBox(
                XO("DTMF sequence empty.\nCheck ALL settings for this effect."),
          wxICON_ERROR );
 
       return false;
    }
+
    double duration = settings.extra.GetDuration();
 
    // all dtmf sequence durations in samples from seconds
@@ -178,7 +210,7 @@ bool EffectDtmf::ProcessInitialize(
    return true;
 }
 
-size_t EffectDtmf::ProcessBlock(EffectSettings &settings,
+size_t EffectDtmf::Instance::ProcessBlock(EffectSettings &settings,
    const float *const *, float *const *outbuf, size_t size)
 {
    auto &dtmfSettings = GetSettings(settings);
@@ -382,6 +414,14 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
    auto result = std::make_unique<Validator>(*this, access, dtmfSettings);
    result->PopulateOrExchange(S, settings, mProjectRate);
    return result;
+}
+
+std::shared_ptr<EffectInstance>
+EffectDtmf::MakeInstance(EffectSettings &settings) const
+{
+   // TODO: don't use Effect::mT0 and Effect::mSampleRate, but use an
+   // EffectContext (that class is not yet defined)
+   return std::make_shared<Instance>(*this, mT0);
 }
 
 bool EffectDtmf::Validator::UpdateUI()

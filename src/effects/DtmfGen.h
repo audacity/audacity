@@ -39,7 +39,7 @@ struct DtmfSettings {
 };
 
 class EffectDtmf final
-   : public EffectWithSettings<DtmfSettings, StatefulPerTrackEffect>
+   : public EffectWithSettings<DtmfSettings, PerTrackEffect>
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -58,33 +58,22 @@ public:
    EffectType GetType() const override;
 
    unsigned GetAudioOutCount() const override;
-   bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
 
    // Effect implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
 
+   struct Instance;
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+      const override;
+
 private:
    // EffectDtmf implementation
 
-   bool MakeDtmfTone(float *buffer, size_t len, float fs,
+   static bool MakeDtmfTone(float *buffer, size_t len, float fs,
                      wxChar tone, sampleCount last,
                      sampleCount total, float amplitude);
-
-private:
-   sampleCount numSamplesSequence;  // total number of samples to generate
-   sampleCount numSamplesTone;      // number of samples in a tone block
-   sampleCount numSamplesSilence;   // number of samples in a silence block
-   sampleCount diff;                // number of extra samples to redistribute
-   sampleCount numRemaining;        // number of samples left to produce in the current block
-   sampleCount curTonePos;          // position in tone to start the wave
-   bool isTone;                     // true if block is tone, otherwise silence
-   int curSeqPos;                   // index into dtmf tone string
 
 public:
    struct Validator;
