@@ -120,6 +120,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "update/UpdateManager.h"
 #include "widgets/wxWidgetsBasicUI.h"
 #include "LogWindow.h"
+#include "FrameStatisticsDialog.h"
 #include "PluginStartupRegistration.h"
 #include "IncompatiblePluginsDialog.h"
 
@@ -505,6 +506,7 @@ static void QuitAudacity(bool bForce)
    // termination when exiting is requested
    #if !defined(__WXMAC__)
    LogWindow::Destroy();
+   FrameStatisticsDialog::Destroy();
    #endif
 
    //print out profile if we have one by deleting it
