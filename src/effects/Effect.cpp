@@ -1010,9 +1010,17 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
    }
 
    // This is happening inside EffectSettingsAccess::ModifySettings
-   settings.extra.SetDurationFormat( isSelection
+   auto newFormat = isSelection
       ? NumericConverter::TimeAndSampleFormat()
-      : NumericConverter::DefaultSelectionFormat() );
+      : NumericConverter::DefaultSelectionFormat();
+   auto updater = [&](EffectSettings &settings) {
+      settings.extra.SetDurationFormat( newFormat );
+   };
+   // Update our copy of settings; update the EffectSettingsAccess too,
+   // if we are going to show a dialog
+   updater(settings);
+   if (pAccess)
+      pAccess->ModifySettings(updater);
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mF0 = selectedRegion.f0();
@@ -1037,11 +1045,13 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
    // been configured, e.g. repeating the last effect on a different selection.
    // Prompting may call Effect::Preview
    if ( pParent && dialogFactory && pAccess &&
-      IsInteractive() &&
-      !ShowHostInterface(
+      IsInteractive()) {
+      if (!ShowHostInterface(
          *pParent, dialogFactory, *pAccess, IsBatchProcessing() ) )
-   {
-      return false;
+         return false;
+      else
+         // Retrieve again after the dialog modified settings
+         settings = pAccess->Get();
    }
 
    bool returnVal = true;
