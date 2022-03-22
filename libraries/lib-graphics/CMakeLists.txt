@@ -1,6 +1,6 @@
 #[[
 A library responsible for custom rendering in Audacity
-]]#
+]]
 
 set( SOURCES
    FrameStatistics.cpp
@@ -11,6 +11,9 @@ set( SOURCES
 
    PixelSampleMapper.cpp
    PixelSampleMapper.h
+
+   graphics/Color.cpp
+   graphics/Color.h
 
    waveform/WaveData.cpp
    waveform/WaveData.h
