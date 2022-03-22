@@ -32,12 +32,13 @@
 namespace {
 wxString AllSymbols();
 }
+
 const EffectParameterMethods& EffectDtmf::Parameters() const
 {
    static CapturedParameters<EffectDtmf,
       Sequence, DutyCycle, Amplitude
    > parameters{
-      [](EffectDtmf &, EffectSettings &es, Settings &s, bool updating){
+      [](EffectDtmf &, EffectSettings &es, DtmfSettings &s, bool updating){
          if (updating) {
             if (s.dtmfSequence.find_first_not_of(AllSymbols())
                 != wxString::npos)
@@ -88,7 +89,6 @@ namespace{ BuiltinEffectsModule::Registration< EffectDtmf > reg; }
 
 EffectDtmf::EffectDtmf()
 {
-   Parameters().Reset(*this);
 }
 
 EffectDtmf::~EffectDtmf()
@@ -127,8 +127,8 @@ unsigned EffectDtmf::GetAudioOutCount() const
 bool EffectDtmf::ProcessInitialize(
    EffectSettings &settings, sampleCount, ChannelNames chanMap)
 {
-   auto &dtmfSettings = mSettings;
-   if (dtmfSettings.dtmfNTones <= 0) {   // Bail if no DTFM sequence.
+   auto &dtmfSettings = GetSettings(settings);
+   if (dtmfSettings.dtmfNTones == 0) {   // Bail if no DTFM sequence.
       ::Effect::MessageBox(
                XO("DTMF sequence empty.\nCheck ALL settings for this effect."),
          wxICON_ERROR );
@@ -178,10 +178,10 @@ bool EffectDtmf::ProcessInitialize(
    return true;
 }
 
-size_t EffectDtmf::ProcessBlock(EffectSettings &,
+size_t EffectDtmf::ProcessBlock(EffectSettings &settings,
    const float *const *, float *const *outbuf, size_t size)
 {
-   auto &dtmfSettings = mSettings;
+   auto &dtmfSettings = GetSettings(settings);
    float *buffer = outbuf[0];
    decltype(size) processed = 0;
 
@@ -254,8 +254,9 @@ struct EffectDtmf::Validator
    : DefaultEffectUIValidator
 {
    Validator(EffectUIClientInterface &effect,
-      EffectSettingsAccess &access, EffectDtmf::Settings &settings)
+      EffectSettingsAccess &access, const DtmfSettings &settings)
       : DefaultEffectUIValidator{effect, access}
+      // Copy settings
       , mSettings{settings}
    {}
    virtual ~Validator() = default;
@@ -272,7 +273,8 @@ struct EffectDtmf::Validator
    void OnDuration(wxCommandEvent & evt);
    void OnDutyCycle(wxCommandEvent & evt);
 
-   EffectDtmf::Settings &mSettings;
+   // These settings exist for the lifetime of the validator
+   DtmfSettings mSettings;
 
    wxTextCtrl *mDtmfSequenceT;
    wxSlider   *mDtmfDutyCycleS;
@@ -285,11 +287,10 @@ struct EffectDtmf::Validator
 void EffectDtmf::Validator::PopulateOrExchange(ShuttleGui & S,
    const EffectSettings &settings, double projectRate)
 {
-   // Hold a reference to special settings, still in the singleton Effect
-   // object
+   // Reference to our copy of this effect's special settings
    auto &dtmfSettings = mSettings;
 
-   // Do NOT hold a reference to settings, but just use it to find some initial
+   // Do NOT hold a reference to EffectSettings, just use it to find initial
    // duration values.  (It came from EffectSettingsAccess so its stable address
    // can't be relied on.)
 
@@ -377,7 +378,7 @@ std::unique_ptr<EffectUIValidator>
 EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 {
    auto &settings = access.Get();
-   auto &dtmfSettings = mSettings;
+   auto &dtmfSettings = GetSettings(settings);
    auto result = std::make_unique<Validator>(*this, access, dtmfSettings);
    result->PopulateOrExchange(S, settings, mProjectRate);
    return result;
@@ -385,10 +386,15 @@ EffectDtmf::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 
 bool EffectDtmf::Validator::UpdateUI()
 {
+   const auto &settings = mAccess.Get();
    auto &dtmfSettings = mSettings;
+
+   // Copy into our settings
+   mSettings = GetSettings(settings);
+
    mDtmfDutyCycleS->SetValue(dtmfSettings.dtmfDutyCycle * DutyCycle.scale);
 
-   mDtmfDurationT->SetValue(mAccess.Get().extra.GetDuration());
+   mDtmfDurationT->SetValue(settings.extra.GetDuration());
 
    DoUpdateUI();
 
@@ -415,12 +421,12 @@ bool EffectDtmf::Validator::ValidateUI()
 
 // Updates dtmfNTones, dtmfTone, dtmfSilence, and sometimes duration
 // They depend on dtmfSequence, dtmfDutyCycle, and duration
-void EffectDtmf::Settings::Recalculate(EffectSettings &settings)
+void DtmfSettings::Recalculate(EffectSettings &settings)
 {
    auto &extra = settings.extra;
    // remember that dtmfDutyCycle is in range (0.0-100.0)
 
-   dtmfNTones = (int) dtmfSequence.length();
+   dtmfNTones = dtmfSequence.length();
 
    if (dtmfNTones==0) {
       // no tones, all zero: don't do anything
@@ -457,6 +463,10 @@ void EffectDtmf::Settings::Recalculate(EffectSettings &settings)
          // - dtmfNTones-1 silences
       }
    }
+
+   // `this` is the settings copy in the validator
+   // Update the EffectSettings held by the dialog
+   EffectDtmf::GetSettings(settings) = *this;
 }
 
 bool EffectDtmf::MakeDtmfTone(float *buffer, size_t len, float fs, wxChar tone, sampleCount last, sampleCount total, float amplitude)

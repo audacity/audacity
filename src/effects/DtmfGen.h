@@ -23,12 +23,25 @@ class wxTextCtrl;
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectDtmf final : public StatefulPerTrackEffect
+struct DtmfSettings {
+   static constexpr wchar_t DefaultSequence[] = L"audacity";
+   static constexpr double DefaultDutyCycle = 55.0;
+   static constexpr double DefaultAmplitude = 0.8;
+
+   wxString dtmfSequence{DefaultSequence}; // dtmf tone string
+   size_t dtmfNTones = dtmfSequence.length(); // total number of tones to generate
+   double dtmfTone{};               // duration of a single tone in ms
+   double dtmfSilence{};            // duration of silence between tones in ms
+   double dtmfDutyCycle{DefaultDutyCycle}; // ratio of dtmfTone/(dtmfTone+dtmfSilence)
+   double dtmfAmplitude{DefaultAmplitude}; // amplitude of dtmf tone sequence, restricted to (0-1)
+
+   void Recalculate(EffectSettings &settings);
+};
+
+class EffectDtmf final
+   : public EffectWithSettings<DtmfSettings, StatefulPerTrackEffect>
 {
 public:
-   struct Settings;
-   static inline Settings *
-   FetchParameters(EffectDtmf &e, EffectSettings &) { return &e.mSettings; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectDtmf();
@@ -74,33 +87,17 @@ private:
    int curSeqPos;                   // index into dtmf tone string
 
 public:
-   struct Settings {
-      static constexpr wchar_t DefaultSequence[] = L"audacity";
-      static constexpr double DefaultDutyCycle = 55.0;
-      static constexpr double DefaultAmplitude = 0.8;
-
-      wxString dtmfSequence{DefaultSequence}; // dtmf tone string
-      int    dtmfNTones = dtmfSequence.length(); // total number of tones to generate
-      double dtmfTone{};               // duration of a single tone in ms
-      double dtmfSilence{};            // duration of silence between tones in ms
-      double dtmfDutyCycle{DefaultDutyCycle}; // ratio of dtmfTone/(dtmfTone+dtmfSilence)
-      double dtmfAmplitude{DefaultAmplitude}; // amplitude of dtmf tone sequence, restricted to (0-1)
-
-      void Recalculate(EffectSettings &settings);
-   };
-
    struct Validator;
 
 private:
-   Settings mSettings;
    const EffectParameterMethods& Parameters() const override;
 
-static constexpr EffectParameter Sequence{ &Settings::dtmfSequence,
-   L"Sequence",   Settings::DefaultSequence, L"", L"", L""};
-static constexpr EffectParameter DutyCycle{ &Settings::dtmfDutyCycle,
-   L"Duty Cycle", Settings::DefaultDutyCycle, 0.0,     100.0,   10.0   };
-static constexpr EffectParameter Amplitude{ &Settings::dtmfAmplitude,
-   L"Amplitude",  Settings::DefaultAmplitude, 0.001,   1.0,     1      };
+static constexpr EffectParameter Sequence{ &DtmfSettings::dtmfSequence,
+   L"Sequence",   DtmfSettings::DefaultSequence, L"", L"", L""};
+static constexpr EffectParameter DutyCycle{ &DtmfSettings::dtmfDutyCycle,
+   L"Duty Cycle", DtmfSettings::DefaultDutyCycle, 0.0,     100.0,   10.0   };
+static constexpr EffectParameter Amplitude{ &DtmfSettings::dtmfAmplitude,
+   L"Amplitude",  DtmfSettings::DefaultAmplitude, 0.001,   1.0,     1      };
 };
 
 #endif
