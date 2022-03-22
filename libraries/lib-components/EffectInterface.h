@@ -194,7 +194,10 @@ public:
     */
    //! @{
    //! Produce an object holding new, independent settings
-   virtual Settings MakeSettings() const = 0;
+   /*!
+    Default implementation returns an empty `any`
+    */
+   virtual Settings MakeSettings() const;
 
    //! Update one settings object from another
    /*!
@@ -204,12 +207,14 @@ public:
 
     Assume that src and dst were created and previously modified only by `this`
 
+    Default implementation does nothing and returns true
+
     @param src settings to copy from
     @param dst settings to copy into
     @return success
     */
    virtual bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst) const = 0;
+      const EffectSettings &src, EffectSettings &dst) const;
 
    //! Store settings as keys and values
    /*!
@@ -249,32 +254,6 @@ public:
    //! Default implementation returns false
    virtual bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings) const;
-};
-
-//! Extension of EffectDefinitionInterface with old system for settings
-/*!
- (Default implementations of EffectDefinitionInterface methods for settings call
- through to the old interface, violating const correctness.  This is meant to be
- transitional only.)
-
- This interface is not used by the EffectUIHost dialog.
- */
-class COMPONENTS_API EffectDefinitionInterfaceEx  /* not final */
-   : public EffectDefinitionInterface
-{
-public:
-   /*! @name settings
-    Default implementation of the nominally const methods call through to the
-    old non-const interface
-    */
-   //! @{
-   Settings MakeSettings() const override;
-   bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst) const override;
-   //! @}
-
-private:
-   EffectDefinitionInterfaceEx *FindMe(const Settings &settings) const;
 };
 
 class wxDialog;
@@ -331,7 +310,7 @@ AudacityCommand.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectProcessor  /* not final */
-   : public EffectDefinitionInterfaceEx
+   : public EffectDefinitionInterface
 {
 public:
    virtual ~EffectProcessor();

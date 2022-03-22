@@ -775,7 +775,7 @@ EffectManager::GetEffectAndDefaultSettings(const PluginID & ID)
 
 namespace {
 void InitializePreset(
-   EffectDefinitionInterfaceEx &definition, EffectSettings &settings) {
+   EffectDefinitionInterface &definition, EffectSettings &settings) {
    bool haveDefaults;
    GetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
       wxT("Initialized"), haveDefaults, false);
@@ -791,7 +791,7 @@ void InitializePreset(
 std::pair<ComponentInterface *, EffectSettings>
 LoadComponent(const PluginID &ID)
 {
-   if (auto result = dynamic_cast<EffectDefinitionInterfaceEx*>(
+   if (auto result = dynamic_cast<EffectDefinitionInterface*>(
       PluginManager::Get().Load(ID))) {
       auto settings = result->MakeSettings();
       InitializePreset(*result, settings);
