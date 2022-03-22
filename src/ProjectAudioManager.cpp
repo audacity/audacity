@@ -1082,7 +1082,8 @@ void ProjectAudioManager::OnAudioIONewBlocks(const WaveTrackArray *tracks)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
-   projectFileIO.AutoSave(true);
+
+   wxTheApp->CallAfter( [&]{ projectFileIO.AutoSave(true); });
 }
 
 void ProjectAudioManager::OnCommitRecording()
