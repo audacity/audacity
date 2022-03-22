@@ -272,15 +272,21 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
    int index = 0;
    int nLoaded = 0;
    LADSPA_Descriptor_Function mainFn = NULL;
+
 #if defined(__WXMSW__)
    wxDynamicLibrary lib;
-   if (lib.Load(path, wxDL_NOW)) {
+   if (lib.Load(path, wxDL_NOW))
+#else
+   void *lib = dlopen((const char *)path.ToUTF8(), RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
+   if (lib)
+#endif
+   {
+
+#if defined(__WXMSW__)
       wxLogNull logNo;
 
       mainFn = (LADSPA_Descriptor_Function) lib.GetSymbol(wxT("ladspa_descriptor"));
 #else
-   void *lib = dlopen((const char *)path.ToUTF8(), RTLD_NOW | RTLD_LOCAL | RTLD_DEEPBIND);
-   if (lib) {
       mainFn = (LADSPA_Descriptor_Function) dlsym(lib, "ladspa_descriptor");
 #endif
 
