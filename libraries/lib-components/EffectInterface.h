@@ -95,6 +95,27 @@ struct EffectSettings : audacity::TypedAny<EffectSettings> {
       TypedAny::swap(other);
       std::swap(extra, other.extra);
    }
+
+   //! Like make_any but a static member function
+   template<typename T, typename... Args>
+   static EffectSettings Make(Args &&... args)
+   {
+      return EffectSettings(std::in_place_type<T>, std::forward<Args>(args)...);
+   }
+
+   //! Convenience for defining overrides of
+   //! EffectDefinitionInterface::CopySettingsContents
+   template<typename T>
+   static bool Copy(const EffectSettings &src, EffectSettings &dst)
+   {
+      const T *pSrc = src.cast<T>();
+      T *pDst = dst.cast<T>();
+      if (pSrc && pDst) {
+         *pDst = *pSrc;
+         return true;
+      }
+      return false;
+   }
 };
 
 //! Interface for accessing an EffectSettings that may change asynchronously in

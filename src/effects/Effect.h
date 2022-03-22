@@ -500,6 +500,34 @@ private:
    unsigned mNumChannels;
 };
 
+//! Convenience for generating EffectDefinitionInterface overrides
+//! and static down-casting functions
+template<typename Settings, typename Base = Effect>
+class EffectWithSettings : public Base {
+public:
+   EffectSettings MakeSettings() const override
+   {
+      return EffectSettings::Make<Settings>();
+   }
+   bool CopySettingsContents(
+      const EffectSettings &src, EffectSettings &dst) const override
+   {
+      return EffectSettings::Copy<Settings>(src, dst);
+   }
+   //! Assume settings originated from MakeSettings() and copies thereof
+   static inline Settings &GetSettings(EffectSettings &settings)
+   {
+      auto pSettings = settings.cast<Settings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+   //! Assume settings originated from MakeSettings() and copies thereof
+   static inline const Settings &GetSettings(const EffectSettings &settings)
+   {
+      return GetSettings(const_cast<EffectSettings &>(settings));
+   }
+};
+
 // FIXME:
 // FIXME:  Remove this once all effects are using the NEW dialog
 // FIXME:
