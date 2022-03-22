@@ -22,13 +22,14 @@ set( LIBRARIES
    lib-project-rate
    lib-ffmpeg-support
    lib-theme
-   image-compiler # not a library, but has a place in their dependency graph   
+   image-compiler # not a library, but has a place in their dependency graph
    lib-theme-resources
    lib-track
    lib-transactions
    lib-sample-track
    lib-module-manager
    lib-project-history
+   lib-graphics
 )
 
 if ( ${_OPT}has_networking )

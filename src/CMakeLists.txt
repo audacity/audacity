@@ -139,6 +139,8 @@ list( APPEND SOURCES
       FFmpeg.h
       FileFormats.cpp
       FileFormats.h
+      FrameStatisticsDialog.cpp
+      FrameStatisticsDialog.h
       FreqWindow.cpp
       FreqWindow.h
       HelpText.cpp
@@ -1457,6 +1459,7 @@ set( AUDACITY_LIBRARIES
    lib-sample-track-interface
    lib-module-manager-interface
    lib-project-history-interface
+   lib-graphics-interface
 )
 
 if (${_OPT}use_ffmpeg)
