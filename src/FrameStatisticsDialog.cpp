@@ -39,8 +39,12 @@ public:
             AddSection(S, FrameStatistics::SectionID::TrackPanel);
             S.AddFixedText(Verbatim("Waveform Rendering (per clip)"));
             AddSection(S, FrameStatistics::SectionID::WaveformView);
-            S.AddFixedText(Verbatim("Spectrum Rendering (per clip)"));
-            AddSection(S, FrameStatistics::SectionID::SpectrumView);
+            S.AddFixedText(Verbatim("WaveDataCache Lookups"));
+            AddSection(S, FrameStatistics::SectionID::WaveDataCache);
+            S.AddFixedText(Verbatim("WaveBitmapCache Preprocess"));
+            AddSection(S, FrameStatistics::SectionID::WaveBitmapCachePreprocess);
+            S.AddFixedText(Verbatim("WaveBitmapCache Lookups"));
+            AddSection(S, FrameStatistics::SectionID::WaveBitmapCache);
          }
          S.EndVerticalLay();
       }

@@ -28,8 +28,9 @@ public:
    {
       TrackPanel,
       WaveformView,
-      SpectrumView,
-
+      WaveDataCache,
+      WaveBitmapCachePreprocess,
+      WaveBitmapCache,
       Count
    };
 
