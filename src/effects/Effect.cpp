@@ -570,7 +570,7 @@ void Effect::ShowOptions()
 {
 }
 
-// EffectUIHostInterface implementation
+// EffectPlugin implementation
 
 const EffectDefinitionInterface& Effect::GetDefinition() const
 {

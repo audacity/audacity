@@ -26,7 +26,7 @@ class wxListBox;
 class wxWindow;
 
 #include "ConfigInterface.h"
-#include "EffectHostInterface.h" // to inherit
+#include "EffectPlugin.h" // to inherit
 #include "EffectInterface.h" // to inherit
 #include "PluginInterface.h"
 
@@ -70,10 +70,9 @@ using FloatBuffers = ArraysOf<float>;
 // TODO:  Much more cleanup of old methods and variables is needed, but
 // TODO:  can't be done until after all effects are using the NEW API.
 
-//! An Effect object is at once host and client:  it is self-hosting.
 class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    public EffectUIClientInterface,
-   public EffectUIHostInterface
+   public EffectPlugin
 {
  //
  // public methods
@@ -187,12 +186,12 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool HasOptions() override;
    void ShowOptions() override;
 
-   // EffectUIHostInterface implementation
+   // EffectPlugin implementation
 
    const EffectDefinitionInterface& GetDefinition() const override;
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
 
-   // EffectUIHostInterface implementation
+   // EffectPlugin implementation
 
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory, EffectSettingsAccess &access,

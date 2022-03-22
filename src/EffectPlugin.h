@@ -2,15 +2,15 @@
 
    Audacity: A Digital Audio Editor
 
-   @file EffectHostInterface.h
+   @file EffectPlugin.h
 
    Paul Licameli
    split from EffectInterface.h
    
 **********************************************************************/
 
-#ifndef __AUDACITY_EFFECTHOSTINTERFACE_H__
-#define __AUDACITY_EFFECTHOSTINTERFACE_H__
+#ifndef __AUDACITY_EFFECTPLUGIN_H__
+#define __AUDACITY_EFFECTPLUGIN_H__
 
 #include "ComponentInterfaceSymbol.h"
 
@@ -24,12 +24,12 @@ class wxWindow;
 class EffectUIClientInterface;
 class EffectSettings;
 class EffectSettingsAccess;
-class EffectUIHostInterface;
+class EffectPlugin;
 
 //! Type of function that creates a dialog for an effect
 /*! The dialog may be modal or non-modal */
 using EffectDialogFactory = std::function< wxDialog* (
-   wxWindow &parent, EffectUIHostInterface &, EffectUIClientInterface &,
+   wxWindow &parent, EffectPlugin &, EffectUIClientInterface &,
    EffectSettingsAccess & ) >;
 
 class TrackList;
@@ -39,10 +39,10 @@ class EffectProcessor;
 
 /*************************************************************************************//**
 
-\class EffectUIHostInterface
+\class EffectPlugin
 @brief UI-related services
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectUIHostInterface
+class AUDACITY_DLL_API EffectPlugin
 {
 public:
    using EffectSettingsAccessPtr = std::shared_ptr<EffectSettingsAccess>;
@@ -52,8 +52,8 @@ public:
    const static wxString kCurrentSettingsIdent;
    const static wxString kFactoryDefaultsIdent;
 
-   EffectUIHostInterface &operator=(EffectUIHostInterface&) = delete;
-   virtual ~EffectUIHostInterface();
+   EffectPlugin &operator=(EffectPlugin&) = delete;
+   virtual ~EffectPlugin();
 
    virtual const EffectDefinitionInterface& GetDefinition() const = 0;
 

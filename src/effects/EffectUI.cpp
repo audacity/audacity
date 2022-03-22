@@ -25,7 +25,7 @@
 #include "RealtimeEffectManager.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 
-static PluginID GetID(EffectUIHostInterface &effect)
+static PluginID GetID(EffectPlugin &effect)
 {
    return PluginManager::GetID(&effect.GetDefinition());
 }
@@ -158,7 +158,7 @@ END_EVENT_TABLE()
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
    AudacityProject &project,
-   EffectUIHostInterface &effect,
+   EffectPlugin &effect,
    EffectUIClientInterface &client,
    EffectSettingsAccess &access)
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
@@ -1231,7 +1231,7 @@ void EffectUIHost::CleanupRealtime()
 }
 
 wxDialog *EffectUI::DialogFactory( wxWindow &parent,
-   EffectUIHostInterface &host,
+   EffectPlugin &host,
    EffectUIClientInterface &client,
    EffectSettingsAccess &access)
 {
