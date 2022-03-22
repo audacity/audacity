@@ -24,6 +24,7 @@
 #include "ZoomInfo.h"
 
 #include "waveform/WaveDataCache.h"
+#include "waveform/WaveBitmapCache.h"
 
 
 //
@@ -37,9 +38,9 @@ void FillBlocksFromAppendBuffer(
    const float* samples =
       static_cast<const float*>(static_cast<const void*>(buffer));
 
-   const size_t blocksCount = RoundUp(samplesCount, blockSize);
+   const size_t blocksCount = RoundUpUnsafe(samplesCount, blockSize);
 
-   const size_t offset = RoundUp(outBlock.NumSamples, blockSize) * 3;
+   const size_t offset = RoundUpUnsafe(outBlock.NumSamples, blockSize) * 3;
 
    float* outBuffer = static_cast<float*>(outBlock.GetWritePointer(
                          sizeof(float) * (offset + 3 * blocksCount))) +
@@ -111,123 +112,91 @@ bool FillFromAppendBuffer(
    return true;
 }
 
-bool WaveClipWaveformCache::GetWaveDisplay(
-   const WaveClip &clip, WaveDisplay &display, double t0,
-   double pixelsPerSecond )
+WaveClipWaveformCache::WaveClipWaveformCache(WaveClip& clip)
 {
-   t0 += clip.GetTrimLeft();
+   mWaveDataCache = std::make_shared<WaveDataCache>(
+      [sequence = clip.GetSequence(), rate = clip.GetRate(), clip = &clip](
+         int64_t requiredSample, WaveCacheSampleBlock::Type dataType,
+         WaveCacheSampleBlock& outBlock)
+      {
+         if (requiredSample < 0)
+            return false;
 
-   const bool allocated = display.mapper.IsValid();
+         outBlock.DataType = dataType;
 
-   const size_t numPixels = (int)display.width;
-
-   if (!mWaveDataCache)
-   {
-      mWaveDataCache = std::make_unique<WaveDataCache>(
-         [sequence = clip.GetSequence(), rate = clip.GetRate(), clip = &clip](
-            int64_t requiredSample, WaveCacheSampleBlock::Type dataType,
-            WaveCacheSampleBlock& outBlock)
+         if (requiredSample >= sequence->GetNumSamples())
          {
-            if (requiredSample < 0)
+            requiredSample -= sequence->GetNumSamples().as_long_long();
+
+            if (requiredSample >= clip->GetAppendBufferLen())
                return false;
 
-            outBlock.DataType = dataType;
+            outBlock.FirstSample = sequence->GetNumSamples().as_long_long();
+            outBlock.NumSamples = 0;
 
-            if (requiredSample >= sequence->GetNumSamples())
-            {
-               requiredSample -= sequence->GetNumSamples().as_long_long();
+            return FillFromAppendBuffer(*clip, outBlock);
+         }
 
-               if (requiredSample >= clip->GetAppendBufferLen())
-                  return false;
+         const auto blockIndex = sequence->FindBlock(requiredSample);
+         const auto& inputBlock = sequence->GetBlockArray()[blockIndex];
 
-               outBlock.FirstSample = sequence->GetNumSamples().as_long_long();
-               outBlock.NumSamples = 0;
+         outBlock.FirstSample = inputBlock.start.as_long_long();
+         outBlock.NumSamples = inputBlock.sb->GetSampleCount();
 
-               return FillFromAppendBuffer(*clip, outBlock);
-            }
+         switch (dataType)
+         {
+         case WaveCacheSampleBlock::Type::Samples:
+         {
+            samplePtr ptr = static_cast<samplePtr>(
+               outBlock.GetWritePointer(outBlock.NumSamples * sizeof(float)));
 
-            const auto blockIndex = sequence->FindBlock(requiredSample);
-            const auto& inputBlock = sequence->GetBlockArray()[blockIndex];
+            inputBlock.sb->GetSamples(
+               ptr, floatSample, 0, outBlock.NumSamples, false);
+         }
+         break;
+         case WaveCacheSampleBlock::Type::MinMaxRMS256:
+         {
+            size_t framesCount = RoundUpUnsafe(outBlock.NumSamples, 256);
 
-            outBlock.FirstSample = inputBlock.start.as_long_long();
-            outBlock.NumSamples = inputBlock.sb->GetSampleCount();
-            
-            switch (dataType)
-            {
-            case WaveCacheSampleBlock::Type::Samples:
-            {
-               samplePtr ptr = static_cast<samplePtr>(outBlock.GetWritePointer(
-                  outBlock.NumSamples * sizeof(float)));
+            float* ptr = static_cast<float*>(
+               outBlock.GetWritePointer(framesCount * sizeof(float) * 3));
 
-               inputBlock.sb->GetSamples(
-                  ptr, floatSample, 0, outBlock.NumSamples, false);
-            }
-            break;
-            case WaveCacheSampleBlock::Type::MinMaxRMS256:
-            {
-               size_t framesCount = RoundUp(outBlock.NumSamples, 256);
+            inputBlock.sb->GetSummary256(ptr, 0, framesCount);
+         }
+         break;
+         case WaveCacheSampleBlock::Type::MinMaxRMS64k:
+         {
+            size_t framesCount = RoundUpUnsafe(outBlock.NumSamples, 64 * 1024);
 
-               float* ptr = static_cast<float*>(
-                  outBlock.GetWritePointer(framesCount * sizeof(float) * 3));
+            float* ptr = static_cast<float*>(
+               outBlock.GetWritePointer(framesCount * sizeof(float) * 3));
 
-               inputBlock.sb->GetSummary256(ptr, 0, framesCount);
-            }
-            break;
-            case WaveCacheSampleBlock::Type::MinMaxRMS64k:
-            {
-               size_t framesCount = RoundUp(outBlock.NumSamples, 64 * 1024);
+            inputBlock.sb->GetSummary256(ptr, 0, framesCount);
+         }
+         break;
+         default:
+            return false;
+         }
 
-               float* ptr = static_cast<float*>(
-                  outBlock.GetWritePointer(framesCount * sizeof(float) * 3));
+         if ((blockIndex + 1) == sequence->GetBlockArray().size())
+         {
+            FillFromAppendBuffer(*clip, outBlock);
+         }
 
-               inputBlock.sb->GetSummary256(ptr, 0, framesCount);
-            }
-            break;
-            default:
-               return false;
-            }
+         return true;
+      },
+      clip.GetRate());
 
-            if ((blockIndex + 1) == sequence->GetBlockArray().size())
-            {
-               FillFromAppendBuffer(*clip, outBlock);
-            }
-
-            return true;
-         },
-         clip.GetRate());
-   }
-
-   if (!allocated)
-      display.Allocate();
-
-   auto range = mWaveDataCache->PerformLookup(
-      ZoomInfo(0.0f, pixelsPerSecond), t0, t0 + numPixels / pixelsPerSecond);
-
-   for (auto it = range.begin(); it != range.end(); ++it)
-   {
-      const auto leftOffset = it.GetLeftOffset();
-      const auto rightOffset = GraphicsDataCacheBase::CacheElementWidth - it.GetRightOffset();
-
-      const WaveDisplayColumn* firstColumn = it->Data.data();
-
-      display.AppendColumns(
-         it->Data.data() + leftOffset,
-         it->Data.data() + rightOffset);
-   }
-  
-   return !range.empty();
-}
-
-WaveClipWaveformCache::WaveClipWaveformCache()
-{
+   mWaveBitmapCache =
+      std::make_shared<WaveBitmapCache>(mWaveDataCache, clip.GetRate());
 }
 
 WaveClipWaveformCache::~WaveClipWaveformCache()
 {
 }
 
-static WaveClip::Caches::RegisteredFactory sKeyW{ []( WaveClip& ){
-   return std::make_unique< WaveClipWaveformCache >();
+static WaveClip::Caches::RegisteredFactory sKeyW{ []( WaveClip& clip ){
+   return std::make_unique< WaveClipWaveformCache >( clip );
 } };
 
 WaveClipWaveformCache &WaveClipWaveformCache::Get( const WaveClip &clip )
@@ -238,11 +207,12 @@ WaveClipWaveformCache &WaveClipWaveformCache::Get( const WaveClip &clip )
 
 void WaveClipWaveformCache::MarkChanged()
 {
-   ++mDirty;
+   mWaveDataCache->Invalidate();
+   mWaveBitmapCache->Invalidate();
 }
 
 void WaveClipWaveformCache::Invalidate()
 {
-   if (mWaveDataCache)
-      mWaveDataCache->Invalidate();
+   mWaveDataCache->Invalidate();
+   mWaveBitmapCache->Invalidate();
 }

@@ -66,7 +66,6 @@ private:
    // int mInitialY;
    bool mUpper;
    int mButton;
-   bool mDirty;
 };
 
 

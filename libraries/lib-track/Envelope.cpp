@@ -52,6 +52,11 @@ Envelope::~Envelope()
 {
 }
 
+size_t Envelope::GetVersion() const noexcept
+{
+   return mVersion;
+}
+
 bool Envelope::ConsistencyCheck()
 {
    bool consistent = true;
@@ -90,6 +95,7 @@ bool Envelope::ConsistencyCheck()
       }
 
       if (disorder) {
+         ++mVersion;
          consistent = false;
          // repair it
          std::stable_sort( mEnv.begin(), mEnv.end(),
@@ -124,6 +130,8 @@ void Envelope::RescaleValues(double minValue, double maxValue)
       mEnv[i].SetVal( this, mMinValue + (mMaxValue - mMinValue) * factor );
    }
 
+   
+   ++mVersion;
 }
 
 /// Flatten removes all points from the envelope to
@@ -133,6 +141,8 @@ void Envelope::Flatten(double value)
 {
    mEnv.clear();
    mDefaultValue = ClampValue(value);
+
+   ++mVersion;
 }
 
 void Envelope::SetDragPoint(int dragPoint)
@@ -175,6 +185,9 @@ void Envelope::SetDragPointValid(bool valid)
          mEnv[mDragPoint].SetT(neighbor.GetT());
          mEnv[mDragPoint].SetVal( this, neighbor.GetVal() );
       }
+
+      
+      ++mVersion;
    }
 }
 
@@ -202,6 +215,9 @@ void Envelope::MoveDragPoint(double newWhen, double value)
    // points share a time value.
    dragPoint.SetT(tt);
    dragPoint.SetVal( this, value );
+
+   
+   ++mVersion;
 }
 
 void Envelope::ClearDragPoint()
@@ -219,6 +235,9 @@ void Envelope::SetRange(double minValue, double maxValue) {
    mDefaultValue = ClampValue(mDefaultValue);
    for( unsigned int i = 0; i < mEnv.size(); i++ )
       mEnv[i].SetVal( this, mEnv[i].GetVal() ); // this clamps the value to the NEW range
+
+   
+   ++mVersion;
 }
 
 // This is used only during construction of an Envelope by complete or partial
@@ -238,6 +257,8 @@ void Envelope::AddPointAtEnd( double t, double val )
       mEnv.erase( mEnv.begin() + nn - 1 );
       --nn;
    }
+
+   ++mVersion;
 }
 
 Envelope::Envelope(const Envelope &orig, double t0, double t1)
@@ -356,16 +377,19 @@ void Envelope::WriteXML(XMLWriter &xmlFile) const
 void Envelope::Delete( int point )
 {
    mEnv.erase(mEnv.begin() + point);
+   ++mVersion;
 }
 
 void Envelope::Insert(int point, const EnvPoint &p)
 {
    mEnv.insert(mEnv.begin() + point, p);
+   ++mVersion;
 }
 
 void Envelope::Insert(double when, double value)
 {
    mEnv.push_back( EnvPoint{ when, value });
+   ++mVersion;
 }
 
 /*! @excsafety{No-fail} */
@@ -373,6 +397,8 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
 {
    if ( t1 <= t0 )
       return;
+
+   ++mVersion;
 
    // This gets called when somebody clears samples.
 
@@ -476,6 +502,8 @@ void Envelope::PasteEnvelope( double t0, const Envelope *e, double sampleDur )
       return;
    }
 
+   ++mVersion;
+
    // Make t0 relative to the offset of the envelope we are pasting into, 
    // and trim it to the domain of this
    t0 = std::min( mTrackLen, std::max( 0.0, t0 - mOffset ) );
@@ -543,6 +571,8 @@ void Envelope::PasteEnvelope( double t0, const Envelope *e, double sampleDur )
 void Envelope::RemoveUnneededPoints
    ( size_t startAt, bool rightward, bool testNeighbors )
 {
+   ++mVersion;
+
    // startAt is the index of a recently inserted point which might make no
    // difference in envelope evaluation, or else might cause nearby points to
    // make no difference.
@@ -609,6 +639,8 @@ void Envelope::RemoveUnneededPoints
 std::pair< int, int > Envelope::ExpandRegion
    ( double t0, double tlen, double *pLeftVal, double *pRightVal )
 {
+   ++mVersion;
+
    // t0 is relative time
 
    double val = GetValueRelative( t0 );
@@ -682,6 +714,9 @@ int Envelope::Reassign(double when, double value)
       return -1;
 
    mEnv[i].SetVal( this, value );
+
+   ++mVersion;
+
    return 0;
 }
 
@@ -722,6 +757,8 @@ void Envelope::Cap( double sampleDur )
  */
 int Envelope::InsertOrReplaceRelative(double when, double value)
 {
+   ++mVersion;
+
 #if defined(_DEBUG)
    // in debug builds, do a spot of argument checking
    if(when > mTrackLen + 0.0000001)
@@ -799,6 +836,7 @@ void Envelope::SetTrackLen( double trackLen, double sampleDur )
    // If more than one point already at the end, keep only the first of them.
    int newLen = std::min( 1 + range.first, range.second );
    mEnv.resize( newLen );
+   ++mVersion;
 
    if ( needPoint )
       AddPointAtEnd( mTrackLen, value );
@@ -816,6 +854,8 @@ void Envelope::RescaleTimes( double newLength )
       for ( auto &point : mEnv )
          point.SetT( point.GetT() * ratio );
    }
+
+   ++mVersion;
    mTrackLen = newLength;
 }
 
@@ -827,6 +867,11 @@ double Envelope::GetValue( double t, double sampleDur ) const
 
    GetValues( &temp, 1, t, sampleDur );
    return temp;
+}
+
+double Envelope::GetDefaultValue() const noexcept
+{
+   return mDefaultValue;
 }
 
 double Envelope::GetValueRelative(double t, bool leftLimit) const

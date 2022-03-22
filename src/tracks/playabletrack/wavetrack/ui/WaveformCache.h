@@ -15,27 +15,20 @@
 
 class WaveDisplay;
 class WaveDataCache;
+class WaveBitmapCache;
 
 struct WaveClipWaveformCache final : WaveClipListener
 {
-   WaveClipWaveformCache();
+   WaveClipWaveformCache( WaveClip& clip );
    ~WaveClipWaveformCache() override;
 
-   std::unique_ptr<WaveDataCache> mWaveDataCache;
-
-   int mDirty { 0 };
+   std::shared_ptr<WaveDataCache> mWaveDataCache;
+   std::shared_ptr<WaveBitmapCache> mWaveBitmapCache;
 
    static WaveClipWaveformCache &Get( const WaveClip &clip );
 
    void MarkChanged() override; // NOFAIL-GUARANTEE
    void Invalidate() override; // NOFAIL-GUARANTEE
-
-   ///Delete the wave cache - force redraw.  Thread-safe
-   void Clear();
-
-   /** Getting high-level data for screen display */
-   bool GetWaveDisplay(const WaveClip &clip, WaveDisplay &display,
-                       double t0, double pixelsPerSecond);
 };
 
 #endif

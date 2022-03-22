@@ -58,6 +58,7 @@ public:
 
    //! Invalidate the cache content
    void Invalidate();
+   void Invalidate(const ZoomInfo& zoomInfo, double t0, double t1);
 
    //! Returns the sample rate associated with cache
    double GetSampleRate() const noexcept;
@@ -87,7 +88,7 @@ protected:
       size_t RightOffset {};
    };
    //! Create a new Cache element. Implementation is responsible of the lifetime control.
-   virtual GraphicsDataCacheElementBase* CreateElement(const GraphicsDataCacheKey& key) noexcept = 0;
+   virtual GraphicsDataCacheElementBase* CreateElement(const GraphicsDataCacheKey& key) = 0;
    //! This method is called, when the cache element should be evicted. Implementation may not deallocate the object.
    virtual void DisposeElement(GraphicsDataCacheElementBase* element) = 0;
 
@@ -97,6 +98,9 @@ protected:
 
    //! Perform a lookup inside the cache. This method modifies mLookup and invalidates any previous result.
    BaseLookupResult PerformBaseLookup(const ZoomInfo& zoomInfo, double t0, double t1);
+
+   const GraphicsDataCacheElementBase* PerformBaseLookup(GraphicsDataCacheKey key);
+
 private:
    // Called internally to create a list of items in the mNewLookupItems
    bool CreateNewItems();
@@ -207,7 +211,7 @@ private:
    {
    }
 
-   const GraphicsDataCacheBase::BaseLookupResult mBaseLookup;
+   GraphicsDataCacheBase::BaseLookupResult mBaseLookup;
    GraphicsDataCacheBase::Lookup::const_iterator mIterator;
 
    template <typename T>
@@ -219,6 +223,9 @@ template<typename CacheElementType>
 class GraphicsDataCache /* not final */ : public GraphicsDataCacheBase
 {
 public:
+   GraphicsDataCache(const GraphicsDataCache&) = delete;
+   GraphicsDataCache& operator = (const GraphicsDataCache&) = delete;
+
    using Initializer = std::function<bool(const GraphicsDataCacheKey& Key, CacheElementType& element)>;
 
    explicit GraphicsDataCache(double sampleRate)
@@ -237,6 +244,11 @@ public:
       const auto base = this->PerformBaseLookup(zoomInfo, t0, t1);
 
       return { { base, true }, { base, false } };
+   }
+
+   const CacheElementType* PerformLookup(GraphicsDataCacheKey key)
+   {
+      return static_cast<const CacheElementType*>(PerformBaseLookup(key));
    }
 
    void setInitializer(Initializer initializer)
@@ -267,7 +279,7 @@ protected:
    }
 
 private:
-   GraphicsDataCacheElementBase* CreateElement(const GraphicsDataCacheKey& key) noexcept override
+   GraphicsDataCacheElementBase* CreateElement(const GraphicsDataCacheKey& key) override
    {
       CacheElementType* element = nullptr;
 

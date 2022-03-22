@@ -78,11 +78,9 @@ public:
 
    // Create from a subrange of another envelope.
    Envelope(const Envelope &orig, double t0, double t1);
-
-   void Initialize(int numPoints);
-
    virtual ~Envelope();
 
+   size_t GetVersion() const noexcept;
    // Return true if violations of point ordering invariants were detected
    // and repaired
    bool ConsistencyCheck();
@@ -130,6 +128,7 @@ public:
    /** \brief Get envelope value at time t */
    double GetValue( double t, double sampleDur = 0 ) const;
 
+   double GetDefaultValue() const noexcept;
    /** \brief Get many envelope points at once.
     *
     * This is much faster than calling GetValue() multiple times if you need
@@ -164,8 +163,6 @@ public:
 
    void print() const;
    void testMe();
-
-   bool IsDirty() const;
 
    void Clear() { mEnv.clear(); }
 
@@ -251,6 +248,7 @@ private:
    // UI stuff
    bool mDragPointValid { false };
    int mDragPoint { -1 };
+   size_t mVersion { 0 };
 
    mutable int mSearchGuess { -2 };
 };

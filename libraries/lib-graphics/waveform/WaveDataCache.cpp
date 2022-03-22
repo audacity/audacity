@@ -26,7 +26,7 @@ bool WaveDataCache::InitializeElement(
    const GraphicsDataCacheKey& key, WaveCacheElement& element)
 {
    auto sw = FrameStatistics::CreateStopwatch(
-      FrameStatistics::SectionID::SpectrumView);
+      FrameStatistics::SectionID::WaveDataCache);
 
    element.AvailableColumns = 0;
 
@@ -71,12 +71,10 @@ bool WaveDataCache::InitializeElement(
       }
 
       if (samplesLeft != 0)
-      {
-         if (summary.SamplesCount == 0)
-            --columnIndex;
          break;
-      }
    }
+
+   assert(columnIndex <= WaveDataCache::CacheElementWidth);
 
    element.AvailableColumns = columnIndex;
    element.IsComplete =
@@ -104,7 +102,7 @@ void processBlock(
    WaveCacheSampleBlock::Summary& summary)
 {
    input = input + 3 * (from / blockSize);
-   count = RoundUp(count, blockSize);
+   count = RoundUpUnsafe(count, blockSize);
 
    float min = summary.Min;
    float max = summary.Max;

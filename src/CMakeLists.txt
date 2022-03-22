@@ -1455,6 +1455,7 @@ set( AUDACITY_LIBRARIES
    lib-module-manager-interface
    lib-project-history-interface
    lib-graphics-interface
+   lib-graphics-wx-interface
 )
 
 if (${_OPT}use_ffmpeg)

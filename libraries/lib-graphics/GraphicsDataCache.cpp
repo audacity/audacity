@@ -49,6 +49,23 @@ bool IsKeyLess(
    else
       return lhs.PixelsPerSecond < rhs.PixelsPerSecond;
 }
+
+template <typename Container>
+auto GetPPSMatchRange(
+   const Container& container, double pixelsPerSecond, double sampleRate)
+{
+   return std::equal_range(
+      container.begin(), container.end(), pixelsPerSecond,
+      [sampleRate](auto lhs, auto rhs)
+      {
+         if constexpr (std::is_arithmetic_v<std::decay_t<decltype(lhs)>>)
+            return !IsSamePPS(sampleRate, lhs, rhs.Key.PixelsPerSecond) &&
+                   lhs < rhs.Key.PixelsPerSecond;
+         else
+            return !IsSamePPS(sampleRate, lhs.Key.PixelsPerSecond, rhs) &&
+                   lhs.Key.PixelsPerSecond < rhs;
+      });
+}
 } // namespace
 
 void GraphicsDataCacheBase::Invalidate()
@@ -57,6 +74,51 @@ void GraphicsDataCacheBase::Invalidate()
       DisposeElement(item.Data);
 
    mLookup.clear();
+}
+
+void GraphicsDataCacheBase::Invalidate(
+   const ZoomInfo& zoomInfo, double t0, double t1)
+{
+   if (bool(t0 > t1) || IsSameTime(mSampleRate, t0, t1))
+      return;
+
+   const double pixelsPerSecond = zoomInfo.GetZoom();
+
+   const auto ppsMatchRange =
+      GetPPSMatchRange(mLookup, pixelsPerSecond, mSampleRate);
+
+   const auto cacheRangeLength =
+      std::distance(ppsMatchRange.first, ppsMatchRange.second);
+
+   if (cacheRangeLength == 0)
+      return;
+
+   const int64_t left = zoomInfo.TimeToPosition(t0);
+   const int64_t right = zoomInfo.TimeToPosition(t1) + 1;
+
+   mLRUHelper.reserve(cacheRangeLength);
+
+   for (auto it = ppsMatchRange.first; it != ppsMatchRange.second; ++it)
+   {
+      if (it->Key.FirstSample < left)
+         continue;
+
+      const auto itemRight = it->Key.FirstSample + CacheElementWidth;
+
+      DisposeElement(it->Data);
+      it->Data->AwaitsEviction = true;
+
+      if (right <= itemRight)
+         break;
+   }
+
+   mLookup.erase(
+      std::remove_if(
+         mLookup.begin(), mLookup.end(),
+         [](auto item) { return item.Data->AwaitsEviction; }),
+      mLookup.end());
+
+   mLRUHelper.clear();
 }
 
 double GraphicsDataCacheBase::GetSampleRate() const noexcept
@@ -101,17 +163,8 @@ GraphicsDataCacheBase::PerformBaseLookup(
    mNewLookupItems.clear();
    mNewLookupItems.reserve(cacheItemsCount);
 
-   const auto ppsMatchRange = std::equal_range(
-      mLookup.begin(), mLookup.end(), pixelsPerSecond,
-      [sampleRate = mSampleRate](auto lhs, auto rhs)
-      {
-         if constexpr (std::is_arithmetic_v<std::decay_t<decltype(lhs)>>)
-            return !IsSamePPS(sampleRate, lhs, rhs.Key.PixelsPerSecond) &&
-                   lhs < rhs.Key.PixelsPerSecond;
-         else
-            return !IsSamePPS(sampleRate, lhs.Key.PixelsPerSecond, rhs) &&
-                   lhs.Key.PixelsPerSecond < rhs;
-   });
+   const auto ppsMatchRange =
+      GetPPSMatchRange(mLookup, pixelsPerSecond, mSampleRate);
 
    for (int64_t itemIndex = 0; itemIndex < cacheItemsCount; ++itemIndex)
    {
@@ -187,6 +240,59 @@ GraphicsDataCacheBase::PerformBaseLookup(
             static_cast<size_t>(std::max(int64_t(0), cacheRightColumn - right)) };
 }
 
+const GraphicsDataCacheElementBase*
+GraphicsDataCacheBase::PerformBaseLookup(GraphicsDataCacheKey key)
+{
+   auto it = FindKey(key);
+
+   if (it != mLookup.end())
+   {
+      GraphicsDataCacheElementBase* data = it->Data;
+
+      if (!data->IsComplete && data->LastUpdate != mCacheAccessIndex)
+      {
+         if (!UpdateElement(it->Key, *data))
+            return {};
+      }
+
+      return data;
+   }
+
+   mNewLookupItems.clear();
+   mNewLookupItems.reserve(1);
+
+   mNewLookupItems.push_back({ key, nullptr });
+
+   ++mCacheAccessIndex;
+
+   LookupElement newElement {
+      key,
+      CreateElement(key)
+   };
+
+   if (newElement.Data == nullptr)
+      return nullptr;
+
+   newElement.Data->LastUpdate = mCacheAccessIndex;
+
+   mLookup.insert(
+      std::upper_bound(
+         mLookup.begin(), mLookup.end(), key,
+         [sampleRate = mSampleRate](auto lhs, auto rhs)
+         {
+            if constexpr (std::is_same_v<
+                             std::decay_t<decltype(lhs)>, GraphicsDataCacheKey>)
+               return IsKeyLess(sampleRate, lhs, rhs.Key);
+            else
+               return IsKeyLess(sampleRate, lhs.Key, rhs);
+         }),
+      newElement);
+      
+   PerformCleanup();
+
+   return newElement.Data;
+}
+
 bool GraphicsDataCacheBase::CreateNewItems()
 {
    for (auto& item : mNewLookupItems)
@@ -227,7 +333,7 @@ void GraphicsDataCacheBase::PerformCleanup()
    const int64_t lookupSize = static_cast<int64_t>(mLookup.size());
 
    const auto allowedItems =
-      RoundUp(mMaxWidth, CacheElementWidth) * mCacheSizeMultiplier;
+      RoundUpUnsafe(mMaxWidth, CacheElementWidth) * mCacheSizeMultiplier;
 
    const int64_t itemsToEvict = lookupSize - allowedItems;
 

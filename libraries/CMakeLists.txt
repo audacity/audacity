@@ -30,6 +30,7 @@ set( LIBRARIES
    lib-module-manager
    lib-project-history
    lib-graphics
+   lib-graphics-wx
 )
 
 if ( ${_OPT}has_networking )
