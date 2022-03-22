@@ -574,16 +574,40 @@ auto Visit(Visitor &&vis, Variant &&var)
       std::forward<Visitor>(vis), std::forward<Variant>(var) );
 }
 
-
+//! Returns a rounded up integer result for numerator / denominator.
+/*!
+* RoundUpUnsafe(4, 2) == 2;
+* RoundUpUnsafe(3, 2) == 2;
+* RoundUpUnsafe(-3, 2) == -1;
+*
+* This function does not check if denominator is 0 of if there is an integer overflow. 
+*/
 template <typename LType, typename RType>
-auto RoundUp(LType numerator, RType denominator) noexcept
+auto RoundUpUnsafe(LType numerator, RType denominator) noexcept
 {
    static_assert(std::is_integral_v<LType>);
    static_assert(std::is_integral_v<RType>);
 
-   const auto result = numerator / denominator;
+   if constexpr (std::is_unsigned_v<LType> && std::is_unsigned_v<RType>)
+   {
+      return (numerator + denominator - 1) / denominator;
+   }
+   else
+   {
+      if (numerator > 0 && denominator > 0)
+      {
+         return (numerator + denominator - 1) / denominator;
+      }
+      else
+      {
+         const auto result = numerator / denominator;
 
-   return result * denominator == numerator ? result : result + 1;
+         if (result < 0 || result * denominator == numerator)
+            return result;
+         else
+            return result + 1;
+      }
+   }
 }
 
 #endif // __AUDACITY_MEMORY_X_H__
