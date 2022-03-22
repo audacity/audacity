@@ -473,7 +473,7 @@ int Effect::ShowHostInterface(wxWindow &parent,
 
    // Let the client show the dialog and decide whether to keep it open
    auto result = client->ShowClientInterface(parent, *mHostUIDialog, forceModal);
-   if (!mHostUIDialog->IsShown())
+   if (mHostUIDialog && !mHostUIDialog->IsShown())
       // Client didn't show it, or showed it modally and closed it
       // So destroy it.
       // (I think mHostUIDialog only needs to be a local variable in this
