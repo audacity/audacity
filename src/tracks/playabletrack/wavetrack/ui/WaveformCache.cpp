@@ -26,6 +26,8 @@
 #include "waveform/WaveDataCache.h"
 #include "waveform/WaveBitmapCache.h"
 
+#include <wx/bitmap.h>
+
 
 //
 // Getting high-level data from the track for screen display and
