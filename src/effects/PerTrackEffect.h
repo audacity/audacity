@@ -43,7 +43,7 @@ protected:
    sampleCount    mSampleCnt{};
 
 private:
-   bool Process(EffectSettings &settings) final;
+   bool Process(EffectInstance &instance, EffectSettings &settings) final;
    bool ProcessPass(EffectSettings &settings);
    bool ProcessTrack(EffectSettings &settings,
       int count,

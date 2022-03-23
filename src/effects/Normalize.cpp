@@ -92,7 +92,7 @@ bool EffectNormalize::CheckWhetherSkipEffect(const EffectSettings &) const
    return ((mGain == false) && (mDC == false));
 }
 
-bool EffectNormalize::Process(EffectSettings &)
+bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
 {
    if (mGain == false && mDC == false)
       return true;

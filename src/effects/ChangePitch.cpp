@@ -185,7 +185,7 @@ bool EffectChangePitch::DoLoadFactoryDefaults(EffectSettings &settings)
 
 // Effect implementation
 
-bool EffectChangePitch::Process(EffectSettings &settings)
+bool EffectChangePitch::Process(EffectInstance &, EffectSettings &settings)
 {
 #if USE_SBSMS
    if (mUseSBSMS)

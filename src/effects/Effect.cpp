@@ -75,6 +75,16 @@ Effect::Instance::Instance(Effect &effect)
 
 Effect::Instance::~Instance() = default;
 
+bool Effect::Instance::Init()
+{
+   return mEffect.Init();
+}
+
+bool Effect::Instance::Process(EffectSettings &settings)
+{
+   return mEffect.Process(*this, settings);
+}
+
 Effect::Effect()
 {
 }
@@ -812,10 +822,9 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
    CountWaveTracks();
 
    // Note: Init may read parameters from preferences
-   if (!Init())
-   {
+   auto pInstance = MakeInstance(settings);
+   if (!pInstance->Init())
       return false;
-   }
 
    // Prompting will be bypassed when applying an effect that has already
    // been configured, e.g. repeating the last effect on a different selection.
@@ -846,7 +855,7 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
       );
       auto vr = valueRestorer( mProgress, progress.get() );
 
-      returnVal = Process(settings);
+      returnVal = pInstance->Process(settings);
    }
 
    if (returnVal && (mT1 >= mT0 ))
@@ -1301,7 +1310,11 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       // again, so the state is exactly the way it was before Preview
       // was called.
       if (!dryOnly)
-         GuardedCall( [&]{ Init(); } );
+         // TODO remove this reinitialization of state within the Effect object
+         // It is done indirectly via Effect::Instance
+         GuardedCall([&]{ access.ModifySettings([&](EffectSettings &settings){
+            MakeInstance(settings)->Init();
+         }); });
 
       // In case any dialog control depends on mT1 or mDuration:
       if ( mUIDialog )
@@ -1389,7 +1402,7 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       auto vr2 = valueRestorer( mIsPreview, true );
 
       access.ModifySettings([&](EffectSettings &settings){
-         success = Process(settings);
+         success = MakeInstance(settings)->Process(settings);
       });
    }
 

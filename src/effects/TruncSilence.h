@@ -66,7 +66,7 @@ public:
                         double* inputLength = NULL,
                         double* minInputLength = NULL) const;
 
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;

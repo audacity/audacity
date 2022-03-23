@@ -628,7 +628,7 @@ bool EffectEqualization::Init()
    return(true);
 }
 
-bool EffectEqualization::Process(EffectSettings &)
+bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
 {
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    if(mEffectEqualization48x) {

@@ -822,8 +822,7 @@ EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
       if (!component)
          return empty;
 
-      if (auto effect = dynamic_cast<EffectPlugin *>(component);
-          effect && effect->MakeInstance(settings))
+      if (auto effect = dynamic_cast<EffectPlugin *>(component))
          return (mEffects[ID] = { effect, std::move(settings) });
       else if (auto client = dynamic_cast<EffectUIClientInterface *>(component)) {
          // Nothing inherits EffectUIClientInterface now that does not also

@@ -48,7 +48,7 @@ bool PerTrackEffect::DoPass2() const
    return false;
 }
 
-bool PerTrackEffect::Process(EffectSettings &settings)
+bool PerTrackEffect::Process(EffectInstance &, EffectSettings &settings)
 {
    CopyInputTracks(true);
    bool bGoodResult = true;

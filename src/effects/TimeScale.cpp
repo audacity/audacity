@@ -131,7 +131,8 @@ void EffectTimeScale::Preview(EffectSettingsAccess &access, bool dryOnly)
    Effect::Preview(access, dryOnly);
 }
 
-bool EffectTimeScale::Process(EffectSettings &settings)
+bool EffectTimeScale::Process(
+   EffectInstance &instance, EffectSettings &settings)
 {
    double pitchStart1 = PercentChangeToRatio(m_PitchPercentChangeStart);
    double pitchEnd1 = PercentChangeToRatio(m_PitchPercentChangeEnd);
@@ -145,7 +146,7 @@ bool EffectTimeScale::Process(EffectSettings &settings)
    }
    
    EffectSBSMS::setParameters(rateStart1,rateEnd1,pitchStart1,pitchEnd1,slideTypeRate,slideTypePitch,false,false,false);
-   return EffectSBSMS::Process(settings);
+   return EffectSBSMS::Process(instance, settings);
 }
 
 std::unique_ptr<EffectUIValidator>

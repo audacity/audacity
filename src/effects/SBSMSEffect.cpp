@@ -210,7 +210,7 @@ double EffectSBSMS::getRate(double rateStart, double rateEnd, SlideType slideTyp
    return slide.getRate(t);
 }
 
-bool EffectSBSMS::Process(EffectSettings &)
+bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
 {
    bool bGoodResult = true;
 

@@ -56,12 +56,6 @@ protected:
       const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
    ) override;
 
-   //! Call once to set up state for whole list of tracks to be processed
-   /*!
-     @return success
-   */
-   virtual bool Init() = 0;
-
    //! After Init(), tell whether Process() should be skipped
    /*
      Typically this is only useful in automation, for example
@@ -81,12 +75,6 @@ protected:
     */
    virtual double CalcPreviewInputLength(
       const EffectSettings &settings, double previewLength) const = 0;
-
-   //! Actually do the effect here.
-   /*!
-    @return success
-    */
-   virtual bool Process(EffectSettings &settings) = 0;
 
    // Previewing linear effect can be optimised by pre-mixing. However this
    // should not be used for non-linear effects such as dynamic processors
@@ -183,10 +171,19 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    Effect();
    virtual ~Effect();
 
+   //! Default result of MakeInstance() calls through to members of Effect
+   /*!
+    Effects that are completely stateless should not use this
+    */
    class AUDACITY_DLL_API Instance : public EffectInstance {
    public:
       explicit Instance(Effect &effect);
       ~Instance() override;
+
+      bool Init() override;
+
+      bool Process(EffectSettings &settings) override;
+
    protected:
       Effect &mEffect;
    };
@@ -329,8 +326,11 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool EnableApply(bool enable = true);
    bool EnablePreview(bool enable = true);
 
-   //! Default implementation does nothing, returns true
-   bool Init() override;
+   /*!
+     @copydoc EffectInstance::Init()
+     Default implementation does nothing, returns true
+   */
+   virtual bool Init();
 
    //! Default implementation returns false
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
@@ -338,6 +338,11 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    //! Default implementation returns `previewLength`
    double CalcPreviewInputLength(
       const EffectSettings &settings, double previewLength) const override;
+
+   /*!
+    @copydoc EffectInstance::Process
+    */
+   virtual bool Process(EffectInstance &instance, EffectSettings &settings) = 0;
 
    //! Add controls to effect panel; always succeeds
    /*!

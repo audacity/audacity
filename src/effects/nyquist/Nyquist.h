@@ -119,7 +119,7 @@ public:
    // Effect implementation
 
    bool Init() override;
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,
       EffectSettingsAccess &access, bool forceModal = false) override;

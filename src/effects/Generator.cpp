@@ -27,7 +27,7 @@
 
 #include "../widgets/AudacityMessageBox.h"
 
-bool Generator::Process(EffectSettings &settings)
+bool Generator::Process(EffectInstance &, EffectSettings &settings)
 {
    const auto duration = settings.extra.GetDuration();
 

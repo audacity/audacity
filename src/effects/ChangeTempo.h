@@ -54,7 +54,7 @@ public:
 
    bool Init() override;
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    double CalcPreviewInputLength(
       const EffectSettings &settings, double previewLength) const override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(

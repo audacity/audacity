@@ -161,7 +161,7 @@ bool EffectChangeTempo::Init()
    return true;
 }
 
-bool EffectChangeTempo::Process(EffectSettings &settings)
+bool EffectChangeTempo::Process(EffectInstance &, EffectSettings &settings)
 {
    bool success = false;
 

@@ -615,7 +615,7 @@ EffectNoiseReduction::Worker::MyWindow::~MyWindow()
 {
 }
 
-bool EffectNoiseReduction::Process(EffectSettings &)
+bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
 {
    // This same code will either reduce noise or profile it
 

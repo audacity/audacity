@@ -343,7 +343,7 @@ bool VampEffect::Init()
    return true;
 }
 
-bool VampEffect::Process(EffectSettings &)
+bool VampEffect::Process(EffectInstance &, EffectSettings &)
 {
    if (!mPlugin)
    {

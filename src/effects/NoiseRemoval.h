@@ -58,7 +58,7 @@ public:
       EffectSettingsAccess &access, bool forceModal = false) override;
    bool Init() override;
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    void End() override;
 
 private:

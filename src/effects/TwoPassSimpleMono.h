@@ -22,7 +22,7 @@ class AUDACITY_DLL_API EffectTwoPassSimpleMono /* not final */ : public Effect
 public:
    // Effect implementation
 
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
 
 protected:
    // EffectTwoPassSimpleMono implementation

@@ -659,7 +659,7 @@ bool NyquistEffect::Init()
 
 static void RegisterFunctions();
 
-bool NyquistEffect::Process(EffectSettings &settings)
+bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 {
    if (mIsPrompt && mControls.size() > 0 && !IsBatchProcessing()) {
       auto &nyquistSettings = GetSettings(settings);
