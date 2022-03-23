@@ -27,10 +27,87 @@
 namespace BasicUI { class ProgressDialog; }
 
 class AudacityProject;
+class Effect;
 class EffectParameterMethods;
 class LabelTrack;
 class Track;
 class WaveTrack;
+
+class AUDACITY_DLL_API EffectBase /* not final */
+   : public EffectUIClientInterface
+   , public EffectPlugin
+{
+public:
+   EffectBase();
+   ~EffectBase() override;
+
+protected:
+   // Previewing linear effect can be optimised by pre-mixing. However this
+   // should not be used for non-linear effects such as dynamic processors
+   // To allow pre-mixing before Preview, set linearEffectFlag to true.
+   void SetLinearEffectFlag(bool linearEffectFlag);
+
+   // Most effects only need to preview a short selection. However some
+   // (such as fade effects) need to know the full selection length.
+   void SetPreviewFullSelectionFlag(bool previewDurationFlag);
+
+   // Use this if the effect needs to know if it is previewing
+   bool IsPreviewing() { return mIsPreview; }
+
+   // Most effects only require selected tracks to be copied for Preview.
+   // If IncludeNotSelectedPreviewTracks(true), then non-linear effects have
+   // preview copies of all wave tracks.
+   void IncludeNotSelectedPreviewTracks(bool includeNotSelected);
+
+   // A global counter of all the successful Effect invocations.
+   static int nEffectsDone;
+
+   // If bGoodResult, replace mWaveTracks tracks in mTracks with successfully processed
+   // mOutputTracks copies, get rid of old mWaveTracks, and set mWaveTracks to mOutputTracks.
+   // Else clear and DELETE mOutputTracks copies.
+   void ReplaceProcessedTracks(const bool bGoodResult);
+
+   BasicUI::ProgressDialog *mProgress{}; // Temporary pointer, NOT deleted in destructor.
+   double         mProjectRate{}; // Sample rate of the project - NEW tracks should
+                               // be created with this rate...
+   WaveTrackFactory   *mFactory{};
+   const TrackList *inputTracks() const { return mTracks; }
+   const AudacityProject *FindProject() const;
+   // used only if CopyInputTracks() is called.
+   std::shared_ptr<TrackList> mOutputTracks;
+   double         mT0{};
+   double         mT1{};
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+   double         mF0{};
+   double         mF1{};
+#endif
+   wxArrayString  mPresetNames;
+   unsigned       mUIFlags{ 0 };
+
+private:
+   friend class Effect;
+
+   //! This weak pointer may be the same as mUIParent, or null
+   wxWeakRef<wxDialog> mUIDialog;
+
+   double GetDefaultDuration();
+
+   void CountWaveTracks();
+
+   TrackList *mTracks{}; // the complete list of all tracks
+   //! This weak pointer may be the same as mHostUIDialog, or null
+   bool mIsLinearEffect{ false };
+   bool mPreviewWithNotSelected{ false };
+   bool mPreviewFullSelection{ false };
+
+   bool mIsPreview{ false };
+
+   std::vector<Track*> mIMap;
+   std::vector<Track*> mOMap;
+
+   int mNumTracks{}; //v This is really mNumWaveTracks, per CountWaveTracks() and GetNumWaveTracks().
+   int mNumGroups{};
+};
 
 /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
  Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
@@ -43,8 +120,7 @@ class WaveTrack;
 // TODO:  can't be done until after all effects are using the NEW API.
 
 class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
-   public EffectUIClientInterface,
-   public EffectPlugin
+   public EffectBase
 {
  //
  // public methods
@@ -204,7 +280,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                   long style = DefaultMessageBoxStyle,
                   const TranslatableString& titleStr = {}) const;
 
-   static void IncEffectCounter(){ nEffectsDone++;};
+   static void IncEffectCounter(){ nEffectsDone++;}
 
    virtual bool Process(EffectSettings &settings) = 0;
 
@@ -273,30 +349,10 @@ protected:
       const WaveTrack &track, const WaveTrack *pRight,
       sampleCount *start, sampleCount *len);
 
-   // Previewing linear effect can be optimised by pre-mixing. However this
-   // should not be used for non-linear effects such as dynamic processors
-   // To allow pre-mixing before Preview, set linearEffectFlag to true.
-   void SetLinearEffectFlag(bool linearEffectFlag);
-
-   // Most effects only need to preview a short selection. However some
-   // (such as fade effects) need to know the full selection length.
-   void SetPreviewFullSelectionFlag(bool previewDurationFlag);
-
-   // Use this if the effect needs to know if it is previewing
-   bool IsPreviewing() { return mIsPreview; }
-
-   // Most effects only require selected tracks to be copied for Preview.
-   // If IncludeNotSelectedPreviewTracks(true), then non-linear effects have
-   // preview copies of all wave tracks.
-   void IncludeNotSelectedPreviewTracks(bool includeNotSelected);
-
    // Use this method to copy the input tracks to mOutputTracks, if
    // doing the processing on them, and replacing the originals only on success (and not cancel).
    // If not all sync-locked selected, then only selected wave tracks.
    void CopyInputTracks(bool allSyncLockSelected = false);
-
-   // A global counter of all the successful Effect invocations.
-   static int nEffectsDone;
 
    // For the use of analyzers, which don't need to make output wave tracks,
    // but may need to add label tracks.
@@ -361,66 +417,21 @@ protected:
    ModifiedAnalysisTrack ModifyAnalysisTrack
       (const LabelTrack *pOrigTrack, const wxString &name = wxString());
 
-   // If bGoodResult, replace mWaveTracks tracks in mTracks with successfully processed
-   // mOutputTracks copies, get rid of old mWaveTracks, and set mWaveTracks to mOutputTracks.
-   // Else clear and DELETE mOutputTracks copies.
-   void ReplaceProcessedTracks(const bool bGoodResult);
-
    // Use this to append a NEW output track.
    Track *AddToOutputTracks(const std::shared_ptr<Track> &t);
 
-//
-// protected data
-//
-// The Effect base class will set these variables, some or all of which
-// may be needed by any particular subclass of Effect.
-//
 protected:
-   BasicUI::ProgressDialog *mProgress{}; // Temporary pointer, NOT deleted in destructor.
-   double         mProjectRate{}; // Sample rate of the project - NEW tracks should
-                               // be created with this rate...
    double         mSampleRate{};
-   WaveTrackFactory   *mFactory{};
-   const TrackList *inputTracks() const { return mTracks; }
-   const AudacityProject *FindProject() const;
-   std::shared_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
-   double         mT0{};
-   double         mT1{};
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   double         mF0{};
-   double         mF1{};
-#endif
-   wxArrayString  mPresetNames;
 
    // UI
    //! This smart pointer tracks the lifetime of the dialog
    wxWeakRef<wxDialog> mHostUIDialog;
    wxWindow       *mUIParent{};
-   unsigned       mUIFlags{ 0 };
 
 private:
-   //! This weak pointer may be the same as the above, or null
-   wxWeakRef<wxDialog> mUIDialog;
-
    wxString GetSavedStateGroup();
-   double GetDefaultDuration();
-
-   void CountWaveTracks();
-
-   TrackList *mTracks{}; // the complete list of all tracks
 
    bool mIsBatch{ false };
-   bool mIsLinearEffect{ false };
-   bool mPreviewWithNotSelected{ false };
-   bool mPreviewFullSelection{ false };
-
-   bool mIsPreview{ false };
-
-   std::vector<Track*> mIMap;
-   std::vector<Track*> mOMap;
-
-   int mNumTracks{}; //v This is really mNumWaveTracks, per CountWaveTracks() and GetNumWaveTracks().
-   int mNumGroups{};
 
    size_t mEffectBlockSize{ 0 };
 };

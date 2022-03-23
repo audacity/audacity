@@ -49,7 +49,7 @@
 #include <unordered_map>
 
 // Effect application counter
-int Effect::nEffectsDone=0;
+int EffectBase::nEffectsDone = 0;
 
 static const int kPlayID = 20102;
 static const int kRewindID = 20103;
@@ -57,13 +57,19 @@ static const int kFFwdID = 20104;
 
 using t2bHash = std::unordered_map< void*, bool >;
 
-Effect::Effect()
+EffectBase::EffectBase()
 {
    // PRL:  I think this initialization of mProjectRate doesn't matter
    // because it is always reassigned in DoEffect before it is used
    // STF: but can't call AudioIOBase::GetOptimalSupportedSampleRate() here.
    // (Which is called to compute the default-default value.)  (Bug 2280)
    mProjectRate = QualitySettings::DefaultSampleRate.ReadWithDefault(44100);
+}
+
+EffectBase::~EffectBase() = default;
+
+Effect::Effect()
+{
 }
 
 Effect::~Effect()
@@ -558,7 +564,7 @@ const EffectDefinitionInterface& Effect::GetDefinition() const
    return *this;
 }
 
-double Effect::GetDefaultDuration()
+double EffectBase::GetDefaultDuration()
 {
    return 30.0;
 }
@@ -944,18 +950,18 @@ bool Effect::EnablePreview(bool enable)
    return enable;
 }
 
-void Effect::SetLinearEffectFlag(bool linearEffectFlag)
+void EffectBase::SetLinearEffectFlag(bool linearEffectFlag)
 {
    mIsLinearEffect = linearEffectFlag;
 }
 
-void Effect::SetPreviewFullSelectionFlag(bool previewDurationFlag)
+void EffectBase::SetPreviewFullSelectionFlag(bool previewDurationFlag)
 {
    mPreviewFullSelection = previewDurationFlag;
 }
 
 
-void Effect::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
+void EffectBase::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
 {
    mPreviewWithNotSelected = includeNotSelected;
 }
@@ -1137,7 +1143,7 @@ auto Effect::ModifyAnalysisTrack
 
 // If bGoodResult, replace mTracks tracks with successfully processed mOutputTracks copies.
 // Else clear and DELETE mOutputTracks copies.
-void Effect::ReplaceProcessedTracks(const bool bGoodResult)
+void EffectBase::ReplaceProcessedTracks(const bool bGoodResult)
 {
    if (!bGoodResult) {
       // Free resources, unless already freed.
@@ -1216,14 +1222,14 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
    nEffectsDone++;
 }
 
-const AudacityProject *Effect::FindProject() const
+const AudacityProject *EffectBase::FindProject() const
 {
    if (!inputTracks())
       return nullptr;
    return inputTracks()->GetOwner();
 }
 
-void Effect::CountWaveTracks()
+void EffectBase::CountWaveTracks()
 {
    mNumTracks = mTracks->Selected< const WaveTrack >().size();
    mNumGroups = mTracks->SelectedLeaders< const WaveTrack >().size();
@@ -1433,4 +1439,3 @@ int Effect::MessageBox( const TranslatableString& message,
       : XO("%s: %s").Format( GetName(), titleStr );
    return AudacityMessageBox( message, title, style, mUIParent );
 }
-
