@@ -703,7 +703,7 @@ void Effect::UnsetBatchProcessing()
 // the recursive paths into this function via Effect::Delegate are simplified,
 // and we don't have both EffectSettings and EffectSettingsAccessPtr
 // If pAccess is not null, settings should have come from its Get()
-bool Effect::DoEffect(EffectSettings &settings, double projectRate,
+bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
     TrackList *list,
     WaveTrackFactory *factory,
     NotifyingSelectedRegion &selectedRegion,
@@ -811,7 +811,7 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
 
    // Prompting will be bypassed when applying an effect that has already
    // been configured, e.g. repeating the last effect on a different selection.
-   // Prompting may call Effect::Preview
+   // Prompting may call EffectBase::Preview
    if ( pParent && dialogFactory && pAccess &&
       IsInteractive()) {
       if (!ShowHostInterface(
@@ -1246,7 +1246,7 @@ double Effect::CalcPreviewInputLength(
    return previewLength;
 }
 
-void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
+void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
 {
    if (mNumTracks == 0) { // nothing to preview
       return;

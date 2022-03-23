@@ -42,6 +42,52 @@ public:
    ~EffectBase() override;
 
 protected:
+   // The EffectBase class fully implements the Preview method for you.
+   // Only override it if you need to do preprocessing or cleanup.
+   void Preview(EffectSettingsAccess &access, bool dryOnly) override;
+
+   bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
+      double projectRate, TrackList *list,
+      WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
+      unsigned flags,
+      // Prompt the user for input only if the next arguments are not all null.
+      wxWindow *pParent,
+      const EffectDialogFactory &dialogFactory,
+      const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
+   ) override;
+
+   //! Call once to set up state for whole list of tracks to be processed
+   /*!
+     @return success
+   */
+   virtual bool Init() = 0;
+
+   //! After Init(), tell whether Process() should be skipped
+   /*
+     Typically this is only useful in automation, for example
+     detecting that zero noise reduction is to be done,
+     or that normalisation is being done without Dc bias shift
+     or amplitude modification.
+    */
+   virtual bool CheckWhetherSkipEffect(const EffectSettings &settings) const
+      = 0;
+
+   // Determine duration of effect preview, given a suggested value
+   /*
+     Most effects just use the previewLength, but time-stretching/compressing
+     effects need to use a different input length, so override this method.
+
+     @return seconds
+    */
+   virtual double CalcPreviewInputLength(
+      const EffectSettings &settings, double previewLength) const = 0;
+
+   //! Actually do the effect here.
+   /*!
+    @return success
+    */
+   virtual bool Process(EffectSettings &settings) = 0;
+
    // Previewing linear effect can be optimised by pre-mixing. However this
    // should not be used for non-linear effects such as dynamic processors
    // To allow pre-mixing before Preview, set linearEffectFlag to true.
@@ -244,9 +290,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory, EffectSettingsAccess &access,
       bool forceModal = false) override;
-   // The Effect class fully implements the Preview method for you.
-   // Only override it if you need to do preprocessing or cleanup.
-   void Preview(EffectSettingsAccess &access, bool dryOnly) override;
    bool SaveSettingsAsString(
       const EffectSettings &settings, wxString & parms) const override;
    bool LoadSettingsFromString(
@@ -254,15 +297,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool IsBatchProcessing() const override;
    void SetBatchProcessing() override;
    void UnsetBatchProcessing() override;
-   bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
-      double projectRate, TrackList *list,
-      WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
-      unsigned flags,
-      // Prompt the user for input only if the next arguments are not all null.
-      wxWindow *pParent,
-      const EffectDialogFactory &dialogFactory,
-      const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
-   ) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
@@ -282,37 +316,19 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    static void IncEffectCounter(){ nEffectsDone++;}
 
-   virtual bool Process(EffectSettings &settings) = 0;
-
  protected:
    bool EnableApply(bool enable = true);
    bool EnablePreview(bool enable = true);
 
-//
-// protected virtual methods
-//
-// Each subclass of Effect overrides one or more of these methods to
-// do its processing.
-//
-protected:
+   //! Default implementation does nothing, returns true
+   bool Init() override;
 
-   // Called once each time an effect is called.  Perform any initialization;
-   // make sure that the effect can be performed on the selected tracks and
-   // return false otherwise
-   virtual bool Init();
+   //! Default implementation returns false
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
 
-   // Check whether effect should be skipped
-   // Typically this is only useful in automation, for example
-   // detecting that zero noise reduction is to be done,
-   // or that normalisation is being done without Dc bias shift
-   // or amplitude modification
-   // Default implementation returns false
-   virtual bool CheckWhetherSkipEffect(const EffectSettings &) const;
-
-   // Most effects just use the previewLength, but time-stretching/compressing
-   // effects need to use a different input length, so override this method.
-   virtual double CalcPreviewInputLength(
-      const EffectSettings &settings, double previewLength) const;
+   //! Default implementation returns `previewLength`
+   double CalcPreviewInputLength(
+      const EffectSettings &settings, double previewLength) const override;
 
    //! Add controls to effect panel; always succeeds
    /*!
