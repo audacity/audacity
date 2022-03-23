@@ -2035,13 +2035,6 @@ void AudioIO::DrainRecordBuffers()
           .load(std::memory_order_relaxed) ||
           deltat >= mMinCaptureSecsToCopy)
       {
-         // This scope may combine many appendings of wave tracks,
-         // and also an autosave, into one transaction,
-         // lessening the number of checkpoints
-         std::optional<TransactionScope> pScope;
-         if (auto pOwningProject = mOwningProject.lock())
-            pScope.emplace(*pOwningProject, "Recording");
-
          bool newBlocks = false;
 
          // Append captured samples to the end of the WaveTracks.
@@ -2177,8 +2170,6 @@ void AudioIO::DrainRecordBuffers()
          if (pListener && newBlocks)
             pListener->OnAudioIONewBlocks(&mCaptureTracks);
 
-         if (pScope)
-            pScope->Commit();
       }
       // end of record buffering
    },
