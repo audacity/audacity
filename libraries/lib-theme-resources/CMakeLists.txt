@@ -136,7 +136,6 @@ set( IMAGE_LIST
    UpButtonExpandSel.png
    UpButtonLarge.png
    UpButtonSmall.png
-   Zoom.png
    ZoomFit.png
    ZoomFitDisabled.png
    ZoomIn.png
