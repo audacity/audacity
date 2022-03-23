@@ -8,11 +8,7 @@ set( IMAGE_LIST
    BandWidthCursor.png
    BottomFrequencyCursor.png
    Colors.txt
-   Copy.png
-   CopyDisabled.png
    CrosshairCursor.png
-   Cut.png
-   CutDisabled.png
    CutPreview.png
    CutPreviewDisabled.png
    DisabledCursor.png
@@ -67,8 +63,6 @@ set( IMAGE_LIST
    Multi.png
    Options.png
    OptionsDisabled.png
-   Paste.png
-   PasteDisabled.png
    Pause.png
    PauseDisabled.png
    Play.png

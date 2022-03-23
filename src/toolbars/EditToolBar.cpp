@@ -69,8 +69,8 @@ const int SEPARATOR_WIDTH = 14;
 ////////////////////////////////////////////////////////////
 
 BEGIN_EVENT_TABLE( EditToolBar, ToolBar )
-   EVT_COMMAND_RANGE( ETBCutID+first_ETB_ID,
-                      ETBCutID+first_ETB_ID + ETBNumButtons - 1,
+   EVT_COMMAND_RANGE(ETBTrimID+first_ETB_ID,
+                      ETBTrimID+first_ETB_ID + ETBNumButtons - 1,
                       wxEVT_COMMAND_BUTTON_CLICKED,
                       EditToolBar::OnButton )
 END_EVENT_TABLE()
@@ -132,12 +132,6 @@ void EditToolBar::Populate()
 
    /* Buttons */
    // Tooltips slightly more verbose than the menu entries are.
-   AddButton(this, bmpCut, bmpCut, bmpCutDisabled, ETBCutID,
-      XO("Cut selection"));
-   AddButton(this, bmpCopy, bmpCopy, bmpCopyDisabled, ETBCopyID,
-      XO("Copy selection"));
-   AddButton(this, bmpPaste, bmpPaste, bmpPasteDisabled, ETBPasteID,
-      XO("Paste"));
    AddButton(this, bmpTrim, bmpTrim, bmpTrimDisabled, ETBTrimID,
       XO("Trim audio outside selection"));
    AddButton(this, bmpSilence, bmpSilence, bmpSilenceDisabled, ETBSilenceID,
@@ -185,7 +179,6 @@ void EditToolBar::Populate()
 
    mButtons[ETBZoomSelID]->SetEnabled(false);
    mButtons[ETBZoomFitID]->SetEnabled(false);
-   mButtons[ETBPasteID]->SetEnabled(false);
 
 #ifdef OPTION_SYNC_LOCK_BUTTON
    mButtons[ETBSyncLockID]->PushDown();
@@ -221,9 +214,6 @@ static const struct Entry {
    CommandID commandName;
    TranslatableString untranslatedLabel;
 } EditToolbarButtonList[] = {
-   { ETBCutID,      wxT("Cut"),         XO("Cut")  },
-   { ETBCopyID,     wxT("Copy"),        XO("Copy")  },
-   { ETBPasteID,    wxT("Paste"),       XO("Paste")  },
    { ETBTrimID,     wxT("Trim"),        XO("Trim audio outside selection")  },
    { ETBSilenceID,  wxT("Silence"),     XO("Silence audio selection")  },
    { ETBUndoID,     wxT("Undo"),        XO("Undo")  },

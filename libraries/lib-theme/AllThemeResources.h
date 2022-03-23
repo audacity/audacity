@@ -97,12 +97,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpZoomSelDisabled, wxImage( 27, 27 ), wxT("ZoomSelDisabled"));
    DEFINE_IMAGE( bmpZoomToggle, wxImage( 27, 27 ), wxT("ZoomToggle"));
    DEFINE_IMAGE( bmpZoomToggleDisabled, wxImage( 27, 27 ), wxT("ZoomToggleDisabled"));
-   DEFINE_IMAGE( bmpCut, wxImage( 26, 24 ), wxT("Cut"));
-   DEFINE_IMAGE( bmpCutDisabled, wxImage( 26, 24 ), wxT("CutDisabled"));
-   DEFINE_IMAGE( bmpCopy, wxImage( 26, 24 ), wxT("Copy"));
-   DEFINE_IMAGE( bmpCopyDisabled, wxImage( 26, 24 ), wxT("CopyDisabled"));
-   DEFINE_IMAGE( bmpPaste, wxImage( 26, 24 ), wxT("Paste"));
-   DEFINE_IMAGE( bmpPasteDisabled, wxImage( 26, 24 ), wxT("PasteDisabled"));
    DEFINE_IMAGE( bmpTrim, wxImage( 26, 24 ), wxT("Trim"));
    DEFINE_IMAGE( bmpTrimDisabled, wxImage( 26, 24 ), wxT("TrimDisabled"));
    DEFINE_IMAGE( bmpSilence, wxImage( 26, 24 ), wxT("Silence"));
