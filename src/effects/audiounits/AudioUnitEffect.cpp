@@ -1032,13 +1032,14 @@ bool AudioUnitEffect::InitializePlugin()
                         &mBlockSize,
                         &dataSize);
 
-   // Is this really needed here or can it be done in InitializeInstance()
+   // Is this really needed here or can it be done in MakeInstance()
    // only?  I think it can, but this is more a conservative change for now,
    // preserving what SetHost() did
    return MakeListener();
 }
 
-bool AudioUnitEffect::InitializeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance>
+AudioUnitEffect::MakeInstance(EffectSettings &settings)
 {
    OSStatus result;
 
@@ -1067,7 +1068,7 @@ bool AudioUnitEffect::InitializeInstance(EffectSettings &settings)
       LoadPreset(CurrentSettingsGroup(), settings);
    }
 
-   return true;
+   return std::make_shared<Effect::Instance>(*this);
 }
 
 bool AudioUnitEffect::MakeListener()
@@ -1363,7 +1364,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
-   if (!slave->InitializeInstance(settings))
+   if (!slave->MakeInstance(settings))
    {
       return false;
    }

@@ -861,7 +861,8 @@ bool LadspaEffect::InitializePlugin()
    return true;
 }
 
-bool LadspaEffect::InitializeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance>
+LadspaEffect::MakeInstance(EffectSettings &settings)
 {
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
       wxT("UseLatency"), mUseLatency, true);
@@ -878,7 +879,7 @@ bool LadspaEffect::InitializeInstance(EffectSettings &settings)
    }
 
    LoadParameters(CurrentSettingsGroup(), settings);
-   return true;
+   return std::make_shared<Effect::Instance>(*this);
 }
 
 unsigned LadspaEffect::GetAudioInCount() const

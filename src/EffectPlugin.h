@@ -35,13 +35,12 @@ using EffectDialogFactory = std::function< wxDialog* (
 class TrackList;
 class WaveTrackFactory;
 class NotifyingSelectedRegion;
-class EffectProcessor;
+class EffectInstance;
 
-/*************************************************************************************//**
-
+/***************************************************************************//**
 \class EffectPlugin
-@brief UI-related services
-*******************************************************************************************/
+@brief Factory of instances of an effect and of dialogs to control them
+*******************************************************************************/
 class AUDACITY_DLL_API EffectPlugin
 {
 public:
@@ -113,10 +112,27 @@ public:
    //! Update the given settings from controls
    virtual bool TransferDataFromWindow(EffectSettings &settings) = 0;
 
+   //! Make an object maintaining short-term state of an Effect
    /*!
-    @return true if successful
+    One effect may have multiple instances extant simultaneously.
+    Instances have state, may be implemented in foreign code, and are temporary,
+    whereas EffectSettings represents persistent effect state that can be saved
+    and reloaded from files.
+
+    @param settings may be assumed to have a lifetime enclosing the instance's
     */
-   virtual bool InitializeInstance(EffectSettings &settings) = 0;
+   virtual std::shared_ptr<EffectInstance>
+   MakeInstance(EffectSettings &settings) = 0;
+};
+
+/***************************************************************************//**
+\class EffectInstance
+@brief Performs effect computation
+*******************************************************************************/
+class EffectInstance : public std::enable_shared_from_this<EffectInstance>
+{
+public:
+   virtual ~EffectInstance();
 };
 
 #endif

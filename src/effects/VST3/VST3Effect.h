@@ -146,7 +146,8 @@ public:
 
    int ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal) override;
    bool InitializePlugin();
-   bool InitializeInstance(EffectSettings &settings) override;
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+      override;
    bool IsGraphicalUI() override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;

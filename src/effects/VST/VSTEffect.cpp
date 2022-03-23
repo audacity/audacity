@@ -1316,7 +1316,8 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
-bool VSTEffect::InitializeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance>
+VSTEffect::MakeInstance(EffectSettings &settings)
 {
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -1339,7 +1340,7 @@ bool VSTEffect::InitializeInstance(EffectSettings &settings)
    }
 
    LoadParameters(CurrentSettingsGroup(), settings);
-   return true;
+   return std::make_shared<Effect::Instance>(*this);
 }
 
 unsigned VSTEffect::GetAudioInCount() const

@@ -68,6 +68,13 @@ EffectBase::EffectBase()
 
 EffectBase::~EffectBase() = default;
 
+Effect::Instance::Instance(Effect &effect)
+   : mEffect{ effect }
+{
+}
+
+Effect::Instance::~Instance() = default;
+
 Effect::Effect()
 {
 }
@@ -144,9 +151,10 @@ bool Effect::SupportsAutomation() const
 
 // EffectProcessor implementation
 
-bool Effect::InitializeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance>
+Effect::MakeInstance(EffectSettings &settings)
 {
-   return true;
+   return std::make_shared<Effect::Instance>(*this);
 }
 
 unsigned Effect::GetAudioInCount() const

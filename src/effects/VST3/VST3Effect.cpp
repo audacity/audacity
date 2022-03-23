@@ -844,13 +844,14 @@ bool VST3Effect::InitializePlugin()
 {
    return true;
 }
-
-bool VST3Effect::InitializeInstance(EffectSettings &settings)
+   
+std::shared_ptr<EffectInstance>
+VST3Effect::MakeInstance(EffectSettings &settings)
 {
    ReloadUserOptions();
    if(!LoadUserPreset(CurrentSettingsGroup(), settings))
       LoadFactoryDefaults(settings);
-   return true;
+   return std::make_shared<Effect::Instance>(*this);
 }
 
 bool VST3Effect::IsGraphicalUI()

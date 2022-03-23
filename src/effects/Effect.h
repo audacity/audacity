@@ -183,6 +183,14 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    Effect();
    virtual ~Effect();
 
+   class AUDACITY_DLL_API Instance : public EffectInstance {
+   public:
+      explicit Instance(Effect &effect);
+      ~Instance() override;
+   protected:
+      Effect &mEffect;
+   };
+
    // ComponentInterface implementation
 
    PluginPath GetPath() const override;
@@ -223,8 +231,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectProcessor implementation
 
-   bool InitializeInstance(EffectSettings &settings) override;
-   
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+      override;
+
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
