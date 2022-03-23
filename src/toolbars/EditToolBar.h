@@ -26,9 +26,6 @@ class wxWindow;
 class AButton;
 
 enum {
-   ETBCutID,
-   ETBCopyID,
-   ETBPasteID,
    ETBTrimID,
    ETBSilenceID,
 
