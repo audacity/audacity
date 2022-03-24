@@ -620,9 +620,9 @@ void ToolManager::Reset()
          || ndx == SpectralSelectionBarID
 #endif
          || ndx == ScrubbingBarID
-// DA: Hides three more toolbars.
-#ifdef EXPERIMENTAL_DA
          || ndx == DeviceBarID
+// DA: Hides two more toolbars.
+#ifdef EXPERIMENTAL_DA
          || ndx == TranscriptionBarID
          || ndx == SelectionBarID
 #endif
@@ -759,6 +759,8 @@ void ToolManager::ReadConfig()
       if( ndx == MeterBarID )
          bShownByDefault = false;
       if( ndx == ScrubbingBarID )
+         bShownByDefault = false;
+      if( ndx == DeviceBarID )
          bShownByDefault = false;
       if( ndx == TimeBarID )
          defaultDock = BotDockID;
