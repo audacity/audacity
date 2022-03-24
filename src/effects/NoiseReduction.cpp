@@ -1229,7 +1229,7 @@ struct ControlInfo {
 
    long SliderSetting(double value) const
    {
-      return TrapLong(
+      return std::clamp<long>(
          0.5 + sliderMax * (value - valueMin) / (valueMax - valueMin),
          0, sliderMax);
    }

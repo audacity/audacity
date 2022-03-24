@@ -529,28 +529,4 @@ public:
 
 #define ID_EFFECT_PREVIEW ePreviewID
 
-// Utility functions
-
-inline float TrapFloat(float x, float min, float max)
-{
-   if (x <= min)
-      return min;
-
-   if (x >= max)
-      return max;
-
-   return x;
-}
-
-inline long TrapLong(long x, long min, long max)
-{
-   if (x <= min)
-      return min;
-
-   if (x >= max)
-      return max;
-
-   return x;
-}
-
 #endif
