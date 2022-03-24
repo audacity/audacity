@@ -247,7 +247,6 @@ private:
    TrackNodePointer mNode{};
    int            mIndex; //!< 0-based position of this track in its TrackList
    wxString       mName;
-   wxString       mDefaultName;
 
  private:
    bool           mSelected;
@@ -423,8 +422,6 @@ private:
 
    wxString GetName() const { return mName; }
    void SetName( const wxString &n );
-   wxString GetDefaultName() const { return mDefaultName; }
-   void SetDefaultName( const wxString &n ) { mDefaultName = n; }
 
    bool GetSelected() const { return mSelected; }
 
@@ -1331,6 +1328,14 @@ class TRACK_API TrackList final
    // Find the owning project, which may be null
    AudacityProject *GetOwner() { return mOwner; }
    const AudacityProject *GetOwner() const { return mOwner; }
+
+   /**
+    * \brief Returns string that contains baseTrackName,
+    * but is guaranteed to be unique among other tracks in that list.
+    * \param baseTrackName String to be put into the template
+    * \return Formatted string: "[baseTrackName] [N]"
+    */
+   wxString MakeUniqueTrackName(const wxString& baseTrackName) const;
 
    // Iteration
 

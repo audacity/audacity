@@ -11,12 +11,16 @@
 #define __AUDACITY_EFFECT_PAULSTRETCH__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
+#include <float.h> // for FLT_MAX
 
 class ShuttleGui;
 
 class EffectPaulstretch final : public Effect
 {
 public:
+   static inline EffectPaulstretch *
+   FetchParameters(EffectPaulstretch &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectPaulstretch();
@@ -24,28 +28,21 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-   ManualPageID ManualPage() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
-
-   // EffectProcessor implementation
-
-   bool DefineParams( ShuttleParams & S ) override;
+   EffectType GetType() const override;
 
    // Effect implementation
 
-   double CalcPreviewInputLength(double previewLength) override;
+   double CalcPreviewInputLength(
+      const EffectSettings &settings, double previewLength) override;
    bool Process(EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
 
 private:
    // EffectPaulstretch implementation
@@ -55,12 +52,17 @@ private:
 
    bool ProcessOne(WaveTrack *track, double t0, double t1, int count);
 
-private:
    float mAmount;
    float mTime_resolution;  //seconds
    double m_t1;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Amount{ &EffectPaulstretch::mAmount,
+   L"Stretch Factor",   10.0f,    1.0,     FLT_MAX, 1   };
+static constexpr EffectParameter Time{ &EffectPaulstretch::mTime_resolution,
+   L"Time Resolution",  0.25f,   0.00099f,  FLT_MAX, 1   };
 };
 
 #endif

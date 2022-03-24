@@ -36,36 +36,36 @@ EffectInvert::~EffectInvert()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectInvert::GetSymbol()
+ComponentInterfaceSymbol EffectInvert::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectInvert::GetDescription()
+TranslatableString EffectInvert::GetDescription() const
 {
    return XO("Flips the audio samples upside-down, reversing their polarity");
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectInvert::GetType()
+EffectType EffectInvert::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectInvert::IsInteractive()
+bool EffectInvert::IsInteractive() const
 {
    return false;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectInvert::GetAudioInCount()
+unsigned EffectInvert::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectInvert::GetAudioOutCount()
+unsigned EffectInvert::GetAudioOutCount() const
 {
    return 1;
 }

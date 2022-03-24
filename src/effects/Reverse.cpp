@@ -46,24 +46,24 @@ EffectReverse::~EffectReverse()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectReverse::GetSymbol()
+ComponentInterfaceSymbol EffectReverse::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectReverse::GetDescription()
+TranslatableString EffectReverse::GetDescription() const
 {
    return XO("Reverses the selected audio");
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectReverse::GetType()
+EffectType EffectReverse::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectReverse::IsInteractive()
+bool EffectReverse::IsInteractive() const
 {
    return false;
 }

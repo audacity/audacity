@@ -307,38 +307,6 @@ BEGIN_EVENT_TABLE(FFmpegNotFoundDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, FFmpegNotFoundDialog::OnOk)
 END_EVENT_TABLE()
 
-struct SafeAVFormatPathUpdater final
-{
-   explicit SafeAVFormatPathUpdater(const wxString& newPath)
-   {
-      mHasOldValue = AVFormatPath.Read(&mOldValue);
-
-      AVFormatPath.Write(newPath);
-   }
-
-   ~SafeAVFormatPathUpdater()
-   {
-      if (mRevertToOld)   
-      {
-         if (mHasOldValue)
-            AVFormatPath.Write(mOldValue);
-         else
-            AVFormatPath.Delete();
-      }
-
-      gPrefs->Flush();
-   }
-
-   void CommitValue() noexcept
-   {
-      mRevertToOld = false;
-   }
-
-   wxString mOldValue;
-   bool mHasOldValue;
-   bool mRevertToOld { true };
-};
-
 bool FindFFmpegLibs(wxWindow* parent)
 {
    wxString path;
@@ -374,7 +342,8 @@ bool FindFFmpegLibs(wxWindow* parent)
 
    wxLogMessage(wxT("User-specified path = '%s'"), path);
 
-   SafeAVFormatPathUpdater updater(path);
+   SettingTransaction transaction;
+   AVFormatPath.Write(path);
 
    // Try to load FFmpeg from the user provided path
    if (!FFmpegFunctions::Load(true))
@@ -383,7 +352,7 @@ bool FindFFmpegLibs(wxWindow* parent)
       return false;
    }
 
-   updater.CommitValue();
+   transaction.Commit();
 
    wxLogMessage(wxT("User-specified FFmpeg file exists. Success."));
 

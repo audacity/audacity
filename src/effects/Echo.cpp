@@ -23,20 +23,19 @@
 #include "Echo.h"
 #include "LoadEffects.h"
 
-#include <float.h>
-
 #include <wx/intl.h>
 
 #include "../ShuttleGui.h"
-#include "../Shuttle.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name    Type     Key            Def   Min      Max      Scale
-Param( Delay,  float,   wxT("Delay"),   1.0f, 0.001f,  FLT_MAX, 1.0f );
-Param( Decay,  float,   wxT("Decay"),   0.5f, 0.0f,    FLT_MAX, 1.0f );
+const EffectParameterMethods& EffectEcho::Parameters() const
+{
+   static CapturedParameters<EffectEcho,
+      Delay, Decay
+   > parameters;
+   return parameters;
+}
 
 const ComponentInterfaceSymbol EffectEcho::Symbol
 { XO("Echo") };
@@ -45,9 +44,7 @@ namespace{ BuiltinEffectsModule::Registration< EffectEcho > reg; }
 
 EffectEcho::EffectEcho()
 {
-   delay = DEF_Delay;
-   decay = DEF_Decay;
-
+   Parameters().Reset(*this);
    SetLinearEffectFlag(true);
 }
 
@@ -57,41 +54,42 @@ EffectEcho::~EffectEcho()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectEcho::GetSymbol()
+ComponentInterfaceSymbol EffectEcho::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectEcho::GetDescription()
+TranslatableString EffectEcho::GetDescription() const
 {
    return XO("Repeats the selected audio again and again");
 }
 
-ManualPageID EffectEcho::ManualPage()
+ManualPageID EffectEcho::ManualPage() const
 {
    return L"Echo";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectEcho::GetType()
+EffectType EffectEcho::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectEcho::GetAudioInCount()
+unsigned EffectEcho::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectEcho::GetAudioOutCount()
+unsigned EffectEcho::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectEcho::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectEcho::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames)
 {
    if (delay == 0.0)
    {
@@ -142,32 +140,6 @@ size_t EffectEcho::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-bool EffectEcho::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( delay, Delay );
-   S.SHUTTLE_PARAM( decay, Decay );
-   return true;
-}
-
-
-bool EffectEcho::GetAutomationParameters(CommandParameters & parms)
-{
-   parms.WriteFloat(KEY_Delay, delay);
-   parms.WriteFloat(KEY_Decay, decay);
-
-   return true;
-}
-
-bool EffectEcho::SetAutomationParameters(CommandParameters & parms)
-{
-   ReadAndVerifyFloat(Delay);
-   ReadAndVerifyFloat(Decay);
-
-   delay = Delay;
-   decay = Decay;
-
-   return true;
-}
-
 std::unique_ptr<EffectUIValidator>
 EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
@@ -177,36 +149,14 @@ EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    {
       S.Validator<FloatingPointValidator<double>>(
             3, &delay, NumValidatorStyle::NO_TRAILING_ZEROES,
-            MIN_Delay, MAX_Delay
-         )
-         .AddTextBox(XXO("&Delay time (seconds):"), wxT(""), 10);
+            Delay.min, Delay.max )
+         .AddTextBox(XXO("&Delay time (seconds):"), L"", 10);
 
       S.Validator<FloatingPointValidator<double>>(
             3, &decay, NumValidatorStyle::NO_TRAILING_ZEROES,
-            MIN_Decay, MAX_Decay)
-         .AddTextBox(XXO("D&ecay factor:"), wxT(""), 10);
+            Decay.min, Decay.max)
+         .AddTextBox(XXO("D&ecay factor:"), L"", 10);
    }
    S.EndMultiColumn();
    return nullptr;
 }
-
-bool EffectEcho::TransferDataToWindow()
-{
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
-bool EffectEcho::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-

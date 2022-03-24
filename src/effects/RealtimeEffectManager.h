@@ -19,7 +19,7 @@
 #include <vector>
 
 #include "ClientData.h"
-#include "ModuleInterface.h" // for PluginID
+#include "PluginProvider.h" // for PluginID
 
 class AudacityProject;
 class EffectProcessor;

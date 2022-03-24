@@ -35,16 +35,10 @@ public:
 
    virtual ~EffectHostInterface();
 
-   virtual EffectDefinitionInterface &GetDefinition() = 0;
+   virtual const EffectDefinitionInterface& GetDefinition() const = 0;
 
    virtual double GetDuration() = 0;
-   virtual NumericFormatSymbol GetDurationFormat() = 0;
    virtual void SetDuration(double seconds) = 0;
-
-   // Preset handling
-   virtual RegistryPath GetUserPresetsGroup(const RegistryPath & name) = 0;
-   virtual RegistryPath GetCurrentSettingsGroup() = 0;
-   virtual RegistryPath GetFactoryDefaultsGroup() = 0;
 };
 
 class wxDialog;
@@ -99,10 +93,13 @@ public:
    ) = 0;
 
    virtual void Preview(EffectSettingsAccess &access, bool dryOnly) = 0;
-   virtual bool GetAutomationParametersAsString(wxString & parms) = 0;
-   virtual bool SetAutomationParametersFromString(const wxString & parms) = 0;
-   virtual bool IsBatchProcessing() = 0;
-   virtual void SetBatchProcessing(bool start) = 0;
+   virtual bool SaveSettingsAsString(
+      const EffectSettings &settings, wxString & parms) const = 0;
+   virtual bool LoadSettingsFromString(
+      const wxString & parms, EffectSettings &settings) const = 0;
+   virtual bool IsBatchProcessing() const = 0;
+   virtual void SetBatchProcessing() = 0;
+   virtual void UnsetBatchProcessing() = 0;
 
    //! Unfortunately complicated dual-use function
    /*!
@@ -129,10 +126,14 @@ public:
       const EffectSettingsAccessPtr &pAccess = nullptr
          //!< Sometimes given; only for UI
    ) = 0;
-   virtual bool Startup(EffectUIClientInterface *client) = 0;
+   virtual bool Startup(
+      EffectUIClientInterface *client, EffectSettings &settings) = 0;
 
-   virtual bool TransferDataToWindow() = 0;
-   virtual bool TransferDataFromWindow() = 0;
+   //! Update controls for the settings
+   virtual bool TransferDataToWindow(const EffectSettings &settings) = 0;
+
+   //! Update the given settings from controls
+   virtual bool TransferDataFromWindow(EffectSettings &settings) = 0;
 };
 
 #endif

@@ -13,6 +13,7 @@
 #define __AUDACITY_EFFECT_BASS_TREBLE__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxCheckBox;
@@ -36,6 +37,8 @@ public:
 class EffectBassTreble final : public Effect
 {
 public:
+   static inline EffectBassTreble *
+   FetchParameters(EffectBassTreble &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectBassTreble();
@@ -43,40 +46,37 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-   ManualPageID ManualPage() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   bool SupportsRealtime() override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   EffectType GetType() const override;
+   bool SupportsRealtime() const override;
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
    bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(EffectSettings &settings,
+      unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    size_t RealtimeProcess(int group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;
-   bool DefineParams( ShuttleParams & S ) override;
-
 
    // Effect Implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
 
    bool CheckWhetherSkipEffect() override;
 
@@ -122,7 +122,17 @@ private:
 
    wxCheckBox  *mLinkCheckBox;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Bass{ &EffectBassTreble::mBass,
+   L"Bass",          0.0,     -30.0,   30.0,    1  };
+static constexpr EffectParameter Treble{ &EffectBassTreble::mTreble,
+   L"Treble",        0.0,     -30.0,   30.0,    1  };
+static constexpr EffectParameter Gain{ &EffectBassTreble::mGain,
+   L"Gain",          0.0,     -30.0,   30.0,    1  };
+static constexpr EffectParameter Link{ &EffectBassTreble::mLink,
+   L"Link Sliders",  false,    false,  true,    1  };
 };
 
 #endif

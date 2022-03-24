@@ -86,7 +86,7 @@
 #include "PlatformCompatibility.h"
 #include "../../SelectFile.h"
 #include "../../ShuttleGui.h"
-#include "../../effects/Effect.h"
+#include "../../EffectHostInterface.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/NumericTextCtrl.h"
@@ -142,7 +142,7 @@ static uint32_t reinterpretAsUint32(float f)
 // declared static so as not to clash with other builtin modules.
 //
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
@@ -158,7 +158,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // executed to scan a VST effect in a different process.
 //
 // ============================================================================
-DECLARE_BUILTIN_MODULE(VSTBuiltin);
+DECLARE_BUILTIN_PROVIDER(VSTBuiltin);
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -235,70 +235,74 @@ public:
 
    // EffectDefinitionInterface implementation
 
-   PluginPath GetPath() override
+   PluginPath GetPath() const override
    {
       return mPath;
    }
 
-   ComponentInterfaceSymbol GetSymbol() override
+   ComponentInterfaceSymbol GetSymbol() const override
    {
       return mName;
    }
 
-   VendorSymbol GetVendor() override
+   VendorSymbol GetVendor() const override
    {
       return { mVendor };
    }
 
-   wxString GetVersion() override
+   wxString GetVersion() const override
    {
       return mVersion;
    }
 
-   TranslatableString GetDescription() override
+   TranslatableString GetDescription() const override
    {
       return mDescription;
    }
 
-   EffectFamilySymbol GetFamily() override
+   EffectFamilySymbol GetFamily() const override
    {
       return VSTPLUGINTYPE;
    }
 
-   EffectType GetType() override
+   EffectType GetType() const override
    {
       return mType;
    }
 
-   bool IsInteractive() override
+   bool IsInteractive() const override
    {
       return mInteractive;
    }
 
-   bool IsDefault() override
+   bool IsDefault() const override
    {
       return false;
    }
 
-   bool SupportsRealtime() override
+   bool SupportsRealtime() const override
    {
       return mType == EffectTypeProcess;
    }
 
-   bool SupportsAutomation() override
+   bool SupportsAutomation() const override
    {
       return mAutomatable;
    }
 
-   bool GetAutomationParameters(CommandParameters &) override { return true; }
-   bool SetAutomationParameters(CommandParameters &) override { return true; }
+   bool SaveSettings(const EffectSettings &, CommandParameters &) const override
+      { return true; }
+   bool LoadSettings(const CommandParameters &, Settings &) const override
+      { return true; }
 
-   bool LoadUserPreset(const RegistryPath &) override { return true; }
-   bool SaveUserPreset(const RegistryPath &) override { return true; }
+   bool LoadUserPreset(const RegistryPath &, Settings &) const override
+      { return true; }
+   bool SaveUserPreset(const RegistryPath &, const Settings &) const override
+      { return true; }
 
    RegistryPaths GetFactoryPresets() const override { return {}; }
-   bool LoadFactoryPreset(int) override { return true; }
-   bool LoadFactoryDefaults() override { return true; }
+   bool LoadFactoryPreset(int, EffectSettings &) const override { return true; }
+   bool LoadFactoryDefaults(EffectSettings &) const override { return true; }
 
 public:
    wxString mPath;
@@ -328,34 +332,34 @@ VSTEffectsModule::~VSTEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath VSTEffectsModule::GetPath()
+PluginPath VSTEffectsModule::GetPath() const
 {
    return {};
 }
 
-ComponentInterfaceSymbol VSTEffectsModule::GetSymbol()
+ComponentInterfaceSymbol VSTEffectsModule::GetSymbol() const
 {
    return XO("VST Effects");
 }
 
-VendorSymbol VSTEffectsModule::GetVendor()
+VendorSymbol VSTEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
 
-wxString VSTEffectsModule::GetVersion()
+wxString VSTEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return AUDACITY_VERSION_STRING;
 }
 
-TranslatableString VSTEffectsModule::GetDescription()
+TranslatableString VSTEffectsModule::GetDescription() const
 {
    return XO("Adds the ability to use VST effects in Audacity.");
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 bool VSTEffectsModule::Initialize()
@@ -393,13 +397,11 @@ FilePath VSTEffectsModule::InstallPath()
    return {};
 }
 
-bool VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
+void VSTEffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
 {
-   // We don't auto-register
-   return true;
 }
 
-PluginPaths VSTEffectsModule::FindPluginPaths(PluginManagerInterface & pm)
+PluginPaths VSTEffectsModule::FindModulePaths(PluginManagerInterface & pm)
 {
    FilePaths pathList;
    FilePaths files;
@@ -695,11 +697,13 @@ bool VSTEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-VSTEffectsModule::CreateInstance(const PluginPath & path)
+VSTEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    // For us, the ID is simply the path to the effect
-   return std::make_unique<VSTEffect>(path);
+   auto result = std::make_unique<VSTEffect>(path);
+   result->InitializePlugin();
+   return result;
 }
 
 // ============================================================================
@@ -716,7 +720,7 @@ VSTEffectsModule::CreateInstance(const PluginPath & path)
 void VSTEffectsModule::Check(const wxChar *path)
 {
    VSTEffect effect(path);
-   if (effect.SetHost(NULL))
+   if (effect.InitializePlugin())
    {
       auto effectIDs = effect.GetEffectIDs();
       wxString out;
@@ -764,8 +768,7 @@ void VSTEffectsModule::Check(const wxChar *path)
 class VSTEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   VSTEffectOptionsDialog(wxWindow * parent,
-      EffectHostInterface &host, EffectDefinitionInterface &effect);
+   VSTEffectOptionsDialog(wxWindow * parent, EffectDefinitionInterface &effect);
    virtual ~VSTEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -773,7 +776,6 @@ public:
    void OnOk(wxCommandEvent & evt);
 
 private:
-   EffectHostInterface &mHost;
    EffectDefinitionInterface &mEffect;
    int mBufferSize;
    bool mUseLatency;
@@ -786,10 +788,9 @@ BEGIN_EVENT_TABLE(VSTEffectOptionsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, VSTEffectOptionsDialog::OnOk)
 END_EVENT_TABLE()
 
-VSTEffectOptionsDialog::VSTEffectOptionsDialog(wxWindow * parent,
-   EffectHostInterface &host, EffectDefinitionInterface &effect)
+VSTEffectOptionsDialog::VSTEffectOptionsDialog(
+   wxWindow * parent, EffectDefinitionInterface &effect)
 :  wxDialogWrapper(parent, wxID_ANY, XO("VST Effect Options"))
-, mHost{ host }
 , mEffect{ effect }
 {
    GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
@@ -1147,7 +1148,6 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
 :  mPath(path),
    mMaster(master)
 {
-   mHost = NULL;
    mModule = NULL;
    mAEffect = NULL;
 
@@ -1199,22 +1199,22 @@ VSTEffect::~VSTEffect()
 // ComponentInterface Implementation
 // ============================================================================
 
-PluginPath VSTEffect::GetPath()
+PluginPath VSTEffect::GetPath() const
 {
    return mPath;
 }
 
-ComponentInterfaceSymbol VSTEffect::GetSymbol()
+ComponentInterfaceSymbol VSTEffect::GetSymbol() const
 {
    return mName;
 }
 
-VendorSymbol VSTEffect::GetVendor()
+VendorSymbol VSTEffect::GetVendor() const
 {
    return { mVendor };
 }
 
-wxString VSTEffect::GetVersion()
+wxString VSTEffect::GetVersion() const
 {
    wxString version;
 
@@ -1233,7 +1233,7 @@ wxString VSTEffect::GetVersion()
    return version;
 }
 
-TranslatableString VSTEffect::GetDescription()
+TranslatableString VSTEffect::GetDescription() const
 {
    // VST does have a product string opcode and some effects return a short
    // description, but most do not or they just return the name again.  So,
@@ -1245,7 +1245,7 @@ TranslatableString VSTEffect::GetDescription()
 // EffectDefinitionInterface Implementation
 // ============================================================================
 
-EffectType VSTEffect::GetType()
+EffectType VSTEffect::GetType() const
 {
    if (mAudioIns == 0 && mAudioOuts == 0 && mMidiIns == 0 && mMidiOuts == 0)
    {
@@ -1266,27 +1266,27 @@ EffectType VSTEffect::GetType()
 }
 
 
-EffectFamilySymbol VSTEffect::GetFamily()
+EffectFamilySymbol VSTEffect::GetFamily() const
 {
    return VSTPLUGINTYPE;
 }
 
-bool VSTEffect::IsInteractive()
+bool VSTEffect::IsInteractive() const
 {
    return mInteractive;
 }
 
-bool VSTEffect::IsDefault()
+bool VSTEffect::IsDefault() const
 {
    return false;
 }
 
-bool VSTEffect::SupportsRealtime()
+bool VSTEffect::SupportsRealtime() const
 {
    return GetType() == EffectTypeProcess;
 }
 
-bool VSTEffect::SupportsAutomation()
+bool VSTEffect::SupportsAutomation() const
 {
    return mAutomatable;
 }
@@ -1295,10 +1295,8 @@ bool VSTEffect::SupportsAutomation()
 // EffectProcessor Implementation
 // ============================================================================
 
-bool VSTEffect::SetHost(EffectHostInterface *host)
+bool VSTEffect::InitializePlugin()
 {
-   mHost = host;
-
    if (!mAEffect)
    {
       Load();
@@ -1316,6 +1314,13 @@ bool VSTEffect::SetHost(EffectHostInterface *host)
       return true;
    }
 
+   return true;
+}
+
+bool VSTEffect::InitializeInstance(
+   EffectHostInterface *host, EffectSettings &settings)
+{
+   mHost = host;
    if (mHost)
    {
       int userBlockSize;
@@ -1329,27 +1334,26 @@ bool VSTEffect::SetHost(EffectHostInterface *host)
 
       bool haveDefaults;
       GetConfig(*this, PluginSettings::Private,
-         mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
          false);
       if (!haveDefaults)
       {
-         SaveParameters(mHost->GetFactoryDefaultsGroup());
+         SaveParameters(FactoryDefaultsGroup(), settings);
          SetConfig(*this, PluginSettings::Private,
-            mHost->GetFactoryDefaultsGroup(), wxT("Initialized"), true);
+            FactoryDefaultsGroup(), wxT("Initialized"), true);
       }
 
-      LoadParameters(mHost->GetCurrentSettingsGroup());
+      LoadParameters(CurrentSettingsGroup(), settings);
    }
-
    return true;
 }
 
-unsigned VSTEffect::GetAudioInCount()
+unsigned VSTEffect::GetAudioInCount() const
 {
    return mAudioIns;
 }
 
-unsigned VSTEffect::GetAudioOutCount()
+unsigned VSTEffect::GetAudioOutCount() const
 {
    return mAudioOuts;
 }
@@ -1403,7 +1407,13 @@ bool VSTEffect::IsReady()
    return mReady;
 }
 
-bool VSTEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool VSTEffect::ProcessInitialize(
+   EffectSettings &settings, sampleCount count, ChannelNames names)
+{
+   return DoProcessInitialize(count, names);
+}
+
+bool VSTEffect::DoProcessInitialize(sampleCount, ChannelNames)
 {
    // Initialize time info
    memset(&mTimeInfo, 0, sizeof(mTimeInfo));
@@ -1464,12 +1474,13 @@ void VSTEffect::SetChannelCount(unsigned numChannels)
    mNumChannels = numChannels;
 }
 
-bool VSTEffect::RealtimeInitialize(EffectSettings &)
+bool VSTEffect::RealtimeInitialize(EffectSettings &settings)
 {
-   return ProcessInitialize(0, NULL);
+   return ProcessInitialize(settings, 0, nullptr);
 }
 
-bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
+bool VSTEffect::RealtimeAddProcessor(
+   EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    mSlaves.push_back(std::make_unique<VSTEffect>(mPath, this));
    VSTEffect *const slave = mSlaves.back().get();
@@ -1502,7 +1513,7 @@ bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
       callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
    }
 
-   return slave->ProcessInitialize(0, NULL);
+   return slave->ProcessInitialize(settings, 0, nullptr);
 }
 
 bool VSTEffect::RealtimeFinalize(EffectSettings &) noexcept
@@ -1592,7 +1603,10 @@ int VSTEffect::ShowClientInterface(
    {
       mSampleRate = 44100;
       mBlockSize = 8192;
-      ProcessInitialize(0, NULL);
+      // No settings here!  Is this call really needed?  It appears to be
+      // redundant with later calls that reach process initialization from the
+      // dialog, either with the Apply or Play buttons.
+      DoProcessInitialize(0, nullptr);
    }
 
    // Remember the dialog with a weak pointer, but don't control its lifetime
@@ -1608,7 +1622,8 @@ int VSTEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool VSTEffect::GetAutomationParameters(CommandParameters & parms)
+bool VSTEffect::SaveSettings(
+   const EffectSettings &, CommandParameters & parms) const
 {
    for (int i = 0; i < mAEffect->numParams; i++)
    {
@@ -1628,9 +1643,10 @@ bool VSTEffect::GetAutomationParameters(CommandParameters & parms)
    return true;
 }
 
-bool VSTEffect::SetAutomationParameters(CommandParameters & parms)
+bool VSTEffect::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
 {
-   callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+   constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    for (int i = 0; i < mAEffect->numParams; i++)
    {
       wxString name = GetString(effGetParamName, i);
@@ -1647,20 +1663,27 @@ bool VSTEffect::SetAutomationParameters(CommandParameters & parms)
 
       if (d >= -1.0 && d <= 1.0)
       {
-         callSetParameter(i, d);
+         const_cast<VSTEffect*>(this)->callSetParameter(i, d);
          for (const auto &slave : mSlaves)
             slave->callSetParameter(i, d);
       }
    }
-   callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+   constCallDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 
    return true;
 }
 
-
-bool VSTEffect::LoadUserPreset(const RegistryPath & name)
+bool VSTEffect::LoadUserPreset(
+   const RegistryPath & name, EffectSettings &settings) const
 {
-   if (!LoadParameters(name))
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<VSTEffect*>(this)->DoLoadUserPreset(name, settings);
+}
+
+bool VSTEffect::DoLoadUserPreset(
+   const RegistryPath & name, EffectSettings &settings)
+{
+   if (!LoadParameters(name, settings))
    {
       return false;
    }
@@ -1670,9 +1693,10 @@ bool VSTEffect::LoadUserPreset(const RegistryPath & name)
    return true;
 }
 
-bool VSTEffect::SaveUserPreset(const RegistryPath & name)
+bool VSTEffect::SaveUserPreset(
+   const RegistryPath & name, const EffectSettings &settings) const
 {
-   return SaveParameters(name);
+   return SaveParameters(name, settings);
 }
 
 RegistryPaths VSTEffect::GetFactoryPresets() const
@@ -1693,7 +1717,13 @@ RegistryPaths VSTEffect::GetFactoryPresets() const
    return progs;
 }
 
-bool VSTEffect::LoadFactoryPreset(int id)
+bool VSTEffect::LoadFactoryPreset(int id, EffectSettings &) const
+{
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<VSTEffect*>(this)->DoLoadFactoryPreset(id);
+}
+
+bool VSTEffect::DoLoadFactoryPreset(int id)
 {
    callSetProgram(id);
 
@@ -1702,9 +1732,15 @@ bool VSTEffect::LoadFactoryPreset(int id)
    return true;
 }
 
-bool VSTEffect::LoadFactoryDefaults()
+bool VSTEffect::LoadFactoryDefaults(EffectSettings &settings) const
 {
-   if (!LoadParameters(mHost->GetFactoryDefaultsGroup()))
+   // To do: externalize state so const_cast isn't needed
+   return const_cast<VSTEffect*>(this)->DoLoadFactoryDefaults(settings);
+}
+
+bool VSTEffect::DoLoadFactoryDefaults(EffectSettings &settings)
+{
+   if (!LoadParameters(FactoryDefaultsGroup(), settings))
    {
       return false;
    }
@@ -1719,7 +1755,7 @@ bool VSTEffect::LoadFactoryDefaults()
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator>
-VSTEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
+VSTEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
@@ -1747,10 +1783,10 @@ VSTEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &)
    }
    else
    {
-      BuildPlain();
+      BuildPlain(access);
    }
 
-   return std::make_unique<DefaultEffectUIValidator>(*this);
+   return std::make_unique<DefaultEffectUIValidator>(*this, access);
 }
 
 bool VSTEffect::IsGraphicalUI()
@@ -1758,13 +1794,8 @@ bool VSTEffect::IsGraphicalUI()
    return mGui;
 }
 
-bool VSTEffect::ValidateUI()
+bool VSTEffect::ValidateUI(EffectSettings &)
 {
-   if (!mParent->Validate() || !mParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    if (GetType() == EffectTypeGenerate)
    {
       mHost->SetDuration(mDuration->GetValue());
@@ -1807,7 +1838,7 @@ bool VSTEffect::CanExportPresets()
 }
 
 // Throws exceptions rather than reporting errors.
-void VSTEffect::ExportPresets()
+void VSTEffect::ExportPresets(const EffectSettings &) const
 {
    wxString path;
 
@@ -1867,7 +1898,7 @@ void VSTEffect::ExportPresets()
 //
 // Based on work by Sven Giermann
 //
-void VSTEffect::ImportPresets()
+void VSTEffect::ImportPresets(EffectSettings &)
 {
    wxString path;
 
@@ -1941,7 +1972,7 @@ bool VSTEffect::HasOptions()
 
 void VSTEffect::ShowOptions()
 {
-   VSTEffectOptionsDialog dlg(mParent, *mHost, *this);
+   VSTEffectOptionsDialog dlg(mParent, *this);
    if (dlg.ShowModal())
    {
       // Reinitialize configuration settings
@@ -2279,7 +2310,8 @@ std::vector<int> VSTEffect::GetEffectIDs()
    return effectIDs;
 }
 
-bool VSTEffect::LoadParameters(const RegistryPath & group)
+bool VSTEffect::LoadParameters(
+   const RegistryPath & group, EffectSettings &settings)
 {
    wxString value;
 
@@ -2325,10 +2357,11 @@ bool VSTEffect::LoadParameters(const RegistryPath & group)
       return false;
    }
 
-   return SetAutomationParameters(eap);
+   return LoadSettings(eap, settings);
 }
 
-bool VSTEffect::SaveParameters(const RegistryPath & group)
+bool VSTEffect::SaveParameters(
+   const RegistryPath & group, const EffectSettings &settings) const
 {
    SetConfig(*this, PluginSettings::Private, group, wxT("UniqueID"),
       mAEffect->uniqueID);
@@ -2340,7 +2373,7 @@ bool VSTEffect::SaveParameters(const RegistryPath & group)
    if (mAEffect->flags & effFlagsProgramChunks)
    {
       void *chunk = NULL;
-      int clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+      int clen = (int) constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
       if (clen <= 0)
       {
          return false;
@@ -2352,7 +2385,7 @@ bool VSTEffect::SaveParameters(const RegistryPath & group)
    }
 
    CommandParameters eap;
-   if (!GetAutomationParameters(eap))
+   if (!SaveSettings(settings, eap))
    {
       return false;
    }
@@ -2514,7 +2547,8 @@ int VSTEffect::GetString(wxString & outstr, int opcode, int index) const
 
    memset(buf, 0, sizeof(buf));
 
-   const_cast<VSTEffect*>(this)->callDispatcher(opcode, index, 0, buf, 0.0);
+   // Assume we are passed a read-only dispatcher function code
+   constCallDispatcher(opcode, index, 0, buf, 0.0);
 
    outstr = wxString::FromUTF8(buf);
 
@@ -2546,6 +2580,14 @@ intptr_t VSTEffect::callDispatcher(int opcode,
    return mAEffect->dispatcher(mAEffect, opcode, index, value, ptr, opt);
 }
 
+intptr_t VSTEffect::constCallDispatcher(int opcode,
+   int index, intptr_t value, void *ptr, float opt) const
+{
+   // Assume we are passed a read-only dispatcher function code
+   return const_cast<VSTEffect*>(this)
+      ->callDispatcher(opcode, index, value, ptr, opt);
+}
+
 void VSTEffect::callProcessReplacing(const float *const *inputs,
    float *const *outputs, int sampleframes)
 {
@@ -2554,7 +2596,7 @@ void VSTEffect::callProcessReplacing(const float *const *inputs,
       const_cast<float**>(outputs), sampleframes);
 }
 
-float VSTEffect::callGetParameter(int index)
+float VSTEffect::callGetParameter(int index) const
 {
    return mAEffect->getParameter(mAEffect, index);
 }
@@ -2681,7 +2723,7 @@ void VSTEffect::BuildFancy()
    return;
 }
 
-void VSTEffect::BuildPlain()
+void VSTEffect::BuildPlain(EffectSettingsAccess &access)
 {
    wxASSERT(mParent); // To justify safenew
    wxScrolledWindow *const scroller = safenew wxScrolledWindow(mParent,
@@ -2723,10 +2765,11 @@ void VSTEffect::BuildPlain()
          {
             wxControl *item = safenew wxStaticText(scroller, 0, _("Duration:"));
             gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT | wxALL, 5);
+            auto &extra = access.Get().extra;
             mDuration = safenew
                NumericTextCtrl(scroller, ID_Duration,
                   NumericConverter::TIME,
-                  mHost->GetDurationFormat(),
+                  extra.GetDurationFormat(),
                   mHost->GetDuration(),
                   mSampleRate,
                   NumericTextCtrl::Options{}
@@ -3303,7 +3346,7 @@ bool VSTEffect::LoadXML(const wxFileName & fn)
    return true;
 }
 
-void VSTEffect::SaveFXB(const wxFileName & fn)
+void VSTEffect::SaveFXB(const wxFileName & fn) const
 {
    // Create/Open the file
    const wxString fullPath{fn.GetFullPath()};
@@ -3330,7 +3373,8 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
    {
       subType = CCONST('F', 'B', 'C', 'h');
 
-      chunkSize = callDispatcher(effGetChunk, 0, 0, &chunkPtr, 0.0);
+      // read-only dispatcher function
+      chunkSize = constCallDispatcher(effGetChunk, 0, 0, &chunkPtr, 0.0);
       dataSize += 4 + chunkSize;
    }
    else
@@ -3390,7 +3434,7 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
    return;
 }
 
-void VSTEffect::SaveFXP(const wxFileName & fn)
+void VSTEffect::SaveFXP(const wxFileName & fn) const
 {
    // Create/Open the file
    const wxString fullPath{ fn.GetFullPath() };
@@ -3407,7 +3451,8 @@ void VSTEffect::SaveFXP(const wxFileName & fn)
 
    wxMemoryBuffer buf;
 
-   int ndx = callDispatcher(effGetProgram, 0, 0, NULL, 0.0);
+   // read-only dispatcher function
+   int ndx = constCallDispatcher(effGetProgram, 0, 0, NULL, 0.0);
    SaveFXProgram(buf, ndx);
 
    f.Write(buf.GetData(), buf.GetDataLen());
@@ -3425,7 +3470,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn)
    return;
 }
 
-void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
+void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index) const
 {
    wxInt32 subType;
    void *chunkPtr;
@@ -3434,7 +3479,8 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
    char progName[28];
    wxInt32 tab[7];
 
-   callDispatcher(effGetProgramNameIndexed, index, 0, &progName, 0.0);
+   // read-only dispatcher function
+   constCallDispatcher(effGetProgramNameIndexed, index, 0, &progName, 0.0);
    progName[27] = '\0';
    chunkSize = strlen(progName);
    memset(&progName[chunkSize], 0, sizeof(progName) - chunkSize);
@@ -3443,7 +3489,8 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
    {
       subType = CCONST('F', 'P', 'C', 'h');
 
-      chunkSize = callDispatcher(effGetChunk, 1, 0, &chunkPtr, 0.0);
+      // read-only dispatcher function
+      chunkSize = constCallDispatcher(effGetChunk, 1, 0, &chunkPtr, 0.0);
       dataSize += 4 + chunkSize;
    }
    else
@@ -3484,7 +3531,7 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
 }
 
 // Throws exceptions rather than giving error return.
-void VSTEffect::SaveXML(const wxFileName & fn)
+void VSTEffect::SaveXML(const wxFileName & fn) const
 // may throw
 {
    XMLFileWriter xmlFile{ fn.GetFullPath(), XO("Error Saving Effect Presets") };
@@ -3507,7 +3554,8 @@ void VSTEffect::SaveXML(const wxFileName & fn)
    {
       void *chunk = NULL;
 
-      clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+      // read-only dispatcher function
+      clen = (int) constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
       if (clen != 0)
       {
          xmlFile.StartTag(wxT("chunk"));

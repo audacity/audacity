@@ -38,6 +38,11 @@ static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
    TimeTrack::New
 };
 
+wxString TimeTrack::GetDefaultName()
+{
+   return _("Time Track");
+}
+
 TimeTrack *TimeTrack::New( AudacityProject &project )
 {
    auto &tracks = TrackList::Get( project );
@@ -65,7 +70,7 @@ void TimeTrack::CleanState()
    mEnvelope->SetTrackLen(DBL_MAX);
    mEnvelope->SetOffset(0);
 
-   SetDefaultName(_("Time Track"));
+   //Time track is always unique
    SetName(GetDefaultName());
 
    mRuler = std::make_unique<Ruler>();
@@ -105,7 +110,6 @@ TimeTrack::TimeTrack(const TimeTrack &orig, double *pT0, double *pT1)
 void TimeTrack::Init(const TimeTrack &orig)
 {
    Track::Init(orig);
-   SetDefaultName(orig.GetDefaultName());
    SetName(orig.GetName());
    SetDisplayLog(orig.GetDisplayLog());
 }

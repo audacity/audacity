@@ -54,23 +54,23 @@ class EffectDefinitionInterface;
 
 namespace PluginSettings {
 
-MODULE_MANAGER_API bool HasConfigGroup( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool HasConfigGroup( const EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group);
-MODULE_MANAGER_API bool GetConfigSubgroups( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool GetConfigSubgroups( const EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group,
    RegistryPaths & subgroups);
 
-MODULE_MANAGER_API bool GetConfigValue( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool GetConfigValue(const EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group,
    const RegistryPath & key, ConfigReference var, ConfigConstReference value);
 
-MODULE_MANAGER_API bool HasConfigValue( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool HasConfigValue( const EffectDefinitionInterface &ident,
    ConfigurationType type,
    const RegistryPath & group, const RegistryPath & key);
 
 // GetConfig with default value
 template<typename Value>
-inline bool GetConfig( EffectDefinitionInterface &ident,
+inline bool GetConfig( const EffectDefinitionInterface& ident,
    ConfigurationType type, const RegistryPath & group,
    const RegistryPath & key, Value &var, const Value &defval)
 { return GetConfigValue(ident, type, group, key,
@@ -78,33 +78,33 @@ inline bool GetConfig( EffectDefinitionInterface &ident,
 
 // GetConfig with implicitly converted default value
 template<typename Value, typename ConvertibleToValue>
-inline bool GetConfig( EffectDefinitionInterface &ident,
+inline bool GetConfig( const EffectDefinitionInterface& ident,
    ConfigurationType type, const RegistryPath & group,
    const RegistryPath & key, Value &var, ConvertibleToValue defval)
 { return GetConfig(ident, type, group, key, var, static_cast<Value>(defval)); }
 
 // GetConfig with default value assumed to be Value{}
 template <typename Value>
-inline bool GetConfig( EffectDefinitionInterface &ident,
+inline bool GetConfig( const EffectDefinitionInterface& ident,
    ConfigurationType type, const RegistryPath & group,
    const RegistryPath & key, Value &var)
 {
    return GetConfig(ident, type, group, key, var, Value{});
 }
 
-MODULE_MANAGER_API bool SetConfigValue( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool SetConfigValue(const EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group,
    const RegistryPath & key, ConfigConstReference value);
 
 template <typename Value>
-inline bool SetConfig( EffectDefinitionInterface &ident,
+inline bool SetConfig( const EffectDefinitionInterface& ident,
    ConfigurationType type, const RegistryPath & group,
    const RegistryPath & key, const Value &value)
 {
    return SetConfigValue(ident, type, group, key, std::cref(value));
 }
 
-MODULE_MANAGER_API bool RemoveConfigSubgroup( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool RemoveConfigSubgroup( const EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group);
 MODULE_MANAGER_API bool RemoveConfig( EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group,

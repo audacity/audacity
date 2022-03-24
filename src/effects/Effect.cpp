@@ -75,9 +75,6 @@ Effect::Effect()
 
    mUIParent = NULL;
 
-   mNumAudioIn = 0;
-   mNumAudioOut = 0;
-
    mBufferSize = 0;
    mBlockSize = 0;
    mNumChannels = 0;
@@ -102,7 +99,7 @@ Effect::~Effect()
 
 // EffectDefinitionInterface implementation
 
-EffectType Effect::GetType()
+EffectType Effect::GetType() const
 {
    if (mClient)
    {
@@ -112,7 +109,7 @@ EffectType Effect::GetType()
    return EffectTypeNone;
 }
 
-PluginPath Effect::GetPath()
+PluginPath Effect::GetPath() const
 {
    if (mClient)
    {
@@ -122,7 +119,7 @@ PluginPath Effect::GetPath()
    return BUILTIN_EFFECT_PREFIX + GetSymbol().Internal();
 }
 
-ComponentInterfaceSymbol Effect::GetSymbol()
+ComponentInterfaceSymbol Effect::GetSymbol() const
 {
    if (mClient)
    {
@@ -132,7 +129,7 @@ ComponentInterfaceSymbol Effect::GetSymbol()
    return {};
 }
 
-VendorSymbol Effect::GetVendor()
+VendorSymbol Effect::GetVendor() const
 {
    if (mClient)
    {
@@ -142,7 +139,7 @@ VendorSymbol Effect::GetVendor()
    return XO("Audacity");
 }
 
-wxString Effect::GetVersion()
+wxString Effect::GetVersion() const
 {
    if (mClient)
    {
@@ -152,7 +149,7 @@ wxString Effect::GetVersion()
    return AUDACITY_VERSION_STRING;
 }
 
-TranslatableString Effect::GetDescription()
+TranslatableString Effect::GetDescription() const
 {
    if (mClient)
    {
@@ -162,7 +159,7 @@ TranslatableString Effect::GetDescription()
    return {};
 }
 
-EffectFamilySymbol Effect::GetFamily()
+EffectFamilySymbol Effect::GetFamily() const
 {
    if (mClient)
    {
@@ -174,7 +171,7 @@ EffectFamilySymbol Effect::GetFamily()
    return { wxT("Audacity"), XO("Built-in") };
 }
 
-bool Effect::IsInteractive()
+bool Effect::IsInteractive() const
 {
    if (mClient)
    {
@@ -184,7 +181,7 @@ bool Effect::IsInteractive()
    return true;
 }
 
-bool Effect::IsDefault()
+bool Effect::IsDefault() const
 {
    if (mClient)
    {
@@ -194,7 +191,7 @@ bool Effect::IsDefault()
    return true;
 }
 
-bool Effect::SupportsRealtime()
+bool Effect::SupportsRealtime() const
 {
    if (mClient)
    {
@@ -204,7 +201,7 @@ bool Effect::SupportsRealtime()
    return false;
 }
 
-bool Effect::SupportsAutomation()
+bool Effect::SupportsAutomation() const
 {
    if (mClient)
    {
@@ -216,17 +213,15 @@ bool Effect::SupportsAutomation()
 
 // EffectProcessor implementation
 
-bool Effect::SetHost(EffectHostInterface *host)
+bool Effect::InitializeInstance(
+   EffectHostInterface *host, EffectSettings &settings)
 {
    if (mClient)
-   {
-      return mClient->SetHost(host);
-   }
-
+      return mClient->InitializeInstance(host, settings);
    return true;
 }
 
-unsigned Effect::GetAudioInCount()
+unsigned Effect::GetAudioInCount() const
 {
    if (mClient)
    {
@@ -236,7 +231,7 @@ unsigned Effect::GetAudioInCount()
    return 0;
 }
 
-unsigned Effect::GetAudioOutCount()
+unsigned Effect::GetAudioOutCount() const
 {
    if (mClient)
    {
@@ -318,13 +313,17 @@ size_t Effect::GetTailSize()
    return 0;
 }
 
-bool Effect::ProcessInitialize(sampleCount totalLen, ChannelNames chanMap)
+const EffectParameterMethods &Effect::Parameters() const
+{
+   static const CapturedParameters<Effect> empty;
+   return empty;
+}
+
+bool Effect::ProcessInitialize(
+   EffectSettings &settings, sampleCount totalLen, ChannelNames chanMap)
 {
    if (mClient)
-   {
-      return mClient->ProcessInitialize(totalLen, chanMap);
-   }
-
+      return mClient->ProcessInitialize(settings, totalLen, chanMap);
    return true;
 }
 
@@ -359,11 +358,12 @@ bool Effect::RealtimeInitialize(EffectSettings &settings)
    return false;
 }
 
-bool Effect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
+bool Effect::RealtimeAddProcessor(
+   EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    if (mClient)
    {
-      return mClient->RealtimeAddProcessor(numChannels, sampleRate);
+      return mClient->RealtimeAddProcessor(settings, numChannels, sampleRate);
    }
 
    return true;
@@ -473,7 +473,7 @@ int Effect::ShowHostInterface(wxWindow &parent,
 
    // Let the client show the dialog and decide whether to keep it open
    auto result = client->ShowClientInterface(parent, *mHostUIDialog, forceModal);
-   if (!mHostUIDialog->IsShown())
+   if (mHostUIDialog && !mHostUIDialog->IsShown())
       // Client didn't show it, or showed it modally and closed it
       // So destroy it.
       // (I think mHostUIDialog only needs to be a local variable in this
@@ -484,52 +484,69 @@ int Effect::ShowHostInterface(wxWindow &parent,
    return result;
 }
 
-bool Effect::GetAutomationParameters(CommandParameters & parms)
+bool Effect::VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
 {
    if (mClient)
-   {
-      return mClient->GetAutomationParameters(parms);
-   }
-
+      return mClient->VisitSettings(visitor, settings);
+   Parameters().Visit(*this, visitor, settings);
    return true;
 }
 
-bool Effect::SetAutomationParameters(CommandParameters & parms)
+bool Effect::VisitSettings(
+   ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
    if (mClient)
-   {
-      return mClient->SetAutomationParameters(parms);
-   }
-
+      return mClient->VisitSettings(visitor, settings);
+   Parameters().Visit(*this, visitor, settings);
    return true;
 }
 
-bool Effect::LoadUserPreset(const RegistryPath & name)
+bool Effect::SaveSettings(
+   const EffectSettings &settings, CommandParameters & parms) const
 {
    if (mClient)
-   {
-      return mClient->LoadUserPreset(name);
-   }
+      return mClient->SaveSettings(settings, parms);
+   Parameters().Get( *this, settings, parms );
+   return true;
+}
 
+bool Effect::LoadSettings(
+   const CommandParameters & parms, Settings &settings) const
+{
+   if (mClient)
+      return mClient->LoadSettings(parms, settings);
+   // The first argument, and with it the const_cast, will disappear when
+   // all built-in effects are stateless.
+   return Parameters().Set( *const_cast<Effect*>(this), parms, settings );
+}
+
+bool Effect::LoadUserPreset(
+   const RegistryPath & name, EffectSettings &settings) const
+{
+   if (mClient)
+      // Call through to third party effects
+      return mClient->LoadUserPreset(name, settings);
+
+   // Find one string in the registry and then reinterpret it
+   // as complete settings
    wxString parms;
    if (!GetConfig(GetDefinition(), PluginSettings::Private,
       name, wxT("Parameters"), parms))
-   {
       return false;
-   }
 
-   return SetAutomationParametersFromString(parms);
+   return LoadSettingsFromString(parms, settings);
 }
 
-bool Effect::SaveUserPreset(const RegistryPath & name)
+bool Effect::SaveUserPreset(
+   const RegistryPath & name, const EffectSettings &settings) const
 {
    if (mClient)
-   {
-      return mClient->SaveUserPreset(name);
-   }
+      // Call through to third party effects
+      return mClient->SaveUserPreset(name, settings);
 
+   // Save all settings as a single string value in the registry
    wxString parms;
-   if (!GetAutomationParametersAsString(parms))
+   if (!SaveSettingsAsString(settings, parms))
       return false;
 
    return SetConfig(GetDefinition(), PluginSettings::Private,
@@ -546,24 +563,21 @@ RegistryPaths Effect::GetFactoryPresets() const
    return {};
 }
 
-bool Effect::LoadFactoryPreset(int id)
+bool Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    if (mClient)
-   {
-      return mClient->LoadFactoryPreset(id);
-   }
-
+      return mClient->LoadFactoryPreset(id, settings);
    return true;
 }
 
-bool Effect::LoadFactoryDefaults()
+bool Effect::LoadFactoryDefaults(Settings &settings) const
 {
    if (mClient)
    {
-      return mClient->LoadFactoryDefaults();
+      return mClient->LoadFactoryDefaults(settings);
    }
 
-   return LoadUserPreset(GetFactoryDefaultsGroup());
+   return LoadUserPreset(FactoryDefaultsGroup(), settings);
 }
 
 // EffectUIClientInterface implementation
@@ -574,7 +588,7 @@ Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
    auto parent = S.GetParent();
    mUIParent = parent;
 
-//   LoadUserPreset(GetCurrentSettingsGroup());
+//   LoadUserPreset(CurrentSettingsGroup());
 
    // Let the effect subclass provide its own validator if it wants
    auto result = PopulateOrExchange(S, access);
@@ -585,7 +599,7 @@ Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
       // No custom validator object?  Then use the default, which will pop
       // the event handler when it is destroyed and invokes CloseUI
       mUIParent->PushEventHandler(this);
-      result = std::make_unique<DefaultEffectUIValidator>(*this);
+      result = std::make_unique<DefaultEffectUIValidator>(*this, access);
    }
    return result;
 }
@@ -595,9 +609,9 @@ bool Effect::IsGraphicalUI()
    return false;
 }
 
-bool Effect::ValidateUI()
+bool Effect::ValidateUI(EffectSettings &)
 {
-   return mUIParent->Validate();
+   return true;
 }
 
 bool Effect::CloseUI()
@@ -625,10 +639,10 @@ static const FileNames::FileTypes &PresetTypes()
    return result;
 };
 
-void Effect::ExportPresets()
+void Effect::ExportPresets(const EffectSettings &settings) const
 {
    wxString params;
-   GetAutomationParametersAsString(params);
+   SaveSettingsAsString(settings, params);
    auto commandId = GetSquashedName(GetSymbol().Internal());
    params =  commandId.GET() + ":" + params;
 
@@ -673,7 +687,7 @@ void Effect::ExportPresets()
 
 }
 
-void Effect::ImportPresets()
+void Effect::ImportPresets(EffectSettings &settings)
 {
    wxString params;
 
@@ -716,7 +730,7 @@ void Effect::ImportPresets()
             }
             return;
          }
-         SetAutomationParametersFromString(params);
+         LoadSettingsFromString(params, settings);
       }
    }
 
@@ -735,9 +749,12 @@ void Effect::ShowOptions()
 
 // EffectHostInterface implementation
 
-EffectDefinitionInterface &Effect::GetDefinition()
+const EffectDefinitionInterface& Effect::GetDefinition() const
 {
-   return mClient ? *mClient : *this;
+   if (mClient)
+      return *mClient;
+   else
+      return *this;
 }
 
 double Effect::GetDefaultDuration()
@@ -753,11 +770,6 @@ double Effect::GetDuration()
    }
 
    return mDuration;
-}
-
-NumericFormatSymbol Effect::GetDurationFormat()
-{
-   return mDurationFormat;
 }
 
 NumericFormatSymbol Effect::GetSelectionFormat()
@@ -777,33 +789,12 @@ void Effect::SetDuration(double seconds)
    if (GetType() == EffectTypeGenerate)
    {
       SetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
+         CurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
    }
 
    mDuration = seconds;
 
    return;
-}
-
-RegistryPath Effect::GetUserPresetsGroup(const RegistryPath & name)
-{
-   RegistryPath group = wxT("UserPresets");
-   if (!name.empty())
-   {
-      group += wxCONFIG_PATH_SEPARATOR + name;
-   }
-
-   return group;
-}
-
-RegistryPath Effect::GetCurrentSettingsGroup()
-{
-   return wxT("CurrentSettings");
-}
-
-RegistryPath Effect::GetFactoryDefaultsGroup()
-{
-   return wxT("FactoryDefaults");
 }
 
 wxString Effect::GetSavedStateGroup()
@@ -813,57 +804,33 @@ wxString Effect::GetSavedStateGroup()
 
 // Effect implementation
 
-bool Effect::Startup(EffectUIClientInterface *client)
+bool Effect::Startup(EffectUIClientInterface *client, EffectSettings &settings)
 {
    // Let destructor know we need to be shutdown
    mClient = client;
 
    // Set host so client startup can use our services
-   if (!SetHost(this))
+   if (!InitializeInstance(this, settings))
    {
       // Bail if the client startup fails
       mClient = NULL;
       return false;
    }
 
-   mNumAudioIn = GetAudioInCount();
-   mNumAudioOut = GetAudioOutCount();
-
-   bool haveDefaults;
-   GetConfig(GetDefinition(), PluginSettings::Private, GetFactoryDefaultsGroup(),
-      wxT("Initialized"), haveDefaults, false);
-   if (!haveDefaults)
-   {
-      SaveUserPreset(GetFactoryDefaultsGroup());
-      SetConfig(GetDefinition(), PluginSettings::Private, GetFactoryDefaultsGroup(),
-         wxT("Initialized"), true);
-   }
-   LoadUserPreset(GetCurrentSettingsGroup());
-
-   return Startup();
-}
-
-bool Effect::Startup()
-{
    return true;
 }
 
-bool Effect::GetAutomationParametersAsString(wxString & parms)
+bool Effect::SaveSettingsAsString(
+   const EffectSettings &settings, wxString & parms) const
 {
    CommandParameters eap;
-
-   if (mUIDialog && !TransferDataFromWindow())
-   {
-      return false;
-   }
-
    ShuttleGetAutomation S;
    S.mpEap = &eap;
-   if( DefineParams( S ) ){
-      ;// got eap value using DefineParams.
+   if( VisitSettings( S, settings ) ){
+      ;// got eap value using VisitSettings.
    }
    // Won't be needed in future
-   else if (!GetAutomationParameters(eap))
+   else if (!SaveSettings(settings, eap))
    {
       return false;
    }
@@ -871,46 +838,59 @@ bool Effect::GetAutomationParametersAsString(wxString & parms)
    return eap.GetParameters(parms);
 }
 
-bool Effect::SetAutomationParametersFromString(const wxString & parms)
+bool Effect::LoadSettingsFromString(
+   const wxString & parms, EffectSettings &settings) const
 {
+   // If the string starts with one of certain significant substrings,
+   // then the rest of the string is reinterpreted as part of a registry key,
+   // and a user or factory preset is then loaded.
+   // (Where did these prefixes come from?  See EffectPresetsDialog; and
+   // ultimately the uses of it by EffectManager::GetPreset, which is used by
+   // the macro management dialog)
    wxString preset = parms;
    bool success = false;
    if (preset.StartsWith(kUserPresetIdent))
    {
       preset.Replace(kUserPresetIdent, wxEmptyString, false);
-      success = LoadUserPreset(GetUserPresetsGroup(preset));
+      success = LoadUserPreset(UserPresetsGroup(preset), settings);
    }
    else if (preset.StartsWith(kFactoryPresetIdent))
    {
       preset.Replace(kFactoryPresetIdent, wxEmptyString, false);
       auto presets = GetFactoryPresets();
-      success = LoadFactoryPreset( make_iterator_range( presets ).index( preset ) );
+      success = LoadFactoryPreset(
+         make_iterator_range( presets ).index( preset ), settings );
    }
    else if (preset.StartsWith(kCurrentSettingsIdent))
    {
       preset.Replace(kCurrentSettingsIdent, wxEmptyString, false);
-      success = LoadUserPreset(GetCurrentSettingsGroup());
+      success = LoadUserPreset(CurrentSettingsGroup(), settings);
    }
    else if (preset.StartsWith(kFactoryDefaultsIdent))
    {
       preset.Replace(kFactoryDefaultsIdent, wxEmptyString, false);
-      success = LoadUserPreset(GetFactoryDefaultsGroup());
+      success = LoadUserPreset(FactoryDefaultsGroup(), settings);
    }
    else
    {
+      // If the string did not start with any of the significant substrings,
+      // then use VisitSettings or LoadSettings to reinterpret it,
+      // or use LoadSettings.
+      // This interprets what was written by SaveSettings, above.
       CommandParameters eap(parms);
       ShuttleSetAutomation S;
       S.SetForValidating( &eap );
-      // DefineParams returns false if not defined for this effect.
-      if( !DefineParams( S ) )
+      // VisitSettings returns false if not defined for this effect.
+      // To do: fix const_cast in use of VisitSettings
+      if ( !const_cast<Effect*>(this)->VisitSettings(S, settings) )
          // the old method...
-         success = SetAutomationParameters(eap);
+         success = LoadSettings(eap, settings);
       else if( !S.bOK )
          success = false;
       else{
          success = true;
          S.SetForWriting( &eap );
-         DefineParams( S );
+         const_cast<Effect*>(this)->VisitSettings(S, settings);
       }
    }
 
@@ -923,36 +903,37 @@ bool Effect::SetAutomationParametersFromString(const wxString & parms)
       return true;
       //return false;
    }
-
-   if (!mUIDialog)
-   {
-      return true;
-   }
-
-   return TransferDataToWindow();
+   return true;
 }
 
 unsigned Effect::TestUIFlags(unsigned mask) {
    return mask & mUIFlags;
 }
 
-bool Effect::IsBatchProcessing()
+bool Effect::IsBatchProcessing() const
 {
    return mIsBatch;
 }
 
-void Effect::SetBatchProcessing(bool start)
+void Effect::SetBatchProcessing()
 {
-   mIsBatch = start;
+   mIsBatch = true;
+   // Save effect's internal state in a special registry path
+   // just for this purpose
+   // If effect is not stateful, this step doesn't really matter, and the
+   // settings object is a dummy
+   auto dummySettings = MakeSettings();
+   SaveUserPreset(GetSavedStateGroup(), dummySettings);
+}
 
-   if (start)
-   {
-      SaveUserPreset(GetSavedStateGroup());
-   }
-   else
-   {
-      LoadUserPreset(GetSavedStateGroup());
-   }
+void Effect::UnsetBatchProcessing()
+{
+   mIsBatch = false;
+   // Restore effect's internal state from registry
+   // If effect is not stateful, this call doesn't really matter, and the
+   // settings object is a dummy
+   auto dummySettings = MakeSettings();
+   LoadUserPreset(GetSavedStateGroup(), dummySettings);
 }
 
 // TODO:  Lift the possible user-prompting part out of this function, so that
@@ -990,7 +971,7 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
    if (GetType() == EffectTypeGenerate)
    {
       GetConfig(GetDefinition(), PluginSettings::Private,
-         GetCurrentSettingsGroup(),
+         CurrentSettingsGroup(),
          wxT("LastUsedDuration"), mDuration, GetDefaultDuration());
    }
 
@@ -1016,7 +997,9 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
    // We don't yet know the effect type for code in the Nyquist Prompt, so
    // assume it requires a track and handle errors when the effect runs.
    if ((GetType() == EffectTypeGenerate || GetPath() == NYQUIST_PROMPT_ID) && (mNumTracks == 0)) {
-      newTrack = mTracks->Add(mFactory->NewWaveTrack());
+      auto track = mFactory->Create();
+      track->SetName(mTracks->MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
+      newTrack = mTracks->Add(track);
       newTrack->SetSelected(true);
    }
 
@@ -1034,9 +1017,10 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
       mT1 = mT0 + mDuration;
    }
 
-   mDurationFormat = isSelection
+   // This is happening inside EffectSettingsAccess::ModifySettings
+   settings.extra.SetDurationFormat( isSelection
       ? NumericConverter::TimeAndSampleFormat()
-      : NumericConverter::DefaultSelectionFormat();
+      : NumericConverter::DefaultSelectionFormat() );
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mF0 = selectedRegion.f0();
@@ -1125,11 +1109,6 @@ bool Effect::Process(EffectSettings &settings)
    CopyInputTracks(true);
    bool bGoodResult = true;
 
-   // It's possible that the number of channels the effect expects changed based on
-   // the parameters (the Audacity Reverb effect does when the stereo width is 0).
-   mNumAudioIn = GetAudioInCount();
-   mNumAudioOut = GetAudioOutCount();
-
    mPass = 1;
    if (InitPass1())
    {
@@ -1162,7 +1141,12 @@ bool Effect::ProcessPass(EffectSettings &settings)
    int count = 0;
    bool clear = false;
 
-   const bool multichannel = mNumAudioIn > 1;
+   // It's possible that the number of channels the effect expects changed based on
+   // the parameters (the Audacity Reverb effect does when the stereo width is 0).
+   const auto numAudioIn = GetAudioInCount();
+   const auto numAudioOut = GetAudioOutCount();
+
+   const bool multichannel = numAudioIn > 1;
    auto range = multichannel
       ? mOutputTracks->Leaders()
       : mOutputTracks->Any();
@@ -1229,11 +1213,11 @@ bool Effect::ProcessPass(EffectSettings &settings)
          {
             // Always create the number of input buffers the client expects even if we don't have
             // the same number of channels.
-            inBufPos.reinit( mNumAudioIn );
-            inBuffer.reinit( mNumAudioIn, mBufferSize );
+            inBufPos.reinit( numAudioIn );
+            inBuffer.reinit( numAudioIn, mBufferSize );
 
             // We won't be using more than the first 2 buffers, so clear the rest (if any)
-            for (size_t i = 2; i < mNumAudioIn; i++)
+            for (size_t i = 2; i < numAudioIn; i++)
             {
                for (size_t j = 0; j < mBufferSize; j++)
                {
@@ -1243,26 +1227,26 @@ bool Effect::ProcessPass(EffectSettings &settings)
 
             // Always create the number of output buffers the client expects even if we don't have
             // the same number of channels.
-            outBufPos.reinit( mNumAudioOut );
+            outBufPos.reinit( numAudioOut );
             // Output buffers get an extra mBlockSize worth to give extra room if
             // the plugin adds latency
-            outBuffer.reinit( mNumAudioOut, mBufferSize + mBlockSize );
+            outBuffer.reinit( numAudioOut, mBufferSize + mBlockSize );
          }
 
          // (Re)Set the input buffer positions
-         for (size_t i = 0; i < mNumAudioIn; i++)
+         for (size_t i = 0; i < numAudioIn; i++)
          {
             inBufPos[i] = inBuffer[i].get();
          }
 
          // (Re)Set the output buffer positions
-         for (size_t i = 0; i < mNumAudioOut; i++)
+         for (size_t i = 0; i < numAudioOut; i++)
          {
             outBufPos[i] = outBuffer[i].get();
          }
 
          // Clear unused input buffers
-         if (!right && !clear && mNumAudioIn > 1)
+         if (!right && !clear && numAudioIn > 1)
          {
             for (size_t j = 0; j < mBufferSize; j++)
             {
@@ -1309,7 +1293,7 @@ bool Effect::ProcessTrack(EffectSettings &settings,
    bool rc = true;
 
    // Give the plugin a chance to initialize
-   if (!ProcessInitialize(len, map))
+   if (!ProcessInitialize(settings, len, map))
    {
       return false;
    }
@@ -1348,7 +1332,7 @@ bool Effect::ProcessTrack(EffectSettings &settings,
    decltype(mBufferSize) outputBufferCnt = 0;
    bool cleared = false;
 
-   auto chans = std::min<unsigned>(mNumAudioOut, mNumChannels);
+   auto chans = std::min<unsigned>(GetAudioOutCount(), mNumChannels);
 
    std::shared_ptr<WaveTrack> genLeft, genRight;
 
@@ -1360,7 +1344,7 @@ bool Effect::ProcessTrack(EffectSettings &settings,
    {
       if (mIsPreview) {
          gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
-         genDur = wxMin(mDuration, CalcPreviewInputLength(genDur));
+         genDur = std::min(mDuration, CalcPreviewInputLength(settings, genDur));
       }
       else {
          genDur = mDuration;
@@ -1668,12 +1652,12 @@ Effect::PopulateOrExchange(ShuttleGui &, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool Effect::TransferDataToWindow()
+bool Effect::TransferDataToWindow(const EffectSettings &)
 {
    return true;
 }
 
-bool Effect::TransferDataFromWindow()
+bool Effect::TransferDataFromWindow(EffectSettings &)
 {
    return true;
 }
@@ -1855,11 +1839,10 @@ Track *Effect::AddToOutputTracks(const std::shared_ptr<Track> &t)
 Effect::AddedAnalysisTrack::AddedAnalysisTrack(Effect *pEffect, const wxString &name)
    : mpEffect(pEffect)
 {
-   LabelTrack::Holder pTrack{ std::make_shared<LabelTrack>() };
-   mpTrack = pTrack.get();
-   if (!name.empty())
-      pTrack->SetName(name);
-   pEffect->mTracks->Add( pTrack );
+   if(!name.empty())
+      mpTrack = LabelTrack::Create(*pEffect->mTracks, name);
+   else
+      mpTrack = LabelTrack::Create(*pEffect->mTracks);
 }
 
 Effect::AddedAnalysisTrack::AddedAnalysisTrack(AddedAnalysisTrack &&that)
@@ -2032,7 +2015,8 @@ void Effect::CountWaveTracks()
    mNumGroups = mTracks->SelectedLeaders< const WaveTrack >().size();
 }
 
-double Effect::CalcPreviewInputLength(double previewLength)
+double Effect::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    return previewLength;
 }
@@ -2060,12 +2044,12 @@ void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
 
    const double rate = mProjectRate;
 
-   if (isNyquist && isGenerator) {
-      previewDuration = CalcPreviewInputLength(previewLen);
-   }
-   else {
-      previewDuration = wxMin(mDuration, CalcPreviewInputLength(previewLen));
-   }
+   const auto &settings = access.Get();
+   if (isNyquist && isGenerator)
+      previewDuration = CalcPreviewInputLength(settings, previewLen);
+   else
+      previewDuration =
+         std::min(mDuration, CalcPreviewInputLength(settings, previewLen));
 
    double t1 = mT0 + previewDuration;
 
@@ -2173,9 +2157,9 @@ void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
 
       auto vr2 = valueRestorer( mIsPreview, true );
 
-      auto settings = access.Get();
-      success = Process(settings);
-      access.Set(std::move(settings));
+      access.ModifySettings([&](EffectSettings &settings){
+         success = Process(settings);
+      });
    }
 
    if (success)
@@ -2225,7 +2209,7 @@ void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
 }
 
 int Effect::MessageBox( const TranslatableString& message,
-   long style, const TranslatableString &titleStr)
+   long style, const TranslatableString &titleStr) const
 {
    auto title = titleStr.empty()
       ? GetName()

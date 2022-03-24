@@ -35,7 +35,6 @@
 #include <wx/valgen.h>
 
 #include "Prefs.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/valnum.h"
@@ -48,11 +47,13 @@ enum
    ID_Width
 };
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name       Type     Key               Def      Min      Max      Scale
-Param( Threshold, int,     wxT("Threshold"),  200,     0,       900,     1  );
-Param( Width,     int,     wxT("Width"),      20,      0,       40,      1  );
+const EffectParameterMethods& EffectClickRemoval::Parameters() const
+{
+   static CapturedParameters<EffectClickRemoval,
+      Threshold, Width
+   > parameters;
+   return parameters;
+}
 
 const ComponentInterfaceSymbol EffectClickRemoval::Symbol
 { XO("Click Removal") };
@@ -68,8 +69,7 @@ END_EVENT_TABLE()
 
 EffectClickRemoval::EffectClickRemoval()
 {
-   mThresholdLevel = DEF_Threshold;
-   mClickWidth = DEF_Width;
+   Parameters().Reset(*this);
 
    SetLinearEffectFlag(false);
 
@@ -83,52 +83,26 @@ EffectClickRemoval::~EffectClickRemoval()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectClickRemoval::GetSymbol()
+ComponentInterfaceSymbol EffectClickRemoval::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectClickRemoval::GetDescription()
+TranslatableString EffectClickRemoval::GetDescription() const
 {
    return XO("Click Removal is designed to remove clicks on audio tracks");
 }
 
-ManualPageID EffectClickRemoval::ManualPage()
+ManualPageID EffectClickRemoval::ManualPage() const
 {
    return L"Click_Removal";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectClickRemoval::GetType()
+EffectType EffectClickRemoval::GetType() const
 {
    return EffectTypeProcess;
-}
-
-// EffectProcessor implementation
-bool EffectClickRemoval::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( mThresholdLevel, Threshold );
-   S.SHUTTLE_PARAM( mClickWidth, Width );
-   return true;
-}
-
-bool EffectClickRemoval::GetAutomationParameters(CommandParameters & parms)
-{
-   parms.Write(KEY_Threshold, mThresholdLevel);
-   parms.Write(KEY_Width, mClickWidth);
-
-   return true;
-}
-
-bool EffectClickRemoval::SetAutomationParameters(CommandParameters & parms)
-{
-   ReadAndVerifyInt(Threshold);
-   ReadAndVerifyInt(Width);
-
-   mThresholdLevel = Threshold;
-   mClickWidth = Width;
-
-   return true;
 }
 
 // Effect implementation
@@ -136,42 +110,6 @@ bool EffectClickRemoval::SetAutomationParameters(CommandParameters & parms)
 bool EffectClickRemoval::CheckWhetherSkipEffect()
 {
    return ((mClickWidth == 0) || (mThresholdLevel == 0));
-}
-
-bool EffectClickRemoval::Startup()
-{
-   wxString base = wxT("/Effects/ClickRemoval/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      mThresholdLevel = gPrefs->Read(base + wxT("ClickThresholdLevel"), 200);
-      if ((mThresholdLevel < MIN_Threshold) || (mThresholdLevel > MAX_Threshold))
-      {  // corrupted Prefs?
-         mThresholdLevel = 0;  //Off-skip
-      }
-      mClickWidth = gPrefs->Read(base + wxT("ClickWidth"), 20);
-      if ((mClickWidth < MIN_Width) || (mClickWidth > MAX_Width))
-      {  // corrupted Prefs?
-         mClickWidth = 0;  //Off-skip
-      }
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
 }
 
 bool EffectClickRemoval::Process(EffectSettings &)
@@ -348,8 +286,7 @@ EffectClickRemoval::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
       mThreshT = S.Id(ID_Thresh)
          .Validator<IntegerValidator<int>>(
             &mThresholdLevel, NumValidatorStyle::DEFAULT,
-            MIN_Threshold, MAX_Threshold
-         )
+            Threshold.min, Threshold.max )
          .AddTextBox(XXO("&Threshold (lower is more sensitive):"),
                      wxT(""),
                      10);
@@ -359,12 +296,12 @@ EffectClickRemoval::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          .Style(wxSL_HORIZONTAL)
          .Validator<wxGenericValidator>(&mThresholdLevel)
          .MinSize( { 150, -1 } )
-         .AddSlider( {}, mThresholdLevel, MAX_Threshold, MIN_Threshold);
+         .AddSlider( {}, mThresholdLevel, Threshold.max, Threshold.min);
 
       // Click width
       mWidthT = S.Id(ID_Width)
          .Validator<IntegerValidator<int>>(
-            &mClickWidth, NumValidatorStyle::DEFAULT, MIN_Width, MAX_Width)
+            &mClickWidth, NumValidatorStyle::DEFAULT, Width.min, Width.max)
          .AddTextBox(XXO("Max &Spike Width (higher is more sensitive):"),
                      wxT(""),
                      10);
@@ -374,31 +311,11 @@ EffectClickRemoval::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          .Style(wxSL_HORIZONTAL)
          .Validator<wxGenericValidator>(&mClickWidth)
          .MinSize( { 150, -1 } )
-         .AddSlider( {}, mClickWidth, MAX_Width, MIN_Width);
+         .AddSlider( {}, mClickWidth, Width.max, Width.min);
    }
    S.EndMultiColumn();
 
    return nullptr;
-}
-
-bool EffectClickRemoval::TransferDataToWindow()
-{
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
-bool EffectClickRemoval::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
 }
 
 void EffectClickRemoval::OnWidthText(wxCommandEvent & WXUNUSED(evt))

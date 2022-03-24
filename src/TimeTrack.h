@@ -25,6 +25,8 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
 
  public:
 
+   static wxString GetDefaultName();
+
    // Construct and also build all attachments
    static TimeTrack *New(AudacityProject &project);
 
@@ -41,7 +43,6 @@ class AUDACITY_DLL_API TimeTrack final : public Track {
    TimeTrack(const TimeTrack &orig, double *pT0 = nullptr, double *pT1 = nullptr);
 
    virtual ~TimeTrack();
-
 
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();

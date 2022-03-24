@@ -13,6 +13,7 @@
 #define __AUDACITY_EFFECT_REVERB__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxCheckBox;
 class wxSlider;
@@ -24,6 +25,9 @@ struct Reverb_priv_t;
 class EffectReverb final : public Effect
 {
 public:
+   struct Params;
+   static inline Params *
+   FetchParameters(EffectReverb &e, EffectSettings &) { return &e.mParams; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectReverb();
@@ -45,41 +49,37 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-   ManualPageID ManualPage() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   EffectType GetType() const override;
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   bool DoLoadFactoryPreset(int id);
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-   bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
 
-   bool Startup() override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
    // EffectReverb implementation
-
-   void SetTitle(const wxString & name = {});
 
 #define SpinSliderHandlers(n) \
    void On ## n ## Slider(wxCommandEvent & evt); \
@@ -123,7 +123,29 @@ private:
 
    wxCheckBox  *mWetOnlyC;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter RoomSize{ &EffectReverb::Params::mRoomSize,
+   L"RoomSize",      75.0,      0,       100,  1  };
+static constexpr EffectParameter PreDelay{ &EffectReverb::Params::mPreDelay,
+   L"Delay",         10.0,      0,       200,  1  };
+static constexpr EffectParameter Reverberance{ &EffectReverb::Params::mReverberance,
+   L"Reverberance",  50.0,      0,       100,  1  };
+static constexpr EffectParameter HfDamping{ &EffectReverb::Params::mHfDamping,
+   L"HfDamping",     50.0,      0,       100,  1  };
+static constexpr EffectParameter ToneLow{ &EffectReverb::Params::mToneLow,
+   L"ToneLow",       100.0,     0,       100,  1  };
+static constexpr EffectParameter ToneHigh{ &EffectReverb::Params::mToneHigh,
+   L"ToneHigh",      100.0,     0,       100,  1  };
+static constexpr EffectParameter WetGain{ &EffectReverb::Params::mWetGain,
+   L"WetGain",       -1.0,      -20,     10,   1  };
+static constexpr EffectParameter DryGain{ &EffectReverb::Params::mDryGain,
+   L"DryGain",       -1.0,      -20,     10,   1  };
+static constexpr EffectParameter StereoWidth{ &EffectReverb::Params::mStereoWidth,
+   L"StereoWidth",   100.0,     0,       100,  1  };
+static constexpr EffectParameter WetOnly{ &EffectReverb::Params::mWetOnly,
+   L"WetOnly",       false,   false,   true, 1  };
 };
 
 #endif

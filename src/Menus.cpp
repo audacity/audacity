@@ -46,6 +46,7 @@
 
 #include <wx/menu.h>
 #include <wx/windowptr.h>
+#include <wx/log.h>
 
 MenuCreator::MenuCreator()
 {
@@ -439,6 +440,8 @@ void MenuCreator::CreateMenusAndCommands(AudacityProject &project)
 void MenuManager::Visit( ToolbarMenuVisitor &visitor )
 {
    static const auto menuTree = MenuTable::Items( MenuPathStart );
+
+   wxLogNull nolog;
    Registry::Visit( visitor, menuTree.get(), &sRegistry() );
 }
 

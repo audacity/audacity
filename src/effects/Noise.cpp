@@ -25,20 +25,11 @@
 #include <wx/valgen.h>
 
 #include "Prefs.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "../widgets/NumericTextCtrl.h"
 
-enum kTypes
-{
-   kWhite,
-   kPink,
-   kBrownian,
-   nTypes
-};
-
-static const EnumValueSymbol kTypeStrings[nTypes] =
+const EnumValueSymbol EffectNoise::kTypeStrings[nTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    /* i18n-hint: not a color, but "white noise" having a uniform spectrum  */
@@ -50,11 +41,13 @@ static const EnumValueSymbol kTypeStrings[nTypes] =
    { XC("Brownian", "noise") }
 };
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name    Type     Key               Def      Min   Max            Scale
-Param( Type,   int,     wxT("Type"),       kWhite,  0,    nTypes - 1, 1  );
-Param( Amp,    double,  wxT("Amplitude"),  0.8,     0.0,  1.0,           1  );
+const EffectParameterMethods& EffectNoise::Parameters() const
+{
+   static CapturedParameters<EffectNoise,
+      Type, Amp
+   > parameters;
+   return parameters;
+}
 
 //
 // EffectNoise
@@ -65,10 +58,10 @@ const ComponentInterfaceSymbol EffectNoise::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectNoise > reg; }
 
+
 EffectNoise::EffectNoise()
 {
-   mType = DEF_Type;
-   mAmp = DEF_Amp;
+   Parameters().Reset(*this);
 
    SetLinearEffectFlag(true);
 
@@ -81,31 +74,31 @@ EffectNoise::~EffectNoise()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectNoise::GetSymbol()
+ComponentInterfaceSymbol EffectNoise::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectNoise::GetDescription()
+TranslatableString EffectNoise::GetDescription() const
 {
    return XO("Generates one of three different types of noise");
 }
 
-ManualPageID EffectNoise::ManualPage()
+ManualPageID EffectNoise::ManualPage() const
 {
    return L"Noise";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNoise::GetType()
+EffectType EffectNoise::GetType() const
 {
    return EffectTypeGenerate;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectNoise::GetAudioOutCount()
+unsigned EffectNoise::GetAudioOutCount() const
 {
    return 1;
 }
@@ -175,63 +168,11 @@ size_t EffectNoise::ProcessBlock(EffectSettings &,
 
    return size;
 }
-bool EffectNoise::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_ENUM_PARAM( mType, Type, kTypeStrings, nTypes );
-   S.SHUTTLE_PARAM( mAmp, Amp );
-   return true;
-}
-
-bool EffectNoise::GetAutomationParameters(CommandParameters & parms)
-{
-   parms.Write(KEY_Type, kTypeStrings[mType].Internal());
-   parms.Write(KEY_Amp, mAmp);
-
-   return true;
-}
-
-bool EffectNoise::SetAutomationParameters(CommandParameters & parms)
-{
-   ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
-   ReadAndVerifyDouble(Amp);
-
-   mType = Type;
-   mAmp = Amp;
-
-   return true;
-}
 
 // Effect implementation
 
-bool EffectNoise::Startup()
-{
-   wxString base = wxT("/Effects/Noise/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      gPrefs->Read(base + wxT("Type"), &mType, 0L);
-      gPrefs->Read(base + wxT("Amplitude"), &mAmp, 0.8f);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
-
 std::unique_ptr<EffectUIValidator>
-EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 {
    wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
@@ -240,16 +181,17 @@ EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
       S.Validator<wxGenericValidator>(&mType)
          .AddChoice(XXO("&Noise type:"), Msgids(kTypeStrings, nTypes));
 
-      S.Validator<FloatingPointValidator<double>>(
-            6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES, MIN_Amp, MAX_Amp
-         )
-         .AddTextBox(XXO("&Amplitude (0-1):"), wxT(""), 12);
+      S
+         .Validator<FloatingPointValidator<double>>(
+            6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES, Amp.min, Amp.max )
+         .AddTextBox(XXO("&Amplitude (0-1):"), L"", 12);
 
       S.AddPrompt(XXO("&Duration:"));
+      auto &extra = access.Get().extra;
       mNoiseDurationT = safenew
          NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,
-                         GetDurationFormat(),
+                         extra.GetDurationFormat(),
                          GetDuration(),
                          mProjectRate,
                          NumericTextCtrl::Options{}
@@ -262,26 +204,15 @@ EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectNoise::TransferDataToWindow()
+bool EffectNoise::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    mNoiseDurationT->SetValue(GetDuration());
 
    return true;
 }
 
-bool EffectNoise::TransferDataFromWindow()
+bool EffectNoise::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    SetDuration(mNoiseDurationT->GetValue());
-
    return true;
 }

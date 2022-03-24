@@ -21,12 +21,10 @@
 #include <algorithm>
 
 #include <math.h>
-#include <float.h>
 
 #include <wx/intl.h>
 #include <wx/valgen.h>
 
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "FFT.h"
 #include "../widgets/valnum.h"
@@ -35,11 +33,13 @@
 
 #include "../WaveTrack.h"
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name    Type     Key                     Def      Min      Max      Scale
-Param( Amount, float,   wxT("Stretch Factor"),   10.0,    1.0,     FLT_MAX, 1   );
-Param( Time,   float,   wxT("Time Resolution"),  0.25f,   0.00099f,  FLT_MAX, 1   );
+const EffectParameterMethods& EffectPaulstretch::Parameters() const
+{
+   static CapturedParameters<EffectPaulstretch,
+      Amount, Time
+   > parameters;
+   return parameters;
+}
 
 /// \brief Class that helps EffectPaulStretch.  It does the FFTs and inner loop 
 /// of the effect.
@@ -95,8 +95,7 @@ END_EVENT_TABLE()
 
 EffectPaulstretch::EffectPaulstretch()
 {
-   mAmount = DEF_Amount;
-   mTime_resolution = DEF_Time;
+   Parameters().Reset(*this);
 
    SetLinearEffectFlag(true);
 }
@@ -107,57 +106,32 @@ EffectPaulstretch::~EffectPaulstretch()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectPaulstretch::GetSymbol()
+ComponentInterfaceSymbol EffectPaulstretch::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectPaulstretch::GetDescription()
+TranslatableString EffectPaulstretch::GetDescription() const
 {
    return XO("Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
 }
 
-ManualPageID EffectPaulstretch::ManualPage()
+ManualPageID EffectPaulstretch::ManualPage() const
 {
    return L"Paulstretch";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectPaulstretch::GetType()
+EffectType EffectPaulstretch::GetType() const
 {
    return EffectTypeProcess;
 }
 
-// EffectProcessor implementation
-bool EffectPaulstretch::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( mAmount, Amount );
-   S.SHUTTLE_PARAM( mTime_resolution, Time );
-   return true;
-}
-
-bool EffectPaulstretch::GetAutomationParameters(CommandParameters & parms)
-{
-   parms.WriteFloat(KEY_Amount, mAmount);
-   parms.WriteFloat(KEY_Time, mTime_resolution);
-
-   return true;
-}
-
-bool EffectPaulstretch::SetAutomationParameters(CommandParameters & parms)
-{
-   ReadAndVerifyFloat(Amount);
-   ReadAndVerifyFloat(Time);
-
-   mAmount = Amount;
-   mTime_resolution = Time;
-
-   return true;
-}
-
 // Effect implementation
 
-double EffectPaulstretch::CalcPreviewInputLength(double previewLength)
+double EffectPaulstretch::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    // FIXME: Preview is currently at the project rate, but should really be
    // at the track rate (bugs 1284 and 852).
@@ -201,41 +175,23 @@ EffectPaulstretch::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
-      S.Validator<FloatingPointValidator<float>>(
-            1, &mAmount, NumValidatorStyle::DEFAULT, MIN_Amount)
+      S
+         .Validator<FloatingPointValidator<float>>(
+            1, &mAmount, NumValidatorStyle::DEFAULT, Amount.min)
          /* i18n-hint: This is how many times longer the sound will be, e.g. applying
           * the effect to a 1-second sample, with the default Stretch Factor of 10.0
           * will give an (approximately) 10 second sound
           */
          .AddTextBox(XXO("&Stretch Factor:"), wxT(""), 10);
 
-      S.Validator<FloatingPointValidator<float>>(
-            3, &mTime_resolution, NumValidatorStyle::ONE_TRAILING_ZERO, MIN_Time)
-         .AddTextBox(XXO("&Time Resolution (seconds):"), wxT(""), 10);
+      S
+         .Validator<FloatingPointValidator<float>>(
+            3, &mTime_resolution, NumValidatorStyle::ONE_TRAILING_ZERO, Time.min)
+         .AddTextBox(XXO("&Time Resolution (seconds):"), L"", 10);
    }
    S.EndMultiColumn();
    return nullptr;
 };
-
-bool EffectPaulstretch::TransferDataToWindow()
-{
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
-
-bool EffectPaulstretch::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
-   return true;
-}
 
 // EffectPaulstretch implementation
 

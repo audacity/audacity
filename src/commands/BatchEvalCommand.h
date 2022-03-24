@@ -31,7 +31,7 @@ class AudacityProject;
 class BatchEvalCommandType final : public OldStyleCommandType
 {
 public:
-   ComponentInterfaceSymbol BuildName() override;
+   ComponentInterfaceSymbol BuildName() const override;
    void BuildSignature(CommandSignature &signature) override;
    OldStyleCommandPointer Create( AudacityProject &project,
       std::unique_ptr<CommandOutputTargets> &&target) override;

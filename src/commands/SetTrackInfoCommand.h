@@ -28,7 +28,9 @@ public:
    SetTrackBase();
    bool Apply(const CommandContext & context) override;
    virtual bool ApplyInner( const CommandContext &context, Track *t  );
-   virtual bool DefineParams( ShuttleParams & S ) override;
+   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
+   bool VisitSettings( SettingsVisitor & S ) override;
+   bool VisitSettings( ConstSettingsVisitor & S ) override;
    virtual void PopulateOrExchange(ShuttleGui & S) override;
 
    int mTrackIndex;
@@ -48,9 +50,11 @@ public:
 
    //SetTrackStatusCommand();
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
-   bool DefineParams( ShuttleParams & S ) override;
+   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
+   TranslatableString GetDescription() const override {return XO("Sets various values for a track.");};
+   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
+   bool VisitSettings( SettingsVisitor & S ) override;
+   bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
@@ -75,9 +79,11 @@ public:
 
    //SetTrackAudioCommand();
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
-   bool DefineParams( ShuttleParams & S ) override;
+   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
+   TranslatableString GetDescription() const override {return XO("Sets various values for a track.");};
+   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
+   bool VisitSettings( SettingsVisitor & S ) override;
+   bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
@@ -104,9 +110,11 @@ public:
 
    //SetTrackVisualsCommand();
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
-   bool DefineParams( ShuttleParams & S ) override;
+   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
+   TranslatableString GetDescription() const override {return XO("Sets various values for a track.");};
+   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
+   bool VisitSettings( SettingsVisitor & S ) override;
+   bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
    // AudacityCommand overrides
@@ -147,20 +155,22 @@ public:
 
    SetTrackCommand();
    // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() override {return Symbol;};
-   TranslatableString GetDescription() override {return XO("Sets various values for a track.");};
+   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
+   TranslatableString GetDescription() const override {return XO("Sets various values for a track.");};
    // AudacityCommand overrides
    ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#set_track";}
 
 public:
 
-   bool DefineParams( ShuttleParams & S ) override { 
+   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S ) {
       return 
-         SetTrackBase::DefineParams(S) &&
-         mSetStatus.DefineParams(S) &&  
-         mSetAudio.DefineParams(S) &&
-         mSetVisuals.DefineParams(S);
+         SetTrackBase::VisitSettings(S) &&
+         mSetStatus.VisitSettings(S) &&  
+         mSetAudio.VisitSettings(S) &&
+         mSetVisuals.VisitSettings(S);
    };
+   bool VisitSettings( SettingsVisitor & S ) override;
+   bool VisitSettings( ConstSettingsVisitor & S ) override;
    void PopulateOrExchange(ShuttleGui & S) override {
       SetTrackBase::PopulateOrExchange( S );
       mSetStatus.PopulateOrExchange(S);

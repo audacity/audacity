@@ -30,7 +30,6 @@
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 #include "TimeWarper.h"
@@ -62,11 +61,13 @@ enum
 
 // Soundtouch is not reasonable below -99% or above 3000%.
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name          Type     Key               Def   Min      Max      Scale
-Param( Percentage,   double,  wxT("Percentage"), 0.0,  -95.0,   3000.0,  1  );
-Param( UseSBSMS,     bool,    wxT("SBSMS"),     false, false,   true,    1  );
+const EffectParameterMethods& EffectChangeTempo::Parameters() const
+{
+   static CapturedParameters<EffectChangeTempo,
+      Percentage, UseSBSMS
+   > parameters;
+   return parameters;
+}
 
 // We warp the slider to go up to 400%, but user can enter higher values.
 static const double kSliderMax = 100.0;         // warped above zero to actually go up to 400%
@@ -91,19 +92,15 @@ END_EVENT_TABLE()
 
 EffectChangeTempo::EffectChangeTempo()
 {
-   m_PercentChange = DEF_Percentage;
+   // mUseSBSMS always defaults to false and its value is used only if USE_SBSMS
+   // is defined
+   Parameters().Reset(*this);
    m_FromBPM = 0.0; // indicates not yet set
    m_ToBPM = 0.0; // indicates not yet set
    m_FromLength = 0.0;
    m_ToLength = 0.0;
 
    m_bLoopDetect = false;
-
-#if USE_SBSMS
-   mUseSBSMS = DEF_UseSBSMS;
-#else
-   mUseSBSMS = false;
-#endif
 
    SetLinearEffectFlag(true);
 }
@@ -114,66 +111,37 @@ EffectChangeTempo::~EffectChangeTempo()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectChangeTempo::GetSymbol()
+ComponentInterfaceSymbol EffectChangeTempo::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectChangeTempo::GetDescription()
+TranslatableString EffectChangeTempo::GetDescription() const
 {
    return XO("Changes the tempo of a selection without changing its pitch");
 }
 
-ManualPageID EffectChangeTempo::ManualPage()
+ManualPageID EffectChangeTempo::ManualPage() const
 {
    return L"Change_Tempo";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectChangeTempo::GetType()
+EffectType EffectChangeTempo::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectChangeTempo::SupportsAutomation()
+bool EffectChangeTempo::SupportsAutomation() const
 {
-   return true;
-}
-
-// EffectProcessor implementation
-bool EffectChangeTempo::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( m_PercentChange, Percentage );
-   S.SHUTTLE_PARAM( mUseSBSMS, UseSBSMS );
-   return true;
-}
-
-bool EffectChangeTempo::GetAutomationParameters(CommandParameters & parms)
-{
-   parms.Write(KEY_Percentage, m_PercentChange);
-   parms.Write(KEY_UseSBSMS, mUseSBSMS);
-
-   return true;
-}
-
-bool EffectChangeTempo::SetAutomationParameters(CommandParameters & parms)
-{
-   ReadAndVerifyDouble(Percentage);
-   m_PercentChange = Percentage;
-
-#if USE_SBSMS
-   ReadAndVerifyBool(UseSBSMS);
-   mUseSBSMS = UseSBSMS;
-#else
-   mUseSBSMS = false;
-#endif
-
    return true;
 }
 
 // Effect implementation
 
-double EffectChangeTempo::CalcPreviewInputLength(double previewLength)
+double EffectChangeTempo::CalcPreviewInputLength(
+   const EffectSettings &, double previewLength)
 {
    return previewLength * (100.0 + m_PercentChange) / 100.0;
 }
@@ -243,9 +211,8 @@ EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          m_pTextCtrl_PercentChange = S.Id(ID_PercentChange)
             .Validator<FloatingPointValidator<double>>(
                3, &m_PercentChange, NumValidatorStyle::THREE_TRAILING_ZEROES,
-               MIN_Percentage, MAX_Percentage
-            )
-            .AddTextBox(XXO("Percent C&hange:"), wxT(""), 12);
+               Percentage.min, Percentage.max )
+            .AddTextBox(XXO("Percent C&hange:"), L"", 12);
       }
       S.EndMultiColumn();
 
@@ -255,7 +222,7 @@ EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          m_pSlider_PercentChange = S.Id(ID_PercentChange)
             .Name(XO("Percent Change"))
             .Style(wxSL_HORIZONTAL)
-            .AddSlider( {}, 0, (int)kSliderMax, (int)MIN_Percentage);
+            .AddSlider( {}, 0, (int)kSliderMax, (int)Percentage.min);
       }
       S.EndHorizontalLay();
 
@@ -305,10 +272,9 @@ EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
                   2, &m_ToLength, NumValidatorStyle::TWO_TRAILING_ZEROES,
                   // min and max need same precision as what we're validating (bug 963)
                   RoundValue( precision,
-                     (m_FromLength * 100.0) / (100.0 + MAX_Percentage) ),
+                     (m_FromLength * 100.0) / (100.0 + Percentage.max) ),
                   RoundValue( precision,
-                     (m_FromLength * 100.0) / (100.0 + MIN_Percentage) )
-               )
+                     (m_FromLength * 100.0) / (100.0 + Percentage.min) ) )
                /* i18n-hint: changing tempo "from" one value "to" another */
                .AddTextBox(XXC("t&o", "change tempo"), wxT(""), 12);
          }
@@ -332,17 +298,12 @@ EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectChangeTempo::TransferDataToWindow()
+bool EffectChangeTempo::TransferDataToWindow(const EffectSettings &)
 {
    // Reset from length because it can be changed by Preview
    m_FromLength = mT1 - mT0;
 
    m_bLoopDetect = true;
-
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
 
    // percent change controls
    Update_Slider_PercentChange();
@@ -355,16 +316,6 @@ bool EffectChangeTempo::TransferDataToWindow()
    m_pTextCtrl_ToLength->SetName(
       wxString::Format( _("Length in seconds from %s, to"),
          m_pTextCtrl_FromLength->GetValue() ) );
-
-   return true;
-}
-
-bool EffectChangeTempo::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
 
    return true;
 }

@@ -63,9 +63,9 @@ AudacityCommand::~AudacityCommand()
 }
 
 
-PluginPath AudacityCommand::GetPath(){        return BUILTIN_GENERIC_COMMAND_PREFIX + GetSymbol().Internal(); }
-VendorSymbol AudacityCommand::GetVendor(){      return XO("Audacity");}
-wxString AudacityCommand::GetVersion(){     return AUDACITY_VERSION_STRING;}
+PluginPath AudacityCommand::GetPath() const {        return BUILTIN_GENERIC_COMMAND_PREFIX + GetSymbol().Internal(); }
+VendorSymbol AudacityCommand::GetVendor() const {      return XO("Audacity");}
+wxString AudacityCommand::GetVersion()  const {     return AUDACITY_VERSION_STRING;}
 
 
 bool AudacityCommand::Init(){
@@ -73,7 +73,7 @@ bool AudacityCommand::Init(){
       return true;
    mNeedsInit = false;
    ShuttleDefaults DefaultSettingShuttle;
-   return DefineParams( DefaultSettingShuttle );
+   return VisitSettings( DefaultSettingShuttle );
 }
 
 bool AudacityCommand::ShowInterface(wxWindow *parent, bool WXUNUSED(forceModal))
@@ -117,7 +117,7 @@ wxDialog *AudacityCommand::CreateUI(wxWindow *parent, AudacityCommand * WXUNUSED
    return NULL;
 }
 
-bool AudacityCommand::GetAutomationParametersAsString(wxString & parms)
+bool AudacityCommand::SaveSettingsAsString(wxString & parms)
 {
    CommandParameters eap;
 
@@ -128,14 +128,14 @@ bool AudacityCommand::GetAutomationParametersAsString(wxString & parms)
 
    ShuttleGetAutomation S;
    S.mpEap = &eap;
-   bool bResult = DefineParams( S );
+   bool bResult = VisitSettings( S );
    wxASSERT_MSG( bResult, "You did not define DefineParameters() for this command" );
    static_cast<void>(bResult); // fix unused variable warning in release mode
 
    return eap.GetParameters(parms);
 }
 
-bool AudacityCommand::SetAutomationParametersFromString(const wxString & parms)
+bool AudacityCommand::LoadSettingsFromString(const wxString & parms)
 {
    wxString preset = parms;
 
@@ -143,7 +143,7 @@ bool AudacityCommand::SetAutomationParametersFromString(const wxString & parms)
    ShuttleSetAutomation S;
 
    S.SetForWriting( &eap );
-   bool bResult = DefineParams( S );
+   bool bResult = VisitSettings( S );
    wxASSERT_MSG( bResult, "You did not define DefineParameters() for this command" );
    static_cast<void>(bResult); // fix unused variable warning in release mode
    if (!S.bOK)
@@ -217,6 +217,16 @@ bool AudacityCommand::TransferDataFromWindow()
    if (mUIParent && (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow()))
       return false;
    return true;
+}
+
+bool AudacityCommand::VisitSettings( SettingsVisitor & )
+{
+   return false;
+}
+
+bool AudacityCommand::VisitSettings( ConstSettingsVisitor & )
+{
+   return false;
 }
 
 int AudacityCommand::MessageBox(

@@ -29,7 +29,7 @@ for shared and private configs - which need to move out.
 #include <wx/tokenzr.h>
 
 #include "BasicUI.h"
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 
 #include "Internat.h" // for macro XO
 #include "FileNames.h"
@@ -65,12 +65,12 @@ PluginDescriptor::~PluginDescriptor()
 
 PluginDescriptor &PluginDescriptor::operator =(PluginDescriptor &&) = default;
 
-bool PluginDescriptor::IsInstantiated() const
+bool PluginDescriptor::IsLoaded() const
 {
    return mInstance != nullptr;
 }
 
-ComponentInterface *PluginDescriptor::GetInstance()
+ComponentInterface *PluginDescriptor::Load()
 {
    if (!mInstance)
    {
@@ -78,7 +78,8 @@ ComponentInterface *PluginDescriptor::GetInstance()
          mInstance = ModuleManager::Get().CreateProviderInstance(GetID(), GetPath());
       else
       {
-         muInstance = ModuleManager::Get().CreateInstance(GetProviderID(), GetPath());
+         muInstance =
+            ModuleManager::Get().LoadPlugin(GetProviderID(), GetPath());
          mInstance = muInstance.get();
       }
    }
@@ -86,7 +87,7 @@ ComponentInterface *PluginDescriptor::GetInstance()
    return mInstance;
 }
 
-void PluginDescriptor::SetInstance(std::unique_ptr<ComponentInterface> instance)
+void PluginDescriptor::Set(std::unique_ptr<ComponentInterface> instance)
 {
    muInstance = std::move(instance);
    mInstance = muInstance.get();
@@ -327,7 +328,7 @@ void PluginDescriptor::SetImporterExtensions( FileExtensions extensions )
 // ============================================================================
 
 const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
-   ModuleInterface *provider, ComponentInterface *pInterface )
+   PluginProvider *provider, ComponentInterface *pInterface )
 {
    EffectDefinitionInterface * pEInterface = dynamic_cast<EffectDefinitionInterface*>(pInterface);
    if( pEInterface )
@@ -340,7 +341,7 @@ const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
 }
 
 const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
-   ModuleInterface *provider, ComponentInterface *pInterface )
+   PluginProvider *provider, ComponentInterface *pInterface )
 {
    ComponentInterface * pCInterface = dynamic_cast<ComponentInterface*>(pInterface);
    if( pCInterface )
@@ -394,10 +395,11 @@ bool PluginManager::IsPluginRegistered(
    return false;
 }
 
-const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)
+const PluginID & PluginManager::RegisterPlugin(PluginProvider *provider)
 {
-   PluginDescriptor & plug = CreatePlugin(GetID(module), module, PluginTypeModule);
-   plug.SetEffectFamily(module->GetOptionalFamilySymbol().Internal());
+   PluginDescriptor & plug =
+      CreatePlugin(GetID(provider), provider, PluginTypeModule);
+   plug.SetEffectFamily(provider->GetOptionalFamilySymbol().Internal());
 
    plug.SetEnabled(true);
    plug.SetValid(true);
@@ -405,7 +407,8 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *module)
    return plug.GetID();
 }
 
-const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, ComponentInterface *command)
+const PluginID & PluginManager::RegisterPlugin(
+   PluginProvider *provider, ComponentInterface *command)
 {
    PluginDescriptor & plug = CreatePlugin(GetID(command), command, (PluginType)PluginTypeAudacityCommand);
 
@@ -417,7 +420,8 @@ const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, Compon
    return plug.GetID();
 }
 
-const PluginID & PluginManager::RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type)
+const PluginID & PluginManager::RegisterPlugin(
+   PluginProvider *provider, EffectDefinitionInterface *effect, int type)
 {
    PluginDescriptor & plug = CreatePlugin(GetID(effect), effect, (PluginType)type);
 
@@ -654,7 +658,7 @@ bool PluginManager::DropFile(const wxString &fileName)
    const wxFileName src{ fileName };
 
    for (auto &plug : PluginsOfType(PluginTypeModule)) {
-      auto module = static_cast<ModuleInterface *>
+      auto module = static_cast<PluginProvider *>
          (mm.CreateProviderInstance(plug.GetID(), plug.GetPath()));
       if (! module)
          continue;
@@ -713,7 +717,7 @@ bool PluginManager::DropFile(const wxString &fileName)
             std::vector<PluginID> ids;
             std::vector<wxString> names;
             nPlugIns = module->DiscoverPluginsAtPath(dstPath, errMsg,
-               [&](ModuleInterface *provider, ComponentInterface *ident)
+               [&](PluginProvider *provider, ComponentInterface *ident)
                                                      -> const PluginID& {
                   // Register as by default, but also collecting the PluginIDs
                   // and names
@@ -1272,7 +1276,7 @@ void PluginManager::CheckForUpdates(bool bFast)
             // Collect plugin paths
             PluginPaths paths;
             if (auto provider = mm.CreateProviderInstance( plugID, plugPath ) )
-               paths = provider->FindPluginPaths( *this );
+               paths = provider->FindModulePaths( *this );
             for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
             {
                wxString path = paths[i].BeforeFirst(wxT(';'));;
@@ -1320,7 +1324,7 @@ const PluginID & PluginManager::RegisterPlugin(
    plug.SetEffectRealtime(effect->SupportsRealtime());
    plug.SetEffectAutomatable(effect->SupportsAutomation());
 
-   plug.SetInstance(std::move(effect));
+   plug.Set(std::move(effect));
    plug.SetEffectLegacy(true);
    plug.SetEnabled(true);
    plug.SetValid(true);
@@ -1426,7 +1430,7 @@ const ComponentInterfaceSymbol & PluginManager::GetSymbol(const PluginID & ID)
       return iter->second.GetSymbol();
 }
 
-ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
+ComponentInterface *PluginManager::Load(const PluginID & ID)
 {
    if (auto iter = mPlugins.find(ID); iter == mPlugins.end())
       return nullptr;
@@ -1440,16 +1444,16 @@ ComponentInterface *PluginManager::GetInstance(const PluginID & ID)
          if (auto iter2 = mPlugins.find(prov); iter2 == mPlugins.end())
             return nullptr;
          else
-            iter2->second.GetInstance();
+            iter2->second.Load();
       }
 
-      return plug.GetInstance();
+      return plug.Load();
    }
 }
 
-PluginID PluginManager::GetID(ModuleInterface *module)
+PluginID PluginManager::GetID(PluginProvider *provider)
 {
-   return ModuleManager::GetID(module);
+   return ModuleManager::GetID(provider);
 }
 
 PluginID PluginManager::GetID(ComponentInterface *command)
@@ -1462,7 +1466,7 @@ PluginID PluginManager::GetID(ComponentInterface *command)
                            command->GetPath());
 }
 
-PluginID PluginManager::GetID(EffectDefinitionInterface *effect)
+PluginID PluginManager::GetID(const EffectDefinitionInterface* effect)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeEffect),
@@ -1716,7 +1720,7 @@ wxString PluginManager::ConvertID(const PluginID & ID)
 
 // This is defined out-of-line here, to keep ComponentInterface free of other
 // #include directives.
-TranslatableString ComponentInterface::GetName()
+TranslatableString ComponentInterface::GetName() const
 {
    return GetSymbol().Msgid();
 }

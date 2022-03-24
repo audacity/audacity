@@ -45,27 +45,39 @@ Identifier EffectDefinitionInterface::GetSquashedName(const Identifier &ident)
 
 EffectDefinitionInterface::~EffectDefinitionInterface() = default;
 
-EffectType EffectDefinitionInterface::GetClassification()
+EffectType EffectDefinitionInterface::GetClassification() const
 {
    return GetType();
 }
 
-bool EffectDefinitionInterface::EnablesDebug()
+bool EffectDefinitionInterface::EnablesDebug() const
 {
    return false;
 }
 
-ManualPageID EffectDefinitionInterface::ManualPage()
+ManualPageID EffectDefinitionInterface::ManualPage() const
 {
    return {};
 }
 
-FilePath EffectDefinitionInterface::HelpPage()
+FilePath EffectDefinitionInterface::HelpPage() const
 {
    return {};
 }
 
-bool EffectDefinitionInterface::IsHiddenFromMenus()
+bool EffectDefinitionInterface::IsHiddenFromMenus() const
+{
+   return false;
+}
+
+bool EffectDefinitionInterface::VisitSettings(
+   SettingsVisitor &, EffectSettings &)
+{
+   return false;
+}
+
+bool EffectDefinitionInterface::VisitSettings(
+   ConstSettingsVisitor &, const EffectSettings &) const
 {
    return false;
 }
@@ -84,66 +96,6 @@ bool EffectDefinitionInterfaceEx::CopySettingsContents(
    return FindMe(src) && FindMe(dst);
 }
 
-bool EffectDefinitionInterfaceEx::SaveSettings(
-   const Settings &settings, CommandParameters & parms) const
-{
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->GetAutomationParameters(parms);
-   else
-      return false;
-}
-
-bool EffectDefinitionInterfaceEx::LoadSettings(
-   CommandParameters & parms, Settings &settings) const
-{
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->SetAutomationParameters(parms);
-   else
-      return false;
-}
-
-bool EffectDefinitionInterfaceEx::LoadUserPreset(
-   const RegistryPath & name, Settings &settings) const
-{
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->LoadUserPreset(name);
-   else
-      return false;
-}
-
-bool EffectDefinitionInterfaceEx::SaveUserPreset(
-   const RegistryPath & name, const Settings &settings) const
-{
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->SaveUserPreset(name);
-   else
-      return false;
-}
-
-bool EffectDefinitionInterfaceEx::LoadFactoryPreset(
-   int id, Settings &settings) const
-{
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->LoadFactoryPreset(id);
-   else
-      return false;
-}
-
-bool EffectDefinitionInterfaceEx::LoadFactoryDefaults(
-   Settings &settings) const
-{
-   if (auto pEffect = FindMe(settings))
-      // Call through to old interface
-      return pEffect->LoadFactoryDefaults();
-   else
-      return false;
-}
-
 EffectDefinitionInterfaceEx *
 EffectDefinitionInterfaceEx::FindMe(const Settings &settings) const
 {
@@ -153,18 +105,19 @@ EffectDefinitionInterfaceEx::FindMe(const Settings &settings) const
    return nullptr;
 }
 
-//bool EffectDefinitionInterface::DefineParams(ShuttleParams & S)
-//{
-//   return false;
-//}
-
 EffectProcessor::~EffectProcessor() = default;
 
 EffectUIValidator::~EffectUIValidator() = default;
 
+bool EffectUIValidator::UpdateUI()
+{
+   return true;
+}
+
 DefaultEffectUIValidator::DefaultEffectUIValidator(
-   EffectUIClientInterface &effect)
+   EffectUIClientInterface &effect, EffectSettingsAccess &access)
    : mEffect{effect}
+   , mAccess{access}
 {}
 
 DefaultEffectUIValidator::~DefaultEffectUIValidator()
@@ -172,9 +125,33 @@ DefaultEffectUIValidator::~DefaultEffectUIValidator()
    mEffect.CloseUI();
 }
 
-bool DefaultEffectUIValidator::Validate()
+bool DefaultEffectUIValidator::ValidateUI()
 {
-   return mEffect.ValidateUI();
+   bool result {};
+   mAccess.ModifySettings([&](EffectSettings &settings){
+      result = mEffect.ValidateUI(settings);
+   });
+   return result;
 }
 
 EffectUIClientInterface::~EffectUIClientInterface() = default;
+
+const RegistryPath &CurrentSettingsGroup()
+{
+   static RegistryPath id{ "CurrentSettings" };
+   return id;
+}
+
+const RegistryPath &FactoryDefaultsGroup()
+{
+   static RegistryPath id{ "FactoryDefaults" };
+   return id;
+}
+
+RegistryPath UserPresetsGroup(const RegistryPath & name)
+{
+   RegistryPath group = wxT("UserPresets");
+   if (!name.empty())
+      group += wxCONFIG_PATH_SEPARATOR + name;
+   return group;
+}

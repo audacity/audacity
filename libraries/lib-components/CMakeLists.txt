@@ -16,8 +16,8 @@ set( SOURCES
    EffectAutomationParameters.h
    EffectInterface.cpp
    EffectInterface.h
-   ModuleInterface.cpp
-   ModuleInterface.h
+   PluginProvider.cpp
+   PluginProvider.h
 )
 set( LIBRARIES
    lib-strings-interface

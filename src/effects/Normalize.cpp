@@ -28,19 +28,18 @@
 
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "../WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "../widgets/ProgressDialog.h"
 
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name         Type     Key                        Def      Min      Max   Scale
-Param( PeakLevel,   double,  wxT("PeakLevel"),           -1.0,    -145.0,  0.0,  1  );
-Param( RemoveDC,    bool,    wxT("RemoveDcOffset"),      true,    false,   true, 1  );
-Param( ApplyGain,   bool,    wxT("ApplyGain"),           true,    false,   true, 1  );
-Param( StereoInd,   bool,    wxT("StereoIndependent"),   false,   false,   true, 1  );
+const EffectParameterMethods& EffectNormalize::Parameters() const
+{
+   static CapturedParameters<EffectNormalize,
+      PeakLevel, ApplyGain, RemoveDC, StereoInd
+   > parameters;
+   return parameters;
+}
 
 const ComponentInterfaceSymbol EffectNormalize::Symbol
 { XO("Normalize") };
@@ -54,11 +53,7 @@ END_EVENT_TABLE()
 
 EffectNormalize::EffectNormalize()
 {
-   mPeakLevel = DEF_PeakLevel;
-   mDC = DEF_RemoveDC;
-   mGain = DEF_ApplyGain;
-   mStereoInd = DEF_StereoInd;
-
+   Parameters().Reset(*this);
    SetLinearEffectFlag(false);
 }
 
@@ -68,60 +63,26 @@ EffectNormalize::~EffectNormalize()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectNormalize::GetSymbol()
+ComponentInterfaceSymbol EffectNormalize::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectNormalize::GetDescription()
+TranslatableString EffectNormalize::GetDescription() const
 {
    return XO("Sets the peak amplitude of one or more tracks");
 }
 
-ManualPageID EffectNormalize::ManualPage()
+ManualPageID EffectNormalize::ManualPage() const
 {
    return L"Normalize";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNormalize::GetType()
+EffectType EffectNormalize::GetType() const
 {
    return EffectTypeProcess;
-}
-
-// EffectProcessor implementation
-bool EffectNormalize::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_PARAM( mPeakLevel, PeakLevel );
-   S.SHUTTLE_PARAM( mGain, ApplyGain );
-   S.SHUTTLE_PARAM( mDC, RemoveDC );
-   S.SHUTTLE_PARAM( mStereoInd, StereoInd );
-   return true;
-}
-
-bool EffectNormalize::GetAutomationParameters(CommandParameters & parms)
-{
-   parms.Write(KEY_PeakLevel, mPeakLevel);
-   parms.Write(KEY_ApplyGain, mGain);
-   parms.Write(KEY_RemoveDC, mDC);
-   parms.Write(KEY_StereoInd, mStereoInd);
-
-   return true;
-}
-
-bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
-{
-   ReadAndVerifyDouble(PeakLevel);
-   ReadAndVerifyBool(ApplyGain);
-   ReadAndVerifyBool(RemoveDC);
-   ReadAndVerifyBool(StereoInd);
-
-   mPeakLevel = PeakLevel;
-   mGain = ApplyGain;
-   mDC = RemoveDC;
-   mStereoInd = StereoInd;
-
-   return true;
 }
 
 // Effect implementation
@@ -129,41 +90,6 @@ bool EffectNormalize::SetAutomationParameters(CommandParameters & parms)
 bool EffectNormalize::CheckWhetherSkipEffect()
 {
    return ((mGain == false) && (mDC == false));
-}
-
-bool EffectNormalize::Startup()
-{
-   wxString base = wxT("/Effects/Normalize/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-      int boolProxy = gPrefs->Read(base + wxT("RemoveDcOffset"), 1);
-      mDC = (boolProxy == 1);
-      boolProxy = gPrefs->Read(base + wxT("Normalize"), 1);
-      mGain = (boolProxy == 1);
-      gPrefs->Read(base + wxT("Level"), &mPeakLevel, -1.0);
-      if(mPeakLevel > 0.0)  // this should never happen
-         mPeakLevel = -mPeakLevel;
-      boolProxy = gPrefs->Read(base + wxT("StereoIndependent"), 0L);
-      mStereoInd = (boolProxy == 1);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
 }
 
 bool EffectNormalize::Process(EffectSettings &)
@@ -175,7 +101,7 @@ bool EffectNormalize::Process(EffectSettings &)
    if( mGain )
    {
       // same value used for all tracks
-      ratio = DB_TO_LINEAR(TrapDouble(mPeakLevel, MIN_PeakLevel, MAX_PeakLevel));
+      ratio = DB_TO_LINEAR(std::clamp<double>(mPeakLevel, PeakLevel.min, PeakLevel.max));
    }
    else {
       ratio = 1.0;
@@ -314,10 +240,9 @@ EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
                      2,
                      &mPeakLevel,
                      NumValidatorStyle::ONE_TRAILING_ZERO,
-                     MIN_PeakLevel,
-                     MAX_PeakLevel
-                  )
-                  .AddTextBox( {}, wxT(""), 10);
+                     PeakLevel.min,
+                     PeakLevel.max )
+                  .AddTextBox( {}, L"", 10);
                mLeveldB = S.AddVariableText(XO("dB"), false,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                mWarning = S.AddVariableText( {}, false,
@@ -339,25 +264,9 @@ EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    return nullptr;
 }
 
-bool EffectNormalize::TransferDataToWindow()
+bool EffectNormalize::TransferDataToWindow(const EffectSettings &)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
    UpdateUI();
-
-   return true;
-}
-
-bool EffectNormalize::TransferDataFromWindow()
-{
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    return true;
 }
 

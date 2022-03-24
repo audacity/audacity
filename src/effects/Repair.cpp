@@ -49,24 +49,24 @@ EffectRepair::~EffectRepair()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectRepair::GetSymbol()
+ComponentInterfaceSymbol EffectRepair::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectRepair::GetDescription()
+TranslatableString EffectRepair::GetDescription() const
 {
    return XO("Sets the peak amplitude of a one or more tracks");
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectRepair::GetType()
+EffectType EffectRepair::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectRepair::IsInteractive()
+bool EffectRepair::IsInteractive() const
 {
    return false;
 }

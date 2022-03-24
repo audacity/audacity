@@ -56,12 +56,12 @@ LibraryPrefs::~LibraryPrefs()
 {
 }
 
-ComponentInterfaceSymbol LibraryPrefs::GetSymbol()
+ComponentInterfaceSymbol LibraryPrefs::GetSymbol() const
 {
    return LIBRARY_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString LibraryPrefs::GetDescription()
+TranslatableString LibraryPrefs::GetDescription() const
 {
    return XO("Preferences for Library");
 }

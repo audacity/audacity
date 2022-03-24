@@ -34,7 +34,7 @@ using namespace Vamp::HostExt;
 // When the module is builtin to Audacity, we use the same function, but it is
 // declared static so as not to clash with other builtin modules.
 // ============================================================================
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create and register the importer
    // Trust the module manager not to leak this
@@ -44,7 +44,7 @@ DECLARE_MODULE_ENTRY(AudacityModule)
 // ============================================================================
 // Register this as a builtin module
 // ============================================================================
-DECLARE_BUILTIN_MODULE(VampsEffectBuiltin);
+DECLARE_BUILTIN_PROVIDER(VampsEffectBuiltin);
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -64,34 +64,34 @@ VampEffectsModule::~VampEffectsModule()
 // ComponentInterface implementation
 // ============================================================================
 
-PluginPath VampEffectsModule::GetPath()
+PluginPath VampEffectsModule::GetPath() const
 {
    return {};
 }
 
-ComponentInterfaceSymbol VampEffectsModule::GetSymbol()
+ComponentInterfaceSymbol VampEffectsModule::GetSymbol() const
 {
    return XO("Vamp Effects");
 }
 
-VendorSymbol VampEffectsModule::GetVendor()
+VendorSymbol VampEffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
 
-wxString VampEffectsModule::GetVersion()
+wxString VampEffectsModule::GetVersion() const
 {
    // This "may" be different if this were to be maintained as a separate DLL
    return VAMPEFFECTS_VERSION;
 }
 
-TranslatableString VampEffectsModule::GetDescription()
+TranslatableString VampEffectsModule::GetDescription() const
 {
    return XO("Provides Vamp Effects support to Audacity");
 }
 
 // ============================================================================
-// ModuleInterface implementation
+// PluginProvider implementation
 // ============================================================================
 
 bool VampEffectsModule::Initialize()
@@ -121,12 +121,11 @@ const FileExtensions &VampEffectsModule::GetFileExtensions()
    return empty;
 }
 
-bool VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface & WXUNUSED(pm))
+void VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
 {
-   return false;
 }
 
-PluginPaths VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED(pm))
+PluginPaths VampEffectsModule::FindModulePaths(PluginManagerInterface &)
 {
    PluginPaths names;
 
@@ -237,7 +236,7 @@ bool VampEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 }
 
 std::unique_ptr<ComponentInterface>
-VampEffectsModule::CreateInstance(const PluginPath & path)
+VampEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
    int output;

@@ -118,19 +118,19 @@ ComponentInterfaceSymbol EffectNoiseRemoval::GetSymbol()
    return Symbol;
 }
 
-TranslatableString EffectNoiseRemoval::GetDescription()
+TranslatableString EffectNoiseRemoval::GetDescription() const
 {
    return XO("Removes constant background noise such as fans, tape noise, or hums");
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNoiseRemoval::GetType()
+EffectType EffectNoiseRemoval::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectNoiseRemoval::SupportsAutomation()
+bool EffectNoiseRemoval::SupportsAutomation() const
 {
    return false;
 }
@@ -175,7 +175,7 @@ int EffectNoiseRemoval::ShowHostInterface(
    dlog.mKeepNoise->SetValue(mbLeaveNoise);
 
    // We may want to twiddle the levels if we are setting
-   // from an automation dialog
+   // from a macro editing dialog
    bool bAllowTwiddleSettings = forceModal;
 
    if (mHasProfile || bAllowTwiddleSettings) {

@@ -44,11 +44,18 @@ GetTrackInfoCommand::GetTrackInfoCommand()
    mInfoType = 0;
 }
 
-bool GetTrackInfoCommand::DefineParams( ShuttleParams & S ){ 
+template<bool Const>
+bool GetTrackInfoCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    S.DefineEnum( mInfoType, wxT("Type"), 0, kTypes, nTypes );
    
    return true;
 }
+
+bool GetTrackInfoCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool GetTrackInfoCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 void GetTrackInfoCommand::PopulateOrExchange(ShuttleGui & S)
 {

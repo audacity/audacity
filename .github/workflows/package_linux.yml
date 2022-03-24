@@ -68,6 +68,7 @@ jobs:
               gettext
           )
 
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends "${apt_packages[@]}"
           sudo apt-get remove -y ccache
     - name: Checkout Audacity

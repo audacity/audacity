@@ -33,10 +33,17 @@ const ComponentInterfaceSymbol ImportCommand::Symbol
 
 namespace{ BuiltinCommandsModule::Registration< ImportCommand > reg; }
 
-bool ImportCommand::DefineParams( ShuttleParams & S ){
-   S.Define( mFileName, wxT("Filename"),  "" );
+template<bool Const>
+bool ImportCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
+   S.Define( mFileName, wxT("Filename"), wxString{} );
    return true;
 }
+
+bool ImportCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool ImportCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 void ImportCommand::PopulateOrExchange(ShuttleGui & S)
 {
@@ -63,15 +70,20 @@ bool ImportCommand::Apply(const CommandContext & context)
    return success;
 }
 
-
-
-bool ExportCommand::DefineParams( ShuttleParams & S ){
+template<bool Const>
+bool ExportCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    wxFileName fn = FileNames::FindDefaultPath(FileNames::Operation::Export);
    fn.SetName("exported.wav");
    S.Define(mFileName, wxT("Filename"), fn.GetFullPath());
    S.Define( mnChannels, wxT("NumChannels"),  1 );
    return true;
 }
+
+bool ExportCommand::VisitSettings( SettingsVisitor & S )
+   { return VisitSettings<false>(S); }
+
+bool ExportCommand::VisitSettings( ConstSettingsVisitor & S )
+   { return VisitSettings<true>(S); }
 
 const ComponentInterfaceSymbol ExportCommand::Symbol
 { XO("Export2") };

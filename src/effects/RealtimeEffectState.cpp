@@ -66,10 +66,12 @@ private:
       ToMainSlot& operator=(EffectAndSettings &&arg) {
          // This happens during MessageBuffer's busying of the slot
          arg.effect.CopySettingsContents(arg.settings, mSettings);
+         mSettings.extra = arg.settings.extra;
          return *this;
       }
 
       // Main thread doesn't move out of the slot, but copies std::any
+      // and extra fields
       struct Reader { Reader(ToMainSlot &&slot, EffectSettings &settings) {
          settings = slot.mSettings;
       } };
@@ -98,6 +100,7 @@ private:
          EffectProcessor &effect, EffectSettings &settings) {
             // This happens during MessageBuffer's busying of the slot
             effect.CopySettingsContents(slot.mSettings, settings);
+            settings.extra = slot.mSettings.extra;
       } };
 
       EffectSettings mSettings;
@@ -238,7 +241,7 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
       }
 
       // Add a NEW processor
-      mEffect->RealtimeAddProcessor(gchans, rate);
+      mEffect->RealtimeAddProcessor(mSettings, gchans, rate);
       mCurrentProcessor++;
    }
 

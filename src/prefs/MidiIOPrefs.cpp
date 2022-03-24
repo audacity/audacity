@@ -64,12 +64,12 @@ MidiIOPrefs::~MidiIOPrefs()
 {
 }
 
-ComponentInterfaceSymbol MidiIOPrefs::GetSymbol()
+ComponentInterfaceSymbol MidiIOPrefs::GetSymbol() const
 {
    return MIDI_IO_PREFS_PLUGIN_SYMBOL;
 }
 
-TranslatableString MidiIOPrefs::GetDescription()
+TranslatableString MidiIOPrefs::GetDescription() const
 {
    return XO("Preferences for MidiIO");
 }

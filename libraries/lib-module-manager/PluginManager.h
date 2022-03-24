@@ -41,6 +41,8 @@ typedef enum : unsigned {
 } PluginType;
 
 // TODO:  Convert this to multiple derived classes
+//! Represents either a PluginProvider or a loaded plug-in and caches some
+//! information about it
 class MODULE_MANAGER_API PluginDescriptor
 {
 public:
@@ -48,7 +50,7 @@ public:
    PluginDescriptor &operator =(PluginDescriptor &&);
    virtual ~PluginDescriptor();
 
-   bool IsInstantiated() const;
+   bool IsLoaded() const;
 
    PluginType GetPluginType() const;
 
@@ -95,8 +97,9 @@ public:
 private:
    friend class PluginManager;
 
-   ComponentInterface *GetInstance();
-   void SetInstance(std::unique_ptr<ComponentInterface> instance);
+   // Load a plug-in, or locate a PluginProvider
+   ComponentInterface *Load();
+   void Set(std::unique_ptr<ComponentInterface> instance);
 
    void SetPluginType(PluginType type);
 
@@ -183,9 +186,9 @@ public:
    bool IsPluginRegistered(
       const PluginPath &path, const TranslatableString *pSymbol) override;
 
-   const PluginID & RegisterPlugin(ModuleInterface *module) override;
-   const PluginID & RegisterPlugin(ModuleInterface *provider, ComponentInterface *command);
-   const PluginID & RegisterPlugin(ModuleInterface *provider, EffectDefinitionInterface *effect, int type) override;
+   const PluginID & RegisterPlugin(PluginProvider *provider) override;
+   const PluginID & RegisterPlugin(PluginProvider *provider, ComponentInterface *command);
+   const PluginID & RegisterPlugin(PluginProvider *provider, EffectDefinitionInterface *effect, int type) override;
 
    void FindFilesInPathList(const wxString & pattern,
                                     const FilePaths & pathList,
@@ -228,9 +231,9 @@ public:
 
    static PluginManager & Get();
 
-   static PluginID GetID(ModuleInterface *module);
+   static PluginID GetID(PluginProvider *provider);
    static PluginID GetID(ComponentInterface *command);
-   static PluginID GetID(EffectDefinitionInterface *effect);
+   static PluginID GetID(const EffectDefinitionInterface* effect);
 
    // This string persists in configuration files
    // So config compatibility will break if it is changed across Audacity versions
@@ -278,7 +281,7 @@ public:
    void EnablePlugin(const PluginID & ID, bool enable);
 
    const ComponentInterfaceSymbol & GetSymbol(const PluginID & ID);
-   ComponentInterface *GetInstance(const PluginID & ID);
+   ComponentInterface *Load(const PluginID & ID);
 
    void CheckForUpdates(bool bFast = false);
 

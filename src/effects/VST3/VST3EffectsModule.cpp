@@ -25,20 +25,20 @@
 
 #include "wxArrayStringEx.h"
 #include "PluginInterface.h"
-#include "ModuleInterface.h"
+#include "PluginProvider.h"
 #include "VST3Effect.h"
 #include "VST3Utils.h"
 #include "widgets/AButton.h"
 
 
-DECLARE_MODULE_ENTRY(AudacityModule)
+DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
    // Create our effects module and register
    // Trust the module manager not to leak this
    return safenew VST3EffectsModule();
 }
 
-DECLARE_BUILTIN_MODULE(VST3Builtin);
+DECLARE_BUILTIN_PROVIDER(VST3Builtin);
 
 //Helper class used to find vst3 effects during folder traversal
 class VST3PluginTraverser final : public wxDirTraverser
@@ -87,27 +87,27 @@ std::shared_ptr<VST3::Hosting::Module> VST3EffectsModule::GetModule(const wxStri
    return module;
 }
 
-PluginPath VST3EffectsModule::GetPath()
+PluginPath VST3EffectsModule::GetPath() const
 {
    return {};
 }
 
-ComponentInterfaceSymbol VST3EffectsModule::GetSymbol()
+ComponentInterfaceSymbol VST3EffectsModule::GetSymbol() const
 {
    return XO("VST3 Effects");
 }
 
-VendorSymbol VST3EffectsModule::GetVendor()
+VendorSymbol VST3EffectsModule::GetVendor() const
 {
    return XO("The Audacity Team");
 }
 
-wxString VST3EffectsModule::GetVersion()
+wxString VST3EffectsModule::GetVersion() const
 {
    return AUDACITY_VERSION_STRING;
 }
 
-TranslatableString VST3EffectsModule::GetDescription()
+TranslatableString VST3EffectsModule::GetDescription() const
 {
    return XO("Adds the ability to use VST3 effects in Audacity.");
 }
@@ -143,12 +143,12 @@ FilePath VST3EffectsModule::InstallPath()
 #endif
 }
 
-bool VST3EffectsModule::AutoRegisterPlugins(PluginManagerInterface& pluginManager)
+void VST3EffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
 {
-   return false;
 }
 
-PluginPaths VST3EffectsModule::FindPluginPaths(PluginManagerInterface& pluginManager)
+PluginPaths
+VST3EffectsModule::FindModulePaths(PluginManagerInterface &)
 {
    //Note: The host recursively scans these folders at startup in this order (User/Global/Application).
    //https://developer.steinberg.help/display/VST/Plug-in+Locations
@@ -261,7 +261,8 @@ bool VST3EffectsModule::IsPluginValid(const PluginPath& path, bool bFast)
    return false;
 }
 
-std::unique_ptr<ComponentInterface> VST3EffectsModule::CreateInstance(const PluginPath& pluginPath)
+std::unique_ptr<ComponentInterface>
+VST3EffectsModule::LoadPlugin(const PluginPath& pluginPath)
 {
    try
    {
@@ -275,8 +276,11 @@ std::unique_ptr<ComponentInterface> VST3EffectsModule::CreateInstance(const Plug
       const auto pluginFactory = module->getFactory();
       for(const auto& classInfo : pluginFactory.classInfos())
       {
-         if(effectUIDString == classInfo.ID().toString())
-            return std::make_unique<VST3Effect>(module, classInfo);
+         if(effectUIDString == classInfo.ID().toString()) {
+            auto result = std::make_unique<VST3Effect>(module, classInfo);
+            result->InitializePlugin();
+            return result;
+         }
       }
       throw std::runtime_error("effect UID not found");
    }

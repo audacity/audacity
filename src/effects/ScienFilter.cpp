@@ -37,7 +37,6 @@ a graph for EffectScienFilter.
 #include "LoadEffects.h"
 
 #include <math.h>
-#include <float.h>
 
 #include <wx/setup.h> // for wxUSE_* macros
 
@@ -57,7 +56,6 @@ a graph for EffectScienFilter.
 #include "PlatformCompatibility.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "Theme.h"
 #include "../WaveTrack.h"
@@ -86,15 +84,7 @@ enum
    ID_StopbandRipple
 };
 
-enum kTypes
-{
-   kButterworth,
-   kChebyshevTypeI,
-   kChebyshevTypeII,
-   nTypes
-};
-
-static const EnumValueSymbol kTypeStrings[nTypes] =
+const EnumValueSymbol EffectScienFilter::kTypeStrings[nTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    { XO("Butterworth") },
@@ -104,31 +94,29 @@ static const EnumValueSymbol kTypeStrings[nTypes] =
    { XO("Chebyshev Type II") }
 };
 
-enum kSubTypes
-{
-   kLowPass  = Biquad::kLowPass,
-   kHighPass = Biquad::kHighPass,
-   nSubTypes = Biquad::nSubTypes
-};
-
-static const EnumValueSymbol kSubTypeStrings[nSubTypes] =
+const EnumValueSymbol EffectScienFilter::kSubTypeStrings[nSubTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Lowpass") },
    { XO("Highpass") }
 };
 
-static_assert(nSubTypes == WXSIZEOF(kSubTypeStrings), "size mismatch");
-
-// Define keys, defaults, minimums, and maximums for the effect parameters
-//
-//     Name       Type     Key                     Def            Min   Max               Scale
-Param( Type,      int,     wxT("FilterType"),       kButterworth,  0,    nTypes - 1,    1  );
-Param( Subtype,   int,     wxT("FilterSubtype"),    kLowPass,      0,    nSubTypes - 1, 1  );
-Param( Order,     int,     wxT("Order"),            1,             1,    10,               1  );
-Param( Cutoff,    float,   wxT("Cutoff"),           1000.0,        1.0,  FLT_MAX,          1  );
-Param( Passband,  float,   wxT("PassbandRipple"),   1.0,           0.0,  100.0,            1  );
-Param( Stopband,  float,   wxT("StopbandRipple"),   30.0,          0.0,  100.0,            1  );
+const EffectParameterMethods& EffectScienFilter::Parameters() const
+{
+   static CapturedParameters<EffectScienFilter,
+      Type, Subtype, Order, Cutoff, Passband, Stopband
+   > parameters{
+      [](EffectScienFilter &, EffectSettings &, EffectScienFilter &e,
+         bool updating){
+         if (updating) {
+            e.mOrderIndex = e.mOrder - 1;
+            e.CalcFilter();
+         }
+         return true;
+      },
+   };
+   return parameters;
+}
 
 //----------------------------------------------------------------------------
 // EffectScienFilter
@@ -157,13 +145,7 @@ END_EVENT_TABLE()
 
 EffectScienFilter::EffectScienFilter()
 {
-   mOrder = DEF_Order;
-   mFilterType = DEF_Type;
-   mFilterSubtype = DEF_Subtype;
-   mCutoff = DEF_Cutoff;
-   mRipple = DEF_Passband;
-   mStopbandRipple = DEF_Stopband;
-
+   Parameters().Reset(*this);
    SetLinearEffectFlag(true);
 
    mOrderIndex = mOrder - 1;
@@ -181,18 +163,18 @@ EffectScienFilter::~EffectScienFilter()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectScienFilter::GetSymbol()
+ComponentInterfaceSymbol EffectScienFilter::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectScienFilter::GetDescription()
+TranslatableString EffectScienFilter::GetDescription() const
 {
    /* i18n-hint: "infinite impulse response" */
    return XO("Performs IIR filtering that emulates analog filters");
 }
 
-ManualPageID EffectScienFilter::ManualPage()
+ManualPageID EffectScienFilter::ManualPage() const
 {
    return L"Classic_Filters";
 }
@@ -200,24 +182,25 @@ ManualPageID EffectScienFilter::ManualPage()
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectScienFilter::GetType()
+EffectType EffectScienFilter::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // EffectProcessor implementation
 
-unsigned EffectScienFilter::GetAudioInCount()
+unsigned EffectScienFilter::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectScienFilter::GetAudioOutCount()
+unsigned EffectScienFilter::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectScienFilter::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
+bool EffectScienFilter::ProcessInitialize(
+   EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    for (int iPair = 0; iPair < (mOrder + 1) / 2; iPair++)
       mpBiquad[iPair].Reset();
@@ -237,100 +220,8 @@ size_t EffectScienFilter::ProcessBlock(EffectSettings &,
 
    return blockLen;
 }
-bool EffectScienFilter::DefineParams( ShuttleParams & S ){
-   S.SHUTTLE_ENUM_PARAM( mFilterType, Type, kTypeStrings, nTypes );
-   S.SHUTTLE_ENUM_PARAM( mFilterSubtype, Subtype, kSubTypeStrings, nSubTypes );
-   S.SHUTTLE_PARAM( mOrder, Order );
-   S.SHUTTLE_PARAM( mCutoff, Cutoff );
-   S.SHUTTLE_PARAM( mRipple, Passband );
-   S.SHUTTLE_PARAM( mStopbandRipple, Stopband );
-   return true;
-}
-
-bool EffectScienFilter::GetAutomationParameters(CommandParameters & parms)
-{
-   parms.Write(KEY_Type, kTypeStrings[mFilterType].Internal());
-   parms.Write(KEY_Subtype, kSubTypeStrings[mFilterSubtype].Internal());
-   parms.Write(KEY_Order, mOrder);
-   parms.WriteFloat(KEY_Cutoff, mCutoff);
-   parms.WriteFloat(KEY_Passband, mRipple);
-   parms.WriteFloat(KEY_Stopband, mStopbandRipple);
-
-   return true;
-}
-
-bool EffectScienFilter::SetAutomationParameters(CommandParameters & parms)
-{
-   ReadAndVerifyEnum(Type, kTypeStrings, nTypes);
-   ReadAndVerifyEnum(Subtype, kSubTypeStrings, nSubTypes);
-   ReadAndVerifyInt(Order);
-   ReadAndVerifyFloat(Cutoff);
-   ReadAndVerifyFloat(Passband);
-   ReadAndVerifyFloat(Stopband);
-
-   mFilterType = Type;
-   mFilterSubtype = Subtype;
-   mOrder = Order;
-   mCutoff = Cutoff;
-   mRipple = Passband;
-   mStopbandRipple = Stopband;
-
-   mOrderIndex = mOrder - 1;
-
-   CalcFilter();
-
-   return true;
-}
 
 // Effect implementation
-
-bool EffectScienFilter::Startup()
-{
-   wxString base = wxT("/SciFilter/");
-
-   // Migrate settings from 2.1.0 or before
-
-   // Already migrated, so bail
-   if (gPrefs->Exists(base + wxT("Migrated")))
-   {
-      return true;
-   }
-
-   // Load the old "current" settings
-   if (gPrefs->Exists(base))
-   {
-	   double dTemp;
-      gPrefs->Read(base + wxT("Order"), &mOrder, 1);
-      mOrder = wxMax (1, mOrder);
-      mOrder = wxMin (MAX_Order, mOrder);
-      gPrefs->Read(base + wxT("FilterType"), &mFilterType, 0);
-      mFilterType = wxMax (0, mFilterType);
-      mFilterType = wxMin (2, mFilterType);
-      gPrefs->Read(base + wxT("FilterSubtype"), &mFilterSubtype, 0);
-      mFilterSubtype = wxMax (0, mFilterSubtype);
-      mFilterSubtype = wxMin (1, mFilterSubtype);
-      gPrefs->Read(base + wxT("Cutoff"), &dTemp, 1000.0);
-      mCutoff = (float)dTemp;
-      mCutoff = wxMax (1, mCutoff);
-      mCutoff = wxMin (100000, mCutoff);
-      gPrefs->Read(base + wxT("Ripple"), &dTemp, 1.0);
-      mRipple = dTemp;
-      mRipple = wxMax (0, mRipple);
-      mRipple = wxMin (100, mRipple);
-      gPrefs->Read(base + wxT("StopbandRipple"), &dTemp, 30.0);
-      mStopbandRipple = dTemp;
-      mStopbandRipple = wxMax (0, mStopbandRipple);
-      mStopbandRipple = wxMin (100, mStopbandRipple);
-
-      SaveUserPreset(GetCurrentSettingsGroup());
-
-      // Do not migrate again
-      gPrefs->Write(base + wxT("Migrated"), true);
-      gPrefs->Flush();
-   }
-
-   return true;
-}
 
 bool EffectScienFilter::Init()
 {
@@ -500,8 +391,8 @@ EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
             .Name(XO("Passband Ripple (dB)"))
             .Validator<FloatingPointValidator<float>>(
                1, &mRipple, NumValidatorStyle::DEFAULT,
-               MIN_Passband, MAX_Passband)
-            .AddTextBox( {}, wxT(""), 10);
+               Passband.min, Passband.max)
+            .AddTextBox( {}, L"", 10);
          mRippleCtlU = S.AddVariableText(XO("dB"),
             false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 
@@ -516,8 +407,8 @@ EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
             .Name(XO("Cutoff (Hz)"))
             .Validator<FloatingPointValidator<float>>(
                1, &mCutoff, NumValidatorStyle::DEFAULT,
-               MIN_Cutoff, mNyquist - 1)
-            .AddTextBox(XXO("C&utoff:"), wxT(""), 10);
+               Cutoff.min, mNyquist - 1)
+            .AddTextBox(XXO("C&utoff:"), L"", 10);
          S.AddUnits(XO("Hz"));
 
          mStopbandRippleCtlP =
@@ -527,8 +418,8 @@ EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
             .Name(XO("Minimum S&topband Attenuation (dB)"))
             .Validator<FloatingPointValidator<float>>(
                1, &mStopbandRipple, NumValidatorStyle::DEFAULT,
-               MIN_Stopband, MAX_Stopband)
-            .AddTextBox( {}, wxT(""), 10);
+               Stopband.min, Stopband.max)
+            .AddTextBox( {}, L"", 10);
          mStopbandRippleCtlU =
             S.AddVariableText(XO("dB"),
             false, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -544,14 +435,9 @@ EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 //
 // Populate the window with relevant variables
 //
-bool EffectScienFilter::TransferDataToWindow()
+bool EffectScienFilter::TransferDataToWindow(const EffectSettings &)
 {
    mOrderIndex = mOrder - 1;
-
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
 
    mdBMinSlider->SetValue((int) mdBMin);
    mdBMin = 0.0;                     // force refresh in TransferGraphLimitsFromWindow()
@@ -564,13 +450,8 @@ bool EffectScienFilter::TransferDataToWindow()
    return TransferGraphLimitsFromWindow();
 }
 
-bool EffectScienFilter::TransferDataFromWindow()
+bool EffectScienFilter::TransferDataFromWindow(EffectSettings &)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
-
    mOrder = mOrderIndex + 1;
 
    CalcFilter();

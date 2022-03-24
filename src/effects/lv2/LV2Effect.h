@@ -9,6 +9,8 @@
 
 *********************************************************************/
 
+#ifndef __AUDACITY_LV2_EFFECT__
+#define __AUDACITY_LV2_EFFECT__
 
 
 #if USE_LV2
@@ -26,25 +28,20 @@ class wxArrayString;
 #include "lv2/atom/forge.h"
 #include "lv2/data-access/data-access.h"
 #include "lv2/log/log.h"
-#include "lv2/midi/midi.h"
 #include "lv2/options/options.h"
 #include "lv2/state/state.h"
-#include "lv2/time/time.h"
 #include "lv2/uri-map/uri-map.h"
-#include "lv2/urid/urid.h"
 #include "lv2/worker/worker.h"
-#include "lv2/ui/ui.h"
-
-#include <lilv/lilv.h>
 #include <suil/suil.h>
+#include "lv2_external_ui.h"
 
+#include "EffectInterface.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
 
-#include "LoadLV2.h"
+#include "LV2Symbols.h"
 #include "NativeWindow.h"
 
-#include "lv2_external_ui.h"
 #include "zix/ring.h"
 
 #include <unordered_map>
@@ -251,8 +248,6 @@ using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
 class LV2EffectSettingsDialog;
 class LV2Wrapper;
 
-using URIDMap = std::vector<MallocString<>>;
-
 class LV2Effect final : public wxEvtHandler,
                         public EffectUIClientInterface
 {
@@ -262,35 +257,42 @@ public:
 
    // ComponentInterface implementation
 
-   PluginPath GetPath() override;
-   ComponentInterfaceSymbol GetSymbol() override;
-   VendorSymbol GetVendor() override;
-   wxString GetVersion() override;
-   TranslatableString GetDescription() override;
+   PluginPath GetPath() const override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   VendorSymbol GetVendor() const override;
+   wxString GetVersion() const override;
+   TranslatableString GetDescription() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   EffectFamilySymbol GetFamily() override;
-   bool IsInteractive() override;
-   bool IsDefault() override;
-   bool SupportsRealtime() override;
-   bool SupportsAutomation() override;
+   EffectType GetType() const override;
+   EffectFamilySymbol GetFamily() const override;
+   bool IsInteractive() const override;
+   bool IsDefault() const override;
+   bool SupportsRealtime() const override;
+   bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      const CommandParameters & parms, Settings &settings) const override;
 
-   bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool LoadUserPreset(
+      const RegistryPath & name, Settings &settings) const override;
+   bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
+   bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   bool DoLoadFactoryPreset(int id);
+   bool LoadFactoryDefaults(EffectSettings &settings) const override;
+   bool DoLoadFactoryDefaults(EffectSettings &settings);
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
 
    int GetMidiInCount() override;
    int GetMidiOutCount() override;
@@ -302,14 +304,16 @@ public:
    sampleCount GetLatency() override;
    size_t GetTailSize() override;
 
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
    bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(EffectSettings &settings,
+      unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
@@ -322,18 +326,21 @@ public:
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
+   bool InitializePlugin();
+
    // EffectUIClientInterface implementation
 
-   bool SetHost(EffectHostInterface *host) override;
+   bool InitializeInstance(
+      EffectHostInterface *host, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
-   bool ValidateUI() override;
+   bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
-   void ExportPresets() override;
-   void ImportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
+   void ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
@@ -341,8 +348,9 @@ public:
    // LV2Effect implementation
 
 private:
-   bool LoadParameters(const RegistryPath & group);
-   bool SaveParameters(const RegistryPath & group);
+   bool LoadParameters(const RegistryPath & group, EffectSettings &settings);
+   bool SaveParameters(
+      const RegistryPath & group, const EffectSettings &settings) const;
 
    LV2Wrapper *InitInstance(float sampleRate);
    void FreeInstance(LV2Wrapper *wrapper);
@@ -352,7 +360,6 @@ private:
                              const char *uri);
    static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
    LV2_URID URID_Map(const char *uri);
-   static LV2_URID Lookup_URI(URIDMap & map, const char *uri, bool add = true);
 
    static const char *urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid);
    const char *URID_Unmap(LV2_URID urid);
@@ -381,10 +388,9 @@ private:
    bool CheckFeatures(const LilvNode *subject, const LilvNode *predicate, bool required);
 
    bool BuildFancy();
-   bool BuildPlain();
+   bool BuildPlain(EffectSettingsAccess &access);
 
    bool TransferDataToWindow() /* not override */;
-   bool TransferDataFromWindow() /* not override */;
    void SetSlider(const LV2ControlPortPtr & port);
 
    void OnTrigger(wxCommandEvent & evt);
@@ -432,19 +438,8 @@ private:
 
 private:
  
-   // Declare the global and local URI maps
-   static URIDMap gURIDMap;
-   URIDMap mURIDMap;
-
-   // Declare the static LILV URI nodes
-#undef NODE
-#define NODE(n, u) static LilvNode *node_##n;
-   NODELIST
-
-   // Declare the static URIDs
-#undef URID
-#define URID(n, u) static LV2_URID urid_##n;
-   URIDLIST
+   // Declare local URI map
+   LV2Symbols::URIDMap mURIDMap;
 
    const LilvPlugin *mPlug;
 
@@ -654,4 +649,5 @@ private:
    bool mStopWorker;
 };
 
+#endif
 #endif

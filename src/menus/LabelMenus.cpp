@@ -79,7 +79,7 @@ int DoAddLabel(
 
    // If none found, start a NEW label track and use it
    if (!lt)
-      lt = tracks.Add( std::make_shared<LabelTrack>() );
+      lt = LabelTrack::Create(tracks);
 
 // LLL: Commented as it seemed a little forceful to remove users
 //      selection when adding the label.  This does not happen if
@@ -339,7 +339,7 @@ void OnPasteNewLabel(const CommandContext &context)
 
          // If no match found, add one
          if (!t)
-            t = tracks.Add( std::make_shared<LabelTrack>() );
+            t = LabelTrack::Create(tracks);
 
          // Select this track so the loop picks it up
          t->SetSelected(true);
@@ -681,19 +681,18 @@ void OnNewLabelTrack(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   auto &window = ProjectWindow::Get( project );
 
-   auto t = tracks.Add( std::make_shared<LabelTrack>() );
+   auto track = LabelTrack::Create(tracks);
 
    SelectUtilities::SelectNone( project );
 
-   t->SetSelected(true);
+   track->SetSelected(true);
 
    ProjectHistory::Get( project )
       .PushState(XO("Created new label track"), XO("New Track"));
 
-   TrackFocus::Get(project).Set(t);
-   t->EnsureVisible();
+   TrackFocus::Get(project).Set(track);
+   track->EnsureVisible();
 }
 
 }; // struct Handler

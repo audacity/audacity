@@ -47,6 +47,7 @@ class AudacityCommand;
 namespace BasicUI { class ProgressDialog; }
 
 class AudacityProject;
+class EffectParameterMethods;
 class LabelTrack;
 class NotifyingSelectedRegion;
 class SelectedRegion;
@@ -81,6 +82,9 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
  // apply the effect to one or more tracks.
  //
  public:
+   static inline Effect *FetchParameters(Effect &e, EffectSettings &)
+   { return &e; }
+
    // The constructor is called once by each subclass at the beginning of the program.
    // Avoid allocating memory or doing time-consuming processing here.
    Effect();
@@ -88,39 +92,49 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // ComponentInterface implementation
 
-   PluginPath GetPath() override;
+   PluginPath GetPath() const override;
+   bool VisitSettings(
+      SettingsVisitor &visitor, EffectSettings &settings) override;
+   bool VisitSettings(
+      ConstSettingsVisitor &visitor, const EffectSettings &settings)
+      const override;
 
-   ComponentInterfaceSymbol GetSymbol() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
 
-   VendorSymbol GetVendor() override;
-   wxString GetVersion() override;
-   TranslatableString GetDescription() override;
+   VendorSymbol GetVendor() const override;
+   wxString GetVersion() const override;
+   TranslatableString GetDescription() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   EffectFamilySymbol GetFamily() override;
-   bool IsInteractive() override;
-   bool IsDefault() override;
-   bool SupportsRealtime() override;
-   bool SupportsAutomation() override;
+   EffectType GetType() const override;
+   EffectFamilySymbol GetFamily() const override;
+   bool IsInteractive() const override;
+   bool IsDefault() const override;
+   bool SupportsRealtime() const override;
+   bool SupportsAutomation() const override;
 
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   bool SaveSettings(
+      const EffectSettings &settings, CommandParameters & parms) const override;
+   bool LoadSettings(
+      const CommandParameters & parms, Settings &settings) const override;
 
-   bool LoadUserPreset(const RegistryPath & name) override;
-   bool SaveUserPreset(const RegistryPath & name) override;
+   bool LoadUserPreset(
+      const RegistryPath & name, Settings &settings) const override;
+   bool SaveUserPreset(
+      const RegistryPath & name, const Settings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
-   bool LoadFactoryPreset(int id) override;
-   bool LoadFactoryDefaults() override;
+   bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
+   bool LoadFactoryDefaults(Settings &settings) const override;
 
    // EffectProcessor implementation
 
-   bool SetHost(EffectHostInterface *host) override;
+   bool InitializeInstance(
+      EffectHostInterface *host, EffectSettings &settings) override;
    
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
 
    int GetMidiInCount() override;
    int GetMidiOutCount() override;
@@ -130,16 +144,23 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
+   size_t GetBlockSize() const override;  
 
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   // VisitSettings(), SaveSettings(), and LoadSettings()
+   // use the functions of EffectParameterMethods.  By default, this function
+   // defines an empty list of parameters.
+   virtual const EffectParameterMethods &Parameters() const;
+
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
    bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(EffectSettings &settings,
+         unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
@@ -157,27 +178,22 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) final;
    bool IsGraphicalUI() override;
-   bool ValidateUI() override;
+   bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
-   void ExportPresets() override;
-   void ImportPresets() override;
+   void ExportPresets(const EffectSettings &settings) const override;
+   void ImportPresets(EffectSettings &settings) override;
 
    bool HasOptions() override;
    void ShowOptions() override;
 
    // EffectHostInterface implementation
 
-   EffectDefinitionInterface &GetDefinition() override;
+   const EffectDefinitionInterface& GetDefinition() const override;
    double GetDuration() override;
-   NumericFormatSymbol GetDurationFormat() override;
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
    void SetDuration(double duration) override;
-
-   RegistryPath GetUserPresetsGroup(const RegistryPath & name) override;
-   RegistryPath GetCurrentSettingsGroup() override;
-   RegistryPath GetFactoryDefaultsGroup() override;
 
    // EffectUIHostInterface implementation
 
@@ -187,10 +203,13 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // The Effect class fully implements the Preview method for you.
    // Only override it if you need to do preprocessing or cleanup.
    void Preview(EffectSettingsAccess &access, bool dryOnly) override;
-   bool GetAutomationParametersAsString(wxString & parms) override;
-   bool SetAutomationParametersFromString(const wxString & parms) override;
-   bool IsBatchProcessing() override;
-   void SetBatchProcessing(bool start) override;
+   bool SaveSettingsAsString(
+      const EffectSettings &settings, wxString & parms) const override;
+   bool LoadSettingsFromString(
+      const wxString & parms, EffectSettings &settings) const override;
+   bool IsBatchProcessing() const override;
+   void SetBatchProcessing() override;
+   void UnsetBatchProcessing() override;
    bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
       double projectRate, TrackList *list,
       WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
@@ -200,9 +219,10 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
       const EffectDialogFactory &dialogFactory,
       const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
    ) override;
-   bool Startup(EffectUIClientInterface *client) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool Startup(
+      EffectUIClientInterface *client, EffectSettings &settings) override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
    // Effect implementation
 
@@ -225,17 +245,13 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    enum : long { DefaultMessageBoxStyle = wxOK | wxCENTRE };
    int MessageBox(const TranslatableString& message,
                   long style = DefaultMessageBoxStyle,
-                  const TranslatableString& titleStr = {});
+                  const TranslatableString& titleStr = {}) const;
 
    static void IncEffectCounter(){ nEffectsDone++;};
 
  protected:
    bool EnableApply(bool enable = true);
    bool EnablePreview(bool enable = true);
-
- public:
-   // NEW virtuals
-   virtual bool Startup();
 
 //
 // protected virtual methods
@@ -274,7 +290,8 @@ protected:
 
    // Most effects just use the previewLength, but time-stretching/compressing
    // effects need to use a different input length, so override this method.
-   virtual double CalcPreviewInputLength(double previewLength);
+   virtual double CalcPreviewInputLength(
+      const EffectSettings &settings, double previewLength);
 
    //! Add controls to effect panel; always succeeds
    /*!
@@ -433,8 +450,6 @@ protected:
    // UI
    //! This smart pointer tracks the lifetime of the dialog
    wxWeakRef<wxDialog> mHostUIDialog;
-   //! This weak pointer may be the same as the above, or null
-   wxWeakRef<wxDialog> mUIDialog;
    wxWindow       *mUIParent;
    unsigned       mUIFlags{ 0 };
 
@@ -443,6 +458,9 @@ protected:
  // Used only by the base Effect class
  //
  private:
+   //! This weak pointer may be the same as the above, or null
+   wxWeakRef<wxDialog> mUIDialog;
+
    wxString GetSavedStateGroup();
    double GetDefaultDuration();
 
@@ -475,7 +493,6 @@ private:
    bool mPreviewFullSelection;
 
    double mDuration;
-   NumericFormatSymbol mDurationFormat;
 
    bool mIsPreview;
 
@@ -487,8 +504,6 @@ private:
 
    // For client driver
    EffectUIClientInterface *mClient;
-   size_t mNumAudioIn;
-   size_t mNumAudioOut;
 
    size_t mBufferSize;
    size_t mBlockSize;
@@ -514,17 +529,6 @@ inline float TrapFloat(float x, float min, float max)
    return x;
 }
 
-inline double TrapDouble(double x, double min, double max)
-{
-   if (x <= min)
-      return min;
-
-   if (x >= max)
-      return max;
-
-   return x;
-}
-
 inline long TrapLong(long x, long min, long max)
 {
    if (x <= min)
@@ -535,57 +539,5 @@ inline long TrapLong(long x, long min, long max)
 
    return x;
 }
-
-// Helper macros for defining, reading and verifying effect parameters
-
-#define Param(name, type, key, def, min, max, scale) \
-   static const wxChar * KEY_ ## name = (key); \
-   static const type DEF_ ## name = (def); \
-   static const type MIN_ ## name = (min); \
-   static const type MAX_ ## name = (max); \
-   static const type SCL_ ## name = (scale);
-
-#define PBasic(name, type, key, def) \
-   static const wxChar * KEY_ ## name = (key); \
-   static const type DEF_ ## name = (def);
-
-#define PRange(name, type, key, def, min, max) \
-   PBasic(name, type, key, def); \
-   static const type MIN_ ## name = (min); \
-   static const type MAX_ ## name = (max);
-
-#define PScale(name, type, key, def, min, max, scale) \
-   PRange(name, type, key, def, min, max); \
-   static const type SCL_ ## name = (scale);
-
-#define ReadParam(type, name) \
-   type name = DEF_ ## name; \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, MIN_ ## name, MAX_ ## name)) \
-      return false;
-
-#define ReadBasic(type, name) \
-   type name; \
-   wxUnusedVar(MIN_ ##name); \
-   wxUnusedVar(MAX_ ##name); \
-   wxUnusedVar(SCL_ ##name); \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name)) \
-      return false;
-
-#define ReadAndVerifyEnum(name, list, listSize) \
-   int name; \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, list, listSize)) \
-      return false;
-
-#define ReadAndVerifyEnumWithObsoletes(name, list, listSize, obsoleteList, nObsolete) \
-   int name; \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, \
-                            list, listSize, obsoleteList, nObsolete)) \
-      return false;
-
-#define ReadAndVerifyInt(name) ReadParam(int, name)
-#define ReadAndVerifyDouble(name) ReadParam(double, name)
-#define ReadAndVerifyFloat(name) ReadParam(float, name)
-#define ReadAndVerifyBool(name) ReadBasic(bool, name)
-#define ReadAndVerifyString(name) ReadBasic(wxString, name)
 
 #endif

@@ -17,6 +17,7 @@
 #define __AUDACITY_EFFECT_WAHWAH__
 
 #include "Effect.h"
+#include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxTextCtrl;
@@ -39,6 +40,8 @@ public:
 class EffectWahwah final : public Effect
 {
 public:
+   static inline EffectWahwah *
+   FetchParameters(EffectWahwah &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectWahwah();
@@ -46,39 +49,37 @@ public:
 
    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() override;
-   TranslatableString GetDescription() override;
-   ManualPageID ManualPage() override;
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
 
    // EffectDefinitionInterface implementation
 
-   EffectType GetType() override;
-   bool SupportsRealtime() override;
-   bool GetAutomationParameters(CommandParameters & parms) override;
-   bool SetAutomationParameters(CommandParameters & parms) override;
+   EffectType GetType() const override;
+   bool SupportsRealtime() const override;
 
    // EffectProcessor implementation
 
-   unsigned GetAudioInCount() override;
-   unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   unsigned GetAudioInCount() const override;
+   unsigned GetAudioOutCount() const override;
+   bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
    bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
+   bool RealtimeAddProcessor(EffectSettings &settings,
+      unsigned numChannels, float sampleRate) override;
    bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    size_t RealtimeProcess(int group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;
-   bool DefineParams( ShuttleParams & S ) override;
 
    // Effect implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
 
 private:
    // EffectWahwah implementation
@@ -101,7 +102,6 @@ private:
    void OnFreqOffText(wxCommandEvent & evt);
    void OnGainText(wxCommandEvent & evt);
 
-private:
    EffectWahwahState mMaster;
    std::vector<EffectWahwahState> mSlaves;
 
@@ -138,8 +138,21 @@ private:
    wxSlider *mFreqOfsS;
    wxSlider *mOutGainS;
 
+   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
+
+static constexpr EffectParameter Freq{ &EffectWahwah::mFreq,
+   L"Freq",       1.5,     0.1,     4.0,     10  };
+static constexpr EffectParameter Phase{ &EffectWahwah::mPhase,
+   L"Phase",      0.0,     0.0,     360.0,   1   };
+static constexpr EffectParameter Depth{ &EffectWahwah::mDepth,
+   L"Depth",      70,      0,       100,     1   }; // scaled to 0-1 before processing
+static constexpr EffectParameter Res{ &EffectWahwah::mRes,
+   L"Resonance",  2.5,     0.1,     10.0,    10  };
+static constexpr EffectParameter FreqOfs{ &EffectWahwah::mFreqOfs,
+   L"Offset",     30,      0,       100,     1   }; // scaled to 0-1 before processing
+static constexpr EffectParameter OutGain{ &EffectWahwah::mOutGain,
+   L"Gain",      -6.0,    -30.0,    30.0,    1   };
 };
 
 #endif
-

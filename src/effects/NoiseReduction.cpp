@@ -420,19 +420,19 @@ EffectNoiseReduction::~EffectNoiseReduction()
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectNoiseReduction::GetSymbol()
+ComponentInterfaceSymbol EffectNoiseReduction::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectNoiseReduction::GetDescription()
+TranslatableString EffectNoiseReduction::GetDescription() const
 {
    return XO("Removes background noise such as fans, tape noise, or hums");
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNoiseReduction::GetType()
+EffectType EffectNoiseReduction::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -463,7 +463,7 @@ int EffectNoiseReduction::ShowHostInterface(
    // Doesn't use the factory but substitutes its own dialog
 
    // We may want to twiddle the levels if we are setting
-   // from an automation dialog
+   // from a macro editing dialog
    return mSettings->PromptUser(this, access, parent,
       bool(mStatistics), forceModal);
 }
@@ -1644,10 +1644,6 @@ void EffectNoiseReduction::Dialog::PopulateOrExchange(ShuttleGui & S)
 
 bool EffectNoiseReduction::Dialog::TransferDataToWindow()
 {
-   // Do the choice controls:
-   if (!EffectDialog::TransferDataToWindow())
-      return false;
-
    for (int id = FIRST_SLIDER; id < END_OF_SLIDERS; id += 2) {
       wxSlider* slider =
          static_cast<wxSlider*>(wxWindow::FindWindowById(id, this));
