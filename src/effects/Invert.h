@@ -15,7 +15,7 @@
 
 #include "Effect.h"
 
-class EffectInvert final : public Effect
+class EffectInvert final : public PerTrackEffect
 {
 public:
    static const ComponentInterfaceSymbol Symbol;

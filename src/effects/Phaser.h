@@ -40,7 +40,7 @@ public:
    int laststages;
 };
 
-class EffectPhaser final : public Effect
+class EffectPhaser final : public PerTrackEffect
 {
 public:
    static inline EffectPhaser *

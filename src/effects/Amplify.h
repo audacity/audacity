@@ -24,7 +24,7 @@ class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 
-class EffectAmplify final : public Effect
+class EffectAmplify final : public PerTrackEffect
 {
 public:
    static inline EffectAmplify *

@@ -13,7 +13,7 @@
 
 #include "Effect.h"
 
-class EffectFade : public Effect
+class EffectFade : public PerTrackEffect
 {
 public:
    EffectFade(bool fadeIn = false);

@@ -43,7 +43,7 @@ public:
    double queuetotal;
 };
 
-class EffectDistortion final : public Effect
+class EffectDistortion final : public PerTrackEffect
 {
 public:
    struct Params;

@@ -31,7 +31,7 @@ class ShuttleGui;
 
 class EffectScienFilterPanel;
 
-class EffectScienFilter final : public Effect
+class EffectScienFilter final : public PerTrackEffect
 {
 public:
    static inline EffectScienFilter *

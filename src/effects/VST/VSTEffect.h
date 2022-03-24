@@ -91,7 +91,7 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 ///
 ///////////////////////////////////////////////////////////////////////////////
 class VSTEffect final
-   : public Effect
+   : public PerTrackEffect
    , public XMLTagHandler
    , public VSTEffectLink
 {

@@ -57,6 +57,8 @@ static const int kFFwdID = 20104;
 
 using t2bHash = std::unordered_map< void*, bool >;
 
+PerTrackEffect::~PerTrackEffect() = default;
+
 Effect::Effect()
 {
    // PRL:  I think this initialization of mProjectRate doesn't matter
@@ -170,11 +172,22 @@ void Effect::SetSampleRate(double rate)
 
 size_t Effect::SetBlockSize(size_t maxBlockSize)
 {
+   mEffectBlockSize = maxBlockSize;
+   return mEffectBlockSize;
+}
+
+size_t Effect::GetBlockSize() const
+{
+   return mEffectBlockSize;
+}
+
+size_t PerTrackEffect::SetBlockSize(size_t maxBlockSize)
+{
    mBlockSize = maxBlockSize;
    return mBlockSize;
 }
 
-size_t Effect::GetBlockSize() const
+size_t PerTrackEffect::GetBlockSize() const
 {
    return mBlockSize;
 }
@@ -861,27 +874,27 @@ bool Effect::Init()
    return true;
 }
 
-bool Effect::InitPass1()
+bool PerTrackEffect::DoPass1() const
 {
    return true;
 }
 
-bool Effect::InitPass2()
+bool PerTrackEffect::DoPass2() const
 {
    return false;
 }
 
-bool Effect::Process(EffectSettings &settings)
+bool PerTrackEffect::Process(EffectSettings &settings)
 {
    CopyInputTracks(true);
    bool bGoodResult = true;
 
    mPass = 1;
-   if (InitPass1())
+   if (DoPass1())
    {
       bGoodResult = ProcessPass(settings);
       mPass = 2;
-      if (bGoodResult && InitPass2())
+      if (bGoodResult && DoPass2())
       {
          bGoodResult = ProcessPass(settings);
       }
@@ -892,7 +905,7 @@ bool Effect::Process(EffectSettings &settings)
    return bGoodResult;
 }
 
-bool Effect::ProcessPass(EffectSettings &settings)
+bool PerTrackEffect::ProcessPass(EffectSettings &settings)
 {
    const auto duration = settings.extra.GetDuration();
    bool bGoodResult = true;
@@ -1044,7 +1057,7 @@ bool Effect::ProcessPass(EffectSettings &settings)
    return bGoodResult;
 }
 
-bool Effect::ProcessTrack(EffectSettings &settings,
+bool PerTrackEffect::ProcessTrack(EffectSettings &settings,
    int count,
    ChannelNames map,
    WaveTrack *left,
@@ -1109,7 +1122,7 @@ bool Effect::ProcessTrack(EffectSettings &settings,
    if (isGenerator)
    {
       const auto duration = settings.extra.GetDuration();
-      if (mIsPreview) {
+      if (IsPreviewing()) {
          gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
          genDur = std::min(duration, CalcPreviewInputLength(settings, genDur));
       }

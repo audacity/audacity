@@ -239,6 +239,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    static void IncEffectCounter(){ nEffectsDone++;};
 
+   virtual bool Process(EffectSettings &settings) = 0;
+
  protected:
    bool EnableApply(bool enable = true);
    bool EnablePreview(bool enable = true);
@@ -262,16 +264,6 @@ protected:
    // or that normalisation is being done without Dc bias shift
    // or amplitude modification
    virtual bool CheckWhetherSkipEffect() { return false; }
-
-   // Actually do the effect here.
-   /*! If Process() is not overridden, it uses ProcessInitialize(),
-    ProcessBlock(), and ProcessFinalize() methods of EffectProcessor,
-    and also GetLatency() to determine how many leading output samples to
-    discard and how many extra samples to produce. */
-   virtual bool Process(EffectSettings &settings);
-   virtual bool ProcessPass(EffectSettings &settings);
-   virtual bool InitPass1();
-   virtual bool InitPass2();
 
    // clean up any temporary memory, needed only per invocation of the
    // effect, after either successful or failed or exception-aborted processing.
@@ -443,11 +435,7 @@ protected:
    wxWindow       *mUIParent{};
    unsigned       mUIFlags{ 0 };
 
-   sampleCount    mSampleCnt{};
-
- // Used only by the base Effect class
- //
- private:
+private:
    //! This weak pointer may be the same as the above, or null
    wxWeakRef<wxDialog> mUIDialog;
 
@@ -456,25 +444,6 @@ protected:
 
    void CountWaveTracks();
 
-   // Driver for client effects
-   bool ProcessTrack(EffectSettings &settings,
-      int count,
-      ChannelNames map,
-      WaveTrack *left,
-      WaveTrack *right,
-      sampleCount start,
-      sampleCount len,
-      FloatBuffers &inBuffer,
-      FloatBuffers &outBuffer,
-      ArrayOf< float * > &inBufPos,
-      ArrayOf< float *> &outBufPos);
-
- //
- // private data
- //
- // Used only by the base Effect class
- //
-private:
    TrackList *mTracks{}; // the complete list of all tracks
 
    bool mIsBatch{ false };
@@ -489,6 +458,47 @@ private:
 
    int mNumTracks{}; //v This is really mNumWaveTracks, per CountWaveTracks() and GetNumWaveTracks().
    int mNumGroups{};
+
+   size_t mEffectBlockSize{ 0 };
+};
+
+//! Base class for Effects that treat each (mono or stereo) track independently
+//! of other tracks.
+/*!
+   Its override of Effect::Process() uses ProcessInitialize(),
+   ProcessBlock(), and ProcessFinalize() methods of EffectProcessor,
+   and also GetLatency() to determine how many leading output samples to
+   discard and how many extra samples to produce.
+ */
+class PerTrackEffect : public Effect
+{
+public:
+   ~PerTrackEffect() override;
+
+   size_t SetBlockSize(size_t maxBlockSize) override;
+   size_t GetBlockSize() const override;
+
+protected:
+   // These were overridables but the generality wasn't used yet
+   /* virtual */ bool DoPass1() const;
+   /* virtual */ bool DoPass2() const;
+
+   sampleCount    mSampleCnt{};
+
+private:
+   bool Process(EffectSettings &settings) final;
+   bool ProcessPass(EffectSettings &settings);
+   bool ProcessTrack(EffectSettings &settings,
+      int count,
+      ChannelNames map,
+      WaveTrack *left,
+      WaveTrack *right,
+      sampleCount start,
+      sampleCount len,
+      FloatBuffers &inBuffer,
+      FloatBuffers &outBuffer,
+      ArrayOf< float * > &inBufPos,
+      ArrayOf< float *> &outBufPos);
 
    size_t mBufferSize{};
    size_t mBlockSize{};
@@ -522,6 +532,9 @@ public:
       return GetSettings(const_cast<EffectSettings &>(settings));
    }
 };
+
+template<typename Settings> using PerTrackEffectWithSettings =
+   EffectWithSettings<Settings, PerTrackEffect>;
 
 // FIXME:
 // FIXME:  Remove this once all effects are using the NEW dialog

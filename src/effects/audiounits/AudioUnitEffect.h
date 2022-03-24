@@ -38,7 +38,7 @@ using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
 
-class AudioUnitEffect final : public Effect
+class AudioUnitEffect final : public PerTrackEffect
 {
 public:
    AudioUnitEffect(const PluginPath & path,

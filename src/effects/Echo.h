@@ -20,7 +20,7 @@ class ShuttleGui;
 
 using Floats = ArrayOf<float>;
 
-class EffectEcho final : public Effect
+class EffectEcho final : public PerTrackEffect
 {
 public:
    static inline EffectEcho *

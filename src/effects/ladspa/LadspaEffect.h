@@ -40,7 +40,7 @@ class NumericTextCtrl;
 
 class LadspaEffectMeter;
 
-class LadspaEffect final : public Effect
+class LadspaEffect final : public PerTrackEffect
 {
 public:
    LadspaEffect(const wxString & path, int index);
