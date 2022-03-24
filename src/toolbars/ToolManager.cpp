@@ -517,17 +517,10 @@ static struct DefaultConfigEntry {
    // Top dock row, may wrap
    { TransportBarID,         NoBarID,                NoBarID                },
    { ToolsBarID,             TransportBarID,         NoBarID                },
-   { RecordMeterBarID,       ToolsBarID,             NoBarID                },
-   { PlayMeterBarID,         RecordMeterBarID,       NoBarID                },
-   { MixerBarID,             PlayMeterBarID,         NoBarID                },
-   { EditBarID,              MixerBarID,             NoBarID                },
-
-// DA: Transcription Toolbar not docked, by default.
-#ifdef EXPERIMENTAL_DA
-   { TranscriptionBarID,     NoBarID,                NoBarID                },
-#else
-   { TranscriptionBarID,     EditBarID,              NoBarID                },
-#endif
+   { EditBarID,              ToolsBarID,             NoBarID                },
+   { RecordMeterBarID,       EditBarID,              NoBarID                },
+   { MixerBarID,             RecordMeterBarID,       NoBarID                },
+   { PlayMeterBarID,         NoBarID,                TransportBarID         },
 
    // start another top dock row
    { ScrubbingBarID,         NoBarID,                TransportBarID         },
@@ -539,6 +532,13 @@ static struct DefaultConfigEntry {
    // Bottom dock
    { SelectionBarID,         NoBarID,                NoBarID                },
    { TimeBarID,              SelectionBarID,         NoBarID                },
+
+// DA: Transcription Toolbar not docked, by default.
+#ifdef EXPERIMENTAL_DA
+   { TranscriptionBarID,     NoBarID,                NoBarID                },
+#else
+   { TranscriptionBarID,     TimeBarID,              NoBarID                },
+#endif
 
    // Hidden by default in bottom dock
    { SpectralSelectionBarID, NoBarID,                NoBarID                },
@@ -590,6 +590,7 @@ void ToolManager::Reset()
          || ndx == SpectralSelectionBarID
 #endif
          || ndx == TimeBarID
+         || ndx == TranscriptionBarID
          )
          dock = mBotDock;
       else
