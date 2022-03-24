@@ -19,7 +19,7 @@ class NumericTextCtrl;
 #include <wx/event.h> // to inherit
 #include <wx/weakref.h>
 
-#include "../Effect.h"
+#include "../PerTrackEffect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 

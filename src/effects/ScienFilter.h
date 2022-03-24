@@ -17,7 +17,7 @@ Vaughan Johnson (Preview)
 
 #include "Biquad.h"
 
-#include "Effect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 #include <float.h> // for FLT_MAX
 

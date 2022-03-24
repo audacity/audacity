@@ -462,49 +462,6 @@ private:
    size_t mEffectBlockSize{ 0 };
 };
 
-//! Base class for Effects that treat each (mono or stereo) track independently
-//! of other tracks.
-/*!
-   Its override of Effect::Process() uses ProcessInitialize(),
-   ProcessBlock(), and ProcessFinalize() methods of EffectProcessor,
-   and also GetLatency() to determine how many leading output samples to
-   discard and how many extra samples to produce.
- */
-class PerTrackEffect : public Effect
-{
-public:
-   ~PerTrackEffect() override;
-
-   size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
-
-protected:
-   // These were overridables but the generality wasn't used yet
-   /* virtual */ bool DoPass1() const;
-   /* virtual */ bool DoPass2() const;
-
-   sampleCount    mSampleCnt{};
-
-private:
-   bool Process(EffectSettings &settings) final;
-   bool ProcessPass(EffectSettings &settings);
-   bool ProcessTrack(EffectSettings &settings,
-      int count,
-      ChannelNames map,
-      WaveTrack *left,
-      WaveTrack *right,
-      sampleCount start,
-      sampleCount len,
-      FloatBuffers &inBuffer,
-      FloatBuffers &outBuffer,
-      ArrayOf< float * > &inBufPos,
-      ArrayOf< float *> &outBufPos);
-
-   size_t mBufferSize{};
-   size_t mBlockSize{};
-   unsigned mNumChannels{};
-};
-
 //! Convenience for generating EffectDefinitionInterface overrides
 //! and static down-casting functions
 template<typename Settings, typename Base = Effect>
@@ -532,9 +489,6 @@ public:
       return GetSettings(const_cast<EffectSettings &>(settings));
    }
 };
-
-template<typename Settings> using PerTrackEffectWithSettings =
-   EffectWithSettings<Settings, PerTrackEffect>;
 
 // FIXME:
 // FIXME:  Remove this once all effects are using the NEW dialog

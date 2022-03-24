@@ -451,6 +451,8 @@ list( APPEND SOURCES
       effects/Normalize.h
       effects/Paulstretch.cpp
       effects/Paulstretch.h
+      effects/PerTrackEffect.cpp
+      effects/PerTrackEffect.h
       effects/Phaser.cpp
       effects/Phaser.h
       effects/RealtimeEffectList.cpp

@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_BASS_TREBLE__
 #define __AUDACITY_EFFECT_BASS_TREBLE__
 
-#include "Effect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;

@@ -19,7 +19,7 @@
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <public.sdk/source/vst/hosting/module.h>
 
-#include "../Effect.h"
+#include "../PerTrackEffect.h"
 #include "internal/ComponentHandler.h"
 
 #include "SampleCount.h"
