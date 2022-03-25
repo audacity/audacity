@@ -13,7 +13,6 @@
 #include "VST3Effect.h"
 
 #include "AudacityException.h"
-#include "EffectHostInterface.h"
 
 #include "Base64.h"
 
@@ -846,17 +845,11 @@ bool VST3Effect::InitializePlugin()
    return true;
 }
 
-bool VST3Effect::InitializeInstance(
-   EffectHostInterface* host, EffectSettings &settings)
+bool VST3Effect::InitializeInstance(EffectSettings &settings)
 {
-   mEffectHost = host;
-
-   if(host)
-   {
-      ReloadUserOptions();
-      if(!LoadUserPreset(CurrentSettingsGroup(), settings))
-         LoadFactoryDefaults(settings);
-   }
+   ReloadUserOptions();
+   if(!LoadUserPreset(CurrentSettingsGroup(), settings))
+      LoadFactoryDefaults(settings);
    return true;
 }
 
@@ -893,7 +886,7 @@ VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &access)
                parent, wxID_ANY,
                NumericConverter::TIME,
                extra.GetDurationFormat(),
-               mEffectHost->GetDuration(),
+               extra.GetDuration(),
                mSetup.sampleRate,
                NumericTextCtrl::Options{}
                   .AutoPos(true)
@@ -924,12 +917,10 @@ VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &access)
    return nullptr;
 }
 
-bool VST3Effect::ValidateUI(EffectSettings &)
+bool VST3Effect::ValidateUI(EffectSettings &settings)
 {
    if (mDuration != nullptr)
-   {
-      mEffectHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
    return true;
 }
 
@@ -1028,13 +1019,10 @@ bool VST3Effect::HasOptions()
 
 void VST3Effect::ShowOptions()
 {
-   if(mEffectHost)
+   VST3OptionsDialog dlg(mParent, *this);
+   if (dlg.ShowModal())
    {
-      VST3OptionsDialog dlg(mParent, *this);
-      if (dlg.ShowModal())
-      {
-         ReloadUserOptions();
-      }
+      ReloadUserOptions();
    }
 }
 

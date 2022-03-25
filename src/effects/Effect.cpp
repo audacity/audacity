@@ -59,12 +59,9 @@ using t2bHash = std::unordered_map< void*, bool >;
 
 Effect::Effect()
 {
-   mClient = NULL;
-
    mTracks = NULL;
    mT0 = 0.0;
    mT1 = 0.0;
-   mDuration = 0.0;
    mIsPreview = false;
    mIsLinearEffect = false;
    mPreviewWithNotSelected = false;
@@ -97,75 +94,42 @@ Effect::~Effect()
       mHostUIDialog->Close();
 }
 
-// EffectDefinitionInterface implementation
-
-EffectType Effect::GetType() const
-{
-   if (mClient)
-   {
-      return mClient->GetType();
-   }
-
-   return EffectTypeNone;
-}
+// ComponentInterface implementation
 
 PluginPath Effect::GetPath() const
 {
-   if (mClient)
-   {
-      return mClient->GetPath();
-   }
-
    return BUILTIN_EFFECT_PREFIX + GetSymbol().Internal();
 }
 
 ComponentInterfaceSymbol Effect::GetSymbol() const
 {
-   if (mClient)
-   {
-      return mClient->GetSymbol();
-   }
-
    return {};
 }
 
 VendorSymbol Effect::GetVendor() const
 {
-   if (mClient)
-   {
-      return mClient->GetVendor();
-   }
-
    return XO("Audacity");
 }
 
 wxString Effect::GetVersion() const
 {
-   if (mClient)
-   {
-      return mClient->GetVersion();
-   }
-
    return AUDACITY_VERSION_STRING;
 }
 
 TranslatableString Effect::GetDescription() const
 {
-   if (mClient)
-   {
-      return mClient->GetDescription();
-   }
-
    return {};
+}
+
+// EffectDefinitionInterface implementation
+
+EffectType Effect::GetType() const
+{
+   return EffectTypeNone;
 }
 
 EffectFamilySymbol Effect::GetFamily() const
 {
-   if (mClient)
-   {
-      return mClient->GetFamily();
-   }
-
    // Unusually, the internal and visible strings differ for the built-in
    // effect family.
    return { wxT("Audacity"), XO("Built-in") };
@@ -173,143 +137,74 @@ EffectFamilySymbol Effect::GetFamily() const
 
 bool Effect::IsInteractive() const
 {
-   if (mClient)
-   {
-      return mClient->IsInteractive();
-   }
-
    return true;
 }
 
 bool Effect::IsDefault() const
 {
-   if (mClient)
-   {
-      return mClient->IsDefault();
-   }
-
    return true;
 }
 
 bool Effect::SupportsRealtime() const
 {
-   if (mClient)
-   {
-      return mClient->SupportsRealtime();
-   }
-
    return false;
 }
 
 bool Effect::SupportsAutomation() const
 {
-   if (mClient)
-   {
-      return mClient->SupportsAutomation();
-   }
-
    return true;
 }
 
 // EffectProcessor implementation
 
-bool Effect::InitializeInstance(
-   EffectHostInterface *host, EffectSettings &settings)
+bool Effect::InitializeInstance(EffectSettings &settings)
 {
-   if (mClient)
-      return mClient->InitializeInstance(host, settings);
    return true;
 }
 
 unsigned Effect::GetAudioInCount() const
 {
-   if (mClient)
-   {
-      return mClient->GetAudioInCount();
-   }
-
    return 0;
 }
 
 unsigned Effect::GetAudioOutCount() const
 {
-   if (mClient)
-   {
-      return mClient->GetAudioOutCount();
-   }
-
    return 0;
 }
 
 int Effect::GetMidiInCount()
 {
-   if (mClient)
-   {
-      return mClient->GetMidiInCount();
-   }
-
    return 0;
 }
 
 int Effect::GetMidiOutCount()
 {
-   if (mClient)
-   {
-      return mClient->GetMidiOutCount();
-   }
-
    return 0;
 }
 
 void Effect::SetSampleRate(double rate)
 {
-   if (mClient)
-   {
-      mClient->SetSampleRate(rate);
-   }
-
    mSampleRate = rate;
 }
 
 size_t Effect::SetBlockSize(size_t maxBlockSize)
 {
-   if (mClient)
-   {
-      return mClient->SetBlockSize(maxBlockSize);
-   }
-
    mBlockSize = maxBlockSize;
-
    return mBlockSize;
 }
 
 size_t Effect::GetBlockSize() const
 {
-   if (mClient)
-   {
-      return mClient->GetBlockSize();
-   }
-
    return mBlockSize;
 }
 
 sampleCount Effect::GetLatency()
 {
-   if (mClient)
-   {
-      return mClient->GetLatency();
-   }
-
    return 0;
 }
 
 size_t Effect::GetTailSize()
 {
-   if (mClient)
-   {
-      return mClient->GetTailSize();
-   }
-
    return 0;
 }
 
@@ -322,102 +217,59 @@ const EffectParameterMethods &Effect::Parameters() const
 bool Effect::ProcessInitialize(
    EffectSettings &settings, sampleCount totalLen, ChannelNames chanMap)
 {
-   if (mClient)
-      return mClient->ProcessInitialize(settings, totalLen, chanMap);
    return true;
 }
 
 bool Effect::ProcessFinalize()
 {
-   if (mClient)
-   {
-      return mClient->ProcessFinalize();
-   }
-
    return true;
 }
 
 size_t Effect::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   if (mClient)
-      return mClient->ProcessBlock(settings, inBlock, outBlock, blockLen);
    return 0;
 }
 
 bool Effect::RealtimeInitialize(EffectSettings &settings)
 {
-   if (mClient)
-   {
-      mBlockSize = mClient->SetBlockSize(512);
-      return mClient->RealtimeInitialize(settings);
-   }
-
-   mBlockSize = 512;
-
    return false;
 }
 
 bool Effect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
-   if (mClient)
-   {
-      return mClient->RealtimeAddProcessor(settings, numChannels, sampleRate);
-   }
-
    return true;
 }
 
 bool Effect::RealtimeFinalize(EffectSettings &settings) noexcept
 {
-   if (mClient)
-      return mClient->RealtimeFinalize(settings);
    return false;
 }
 
 bool Effect::RealtimeSuspend()
 {
-   if (mClient)
-      return mClient->RealtimeSuspend();
-
    return true;
 }
 
 bool Effect::RealtimeResume() noexcept
 {
-   if (mClient)
-      return mClient->RealtimeResume();
-
    return true;
 }
 
 bool Effect::RealtimeProcessStart(EffectSettings &settings)
 {
-   if (mClient)
-   {
-      return mClient->RealtimeProcessStart(settings);
-   }
-
    return true;
 }
 
 size_t Effect::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-   if (mClient)
-      return mClient->
-         RealtimeProcess(group, settings, inbuf, outbuf, numSamples);
    return 0;
 }
 
 bool Effect::RealtimeProcessEnd(EffectSettings &settings) noexcept
 {
-   if (mClient)
-   {
-      return mClient->RealtimeProcessEnd(settings);
-   }
-
    return true;
 }
 
@@ -466,7 +318,7 @@ int Effect::ShowHostInterface(wxWindow &parent,
    // The usual factory lets the client (which is this, when self-hosting)
    // populate it.  That factory function is called indirectly through a
    // std::function to avoid source code dependency cycles.
-   const auto client = mClient ? mClient : this;
+   EffectUIClientInterface *const client = this;
    mHostUIDialog = factory(parent, *this, *client, access);
    if (!mHostUIDialog)
       return 0;
@@ -486,8 +338,6 @@ int Effect::ShowHostInterface(wxWindow &parent,
 
 bool Effect::VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
 {
-   if (mClient)
-      return mClient->VisitSettings(visitor, settings);
    Parameters().Visit(*this, visitor, settings);
    return true;
 }
@@ -495,8 +345,6 @@ bool Effect::VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
 bool Effect::VisitSettings(
    ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
-   if (mClient)
-      return mClient->VisitSettings(visitor, settings);
    Parameters().Visit(*this, visitor, settings);
    return true;
 }
@@ -504,8 +352,6 @@ bool Effect::VisitSettings(
 bool Effect::SaveSettings(
    const EffectSettings &settings, CommandParameters & parms) const
 {
-   if (mClient)
-      return mClient->SaveSettings(settings, parms);
    Parameters().Get( *this, settings, parms );
    return true;
 }
@@ -513,8 +359,6 @@ bool Effect::SaveSettings(
 bool Effect::LoadSettings(
    const CommandParameters & parms, Settings &settings) const
 {
-   if (mClient)
-      return mClient->LoadSettings(parms, settings);
    // The first argument, and with it the const_cast, will disappear when
    // all built-in effects are stateless.
    return Parameters().Set( *const_cast<Effect*>(this), parms, settings );
@@ -523,10 +367,6 @@ bool Effect::LoadSettings(
 bool Effect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
 {
-   if (mClient)
-      // Call through to third party effects
-      return mClient->LoadUserPreset(name, settings);
-
    // Find one string in the registry and then reinterpret it
    // as complete settings
    wxString parms;
@@ -540,10 +380,6 @@ bool Effect::LoadUserPreset(
 bool Effect::SaveUserPreset(
    const RegistryPath & name, const EffectSettings &settings) const
 {
-   if (mClient)
-      // Call through to third party effects
-      return mClient->SaveUserPreset(name, settings);
-
    // Save all settings as a single string value in the registry
    wxString parms;
    if (!SaveSettingsAsString(settings, parms))
@@ -555,28 +391,16 @@ bool Effect::SaveUserPreset(
 
 RegistryPaths Effect::GetFactoryPresets() const
 {
-   if (mClient)
-   {
-      return mClient->GetFactoryPresets();
-   }
-
    return {};
 }
 
 bool Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
-   if (mClient)
-      return mClient->LoadFactoryPreset(id, settings);
    return true;
 }
 
 bool Effect::LoadFactoryDefaults(Settings &settings) const
 {
-   if (mClient)
-   {
-      return mClient->LoadFactoryDefaults(settings);
-   }
-
    return LoadUserPreset(FactoryDefaultsGroup(), settings);
 }
 
@@ -596,11 +420,10 @@ Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
    mUIParent->SetMinSize(mUIParent->GetSizer()->GetMinSize());
 
    if (!result) {
-      // No custom validator object?  Then use the default, which will pop
-      // the event handler when it is destroyed and invokes CloseUI
-      mUIParent->PushEventHandler(this);
+      // No custom validator object?  Then use the default
       result = std::make_unique<DefaultEffectUIValidator>(*this, access);
    }
+   mUIParent->PushEventHandler(this);
    return result;
 }
 
@@ -747,29 +570,16 @@ void Effect::ShowOptions()
 {
 }
 
-// EffectHostInterface implementation
+// EffectUIHostInterface implementation
 
 const EffectDefinitionInterface& Effect::GetDefinition() const
 {
-   if (mClient)
-      return *mClient;
-   else
-      return *this;
+   return *this;
 }
 
 double Effect::GetDefaultDuration()
 {
    return 30.0;
-}
-
-double Effect::GetDuration()
-{
-   if (mDuration < 0.0)
-   {
-      mDuration = 0.0;
-   }
-
-   return mDuration;
 }
 
 NumericFormatSymbol Effect::GetSelectionFormat()
@@ -779,46 +589,12 @@ NumericFormatSymbol Effect::GetSelectionFormat()
    return NumericConverter::HoursMinsSecondsFormat();
 }
 
-void Effect::SetDuration(double seconds)
-{
-   if (seconds < 0.0)
-   {
-      seconds = 0.0;
-   }
-
-   if (GetType() == EffectTypeGenerate)
-   {
-      SetConfig(GetDefinition(), PluginSettings::Private,
-         CurrentSettingsGroup(), wxT("LastUsedDuration"), seconds);
-   }
-
-   mDuration = seconds;
-
-   return;
-}
-
 wxString Effect::GetSavedStateGroup()
 {
    return wxT("SavedState");
 }
 
 // Effect implementation
-
-bool Effect::Startup(EffectUIClientInterface *client, EffectSettings &settings)
-{
-   // Let destructor know we need to be shutdown
-   mClient = client;
-
-   // Set host so client startup can use our services
-   if (!InitializeInstance(this, settings))
-   {
-      // Bail if the client startup fails
-      mClient = NULL;
-      return false;
-   }
-
-   return true;
-}
 
 bool Effect::SaveSettingsAsString(
    const EffectSettings &settings, wxString & parms) const
@@ -967,25 +743,23 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
 
    bool isSelection = false;
 
-   mDuration = 0.0;
+   auto duration = 0.0;
    if (GetType() == EffectTypeGenerate)
-   {
       GetConfig(GetDefinition(), PluginSettings::Private,
          CurrentSettingsGroup(),
-         wxT("LastUsedDuration"), mDuration, GetDefaultDuration());
-   }
+         EffectSettingsExtra::DurationKey(), duration, GetDefaultDuration());
 
    WaveTrack *newTrack{};
    bool success = false;
-   auto oldDuration = mDuration;
+   auto oldDuration = duration;
 
    auto cleanup = finally( [&] {
       if (!success) {
          if (newTrack) {
             mTracks->Remove(newTrack);
          }
-         // LastUsedDuration may have been modified by Preview.
-         SetDuration(oldDuration);
+         // On failure, restore the old duration setting
+         settings.extra.SetDuration(oldDuration);
       }
       else
          trans.Commit();
@@ -1012,15 +786,24 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
       // but we do need to make sure we have the right number of samples at the project rate
       double quantMT0 = QUANTIZED_TIME(mT0, mProjectRate);
       double quantMT1 = QUANTIZED_TIME(mT1, mProjectRate);
-      mDuration = quantMT1 - quantMT0;
+      duration = quantMT1 - quantMT0;
       isSelection = true;
-      mT1 = mT0 + mDuration;
+      mT1 = mT0 + duration;
    }
 
    // This is happening inside EffectSettingsAccess::ModifySettings
-   settings.extra.SetDurationFormat( isSelection
+   auto newFormat = isSelection
       ? NumericConverter::TimeAndSampleFormat()
-      : NumericConverter::DefaultSelectionFormat() );
+      : NumericConverter::DefaultSelectionFormat();
+   auto updater = [&](EffectSettings &settings) {
+      settings.extra.SetDuration(duration);
+      settings.extra.SetDurationFormat( newFormat );
+   };
+   // Update our copy of settings; update the EffectSettingsAccess too,
+   // if we are going to show a dialog
+   updater(settings);
+   if (pAccess)
+      pAccess->ModifySettings(updater);
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mF0 = selectedRegion.f0();
@@ -1045,12 +828,17 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
    // been configured, e.g. repeating the last effect on a different selection.
    // Prompting may call Effect::Preview
    if ( pParent && dialogFactory && pAccess &&
-      IsInteractive() &&
-      !ShowHostInterface(
+      IsInteractive()) {
+      if (!ShowHostInterface(
          *pParent, dialogFactory, *pAccess, IsBatchProcessing() ) )
-   {
-      return false;
+         return false;
+      else
+         // Retrieve again after the dialog modified settings
+         settings = pAccess->Get();
    }
+
+   // If the dialog was shown, then it has been closed without errors or
+   // cancellation, and any change of duration has been saved in the config file
 
    bool returnVal = true;
    bool skipFlag = CheckWhetherSkipEffect();
@@ -1127,6 +915,7 @@ bool Effect::Process(EffectSettings &settings)
 
 bool Effect::ProcessPass(EffectSettings &settings)
 {
+   const auto duration = settings.extra.GetDuration();
    bool bGoodResult = true;
    bool isGenerator = GetType() == EffectTypeGenerate;
 
@@ -1194,7 +983,7 @@ bool Effect::ProcessPass(EffectSettings &settings)
             mSampleCnt = len;
          }
          else
-            mSampleCnt = left->TimeToLongSamples(mDuration);
+            mSampleCnt = left->TimeToLongSamples(duration);
 
          // Let the client know the sample rate
          SetSampleRate(left->GetRate());
@@ -1266,14 +1055,12 @@ bool Effect::ProcessPass(EffectSettings &settings)
       },
       [&](Track *t) {
          if (SyncLock::IsSyncLockSelected(t))
-            t->SyncLockAdjust(mT1, mT0 + mDuration);
+            t->SyncLockAdjust(mT1, mT0 + duration);
       }
    );
 
    if (bGoodResult && GetType() == EffectTypeGenerate)
-   {
-      mT1 = mT0 + mDuration;
-   }
+      mT1 = mT0 + duration;
 
    return bGoodResult;
 }
@@ -1342,13 +1129,13 @@ bool Effect::ProcessTrack(EffectSettings &settings,
    double genDur = 0;
    if (isGenerator)
    {
+      const auto duration = settings.extra.GetDuration();
       if (mIsPreview) {
          gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &genDur, 6.0);
-         genDur = std::min(mDuration, CalcPreviewInputLength(settings, genDur));
+         genDur = std::min(duration, CalcPreviewInputLength(settings, genDur));
       }
-      else {
-         genDur = mDuration;
-      }
+      else
+         genDur = duration;
 
       genLength = sampleCount((left->GetRate() * genDur) + 0.5);  // round to nearest sample
       delayRemaining = genLength;
@@ -2048,8 +1835,8 @@ void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
    if (isNyquist && isGenerator)
       previewDuration = CalcPreviewInputLength(settings, previewLen);
    else
-      previewDuration =
-         std::min(mDuration, CalcPreviewInputLength(settings, previewLen));
+      previewDuration = std::min(settings.extra.GetDuration(),
+         CalcPreviewInputLength(settings, previewLen));
 
    double t1 = mT0 + previewDuration;
 

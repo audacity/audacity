@@ -35,7 +35,7 @@ class wxArrayString;
 #include <suil/suil.h>
 #include "lv2_external_ui.h"
 
-#include "EffectInterface.h"
+#include "../Effect.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
 
@@ -248,8 +248,7 @@ using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
 class LV2EffectSettingsDialog;
 class LV2Wrapper;
 
-class LV2Effect final : public wxEvtHandler,
-                        public EffectUIClientInterface
+class LV2Effect final : public Effect
 {
 public:
    LV2Effect(const LilvPlugin *plug);
@@ -330,8 +329,7 @@ public:
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(
-      EffectHostInterface *host, EffectSettings &settings) override;
+   bool InitializeInstance(EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -442,8 +440,6 @@ private:
    LV2Symbols::URIDMap mURIDMap;
 
    const LilvPlugin *mPlug;
-
-   EffectHostInterface *mHost;
 
    float mSampleRate;
    int mBlockSize;

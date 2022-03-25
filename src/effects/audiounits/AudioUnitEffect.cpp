@@ -46,7 +46,6 @@
 #include <wx/tokenzr.h>
 
 #include "../../SelectFile.h"
-#include "../../EffectHostInterface.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/valnum.h"
@@ -1039,19 +1038,17 @@ bool AudioUnitEffect::InitializePlugin()
    return MakeListener();
 }
 
-bool AudioUnitEffect::InitializeInstance(
-   EffectHostInterface *host, EffectSettings &settings)
+bool AudioUnitEffect::InitializeInstance(EffectSettings &settings)
 {
    OSStatus result;
-
-   mHost = host;
 
    if (mMaster)
       // Do common steps
       InitializePlugin();
 
-   if (mHost)
-   {
+   if (!mMaster) {
+      // Don't HAVE a master -- this IS the master.
+
       GetConfig(*this, PluginSettings::Shared, wxT("Options"),
          wxT("UseLatency"), mUseLatency, true);
       GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -1366,7 +1363,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
-   if (!slave->InitializeInstance(nullptr, settings))
+   if (!slave->InitializeInstance(settings))
    {
       return false;
    }
@@ -1757,13 +1754,11 @@ bool AudioUnitEffect::IsGraphicalUI()
    return mUIType != wxT("Plain");
 }
 
-bool AudioUnitEffect::ValidateUI(EffectSettings &)
+bool AudioUnitEffect::ValidateUI([[maybe_unused]] EffectSettings &settings)
 {
 #if 0
    if (GetType() == EffectTypeGenerate)
-   {
-      mHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
 #endif
    return true;
 }

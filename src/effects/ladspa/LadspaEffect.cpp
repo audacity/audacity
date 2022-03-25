@@ -57,7 +57,6 @@ effects from this one class.
 #include <wx/version.h>
 
 #include "AudacityException.h"
-#include "../../EffectHostInterface.h"
 #include "FileNames.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/NumericTextCtrl.h"
@@ -862,29 +861,23 @@ bool LadspaEffect::InitializePlugin()
    return true;
 }
 
-bool LadspaEffect::InitializeInstance(
-   EffectHostInterface *host, EffectSettings &settings)
+bool LadspaEffect::InitializeInstance(EffectSettings &settings)
 {
-   mHost = host;
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      wxT("UseLatency"), mUseLatency, true);
 
-   if (mHost)
+   bool haveDefaults;
+   GetConfig(*this, PluginSettings::Private,
+      FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+      false);
+   if (!haveDefaults)
    {
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("UseLatency"), mUseLatency, true);
-
-      bool haveDefaults;
-      GetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
-         false);
-      if (!haveDefaults)
-      {
-         SaveParameters(FactoryDefaultsGroup(), settings);
-         SetConfig(*this, PluginSettings::Private,
-            FactoryDefaultsGroup(), wxT("Initialized"), true);
-      }
-
-      LoadParameters(CurrentSettingsGroup(), settings);
+      SaveParameters(FactoryDefaultsGroup(), settings);
+      SetConfig(*this, PluginSettings::Private,
+         FactoryDefaultsGroup(), wxT("Initialized"), true);
    }
+
+   LoadParameters(CurrentSettingsGroup(), settings);
    return true;
 }
 
@@ -1241,7 +1234,7 @@ LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
                NumericTextCtrl(w, ID_Duration,
                   NumericConverter::TIME,
                   extra.GetDurationFormat(),
-                  mHost->GetDuration(),
+                  extra.GetDuration(),
                   mSampleRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
@@ -1508,12 +1501,10 @@ bool LadspaEffect::IsGraphicalUI()
    return false;
 }
 
-bool LadspaEffect::ValidateUI(EffectSettings &)
+bool LadspaEffect::ValidateUI(EffectSettings &settings)
 {
    if (GetType() == EffectTypeGenerate)
-   {
-      mHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
 
    return true;
 }
