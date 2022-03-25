@@ -17,7 +17,7 @@
 struct GRAPHICS_API Color final
 {
 public:
-   constexpr Color() noexcept = default;
+   constexpr Color() noexcept : mABGR(0) {}
    constexpr Color(const Color&) noexcept = default;
    constexpr Color(Color&&) noexcept = default;
    Color& operator=(const Color&) noexcept = default;
@@ -78,7 +78,7 @@ public:
       return mBlue;
    }
 
-   constexpr uint8_t GetAlpha() const noexcept 
+   constexpr uint8_t GetAlpha() const noexcept
    {
       return mAlpha;
    }
@@ -173,13 +173,13 @@ private:
       static_assert(std::is_floating_point<ScaleType>::value);
 
       const auto lerpValue = (a + (b - a) * t);
-      
+
       const auto roundLerpValue = static_cast<int16_t>(lerpValue + ScaleType(0.5));
 
       const auto ui8LerpValue =
          static_cast<uint8_t>(std::max<decltype(roundLerpValue)>(
             0, std::min<decltype(roundLerpValue)>(255, roundLerpValue)));
-                 
+
       return ui8LerpValue;
    }
 
@@ -190,12 +190,11 @@ private:
 
    union
    {
+      uint32_t mABGR;
       struct
       {
          uint8_t mRed, mGreen, mBlue, mAlpha;
       };
-
-      uint32_t mABGR { 0 };
    };
 };
 
