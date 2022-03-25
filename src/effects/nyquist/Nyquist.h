@@ -103,9 +103,9 @@ public:
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
    bool DoLoadSettings(
-      const CommandParameters & parms, Settings &settings);
+      const CommandParameters & parms, EffectSettings &settings);
 
    // EffectProcessor implementation
 
@@ -126,7 +126,7 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(Settings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
    // NyquistEffect implementation
    // For Nyquist Workbench support

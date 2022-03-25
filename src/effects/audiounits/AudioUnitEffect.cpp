@@ -1530,7 +1530,7 @@ bool AudioUnitEffect::SaveSettings(
 }
 
 bool AudioUnitEffect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    OSStatus result;
    UInt32 dataSize;

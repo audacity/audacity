@@ -1460,7 +1460,7 @@ bool LV2Effect::SaveSettings(
 }
 
 bool LV2Effect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    // First pass validates values
    for (auto & port : mControlPorts)

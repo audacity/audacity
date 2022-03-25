@@ -423,14 +423,14 @@ bool NyquistEffect::SaveSettings(
 }
 
 bool NyquistEffect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
    return const_cast<NyquistEffect*>(this)->DoLoadSettings(parms, settings);
 }
 
 bool NyquistEffect::DoLoadSettings(
-   const CommandParameters & parms, Settings &settings)
+   const CommandParameters & parms, EffectSettings &settings)
 {
    // Due to a constness problem that happens when using the prompt, we need
    // to be ready to switch the params to a local instance.

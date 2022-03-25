@@ -61,7 +61,7 @@ public:
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
    // EffectProcessor implementation
 

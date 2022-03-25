@@ -1097,7 +1097,7 @@ bool LadspaEffect::SaveSettings(
 }
 
 bool LadspaEffect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {

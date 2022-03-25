@@ -47,7 +47,7 @@ public:
 
    EffectType GetType() const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
    // Effect implementation
 

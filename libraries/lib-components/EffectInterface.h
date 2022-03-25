@@ -169,8 +169,6 @@ class COMPONENTS_API EffectDefinitionInterface  /* not final */
    : public ComponentInterface
 {
 public:
-   using Settings = EffectSettings;
-
    //! A utility that strips spaces and CamelCases a name.
    static Identifier GetSquashedName(const Identifier &ident);
 
@@ -218,7 +216,7 @@ public:
    /*!
     Default implementation returns an empty `any`
     */
-   virtual Settings MakeSettings() const;
+   virtual EffectSettings MakeSettings() const;
 
    //! Update one settings object from another
    /*!
@@ -242,29 +240,29 @@ public:
     @return true on success
     */
    virtual bool SaveSettings(
-      const Settings &settings, CommandParameters & parms) const = 0;
+      const EffectSettings &settings, CommandParameters & parms) const = 0;
 
    //! Restore settings from keys and values
    /*!
     @return true on success
     */
    virtual bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const = 0;
+      const CommandParameters & parms, EffectSettings &settings) const = 0;
 
    //! Report names of factory presets
    virtual RegistryPaths GetFactoryPresets() const = 0;
 
    //! Change settings to a user-named preset
    virtual bool LoadUserPreset(
-      const RegistryPath & name, Settings &settings) const = 0;
+      const RegistryPath & name, EffectSettings &settings) const = 0;
    //! Save settings in the configuration file as a user-named preset
    virtual bool SaveUserPreset(
-      const RegistryPath & name, const Settings &settings) const = 0;
+      const RegistryPath & name, const EffectSettings &settings) const = 0;
 
    //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
-   virtual bool LoadFactoryPreset(int id, Settings &settings) const = 0;
+   virtual bool LoadFactoryPreset(int id, EffectSettings &settings) const = 0;
    //! Change settings back to "factory default"
-   virtual bool LoadFactoryDefaults(Settings &settings) const = 0;
+   virtual bool LoadFactoryDefaults(EffectSettings &settings) const = 0;
    //! @}
 
    //! Visit settings, if defined.  false means no defined settings.

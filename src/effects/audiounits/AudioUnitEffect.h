@@ -67,12 +67,12 @@ public:
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
    bool LoadUserPreset(
-      const RegistryPath & name, Settings &settings) const override;
+      const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
-      const RegistryPath & name, const Settings &settings) const override;
+      const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;

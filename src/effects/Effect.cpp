@@ -340,7 +340,7 @@ bool Effect::SaveSettings(
 }
 
 bool Effect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    // The first argument, and with it the const_cast, will disappear when
    // all built-in effects are stateless.
@@ -382,7 +382,7 @@ bool Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
    return true;
 }
 
-bool Effect::LoadFactoryDefaults(Settings &settings) const
+bool Effect::LoadFactoryDefaults(EffectSettings &settings) const
 {
    return LoadUserPreset(FactoryDefaultsGroup(), settings);
 }
