@@ -59,30 +59,11 @@ using t2bHash = std::unordered_map< void*, bool >;
 
 Effect::Effect()
 {
-   mTracks = NULL;
-   mT0 = 0.0;
-   mT1 = 0.0;
-   mIsPreview = false;
-   mIsLinearEffect = false;
-   mPreviewWithNotSelected = false;
-   mPreviewFullSelection = false;
-   mNumTracks = 0;
-   mNumGroups = 0;
-   mProgress = NULL;
-
-   mUIParent = NULL;
-
-   mBufferSize = 0;
-   mBlockSize = 0;
-   mNumChannels = 0;
-
    // PRL:  I think this initialization of mProjectRate doesn't matter
    // because it is always reassigned in DoEffect before it is used
    // STF: but can't call AudioIOBase::GetOptimalSupportedSampleRate() here.
    // (Which is called to compute the default-default value.)  (Bug 2280)
    mProjectRate = QualitySettings::DefaultSampleRate.ReadWithDefault(44100);
-
-   mIsBatch = false;
 }
 
 Effect::~Effect()

@@ -419,31 +419,31 @@ protected:
 // may be needed by any particular subclass of Effect.
 //
 protected:
-   BasicUI::ProgressDialog *mProgress = nullptr; // Temporary pointer, NOT deleted in destructor.
-   double         mProjectRate; // Sample rate of the project - NEW tracks should
+   BasicUI::ProgressDialog *mProgress{}; // Temporary pointer, NOT deleted in destructor.
+   double         mProjectRate{}; // Sample rate of the project - NEW tracks should
                                // be created with this rate...
-   double         mSampleRate;
-   WaveTrackFactory   *mFactory;
+   double         mSampleRate{};
+   WaveTrackFactory   *mFactory{};
    const TrackList *inputTracks() const { return mTracks; }
    const AudacityProject *FindProject() const;
    std::shared_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
-   double         mT0;
-   double         mT1;
+   double         mT0{};
+   double         mT1{};
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   double         mF0;
-   double         mF1;
+   double         mF0{};
+   double         mF1{};
 #endif
    wxArrayString  mPresetNames;
    wxArrayString  mPresetValues;
-   int            mPass;
+   int            mPass{};
 
    // UI
    //! This smart pointer tracks the lifetime of the dialog
    wxWeakRef<wxDialog> mHostUIDialog;
-   wxWindow       *mUIParent;
+   wxWindow       *mUIParent{};
    unsigned       mUIFlags{ 0 };
 
-   sampleCount    mSampleCnt;
+   sampleCount    mSampleCnt{};
 
  // Used only by the base Effect class
  //
@@ -475,24 +475,24 @@ protected:
  // Used only by the base Effect class
  //
 private:
-   TrackList *mTracks; // the complete list of all tracks
+   TrackList *mTracks{}; // the complete list of all tracks
 
-   bool mIsBatch;
-   bool mIsLinearEffect;
-   bool mPreviewWithNotSelected;
-   bool mPreviewFullSelection;
+   bool mIsBatch{ false };
+   bool mIsLinearEffect{ false };
+   bool mPreviewWithNotSelected{ false };
+   bool mPreviewFullSelection{ false };
 
-   bool mIsPreview;
+   bool mIsPreview{ false };
 
    std::vector<Track*> mIMap;
    std::vector<Track*> mOMap;
 
-   int mNumTracks; //v This is really mNumWaveTracks, per CountWaveTracks() and GetNumWaveTracks().
-   int mNumGroups;
+   int mNumTracks{}; //v This is really mNumWaveTracks, per CountWaveTracks() and GetNumWaveTracks().
+   int mNumGroups{};
 
-   size_t mBufferSize;
-   size_t mBlockSize;
-   unsigned mNumChannels;
+   size_t mBufferSize{};
+   size_t mBlockSize{};
+   unsigned mNumChannels{};
 };
 
 //! Convenience for generating EffectDefinitionInterface overrides
