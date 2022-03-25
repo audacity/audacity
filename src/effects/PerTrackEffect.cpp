@@ -25,7 +25,43 @@
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 
+PerTrackEffect::Instance::~Instance() = default;
+
+bool PerTrackEffect::Instance::Process(EffectSettings &settings)
+{
+   return GetEffect().Process(*this, settings);
+}
+
+bool PerTrackEffect::Instance::ProcessInitialize(EffectSettings &settings,
+   sampleCount totalLen, ChannelNames chanMap)
+{
+   return GetEffect().ProcessInitialize(settings, totalLen, chanMap);
+}
+
+bool PerTrackEffect::Instance::ProcessFinalize() /* noexcept */
+{
+
+   return GetEffect().ProcessFinalize();
+}
+
+size_t PerTrackEffect::Instance::ProcessBlock(EffectSettings &settings,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
+{
+   return GetEffect().ProcessBlock(settings, inBlock, outBlock, blockLen);
+}
+
+sampleCount PerTrackEffect::Instance::GetLatency()
+{
+   return GetEffect().GetLatency();
+}
+
 PerTrackEffect::~PerTrackEffect() = default;
+
+std::shared_ptr<EffectInstance>
+PerTrackEffect::MakeInstance(EffectSettings &settings)
+{
+   return std::make_shared<Instance>(*this);
+}
 
 size_t PerTrackEffect::SetBlockSize(size_t maxBlockSize)
 {
@@ -48,22 +84,23 @@ bool PerTrackEffect::DoPass2() const
    return false;
 }
 
-bool PerTrackEffect::Process(EffectInstance &, EffectSettings &settings)
+bool PerTrackEffect::Process(EffectInstance &instance, EffectSettings &settings)
 {
    CopyInputTracks(true);
    bool bGoodResult = true;
    // mPass = 1;
    if (DoPass1()) {
-      bGoodResult = ProcessPass(settings);
+      auto &myInstance = static_cast<Instance&>(instance);
+      bGoodResult = ProcessPass(myInstance, settings);
       // mPass = 2;
       if (bGoodResult && DoPass2())
-         bGoodResult = ProcessPass(settings);
+         bGoodResult = ProcessPass(myInstance, settings);
    }
    ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
-bool PerTrackEffect::ProcessPass(EffectSettings &settings)
+bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 {
    const auto duration = settings.extra.GetDuration();
    bool bGoodResult = true;
@@ -174,7 +211,7 @@ bool PerTrackEffect::ProcessPass(EffectSettings &settings)
          }
 
          // Go process the track(s)
-         bGoodResult = ProcessTrack(settings,
+         bGoodResult = ProcessTrack(instance, settings,
             count, map, left, right, start, len,
             inBuffer, outBuffer, inBufPos, outBufPos, bufferSize, numChannels);
          if (!bGoodResult)
@@ -194,7 +231,7 @@ bool PerTrackEffect::ProcessPass(EffectSettings &settings)
    return bGoodResult;
 }
 
-bool PerTrackEffect::ProcessTrack(EffectSettings &settings,
+bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    int count,
    ChannelNames map,
    WaveTrack *left,
@@ -209,13 +246,13 @@ bool PerTrackEffect::ProcessTrack(EffectSettings &settings,
    bool rc = true;
 
    // Give the plugin a chance to initialize
-   if (!ProcessInitialize(settings, len, map))
+   if (!instance.ProcessInitialize(settings, len, map))
       return false;
 
    { // Start scope for cleanup
    auto cleanup = finally( [&] {
       // Allow the plugin to cleanup
-      if (!ProcessFinalize())
+      if (!instance.ProcessFinalize())
          // In case of non-exceptional flow of control, set rc
          rc = false;
    } );
@@ -236,7 +273,7 @@ bool PerTrackEffect::ProcessTrack(EffectSettings &settings,
    auto inPos = start;
    auto outPos = start;
    auto inputRemaining = len;
-   decltype(GetLatency()) curDelay = 0, delayRemaining = 0;
+   decltype(instance.GetLatency()) curDelay = 0, delayRemaining = 0;
    decltype(mBlockSize) curBlockSize = 0;
    decltype(bufferSize) inputBufferCnt = 0;
    decltype(bufferSize) outputBufferCnt = 0;
@@ -332,8 +369,8 @@ bool PerTrackEffect::ProcessTrack(EffectSettings &settings,
       // Finally call the plugin to process the block
       decltype(curBlockSize) processed;
       try {
-         processed =
-            ProcessBlock(settings, inBufPos.get(), outBufPos.get(), curBlockSize);
+         processed = instance.ProcessBlock(
+            settings, inBufPos.get(), outBufPos.get(), curBlockSize);
       }
       catch( const AudacityException & WXUNUSED(e) ) {
          // PRL: Bug 437:
@@ -367,7 +404,7 @@ bool PerTrackEffect::ProcessTrack(EffectSettings &settings,
       // Get the current number of delayed samples and accumulate
       if (isProcessor) {
          {
-            auto delay = GetLatency();
+            auto delay = instance.GetLatency();
             curDelay += delay;
             delayRemaining += delay;
          }

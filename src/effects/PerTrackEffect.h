@@ -35,6 +35,50 @@ public:
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
+   //! Adds virtual functions whose default implementations call-through to the
+   //! PerTrackEffect members
+   /*!
+    PerTrackEffects that are completely stateless will define subclasses that
+    override the new virtual functions
+    */
+   class AUDACITY_DLL_API Instance : public Effect::Instance {
+   public:
+      using Effect::Instance::Instance;
+      ~Instance() override;
+   
+      //! Uses the other virtual functions of this class
+      bool Process(EffectSettings &settings) final;
+
+      /*!
+       @copydoc EffectProcessor::ProcessInitialize()
+       */
+      virtual bool ProcessInitialize(EffectSettings &settings,
+         sampleCount totalLen, ChannelNames chanMap);
+
+      /*!
+       @copydoc EffectProcessor::ProcessFinalize()
+       */
+      virtual bool ProcessFinalize() /* noexcept */ ;
+
+      /*!
+       @copydoc EffectProcessor::ProcessBlock()
+       */
+      virtual size_t ProcessBlock(EffectSettings &settings,
+         const float *const *inBlock, float *const *outBlock, size_t blockLen);
+
+      /*!
+       @copydoc EffectProcessor::GetLatency()
+       */
+      virtual sampleCount GetLatency();
+
+   protected:
+      PerTrackEffect &GetEffect() const
+      { return static_cast<PerTrackEffect &>(mEffect); }
+   };
+
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+      override;
+
 protected:
    // These were overridables but the generality wasn't used yet
    /* virtual */ bool DoPass1() const;
@@ -44,8 +88,8 @@ protected:
 
 private:
    bool Process(EffectInstance &instance, EffectSettings &settings) final;
-   bool ProcessPass(EffectSettings &settings);
-   bool ProcessTrack(EffectSettings &settings,
+   bool ProcessPass(Instance &instance, EffectSettings &settings);
+   bool ProcessTrack(Instance &instance, EffectSettings &settings,
       int count,
       ChannelNames map,
       WaveTrack *left,
