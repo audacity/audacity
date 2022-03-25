@@ -421,6 +421,8 @@ list( APPEND SOURCES
       effects/Echo.h
       effects/Effect.cpp
       effects/Effect.h
+      effects/EffectBase.cpp
+      effects/EffectBase.h
       effects/EffectManager.cpp
       effects/EffectManager.h
       effects/EffectUI.cpp
