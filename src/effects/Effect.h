@@ -194,11 +194,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    unsigned TestUIFlags(unsigned mask);
 
-   void SetPresetParameters( const wxArrayString * Names, const wxArrayString * Values ) {
-      if( Names ) mPresetNames = *Names;
-      if( Values ) mPresetValues = *Values;
-   }
-
    //! Re-invoke DoEffect on another Effect object that implements the work
    bool Delegate(Effect &delegate, EffectSettings &settings);
 
@@ -398,7 +393,6 @@ protected:
    double         mF1{};
 #endif
    wxArrayString  mPresetNames;
-   wxArrayString  mPresetValues;
 
    // UI
    //! This smart pointer tracks the lifetime of the dialog

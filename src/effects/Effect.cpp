@@ -747,6 +747,7 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
 
       End();
       ReplaceProcessedTracks( false );
+      mPresetNames.clear();
    } );
 
    // We don't yet know the effect type for code in the Nyquist Prompt, so
@@ -789,12 +790,10 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mF0 = selectedRegion.f0();
    mF1 = selectedRegion.f1();
-   wxArrayString Names;
    if( mF0 != SelectedRegion::UndefinedFrequency )
-      Names.push_back(wxT("control-f0"));
+      mPresetNames.push_back(L"control-f0");
    if( mF1 != SelectedRegion::UndefinedFrequency )
-      Names.push_back(wxT("control-f1"));
-   SetPresetParameters( &Names, NULL );
+      mPresetNames.push_back(L"control-f1");
 
 #endif
    CountWaveTracks();
