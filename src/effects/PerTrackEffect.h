@@ -15,6 +15,9 @@
 #define __AUDACITY_PER_TRACK_EFFECT__
 
 #include "Effect.h" // to inherit
+#include "MemoryX.h"
+
+using FloatBuffers = ArraysOf<float>;
 
 //! Base class for Effects that treat each (mono or stereo) track independently
 //! of other tracks.

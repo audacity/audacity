@@ -92,6 +92,8 @@ effects from this one class.
 #include <sstream>
 #include <float.h>
 
+#define NYQUIST_WORKER_ID wxT("Nyquist Worker")
+
 int NyquistEffect::mReentryCount = 0;
 
 enum

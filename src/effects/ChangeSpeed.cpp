@@ -23,6 +23,7 @@
 #include <wx/intl.h>
 #include <wx/slider.h>
 
+#include "ConfigInterface.h"
 #include "../LabelTrack.h"
 #include "Prefs.h"
 #include "Resample.h"

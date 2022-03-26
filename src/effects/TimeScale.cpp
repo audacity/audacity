@@ -24,6 +24,7 @@
 #include <wx/intl.h>
 #include <wx/slider.h>
 
+#include "MemoryX.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 

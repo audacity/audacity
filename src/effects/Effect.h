@@ -13,34 +13,14 @@
 #define __AUDACITY_EFFECT__
 
 
+#include <wx/event.h>
+// Wanted to include just wx/weakref.h, but it fails to compile on Windows
+// when you have wxWeakRef to an incomplete type
+#include <wx/dialog.h>
 
-#include <functional>
-#include <set>
-
-#include <wx/defs.h>
-
-class wxButton;
-class wxCheckBox;
-class wxChoice;
-class wxListBox;
-class wxWindow;
-
-#include "ConfigInterface.h"
 #include "EffectPlugin.h" // to inherit
 #include "EffectInterface.h" // to inherit
-#include "PluginInterface.h"
-
 #include "SampleCount.h"
-#include "SelectedRegion.h"
-
-#include "Track.h"
-
-#include "../widgets/wxPanelWrapper.h" // to inherit
-#include <wx/windowptr.h>
-
-class wxArrayString;
-class ShuttleGui;
-class AudacityCommand;
 
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
 
@@ -49,22 +29,14 @@ namespace BasicUI { class ProgressDialog; }
 class AudacityProject;
 class EffectParameterMethods;
 class LabelTrack;
-class NotifyingSelectedRegion;
-class SelectedRegion;
 class Track;
-class TrackList;
-class WaveTrackFactory;
 class WaveTrack;
-
-using FloatBuffers = ArraysOf<float>;
 
 /* i18n-hint: "Nyquist" is an embedded interpreted programming language in
  Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
  In the translations of this and other strings, you may transliterate the
  name into another alphabet.  */
 #define NYQUISTEFFECTS_FAMILY ( EffectFamilySymbol{ XO("Nyquist") } )
-
-#define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
 // TODO:  Apr-06-2015
 // TODO:  Much more cleanup of old methods and variables is needed, but

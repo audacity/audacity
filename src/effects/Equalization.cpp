@@ -88,6 +88,7 @@
 #include <wx/utils.h>
 
 #include "AColor.h"
+#include "ConfigInterface.h"
 #include "../ShuttleAutomation.h"
 #include "../ShuttleGui.h"
 #include "PlatformCompatibility.h"

@@ -19,6 +19,7 @@
 class wxSlider;
 class wxStaticText;
 class wxCheckBox;
+class wxChoice;
 class wxTextCtrl;
 class ShuttleGui;
 

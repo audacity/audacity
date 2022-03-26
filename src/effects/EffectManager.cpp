@@ -28,6 +28,7 @@ effects.
 
 #include "../widgets/AudacityMessageBox.h"
 
+#include "ConfigInterface.h"
 #include "../ShuttleGetDefinition.h"
 #include "../commands/CommandContext.h"
 #include "../commands/AudacityCommand.h"
