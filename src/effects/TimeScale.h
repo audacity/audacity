@@ -44,7 +44,6 @@ public:
 
    // Effect implementation
 
-   bool Init() override;
    void Preview(EffectSettingsAccess &access, bool dryOnly) override;
    bool Process(EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(

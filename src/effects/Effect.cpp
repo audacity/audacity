@@ -853,7 +853,6 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
       region, mUIFlags, nullptr, nullptr, nullptr);
 }
 
-// All legacy effects should have this overridden
 bool Effect::Init()
 {
    return true;

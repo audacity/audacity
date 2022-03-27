@@ -185,11 +185,6 @@ bool EffectChangePitch::DoLoadFactoryDefaults(EffectSettings &settings)
 
 // Effect implementation
 
-bool EffectChangePitch::Init()
-{
-   return true;
-}
-
 bool EffectChangePitch::Process(EffectSettings &settings)
 {
 #if USE_SBSMS

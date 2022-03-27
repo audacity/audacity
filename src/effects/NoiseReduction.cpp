@@ -437,11 +437,6 @@ EffectType EffectNoiseReduction::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectNoiseReduction::Init()
-{
-   return true;
-}
-
 bool EffectNoiseReduction::CheckWhetherSkipEffect()
 {
    return false;

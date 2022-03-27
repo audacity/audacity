@@ -61,7 +61,6 @@ public:
 
    // Effect implementation
 
-   bool Init() override;
    bool Process(EffectSettings &settings) override;
    bool CheckWhetherSkipEffect() override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(

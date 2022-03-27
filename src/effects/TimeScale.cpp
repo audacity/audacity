@@ -109,11 +109,6 @@ EffectType EffectTimeScale::GetType() const
 
 // Effect implementation
 
-bool EffectTimeScale::Init()
-{
-   return true;
-}
-
 double EffectTimeScale::CalcPreviewInputLength(
    const EffectSettings &settings, double previewLength)
 {
