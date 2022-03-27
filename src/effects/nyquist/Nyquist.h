@@ -60,8 +60,16 @@ public:
    int ticks;
 };
 
+struct NyquistSettings {
+   // other settings, for the Nyquist prompt; else null
+   EffectSettings proxySettings;
+   bool proxyDebug{ false };
 
-class AUDACITY_DLL_API NyquistEffect final : public Effect
+   // Other fields, to do
+};
+
+class AUDACITY_DLL_API NyquistEffect final
+   : public EffectWithSettings<NyquistSettings>
 {
 public:
 
@@ -110,7 +118,6 @@ public:
    // Effect implementation
 
    bool Init() override;
-   bool CheckWhetherSkipEffect() override;
    bool Process(EffectSettings &settings) override;
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,

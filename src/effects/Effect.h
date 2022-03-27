@@ -229,11 +229,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    }
 
    //! Re-invoke DoEffect on another Effect object that implements the work
-   bool Delegate( Effect &delegate,
-      EffectSettings &settings, //!< Always given; only for processing
-      wxWindow &parent, const EffectDialogFactory &factory,
-      const EffectSettingsAccessPtr &pSettings //!< Sometimes given; only for UI
-   );
+   bool Delegate(Effect &delegate, EffectSettings &settings);
 
    // Display a message box, using effect's (translated) name as the prefix
    // for the title.

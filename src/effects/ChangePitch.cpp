@@ -200,7 +200,7 @@ bool EffectChangePitch::Process(EffectSettings &settings)
       proxy.mProxyEffectName = XO("High Quality Pitch Change");
       proxy.setParameters(1.0, pitchRatio);
       //! Already processing; don't make a dialog
-      return Delegate(proxy, settings, *mUIParent, nullptr, nullptr);
+      return Delegate(proxy, settings);
    }
    else
 #endif
