@@ -820,7 +820,7 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
    // cancellation, and any change of duration has been saved in the config file
 
    bool returnVal = true;
-   bool skipFlag = CheckWhetherSkipEffect();
+   bool skipFlag = CheckWhetherSkipEffect(settings);
    if (skipFlag == false)
    {
       using namespace BasicUI;
@@ -1227,6 +1227,11 @@ void Effect::CountWaveTracks()
 {
    mNumTracks = mTracks->Selected< const WaveTrack >().size();
    mNumGroups = mTracks->SelectedLeaders< const WaveTrack >().size();
+}
+
+bool Effect::CheckWhetherSkipEffect(const EffectSettings &) const
+{
+   return false;
 }
 
 double Effect::CalcPreviewInputLength(

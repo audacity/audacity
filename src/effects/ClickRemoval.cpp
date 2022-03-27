@@ -107,7 +107,7 @@ EffectType EffectClickRemoval::GetType() const
 
 // Effect implementation
 
-bool EffectClickRemoval::CheckWhetherSkipEffect()
+bool EffectClickRemoval::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return ((mClickWidth == 0) || (mThresholdLevel == 0));
 }

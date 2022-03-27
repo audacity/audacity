@@ -226,7 +226,7 @@ bool EffectChangePitch::Process(EffectSettings &settings)
    }
 }
 
-bool EffectChangePitch::CheckWhetherSkipEffect()
+bool EffectChangePitch::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (m_dPercentChange == 0.0);
 }

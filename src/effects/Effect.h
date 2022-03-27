@@ -230,7 +230,8 @@ protected:
    // detecting that zero noise reduction is to be done,
    // or that normalisation is being done without Dc bias shift
    // or amplitude modification
-   virtual bool CheckWhetherSkipEffect() { return false; }
+   // Default implementation returns false
+   virtual bool CheckWhetherSkipEffect(const EffectSettings &) const;
 
    // Most effects just use the previewLength, but time-stretching/compressing
    // effects need to use a different input length, so override this method.

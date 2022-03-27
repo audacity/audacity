@@ -41,7 +41,6 @@ public:
       const EffectDialogFactory &factory,
       EffectSettingsAccess &access, bool forceModal = false) override;
 
-   bool CheckWhetherSkipEffect() override;
    bool Process(EffectSettings &settings) override;
 
    class Settings;

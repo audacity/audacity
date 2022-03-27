@@ -46,7 +46,7 @@ public:
 
    // Effect implementation
 
-   bool CheckWhetherSkipEffect() override;
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
    bool Process(EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;

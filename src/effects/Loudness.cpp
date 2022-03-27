@@ -94,11 +94,6 @@ EffectType EffectLoudness::GetType() const
 
 // Effect implementation
 
-bool EffectLoudness::CheckWhetherSkipEffect()
-{
-   return false;
-}
-
 bool EffectLoudness::Process(EffectSettings &)
 {
    if(mNormalizeTo == kLoudness)

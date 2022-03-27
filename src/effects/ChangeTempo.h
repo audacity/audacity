@@ -53,7 +53,7 @@ public:
    // Effect implementation
 
    bool Init() override;
-   bool CheckWhetherSkipEffect() override;
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
    bool Process(EffectSettings &settings) override;
    double CalcPreviewInputLength(
       const EffectSettings &settings, double previewLength) const override;

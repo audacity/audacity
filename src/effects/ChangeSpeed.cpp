@@ -155,7 +155,7 @@ bool EffectChangeSpeed::DoLoadFactoryDefaults(EffectSettings &settings)
 
 // Effect implementation
 
-bool EffectChangeSpeed::CheckWhetherSkipEffect()
+bool EffectChangeSpeed::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (m_PercentChange == 0.0);
 }

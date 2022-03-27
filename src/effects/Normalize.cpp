@@ -87,7 +87,7 @@ EffectType EffectNormalize::GetType() const
 
 // Effect implementation
 
-bool EffectNormalize::CheckWhetherSkipEffect()
+bool EffectNormalize::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return ((mGain == false) && (mDC == false));
 }

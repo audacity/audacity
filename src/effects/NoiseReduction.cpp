@@ -437,11 +437,6 @@ EffectType EffectNoiseReduction::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectNoiseReduction::CheckWhetherSkipEffect()
-{
-   return false;
-}
-
 //! An override still here for historical reasons, ignoring the factory
 //! and the access
 /*! We would like to make this effect behave more like others, but it does have

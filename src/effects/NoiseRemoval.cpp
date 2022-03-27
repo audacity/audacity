@@ -148,7 +148,7 @@ bool EffectNoiseRemoval::Init()
    return gPrefs->Flush();
 }
 
-bool EffectNoiseRemoval::CheckWhetherSkipEffect()
+bool EffectNoiseRemoval::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (mLevel == 0);
 }
