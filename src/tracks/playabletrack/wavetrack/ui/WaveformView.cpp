@@ -344,8 +344,9 @@ void DrawMinMaxRMS(
    const auto trimLeft = clip.GetTrimLeft();
    const auto sequenceStartTime = clip.GetSequenceStartTime();
 
-   clipCache.mWaveBitmapCache
-      ->SetDisplayParameters(
+   WavePaintParameters paintParameters;
+   paintParameters
+      .SetDisplayParameters(
          rect.GetHeight(), zoomMin, zoomMax, artist->mShowClipping)
       .SetDBParameters(dbRange, dB)
       .SetBlankColor(ColorFromWXBrush(artist->blankBrush))
@@ -361,11 +362,12 @@ void DrawMinMaxRMS(
       .SetClippingColors(
          ColorFromWXPen(muted ? artist->muteClippedPen : artist->clippedPen),
          ColorFromWXPen(muted ? artist->muteClippedPen : artist->clippedPen))
-      .SetSelection(
-         zoomInfo,
-         artist->pSelectedRegion->t0() - sequenceStartTime,
-         artist->pSelectedRegion->t1() - sequenceStartTime)
       .SetEnvelope(*clip.GetEnvelope());
+
+   clipCache.mWaveBitmapCache->SetPaintParameters(paintParameters)
+      .SetSelection(
+         zoomInfo, artist->pSelectedRegion->t0() - sequenceStartTime,
+         artist->pSelectedRegion->t1() - sequenceStartTime);
 
    auto range = clipCache.mWaveBitmapCache->PerformLookup(
       zoomInfo, t0 + trimLeft, t1 + trimLeft);

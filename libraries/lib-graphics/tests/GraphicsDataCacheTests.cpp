@@ -1,9 +1,9 @@
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
 /*!********************************************************************
 
  Audacity: A Digital Audio Editor
 
- @file GraphicsDataCacheTests.cpp
- @brief Tests for the FromChars functions
+ GraphicsDataCacheTests.cpp
 
  Dmitry Vedenko
  **********************************************************************/

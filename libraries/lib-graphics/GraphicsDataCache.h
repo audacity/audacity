@@ -241,6 +241,8 @@ public:
    IteratorRange<GraphicsDataCacheIterator<CacheElementType>>
    PerformLookup(const ZoomInfo& zoomInfo, double t0, double t1)
    {
+      CheckCache(zoomInfo, t0, t1);
+
       const auto base = this->PerformBaseLookup(zoomInfo, t0, t1);
 
       return { { base, true }, { base, false } };
@@ -257,6 +259,11 @@ public:
    }
 
 protected:
+   virtual void
+   CheckCache(const ZoomInfo& /*zoomInfo*/, double /*t0*/, double /*t1*/)
+   {
+   }
+
    virtual bool
    InitializeElement(const GraphicsDataCacheKey& key, CacheElementType& element)
    {

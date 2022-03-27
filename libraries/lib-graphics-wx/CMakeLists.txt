@@ -5,6 +5,8 @@ A library responsible for custom rendering in Audacity
 set( SOURCES
    graphics/WXColor.cpp
    graphics/WXColor.h
+   graphics/WXGraphicsContextPainter.cpp
+   graphics/WXGraphicsContextPainter.h
 
    waveform/WaveBitmapCache.cpp
    waveform/WaveBitmapCache.h
