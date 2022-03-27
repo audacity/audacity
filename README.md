@@ -1,3 +1,7 @@
+# WARNING
+
+The Qt-branch is highly experimental and not ready for testing yet. 
+
 [![Audacity](https://forum.audacityteam.org/styles/prosilver/theme/images/Audacity-logo_75px_trans_forum.png)](https://www.audacityteam.org) 
 =========================
 
