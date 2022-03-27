@@ -110,7 +110,7 @@ EffectType EffectTimeScale::GetType() const
 // Effect implementation
 
 double EffectTimeScale::CalcPreviewInputLength(
-   const EffectSettings &settings, double previewLength)
+   const EffectSettings &settings, double previewLength) const
 {
    double inputLength = settings.extra.GetDuration();
    if(inputLength == 0.0) {
@@ -271,7 +271,8 @@ inline double EffectTimeScale::HalfStepsToPercentChange(double halfSteps)
    return 100.0 * (pow(2.0,halfSteps/12.0) - 1.0);
 }
 
-inline double EffectTimeScale::PercentChangeToHalfSteps(double percentChange)
+inline
+double EffectTimeScale::PercentChangeToHalfSteps(double percentChange)
 {
    return 12.0 * log2(PercentChangeToRatio(percentChange));
 }

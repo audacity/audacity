@@ -52,7 +52,7 @@ public:
    // Effect implementation
 
    double CalcPreviewInputLength(
-      const EffectSettings &settings, double previewLength) override;
+      const EffectSettings &settings, double previewLength) const override;
 
    // Analyze a single track to find silences
    // If inputLength is not NULL we are calculating the minimum
@@ -64,7 +64,7 @@ public:
                         sampleCount* index,
                         int whichTrack,
                         double* inputLength = NULL,
-                        double* minInputLength = NULL);
+                        double* minInputLength = NULL) const;
 
    bool Process(EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(

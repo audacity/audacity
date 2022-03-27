@@ -960,7 +960,7 @@ void Effect::IncludeNotSelectedPreviewTracks(bool includeNotSelected)
    mPreviewWithNotSelected = includeNotSelected;
 }
 
-bool Effect::TotalProgress(double frac, const TranslatableString &msg)
+bool Effect::TotalProgress(double frac, const TranslatableString &msg) const
 {
    auto updateResult = (mProgress ?
       mProgress->Poll(frac * 1000, 1000, msg) :
@@ -968,7 +968,8 @@ bool Effect::TotalProgress(double frac, const TranslatableString &msg)
    return (updateResult != ProgressResult::Success);
 }
 
-bool Effect::TrackProgress(int whichTrack, double frac, const TranslatableString &msg)
+bool Effect::TrackProgress(
+   int whichTrack, double frac, const TranslatableString &msg) const
 {
    auto updateResult = (mProgress ?
       mProgress->Poll(whichTrack + frac, (double) mNumTracks, msg) :
@@ -976,7 +977,8 @@ bool Effect::TrackProgress(int whichTrack, double frac, const TranslatableString
    return (updateResult != ProgressResult::Success);
 }
 
-bool Effect::TrackGroupProgress(int whichGroup, double frac, const TranslatableString &msg)
+bool Effect::TrackGroupProgress(
+   int whichGroup, double frac, const TranslatableString &msg) const
 {
    auto updateResult = (mProgress ?
       mProgress->Poll(whichGroup + frac, (double) mNumGroups, msg) :
@@ -1228,7 +1230,7 @@ void Effect::CountWaveTracks()
 }
 
 double Effect::CalcPreviewInputLength(
-   const EffectSettings &, double previewLength)
+   const EffectSettings &, double previewLength) const
 {
    return previewLength;
 }

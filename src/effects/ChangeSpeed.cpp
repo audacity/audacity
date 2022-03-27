@@ -161,7 +161,7 @@ bool EffectChangeSpeed::CheckWhetherSkipEffect()
 }
 
 double EffectChangeSpeed::CalcPreviewInputLength(
-   const EffectSettings &, double previewLength)
+   const EffectSettings &, double previewLength) const
 {
    return previewLength * (100.0 + m_PercentChange) / 100.0;
 }

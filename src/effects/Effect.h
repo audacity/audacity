@@ -235,7 +235,7 @@ protected:
    // Most effects just use the previewLength, but time-stretching/compressing
    // effects need to use a different input length, so override this method.
    virtual double CalcPreviewInputLength(
-      const EffectSettings &settings, double previewLength);
+      const EffectSettings &settings, double previewLength) const;
 
    //! Add controls to effect panel; always succeeds
    /*!
@@ -252,18 +252,20 @@ protected:
    // is okay, but don't try to undo).
 
    // Pass a fraction between 0.0 and 1.0
-   bool TotalProgress(double frac, const TranslatableString & = {});
+   bool TotalProgress(double frac, const TranslatableString & = {}) const;
 
    // Pass a fraction between 0.0 and 1.0, for the current track
    // (when doing one track at a time)
-   bool TrackProgress(int whichTrack, double frac, const TranslatableString & = {});
+   bool TrackProgress(
+      int whichTrack, double frac, const TranslatableString & = {}) const;
 
    // Pass a fraction between 0.0 and 1.0, for the current track group
    // (when doing stereo groups at a time)
-   bool TrackGroupProgress(int whichGroup, double frac, const TranslatableString & = {});
+   bool TrackGroupProgress(
+      int whichGroup, double frac, const TranslatableString & = {}) const;
 
-   int GetNumWaveTracks() { return mNumTracks; }
-   int GetNumWaveGroups() { return mNumGroups; }
+   int GetNumWaveTracks() const { return mNumTracks; }
+   int GetNumWaveGroups() const { return mNumGroups; }
 
    // Calculates the start time and length in samples for one or two channels
    void GetBounds(

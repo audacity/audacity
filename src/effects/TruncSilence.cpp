@@ -204,7 +204,7 @@ bool EffectTruncSilence::LoadSettings(
 // Effect implementation
 
 double EffectTruncSilence::CalcPreviewInputLength(
-   const EffectSettings &, double /* previewLength */)
+   const EffectSettings &, double /* previewLength */) const
 {
    double inputLength = mT1 - mT0;
    double minInputLength = inputLength;
@@ -514,7 +514,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
                                  sampleCount* index,
                                  int whichTrack,
                                  double* inputLength /*= NULL*/,
-                                 double* minInputLength /*= NULL*/)
+                                 double* minInputLength /*= NULL*/) const
 {
    // Smallest silent region to detect in frames
    auto minSilenceFrames = sampleCount(std::max( mInitialAllowedSilence, DEF_MinTruncMs) * wt->GetRate());
