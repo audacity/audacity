@@ -529,11 +529,6 @@ bool VampEffect::Process(EffectSettings &)
    return true;
 }
 
-void VampEffect::End()
-{
-   mPlugin.reset();
-}
-
 std::unique_ptr<EffectUIValidator>
 VampEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {

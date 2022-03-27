@@ -232,11 +232,6 @@ protected:
    // or amplitude modification
    virtual bool CheckWhetherSkipEffect() { return false; }
 
-   // clean up any temporary memory, needed only per invocation of the
-   // effect, after either successful or failed or exception-aborted processing.
-   // Invoked inside a "finally" block so it must be no-throw.
-   virtual void End();
-
    // Most effects just use the previewLength, but time-stretching/compressing
    // effects need to use a different input length, so override this method.
    virtual double CalcPreviewInputLength(

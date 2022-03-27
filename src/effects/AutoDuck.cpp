@@ -175,11 +175,6 @@ bool EffectAutoDuck::Init()
    return true;
 }
 
-void EffectAutoDuck::End()
-{
-   mControlTrack = NULL;
-}
-
 bool EffectAutoDuck::Process(EffectSettings &)
 {
    if (GetNumWaveTracks() == 0 || !mControlTrack)

@@ -745,7 +745,6 @@ bool Effect::DoEffect(EffectSettings &settings, double projectRate,
       else
          trans.Commit();
 
-      End();
       ReplaceProcessedTracks( false );
       mPresetNames.clear();
    } );
@@ -858,10 +857,6 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
 bool Effect::Init()
 {
    return true;
-}
-
-void Effect::End()
-{
 }
 
 std::unique_ptr<EffectUIValidator>
@@ -1282,13 +1277,11 @@ void Effect::Preview(EffectSettingsAccess &access, bool dryOnly)
 
    auto cleanup = finally( [&] {
 
-      // Effect is already inited; we will call Process, End, and then Init
+      // Effect is already inited; we will call Process and then Init
       // again, so the state is exactly the way it was before Preview
       // was called.
-      if (!dryOnly) {
-         End();
+      if (!dryOnly)
          GuardedCall( [&]{ Init(); } );
-      }
 
       // In case any dialog control depends on mT1 or mDuration:
       if ( mUIDialog )
