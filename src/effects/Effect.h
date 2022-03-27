@@ -427,7 +427,6 @@ protected:
 #endif
    wxArrayString  mPresetNames;
    wxArrayString  mPresetValues;
-   int            mPass{};
 
    // UI
    //! This smart pointer tracks the lifetime of the dialog

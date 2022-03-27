@@ -52,11 +52,9 @@ private:
       FloatBuffers &inBuffer,
       FloatBuffers &outBuffer,
       ArrayOf< float * > &inBufPos,
-      ArrayOf< float *> &outBufPos);
+      ArrayOf< float *> &outBufPos, size_t bufferSize, unsigned mNumChannels);
 
-   size_t mBufferSize{};
    size_t mBlockSize{};
-   unsigned mNumChannels{};
 };
 
 template<typename Settings> using PerTrackEffectWithSettings =
