@@ -27,8 +27,9 @@ class ShuttleGui;
 class EffectAmplifySL final : public Effect
 {
 public:
-   static inline EffectAmplifySL*
-   FetchParameters(EffectAmplifySL&e, EffectSettings &){ return &e; }
+   struct Settings;
+   static inline Settings*
+   FetchParameters(EffectAmplifySL&e, EffectSettings &){ return &e.mSettings; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectAmplifySL();
@@ -74,14 +75,23 @@ private:
    void OnClipCheckBox(wxCommandEvent & evt);
    void CheckClip();
 
+public:
+
+   struct Settings
+   {
+      double mRatio;
+      double mAmp;
+      bool   mCanClip;
+   };
+
 private:
+
+   Settings mSettings;
+
    double mPeak;
 
-   double mRatio;
    double mRatioClip;   // maximum value of mRatio which does not cause clipping
-   double mAmp;
    double mNewPeak;
-   bool mCanClip;
 
    wxSlider *mAmpS;
    wxTextCtrl *mAmpT;
@@ -92,12 +102,12 @@ private:
 
    DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter Ratio{ &EffectAmplifySL::mRatio,
+static constexpr EffectParameter Ratio{ &Settings::mRatio,
    L"Ratio",            0.9f,       0.003162f,  316.227766f,   1.0f  };
 // Amp is not saved in settings!
-static constexpr EffectParameter Amp{ &EffectAmplifySL::mAmp,
+static constexpr EffectParameter Amp{ &Settings::mAmp,
    L"",                -0.91515f,  -50.0f,     50.0f,         10.0f };
-static constexpr EffectParameter Clipping{ &EffectAmplifySL::mCanClip,
+static constexpr EffectParameter Clipping{ &Settings::mCanClip,
    L"AllowClipping",    false,    false,  true,    1  };
 };
 
