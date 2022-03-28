@@ -102,7 +102,7 @@ public:
    TransformType Translated(DataType x, DataType y) const noexcept
    {
       auto copy = *this;
-      copy.Translate(pt);
+      copy.Translate(x, y);
       return copy;
    }
 
