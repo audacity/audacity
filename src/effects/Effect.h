@@ -416,6 +416,10 @@ public:
    {
       return GetSettings(const_cast<EffectSettings &>(settings));
    }
+   static inline Settings *
+   FetchParameters(Base &, EffectSettings &s) {
+      return &GetSettings(s);
+   }
 };
 
 //! Subclass of Effect, to be eliminated after all of its subclasses
