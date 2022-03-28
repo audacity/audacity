@@ -213,10 +213,13 @@ struct EffectAmplifySL::Validator
 {
    Validator(EffectUIClientInterface&   effect,
              EffectSettingsAccess&      access,
-             EffectAmplifySL::Settings& settings)
+             EffectAmplifySL::Settings& settings,
+             EffectAmplifySL::State&    state
+            )
 
       : DefaultEffectUIValidator{ effect, access }
       , mSettings{ settings }
+      , mState{ state }
    {}
    virtual ~Validator() = default;
 
@@ -228,7 +231,7 @@ struct EffectAmplifySL::Validator
    void DoUpdateUI();
       
    void PopulateOrExchange(ShuttleGui& S,
-      const EffectSettings& settings, double projectRate);
+      const EffectSettings& settings, bool batch);
 
    void OnAmpSlider(wxCommandEvent& evt);
    void OnAmpText(wxCommandEvent& evt);
@@ -236,6 +239,7 @@ struct EffectAmplifySL::Validator
    void OnClipCheckBox(wxCommandEvent& evt);
 
    EffectAmplifySL::Settings& mSettings;
+   EffectAmplifySL::State& mState;
 
    wxSlider*   mAmpS;
    wxTextCtrl* mAmpT;
@@ -244,6 +248,80 @@ struct EffectAmplifySL::Validator
 };
 
 
+void EffectAmplifySL::Validator::PopulateOrExchange(ShuttleGui& S,
+   const EffectSettings& settings, bool batch)
+{
+   enum { precision = 3 }; // allow (a generous) 3 decimal  places for Amplification (dB)
+
+   if (batch)
+   {
+      mSettings.mCanClip = true;
+      mState.mPeak = 1.0;
+   }
+   else
+   {
+      if (mState.mPeak > 0.0)
+      {
+         mSettings.mRatio = 1.0 / mState.mPeak;
+         mState.mRatioClip = mSettings.mRatio;
+      }
+      else
+      {
+         mSettings.mRatio = 1.0;
+      }
+   }
+
+   S.AddSpace(0, 5);
+
+   S.StartVerticalLay(0);
+   {
+      // Amplitude
+      S.StartMultiColumn(2, wxCENTER);
+      {
+         mAmpT = S.Id(ID_Amp)
+            .Validator<FloatingPointValidator<double>>(
+               precision, &mSettings.mAmp, NumValidatorStyle::ONE_TRAILING_ZERO, Amp.min, Amp.max)
+            .AddTextBox(XXO("&Amplification (dB):"), L"", 12);
+      }
+      S.EndMultiColumn();
+
+      // Amplitude
+      S.StartHorizontalLay(wxEXPAND);
+      {
+         mAmpS = S.Id(ID_Amp)
+            .Style(wxSL_HORIZONTAL)
+            .Name(XO("Amplification dB"))
+            .AddSlider({}, 0, Amp.max * Amp.scale, Amp.min * Amp.scale);
+      }
+      S.EndHorizontalLay();
+
+      // Peak
+      S.StartMultiColumn(2, wxCENTER);
+      {
+         mNewPeakT = S.Id(ID_Peak)
+            .Validator<FloatingPointValidator<double>>(
+               // One extra decimal place so that rounding is visible to user
+               // (see: bug 958)
+               precision + 1,
+               &(mState.mNewPeak), NumValidatorStyle::ONE_TRAILING_ZERO,
+               // min and max need same precision as what we're validating (bug 963)
+               RoundValue(precision + 1, Amp.min + LINEAR_TO_DB(mState.mPeak)),
+               RoundValue(precision + 1, Amp.max + LINEAR_TO_DB(mState.mPeak)))
+            .AddTextBox(XXO("&New Peak Amplitude (dB):"), L"", 12);
+      }
+      S.EndMultiColumn();
+
+      // Clipping
+      S.StartHorizontalLay(wxCENTER);
+      {
+
+         mClip = S.Id(ID_Clip).Disable(batch)
+            .AddCheckBox(XXO("Allo&w clipping"), false);
+      }
+      S.EndHorizontalLay();
+   }
+   S.EndVerticalLay();
+}
 
 std::unique_ptr<EffectUIValidator>
 EffectAmplifySL::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
