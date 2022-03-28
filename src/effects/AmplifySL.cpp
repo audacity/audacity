@@ -211,13 +211,14 @@ void EffectAmplifySL::Preview(EffectSettingsAccess &access, bool dryOnly)
 struct EffectAmplifySL::Validator
    : DefaultEffectUIValidator
 {
-   Validator(EffectUIClientInterface&   effect,
+   Validator(Effect&                    effect,
              EffectSettingsAccess&      access,
              EffectAmplifySL::Settings& settings,
              EffectAmplifySL::State&    state
             )
 
       : DefaultEffectUIValidator{ effect, access }
+      , mActualEffect{ effect }
       , mSettings{ settings }
       , mState{ state }
    {}
@@ -238,6 +239,22 @@ struct EffectAmplifySL::Validator
    void OnPeakText(wxCommandEvent& evt);
    void OnClipCheckBox(wxCommandEvent& evt);
 
+   void CheckClip()
+   {
+      // TO SOLVE: Effect::EnableApply is protected
+      // 
+      //mActualEffect.EnableApply(mClip->GetValue() || (mState.mPeak > 0.0 && mSettings.mRatio <= mState.mRatioClip));
+   }
+
+   void EnableApply(bool a)
+   {
+      // TO SOLVE: Effect::EnableApply is protected
+      // 
+      //mActualEffect.EnableApply(a)
+   }
+
+
+   Effect& mActualEffect;
    EffectAmplifySL::Settings& mSettings;
    EffectAmplifySL::State& mState;
 
@@ -321,6 +338,80 @@ void EffectAmplifySL::Validator::PopulateOrExchange(ShuttleGui& S,
       S.EndHorizontalLay();
    }
    S.EndVerticalLay();
+}
+
+
+void EffectAmplifySL::Validator::OnAmpSlider(wxCommandEvent& evt)
+{
+   double dB = evt.GetInt() / Amp.scale;
+   mSettings.mRatio = DB_TO_LINEAR(std::clamp<double>(dB, Amp.min, Amp.max));
+
+   double dB2 = (evt.GetInt() - 1) / Amp.scale;
+   double ratio2 = DB_TO_LINEAR(std::clamp<double>(dB2, Amp.min, Amp.max));
+
+   if (!mClip->GetValue() && mSettings.mRatio * mState.mPeak > 1.0 && ratio2 * mState.mPeak < 1.0)
+   {
+      mSettings.mRatio = 1.0 / mState.mPeak;
+   }
+
+   mSettings.mAmp = LINEAR_TO_DB(mSettings.mRatio);
+   mAmpT->GetValidator()->TransferToWindow();
+
+   mState.mNewPeak = LINEAR_TO_DB(mSettings.mRatio * mState.mPeak);
+   mNewPeakT->GetValidator()->TransferToWindow();
+
+   CheckClip();
+}
+
+
+void EffectAmplifySL::Validator::OnAmpText(wxCommandEvent& evt)
+{
+   if (!mAmpT->GetValidator()->TransferFromWindow())
+   {
+      EnableApply(false);
+      return;
+   }
+
+   mSettings.mRatio = DB_TO_LINEAR(std::clamp<double>(mSettings.mAmp * Amp.scale, Amp.min * Amp.scale, Amp.max * Amp.scale) / Amp.scale);
+
+   mAmpS->SetValue((int)(LINEAR_TO_DB(mSettings.mRatio) * Amp.scale + 0.5));
+
+   mState.mNewPeak = LINEAR_TO_DB(mSettings.mRatio * mState.mPeak);
+   mNewPeakT->GetValidator()->TransferToWindow();
+
+   CheckClip();
+}
+
+
+void EffectAmplifySL::Validator::OnPeakText(wxCommandEvent& evt)
+{
+   if (!mNewPeakT->GetValidator()->TransferFromWindow())
+   {
+      EnableApply(false);
+      return;
+   }
+
+   if (mState.mNewPeak == 0.0)
+      mSettings.mRatio = mState.mRatioClip;
+   else
+      mSettings.mRatio = DB_TO_LINEAR(mState.mNewPeak) / mState.mPeak;
+
+   double ampInit = LINEAR_TO_DB(mSettings.mRatio);
+   mSettings.mAmp = std::clamp<double>(ampInit, Amp.min, Amp.max);
+   if (mSettings.mAmp != ampInit)
+      mSettings.mRatio = DB_TO_LINEAR(mSettings.mAmp);
+
+   mAmpT->GetValidator()->TransferToWindow();
+
+   mAmpS->SetValue((int)(mSettings.mAmp * Amp.scale + 0.5f));
+
+   CheckClip();
+}
+
+
+void EffectAmplifySL::Validator::OnClipCheckBox(wxCommandEvent& evt)
+{
+   CheckClip();
 }
 
 std::unique_ptr<EffectUIValidator>
