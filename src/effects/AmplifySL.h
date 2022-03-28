@@ -84,16 +84,20 @@ public:
       bool   mCanClip;
    };
 
+   struct State
+   {
+      double mPeak;
+      double mRatioClip;   // maximum value of mRatio which does not cause clipping
+      double mNewPeak;
+   };
+
    struct Validator;
 
 private:
 
    Settings mSettings;
 
-   double mPeak;
-
-   double mRatioClip;   // maximum value of mRatio which does not cause clipping
-   double mNewPeak;
+   State mState;   
 
    wxSlider *mAmpS;
    wxTextCtrl *mAmpT;

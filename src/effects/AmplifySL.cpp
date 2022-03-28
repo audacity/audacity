@@ -94,8 +94,8 @@ EffectAmplifySL::EffectAmplifySL()
    mSettings.mAmp = Amp.def;
    // Ratio.def == DB_TO_LINEAR(Amp.def)
    Parameters().Reset(*this);
-   mRatioClip = 0.0;
-   mPeak = 0.0;
+   mState.mRatioClip = 0.0;
+   mState.mPeak = 0.0;
 
    SetLinearEffectFlag(true);
 }
@@ -162,11 +162,11 @@ bool EffectAmplifySL::DoLoadFactoryDefaults()
 {
    Init();
 
-   mRatioClip = 0.0;
-   if (mPeak > 0.0)
+   mState.mRatioClip = 0.0;
+   if (mState.mPeak > 0.0)
    {
-      mSettings.mRatio = 1.0 / mPeak;
-      mRatioClip = mSettings.mRatio;
+      mSettings.mRatio = 1.0 / mState.mPeak;
+      mState.mRatioClip = mSettings.mRatio;
    }
    else
    {
@@ -182,7 +182,7 @@ bool EffectAmplifySL::DoLoadFactoryDefaults()
 
 bool EffectAmplifySL::Init()
 {
-   mPeak = 0.0;
+   mState.mPeak = 0.0;
 
    for (auto t : inputTracks()->Selected< const WaveTrack >())
    {
@@ -190,9 +190,9 @@ bool EffectAmplifySL::Init()
       const float min = pair.first, max = pair.second;
       float newpeak = (fabs(min) > fabs(max) ? fabs(min) : fabs(max));
 
-      if (newpeak > mPeak)
+      if (newpeak > mState.mPeak)
       {
-         mPeak = newpeak;
+         mState.mPeak = newpeak;
       }
    }
 
@@ -202,7 +202,7 @@ bool EffectAmplifySL::Init()
 void EffectAmplifySL::Preview(EffectSettingsAccess &access, bool dryOnly)
 {
    auto cleanup1 = valueRestorer(mSettings.mRatio );
-   auto cleanup2 = valueRestorer( mPeak );
+   auto cleanup2 = valueRestorer(mState.mPeak );
 
    Effect::Preview(access, dryOnly);
 }
@@ -254,14 +254,14 @@ EffectAmplifySL::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    if ( batch )
    {
       mSettings.mCanClip = true;
-      mPeak = 1.0;
+      mState.mPeak = 1.0;
    }
    else 
    {
-      if (mPeak > 0.0)
+      if (mState.mPeak > 0.0)
       {
-         mSettings.mRatio = 1.0 / mPeak;
-         mRatioClip = mSettings.mRatio;
+         mSettings.mRatio = 1.0 / mState.mPeak;
+         mState.mRatioClip = mSettings.mRatio;
       }
       else
       {
@@ -301,10 +301,10 @@ EffectAmplifySL::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
                // One extra decimal place so that rounding is visible to user
                // (see: bug 958)
                precision + 1,
-               &mNewPeak, NumValidatorStyle::ONE_TRAILING_ZERO,
+               &(mState.mNewPeak), NumValidatorStyle::ONE_TRAILING_ZERO,
                // min and max need same precision as what we're validating (bug 963)
-               RoundValue( precision + 1, Amp.min + LINEAR_TO_DB(mPeak) ),
-               RoundValue( precision + 1, Amp.max + LINEAR_TO_DB(mPeak) ) )
+               RoundValue( precision + 1, Amp.min + LINEAR_TO_DB(mState.mPeak) ),
+               RoundValue( precision + 1, Amp.max + LINEAR_TO_DB(mState.mPeak) ) )
             .AddTextBox(XXO("&New Peak Amplitude (dB):"), L"", 12);
       }
       S.EndMultiColumn();
@@ -331,8 +331,8 @@ void EffectAmplifySL::ClampRatio()
    if (dB != dBInit)
       mSettings.mRatio = DB_TO_LINEAR(dB);
 
-   mSettings.mAmp = LINEAR_TO_DB(mSettings.mRatio);
-   mNewPeak = LINEAR_TO_DB(mSettings.mRatio * mPeak);
+   mSettings.mAmp  = LINEAR_TO_DB(mSettings.mRatio);
+   mState.mNewPeak = LINEAR_TO_DB(mSettings.mRatio * mState.mPeak);
 }
 
 bool EffectAmplifySL::TransferDataToWindow(const EffectSettings &)
@@ -356,9 +356,9 @@ bool EffectAmplifySL::TransferDataFromWindow(EffectSettings &)
 
    mSettings.mCanClip = mClip->GetValue();
 
-   if (!mSettings.mCanClip && mSettings.mRatio * mPeak > 1.0)
+   if (!mSettings.mCanClip && mSettings.mRatio * mState.mPeak > 1.0)
    {
-      mSettings.mRatio = 1.0 / mPeak;
+      mSettings.mRatio = 1.0 / mState.mPeak;
    }
 
    ClampRatio();
@@ -370,7 +370,7 @@ bool EffectAmplifySL::TransferDataFromWindow(EffectSettings &)
 
 void EffectAmplifySL::CheckClip()
 {
-   EnableApply(mClip->GetValue() || (mPeak > 0.0 && mSettings.mRatio <= mRatioClip));
+   EnableApply(mClip->GetValue() || (mState.mPeak > 0.0 && mSettings.mRatio <= mState.mRatioClip));
 }
 
 void EffectAmplifySL::OnAmpText(wxCommandEvent & WXUNUSED(evt))
@@ -385,7 +385,7 @@ void EffectAmplifySL::OnAmpText(wxCommandEvent & WXUNUSED(evt))
 
    mAmpS->SetValue((int) (LINEAR_TO_DB(mSettings.mRatio) * Amp.scale + 0.5));
 
-   mNewPeak = LINEAR_TO_DB(mSettings.mRatio * mPeak);
+   mState.mNewPeak = LINEAR_TO_DB(mSettings.mRatio * mState.mPeak);
    mNewPeakT->GetValidator()->TransferToWindow();
 
    CheckClip();
@@ -399,10 +399,10 @@ void EffectAmplifySL::OnPeakText(wxCommandEvent & WXUNUSED(evt))
       return;
    }
 
-   if (mNewPeak == 0.0)
-      mSettings.mRatio = mRatioClip;
+   if (mState.mNewPeak == 0.0)
+      mSettings.mRatio = mState.mRatioClip;
    else
-      mSettings.mRatio = DB_TO_LINEAR(mNewPeak) / mPeak;
+      mSettings.mRatio = DB_TO_LINEAR(mState.mNewPeak) / mState.mPeak;
 
    double ampInit = LINEAR_TO_DB(mSettings.mRatio);
    mSettings.mAmp = std::clamp<double>(ampInit, Amp.min, Amp.max);
@@ -424,15 +424,15 @@ void EffectAmplifySL::OnAmpSlider(wxCommandEvent & evt)
    double dB2 = (evt.GetInt() - 1) / Amp.scale;
    double ratio2 = DB_TO_LINEAR(std::clamp<double>(dB2, Amp.min, Amp.max));
 
-   if (!mClip->GetValue() && mSettings.mRatio * mPeak > 1.0 && ratio2 * mPeak < 1.0)
+   if (!mClip->GetValue() && mSettings.mRatio * mState.mPeak > 1.0 && ratio2 * mState.mPeak < 1.0)
    {
-      mSettings.mRatio = 1.0 / mPeak;
+      mSettings.mRatio = 1.0 / mState.mPeak;
    }
 
    mSettings.mAmp = LINEAR_TO_DB(mSettings.mRatio);
    mAmpT->GetValidator()->TransferToWindow();
 
-   mNewPeak = LINEAR_TO_DB(mSettings.mRatio * mPeak);
+   mState.mNewPeak = LINEAR_TO_DB(mSettings.mRatio * mState.mPeak);
    mNewPeakT->GetValidator()->TransferToWindow();
 
    CheckClip();
