@@ -207,6 +207,44 @@ void EffectAmplifySL::Preview(EffectSettingsAccess &access, bool dryOnly)
    Effect::Preview(access, dryOnly);
 }
 
+// Event handler object
+struct EffectAmplifySL::Validator
+   : DefaultEffectUIValidator
+{
+   Validator(EffectUIClientInterface&   effect,
+             EffectSettingsAccess&      access,
+             EffectAmplifySL::Settings& settings)
+
+      : DefaultEffectUIValidator{ effect, access }
+      , mSettings{ settings }
+   {}
+   virtual ~Validator() = default;
+
+   
+   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
+
+   bool ValidateUI() override;
+   bool UpdateUI() override;
+   void DoUpdateUI();
+      
+   void PopulateOrExchange(ShuttleGui& S,
+      const EffectSettings& settings, double projectRate);
+
+   void OnAmpSlider(wxCommandEvent& evt);
+   void OnAmpText(wxCommandEvent& evt);
+   void OnPeakText(wxCommandEvent& evt);
+   void OnClipCheckBox(wxCommandEvent& evt);
+
+   EffectAmplifySL::Settings& mSettings;
+
+   wxSlider*   mAmpS;
+   wxTextCtrl* mAmpT;
+   wxTextCtrl* mNewPeakT;
+   wxCheckBox* mClip;
+};
+
+
+
 std::unique_ptr<EffectUIValidator>
 EffectAmplifySL::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
 {

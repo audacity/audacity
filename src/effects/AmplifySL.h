@@ -84,6 +84,8 @@ public:
       bool   mCanClip;
    };
 
+   struct Validator;
+
 private:
 
    Settings mSettings;
