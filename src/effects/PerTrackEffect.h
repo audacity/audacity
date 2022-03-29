@@ -99,7 +99,8 @@ private:
       FloatBuffers &inBuffer,
       FloatBuffers &outBuffer,
       ArrayOf< float * > &inBufPos,
-      ArrayOf< float *> &outBufPos, size_t bufferSize, unsigned mNumChannels);
+      ArrayOf< float *> &outBufPos, size_t bufferSize, size_t blockSize,
+      unsigned mNumChannels);
 
    size_t mBlockSize{};
 };

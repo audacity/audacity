@@ -110,7 +110,7 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
    ArrayOf<float *> inBufPos, outBufPos;
    ChannelName map[3];
    size_t bufferSize = 0;
-   mBlockSize = 0;
+   size_t blockSize = 0;
    int count = 0;
    bool clear = false;
 
@@ -168,12 +168,12 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
 
          // Get the block size the client wants to use
          auto max = left->GetMaxBlockSize() * 2;
-         mBlockSize = SetBlockSize(max);
+         blockSize = SetBlockSize(max);
 
          // Calculate the buffer size to be at least the max rounded up to the clients
          // selected block size.
          const auto prevBufferSize = bufferSize;
-         bufferSize = ((max + (mBlockSize - 1)) / mBlockSize) * mBlockSize;
+         bufferSize = ((max + (blockSize - 1)) / blockSize) * blockSize;
 
          // If the buffer size has changed, then (re)allocate the buffers
          if (prevBufferSize != bufferSize) {
@@ -190,9 +190,9 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             // Always create the number of output buffers the client expects even if we don't have
             // the same number of channels.
             outBufPos.reinit( numAudioOut );
-            // Output buffers get an extra mBlockSize worth to give extra room if
+            // Output buffers get an extra blockSize worth to give extra room if
             // the plugin adds latency
-            outBuffer.reinit( numAudioOut, bufferSize + mBlockSize );
+            outBuffer.reinit( numAudioOut, bufferSize + blockSize );
          }
 
          // (Re)Set the input buffer positions
@@ -213,7 +213,8 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
          // Go process the track(s)
          bGoodResult = ProcessTrack(instance, settings,
             count, map, left, right, start, len,
-            inBuffer, outBuffer, inBufPos, outBufPos, bufferSize, numChannels);
+            inBuffer, outBuffer, inBufPos, outBufPos, bufferSize, blockSize,
+            numChannels);
          if (!bGoodResult)
             return;
 
@@ -241,7 +242,8 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    FloatBuffers &inBuffer,
    FloatBuffers &outBuffer,
    ArrayOf< float * > &inBufPos,
-   ArrayOf< float *> &outBufPos, size_t bufferSize, unsigned numChannels)
+   ArrayOf< float *> &outBufPos, size_t bufferSize, size_t blockSize,
+   unsigned numChannels)
 {
    bool rc = true;
 
@@ -274,7 +276,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    auto outPos = start;
    auto inputRemaining = len;
    decltype(instance.GetLatency()) curDelay = 0, delayRemaining = 0;
-   decltype(mBlockSize) curBlockSize = 0;
+   decltype(blockSize) curBlockSize = 0;
    decltype(bufferSize) inputBufferCnt = 0;
    decltype(bufferSize) outputBufferCnt = 0;
    bool cleared = false;
@@ -324,7 +326,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
          }
 
          // Calculate the number of samples to process
-         curBlockSize = mBlockSize;
+         curBlockSize = blockSize;
          if (curBlockSize > inputRemaining) {
             // We've reached the last block...set current block size to what's left
             // inputRemaining is positive and bounded by a size_t
@@ -333,7 +335,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
 
             // Clear the remainder of the buffers so that a full block can be passed
             // to the effect
-            auto cnt = mBlockSize - curBlockSize;
+            auto cnt = blockSize - curBlockSize;
             for (size_t i = 0; i < numChannels; i++)
                for (decltype(cnt) j = 0 ; j < cnt; j++)
                   inBufPos[i][j + curBlockSize] = 0.0;
@@ -350,7 +352,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
       // We've exhausted the input samples and are now working on the delay
       else if (delayRemaining != 0) {
          // Calculate the number of samples to process
-         curBlockSize = limitSampleBufferSize( mBlockSize, delayRemaining );
+         curBlockSize = limitSampleBufferSize( blockSize, delayRemaining );
          delayRemaining -= curBlockSize;
 
          // From this point on, we only want to feed zeros to the plugin
@@ -359,7 +361,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
             for (size_t i = 0; i < numChannels; i++) {
                inBufPos[i] = inBuffer[i].get();
                // And clear
-               for (size_t j = 0; j < mBlockSize; j++)
+               for (size_t j = 0; j < blockSize; j++)
                   inBuffer[i][j] = 0.0;
             }
             cleared = true;
