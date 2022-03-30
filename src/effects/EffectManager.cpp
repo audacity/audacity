@@ -816,7 +816,6 @@ EffectAndDefaultSettings &EffectManager::DoGetEffect(const PluginID & ID)
    if (auto iter = mEffects.find(ID); iter != mEffects.end())
       return iter->second;
    else {
-      std::shared_ptr<Effect> hostEffect;
       // This will instantiate the effect client if it hasn't already been done
       auto [component, settings] = LoadComponent(ID);
       if (!component)
