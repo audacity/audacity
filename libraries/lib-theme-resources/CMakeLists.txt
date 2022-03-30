@@ -168,6 +168,9 @@ foreach( pair
    add_custom_command( OUTPUT "${CMAKE_CURRENT_SOURCE_DIR}/${filename}.h"
       COMMAND image-compiler ${arguments}
       DEPENDS ${THEME_FILES}
+         # Also depend on the list of images, forcing rebuild in case of
+         # deleted images only
+         ../lib-theme/AllThemeResources.h
       COMMENT "Generating ${filename}.h..."
    )
 endforeach()
