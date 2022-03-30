@@ -125,26 +125,4 @@ public:
    MakeInstance(EffectSettings &settings) = 0;
 };
 
-/***************************************************************************//**
-\class EffectInstance
-@brief Performs effect computation
-*******************************************************************************/
-class EffectInstance : public std::enable_shared_from_this<EffectInstance>
-{
-public:
-   virtual ~EffectInstance();
-
-   //! Call once to set up state for whole list of tracks to be processed
-   /*!
-    @return success
-    */
-   virtual bool Init() = 0;
-
-   //! Actually do the effect here.
-   /*!
-    @return success
-    */
-   virtual bool Process(EffectSettings &settings) = 0;
-};
-
 #endif

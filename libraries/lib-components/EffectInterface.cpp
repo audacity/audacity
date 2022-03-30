@@ -99,6 +99,8 @@ bool EffectDefinitionInterface::CopySettingsContents(
    return true;
 }
 
+EffectInstance::~EffectInstance() = default;
+
 EffectProcessor::~EffectProcessor() = default;
 
 EffectUIValidator::~EffectUIValidator() = default;
