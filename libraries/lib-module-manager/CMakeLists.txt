@@ -12,6 +12,8 @@ set( SOURCES
    ModuleManager.h
    ModuleSettings.cpp
    ModuleSettings.h
+   PluginDescriptor.cpp
+   PluginDescriptor.h
    PluginInterface.cpp
    PluginInterface.h
    PluginManager.cpp
