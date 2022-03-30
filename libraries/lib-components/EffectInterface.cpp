@@ -103,6 +103,8 @@ bool EffectSettingsManager::CopySettingsContents(
 
 EffectInstance::~EffectInstance() = default;
 
+EffectInstanceFactory::~EffectInstanceFactory() = default;
+
 EffectProcessor::~EffectProcessor() = default;
 
 EffectUIValidator::~EffectUIValidator() = default;

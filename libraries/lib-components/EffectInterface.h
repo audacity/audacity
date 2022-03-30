@@ -381,6 +381,26 @@ public:
    virtual bool RealtimeFinalize(EffectSettings &settings) noexcept = 0;
 };
 
+/***************************************************************************//**
+\class EffectInstanceFactory
+*******************************************************************************/
+class COMPONENTS_API EffectInstanceFactory {
+public:
+   virtual ~EffectInstanceFactory();
+
+   //! Make an object maintaining short-term state of an Effect
+   /*!
+    One effect may have multiple instances extant simultaneously.
+    Instances have state, may be implemented in foreign code, and are temporary,
+    whereas EffectSettings represents persistent effect state that can be saved
+    and reloaded from files.
+
+    @param settings may be assumed to have a lifetime enclosing the instance's
+    */
+   virtual std::shared_ptr<EffectInstance>
+   MakeInstance(EffectSettings &settings) = 0;
+};
+
 /*************************************************************************************//**
 
 \class EffectProcessor 
