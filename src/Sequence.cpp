@@ -45,7 +45,7 @@
 #include "SampleBlock.h"
 #include "InconsistencyException.h"
 
-size_t Sequence::sMaxDiskBlockSize = 1048576;
+size_t Sequence::sMaxDiskBlockSize = 8192;
 
 // Sequence methods
 Sequence::Sequence(
