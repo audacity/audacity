@@ -34,6 +34,7 @@ class WarningDialog final : public wxDialogWrapper
  public:
    // constructors and destructors
    WarningDialog(wxWindow *parent,
+                 char message1= ("Information") ,
                  const TranslatableString &message,
                  const TranslatableString &footer,
                  bool showCancelButton);
@@ -52,14 +53,13 @@ END_EVENT_TABLE()
 
 const TranslatableString &DefaultWarningFooter()
 {
-   static auto result = XXO("Don't show this warning again");
-   return result;
+   wxString::Format( XXO("Don't show this %s again"), message1);
 }
 
 WarningDialog::WarningDialog(wxWindow *parent, const TranslatableString &message,
                              const TranslatableString &footer,
                              bool showCancelButton)
-:  wxDialogWrapper(parent, wxID_ANY, XO("Warning"),
+:  wxDialogWrapper(parent, wxID_ANY, XO(message1),
             wxDefaultPosition, wxDefaultSize,
             (showCancelButton ? wxDEFAULT_DIALOG_STYLE : wxCAPTION | wxSYSTEM_MENU)) // Unlike wxDEFAULT_DIALOG_STYLE, no wxCLOSE_BOX.
 {
