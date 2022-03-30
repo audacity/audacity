@@ -164,11 +164,11 @@ bool PerTrackEffect::ProcessPass(Instance &instance, EffectSettings &settings)
             mSampleCnt = left->TimeToLongSamples(duration);
 
          // Let the client know the sample rate
-         SetSampleRate(left->GetRate());
+         instance.SetSampleRate(left->GetRate());
 
          // Get the block size the client wants to use
          auto max = left->GetMaxBlockSize() * 2;
-         blockSize = SetBlockSize(max);
+         blockSize = instance.SetBlockSize(max);
 
          // Calculate the buffer size to be at least the max rounded up to the clients
          // selected block size.

@@ -22,6 +22,7 @@ class EffectParameterMethods;
 class LabelTrack;
 class WaveTrack;
 
+class Effect;
 //! A mix-in class for effects that are not yet migrated to statelessness.
 //! To be eliminated when all effects are migrated
 class AUDACITY_DLL_API StatefulEffectBase {
@@ -35,8 +36,26 @@ public:
       bool Init() override;
       bool Process(EffectSettings &settings) override;
 
+      void SetSampleRate(double rate) override;
+   
+      size_t GetBlockSize() const override;
+      size_t SetBlockSize(size_t maxBlockSize) override;
+   
+      bool RealtimeInitialize(EffectSettings &settings) override;
+      bool RealtimeAddProcessor(EffectSettings &settings,
+         unsigned numChannels, float sampleRate) override;
+      bool RealtimeSuspend() override;
+      bool RealtimeResume() noexcept override;
+      bool RealtimeProcessStart(EffectSettings &settings) override;
+      size_t RealtimeProcess(int group, EffectSettings &settings,
+         const float *const *inBuf, float *const *outBuf, size_t numSamples)
+      override;
+      bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
+      bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    protected:
       StatefulEffectBase &mEffect;
+   private:
+      Effect &GetEffect() const;
    };
 
    /*!

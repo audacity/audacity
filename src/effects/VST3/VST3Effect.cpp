@@ -804,7 +804,7 @@ bool VST3Effect::RealtimeProcessStart(EffectSettings &)
    assert(mPendingChanges == nullptr);
 
    if(mComponentHandler != nullptr)
-      //Same parameter changes are used among all of the relatime processors
+      //Same parameter changes are used among all of the realtime processors
       mPendingChanges = mComponentHandler->getPendingChanges();
    return true;
 }

@@ -340,6 +340,26 @@ public:
     @return success
     */
    virtual bool Process(EffectSettings &settings) = 0;
+
+   virtual void SetSampleRate(double rate) = 0;
+
+   virtual size_t GetBlockSize() const = 0;
+
+   // Suggest a block size, but the return is the size that was really set:
+   virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
+
+   virtual bool RealtimeInitialize(EffectSettings &settings) = 0;
+   virtual bool RealtimeAddProcessor(
+      EffectSettings &settings, unsigned numChannels, float sampleRate) = 0;
+   virtual bool RealtimeSuspend() = 0;
+   virtual bool RealtimeResume() noexcept = 0;
+   //! settings are possibly changed, since last call, by an asynchronous dialog
+   virtual bool RealtimeProcessStart(EffectSettings &settings) = 0;
+   virtual size_t RealtimeProcess(int group, EffectSettings &settings,
+      const float *const *inBuf, float *const *outBuf, size_t numSamples) = 0;
+   //! settings can be updated to let a dialog change appearance at idle
+   virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept = 0;
+   virtual bool RealtimeFinalize(EffectSettings &settings) noexcept = 0;
 };
 
 /*************************************************************************************//**

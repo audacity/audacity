@@ -53,14 +53,76 @@ StatefulEffectBase::Instance::Instance(StatefulEffectBase &effect)
 
 StatefulEffectBase::Instance::~Instance() = default;
 
+Effect &StatefulEffectBase::Instance::GetEffect() const
+{
+   return dynamic_cast<Effect&>(mEffect);
+}
+
 bool StatefulEffectBase::Instance::Init()
 {
-   return mEffect.Init();
+   return GetEffect().Init();
 }
 
 bool StatefulEffectBase::Instance::Process(EffectSettings &settings)
 {
-   return mEffect.Process(*this, settings);
+   return GetEffect().Process(*this, settings);
+}
+
+void StatefulEffectBase::Instance::SetSampleRate(double rate)
+{
+   GetEffect().SetSampleRate(rate);
+}
+
+bool StatefulEffectBase::Instance::RealtimeInitialize(EffectSettings &settings)
+{
+   return GetEffect().RealtimeInitialize(settings);
+}
+
+bool StatefulEffectBase::Instance::RealtimeAddProcessor(EffectSettings &settings,
+   unsigned numChannels, float sampleRate)
+{
+   return GetEffect().RealtimeAddProcessor(settings, numChannels, sampleRate);
+}
+
+bool StatefulEffectBase::Instance::RealtimeSuspend()
+{
+   return GetEffect().RealtimeSuspend();
+}
+
+bool StatefulEffectBase::Instance::RealtimeResume() noexcept
+{
+   return GetEffect().RealtimeResume();
+}
+
+bool StatefulEffectBase::Instance::RealtimeProcessStart(EffectSettings &settings)
+{
+   return GetEffect().RealtimeProcessStart(settings);
+}
+
+size_t StatefulEffectBase::Instance::RealtimeProcess(int group, EffectSettings &settings,
+   const float *const *inBuf, float *const *outBuf, size_t numSamples)
+{
+   return GetEffect().RealtimeProcess(group, settings, inBuf, outBuf, numSamples);
+}
+
+bool StatefulEffectBase::Instance::RealtimeProcessEnd(EffectSettings &settings) noexcept
+{
+   return GetEffect().RealtimeProcessEnd(settings);
+}
+
+bool StatefulEffectBase::Instance::RealtimeFinalize(EffectSettings &settings) noexcept
+{
+   return GetEffect().RealtimeFinalize(settings);
+}
+
+size_t StatefulEffectBase::Instance::GetBlockSize() const
+{
+   return GetEffect().GetBlockSize();
+}
+
+size_t StatefulEffectBase::Instance::SetBlockSize(size_t maxBlockSize)
+{
+   return GetEffect().SetBlockSize(maxBlockSize);
 }
 
 Effect::Effect()
