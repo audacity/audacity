@@ -99,7 +99,7 @@ void RealtimeEffectManager::Finalize() noexcept
    // Assume it is now safe to clean up
    mLatency = std::chrono::microseconds(0);
 
-   VisitAll([](auto &state, bool){ state.Finalize(); });
+   VisitAll([](RealtimeEffectState &state, bool){ state.Finalize(); });
 
    // Reset processor parameters
    mGroupLeaders.clear();

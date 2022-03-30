@@ -384,7 +384,9 @@ public:
 /***************************************************************************//**
 \class EffectInstanceFactory
 *******************************************************************************/
-class COMPONENTS_API EffectInstanceFactory {
+class COMPONENTS_API EffectInstanceFactory
+   : public EffectSettingsManager
+{
 public:
    virtual ~EffectInstanceFactory();
 
@@ -399,6 +401,15 @@ public:
     */
    virtual std::shared_ptr<EffectInstance>
    MakeInstance(EffectSettings &settings) const = 0;
+
+   //! How many input buffers to allocate at once
+   /*!
+    If the effect ALWAYS processes channels independently, this can return 1
+    */
+   virtual unsigned GetAudioInCount() const = 0;
+
+   //! How many output buffers to allocate at once
+   virtual unsigned GetAudioOutCount() const = 0;
 };
 
 /*************************************************************************************//**
@@ -411,13 +422,9 @@ AudacityCommand.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectProcessor  /* not final */
-   : public EffectSettingsManager
 {
 public:
    virtual ~EffectProcessor();
-
-   virtual unsigned GetAudioInCount() const = 0;
-   virtual unsigned GetAudioOutCount() const = 0;
 
    virtual int GetMidiInCount() = 0;
    virtual int GetMidiOutCount() = 0;

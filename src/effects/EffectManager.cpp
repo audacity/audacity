@@ -61,13 +61,8 @@ const PluginID & EffectManager::RegisterEffect(
    std::unique_ptr<EffectPlugin> uEffect)
 {
    auto pEffect = uEffect.get();
-   // Change the "grip" on the object
-   // uEffect is expected to be a self-hosting Nyquist effect
-   auto uDefinition = std::unique_ptr<EffectDefinitionInterface>(
-      dynamic_cast<EffectUIClientInterface*>(uEffect.release()));
-   wxASSERT(uDefinition);
    const PluginID & ID =
-      PluginManager::Get().RegisterPlugin(std::move(uDefinition), PluginTypeEffect);
+      PluginManager::Get().RegisterPlugin(std::move(uEffect), PluginTypeEffect);
    mEffects[ID] = { pEffect, {} };
    return ID;
 }
@@ -894,14 +889,8 @@ const PluginID & EffectManager::GetEffectByIdentifier(const CommandID & strTarge
    return empty;
 }
 
-/* TODO:  fix the effect management so that repeated calls with the same ID
- give Effect objects with independent state for effect settings.
- */
-EffectProcessor *
-EffectManager::NewEffect(const PluginID & ID)
+const EffectInstanceFactory *
+EffectManager::GetInstanceFactory(const PluginID &ID)
 {
-   // Must have a "valid" ID
-   if (ID.empty())
-      return nullptr;
-   return dynamic_cast<EffectUIClientInterface *>(Get().GetEffect(ID));
+   return Get().GetEffect(ID);
 }
