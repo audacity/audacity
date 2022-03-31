@@ -862,7 +862,13 @@ bool LadspaEffect::InitializePlugin()
 }
 
 std::shared_ptr<EffectInstance>
-LadspaEffect::MakeInstance(EffectSettings &settings)
+LadspaEffect::MakeInstance(EffectSettings &settings) const
+{
+   return const_cast<LadspaEffect *>(this)->MakeInstance(settings);
+}
+
+std::shared_ptr<EffectInstance>
+LadspaEffect::DoMakeInstance(EffectSettings &settings)
 {
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
       wxT("UseLatency"), mUseLatency, true);

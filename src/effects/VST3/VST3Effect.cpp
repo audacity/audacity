@@ -846,7 +846,13 @@ bool VST3Effect::InitializePlugin()
 }
    
 std::shared_ptr<EffectInstance>
-VST3Effect::MakeInstance(EffectSettings &settings)
+VST3Effect::MakeInstance(EffectSettings &settings) const
+{
+   return const_cast<VST3Effect*>(this)->DoMakeInstance(settings);
+}
+   
+std::shared_ptr<EffectInstance>
+VST3Effect::DoMakeInstance(EffectSettings &settings)
 {
    ReloadUserOptions();
    if(!LoadUserPreset(CurrentSettingsGroup(), settings))

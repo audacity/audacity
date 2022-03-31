@@ -120,7 +120,8 @@ public:
    // EffectUIClientInterface implementation
 
    std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-      override;
+      const override;
+   std::shared_ptr<EffectInstance> DoMakeInstance(EffectSettings &settings);
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;

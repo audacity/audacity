@@ -202,9 +202,13 @@ bool Effect::SupportsAutomation() const
 // EffectProcessor implementation
 
 std::shared_ptr<EffectInstance>
-Effect::MakeInstance(EffectSettings &settings)
+Effect::MakeInstance(EffectSettings &settings) const
 {
-   return std::make_shared<Effect::Instance>(*this);
+   // Cheat with const-cast to return an object that calls through to
+   // non-const methods of a stateful effect.
+   // Stateless effects should override this function and be really const
+   // correct.
+   return std::make_shared<Effect::Instance>(const_cast<Effect&>(*this));
 }
 
 unsigned Effect::GetAudioInCount() const

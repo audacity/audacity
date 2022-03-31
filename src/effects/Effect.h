@@ -131,7 +131,7 @@ class AUDACITY_DLL_API Effect /* not final */
    // EffectProcessor implementation
 
    std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-      override;
+      const override;
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

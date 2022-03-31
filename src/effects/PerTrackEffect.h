@@ -77,7 +77,7 @@ public:
    };
 
    std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-      override;
+      const override;
 
 protected:
    // These were overridables but the generality wasn't used yet

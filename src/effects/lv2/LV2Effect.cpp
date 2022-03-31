@@ -909,7 +909,13 @@ bool LV2Effect::InitializePlugin()
 }
 
 std::shared_ptr<EffectInstance>
-LV2Effect::MakeInstance(EffectSettings &settings)
+LV2Effect::MakeInstance(EffectSettings &settings) const
+{
+   return const_cast<LV2Effect*>(this)->DoMakeInstance(settings);
+}
+
+std::shared_ptr<EffectInstance>
+LV2Effect::DoMakeInstance(EffectSettings &settings)
 {
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Settings"),

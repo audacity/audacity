@@ -58,9 +58,14 @@ sampleCount PerTrackEffect::Instance::GetLatency()
 PerTrackEffect::~PerTrackEffect() = default;
 
 std::shared_ptr<EffectInstance>
-PerTrackEffect::MakeInstance(EffectSettings &settings)
+PerTrackEffect::MakeInstance(EffectSettings &settings) const
 {
-   return std::make_shared<Instance>(*this);
+   // Cheat with const-cast to return an object that calls through to
+   // non-const methods of a stateful effect.
+   // Stateless effects should override this function and be really const
+   // correct.
+   return std::make_shared<Instance>(
+      const_cast<PerTrackEffect&>(*this));
 }
 
 size_t PerTrackEffect::SetBlockSize(size_t maxBlockSize)

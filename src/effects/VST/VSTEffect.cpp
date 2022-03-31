@@ -1303,7 +1303,13 @@ bool VSTEffect::InitializePlugin()
 }
 
 std::shared_ptr<EffectInstance>
-VSTEffect::MakeInstance(EffectSettings &settings)
+VSTEffect::MakeInstance(EffectSettings &settings) const
+{
+   return const_cast<VSTEffect*>(this)->DoMakeInstance(settings);
+}
+
+std::shared_ptr<EffectInstance>
+VSTEffect::DoMakeInstance(EffectSettings &settings)
 {
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
