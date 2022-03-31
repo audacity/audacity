@@ -76,7 +76,7 @@ public:
 private:
    PluginID mID;
    wxString mParameters;  // Used only during deserialization
-   EffectProcessor *mEffect;
+   EffectProcessor *mEffect{};
    EffectSettings mSettings;
 
    struct Access;
