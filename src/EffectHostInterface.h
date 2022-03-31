@@ -19,28 +19,6 @@
 
 class EffectDefinitionInterface;
 
-/*************************************************************************************//**
-
-\class EffectHostInterface 
-
-\brief EffectHostInterface is a decorator of a EffectUIClientInterface.  It adds 
-virtual (abstract) functions to get presets and actually apply the effect.  It uses
-ConfigClientInterface to add Getters/setters for private and shared configs. 
-
-*******************************************************************************************/
-class AUDACITY_DLL_API EffectHostInterface
-{
-public:
-   EffectHostInterface &operator=(EffectHostInterface&) = delete;
-
-   virtual ~EffectHostInterface();
-
-   virtual const EffectDefinitionInterface& GetDefinition() const = 0;
-
-   virtual double GetDuration() = 0;
-   virtual void SetDuration(double seconds) = 0;
-};
-
 class wxDialog;
 class wxWindow;
 class EffectUIClientInterface;
@@ -62,9 +40,9 @@ class EffectProcessor;
 /*************************************************************************************//**
 
 \class EffectUIHostInterface
-@brief extends EffectHostInterface with UI-related services
+@brief UI-related services
 *******************************************************************************************/
-class AUDACITY_DLL_API EffectUIHostInterface : public EffectHostInterface
+class AUDACITY_DLL_API EffectUIHostInterface
 {
 public:
    using EffectSettingsAccessPtr = std::shared_ptr<EffectSettingsAccess>;
@@ -76,6 +54,8 @@ public:
 
    EffectUIHostInterface &operator=(EffectUIHostInterface&) = delete;
    virtual ~EffectUIHostInterface();
+
+   virtual const EffectDefinitionInterface& GetDefinition() const = 0;
 
    //! Usually applies factory to self and given access
    /*!
@@ -126,14 +106,17 @@ public:
       const EffectSettingsAccessPtr &pAccess = nullptr
          //!< Sometimes given; only for UI
    ) = 0;
-   virtual bool Startup(
-      EffectUIClientInterface *client, EffectSettings &settings) = 0;
 
    //! Update controls for the settings
    virtual bool TransferDataToWindow(const EffectSettings &settings) = 0;
 
    //! Update the given settings from controls
    virtual bool TransferDataFromWindow(EffectSettings &settings) = 0;
+
+   /*!
+    @return true if successful
+    */
+   virtual bool InitializeInstance(EffectSettings &settings) = 0;
 };
 
 #endif

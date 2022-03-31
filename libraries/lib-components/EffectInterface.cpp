@@ -8,6 +8,12 @@
 #include "EffectInterface.h"
 #include <wx/tokenzr.h>
 
+const RegistryPath &EffectSettingsExtra::DurationKey()
+{
+   static wxString key("LastUsedDuration");
+   return key;
+}
+
 EffectSettingsAccess::~EffectSettingsAccess() = default;
 
 SimpleEffectSettingsAccess::~SimpleEffectSettingsAccess() = default;
@@ -82,27 +88,15 @@ bool EffectDefinitionInterface::VisitSettings(
    return false;
 }
 
-auto EffectDefinitionInterfaceEx::MakeSettings() const -> Settings
+auto EffectDefinitionInterface::MakeSettings() const -> Settings
 {
-   // Temporary default implementation just saves self
-   // Cast away const! Capture pointer to self
-   return Settings( const_cast<EffectDefinitionInterfaceEx*>(this) );
+   return {};
 }
 
-bool EffectDefinitionInterfaceEx::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst) const
+bool EffectDefinitionInterface::CopySettingsContents(
+   const EffectSettings &, EffectSettings &) const
 {
-   //! No real copy, just a sanity check on common origin
-   return FindMe(src) && FindMe(dst);
-}
-
-EffectDefinitionInterfaceEx *
-EffectDefinitionInterfaceEx::FindMe(const Settings &settings) const
-{
-   if (auto ppEffect = settings.cast<EffectDefinitionInterfaceEx*>();
-       ppEffect && *ppEffect == this)
-      return *ppEffect;
-   return nullptr;
+   return true;
 }
 
 EffectProcessor::~EffectProcessor() = default;

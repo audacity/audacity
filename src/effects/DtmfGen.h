@@ -88,7 +88,7 @@ public:
       double dtmfDutyCycle{DefaultDutyCycle}; // ratio of dtmfTone/(dtmfTone+dtmfSilence)
       double dtmfAmplitude{DefaultAmplitude}; // amplitude of dtmf tone sequence, restricted to (0-1)
 
-      void Recalculate(Effect &effect);
+      void Recalculate(EffectSettings &settings);
    };
 
    struct Validator;

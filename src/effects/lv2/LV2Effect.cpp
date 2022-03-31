@@ -49,7 +49,6 @@
 
 #include "AudacityException.h"
 #include "ConfigInterface.h"
-#include "../../EffectHostInterface.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
@@ -352,7 +351,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
 {
    mPlug = plug;
 
-   mHost = NULL;
    mMaster = NULL;
    mProcess = NULL;
    mSuilInstance = NULL;
@@ -910,36 +908,31 @@ bool LV2Effect::InitializePlugin()
    return true;
 }
 
-bool LV2Effect::InitializeInstance(
-   EffectHostInterface *host, EffectSettings &settings)
+bool LV2Effect::InitializeInstance(EffectSettings &settings)
 {
-   mHost = host;
-   if (mHost)
+   int userBlockSize;
+   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
+      wxT("BufferSize"), userBlockSize, 8192);
+   mUserBlockSize = std::max(1, userBlockSize);
+   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
+      wxT("UseLatency"), mUseLatency, true);
+   GetConfig(*this, PluginSettings::Shared, wxT("Settings"), wxT("UseGUI"),
+      mUseGUI, true);
+
+   mBlockSize = mUserBlockSize;
+
+   bool haveDefaults;
+   GetConfig(*this, PluginSettings::Private,
+      FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+      false);
+   if (!haveDefaults)
    {
-      int userBlockSize;
-      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-         wxT("BufferSize"), userBlockSize, 8192);
-      mUserBlockSize = std::max(1, userBlockSize);
-      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-         wxT("UseLatency"), mUseLatency, true);
-      GetConfig(*this, PluginSettings::Shared, wxT("Settings"), wxT("UseGUI"),
-         mUseGUI, true);
-
-      mBlockSize = mUserBlockSize;
-
-      bool haveDefaults;
-      GetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
-         false);
-      if (!haveDefaults)
-      {
-         SaveParameters(FactoryDefaultsGroup(), settings);
-         SetConfig(*this, PluginSettings::Private,
-            FactoryDefaultsGroup(), wxT("Initialized"), true);
-      }
-
-      LoadParameters(CurrentSettingsGroup(), settings);
+      SaveParameters(FactoryDefaultsGroup(), settings);
+      SetConfig(*this, PluginSettings::Private,
+         FactoryDefaultsGroup(), wxT("Initialized"), true);
    }
+
+   LoadParameters(CurrentSettingsGroup(), settings);
 
    lv2_atom_forge_init(&mForge, &mURIDMapFeature);
 
@@ -1560,12 +1553,10 @@ bool LV2Effect::IsGraphicalUI()
    return mUseGUI;
 }
 
-bool LV2Effect::ValidateUI(EffectSettings &)
+bool LV2Effect::ValidateUI(EffectSettings &settings)
 {
    if (GetType() == EffectTypeGenerate)
-   {
-      mHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
 
    return true;
 }
@@ -2320,7 +2311,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                NumericTextCtrl(w, ID_Duration,
                                NumericConverter::TIME,
                                extra.GetDurationFormat(),
-                               mHost->GetDuration(),
+                               extra.GetDuration(),
                                mSampleRate,
                                NumericTextCtrl::Options {}
             .AutoPos(true));

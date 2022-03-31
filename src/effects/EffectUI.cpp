@@ -212,7 +212,6 @@ bool EffectUIHost::TransferDataToWindow()
       mpValidator->UpdateUI() &&
       //! Do validators
       wxDialogWrapper::TransferDataToWindow();
- 
 }
 
 bool EffectUIHost::TransferDataFromWindow()
@@ -234,6 +233,15 @@ bool EffectUIHost::TransferDataFromWindow()
    mpAccess->ModifySettings([&](EffectSettings &settings){
       // Allow other transfers, and reassignment of settings
       result = mEffectUIHost.TransferDataFromWindow(settings);
+      if (result) {
+         auto &definition = mEffectUIHost.GetDefinition();
+         if (definition.GetType() == EffectTypeGenerate) {
+            const auto seconds = settings.extra.GetDuration();
+            SetConfig(definition, PluginSettings::Private,
+               CurrentSettingsGroup(), EffectSettingsExtra::DurationKey(),
+               seconds);
+         }
+      }
    });
    return result;
 }

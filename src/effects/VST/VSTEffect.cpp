@@ -86,7 +86,6 @@
 #include "PlatformCompatibility.h"
 #include "../../SelectFile.h"
 #include "../../ShuttleGui.h"
-#include "../../EffectHostInterface.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/NumericTextCtrl.h"
@@ -225,7 +224,7 @@ enum InfoKeys
 //! This object exists in a separate process, to validate a newly seen plug-in.
 /*! It needs to implement EffectDefinitionInterface but mostly just as stubs */
 class VSTSubProcess final : public wxProcess
-   , public EffectDefinitionInterfaceEx
+   , public EffectDefinitionInterface
 {
 public:
    VSTSubProcess()
@@ -1317,34 +1316,29 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
-bool VSTEffect::InitializeInstance(
-   EffectHostInterface *host, EffectSettings &settings)
+bool VSTEffect::InitializeInstance(EffectSettings &settings)
 {
-   mHost = host;
-   if (mHost)
+   int userBlockSize;
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      wxT("BufferSize"), userBlockSize, 8192);
+   mUserBlockSize = std::max( 1, userBlockSize );
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      wxT("UseLatency"), mUseLatency, true);
+
+   mBlockSize = mUserBlockSize;
+
+   bool haveDefaults;
+   GetConfig(*this, PluginSettings::Private,
+      FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+      false);
+   if (!haveDefaults)
    {
-      int userBlockSize;
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("BufferSize"), userBlockSize, 8192);
-      mUserBlockSize = std::max( 1, userBlockSize );
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("UseLatency"), mUseLatency, true);
-
-      mBlockSize = mUserBlockSize;
-
-      bool haveDefaults;
-      GetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
-         false);
-      if (!haveDefaults)
-      {
-         SaveParameters(FactoryDefaultsGroup(), settings);
-         SetConfig(*this, PluginSettings::Private,
-            FactoryDefaultsGroup(), wxT("Initialized"), true);
-      }
-
-      LoadParameters(CurrentSettingsGroup(), settings);
+      SaveParameters(FactoryDefaultsGroup(), settings);
+      SetConfig(*this, PluginSettings::Private,
+         FactoryDefaultsGroup(), wxT("Initialized"), true);
    }
+
+   LoadParameters(CurrentSettingsGroup(), settings);
    return true;
 }
 
@@ -1794,12 +1788,10 @@ bool VSTEffect::IsGraphicalUI()
    return mGui;
 }
 
-bool VSTEffect::ValidateUI(EffectSettings &)
+bool VSTEffect::ValidateUI(EffectSettings &settings)
 {
    if (GetType() == EffectTypeGenerate)
-   {
-      mHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
 
    return true;
 }
@@ -2770,7 +2762,7 @@ void VSTEffect::BuildPlain(EffectSettingsAccess &access)
                NumericTextCtrl(scroller, ID_Duration,
                   NumericConverter::TIME,
                   extra.GetDurationFormat(),
-                  mHost->GetDuration(),
+                  extra.GetDuration(),
                   mSampleRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
