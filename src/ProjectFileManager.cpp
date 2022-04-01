@@ -445,8 +445,9 @@ bool ProjectFileManager::SaveAs(bool allowOverwrite /* = false */)
    TranslatableString message = XO("\
 'Save Project' is for an Audacity project, not an audio file.\n\
 For an audio file that will open in other apps, use 'Export'.\n");
+   TranslatableString footer = XXO("Don't show this infomation again");
 
-   if (ShowWarningDialog(&window, wxT("FirstProjectSave"), message, true) != wxID_OK) {
+   if (ShowWarningDialog(&window, wxT("FirstProjectSave"), message, true, footer) != wxID_OK) {
       return false;
    }
 

@@ -36,7 +36,8 @@ class WarningDialog final : public wxDialogWrapper
    WarningDialog(wxWindow *parent,
                  const TranslatableString &message,
                  const TranslatableString &footer,
-                 bool showCancelButton);
+                 bool showCancelButton,
+                 bool isInfoDlog = false);
 
  private:
    void OnOK(wxCommandEvent& event);
@@ -58,8 +59,10 @@ const TranslatableString &DefaultWarningFooter()
 
 WarningDialog::WarningDialog(wxWindow *parent, const TranslatableString &message,
                              const TranslatableString &footer,
-                             bool showCancelButton)
-:  wxDialogWrapper(parent, wxID_ANY, XO("Warning"),
+                             bool showCancelButton,
+                             bool isInfoDlog)
+:  wxDialogWrapper(parent, wxID_ANY, 
+            (isInfoDlog ? XO("Infomation") : XO("Warning")),
             wxDefaultPosition, wxDefaultSize,
             (showCancelButton ? wxDEFAULT_DIALOG_STYLE : wxCAPTION | wxSYSTEM_MENU)) // Unlike wxDEFAULT_DIALOG_STYLE, no wxCLOSE_BOX.
 {
@@ -100,7 +103,8 @@ int ShowWarningDialog(wxWindow *parent,
       return wxID_OK;
    }
 
-   WarningDialog dlog(parent, message, footer, showCancelButton);
+   bool isInfoDlog = internalDialogName == wxT("FirstProjectSave");
+   WarningDialog dlog(parent, message, footer, showCancelButton, isInfoDlog);
 
    int retCode = dlog.ShowModal();
    if (retCode == wxID_CANCEL)
