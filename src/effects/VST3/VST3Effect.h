@@ -41,7 +41,7 @@ class ParameterChangesProvider;
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
-class VST3Effect final : public PerTrackEffect
+class VST3Effect final : public StatefulPerTrackEffect
 {
    //Keep strong reference to a module while effect is alive
    std::shared_ptr<VST3::Hosting::Module> mModule;

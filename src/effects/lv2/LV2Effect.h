@@ -248,7 +248,7 @@ using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
 class LV2EffectSettingsDialog;
 class LV2Wrapper;
 
-class LV2Effect final : public PerTrackEffect
+class LV2Effect final : public StatefulPerTrackEffect
 {
 public:
    LV2Effect(const LilvPlugin *plug);

@@ -34,7 +34,7 @@ public:
    double xn1Treble, xn2Treble, yn1Treble, yn2Treble;
 };
 
-class EffectBassTreble final : public PerTrackEffect
+class EffectBassTreble final : public StatefulPerTrackEffect
 {
 public:
    static inline EffectBassTreble *

@@ -23,7 +23,7 @@ class wxTextCtrl;
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectDtmf final : public PerTrackEffect
+class EffectDtmf final : public StatefulPerTrackEffect
 {
 public:
    struct Settings;

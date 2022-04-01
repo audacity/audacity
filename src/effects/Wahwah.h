@@ -37,7 +37,7 @@ public:
    double b0, b1, b2, a0, a1, a2;
 };
 
-class EffectWahwah final : public PerTrackEffect
+class EffectWahwah final : public StatefulPerTrackEffect
 {
 public:
    static inline EffectWahwah *

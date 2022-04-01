@@ -23,8 +23,9 @@ using FloatBuffers = ArraysOf<float>;
 //! of other tracks.
 /*!
    Its override of Effect::Process() uses ProcessInitialize(),
-   ProcessBlock(), and ProcessFinalize() methods of EffectProcessor,
-   and also GetLatency() to determine how many leading output samples to
+   ProcessBlock(), and ProcessFinalize() methods of its instance made by
+   MakeInstance(), which must be a subclass of PerTrackEffect::Instance.
+   Also uses GetLatency() to determine how many leading output samples to
    discard and how many extra samples to produce.
  */
 class PerTrackEffect : public Effect
@@ -35,12 +36,6 @@ public:
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
-   //! Adds virtual functions whose default implementations call-through to the
-   //! PerTrackEffect members
-   /*!
-    PerTrackEffects that are completely stateless will define subclasses that
-    override the new virtual functions
-    */
    class AUDACITY_DLL_API Instance : public Effect::Instance {
    public:
       explicit Instance(PerTrackEffect &processor)
@@ -52,53 +47,28 @@ public:
       //! Uses the other virtual functions of this class
       bool Process(EffectSettings &settings) final;
 
-      /*!
-       @copydoc PerTrackEffect::ProcessInitialize()
-       */
+      //! Called at start of destructive processing, for each (mono/stereo) track
+      //! Default implementation does nothing, returns true
       virtual bool ProcessInitialize(EffectSettings &settings,
          sampleCount totalLen, ChannelNames chanMap);
 
-      /*!
-       @copydoc PerTrackEffect::ProcessFinalize()
-       */
+      //! Called at end of destructive processing, for each (mono/stereo) track
+      //! Default implementation does nothing, returns true
+      //! This may be called during stack unwinding:
       virtual bool ProcessFinalize() /* noexcept */ ;
 
-      /*!
-       @copydoc PerTrackEffect::ProcessBlock()
-       */
+      //! Called for destructive effect computation
       virtual size_t ProcessBlock(EffectSettings &settings,
-         const float *const *inBlock, float *const *outBlock, size_t blockLen);
+         const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      = 0;
 
-      /*!
-       @copydoc PerTrackEffect::GetLatency()
-       */
+      //! Called for destructive, non-realtime effect computation
+      //! Default implementation returns zero
       virtual sampleCount GetLatency();
 
    protected:
       PerTrackEffect &mProcessor;
    };
-
-   //! Called for destructive, non-realtime effect computation
-   //! Default implementation returns zero
-   virtual sampleCount GetLatency();
-
-   //! Called at start of destructive processing, for each (mono/stereo) track
-   //! Default implementation does nothing, returns true
-   virtual bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap = nullptr);
-
-   //! Called at end of destructive processing, for each (mono/stereo) track
-   //! Default implementation does nothing, returns true
-   //! This may be called during stack unwinding:
-   virtual bool ProcessFinalize() /* noexcept */;
-
-   //! Called for destructive effect computation
-   //! Default implementation does nothing, returns zero
-   virtual size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen);
-
-   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-      const override;
 
 protected:
    // These were overridables but the generality wasn't used yet
@@ -128,5 +98,55 @@ private:
 
 template<typename Settings> using PerTrackEffectWithSettings =
    EffectWithSettings<Settings, PerTrackEffect>;
+
+//! Subclass of PerTrackEffect, to be eliminated after all of its subclasses
+//! are rewritten to be stateless
+class StatefulPerTrackEffect : public PerTrackEffect {
+public:
+
+   //! Implemented with call-throughs to the
+   //! StatefulPerTrackEffect virtual functions
+   class AUDACITY_DLL_API Instance : public PerTrackEffect::Instance {
+   public:
+      using PerTrackEffect::Instance::Instance;
+      ~Instance() override;
+      bool ProcessInitialize(EffectSettings &settings,
+         sampleCount totalLen, ChannelNames chanMap) override;
+      bool ProcessFinalize() /* noexcept */ override;
+      size_t ProcessBlock(EffectSettings &settings,
+         const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      override;
+      sampleCount GetLatency() override;
+
+   protected:
+      StatefulPerTrackEffect &GetEffect() const
+      { return static_cast<StatefulPerTrackEffect &>(mProcessor); }
+   };
+
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+      const override;
+
+   /*!
+    @copydoc PerTrackEffect::Instance::GetLatency()
+    */
+   virtual sampleCount GetLatency();
+
+   /*!
+    @copydoc PerTrackEffect::Instance::ProcessInitialize()
+    */
+   virtual bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap = nullptr);
+
+   /*!
+    @copydoc PerTrackEffect::Instance::ProcessFinalize()
+    */
+   virtual bool ProcessFinalize() /* noexcept */;
+
+   /*!
+    @copydoc PerTrackEffect::Instance::ProcessBlock()
+    */
+   virtual size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen);
+};
 
 #endif

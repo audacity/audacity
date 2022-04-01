@@ -22,7 +22,7 @@ class ShuttleGui;
 
 struct Reverb_priv_t;
 
-class EffectReverb final : public PerTrackEffect
+class EffectReverb final : public StatefulPerTrackEffect
 {
 public:
    struct Params;

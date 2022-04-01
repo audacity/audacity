@@ -32,7 +32,7 @@ class ShuttleGui;
 
 class EffectScienFilterPanel;
 
-class EffectScienFilter final : public PerTrackEffect
+class EffectScienFilter final : public StatefulPerTrackEffect
 {
 public:
    static inline EffectScienFilter *

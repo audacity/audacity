@@ -20,7 +20,7 @@
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectToneGen : public PerTrackEffect
+class EffectToneGen : public StatefulPerTrackEffect
 {
 public:
    static inline EffectToneGen *
