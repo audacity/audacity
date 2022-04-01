@@ -291,12 +291,12 @@ public:
 
    bool SaveSettings(const EffectSettings &, CommandParameters &) const override
       { return true; }
-   bool LoadSettings(const CommandParameters &, Settings &) const override
+   bool LoadSettings(const CommandParameters &, EffectSettings &) const override
       { return true; }
 
-   bool LoadUserPreset(const RegistryPath &, Settings &) const override
+   bool LoadUserPreset(const RegistryPath &, EffectSettings &) const override
       { return true; }
-   bool SaveUserPreset(const RegistryPath &, const Settings &) const override
+   bool SaveUserPreset(const RegistryPath &, const EffectSettings &) const override
       { return true; }
 
    RegistryPaths GetFactoryPresets() const override { return {}; }
@@ -1316,7 +1316,8 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
-bool VSTEffect::InitializeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance>
+VSTEffect::MakeInstance(EffectSettings &settings)
 {
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -1339,7 +1340,7 @@ bool VSTEffect::InitializeInstance(EffectSettings &settings)
    }
 
    LoadParameters(CurrentSettingsGroup(), settings);
-   return true;
+   return std::make_shared<Effect::Instance>(*this);
 }
 
 unsigned VSTEffect::GetAudioInCount() const
@@ -1638,7 +1639,7 @@ bool VSTEffect::SaveSettings(
 }
 
 bool VSTEffect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    for (int i = 0; i < mAEffect->numParams; i++)

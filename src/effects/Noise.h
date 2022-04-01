@@ -13,13 +13,13 @@
 #ifndef __AUDACITY_EFFECT_NOISE__
 #define __AUDACITY_EFFECT_NOISE__
 
-#include "Effect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectNoise final : public Effect
+class EffectNoise final : public PerTrackEffect
 {
 public:
    static inline EffectNoise *

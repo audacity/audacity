@@ -11,9 +11,9 @@
 #ifndef __AUDACITY_EFFECT_FADE__
 #define __AUDACITY_EFFECT_FADE__
 
-#include "Effect.h"
+#include "PerTrackEffect.h"
 
-class EffectFade : public Effect
+class EffectFade : public PerTrackEffect
 {
 public:
    EffectFade(bool fadeIn = false);

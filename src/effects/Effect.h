@@ -12,68 +12,18 @@
 #ifndef __AUDACITY_EFFECT__
 #define __AUDACITY_EFFECT__
 
-
-
-#include <functional>
-#include <set>
-
-#include <wx/defs.h>
-
-class wxButton;
-class wxCheckBox;
-class wxChoice;
-class wxListBox;
-class wxWindow;
-
-#include "ConfigInterface.h"
-#include "EffectHostInterface.h" // to inherit
-#include "EffectInterface.h" // to inherit
-#include "PluginInterface.h"
+#include "EffectBase.h"
 
 #include "SampleCount.h"
-#include "SelectedRegion.h"
-
-#include "Track.h"
-
-#include "../widgets/wxPanelWrapper.h" // to inherit
-#include <wx/windowptr.h>
-
-class wxArrayString;
-class ShuttleGui;
-class AudacityCommand;
 
 #define BUILTIN_EFFECT_PREFIX wxT("Built-in Effect: ")
 
-namespace BasicUI { class ProgressDialog; }
-
-class AudacityProject;
 class EffectParameterMethods;
 class LabelTrack;
-class NotifyingSelectedRegion;
-class SelectedRegion;
-class Track;
-class TrackList;
-class WaveTrackFactory;
 class WaveTrack;
 
-using FloatBuffers = ArraysOf<float>;
-
-/* i18n-hint: "Nyquist" is an embedded interpreted programming language in
- Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
- In the translations of this and other strings, you may transliterate the
- name into another alphabet.  */
-#define NYQUISTEFFECTS_FAMILY ( EffectFamilySymbol{ XO("Nyquist") } )
-
-#define NYQUIST_WORKER_ID wxT("Nyquist Worker")
-
-// TODO:  Apr-06-2015
-// TODO:  Much more cleanup of old methods and variables is needed, but
-// TODO:  can't be done until after all effects are using the NEW API.
-
-//! An Effect object is at once host and client:  it is self-hosting.
 class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
-   public EffectUIClientInterface,
-   public EffectUIHostInterface
+   public EffectBase
 {
  //
  // public methods
@@ -89,6 +39,23 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // Avoid allocating memory or doing time-consuming processing here.
    Effect();
    virtual ~Effect();
+
+   //! Default result of MakeInstance() calls through to members of Effect
+   /*!
+    Effects that are completely stateless should not use this
+    */
+   class AUDACITY_DLL_API Instance : public EffectInstance {
+   public:
+      explicit Instance(Effect &effect);
+      ~Instance() override;
+
+      bool Init() override;
+
+      bool Process(EffectSettings &settings) override;
+
+   protected:
+      Effect &mEffect;
+   };
 
    // ComponentInterface implementation
 
@@ -117,21 +84,22 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
    bool LoadUserPreset(
-      const RegistryPath & name, Settings &settings) const override;
+      const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
-      const RegistryPath & name, const Settings &settings) const override;
+      const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-   bool LoadFactoryDefaults(Settings &settings) const override;
+   bool LoadFactoryDefaults(EffectSettings &settings) const override;
 
    // EffectProcessor implementation
 
-   bool InitializeInstance(EffectSettings &settings) override;
-   
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+      override;
+
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
@@ -187,19 +155,16 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool HasOptions() override;
    void ShowOptions() override;
 
-   // EffectUIHostInterface implementation
+   // EffectPlugin implementation
 
    const EffectDefinitionInterface& GetDefinition() const override;
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
 
-   // EffectUIHostInterface implementation
+   // EffectPlugin implementation
 
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory, EffectSettingsAccess &access,
       bool forceModal = false) override;
-   // The Effect class fully implements the Preview method for you.
-   // Only override it if you need to do preprocessing or cleanup.
-   void Preview(EffectSettingsAccess &access, bool dryOnly) override;
    bool SaveSettingsAsString(
       const EffectSettings &settings, wxString & parms) const override;
    bool LoadSettingsFromString(
@@ -207,15 +172,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool IsBatchProcessing() const override;
    void SetBatchProcessing() override;
    void UnsetBatchProcessing() override;
-   bool DoEffect(EffectSettings &settings, //!< Always given; only for processing
-      double projectRate, TrackList *list,
-      WaveTrackFactory *factory, NotifyingSelectedRegion &selectedRegion,
-      unsigned flags,
-      // Prompt the user for input only if the next arguments are not all null.
-      wxWindow *pParent,
-      const EffectDialogFactory &dialogFactory,
-      const EffectSettingsAccessPtr &pAccess //!< Sometimes given; only for UI
-   ) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
@@ -223,17 +179,8 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    unsigned TestUIFlags(unsigned mask);
 
-   void SetPresetParameters( const wxArrayString * Names, const wxArrayString * Values ) {
-      if( Names ) mPresetNames = *Names;
-      if( Values ) mPresetValues = *Values;
-   }
-
    //! Re-invoke DoEffect on another Effect object that implements the work
-   bool Delegate( Effect &delegate,
-      EffectSettings &settings, //!< Always given; only for processing
-      wxWindow &parent, const EffectDialogFactory &factory,
-      const EffectSettingsAccessPtr &pSettings //!< Sometimes given; only for UI
-   );
+   bool Delegate(Effect &delegate, EffectSettings &settings);
 
    // Display a message box, using effect's (translated) name as the prefix
    // for the title.
@@ -242,51 +189,29 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
                   long style = DefaultMessageBoxStyle,
                   const TranslatableString& titleStr = {}) const;
 
-   static void IncEffectCounter(){ nEffectsDone++;};
+   static void IncEffectCounter(){ nEffectsDone++;}
 
  protected:
    bool EnableApply(bool enable = true);
    bool EnablePreview(bool enable = true);
 
-//
-// protected virtual methods
-//
-// Each subclass of Effect overrides one or more of these methods to
-// do its processing.
-//
-protected:
-
-   // Called once each time an effect is called.  Perform any initialization;
-   // make sure that the effect can be performed on the selected tracks and
-   // return false otherwise
+   /*!
+     @copydoc EffectInstance::Init()
+     Default implementation does nothing, returns true
+   */
    virtual bool Init();
 
-   // Check whether effect should be skipped
-   // Typically this is only useful in automation, for example
-   // detecting that zero noise reduction is to be done,
-   // or that normalisation is being done without Dc bias shift
-   // or amplitude modification
-   virtual bool CheckWhetherSkipEffect() { return false; }
+   //! Default implementation returns false
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
 
-   // Actually do the effect here.
-   /*! If Process() is not overridden, it uses ProcessInitialize(),
-    ProcessBlock(), and ProcessFinalize() methods of EffectProcessor,
-    and also GetLatency() to determine how many leading output samples to
-    discard and how many extra samples to produce. */
-   virtual bool Process(EffectSettings &settings);
-   virtual bool ProcessPass(EffectSettings &settings);
-   virtual bool InitPass1();
-   virtual bool InitPass2();
+   //! Default implementation returns `previewLength`
+   double CalcPreviewInputLength(
+      const EffectSettings &settings, double previewLength) const override;
 
-   // clean up any temporary memory, needed only per invocation of the
-   // effect, after either successful or failed or exception-aborted processing.
-   // Invoked inside a "finally" block so it must be no-throw.
-   virtual void End();
-
-   // Most effects just use the previewLength, but time-stretching/compressing
-   // effects need to use a different input length, so override this method.
-   virtual double CalcPreviewInputLength(
-      const EffectSettings &settings, double previewLength);
+   /*!
+    @copydoc EffectInstance::Process
+    */
+   virtual bool Process(EffectInstance &instance, EffectSettings &settings) = 0;
 
    //! Add controls to effect panel; always succeeds
    /*!
@@ -303,48 +228,30 @@ protected:
    // is okay, but don't try to undo).
 
    // Pass a fraction between 0.0 and 1.0
-   bool TotalProgress(double frac, const TranslatableString & = {});
+   bool TotalProgress(double frac, const TranslatableString & = {}) const;
 
    // Pass a fraction between 0.0 and 1.0, for the current track
    // (when doing one track at a time)
-   bool TrackProgress(int whichTrack, double frac, const TranslatableString & = {});
+   bool TrackProgress(
+      int whichTrack, double frac, const TranslatableString & = {}) const;
 
    // Pass a fraction between 0.0 and 1.0, for the current track group
    // (when doing stereo groups at a time)
-   bool TrackGroupProgress(int whichGroup, double frac, const TranslatableString & = {});
+   bool TrackGroupProgress(
+      int whichGroup, double frac, const TranslatableString & = {}) const;
 
-   int GetNumWaveTracks() { return mNumTracks; }
-   int GetNumWaveGroups() { return mNumGroups; }
+   int GetNumWaveTracks() const { return mNumTracks; }
+   int GetNumWaveGroups() const { return mNumGroups; }
 
    // Calculates the start time and length in samples for one or two channels
    void GetBounds(
       const WaveTrack &track, const WaveTrack *pRight,
       sampleCount *start, sampleCount *len);
 
-   // Previewing linear effect can be optimised by pre-mixing. However this
-   // should not be used for non-linear effects such as dynamic processors
-   // To allow pre-mixing before Preview, set linearEffectFlag to true.
-   void SetLinearEffectFlag(bool linearEffectFlag);
-
-   // Most effects only need to preview a short selection. However some
-   // (such as fade effects) need to know the full selection length.
-   void SetPreviewFullSelectionFlag(bool previewDurationFlag);
-
-   // Use this if the effect needs to know if it is previewing
-   bool IsPreviewing() { return mIsPreview; }
-
-   // Most effects only require selected tracks to be copied for Preview.
-   // If IncludeNotSelectedPreviewTracks(true), then non-linear effects have
-   // preview copies of all wave tracks.
-   void IncludeNotSelectedPreviewTracks(bool includeNotSelected);
-
    // Use this method to copy the input tracks to mOutputTracks, if
    // doing the processing on them, and replacing the originals only on success (and not cancel).
    // If not all sync-locked selected, then only selected wave tracks.
    void CopyInputTracks(bool allSyncLockSelected = false);
-
-   // A global counter of all the successful Effect invocations.
-   static int nEffectsDone;
 
    // For the use of analyzers, which don't need to make output wave tracks,
    // but may need to add label tracks.
@@ -409,95 +316,51 @@ protected:
    ModifiedAnalysisTrack ModifyAnalysisTrack
       (const LabelTrack *pOrigTrack, const wxString &name = wxString());
 
-   // If bGoodResult, replace mWaveTracks tracks in mTracks with successfully processed
-   // mOutputTracks copies, get rid of old mWaveTracks, and set mWaveTracks to mOutputTracks.
-   // Else clear and DELETE mOutputTracks copies.
-   void ReplaceProcessedTracks(const bool bGoodResult);
-
    // Use this to append a NEW output track.
    Track *AddToOutputTracks(const std::shared_ptr<Track> &t);
 
-//
-// protected data
-//
-// The Effect base class will set these variables, some or all of which
-// may be needed by any particular subclass of Effect.
-//
 protected:
-   BasicUI::ProgressDialog *mProgress = nullptr; // Temporary pointer, NOT deleted in destructor.
-   double         mProjectRate; // Sample rate of the project - NEW tracks should
-                               // be created with this rate...
-   double         mSampleRate;
-   WaveTrackFactory   *mFactory;
-   const TrackList *inputTracks() const { return mTracks; }
-   const AudacityProject *FindProject() const;
-   std::shared_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
-   double         mT0;
-   double         mT1;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   double         mF0;
-   double         mF1;
-#endif
-   wxArrayString  mPresetNames;
-   wxArrayString  mPresetValues;
-   int            mPass;
+   double         mSampleRate{};
 
    // UI
    //! This smart pointer tracks the lifetime of the dialog
    wxWeakRef<wxDialog> mHostUIDialog;
-   wxWindow       *mUIParent;
-   unsigned       mUIFlags{ 0 };
+   wxWindow       *mUIParent{};
 
-   sampleCount    mSampleCnt;
-
- // Used only by the base Effect class
- //
- private:
-   //! This weak pointer may be the same as the above, or null
-   wxWeakRef<wxDialog> mUIDialog;
-
-   wxString GetSavedStateGroup();
-   double GetDefaultDuration();
-
-   void CountWaveTracks();
-
-   // Driver for client effects
-   bool ProcessTrack(EffectSettings &settings,
-      int count,
-      ChannelNames map,
-      WaveTrack *left,
-      WaveTrack *right,
-      sampleCount start,
-      sampleCount len,
-      FloatBuffers &inBuffer,
-      FloatBuffers &outBuffer,
-      ArrayOf< float * > &inBufPos,
-      ArrayOf< float *> &outBufPos);
-
- //
- // private data
- //
- // Used only by the base Effect class
- //
 private:
-   TrackList *mTracks; // the complete list of all tracks
+   wxString GetSavedStateGroup();
 
-   bool mIsBatch;
-   bool mIsLinearEffect;
-   bool mPreviewWithNotSelected;
-   bool mPreviewFullSelection;
+   bool mIsBatch{ false };
 
-   bool mIsPreview;
+   size_t mEffectBlockSize{ 0 };
+};
 
-   std::vector<Track*> mIMap;
-   std::vector<Track*> mOMap;
-
-   int mNumTracks; //v This is really mNumWaveTracks, per CountWaveTracks() and GetNumWaveTracks().
-   int mNumGroups;
-
-   size_t mBufferSize;
-   size_t mBlockSize;
-   unsigned mNumChannels;
+//! Convenience for generating EffectDefinitionInterface overrides
+//! and static down-casting functions
+template<typename Settings, typename Base = Effect>
+class EffectWithSettings : public Base {
+public:
+   EffectSettings MakeSettings() const override
+   {
+      return EffectSettings::Make<Settings>();
+   }
+   bool CopySettingsContents(
+      const EffectSettings &src, EffectSettings &dst) const override
+   {
+      return EffectSettings::Copy<Settings>(src, dst);
+   }
+   //! Assume settings originated from MakeSettings() and copies thereof
+   static inline Settings &GetSettings(EffectSettings &settings)
+   {
+      auto pSettings = settings.cast<Settings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+   //! Assume settings originated from MakeSettings() and copies thereof
+   static inline const Settings &GetSettings(const EffectSettings &settings)
+   {
+      return GetSettings(const_cast<EffectSettings &>(settings));
+   }
 };
 
 // FIXME:
@@ -505,29 +368,5 @@ private:
 // FIXME:
 
 #define ID_EFFECT_PREVIEW ePreviewID
-
-// Utility functions
-
-inline float TrapFloat(float x, float min, float max)
-{
-   if (x <= min)
-      return min;
-
-   if (x >= max)
-      return max;
-
-   return x;
-}
-
-inline long TrapLong(long x, long min, long max)
-{
-   if (x <= min)
-      return min;
-
-   if (x >= max)
-      return max;
-
-   return x;
-}
 
 #endif

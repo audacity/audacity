@@ -61,9 +61,8 @@ public:
 
    // Effect implementation
 
-   bool Init() override;
-   bool Process(EffectSettings &settings) override;
-   bool CheckWhetherSkipEffect() override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

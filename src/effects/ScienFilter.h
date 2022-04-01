@@ -17,8 +17,9 @@ Vaughan Johnson (Preview)
 
 #include "Biquad.h"
 
-#include "Effect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
+#include "../widgets/wxPanelWrapper.h"
 #include <float.h> // for FLT_MAX
 
 class wxBitmap;
@@ -31,7 +32,7 @@ class ShuttleGui;
 
 class EffectScienFilterPanel;
 
-class EffectScienFilter final : public Effect
+class EffectScienFilter final : public PerTrackEffect
 {
 public:
    static inline EffectScienFilter *

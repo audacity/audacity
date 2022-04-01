@@ -92,6 +92,8 @@ effects from this one class.
 #include <sstream>
 #include <float.h>
 
+#define NYQUIST_WORKER_ID wxT("Nyquist Worker")
+
 int NyquistEffect::mReentryCount = 0;
 
 enum
@@ -421,14 +423,14 @@ bool NyquistEffect::SaveSettings(
 }
 
 bool NyquistEffect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
    return const_cast<NyquistEffect*>(this)->DoLoadSettings(parms, settings);
 }
 
 bool NyquistEffect::DoLoadSettings(
-   const CommandParameters & parms, Settings &settings)
+   const CommandParameters & parms, EffectSettings &settings)
 {
    // Due to a constness problem that happens when using the prompt, we need
    // to be ready to switch the params to a local instance.
@@ -655,17 +657,27 @@ bool NyquistEffect::Init()
    return true;
 }
 
-bool NyquistEffect::CheckWhetherSkipEffect()
-{
-   // If we're a prompt and we have controls, then we've already processed
-   // the audio, so skip further processing.
-   return (mIsPrompt && mControls.size() > 0 && !IsBatchProcessing());
-}
-
 static void RegisterFunctions();
 
-bool NyquistEffect::Process(EffectSettings &)
+bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
 {
+   if (mIsPrompt && mControls.size() > 0 && !IsBatchProcessing()) {
+      auto &nyquistSettings = GetSettings(settings);
+      auto cleanup = finally([&]{
+         // Free up memory
+         nyquistSettings.proxySettings = {};
+      });
+      NyquistEffect proxy{ NYQUIST_WORKER_ID };
+      proxy.SetCommand(mInputCmd);
+      proxy.mDebug = nyquistSettings.proxyDebug;
+      auto result = Delegate(proxy, nyquistSettings.proxySettings);
+      if (result) {
+         mT0 = proxy.mT0;
+         mT1 = proxy.mT1;
+      }
+      return result;
+   }
+
    // Check for reentrant Nyquist commands.
    // I'm choosing to mark skipped Nyquist commands as successful even though
    // they are skipped.  The reason is that when Nyquist calls out to a chain,
@@ -1056,52 +1068,47 @@ int NyquistEffect::ShowHostInterface(
    // We're done if the user clicked "Close", we are not the Nyquist Prompt,
    // or the program currently loaded into the prompt doesn't have a UI.
    if (!res || !mIsPrompt || mControls.size() == 0)
-   {
       return res;
-   }
+
+   // Nyquist prompt was OK, but gave us some magic ;control comments to
+   // reinterpret into a second dialog
 
    NyquistEffect effect(NYQUIST_WORKER_ID);
+   effect.SetCommand(mInputCmd);
 
-   if (IsBatchProcessing())
-   {
-      // Must give effect its own settings to interpret, not those in access
-      auto newSettings = effect.MakeSettings();
+   // Must give effect its own settings to interpret, not those in access
+   auto newSettings = effect.MakeSettings();
+   auto newAccess = std::make_shared<SimpleEffectSettingsAccess>(newSettings);
 
+   if (IsBatchProcessing()) {
       effect.SetBatchProcessing();
-      effect.SetCommand(mInputCmd);
 
       CommandParameters cp;
       cp.SetParameters(mParameters);
       effect.LoadSettings(cp, newSettings);
 
       // Show the normal (prompt or effect) interface
-      auto newAccess = std::make_shared<SimpleEffectSettingsAccess>(newSettings);
       res = effect.ShowHostInterface(parent, factory, *newAccess, forceModal);
-      if (res)
-      {
+      if (res) {
          CommandParameters cp;
          effect.SaveSettings(newSettings, cp);
          cp.GetParameters(mParameters);
       }
    }
-   else
-   {
-      effect.SetCommand(mInputCmd);
-      effect.mDebug = (res == eDebugID);
-      // Delegate to the Nyquist Prompt,
-      // which gets some Lisp from the user to interpret
+   else {
+      if (!factory)
+         return 0;
+      res = effect.ShowHostInterface(parent, factory, *newAccess, false );
+      if (!res)
+         return 0;
 
-      // No need to read-modify-write the Settings, 
-      // just use a throwaway temp Settings
-
-      auto newSettings = effect.MakeSettings();
-      auto newAccess = std::make_shared<SimpleEffectSettingsAccess>(newSettings);
-      res = Delegate(effect, newSettings,
-         parent, factory, newAccess);
-      mT0 = effect.mT0;
-      mT1 = effect.mT1;
+      // Wrap the new settings in the old settings
+      access.ModifySettings([&](EffectSettings &settings){
+         auto &nyquistSettings = GetSettings(settings);
+         nyquistSettings.proxySettings = std::move(newSettings);
+         nyquistSettings.proxyDebug = this->mDebug;
+      });
    }
-
    return res;
 }
 

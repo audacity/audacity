@@ -13,12 +13,13 @@
 
 #include <queue>
 
-#include "Effect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxStaticText;
 class wxCheckBox;
+class wxChoice;
 class wxTextCtrl;
 class ShuttleGui;
 
@@ -43,7 +44,7 @@ public:
    double queuetotal;
 };
 
-class EffectDistortion final : public Effect
+class EffectDistortion final : public PerTrackEffect
 {
 public:
    struct Params;

@@ -391,7 +391,7 @@ bool EffectReverb::TransferDataFromWindow(EffectSettings &)
    { \
       if (mProcessingEvent) return; \
       mProcessingEvent = true; \
-      m ## n ## S->SetValue(TrapLong(evt.GetInt(), n.min, n.max)); \
+      m ## n ## S->SetValue(std::clamp<long>(evt.GetInt(), n.min, n.max)); \
       mProcessingEvent = false; \
    }
 

@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_REVERB__
 #define __AUDACITY_EFFECT_REVERB__
 
-#include "Effect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxCheckBox;
@@ -22,7 +22,7 @@ class ShuttleGui;
 
 struct Reverb_priv_t;
 
-class EffectReverb final : public Effect
+class EffectReverb final : public PerTrackEffect
 {
 public:
    struct Params;

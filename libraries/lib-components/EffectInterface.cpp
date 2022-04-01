@@ -88,7 +88,7 @@ bool EffectDefinitionInterface::VisitSettings(
    return false;
 }
 
-auto EffectDefinitionInterface::MakeSettings() const -> Settings
+auto EffectDefinitionInterface::MakeSettings() const -> EffectSettings
 {
    return {};
 }

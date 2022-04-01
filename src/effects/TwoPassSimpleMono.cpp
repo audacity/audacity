@@ -23,7 +23,7 @@ doing the second pass over all selected tracks.
 
 #include "../WaveTrack.h"
 
-bool EffectTwoPassSimpleMono::Process(EffectSettings &settings)
+bool EffectTwoPassSimpleMono::Process(EffectInstance &, EffectSettings &settings)
 {
    mPass = 0;
    mSecondPassDisabled = false;

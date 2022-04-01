@@ -35,7 +35,7 @@ class wxArrayString;
 #include <suil/suil.h>
 #include "lv2_external_ui.h"
 
-#include "../Effect.h"
+#include "../PerTrackEffect.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
 
@@ -248,7 +248,7 @@ using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
 class LV2EffectSettingsDialog;
 class LV2Wrapper;
 
-class LV2Effect final : public Effect
+class LV2Effect final : public PerTrackEffect
 {
 public:
    LV2Effect(const LilvPlugin *plug);
@@ -274,13 +274,13 @@ public:
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
    bool LoadUserPreset(
-      const RegistryPath & name, Settings &settings) const override;
+      const RegistryPath & name, EffectSettings &settings) const override;
    bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
    bool SaveUserPreset(
-      const RegistryPath & name, const Settings &settings) const override;
+      const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
@@ -329,7 +329,8 @@ public:
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(EffectSettings &settings) override;
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+      override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;

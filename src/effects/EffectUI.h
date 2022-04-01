@@ -19,7 +19,7 @@
 #include <optional>
 
 #include "Identifier.h"
-#include "EffectHostInterface.h"
+#include "EffectPlugin.h"
 #include "Observer.h"
 #include "PluginInterface.h"
 #include "effects/RealtimeEffectManager.h"
@@ -44,7 +44,7 @@ public:
    // constructors and destructors
    EffectUIHost(wxWindow *parent,
                 AudacityProject &project,
-                EffectUIHostInterface &effect,
+                EffectPlugin &effect,
                 EffectUIClientInterface &client,
                 EffectSettingsAccess &access);
    virtual ~EffectUIHost();
@@ -96,10 +96,10 @@ private:
 
    AudacityProject &mProject;
    wxWindow *mParent;
-   EffectUIHostInterface &mEffectUIHost;
+   EffectPlugin &mEffectUIHost;
    EffectUIClientInterface &mClient;
    //! @invariant not null
-   const EffectUIHostInterface::EffectSettingsAccessPtr mpAccess;
+   const EffectPlugin::EffectSettingsAccessPtr mpAccess;
    RealtimeEffectState *mpState{ nullptr };
    std::unique_ptr<EffectUIValidator> mpValidator;
 
@@ -150,7 +150,7 @@ class CommandContext;
 namespace  EffectUI {
 
    AUDACITY_DLL_API
-   wxDialog *DialogFactory( wxWindow &parent, EffectUIHostInterface &host,
+   wxDialog *DialogFactory( wxWindow &parent, EffectPlugin &host,
       EffectUIClientInterface &client, EffectSettingsAccess &access);
 
    /** Run an effect given the plugin ID */

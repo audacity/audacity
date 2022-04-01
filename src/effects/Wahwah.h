@@ -16,7 +16,7 @@
 #ifndef __AUDACITY_EFFECT_WAHWAH__
 #define __AUDACITY_EFFECT_WAHWAH__
 
-#include "Effect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;
@@ -37,7 +37,7 @@ public:
    double b0, b1, b2, a0, a1, a2;
 };
 
-class EffectWahwah final : public Effect
+class EffectWahwah final : public PerTrackEffect
 {
 public:
    static inline EffectWahwah *

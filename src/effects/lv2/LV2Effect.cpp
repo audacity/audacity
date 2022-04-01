@@ -908,7 +908,8 @@ bool LV2Effect::InitializePlugin()
    return true;
 }
 
-bool LV2Effect::InitializeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance>
+LV2Effect::MakeInstance(EffectSettings &settings)
 {
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
@@ -936,7 +937,7 @@ bool LV2Effect::InitializeInstance(EffectSettings &settings)
 
    lv2_atom_forge_init(&mForge, &mURIDMapFeature);
 
-   return true;
+   return std::make_shared<Effect::Instance>(*this);
 }
 
 unsigned LV2Effect::GetAudioInCount() const
@@ -1459,7 +1460,7 @@ bool LV2Effect::SaveSettings(
 }
 
 bool LV2Effect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    // First pass validates values
    for (auto & port : mControlPorts)

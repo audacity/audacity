@@ -47,12 +47,12 @@ public:
 
    EffectType GetType() const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
    // Effect implementation
 
    double CalcPreviewInputLength(
-      const EffectSettings &settings, double previewLength) override;
+      const EffectSettings &settings, double previewLength) const override;
 
    // Analyze a single track to find silences
    // If inputLength is not NULL we are calculating the minimum
@@ -64,9 +64,9 @@ public:
                         sampleCount* index,
                         int whichTrack,
                         double* inputLength = NULL,
-                        double* minInputLength = NULL);
+                        double* minInputLength = NULL) const;
 
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
