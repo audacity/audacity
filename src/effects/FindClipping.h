@@ -19,7 +19,7 @@ class LabelTrack;
 #include "Effect.h"
 #include "../ShuttleAutomation.h"
 
-class EffectFindClipping final : public Effect
+class EffectFindClipping final : public StatefulEffect
 {
 public:
    static inline EffectFindClipping *

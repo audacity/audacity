@@ -28,7 +28,7 @@ class wxChoice;
 class wxSimplebook;
 class ShuttleGui;
 
-class EffectLoudness final : public Effect
+class EffectLoudness final : public StatefulEffect
 {
 public:
    enum kNormalizeTargets

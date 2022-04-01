@@ -22,7 +22,7 @@ class wxTextCtrl;
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectChangeSpeed final : public Effect
+class EffectChangeSpeed final : public StatefulEffect
 {
 public:
    static inline EffectChangeSpeed *

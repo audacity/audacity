@@ -58,7 +58,7 @@ bool StatefulEffectBase::Instance::Init()
    return GetEffect().Init();
 }
 
-bool StatefulEffectBase::Instance::Process(EffectSettings &settings)
+bool StatefulEffect::Instance::Process(EffectSettings &settings)
 {
    return GetEffect().Process(*this, settings);
 }
@@ -195,13 +195,13 @@ bool Effect::SupportsAutomation() const
 }
 
 std::shared_ptr<EffectInstance>
-Effect::MakeInstance(EffectSettings &settings) const
+StatefulEffect::MakeInstance(EffectSettings &settings) const
 {
    // Cheat with const-cast to return an object that calls through to
    // non-const methods of a stateful effect.
    // Stateless effects should override this function and be really const
    // correct.
-   return std::make_shared<Effect::Instance>(const_cast<Effect&>(*this));
+   return std::make_shared<Instance>(const_cast<StatefulEffect&>(*this));
 }
 
 unsigned Effect::GetAudioInCount() const

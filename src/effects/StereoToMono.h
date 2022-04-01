@@ -13,7 +13,7 @@
 
 #include "Effect.h"
 
-class EffectStereoToMono final : public Effect
+class EffectStereoToMono final : public StatefulEffect
 {
 public:
    static const ComponentInterfaceSymbol Symbol;

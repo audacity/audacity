@@ -70,7 +70,7 @@ struct NyquistSettings {
 };
 
 class AUDACITY_DLL_API NyquistEffect final
-   : public EffectWithSettings<NyquistSettings>
+   : public EffectWithSettings<NyquistSettings, StatefulEffect>
 {
 public:
 

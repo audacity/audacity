@@ -112,7 +112,7 @@ bool PerTrackEffect::Process(EffectInstance &instance, EffectSettings &settings)
    bool bGoodResult = true;
    // mPass = 1;
    if (DoPass1()) {
-      auto &myInstance = static_cast<Instance&>(instance);
+      auto &myInstance = dynamic_cast<Instance&>(instance);
       bGoodResult = ProcessPass(myInstance, settings);
       // mPass = 2;
       if (bGoodResult && DoPass2())

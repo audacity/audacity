@@ -27,13 +27,12 @@ class WaveTrack;
 class AUDACITY_DLL_API StatefulEffectBase {
 public:
    //! Calls through to members of StatefulEffectBase
-   class AUDACITY_DLL_API Instance : public EffectInstance {
+   class AUDACITY_DLL_API Instance : public virtual EffectInstance {
    public:
       explicit Instance(StatefulEffectBase &effect);
       ~Instance() override;
 
       bool Init() override;
-      bool Process(EffectSettings &settings) override;
 
       void SetSampleRate(double rate) override;
    
@@ -53,7 +52,6 @@ public:
       bool RealtimeFinalize(EffectSettings &settings) noexcept override;
    protected:
       StatefulEffectBase &mEffect;
-   private:
       StatefulEffectBase &GetEffect() const { return mEffect; }
    };
 
@@ -146,7 +144,6 @@ private:
 
 class AUDACITY_DLL_API Effect /* not final */
    : public wxEvtHandler
-   , public StatefulEffectBase
    , public EffectBase
 {
  //
@@ -201,9 +198,6 @@ class AUDACITY_DLL_API Effect /* not final */
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
-
-   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-      const override;
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -422,6 +416,22 @@ public:
    {
       return GetSettings(const_cast<EffectSettings &>(settings));
    }
+};
+
+//! Subclass of Effect, to be eliminated after all of its subclasses
+//! are rewritten to be stateless
+class StatefulEffect
+   : public StatefulEffectBase
+   , public Effect
+{
+public:
+   class AUDACITY_DLL_API Instance : public StatefulEffectBase::Instance {
+   public:
+      using StatefulEffectBase::Instance::Instance;
+      bool Process(EffectSettings &settings) override;
+   };
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+       const override;
 };
 
 // FIXME:

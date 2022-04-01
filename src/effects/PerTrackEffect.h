@@ -28,7 +28,9 @@ using FloatBuffers = ArraysOf<float>;
    Also uses GetLatency() to determine how many leading output samples to
    discard and how many extra samples to produce.
  */
-class PerTrackEffect : public Effect
+class PerTrackEffect
+   : public StatefulEffectBase
+   , public Effect
 {
 public:
    ~PerTrackEffect() override;
@@ -36,11 +38,10 @@ public:
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
-   class AUDACITY_DLL_API Instance : public Effect::Instance {
+   class AUDACITY_DLL_API Instance : public virtual EffectInstance {
    public:
       explicit Instance(PerTrackEffect &processor)
-         : Effect::Instance{ processor }
-         , mProcessor{ processor }
+         : mProcessor{ processor }
       {}
       ~Instance() override;
    
@@ -106,9 +107,15 @@ public:
 
    //! Implemented with call-throughs to the
    //! StatefulPerTrackEffect virtual functions
-   class AUDACITY_DLL_API Instance : public PerTrackEffect::Instance {
+   class AUDACITY_DLL_API Instance
+      : public StatefulEffectBase::Instance
+      , public PerTrackEffect::Instance
+   {
    public:
-      using PerTrackEffect::Instance::Instance;
+      explicit Instance(StatefulPerTrackEffect &effect)
+         : StatefulEffectBase::Instance{ effect }
+         , PerTrackEffect::Instance{ effect }
+      {}
       ~Instance() override;
       bool ProcessInitialize(EffectSettings &settings,
          sampleCount totalLen, ChannelNames chanMap) override;

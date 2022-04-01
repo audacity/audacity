@@ -26,7 +26,7 @@ using namespace _sbsms_;
 class LabelTrack;
 class TimeWarper;
 
-class EffectSBSMS /* not final */ : public Effect
+class EffectSBSMS /* not final */ : public StatefulEffect
 {
 public:
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
