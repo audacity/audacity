@@ -429,39 +429,7 @@ public:
    virtual int GetMidiInCount() = 0;
    virtual int GetMidiOutCount() = 0;
 
-   virtual void SetSampleRate(double rate) = 0;
-   // Suggest a block size, but the return is the size that was really set:
-   virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
-   virtual size_t GetBlockSize() const = 0;
-
-   //! Called for destructive, non-realtime effect computation
-   virtual sampleCount GetLatency() = 0;
    virtual size_t GetTailSize() = 0;
-
-   //! Called for destructive, non-realtime effect computation
-   virtual bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap = nullptr) = 0;
-
-   //! Called for destructive, non-realtime effect computation
-   // This may be called during stack unwinding:
-   virtual bool ProcessFinalize() /* noexcept */ = 0;
-
-   //! Called for destructive, non-realtime effect computation
-   virtual size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen) = 0;
-
-   virtual bool RealtimeInitialize(EffectSettings &settings) = 0;
-   virtual bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate) = 0;
-   virtual bool RealtimeFinalize(EffectSettings &settings) noexcept = 0;
-   virtual bool RealtimeSuspend() = 0;
-   virtual bool RealtimeResume() noexcept = 0;
-   //! settings are possibly changed, since last call, by an asynchronous dialog
-   virtual bool RealtimeProcessStart(EffectSettings &settings) = 0;
-   virtual size_t RealtimeProcess(int group, EffectSettings &settings,
-      const float *const *inBuf, float *const *outBuf, size_t numSamples) = 0;
-   //! settings can be updated to let a dialog change appearance at idle
-   virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept = 0;
 };
 
 /*************************************************************************************//**

@@ -53,11 +53,6 @@ StatefulEffectBase::Instance::Instance(StatefulEffectBase &effect)
 
 StatefulEffectBase::Instance::~Instance() = default;
 
-Effect &StatefulEffectBase::Instance::GetEffect() const
-{
-   return dynamic_cast<Effect&>(mEffect);
-}
-
 bool StatefulEffectBase::Instance::Init()
 {
    return GetEffect().Init();
@@ -231,25 +226,20 @@ int Effect::GetMidiOutCount()
    return 0;
 }
 
-void Effect::SetSampleRate(double rate)
+void StatefulEffectBase::SetSampleRate(double rate)
 {
    mSampleRate = rate;
 }
 
-size_t Effect::SetBlockSize(size_t maxBlockSize)
+size_t StatefulEffectBase::SetBlockSize(size_t maxBlockSize)
 {
    mEffectBlockSize = maxBlockSize;
    return mEffectBlockSize;
 }
 
-size_t Effect::GetBlockSize() const
+size_t StatefulEffectBase::GetBlockSize() const
 {
    return mEffectBlockSize;
-}
-
-sampleCount Effect::GetLatency()
-{
-   return 0;
 }
 
 size_t Effect::GetTailSize()
@@ -263,63 +253,46 @@ const EffectParameterMethods &Effect::Parameters() const
    return empty;
 }
 
-bool Effect::ProcessInitialize(
-   EffectSettings &settings, sampleCount totalLen, ChannelNames chanMap)
-{
-   return true;
-}
-
-bool Effect::ProcessFinalize()
-{
-   return true;
-}
-
-size_t Effect::ProcessBlock(EffectSettings &settings,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
-{
-   return 0;
-}
-
-bool Effect::RealtimeInitialize(EffectSettings &settings)
+bool StatefulEffectBase::RealtimeInitialize(EffectSettings &settings)
 {
    return false;
 }
 
-bool Effect::RealtimeAddProcessor(
+bool StatefulEffectBase::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    return true;
 }
 
-bool Effect::RealtimeFinalize(EffectSettings &settings) noexcept
-{
-   return false;
-}
-
-bool Effect::RealtimeSuspend()
+bool StatefulEffectBase::RealtimeSuspend()
 {
    return true;
 }
 
-bool Effect::RealtimeResume() noexcept
+bool StatefulEffectBase::RealtimeResume() noexcept
 {
    return true;
 }
 
-bool Effect::RealtimeProcessStart(EffectSettings &settings)
+bool StatefulEffectBase::RealtimeProcessStart(EffectSettings &settings)
 {
    return true;
 }
 
-size_t Effect::RealtimeProcess(int group, EffectSettings &settings,
+size_t StatefulEffectBase::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    return 0;
 }
 
-bool Effect::RealtimeProcessEnd(EffectSettings &settings) noexcept
+bool StatefulEffectBase::RealtimeProcessEnd(EffectSettings &settings) noexcept
 {
    return true;
+}
+
+bool StatefulEffectBase::RealtimeFinalize(EffectSettings &settings) noexcept
+{
+   return false;
 }
 
 int Effect::ShowClientInterface(

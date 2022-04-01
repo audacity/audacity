@@ -529,3 +529,25 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    } // End scope for cleanup
    return rc;
 }
+
+sampleCount PerTrackEffect::GetLatency()
+{
+   return 0;
+}
+
+bool PerTrackEffect::ProcessInitialize(
+   EffectSettings &settings, sampleCount totalLen, ChannelNames chanMap)
+{
+   return true;
+}
+
+bool PerTrackEffect::ProcessFinalize()
+{
+   return true;
+}
+
+size_t PerTrackEffect::ProcessBlock(EffectSettings &settings,
+   const float *const *inBlock, float *const *outBlock, size_t blockLen)
+{
+   return 0;
+}

@@ -50,24 +50,24 @@ public:
       bool Process(EffectSettings &settings) final;
 
       /*!
-       @copydoc EffectProcessor::ProcessInitialize()
+       @copydoc PerTrackEffect::ProcessInitialize()
        */
       virtual bool ProcessInitialize(EffectSettings &settings,
          sampleCount totalLen, ChannelNames chanMap);
 
       /*!
-       @copydoc EffectProcessor::ProcessFinalize()
+       @copydoc PerTrackEffect::ProcessFinalize()
        */
       virtual bool ProcessFinalize() /* noexcept */ ;
 
       /*!
-       @copydoc EffectProcessor::ProcessBlock()
+       @copydoc PerTrackEffect::ProcessBlock()
        */
       virtual size_t ProcessBlock(EffectSettings &settings,
          const float *const *inBlock, float *const *outBlock, size_t blockLen);
 
       /*!
-       @copydoc EffectProcessor::GetLatency()
+       @copydoc PerTrackEffect::GetLatency()
        */
       virtual sampleCount GetLatency();
 
@@ -75,6 +75,25 @@ public:
       PerTrackEffect &GetEffect() const
       { return static_cast<PerTrackEffect &>(mEffect); }
    };
+
+   //! Called for destructive, non-realtime effect computation
+   //! Default implementation returns zero
+   virtual sampleCount GetLatency();
+
+   //! Called at start of destructive processing, for each (mono/stereo) track
+   //! Default implementation does nothing, returns true
+   virtual bool ProcessInitialize(EffectSettings &settings,
+      sampleCount totalLen, ChannelNames chanMap = nullptr);
+
+   //! Called at end of destructive processing, for each (mono/stereo) track
+   //! Default implementation does nothing, returns true
+   //! This may be called during stack unwinding:
+   virtual bool ProcessFinalize() /* noexcept */;
+
+   //! Called for destructive effect computation
+   //! Default implementation does nothing, returns zero
+   virtual size_t ProcessBlock(EffectSettings &settings,
+      const float *const *inBlock, float *const *outBlock, size_t blockLen);
 
    std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
       const override;
