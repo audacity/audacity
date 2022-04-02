@@ -36,7 +36,7 @@ public:
 
    class AUDACITY_DLL_API Instance : public virtual EffectInstance {
    public:
-      explicit Instance(PerTrackEffect &processor)
+      explicit Instance(const PerTrackEffect &processor)
          : mProcessor{ processor }
       {}
       ~Instance() override;
@@ -64,7 +64,7 @@ public:
       virtual sampleCount GetLatency();
 
    protected:
-      PerTrackEffect &mProcessor;
+      const PerTrackEffect &mProcessor;
    };
 
 protected:
@@ -73,7 +73,7 @@ protected:
    /* virtual */ bool DoPass2() const;
 
    // non-virtual
-   bool Process(EffectInstance &instance, EffectSettings &settings);
+   bool Process(EffectInstance &instance, EffectSettings &settings) const;
 
    sampleCount    mSampleCnt{};
 
@@ -90,7 +90,7 @@ private:
       FloatBuffers &outBuffer,
       ArrayOf< float * > &inBufPos,
       ArrayOf< float *> &outBufPos, size_t bufferSize, size_t blockSize,
-      unsigned mNumChannels);
+      unsigned mNumChannels) const;
 };
 
 template<typename Settings> using PerTrackEffectWithSettings =
@@ -126,7 +126,11 @@ public:
 
    protected:
       StatefulPerTrackEffect &GetEffect() const
-      { return static_cast<StatefulPerTrackEffect &>(mProcessor); }
+      {
+         // Tolerate const_cast in this class while it sun-sets
+         return static_cast<StatefulPerTrackEffect &>(
+            const_cast<PerTrackEffect &>(mProcessor));
+      }
    };
 
    std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)

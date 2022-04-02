@@ -113,19 +113,21 @@ bool PerTrackEffect::DoPass2() const
    return false;
 }
 
-bool PerTrackEffect::Process(EffectInstance &instance, EffectSettings &settings)
+bool PerTrackEffect::Process(
+   EffectInstance &instance, EffectSettings &settings) const
 {
-   CopyInputTracks(true);
+   auto pThis = const_cast<PerTrackEffect *>(this);
+   pThis->CopyInputTracks(true);
    bool bGoodResult = true;
    // mPass = 1;
    if (DoPass1()) {
       auto &myInstance = dynamic_cast<Instance&>(instance);
-      bGoodResult = ProcessPass(myInstance, settings);
+      bGoodResult = pThis->ProcessPass(myInstance, settings);
       // mPass = 2;
       if (bGoodResult && DoPass2())
-         bGoodResult = ProcessPass(myInstance, settings);
+         bGoodResult = pThis->ProcessPass(myInstance, settings);
    }
-   ReplaceProcessedTracks(bGoodResult);
+   pThis->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
@@ -272,7 +274,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    FloatBuffers &outBuffer,
    ArrayOf< float * > &inBufPos,
    ArrayOf< float *> &outBufPos, size_t bufferSize, size_t blockSize,
-   unsigned numChannels)
+   unsigned numChannels) const
 {
    bool rc = true;
 
