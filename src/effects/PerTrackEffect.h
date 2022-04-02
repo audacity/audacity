@@ -43,7 +43,10 @@ public:
     */
    class AUDACITY_DLL_API Instance : public Effect::Instance {
    public:
-      using Effect::Instance::Instance;
+      explicit Instance(PerTrackEffect &processor)
+         : Effect::Instance{ processor }
+         , mProcessor{ processor }
+      {}
       ~Instance() override;
    
       //! Uses the other virtual functions of this class
@@ -72,8 +75,7 @@ public:
       virtual sampleCount GetLatency();
 
    protected:
-      PerTrackEffect &GetEffect() const
-      { return static_cast<PerTrackEffect &>(mEffect); }
+      PerTrackEffect &mProcessor;
    };
 
    //! Called for destructive, non-realtime effect computation

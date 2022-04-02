@@ -29,30 +29,30 @@ PerTrackEffect::Instance::~Instance() = default;
 
 bool PerTrackEffect::Instance::Process(EffectSettings &settings)
 {
-   return GetEffect().Process(*this, settings);
+   return mProcessor.Process(*this, settings);
 }
 
 bool PerTrackEffect::Instance::ProcessInitialize(EffectSettings &settings,
    sampleCount totalLen, ChannelNames chanMap)
 {
-   return GetEffect().ProcessInitialize(settings, totalLen, chanMap);
+   return mProcessor.ProcessInitialize(settings, totalLen, chanMap);
 }
 
 bool PerTrackEffect::Instance::ProcessFinalize() /* noexcept */
 {
 
-   return GetEffect().ProcessFinalize();
+   return mProcessor.ProcessFinalize();
 }
 
 size_t PerTrackEffect::Instance::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   return GetEffect().ProcessBlock(settings, inBlock, outBlock, blockLen);
+   return mProcessor.ProcessBlock(settings, inBlock, outBlock, blockLen);
 }
 
 sampleCount PerTrackEffect::Instance::GetLatency()
 {
-   return GetEffect().GetLatency();
+   return mProcessor.GetLatency();
 }
 
 PerTrackEffect::~PerTrackEffect() = default;
