@@ -385,6 +385,18 @@ public:
    virtual size_t GetTailSize() const;
 };
 
+//! Inherit to add a state variable to an EffectInstance subclass
+class COMPONENTS_API EffectInstanceWithBlockSize
+   : public virtual EffectInstance
+{
+public:
+   ~EffectInstanceWithBlockSize() override;
+   size_t GetBlockSize() const override;
+   size_t SetBlockSize(size_t maxBlockSize) override;
+protected:
+   size_t mBlockSize{ 0 };
+};
+
 /***************************************************************************//**
 \class EffectInstanceFactory
 *******************************************************************************/

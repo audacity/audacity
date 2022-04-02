@@ -108,6 +108,18 @@ size_t EffectInstance::GetTailSize() const
    return 0;
 }
 
+EffectInstanceWithBlockSize::~EffectInstanceWithBlockSize() = default;
+
+size_t EffectInstanceWithBlockSize::GetBlockSize() const
+{
+   return mBlockSize;
+}
+
+size_t EffectInstanceWithBlockSize::SetBlockSize(size_t maxBlockSize)
+{
+   return (mBlockSize = maxBlockSize);
+}
+
 EffectInstanceFactory::~EffectInstanceFactory() = default;
 
 int EffectInstanceFactory::GetMidiInCount() const
