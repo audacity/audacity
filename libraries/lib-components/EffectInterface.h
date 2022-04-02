@@ -351,8 +351,9 @@ public:
    //! Call once to set up state for whole list of tracks to be processed
    /*!
     @return success
+    Default implementation does nothing, returns true
     */
-   virtual bool Init() = 0;
+   virtual bool Init();
 
    //! Actually do the effect here.
    /*!
@@ -367,18 +368,60 @@ public:
    // Suggest a block size, but the return is the size that was really set:
    virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
 
-   virtual bool RealtimeInitialize(EffectSettings &settings) = 0;
+   /*!
+    @return success
+    Default implementation does nothing, returns false (so assume realtime is
+    not supported).
+    Other member functions related to realtime return true or zero, but will not
+    be called, unless a derived class overrides RealtimeInitialize.
+    */
+   virtual bool RealtimeInitialize(EffectSettings &settings);
+
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
    virtual bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate) = 0;
-   virtual bool RealtimeSuspend() = 0;
-   virtual bool RealtimeResume() noexcept = 0;
+      EffectSettings &settings, unsigned numChannels, float sampleRate);
+
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeSuspend();
+
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeResume() noexcept;
+
    //! settings are possibly changed, since last call, by an asynchronous dialog
-   virtual bool RealtimeProcessStart(EffectSettings &settings) = 0;
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeProcessStart(EffectSettings &settings);
+
+   /*!
+    @return success
+    Default implementation does nothing, returns 0
+    */
    virtual size_t RealtimeProcess(int group, EffectSettings &settings,
-      const float *const *inBuf, float *const *outBuf, size_t numSamples) = 0;
+      const float *const *inBuf, float *const *outBuf, size_t numSamples);
+
    //! settings can be updated to let a dialog change appearance at idle
-   virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept = 0;
-   virtual bool RealtimeFinalize(EffectSettings &settings) noexcept = 0;
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept;
+
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeFinalize(EffectSettings &settings) noexcept;
 
    //! Function that has not yet found a use
    //! Correct definitions of it will likely depend on settings and state
