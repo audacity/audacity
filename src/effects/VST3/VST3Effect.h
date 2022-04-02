@@ -119,8 +119,8 @@ public:
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
+   int GetMidiInCount() const override;
+   int GetMidiOutCount() const override;
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;

@@ -216,16 +216,6 @@ unsigned Effect::GetAudioOutCount() const
    return 0;
 }
 
-int Effect::GetMidiInCount()
-{
-   return 0;
-}
-
-int Effect::GetMidiOutCount()
-{
-   return 0;
-}
-
 void StatefulEffectBase::SetSampleRate(double rate)
 {
    mSampleRate = rate;

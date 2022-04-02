@@ -208,9 +208,6 @@ class AUDACITY_DLL_API Effect /* not final */
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
-
    // VisitSettings(), SaveSettings(), and LoadSettings()
    // use the functions of EffectParameterMethods.  By default, this function
    // defines an empty list of parameters.

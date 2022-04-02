@@ -1345,12 +1345,12 @@ unsigned VSTEffect::GetAudioOutCount() const
    return mAudioOuts;
 }
 
-int VSTEffect::GetMidiInCount()
+int VSTEffect::GetMidiInCount() const
 {
    return mMidiIns;
 }
 
-int VSTEffect::GetMidiOutCount()
+int VSTEffect::GetMidiOutCount() const
 {
    return mMidiOuts;
 }

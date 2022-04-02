@@ -1202,12 +1202,12 @@ unsigned AudioUnitEffect::GetAudioOutCount() const
    return mAudioOuts;
 }
 
-int AudioUnitEffect::GetMidiInCount()
+int AudioUnitEffect::GetMidiInCount() const
 {
    return 0;
 }
 
-int AudioUnitEffect::GetMidiOutCount()
+int AudioUnitEffect::GetMidiOutCount() const
 {
    return 0;
 }

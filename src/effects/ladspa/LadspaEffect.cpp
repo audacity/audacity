@@ -898,12 +898,12 @@ unsigned LadspaEffect::GetAudioOutCount() const
    return mAudioOuts;
 }
 
-int LadspaEffect::GetMidiInCount()
+int LadspaEffect::GetMidiInCount() const
 {
    return 0;
 }
 
-int LadspaEffect::GetMidiOutCount()
+int LadspaEffect::GetMidiOutCount() const
 {
    return 0;
 }

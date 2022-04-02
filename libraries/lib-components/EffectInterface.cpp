@@ -110,6 +110,16 @@ size_t EffectInstance::GetTailSize() const
 
 EffectInstanceFactory::~EffectInstanceFactory() = default;
 
+int EffectInstanceFactory::GetMidiInCount() const
+{
+   return 0;
+}
+
+int EffectInstanceFactory::GetMidiOutCount() const
+{
+   return 0;
+}
+
 EffectProcessor::~EffectProcessor() = default;
 
 EffectUIValidator::~EffectUIValidator() = default;

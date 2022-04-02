@@ -414,6 +414,12 @@ public:
 
    //! How many output buffers to allocate at once
    virtual unsigned GetAudioOutCount() const = 0;
+
+   //! Function that has not yet found a use
+   virtual int GetMidiInCount() const;
+
+   //! Function that has not yet found a use
+   virtual int GetMidiOutCount() const;
 };
 
 /*************************************************************************************//**
@@ -429,9 +435,6 @@ class COMPONENTS_API EffectProcessor  /* not final */
 {
 public:
    virtual ~EffectProcessor();
-
-   virtual int GetMidiInCount() = 0;
-   virtual int GetMidiOutCount() = 0;
 };
 
 /*************************************************************************************//**

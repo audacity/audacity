@@ -956,12 +956,12 @@ unsigned LV2Effect::GetAudioOutCount() const
    return mAudioOut;
 }
 
-int LV2Effect::GetMidiInCount()
+int LV2Effect::GetMidiInCount() const
 {
    return mMidiIn;
 }
 
-int LV2Effect::GetMidiOutCount()
+int LV2Effect::GetMidiOutCount() const
 {
    return mMidiOut;
 }
