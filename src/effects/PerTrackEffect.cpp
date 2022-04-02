@@ -85,13 +85,20 @@ StatefulPerTrackEffect::MakeInstance(EffectSettings &settings) const
       const_cast<StatefulPerTrackEffect&>(*this));
 }
 
-size_t PerTrackEffect::SetBlockSize(size_t maxBlockSize)
+bool StatefulPerTrackEffect::Process(
+   EffectInstance &instance, EffectSettings &settings)
+{
+   // Call through to a non-virtual function
+   return PerTrackEffect::Process(instance, settings);
+}
+
+size_t StatefulPerTrackEffect::SetBlockSize(size_t maxBlockSize)
 {
    mBlockSize = maxBlockSize;
    return mBlockSize;
 }
 
-size_t PerTrackEffect::GetBlockSize() const
+size_t StatefulPerTrackEffect::GetBlockSize() const
 {
    return mBlockSize;
 }

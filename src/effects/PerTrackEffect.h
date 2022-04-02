@@ -29,14 +29,10 @@ using FloatBuffers = ArraysOf<float>;
    discard and how many extra samples to produce.
  */
 class PerTrackEffect
-   : public StatefulEffectBase
-   , public Effect
+   : public Effect
 {
 public:
    ~PerTrackEffect() override;
-
-   size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
 
    class AUDACITY_DLL_API Instance : public virtual EffectInstance {
    public:
@@ -76,10 +72,12 @@ protected:
    /* virtual */ bool DoPass1() const;
    /* virtual */ bool DoPass2() const;
 
+   // non-virtual
+   bool Process(EffectInstance &instance, EffectSettings &settings);
+
    sampleCount    mSampleCnt{};
 
 private:
-   bool Process(EffectInstance &instance, EffectSettings &settings) final;
    bool ProcessPass(Instance &instance, EffectSettings &settings);
    bool ProcessTrack(Instance &instance, EffectSettings &settings,
       int count,
@@ -93,8 +91,6 @@ private:
       ArrayOf< float * > &inBufPos,
       ArrayOf< float *> &outBufPos, size_t bufferSize, size_t blockSize,
       unsigned mNumChannels);
-
-   size_t mBlockSize{};
 };
 
 template<typename Settings> using PerTrackEffectWithSettings =
@@ -102,7 +98,10 @@ template<typename Settings> using PerTrackEffectWithSettings =
 
 //! Subclass of PerTrackEffect, to be eliminated after all of its subclasses
 //! are rewritten to be stateless
-class StatefulPerTrackEffect : public PerTrackEffect {
+class StatefulPerTrackEffect
+   : public StatefulEffectBase
+   , public PerTrackEffect
+{
 public:
 
    //! Implemented with call-throughs to the
@@ -133,6 +132,9 @@ public:
    std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
       const override;
 
+   size_t SetBlockSize(size_t maxBlockSize) override;
+   size_t GetBlockSize() const override;
+
    /*!
     @copydoc PerTrackEffect::Instance::GetLatency()
     */
@@ -154,6 +156,11 @@ public:
     */
    virtual size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen);
+
+private:
+   bool Process(EffectInstance &instance, EffectSettings &settings) final;
+
+   size_t mBlockSize{};
 };
 
 #endif
