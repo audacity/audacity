@@ -22,8 +22,39 @@ class EffectParameterMethods;
 class LabelTrack;
 class WaveTrack;
 
-class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
-   public EffectBase
+//! A mix-in class for effects that are not yet migrated to statelessness.
+//! To be eliminated when all effects are migrated
+class AUDACITY_DLL_API StatefulEffectBase {
+public:
+   //! Calls through to members of StatefulEffectBase
+   class AUDACITY_DLL_API Instance : public EffectInstance {
+   public:
+      explicit Instance(StatefulEffectBase &effect);
+      ~Instance() override;
+
+      bool Init() override;
+      bool Process(EffectSettings &settings) override;
+
+   protected:
+      StatefulEffectBase &mEffect;
+   };
+
+   /*!
+     @copydoc EffectInstance::Init()
+     Default implementation does nothing, returns true
+   */
+   virtual bool Init();
+
+   /*!
+    @copydoc EffectInstance::Process
+    */
+   virtual bool Process(EffectInstance &instance, EffectSettings &settings) = 0;
+};
+
+class AUDACITY_DLL_API Effect /* not final */
+   : public wxEvtHandler
+   , public StatefulEffectBase
+   , public EffectBase
 {
  //
  // public methods
@@ -39,23 +70,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // Avoid allocating memory or doing time-consuming processing here.
    Effect();
    virtual ~Effect();
-
-   //! Default result of MakeInstance() calls through to members of Effect
-   /*!
-    Effects that are completely stateless should not use this
-    */
-   class AUDACITY_DLL_API Instance : public EffectInstance {
-   public:
-      explicit Instance(Effect &effect);
-      ~Instance() override;
-
-      bool Init() override;
-
-      bool Process(EffectSettings &settings) override;
-
-   protected:
-      Effect &mEffect;
-   };
 
    // ComponentInterface implementation
 
@@ -195,23 +209,12 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool EnableApply(bool enable = true);
    bool EnablePreview(bool enable = true);
 
-   /*!
-     @copydoc EffectInstance::Init()
-     Default implementation does nothing, returns true
-   */
-   virtual bool Init();
-
    //! Default implementation returns false
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
 
    //! Default implementation returns `previewLength`
    double CalcPreviewInputLength(
       const EffectSettings &settings, double previewLength) const override;
-
-   /*!
-    @copydoc EffectInstance::Process
-    */
-   virtual bool Process(EffectInstance &instance, EffectSettings &settings) = 0;
 
    //! Add controls to effect panel; always succeeds
    /*!

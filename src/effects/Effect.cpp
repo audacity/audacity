@@ -46,19 +46,19 @@ static const int kFFwdID = 20104;
 
 using t2bHash = std::unordered_map< void*, bool >;
 
-Effect::Instance::Instance(Effect &effect)
+StatefulEffectBase::Instance::Instance(StatefulEffectBase &effect)
    : mEffect{ effect }
 {
 }
 
-Effect::Instance::~Instance() = default;
+StatefulEffectBase::Instance::~Instance() = default;
 
-bool Effect::Instance::Init()
+bool StatefulEffectBase::Instance::Init()
 {
    return mEffect.Init();
 }
 
-bool Effect::Instance::Process(EffectSettings &settings)
+bool StatefulEffectBase::Instance::Process(EffectSettings &settings)
 {
    return mEffect.Process(*this, settings);
 }
@@ -699,7 +699,7 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
       region, mUIFlags, nullptr, nullptr, nullptr);
 }
 
-bool Effect::Init()
+bool StatefulEffectBase::Init()
 {
    return true;
 }
