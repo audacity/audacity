@@ -21,7 +21,7 @@
 #include <AudioUnit/AudioUnit.h>
 #include <AudioUnit/AudioUnitProperties.h>
 
-#include "../PerTrackEffect.h"
+#include "../StatefulPerTrackEffect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 

@@ -27,8 +27,6 @@
 
 PerTrackEffect::Instance::~Instance() = default;
 
-StatefulPerTrackEffect::Instance::~Instance() = default;
-
 bool PerTrackEffect::Instance::Process(EffectSettings &settings)
 {
    return mProcessor.Process(*this, settings);
@@ -40,26 +38,9 @@ bool PerTrackEffect::Instance::ProcessInitialize(EffectSettings &settings,
    return true;
 }
 
-bool StatefulPerTrackEffect::Instance::ProcessInitialize(EffectSettings &settings,
-   sampleCount totalLen, ChannelNames chanMap)
-{
-   return GetEffect().ProcessInitialize(settings, totalLen, chanMap);
-}
-
 bool PerTrackEffect::Instance::ProcessFinalize() /* noexcept */
 {
    return true;
-}
-
-bool StatefulPerTrackEffect::Instance::ProcessFinalize() /* noexcept */
-{
-   return GetEffect().ProcessFinalize();
-}
-
-size_t StatefulPerTrackEffect::Instance::ProcessBlock(EffectSettings &settings,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
-{
-   return GetEffect().ProcessBlock(settings, inBlock, outBlock, blockLen);
 }
 
 sampleCount PerTrackEffect::Instance::GetLatency()
@@ -67,41 +48,7 @@ sampleCount PerTrackEffect::Instance::GetLatency()
    return 0;
 }
 
-sampleCount StatefulPerTrackEffect::Instance::GetLatency()
-{
-   return GetEffect().GetLatency();
-}
-
 PerTrackEffect::~PerTrackEffect() = default;
-
-std::shared_ptr<EffectInstance>
-StatefulPerTrackEffect::MakeInstance(EffectSettings &settings) const
-{
-   // Cheat with const-cast to return an object that calls through to
-   // non-const methods of a stateful effect.
-   // Stateless effects should override this function and be really const
-   // correct.
-   return std::make_shared<Instance>(
-      const_cast<StatefulPerTrackEffect&>(*this));
-}
-
-bool StatefulPerTrackEffect::Process(
-   EffectInstance &instance, EffectSettings &settings)
-{
-   // Call through to a non-virtual function
-   return PerTrackEffect::Process(instance, settings);
-}
-
-size_t StatefulPerTrackEffect::SetBlockSize(size_t maxBlockSize)
-{
-   mBlockSize = maxBlockSize;
-   return mBlockSize;
-}
-
-size_t StatefulPerTrackEffect::GetBlockSize() const
-{
-   return mBlockSize;
-}
 
 bool PerTrackEffect::DoPass1() const
 {
@@ -554,26 +501,4 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
 
    } // End scope for cleanup
    return rc;
-}
-
-sampleCount StatefulPerTrackEffect::GetLatency()
-{
-   return 0;
-}
-
-bool StatefulPerTrackEffect::ProcessInitialize(
-   EffectSettings &settings, sampleCount totalLen, ChannelNames chanMap)
-{
-   return true;
-}
-
-bool StatefulPerTrackEffect::ProcessFinalize()
-{
-   return true;
-}
-
-size_t StatefulPerTrackEffect::ProcessBlock(EffectSettings &settings,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
-{
-   return 0;
 }

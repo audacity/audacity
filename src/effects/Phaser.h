@@ -16,7 +16,7 @@
 #ifndef __AUDACITY_EFFECT_PHASER__
 #define __AUDACITY_EFFECT_PHASER__
 
-#include "PerTrackEffect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;

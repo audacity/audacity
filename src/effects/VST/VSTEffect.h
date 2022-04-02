@@ -12,7 +12,7 @@
 
 #if USE_VST
 
-#include "../PerTrackEffect.h"
+#include "../StatefulPerTrackEffect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 

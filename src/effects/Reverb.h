@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_REVERB__
 #define __AUDACITY_EFFECT_REVERB__
 
-#include "PerTrackEffect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxCheckBox;

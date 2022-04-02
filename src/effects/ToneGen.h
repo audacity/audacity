@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_EFFECT_TONEGEN__
 #define __AUDACITY_EFFECT_TONEGEN__
 
-#include "PerTrackEffect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 #include <float.h> // for DBL_MAX
 

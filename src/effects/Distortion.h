@@ -13,7 +13,7 @@
 
 #include <queue>
 
-#include "PerTrackEffect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;

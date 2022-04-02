@@ -35,7 +35,7 @@ class wxArrayString;
 #include <suil/suil.h>
 #include "lv2_external_ui.h"
 
-#include "../PerTrackEffect.h"
+#include "../StatefulPerTrackEffect.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
 

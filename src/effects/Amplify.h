@@ -15,7 +15,7 @@
 #ifndef __AUDACITY_EFFECT_AMPLIFY__
 #define __AUDACITY_EFFECT_AMPLIFY__
 
-#include "PerTrackEffect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 

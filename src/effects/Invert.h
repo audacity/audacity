@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_EFFECT_INVERT__
 #define __AUDACITY_EFFECT_INVERT__
 
-#include "PerTrackEffect.h"
+#include "StatefulPerTrackEffect.h"
 
 class EffectInvert final : public StatefulPerTrackEffect
 {
