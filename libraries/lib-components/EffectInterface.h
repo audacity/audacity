@@ -379,6 +379,10 @@ public:
    //! settings can be updated to let a dialog change appearance at idle
    virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept = 0;
    virtual bool RealtimeFinalize(EffectSettings &settings) noexcept = 0;
+
+   //! Function that has not yet found a use
+   //! Correct definitions of it will likely depend on settings and state
+   virtual size_t GetTailSize() const;
 };
 
 /***************************************************************************//**
@@ -428,8 +432,6 @@ public:
 
    virtual int GetMidiInCount() = 0;
    virtual int GetMidiOutCount() = 0;
-
-   virtual size_t GetTailSize() = 0;
 };
 
 /*************************************************************************************//**

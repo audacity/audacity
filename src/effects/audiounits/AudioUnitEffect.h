@@ -91,7 +91,7 @@ public:
    size_t GetBlockSize() const override;
 
    sampleCount GetLatency() override;
-   size_t GetTailSize() override;
+   // size_t GetTailSize() const override;
 
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;

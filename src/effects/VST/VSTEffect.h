@@ -142,7 +142,6 @@ class VSTEffect final
    int GetMidiOutCount() override;
 
    sampleCount GetLatency() override;
-   size_t GetTailSize() override;
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;

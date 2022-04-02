@@ -1023,11 +1023,6 @@ sampleCount LV2Effect::GetLatency()
    return 0;
 }
 
-size_t LV2Effect::GetTailSize()
-{
-   return 0;
-}
-
 bool LV2Effect::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames chanMap)
 {

@@ -1384,11 +1384,6 @@ sampleCount VSTEffect::GetLatency()
    return 0;
 }
 
-size_t VSTEffect::GetTailSize()
-{
-   return 0;
-}
-
 bool VSTEffect::IsReady()
 {
    return mReady;

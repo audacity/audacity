@@ -242,11 +242,6 @@ size_t StatefulEffectBase::GetBlockSize() const
    return mEffectBlockSize;
 }
 
-size_t Effect::GetTailSize()
-{
-   return 0;
-}
-
 const EffectParameterMethods &Effect::Parameters() const
 {
    static const CapturedParameters<Effect> empty;

@@ -103,6 +103,11 @@ bool EffectSettingsManager::CopySettingsContents(
 
 EffectInstance::~EffectInstance() = default;
 
+size_t EffectInstance::GetTailSize() const
+{
+   return 0;
+}
+
 EffectInstanceFactory::~EffectInstanceFactory() = default;
 
 EffectProcessor::~EffectProcessor() = default;

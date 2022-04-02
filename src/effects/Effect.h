@@ -211,8 +211,6 @@ class AUDACITY_DLL_API Effect /* not final */
    int GetMidiInCount() override;
    int GetMidiOutCount() override;
 
-   size_t GetTailSize() override;
-
    // VisitSettings(), SaveSettings(), and LoadSettings()
    // use the functions of EffectParameterMethods.  By default, this function
    // defines an empty list of parameters.

@@ -597,13 +597,6 @@ sampleCount VST3Effect::GetLatency()
    return { 0u };
 }
 
-size_t VST3Effect::GetTailSize()
-{
-   //Not supported, note that tail size in samples can
-   //have different values in realtime processors
-   return 0;
-}
-
 bool VST3Effect::ProcessInitialize(
    EffectSettings &settings, sampleCount, ChannelNames)
 {

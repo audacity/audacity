@@ -936,11 +936,6 @@ sampleCount LadspaEffect::GetLatency()
    return 0;
 }
 
-size_t LadspaEffect::GetTailSize()
-{
-   return 0;
-}
-
 bool LadspaEffect::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames chanMap)
 {
