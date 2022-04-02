@@ -92,7 +92,4 @@ private:
       ArrayOf< float *> &outBufPos, size_t bufferSize, size_t blockSize,
       unsigned mNumChannels) const;
 };
-
-template<typename Settings> using PerTrackEffectWithSettings =
-   EffectWithSettings<Settings, PerTrackEffect>;
 #endif

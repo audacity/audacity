@@ -392,7 +392,7 @@ private:
 
 //! Convenience for generating EffectDefinitionInterface overrides
 //! and static down-casting functions
-template<typename Settings, typename Base = Effect>
+template<typename Settings, typename Base>
 class EffectWithSettings : public Base {
 public:
    EffectSettings MakeSettings() const override
