@@ -63,8 +63,6 @@ public:
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
-   // EffectProcessor implementation
-
    unsigned GetAudioInCount() const override;
 
    // Effect implementation

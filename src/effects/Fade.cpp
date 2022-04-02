@@ -67,8 +67,6 @@ bool EffectFade::IsInteractive() const
    return false;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectFade::GetAudioInCount() const
 {
    return 1;

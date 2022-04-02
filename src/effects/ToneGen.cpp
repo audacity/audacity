@@ -138,8 +138,6 @@ EffectType EffectToneGen::GetType() const
    return EffectTypeGenerate;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectToneGen::GetAudioOutCount() const
 {
    return 1;

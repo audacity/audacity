@@ -1276,10 +1276,6 @@ bool VSTEffect::SupportsAutomation() const
    return mAutomatable;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
-
 bool VSTEffect::InitializePlugin()
 {
    if (!mAEffect)

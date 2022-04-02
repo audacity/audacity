@@ -714,10 +714,6 @@ bool LadspaEffect::SupportsAutomation() const
    return mNumInputControls > 0;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
-
 bool LadspaEffect::InitializePlugin()
 {
    if (!Load())

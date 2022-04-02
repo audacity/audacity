@@ -55,8 +55,6 @@ public:
    EffectType GetType() const override;
    bool SupportsRealtime() const override;
 
-   // EffectProcessor implementation
-
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
    bool ProcessInitialize(EffectSettings &settings,

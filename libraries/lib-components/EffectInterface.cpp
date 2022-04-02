@@ -120,8 +120,6 @@ int EffectInstanceFactory::GetMidiOutCount() const
    return 0;
 }
 
-EffectProcessor::~EffectProcessor() = default;
-
 EffectUIValidator::~EffectUIValidator() = default;
 
 bool EffectUIValidator::UpdateUI()

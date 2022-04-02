@@ -306,7 +306,6 @@ bool NyquistEffect::IsDefault() const
    return mIsPrompt;
 }
 
-// EffectProcessor implementation
 bool NyquistEffect::VisitSettings(
    SettingsVisitor &visitor, EffectSettings &settings)
 {

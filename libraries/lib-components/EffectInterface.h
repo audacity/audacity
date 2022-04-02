@@ -424,21 +424,6 @@ public:
 
 /*************************************************************************************//**
 
-\class EffectProcessor 
-
-\brief provides the ident interface to Effect, and is what makes
-Effect into a plug-in command.  It has functions for effect calculations that are not part of
-AudacityCommand.
-
-*******************************************************************************************/
-class COMPONENTS_API EffectProcessor  /* not final */
-{
-public:
-   virtual ~EffectProcessor();
-};
-
-/*************************************************************************************//**
-
 \class EffectUIValidator
 
 \brief Interface for transferring values from a panel of effect controls
@@ -509,7 +494,6 @@ values.  It can import and export presets.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectUIClientInterface /* not final */
-   : public EffectProcessor
 {
 public:
    virtual ~EffectUIClientInterface();

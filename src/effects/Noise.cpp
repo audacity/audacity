@@ -96,8 +96,6 @@ EffectType EffectNoise::GetType() const
    return EffectTypeGenerate;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectNoise::GetAudioOutCount() const
 {
    return 1;

@@ -145,8 +145,6 @@ EffectType EffectReverb::GetType() const
    return EffectTypeProcess;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectReverb::GetAudioInCount() const
 {
    return 2;

@@ -137,9 +137,6 @@ bool VampEffect::IsDefault() const
    return false;
 }
 
-
-// EffectProcessor implementation
-
 unsigned VampEffect::GetAudioInCount() const
 {
    return mPlugin->getMaxChannelCount();

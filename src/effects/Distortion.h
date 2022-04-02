@@ -80,8 +80,6 @@ public:
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool DoLoadFactoryPreset(int id);
 
-   // EffectProcessor implementation
-
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
    bool ProcessInitialize(EffectSettings &settings,

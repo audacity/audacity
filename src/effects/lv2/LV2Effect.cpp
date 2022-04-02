@@ -489,9 +489,6 @@ bool LV2Effect::SupportsAutomation() const
    return true;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
 bool LV2Effect::InitializePlugin()
 {
    using namespace LV2Symbols;

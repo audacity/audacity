@@ -137,8 +137,10 @@ public:
    virtual size_t GetBlockSize() const;
 
 protected:
+
    double         mSampleRate{};
 private:
+
    size_t mEffectBlockSize{ 0 };
 };
 
@@ -199,8 +201,6 @@ class AUDACITY_DLL_API Effect /* not final */
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
-
-   // EffectProcessor implementation
 
    std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
       const override;

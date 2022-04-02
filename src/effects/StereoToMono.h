@@ -31,8 +31,6 @@ public:
    EffectType GetType() const override;
    bool IsInteractive() const override;
 
-   // EffectProcessor implementation
-
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 

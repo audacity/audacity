@@ -57,10 +57,6 @@ public:
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
    bool DoLoadFactoryDefaults(EffectSettings &settings);
 
-   // EffectProcessor implementation
-
-   // Effect implementation
-
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(

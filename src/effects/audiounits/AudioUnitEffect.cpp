@@ -1003,10 +1003,6 @@ bool AudioUnitEffect::SupportsAutomation() const
    return false;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
-
 bool AudioUnitEffect::InitializePlugin()
 {
    OSStatus result;

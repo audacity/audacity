@@ -44,10 +44,6 @@ public:
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
    bool DoLoadFactoryDefaults(EffectSettings &settings);
 
-   // EffectProcessor implementation
-
-   // Effect implementation
-
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
    double CalcPreviewInputLength(
       const EffectSettings &settings, double previewLength) const override;

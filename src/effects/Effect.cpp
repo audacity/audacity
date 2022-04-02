@@ -194,8 +194,6 @@ bool Effect::SupportsAutomation() const
    return true;
 }
 
-// EffectProcessor implementation
-
 std::shared_ptr<EffectInstance>
 Effect::MakeInstance(EffectSettings &settings) const
 {

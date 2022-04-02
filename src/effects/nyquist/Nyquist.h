@@ -107,8 +107,6 @@ public:
    bool DoLoadSettings(
       const CommandParameters & parms, EffectSettings &settings);
 
-   // EffectProcessor implementation
-
    bool VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
       override;
    bool VisitSettings(

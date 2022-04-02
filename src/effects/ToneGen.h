@@ -38,8 +38,6 @@ public:
 
    EffectType GetType() const override;
 
-   // EffectProcessor implementation
-
    unsigned GetAudioOutCount() const override;
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;

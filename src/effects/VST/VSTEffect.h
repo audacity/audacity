@@ -86,7 +86,7 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// VSTEffect is an Audacity EffectProcessor that forwards actual 
+/// VSTEffect is an Audacity effect that forwards actual
 /// audio processing via a VSTEffectLink
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -132,8 +132,6 @@ class VSTEffect final
    bool DoLoadFactoryPreset(int id);
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
    bool DoLoadFactoryDefaults(EffectSettings &settings);
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
