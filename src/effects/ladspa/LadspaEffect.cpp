@@ -406,7 +406,7 @@ class LadspaEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
    LadspaEffectOptionsDialog(
-      wxWindow * parent, EffectDefinitionInterface &effect);
+      wxWindow * parent, EffectDefinitionInterface &effect, bool &var);
    virtual ~LadspaEffectOptionsDialog();
 
    void PopulateOrExchange(ShuttleGui & S);
@@ -415,7 +415,7 @@ public:
 
 private:
    EffectDefinitionInterface &mEffect;
-   bool mUseLatency;
+   bool &mUseLatency;
 
    DECLARE_EVENT_TABLE()
 };
@@ -425,13 +425,12 @@ BEGIN_EVENT_TABLE(LadspaEffectOptionsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(
-   wxWindow * parent, EffectDefinitionInterface &effect)
+   wxWindow * parent, EffectDefinitionInterface &effect, bool &var)
 : wxDialogWrapper(parent, wxID_ANY, XO("LADSPA Effect Options"))
 , mEffect{ effect }
+, mUseLatency{ var }
 {
-   GetConfig(mEffect,
-      PluginSettings::Shared, wxT("Options"), wxT("UseLatency"),
-      mUseLatency, true);
+   mUseLatency = LadspaEffect::LoadUseLatency(effect);
 
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
@@ -439,6 +438,24 @@ LadspaEffectOptionsDialog::LadspaEffectOptionsDialog(
 
 LadspaEffectOptionsDialog::~LadspaEffectOptionsDialog()
 {
+}
+
+static const wchar_t *OptionsKey = L"Options";
+static const wchar_t *UseLatencyKey = L"UseLatency";
+
+bool LadspaEffect::LoadUseLatency(const EffectDefinitionInterface &effect)
+{
+   bool result{};
+   GetConfig(effect, PluginSettings::Shared,
+      OptionsKey, UseLatencyKey, result, true /* default value */);
+   return result;
+}
+
+bool LadspaEffect::SaveUseLatency(
+   const EffectDefinitionInterface &effect, bool value)
+{
+   return SetConfig(
+      effect, PluginSettings::Shared, OptionsKey, UseLatencyKey, value);
 }
 
 void LadspaEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
@@ -486,10 +503,11 @@ void LadspaEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    }
 
    ShuttleGui S(this, eIsGettingFromDialog);
+   // Note this call re-visits the controls, not to create them but to fetch
+   // the values, in this case mUseLatency
    PopulateOrExchange(S);
 
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
-      wxT("UseLatency"), mUseLatency);
+   LadspaEffect::SaveUseLatency(mEffect, mUseLatency);
 
    EndModal(wxID_OK);
 }
@@ -709,6 +727,7 @@ bool LadspaEffect::InitializePlugin()
    {
       return false;
    }
+   mUseLatency = LadspaEffect::LoadUseLatency(*this);
 
    mInputPorts.reinit( mData->PortCount );
    mOutputPorts.reinit( mData->PortCount );
@@ -855,9 +874,6 @@ LadspaEffect::MakeInstance(EffectSettings &settings) const
 std::shared_ptr<EffectInstance>
 LadspaEffect::DoMakeInstance(EffectSettings &settings)
 {
-   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-      wxT("UseLatency"), mUseLatency, true);
-
    bool haveDefaults;
    GetConfig(*this, PluginSettings::Private,
       FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
@@ -1531,13 +1547,8 @@ bool LadspaEffect::HasOptions()
 
 void LadspaEffect::ShowOptions()
 {
-   LadspaEffectOptionsDialog dlg(mParent, *this);
-   if (dlg.ShowModal())
-   {
-      // Reinitialize configuration options
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("UseLatency"), mUseLatency, true);
-   }
+   LadspaEffectOptionsDialog dlg(mParent, *this, mUseLatency);
+   dlg.ShowModal();
 }
 
 // ============================================================================

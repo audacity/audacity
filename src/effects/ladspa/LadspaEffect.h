@@ -46,6 +46,10 @@ public:
    LadspaEffect(const wxString & path, int index);
    virtual ~LadspaEffect();
 
+   static bool LoadUseLatency(const EffectDefinitionInterface &effect);
+   static bool SaveUseLatency(
+      const EffectDefinitionInterface &effect, bool value);
+
    // ComponentInterface implementation
 
    PluginPath GetPath() const override;
@@ -180,14 +184,14 @@ private:
    int mNumOutputControls{ 0 };
    Floats mOutputControls;
 
-   bool mUseLatency;
+   bool mUseLatency{ true };
    int mLatencyPort{ -1 };
-   bool mLatencyDone;
+   bool mLatencyDone{ false };
 
    // Realtime processing
    std::vector<LADSPA_Handle> mSlaves;
 
-   NumericTextCtrl *mDuration;
+   NumericTextCtrl *mDuration{};
    wxWeakRef<wxDialog> mDialog;
    wxWindow *mParent{};
    ArrayOf<wxSlider*> mSliders;
