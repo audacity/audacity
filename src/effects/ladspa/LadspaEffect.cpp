@@ -616,26 +616,9 @@ BEGIN_EVENT_TABLE(LadspaEffect, wxEvtHandler)
 END_EVENT_TABLE()
 
 LadspaEffect::LadspaEffect(const wxString & path, int index)
+   : mPath{ path }
+   , mIndex{ index }
 {
-   mPath = path;
-   mIndex = index;
-   mData = NULL;
-
-   mMaster = NULL;
-   mReady = false;
-
-   mInteractive = false;
-
-   mAudioIns = 0;
-   mAudioOuts = 0;
-   mNumInputControls = 0;
-   mNumOutputControls = 0;
-   mSampleRate = 44100;
-   mBlockSize = 0;
-
-   mLatencyPort = -1;
-
-   mParent = NULL;
 }
 
 LadspaEffect::~LadspaEffect()

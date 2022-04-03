@@ -152,36 +152,36 @@ private:
 
 private:
 
-   wxString mPath;
-   int mIndex;
+   const wxString mPath;
+   const int mIndex;
 
    wxDynamicLibrary mLib;
-   const LADSPA_Descriptor *mData;
+   const LADSPA_Descriptor *mData{};
 
    wxString pluginName;
 
-   bool mReady;
+   bool mReady{ false };
 
-   LADSPA_Handle mMaster;
+   LADSPA_Handle mMaster{};
 
-   double mSampleRate;
-   size_t mBlockSize;
+   double mSampleRate{ 44100.0 };
+   size_t mBlockSize{ 0 };
 
-   bool mInteractive;
+   bool mInteractive{ false };
 
-   unsigned mAudioIns;
+   unsigned mAudioIns{ 0 };
    ArrayOf<unsigned long> mInputPorts;
 
-   unsigned mAudioOuts;
+   unsigned mAudioOuts{ 0 };
    ArrayOf<unsigned long> mOutputPorts;
 
-   int mNumInputControls;
+   int mNumInputControls{ 0 };
    Floats mInputControls;
-   int mNumOutputControls;
+   int mNumOutputControls{ 0 };
    Floats mOutputControls;
 
    bool mUseLatency;
-   int mLatencyPort;
+   int mLatencyPort{ -1 };
    bool mLatencyDone;
 
    // Realtime processing
@@ -189,7 +189,7 @@ private:
 
    NumericTextCtrl *mDuration;
    wxWeakRef<wxDialog> mDialog;
-   wxWindow *mParent;
+   wxWindow *mParent{};
    ArrayOf<wxSlider*> mSliders;
    ArrayOf<wxTextCtrl*> mFields;
    ArrayOf<wxStaticText*> mLabels;
