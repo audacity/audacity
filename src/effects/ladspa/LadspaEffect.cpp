@@ -1131,14 +1131,7 @@ bool LadspaEffect::LoadUserPreset(
 bool LadspaEffect::DoLoadUserPreset(
    const RegistryPath & name, EffectSettings &settings)
 {
-   if (!LoadParameters(name, settings))
-   {
-      return false;
-   }
-
-   RefreshControls();
-
-   return true;
+   return LoadParameters(name, settings);
 }
 
 bool LadspaEffect::SaveUserPreset(
@@ -1165,14 +1158,7 @@ bool LadspaEffect::LoadFactoryDefaults(EffectSettings &settings) const
 
 bool LadspaEffect::DoLoadFactoryDefaults(EffectSettings &settings)
 {
-   if (!LoadParameters(FactoryDefaultsGroup(), settings))
-   {
-      return false;
-   }
-
-   RefreshControls();
-
-   return true;
+   return LoadParameters(FactoryDefaultsGroup(), settings);
 }
 
 // ============================================================================
@@ -1186,6 +1172,7 @@ struct LadspaEffect::Validator : DefaultEffectUIValidator {
 
 bool LadspaEffect::Validator::UpdateUI()
 {
+   static_cast<LadspaEffect&>(mEffect).RefreshControls();
    return true;
 }
 
