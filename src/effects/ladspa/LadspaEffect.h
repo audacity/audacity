@@ -123,6 +123,7 @@ public:
    std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
       const override;
    std::shared_ptr<EffectInstance> DoMakeInstance(EffectSettings &settings);
+   struct Validator;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
