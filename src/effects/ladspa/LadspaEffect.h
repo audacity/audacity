@@ -74,14 +74,12 @@ public:
 
    bool LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
-   bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
-   bool DoLoadFactoryDefaults(EffectSettings &settings);
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -143,7 +141,8 @@ private:
    bool Load();
    void Unload();
 
-   bool LoadParameters(const RegistryPath & group, EffectSettings &settings);
+   bool LoadParameters(
+      const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 

@@ -1124,13 +1124,6 @@ bool LadspaEffect::LoadSettings(
 bool LadspaEffect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
 {
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<LadspaEffect*>(this)->DoLoadUserPreset(name, settings);
-}
-
-bool LadspaEffect::DoLoadUserPreset(
-   const RegistryPath & name, EffectSettings &settings)
-{
    return LoadParameters(name, settings);
 }
 
@@ -1151,12 +1144,6 @@ bool LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
 }
 
 bool LadspaEffect::LoadFactoryDefaults(EffectSettings &settings) const
-{
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<LadspaEffect*>(this)->DoLoadFactoryDefaults(settings);
-}
-
-bool LadspaEffect::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    return LoadParameters(FactoryDefaultsGroup(), settings);
 }
@@ -1601,7 +1588,7 @@ void LadspaEffect::Unload()
 }
 
 bool LadspaEffect::LoadParameters(
-   const RegistryPath & group, EffectSettings &settings)
+   const RegistryPath & group, EffectSettings &settings) const
 {
    wxString parms;
    if (!GetConfig(*this, PluginSettings::Private, group, wxT("Parameters"),
