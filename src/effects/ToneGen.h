@@ -13,14 +13,14 @@
 #ifndef __AUDACITY_EFFECT_TONEGEN__
 #define __AUDACITY_EFFECT_TONEGEN__
 
-#include "Effect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 #include <float.h> // for DBL_MAX
 
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectToneGen : public Effect
+class EffectToneGen : public PerTrackEffect
 {
 public:
    static inline EffectToneGen *

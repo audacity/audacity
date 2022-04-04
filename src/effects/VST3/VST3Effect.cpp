@@ -366,7 +366,7 @@ bool VST3Effect::SaveSettings(
 }
 
 bool VST3Effect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    using namespace Steinberg;
 
@@ -844,13 +844,14 @@ bool VST3Effect::InitializePlugin()
 {
    return true;
 }
-
-bool VST3Effect::InitializeInstance(EffectSettings &settings)
+   
+std::shared_ptr<EffectInstance>
+VST3Effect::MakeInstance(EffectSettings &settings)
 {
    ReloadUserOptions();
    if(!LoadUserPreset(CurrentSettingsGroup(), settings))
       LoadFactoryDefaults(settings);
-   return true;
+   return std::make_shared<Effect::Instance>(*this);
 }
 
 bool VST3Effect::IsGraphicalUI()

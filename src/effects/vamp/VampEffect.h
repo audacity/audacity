@@ -18,6 +18,7 @@
 #include <vamp-hostsdk/PluginLoader.h>
 
 #include "../Effect.h"
+#include "MemoryX.h"
 
 class wxStaticText;
 class wxSlider;
@@ -60,7 +61,7 @@ public:
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
    // EffectProcessor implementation
 
@@ -69,8 +70,7 @@ public:
    // Effect implementation
 
    bool Init() override;
-   bool Process(EffectSettings &settings) override;
-   void End() override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

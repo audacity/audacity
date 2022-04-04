@@ -88,6 +88,7 @@
 #include <wx/utils.h>
 
 #include "AColor.h"
+#include "ConfigInterface.h"
 #include "../ShuttleAutomation.h"
 #include "../ShuttleGui.h"
 #include "PlatformCompatibility.h"
@@ -627,7 +628,7 @@ bool EffectEqualization::Init()
    return(true);
 }
 
-bool EffectEqualization::Process(EffectSettings &)
+bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
 {
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    if(mEffectEqualization48x) {

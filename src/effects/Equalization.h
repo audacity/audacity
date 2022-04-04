@@ -20,6 +20,8 @@
 #include "Effect.h"
 #include "RealFFTf.h"
 #include "../ShuttleAutomation.h"
+#include "../widgets/wxPanelWrapper.h"
+#include "XMLTagHandler.h"
 
 // Flags to specialise the UI
 const int kEqOptionGraphic =1;
@@ -131,7 +133,7 @@ public:
    // Effect implementation
 
    bool Init() override;
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
 
    bool CloseUI() override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(

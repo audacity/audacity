@@ -172,7 +172,7 @@ size_t EffectBassTreble::RealtimeProcess(int group, EffectSettings &settings,
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
 
-bool EffectBassTreble::CheckWhetherSkipEffect()
+bool EffectBassTreble::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (mBass == 0.0 && mTreble == 0.0 && mGain == 0.0);
 }

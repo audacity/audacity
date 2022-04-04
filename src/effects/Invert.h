@@ -13,9 +13,9 @@
 #ifndef __AUDACITY_EFFECT_INVERT__
 #define __AUDACITY_EFFECT_INVERT__
 
-#include "Effect.h"
+#include "PerTrackEffect.h"
 
-class EffectInvert final : public Effect
+class EffectInvert final : public PerTrackEffect
 {
 public:
    static const ComponentInterfaceSymbol Symbol;

@@ -16,7 +16,7 @@
 #ifndef __AUDACITY_EFFECT_PHASER__
 #define __AUDACITY_EFFECT_PHASER__
 
-#include "Effect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;
@@ -40,7 +40,7 @@ public:
    int laststages;
 };
 
-class EffectPhaser final : public Effect
+class EffectPhaser final : public PerTrackEffect
 {
 public:
    static inline EffectPhaser *

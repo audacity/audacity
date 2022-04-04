@@ -24,6 +24,7 @@
 #include <wx/intl.h>
 #include <wx/slider.h>
 
+#include "MemoryX.h"
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
@@ -108,13 +109,8 @@ EffectType EffectTimeScale::GetType() const
 
 // Effect implementation
 
-bool EffectTimeScale::Init()
-{
-   return true;
-}
-
 double EffectTimeScale::CalcPreviewInputLength(
-   const EffectSettings &settings, double previewLength)
+   const EffectSettings &settings, double previewLength) const
 {
    double inputLength = settings.extra.GetDuration();
    if(inputLength == 0.0) {
@@ -135,7 +131,8 @@ void EffectTimeScale::Preview(EffectSettingsAccess &access, bool dryOnly)
    Effect::Preview(access, dryOnly);
 }
 
-bool EffectTimeScale::Process(EffectSettings &settings)
+bool EffectTimeScale::Process(
+   EffectInstance &instance, EffectSettings &settings)
 {
    double pitchStart1 = PercentChangeToRatio(m_PitchPercentChangeStart);
    double pitchEnd1 = PercentChangeToRatio(m_PitchPercentChangeEnd);
@@ -149,7 +146,7 @@ bool EffectTimeScale::Process(EffectSettings &settings)
    }
    
    EffectSBSMS::setParameters(rateStart1,rateEnd1,pitchStart1,pitchEnd1,slideTypeRate,slideTypePitch,false,false,false);
-   return EffectSBSMS::Process(settings);
+   return EffectSBSMS::Process(instance, settings);
 }
 
 std::unique_ptr<EffectUIValidator>
@@ -275,7 +272,8 @@ inline double EffectTimeScale::HalfStepsToPercentChange(double halfSteps)
    return 100.0 * (pow(2.0,halfSteps/12.0) - 1.0);
 }
 
-inline double EffectTimeScale::PercentChangeToHalfSteps(double percentChange)
+inline
+double EffectTimeScale::PercentChangeToHalfSteps(double percentChange)
 {
    return 12.0 * log2(PercentChangeToRatio(percentChange));
 }

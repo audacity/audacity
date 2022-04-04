@@ -193,7 +193,7 @@ bool VampEffect::SaveSettings(
 }
 
 bool VampEffect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    // First pass verifies values
    for (size_t p = 0, paramCount = mParameters.size(); p < paramCount; p++)
@@ -343,7 +343,7 @@ bool VampEffect::Init()
    return true;
 }
 
-bool VampEffect::Process(EffectSettings &)
+bool VampEffect::Process(EffectInstance &, EffectSettings &)
 {
    if (!mPlugin)
    {
@@ -527,11 +527,6 @@ bool VampEffect::Process(EffectSettings &)
       addedTrack->Commit();
 
    return true;
-}
-
-void VampEffect::End()
-{
-   mPlugin.reset();
 }
 
 std::unique_ptr<EffectUIValidator>

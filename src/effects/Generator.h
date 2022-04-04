@@ -33,8 +33,6 @@ protected:
    virtual bool GenerateTrack(EffectSettings &settings,
       WaveTrack *tmp, const WaveTrack &track, int ntrack) = 0;
 
-   bool Init()  override { return true; }
-
    // Actions to perform at the respective points in the generation process
    // NEW virtuals
    virtual void BeforeGenerate() { };
@@ -50,7 +48,7 @@ protected:
    // Postcondition:
    // If mDuration was valid (>= 0), then the tracks are replaced by the
    // generated results and true is returned. Otherwise, return false.
-   AUDACITY_DLL_API bool Process(EffectSettings &settings) override;
+   AUDACITY_DLL_API bool Process(EffectInstance &instance, EffectSettings &settings) override;
 };
 
 // Abstract generator which creates the sound in discrete blocks, whilst

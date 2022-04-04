@@ -22,7 +22,7 @@ class AUDACITY_DLL_API EffectTwoPassSimpleMono /* not final */ : public Effect
 public:
    // Effect implementation
 
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
 
 protected:
    // EffectTwoPassSimpleMono implementation
@@ -30,8 +30,8 @@ protected:
    // Override these methods if you need to initialize something
    // before each pass. Return None if processing should stop.
    // These should not depend on mOutputTracks having been set up via CopyInputTracks().
-   bool InitPass1() override;
-   bool InitPass2() override;
+   virtual bool InitPass1();
+   virtual bool InitPass2();
 
    // NEW virtuals
 
@@ -81,7 +81,7 @@ protected:
 private:
    bool ProcessOne(WaveTrack * t, WaveTrack * outTrack,
                    sampleCount start, sampleCount end);
-   bool ProcessPass(EffectSettings &settings) override;
+   bool ProcessPass(EffectSettings &settings);
 };
 
 #endif
