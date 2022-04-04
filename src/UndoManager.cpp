@@ -160,19 +160,15 @@ size_t UndoManager::EstimateRemovedBlocks(size_t begin, size_t end)
 void UndoManager::RemoveStates(size_t begin, size_t end)
 {
    using namespace BasicUI;
-   // Install a callback function that updates a progress indicator
    unsigned long long nToDelete = EstimateRemovedBlocks(begin, end),
       nDeleted = 0;
    auto dialog =
       MakeProgress(XO("Progress"), XO("Discarding undo/redo history"), 0);
-   auto callback = [&](const SampleBlock &){
-      dialog->Poll(++nDeleted, nToDelete);
+
+   // Install a callback function that updates a progress indicator
+   SampleBlock::DeletionCallback::Scope callbackScope{
+      [&](const SampleBlock &){ dialog->Poll(++nDeleted, nToDelete); }
    };
-   auto &trackFactory = WaveTrackFactory::Get( mProject );
-   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-   auto prevCallback =
-      pSampleBlockFactory->SetBlockDeletionCallback(callback);
-   auto cleanup = finally([&]{ pSampleBlockFactory->SetBlockDeletionCallback( prevCallback ); });
 
    // Wrap the whole in a savepoint for better performance
    TransactionScope trans{mProject, "DiscardingUndoStates"};
