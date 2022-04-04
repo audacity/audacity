@@ -851,7 +851,7 @@ VST3Effect::MakeInstance(EffectSettings &settings)
    ReloadUserOptions();
    if(!LoadUserPreset(CurrentSettingsGroup(), settings))
       LoadFactoryDefaults(settings);
-   return std::make_shared<Effect::Instance>(*this);
+   return std::make_shared<Instance>(*this);
 }
 
 bool VST3Effect::IsGraphicalUI()

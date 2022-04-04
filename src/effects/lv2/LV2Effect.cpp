@@ -937,7 +937,7 @@ LV2Effect::MakeInstance(EffectSettings &settings)
 
    lv2_atom_forge_init(&mForge, &mURIDMapFeature);
 
-   return std::make_shared<Effect::Instance>(*this);
+   return std::make_shared<Instance>(*this);
 }
 
 unsigned LV2Effect::GetAudioInCount() const

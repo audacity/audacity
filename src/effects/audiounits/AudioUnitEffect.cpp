@@ -1068,7 +1068,7 @@ AudioUnitEffect::MakeInstance(EffectSettings &settings)
       LoadPreset(CurrentSettingsGroup(), settings);
    }
 
-   return std::make_shared<Effect::Instance>(*this);
+   return std::make_shared<Instance>(*this);
 }
 
 bool AudioUnitEffect::MakeListener()
