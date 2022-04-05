@@ -16,7 +16,7 @@
 #ifndef __AUDACITY_EFFECT_WAHWAH__
 #define __AUDACITY_EFFECT_WAHWAH__
 
-#include "PerTrackEffect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;
@@ -37,7 +37,7 @@ public:
    double b0, b1, b2, a0, a1, a2;
 };
 
-class EffectWahwah final : public PerTrackEffect
+class EffectWahwah final : public StatefulPerTrackEffect
 {
 public:
    static inline EffectWahwah *
@@ -57,8 +57,6 @@ public:
 
    EffectType GetType() const override;
    bool SupportsRealtime() const override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

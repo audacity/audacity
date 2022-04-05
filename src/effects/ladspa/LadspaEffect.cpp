@@ -714,10 +714,6 @@ bool LadspaEffect::SupportsAutomation() const
    return mNumInputControls > 0;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
-
 bool LadspaEffect::InitializePlugin()
 {
    if (!Load())
@@ -898,12 +894,12 @@ unsigned LadspaEffect::GetAudioOutCount() const
    return mAudioOuts;
 }
 
-int LadspaEffect::GetMidiInCount()
+int LadspaEffect::GetMidiInCount() const
 {
    return 0;
 }
 
-int LadspaEffect::GetMidiOutCount()
+int LadspaEffect::GetMidiOutCount() const
 {
    return 0;
 }
@@ -933,11 +929,6 @@ sampleCount LadspaEffect::GetLatency()
       return sampleCount ( mOutputControls[mLatencyPort] );
    }
 
-   return 0;
-}
-
-size_t LadspaEffect::GetTailSize()
-{
    return 0;
 }
 

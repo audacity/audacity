@@ -14,7 +14,7 @@
 #ifndef __AUDACITY_EFFECT_DTMF__
 #define __AUDACITY_EFFECT_DTMF__
 
-#include "PerTrackEffect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;
@@ -23,7 +23,7 @@ class wxTextCtrl;
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectDtmf final : public PerTrackEffect
+class EffectDtmf final : public StatefulPerTrackEffect
 {
 public:
    struct Settings;
@@ -43,8 +43,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioOutCount() const override;
    bool ProcessInitialize(EffectSettings &settings,

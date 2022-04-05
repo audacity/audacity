@@ -46,83 +46,9 @@ static const int kFFwdID = 20104;
 
 using t2bHash = std::unordered_map< void*, bool >;
 
-StatefulEffectBase::Instance::Instance(StatefulEffectBase &effect)
-   : mEffect{ effect }
-{
-}
-
-StatefulEffectBase::Instance::~Instance() = default;
-
-Effect &StatefulEffectBase::Instance::GetEffect() const
-{
-   return dynamic_cast<Effect&>(mEffect);
-}
-
-bool StatefulEffectBase::Instance::Init()
-{
-   return GetEffect().Init();
-}
-
-bool StatefulEffectBase::Instance::Process(EffectSettings &settings)
+bool StatefulEffect::Instance::Process(EffectSettings &settings)
 {
    return GetEffect().Process(*this, settings);
-}
-
-void StatefulEffectBase::Instance::SetSampleRate(double rate)
-{
-   GetEffect().SetSampleRate(rate);
-}
-
-bool StatefulEffectBase::Instance::RealtimeInitialize(EffectSettings &settings)
-{
-   return GetEffect().RealtimeInitialize(settings);
-}
-
-bool StatefulEffectBase::Instance::RealtimeAddProcessor(EffectSettings &settings,
-   unsigned numChannels, float sampleRate)
-{
-   return GetEffect().RealtimeAddProcessor(settings, numChannels, sampleRate);
-}
-
-bool StatefulEffectBase::Instance::RealtimeSuspend()
-{
-   return GetEffect().RealtimeSuspend();
-}
-
-bool StatefulEffectBase::Instance::RealtimeResume() noexcept
-{
-   return GetEffect().RealtimeResume();
-}
-
-bool StatefulEffectBase::Instance::RealtimeProcessStart(EffectSettings &settings)
-{
-   return GetEffect().RealtimeProcessStart(settings);
-}
-
-size_t StatefulEffectBase::Instance::RealtimeProcess(int group, EffectSettings &settings,
-   const float *const *inBuf, float *const *outBuf, size_t numSamples)
-{
-   return GetEffect().RealtimeProcess(group, settings, inBuf, outBuf, numSamples);
-}
-
-bool StatefulEffectBase::Instance::RealtimeProcessEnd(EffectSettings &settings) noexcept
-{
-   return GetEffect().RealtimeProcessEnd(settings);
-}
-
-bool StatefulEffectBase::Instance::RealtimeFinalize(EffectSettings &settings) noexcept
-{
-   return GetEffect().RealtimeFinalize(settings);
-}
-
-size_t StatefulEffectBase::Instance::GetBlockSize() const
-{
-   return GetEffect().GetBlockSize();
-}
-
-size_t StatefulEffectBase::Instance::SetBlockSize(size_t maxBlockSize)
-{
-   return GetEffect().SetBlockSize(maxBlockSize);
 }
 
 Effect::Effect()
@@ -199,16 +125,14 @@ bool Effect::SupportsAutomation() const
    return true;
 }
 
-// EffectProcessor implementation
-
 std::shared_ptr<EffectInstance>
-Effect::MakeInstance(EffectSettings &settings) const
+StatefulEffect::MakeInstance(EffectSettings &settings) const
 {
    // Cheat with const-cast to return an object that calls through to
    // non-const methods of a stateful effect.
    // Stateless effects should override this function and be really const
    // correct.
-   return std::make_shared<Effect::Instance>(const_cast<Effect&>(*this));
+   return std::make_shared<Instance>(const_cast<StatefulEffect&>(*this));
 }
 
 unsigned Effect::GetAudioInCount() const
@@ -221,105 +145,10 @@ unsigned Effect::GetAudioOutCount() const
    return 0;
 }
 
-int Effect::GetMidiInCount()
-{
-   return 0;
-}
-
-int Effect::GetMidiOutCount()
-{
-   return 0;
-}
-
-void Effect::SetSampleRate(double rate)
-{
-   mSampleRate = rate;
-}
-
-size_t Effect::SetBlockSize(size_t maxBlockSize)
-{
-   mEffectBlockSize = maxBlockSize;
-   return mEffectBlockSize;
-}
-
-size_t Effect::GetBlockSize() const
-{
-   return mEffectBlockSize;
-}
-
-sampleCount Effect::GetLatency()
-{
-   return 0;
-}
-
-size_t Effect::GetTailSize()
-{
-   return 0;
-}
-
 const EffectParameterMethods &Effect::Parameters() const
 {
    static const CapturedParameters<Effect> empty;
    return empty;
-}
-
-bool Effect::ProcessInitialize(
-   EffectSettings &settings, sampleCount totalLen, ChannelNames chanMap)
-{
-   return true;
-}
-
-bool Effect::ProcessFinalize()
-{
-   return true;
-}
-
-size_t Effect::ProcessBlock(EffectSettings &settings,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
-{
-   return 0;
-}
-
-bool Effect::RealtimeInitialize(EffectSettings &settings)
-{
-   return false;
-}
-
-bool Effect::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned numChannels, float sampleRate)
-{
-   return true;
-}
-
-bool Effect::RealtimeFinalize(EffectSettings &settings) noexcept
-{
-   return false;
-}
-
-bool Effect::RealtimeSuspend()
-{
-   return true;
-}
-
-bool Effect::RealtimeResume() noexcept
-{
-   return true;
-}
-
-bool Effect::RealtimeProcessStart(EffectSettings &settings)
-{
-   return true;
-}
-
-size_t Effect::RealtimeProcess(int group, EffectSettings &settings,
-   const float *const *inbuf, float *const *outbuf, size_t numSamples)
-{
-   return 0;
-}
-
-bool Effect::RealtimeProcessEnd(EffectSettings &settings) noexcept
-{
-   return true;
 }
 
 int Effect::ShowClientInterface(
@@ -763,11 +592,6 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
 
    return delegate.DoEffect(settings, mProjectRate, mTracks, mFactory,
       region, mUIFlags, nullptr, nullptr, nullptr);
-}
-
-bool StatefulEffectBase::Init()
-{
-   return true;
 }
 
 std::unique_ptr<EffectUIValidator>

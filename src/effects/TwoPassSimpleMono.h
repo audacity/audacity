@@ -17,7 +17,8 @@
 
 class WaveTrack;
 
-class AUDACITY_DLL_API EffectTwoPassSimpleMono /* not final */ : public Effect
+class AUDACITY_DLL_API EffectTwoPassSimpleMono /* not final */
+   : public StatefulEffect
 {
 public:
    // Effect implementation

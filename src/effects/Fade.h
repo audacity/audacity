@@ -11,9 +11,9 @@
 #ifndef __AUDACITY_EFFECT_FADE__
 #define __AUDACITY_EFFECT_FADE__
 
-#include "PerTrackEffect.h"
+#include "StatefulPerTrackEffect.h"
 
-class EffectFade : public PerTrackEffect
+class EffectFade : public StatefulPerTrackEffect
 {
 public:
    EffectFade(bool fadeIn = false);
@@ -28,8 +28,6 @@ public:
 
    EffectType GetType() const override;
    bool IsInteractive() const override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

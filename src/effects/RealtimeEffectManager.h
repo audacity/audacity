@@ -22,7 +22,6 @@
 #include "PluginProvider.h" // for PluginID
 
 class AudacityProject;
-class EffectProcessor;
 class RealtimeEffectList;
 class RealtimeEffectState;
 class Track;
@@ -38,7 +37,6 @@ class AUDACITY_DLL_API RealtimeEffectManager final
 {
 public:
    using Latency = std::chrono::microseconds;
-   using EffectArray = std::vector <EffectProcessor*> ;
 
    RealtimeEffectManager(AudacityProject &project);
    ~RealtimeEffectManager();

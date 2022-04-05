@@ -1276,10 +1276,6 @@ bool VSTEffect::SupportsAutomation() const
    return mAutomatable;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
-
 bool VSTEffect::InitializePlugin()
 {
    if (!mAEffect)
@@ -1345,12 +1341,12 @@ unsigned VSTEffect::GetAudioOutCount() const
    return mAudioOuts;
 }
 
-int VSTEffect::GetMidiInCount()
+int VSTEffect::GetMidiInCount() const
 {
    return mMidiIns;
 }
 
-int VSTEffect::GetMidiOutCount()
+int VSTEffect::GetMidiOutCount() const
 {
    return mMidiOuts;
 }
@@ -1381,11 +1377,6 @@ sampleCount VSTEffect::GetLatency()
       return delay;
    }
 
-   return 0;
-}
-
-size_t VSTEffect::GetTailSize()
-{
    return 0;
 }
 

@@ -15,7 +15,7 @@
 
 #include "Effect.h"
 
-class EffectReverse final : public Effect
+class EffectReverse final : public StatefulEffect
 {
 public:
    static const ComponentInterfaceSymbol Symbol;

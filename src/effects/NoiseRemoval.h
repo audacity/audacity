@@ -33,7 +33,7 @@ class wxTextCtrl;
 #include "RealFFTf.h"
 #include "SampleFormat.h"
 
-class EffectNoiseRemoval final : public Effect
+class EffectNoiseRemoval final : public StatefulEffect
 {
 public:
    static const ComponentInterfaceSymbol Symbol;

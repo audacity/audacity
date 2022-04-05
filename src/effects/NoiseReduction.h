@@ -15,7 +15,7 @@
 
 #include "Effect.h"
 
-class EffectNoiseReduction final : public Effect {
+class EffectNoiseReduction final : public StatefulEffect {
 public:
    static const ComponentInterfaceSymbol Symbol;
 

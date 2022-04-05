@@ -19,7 +19,7 @@
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <public.sdk/source/vst/hosting/module.h>
 
-#include "../PerTrackEffect.h"
+#include "../StatefulPerTrackEffect.h"
 #include "internal/ComponentHandler.h"
 
 #include "SampleCount.h"
@@ -41,7 +41,7 @@ class ParameterChangesProvider;
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
-class VST3Effect final : public PerTrackEffect
+class VST3Effect final : public StatefulPerTrackEffect
 {
    //Keep strong reference to a module while effect is alive
    std::shared_ptr<VST3::Hosting::Module> mModule;
@@ -119,13 +119,12 @@ public:
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
+   int GetMidiInCount() const override;
+   int GetMidiOutCount() const override;
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
    sampleCount GetLatency() override;
-   size_t GetTailSize() override;
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;

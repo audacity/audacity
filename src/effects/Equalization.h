@@ -94,7 +94,7 @@ using EQCurveArray = std::vector<EQCurve>;
 class EffectEqualization48x;
 #endif
 
-class EffectEqualization : public Effect,
+class EffectEqualization : public StatefulEffect,
                            public XMLTagHandler
 {
 public:

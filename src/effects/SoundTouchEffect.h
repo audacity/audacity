@@ -30,7 +30,7 @@ class TimeWarper;
 class NoteTrack;
 class WaveTrack;
 
-class EffectSoundTouch /* not final */ : public Effect
+class EffectSoundTouch /* not final */ : public StatefulEffect
 {
 public:
    

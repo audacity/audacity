@@ -29,55 +29,26 @@ PerTrackEffect::Instance::~Instance() = default;
 
 bool PerTrackEffect::Instance::Process(EffectSettings &settings)
 {
-   return GetEffect().Process(*this, settings);
+   return mProcessor.Process(*this, settings);
 }
 
 bool PerTrackEffect::Instance::ProcessInitialize(EffectSettings &settings,
    sampleCount totalLen, ChannelNames chanMap)
 {
-   return GetEffect().ProcessInitialize(settings, totalLen, chanMap);
+   return true;
 }
 
 bool PerTrackEffect::Instance::ProcessFinalize() /* noexcept */
 {
-
-   return GetEffect().ProcessFinalize();
-}
-
-size_t PerTrackEffect::Instance::ProcessBlock(EffectSettings &settings,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
-{
-   return GetEffect().ProcessBlock(settings, inBlock, outBlock, blockLen);
+   return true;
 }
 
 sampleCount PerTrackEffect::Instance::GetLatency()
 {
-   return GetEffect().GetLatency();
+   return 0;
 }
 
 PerTrackEffect::~PerTrackEffect() = default;
-
-std::shared_ptr<EffectInstance>
-PerTrackEffect::MakeInstance(EffectSettings &settings) const
-{
-   // Cheat with const-cast to return an object that calls through to
-   // non-const methods of a stateful effect.
-   // Stateless effects should override this function and be really const
-   // correct.
-   return std::make_shared<Instance>(
-      const_cast<PerTrackEffect&>(*this));
-}
-
-size_t PerTrackEffect::SetBlockSize(size_t maxBlockSize)
-{
-   mBlockSize = maxBlockSize;
-   return mBlockSize;
-}
-
-size_t PerTrackEffect::GetBlockSize() const
-{
-   return mBlockSize;
-}
 
 bool PerTrackEffect::DoPass1() const
 {
@@ -89,19 +60,21 @@ bool PerTrackEffect::DoPass2() const
    return false;
 }
 
-bool PerTrackEffect::Process(EffectInstance &instance, EffectSettings &settings)
+bool PerTrackEffect::Process(
+   EffectInstance &instance, EffectSettings &settings) const
 {
-   CopyInputTracks(true);
+   auto pThis = const_cast<PerTrackEffect *>(this);
+   pThis->CopyInputTracks(true);
    bool bGoodResult = true;
    // mPass = 1;
    if (DoPass1()) {
-      auto &myInstance = static_cast<Instance&>(instance);
-      bGoodResult = ProcessPass(myInstance, settings);
+      auto &myInstance = dynamic_cast<Instance&>(instance);
+      bGoodResult = pThis->ProcessPass(myInstance, settings);
       // mPass = 2;
       if (bGoodResult && DoPass2())
-         bGoodResult = ProcessPass(myInstance, settings);
+         bGoodResult = pThis->ProcessPass(myInstance, settings);
    }
-   ReplaceProcessedTracks(bGoodResult);
+   pThis->ReplaceProcessedTracks(bGoodResult);
    return bGoodResult;
 }
 
@@ -248,7 +221,7 @@ bool PerTrackEffect::ProcessTrack(Instance &instance, EffectSettings &settings,
    FloatBuffers &outBuffer,
    ArrayOf< float * > &inBufPos,
    ArrayOf< float *> &outBufPos, size_t bufferSize, size_t blockSize,
-   unsigned numChannels)
+   unsigned numChannels) const
 {
    bool rc = true;
 

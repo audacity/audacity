@@ -19,7 +19,7 @@ class ShuttleGui;
 
 class wxStaticText;
 
-class EffectRepeat final : public Effect
+class EffectRepeat final : public StatefulEffect
 {
 public:
    static inline EffectRepeat *

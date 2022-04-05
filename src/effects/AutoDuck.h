@@ -22,7 +22,7 @@ class ShuttleGui;
 
 #define AUTO_DUCK_PANEL_NUM_CONTROL_POINTS 5
 
-class EffectAutoDuck final : public Effect
+class EffectAutoDuck final : public StatefulEffect
 {
 public:
    static inline EffectAutoDuck *

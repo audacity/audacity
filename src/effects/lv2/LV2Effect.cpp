@@ -489,9 +489,6 @@ bool LV2Effect::SupportsAutomation() const
    return true;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
 bool LV2Effect::InitializePlugin()
 {
    using namespace LV2Symbols;
@@ -956,12 +953,12 @@ unsigned LV2Effect::GetAudioOutCount() const
    return mAudioOut;
 }
 
-int LV2Effect::GetMidiInCount()
+int LV2Effect::GetMidiInCount() const
 {
    return mMidiIn;
 }
 
-int LV2Effect::GetMidiOutCount()
+int LV2Effect::GetMidiOutCount() const
 {
    return mMidiOut;
 }
@@ -1020,11 +1017,6 @@ sampleCount LV2Effect::GetLatency()
       return sampleCount(mMaster->GetLatency());
    }
 
-   return 0;
-}
-
-size_t LV2Effect::GetTailSize()
-{
    return 0;
 }
 

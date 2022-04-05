@@ -129,8 +129,6 @@ EffectType EffectAmplify::GetType() const
    return EffectTypeProcess;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectAmplify::GetAudioInCount() const
 {
    return 1;

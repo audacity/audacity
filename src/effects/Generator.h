@@ -21,7 +21,7 @@
 #include "Effect.h"
 
 // Base class for Generators (effects which fill a given duration)
-class Generator /* not final */ : public Effect
+class Generator /* not final */ : public StatefulEffect
 {
 public:
    Generator() { }

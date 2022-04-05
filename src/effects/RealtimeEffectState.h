@@ -21,7 +21,6 @@
 #include "PluginProvider.h" // for PluginID
 #include "XMLTagHandler.h"
 
-class EffectProcessor;
 class EffectSettingsAccess;
 class Track;
 

@@ -16,7 +16,7 @@
 #ifndef __AUDACITY_EFFECT_PHASER__
 #define __AUDACITY_EFFECT_PHASER__
 
-#include "PerTrackEffect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;
@@ -40,7 +40,7 @@ public:
    int laststages;
 };
 
-class EffectPhaser final : public PerTrackEffect
+class EffectPhaser final : public StatefulPerTrackEffect
 {
 public:
    static inline EffectPhaser *
@@ -60,8 +60,6 @@ public:
 
    EffectType GetType() const override;
    bool SupportsRealtime() const override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

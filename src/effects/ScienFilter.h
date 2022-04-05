@@ -17,7 +17,7 @@ Vaughan Johnson (Preview)
 
 #include "Biquad.h"
 
-#include "PerTrackEffect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 #include "../widgets/wxPanelWrapper.h"
 #include <float.h> // for FLT_MAX
@@ -32,7 +32,7 @@ class ShuttleGui;
 
 class EffectScienFilterPanel;
 
-class EffectScienFilter final : public PerTrackEffect
+class EffectScienFilter final : public StatefulPerTrackEffect
 {
 public:
    static inline EffectScienFilter *
@@ -51,8 +51,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

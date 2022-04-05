@@ -13,13 +13,13 @@
 #ifndef __AUDACITY_EFFECT_NOISE__
 #define __AUDACITY_EFFECT_NOISE__
 
-#include "PerTrackEffect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectNoise final : public PerTrackEffect
+class EffectNoise final : public StatefulPerTrackEffect
 {
 public:
    static inline EffectNoise *
@@ -38,8 +38,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioOutCount() const override;
    size_t ProcessBlock(EffectSettings &settings,

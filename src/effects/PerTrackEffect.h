@@ -23,71 +23,61 @@ using FloatBuffers = ArraysOf<float>;
 //! of other tracks.
 /*!
    Its override of Effect::Process() uses ProcessInitialize(),
-   ProcessBlock(), and ProcessFinalize() methods of EffectProcessor,
-   and also GetLatency() to determine how many leading output samples to
+   ProcessBlock(), and ProcessFinalize() methods of its instance made by
+   MakeInstance(), which must be a subclass of PerTrackEffect::Instance.
+   Also uses GetLatency() to determine how many leading output samples to
    discard and how many extra samples to produce.
  */
-class PerTrackEffect : public Effect
+class PerTrackEffect
+   : public Effect
 {
 public:
    ~PerTrackEffect() override;
 
-   size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
-
-   //! Adds virtual functions whose default implementations call-through to the
-   //! PerTrackEffect members
-   /*!
-    PerTrackEffects that are completely stateless will define subclasses that
-    override the new virtual functions
-    */
-   class AUDACITY_DLL_API Instance : public Effect::Instance {
+   class AUDACITY_DLL_API Instance : public virtual EffectInstance {
    public:
-      using Effect::Instance::Instance;
+      explicit Instance(const PerTrackEffect &processor)
+         : mProcessor{ processor }
+      {}
       ~Instance() override;
    
       //! Uses the other virtual functions of this class
       bool Process(EffectSettings &settings) final;
 
-      /*!
-       @copydoc EffectProcessor::ProcessInitialize()
-       */
+      //! Called at start of destructive processing, for each (mono/stereo) track
+      //! Default implementation does nothing, returns true
       virtual bool ProcessInitialize(EffectSettings &settings,
          sampleCount totalLen, ChannelNames chanMap);
 
-      /*!
-       @copydoc EffectProcessor::ProcessFinalize()
-       */
+      //! Called at end of destructive processing, for each (mono/stereo) track
+      //! Default implementation does nothing, returns true
+      //! This may be called during stack unwinding:
       virtual bool ProcessFinalize() /* noexcept */ ;
 
-      /*!
-       @copydoc EffectProcessor::ProcessBlock()
-       */
+      //! Called for destructive effect computation
       virtual size_t ProcessBlock(EffectSettings &settings,
-         const float *const *inBlock, float *const *outBlock, size_t blockLen);
+         const float *const *inBlock, float *const *outBlock, size_t blockLen)
+      = 0;
 
-      /*!
-       @copydoc EffectProcessor::GetLatency()
-       */
+      //! Called for destructive, non-realtime effect computation
+      //! Default implementation returns zero
       virtual sampleCount GetLatency();
 
    protected:
-      PerTrackEffect &GetEffect() const
-      { return static_cast<PerTrackEffect &>(mEffect); }
+      const PerTrackEffect &mProcessor;
    };
-
-   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-      const override;
 
 protected:
    // These were overridables but the generality wasn't used yet
    /* virtual */ bool DoPass1() const;
    /* virtual */ bool DoPass2() const;
 
+   // non-virtual
+   bool Process(EffectInstance &instance, EffectSettings &settings) const;
+
    sampleCount    mSampleCnt{};
 
 private:
-   bool Process(EffectInstance &instance, EffectSettings &settings) final;
    bool ProcessPass(Instance &instance, EffectSettings &settings);
    bool ProcessTrack(Instance &instance, EffectSettings &settings,
       int count,
@@ -100,12 +90,6 @@ private:
       FloatBuffers &outBuffer,
       ArrayOf< float * > &inBufPos,
       ArrayOf< float *> &outBufPos, size_t bufferSize, size_t blockSize,
-      unsigned mNumChannels);
-
-   size_t mBlockSize{};
+      unsigned mNumChannels) const;
 };
-
-template<typename Settings> using PerTrackEffectWithSettings =
-   EffectWithSettings<Settings, PerTrackEffect>;
-
 #endif

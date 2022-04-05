@@ -103,9 +103,80 @@ bool EffectSettingsManager::CopySettingsContents(
 
 EffectInstance::~EffectInstance() = default;
 
+bool EffectInstance::Init()
+{
+   return true;
+}
+
+bool EffectInstance::RealtimeInitialize(EffectSettings &)
+{
+   return false;
+}
+
+bool EffectInstance::RealtimeAddProcessor(EffectSettings &, unsigned, float)
+{
+   return true;
+}
+
+bool EffectInstance::RealtimeSuspend()
+{
+   return true;
+}
+
+bool EffectInstance::RealtimeResume() noexcept
+{
+   return true;
+}
+
+bool EffectInstance::RealtimeProcessStart(EffectSettings &)
+{
+   return true;
+}
+
+size_t EffectInstance::RealtimeProcess(int, EffectSettings &,
+   const float *const *, float *const *, size_t)
+{
+   return 0;
+}
+
+bool EffectInstance::RealtimeProcessEnd(EffectSettings &) noexcept
+{
+   return true;
+}
+
+bool EffectInstance::RealtimeFinalize(EffectSettings &) noexcept
+{
+   return true;
+}
+
+size_t EffectInstance::GetTailSize() const
+{
+   return 0;
+}
+
+EffectInstanceWithBlockSize::~EffectInstanceWithBlockSize() = default;
+
+size_t EffectInstanceWithBlockSize::GetBlockSize() const
+{
+   return mBlockSize;
+}
+
+size_t EffectInstanceWithBlockSize::SetBlockSize(size_t maxBlockSize)
+{
+   return (mBlockSize = maxBlockSize);
+}
+
 EffectInstanceFactory::~EffectInstanceFactory() = default;
 
-EffectProcessor::~EffectProcessor() = default;
+int EffectInstanceFactory::GetMidiInCount() const
+{
+   return 0;
+}
+
+int EffectInstanceFactory::GetMidiOutCount() const
+{
+   return 0;
+}
 
 EffectUIValidator::~EffectUIValidator() = default;
 

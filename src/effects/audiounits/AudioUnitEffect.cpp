@@ -1003,10 +1003,6 @@ bool AudioUnitEffect::SupportsAutomation() const
    return false;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
-
 bool AudioUnitEffect::InitializePlugin()
 {
    OSStatus result;
@@ -1202,12 +1198,12 @@ unsigned AudioUnitEffect::GetAudioOutCount() const
    return mAudioOuts;
 }
 
-int AudioUnitEffect::GetMidiInCount()
+int AudioUnitEffect::GetMidiInCount() const
 {
    return 0;
 }
 
-int AudioUnitEffect::GetMidiOutCount()
+int AudioUnitEffect::GetMidiOutCount() const
 {
    return 0;
 }
@@ -1249,7 +1245,9 @@ sampleCount AudioUnitEffect::GetLatency()
    return 0;
 }
 
-size_t AudioUnitEffect::GetTailSize()
+#if 0
+// TODO move to AudioUnitEffect::Instance when that class exists
+size_t AudioUnitEffect::GetTailSize() const
 {
    // Retrieve the tail time
    Float64 tailTime = 0.0;
@@ -1263,6 +1261,7 @@ size_t AudioUnitEffect::GetTailSize()
 
    return tailTime * mSampleRate;
 }
+#endif
 
 bool AudioUnitEffect::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames chanMap)
