@@ -713,6 +713,71 @@ bool LadspaEffect::SupportsAutomation() const
    return mNumInputControls > 0;
 }
 
+namespace {
+std::pair<float, float>
+InputCountrolPortBounds(const LADSPA_PortRangeHint &hint, double sampleRate)
+{
+   // Find lower and upper bound values for ths hint
+   const auto multiplier =
+      LADSPA_IS_HINT_SAMPLE_RATE(hint.HintDescriptor) ? sampleRate : 1.0;
+   return { hint.LowerBound * multiplier, hint.UpperBound * multiplier };
+}
+float ClampInputControlValue(
+   const LADSPA_PortRangeHint &hint, float val, float lower, float upper)
+{
+   if (LADSPA_IS_HINT_BOUNDED_BELOW(hint.HintDescriptor) && val < lower)
+      val = lower;
+   if (LADSPA_IS_HINT_BOUNDED_ABOVE(hint.HintDescriptor) && val > upper)
+      val = upper;
+   return val;
+}
+float InputControlPortDefaultValue(
+   const LADSPA_PortRangeHint &hint, double sampleRate)
+{
+   // See comments in library header ladspa.h about interpretation of macros
+   const auto bounds = InputCountrolPortBounds(hint, sampleRate);
+
+   // Function to find low, middle, or high default values
+   const auto combine = [bounds,
+      logarithmic = LADSPA_IS_HINT_LOGARITHMIC(hint.HintDescriptor)
+   ](float lowWeight, float highWeight){
+      auto [lower, upper] = bounds;
+      return logarithmic
+         ? exp(log(lower) * lowWeight + log(upper) * highWeight)
+         : lower * lowWeight + upper * highWeight;
+   };
+
+   auto [lower, upper] = bounds;
+   auto val = 1.0f;
+   // Four bits of the descriptor describe mutually exclusive cases
+   switch (hint.HintDescriptor & LADSPA_HINT_DEFAULT_MASK) {
+   case LADSPA_HINT_DEFAULT_NONE:
+   default:
+      break;
+   case LADSPA_HINT_DEFAULT_MINIMUM:
+      val = lower; break;
+   case LADSPA_HINT_DEFAULT_LOW:
+      val = combine(0.75, 0.25); break;
+   case LADSPA_HINT_DEFAULT_MIDDLE:
+      val = combine(0.5, 0.5); break;
+   case LADSPA_HINT_DEFAULT_HIGH:
+      val = combine(0.25, 0.75); break;
+   case LADSPA_HINT_DEFAULT_MAXIMUM:
+      val = upper; break;
+   case LADSPA_HINT_DEFAULT_0:
+      val = 0.0f; break;
+   case LADSPA_HINT_DEFAULT_1:
+      val = 1.0f; break;
+   case LADSPA_HINT_DEFAULT_100:
+      val = 100.0f; break;
+   case LADSPA_HINT_DEFAULT_440:
+      val = 440.0f; break;
+   }
+
+   return ClampInputControlValue(hint, val, lower, upper);
+}
+}
+
 bool LadspaEffect::InitializePlugin()
 {
    if (!Load())
@@ -738,96 +803,9 @@ bool LadspaEffect::InitializePlugin()
       // Determine the port's default value
       else if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_INPUT(d)) {
          mInteractive = true;
-
-         LADSPA_PortRangeHint hint = mData->PortRangeHints[p];
-         float val = float(1.0);
-         float lower = hint.LowerBound;
-         float upper = hint.UpperBound;
-
-         if (LADSPA_IS_HINT_SAMPLE_RATE(hint.HintDescriptor))
-         {
-            lower *= mSampleRate;
-            upper *= mSampleRate;
-         }
-
-         if (LADSPA_IS_HINT_BOUNDED_BELOW(hint.HintDescriptor) && val < lower)
-         {
-            val = lower;
-         }
-
-         if (LADSPA_IS_HINT_BOUNDED_ABOVE(hint.HintDescriptor) && val > upper)
-         {
-            val = upper;
-         }
-
-         if (LADSPA_IS_HINT_DEFAULT_MINIMUM(hint.HintDescriptor))
-         {
-            val = lower;
-         }
-
-         if (LADSPA_IS_HINT_DEFAULT_MAXIMUM(hint.HintDescriptor))
-         {
-            val = upper;
-         }
-
-         if (LADSPA_IS_HINT_DEFAULT_LOW(hint.HintDescriptor))
-         {
-            if (LADSPA_IS_HINT_LOGARITHMIC(hint.HintDescriptor))
-            {
-               val = exp(log(lower) * 0.75f + log(upper) * 0.25f);
-            }
-            else
-            {
-               val = lower * 0.75f + upper * 0.25f;
-            }
-         }
-
-         if (LADSPA_IS_HINT_DEFAULT_MIDDLE(hint.HintDescriptor))
-         {
-            if (LADSPA_IS_HINT_LOGARITHMIC(hint.HintDescriptor))
-            {
-               val = exp(log(lower) * 0.5f + log(upper) * 0.5f);
-            }
-            else
-            {
-               val = lower * 0.5f + upper * 0.5f;
-            }
-         }
-
-         if (LADSPA_IS_HINT_DEFAULT_HIGH(hint.HintDescriptor))
-         {
-            if (LADSPA_IS_HINT_LOGARITHMIC(hint.HintDescriptor))
-            {
-               val = exp(log(lower) * 0.25f + log(upper) * 0.75f);
-            }
-            else
-            {
-               val = lower * 0.25f + upper * 0.75f;
-            }
-         }
-
-         if (LADSPA_IS_HINT_DEFAULT_0(hint.HintDescriptor))
-         {
-            val = 0.0f;
-         }
-
-         if (LADSPA_IS_HINT_DEFAULT_1(hint.HintDescriptor))
-         {
-            val = 1.0f;
-         }
-
-         if (LADSPA_IS_HINT_DEFAULT_100(hint.HintDescriptor))
-         {
-            val = 100.0f;
-         }
-
-         if (LADSPA_IS_HINT_DEFAULT_440(hint.HintDescriptor))
-         {
-            val = 440.0f;
-         }
-
          mNumInputControls++;
-         controls[p] = val;
+         controls[p] = InputControlPortDefaultValue(
+            mData->PortRangeHints[p], mSampleRate);
       }
       else if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_OUTPUT(d)) {
          controls[p] = 0.0;
