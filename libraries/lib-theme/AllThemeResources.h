@@ -76,6 +76,8 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpSeek, wxImage( 26, 16 ), wxT("Seek"));
    DEFINE_IMAGE( bmpSeekDisabled, wxImage( 26, 16 ), wxT("SeekDisabled"));
 
+   SET_THEME_FLAGS(  resFlagNewLine  );
+   DEFINE_IMAGE(bmpSetup, wxImage(33, 32), wxT("Setup"));
 
    SET_THEME_FLAGS(  resFlagNewLine  );
    DEFINE_IMAGE( bmpIBeam, wxImage( 27, 27 ), wxT("IBeam"));
