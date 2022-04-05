@@ -76,28 +76,34 @@ bool EffectDefinitionInterface::IsHiddenFromMenus() const
    return false;
 }
 
-bool EffectDefinitionInterface::VisitSettings(
+EffectSettingsManager::~EffectSettingsManager() = default;
+
+bool EffectSettingsManager::VisitSettings(
    SettingsVisitor &, EffectSettings &)
 {
    return false;
 }
 
-bool EffectDefinitionInterface::VisitSettings(
+bool EffectSettingsManager::VisitSettings(
    ConstSettingsVisitor &, const EffectSettings &) const
 {
    return false;
 }
 
-auto EffectDefinitionInterface::MakeSettings() const -> EffectSettings
+auto EffectSettingsManager::MakeSettings() const -> EffectSettings
 {
    return {};
 }
 
-bool EffectDefinitionInterface::CopySettingsContents(
+bool EffectSettingsManager::CopySettingsContents(
    const EffectSettings &, EffectSettings &) const
 {
    return true;
 }
+
+EffectInstance::~EffectInstance() = default;
+
+EffectInstanceFactory::~EffectInstanceFactory() = default;
 
 EffectProcessor::~EffectProcessor() = default;
 

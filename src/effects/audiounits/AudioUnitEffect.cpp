@@ -1039,7 +1039,13 @@ bool AudioUnitEffect::InitializePlugin()
 }
 
 std::shared_ptr<EffectInstance>
-AudioUnitEffect::MakeInstance(EffectSettings &settings)
+AudioUnitEffect::MakeInstance(EffectSettings &settings) const
+{
+   return const_cast<AudioUnitEffect*>(this)->DoMakeInstance(settings);
+}
+
+std::shared_ptr<EffectInstance>
+AudioUnitEffect::DoMakeInstance(EffectSettings &settings)
 {
    OSStatus result;
 
@@ -1068,7 +1074,7 @@ AudioUnitEffect::MakeInstance(EffectSettings &settings)
       LoadPreset(CurrentSettingsGroup(), settings);
    }
 
-   return std::make_shared<Effect::Instance>(*this);
+   return std::make_shared<Instance>(*this);
 }
 
 bool AudioUnitEffect::MakeListener()
@@ -1911,7 +1917,7 @@ void AudioUnitEffect::ShowOptions()
 // ============================================================================
 
 bool AudioUnitEffect::LoadPreset(
-   const RegistryPath & group, EffectSettings &settings)
+   const RegistryPath & group, EffectSettings &settings) const
 {
    wxString parms;
 

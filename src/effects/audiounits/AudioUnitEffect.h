@@ -121,7 +121,8 @@ public:
    // EffectUIClientInterface implementation
 
    std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-      override;
+      const override;
+   std::shared_ptr<EffectInstance> DoMakeInstance(EffectSettings &settings);
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -171,7 +172,7 @@ private:
 
    void GetChannelCounts();
 
-   bool LoadPreset(const RegistryPath & group, EffectSettings &settings);
+   bool LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
    bool SavePreset(const RegistryPath & group) const;
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)

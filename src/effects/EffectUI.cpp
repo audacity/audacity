@@ -1531,10 +1531,10 @@ void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    return;
 }
 
-//! Inject a factory for realtime effect states
+//! Inject a factory for realtime effects
 #include "RealtimeEffectState.h"
-static
-RealtimeEffectState::EffectFactory::Scope scope{ &EffectManager::NewEffect };
+static RealtimeEffectState::EffectFactory::Scope
+scope{ &EffectManager::GetInstanceFactory };
 
 /* The following registration objects need a home at a higher level to avoid
  dependency either way between WaveTrack or RealtimeEffectList, which need to

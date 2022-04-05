@@ -46,21 +46,83 @@ static const int kFFwdID = 20104;
 
 using t2bHash = std::unordered_map< void*, bool >;
 
-Effect::Instance::Instance(Effect &effect)
+StatefulEffectBase::Instance::Instance(StatefulEffectBase &effect)
    : mEffect{ effect }
 {
 }
 
-Effect::Instance::~Instance() = default;
+StatefulEffectBase::Instance::~Instance() = default;
 
-bool Effect::Instance::Init()
+Effect &StatefulEffectBase::Instance::GetEffect() const
 {
-   return mEffect.Init();
+   return dynamic_cast<Effect&>(mEffect);
 }
 
-bool Effect::Instance::Process(EffectSettings &settings)
+bool StatefulEffectBase::Instance::Init()
 {
-   return mEffect.Process(*this, settings);
+   return GetEffect().Init();
+}
+
+bool StatefulEffectBase::Instance::Process(EffectSettings &settings)
+{
+   return GetEffect().Process(*this, settings);
+}
+
+void StatefulEffectBase::Instance::SetSampleRate(double rate)
+{
+   GetEffect().SetSampleRate(rate);
+}
+
+bool StatefulEffectBase::Instance::RealtimeInitialize(EffectSettings &settings)
+{
+   return GetEffect().RealtimeInitialize(settings);
+}
+
+bool StatefulEffectBase::Instance::RealtimeAddProcessor(EffectSettings &settings,
+   unsigned numChannels, float sampleRate)
+{
+   return GetEffect().RealtimeAddProcessor(settings, numChannels, sampleRate);
+}
+
+bool StatefulEffectBase::Instance::RealtimeSuspend()
+{
+   return GetEffect().RealtimeSuspend();
+}
+
+bool StatefulEffectBase::Instance::RealtimeResume() noexcept
+{
+   return GetEffect().RealtimeResume();
+}
+
+bool StatefulEffectBase::Instance::RealtimeProcessStart(EffectSettings &settings)
+{
+   return GetEffect().RealtimeProcessStart(settings);
+}
+
+size_t StatefulEffectBase::Instance::RealtimeProcess(int group, EffectSettings &settings,
+   const float *const *inBuf, float *const *outBuf, size_t numSamples)
+{
+   return GetEffect().RealtimeProcess(group, settings, inBuf, outBuf, numSamples);
+}
+
+bool StatefulEffectBase::Instance::RealtimeProcessEnd(EffectSettings &settings) noexcept
+{
+   return GetEffect().RealtimeProcessEnd(settings);
+}
+
+bool StatefulEffectBase::Instance::RealtimeFinalize(EffectSettings &settings) noexcept
+{
+   return GetEffect().RealtimeFinalize(settings);
+}
+
+size_t StatefulEffectBase::Instance::GetBlockSize() const
+{
+   return GetEffect().GetBlockSize();
+}
+
+size_t StatefulEffectBase::Instance::SetBlockSize(size_t maxBlockSize)
+{
+   return GetEffect().SetBlockSize(maxBlockSize);
 }
 
 Effect::Effect()
@@ -140,9 +202,13 @@ bool Effect::SupportsAutomation() const
 // EffectProcessor implementation
 
 std::shared_ptr<EffectInstance>
-Effect::MakeInstance(EffectSettings &settings)
+Effect::MakeInstance(EffectSettings &settings) const
 {
-   return std::make_shared<Effect::Instance>(*this);
+   // Cheat with const-cast to return an object that calls through to
+   // non-const methods of a stateful effect.
+   // Stateless effects should override this function and be really const
+   // correct.
+   return std::make_shared<Effect::Instance>(const_cast<Effect&>(*this));
 }
 
 unsigned Effect::GetAudioInCount() const
@@ -555,7 +621,7 @@ void Effect::ShowOptions()
 
 // EffectPlugin implementation
 
-const EffectDefinitionInterface& Effect::GetDefinition() const
+const EffectSettingsManager& Effect::GetDefinition() const
 {
    return *this;
 }
@@ -699,7 +765,7 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
       region, mUIFlags, nullptr, nullptr, nullptr);
 }
 
-bool Effect::Init()
+bool StatefulEffectBase::Init()
 {
    return true;
 }

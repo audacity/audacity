@@ -206,6 +206,22 @@ public:
 
    //! Default is false
    virtual bool IsHiddenFromMenus() const;
+};
+
+/*************************************************************************************//**
+
+\class EffectSettingsManager
+
+\brief EffectSettingsManager is an EffectDefinitionInterface that adds a
+factory function for EffectSettings, and const functions for manipulating those
+settings.  This externalizes certain effect state.
+
+*******************************************************************************************/
+class COMPONENTS_API EffectSettingsManager  /* not final */
+   : public EffectDefinitionInterface
+{
+public:
+   virtual ~EffectSettingsManager();
 
    /*! @name settings
     Interface for saving and loading externalized settings.
@@ -265,11 +281,14 @@ public:
    virtual bool LoadFactoryDefaults(EffectSettings &settings) const = 0;
    //! @}
 
-   //! Visit settings, if defined.  false means no defined settings.
+   //! Visit settings (and maybe change them), if defined.
+   //! false means no defined settings.
    //! Default implementation returns false
    virtual bool VisitSettings(
-      SettingsVisitor &visitor, EffectSettings &settings);
-   //! Visit settings, if defined.  false means no defined settings.
+      SettingsVisitor &visitor, EffectSettings &settings); // TODO const
+
+   //! Visit settings (read-only), if defined.
+   //! false means no defined settings.
    //! Default implementation returns false
    virtual bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings) const;
@@ -319,6 +338,80 @@ typedef enum
    ChannelNameBottomFrontRight,
 } ChannelName, *ChannelNames;
 
+/***************************************************************************//**
+\class EffectInstance
+@brief Performs effect computation
+*******************************************************************************/
+class COMPONENTS_API EffectInstance
+   : public std::enable_shared_from_this<EffectInstance>
+{
+public:
+   virtual ~EffectInstance();
+
+   //! Call once to set up state for whole list of tracks to be processed
+   /*!
+    @return success
+    */
+   virtual bool Init() = 0;
+
+   //! Actually do the effect here.
+   /*!
+    @return success
+    */
+   virtual bool Process(EffectSettings &settings) = 0;
+
+   virtual void SetSampleRate(double rate) = 0;
+
+   virtual size_t GetBlockSize() const = 0;
+
+   // Suggest a block size, but the return is the size that was really set:
+   virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
+
+   virtual bool RealtimeInitialize(EffectSettings &settings) = 0;
+   virtual bool RealtimeAddProcessor(
+      EffectSettings &settings, unsigned numChannels, float sampleRate) = 0;
+   virtual bool RealtimeSuspend() = 0;
+   virtual bool RealtimeResume() noexcept = 0;
+   //! settings are possibly changed, since last call, by an asynchronous dialog
+   virtual bool RealtimeProcessStart(EffectSettings &settings) = 0;
+   virtual size_t RealtimeProcess(int group, EffectSettings &settings,
+      const float *const *inBuf, float *const *outBuf, size_t numSamples) = 0;
+   //! settings can be updated to let a dialog change appearance at idle
+   virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept = 0;
+   virtual bool RealtimeFinalize(EffectSettings &settings) noexcept = 0;
+};
+
+/***************************************************************************//**
+\class EffectInstanceFactory
+*******************************************************************************/
+class COMPONENTS_API EffectInstanceFactory
+   : public EffectSettingsManager
+{
+public:
+   virtual ~EffectInstanceFactory();
+
+   //! Make an object maintaining short-term state of an Effect
+   /*!
+    One effect may have multiple instances extant simultaneously.
+    Instances have state, may be implemented in foreign code, and are temporary,
+    whereas EffectSettings represents persistent effect state that can be saved
+    and reloaded from files.
+
+    @param settings may be assumed to have a lifetime enclosing the instance's
+    */
+   virtual std::shared_ptr<EffectInstance>
+   MakeInstance(EffectSettings &settings) const = 0;
+
+   //! How many input buffers to allocate at once
+   /*!
+    If the effect ALWAYS processes channels independently, this can return 1
+    */
+   virtual unsigned GetAudioInCount() const = 0;
+
+   //! How many output buffers to allocate at once
+   virtual unsigned GetAudioOutCount() const = 0;
+};
+
 /*************************************************************************************//**
 
 \class EffectProcessor 
@@ -329,13 +422,9 @@ AudacityCommand.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectProcessor  /* not final */
-   : public EffectDefinitionInterface
 {
 public:
    virtual ~EffectProcessor();
-
-   virtual unsigned GetAudioInCount() const = 0;
-   virtual unsigned GetAudioOutCount() const = 0;
 
    virtual int GetMidiInCount() = 0;
    virtual int GetMidiOutCount() = 0;
