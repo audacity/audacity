@@ -155,7 +155,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Anton Gerasimov"), developerFormat, roleExMuse);
    AddCredit(wxT("Jouni Helminen"), designerFormat, roleExMuse);
    AddCredit(wxT("Pavel Penikov"), testerFormat, roleExMuse);
-   AddCredit(wxT("Chayan Roy"), designerFormat, roleExMuse);
    
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
