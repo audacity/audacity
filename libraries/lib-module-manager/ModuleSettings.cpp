@@ -28,6 +28,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
       "mod-vamp",
       "mod-effect-classes",
       "mod-vst",
+      "mod-vst3",
    };
    return modules;
 }

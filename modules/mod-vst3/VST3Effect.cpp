@@ -415,3 +415,6 @@ bool VST3Effect::CopySettingsContents(const EffectSettings& src, EffectSettings&
    VST3Wrapper::CopySettingsContents(src, dst);
    return true;
 }
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES
