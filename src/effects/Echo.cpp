@@ -188,27 +188,56 @@ size_t EffectEcho::Instance::ProcessBlock(EffectSettings& settings,
 }
 
 
-#if 0
 
-std::unique_ptr<EffectUIValidator>
-EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+struct EffectEcho::Validator
+   : DefaultEffectUIValidator
+{
+   Validator(EffectUIClientInterface& effect,
+      EffectSettingsAccess& access, const EffectEchoSettings& settings)
+      : DefaultEffectUIValidator{ effect, access }
+      // Copy settings
+      , mSettings{ settings }
+   {}
+   virtual ~Validator() = default;
+
+   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
+
+   bool ValidateUI() override;
+   bool UpdateUI() override;
+   
+   void PopulateOrExchange(ShuttleGui& S,
+      const EffectSettings& settings, double projectRate);
+
+   EffectEchoSettings mSettings;
+};
+
+
+void EffectEcho::Validator::PopulateOrExchange(ShuttleGui& S, const EffectSettings& settings, double aRate)
 {
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       S.Validator<FloatingPointValidator<double>>(
-            3, &delay, NumValidatorStyle::NO_TRAILING_ZEROES,
+            3, &(mSettings.delay), NumValidatorStyle::NO_TRAILING_ZEROES,
             Delay.min, Delay.max )
          .AddTextBox(XXO("&Delay time (seconds):"), L"", 10);
 
       S.Validator<FloatingPointValidator<double>>(
-            3, &decay, NumValidatorStyle::NO_TRAILING_ZEROES,
+            3, &(mSettings.decay), NumValidatorStyle::NO_TRAILING_ZEROES,
             Decay.min, Decay.max)
          .AddTextBox(XXO("D&ecay factor:"), L"", 10);
    }
-   S.EndMultiColumn();
-   return nullptr;
+   S.EndMultiColumn();   
+}
+
+
+#if 0
+
+std::unique_ptr<EffectUIValidator>
+EffectEcho::PopulateOrExchange(ShuttleGui& S, EffectSettingsAccess&)
+{
+   // TODO later
 }
 
 #endif
