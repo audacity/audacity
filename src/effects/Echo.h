@@ -20,7 +20,17 @@ class ShuttleGui;
 
 using Floats = ArrayOf<float>;
 
-class EffectEcho final : public StatefulPerTrackEffect
+struct EffectEchoSettings
+{
+   static constexpr double DefaultDelay = 1.0F;
+   static constexpr double DefaultDecay = 0.5F;
+
+   double delay{ DefaultDelay };
+   double decay{ DefaultDecay };
+};
+
+
+class EffectEcho final : public EffectWithSettings<EffectEchoSettings, PerTrackEffect>
 {
 public:
    static inline EffectEcho *
@@ -42,12 +52,7 @@ public:
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
-   bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
+   
 
    // Effect implementation
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
@@ -64,22 +69,10 @@ private:
 
    const EffectParameterMethods& Parameters() const override;
 
-#if 0
-   // TODO simplify like this in C++20
-   using ParametersType = CapturedParameters<EffectEcho,
-        EffectParameter{
-         &EffectEcho::delay, L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f }
-      , EffectParameter{
-         &EffectEcho::decay, L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f }
-   >;
-#else
 
-static constexpr EffectParameter Delay{ &EffectEcho::delay,
-   L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f };
-static constexpr EffectParameter Decay{ &EffectEcho::decay,
-   L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f };
+static constexpr EffectParameter Delay{ &EffectEchoSettings::delay, L"Delay", EffectEchoSettings::DefaultDelay, 0.001f,  FLT_MAX, 1.0f };
+static constexpr EffectParameter Decay{ &EffectEchoSettings::decay, L"Decay", EffectEchoSettings::DefaultDecay, 0.0f,    FLT_MAX, 1.0f };
 
-#endif
 };
 
 #endif // __AUDACITY_EFFECT_ECHO__

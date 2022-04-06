@@ -21,6 +21,9 @@
 
 
 #include "Echo.h"
+
+#if 0
+
 #include "LoadEffects.h"
 
 #include <wx/intl.h>
@@ -158,3 +161,5 @@ EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    S.EndMultiColumn();
    return nullptr;
 }
+
+#endif
