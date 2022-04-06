@@ -9,6 +9,7 @@ set( MODULES
    mod-soundtouch
    mod-vamp
    mod-vst
+   mod-vst3
 )
 
 audacity_module_subdirectory("${MODULES}")

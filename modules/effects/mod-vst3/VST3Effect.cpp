@@ -141,3 +141,6 @@ void VST3Effect::ShowOptions(const EffectPlugin &) const
 
 // Inject factory hook to make VST3Effect capable of UI
 static VST3EffectsModule::Factory::SubstituteInUnique<VST3Effect> scope;
+
+#include "ModuleConstants.h"
+DEFINE_MODULE_ENTRIES

@@ -91,6 +91,7 @@ static const std::unordered_set<wxString> &autoEnabledModules()
       "mod-lv2",
       "mod-vamp",
       "mod-vst",
+      "mod-vst3",
    };
    return modules;
 }

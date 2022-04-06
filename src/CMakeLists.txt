@@ -416,30 +416,6 @@ set( SOURCES
       effects/Wahwah.cpp
       effects/Wahwah.h
 
-      # VST Effects
-
-      $<$<BOOL:${${_OPT}has_vst3}>:
-         effects/VST3/VST3Editor.cpp
-         effects/VST3/VST3Editor.h
-         effects/VST3/VST3Effect.h
-         effects/VST3/VST3Effect.cpp
-         effects/VST3/VST3OptionsDialog.h
-         effects/VST3/VST3OptionsDialog.cpp
-         effects/VST3/VST3ParametersWindow.h
-         effects/VST3/VST3ParametersWindow.cpp
-         effects/VST3/internal/PlugFrame.h
-         effects/VST3/internal/PlugFrame.cpp
-      >
-
-      $<$<AND:$<BOOL:${${_OPT}has_vst3}>,$<BOOL:${wxIS_GTK}>>:
-         effects/VST3/internal/x11/RunLoop.h
-         effects/VST3/internal/x11/RunLoop.cpp
-         effects/VST3/internal/x11/PlugFrame.h
-         effects/VST3/internal/x11/PlugFrame.cpp
-         effects/VST3/internal/x11/SocketWindow.h
-         effects/VST3/internal/x11/SocketWindow.cpp
-      >
-
       # Nyquist Effects
 
       $<$<BOOL:${USE_NYQUIST}>:
@@ -1209,12 +1185,6 @@ set( AUDACITY_LIBRARIES
    lib-music-information-retrieval-interface
    lib-preference-pages-interface
 )
-
-if (${_OPT}has_vst3)
-   list( APPEND AUDACITY_LIBRARIES
-      lib-vst3-interface
-   )
-endif()
 
 if ( ${_OPT}has_networking )
    list( APPEND AUDACITY_LIBRARIES

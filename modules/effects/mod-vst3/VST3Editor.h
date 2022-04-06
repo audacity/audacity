@@ -2,7 +2,7 @@
 
 #include <pluginterfaces/base/smartpointer.h>
 
-#include "../EffectEditor.h"
+#include "effects/EffectEditor.h"
 
 class StatelessPerTrackEffect;
 class VST3Wrapper;
