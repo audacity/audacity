@@ -40,6 +40,16 @@ class NumericTextCtrl;
 
 class LadspaEffectMeter;
 
+struct LadspaEffectSettings {
+   explicit LadspaEffectSettings(size_t nPorts = 0)
+      : controls( nPorts )
+   {}
+
+   // Allocate as many slots as there are ports, although some may correspond
+   // to audio, not control, ports and so rest unused
+   std::vector<float> controls;
+};
+
 class LadspaEffect final : public StatefulPerTrackEffect
 {
 public:
@@ -115,7 +125,7 @@ public:
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
    bool InitializePlugin();
-   bool InitializeControls(Floats &controls) const;
+   bool InitializeControls(LadspaEffectSettings &settings) const;
 
    // EffectUIClientInterface implementation
 
@@ -184,10 +194,7 @@ private:
 
    int mNumInputControls{ 0 };
    int mNumOutputControls{ 0 };
-
-   // Allocate as many slots as there are ports, although some may correspond
-   // to audio, not control, ports and so rest unused
-   Floats mControls;
+   LadspaEffectSettings mSettings;
 
    bool mUseLatency{ true };
    int mLatencyPort{ -1 };
