@@ -115,6 +115,7 @@ public:
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
    bool InitializePlugin();
+   bool InitializeControls(Floats &controls) const;
 
    // EffectUIClientInterface implementation
 

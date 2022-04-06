@@ -788,7 +788,6 @@ bool LadspaEffect::InitializePlugin()
    auto &controls = mControls;
    mInputPorts.reinit( mData->PortCount );
    mOutputPorts.reinit( mData->PortCount );
-   controls.reinit( mData->PortCount );
 
    for (unsigned long p = 0; p < mData->PortCount; p++) {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
@@ -800,28 +799,41 @@ bool LadspaEffect::InitializePlugin()
          else if (LADSPA_IS_PORT_OUTPUT(d))
             mOutputPorts[mAudioOuts++] = p;
       }
-      // Determine the port's default value
-      else if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_INPUT(d)) {
-         mInteractive = true;
-         mNumInputControls++;
+      // Count control ports
+      else if (LADSPA_IS_PORT_CONTROL(d)) {
+         if (LADSPA_IS_PORT_INPUT(d)) {
+            mInteractive = true;
+            mNumInputControls++;
+         }
+         else if (LADSPA_IS_PORT_OUTPUT(d)) {
+            // LADSPA effects have a convention of providing latency on an output
+            // control port whose name is "latency".
+            if (strcmp(mData->PortNames[p], "latency") == 0)
+               mLatencyPort = p;
+            else {
+               mInteractive = true;
+               mNumOutputControls++;
+            }
+         }
+      }
+   }
+
+   InitializeControls(mControls);
+
+   return true;
+}
+
+bool LadspaEffect::InitializeControls(Floats &controls) const
+{
+   controls.reinit( mData->PortCount );
+   for (unsigned long p = 0; p < mData->PortCount; ++p) {
+      LADSPA_PortDescriptor d = mData->PortDescriptors[p];
+      if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_INPUT(d))
+         // Determine the port's default value
          controls[p] = InputControlPortDefaultValue(
             mData->PortRangeHints[p], mSampleRate);
-      }
-      else if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_OUTPUT(d)) {
-         controls[p] = 0.0;
-
-         // LADSPA effects have a convention of providing latency on an output
-         // control port whose name is "latency".
-         if (strcmp(mData->PortNames[p], "latency") == 0)
-         {
-            mLatencyPort = p;
-         }
-         else
-         {
-            mInteractive = true;
-            mNumOutputControls++;
-         }
-      }
+      else
+         controls[p] = 0;
    }
    return true;
 }
