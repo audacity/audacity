@@ -22,6 +22,34 @@
 
 #include "Echo.h"
 
+
+struct EffectEcho::Instance
+   : public PerTrackEffect::Instance
+   , public EffectInstanceWithBlockSize
+{
+   Instance(const PerTrackEffect& effect)
+      : PerTrackEffect::Instance{ effect }
+   {}
+
+   void SetSampleRate(double rate) override { mSampleRate = rate; }
+
+   bool ProcessInitialize(EffectSettings& settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
+
+   size_t ProcessBlock(EffectSettings& settings,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
+
+   double mSampleRate{};
+};
+
+
+std::shared_ptr<EffectInstance>
+EffectEcho::MakeInstance(EffectSettings& settings) const
+{
+   return std::make_shared<Instance>(*this);
+}
+
+
 #if 0
 
 #include "LoadEffects.h"
