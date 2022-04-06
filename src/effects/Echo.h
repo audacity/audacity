@@ -63,14 +63,7 @@ public:
    struct Validator;
 
 private:
-   // EffectEcho implementation
-
-   double delay;
-   double decay;
-   Floats history;
-   size_t histPos;
-   size_t histLen;
-
+   
    const EffectParameterMethods& Parameters() const override;
 
 

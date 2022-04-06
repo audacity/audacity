@@ -36,10 +36,17 @@ struct EffectEcho::Instance
    bool ProcessInitialize(EffectSettings& settings,
       sampleCount totalLen, ChannelNames chanMap) override;
 
+   bool ProcessFinalize() override;
+
    size_t ProcessBlock(EffectSettings& settings,
       const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
 
    double mSampleRate{};
+
+   // state
+   Floats history;
+   size_t histPos;
+   size_t histLen;
 };
 
 
@@ -117,18 +124,20 @@ unsigned EffectEcho::GetAudioOutCount() const
    return 1;
 }
 
-#if 0
 
-bool EffectEcho::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames)
+bool EffectEcho::Instance::ProcessInitialize(
+   EffectSettings& settings, sampleCount, ChannelNames)
 {
-   if (delay == 0.0)
+
+   auto& echoSettings = GetSettings(settings);
+
+   if (echoSettings.delay == 0.0)
    {
       return false;
    }
 
    histPos = 0;
-   auto requestedHistLen = (sampleCount) (mSampleRate * delay);
+   auto requestedHistLen = (sampleCount) (mSampleRate * echoSettings.delay);
 
    // Guard against extreme delay values input by the user
    try {
@@ -140,18 +149,24 @@ bool EffectEcho::ProcessInitialize(
       history.reinit(histLen, true);
    }
    catch ( const std::bad_alloc& ) {
-      Effect::MessageBox( XO("Requested value exceeds memory capacity.") );
+
+      mProcessor.MessageBox( XO("Requested value exceeds memory capacity.") );
+
       return false;
    }
 
    return history != NULL;
 }
 
-bool EffectEcho::ProcessFinalize()
+
+bool EffectEcho::Instance::ProcessFinalize()
 {
    history.reset();
    return true;
 }
+
+
+#if 0
 
 size_t EffectEcho::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
