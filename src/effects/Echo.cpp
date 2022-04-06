@@ -50,7 +50,7 @@ EffectEcho::MakeInstance(EffectSettings& settings) const
 }
 
 
-#if 0
+
 
 #include "LoadEffects.h"
 
@@ -75,7 +75,7 @@ namespace{ BuiltinEffectsModule::Registration< EffectEcho > reg; }
 
 EffectEcho::EffectEcho()
 {
-   Parameters().Reset(*this);
+   //Parameters().Reset(*this);
    SetLinearEffectFlag(true);
 }
 
@@ -116,6 +116,8 @@ unsigned EffectEcho::GetAudioOutCount() const
 {
    return 1;
 }
+
+#if 0
 
 bool EffectEcho::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames)

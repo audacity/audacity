@@ -33,8 +33,7 @@ struct EffectEchoSettings
 class EffectEcho final : public EffectWithSettings<EffectEchoSettings, PerTrackEffect>
 {
 public:
-   static inline EffectEcho *
-   FetchParameters(EffectEcho &e, EffectSettings &) { return &e; }
+   
    static const ComponentInterfaceSymbol Symbol;
 
    EffectEcho();
