@@ -232,14 +232,28 @@ void EffectEcho::Validator::PopulateOrExchange(ShuttleGui& S, const EffectSettin
 }
 
 
-// have do-nothing implementations for the time being
 bool EffectEcho::Validator::ValidateUI()
 {
+   mAccess.ModifySettings
+   (
+      [this](EffectSettings& settings)
+      {
+         // pass back the modified settings to the MessageBuffer
+         EffectEcho::GetSettings(settings) = mSettings;
+      }
+   );
+
    return true;
 }
 
+
+
 bool EffectEcho::Validator::UpdateUI()
 {
+   // get the settings from the MessageBuffer and write them to our local copy
+   const auto& settings = mAccess.Get();      
+   mSettings = GetSettings(settings);
+
    return true;
 }
 
