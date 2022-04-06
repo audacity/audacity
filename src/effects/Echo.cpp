@@ -232,12 +232,25 @@ void EffectEcho::Validator::PopulateOrExchange(ShuttleGui& S, const EffectSettin
 }
 
 
-#if 0
-
-std::unique_ptr<EffectUIValidator>
-EffectEcho::PopulateOrExchange(ShuttleGui& S, EffectSettingsAccess&)
+// have do-nothing implementations for the time being
+bool EffectEcho::Validator::ValidateUI()
 {
-   // TODO later
+   return true;
 }
 
-#endif
+bool EffectEcho::Validator::UpdateUI()
+{
+   return true;
+}
+
+
+std::unique_ptr<EffectUIValidator>
+EffectEcho::PopulateOrExchange(ShuttleGui& S, EffectSettingsAccess& access)
+{
+   auto& settings = access.Get();
+   auto& myEffSettings = GetSettings(settings);
+   auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+   result->PopulateOrExchange(S, settings, mProjectRate);
+   return result;   
+}
+
