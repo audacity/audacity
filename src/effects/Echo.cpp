@@ -166,11 +166,12 @@ bool EffectEcho::Instance::ProcessFinalize()
 }
 
 
-#if 0
 
-size_t EffectEcho::ProcessBlock(EffectSettings &,
+size_t EffectEcho::Instance::ProcessBlock(EffectSettings& settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
+   auto& echoSettings = GetSettings(settings);
+
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
@@ -180,11 +181,14 @@ size_t EffectEcho::ProcessBlock(EffectSettings &,
       {
          histPos = 0;
       }
-      history[histPos] = obuf[i] = ibuf[i] + history[histPos] * decay;
+      history[histPos] = obuf[i] = ibuf[i] + history[histPos] * echoSettings.decay;
    }
 
    return blockLen;
 }
+
+
+#if 0
 
 std::unique_ptr<EffectUIValidator>
 EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
