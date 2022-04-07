@@ -175,7 +175,7 @@ bool UndoManager::RedoAvailable()
    return (current < (int)stack.size() - 1);
 }
 
-void UndoManager::ModifyState(const TrackList * l,
+void UndoManager::ModifyState(const TrackList &l,
                               const SelectedRegion &selectedRegion)
 {
    if (current == wxNOT_FOUND) {
@@ -188,7 +188,7 @@ void UndoManager::ModifyState(const TrackList * l,
 
    // Duplicate
    auto tracksCopy = TrackList::Create( nullptr );
-   for (auto t : *l) {
+   for (auto t : l) {
       if ( t->GetId() == TrackId{} )
          // Don't copy a pending added track
          continue;
@@ -218,7 +218,7 @@ void UndoManager::RenameState( int state,
    }
 }
 
-void UndoManager::PushState(const TrackList * l,
+void UndoManager::PushState(const TrackList &l,
                             const SelectedRegion &selectedRegion,
                             const TranslatableString &longDescription,
                             const TranslatableString &shortDescription,
@@ -238,7 +238,7 @@ void UndoManager::PushState(const TrackList * l,
    }
 
    auto tracksCopy = TrackList::Create( nullptr );
-   for (auto t : *l) {
+   for (auto t : l) {
       if ( t->GetId() == TrackId{} )
          // Don't copy a pending added track
          continue;

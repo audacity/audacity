@@ -47,7 +47,7 @@ void ProjectHistory::InitialState()
    undoManager.ClearStates();
 
    undoManager.PushState(
-      &tracks, viewInfo.selectedRegion,
+      tracks, viewInfo.selectedRegion,
       XO("Created new project"), {});
 
    undoManager.StateSaved();
@@ -90,7 +90,7 @@ void ProjectHistory::PushState(const TranslatableString &desc,
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
    undoManager.PushState(
-      &tracks, viewInfo.selectedRegion,
+      tracks, viewInfo.selectedRegion,
       desc, shortDesc, flags);
 
    mDirty = true;
@@ -113,7 +113,7 @@ void ProjectHistory::ModifyState(bool bWantsAutoSave)
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   undoManager.ModifyState(&tracks, viewInfo.selectedRegion);
+   undoManager.ModifyState(tracks, viewInfo.selectedRegion);
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
@@ -126,6 +126,8 @@ void ProjectHistory::PopState(const UndoState &state, bool doAutosave)
       AutoSave::Call(project);
 
    // remaining no-fail operations "commit" the changes of undo manager state
+   TrackList *const tracks = state.tracks.get();
+   wxASSERT(tracks);
    auto &dstTracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
@@ -136,15 +138,9 @@ void ProjectHistory::PopState(const UndoState &state, bool doAutosave)
       if (pExtension)
          pExtension->RestoreUndoRedoState(project);
 
-   TrackList *const tracks = state.tracks.get();
-
    dstTracks.Clear();
-
    for (auto t : tracks->Any())
-   {
       dstTracks.Add(t->Duplicate());
-   }
-
 }
 
 void ProjectHistory::SetStateTo(unsigned int n, bool doAutosave)

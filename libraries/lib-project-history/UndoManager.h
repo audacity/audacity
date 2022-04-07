@@ -176,12 +176,12 @@ class PROJECT_HISTORY_API UndoManager final
    UndoManager( const UndoManager& ) = delete;
    UndoManager& operator = ( const UndoManager& ) = delete;
 
-   void PushState(const TrackList * l,
+   void PushState(const TrackList &l,
                   const SelectedRegion &selectedRegion,
                   const TranslatableString &longDescription,
                   const TranslatableString &shortDescription,
                   UndoPush flags = UndoPush::NONE);
-   void ModifyState(const TrackList * l,
+   void ModifyState(const TrackList &l,
                     const SelectedRegion &selectedRegion);
    void RenameState( int state,
       const TranslatableString &longDescription,
@@ -232,6 +232,8 @@ class PROJECT_HISTORY_API UndoManager final
  
    int current;
    int saved;
+   
+   //! @invariant each state holds a non-null pointer to TrackList
    UndoStack stack;
 
    TranslatableString lastAction;
