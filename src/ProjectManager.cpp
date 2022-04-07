@@ -57,6 +57,23 @@ Paul Licameli split from AudacityProject.cpp
 #include "../images/AudacityLogoAlpha.xpm"
 #endif
 
+namespace {
+   void SaveWindowPreferences(const wxRect& windowRect, const wxRect& normalRect,
+                              bool isMaximized, bool isIconized) {
+      gPrefs->Write(ProjectWindow::Preference_X, windowRect.GetX());
+      gPrefs->Write(ProjectWindow::Preference_Y, windowRect.GetY());
+      gPrefs->Write(ProjectWindow::Preference_Width, windowRect.GetWidth());
+      gPrefs->Write(ProjectWindow::Preference_Height, windowRect.GetHeight());
+      gPrefs->Write(ProjectWindow::Preference_Maximized, isMaximized);
+      gPrefs->Write(ProjectWindow::Preference_Normal_X, normalRect.GetX());
+      gPrefs->Write(ProjectWindow::Preference_Normal_Y, normalRect.GetY());
+      gPrefs->Write(ProjectWindow::Preference_Normal_Width, normalRect.GetWidth());
+      gPrefs->Write(ProjectWindow::Preference_Normal_Height, normalRect.GetHeight());
+      gPrefs->Write(ProjectWindow::Preference_Iconized, isIconized);
+      gPrefs->Flush();
+   }
+}
+
 const int AudacityProjectTimerID = 5200;
 
 static AudacityProject::AttachedObjects::RegisteredFactory sProjectManagerKey {
@@ -124,23 +141,15 @@ void ProjectManager::SaveWindowSize()
       }
       else
          foundIconizedProject =  TRUE;
-
    }
+
    if (validWindowForSaveWindowSize)
    {
       wxRect windowRect = validProject->GetRect();
       wxRect normalRect = validProject->GetNormalizedWindowState();
       bool wndMaximized = validProject->IsMaximized();
-      gPrefs->Write(wxT("/Window/X"), windowRect.GetX());
-      gPrefs->Write(wxT("/Window/Y"), windowRect.GetY());
-      gPrefs->Write(wxT("/Window/Width"), windowRect.GetWidth());
-      gPrefs->Write(wxT("/Window/Height"), windowRect.GetHeight());
-      gPrefs->Write(wxT("/Window/Maximized"), wndMaximized);
-      gPrefs->Write(wxT("/Window/Normal_X"), normalRect.GetX());
-      gPrefs->Write(wxT("/Window/Normal_Y"), normalRect.GetY());
-      gPrefs->Write(wxT("/Window/Normal_Width"), normalRect.GetWidth());
-      gPrefs->Write(wxT("/Window/Normal_Height"), normalRect.GetHeight());
-      gPrefs->Write(wxT("/Window/Iconized"), FALSE);
+
+      SaveWindowPreferences(windowRect, normalRect, wndMaximized, false);
    }
    else
    {
@@ -148,18 +157,10 @@ void ProjectManager::SaveWindowSize()
          validProject = &ProjectWindow::Get( **AllProjects{}.begin() );
          bool wndMaximized = validProject->IsMaximized();
          wxRect normalRect = validProject->GetNormalizedWindowState();
+
          // store only the normal rectangle because the itemized rectangle
          // makes no sense for an opening project window
-         gPrefs->Write(wxT("/Window/X"), normalRect.GetX());
-         gPrefs->Write(wxT("/Window/Y"), normalRect.GetY());
-         gPrefs->Write(wxT("/Window/Width"), normalRect.GetWidth());
-         gPrefs->Write(wxT("/Window/Height"), normalRect.GetHeight());
-         gPrefs->Write(wxT("/Window/Maximized"), wndMaximized);
-         gPrefs->Write(wxT("/Window/Normal_X"), normalRect.GetX());
-         gPrefs->Write(wxT("/Window/Normal_Y"), normalRect.GetY());
-         gPrefs->Write(wxT("/Window/Normal_Width"), normalRect.GetWidth());
-         gPrefs->Write(wxT("/Window/Normal_Height"), normalRect.GetHeight());
-         gPrefs->Write(wxT("/Window/Iconized"), TRUE);
+         SaveWindowPreferences(normalRect, normalRect, wndMaximized, true);
       }
       else {
          // this would be a very strange case that might possibly occur on the Mac
@@ -167,19 +168,9 @@ void ProjectManager::SaveWindowSize()
          // in this case we are going to write only the default values
          wxRect defWndRect;
          GetDefaultWindowRect(&defWndRect);
-         gPrefs->Write(wxT("/Window/X"), defWndRect.GetX());
-         gPrefs->Write(wxT("/Window/Y"), defWndRect.GetY());
-         gPrefs->Write(wxT("/Window/Width"), defWndRect.GetWidth());
-         gPrefs->Write(wxT("/Window/Height"), defWndRect.GetHeight());
-         gPrefs->Write(wxT("/Window/Maximized"), FALSE);
-         gPrefs->Write(wxT("/Window/Normal_X"), defWndRect.GetX());
-         gPrefs->Write(wxT("/Window/Normal_Y"), defWndRect.GetY());
-         gPrefs->Write(wxT("/Window/Normal_Width"), defWndRect.GetWidth());
-         gPrefs->Write(wxT("/Window/Normal_Height"), defWndRect.GetHeight());
-         gPrefs->Write(wxT("/Window/Iconized"), FALSE);
+         SaveWindowPreferences(defWndRect, defWndRect, false, false);
       }
    }
-   gPrefs->Flush();
    sbWindowRectAlreadySaved = true;
 }
 

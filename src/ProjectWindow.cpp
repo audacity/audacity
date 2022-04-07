@@ -144,20 +144,20 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    wxRect defaultRect;
    GetDefaultWindowRect(&defaultRect);
 
-   gPrefs->Read(wxT("/Window/Maximized"), pMaximized, false);
-   gPrefs->Read(wxT("/Window/Iconized"), pIconized, false);
+   gPrefs->Read(ProjectWindow::Preference_Maximized, pMaximized, false);
+   gPrefs->Read(ProjectWindow::Preference_Iconized, pIconized, false);
 
    wxRect windowRect;
-   gPrefs->Read(wxT("/Window/X"), &windowRect.x, defaultRect.x);
-   gPrefs->Read(wxT("/Window/Y"), &windowRect.y, defaultRect.y);
-   gPrefs->Read(wxT("/Window/Width"), &windowRect.width, defaultRect.width);
-   gPrefs->Read(wxT("/Window/Height"), &windowRect.height, defaultRect.height);
+   gPrefs->Read(ProjectWindow::Preference_X, &windowRect.x, defaultRect.x);
+   gPrefs->Read(ProjectWindow::Preference_Y, &windowRect.y, defaultRect.y);
+   gPrefs->Read(ProjectWindow::Preference_Width, &windowRect.width, defaultRect.width);
+   gPrefs->Read(ProjectWindow::Preference_Height, &windowRect.height, defaultRect.height);
 
    wxRect normalRect;
-   gPrefs->Read(wxT("/Window/Normal_X"), &normalRect.x, defaultRect.x);
-   gPrefs->Read(wxT("/Window/Normal_Y"), &normalRect.y, defaultRect.y);
-   gPrefs->Read(wxT("/Window/Normal_Width"), &normalRect.width, defaultRect.width);
-   gPrefs->Read(wxT("/Window/Normal_Height"), &normalRect.height, defaultRect.height);
+   gPrefs->Read(ProjectWindow::Preference_Normal_X, &normalRect.x, defaultRect.x);
+   gPrefs->Read(ProjectWindow::Preference_Normal_Y, &normalRect.y, defaultRect.y);
+   gPrefs->Read(ProjectWindow::Preference_Normal_Width, &normalRect.width, defaultRect.width);
+   gPrefs->Read(ProjectWindow::Preference_Normal_Height, &normalRect.height, defaultRect.height);
 
    // Workaround 2.1.1 and earlier bug on OSX...affects only normalRect, but let's just
    // validate for all rects and plats

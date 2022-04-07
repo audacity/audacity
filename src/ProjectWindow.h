@@ -38,6 +38,17 @@ public:
    static ProjectWindow *Find( AudacityProject *pProject );
    static const ProjectWindow *Find( const AudacityProject *pProject );
 
+   static constexpr auto Preference_X = L"/Window/X";
+   static constexpr auto Preference_Y = L"/Window/Y";
+   static constexpr auto Preference_Width = L"/Window/Width";
+   static constexpr auto Preference_Height = L"/Window/Height";
+   static constexpr auto Preference_Maximized = L"/Window/Maximized";
+   static constexpr auto Preference_Normal_X = L"/Window/Normal_X";
+   static constexpr auto Preference_Normal_Y = L"/Window/Normal_Y";
+   static constexpr auto Preference_Normal_Width = L"/Window/Normal_Width";
+   static constexpr auto Preference_Normal_Height = L"/Window/Normal_Height";
+   static constexpr auto Preference_Iconized = L"/Window/Iconized";
+
    explicit ProjectWindow(
       wxWindow * parent, wxWindowID id,
       const wxPoint & pos, const wxSize &size,
