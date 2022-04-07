@@ -20,6 +20,7 @@ RealtimeEffectList::~RealtimeEffectList()
 {
 }
 
+// Access for per-project effect list
 static const AttachedProjectObjects::RegisteredFactory masterEffects
 {
    [](AudacityProject &project)
@@ -31,6 +32,14 @@ static const AttachedProjectObjects::RegisteredFactory masterEffects
 RealtimeEffectList &RealtimeEffectList::Get(AudacityProject &project)
 {
    return project.AttachedObjects::Get<RealtimeEffectList>(masterEffects);
+}
+
+RealtimeEffectList &RealtimeEffectList::Set(
+   AudacityProject &project, const std::shared_ptr<RealtimeEffectList> &list)
+{
+   auto &result = *list;
+   project.AttachedObjects::Assign(masterEffects, list);
+   return result;
 }
 
 const RealtimeEffectList &RealtimeEffectList::Get(const AudacityProject &project)
@@ -46,6 +55,7 @@ static const AttachedTrackObjects::RegisteredFactory trackEffects
    }
 };
 
+// Access for per-track effect list
 RealtimeEffectList &RealtimeEffectList::Get(Track &track)
 {
    return track.AttachedObjects::Get<RealtimeEffectList>(trackEffects);
@@ -134,3 +144,15 @@ void RealtimeEffectList::WriteXML(XMLWriter &xmlFile) const
    
    xmlFile.EndTag(XMLTag());
 }
+
+void RealtimeEffectList::RestoreUndoRedoState(AudacityProject &project) noexcept
+{
+   // Restore per-project states
+   Set(project, shared_from_this());
+}
+
+static UndoRedoExtensionRegistry::Entry sEntry {
+   [](AudacityProject &project) -> std::shared_ptr<UndoStateExtension> {
+      return RealtimeEffectList::Get(project).shared_from_this();
+   }
+};
