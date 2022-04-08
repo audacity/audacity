@@ -208,12 +208,12 @@ FromChars(const char* buffer, const char* last, bool& value) noexcept
    if (buffer[0] == '0')
    {
       value = false;
-      return { buffer, std::errc() };
+      return { buffer + 1, std::errc() };
    }
    else if (buffer[0] == '1')
    {
       value = true;
-      return { buffer, std::errc() };
+      return { buffer + 1, std::errc() };
    }
 
    return { buffer, std::errc::invalid_argument };
