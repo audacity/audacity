@@ -131,8 +131,8 @@ list( APPEND SOURCES
       Diags.h
       DropTarget.cpp
       DropoutDetector.cpp
-      EffectHostInterface.cpp
-      EffectHostInterface.h
+      EffectPlugin.cpp
+      EffectPlugin.h
       EnvelopeEditor.cpp
       EnvelopeEditor.h
       FFmpeg.cpp
@@ -421,6 +421,8 @@ list( APPEND SOURCES
       effects/Echo.h
       effects/Effect.cpp
       effects/Effect.h
+      effects/EffectBase.cpp
+      effects/EffectBase.h
       effects/EffectManager.cpp
       effects/EffectManager.h
       effects/EffectUI.cpp
@@ -451,6 +453,8 @@ list( APPEND SOURCES
       effects/Normalize.h
       effects/Paulstretch.cpp
       effects/Paulstretch.h
+      effects/PerTrackEffect.cpp
+      effects/PerTrackEffect.h
       effects/Phaser.cpp
       effects/Phaser.h
       effects/RealtimeEffectList.cpp
@@ -480,6 +484,10 @@ list( APPEND SOURCES
       effects/SimpleMono.h
       effects/SoundTouchEffect.cpp
       effects/SoundTouchEffect.h
+      effects/StatefulEffectBase.cpp
+      effects/StatefulEffectBase.h
+      effects/StatefulPerTrackEffect.cpp
+      effects/StatefulPerTrackEffect.h
       effects/StereoToMono.cpp
       effects/StereoToMono.h
       effects/TimeScale.cpp
@@ -578,6 +586,8 @@ list( APPEND SOURCES
       $<$<BOOL:${USE_LV2}>:
          effects/lv2/LV2Effect.cpp
          effects/lv2/LV2Effect.h
+         effects/lv2/LV2Symbols.cpp
+         effects/lv2/LV2Symbols.h
          effects/lv2/LoadLV2.cpp
          effects/lv2/LoadLV2.h
          effects/lv2/NativeWindow.h

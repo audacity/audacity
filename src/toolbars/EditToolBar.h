@@ -20,20 +20,24 @@
 
 class wxCommandEvent;
 class wxDC;
+class wxGridSizer;
 class wxImage;
 class wxWindow;
 
 class AButton;
 
 enum {
-   ETBCutID,
-   ETBCopyID,
-   ETBPasteID,
+   ETBZoomInID,
+   ETBZoomOutID,
+#ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
+   ETBZoomToggleID,
+#endif
+
+   ETBZoomSelID,
+   ETBZoomFitID,
+
    ETBTrimID,
    ETBSilenceID,
-
-   ETBUndoID,
-   ETBRedoID,
 
 #ifdef EXPERIMENTAL_SYNC_LOCK
    //Undefined, so no sync-lock on/off button.
@@ -44,14 +48,8 @@ enum {
    ETBSyncLockID,
 #endif
 
-   ETBZoomInID,
-   ETBZoomOutID,
-#ifdef EXPERIMENTAL_ZOOM_TOGGLE_BUTTON
-   ETBZoomToggleID,
-#endif
-
-   ETBZoomSelID,
-   ETBZoomFitID,
+   ETBUndoID,
+   ETBRedoID,
 
    ETBNumButtons
 };
@@ -95,6 +93,8 @@ class EditToolBar final : public ToolBar {
    void ForAllButtons(int Action);
 
    AButton *mButtons[ETBNumButtons];
+
+   wxGridSizer* mToolSizer;
 
    wxImage *upImage;
    wxImage *downImage;

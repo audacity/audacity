@@ -8,6 +8,12 @@
 #include "EffectInterface.h"
 #include <wx/tokenzr.h>
 
+const RegistryPath &EffectSettingsExtra::DurationKey()
+{
+   static wxString key("LastUsedDuration");
+   return key;
+}
+
 EffectSettingsAccess::~EffectSettingsAccess() = default;
 
 SimpleEffectSettingsAccess::~SimpleEffectSettingsAccess() = default;
@@ -70,42 +76,107 @@ bool EffectDefinitionInterface::IsHiddenFromMenus() const
    return false;
 }
 
-bool EffectDefinitionInterface::VisitSettings(
+EffectSettingsManager::~EffectSettingsManager() = default;
+
+bool EffectSettingsManager::VisitSettings(
    SettingsVisitor &, EffectSettings &)
 {
    return false;
 }
 
-bool EffectDefinitionInterface::VisitSettings(
+bool EffectSettingsManager::VisitSettings(
    ConstSettingsVisitor &, const EffectSettings &) const
 {
    return false;
 }
 
-auto EffectDefinitionInterfaceEx::MakeSettings() const -> Settings
+auto EffectSettingsManager::MakeSettings() const -> EffectSettings
 {
-   // Temporary default implementation just saves self
-   // Cast away const! Capture pointer to self
-   return Settings( const_cast<EffectDefinitionInterfaceEx*>(this) );
+   return {};
 }
 
-bool EffectDefinitionInterfaceEx::CopySettingsContents(
-   const EffectSettings &src, EffectSettings &dst) const
+bool EffectSettingsManager::CopySettingsContents(
+   const EffectSettings &, EffectSettings &) const
 {
-   //! No real copy, just a sanity check on common origin
-   return FindMe(src) && FindMe(dst);
+   return true;
 }
 
-EffectDefinitionInterfaceEx *
-EffectDefinitionInterfaceEx::FindMe(const Settings &settings) const
+EffectInstance::~EffectInstance() = default;
+
+bool EffectInstance::Init()
 {
-   if (auto ppEffect = settings.cast<EffectDefinitionInterfaceEx*>();
-       ppEffect && *ppEffect == this)
-      return *ppEffect;
-   return nullptr;
+   return true;
 }
 
-EffectProcessor::~EffectProcessor() = default;
+bool EffectInstance::RealtimeInitialize(EffectSettings &)
+{
+   return false;
+}
+
+bool EffectInstance::RealtimeAddProcessor(EffectSettings &, unsigned, float)
+{
+   return true;
+}
+
+bool EffectInstance::RealtimeSuspend()
+{
+   return true;
+}
+
+bool EffectInstance::RealtimeResume() noexcept
+{
+   return true;
+}
+
+bool EffectInstance::RealtimeProcessStart(EffectSettings &)
+{
+   return true;
+}
+
+size_t EffectInstance::RealtimeProcess(int, EffectSettings &,
+   const float *const *, float *const *, size_t)
+{
+   return 0;
+}
+
+bool EffectInstance::RealtimeProcessEnd(EffectSettings &) noexcept
+{
+   return true;
+}
+
+bool EffectInstance::RealtimeFinalize(EffectSettings &) noexcept
+{
+   return true;
+}
+
+size_t EffectInstance::GetTailSize() const
+{
+   return 0;
+}
+
+EffectInstanceWithBlockSize::~EffectInstanceWithBlockSize() = default;
+
+size_t EffectInstanceWithBlockSize::GetBlockSize() const
+{
+   return mBlockSize;
+}
+
+size_t EffectInstanceWithBlockSize::SetBlockSize(size_t maxBlockSize)
+{
+   return (mBlockSize = maxBlockSize);
+}
+
+EffectInstanceFactory::~EffectInstanceFactory() = default;
+
+int EffectInstanceFactory::GetMidiInCount() const
+{
+   return 0;
+}
+
+int EffectInstanceFactory::GetMidiOutCount() const
+{
+   return 0;
+}
 
 EffectUIValidator::~EffectUIValidator() = default;
 

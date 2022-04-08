@@ -13,6 +13,8 @@
 
 #include "TwoPassSimpleMono.h"
 #include "../ShuttleAutomation.h"
+#include "MemoryX.h"
+#include "../widgets/wxPanelWrapper.h"
 
 class wxCheckBox;
 class wxSlider;

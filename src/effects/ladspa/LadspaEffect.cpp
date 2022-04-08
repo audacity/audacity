@@ -57,7 +57,6 @@ effects from this one class.
 #include <wx/version.h>
 
 #include "AudacityException.h"
-#include "../../EffectHostInterface.h"
 #include "FileNames.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/NumericTextCtrl.h"
@@ -715,10 +714,6 @@ bool LadspaEffect::SupportsAutomation() const
    return mNumInputControls > 0;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
-
 bool LadspaEffect::InitializePlugin()
 {
    if (!Load())
@@ -862,30 +857,31 @@ bool LadspaEffect::InitializePlugin()
    return true;
 }
 
-bool LadspaEffect::InitializeInstance(
-   EffectHostInterface *host, EffectSettings &settings)
+std::shared_ptr<EffectInstance>
+LadspaEffect::MakeInstance(EffectSettings &settings) const
 {
-   mHost = host;
+   return const_cast<LadspaEffect *>(this)->MakeInstance(settings);
+}
 
-   if (mHost)
+std::shared_ptr<EffectInstance>
+LadspaEffect::DoMakeInstance(EffectSettings &settings)
+{
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      wxT("UseLatency"), mUseLatency, true);
+
+   bool haveDefaults;
+   GetConfig(*this, PluginSettings::Private,
+      FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+      false);
+   if (!haveDefaults)
    {
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("UseLatency"), mUseLatency, true);
-
-      bool haveDefaults;
-      GetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
-         false);
-      if (!haveDefaults)
-      {
-         SaveParameters(FactoryDefaultsGroup(), settings);
-         SetConfig(*this, PluginSettings::Private,
-            FactoryDefaultsGroup(), wxT("Initialized"), true);
-      }
-
-      LoadParameters(CurrentSettingsGroup(), settings);
+      SaveParameters(FactoryDefaultsGroup(), settings);
+      SetConfig(*this, PluginSettings::Private,
+         FactoryDefaultsGroup(), wxT("Initialized"), true);
    }
-   return true;
+
+   LoadParameters(CurrentSettingsGroup(), settings);
+   return std::make_shared<Instance>(*this);
 }
 
 unsigned LadspaEffect::GetAudioInCount() const
@@ -898,12 +894,12 @@ unsigned LadspaEffect::GetAudioOutCount() const
    return mAudioOuts;
 }
 
-int LadspaEffect::GetMidiInCount()
+int LadspaEffect::GetMidiInCount() const
 {
    return 0;
 }
 
-int LadspaEffect::GetMidiOutCount()
+int LadspaEffect::GetMidiOutCount() const
 {
    return 0;
 }
@@ -933,11 +929,6 @@ sampleCount LadspaEffect::GetLatency()
       return sampleCount ( mOutputControls[mLatencyPort] );
    }
 
-   return 0;
-}
-
-size_t LadspaEffect::GetTailSize()
-{
    return 0;
 }
 
@@ -1103,7 +1094,7 @@ bool LadspaEffect::SaveSettings(
 }
 
 bool LadspaEffect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    for (unsigned long p = 0; p < mData->PortCount; p++)
    {
@@ -1241,7 +1232,7 @@ LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
                NumericTextCtrl(w, ID_Duration,
                   NumericConverter::TIME,
                   extra.GetDurationFormat(),
-                  mHost->GetDuration(),
+                  extra.GetDuration(),
                   mSampleRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
@@ -1508,12 +1499,10 @@ bool LadspaEffect::IsGraphicalUI()
    return false;
 }
 
-bool LadspaEffect::ValidateUI(EffectSettings &)
+bool LadspaEffect::ValidateUI(EffectSettings &settings)
 {
    if (GetType() == EffectTypeGenerate)
-   {
-      mHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
 
    return true;
 }

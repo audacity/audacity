@@ -185,12 +185,7 @@ bool EffectChangePitch::DoLoadFactoryDefaults(EffectSettings &settings)
 
 // Effect implementation
 
-bool EffectChangePitch::Init()
-{
-   return true;
-}
-
-bool EffectChangePitch::Process(EffectSettings &settings)
+bool EffectChangePitch::Process(EffectInstance &, EffectSettings &settings)
 {
 #if USE_SBSMS
    if (mUseSBSMS)
@@ -200,7 +195,7 @@ bool EffectChangePitch::Process(EffectSettings &settings)
       proxy.mProxyEffectName = XO("High Quality Pitch Change");
       proxy.setParameters(1.0, pitchRatio);
       //! Already processing; don't make a dialog
-      return Delegate(proxy, settings, *mUIParent, nullptr, nullptr);
+      return Delegate(proxy, settings);
    }
    else
 #endif
@@ -231,7 +226,7 @@ bool EffectChangePitch::Process(EffectSettings &settings)
    }
 }
 
-bool EffectChangePitch::CheckWhetherSkipEffect()
+bool EffectChangePitch::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (m_dPercentChange == 0.0);
 }

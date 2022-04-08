@@ -69,5 +69,5 @@ sampleFormat ImportFileHandle::ChooseFormat(sampleFormat effectiveFormat)
 std::shared_ptr<WaveTrack> ImportFileHandle::NewWaveTrack(
    WaveTrackFactory &trackFactory, sampleFormat effectiveFormat, double rate)
 {
-   return trackFactory.NewWaveTrack(ChooseFormat(effectiveFormat), rate);
+   return trackFactory.Create(ChooseFormat(effectiveFormat), rate);
 }

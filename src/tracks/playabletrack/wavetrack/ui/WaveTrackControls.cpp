@@ -1077,7 +1077,7 @@ using TCPLine = TrackInfo::TCPLine;
 static const struct WaveTrackTCPLines
    : TCPLines { WaveTrackTCPLines() {
    (TCPLines&)*this =
-      PlayableTrackControls::StaticTCPLines();
+      PlayableTrackControls::StaticWaveTCPLines();
    insert( end(), {
 
       { TCPLine::kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,

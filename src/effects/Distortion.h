@@ -13,12 +13,13 @@
 
 #include <queue>
 
-#include "Effect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;
 class wxStaticText;
 class wxCheckBox;
+class wxChoice;
 class wxTextCtrl;
 class ShuttleGui;
 
@@ -43,7 +44,7 @@ public:
    double queuetotal;
 };
 
-class EffectDistortion final : public Effect
+class EffectDistortion final : public StatefulPerTrackEffect
 {
 public:
    struct Params;
@@ -78,8 +79,6 @@ public:
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool DoLoadFactoryPreset(int id);
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

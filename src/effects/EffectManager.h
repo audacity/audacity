@@ -17,7 +17,7 @@
 
 #include <unordered_map>
 #include "EffectInterface.h"
-#include "EffectHostInterface.h" // for EffectDialogFactory
+#include "EffectPlugin.h" // for EffectDialogFactory
 #include "Identifier.h"
 
 class AudacityCommand;
@@ -33,13 +33,13 @@ typedef wxString PluginID;
 #include "EffectInterface.h"
 
 struct EffectAndDefaultSettings{
-   EffectUIHostInterface *effect{};
+   EffectPlugin *effect{};
    EffectSettings settings{};
 };
 
 using EffectMap = std::unordered_map<wxString, EffectAndDefaultSettings>;
 using AudacityCommandMap = std::unordered_map<wxString, AudacityCommand *>;
-using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<EffectUIHostInterface> >;
+using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<EffectPlugin> >;
 
 class AudacityCommand;
 
@@ -63,8 +63,9 @@ public:
       kRepeatNyquistPrompt = 0x10,
    };
 
-   /*! Create a new instance of an effect by its ID. */
-   static std::unique_ptr<EffectProcessor> NewEffect(const PluginID &ID);
+   /*! Find the singleton EffectInstanceFactory for ID. */
+   static
+   const EffectInstanceFactory *GetInstanceFactory(const PluginID &ID);
 
    /** Get the singleton instance of the EffectManager. Probably not safe
        for multi-thread use. */
@@ -83,7 +84,7 @@ public:
    //! Here solely for the purpose of Nyquist Workbench until a better solution is devised.
    /** Register an effect so it can be executed.
      uEffect is expected to be a self-hosting Nyquist effect */
-   const PluginID & RegisterEffect(std::unique_ptr<EffectUIHostInterface> uEffect);
+   const PluginID & RegisterEffect(std::unique_ptr<EffectPlugin> uEffect);
    //! Used only by Nyquist Workbench module
    void UnregisterEffect(const PluginID & ID);
 
@@ -148,7 +149,7 @@ public:
    const PluginID & GetEffectByIdentifier(const CommandID & strTarget);
 
    /*! Return an effect by its ID. */
-   EffectUIHostInterface *GetEffect(const PluginID & ID);
+   EffectPlugin *GetEffect(const PluginID & ID);
 
    /*! Get default settings by effect ID. */
    EffectSettings *GetDefaultSettings(const PluginID & ID);
@@ -157,7 +158,7 @@ public:
    /*!
     @return if first member is not null, then the second is not null
     */
-   std::pair<EffectUIHostInterface *, EffectSettings *>
+   std::pair<EffectPlugin *, EffectSettings *>
    GetEffectAndDefaultSettings(const PluginID & ID);
 
 private:

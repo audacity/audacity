@@ -96,8 +96,6 @@ EffectType EffectNoise::GetType() const
    return EffectTypeGenerate;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectNoise::GetAudioOutCount() const
 {
    return 1;
@@ -192,7 +190,7 @@ EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
          NumericTextCtrl(S.GetParent(), wxID_ANY,
                          NumericConverter::TIME,
                          extra.GetDurationFormat(),
-                         GetDuration(),
+                         extra.GetDuration(),
                          mProjectRate,
                          NumericTextCtrl::Options{}
                             .AutoPos(true));
@@ -204,15 +202,15 @@ EffectNoise::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
    return nullptr;
 }
 
-bool EffectNoise::TransferDataToWindow(const EffectSettings &)
+bool EffectNoise::TransferDataToWindow(const EffectSettings &settings)
 {
-   mNoiseDurationT->SetValue(GetDuration());
+   mNoiseDurationT->SetValue(settings.extra.GetDuration());
 
    return true;
 }
 
-bool EffectNoise::TransferDataFromWindow(EffectSettings &)
+bool EffectNoise::TransferDataFromWindow(EffectSettings &settings)
 {
-   SetDuration(mNoiseDurationT->GetValue());
+   settings.extra.SetDuration(mNoiseDurationT->GetValue());
    return true;
 }

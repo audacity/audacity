@@ -13,9 +13,9 @@
 #ifndef __AUDACITY_EFFECT_INVERT__
 #define __AUDACITY_EFFECT_INVERT__
 
-#include "Effect.h"
+#include "StatefulPerTrackEffect.h"
 
-class EffectInvert final : public Effect
+class EffectInvert final : public StatefulPerTrackEffect
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -32,8 +32,6 @@ public:
 
    EffectType GetType() const override;
    bool IsInteractive() const override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

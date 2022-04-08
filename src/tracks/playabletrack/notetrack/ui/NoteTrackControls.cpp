@@ -219,8 +219,8 @@ void MidiControlsDrawFunction
 
 static const struct NoteTrackTCPLines
    : TCPLines { NoteTrackTCPLines() {
-   (TCPLines&)*this =
-      NoteTrackControlsBase::StaticTCPLines();
+   *static_cast<TCPLines*>(this) =
+      NoteTrackControlsBase::StaticNoteTCPLines();
    insert( end(), {
       { TCPLine::kItemMidiControlsRect, kMidiCellHeight * 4, 0,
         MidiControlsDrawFunction },

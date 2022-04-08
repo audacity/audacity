@@ -13,14 +13,14 @@
 #ifndef __AUDACITY_EFFECT_TONEGEN__
 #define __AUDACITY_EFFECT_TONEGEN__
 
-#include "Effect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 #include <float.h> // for DBL_MAX
 
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectToneGen : public Effect
+class EffectToneGen : public StatefulPerTrackEffect
 {
 public:
    static inline EffectToneGen *
@@ -37,8 +37,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioOutCount() const override;
    bool ProcessInitialize(EffectSettings &settings,

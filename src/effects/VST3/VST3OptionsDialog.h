@@ -11,8 +11,8 @@
 #pragma once
 
 #include "widgets/wxPanelWrapper.h"
-#include "EffectHostInterface.h"
 
+class EffectDefinitionInterface;
 class ShuttleGui;
 
 class VST3OptionsDialog final : public wxDialogWrapper

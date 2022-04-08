@@ -69,14 +69,20 @@ typedef enum EffectType : int
 using EffectFamilySymbol = ComponentInterfaceSymbol;
 
 //! Non-polymorphic package of settings values common to many effects
-class EffectSettingsExtra final {
+class COMPONENTS_API EffectSettingsExtra final {
 public:
+   static const RegistryPath &DurationKey();
    const NumericFormatSymbol& GetDurationFormat() const
       { return mDurationFormat; }
    void SetDurationFormat(const NumericFormatSymbol &durationFormat)
       { mDurationFormat = durationFormat; }
+
+   //! @return value is not negative
+   double GetDuration() const { return mDuration; }
+   void SetDuration(double value) { mDuration = std::max(0.0, value); }
 private:
    NumericFormatSymbol mDurationFormat{};
+   double mDuration{}; //!< @invariant non-negative
 };
 
 //! Externalized state of a plug-in
@@ -88,6 +94,27 @@ struct EffectSettings : audacity::TypedAny<EffectSettings> {
    {
       TypedAny::swap(other);
       std::swap(extra, other.extra);
+   }
+
+   //! Like make_any but a static member function
+   template<typename T, typename... Args>
+   static EffectSettings Make(Args &&... args)
+   {
+      return EffectSettings(std::in_place_type<T>, std::forward<Args>(args)...);
+   }
+
+   //! Convenience for defining overrides of
+   //! EffectDefinitionInterface::CopySettingsContents
+   template<typename T>
+   static bool Copy(const EffectSettings &src, EffectSettings &dst)
+   {
+      const T *pSrc = src.cast<T>();
+      T *pDst = dst.cast<T>();
+      if (pSrc && pDst) {
+         *pDst = *pSrc;
+         return true;
+      }
+      return false;
    }
 };
 
@@ -142,8 +169,6 @@ class COMPONENTS_API EffectDefinitionInterface  /* not final */
    : public ComponentInterface
 {
 public:
-   using Settings = EffectSettings;
-
    //! A utility that strips spaces and CamelCases a name.
    static Identifier GetSquashedName(const Identifier &ident);
 
@@ -181,6 +206,22 @@ public:
 
    //! Default is false
    virtual bool IsHiddenFromMenus() const;
+};
+
+/*************************************************************************************//**
+
+\class EffectSettingsManager
+
+\brief EffectSettingsManager is an EffectDefinitionInterface that adds a
+factory function for EffectSettings, and const functions for manipulating those
+settings.  This externalizes certain effect state.
+
+*******************************************************************************************/
+class COMPONENTS_API EffectSettingsManager  /* not final */
+   : public EffectDefinitionInterface
+{
+public:
+   virtual ~EffectSettingsManager();
 
    /*! @name settings
     Interface for saving and loading externalized settings.
@@ -188,7 +229,10 @@ public:
     */
    //! @{
    //! Produce an object holding new, independent settings
-   virtual Settings MakeSettings() const = 0;
+   /*!
+    Default implementation returns an empty `any`
+    */
+   virtual EffectSettings MakeSettings() const;
 
    //! Update one settings object from another
    /*!
@@ -198,86 +242,62 @@ public:
 
     Assume that src and dst were created and previously modified only by `this`
 
+    Default implementation does nothing and returns true
+
     @param src settings to copy from
     @param dst settings to copy into
     @return success
     */
    virtual bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst) const = 0;
+      const EffectSettings &src, EffectSettings &dst) const;
 
    //! Store settings as keys and values
    /*!
     @return true on success
     */
    virtual bool SaveSettings(
-      const Settings &settings, CommandParameters & parms) const = 0;
+      const EffectSettings &settings, CommandParameters & parms) const = 0;
 
    //! Restore settings from keys and values
    /*!
     @return true on success
     */
    virtual bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const = 0;
+      const CommandParameters & parms, EffectSettings &settings) const = 0;
 
    //! Report names of factory presets
    virtual RegistryPaths GetFactoryPresets() const = 0;
 
    //! Change settings to a user-named preset
    virtual bool LoadUserPreset(
-      const RegistryPath & name, Settings &settings) const = 0;
+      const RegistryPath & name, EffectSettings &settings) const = 0;
    //! Save settings in the configuration file as a user-named preset
    virtual bool SaveUserPreset(
-      const RegistryPath & name, const Settings &settings) const = 0;
+      const RegistryPath & name, const EffectSettings &settings) const = 0;
 
    //! Change settings to the preset whose name is `GetFactoryPresets()[id]`
-   virtual bool LoadFactoryPreset(int id, Settings &settings) const = 0;
+   virtual bool LoadFactoryPreset(int id, EffectSettings &settings) const = 0;
    //! Change settings back to "factory default"
-   virtual bool LoadFactoryDefaults(Settings &settings) const = 0;
+   virtual bool LoadFactoryDefaults(EffectSettings &settings) const = 0;
    //! @}
 
-   //! Visit settings, if defined.  false means no defined settings.
+   //! Visit settings (and maybe change them), if defined.
+   //! false means no defined settings.
    //! Default implementation returns false
    virtual bool VisitSettings(
-      SettingsVisitor &visitor, EffectSettings &settings);
-   //! Visit settings, if defined.  false means no defined settings.
+      SettingsVisitor &visitor, EffectSettings &settings); // TODO const
+
+   //! Visit settings (read-only), if defined.
+   //! false means no defined settings.
    //! Default implementation returns false
    virtual bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings) const;
-};
-
-//! Extension of EffectDefinitionInterface with old system for settings
-/*!
- (Default implementations of EffectDefinitionInterface methods for settings call
- through to the old interface, violating const correctness.  This is meant to be
- transitional only.)
-
- This interface is not used by the EffectUIHost dialog.
- */
-class COMPONENTS_API EffectDefinitionInterfaceEx  /* not final */
-   : public EffectDefinitionInterface
-{
-public:
-   /*! @name settings
-    Default implementation of the nominally const methods call through to the
-    old non-const interface
-    */
-   //! @{
-   Settings MakeSettings() const override;
-   bool CopySettingsContents(
-      const EffectSettings &src, EffectSettings &dst) const override;
-   //! @}
-
-private:
-   EffectDefinitionInterfaceEx *FindMe(const Settings &settings) const;
 };
 
 class wxDialog;
 class wxWindow;
 
 class EffectUIClientInterface;
-
-// Incomplete type not defined in libraries -- TODO clean that up:
-class EffectHostInterface;
 
 class sampleCount;
 
@@ -318,60 +338,143 @@ typedef enum
    ChannelNameBottomFrontRight,
 } ChannelName, *ChannelNames;
 
-/*************************************************************************************//**
-
-\class EffectProcessor 
-
-\brief provides the ident interface to Effect, and is what makes
-Effect into a plug-in command.  It has functions for effect calculations that are not part of
-AudacityCommand.
-
-*******************************************************************************************/
-class COMPONENTS_API EffectProcessor  /* not final */
-   : public EffectDefinitionInterfaceEx
+/***************************************************************************//**
+\class EffectInstance
+@brief Performs effect computation
+*******************************************************************************/
+class COMPONENTS_API EffectInstance
+   : public std::enable_shared_from_this<EffectInstance>
 {
 public:
-   virtual ~EffectProcessor();
+   virtual ~EffectInstance();
 
-   virtual unsigned GetAudioInCount() const = 0;
-   virtual unsigned GetAudioOutCount() const = 0;
+   //! Call once to set up state for whole list of tracks to be processed
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool Init();
 
-   virtual int GetMidiInCount() = 0;
-   virtual int GetMidiOutCount() = 0;
+   //! Actually do the effect here.
+   /*!
+    @return success
+    */
+   virtual bool Process(EffectSettings &settings) = 0;
 
    virtual void SetSampleRate(double rate) = 0;
-   // Suggest a block size, but the return is the size that was really set:
-   virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
+
    virtual size_t GetBlockSize() const = 0;
 
-   //! Called for destructive, non-realtime effect computation
-   virtual sampleCount GetLatency() = 0;
-   virtual size_t GetTailSize() = 0;
+   // Suggest a block size, but the return is the size that was really set:
+   virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
 
-   //! Called for destructive, non-realtime effect computation
-   virtual bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap = nullptr) = 0;
+   /*!
+    @return success
+    Default implementation does nothing, returns false (so assume realtime is
+    not supported).
+    Other member functions related to realtime return true or zero, but will not
+    be called, unless a derived class overrides RealtimeInitialize.
+    */
+   virtual bool RealtimeInitialize(EffectSettings &settings);
 
-   //! Called for destructive, non-realtime effect computation
-   // This may be called during stack unwinding:
-   virtual bool ProcessFinalize() /* noexcept */ = 0;
-
-   //! Called for destructive, non-realtime effect computation
-   virtual size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen) = 0;
-
-   virtual bool RealtimeInitialize(EffectSettings &settings) = 0;
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
    virtual bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate) = 0;
-   virtual bool RealtimeFinalize(EffectSettings &settings) noexcept = 0;
-   virtual bool RealtimeSuspend() = 0;
-   virtual bool RealtimeResume() noexcept = 0;
+      EffectSettings &settings, unsigned numChannels, float sampleRate);
+
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeSuspend();
+
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeResume() noexcept;
+
    //! settings are possibly changed, since last call, by an asynchronous dialog
-   virtual bool RealtimeProcessStart(EffectSettings &settings) = 0;
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeProcessStart(EffectSettings &settings);
+
+   /*!
+    @return success
+    Default implementation does nothing, returns 0
+    */
    virtual size_t RealtimeProcess(int group, EffectSettings &settings,
-      const float *const *inBuf, float *const *outBuf, size_t numSamples) = 0;
+      const float *const *inBuf, float *const *outBuf, size_t numSamples);
+
    //! settings can be updated to let a dialog change appearance at idle
-   virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept = 0;
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept;
+
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeFinalize(EffectSettings &settings) noexcept;
+
+   //! Function that has not yet found a use
+   //! Correct definitions of it will likely depend on settings and state
+   virtual size_t GetTailSize() const;
+};
+
+//! Inherit to add a state variable to an EffectInstance subclass
+class COMPONENTS_API EffectInstanceWithBlockSize
+   : public virtual EffectInstance
+{
+public:
+   ~EffectInstanceWithBlockSize() override;
+   size_t GetBlockSize() const override;
+   size_t SetBlockSize(size_t maxBlockSize) override;
+protected:
+   size_t mBlockSize{ 0 };
+};
+
+/***************************************************************************//**
+\class EffectInstanceFactory
+*******************************************************************************/
+class COMPONENTS_API EffectInstanceFactory
+   : public EffectSettingsManager
+{
+public:
+   virtual ~EffectInstanceFactory();
+
+   //! Make an object maintaining short-term state of an Effect
+   /*!
+    One effect may have multiple instances extant simultaneously.
+    Instances have state, may be implemented in foreign code, and are temporary,
+    whereas EffectSettings represents persistent effect state that can be saved
+    and reloaded from files.
+
+    @param settings may be assumed to have a lifetime enclosing the instance's
+    */
+   virtual std::shared_ptr<EffectInstance>
+   MakeInstance(EffectSettings &settings) const = 0;
+
+   //! How many input buffers to allocate at once
+   /*!
+    If the effect ALWAYS processes channels independently, this can return 1
+    */
+   virtual unsigned GetAudioInCount() const = 0;
+
+   //! How many output buffers to allocate at once
+   virtual unsigned GetAudioOutCount() const = 0;
+
+   //! Function that has not yet found a use
+   virtual int GetMidiInCount() const;
+
+   //! Function that has not yet found a use
+   virtual int GetMidiOutCount() const;
 };
 
 /*************************************************************************************//**
@@ -446,7 +549,6 @@ values.  It can import and export presets.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectUIClientInterface /* not final */
-   : public EffectProcessor
 {
 public:
    virtual ~EffectUIClientInterface();
@@ -458,12 +560,6 @@ public:
    virtual int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal = false
    ) = 0;
-
-   /*!
-    @return true if successful
-    */
-   virtual bool InitializeInstance(
-      EffectHostInterface *host, EffectSettings &settings) = 0;
 
    virtual bool IsGraphicalUI() = 0;
 

@@ -49,23 +49,14 @@
 
 #include "AudacityException.h"
 #include "ConfigInterface.h"
-#include "../../EffectHostInterface.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/wxPanelWrapper.h"
 #include "../../widgets/NumericTextCtrl.h"
 
-#include "lilv/lilv.h"
-#include "suil/suil.h"
-#include "lv2/atom/atom.h"
-#include "lv2/atom/forge.h"
-#include "lv2/atom/util.h"
+#include "lv2/buf-size/buf-size.h"
 #include "lv2/instance-access/instance-access.h"
-#include "lv2/port-groups/port-groups.h"
-#include "lv2/parameters/parameters.h"
-#include "lv2/state/state.h"
-#include "lv2/ui/ui.h"
 
 #if defined(__WXGTK__)
 #include <gtk/gtk.h>
@@ -80,19 +71,6 @@
 
 // Define a reasonable default sequence size in bytes
 #define DEFAULT_SEQSIZE 8192
-
-// Define the static URI map
-URIDMap LV2Effect::gURIDMap;
-
-// Define the static LILV URI nodes
-#undef NODE
-#define NODE(n, u) LilvNode *LV2Effect::node_##n = NULL;
-NODELIST
-
-// Define the static URIDs
-#undef URID
-#define URID(n, u) LV2_URID LV2Effect::urid_##n = 0;
-URIDLIST
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -373,7 +351,6 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
 {
    mPlug = plug;
 
-   mHost = NULL;
    mMaster = NULL;
    mProcess = NULL;
    mSuilInstance = NULL;
@@ -512,11 +489,10 @@ bool LV2Effect::SupportsAutomation() const
    return true;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
 bool LV2Effect::InitializePlugin()
 {
+   using namespace LV2Symbols;
+
    AddOption(urid_SequenceSize, sizeof(mSeqSize), urid_Int, &mSeqSize);
    AddOption(urid_MinBlockLength, sizeof(mMinBlockSize), urid_Int, &mMinBlockSize);
    AddOption(urid_MaxBlockLength, sizeof(mMaxBlockSize), urid_Int, &mMaxBlockSize);
@@ -929,40 +905,42 @@ bool LV2Effect::InitializePlugin()
    return true;
 }
 
-bool LV2Effect::InitializeInstance(
-   EffectHostInterface *host, EffectSettings &settings)
+std::shared_ptr<EffectInstance>
+LV2Effect::MakeInstance(EffectSettings &settings) const
 {
-   mHost = host;
-   if (mHost)
+   return const_cast<LV2Effect*>(this)->DoMakeInstance(settings);
+}
+
+std::shared_ptr<EffectInstance>
+LV2Effect::DoMakeInstance(EffectSettings &settings)
+{
+   int userBlockSize;
+   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
+      wxT("BufferSize"), userBlockSize, 8192);
+   mUserBlockSize = std::max(1, userBlockSize);
+   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
+      wxT("UseLatency"), mUseLatency, true);
+   GetConfig(*this, PluginSettings::Shared, wxT("Settings"), wxT("UseGUI"),
+      mUseGUI, true);
+
+   mBlockSize = mUserBlockSize;
+
+   bool haveDefaults;
+   GetConfig(*this, PluginSettings::Private,
+      FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+      false);
+   if (!haveDefaults)
    {
-      int userBlockSize;
-      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-         wxT("BufferSize"), userBlockSize, 8192);
-      mUserBlockSize = std::max(1, userBlockSize);
-      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-         wxT("UseLatency"), mUseLatency, true);
-      GetConfig(*this, PluginSettings::Shared, wxT("Settings"), wxT("UseGUI"),
-         mUseGUI, true);
-
-      mBlockSize = mUserBlockSize;
-
-      bool haveDefaults;
-      GetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
-         false);
-      if (!haveDefaults)
-      {
-         SaveParameters(FactoryDefaultsGroup(), settings);
-         SetConfig(*this, PluginSettings::Private,
-            FactoryDefaultsGroup(), wxT("Initialized"), true);
-      }
-
-      LoadParameters(CurrentSettingsGroup(), settings);
+      SaveParameters(FactoryDefaultsGroup(), settings);
+      SetConfig(*this, PluginSettings::Private,
+         FactoryDefaultsGroup(), wxT("Initialized"), true);
    }
+
+   LoadParameters(CurrentSettingsGroup(), settings);
 
    lv2_atom_forge_init(&mForge, &mURIDMapFeature);
 
-   return true;
+   return std::make_shared<Instance>(*this);
 }
 
 unsigned LV2Effect::GetAudioInCount() const
@@ -975,12 +953,12 @@ unsigned LV2Effect::GetAudioOutCount() const
    return mAudioOut;
 }
 
-int LV2Effect::GetMidiInCount()
+int LV2Effect::GetMidiInCount() const
 {
    return mMidiIn;
 }
 
-int LV2Effect::GetMidiOutCount()
+int LV2Effect::GetMidiOutCount() const
 {
    return mMidiOut;
 }
@@ -1042,11 +1020,6 @@ sampleCount LV2Effect::GetLatency()
    return 0;
 }
 
-size_t LV2Effect::GetTailSize()
-{
-   return 0;
-}
-
 bool LV2Effect::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames chanMap)
 {
@@ -1083,6 +1056,7 @@ bool LV2Effect::ProcessFinalize()
 size_t LV2Effect::ProcessBlock(EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t size)
 {
+   using namespace LV2Symbols;
    wxASSERT(size <= ( size_t) mBlockSize);
 
    LilvInstance *instance = mProcess->GetInstance();
@@ -1256,6 +1230,7 @@ bool LV2Effect::RealtimeResume() noexcept
 
 bool LV2Effect::RealtimeProcessStart(EffectSettings &)
 {
+   using namespace LV2Symbols;
    int i = 0;
    for (auto & port : mAudioPorts)
    {
@@ -1401,7 +1376,7 @@ size_t LV2Effect::RealtimeProcess(int group, EffectSettings &,
 
          LV2_Atom *chunk = ( LV2_Atom *) buf;
          chunk->size = port->mMinimumSize;
-         chunk->type = urid_Chunk;
+         chunk->type = LV2Symbols::urid_Chunk;
       }
    }
 
@@ -1483,7 +1458,7 @@ bool LV2Effect::SaveSettings(
 }
 
 bool LV2Effect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    // First pass validates values
    for (auto & port : mControlPorts)
@@ -1577,12 +1552,10 @@ bool LV2Effect::IsGraphicalUI()
    return mUseGUI;
 }
 
-bool LV2Effect::ValidateUI(EffectSettings &)
+bool LV2Effect::ValidateUI(EffectSettings &settings)
 {
    if (GetType() == EffectTypeGenerate)
-   {
-      mHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
 
    return true;
 }
@@ -1657,6 +1630,7 @@ bool LV2Effect::SaveUserPreset(
 
 RegistryPaths LV2Effect::GetFactoryPresets() const
 {
+   using namespace LV2Symbols;
    if (mFactoryPresetsLoaded)
    {
       return mFactoryPresetNames;
@@ -1704,6 +1678,7 @@ bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &) const
 
 bool LV2Effect::DoLoadFactoryPreset(int id)
 {
+   using namespace LV2Symbols;
    if (id < 0 || id >= (int) mFactoryPresetUris.size())
    {
       return false;
@@ -1854,9 +1829,9 @@ LV2_Feature *LV2Effect::AddFeature(const char *uri, void *data)
 
 bool LV2Effect::ValidateFeatures(const LilvNode *subject)
 {
-   if (CheckFeatures(subject, node_RequiredFeature, true))
+   if (CheckFeatures(subject, LV2Symbols::node_RequiredFeature, true))
    {
-      return CheckFeatures(subject, node_OptionalFeature, false);
+      return CheckFeatures(subject, LV2Symbols::node_OptionalFeature, false);
    }
 
    return false;
@@ -1866,7 +1841,8 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, const LilvNode *predicate
 {
    bool supported = true;
 
-   LilvNodes *nodes = lilv_world_find_nodes(gWorld, subject, predicate, NULL);
+   LilvNodes *nodes =
+      lilv_world_find_nodes(LV2Symbols::gWorld, subject, predicate, nullptr);
    if (nodes)
    {
       LILV_FOREACH(nodes, i, nodes)
@@ -1901,7 +1877,6 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, const LilvNode *predicate
                if (required)
                {
                   wxLogError(wxT("%s requires unsupported feature %s"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
-                  printf(_("%s requires unsupported feature %s\n"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
                   break;
                }
                supported = true;
@@ -1918,9 +1893,9 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, const LilvNode *predicate
 
 bool LV2Effect::ValidateOptions(const LilvNode *subject)
 {
-   if (CheckOptions(subject, node_RequiredOption, true))
+   if (CheckOptions(subject, LV2Symbols::node_RequiredOption, true))
    {
-      return CheckOptions(subject, node_SupportedOption, false);
+      return CheckOptions(subject, LV2Symbols::node_SupportedOption, false);
    }
 
    return false;
@@ -1928,6 +1903,7 @@ bool LV2Effect::ValidateOptions(const LilvNode *subject)
 
 bool LV2Effect::CheckOptions(const LilvNode *subject, const LilvNode *predicate, bool required)
 {
+   using namespace LV2Symbols;
    bool supported = true;
 
    LilvNodes *nodes = lilv_world_find_nodes(gWorld, subject, predicate, NULL);
@@ -1965,7 +1941,6 @@ bool LV2Effect::CheckOptions(const LilvNode *subject, const LilvNode *predicate,
                if (required)
                {
                   wxLogError(wxT("%s requires unsupported option %s"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
-                  printf(_("%s requires unsupported option %s\n"), lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
                   break;
                }
                supported = true;
@@ -2052,6 +2027,7 @@ void LV2Effect::FreeInstance(LV2Wrapper *wrapper)
 
 bool LV2Effect::BuildFancy()
 {
+   using namespace LV2Symbols;
    // Set the native UI type
    const char *nativeType =
 #if defined(__WXGTK3__)
@@ -2334,7 +2310,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                NumericTextCtrl(w, ID_Duration,
                                NumericConverter::TIME,
                                extra.GetDurationFormat(),
-                               mHost->GetDuration(),
+                               extra.GetDuration(),
                                mSampleRate,
                                NumericTextCtrl::Options {}
             .AutoPos(true));
@@ -2803,7 +2779,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
                suil_instance_port_event(mSuilInstance,
                                         mControlOut->mIndex,
                                         size,
-                                        urid_EventTransfer,
+                                        LV2Symbols::urid_EventTransfer,
                                         atom);
             }
             else
@@ -2915,6 +2891,7 @@ LV2_URID LV2Effect::urid_map(LV2_URID_Map_Handle handle, const char *uri)
 
 LV2_URID LV2Effect::URID_Map(const char *uri)
 {
+   using namespace LV2Symbols;
    LV2_URID urid;
    
    urid = Lookup_URI(gURIDMap, uri, false);
@@ -2932,27 +2909,6 @@ LV2_URID LV2Effect::URID_Map(const char *uri)
    return 0;
 }
 
-LV2_URID LV2Effect::Lookup_URI(URIDMap & map, const char *uri, bool add)
-{
-   size_t ndx = map.size();
-   for (size_t i = 0; i < ndx; i++)
-   {
-      if (strcmp(map[i].get(), uri) == 0)
-      {
-         return i + 1;
-      }
-   }
-
-   if (add)
-   {
-      // Almost all compilers have strdup(), but VC++ and MinGW call it _strdup().
-      map.push_back(MallocString<>(wxCRT_StrdupA(uri)));
-      return ndx + 1;
-   }
-
-   return 0;
-}
-
 // static callback
 const char *LV2Effect::urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid)
 {
@@ -2961,6 +2917,7 @@ const char *LV2Effect::urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid)
 
 const char *LV2Effect::URID_Unmap(LV2_URID urid)
 {
+   using namespace LV2Symbols;
    if (urid > 0)
    {
       if (urid <= (LV2_URID) gURIDMap.size())
@@ -3000,6 +2957,7 @@ int LV2Effect::log_vprintf(LV2_Log_Handle handle, LV2_URID type, const char *fmt
 
 int LV2Effect::LogVPrintf(LV2_URID type, const char *fmt, va_list ap)
 {
+   using namespace LV2Symbols;
    long level = wxLOG_Error;
 
    if (type == urid_Error)
@@ -3103,7 +3061,7 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
       }
    }
    // Handle event transfers
-   else if (protocol == urid_EventTransfer)
+   else if (protocol == LV2Symbols::urid_EventTransfer)
    {
       if (mControlIn && port_index == mControlIn->mIndex)
       {
@@ -3155,7 +3113,7 @@ const void *LV2Effect::GetPortValue(const char *port_symbol,
       if (port->mSymbol == symbol)
       {
          *size = sizeof(float);
-         *type = urid_Float;
+         *type = LV2Symbols::urid_Float;
          return (void *) &port->mVal;
       }
    }
@@ -3185,6 +3143,7 @@ void LV2Effect::SetPortValue(const char *port_symbol,
 
    for (auto & port : mControlPorts)
    {
+      using namespace LV2Symbols;
       if (port->mSymbol == symbol)
       {
          if (type == urid_Bool && size == sizeof(bool))

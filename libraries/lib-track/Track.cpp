@@ -66,7 +66,6 @@ void Track::Init(const Track &orig)
 {
    mId = orig.mId;
 
-   mDefaultName = orig.mDefaultName;
    mName = orig.mName;
 
    mSelected = orig.mSelected;
@@ -449,6 +448,27 @@ void TrackList::Swap(TrackList &that)
 TrackList::~TrackList()
 {
    Clear(false);
+}
+
+wxString TrackList::MakeUniqueTrackName(const wxString& baseTrackName) const
+{
+   int n = 1;
+   while(true)
+   {
+      auto name = wxString::Format("%s %d", baseTrackName, n++);
+
+      bool found {false};
+      for(const auto track : Any())
+      {
+         if(track->GetName() == name)
+         {
+            found = true;
+            break;
+         }
+      }
+      if(!found)
+         return name;
+   }
 }
 
 void TrackList::RecalcPositions(TrackNodePointer node)

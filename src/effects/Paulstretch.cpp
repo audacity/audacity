@@ -131,7 +131,7 @@ EffectType EffectPaulstretch::GetType() const
 // Effect implementation
 
 double EffectPaulstretch::CalcPreviewInputLength(
-   const EffectSettings &, double previewLength)
+   const EffectSettings &, double previewLength) const
 {
    // FIXME: Preview is currently at the project rate, but should really be
    // at the track rate (bugs 1284 and 852).
@@ -144,7 +144,7 @@ double EffectPaulstretch::CalcPreviewInputLength(
 }
 
 
-bool EffectPaulstretch::Process(EffectSettings &)
+bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
 {
    CopyInputTracks();
    m_t1=mT1;
@@ -200,7 +200,7 @@ void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))
    EnableApply(mUIParent->TransferDataFromWindow());
 }
 
-size_t EffectPaulstretch::GetBufferSize(double rate)
+size_t EffectPaulstretch::GetBufferSize(double rate) const
 {
    // Audacity's fft requires a power of 2
    float tmp = rate * mTime_resolution / 2.0;

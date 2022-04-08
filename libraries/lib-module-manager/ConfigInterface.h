@@ -106,7 +106,7 @@ inline bool SetConfig( const EffectDefinitionInterface& ident,
 
 MODULE_MANAGER_API bool RemoveConfigSubgroup( const EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group);
-MODULE_MANAGER_API bool RemoveConfig( EffectDefinitionInterface &ident,
+MODULE_MANAGER_API bool RemoveConfig( const EffectDefinitionInterface &ident,
    ConfigurationType type, const RegistryPath & group,
    const RegistryPath & key);
 

@@ -123,8 +123,7 @@ NoteTrack *NoteTrack::New( AudacityProject &project )
 NoteTrack::NoteTrack()
    : NoteTrackBase()
 {
-   SetDefaultName(_("Note Track"));
-   SetName(GetDefaultName());
+   SetName(_("Note Track"));
 
    mSeq = NULL;
    mSerializationLength = 0;

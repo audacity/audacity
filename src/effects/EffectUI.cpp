@@ -25,7 +25,7 @@
 #include "RealtimeEffectManager.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 
-static PluginID GetID(EffectUIHostInterface &effect)
+static PluginID GetID(EffectPlugin &effect)
 {
    return PluginManager::GetID(&effect.GetDefinition());
 }
@@ -158,7 +158,7 @@ END_EVENT_TABLE()
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
    AudacityProject &project,
-   EffectUIHostInterface &effect,
+   EffectPlugin &effect,
    EffectUIClientInterface &client,
    EffectSettingsAccess &access)
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
@@ -212,7 +212,6 @@ bool EffectUIHost::TransferDataToWindow()
       mpValidator->UpdateUI() &&
       //! Do validators
       wxDialogWrapper::TransferDataToWindow();
- 
 }
 
 bool EffectUIHost::TransferDataFromWindow()
@@ -234,6 +233,15 @@ bool EffectUIHost::TransferDataFromWindow()
    mpAccess->ModifySettings([&](EffectSettings &settings){
       // Allow other transfers, and reassignment of settings
       result = mEffectUIHost.TransferDataFromWindow(settings);
+      if (result) {
+         auto &definition = mEffectUIHost.GetDefinition();
+         if (definition.GetType() == EffectTypeGenerate) {
+            const auto seconds = settings.extra.GetDuration();
+            SetConfig(definition, PluginSettings::Private,
+               CurrentSettingsGroup(), EffectSettingsExtra::DurationKey(),
+               seconds);
+         }
+      }
    });
    return result;
 }
@@ -1223,7 +1231,7 @@ void EffectUIHost::CleanupRealtime()
 }
 
 wxDialog *EffectUI::DialogFactory( wxWindow &parent,
-   EffectUIHostInterface &host,
+   EffectPlugin &host,
    EffectUIClientInterface &client,
    EffectSettingsAccess &access)
 {
@@ -1523,10 +1531,10 @@ void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
    return;
 }
 
-//! Inject a factory for realtime effect states
+//! Inject a factory for realtime effects
 #include "RealtimeEffectState.h"
-static
-RealtimeEffectState::EffectFactory::Scope scope{ &EffectManager::NewEffect };
+static RealtimeEffectState::EffectFactory::Scope
+scope{ &EffectManager::GetInstanceFactory };
 
 /* The following registration objects need a home at a higher level to avoid
  dependency either way between WaveTrack or RealtimeEffectList, which need to

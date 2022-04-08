@@ -87,18 +87,18 @@ void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 
-   auto mixLeft = trackFactory->NewWaveTrack(format, rate);
+   auto mixLeft = trackFactory->Create(format, rate);
    if (oneinput)
       mixLeft->SetName(first->GetName()); /* set name of output track to be the same as the sole input track */
    else
       /* i18n-hint: noun, means a track, made by mixing other tracks */
-      mixLeft->SetName(_("Mix"));
+      mixLeft->SetName(tracks->MakeUniqueTrackName(_("Mix")));
    mixLeft->SetOffset(mixStartTime);
 
    // TODO: more-than-two-channels
    decltype(mixLeft) mixRight{};
    if ( !mono ) {
-      mixRight = trackFactory->NewWaveTrack(format, rate);
+      mixRight = trackFactory->Create(format, rate);
       if (oneinput) {
          auto channels = TrackList::Channels(first);
          if (channels.size() > 1)
@@ -107,7 +107,7 @@ void MixAndRender(TrackList *tracks, WaveTrackFactory *trackFactory,
             mixRight->SetName(first->GetName());   /* set name to that of sole input channel */
       }
       else
-         mixRight->SetName(_("Mix"));
+         mixRight->SetName(tracks->MakeUniqueTrackName(_("Mix")));
       mixRight->SetOffset(mixStartTime);
    }
 

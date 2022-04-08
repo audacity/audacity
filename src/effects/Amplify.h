@@ -15,7 +15,7 @@
 #ifndef __AUDACITY_EFFECT_AMPLIFY__
 #define __AUDACITY_EFFECT_AMPLIFY__
 
-#include "Effect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 
@@ -24,7 +24,7 @@ class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 
-class EffectAmplify final : public Effect
+class EffectAmplify final : public StatefulPerTrackEffect
 {
 public:
    static inline EffectAmplify *
@@ -45,8 +45,6 @@ public:
    EffectType GetType() const override;
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
    bool DoLoadFactoryDefaults();
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

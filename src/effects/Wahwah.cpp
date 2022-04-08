@@ -114,8 +114,6 @@ bool EffectWahwah::SupportsRealtime() const
    return true;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectWahwah::GetAudioInCount() const
 {
    return 1;

@@ -22,7 +22,7 @@ class wxTextCtrl;
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectChangeSpeed final : public Effect
+class EffectChangeSpeed final : public StatefulEffect
 {
 public:
    static inline EffectChangeSpeed *
@@ -44,15 +44,11 @@ public:
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
    bool DoLoadFactoryDefaults(EffectSettings &settings);
 
-   // EffectProcessor implementation
-
-   // Effect implementation
-
-   bool CheckWhetherSkipEffect() override;
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
    double CalcPreviewInputLength(
-      const EffectSettings &settings, double previewLength) override;
+      const EffectSettings &settings, double previewLength) const override;
    bool Init() override;
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

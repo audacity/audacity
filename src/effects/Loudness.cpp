@@ -94,12 +94,7 @@ EffectType EffectLoudness::GetType() const
 
 // Effect implementation
 
-bool EffectLoudness::CheckWhetherSkipEffect()
-{
-   return false;
-}
-
-bool EffectLoudness::Process(EffectSettings &)
+bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
 {
    if(mNormalizeTo == kLoudness)
       // LU use 10*log10(...) instead of 20*log10(...)

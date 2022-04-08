@@ -19,7 +19,7 @@ class NumericTextCtrl;
 #include <wx/event.h> // to inherit
 #include <wx/weakref.h>
 
-#include "EffectInterface.h"
+#include "../StatefulPerTrackEffect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
@@ -40,8 +40,7 @@ class NumericTextCtrl;
 
 class LadspaEffectMeter;
 
-class LadspaEffect final : public wxEvtHandler,
-                     public EffectUIClientInterface
+class LadspaEffect final : public StatefulPerTrackEffect
 {
 public:
    LadspaEffect(const wxString & path, int index);
@@ -67,33 +66,30 @@ public:
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
    bool LoadUserPreset(
-      const RegistryPath & name, Settings &settings) const override;
-   bool DoLoadUserPreset(const RegistryPath & name, Settings &settings);
+      const RegistryPath & name, EffectSettings &settings) const override;
+   bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
    bool SaveUserPreset(
-      const RegistryPath & name, const Settings &settings) const override;
+      const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
    bool DoLoadFactoryDefaults(EffectSettings &settings);
 
-   // EffectProcessor implementation
-
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
+   int GetMidiInCount() const override;
+   int GetMidiOutCount() const override;
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
    sampleCount GetLatency() override;
-   size_t GetTailSize() override;
 
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;
@@ -120,8 +116,9 @@ public:
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(
-      EffectHostInterface *host, EffectSettings &settings) override;
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+      const override;
+   std::shared_ptr<EffectInstance> DoMakeInstance(EffectSettings &settings);
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -157,7 +154,6 @@ private:
 
    wxString mPath;
    int mIndex;
-   EffectHostInterface *mHost{};
 
    wxDynamicLibrary mLib;
    const LADSPA_Descriptor *mData;
