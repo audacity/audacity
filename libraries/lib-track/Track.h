@@ -232,13 +232,20 @@ public:
        Aligned, //< Tracks are grouped and changes should be synchronized
    };
 
+   // Structure describing data common to channels of a group of tracks
+   // Should be deep-copyable (think twice before adding shared pointers!)
+   struct ChannelGroupData {
+      LinkType mLinkType{ LinkType::None };
+   };
+
 private:
 
    friend class TrackList;
 
  private:
    TrackId mId; //!< Identifies the track only in-session, not persistently
-   LinkType mLinkType{ LinkType::None };
+
+   std::unique_ptr<ChannelGroupData> mpGroupData;
 
  protected:
    std::weak_ptr<TrackList> mList; //!< Back pointer to owning TrackList
@@ -384,10 +391,12 @@ public:
 protected:
    
    void SetLinkType(LinkType linkType);
-   void DoSetLinkType(LinkType linkType) noexcept;
    void SetChannel(ChannelType c) noexcept;
+
 private:
-   
+   ChannelGroupData &MakeGroupData();
+   void DoSetLinkType(LinkType linkType);
+
    Track* GetLinkedTrack() const;
    //! Returns true for leaders of multichannel groups
    bool HasLinkedTrack() const noexcept;

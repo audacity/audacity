@@ -69,7 +69,11 @@ void Track::Init(const Track &orig)
    mName = orig.mName;
 
    mSelected = orig.mSelected;
-   mLinkType = orig.mLinkType;
+
+   // Deep copy of any group data
+   mpGroupData = orig.mpGroupData ?
+      std::make_unique<ChannelGroupData>(*orig.mpGroupData) : nullptr;
+
    mChannel = orig.mChannel;
 }
 
@@ -165,9 +169,57 @@ void Track::SetLinkType(LinkType linkType)
    }
 }
 
-void Track::DoSetLinkType(LinkType linkType) noexcept
+Track::ChannelGroupData &Track::MakeGroupData()
 {
-   mLinkType = linkType;
+   if (!mpGroupData)
+      // Make on demand
+      mpGroupData = std::make_unique<ChannelGroupData>();
+   return *mpGroupData;
+}
+
+void Track::DoSetLinkType(LinkType linkType)
+{
+   auto oldType = GetLinkType();
+   if (linkType == oldType)
+      // No change
+      return;
+
+   if (oldType == LinkType::None) {
+      // Becoming linked
+   
+      // First ensure there is no partner
+      if (auto partner = GetLinkedTrack())
+         partner->mpGroupData.reset();
+      assert(!GetLinkedTrack());
+   
+      // Change the link type
+      MakeGroupData().mLinkType = linkType;
+
+      // If this acquired a partner, it loses any old group data
+      if (auto partner = GetLinkedTrack())
+         partner->mpGroupData.reset();
+   }
+   else if (linkType == LinkType::None) {
+      // Becoming unlinked
+      assert(mpGroupData);
+      if (HasLinkedTrack()) {
+         // Make independent copy of group data in the partner, which should
+         // have had none
+         auto partner = GetLinkedTrack();
+         assert(!partner->mpGroupData);
+         partner->mpGroupData =
+            std::make_unique<ChannelGroupData>(*mpGroupData);
+         partner->mpGroupData->mLinkType = LinkType::None;
+      }
+      mpGroupData->mLinkType = LinkType::None;
+   }
+   else {
+      // Remaining linked, changing the type
+      assert(mpGroupData);
+      MakeGroupData().mLinkType = linkType;
+   }
+
+   assert(LinkConsistencyCheck());
 }
 
 void Track::SetChannel(ChannelType c) noexcept
@@ -203,7 +255,7 @@ Track *Track::GetLinkedTrack() const
 
 bool Track::HasLinkedTrack() const noexcept
 {
-    return mLinkType != LinkType::None;
+    return mpGroupData && mpGroupData->mLinkType != LinkType::None;
 }
 
 void Track::Notify( int code )
@@ -327,7 +379,8 @@ void Track::FinishCopy
 {
    if (dest) {
       dest->SetChannel(n->GetChannel());
-      dest->SetLinkType(n->GetLinkType());
+      dest->mpGroupData = n->mpGroupData ?
+         std::make_unique<ChannelGroupData>(*n->mpGroupData) : nullptr;
       dest->SetName(n->GetName());
    }
 }
@@ -1231,7 +1284,7 @@ bool TrackList::HasPendingTracks() const
 
 Track::LinkType Track::GetLinkType() const noexcept
 {
-    return mLinkType;
+    return mpGroupData ? mpGroupData->mLinkType : LinkType::None;
 }
 
 bool Track::IsAlignedWithLeader() const
