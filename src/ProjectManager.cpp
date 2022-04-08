@@ -50,6 +50,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/WindowAccessible.h"
 
 #include <wx/app.h>
+#include <wx/richmsgdlg.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
 
@@ -495,13 +496,20 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
          {
           Message += XO("\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nCancel, Edit > Undo until all tracks\nare open, then File > Save Project.");
          }
-         int result = AudacityMessageBox(
-            Message,
-            Title,
-            wxYES_NO | wxCANCEL | wxICON_QUESTION,
-            &window);
 
-         if (result == wxCANCEL || (result == wxYES &&
+         wxRichMessageDialog saveOnCloseDialog(
+            &window,
+            Message.Translation(),
+            Title.Translation(),
+            wxYES_NO | wxCANCEL | wxICON_QUESTION);
+
+         if (!bHasTracks) saveOnCloseDialog.ShowCheckBox("Don't show this again");
+
+         auto result = saveOnCloseDialog.ShowModal();
+         if (!bHasTracks && saveOnCloseDialog.IsCheckBoxChecked())
+            gPrefs->Write(wxT("/GUI/EmptyCanBeDirty"), false);
+
+         if (result == wxID_CANCEL || (result == wxID_YES &&
               !GuardedCall<bool>( [&]{ return projectFileManager.Save(); } )
          )) {
             event.Veto();
