@@ -90,11 +90,8 @@ private:
 
    DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter Ratio{ &EffectAmplify::mRatio,
-   L"Ratio",            0.9f,       0.003162f,  316.227766f,   1.0f  };
-// Amp is not saved in settings!
 static constexpr EffectParameter Amp{ &EffectAmplify::mAmp,
-   L"",                -0.91515f,  -50.0f,     50.0f,         10.0f };
+   L"Amp",                -0.91515f,  -50.0f,     50.0f,         10.0f };
 static constexpr EffectParameter Clipping{ &EffectAmplify::mCanClip,
    L"AllowClipping",    false,    false,  true,    1  };
 };

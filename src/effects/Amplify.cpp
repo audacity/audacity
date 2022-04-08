@@ -51,11 +51,11 @@ const EffectParameterMethods& EffectAmplify::Parameters() const
 {
    static CapturedParameters<EffectAmplify,
       // Interactive case
-      Ratio, Clipping
+      Amp, Clipping
    > parameters;
 
    static CapturedParameters<EffectAmplify,
-      Ratio
+      Amp
    > batchParameters{
       // If invoking Amplify from a macro, mCanClip is not a parameter
       // but is always true
