@@ -27,6 +27,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "commands/CommandContext.h"
 #include "prefs/ThemePrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ToolManager.h"
@@ -559,6 +560,14 @@ ProjectWindow *ProjectWindow::Find( AudacityProject *pProject )
 const ProjectWindow *ProjectWindow::Find( const AudacityProject *pProject )
 {
    return Find( const_cast< AudacityProject * >( pProject ) );
+}
+
+void ProjectWindow::OnResetWindow(const CommandContext& context)
+{
+   auto& project = context.project;
+   auto& window = ProjectWindow::Get(project);
+
+   window.Reset();
 }
 
 int ProjectWindow::NextWindowID()
@@ -1245,7 +1254,13 @@ wxPanel* ProjectWindow::GetTopPanel() noexcept
    return mTopPanel;
 }
 
+void ProjectWindow::Reset()
+{
+   wxRect defaultRect;
+   GetDefaultWindowRect(&defaultRect);
 
+   SetSize(defaultRect.width, defaultRect.height);
+}
 
 void ProjectWindow::UpdateStatusWidths()
 {

@@ -17,6 +17,7 @@ Paul Licameli split from AudacityProject.h
 #include "Prefs.h"
 #include "Observer.h"
 
+class CommandContext;
 class Track;
 
 class wxScrollBar;
@@ -38,6 +39,8 @@ public:
    static ProjectWindow *Find( AudacityProject *pProject );
    static const ProjectWindow *Find( const AudacityProject *pProject );
 
+   static void OnResetWindow(const CommandContext& context);
+
    explicit ProjectWindow(
       wxWindow * parent, wxWindowID id,
       const wxPoint & pos, const wxSize &size,
@@ -52,6 +55,8 @@ public:
 
    bool IsBeingDeleted() const { return mIsDeleting; }
    void SetIsBeingDeleted() { mIsDeleting = true; }
+
+   void Reset();
 
    /**
     * \brief Effect window contains list off effects assigned to
