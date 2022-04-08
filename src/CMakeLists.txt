@@ -1441,12 +1441,17 @@ set( AUDACITY_LIBRARIES
    lib-uuid-interface
    lib-screen-geometry-interface
    lib-project-rate-interface
-   lib-ffmpeg-support-interface
    lib-theme-resources-interface
    lib-transactions-interface
    lib-sample-track-interface
    lib-module-manager-interface
 )
+
+if (${_OPT}use_ffmpeg)
+   list( APPEND AUDACITY_LIBRARIES
+      lib-ffmpeg-support-interface
+   )
+endif()
 
 if ( ${_OPT}has_networking )
    list( APPEND AUDACITY_LIBRARIES
