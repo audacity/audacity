@@ -101,13 +101,11 @@ void DoMixAndRender
       }
 
       // Bug 2218, remember more things...
-      if (selectedCount>=1) {
-         pNewLeft->SetWaveColorIndex(firstColour);
+      if (selectedCount >= 1) {
          pNewLeft->SetSelected(!toNewTrack);
-         if (pNewRight) {
+         pNewLeft->SetWaveColorIndex(firstColour);
+         if (pNewRight)
             pNewRight->SetWaveColorIndex(firstColour);
-            pNewRight->SetSelected(!toNewTrack);
-         }
       }
 
       // Permute the tracks as needed

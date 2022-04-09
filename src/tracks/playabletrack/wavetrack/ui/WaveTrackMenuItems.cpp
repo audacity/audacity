@@ -63,14 +63,14 @@ void OnNewStereoTrack(const CommandContext &context)
    auto left = trackFactory.Create(defaultFormat, rate);
    left->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
    tracks.Add(left);
-   left->SetSelected(true);
 
    auto right = trackFactory.Create(defaultFormat, rate);
    right->SetName(left->GetName());
    tracks.Add(right);
-   right->SetSelected(true);
 
    tracks.MakeMultiChannelTrack(*left, 2, true);
+
+   left->SetSelected(true);
 
    ProjectHistory::Get( project )
       .PushState(XO("Created new stereo audio track"), XO("New Track"));

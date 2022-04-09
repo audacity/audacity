@@ -187,6 +187,7 @@ public:
    // Should be deep-copyable (think twice before adding shared pointers!)
    struct TRACK_API ChannelGroupData : ChannelGroupAttachments {
       LinkType mLinkType{ LinkType::None };
+      bool mSelected{ false };
    };
 
 private:
@@ -205,9 +206,6 @@ private:
    TrackNodePointer mNode{};
    int            mIndex; //!< 0-based position of this track in its TrackList
    wxString       mName;
-
- private:
-   bool           mSelected;
 
  public:
 
@@ -396,15 +394,11 @@ private:
    // public nonvirtual duplication function that invokes Clone():
    virtual Holder Duplicate() const;
 
-   // Called when this track is merged to stereo with another, and should
-   // take on some parameters of its partner.
-   virtual void Merge(const Track &orig);
-
    wxString GetName() const { return mName; }
    void SetName( const wxString &n );
 
-   bool GetSelected() const { return mSelected; }
-
+   //! Selectedness is always the same for all channels of a group
+   bool GetSelected() const;
    virtual void SetSelected(bool s);
 
    // The argument tells whether the last undo history state should be
@@ -870,7 +864,10 @@ public:
    void SetSolo    (bool s);
 
    void Init( const PlayableTrack &init );
-   void Merge( const Track &init ) override;
+
+   // Called when this track is merged to stereo with another, and should
+   // take on some parameters of its partner.
+   virtual void Merge( const Track &init );
 
    // Serialize, not with tags of its own, but as attributes within a tag.
    void WriteXMLAttributes(XMLWriter &xmlFile) const;
@@ -1650,7 +1647,7 @@ private:
 
    void RecalcPositions(TrackNodePointer node);
    void QueueEvent(TrackListEvent event);
-   void SelectionEvent( const std::shared_ptr<Track> &pTrack );
+   void SelectionEvent(Track &track);
    void PermutationEvent(TrackNodePointer node);
    void DataEvent(
       const std::shared_ptr<Track> &pTrack, bool allChannels, int code );

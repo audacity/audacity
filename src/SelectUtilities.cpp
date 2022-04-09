@@ -49,9 +49,9 @@ void DoSelectTimeAndAudioTracks
 
    if( bAllTracks ) {
       // Unselect all tracks before selecting audio.
-      for (auto t : tracks.Any())
+      for (auto t : tracks.Leaders())
          t->SetSelected(false);
-      for (auto t : tracks.Any<WaveTrack>())
+      for (auto t : tracks.Leaders<WaveTrack>())
          t->SetSelected(true);
 
       ProjectHistory::Get( project ).ModifyState(false);
@@ -72,7 +72,7 @@ void DoSelectTimeAndTracks
          tracks.GetMinOffset(), tracks.GetEndTime());
 
    if( bAllTracks ) {
-      for (auto t : tracks.Any())
+      for (auto t : tracks.Leaders())
          t->SetSelected(true);
 
       ProjectHistory::Get( project ).ModifyState(false);
@@ -82,7 +82,7 @@ void DoSelectTimeAndTracks
 void SelectNone( AudacityProject &project )
 {
    auto &tracks = TrackList::Get( project );
-   for (auto t : tracks.Any())
+   for (auto t : tracks.Leaders())
       t->SetSelected(false);
 
    auto &trackPanel = TrackPanel::Get( project );

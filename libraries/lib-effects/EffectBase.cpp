@@ -427,22 +427,21 @@ void EffectBase::Preview(
          return;
 
       mixLeft->Offset(-mixLeft->GetStartTime());
-      mixLeft->SetSelected(true);
       auto pLeft = mTracks->Add( mixLeft );
       Track *pRight{};
       if (mixRight) {
          mixRight->Offset(-mixRight->GetStartTime());
-         mixRight->SetSelected(true);
          pRight = mTracks->Add( mixRight );
          mTracks->MakeMultiChannelTrack(*pLeft, 2, true);
       }
+      mixLeft->SetSelected(true);
    }
    else {
       for (auto src : saveTracks->Any< const WaveTrack >()) {
          if (src->GetSelected() || mPreviewWithNotSelected) {
             auto dest = src->Copy(mT0, t1);
-            dest->SetSelected(src->GetSelected());
             mTracks->Add( dest );
+            dest->SetSelected(src->GetSelected());
          }
       }
    }

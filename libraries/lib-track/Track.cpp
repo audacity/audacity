@@ -45,8 +45,6 @@ and TimeTrack.
 Track::Track()
 :  vrulerSize(36,0)
 {
-   mSelected  = false;
-
    mIndex = 0;
 
    mOffset = 0.0;
@@ -68,8 +66,6 @@ void Track::Init(const Track &orig)
 
    mName = orig.mName;
 
-   mSelected = orig.mSelected;
-
    // Deep copy of any group data
    mpGroupData = orig.mpGroupData ?
       std::make_unique<ChannelGroupData>(*orig.mpGroupData) : nullptr;
@@ -85,13 +81,19 @@ void Track::SetName( const wxString &n )
    }
 }
 
+bool Track::GetSelected() const
+{
+   return GetGroupData().mSelected;
+}
+
 void Track::SetSelected(bool s)
 {
-   if (mSelected != s) {
-      mSelected = s;
+   auto &selected = GetGroupData().mSelected;
+   if (selected != s) {
+      selected = s;
       auto pList = mList.lock();
       if (pList)
-         pList->SelectionEvent( SharedPointer() );
+         pList->SelectionEvent(*this);
    }
 }
 
@@ -100,11 +102,6 @@ void Track::EnsureVisible( bool modifyState )
    auto pList = mList.lock();
    if (pList)
       pList->EnsureVisibleEvent( SharedPointer(), modifyState );
-}
-
-void Track::Merge(const Track &orig)
-{
-   mSelected = orig.mSelected;
 }
 
 Track::Holder Track::Duplicate() const
@@ -333,7 +330,6 @@ void PlayableTrack::Merge( const Track &orig )
    wxASSERT( pOrig );
    DoSetMute(pOrig->DoGetMute());
    DoSetSolo(pOrig->DoGetSolo());
-   AudioTrack::Merge( *pOrig );
 }
 
 void PlayableTrack::SetMute( bool m )
@@ -593,9 +589,11 @@ void TrackList::QueueEvent(TrackListEvent event)
    } );
 }
 
-void TrackList::SelectionEvent( const std::shared_ptr<Track> &pTrack )
+void TrackList::SelectionEvent(Track &track)
 {
-   QueueEvent({ TrackListEvent::SELECTION_CHANGE, pTrack });
+   for (auto channel : Channels(&track))
+      QueueEvent({
+         TrackListEvent::SELECTION_CHANGE, channel->shared_from_this() });
 }
 
 void TrackList::DataEvent(
