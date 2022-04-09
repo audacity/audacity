@@ -93,12 +93,8 @@ void DoMixAndRender
       }
 
       // If we're just rendering (not mixing), keep the track name the same
-      if (selectedCount==1) {
+      if (selectedCount == 1)
          pNewLeft->SetName(firstName);
-         if (pNewRight) {
-            pNewRight->SetName(firstName);
-         }
-      }
 
       // Bug 2218, remember more things...
       if (selectedCount >= 1) {

@@ -186,6 +186,7 @@ public:
    // Structure describing data common to channels of a group of tracks
    // Should be deep-copyable (think twice before adding shared pointers!)
    struct ChannelGroupData : ChannelGroupAttachments {
+      wxString mName;
       LinkType mLinkType{ LinkType::None };
       bool mSelected{ false };
    };
@@ -205,7 +206,6 @@ private:
    /*! mNode's pointer to std::list might not be this TrackList, if it's a pending update track */
    TrackNodePointer mNode{};
    int            mIndex; //!< 0-based position of this track in its TrackList
-   wxString       mName;
 
  public:
 
@@ -394,7 +394,8 @@ private:
    // public nonvirtual duplication function that invokes Clone():
    virtual Holder Duplicate() const;
 
-   wxString GetName() const { return mName; }
+   //! Name is always the same for all channels of a group
+   const wxString &GetName() const;
    void SetName( const wxString &n );
 
    //! Selectedness is always the same for all channels of a group

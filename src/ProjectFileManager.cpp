@@ -1130,14 +1130,12 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
          // Count groups only
          ++i;
          newTrack->SetSelected(true);
+         if (useSuffix)
+             //i18n-hint Name default name assigned to a clip on track import
+             newTrack->SetName(XC("%s %d", "clip name template").Format(trackNameBase, i + 1).Translation());
+         else
+             newTrack->SetName(trackNameBase);
       }
-
-      
-      if (useSuffix)
-          //i18n-hint Name default name assigned to a clip on track import
-          newTrack->SetName(XC("%s %d", "clip name template").Format(trackNameBase, i + 1).Translation());
-      else
-          newTrack->SetName(trackNameBase);
 
       newTrack->TypeSwitch([&](WaveTrack *wt) {
          if (newRate == 0)
