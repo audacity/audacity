@@ -70,11 +70,9 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
    // "exclusive" mute means mute the chosen track and unmute all others.
    if (exclusive) {
       for (auto leader : tracks.Leaders<PlayableTrack>()) {
-         const auto group = TrackList::Channels(leader);
          bool chosen = (t == leader);
-         for (auto channel : group)
-            channel->SetMute( chosen ),
-            channel->SetSolo( false );
+         leader->SetMute(chosen);
+         leader->SetSolo(false);
       }
    }
    else {
@@ -84,8 +82,7 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
          return;
 
       bool wasMute = pt->GetMute();
-      for (auto channel : TrackList::Channels(pt))
-         channel->SetMute( !wasMute );
+      pt->SetMute(!wasMute);
 
       if (auto value = TracksBehaviorsSolo.ReadEnum();
          value == SoloBehaviorSimple || value == SoloBehaviorNone)
@@ -97,10 +94,9 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
          auto range = tracks.Leaders<PlayableTrack>();
          auto nPlayableTracks = range.size();
          auto nPlaying = (range - &PlayableTrack::GetMute).size();
-
-         for (auto track : tracks.Any<PlayableTrack>())
-            // will set both of a stereo pair
-            track->SetSolo( (nPlaying==1) && (nPlayableTracks > 1 ) && !track->GetMute() );
+         for (auto track : range)
+            track->SetSolo((nPlaying == 1) &&
+               (nPlayableTracks > 1) && !track->GetMute());
       }
    }
    ProjectHistory::Get( project ).ModifyState(true);
@@ -128,29 +124,22 @@ void DoTrackSolo(AudacityProject &project, Track *t, bool exclusive)
    //   Simple   - Behaves as radio buttons, shift=individual
    // In addition, Simple solo will mute/unmute tracks
    // when in standard radio button mode.
-   if ( bSoloMultiple )
-   {
-      for (auto channel : TrackList::Channels(pt))
-         channel->SetSolo( !bWasSolo );
-   }
-   else
-   {
+   if (bSoloMultiple)
+      pt->SetSolo(!bWasSolo);
+   else {
       // Normal click solo this track only, mute everything else.
       // OR unmute and unsolo everything.
       for (auto leader : tracks.Leaders<PlayableTrack>()) {
-         const auto group = TrackList::Channels(leader);
          bool chosen = (t == leader);
-         for (auto channel : group) {
-            if (chosen) {
-               channel->SetSolo( !bWasSolo );
-               if (simple)
-                  channel->SetMute( false );
-            }
-            else {
-               channel->SetSolo( false );
-               if (simple)
-                  channel->SetMute( !bWasSolo );
-            }
+         if (chosen) {
+            leader->SetSolo(!bWasSolo);
+            if (simple)
+               leader->SetMute(false);
+         }
+         else {
+            leader->SetSolo(false);
+            if (simple)
+               leader->SetMute(!bWasSolo);
          }
       }
    }

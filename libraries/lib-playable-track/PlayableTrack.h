@@ -51,12 +51,6 @@ public:
    void SetMute    (bool m);
    void SetSolo    (bool s);
 
-   void Init( const PlayableTrack &init );
-
-   // Called when this track is merged to stereo with another, and should
-   // take on some parameters of its partner.
-   virtual void Merge( const Track &init );
-
    // Serialize, not with tags of its own, but as attributes within a tag.
    void WriteXMLAttributes(XMLWriter &xmlFile) const;
 
@@ -64,16 +58,10 @@ public:
    bool HandleXMLAttribute(const std::string_view &attr, const XMLAttributeValueView &value);
 
 protected:
-   // These just abbreviate load and store with relaxed memory ordering
    bool DoGetMute() const;
    void DoSetMute(bool value);
    bool DoGetSolo() const;
    void DoSetSolo(bool value);
-
-   //! Atomic because it may be read by worker threads in playback
-   std::atomic<bool>  mMute { false };
-   //! Atomic because it may be read by worker threads in playback
-   std::atomic<bool>  mSolo { false };
 };
 
 ENUMERATE_TRACK_TYPE(PlayableTrack);
