@@ -61,15 +61,14 @@ void OnNewStereoTrack(const CommandContext &context)
    SelectUtilities::SelectNone( project );
 
    auto left = trackFactory.Create(defaultFormat, rate);
-   left->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
    tracks.Add(left);
 
    auto right = trackFactory.Create(defaultFormat, rate);
-   right->SetName(left->GetName());
    tracks.Add(right);
 
    tracks.MakeMultiChannelTrack(*left, 2, true);
 
+   left->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
    left->SetSelected(true);
 
    ProjectHistory::Get( project )

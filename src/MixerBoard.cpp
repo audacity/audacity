@@ -1079,7 +1079,8 @@ wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
 
    // random choice:    return mMusicalInstruments[(int)pTrack % mMusicalInstruments.size()].mBitmap;
 
-   const wxString strTrackName(pTrack->GetName().MakeLower());
+   const wxString strTrackName(
+      wxString{ pTrack->GetName() }.MakeLower());
    size_t nBestItemIndex = 0;
    unsigned int nBestScore = 0;
    unsigned int nInstrIndex = 0;

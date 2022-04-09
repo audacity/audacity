@@ -64,8 +64,6 @@ void Track::Init(const Track &orig)
 {
    mId = orig.mId;
 
-   mName = orig.mName;
-
    // Deep copy of any group data
    mpGroupData = orig.mpGroupData ?
       std::make_unique<ChannelGroupData>(*orig.mpGroupData) : nullptr;
@@ -73,11 +71,17 @@ void Track::Init(const Track &orig)
    mChannel = orig.mChannel;
 }
 
+const wxString &Track::GetName() const
+{
+   return GetGroupData().mName;
+}
+
 void Track::SetName( const wxString &n )
 {
-   if ( mName != n ) {
-      mName = n;
-      Notify(false);
+   auto &name = GetGroupData().mName;
+   if (name != n) {
+      name = n;
+      Notify(true);
    }
 }
 
@@ -414,7 +418,6 @@ void Track::FinishCopy
       dest->SetChannel(n->GetChannel());
       dest->mpGroupData = n->mpGroupData ?
          std::make_unique<ChannelGroupData>(*n->mpGroupData) : nullptr;
-      dest->SetName(n->GetName());
    }
 }
 
@@ -1281,6 +1284,9 @@ void Track::WriteCommonXMLAttributes(
    XMLWriter &xmlFile, bool includeNameAndSelected) const
 {
    if (includeNameAndSelected) {
+      // May write name and selectedness redundantly for right channels,
+      // but continue doing that in case the file is opened in Audacity 3.1.x
+      // which does not have unique ChannelGroupData for the track
       xmlFile.WriteAttr(wxT("name"), GetName());
       xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
    }
@@ -1301,6 +1307,9 @@ bool Track::HandleCommonXMLAttribute(
    });
    if (handled)
       ;
+   // Note that the per-group properties of name and selectedness may have
+   // been written redundantly for each channel, and values for the last
+   // channel will be the last ones assigned
    else if (attr == "name") {
       SetName(valueView.ToWString());
       return true;

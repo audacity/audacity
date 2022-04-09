@@ -113,17 +113,8 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    // TODO: more-than-two-channels
    decltype(mixLeft) mixRight{};
-   if ( !mono ) {
+   if (!mono) {
       mixRight = trackFactory->Create(format, rate);
-      if (oneinput) {
-         auto channels = TrackList::Channels(first);
-         if (channels.size() > 1)
-            mixRight->SetName((*channels.begin().advance(1))->GetName()); /* set name to match input track's right channel!*/
-         else
-            mixRight->SetName(first->GetName());   /* set name to that of sole input channel */
-      }
-      else
-         mixRight->SetName(newTrackName);
       mixRight->SetOffset(mixStartTime);
    }
 

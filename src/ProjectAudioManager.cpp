@@ -903,14 +903,13 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // ISO standard would be nice, but ":" is unsafe for file name.
             nameSuffix.Replace(wxT(":"), wxT("-"));
 
-            if (baseTrackName.empty()) {
-               newTrack->SetName(nameSuffix);
-            }
-            else if (nameSuffix.empty()) {
-               newTrack->SetName(baseTrackName);
-            }
-            else {
-               newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
+            if (newTrack.get() == first) {
+               if (baseTrackName.empty())
+                  newTrack->SetName(nameSuffix);
+               else if (nameSuffix.empty())
+                  newTrack->SetName(baseTrackName);
+               else
+                  newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
             }
             //create a new clip with a proper name before recording is started
             newTrack->CreateClip(t0, makeNewClipName(newTrack.get()));

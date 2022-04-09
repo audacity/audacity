@@ -865,8 +865,6 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    int totalHeight = 0;
    int nChannels = 0;
    for (auto channel : channels) {
-      // Keep original stereo track name.
-      channel->SetName(pTrack->GetName());
       auto &view = TrackView::Get( *channel );
       if (stereo)
          channel->SetPanFromChannelType();
