@@ -13,6 +13,7 @@
 #ifndef __AUDACITY_PLAYABLE_TRACK__
 #define __AUDACITY_PLAYABLE_TRACK__
 
+#include "Prefs.h"
 #include "Track.h"
 
 //! Track subclass holding data representing sound (as notes, or samples, or ...)
@@ -76,4 +77,13 @@ protected:
 };
 
 ENUMERATE_TRACK_TYPE(PlayableTrack);
+
+enum SoloBehavior {
+   SoloBehaviorSimple,
+   SoloBehaviorMulti,
+   SoloBehaviorNone,
+};
+
+extern PLAYABLE_TRACK_API EnumSetting<SoloBehavior> TracksBehaviorsSolo;
+
 #endif

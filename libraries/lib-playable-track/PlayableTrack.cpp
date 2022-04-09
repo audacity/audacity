@@ -129,3 +129,14 @@ auto PlayableTrack::ClassTypeInfo() -> const TypeInfo &
       false, &AudioTrack::ClassTypeInfo() };
    return info;
 }
+
+EnumSetting<SoloBehavior> TracksBehaviorsSolo{
+   wxT("/GUI/Solo"),
+   {
+      ByColumns,
+      { XO("Simple"),  XO("Multi-track"), XO("None") },
+      { wxT("Simple"), wxT("Multi"),      wxT("None") }
+   },
+   0, // "Simple"
+   { SoloBehaviorSimple, SoloBehaviorMulti, SoloBehaviorNone },
+};
