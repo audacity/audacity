@@ -388,7 +388,7 @@ void WaveTrack::SetGain(float newGain)
 {
    if (GetGain() != newGain) {
       DoSetGain(newGain);
-      Notify();
+      Notify(false);
    }
 }
 
@@ -411,7 +411,7 @@ void WaveTrack::SetPan(float newPan)
 
    if ( GetPan() != newPan ) {
       DoSetPan(newPan);
-      Notify();
+      Notify(false);
    }
 }
 
