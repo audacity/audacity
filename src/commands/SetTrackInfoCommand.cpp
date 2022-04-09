@@ -175,9 +175,9 @@ bool SetTrackAudioCommand::ApplyInner(const CommandContext & context, Track * t 
    if( wt && bHasPan )
       wt->SetPan(mPan/100.0);
 
-   if( pt && bHasSolo )
+   if (pt && bHasSolo)
       pt->SetSolo(bSolo);
-   if( pt && bHasMute )
+   if (pt && bHasMute)
       pt->SetMute(bMute);
    return true;
 }

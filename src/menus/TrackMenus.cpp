@@ -746,9 +746,8 @@ static void MuteTracks(const CommandContext &context, bool mute, bool selected)
    const auto soloSimple = (solo == SoloBehaviorSimple);
    const auto soloNone = (solo == SoloBehaviorNone);
 
-   auto iter = selected ? tracks.Selected<PlayableTrack>() : tracks.Any<PlayableTrack>();
-   for (auto pt : iter)
-   {
+   auto iter = selected ? tracks.SelectedLeaders<PlayableTrack>() : tracks.Leaders<PlayableTrack>();
+   for (auto pt : iter) {
       pt->SetMute(mute);
       if (soloSimple || soloNone)
          pt->SetSolo(false);

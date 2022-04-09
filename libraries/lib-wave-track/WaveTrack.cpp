@@ -186,7 +186,6 @@ void WaveTrack::Merge(const Track &orig)
       Attachments &attachments = *this;
       attachments = *pwt;
    });
-   WritableSampleTrack::Merge(orig);
 }
 
 WaveTrack::~WaveTrack()

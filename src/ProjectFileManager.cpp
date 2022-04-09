@@ -1095,9 +1095,11 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
       !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
    if (projectHasSolo)
    {
-      for (auto& track : newTracks)
-         for (auto& channel : track)
-            channel->SetMute(true);
+      // Iterate vector of vectors of pointers to tracks that are not yet
+      // in the track list
+      for (auto& group : newTracks)
+         if (!group.empty())
+            (*group.begin())->SetMute(true);
    }
 
    // Must add all tracks first (before using Track::IsLeader)
