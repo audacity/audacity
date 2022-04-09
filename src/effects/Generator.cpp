@@ -21,7 +21,6 @@
 #include "SyncLock.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "../prefs/TracksBehaviorsPrefs.h"
 
 #include "TimeWarper.h"
 

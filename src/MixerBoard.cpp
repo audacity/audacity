@@ -41,7 +41,6 @@
 #include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
 #include "ProjectFileIO.h"
-#include "ProjectSettings.h"
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
 #include "SelectUtilities.h"
@@ -294,7 +293,7 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                   *(mMixerBoard->mImageSoloDisabled),
                   true); // toggle button
    mToggleButton_Solo->SetName(_("Solo"));
-   bool bSoloNone = ProjectSettings::Get( *mProject ).IsSoloNone();
+   bool bSoloNone = (TracksBehaviorsSolo.ReadEnum() == SoloBehaviorNone);
    mToggleButton_Solo->Show(!bSoloNone);
 
 
@@ -393,7 +392,7 @@ void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider a
    mSlider_Velocity->SetSize(-1, nGainSliderHeight);
 #endif
 
-   bool bSoloNone = ProjectSettings::Get( *mProject ).IsSoloNone();
+   bool bSoloNone = TracksBehaviorsSolo.ReadEnum() == SoloBehaviorNone;
 
    mToggleButton_Solo->Show(!bSoloNone);
 
@@ -764,7 +763,7 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
    mToggleButton_Mute->SetAlternateIdx(mTrack->GetSolo() ? 1 : 0);
 
    // Update the TrackPanel correspondingly.
-   if (ProjectSettings::Get(*mProject).IsSoloSimple())
+   if (TracksBehaviorsSolo.ReadEnum() == SoloBehaviorSimple)
       ProjectWindow::Get( *mProject ).RedrawProject();
    else
       // Update only the changed track.

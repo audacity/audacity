@@ -742,8 +742,9 @@ static void MuteTracks(const CommandContext &context, bool mute, bool selected)
    auto &tracks = TrackList::Get( project );
    auto &window = ProjectWindow::Get( project );
 
-   auto soloSimple = settings.IsSoloSimple();
-   auto soloNone = settings.IsSoloNone();
+   const auto solo = TracksBehaviorsSolo.ReadEnum();
+   const auto soloSimple = (solo == SoloBehaviorSimple);
+   const auto soloNone = (solo == SoloBehaviorNone);
 
    auto iter = selected ? tracks.Selected<PlayableTrack>() : tracks.Any<PlayableTrack>();
    for (auto pt : iter)
