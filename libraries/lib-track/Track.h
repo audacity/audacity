@@ -811,7 +811,7 @@ public:
    // Send a notification to subscribers when state of the track changes
    // To do: define values for the argument to distinguish different parts
    // of the state
-   void Notify( int code = -1 );
+   void Notify(bool allChannels, int code = -1);
 
    // An always-true predicate useful for defining iterators
    bool Any() const;
@@ -1652,7 +1652,8 @@ private:
    void QueueEvent(TrackListEvent event);
    void SelectionEvent( const std::shared_ptr<Track> &pTrack );
    void PermutationEvent(TrackNodePointer node);
-   void DataEvent( const std::shared_ptr<Track> &pTrack, int code );
+   void DataEvent(
+      const std::shared_ptr<Track> &pTrack, bool allChannels, int code );
    void EnsureVisibleEvent(
       const std::shared_ptr<Track> &pTrack, bool modifyState );
    void DeletionEvent(std::weak_ptr<Track> node, bool duringReplace);

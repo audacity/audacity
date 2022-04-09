@@ -81,7 +81,7 @@ void Track::SetName( const wxString &n )
 {
    if ( mName != n ) {
       mName = n;
-      Notify();
+      Notify(false);
    }
 }
 
@@ -276,11 +276,11 @@ bool Track::HasLinkedTrack() const noexcept
     return mpGroupData && mpGroupData->mLinkType != LinkType::None;
 }
 
-void Track::Notify( int code )
+void Track::Notify(bool allChannels, int code)
 {
    auto pList = mList.lock();
    if (pList)
-      pList->DataEvent( SharedPointer(), code );
+      pList->DataEvent(SharedPointer(), allChannels, code);
 }
 
 void Track::SyncLockAdjust(double oldT1, double newT1)
@@ -340,7 +340,7 @@ void PlayableTrack::SetMute( bool m )
 {
    if ( DoGetMute() != m ) {
       DoSetMute(m);
-      Notify();
+      Notify(false);
    }
 }
 
@@ -348,7 +348,7 @@ void PlayableTrack::SetSolo( bool s  )
 {
    if ( DoGetSolo() != s ) {
       DoSetSolo(s);
-      Notify();
+      Notify(false);
    }
 }
 
@@ -598,10 +598,17 @@ void TrackList::SelectionEvent( const std::shared_ptr<Track> &pTrack )
    QueueEvent({ TrackListEvent::SELECTION_CHANGE, pTrack });
 }
 
-void TrackList::DataEvent( const std::shared_ptr<Track> &pTrack, int code )
+void TrackList::DataEvent(
+   const std::shared_ptr<Track> &pTrack, bool allChannels, int code)
 {
-   QueueEvent({
-      TrackListEvent::TRACK_DATA_CHANGE, pTrack, code });
+   auto doQueueEvent = [this, code](const std::shared_ptr<Track> &theTrack){
+      QueueEvent({ TrackListEvent::TRACK_DATA_CHANGE, theTrack, code });
+   };
+   if (allChannels)
+      for (auto channel : Channels(pTrack.get()))
+         doQueueEvent(channel->shared_from_this());
+   else
+      doQueueEvent(pTrack);
 }
 
 void TrackList::EnsureVisibleEvent(

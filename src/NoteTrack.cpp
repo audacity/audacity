@@ -633,7 +633,7 @@ void NoteTrack::SetVelocity(float velocity)
 {
    if (GetVelocity() != velocity) {
       DoSetVelocity(velocity);
-      Notify();
+      Notify(false);
    }
 }
 
