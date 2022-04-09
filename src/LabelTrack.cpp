@@ -118,6 +118,7 @@ auto LabelTrack::ClassTypeInfo() -> const TypeInfo &
 Track::Holder LabelTrack::PasteInto( AudacityProject & ) const
 {
    auto pNewTrack = std::make_shared<LabelTrack>();
+   pNewTrack->Init(*this);
    pNewTrack->Paste(0.0, this);
    return pNewTrack;
 }

@@ -705,6 +705,7 @@ auto NoteTrack::ClassTypeInfo() -> const TypeInfo &
 Track::Holder NoteTrack::PasteInto( AudacityProject & ) const
 {
    auto pNewTrack = std::make_shared<NoteTrack>();
+   pNewTrack->Init(*this);
    pNewTrack->Paste(0.0, this);
    return pNewTrack;
 }
