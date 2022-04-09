@@ -617,6 +617,27 @@ auto TrackList::FindLeader( Track *pTrack )
    return iter.Filter( &Track::IsLeader );
 }
 
+bool TrackList::SwapChannels(Track &track)
+{
+   if (!track.HasLinkedTrack())
+      return false;
+   auto pOwner = track.GetOwner();
+   if (!pOwner)
+      return false;
+   auto pPartner = pOwner->GetNext(&track, false);
+   if (!pPartner)
+      return false;
+
+   // Swap channels, avoiding copying of GroupData
+   auto pData = move(track.mpGroupData);
+   assert(pData);
+   pOwner->MoveUp(pPartner);
+   pPartner->mpGroupData = move(pData);
+   pPartner->SetChannel(Track::LeftChannel);
+   track.SetChannel(Track::RightChannel);
+   return true;
+}
+
 void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
 {
    for (const auto iter : permutation) {

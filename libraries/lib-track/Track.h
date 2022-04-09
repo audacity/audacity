@@ -1510,6 +1510,10 @@ public:
       return Channels_<TrackType>( pTrack->GetOwner()->FindLeader(pTrack) );
    }
 
+   //! If the given track is one of a pair of channels, swap them
+   /*! @return success */
+   static bool SwapChannels(Track &track);
+
    friend class Track;
 
    //! For use in sorting:  assume each iterator points into this list, no duplications
