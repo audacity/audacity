@@ -1126,11 +1126,11 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
             { return pTrack->IsLeader(); } );
 
    for (const auto &newTrack : results) {
-      if ( newTrack->IsLeader() )
+      if ( newTrack->IsLeader() ) {
          // Count groups only
          ++i;
-
-      newTrack->SetSelected(true);
+         newTrack->SetSelected(true);
+      }
 
       
       if (useSuffix)

@@ -54,22 +54,12 @@ SetTrackAudioCommand and SetTrackVisualsCommand.
 
 bool SetTrackBase::Apply(const CommandContext & context  )
 {
-   long i = 0;// track counter
-   long j = 0;// channel counter
    auto &tracks = TrackList::Get( context.project );
-   for ( auto t : tracks.Leaders() )
-   {
-      auto channels = TrackList::Channels(t);
-      for ( auto channel : channels ) {
-         bool bThisTrack =
-         channel->GetSelected();
-
-         if( bThisTrack ){
-            ApplyInner( context, channel );
-         }
-         ++j; // count all channels
-      }
-      ++i; // count groups of channels
+   for (auto t : tracks.Leaders()) {
+      bool bThisTrack = t->GetSelected();
+      if (bThisTrack)
+         for (auto channel : TrackList::Channels(t))
+            ApplyInner(context, channel);
    }
    return true;
 }
@@ -121,8 +111,7 @@ bool SetTrackStatusCommand::ApplyInner(const CommandContext & context, Track * t
    if( bHasTrackName )
       t->SetName(mTrackName);
 
-   // In stereo tracks, both channels need selecting/deselecting.
-   if( bHasSelected )
+   if (bHasSelected)
       t->SetSelected(bSelected);
 
    if( bHasFocused )

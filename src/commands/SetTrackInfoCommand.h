@@ -164,7 +164,7 @@ public:
    bool ApplyInner(const CommandContext & context, Track * t ) override {
       return 
          mSetStatus.ApplyInner( context, t ) &&  
-         mSetAudio.ApplyInner( context, t )&&
+         mSetAudio.ApplyInner( context, t ) &&
          mSetVisuals.ApplyInner( context, t );
    }
 
