@@ -177,6 +177,22 @@ Track::ChannelGroupData &Track::MakeGroupData()
    return *mpGroupData;
 }
 
+Track::ChannelGroupData &Track::GetGroupData()
+{
+   auto pTrack = this;
+   if (auto pList = GetOwner())
+      if (auto pLeader = *pList->FindLeader(pTrack))
+         pTrack = pLeader;
+   // May make on demand
+   return pTrack->MakeGroupData();
+}
+
+const Track::ChannelGroupData &Track::GetGroupData() const
+{
+   // May make group data on demand, but consider that logically const
+   return const_cast<Track *>(this)->GetGroupData();
+}
+
 void Track::DoSetLinkType(LinkType linkType)
 {
    auto oldType = GetLinkType();

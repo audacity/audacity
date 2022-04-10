@@ -388,6 +388,9 @@ public:
    //! Returns true if the leader track has link type LinkType::Aligned
    bool IsAlignedWithLeader() const;
 
+   ChannelGroupData &GetGroupData();
+   const ChannelGroupData &GetGroupData() const;
+
 protected:
    
    void SetLinkType(LinkType linkType);
