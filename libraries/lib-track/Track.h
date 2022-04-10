@@ -461,6 +461,7 @@ public:
    // Note that subclasses may want to distinguish tracks stored in a clipboard
    // from those stored in a project
    // May assume precondition: t0 <= t1
+   // Should invoke Track::Init
    virtual Holder Copy
       (double WXUNUSED(t0), double WXUNUSED(t1), bool forClipboard = true) const = 0;
 

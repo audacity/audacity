@@ -711,6 +711,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
 Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 {
    auto tmp = std::make_shared<LabelTrack>();
+   tmp->Init(*this);
    const auto lt = static_cast<LabelTrack*>(tmp.get());
 
    for (auto &labelStruct: mLabels) {
