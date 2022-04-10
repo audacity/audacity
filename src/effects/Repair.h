@@ -15,7 +15,7 @@
 
 class WaveTrack;
 
-class EffectRepair final : public Effect
+class EffectRepair final : public StatefulEffect
 {
 public:
    static const ComponentInterfaceSymbol Symbol;

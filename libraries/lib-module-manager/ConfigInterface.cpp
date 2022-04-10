@@ -68,7 +68,7 @@ bool RemoveConfigSubgroup( const EffectDefinitionInterface &ident,
    return pluginManager.RemoveConfigSubgroup(type, id, group);
 }
 
-bool RemoveConfig( EffectDefinitionInterface &ident,
+bool RemoveConfig( const EffectDefinitionInterface &ident,
    PluginSettings::ConfigurationType type,
    const RegistryPath & group, const RegistryPath & key)
 {

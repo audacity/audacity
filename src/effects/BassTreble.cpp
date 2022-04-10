@@ -111,9 +111,6 @@ bool EffectBassTreble::SupportsRealtime() const
    return true;
 }
 
-
-// EffectProcessor implementation
-
 unsigned EffectBassTreble::GetAudioInCount() const
 {
    return 1;
@@ -300,10 +297,6 @@ void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRa
    data.gain = DB_TO_LINEAR(mGain);
 
 }
-
-
-// EffectProcessor implementation
-
 
 size_t EffectBassTreble::InstanceProcess(EffectSettings &settings,
    EffectBassTrebleState & data,

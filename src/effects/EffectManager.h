@@ -63,8 +63,9 @@ public:
       kRepeatNyquistPrompt = 0x10,
    };
 
-   /*! Create a new instance of an effect by its ID. */
-   static EffectProcessor *NewEffect(const PluginID &ID);
+   /*! Find the singleton EffectInstanceFactory for ID. */
+   static
+   const EffectInstanceFactory *GetInstanceFactory(const PluginID &ID);
 
    /** Get the singleton instance of the EffectManager. Probably not safe
        for multi-thread use. */

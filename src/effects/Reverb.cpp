@@ -145,16 +145,14 @@ EffectType EffectReverb::GetType() const
    return EffectTypeProcess;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectReverb::GetAudioInCount() const
 {
-   return mParams.mStereoWidth ? 2 : 1;
+   return 2;
 }
 
 unsigned EffectReverb::GetAudioOutCount() const
 {
-   return mParams.mStereoWidth ? 2 : 1;
+   return 2;
 }
 
 static size_t BLOCK = 16384;

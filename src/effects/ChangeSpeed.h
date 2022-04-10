@@ -22,7 +22,7 @@ class wxTextCtrl;
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectChangeSpeed final : public Effect
+class EffectChangeSpeed final : public StatefulEffect
 {
 public:
    static inline EffectChangeSpeed *
@@ -43,10 +43,6 @@ public:
    EffectType GetType() const override;
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
    bool DoLoadFactoryDefaults(EffectSettings &settings);
-
-   // EffectProcessor implementation
-
-   // Effect implementation
 
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
    double CalcPreviewInputLength(

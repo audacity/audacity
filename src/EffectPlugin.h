@@ -12,12 +12,12 @@
 #ifndef __AUDACITY_EFFECTPLUGIN_H__
 #define __AUDACITY_EFFECTPLUGIN_H__
 
-#include "ComponentInterfaceSymbol.h"
+#include "EffectInterface.h"
 
 #include <functional>
 #include <memory>
 
-class EffectDefinitionInterface;
+class EffectSettingsManager;
 
 class wxDialog;
 class wxWindow;
@@ -42,6 +42,7 @@ class EffectInstance;
 @brief Factory of instances of an effect and of dialogs to control them
 *******************************************************************************/
 class AUDACITY_DLL_API EffectPlugin
+   : public EffectInstanceFactory
 {
 public:
    using EffectSettingsAccessPtr = std::shared_ptr<EffectSettingsAccess>;
@@ -54,7 +55,7 @@ public:
    EffectPlugin &operator=(EffectPlugin&) = delete;
    virtual ~EffectPlugin();
 
-   virtual const EffectDefinitionInterface& GetDefinition() const = 0;
+   virtual const EffectSettingsManager& GetDefinition() const = 0;
 
    //! Usually applies factory to self and given access
    /*!
@@ -111,40 +112,6 @@ public:
 
    //! Update the given settings from controls
    virtual bool TransferDataFromWindow(EffectSettings &settings) = 0;
-
-   //! Make an object maintaining short-term state of an Effect
-   /*!
-    One effect may have multiple instances extant simultaneously.
-    Instances have state, may be implemented in foreign code, and are temporary,
-    whereas EffectSettings represents persistent effect state that can be saved
-    and reloaded from files.
-
-    @param settings may be assumed to have a lifetime enclosing the instance's
-    */
-   virtual std::shared_ptr<EffectInstance>
-   MakeInstance(EffectSettings &settings) = 0;
-};
-
-/***************************************************************************//**
-\class EffectInstance
-@brief Performs effect computation
-*******************************************************************************/
-class EffectInstance : public std::enable_shared_from_this<EffectInstance>
-{
-public:
-   virtual ~EffectInstance();
-
-   //! Call once to set up state for whole list of tracks to be processed
-   /*!
-    @return success
-    */
-   virtual bool Init() = 0;
-
-   //! Actually do the effect here.
-   /*!
-    @return success
-    */
-   virtual bool Process(EffectSettings &settings) = 0;
 };
 
 #endif

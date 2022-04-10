@@ -206,6 +206,22 @@ public:
 
    //! Default is false
    virtual bool IsHiddenFromMenus() const;
+};
+
+/*************************************************************************************//**
+
+\class EffectSettingsManager
+
+\brief EffectSettingsManager is an EffectDefinitionInterface that adds a
+factory function for EffectSettings, and const functions for manipulating those
+settings.  This externalizes certain effect state.
+
+*******************************************************************************************/
+class COMPONENTS_API EffectSettingsManager  /* not final */
+   : public EffectDefinitionInterface
+{
+public:
+   virtual ~EffectSettingsManager();
 
    /*! @name settings
     Interface for saving and loading externalized settings.
@@ -265,11 +281,14 @@ public:
    virtual bool LoadFactoryDefaults(EffectSettings &settings) const = 0;
    //! @}
 
-   //! Visit settings, if defined.  false means no defined settings.
+   //! Visit settings (and maybe change them), if defined.
+   //! false means no defined settings.
    //! Default implementation returns false
    virtual bool VisitSettings(
-      SettingsVisitor &visitor, EffectSettings &settings);
-   //! Visit settings, if defined.  false means no defined settings.
+      SettingsVisitor &visitor, EffectSettings &settings); // TODO const
+
+   //! Visit settings (read-only), if defined.
+   //! false means no defined settings.
    //! Default implementation returns false
    virtual bool VisitSettings(
       ConstSettingsVisitor &visitor, const EffectSettings &settings) const;
@@ -319,60 +338,143 @@ typedef enum
    ChannelNameBottomFrontRight,
 } ChannelName, *ChannelNames;
 
-/*************************************************************************************//**
-
-\class EffectProcessor 
-
-\brief provides the ident interface to Effect, and is what makes
-Effect into a plug-in command.  It has functions for effect calculations that are not part of
-AudacityCommand.
-
-*******************************************************************************************/
-class COMPONENTS_API EffectProcessor  /* not final */
-   : public EffectDefinitionInterface
+/***************************************************************************//**
+\class EffectInstance
+@brief Performs effect computation
+*******************************************************************************/
+class COMPONENTS_API EffectInstance
+   : public std::enable_shared_from_this<EffectInstance>
 {
 public:
-   virtual ~EffectProcessor();
+   virtual ~EffectInstance();
 
-   virtual unsigned GetAudioInCount() const = 0;
-   virtual unsigned GetAudioOutCount() const = 0;
+   //! Call once to set up state for whole list of tracks to be processed
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool Init();
 
-   virtual int GetMidiInCount() = 0;
-   virtual int GetMidiOutCount() = 0;
+   //! Actually do the effect here.
+   /*!
+    @return success
+    */
+   virtual bool Process(EffectSettings &settings) = 0;
 
    virtual void SetSampleRate(double rate) = 0;
-   // Suggest a block size, but the return is the size that was really set:
-   virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
+
    virtual size_t GetBlockSize() const = 0;
 
-   //! Called for destructive, non-realtime effect computation
-   virtual sampleCount GetLatency() = 0;
-   virtual size_t GetTailSize() = 0;
+   // Suggest a block size, but the return is the size that was really set:
+   virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
 
-   //! Called for destructive, non-realtime effect computation
-   virtual bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap = nullptr) = 0;
+   /*!
+    @return success
+    Default implementation does nothing, returns false (so assume realtime is
+    not supported).
+    Other member functions related to realtime return true or zero, but will not
+    be called, unless a derived class overrides RealtimeInitialize.
+    */
+   virtual bool RealtimeInitialize(EffectSettings &settings);
 
-   //! Called for destructive, non-realtime effect computation
-   // This may be called during stack unwinding:
-   virtual bool ProcessFinalize() /* noexcept */ = 0;
-
-   //! Called for destructive, non-realtime effect computation
-   virtual size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen) = 0;
-
-   virtual bool RealtimeInitialize(EffectSettings &settings) = 0;
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
    virtual bool RealtimeAddProcessor(
-      EffectSettings &settings, unsigned numChannels, float sampleRate) = 0;
-   virtual bool RealtimeFinalize(EffectSettings &settings) noexcept = 0;
-   virtual bool RealtimeSuspend() = 0;
-   virtual bool RealtimeResume() noexcept = 0;
+      EffectSettings &settings, unsigned numChannels, float sampleRate);
+
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeSuspend();
+
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeResume() noexcept;
+
    //! settings are possibly changed, since last call, by an asynchronous dialog
-   virtual bool RealtimeProcessStart(EffectSettings &settings) = 0;
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeProcessStart(EffectSettings &settings);
+
+   /*!
+    @return success
+    Default implementation does nothing, returns 0
+    */
    virtual size_t RealtimeProcess(int group, EffectSettings &settings,
-      const float *const *inBuf, float *const *outBuf, size_t numSamples) = 0;
+      const float *const *inBuf, float *const *outBuf, size_t numSamples);
+
    //! settings can be updated to let a dialog change appearance at idle
-   virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept = 0;
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept;
+
+   /*!
+    @return success
+    Default implementation does nothing, returns true
+    */
+   virtual bool RealtimeFinalize(EffectSettings &settings) noexcept;
+
+   //! Function that has not yet found a use
+   //! Correct definitions of it will likely depend on settings and state
+   virtual size_t GetTailSize() const;
+};
+
+//! Inherit to add a state variable to an EffectInstance subclass
+class COMPONENTS_API EffectInstanceWithBlockSize
+   : public virtual EffectInstance
+{
+public:
+   ~EffectInstanceWithBlockSize() override;
+   size_t GetBlockSize() const override;
+   size_t SetBlockSize(size_t maxBlockSize) override;
+protected:
+   size_t mBlockSize{ 0 };
+};
+
+/***************************************************************************//**
+\class EffectInstanceFactory
+*******************************************************************************/
+class COMPONENTS_API EffectInstanceFactory
+   : public EffectSettingsManager
+{
+public:
+   virtual ~EffectInstanceFactory();
+
+   //! Make an object maintaining short-term state of an Effect
+   /*!
+    One effect may have multiple instances extant simultaneously.
+    Instances have state, may be implemented in foreign code, and are temporary,
+    whereas EffectSettings represents persistent effect state that can be saved
+    and reloaded from files.
+
+    @param settings may be assumed to have a lifetime enclosing the instance's
+    */
+   virtual std::shared_ptr<EffectInstance>
+   MakeInstance(EffectSettings &settings) const = 0;
+
+   //! How many input buffers to allocate at once
+   /*!
+    If the effect ALWAYS processes channels independently, this can return 1
+    */
+   virtual unsigned GetAudioInCount() const = 0;
+
+   //! How many output buffers to allocate at once
+   virtual unsigned GetAudioOutCount() const = 0;
+
+   //! Function that has not yet found a use
+   virtual int GetMidiInCount() const;
+
+   //! Function that has not yet found a use
+   virtual int GetMidiOutCount() const;
 };
 
 /*************************************************************************************//**
@@ -447,7 +549,6 @@ values.  It can import and export presets.
 
 *******************************************************************************************/
 class COMPONENTS_API EffectUIClientInterface /* not final */
-   : public EffectProcessor
 {
 public:
    virtual ~EffectUIClientInterface();

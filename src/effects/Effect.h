@@ -22,8 +22,129 @@ class EffectParameterMethods;
 class LabelTrack;
 class WaveTrack;
 
-class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
-   public EffectBase
+//! A mix-in class for effects that are not yet migrated to statelessness.
+//! To be eliminated when all effects are migrated
+class AUDACITY_DLL_API StatefulEffectBase {
+public:
+   //! Calls through to members of StatefulEffectBase
+   class AUDACITY_DLL_API Instance : public virtual EffectInstance {
+   public:
+      explicit Instance(StatefulEffectBase &effect);
+      ~Instance() override;
+
+      bool Init() override;
+
+      void SetSampleRate(double rate) override;
+   
+      size_t GetBlockSize() const override;
+      size_t SetBlockSize(size_t maxBlockSize) override;
+   
+      bool RealtimeInitialize(EffectSettings &settings) override;
+      bool RealtimeAddProcessor(EffectSettings &settings,
+         unsigned numChannels, float sampleRate) override;
+      bool RealtimeSuspend() override;
+      bool RealtimeResume() noexcept override;
+      bool RealtimeProcessStart(EffectSettings &settings) override;
+      size_t RealtimeProcess(int group, EffectSettings &settings,
+         const float *const *inBuf, float *const *outBuf, size_t numSamples)
+      override;
+      bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
+      bool RealtimeFinalize(EffectSettings &settings) noexcept override;
+   protected:
+      StatefulEffectBase &mEffect;
+      StatefulEffectBase &GetEffect() const { return mEffect; }
+   };
+
+   /*!
+     @copydoc EffectInstance::Init()
+     Default implementation does nothing, returns true
+   */
+   virtual bool Init();
+
+   /*!
+    @copydoc EffectInstance::Process
+    */
+   virtual bool Process(EffectInstance &instance, EffectSettings &settings) = 0;
+
+   /*!
+     @copydoc EffectInstance::SetSampleRate()
+     Default implementation assigns mSampleRate
+   */
+   virtual void SetSampleRate(double rate);
+
+   /*!
+     @copydoc RealtimeInitialize::RealtimeInitialize()
+     Default implementation does nothing, returns false
+   */
+   virtual bool RealtimeInitialize(EffectSettings &settings);
+
+   /*!
+     @copydoc RealtimeInitialize::RealtimeAddProcessor()
+     Default implementation does nothing, returns true
+   */
+   virtual bool RealtimeAddProcessor(
+      EffectSettings &settings, unsigned numChannels, float sampleRate);
+
+   /*!
+     @copydoc RealtimeInitialize::RealtimeSuspend()
+     Default implementation does nothing, returns true
+   */
+   virtual bool RealtimeSuspend();
+
+   /*!
+     @copydoc RealtimeInitialize::RealtimeResume()
+     Default implementation does nothing, returns true
+   */
+   virtual bool RealtimeResume() noexcept;
+
+   /*!
+     @copydoc RealtimeInitialize::RealtimeProcessStart()
+     Default implementation does nothing, returns true
+   */
+   virtual bool RealtimeProcessStart(EffectSettings &settings);
+
+   /*!
+     @copydoc RealtimeInitialize::RealtimeProcess()
+     Default implementation does nothing, returns 0
+   */
+   virtual size_t RealtimeProcess(int group, EffectSettings &settings,
+      const float *const *inBuf, float *const *outBuf, size_t numSamples);
+
+   /*!
+     @copydoc RealtimeInitialize::RealtimeProcessEnd()
+     Default implementation does nothing, returns true
+   */
+   virtual bool RealtimeProcessEnd(EffectSettings &settings) noexcept;
+
+   /*!
+     @copydoc RealtimeInitialize::RealtimeFinalize()
+     Default implementation does nothing, returns false
+   */
+   virtual bool RealtimeFinalize(EffectSettings &settings) noexcept;
+
+   /*!
+     @copydoc RealtimeInitialize::SetBlockSize()
+     Default implementation assigns mEffectBlockSize, returns it
+   */
+   virtual size_t SetBlockSize(size_t maxBlockSize);
+
+   /*!
+     @copydoc RealtimeInitialize::GetBlockSize()
+     Default implementation returns mEffectBlockSize
+   */
+   virtual size_t GetBlockSize() const;
+
+protected:
+
+   double         mSampleRate{};
+private:
+
+   size_t mEffectBlockSize{ 0 };
+};
+
+class AUDACITY_DLL_API Effect /* not final */
+   : public wxEvtHandler
+   , public EffectBase
 {
  //
  // public methods
@@ -39,23 +160,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // Avoid allocating memory or doing time-consuming processing here.
    Effect();
    virtual ~Effect();
-
-   //! Default result of MakeInstance() calls through to members of Effect
-   /*!
-    Effects that are completely stateless should not use this
-    */
-   class AUDACITY_DLL_API Instance : public EffectInstance {
-   public:
-      explicit Instance(Effect &effect);
-      ~Instance() override;
-
-      bool Init() override;
-
-      bool Process(EffectSettings &settings) override;
-
-   protected:
-      Effect &mEffect;
-   };
 
    // ComponentInterface implementation
 
@@ -95,47 +199,13 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
 
-   // EffectProcessor implementation
-
-   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-      override;
-
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
-
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
-
-   sampleCount GetLatency() override;
-   size_t GetTailSize() override;
-
-   void SetSampleRate(double rate) override;
-   size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;  
 
    // VisitSettings(), SaveSettings(), and LoadSettings()
    // use the functions of EffectParameterMethods.  By default, this function
    // defines an empty list of parameters.
    virtual const EffectParameterMethods &Parameters() const;
-
-   bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-
-   bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-         unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   bool RealtimeSuspend() override;
-   bool RealtimeResume() noexcept override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(int group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
-   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
 
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal = false) override;
@@ -157,7 +227,7 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    // EffectPlugin implementation
 
-   const EffectDefinitionInterface& GetDefinition() const override;
+   const EffectSettingsManager& GetDefinition() const override;
    virtual NumericFormatSymbol GetSelectionFormat() /* not override? */; // time format in Selection toolbar
 
    // EffectPlugin implementation
@@ -195,23 +265,12 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    bool EnableApply(bool enable = true);
    bool EnablePreview(bool enable = true);
 
-   /*!
-     @copydoc EffectInstance::Init()
-     Default implementation does nothing, returns true
-   */
-   virtual bool Init();
-
    //! Default implementation returns false
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
 
    //! Default implementation returns `previewLength`
    double CalcPreviewInputLength(
       const EffectSettings &settings, double previewLength) const override;
-
-   /*!
-    @copydoc EffectInstance::Process
-    */
-   virtual bool Process(EffectInstance &instance, EffectSettings &settings) = 0;
 
    //! Add controls to effect panel; always succeeds
    /*!
@@ -320,8 +379,6 @@ class AUDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    Track *AddToOutputTracks(const std::shared_ptr<Track> &t);
 
 protected:
-   double         mSampleRate{};
-
    // UI
    //! This smart pointer tracks the lifetime of the dialog
    wxWeakRef<wxDialog> mHostUIDialog;
@@ -331,13 +388,11 @@ private:
    wxString GetSavedStateGroup();
 
    bool mIsBatch{ false };
-
-   size_t mEffectBlockSize{ 0 };
 };
 
 //! Convenience for generating EffectDefinitionInterface overrides
 //! and static down-casting functions
-template<typename Settings, typename Base = Effect>
+template<typename Settings, typename Base>
 class EffectWithSettings : public Base {
 public:
    EffectSettings MakeSettings() const override
@@ -361,6 +416,26 @@ public:
    {
       return GetSettings(const_cast<EffectSettings &>(settings));
    }
+   static inline Settings *
+   FetchParameters(Base &, EffectSettings &s) {
+      return &GetSettings(s);
+   }
+};
+
+//! Subclass of Effect, to be eliminated after all of its subclasses
+//! are rewritten to be stateless
+class StatefulEffect
+   : public StatefulEffectBase
+   , public Effect
+{
+public:
+   class AUDACITY_DLL_API Instance : public StatefulEffectBase::Instance {
+   public:
+      using StatefulEffectBase::Instance::Instance;
+      bool Process(EffectSettings &settings) override;
+   };
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+       const override;
 };
 
 // FIXME:

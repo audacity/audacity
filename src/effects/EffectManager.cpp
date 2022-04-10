@@ -61,13 +61,8 @@ const PluginID & EffectManager::RegisterEffect(
    std::unique_ptr<EffectPlugin> uEffect)
 {
    auto pEffect = uEffect.get();
-   // Change the "grip" on the object
-   // uEffect is expected to be a self-hosting Nyquist effect
-   auto uDefinition = std::unique_ptr<EffectDefinitionInterface>(
-      dynamic_cast<EffectUIClientInterface*>(uEffect.release()));
-   wxASSERT(uDefinition);
    const PluginID & ID =
-      PluginManager::Get().RegisterPlugin(std::move(uDefinition), PluginTypeEffect);
+      PluginManager::Get().RegisterPlugin(std::move(uEffect), PluginTypeEffect);
    mEffects[ID] = { pEffect, {} };
    return ID;
 }
@@ -167,7 +162,7 @@ TranslatableString EffectManager::GetCommandTip(const PluginID & ID)
 
 void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags)
 {
-   const EffectDefinitionInterface *effect = nullptr;
+   const EffectSettingsManager *effect = nullptr;
    const EffectSettings *settings;
    AudacityCommand *command = nullptr;
 
@@ -776,23 +771,23 @@ EffectManager::GetEffectAndDefaultSettings(const PluginID & ID)
 
 namespace {
 void InitializePreset(
-   EffectDefinitionInterface &definition, EffectSettings &settings) {
+   EffectSettingsManager &manager, EffectSettings &settings) {
    bool haveDefaults;
-   GetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
+   GetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
       wxT("Initialized"), haveDefaults, false);
    if (!haveDefaults)
    {
-      definition.SaveUserPreset(FactoryDefaultsGroup(), settings);
-      SetConfig(definition, PluginSettings::Private, FactoryDefaultsGroup(),
+      manager.SaveUserPreset(FactoryDefaultsGroup(), settings);
+      SetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
          wxT("Initialized"), true);
    }
-   definition.LoadUserPreset(CurrentSettingsGroup(), settings);
+   manager.LoadUserPreset(CurrentSettingsGroup(), settings);
 }
 
 std::pair<ComponentInterface *, EffectSettings>
 LoadComponent(const PluginID &ID)
 {
-   if (auto result = dynamic_cast<EffectDefinitionInterface*>(
+   if (auto result = dynamic_cast<EffectSettingsManager*>(
       PluginManager::Get().Load(ID))) {
       auto settings = result->MakeSettings();
       InitializePreset(*result, settings);
@@ -894,14 +889,8 @@ const PluginID & EffectManager::GetEffectByIdentifier(const CommandID & strTarge
    return empty;
 }
 
-/* TODO:  fix the effect management so that repeated calls with the same ID
- give Effect objects with independent state for effect settings.
- */
-EffectProcessor *
-EffectManager::NewEffect(const PluginID & ID)
+const EffectInstanceFactory *
+EffectManager::GetInstanceFactory(const PluginID &ID)
 {
-   // Must have a "valid" ID
-   if (ID.empty())
-      return nullptr;
-   return dynamic_cast<EffectUIClientInterface *>(Get().GetEffect(ID));
+   return Get().GetEffect(ID);
 }

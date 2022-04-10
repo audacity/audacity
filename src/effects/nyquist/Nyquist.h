@@ -70,7 +70,7 @@ struct NyquistSettings {
 };
 
 class AUDACITY_DLL_API NyquistEffect final
-   : public EffectWithSettings<NyquistSettings>
+   : public EffectWithSettings<NyquistSettings, StatefulEffect>
 {
 public:
 
@@ -106,8 +106,6 @@ public:
       const CommandParameters & parms, EffectSettings &settings) const override;
    bool DoLoadSettings(
       const CommandParameters & parms, EffectSettings &settings);
-
-   // EffectProcessor implementation
 
    bool VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
       override;

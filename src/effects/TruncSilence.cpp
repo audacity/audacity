@@ -158,8 +158,6 @@ EffectType EffectTruncSilence::GetType() const
    return EffectTypeProcess;
 }
 
-// EffectProcessor implementation
-
 bool EffectTruncSilence::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {

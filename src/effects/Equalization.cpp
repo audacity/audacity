@@ -374,7 +374,6 @@ EffectType EffectEqualization::GetType() const
    return EffectTypeProcess;
 }
 
-// EffectProcessor implementation
 bool EffectEqualization::VisitSettings(
    ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {

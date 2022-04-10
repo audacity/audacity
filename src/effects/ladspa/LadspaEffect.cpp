@@ -714,10 +714,6 @@ bool LadspaEffect::SupportsAutomation() const
    return mNumInputControls > 0;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
-
 bool LadspaEffect::InitializePlugin()
 {
    if (!Load())
@@ -862,7 +858,13 @@ bool LadspaEffect::InitializePlugin()
 }
 
 std::shared_ptr<EffectInstance>
-LadspaEffect::MakeInstance(EffectSettings &settings)
+LadspaEffect::MakeInstance(EffectSettings &settings) const
+{
+   return const_cast<LadspaEffect *>(this)->MakeInstance(settings);
+}
+
+std::shared_ptr<EffectInstance>
+LadspaEffect::DoMakeInstance(EffectSettings &settings)
 {
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
       wxT("UseLatency"), mUseLatency, true);
@@ -879,7 +881,7 @@ LadspaEffect::MakeInstance(EffectSettings &settings)
    }
 
    LoadParameters(CurrentSettingsGroup(), settings);
-   return std::make_shared<Effect::Instance>(*this);
+   return std::make_shared<Instance>(*this);
 }
 
 unsigned LadspaEffect::GetAudioInCount() const
@@ -892,12 +894,12 @@ unsigned LadspaEffect::GetAudioOutCount() const
    return mAudioOuts;
 }
 
-int LadspaEffect::GetMidiInCount()
+int LadspaEffect::GetMidiInCount() const
 {
    return 0;
 }
 
-int LadspaEffect::GetMidiOutCount()
+int LadspaEffect::GetMidiOutCount() const
 {
    return 0;
 }
@@ -927,11 +929,6 @@ sampleCount LadspaEffect::GetLatency()
       return sampleCount ( mOutputControls[mLatencyPort] );
    }
 
-   return 0;
-}
-
-size_t LadspaEffect::GetTailSize()
-{
    return 0;
 }
 

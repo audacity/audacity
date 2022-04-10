@@ -34,7 +34,7 @@ using Floats = ArrayOf<float>;
    It is not an abbreviation for anything.  See http://vamp-plugins.org */
 #define VAMPEFFECTS_FAMILY XO("Vamp")
 
-class VampEffect final : public Effect
+class VampEffect final : public StatefulEffect
 {
 public:
    VampEffect(std::unique_ptr<Vamp::Plugin> &&plugin,
@@ -62,8 +62,6 @@ public:
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
 

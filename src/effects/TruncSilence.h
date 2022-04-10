@@ -27,7 +27,7 @@ class wxCheckBox;
 
 class RegionList;
 
-class EffectTruncSilence final : public Effect
+class EffectTruncSilence final : public StatefulEffect
 {
 public:
    static inline EffectTruncSilence *

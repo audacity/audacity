@@ -555,13 +555,13 @@ unsigned VST3Effect::GetAudioOutCount() const
       Steinberg::Vst::kMain);
 }
 
-int VST3Effect::GetMidiInCount()
+int VST3Effect::GetMidiInCount() const
 {
    //Dummy
    return 0;
 }
 
-int VST3Effect::GetMidiOutCount()
+int VST3Effect::GetMidiOutCount() const
 {
    //Dummy
    return 0;
@@ -595,13 +595,6 @@ sampleCount VST3Effect::GetLatency()
       return delay;
    }
    return { 0u };
-}
-
-size_t VST3Effect::GetTailSize()
-{
-   //Not supported, note that tail size in samples can
-   //have different values in realtime processors
-   return 0;
 }
 
 bool VST3Effect::ProcessInitialize(
@@ -804,7 +797,7 @@ bool VST3Effect::RealtimeProcessStart(EffectSettings &)
    assert(mPendingChanges == nullptr);
 
    if(mComponentHandler != nullptr)
-      //Same parameter changes are used among all of the relatime processors
+      //Same parameter changes are used among all of the realtime processors
       mPendingChanges = mComponentHandler->getPendingChanges();
    return true;
 }
@@ -846,12 +839,18 @@ bool VST3Effect::InitializePlugin()
 }
    
 std::shared_ptr<EffectInstance>
-VST3Effect::MakeInstance(EffectSettings &settings)
+VST3Effect::MakeInstance(EffectSettings &settings) const
+{
+   return const_cast<VST3Effect*>(this)->DoMakeInstance(settings);
+}
+   
+std::shared_ptr<EffectInstance>
+VST3Effect::DoMakeInstance(EffectSettings &settings)
 {
    ReloadUserOptions();
    if(!LoadUserPreset(CurrentSettingsGroup(), settings))
       LoadFactoryDefaults(settings);
-   return std::make_shared<Effect::Instance>(*this);
+   return std::make_shared<Instance>(*this);
 }
 
 bool VST3Effect::IsGraphicalUI()

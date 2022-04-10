@@ -489,9 +489,6 @@ bool LV2Effect::SupportsAutomation() const
    return true;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
 bool LV2Effect::InitializePlugin()
 {
    using namespace LV2Symbols;
@@ -909,7 +906,13 @@ bool LV2Effect::InitializePlugin()
 }
 
 std::shared_ptr<EffectInstance>
-LV2Effect::MakeInstance(EffectSettings &settings)
+LV2Effect::MakeInstance(EffectSettings &settings) const
+{
+   return const_cast<LV2Effect*>(this)->DoMakeInstance(settings);
+}
+
+std::shared_ptr<EffectInstance>
+LV2Effect::DoMakeInstance(EffectSettings &settings)
 {
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
@@ -937,7 +940,7 @@ LV2Effect::MakeInstance(EffectSettings &settings)
 
    lv2_atom_forge_init(&mForge, &mURIDMapFeature);
 
-   return std::make_shared<Effect::Instance>(*this);
+   return std::make_shared<Instance>(*this);
 }
 
 unsigned LV2Effect::GetAudioInCount() const
@@ -950,12 +953,12 @@ unsigned LV2Effect::GetAudioOutCount() const
    return mAudioOut;
 }
 
-int LV2Effect::GetMidiInCount()
+int LV2Effect::GetMidiInCount() const
 {
    return mMidiIn;
 }
 
-int LV2Effect::GetMidiOutCount()
+int LV2Effect::GetMidiOutCount() const
 {
    return mMidiOut;
 }
@@ -1014,11 +1017,6 @@ sampleCount LV2Effect::GetLatency()
       return sampleCount(mMaster->GetLatency());
    }
 
-   return 0;
-}
-
-size_t LV2Effect::GetTailSize()
-{
    return 0;
 }
 

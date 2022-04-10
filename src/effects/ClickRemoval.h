@@ -24,7 +24,7 @@ class wxTextCtrl;
 class Envelope;
 class ShuttleGui;
 
-class EffectClickRemoval final : public Effect
+class EffectClickRemoval final : public StatefulEffect
 {
 public:
    static inline EffectClickRemoval *

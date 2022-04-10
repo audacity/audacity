@@ -16,7 +16,7 @@
 
 class ShuttleGui;
 
-class EffectPaulstretch final : public Effect
+class EffectPaulstretch final : public StatefulEffect
 {
 public:
    static inline EffectPaulstretch *

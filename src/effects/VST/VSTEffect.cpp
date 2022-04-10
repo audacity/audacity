@@ -289,20 +289,6 @@ public:
       return mAutomatable;
    }
 
-   bool SaveSettings(const EffectSettings &, CommandParameters &) const override
-      { return true; }
-   bool LoadSettings(const CommandParameters &, EffectSettings &) const override
-      { return true; }
-
-   bool LoadUserPreset(const RegistryPath &, EffectSettings &) const override
-      { return true; }
-   bool SaveUserPreset(const RegistryPath &, const EffectSettings &) const override
-      { return true; }
-
-   RegistryPaths GetFactoryPresets() const override { return {}; }
-   bool LoadFactoryPreset(int, EffectSettings &) const override { return true; }
-   bool LoadFactoryDefaults(EffectSettings &) const override { return true; }
-
 public:
    wxString mPath;
    wxString mName;
@@ -1290,10 +1276,6 @@ bool VSTEffect::SupportsAutomation() const
    return mAutomatable;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
-
 bool VSTEffect::InitializePlugin()
 {
    if (!mAEffect)
@@ -1317,7 +1299,13 @@ bool VSTEffect::InitializePlugin()
 }
 
 std::shared_ptr<EffectInstance>
-VSTEffect::MakeInstance(EffectSettings &settings)
+VSTEffect::MakeInstance(EffectSettings &settings) const
+{
+   return const_cast<VSTEffect*>(this)->DoMakeInstance(settings);
+}
+
+std::shared_ptr<EffectInstance>
+VSTEffect::DoMakeInstance(EffectSettings &settings)
 {
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -1340,7 +1328,7 @@ VSTEffect::MakeInstance(EffectSettings &settings)
    }
 
    LoadParameters(CurrentSettingsGroup(), settings);
-   return std::make_shared<Effect::Instance>(*this);
+   return std::make_shared<Instance>(*this);
 }
 
 unsigned VSTEffect::GetAudioInCount() const
@@ -1353,12 +1341,12 @@ unsigned VSTEffect::GetAudioOutCount() const
    return mAudioOuts;
 }
 
-int VSTEffect::GetMidiInCount()
+int VSTEffect::GetMidiInCount() const
 {
    return mMidiIns;
 }
 
-int VSTEffect::GetMidiOutCount()
+int VSTEffect::GetMidiOutCount() const
 {
    return mMidiOuts;
 }
@@ -1389,11 +1377,6 @@ sampleCount VSTEffect::GetLatency()
       return delay;
    }
 
-   return 0;
-}
-
-size_t VSTEffect::GetTailSize()
-{
    return 0;
 }
 

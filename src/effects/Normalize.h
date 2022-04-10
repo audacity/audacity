@@ -21,7 +21,7 @@ class wxStaticText;
 class wxTextCtrl;
 class ShuttleGui;
 
-class EffectNormalize final : public Effect
+class EffectNormalize final : public StatefulEffect
 {
 public:
    static inline EffectNormalize *
