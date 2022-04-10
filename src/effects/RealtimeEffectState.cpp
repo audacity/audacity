@@ -139,6 +139,13 @@ RealtimeEffectState::RealtimeEffectState(const PluginID & id)
    SetID(id);
 }
 
+RealtimeEffectState::RealtimeEffectState(const RealtimeEffectState &other)
+  : mID{ other.mID }
+  , mPlugin{ other.mPlugin }
+  , mSettings{ other.mSettings }
+{
+}
+
 RealtimeEffectState::~RealtimeEffectState() = default;
 
 void RealtimeEffectState::SetID(const PluginID & id)

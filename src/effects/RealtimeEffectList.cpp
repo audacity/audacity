@@ -20,6 +20,15 @@ RealtimeEffectList::~RealtimeEffectList()
 {
 }
 
+std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
+{
+   auto result = std::make_unique<RealtimeEffectList>();
+   for (auto &pState : mStates)
+      result->mStates.push_back(
+         std::make_unique<RealtimeEffectState>(*pState));
+   return result;
+}
+
 // Access for per-project effect list
 static const AttachedProjectObjects::RegisteredFactory masterEffects
 {
@@ -47,18 +56,19 @@ const RealtimeEffectList &RealtimeEffectList::Get(const AudacityProject &project
    return Get(const_cast<AudacityProject &>(project));
 }
 
-static const AttachedTrackObjects::RegisteredFactory trackEffects
+static const Track::ChannelGroupAttachments::RegisteredFactory trackEffects
 {
-   [](Track &track)
+   [](Track::ChannelGroupData &)
    {
-      return std::make_shared<RealtimeEffectList>();
+      return std::make_unique<RealtimeEffectList>();
    }
 };
 
 // Access for per-track effect list
 RealtimeEffectList &RealtimeEffectList::Get(Track &track)
 {
-   return track.AttachedObjects::Get<RealtimeEffectList>(trackEffects);
+   return track.GetGroupData()
+      .Track::ChannelGroupAttachments::Get<RealtimeEffectList>(trackEffects);
 }
 
 const RealtimeEffectList &RealtimeEffectList::Get(const Track &track)
