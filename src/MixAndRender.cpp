@@ -93,7 +93,9 @@ void MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 
-   auto mixLeft = trackFactory->Create(format, rate);
+   auto mixLeft = first->EmptyCopy(trackFactory->GetSampleBlockFactory());
+   mixLeft->SetRate(rate);
+   mixLeft->ConvertToSampleFormat(format);
    if (oneinput)
       mixLeft->SetName(first->GetName()); /* set name of output track to be the same as the sole input track */
    else
