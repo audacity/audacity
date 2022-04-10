@@ -169,9 +169,9 @@ bool SetTrackAudioCommand::ApplyInner(const CommandContext & context, Track * t 
    auto wt = dynamic_cast<WaveTrack *>(t);
    auto pt = dynamic_cast<PlayableTrack *>(t);
 
-   if( wt && bHasGain )
+   if (wt && bHasGain)
       wt->SetGain(DB_TO_LINEAR(mGain));
-   if( wt && bHasPan )
+   if (wt && bHasPan)
       wt->SetPan(mPan/100.0);
 
    if (pt && bHasSolo)
