@@ -414,8 +414,6 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
    float fValue = mSlider_Gain->Get();
    if (GetWave())
       GetWave()->SetGain(fValue);
-   if (GetRight())
-      GetRight()->SetGain(fValue);
 
    // Update the TrackPanel correspondingly.
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
@@ -445,8 +443,6 @@ void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
    float fValue = mSlider_Pan->Get();
    if (GetWave()) // test in case track is a NoteTrack
       GetWave()->SetPan(fValue);
-   if (GetRight())
-      GetRight()->SetPan(fValue);
 
    // Update the TrackPanel correspondingly.
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
@@ -647,10 +643,7 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
       float gain = pTrack->GetChannelGain(0);
       for (unsigned int index = 0; index < nFrames; index++)
          meterFloatsArray[2 * index] *= gain;
-      if (GetRight())
-         gain = GetRight()->GetChannelGain(1);
-      else
-         gain = pTrack->GetChannelGain(1);
+      gain = pTrack->GetChannelGain(1);
       for (unsigned int index = 0; index < nFrames; index++)
          meterFloatsArray[(2 * index) + 1] *= gain;
       // Clip to [-1.0, 1.0] range.

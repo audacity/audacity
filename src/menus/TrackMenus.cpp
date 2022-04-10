@@ -153,7 +153,7 @@ void DoPanTracks(AudacityProject &project, float PanValue)
    auto &window = ProjectWindow::Get( project );
 
    // count selected wave tracks
-   const auto range = tracks.Any< WaveTrack >();
+   const auto range = tracks.Leaders< WaveTrack >();
    const auto selectedRange = range + &Track::IsSelected;
    auto count = selectedRange.size();
 
@@ -574,8 +574,7 @@ void SetTrackGain(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
    wxASSERT(wt);
    float newValue = slider->Get();
 
-   for (auto channel : TrackList::Channels(wt))
-      channel->SetGain(newValue);
+   wt->SetGain(newValue);
 
    ProjectHistory::Get( project )
       .PushState(XO("Adjusted gain"), XO("Gain"), UndoPush::CONSOLIDATE);
@@ -588,8 +587,7 @@ void SetTrackPan(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
    wxASSERT(wt);
    float newValue = slider->Get();
 
-   for (auto channel : TrackList::Channels(wt))
-      channel->SetPan(newValue);
+   wt->SetPan(newValue);
 
    ProjectHistory::Get( project )
       .PushState(XO("Adjusted Pan"), XO("Pan"), UndoPush::CONSOLIDATE);

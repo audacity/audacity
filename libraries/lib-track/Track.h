@@ -414,9 +414,6 @@ public:
    void Offset(double t) { SetOffset(GetOffset() + t); }
    virtual void SetOffset (double o) { mOffset = o; }
 
-   virtual void SetPan( float ){ ;}
-   virtual void SetPanFromChannelType(){ ;};
-
    // Create a NEW track and modify this track
    // Return non-NULL or else throw
    // May assume precondition: t0 <= t1

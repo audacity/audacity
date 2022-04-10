@@ -828,7 +828,6 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    partner->Merge(*pTrack);
 
    pTrack->SetPan( 0.0f );
-   partner->SetPan( 0.0f );
 
    // Set NEW track heights and minimized state
    auto
@@ -862,6 +861,9 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    AudacityProject *const project = &mpData->project;
    auto channels = TrackList::Channels( pTrack );
 
+   // Unlink to make pan values independent, before changing them
+   TrackList::Get( *project ).UnlinkChannels( *pTrack );
+
    int totalHeight = 0;
    int nChannels = 0;
    for (auto channel : channels) {
@@ -876,7 +878,6 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
       ++nChannels;
    }
 
-   TrackList::Get( *project ).UnlinkChannels( *pTrack );
    int averageHeight = totalHeight / nChannels;
 
    for (auto channel : channels)
