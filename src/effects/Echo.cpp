@@ -121,13 +121,10 @@ unsigned EffectEcho::GetAudioOutCount() const
 }
 
 bool EffectEcho::Instance::ProcessInitialize(
-   EffectSettings&, sampleCount, ChannelNames)
+   EffectSettings& settings, sampleCount, ChannelNames)
 {
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& echoSettings = static_cast<const EffectEcho&>(mProcessor).mSettings;
-
+   auto& echoSettings = GetSettings(settings);
+  
    if (echoSettings.delay == 0.0)
    {
       return false;
@@ -158,14 +155,11 @@ bool EffectEcho::Instance::ProcessFinalize()
    return true;
 }
 
-size_t EffectEcho::Instance::ProcessBlock(EffectSettings&,
+size_t EffectEcho::Instance::ProcessBlock(EffectSettings& settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& echoSettings = static_cast<const EffectEcho&>(mProcessor).mSettings;
-
+   auto& echoSettings = GetSettings(settings);
+   
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
@@ -187,7 +181,7 @@ struct EffectEcho::Validator
    : DefaultEffectUIValidator
 {
    Validator(EffectUIClientInterface& effect,
-      EffectSettingsAccess& access, EffectEchoSettings& settings)
+      EffectSettingsAccess& access, const EffectEchoSettings& settings)
       : DefaultEffectUIValidator{ effect, access }
       , mSettings{ settings }
    {}
@@ -200,14 +194,23 @@ struct EffectEcho::Validator
 
    void PopulateOrExchange(ShuttleGui& S);
 
-   EffectEchoSettings& mSettings;
+   EffectEchoSettings mSettings;
 };
 
 
 
-
 std::unique_ptr<EffectUIValidator>
-EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess& access)
+EffectEcho::PopulateOrExchange(ShuttleGui& S, EffectSettingsAccess& access)
+{
+   auto& settings = access.Get();
+   auto& myEffSettings = GetSettings(settings);
+   auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+   result->PopulateOrExchange(S);
+   return result;
+}
+
+
+void EffectEcho::Validator::PopulateOrExchange(ShuttleGui & S)
 {
    auto& echoSettings = mSettings;
 
@@ -225,8 +228,7 @@ EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess& access)
             Decay.min, Decay.max)
          .AddTextBox(XXO("D&ecay factor:"), L"", 10);
    }
-   S.EndMultiColumn();
-   return nullptr;
+   S.EndMultiColumn();   
 }
 
 
@@ -238,8 +240,7 @@ bool EffectEcho::Validator::ValidateUI()
    {
       // pass back the modified settings to the MessageBuffer
 
-      // TODO uncomment at last step
-      //EffectEcho::GetSettings(settings) = mSettings;
+      EffectEcho::GetSettings(settings) = mSettings;
    }
    );
 
@@ -252,8 +253,7 @@ bool EffectEcho::Validator::UpdateUI()
    // get the settings from the MessageBuffer and write them to our local copy
    const auto& settings = mAccess.Get();
 
-   // TODO uncomment at last step
-   //mSettings = GetSettings(settings);
+   mSettings = GetSettings(settings);
 
    return true;
 }

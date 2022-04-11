@@ -30,12 +30,9 @@ struct EffectEchoSettings
    double decay{ decayDefault };
 };
 
-class EffectEcho final : public StatefulPerTrackEffect
+class EffectEcho final : public EffectWithSettings<EffectEchoSettings, PerTrackEffect>
 {
 public:
-
-   static inline EffectEchoSettings*
-      FetchParameters(EffectEcho& e, EffectSettings&) { return &(e.mSettings); }
    
    static const ComponentInterfaceSymbol Symbol;
 
@@ -68,9 +65,7 @@ public:
 
 private:
    // EffectEcho implementation
-
-   EffectEchoSettings mSettings;
-
+   
 
    const EffectParameterMethods& Parameters() const override;
 
