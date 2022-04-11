@@ -141,6 +141,31 @@ size_t EffectEcho::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
+
+
+struct EffectEcho::Validator
+   : DefaultEffectUIValidator
+{
+   Validator(EffectUIClientInterface& effect,
+      EffectSettingsAccess& access, EffectEchoSettings& settings)
+      : DefaultEffectUIValidator{ effect, access }
+      , mSettings{ settings }
+   {}
+   virtual ~Validator() = default;
+
+   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
+
+   bool ValidateUI() override;
+   bool UpdateUI() override;
+
+   void PopulateOrExchange(ShuttleGui& S);
+
+   EffectEchoSettings& mSettings;
+};
+
+
+
+
 std::unique_ptr<EffectUIValidator>
 EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess& access)
 {
@@ -163,3 +188,33 @@ EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess& access)
    S.EndMultiColumn();
    return nullptr;
 }
+
+
+bool EffectEcho::Validator::ValidateUI()
+{
+   mAccess.ModifySettings
+   (
+      [this](EffectSettings& settings)
+   {
+      // pass back the modified settings to the MessageBuffer
+
+      // TODO uncomment at last step
+      //EffectEcho::GetSettings(settings) = mSettings;
+   }
+   );
+
+   return true;
+}
+
+
+bool EffectEcho::Validator::UpdateUI()
+{
+   // get the settings from the MessageBuffer and write them to our local copy
+   const auto& settings = mAccess.Get();
+
+   // TODO uncomment at last step
+   //mSettings = GetSettings(settings);
+
+   return true;
+}
+

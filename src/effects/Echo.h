@@ -65,6 +65,8 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
 
+   struct Validator;
+
 private:
    // EffectEcho implementation
 
