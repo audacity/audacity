@@ -246,4 +246,3 @@ public:
 
    FilePaths GetSearchPaths();
 };
-

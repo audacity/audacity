@@ -860,7 +860,7 @@ bool LadspaEffect::InitializePlugin()
 std::shared_ptr<EffectInstance>
 LadspaEffect::MakeInstance(EffectSettings &settings) const
 {
-   return const_cast<LadspaEffect *>(this)->MakeInstance(settings);
+   return const_cast<LadspaEffect *>(this)->DoMakeInstance(settings);
 }
 
 std::shared_ptr<EffectInstance>
