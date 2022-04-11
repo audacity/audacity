@@ -42,6 +42,41 @@ const ComponentInterfaceSymbol EffectEcho::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectEcho > reg; }
 
+
+struct EffectEcho::Instance
+   : public PerTrackEffect::Instance
+   , public EffectInstanceWithBlockSize
+   , public EffectInstanceWithSampleRate
+
+{
+   Instance(const PerTrackEffect& effect)
+      : PerTrackEffect::Instance{ effect }
+   {}
+
+   bool ProcessInitialize(EffectSettings& settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
+
+   size_t ProcessBlock(EffectSettings& settings,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
+
+   bool ProcessFinalize(void) override;
+
+   Floats history;
+   size_t histPos;
+   size_t histLen;
+};
+
+
+
+std::shared_ptr<EffectInstance>
+EffectEcho::MakeInstance(EffectSettings&) const
+{
+   return std::make_shared<Instance>(*this);
+}
+
+
+
+
 EffectEcho::EffectEcho()
 {
    SetLinearEffectFlag(true);
@@ -85,10 +120,13 @@ unsigned EffectEcho::GetAudioOutCount() const
    return 1;
 }
 
-bool EffectEcho::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames)
+bool EffectEcho::Instance::ProcessInitialize(
+   EffectSettings&, sampleCount, ChannelNames)
 {
-   auto& echoSettings = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& echoSettings = static_cast<const EffectEcho&>(mProcessor).mSettings;
 
    if (echoSettings.delay == 0.0)
    {
@@ -108,23 +146,25 @@ bool EffectEcho::ProcessInitialize(
       history.reinit(histLen, true);
    }
    catch ( const std::bad_alloc& ) {
-      Effect::MessageBox( XO("Requested value exceeds memory capacity.") );
+      mProcessor.MessageBox( XO("Requested value exceeds memory capacity.") );
       return false;
    }
 
    return history != NULL;
 }
 
-bool EffectEcho::ProcessFinalize()
+bool EffectEcho::Instance::ProcessFinalize()
 {
-   history.reset();
    return true;
 }
 
-size_t EffectEcho::ProcessBlock(EffectSettings &,
+size_t EffectEcho::Instance::ProcessBlock(EffectSettings&,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   auto& echoSettings = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& echoSettings = static_cast<const EffectEcho&>(mProcessor).mSettings;
 
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];

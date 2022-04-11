@@ -54,12 +54,6 @@ public:
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
-   bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
 
    // Effect implementation
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
@@ -67,14 +61,16 @@ public:
 
    struct Validator;
 
+   struct Instance;
+
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings& settings) const;
+
+
 private:
    // EffectEcho implementation
 
    EffectEchoSettings mSettings;
 
-   Floats history;
-   size_t histPos;
-   size_t histLen;
 
    const EffectParameterMethods& Parameters() const override;
 
