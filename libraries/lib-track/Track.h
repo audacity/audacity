@@ -232,9 +232,16 @@ public:
        Aligned, //< Tracks are grouped and changes should be synchronized
    };
 
+   struct ChannelGroupData;
+
+   //! Hosting of objects attached by higher level code
+   using ChannelGroupAttachments = ClientData::Site<
+      ChannelGroupData, ClientData::Cloneable<>, ClientData::DeepCopying
+   >;
+
    // Structure describing data common to channels of a group of tracks
    // Should be deep-copyable (think twice before adding shared pointers!)
-   struct ChannelGroupData {
+   struct ChannelGroupData : ChannelGroupAttachments {
       LinkType mLinkType{ LinkType::None };
    };
 
