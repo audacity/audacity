@@ -108,11 +108,9 @@ public:
    std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
       const override;
    struct Validator;
-   std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectSettingsAccess &access) override;
+   std::unique_ptr<EffectUIValidator>
+      PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
-   bool ValidateUI(EffectSettings &) override;
-   bool CloseUI() override;
 
    bool CanExportPresets() override;
    void ExportPresets(const EffectSettings &settings) const override;
@@ -135,11 +133,6 @@ private:
    LADSPA_Handle InitInstance(
       float sampleRate, LadspaEffectSettings &settings) const;
    void FreeInstance(LADSPA_Handle handle) const;
-
-   void OnCheckBox(wxCommandEvent & evt);
-   void OnSlider(wxCommandEvent & evt);
-   void OnTextCtrl(wxCommandEvent & evt);
-   void RefreshControls();
 
 private:
 
@@ -170,17 +163,6 @@ private:
 
    bool mUseLatency{ true };
    int mLatencyPort{ -1 };
-
-   NumericTextCtrl *mDuration{};
-   wxWeakRef<wxDialog> mDialog;
-   wxWindow *mParent{};
-   ArrayOf<wxSlider*> mSliders;
-   ArrayOf<wxTextCtrl*> mFields;
-   ArrayOf<wxStaticText*> mLabels;
-   ArrayOf<wxCheckBox*> mToggles;
-   ArrayOf<LadspaEffectMeter *> mMeters;
-
-   DECLARE_EVENT_TABLE()
 
    friend class LadspaEffectsModule;
 };
