@@ -52,6 +52,7 @@ env:
   BUILD_LEVEL: ${{ (inputs && inputs.build_level) || (github.event.inputs && github.event.inputs.build_level) || ((startsWith(github.ref, 'refs/heads/release-') && 'beta') || 'alpha') }}
   BUILD_TYPE: ${{ (inputs && inputs.build_type) || (github.event.inputs && github.event.inputs.build_type) || 'Release' }}
   CMAKE_OPTIONS: ${{ (inputs && inputs.cmake_options) || (github.event.inputs && github.event.inputs.cmake_options) || '' }}
+  OWNER: ${{ github.repository_owner }}
 
 jobs:
   generate_offline_dependencies:
@@ -125,6 +126,11 @@ jobs:
       contents: read
       packages: write
     steps:
+    - name: Lowecase owner
+      shell: bash
+      run: |
+        OWNER=${{ github.repository_owner }}
+        echo "LOWERCASE_OWNER=${OWNER,,}" >> ${GITHUB_ENV}
     - name: Checkout Audacity
       uses: actions/checkout@v2
     - name: Log in to the Container registry
@@ -137,7 +143,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v3
       with:
-        images: ghcr.io/${{ github.repository_owner }}/audacity-${{ matrix.config.name }}-build
+        images: ghcr.io/${{ env.LOWERCASE_OWNER }}/audacity-${{ matrix.config.name }}-build
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
       with:
@@ -176,7 +182,8 @@ jobs:
 
         ls -la .
 
-        docker run --volume=$(pwd):/work_dir:rw --rm --network=none ghcr.io/${{ github.repository_owner }}/audacity-${{ matrix.config.name }}-build:${{ github.ref_name }}
+        OWNER=${{ github.repository_owner }}
+        docker run --volume=$(pwd):/work_dir:rw --rm --network=none ghcr.io/${OWNER,,}/audacity-${{ matrix.config.name }}-build:${{ github.ref_name }}
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
