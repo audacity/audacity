@@ -44,7 +44,6 @@ namespace{ BuiltinEffectsModule::Registration< EffectEcho > reg; }
 
 EffectEcho::EffectEcho()
 {
-   Parameters().Reset(*this);
    SetLinearEffectFlag(true);
 }
 
@@ -89,13 +88,15 @@ unsigned EffectEcho::GetAudioOutCount() const
 bool EffectEcho::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames)
 {
-   if (delay == 0.0)
+   auto& echoSettings = mSettings;
+
+   if (echoSettings.delay == 0.0)
    {
       return false;
    }
 
    histPos = 0;
-   auto requestedHistLen = (sampleCount) (mSampleRate * delay);
+   auto requestedHistLen = (sampleCount) (mSampleRate * echoSettings.delay);
 
    // Guard against extreme delay values input by the user
    try {
@@ -123,6 +124,8 @@ bool EffectEcho::ProcessFinalize()
 size_t EffectEcho::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
+   auto& echoSettings = mSettings;
+
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
@@ -132,26 +135,28 @@ size_t EffectEcho::ProcessBlock(EffectSettings &,
       {
          histPos = 0;
       }
-      history[histPos] = obuf[i] = ibuf[i] + history[histPos] * decay;
+      history[histPos] = obuf[i] = ibuf[i] + history[histPos] * echoSettings.decay;
    }
 
    return blockLen;
 }
 
 std::unique_ptr<EffectUIValidator>
-EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+EffectEcho::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess& access)
 {
+   auto& echoSettings = mSettings;
+
    S.AddSpace(0, 5);
 
    S.StartMultiColumn(2, wxALIGN_CENTER);
    {
       S.Validator<FloatingPointValidator<double>>(
-            3, &delay, NumValidatorStyle::NO_TRAILING_ZEROES,
+            3, &echoSettings.delay, NumValidatorStyle::NO_TRAILING_ZEROES,
             Delay.min, Delay.max )
          .AddTextBox(XXO("&Delay time (seconds):"), L"", 10);
 
       S.Validator<FloatingPointValidator<double>>(
-            3, &decay, NumValidatorStyle::NO_TRAILING_ZEROES,
+            3, &echoSettings.decay, NumValidatorStyle::NO_TRAILING_ZEROES,
             Decay.min, Decay.max)
          .AddTextBox(XXO("D&ecay factor:"), L"", 10);
    }

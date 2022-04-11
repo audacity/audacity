@@ -20,11 +20,23 @@ class ShuttleGui;
 
 using Floats = ArrayOf<float>;
 
+
+struct EffectEchoSettings
+{
+   static constexpr double delayDefault = 1.0;
+   static constexpr double decayDefault = 0.5;
+
+   double delay{ delayDefault };
+   double decay{ decayDefault };
+};
+
 class EffectEcho final : public StatefulPerTrackEffect
 {
 public:
-   static inline EffectEcho *
-   FetchParameters(EffectEcho &e, EffectSettings &) { return &e; }
+
+   static inline EffectEchoSettings*
+      FetchParameters(EffectEcho& e, EffectSettings&) { return &(e.mSettings); }
+   
    static const ComponentInterfaceSymbol Symbol;
 
    EffectEcho();
@@ -56,8 +68,8 @@ public:
 private:
    // EffectEcho implementation
 
-   double delay;
-   double decay;
+   EffectEchoSettings mSettings;
+
    Floats history;
    size_t histPos;
    size_t histLen;
@@ -74,10 +86,10 @@ private:
    >;
 #else
 
-static constexpr EffectParameter Delay{ &EffectEcho::delay,
-   L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f };
-static constexpr EffectParameter Decay{ &EffectEcho::decay,
-   L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f };
+static constexpr EffectParameter Delay{ &EffectEchoSettings::delay,
+   L"Delay",   EffectEchoSettings::delayDefault, 0.001f,  FLT_MAX, 1.0f };
+static constexpr EffectParameter Decay{ &EffectEchoSettings::decay,
+   L"Decay",   EffectEchoSettings::decayDefault, 0.0f,    FLT_MAX, 1.0f };
 
 #endif
 };
