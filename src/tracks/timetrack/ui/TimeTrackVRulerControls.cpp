@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "AColor.h"
 #include "AllThemeResources.h"
-#include "../../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../../RefreshCode.h"
 #include "Theme.h"
 #include "../../../TimeTrack.h"

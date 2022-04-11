@@ -294,7 +294,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
       &TrackPanel::OnIdle, this);
 
    // Register for tracklist updates
-   mTrackListScubscription =
+   mTrackListSubscription =
    mTracks->Subscribe([this](const TrackListEvent &event){
       switch (event.mType) {
       case TrackListEvent::RESIZING:
@@ -315,9 +315,10 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    theProject->Bind(
       EVT_TRACK_FOCUS_CHANGE, &TrackPanel::OnTrackFocusChange, this );
 
-   theProject->Bind(EVT_UNDO_RESET, &TrackPanel::OnUndoReset, this);
+   mUndoSubscription = UndoManager::Get(*theProject)
+      .Subscribe(*this, &TrackPanel::OnUndoReset);
 
-   mAudioIOScubscription =
+   mAudioIOSubscription =
       AudioIO::Get()->Subscribe(*this, &TrackPanel::OnAudioIO);
    UpdatePrefs();
 }
@@ -451,11 +452,12 @@ void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )
    }
 }
 
-void TrackPanel::OnUndoReset( wxCommandEvent &event )
+void TrackPanel::OnUndoReset(UndoRedoMessage message)
 {
-   event.Skip();
-   TrackFocus::Get( *GetProject() ).Set( nullptr );
-   Refresh( false );
+   if (message.type == UndoRedoMessage::Reset) {
+      TrackFocus::Get( *GetProject() ).Set( nullptr );
+      Refresh( false );
+   }
 }
 
 /// AS: OnPaint( ) is called during the normal course of

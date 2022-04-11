@@ -23,7 +23,7 @@
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../LabelTrack.h"
-#include "../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../Shuttle.h"
 #include "../ShuttleGui.h"
 #include "CommandContext.h"
