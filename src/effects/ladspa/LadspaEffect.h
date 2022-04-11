@@ -152,7 +152,7 @@ private:
    void OnCheckBox(wxCommandEvent & evt);
    void OnSlider(wxCommandEvent & evt);
    void OnTextCtrl(wxCommandEvent & evt);
-   void RefreshControls(bool outputOnly = false);
+   void RefreshControls();
 
 private:
 

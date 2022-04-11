@@ -561,7 +561,6 @@ LadspaEffectMeter::LadspaEffectMeter(wxWindow *parent, const float & val, float 
    mMin = min;
    mMax = max;
    mLastValue = -mVal;
-
    SetBackgroundColour(*wxWHITE);
 }
 
@@ -573,9 +572,7 @@ void LadspaEffectMeter::OnIdle(wxIdleEvent &evt)
 {
    evt.Skip();
    if (mLastValue != mVal)
-   {
       Refresh(false);
-   }
 }
 
 void LadspaEffectMeter::OnErase(wxEraseEvent & WXUNUSED(evt))
@@ -597,19 +594,14 @@ void LadspaEffectMeter::OnPaint(wxPaintEvent & WXUNUSED(evt))
    // These use unscaled value, min, and max
    float val = mVal;
    if (val > mMax)
-   {
       val = mMax;
-   }
    if (val < mMin)
-   {
       val = mMin;
-   }
    val -= mMin;
 
    // Setup for erasing the background
    dc.SetPen(*wxTRANSPARENT_PEN);
    dc.SetBrush(wxColour(100, 100, 220));
-
    dc.Clear();
    dc.DrawRectangle(x, y, (w * (val / fabs(mMax - mMin))), h);
 
@@ -973,20 +965,13 @@ size_t LadspaEffect::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    for (int i = 0; i < (int)mAudioIns; i++)
-   {
       mData->connect_port(mMaster, mInputPorts[i],
          const_cast<float*>(inBlock[i]));
-   }
 
    for (int i = 0; i < (int)mAudioOuts; i++)
-   {
       mData->connect_port(mMaster, mOutputPorts[i], outBlock[i]);
-   }
 
    mData->run(mMaster, blockLen);
-
-   RefreshControls(true);
-
    return blockLen;
 }
 
@@ -1457,15 +1442,16 @@ LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
             upper = floorf(upper * 1000000.0) / 1000000.0;
             mInputControls[p] = roundf(mInputControls[p] * 1000000.0) / 1000000.0;
 
-            mMeters[p] = safenew LadspaEffectMeter(w, mOutputControls[p], lower, upper);
+            // Capture const reference to output control value for later
+            // display update
+            mMeters[p] = safenew LadspaEffectMeter(
+               w, mOutputControls[p], lower, upper);
             mMeters[p]->SetLabel(labelText);    // for screen readers
             gridSizer->Add(mMeters[p], 1, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL, 5);
          }
 
          paramSizer->Add(gridSizer.release(), 0, wxEXPAND | wxALL, 5);
          marginSizer->Add(paramSizer.release(), 0, wxEXPAND | wxALL, 5);
-
-         RefreshControls(true);
       }
 
       w->SetSizer(uMarginSizer.release());
@@ -1744,54 +1730,35 @@ void LadspaEffect::OnTextCtrl(wxCommandEvent & evt)
    that->mSliders[p]->SetValue((int)(((val-lower)/range) * 1000.0 + 0.5));
 }
 
-void LadspaEffect::RefreshControls(bool outputOnly)
+void LadspaEffect::RefreshControls()
 {
    if (!mParent)
-   {
       return;
-   }
 
-   for (unsigned long p = 0; p < mData->PortCount; p++)
-   {
+   for (unsigned long p = 0; p < mData->PortCount; p++) {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
       if (!(LADSPA_IS_PORT_CONTROL(d)))
-      {
          continue;
-      }
 
       wxString fieldText;
       LADSPA_PortRangeHint hint = mData->PortRangeHints[p];
 
       bool forceint = false;
       if (LADSPA_IS_HINT_SAMPLE_RATE(hint.HintDescriptor))
-      {
          forceint = true;
-      }
 
       if (LADSPA_IS_PORT_OUTPUT(d)) 
-      {
          continue;
-      }
 
-      if (outputOnly)
-      {
-         continue;
-      }
-
-      if (LADSPA_IS_HINT_TOGGLED(hint.HintDescriptor))
-      {
+      if (LADSPA_IS_HINT_TOGGLED(hint.HintDescriptor)) {
          mToggles[p]->SetValue(mInputControls[p] > 0);
          continue;
       }
 
       if (LADSPA_IS_HINT_INTEGER(hint.HintDescriptor) || forceint)
-      {
          fieldText.Printf(wxT("%d"), (int)(mInputControls[p] + 0.5));
-      }
       else
-      {
          fieldText = Internat::ToDisplayString(mInputControls[p]);
-      }
 
       // Set the textctrl value.  This will trigger an event so OnTextCtrl()
       // can update the slider.
