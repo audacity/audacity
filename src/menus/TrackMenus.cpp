@@ -54,14 +54,15 @@ void DoMixAndRender
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
+   auto trackRange = tracks.Selected< WaveTrack >();
    WaveTrack::Holder uNewLeft, uNewRight;
-   ::MixAndRender(
-      &tracks, &trackFactory, rate, defaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
+   ::MixAndRender(trackRange.Filter<const WaveTrack>(),
+      Mixer::WarpOptions{ tracks },
+      tracks.MakeUniqueTrackName(_("Mix")),
+      &trackFactory, rate, defaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
 
    if (uNewLeft) {
       // Remove originals, get stats on what tracks were mixed
-
-      auto trackRange = tracks.Selected< WaveTrack >();
 
       // But before removing, determine the first track after the removal
       auto last = *trackRange.rbegin();
