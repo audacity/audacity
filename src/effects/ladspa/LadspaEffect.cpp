@@ -919,11 +919,9 @@ bool LadspaEffect::ProcessInitialize(
    /* Instantiate the plugin */
    if (!mReady)
    {
-      mMaster = InitInstance(mSampleRate);
+      mMaster = InitInstance(mSampleRate, mSettings);
       if (!mMaster)
-      {
          return false;
-      }
       mReady = true;
    }
 
@@ -934,12 +932,10 @@ bool LadspaEffect::ProcessInitialize(
 
 bool LadspaEffect::ProcessFinalize()
 {
-   if (mReady)
-   {
+   if (mReady) {
       mReady = false;
-
       FreeInstance(mMaster);
-      mMaster = NULL;
+      mMaster = nullptr;
    }
 
    return true;
@@ -948,11 +944,11 @@ bool LadspaEffect::ProcessFinalize()
 size_t LadspaEffect::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   for (int i = 0; i < (int)mAudioIns; i++)
+   for (unsigned i = 0; i < mAudioIns; ++i)
       mData->connect_port(mMaster, mInputPorts[i],
          const_cast<float*>(inBlock[i]));
 
-   for (int i = 0; i < (int)mAudioOuts; i++)
+   for (unsigned i = 0; i < mAudioOuts; ++i)
       mData->connect_port(mMaster, mOutputPorts[i], outBlock[i]);
 
    mData->run(mMaster, blockLen);
@@ -967,7 +963,7 @@ bool LadspaEffect::RealtimeInitialize(EffectSettings &)
 bool LadspaEffect::RealtimeAddProcessor(
    EffectSettings &, unsigned, float sampleRate)
 {
-   LADSPA_Handle slave = InitInstance(sampleRate);
+   LADSPA_Handle slave = InitInstance(sampleRate, mSettings);
    if (!slave)
    {
       return false;
@@ -1535,15 +1531,16 @@ bool LadspaEffect::SaveParameters(
       group, wxT("Parameters"), parms);
 }
 
-LADSPA_Handle LadspaEffect::InitInstance(float sampleRate)
+LADSPA_Handle LadspaEffect::InitInstance(
+   float sampleRate, LadspaEffectSettings &settings) const
 {
    /* Instantiate the plugin */
    LADSPA_Handle handle = mData->instantiate(mData, sampleRate);
    if (!handle)
-      return NULL;
+      return nullptr;
 
-   auto &controls = mSettings.controls;
-   for (unsigned long p = 0; p < mData->PortCount; p++) {
+   auto &controls = settings.controls;
+   for (unsigned long p = 0; p < mData->PortCount; ++p) {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
       if (LADSPA_IS_PORT_CONTROL(d))
          mData->connect_port(handle, p, &controls[p]);
@@ -1554,7 +1551,7 @@ LADSPA_Handle LadspaEffect::InitInstance(float sampleRate)
    return handle;
 }
 
-void LadspaEffect::FreeInstance(LADSPA_Handle handle)
+void LadspaEffect::FreeInstance(LADSPA_Handle handle) const
 {
    if (mData->deactivate)
    {

@@ -157,8 +157,9 @@ private:
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
-   LADSPA_Handle InitInstance(float sampleRate);
-   void FreeInstance(LADSPA_Handle handle);
+   LADSPA_Handle InitInstance(
+      float sampleRate, LadspaEffectSettings &settings) const;
+   void FreeInstance(LADSPA_Handle handle) const;
 
    void OnCheckBox(wxCommandEvent & evt);
    void OnSlider(wxCommandEvent & evt);
