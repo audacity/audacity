@@ -126,15 +126,15 @@ unsigned EffectDtmf::GetAudioOutCount() const
 
 //! Temporary state of the computation
 struct EffectDtmf::Instance
-   : public PerTrackEffect::Instance
-   , public EffectInstanceWithBlockSize
+   : PerTrackEffect::Instance
+   , EffectInstanceWithBlockSize
+   , EffectInstanceWithSampleRate
 {
    Instance(const PerTrackEffect &effect, double t0)
       : PerTrackEffect::Instance{ effect }
       , mT0{ t0 }
    {}
 
-   void SetSampleRate(double rate) override { mSampleRate = rate; }
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;
    size_t ProcessBlock(EffectSettings &settings,
@@ -142,7 +142,6 @@ struct EffectDtmf::Instance
    override;
 
    const double mT0;
-   double mSampleRate{};
 
    sampleCount numSamplesSequence;  // total number of samples to generate
    sampleCount numSamplesTone;      // number of samples in a tone block

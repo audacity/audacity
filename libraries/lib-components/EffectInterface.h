@@ -440,6 +440,17 @@ protected:
    size_t mBlockSize{ 0 };
 };
 
+//! Inherit to add a state variable to an EffectInstance subclass
+class COMPONENTS_API EffectInstanceWithSampleRate
+   : public virtual EffectInstance
+{
+public:
+   ~EffectInstanceWithSampleRate() override;
+   void SetSampleRate(double rate) override;
+protected:
+   double mSampleRate{ 0 };
+};
+
 /***************************************************************************//**
 \class EffectInstanceFactory
 *******************************************************************************/
