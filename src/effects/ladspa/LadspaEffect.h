@@ -97,31 +97,6 @@ public:
    int GetMidiInCount() const override;
    int GetMidiOutCount() const override;
 
-   void SetSampleRate(double rate) override;
-   size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
-
-   sampleCount GetLatency() override;
-
-   bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-
-   bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   bool RealtimeSuspend() override;
-   bool RealtimeResume() noexcept override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(int group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
-   bool RealtimeProcessEnd(EffectSettings &) noexcept override;
-
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
    bool InitializePlugin();
@@ -129,9 +104,9 @@ public:
 
    // EffectUIClientInterface implementation
 
+   struct Instance;
    std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
       const override;
-   std::shared_ptr<EffectInstance> DoMakeInstance(EffectSettings &settings);
    struct Validator;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
@@ -176,10 +151,6 @@ private:
 
    wxString pluginName;
 
-   bool mReady{ false };
-
-   LADSPA_Handle mMaster{};
-
    double mSampleRate{ 44100.0 };
    size_t mBlockSize{ 0 };
 
@@ -199,10 +170,6 @@ private:
 
    bool mUseLatency{ true };
    int mLatencyPort{ -1 };
-   bool mLatencyDone{ false };
-
-   // Realtime processing
-   std::vector<LADSPA_Handle> mSlaves;
 
    NumericTextCtrl *mDuration{};
    wxWeakRef<wxDialog> mDialog;
