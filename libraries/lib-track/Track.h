@@ -232,13 +232,27 @@ public:
        Aligned, //< Tracks are grouped and changes should be synchronized
    };
 
+   struct ChannelGroupData;
+
+   //! Hosting of objects attached by higher level code
+   using ChannelGroupAttachments = ClientData::Site<
+      ChannelGroupData, ClientData::Cloneable<>, ClientData::DeepCopying
+   >;
+
+   // Structure describing data common to channels of a group of tracks
+   // Should be deep-copyable (think twice before adding shared pointers!)
+   struct ChannelGroupData : ChannelGroupAttachments {
+      LinkType mLinkType{ LinkType::None };
+   };
+
 private:
 
    friend class TrackList;
 
  private:
    TrackId mId; //!< Identifies the track only in-session, not persistently
-   LinkType mLinkType{ LinkType::None };
+
+   std::unique_ptr<ChannelGroupData> mpGroupData;
 
  protected:
    std::weak_ptr<TrackList> mList; //!< Back pointer to owning TrackList
@@ -247,7 +261,6 @@ private:
    TrackNodePointer mNode{};
    int            mIndex; //!< 0-based position of this track in its TrackList
    wxString       mName;
-   wxString       mDefaultName;
 
  private:
    bool           mSelected;
@@ -382,13 +395,18 @@ public:
    //! Returns true if the leader track has link type LinkType::Aligned
    bool IsAlignedWithLeader() const;
 
+   ChannelGroupData &GetGroupData();
+   const ChannelGroupData &GetGroupData() const;
+
 protected:
    
    void SetLinkType(LinkType linkType);
-   void DoSetLinkType(LinkType linkType) noexcept;
    void SetChannel(ChannelType c) noexcept;
+
 private:
-   
+   ChannelGroupData &MakeGroupData();
+   void DoSetLinkType(LinkType linkType);
+
    Track* GetLinkedTrack() const;
    //! Returns true for leaders of multichannel groups
    bool HasLinkedTrack() const noexcept;
@@ -423,8 +441,6 @@ private:
 
    wxString GetName() const { return mName; }
    void SetName( const wxString &n );
-   wxString GetDefaultName() const { return mDefaultName; }
-   void SetDefaultName( const wxString &n ) { mDefaultName = n; }
 
    bool GetSelected() const { return mSelected; }
 
@@ -455,6 +471,7 @@ public:
    // Note that subclasses may want to distinguish tracks stored in a clipboard
    // from those stored in a project
    // May assume precondition: t0 <= t1
+   // Should invoke Track::Init
    virtual Holder Copy
       (double WXUNUSED(t0), double WXUNUSED(t1), bool forClipboard = true) const = 0;
 
@@ -1332,6 +1349,14 @@ class TRACK_API TrackList final
    AudacityProject *GetOwner() { return mOwner; }
    const AudacityProject *GetOwner() const { return mOwner; }
 
+   /**
+    * \brief Returns string that contains baseTrackName,
+    * but is guaranteed to be unique among other tracks in that list.
+    * \param baseTrackName String to be put into the template
+    * \return Formatted string: "[baseTrackName] [N]"
+    */
+   wxString MakeUniqueTrackName(const wxString& baseTrackName) const;
+
    // Iteration
 
    // Hide the inherited begin() and end()
@@ -1494,6 +1519,10 @@ public:
    {
       return Channels_<TrackType>( pTrack->GetOwner()->FindLeader(pTrack) );
    }
+
+   //! If the given track is one of a pair of channels, swap them
+   /*! @return success */
+   static bool SwapChannels(Track &track);
 
    friend class Track;
 

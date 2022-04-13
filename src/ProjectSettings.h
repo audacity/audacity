@@ -40,7 +40,6 @@ enum {
    selectTool,
    envelopeTool,
    drawTool,
-   zoomTool,
    multiTool,
 
 #ifdef EXPERIMENTAL_BRUSH_TOOL

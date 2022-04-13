@@ -2,13 +2,13 @@
 #include "../Menus.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
 #include "Track.h"
 #include "../TrackInfo.h"
 #include "../TrackPanel.h"
-#include "../UndoManager.h"
+#include "UndoManager.h"
 #include "ViewInfo.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
@@ -350,27 +350,26 @@ void OnShowNameOverlay(const CommandContext &context)
 }
 
 // Not a menu item, but a listener for events
-void OnUndoPushed( wxCommandEvent &evt )
+void OnUndoPushed(UndoRedoMessage message)
 {
-   evt.Skip();
-   const auto &settings = ProjectSettings::Get( mProject );
-   if (settings.GetTracksFitVerticallyZoomed())
-      DoZoomFitV( mProject );
+   if (message.type == UndoRedoMessage::Pushed) {
+      const auto &settings = ProjectSettings::Get( mProject );
+      if (settings.GetTracksFitVerticallyZoomed())
+         DoZoomFitV( mProject );
+   }
 }
 
 Handler( AudacityProject &project )
    : mProject{ project }
 {
-   mProject.Bind( EVT_UNDO_PUSHED, &Handler::OnUndoPushed, this );
+   mUndoSubscription = UndoManager::Get(mProject)
+      .Subscribe(*this, &Handler::OnUndoPushed);
 }
 
-~Handler()
-{
-   mProject.Unbind( EVT_UNDO_PUSHED, &Handler::OnUndoPushed, this );
-}
 Handler( const Handler & ) PROHIBITED;
 Handler &operator=( const Handler & ) PROHIBITED;
 
+Observer::Subscription mUndoSubscription;
 AudacityProject &mProject;
 
 }; // struct Handler

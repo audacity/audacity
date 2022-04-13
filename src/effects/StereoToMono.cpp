@@ -62,8 +62,6 @@ bool EffectStereoToMono::IsInteractive() const
    return false;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectStereoToMono::GetAudioInCount() const
 {
    return 2;
@@ -76,7 +74,7 @@ unsigned EffectStereoToMono::GetAudioOutCount() const
 
 // Effect implementation
 
-bool EffectStereoToMono::Process(EffectSettings &)
+bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 {
    // Do not use mWaveTracks here.  We will possibly DELETE tracks,
    // so we must use the "real" tracklist.

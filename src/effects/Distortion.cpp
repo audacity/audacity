@@ -191,8 +191,6 @@ bool EffectDistortion::SupportsRealtime() const
    return true;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectDistortion::GetAudioInCount() const
 {
    return 1;

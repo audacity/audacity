@@ -17,7 +17,7 @@
 //! Mediator of two-way inter-thread communication of changes of settings
 class RealtimeEffectState::AccessState : public NonInterferingBase {
 public:
-   AccessState(EffectProcessor &effect, EffectSettings &settings)
+   AccessState(const EffectSettingsManager &effect, EffectSettings &settings)
       : mEffect{effect}
       , mSettings{settings}
    {
@@ -42,7 +42,7 @@ public:
    }
 
    struct EffectAndSettings{
-      EffectProcessor &effect; const EffectSettings &settings; };
+      const EffectSettingsManager &effect; const EffectSettings &settings; };
    void WorkerRead() {
       // Worker thread avoids memory allocation.  It copies the contents of any
       mChannelFromMain.Read<FromMainSlot::Reader>(mEffect, mSettings);
@@ -97,7 +97,7 @@ private:
 
       // Worker thread reads the slot
       struct Reader { Reader(FromMainSlot &&slot,
-         EffectProcessor &effect, EffectSettings &settings) {
+         const EffectSettingsManager &effect, EffectSettings &settings) {
             // This happens during MessageBuffer's busying of the slot
             effect.CopySettingsContents(slot.mSettings, settings);
             settings.extra = slot.mSettings.extra;
@@ -107,7 +107,7 @@ private:
    };
    MessageBuffer<FromMainSlot> mChannelFromMain;
 
-   EffectProcessor &mEffect;
+   const EffectSettingsManager &mEffect;
    EffectSettings &mSettings;
    EffectSettings mMainThreadCache;
 };
@@ -139,6 +139,13 @@ RealtimeEffectState::RealtimeEffectState(const PluginID & id)
    SetID(id);
 }
 
+RealtimeEffectState::RealtimeEffectState(const RealtimeEffectState &other)
+  : mID{ other.mID }
+  , mPlugin{ other.mPlugin }
+  , mSettings{ other.mSettings }
+{
+}
+
 RealtimeEffectState::~RealtimeEffectState() = default;
 
 void RealtimeEffectState::SetID(const PluginID & id)
@@ -153,46 +160,54 @@ void RealtimeEffectState::SetID(const PluginID & id)
       assert(empty);
 }
 
-EffectProcessor *RealtimeEffectState::GetEffect()
+const EffectInstanceFactory *RealtimeEffectState::GetEffect()
 {
-   if (!mEffect) {
-      mEffect = EffectFactory::Call(mID);
-      if (mEffect)
+   if (!mPlugin) {
+      mPlugin = EffectFactory::Call(mID);
+      if (mPlugin)
          // Also make EffectSettings
-         mSettings = mEffect->MakeSettings();
+         mSettings = mPlugin->MakeSettings();
    }
-   return mEffect.get();
+   return mPlugin;
 }
 
 bool RealtimeEffectState::Suspend()
 {
    ++mSuspendCount;
-   return mSuspendCount != 1 || (mEffect && mEffect->RealtimeSuspend());
+   return mSuspendCount != 1 || (mInstance && mInstance->RealtimeSuspend());
 }
 
 bool RealtimeEffectState::Resume() noexcept
 {
    assert(mSuspendCount > 0);
    --mSuspendCount;
-   return mSuspendCount != 0 || (mEffect && mEffect->RealtimeResume());
+   return mSuspendCount != 0 || (mInstance && mInstance->RealtimeResume());
 }
 
 bool RealtimeEffectState::Initialize(double rate)
 {
-   if (!mEffect)
+   if (!mPlugin)
+      return false;
+   mInstance = mPlugin->MakeInstance(mSettings);
+   if (!mInstance)
       return false;
 
    mCurrentProcessor = 0;
    mGroups.clear();
-   mEffect->SetSampleRate(rate);
-   return mEffect->RealtimeInitialize(mSettings);
+   mInstance->SetSampleRate(rate);
+
+   // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
+   // number was important
+   mInstance->SetBlockSize(512);
+
+   return mInstance->RealtimeInitialize(mSettings);
 }
 
 //! Set up processors to be visited repeatedly in Process.
 /*! The iteration over channels in AddTrack and Process must be the same */
 bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
 {
-   if (!mEffect)
+   if (!mPlugin || !mInstance)
       return false;
 
    auto ichans = chans;
@@ -201,8 +216,8 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
 
    mGroups[&track] = mCurrentProcessor;
 
-   const auto numAudioIn = mEffect->GetAudioInCount();
-   const auto numAudioOut = mEffect->GetAudioOutCount();
+   const auto numAudioIn = mPlugin->GetAudioInCount();
+   const auto numAudioOut = mPlugin->GetAudioOutCount();
 
    // Call the client until we run out of input or output channels
    while (ichans > 0 && ochans > 0)
@@ -241,7 +256,7 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
       }
 
       // Add a NEW processor
-      mEffect->RealtimeAddProcessor(mSettings, gchans, rate);
+      mInstance->RealtimeAddProcessor(mSettings, gchans, rate);
       mCurrentProcessor++;
    }
 
@@ -250,7 +265,7 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
 
 bool RealtimeEffectState::ProcessStart()
 {
-   if (!mEffect)
+   if (!mInstance)
       return false;
 
    // Get state changes from the main thread
@@ -258,7 +273,7 @@ bool RealtimeEffectState::ProcessStart()
    if (!mwAccess.expired())
       mpAccessState->WorkerRead();
 
-   return mEffect->RealtimeProcessStart(mSettings);
+   return mInstance->RealtimeProcessStart(mSettings);
 }
 
 //! Visit the effect processors that were added in AddTrack
@@ -268,7 +283,7 @@ size_t RealtimeEffectState::Process(Track &track,
    const float *const *inbuf, float *const *outbuf, float *dummybuf,
    size_t numSamples)
 {
-   if (!mEffect) {
+   if (!mPlugin || !mInstance) {
       for (size_t ii = 0; ii < chans; ++ii)
          memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
       return numSamples; // consider all samples to be trivially processed
@@ -282,8 +297,8 @@ size_t RealtimeEffectState::Process(Track &track,
    // so if the number of channels we're currently processing are different
    // than what the effect expects, then we use a few methods of satisfying
    // the effects requirements.
-   const auto numAudioIn = mEffect->GetAudioInCount();
-   const auto numAudioOut = mEffect->GetAudioOutCount();
+   const auto numAudioIn = mPlugin->GetAudioInCount();
+   const auto numAudioOut = mPlugin->GetAudioOutCount();
 
    const auto clientIn =
       static_cast<const float **>(alloca(numAudioIn * sizeof(float *)));
@@ -363,11 +378,11 @@ size_t RealtimeEffectState::Process(Track &track,
 
       // Finally call the plugin to process the block
       len = 0;
-      const auto blockSize = mEffect->GetBlockSize();
+      const auto blockSize = mInstance->GetBlockSize();
       for (decltype(numSamples) block = 0; block < numSamples; block += blockSize)
       {
          auto cnt = std::min(numSamples - block, blockSize);
-         len += mEffect->RealtimeProcess(processor,
+         len += mInstance->RealtimeProcess(processor,
             mSettings, clientIn, clientOut, cnt);
 
          for (size_t i = 0 ; i < numAudioIn; i++)
@@ -388,10 +403,10 @@ size_t RealtimeEffectState::Process(Track &track,
 
 bool RealtimeEffectState::ProcessEnd()
 {
-   if (!mEffect)
+   if (!mInstance)
       return false;
 
-   auto result = mEffect->RealtimeProcessEnd(mSettings);
+   auto result = mInstance->RealtimeProcessEnd(mSettings);
    if (result && !mwAccess.expired())
       // Some dialogs require communication back from the processor so that
       // they can update their appearance in idle time, and some plug-in
@@ -412,10 +427,12 @@ bool RealtimeEffectState::Finalize() noexcept
 {
    mGroups.clear();
 
-   if (!mEffect)
+   if (!mInstance)
       return false;
 
-   return mEffect->RealtimeFinalize(mSettings);
+   auto result = mInstance->RealtimeFinalize(mSettings);
+   mInstance.reset();
+   return result;
 }
 
 const std::string &RealtimeEffectState::XMLTag()
@@ -436,7 +453,7 @@ bool RealtimeEffectState::HandleXMLTag(
 {
    if (tag == XMLTag()) {
       mParameters.clear();
-      mEffect.reset();
+      mPlugin = nullptr;
       mID.clear();
 
       for (auto pair : attrs) {
@@ -445,7 +462,7 @@ bool RealtimeEffectState::HandleXMLTag(
 
          if (attr == idAttribute) {
             SetID(value.ToWString());
-            if (!mEffect) {
+            if (!mPlugin) {
                // TODO - complain!!!!
             }
          }
@@ -482,9 +499,9 @@ bool RealtimeEffectState::HandleXMLTag(
 void RealtimeEffectState::HandleXMLEndTag(const std::string_view &tag)
 {
    if (tag == XMLTag()) {
-      if (mEffect && !mParameters.empty()) {
+      if (mPlugin && !mParameters.empty()) {
          CommandParameters parms(mParameters);
-         mEffect->LoadSettings(parms, mSettings);
+         mPlugin->LoadSettings(parms, mSettings);
       }
       mParameters.clear();
    }
@@ -499,15 +516,16 @@ XMLTagHandler *RealtimeEffectState::HandleXMLChild(const std::string_view &tag)
 
 void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
 {
-   if (!mEffect)
+   if (!mPlugin)
       return;
 
    xmlFile.StartTag(XMLTag());
-   xmlFile.WriteAttr(idAttribute, XMLWriter::XMLEsc(PluginManager::GetID(mEffect.get())));
-   xmlFile.WriteAttr(versionAttribute, XMLWriter::XMLEsc(mEffect->GetVersion()));
+   xmlFile.WriteAttr(
+      idAttribute, XMLWriter::XMLEsc(PluginManager::GetID(mPlugin)));
+   xmlFile.WriteAttr(versionAttribute, XMLWriter::XMLEsc(mPlugin->GetVersion()));
 
    CommandParameters cmdParms;
-   if (mEffect->SaveSettings(mSettings, cmdParms)) {
+   if (mPlugin->SaveSettings(mSettings, cmdParms)) {
       xmlFile.StartTag(parametersAttribute);
 
       wxString entryName;
@@ -540,7 +558,7 @@ std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
 
    // Initialize once in the lifetime of `this`
    if (!mpAccessState)
-      mpAccessState = std::make_unique<AccessState>(*mEffect, mSettings);
+      mpAccessState = std::make_unique<AccessState>(*mPlugin, mSettings);
 
    // Reinitialize
    mpAccessState->Initialize(mSettings);

@@ -861,14 +861,14 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
          gPrefs->Read(wxT("/GUI/TrackNames/DateStamp"), &useDateStamp, false);
          gPrefs->Read(wxT("/GUI/TrackNames/TimeStamp"), &useTimeStamp, false);
-         defaultTrackName = WaveTrack::GetDefaultAudioTrackNamePreference();
+         defaultTrackName = trackList.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference());
          gPrefs->Read(wxT("/GUI/TrackNames/RecodingTrackName"), &defaultRecordingTrackName, defaultTrackName);
 
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
 
          Track *first {};
          for (int c = 0; c < recordingChannels; c++) {
-            auto newTrack = WaveTrackFactory::Get( *p ).NewWaveTrack();
+            auto newTrack = WaveTrackFactory::Get( *p ).Create();
             if (!first)
                first = newTrack.get();
 
@@ -1082,7 +1082,8 @@ void ProjectAudioManager::OnAudioIONewBlocks(const WaveTrackArray *tracks)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
-   projectFileIO.AutoSave(true);
+
+   wxTheApp->CallAfter( [&]{ projectFileIO.AutoSave(true); });
 }
 
 void ProjectAudioManager::OnCommitRecording()

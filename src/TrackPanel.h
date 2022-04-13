@@ -100,7 +100,7 @@ class AUDACITY_DLL_API TrackPanel final
    void OnProjectSettingsChange(wxCommandEvent &event);
    void OnTrackFocusChange( wxCommandEvent &event );
 
-   void OnUndoReset( wxCommandEvent &event );
+   void OnUndoReset(struct UndoRedoMessage);
 
    void Refresh
       (bool eraseBackground = true, const wxRect *rect = (const wxRect *) NULL)
@@ -184,8 +184,10 @@ public:
 public:
 
 protected:
-   Observer::Subscription mTrackListScubscription,
-      mAudioIOScubscription;
+   Observer::Subscription mTrackListSubscription
+      , mAudioIOSubscription
+      , mUndoSubscription
+   ;
 
    TrackPanelListener *mListener;
 

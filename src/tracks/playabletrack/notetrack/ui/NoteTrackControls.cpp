@@ -24,7 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../NoteTrack.h"
 #include "../../../../widgets/PopupMenuTable.h"
 #include "Project.h"
-#include "../../../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../../../ProjectWindows.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../prefs/ThemePrefs.h"
@@ -219,8 +219,8 @@ void MidiControlsDrawFunction
 
 static const struct NoteTrackTCPLines
    : TCPLines { NoteTrackTCPLines() {
-   (TCPLines&)*this =
-      NoteTrackControlsBase::StaticTCPLines();
+   *static_cast<TCPLines*>(this) =
+      NoteTrackControlsBase::StaticNoteTCPLines();
    insert( end(), {
       { TCPLine::kItemMidiControlsRect, kMidiCellHeight * 4, 0,
         MidiControlsDrawFunction },

@@ -25,27 +25,37 @@ UndoManager
 
 #include <wx/hashset.h>
 
-#include "Clipboard.h"
-#include "Diags.h"
+#include "BasicUI.h"
 #include "Project.h"
-#include "SampleBlock.h"
-#include "Sequence.h"
-#include "WaveTrack.h"          // temp
-//#include "NoteTrack.h"  // for Sonify* function declarations
-#include "Diags.h"
-#include "Tags.h"
+#include "Track.h"
 #include "TransactionScope.h"
-#include "widgets/ProgressDialog.h"
+//#include "NoteTrack.h"  // for Sonify* function declarations
 
 
-#include <unordered_set>
+UndoStateExtension::~UndoStateExtension() = default;
 
-wxDEFINE_EVENT(EVT_UNDO_PUSHED, wxCommandEvent);
-wxDEFINE_EVENT(EVT_UNDO_MODIFIED, wxCommandEvent);
-wxDEFINE_EVENT(EVT_UNDO_RENAMED, wxCommandEvent);
-wxDEFINE_EVENT(EVT_UNDO_OR_REDO, wxCommandEvent);
-wxDEFINE_EVENT(EVT_UNDO_RESET, wxCommandEvent);
-wxDEFINE_EVENT(EVT_UNDO_PURGE, wxCommandEvent);
+namespace {
+   using Savers = std::vector<UndoRedoExtensionRegistry::Saver>;
+   static Savers &GetSavers()
+   {
+      static Savers theSavers;
+      return theSavers;
+   }
+
+   UndoState::Extensions GetExtensions(AudacityProject &project)
+   {
+      UndoState::Extensions result;
+      for (auto &saver : GetSavers())
+         if (saver)
+            result.emplace_back(saver(project));
+      return result;
+   }
+}
+
+UndoRedoExtensionRegistry::Entry::Entry(const Saver &saver)
+{
+   GetSavers().emplace_back(saver);
+}
 
 using SampleBlockID = long long;
 
@@ -74,71 +84,6 @@ UndoManager::UndoManager( AudacityProject &project )
 UndoManager::~UndoManager()
 {
    wxASSERT( stack.empty() );
-}
-
-namespace {
-   SpaceArray::value_type
-   CalculateUsage(const TrackList &tracks, SampleBlockIDSet &seen)
-   {
-      SpaceArray::value_type result = 0;
-      //TIMER_START( "CalculateSpaceUsage", space_calc );
-      InspectBlocks(
-         tracks,
-         BlockSpaceUsageAccumulator( result ),
-         &seen
-      );
-      return result;
-   }
-}
-
-void UndoManager::CalculateSpaceUsage()
-{
-   space.clear();
-   space.resize(stack.size(), 0);
-
-   SampleBlockIDSet seen;
-
-   // After copies and pastes, a block file may be used in more than
-   // one place in one undo history state, and it may be used in more than
-   // one undo history state.  It might even be used in two states, but not
-   // in another state that is between them -- as when you have state A,
-   // then make a cut to get state B, but then paste it back into state C.
-
-   // So be sure to count each block file once only, in the last undo item that
-   // contains it.
-
-   // Why the last and not the first? Because the user of the History dialog
-   // may DELETE undo states, oldest first.  To reclaim disk space you must
-   // DELETE all states containing the block file.  So the block file's
-   // contribution to space usage should be counted only in that latest state.
-
-   for (size_t nn = stack.size(); nn--;)
-   {
-      // Scan all tracks at current level
-      auto &tracks = *stack[nn]->state.tracks;
-      space[nn] = CalculateUsage(tracks, seen);
-   }
-
-   // Count the usage of the clipboard separately, using another set.  Do not
-   // multiple-count any block occurring multiple times within the clipboard.
-   seen.clear();
-   mClipboardSpaceUsage = CalculateUsage(
-      Clipboard::Get().GetTracks(), seen);
-
-   //TIMER_STOP( space_calc );
-}
-
-wxLongLong_t UndoManager::GetLongDescription(
-   unsigned int n, TranslatableString *desc, TranslatableString *size)
-{
-   wxASSERT(n < stack.size());
-   wxASSERT(space.size() == stack.size());
-
-   *desc = stack[n]->description;
-
-   *size = Internat::FormatSize(space[n]);
-
-   return space[n];
 }
 
 void UndoManager::GetShortDescription(unsigned int n, TranslatableString *desc)
@@ -170,56 +115,19 @@ void UndoManager::RemoveStateAt(int n)
    stack.erase(iter);
 }
 
-
-//! Just to find a denominator for a progress indicator.
-/*! This estimate procedure should in fact be exact */
-size_t UndoManager::EstimateRemovedBlocks(size_t begin, size_t end)
+void UndoManager::EnqueueMessage(UndoRedoMessage message)
 {
-   if (begin == end)
-      return 0;
-
-   // Collect ids that survive
-   SampleBlockIDSet wontDelete;
-   auto f = [&](const auto &p){
-      InspectBlocks(*p->state.tracks, {}, &wontDelete);
-   };
-   auto first = stack.begin(), last = stack.end();
-   std::for_each( first, first + begin, f );
-   std::for_each( first + end, last, f );
-   if (saved >= 0)
-      std::for_each( first + saved, first + saved + 1, f );
-   InspectBlocks(TrackList::Get(mProject), {}, &wontDelete);
-
-   // Collect ids that won't survive (and are not negative pseudo ids)
-   SampleBlockIDSet seen, mayDelete;
-   std::for_each( first + begin, first + end, [&](const auto &p){
-      auto &tracks = *p->state.tracks;
-      InspectBlocks(tracks, [&]( const SampleBlock &block ){
-         auto id = block.GetBlockID();
-         if ( id > 0 && !wontDelete.count( id ) )
-            mayDelete.insert( id );
-      },
-      &seen);
-   } );
-   return mayDelete.size();
+   BasicUI::CallAfter([wThis = weak_from_this(), message]{
+      if (auto pThis = wThis.lock())
+         pThis->Publish(message);
+   });
 }
 
 void UndoManager::RemoveStates(size_t begin, size_t end)
 {
-   // Install a callback function that updates a progress indicator
-   unsigned long long nToDelete = EstimateRemovedBlocks(begin, end),
-      nDeleted = 0;
-   ProgressDialog dialog{ XO("Progress"), XO("Discarding undo/redo history"),
-      pdlgHideStopButton | pdlgHideCancelButton
-   };
-   auto callback = [&](const SampleBlock &){
-      dialog.Update(++nDeleted, nToDelete);
-   };
-   auto &trackFactory = WaveTrackFactory::Get( mProject );
-   auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-   auto prevCallback =
-      pSampleBlockFactory->SetBlockDeletionCallback(callback);
-   auto cleanup = finally([&]{ pSampleBlockFactory->SetBlockDeletionCallback( prevCallback ); });
+   Publish({ UndoRedoMessage::BeginPurge, begin, end });
+   auto cleanup =
+      finally([&]{ Publish({ UndoRedoMessage::EndPurge }); });
 
    // Wrap the whole in a savepoint for better performance
    TransactionScope trans{mProject, "DiscardingUndoStates"};
@@ -237,13 +145,7 @@ void UndoManager::RemoveStates(size_t begin, size_t end)
    trans.Commit();
    
    if (begin != end)
-      // wxWidgets will own the event object
-      mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_PURGE } );
-
-   // Check sanity
-   wxASSERT_MSG(
-      nDeleted == 0 || // maybe bypassing all deletions
-      nDeleted == nToDelete, "Block count was misestimated");
+      EnqueueMessage({ UndoRedoMessage::Purge });
 }
 
 void UndoManager::ClearStates()
@@ -273,9 +175,8 @@ bool UndoManager::RedoAvailable()
    return (current < (int)stack.size() - 1);
 }
 
-void UndoManager::ModifyState(const TrackList * l,
-                              const SelectedRegion &selectedRegion,
-                              const std::shared_ptr<Tags> &tags)
+void UndoManager::ModifyState(const TrackList &l,
+                              const SelectedRegion &selectedRegion)
 {
    if (current == wxNOT_FOUND) {
       return;
@@ -287,7 +188,7 @@ void UndoManager::ModifyState(const TrackList * l,
 
    // Duplicate
    auto tracksCopy = TrackList::Create( nullptr );
-   for (auto t : *l) {
+   for (auto t : l) {
       if ( t->GetId() == TrackId{} )
          // Don't copy a pending added track
          continue;
@@ -295,14 +196,13 @@ void UndoManager::ModifyState(const TrackList * l,
    }
 
    // Replace
+   stack[current]->state.extensions = GetExtensions(mProject);
    stack[current]->state.tracks = std::move(tracksCopy);
-   stack[current]->state.tags = tags;
 
    stack[current]->state.selectedRegion = selectedRegion;
 //   SonifyEndModifyState();
 
-   // wxWidgets will own the event object
-   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_MODIFIED } );
+   EnqueueMessage({ UndoRedoMessage::Modified });
 }
 
 void UndoManager::RenameState( int state,
@@ -314,14 +214,12 @@ void UndoManager::RenameState( int state,
       theState.description = longDescription;
       theState.shortDescription = shortDescription;
 
-      // wxWidgets will own the event object
-      mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RENAMED } );
+      EnqueueMessage({ UndoRedoMessage::Renamed });
    }
 }
 
-void UndoManager::PushState(const TrackList * l,
+void UndoManager::PushState(const TrackList &l,
                             const SelectedRegion &selectedRegion,
-                            const std::shared_ptr<Tags> &tags,
                             const TranslatableString &longDescription,
                             const TranslatableString &shortDescription,
                             UndoPush flags)
@@ -330,7 +228,7 @@ void UndoManager::PushState(const TrackList * l,
        // compare full translations not msgids!
        lastAction.Translation() == longDescription.Translation() &&
        mayConsolidate ) {
-      ModifyState(l, selectedRegion, tags);
+      ModifyState(l, selectedRegion);
       // MB: If the "saved" state was modified by ModifyState, reset
       //  it so that UnsavedChanges returns true.
       if (current == saved) {
@@ -340,7 +238,7 @@ void UndoManager::PushState(const TrackList * l,
    }
 
    auto tracksCopy = TrackList::Create( nullptr );
-   for (auto t : *l) {
+   for (auto t : l) {
       if ( t->GetId() == TrackId{} )
          // Don't copy a pending added track
          continue;
@@ -351,20 +249,17 @@ void UndoManager::PushState(const TrackList * l,
 
    AbandonRedo();
 
-   // Assume tags was duplicated before any changes.
-   // Just save a NEW shared_ptr to it.
    stack.push_back(
       std::make_unique<UndoStackElem>
-         (std::move(tracksCopy),
-            longDescription, shortDescription, selectedRegion, tags)
+         (GetExtensions(mProject), std::move(tracksCopy),
+            longDescription, shortDescription, selectedRegion)
    );
 
    current++;
 
    lastAction = longDescription;
 
-   // wxWidgets will own the event object
-   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_PUSHED } );
+   EnqueueMessage({ UndoRedoMessage::Pushed });
 }
 
 void UndoManager::AbandonRedo()
@@ -386,8 +281,7 @@ void UndoManager::SetStateTo(unsigned int n, const Consumer &consumer)
 
    consumer( *stack[current] );
 
-   // wxWidgets will own the event object
-   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_RESET } );
+   EnqueueMessage({ UndoRedoMessage::Reset });
 }
 
 void UndoManager::Undo(const Consumer &consumer)
@@ -401,8 +295,7 @@ void UndoManager::Undo(const Consumer &consumer)
 
    consumer( *stack[current] );
 
-   // wxWidgets will own the event object
-   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_OR_REDO } );
+   EnqueueMessage({ UndoRedoMessage::UndoOrRedo });
 }
 
 void UndoManager::Redo(const Consumer &consumer)
@@ -429,8 +322,7 @@ void UndoManager::Redo(const Consumer &consumer)
 
    consumer( *stack[current] );
 
-   // wxWidgets will own the event object
-   mProject.QueueEvent( safenew wxCommandEvent{ EVT_UNDO_OR_REDO } );
+   EnqueueMessage({ UndoRedoMessage::UndoOrRedo });
 }
 
 void UndoManager::VisitStates( const Consumer &consumer, bool newestFirst )
@@ -485,4 +377,3 @@ int UndoManager::GetSavedState() const
 //                t ? t->GetEndTime()-t->GetStartTime() : 0);
 //   }
 //}
-

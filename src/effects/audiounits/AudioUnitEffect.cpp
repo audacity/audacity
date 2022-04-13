@@ -46,7 +46,6 @@
 #include <wx/tokenzr.h>
 
 #include "../../SelectFile.h"
-#include "../../EffectHostInterface.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/valnum.h"
@@ -1004,10 +1003,6 @@ bool AudioUnitEffect::SupportsAutomation() const
    return false;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
-
 bool AudioUnitEffect::InitializePlugin()
 {
    OSStatus result;
@@ -1033,25 +1028,30 @@ bool AudioUnitEffect::InitializePlugin()
                         &mBlockSize,
                         &dataSize);
 
-   // Is this really needed here or can it be done in InitializeInstance()
+   // Is this really needed here or can it be done in MakeInstance()
    // only?  I think it can, but this is more a conservative change for now,
    // preserving what SetHost() did
    return MakeListener();
 }
 
-bool AudioUnitEffect::InitializeInstance(
-   EffectHostInterface *host, EffectSettings &settings)
+std::shared_ptr<EffectInstance>
+AudioUnitEffect::MakeInstance(EffectSettings &settings) const
+{
+   return const_cast<AudioUnitEffect*>(this)->DoMakeInstance(settings);
+}
+
+std::shared_ptr<EffectInstance>
+AudioUnitEffect::DoMakeInstance(EffectSettings &settings)
 {
    OSStatus result;
-
-   mHost = host;
 
    if (mMaster)
       // Do common steps
       InitializePlugin();
 
-   if (mHost)
-   {
+   if (!mMaster) {
+      // Don't HAVE a master -- this IS the master.
+
       GetConfig(*this, PluginSettings::Shared, wxT("Options"),
          wxT("UseLatency"), mUseLatency, true);
       GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -1070,7 +1070,7 @@ bool AudioUnitEffect::InitializeInstance(
       LoadPreset(CurrentSettingsGroup(), settings);
    }
 
-   return true;
+   return std::make_shared<Instance>(*this);
 }
 
 bool AudioUnitEffect::MakeListener()
@@ -1198,12 +1198,12 @@ unsigned AudioUnitEffect::GetAudioOutCount() const
    return mAudioOuts;
 }
 
-int AudioUnitEffect::GetMidiInCount()
+int AudioUnitEffect::GetMidiInCount() const
 {
    return 0;
 }
 
-int AudioUnitEffect::GetMidiOutCount()
+int AudioUnitEffect::GetMidiOutCount() const
 {
    return 0;
 }
@@ -1245,7 +1245,9 @@ sampleCount AudioUnitEffect::GetLatency()
    return 0;
 }
 
-size_t AudioUnitEffect::GetTailSize()
+#if 0
+// TODO move to AudioUnitEffect::Instance when that class exists
+size_t AudioUnitEffect::GetTailSize() const
 {
    // Retrieve the tail time
    Float64 tailTime = 0.0;
@@ -1259,6 +1261,7 @@ size_t AudioUnitEffect::GetTailSize()
 
    return tailTime * mSampleRate;
 }
+#endif
 
 bool AudioUnitEffect::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames chanMap)
@@ -1366,7 +1369,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
-   if (!slave->InitializeInstance(nullptr, settings))
+   if (!slave->MakeInstance(settings))
    {
       return false;
    }
@@ -1532,7 +1535,7 @@ bool AudioUnitEffect::SaveSettings(
 }
 
 bool AudioUnitEffect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    OSStatus result;
    UInt32 dataSize;
@@ -1757,13 +1760,11 @@ bool AudioUnitEffect::IsGraphicalUI()
    return mUIType != wxT("Plain");
 }
 
-bool AudioUnitEffect::ValidateUI(EffectSettings &)
+bool AudioUnitEffect::ValidateUI([[maybe_unused]] EffectSettings &settings)
 {
 #if 0
    if (GetType() == EffectTypeGenerate)
-   {
-      mHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
 #endif
    return true;
 }
@@ -1915,7 +1916,7 @@ void AudioUnitEffect::ShowOptions()
 // ============================================================================
 
 bool AudioUnitEffect::LoadPreset(
-   const RegistryPath & group, EffectSettings &settings)
+   const RegistryPath & group, EffectSettings &settings) const
 {
    wxString parms;
 

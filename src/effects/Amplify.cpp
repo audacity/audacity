@@ -129,8 +129,6 @@ EffectType EffectAmplify::GetType() const
    return EffectTypeProcess;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectAmplify::GetAudioInCount() const
 {
    return 1;
@@ -230,6 +228,9 @@ EffectAmplify::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
          mRatio = 1.0;
       }
    }
+
+   // At this point mNewPeak is still uninitialized; this will intialize it
+   ClampRatio();
 
    S.AddSpace(0, 5);
 

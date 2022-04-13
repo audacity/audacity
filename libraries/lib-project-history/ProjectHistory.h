@@ -12,23 +12,34 @@ Paul Licameli split from ProjectManager.h
 #define __AUDACITY_PROJECT_HISTORY__
 
 #include "ClientData.h"
+#include "GlobalVariable.h"
 
 class AudacityProject;
 struct UndoState;
 enum class UndoPush : unsigned char;
 
-class AUDACITY_DLL_API ProjectHistory final
+class PROJECT_HISTORY_API ProjectHistory final
    : public ClientData::Base
 {
 public:
+   //! Type of function that saves project state to the database,
+   //! or throws an exception on failure
+   /*!
+    Invoked when undo states are added or modified, or when the
+    current state changes because of undo or redo
+    */
+   struct PROJECT_HISTORY_API AutoSave : GlobalHook<AutoSave,
+      void(AudacityProject &)
+   > {};
+
    static ProjectHistory &Get( AudacityProject &project );
    static const ProjectHistory &Get( const AudacityProject &project );
 
    explicit ProjectHistory( AudacityProject &project )
       : mProject{ project }
    {}
-   ProjectHistory( const ProjectHistory & ) PROHIBITED;
-   ProjectHistory &operator=( const ProjectHistory & ) PROHIBITED;
+   ProjectHistory( const ProjectHistory & ) = delete;
+   ProjectHistory &operator=( const ProjectHistory & ) = delete;
    ~ProjectHistory() override;
 
    void InitialState();

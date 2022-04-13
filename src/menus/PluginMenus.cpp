@@ -17,7 +17,7 @@
 #include "../toolbars/ToolManager.h"
 #include "../Screenshot.h"
 #include "TempDirectory.h"
-#include "../UndoManager.h"
+#include "UndoManager.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../effects/EffectManager.h"

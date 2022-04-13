@@ -58,8 +58,6 @@ bool EffectInvert::IsInteractive() const
    return false;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectInvert::GetAudioInCount() const
 {
    return 1;

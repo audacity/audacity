@@ -66,11 +66,14 @@ void Track::Init(const Track &orig)
 {
    mId = orig.mId;
 
-   mDefaultName = orig.mDefaultName;
    mName = orig.mName;
 
    mSelected = orig.mSelected;
-   mLinkType = orig.mLinkType;
+
+   // Deep copy of any group data
+   mpGroupData = orig.mpGroupData ?
+      std::make_unique<ChannelGroupData>(*orig.mpGroupData) : nullptr;
+
    mChannel = orig.mChannel;
 }
 
@@ -166,9 +169,73 @@ void Track::SetLinkType(LinkType linkType)
    }
 }
 
-void Track::DoSetLinkType(LinkType linkType) noexcept
+Track::ChannelGroupData &Track::MakeGroupData()
 {
-   mLinkType = linkType;
+   if (!mpGroupData)
+      // Make on demand
+      mpGroupData = std::make_unique<ChannelGroupData>();
+   return *mpGroupData;
+}
+
+Track::ChannelGroupData &Track::GetGroupData()
+{
+   auto pTrack = this;
+   if (auto pList = GetOwner())
+      if (auto pLeader = *pList->FindLeader(pTrack))
+         pTrack = pLeader;
+   // May make on demand
+   return pTrack->MakeGroupData();
+}
+
+const Track::ChannelGroupData &Track::GetGroupData() const
+{
+   // May make group data on demand, but consider that logically const
+   return const_cast<Track *>(this)->GetGroupData();
+}
+
+void Track::DoSetLinkType(LinkType linkType)
+{
+   auto oldType = GetLinkType();
+   if (linkType == oldType)
+      // No change
+      return;
+
+   if (oldType == LinkType::None) {
+      // Becoming linked
+   
+      // First ensure there is no partner
+      if (auto partner = GetLinkedTrack())
+         partner->mpGroupData.reset();
+      assert(!GetLinkedTrack());
+   
+      // Change the link type
+      MakeGroupData().mLinkType = linkType;
+
+      // If this acquired a partner, it loses any old group data
+      if (auto partner = GetLinkedTrack())
+         partner->mpGroupData.reset();
+   }
+   else if (linkType == LinkType::None) {
+      // Becoming unlinked
+      assert(mpGroupData);
+      if (HasLinkedTrack()) {
+         // Make independent copy of group data in the partner, which should
+         // have had none
+         auto partner = GetLinkedTrack();
+         assert(!partner->mpGroupData);
+         partner->mpGroupData =
+            std::make_unique<ChannelGroupData>(*mpGroupData);
+         partner->mpGroupData->mLinkType = LinkType::None;
+      }
+      mpGroupData->mLinkType = LinkType::None;
+   }
+   else {
+      // Remaining linked, changing the type
+      assert(mpGroupData);
+      MakeGroupData().mLinkType = linkType;
+   }
+
+   assert(LinkConsistencyCheck());
 }
 
 void Track::SetChannel(ChannelType c) noexcept
@@ -204,7 +271,7 @@ Track *Track::GetLinkedTrack() const
 
 bool Track::HasLinkedTrack() const noexcept
 {
-    return mLinkType != LinkType::None;
+    return mpGroupData && mpGroupData->mLinkType != LinkType::None;
 }
 
 void Track::Notify( int code )
@@ -328,7 +395,8 @@ void Track::FinishCopy
 {
    if (dest) {
       dest->SetChannel(n->GetChannel());
-      dest->SetLinkType(n->GetLinkType());
+      dest->mpGroupData = n->mpGroupData ?
+         std::make_unique<ChannelGroupData>(*n->mpGroupData) : nullptr;
       dest->SetName(n->GetName());
    }
 }
@@ -451,6 +519,27 @@ TrackList::~TrackList()
    Clear(false);
 }
 
+wxString TrackList::MakeUniqueTrackName(const wxString& baseTrackName) const
+{
+   int n = 1;
+   while(true)
+   {
+      auto name = wxString::Format("%s %d", baseTrackName, n++);
+
+      bool found {false};
+      for(const auto track : Any())
+      {
+         if(track->GetName() == name)
+         {
+            found = true;
+            break;
+         }
+      }
+      if(!found)
+         return name;
+   }
+}
+
 void TrackList::RecalcPositions(TrackNodePointer node)
 {
    if ( isNull( node ) )
@@ -542,6 +631,27 @@ auto TrackList::FindLeader( Track *pTrack )
    while( *iter && ! ( *iter )->IsLeader() )
       --iter;
    return iter.Filter( &Track::IsLeader );
+}
+
+bool TrackList::SwapChannels(Track &track)
+{
+   if (!track.HasLinkedTrack())
+      return false;
+   auto pOwner = track.GetOwner();
+   if (!pOwner)
+      return false;
+   auto pPartner = pOwner->GetNext(&track, false);
+   if (!pPartner)
+      return false;
+
+   // Swap channels, avoiding copying of GroupData
+   auto pData = move(track.mpGroupData);
+   assert(pData);
+   pOwner->MoveUp(pPartner);
+   pPartner->mpGroupData = move(pData);
+   pPartner->SetChannel(Track::LeftChannel);
+   track.SetChannel(Track::RightChannel);
+   return true;
 }
 
 void TrackList::Permute(const std::vector<TrackNodePointer> &permutation)
@@ -1211,7 +1321,7 @@ bool TrackList::HasPendingTracks() const
 
 Track::LinkType Track::GetLinkType() const noexcept
 {
-    return mLinkType;
+    return mpGroupData ? mpGroupData->mLinkType : LinkType::None;
 }
 
 bool Track::IsAlignedWithLeader() const

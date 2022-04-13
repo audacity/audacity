@@ -13,7 +13,6 @@
 #include "VST3Effect.h"
 
 #include "AudacityException.h"
-#include "EffectHostInterface.h"
 
 #include "Base64.h"
 
@@ -367,7 +366,7 @@ bool VST3Effect::SaveSettings(
 }
 
 bool VST3Effect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    using namespace Steinberg;
 
@@ -556,13 +555,13 @@ unsigned VST3Effect::GetAudioOutCount() const
       Steinberg::Vst::kMain);
 }
 
-int VST3Effect::GetMidiInCount()
+int VST3Effect::GetMidiInCount() const
 {
    //Dummy
    return 0;
 }
 
-int VST3Effect::GetMidiOutCount()
+int VST3Effect::GetMidiOutCount() const
 {
    //Dummy
    return 0;
@@ -596,13 +595,6 @@ sampleCount VST3Effect::GetLatency()
       return delay;
    }
    return { 0u };
-}
-
-size_t VST3Effect::GetTailSize()
-{
-   //Not supported, note that tail size in samples can
-   //have different values in realtime processors
-   return 0;
 }
 
 bool VST3Effect::ProcessInitialize(
@@ -805,7 +797,7 @@ bool VST3Effect::RealtimeProcessStart(EffectSettings &)
    assert(mPendingChanges == nullptr);
 
    if(mComponentHandler != nullptr)
-      //Same parameter changes are used among all of the relatime processors
+      //Same parameter changes are used among all of the realtime processors
       mPendingChanges = mComponentHandler->getPendingChanges();
    return true;
 }
@@ -845,19 +837,20 @@ bool VST3Effect::InitializePlugin()
 {
    return true;
 }
-
-bool VST3Effect::InitializeInstance(
-   EffectHostInterface* host, EffectSettings &settings)
+   
+std::shared_ptr<EffectInstance>
+VST3Effect::MakeInstance(EffectSettings &settings) const
 {
-   mEffectHost = host;
-
-   if(host)
-   {
-      ReloadUserOptions();
-      if(!LoadUserPreset(CurrentSettingsGroup(), settings))
-         LoadFactoryDefaults(settings);
-   }
-   return true;
+   return const_cast<VST3Effect*>(this)->DoMakeInstance(settings);
+}
+   
+std::shared_ptr<EffectInstance>
+VST3Effect::DoMakeInstance(EffectSettings &settings)
+{
+   ReloadUserOptions();
+   if(!LoadUserPreset(CurrentSettingsGroup(), settings))
+      LoadFactoryDefaults(settings);
+   return std::make_shared<Instance>(*this);
 }
 
 bool VST3Effect::IsGraphicalUI()
@@ -893,7 +886,7 @@ VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &access)
                parent, wxID_ANY,
                NumericConverter::TIME,
                extra.GetDurationFormat(),
-               mEffectHost->GetDuration(),
+               extra.GetDuration(),
                mSetup.sampleRate,
                NumericTextCtrl::Options{}
                   .AutoPos(true)
@@ -924,12 +917,10 @@ VST3Effect::PopulateUI(ShuttleGui& S, EffectSettingsAccess &access)
    return nullptr;
 }
 
-bool VST3Effect::ValidateUI(EffectSettings &)
+bool VST3Effect::ValidateUI(EffectSettings &settings)
 {
    if (mDuration != nullptr)
-   {
-      mEffectHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
    return true;
 }
 
@@ -1028,13 +1019,10 @@ bool VST3Effect::HasOptions()
 
 void VST3Effect::ShowOptions()
 {
-   if(mEffectHost)
+   VST3OptionsDialog dlg(mParent, *this);
+   if (dlg.ShowModal())
    {
-      VST3OptionsDialog dlg(mParent, *this);
-      if (dlg.ShowModal())
-      {
-         ReloadUserOptions();
-      }
+      ReloadUserOptions();
    }
 }
 

@@ -16,6 +16,7 @@
 #include "Prefs.h"
 #include "ClientData.h"
 #include "commands/CommandFlag.h"
+#include "Observer.h"
 
 class wxArrayString;
 class wxCommandEvent;
@@ -113,8 +114,9 @@ private:
    void TellUserWhyDisallowed(const TranslatableString & Name, CommandFlag flagsGot,
       CommandFlag flagsRequired);
 
-   void OnUndoRedo( wxCommandEvent &evt );
+   void OnUndoRedo(struct UndoRedoMessage);
 
+   Observer::Subscription mUndoSubscription;
    AudacityProject &mProject;
 
 public:

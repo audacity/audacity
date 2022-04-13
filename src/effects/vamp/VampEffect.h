@@ -18,6 +18,7 @@
 #include <vamp-hostsdk/PluginLoader.h>
 
 #include "../Effect.h"
+#include "MemoryX.h"
 
 class wxStaticText;
 class wxSlider;
@@ -33,7 +34,7 @@ using Floats = ArrayOf<float>;
    It is not an abbreviation for anything.  See http://vamp-plugins.org */
 #define VAMPEFFECTS_FAMILY XO("Vamp")
 
-class VampEffect final : public Effect
+class VampEffect final : public StatefulEffect
 {
 public:
    VampEffect(std::unique_ptr<Vamp::Plugin> &&plugin,
@@ -60,17 +61,14 @@ public:
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
-
-   // EffectProcessor implementation
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
    unsigned GetAudioInCount() const override;
 
    // Effect implementation
 
    bool Init() override;
-   bool Process(EffectSettings &settings) override;
-   void End() override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

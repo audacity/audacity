@@ -127,8 +127,6 @@ bool EffectPhaser::SupportsRealtime() const
    return true;
 }
 
-// EffectProcessor implementation
-
 unsigned EffectPhaser::GetAudioInCount() const
 {
    return 1;

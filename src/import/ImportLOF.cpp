@@ -85,7 +85,7 @@
 #include "ImportPlugin.h"
 #include "Import.h"
 #include "Project.h"
-#include "../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../ProjectManager.h"
 #include "../ProjectWindow.h"
 #include "../ProjectWindows.h"

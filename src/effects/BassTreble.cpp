@@ -111,9 +111,6 @@ bool EffectBassTreble::SupportsRealtime() const
    return true;
 }
 
-
-// EffectProcessor implementation
-
 unsigned EffectBassTreble::GetAudioInCount() const
 {
    return 1;
@@ -172,7 +169,7 @@ size_t EffectBassTreble::RealtimeProcess(int group, EffectSettings &settings,
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
 
-bool EffectBassTreble::CheckWhetherSkipEffect()
+bool EffectBassTreble::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (mBass == 0.0 && mTreble == 0.0 && mGain == 0.0);
 }
@@ -300,10 +297,6 @@ void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRa
    data.gain = DB_TO_LINEAR(mGain);
 
 }
-
-
-// EffectProcessor implementation
-
 
 size_t EffectBassTreble::InstanceProcess(EffectSettings &settings,
    EffectBassTrebleState & data,

@@ -11,8 +11,8 @@
 
 #include <vector>
 
-#include "TrackAttachment.h"
 #include "PluginProvider.h" // for PluginID
+#include "UndoManager.h"
 #include "XMLTagHandler.h"
 
 class AudacityProject;
@@ -21,7 +21,14 @@ class RealtimeEffectState;
 
 class Track;
 
-class RealtimeEffectList final : public TrackAttachment, public XMLTagHandler
+class RealtimeEffectList final
+   // Inheritance from std::enable_shared_from_this must be public
+   // but the per-track lists are managed by unique not shared pointers
+   : public std::enable_shared_from_this<RealtimeEffectList>
+   , public ClientData::Base
+   , public ClientData::Cloneable<>
+   , public UndoStateExtension
+   , public XMLTagHandler
 {
    RealtimeEffectList(const RealtimeEffectList &) = delete;
    RealtimeEffectList &operator=(const RealtimeEffectList &) = delete;
@@ -30,8 +37,13 @@ public:
    RealtimeEffectList();
    virtual ~RealtimeEffectList();
 
+   std::unique_ptr<ClientData::Cloneable<>> Clone() const override;
+
    static RealtimeEffectList &Get(AudacityProject &project);
    static const RealtimeEffectList &Get(const AudacityProject &project);
+   static RealtimeEffectList &Set(
+      AudacityProject &project,
+      const std::shared_ptr<RealtimeEffectList> &list);
 
    static RealtimeEffectList &Get(Track &track);
    static const RealtimeEffectList &Get(const Track &track);
@@ -55,6 +67,8 @@ public:
    void HandleXMLEndTag(const std::string_view &tag) override;
    XMLTagHandler *HandleXMLChild(const std::string_view &tag) override;
    void WriteXML(XMLWriter &xmlFile) const;
+
+   void RestoreUndoRedoState(AudacityProject &project) noexcept override;
 
 private:
    States mStates;

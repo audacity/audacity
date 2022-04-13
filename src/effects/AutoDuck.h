@@ -14,6 +14,7 @@
 #include "Effect.h"
 #include "../ShuttleAutomation.h"
 #include <float.h> // for DBL_MAX
+#include "../widgets/wxPanelWrapper.h"
 
 class wxBitmap;
 class wxTextCtrl;
@@ -21,7 +22,7 @@ class ShuttleGui;
 
 #define AUTO_DUCK_PANEL_NUM_CONTROL_POINTS 5
 
-class EffectAutoDuck final : public Effect
+class EffectAutoDuck final : public StatefulEffect
 {
 public:
    static inline EffectAutoDuck *
@@ -44,8 +45,7 @@ public:
    // Effect implementation
 
    bool Init() override;
-   void End() override;
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

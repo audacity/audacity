@@ -24,16 +24,14 @@ static AudacityProject::AttachedObjects::RegisteredFactory sKey {
       [&project](RecordingDropoutEvent &evt){
          evt.Skip();
          // Make a track with labels for recording errors
-         auto uTrack = std::make_shared<LabelTrack>();
-         auto pTrack = uTrack.get();
          auto &tracks = TrackList::Get( project );
-         tracks.Add( uTrack );
+
          /* i18n-hint:  A name given to a track, appearing as its menu button.
           The translation should be short or else it will not display well.
           At most, about 11 Latin characters.
           Dropout is a loss of a short sequence of audio sample data from the
           recording */
-         pTrack->SetName(_("Dropouts"));
+         auto pTrack = LabelTrack::Create(tracks, tracks.MakeUniqueTrackName(_("Dropouts")));
          long counter = 1;
          for (auto &interval : evt.intervals)
             pTrack->AddLabel(

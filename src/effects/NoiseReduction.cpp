@@ -437,16 +437,6 @@ EffectType EffectNoiseReduction::GetType() const
    return EffectTypeProcess;
 }
 
-bool EffectNoiseReduction::Init()
-{
-   return true;
-}
-
-bool EffectNoiseReduction::CheckWhetherSkipEffect()
-{
-   return false;
-}
-
 //! An override still here for historical reasons, ignoring the factory
 //! and the access
 /*! We would like to make this effect behave more like others, but it does have
@@ -625,7 +615,7 @@ EffectNoiseReduction::Worker::MyWindow::~MyWindow()
 {
 }
 
-bool EffectNoiseReduction::Process(EffectSettings &)
+bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
 {
    // This same code will either reduce noise or profile it
 
@@ -1229,7 +1219,7 @@ struct ControlInfo {
 
    long SliderSetting(double value) const
    {
-      return TrapLong(
+      return std::clamp<long>(
          0.5 + sliderMax * (value - valueMin) / (valueMax - valueMin),
          0, sliderMax);
    }

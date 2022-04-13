@@ -33,7 +33,7 @@ class wxTextCtrl;
 #include "RealFFTf.h"
 #include "SampleFormat.h"
 
-class EffectNoiseRemoval final : public Effect
+class EffectNoiseRemoval final : public StatefulEffect
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -57,8 +57,8 @@ public:
       const EffectDialogFactory &factory,
       EffectSettingsAccess &access, bool forceModal = false) override;
    bool Init() override;
-   bool CheckWhetherSkipEffect() override;
-   bool Process(EffectSettings &settings) override;
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    void End() override;
 
 private:

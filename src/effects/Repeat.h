@@ -19,7 +19,7 @@ class ShuttleGui;
 
 class wxStaticText;
 
-class EffectRepeat final : public Effect
+class EffectRepeat final : public StatefulEffect
 {
 public:
    static inline EffectRepeat *
@@ -41,7 +41,7 @@ public:
 
    // Effect implementation
 
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;

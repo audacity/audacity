@@ -23,6 +23,7 @@
 #include <wx/intl.h>
 #include <wx/slider.h>
 
+#include "ConfigInterface.h"
 #include "../LabelTrack.h"
 #include "Prefs.h"
 #include "Resample.h"
@@ -154,13 +155,13 @@ bool EffectChangeSpeed::DoLoadFactoryDefaults(EffectSettings &settings)
 
 // Effect implementation
 
-bool EffectChangeSpeed::CheckWhetherSkipEffect()
+bool EffectChangeSpeed::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (m_PercentChange == 0.0);
 }
 
 double EffectChangeSpeed::CalcPreviewInputLength(
-   const EffectSettings &, double previewLength)
+   const EffectSettings &, double previewLength) const
 {
    return previewLength * (100.0 + m_PercentChange) / 100.0;
 }
@@ -173,7 +174,7 @@ bool EffectChangeSpeed::Init()
    return true;
 }
 
-bool EffectChangeSpeed::Process(EffectSettings &)
+bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 {
    // Similar to EffectSoundTouch::Process()
 

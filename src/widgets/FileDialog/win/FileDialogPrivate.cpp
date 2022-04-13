@@ -1138,8 +1138,7 @@ int FileDialog::ShowModal()
       //=== Adding the correct extension >>=================================
       m_filterIndex = (int)of.nFilterIndex - 1;
 
-      if ( !of.nFileExtension ||
-            (of.nFileExtension && fileNameBuffer[of.nFileExtension] == wxT('\0')) )
+      if ( !of.nFileExtension || fileNameBuffer[of.nFileExtension] == wxT('\0') )
       {
          // User has typed a filename without an extension:
          const wxChar* extension = filterBuffer;

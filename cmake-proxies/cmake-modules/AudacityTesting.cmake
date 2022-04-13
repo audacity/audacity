@@ -129,9 +129,10 @@ if( ${_OPT}has_tests )
       )
 
       set_tests_properties(
-         ${ADD_UNIT_TEST_NAME}
+         ${test_name}
          PROPERTIES
             LABELS "journal_tests"
+            TIMEOUT 180
       )
    endfunction()
 else()
