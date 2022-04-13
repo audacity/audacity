@@ -763,7 +763,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 
          //wxPrintf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
-         newClip->Offset(-t0);
+         newClip->Offset(clip_t0-t0);
          if (newClip->GetPlayStartTime() < 0)
             newClip->SetPlayStartTime(0);
 
