@@ -567,6 +567,8 @@ list( APPEND SOURCES
          effects/audiounits/AUControl.mm
          effects/audiounits/AudioUnitEffect.cpp
          effects/audiounits/AudioUnitEffect.h
+         effects/audiounits/AudioUnitUtils.cpp
+         effects/audiounits/AudioUnitUtils.h
       >
 
       # Ladspa Effects
