@@ -887,15 +887,18 @@ void OnSplitNew(const CommandContext &context)
          [&](WaveTrack *wt) {
             // Clips must be aligned to sample positions or the NEW clip will
             // not fit in the gap where it came from
-            double offset = wt->GetOffset();
-            offset = wt->LongSamplesToTime(wt->TimeToLongSamples(offset));
             double newt0 = wt->LongSamplesToTime(wt->TimeToLongSamples(
                selectedRegion.t0()));
             double newt1 = wt->LongSamplesToTime(wt->TimeToLongSamples(
                selectedRegion.t1()));
-            dest = wt->SplitCut(newt0, newt1);
+            // Fix issue 2846 by calling copy with forClipboard = false.
+            // This avoids creating the blank placeholder clips
+            dest = wt->Copy(newt0, newt1, false);
+            wt->SplitDelete(newt0, newt1);
             if (dest) {
-               dest->SetOffset(wxMax(newt0, offset));
+               // The copy function normally puts the clip at time 0
+               // This offset lines it up with the original track's timing
+               dest->Offset(newt0);
                FinishCopy(wt, dest, tracks);
             }
          }
