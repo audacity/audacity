@@ -716,35 +716,27 @@ bool LadspaEffect::SupportsAutomation() const
 bool LadspaEffect::InitializePlugin()
 {
    if (!Load())
-   {
       return false;
-   }
+
    mUseLatency = LadspaEffect::LoadUseLatency(*this);
 
+   auto &controls = mControls;
    mInputPorts.reinit( mData->PortCount );
    mOutputPorts.reinit( mData->PortCount );
-   mInputControls.reinit( mData->PortCount );
-   mOutputControls.reinit( mData->PortCount );
+   controls.reinit( mData->PortCount );
 
-   for (unsigned long p = 0; p < mData->PortCount; p++)
-   {
+   for (unsigned long p = 0; p < mData->PortCount; p++) {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
 
       // Collect the audio ports
-      if (LADSPA_IS_PORT_AUDIO(d))
-      {
+      if (LADSPA_IS_PORT_AUDIO(d)) {
          if (LADSPA_IS_PORT_INPUT(d)) 
-         {
             mInputPorts[mAudioIns++] = p;
-         }
          else if (LADSPA_IS_PORT_OUTPUT(d))
-         {
             mOutputPorts[mAudioOuts++] = p;
-         }
       }
       // Determine the port's default value
-      else if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_INPUT(d))
-      {
+      else if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_INPUT(d)) {
          mInteractive = true;
 
          LADSPA_PortRangeHint hint = mData->PortRangeHints[p];
@@ -835,11 +827,10 @@ bool LadspaEffect::InitializePlugin()
          }
 
          mNumInputControls++;
-         mInputControls[p] = val;
+         controls[p] = val;
       }
-      else if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_OUTPUT(d))
-      {
-         mOutputControls[p] = 0.0;
+      else if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_OUTPUT(d)) {
+         controls[p] = 0.0;
 
          // LADSPA effects have a convention of providing latency on an output
          // control port whose name is "latency".
@@ -920,10 +911,10 @@ size_t LadspaEffect::GetBlockSize() const
 
 sampleCount LadspaEffect::GetLatency()
 {
-   if (mUseLatency && mLatencyPort >= 0 && !mLatencyDone)
-   {
+   auto &controls = mControls;
+   if (mUseLatency && mLatencyPort >= 0 && !mLatencyDone) {
       mLatencyDone = true;
-      return sampleCount ( mOutputControls[mLatencyPort] );
+      return sampleCount{ controls[mLatencyPort] };
    }
 
    return 0;
@@ -1067,39 +1058,30 @@ int LadspaEffect::ShowClientInterface(
 bool LadspaEffect::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {
-   for (unsigned long p = 0; p < mData->PortCount; p++)
-   {
+   auto &controls = mControls;
+   for (unsigned long p = 0; p < mData->PortCount; p++) {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
-
       if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_INPUT(d))
-      {
-         if (!parms.Write(LAT1CTOWX(mData->PortNames[p]), mInputControls[p]))
-         {
+         if (!parms.Write(LAT1CTOWX(mData->PortNames[p]), controls[p]))
             return false;
-         }
-      }
    }
-
    return true;
 }
 
 bool LadspaEffect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
-   for (unsigned long p = 0; p < mData->PortCount; p++)
-   {
+   auto &controls = mControls;
+   for (unsigned long p = 0; p < mData->PortCount; p++) {
       LADSPA_PortDescriptor descriptor = mData->PortDescriptors[p];
 
-      if (LADSPA_IS_PORT_CONTROL(descriptor) && LADSPA_IS_PORT_INPUT(descriptor))
-      {
+      if (LADSPA_IS_PORT_CONTROL(descriptor) &&
+          LADSPA_IS_PORT_INPUT(descriptor)) {
          wxString labelText = LAT1CTOWX(mData->PortNames[p]);
          double d = 0.0;
          if (!parms.Read(labelText, &d))
-         {
             return false;
-         }
-
-         mInputControls[p] = d;
+         controls[p] = d;
       }
    }
 
@@ -1151,6 +1133,7 @@ bool LadspaEffect::Validator::UpdateUI()
 std::unique_ptr<EffectUIValidator>
 LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 {
+   auto &controls = mControls;
    auto result = std::make_unique<Validator>(*this, access);
    auto parent = S.GetParent();
 
@@ -1233,11 +1216,10 @@ LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
             wxString fieldText;
             LADSPA_PortRangeHint hint = mData->PortRangeHints[p];
 
-            if (LADSPA_IS_HINT_TOGGLED(hint.HintDescriptor))
-            {
+            if (LADSPA_IS_HINT_TOGGLED(hint.HintDescriptor)) {
                mToggles[p] = safenew wxCheckBox(w, ID_Toggles + p, wxT(""));
                mToggles[p]->SetName(labelText);
-               mToggles[p]->SetValue(mInputControls[p] > 0);
+               mToggles[p]->SetValue(controls[p] > 0);
                gridSizer->Add(mToggles[p], 0, wxALL, 5);
 
                gridSizer->Add(1, 1, 0);
@@ -1275,17 +1257,13 @@ LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
             // Limit to the UI precision
             lower = ceilf(lower * 1000000.0) / 1000000.0;
             upper = floorf(upper * 1000000.0) / 1000000.0;
-            mInputControls[p] = roundf(mInputControls[p] * 1000000.0) / 1000000.0;
+            controls[p] = roundf(controls[p] * 1000000.0) / 1000000.0;
 
-            if (haslo && mInputControls[p] < lower)
-            {
-               mInputControls[p] = lower;
-            }
+            if (haslo && controls[p] < lower)
+               controls[p] = lower;
 
-            if (hashi && mInputControls[p] > upper)
-            {
-               mInputControls[p] = lower;
-            }
+            if (hashi && controls[p] > upper)
+               controls[p] = lower;
 
             // Don't specify a value at creation time.  This prevents unwanted events
             // being sent to the OnTextCtrl() handler before the associated slider
@@ -1342,36 +1320,28 @@ LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
                gridSizer->Add(1, 1, 0);
             }
 
-            if (LADSPA_IS_HINT_INTEGER(hint.HintDescriptor) || forceint)
-            {
-               fieldText.Printf(wxT("%d"), (int)(mInputControls[p] + 0.5));
+            if (LADSPA_IS_HINT_INTEGER(hint.HintDescriptor) || forceint) {
+               fieldText.Printf(wxT("%d"), (int)(controls[p] + 0.5));
 
-               IntegerValidator<float> vld(&mInputControls[p]);
+               IntegerValidator<float> vld(&controls[p]);
                vld.SetRange(haslo ? lower : INT_MIN,
                   hashi ? upper : INT_MAX);
                mFields[p]->SetValidator(vld);
             }
-            else
-            {
-               fieldText = Internat::ToDisplayString(mInputControls[p]);
+            else {
+               fieldText = Internat::ToDisplayString(controls[p]);
 
                // > 12 decimal places can cause rounding errors in display.
-               FloatingPointValidator<float> vld(6, &mInputControls[p]);
+               FloatingPointValidator<float> vld(6, &controls[p]);
                vld.SetRange(lower, upper);
 
                // Set number of decimal places
                if (upper - lower < 10.0)
-               {
                   vld.SetStyle(NumValidatorStyle::THREE_TRAILING_ZEROES);
-               }
                else if (upper - lower < 100.0)
-               {
                   vld.SetStyle(NumValidatorStyle::TWO_TRAILING_ZEROES);
-               }
                else
-               {
                   vld.SetStyle(NumValidatorStyle::ONE_TRAILING_ZERO);
-               }
 
                mFields[p]->SetValidator(vld);
             }
@@ -1440,12 +1410,12 @@ LadspaEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
             // Limit to the UI precision
             lower = ceilf(lower * 1000000.0) / 1000000.0;
             upper = floorf(upper * 1000000.0) / 1000000.0;
-            mInputControls[p] = roundf(mInputControls[p] * 1000000.0) / 1000000.0;
+            controls[p] = roundf(controls[p] * 1000000.0) / 1000000.0;
 
             // Capture const reference to output control value for later
             // display update
             mMeters[p] = safenew LadspaEffectMeter(
-               w, mOutputControls[p], lower, upper);
+               w, controls[p], lower, upper);
             mMeters[p]->SetLabel(labelText);    // for screen readers
             gridSizer->Add(mMeters[p], 1, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxALL, 5);
          }
@@ -1616,30 +1586,17 @@ LADSPA_Handle LadspaEffect::InitInstance(float sampleRate)
    /* Instantiate the plugin */
    LADSPA_Handle handle = mData->instantiate(mData, sampleRate);
    if (!handle)
-   {
       return NULL;
-   }
 
-   for (unsigned long p = 0; p < mData->PortCount; p++)
-   {
+   auto &controls = mControls;
+   for (unsigned long p = 0; p < mData->PortCount; p++) {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
       if (LADSPA_IS_PORT_CONTROL(d))
-      {
-         if (LADSPA_IS_PORT_INPUT(d))
-         {
-            mData->connect_port(handle, p, &mInputControls[p]);
-         }
-         else
-         {
-            mData->connect_port(handle, p, &mOutputControls[p]);
-         }
-      }
+         mData->connect_port(handle, p, &controls[p]);
    }
 
    if (mData->activate)
-   {
       mData->activate(handle);
-   }
 
    return handle;
 }
@@ -1656,13 +1613,14 @@ void LadspaEffect::FreeInstance(LADSPA_Handle handle)
 
 void LadspaEffect::OnCheckBox(wxCommandEvent & evt)
 {
+   auto &controls = mControls;
    int p = evt.GetId() - ID_Toggles;
-
-   mInputControls[p] = mToggles[p]->GetValue();
+   controls[p] = mToggles[p]->GetValue();
 }
 
 void LadspaEffect::OnSlider(wxCommandEvent & evt)
 {
+   auto &controls = mControls;
    int p = evt.GetId() - ID_Sliders;
 
    float val;
@@ -1693,12 +1651,12 @@ void LadspaEffect::OnSlider(wxCommandEvent & evt)
       str = Internat::ToDisplayString(val);
 
    mFields[p]->SetValue(str);
-
-   mInputControls[p] = val;
+   controls[p] = val;
 }
 
 void LadspaEffect::OnTextCtrl(wxCommandEvent & evt)
 {
+   auto &controls = mControls;
    LadspaEffect *that = this;
    int p = evt.GetId() - ID_Texts;
 
@@ -1725,8 +1683,7 @@ void LadspaEffect::OnTextCtrl(wxCommandEvent & evt)
    if (val > upper)
       val = upper;
 
-   mInputControls[p] = val;
-
+   controls[p] = val;
    that->mSliders[p]->SetValue((int)(((val-lower)/range) * 1000.0 + 0.5));
 }
 
@@ -1735,6 +1692,7 @@ void LadspaEffect::RefreshControls()
    if (!mParent)
       return;
 
+   auto &controls = mControls;
    for (unsigned long p = 0; p < mData->PortCount; p++) {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
       if (!(LADSPA_IS_PORT_CONTROL(d)))
@@ -1751,14 +1709,14 @@ void LadspaEffect::RefreshControls()
          continue;
 
       if (LADSPA_IS_HINT_TOGGLED(hint.HintDescriptor)) {
-         mToggles[p]->SetValue(mInputControls[p] > 0);
+         mToggles[p]->SetValue(controls[p] > 0);
          continue;
       }
 
       if (LADSPA_IS_HINT_INTEGER(hint.HintDescriptor) || forceint)
-         fieldText.Printf(wxT("%d"), (int)(mInputControls[p] + 0.5));
+         fieldText.Printf(wxT("%d"), (int)(controls[p] + 0.5));
       else
-         fieldText = Internat::ToDisplayString(mInputControls[p]);
+         fieldText = Internat::ToDisplayString(controls[p]);
 
       // Set the textctrl value.  This will trigger an event so OnTextCtrl()
       // can update the slider.

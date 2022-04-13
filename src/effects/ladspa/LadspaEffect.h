@@ -174,15 +174,19 @@ private:
    bool mInteractive{ false };
 
    unsigned mAudioIns{ 0 };
+   // Mapping from input channel number to audio port number
    ArrayOf<unsigned long> mInputPorts;
 
    unsigned mAudioOuts{ 0 };
+   // Mapping from output channel number to audio port number
    ArrayOf<unsigned long> mOutputPorts;
 
    int mNumInputControls{ 0 };
-   Floats mInputControls;
    int mNumOutputControls{ 0 };
-   Floats mOutputControls;
+
+   // Allocate as many slots as there are ports, although some may correspond
+   // to audio, not control, ports and so rest unused
+   Floats mControls;
 
    bool mUseLatency{ true };
    int mLatencyPort{ -1 };
