@@ -405,7 +405,10 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
    // Generators need to generate per track.
    if (mIsLinearEffect && !isGenerator) {
       WaveTrack::Holder mixLeft, mixRight;
-      MixAndRender(saveTracks, mFactory, rate, floatSample, mT0, t1, mixLeft, mixRight);
+      MixAndRender(saveTracks->Selected<const WaveTrack>(),
+         Mixer::WarpOptions{ *saveTracks },
+         wxString{}, // Don't care about the name of the temporary tracks
+         mFactory, rate, floatSample, mT0, t1, mixLeft, mixRight);
       if (!mixLeft)
          return;
 

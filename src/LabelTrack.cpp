@@ -118,6 +118,7 @@ auto LabelTrack::ClassTypeInfo() -> const TypeInfo &
 Track::Holder LabelTrack::PasteInto( AudacityProject & ) const
 {
    auto pNewTrack = std::make_shared<LabelTrack>();
+   pNewTrack->Init(*this);
    pNewTrack->Paste(0.0, this);
    return pNewTrack;
 }
@@ -711,6 +712,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
 Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 {
    auto tmp = std::make_shared<LabelTrack>();
+   tmp->Init(*this);
    const auto lt = static_cast<LabelTrack*>(tmp.get());
 
    for (auto &labelStruct: mLabels) {

@@ -918,7 +918,7 @@ static const WaveTrackSubViews::RegisteredFactory key{
 #include "WaveTrackControls.h"
 #include "AudioIOBase.h"
 #include "../../../../Menus.h"
-#include "../../../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../prefs/PrefsDialog.h"
 #include "../../../../prefs/SpectrumPrefs.h"

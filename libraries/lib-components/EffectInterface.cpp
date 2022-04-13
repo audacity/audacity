@@ -166,6 +166,13 @@ size_t EffectInstanceWithBlockSize::SetBlockSize(size_t maxBlockSize)
    return (mBlockSize = maxBlockSize);
 }
 
+EffectInstanceWithSampleRate::~EffectInstanceWithSampleRate() = default;
+
+void EffectInstanceWithSampleRate::SetSampleRate(double rate)
+{
+   mSampleRate = rate;
+}
+
 EffectInstanceFactory::~EffectInstanceFactory() = default;
 
 int EffectInstanceFactory::GetMidiInCount() const

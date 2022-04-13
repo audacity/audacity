@@ -6,7 +6,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "../ProjectAudioIO.h"
-#include "../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "ProjectRate.h"
 #include "../ProjectSettings.h"
 #include "PluginManager.h"
@@ -18,7 +18,7 @@
 #include "../TrackPanelAx.h"
 #include "../TrackPanel.h"
 #include "../TrackUtilities.h"
-#include "../UndoManager.h"
+#include "UndoManager.h"
 #include "../WaveClip.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
@@ -54,14 +54,15 @@ void DoMixAndRender
    auto &trackPanel = TrackPanel::Get( project );
    auto &window = ProjectWindow::Get( project );
 
+   auto trackRange = tracks.Selected< WaveTrack >();
    WaveTrack::Holder uNewLeft, uNewRight;
-   ::MixAndRender(
-      &tracks, &trackFactory, rate, defaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
+   ::MixAndRender(trackRange.Filter<const WaveTrack>(),
+      Mixer::WarpOptions{ tracks },
+      tracks.MakeUniqueTrackName(_("Mix")),
+      &trackFactory, rate, defaultFormat, 0.0, 0.0, uNewLeft, uNewRight);
 
    if (uNewLeft) {
       // Remove originals, get stats on what tracks were mixed
-
-      auto trackRange = tracks.Selected< WaveTrack >();
 
       // But before removing, determine the first track after the removal
       auto last = *trackRange.rbegin();

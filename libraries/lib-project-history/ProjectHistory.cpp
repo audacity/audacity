@@ -11,8 +11,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "ProjectHistory.h"
 
 #include "Project.h"
-#include "ProjectFileIO.h"
-#include "Tags.h"
 #include "Track.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -45,12 +43,11 @@ void ProjectHistory::InitialState()
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   auto &tags = Tags::Get( project );
 
    undoManager.ClearStates();
 
    undoManager.PushState(
-      &tracks, viewInfo.selectedRegion, tags.shared_from_this(),
+      tracks, viewInfo.selectedRegion,
       XO("Created new project"), {});
 
    undoManager.StateSaved();
@@ -74,19 +71,6 @@ bool ProjectHistory::RedoAvailable() const
       !tracks.HasPendingTracks();
 }
 
-namespace {
-   void AutoSaveOrThrow( ProjectFileIO &projectFileIO )
-   {
-      if ( !projectFileIO.AutoSave() )
-         throw SimpleMessageBoxException{
-            ExceptionType::Internal,
-            XO("Automatic database backup failed."),
-            XO("Warning"),
-            "Error:_Disk_full_or_not_writable"
-         };
-   }
-}
-
 void ProjectHistory::PushState(
    const TranslatableString &desc, const TranslatableString &shortDesc)
 {
@@ -98,17 +82,15 @@ void ProjectHistory::PushState(const TranslatableString &desc,
                                 UndoPush flags )
 {
    auto &project = mProject;
-   auto &projectFileIO = ProjectFileIO::Get( project );
    if((flags & UndoPush::NOAUTOSAVE) == UndoPush::NONE)
-      AutoSaveOrThrow( projectFileIO );
+      AutoSave::Call(project);
 
    // remaining no-fail operations "commit" the changes of undo manager state
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   auto &tags = Tags::Get( project );
    undoManager.PushState(
-      &tracks, viewInfo.selectedRegion, tags.shared_from_this(),
+      tracks, viewInfo.selectedRegion,
       desc, shortDesc, flags);
 
    mDirty = true;
@@ -124,17 +106,14 @@ void ProjectHistory::RollbackState()
 void ProjectHistory::ModifyState(bool bWantsAutoSave)
 {
    auto &project = mProject;
-   auto &projectFileIO = ProjectFileIO::Get( project );
    if (bWantsAutoSave)
-      AutoSaveOrThrow( projectFileIO );
+      AutoSave::Call(project);
 
    // remaining no-fail operations "commit" the changes of undo manager state
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
    auto &undoManager = UndoManager::Get( project );
-   auto &tags = Tags::Get( project );
-   undoManager.ModifyState(
-      &tracks, viewInfo.selectedRegion, tags.shared_from_this());
+   undoManager.ModifyState(tracks, viewInfo.selectedRegion);
 }
 
 // LL:  Is there a memory leak here as "l" and "t" are not deleted???
@@ -143,28 +122,25 @@ void ProjectHistory::ModifyState(bool bWantsAutoSave)
 void ProjectHistory::PopState(const UndoState &state, bool doAutosave)
 {
    auto &project = mProject;
-   auto &projectFileIO = ProjectFileIO::Get( project );
    if (doAutosave)
-      AutoSaveOrThrow( projectFileIO );
+      AutoSave::Call(project);
 
    // remaining no-fail operations "commit" the changes of undo manager state
+   TrackList *const tracks = state.tracks.get();
+   wxASSERT(tracks);
    auto &dstTracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    viewInfo.selectedRegion = state.selectedRegion;
 
-   // Restore tags
-   Tags::Set( project, state.tags );
-
-   TrackList *const tracks = state.tracks.get();
+   // Restore extra state
+   for (auto &pExtension : state.extensions)
+      if (pExtension)
+         pExtension->RestoreUndoRedoState(project);
 
    dstTracks.Clear();
-
    for (auto t : tracks->Any())
-   {
       dstTracks.Add(t->Duplicate());
-   }
-
 }
 
 void ProjectHistory::SetStateTo(unsigned int n, bool doAutosave)

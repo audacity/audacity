@@ -20,7 +20,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../CellularPanel.h"
 #include "Project.h"
 #include "../../../../ProjectAudioIO.h"
-#include "../../../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../../../ProjectWindows.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../ShuttleGui.h"
@@ -891,7 +891,6 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
    AudacityProject *const project = &mpData->project;
 
    WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
-   const auto linkType = pTrack->GetLinkType();
    auto channels = TrackList::Channels( pTrack );
    if (channels.size() != 2)
       return;
@@ -902,18 +901,16 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 
    auto partner = *channels.rbegin();
 
-   SplitStereo(false);
+   if (TrackList::SwapChannels(*pTrack)) {
+      auto &tracks = TrackList::Get( *project );
+      if (hasFocus)
+         trackFocus.Set(partner);
 
-   auto &tracks = TrackList::Get( *project );
-   tracks.MoveUp(partner);
-   tracks.MakeMultiChannelTrack(*partner, 2, linkType == Track::LinkType::Aligned);
-   if (hasFocus)
-      trackFocus.Set(partner);
-
-   ProjectHistory::Get( *project ).PushState(
-      /* i18n-hint: The string names a track  */
-      XO("Swapped Channels in '%s'").Format( pTrack->GetName() ),
-      XO("Swap Channels"));
+      ProjectHistory::Get( *project ).PushState(
+         /* i18n-hint: The string names a track  */
+         XO("Swapped Channels in '%s'").Format( pTrack->GetName() ),
+         XO("Swap Channels"));
+   }
 
    mpData->result = RefreshCode::RefreshAll;
 }

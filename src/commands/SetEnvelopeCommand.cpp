@@ -21,8 +21,8 @@
 
 #include "CommandContext.h"
 #include "LoadCommands.h"
-#include "../ProjectHistory.h"
-#include "../UndoManager.h"
+#include "ProjectHistory.h"
+#include "UndoManager.h"
 #include "../WaveClip.h"
 #include "../WaveTrack.h"
 #include "Envelope.h"

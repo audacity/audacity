@@ -224,11 +224,6 @@ void InitProjectWindow( ProjectWindow &window )
    ToolManager::Get( project ).LayoutToolBars();
 
    //
-   // Create the horizontal ruler
-   //
-   auto &ruler = AdornedRulerPanel::Get( project );
-
-   //
    // Create the TrackPanel and the scrollbars
    //
 
@@ -237,14 +232,8 @@ void InitProjectWindow( ProjectWindow &window )
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       ubs->Add( ToolManager::Get( project ).GetTopDock(), 0, wxEXPAND | wxALIGN_TOP );
-      ubs->Add(&ruler, 0, wxEXPAND);
       topPanel->SetSizer(ubs.release());
    }
-
-   // Ensure that the topdock comes before the ruler in the tab order,
-   // irrespective of the order in which they were created.
-   ToolManager::Get(project).GetTopDock()->MoveBeforeInTabOrder(&ruler);
-
 
    wxBoxSizer *bs;
    {
@@ -269,6 +258,11 @@ void InitProjectWindow( ProjectWindow &window )
 
    const auto trackListWindow = window.GetTrackListWindow();
 
+   //
+   // Create the horizontal ruler
+   //
+   auto &ruler = AdornedRulerPanel::Get( project );
+
    bs = static_cast<wxBoxSizer*>(trackListWindow->GetSizer());
 
    auto vsBar = &window.GetVerticalScrollBar();
@@ -290,6 +284,7 @@ void InitProjectWindow( ProjectWindow &window )
          hs->Add(vs.release(), 0, wxEXPAND | wxALIGN_TOP);
       }
 
+      bs->Add(&ruler, 0, wxEXPAND | wxALIGN_TOP);
       bs->Add(hs.release(), 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
    }
 

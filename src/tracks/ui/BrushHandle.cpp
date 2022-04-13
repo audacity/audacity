@@ -18,7 +18,7 @@ Edward Hui
 #include "NumberScale.h"
 #include "Project.h"
 #include "../../ProjectAudioIO.h"
-#include "../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../ProjectWindow.h"
 #include "../../RefreshCode.h"
