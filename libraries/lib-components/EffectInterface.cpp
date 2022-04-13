@@ -185,23 +185,23 @@ int EffectInstanceFactory::GetMidiOutCount() const
    return 0;
 }
 
-EffectUIValidator::~EffectUIValidator() = default;
+EffectUIValidator::EffectUIValidator(
+   EffectUIClientInterface &effect, EffectSettingsAccess &access)
+   : mEffect{effect}
+   , mAccess{access}
+{}
+
+EffectUIValidator::~EffectUIValidator()
+{
+   mEffect.CloseUI();
+}
 
 bool EffectUIValidator::UpdateUI()
 {
    return true;
 }
 
-DefaultEffectUIValidator::DefaultEffectUIValidator(
-   EffectUIClientInterface &effect, EffectSettingsAccess &access)
-   : mEffect{effect}
-   , mAccess{access}
-{}
-
-DefaultEffectUIValidator::~DefaultEffectUIValidator()
-{
-   mEffect.CloseUI();
-}
+DefaultEffectUIValidator::~DefaultEffectUIValidator() = default;
 
 bool DefaultEffectUIValidator::ValidateUI()
 {
