@@ -24,7 +24,7 @@ class wxTextCtrl;
 class Envelope;
 class ShuttleGui;
 
-class EffectClickRemoval final : public Effect
+class EffectClickRemoval final : public StatefulEffect
 {
 public:
    static inline EffectClickRemoval *
@@ -46,8 +46,8 @@ public:
 
    // Effect implementation
 
-   bool CheckWhetherSkipEffect() override;
-   bool Process(EffectSettings &settings) override;
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
 

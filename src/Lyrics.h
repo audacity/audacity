@@ -24,7 +24,6 @@ class AudacityProject;
 struct AudioIOEvent;
 class LabelTrack;
 
-
 #define LYRICS_DEFAULT_WIDTH 608
 #define LYRICS_DEFAULT_HEIGHT 280
 
@@ -102,8 +101,8 @@ class LyricsPanel final
    void SetLyricsStyle(const LyricsStyle newLyricsStyle);
 
    void Update(double t);
-   void UpdateLyrics(wxEvent &e);
-   void UpdateLyrics();
+   void UpdateLyrics(struct UndoRedoMessage);
+   void DoUpdateLyrics();
    void OnShow(wxShowEvent& e);
    void OnStartStop(AudioIOEvent);
 
@@ -141,7 +140,9 @@ private:
    void GetKaraokePosition(double t, int *outX, double *outY);
 
 private:
-   Observer::Subscription mSubscription;
+   Observer::Subscription mAudioIOSubscription
+      , mUndoSubscription
+   ;
 
    int            mWidth;  // client width
    int            mHeight; // client height

@@ -21,7 +21,7 @@
 #include <AudioUnit/AudioUnit.h>
 #include <AudioUnit/AudioUnitProperties.h>
 
-#include "EffectInterface.h"
+#include "../StatefulPerTrackEffect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
@@ -38,8 +38,7 @@ using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
 
-class AudioUnitEffect : public wxEvtHandler,
-                        public EffectUIClientInterface
+class AudioUnitEffect final : public StatefulPerTrackEffect
 {
 public:
    AudioUnitEffect(const PluginPath & path,
@@ -68,31 +67,29 @@ public:
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
    bool LoadUserPreset(
-      const RegistryPath & name, Settings &settings) const override;
+      const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
-      const RegistryPath & name, const Settings &settings) const override;
+      const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
 
-   // EffectProcessor implementation
-
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
+   int GetMidiInCount() const override;
+   int GetMidiOutCount() const override;
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
    sampleCount GetLatency() override;
-   size_t GetTailSize() override;
+   // size_t GetTailSize() const override;
 
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;
@@ -121,8 +118,9 @@ public:
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(
-      EffectHostInterface *host, EffectSettings &settings) override;
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+      const override;
+   std::shared_ptr<EffectInstance> DoMakeInstance(EffectSettings &settings);
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -172,7 +170,7 @@ private:
 
    void GetChannelCounts();
 
-   bool LoadPreset(const RegistryPath & group, EffectSettings &settings);
+   bool LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
    bool SavePreset(const RegistryPath & group) const;
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
@@ -193,7 +191,6 @@ private:
    bool mSupportsMono;
    bool mSupportsStereo;
 
-   EffectHostInterface *mHost{};
    unsigned mAudioIns;
    unsigned mAudioOuts;
    bool mInteractive;

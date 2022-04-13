@@ -14,7 +14,7 @@ Paul Licameli split from WaveTrackVRulerControls.cpp
 #include "WaveTrackVRulerControls.h"
 
 #include "NumberScale.h"
-#include "../../../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../WaveTrack.h"

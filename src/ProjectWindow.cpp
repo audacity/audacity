@@ -94,7 +94,7 @@ void GetDefaultWindowRect(wxRect *defRect)
 {
    *defRect = wxGetClientDisplayRect();
 
-   int width = 940;
+   int width = 1200;
    int height = 674;
 
    //These conditional values assist in improving placement and size
@@ -637,10 +637,20 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mHsbar->SetName(_("Horizontal Scrollbar"));
    mVsbar->SetName(_("Vertical Scrollbar"));
 
-   project.Bind( EVT_UNDO_MODIFIED, &ProjectWindow::OnUndoPushedModified, this );
-   project.Bind( EVT_UNDO_PUSHED, &ProjectWindow::OnUndoPushedModified, this );
-   project.Bind( EVT_UNDO_OR_REDO, &ProjectWindow::OnUndoRedo, this );
-   project.Bind( EVT_UNDO_RESET, &ProjectWindow::OnUndoReset, this );
+   mUndoSubscription = UndoManager::Get(project)
+      .Subscribe([this](UndoRedoMessage message){
+         switch (message.type) {
+         case UndoRedoMessage::Pushed:
+         case UndoRedoMessage::Modified:
+            return OnUndoPushedModified();
+         case UndoRedoMessage::UndoOrRedo:
+            return OnUndoRedo();
+         case UndoRedoMessage::Reset:
+            return OnUndoReset();
+         default:
+            return;
+         }
+      });
 
    wxTheApp->Bind(EVT_THEME_CHANGE, &ProjectWindow::OnThemeChange, this);
 }
@@ -1391,22 +1401,19 @@ void ProjectWindow::OnToolBarUpdate(wxCommandEvent & event)
    event.Skip(false);             /* No need to propagate any further */
 }
 
-void ProjectWindow::OnUndoPushedModified( wxCommandEvent &evt )
+void ProjectWindow::OnUndoPushedModified()
 {
-   evt.Skip();
    RedrawProject();
 }
 
-void ProjectWindow::OnUndoRedo( wxCommandEvent &evt )
+void ProjectWindow::OnUndoRedo()
 {
-   evt.Skip();
    HandleResize();
    RedrawProject();
 }
 
-void ProjectWindow::OnUndoReset( wxCommandEvent &evt )
+void ProjectWindow::OnUndoReset()
 {
-   evt.Skip();
    HandleResize();
    // RedrawProject();  // Should we do this here too?
 }

@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_BASS_TREBLE__
 #define __AUDACITY_EFFECT_BASS_TREBLE__
 
-#include "Effect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxSlider;
@@ -34,7 +34,7 @@ public:
    double xn1Treble, xn2Treble, yn1Treble, yn2Treble;
 };
 
-class EffectBassTreble final : public Effect
+class EffectBassTreble final : public StatefulPerTrackEffect
 {
 public:
    static inline EffectBassTreble *
@@ -54,8 +54,6 @@ public:
 
    EffectType GetType() const override;
    bool SupportsRealtime() const override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -78,7 +76,7 @@ public:
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
 
-   bool CheckWhetherSkipEffect() override;
+   bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
 
 private:
    // EffectBassTreble implementation

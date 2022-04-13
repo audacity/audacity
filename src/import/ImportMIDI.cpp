@@ -27,7 +27,7 @@
 #include "../NoteTrack.h"
 #include "Project.h"
 #include "../ProjectFileIO.h"
-#include "../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../ProjectWindow.h"
 #include "../SelectUtilities.h"
 #include "../widgets/AudacityMessageBox.h"

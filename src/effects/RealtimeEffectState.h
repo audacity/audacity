@@ -21,7 +21,6 @@
 #include "PluginProvider.h" // for PluginID
 #include "XMLTagHandler.h"
 
-class EffectProcessor;
 class EffectSettingsAccess;
 class Track;
 
@@ -29,10 +28,11 @@ class RealtimeEffectState : public XMLTagHandler
 {
 public:
    struct AUDACITY_DLL_API EffectFactory : GlobalHook<EffectFactory,
-      std::unique_ptr<EffectProcessor>(const PluginID &)
+      const EffectInstanceFactory *(const PluginID &)
    >{};
 
    explicit RealtimeEffectState(const PluginID & id);
+   RealtimeEffectState(const RealtimeEffectState &other);
    ~RealtimeEffectState();
 
    //! May be called with nonempty id at most once in the lifetime of a state
@@ -40,7 +40,7 @@ public:
     Call with empty id is ignored.
     Called by the constructor that takes an id */
    void SetID(const PluginID & id);
-   EffectProcessor *GetEffect();
+   const EffectInstanceFactory *GetEffect();
 
    bool Suspend();
    bool Resume() noexcept;
@@ -74,10 +74,24 @@ public:
    std::shared_ptr<EffectSettingsAccess> GetAccess();
 
 private:
+   /*! @name Members that are copied
+    @{
+    */
+
    PluginID mID;
-   wxString mParameters;  // Used only during deserialization
-   std::unique_ptr<EffectProcessor> mEffect;
+
+   //! Stateless effect object
+   const EffectInstanceFactory *mPlugin{};
+   
    EffectSettings mSettings;
+
+   //! @}
+
+   // Following are not copied
+   wxString mParameters;  // Used only during deserialization
+
+   //! Stateful instance made by the plug-in
+   std::shared_ptr<EffectInstance> mInstance;
 
    struct Access;
    struct AccessState;

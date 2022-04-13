@@ -8,7 +8,7 @@
 #include "Project.h"
 #include "../ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
-#include "../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "ProjectRate.h"
 #include "../ProjectSelectionManager.h"
 #include "../ProjectSettings.h"

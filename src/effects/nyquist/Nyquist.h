@@ -13,6 +13,7 @@
 
 #include "../Effect.h"
 #include "FileNames.h"
+#include "../../widgets/wxPanelWrapper.h"
 
 #include "nyx.h"
 
@@ -60,8 +61,16 @@ public:
    int ticks;
 };
 
+struct NyquistSettings {
+   // other settings, for the Nyquist prompt; else null
+   EffectSettings proxySettings;
+   bool proxyDebug{ false };
 
-class AUDACITY_DLL_API NyquistEffect final : public Effect
+   // Other fields, to do
+};
+
+class AUDACITY_DLL_API NyquistEffect final
+   : public EffectWithSettings<NyquistSettings, StatefulEffect>
 {
 public:
 
@@ -94,11 +103,9 @@ public:
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
    bool DoLoadSettings(
-      const CommandParameters & parms, Settings &settings);
-
-   // EffectProcessor implementation
+      const CommandParameters & parms, EffectSettings &settings);
 
    bool VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
       override;
@@ -110,15 +117,14 @@ public:
    // Effect implementation
 
    bool Init() override;
-   bool CheckWhetherSkipEffect() override;
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,
       EffectSettingsAccess &access, bool forceModal = false) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(Settings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
 
    // NyquistEffect implementation
    // For Nyquist Workbench support

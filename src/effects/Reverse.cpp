@@ -70,7 +70,7 @@ bool EffectReverse::IsInteractive() const
 
 // Effect implementation
 
-bool EffectReverse::Process(EffectSettings &)
+bool EffectReverse::Process(EffectInstance &, EffectSettings &)
 {
    //all needed because Reverse should move the labels too
    this->CopyInputTracks(true); // Set up mOutputTracks.

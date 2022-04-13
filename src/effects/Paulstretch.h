@@ -16,7 +16,7 @@
 
 class ShuttleGui;
 
-class EffectPaulstretch final : public Effect
+class EffectPaulstretch final : public StatefulEffect
 {
 public:
    static inline EffectPaulstretch *
@@ -39,8 +39,8 @@ public:
    // Effect implementation
 
    double CalcPreviewInputLength(
-      const EffectSettings &settings, double previewLength) override;
-   bool Process(EffectSettings &settings) override;
+      const EffectSettings &settings, double previewLength) const override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
 
@@ -48,7 +48,7 @@ private:
    // EffectPaulstretch implementation
    
    void OnText(wxCommandEvent & evt);
-   size_t GetBufferSize(double rate);
+   size_t GetBufferSize(double rate) const;
 
    bool ProcessOne(WaveTrack *track, double t0, double t1, int count);
 

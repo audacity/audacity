@@ -13,7 +13,7 @@
 
 #include "Effect.h"
 
-class EffectStereoToMono final : public Effect
+class EffectStereoToMono final : public StatefulEffect
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
@@ -31,14 +31,12 @@ public:
    EffectType GetType() const override;
    bool IsInteractive() const override;
 
-   // EffectProcessor implementation
-
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
    // Effect implementation
 
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    bool IsHiddenFromMenus() const override;
 
 private:

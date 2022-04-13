@@ -12,7 +12,7 @@
 
 #if USE_VST
 
-#include "EffectInterface.h"
+#include "../StatefulPerTrackEffect.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
@@ -86,14 +86,14 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// VSTEffect is an Audacity EffectProcessor that forwards actual 
+/// VSTEffect is an Audacity effect that forwards actual
 /// audio processing via a VSTEffectLink
 ///
 ///////////////////////////////////////////////////////////////////////////////
-class VSTEffect final : public wxEvtHandler,
-                  public EffectUIClientInterface,
-                  public XMLTagHandler,
-                  public VSTEffectLink
+class VSTEffect final
+   : public StatefulPerTrackEffect
+   , public XMLTagHandler
+   , public VSTEffectLink
 {
  public:
    VSTEffect(const PluginPath & path, VSTEffect *master = NULL);
@@ -119,13 +119,13 @@ class VSTEffect final : public wxEvtHandler,
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
    bool LoadUserPreset(
-      const RegistryPath & name, Settings &settings) const override;
+      const RegistryPath & name, EffectSettings &settings) const override;
    bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
    bool SaveUserPreset(
-      const RegistryPath & name, const Settings &settings) const override;
+      const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
@@ -133,16 +133,13 @@ class VSTEffect final : public wxEvtHandler,
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
    bool DoLoadFactoryDefaults(EffectSettings &settings);
 
-   // EffectProcessor implementation
-
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
+   int GetMidiInCount() const override;
+   int GetMidiOutCount() const override;
 
    sampleCount GetLatency() override;
-   size_t GetTailSize() override;
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
@@ -176,8 +173,9 @@ class VSTEffect final : public wxEvtHandler,
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(
-      EffectHostInterface *host, EffectSettings &settings) override;
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+      const override;
+   std::shared_ptr<EffectInstance> DoMakeInstance(EffectSettings &settings);
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -294,7 +292,6 @@ private:
    using ModuleHandle = std::unique_ptr < char, ModuleDeleter > ;
 #endif
 
-   EffectHostInterface *mHost{};
    PluginID mID;
    PluginPath mPath;
    unsigned mAudioIns;

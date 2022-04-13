@@ -20,7 +20,6 @@ class TrackPanelResizeHandle;
 class TrackPanelResizerCell
    : public CommonTrackCell
    , public std::enable_shared_from_this< TrackPanelResizerCell >
-   , public ClientData::Base
 {
    TrackPanelResizerCell(const TrackPanelResizerCell&) = delete;
    TrackPanelResizerCell &operator= (const TrackPanelResizerCell&) = delete;

@@ -131,8 +131,8 @@ list( APPEND SOURCES
       Diags.h
       DropTarget.cpp
       DropoutDetector.cpp
-      EffectHostInterface.cpp
-      EffectHostInterface.h
+      EffectPlugin.cpp
+      EffectPlugin.h
       EnvelopeEditor.cpp
       EnvelopeEditor.h
       FFmpeg.cpp
@@ -202,8 +202,6 @@ list( APPEND SOURCES
       ProjectFileIO.h
       ProjectFileManager.cpp
       ProjectFileManager.h
-      ProjectHistory.cpp
-      ProjectHistory.h
       ProjectManager.cpp
       ProjectManager.h
       ProjectSelectionManager.cpp
@@ -301,8 +299,6 @@ list( APPEND SOURCES
       UIHandle.h
       TransportUtilities.cpp
       TransportUtilities.h
-      UndoManager.cpp
-      UndoManager.h
       VoiceKey.cpp
       VoiceKey.h
       WaveClip.cpp
@@ -421,6 +417,8 @@ list( APPEND SOURCES
       effects/Echo.h
       effects/Effect.cpp
       effects/Effect.h
+      effects/EffectBase.cpp
+      effects/EffectBase.h
       effects/EffectManager.cpp
       effects/EffectManager.h
       effects/EffectUI.cpp
@@ -451,6 +449,8 @@ list( APPEND SOURCES
       effects/Normalize.h
       effects/Paulstretch.cpp
       effects/Paulstretch.h
+      effects/PerTrackEffect.cpp
+      effects/PerTrackEffect.h
       effects/Phaser.cpp
       effects/Phaser.h
       effects/RealtimeEffectList.cpp
@@ -480,6 +480,10 @@ list( APPEND SOURCES
       effects/SimpleMono.h
       effects/SoundTouchEffect.cpp
       effects/SoundTouchEffect.h
+      effects/StatefulEffectBase.cpp
+      effects/StatefulEffectBase.h
+      effects/StatefulPerTrackEffect.cpp
+      effects/StatefulPerTrackEffect.h
       effects/StereoToMono.cpp
       effects/StereoToMono.h
       effects/TimeScale.cpp
@@ -578,6 +582,8 @@ list( APPEND SOURCES
       $<$<BOOL:${USE_LV2}>:
          effects/lv2/LV2Effect.cpp
          effects/lv2/LV2Effect.h
+         effects/lv2/LV2Symbols.cpp
+         effects/lv2/LV2Symbols.h
          effects/lv2/LoadLV2.cpp
          effects/lv2/LoadLV2.h
          effects/lv2/NativeWindow.h
@@ -1429,13 +1435,12 @@ set( AUDACITY_LIBRARIES
 # A sub-sequence of what is in libraries/CMakeLists.txt :
    lib-string-utils-interface
    lib-uuid-interface
-   lib-screen-geometry-interface
    lib-project-rate-interface
    lib-ffmpeg-support-interface
    lib-theme-resources-interface
-   lib-transactions-interface
    lib-sample-track-interface
    lib-module-manager-interface
+   lib-project-history-interface
 )
 
 if ( ${_OPT}has_networking )

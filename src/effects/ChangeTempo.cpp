@@ -141,12 +141,12 @@ bool EffectChangeTempo::SupportsAutomation() const
 // Effect implementation
 
 double EffectChangeTempo::CalcPreviewInputLength(
-   const EffectSettings &, double previewLength)
+   const EffectSettings &, double previewLength) const
 {
    return previewLength * (100.0 + m_PercentChange) / 100.0;
 }
 
-bool EffectChangeTempo::CheckWhetherSkipEffect()
+bool EffectChangeTempo::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (m_PercentChange == 0.0);
 }
@@ -161,7 +161,7 @@ bool EffectChangeTempo::Init()
    return true;
 }
 
-bool EffectChangeTempo::Process(EffectSettings &settings)
+bool EffectChangeTempo::Process(EffectInstance &, EffectSettings &settings)
 {
    bool success = false;
 
@@ -173,7 +173,7 @@ bool EffectChangeTempo::Process(EffectSettings &settings)
       proxy.mProxyEffectName = XO("High Quality Tempo Change");
       proxy.setParameters(tempoRatio, 1.0);
       //! Already processing; don't make a dialog
-      success = Delegate(proxy, settings, *mUIParent, nullptr, nullptr);
+      success = Delegate(proxy, settings);
    }
    else
 #endif

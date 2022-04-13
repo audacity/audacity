@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../HitTestResult.h"
 #include "Project.h"
-#include "../../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../../RefreshCode.h"
 #include "../../../TimeTrack.h"
 #include "../../../widgets/PopupMenuTable.h"

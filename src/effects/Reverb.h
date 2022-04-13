@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_REVERB__
 #define __AUDACITY_EFFECT_REVERB__
 
-#include "Effect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class wxCheckBox;
@@ -22,7 +22,7 @@ class ShuttleGui;
 
 struct Reverb_priv_t;
 
-class EffectReverb final : public Effect
+class EffectReverb final : public StatefulPerTrackEffect
 {
 public:
    struct Params;
@@ -59,8 +59,6 @@ public:
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool DoLoadFactoryPreset(int id);
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

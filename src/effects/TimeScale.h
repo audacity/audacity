@@ -44,21 +44,20 @@ public:
 
    // Effect implementation
 
-   bool Init() override;
    void Preview(EffectSettingsAccess &access, bool dryOnly) override;
-   bool Process(EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    double CalcPreviewInputLength(
-      const EffectSettings &settings, double previewLength) override;
+      const EffectSettings &settings, double previewLength) const override;
 
 private:
    // EffectTimeScale implementation
 
-   inline double PercentChangeToRatio(double percentChange);
-   inline double HalfStepsToPercentChange(double halfSteps);
-   inline double PercentChangeToHalfSteps(double percentChange);
+   static inline double PercentChangeToRatio(double percentChange);
+   static inline double HalfStepsToPercentChange(double halfSteps);
+   static inline double PercentChangeToHalfSteps(double percentChange);
 
    void OnText_RatePercentChangeStart(wxCommandEvent & evt);
    void OnText_RatePercentChangeEnd(wxCommandEvent & evt);

@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "AColor.h"
 #include "../../HitTestResult.h"
 #include "../../ProjectAudioIO.h"
-#include "../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
 #include "../../Snap.h"
@@ -24,7 +24,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackArtist.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
-#include "../../UndoManager.h"
+#include "UndoManager.h"
 #include "ViewInfo.h"
 #include "../../../images/Cursors.h"
 

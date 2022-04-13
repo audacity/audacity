@@ -7,7 +7,7 @@
 #include "../NoteTrack.h"
 #include "Prefs.h"
 #include "Project.h"
-#include "../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "ProjectRate.h"
 #include "../ProjectSettings.h"
 #include "../ProjectWindow.h"
@@ -16,7 +16,7 @@
 #include "../SyncLock.h"
 #include "../TrackPanel.h"
 #include "../TrackPanelAx.h"
-#include "../UndoManager.h"
+#include "UndoManager.h"
 #include "ViewInfo.h"
 #include "../WaveTrack.h"
 #include "../commands/CommandContext.h"
@@ -1156,7 +1156,7 @@ BaseItemSharedPtr EditMenu()
       Section( "Other",
       //////////////////////////////////////////////////////////////////////////
 
-         Menu( wxT("Clip"), XXO("Clip B&oundaries"),
+         Menu( wxT("Clip"), XXO("Audi&o Clips"),
             Section( "",
                /* i18n-hint: (verb) It's an item on a menu. */
                Command( wxT("Split"), XXO("Sp&lit"), FN(OnSplit),

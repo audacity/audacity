@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_ECHO__
 #define __AUDACITY_EFFECT_ECHO__
 
-#include "Effect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 #include <float.h> // for FLT_MAX
 
@@ -20,7 +20,7 @@ class ShuttleGui;
 
 using Floats = ArrayOf<float>;
 
-class EffectEcho final : public Effect
+class EffectEcho final : public StatefulPerTrackEffect
 {
 public:
    static inline EffectEcho *
@@ -39,8 +39,6 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

@@ -19,7 +19,7 @@
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <public.sdk/source/vst/hosting/module.h>
 
-#include "EffectInterface.h"
+#include "../StatefulPerTrackEffect.h"
 #include "internal/ComponentHandler.h"
 
 #include "SampleCount.h"
@@ -41,7 +41,7 @@ class ParameterChangesProvider;
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
-class VST3Effect final : public EffectUIClientInterface
+class VST3Effect final : public StatefulPerTrackEffect
 {
    //Keep strong reference to a module while effect is alive
    std::shared_ptr<VST3::Hosting::Module> mModule;
@@ -62,7 +62,6 @@ class VST3Effect final : public EffectUIClientInterface
    Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
    Steinberg::IPtr<internal::ComponentHandler> mComponentHandler;
    wxWindow* mParent { nullptr };
-   EffectHostInterface *mEffectHost{};
    NumericTextCtrl* mDuration { nullptr };
 
    //Holds pending parameter changes to be applied to multiple realtime effects.
@@ -109,24 +108,23 @@ public:
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
    bool LoadUserPreset(
-      const RegistryPath & name, Settings &settings) const override;
+      const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
-      const RegistryPath & name, const Settings &settings) const override;
+      const RegistryPath & name, const EffectSettings &settings) const override;
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool LoadFactoryDefaults(EffectSettings &) const override;
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
+   int GetMidiInCount() const override;
+   int GetMidiOutCount() const override;
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
    sampleCount GetLatency() override;
-   size_t GetTailSize() override;
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;
    bool ProcessFinalize() override;
@@ -147,8 +145,9 @@ public:
 
    int ShowClientInterface(wxWindow& parent, wxDialog& dialog, bool forceModal) override;
    bool InitializePlugin();
-   bool InitializeInstance(
-      EffectHostInterface *host, EffectSettings &settings) override;
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+      const override;
+   std::shared_ptr<EffectInstance> DoMakeInstance(EffectSettings &settings);
    bool IsGraphicalUI() override;
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;

@@ -9,6 +9,8 @@
 
 *********************************************************************/
 
+#ifndef __AUDACITY_LV2_EFFECT__
+#define __AUDACITY_LV2_EFFECT__
 
 
 #if USE_LV2
@@ -26,25 +28,20 @@ class wxArrayString;
 #include "lv2/atom/forge.h"
 #include "lv2/data-access/data-access.h"
 #include "lv2/log/log.h"
-#include "lv2/midi/midi.h"
 #include "lv2/options/options.h"
 #include "lv2/state/state.h"
-#include "lv2/time/time.h"
 #include "lv2/uri-map/uri-map.h"
-#include "lv2/urid/urid.h"
 #include "lv2/worker/worker.h"
-#include "lv2/ui/ui.h"
-
-#include <lilv/lilv.h>
 #include <suil/suil.h>
+#include "lv2_external_ui.h"
 
+#include "../StatefulPerTrackEffect.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
 
-#include "LoadLV2.h"
+#include "LV2Symbols.h"
 #include "NativeWindow.h"
 
-#include "lv2_external_ui.h"
 #include "zix/ring.h"
 
 #include <unordered_map>
@@ -251,10 +248,7 @@ using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
 class LV2EffectSettingsDialog;
 class LV2Wrapper;
 
-using URIDMap = std::vector<MallocString<>>;
-
-class LV2Effect final : public wxEvtHandler,
-                        public EffectUIClientInterface
+class LV2Effect final : public StatefulPerTrackEffect
 {
 public:
    LV2Effect(const LilvPlugin *plug);
@@ -280,13 +274,13 @@ public:
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
-      const CommandParameters & parms, Settings &settings) const override;
+      const CommandParameters & parms, EffectSettings &settings) const override;
 
    bool LoadUserPreset(
-      const RegistryPath & name, Settings &settings) const override;
+      const RegistryPath & name, EffectSettings &settings) const override;
    bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
    bool SaveUserPreset(
-      const RegistryPath & name, const Settings &settings) const override;
+      const RegistryPath & name, const EffectSettings &settings) const override;
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
@@ -294,20 +288,17 @@ public:
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
    bool DoLoadFactoryDefaults(EffectSettings &settings);
 
-   // EffectProcessor implementation
-
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
-   int GetMidiInCount() override;
-   int GetMidiOutCount() override;
+   int GetMidiInCount() const override;
+   int GetMidiOutCount() const override;
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
    sampleCount GetLatency() override;
-   size_t GetTailSize() override;
 
    bool ProcessInitialize(EffectSettings &settings,
       sampleCount totalLen, ChannelNames chanMap) override;
@@ -335,8 +326,9 @@ public:
 
    // EffectUIClientInterface implementation
 
-   bool InitializeInstance(
-      EffectHostInterface *host, EffectSettings &settings) override;
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
+      const override;
+   std::shared_ptr<EffectInstance> DoMakeInstance(EffectSettings &settings);
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectSettingsAccess &access) override;
    bool IsGraphicalUI() override;
@@ -365,7 +357,6 @@ private:
                              const char *uri);
    static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
    LV2_URID URID_Map(const char *uri);
-   static LV2_URID Lookup_URI(URIDMap & map, const char *uri, bool add = true);
 
    static const char *urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid);
    const char *URID_Unmap(LV2_URID urid);
@@ -444,23 +435,10 @@ private:
 
 private:
  
-   // Declare the global and local URI maps
-   static URIDMap gURIDMap;
-   URIDMap mURIDMap;
-
-   // Declare the static LILV URI nodes
-#undef NODE
-#define NODE(n, u) static LilvNode *node_##n;
-   NODELIST
-
-   // Declare the static URIDs
-#undef URID
-#define URID(n, u) static LV2_URID urid_##n;
-   URIDLIST
+   // Declare local URI map
+   LV2Symbols::URIDMap mURIDMap;
 
    const LilvPlugin *mPlug;
-
-   EffectHostInterface *mHost;
 
    float mSampleRate;
    int mBlockSize;
@@ -666,4 +644,5 @@ private:
    bool mStopWorker;
 };
 
+#endif
 #endif

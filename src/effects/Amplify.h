@@ -15,7 +15,7 @@
 #ifndef __AUDACITY_EFFECT_AMPLIFY__
 #define __AUDACITY_EFFECT_AMPLIFY__
 
-#include "Effect.h"
+#include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 
@@ -24,7 +24,7 @@ class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 
-class EffectAmplify final : public Effect
+class EffectAmplify final : public StatefulPerTrackEffect
 {
 public:
    static inline EffectAmplify *
@@ -45,8 +45,6 @@ public:
    EffectType GetType() const override;
    bool LoadFactoryDefaults(EffectSettings &settings) const override;
    bool DoLoadFactoryDefaults();
-
-   // EffectProcessor implementation
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -75,13 +73,13 @@ private:
    void CheckClip();
 
 private:
-   double mPeak;
+   double mPeak      = 1.0;
 
-   double mRatio;
-   double mRatioClip;   // maximum value of mRatio which does not cause clipping
-   double mAmp;
-   double mNewPeak;
-   bool mCanClip;
+   double mRatio     = 1.0;
+   double mRatioClip = 1.0;   // maximum value of mRatio which does not cause clipping
+   double mAmp       = 0.0;
+   double mNewPeak   = 1.0;
+   bool   mCanClip   = true;
 
    wxSlider *mAmpS;
    wxTextCtrl *mAmpT;

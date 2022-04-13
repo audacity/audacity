@@ -25,6 +25,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "CodeConversions.h"
 #include "DBConnection.h"
 #include "Project.h"
+#include "ProjectHistory.h"
 #include "ProjectSerializer.h"
 #include "ProjectWindows.h"
 #include "SampleBlock.h"
@@ -2711,3 +2712,16 @@ InvisibleTemporaryProject::~InvisibleTemporaryProject()
    mpProject.reset();
    try { wxTheApp->Yield(); } catch(...) {}
 }
+
+//! Install the callback from undo manager
+static ProjectHistory::AutoSave::Scope scope {
+[](AudacityProject &project) {
+   auto &projectFileIO = ProjectFileIO::Get(project);
+   if ( !projectFileIO.AutoSave() )
+      throw SimpleMessageBoxException{
+         ExceptionType::Internal,
+         XO("Automatic database backup failed."),
+         XO("Warning"),
+         "Error:_Disk_full_or_not_writable"
+      };
+} };

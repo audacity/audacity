@@ -105,7 +105,7 @@ private:
    using Holder = std::shared_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
-
+   
    double GetOffset() const override;
    void SetOffset(double o) override;
    ChannelType GetChannelIgnoringPan() const override;
@@ -596,8 +596,8 @@ void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
    SampleBlockIDSet *pIDs = nullptr);
 
 // Non-mutating version of the above
-void InspectBlocks(const TrackList &tracks, BlockInspector inspector,
-   SampleBlockIDSet *pIDs = nullptr);
+void InspectBlocks(const TrackList &tracks,
+   BlockInspector inspector, SampleBlockIDSet *pIDs = nullptr);
 
 class ProjectRate;
 
@@ -623,14 +623,23 @@ class AUDACITY_DLL_API WaveTrackFactory final
    const SampleBlockFactoryPtr &GetSampleBlockFactory() const
    { return mpFactory; }
 
+   /**
+    * \brief Creates an unnamed empty WaveTrack with default sample format and default rate
+    * \return Orphaned WaveTrack
+    */
+   std::shared_ptr<WaveTrack> Create();
+
+   /**
+    * \brief Creates an unnamed empty WaveTrack with custom sample format and custom rate
+    * \param format Desired sample format
+    * \param rate Desired sample rate
+    * \return Orphaned WaveTrack
+    */
+   std::shared_ptr<WaveTrack> Create(sampleFormat format, double rate);
+
  private:
    const ProjectRate &mRate;
    SampleBlockFactoryPtr mpFactory;
- public:
-   std::shared_ptr<WaveTrack> DuplicateWaveTrack(const WaveTrack &orig);
-   std::shared_ptr<WaveTrack> NewWaveTrack(
-      sampleFormat format = (sampleFormat)0,
-      double rate = 0);
 };
 
 extern AUDACITY_DLL_API BoolSetting

@@ -86,7 +86,6 @@
 #include "PlatformCompatibility.h"
 #include "../../SelectFile.h"
 #include "../../ShuttleGui.h"
-#include "../../EffectHostInterface.h"
 #include "../../widgets/valnum.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/NumericTextCtrl.h"
@@ -225,7 +224,7 @@ enum InfoKeys
 //! This object exists in a separate process, to validate a newly seen plug-in.
 /*! It needs to implement EffectDefinitionInterface but mostly just as stubs */
 class VSTSubProcess final : public wxProcess
-   , public EffectDefinitionInterfaceEx
+   , public EffectDefinitionInterface
 {
 public:
    VSTSubProcess()
@@ -289,20 +288,6 @@ public:
    {
       return mAutomatable;
    }
-
-   bool SaveSettings(const EffectSettings &, CommandParameters &) const override
-      { return true; }
-   bool LoadSettings(const CommandParameters &, Settings &) const override
-      { return true; }
-
-   bool LoadUserPreset(const RegistryPath &, Settings &) const override
-      { return true; }
-   bool SaveUserPreset(const RegistryPath &, const Settings &) const override
-      { return true; }
-
-   RegistryPaths GetFactoryPresets() const override { return {}; }
-   bool LoadFactoryPreset(int, EffectSettings &) const override { return true; }
-   bool LoadFactoryDefaults(EffectSettings &) const override { return true; }
 
 public:
    wxString mPath;
@@ -1291,10 +1276,6 @@ bool VSTEffect::SupportsAutomation() const
    return mAutomatable;
 }
 
-// ============================================================================
-// EffectProcessor Implementation
-// ============================================================================
-
 bool VSTEffect::InitializePlugin()
 {
    if (!mAEffect)
@@ -1317,35 +1298,37 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
-bool VSTEffect::InitializeInstance(
-   EffectHostInterface *host, EffectSettings &settings)
+std::shared_ptr<EffectInstance>
+VSTEffect::MakeInstance(EffectSettings &settings) const
 {
-   mHost = host;
-   if (mHost)
+   return const_cast<VSTEffect*>(this)->DoMakeInstance(settings);
+}
+
+std::shared_ptr<EffectInstance>
+VSTEffect::DoMakeInstance(EffectSettings &settings)
+{
+   int userBlockSize;
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      wxT("BufferSize"), userBlockSize, 8192);
+   mUserBlockSize = std::max( 1, userBlockSize );
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      wxT("UseLatency"), mUseLatency, true);
+
+   mBlockSize = mUserBlockSize;
+
+   bool haveDefaults;
+   GetConfig(*this, PluginSettings::Private,
+      FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
+      false);
+   if (!haveDefaults)
    {
-      int userBlockSize;
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("BufferSize"), userBlockSize, 8192);
-      mUserBlockSize = std::max( 1, userBlockSize );
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("UseLatency"), mUseLatency, true);
-
-      mBlockSize = mUserBlockSize;
-
-      bool haveDefaults;
-      GetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
-         false);
-      if (!haveDefaults)
-      {
-         SaveParameters(FactoryDefaultsGroup(), settings);
-         SetConfig(*this, PluginSettings::Private,
-            FactoryDefaultsGroup(), wxT("Initialized"), true);
-      }
-
-      LoadParameters(CurrentSettingsGroup(), settings);
+      SaveParameters(FactoryDefaultsGroup(), settings);
+      SetConfig(*this, PluginSettings::Private,
+         FactoryDefaultsGroup(), wxT("Initialized"), true);
    }
-   return true;
+
+   LoadParameters(CurrentSettingsGroup(), settings);
+   return std::make_shared<Instance>(*this);
 }
 
 unsigned VSTEffect::GetAudioInCount() const
@@ -1358,12 +1341,12 @@ unsigned VSTEffect::GetAudioOutCount() const
    return mAudioOuts;
 }
 
-int VSTEffect::GetMidiInCount()
+int VSTEffect::GetMidiInCount() const
 {
    return mMidiIns;
 }
 
-int VSTEffect::GetMidiOutCount()
+int VSTEffect::GetMidiOutCount() const
 {
    return mMidiOuts;
 }
@@ -1394,11 +1377,6 @@ sampleCount VSTEffect::GetLatency()
       return delay;
    }
 
-   return 0;
-}
-
-size_t VSTEffect::GetTailSize()
-{
    return 0;
 }
 
@@ -1644,7 +1622,7 @@ bool VSTEffect::SaveSettings(
 }
 
 bool VSTEffect::LoadSettings(
-   const CommandParameters & parms, Settings &settings) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
    constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    for (int i = 0; i < mAEffect->numParams; i++)
@@ -1794,12 +1772,10 @@ bool VSTEffect::IsGraphicalUI()
    return mGui;
 }
 
-bool VSTEffect::ValidateUI(EffectSettings &)
+bool VSTEffect::ValidateUI(EffectSettings &settings)
 {
    if (GetType() == EffectTypeGenerate)
-   {
-      mHost->SetDuration(mDuration->GetValue());
-   }
+      settings.extra.SetDuration(mDuration->GetValue());
 
    return true;
 }
@@ -2770,7 +2746,7 @@ void VSTEffect::BuildPlain(EffectSettingsAccess &access)
                NumericTextCtrl(scroller, ID_Duration,
                   NumericConverter::TIME,
                   extra.GetDurationFormat(),
-                  mHost->GetDuration(),
+                  extra.GetDuration(),
                   mSampleRate,
                   NumericTextCtrl::Options{}
                      .AutoPos(true));
