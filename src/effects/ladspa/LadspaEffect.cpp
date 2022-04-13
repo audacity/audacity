@@ -111,6 +111,15 @@ LadspaEffectsModule::~LadspaEffectsModule()
 {
 }
 
+// Don't use the template-generated MakeSettings(), which default-constructs
+// the structure.  Instead allocate a number of values chosen by the plug-in
+EffectSettings LadspaEffect::MakeSettings() const
+{
+   auto result = EffectSettings::Make<LadspaEffectSettings>( mData->PortCount );
+   InitializeControls(GetSettings(result));
+   return result;
+}
+
 // ============================================================================
 // ComponentInterface implementation
 // ============================================================================
@@ -781,9 +790,6 @@ bool LadspaEffect::InitializePlugin()
 
    mInputPorts.reinit( mData->PortCount );
    mOutputPorts.reinit( mData->PortCount );
-   mSettings = LadspaEffectSettings{ mData->PortCount };
-   auto &controls = mSettings.controls;
-
    for (unsigned long p = 0; p < mData->PortCount; p++) {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
 
@@ -812,9 +818,6 @@ bool LadspaEffect::InitializePlugin()
          }
       }
    }
-
-   InitializeControls(mSettings);
-
    return true;
 }
 
@@ -913,10 +916,10 @@ int LadspaEffect::GetMidiOutCount() const
    return 0;
 }
 
-sampleCount LadspaEffect::Instance::GetLatency(const EffectSettings &)
+sampleCount LadspaEffect::Instance::GetLatency(const EffectSettings &settings)
 {
    auto &effect = GetEffect();
-   auto &controls = effect.mSettings.controls;
+   auto &controls = GetSettings(settings).controls;
    if (effect.mUseLatency && effect.mLatencyPort >= 0 && !mLatencyDone) {
       mLatencyDone = true;
       return sampleCount{ controls[effect.mLatencyPort] };
@@ -925,13 +928,12 @@ sampleCount LadspaEffect::Instance::GetLatency(const EffectSettings &)
 }
 
 bool LadspaEffect::Instance::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames)
+   EffectSettings &settings, sampleCount, ChannelNames)
 {
    /* Instantiate the plugin */
    if (!mReady) {
       auto &effect = GetEffect();
-      auto &ladspaSettings =
-         const_cast<LadspaEffectSettings&>(effect.mSettings);
+      auto &ladspaSettings = GetSettings(settings);
       mMaster = effect.InitInstance(mSampleRate, ladspaSettings);
       if (!mMaster)
          return false;
@@ -973,10 +975,10 @@ bool LadspaEffect::Instance::RealtimeInitialize(EffectSettings &)
 }
 
 bool LadspaEffect::Instance::RealtimeAddProcessor(
-   EffectSettings &, unsigned, float sampleRate)
+   EffectSettings &settings, unsigned, float sampleRate)
 {
    auto &effect = GetEffect();
-   auto &ladspaSettings = const_cast<LadspaEffectSettings &>(effect.mSettings);
+   auto &ladspaSettings = GetSettings(settings);
    LADSPA_Handle slave = effect.InitInstance(sampleRate, ladspaSettings);
    if (!slave)
    {
@@ -1054,9 +1056,9 @@ int LadspaEffect::ShowClientInterface(
 }
 
 bool LadspaEffect::SaveSettings(
-   const EffectSettings &, CommandParameters & parms) const
+   const EffectSettings &settings, CommandParameters & parms) const
 {
-   const auto &controls = mSettings.controls;
+   const auto &controls = GetSettings(settings).controls;
    for (unsigned long p = 0; p < mData->PortCount; p++) {
       LADSPA_PortDescriptor d = mData->PortDescriptors[p];
       if (LADSPA_IS_PORT_CONTROL(d) && LADSPA_IS_PORT_INPUT(d))
@@ -1067,9 +1069,9 @@ bool LadspaEffect::SaveSettings(
 }
 
 bool LadspaEffect::LoadSettings(
-   const CommandParameters & parms, EffectSettings &) const
+   const CommandParameters & parms, EffectSettings &settings) const
 {
-   auto &controls = const_cast<LadspaEffectSettings&>(mSettings).controls;
+   auto &controls = GetSettings(settings).controls;
    for (unsigned long p = 0; p < mData->PortCount; p++) {
       LADSPA_PortDescriptor descriptor = mData->PortDescriptors[p];
 
@@ -1118,13 +1120,12 @@ bool LadspaEffect::LoadFactoryDefaults(EffectSettings &settings) const
 
 struct LadspaEffect::Validator : EffectUIValidator {
    Validator(EffectUIClientInterface &effect,
-      EffectSettingsAccess &access, double sampleRate, EffectType type,
-      LadspaEffectSettings &settings)
+      EffectSettingsAccess &access, double sampleRate, EffectType type)
       : EffectUIValidator{ effect, access }
       , mSampleRate{ sampleRate }
       , mType{ type }
-      // Bind settings
-      , mSettings{ settings }
+      // Copy settings
+      , mSettings{ GetSettings(access.Get()) }
    {}
 
    bool UpdateUI() override;
@@ -1142,7 +1143,7 @@ struct LadspaEffect::Validator : EffectUIValidator {
 
    const double mSampleRate;
    const EffectType mType;
-   LadspaEffectSettings &mSettings;
+   LadspaEffectSettings mSettings;
 
    NumericTextCtrl *mDuration{};
    wxWeakRef<wxDialog> mDialog;
@@ -1434,8 +1435,8 @@ void LadspaEffect::Validator::PopulateUI(ShuttleGui &S)
 std::unique_ptr<EffectUIValidator>
 LadspaEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
 {
-   auto result = std::make_unique<Validator>(
-      *this, access, mSampleRate, GetType(), mSettings);
+   auto result =
+      std::make_unique<Validator>(*this, access, mSampleRate, GetType());
    result->PopulateUI(S);
    return result;
 }
@@ -1450,6 +1451,7 @@ bool LadspaEffect::Validator::ValidateUI()
    mAccess.ModifySettings([this](EffectSettings &settings){
       if (mType == EffectTypeGenerate)
          settings.extra.SetDuration(mDuration->GetValue());
+      GetSettings(settings) = mSettings;
    });
    return true;
 }
@@ -1678,6 +1680,8 @@ void LadspaEffect::Validator::RefreshControls()
       return;
 
    auto &controls = mSettings.controls;
+   // Copy from the dialog
+   controls = GetSettings(mAccess.Get()).controls;
    const auto &data = *GetEffect().mData;
    for (unsigned long p = 0; p < data.PortCount; ++p) {
       LADSPA_PortDescriptor d = data.PortDescriptors[p];

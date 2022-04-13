@@ -50,7 +50,8 @@ struct LadspaEffectSettings {
    std::vector<float> controls;
 };
 
-class LadspaEffect final : public StatefulPerTrackEffect
+class LadspaEffect final
+   : public EffectWithSettings<LadspaEffectSettings, PerTrackEffect>
 {
 public:
    LadspaEffect(const wxString & path, int index);
@@ -59,6 +60,8 @@ public:
    static bool LoadUseLatency(const EffectDefinitionInterface &effect);
    static bool SaveUseLatency(
       const EffectDefinitionInterface &effect, bool value);
+
+   EffectSettings MakeSettings() const override;
 
    // ComponentInterface implementation
 
@@ -159,7 +162,6 @@ private:
 
    int mNumInputControls{ 0 };
    int mNumOutputControls{ 0 };
-   LadspaEffectSettings mSettings;
 
    bool mUseLatency{ true };
    int mLatencyPort{ -1 };
