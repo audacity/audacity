@@ -19,7 +19,7 @@
 #include <vector>
 
 #include <AudioToolbox/AudioUnitUtilities.h>
-#include <AudioUnit/AudioUnit.h>
+#include "AudioUnitUtils.h"
 #include <AudioUnit/AudioUnitProperties.h>
 
 #include "../StatefulPerTrackEffect.h"
@@ -59,6 +59,17 @@ struct AudioUnitWrapper
    explicit AudioUnitWrapper(AudioComponent component)
       : mComponent{ component }
    {}
+
+   // Supply most often used values as defaults for scope and element
+   template<typename T>
+   OSStatus SetProperty(AudioUnitPropertyID inID, const T &property,
+      AudioUnitScope inScope = kAudioUnitScope_Global,
+      AudioUnitElement inElement = 0) const
+   {
+      // Supply mUnit.get() to the non-member function
+      return AudioUnitUtils::SetProperty(mUnit.get(),
+         inID, property, inScope, inElement);
+   }
 
    bool CreateAudioUnit();
 
@@ -207,7 +218,6 @@ private:
    bool BypassEffect(bool bypass);
 
 private:
-
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;
