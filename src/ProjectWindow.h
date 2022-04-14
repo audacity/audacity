@@ -17,6 +17,7 @@ Paul Licameli split from AudacityProject.h
 #include "Prefs.h"
 #include "Observer.h"
 
+class CommandContext;
 class Track;
 
 class wxScrollBar;
@@ -38,6 +39,8 @@ public:
    static ProjectWindow *Find( AudacityProject *pProject );
    static const ProjectWindow *Find( const AudacityProject *pProject );
 
+   static void OnResetWindow(const CommandContext& context);
+
    explicit ProjectWindow(
       wxWindow * parent, wxWindowID id,
       const wxPoint & pos, const wxSize &size,
@@ -52,6 +55,8 @@ public:
 
    bool IsBeingDeleted() const { return mIsDeleting; }
    void SetIsBeingDeleted() { mIsDeleting = true; }
+
+   void Reset();
 
    /**
     * \brief Effect window contains list off effects assigned to
@@ -234,5 +239,16 @@ private:
 
 void GetDefaultWindowRect(wxRect *defRect);
 void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized);
+
+extern AUDACITY_DLL_API BoolSetting ProjectWindowMaximized;
+extern AUDACITY_DLL_API BoolSetting ProjectWindowIconized;
+extern AUDACITY_DLL_API IntSetting ProjectWindowX;
+extern AUDACITY_DLL_API IntSetting ProjectWindowY;
+extern AUDACITY_DLL_API IntSetting ProjectWindowWidth;
+extern AUDACITY_DLL_API IntSetting ProjectWindowHeight;
+extern AUDACITY_DLL_API IntSetting ProjectWindowNormalX;
+extern AUDACITY_DLL_API IntSetting ProjectWindowNormalY;
+extern AUDACITY_DLL_API IntSetting ProjectWindowNormalWidth;
+extern AUDACITY_DLL_API IntSetting ProjectWindowNormalHeight;
 
 #endif
