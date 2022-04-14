@@ -60,17 +60,16 @@ Paul Licameli split from AudacityProject.cpp
 namespace {
    void SaveWindowPreferences(const wxRect& windowRect, const wxRect& normalRect,
                               bool isMaximized, bool isIconized) {
-      gPrefs->Write(ProjectWindow::Preference_X, windowRect.GetX());
-      gPrefs->Write(ProjectWindow::Preference_Y, windowRect.GetY());
-      gPrefs->Write(ProjectWindow::Preference_Width, windowRect.GetWidth());
-      gPrefs->Write(ProjectWindow::Preference_Height, windowRect.GetHeight());
-      gPrefs->Write(ProjectWindow::Preference_Maximized, isMaximized);
-      gPrefs->Write(ProjectWindow::Preference_Normal_X, normalRect.GetX());
-      gPrefs->Write(ProjectWindow::Preference_Normal_Y, normalRect.GetY());
-      gPrefs->Write(ProjectWindow::Preference_Normal_Width, normalRect.GetWidth());
-      gPrefs->Write(ProjectWindow::Preference_Normal_Height, normalRect.GetHeight());
-      gPrefs->Write(ProjectWindow::Preference_Iconized, isIconized);
-      gPrefs->Flush();
+      ProjectWindowX.Write(windowRect.GetX());
+      ProjectWindowY.Write(windowRect.GetY());
+      ProjectWindowWidth.Write(windowRect.GetWidth());
+      ProjectWindowHeight.Write(windowRect.GetHeight());
+      ProjectWindowMaximized.Write(isMaximized);
+      ProjectWindowNormalX.Write(normalRect.GetX());
+      ProjectWindowNormalY.Write(normalRect.GetY());
+      ProjectWindowNormalWidth.Write(normalRect.GetWidth());
+      ProjectWindowNormalHeight.Write(normalRect.GetHeight());
+      ProjectWindowIconized.Write(isIconized);
    }
 }
 

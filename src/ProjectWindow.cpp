@@ -41,6 +41,22 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/sizer.h>
 #include <wx/splitter.h>
 
+namespace {
+   constexpr int DEFAULT_WINDOW_WIDTH = 1200;
+   constexpr int DEFAULT_WINDOW_HEIGHT = 674;
+}
+
+BoolSetting ProjectWindowMaximized{ L"/Window/Maximized", false };
+BoolSetting ProjectWindowIconized{ L"/Window/Iconized", false };
+IntSetting ProjectWindowX{ L"/Window/X", 0 };
+IntSetting ProjectWindowY{ L"/Window/Y", 0 };
+IntSetting ProjectWindowWidth{ L"/Window/Width", DEFAULT_WINDOW_WIDTH };
+IntSetting ProjectWindowHeight{ L"/Window/Height", DEFAULT_WINDOW_HEIGHT };
+IntSetting ProjectWindowNormalX{ L"/Window/Normal_X", 0 };
+IntSetting ProjectWindowNormalY{ L"/Window/Normal_Y", 0 };
+IntSetting ProjectWindowNormalWidth{ L"/Window/Normal_Width", DEFAULT_WINDOW_WIDTH };
+IntSetting ProjectWindowNormalHeight{ L"/Window/Normal_Height", DEFAULT_WINDOW_HEIGHT };
+
 // Returns the screen containing a rectangle, or -1 if none does.
 int ScreenContaining( wxRect & r ){
    unsigned int n = wxDisplay::GetCount();
@@ -94,8 +110,8 @@ void GetDefaultWindowRect(wxRect *defRect)
 {
    *defRect = wxGetClientDisplayRect();
 
-   int width = 1200;
-   int height = 674;
+   int width = DEFAULT_WINDOW_WIDTH;
+   int height = DEFAULT_WINDOW_HEIGHT;
 
    //These conditional values assist in improving placement and size
    //of NEW windows on different platforms.
@@ -144,20 +160,20 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    wxRect defaultRect;
    GetDefaultWindowRect(&defaultRect);
 
-   gPrefs->Read(ProjectWindow::Preference_Maximized, pMaximized, false);
-   gPrefs->Read(ProjectWindow::Preference_Iconized, pIconized, false);
+   *pMaximized = ProjectWindowMaximized.Read();
+   *pIconized = ProjectWindowIconized.Read();
 
    wxRect windowRect;
-   gPrefs->Read(ProjectWindow::Preference_X, &windowRect.x, defaultRect.x);
-   gPrefs->Read(ProjectWindow::Preference_Y, &windowRect.y, defaultRect.y);
-   gPrefs->Read(ProjectWindow::Preference_Width, &windowRect.width, defaultRect.width);
-   gPrefs->Read(ProjectWindow::Preference_Height, &windowRect.height, defaultRect.height);
+   windowRect.x = ProjectWindowX.ReadWithDefault(defaultRect.x);
+   windowRect.y = ProjectWindowY.ReadWithDefault(defaultRect.y);
+   windowRect.width = ProjectWindowWidth.ReadWithDefault(defaultRect.width);
+   windowRect.height = ProjectWindowHeight.ReadWithDefault(defaultRect.height);
 
    wxRect normalRect;
-   gPrefs->Read(ProjectWindow::Preference_Normal_X, &normalRect.x, defaultRect.x);
-   gPrefs->Read(ProjectWindow::Preference_Normal_Y, &normalRect.y, defaultRect.y);
-   gPrefs->Read(ProjectWindow::Preference_Normal_Width, &normalRect.width, defaultRect.width);
-   gPrefs->Read(ProjectWindow::Preference_Normal_Height, &normalRect.height, defaultRect.height);
+   normalRect.x = ProjectWindowNormalX.ReadWithDefault(defaultRect.x);
+   normalRect.y = ProjectWindowNormalY.ReadWithDefault(defaultRect.y);
+   normalRect.width = ProjectWindowNormalWidth.ReadWithDefault(defaultRect.width);
+   normalRect.height = ProjectWindowNormalHeight.ReadWithDefault(defaultRect.height);
 
    // Workaround 2.1.1 and earlier bug on OSX...affects only normalRect, but let's just
    // validate for all rects and plats
