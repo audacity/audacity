@@ -108,30 +108,19 @@ public:
 
    bool Get(AudioUnit mUnit, AudioUnitParameterID parmID)
    {
-      OSStatus result;
       UInt32 dataSize;
 
       info = {};
-      dataSize = sizeof(info);
-      result = AudioUnitGetProperty(mUnit,
-                                    kAudioUnitProperty_ParameterInfo,
-                                    kAudioUnitScope_Global,
-                                    parmID,
-                                    &info,
-                                    &dataSize);  
-      if (result != noErr)
-      {
+      // Note non-default element parameter, parmID
+      if (AudioUnitUtils::GetFixedSizeProperty(mUnit,
+         kAudioUnitProperty_ParameterInfo, info,
+         kAudioUnitScope_Global, parmID))
          return false;
-      }
 
       if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
-      {
          name = wxCFStringRef::AsString(info.cfNameString);
-      }
       else
-      {
          name = wxString(info.name);
-      }
 
 #if defined(USE_EXTENDED_NAMES)
       // If the parameter has a non-empty name, then the final parameter name will
@@ -169,16 +158,9 @@ public:
          AudioUnitUtils::ParameterNameInfo clumpInfo{
             info.clumpID, kAudioUnitParameterName_Full
          };
-         dataSize = sizeof(clumpInfo);
 
-         result = AudioUnitGetProperty(mUnit,
-                                       kAudioUnitProperty_ParameterClumpName,
-                                       kAudioUnitScope_Global,
-                                       0,
-                                       &clumpInfo,
-                                       &dataSize);  
-         if (result == noErr)
-         {
+         if (!AudioUnitUtils::GetFixedSizeProperty(mUnit,
+            kAudioUnitProperty_ParameterClumpName, clumpInfo)) {
             clumpName =  wxCFStringRef::AsString(clumpInfo.outName);
             clumpName.Replace(idBeg, wxT('_'));
             clumpName.Replace(idSep, wxT('_'));
@@ -950,14 +932,10 @@ bool AudioUnitEffect::InitializeInstance()
    SetRateAndChannels();
 
    // Retrieve the desired number of frames per slice
-   UInt32 dataSize = sizeof(mBlockSize);
-   mBlockSize = 512;
-   AudioUnitGetProperty(mUnit.get(),
-                        kAudioUnitProperty_MaximumFramesPerSlice,
-                        kAudioUnitScope_Global,
-                        0,
-                        &mBlockSize,
-                        &dataSize);
+   if (GetFixedSizeProperty(
+      kAudioUnitProperty_MaximumFramesPerSlice, mBlockSize))
+      // Call failed?  Then supply a default:
+      mBlockSize = 512;
 
    // Is this really needed here or can it be done in MakeInstance()
    // only?  I think it can, but this is more a conservative change for now,
@@ -1112,30 +1090,19 @@ bool AudioUnitEffect::MakeListener()
       {
          return false;
       }
-
-      AudioUnitCocoaViewInfo cocoaViewInfo;
-      dataSize = sizeof(AudioUnitCocoaViewInfo);
    
       // Check for a Cocoa UI
-      result = AudioUnitGetProperty(mUnit.get(),
-                                    kAudioUnitProperty_CocoaUI,
-                                    kAudioUnitScope_Global,
-                                    0,
-                                    &cocoaViewInfo,
-                                    &dataSize);
-
-      bool hasCocoa = result == noErr;
+      // This could retrieve a variable-size property, but we only look at
+      // the first element.
+      AudioUnitCocoaViewInfo cocoaViewInfo;
+      bool hasCocoa =
+         !GetFixedSizeProperty(kAudioUnitProperty_CocoaUI, cocoaViewInfo);
 
       // Check for a Carbon UI
+      // This could retrieve a variable sized array but we only need the first
       AudioComponentDescription compDesc;
-      dataSize = sizeof(compDesc);
-      result = AudioUnitGetProperty(mUnit.get(),
-                                    kAudioUnitProperty_GetUIComponentList,
-                                    kAudioUnitScope_Global,
-                                    0,
-                                    &compDesc,
-                                    &dataSize);
-      bool hasCarbon = result == noErr;
+      bool hasCarbon =
+         !GetFixedSizeProperty(kAudioUnitProperty_GetUIComponentList, compDesc);
 
       mInteractive = (cnt > 0) || hasCocoa || hasCarbon;
    }
@@ -1181,22 +1148,13 @@ size_t AudioUnitEffect::GetBlockSize() const
 sampleCount AudioUnitEffect::GetLatency()
 {
    // Retrieve the latency (can be updated via an event)
-   if (mUseLatency && !mLatencyDone)
-   {
-      mLatencyDone = true;
-
+   if (mUseLatency && !mLatencyDone) {
       Float64 latency = 0.0;
-      UInt32 dataSize = sizeof(latency);
-      AudioUnitGetProperty(mUnit.get(),
-                           kAudioUnitProperty_Latency,
-                           kAudioUnitScope_Global,
-                           0,
-                           &latency,
-                           &dataSize);  
-
-      return sampleCount(latency * mSampleRate);
+      if (!GetFixedSizeProperty(kAudioUnitProperty_Latency, latency)) {
+         mLatencyDone = true;
+         return sampleCount{ latency * mSampleRate };
+      }
    }
-
    return 0;
 }
 
@@ -1206,15 +1164,9 @@ size_t AudioUnitEffect::GetTailSize() const
 {
    // Retrieve the tail time
    Float64 tailTime = 0.0;
-   UInt32 dataSize = sizeof(tailTime);
-   AudioUnitGetProperty(mUnit,
-                        kAudioUnitProperty_TailTime,
-                        kAudioUnitScope_Global,
-                        0,
-                        &tailTime,
-                        &dataSize);  
-
-   return tailTime * mSampleRate;
+   if (!GetFixedSizeProperty(kAudioUnitProperty_TailTime, tailTime))
+      return tailTime * mSampleRate;
+   return 0;
 }
 #endif
 
@@ -1536,18 +1488,10 @@ bool AudioUnitEffect::SaveUserPreset(
 
 bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
 {
-   OSStatus result;
-
    // Retrieve the list of factory presets
    CF_ptr<CFArrayRef> array;
-   UInt32 dataSize = sizeof(CFArrayRef);
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_FactoryPresets,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &array,
-                                 &dataSize);
-   if (result != noErr || id < 0 || id >= CFArrayGetCount(array.get()))
+   if (GetFixedSizeProperty(kAudioUnitProperty_FactoryPresets, array) ||
+       id < 0 || id >= CFArrayGetCount(array.get()))
       return false;
 
    if (!SetProperty(kAudioUnitProperty_PresentPreset,
@@ -1568,19 +1512,11 @@ bool AudioUnitEffect::LoadFactoryDefaults(EffectSettings &settings) const
 
 RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 {
-   OSStatus result;
    RegistryPaths presets;
 
    // Retrieve the list of factory presets
    CF_ptr<CFArrayRef> array;
-   UInt32 dataSize = sizeof(CFArrayRef);
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_FactoryPresets,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &array,
-                                 &dataSize);
-   if (result == noErr)
+   if (!GetFixedSizeProperty(kAudioUnitProperty_FactoryPresets, array))
       for (CFIndex i = 0, cnt = CFArrayGetCount(array.get()); i < cnt; ++i)
          presets.push_back(wxCFStringRef::AsString(
             static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), i))
@@ -1898,13 +1834,8 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
 
    // Now retrieve the preset content
    CF_ptr<CFPropertyListRef> content;
-   UInt32 size = sizeof(content);
-   AudioUnitGetProperty(mUnit.get(),
-                        kAudioUnitProperty_ClassInfo,
-                        kAudioUnitScope_Global,
-                        0,
-                        &content,
-                        &size);
+   if (GetFixedSizeProperty(kAudioUnitProperty_ClassInfo, content))
+       return false;
 
    // And convert it to serialized binary data
    CF_ptr<CFDataRef> data{
@@ -1999,18 +1930,10 @@ bool AudioUnitEffect::SetRateAndChannels()
 
 bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
 {
-   OSStatus result;
-
    // Retrieve the class state from the source AU
    CF_ptr<CFPropertyListRef> content;
-   UInt32 size = sizeof(content);
-   result = AudioUnitGetProperty(srcUnit,
-                                 kAudioUnitProperty_ClassInfo,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &content,
-                                 &size);
-   if (result != noErr)
+   if (AudioUnitUtils::GetFixedSizeProperty(srcUnit,
+      kAudioUnitProperty_ClassInfo, content))
       return false;
 
    // Set the destination AUs state from the source AU's content
@@ -2041,14 +1964,7 @@ TranslatableString AudioUnitEffect::Export(const wxString & path) const
 
    // Now retrieve the preset content
    CF_ptr<CFPropertyListRef> content;
-   UInt32 size = sizeof(content);
-   auto result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_ClassInfo,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &content,
-                                 &size);
-   if (result)
+   if (GetFixedSizeProperty(kAudioUnitProperty_ClassInfo, content))
       return XO("Failed to retrieve preset content");
 
    // And convert it to serialized XML data

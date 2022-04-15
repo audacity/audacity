@@ -52,6 +52,17 @@ struct AudioUnitWrapper
 
    // Supply most often used values as defaults for scope and element
    template<typename T>
+   OSStatus GetFixedSizeProperty(AudioUnitPropertyID inID, T &property,
+      AudioUnitScope inScope = kAudioUnitScope_Global,
+      AudioUnitElement inElement = 0) const
+   {
+      // Supply mUnit.get() to the non-member function
+      return AudioUnitUtils::GetFixedSizeProperty(mUnit.get(),
+         inID, property, inScope, inElement);
+   }
+
+   // Supply most often used values as defaults for scope and element
+   template<typename T>
    OSStatus SetProperty(AudioUnitPropertyID inID, const T &property,
       AudioUnitScope inScope = kAudioUnitScope_Global,
       AudioUnitElement inElement = 0) const
