@@ -1260,22 +1260,17 @@ bool AudioUnitEffect::ProcessInitialize(
                                  0,
                                  &callbackStruct,
                                  sizeof(AURenderCallbackStruct));
-   if (result != noErr)
-   {
-      wxPrintf("Setting input render callback failed.\n");
+   if (result != noErr) {
+      wxLogError("Setting input render callback failed.\n");
       return false;
    }
 
    result = AudioUnitReset(mUnit.get(), kAudioUnitScope_Global, 0);
    if (result != noErr)
-   {
       return false;
-   }
 
    if (!BypassEffect(false))
-   {
       return false;
-   }
 
    mLatencyDone = false;
 
@@ -1316,14 +1311,12 @@ size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
                             0,
                             blockLen,
                             mOutputList.get());
-   if (result != noErr)
-   {
-      wxPrintf("Render failed: %d %4.4s\n", (int)result, (char *)&result);
+   if (result != noErr) {
+      wxLogError("Render failed: %d %4.4s\n", (int)result, (char *)&result);
       return 0;
    }
 
    mTimeStamp.mSampleTime += blockLen;
-
    return blockLen;
 }
 
@@ -2048,27 +2041,24 @@ bool AudioUnitEffect::SetRateAndChannels()
                                  0,
                                  &mSampleRate,
                                  sizeof(Float64));
-   if (result != noErr)
-   {
-      wxPrintf("%ls Didn't accept sample rate on global\n",
-               // Exposing internal name only in debug printf
-               GetSymbol().Internal().wx_str());
+   if (result != noErr) {
+      wxLogError("%ls Didn't accept sample rate on global\n",
+         // Exposing internal name only in logging
+         GetSymbol().Internal().wx_str());
       return false;
    }
 
-   if (mAudioIns > 0)
-   {
+   if (mAudioIns > 0) {
       result = AudioUnitSetProperty(mUnit.get(),
                                     kAudioUnitProperty_SampleRate,
                                     kAudioUnitScope_Input,
                                     0,
                                     &mSampleRate,
                                     sizeof(Float64));
-      if (result != noErr)
-      {
-         wxPrintf("%ls Didn't accept sample rate on input\n",
-               // Exposing internal name only in debug printf
-               GetSymbol().Internal().wx_str());
+      if (result != noErr) {
+         wxLogError("%ls Didn't accept sample rate on input\n",
+            // Exposing internal name only in logging
+            GetSymbol().Internal().wx_str());
          return false;
       }
 
@@ -2078,11 +2068,10 @@ bool AudioUnitEffect::SetRateAndChannels()
                                     0,
                                     &streamFormat,
                                     sizeof(AudioStreamBasicDescription));
-      if (result != noErr)
-      {
-         wxPrintf("%ls didn't accept stream format on input\n",
-               // Exposing internal name only in debug printf
-               GetSymbol().Internal().wx_str());
+      if (result != noErr) {
+         wxLogError("%ls didn't accept stream format on input\n",
+            // Exposing internal name only in logging
+            GetSymbol().Internal().wx_str());
          return false;
       }
    }
@@ -2095,11 +2084,10 @@ bool AudioUnitEffect::SetRateAndChannels()
                                     0,
                                     &mSampleRate,
                                     sizeof(Float64));
-      if (result != noErr)
-      {
-         wxPrintf("%ls Didn't accept sample rate on output\n",
-               // Exposing internal name only in debug printf
-               GetSymbol().Internal().wx_str());
+      if (result != noErr) {
+         wxLogError("%ls Didn't accept sample rate on output\n",
+            // Exposing internal name only in logging
+            GetSymbol().Internal().wx_str());
          return false;
       }
    
@@ -2111,19 +2099,17 @@ bool AudioUnitEffect::SetRateAndChannels()
                                     &streamFormat,
                                     sizeof(AudioStreamBasicDescription));
    
-      if (result != noErr)
-      {
-         wxPrintf("%ls didn't accept stream format on output\n",
-               // Exposing internal name only in debug printf
-               GetSymbol().Internal().wx_str());
+      if (result != noErr) {
+         wxLogError("%ls didn't accept stream format on output\n",
+            // Exposing internal name only in logging
+            GetSymbol().Internal().wx_str());
          return false;
       }
    }
 
    result = AudioUnitInitialize(mUnit.get());
-   if (result != noErr)
-   {
-      wxPrintf("Couldn't initialize audio unit\n");
+   if (result != noErr) {
+      wxLogError("Couldn't initialize audio unit\n");
       return false;
    }
 
