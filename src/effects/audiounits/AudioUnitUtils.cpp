@@ -10,6 +10,17 @@
 
 #include "AudioUnitUtils.h"
 
+OSStatus AudioUnitUtils::GetFixedSizePropertyPtr(AudioUnit unit,
+   AudioUnitPropertyID inID, void *pProperty, const UInt32 size,
+   AudioUnitScope inScope, AudioUnitElement inElement)
+{
+   auto newSize = size;
+   auto result = AudioUnitGetProperty(unit, inID, inScope, inElement,
+      pProperty, &newSize);
+   assert(newSize <= size);
+   return result;
+}
+
 OSStatus AudioUnitUtils::SetPropertyPtr(AudioUnit unit,
    AudioUnitPropertyID inID, const void *pProperty, UInt32 size,
    AudioUnitScope inScope, AudioUnitElement inElement)

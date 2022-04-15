@@ -27,6 +27,23 @@ using AudioUnitCleanup = std::unique_ptr<T, AudioUnitCleaner<T, fn>>;
 /*! @namespace AudioUnitUtils
  */
 namespace AudioUnitUtils {
+   //! Type-erased function to get an AudioUnit property of fixed size
+   OSStatus GetFixedSizePropertyPtr(AudioUnit unit, AudioUnitPropertyID inID,
+      void *pProperty, UInt32 size, AudioUnitScope inScope,
+      AudioUnitElement inElement);
+
+   //! Get an AudioUnit property of deduced type and fixed size,
+   //! supplying most often used values as defaults for scope and element
+   template<typename T>
+   OSStatus GetFixedSizeProperty(AudioUnit unit, AudioUnitPropertyID inID,
+      T &property,
+      AudioUnitScope inScope = kAudioUnitScope_Global,
+      AudioUnitElement inElement = 0)
+   {
+      return GetFixedSizePropertyPtr(unit, inID,
+         &property, sizeof(property), inScope, inElement);
+   }
+
    //! Type-erased function to set an AudioUnit property
    OSStatus SetPropertyPtr(AudioUnit unit, AudioUnitPropertyID inID,
       const void *pProperty, UInt32 size, AudioUnitScope inScope,
