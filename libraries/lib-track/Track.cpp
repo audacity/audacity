@@ -768,10 +768,10 @@ bool TrackList::MakeMultiChannelTrack(Track& track, int nChannels, bool aligned)
       if (!canLink)
          return false;
 
-      (*first)->SetLinkType(aligned ? Track::LinkType::Aligned : Track::LinkType::Group);
       (*first)->SetChannel(Track::LeftChannel);
       auto second = std::next(first);
       (*second)->SetChannel(Track::RightChannel);
+      (*first)->SetLinkType(aligned ? Track::LinkType::Aligned : Track::LinkType::Group);
    }
    else
       THROW_INCONSISTENCY_EXCEPTION;
