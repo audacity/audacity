@@ -2003,10 +2003,7 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
 
 bool AudioUnitEffect::SetRateAndChannels()
 {
-   OSStatus result;
-
    mInitialization.reset();
-
    AudioStreamBasicDescription streamFormat {
       // Float64 mSampleRate;
       mSampleRate,
@@ -2028,7 +2025,7 @@ bool AudioUnitEffect::SetRateAndChannels()
       sizeof(float),
 
       // UInt32  mChannelsPerFrame;
-      mAudioIns,
+      0,
 
       // UInt32  mBitsPerChannel;
       sizeof(float) * 8,
@@ -2037,80 +2034,39 @@ bool AudioUnitEffect::SetRateAndChannels()
       0
    };
 
-   result = AudioUnitSetProperty(mUnit.get(),
-                                 kAudioUnitProperty_SampleRate,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &mSampleRate,
-                                 sizeof(Float64));
-   if (result != noErr) {
-      wxLogError("%ls Didn't accept sample rate on global\n",
-         // Exposing internal name only in logging
-         GetSymbol().Internal().wx_str());
-      return false;
-   }
-
-   if (mAudioIns > 0) {
-      result = AudioUnitSetProperty(mUnit.get(),
-                                    kAudioUnitProperty_SampleRate,
-                                    kAudioUnitScope_Input,
-                                    0,
-                                    &mSampleRate,
-                                    sizeof(Float64));
-      if (result != noErr) {
-         wxLogError("%ls Didn't accept sample rate on input\n",
-            // Exposing internal name only in logging
-            GetSymbol().Internal().wx_str());
-         return false;
-      }
-
-      result = AudioUnitSetProperty(mUnit.get(),
-                                    kAudioUnitProperty_StreamFormat,
-                                    kAudioUnitScope_Input,
-                                    0,
-                                    &streamFormat,
-                                    sizeof(AudioStreamBasicDescription));
-      if (result != noErr) {
-         wxLogError("%ls didn't accept stream format on input\n",
-            // Exposing internal name only in logging
-            GetSymbol().Internal().wx_str());
-         return false;
+   const struct Info{
+      unsigned nChannels;
+      AudioUnitScope scope;
+      const char *const msg; // used only in log messages
+   } infos[]{
+      { 1, kAudioUnitScope_Global, "global" },
+      { mAudioIns, kAudioUnitScope_Input, "input" },
+      { mAudioOuts, kAudioUnitScope_Output, "output" },
+   };
+   for (const auto &[nChannels, scope, msg] : infos) {
+      if (nChannels) {
+         if (AudioUnitSetProperty(mUnit.get(), kAudioUnitProperty_SampleRate,
+            scope, 0, &mSampleRate, sizeof(mSampleRate))) {
+            wxLogError("%ls Didn't accept sample rate on %s\n",
+               // Exposing internal name only in logging
+               GetSymbol().Internal().wx_str(), msg);
+            return false;
+         }
+         if (scope != kAudioUnitScope_Global) {
+            streamFormat.mChannelsPerFrame = nChannels;
+            if (AudioUnitSetProperty(mUnit.get(),
+               kAudioUnitProperty_StreamFormat,
+               scope, 0, &streamFormat, sizeof(streamFormat))) {
+               wxLogError("%ls didn't accept stream format on %s\n",
+                  // Exposing internal name only in logging
+                  GetSymbol().Internal().wx_str(), msg);
+               return false;
+            }
+         }
       }
    }
 
-   if (mAudioOuts > 0)
-   {
-      result = AudioUnitSetProperty(mUnit.get(),
-                                    kAudioUnitProperty_SampleRate,
-                                    kAudioUnitScope_Output,
-                                    0,
-                                    &mSampleRate,
-                                    sizeof(Float64));
-      if (result != noErr) {
-         wxLogError("%ls Didn't accept sample rate on output\n",
-            // Exposing internal name only in logging
-            GetSymbol().Internal().wx_str());
-         return false;
-      }
-   
-      streamFormat.mChannelsPerFrame = mAudioOuts;
-      result = AudioUnitSetProperty(mUnit.get(),
-                                    kAudioUnitProperty_StreamFormat,
-                                    kAudioUnitScope_Output,
-                                    0,
-                                    &streamFormat,
-                                    sizeof(AudioStreamBasicDescription));
-   
-      if (result != noErr) {
-         wxLogError("%ls didn't accept stream format on output\n",
-            // Exposing internal name only in logging
-            GetSymbol().Internal().wx_str());
-         return false;
-      }
-   }
-
-   result = AudioUnitInitialize(mUnit.get());
-   if (result != noErr) {
+   if (AudioUnitInitialize(mUnit.get())) {
       wxLogError("Couldn't initialize audio unit\n");
       return false;
    }
