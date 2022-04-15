@@ -56,6 +56,7 @@ namespace {
 namespace {
    const auto waveformScaleKey = wxT("/GUI/DefaultWaveformScaleChoice");
    const auto dbValueString = wxT("dB");
+   const auto dbLinValueString = wxT("dBLin");
 }
 
 static EnumSetting< WaveformSettings::ScaleTypeValues > waveformScaleSetting{
@@ -63,6 +64,7 @@ static EnumSetting< WaveformSettings::ScaleTypeValues > waveformScaleSetting{
    {
       { XO("Linear") },
       { dbValueString, XO("Logarithmic (dB)") },
+      { dbLinValueString, XO("Linear (dB)") },
    },
 
    0, // linear
@@ -70,6 +72,7 @@ static EnumSetting< WaveformSettings::ScaleTypeValues > waveformScaleSetting{
    {
       WaveformSettings::stLinear,
       WaveformSettings::stLogarithmic,
+      WaveformSettings::stLinearDb
    }
 };
 

@@ -287,7 +287,8 @@ static const EnumValueSymbol kColourStrings[nColours] =
 enum kScaleTypes
 {
    kLinear,
-   kDb,
+   kLogarithmic,
+   kLinearDb,
    nScaleTypes
 };
 
@@ -296,7 +297,8 @@ static const EnumValueSymbol kScaleTypeStrings[nScaleTypes] =
    // These are acceptable dual purpose internal/visible names
    { XO("Linear") },
    /* i18n-hint: abbreviates decibels */
-   { XO("dB") },
+   { XO("Logarithmic (dB)") },
+   { XO("Linear (dB)")}
 };
 
 enum kZoomTypes
@@ -422,11 +424,14 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
          view.SetDisplay( WaveTrackSubViewType::Default(), false );
       }
    }
-   if( wt && bHasScaleType )
-      wt->GetWaveformSettings().scaleType = 
-         (mScaleType==kLinear) ? 
-            WaveformSettings::stLinear
-            : WaveformSettings::stLogarithmic;
+   if( wt && bHasScaleType ){
+      switch( mScaleType ){
+         default:
+         case kLinear: wt->GetWaveformSettings().scaleType = WaveformSettings::stLinear;
+         case kLogarithmic: wt->GetWaveformSettings().scaleType = WaveformSettings::stLogarithmic;
+         case kLinearDb: wt->GetWaveformSettings().scaleType = WaveformSettings::stLinearDb;
+      }
+   }
 
    if( wt && bHasVZoom ){
       switch( mVZoom ){

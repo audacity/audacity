@@ -1001,6 +1001,8 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context,
    highlight = target && target->GetTrack().get() == track;
 #endif
 
+   // TODO: Change name of variable from "dB" to "log"
+   // in all instances where appropriate to accurately express intent
    const bool dB = !track->GetWaveformSettings().isLinear();
 
    const auto &blankSelectedBrush = artist->blankSelectedBrush;

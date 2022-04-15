@@ -186,12 +186,12 @@ void WaveformVRulerControls::DoUpdateVRuler(
    WaveformSettings::ScaleType scaleType =
    wt->GetWaveformSettings().scaleType;
    
-   if (scaleType == WaveformSettings::stLinear) {
+   if (wt->GetWaveformSettings().isLinear()) {
       // Waveform
       
       float min, max;
       wt->GetDisplayBounds(&min, &max);
-      if (wt->GetLastScaleType() != scaleType &&
+      if (wt->GetLastScaleType() == WaveformSettings::stLogarithmic &&
           wt->GetLastScaleType() != -1)
       {
          // do a translation into the linear space
@@ -219,6 +219,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
+      // TODO: Create Ruler for Linear (dB) and set it here
       vruler->SetFormat(Ruler::RealFormat);
       vruler->SetUnits({});
       vruler->SetLabelEdges(false);
@@ -234,7 +235,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
       wt->GetDisplayBounds(&min, &max);
       float lastdBRange;
       
-      if (wt->GetLastScaleType() != scaleType &&
+      if (wt->GetLastScaleType() != WaveformSettings::stLogarithmic &&
           wt->GetLastScaleType() != -1)
       {
          // do a translation into the dB space
