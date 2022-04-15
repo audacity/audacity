@@ -281,7 +281,7 @@ void WaveTrack::SetPanFromChannelType()
 
 bool WaveTrack::LinkConsistencyCheck()
 {
-   auto err = WritableSampleTrack::LinkConsistencyCheck();
+   auto err = !WritableSampleTrack::LinkConsistencyCheck();
 
    auto linkType = GetLinkType();
    if (static_cast<int>(linkType) == 1 || //Comes from old audacity version
