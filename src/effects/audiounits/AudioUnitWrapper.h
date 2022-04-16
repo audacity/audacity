@@ -16,6 +16,7 @@
 #if USE_AUDIO_UNITS
 
 #include <optional>
+#include <unordered_map>
 #include <wx/string.h>
 
 #include "AudioUnitUtils.h"
@@ -23,6 +24,26 @@
 class wxCFStringRef;
 class wxMemoryBuffer;
 class TranslatableString;
+
+//! This works as a cached copy of state stored in an AudioUnit, but can also
+//! outlive it
+struct AudioUnitEffectSettings {
+   // Hash from numerical perameter IDs (should we assume they are small
+   // integers?) to floating point values
+   using Map =
+      std::unordered_map<AudioUnitParameterID, AudioUnitParameterValue>;
+   Map values;
+
+   AudioUnitEffectSettings() = default;
+   AudioUnitEffectSettings(Map map) : values{ move(map) } {}
+   
+   //! Associate 0 with all keys already present in the map
+   void ResetValues()
+   {
+      for (auto &[_, value] : values)
+         value = {};
+   }
+};
 
 //! Common base class for AudioUnitEffect and its Instance
 /*!
@@ -97,6 +118,9 @@ struct AudioUnitWrapper
     */
    TranslatableString InterpretBlob(
       const wxString &group, const wxMemoryBuffer &buf) const;
+
+   bool FetchSettings(AudioUnitEffectSettings &settings) const;
+   bool StoreSettings(const AudioUnitEffectSettings &settings) const;
 
    bool CreateAudioUnit();
 

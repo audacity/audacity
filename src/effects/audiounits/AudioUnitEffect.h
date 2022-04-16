@@ -190,6 +190,14 @@ private:
    bool BypassEffect(bool bypass);
 
 private:
+   AudioUnitEffectSettings mSettings;
+   //! This function will be rewritten when the effect is really stateless
+   AudioUnitEffectSettings &GetSettings(EffectSettings &) const
+      { return const_cast<AudioUnitEffect*>(this)->mSettings; }
+   //! This function will be rewritten when the effect is really stateless
+   const AudioUnitEffectSettings &GetSettings(const EffectSettings &) const
+      { return mSettings; }
+
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;

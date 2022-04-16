@@ -109,6 +109,67 @@ AudioUnitWrapper::ParameterInfo::ParameterInfo(
 #endif
 }
 
+bool AudioUnitWrapper::FetchSettings(AudioUnitEffectSettings &settings) const
+{
+   // Fetch Settings values from the AudioUnit into AudioUnitEffectSettings,
+   // keeping the cache up-to-date after state changes in the AudioUnit
+
+   // First zero out all values, in case any parameters are not retrievable
+   settings.ResetValues();
+
+   ForEachParameter(
+   [this, &settings](const ParameterInfo &pi, AudioUnitParameterID ID) {
+      AudioUnitParameterValue value;
+      if (!pi.mName ||
+         AudioUnitGetParameter(
+            mUnit.get(), ID, kAudioUnitScope_Global, 0, &value))
+         // Probably failed because of invalid parameter which can happen
+         // if a plug-in is in a certain mode that doesn't contain the
+         // parameter.  In any case, just ignore it.
+         {}
+      else
+         settings.values[ID] = value;
+      return true;
+   });
+   return true;
+}
+
+bool AudioUnitWrapper::StoreSettings(
+   const AudioUnitEffectSettings &settings) const
+{
+   // This is a const member function inherited by AudioUnitEffect, though it
+   // mutates the AudioUnit object (mUnit.get()).  This is necessary for the
+   // AudioUnitEffect (an EffectPlugin) to compute the "blob" of settings state
+   // for export or to save settings in the config file, which the SDK later
+   // reinterprets.
+   // So consider mUnit a mutable scratch pad object.  This doesn't really make
+   // the AudioUnitEffect stateful.
+
+   // Update parameter values in the AudioUnit from const
+   // AudioUnitEffectSettings
+   ForEachParameter(
+   [this, &settings](const ParameterInfo &pi, AudioUnitParameterID ID)
+   {
+      if (pi.mName) {
+         if (auto iter = settings.values.find(ID);
+             iter != settings.values.end()) {
+            if (AudioUnitSetParameter(mUnit.get(), ID,
+               kAudioUnitScope_Global, 0, iter->second, 0)) {
+               // Probably failed because of invalid parameter which can happen
+               // if a plug-in is in a certain mode that doesn't contain the
+               // parameter.  In any case, just ignore it.
+            }
+         }
+         else
+            // Leave parameters that are in the AudioUnit, but not known in
+            // settings, unchanged
+            {}
+      }
+      return true;
+   });
+   return true;
+}
+
 bool AudioUnitWrapper::CreateAudioUnit()
 {
    AudioUnit unit{};
