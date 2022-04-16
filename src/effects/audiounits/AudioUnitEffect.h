@@ -63,6 +63,17 @@ struct AudioUnitWrapper
 
    // Supply most often used values as defaults for scope and element
    template<typename T>
+   OSStatus GetVariableSizeProperty(AudioUnitPropertyID inID,
+      PackedArrayPtr<T> &pObject,
+      AudioUnitScope inScope = kAudioUnitScope_Global,
+      AudioUnitElement inElement = 0) const
+   {
+      return AudioUnitUtils::GetVariableSizeProperty(mUnit.get(),
+         inID, pObject, inScope, inElement);
+   }
+
+   // Supply most often used values as defaults for scope and element
+   template<typename T>
    OSStatus SetProperty(AudioUnitPropertyID inID, const T &property,
       AudioUnitScope inScope = kAudioUnitScope_Global,
       AudioUnitElement inElement = 0) const
