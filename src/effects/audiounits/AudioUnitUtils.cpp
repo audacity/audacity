@@ -9,6 +9,7 @@
 ***********************************************************************/
 
 #include "AudioUnitUtils.h"
+#include "MemoryX.h"
 
 OSStatus AudioUnitUtils::GetFixedSizePropertyPtr(AudioUnit unit,
    AudioUnitPropertyID inID, void *pProperty, UInt32 size,
@@ -18,6 +19,42 @@ OSStatus AudioUnitUtils::GetFixedSizePropertyPtr(AudioUnit unit,
    auto result = AudioUnitGetProperty(unit, inID, inScope, inElement,
       pProperty, &newSize);
    assert(newSize <= size);
+   return result;
+}
+
+OSStatus AudioUnitUtils::GetVariableSizePropertyPtr(AudioUnit unit,
+   AudioUnitElement inElement, size_t minSize, void *&pObject, size_t &size,
+   AudioUnitPropertyID inID, AudioUnitScope inScope)
+{
+   size = 0;
+
+   // Query for statically unknown size of the property first
+   UInt32 dataSize;
+   auto result = AudioUnitGetPropertyInfo(unit, inID, inScope, inElement,
+      &dataSize, nullptr);
+   if (result)
+      return result;
+
+   // Allocate
+   auto newSize = std::max<size_t>(minSize, dataSize);
+   auto pObj = ::operator new(newSize);
+   auto cleanup = finally([&]{
+      if (!pObject)
+         ::operator delete(pObj);
+   });
+
+   // Try to get the property
+   dataSize = newSize;
+   result =
+      AudioUnitGetProperty(unit, inID, inScope, inElement, pObj, &dataSize);
+   if (result) {
+      pObject = nullptr;
+      return result;
+   }
+
+   // Success
+   pObject = pObj;
+   size = newSize;
    return result;
 }
 

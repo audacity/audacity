@@ -880,49 +880,16 @@ bool AudioUnitEffect::SupportsRealtime() const
 
 bool AudioUnitEffect::SupportsAutomation() const
 {
-   OSStatus result;
-   UInt32 dataSize;
-   Boolean isWritable;
-
-   result = AudioUnitGetPropertyInfo(mUnit.get(),
-                                     kAudioUnitProperty_ParameterList,
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     &dataSize,
-                                     &isWritable);
-   if (result != noErr)
-   {
+   PackedArrayPtr<AudioUnitParameterID> array;
+   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
-   }
-
-   UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-   ArrayOf<AudioUnitParameterID> array{cnt};
-
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_ParameterList,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 array.get(),
-                                 &dataSize);  
-   if (result != noErr)
-   {
-      return false;
-   }
-
-   for (int i = 0; i < cnt; i++)
-   {
+   for (const auto &ID : array) {
       ParameterInfo pi;
-
-      if (pi.Get(mUnit.get(), array[i]))
-      {
+      if (pi.Get(mUnit.get(), ID))
          if (pi.info.flags & kAudioUnitParameterFlag_IsWritable)
-         {
             // All we need is one
             return true;
-         }
-      }
    }
-
    return false;
 }
 
@@ -1042,50 +1009,16 @@ bool AudioUnitEffect::MakeListener()
       event.mArgument.mParameter.mScope = kAudioUnitScope_Global;
       event.mArgument.mParameter.mElement = 0;
 
-      UInt32 dataSize;
-      Boolean isWritable;
-
       // Retrieve the list of parameters
-      result = AudioUnitGetPropertyInfo(mUnit.get(),
-                                        kAudioUnitProperty_ParameterList,
-                                        kAudioUnitScope_Global,
-                                        0,
-                                        &dataSize,
-                                        &isWritable);
-      if (result != noErr)
-      {
+      PackedArrayPtr<AudioUnitParameterID> array;
+      if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
          return false;
-      }
 
-      // And get them
-      UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-      if (cnt != 0)
-      {
-         ArrayOf<AudioUnitParameterID> array {cnt};
-
-         result = AudioUnitGetProperty(mUnit.get(),
-                                       kAudioUnitProperty_ParameterList,
-                                       kAudioUnitScope_Global,
-                                       0,
-                                       array.get(),
-                                       &dataSize);  
-         if (result != noErr)
-         {
+      // Register them as something we're interested in
+      for (const auto &ID : array) {
+         event.mArgument.mParameter.mParameterID = ID;
+         if (AUEventListenerAddEventType(mEventListenerRef.get(), this, &event))
             return false;
-         }
-
-         // Register them as something we're interested in
-         for (int i = 0; i < cnt; i++)
-         {
-            event.mArgument.mParameter.mParameterID = array[i];
-            result = AUEventListenerAddEventType(mEventListenerRef.get(),
-                                                 this,
-                                                 &event);
-            if (result != noErr)
-            {
-               return false;
-            }
-         }
       }
 
       event.mEventType = kAudioUnitEvent_PropertyChange;
@@ -1115,7 +1048,7 @@ bool AudioUnitEffect::MakeListener()
       bool hasCarbon =
          !GetFixedSizeProperty(kAudioUnitProperty_GetUIComponentList, compDesc);
 
-      mInteractive = (cnt > 0) || hasCocoa || hasCarbon;
+      mInteractive = (PackedArrayCount(array) > 0) || hasCocoa || hasCarbon;
    }
 
    return true;
@@ -1369,118 +1302,49 @@ int AudioUnitEffect::ShowClientInterface(
 bool AudioUnitEffect::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {
-   OSStatus result;
-   UInt32 dataSize;
-   Boolean isWritable;
-
-   result = AudioUnitGetPropertyInfo(mUnit.get(),
-                                     kAudioUnitProperty_ParameterList,
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     &dataSize,
-                                     &isWritable);
-   if (result != noErr)
-   {
+   PackedArrayPtr<AudioUnitParameterID> array;
+   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
-   }
-
-   UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-   ArrayOf<AudioUnitParameterID> array {cnt};
-
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_ParameterList,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 array.get(),
-                                 &dataSize);  
-   if (result != noErr)
-   {
-      return false;
-   }
-
-   for (int i = 0; i < cnt; i++)
-   {
+   for (const auto &ID : array) {
       ParameterInfo pi;
-
-      if (!pi.Get(mUnit.get(), array[i]))
-      {
+      if (!pi.Get(mUnit.get(), ID))
          // Probably failed because of invalid parameter which can happen
          // if a plug-in is in a certain mode that doesn't contain the
          // parameter.  In any case, just ignore it.
          continue;
-      }
-
       AudioUnitParameterValue value;
-      result = AudioUnitGetParameter(mUnit.get(), array[i],
-         kAudioUnitScope_Global, 0, &value);
-      if (result != noErr)
-      {
+      if (AudioUnitGetParameter(mUnit.get(), ID, kAudioUnitScope_Global, 0,
+         &value))
          // Probably failed because of invalid parameter which can happen
          // if a plug-in is in a certain mode that doesn't contain the
          // parameter.  In any case, just ignore it.
          continue;
-      }
-
       parms.Write(pi.name, value);
    }
-
    return true;
 }
 
 bool AudioUnitEffect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
-   OSStatus result;
-   UInt32 dataSize;
-   Boolean isWritable;
-
-   result = AudioUnitGetPropertyInfo(mUnit.get(),
-                                     kAudioUnitProperty_ParameterList,
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     &dataSize,
-                                     &isWritable);
-   if (result != noErr)
-   {
+   PackedArrayPtr<AudioUnitParameterID> array;
+   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
-   }
-
-   UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-   ArrayOf<AudioUnitParameterID> array {cnt};
-
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_ParameterList,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 array.get(),
-                                 &dataSize);  
-   if (result != noErr)
-   {
-      return false;
-   }
-
-   for (int i = 0; i < cnt; i++)
-   {
+   for (const auto &ID : array) {
       ParameterInfo pi;
-
-      if (!pi.Get(mUnit.get(), array[i]))
-      {
+      if (!pi.Get(mUnit.get(), ID))
          // Probably failed because of invalid parameter which can happen
          // if a plug-in is in a certain mode that doesn't contain the
          // parameter.  In any case, just ignore it.
          continue;
-      }
-
       double d = 0.0;
-      if (parms.Read(pi.name, &d))
-      {
-         AudioUnitParameterValue value = d;
-         AudioUnitSetParameter(mUnit.get(), array[i], kAudioUnitScope_Global,
-            0, value, 0);
-         Notify(mUnit.get(), array[i]);
+      if (parms.Read(pi.name, &d)) {
+         if (AudioUnitSetParameter(mUnit.get(), ID, kAudioUnitScope_Global,
+            0, d, 0))
+            return false;
+         Notify(mUnit.get(), ID);
       }
    }
-
    return true;
 }
 
@@ -2127,19 +1991,9 @@ void AudioUnitEffect::EventListenerCallback(void *inCallbackRefCon,
 
 void AudioUnitEffect::GetChannelCounts()
 {
-   Boolean isWritable = 0;
-   UInt32  dataSize = 0;
-   OSStatus result;
-
    // Does AU have channel info
-   result = AudioUnitGetPropertyInfo(mUnit.get(),
-                                     kAudioUnitProperty_SupportedNumChannels,
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     &dataSize,
-                                     &isWritable);
-   if (result)
-   {
+   PackedArrayPtr<AUChannelInfo> info;
+   if (GetVariableSizeProperty(kAudioUnitProperty_SupportedNumChannels, info)) {
       // None supplied.  Apparently all FX type units can do any number of INs
       // and OUTs as long as they are the same number.  In this case, we'll
       // just say stereo.
@@ -2147,25 +2001,6 @@ void AudioUnitEffect::GetChannelCounts()
       // We should probably check to make sure we're dealing with an FX type.
       mAudioIns = 2;
       mAudioOuts = 2;
-      return;
-   }
-
-   ArrayOf<char> buffer{ dataSize };
-   auto info = (AUChannelInfo *) buffer.get();
-
-   // Retrieve the channel info
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_SupportedNumChannels,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 info,
-                                 &dataSize);
-   if (result)
-   {
-      // Oh well, not much we can do out this case
-      mAudioIns = 2;
-      mAudioOuts = 2;
-
       return;
    }
 
@@ -2186,98 +2021,66 @@ void AudioUnitEffect::GetChannelCounts()
    mAudioOuts = 2;
 
    // Look only for exact channel constraints
-   for (int i = 0; i < dataSize / sizeof(AUChannelInfo); i++)
-   {
-      AUChannelInfo *ci = &info[i];
-
-      int ic = ci->inChannels;
-      int oc = ci->outChannels;
+   for (auto &ci : info) {
+      int ic = ci.inChannels;
+      int oc = ci.outChannels;
 
       if (ic < 0 && oc >= 0)
-      {
          ic = 2;
-      }
       else if (ic >= 0 && oc < 0)
-      {
          oc = 2;
-      }
-      else if (ic < 0 && oc < 0)
-      {
+      else if (ic < 0 && oc < 0) {
          ic = 2;
          oc = 2;
       }
 
       if (ic == 2 && oc == 2)
-      {
          haves2s = true;
-      }
       else if (ic == 1 && oc == 1)
-      {
          havem2m = true;
-      }   
       else if (ic == 1 && oc == 2)
-      {
          havem2s = true;
-      }
       else if (ic == 2 && oc == 1)
-      {
          haves2m = true;
-      }
       else if (ic == 0 && oc == 2)
-      {
          haven2s = true;
-      }
       else if (ic == 0 && oc == 1)
-      {
          haven2m = true;
-      }
       else if (ic == 1 && oc == 0)
-      {
          havem2n = true;
-      }
       else if (ic == 2 && oc == 0)
-      {
          haves2n = true;
-      }
    }
 
-   if (haves2s)
-   {
+   if (haves2s) {
       mAudioIns = 2;
       mAudioOuts = 2;
    }
-   else if (havem2m)
-   {
+   else if (havem2m) {
       mAudioIns = 1;
       mAudioOuts = 1;
    }
-   else if (havem2s)
-   {
+   else if (havem2s) {
       mAudioIns = 1;
       mAudioOuts = 2;
    }
-   else if (haves2m)
-   {
+   else if (haves2m) {
       mAudioIns = 2;
       mAudioOuts = 1;
    }
-   else if (haven2m)
-   {
+   else if (haven2m) {
       mAudioIns = 0;
       mAudioOuts = 1;
    }
-   else if (haven2s)
-   {
+   else if (haven2s) {
       mAudioIns = 0;
       mAudioOuts = 2;
    }
-   else if (haves2n)
-   {
+   else if (haves2n) {
       mAudioIns = 2;
       mAudioOuts = 0;
    }
-   else if (havem2n)
-   {
+   else if (havem2n) {
       mAudioIns = 1;
       mAudioOuts = 0;
    }

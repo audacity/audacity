@@ -32,6 +32,8 @@
 #endif
 
 #include "MemoryX.h"
+#include "CFResources.h"
+#include "AudioUnitUtils.h"
 
 class AUControlImpl final : public wxWidgetCocoaImpl
 {
@@ -273,37 +275,24 @@ void AUControl::OnSize(wxSizeEvent & evt)
    return;
 }
 
+template<> struct PackedArrayTraits<AudioUnitCocoaViewInfo> {
+   struct header_type {
+      CF_ptr<CFURLRef> p1;
+
+      header_type() {
+         // Sanity checks against toolkit version change
+         static_assert(offsetof(header_type, p1) ==
+            offsetof(AudioUnitCocoaViewInfo, mCocoaAUViewBundleLocation));
+      }
+   };
+   using element_type = CF_ptr<CFStringRef>;
+};
+
 void AUControl::CreateCocoa()
 {
-   OSStatus result;
-   UInt32 dataSize;
-
-   result = AudioUnitGetPropertyInfo(mUnit,
-                                     kAudioUnitProperty_CocoaUI,
-                                     kAudioUnitScope_Global, 
-                                     0,
-                                     &dataSize,
-                                     NULL);
-   if (result != noErr)
-      return;
-
-   int cnt = (dataSize - sizeof(CFURLRef)) / sizeof(CFStringRef);
-   if (cnt == 0)
-      return;
-
-   ArrayOf<char> buffer{ dataSize };
-   auto viewInfo = (AudioUnitCocoaViewInfo *) buffer.get();
-   if (viewInfo == NULL)
-      return;
-
-   // Get the view info
-   result = AudioUnitGetProperty(mUnit,
-                                 kAudioUnitProperty_CocoaUI,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 viewInfo,
-                                 &dataSize);
-   if (result == noErr) {
+   PackedArrayPtr<AudioUnitCocoaViewInfo> viewInfo;
+   if (!AudioUnitUtils::GetVariableSizeProperty(mUnit,
+      kAudioUnitProperty_CocoaUI, viewInfo)) {
       // Looks like the AU has a Cocoa UI, so load the factory class
       auto bundleLoc =
          static_cast<NSURL *>(viewInfo->mCocoaAUViewBundleLocation);
@@ -314,22 +303,15 @@ void AUControl::CreateCocoa()
             // Load the class from the bundle
             if (auto factoryClass = [bundle classNamed:viewClass])
                // Create an instance of the class
-               if (id factoryInst = [[[factoryClass alloc] init] autorelease])
+               if (id factoryInst = [[[factoryClass alloc] init] autorelease]) {
                   // Create the view, suggesting a reasonable size
-                  mView = [factoryInst uiViewForAudioUnit:mUnit
-                                                 withSize:NSSize{800, 600}];
-
-      if (viewInfo->mCocoaAUViewBundleLocation != nil)
-         CFRelease(viewInfo->mCocoaAUViewBundleLocation);
-
-      for (int i = 0; i < cnt; i++)
-         CFRelease(viewInfo->mCocoaAUViewClass[i]);
+                  if ((mView = [factoryInst uiViewForAudioUnit:mUnit
+                                                 withSize:NSSize{800, 600}]))
+                     [mView retain];
+                  else
+                     return;
+               }
    }
-
-   if (!mView)
-      return;
-
-   [mView retain];
 
    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
    [center addObserver:mAUView
@@ -427,42 +409,16 @@ void AUControl::ForceRedraw()
 
 void AUControl::CreateCarbon()
 {
-   OSStatus result;
-   UInt32 dataSize;
-
-   result = AudioUnitGetPropertyInfo(mUnit,
-                                     kAudioUnitProperty_GetUIComponentList,
-                                     kAudioUnitScope_Global, 
-                                     0,
-                                     &dataSize,
-                                     NULL);
-   if (result != noErr)
-      return;
-
-   int cnt = (dataSize - sizeof(CFURLRef)) / sizeof(CFStringRef);
-   if (cnt == 0)
-      return;
-
-   ArrayOf<char> buffer{ dataSize };
-   auto compList = (AudioComponentDescription *) buffer.get();
-   if (compList == NULL)
-      return;
-
-   // Get the view info
-   result = AudioUnitGetProperty(mUnit,
-                                 kAudioUnitProperty_GetUIComponentList,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 compList,
-                                 &dataSize);
-   if (result != noErr)
+   PackedArrayPtr<AudioComponentDescription> compList;
+   if (AudioUnitUtils::GetVariableSizeProperty(mUnit,
+      kAudioUnitProperty_GetUIComponentList, compList))
       return;
 
    // Get the component
    AudioComponent comp = AudioComponentFindNext(nullptr, &compList[0]);
 
    // Try to create an instance
-   result = AudioComponentInstanceNew(comp, &mInstance);
+   auto result = AudioComponentInstanceNew(comp, &mInstance);
 
    if (result != noErr)
       return;

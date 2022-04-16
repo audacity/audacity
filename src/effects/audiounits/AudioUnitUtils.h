@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <AudioUnit/AudioUnit.h>
+#include "PackedArray.h"
 
 namespace AudioUnitUtils {
    //! Type-erased function to get an AudioUnit property of fixed size
@@ -30,6 +31,33 @@ namespace AudioUnitUtils {
    {
       return GetFixedSizePropertyPtr(unit, inID,
          &property, sizeof(property), inScope, inElement);
+   }
+
+   //! Type-erased function to get an AudioUnit property of variable size
+   OSStatus GetVariableSizePropertyPtr(AudioUnit unit, AudioUnitPropertyID inID,
+      size_t minSize, void *&pObject, size_t &size,
+      AudioUnitScope inScope, AudioUnitElement inElement);
+
+   //! Get an AudioUnit property of deduced type and variable size,
+   //! supplying most often used values as defaults for scope and element
+   /*!
+    Warning: on success, performs a "naked" allocation in pObject!
+    Else, nulls it.
+    */
+   template<typename T>
+   OSStatus GetVariableSizeProperty(AudioUnit unit, AudioUnitPropertyID inID,
+      PackedArrayPtr<T> &pObject,
+      AudioUnitScope inScope = kAudioUnitScope_Global,
+      AudioUnitElement inElement = 0)
+   {
+      void *p{};
+      size_t size{};
+      auto result = GetVariableSizePropertyPtr(unit, inID,
+         sizeof(typename PackedArrayTraits<T>::header_type), p, size,
+         inScope, inElement);
+      if (!result)
+         pObject = { static_cast<T*>(p), size };
+      return result;
    }
 
    //! Type-erased function to set an AudioUnit property
