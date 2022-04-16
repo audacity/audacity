@@ -907,7 +907,7 @@ struct Ruler::Updater {
    void UpdateCustom( wxDC &dc, UpdateOutputs &allOutputs ) const;
    void UpdateLinear(
       wxDC &dc, const Envelope *envelope, UpdateOutputs &allOutputs ) const;
-   void UpdateNonlinear( wxDC &dc, UpdateOutputs &allOutputs ) const;
+   void UpdateLogarithmic( wxDC &dc, UpdateOutputs &allOutputs ) const;
 };
 
 struct Ruler::Cache {
@@ -1210,7 +1210,7 @@ void Ruler::Updater::UpdateLinear(
    }
 }
 
-void Ruler::Updater::UpdateNonlinear(
+void Ruler::Updater::UpdateLogarithmic(
     wxDC &dc, UpdateOutputs &allOutputs ) const
 {
    TickOutputs majorOutputs{
@@ -1310,10 +1310,10 @@ void Ruler::Updater::Update(
 
    if ( mCustom )
       UpdateCustom( dc, allOutputs );
-   else if ( !mLog )
-      UpdateLinear( dc, envelope, allOutputs );
+   else if ( mLog )
+      UpdateLogarithmic( dc, allOutputs );
    else
-      UpdateNonlinear( dc, allOutputs );
+      UpdateLinear( dc, envelope, allOutputs );
 
    int displacementx=0, displacementy=0;
    auto &box = allOutputs.box;
