@@ -72,7 +72,7 @@ static EnumSetting< WaveformSettings::ScaleTypeValues > waveformScaleSetting{
    {
       WaveformSettings::stLinear,
       WaveformSettings::stLogarithmic,
-      WaveformSettings::stLinearDb
+      WaveformSettings::stLinearDB
    }
 };
 

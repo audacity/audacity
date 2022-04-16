@@ -288,7 +288,7 @@ enum kScaleTypes
 {
    kLinear,
    kLogarithmic,
-   kLinearDb,
+   kLinearDB,
    nScaleTypes
 };
 
@@ -429,7 +429,7 @@ bool SetTrackVisualsCommand::ApplyInner(const CommandContext & context, Track * 
          default:
          case kLinear: wt->GetWaveformSettings().scaleType = WaveformSettings::stLinear;
          case kLogarithmic: wt->GetWaveformSettings().scaleType = WaveformSettings::stLogarithmic;
-         case kLinearDb: wt->GetWaveformSettings().scaleType = WaveformSettings::stLinearDb;
+         case kLinearDB: wt->GetWaveformSettings().scaleType = WaveformSettings::stLinearDB;
       }
    }
 

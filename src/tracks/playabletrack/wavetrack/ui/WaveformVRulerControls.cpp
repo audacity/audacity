@@ -219,11 +219,18 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetBounds(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
       vruler->SetOrientation(wxVERTICAL);
       vruler->SetRange(max, min);
-      // TODO: Create Ruler for Linear (dB) and set it here
       vruler->SetFormat(Ruler::RealFormat);
       vruler->SetUnits({});
       vruler->SetLabelEdges(false);
       vruler->SetLog(false);
+      if (scaleType == WaveformSettings::stLinearDB)
+      {
+         vruler->SetLinearDB(true);
+      }
+      else
+      {
+         vruler->SetLinearDB(false);
+      }
    }
    else {
       wxASSERT(scaleType == WaveformSettings::stLogarithmic);
@@ -332,6 +339,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
       vruler->SetFormat(Ruler::RealLogFormat);
       vruler->SetLabelEdges(true);
       vruler->SetLog(false);
+      vruler->SetLinearDB(false);
    }
    vruler->GetMaxSize( &wt->vrulerSize.first, &wt->vrulerSize.second );
 }

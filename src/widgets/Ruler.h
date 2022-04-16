@@ -80,6 +80,9 @@ class AUDACITY_DLL_API Ruler {
    // Logarithmic
    void SetLog(bool log);
 
+   // Linear DB scale
+   void SetLinearDB(bool linDB);
+
    // Minimum number of pixels between labels
    void SetSpacing(int spacing);
 
@@ -214,6 +217,7 @@ private:
    bool         mLabelEdges;
    RulerFormat  mFormat;
    bool         mLog;
+   bool         mLinearDB;
    bool         mFlip;
    bool         mCustom;
    bool         mbMinor;

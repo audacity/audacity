@@ -58,7 +58,7 @@ public:
    enum ScaleTypeValues : int {
       stLinear,
       stLogarithmic,
-      stLinearDb,
+      stLinearDB,
 
       stNumScaleTypes,
    };

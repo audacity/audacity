@@ -86,6 +86,7 @@ Ruler::Ruler()
    mFormat = RealFormat;
    mFlip = false;
    mLog = false;
+   mLinearDB = false;
    mLabelEdges = false;
 
    mLeft = -1;
@@ -145,6 +146,17 @@ void Ruler::SetLog(bool log)
 
    if (mLog != log) {
       mLog = log;
+
+      Invalidate();
+   }
+}
+
+void Ruler::SetLinearDB(bool linDB)
+{
+   // Linear DB scale
+
+   if (mLinearDB != linDB) {
+      mLinearDB = linDB;
 
       Invalidate();
    }
@@ -872,6 +884,7 @@ struct Ruler::Updater {
    const bool mCustom = mRuler.mCustom;
    const Fonts &mFonts = *mRuler.mpFonts;
    const bool mLog = mRuler.mLog;
+   const bool mLinearDB = mRuler.mLinearDB;
    const double mHiddenMin = mRuler.mHiddenMin;
    const double mHiddenMax = mRuler.mHiddenMax;
    const bool mLabelEdges = mRuler.mLabelEdges;
@@ -936,6 +949,10 @@ bool Ruler::Updater::Tick( wxDC &dc,
    // But we shouldn't have an array of labels.
    if( outputs.labels.size() >= mLength )
       return false;
+      
+   if (mLinearDB){
+      d = LINEAR_TO_DB(fabs(d));
+   }
 
    Label lab;
    lab.value = d;
