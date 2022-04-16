@@ -17,6 +17,7 @@
 #include "MemoryX.h"
 #include <functional>
 #include <type_traits>
+#include <unordered_map>
 #include <vector>
 
 #include <AudioToolbox/AudioUnitUtilities.h>
@@ -41,6 +42,10 @@ class AudioUnitEffectImportDialog;
 class AUControl;
 class wxCFStringRef;
 class wxMemoryBuffer;
+
+struct AudioUnitEffectSettings {
+   std::unordered_map<wxString, AudioUnitParameterValue> values;
+};
 
 //! Common base class for AudioUnitEffect and its Instance
 /*!
@@ -92,6 +97,8 @@ struct AudioUnitWrapper
       std::function< bool(const ParameterInfo &pi, AudioUnitParameterID ID) >;
    //! @return false if parameters could not be retrieved at all, else true
    bool ForEachParameter(ParameterVisitor visitor) const;
+
+   bool FetchSettings(AudioUnitEffectSettings &settings) const;
 
    bool CreateAudioUnit();
 
@@ -216,7 +223,8 @@ private:
    MakeBlob(const wxCFStringRef &cfname, bool binary) const;
 
    TranslatableString Export(const wxString & path) const;
-   TranslatableString Import(const wxString & path);
+   TranslatableString Import(
+      AudioUnitEffectSettings &settings, const wxString & path) const;
    /*!
     @param path only for formatting error messages
     @return error message
@@ -255,7 +263,7 @@ private:
     @param group only for formatting error messages
     @return an error message
     */
-   TranslatableString InterpretBlob(
+   TranslatableString InterpretBlob(AudioUnitEffectSettings &settings,
       const wxString &group, const wxMemoryBuffer &buf) const;
 
    bool SavePreset(const RegistryPath & group) const;
@@ -267,6 +275,14 @@ private:
    bool BypassEffect(bool bypass);
 
 private:
+   AudioUnitEffectSettings mSettings;
+   //! This function will be rewritten when the effect is really stateless
+   AudioUnitEffectSettings &GetSettings(EffectSettings &) const
+      { return const_cast<AudioUnitEffect*>(this)->mSettings; }
+   //! This function will be rewritten when the effect is really stateless
+   const AudioUnitEffectSettings &GetSettings(const EffectSettings &) const
+      { return mSettings; }
+
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;
