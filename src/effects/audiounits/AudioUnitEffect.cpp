@@ -19,6 +19,7 @@
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffect.h"
 #include "AudacityException.h"
+#include "AUControl.h"
 #include "ModuleManager.h"
 #include "SampleCount.h"
 #include "ConfigInterface.h"

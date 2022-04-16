@@ -26,7 +26,6 @@
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
-#include "AUControl.h"
 #include <wx/weakref.h>
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
@@ -38,6 +37,7 @@ using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 
 class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
+class AUControl;
 
 //! Generates deleters for std::unique_ptr that clean up AU plugin state
 template<typename T, OSStatus(*fn)(T*)> struct AudioUnitCleaner {
