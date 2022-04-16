@@ -25,7 +25,7 @@
 #include <AudioToolbox/AudioUnitUtilities.h>
 #include <AudioUnit/AudioUnitProperties.h>
 
-#include "../StatefulPerTrackEffect.h"
+#include "../PerTrackEffect.h"
 #include "PluginInterface.h"
 
 #include <wx/weakref.h>
@@ -38,7 +38,7 @@ class AudioUnitEffect;
 class AUControl;
 
 class AudioUnitEffect final
-   : public StatefulPerTrackEffect
+   : public PerTrackEffect
    , AudioUnitWrapper
 {
 public:
@@ -68,6 +68,8 @@ public:
    bool SupportsAutomation() const override;
 
    EffectSettings MakeSettings() const override;
+   bool CopySettingsContents(
+      const EffectSettings &src, EffectSettings &dst) const override;
 
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
@@ -88,9 +90,6 @@ public:
 
    int GetMidiInCount() const override;
    int GetMidiOutCount() const override;
-
-   size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
 
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
@@ -142,17 +141,6 @@ private:
 #endif
 
 private:
-   AudioUnitEffectSettings mSettings;
-
-public:
-   //! This function will be rewritten when the effect is really stateless
-   AudioUnitEffectSettings &GetSettings(EffectSettings &) const
-      { return const_cast<AudioUnitEffect*>(this)->mSettings; }
-   //! This function will be rewritten when the effect is really stateless
-   const AudioUnitEffectSettings &GetSettings(const EffectSettings &) const
-      { return mSettings; }
-
-private:
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;
@@ -162,14 +150,11 @@ private:
    unsigned mAudioOuts{ 2 };
 
    bool mInteractive{ false };
-   UInt32 mBlockSize{ 0 };
-
    bool mUseLatency{ true };
 
    wxWindow *mParent{};
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
    bool mIsGraphical{ false };
-   mutable bool mInitialFetchDone{ false };
 };
 
 #endif

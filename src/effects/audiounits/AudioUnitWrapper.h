@@ -16,6 +16,7 @@
 #if USE_AUDIO_UNITS
 
 #include <optional>
+#include <map>
 #include <set>
 #include <unordered_map>
 #include <wx/string.h>
@@ -24,11 +25,16 @@
 
 class wxCFStringRef;
 class wxMemoryBuffer;
+class EffectSettings;
 class TranslatableString;
+class AudioUnitWrapper;
 
 //! This works as a cached copy of state stored in an AudioUnit, but can also
 //! outlive it
 struct AudioUnitEffectSettings {
+   //! Object from which settings were fetched
+   const AudioUnitWrapper *pSource{};
+
    //! The effect object and all Settings objects coming from it share this
    //! set of strings, which allows Pair below to copy without allocations.
    /*!
@@ -44,7 +50,7 @@ struct AudioUnitEffectSettings {
    //! Map from numerical parameter IDs (not always a small initial segment
    //! of the integers) to optional pairs of names and floating point values
    using Pair = std::pair<const wxString &, AudioUnitParameterValue>;
-   using Map = std::unordered_map<AudioUnitParameterID, std::optional<Pair>>;
+   using Map = std::map<AudioUnitParameterID, std::optional<Pair>>;
    Map values;
 
    AudioUnitEffectSettings() = default;
@@ -75,6 +81,10 @@ struct AudioUnitEffectSettings {
 struct AudioUnitWrapper
 {
    using Parameters = PackedArray::Ptr<const AudioUnitParameterID>;
+
+   static AudioUnitEffectSettings &GetSettings(EffectSettings &settings);
+   static const AudioUnitEffectSettings &GetSettings(
+      const EffectSettings &settings);
 
    /*!
     @param pParameters if non-null, use those; else, fetch from the AudioUnit
