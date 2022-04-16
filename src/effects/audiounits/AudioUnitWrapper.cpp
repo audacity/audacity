@@ -14,10 +14,25 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitWrapper.h"
+#include "EffectInterface.h"
 #include "Internat.h"
 #include "ModuleManager.h"
 
 #include <wx/osx/core/private.h>
+
+AudioUnitEffectSettings &
+AudioUnitWrapper::GetSettings(EffectSettings &settings) {
+   auto pSettings = settings.cast<AudioUnitEffectSettings>();
+   // Assume the settings object ultimately came from AudioUnitEffect's
+   // MakeSettings or copying of that
+   assert(pSettings);
+   return *pSettings;
+}
+
+const AudioUnitEffectSettings &
+AudioUnitWrapper::GetSettings(const EffectSettings &settings) {
+   return GetSettings(const_cast<EffectSettings &>(settings));
+}
 
 //
 // When a plug-in's state is saved to the settings file (as a preset),

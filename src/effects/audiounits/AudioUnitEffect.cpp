@@ -206,6 +206,9 @@ class AudioUnitInstance : public PerTrackEffect::Instance
    , public AudioUnitWrapper
    , EffectInstanceWithSampleRate
 {
+   // The former `Float64 mSampleRate;` member is now provided by the base
+   // class EffectInstanceWithSampleRate as double
+   static_assert(std::is_same_v<Float64, double>);
 public:
    AudioUnitInstance(const PerTrackEffect &effect,
       AudioComponent component, Parameters &parameters,
@@ -483,21 +486,6 @@ int AudioUnitEffect::GetMidiOutCount() const
    return 0;
 }
 
-void AudioUnitEffect::SetSampleRate(double rate)
-{
-   mSampleRate = rate;
-}
-
-size_t AudioUnitEffect::SetBlockSize(size_t maxBlockSize)
-{
-   return mBlockSize;
-}
-
-size_t AudioUnitEffect::GetBlockSize() const
-{
-   return mBlockSize;
-}
-
 size_t AudioUnitInstance::SetBlockSize(size_t)
 {
    // Ignore the argument!  Too-large block sizes won't work
@@ -624,7 +612,7 @@ bool AudioUnitInstance::RealtimeAddProcessor(
    slave->SetBlockSize(mBlockSize);
    slave->SetSampleRate(sampleRate);
 
-   if (!slave->StoreSettings(effect.GetSettings(settings)))
+   if (!slave->StoreSettings(GetSettings(settings)))
       return false;
 
    if (!slave->ProcessInitialize(settings, 0, nullptr))
@@ -664,8 +652,10 @@ bool AudioUnitInstance::RealtimeResume()
    return true;
 }
 
-bool AudioUnitInstance::RealtimeProcessStart(EffectSettings &)
+bool AudioUnitInstance::RealtimeProcessStart(EffectSettings &settings)
 {
+   for (auto &pSlave : mSlaves)
+      pSlave->StoreSettings(GetSettings(settings));
    return true;
 }
 
@@ -695,15 +685,38 @@ int AudioUnitEffect::ShowClientInterface(
    return dialog.ShowModal();
 }
 
+// Don't use the template-generated MakeSettings(), which default-constructs
+// the structure.  Instead allocate a number of values chosen by the plug-in
 EffectSettings AudioUnitEffect::MakeSettings() const
 {
-   auto result = StatefulPerTrackEffect::MakeSettings();
-   // Cause initial population of the map stored in the stateful effect
-   if (!mInitialFetchDone) {
-      FetchSettings(GetSettings(result));
-      mInitialFetchDone = true;
+   AudioUnitEffectSettings settings;
+   FetchSettings(settings);
+   return EffectSettings::Make<AudioUnitEffectSettings>(std::move(settings));
+}
+
+bool AudioUnitEffect::CopySettingsContents(
+   const EffectSettings &src, EffectSettings &dst) const
+{
+   // Do an in-place rewrite of dst, avoiding allocations
+   auto &dstMap = GetSettings(dst).values;
+   auto dstIter = dstMap.begin(), dstEnd = dstMap.end();
+   const auto &srcMap = GetSettings(src).values;
+   // Iterate the two maps in parallel, assuming correspondence of
+   // keys, because the settings objects ultimately came from MakeSettings()
+   // and copies.  Nothing else ever inserts or removes keys.
+   assert(srcMap.size() == dstMap.size());
+   for (auto &[key, oValue] : srcMap) {
+      assert(dstIter != dstEnd);
+      assert(dstIter->first == key);
+      auto &dstOValue = dstIter->second;
+      if (oValue)
+         dstOValue.emplace(*oValue);
+      else
+         dstOValue.reset();
+      ++dstIter;
    }
-   return result;
+   assert(dstIter == dstEnd);
+   return true;
 }
 
 bool AudioUnitEffect::SaveSettings(
@@ -772,16 +785,12 @@ bool AudioUnitValidator::ValidateUI()
 
 bool AudioUnitValidator::FetchSettingsFromInstance(EffectSettings &settings)
 {
-   return mInstance.FetchSettings(
-      // Change this when GetSettings becomes a static function
-      static_cast<const AudioUnitEffect&>(mEffect).GetSettings(settings));
+   return mInstance.FetchSettings(AudioUnitInstance::GetSettings(settings));
 }
 
 bool AudioUnitValidator::StoreSettingsToInstance(const EffectSettings &settings)
 {
-   return mInstance.StoreSettings(
-      // Change this when GetSettings becomes a static function
-      static_cast<const AudioUnitEffect&>(mEffect).GetSettings(settings));
+   return mInstance.StoreSettings(AudioUnitInstance::GetSettings(settings));
 }
 
 bool AudioUnitEffect::LoadUserPreset(
