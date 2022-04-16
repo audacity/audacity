@@ -463,7 +463,7 @@ wxString AudioUnitEffectsModule::FromOSType(OSType type)
                 (type & 0x0000ff00) << 8  |
                 (type & 0x000000ff) << 24;
    
-   return wxString::FromUTF8((char *)&rev, 4);
+   return wxString::FromUTF8(reinterpret_cast<char *>(&rev), 4);
 }
 
 OSType AudioUnitEffectsModule::ToOSType(const wxString & type)
@@ -1312,7 +1312,8 @@ size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
                             blockLen,
                             mOutputList.get());
    if (result != noErr) {
-      wxLogError("Render failed: %d %4.4s\n", (int)result, (char *)&result);
+      wxLogError("Render failed: %d %4.4s\n",
+         static_cast<int>(result), reinterpret_cast<char *>(&result));
       return 0;
    }
 
@@ -1890,7 +1891,7 @@ bool AudioUnitEffect::LoadPreset(
       wxLogError(wxT("Failed to decode \"%s\" preset"), group);
       return false;
    }
-   const uint8_t *bufPtr = (uint8_t *) buf.GetData();
+   const uint8_t *bufPtr = static_cast<uint8_t *>(buf.GetData());
 
    // Create a CFData object that references the decoded preset
    CF_ptr<CFDataRef> data{
@@ -2242,9 +2243,7 @@ TranslatableString AudioUnitEffect::Import(const wxString & path)
    // Create a CFData object that references the decoded preset
    CF_ptr<CFDataRef> data{
       CFDataCreateWithBytesNoCopy(kCFAllocatorDefault,
-                                  (const UInt8 *) buf.GetData(),
-                                  len,
-                                  kCFAllocatorNull)
+         static_cast<const UInt8 *>(buf.GetData()), len, kCFAllocatorNull)
    };
    if (!data)
    {
@@ -2310,11 +2309,8 @@ OSStatus AudioUnitEffect::RenderCallback(void *inRefCon,
                                          UInt32 inNumFrames,
                                          AudioBufferList *ioData)
 {
-   return ((AudioUnitEffect *) inRefCon)->Render(inActionFlags,
-                                                 inTimeStamp,
-                                                 inBusNumber,
-                                                 inNumFrames,
-                                                 ioData);
+   return static_cast<AudioUnitEffect *>(inRefCon)->Render(inActionFlags,
+      inTimeStamp, inBusNumber, inNumFrames, ioData);
 }
 
 void AudioUnitEffect::EventListener(const AudioUnitEvent *inEvent,
@@ -2359,8 +2355,8 @@ void AudioUnitEffect::EventListenerCallback(void *inCallbackRefCon,
                                             UInt64 inEventHostTime,
                                             AudioUnitParameterValue inParameterValue)
 {
-   ((AudioUnitEffect *) inCallbackRefCon)->EventListener(inEvent,
-                                                         inParameterValue);
+   static_cast<AudioUnitEffect *>(inCallbackRefCon)
+      ->EventListener(inEvent, inParameterValue);
 }
 
 void AudioUnitEffect::GetChannelCounts()
