@@ -13,6 +13,8 @@
 
 #include <algorithm>
 #include <AudioUnit/AudioUnit.h>
+#include "CFResources.h"
+#include "PackedArray.h"
 
 //! Generates deleters for std::unique_ptr that clean up AU plugin state
 template<typename T, OSStatus(*fn)(T*)> struct AudioUnitCleaner {
@@ -42,6 +44,38 @@ namespace AudioUnitUtils {
    {
       return GetFixedSizePropertyPtr(unit, inID,
          &property, sizeof(property), inScope, inElement);
+   }
+
+   //! Type-erased function to get an AudioUnit property of variable size
+   /*!
+    Warning: on success, performs a "naked" allocation in pObject!
+    Else, nulls it.
+    */
+   OSStatus GetVariableSizePropertyPtr(AudioUnit unit, AudioUnitPropertyID inID,
+      size_t minSize, void *&pObject, size_t &size,
+      AudioUnitScope inScope, AudioUnitElement inElement);
+
+   //! Get an AudioUnit property of deduced type and variable size,
+   //! supplying most often used values as defaults for scope and element,
+   //! and seating the raw pointer result into a smart pointer
+   template<typename T>
+   OSStatus GetVariableSizeProperty(AudioUnit unit, AudioUnitPropertyID inID,
+      PackedArrayPtr<T> &pObject,
+      AudioUnitScope inScope = kAudioUnitScope_Global,
+      AudioUnitElement inElement = 0)
+   {
+      void *p{};
+      size_t size{};
+      auto result = GetVariableSizePropertyPtr(unit, inID,
+         sizeof(typename PackedArrayTraits<T>::header_type), p, size,
+         inScope, inElement);
+      if (!result)
+         // Construct PackedArrayPtr
+         pObject = {
+            static_cast<T*>(p), // the pointer
+            size // the size that the deleter must remember
+         };
+      return result;
    }
 
    //! Type-erased function to set an AudioUnit property
@@ -137,5 +171,25 @@ namespace AudioUnitUtils {
 
    //! @}
 }
+
+/*!
+ @name Traits attached to SDK structures, in the global namespace
+ */
+//! @{
+
+template<> struct PackedArrayTraits<AudioUnitCocoaViewInfo> {
+   struct header_type {
+      CF_ptr<CFURLRef> p1;
+
+      header_type() {
+         // Sanity checks against toolkit version change
+         static_assert(offsetof(header_type, p1) ==
+            offsetof(AudioUnitCocoaViewInfo, mCocoaAUViewBundleLocation));
+      }
+   };
+   using element_type = CF_ptr<CFStringRef>;
+};
+
+//! @}
 
 #endif
