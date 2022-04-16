@@ -107,12 +107,11 @@ public:
 
    virtual ~ParameterInfo()
    {
-      if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
-      {
-         if (info.flags & kAudioUnitParameterFlag_CFNameRelease)
-         {
+      if (info.flags & kAudioUnitParameterFlag_CFNameRelease) {
+         if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
             CFRelease(info.cfNameString);
-         }
+         if (info.flags & kAudioUnitParameterUnit_CustomUnit)
+            CFRelease(info.unitName);
       }
    }
 
@@ -177,9 +176,11 @@ public:
       {
          wxString clumpName;
 
-         AudioUnitParameterNameInfo clumpInfo = {};
-         clumpInfo.inID = info.clumpID;
-         clumpInfo.inDesiredLength = kAudioUnitParameterName_Full;
+         struct AudioUnitParameterNameInfoEx : AudioUnitParameterNameInfo {
+            ~AudioUnitParameterNameInfoEx() { CFRelease(outName); }
+         } clumpInfo{
+            info.clumpID, kAudioUnitParameterName_Full, nullptr
+         };
          dataSize = sizeof(clumpInfo);
 
          result = AudioUnitGetProperty(mUnit,
