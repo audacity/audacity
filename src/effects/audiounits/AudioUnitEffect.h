@@ -17,6 +17,7 @@
 #include "MemoryX.h"
 #include <functional>
 #include <type_traits>
+#include <unordered_map>
 #include <vector>
 
 #include <AudioToolbox/AudioUnitUtilities.h>
@@ -59,6 +60,10 @@ template<> struct PackedArrayTraits<AudioBufferList> {
    using iterated_type = element_type;
 };
 
+struct AudioUnitEffectSettings {
+   std::unordered_map<wxString, AudioUnitParameterValue> values;
+};
+
 class AudioUnitEffect final : public StatefulPerTrackEffect
 {
 public:
@@ -85,6 +90,7 @@ public:
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
+   bool FetchSettings(AudioUnitEffectSettings &settings) const;
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
@@ -182,7 +188,8 @@ private:
    MakeBlob(const wxCFStringRef &cfname, bool binary) const;
 
    TranslatableString Export(const wxString & path) const;
-   TranslatableString Import(const wxString & path);
+   TranslatableString Import(
+      AudioUnitEffectSettings &settings, const wxString & path) const;
    /*!
     @param path only for formatting error messages
     @return error message
@@ -221,7 +228,7 @@ private:
     @param group only for formatting error messages
     @return an error message
     */
-   TranslatableString InterpretBlob(
+   TranslatableString InterpretBlob(AudioUnitEffectSettings &settings,
       const wxString &group, const wxMemoryBuffer &buf) const;
 
    bool SavePreset(const RegistryPath & group) const;
@@ -264,6 +271,14 @@ private:
       return AudioUnitUtils::SetProperty(mUnit.get(),
          inID, property, inScope, inElement);
    }
+   
+   AudioUnitEffectSettings mSettings;
+   //! This function will be rewritten when the effect is really stateless
+   AudioUnitEffectSettings &GetSettings(EffectSettings &) const
+      { return const_cast<AudioUnitEffect*>(this)->mSettings; }
+   //! This function will be rewritten when the effect is really stateless
+   const AudioUnitEffectSettings &GetSettings(const EffectSettings &) const
+      { return mSettings; }
 
    const PluginPath mPath;
    const wxString mName;
