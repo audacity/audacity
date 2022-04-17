@@ -91,6 +91,7 @@ public:
    bool SupportsAutomation() const override;
 
    bool FetchSettings(AudioUnitEffectSettings &settings) const;
+   bool StoreSettings(const AudioUnitEffectSettings &settings) const;
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
@@ -185,9 +186,11 @@ private:
     @return smart pointer to data, and an error message
     */
    std::pair<CF_ptr<CFDataRef>, TranslatableString>
-   MakeBlob(const wxCFStringRef &cfname, bool binary) const;
+   MakeBlob(const AudioUnitEffectSettings &settings,
+      const wxCFStringRef &cfname, bool binary) const;
 
-   TranslatableString Export(const wxString & path) const;
+   TranslatableString Export(
+      const AudioUnitEffectSettings &settings, const wxString & path) const;
    TranslatableString Import(
       AudioUnitEffectSettings &settings, const wxString & path) const;
    /*!
@@ -221,6 +224,8 @@ private:
 
    void GetChannelCounts();
 
+   bool MigrateOldConfigFile(
+      const RegistryPath & group, EffectSettings &settings) const;
    bool LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
 
    //! Interpret the dump made before by MakeBlob
@@ -231,7 +236,8 @@ private:
    TranslatableString InterpretBlob(AudioUnitEffectSettings &settings,
       const wxString &group, const wxMemoryBuffer &buf) const;
 
-   bool SavePreset(const RegistryPath & group) const;
+   bool SavePreset(const RegistryPath & group,
+      const AudioUnitEffectSettings &settings) const;
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
    bool CreatePlain(wxWindow *parent);
