@@ -77,7 +77,7 @@
 // at runtime by scanning an effects parameters to determine if dups are present
 // and, if so, enable the clump and parameter IDs.
 #define USE_EXTENDED_NAMES
-class ParameterInfo final
+class AudioUnitWrapper::ParameterInfo final
 {
 public:
    ParameterInfo()
@@ -270,17 +270,14 @@ bool AudioUnitEffect::SupportsRealtime() const
 
 bool AudioUnitEffect::SupportsAutomation() const
 {
-   PackedArray::Ptr<AudioUnitParameterID> array;
-   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
-      return false;
-   for (const auto &ID : array) {
-      ParameterInfo pi;
-      if (pi.Get(mUnit.get(), ID))
-         if (pi.info.flags & kAudioUnitParameterFlag_IsWritable)
-            // All we need is one
-            return true;
-   }
-   return false;
+   bool supports = false;
+   return ForEachParameter(
+   [&supports](const ParameterInfo &pi, AudioUnitParameterID) {
+      if (pi.info.flags & kAudioUnitParameterFlag_IsWritable)
+         supports = true;
+      // Search only until we find one, that's all we need to know
+      return !supports;
+   }) && supports;
 }
 
 bool AudioUnitWrapper::CreateAudioUnit()
@@ -674,50 +671,37 @@ int AudioUnitEffect::ShowClientInterface(
 bool AudioUnitEffect::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {
-   PackedArray::Ptr<AudioUnitParameterID> array;
-   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
-      return false;
-   for (const auto &ID : array) {
-      ParameterInfo pi;
-      if (!pi.Get(mUnit.get(), ID))
-         // Probably failed because of invalid parameter which can happen
-         // if a plug-in is in a certain mode that doesn't contain the
-         // parameter.  In any case, just ignore it.
-         continue;
+   return ForEachParameter(
+   [this, &parms](const ParameterInfo &pi, AudioUnitParameterID ID) {
       AudioUnitParameterValue value;
       if (AudioUnitGetParameter(mUnit.get(), ID, kAudioUnitScope_Global, 0,
          &value))
          // Probably failed because of invalid parameter which can happen
          // if a plug-in is in a certain mode that doesn't contain the
          // parameter.  In any case, just ignore it.
-         continue;
-      parms.Write(pi.name, value);
-   }
-   return true;
+         {}
+      else
+         parms.Write(pi.name, value);
+      return true;
+   });
 }
 
 bool AudioUnitEffect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
-   PackedArray::Ptr<AudioUnitParameterID> array;
-   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
-      return false;
-   for (const auto &ID : array) {
-      ParameterInfo pi;
-      if (!pi.Get(mUnit.get(), ID))
-         // Probably failed because of invalid parameter which can happen
-         // if a plug-in is in a certain mode that doesn't contain the
-         // parameter.  In any case, just ignore it.
-         continue;
+   bool success = true;
+   return ForEachParameter(
+   [this, &parms, &success](const ParameterInfo &pi, AudioUnitParameterID ID) {
       double d = 0.0;
       if (parms.Read(pi.name, &d)) {
          if (AudioUnitSetParameter(mUnit.get(), ID, kAudioUnitScope_Global,
             0, d, 0))
-            return false;
-         Notify(mUnit.get(), ID);
+            success = false;
+         else
+            Notify(mUnit.get(), ID);
       }
-   }
-   return true;
+      return success;
+   }) && success;
 }
 
 bool AudioUnitEffect::LoadUserPreset(
@@ -1077,6 +1061,24 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
          SaveBlobToConfig(group, {}, CFDataGetBytePtr(data.get()), length);
       if (!error.empty())
          return false;
+   }
+   return true;
+}
+
+bool AudioUnitWrapper::ForEachParameter(ParameterVisitor visitor) const
+{
+   PackedArray::Ptr<AudioUnitParameterID> array;
+   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
+      return false;
+   for (const auto &ID : array) {
+      ParameterInfo pi;
+      if (!pi.Get(mUnit.get(), ID))
+         // Probably failed because of invalid parameter which can happen
+         // if a plug-in is in a certain mode that doesn't contain the
+         // parameter.  In any case, just ignore it.
+         continue;
+      if (!visitor(pi, ID))
+         break;
    }
    return true;
 }
