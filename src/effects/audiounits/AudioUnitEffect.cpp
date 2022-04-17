@@ -123,37 +123,26 @@ public:
          name = wxString(info.name);
 
 #if defined(USE_EXTENDED_NAMES)
-      // If the parameter has a non-empty name, then the final parameter name will
-      // be either:
+      // Parameter name may or may not be present.  The modified name will be:
       //
-      //    <parmID,ParameterName>
+      //    <[ParameterName,]parmID>
       //
-      // or (if the name isn't available):
-      //
-      //    <parmID>
-      if (!name.empty())
-      {
+      // (where the [ ] meta-characters denote optionality)
+      // (And any of the characters < , > in ParameterName are replaced with _)
+      if (!name.empty()) {
          name.Replace(idBeg, wxT('_'));
          name.Replace(idSep, wxT('_'));
          name.Replace(idEnd, wxT('_'));
          name.Append(idSep);
       }
-      name = wxString::Format(wxT("%c%s%x%c"),
-                              idBeg,
-                              name,
-                              parmID,
-                              idEnd);
+      name = wxString::Format(wxT("%c%s%x%c"), idBeg, name, parmID, idEnd);
 
-      // If the parameter has a clumpID, then the final parameter name will be
-      // either:
+      // If the parameter has a clumpID, then the final modified name will be:
       //
-      //    <clumpID,clumpName><parmID,ParameterName>
+      //    <[clumpName,]clumpId><[ParameterName,]parmID>
       //
-      // or (if the clumpName isn't available):
-      //
-      //    <clumpID><parmID,ParameterName>
-      if (info.flags & kAudioUnitParameterFlag_HasClump)
-      {
+      // (And any of the characters < , > in clumpName are replaced with _)
+      if (info.flags & kAudioUnitParameterFlag_HasClump) {
          wxString clumpName;
          AudioUnitUtils::ParameterNameInfo clumpInfo{
             info.clumpID, kAudioUnitParameterName_Full
@@ -168,20 +157,15 @@ public:
             clumpName.Append(idSep);
          }
          name = wxString::Format(wxT("%c%s%x%c%s"),
-                                 idBeg,
-                                 clumpName,
-                                 info.clumpID,
-                                 idEnd,
-                                 name);
+            idBeg, clumpName, info.clumpID, idEnd, name);
       }
 #endif
-
       return true;
    }
 
-   static const char idBeg = wxT('<');
-   static const char idSep = wxT(',');
-   static const char idEnd = wxT('>');
+   static constexpr char idBeg = wxT('<');
+   static constexpr char idSep = wxT(',');
+   static constexpr char idEnd = wxT('>');
 
    wxString name;
    AudioUnitParameterInfo info;
