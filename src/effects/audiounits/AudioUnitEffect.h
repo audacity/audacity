@@ -15,6 +15,7 @@
 #if USE_AUDIO_UNITS
 
 #include "MemoryX.h"
+#include <functional>
 #include <type_traits>
 #include <vector>
 
@@ -84,6 +85,13 @@ struct AudioUnitWrapper
       return AudioUnitUtils::SetProperty(mUnit.get(),
          inID, property, inScope, inElement);
    }
+
+   class ParameterInfo;
+   //! Return value: if true, continue visiting
+   using ParameterVisitor =
+      std::function< bool(const ParameterInfo &pi, AudioUnitParameterID ID) >;
+   //! @return false if parameters could not be retrieved at all, else true
+   bool ForEachParameter(ParameterVisitor visitor) const;
 
    bool CreateAudioUnit();
 
