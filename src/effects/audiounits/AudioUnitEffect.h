@@ -177,8 +177,6 @@ private:
 
    bool SetRateAndChannels();
 
-   bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
-
    //! Obtain dump of the setting state of an AudioUnit instance
    /*!
     @param binary if false, then produce XML serialization instead; but

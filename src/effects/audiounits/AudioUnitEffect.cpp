@@ -1184,10 +1184,8 @@ bool AudioUnitEffect::RealtimeAddProcessor(
    slave->SetBlockSize(mBlockSize);
    slave->SetSampleRate(sampleRate);
 
-   if (!CopyParameters(mUnit.get(), slave->mUnit.get()))
-   {
+   if (!slave->StoreSettings(GetSettings(settings)))
       return false;
-   }
 
    auto pSlave = slave.get();
    mSlaves.push_back(std::move(slave));
@@ -1814,25 +1812,6 @@ bool AudioUnitEffect::SetRateAndChannels()
    }
 
    mInitialization.reset(mUnit.get());
-   return true;
-}
-
-bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
-{
-   // Retrieve the class state from the source AU
-   CFPropertyListRef content;
-   if (AudioUnitUtils::GetFixedSizeProperty(srcUnit,
-      kAudioUnitProperty_ClassInfo, content))
-      return false;
-
-   // Set the destination AUs state from the source AU's content
-   if (AudioUnitUtils::SetProperty(dstUnit,
-      kAudioUnitProperty_ClassInfo, content))
-      return false;
-
-   // Notify interested parties
-   Notify(dstUnit, kAUParameterListener_AnyParameter);
-
    return true;
 }
 
