@@ -160,6 +160,8 @@ public:
    // AudioUnitEffect implementation
    
 private:
+   class ParameterInfo;
+
    bool SetRateAndChannels();
 
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
