@@ -173,6 +173,13 @@ private:
 
    TranslatableString Export(const wxString & path) const;
    TranslatableString Import(const wxString & path);
+   /*!
+    @param path only for formatting error messages
+    @return error message
+    */
+   TranslatableString SaveBlobToConfig(const RegistryPath &group,
+      const wxString &path, const void *blob, size_t len,
+      bool allowEmpty = true) const;
    void Notify(AudioUnit unit, AudioUnitParameterID parm) const;
 
    static OSStatus RenderCallback(void *inRefCon,
