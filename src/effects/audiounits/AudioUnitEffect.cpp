@@ -1646,34 +1646,9 @@ bool AudioUnitEffect::LoadPreset(
    }
    
    // Decode it, complementary to what SaveBlobToConfig did
-   wxMemoryBuffer buf = wxBase64Decode(parms);
-   size_t bufLen = buf.GetDataLen();
-   if (!bufLen) {
-      wxLogError(wxT("Failed to decode \"%s\" preset"), group);
-      return false;
-   }
-   const uint8_t *bufPtr = static_cast<uint8_t *>(buf.GetData());
-
-   // Create a CFData object that references the decoded preset
-   CF_ptr<CFDataRef> data{
-      CFDataCreateWithBytesNoCopy(kCFAllocatorDefault,
-         bufPtr, bufLen, kCFAllocatorNull)
-   };
-   if (!data) {
-      wxLogError(wxT("Failed to convert \"%s\" preset to internal format"),
-         group);
-      return false;
-   }
-
-   // Convert it back to a property list.
-   CF_ptr<CFPropertyListRef> content{
-      CFPropertyListCreateWithData(kCFAllocatorDefault,
-         data.get(), kCFPropertyListImmutable, nullptr,
-         // TODO might retrieve more error information
-         nullptr)
-   };
-   if (!content) {
-      wxLogError(wxT("Failed to create property list for \"%s\" preset"), group);
+   auto error = InterpretBlob(group, wxBase64Decode(parms));
+   if (!error.empty()) {
+      wxLogError(error.Debug());
       return false;
    }
 
@@ -1681,15 +1656,42 @@ bool AudioUnitEffect::LoadPreset(
    if (mpControl)
       mpControl->ForceRedraw();
 
-   // Finally, update the properties and parameters
-   if (SetProperty(kAudioUnitProperty_ClassInfo, content)) {
-      wxLogError(wxT("Failed to set class info for \"%s\" preset"), group);
-      return false;
-   }
-
    // Notify interested parties of change and propagate to slaves
    Notify(mUnit.get(), kAUParameterListener_AnyParameter);
    return true;
+}
+
+TranslatableString AudioUnitEffect::InterpretBlob(
+   const RegistryPath &group, const wxMemoryBuffer &buf) const
+{
+   size_t bufLen = buf.GetDataLen();
+   if (!bufLen)
+      return XO("Failed to decode \"%s\" preset").Format(group);
+
+   // Create a CFData object that references the decoded preset
+   const uint8_t *bufPtr = static_cast<uint8_t *>(buf.GetData());
+   CF_ptr<CFDataRef> data{ CFDataCreateWithBytesNoCopy(kCFAllocatorDefault,
+      bufPtr, bufLen, kCFAllocatorNull)
+   };
+   if (!data)
+      return XO("Failed to convert \"%s\" preset to internal format")
+         .Format(group);
+
+   // Convert it back to a property list
+   CF_ptr<CFPropertyListRef> content{
+      CFPropertyListCreateWithData(kCFAllocatorDefault,
+      data.get(), kCFPropertyListImmutable, nullptr,
+      // TODO might retrieve more error information
+      nullptr)
+   };
+   if (!content)
+      return XO("Failed to create property list for \"%s\" preset")
+         .Format(group);
+
+   // Finally, update the properties and parameters
+   if (SetProperty(kAudioUnitProperty_ClassInfo, content.get()))
+      return XO("Failed to set class info for \"%s\" preset").Format(group);
+   return {};
 }
 
 bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
@@ -1869,27 +1871,9 @@ TranslatableString AudioUnitEffect::Import(const wxString & path)
    if (f.Read(buf.GetData(), len) != len || f.Error())
       return XO("Unable to read the preset from \"%s\"").Format(path);
 
-   // Create a CFData object that references the decoded preset
-   CF_ptr<CFDataRef> data{
-      CFDataCreateWithBytesNoCopy(kCFAllocatorDefault,
-         static_cast<const UInt8 *>(buf.GetData()), len, kCFAllocatorNull)
-   };
-   if (!data)
-      return XO("Failed to convert preset to internal format");
-
-   // Convert it back to a property list.
-   CF_ptr<CFPropertyListRef> content{
-      CFPropertyListCreateWithData(kCFAllocatorDefault,
-         data.get(), kCFPropertyListImmutable, nullptr,
-         // TODO might retrieve more error information
-         nullptr)
-   };
-   if (!content)
-      return XO("Failed to create property list for preset");
-
-   // Finally, update the properties and parameters
-   if (SetProperty(kAudioUnitProperty_ClassInfo, content))
-      return XO("Failed to set class info for \"%s\" preset");
+   const auto error = InterpretBlob(path, buf);
+   if (!error.empty())
+      return error;
 
    // Notify interested parties of change and propagate to slaves
    Notify(mUnit.get(), kAUParameterListener_AnyParameter);
