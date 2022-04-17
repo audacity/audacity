@@ -15,6 +15,7 @@
 #if USE_AUDIO_UNITS
 
 #include "MemoryX.h"
+#include <functional>
 #include <type_traits>
 #include <vector>
 
@@ -161,6 +162,11 @@ public:
    
 private:
    class ParameterInfo;
+   //! Return value: if true, continue visiting
+   using ParameterVisitor =
+      std::function< bool(const ParameterInfo &pi, AudioUnitParameterID ID) >;
+   //! @return false if parameters could not be retrieved at all, else true
+   bool ForEachParameter(ParameterVisitor visitor) const;
 
    bool SetRateAndChannels();
 
