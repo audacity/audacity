@@ -23,7 +23,6 @@
 #include "ModuleManager.h"
 #include "SampleCount.h"
 #include "ConfigInterface.h"
-#include "CFResources.h"
 
 #include <wx/defs.h>
 #include <wx/base64.h>
@@ -1693,25 +1692,8 @@ bool AudioUnitEffect::LoadPreset(
 
 bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
 {
-   // First set the name of the preset
    wxCFStringRef cfname(wxFileNameFromPath(group));
-
-   // Define the preset property and set it in the audio unit
-   if (SetProperty(kAudioUnitProperty_PresentPreset,
-         AUPreset{ -1 /* indicates user preset */, cfname }))
-      return false;
-
-   // Now retrieve the preset content
-   CF_ptr<CFPropertyListRef> content;
-   GetFixedSizeProperty(kAudioUnitProperty_ClassInfo, content);
-
-   // And convert it to serialized binary data
-   CF_ptr<CFDataRef> data{
-      CFPropertyListCreateData(kCFAllocatorDefault,
-         content.get(), PRESET_FORMAT, 0,
-         // TODO might retrieve more error information
-         nullptr)
-   };
+   const auto &[data, _] = MakeBlob(cfname, true);
    if (!data)
       return false;
 
@@ -1828,37 +1810,50 @@ TranslatableString AudioUnitEffect::Export(const wxString & path) const
    // First set the name of the preset
    wxCFStringRef cfname(wxFileName(path).GetName());
 
-   // Define the preset property and set it in the audio unit
-   if (SetProperty(kAudioUnitProperty_PresentPreset,
-      AUPreset{ -1 /* indicates user preset */, cfname }))
-      return XO("Failed to set preset name");
-
-   // Now retrieve the preset content
-   CF_ptr<CFPropertyListRef> content;
-   if (GetFixedSizeProperty(kAudioUnitProperty_ClassInfo, content))
-      return XO("Failed to retrieve preset content");
-
-   // And convert it to serialized XML data
-   CF_ptr<CFDataRef> data{
-      CFPropertyListCreateData(kCFAllocatorDefault,
-         content.get(), kCFPropertyListXMLFormat_v1_0, 0,
-         // TODO might retrieve more error information
-         nullptr)
-   };
-   if (!data)
-      return XO("Failed to convert property list to XML data");
-
-   // Nothing to do if we don't have any data
-   SInt32 length = CFDataGetLength(data.get());
-   if (!length)
-      return XO("XML data is empty after conversion");
+   const auto &[data, message] = MakeBlob(cfname, false);
+   if (!data || !message.empty())
+      return message;
 
    // Write XML data
+   auto length = CFDataGetLength(data.get());
    if (f.Write(CFDataGetBytePtr(data.get()), length) != length || f.Error())
       return XO("Failed to write XML preset to \"%s\"").Format(path);
 
    f.Close();
    return {};
+}
+
+std::pair<CF_ptr<CFDataRef>, TranslatableString>
+AudioUnitEffect::MakeBlob(const wxCFStringRef &cfname, bool binary) const
+{
+   CF_ptr<CFDataRef> data;
+   TranslatableString message;
+
+   // Define the preset property and set it in the audio unit
+   if (SetProperty(kAudioUnitProperty_PresentPreset,
+      AUPreset{ -1 /* indicates user preset */, cfname }))
+      message = XO("Failed to set preset name");
+
+   // Now retrieve the preset content
+   else if (CF_ptr<CFPropertyListRef> content;
+      GetFixedSizeProperty(kAudioUnitProperty_ClassInfo, content))
+      message = XO("Failed to retrieve preset content");
+
+   // And convert it to serialized XML data
+   else if (data.reset(CFPropertyListCreateData(kCFAllocatorDefault,
+         content.get(),
+            (binary ? PRESET_FORMAT : kCFPropertyListXMLFormat_v1_0), 0,
+         // TODO might retrieve more error information
+         nullptr));
+      !data)
+      message = XO("Failed to convert property list to XML data");
+
+   // Nothing to do if we don't have any data
+   else if (auto length = CFDataGetLength(data.get()); length == 0)
+      // Caller might not treat this as error, becauase data is non-null
+      message = XO("XML data is empty after conversion");
+
+   return { move(data), message };
 }
 
 TranslatableString AudioUnitEffect::Import(const wxString & path)
