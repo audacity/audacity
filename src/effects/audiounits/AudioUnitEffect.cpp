@@ -53,9 +53,10 @@
 #include "../../widgets/wxPanelWrapper.h"
 
 //
-// When a plug-ins state is saved to the settings file (as a preset),
-// it can be one of two formats, binary or XML.  In either case, it
-// gets base64 encoded before storing.
+// When a plug-in's state is saved to the settings file (as a preset),
+// it is in binary and gets base64 encoded before storing.
+//
+// When exporting, save as XML without base64 encoding.
 //
 // The advantages of XML format is less chance of failures occurring
 // when exporting.  But, it can take a bit more space per preset int
@@ -711,21 +712,22 @@ TranslatableString AudioUnitEffectImportDialog::Import(
       return XO("Unable to read the preset from \"%s\"").Format(fullPath);
    }
 
-   wxString parms = wxBase64Encode(buf.GetData(), len);
-   if (parms.IsEmpty())
-   {
-      return XO("Failed to encode preset from \"%s\"").Format(fullPath);
-   }
+   return mEffect->SaveBlobToConfig(UserPresetsGroup(name),
+      fullPath, buf.GetData(), len, false);
+}
+
+TranslatableString AudioUnitEffect::SaveBlobToConfig(
+   const RegistryPath &group, const wxString &path,
+   const void *blob, size_t len, bool allowEmpty) const
+{
+   // Base64 encode the returned binary property list
+   auto parms = wxBase64Encode(blob, len);
+   if (!allowEmpty && parms.IsEmpty())
+      return XO("Failed to encode preset from \"%s\"").Format(path);
 
    // And write it to the config
-   wxString group = UserPresetsGroup(name);
-   if (!SetConfig(*mEffect,
-      PluginSettings::Private, group, PRESET_KEY,
-      parms))
-   {
+   if (!SetConfig(*this, PluginSettings::Private, group, PRESET_KEY, parms))
       return XO("Unable to store preset in config file");
-   }
-
    return {};
 }
 
@@ -1635,7 +1637,7 @@ bool AudioUnitEffect::LoadPreset(
       return false;
    }
    
-   // Decode it
+   // Decode it, complementary to what SaveBlobToConfig did
    wxMemoryBuffer buf = wxBase64Decode(parms);
    size_t bufLen = buf.GetDataLen();
    if (!bufLen) {
@@ -1691,11 +1693,9 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
 
    // Nothing to do if we don't have any data
    if (const auto length = CFDataGetLength(data.get())) {
-      // Base64 encode the returned binary property list
-      auto parms = wxBase64Encode(CFDataGetBytePtr(data.get()), length);
-      // And write it to the config
-      if (!SetConfig(*this,
-         PluginSettings::Private, group, PRESET_KEY, parms))
+      auto error =
+         SaveBlobToConfig(group, {}, CFDataGetBytePtr(data.get()), length);
+      if (!error.empty())
          return false;
    }
    return true;
