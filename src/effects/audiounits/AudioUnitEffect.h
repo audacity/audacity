@@ -38,6 +38,7 @@ using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
 class AUControl;
+class wxCFStringRef;
 
 //! Common base class for AudioUnitEffect and its Instance
 /*!
@@ -195,6 +196,16 @@ private:
    bool SetRateAndChannels();
 
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
+
+   //! Obtain dump of the setting state of an AudioUnit instance
+   /*!
+    @param binary if false, then produce XML serialization instead; but
+    AudioUnits does not need to be told the format again to reinterpret the blob
+    @return smart pointer to data, and an error message
+    */
+   std::pair<CF_ptr<CFDataRef>, TranslatableString>
+   MakeBlob(const wxCFStringRef &cfname, bool binary) const;
+
    TranslatableString Export(const wxString & path) const;
    TranslatableString Import(const wxString & path);
    void Notify(AudioUnit unit, AudioUnitParameterID parm) const;
