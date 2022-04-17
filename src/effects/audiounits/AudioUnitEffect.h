@@ -39,6 +39,7 @@ class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
 class AUControl;
 class wxCFStringRef;
+class wxMemoryBuffer;
 
 //! Common base class for AudioUnitEffect and its Instance
 /*!
@@ -239,6 +240,15 @@ private:
    void GetChannelCounts();
 
    bool LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
+
+   //! Interpret the dump made before by MakeBlob
+   /*!
+    @param group only for formatting error messages
+    @return an error message
+    */
+   TranslatableString InterpretBlob(
+      const wxString &group, const wxMemoryBuffer &buf) const;
+
    bool SavePreset(const RegistryPath & group) const;
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
