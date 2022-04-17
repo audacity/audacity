@@ -146,8 +146,6 @@ public:
 private:
    bool SetRateAndChannels();
 
-   bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
-
    TranslatableString Export(
       const AudioUnitEffectSettings &settings, const wxString & path) const;
    TranslatableString Import(
