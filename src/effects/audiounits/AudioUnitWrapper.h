@@ -109,7 +109,8 @@ struct AudioUnitWrapper
     @return smart pointer to data, and an error message
     */
    std::pair<CF_ptr<CFDataRef>, TranslatableString>
-   MakeBlob(const wxCFStringRef &cfname, bool binary) const;
+   MakeBlob(const AudioUnitEffectSettings &settings,
+      const wxCFStringRef &cfname, bool binary) const;
 
    //! Interpret the dump made before by MakeBlob
    /*!

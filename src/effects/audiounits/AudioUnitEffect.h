@@ -148,7 +148,8 @@ private:
 
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
 
-   TranslatableString Export(const wxString & path) const;
+   TranslatableString Export(
+      const AudioUnitEffectSettings &settings, const wxString & path) const;
    TranslatableString Import(
       AudioUnitEffectSettings &settings, const wxString & path) const;
    /*!
@@ -182,8 +183,11 @@ private:
 
    void GetChannelCounts();
 
+   bool MigrateOldConfigFile(
+      const RegistryPath & group, EffectSettings &settings) const;
    bool LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
-   bool SavePreset(const RegistryPath & group) const;
+   bool SavePreset(const RegistryPath & group,
+      const AudioUnitEffectSettings &settings) const;
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
    bool CreatePlain(wxWindow *parent);

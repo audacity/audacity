@@ -233,8 +233,16 @@ void AudioUnitWrapper::ForEachParameter(ParameterVisitor visitor) const
 }
 
 std::pair<CF_ptr<CFDataRef>, TranslatableString>
-AudioUnitWrapper::MakeBlob(const wxCFStringRef &cfname, bool binary) const
+AudioUnitWrapper::MakeBlob(const AudioUnitEffectSettings &settings,
+   const wxCFStringRef &cfname, bool binary) const
 {
+   // This is a const function of AudioUnitEffect, but it mutates
+   // an AudioUnit object (mUnit.get()) to accomplish its work.  But that
+   // should be the "scratchpad" unit only, not real instance state.
+
+   // Update state of the unit from settings
+   StoreSettings(settings);
+
    CF_ptr<CFDataRef> data;
    TranslatableString message;
 

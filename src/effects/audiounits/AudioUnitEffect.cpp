@@ -255,7 +255,6 @@ bool AudioUnitEffect::InitializePlugin()
    if (!InitializeInstance())
       return false;
 
-
    // Consult preferences
    // Decide mUseLatency, which affects GetLatency(), which is actually used
    // so far only in destructive effect processing
@@ -651,9 +650,9 @@ bool AudioUnitEffect::LoadUserPreset(
 }
 
 bool AudioUnitEffect::SaveUserPreset(
-   const RegistryPath & name, const EffectSettings &) const
+   const RegistryPath & name, const EffectSettings &settings) const
 {
-   return SavePreset(name);
+   return SavePreset(name, GetSettings(settings));
 }
 
 bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &settings) const
@@ -804,7 +803,7 @@ bool AudioUnitEffect::CanExportPresets()
    return true;
 }
 
-void AudioUnitEffect::ExportPresets(const EffectSettings &) const
+void AudioUnitEffect::ExportPresets(const EffectSettings &settings) const
 {
    // Generate the user domain path
    wxFileName fn;
@@ -814,8 +813,7 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &) const
    fn.Normalize();
    FilePath path = fn.GetFullPath();
 
-   if (!fn.Mkdir(fn.GetFullPath(), 0755, wxPATH_MKDIR_FULL))
-   {
+   if (!fn.Mkdir(fn.GetFullPath(), 0755, wxPATH_MKDIR_FULL)) {
       wxLogError(wxT("Couldn't create the \"%s\" directory"), fn.GetPath());
       return;
    }
@@ -837,19 +835,15 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &) const
 
    // User canceled...
    if (path.empty())
-   {
       return;
-   }
 
-   auto msg = Export(path);
+   auto msg = Export(GetSettings(settings), path);
    if (!msg.empty())
-   {
       AudacityMessageBox(
          XO("Could not export \"%s\" preset\n\n%s").Format(path, msg),
          XO("Export Audio Unit Presets"),
          wxOK | wxCENTRE,
          mParent);
-   }
 }
 
 void AudioUnitEffect::ImportPresets(EffectSettings &settings)
@@ -908,24 +902,34 @@ void AudioUnitEffect::ShowOptions()
 // AudioUnitEffect Implementation
 // ============================================================================
 
-bool AudioUnitEffect::LoadPreset(
+bool AudioUnitEffect::MigrateOldConfigFile(
    const RegistryPath & group, EffectSettings &settings) const
 {
-   wxString parms;
-
+   // Migration of very old format configuration file, should not normally
+   // happen and perhaps this code can be abandoned
    // Attempt to load old preset parameters and resave using new method
-   if (GetConfig(*this, PluginSettings::Private, group, wxT("Parameters"),
-      parms, wxEmptyString)) {
+   constexpr auto oldKey = L"Parameters";
+   wxString parms;
+   if (GetConfig(*this, PluginSettings::Private,
+      group, oldKey, parms, wxEmptyString)) {
       CommandParameters eap;
       if (eap.SetParameters(parms))
          if (LoadSettings(eap, settings))
-            if (SavePreset(group))
-               RemoveConfig(*this, PluginSettings::Private,
-                  group, wxT("Parameters"));
+            if (SavePreset(group, GetSettings(settings)))
+               RemoveConfig(*this, PluginSettings::Private, group, oldKey);
       return true;
    }
+   return false;
+}
+
+bool AudioUnitEffect::LoadPreset(
+   const RegistryPath & group, EffectSettings &settings) const
+{
+   if (MigrateOldConfigFile(group, settings))
+      return true;
 
    // Retrieve the preset
+   wxString parms;
    if (!GetConfig(*this, PluginSettings::Private, group, PRESET_KEY, parms,
       wxEmptyString)) {
       // Commented "CurrentSettings" gets tried a lot and useless messages appear
@@ -945,10 +949,11 @@ bool AudioUnitEffect::LoadPreset(
    return true;
 }
 
-bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
+bool AudioUnitEffect::SavePreset(
+   const RegistryPath & group, const AudioUnitEffectSettings &settings) const
 {
    wxCFStringRef cfname(wxFileNameFromPath(group));
-   const auto &[data, _] = MakeBlob(cfname, true);
+   const auto &[data, _] = MakeBlob(settings, cfname, true);
    if (!data)
       return false;
 
@@ -1050,7 +1055,8 @@ bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
    return true;
 }
 
-TranslatableString AudioUnitEffect::Export(const wxString & path) const
+TranslatableString AudioUnitEffect::Export(
+   const AudioUnitEffectSettings &settings, const wxString & path) const
 {
    // Create the file
    wxFFile f(path, wxT("wb"));
@@ -1060,7 +1066,7 @@ TranslatableString AudioUnitEffect::Export(const wxString & path) const
    // First set the name of the preset
    wxCFStringRef cfname(wxFileName(path).GetName());
 
-   const auto &[data, message] = MakeBlob(cfname, false);
+   const auto &[data, message] = MakeBlob(settings, cfname, false);
    if (!data || !message.empty())
       return message;
 
