@@ -114,6 +114,8 @@ public:
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool MakeListener();
+   bool CreateAudioUnit();
+   bool InitializeInstance();
    bool InitializePlugin();
 
    // EffectUIClientInterface implementation

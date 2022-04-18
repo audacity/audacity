@@ -1003,19 +1003,19 @@ bool AudioUnitEffect::SupportsAutomation() const
    return false;
 }
 
-bool AudioUnitEffect::InitializePlugin()
+bool AudioUnitEffect::CreateAudioUnit()
 {
-   OSStatus result;
+   auto result = AudioComponentInstanceNew(mComponent, &mUnit);
+   return (!result && mUnit != nullptr);
+}
+
+bool AudioUnitEffect::InitializeInstance()
+{
+   if (!CreateAudioUnit())
+      return false;
 
    mSampleRate = 44100;
-   result = AudioComponentInstanceNew(mComponent, &mUnit);
-   if (!mUnit)
-   {
-      return false;
-   }
-
    GetChannelCounts();
-
    SetRateAndChannels();
 
    // Retrieve the desired number of frames per slice
@@ -1043,34 +1043,54 @@ AudioUnitEffect::MakeInstance(EffectSettings &settings) const
 std::shared_ptr<EffectInstance>
 AudioUnitEffect::DoMakeInstance(EffectSettings &settings)
 {
-   OSStatus result;
-
    if (mMaster)
-      // Do common steps
-      InitializePlugin();
-
-   if (!mMaster) {
+      // This is a slave
+      InitializeInstance();
+   else
       // Don't HAVE a master -- this IS the master.
-
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("UseLatency"), mUseLatency, true);
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("UIType"), mUIType, wxT("Full"));
-
-      bool haveDefaults;
-      GetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults, false);
-      if (!haveDefaults)
-      {
-         SavePreset(FactoryDefaultsGroup());
-         SetConfig(*this, PluginSettings::Private,
-            FactoryDefaultsGroup(), wxT("Initialized"), true);
-      }
-
       LoadPreset(CurrentSettingsGroup(), settings);
+   return std::make_shared<Instance>(*this);
+}
+
+bool AudioUnitEffect::InitializePlugin()
+{
+   // To implement the services of EffectPlugin -- such as, a query of the
+   // set of effect parameters, so that we can implement MakeSettings -- we
+   // also need what is called an AudioComponentInstance, also called an
+   // AudioUnit.
+   // It's not just for implementing EffectInstance.  AudioUnits is unlike other
+   // third party effect families that distinguish the notions of plug-in and
+   // instance.
+
+   // When AudioUnitEffect implements its own proper Instance class, this
+   // should call CreateAudioUnit() directly and not do the rest of
+   // InitializeInstance.
+   if (!InitializeInstance())
+      return false;
+
+   // Consult preferences
+   // Decide mUseLatancy, which affects GetLatency(), which is actually used
+   // so far only in destructive effect processing
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      wxT("UseLatency"), mUseLatency, true);
+   // Decide whether to build plain or fancy user interfaces
+   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+      wxT("UIType"), mUIType, wxT("Full"));
+
+   // Once, persistently, for each AudioUnitEffect, the first time it is loaded:
+   // Query the instance for parameters and their settings, and save that in
+   // the configuration file as "factory default settings"
+   bool haveDefaults;
+   constexpr auto InitializedKey = L"Initialized";
+   GetConfig(*this, PluginSettings::Private,
+      FactoryDefaultsGroup(), InitializedKey, haveDefaults, false);
+   if (!haveDefaults) {
+      SavePreset(FactoryDefaultsGroup());
+      SetConfig(*this, PluginSettings::Private,
+         FactoryDefaultsGroup(), InitializedKey, true);
    }
 
-   return std::make_shared<Instance>(*this);
+   return true;
 }
 
 bool AudioUnitEffect::MakeListener()
@@ -1369,10 +1389,8 @@ bool AudioUnitEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
    auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
-   if (!slave->MakeInstance(settings))
-   {
+   if (!slave->InitializeInstance())
       return false;
-   }
 
    slave->SetBlockSize(mBlockSize);
    slave->SetChannelCount(numChannels);
