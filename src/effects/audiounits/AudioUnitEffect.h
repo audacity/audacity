@@ -146,10 +146,6 @@ private:
    TranslatableString Import(const wxString & path);
    void Notify(AudioUnit unit, AudioUnitParameterID parm) const;
 
-   // Realtime
-   unsigned GetChannelCount();
-   void SetChannelCount(unsigned numChannels);
-   
    static OSStatus RenderCallback(void *inRefCon,
                                   AudioUnitRenderActionFlags *inActionFlags,
                                   const AudioTimeStamp *inTimeStamp,
@@ -183,41 +179,38 @@ private:
 
 private:
 
-   PluginPath mPath;
-   wxString mName;
-   wxString mVendor;
-   AudioComponent mComponent;
-   AudioUnit mUnit;
-   bool mUnitInitialized;
+   const PluginPath mPath;
+   const wxString mName;
+   const wxString mVendor;
+   const AudioComponent mComponent;
+   AudioUnit mUnit{};
+   bool mUnitInitialized{ false };
 
-   bool mSupportsMono;
-   bool mSupportsStereo;
+   // Initialized in GetChannelCounts()
+   unsigned mAudioIns{ 2 };
+   unsigned mAudioOuts{ 2 };
 
-   unsigned mAudioIns;
-   unsigned mAudioOuts;
-   bool mInteractive;
-   bool mLatencyDone;
-   UInt32 mBlockSize;
-   double mSampleRate;
+   bool mInteractive{ false };
+   bool mLatencyDone{ false };
+   UInt32 mBlockSize{ 0 };
+   Float64 mSampleRate{ 44100.0 };
 
-   int mBufferSize;
-   bool mUseLatency;
+   bool mUseLatency{ true };
 
-   AudioTimeStamp mTimeStamp;
+   AudioTimeStamp mTimeStamp{};
 
    ArrayOf<AudioBufferList> mInputList;
    ArrayOf<AudioBufferList> mOutputList;
 
-   wxWindow *mParent;
+   wxWindow *mParent{};
    wxWeakRef<wxDialog> mDialog;
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
-   bool mIsGraphical;
+   bool mIsGraphical{ false };
 
-   AudioUnitEffect *mMaster;     // non-NULL if a slave
+   AudioUnitEffect *const mMaster;     // non-NULL if a slave
    AudioUnitEffectArray mSlaves;
-   unsigned mNumChannels;
 
-   AUEventListenerRef mEventListenerRef;
+   AUEventListenerRef mEventListenerRef{};
 
    AUControl *mpControl{};
 

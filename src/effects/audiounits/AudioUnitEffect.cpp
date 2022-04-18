@@ -816,25 +816,12 @@ AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
                                  const wxString & name,
                                  AudioComponent component,
                                  AudioUnitEffect *master)
+   : mPath{ path }
+   , mName{ name.AfterFirst(wxT(':')).Trim(true).Trim(false) }
+   , mVendor{ name.BeforeFirst(wxT(':')).Trim(true).Trim(false) }
+   , mComponent{ component }
+   , mMaster{ master }
 {
-   mPath = path;
-   mName = name.AfterFirst(wxT(':')).Trim(true).Trim(false);
-   mVendor = name.BeforeFirst(wxT(':')).Trim(true).Trim(false);
-   mComponent = component;
-   mMaster = master;
-
-   mpControl = NULL;
-   mUnit = NULL;
-   
-   mBlockSize = 0.0;
-   mInteractive = false;
-   mIsGraphical = false;
-
-   mParent = NULL;
-
-   mUnitInitialized = false;
-
-   mEventListenerRef = NULL;
 }
 
 AudioUnitEffect::~AudioUnitEffect()
@@ -1054,7 +1041,7 @@ bool AudioUnitEffect::InitializePlugin()
       return false;
 
    // Consult preferences
-   // Decide mUseLatancy, which affects GetLatency(), which is actually used
+   // Decide mUseLatency, which affects GetLatency(), which is actually used
    // so far only in destructive effect processing
    GetConfig(*this, PluginSettings::Shared, OptionsKey, UseLatencyKey,
       mUseLatency, true);
@@ -1371,14 +1358,13 @@ bool AudioUnitEffect::RealtimeInitialize(EffectSettings &settings)
 }
 
 bool AudioUnitEffect::RealtimeAddProcessor(
-   EffectSettings &settings, unsigned numChannels, float sampleRate)
+   EffectSettings &settings, unsigned, float sampleRate)
 {
    auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
    if (!slave->InitializeInstance())
       return false;
 
    slave->SetBlockSize(mBlockSize);
-   slave->SetChannelCount(numChannels);
    slave->SetSampleRate(sampleRate);
 
    if (!CopyParameters(mUnit, slave->mUnit))
@@ -2243,16 +2229,6 @@ bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
    Notify(dstUnit, kAUParameterListener_AnyParameter);
 
    return true;
-}
-
-unsigned AudioUnitEffect::GetChannelCount()
-{
-   return mNumChannels;
-}
-
-void AudioUnitEffect::SetChannelCount(unsigned numChannels)
-{
-   mNumChannels = numChannels;
 }
 
 TranslatableString AudioUnitEffect::Export(const wxString & path) const
