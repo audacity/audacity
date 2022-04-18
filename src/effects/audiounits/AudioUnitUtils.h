@@ -111,6 +111,15 @@ namespace AudioUnitUtils {
     */
    //! @{
 
+   struct Buffer : AudioBuffer {
+      Buffer(UInt32 numberChannels, UInt32 dataByteSize, void *data)
+      : AudioBuffer{} {
+         mNumberChannels = numberChannels;
+         mDataByteSize = dataByteSize;
+         mData = data;
+      }
+   };
+
    struct RenderCallback : AURenderCallbackStruct {
       RenderCallback(AURenderCallback inProc, void *inProcRefCon)
       : AURenderCallbackStruct{} {
@@ -176,6 +185,14 @@ namespace AudioUnitUtils {
  @name Traits attached to SDK structures, in the global namespace
  */
 //! @{
+
+template<> struct PackedArrayTraits<AudioBufferList> {
+   struct header_type { UInt32 mNumberBuffers; };
+   // Overlay the element type with the wrapper type
+   using element_type = AudioUnitUtils::Buffer;
+   using iterated_type = element_type;
+   static_assert(sizeof(element_type) == sizeof(AudioBuffer));
+};
 
 template<> struct PackedArrayTraits<AudioUnitCocoaViewInfo> {
    struct header_type {
