@@ -32,6 +32,213 @@
 // private helper classes and functions
 namespace {
 
+enum class GroupBy
+{
+   Publisher,
+   Type
+};
+
+enum class SortBy
+{
+   Name,
+   PublisherName,
+   TypeName
+};
+   
+// Some weird special case stuff just for Noise Reduction so that there is
+// more informative help
+CommandFlag FixBatchFlags(CommandFlag batchflags, const PluginDescriptor* plug)
+{
+   if ( plug->GetSymbol().Msgid() == XO( "Noise Reduction" ) )
+      return ( batchflags | NoiseReductionTimeSelectedFlag() ) & ~TimeSelectedFlag();
+   return batchflags;
+}
+
+   
+bool IsEnabledPlugin(const PluginDescriptor* plug)
+{
+   if( PluginManager::Get().IsPluginLoaded(plug->GetID()) && EffectManager::Get().IsHidden(plug->GetID()) )
+         return false;
+   if ( !plug->IsEnabled() ){
+      return false;// don't add to menus!
+   }
+   return true;
+}
+
+bool IsDefaultPlugin(const PluginDescriptor* plug)
+{
+   if (plug->IsEffectDefault()
+#ifdef EXPERIMENTAL_DA
+      // Move Nyquist prompt into nyquist group.
+      && (plug->GetSymbol() !=
+            ComponentInterfaceSymbol("Nyquist Effects Prompt"))
+      && (plug->GetSymbol() != ComponentInterfaceSymbol("Nyquist Tools Prompt"))
+      && (plug->GetSymbol() != ComponentInterfaceSymbol(NYQUIST_PROMPT_ID))
+#endif
+      )
+      return true;
+   return false;
+}
+
+
+// Forward-declared function has its definition below with OnEffect in view
+void AddEffectMenuItemGroup(
+   MenuTable::BaseItemPtrs &table,
+   const TranslatableStrings & names,
+   const PluginIDs & plugs,
+   const std::vector<CommandFlag> & flags,
+   bool useSubgroups);
+
+   
+void AddGroupedEffectMenuItems(
+   MenuTable::BaseItemPtrs &table,
+   std::vector<const PluginDescriptor*> & plugs,
+   CommandFlag batchflags,
+   CommandFlag realflags,
+   GroupBy groupBy,
+   bool useSubgroups)
+{
+   TranslatableString last;
+   TranslatableString current;
+
+   size_t pluginCnt = plugs.size();
+
+   TranslatableStrings groupNames;
+   PluginIDs groupPlugs;
+   std::vector<CommandFlag> groupFlags;
+
+   for (size_t i = 0; i < pluginCnt; i++)
+   {
+      const PluginDescriptor *plug = plugs[i];
+
+      auto name = plug->GetSymbol().Msgid();
+
+      if (plug->IsEffectInteractive())
+         name += XO("...");
+      
+      if (groupBy == GroupBy::Publisher/*wxT("groupby:publisher")*/)
+      {
+         current = EffectManager::Get().GetVendorName(plug->GetID());
+         if (current.empty())
+         {
+            current = XO("Unknown");
+         }
+      }
+      else if (groupBy == GroupBy::Type /*wxT("groupby:type")*/)
+      {
+         current = EffectManager::Get().GetEffectFamilyName(plug->GetID());
+         if (current.empty())
+         {
+            current = XO("Unknown");
+         }
+      }
+
+      if (current != last)
+      {
+         using namespace MenuTable;
+         BaseItemPtrs temp;
+         bool bInSubmenu = !last.empty() && (groupNames.size() > 1);
+
+         AddEffectMenuItemGroup(temp,
+            groupNames,
+            groupPlugs, groupFlags, useSubgroups);
+
+         table.push_back( MenuOrItems( wxEmptyString,
+            ( bInSubmenu ? last : TranslatableString{} ), std::move( temp )
+         ) );
+
+         groupNames.clear();
+         groupPlugs.clear();
+         groupFlags.clear();
+         last = current;
+      }
+
+      groupNames.push_back( name );
+      groupPlugs.push_back(plug->GetID());
+      groupFlags.push_back(
+         plug->IsEffectRealtime() ? realflags : FixBatchFlags( batchflags, plug ) );
+   }
+
+   if (groupNames.size() > 0)
+   {
+      using namespace MenuTable;
+      BaseItemPtrs temp;
+      bool bInSubmenu = groupNames.size() > 1;
+
+      AddEffectMenuItemGroup(temp,
+         groupNames, groupPlugs, groupFlags, useSubgroups);
+
+      table.push_back( MenuOrItems( wxEmptyString,
+         ( bInSubmenu ? current : TranslatableString{} ), std::move( temp )
+      ) );
+   }
+}
+
+void AddSortedEffectMenuItems(
+   MenuTable::BaseItemPtrs &table,
+   std::vector<const PluginDescriptor*> & plugs,
+   CommandFlag batchflags,
+   CommandFlag realflags,
+   SortBy sortBy,
+   bool useSubgroups)
+{
+   size_t pluginCnt = plugs.size();
+
+   TranslatableStrings groupNames;
+   PluginIDs groupPlugs;
+   std::vector<CommandFlag> groupFlags;
+
+   for (size_t i = 0; i < pluginCnt; i++)
+   {
+      const PluginDescriptor *plug = plugs[i];
+
+      auto name = plug->GetSymbol().Msgid();
+
+      if (plug->IsEffectInteractive())
+         name += XO("...");
+
+      TranslatableString group;
+      if (sortBy == SortBy::PublisherName/* wxT("sortby:publisher:name")*/)
+      {
+         group = EffectManager::Get().GetVendorName(plug->GetID());
+      }
+      else if (sortBy == SortBy::TypeName /*wxT("sortby:type:name")*/)
+      {
+         group = EffectManager::Get().GetEffectFamilyName(plug->GetID());
+      }
+
+      if (plug->IsEffectDefault())
+      {
+         group = {};
+      }
+
+      groupNames.push_back(
+         group.empty()
+            ? name
+            : XO("%s: %s").Format( group, name )
+      );
+
+      groupPlugs.push_back(plug->GetID());
+      groupFlags.push_back(
+         plug->IsEffectRealtime() ? realflags : FixBatchFlags( batchflags, plug ) );
+   }
+
+   if (groupNames.size() > 0)
+   {
+      AddEffectMenuItemGroup(
+         table, groupNames, groupPlugs, groupFlags, useSubgroups);
+   }
+}
+
+struct MenuSectionBuilder
+{
+   std::vector<const PluginDescriptor*> plugins;
+
+   std::function<bool(const PluginDescriptor*)> filter;
+   std::function<bool(const PluginDescriptor*, const PluginDescriptor*)> compare;
+   std::function<void(MenuTable::BaseItemPtrs&, std::vector<const PluginDescriptor*>&)> add;
+};
+
 AttachedWindows::RegisteredFactory sMacrosWindowKey{
    []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
       auto &window = ProjectWindow::Get( parent );
@@ -144,162 +351,6 @@ bool CompareEffectsByType(const PluginDescriptor *a, const PluginDescriptor *b)
          bkey.Translation(), b->GetSymbol().Translation(), b->GetPath() );
 }
 
-// Forward-declared function has its definition below with OnEffect in view
-void AddEffectMenuItemGroup(
-   MenuTable::BaseItemPtrs &table,
-   const TranslatableStrings & names,
-   const PluginIDs & plugs,
-   const std::vector<CommandFlag> & flags,
-   bool isDefault);
-
-void AddEffectMenuItems(
-   MenuTable::BaseItemPtrs &table,
-   std::vector<const PluginDescriptor*> & plugs,
-   CommandFlag batchflags,
-   CommandFlag realflags,
-   bool isDefault)
-{
-   size_t pluginCnt = plugs.size();
-
-   auto groupBy = EffectsGroupBy.Read();
-
-   bool grouped = false;
-   if (groupBy.StartsWith(wxT("groupby")))
-   {
-      grouped = true;
-   }
-
-   // Some weird special case stuff just for Noise Reduction so that there is
-   // more informative help
-   const auto getBatchFlags = [&]( const PluginDescriptor *plug ){
-      if ( plug->GetSymbol().Msgid() == XO( "Noise Reduction" ) )
-         return
-            ( batchflags | NoiseReductionTimeSelectedFlag() ) & ~TimeSelectedFlag();
-      return batchflags;
-   };
-
-   TranslatableStrings groupNames;
-   PluginIDs groupPlugs;
-   std::vector<CommandFlag> groupFlags;
-   if (grouped)
-   {
-      TranslatableString last;
-      TranslatableString current;
-
-      for (size_t i = 0; i < pluginCnt; i++)
-      {
-         const PluginDescriptor *plug = plugs[i];
-
-         auto name = plug->GetSymbol().Msgid();
-
-         if (plug->IsEffectInteractive())
-            name += XO("...");
-
-         if (groupBy == wxT("groupby:publisher"))
-         {
-            current = EffectManager::Get().GetVendorName(plug->GetID());
-            if (current.empty())
-            {
-               current = XO("Unknown");
-            }
-         }
-         else if (groupBy == wxT("groupby:type"))
-         {
-            current = EffectManager::Get().GetEffectFamilyName(plug->GetID());
-            if (current.empty())
-            {
-               current = XO("Unknown");
-            }
-         }
-
-         if (current != last)
-         {
-            using namespace MenuTable;
-            BaseItemPtrs temp;
-            bool bInSubmenu = !last.empty() && (groupNames.size() > 1);
-
-            AddEffectMenuItemGroup(temp,
-               groupNames,
-               groupPlugs, groupFlags, isDefault);
-
-            table.push_back( MenuOrItems( wxEmptyString,
-               ( bInSubmenu ? last : TranslatableString{} ), std::move( temp )
-            ) );
-
-            groupNames.clear();
-            groupPlugs.clear();
-            groupFlags.clear();
-            last = current;
-         }
-
-         groupNames.push_back( name );
-         groupPlugs.push_back(plug->GetID());
-         groupFlags.push_back(
-            plug->IsEffectRealtime() ? realflags : getBatchFlags( plug ) );
-      }
-
-      if (groupNames.size() > 0)
-      {
-         using namespace MenuTable;
-         BaseItemPtrs temp;
-         bool bInSubmenu = groupNames.size() > 1;
-
-         AddEffectMenuItemGroup(temp,
-            groupNames, groupPlugs, groupFlags, isDefault);
-
-         table.push_back( MenuOrItems( wxEmptyString,
-            ( bInSubmenu ? current : TranslatableString{} ), std::move( temp )
-         ) );
-      }
-   }
-   else
-   {
-      for (size_t i = 0; i < pluginCnt; i++)
-      {
-         const PluginDescriptor *plug = plugs[i];
-
-         auto name = plug->GetSymbol().Msgid();
-
-         if (plug->IsEffectInteractive())
-            name += XO("...");
-
-         TranslatableString group;
-         if (groupBy == wxT("sortby:publisher:name"))
-         {
-            group = EffectManager::Get().GetVendorName(plug->GetID());
-         }
-         else if (groupBy == wxT("sortby:type:name"))
-         {
-            group = EffectManager::Get().GetEffectFamilyName(plug->GetID());
-         }
-
-         if (plug->IsEffectDefault())
-         {
-            group = {};
-         }
-
-         groupNames.push_back(
-            group.empty()
-               ? name
-               : XO("%s: %s").Format( group, name )
-         );
-
-         groupPlugs.push_back(plug->GetID());
-         groupFlags.push_back(
-            plug->IsEffectRealtime() ? realflags : getBatchFlags( plug ) );
-      }
-
-      if (groupNames.size() > 0)
-      {
-         AddEffectMenuItemGroup(
-            table, groupNames, groupPlugs, groupFlags, isDefault);
-      }
-
-   }
-
-   return;
-}
-
 /// The effects come from a plug in list
 /// This code iterates through the list, adding effects into
 /// the menu.
@@ -310,65 +361,143 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
 {
    MenuTable::BaseItemPtrs result;
    PluginManager & pm = PluginManager::Get();
+   
+   const auto groupby = EffectsGroupBy.Read();
 
-   std::vector<const PluginDescriptor*> defplugs;
-   std::vector<const PluginDescriptor*> optplugs;
+   std::vector<MenuSectionBuilder> sections;
+   
+   auto MakeAddSortedItems = [=](SortBy sortby, bool useSubgroups)
+   {
+      return [=](MenuTable::BaseItemPtrs& items, std::vector<const PluginDescriptor*>& plugins)
+      {
+         return AddSortedEffectMenuItems(items, plugins, batchflags, realflags, sortby, useSubgroups);
+      };
+   };
 
-   EffectManager & em = EffectManager::Get();
-   for (auto &plugin : pm.EffectsOfType(type)) {
-      auto plug = &plugin;
-      if( pm.IsPluginLoaded(plug->GetID()) && em.IsHidden(plug->GetID()) )
-         continue;
-      if ( !plug->IsEnabled() ){
-         ;// don't add to menus!
+   auto MakeAddGroupedItems = [=](GroupBy groupBy, bool useSubgroups)
+   {
+      return [=](MenuTable::BaseItemPtrs& items, std::vector<const PluginDescriptor*>& plugins)
+      {
+         return AddGroupedEffectMenuItems(items, plugins, batchflags, realflags, groupBy, useSubgroups);
+      };
+   };
+
+   auto DefaultFilter = [](auto plug) { return IsEnabledPlugin(plug) && IsDefaultPlugin(plug); };
+   if(groupby == "sortby:publisher:name")
+   {
+      sections.emplace_back(
+         MenuSectionBuilder {
+            {},
+            DefaultFilter,
+            CompareEffectsByName,
+            MakeAddSortedItems(SortBy::PublisherName, false)
+         });
+      sections.emplace_back(
+         MenuSectionBuilder {
+            {},
+            IsEnabledPlugin,
+            CompareEffectsByPublisherAndName,
+            MakeAddSortedItems(SortBy::PublisherName, true )
+         });
+   }
+   else if(groupby == "sortby:type:name")
+   {
+      sections.emplace_back(
+         MenuSectionBuilder {
+            {},
+            DefaultFilter,
+            CompareEffectsByName,
+            MakeAddSortedItems(SortBy::TypeName, false)
+         });
+      sections.emplace_back(
+         MenuSectionBuilder {
+            {},
+            IsEnabledPlugin,
+            CompareEffectsByPublisherAndName,
+            MakeAddSortedItems(SortBy::TypeName, true )
+         });
+   }
+   else if(groupby == "groupby:publisher")
+   {
+      sections.emplace_back(
+         MenuSectionBuilder {
+            {},
+            DefaultFilter,
+            CompareEffectsByPublisher,
+            MakeAddGroupedItems(GroupBy::Publisher, false)
+         });
+      sections.emplace_back(
+         MenuSectionBuilder {
+            {},
+            IsEnabledPlugin,
+            CompareEffectsByPublisher,
+            MakeAddGroupedItems(GroupBy::Publisher, true )
+         });
+   }
+   else if(groupby == "groupby:type")
+   {
+      sections.emplace_back(
+         MenuSectionBuilder {
+            {},
+            DefaultFilter,
+            CompareEffectsByType,
+            MakeAddGroupedItems(GroupBy::Type, false)
+         });
+      sections.emplace_back(
+         MenuSectionBuilder {
+            {},
+            IsEnabledPlugin,
+            CompareEffectsByType,
+            MakeAddGroupedItems(GroupBy::Type, true )
+         });
+   }
+   else //if(groupby == "sortby:name")
+   {
+      sections.emplace_back(
+         MenuSectionBuilder {
+            {},
+            DefaultFilter,
+            CompareEffectsByName,
+            MakeAddSortedItems(SortBy::Name, false)
+         });
+      sections.emplace_back(
+         MenuSectionBuilder {
+            {},
+            IsEnabledPlugin,
+            CompareEffectsByName,
+            MakeAddSortedItems(SortBy::Name, true)
+         });
+   }
+   for(auto& plugin : pm.EffectsOfType(type))
+   {
+      for(auto& section : sections)
+      {
+         if(section.filter(&plugin))
+         {
+            auto it = section.compare ?
+               std::lower_bound(section.plugins.begin(), section.plugins.end(), &plugin, section.compare) :
+               section.plugins.end();
+            section.plugins.insert(it, &plugin);
+
+            break;
+         }
       }
-      else if (plug->IsEffectDefault()
-#ifdef EXPERIMENTAL_DA
-         // Move Nyquist prompt into nyquist group.
-         && (plug->GetSymbol() !=
-               ComponentInterfaceSymbol("Nyquist Effects Prompt"))
-         && (plug->GetSymbol() != ComponentInterfaceSymbol("Nyquist Tools Prompt"))
-         && (plug->GetSymbol() != ComponentInterfaceSymbol(NYQUIST_PROMPT_ID))
-#endif
-         )
-         defplugs.push_back(plug);
-      else
-         optplugs.push_back(plug);
    }
 
-   wxString groupby = EffectsGroupBy.Read();
+   for(auto& section : sections)
+   {
+      MenuTable::BaseItemPtrs items;
+      section.add(items, section.plugins);
 
-   using Comparator = bool(*)(const PluginDescriptor*, const PluginDescriptor*);
-   Comparator comp1, comp2;
-   if (groupby == wxT("sortby:name"))
-      comp1 = comp2 = CompareEffectsByName;
-   else if (groupby == wxT("sortby:publisher:name"))
-      comp1 = CompareEffectsByName, comp2 = CompareEffectsByPublisherAndName;
-   else if (groupby == wxT("sortby:type:name"))
-      comp1 = CompareEffectsByName, comp2 = CompareEffectsByTypeAndName;
-   else if (groupby == wxT("groupby:publisher"))
-      comp1 = comp2 = CompareEffectsByPublisher;
-   else if (groupby == wxT("groupby:type"))
-      comp1 = comp2 = CompareEffectsByType;
-   else // name
-      comp1 = comp2 = CompareEffectsByName;
+      if(items.empty())
+         continue;
 
-   std::sort( defplugs.begin(), defplugs.end(), comp1 );
-   std::sort( optplugs.begin(), optplugs.end(), comp2 );
-
-   MenuTable::BaseItemPtrs section1;
-   AddEffectMenuItems( section1, defplugs, batchflags, realflags, true );
-
-   MenuTable::BaseItemPtrs section2;
-   AddEffectMenuItems( section2, optplugs, batchflags, realflags, false );
-
-   bool section = !section1.empty() && !section2.empty();
-   result.push_back( MenuTable::Items( "", std::move( section1 ) ) );
-   if ( section )
-      result.push_back( MenuTable::Section( "", std::move( section2 ) ) );
-   else
-      result.push_back( MenuTable::Items( "", std::move( section2 ) ) );
-
+      if(result.empty())
+         result.push_back(MenuTable::Items( "", std::move( items ) ));
+      else
+         result.push_back(MenuTable::Section( "", std::move( items ) ));
+   }
+   
    return result;
 }
 
@@ -697,7 +826,7 @@ void AddEffectMenuItemGroup(
    const TranslatableStrings & names,
    const PluginIDs & plugs,
    const std::vector<CommandFlag> & flags,
-   bool isDefault)
+   bool useSubgroups)
 {
    const int namesCnt = (int) names.size();
    int perGroup;
@@ -718,9 +847,8 @@ void AddEffectMenuItemGroup(
          groupCnt--;
       }
    }
-
-   // The "default" effects shouldn't be broken into subgroups
-   if (namesCnt > 0 && isDefault)
+   
+   if (namesCnt > 0 && !useSubgroups)
    {
       perGroup = 0;
    }
@@ -818,8 +946,6 @@ void AddEffectMenuItemGroup(
          }
       }
    }
-
-   return;
 }
 
 MenuTable::BaseItemPtrs PopulateMacrosMenu( CommandFlag flags  )
