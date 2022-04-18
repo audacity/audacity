@@ -1105,11 +1105,10 @@ size_t AudioUnitEffect::GetTailSize() const
 bool AudioUnitEffect::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames chanMap)
 {
-   mInputList.reinit(mAudioIns);
-   mInputList[0].mNumberBuffers = mAudioIns;
-   
-   mOutputList.reinit(mAudioOuts);
-   mOutputList[0].mNumberBuffers = mAudioOuts;
+   mInputList =
+      PackedArrayAllocateCount<AudioBufferList>(mAudioIns)(mAudioIns);
+   mOutputList =
+      PackedArrayAllocateCount<AudioBufferList>(mAudioOuts)(mAudioOuts);
 
    memset(&mTimeStamp, 0, sizeof(AudioTimeStamp));
    mTimeStamp.mSampleTime = 0; // This is a double-precision number that should
@@ -1140,26 +1139,24 @@ bool AudioUnitEffect::ProcessFinalize()
 {
    mOutputList.reset();
    mInputList.reset();
-
    return true;
 }
 
 size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   for (size_t i = 0; i < mAudioIns; i++)
-   {
-      mInputList[0].mBuffers[i].mNumberChannels = 1;
-      mInputList[0].mBuffers[i].mData = const_cast<float*>(inBlock[i]);
-      mInputList[0].mBuffers[i].mDataByteSize = sizeof(float) * blockLen;
-   }
+   // mAudioIns and mAudioOuts don't change after plugin initialization,
+   // so ProcessInitialize() made sufficient allocations
+   assert(PackedArrayCount(mInputList) >= mAudioIns);
+   for (size_t i = 0; i < mAudioIns; ++i)
+      mInputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
+         const_cast<float*>(inBlock[i]) };
 
-   for (size_t i = 0; i < mAudioOuts; i++)
-   {
-      mOutputList[0].mBuffers[i].mNumberChannels = 1;
-      mOutputList[0].mBuffers[i].mData = outBlock[i];
-      mOutputList[0].mBuffers[i].mDataByteSize = sizeof(float) * blockLen;
-   }
+   // See previous comment
+   assert(PackedArrayCount(mOutputList) >= mAudioOuts);
+   for (size_t i = 0; i < mAudioOuts; ++i)
+      mOutputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
+         outBlock[i] };
 
    AudioUnitRenderActionFlags flags = 0;
    OSStatus result;
@@ -1911,9 +1908,15 @@ OSStatus AudioUnitEffect::Render(AudioUnitRenderActionFlags *inActionFlags,
                                  UInt32 inNumFrames,
                                  AudioBufferList *ioData)
 {
-   for (int i = 0; i < ioData->mNumberBuffers; i++)
-      ioData->mBuffers[i].mData = mInputList[0].mBuffers[i].mData;
-
+   size_t i = 0;
+   auto size =
+      std::min<size_t>(ioData->mNumberBuffers, PackedArrayCount(mInputList));
+   for (; i < size; ++i)
+      ioData->mBuffers[i].mData = mInputList[i].mData;
+   // Some defensive code here just in case SDK requests from us an unexpectedly
+   // large number of buffers:
+   for (; i < ioData->mNumberBuffers; ++i)
+      ioData->mBuffers[i].mData = nullptr;
    return 0;
 }
 

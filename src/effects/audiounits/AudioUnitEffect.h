@@ -251,8 +251,8 @@ private:
 
    AudioTimeStamp mTimeStamp{};
 
-   ArrayOf<AudioBufferList> mInputList;
-   ArrayOf<AudioBufferList> mOutputList;
+   PackedArrayPtr<AudioBufferList> mInputList;
+   PackedArrayPtr<AudioBufferList> mOutputList;
 
    wxWindow *mParent{};
    wxWeakRef<wxDialog> mDialog;
