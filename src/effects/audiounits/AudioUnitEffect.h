@@ -49,6 +49,12 @@ template<typename Ptr, OSStatus(*fn)(Ptr),
    typename T = std::remove_pointer_t<Ptr> /* deduced */ >
 using AudioUnitCleanup = std::unique_ptr<T, AudioUnitCleaner<T, fn>>;
 
+template<> struct PackedArrayTraits<AudioBufferList> {
+   struct header_type { UInt32 mNumberBuffers; };
+   using element_type = AudioBuffer;
+   using iterated_type = element_type;
+};
+
 class AudioUnitEffect final : public StatefulPerTrackEffect
 {
 public:
@@ -244,8 +250,8 @@ private:
 
    AudioTimeStamp mTimeStamp{};
 
-   ArrayOf<AudioBufferList> mInputList;
-   ArrayOf<AudioBufferList> mOutputList;
+   PackedArrayPtr<AudioBufferList> mInputList;
+   PackedArrayPtr<AudioBufferList> mOutputList;
 
    wxWindow *mParent{};
    wxWeakRef<wxDialog> mDialog;
