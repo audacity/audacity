@@ -44,7 +44,7 @@ HitTestPreview CutlineHandle::HitPreview(bool cutline, bool unsafe)
    return {
       (cutline
        ? XO("Left-Click to expand, Right-Click to remove")
-       : XO("Left-Click to merge clips")),
+       : XO("Join Clips")),
       (unsafe
        ? &*disabledCursor
        : &arrowCursor)
