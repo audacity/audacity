@@ -502,19 +502,14 @@ class AudioUnitEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
    AudioUnitEffectOptionsDialog(
-      wxWindow * parent, EffectDefinitionInterface &effect);
+      wxWindow * parent, bool &useLatencey, wxString &uiType);
    virtual ~AudioUnitEffectOptionsDialog();
-
    void PopulateOrExchange(ShuttleGui & S);
-
    void OnOk(wxCommandEvent & evt);
-
 private:
-   EffectDefinitionInterface &mEffect;
-
-   bool mUseLatency;
-   TranslatableString mUIType;
-
+   bool &mUseLatency;
+   wxString &mUIType;
+   TranslatableString mUITypeString;
    DECLARE_EVENT_TABLE()
 };
 
@@ -523,21 +518,13 @@ BEGIN_EVENT_TABLE(AudioUnitEffectOptionsDialog, wxDialogWrapper)
 END_EVENT_TABLE()
 
 AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(
-   wxWindow * parent, EffectDefinitionInterface &effect)
+   wxWindow * parent, bool &useLatency, wxString &uiType)
 : wxDialogWrapper(parent, wxID_ANY, XO("Audio Unit Effect Options"))
-, mEffect{ effect }
+, mUseLatency{ useLatency }
+, mUIType{ uiType }
+// Get the localization of the string for display to the user
+, mUITypeString{ mUIType, {} }
 {
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
-      wxT("UseLatency"), mUseLatency, true);
-
-   // Expect one of three string values from the config file
-   wxString uiType;
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
-      wxT("UIType"), uiType, wxT("Full"));
-
-   // Get the localization of the string for display to the user
-   mUIType = TranslatableString{ uiType, {} };
-
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }
@@ -548,7 +535,6 @@ AudioUnitEffectOptionsDialog::~AudioUnitEffectOptionsDialog()
 
 void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 {
-   
    S.SetBorder(5);
    S.StartHorizontalLay(wxEXPAND, 1);
    {
@@ -587,7 +573,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
             S.StartHorizontalLay(wxALIGN_LEFT);
             {
                S.TieChoice(XXO("Select &interface"),
-                  mUIType,
+                  mUITypeString,
                   {
                      XO("Full"),
                      XO("Generic"),
@@ -603,9 +589,7 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
       S.EndVerticalLay();
    }
    S.EndHorizontalLay();
-
    S.AddStandardButtons();
-
    Layout();
    Fit();
    Center();
@@ -614,21 +598,14 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 void AudioUnitEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 {
    if (!Validate())
-   {
       return;
-   }
 
+   // This re-visits the controls, not to create them but to transfer values out
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
    // un-translate the type
-   auto uiType = mUIType.MSGID().GET();
-
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
-      wxT("UseLatency"), mUseLatency);
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Options"),
-      wxT("UIType"), uiType);
-
+   mUIType = mUITypeString.MSGID().GET();
    EndModal(wxID_OK);
 }
 
@@ -1052,6 +1029,10 @@ AudioUnitEffect::DoMakeInstance(EffectSettings &settings)
    return std::make_shared<Instance>(*this);
 }
 
+constexpr auto OptionsKey = L"Options";
+constexpr auto UseLatencyKey = L"UseLatency";
+constexpr auto UITypeKey = L"UIType";
+
 bool AudioUnitEffect::InitializePlugin()
 {
    // To implement the services of EffectPlugin -- such as, a query of the
@@ -1071,11 +1052,11 @@ bool AudioUnitEffect::InitializePlugin()
    // Consult preferences
    // Decide mUseLatancy, which affects GetLatency(), which is actually used
    // so far only in destructive effect processing
-   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-      wxT("UseLatency"), mUseLatency, true);
+   GetConfig(*this, PluginSettings::Shared, OptionsKey, UseLatencyKey,
+      mUseLatency, true);
    // Decide whether to build plain or fancy user interfaces
-   GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-      wxT("UIType"), mUIType, wxT("Full"));
+   GetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey,
+      mUIType, wxT("Full"));
 
    // Once, persistently, for each AudioUnitEffect, the first time it is loaded:
    // Query the instance for parameters and their settings, and save that in
@@ -1918,14 +1899,12 @@ bool AudioUnitEffect::HasOptions()
 
 void AudioUnitEffect::ShowOptions()
 {
-   AudioUnitEffectOptionsDialog dlg(mParent, *this);
-   if (dlg.ShowModal())
-   {
-      // Reinitialize configuration settings
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("UseLatency"), mUseLatency, true);
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-         wxT("UIType"), mUIType, wxT("Full"));
+   AudioUnitEffectOptionsDialog dlg(mParent, mUseLatency, mUIType);
+   if (dlg.ShowModal()) {
+      // Save changed values to the config file
+      SetConfig(*this, PluginSettings::Shared, OptionsKey, UseLatencyKey,
+         mUseLatency);
+      SetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey, mUIType);
    }
 }
 
