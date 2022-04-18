@@ -201,7 +201,7 @@ You can use `cmake -LH` to get a list of the options available (or use CMake GUI
 
 ### Building with Deep Learning 
 
-To enable deep learning features, pass `audacity_has_deep_learning=on` and `audacity_has_networking=yes` to CMake. 
+To enable deep learning features, pass `audacity_has_deeplearning=on` and `audacity_has_networking=yes` to CMake. 
 Deep Learning is only supported on Linux, macOS, and Windows 64-bit builds.
 
 ### Building using system libraries
