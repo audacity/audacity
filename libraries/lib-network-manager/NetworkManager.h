@@ -3,7 +3,7 @@
  Audacity: A Digital Audio Editor
 
  @file NetworkManager.h
- @brief Declare a class for preforming HTTP requests.
+ @brief Declare a class for performing HTTP requests.
 
  Dmitry Vedenko
  **********************************************************************/

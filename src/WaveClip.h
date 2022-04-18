@@ -182,9 +182,9 @@ public:
    //! Moves play end position by deltaTime
    void TrimRight(double deltaTime);
 
-   //! Sets the the left trimming to the absoulte time (if that is in bounds)
+   //! Sets the the left trimming to the absolute time (if that is in bounds)
    void TrimLeftTo(double to);
-   //! Sets the the right trimming to the absoulte time (if that is in bounds)
+   //! Sets the the right trimming to the absolute time (if that is in bounds)
    void TrimRightTo(double to);
 
    /*! @excsafety{No-fail} */

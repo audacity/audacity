@@ -55,7 +55,7 @@ endif()
 
 # Detect, which version of FileDialog to use for
 # We always assume that GTK is used on platforms other than Windows and macOS,
-# as there is no other implementation avalaible now
+# as there is no other implementation available now
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( wxIS_MAC on )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )

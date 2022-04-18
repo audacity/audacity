@@ -183,7 +183,7 @@ public:
 
    //FIXME: These functions do not push state to undo history
    //because attempt to do so leads to a focus lose which, in
-   //turn finilizes text editing (state is saved after text
+   //turn finalizes text editing (state is saved after text
    //editing was intentionally finished instead)
 
    bool CutSelectedText(AudacityProject& project);

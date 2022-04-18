@@ -1,5 +1,5 @@
 # ZLib is a very popular library to use.
-# Some of the dependecies do not check for the system libraries,
+# Some of the dependencies do not check for the system libraries,
 # which can be problematic.
 # We need to call find_package once again.
 if (${_OPT}use_zlib STREQUAL "system")

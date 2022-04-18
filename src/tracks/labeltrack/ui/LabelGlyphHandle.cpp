@@ -163,7 +163,7 @@ void LabelGlyphHandle::HandleGlyphClick
             // then it's an adjust.
             // In both cases the two points coalesce.
             // 
-            // NOTE: seems that it's not neccessary that hitting the both
+            // NOTE: seems that it's not necessary that hitting the both
             // left and right handles mean that we're dealing with a point, 
             // but the range will be turned into a point on click
             bool isPointLabel = hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight;

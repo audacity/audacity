@@ -3,7 +3,7 @@
  Audacity: A Digital Audio Editor
 
  @file CodeConversions.cpp
- @brief Define functions to preform UTF-8 to std::wstring conversions.
+ @brief Define functions to perform UTF-8 to std::wstring conversions.
 
  Dmitry Vedenko
  **********************************************************************/

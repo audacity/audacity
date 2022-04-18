@@ -229,7 +229,7 @@ EffectAmplify::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
       }
    }
 
-   // At this point mNewPeak is still uninitialized; this will intialize it
+   // At this point mNewPeak is still uninitialized; this will initialize it
    ClampRatio();
 
    S.AddSpace(0, 5);

@@ -294,7 +294,7 @@ void ViewInfo::WriteXMLAttributes(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("zoom"), zoom, 10);
 }
 
-//! Construct once at static intialization time to hook project file IO
+//! Construct once at static initialization time to hook project file IO
 static struct ViewInfo::ProjectFileIORegistration {
 
 ProjectFileIORegistry::AttributeReaderEntries entries {
