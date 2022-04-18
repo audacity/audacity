@@ -813,20 +813,11 @@ TranslatableString AudioUnitEffect::GetDescription() const
 EffectType AudioUnitEffect::GetType() const
 {
    if (mAudioIns == 0 && mAudioOuts == 0)
-   {
       return EffectTypeNone;
-   }
-
    if (mAudioIns == 0)
-   {
       return EffectTypeGenerate;
-   }
-
    if (mAudioOuts == 0)
-   {
       return EffectTypeAnalyze;
-   }
-
    return EffectTypeProcess;
 }
 
@@ -921,7 +912,7 @@ AudioUnitEffect::DoMakeInstance(EffectSettings &settings)
       InitializeInstance();
    else
       // Don't HAVE a master -- this IS the master.
-      LoadPreset(CurrentSettingsGroup(), settings);
+      LoadPreset(CurrentSettingsGroup(), settings); // StoreSettings?
    return std::make_shared<Instance>(*this, GetSettings(settings));
 }
 
@@ -1125,7 +1116,7 @@ bool AudioUnitEffect::ProcessInitialize(
    mOutputList =
       PackedArrayAllocateCount<AudioBufferList>(mAudioOuts)(mAudioOuts);
 
-   memset(&mTimeStamp, 0, sizeof(AudioTimeStamp));
+   mTimeStamp = {};
    mTimeStamp.mSampleTime = 0; // This is a double-precision number that should
                                // accumulate the number of frames processed so far
    mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
@@ -1219,10 +1210,8 @@ bool AudioUnitEffect::RealtimeAddProcessor(
 bool AudioUnitEffect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-   {
+   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; ++i)
       mSlaves[i]->ProcessFinalize();
-   }
    mSlaves.clear();
    return ProcessFinalize();
 });
@@ -1231,18 +1220,10 @@ return GuardedCall<bool>([&]{
 bool AudioUnitEffect::RealtimeSuspend()
 {
    if (!BypassEffect(true))
-   {
       return false;
-   }
-
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-   {
+   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; ++i)
       if (!mSlaves[i]->BypassEffect(true))
-      {
          return false;
-      }
-   }
-
    return true;
 }
 
@@ -1250,18 +1231,10 @@ bool AudioUnitEffect::RealtimeResume() noexcept
 {
 return GuardedCall<bool>([&]{
    if (!BypassEffect(false))
-   {
       return false;
-   }
-
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-   {
+   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; ++i)
       if (!mSlaves[i]->BypassEffect(false))
-      {
          return false;
-      }
-   }
-
    return true;
 });
 }
@@ -1288,12 +1261,10 @@ int AudioUnitEffect::ShowClientInterface(
 {
    // Remember the dialog with a weak pointer, but don't control its lifetime
    mDialog = &dialog;
-   if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
-   {
+   if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
       mDialog->Show();
       return 0;
    }
-
    return mDialog->ShowModal();
 }
 
@@ -1372,7 +1343,7 @@ bool AudioUnitEffect::LoadSettings(
             0, d, 0))
             success = false;
          else
-            Notify(mUnit.get(), ID);
+            Notify(mUnit.get(), ID);//
       }
       return success;
    }) && success && FetchSettings(GetSettings(settings));
@@ -1450,11 +1421,9 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
    wxPanel *container;
    {
       auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-
       wxASSERT(mParent); // To justify safenew
       container = safenew wxPanelWrapper(mParent, wxID_ANY);
       mainSizer->Add(container, 1, wxEXPAND);
-
       mParent->SetSizer(mainSizer.release());
    }
 
@@ -1468,9 +1437,7 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
    {
       auto pControl = Destroy_ptr<AUControl>(safenew AUControl);
       if (!pControl)
-      {
          return nullptr;
-      }
 
       if (!pControl->Create(container, mComponent, mUnit.get(),
          mUIType == FullValue.MSGID().GET()))
@@ -1478,7 +1445,6 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
 
       {
          auto innerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-
          innerSizer->Add((mpControl = pControl.release()), 1, wxEXPAND);
          container->SetSizer(innerSizer.release());
       }
@@ -1527,18 +1493,15 @@ bool AudioUnitEffect::CloseUI()
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(false);
 #endif
-   if (mpControl)
-   {
+   if (mpControl) {
       mParent->RemoveEventHandler(this);
-
       mpControl->Close();
       mpControl = nullptr;
    }
 #endif
 
-   mParent = NULL;
-   mDialog = NULL;
-
+   mParent = nullptr;
+   mDialog = nullptr;
    return true;
 }
 
@@ -1963,11 +1926,8 @@ OSStatus AudioUnitEffect::Render(AudioUnitRenderActionFlags *inActionFlags,
 
 // static
 OSStatus AudioUnitEffect::RenderCallback(void *inRefCon,
-                                         AudioUnitRenderActionFlags *inActionFlags,
-                                         const AudioTimeStamp *inTimeStamp,
-                                         UInt32 inBusNumber,
-                                         UInt32 inNumFrames,
-                                         AudioBufferList *ioData)
+   AudioUnitRenderActionFlags *inActionFlags, const AudioTimeStamp *inTimeStamp,
+   UInt32 inBusNumber, UInt32 inNumFrames, AudioBufferList *ioData)
 {
    return static_cast<AudioUnitEffect *>(inRefCon)->Render(inActionFlags,
       inTimeStamp, inBusNumber, inNumFrames, ioData);
@@ -1980,7 +1940,7 @@ void AudioUnitEffect::Instance::EventListener(const AudioUnitEvent *inEvent,
    if (inEvent->mEventType == kAudioUnitEvent_PropertyChange) {
       // Handle latency changes
       if (inEvent->mArgument.mProperty.mPropertyID ==
-          kAudioUnitProperty_Latency) {
+         kAudioUnitProperty_Latency) {
          // Allow change to be used
          //mLatencyDone = false;
       }
