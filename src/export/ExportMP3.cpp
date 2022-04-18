@@ -926,7 +926,7 @@ MP3Exporter::MP3Exporter()
 // We could use #defines rather than this variable.
 // The idea of the variable is that if we wanted, we could allow
 // a dynamic override of the library, e.g. with a newer faster version,
-// or to fix CVEs in the underlying librray.
+// or to fix CVEs in the underlying library.
 // for now though the 'variable' is a constant.
 #ifdef MP3_EXPORT_BUILT_IN
    mLibIsExternal = false;

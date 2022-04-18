@@ -208,7 +208,7 @@ bool EffectUIHost::TransferDataToWindow()
 {
    // Transfer-to takes const reference to settings
    return mEffectUIHost.TransferDataToWindow(mpAccess->Get()) &&
-      //! Do other apperance updates
+      //! Do other appearance updates
       mpValidator->UpdateUI() &&
       //! Do validators
       wxDialogWrapper::TransferDataToWindow();

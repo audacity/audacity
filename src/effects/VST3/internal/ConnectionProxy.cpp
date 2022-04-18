@@ -30,7 +30,7 @@ Steinberg::tresult internal::ConnectionProxy::connect (IConnectionPoint* other)
    else if(mTarget != nullptr)
       return Steinberg::kResultFalse;
 
-   //Looks a bit awkward, but the souce can send messages to
+   //Looks a bit awkward, but the source can send messages to
    //the target during connection
    mTarget = other;
    auto result = mSource->connect(this);

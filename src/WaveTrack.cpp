@@ -1070,7 +1070,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
             auto trim = src->GetPlayEndTime() - src->GetPlayStartTime();
             target->Paste(target->GetPlayStartTime(), src);
             target->SetTrimLeft(trim);
-            //Play start time needs to be ajusted after 
+            //Play start time needs to be adjusted after 
             //prepending data to the sequence
             target->Offset(-trim);
          };

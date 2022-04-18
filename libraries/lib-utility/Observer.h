@@ -100,7 +100,7 @@ private:
  Intended for single-threaded use only.
  Move-only; allows type-erased custom allocation.
 
- @tparam Message the type of mesage
+ @tparam Message the type of message
  @tparam NotifyAll if true, callback return values are ignored; else, a callback
    returning true causes earlier subscribed callbacks to be skipped
  */

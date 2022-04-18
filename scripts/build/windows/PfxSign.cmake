@@ -21,8 +21,8 @@ elseif(DEFINED ENV{WINDOWS_CERTIFICATE})
     )
 else()
     message(FATAL_ERROR [[
-        Code signing is skipped, as certifacte is missing. 
+        Code signing is skipped, as certifcate is missing. 
         Please, set the path to PFX file using -DWINDOWS_CERTIFICATE=... 
-        or set the environment variable WINDOWS_CERTIFICATE to base64 encoded PFX certifacte.
+        or set the environment variable WINDOWS_CERTIFICATE to base64 encoded PFX certifcate.
     ]])
 endif()

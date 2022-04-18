@@ -199,7 +199,7 @@ bool BrushHandle::Escape(AudacityProject *project)
    return false;
 }
 
-// Add or remove data accroding to the ctrl key press
+// Add or remove data according to the ctrl key press
 void BrushHandle::HandleHopBinData(int hopNum, int freqBinNum) {
    // Ignore the mouse dragging outside valid area
    // We should also check for the available freq. range that is visible to user

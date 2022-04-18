@@ -1047,7 +1047,7 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
 
          // Rollback transaction in case one was active.
          // If this fails (probably due to memory or disk space), the transaction will
-         // (presumably) stil be active, so further updates to the project file will
+         // (presumably) still be active, so further updates to the project file will
          // fail as well. Not really much we can do about it except tell the user.
          auto result = sqlite3_exec(db, "ROLLBACK;", nullptr, nullptr, nullptr);
 
@@ -1563,7 +1563,7 @@ void ProjectFileIO::Compact(
 
                   if (!wxRenameFile(origName, tempName))
                   {
-                     wxLogWarning(wxT("Compaction failed to rename orignal %s to temp %s"),
+                     wxLogWarning(wxT("Compaction failed to rename original %s to temp %s"),
                                   origName, tempName);
                   }
                }
@@ -1967,7 +1967,7 @@ bool ProjectFileIO::WriteDoc(const char *table,
       return false;
    }
 
-   // Finalize the statement before commiting the transaction
+   // Finalize the statement before committing the transaction
    sqlite3_finalize(stmt);
    stmt = nullptr;
 

@@ -3,7 +3,7 @@
  Audacity: A Digital Audio Editor
 
  @file CurlHandleManager.cpp
- @brief Define a class responsible for reuse of CURL hanldes.
+ @brief Define a class responsible for reuse of CURL handles.
 
  Dmitry Vedenko
  **********************************************************************/
