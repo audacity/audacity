@@ -37,6 +37,8 @@ Edward Hui
 #include "../../../images/Cursors.h"
 #include "../playabletrack/wavetrack/ui/SpectrumView.h"
 
+#include "graphics/Painter.h"
+
 #include <cmath>
 #include <wx/event.h>
 #include <iostream>
@@ -408,13 +410,16 @@ void BrushHandle::Draw(
       const wxRect &rect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassTracks ) {
-      auto& dc = context.dc;
-      wxPoint coord;
-      coord.x = mMostRecentX;
-      coord.y = mMostRecentY;
-      dc.SetBrush( *wxTRANSPARENT_BRUSH );
-      dc.SetPen( *wxYELLOW_PEN );
-      dc.DrawCircle(coord, mBrushRadius);
+      auto& painter = context.painter;
+      auto mutator = painter.GetStateMutator();
+
+      const Point coord = { float(mMostRecentX), float(mMostRecentY) };
+
+      mutator.SetBrush(Brush::NoBrush);
+      // Yellow Pen
+      mutator.SetPen(Pen(Color(255, 255, 0, 255)));
+
+      painter.DrawCircle(coord, mBrushRadius);
    }
 }
 

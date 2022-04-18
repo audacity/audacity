@@ -109,6 +109,11 @@
 #include "AllThemeResources.h"
 #include "float_cast.h"
 
+#include "graphics/WXPainterFactory.h"
+#include "graphics/Painter.h"
+#include "graphics/WXColor.h"
+#include "graphics/WXPainterUtils.h"
+
 #if wxUSE_ACCESSIBILITY
 #include "../widgets/WindowAccessible.h"
 #endif
@@ -118,7 +123,6 @@
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
 #include "Equalization48x.h"
 #endif
-
 
 enum
 {
@@ -2967,12 +2971,12 @@ END_EVENT_TABLE()
 
 EqualizationPanel::EqualizationPanel(
    wxWindow *parent, wxWindowID winid, EffectEqualization *effect)
-:  wxPanelWrapper(parent, winid)
+    : wxPanelWrapper(parent, winid)
+    , mPainter(CreatePainter(this))
 {
    mParent = parent;
    mEffect = effect;
 
-   mBitmap = NULL;
    mWidth = 0;
    mHeight = 0;
 
@@ -3013,37 +3017,29 @@ void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))
 #include "../TrackPanelDrawingContext.h"
 void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 {
-   wxPaintDC dc(this);
    if(mRecalcRequired) {
       Recalc();
       mRecalcRequired = false;
    }
+
    int width, height;
    GetSize(&width, &height);
 
-   if (!mBitmap || mWidth!=width || mHeight!=height)
-   {
-      mWidth = width;
-      mHeight = height;
-      mBitmap = std::make_unique<wxBitmap>(mWidth, mHeight,24);
-   }
+   Brush bkgndBrush(ColorFromWXColor(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
 
-   wxBrush bkgndBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
-
-   wxMemoryDC memDC;
-   memDC.SelectObject(*mBitmap);
+   auto stateMutator = mPainter->GetStateMutator();
 
    wxRect bkgndRect;
    bkgndRect.x = 0;
    bkgndRect.y = 0;
    bkgndRect.width = mWidth;
    bkgndRect.height = mHeight;
-   memDC.SetBrush(bkgndBrush);
-   memDC.SetPen(*wxTRANSPARENT_PEN);
-   memDC.DrawRectangle(bkgndRect);
+   stateMutator.SetBrush(bkgndBrush);
+   stateMutator.SetPen(Pen::NoPen);
+   mPainter->DrawRect(RectFromWXRect(bkgndRect));
 
    bkgndRect.y = mHeight;
-   memDC.DrawRectangle(bkgndRect);
+   mPainter->DrawRect(RectFromWXRect(bkgndRect));
 
    wxRect border;
    border.x = 0;
@@ -3051,29 +3047,29 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    border.width = mWidth;
    border.height = mHeight;
 
-   memDC.SetBrush(*wxWHITE_BRUSH);
-   memDC.SetPen(*wxBLACK_PEN);
-   memDC.DrawRectangle(border);
+   stateMutator.SetBrush(Colors::White);
+   stateMutator.SetPen(Colors::Black);
+   mPainter->DrawRect(RectFromWXRect(border));
 
    mEnvRect = border;
    mEnvRect.Deflate(PANELBORDER, PANELBORDER);
 
    // Pure blue x-axis line
-   memDC.SetPen(wxPen(theTheme.Colour( clrGraphLines ), 1, wxPENSTYLE_SOLID));
+   stateMutator.SetPen(ColorFromWXColor(theTheme.Colour(clrGraphLines)));
    int center = (int) (mEnvRect.height * mEffect->mdBMax/(mEffect->mdBMax-mEffect->mdBMin) + .5);
-   AColor::Line(memDC,
+   AColor::Line(*mPainter,
       mEnvRect.GetLeft(), mEnvRect.y + center,
       mEnvRect.GetRight(), mEnvRect.y + center);
 
    // Draw the grid, if asked for.  Do it now so it's underneath the main plots.
    if( mEffect->mDrawGrid )
    {
-      mEffect->mFreqRuler->ruler.DrawGrid(memDC, mEnvRect.height, true, true, PANELBORDER, PANELBORDER);
-      mEffect->mdBRuler->ruler.DrawGrid(memDC, mEnvRect.width, true, true, PANELBORDER, PANELBORDER);
+      mEffect->mFreqRuler->ruler.DrawGrid(*mPainter, mEnvRect.height, true, true, PANELBORDER, PANELBORDER);
+      mEffect->mdBRuler->ruler.DrawGrid(*mPainter, mEnvRect.width, true, true, PANELBORDER, PANELBORDER);
    }
 
    // Med-blue envelope line
-   memDC.SetPen(wxPen(theTheme.Colour(clrGraphLines), 3, wxPENSTYLE_SOLID));
+   stateMutator.SetPen(Pen(ColorFromWXColor(theTheme.Colour(clrGraphLines)), 3));
 
    // Draw envelope
    int x, y, xlast = 0, ylast = 0;
@@ -3097,7 +3093,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
          }
          if ((i != 0) & (!off1))
          {
-            AColor::Line(memDC, xlast, ylast,
+            AColor::Line(*mPainter, xlast, ylast,
                x, mEnvRect.y + y);
          }
          off1 = off;
@@ -3108,7 +3104,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 
    //Now draw the actual response that you will get.
    //mFilterFunc has a linear scale, window has a log one so we have to fiddle about
-   memDC.SetPen(wxPen(theTheme.Colour( clrResponseLines ), 1, wxPENSTYLE_SOLID));
+   stateMutator.SetPen(ColorFromWXColor(theTheme.Colour(clrResponseLines)));
    double scale = (double)mEnvRect.height/(mEffect->mdBMax-mEffect->mdBMin);   //pixels per dB
    double yF;   //gain at this freq
    double delta = mEffect->mHiFreq / (((double)mEffect->mWindowSize / 2.));   //size of each freq bin
@@ -3169,13 +3165,13 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
 
       if (i != 0)
       {
-         AColor::Line(memDC, xlast, ylast, x, mEnvRect.y + y);
+         AColor::Line(*mPainter, xlast, ylast, x, mEnvRect.y + y);
       }
       xlast = x;
       ylast = mEnvRect.y + y;
    }
 
-   memDC.SetPen(*wxBLACK_PEN);
+   stateMutator.SetPen(Colors::Black);
    if( mEffect->mDrawMode )
    {
       ZoomInfo zoomInfo( 0.0, mEnvRect.width-1 );
@@ -3185,13 +3181,15 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
       TrackArtist artist( nullptr );
 
       artist.pZoomInfo = &zoomInfo;
-      TrackPanelDrawingContext context{ memDC, {}, {}, &artist  };
+
+      wxMemoryDC tempDc;
+      TrackPanelDrawingContext context { tempDc, *mPainter, {}, {}, &artist };
       EnvelopeEditor::DrawPoints( *mEffect->mEnvelope,
          context, mEnvRect, false, 0.0,
       mEffect->mdBMin, mEffect->mdBMax, false);
    }
 
-   dc.Blit(0, 0, mWidth, mHeight, &memDC, 0, 0, wxCOPY, FALSE);
+   mPainter->Flush();
 }
 
 void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)

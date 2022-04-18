@@ -23,12 +23,15 @@
 #include "TrackPanelDrawingContext.h"
 #include "ViewInfo.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+
 namespace {
-void DrawPoint(wxDC & dc, const wxRect & r, int x, int y, bool top)
+void DrawPoint(Painter& painter, const wxRect& r, int x, int y, bool top)
 {
    if (y >= 0 && y <= r.height) {
       wxRect circle(r.x + x, r.y + (top ? y - 1: y - 2), 4, 4);
-      dc.DrawEllipse(circle);
+      painter.DrawEllipse(circle.x, circle.y, circle.width, circle.height);
    }
 }
 }
@@ -38,7 +41,9 @@ void EnvelopeEditor::DrawPoints(const Envelope &env,
  bool dB, double dBRange,
  float zoomMin, float zoomMax, bool mirrored, int origin)
 {
-   auto &dc = context.dc;
+   auto &painter = context.painter;
+   auto painterStateMutator = painter.GetStateMutator();
+
    const auto artist = TrackArtist::Get( context );
    const auto &zoomInfo = *artist->pZoomInfo;
 
@@ -47,9 +52,11 @@ void EnvelopeEditor::DrawPoints(const Envelope &env,
    auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
    highlight = target && target->GetEnvelope() == this;
 #endif
-   wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
-   dc.SetPen( pen );
-   dc.SetBrush(*wxWHITE_BRUSH);
+   const auto pen = PenFromWXPen(highlight ? AColor::uglyPen : AColor::envelopePen);
+   const auto envelopeBrush = BrushFromWXBrush(AColor::envelopeBrush);
+
+   painterStateMutator.SetPen(pen);
+   painterStateMutator.SetBrush(Brush(Colors::White));
 
    for (int i = 0; i < (int)env.GetNumberOfPoints(); i++) {
       const double time = env[i].GetT() + env.GetOffset();
@@ -57,8 +64,8 @@ void EnvelopeEditor::DrawPoints(const Envelope &env,
       if (position >= 0 && position < r.width) {
          // Change colour if this is the draggable point...
          if (i == env.GetDragPoint()) {
-            dc.SetPen( pen );
-            dc.SetBrush(AColor::envelopeBrush);
+            painterStateMutator.SetPen( pen );
+            painterStateMutator.SetBrush(envelopeBrush);
          }
 
          double v = env[i].GetVal();
@@ -68,7 +75,7 @@ void EnvelopeEditor::DrawPoints(const Envelope &env,
          y = GetWaveYPos(v, zoomMin, zoomMax, r.height, dB,
             true, dBRange, false);
          if (!mirrored) {
-            DrawPoint(dc, r, x, y, true);
+            DrawPoint(painter, r, x, y, true);
          }
          else {
             y2 = GetWaveYPos(-v-.000000001, zoomMin, zoomMax, r.height, dB,
@@ -83,8 +90,8 @@ void EnvelopeEditor::DrawPoints(const Envelope &env,
                y2 = value + 4;
             }
 
-            DrawPoint(dc, r, x, y, true);
-            DrawPoint(dc, r, x, y2, false);
+            DrawPoint(painter, r, x, y, true);
+            DrawPoint(painter, r, x, y2, false);
 
             // Contour
             y = GetWaveYPos(v, zoomMin, zoomMax, r.height, dB,
@@ -92,15 +99,15 @@ void EnvelopeEditor::DrawPoints(const Envelope &env,
             y2 = GetWaveYPos(-v-.000000001, zoomMin, zoomMax, r.height, dB,
                false, dBRange, false);
             if (y <= y2) {
-               DrawPoint(dc, r, x, y, true);
-               DrawPoint(dc, r, x, y2, false);
+               DrawPoint(painter, r, x, y, true);
+               DrawPoint(painter, r, x, y2, false);
             }
          }
 
          // Change colour back again if was the draggable point.
          if (i == env.GetDragPoint()) {
-            dc.SetPen( pen );
-            dc.SetBrush(*wxWHITE_BRUSH);
+            painterStateMutator.SetPen(pen);
+            painterStateMutator.SetBrush(Brush(Colors::White));
          }
       }
    }

@@ -65,6 +65,12 @@ or ASlider.
 
 #include "AllThemeResources.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+#include "graphics/WXPainterFactory.h"
+#include "graphics/WXColor.h"
+#include "CodeConversions.h"
+
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
 
@@ -671,12 +677,12 @@ void LWSlider::AdjustSize(const wxSize & sz)
    Refresh();
 }
 
-void LWSlider::OnPaint(wxDC &dc, bool highlight)
+void LWSlider::OnPaint(Painter &painter, bool highlight)
 {
    // The dc will be a paint DC
    if (!mBitmap || !mThumbBitmap || !mThumbBitmapHilited)
    {
-      DrawToBitmap(dc);
+      DrawToBitmap(painter);
    }
 
    //thumbPos should be in pixels
@@ -694,21 +700,22 @@ void LWSlider::OnPaint(wxDC &dc, bool highlight)
    // Draw the background.
    // If we are lightweight, this has already been done for us.
    if( mHW ){
-      dc.SetBackground( *wxTRANSPARENT_BRUSH );
-      dc.Clear();
+      painter.Clear();
    }
 
-   dc.DrawBitmap(*mBitmap, mLeft, mTop, true);
+   painter.DrawImage(*mBitmap, mLeft, mTop);
    const auto &thumbBitmap =
       highlight ? *mThumbBitmapHilited : *mThumbBitmap;
    if (mOrientation == wxHORIZONTAL)
    {
-      dc.DrawBitmap(thumbBitmap, mLeft+thumbPos, mTop+thumbOrtho, true);
+      painter.DrawImage(
+         thumbBitmap, mLeft + thumbPos, mTop + thumbOrtho);
    }
    else
    {
       // TODO: Don't use pixel-count hack in positioning.  
-      dc.DrawBitmap(thumbBitmap, mLeft+thumbOrtho-5, mTop+thumbPos, true);
+      painter.DrawImage(
+         thumbBitmap, mLeft + thumbOrtho - 5, mTop + thumbPos);
    }
 
    if (mTipPanel)
@@ -726,46 +733,43 @@ void LWSlider::OnSize( wxSizeEvent & event )
 
 // This function only uses the paintDC to determine what kind of bitmap
 // to draw to and nothing else.  It does not draw to the paintDC.
-void LWSlider::DrawToBitmap(wxDC & paintDC)
+void LWSlider::DrawToBitmap(Painter & painter)
 {
    // Get correctly oriented thumb.
    if (mOrientation == wxVERTICAL){
-      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbRotated )));
-      mThumbBitmapHilited = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbRotatedHilited )));
+      mThumbBitmap = &theTheme.GetPainterImage(painter, bmpSliderThumbRotated);
+      mThumbBitmapHilited =
+         &theTheme.GetPainterImage(painter, bmpSliderThumbRotatedHilited);
    }
    else {
-      mThumbBitmap = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumb )));
-      mThumbBitmapHilited = std::make_unique<wxBitmap>(wxBitmap( theTheme.Bitmap( bmpSliderThumbHilited )));
+      mThumbBitmap = &theTheme.GetPainterImage(painter, bmpSliderThumb);
+      mThumbBitmapHilited =
+         &theTheme.GetPainterImage(painter, bmpSliderThumbHilited);
    }
 
    // Now the background bitmap
-   mBitmap = std::make_unique<wxBitmap>();
-   mBitmap->Create(mWidth, mHeight, paintDC);
-
-#if defined(__WXMAC__)
-   mBitmap->UseAlpha();
-#endif
+   mBitmap =
+      painter.CreateDeviceImage(PainterImageFormat::RGBA8888, mWidth, mHeight);
 
    // Set up the memory DC
    // We draw to it, not the paintDC.
-   wxMemoryDC dc;
-   dc.SelectObject(*mBitmap);
+   auto offscreenHolder = painter.PaintOn(*mBitmap);
+   auto stateMutator = painter.GetStateMutator();
 
-   dc.SetBackground(wxBrush(mParent->GetBackgroundColour()));
-   dc.Clear();
+   painter.Clear(ColorFromWXColor(mParent->GetBackgroundColour()));
 
    // Draw the line along which the thumb moves.
-   AColor::UseThemeColour(&dc, clrSliderMain );
+   AColor::UseThemeColour(stateMutator, clrSliderMain );
 
    if (mOrientation == wxHORIZONTAL)
    {
-      AColor::Line(dc, mLeftX, mCenterY, mRightX+2, mCenterY);
-      AColor::Line(dc, mLeftX, mCenterY+1, mRightX+2, mCenterY+1);
+      AColor::Line(painter, mLeftX, mCenterY, mRightX + 2, mCenterY);
+      AColor::Line(painter, mLeftX, mCenterY + 1, mRightX + 2, mCenterY + 1);
    }
    else 
    {
-      AColor::Line(dc, mCenterX, mTopY, mCenterX, mBottomY+2);
-      AColor::Line(dc, mCenterX+1, mTopY, mCenterX+1, mBottomY+2);
+      AColor::Line(painter, mCenterX, mTopY, mCenterX, mBottomY + 2);
+      AColor::Line(painter, mCenterX + 1, mTopY, mCenterX + 1, mBottomY + 2);
    }
 
    // Draw +/- or L/R first.  We need to draw these before the tick marks.
@@ -776,28 +780,31 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
       // sliderFontSize is for the tooltip.
       // we need something smaller here...
       wxFont labelFont(7, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-      dc.SetFont(labelFont);
+      stateMutator.SetFont(FontFromWXFont(painter, labelFont));
 
       // Color
-      dc.SetTextForeground( theTheme.Colour( clrTrackPanelText ));
+      stateMutator.SetBrush(
+         ColorFromWXColor(theTheme.Colour(clrTrackPanelText)));
 
       /* i18n-hint: One-letter abbreviation for Left, in the Pan slider */
-      dc.DrawText(_("L"), mLeftX, 0);
+      painter.DrawText(mLeftX, 0, audacity::ToUTF8(_("L")));
 
       /* i18n-hint: One-letter abbreviation for Right, in the Pan slider */
-      dc.DrawText(_("R"), mRightX - dc.GetTextExtent(_("R")).GetWidth(), 0);
+      painter.DrawText(
+         mRightX - painter.GetTextSize(audacity::ToUTF8(_("R"))).width, 0,
+         audacity::ToUTF8(_("R")));
    }
    else
    {
       // draw the '-' and the '+'
       // These are drawn with lines, rather tha nwith a font.
-      AColor::UseThemeColour(&dc, clrTrackPanelText );
+      AColor::UseThemeColour(stateMutator, clrTrackPanelText );
 
       if (mOrientation == wxHORIZONTAL)
       {
-         AColor::Line(dc, mLeftX, mCenterY-10, mLeftX+4, mCenterY-10);
-         AColor::Line(dc, mRightX-5, mCenterY-10, mRightX-1, mCenterY-10);
-         AColor::Line(dc, mRightX-3, mCenterY-12, mRightX-3, mCenterY-8);
+         AColor::Line(painter, mLeftX, mCenterY-10, mLeftX+4, mCenterY-10);
+         AColor::Line(painter, mRightX-5, mCenterY-10, mRightX-1, mCenterY-10);
+         AColor::Line(painter, mRightX-3, mCenterY-12, mRightX-3, mCenterY-8);
       }
       else
       {
@@ -806,9 +813,9 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
          // Draw '+' and '-' only for other vertical sliders.
          if (mStyle != DB_SLIDER)
          {
-            AColor::Line(dc, mCenterX-12, mBottomY-3,  mCenterX-8, mBottomY-3);
-            AColor::Line(dc, mCenterX-12, mTopY+3,     mCenterX-8, mTopY+3);
-            AColor::Line(dc, mCenterX-10, mTopY,       mCenterX-10, mTopY+5);
+            AColor::Line(painter, mCenterX-12, mBottomY-3,  mCenterX-8, mBottomY-3);
+            AColor::Line(painter, mCenterX-12, mTopY+3,     mCenterX-8, mTopY+3);
+            AColor::Line(painter, mCenterX-10, mTopY,       mCenterX-10, mTopY+5);
          }
       }
    }
@@ -843,41 +850,31 @@ void LWSlider::DrawToBitmap(wxDC & paintDC)
          {
             int_d = (int)d;
             int tickLength = ((int_d == 0) || (int_d == divs)) ? 5: 3; // longer ticks at extremes
-            AColor::UseThemeColour(&dc, clrSliderLight );
+            AColor::UseThemeColour(stateMutator, clrSliderLight );
 
             if (mOrientation == wxHORIZONTAL)
             {
-               AColor::Line(dc, mLeftX+p, mCenterY-tickLength, mLeftX+p, mCenterY-1); // ticks above
+               AColor::Line(painter, mLeftX+p, mCenterY-tickLength, mLeftX+p, mCenterY-1); // ticks above
             }
             else
             {
-               AColor::Line(dc, mCenterX-tickLength, mTopY+p, mCenterX-1, mTopY+p); // ticks at left
+               AColor::Line(painter, mCenterX-tickLength, mTopY+p, mCenterX-1, mTopY+p); // ticks at left
             }
 
-            AColor::UseThemeColour(&dc, clrSliderDark );
+            AColor::UseThemeColour(stateMutator, clrSliderDark );
 
             if (mOrientation == wxHORIZONTAL)
             {
-               AColor::Line(dc, mLeftX+p+1, mCenterY-tickLength+1, mLeftX+p+1, mCenterY-1); // ticks above
+               AColor::Line(painter, mLeftX+p+1, mCenterY-tickLength+1, mLeftX+p+1, mCenterY-1); // ticks above
             }
             else
             {
-               AColor::Line(dc, mCenterX-tickLength+1, mTopY+p+1, mCenterX-1, mTopY+p+1); // ticks at left
+               AColor::Line(painter, mCenterX-tickLength+1, mTopY+p+1, mCenterX-1, mTopY+p+1); // ticks at left
             }
          }
          d += upp;
       }
 #endif
-   }
-
-   dc.SelectObject(wxNullBitmap);
-
-   // safenew, because SetMask takes ownership
-   // We always mask.  If we are HeavyWeight, the ASlider draws the
-   // background.
-   if( !mHW )
-   {
-      mBitmap->SetMask(safenew wxMask(*mBitmap, dc.GetBackground().GetColour()));
    }
 }
 
@@ -1534,8 +1531,9 @@ void LWSlider::Refresh()
 void LWSlider::Redraw()
 {
    mBitmap.reset();
-   mThumbBitmap.reset();
-   mThumbBitmapHilited.reset();
+
+   mThumbBitmap = {};
+   mThumbBitmapHilited = {};
 
    Refresh();
 }
@@ -1549,8 +1547,8 @@ void LWSlider::SetEnabled(bool enabled)
 {
    mEnabled = enabled;
 
-   mThumbBitmap.reset();
-   mThumbBitmapHilited.reset();
+   mThumbBitmap = {};
+   mThumbBitmapHilited = {};
 
    Refresh();
 }
@@ -1582,13 +1580,11 @@ BEGIN_EVENT_TABLE(ASlider, wxPanel)
    EVT_TIMER(wxID_ANY, ASlider::OnTimer)
 END_EVENT_TABLE()
 
-ASlider::ASlider( wxWindow * parent,
-                  wxWindowID id,
-                  const TranslatableString &name,
-                  const wxPoint & pos,
-                  const wxSize & size,
-                  const Options &options)
-: wxPanel( parent, id, pos, size, wxWANTS_CHARS )
+ASlider::ASlider(
+   wxWindow* parent, wxWindowID id, const TranslatableString& name,
+   const wxPoint& pos, const wxSize& size, const Options& options)
+    : wxPanel(parent, id, pos, size, wxWANTS_CHARS)
+    , mPainter(CreatePainter(this))
 {
    //wxColour Col(parent->GetBackgroundColour());
    //SetBackgroundColour( Col );
@@ -1664,13 +1660,11 @@ void ASlider::OnErase(wxEraseEvent & WXUNUSED(event))
 
 void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
-   wxBufferedPaintDC dc(this);
-
    bool highlighted =
       GetClientRect().Contains(
          ScreenToClient(
             ::wxGetMousePosition() ) );
-   mLWSlider->OnPaint(dc, highlighted);
+   mLWSlider->OnPaint(*mPainter, highlighted);
 
    if ( mSliderIsFocused )
    {
@@ -1678,7 +1672,7 @@ void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
 
       r.Deflate( 1, 1 );
 
-      AColor::DrawFocus( dc, r );
+      AColor::DrawFocus( *mPainter, r );
    }
 }
 

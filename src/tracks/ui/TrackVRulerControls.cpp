@@ -23,6 +23,9 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/dc.h>
 #include <wx/translation.h>
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+
 TrackVRulerControls::TrackVRulerControls(
    const std::shared_ptr<TrackView> &pTrackView )
   : mwTrackView{ pTrackView }
@@ -63,10 +66,11 @@ void TrackVRulerControls::DrawZooming
 {
    // Draw a dashed rectangle, its right side disappearing in the black right
    // border of the track area, which is not part of this cell but right of it.
-   auto &dc = context.dc;
+   auto &painter = context.painter;
+   auto stateMutator = painter.GetStateMutator();
 
-   dc.SetBrush(*wxTRANSPARENT_BRUSH);
-   dc.SetPen(*wxBLACK_DASHED_PEN);
+   stateMutator.SetBrush(Brush::NoBrush);
+   stateMutator.SetPen(PenFromWXPen(*wxBLACK_DASHED_PEN));
 
    wxRect rect {
       rect_.x,
@@ -75,7 +79,7 @@ void TrackVRulerControls::DrawZooming
       1 + abs( zoomEnd - zoomStart)
    };
 
-   dc.DrawRectangle(rect);
+   painter.DrawRect(RectFromWXRect(rect));
 }
 
 wxRect TrackVRulerControls::ZoomingArea(
@@ -103,19 +107,19 @@ void TrackVRulerControls::Draw(
       auto rect = rect_;
       --rect.width;
       
-      auto dc = &context.dc;
-      
+      auto& painter = context.painter;
+      auto stateMutator = painter.GetStateMutator();
       
       // Paint the background
       auto pTrack = FindTrack();
-      AColor::MediumTrackInfo(dc, pTrack && pTrack->GetSelected() );
-      dc->DrawRectangle( rect );
+      AColor::MediumTrackInfo(stateMutator, pTrack && pTrack->GetSelected());
+      painter.DrawRect( RectFromWXRect( rect ) );
       
       // Stroke the left border
-      dc->SetPen(*wxBLACK_PEN);
+      stateMutator.SetPen(Colors::Black);
       {
          const auto left = rect.GetLeft();
-         AColor::Line( *dc, left, rect.GetTop(), left, rect.GetBottom() );
+         AColor::Line( painter, left, rect.GetTop(), left, rect.GetBottom() );
       }
    }
 }

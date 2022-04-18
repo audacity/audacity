@@ -30,6 +30,10 @@ It is also a place to document colour usage policy in Audacity
 #include "AllThemeResources.h"
 #include "Theme.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+#include "graphics/WXColor.h"
+
 bool AColor::inited = false;
 wxBrush AColor::lightBrush[2];
 wxBrush AColor::mediumBrush[2];
@@ -133,6 +137,69 @@ namespace
       dc.StretchBlit(x0, y2, xw0, yh2, &memDC, u0, v2, uw0, vh2, wxCOPY, true);
       dc.StretchBlit(x1, y2, xw1, yh2, &memDC, u1, v2, uw1, vh2, wxCOPY, true);
       dc.StretchBlit(x2, y2, xw2, yh2, &memDC, u2, v2, uw2, vh2, wxCOPY, true);
+   }
+
+   void DrawNinePatch(Painter& painter, int bitmapIndex, const wxRect& r)
+   {
+      const auto& bitmap = theTheme.GetPainterImage(painter, bitmapIndex);
+
+      // image slices
+
+      const auto uw0 = bitmap.GetWidth() / 2;
+      const auto uw1 = 1;
+      const auto uw2 = bitmap.GetWidth() - uw0 - uw1;
+
+      const auto vh0 = bitmap.GetHeight() / 2;
+      const auto vh1 = 1;
+      const auto vh2 = bitmap.GetHeight() - vh1 - vh0;
+
+      const auto u0 = 0;
+      const auto u1 = uw0;
+      const auto u2 = uw0 + uw1;
+
+      const auto v0 = 0;
+      const auto v1 = vh0;
+      const auto v2 = vh0 + vh1;
+
+      // Button geometry
+
+      const auto xw0 = std::min<uint32_t>(uw0, r.width / 2);
+      const auto xw2 = std::min<uint32_t>(uw2, r.width / 2);
+      const auto xw1 = r.width - xw0 - xw2;
+
+      const auto yh0 = std::min<uint32_t>(vh0, r.height / 2);
+      const auto yh2 = std::min<uint32_t>(vh2, r.height / 2);
+      const auto yh1 = r.height - yh0 - yh2;
+
+      const auto x0 = r.x;
+      const auto x1 = r.x + xw0;
+      const auto x2 = r.x + xw0 + xw1;
+
+      const auto y0 = r.y;
+      const auto y1 = r.y + yh0;
+      const auto y2 = r.y + yh0 + yh1;
+
+      const PainterImage* images[] = {
+         &theTheme.GetPainterImage(painter, bitmapIndex, u0, v0, uw0, vh0),
+         &theTheme.GetPainterImage(painter, bitmapIndex, u1, v0, uw1, vh0),
+         &theTheme.GetPainterImage(painter, bitmapIndex, u2, v0, uw2, vh0),
+         &theTheme.GetPainterImage(painter, bitmapIndex, u0, v1, uw0, vh1),
+         &theTheme.GetPainterImage(painter, bitmapIndex, u1, v1, uw1, vh1),
+         &theTheme.GetPainterImage(painter, bitmapIndex, u2, v1, uw2, vh1),
+         &theTheme.GetPainterImage(painter, bitmapIndex, u0, v2, uw0, vh2),
+         &theTheme.GetPainterImage(painter, bitmapIndex, u1, v2, uw1, vh2),
+         &theTheme.GetPainterImage(painter, bitmapIndex, u2, v2, uw2, vh2),
+      };
+
+      painter.DrawImage(*images[0], x0, y0, xw0, yh0);
+      painter.DrawImage(*images[1], x1, y0, xw1, yh0);
+      painter.DrawImage(*images[2], x2, y0, xw2, yh0);
+      painter.DrawImage(*images[3], x0, y1, xw0, yh1);
+      painter.DrawImage(*images[4], x1, y1, xw1, yh1);
+      painter.DrawImage(*images[5], x2, y1, xw2, yh1);
+      painter.DrawImage(*images[6], x0, y2, xw0, yh2);
+      painter.DrawImage(*images[7], x1, y2, xw1, yh2);
+      painter.DrawImage(*images[8], x2, y2, xw2, yh2);
    }
 
    int GetButtonImageIndex(bool up, bool selected, bool highlight)
@@ -469,10 +536,302 @@ void AColor::SnapGuidePen(wxDC * dc)
    dc->SetPen(snapGuidePen);
 }
 
+void AColor::Arrow(Painter& painter, wxCoord x, wxCoord y, int width, bool down)
+{
+   if (width & 0x01)
+   {
+      width--;
+   }
+
+   Point pt[3];
+   int half = width / 2;
+
+   if (down)
+   {
+      pt[0].x = x;
+      pt[0].y = y;
+      pt[1].x = x + width;
+      pt[1].y = y;
+      pt[2].x = x + half;
+      pt[2].y = y + half;
+   }
+   else
+   {
+      pt[0].x = x;
+      pt[0].y = y + half;
+      pt[1].x = y + half;
+      pt[1].y = y;
+      pt[2].x = x + width;
+      pt[2].y = y + half;
+   }
+
+   painter.DrawPolygon(pt, 3);
+}
+
+void AColor::Line(Painter& painter, wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2)
+{
+   painter.DrawLine(x1, y1, x2, y2);
+}
+
+void AColor::Lines(Painter& painter, size_t nPoints, const Point points[])
+{
+   painter.DrawLines(points, nPoints);
+}
+
+void AColor::DrawFocus(Painter& painter, wxRect& rect)
+{
+   // draw the pixels manually: note that to behave in the same manner as
+   // DrawRect(), we must exclude the bottom and right borders from the
+   // rectangle
+   wxCoord x1 = rect.GetLeft(), y1 = rect.GetTop(), x2 = rect.GetRight(),
+           y2 = rect.GetBottom();
+
+   auto mutator = painter.GetStateMutator();
+
+   UseThemeColour(mutator, -1, clrTrackPanelText);
+
+   auto stateMutator = painter.GetStateMutator();
+
+   auto pen = stateMutator.GetPen();
+   pen.SetStyle(PenStyle::Dot);
+   stateMutator.SetPen(pen);
+
+   painter.DrawRect(x1, y1, x2, y2);
+}
+
+void AColor::Bevel(Painter& painter, bool up, const wxRect& r)
+{
+   auto mutator = painter.GetStateMutator();
+
+   if (up)
+      AColor::Light(mutator, false);
+   else
+      AColor::Dark(mutator, false);
+
+   AColor::Line(painter, r.x, r.y, r.x + r.width, r.y);
+   AColor::Line(painter, r.x, r.y, r.x, r.y + r.height);
+
+   if (!up)
+      AColor::Light(mutator, false);
+   else
+      AColor::Dark(mutator, false);
+
+   AColor::Line(painter, r.x + r.width, r.y, r.x + r.width, r.y + r.height);
+   AColor::Line(painter, r.x, r.y + r.height, r.x + r.width, r.y + r.height);
+}
+
+void AColor::Bevel2(
+   Painter& painter, bool up, const wxRect& r, bool bSel, bool bHighlight)
+{
+   const auto bitmatIndex = GetButtonImageIndex(up, bSel, bHighlight);
+
+   const auto& fullImage = theTheme.GetPainterImage(painter, bitmatIndex);
+
+   int h = std::min<int>(r.height, fullImage.GetHeight());
+   int r2 = r.width - r.width / 2;
+
+   const auto& leftImage =
+      theTheme.GetPainterImage(painter, bitmatIndex, 0, 0, r.width / 2, h);
+
+   const auto& rightImage = theTheme.GetPainterImage(
+      painter, bitmatIndex, fullImage.GetWidth() - r2, 0, r2, h);
+
+   painter.DrawImage(leftImage, r.x, r.y, r.width / 2, h);
+   painter.DrawImage(rightImage, r.x + r.width / 2, r.y, r2, h);
+}
+
+void AColor::ButtonStretch(
+   Painter& painter, bool up, const wxRect& r, bool selected, bool highlight)
+{
+   DrawNinePatch(painter, GetButtonImageIndex(up, selected, highlight), r);
+}
+
+void AColor::BevelTrackInfo(
+   Painter& painter, bool up, const wxRect& r, bool highlight)
+{
+#ifndef EXPERIMENTAL_THEMING
+   Bevel(dc, up, r);
+#else
+   // Note that the actually drawn rectangle extends one pixel right of and
+   // below the given
+
+   auto mutator = painter.GetStateMutator();
+
+   wxColour col;
+   col = Blend(
+      theTheme.Colour(clrTrackInfo),
+      up ? wxColour(255, 255, 255) : wxColour(0, 0, 0));
+
+   Pen pen = PenFromWXPen(highlight ? uglyPen : col);
+   mutator.SetPen(pen);
+
+   painter.DrawLine(r.x, r.y, r.x + r.width, r.y);
+   painter.DrawLine(r.x, r.y, r.x, r.y + r.height);
+
+   col = Blend(
+      theTheme.Colour(clrTrackInfo),
+      up ? wxColour(0, 0, 0) : wxColour(255, 255, 255));
+
+   pen.SetColor(ColorFromWXColor(col));
+   mutator.SetPen(highlight ? PenFromWXPen(uglyPen) : pen);
+
+   painter.DrawLine(r.x + r.width, r.y, r.x + r.width, r.y + r.height);
+   painter.DrawLine(r.x, r.y + r.height, r.x + r.width, r.y + r.height);
+#endif
+}
+
+void AColor::UseThemeColour(PainterStateMutator& mutator, int iBrush, int iPen, int alpha)
+{
+   if (!inited)
+      Init();
+
+   if ((iBrush == -1) && (iPen == -1))
+      return;
+
+   Color col = Colors::Black;
+
+   if (iBrush != -1)
+   {
+      col = ColorFromWXColor(theTheme.Colour(iBrush)).WithAlpha(alpha);
+      mutator.SetBrush(Brush(col));
+   }
+
+   if (iPen != -1)
+      col = ColorFromWXColor(theTheme.Colour(iPen));
+
+   mutator.SetPen(Pen(col));
+}
+
+void AColor::TrackPanelBackground(PainterStateMutator& mutator, bool selected)
+{
+#ifdef EXPERIMENTAL_THEMING
+   UseThemeColour(mutator, selected ? clrMediumSelected : clrTrackBackground);
+#else
+   Dark(mutator, selected);
+#endif
+}
+
+void AColor::Light(PainterStateMutator& mutator, bool selected, bool highlight)
+{
+   if (!inited)
+      Init();
+
+      int index = (int)selected;
+   const auto brush = BrushFromWXBrush(highlight ? AColor::uglyBrush : lightBrush[index]);
+   mutator.SetBrush(brush);
+   const auto pen = PenFromWXPen(highlight ? AColor::uglyPen : lightPen[index]);
+   mutator.SetPen(pen);
+}
+
+void AColor::Medium(PainterStateMutator& mutator, bool selected)
+{
+   if (!inited)
+      Init();
+
+   int index = (int)selected;
+
+   mutator.SetBrush(BrushFromWXBrush(mediumBrush[index]));
+   mutator.SetPen(PenFromWXPen(mediumPen[index]));
+}
+
+void AColor::MediumTrackInfo(PainterStateMutator& mutator, bool selected)
+{
+#ifdef EXPERIMENTAL_THEMING
+   UseThemeColour(mutator, selected ? clrTrackInfoSelected : clrTrackInfo);
+#else
+   Medium(mutator, selected);
+#endif
+}
+
+void AColor::Dark(PainterStateMutator& mutator, bool selected, bool highlight)
+{
+   if (!inited)
+      Init();
+
+      int index = (int)selected;
+   auto& brush = highlight ? AColor::uglyBrush : darkBrush[index];
+   mutator.SetBrush(BrushFromWXBrush(brush));
+   auto& pen = highlight ? AColor::uglyPen : darkPen[index];
+   mutator.SetPen(PenFromWXPen(pen));
+}
+
+void AColor::CursorColor(PainterStateMutator& mutator)
+{
+   if (!inited)
+      Init();
+
+   mutator.SetPen(PenFromWXPen(cursorPen));
+}
+
+void AColor::IndicatorColor(PainterStateMutator& mutator, bool bIsNotRecording)
+{
+   if (!inited)
+      Init();
+
+   int index = (int)bIsNotRecording;
+   mutator.SetPen(PenFromWXPen(indicatorPen[index]));
+   mutator.SetBrush(BrushFromWXBrush(indicatorBrush[index]));
+}
+
+void AColor::Mute(
+   PainterStateMutator& mutator, bool on, bool selected, bool soloing)
+{
+   if (!inited)
+      Init();
+
+   int index = (int)selected;
+
+   if (on)
+   {
+      mutator.SetPen(PenFromWXPen(*wxBLACK_PEN));
+      mutator.SetBrush(BrushFromWXBrush(muteBrush[(int)soloing]));
+   }
+   else
+   {
+      mutator.SetPen(PenFromWXPen(*wxTRANSPARENT_PEN));
+      mutator.SetBrush(BrushFromWXBrush(mediumBrush[index]));
+   }
+}
+
+void AColor::Solo(PainterStateMutator& mutator, bool on, bool selected)
+{
+   if (!inited)
+      Init();
+
+      int index = (int)selected;
+   if (on)
+   {
+      mutator.SetPen(PenFromWXPen(*wxBLACK_PEN));
+      mutator.SetBrush(BrushFromWXBrush(soloBrush));
+   }
+   else
+   {
+      mutator.SetPen(PenFromWXPen(*wxTRANSPARENT_PEN));
+      mutator.SetBrush(BrushFromWXBrush(mediumBrush[index]));
+   }
+}
+
+void AColor::TrackFocusPen(PainterStateMutator& mutator, int level)
+{
+   if (!inited)
+      Init();
+
+   mutator.SetPen(PenFromWXPen(trackFocusPens[level]));
+}
+
+void AColor::SnapGuidePen(PainterStateMutator& mutator)
+{
+   if (!inited)
+      Init();
+
+   mutator.SetPen(PenFromWXPen(snapGuidePen));
+}
+
 void AColor::Mute(wxDC * dc, bool on, bool selected, bool soloing)
 {
    if (!inited)
       Init();
+
    int index = (int) selected;
    if (on) {
       dc->SetPen(*wxBLACK_PEN);
@@ -692,6 +1051,59 @@ void AColor::DarkMIDIChannel(wxDC * dc, int channel /* 1 - 16 */ )
 }
 
 
+void AColor::MIDIChannel(PainterStateMutator& mutator, int channel)
+{
+   if (channel >= 1 && channel <= 16)
+   {
+      const int* colors = AColor_midicolors[channel - 1];
+
+      mutator.SetPen(Pen(Color(colors[0], colors[1], colors[2], 255), 1));
+      mutator.SetBrush(Brush(Color(colors[0], colors[1], colors[2], 255)));
+   }
+   else
+   {
+      mutator.SetPen(Pen(Color(153, 153, 153, 255), 1));
+      mutator.SetBrush(Brush(Color(153, 153, 153, 255)));
+   }
+}
+
+void AColor::LightMIDIChannel(PainterStateMutator& mutator, int channel)
+{
+   if (channel >= 1 && channel <= 16)
+   {
+      const int* colors = AColor_midicolors[channel - 1];
+
+      mutator.SetPen(Pen(
+         Color(
+            127 + colors[0] / 2, 127 + colors[1] / 2, 127 + colors[2] / 2, 255),
+         1));
+      mutator.SetBrush(Brush(Color(
+         127 + colors[0] / 2, 127 + colors[1] / 2, 127 + colors[2] / 2, 255)));
+   }
+   else
+   {
+      mutator.SetPen(Pen(Color(204, 204, 204, 255), 1));
+      mutator.SetBrush(Brush(Color(204, 204, 204, 255)));
+   }
+}
+
+void AColor::DarkMIDIChannel(PainterStateMutator& mutator, int channel)
+{
+   if (channel >= 1 && channel <= 16)
+   {
+      const int* colors = AColor_midicolors[channel - 1];
+
+      mutator.SetPen(
+         Pen(Color(colors[0] / 2, colors[1] / 2, colors[2] / 2, 255), 1));
+      mutator.SetBrush(
+         Brush(Color(colors[0] / 2, colors[1] / 2, colors[2] / 2, 255)));
+   }
+   else
+   {
+      mutator.SetPen(Pen(Color(102, 102, 102, 255), 1));
+      mutator.SetBrush(Brush(Color(102, 102, 102, 255)));
+   }
+}
 
 unsigned char AColor::gradient_pre[ColorGradientTotal][colorSchemes][gradientSteps][3];
 

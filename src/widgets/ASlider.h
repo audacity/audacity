@@ -25,6 +25,8 @@ class wxTextCtrl;
 
 class Ruler;
 class TipWindow;
+class Painter;
+class PainterImage;
 
 //
 // Predefined slider types (mStyle)
@@ -131,7 +133,7 @@ class AUDACITY_DLL_API LWSlider
 
    void AdjustSize(const wxSize & sz);
 
-   void OnPaint(wxDC &dc, bool highlighted);
+   void OnPaint(Painter &dc, bool highlighted);
    void OnSize(wxSizeEvent & event);
    void OnMouseEvent(wxMouseEvent & event);
    void OnKeyDown(wxKeyEvent & event);
@@ -157,7 +159,7 @@ class AUDACITY_DLL_API LWSlider
    void FormatPopWin();
    void SetPopWinPosition();
    void CreatePopWin();
-   void DrawToBitmap(wxDC & dc);
+   void DrawToBitmap(Painter & painter);
 
    bool DoShowDialog(wxPoint pos);
 
@@ -223,7 +225,9 @@ class AUDACITY_DLL_API LWSlider
 
    bool mIsDragging;
 
-   std::unique_ptr<wxBitmap> mBitmap, mThumbBitmap, mThumbBitmapHilited;
+   std::unique_ptr<PainterImage> mBitmap;
+   const PainterImage* mThumbBitmap;
+   const PainterImage* mThumbBitmapHilited;
 
    TranslatableString mName;
 
@@ -311,6 +315,7 @@ public:
    static TempAllowFocus TemporarilyAllowFocus();
 
  private:
+   std::unique_ptr<Painter> mPainter;
    std::unique_ptr<LWSlider> mLWSlider;
    bool mSliderIsFocused;
    wxTimer mTimer;

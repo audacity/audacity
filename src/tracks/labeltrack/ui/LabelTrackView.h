@@ -11,6 +11,8 @@ Paul Licameli split from class LabelTrack
 #ifndef __AUDACITY_LABEL_TRACK_VIEW__
 #define __AUDACITY_LABEL_TRACK_VIEW__
 
+#include <memory>
+
 #include "../../ui/CommonTrackView.h"
 
 class LabelGlyphHandle;
@@ -27,8 +29,11 @@ class ZoomInfo;
 
 class wxBitmap;
 class wxCommandEvent;
-class wxDC;
 class wxMouseEvent;
+
+class Painter;
+class PainterImage;
+class PainterFont;
 
 constexpr int NUM_GLYPH_CONFIGS = 3;
 constexpr int NUM_GLYPH_HIGHLIGHTS = 4;
@@ -123,7 +128,7 @@ public:
       const LabelTrack &track, LabelTrackHit &hit, int x, int y );
 
 private:
-   static wxBitmap & GetGlyph( int i);
+   static const PainterImage& GetGlyph(Painter& painter, int i);
 
    struct Index
    {
@@ -172,10 +177,10 @@ private:
 public:
    //get current cursor position,
    // relative to the left edge of the track panel
-   bool CalcCursorX( AudacityProject &project, int * x ) const;
+   bool CalcCursorX(AudacityProject &project, int * x) const;
 
 private:
-   void CalcHighlightXs(int *x1, int *x2) const;
+   void CalcHighlightXs(Painter& painter, int* x1, int* x2) const;
 
 public:
    void ShowContextMenu( AudacityProject &project );
@@ -208,15 +213,15 @@ private:
 
    void ComputeTextPosition(const wxRect & r, int index) const;
    void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const;
-   static void DrawLines( wxDC & dc, const LabelStruct &ls, const wxRect & r);
-   static void DrawGlyphs( wxDC & dc, const LabelStruct &ls, const wxRect & r,
+   static void DrawLines( Painter & painter, const LabelStruct &ls, const wxRect & r);
+   static void DrawGlyphs( Painter & painter, const LabelStruct &ls, const wxRect & r,
       int GlyphLeft, int GlyphRight);
    static int GetTextFrameHeight();
-   static void DrawText( wxDC & dc, const LabelStruct &ls, const wxRect & r);
-   static void DrawTextBox( wxDC & dc, const LabelStruct &ls, const wxRect & r);
-   static void DrawBar(wxDC& dc, const LabelStruct& ls, const wxRect& r);
+   static void DrawText( Painter & painter, const LabelStruct &ls, const wxRect & r);
+   static void DrawTextBox( Painter & painter, const LabelStruct &ls, const wxRect & r);
+   static void DrawBar(Painter& painter, const LabelStruct& ls, const wxRect& r);
    static void DrawHighlight(
-      wxDC & dc, const LabelStruct &ls, int xPos1, int xPos2, int charHeight);
+      Painter & painter, const LabelStruct &ls, int xPos1, int xPos2, int charHeight);
 
 public:
    /// convert pixel coordinate to character position in text box
@@ -241,7 +246,7 @@ private:
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
 
-   static void calculateFontHeight(wxDC & dc);
+   static void calculateFontHeight(Painter& dc);
 
    bool IsValidIndex(const Index& index, AudacityProject& project) const;
 
@@ -260,7 +265,7 @@ private:
    std::weak_ptr<LabelTextHandle> mTextHandle;
 
    static wxFont msFont;
-
+   static std::shared_ptr<PainterFont> msPainterFont;
    // Bug #2571: See explanation in ShowContextMenu()
    int mEditIndex;
 };

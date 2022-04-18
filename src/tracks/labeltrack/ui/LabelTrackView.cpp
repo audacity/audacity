@@ -40,11 +40,17 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../widgets/AudacityTextEntryDialog.h"
 #include "../../../widgets/wxWidgetsWindowPlacement.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXColor.h"
+#include "graphics/WXPainterUtils.h"
+#include "CodeConversions.h"
+
 #include <wx/clipbrd.h>
 #include <wx/dcclient.h>
 #include <wx/font.h>
 #include <wx/frame.h>
 #include <wx/menu.h>
+
 
 LabelTrackView::Index::Index()
 :  mIndex(-1),
@@ -207,6 +213,7 @@ std::vector<UIHandlePtr> LabelTrackView::DetailedHitTest
 bool LabelTrackView::mbGlyphsReady=false;
 
 wxFont LabelTrackView::msFont;
+std::shared_ptr<PainterFont> LabelTrackView::msPainterFont;
 
 /// We have several variants of the icons (highlighting).
 /// The icons are draggable, and you can drag one boundary
@@ -266,6 +273,7 @@ void LabelTrackView::ResetFont()
    wxString facename = gPrefs->Read(wxT("/GUI/LabelFontFacename"), wxT(""));
    int size = gPrefs->Read(wxT("/GUI/LabelFontSize"), DefaultFontSize);
    msFont = GetFont(facename, size);
+   msPainterFont = {};
 }
 
 /// ComputeTextPosition is 'smart' about where to display
@@ -522,7 +530,7 @@ void LabelTrackView::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) c
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
 void LabelTrackView::DrawLines(
-   wxDC & dc, const LabelStruct &ls, const wxRect & r)
+   Painter& painter, const LabelStruct& ls, const wxRect& r)
 {
    auto &x = ls.x;
    auto &x1 = ls.x1;
@@ -537,7 +545,7 @@ void LabelTrackView::DrawLines(
          x1++;
    }
 
-   // How far out from the centre line should the vertical lines
+   // How far out from the center line should the vertical lines
    // start, i.e. what is the y position of the icon?
    // We adjust this so that the line encroaches on the icon
    // slightly (there is white space in the design).
@@ -551,21 +559,21 @@ void LabelTrackView::DrawLines(
       if((x  >= r.x) && (x  <= (r.x+r.width)))
       {
          // Draw line above and below left dragging widget.
-         AColor::Line(dc, x, r.y,  x, yIconStart - 1);
-         AColor::Line(dc, x, yIconEnd, x, r.y + r.height);
+         AColor::Line(painter, x, r.y,  x, yIconStart - 1);
+         AColor::Line(painter, x, yIconEnd, x, r.y + r.height);
       }
       if((x1 >= r.x) && (x1 <= (r.x+r.width)))
       {
          // Draw line above and below right dragging widget.
-         AColor::Line(dc, x1, r.y,  x1, yIconStart - 1);
-         AColor::Line(dc, x1, yIconEnd, x1, r.y + r.height);
+         AColor::Line(painter, x1, r.y, x1, yIconStart - 1);
+         AColor::Line(painter, x1, yIconEnd, x1, r.y + r.height);
       }
    }
    else
    {
       // Draw the line, even though the widget is off screen
-      AColor::Line(dc, x, r.y,  x, r.y + r.height);
-      AColor::Line(dc, x1, r.y,  x1, r.y + r.height);
+      AColor::Line(painter, x, r.y, x, r.y + r.height);
+      AColor::Line(painter, x1, r.y, x1, r.y + r.height);
    }
 }
 
@@ -573,7 +581,7 @@ void LabelTrackView::DrawLines(
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
 void LabelTrackView::DrawGlyphs(
-   wxDC & dc, const LabelStruct &ls, const wxRect & r,
+   Painter& painter, const LabelStruct& ls, const wxRect& r,
    int GlyphLeft, int GlyphRight)
 {
    auto &y = ls.y;
@@ -588,12 +596,12 @@ void LabelTrackView::DrawGlyphs(
    auto &x = ls.x;
    auto &x1 = ls.x1;
 
-   if((x  >= r.x) && (x  <= (r.x+r.width)))
-      dc.DrawBitmap(GetGlyph(GlyphLeft), x-xHalfWidth,yStart, true);
+   if ((x >= r.x) && (x <= (r.x + r.width)))
+      painter.DrawImage(GetGlyph(painter, GlyphLeft), x - xHalfWidth, yStart);
    // The extra test commented out here would suppress right hand markers
    // when they overlap the left hand marker (e.g. zoomed out) or to the left.
    if((x1 >= r.x) && (x1 <= (r.x+r.width)) /*&& (x1>x+mIconWidth)*/)
-      dc.DrawBitmap(GetGlyph(GlyphRight), x1-xHalfWidth,yStart, true);
+      painter.DrawImage(GetGlyph(painter, GlyphRight), x1-xHalfWidth,yStart);
 }
 
 int LabelTrackView::GetTextFrameHeight()
@@ -607,7 +615,7 @@ int LabelTrackView::GetTextFrameHeight()
 /// behind the text itself.
 ///   @param  dc the device context
 ///   @param  r  the LabelTrack rectangle.
-void LabelTrackView::DrawText(wxDC & dc, const LabelStruct &ls, const wxRect & r)
+void LabelTrackView::DrawText(Painter & painter, const LabelStruct &ls, const wxRect & r)
 {
    const int yFrameHeight = mTextHeight + TextFramePadding * 2;
    //If y is positive then it is the center line for the
@@ -630,15 +638,15 @@ void LabelTrackView::DrawText(wxDC & dc, const LabelStruct &ls, const wxRect & r
       {
          // Now draw the text itself.
          auto pos = y - LabelBarHeight - yFrameHeight + TextFrameYOffset +
-            (yFrameHeight - mFontHeight) / 2 + dc.GetFontMetrics().ascent;
-         dc.DrawText(ls.title, xText, pos);
+            (yFrameHeight - mFontHeight) / 2 + painter.GetCurrentFont()->GetFontMetrics().Ascent;
+         painter.DrawText(xText, pos, audacity::ToUTF8(ls.title));
       }
    }
 
 }
 
 void LabelTrackView::DrawTextBox(
-   wxDC & dc, const LabelStruct &ls, const wxRect & r)
+   Painter & painter, const LabelStruct &ls, const wxRect & r)
 {
    // In drawing the bar and the frame, we compute the clipping
    // to the viewport ourselves.  Under Win98 the GDI does its
@@ -657,14 +665,14 @@ void LabelTrackView::DrawTextBox(
 
     if ((xStart < (r.x + r.width)) && (xEnd > r.x) && (xWidth > 0))
     {
-       wxRect frame(
-          xStart, ls.y - (textFrameHeight + LabelBarHeight) / 2 + TextFrameYOffset,
+       painter.DrawRect(
+          xStart,
+          ls.y - (textFrameHeight + LabelBarHeight) / 2 + TextFrameYOffset,
           xWidth, textFrameHeight);
-       dc.DrawRectangle(frame);
     }
 }
 
-void LabelTrackView::DrawBar(wxDC& dc, const LabelStruct& ls, const wxRect& r)
+void LabelTrackView::DrawBar(Painter& painter, const LabelStruct& ls, const wxRect& r)
 {
    //If y is positive then it is the center line for the
    //text we are about to draw.
@@ -681,56 +689,55 @@ void LabelTrackView::DrawBar(wxDC& dc, const LabelStruct& ls, const wxRect& r)
 
    if ((xStart < (r.x + r.width)) && (xEnd > r.x) && (xWidth > 0))
    {
-      wxRect bar(xStart, y - (LabelBarHeight - GetTextFrameHeight()) / 2,
-         xWidth, LabelBarHeight);
       if (x1 > x + xBarShorten)
-         dc.DrawRectangle(bar);
+         painter.DrawRect(
+            xStart, y - (LabelBarHeight - GetTextFrameHeight()) / 2, xWidth,
+            LabelBarHeight);
    }
 }
 
 /// Draws text-selected region within the label
-void LabelTrackView::DrawHighlight( wxDC & dc, const LabelStruct &ls,
+void LabelTrackView::DrawHighlight( Painter & painter, const LabelStruct &ls,
    int xPos1, int xPos2, int charHeight)
 {
+   auto stateMutator = painter.GetStateMutator();
+
    const int yFrameHeight = mTextHeight + TextFramePadding * 2;
    
-   dc.SetPen(*wxTRANSPARENT_PEN);
-   wxBrush curBrush = dc.GetBrush();
-   curBrush.SetColour(wxString(wxT("BLUE")));
+   stateMutator.SetPen(Pen::NoPen);
+   stateMutator.SetBrush(Colors::Blue);
+
    auto top = ls.y + TextFrameYOffset - (LabelBarHeight + yFrameHeight) / 2 + (yFrameHeight - charHeight) / 2;
    if (xPos1 < xPos2)
-      dc.DrawRectangle(xPos1-1, top, xPos2-xPos1+1, charHeight);
+      painter.DrawRect(xPos1-1, top, xPos2-xPos1+1, charHeight);
    else
-      dc.DrawRectangle(xPos2-1, top, xPos1-xPos2+1, charHeight);
+      painter.DrawRect(xPos2 - 1, top, xPos1 - xPos2 + 1, charHeight);
 }
 
 namespace {
-void getXPos( const LabelStruct &ls, wxDC & dc, int * xPos1, int cursorPos)
+void getXPos(const PainterFont& font, const LabelStruct &ls, int * xPos1, int cursorPos)
 {
    *xPos1 = ls.xText;
    if( cursorPos > 0)
    {
-      int partWidth;
-      // Calculate the width of the substring and add it to Xpos
-      dc.GetTextExtent(ls.title.Left(cursorPos), &partWidth, NULL);
-      *xPos1 += partWidth;
+      *xPos1 += static_cast<int>(
+         font.GetTextSize(audacity::ToUTF8(ls.title.Left(cursorPos)))
+            .width);
    }
 }
 }
 
-bool LabelTrackView::CalcCursorX( AudacityProject &project, int * x) const
+bool LabelTrackView::CalcCursorX(AudacityProject& project, int* x) const
 {
    if (IsValidIndex(mTextEditIndex, project)) {
-      wxMemoryDC dc;
-
-      if (msFont.Ok()) {
-         dc.SetFont(msFont);
+      if (!msPainterFont) {
+         return false;
       }
 
       const auto pTrack = FindLabelTrack();
       const auto &mLabels = pTrack->GetLabels();
 
-      getXPos(mLabels[mTextEditIndex], dc, x, mCurrentCursorPos);
+      getXPos(*msPainterFont, mLabels[mTextEditIndex], x, mCurrentCursorPos);
       *x += mIconWidth / 2;
       return true;
    }
@@ -738,13 +745,16 @@ bool LabelTrackView::CalcCursorX( AudacityProject &project, int * x) const
    return false;
 }
 
-void LabelTrackView::CalcHighlightXs(int *x1, int *x2) const
+void LabelTrackView::CalcHighlightXs(Painter& painter, int* x1, int* x2) const
 {
    wxMemoryDC dc;
 
-   if (msFont.Ok()) {
-      dc.SetFont(msFont);
+   if (msFont.Ok() && !msPainterFont) {
+      msPainterFont = FontFromWXFont(painter, msFont);
    }
+
+   if (!msPainterFont)
+      return;
 
    int pos1 = mInitialCursorPos, pos2 = mCurrentCursorPos;
    if (pos1 > pos2)
@@ -755,9 +765,9 @@ void LabelTrackView::CalcHighlightXs(int *x1, int *x2) const
    const auto &labelStruct = mLabels[mTextEditIndex];
 
    // find the left X pos of highlighted area
-   getXPos(labelStruct, dc, x1, pos1);
+   getXPos(*msPainterFont, labelStruct, x1, pos1);
    // find the right X pos of highlighted area
-   getXPos(labelStruct, dc, x2, pos2);
+   getXPos(*msPainterFont, labelStruct, x2, pos2);
 }
 
 #include "LabelGlyphHandle.h"
@@ -787,17 +797,21 @@ namespace {
 void LabelTrackView::Draw
 ( TrackPanelDrawingContext &context, const wxRect & r ) const
 {
-   auto &dc = context.dc;
+   auto &painter = context.painter;
+   auto stateMutator = painter.GetStateMutator();
+
    const auto artist = TrackArtist::Get( context );
    const auto &zoomInfo = *artist->pZoomInfo;
 
    auto pHit = findHit( artist->parent );
 
-   if(msFont.Ok())
-      dc.SetFont(msFont);
+   if (msFont.Ok() && !msPainterFont)
+      msPainterFont = FontFromWXFont(painter, msFont);
+
+   stateMutator.SetFont(msPainterFont);
 
    if (mFontHeight == -1)
-      calculateFontHeight(dc);
+      calculateFontHeight(painter);
 
    const auto pTrack = std::static_pointer_cast< const LabelTrack >(
       FindTrack()->SubstitutePendingChangedTrack());
@@ -813,8 +827,8 @@ void LabelTrackView::Draw
    // TODO: Make more efficient by only re-computing when a
    // text label title changes.
    for (const auto &labelStruct : mLabels) {
-      dc.GetTextExtent(labelStruct.title, &textWidth, &textHeight);
-      labelStruct.width = textWidth;
+      labelStruct.width =
+         painter.GetTextSize(audacity::ToUTF8(labelStruct.title)).width;
    }
 
    // TODO: And this only needs to be done once, but we
@@ -823,14 +837,16 @@ void LabelTrackView::Draw
    // guarding against the case where there are no
    // labels or all are empty strings, which for example
    // happens with a NEW label track.
-   mTextHeight = dc.GetFontMetrics().ascent + dc.GetFontMetrics().descent;
+   const auto fontMetrics = painter.GetCurrentFont()->GetFontMetrics();
+
+   mTextHeight = fontMetrics.Ascent + fontMetrics.Descent;
    const int yFrameHeight = mTextHeight + TextFramePadding * 2;
 
    ComputeLayout( r, zoomInfo );
-   dc.SetTextForeground(theTheme.Colour( clrLabelTrackText));
-   dc.SetBackgroundMode(wxTRANSPARENT);
-   dc.SetBrush(AColor::labelTextNormalBrush);
-   dc.SetPen(AColor::labelSurroundPen);
+
+   stateMutator.SetBrush(BrushFromWXBrush(AColor::labelTextNormalBrush));
+   stateMutator.SetPen(PenFromWXPen(AColor::labelSurroundPen));
+
    int GlyphLeft;
    int GlyphRight;
    // Now we draw the various items in this order,
@@ -838,7 +854,7 @@ void LabelTrackView::Draw
 
    // Draw vertical lines that show where the end positions are.
    for (const auto &labelStruct : mLabels)
-      DrawLines( dc, labelStruct, r );
+      DrawLines( painter, labelStruct, r );
 
    // Draw the end glyphs.
    { int i = -1; for (const auto &labelStruct : mLabels) { ++i;
@@ -848,7 +864,7 @@ void LabelTrackView::Draw
          GlyphLeft = (pHit->mEdge & 4) ? 6:9;
       if( pHit && i == pHit->mMouseOverLabelRight )
          GlyphRight = (pHit->mEdge & 4) ? 7:4;
-      DrawGlyphs( dc, labelStruct, r, GlyphLeft, GlyphRight );
+      DrawGlyphs( painter, labelStruct, r, GlyphLeft, GlyphRight );
    }}
 
    auto &project = *artist->parent->GetProject();
@@ -866,21 +882,26 @@ void LabelTrackView::Draw
          highlight = highlightTrack && target->GetLabelNum() == i;
 #endif
          
-         dc.SetBrush(mNavigationIndex == i || (pHit && pHit->mMouseOverLabel == i) 
-            ? AColor::labelTextEditBrush : AColor::labelTextNormalBrush);
-         DrawBar(dc, labelStruct, r);
+         stateMutator.SetBrush(BrushFromWXBrush(
+            mNavigationIndex == i || (pHit && pHit->mMouseOverLabel == i) ?
+               AColor::labelTextEditBrush :
+               AColor::labelTextNormalBrush));
+
+         DrawBar(painter, labelStruct, r);
 
          bool selected = mTextEditIndex == i;
 
          if (selected)
-            dc.SetBrush(AColor::labelTextEditBrush);
+            stateMutator.SetBrush(BrushFromWXBrush(AColor::labelTextEditBrush));
          else if (highlight)
-            dc.SetBrush(AColor::uglyBrush);
+            stateMutator.SetBrush(BrushFromWXBrush(AColor::uglyBrush));
          else
-            dc.SetBrush(AColor::labelTextNormalBrush);
-         DrawTextBox(dc, labelStruct, r);
+            stateMutator.SetBrush(BrushFromWXBrush(AColor::labelTextNormalBrush));
 
-         dc.SetBrush(AColor::labelTextNormalBrush);
+         DrawTextBox(painter, labelStruct, r);
+
+         // Why?
+         stateMutator.SetBrush(BrushFromWXBrush(AColor::labelTextNormalBrush));
       }
    }
 
@@ -888,19 +909,19 @@ void LabelTrackView::Draw
    if ( (mInitialCursorPos != mCurrentCursorPos) && IsValidIndex(mTextEditIndex, project))
    {
       int xpos1, xpos2;
-      CalcHighlightXs(&xpos1, &xpos2);
-      DrawHighlight(dc, mLabels[mTextEditIndex],
-         xpos1, xpos2, dc.GetFontMetrics().ascent + dc.GetFontMetrics().descent);
+      CalcHighlightXs(painter, &xpos1, &xpos2);
+      DrawHighlight(
+         painter, mLabels[mTextEditIndex],
+         xpos1, xpos2, fontMetrics.Ascent + fontMetrics.Descent);
    }
 
    // Draw the text and the label boxes.
-   { int i = -1; for (const auto &labelStruct : mLabels) { ++i;
-      if(mTextEditIndex == i )
-         dc.SetBrush(AColor::labelTextEditBrush);
-      DrawText( dc, labelStruct, r );
-      if(mTextEditIndex == i )
-         dc.SetBrush(AColor::labelTextNormalBrush);
-   }}
+
+   for (const auto& labelStruct : mLabels)
+   {
+      stateMutator.SetBrush(ColorFromWXColor(theTheme.Colour(clrLabelTrackText)));
+      DrawText(painter, labelStruct, r);
+   }
 
    // Draw the cursor, if there is one.
    if(mInitialCursorPos == mCurrentCursorPos && IsValidIndex(mTextEditIndex, project))
@@ -911,16 +932,17 @@ void LabelTrackView::Draw
       if( mCurrentCursorPos > 0)
       {
          // Calculate the width of the substring and add it to Xpos
-         int partWidth;
-         dc.GetTextExtent(labelStruct.title.Left(mCurrentCursorPos), &partWidth, NULL);
-         xPos += partWidth;
+         xPos += static_cast<int>(painter.GetTextSize(
+            audacity::ToUTF8(labelStruct.title.Left(mCurrentCursorPos))).width);
       }
 
-      wxPen currentPen = dc.GetPen();
+      Pen currentPen = stateMutator.GetPen();
       const int CursorWidth=2;
       currentPen.SetWidth(CursorWidth);
+      stateMutator.SetPen(currentPen);
+
       const auto top = labelStruct.y - (LabelBarHeight + yFrameHeight) / 2 + (yFrameHeight - mFontHeight) / 2 + TextFrameYOffset;
-      AColor::Line(dc,
+      AColor::Line(painter,
                    xPos-1, top,
                    xPos-1, top + mFontHeight);
       currentPen.SetWidth(1);
@@ -1025,13 +1047,12 @@ int LabelTrackView::GetNavigationIndex(AudacityProject& project) const
     return -1;
 }
 
-void LabelTrackView::calculateFontHeight(wxDC & dc)
+void LabelTrackView::calculateFontHeight(Painter& painter)
 {
    int charDescent;
    int charLeading;
 
-   // Calculate the width of the substring and add it to Xpos
-   dc.GetTextExtent(wxT("(Test String)|[yp]"), NULL, &mFontHeight, &charDescent, &charLeading);
+   const auto fontMetrics = painter.GetCurrentFont()->GetFontMetrics();
 
    // The cursor will have height charHeight.  We don't include the descender as
    // part of the height because for phonetic fonts this leads to cursors which are
@@ -1040,7 +1061,7 @@ void LabelTrackView::calculateFontHeight(wxDC & dc)
    // using CursorExtraHeight so that the cursor is just a little taller than the
    // body of the characters.
    const int CursorExtraHeight=2;
-   mFontHeight += CursorExtraHeight - (charLeading+charDescent);
+   mFontHeight = fontMetrics.LineHeight + CursorExtraHeight - (fontMetrics.Descent + fontMetrics.Linegap);
 }
 
 bool LabelTrackView::IsValidIndex(const Index& index, AudacityProject& project) const
@@ -2169,9 +2190,9 @@ void LabelTrackView::OnSelectionChange( LabelTrackEvent &e )
    }
 }
 
-wxBitmap & LabelTrackView::GetGlyph( int i)
+const PainterImage & LabelTrackView::GetGlyph(Painter& painter, int i)
 {
-   return theTheme.Bitmap( i + bmpLabelGlyph0);
+   return theTheme.GetPainterImage(painter, i + bmpLabelGlyph0);
 }
 
 // This one XPM spec is used to generate a number of

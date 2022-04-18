@@ -16,11 +16,13 @@
 class UIHandle;
 using UIHandlePtr = std::shared_ptr<UIHandle>;
 class wxDC;
+class Painter;
 
 #include <wx/mousestate.h> // member variable
 
 struct TrackPanelDrawingContext {
-   wxDC &dc;
+   wxDC& hdc;
+   Painter& painter;
    UIHandlePtr target;
    wxMouseState lastState;
 

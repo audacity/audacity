@@ -35,6 +35,9 @@
 
 #include "tracks/ui/TrackView.h"
 
+#include "graphics/WXPainterFactory.h"
+#include "graphics/Painter.h"
+
 // Globals, so that we remember settings from session to session
 wxPrintData &gPrintData()
 {
@@ -66,6 +69,7 @@ class AudacityPrintout final : public wxPrintout
 bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
 {
    wxDC *dc = GetDC();
+   
    if (!dc)
       return false;
 
@@ -76,6 +80,8 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    int screenTotalHeight =
       TrackView::GetTotalHeight( *mTracks ) + rulerScreenHeight;
 
+   auto painter = CreatePainter(*dc);
+
    double scale = height / (double)screenTotalHeight;
 
    int rulerPageHeight = (int)(rulerScreenHeight * scale);
@@ -85,7 +91,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    ruler.SetRange(0.0, mTracks->GetEndTime());
    ruler.SetFormat(Ruler::TimeFormat);
    ruler.SetLabelEdges(true);
-   ruler.Draw(*dc);
+   ruler.Draw(*painter);
 
    TrackArtist artist( &mPanel );
    artist.SetBackgroundBrushes(*wxWHITE_BRUSH, *wxWHITE_BRUSH,
@@ -124,17 +130,18 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
          r.SetHeight( nextY - yy );
          yy = nextY;
 
-         TrackPanelDrawingContext context{
-            *dc, {}, {}, &artist
-         };
+         TrackPanelDrawingContext context { *dc, *painter, {}, {}, &artist };
          iter->second->Draw( context, r, TrackArtist::PassTracks );
       }
 
-      dc->SetPen(*wxBLACK_PEN);
-      AColor::Line(*dc, 0, y, width, y);
+      auto stateMutator = painter->GetStateMutator();
+      stateMutator.SetPen(Colors::Black);
+      AColor::Line(*painter, 0, y, width, y);
 
       y += trackHeight;
    };
+
+   painter->Flush();
 
    return true;
 }

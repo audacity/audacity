@@ -120,6 +120,9 @@ void processBlock(
 
    assert(min <= max);
 
+   if (max < min)
+      int a = 1;
+
    summary.Min = min;
    summary.Max = max;
    summary.SquaresSum = squareSum;

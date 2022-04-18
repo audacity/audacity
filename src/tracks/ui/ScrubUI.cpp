@@ -19,7 +19,12 @@
 #include "../../ProjectWindows.h"
 #include "../../TrackPanel.h"
 
-#include <wx/dcclient.h>
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+#include "graphics/WXPainterFactory.h"
+
+#include "CodeConversions.h"
+
 #include <wx/windowptr.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,8 +41,8 @@ public:
 
 private:
    unsigned SequenceNumber() const override;
-   std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
-   void Draw(OverlayPanel &panel, wxDC &dc) override;
+   std::pair<wxRect, bool> DoGetRectangle(Painter&, wxSize size) override;
+   void Draw(OverlayPanel &panel, Painter &painter) override;
 
    void OnTimer(Observer::Message);
 
@@ -67,7 +72,7 @@ unsigned ScrubbingOverlay::SequenceNumber() const
    return 40;
 }
 
-std::pair<wxRect, bool> ScrubbingOverlay::DoGetRectangle(wxSize)
+std::pair<wxRect, bool> ScrubbingOverlay::DoGetRectangle(Painter&, wxSize)
 {
    wxRect rect(mLastScrubRect);
    const bool outdated =
@@ -80,7 +85,7 @@ std::pair<wxRect, bool> ScrubbingOverlay::DoGetRectangle(wxSize)
    );
 }
 
-void ScrubbingOverlay::Draw(OverlayPanel &, wxDC &dc)
+void ScrubbingOverlay::Draw(OverlayPanel &, Painter &painter)
 {
    mLastScrubRect = mNextScrubRect;
    mLastScrubSpeedText = mNextScrubSpeedText;
@@ -89,21 +94,28 @@ void ScrubbingOverlay::Draw(OverlayPanel &, wxDC &dc)
    if (!scrubber.ShouldDrawScrubSpeed())
       return;
 
+   auto stateMutator = painter.GetStateMutator();
+
    static const wxFont labelFont(24, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   dc.SetFont(labelFont);
+   stateMutator.SetFont(FontFromWXFont(painter, labelFont));
 
    // These two colors were previously saturated red and green.  However
    // we have a rule to try to only use red for reserved purposes of
    //  (a) Recording
    //  (b) Error alerts
    // So they were changed to 'orange' and 'lime'.
-   static const wxColour clrNoScroll(215, 162, 0), clrScroll(0, 204, 153);
-   if (scrubber.IsScrollScrubbing())
-      dc.SetTextForeground(clrScroll);
-   else
-      dc.SetTextForeground(clrNoScroll);
+   static const Color
+      clrNoScroll(215, 162, 0, 255),
+      clrScroll(0, 204, 153, 255);
 
-   dc.DrawText(mLastScrubSpeedText, mLastScrubRect.GetX(), mLastScrubRect.GetY());
+   if (scrubber.IsScrollScrubbing())
+      stateMutator.SetBrush(clrScroll);
+   else
+      stateMutator.SetBrush(clrNoScroll);
+
+   painter.DrawText(
+      mLastScrubRect.GetX(), mLastScrubRect.GetY(),
+      audacity::ToUTF8(mLastScrubSpeedText));
 }
 
 void ScrubbingOverlay::OnTimer(Observer::Message)
@@ -169,10 +181,13 @@ void ScrubbingOverlay::OnTimer(Observer::Message)
       // Find the origin for drawing text
       wxCoord width, height;
       {
-         wxClientDC dc( &trackPanel );
+         auto& painter = GetMeasuringPainter();
          static const wxFont labelFont(24, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-         dc.SetFont(labelFont);
-         dc.GetTextExtent(mNextScrubSpeedText, &width, &height);
+
+         const auto size = painter.GetTextSize(*FontFromWXFont(painter, labelFont), audacity::ToUTF8(mNextScrubSpeedText));
+
+         width = size.width;
+         height = size.height;
       }
       const auto xx =
          std::max(0, std::min(panelWidth - width, position.x - width / 2));

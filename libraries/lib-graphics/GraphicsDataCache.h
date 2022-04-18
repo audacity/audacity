@@ -63,6 +63,9 @@ public:
    //! Returns the sample rate associated with cache
    double GetSampleRate() const noexcept;
 
+   void UpdateViewportWidth(int64_t width) noexcept;
+   int64_t GetMaxViewportWidth() const noexcept;
+
 protected:
    explicit GraphicsDataCacheBase(double sampleRate);
 
@@ -125,7 +128,7 @@ private:
    double mSampleRate {}; // DV: Why do we use double for sample rate? I don't know
 
    // The max width of the request processed in pixels
-   int64_t mMaxWidth {};
+   int64_t mMaxWidth { 1600 };
    // This value is incremented on every lookup
    uint64_t mCacheAccessIndex {};
    // A multiplier used to control the cache size

@@ -44,6 +44,13 @@ Paul Licameli split from TrackPanel.cpp
 #include "prefs/TracksBehaviorsPrefs.h"
 #include "tracks/ui/TrackView.h"
 
+#include "CodeConversions.h"
+#include "UTF8Utils.h"
+
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+#include "graphics/WXColor.h"
+
 // Subscribe to preference changes to update static variables
 struct Settings : PrefsListener {
    wxString gSoloPref;
@@ -231,9 +238,11 @@ void TrackInfo::DrawItems
   const wxRect &rect, const Track *pTrack,
   const std::vector<TCPLine> &topLines, const std::vector<TCPLine> &bottomLines )
 {
-   auto dc = &context.dc;
-   TrackInfo::SetTrackInfoFont(dc);
-   dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
+   auto& painter = context.painter;
+   auto stateMutator = painter.GetStateMutator();
+
+   TrackInfo::SetTrackInfoFont(stateMutator);
+   stateMutator.SetBrush(ColorFromWXColor(theTheme.Colour(clrTrackPanelText)));
 
    {
       int yy = 0;
@@ -268,18 +277,20 @@ void TrackInfo::DrawCloseButton(
    TrackPanelDrawingContext &context, const wxRect &bev,
    const Track *pTrack, ButtonHandle *target )
 {
-   auto dc = &context.dc;
+   auto& painter = context.painter;
+   auto stateMutator = painter.GetStateMutator();
+
    bool selected = pTrack ? pTrack->GetSelected() : true;
    bool hit = target && target->GetTrack().get() == pTrack;
    bool captured = hit && target->IsClicked();
    bool down = captured && bev.Contains( context.lastState.GetPosition());
-   AColor::Bevel2(*dc, !down, bev, selected, hit );
+   AColor::Bevel2(painter, !down, bev, selected, hit );
 
 #ifdef EXPERIMENTAL_THEMING
-   wxPen pen( theTheme.Colour( clrTrackPanelText ));
-   dc->SetPen( pen );
+   stateMutator.SetPen(
+      Pen(ColorFromWXColor(theTheme.Colour(clrTrackPanelText))));
 #else
-   dc->SetPen(*wxBLACK_PEN);
+   stateMutator.SetPen(Pen(Colors::Black));
 #endif
    bev.Inflate( -1, -1 );
    // Draw the "X"
@@ -290,10 +301,10 @@ void TrackInfo::DrawCloseButton(
    int rs = ls + s;
    int bs = ts + s;
 
-   AColor::Line(*dc, ls,     ts, rs,     bs);
-   AColor::Line(*dc, ls + 1, ts, rs + 1, bs);
-   AColor::Line(*dc, rs,     ts, ls,     bs);
-   AColor::Line(*dc, rs + 1, ts, ls + 1, bs);
+   AColor::Line(painter, ls, ts, rs, bs);
+   AColor::Line(painter, ls + 1, ts, rs + 1, bs);
+   AColor::Line(painter, rs, ts, ls, bs);
+   AColor::Line(painter, rs + 1, ts, ls + 1, bs);
    //   bev.Inflate(-1, -1);
 }
 
@@ -301,7 +312,9 @@ void TrackInfo::CloseTitleDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
 {
-   auto dc = &context.dc;
+   auto& painter = context.painter;
+   auto stateMutator = painter.GetStateMutator();
+
    bool selected = pTrack ? pTrack->GetSelected() : true;
    {
       wxRect bev = rect;
@@ -317,26 +330,27 @@ void TrackInfo::CloseTitleDrawFunction
       bool hit = target && target->GetTrack().get() == pTrack;
       bool captured = hit && target->IsClicked();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
-      wxString titleStr =
-         pTrack ? pTrack->GetName() : _("Name");
+      auto titleStr =
+         audacity::ToUTF8(pTrack ? pTrack->GetName() : _("Name"));
 
       //bev.Inflate(-1, -1);
-      AColor::Bevel2(*dc, !down, bev, selected, hit);
+      AColor::Bevel2(painter, !down, bev, selected, hit);
 
       // Draw title text
-      SetTrackInfoFont(dc);
+      SetTrackInfoFont(stateMutator);
 
       // Bug 1660 The 'k' of 'Audio Track' was being truncated.
       // Constant of 32 found by counting pixels on a windows machine.
       // I believe it's the size of the X close button + the size of the 
       // drop down arrow.
-      int allowableWidth = rect.width - 32;
+      const int allowableWidth = rect.width - 32;
 
-      wxCoord textWidth, textHeight;
-      dc->GetTextExtent(titleStr, &textWidth, &textHeight);
-      while (textWidth > allowableWidth) {
-         titleStr = titleStr.Left(titleStr.length() - 1);
-         dc->GetTextExtent(titleStr, &textWidth, &textHeight);
+      auto textSize = painter.GetTextSize(titleStr);
+
+      while (textSize.width > allowableWidth)
+      {
+         titleStr = utf8::PopLastCharacter(titleStr);
+         auto textSize = painter.GetTextSize(titleStr);
       }
 
       // Pop-up triangle
@@ -353,17 +367,16 @@ void TrackInfo::CloseTitleDrawFunction
    //   AColor::MediumTrackInfo(dc, t->GetSelected());
    //   dc->DrawRectangle(bev);
 
-      dc->SetTextForeground( c );
-      dc->SetTextBackground( wxTRANSPARENT );
-      dc->DrawText(titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
+      stateMutator.SetBrush(Brush(ColorFromWXColor(c)));
+      painter.DrawText(
+         bev.x + 2, bev.y + (bev.height - textSize.height) / 2, titleStr);
 
 
 
-      dc->SetPen(c);
-      dc->SetBrush(c);
+      stateMutator.SetPen(Pen(ColorFromWXColor(c)));
 
       int s = 10; // Width of dropdown arrow...height is half of width
-      AColor::Arrow(*dc,
+      AColor::Arrow(painter,
                     bev.GetRight() - s - 3, // 3 to offset from right border
                     bev.y + ((bev.height - (s / 2)) / 2),
                     s);
@@ -375,7 +388,9 @@ void TrackInfo::MinimizeSyncLockDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
 {
-   auto dc = &context.dc;
+   auto& painter = context.painter;
+   auto stateMutator = painter.GetStateMutator();
+
    bool selected = pTrack ? pTrack->GetSelected() : true;
    bool syncLockSelected = pTrack ? SyncLock::IsSyncLockSelected(pTrack) : true;
    bool minimized =
@@ -392,17 +407,18 @@ void TrackInfo::MinimizeSyncLockDrawFunction
       //AColor::MediumTrackInfo(dc, t->GetSelected());
       //dc->DrawRectangle(bev);
 
-      AColor::Bevel2(*dc, !down, bev, selected, hit);
+      AColor::Bevel2(painter, !down, bev, selected, hit);
 
 #ifdef EXPERIMENTAL_THEMING
-      wxColour c = theTheme.Colour(clrTrackPanelText);
-      dc->SetBrush(c);
-      dc->SetPen(c);
+      const Color c = ColorFromWXColor(theTheme.Colour(clrTrackPanelText));
+
+      stateMutator.SetBrush(c);
+      stateMutator.SetPen(c);
 #else
-      AColor::Dark(dc, selected);
+      AColor::Dark(stateMutator, selected);
 #endif
 
-      AColor::Arrow(*dc,
+      AColor::Arrow(painter,
                     bev.x - 5 + bev.width / 2,
                     bev.y - 2 + bev.height / 2,
                     10,
@@ -417,25 +433,27 @@ void TrackInfo::MinimizeSyncLockDrawFunction
       bool captured = hit && target->IsClicked();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
 
-      AColor::Bevel2(*dc, !down, bev, selected, hit);
+      AColor::Bevel2(painter, !down, bev, selected, hit);
 
 #ifdef EXPERIMENTAL_THEMING
-      wxColour c = theTheme.Colour(clrTrackPanelText);
-      dc->SetBrush(c);
-      dc->SetPen(c);
+      const Color c = ColorFromWXColor(theTheme.Colour(clrTrackPanelText));
+
+      stateMutator.SetBrush(c);
+      stateMutator.SetPen(c);
 #else
-      AColor::Dark(dc, selected);
+      AColor::Dark(stateMutator, selected);
 #endif
 
-      wxString str = _("Select");
-      wxCoord textWidth;
-      wxCoord textHeight;
-      SetTrackInfoFont(dc);
-      dc->GetTextExtent(str, &textWidth, &textHeight);
+      const auto str = audacity::ToUTF8(_("Select"));
 
-      dc->SetTextForeground( c );
-      dc->SetTextBackground( wxTRANSPARENT );
-      dc->DrawText(str, bev.x + 2 + (bev.width-textWidth)/2, bev.y + (bev.height - textHeight) / 2);
+      SetTrackInfoFont(stateMutator);
+      const auto textSize = painter.GetTextSize(str);
+
+      stateMutator.SetBrush(c);
+
+      painter.DrawText(
+         bev.x + 2 + (bev.width - textSize.width) / 2,
+         bev.y + (bev.height - textSize.height) / 2, str);
    }
 
 
@@ -445,12 +463,12 @@ void TrackInfo::MinimizeSyncLockDrawFunction
       wxRect syncLockIconRect = rect;
 	
       GetSyncLockHorizontalBounds( rect, syncLockIconRect );
-      wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockIcon));
+
+      const auto& syncLockBitmap = theTheme.GetPainterImage(painter, bmpSyncLockIcon);
       // Icon is 12x12 and syncLockIconRect is 16x16.
-      dc->DrawBitmap(syncLockBitmap,
+      painter.DrawImage(syncLockBitmap,
                      syncLockIconRect.x + 3,
-                     syncLockIconRect.y + 2,
-                     true);
+                     syncLockIconRect.y + 2);
    }
 }
 
@@ -559,6 +577,12 @@ void TrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
 void TrackInfo::SetTrackInfoFont(wxDC * dc)
 {
    dc->SetFont(settings().gFont);
+}
+
+void TrackInfo::SetTrackInfoFont(PainterStateMutator& stateMutator)
+{
+   stateMutator.SetFont(
+      FontFromWXFont(stateMutator.GetPainter(), settings().gFont));
 }
 
 //#define USE_BEVELS

@@ -28,6 +28,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/cursor.h>
 #include <wx/event.h>
 
+#include "graphics/Painter.h"
+
 // Define this, just so the click to deselect can dispatch here
 // This handle class, unlike most, doesn't associate with any particular cell.
 class BackgroundHandle : public UIHandle
@@ -126,10 +128,11 @@ void BackgroundCell::Draw(
    const wxRect &rect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassBackground ) {
-      auto &dc = context.dc;
+      auto &painter = context.painter;
       // Paint over the part below the tracks
-      AColor::TrackPanelBackground( &dc, false );
-      dc.DrawRectangle( rect );
+      auto stateMutator = painter.GetStateMutator();
+      AColor::TrackPanelBackground( stateMutator, false );
+      painter.DrawRect(rect.x, rect.y, rect.width, rect.height);
    }
 }
 

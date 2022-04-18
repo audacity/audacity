@@ -22,6 +22,8 @@ set( SOURCES
    graphics/Pen.h
    graphics/Point.h
    graphics/Rect.h
+   graphics/RendererID.cpp
+   graphics/RendererID.h
    graphics/Size.h
    graphics/Transform.h
 

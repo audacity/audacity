@@ -58,6 +58,7 @@ and use it for toolbar and window layouts too.
 
 
 #include <map>
+#include <unordered_map>
 
 #include <wx/wxprec.h>
 #include <wx/brush.h>
@@ -77,6 +78,8 @@ and use it for toolbar and window layouts too.
 #include "ImageManipulation.h"
 #include "Internat.h"
 #include "MemoryX.h"
+
+#include "graphics/Painter.h"
 
 // theTheme is a global variable.
 THEME_API Theme theTheme;
@@ -132,7 +135,94 @@ FilePath ThemeComponent(const wxString &dir, const wxString &Str)
 {
    return wxFileName( dir, Str, wxT("png") ).GetFullPath();
 }
+
+struct PainterImageCacheKey final
+{
+   int Index;
+   int X;
+   int Y;
+   int Width;
+   int Heigth;
+};
+
+size_t CombineHash(size_t seed, size_t v) noexcept
+{
+   // https://www.boost.org/doc/libs/1_35_0/doc/html/boost/hash_combine_id241013.html
+   return seed ^
+          (std::hash<size_t> {}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2));
 }
+
+template<typename ...Args>
+size_t CombineHash(size_t seed, size_t v, Args... args) noexcept
+{
+   return CombineHash(CombineHash(seed, v), args...);
+}
+
+struct PainterImageCacheKeyHash final
+{
+   size_t operator()(const PainterImageCacheKey& key) const noexcept
+   {
+      return CombineHash(
+         std::hash<size_t> {}(key.Index), key.X, key.Y, key.Width, key.Heigth);
+   }
+};
+
+bool operator==(const PainterImageCacheKey& lhs, const PainterImageCacheKey& rhs) noexcept
+{
+   return lhs.Index == rhs.Index &&
+          lhs.X == rhs.X && lhs.Y == rhs.Y &&
+          lhs.Width == rhs.Width && lhs.Heigth == rhs.Heigth;
+}
+
+}
+
+class ThemeBase::PainterImageCache final
+{
+public:
+   using Cache = std::unordered_map<
+      PainterImageCacheKey, std::unique_ptr<PainterImage>,
+      PainterImageCacheKeyHash>;
+
+   const PainterImage& GetImage(
+      Painter& painter, ThemeSet& set, int index, int x, int y, int w, int h)
+   {
+      const PainterImageCacheKey key = { index, x, y, w, h };
+
+      auto it = mCache.find(key);
+
+      if (it != mCache.end())
+      {
+         if (painter.GetRendererID() == it->second->GetRendererID())
+            return *it->second;
+         else
+            mCache.clear();
+      }
+
+      if (x == 0 && y == 0 && w == 0 && h == 0)
+      {
+         auto image = set.mImages.at(index);
+
+         auto result = mCache.emplace(
+            key, painter.CreateImage(
+                    image.HasAlpha() ? PainterImageFormat::RGBA8888 :
+                                       PainterImageFormat::RGB888,
+                    image.GetWidth(), image.GetHeight(), image.GetData(),
+                    image.GetAlpha()));
+
+         return *(result.first->second);
+      }
+
+      const auto& baseImage = GetImage(painter, set, index, 0, 0, 0, 0);
+
+      auto result =
+         mCache.emplace(key, painter.GetSubImage(baseImage, x, y, w, h));
+
+      return *(result.first->second);
+   }
+
+private:
+   Cache mCache;
+};
 
 void Theme::EnsureInitialised()
 {
@@ -248,6 +338,8 @@ void ThemeBase::SwitchTheme( teThemeType Theme )
       CreateImageCache();
 #endif
    }
+
+   mPainterImageCache = std::make_unique<PainterImageCache>();
 }
 
 /// This function is called to load the initial Theme images.
@@ -305,7 +397,7 @@ void ThemeBase::RecolourBitmap( int iIndex, wxColour From, wxColour To )
    ReplaceImage( iIndex, pResult.get() );
 }
 
-int ThemeBase::ColourDistance( wxColour & From, wxColour & To ){
+int ThemeBase::ColourDistance( const wxColour & From, const wxColour & To ){
    return 
       abs( From.Red() - To.Red() )
       + abs( From.Green() - To.Green() )
@@ -1327,6 +1419,12 @@ wxSize  ThemeBase::ImageSize( int iIndex )
    EnsureInitialised();
    wxImage & Image = resources.mImages[iIndex];
    return wxSize( Image.GetWidth(), Image.GetHeight());
+}
+
+const PainterImage& ThemeBase::GetPainterImage(
+   Painter& painter, int index, int x, int y, int w, int h)
+{
+   return mPainterImageCache->GetImage(painter, *mpSet, index, x, y, w, h);
 }
 
 /// Replaces both the image and the bitmap.

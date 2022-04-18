@@ -26,6 +26,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../widgets/Ruler.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+#include "CodeConversions.h"
+
 #include <wx/dc.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -119,14 +123,15 @@ void NoteTrackVRulerControls::Draw(
       const auto artist = TrackArtist::Get( context );
       UpdateRuler(rect);
 
-      auto dc = &context.dc;
+      auto& painter = context.painter;
+      auto stateMutator = painter.GetStateMutator();
 
-      dc->SetPen(highlight ? AColor::uglyPen : *wxTRANSPARENT_PEN);
-      dc->SetBrush(*wxWHITE_BRUSH);
+      stateMutator.SetPen(PenFromWXPen(highlight ? AColor::uglyPen : *wxTRANSPARENT_PEN));
+      stateMutator.SetBrush(Brush(Colors::White));
       wxRect bev = rect;
       bev.x++;
       bev.width--;
-      dc->DrawRectangle(bev);
+      painter.DrawRect(bev.x, bev.y, bev.width, bev.height);
 
       rect.y += 1;
       rect.height -= 1;
@@ -138,7 +143,7 @@ void NoteTrackVRulerControls::Draw(
       wxBrush blackKeyBrush;
       blackKeyBrush.SetColour(70, 70, 70);
 
-      dc->SetBrush(blackKeyBrush);
+      stateMutator.SetBrush(BrushFromWXBrush(blackKeyBrush));
 
       int fontSize = 10;
 #ifdef __WXMSW__
@@ -146,21 +151,25 @@ void NoteTrackVRulerControls::Draw(
 #endif
 
       wxFont labelFont(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-      dc->SetFont(labelFont);
+      auto graphicsFont = FontFromWXFont(painter, labelFont);
+
+      stateMutator.SetFont(graphicsFont);
 
       int octave = 0;
       int obottom = data.GetOctaveBottom(octave);
       int marg = data.GetNoteMargin();
 
       while (obottom >= rect.y) {
-         dc->SetPen(*wxBLACK_PEN);
+         stateMutator.SetPen(Pen(Colors::Black));
          for (int white = 0; white < 7; white++) {
             int pos = data.GetWhitePos(white);
-            if (obottom - pos > rect.y + marg + 1 &&
-                // don't draw too close to margin line -- it's annoying
-                obottom - pos < rect.y + rect.height - marg - 3)
-               AColor::Line(*dc, rect.x, obottom - pos,
-                            rect.x + rect.width, obottom - pos);
+            if (
+               obottom - pos > rect.y + marg + 1 &&
+               // don't draw too close to margin line -- it's annoying
+               obottom - pos < rect.y + rect.height - marg - 3)
+               AColor::Line(
+                  painter, rect.x, obottom - pos, rect.x + rect.width,
+                  obottom - pos);
          }
          wxRect br = rect;
          br.height = data.GetPitchHeight(1);
@@ -169,13 +178,13 @@ void NoteTrackVRulerControls::Draw(
          for (int black = 0; black < 5; black++) {
             br.y = obottom - data.GetBlackPos(black);
             if (br.y > rect.y + marg - 2 && br.y + br.height < rect.y + rect.height - marg) {
-               dc->SetPen(hilitePen);
-               dc->DrawRectangle(br);
-               dc->SetPen(*wxBLACK_PEN);
-               AColor::Line(*dc,
+               stateMutator.SetPen(PenFromWXPen(hilitePen));
+               painter.DrawRect(br.x, br.y, br.width, br.height);
+               stateMutator.SetPen(Pen(Colors::Black));
+               AColor::Line(painter,
                             br.x + 1, br.y + br.height - 1,
                             br.x + br.width - 1, br.y + br.height - 1);
-               AColor::Line(*dc,
+               AColor::Line(painter,
                             br.x + br.width - 1, br.y + 1,
                             br.x + br.width - 1, br.y + br.height - 1);
             }
@@ -186,25 +195,27 @@ void NoteTrackVRulerControls::Draw(
             // ISO standard: A440 is in the 4th octave, denoted
             // A4 <- the "4" should be a subscript.
             s.Printf(wxT("C%d"), octave - 1);
-            wxCoord width, height;
-            dc->GetTextExtent(s, &width, &height);
-            if (obottom - height + 4 > rect.y &&
+            auto utfString = audacity::ToUTF8(s);
+            auto textSize = painter.GetTextSize(utfString);
+
+            if (obottom - textSize.height + 4 > rect.y &&
                 obottom + 4 < rect.y + rect.height) {
-               dc->SetTextForeground(wxColour(60, 60, 255));
-               dc->DrawText(s, rect.x + rect.width - width,
-                            obottom - height + 2);
+               stateMutator.SetBrush(Brush(Color(60, 60, 255, 255)));
+               painter.DrawText(
+                  rect.x + rect.width - textSize.width,
+                  obottom - textSize.height + 2, utfString);
             }
          }
          obottom = data.GetOctaveBottom(++octave);
       }
       // draw lines delineating the out-of-bounds margins
-      dc->SetPen(*wxBLACK_PEN);
+      stateMutator.SetPen(Pen(Colors::Black));
       // you would think the -1 offset here should be -2 to match the
       // adjustment to rect.y (see above), but -1 produces correct output
-      AColor::Line(*dc, rect.x, rect.y + marg - 1, rect.x + rect.width, rect.y + marg - 1);
+      AColor::Line(painter, rect.x, rect.y + marg - 1, rect.x + rect.width, rect.y + marg - 1);
       // since the margin gives us the bottom of the line,
       // the extra -1 gets us to the top
-      AColor::Line(*dc, rect.x, rect.y + rect.height - marg - 1,
+      AColor::Line(painter, rect.x, rect.y + rect.height - marg - 1,
                         rect.x + rect.width, rect.y + rect.height - marg - 1);
 
    }

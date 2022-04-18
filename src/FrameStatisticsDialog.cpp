@@ -55,13 +55,18 @@ public:
 
       mStatisticsUpdated = FrameStatistics::Subscribe(
          [this](FrameStatistics::SectionID sectionID) {
-            constexpr auto timeout = std::chrono::milliseconds(300);
-            const auto now = std::chrono::steady_clock::now();
+            mSections[size_t(sectionID)].Dirty = true;
+         });
 
-            if ((now - mLastUpdate) > timeout)
+      Bind(
+         wxEVT_IDLE,
+         [this](wxIdleEvent& evt)
+         {
+            for (size_t i = 0; i < size_t(FrameStatistics::SectionID::Count);
+                 ++i)
             {
-               SectionUpdated(sectionID);
-               mLastUpdate = now;
+               if (mSections[i].Dirty)
+                  SectionUpdated(FrameStatistics::SectionID(i));
             }
          });
    }
@@ -110,6 +115,8 @@ private:
       section.Max->SetLabel(FormatTime(profilerSection.GetMaxDuration()));
       section.Avg->SetLabel(FormatTime(profilerSection.GetAverageDuration()));
       section.Events->SetLabel(std::to_string(profilerSection.GetEventsCount()));
+
+      section.Dirty = false;
    }
 
    struct Section final
@@ -119,13 +126,13 @@ private:
       wxStaticText* Max;
       wxStaticText* Avg;
       wxStaticText* Events;
+
+      bool Dirty { true };
    };
 
    Section mSections[size_t(FrameStatistics::SectionID::Count)];
 
    Observer::Subscription mStatisticsUpdated;
-
-   std::chrono::steady_clock::time_point mLastUpdate;
 };
 
 Destroy_ptr<Dialog> sDialog;

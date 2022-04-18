@@ -18,6 +18,7 @@
 #include "ZoomInfo.h"
 
 #include "waveform/WaveDataCache.h"
+#include "graphics/Painter.h"
 
 #include "Envelope.h"
 #include "FrameStatistics.h"
@@ -89,6 +90,8 @@ struct WaveBitmapCache::LookupHelper final
 
    bool PerformLookup(WaveBitmapCache* cache, GraphicsDataCacheKey key)
    {
+      DataCache->UpdateViewportWidth(cache->GetMaxViewportWidth());
+
       auto result = DataCache->PerformLookup(key);
 
       if (result == nullptr)
@@ -311,6 +314,9 @@ WaveBitmapCache::SetPaintParameters(const WavePaintParameters& params)
 {
    if (mPaintParamters != params)
    {
+      if (mPaintParamters.Height != params.Height)
+         mCachedImage = {};
+
       mPaintParamters = params;
       mEnvelope = params.AttachedEnvelope;
       mEnvelopeVersion = mEnvelope != nullptr ? mEnvelope->GetVersion() : 0;
@@ -401,8 +407,21 @@ bool WaveBitmapCache::InitializeElement(
    element.AvailableColumns = columnsCount;
    element.IsComplete = mLookupHelper->IsComplete;
 
-   element.Bitmap = std::make_unique<wxBitmap>(*mCachedImage);
+   element.Bitmap = mPainter->CreateImage(
+      PainterImageFormat::RGB888, CacheElementWidth, height, imageData);
 
    return true;
 }
 
+WaveBitmapCache& WaveBitmapCache::SetPainter(Painter& painter)
+{
+   if (mRendererID != painter.GetRendererID())
+   {
+      mRendererID = painter.GetRendererID();
+      Invalidate();
+   }
+   
+   mPainter = &painter;
+
+   return *this;
+}

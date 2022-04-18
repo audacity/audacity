@@ -40,7 +40,7 @@ void OverlayPanel::ClearOverlays()
    mOverlays.clear();
 }
 
-void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
+void OverlayPanel::DrawOverlays(bool repaint_all, Painter &painter)
 {
    if ( !IsShownOnScreen() )
       return;
@@ -58,7 +58,7 @@ void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
    // Find out the rectangles and outdatedness for each overlay
    wxSize size(GetBackingDC().GetSize());
    for (const auto& pOverlay : mOverlays)
-      pairs.push_back( pOverlay.lock()->GetRectangle(size) );
+      pairs.push_back( pOverlay.lock()->GetRectangle(painter, size) );
 
    // See what requires redrawing.  If repainting, all.
    // If not, then whatever is outdated, and whatever will be damaged by
@@ -99,25 +99,12 @@ void OverlayPanel::DrawOverlays(bool repaint_all, wxDC *pDC)
       } while (!done);
    }
 
-   std::optional<wxClientDC> myDC;
-   auto &dc = pDC ? *pDC : (myDC.emplace(this), *myDC);
-
-   // Erase
-   auto it2 = pairs.begin();
-   for (auto pOverlay : mOverlays) {
-      if (repaint_all || it2->second)
-         pOverlay.lock()->Erase(dc, GetBackingDC());
-      ++it2;
-   }
-
    // Draw
-   it2 = pairs.begin();
+   auto it2 = pairs.begin();
    for (auto pOverlay : mOverlays) {
       if (repaint_all || it2->second) {
          // Guarantee a clean state of the dc each pass:
-         ADCChanger changer{ &dc };
-
-         pOverlay.lock()->Draw(*this, dc);
+         pOverlay.lock()->Draw(*this, painter);
       }
       ++it2;
    }

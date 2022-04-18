@@ -49,6 +49,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackAffordanceHandle.h"
 #include "WaveClipTrimHandle.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+#include "graphics/WXColor.h"
+
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
 using WaveTrackSubViewPtrs = std::vector< std::shared_ptr< WaveTrackSubView > >;
@@ -778,7 +782,8 @@ void WaveTrackSubView::DrawBoldBoundaries(
    TrackPanelDrawingContext &context, const WaveTrack *track,
    const wxRect &rect )
 {
-   auto &dc = context.dc;
+   auto &painter = context.painter;
+   auto stateMutator = painter.GetStateMutator();
    const auto artist = TrackArtist::Get( context );
 
    const auto &zoomInfo = *artist->pZoomInfo;
@@ -795,22 +800,25 @@ void WaveTrackSubView::DrawBoldBoundaries(
 #endif
       const int xx = zoomInfo.TimeToPosition(loc.pos);
       if (xx >= 0 && xx < rect.width) {
-         dc.SetPen( highlightLoc ? AColor::uglyPen : *wxGREY_PEN );
-         AColor::Line(dc, (int) (rect.x + xx - 1), rect.y, (int) (rect.x + xx - 1), rect.y + rect.height);
+         stateMutator.SetPen(
+            PenFromWXPen(highlightLoc ? AColor::uglyPen : *wxGREY_PEN));
+         AColor::Line(painter, (int) (rect.x + xx - 1), rect.y, (int) (rect.x + xx - 1), rect.y + rect.height);
          if (loc.typ == WaveTrackLocation::locationCutLine) {
-            dc.SetPen( highlightLoc ? AColor::uglyPen : *wxRED_PEN );
+            stateMutator.SetPen( PenFromWXPen( highlightLoc ? AColor::uglyPen : *wxRED_PEN ) );
          }
          else {
 #ifdef EXPERIMENTAL_DA
             // JKC Black does not show up enough.
-            dc.SetPen(highlightLoc ? AColor::uglyPen : *wxWHITE_PEN);
+            stateMutator.SetPen(PenFromWXPen(highlightLoc ? AColor::uglyPen : *wxWHITE_PEN));
 #else
-            dc.SetPen(highlightLoc ? AColor::uglyPen : *wxBLACK_PEN);
+            stateMutator.SetPen(
+               PenFromWXPen(highlightLoc ? AColor::uglyPen : *wxBLACK_PEN));
 #endif
          }
-         AColor::Line(dc, (int) (rect.x + xx), rect.y, (int) (rect.x + xx), rect.y + rect.height);
-         dc.SetPen( highlightLoc ? AColor::uglyPen : *wxGREY_PEN );
-         AColor::Line(dc, (int) (rect.x + xx + 1), rect.y, (int) (rect.x + xx + 1), rect.y + rect.height);
+         AColor::Line(painter, (int) (rect.x + xx), rect.y, (int) (rect.x + xx), rect.y + rect.height);
+         stateMutator.SetPen(
+            PenFromWXPen(highlightLoc ? AColor::uglyPen : *wxGREY_PEN));
+         AColor::Line(painter, (int) (rect.x + xx + 1), rect.y, (int) (rect.x + xx + 1), rect.y + rect.height);
       }
    }
 }

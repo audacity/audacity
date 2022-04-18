@@ -94,6 +94,13 @@ is time to refresh some aspect of the screen.
 #include <wx/dcclient.h>
 #include <wx/graphics.h>
 
+#include "graphics/WXPainterFactory.h"
+#include "graphics/Painter.h"
+#include "graphics/WXColor.h"
+#include "graphics/WXPainterUtils.h"
+
+#include "CodeConversions.h"
+
 static_assert( kVerticalPadding == kTopMargin + kBottomMargin );
 static_assert( kTrackInfoBtnSize == kAffordancesAreaHeight, "Drag bar is misaligned with the menu button");
 
@@ -266,6 +273,8 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 #pragma warning( default: 4355 )
 #endif
 {
+   mPainter = CreatePainter(this);
+
    SetLayoutDirection(wxLayout_LeftToRight);
    SetLabel(XO("Track Panel"));
    SetName(XO("Track Panel"));
@@ -423,8 +432,8 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    // Notify listeners for timer ticks
    window.GetPlaybackScroller().OnTimer();
 
-   DrawOverlays(false);
-   mRuler->DrawOverlays(false);
+   DrawOverlays(false, *mPainter);
+   mRuler->DrawOverlays(false, *mPainter);
 
    if(IsAudioActive() && gAudioIO->GetNumCaptureChannels()) {
 
@@ -470,40 +479,13 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
    auto sw =
       FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::TrackPanel);
 
-   {
-      wxPaintDC dc(this);
+   DrawTracks();
 
-      // Retrieve the damage rectangle
-      wxRect box = GetUpdateRegion().GetBox();
+   auto clipStateMutator = mPainter->GetClipStateMutator();
+   clipStateMutator.ResetClipRect();
+   DrawOverlays(true, *mPainter);
 
-      // Recreate the backing bitmap if we have a full refresh
-      // (See TrackPanel::Refresh())
-      if (mRefreshBacking || (box == GetRect()))
-      {
-         // Reset (should a mutex be used???)
-         mRefreshBacking = false;
-
-         // Redraw the backing bitmap
-         DrawTracks(&GetBackingDCForRepaint());
-
-         // Copy it to the display
-         DisplayBitmap(dc);
-      }
-      else
-      {
-         // Copy full, possibly clipped, damage rectangle
-         RepairBitmap(dc, box.x, box.y, box.width, box.height);
-      }
-
-      // Done with the clipped DC
-
-      // Drawing now goes directly to the client area.
-      // DrawOverlays() may need to draw outside the clipped region.
-      // (Used to make a NEW, separate wxClientDC, but that risks flashing
-      // problems on Mac.)
-      dc.DestroyClippingRegion();
-      DrawOverlays(true, &dc);
-   }
+   mPainter->Flush();
 }
 
 void TrackPanel::MakeParentRedrawScrollbars()
@@ -554,8 +536,7 @@ void TrackPanel::ProcessUIHandleResult
       panel->UpdateVRuler(pClickedTrack);
 
    if (refreshResult & RefreshCode::DrawOverlays) {
-      panel->DrawOverlays(false);
-      mRuler->DrawOverlays(false);
+      panel->Refresh(false);
    }
 
    // Refresh all if told to do so, or if told to refresh a track that
@@ -806,18 +787,17 @@ void TrackPanel::OnAudioIO(AudioIOEvent evt)
 /// Draw the actual track areas.  We only draw the borders
 /// and the little buttons and menues and whatnot here, the
 /// actual contents of each track are drawn by the TrackArtist.
-void TrackPanel::DrawTracks(wxDC * dc)
+void TrackPanel::DrawTracks()
 {
-   wxRegion region = GetUpdateRegion();
-
    const wxRect clip = GetRect();
 
    const SelectedRegion &sr = mViewInfo->selectedRegion;
    mTrackArtist->pSelectedRegion = &sr;
    mTrackArtist->pZoomInfo = mViewInfo;
-   TrackPanelDrawingContext context {
-      *dc, Target(), mLastMouseState, mTrackArtist.get()
-   };
+
+   wxClientDC tempDC(this);
+   TrackPanelDrawingContext context { tempDC, *mPainter, Target(),
+                                      mLastMouseState, mTrackArtist.get() };
 
    // Don't draw a bottom margin here.
 
@@ -1075,11 +1055,14 @@ namespace {
    };
 
 void GetTrackNameExtent(
-   wxDC &dc, const Track *t, wxCoord *pW, wxCoord *pH )
+   Painter &painter, const Track *t, wxCoord *pW, wxCoord *pH )
 {
    wxFont labelFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   dc.SetFont(labelFont);
-   dc.GetTextExtent( t->GetName(), pW, pH );
+
+   const auto size = painter.GetTextSize( audacity::ToUTF8(t->GetName()) );
+
+   *pW = static_cast<wxCoord>(size.width);
+   *pH = static_cast<wxCoord>(size.height);
 }
 
 wxRect GetTrackNameRect(
@@ -1106,10 +1089,12 @@ void DrawTrackName(
       return;
    if( !t->IsLeader())
       return;
-   auto &dc = context.dc;
+   auto& painter = context.painter;
+   auto stateMutator = painter.GetStateMutator();
+
    wxBrush Brush;
    wxCoord textWidth, textHeight;
-   GetTrackNameExtent( dc, t, &textWidth, &textHeight );
+   GetTrackNameExtent( painter, t, &textWidth, &textHeight );
 
    // Logic for name background translucency (aka 'shields')
    // Tracks less than kOpaqueHeight high will have opaque shields.
@@ -1133,44 +1118,13 @@ void DrawTrackName(
    const auto nameRect =
       GetTrackNameRect( leftOffset, rect, textWidth, textHeight );
 
-#ifdef __WXMAC__
-   // Mac dc is a graphics dc already.
-   AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText, opacity );
-   dc.DrawRoundedRectangle( nameRect, 8.0 );
-#else
-   // This little dance with wxImage in order to draw to a graphic dc
-   // which we can then paste as a translucent bitmap onto the real dc.
-   enum : int {
-      SecondMarginX = 1, SecondMarginY = 1,
-      SecondMarginsX = 2 * SecondMarginX, SecondMarginsY = 2 * SecondMarginY,
-   };
-   wxImage image(
-      textWidth + MarginsX + SecondMarginsX,
-      textHeight + MarginsY + SecondMarginsY );
-   image.InitAlpha();
-   unsigned char *alpha=image.GetAlpha();
-   memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, image.GetWidth()*image.GetHeight());
+   AColor::UseThemeColour( stateMutator, clrTrackInfoSelected, clrTrackPanelText, opacity );
+   painter.DrawRoundedRect(nameRect.x, nameRect.y, nameRect.width, nameRect.height, 8.0);
 
-   {
-      std::unique_ptr< wxGraphicsContext >
-         pGc{ wxGraphicsContext::Create(image) };
-      auto &gc = *pGc;
-      // This is to a gc, not a dc.
-      AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, opacity );
-      // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
-      gc.DrawRoundedRectangle(
-         SecondMarginX, SecondMarginY,
-         textWidth + MarginsX, textHeight + MarginsY, 8.0 );
-      // destructor of gc updates the wxImage.
-   }
-   wxBitmap bitmap( image );
-   dc.DrawBitmap( bitmap,
-      nameRect.x - SecondMarginX, nameRect.y - SecondMarginY );
-#endif
-   dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
-   dc.DrawText(t->GetName(),
-      nameRect.x + MarginX,
-      nameRect.y + MarginY);
+   stateMutator.SetBrush(ColorFromWXColor(theTheme.Colour(clrTrackPanelText)));
+   painter.DrawText(
+      nameRect.x + MarginX, nameRect.y + MarginY,
+      audacity::ToUTF8(t->GetName()));
 }
 
 /*
@@ -1227,10 +1181,11 @@ struct EmptyCell final : CommonTrackPanelCell {
    {
       if ( iPass == TrackArtist::PassMargins ) {
          // Draw a margin area of TrackPanel
-         auto dc = &context.dc;
+         auto& painter = context.painter;
+         auto stateMutator = painter.GetStateMutator();
 
-         AColor::TrackPanelBackground( dc, false );
-         dc->DrawRectangle( rect );
+         AColor::TrackPanelBackground(stateMutator, false);
+         painter.DrawRect( rect.x, rect.y, rect.width, rect.height );
       }
    }
 };
@@ -1288,12 +1243,14 @@ struct VRulersAndChannels final : TrackPanelGroup {
       if ( iPass == TrackArtist::PassControls ) {
          if (mRefinement.size() > 1) {
             // Draw lines separating sub-views
-            auto &dc = context.dc;
-            AColor::CursorColor( &dc );
+            auto &painter = context.painter;
+            auto stateMutator = painter.GetStateMutator();
+
+            AColor::CursorColor( stateMutator );
             auto iter = mRefinement.begin() + 1, end = mRefinement.end();
             for ( ; iter != end; ++iter ) {
                auto yy = iter->first;
-               AColor::Line( dc, mLeftOffset, yy, rect.GetRight(), yy );
+               AColor::Line( painter, mLeftOffset, yy, rect.GetRight(), yy );
             }
          }
       }
@@ -1307,7 +1264,7 @@ struct VRulersAndChannels final : TrackPanelGroup {
       if ( iPass == TrackArtist::PassBorders ) {
          if ( true ) {
             wxCoord textWidth, textHeight;
-            GetTrackNameExtent( context.dc, mpTrack.get(),
+            GetTrackNameExtent( context.painter, mpTrack.get(),
                &textWidth, &textHeight );
             result =
                GetTrackNameRect( mLeftOffset, rect, textWidth, textHeight );
@@ -1340,11 +1297,13 @@ public:
    {
       if (iPass == TrackArtist::PassBackground)
       {
-         context.dc.SetPen(*wxTRANSPARENT_PEN);
-         AColor::UseThemeColour(&context.dc, mFillBrushName);
-         context.dc.DrawRectangle(rect);
+         auto stateMutator = context.painter.GetStateMutator();
+         stateMutator.SetPen(Pen::NoPen);
+
+         AColor::UseThemeColour(stateMutator, mFillBrushName);
+         context.painter.DrawRect(rect.x, rect.y, rect.width, rect.height);
          wxRect bevel(rect.x, rect.y, rect.width - 1, rect.height - 1);
-         AColor::BevelTrackInfo(context.dc, true, bevel, false);
+         AColor::BevelTrackInfo(context.painter, true, bevel, false);
       }
    }
 
@@ -1481,12 +1440,14 @@ struct LabeledChannelGroup final : TrackPanelGroup {
       const wxRect &rect, unsigned iPass ) override
    {
       if ( iPass == TrackArtist::PassBorders ) {
-         auto &dc = context.dc;
-         dc.SetBrush(*wxTRANSPARENT_BRUSH);
-         dc.SetPen(*wxBLACK_PEN);
+         auto &painter = context.painter;
+         auto stateMutator = painter.GetStateMutator();
+
+         stateMutator.SetBrush(Brush::NoBrush);
+         stateMutator.SetPen(Pen(Colors::Black));
 
          // border
-         dc.DrawRectangle(
+         painter.DrawRect(
             rect.x, rect.y,
             rect.width - kShadowThickness, rect.height - kShadowThickness
          );
@@ -1498,9 +1459,9 @@ struct LabeledChannelGroup final : TrackPanelGroup {
          const auto bottom = rect.GetBottom();
 
          // bottom
-         AColor::Line(dc, rect.x + 2, bottom, right, bottom);
+         AColor::Line(painter, rect.x + 2, bottom, right, bottom);
          // right
-         AColor::Line(dc, right, rect.y + 2, right, bottom);
+         AColor::Line(painter, right, rect.y + 2, right, bottom);
       }
       if ( iPass == TrackArtist::PassFocus ) {
          // Sometimes highlight is not drawn on backing bitmap. I thought
@@ -1516,19 +1477,22 @@ struct LabeledChannelGroup final : TrackPanelGroup {
              wxWindow::FindFocus() == &trackPanel ) {
             /// Draw a three-level highlight gradient around the focused track.
             wxRect theRect = rect;
-            auto &dc = context.dc;
-            dc.SetBrush(*wxTRANSPARENT_BRUSH);
+            auto &painter = context.painter;
+            auto stateMutator = painter.GetStateMutator();
 
-            AColor::TrackFocusPen( &dc, 2 );
-            dc.DrawRectangle(theRect);
+            stateMutator.SetBrush(Brush::NoBrush);
+
+            AColor::TrackFocusPen( stateMutator, 2 );
+            painter.DrawRect(theRect.x, theRect.y, theRect.width, theRect.height);
             theRect.Deflate(1);
 
-            AColor::TrackFocusPen( &dc, 1 );
-            dc.DrawRectangle(theRect);
+            AColor::TrackFocusPen( stateMutator, 1 );
+            painter.DrawRect(theRect.x, theRect.y, theRect.width, theRect.height);
             theRect.Deflate(1);
 
-            AColor::TrackFocusPen( &dc, 0 );
-            dc.DrawRectangle(theRect);
+            AColor::TrackFocusPen( stateMutator, 0 );
+            painter.DrawRect(
+               theRect.x, theRect.y, theRect.width, theRect.height);
          }
       }
    }

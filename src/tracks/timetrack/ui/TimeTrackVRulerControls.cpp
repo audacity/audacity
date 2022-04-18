@@ -26,6 +26,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../UIHandle.h"
 #include "../../../widgets/Ruler.h"
 
+#include "graphics/Painter.h"
+
 TimeTrackVRulerControls::~TimeTrackVRulerControls()
 {
 }
@@ -78,11 +80,13 @@ void TimeTrackVRulerControls::Draw(
       --rect.width;
       --rect.height;
 
-      auto dc = &context.dc;
+      auto& painter = context.painter;
+      auto stateMutator = painter.GetStateMutator();
+
       wxRect bev = rect;
       bev.Inflate(-1, 0);
       bev.width += 1;
-      AColor::BevelTrackInfo(*dc, true, bev);
+      AColor::BevelTrackInfo(painter, true, bev);
       
       // Right align the ruler
       wxRect rr = rect;
@@ -98,7 +102,7 @@ void TimeTrackVRulerControls::Draw(
       auto vruler = &ruler();
 
       vruler->SetTickColour( theTheme.Colour( clrTrackPanelText ));
-      vruler->Draw(*dc);
+      vruler->Draw(painter);
    }
 }
 

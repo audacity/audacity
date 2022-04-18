@@ -23,7 +23,7 @@ public:
    Color& operator=(const Color&) noexcept = default;
    Color& operator=(Color&&) noexcept = default;
 
-   constexpr Color(uint8_t rr, uint8_t gg, uint8_t bb, uint8_t aa) noexcept
+   constexpr Color(uint8_t rr, uint8_t gg, uint8_t bb, uint8_t aa = 255) noexcept
        : mRed(rr)
        , mGreen(gg)
        , mBlue(bb)

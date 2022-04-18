@@ -28,7 +28,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../ui/EnvelopeHandle.h"
 
-#include <wx/dc.h>
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
 
 using Doubles = ArrayOf<double>;
 
@@ -72,7 +73,7 @@ void DrawHorzRulerAndCurve
 ( TrackPanelDrawingContext &context, const wxRect & r,
   const TimeTrack &track, Ruler &ruler )
 {
-   auto &dc = context.dc;
+   auto &painter = context.painter;
    const auto artist = TrackArtist::Get( context );
    const auto &zoomInfo = *artist->pZoomInfo;
    
@@ -89,9 +90,9 @@ void DrawHorzRulerAndCurve
       wxASSERT(false);
       min = max;
    }
-   
-   AColor::UseThemeColour( &dc, clrUnselected );
-   dc.DrawRectangle(r);
+   auto stateMutator = painter.GetStateMutator();
+   AColor::UseThemeColour( stateMutator, clrUnselected );
+   painter.DrawRect(r.x, r.y, r.width, r.height);
    
    //copy this rectangle away for future use.
    wxRect mid = r;
@@ -102,14 +103,14 @@ void DrawHorzRulerAndCurve
    ruler.SetFlip(true); // tick marks at top of track.
    ruler.Invalidate();  // otherwise does not redraw.
    ruler.SetTickColour( theTheme.Colour( clrTrackPanelText ));
-   ruler.Draw(dc, track.GetEnvelope());
+   ruler.Draw(painter, track.GetEnvelope());
    
    Doubles envValues{ size_t(mid.width) };
    CommonTrackView::GetEnvelopeValues( *track.GetEnvelope(),
     0, 0, envValues.get(), mid.width, 0, zoomInfo );
    
    wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
-   dc.SetPen( pen );
+   stateMutator.SetPen(PenFromWXPen(pen));
    
    auto rangeLower = track.GetRangeLower(), rangeUpper = track.GetRangeUpper();
    double logLower = log(std::max(1.0e-7, rangeLower)),
@@ -123,7 +124,7 @@ void DrawHorzRulerAndCurve
       else
          y = (double)mid.height * (rangeUpper - envValues[x]) / (rangeUpper - rangeLower);
       int thisy = r.y + (int)y;
-      AColor::Line(dc, mid.x + x, thisy - 1, mid.x + x, thisy+2);
+      AColor::Line(painter, mid.x + x, thisy - 1, mid.x + x, thisy+2);
    }
 }
 

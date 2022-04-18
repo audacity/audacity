@@ -14,6 +14,7 @@
 #include "BackedPanel.h" // to inherit
 
 class Overlay;
+class Painter;
 
 class AUDACITY_DLL_API OverlayPanel /* not final */ : public BackedPanel {
 public:
@@ -37,7 +38,7 @@ public:
    // will be erased and re-drawn.
    // pDC can be null, in which case, DrawOverlays() will create a
    // wxClientDC internally when necessary.
-   void DrawOverlays(bool repaint_all, wxDC *pDC = nullptr);
+   void DrawOverlays(bool repaint_all, Painter& painter);
    
 private:
    using OverlayPtr = std::weak_ptr<Overlay>;

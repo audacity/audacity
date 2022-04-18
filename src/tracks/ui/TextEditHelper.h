@@ -16,7 +16,7 @@
 #include "UIHandle.h"
 #include <wx/colour.h>
 
-class wxDC;
+class Painter;
 class wxMouseEvent;
 
 class AudacityProject;
@@ -89,7 +89,7 @@ public:
     bool OnDrag(const wxMouseEvent& event, AudacityProject* project);
     bool OnRelease(const wxMouseEvent& event, AudacityProject* project);
 
-    void Draw(wxDC& dc, const wxRect& rect);
+    void Draw(Painter& painter, const wxRect& rect);
 
     bool CutSelectedText(AudacityProject& project);
     bool CopySelectedText(AudacityProject& project);

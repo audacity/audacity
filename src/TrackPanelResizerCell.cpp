@@ -24,6 +24,9 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/dc.h>
 #include <wx/mousestate.h>
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+
 TrackPanelResizerCell::TrackPanelResizerCell(
    const std::shared_ptr<Track> &pTrack )
    : CommonTrackCell{ pTrack }
@@ -51,13 +54,15 @@ void TrackPanelResizerCell::Draw(
    if ( iPass == TrackArtist::PassMargins ) {
       auto pTrack = FindTrack();
       if ( pTrack ) {
-         auto dc = &context.dc;
+         auto& painter = context.painter;
+         auto stateMutator = painter.GetStateMutator();
+
          const bool last =
             pTrack.get() == *TrackList::Channels( pTrack.get() ).rbegin();
          if ( last ) {
             // Fill in separator area below a track
-            AColor::TrackPanelBackground( dc, false );
-            dc->DrawRectangle( rect );
+            AColor::TrackPanelBackground( stateMutator, false );
+            painter.DrawRect( RectFromWXRect( rect ) );
          }
          else {
             // Area between channels of a group
@@ -65,40 +70,39 @@ void TrackPanelResizerCell::Draw(
             // of this channel, down to and including the upper border of the
             // next channel
             
-            ADCChanger cleanup{ dc };
-            
             // Paint the left part of the background
             const auto artist = TrackArtist::Get( context );
             auto labelw = artist->pZoomInfo->GetLeftOffset() - 1;
-            AColor::MediumTrackInfo( dc, pTrack->GetSelected() );
-            dc->DrawRectangle(
+            AColor::MediumTrackInfo( stateMutator, pTrack->GetSelected() );
+            painter.DrawRect(
                rect.GetX(), rect.GetY(), labelw, rect.GetHeight() );
             
             // Stroke the left border
-            dc->SetPen(*wxBLACK_PEN);
+            stateMutator.SetPen(Colors::Black);
             {
                const auto left = rect.GetLeft();
-               AColor::Line( *dc, left, rect.GetTop(), left, rect.GetBottom() );
+               AColor::Line( painter, left, rect.GetTop(), left, rect.GetBottom() );
             }
             
-            AColor::TrackPanelBackground(dc, false);
+            AColor::TrackPanelBackground(stateMutator, false);
             
             wxRect rec{ rect };
             rec.width -= labelw - rec.x;
             rec.x = labelw;
             
-            dc->DrawRectangle( wxRect( rec ).Inflate( 0, -kBorderThickness ) );
+            painter.DrawRect( RectFromWXRect( wxRect( rec ).Inflate( 0, -kBorderThickness ) ) );
             
             // These lines stroke over what is otherwise "border" of each
             // channel
-            dc->SetBrush(*wxTRANSPARENT_BRUSH);
-            dc->SetPen(*wxBLACK_PEN);
+            stateMutator.SetBrush(Brush::NoBrush);
+            stateMutator.SetPen(Colors::Black);
+
             const auto left = rec.GetLeft();
             const auto right = rec.GetRight();
             const auto top = rec.GetTop();
             const auto bottom = rec.GetBottom();
-            AColor::Line( *dc, left, top,    right, top    );
-            AColor::Line( *dc, left, bottom, right, bottom );
+            AColor::Line( painter, left, top,    right, top    );
+            AColor::Line( painter, left, bottom, right, bottom );
          }
       }
    }

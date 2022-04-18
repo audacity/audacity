@@ -43,7 +43,7 @@ void WaveTrackVRulerControls::DoDraw( TrackVRulerControls &controls,
       --rect.width;
       --rect.height;
 
-      auto dc = &context.dc;
+      auto& painter = context.painter;
 
       // All waves have a ruler in the info panel
       // The ruler needs a bevelled surround.
@@ -56,7 +56,7 @@ void WaveTrackVRulerControls::DoDraw( TrackVRulerControls &controls,
       highlight = rect.Contains(context.lastState.GetPosition());
 #endif
    
-      AColor::BevelTrackInfo(*dc, true, bev, highlight);
+      AColor::BevelTrackInfo(painter, true, bev, highlight);
       
       // Right align the ruler
       wxRect rr = rect;
@@ -84,6 +84,6 @@ void WaveTrackVRulerControls::DoDraw( TrackVRulerControls &controls,
       controls.UpdateRuler(rr);
 
       vruler.SetTickColour( theTheme.Colour( clrTrackPanelText ));
-      vruler.Draw(*dc);
+      vruler.Draw(painter);
    }
 }

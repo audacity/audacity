@@ -7,6 +7,10 @@ set( SOURCES
    graphics/WXColor.h
    graphics/WXGraphicsContextPainter.cpp
    graphics/WXGraphicsContextPainter.h
+   graphics/WXPainterFactory.cpp
+   graphics/WXPainterFactory.h
+   graphics/WXPainterUtils.cpp
+   graphics/WXPainterUtils.h
 
    waveform/WaveBitmapCache.cpp
    waveform/WaveBitmapCache.h

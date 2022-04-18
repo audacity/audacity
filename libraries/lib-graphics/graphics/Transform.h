@@ -15,6 +15,8 @@
 #include <numeric>
 
 #include "Point.h"
+#include "Size.h"
+#include "Rect.h"
 
 template <typename DataType>
 class TransformType final
@@ -85,6 +87,16 @@ public:
    PointType<DataType> Apply(PointType<DataType> pt) const noexcept
    {
       return Apply(pt.x, pt.y);
+   }
+
+   SizeType<DataType> Apply(SizeType<DataType> sz) const noexcept
+   {
+      return sz * mScale;
+   }
+
+   RectType<DataType> Apply(RectType<DataType> rect) const noexcept
+   {
+      return { Apply(rect.Origin), Apply(rect.Size) };
    }
 
    TransformType& Translate(DataType x, DataType y) noexcept
@@ -192,6 +204,16 @@ public:
       auto copy = *this;
       copy.Inverse();
       return copy;
+   }
+
+   PointType<DataType> GetTranslation() const noexcept
+   {
+      return mTranslation;
+   }
+
+   PointType<DataType> GetScale() const noexcept
+   {
+      return mScale;
    }
 
 private:

@@ -17,12 +17,15 @@
 #include "GraphicsDataCache.h"
 
 #include "graphics/Color.h"
+#include "graphics/RendererID.h"
 #include "waveform/WavePaintParameters.h"
 
 class wxBitmap;
 class wxImage;
 class WaveDataCache;
 class Envelope;
+class PainterImage;
+class Painter;
 
 struct GRAPHICS_WX_API WaveBitmapCacheElement final :
     GraphicsDataCacheElementBase
@@ -31,7 +34,7 @@ struct GRAPHICS_WX_API WaveBitmapCacheElement final :
 
    void Dispose() override;
 
-   std::unique_ptr<wxBitmap> Bitmap;
+   std::unique_ptr<PainterImage> Bitmap;
    size_t AvailableColumns { 0 };
 };
 
@@ -44,6 +47,7 @@ public:
 
    WaveBitmapCache& SetPaintParameters(const WavePaintParameters& params);
    WaveBitmapCache& SetSelection(const ZoomInfo& zoomInfo, double t0, double t1);
+   WaveBitmapCache& SetPainter(Painter& painter);
 
 private:
    bool InitializeElement(
@@ -72,4 +76,7 @@ private:
 
    const Envelope* mEnvelope { nullptr };
    size_t mEnvelopeVersion { 0 };
+
+   Painter* mPainter { nullptr };
+   RendererID mRendererID;
 };

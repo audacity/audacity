@@ -23,6 +23,9 @@ set(SOURCES
 
     FromChars.h
     FromChars.cpp
+
+    UTF8Utils.h
+    UTF8Utils.cpp
 )
 
 set( LIBRARIES

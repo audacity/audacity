@@ -75,6 +75,12 @@
 #include "AllThemeResources.h"
 #include "../widgets/valnum.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXColor.h"
+#include "graphics/WXPainterUtils.h"
+#include "graphics/WXPainterFactory.h"
+#include "CodeConversions.h"
+
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
 
@@ -297,6 +303,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
              float fDecayRate /*= 60.0f*/)
 : MeterPanelBase(parent, id, pos, size, wxTAB_TRAVERSAL | wxNO_BORDER | wxWANTS_CHARS),
    mProject(project),
+   mPainter(CreatePainter(this)),
    mQueue{ 1024 },
    mWidth(size.x),
    mHeight(size.y),
@@ -381,12 +388,12 @@ MeterPanel::MeterPanel(AudacityProject *project,
       if(mIsInput)
       {
          //mIcon = NEW wxBitmap(MicMenuNarrow_xpm);
-         mIcon = std::make_unique<wxBitmap>(wxBitmap(theTheme.Bitmap(bmpMic)));
+         mIcon = &theTheme.GetPainterImage(*mPainter, bmpMic);
       }
       else
       {
          //mIcon = NEW wxBitmap(SpeakerMenuNarrow_xpm);
-         mIcon = std::make_unique<wxBitmap>(wxBitmap(theTheme.Bitmap(bmpSpeaker)));
+         mIcon = &theTheme.GetPainterImage(*mPainter, bmpSpeaker);
       }
    }
 
@@ -468,25 +475,17 @@ void MeterPanel::OnErase(wxEraseEvent & WXUNUSED(event))
 
 void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
-#if defined(__WXMAC__)
-   auto paintDC = std::make_unique<wxPaintDC>(this);
-#else
-   std::unique_ptr<wxDC> paintDC{ wxAutoBufferedPaintDCFactory(this) };
-#endif
-   wxDC & destDC = *paintDC;
-   wxColour clrText = theTheme.Colour( clrTrackPanelText );
-   wxColour clrBoxFill = theTheme.Colour( clrMedium );
+   Color clrText = ColorFromWXColor(theTheme.Colour(clrTrackPanelText));
+   Color clrBoxFill = ColorFromWXColor(theTheme.Colour( clrMedium ));
 
    if (mLayoutValid == false || (mStyle == MixerTrackCluster ))
    {
       // Create a NEW one using current size and select into the DC
-      mBitmap = std::make_unique<wxBitmap>();
-      mBitmap->Create(mWidth, mHeight, destDC);
-      wxMemoryDC dc;
-      dc.SelectObject(*mBitmap);
-
+      mBitmap = mPainter->CreateDeviceImage(PainterImageFormat::RGB888, mWidth, mHeight);
+      auto offscreenHolder = mPainter->PaintOn(*mBitmap);
+      auto stateMutator = mPainter->GetStateMutator();
       // Go calculate all of the layout metrics
-      HandleLayout(dc);
+      HandleLayout();
    
       // Start with a clean background
       // LLL:  Should research USE_AQUA_THEME usefulness...
@@ -499,58 +498,59 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 #endif
      
       mBkgndBrush.SetColour( GetBackgroundColour() );
-      dc.SetPen(*wxTRANSPARENT_PEN);
-      dc.SetBrush(mBkgndBrush);
-      dc.DrawRectangle(0, 0, mWidth, mHeight);
+      stateMutator.SetPen(Pen::NoPen);
+      stateMutator.SetBrush(BrushFromWXBrush(mBkgndBrush));
+      mPainter->DrawRect(0, 0, mWidth, mHeight);
 //#endif
 
       // MixerTrackCluster style has no icon or L/R labels
       if (mStyle != MixerTrackCluster)
       {
          bool highlight = InIcon();
-         dc.DrawBitmap( theTheme.Bitmap( highlight ? 
+         mPainter->DrawImage( theTheme.GetPainterImage(*mPainter, highlight ? 
             bmpHiliteUpButtonSmall : bmpUpButtonSmall ), 
-            mIconRect.GetPosition(), false );
+            mIconRect.x, mIconRect.y );
 
-         dc.DrawBitmap(*mIcon, mIconRect.GetPosition(), true);
-         dc.SetFont(GetFont());
-         dc.SetTextForeground( clrText );
-         dc.SetTextBackground( clrBoxFill );
-         dc.DrawText(mLeftText, mLeftTextPos.x, mLeftTextPos.y);
-         dc.DrawText(mRightText, mRightTextPos.x, mRightTextPos.y);
+         mPainter->DrawImage(*mIcon, mIconRect.x, mIconRect.y);
+         
+         stateMutator.SetFont(FontFromWXFont(*mPainter, GetFont()));
+         stateMutator.SetBrush( clrText );
+         //dc.SetTextBackground( clrBoxFill );
+         mPainter->DrawText(mLeftTextPos.x, mLeftTextPos.y, audacity::ToUTF8(mLeftText));
+         mPainter->DrawText(mRightTextPos.x, mRightTextPos.y, audacity::ToUTF8(mRightText));
       }
    
       // Setup the colors for the 3 sections of the meter bars
-      wxColor green(117, 215, 112);
-      wxColor yellow(255, 255, 0);
-      wxColor red(255, 0, 0);
+      Color green(117, 215, 112);
+      Color yellow(255, 255, 0);
+      Color red(255, 0, 0);
    
       // Bug #2473 - (Sort of) Hack to make text on meters more
       // visible with darker backgrounds. It would be better to have
       // different colors entirely and as part of the theme.
       if (GetBackgroundColour().GetLuminance() < 0.25)
       {
-         green = wxColor(117-100, 215-100, 112-100);
-         yellow = wxColor(255-100, 255-100, 0);
-         red = wxColor(255-100, 0, 0);
+         green = Color(117-100, 215-100, 112-100);
+         yellow = Color(255-100, 255-100, 0);
+         red = Color(255-100, 0, 0);
       }
       else if (GetBackgroundColour().GetLuminance() < 0.50)
       {
-         green = wxColor(117-50, 215-50, 112-50);
-         yellow = wxColor(255-50, 255-50, 0);
-         red = wxColor(255-50, 0, 0);
+         green = Color(117-50, 215-50, 112-50);
+         yellow = Color(255-50, 255-50, 0);
+         red = Color(255-50, 0, 0);
       }
 
       // Draw the meter bars at maximum levels
       for (unsigned int i = 0; i < mNumBars; i++)
       {
          // Give it a recessed look
-         AColor::Bevel(dc, false, mBar[i].b);
+         AColor::Bevel(*mPainter, false, mBar[i].b);
    
          // Draw the clip indicator bevel
          if (mClip)
          {
-            AColor::Bevel(dc, false, mBar[i].rClip);
+            AColor::Bevel(*mPainter, false, mBar[i].rClip);
          }
    
          // Cache bar rect
@@ -558,7 +558,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    
          if (mGradient)
          {
-            // Calculate the size of the two gradiant segments of the meter
+            // Calculate the size of the two gradient segments of the meter
             double gradw;
             double gradh;
             if (mDB)
@@ -574,38 +574,45 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    
             if (mBar[i].vert)
             {
+               stateMutator.SetPen(Pen::NoPen);
                // Draw the "critical" segment (starts at top of meter and works down)
                r.SetHeight(gradh);
-               dc.GradientFillLinear(r, red, yellow, wxSOUTH);
+               mPainter->DrawLinearGradientRect(RectFromWXRect(r), red, yellow, Painter::LinearGradientDirection::TopToBottom);
    
                // Draw the "warning" segment
                r.SetTop(r.GetBottom());
-               dc.GradientFillLinear(r, yellow, green, wxSOUTH);
+               mPainter->DrawLinearGradientRect(
+                  RectFromWXRect(r), yellow, green,
+                  Painter::LinearGradientDirection::TopToBottom);
    
                // Draw the "safe" segment
                r.SetTop(r.GetBottom());
                r.SetBottom(mBar[i].r.GetBottom());
-               dc.SetPen(*wxTRANSPARENT_PEN);
-               dc.SetBrush(green);
-               dc.DrawRectangle(r);
+               
+               stateMutator.SetBrush(green);
+               mPainter->DrawRect(RectFromWXRect(r));
             }
             else
             {
                // Draw the "safe" segment
                r.SetWidth(r.GetWidth() - (int) (gradw + gradw + 0.5));
-               dc.SetPen(*wxTRANSPARENT_PEN);
-               dc.SetBrush(green);
-               dc.DrawRectangle(r);
+               stateMutator.SetPen(Pen::NoPen);
+               stateMutator.SetBrush(green);
+               mPainter->DrawRect(RectFromWXRect(r));
    
                // Draw the "warning"  segment
                r.SetLeft(r.GetRight() + 1);
                r.SetWidth(floor(gradw));
-               dc.GradientFillLinear(r, green, yellow);
+               mPainter->DrawLinearGradientRect(
+                  RectFromWXRect(r), green, yellow,
+                  Painter::LinearGradientDirection::LeftToRight);
    
                // Draw the "critical" segment
                r.SetLeft(r.GetRight() + 1);
                r.SetRight(mBar[i].r.GetRight());
-               dc.GradientFillLinear(r, yellow, red);
+               mPainter->DrawLinearGradientRect(
+                  RectFromWXRect(r), yellow, red,
+                  Painter::LinearGradientDirection::LeftToRight);
             }
 #ifdef EXPERIMENTAL_METER_LED_STYLE
             if (!mBar[i].vert)
@@ -613,68 +620,67 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                wxRect r = mBar[i].r;
                wxPen BackgroundPen;
                BackgroundPen.SetColour( wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE) );
-               dc.SetPen( BackgroundPen );
+               stateMutator.SetPen(PenFromWXPen(BackgroundPen));
                int i;
                for(i=0;i<r.width;i++)
                {
                   // 2 pixel spacing between the LEDs
                   if( (i%7)<2 ){
-                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+r.height );
+                     AColor::Line( *mPainter, i+r.x, r.y, i+r.x, r.y+r.height );
                   } else {
                      // The LEDs have triangular ends.  
                      // This code shapes the ends.
                      int j = abs( (i%7)-4);
-                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+j +1);
-                     AColor::Line( dc, i+r.x, r.y+r.height-j, i+r.x, r.y+r.height );
+                     AColor::Line( *mPainter, i+r.x, r.y, i+r.x, r.y+j +1);
+                     AColor::Line( *mPainter, i+r.x, r.y+r.height-j, i+r.x, r.y+r.height );
                   }
                }
             }
 #endif
          }
       }
-      mRuler.SetTickColour( clrText );
-      dc.SetTextForeground( clrText );
+      mRuler.SetTickColour(wxColorFromColor(clrText));
+      // text fg
+      stateMutator.SetBrush(clrText);
       // Draw the ruler
 #ifndef EXPERIMENTAL_DA
-      mRuler.Draw(dc);
+      mRuler.Draw(*mPainter);
 #endif
-
-      // Bitmap created...unselect
-      dc.SelectObject(wxNullBitmap);
    }
-
+   auto stateMutator = mPainter->GetStateMutator();
    // Copy predrawn bitmap to the dest DC
-   destDC.DrawBitmap(*mBitmap, 0, 0);
+   mPainter->DrawImage(*mBitmap, 0, 0);
 
    // Go draw the meter bars, Left & Right channels using current levels
    for (unsigned int i = 0; i < mNumBars; i++)
    {
-      DrawMeterBar(destDC, &mBar[i]);
+      DrawMeterBar(*mPainter, &mBar[i]);
    }
 
-   destDC.SetTextForeground( clrText );
+   // text fg
+   stateMutator.SetBrush(clrText);
 
 #ifndef EXPERIMENTAL_DA
    // We can have numbers over the bars, in which case we have to draw them each time.
    if (mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
    {
-      mRuler.SetTickColour( clrText );
+      mRuler.SetTickColour(wxColorFromColor(clrText) );
       // If the text colour is too similar to the meter colour, then we need a background
       // for the text.  We require a total of at least one full-scale RGB difference.
-      int d = theTheme.ColourDistance( clrText, theTheme.Colour( clrMeterOutputRMSBrush ) );
+      int d = theTheme.ColourDistance( wxColorFromColor(clrText), theTheme.Colour( clrMeterOutputRMSBrush ) );
       if( d < 256 )
       {
-         destDC.SetBackgroundMode( wxSOLID );
-         destDC.SetTextBackground( clrBoxFill );
+         //destDC.SetBackgroundMode( wxSOLID );
+         //destDC.SetTextBackground( clrBoxFill );
       }
-      mRuler.Draw(destDC);
+      mRuler.Draw(*mPainter);
    }
 #endif
 
    // Let the user know they can click to start monitoring
    if( mIsInput && !mActive )
    {
-      destDC.SetFont( GetFont() );
+      stateMutator.SetFont( FontFromWXFont(*mPainter, GetFont() ) );
 
       wxArrayStringEx texts{
          _("Click to Start Monitoring") ,
@@ -685,47 +691,46 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 
       for( size_t i = 0, cnt = texts.size(); i < cnt; i++ )
       {
-         wxString Text = wxT(" ") + texts[i] + wxT(" ");
-         wxSize Siz = destDC.GetTextExtent( Text );
-         Siz.SetWidth( Siz.GetWidth() + gap );
-         Siz.SetHeight( Siz.GetHeight() + gap );
+         auto Text = audacity::ToUTF8( wxT(" ") + texts[i] + wxT(" ") );
+         Size Siz = mPainter->GetTextSize( Text );
+         Siz.width += gap;
+         Siz.height += gap;
 
          if( mBar[0].vert)
          {
-            if( Siz.GetWidth() < mBar[0].r.GetHeight() )
+            if( Siz.width < mBar[0].r.width )
             {
-               wxRect r( mBar[1].b.GetLeft() - (int) (Siz.GetHeight() / 2.0) + 0.5,
-                           mBar[0].r.GetTop() + (int) ((mBar[0].r.GetHeight() - Siz.GetWidth()) / 2.0) + 0.5,
-                           Siz.GetHeight(),
-                           Siz.GetWidth() );
+               wxRect r( mBar[1].b.GetLeft() - (int) (Siz.height / 2.0) + 0.5,
+                           mBar[0].r.GetTop() + (int) ((mBar[0].r.height - Siz.width) / 2.0) + 0.5,
+                           Siz.height,
+                           Siz.width );
 
-               destDC.SetBrush( wxBrush( clrBoxFill ) );
-               destDC.SetPen( *wxWHITE_PEN );
-               destDC.DrawRectangle( r );
-               destDC.SetBackgroundMode( wxTRANSPARENT );
+               stateMutator.SetBrush( clrBoxFill );
+               stateMutator.SetPen( Pen::NoPen );
+               mPainter->DrawRect(RectFromWXRect(r));
+
                r.SetTop( r.GetBottom() + (gap / 2) );
-               destDC.SetTextForeground( clrText );
-               destDC.DrawRotatedText( Text, r.GetPosition(), 90 );
+               stateMutator.SetBrush( clrText );
+               mPainter->DrawRotatedText(r.x, r.y, 90, Text);
                break;
             }
          }
          else
          {
-            if( Siz.GetWidth() < mBar[0].r.GetWidth() )
+            if( Siz.width < mBar[0].r.width )
             {
-               wxRect r( mBar[0].r.GetLeft() + (int) ((mBar[0].r.GetWidth() - Siz.GetWidth()) / 2.0) + 0.5,
-                         mBar[1].b.GetTop() - (int) (Siz.GetHeight() / 2.0) + 0.5,
-                         Siz.GetWidth(),
-                         Siz.GetHeight() );
+               wxRect r( mBar[0].r.GetLeft() + (int) ((mBar[0].r.GetWidth() - Siz.width) / 2.0) + 0.5,
+                         mBar[1].b.GetTop() - (int) (Siz.width / 2.0) + 0.5,
+                         Siz.width,
+                         Siz.width );
 
-               destDC.SetBrush( wxBrush( clrBoxFill ) );
-               destDC.SetPen( *wxWHITE_PEN );
-               destDC.DrawRectangle( r );
-               destDC.SetBackgroundMode( wxTRANSPARENT );
+               stateMutator.SetBrush( clrBoxFill );
+               stateMutator.SetPen(Colors::White);
+               mPainter->DrawRect(RectFromWXRect(r));
                r.SetLeft( r.GetLeft() + (gap / 2) );
                r.SetTop( r.GetTop() + (gap / 2));
-               destDC.SetTextForeground( clrText );
-               destDC.DrawText( Text, r.GetPosition() );
+               stateMutator.SetBrush(clrText);
+               mPainter->DrawText(r.x, r.y, Text);
                break;
             }
          }
@@ -735,7 +740,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    if (mIsFocused)
    {
       wxRect r = mIconRect;
-      AColor::DrawFocus(destDC, r.Inflate(1, 1));
+      AColor::DrawFocus(*mPainter, r.Inflate(1, 1));
    }
 }
 
@@ -1288,7 +1293,7 @@ void MeterPanel::SetBarAndClip(int iBar, bool vert)
    }
 }
 
-void MeterPanel::HandleLayout(wxDC &dc)
+void MeterPanel::HandleLayout()
 {
    // Refresh to reflect any language changes
    /* i18n-hint: One-letter abbreviation for Left, in VU Meter */
@@ -1296,7 +1301,9 @@ void MeterPanel::HandleLayout(wxDC &dc)
    /* i18n-hint: One-letter abbreviation for Right, in VU Meter */
    mRightText = _("R");
 
-   dc.SetFont(GetFont());
+   auto stateMutator = mPainter->GetStateMutator();
+   stateMutator.SetFont(FontFromWXFont(*mPainter, GetFont()));
+
    int iconWidth = 0;
    int iconHeight = 0;
    int width = mWidth;
@@ -1329,8 +1336,13 @@ void MeterPanel::HandleLayout(wxDC &dc)
       iconHeight = mIcon->GetHeight();
       if (mLeftSize.GetWidth() == 0)  // Not yet initialized to dc.
       {
-         dc.GetTextExtent(mLeftText, &mLeftSize.x, &mLeftSize.y);
-         dc.GetTextExtent(mRightText, &mRightSize.x, &mRightSize.y);
+         const auto leftSize = mPainter->GetTextSize(audacity::ToUTF8(mLeftText));
+         mLeftSize.x = leftSize.width;
+         mLeftSize.y = leftSize.height;
+
+         const auto rightSize = mPainter->GetTextSize(audacity::ToUTF8(mRightText));
+         mRightSize.x = rightSize.width;
+         mRightSize.y = rightSize.height;
       }
    }
 
@@ -1611,7 +1623,7 @@ void MeterPanel::RepaintBarsNow()
    }
 }
 
-void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
+void MeterPanel::DrawMeterBar(Painter &painter, MeterBar *bar)
 {
    // Cache some metrics
    wxCoord x = bar->r.GetLeft();
@@ -1621,16 +1633,14 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
    wxCoord ht;
    wxCoord wd;
 
+   auto stateMutator = painter.GetStateMutator();
+
    // Setup for erasing the background
-   dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBkgndBrush);
+   stateMutator.SetPen(Pen::NoPen);
+   stateMutator.SetBrush(BrushFromWXBrush(mMeterDisabled ? mDisabledBkgndBrush : mBkgndBrush));
 
    if (mGradient)
    {
-      // Map the predrawn bitmap into the source DC
-      wxMemoryDC srcDC;
-      srcDC.SelectObject(*mBitmap);
-
       if (bar->vert)
       {
          // Copy as much of the predrawn meter bar as is required for the
@@ -1642,7 +1652,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          if (h - ht)
          {
             // ht includes peak value...not really needed but doesn't hurt
-            dc.DrawRectangle(x, y, w, h - ht);
+            painter.DrawRect(x, y, w, h - ht);
          }
 
          // Copy as much of the predrawn meter bar as is required for the
@@ -1650,7 +1660,10 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          // +/-1 to include the peak position
          if (ht)
          {
-            dc.Blit(x, y + h - ht - 1, w, ht + 1, &srcDC, x, y + h - ht - 1);
+            painter.DrawImage(
+               *mBitmap,
+               x, y + h - ht - 1, w, ht + 1,
+               x, y + h - ht - 1);
          }
 
          // Draw the "recent" peak hold line using the predrawn meter bar so that
@@ -1659,19 +1672,20 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          ht = (int)(bar->peakHold * (h - 1) + 0.5);
          if (ht > 1)
          {
-            dc.Blit(x, y + h - ht - 1, w, 2, &srcDC, x, y + h - ht - 1);
+            painter.DrawImage(
+               *mBitmap, x, y + h - ht - 1, w, 2, x, y + h - ht - 1);
          }
 
          // Draw the "maximum" peak hold line
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
-         dc.SetPen(mPeakPeakPen);
+         stateMutator.SetPen(PenFromWXPen(mPeakPeakPen));
          ht = (int)(bar->peakPeakHold * (h - 1) + 0.5);
          if (ht > 0)
          {
-            AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
+            AColor::Line(painter, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
             if (ht > 1)
             {
-               AColor::Line(dc, x, y + h - ht, x + w - 1, y + h - ht);
+               AColor::Line(painter, x, y + h - ht, x + w - 1, y + h - ht);
             }
          }
       }
@@ -1685,7 +1699,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          if (w - wd)
          {
             // wd includes peak value...not really needed but doesn't hurt
-            dc.DrawRectangle(x + wd, y, w - wd, h);
+            painter.DrawRect(x + wd, y, w - wd, h);
          }
 
          // Copy as much of the predrawn meter bar as is required for the
@@ -1694,7 +1708,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          // +1 to include peak position
          if (wd)
          {
-            dc.Blit(x, y, wd + 1, h, &srcDC, x, y);
+            painter.DrawImage(*mBitmap, x, y, wd + 1, h, x, y);
          }
 
          // Draw the "recent" peak hold line using the predrawn meter bar so that
@@ -1703,25 +1717,22 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          wd = (int)(bar->peakHold * (w - 1) + 0.5);
          if (wd > 1)
          {
-            dc.Blit(x + wd - 1, y, 2, h, &srcDC, x + wd, y);
+            painter.DrawImage(*mBitmap, x + wd - 1, y, 2, h, x + wd, y);
          }
 
          // Draw the "maximum" peak hold line using a themed color
          // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
-         dc.SetPen(mPeakPeakPen);
+         stateMutator.SetPen(PenFromWXPen(mPeakPeakPen));
          wd = (int)(bar->peakPeakHold * (w - 1) + 0.5);
          if (wd > 0)
          {
-            AColor::Line(dc, x + wd, y, x + wd, y + h - 1);
+            AColor::Line(painter, x + wd, y, x + wd, y + h - 1);
             if (wd > 1)
             {
-               AColor::Line(dc, x + wd - 1, y, x + wd - 1, y + h - 1);
+               AColor::Line(painter, x + wd - 1, y, x + wd - 1, y + h - 1);
             }
          }
       }
-
-      // No longer need the source DC, so unselect the predrawn bitmap
-      srcDC.SelectObject(wxNullBitmap);
    }
    else
    {
@@ -1735,28 +1746,28 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          if (h - ht)
          {
             // ht includes peak value...not really needed but doesn't hurt
-            dc.DrawRectangle(x, y, w, h - ht);
+            painter.DrawRect(x, y, w, h - ht);
          }
 
          // Draw the peak level
          // +/-1 to include the peak position
-         dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBrush);
+         stateMutator.SetPen(Pen::NoPen);
+         stateMutator.SetBrush(BrushFromWXBrush(mMeterDisabled ? mDisabledBkgndBrush : mBrush));
          if (ht)
          {
-            dc.DrawRectangle(x, y + h - ht - 1, w, ht + 1);
+            painter.DrawRect(x, y + h - ht - 1, w, ht + 1);
          }
 
          // Draw the "recent" peak hold line
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
-         dc.SetPen(mPen);
+         stateMutator.SetPen(PenFromWXPen(mPen));
          ht = (int)(bar->peakHold * (h - 1) + 0.5);
          if (ht > 0)
          {
-            AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
+            AColor::Line(painter, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
             if (ht > 1)
             {
-               AColor::Line(dc, x, y + h - ht, x + w - 1, y + h - ht);
+               AColor::Line(painter, x, y + h - ht, x + w - 1, y + h - ht);
             }
          }
 
@@ -1766,23 +1777,23 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          ht = (int)(bar->rms * (h - 1) + 0.5);
 
          // Draw the RMS level
-         dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mRMSBrush);
+         stateMutator.SetPen(Pen::NoPen);
+         stateMutator.SetBrush(BrushFromWXBrush(mMeterDisabled ? mDisabledBkgndBrush : mRMSBrush));
          if (ht)
          {
-            dc.DrawRectangle(x, y + h - ht - 1, w, ht + 1);
+            painter.DrawRect(x, y + h - ht - 1, w, ht + 1);
          }
 
          // Draw the "maximum" peak hold line
          // (h - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
-         dc.SetPen(mPeakPeakPen);
+         stateMutator.SetPen(PenFromWXPen(mPeakPeakPen));
          ht = (int)(bar->peakPeakHold * (h - 1) + 0.5);
          if (ht > 0)
          {
-            AColor::Line(dc, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
+            AColor::Line(painter, x, y + h - ht - 1, x + w - 1, y + h - ht - 1);
             if (ht > 1)
             {
-               AColor::Line(dc, x, y + h - ht, x + w - 1, y + h - ht);
+               AColor::Line(painter, x, y + h - ht, x + w - 1, y + h - ht);
             }
          }
       }
@@ -1796,28 +1807,28 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          if (w - wd)
          {
             // wd includes peak value...not really needed but doesn't hurt
-            dc.DrawRectangle(x + wd, y, w - wd, h);
+            painter.DrawRect(x + wd, y, w - wd, h);
          }
 
          // Draw the peak level
          // +1 to include peak position
-         dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBrush);
+         stateMutator.SetPen(Pen::NoPen);
+         stateMutator.SetBrush(BrushFromWXBrush(mMeterDisabled ? mDisabledBkgndBrush : mBrush));
          if (wd)
          {
-            dc.DrawRectangle(x, y, wd + 1, h);
+            painter.DrawRect(x, y, wd + 1, h);
          }
 
          // Draw the "recent" peak hold line
          // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
-         dc.SetPen(mPen);
+         stateMutator.SetPen(PenFromWXPen(mPen));
          wd = (int)(bar->peakHold * (w - 1) + 0.5);
          if (wd > 0)
          {
-            AColor::Line(dc, x + wd, y, x + wd, y + h - 1);
+            AColor::Line(painter, x + wd, y, x + wd, y + h - 1);
             if (wd > 1)
             {
-               AColor::Line(dc, x + wd - 1, y, x + wd - 1, y + h - 1);
+               AColor::Line(painter, x + wd - 1, y, x + wd - 1, y + h - 1);
             }
          }
 
@@ -1827,23 +1838,23 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
 
          // Draw the rms level 
          // +1 to include the rms position
-         dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mRMSBrush);
+         stateMutator.SetPen(Pen::NoPen);
+         stateMutator.SetBrush(BrushFromWXBrush(mMeterDisabled ? mDisabledBkgndBrush : mRMSBrush));
          if (wd)
          {
-            dc.DrawRectangle(x, y, wd + 1, h);
+            painter.DrawRect(x, y, wd + 1, h);
          }
 
          // Draw the "maximum" peak hold line using a themed color
          // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
-         dc.SetPen(mPeakPeakPen);
+         stateMutator.SetPen(PenFromWXPen(mPeakPeakPen));
          wd = (int)(bar->peakPeakHold * (w - 1) + 0.5);
          if (wd > 0)
          {
-            AColor::Line(dc, x + wd, y, x + wd, y + h - 1);
+            AColor::Line(painter, x + wd, y, x + wd, y + h - 1);
             if (wd > 1)
             {
-               AColor::Line(dc, x + wd - 1, y, x + wd - 1, y + h - 1);
+               AColor::Line(painter, x + wd - 1, y, x + wd - 1, y + h - 1);
             }
          }
       }
@@ -1856,18 +1867,19 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
    {
       if (bar->clipping)
       {
-         dc.SetBrush(mClipBrush);
+         stateMutator.SetBrush(BrushFromWXBrush(mClipBrush));
       }
       else
       {
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBkgndBrush);
+         stateMutator.SetBrush(BrushFromWXBrush(mMeterDisabled ? mDisabledBkgndBrush : mBkgndBrush));
       }
-      dc.SetPen(*wxTRANSPARENT_PEN);
+      stateMutator.SetPen(Pen::NoPen);
+      
       wxRect r(bar->rClip.GetX() + 1,
                bar->rClip.GetY() + 1,
                bar->rClip.GetWidth() - 1,
                bar->rClip.GetHeight() - 1);
-      dc.DrawRectangle(r);
+      painter.DrawRect(RectFromWXRect(r));
    }
 }
 
@@ -2119,6 +2131,10 @@ wxString MeterPanel::Key(const wxString & key) const
    }
 
    return wxT("/Meter/Output/") + key;
+}
+
+MeterPanel::~MeterPanel()
+{
 }
 
 // This compensates for a but in wxWidgets 3.0.2 for mac:

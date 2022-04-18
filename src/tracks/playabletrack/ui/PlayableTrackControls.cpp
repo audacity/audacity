@@ -20,6 +20,10 @@ Paul Licameli split from TrackInfo.cpp
 #include "ViewInfo.h"
 #include "../../../effects/RealtimeEffectManager.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+#include "CodeConversions.h"
+
 #include <wx/dc.h>
 
 using TCPLine = TrackInfo::TCPLine;
@@ -58,105 +62,109 @@ void GetWideMuteSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
 }
 
 void MuteOrSoloDrawFunction
-( wxDC *dc, const wxRect &bev, const Track *pTrack, bool down, 
+( Painter& painter, const wxRect &bev, const Track *pTrack, bool down, 
   bool WXUNUSED(captured),
   bool solo, bool hit )
 {
+   auto stateMutator = painter.GetStateMutator();
+
    //bev.Inflate(-1, -1);
    bool selected = pTrack ? pTrack->GetSelected() : true;
    auto pt = dynamic_cast<const PlayableTrack *>(pTrack);
    bool value = pt ? (solo ? pt->GetSolo() : pt->GetMute()) : false;
 
 #if 0
-   AColor::MediumTrackInfo( dc, t->GetSelected());
+   AColor::MediumTrackInfo( stateMutator, t->GetSelected());
    if( solo )
    {
       if( pt && pt->GetSolo() )
       {
-         AColor::Solo(dc, pt->GetSolo(), t->GetSelected());
+         AColor::Solo(stateMutator, pt->GetSolo(), t->GetSelected());
       }
    }
    else
    {
       if( pt && pt->GetMute() )
       {
-         AColor::Mute(dc, pt->GetMute(), t->GetSelected(), pt->GetSolo());
+         AColor::Mute(stateMutator, pt->GetMute(), t->GetSelected(), pt->GetSolo());
       }
    }
    //(solo) ? AColor::Solo(dc, t->GetSolo(), t->GetSelected()) :
    //    AColor::Mute(dc, t->GetMute(), t->GetSelected(), t->GetSolo());
-   dc->SetPen( *wxTRANSPARENT_PEN );//No border!
-   dc->DrawRectangle(bev);
+   stateMutator.SetPen( Pen::NoPen );//No border!
+   painter.DrawRectangle(bev.x, bev.y, bev.width, bev.height);
 #endif
 
-   wxCoord textWidth, textHeight;
-   wxString str = (solo) ?
+   const auto str = audacity::ToUTF8( (solo) ?
       /* i18n-hint: This is on a button that will silence all the other tracks.*/
       _("Solo") :
       /* i18n-hint: This is on a button that will silence this track.*/
-      _("Mute");
+      _("Mute"));
 
    AColor::Bevel2(
-      *dc,
+      painter,
       value == down,
       bev,
       selected, hit
    );
 
-   TrackInfo::SetTrackInfoFont(dc);
-   dc->GetTextExtent(str, &textWidth, &textHeight);
-   dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
+   TrackInfo::SetTrackInfoFont(stateMutator);
+   const auto textSize = painter.GetTextSize(str);
+   painter.DrawText(
+      bev.x + (bev.width - textSize.width) / 2,
+      bev.y + (bev.height - textSize.height) / 2, str);
 }
 
 void EffectsDrawFunction
-( wxDC *dc, const wxRect &bev, const Track *pTrack, bool down, 
+( Painter &painter, const wxRect &bev, const Track *pTrack, bool down, 
   bool sel, bool hit )
 {   
-   wxCoord textWidth, textHeight;
-   const auto str = XO("Effects").Translation();
+   const auto str = audacity::ToUTF8(XO("Effects").Translation());
 
    const auto selected = pTrack ? pTrack->GetSelected() : true;
 
-   AColor::ButtonStretch(*dc, !down, bev, selected, hit);
-   
-   TrackInfo::SetTrackInfoFont(dc);
-   dc->GetTextExtent(str, &textWidth, &textHeight);
-   dc->DrawText(str, bev.x + (bev.width - textWidth) / 2, bev.y + (bev.height - textHeight) / 2);
+   AColor::ButtonStretch(painter, !down, bev, selected, hit);
+
+   auto stateMutator = painter.GetStateMutator();
+
+   TrackInfo::SetTrackInfoFont(stateMutator);
+   const auto textSize = painter.GetTextSize(str);
+   painter.DrawText(bev.x + (bev.width - textSize.width) / 2, bev.y + (bev.height - textSize.height) / 2, str);
 }
 
 void WideMuteDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
 {
-   auto dc = &context.dc;
+   auto& painter = context.painter;
    wxRect bev = rect;
    GetWideMuteSoloHorizontalBounds( rect, bev );
    auto target = dynamic_cast<MuteButtonHandle*>( context.target.get() );
    bool hit = target && target->GetTrack().get() == pTrack;
    bool captured = hit && target->IsClicked();
    bool down = captured && bev.Contains( context.lastState.GetPosition());
-   MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false, hit );
+   MuteOrSoloDrawFunction( painter, bev, pTrack, down, captured, false, hit );
 }
 
 void WideSoloDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
 {
-   auto dc = &context.dc;
+   auto& painter = context.painter;
    wxRect bev = rect;
    GetWideMuteSoloHorizontalBounds( rect, bev );
    auto target = dynamic_cast<SoloButtonHandle*>( context.target.get() );
    bool hit = target && target->GetTrack().get() == pTrack;
    bool captured = hit && target->IsClicked();
    bool down = captured && bev.Contains( context.lastState.GetPosition());
-   MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true, hit );
+   MuteOrSoloDrawFunction( painter, bev, pTrack, down, captured, true, hit );
 }
 
 void MuteAndSoloDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
 {
-   auto dc = &context.dc;
+   auto& painter = context.painter;
    bool bHasSoloButton = TrackInfo::HasSoloButton();
 
    wxRect bev = rect;
@@ -169,7 +177,7 @@ void MuteAndSoloDrawFunction
       bool hit = target && target->GetTrack().get() == pTrack;
       bool captured = hit && target->IsClicked();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
-      MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false, hit );
+      MuteOrSoloDrawFunction( painter, bev, pTrack, down, captured, false, hit );
    }
 
    if( !bHasSoloButton )
@@ -181,7 +189,7 @@ void MuteAndSoloDrawFunction
       bool hit = target && target->GetTrack().get() == pTrack;
       bool captured = hit && target->IsClicked();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
-      MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, true, hit );
+      MuteOrSoloDrawFunction( painter, bev, pTrack, down, captured, true, hit );
    }
 }
 
@@ -189,7 +197,7 @@ void EffectsDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
 {
-   auto dc = &context.dc;
+   auto& painter = context.painter;
 
    wxRect bev = rect;
 
@@ -199,7 +207,7 @@ void EffectsDrawFunction
       bool hit = target && target->GetTrack().get() == pTrack;
       bool captured = hit && target->IsClicked();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
-      EffectsDrawFunction( dc, bev, pTrack, down, captured, hit );
+      EffectsDrawFunction( painter, bev, pTrack, down, captured, hit );
    }
 }
 }

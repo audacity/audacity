@@ -85,6 +85,12 @@ the mouse around.
 #include "widgets/Ruler.h"
 #include "widgets/VetoDialogHook.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterFactory.h"
+#include "graphics/WXPainterUtils.h"
+#include "graphics/WXColor.h"
+#include "CodeConversions.h"
+
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
 #endif
@@ -188,6 +194,7 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
 :  wxDialogWrapper(parent, id, title, pos, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX),
    mProject{ &project }
+,  mPainter(CreatePainter(this))
 ,  mAnalyst(std::make_unique<SpectrumAnalyst>())
 {
    SetName();
@@ -647,51 +654,46 @@ void FrequencyPlotDialog::OnSize(wxSizeEvent & WXUNUSED(event))
    Refresh(true);
 }
 
-void FrequencyPlotDialog::DrawBackground(wxMemoryDC & dc)
+void FrequencyPlotDialog::DrawBackground(PainterStateMutator& stateMutator)
 {
-   Layout();
+   mPainter->Clear(Color(254, 254, 254, 255));// DONT-THEME Mask colour.
 
-   mBitmap.reset();
+   stateMutator.SetPen(Colors::Black);
+   stateMutator.SetBrush(Colors::White);
+   mPainter->DrawRect(RectFromWXRect(mPlotRect));
 
-   mPlotRect = mFreqPlot->GetClientRect();
-
-   mBitmap = std::make_unique<wxBitmap>(mPlotRect.width, mPlotRect.height,24);
-
-   dc.SelectObject(*mBitmap);
-
-   dc.SetBackground(wxBrush(wxColour(254, 254, 254)));// DONT-THEME Mask colour.
-   dc.Clear();
-
-   dc.SetPen(*wxBLACK_PEN);
-   dc.SetBrush(*wxWHITE_BRUSH);
-   dc.DrawRectangle(mPlotRect);
-
-   dc.SetFont(mFreqFont);
+   stateMutator.SetFont(FontFromWXFont(*mPainter, mFreqFont));
 }
 
 void FrequencyPlotDialog::DrawPlot()
 {
-   if (!mData || mDataLen < mWindowSize || mAnalyst->GetProcessedSize() == 0) {
-      wxMemoryDC memDC;
+   Layout();
 
+   mPlotRect = mFreqPlot->GetClientRect();
+   mBitmap = mPainter->CreateDeviceImage(
+      PainterImageFormat::RGB888, mPlotRect.width, mPlotRect.height);
+
+   auto offscreenHolder = mPainter->PaintOn(*mBitmap);
+   auto stateMutator = mPainter->GetStateMutator();
+
+   if (!mData || mDataLen < mWindowSize || mAnalyst->GetProcessedSize() == 0) {
       vRuler->ruler.SetLog(false);
       vRuler->ruler.SetRange(0.0, -dBRange);
 
       hRuler->ruler.SetLog(false);
       hRuler->ruler.SetRange(0, 1);
 
-      DrawBackground(memDC);
+      DrawBackground(stateMutator);
 
       if (mDataLen < mWindowSize) {
-         wxString msg = _("Not enough data selected.");
-         wxSize sz = memDC.GetTextExtent(msg);
-         memDC.DrawText(msg,
-                        (mPlotRect.GetWidth() - sz.GetWidth()) / 2,
-                        (mPlotRect.GetHeight() - sz.GetHeight()) / 2);
-      }
+         const auto msg = audacity::ToUTF8(_("Not enough data selected."));
 
-      memDC.SelectObject(wxNullBitmap);
-      
+         const auto sz = mPainter->GetTextSize(msg);
+         mPainter->DrawText(
+            (mPlotRect.GetWidth() - sz.width) / 2,
+            (mPlotRect.GetHeight() - sz.height) / 2, msg);
+      }
+ 
       mFreqPlot->Refresh();
 
       Refresh();
@@ -730,8 +732,7 @@ void FrequencyPlotDialog::DrawPlot()
    }
    vRuler->Refresh(false);
 
-   wxMemoryDC memDC;
-   DrawBackground(memDC);
+   DrawBackground(stateMutator);
 
    // Get the plot dimensions
    //
@@ -773,9 +774,9 @@ void FrequencyPlotDialog::DrawPlot()
 
    // Draw the plot
    if (mAlg == SpectrumAnalyst::Spectrum)
-      memDC.SetPen(wxPen(theTheme.Colour( clrHzPlot ), 1, wxPENSTYLE_SOLID));
+      stateMutator.SetPen(ColorFromWXColor(theTheme.Colour(clrHzPlot)));
    else
-      memDC.SetPen(wxPen(theTheme.Colour( clrWavelengthPlot), 1, wxPENSTYLE_SOLID));
+      stateMutator.SetPen(ColorFromWXColor(theTheme.Colour(clrWavelengthPlot)));
 
    float xPos = xMin;
 
@@ -795,7 +796,7 @@ void FrequencyPlotDialog::DrawPlot()
          lineheight = r.height - 2;
 
       if (ynorm > 0.0)
-         AColor::Line(memDC, r.x + 1 + i, r.y + r.height - 1 - lineheight,
+         AColor::Line(*mPainter, r.x + 1 + i, r.y + r.height - 1 - lineheight,
                         r.x + 1 + i, r.y + r.height - 1);
 
       if (mLogAxis)
@@ -805,17 +806,15 @@ void FrequencyPlotDialog::DrawPlot()
    }
 
    // Outline the graph
-   memDC.SetPen(*wxBLACK_PEN);
-   memDC.SetBrush(*wxTRANSPARENT_BRUSH);
-   memDC.DrawRectangle(r);
+   stateMutator.SetPen(Colors::Black);
+   stateMutator.SetBrush(Brush::NoBrush);
+   mPainter->DrawRect(RectFromWXRect(r));
 
    if(mDrawGrid)
    {
-      hRuler->ruler.DrawGrid(memDC, r.height, true, true, 1, 1);
-      vRuler->ruler.DrawGrid(memDC, r.width, true, true, 1, 1);
+      hRuler->ruler.DrawGrid(*mPainter, r.height, true, true, 1, 1);
+      vRuler->ruler.DrawGrid(*mPainter, r.width, true, true, 1, 1);
    }
-
-   memDC.SelectObject( wxNullBitmap );
 
    mFreqPlot->Refresh();
 }
@@ -885,14 +884,17 @@ void FrequencyPlotDialog::OnAxisChoice(wxCommandEvent & WXUNUSED(event))
 
 void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
 {
-   wxPaintDC dc( (wxWindow *) event.GetEventObject() );
+   if (!mBitmap)
+      DrawPlot();
 
-   dc.DrawBitmap( *mBitmap, 0, 0, true );
+   mPainter->DrawImage( *mBitmap, 0, 0 );
    // Fix for Bug 1226 "Plot Spectrum freezes... if insufficient samples selected"
    if (!mData || mDataLen < mWindowSize)
       return;
 
-   dc.SetFont(mFreqFont);
+   auto stateMutator = mPainter->GetStateMutator();
+
+   stateMutator.SetFont(FontFromWXFont(*mPainter, mFreqFont));
 
    wxRect r = mPlotRect;
 
@@ -932,8 +934,8 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
       else
          px = (int)((bestpeak - xMin) * width / (xMax - xMin));
 
-      dc.SetPen(wxPen(wxColour(255, 32, 32), 1, wxPENSTYLE_SOLID));
-      AColor::Line(dc, r.x + 1 + px, r.y, r.x + 1 + px, r.y + r.height);
+      stateMutator.SetPen(Color(255, 32, 32, 255));
+      AColor::Line(*mPainter, r.x + 1 + px, r.y, r.x + 1 + px, r.y + r.height);
 
        // print out info about the cursor location
 
@@ -981,9 +983,9 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
 
 
    // Outline the graph
-   dc.SetPen(*wxBLACK_PEN);
-   dc.SetBrush(*wxTRANSPARENT_BRUSH);
-   dc.DrawRectangle(r);
+   stateMutator.SetPen(Colors::Black);
+   stateMutator.SetBrush(Brush::NoBrush);
+   mPainter->DrawRect(RectFromWXRect(r));
 }
 
 void FrequencyPlotDialog::OnCloseWindow(wxCloseEvent & WXUNUSED(event))

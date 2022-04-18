@@ -21,6 +21,8 @@ class wxPoint;
 class wxRect;
 class wxWindow;
 
+class PainterStateMutator;
+
 class ButtonHandle;
 class LWSlider;
 class Track;
@@ -102,7 +104,8 @@ namespace TrackInfo
 
    AUDACITY_DLL_API
    void SetTrackInfoFont(wxDC *dc);
-
+   AUDACITY_DLL_API
+   void SetTrackInfoFont(PainterStateMutator& stateMutator);
 
    AUDACITY_DLL_API
    void GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest );

@@ -33,6 +33,9 @@
 #include "../../../../RefreshCode.h"
 #include "Theme.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+
 class NoteTrackAffordanceHandle final : public AffordanceHandle
 {
 public:
@@ -123,11 +126,13 @@ void NoteTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                 py >= clipRect.GetTop() && py <= clipRect.GetBottom());
 
         {
-            wxDCClipper clipper(context.dc, rect);
-            context.dc.SetTextBackground(wxTransparentColor);
-            context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
-            context.dc.SetFont(wxFont(wxFontInfo()));
-            TrackArt::DrawClipAffordance(context.dc, clipRect, nt->GetName(), highlight, selected);
+            auto stateMutator = context.painter.GetStateMutator();
+            auto clipStateMutator = context.painter.GetClipStateMutator();
+            clipStateMutator.SetClipRect(RectFromWXRect(rect), false);
+
+            //context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
+            stateMutator.SetFont(context.painter.GetDefaultFont());
+            TrackArt::DrawClipAffordance(context.painter, clipRect, nt->GetName(), highlight, selected);
         }
     }
 }

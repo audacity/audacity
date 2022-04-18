@@ -17,7 +17,11 @@
 enum class PenStyle
 {
    None,
-   Solid
+   Solid,
+   Dot,
+   LongDash,
+   ShortDash,
+   DotDash
 };
 
 class GRAPHICS_API Pen final

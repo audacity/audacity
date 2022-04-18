@@ -88,6 +88,12 @@ struct SizeType final
 
       return *this;
    }
+
+   bool IsZero() const noexcept
+   {
+      return std::abs(width) <= std::numeric_limits<DataType>::epsilon() &&
+             std::abs(height) <= std::numeric_limits<DataType>::epsilon();
+   }
 };
 
 template <typename From, typename To>

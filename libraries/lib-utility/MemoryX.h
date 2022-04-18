@@ -2,6 +2,7 @@
 #define __AUDACITY_MEMORY_X_H__
 
 // C++ standard header <memory> with a few extensions
+#include <atomic>
 #include <iterator>
 #include <memory>
 #include <new> // align_val_t and hardware_destructive_interference_size

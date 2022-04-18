@@ -75,6 +75,12 @@ struct PointType final
 
       return { -x, -y };
    }
+
+   bool IsZero() const noexcept
+   {
+      return std::abs(x) <= std::numeric_limits<DataType>::epsilon() &&
+             std::abs(y) <= std::numeric_limits<DataType>::epsilon();
+   }
 };
 
 template<typename From, typename To>

@@ -13,6 +13,7 @@
 
 #include <chrono>
 #include <vector>
+#include <memory>
 
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/timer.h> // to inherit
@@ -51,6 +52,8 @@ class TrackPanelAx;
 class TrackPanelListener;
 
 struct TrackPanelDrawingContext;
+
+class Painter;
 
 enum class UndoPush : unsigned char;
 
@@ -172,7 +175,7 @@ public:
    AdornedRulerPanel * GetRuler(){ return mRuler;}
 
 protected:
-   void DrawTracks(wxDC * dc);
+   void DrawTracks();
 
 public:
    // Set the object that performs catch-all event handling when the pointer
@@ -233,6 +236,8 @@ protected:
        unsigned refreshResult) override;
 
    void UpdateStatusMessage( const TranslatableString &status ) override;
+
+   std::unique_ptr<Painter> mPainter;
 };
 
 #endif

@@ -11,11 +11,12 @@
 #pragma once
 
 #include "graphics/Color.h"
+#include <wx/colour.h>
 
-class wxColour;
 class wxPen;
 class wxBrush;
 
 GRAPHICS_WX_API Color ColorFromWXColor(const wxColour& color) noexcept;
 GRAPHICS_WX_API Color ColorFromWXPen(const wxPen& pen) noexcept;
 GRAPHICS_WX_API Color ColorFromWXBrush(const wxBrush& brush) noexcept;
+GRAPHICS_WX_API wxColour wxColorFromColor(Color color) noexcept;

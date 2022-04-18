@@ -126,6 +126,16 @@ double GraphicsDataCacheBase::GetSampleRate() const noexcept
    return mSampleRate;
 }
 
+void GraphicsDataCacheBase::UpdateViewportWidth(int64_t width) noexcept
+{
+   mMaxWidth = std::max(mMaxWidth, width);
+}
+
+int64_t GraphicsDataCacheBase::GetMaxViewportWidth() const noexcept
+{
+   return mMaxWidth;
+}
+
 GraphicsDataCacheBase::GraphicsDataCacheBase(double sampleRate)
     : mSampleRate(sampleRate)
 {
@@ -158,7 +168,7 @@ GraphicsDataCacheBase::PerformBaseLookup(
 
    const double samplesPerPixel = mSampleRate / pixelsPerSecond;
 
-   mMaxWidth = std::max(mMaxWidth, width);
+   UpdateViewportWidth(width);
 
    mNewLookupItems.clear();
    mNewLookupItems.reserve(cacheItemsCount);
@@ -274,6 +284,8 @@ GraphicsDataCacheBase::PerformBaseLookup(GraphicsDataCacheKey key)
       return nullptr;
 
    newElement.Data->LastUpdate = mCacheAccessIndex;
+   newElement.Data->LastCacheAccess = mCacheAccessIndex;
+   newElement.Data->AwaitsEviction = false;
 
    mLookup.insert(
       std::upper_bound(

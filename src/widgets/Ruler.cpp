@@ -67,6 +67,12 @@ array of Ruler::Label.
 #include "Theme.h"
 #include "ViewInfo.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+#include "graphics/WXColor.h"
+#include "graphics/WXPainterFactory.h"
+#include "CodeConversions.h"
+
 using std::min;
 using std::max;
 
@@ -256,22 +262,24 @@ void Ruler::SetMinor(bool value)
 
 namespace {
 void FindFontHeights(
-   wxCoord &height, wxCoord &lead, wxDC &dc, const wxFont &font )
+   wxCoord& height, wxCoord& lead, Painter& painter, const wxFont& font)
 {
-   wxCoord strW, strH, strD, strL;
-   static const wxString exampleText = wxT("0.9");   //ignored for height calcs on all platforms
-   dc.SetFont( font );
-   dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
-   height = strH - strD - strL;
-   lead = strL;
+   static const char* exampleText = "0.9";   //ignored for height calcs on all platforms
+
+   auto painterFont = FontFromWXFont(painter, font);
+   const auto size = painter.GetTextSize(*painterFont, exampleText);
+   const auto metrics = painterFont->GetFontMetrics();
+
+   height = size.height - metrics.Descent - metrics.Linegap;
+   lead = size.width;
 }
 
 void FindFontHeights(
    wxCoord &height, wxCoord &lead,
-   wxDC &dc, int fontSize, wxFontWeight weight = wxFONTWEIGHT_NORMAL )
+   Painter &painter, int fontSize, wxFontWeight weight = wxFONTWEIGHT_NORMAL )
 {
    const wxFont font{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, weight };
-   FindFontHeights( height, lead, dc, font );
+   FindFontHeights( height, lead, painter, font );
 }
 }
 
@@ -284,9 +292,8 @@ void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxF
 
    wxScreenDC dc;
    wxCoord height;
-   FindFontHeights( height, mpUserFonts->lead, dc, majorFont );
+   FindFontHeights( height, mpUserFonts->lead, GetMeasuringPainter(), majorFont );
 
-   mpFonts.reset();
    mpFonts.reset();
    Invalidate();
 }
@@ -757,7 +764,7 @@ TranslatableString LabelString(
 
 auto Ruler::MakeTick(
    Label lab,
-   wxDC &dc, wxFont font,
+   Painter &painter, const std::shared_ptr<PainterFont>& font,
    std::vector<bool> &bits,
    int left, int top, int spacing, int lead,
    bool flip, int orientation )
@@ -769,41 +776,38 @@ auto Ruler::MakeTick(
    auto length = bits.size() - 1;
    auto pos = lab.pos;
 
-   dc.SetFont( font );
-
-   wxCoord strW, strH, strD, strL;
    auto str = lab.text;
    // Do not put the text into results until we are sure it does not overlap
    lab.text = {};
-   dc.GetTextExtent(str.Translation(), &strW, &strH, &strD, &strL);
+   const auto strSize = painter.GetTextSize(*font, audacity::ToUTF8(str.Translation()));
 
    int strPos, strLen, strLeft, strTop;
    if ( orientation == wxHORIZONTAL ) {
-      strLen = strW;
-      strPos = pos - strW/2;
+      strLen = strSize.width;
+      strPos = pos - strSize.width / 2;
       if (strPos < 0)
          strPos = 0;
-      if (strPos + strW >= length)
-         strPos = length - strW;
+      if (strPos + strSize.width >= length)
+         strPos = length - strSize.width;
       strLeft = left + strPos;
       if ( flip )
          strTop = top + 4;
       else
-         strTop = -strH - lead;
+         strTop = -strSize.height - lead;
 //         strTop = top - lead + 4;// More space was needed...
    }
    else {
-      strLen = strH;
-      strPos = pos - strH/2;
+      strLen = strSize.height;
+      strPos = pos - strSize.height / 2;
       if (strPos < 0)
          strPos = 0;
-      if (strPos + strH >= length)
-         strPos = length - strH;
+      if (strPos + strSize.height >= length)
+         strPos = length - strSize.height;
       strTop = top + strPos;
       if ( flip )
          strLeft = left + 5;
       else
-         strLeft = -strW - 6;
+         strLeft = -strSize.width - 6;
    }
 
    // FIXME: we shouldn't even get here if strPos < 0.
@@ -843,7 +847,7 @@ auto Ruler::MakeTick(
 
    // Good to display the text
    lab.text = str;
-   return { { strLeft, strTop, strW, strH }, lab };
+   return { { strLeft, strTop, static_cast<int>(strSize.width), static_cast<int>(strSize.height) }, lab };
 }
 
 struct Ruler::Updater {
@@ -870,7 +874,8 @@ struct Ruler::Updater {
    const bool mFlip = mRuler.mFlip;
 
    const bool mCustom = mRuler.mCustom;
-   const Fonts &mFonts = *mRuler.mpFonts;
+   const Fonts& mFonts = *mRuler.mpFonts;
+   const PainterFonts& mPainterFonts = *mRuler.mpPainterFonts;
    const bool mLog = mRuler.mLog;
    const double mHiddenMin = mRuler.mHiddenMin;
    const double mHiddenMax = mRuler.mHiddenMax;
@@ -882,32 +887,40 @@ struct Ruler::Updater {
 
    struct TickOutputs;
    
-   bool Tick( wxDC &dc,
-      int pos, double d, const TickSizes &tickSizes, wxFont font,
+   bool Tick( Painter &painter,
+      int pos, double d, const TickSizes &tickSizes, const std::shared_ptr<PainterFont>& font,
       TickOutputs outputs
    ) const;
 
    // Another tick generator for custom ruler case (noauto) .
-   bool TickCustom( wxDC &dc, int labelIdx, wxFont font,
+   bool TickCustom(
+      Painter& painter, int labelIdx, const std::shared_ptr<PainterFont>& font,
       TickOutputs outputs
    ) const;
 
+   static void CreatePainterFonts(
+      Fonts& fonts, std::unique_ptr<PainterFonts>& pPainterFonts,
+      Painter& painter);
+
    static void ChooseFonts(
-      std::unique_ptr<Fonts> &pFonts, const Fonts *pUserFonts,
-      wxDC &dc, int desiredPixelHeight );
+      std::unique_ptr<Fonts>& pFonts,
+      std::unique_ptr<PainterFonts>& pPainterFonts,
+      const Fonts* pUserFonts, Painter& painter,
+      int desiredPixelHeight);
 
    struct UpdateOutputs;
    
    void Update(
-      wxDC &dc, const Envelope* envelope,
+      Painter& painter, const Envelope* envelope,
       UpdateOutputs &allOutputs
    )// Envelope *speedEnv, long minSpeed, long maxSpeed )
       const;
 
-   void UpdateCustom( wxDC &dc, UpdateOutputs &allOutputs ) const;
+   void UpdateCustom(Painter& painter, UpdateOutputs& allOutputs) const;
    void UpdateLinear(
-      wxDC &dc, const Envelope *envelope, UpdateOutputs &allOutputs ) const;
-   void UpdateNonlinear( wxDC &dc, UpdateOutputs &allOutputs ) const;
+      Painter& painter, const Envelope* envelope,
+      UpdateOutputs& allOutputs) const;
+   void UpdateNonlinear(Painter& painter, UpdateOutputs& allOutputs) const;
 };
 
 struct Ruler::Cache {
@@ -923,8 +936,9 @@ struct Ruler::Updater::UpdateOutputs {
    wxRect &box;
 };
 
-bool Ruler::Updater::Tick( wxDC &dc,
-   int pos, double d, const TickSizes &tickSizes, wxFont font,
+bool Ruler::Updater::Tick(
+   Painter& painter,
+   int pos, double d, const TickSizes &tickSizes, const std::shared_ptr<PainterFont>& font,
    // in/out:
    TickOutputs outputs ) const
 {
@@ -944,7 +958,7 @@ bool Ruler::Updater::Tick( wxDC &dc,
 
    const auto result = MakeTick(
       lab,
-      dc, font,
+      painter, font,
       outputs.bits,
       mLeft, mTop, mSpacing, mFonts.lead,
       mFlip,
@@ -956,7 +970,8 @@ bool Ruler::Updater::Tick( wxDC &dc,
    return !rect.IsEmpty();
 }
 
-bool Ruler::Updater::TickCustom( wxDC &dc, int labelIdx, wxFont font,
+bool Ruler::Updater::TickCustom(
+   Painter& painter, int labelIdx, const std::shared_ptr<PainterFont>& font,
    // in/out:
    TickOutputs outputs ) const
 {
@@ -973,7 +988,7 @@ bool Ruler::Updater::TickCustom( wxDC &dc, int labelIdx, wxFont font,
    const auto result = MakeTick(
       lab,
 
-      dc, font,
+      painter, font,
       outputs.bits,
       mLeft, mTop, mSpacing, mFonts.lead,
       mFlip,
@@ -1013,16 +1028,28 @@ static constexpr int MaxPixelHeight =
    12;
 #endif
 
+void Ruler::Updater::CreatePainterFonts(
+   Fonts& fonts, std::unique_ptr<PainterFonts>& pPainterFonts, Painter& painter)
+{
+   pPainterFonts = std::make_unique<PainterFonts>(PainterFonts {
+      FontFromWXFont(painter, fonts.major),
+      FontFromWXFont(painter, fonts.minor),
+      FontFromWXFont(painter, fonts.minorMinor),
+   });
+}
 
 void Ruler::Updater::ChooseFonts(
-   std::unique_ptr<Fonts> &pFonts, const Fonts *pUserFonts,
-   wxDC &dc, int desiredPixelHeight )
+   std::unique_ptr<Fonts>& pFonts,
+   std::unique_ptr<PainterFonts>& pPainterFonts, const Fonts* pUserFonts,
+   Painter& painter,
+   int desiredPixelHeight)
 {
    if ( pFonts )
       return;
 
    if ( pUserFonts ) {
       pFonts = std::make_unique<Fonts>( *pUserFonts );
+      CreatePainterFonts(*pFonts, pPainterFonts, painter);
       return;
    }
 
@@ -1036,20 +1063,23 @@ void Ruler::Updater::ChooseFonts(
 
    // Keep making the font bigger until it's too big, then subtract one.
    wxCoord height;
-   FindFontHeights( height, fonts.lead, dc, fontSize, wxFONTWEIGHT_BOLD );
+   FindFontHeights( height, fonts.lead, painter, fontSize, wxFONTWEIGHT_BOLD );
    while (height <= desiredPixelHeight && fontSize < 40) {
       fontSize++;
-      FindFontHeights( height, fonts.lead, dc, fontSize, wxFONTWEIGHT_BOLD );
+      FindFontHeights( height, fonts.lead, painter, fontSize, wxFONTWEIGHT_BOLD );
    }
    fontSize--;
-   FindFontHeights( height, fonts.lead, dc, fontSize );
+   FindFontHeights(height, fonts.lead, painter, fontSize);
 
    fonts.major = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD };
    fonts.minor = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
    fonts.minorMinor = wxFont{ fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
+
+   CreatePainterFonts(*pFonts, pPainterFonts, painter);
 }
 
-void Ruler::Updater::UpdateCustom( wxDC &dc, UpdateOutputs &allOutputs ) const
+void Ruler::Updater::UpdateCustom(
+   Painter& painter, UpdateOutputs& allOutputs) const
 {
    TickOutputs majorOutputs{
       allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
@@ -1060,11 +1090,11 @@ void Ruler::Updater::UpdateCustom( wxDC &dc, UpdateOutputs &allOutputs ) const
    int numLabel = allOutputs.majorLabels.size();
 
    for( int i = 0; (i<numLabel) && (i<=mLength); ++i )
-      TickCustom( dc, i, mFonts.major, majorOutputs );
+      TickCustom( painter, i, mPainterFonts.major, majorOutputs );
 }
 
 void Ruler::Updater::UpdateLinear(
-   wxDC &dc, const Envelope *envelope, UpdateOutputs &allOutputs ) const
+   Painter& painter, const Envelope* envelope, UpdateOutputs& allOutputs) const
 {
    TickOutputs majorOutputs{
       allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
@@ -1077,7 +1107,7 @@ void Ruler::Updater::UpdateLinear(
    TickSizes tickSizes{ UPP, mOrientation, mFormat, false };
 
    auto TickAtValue =
-   [this, &tickSizes, &dc, &majorOutputs]
+   [this, &tickSizes, &painter, &majorOutputs]
    ( double value ) -> int {
       // Make a tick only if the value is strictly between the bounds
       if ( value <= std::min( mMin, mMax ) )
@@ -1097,7 +1127,7 @@ void Ruler::Updater::UpdateLinear(
 
       const int iMaxPos = (mOrientation == wxHORIZONTAL) ? mRight : mBottom - 5;
       if (mid >= 0 && mid < iMaxPos)
-         Tick( dc, mid, value, tickSizes, mFonts.major, majorOutputs );
+         Tick( painter, mid, value, tickSizes, mPainterFonts.major, majorOutputs );
       else
          return -1;
       
@@ -1120,8 +1150,8 @@ void Ruler::Updater::UpdateLinear(
 
    // Extreme values
    if (mLabelEdges) {
-      Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
-      Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
+      Tick(painter, 0, mMin, tickSizes, mPainterFonts.major, majorOutputs);
+      Tick(painter, mLength, mMax, tickSizes, mPainterFonts.major, majorOutputs);
    }
 
    if ( !mDbMirrorValue ) {
@@ -1135,7 +1165,7 @@ void Ruler::Updater::UpdateLinear(
    // Major and minor ticks
    for (int jj = 0; jj < 2; ++jj) {
       const double denom = jj == 0 ? tickSizes.mMajor : tickSizes.mMinor;
-      auto font = jj == 0 ? mFonts.major : mFonts.minor;
+      auto font = jj == 0 ? mPainterFonts.major : mPainterFonts.minor;
       TickOutputs outputs{
          (jj == 0 ? allOutputs.majorLabels : allOutputs.minorLabels),
          allOutputs.bits, allOutputs.box
@@ -1180,7 +1210,7 @@ void Ruler::Updater::UpdateLinear(
             step = floor(sg * warpedD / denom);
             bool major = jj == 0;
             tickSizes.useMajor = major;
-            bool ticked = Tick( dc, ii, sg * step * denom, tickSizes,
+            bool ticked = Tick( painter, ii, sg * step * denom, tickSizes,
                font, outputs );
             if( !major && !ticked ){
                nDroppedMinorLabels++;
@@ -1205,13 +1235,13 @@ void Ruler::Updater::UpdateLinear(
 
    // Left and Right Edges
    if (mLabelEdges) {
-      Tick( dc, 0, mMin, tickSizes, mFonts.major, majorOutputs );
-      Tick( dc, mLength, mMax, tickSizes, mFonts.major, majorOutputs );
+      Tick(painter, 0, mMin, tickSizes, mPainterFonts.major, majorOutputs);
+      Tick(painter, mLength, mMax, tickSizes, mPainterFonts.major, majorOutputs);
    }
 }
 
 void Ruler::Updater::UpdateNonlinear(
-    wxDC &dc, UpdateOutputs &allOutputs ) const
+   Painter& painter, UpdateOutputs& allOutputs) const
 {
    TickOutputs majorOutputs{
       allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
@@ -1242,7 +1272,7 @@ void Ruler::Updater::UpdateNonlinear(
       {  val = decade;
          if(val >= rMin && val < rMax) {
             const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-            Tick( dc, pos, val, tickSizes, mFonts.major, majorOutputs );
+            Tick( painter, pos, val, tickSizes, mPainterFonts.major, majorOutputs );
          }
       }
       decade *= step;
@@ -1265,7 +1295,7 @@ void Ruler::Updater::UpdateNonlinear(
          val = decade * j;
          if(val >= rMin && val < rMax) {
             const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-            Tick( dc, pos, val, tickSizes, mFonts.minor, minorOutputs );
+            Tick( painter, pos, val, tickSizes, mPainterFonts.minor, minorOutputs );
          }
       }
       decade *= step;
@@ -1289,8 +1319,8 @@ void Ruler::Updater::UpdateNonlinear(
                val = decade * f / 10;
                if (val >= rMin && val < rMax) {
                   const int pos(0.5 + mLength * numberScale.ValueToPosition(val));
-                  Tick( dc, pos, val, tickSizes,
-                     mFonts.minorMinor, minorMinorOutputs );
+                  Tick( painter, pos, val, tickSizes,
+                     mPainterFonts.minorMinor, minorMinorOutputs );
                }
             }
          }
@@ -1300,7 +1330,7 @@ void Ruler::Updater::UpdateNonlinear(
 }
 
 void Ruler::Updater::Update(
-   wxDC &dc, const Envelope* envelope,
+   Painter& painter, const Envelope* envelope,
    UpdateOutputs &allOutputs
 )// Envelope *speedEnv, long minSpeed, long maxSpeed )
    const
@@ -1309,11 +1339,11 @@ void Ruler::Updater::Update(
       allOutputs.majorLabels, allOutputs.bits, allOutputs.box };
 
    if ( mCustom )
-      UpdateCustom( dc, allOutputs );
+      UpdateCustom( painter, allOutputs );
    else if ( !mLog )
-      UpdateLinear( dc, envelope, allOutputs );
+      UpdateLinear( painter, envelope, allOutputs );
    else
-      UpdateNonlinear( dc, allOutputs );
+      UpdateNonlinear( painter, allOutputs );
 
    int displacementx=0, displacementy=0;
    auto &box = allOutputs.box;
@@ -1352,17 +1382,16 @@ void Ruler::Updater::Update(
       update( label );
 }
 
-void Ruler::ChooseFonts( wxDC &dc ) const
+void Ruler::ChooseFonts(Painter& painter) const
 {
-   Updater::ChooseFonts( mpFonts, mpUserFonts.get(), dc,
+   Updater::ChooseFonts( mpFonts, mpPainterFonts, mpUserFonts.get(), painter,
       mOrientation == wxHORIZONTAL
          ? mBottom - mTop - 5 // height less ticks and 1px gap
          : MaxPixelHeight
    );
 }
 
-void Ruler::UpdateCache(
-   wxDC &dc, const Envelope* envelope )
+void Ruler::UpdateCache(Painter& painter, const Envelope* envelope)
    const // Envelope *speedEnv, long minSpeed, long maxSpeed )
 {
    if ( mpCache )
@@ -1376,7 +1405,7 @@ void Ruler::UpdateCache(
    // (i.e. we've been invalidated).  Recompute all
    // tick positions and font size.
 
-   ChooseFonts( dc );
+   ChooseFonts( painter );
    mpCache = std::make_unique< Cache >();
    auto &cache = *mpCache;
 
@@ -1412,37 +1441,54 @@ void Ruler::UpdateCache(
       cache.mMajorLabels, cache.mMinorLabels, cache.mMinorMinorLabels,
       cache.mBits, cache.mRect
    };
-   updater.Update(dc, envelope, allOutputs);
+   updater.Update(painter, envelope, allOutputs);
+}
+
+Painter& Ruler::GetPainter() const
+{
+   if (!mPainter)
+      return GetMeasuringPainter();
+
+   return *mPainter;
+}
+
+Painter& Ruler::GetPainter(wxWindow* wnd)
+{
+   if (!mPainter)
+      mPainter = CreatePainter(wnd);
+
+   return *mPainter;
 }
 
 auto Ruler::GetFonts() const -> Fonts
 {
    if ( !mpFonts ) {
-      wxScreenDC dc;
-      ChooseFonts( dc );
+      ChooseFonts( GetPainter() );
    }
 
    return *mpFonts;
 }
 
-void Ruler::Draw(wxDC& dc) const
+void Ruler::Draw(Painter& painter) const
 {
-   Draw( dc, NULL);
+   Draw( painter, NULL);
 }
 
-void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
+void Ruler::Draw(Painter& painter, const Envelope* envelope) const
 {
    if( mLength <=0 )
       return;
 
-   UpdateCache( dc, envelope );
+   auto stateMutator = painter.GetStateMutator();
+
+   UpdateCache( painter, envelope );
    auto &cache = *mpCache;
 
-   dc.SetTextForeground( mTickColour );
+   stateMutator.SetBrush(ColorFromWXColor(mTickColour));
 #ifdef EXPERIMENTAL_THEMING
-   dc.SetPen(mPen);
+   stateMutator.SetPen(PenFromWXPen(mPen));
 #else
-   dc.SetPen(*wxBLACK_PEN);
+   stateMutator.SetPen(*wxBLACK_PEN);
 #endif
 
    // Draws a long line the length of the ruler.
@@ -1450,24 +1496,24 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
    {
       if (mOrientation == wxHORIZONTAL) {
          if (mFlip)
-            AColor::Line(dc, mLeft, mTop, mRight, mTop);
+            AColor::Line(painter, mLeft, mTop, mRight, mTop);
          else
-            AColor::Line(dc, mLeft, mBottom, mRight, mBottom);
+            AColor::Line(painter, mLeft, mBottom, mRight, mBottom);
       }
       else {
          if (mFlip)
-            AColor::Line(dc, mLeft, mTop, mLeft, mBottom);
+            AColor::Line(painter, mLeft, mTop, mLeft, mBottom);
          else
          {
             // These calculations appear to be wrong, and to never have been used (so not tested) prior to MixerBoard.
             //    AColor::Line(dc, mRect.x-mRect.width, mTop, mRect.x-mRect.width, mBottom);
             const int nLineX = mRight - 1;
-            AColor::Line(dc, nLineX, mTop, nLineX, mBottom);
+            AColor::Line(painter, nLineX, mTop, nLineX, mBottom);
          }
       }
    }
 
-   dc.SetFont( mpFonts->major );
+   stateMutator.SetFont(mpPainterFonts->major);
 
    // We may want to not show the ticks at the extremes,
    // though still showing the labels.
@@ -1475,42 +1521,47 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
    // button, since otherwise the tick is drawn on the bevel.
    int iMaxPos = (mOrientation==wxHORIZONTAL)? mRight : mBottom-5;
 
-   auto drawLabel = [this, iMaxPos, &dc]( const Label &label, int length ){
+   auto drawLabel = [this, iMaxPos, &painter](const Label& label, int length)
+   {
       int pos = label.pos;
 
       if( mbTicksAtExtremes || ((pos!=0)&&(pos!=iMaxPos)))
       {
          if (mOrientation == wxHORIZONTAL) {
             if (mFlip)
-               AColor::Line(dc, mLeft + pos, mTop,
+               AColor::Line(
+                  painter, mLeft + pos, mTop,
                              mLeft + pos, mTop + length);
             else
-               AColor::Line(dc, mLeft + pos, mBottom - length,
+               AColor::Line(
+                  painter, mLeft + pos, mBottom - length,
                              mLeft + pos, mBottom);
          }
          else {
             if (mFlip)
-               AColor::Line(dc, mLeft, mTop + pos,
+               AColor::Line(
+                  painter, mLeft, mTop + pos,
                              mLeft + length, mTop + pos);
             else
-               AColor::Line(dc, mRight - length, mTop + pos,
+               AColor::Line(
+                  painter, mRight - length, mTop + pos,
                              mRight, mTop + pos);
          }
       }
 
-      label.Draw(dc, mTwoTone, mTickColour);
+      label.Draw(painter, mTwoTone, mTickColour);
    };
 
    for( const auto &label : cache.mMajorLabels )
       drawLabel( label, 4 );
 
    if( mbMinor ) {
-      dc.SetFont( mpFonts->minor );
+      stateMutator.SetFont( mpPainterFonts->minor );
       for( const auto &label : cache.mMinorLabels )
          drawLabel( label, 2 );
    }
 
-   dc.SetFont( mpFonts->minorMinor );
+   stateMutator.SetFont( mpPainterFonts->minorMinor );
 
    for( const auto &label : cache.mMinorMinorLabels )
       if ( !label.text.empty() )
@@ -1518,59 +1569,62 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
 }
 
 // ********** Draw grid ***************************
-void Ruler::DrawGrid(wxDC& dc,
+void Ruler::DrawGrid(
+   Painter& painter,
    const int gridLineLength,
    const bool minorGrid, const bool majorGrid, int xOffset, int yOffset)
    const
 {
-   UpdateCache( dc, nullptr );
+   UpdateCache( painter, nullptr );
    auto &cache = *mpCache;
 
    int gridPos;
    wxPen gridPen;
 
+   auto stateMutator = painter.GetStateMutator();
+
    if(mbMinor && (minorGrid && (gridLineLength != 0 ))) {
       gridPen.SetColour(178, 178, 178); // very light grey
-      dc.SetPen(gridPen);
+      stateMutator.SetPen(PenFromWXPen(gridPen));
       for( const auto &label : cache.mMinorLabels ) {
          gridPos = label.pos;
          if(mOrientation == wxHORIZONTAL) {
             if((gridPos != 0) && (gridPos != gridLineLength))
-               AColor::Line(dc, gridPos+xOffset, yOffset, gridPos+xOffset, gridLineLength-1+yOffset);
+               AColor::Line(painter, gridPos+xOffset, yOffset, gridPos+xOffset, gridLineLength-1+yOffset);
          }
          else {
             if((gridPos != 0) && (gridPos != gridLineLength))
-               AColor::Line(dc, xOffset, gridPos+yOffset, gridLineLength-1+xOffset, gridPos+yOffset);
+               AColor::Line(painter, xOffset, gridPos+yOffset, gridLineLength-1+xOffset, gridPos+yOffset);
          }
       }
    }
 
    if(majorGrid && (gridLineLength != 0 )) {
       gridPen.SetColour(127, 127, 127); // light grey
-      dc.SetPen(gridPen);
+      stateMutator.SetPen(PenFromWXPen(gridPen));
       for( const auto &label : cache.mMajorLabels ) {
          gridPos = label.pos;
          if(mOrientation == wxHORIZONTAL) {
             if((gridPos != 0) && (gridPos != gridLineLength))
-               AColor::Line(dc, gridPos+xOffset, yOffset, gridPos+xOffset, gridLineLength-1+yOffset);
+               AColor::Line(painter, gridPos+xOffset, yOffset, gridPos+xOffset, gridLineLength-1+yOffset);
          }
          else {
             if((gridPos != 0) && (gridPos != gridLineLength))
-               AColor::Line(dc, xOffset, gridPos+yOffset, gridLineLength-1+xOffset, gridPos+yOffset);
+               AColor::Line(painter, xOffset, gridPos+yOffset, gridLineLength-1+xOffset, gridPos+yOffset);
          }
       }
 
       int zeroPosition = GetZeroPosition();
       if(zeroPosition > 0) {
          // Draw 'zero' grid line in black
-         dc.SetPen(*wxBLACK_PEN);
+         stateMutator.SetPen(Colors::Black);
          if(mOrientation == wxHORIZONTAL) {
             if(zeroPosition != gridLineLength)
-               AColor::Line(dc, zeroPosition+xOffset, yOffset, zeroPosition+xOffset, gridLineLength-1+yOffset);
+               AColor::Line(painter, zeroPosition+xOffset, yOffset, zeroPosition+xOffset, gridLineLength-1+yOffset);
          }
          else {
             if(zeroPosition != gridLineLength)
-               AColor::Line(dc, xOffset, zeroPosition+yOffset, gridLineLength-1+xOffset, zeroPosition+yOffset);
+               AColor::Line(painter, xOffset, zeroPosition+yOffset, gridLineLength-1+xOffset, zeroPosition+yOffset);
          }
       }
    }
@@ -1603,8 +1657,7 @@ int Ruler::GetZeroPosition() const
 void Ruler::GetMaxSize(wxCoord *width, wxCoord *height)
 {
    if ( !mpCache ) {
-      wxScreenDC sdc;
-      UpdateCache( sdc, nullptr );
+      UpdateCache( GetPainter(), nullptr );
    }
 
    auto &cache = *mpCache;
@@ -1662,18 +1715,21 @@ void Ruler::SetCustomMinorLabels(
 }
 #endif
 
-void Ruler::Label::Draw(wxDC&dc, bool twoTone, wxColour c) const
+void Ruler::Label::Draw(Painter& painter, bool twoTone, wxColour c) const
 {
    if (!text.empty()) {
       bool altColor = twoTone && value < 0.0;
 
+      auto stateMutator = painter.GetStateMutator();
+
 #ifdef EXPERIMENTAL_THEMING
-      dc.SetTextForeground(altColor ? theTheme.Colour( clrTextNegativeNumbers) : c);
+      auto color = ColorFromWXColor(
+         altColor ? theTheme.Colour(clrTextNegativeNumbers) : c);
 #else
-      dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
+      auto color = ColorFromWXColor(altColor ? *wxBLUE : *wxBLACK);
 #endif
-      dc.SetBackgroundMode(wxTRANSPARENT);
-      dc.DrawText(text.Translation(), lx, ly);
+      stateMutator.SetBrush(color);
+      painter.DrawText(lx, ly, audacity::ToUTF8(text.Translation()));
    }
 }
 
@@ -1747,13 +1803,11 @@ void RulerPanel::OnErase(wxEraseEvent & WXUNUSED(evt))
 
 void RulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
-   wxPaintDC dc(this);
+   auto& painter = ruler.GetPainter(this);
 
-#if defined(__WXMSW__)
-   dc.Clear();
-#endif
+   ruler.Draw(painter);
 
-   ruler.Draw(dc);
+   painter.Flush();
 }
 
 void RulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))

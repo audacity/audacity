@@ -42,8 +42,6 @@ a graph for EffectScienFilter.
 
 #include <wx/brush.h>
 #include <wx/choice.h>
-#include <wx/dcclient.h>
-#include <wx/dcmemory.h>
 #include <wx/intl.h>
 #include <wx/settings.h>
 #include <wx/slider.h>
@@ -63,6 +61,11 @@ a graph for EffectScienFilter.
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/Ruler.h"
 #include "../widgets/WindowAccessible.h"
+
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+#include "graphics/WXPainterFactory.h"
+#include "graphics/WXColor.h"
 
 #if !defined(M_PI)
 #define PI = 3.1415926535897932384626433832795
@@ -703,7 +706,8 @@ END_EVENT_TABLE()
 EffectScienFilterPanel::EffectScienFilterPanel(
    wxWindow *parent, wxWindowID winid,
    EffectScienFilter *effect, double lo, double hi)
-:  wxPanelWrapper(parent, winid, wxDefaultPosition, wxSize(400, 200))
+    : wxPanelWrapper(parent, winid, wxDefaultPosition, wxSize(400, 200))
+    , mPainter(CreatePainter(this))
 {
    mEffect = effect;
    mParent = parent;
@@ -754,57 +758,53 @@ void EffectScienFilterPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
 
 void EffectScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
-   wxPaintDC dc(this);
    int width, height;
    GetSize(&width, &height);
 
-   if (!mBitmap || mWidth != width || mHeight != height)
-   {
-      mWidth = width;
-      mHeight = height;
-      mBitmap = std::make_unique<wxBitmap>(mWidth, mHeight,24);
-   }
+   auto stateMutator = mPainter->GetStateMutator();
 
-   wxBrush bkgndBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
+   Brush bkgndBrush(ColorFromWXColor(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
 
-   wxMemoryDC memDC;
-   memDC.SelectObject(*mBitmap);
+   Rect bkgndRect;
+   bkgndRect.Origin.x = 0;
+   bkgndRect.Origin.y = 0;
+   bkgndRect.Size.width = mWidth;
+   bkgndRect.Size.height = mHeight;
 
-   wxRect bkgndRect;
-   bkgndRect.x = 0;
-   bkgndRect.y = 0;
-   bkgndRect.width = mWidth;
-   bkgndRect.height = mHeight;
-   memDC.SetBrush(bkgndBrush);
-   memDC.SetPen(*wxTRANSPARENT_PEN);
-   memDC.DrawRectangle(bkgndRect);
+   stateMutator.SetBrush(bkgndBrush);
+   stateMutator.SetPen(Pen::NoPen);
+   mPainter->DrawRect(bkgndRect);
 
-   bkgndRect.y = mHeight;
-   memDC.DrawRectangle(bkgndRect);
+   bkgndRect.Origin.y = mHeight;
+   mPainter->DrawRect(bkgndRect);
 
-   wxRect border;
-   border.x = 0;
-   border.y = 0;
-   border.width = mWidth;
-   border.height = mHeight;
+   Rect border;
+   border.Origin.x = 0;
+   border.Origin.y = 0;
+   border.Size.width = mWidth;
+   border.Size.height = mHeight;
 
-   memDC.SetBrush(*wxWHITE_BRUSH);
-   memDC.SetPen(*wxBLACK_PEN);
-   memDC.DrawRectangle(border);
+   stateMutator.SetBrush(Colors::White);
+   stateMutator.SetPen(Colors::Black);
+   mPainter->DrawRect(border);
 
-   mEnvRect = border;
+   mEnvRect = { static_cast<wxCoord>(border.Origin.x),
+                static_cast<wxCoord>(border.Origin.y),
+                static_cast<wxCoord>(border.Size.width),
+                static_cast<wxCoord>(border.Size.height) };
+
    mEnvRect.Deflate(2, 2);
 
    // Pure blue x-axis line
-   memDC.SetPen(wxPen(theTheme.Colour(clrGraphLines), 1, wxPENSTYLE_SOLID));
+   stateMutator.SetPen(ColorFromWXColor(theTheme.Colour(clrGraphLines)));
    int center = (int) (mEnvRect.height * mDbMax / (mDbMax - mDbMin) + 0.5);
-   AColor::Line(memDC,
+   AColor::Line(*mPainter,
                 mEnvRect.GetLeft(), mEnvRect.y + center,
                 mEnvRect.GetRight(), mEnvRect.y + center);
 
    //Now draw the actual response that you will get.
    //mFilterFunc has a linear scale, window has a log one so we have to fiddle about
-   memDC.SetPen(wxPen(theTheme.Colour(clrResponseLines), 3, wxPENSTYLE_SOLID));
+   stateMutator.SetPen(Pen(ColorFromWXColor(theTheme.Colour(clrResponseLines)), 3));
    double scale = (double) mEnvRect.height / (mDbMax - mDbMin);    // pixels per dB
    double yF;                                                     // gain at this freq
 
@@ -838,17 +838,15 @@ void EffectScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
       if (i != 0 && (y < mEnvRect.height - 1 || ylast < mEnvRect.y + mEnvRect.height - 1))
       {
-         AColor::Line(memDC, xlast, ylast, x, mEnvRect.y + y);
+         AColor::Line(*mPainter, xlast, ylast, x, mEnvRect.y + y);
       }
       xlast = x;
       ylast = mEnvRect.y + y;
    }
 
-   memDC.SetPen(*wxBLACK_PEN);
-   mEffect->mfreqRuler->ruler.DrawGrid(memDC, mEnvRect.height + 2, true, true, 0, 1);
-   mEffect->mdBRuler->ruler.DrawGrid(memDC, mEnvRect.width + 2, true, true, 1, 2);
+   stateMutator.SetPen(Colors::Black);
+   mEffect->mfreqRuler->ruler.DrawGrid(*mPainter, mEnvRect.height + 2, true, true, 0, 1);
+   mEffect->mdBRuler->ruler.DrawGrid(*mPainter, mEnvRect.width + 2, true, true, 1, 2);
 
-   dc.Blit(0, 0, mWidth, mHeight, &memDC, 0, 0, wxCOPY, FALSE);
-
-   memDC.SelectObject(wxNullBitmap);
+   mPainter->Flush();
 }

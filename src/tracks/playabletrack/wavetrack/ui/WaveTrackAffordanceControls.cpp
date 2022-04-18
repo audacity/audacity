@@ -50,6 +50,9 @@
 
 #include "WaveClipTrimHandle.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+
 
 
 class SetWaveClipNameCommand : public AudacityCommand
@@ -240,11 +243,14 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
         const auto& zoomInfo = *artist->pZoomInfo;
 
         {
-            wxDCClipper dcClipper(context.dc, rect);
+            auto& painter = context.painter;
+            auto stateMutator = painter.GetStateMutator();
+            auto clipStateMutator = painter.GetClipStateMutator();
 
-            context.dc.SetTextBackground(wxTransparentColor);
-            context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
-            context.dc.SetFont(mClipNameFont);
+            clipStateMutator.SetClipRect(RectFromWXRect(rect), false);
+
+            //context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
+            stateMutator.SetFont(FontFromWXFont(painter, mClipNameFont));
 
             auto px = context.lastState.m_x;
             auto py = context.lastState.m_y;
@@ -256,7 +262,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
 
                 if(!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
                 {
-                   TrackArt::DrawClipFolded(context.dc, affordanceRect);
+                   TrackArt::DrawClipFolded(painter, affordanceRect);
                    continue;
                 }
 
@@ -264,12 +270,12 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                 auto highlight = selected || affordanceRect.Contains(px, py);
                 if (mTextEditHelper && mEditedClip.lock() == clip)
                 {
-                    auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, wxEmptyString, highlight, selected);
-                    mTextEditHelper->Draw(context.dc, titleRect);
+                    auto titleRect = TrackArt::DrawClipAffordance(painter, affordanceRect, wxEmptyString, highlight, selected);
+                    mTextEditHelper->Draw(painter, titleRect);
                 }
                 else
                 {
-                    auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, clip->GetName(), highlight, selected);
+                    auto titleRect = TrackArt::DrawClipAffordance(painter, affordanceRect, clip->GetName(), highlight, selected);
                     mClipNameVisible = !titleRect.IsEmpty();
                 }
             }

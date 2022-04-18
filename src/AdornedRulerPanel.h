@@ -21,6 +21,7 @@ class AudacityProject;
 struct AudioIOEvent;
 struct SelectedRegionEvent;
 class TrackList;
+class Painter;
 
 // This is an Audacity Specific ruler panel.
 class AUDACITY_DLL_API AdornedRulerPanel final
@@ -95,21 +96,21 @@ private:
    void StartQPPlay(
       bool newDefault, bool cutPreview, const double *pStartTime = nullptr);
 
-   void DoDrawBackground(wxDC * dc);
-   void DoDrawEdge(wxDC *dc);
-   void DoDrawMarks(wxDC * dc, bool /*text */ );
+   void DoDrawBackground(Painter& painter);
+   void DoDrawEdge(Painter& painter);
+   void DoDrawMarks(Painter& painter, bool /*text */);
    wxRect RegionRectangle(double t0, double t1) const;
    wxRect PlayRegionRectangle() const;
    wxRect SelectedRegionRectangle() const;
-   void DoDrawPlayRegion(wxDC * dc,
+   void DoDrawPlayRegion(Painter& painter,
       const wxRect &rectP, const wxRect &rectL, const wxRect &rectR);
-   void DoDrawPlayRegionLimits(wxDC * dc, const wxRect &rect);
-   void DoDrawOverlap(wxDC * dc, const wxRect &rect);
-   void DoDrawSelection(wxDC * dc,
+   void DoDrawPlayRegionLimits(Painter& painter, const wxRect& rect);
+   void DoDrawOverlap(Painter& painter, const wxRect& rect);
+   void DoDrawSelection(Painter& painter,
       const wxRect &rectS, const wxRect &rectL, const wxRect &rectR);
 
 public:
-   void DoDrawScrubIndicator(wxDC * dc, wxCoord xx, int width, bool scrub, bool seek);
+   void DoDrawScrubIndicator(Painter& painter, wxCoord xx, int width, bool scrub, bool seek);
    void UpdateButtonStates();
 
 private:
@@ -132,8 +133,8 @@ private:
    bool IsWithinMarker(int mousePosX, double markerTime);
 
 private:
-
    Ruler mRuler;
+   Painter& mPainter;
    AudacityProject *const mProject;
    TrackList *mTracks;
 

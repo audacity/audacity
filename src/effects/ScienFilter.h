@@ -29,6 +29,7 @@ class wxStaticText;
 class wxTextCtrl;
 class RulerPanel;
 class ShuttleGui;
+class Painter;
 
 class EffectScienFilterPanel;
 
@@ -188,6 +189,7 @@ private:
 private:
    EffectScienFilter *mEffect;
    wxWindow *mParent;
+   std::unique_ptr<Painter> mPainter;
 
    double mLoFreq;
    double mHiFreq;

@@ -17,7 +17,9 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-files-interface
+   lib-graphics-interface
    PRIVATE
+   lib-graphics-wx-interface
    wxwidgets::wxwidgets
  )
 audacity_library( lib-theme "${SOURCES}" "${LIBRARIES}"

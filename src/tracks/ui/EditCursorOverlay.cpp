@@ -21,7 +21,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackPanel.h"
 #include "ViewInfo.h"
 
-#include <wx/dc.h>
+#include "graphics/Painter.h"
 
 namespace {
    template < class LOW, class MID, class HIGH >
@@ -53,7 +53,8 @@ unsigned EditCursorOverlay::SequenceNumber() const
    return 20;
 }
 
-std::pair<wxRect, bool> EditCursorOverlay::DoGetRectangle(wxSize size)
+std::pair<wxRect, bool>
+EditCursorOverlay::DoGetRectangle(Painter&, wxSize size)
 {
    const auto &viewInfo = ViewInfo::Get( *mProject );
    const auto &selection = viewInfo.selectedRegion;
@@ -77,7 +78,7 @@ std::pair<wxRect, bool> EditCursorOverlay::DoGetRectangle(wxSize size)
 }
 
 
-void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
+void EditCursorOverlay::Draw(OverlayPanel &panel, Painter &painter)
 {
    if (mIsMaster && !mPartner) {
       auto &ruler = AdornedRulerPanel::Get( *mProject );
@@ -100,41 +101,15 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
       return;
 
    auto &trackPanel = TrackPanel::Get( *mProject );
-   //NOTE: point selection cursor drawing over tracks moved to TrackPanel.cpp(see also TrackArt::DrawCursor)
-   /*if (auto tp = dynamic_cast<TrackPanel*>(&panel)) {
-      wxASSERT(mIsMaster);
-      AColor::CursorColor(&dc);
 
-      // Draw cursor in all selected tracks
-      tp->VisitCells( [&]( const wxRect &rect, TrackPanelCell &cell ) {
-         const auto pTrackView = dynamic_cast<TrackView*>(&cell);
-         if (!pTrackView)
-            return;
-         const auto pTrack = pTrackView->FindTrack();
-         if (pTrack->GetSelected() ||
-             TrackFocus::Get( *mProject ).IsFocused( pTrack.get() ))
-         {
-            // AColor::Line includes both endpoints so use GetBottom()
-            AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());
-            // ^^^ The whole point of this routine.
-
-         }
-      } );
-   }
-   else if (auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
+   if (auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel))
+   {
       wxASSERT(!mIsMaster);
-      dc.SetPen(*wxBLACK_PEN);
+      auto stateMutator = painter.GetStateMutator();
+      stateMutator.SetPen(Colors::Black);
       // AColor::Line includes both endpoints so use GetBottom()
       auto rect = ruler->GetInnerRect();
-      AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());
-   }
-   else
-      wxASSERT(false);*/
-   if (auto ruler = dynamic_cast<AdornedRulerPanel*>(&panel)) {
-       wxASSERT(!mIsMaster);
-       dc.SetPen(*wxBLACK_PEN);
-       // AColor::Line includes both endpoints so use GetBottom()
-       auto rect = ruler->GetInnerRect();
-       AColor::Line(dc, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());
+      AColor::Line(
+         painter, mLastCursorX, rect.GetTop(), mLastCursorX, rect.GetBottom());
    }
 }

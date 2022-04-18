@@ -265,8 +265,8 @@ void MoveWhenAudioInactive
       viewInfo.selectedRegion.collapseToT0();
 
       // Move the visual cursor, avoiding an unnecessary complete redraw
-      trackPanel.DrawOverlays(false);
-      ruler.DrawOverlays(false);
+      trackPanel.Refresh();
+      ruler.Refresh();
    }
    else
    {

@@ -31,6 +31,9 @@
 class AudacityProject;
 struct AudioIOEvent;
 
+class Painter;
+class PainterImage;
+
 // Increase this when we add support for multichannel meters
 // (most of the code is already there)
 const int kMaxMeterBars = 2;
@@ -124,6 +127,8 @@ class AUDACITY_DLL_API MeterPanel final
          Style style = HorizontalStereo,
          float fDecayRate = 60.0f);
 
+   ~MeterPanel();
+
    void SetFocusFromKbd() override;
 
    void Clear() override;
@@ -215,10 +220,10 @@ class AUDACITY_DLL_API MeterPanel final
 
    void OnMeterUpdate(wxTimerEvent &evt);
 
-   void HandleLayout(wxDC &dc);
+   void HandleLayout();
    void SetActiveStyle(Style style);
    void SetBarAndClip(int iBar, bool vert);
-   void DrawMeterBar(wxDC &dc, MeterBar *meterBar);
+   void DrawMeterBar(Painter &painter, MeterBar *meterBar);
    void ResetBar(MeterBar *bar, bool resetClipping);
    void RepaintBarsNow();
    wxFont GetFont() const;
@@ -235,6 +240,8 @@ class AUDACITY_DLL_API MeterPanel final
    Observer::Subscription mSubscription;
 
    AudacityProject *mProject;
+   std::unique_ptr<Painter> mPainter;
+
    MeterUpdateQueue mQueue;
    wxTimer          mTimer;
 
@@ -270,13 +277,13 @@ class AUDACITY_DLL_API MeterPanel final
 
    bool      mLayoutValid;
 
-   std::unique_ptr<wxBitmap> mBitmap;
+   std::unique_ptr<PainterImage> mBitmap;
    wxRect    mIconRect;
    wxPoint   mLeftTextPos;
    wxPoint   mRightTextPos;
    wxSize    mLeftSize;
    wxSize    mRightSize;
-   std::unique_ptr<wxBitmap> mIcon;
+   const PainterImage* mIcon;
    wxPen     mPen;
    wxPen     mDisabledPen;
    wxPen     mPeakPeakPen;

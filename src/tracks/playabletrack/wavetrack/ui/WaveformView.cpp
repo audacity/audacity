@@ -38,6 +38,8 @@ Paul Licameli split from WaveTrackView.cpp
 #include "waveform/WaveData.h"
 #include "waveform/WaveBitmapCache.h"
 #include "graphics/WXColor.h"
+#include "graphics/WXPainterUtils.h"
+#include "graphics/Painter.h"
 
 #include <wx/graphics.h>
 #include <wx/dc.h>
@@ -159,7 +161,7 @@ void DrawWaveformBackground(TrackPanelDrawingContext &context,
                                          bool bIsSyncLockSelected,
                                          bool highlightEnvelope)
 {
-   auto &dc = context.dc;
+   auto &painter = context.painter;
    const auto artist = TrackArtist::Get( context );
    const auto &zoomInfo = *artist->pZoomInfo;
 
@@ -182,13 +184,16 @@ void DrawWaveformBackground(TrackPanelDrawingContext &context,
    int xx, lx = 0;
    int l, w;
 
-   const auto &blankBrush = artist->blankBrush;
-   const auto &selectedBrush = artist->selectedBrush;
-   const auto &unselectedBrush = artist->unselectedBrush;
+   const auto blankBrush = BrushFromWXBrush(artist->blankBrush);
+   const auto selectedBrush = BrushFromWXBrush(artist->selectedBrush);
+   const auto unselectedBrush = BrushFromWXBrush(artist->unselectedBrush);
 
-   dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.SetBrush(blankBrush);
-   dc.DrawRectangle(rect);
+   auto painterStateMutator = painter.GetStateMutator();
+
+   painterStateMutator.SetPen(Pen::NoPen);
+   painterStateMutator.SetBrush(blankBrush);
+
+   painter.DrawRect(rect.x, rect.y, rect.width, rect.height);
 
    // Bug 2389 - always draw at least one pixel of selection.
    int selectedX = zoomInfo.TimeToPosition(t0, -leftOffset);
@@ -233,21 +238,21 @@ void DrawWaveformBackground(TrackPanelDrawingContext &context,
          continue;
       }
 
-      dc.SetBrush(lsel ? selectedBrush : unselectedBrush);
+      painterStateMutator.SetBrush(lsel ? selectedBrush : unselectedBrush);
 
       l = rect.x + lx;
       w = xx - lx;
       if (lmaxbot < lmintop - 1) {
-         dc.DrawRectangle(l, rect.y + lmaxtop, w, lmaxbot - lmaxtop);
-         dc.DrawRectangle(l, rect.y + lmintop, w, lminbot - lmintop);
+         painter.DrawRect(l, rect.y + lmaxtop, w, lmaxbot - lmaxtop);
+         painter.DrawRect(l, rect.y + lmintop, w, lminbot - lmintop);
       }
       else {
-         dc.DrawRectangle(l, rect.y + lmaxtop, w, lminbot - lmaxtop);
+         painter.DrawRect(l, rect.y + lmaxtop, w, lminbot - lmaxtop);
       }
 
       if (highlightEnvelope && lmaxbot < lmintop - 1) {
-         dc.SetBrush( AColor::uglyBrush );
-         dc.DrawRectangle(l, rect.y + lmaxbot, w, lmintop - lmaxbot);
+         painterStateMutator.SetBrush(BrushFromWXBrush(AColor::uglyBrush));
+         painter.DrawRect(l, rect.y + lmaxbot, w, lmintop - lmaxbot);
       }
 
       lmaxtop = maxtop;
@@ -258,19 +263,19 @@ void DrawWaveformBackground(TrackPanelDrawingContext &context,
       lx = xx;
    }
 
-   dc.SetBrush(lsel ? selectedBrush : unselectedBrush);
+   painterStateMutator.SetBrush(lsel ? selectedBrush : unselectedBrush);
    l = rect.x + lx;
    w = xx - lx;
    if (lmaxbot < lmintop - 1) {
-      dc.DrawRectangle(l, rect.y + lmaxtop, w, lmaxbot - lmaxtop);
-      dc.DrawRectangle(l, rect.y + lmintop, w, lminbot - lmintop);
+      painter.DrawRect(l, rect.y + lmaxtop, w, lmaxbot - lmaxtop);
+      painter.DrawRect(l, rect.y + lmintop, w, lminbot - lmintop);
    }
    else {
-      dc.DrawRectangle(l, rect.y + lmaxtop, w, lminbot - lmaxtop);
+      painter.DrawRect(l, rect.y + lmaxtop, w, lminbot - lmaxtop);
    }
    if (highlightEnvelope && lmaxbot < lmintop - 1) {
-      dc.SetBrush( AColor::uglyBrush );
-      dc.DrawRectangle(l, rect.y + lmaxbot, w, lmintop - lmaxbot);
+      painterStateMutator.SetBrush(BrushFromWXBrush(AColor::uglyBrush));
+      painter.DrawRect(l, rect.y + lmaxbot, w, lmintop - lmaxbot);
    }
 
    // If sync-lock selected, draw in linked graphics.
@@ -285,8 +290,8 @@ void DrawWaveformBackground(TrackPanelDrawingContext &context,
    //is spread across rect.height.  Draw the line at the proper place.
    if (zeroLevelYCoordinate >= rect.GetTop() &&
        zeroLevelYCoordinate <= rect.GetBottom()) {
-      dc.SetPen(*wxBLACK_PEN);
-      AColor::Line(dc, rect.x, zeroLevelYCoordinate,
+      painterStateMutator.SetPen(Pen(Colors::Black));
+      painter.DrawLine(rect.x, zeroLevelYCoordinate,
                    rect.x + rect.width - 1, zeroLevelYCoordinate);
    }
 }
@@ -300,42 +305,13 @@ struct WavePortion {
    {}
 };
 
-void FindWavePortions
-   (std::vector<WavePortion> &portions, const wxRect &rect, const ZoomInfo &zoomInfo,
-    const ClipParameters &params)
-{
-   // If there is no fisheye, then only one rectangle has nonzero width.
-   // If there is a fisheye, make rectangles for before and after
-   // (except when they are squeezed to zero width), and at least one for inside
-   // the fisheye.
-
-   ZoomInfo::Intervals intervals;
-   zoomInfo.FindIntervals(params.rate, intervals, rect.width, rect.x);
-   ZoomInfo::Intervals::const_iterator it = intervals.begin(), end = intervals.end(), prev;
-   wxASSERT(it != end && it->position == rect.x);
-   const int rightmost = rect.x + rect.width;
-   for (int left = rect.x; left < rightmost;) {
-      while (it != end && it->position <= left)
-         prev = it++;
-      if (it == end)
-         break;
-      const int right = std::max(left, (int)(it->position));
-      const int width = right - left;
-      if (width > 0)
-         portions.push_back(
-            WavePortion(left, rect.y, width, rect.height,
-                        prev->averageZoom, prev->inFisheye)
-         );
-      left = right;
-   }
-}
-
 void DrawMinMaxRMS(
    TrackPanelDrawingContext& context, const WaveClip& clip, int leftOffset, double t0, double t1,
    const wxRect& rect, float zoomMin, float zoomMax, bool dB, float dbRange,
    bool muted)
 {
-   auto &dc = context.dc;
+   auto &painter = context.painter;
+
    const auto artist = TrackArtist::Get(context);
    const ZoomInfo zoomInfo(0.0, artist->pZoomInfo->GetZoom());
 
@@ -367,26 +343,22 @@ void DrawMinMaxRMS(
    clipCache.mWaveBitmapCache->SetPaintParameters(paintParameters)
       .SetSelection(
          zoomInfo, artist->pSelectedRegion->t0() - sequenceStartTime,
-         artist->pSelectedRegion->t1() - sequenceStartTime);
+         artist->pSelectedRegion->t1() - sequenceStartTime)
+      .SetPainter(painter);
 
    auto range = clipCache.mWaveBitmapCache->PerformLookup(
       zoomInfo, t0 + trimLeft, t1 + trimLeft);
-
-   wxMemoryDC memDC;
 
    auto left = rect.GetLeft() + leftOffset;
 
    for (auto it = range.begin(); it != range.end(); ++it)
    {
-      const auto leftOffset = it.GetLeftOffset();
-      const auto width =
-         GraphicsDataCacheBase::CacheElementWidth - it.GetRightOffset() - leftOffset;
+      const auto elementLeftOffset = it.GetLeftOffset();
+      const auto width = GraphicsDataCacheBase::CacheElementWidth;
 
-      memDC.SelectObject(*it->Bitmap);
-
-      dc.Blit(
-         left, rect.GetTop(), width, rect.GetRight(), &memDC,
-         leftOffset, 0, wxCOPY);
+      painter.DrawImage(
+         *it->Bitmap, left - elementLeftOffset, rect.GetTop(), width,
+         rect.GetHeight());
 
       left += width;
    }
@@ -400,7 +372,9 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context,
                                         bool showPoints, bool muted,
                                         bool highlight)
 {
-   auto &dc = context.dc;
+   auto &painter = context.painter;
+   auto painterStateMutator = painter.GetStateMutator();
+
    const auto artist = TrackArtist::Get( context );
    const auto &zoomInfo = *artist->pZoomInfo;
 
@@ -436,10 +410,12 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context,
    if (bShowClipping)
       clipped.reinit( size_t(slen) );
 
-   const auto &muteSamplePen = artist->muteSamplePen;
-   const auto &samplePen = artist->samplePen;
-   auto &pen = highlight ? AColor::uglyPen : muted ? muteSamplePen : samplePen;
-   dc.SetPen( pen );
+   const auto muteSamplePen = PenFromWXPen(artist->muteSamplePen);
+   const auto samplePen = PenFromWXPen(artist->samplePen);
+   auto pen = highlight ? PenFromWXPen(AColor::uglyPen) :
+                          (muted ? muteSamplePen : samplePen);
+
+   painterStateMutator.SetPen( pen );
 
    for (decltype(slen) s = 0; s < slen; s++) {
       const double time = toffset + (s + s0).as_double() / rate;
@@ -467,21 +443,24 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context,
       // Draw points where spacing is enough
       const auto bigPoints = artist->bigPoints;
       const int tickSize = bigPoints ? 4 : 3;// Bigger ellipses when draggable.
-      wxRect pr;
-      pr.width = tickSize;
-      pr.height = tickSize;
+      Rect pr;
+
+      pr.Size.width = tickSize;
+      pr.Size.height = tickSize;
       //different colour when draggable.
-      const auto &dragsampleBrush = artist->dragsampleBrush;
-      const auto &sampleBrush = artist->sampleBrush;
-      auto &brush = highlight
-         ? AColor::uglyBrush
-         : bigPoints ? dragsampleBrush : sampleBrush;
-      dc.SetBrush( brush );
+      const auto dragsampleBrush = BrushFromWXBrush(artist->dragsampleBrush);
+      const auto sampleBrush = BrushFromWXBrush(artist->sampleBrush);
+      auto brush = highlight ? BrushFromWXBrush(AColor::uglyBrush) :
+                               (bigPoints ? dragsampleBrush : sampleBrush);
+
+      painterStateMutator.SetBrush( brush );
+
       for (decltype(slen) s = 0; s < slen; s++) {
          if (ypos[s] >= 0 && ypos[s] < rect.height) {
-            pr.x = rect.x + xpos[s] - tickSize/2;
-            pr.y = rect.y + ypos[s] - tickSize/2;
-            dc.DrawEllipse(pr);
+            pr.Origin.x = rect.x + xpos[s] - tickSize/2;
+            pr.Origin.y = rect.y + ypos[s] - tickSize/2;
+
+            painter.DrawEllipse(pr);
          }
       }
    }
@@ -492,7 +471,7 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context,
       int yZero = GetWaveYPos(0.0, zoomMin, zoomMax, rect.height, dB, true, dBRange, false);
       yZero = rect.y + std::max(-1, std::min(rect.height, yZero));
       for (decltype(slen) s = 0; s < slen; s++) {
-         AColor::Line(dc,
+         painter.DrawLine(
                      rect.x + xpos[s], rect.y + ypos[s],
                      rect.x + xpos[s], yZero);
       }
@@ -500,7 +479,7 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context,
    else {
       // Connect samples with straight lines
       for (decltype(slen) s = 0; s < slen - 1; s++) {
-         AColor::Line(dc,
+         painter.DrawLine(
                      rect.x + xpos[s], rect.y + ypos[s],
                      rect.x + xpos[s + 1], rect.y + ypos[s + 1]);
       }
@@ -508,12 +487,13 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context,
 
    // Draw clipping
    if (clipcnt) {
-      const auto &muteClippedPen = artist->muteClippedPen;
-      const auto &clippedPen = artist->clippedPen;
-      dc.SetPen(muted ? muteClippedPen : clippedPen);
+      const auto muteClippedPen = PenFromWXPen(artist->muteClippedPen);
+      const auto clippedPen = PenFromWXPen(artist->clippedPen);
+
+      painterStateMutator.SetPen(muted ? muteClippedPen : clippedPen);
       while (--clipcnt >= 0) {
          auto s = clipped[clipcnt];
-         AColor::Line(dc, rect.x + s, rect.y, rect.x + s, rect.y + rect.height);
+         painter.DrawLine(rect.x + s, rect.y, rect.x + s, rect.y + rect.height);
       }
    }
 }
@@ -522,27 +502,27 @@ void DrawEnvLine(
    TrackPanelDrawingContext &context,
    const wxRect &rect, int x0, int y0, int cy, bool top )
 {
-   auto &dc = context.dc;
+   auto& painter = context.painter;
 
    int xx = rect.x + x0;
    int yy = rect.y + cy;
 
    if (y0 < 0) {
       if (x0 % 4 != 3) {
-         AColor::Line(dc, xx, yy, xx, yy + 3);
+         painter.DrawLine(xx, yy, xx, yy + 3);
       }
    }
    else if (y0 > rect.height) {
       if (x0 % 4 != 3) {
-         AColor::Line(dc, xx, yy - 3, xx, yy);
+         painter.DrawLine(xx, yy - 3, xx, yy);
       }
    }
    else {
       if (top) {
-         AColor::Line(dc, xx, yy, xx, yy + 3);
+         painter.DrawLine(xx, yy, xx, yy + 3);
       }
       else {
-         AColor::Line(dc, xx, yy - 3, xx, yy);
+         painter.DrawLine(xx, yy - 3, xx, yy);
       }
    }
 }
@@ -552,12 +532,13 @@ void DrawEnvelope(TrackPanelDrawingContext &context,
                                float zoomMin, float zoomMax,
                                bool dB, float dBRange, bool highlight)
 {
-   auto &dc = context.dc;
+   auto& painter = context.painter;
+   auto painterStateMutator = painter.GetStateMutator();
 
    int h = rect.height;
 
-   auto &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
-   dc.SetPen( pen );
+   auto pen = PenFromWXPen(highlight ? AColor::uglyPen : AColor::envelopePen);
+   painterStateMutator.SetPen(pen);
 
    for (int x0 = 0; x0 < rect.width; ++x0) {
       int cenvTop = GetWaveYPos(env[x0], zoomMin, zoomMax,
@@ -595,7 +576,9 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
                                    bool muted,
                                    bool selected)
 {
-   auto &dc = context.dc;
+   auto& painter = context.painter;
+   auto painterStateMutator = painter.GetStateMutator();
+
    const auto artist = TrackArtist::Get( context );
    const auto &selectedRegion = *artist->pSelectedRegion;
    const auto &zoomInfo = *artist->pZoomInfo;
@@ -613,7 +596,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    if (!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
    {
       auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
-      TrackArt::DrawClipFolded(dc, clipRect);
+      TrackArt::DrawClipFolded(context.painter, clipRect);
       return;
    }
 
@@ -639,7 +622,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
 
    const float dBRange = track->GetWaveformSettings().dBRange;
 
-   dc.SetPen(*wxTRANSPARENT_PEN);
+   painterStateMutator.SetPen(Pen::NoPen);
+
    int iColorIndex = clip->GetColourIndex();
    artist->SetColours( iColorIndex );
 
@@ -723,7 +707,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    }
    {
       auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
-      TrackArt::DrawClipEdges(dc, clipRect, selected);
+      TrackArt::DrawClipEdges(context.painter, clipRect, selected);
    }
 }
 
@@ -731,7 +715,8 @@ void DrawTimeSlider( TrackPanelDrawingContext &context,
                                   const wxRect & rect,
                                   bool rightwards, bool highlight )
 {
-   auto &dc = context.dc;
+   auto& painter = context.painter;
+   auto painterStateMutator = painter.GetStateMutator();
 
    const int border = 3; // 3 pixels all round.
    const int width = 6; // width of the drag box.
@@ -757,15 +742,20 @@ void DrawTimeSlider( TrackPanelDrawingContext &context,
    int yTop  = rect.y + border;
    int yBot  = rect.y + rect.height - border - 1;
 
-   AColor::Light(&dc, false, highlight);
-   AColor::Line(dc, xLeft,         yBot - leftTaper, xLeft,         yTop + leftTaper);
-   AColor::Line(dc, xLeft,         yTop + leftTaper, xLeft + xFlat, yTop);
-   AColor::Line(dc, xLeft + xFlat, yTop,             xLeft + width, yTop + rightTaper);
+   const auto lightPen =
+      PenFromWXPen(highlight ? AColor::uglyPen : AColor::lightPen[0]);
+   const auto darkPen =
+      PenFromWXPen(highlight ? AColor::uglyPen : AColor::darkPen[0]);
 
-   AColor::Dark(&dc, false, highlight);
-   AColor::Line(dc, xLeft + width,         yTop + rightTaper, xLeft + width,       yBot - rightTaper);
-   AColor::Line(dc, xLeft + width,         yBot - rightTaper, xLeft + width-xFlat, yBot);
-   AColor::Line(dc, xLeft + width - xFlat, yBot,              xLeft,               yBot - leftTaper);
+   painterStateMutator.SetPen(lightPen);
+   painter.DrawLine(xLeft,         yBot - leftTaper, xLeft,         yTop + leftTaper);
+   painter.DrawLine(xLeft, yTop + leftTaper, xLeft + xFlat, yTop);
+   painter.DrawLine(xLeft + xFlat, yTop, xLeft + width, yTop + rightTaper);
+
+   painterStateMutator.SetPen(darkPen);
+   painter.DrawLine(xLeft + width,         yTop + rightTaper, xLeft + width,       yBot - rightTaper);
+   painter.DrawLine(xLeft + width,         yBot - rightTaper, xLeft + width-xFlat, yBot);
+   painter.DrawLine(xLeft + width - xFlat, yBot, xLeft, yBot - leftTaper);
 
    int firstBar = yTop + taper + taper / 2;
    int nBars    = (yBot - yTop - taper * 3) / barSpacing + 1;
@@ -773,15 +763,15 @@ void DrawTimeSlider( TrackPanelDrawingContext &context,
    int yy;
    int i;
 
-   AColor::Light(&dc, false, highlight);
+   painterStateMutator.SetPen(lightPen);
    for (i = 0;i < nBars; i++) {
       yy = firstBar + barSpacing * i;
-      AColor::Line(dc, xLeft, yy, xLeft + barWidth, yy);
+      painter.DrawLine(xLeft, yy, xLeft + barWidth, yy);
    }
-   AColor::Dark(&dc, false, highlight);
+   painterStateMutator.SetPen(darkPen);
    for(i = 0;i < nBars; i++){
       yy = firstBar + barSpacing * i + 1;
-      AColor::Line(dc, xLeft, yy, xLeft + barWidth, yy);
+      painter.DrawLine(xLeft, yy, xLeft + barWidth, yy);
    }
 }
 
@@ -795,7 +785,6 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context,
                                const wxRect& rect,
                                bool muted)
 {
-   auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
 
    bool highlight = false;
@@ -831,7 +820,6 @@ void WaveformView::Draw(
    TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassTracks ) {
-      auto &dc = context.dc;
       // Update cache for locations, e.g. cutlines and merge points
       // Bug2588: do this for both channels, even if one is not drawn, so that
       // cut-line editing (which depends on the locations cache) works properly.

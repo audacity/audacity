@@ -242,8 +242,7 @@ public:
    {
       if(iPass == TrackArtist::PassSnapping && mSnap.Snapped())
       {
-         auto &dc = context.dc;
-         SnapManager::Draw(&dc, rect.x + mSnap.outCoord, -1);
+         SnapManager::Draw(context.painter, rect.x + mSnap.outCoord, -1);
       }
    }
 

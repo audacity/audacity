@@ -30,6 +30,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "StretchHandle.h"
 #include "NoteTrackAffordanceControls.h"
 
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+#include "graphics/WXColor.h"
+
 #include <wx/dc.h>
 
 NoteTrackView::NoteTrackView( const std::shared_ptr<Track> &pTrack )
@@ -261,18 +265,20 @@ int PitchToY(double p, int bottom)
 void DrawNoteBackground(TrackPanelDrawingContext &context,
                                      const NoteTrack *track,
                                      const wxRect &rect, const wxRect &sel,
-                                     const wxBrush &wb, const wxPen &wp,
-                                     const wxBrush &bb, const wxPen &bp,
-                                     const wxPen &mp)
+                                     const Brush &wb, const Pen &wp,
+                                     const Brush &bb, const Pen &bp,
+                                     const Pen &mp)
 {
-   auto &dc = context.dc;
+   auto &painter = context.painter;
+   auto stateMutator = painter.GetStateMutator();
+
    const auto artist = TrackArtist::Get( context );
    const auto &zoomInfo = *artist->pZoomInfo;
 
-   dc.SetBrush(wb);
-   dc.SetPen(wp);
+   stateMutator.SetBrush(wb);
+   stateMutator.SetPen(wp);
 #ifndef EXPERIMENTAL_NOTETRACK_OVERLAY
-   dc.DrawRectangle(sel); // fill rectangle with white keys background
+   painter.DrawRect(sel.x, sel.y, sel.width, sel.height); // fill rectangle with white keys background
 #endif
 
    int left = TIME_TO_X(track->GetOffset());
@@ -285,7 +291,7 @@ void DrawNoteBackground(TrackPanelDrawingContext &context,
    if (left >= right) return;
 
    NoteTrackDisplayData data{ track, rect };
-   dc.SetBrush(bb);
+   stateMutator.SetBrush(bb);
    int octave = 0;
    // obottom is the window coordinate of octave divider line
    int obottom = data.GetOctaveBottom(octave);
@@ -295,15 +301,15 @@ void DrawNoteBackground(TrackPanelDrawingContext &context,
    while (obottom > rect.y + data.GetNoteMargin() + 3) {
       // draw a black line separating octaves if this octave bottom is visible
       if (obottom < rect.y + rect.height - data.GetNoteMargin()) {
-         dc.SetPen(*wxBLACK_PEN);
+         stateMutator.SetPen(Colors::Black);
          // obottom - 1 because obottom is at the bottom of the line
-         AColor::Line(dc, left, obottom - 1, right, obottom - 1);
+         AColor::Line(painter, left, obottom - 1, right, obottom - 1);
       }
-      dc.SetPen(bp);
+      stateMutator.SetPen(bp);
       // draw a black-key stripe colored line separating E and F if visible
       if (obottom - eOffset > rect.y && obottom - eOffset < rect.y + rect.height) {
-         AColor::Line(dc, left, obottom - eOffset,
-                          right, obottom - eOffset);
+         AColor::Line(painter, left, obottom - eOffset,
+                      right, obottom - eOffset);
       }
 
       // draw visible black key lines
@@ -314,7 +320,7 @@ void DrawNoteBackground(TrackPanelDrawingContext &context,
       for (int black = 0; black < 5; black++) {
          br.y = obottom - data.GetBlackPos(black);
          if (br.y > rect.y && br.y + br.height < rect.y + rect.height) {
-            dc.DrawRectangle(br); // draw each black key background stripe
+            painter.DrawRect(br.x, br.y, br.width, br.height); // draw each black key background stripe
          }
       }
       obottom = data.GetOctaveBottom(++octave);
@@ -331,7 +337,7 @@ void DrawNoteBackground(TrackPanelDrawingContext &context,
    // bar lines, map the beats to times, map the times to position,
    // and draw the bar lines that fall within the region of interest (sel)
    // seq->convert_to_beats();
-   dc.SetPen(mp);
+   stateMutator.SetPen(mp);
    Alg_time_sigs &sigs = seq->time_sig;
    int i = 0; // index into ts[]
    double next_bar_beat = 0.0;
@@ -348,7 +354,7 @@ void DrawNoteBackground(TrackPanelDrawingContext &context,
       // map time to position
       int xx = TIME_TO_X(t + track->GetOffset());
       if (xx > right) break;
-      AColor::Line(dc, xx, sel.y, xx, sel.y + sel.height);
+      AColor::Line(painter, xx, sel.y, xx, sel.y + sel.height);
       next_bar_beat += beats_per_measure;
    }
 }
@@ -365,7 +371,10 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
                                 bool muted,
                                 bool selected)
 {
-   auto &dc = context.dc;
+   auto &painter = context.painter;
+   auto stateMutator = painter.GetStateMutator();
+   auto clipStateMutator = painter.GetClipStateMutator();
+
    const auto artist = TrackArtist::Get( context );
    const auto &selectedRegion = *artist->pSelectedRegion;
    const auto &zoomInfo = *artist->pZoomInfo;
@@ -395,19 +404,17 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
    //   170,170,170 -- bar lines
    //   165,165,190 -- selected white keys
 
-   wxPen blackStripePen;
-   blackStripePen.SetColour(theTheme.Colour( clrMidiZebra));
-   wxBrush blackStripeBrush;
-   blackStripeBrush.SetColour(theTheme.Colour( clrMidiZebra));
-   wxPen barLinePen;
-   barLinePen.SetColour(theTheme.Colour( clrMidiLines));
+   const Pen blackStripePen(ColorFromWXColor(theTheme.Colour(clrMidiZebra)));
+   const Brush blackStripeBrush(ColorFromWXColor(theTheme.Colour(clrMidiZebra)));
+   const Pen barLinePen(ColorFromWXColor(theTheme.Colour(clrMidiLines)));
 
-   const auto &blankBrush = artist->blankBrush;
-   const auto &blankPen = artist->blankPen;
+   const auto blankBrush = BrushFromWXBrush(artist->blankBrush);
+   const auto blankPen = PenFromWXPen(artist->blankPen);
+
    DrawNoteBackground(context, track, rect, rect, blankBrush, blankPen,
                       blackStripeBrush, blackStripePen, barLinePen);
 
-   dc.SetClippingRegion(rect);
+   clipStateMutator.SetClipRect(rect.x, rect.y, rect.width, rect.height, false);
 
    // Draw the selection background
    // First, the white keys, as a single rectangle
@@ -418,24 +425,20 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
    selBG.x = TIME_TO_X(sel0);
    selBG.width = TIME_TO_X(sel1) - TIME_TO_X(sel0);
 
-   wxPen selectedWhiteKeyPen;
-   selectedWhiteKeyPen.SetColour(165, 165, 190);
-   dc.SetPen(selectedWhiteKeyPen);
+   const Pen selectedWhiteKeyPen(Color(165, 165, 190, 255));
+   stateMutator.SetPen(selectedWhiteKeyPen);
 
-   wxBrush selectedWhiteKeyBrush;
-   selectedWhiteKeyBrush.SetColour(theTheme.Colour( clrSelected ));
+   const Brush selectedWhiteKeyBrush(ColorFromWXColor(theTheme.Colour( clrSelected )));
    // Then, the black keys and octave stripes, as smaller rectangles
-   wxPen selectedBlackKeyPen;
-   selectedBlackKeyPen.SetColour(theTheme.Colour( clrMidiZebra));
-   wxBrush selectedBlackKeyBrush;
-   selectedBlackKeyBrush.SetColour(theTheme.Colour( clrMidiZebra));
-   wxPen selectedBarLinePen;
-   selectedBarLinePen.SetColour(theTheme.Colour( clrMidiLines));
+   const Pen selectedBlackKeyPen(ColorFromWXColor(theTheme.Colour( clrMidiZebra)));
+   const Brush selectedBlackKeyBrush(ColorFromWXColor(theTheme.Colour( clrMidiZebra)));
+   const Pen selectedBarLinePen(ColorFromWXColor(theTheme.Colour( clrMidiLines)));
 
    DrawNoteBackground(context, track, rect, selBG,
                       selectedWhiteKeyBrush, selectedWhiteKeyPen,
                       selectedBlackKeyBrush, selectedBlackKeyPen,
                       selectedBarLinePen);
+
    SonifyEndNoteBackground();
    SonifyBeginNoteForeground();
    int marg = data.GetNoteMargin();
@@ -502,16 +505,16 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
                          // too high for window
                          nr.y = rect.y;
                          nr.height = marg;
-                         dc.SetBrush(*wxBLACK_BRUSH);
-                         dc.SetPen(*wxBLACK_PEN);
-                         dc.DrawRectangle(nr);
+                         stateMutator.SetBrush(Colors::Black);
+                         stateMutator.SetPen(Colors::Black);
+                         painter.DrawRect(nr.x, nr.y, nr.width, nr.height);
                      } else if (nr.y >= rect.y + rect.height - marg - 1) {
                          // too low for window
                          nr.y = rect.y + rect.height - marg;
                          nr.height = marg;
-                         dc.SetBrush(*wxBLACK_BRUSH);
-                         dc.SetPen(*wxBLACK_PEN);
-                         dc.DrawRectangle(nr);
+                         stateMutator.SetBrush(Colors::Black);
+                         stateMutator.SetPen(Colors::Black);
+                         painter.DrawRect(nr.x, nr.y, nr.width, nr.height);
                      } else {
                         if (nr.y + nr.height > rect.y + rect.height - marg)
                            nr.height = rect.y + rect.height - nr.y;
@@ -522,18 +525,20 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
                         }
                         // nr.y += rect.y;
                         if (muted)
-                           AColor::LightMIDIChannel(&dc, note->chan + 1);
+                           AColor::LightMIDIChannel(stateMutator, note->chan + 1);
                         else
-                           AColor::MIDIChannel(&dc, note->chan + 1);
-                        dc.DrawRectangle(nr);
+                           AColor::MIDIChannel(stateMutator, note->chan + 1);
+
+                        painter.DrawRect(nr.x, nr.y, nr.width, nr.height);
+
                         if (data.GetPitchHeight(1) > 2) {
-                           AColor::LightMIDIChannel(&dc, note->chan + 1);
-                           AColor::Line(dc, nr.x, nr.y, nr.x + nr.width-2, nr.y);
-                           AColor::Line(dc, nr.x, nr.y, nr.x, nr.y + nr.height-2);
-                           AColor::DarkMIDIChannel(&dc, note->chan + 1);
-                           AColor::Line(dc, nr.x+nr.width-1, nr.y,
+                           AColor::LightMIDIChannel(stateMutator, note->chan + 1);
+                           AColor::Line(painter, nr.x, nr.y, nr.x + nr.width-2, nr.y);
+                           AColor::Line(painter, nr.x, nr.y, nr.x, nr.y + nr.height-2);
+                           AColor::DarkMIDIChannel(stateMutator, note->chan + 1);
+                           AColor::Line(painter, nr.x+nr.width-1, nr.y,
                                  nr.x+nr.width-1, nr.y+nr.height-1);
-                           AColor::Line(dc, nr.x, nr.y+nr.height-1,
+                           AColor::Line(painter, nr.x, nr.y+nr.height-1,
                                  nr.x+nr.width-1, nr.y+nr.height-1);
                         }
 //                        }
@@ -551,24 +556,28 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
                   long fillflag = 0;
 
                   // set default color to be that of channel
-                  AColor::MIDIChannel(&dc, note->chan+1);
+                  AColor::MIDIChannel(stateMutator, note->chan+1);
                   if (shape != text) {
                      if (linecolor != -1)
-                        dc.SetPen(wxPen(wxColour(RED(linecolor),
-                              GREEN(linecolor),
-                              BLUE(linecolor)),
-                              linethick, wxPENSTYLE_SOLID));
+                        stateMutator.SetPen(Pen(
+                           Color(
+                              RED(linecolor), GREEN(linecolor), BLUE(linecolor),
+                              255),
+                           linethick));
                   }
                   if (shape != line) {
                      fillcolor = LookupIntAttribute(note, fillcolori, -1);
                      fillflag = LookupLogicalAttribute(note, filll, false);
 
                      if (fillcolor != -1)
-                        dc.SetBrush(wxBrush(wxColour(RED(fillcolor),
+                        stateMutator.SetBrush(
+                           Color(
+                              RED(fillcolor),
                               GREEN(fillcolor),
-                              BLUE(fillcolor)),
-                              wxBRUSHSTYLE_SOLID));
-                     if (!fillflag) dc.SetBrush(*wxTRANSPARENT_BRUSH);
+                              BLUE(fillcolor), 255));
+
+                     if (!fillflag)
+                        stateMutator.SetBrush(Brush::NoBrush);
                   }
                   int y1 = data.PitchToY(LookupRealAttribute(note, y1r, note->pitch));
                   if (shape == line) {
@@ -582,7 +591,7 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
                         y1 = (int)((yy + (y1 - yy) * (h1 - xx) / (x1 - xx)) + 0.5);
                         x1 = h1;
                      }
-                     AColor::Line(dc, TIME_TO_X(xx), yy, TIME_TO_X(x1), y1);
+                     AColor::Line(painter, TIME_TO_X(xx), yy, TIME_TO_X(x1), y1);
                   } else if (shape == rectangle) {
                      if (xx < h) { // clip on left, leave 10 pixels to spare
                         xx = X_TO_TIME(rect.x - (linethick + 10));
@@ -590,9 +599,11 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
                      if (x1 > h1) { // clip on right, leave 10 pixels to spare
                         xx = X_TO_TIME(rect.x + rect.width + linethick + 10);
                      }
-                     dc.DrawRectangle(TIME_TO_X(xx), yy, TIME_TO_X(x1) - TIME_TO_X(xx), y1 - yy + 1);
+                     painter.DrawRect(
+                        TIME_TO_X(xx), yy, TIME_TO_X(x1) - TIME_TO_X(xx),
+                        y1 - yy + 1);
                   } else if (shape == triangle) {
-                     wxPoint points[3];
+                     Point points[3];
                      points[0].x = TIME_TO_X(xx);
                      CLIP(points[0].x);
                      points[0].y = yy;
@@ -602,9 +613,9 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
                      points[2].x = TIME_TO_X(LookupRealAttribute(note, x2r, xx));
                      CLIP(points[2].x);
                      points[2].y = data.PitchToY(LookupRealAttribute(note, y2r, note->pitch));
-                     dc.DrawPolygon(3, points);
+                     painter.DrawPolygon(points, 3);
                   } else if (shape == polygon) {
-                     wxPoint points[20]; // upper bound of 20 sides
+                     Point points[20]; // upper bound of 20 sides
                      points[0].x = TIME_TO_X(xx);
                      CLIP(points[0].x);
                      points[0].y = yy;
@@ -630,20 +641,23 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
                         points[n].y = data.PitchToY(yn);
                         n++;
                      }
-                     dc.DrawPolygon(n, points);
+
+                     painter.DrawPolygon(points, n);
                   } else if (shape == oval) {
                      int ix = TIME_TO_X(xx);
                      CLIP(ix);
                      int ix1 = TIME_TO_X(x1) - TIME_TO_X(xx);
                      if (ix1 > CLIP_MAX * 2) ix1 = CLIP_MAX * 2; // CLIP a width
-                     dc.DrawEllipse(ix, yy, ix1, y1 - yy + 1);
+                     painter.DrawEllipse(ix, yy, ix1, y1 - yy + 1);
                   } else if (shape == text) {
                      if (linecolor != -1)
-                        dc.SetTextForeground(wxColour(RED(linecolor),
-                              GREEN(linecolor),
-                              BLUE(linecolor)));
-                     // if no color specified, copy color from brush
-                     else dc.SetTextForeground(dc.GetBrush().GetColour());
+                     {
+                        stateMutator.SetBrush(Color(RED(linecolor), GREEN(linecolor), BLUE(linecolor), 255));
+                     }
+                     //else // if no color specified, copy color from brush
+                     //{
+                     //   dc.SetTextForeground(dc.GetBrush().GetColour());
+                     //}
 
                      // This seems to have no effect, so I commented it out. -RBD
                      //if (fillcolor != -1)
@@ -664,35 +678,37 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
                      wxfont.SetStyle(wxFONTSTYLE_NORMAL);
                      wxfont.SetWeight(weight == bold ? wxFONTWEIGHT_BOLD : wxFONTWEIGHT_NORMAL);
                      wxfont.SetPointSize(size);
-                     dc.SetFont(wxfont);
+                     stateMutator.SetFont(FontFromWXFont(painter, wxfont));
 
                      // now do justification
                      const char *s = LookupStringAttribute(note, texts, "");
-                     wxCoord textWidth, textHeight;
-                     dc.GetTextExtent(wxString::FromUTF8(s), &textWidth, &textHeight);
+                     
+                     const auto textSize = painter.GetTextSize(s);
+
                      long hoffset = 0;
-                     long voffset = -textHeight; // default should be baseline of text
+                     long voffset = -textSize.height; // default should be baseline of text
 
                      if (strlen(justify) != 2) justify = "ld";
 
-                     if (justify[0] == 'c') hoffset = -(textWidth/2);
-                     else if (justify[0] == 'r') hoffset = -textWidth;
+                     if (justify[0] == 'c') hoffset = -(textSize.width/2);
+                     else if (justify[0] == 'r') hoffset = -textSize.width;
 
                      if (justify[1] == 't') voffset = 0;
-                     else if (justify[1] == 'c') voffset = -(textHeight/2);
-                     else if (justify[1] == 'b') voffset = -textHeight;
+                     else if (justify[1] == 'c') voffset = -(textSize.height/2);
+                     else if (justify[1] == 'b') voffset = -textSize.height;
                      if (fillflag) {
                         // It should be possible to do this with background color,
                         // but maybe because of the transfer mode, no background is
                         // drawn. To fix this, just draw a rectangle:
-                        dc.SetPen(wxPen(wxColour(RED(fillcolor),
-                              GREEN(fillcolor),
-                              BLUE(fillcolor)),
-                              1, wxPENSTYLE_SOLID));
-                        dc.DrawRectangle(TIME_TO_X(xx) + hoffset, yy + voffset,
-                              textWidth, textHeight);
+                        stateMutator.SetPen(Color(
+                           RED(fillcolor), GREEN(fillcolor), BLUE(fillcolor),
+                           255));
+
+                        painter.DrawRect(TIME_TO_X(xx) + hoffset, yy + voffset,
+                              textSize.width, textSize.height);
                      }
-                     dc.DrawText(LAT1CTOWX(s), TIME_TO_X(xx) + hoffset, yy + voffset);
+
+                     painter.DrawText(TIME_TO_X(xx) + hoffset, yy + voffset, s);
                   }
                }
             }
@@ -701,9 +717,9 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
    }
    iterator.end();
    // draw black line between top/bottom margins and the track
-   dc.SetPen(*wxBLACK_PEN);
-   AColor::Line(dc, rect.x, rect.y + marg, rect.x + rect.width, rect.y + marg);
-   AColor::Line(dc, rect.x, rect.y + rect.height - marg - 1, // subtract 1 to get
+   stateMutator.SetPen(Colors::Black);
+   AColor::Line(painter, rect.x, rect.y + marg, rect.x + rect.width, rect.y + marg);
+   AColor::Line(painter, rect.x, rect.y + rect.height - marg - 1, // subtract 1 to get
                 rect.x + rect.width, rect.y + rect.height - marg - 1); // top of line
 
    if (h == 0.0 && track->GetOffset() < 0.0) {
@@ -715,10 +731,9 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
       int left = TIME_TO_X(track->GetOffset());
       int right = TIME_TO_X(track->GetOffset() + track->GetSeq().get_real_dur());
 
-      TrackArt::DrawClipEdges(dc, wxRect(left, rect.GetTop(), right - left + 1, rect.GetHeight()), selected);
+      TrackArt::DrawClipEdges(painter, wxRect(left, rect.GetTop(), right - left + 1, rect.GetHeight()), selected);
    }
 
-   dc.DestroyClippingRegion();
    SonifyEndNoteForeground();
 }
 

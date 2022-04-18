@@ -14,12 +14,17 @@
 #include "TextEditHelper.h"
 
 #include <wx/app.h>
-#include <wx/dc.h>
-#include <wx/dcmemory.h>
 #include <wx/clipbrd.h>
 
 #include "../../ProjectWindow.h"
 #include "../../RefreshCode.h"
+
+#include "graphics/Painter.h"
+#include "graphics/WXPainterFactory.h"
+#include "graphics/WXPainterUtils.h"
+#include "graphics/WXColor.h"
+#include "CodeConversions.h"
+#include "UTF8Utils.h"
 
 TextEditDelegate::~TextEditDelegate() = default;
 
@@ -345,14 +350,17 @@ bool TextEditHelper::OnRelease(const wxMouseEvent& event, AudacityProject* proje
     return HandleDragRelease(event, project);
 }
 
-void TextEditHelper::Draw(wxDC& dc, const wxRect& rect)
+void TextEditHelper::Draw(Painter& painter, const wxRect& rect)
 {
+   auto stateMutator = painter.GetStateMutator();
+   
     mBBox = rect;
-    dc.SetFont(mFont);
+    stateMutator.SetFont(FontFromWXFont(painter, mFont));
 
-    const auto cursorHeight = dc.GetFontMetrics().height;
+    const auto cursorHeight = painter.GetCurrentFont()->GetFontMetrics().LineHeight;
 
-    wxDCClipper clipper(dc, rect);
+    auto clipStateMutator = painter.GetClipStateMutator();
+    clipStateMutator.SetClipRect(RectFromWXRect(rect), false);
     
     auto rtl = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft;
 
@@ -392,21 +400,24 @@ void TextEditHelper::Draw(wxDC& dc, const wxRect& rect)
         auto right = 0;
         GetCharPositionX(std::min(mCurrentCursorPos, mInitialCursorPos), &left);
         GetCharPositionX(std::max(mCurrentCursorPos, mInitialCursorPos), &right);
-        dc.SetPen(*wxTRANSPARENT_PEN);
-        dc.SetBrush(mTextSelectionColor);
-        dc.DrawRectangle(wxRect(left, rect.GetTop() + (rect.GetHeight() - cursorHeight) / 2, right - left, cursorHeight));
+        stateMutator.SetPen(Pen::NoPen);
+        stateMutator.SetBrush(ColorFromWXColor(mTextSelectionColor));
+        painter.DrawRect(left, rect.GetTop() + (rect.GetHeight() - cursorHeight) / 2, right - left, cursorHeight);
     }
 
-    dc.SetTextBackground(wxTransparentColour);
-    dc.SetTextForeground(mTextColor);
-    dc.SetFont(wxFont(wxFontInfo()));
-    dc.DrawLabel(mText.Mid(mOffset), rect, (rtl ? wxALIGN_RIGHT : wxALIGN_LEFT) | wxALIGN_CENTER_VERTICAL);
+    stateMutator.SetBrush(ColorFromWXColor(mTextColor));
+    stateMutator.SetFont(painter.GetDefaultFont());
+    painter.DrawText(
+       RectFromWXRect(rect), audacity::ToUTF8(mText.Mid(mOffset)),
+       (rtl ? PainterHorizontalAlignment::Right :
+              PainterHorizontalAlignment::Left),
+       PainterVerticalAlignment::Center);
 
     if (mCurrentCursorPos == mInitialCursorPos)
     {
-        dc.SetPen(mTextColor);
+        stateMutator.SetPen(ColorFromWXColor(mTextColor));
         auto top = rect.GetTop() + (rect.GetHeight() - cursorHeight) / 2;
-        dc.DrawLine(curPosX, top, curPosX, top + cursorHeight);
+        painter.DrawLine(curPosX, top, curPosX, top + cursorHeight);
     }
 }
 
@@ -463,9 +474,11 @@ void TextEditHelper::RemoveSelectedText(AudacityProject* project)
 int TextEditHelper::FindCursorIndex(const wxPoint& point)
 {
     int result = -1;
-    wxMemoryDC dc;
+    auto& painter = GetMeasuringPainter();
+    auto stateMutator = painter.GetStateMutator();
+    
     if (mFont.Ok())
-        dc.SetFont(mFont);
+       stateMutator.SetFont(FontFromWXFont(painter, mFont));
 
     // A bool indicator to see if set the cursor position or not
     bool finished = false;
@@ -473,11 +486,11 @@ int TextEditHelper::FindCursorIndex(const wxPoint& point)
     int partWidth;
     int oneWidth;
     //double bound;
-    wxString subString;
+    const std::string text = audacity::ToUTF8(mText);
 
     auto offsetX = 0;
     if (mOffset > 0)
-        offsetX = dc.GetTextExtent(mText.Left(mOffset)).GetWidth();
+        offsetX = painter.GetTextSize(utf8::LeftSubString<std::string_view>(text, mOffset)).width;
 
     const auto layout = wxTheApp->GetLayoutDirection();
 
@@ -489,12 +502,13 @@ int TextEditHelper::FindCursorIndex(const wxPoint& point)
             charIndex++;
             continue;
         }
-        subString = mText.Left(charIndex);
+
+        auto subString = utf8::LeftSubString<std::string_view>(text, charIndex);
         // Get the width of substring
-        dc.GetTextExtent(subString, &partWidth, NULL);
+        partWidth = painter.GetTextSize(subString).width;
 
         // Get the width of the last character
-        dc.GetTextExtent(subString.Right(1), &oneWidth, NULL);
+        oneWidth = painter.GetTextSize(utf8::RightSubString(subString, 1)).width;
         
         if (layout == wxLayout_RightToLeft)
         {
@@ -531,13 +545,16 @@ bool TextEditHelper::GetCharPositionX(int index, int* outX)
     if (!mFont.Ok())
         return false;
 
-    wxMemoryDC dc;
-    dc.SetFont(mFont);
+    auto& painter = GetMeasuringPainter();
+    auto stateMutator = painter.GetStateMutator();
+    stateMutator.SetFont(FontFromWXFont(painter, mFont));
+
+    const std::string text = audacity::ToUTF8(mText);
 
     int offsetX{ 0 };
     if (mOffset > 0)
     {
-        offsetX = dc.GetTextExtent(mText.Left(mOffset)).GetWidth();
+        offsetX = painter.GetTextSize(utf8::LeftSubString<std::string_view>(text, mOffset)).width;
     }
 
     if (wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft)
@@ -545,14 +562,14 @@ bool TextEditHelper::GetCharPositionX(int index, int* outX)
         if (index <= 0)
             *outX = mBBox.GetRight() + offsetX;
         else
-            *outX = mBBox.GetRight() - dc.GetTextExtent(mText.Left(index)).GetWidth() + offsetX;
+            *outX = mBBox.GetRight() - painter.GetTextSize(utf8::LeftSubString<std::string_view>(text,index)).width + offsetX;
     }
     else
     {
         if (index <= 0)
             *outX = mBBox.GetLeft() - offsetX;
         else
-            *outX = mBBox.GetLeft() + dc.GetTextExtent(mText.Left(index)).GetWidth() - offsetX;
+            *outX = mBBox.GetLeft() + painter.GetTextSize(utf8::LeftSubString<std::string_view>(text,index)).width - offsetX;
     }
 
     return true;

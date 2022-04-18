@@ -28,3 +28,9 @@ Color ColorFromWXBrush(const wxBrush& brush) noexcept
 {
    return ColorFromWXColor(brush.GetColour());
 }
+
+wxColour wxColorFromColor(Color color) noexcept
+{
+   return wxColour(
+      color.GetRed(), color.GetGreen(), color.GetBlue(), color.GetAlpha());
+}

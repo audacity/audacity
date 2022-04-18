@@ -1013,11 +1013,11 @@ void TimeShiftHandle::Draw(
    const wxRect &rect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassSnapping ) {
-      auto &dc = context.dc;
+      auto &painter = context.painter;
       // Draw snap guidelines if we have any
       if ( mSnapManager ) {
          mSnapManager->Draw(
-            &dc, mClipMoveState.snapLeft, mClipMoveState.snapRight );
+            painter, mClipMoveState.snapLeft, mClipMoveState.snapRight);
       }
    }
 }

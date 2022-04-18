@@ -29,6 +29,8 @@ Paul Licameli split from TrackControls.cpp
 #include "Track.h"
 #include "../../widgets/PopupMenuTable.h"
 
+#include "graphics/Painter.h"
+
 #include <wx/dc.h>
 #include <wx/frame.h>
 
@@ -357,10 +359,12 @@ void CommonTrackControls::Draw(
 {
    if ( iPass == TrackArtist::PassMargins ) {
       // fill in label
-      auto dc = &context.dc;
+      auto& painter = context.painter;
+      auto stateMutator = painter.GetStateMutator();
+
       const auto pTrack = FindTrack();
-      AColor::MediumTrackInfo( dc, pTrack && pTrack->GetSelected() );
-      dc->DrawRectangle( rect_ );
+      AColor::MediumTrackInfo( stateMutator, pTrack && pTrack->GetSelected() );
+      painter.DrawRect(rect_.x, rect_.y, rect_.width, rect_.height);
    }
 
    if ( iPass == TrackArtist::PassControls ) {

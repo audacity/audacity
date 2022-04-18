@@ -18,9 +18,14 @@
 #include <wx/brush.h> // member variable
 #include <wx/pen.h> // member variable
 
+#include "graphics/Point.h"
+
 class wxDC;
 class wxGraphicsContext;
 class wxRect;
+
+class Painter;
+class PainterStateMutator;
 
 class THEME_API AColor {
  public:
@@ -37,14 +42,14 @@ class THEME_API AColor {
    static void Init();
    static void ReInit();
 
-   static void Arrow(wxDC & dc, wxCoord x, wxCoord y, int width, bool down = true);
+   static void Arrow(wxDC& dc, wxCoord x, wxCoord y, int width, bool down = true);
 
    // Draw a line, INCLUSIVE of both endpoints
    // (unlike what wxDC::DrawLine() documentation specifies)
-   static void Line(wxDC & dc, wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
+   static void Line(wxDC& dc, wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
 
    // Draw lines, INCLUSIVE of all endpoints
-   static void Lines(wxDC &dc, size_t nPoints, const wxPoint points[]);
+   static void Lines(wxDC& dc, size_t nPoints, const wxPoint points[]);
 
    static void DrawFocus(wxDC & dc, wxRect & r);
    static void Bevel(wxDC & dc, bool up, const wxRect & r);
@@ -82,6 +87,66 @@ class THEME_API AColor {
 
    static void TrackFocusPen(wxDC * dc, int level /* 0 - 2 */);
    static void SnapGuidePen(wxDC * dc);
+
+   static void Arrow(Painter& painter, wxCoord x, wxCoord y, int width, bool down = true);
+
+   // Draw a line, INCLUSIVE of both endpoints
+   // (unlike what wxDC::DrawLine() documentation specifies)
+   static void
+   Line(Painter& painter, wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
+
+   // Draw lines, INCLUSIVE of all endpoints
+   static void Lines(Painter& painter, size_t nPoints, const Point points[]);
+
+   static void DrawFocus(Painter& painter, wxRect& r);
+   static void Bevel(Painter& painter, bool up, const wxRect& r);
+   static void Bevel2(
+      Painter& painter, bool up, const wxRect& r, bool bSel = false,
+      bool bHighlight = false);
+   /**
+    * \brief Draw a button that fills a given rect
+    */
+   static void ButtonStretch(
+      Painter& painter, bool up, const wxRect& r, bool selected = false,
+      bool highlight = false);
+   static void BevelTrackInfo(
+      Painter& painter, bool up, const wxRect& r, bool highlight = false);
+
+   static void UseThemeColour(
+      PainterStateMutator& mutator, int iBrush, int iPen = -1, int alpha = 255);
+
+   static void
+   TrackPanelBackground(PainterStateMutator& mutator, bool selected);
+
+   static void
+   Light(PainterStateMutator& mutator, bool selected, bool highlight = false);
+   static void Medium(PainterStateMutator& mutator, bool selected);
+   static void MediumTrackInfo(PainterStateMutator& mutator, bool selected);
+   static void
+   Dark(PainterStateMutator& mutator, bool selected, bool highlight = false);
+
+   static void CursorColor(PainterStateMutator& mutator);
+   static void
+   IndicatorColor(PainterStateMutator& mutator, bool bIsNotRecording);
+
+   static void
+   Mute(PainterStateMutator& mutator, bool on, bool selected, bool soloing);
+   static void Solo(PainterStateMutator& mutator, bool on, bool selected);
+
+   // In all of these, channel is 1-indexed (1 through 16); if out of bounds
+   // (either due to being explicitly set to 0 or due to an allegro file with
+   // more than 16 channels) a gray color is returned.
+
+   static void
+   MIDIChannel(PainterStateMutator& mutator, int channel /* 1 - 16 */);
+   static void
+   LightMIDIChannel(PainterStateMutator& mutator, int channel /* 1 - 16 */);
+   static void
+   DarkMIDIChannel(PainterStateMutator& mutator, int channel /* 1 - 16 */);
+
+   static void
+   TrackFocusPen(PainterStateMutator& mutator, int level /* 0 - 2 */);
+   static void SnapGuidePen(PainterStateMutator& mutator);
 
    static void PreComputeGradient();
 

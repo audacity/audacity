@@ -1019,12 +1019,11 @@ void SelectHandle::Draw(
    const wxRect &rect, unsigned iPass )
 {
    if ( iPass == TrackArtist::PassSnapping ) {
-      auto &dc = context.dc;
       // Draw snap guidelines if we have any
       if ( mSnapManager ) {
          auto coord1 = (mUseSnap || IsClicked()) ? mSnapStart.outCoord : -1;
          auto coord2 = (!mUseSnap || !IsClicked()) ? -1 : mSnapEnd.outCoord;
-         mSnapManager->Draw( &dc, coord1, coord2 );
+         mSnapManager->Draw( context.painter, coord1, coord2 );
       }
    }
 }

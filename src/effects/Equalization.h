@@ -45,6 +45,7 @@ class Envelope;
 class EnvelopeEditor;
 class EqualizationPanel;
 class RulerPanel;
+class Painter;
 
 using Floats = ArrayOf<float>;
 
@@ -365,10 +366,10 @@ private:
    wxWindow *mParent;
    EffectEqualization *mEffect;
    std::unique_ptr<EnvelopeEditor> mLinEditor, mLogEditor;
+   std::unique_ptr<Painter> mPainter;
 
    bool mRecalcRequired;
 
-   std::unique_ptr<wxBitmap> mBitmap;
    wxRect mEnvRect;
    int mWidth;
    int mHeight;

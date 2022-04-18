@@ -19,6 +19,12 @@
 #include "TrackArtist.h"
 #include "TrackPanelDrawingContext.h"
 #include "ZoomInfo.h"
+
+#include "graphics/Painter.h"
+#include "graphics/WXPainterUtils.h"
+
+#include "CodeConversions.h"
+
 #include <wx/app.h>
 #include <wx/dc.h>
 
@@ -126,29 +132,31 @@ float ValueOfPixel(int yy, int height, bool offset,
 void TrackArt::DrawNegativeOffsetTrackArrows(
    TrackPanelDrawingContext &context, const wxRect &rect )
 {
-   auto &dc = context.dc;
+   auto &painter = context.painter;
 
    // Draws two black arrows on the left side of the track to
    // indicate the user that the track has been time-shifted
    // to the left beyond t=0.0.
+   auto stateMutator = painter.GetStateMutator();
 
-   dc.SetPen(*wxBLACK_PEN);
-   AColor::Line(dc,
+   stateMutator.SetPen(Pen(Colors::Black));
+
+   AColor::Line(painter,
                 rect.x + 2, rect.y + 6,
                 rect.x + 8, rect.y + 6);
-   AColor::Line(dc,
+   AColor::Line(painter,
                 rect.x + 2, rect.y + 6,
                 rect.x + 6, rect.y + 2);
-   AColor::Line(dc,
+   AColor::Line(painter,
                 rect.x + 2, rect.y + 6,
                 rect.x + 6, rect.y + 10);
-   AColor::Line(dc,
+   AColor::Line(painter,
                 rect.x + 2, rect.y + rect.height - 8,
                 rect.x + 8, rect.y + rect.height - 8);
-   AColor::Line(dc,
+   AColor::Line(painter,
                 rect.x + 2, rect.y + rect.height - 8,
                 rect.x + 6, rect.y + rect.height - 4);
-   AColor::Line(dc,
+   AColor::Line(painter,
                 rect.x + 2, rect.y + rect.height - 8,
                 rect.x + 6, rect.y + rect.height - 12);
 }
@@ -188,6 +196,42 @@ wxString TrackArt::TruncateText(wxDC& dc, const wxString& text, const int maxWid
    return wxEmptyString;
 }
 
+wxString
+TruncateText(Painter& painter, const wxString& text, const int maxWidth)
+{
+   static const wxString ellipsis = "\u2026";
+
+   if (painter.GetTextSize(audacity::ToUTF8(text)).width <= maxWidth)
+      return text;
+
+   auto left = 0;
+   // no need to check text + '...'
+   auto right = static_cast<int>(text.Length() - 2);
+
+   while (left <= right)
+   {
+      auto middle = (left + right) / 2;
+      auto str = text.SubString(0, middle).Trim() + ellipsis;
+      auto strWidth = painter.GetTextSize(audacity::ToUTF8(str)).width;
+      if (strWidth < maxWidth)
+         // if left == right (== middle), then exit loop
+         // with right equals to the last known index for which
+         // strWidth < maxWidth
+         left = middle + 1;
+      else if (strWidth > maxWidth)
+         // if right == left (== middle), then exit loop with
+         // right equals to (left - 1), which is the last known
+         // index for which (strWidth < maxWidth) or -1
+         right = middle - 1;
+      else
+         return str;
+   }
+   if (right >= 0)
+      return text.SubString(0, right).Trim() + ellipsis;
+
+   return wxEmptyString;
+}
+
 wxRect TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString& title, bool highlight, bool selected)
 {
    //To make sure that roundings do not overlap each other
@@ -204,7 +248,7 @@ wxRect TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString
    auto drawingRect = rect;
    if (hasClipRect)
    {
-       //to make sure that rounding happends outside the clipping rectangle
+       //to make sure that rounding happens outside the clipping rectangle
        drawingRect.SetLeft(std::max(rect.GetLeft(), clipRect.GetLeft() - clipFrameRadius - 1));
        drawingRect.SetRight(std::min(rect.GetRight(), clipRect.GetRight() + clipFrameRadius + 1));
    }
@@ -250,6 +294,87 @@ wxRect TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, const wxString
    return titleRect;
 }
 
+wxRect TrackArt::DrawClipAffordance(
+   Painter& painter, const wxRect& rect, const wxString& title, bool highlight,
+   bool selected)
+{
+   // To make sure that roundings do not overlap each other
+   auto clipFrameRadius = std::min(ClipFrameRadius, rect.width / 2);
+
+   const auto painterClipRect = painter.GetCurrentClipRect();
+
+   const auto clipRect = wxRect(
+      painterClipRect.Origin.x, painterClipRect.Origin.y,
+      painterClipRect.Size.width, painterClipRect.Size.height);
+
+   const bool hasClipRect = painter.HasClipping();
+   // Fix #1689: visual glitches appear on attempt to draw a rectangle
+   // larger than 0x7FFFFFF pixels wide (value was discovered
+   // by manual testing, and maybe depends on OS being used), but
+   // it's very unlikely that such huge rectangle will be ever fully visible
+   // on the screen, so we can safely reduce its size to be slightly larger than
+   // clipping rectangle, and avoid that problem
+   auto drawingRect = rect;
+   if (hasClipRect)
+   {
+      // to make sure that rounding happens outside the clipping rectangle
+      drawingRect.SetLeft(
+         std::max(rect.GetLeft(), clipRect.GetLeft() - clipFrameRadius - 1));
+      drawingRect.SetRight(
+         std::min(rect.GetRight(), clipRect.GetRight() + clipFrameRadius + 1));
+   }
+
+   auto stateMutator = painter.GetStateMutator();
+
+   if (selected)
+   {
+      Rect strokeRect { Point { float(drawingRect.x - ClipSelectionStrokeSize),
+                                float(drawingRect.y) },
+                        Size { float(drawingRect.width + ClipSelectionStrokeSize * 2),
+                               float(drawingRect.height + clipFrameRadius) } };
+
+      stateMutator.SetBrush(Brush::NoBrush);
+      AColor::UseThemeColour(
+         stateMutator, clrClipAffordanceStroke, clrClipAffordanceStroke);
+      painter.DrawRoundedRect(strokeRect, clipFrameRadius);
+   }
+
+   AColor::UseThemeColour(
+      stateMutator,
+      highlight ? clrClipAffordanceActiveBrush : clrClipAffordanceInactiveBrush,
+      clrClipAffordanceOutlinePen);
+   painter.DrawRoundedRect(
+      Rect { Point { float(drawingRect.x),
+                     float(drawingRect.y + ClipSelectionStrokeSize) },
+             Size { float(drawingRect.width),
+                    float(drawingRect.height + clipFrameRadius) } },
+      clipFrameRadius);
+
+   auto titleRect =
+      hasClipRect ?
+         // avoid drawing text outside the clipping rectangle if possible
+         GetAffordanceTitleRect(rect.Intersect(clipRect)) :
+         GetAffordanceTitleRect(rect);
+
+   if (!title.empty())
+   {
+      auto truncatedTitle =
+         TruncateText(painter, title, titleRect.GetWidth());
+      if (!truncatedTitle.empty())
+      {
+         const auto hAlign = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft ?
+                          PainterHorizontalAlignment::Right :
+                          PainterHorizontalAlignment::Left;
+         painter.DrawText(
+            titleRect.x, titleRect.y, titleRect.width, titleRect.height,
+            audacity::ToUTF8(truncatedTitle), hAlign, PainterVerticalAlignment::Center);
+      }
+      else
+         return {};
+   }
+   return titleRect;
+}
+
 void TrackArt::DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected)
 {
    dc.SetBrush(*wxTRANSPARENT_BRUSH);
@@ -287,10 +412,60 @@ void TrackArt::DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected)
    }
 }
 
+void TrackArt::DrawClipEdges(Painter& painter, const wxRect& clipRect, bool selected)
+{
+   auto stateMutator = painter.GetStateMutator();
+   stateMutator.SetBrush(Brush::NoBrush);
+
+   {
+      AColor::UseThemeColour(stateMutator, -1, clrClipAffordanceOutlinePen);
+      AColor::Line(
+         painter, clipRect.GetLeft(), clipRect.GetTop(), clipRect.GetLeft(),
+         clipRect.GetBottom());
+      AColor::Line(
+         painter, clipRect.GetRight(), clipRect.GetTop(), clipRect.GetRight(),
+         clipRect.GetBottom());
+   }
+
+   if (selected)
+   {
+      if constexpr (ClipSelectionStrokeSize == 1)
+      {
+         AColor::UseThemeColour(stateMutator, -1, clrClipAffordanceStroke);
+         AColor::Line(
+            painter, clipRect.GetLeft() - ClipSelectionStrokeSize,
+            clipRect.GetTop(),
+            clipRect.GetLeft() - ClipSelectionStrokeSize, clipRect.GetBottom());
+         AColor::Line(
+            painter, clipRect.GetRight() + ClipSelectionStrokeSize,
+            clipRect.GetTop(), clipRect.GetRight() + ClipSelectionStrokeSize,
+            clipRect.GetBottom());
+      }
+      else if constexpr (ClipSelectionStrokeSize > 1)
+      {
+         AColor::UseThemeColour(
+            stateMutator, clrClipAffordanceStroke, clrClipAffordanceStroke);
+         painter.DrawRect(
+            clipRect.GetLeft() - ClipSelectionStrokeSize, clipRect.GetTop(),
+            ClipSelectionStrokeSize, clipRect.GetHeight());
+         painter.DrawRect(
+            clipRect.GetRight() + 1, clipRect.GetTop(), ClipSelectionStrokeSize,
+            clipRect.GetHeight());
+      }
+   }
+}
+
 void TrackArt::DrawClipFolded(wxDC& dc, const wxRect& rect)
 {
    AColor::UseThemeColour(&dc, clrClipAffordanceOutlinePen);
    dc.DrawRectangle(rect);
+}
+
+void TrackArt::DrawClipFolded(Painter& painter, const wxRect& rect)
+{
+   auto stateMutator = painter.GetStateMutator();
+   AColor::UseThemeColour(stateMutator, clrClipAffordanceOutlinePen);
+   painter.DrawRect(rect.x, rect.y, rect.width, rect.height);
 }
 
 // Draws the sync-lock bitmap, tiled; always draws stationary relative to the DC
@@ -309,9 +484,9 @@ void TrackArt::DrawClipFolded(wxDC& dc, const wxRect& rect)
 void TrackArt::DrawSyncLockTiles(
    TrackPanelDrawingContext &context, const wxRect &rect )
 {
-   const auto dc = &context.dc;
+   auto& painter = context.painter;
 
-   wxBitmap syncLockBitmap(theTheme.Image(bmpSyncLockSelTile));
+   const auto& syncLockBitmap = theTheme.GetPainterImage(painter, bmpSyncLockSelTile);
 
    // Grid spacing is a bit smaller than actual image size
    int gridW = syncLockBitmap.GetWidth() - 6;
@@ -378,12 +553,13 @@ void TrackArt::DrawSyncLockTiles(
 
             // Do we need to get a sub-bitmap?
             if (width != syncLockBitmap.GetWidth() || height != syncLockBitmap.GetHeight()) {
-               wxBitmap subSyncLockBitmap =
-                  syncLockBitmap.GetSubBitmap(wxRect(xOffset, yOffset, width, height));
-               dc->DrawBitmap(subSyncLockBitmap, rect.x + xx, rect.y + yy, true);
+               const auto& subSyncLockBitmap = theTheme.GetPainterImage(
+                  painter, bmpSyncLockSelTile, xOffset, yOffset, width, height);
+
+               painter.DrawImage(subSyncLockBitmap, rect.x + xx, rect.y + yy);
             }
             else {
-               dc->DrawBitmap(syncLockBitmap, rect.x + xx, rect.y + yy, true);
+               painter.DrawImage(syncLockBitmap, rect.x + xx, rect.y + yy);
             }
          }
 
@@ -421,7 +597,9 @@ void TrackArt::DrawBackgroundWithSelection(
    const Track *track, const wxBrush &selBrush, const wxBrush &unselBrush,
    bool useSelection)
 {
-   const auto dc = &context.dc;
+   auto& painter = context.painter;
+   auto stateMutator = painter.GetStateMutator();
+
    const auto artist = TrackArtist::Get( context );
    const auto &selectedRegion = *artist->pSelectedRegion;
    const auto &zoomInfo = *artist->pZoomInfo;
@@ -430,7 +608,8 @@ void TrackArt::DrawBackgroundWithSelection(
    const double sel0 = useSelection ? selectedRegion.t0() : 0.0;
    const double sel1 = useSelection ? selectedRegion.t1() : 0.0;
 
-   dc->SetPen(*wxTRANSPARENT_PEN);
+   stateMutator.SetPen(Pen::NoPen);
+
    if (SyncLock::IsSelectedOrSyncLockSelected(track))
    {
       // Rectangles before, within, after the selection
@@ -444,8 +623,8 @@ void TrackArt::DrawBackgroundWithSelection(
       }
 
       if (before.width > 0) {
-         dc->SetBrush(unselBrush);
-         dc->DrawRectangle(before);
+         stateMutator.SetBrush(BrushFromWXBrush(unselBrush));
+         painter.DrawRect(before.x, before.y, before.width, before.height);
 
          within.x = 1 + before.GetRight();
       }
@@ -464,13 +643,13 @@ void TrackArt::DrawBackgroundWithSelection(
 
       if (within.width > 0) {
          if (track->GetSelected()) {
-            dc->SetBrush(selBrush);
-            dc->DrawRectangle(within);
+            stateMutator.SetBrush(BrushFromWXBrush(selBrush));
+            painter.DrawRect(within.x, within.y, within.width, within.height);
          }
          else {
             // Per condition above, track must be sync-lock selected
-            dc->SetBrush(unselBrush);
-            dc->DrawRectangle(within);
+            stateMutator.SetBrush(BrushFromWXBrush(unselBrush));
+            painter.DrawRect(within.x, within.y, within.width, within.height);
             DrawSyncLockTiles( context, within );
          }
 
@@ -483,22 +662,23 @@ void TrackArt::DrawBackgroundWithSelection(
 
       after.width = 1 + rect.GetRight() - after.x;
       if (after.width > 0) {
-         dc->SetBrush(unselBrush);
-         dc->DrawRectangle(after);
+         stateMutator.SetBrush(BrushFromWXBrush(unselBrush));
+         painter.DrawRect(after.x, after.y, after.width, after.height);
       }
    }
    else
    {
       // Track not selected; just draw background
-      dc->SetBrush(unselBrush);
-      dc->DrawRectangle(rect);
+      stateMutator.SetBrush(BrushFromWXBrush(unselBrush));
+      painter.DrawRect(rect.x, rect.y, rect.width, rect.height);
    }
 }
 
 void TrackArt::DrawCursor(TrackPanelDrawingContext& context,
    const wxRect& rect, const Track* track)
 {
-   const auto dc = &context.dc;
+   auto& painter = context.painter;
+
    const auto artist = TrackArtist::Get(context);
    const auto& selectedRegion = *artist->pSelectedRegion;
    
@@ -508,8 +688,10 @@ void TrackArt::DrawCursor(TrackPanelDrawingContext& context,
        auto x = static_cast<int>(zoomInfo.TimeToPosition(selectedRegion.t0(), rect.x));
        if (x >= rect.GetLeft() && x <= rect.GetRight())
        {
-          AColor::CursorColor(dc);
-          AColor::Line(*dc, x, rect.GetTop(), x, rect.GetBottom());
+          auto stateMutator = painter.GetStateMutator();
+
+          AColor::CursorColor(stateMutator);
+          AColor::Line(painter, x, rect.GetTop(), x, rect.GetBottom());
        }
    }
 }
