@@ -1,0 +1,211 @@
+4 STEPS TO MAKE AN EFFECT STATELESS
+
+Let use use EffectEcho as an example.
+
+
+1) "Define Settings"
+
+   In header file:
+       before the effect definition, define a struct EffectEchoSettings containing the settings.
+
+       Base class remains as original, i.e. either StatefulPerTrackEffect or StatefulEffect
+       
+       Declare a private EffectEchoSettings mSettings;
+       
+       REMOVE the members of the effect that go into the settings. REPLACE instead with EffectEchoSettings mSettings; in the effect and then do what is needed to fix compilation and running:
+          
+       Modify FetchParameters: it must now return the address of mSettings, not of the effect
+    
+       Update pointers-to-members in EffectParameter declarations
+    
+   In cpp file:
+       Insert sufficient auto& echoSettings = mSettings; (which changes later) and echoSettings. (which won't need more change) to fix compilation
+        
+       Remove call to Reset() in constructor
+        
+    
+2) "Define validator"
+
+    In header file:
+    
+    add line "struct Validator;" in public section
+
+
+    In cpp file:
+    add class definition in the .cpp with mSettings:
+    
+        struct EffectEcho::Validator
+           : DefaultEffectUIValidator
+        {
+           Validator(EffectUIClientInterface& effect,
+              EffectSettingsAccess& access, EffectEchoSettings& settings)
+              : DefaultEffectUIValidator{ effect, access }
+              , mSettings{ settings }
+           {}
+           virtual ~Validator() = default;
+
+           Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
+
+           bool ValidateUI() override;
+           bool UpdateUI() override;
+
+           void PopulateOrExchange(ShuttleGui& S);
+
+           EffectEchoSettings& mSettings;
+        };
+
+
+        bool EffectEcho::Validator::ValidateUI()
+        {
+           mAccess.ModifySettings
+           (
+              [this](EffectSettings& settings)
+           {
+              // pass back the modified settings to the MessageBuffer
+
+              // TODO uncomment at last step
+              //EffectEcho::GetSettings(settings) = mSettings;
+           }
+           );
+
+           return true;
+        }
+
+
+        bool EffectEcho::Validator::UpdateUI()
+        {
+           // get the settings from the MessageBuffer and write them to our local copy
+           const auto& settings = mAccess.Get();
+
+           // TODO uncomment at last step
+           //mSettings = GetSettings(settings);
+
+           return true;
+        }
+
+    
+
+
+3) "Define the instance"
+
+    In header file, 
+    
+        add in public section:
+    
+            struct Instance;
+
+            std::shared_ptr<EffectInstance> MakeInstance(EffectSettings& settings) const;
+
+        Identify members that represent state - comment them out 
+        
+        remove methods: ProcessInitialize, ProcessFinalize, ProcessBlock
+
+    In cpp file,
+    
+        add:
+    
+        struct EffectEcho::Instance
+           : public PerTrackEffect::Instance
+           , public EffectInstanceWithBlockSize
+           , public EffectInstanceWithSampleRate
+
+        {
+           Instance(const PerTrackEffect& effect)
+              : PerTrackEffect::Instance{ effect }
+           {}
+
+           bool ProcessInitialize(EffectSettings& settings,
+              sampleCount totalLen, ChannelNames chanMap) override;
+
+           size_t ProcessBlock(EffectSettings& settings,
+              const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
+
+           bool ProcessFinalize(void) override;
+
+           << MEMBERS WHICH REPRESENT STATE which you commented out earlier >>
+        };
+
+
+        std::shared_ptr<EffectInstance>
+        EffectEcho::MakeInstance(EffectSettings&) const
+        {
+           return std::make_shared<Instance>(*this);
+        }
+        
+        
+    Make the Effect::Process*** methods belong to the instance by: 
+    
+    - prepending ::Instance where needed
+
+    - adding this at the beginning (may not be needed in all of them)
+    
+        // temporary - in the final step this will be replaced by
+        // auto& echoSettings = GetSettings(settings);
+        //
+        auto& echoSettings = static_cast<const EffectEcho&>(mProcessor).mSettings;
+
+    
+
+
+4) "Real Statelessness"
+
+    In header file:
+    
+    - make the effect inherit:  
+      
+      -- EffectWithSettings<EffectEchoSettings, PerTrackEffect> if the effect is per-track
+      -- EffectWithSettings<EffectEchoSettings,         Effect> otherwise
+    
+    - remove the FetchParameters method
+    
+    - remove mSettings member
+
+
+    In cpp file:
+    
+    - go to ProcessInitialize, ProcessBlock, ProcessFinalize, RealtimeInitialize etc.; remove the downcast and enable the commented out GetSettings
+    
+    - go to Validator::ValidateUI and Validator::UpdateUI, remove the commenting out on the commented lines
+    
+    - add const to arg EffectEchoSettings& in the Validator constructor
+    
+    - turn Validator::mSettings from a reference to a non-reference
+    
+    - modify PopulateOrExchange to make it belong to the Validator
+      -- remove parameter EffectSettings from it, it is not needed anymore
+      -- it should now return void
+      
+    - reimplement Effect::PopulateOrExchange:
+    
+        std::unique_ptr<EffectUIValidator>
+        EffectEcho::PopulateOrExchange(ShuttleGui& S, EffectSettingsAccess& access)
+        {
+           auto& settings = access.Get();
+           auto& myEffSettings = GetSettings(settings);
+           auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+           result->PopulateOrExchange(S);
+           return result;
+        }
+
+
+Some notes by Paul Licameli:
+
+Regarding step 2:
+"Another possibility, is that I MAY put all the needed calls to GetSettings() in early, BUT I do not yet use EffectWithSettings<> and the definition of GetSettings() that it generates. Instead, I define GetSettings() to ignore its argument and return mSettings in the effect object. At the last step of real statelessness, I can delete the definition of GetSettings() but leave the calls."
+
+Regarding step 4:
+"There may be a fifth step: see the commit I recently pushed to the branch for ladspa effects.
+
+MakeSettings and CopySettingsContents may require explicit definitions instead of those generated by the template EffectWithSettings.
+
+That does not apply to built-in effects where the settings structure simply contains several scalar fields and no variable sized containers.
+
+For Ladspa, you can see that MakeSettings() instead allocates a vector of values, whose size is not known at compilation time but depends on other information that the effect is queried for. So default construction of the settings, as in the generated MakeSettings(), will not do.
+
+Then CopySettingsContents must also be overridden, not for correctness but for efficiency. The override is supposed to avoid memory allocations when the main thread calls it, so it should not use the copy constructors of the embedded std::vector but instead rewrite an existing vector without changing its capacity. The assumption will be made that the destination settings containers are already correctly sized, because MakeSettings did that, or else full copies done in the main thread (where allocations are allowed) already did that.
+
+Other third party effect families like AudioUnits may have Settings structures containing maps from strings to values, instead of vectors, but the problems will be similar."
+
+
+
+
