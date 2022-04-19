@@ -661,7 +661,16 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
          XO("Ogg Vorbis Import and Export"), disabled);
    #endif
 
-   #ifdef USE_LIBID3TAG
+   #ifdef USE_LIBOPUS
+   AddBuildinfoRow(&informationStr, wxT("libopus"),
+         XO("Opus Import and Export"), enabled);
+   #else
+   AddBuildinfoRow(&informationStr, wxT("libopus"),
+         XO("Opus Import and Export"), disabled);
+   #endif
+
+
+#ifdef USE_LIBID3TAG
    AddBuildinfoRow(&informationStr, wxT("libid3tag"), XO("ID3 tag support"),
          enabled);
    #else
