@@ -15,6 +15,7 @@
 #if USE_AUDIO_UNITS
 
 #include "MemoryX.h"
+#include <type_traits>
 #include <vector>
 
 #include <AudioToolbox/AudioUnitUtilities.h>
@@ -37,6 +38,16 @@ using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 
 class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
+
+//! Generates deleters for std::unique_ptr that clean up AU plugin state
+template<typename T, OSStatus(*fn)(T*)> struct AudioUnitCleaner {
+   // Let this have non-void return type, though ~unique_ptr() will ignore it
+   auto operator () (T *p) noexcept { return fn(p); }
+};
+//! RAII for cleaning up AU plugin state
+template<typename Ptr, OSStatus(*fn)(Ptr),
+   typename T = std::remove_pointer_t<Ptr> /* deduced */ >
+using AudioUnitCleanup = std::unique_ptr<T, AudioUnitCleaner<T, fn>>;
 
 class AudioUnitEffect final : public StatefulPerTrackEffect
 {
@@ -183,8 +194,11 @@ private:
    const wxString mName;
    const wxString mVendor;
    const AudioComponent mComponent;
-   AudioUnit mUnit{};
-   bool mUnitInitialized{ false };
+
+   // The sequence of these three members matters in the destructor
+   AudioUnitCleanup<AudioUnit, AudioComponentInstanceDispose> mUnit;
+   AudioUnitCleanup<AUEventListenerRef, AUListenerDispose> mEventListenerRef;
+   AudioUnitCleanup<AudioUnit, AudioUnitUninitialize> mInitialization;
 
    // Initialized in GetChannelCounts()
    unsigned mAudioIns{ 2 };
@@ -209,8 +223,6 @@ private:
 
    AudioUnitEffect *const mMaster;     // non-NULL if a slave
    AudioUnitEffectArray mSlaves;
-
-   AUEventListenerRef mEventListenerRef{};
 
    AUControl *mpControl{};
 

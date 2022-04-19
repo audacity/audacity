@@ -826,20 +826,6 @@ AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
 
 AudioUnitEffect::~AudioUnitEffect()
 {
-   if (mUnitInitialized)
-   {
-      AudioUnitUninitialize(mUnit);
-   }
-
-   if (mEventListenerRef)
-   {
-      AUListenerDispose(mEventListenerRef);
-   }
-
-   if (mUnit)
-   {
-      AudioComponentInstanceDispose(mUnit);
-   }
 }
 
 // ============================================================================
@@ -929,7 +915,7 @@ bool AudioUnitEffect::SupportsAutomation() const
    UInt32 dataSize;
    Boolean isWritable;
 
-   result = AudioUnitGetPropertyInfo(mUnit,
+   result = AudioUnitGetPropertyInfo(mUnit.get(),
                                      kAudioUnitProperty_ParameterList,
                                      kAudioUnitScope_Global,
                                      0,
@@ -943,7 +929,7 @@ bool AudioUnitEffect::SupportsAutomation() const
    UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
    ArrayOf<AudioUnitParameterID> array{cnt};
 
-   result = AudioUnitGetProperty(mUnit,
+   result = AudioUnitGetProperty(mUnit.get(),
                                  kAudioUnitProperty_ParameterList,
                                  kAudioUnitScope_Global,
                                  0,
@@ -958,7 +944,7 @@ bool AudioUnitEffect::SupportsAutomation() const
    {
       ParameterInfo pi;
 
-      if (pi.Get(mUnit, array[i]))
+      if (pi.Get(mUnit.get(), array[i]))
       {
          if (pi.info.flags & kAudioUnitParameterFlag_IsWritable)
          {
@@ -973,8 +959,11 @@ bool AudioUnitEffect::SupportsAutomation() const
 
 bool AudioUnitEffect::CreateAudioUnit()
 {
-   auto result = AudioComponentInstanceNew(mComponent, &mUnit);
-   return (!result && mUnit != nullptr);
+   AudioUnit unit{};
+   auto result = AudioComponentInstanceNew(mComponent, &unit);
+   if (!result)
+      mUnit.reset(unit);
+   return (!result && unit != nullptr);
 }
 
 bool AudioUnitEffect::InitializeInstance()
@@ -989,7 +978,7 @@ bool AudioUnitEffect::InitializeInstance()
    // Retrieve the desired number of frames per slice
    UInt32 dataSize = sizeof(mBlockSize);
    mBlockSize = 512;
-   AudioUnitGetProperty(mUnit,
+   AudioUnitGetProperty(mUnit.get(),
                         kAudioUnitProperty_MaximumFramesPerSlice,
                         kAudioUnitScope_Global,
                         0,
@@ -1071,22 +1060,22 @@ bool AudioUnitEffect::MakeListener()
    {
       // Don't have a master -- so this IS the master.
       OSStatus result;
+      AUEventListenerRef eventListenerRef{};
       result = AUEventListenerCreate(AudioUnitEffect::EventListenerCallback,
                                     this,
                                     (CFRunLoopRef)GetCFRunLoopFromEventLoop(GetCurrentEventLoop()),
                                     kCFRunLoopDefaultMode,
                                     0.0,
                                     0.0,
-                                    &mEventListenerRef);
+                                    &eventListenerRef);
       if (result != noErr)
-      {
          return false;
-      }
+      mEventListenerRef.reset(eventListenerRef);
 
       AudioUnitEvent event;
  
       event.mEventType = kAudioUnitEvent_ParameterValueChange;
-      event.mArgument.mParameter.mAudioUnit = mUnit;
+      event.mArgument.mParameter.mAudioUnit = mUnit.get();
       event.mArgument.mParameter.mScope = kAudioUnitScope_Global;
       event.mArgument.mParameter.mElement = 0;
 
@@ -1094,7 +1083,7 @@ bool AudioUnitEffect::MakeListener()
       Boolean isWritable;
 
       // Retrieve the list of parameters
-      result = AudioUnitGetPropertyInfo(mUnit,
+      result = AudioUnitGetPropertyInfo(mUnit.get(),
                                         kAudioUnitProperty_ParameterList,
                                         kAudioUnitScope_Global,
                                         0,
@@ -1111,7 +1100,7 @@ bool AudioUnitEffect::MakeListener()
       {
          ArrayOf<AudioUnitParameterID> array {cnt};
 
-         result = AudioUnitGetProperty(mUnit,
+         result = AudioUnitGetProperty(mUnit.get(),
                                        kAudioUnitProperty_ParameterList,
                                        kAudioUnitScope_Global,
                                        0,
@@ -1126,7 +1115,7 @@ bool AudioUnitEffect::MakeListener()
          for (int i = 0; i < cnt; i++)
          {
             event.mArgument.mParameter.mParameterID = array[i];
-            result = AUEventListenerAddEventType(mEventListenerRef,
+            result = AUEventListenerAddEventType(mEventListenerRef.get(),
                                                  this,
                                                  &event);
             if (result != noErr)
@@ -1137,12 +1126,12 @@ bool AudioUnitEffect::MakeListener()
       }
 
       event.mEventType = kAudioUnitEvent_PropertyChange;
-      event.mArgument.mProperty.mAudioUnit = mUnit;
+      event.mArgument.mProperty.mAudioUnit = mUnit.get();
       event.mArgument.mProperty.mPropertyID = kAudioUnitProperty_Latency;
       event.mArgument.mProperty.mScope = kAudioUnitScope_Global;
       event.mArgument.mProperty.mElement = 0;
 
-      result = AUEventListenerAddEventType(mEventListenerRef,
+      result = AUEventListenerAddEventType(mEventListenerRef.get(),
                                            this,
                                            &event);
       if (result != noErr)
@@ -1154,7 +1143,7 @@ bool AudioUnitEffect::MakeListener()
       dataSize = sizeof(AudioUnitCocoaViewInfo);
    
       // Check for a Cocoa UI
-      result = AudioUnitGetProperty(mUnit,
+      result = AudioUnitGetProperty(mUnit.get(),
                                     kAudioUnitProperty_CocoaUI,
                                     kAudioUnitScope_Global,
                                     0,
@@ -1166,7 +1155,7 @@ bool AudioUnitEffect::MakeListener()
       // Check for a Carbon UI
       AudioComponentDescription compDesc;
       dataSize = sizeof(compDesc);
-      result = AudioUnitGetProperty(mUnit,
+      result = AudioUnitGetProperty(mUnit.get(),
                                     kAudioUnitProperty_GetUIComponentList,
                                     kAudioUnitScope_Global,
                                     0,
@@ -1224,7 +1213,7 @@ sampleCount AudioUnitEffect::GetLatency()
 
       Float64 latency = 0.0;
       UInt32 dataSize = sizeof(latency);
-      AudioUnitGetProperty(mUnit,
+      AudioUnitGetProperty(mUnit.get(),
                            kAudioUnitProperty_Latency,
                            kAudioUnitScope_Global,
                            0,
@@ -1279,7 +1268,7 @@ bool AudioUnitEffect::ProcessInitialize(
    AURenderCallbackStruct callbackStruct;
    callbackStruct.inputProc = RenderCallback;
    callbackStruct.inputProcRefCon = this;
-   result = AudioUnitSetProperty(mUnit,
+   result = AudioUnitSetProperty(mUnit.get(),
                                  kAudioUnitProperty_SetRenderCallback,
                                  kAudioUnitScope_Input,
                                  0,
@@ -1291,7 +1280,7 @@ bool AudioUnitEffect::ProcessInitialize(
       return false;
    }
 
-   result = AudioUnitReset(mUnit, kAudioUnitScope_Global, 0);
+   result = AudioUnitReset(mUnit.get(), kAudioUnitScope_Global, 0);
    if (result != noErr)
    {
       return false;
@@ -1335,7 +1324,7 @@ size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
    AudioUnitRenderActionFlags flags = 0;
    OSStatus result;
 
-   result = AudioUnitRender(mUnit,
+   result = AudioUnitRender(mUnit.get(),
                             &flags,
                             &mTimeStamp,
                             0,
@@ -1367,7 +1356,7 @@ bool AudioUnitEffect::RealtimeAddProcessor(
    slave->SetBlockSize(mBlockSize);
    slave->SetSampleRate(sampleRate);
 
-   if (!CopyParameters(mUnit, slave->mUnit))
+   if (!CopyParameters(mUnit.get(), slave->mUnit.get()))
    {
       return false;
    }
@@ -1466,7 +1455,7 @@ bool AudioUnitEffect::SaveSettings(
    UInt32 dataSize;
    Boolean isWritable;
 
-   result = AudioUnitGetPropertyInfo(mUnit,
+   result = AudioUnitGetPropertyInfo(mUnit.get(),
                                      kAudioUnitProperty_ParameterList,
                                      kAudioUnitScope_Global,
                                      0,
@@ -1480,7 +1469,7 @@ bool AudioUnitEffect::SaveSettings(
    UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
    ArrayOf<AudioUnitParameterID> array {cnt};
 
-   result = AudioUnitGetProperty(mUnit,
+   result = AudioUnitGetProperty(mUnit.get(),
                                  kAudioUnitProperty_ParameterList,
                                  kAudioUnitScope_Global,
                                  0,
@@ -1495,7 +1484,7 @@ bool AudioUnitEffect::SaveSettings(
    {
       ParameterInfo pi;
 
-      if (!pi.Get(mUnit, array[i]))
+      if (!pi.Get(mUnit.get(), array[i]))
       {
          // Probably failed because of invalid parameter which can happen
          // if a plug-in is in a certain mode that doesn't contain the
@@ -1504,11 +1493,8 @@ bool AudioUnitEffect::SaveSettings(
       }
 
       AudioUnitParameterValue value;
-      result = AudioUnitGetParameter(mUnit,
-                                     array[i],
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     &value);
+      result = AudioUnitGetParameter(mUnit.get(), array[i],
+         kAudioUnitScope_Global, 0, &value);
       if (result != noErr)
       {
          // Probably failed because of invalid parameter which can happen
@@ -1530,7 +1516,7 @@ bool AudioUnitEffect::LoadSettings(
    UInt32 dataSize;
    Boolean isWritable;
 
-   result = AudioUnitGetPropertyInfo(mUnit,
+   result = AudioUnitGetPropertyInfo(mUnit.get(),
                                      kAudioUnitProperty_ParameterList,
                                      kAudioUnitScope_Global,
                                      0,
@@ -1544,7 +1530,7 @@ bool AudioUnitEffect::LoadSettings(
    UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
    ArrayOf<AudioUnitParameterID> array {cnt};
 
-   result = AudioUnitGetProperty(mUnit,
+   result = AudioUnitGetProperty(mUnit.get(),
                                  kAudioUnitProperty_ParameterList,
                                  kAudioUnitScope_Global,
                                  0,
@@ -1559,7 +1545,7 @@ bool AudioUnitEffect::LoadSettings(
    {
       ParameterInfo pi;
 
-      if (!pi.Get(mUnit, array[i]))
+      if (!pi.Get(mUnit.get(), array[i]))
       {
          // Probably failed because of invalid parameter which can happen
          // if a plug-in is in a certain mode that doesn't contain the
@@ -1571,14 +1557,9 @@ bool AudioUnitEffect::LoadSettings(
       if (parms.Read(pi.name, &d))
       {
          AudioUnitParameterValue value = d;
-         AudioUnitSetParameter(mUnit,
-                               array[i],
-                               kAudioUnitScope_Global,
-                               0,
-                               value,
-                               0);
-
-         Notify(mUnit, array[i]);
+         AudioUnitSetParameter(mUnit.get(), array[i], kAudioUnitScope_Global,
+            0, value, 0);
+         Notify(mUnit.get(), array[i]);
       }
    }
 
@@ -1605,7 +1586,7 @@ bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
    // Retrieve the list of factory presets
    CFArrayRef array{};
    UInt32 dataSize = sizeof(CFArrayRef);
-   result = AudioUnitGetProperty(mUnit,
+   result = AudioUnitGetProperty(mUnit.get(),
                                  kAudioUnitProperty_FactoryPresets,
                                  kAudioUnitScope_Global,
                                  0,
@@ -1624,7 +1605,7 @@ bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
 
    const AUPreset *preset = (const AUPreset *) CFArrayGetValueAtIndex(array, id);
 
-   result = AudioUnitSetProperty(mUnit,
+   result = AudioUnitSetProperty(mUnit.get(),
                                  kAudioUnitProperty_PresentPreset,
                                  kAudioUnitScope_Global,
                                  0,
@@ -1633,7 +1614,7 @@ bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
    if (result == noErr)
    {
       // Notify interested parties of change and propagate to slaves
-      Notify(mUnit, kAUParameterListener_AnyParameter);
+      Notify(mUnit.get(), kAUParameterListener_AnyParameter);
    }
 
    return result == noErr;
@@ -1654,7 +1635,7 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
    // Retrieve the list of factory presets
    CFArrayRef array{};
    UInt32 dataSize = sizeof(CFArrayRef);
-   result = AudioUnitGetProperty(mUnit,
+   result = AudioUnitGetProperty(mUnit.get(),
                                  kAudioUnitProperty_FactoryPresets,
                                  kAudioUnitScope_Global,
                                  0,
@@ -1712,7 +1693,7 @@ AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
          return nullptr;
       }
 
-      if (!pControl->Create(container, mComponent, mUnit,
+      if (!pControl->Create(container, mComponent, mUnit.get(),
          mUIType == FullValue.MSGID().GET()))
          return nullptr;
 
@@ -1982,7 +1963,7 @@ bool AudioUnitEffect::LoadPreset(
 
    // Finally, update the properties and parameters
    OSStatus result;
-   result = AudioUnitSetProperty(mUnit,
+   result = AudioUnitSetProperty(mUnit.get(),
                                  kAudioUnitProperty_ClassInfo,
                                  kAudioUnitScope_Global,
                                  0,
@@ -1995,7 +1976,7 @@ bool AudioUnitEffect::LoadPreset(
    }
 
    // Notify interested parties of change and propagate to slaves
-   Notify(mUnit, kAUParameterListener_AnyParameter);
+   Notify(mUnit.get(), kAUParameterListener_AnyParameter);
 
    return true;
 }
@@ -2011,7 +1992,7 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
    preset.presetName = cfname;
 
    // And set it in the audio unit
-   AudioUnitSetProperty(mUnit,
+   AudioUnitSetProperty(mUnit.get(),
                         kAudioUnitProperty_PresentPreset,
                         kAudioUnitScope_Global,
                         0,
@@ -2021,7 +2002,7 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
    // Now retrieve the preset content
    CFPropertyListRef content;
    UInt32 size = sizeof(content);
-   AudioUnitGetProperty(mUnit,
+   AudioUnitGetProperty(mUnit.get(),
                         kAudioUnitProperty_ClassInfo,
                         kAudioUnitScope_Global,
                         0,
@@ -2065,12 +2046,7 @@ bool AudioUnitEffect::SetRateAndChannels()
 {
    OSStatus result;
 
-   if (mUnitInitialized)
-   {
-      AudioUnitUninitialize(mUnit);
-
-      mUnitInitialized = false;
-   }
+   mInitialization.reset();
 
    AudioStreamBasicDescription streamFormat {
       // Float64 mSampleRate;
@@ -2102,7 +2078,7 @@ bool AudioUnitEffect::SetRateAndChannels()
       0
    };
 
-   result = AudioUnitSetProperty(mUnit,
+   result = AudioUnitSetProperty(mUnit.get(),
                                  kAudioUnitProperty_SampleRate,
                                  kAudioUnitScope_Global,
                                  0,
@@ -2118,7 +2094,7 @@ bool AudioUnitEffect::SetRateAndChannels()
 
    if (mAudioIns > 0)
    {
-      result = AudioUnitSetProperty(mUnit,
+      result = AudioUnitSetProperty(mUnit.get(),
                                     kAudioUnitProperty_SampleRate,
                                     kAudioUnitScope_Input,
                                     0,
@@ -2132,7 +2108,7 @@ bool AudioUnitEffect::SetRateAndChannels()
          return false;
       }
 
-      result = AudioUnitSetProperty(mUnit,
+      result = AudioUnitSetProperty(mUnit.get(),
                                     kAudioUnitProperty_StreamFormat,
                                     kAudioUnitScope_Input,
                                     0,
@@ -2149,7 +2125,7 @@ bool AudioUnitEffect::SetRateAndChannels()
 
    if (mAudioOuts > 0)
    {
-      result = AudioUnitSetProperty(mUnit,
+      result = AudioUnitSetProperty(mUnit.get(),
                                     kAudioUnitProperty_SampleRate,
                                     kAudioUnitScope_Output,
                                     0,
@@ -2164,7 +2140,7 @@ bool AudioUnitEffect::SetRateAndChannels()
       }
    
       streamFormat.mChannelsPerFrame = mAudioOuts;
-      result = AudioUnitSetProperty(mUnit,
+      result = AudioUnitSetProperty(mUnit.get(),
                                     kAudioUnitProperty_StreamFormat,
                                     kAudioUnitScope_Output,
                                     0,
@@ -2180,15 +2156,14 @@ bool AudioUnitEffect::SetRateAndChannels()
       }
    }
 
-   result = AudioUnitInitialize(mUnit);
+   result = AudioUnitInitialize(mUnit.get());
    if (result != noErr)
    {
       wxPrintf("Couldn't initialize audio unit\n");
       return false;
    }
 
-   mUnitInitialized = true;
-
+   mInitialization.reset(mUnit.get());
    return true;
 }
 
@@ -2250,7 +2225,7 @@ TranslatableString AudioUnitEffect::Export(const wxString & path) const
 
    // And set it in the audio unit
    OSStatus result;
-   result = AudioUnitSetProperty(mUnit,
+   result = AudioUnitSetProperty(mUnit.get(),
                                  kAudioUnitProperty_PresentPreset,
                                  kAudioUnitScope_Global,
                                  0,
@@ -2264,7 +2239,7 @@ TranslatableString AudioUnitEffect::Export(const wxString & path) const
    // Now retrieve the preset content
    CFPropertyListRef content;
    UInt32 size = sizeof(content);
-   result = AudioUnitGetProperty(mUnit,
+   result = AudioUnitGetProperty(mUnit.get(),
                                  kAudioUnitProperty_ClassInfo,
                                  kAudioUnitScope_Global,
                                  0,
@@ -2355,7 +2330,7 @@ TranslatableString AudioUnitEffect::Import(const wxString & path)
 
    // Finally, update the properties and parameters
    OSStatus result;
-   result = AudioUnitSetProperty(mUnit,
+   result = AudioUnitSetProperty(mUnit.get(),
                                  kAudioUnitProperty_ClassInfo,
                                  kAudioUnitScope_Global,
                                  0,
@@ -2367,7 +2342,7 @@ TranslatableString AudioUnitEffect::Import(const wxString & path)
    }
 
    // Notify interested parties of change and propagate to slaves
-   Notify(mUnit, kAUParameterListener_AnyParameter);
+   Notify(mUnit.get(), kAUParameterListener_AnyParameter);
 
    return {};
 }
@@ -2431,12 +2406,9 @@ void AudioUnitEffect::EventListener(const AudioUnitEvent *inEvent,
    if (mMaster)
    {
       // We're a slave, so just set the parameter
-      AudioUnitSetParameter(mUnit,
-                            inEvent->mArgument.mParameter.mParameterID,
-                            kAudioUnitScope_Global,
-                            0,
-                            inParameterValue,
-                            0);
+      AudioUnitSetParameter(mUnit.get(),
+         inEvent->mArgument.mParameter.mParameterID,
+         kAudioUnitScope_Global, 0, inParameterValue, 0);
    }
    else
    {
@@ -2466,7 +2438,7 @@ void AudioUnitEffect::GetChannelCounts()
    OSStatus result;
 
    // Does AU have channel info
-   result = AudioUnitGetPropertyInfo(mUnit,
+   result = AudioUnitGetPropertyInfo(mUnit.get(),
                                      kAudioUnitProperty_SupportedNumChannels,
                                      kAudioUnitScope_Global,
                                      0,
@@ -2488,7 +2460,7 @@ void AudioUnitEffect::GetChannelCounts()
    auto info = (AUChannelInfo *) buffer.get();
 
    // Retrieve the channel info
-   result = AudioUnitGetProperty(mUnit,
+   result = AudioUnitGetProperty(mUnit.get(),
                                  kAudioUnitProperty_SupportedNumChannels,
                                  kAudioUnitScope_Global,
                                  0,
@@ -2625,7 +2597,7 @@ bool AudioUnitEffect::BypassEffect(bool bypass)
 
    UInt32 value = (bypass ? 1 : 0);
 
-   result = AudioUnitSetProperty(mUnit,
+   result = AudioUnitSetProperty(mUnit.get(),
                                  kAudioUnitProperty_BypassEffect,
                                  kAudioUnitScope_Global,
                                  0,
