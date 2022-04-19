@@ -28,9 +28,100 @@
 #include "../widgets/AudacityMessageBox.h"
 
 #include <wx/log.h>
+#include <wx/stdpaths.h>
+
+#include "XMLFileReader.h"
 
 // private helper classes and functions
 namespace {
+
+
+using EffectsMenuGroups = std::vector<std::pair<TranslatableString, std::vector<TranslatableString>>>;
+
+struct EffectsMenuGroupsHandler : XMLTagHandler
+{
+   struct EffectsHandler : XMLTagHandler
+   {
+      std::optional<std::string> textContent;
+      std::vector<TranslatableString>& effects;
+
+      EffectsHandler(std::vector<TranslatableString>& effects) : effects(effects) { }
+
+      bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override { return true; }
+      void HandleXMLContent(const std::string_view& text) override { textContent = text; }
+      void HandleXMLEndTag(const std::string_view& tag) override
+      {
+         if(textContent.has_value() && tag == "Effect")
+            effects.emplace_back(TranslatableString { *textContent, {} });
+         textContent.reset();
+      }
+      XMLTagHandler* HandleXMLChild(const std::string_view& tag) override
+      {
+         if(tag == "Effect")
+            return this;
+         return nullptr;
+      }
+
+   };
+
+   struct GroupHandler : XMLTagHandler
+   {
+      std::optional<std::string> textContent;
+      std::unique_ptr<EffectsHandler> effectsHandler;
+      std::pair<TranslatableString, std::vector<TranslatableString>>& group;
+
+      GroupHandler(std::pair<TranslatableString, std::vector<TranslatableString>>& group) : group(group) { }
+
+      bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override { return true; }
+      void HandleXMLContent(const std::string_view& text) override { textContent = text; }
+      void HandleXMLEndTag(const std::string_view& tag) override
+      {
+         if(textContent.has_value() && tag == "Name")
+            group.first = TranslatableString { *textContent, { } };
+         textContent.reset();
+      }
+      XMLTagHandler* HandleXMLChild(const std::string_view& tag) override
+      {
+         if(tag == "Effects")
+         {
+            effectsHandler = std::make_unique<EffectsHandler>(group.second);
+            return &*effectsHandler;
+         }
+         if(tag == "Name")
+            return this;
+
+         return nullptr;
+      }
+   };
+
+   EffectsMenuGroups& groups;
+   std::unique_ptr<GroupHandler> groupHandler;
+
+   EffectsMenuGroupsHandler(EffectsMenuGroups& groups) : groups(groups) { }
+
+   bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override { return true; }
+
+   XMLTagHandler* HandleXMLChild(const std::string_view& tag) override
+   {
+      if(tag == "Group")
+      {
+         groups.resize(groups.size() + 1);
+         groupHandler = std::make_unique<GroupHandler>(groups.back());
+         return &*groupHandler;
+      }
+      return nullptr;
+   }
+};
+
+EffectsMenuGroups LoadEffectsMenuGroups(const wxString& path)
+{
+   EffectsMenuGroups result;
+   EffectsMenuGroupsHandler handler(result);
+
+   XMLFileReader reader;
+   reader.Parse(&handler, path);
+   return result;
+}
 
 enum class GroupBy
 {
@@ -80,6 +171,38 @@ bool IsDefaultPlugin(const PluginDescriptor* plug)
    return false;
 }
 
+bool IsBundledPlugin(const PluginDescriptor* plug)
+{
+   if(IsDefaultPlugin(plug))
+      return true;
+   auto applicationBundlePath = wxFileName(wxStandardPaths::Get().GetExecutablePath());
+#if __WXMAC__
+   //Remove MacOSX
+   applicationBundlePath.RemoveLastDir();
+#endif
+   auto pluginPath = wxFileName(plug->GetPath());
+   pluginPath.MakeAbsolute();
+   return pluginPath.GetPath().StartsWith(applicationBundlePath.GetPath());
+}
+
+auto MakeGroupsFilter(const EffectsMenuGroups& list) -> auto
+{
+   return [=](const PluginDescriptor* plug)
+   {
+      if(!IsEnabledPlugin(plug))
+         return false;
+
+      for(auto& p : list)
+      {
+         for(auto& name : p.second)
+         {
+            if(name == plug->GetSymbol().Msgid())
+               return true;
+         }
+      }
+      return false;
+   };
+}
 
 // Forward-declared function has its definition below with OnEffect in view
 void AddEffectMenuItemGroup(
@@ -228,6 +351,55 @@ void AddSortedEffectMenuItems(
       AddEffectMenuItemGroup(
          table, groupNames, groupPlugs, groupFlags, useSubgroups);
    }
+}
+
+auto MakeAddGroupItems(const EffectsMenuGroups& list, CommandFlag batchflags, CommandFlag realflags) -> auto
+{
+   return [=](MenuTable::BaseItemPtrs& items, std::vector<const PluginDescriptor*>& plugs)
+   {
+      for(auto& p : list)
+      {
+         TranslatableStrings groupNames;
+         PluginIDs groupPlugs;
+         std::vector<CommandFlag> groupFlags;
+         
+         auto srcNames = p.second;
+         std::sort(srcNames.begin(), srcNames.end(), [](const auto a, const auto b) { return a.Translation() < b.Translation(); });
+
+         for(auto& name : srcNames)
+         {
+            auto it = std::find_if(plugs.begin(), plugs.end(), [&name](const PluginDescriptor* other)
+            {
+               return name == other->GetSymbol().Msgid();
+            });
+            if(it == plugs.end())
+               continue;
+
+            auto plug = *it;
+            if(plug->IsEffectInteractive())
+               groupNames.push_back(name + XO("..."));
+            else
+               groupNames.push_back( name );
+
+            groupPlugs.push_back(plug->GetID());
+            groupFlags.push_back(
+               plug->IsEffectRealtime() ? realflags : FixBatchFlags( batchflags, plug ) );
+         }
+
+         if (!groupNames.empty())
+         {
+            using namespace MenuTable;
+            BaseItemPtrs temp;
+
+            AddEffectMenuItemGroup(temp,
+               groupNames, groupPlugs, groupFlags, false);
+
+            items.push_back( MenuOrItems( wxEmptyString,
+               p.first, std::move( temp )
+            ) );
+         }
+      }
+   };
 }
 
 struct MenuSectionBuilder
@@ -383,7 +555,56 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    };
 
    auto DefaultFilter = [](auto plug) { return IsEnabledPlugin(plug) && IsDefaultPlugin(plug); };
-   if(groupby == "sortby:publisher:name")
+   if(groupby == "default")
+   {
+      if(type == EffectTypeProcess)
+      {
+         static auto effectMenuDefaults = [] {
+            wxFileName path = wxStandardPaths::Get().GetExecutablePath();
+#if defined(__WXMAC__)
+            //remove MacOSX
+            path.RemoveLastDir();
+#endif
+            path.AppendDir("res");
+            path.SetFullName("effects_menu_defaults.xml");
+            return LoadEffectsMenuGroups(path.GetFullPath());
+         }();
+         static auto groupsFilter = MakeGroupsFilter(effectMenuDefaults);
+
+         sections.emplace_back(
+            MenuSectionBuilder {
+               {},
+               [=](auto plug) { return IsEnabledPlugin(plug) && groupsFilter(plug); },
+               nullptr,
+               MakeAddGroupItems(effectMenuDefaults, batchflags, realflags)
+            });
+         sections.emplace_back(
+            MenuSectionBuilder {
+               {},
+               IsEnabledPlugin,
+               CompareEffectsByPublisher,
+               MakeAddGroupedItems(GroupBy::Publisher, false )
+            });
+      }
+      else//Generators/Analyzers
+      {
+         sections.emplace_back(
+            MenuSectionBuilder {
+               {},
+               [](auto plug){ return IsEnabledPlugin(plug) && IsBundledPlugin(plug); } ,
+               CompareEffectsByName,
+               MakeAddSortedItems(SortBy::Name, false )
+            });
+         sections.emplace_back(
+            MenuSectionBuilder {
+               {},
+               IsEnabledPlugin,
+               CompareEffectsByPublisher,
+               MakeAddGroupedItems(GroupBy::Publisher, true )
+            });
+      }
+   }
+   else if(groupby == "sortby:publisher:name")
    {
       sections.emplace_back(
          MenuSectionBuilder {
@@ -474,11 +695,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
       {
          if(section.filter(&plugin))
          {
-            auto it = section.compare ?
-               std::lower_bound(section.plugins.begin(), section.plugins.end(), &plugin, section.compare) :
-               section.plugins.end();
-            section.plugins.insert(it, &plugin);
-
+            section.plugins.push_back(&plugin);
             break;
          }
       }
@@ -486,6 +703,9 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
 
    for(auto& section : sections)
    {
+      if(section.compare != nullptr)
+         std::sort(section.plugins.begin(), section.plugins.end(), section.compare);
+
       MenuTable::BaseItemPtrs items;
       section.add(items, section.plugins);
 
