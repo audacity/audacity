@@ -120,6 +120,19 @@ EffectSettings LadspaEffect::MakeSettings() const
    return result;
 }
 
+bool LadspaEffect::CopySettingsContents(
+   const EffectSettings &src, EffectSettings &dst) const
+{
+   // Do not use the copy constructor of std::vector.  Do an in-place rewrite
+   // of the destination vector, which will not allocate memory if dstControls
+   // began with sufficient capacity.
+   auto &srcControls = GetSettings(src).controls;
+   auto &dstControls = GetSettings(dst).controls;
+   dstControls.resize(0);
+   copy(srcControls.begin(), srcControls.end(), back_inserter(dstControls));
+   return true;
+}
+
 // ============================================================================
 // ComponentInterface implementation
 // ============================================================================

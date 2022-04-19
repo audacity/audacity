@@ -62,6 +62,8 @@ public:
       const EffectDefinitionInterface &effect, bool value);
 
    EffectSettings MakeSettings() const override;
+   bool CopySettingsContents(
+      const EffectSettings &src, EffectSettings &dst) const override;
 
    // ComponentInterface implementation
 
