@@ -1711,7 +1711,6 @@ void WaveTrack::Disjoin(double t0, double t1)
          // the region spans to the end of the clip, so we can just delete it
          if (region.clip->GetPlayEndSample() == region.end) {
             WaveClipHolder toRemove = RemoveAndReturnClip(region.clip.get());
-            toRemove.~shared_ptr();
             continue;
          }
       }
@@ -1725,8 +1724,7 @@ void WaveTrack::Disjoin(double t0, double t1)
             newClip = CopyToNewClip(region.clip, region.end, region.clip->GetPlayEndSample());
          }
          //remove the remainder of the clip
-         WaveClipHolder toRemove = RemoveAndReturnClip(region.clip.get());
-         toRemove.~shared_ptr();
+         WaveClipHolder toRemove = RemoveAndReturnClip(region.clip.get());        
       }
       lastEndPos=region.end;
    }
