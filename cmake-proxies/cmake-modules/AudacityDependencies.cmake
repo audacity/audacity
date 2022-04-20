@@ -1,11 +1,15 @@
 # Load Conan
 
 if ( ${_OPT}conan_allow_prebuilt_binaries )
-    set( CONAN_BUILD_MODE BUILD missing )
     set( CONAN_REMOTE https://artifactory.audacityteam.org/artifactory/api/conan/audacity-binaries )
 else()
-    set( CONAN_BUILD_MODE BUILD all )
     set( CONAN_REMOTE https://artifactory.audacityteam.org/artifactory/api/conan/audacity-recipes )
+endif()
+
+if( ${OPT}conan_force_build_dependencies)
+   set( CONAN_BUILD_MODE BUILD all )
+else()
+   set( CONAN_BUILD_MODE BUILD missing )
 endif()
 
 if( ${_OPT}conan_enabled )

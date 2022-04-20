@@ -79,6 +79,7 @@ supports PulseAudio, OSS and ALSA under Linux.
     -D CMAKE_BUILD_TYPE=Release \
     -D audacity_conan_enabled=Off \
     -D audacity_conan_allow_prebuilt_binaries=no \
+    -D audacity_conan_force_build_dependencies=yes \
     -D audacity_lib_preference=system \
     -D audacity_obey_system_dependencies=On \
     -D audacity_use_pch=no \
