@@ -763,6 +763,9 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 
          //wxPrintf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
+         if (newClip->GetPlayStartTime() < 0)
+            newClip->SetPlayStartTime(0);
+
          newClip->SetPlayStartTime(clip_t0);
 
          newTrack->mClips.push_back(std::move(newClip)); // transfer ownership
