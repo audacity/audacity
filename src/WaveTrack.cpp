@@ -733,6 +733,8 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    auto result = EmptyCopy();
    WaveTrack *newTrack = result.get();
 
+   double prev_t1 = 0;
+
    // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know, but
    // that was the old behavior.  But this function is also used by the
    // Duplicate command and I changed its behavior in that case.
@@ -747,7 +749,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          newTrack->mClips.push_back
             (std::make_unique<WaveClip>(*clip, mpFactory, ! forClipboard));
          WaveClip *const newClip = newTrack->mClips.back().get();
-         newClip->Offset(-t0);
+         newClip->SetPlayStartTime(clip->GetPlayStartTime());
       }
       else if (t1 > clip->GetPlayStartTime() && t0 < clip->GetPlayEndTime())
       {
@@ -758,34 +760,15 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          const double clip_t1 = std::min(t1, clip->GetPlayEndTime());
 
          auto newClip = std::make_unique<WaveClip>
-            (*clip, mpFactory, ! forClipboard, clip_t0, clip_t1);
+            (*clip, mpFactory, !forClipboard, clip_t0, clip_t1);
          newClip->SetName(clip->GetName());
 
          //wxPrintf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
-         newClip->Offset(clip_t0-t0);
-         if (newClip->GetPlayStartTime() < 0)
-            newClip->SetPlayStartTime(0);
+         newClip->SetPlayStartTime(clip_t0);
 
          newTrack->mClips.push_back(std::move(newClip)); // transfer ownership
       }
-   }
-
-   // AWD, Oct 2009: If the selection ends in whitespace, create a placeholder
-   // clip representing that whitespace
-   // PRL:  Only if we want the track for pasting into other tracks.  Not if it
-   // goes directly into a project as in the Duplicate command.
-   if (forClipboard &&
-       newTrack->GetEndTime() + 1.0 / newTrack->GetRate() < t1 - t0)
-   {
-      auto placeholder = std::make_unique<WaveClip>(mpFactory,
-            newTrack->GetSampleFormat(),
-            static_cast<int>(newTrack->GetRate()),
-            0 /*colourindex*/);
-      placeholder->SetIsPlaceholder(true);
-      placeholder->InsertSilence(0, (t1 - t0) - newTrack->GetEndTime());
-      placeholder->Offset(newTrack->GetEndTime());
-      newTrack->mClips.push_back(std::move(placeholder)); // transfer ownership
    }
 
    return result;
