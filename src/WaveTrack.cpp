@@ -733,8 +733,6 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    auto result = EmptyCopy();
    WaveTrack *newTrack = result.get();
 
-   double prev_t1 = 0;
-
    // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know, but
    // that was the old behavior.  But this function is also used by the
    // Duplicate command and I changed its behavior in that case.
