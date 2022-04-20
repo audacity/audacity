@@ -747,7 +747,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          newTrack->mClips.push_back
             (std::make_unique<WaveClip>(*clip, mpFactory, ! forClipboard));
          WaveClip *const newClip = newTrack->mClips.back().get();
-         newClip->SetPlayStartTime(clip->GetPlayStartTime());
+         newClip->Offset(-t0);
       }
       else if (t1 > clip->GetPlayStartTime() && t0 < clip->GetPlayEndTime())
       {
@@ -758,22 +758,42 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          const double clip_t1 = std::min(t1, clip->GetPlayEndTime());
 
          auto newClip = std::make_unique<WaveClip>
-            (*clip, mpFactory, !forClipboard, clip_t0, clip_t1);
+            (*clip, mpFactory, ! forClipboard, clip_t0, clip_t1);
          newClip->SetName(clip->GetName());
 
          //wxPrintf("copy: clip_t0=%f, clip_t1=%f\n", clip_t0, clip_t1);
 
-         if (clip_t0 < 0)
-         {
+         // If we are in the case with an audio clip on the right side with blank space to its left,
+         // we need to calculate the offset slightly differently:
+         //  |    [-----CLIP--|--]             [-|----CLIP----]      |
+         // t0                t1       VS.       t0                  t1
+         //  |----|                              ||
+         //  OFFSET = clip_t0 - t0            OFFSET = 0
+         if (t0 < clip->GetPlayStartTime() && t1 < clip->GetPlayEndTime()) {
+            newClip->SetPlayStartTime(clip_t0-t0); //not sure why Offset doesn't work for this; may want to modify
+         }
+         if (newClip->GetPlayStartTime() < 0)
             newClip->SetPlayStartTime(0);
-         }
-         else
-         {
-            newClip->SetPlayStartTime(clip_t0);
-         }
 
          newTrack->mClips.push_back(std::move(newClip)); // transfer ownership
       }
+   }
+
+   // AWD, Oct 2009: If the selection ends in whitespace, create a placeholder
+   // clip representing that whitespace
+   // PRL:  Only if we want the track for pasting into other tracks.  Not if it
+   // goes directly into a project as in the Duplicate command.
+   if (forClipboard &&
+       newTrack->GetEndTime() + 1.0 / newTrack->GetRate() < t1 - t0)
+   {
+      auto placeholder = std::make_unique<WaveClip>(mpFactory,
+            newTrack->GetSampleFormat(),
+            static_cast<int>(newTrack->GetRate()),
+            0 /*colourindex*/);
+      placeholder->SetIsPlaceholder(true);
+      placeholder->InsertSilence(0, (t1 - t0) - newTrack->GetEndTime());
+      placeholder->Offset(newTrack->GetEndTime());
+      newTrack->mClips.push_back(std::move(placeholder)); // transfer ownership
    }
 
    return result;

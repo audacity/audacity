@@ -896,7 +896,8 @@ void OnSplitNew(const CommandContext &context)
                selectedRegion.t0()));
             double newt1 = wt->LongSamplesToTime(wt->TimeToLongSamples(
                selectedRegion.t1()));
-            dest = wt->SplitCut(newt0, newt1);
+            dest = wt->Copy(newt0, newt1, false);
+            wt->SplitDelete(newt0, newt1);
             if (dest) {
                dest->SetOffset(wxMax(newt0, offset));
                FinishCopy(wt, dest, tracks);
