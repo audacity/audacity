@@ -475,6 +475,8 @@ void MeterPanel::OnErase(wxEraseEvent & WXUNUSED(event))
 
 void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
+   auto paintEvent = mPainter->Paint();
+   
    Color clrText = ColorFromWXColor(theTheme.Colour(clrTrackPanelText));
    Color clrBoxFill = ColorFromWXColor(theTheme.Colour( clrMedium ));
 
@@ -497,7 +499,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       //}
 #endif
      
-      mBkgndBrush.SetColour( GetBackgroundColour() );
+      mBkgndBrush.SetColour(GetBackgroundColour());
       stateMutator.SetPen(Pen::NoPen);
       stateMutator.SetBrush(BrushFromWXBrush(mBkgndBrush));
       mPainter->DrawRect(0, 0, mWidth, mHeight);
@@ -506,6 +508,8 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       // MixerTrackCluster style has no icon or L/R labels
       if (mStyle != MixerTrackCluster)
       {
+         auto stateMutator = mPainter->GetStateMutator();
+         
          bool highlight = InIcon();
          mPainter->DrawImage( theTheme.GetPainterImage(*mPainter, highlight ? 
             bmpHiliteUpButtonSmall : bmpUpButtonSmall ), 
@@ -693,6 +697,9 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       {
          auto Text = audacity::ToUTF8( wxT(" ") + texts[i] + wxT(" ") );
          Size Siz = mPainter->GetTextSize( Text );
+         const auto descent =
+            mPainter->GetCurrentFont()->GetFontMetrics().Descent;
+         
          Siz.width += gap;
          Siz.height += gap;
 
@@ -720,9 +727,9 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
             if( Siz.width < mBar[0].r.width )
             {
                wxRect r( mBar[0].r.GetLeft() + (int) ((mBar[0].r.GetWidth() - Siz.width) / 2.0) + 0.5,
-                         mBar[1].b.GetTop() - (int) (Siz.width / 2.0) + 0.5,
+                         mBar[1].b.GetTop() - (int) (Siz.height / 2.0) + 0.5,
                          Siz.width,
-                         Siz.width );
+                         Siz.height );
 
                stateMutator.SetBrush( clrBoxFill );
                stateMutator.SetPen(Colors::White);

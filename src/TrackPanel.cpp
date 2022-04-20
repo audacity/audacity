@@ -432,8 +432,11 @@ void TrackPanel::OnTimer(wxTimerEvent& )
    // Notify listeners for timer ticks
    window.GetPlaybackScroller().OnTimer();
 
-   DrawOverlays(false, *mPainter);
-   mRuler->DrawOverlays(false, *mPainter);
+   //DrawOverlays(false, *mPainter);
+   //mRuler->DrawOverlays(false, *mPainter);
+
+   Refresh();
+   mRuler->Refresh();
 
    if(IsAudioActive() && gAudioIO->GetNumCaptureChannels()) {
 
@@ -478,6 +481,8 @@ void TrackPanel::OnPaint(wxPaintEvent & /* event */)
 
    auto sw =
       FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::TrackPanel);
+
+   auto paint = mPainter->Paint();
 
    DrawTracks();
 

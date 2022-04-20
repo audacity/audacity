@@ -638,6 +638,8 @@ EffectCompressorPanel::EffectCompressorPanel(
 
 void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
+   auto paintEvent = mPainter->Paint();
+   
    int width, height;
    GetSize(&width, &height);
 

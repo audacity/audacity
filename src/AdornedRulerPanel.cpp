@@ -1555,6 +1555,8 @@ void AdornedRulerPanel::OnAudioStartStop(AudioIOEvent evt)
 
 void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
+   auto paintEvent = mPainter.Paint();
+
    const auto &viewInfo = ViewInfo::Get( *GetProject() );
    const auto &playRegion = viewInfo.playRegion;
    const auto playRegionBounds = std::pair{
@@ -2159,8 +2161,8 @@ void AdornedRulerPanel::DrawBothOverlays()
       wxASSERT( false );
    }
    else
-      pCellularPanel->DrawOverlays( false, mPainter );
-   DrawOverlays( false, mPainter );
+      pCellularPanel->Refresh();
+   Refresh();
 }
 
 void AdornedRulerPanel::UpdateButtonStates()

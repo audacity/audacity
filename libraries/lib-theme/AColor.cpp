@@ -559,7 +559,7 @@ void AColor::Arrow(Painter& painter, wxCoord x, wxCoord y, int width, bool down)
    {
       pt[0].x = x;
       pt[0].y = y + half;
-      pt[1].x = y + half;
+      pt[1].x = x + half;
       pt[1].y = y;
       pt[2].x = x + width;
       pt[2].y = y + half;
@@ -716,7 +716,7 @@ void AColor::Light(PainterStateMutator& mutator, bool selected, bool highlight)
    if (!inited)
       Init();
 
-      int index = (int)selected;
+   int index = (int)selected;
    const auto brush = BrushFromWXBrush(highlight ? AColor::uglyBrush : lightBrush[index]);
    mutator.SetBrush(brush);
    const auto pen = PenFromWXPen(highlight ? AColor::uglyPen : lightPen[index]);
@@ -748,7 +748,7 @@ void AColor::Dark(PainterStateMutator& mutator, bool selected, bool highlight)
    if (!inited)
       Init();
 
-      int index = (int)selected;
+   int index = (int)selected;
    auto& brush = highlight ? AColor::uglyBrush : darkBrush[index];
    mutator.SetBrush(BrushFromWXBrush(brush));
    auto& pen = highlight ? AColor::uglyPen : darkPen[index];

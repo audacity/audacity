@@ -207,6 +207,19 @@ private:
    friend class Painter;
 };
 
+class GRAPHICS_API PaintEventHolder final
+{
+public:
+   ~PaintEventHolder();
+
+private:
+   PaintEventHolder(Painter& painter);
+
+   Painter& mPainter;
+
+   friend class Painter;
+};
+
 class GRAPHICS_API Painter /* not final */
 {
 public:
@@ -366,9 +379,12 @@ public:
    
    virtual void Flush() = 0;
 
+   PaintEventHolder Paint();
    PainterOffscreenHolder PaintOn(PainterImage& image);
 
 protected:
+   virtual void BeginPaint() = 0;
+   virtual void EndPaint() = 0;
    virtual void DoClear(const Rect& rect, Color color) = 0;
 
    virtual void UpdateBrush(const Brush& brush) = 0;
@@ -414,7 +430,7 @@ private:
    
    struct PainterState final
    {
-      Pen Pen;
+      Pen Pen { Pen::NoPen };
       Brush Brush;
       std::shared_ptr<PainterFont> Font;
       bool Antialiasing { true };
@@ -429,4 +445,5 @@ private:
    friend class PainterClipStateMutator;
    friend class PainterPath;
    friend class PainterOffscreenHolder;
+   friend class PaintEventHolder;
 };

@@ -270,8 +270,8 @@ void FindFontHeights(
    const auto size = painter.GetTextSize(*painterFont, exampleText);
    const auto metrics = painterFont->GetFontMetrics();
 
-   height = size.height - metrics.Descent - metrics.Linegap;
-   lead = size.width;
+   height = size.height;
+   lead = metrics.Linegap;
 }
 
 void FindFontHeights(
@@ -1537,7 +1537,7 @@ void Ruler::Draw(Painter& painter, const Envelope* envelope) const
                   painter, mLeft + pos, mBottom - length,
                              mLeft + pos, mBottom);
          }
-         else {
+         else { 
             if (mFlip)
                AColor::Line(
                   painter, mLeft, mTop + pos,
@@ -1804,6 +1804,8 @@ void RulerPanel::OnErase(wxEraseEvent & WXUNUSED(evt))
 void RulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    auto& painter = ruler.GetPainter(this);
+
+   auto paintEvent = painter.Paint();
 
    ruler.Draw(painter);
 

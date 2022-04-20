@@ -350,15 +350,14 @@ void DrawMinMaxRMS(
       zoomInfo, t0 + trimLeft, t1 + trimLeft);
 
    auto left = rect.GetLeft() + leftOffset;
+   auto height = rect.GetHeight();
 
    for (auto it = range.begin(); it != range.end(); ++it)
    {
       const auto elementLeftOffset = it.GetLeftOffset();
-      const auto width = GraphicsDataCacheBase::CacheElementWidth;
+      const auto width = it->AvailableColumns - elementLeftOffset;
 
-      painter.DrawImage(
-         *it->Bitmap, left - elementLeftOffset, rect.GetTop(), width,
-         rect.GetHeight());
+      painter.DrawImage(*it->Bitmap, left, rect.GetTop(), width, height, elementLeftOffset, 0);
 
       left += width;
    }

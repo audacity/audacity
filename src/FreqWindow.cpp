@@ -884,6 +884,8 @@ void FrequencyPlotDialog::OnAxisChoice(wxCommandEvent & WXUNUSED(event))
 
 void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
 {
+   auto paintEvent = mPainter->Paint();
+   
    if (!mBitmap)
       DrawPlot();
 

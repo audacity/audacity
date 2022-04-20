@@ -23,6 +23,7 @@ namespace
 {
 wxGraphicsRenderer* GetRenderer()
 {
+   //return wxGraphicsRenderer::GetDefaultRenderer();
    return wxGraphicsRenderer::GetDirect2DRenderer();
 }
 }
@@ -30,37 +31,19 @@ wxGraphicsRenderer* GetRenderer()
 std::unique_ptr<Painter> CreatePainter(wxWindow* wnd)
 {
    return std::make_unique<WXGraphicsContextPainter>(
-      GetRenderer()->CreateContext(wnd), wnd->GetFont());
+      GetRenderer(), wnd, wnd->GetFont());
 }
 
-std::unique_ptr<Painter> CreatePainter(wxWindowDC& dc)
+std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc)
 {
    return std::make_unique<WXGraphicsContextPainter>(
-      GetRenderer()->CreateContext(dc), dc.GetFont());
-}
-
-std::unique_ptr<Painter> CreatePainter(wxMemoryDC& dc)
-{
-   return std::make_unique<WXGraphicsContextPainter>(
-      GetRenderer()->CreateContext(dc), dc.GetFont());
-}
-
-std::unique_ptr<Painter> CreatePainter(wxPrinterDC& dc)
-{
-   return std::make_unique<WXGraphicsContextPainter>(
-      GetRenderer()->CreateContext(dc), dc.GetFont());
-}
-
-std::unique_ptr<Painter> CreatePainter(wxDC& dc)
-{
-   return std::make_unique<WXGraphicsContextPainter>(
-      GetRenderer()->CreateContextFromUnknownDC(dc), dc.GetFont());
+      GetRenderer(), &dc, dc.GetFont());
 }
 
 Painter& GetMeasuringPainter()
 {
    static auto context = std::make_unique<WXGraphicsContextPainter>(
-      GetRenderer()->CreateMeasuringContext(), *wxNORMAL_FONT);
+      GetRenderer(), *wxNORMAL_FONT);
 
    return *context;
 }

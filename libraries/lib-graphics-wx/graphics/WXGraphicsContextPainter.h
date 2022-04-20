@@ -15,6 +15,9 @@
 
 #include "graphics/Painter.h"
 
+class wxWindow;
+class wxDC;
+class wxGraphicsRenderer;
 class wxGraphicsContext;
 class wxGraphicsPath;
 class wxPoint2DDouble;
@@ -25,7 +28,13 @@ GRAPHICS_WX_API RendererID WXGraphicsContextPainterRendererID();
 class GRAPHICS_WX_API WXGraphicsContextPainter final : public Painter
 {
 public:
-   explicit WXGraphicsContextPainter(wxGraphicsContext* graphicsContext, const wxFont& defaultFont);
+   WXGraphicsContextPainter(
+      wxGraphicsRenderer* renderer, wxWindow* window, const wxFont& defaultFont);
+   WXGraphicsContextPainter(
+      wxGraphicsRenderer* renderer, wxDC* dc, const wxFont& defaultFont);
+   WXGraphicsContextPainter(
+      wxGraphicsRenderer* renderer, const wxFont& defaultFont);
+
    ~WXGraphicsContextPainter();
 
    WXGraphicsContextPainter(const WXGraphicsContextPainter&) = delete;
@@ -57,6 +66,9 @@ public:
    void Flush() override;
 
 private:
+   void BeginPaint() override;
+   void EndPaint() override;
+
    void DoClear(const Rect& rect, Color color) override;
 
    void UpdateBrush(const Brush& brush) override;

@@ -24,6 +24,7 @@ PenStyle GetPenStyle(wxPenStyle style) noexcept
    switch (style)
    {
    case wxPENSTYLE_INVALID:
+   case wxPENSTYLE_TRANSPARENT:
       return PenStyle::None;
    case wxPENSTYLE_SOLID:
       return PenStyle::Solid;
@@ -45,7 +46,7 @@ wxPenStyle GetPenStyle(PenStyle style) noexcept
    switch (style)
    {
    case PenStyle::None:
-      return wxPENSTYLE_INVALID;
+      return wxPENSTYLE_TRANSPARENT;
    case PenStyle::Solid:
       return wxPENSTYLE_SOLID;
    case PenStyle::Dot:
@@ -75,14 +76,18 @@ GRAPHICS_WX_API Brush BrushFromWXBrush(const wxBrush& brush) noexcept
 
 wxPen wxPenFromPen(const Pen& pen) noexcept
 {
-   return wxPen(wxColorFromColor(pen.GetColor()), pen.GetWidth(), GetPenStyle(pen.GetStyle()));
+   return pen.GetStyle() != PenStyle::None ?
+             wxPen(
+                wxColorFromColor(pen.GetColor()), pen.GetWidth(),
+                GetPenStyle(pen.GetStyle())) :
+             wxNullPen;
 }
 
 wxBrush wxBrushFromBrush(const Brush& brush) noexcept
 {
    return brush.GetStyle() == BrushStyle::Solid ?
              wxBrush(wxColorFromColor(brush.GetColor())) :
-             wxBrush();
+             wxNullBrush;
 }
 
 GRAPHICS_WX_API std::shared_ptr<PainterFont>

@@ -748,15 +748,17 @@ void LWSlider::DrawToBitmap(Painter & painter)
    }
 
    // Now the background bitmap
-   mBitmap =
-      painter.CreateDeviceImage(PainterImageFormat::RGBA8888, mWidth, mHeight);
+   mBitmap = painter.CreateDeviceImage(
+      mHW ? PainterImageFormat::RGB888 : PainterImageFormat::RGBA8888, mWidth,
+      mHeight);
 
    // Set up the memory DC
    // We draw to it, not the paintDC.
    auto offscreenHolder = painter.PaintOn(*mBitmap);
    auto stateMutator = painter.GetStateMutator();
 
-   painter.Clear(ColorFromWXColor(mParent->GetBackgroundColour()));
+   painter.Clear(
+      mHW ? ColorFromWXColor(mParent->GetBackgroundColour()) : Colors::Transparent);
 
    // Draw the line along which the thumb moves.
    AColor::UseThemeColour(stateMutator, clrSliderMain );
@@ -1660,10 +1662,13 @@ void ASlider::OnErase(wxEraseEvent & WXUNUSED(event))
 
 void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
+   auto paintEvent = mPainter->Paint();
+   
    bool highlighted =
       GetClientRect().Contains(
          ScreenToClient(
             ::wxGetMousePosition() ) );
+   
    mLWSlider->OnPaint(*mPainter, highlighted);
 
    if ( mSliderIsFocused )

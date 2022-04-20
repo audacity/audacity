@@ -3025,6 +3025,8 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    int width, height;
    GetSize(&width, &height);
 
+   auto paintEvent = mPainter->Paint();
+
    Brush bkgndBrush(ColorFromWXColor(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
 
    auto stateMutator = mPainter->GetStateMutator();

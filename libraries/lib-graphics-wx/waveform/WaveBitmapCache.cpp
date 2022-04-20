@@ -379,7 +379,6 @@ bool WaveBitmapCache::InitializeElement(
       FrameStatistics::SectionID::WaveBitmapCache);
 
    auto imageData = mCachedImage->GetData();
-   constexpr auto stride = CacheElementWidth * 3;
 
    const auto columnsCount = mLookupHelper->AvailableColumns;
 
@@ -387,9 +386,10 @@ bool WaveBitmapCache::InitializeElement(
 
    const auto height = static_cast<uint32_t>(mPaintParamters.Height);
 
+   auto rowData = imageData;
+
    for (uint32_t row = 0; row < height; ++row)
    {
-      auto rowData = imageData + row * stride;
       auto colorFunction = mLookupHelper->ColorFunctions.data();
 
       for (size_t pixel = 0; pixel < columnsCount; ++pixel)
@@ -408,7 +408,7 @@ bool WaveBitmapCache::InitializeElement(
    element.IsComplete = mLookupHelper->IsComplete;
 
    element.Bitmap = mPainter->CreateImage(
-      PainterImageFormat::RGB888, CacheElementWidth, height, imageData);
+      PainterImageFormat::RGB888, columnsCount, height, imageData);
 
    return true;
 }

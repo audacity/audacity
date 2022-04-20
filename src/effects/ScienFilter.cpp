@@ -761,6 +761,8 @@ void EffectScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    int width, height;
    GetSize(&width, &height);
 
+   auto paintEvent = mPainter->Paint();
+
    auto stateMutator = mPainter->GetStateMutator();
 
    Brush bkgndBrush(ColorFromWXColor(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));

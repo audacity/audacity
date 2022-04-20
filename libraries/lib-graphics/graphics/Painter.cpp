@@ -499,6 +499,11 @@ void Painter::Clear(const Rect& rect, Color color)
    DoClear(rect, color);
 }
 
+PaintEventHolder Painter::Paint()
+{
+   return PaintEventHolder(*this);
+}
+
 PainterOffscreenHolder Painter::PaintOn(PainterImage& image)
 {
    return PainterOffscreenHolder(image, *this);
@@ -853,4 +858,15 @@ Rect Painter::GetImageRect(const PainterImage& image) const
 {
    return { Point {}, Size { static_cast<float>(image.GetWidth()),
                              static_cast<float>(image.GetHeight()) } };
+}
+
+PaintEventHolder::~PaintEventHolder()
+{
+   mPainter.EndPaint();
+}
+
+PaintEventHolder::PaintEventHolder(Painter& painter)
+    : mPainter(painter)
+{
+   mPainter.BeginPaint();
 }

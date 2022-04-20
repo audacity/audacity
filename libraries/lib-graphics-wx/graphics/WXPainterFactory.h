@@ -20,9 +20,6 @@ class wxPrinterDC;
 class wxDC;
 
 GRAPHICS_WX_API std::unique_ptr<Painter> CreatePainter(wxWindow* wnd);
-GRAPHICS_WX_API std::unique_ptr<Painter> CreatePainter(wxWindowDC& dc);
-GRAPHICS_WX_API std::unique_ptr<Painter> CreatePainter(wxMemoryDC& dc);
-GRAPHICS_WX_API std::unique_ptr<Painter> CreatePainter(wxPrinterDC& dc);
-GRAPHICS_WX_API std::unique_ptr<Painter> CreatePainter(wxDC& dc);
+GRAPHICS_WX_API std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc);
 
 GRAPHICS_WX_API Painter& GetMeasuringPainter();
