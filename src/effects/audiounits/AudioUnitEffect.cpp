@@ -533,6 +533,10 @@ AudioUnitEffectOptionsDialog::~AudioUnitEffectOptionsDialog()
 {
 }
 
+static const auto FullValue = XO("Full");
+static const auto GenericValue = XO("Generic");
+static const auto BasicValue = XO("Basic");
+
 void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(5);
@@ -575,10 +579,10 @@ void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
                S.TieChoice(XXO("Select &interface"),
                   mUITypeString,
                   {
-                     XO("Full"),
-                     XO("Generic"),
+                     FullValue,
+                     GenericValue,
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
-                     XO("Basic")
+                     BasicValue,
 #endif
                   });
             }
@@ -1056,7 +1060,7 @@ bool AudioUnitEffect::InitializePlugin()
       mUseLatency, true);
    // Decide whether to build plain or fancy user interfaces
    GetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey,
-      mUIType, wxT("Full"));
+      mUIType, FullValue.MSGID().GET() /* Config stores un-localized string */);
 
    // Once, persistently, for each AudioUnitEffect, the first time it is loaded:
    // Query the instance for parameters and their settings, and save that in
@@ -1709,12 +1713,9 @@ AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
    }
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
-   if (mUIType == wxT("Basic"))
-   {
+   if (mUIType == BasicValue.MSGID().GET()) {
       if (!CreatePlain(mParent))
-      {
          return nullptr;
-      }
    }
    else
 #endif
@@ -1725,10 +1726,9 @@ AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
          return nullptr;
       }
 
-      if (!pControl->Create(container, mComponent, mUnit, mUIType == wxT("Full")))
-      {
+      if (!pControl->Create(container, mComponent, mUnit,
+         mUIType == FullValue.MSGID().GET()))
          return nullptr;
-      }
 
       {
          auto innerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
