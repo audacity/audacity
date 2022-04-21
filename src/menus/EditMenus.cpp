@@ -903,7 +903,7 @@ void OnSplitNew(const CommandContext &context)
             if (dest) {
                // The copy function normally puts the clip at time 0
                // This offset lines it up with the original track's timing
-               dest->SetOffset(wxMax(newt0, offset));
+               dest->Offset(wxMax(newt0, offset));
                FinishCopy(wt, dest, tracks);
             }
          }
