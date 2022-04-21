@@ -19,8 +19,6 @@
 #include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
-class wxSlider;
-class wxTextCtrl;
 class ShuttleGui;
 
 class EffectWahwahState
@@ -110,7 +108,8 @@ public:
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
+
+   struct Validator;
 
 private:
    // EffectWahwah implementation
@@ -121,39 +120,10 @@ private:
    size_t InstanceProcess(EffectSettings &settings, EffectWahwahState & data,
       const float *const *inBlock, float *const *outBlock, size_t blockLen);
 
-   void OnFreqSlider(wxCommandEvent & evt);
-   void OnPhaseSlider(wxCommandEvent & evt);
-   void OnDepthSlider(wxCommandEvent & evt);
-   void OnResonanceSlider(wxCommandEvent & evt);
-   void OnFreqOffSlider(wxCommandEvent & evt);
-   void OnGainSlider(wxCommandEvent & evt);
-
-   void OnFreqText(wxCommandEvent & evt);
-   void OnPhaseText(wxCommandEvent & evt);
-   void OnDepthText(wxCommandEvent & evt);
-   void OnResonanceText(wxCommandEvent & evt);
-   void OnFreqOffText(wxCommandEvent & evt);
-   void OnGainText(wxCommandEvent & evt);
-
    EffectWahwahState mMaster;
    std::vector<EffectWahwahState> mSlaves;
 
-   wxTextCtrl *mFreqT;
-   wxTextCtrl *mPhaseT;
-   wxTextCtrl *mDepthT;
-   wxTextCtrl *mResT;
-   wxTextCtrl *mFreqOfsT;
-   wxTextCtrl *mOutGainT;
-
-   wxSlider *mFreqS;
-   wxSlider *mPhaseS;
-   wxSlider *mDepthS;
-   wxSlider *mResS;
-   wxSlider *mFreqOfsS;
-   wxSlider *mOutGainS;
-
    const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
 
 static constexpr EffectParameter Freq   { &EffectWahwahSettings::mFreq,    L"Freq",       EffectWahwahSettings::freqDefault,      0.1,       4.0,  10  };
 static constexpr EffectParameter Phase  { &EffectWahwahSettings::mPhase,   L"Phase",      EffectWahwahSettings::phaseDefault,     0.0,     360.0,   1  };
