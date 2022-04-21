@@ -3022,8 +3022,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
       mRecalcRequired = false;
    }
 
-   int width, height;
-   GetSize(&width, &height);
+   GetSize(&mWidth, &mHeight);
 
    auto paintEvent = mPainter->Paint();
 
@@ -3174,6 +3173,7 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
    }
 
    stateMutator.SetPen(Colors::Black);
+   
    if( mEffect->mDrawMode )
    {
       ZoomInfo zoomInfo( 0.0, mEnvRect.width-1 );
@@ -3190,8 +3190,6 @@ void EqualizationPanel::OnPaint(wxPaintEvent &  WXUNUSED(event))
          context, mEnvRect, false, 0.0,
       mEffect->mdBMin, mEffect->mdBMax, false);
    }
-
-   mPainter->Flush();
 }
 
 void EqualizationPanel::OnMouseEvent(wxMouseEvent & event)

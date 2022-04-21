@@ -194,7 +194,6 @@ FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
 :  wxDialogWrapper(parent, id, title, pos, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX),
    mProject{ &project }
-,  mPainter(CreatePainter(this))
 ,  mAnalyst(std::make_unique<SpectrumAnalyst>())
 {
    SetName();
@@ -316,6 +315,8 @@ void FrequencyPlotDialog::Populate()
       S.EndVerticalLay();
 
       mFreqPlot = safenew FreqPlot(S.GetParent(), wxID_ANY);
+      mPainter = CreatePainter(mFreqPlot);
+      
       S.Prop(1)
          .Position(wxEXPAND)
          .MinSize( { wxDefaultCoord, FREQ_WINDOW_HEIGHT } )
@@ -694,9 +695,9 @@ void FrequencyPlotDialog::DrawPlot()
             (mPlotRect.GetHeight() - sz.height) / 2, msg);
       }
  
-      mFreqPlot->Refresh();
+      mFreqPlot->Refresh(false);
 
-      Refresh();
+      Refresh(false);
 
       return;
    }
@@ -816,7 +817,7 @@ void FrequencyPlotDialog::DrawPlot()
       vRuler->ruler.DrawGrid(*mPainter, r.width, true, true, 1, 1);
    }
 
-   mFreqPlot->Refresh();
+   mFreqPlot->Refresh(false);
 }
 
 
@@ -885,11 +886,14 @@ void FrequencyPlotDialog::OnAxisChoice(wxCommandEvent & WXUNUSED(event))
 void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
 {
    auto paintEvent = mPainter->Paint();
-   
+      
    if (!mBitmap)
       DrawPlot();
 
+   mPainter->Clear(ColorFromWXColor(GetBackgroundColour()));
+
    mPainter->DrawImage( *mBitmap, 0, 0 );
+   return;
    // Fix for Bug 1226 "Plot Spectrum freezes... if insufficient samples selected"
    if (!mData || mDataLen < mWindowSize)
       return;

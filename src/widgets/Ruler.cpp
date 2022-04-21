@@ -1807,9 +1807,10 @@ void RulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
    auto paintEvent = painter.Paint();
 
-   ruler.Draw(painter);
+   //auto stateMutator = painter.GetStateMutator();
+   painter.Clear(ColorFromWXColor(GetBackgroundColour()));
 
-   painter.Flush();
+   ruler.Draw(painter);
 }
 
 void RulerPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
