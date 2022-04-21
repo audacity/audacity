@@ -17,11 +17,17 @@ Let use use EffectEcho as an example.
        Modify FetchParameters: it must now return the address of mSettings, not of the effect
     
        Update pointers-to-members in EffectParameter declarations
+
+       you can remove forward declarations like:
+         class wxCheckBox;
+         class wxSlider;
+         class wxSpinCtrl;
+
     
    In cpp file:
        Insert sufficient auto& echoSettings = mSettings; (which changes later) and echoSettings. (which won't need more change) to fix compilation
         
-       Remove call to Reset() in constructor
+       Remove call to Parameters().Reset(*this); in constructor
         
     
 2) "Define validator"

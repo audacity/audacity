@@ -37,11 +37,44 @@ public:
    double b0, b1, b2, a0, a1, a2;
 };
 
+
+struct EffectWahwahSettings
+{
+    /* Parameters:
+    mFreq - LFO frequency
+    mPhase - LFO startphase in RADIANS - useful for stereo WahWah
+    mDepth - Wah depth
+    mRes - Resonance
+    mFreqOfs - Wah frequency offset
+    mOutGain - output gain
+
+    !!!!!!!!!!!!! IMPORTANT!!!!!!!!! :
+    mDepth and mFreqOfs should be from 0(min) to 1(max) !
+    mRes should be greater than 0 !  */
+
+   static constexpr double freqDefault = 1.5;
+   static constexpr double phaseDefault = 0.0;
+   static constexpr int    depthDefault = 70;
+   static constexpr double resDefault = 2.5;
+   static constexpr int    freqOfsDefault = 30;
+   static constexpr double outGainDefault = -6.0;
+
+
+   double mFreq   { freqDefault };
+   double mPhase  { phaseDefault };
+   int    mDepth  { depthDefault };
+   double mRes    { resDefault };
+   int    mFreqOfs{ freqOfsDefault };
+   double mOutGain{ outGainDefault };
+};
+
+
 class EffectWahwah final : public StatefulPerTrackEffect
 {
 public:
-   static inline EffectWahwah *
-   FetchParameters(EffectWahwah &e, EffectSettings &) { return &e; }
+
+   static inline EffectWahwahSettings *
+   FetchParameters(EffectWahwah &e, EffectSettings &) { return &e.mSettings; }
    static const ComponentInterfaceSymbol Symbol;
 
    EffectWahwah();
@@ -82,6 +115,8 @@ public:
 private:
    // EffectWahwah implementation
 
+   EffectWahwahSettings mSettings;
+
    void InstanceInit(EffectWahwahState & data, float sampleRate);
    size_t InstanceProcess(EffectSettings &settings, EffectWahwahState & data,
       const float *const *inBlock, float *const *outBlock, size_t blockLen);
@@ -103,25 +138,6 @@ private:
    EffectWahwahState mMaster;
    std::vector<EffectWahwahState> mSlaves;
 
-   /* Parameters:
-   mFreq - LFO frequency
-   mPhase - LFO startphase in RADIANS - useful for stereo WahWah
-   mDepth - Wah depth
-   mRes - Resonance
-   mFreqOfs - Wah frequency offset
-   mOutGain - output gain
-
-   !!!!!!!!!!!!! IMPORTANT!!!!!!!!! :
-   mDepth and mFreqOfs should be from 0(min) to 1(max) !
-   mRes should be greater than 0 !  */
-
-   double mFreq;
-   double mPhase;
-   int mDepth;
-   double mRes;
-   int mFreqOfs;
-   double mOutGain;
-
    wxTextCtrl *mFreqT;
    wxTextCtrl *mPhaseT;
    wxTextCtrl *mDepthT;
@@ -139,18 +155,12 @@ private:
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter Freq{ &EffectWahwah::mFreq,
-   L"Freq",       1.5,     0.1,     4.0,     10  };
-static constexpr EffectParameter Phase{ &EffectWahwah::mPhase,
-   L"Phase",      0.0,     0.0,     360.0,   1   };
-static constexpr EffectParameter Depth{ &EffectWahwah::mDepth,
-   L"Depth",      70,      0,       100,     1   }; // scaled to 0-1 before processing
-static constexpr EffectParameter Res{ &EffectWahwah::mRes,
-   L"Resonance",  2.5,     0.1,     10.0,    10  };
-static constexpr EffectParameter FreqOfs{ &EffectWahwah::mFreqOfs,
-   L"Offset",     30,      0,       100,     1   }; // scaled to 0-1 before processing
-static constexpr EffectParameter OutGain{ &EffectWahwah::mOutGain,
-   L"Gain",      -6.0,    -30.0,    30.0,    1   };
+static constexpr EffectParameter Freq   { &EffectWahwahSettings::mFreq,    L"Freq",       EffectWahwahSettings::freqDefault,      0.1,       4.0,  10  };
+static constexpr EffectParameter Phase  { &EffectWahwahSettings::mPhase,   L"Phase",      EffectWahwahSettings::phaseDefault,     0.0,     360.0,   1  };
+static constexpr EffectParameter Depth  { &EffectWahwahSettings::mDepth,   L"Depth",      EffectWahwahSettings::depthDefault,     0,       100,     1  }; // scaled to 0-1 before processing
+static constexpr EffectParameter Res    { &EffectWahwahSettings::mRes,     L"Resonance",  EffectWahwahSettings::resDefault,       0.1,      10.0,  10  };
+static constexpr EffectParameter FreqOfs{ &EffectWahwahSettings::mFreqOfs, L"Offset",     EffectWahwahSettings::freqOfsDefault,   0,       100,     1  }; // scaled to 0-1 before processing
+static constexpr EffectParameter OutGain{ &EffectWahwahSettings::mOutGain, L"Gain",       EffectWahwahSettings::outGainDefault, -30.0,      30.0,   1  };
 };
 
 #endif
