@@ -751,7 +751,8 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       }
       else if (t1 > clip->GetPlayStartTime() && t0 < clip->GetPlayEndTime())
       {
-         // Clip is affected by command
+         // Clip is affected by command, but the entire clip is not contained
+         // in the selection
          //wxPrintf("copy: clip %i is affected by command\n", (int)clip);
 
          const double clip_t0 = std::max(t0, clip->GetPlayStartTime());

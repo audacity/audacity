@@ -896,9 +896,13 @@ void OnSplitNew(const CommandContext &context)
                selectedRegion.t0()));
             double newt1 = wt->LongSamplesToTime(wt->TimeToLongSamples(
                selectedRegion.t1()));
+            // Fix issue 2846 by calling copy with forClipboard = false.
+            // This avoids creating the blank placeholder clips
             dest = wt->Copy(newt0, newt1, false);
             wt->SplitDelete(newt0, newt1);
             if (dest) {
+               // The copy function normally puts the clip at time 0
+               // This offset lines it up with the original track's timing
                dest->SetOffset(wxMax(newt0, offset));
                FinishCopy(wt, dest, tracks);
             }
