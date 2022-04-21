@@ -126,9 +126,24 @@ Let use use EffectEcho as an example.
            size_t ProcessBlock(EffectSettings& settings,
               const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
 
-           bool ProcessFinalize(void) override;
+           bool ProcessFinalize(void) override; // not every effect needs this
+           
+           /* you will need these for realtime-capable effects
+           
+           bool RealtimeInitialize(EffectSettings& settings) override;
 
-           << MEMBERS WHICH REPRESENT STATE which you commented out earlier >>
+           bool RealtimeAddProcessor(EffectSettings& settings,
+              unsigned numChannels, float sampleRate) override;
+
+           bool RealtimeFinalize(EffectSettings& settings) noexcept override;
+
+           size_t RealtimeProcess(int group, EffectSettings& settings,
+              const float* const* inbuf, float* const* outbuf, size_t numSamples)
+              override;
+           
+           */
+
+           // << MEMBERS WHICH REPRESENT STATE which you commented out earlier >>
         };
 
 
@@ -143,7 +158,11 @@ Let use use EffectEcho as an example.
     
     - prepending ::Instance where needed
 
-    - adding this at the beginning (may not be needed in all of them)
+    - replacing the lines you added in step 1:
+    
+        auto& echoSettings = mSettings;
+            
+      with this 
     
         // temporary - in the final step this will be replaced by
         // auto& echoSettings = GetSettings(settings);

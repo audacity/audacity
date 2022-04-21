@@ -91,18 +91,6 @@ public:
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
-   bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-   bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   size_t RealtimeProcess(int group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
 
    // Effect implementation
 
@@ -110,18 +98,13 @@ public:
       ShuttleGui & S, EffectSettingsAccess &access) override;
 
    struct Validator;
+   struct Instance;
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings&) const override;
 
 private:
    // EffectWahwah implementation
 
    EffectWahwahSettings mSettings;
-
-   void InstanceInit(EffectWahwahState & data, float sampleRate);
-   size_t InstanceProcess(EffectSettings &settings, EffectWahwahState & data,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen);
-
-   EffectWahwahState mMaster;
-   std::vector<EffectWahwahState> mSlaves;
 
    const EffectParameterMethods& Parameters() const override;
 

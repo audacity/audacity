@@ -130,6 +130,52 @@ bool EffectWahwah::Validator::ValidateUI()
 }
 
 
+struct EffectWahwah::Instance
+   : public PerTrackEffect::Instance
+   , public EffectInstanceWithBlockSize
+   , public EffectInstanceWithSampleRate
+
+{
+   explicit Instance(const PerTrackEffect& effect)
+      : PerTrackEffect::Instance{ effect }
+   {}
+
+   bool ProcessInitialize(EffectSettings& settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
+
+   size_t ProcessBlock(EffectSettings& settings,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
+
+   //bool ProcessFinalize(void) override;
+
+   bool RealtimeInitialize(EffectSettings& settings) override;
+
+   bool RealtimeAddProcessor(EffectSettings& settings,
+      unsigned numChannels, float sampleRate) override;
+
+   bool RealtimeFinalize(EffectSettings& settings) noexcept override;
+
+   size_t RealtimeProcess(int group, EffectSettings& settings,
+      const float* const* inbuf, float* const* outbuf, size_t numSamples)
+      override;
+
+
+   void InstanceInit(EffectWahwahState& data, float sampleRate);
+
+   size_t InstanceProcess(EffectSettings& settings, EffectWahwahState& data,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen);
+
+   EffectWahwahState mMaster;
+   std::vector<EffectWahwahState> mSlaves;
+};
+
+
+std::shared_ptr<EffectInstance>
+EffectWahwah::MakeInstance(EffectSettings&) const
+{
+   return std::make_shared<Instance>(*this);
+}
+
 EffectWahwah::EffectWahwah()
 {
    SetLinearEffectFlag(true);
@@ -178,7 +224,7 @@ unsigned EffectWahwah::GetAudioOutCount() const
    return 1;
 }
 
-bool EffectWahwah::ProcessInitialize(
+bool EffectWahwah::Instance::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    InstanceInit(mMaster, mSampleRate);
@@ -191,13 +237,13 @@ bool EffectWahwah::ProcessInitialize(
    return true;
 }
 
-size_t EffectWahwah::ProcessBlock(EffectSettings &settings,
+size_t EffectWahwah::Instance::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectWahwah::RealtimeInitialize(EffectSettings &)
+bool EffectWahwah::Instance::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -206,7 +252,7 @@ bool EffectWahwah::RealtimeInitialize(EffectSettings &)
    return true;
 }
 
-bool EffectWahwah::RealtimeAddProcessor(
+bool EffectWahwah::Instance::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
    EffectWahwahState slave;
@@ -218,14 +264,14 @@ bool EffectWahwah::RealtimeAddProcessor(
    return true;
 }
 
-bool EffectWahwah::RealtimeFinalize(EffectSettings &) noexcept
+bool EffectWahwah::Instance::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectWahwah::RealtimeProcess(int group, EffectSettings &settings,
+size_t EffectWahwah::Instance::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
@@ -360,9 +406,12 @@ bool EffectWahwah::Validator::UpdateUI()
 
 // EffectWahwah implementation
 
-void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate)
+void EffectWahwah::Instance::InstanceInit(EffectWahwahState & data, float sampleRate)
 {
-   auto& ms = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& ms = static_cast<const EffectWahwah&>(mProcessor).mSettings;
 
    data.samplerate = sampleRate;
    data.lfoskip = ms.mFreq * 2 * M_PI / sampleRate;
@@ -384,11 +433,14 @@ void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate)
    data.outgain = DB_TO_LINEAR(ms.mOutGain);
 }
 
-size_t EffectWahwah::InstanceProcess(EffectSettings &settings,
+size_t EffectWahwah::Instance::InstanceProcess(EffectSettings& settings,
    EffectWahwahState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   auto& ms = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& ms = static_cast<const EffectWahwah&>(mProcessor).mSettings;
 
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
