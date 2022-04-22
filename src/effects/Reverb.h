@@ -15,10 +15,6 @@
 #include "StatefulPerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
-class wxCheckBox;
-class wxSlider;
-class wxSpinCtrl;
-class ShuttleGui;
 
 struct Reverb_priv_t;
 
@@ -86,30 +82,12 @@ public:
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
+
+   struct Validator;
 
 private:
    // EffectReverb implementation
 
-   
-
-
-#define SpinSliderHandlers(n) \
-   void On ## n ## Slider(wxCommandEvent & evt); \
-   void On ## n ## Text(wxCommandEvent & evt);
-
-   SpinSliderHandlers(RoomSize)
-   SpinSliderHandlers(PreDelay)
-   SpinSliderHandlers(Reverberance)
-   SpinSliderHandlers(HfDamping)
-   SpinSliderHandlers(ToneLow)
-   SpinSliderHandlers(ToneHigh)
-   SpinSliderHandlers(WetGain)
-   SpinSliderHandlers(DryGain)
-   SpinSliderHandlers(StereoWidth)
-
-#undef SpinSliderHandlers
 
 private:
    unsigned mNumChans {};
@@ -117,28 +95,7 @@ private:
 
    EffectReverbSettings mSettings;
 
-   bool mProcessingEvent;
-
-#define SpinSlider(n) \
-   wxSpinCtrl  *m ## n ## T; \
-   wxSlider    *m ## n ## S;
-
-   SpinSlider(RoomSize)
-   SpinSlider(PreDelay)
-   SpinSlider(Reverberance)
-   SpinSlider(HfDamping)
-   SpinSlider(ToneLow)
-   SpinSlider(ToneHigh)
-   SpinSlider(WetGain)
-   SpinSlider(DryGain)
-   SpinSlider(StereoWidth)
-
-#undef SpinSlider
-
-   wxCheckBox  *mWetOnlyC;
-
    const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
 
 static constexpr EffectParameter RoomSize{ &EffectReverbSettings::mRoomSize,  L"RoomSize",
                                             EffectReverbSettings::roomSizeDefault,      0,       100,  1  };

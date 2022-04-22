@@ -31,20 +31,6 @@
 #include "Reverb_libSoX.h"
 
 
-enum 
-{
-   ID_RoomSize = 10000,
-   ID_PreDelay,
-   ID_Reverberance,
-   ID_HfDamping,
-   ID_ToneLow,
-   ID_ToneHigh,
-   ID_WetGain,
-   ID_DryGain,
-   ID_StereoWidth,
-   ID_WetOnly
-};
-
 const EffectParameterMethods& EffectReverb::Parameters() const
 {
    static CapturedParameters<EffectReverb,
@@ -90,30 +76,99 @@ const ComponentInterfaceSymbol EffectReverb::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectReverb > reg; }
 
-BEGIN_EVENT_TABLE(EffectReverb, wxEvtHandler)
 
-#define SpinSliderEvent(n) \
-   EVT_SLIDER(ID_ ## n, EffectReverb::On ## n ## Slider) \
-   EVT_TEXT(ID_ ## n, EffectReverb::On ## n ## Text)
+struct EffectReverb::Validator
+   : EffectUIValidator
+{
+   Validator(EffectUIClientInterface& effect,
+      EffectSettingsAccess& access, EffectReverbSettings& settings)
+      : EffectUIValidator{ effect, access }
+      , mSettings{ settings }
+   {}
+   virtual ~Validator() = default;
 
-   SpinSliderEvent(RoomSize)
-   SpinSliderEvent(PreDelay)
-   SpinSliderEvent(Reverberance)
-   SpinSliderEvent(HfDamping)
-   SpinSliderEvent(ToneLow)
-   SpinSliderEvent(ToneHigh)
-   SpinSliderEvent(WetGain)
-   SpinSliderEvent(DryGain)
-   SpinSliderEvent(StereoWidth)
+   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
 
-#undef SpinSliderEvent 
+   bool ValidateUI() override;
+   bool UpdateUI() override;
 
-END_EVENT_TABLE()
+   void PopulateOrExchange(ShuttleGui& S);
+
+   EffectReverbSettings& mSettings;
+
+   bool mProcessingEvent = false;
+
+#define SpinSlider(n) \
+   wxSpinCtrl  *m ## n ## T; \
+   wxSlider    *m ## n ## S;
+
+   SpinSlider(RoomSize)
+   SpinSlider(PreDelay)
+   SpinSlider(Reverberance)
+   SpinSlider(HfDamping)
+   SpinSlider(ToneLow)
+   SpinSlider(ToneHigh)
+   SpinSlider(WetGain)
+   SpinSlider(DryGain)
+   SpinSlider(StereoWidth)
+
+#undef SpinSlider
+
+   wxCheckBox* mWetOnlyC;
+
+
+#define SpinSliderHandlers(n) \
+   void On ## n ## Slider(wxCommandEvent & evt); \
+   void On ## n ## Text(wxCommandEvent & evt);
+
+   SpinSliderHandlers(RoomSize)
+   SpinSliderHandlers(PreDelay)
+   SpinSliderHandlers(Reverberance)
+   SpinSliderHandlers(HfDamping)
+   SpinSliderHandlers(ToneLow)
+   SpinSliderHandlers(ToneHigh)
+   SpinSliderHandlers(WetGain)
+   SpinSliderHandlers(DryGain)
+   SpinSliderHandlers(StereoWidth)
+
+#undef SpinSliderHandlers
+
+};
+
+
+bool EffectReverb::Validator::ValidateUI()
+{
+   auto& rs = mSettings;
+
+   rs.mRoomSize     = mRoomSizeS->GetValue();
+   rs.mPreDelay     = mPreDelayS->GetValue();
+   rs.mReverberance = mReverberanceS->GetValue();
+   rs.mHfDamping    = mHfDampingS->GetValue();
+   rs.mToneLow      = mToneLowS->GetValue();
+   rs.mToneHigh     = mToneHighS->GetValue();
+   rs.mWetGain      = mWetGainS->GetValue();
+   rs.mDryGain      = mDryGainS->GetValue();
+   rs.mStereoWidth  = mStereoWidthS->GetValue();
+   rs.mWetOnly      = mWetOnlyC->GetValue();
+
+   mAccess.ModifySettings
+   (
+      [this](EffectSettings& settings)
+      {
+         // pass back the modified settings to the MessageBuffer
+
+         // TODO uncomment at last step
+         //EffectEcho::GetSettings(settings) = mSettings;
+      }
+   );
+
+   return true;
+}
+
+
 
 EffectReverb::EffectReverb()
 {
-   mProcessingEvent = false;
-
    SetLinearEffectFlag(true);
 }
 
@@ -297,9 +352,22 @@ bool EffectReverb::DoLoadFactoryPreset(int id)
 }
 
 // Effect implementation
-
 std::unique_ptr<EffectUIValidator> EffectReverb::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
+   ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access)
+{
+   // ENABLE AT LAST STEP
+   // auto& settings = access.Get();
+   // auto& myEffSettings = GetSettings(settings);
+
+   // DISABLE AT LAST STEP
+   auto& myEffSettings = mSettings;
+   auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+   result->PopulateOrExchange(S);
+   return result;
+}
+
+
+void EffectReverb::Validator::PopulateOrExchange(ShuttleGui & S)
 {
    S.AddSpace(0, 5);
 
@@ -308,12 +376,11 @@ std::unique_ptr<EffectUIValidator> EffectReverb::PopulateOrExchange(
       S.SetStretchyCol(2);
 
 #define SpinSlider(n, p) \
-      m ## n ## T = S.Id(ID_ ## n). \
-         AddSpinCtrl( p, n.def, n.max, n.min); \
-      S; \
-      m ## n ## S = S.Id(ID_ ## n) \
-         .Style(wxSL_HORIZONTAL) \
-         .AddSlider( {}, n.def, n.max, n.min);
+      m ## n ## T = S.AddSpinCtrl( p, n.def, n.max, n.min); \
+      BindTo(*m ## n ## T, wxEVT_SPINCTRL, &Validator::On ## n ## Text);\
+      \
+      m ## n ## S = S.Style(wxSL_HORIZONTAL).AddSlider( {}, n.def, n.max, n.min); \
+      BindTo(*m ## n ## S, wxEVT_SLIDER, &Validator::On ## n ## Slider);
 
       SpinSlider(RoomSize,       XXO("&Room Size (%):"))
       SpinSlider(PreDelay,       XXO("&Pre-delay (ms):"))
@@ -333,17 +400,20 @@ std::unique_ptr<EffectUIValidator> EffectReverb::PopulateOrExchange(
    S.StartHorizontalLay(wxCENTER, false);
    {
       mWetOnlyC =
-      S
-         .Id(ID_WetOnly).
-            AddCheckBox(XXO("Wet O&nly"), WetOnly.def);
+      S.AddCheckBox(XXO("Wet O&nly"), WetOnly.def);      
    }
    S.EndHorizontalLay();
 
-   return nullptr;
 }
 
-bool EffectReverb::TransferDataToWindow(const EffectSettings &)
+bool EffectReverb::Validator::UpdateUI()
 {
+   // get the settings from the MessageBuffer and write them to our local copy
+   //const auto& rs = mAccess.Get();
+
+   // TODO uncomment at last step
+   //mSettings = GetSettings(settings);
+
    auto& rs = mSettings;
 
 #define SetSpinSlider(n) \
@@ -367,38 +437,23 @@ bool EffectReverb::TransferDataToWindow(const EffectSettings &)
    return true;
 }
 
-bool EffectReverb::TransferDataFromWindow(EffectSettings &)
-{
-   auto& rs = mSettings;
-
-   rs.mRoomSize = mRoomSizeS->GetValue();
-   rs.mPreDelay = mPreDelayS->GetValue();
-   rs.mReverberance = mReverberanceS->GetValue();
-   rs.mHfDamping = mHfDampingS->GetValue();
-   rs.mToneLow = mToneLowS->GetValue();
-   rs.mToneHigh = mToneHighS->GetValue();
-   rs.mWetGain = mWetGainS->GetValue();
-   rs.mDryGain = mDryGainS->GetValue();
-   rs.mStereoWidth = mStereoWidthS->GetValue();
-   rs.mWetOnly = mWetOnlyC->GetValue();
-
-   return true;
-}
 
 #define SpinSliderHandlers(n) \
-   void EffectReverb::On ## n ## Slider(wxCommandEvent & evt) \
+   void EffectReverb::Validator::On ## n ## Slider(wxCommandEvent & evt) \
    { \
       if (mProcessingEvent) return; \
       mProcessingEvent = true; \
       m ## n ## T->SetValue(wxString::Format(wxT("%d"), evt.GetInt())); \
       mProcessingEvent = false; \
+      ValidateUI(); \
    } \
-   void EffectReverb::On ## n ## Text(wxCommandEvent & evt) \
+   void EffectReverb::Validator::On ## n ## Text(wxCommandEvent & evt) \
    { \
       if (mProcessingEvent) return; \
       mProcessingEvent = true; \
       m ## n ## S->SetValue(std::clamp<long>(evt.GetInt(), n.min, n.max)); \
       mProcessingEvent = false; \
+      ValidateUI(); \
    }
 
 SpinSliderHandlers(RoomSize)
