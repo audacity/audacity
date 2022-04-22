@@ -22,6 +22,7 @@
 
 #include "graphics/Painter.h"
 #include "graphics/WXPainterUtils.h"
+#include "graphics/WXColor.h"
 
 #include "CodeConversions.h"
 
@@ -365,6 +366,10 @@ wxRect TrackArt::DrawClipAffordance(
          const auto hAlign = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft ?
                           PainterHorizontalAlignment::Right :
                           PainterHorizontalAlignment::Left;
+
+         stateMutator.SetBrush(
+            ColorFromWXColor(theTheme.Colour(clrClipNameText)));
+
          painter.DrawText(
             titleRect.x, titleRect.y, titleRect.width, titleRect.height,
             audacity::ToUTF8(truncatedTitle), hAlign, PainterVerticalAlignment::Center);
