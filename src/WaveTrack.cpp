@@ -771,13 +771,12 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          //  |----|                            |-|
          //  OFFSET = clip_t0 - t0            OFFSET = -t0
          if (t0 < clip->GetPlayStartTime() && t1 < clip->GetPlayEndTime()) {
+            wxASSERT(clip_t0 - t0 >= 0); //debugging
             newClip->SetPlayStartTime(clip_t0-t0); //not sure why Offset doesn't work for this; may want to modify
          }
          else {
-            newClip->SetPlayStartTime(-t0);
-         }
-         if (newClip->GetPlayStartTime() < 0)
             newClip->SetPlayStartTime(0);
+         }
 
          newTrack->mClips.push_back(std::move(newClip)); // transfer ownership
       }
