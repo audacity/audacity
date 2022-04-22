@@ -30,6 +30,7 @@
 
 #include "Reverb_libSoX.h"
 
+
 enum 
 {
    ID_RoomSize = 10000,
@@ -56,7 +57,7 @@ const EffectParameterMethods& EffectReverb::Parameters() const
 static const struct
 {
    const TranslatableString name;
-   EffectReverb::Params params;
+   EffectReverbSettings preset;
 }
 FactoryPresets[] =
 {
@@ -111,7 +112,6 @@ END_EVENT_TABLE()
 
 EffectReverb::EffectReverb()
 {
-   Parameters().Reset(*this);
    mProcessingEvent = false;
 
    SetLinearEffectFlag(true);
@@ -160,6 +160,8 @@ static size_t BLOCK = 16384;
 bool EffectReverb::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames chanMap)
 {
+   auto& rs = mSettings;
+
    bool isStereo = false;
    mNumChans = 1;
    if (chanMap && chanMap[0] != ChannelNameEOL && chanMap[1] == ChannelNameFrontRight)
@@ -174,14 +176,14 @@ bool EffectReverb::ProcessInitialize(
    {
       reverb_create(&mP[i].reverb,
                     mSampleRate,
-                    mParams.mWetGain,
-                    mParams.mRoomSize,
-                    mParams.mReverberance,
-                    mParams.mHfDamping,
-                    mParams.mPreDelay,
-                    mParams.mStereoWidth * (isStereo ? 1 : 0),
-                    mParams.mToneLow,
-                    mParams.mToneHigh,
+                    rs.mWetGain,
+                    rs.mRoomSize,
+                    rs.mReverberance,
+                    rs.mHfDamping,
+                    rs.mPreDelay,
+                    rs.mStereoWidth * (isStereo ? 1 : 0),
+                    rs.mToneLow,
+                    rs.mToneHigh,
                     BLOCK,
                     mP[i].wet);
    }
@@ -204,6 +206,8 @@ bool EffectReverb::ProcessFinalize()
 size_t EffectReverb::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
+   auto& rs = mSettings;
+
    const float *ichans[2] = {NULL, NULL};
    float *ochans[2] = {NULL, NULL};
 
@@ -213,7 +217,7 @@ size_t EffectReverb::ProcessBlock(EffectSettings &,
       ochans[c] = outBlock[c];
    }
    
-   float const dryMult = mParams.mWetOnly ? 0 : dB_to_linear(mParams.mDryGain);
+   float const dryMult = rs.mWetOnly ? 0 : dB_to_linear(rs.mDryGain);
 
    auto remaining = blockLen;
 
@@ -288,7 +292,7 @@ bool EffectReverb::DoLoadFactoryPreset(int id)
       return false;
    }
 
-   mParams = FactoryPresets[id].params;
+   mSettings = FactoryPresets[id].preset;
    return true;
 }
 
@@ -340,9 +344,11 @@ std::unique_ptr<EffectUIValidator> EffectReverb::PopulateOrExchange(
 
 bool EffectReverb::TransferDataToWindow(const EffectSettings &)
 {
+   auto& rs = mSettings;
+
 #define SetSpinSlider(n) \
-   m ## n ## S->SetValue((int) mParams.m ## n); \
-   m ## n ## T->SetValue(wxString::Format(wxT("%d"), (int) mParams.m ## n));
+   m ## n ## S->SetValue((int) rs.m ## n); \
+   m ## n ## T->SetValue(wxString::Format(wxT("%d"), (int) rs.m ## n));
 
    SetSpinSlider(RoomSize);
    SetSpinSlider(PreDelay);
@@ -356,23 +362,25 @@ bool EffectReverb::TransferDataToWindow(const EffectSettings &)
 
 #undef SetSpinSlider
 
-   mWetOnlyC->SetValue((int) mParams.mWetOnly);
+   mWetOnlyC->SetValue((int) rs.mWetOnly);
 
    return true;
 }
 
 bool EffectReverb::TransferDataFromWindow(EffectSettings &)
 {
-   mParams.mRoomSize = mRoomSizeS->GetValue();
-   mParams.mPreDelay = mPreDelayS->GetValue();
-   mParams.mReverberance = mReverberanceS->GetValue();
-   mParams.mHfDamping = mHfDampingS->GetValue();
-   mParams.mToneLow = mToneLowS->GetValue();
-   mParams.mToneHigh = mToneHighS->GetValue();
-   mParams.mWetGain = mWetGainS->GetValue();
-   mParams.mDryGain = mDryGainS->GetValue();
-   mParams.mStereoWidth = mStereoWidthS->GetValue();
-   mParams.mWetOnly = mWetOnlyC->GetValue();
+   auto& rs = mSettings;
+
+   rs.mRoomSize = mRoomSizeS->GetValue();
+   rs.mPreDelay = mPreDelayS->GetValue();
+   rs.mReverberance = mReverberanceS->GetValue();
+   rs.mHfDamping = mHfDampingS->GetValue();
+   rs.mToneLow = mToneLowS->GetValue();
+   rs.mToneHigh = mToneHighS->GetValue();
+   rs.mWetGain = mWetGainS->GetValue();
+   rs.mDryGain = mDryGainS->GetValue();
+   rs.mStereoWidth = mStereoWidthS->GetValue();
+   rs.mWetOnly = mWetOnlyC->GetValue();
 
    return true;
 }
@@ -404,3 +412,4 @@ SpinSliderHandlers(DryGain)
 SpinSliderHandlers(StereoWidth)
 
 #undef SpinSliderHandlers
+
