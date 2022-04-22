@@ -67,12 +67,10 @@ struct EffectWahwahSettings
 };
 
 
-class EffectWahwah final : public StatefulPerTrackEffect
+class EffectWahwah final : public EffectWithSettings<EffectWahwahSettings, PerTrackEffect>
 {
 public:
-
-   static inline EffectWahwahSettings *
-   FetchParameters(EffectWahwah &e, EffectSettings &) { return &e.mSettings; }
+      
    static const ComponentInterfaceSymbol Symbol;
 
    EffectWahwah();
@@ -103,8 +101,6 @@ public:
 
 private:
    // EffectWahwah implementation
-
-   EffectWahwahSettings mSettings;
 
    const EffectParameterMethods& Parameters() const override;
 

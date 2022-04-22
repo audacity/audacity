@@ -54,7 +54,7 @@ struct EffectWahwah::Validator
    : EffectUIValidator
 {
    Validator(EffectUIClientInterface& effect,
-      EffectSettingsAccess& access, EffectWahwahSettings& settings)
+      EffectSettingsAccess& access, const EffectWahwahSettings& settings)
       : EffectUIValidator{ effect, access }
       , mSettings{ settings }
    {}
@@ -96,8 +96,7 @@ struct EffectWahwah::Validator
    wxSlider* mOutGainS;
 
 
-
-   EffectWahwahSettings& mSettings;
+   EffectWahwahSettings mSettings;
 
    void EnableApplyFromValidate()
    {
@@ -118,12 +117,10 @@ bool EffectWahwah::Validator::ValidateUI()
    mAccess.ModifySettings
    (
       [this](EffectSettings& settings)
-   {
-      // pass back the modified settings to the MessageBuffer
-
-      // TODO uncomment at last step
-      //EffectEcho::GetSettings(settings) = mSettings;
-   }
+      {
+         // pass back the modified settings to the MessageBuffer
+         GetSettings(settings) = mSettings;
+      }
    );
 
    return true;
@@ -160,7 +157,7 @@ struct EffectWahwah::Instance
       override;
 
 
-   void InstanceInit(EffectWahwahState& data, float sampleRate);
+   void InstanceInit(EffectSettings& settings, EffectWahwahState& data, float sampleRate);
 
    size_t InstanceProcess(EffectSettings& settings, EffectWahwahState& data,
       const float* const* inBlock, float* const* outBlock, size_t blockLen);
@@ -225,9 +222,9 @@ unsigned EffectWahwah::GetAudioOutCount() const
 }
 
 bool EffectWahwah::Instance::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames chanMap)
+   EffectSettings & settings, sampleCount, ChannelNames chanMap)
 {
-   InstanceInit(mMaster, mSampleRate);
+   InstanceInit(settings, mMaster, mSampleRate);
 
    if (chanMap[0] == ChannelNameFrontRight)
    {
@@ -257,7 +254,7 @@ bool EffectWahwah::Instance::RealtimeAddProcessor(
 {
    EffectWahwahState slave;
 
-   InstanceInit(slave, sampleRate);
+   InstanceInit(settings, slave, sampleRate);
 
    mSlaves.push_back(slave);
 
@@ -282,10 +279,8 @@ size_t EffectWahwah::Instance::RealtimeProcess(int group, EffectSettings &settin
 std::unique_ptr<EffectUIValidator>
 EffectWahwah::PopulateOrExchange(ShuttleGui& S, EffectSettingsAccess& access)
 {
-   // TODO
-//   auto& settings = access.Get();
-//   auto& myEffSettings = GetSettings(settings);
-   auto &myEffSettings = mSettings;
+   auto& settings = access.Get();
+   auto& myEffSettings = GetSettings(settings);
    auto result = std::make_unique<Validator>(*this, access, myEffSettings);
    result->PopulateOrExchange(S);
    return result;
@@ -389,8 +384,7 @@ bool EffectWahwah::Validator::UpdateUI()
    // get the settings from the MessageBuffer and write them to our local copy
    const auto& settings = mAccess.Get();
 
-   // TODO uncomment at last step
-   //mSettings = GetSettings(settings);
+   mSettings = GetSettings(settings);
 
    auto& ms = mSettings;
 
@@ -406,12 +400,9 @@ bool EffectWahwah::Validator::UpdateUI()
 
 // EffectWahwah implementation
 
-void EffectWahwah::Instance::InstanceInit(EffectWahwahState & data, float sampleRate)
+void EffectWahwah::Instance::InstanceInit(EffectSettings& settings, EffectWahwahState & data, float sampleRate)
 {
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& ms = static_cast<const EffectWahwah&>(mProcessor).mSettings;
+   auto& ms = GetSettings(settings);
 
    data.samplerate = sampleRate;
    data.lfoskip = ms.mFreq * 2 * M_PI / sampleRate;
@@ -437,11 +428,8 @@ size_t EffectWahwah::Instance::InstanceProcess(EffectSettings& settings,
    EffectWahwahState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& ms = static_cast<const EffectWahwah&>(mProcessor).mSettings;
-
+   auto& ms = GetSettings(settings);
+   
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
    double frequency, omega, sn, cs, alpha;
