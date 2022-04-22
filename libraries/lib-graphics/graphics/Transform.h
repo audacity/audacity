@@ -216,6 +216,22 @@ public:
       return mScale;
    }
 
+   template <typename DataType>
+   friend bool operator==(
+      const TransformType<DataType> lhs,
+      const TransformType<DataType> rhs) noexcept
+   {
+      return lhs.mTranslation == rhs.mTranslation && lhs.mScale == rhs.mScale;
+   }
+
+   template <typename DataType>
+   friend bool operator!=(
+      const TransformType<DataType> lhs,
+      const TransformType<DataType> rhs) noexcept
+   {
+      return !(lhs == rhs);
+   }
+
 private:
    TransformType(PointType<DataType> tr, PointType<DataType> sc)
        : mTranslation(tr)
@@ -225,5 +241,6 @@ private:
    PointType<DataType> mTranslation { 0, 0 };
    PointType<DataType> mScale { 1, 1 };
 };
+
 
 using Transform = TransformType<float>;

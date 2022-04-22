@@ -23,6 +23,11 @@
 
 class Painter;
 
+constexpr Rect NoClippingRect = {
+   Point {}, Size { std::numeric_limits<float>::infinity(),
+                    std::numeric_limits<float>::infinity() }
+};
+
 enum class PainterHorizontalAlignment
 {
    Left,
@@ -392,7 +397,7 @@ protected:
    virtual void UpdateTransform(const Transform& transform) = 0;
    virtual void UpdateClipRect(const Rect& rect) = 0;
    virtual bool UpdateAntiAliasingState(bool enabled) = 0;
-   virtual void UpdateFont(const PainterFont& font) = 0;
+   virtual void UpdateFont(const std::shared_ptr<PainterFont>& font) = 0;
 
    virtual size_t BeginPath() = 0;
 

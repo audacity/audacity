@@ -179,32 +179,37 @@ public:
 
    void Push(wxGraphicsContextPainterImage& image)
    {
-      mStack.emplace_back(std::make_unique<Surface>(
+      mPaintTargetsStack.emplace_back(std::make_unique<Surface>(
          *mRenderer, image.Width, image.Height, image.HasAlpha));
    }
 
    void Pop(wxGraphicsContextPainterImage& image)
    {     
-      auto& currentItem = mStack.back();
+      auto& currentItem = mPaintTargetsStack.back();
 
       currentItem->GC = {};
       image.Bitmap = mRenderer->CreateBitmapFromImage(currentItem->Image);
 
-      //currentItem->Image.SaveFile(wxString::Format(
-      //   "C:\\devel\\temp\\audacity\\%lld_%d.png", time(nullptr), ++idx));
-
-      mStack.pop_back();
+      mPaintTargetsStack.pop_back();
    }
 
    bool BeginPaint()
    {
+      assert(mPaintTargetsStack.empty());
+
+      if (!mPaintTargetsStack.empty())
+         return false;
+      
       if (mWindow)
       {
-         mBaseContext.reset(mRenderer->CreateContext(mWindow));
+         mPaintTargetsStack.emplace_back(
+            std::make_unique<Surface>(*mRenderer, mWindow));
       }
       else if (mDC)
       {
-         mBaseContext.reset(mRenderer->CreateContext(mDC));
+         mPaintTargetsStack.emplace_back(
+            std::make_unique<Surface>(*mRenderer, mDC));
+         
          mDC = nullptr;
       }
       else
@@ -212,22 +217,24 @@ public:
          assert(false);
       }
 
-      return mBaseContext != nullptr;
+      return !mPaintTargetsStack.empty();
    }
 
    void EndPaint()
    {
-      mBaseContext.reset();
+      assert(mPaintTargetsStack.size() == 1);
+      mPaintTargetsStack.clear();
    }
 
    bool InPaintEnvent() const
    {
-      return mBaseContext != nullptr || !mStack.empty();
+      return !mPaintTargetsStack.empty();
    }
 
    wxGraphicsContext* GetCurrentContext() const
    {
-      return mStack.empty() ? mBaseContext.get() : mStack.back()->GC.get();
+      return !mPaintTargetsStack.empty() ? mPaintTargetsStack.back()->GC.get() :
+                                           nullptr;
    }
 
    wxGraphicsRenderer& GetRenderer() noexcept
@@ -262,9 +269,71 @@ public:
       return {};
    }
 
+   bool IsSamePen(const Pen& pen) const
+   {
+      return !mPaintTargetsStack.empty() &&
+             mPaintTargetsStack.back()->CurrentPen == pen;
+   }
+
+   void SetPen(const Pen& pen)
+   {
+      if (!mPaintTargetsStack.empty())
+         mPaintTargetsStack.back()->SetPen(pen);
+   }
+
+   void SetBrush(const Brush& brush)
+   {
+      if (!mPaintTargetsStack.empty())
+         mPaintTargetsStack.back()->SetBrush(brush);
+   }
+
+   void SetFont(const std::shared_ptr<wxGraphicsContextPainterFont>& font)
+   {
+      if (!mPaintTargetsStack.empty())
+         mPaintTargetsStack.back()->SetFont(font);
+   }
+
+   void UpdateFont()
+   {
+      if (!mPaintTargetsStack.empty())
+         mPaintTargetsStack.back()->UpdateFont();
+   }
+
+   void SetTransform(const Transform& transform)
+   {
+      if (!mPaintTargetsStack.empty())
+         mPaintTargetsStack.back()->SetTransform(transform);
+   }
+
+   void SetClipRect(const Rect& rect)
+   {
+      if (!mPaintTargetsStack.empty())
+         mPaintTargetsStack.back()->SetClipRect(rect);
+   }
+
+   bool SetAntialiasing(bool enabled)
+   {
+      if (!mPaintTargetsStack.empty())
+         return mPaintTargetsStack.back()->SetAntialiasing(enabled);
+
+      return false;
+   }
+
 private:
    struct Surface final
    {
+      Surface(wxGraphicsRenderer& renderer, wxWindow* window)
+          : GC(renderer.CreateContext(window))
+      {
+         InitGCState();
+      }
+
+      Surface(wxGraphicsRenderer& renderer, wxDC* dc)
+          : GC(renderer.CreateContext(dc))
+      {
+         InitGCState();
+      }
+      
       Surface(wxGraphicsRenderer& renderer, uint32_t width, uint32_t height, bool alpha)
           : Image(width, height)
       {
@@ -277,18 +346,164 @@ private:
          }
 
          GC.reset(renderer.CreateContextFromImage(Image));
+
+         InitGCState();
+      }
+
+      void InitGCState()
+      {
+         GC->SetPen(wxPenFromPen(CurrentPen));
+         GC->SetBrush(wxBrushFromBrush(CurrentBrush));
+         
+         CurrentAntialiasing =
+            GC->SetAntialiasMode(
+               CurrentAntialiasing ? wxANTIALIAS_DEFAULT : wxANTIALIAS_NONE) &&
+            CurrentAntialiasing;
+      }
+
+      void SetPen(const Pen& pen)
+      {
+         if (CurrentPen != pen)
+         {
+            CurrentPen = pen;
+            GC->SetPen(wxPenFromPen(pen));
+         }
+      }
+
+      void SetBrush(const Brush& brush)
+      {
+         if (CurrentBrush != brush)
+         {
+            CurrentBrush = brush;
+
+            if (brush.GetStyle() == BrushStyle::LinearGradient)
+            {
+               auto gradient = brush.GetGradientData();
+
+               if (gradient != nullptr)
+               {
+                  wxGraphicsGradientStops stops;
+
+                  for (auto stop : gradient->stops)
+                  {
+                     stops.Add(
+                        wxColour(
+                           stop.color.GetRed(), stop.color.GetGreen(),
+                           stop.color.GetBlue(), stop.color.GetAlpha()),
+                        stop.position);
+                  }
+
+                  GC->SetBrush(GC->CreateLinearGradientBrush(
+                     gradient->firstPoint.x, gradient->firstPoint.y,
+                     gradient->secondPoint.x, gradient->secondPoint.y, stops));
+               }
+               else
+               {
+                  GC->SetBrush(wxBrush());
+               }
+            }
+            else
+            {
+               GC->SetBrush(wxBrushFromBrush(brush));
+            }
+         }
+      }
+
+      void SetFont(const std::shared_ptr<wxGraphicsContextPainterFont>& font)
+      {
+         if (font == nullptr)
+            return;
+
+         if (CurrentFont == nullptr || font->Font != CurrentFont->Font)
+         {
+            CurrentFont = font;
+            FontDirty = true;
+         }
+      }
+
+      void UpdateFont()
+      {
+         if (CurrentFont == nullptr)
+            return;
+
+         if (FontDirty || CurrentTextColor != CurrentBrush.GetColor())
+         {
+            CurrentTextColor = CurrentBrush.GetColor();
+            FontDirty = false;
+
+            GC->SetFont(CurrentFont->GetGraphicsFont(*GC, CurrentTextColor));
+         }
+      }
+
+      void SetTransform(const Transform& transform)
+      {
+         if (CurrentTransform != transform)
+         {
+            CurrentTransform = transform;
+            
+            const wxGraphicsMatrix mtx = GC->CreateMatrix(
+               transform.GetScale().x, 0.0, 0.0, transform.GetScale().y,
+               transform.GetTranslation().x, transform.GetTranslation().y);
+
+            GC->SetTransform(mtx);
+         }
+      }
+
+      void SetClipRect(const Rect& rect)
+      {
+         if (CurrentClipRect != rect)
+         {
+            CurrentClipRect = rect;
+
+            GC->ResetClip();
+
+            if (
+               std::isfinite(rect.Size.width) &&
+               std::isfinite(rect.Size.height))
+            {
+               GC->Clip(
+                  rect.Origin.x, rect.Origin.y, rect.Size.width,
+                  rect.Size.height);
+            }
+         }
+      }
+
+      bool SetAntialiasing(bool enabled)
+      {
+         if (CurrentAntialiasing != enabled)
+         {
+            const bool supported = GC->SetAntialiasMode(
+               CurrentAntialiasing ? wxANTIALIAS_DEFAULT : wxANTIALIAS_NONE);
+
+            CurrentAntialiasing = supported && enabled;
+
+            return supported;
+         }
+
+         return false;
       }
 
       wxImage Image;
       std::unique_ptr<wxGraphicsContext> GC;
+
+      Pen CurrentPen { Pen::NoPen };
+      Brush CurrentBrush;
+      
+      std::shared_ptr<wxGraphicsContextPainterFont> CurrentFont;
+      Color CurrentTextColor { Colors::Black };
+      
+      Transform CurrentTransform;
+      Rect CurrentClipRect { NoClippingRect };
+
+      bool FontDirty { true };
+      bool CurrentAntialiasing { true };
    };
 
    wxGraphicsRenderer* mRenderer;
    wxWindow* mWindow;
    wxDC* mDC;
 
-   std::unique_ptr<wxGraphicsContext> mBaseContext;
-   std::vector<std::unique_ptr<Surface>> mStack;
+   std::vector<std::unique_ptr<Surface>> mPaintTargetsStack;
 };
 
 WXGraphicsContextPainter::WXGraphicsContextPainter(
@@ -454,6 +669,8 @@ void WXGraphicsContextPainter::Flush()
    if (!mPaintTargetStack->InPaintEnvent())
       return;
 
+   FlushCachedPath();
+
    mPaintTargetStack->GetCurrentContext()->Flush();
 }
 
@@ -468,7 +685,7 @@ void WXGraphicsContextPainter::BeginPaint()
 
    UpdateBrush(GetCurrentBrush());
    UpdatePen(GetCurrentPen());
-   UpdateFont(*GetCurrentFont());
+   UpdateFont(GetCurrentFont());
    UpdateAntiAliasingState(GetAntiAliasingEnabled());
    UpdateTransform(GetCurrentTransform());
    UpdateClipRect(GetCurrentClipRect());
@@ -476,6 +693,7 @@ void WXGraphicsContextPainter::BeginPaint()
 
 void WXGraphicsContextPainter::EndPaint()
 {
+   FlushCachedPath();
    mPaintTargetStack->EndPaint();
 }
 
@@ -484,38 +702,7 @@ void WXGraphicsContextPainter::UpdateBrush(const Brush& brush)
    if (!mPaintTargetStack->InPaintEnvent())
       return;
 
-   auto ctx = mPaintTargetStack->GetCurrentContext();
-   
-   if (brush.GetStyle() == BrushStyle::LinearGradient)
-   {
-      auto gradient = brush.GetGradientData();
-
-      if (gradient != nullptr)
-      {
-         wxGraphicsGradientStops stops;
-
-         for (auto stop : gradient->stops)
-         {
-            stops.Add(
-               wxColour(
-                  stop.color.GetRed(), stop.color.GetGreen(),
-                  stop.color.GetBlue(), stop.color.GetAlpha()),
-               stop.position);
-         }
-         
-         ctx->SetBrush(ctx->CreateLinearGradientBrush(
-            gradient->firstPoint.x, gradient->firstPoint.y,
-            gradient->secondPoint.x, gradient->secondPoint.y, stops));
-      }
-      else
-      {
-         ctx->SetBrush(wxBrush());
-      }
-   }
-   else
-   {
-      ctx->SetBrush(wxBrushFromBrush(brush));
-   }
+   mPaintTargetStack->SetBrush(brush);
 }
 
 void WXGraphicsContextPainter::UpdatePen(const Pen& pen)
@@ -523,7 +710,11 @@ void WXGraphicsContextPainter::UpdatePen(const Pen& pen)
    if (!mPaintTargetStack->InPaintEnvent())
       return;
 
-   mPaintTargetStack->GetCurrentContext()->SetPen(wxPenFromPen(pen));
+   if (!mPaintTargetStack->IsSamePen(pen))
+   {
+      FlushCachedPath();
+      mPaintTargetStack->SetPen(pen);
+   }
 }
 
 void WXGraphicsContextPainter::UpdateTransform(const Transform& transform)
@@ -531,13 +722,7 @@ void WXGraphicsContextPainter::UpdateTransform(const Transform& transform)
    if (!mPaintTargetStack->InPaintEnvent())
       return;
 
-   auto ctx = mPaintTargetStack->GetCurrentContext();
-
-   const wxGraphicsMatrix mtx = ctx->CreateMatrix(
-      transform.GetScale().x, 0.0, 0.0, transform.GetScale().y,
-      transform.GetTranslation().x, transform.GetTranslation().y);
-
-   ctx->SetTransform(mtx);
+   mPaintTargetStack->SetTransform(transform);
 }
 
 void WXGraphicsContextPainter::UpdateClipRect(const Rect& rect)
@@ -545,17 +730,7 @@ void WXGraphicsContextPainter::UpdateClipRect(const Rect& rect)
    if (!mPaintTargetStack->InPaintEnvent())
       return;
 
-   auto ctx = mPaintTargetStack->GetCurrentContext();
-
-   ctx->ResetClip();
-   if (std::isfinite(rect.Size.width) && std::isfinite(rect.Size.height))
-   {
-      ctx->Clip(
-         rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height);
-   }
-
-   double x, y, w, h;
-   ctx->GetClipBox(&x, &y, &w, &h);
+   mPaintTargetStack->SetClipRect(rect);
 }
 
 bool WXGraphicsContextPainter::UpdateAntiAliasingState(bool enabled)
@@ -563,9 +738,7 @@ bool WXGraphicsContextPainter::UpdateAntiAliasingState(bool enabled)
    if (!mPaintTargetStack->InPaintEnvent())
       return false;
 
-   return mPaintTargetStack->GetCurrentContext()->SetAntialiasMode(
-             enabled ? wxANTIALIAS_DEFAULT : wxANTIALIAS_NONE) ==
-          wxANTIALIAS_DEFAULT;
+   return mPaintTargetStack->SetAntialiasing(enabled);
 }
 
 size_t WXGraphicsContextPainter::BeginPath()
@@ -618,6 +791,8 @@ void WXGraphicsContextPainter::EndPath(size_t pathIndex)
    if (pathIndex >= mPaths.size() || mPaths[pathIndex] == nullptr)
       return;
 
+   FlushCachedPath();
+
    mPaintTargetStack->GetCurrentContext()->FillPath(*mPaths[pathIndex]);
    mPaintTargetStack->GetCurrentContext()->StrokePath(*mPaths[pathIndex]);
 
@@ -628,6 +803,8 @@ void WXGraphicsContextPainter::DoDrawPolygon(const Point* pts, size_t count)
 {
    if (!mPaintTargetStack->InPaintEnvent())
       return;
+
+   FlushCachedPath();
 
    mPoints.reserve(count + 1);
 
@@ -648,7 +825,15 @@ void WXGraphicsContextPainter::DoDrawLines(const Point* pts, size_t count)
 
    assert(count % 2 == 0);
 
-   if (count == 2)
+   auto& path = GetCachedPath();
+
+   for (size_t i = 0; i < count / 2; ++i)
+   {
+      path.MoveToPoint(pts[2 * i].x, pts[2 * i].y);
+      path.AddLineToPoint(pts[2 * i + 1].x, pts[2 * i + 1].y);
+   }
+
+   /* if (count == 2)
    {
       mPaintTargetStack->GetCurrentContext()->StrokeLine(pts[0].x, pts[0].y, pts[1].x, pts[1].y);
    }
@@ -669,13 +854,15 @@ void WXGraphicsContextPainter::DoDrawLines(const Point* pts, size_t count)
 
       mPoints.clear();
       mEndPoints.clear();
-   }
+   }*/
 }
 
 void WXGraphicsContextPainter::DoDrawRect(const Rect& rect)
 {
    if (!mPaintTargetStack->InPaintEnvent())
       return;
+
+   FlushCachedPath();
 
    mPaintTargetStack->GetCurrentContext()->DrawRectangle(
       rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height);
@@ -685,6 +872,8 @@ void WXGraphicsContextPainter::DoDrawEllipse(const Rect& rect)
 {
    if (!mPaintTargetStack->InPaintEnvent())
       return;
+
+   FlushCachedPath();
 
    mPaintTargetStack->GetCurrentContext()->DrawEllipse(
       rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height);
@@ -700,12 +889,12 @@ void WXGraphicsContextPainter::DoDrawText(
    if (font.GetRendererID() != GetRendererID())
       return;
 
+   FlushCachedPath();
+
    wxGraphicsContext* currentContext = mPaintTargetStack->GetCurrentContext();
 
-   currentContext->SetFont(
-      static_cast<const wxGraphicsContextPainterFont&>(font).GetGraphicsFont(
-         *currentContext, GetCurrentBrush().GetColor()));
-
+   mPaintTargetStack->UpdateFont();
+   
    const wxGraphicsBrush bgBrush =
       backgroundBrush.GetStyle() != BrushStyle::None ?
          currentContext->CreateBrush(wxBrushFromBrush(backgroundBrush)) :
@@ -722,11 +911,11 @@ void WXGraphicsContextPainter::DoDrawRotatedText(
    if (font.GetRendererID() != GetRendererID())
       return;
 
+   FlushCachedPath();
+
    wxGraphicsContext* currentContext = mPaintTargetStack->GetCurrentContext();
 
-   currentContext->SetFont(
-      static_cast<const wxGraphicsContextPainterFont&>(font).GetGraphicsFont(
-         *currentContext, GetCurrentBrush().GetColor()));
+   mPaintTargetStack->UpdateFont();
 
    const wxGraphicsBrush bgBrush =
       backgroundBrush.GetStyle() != BrushStyle::None ?
@@ -749,6 +938,8 @@ void WXGraphicsContextPainter::DoDrawImage(
 
    if (rect.Size.IsZero() || imageRect.Size.IsZero())
       return;
+   
+   FlushCachedPath();
 
    wxGraphicsContext* currentContext = mPaintTargetStack->GetCurrentContext();
 
@@ -785,15 +976,21 @@ Size WXGraphicsContextPainter::DoGetTextSize(
       mPaintTargetStack->GetCurrentContext(), text);
 }
 
-void WXGraphicsContextPainter::UpdateFont(const PainterFont&)
+void WXGraphicsContextPainter::UpdateFont(const std::shared_ptr<PainterFont>& font)
 {
+   if (!mPaintTargetStack->InPaintEnvent() || font->GetRendererID() != GetRendererID())
+      return;
 
+   mPaintTargetStack->SetFont(
+      std::static_pointer_cast<wxGraphicsContextPainterFont>(font));
 }
 
 void WXGraphicsContextPainter::DoDrawRoundedRect(const Rect& rect, float radius)
 {
    if (!mPaintTargetStack->InPaintEnvent())
       return;
+
+   FlushCachedPath();
 
    mPaintTargetStack->GetCurrentContext()->DrawRoundedRectangle(
       rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height, radius);
@@ -804,17 +1001,41 @@ void WXGraphicsContextPainter::PushPaintTarget(PainterImage& image)
    if (image.GetRendererID() != GetRendererID())
       return;
 
+   if (mPaintTargetStack->InPaintEnvent())
+      FlushCachedPath();
+
    mPaintTargetStack->Push(static_cast<wxGraphicsContextPainterImage&>(image));
 
    UpdatePen(GetCurrentPen());
    UpdateBrush(GetCurrentBrush());
-   UpdateFont(*GetCurrentFont());
+   UpdateFont(GetCurrentFont());
    UpdateAntiAliasingState(GetAntiAliasingEnabled());
 }
 
 void WXGraphicsContextPainter::PopPaintTarget(PainterImage& image)
 {
+   FlushCachedPath();
    mPaintTargetStack->Pop(static_cast<wxGraphicsContextPainterImage&>(image));
+}
+
+wxGraphicsPath& WXGraphicsContextPainter::GetCachedPath()
+{
+   if (mCachedPath == nullptr)
+   {
+      mCachedPath = std::make_unique<wxGraphicsPath>(
+         mPaintTargetStack->GetCurrentContext()->CreatePath());
+   }
+
+   return *mCachedPath;
+}
+
+void WXGraphicsContextPainter::FlushCachedPath()
+{
+   if (mCachedPath == nullptr)
+      return;
+
+   mPaintTargetStack->GetCurrentContext()->StrokePath(*mCachedPath);
+   mCachedPath.reset();
 }
 
 RendererID WXGraphicsContextPainterRendererID()

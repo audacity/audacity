@@ -108,7 +108,7 @@ private:
    Size DoGetTextSize(
       const PainterFont& font, const std::string_view& text) const override;
 
-   void UpdateFont(const PainterFont& font) override;
+   void UpdateFont(const std::shared_ptr<PainterFont>& font) override;
 
    void DoDrawRoundedRect(const Rect& rect, float radius) override;
 
@@ -123,4 +123,11 @@ private:
    std::vector<wxPoint2DDouble> mPoints;
    std::vector<wxPoint2DDouble> mEndPoints;
    std::shared_ptr<PainterFont> mDefaultFont;
+
+   // wxGraphicsContext seems to use paths to draw lines,
+   // at least on Windows.
+   wxGraphicsPath& GetCachedPath();
+   void FlushCachedPath();
+   
+   std::unique_ptr<wxGraphicsPath> mCachedPath;
 };

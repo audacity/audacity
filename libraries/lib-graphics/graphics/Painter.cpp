@@ -12,14 +12,6 @@
 
 #include <cassert>
 
-namespace
-{
-constexpr Rect NoClippingRect = {
-   Point {}, Size { std::numeric_limits<float>::infinity(),
-                    std::numeric_limits<float>::infinity() }
-};
-}
-
 Painter::Painter()
 {
    mStateStack.emplace_back();
@@ -571,7 +563,7 @@ void PainterStateMutator::SetFont(std::shared_ptr<PainterFont> font)
    mPainter.mStateStack.back().Font =
       font != nullptr ? std::move(font) : mPainter.GetDefaultFont();
 
-   mPainter.UpdateFont(*mPainter.mStateStack.back().Font);
+   mPainter.UpdateFont(mPainter.mStateStack.back().Font);
 }
 
 std::shared_ptr<PainterFont> PainterStateMutator::GetFont() const
