@@ -42,7 +42,7 @@ public:
       size_t ProcessBlock(EffectSettings &settings,
          const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
-      sampleCount GetLatency() override;
+      sampleCount GetLatency(const EffectSettings &settings) override;
 
    protected:
       StatefulPerTrackEffect &GetEffect() const

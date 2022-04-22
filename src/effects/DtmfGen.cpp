@@ -282,11 +282,11 @@ size_t EffectDtmf::Instance::ProcessBlock(EffectSettings &settings,
 
 // Event handler object
 struct EffectDtmf::Validator
-   : DefaultEffectUIValidator
+   : EffectUIValidator
 {
    Validator(EffectUIClientInterface &effect,
       EffectSettingsAccess &access, const DtmfSettings &settings)
-      : DefaultEffectUIValidator{effect, access}
+      : EffectUIValidator{effect, access}
       // Copy settings
       , mSettings{settings}
    {}
