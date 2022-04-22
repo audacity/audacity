@@ -768,10 +768,13 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          // we need to calculate the offset slightly differently:
          //  |    [-----CLIP--|--]             [-|----CLIP----]      |
          // t0                t1       VS.       t0                  t1
-         //  |----|                              ||
-         //  OFFSET = clip_t0 - t0            OFFSET = 0
+         //  |----|                            |-|
+         //  OFFSET = clip_t0 - t0            OFFSET = -t0
          if (t0 < clip->GetPlayStartTime() && t1 < clip->GetPlayEndTime()) {
             newClip->SetPlayStartTime(clip_t0-t0); //not sure why Offset doesn't work for this; may want to modify
+         }
+         else {
+            newClip->SetPlayStartTime(-t0);
          }
          if (newClip->GetPlayStartTime() < 0)
             newClip->SetPlayStartTime(0);
