@@ -22,6 +22,7 @@ class EffectSettingsManager;
 class wxDialog;
 class wxWindow;
 class EffectUIClientInterface;
+class EffectInstance;
 class EffectSettings;
 class EffectSettingsAccess;
 class EffectPlugin;
@@ -30,7 +31,7 @@ class EffectPlugin;
 /*! The dialog may be modal or non-modal */
 using EffectDialogFactory = std::function< wxDialog* (
    wxWindow &parent, EffectPlugin &, EffectUIClientInterface &,
-   EffectSettingsAccess & ) >;
+   EffectInstance &, EffectSettingsAccess & ) >;
 
 class TrackList;
 class WaveTrackFactory;
@@ -61,6 +62,9 @@ public:
    /*!
     But there are a few unusual overrides for historical reasons
 
+    @param instance is only guaranteed to have lifetime suitable for a modal
+    dialog, unless the dialog stores instance.shared_from_this()
+
     @param access is only guaranteed to have lifetime suitable for a modal
     dialog, unless the dialog stores access.shared_from_this()
 
@@ -69,8 +73,8 @@ public:
     */
    virtual int ShowHostInterface(
       wxWindow &parent, const EffectDialogFactory &factory,
-      EffectSettingsAccess &access, bool forceModal = false
-   ) = 0;
+      EffectInstance &instance, EffectSettingsAccess &access,
+      bool forceModal = false) = 0;
 
    virtual void Preview(EffectSettingsAccess &access, bool dryOnly) = 0;
    virtual bool SaveSettingsAsString(

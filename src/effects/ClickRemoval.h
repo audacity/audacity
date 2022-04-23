@@ -49,7 +49,8 @@ public:
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
 
 private:
    bool ProcessOne(int count, WaveTrack * track,

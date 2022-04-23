@@ -120,9 +120,11 @@ public:
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,
-      EffectSettingsAccess &access, bool forceModal = false) override;
+      EffectInstance &instance, EffectSettingsAccess &access,
+      bool forceModal = false) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 

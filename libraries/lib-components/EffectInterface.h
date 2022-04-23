@@ -580,6 +580,8 @@ public:
    //! Adds controls to a panel that is given as the parent window of `S`
    /*!
     @param S interface for adding controls to a panel in a dialog
+    @param instance guaranteed to have a lifetime containing that of the returned
+    object
     @param access guaranteed to have a lifetime containing that of the returned
     object
 
@@ -587,8 +589,8 @@ public:
     controls; it might also hold some state needed to implement event handlers
     of the controls; it will exist only while the dialog continues to exist
     */
-   virtual std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectSettingsAccess &access) = 0;
+   virtual std::unique_ptr<EffectUIValidator> PopulateUI(ShuttleGui &S,
+      EffectInstance &instance, EffectSettingsAccess &access) = 0;
 
    virtual bool CanExportPresets() = 0;
    virtual void ExportPresets(const EffectSettings &settings) const = 0;

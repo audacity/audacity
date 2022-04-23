@@ -259,8 +259,8 @@ bool EffectScienFilter::Init()
    return true;
 }
 
-std::unique_ptr<EffectUIValidator>
-EffectScienFilter::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> EffectScienFilter::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    S.AddSpace(5);
    S.SetSizerProportion(1);

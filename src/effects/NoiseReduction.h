@@ -39,7 +39,8 @@ public:
 
    int ShowHostInterface( wxWindow &parent,
       const EffectDialogFactory &factory,
-      EffectSettingsAccess &access, bool forceModal = false) override;
+      EffectInstance &instance, EffectSettingsAccess &access,
+      bool forceModal = false) override;
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
 

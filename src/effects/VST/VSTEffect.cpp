@@ -1726,8 +1726,8 @@ bool VSTEffect::DoLoadFactoryDefaults(EffectSettings &settings)
 // EffectUIClientInterface implementation
 // ============================================================================
 
-std::unique_ptr<EffectUIValidator>
-VSTEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
+std::unique_ptr<EffectUIValidator> VSTEffect::PopulateUI(ShuttleGui &S,
+   EffectInstance &, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
