@@ -279,32 +279,34 @@ void WaveTrack::SetPanFromChannelType()
       SetPan( 1.0f );
 }
 
-bool WaveTrack::LinkConsistencyCheck()
+bool WaveTrack::LinkConsistencyFix(bool doFix, bool completeList)
 {
-   auto err = !WritableSampleTrack::LinkConsistencyCheck();
-
-   auto linkType = GetLinkType();
-   if (static_cast<int>(linkType) == 1 || //Comes from old audacity version
-       linkType == LinkType::Aligned) 
-   {
-      auto next = dynamic_cast<WaveTrack*>(*std::next(GetOwner()->Find(this)));
-      if (next == nullptr)
-      {
-         //next track is not a wave track, fix and report error
-          wxLogWarning(
-             wxT("Right track %s is expected to be a WaveTrack.\n Removing link from left wave track %s."),
-             next->GetName(), GetName());
-         SetLinkType(LinkType::None);
-         SetChannel(MonoChannel);
-         err = true;
-      }
-      else
-      {
-         auto newLinkType = AreAligned(SortedClipArray(), next->SortedClipArray())
-            ? LinkType::Aligned : LinkType::Group;
-         //not an error
-         if (newLinkType != linkType)
-            SetLinkType(newLinkType);
+   auto err = !WritableSampleTrack::LinkConsistencyFix(doFix, completeList);
+   if (completeList) {
+      auto linkType = GetLinkType();
+      if (static_cast<int>(linkType) == 1 || //Comes from old audacity version
+          linkType == LinkType::Aligned) {
+         auto next =
+            dynamic_cast<WaveTrack*>(*std::next(GetOwner()->Find(this)));
+         if (next == nullptr) {
+            //next track is absent or not a wave track, fix and report error
+            if (doFix) {
+               wxLogWarning(L"Right track %s is expected to be a WaveTrack."
+                  "\n Removing link from left wave track %s.",
+                  next->GetName(), GetName());
+               SetLinkType(LinkType::None);
+               SetChannel(MonoChannel);
+            }
+            err = true;
+         }
+         else if (doFix) {
+            auto newLinkType =
+               AreAligned(SortedClipArray(), next->SortedClipArray())
+               ? LinkType::Aligned : LinkType::Group;
+            //not an error
+            if (newLinkType != linkType)
+               SetLinkType(newLinkType);
+         }
       }
    }
    return !err;
@@ -1888,7 +1890,7 @@ bool WaveTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
             mChannel = static_cast<Track::ChannelType>( nValue );
          }
          else if (attr == "linked" && value.TryGet(nValue))
-            SetLinkType(ToLinkType(nValue));
+            SetLinkType(ToLinkType(nValue), false);
          else if (attr == "colorindex" && value.TryGet(nValue))
             // Don't use SetWaveColorIndex as it sets the clips too.
             mWaveColorIndex  = nValue;

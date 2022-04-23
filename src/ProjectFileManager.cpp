@@ -208,7 +208,7 @@ auto ProjectFileManager::ReadProjectFile(
             err = true;
          }
 
-         err = ( !t->LinkConsistencyCheck() ) || err;
+         err = ( !t->LinkConsistencyFix() ) || err;
 
          mLastSavedTracks->Add(t->Duplicate());
       }
