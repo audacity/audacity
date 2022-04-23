@@ -213,7 +213,8 @@ class AUDACITY_DLL_API Effect /* not final */
    // EffectUIClientInterface implementation
 
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectSettingsAccess &access) override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
@@ -233,7 +234,8 @@ class AUDACITY_DLL_API Effect /* not final */
    // EffectPlugin implementation
 
    int ShowHostInterface( wxWindow &parent,
-      const EffectDialogFactory &factory, EffectSettingsAccess &access,
+      const EffectDialogFactory &factory,
+      EffectInstance &instance, EffectSettingsAccess &access,
       bool forceModal = false) override;
    bool SaveSettingsAsString(
       const EffectSettings &settings, wxString & parms) const override;
@@ -280,7 +282,7 @@ class AUDACITY_DLL_API Effect /* not final */
     DefaultEffectUIValidator; default implementation returns null
     */
    virtual std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access);
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access);
 
    // No more virtuals!
 

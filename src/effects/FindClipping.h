@@ -43,7 +43,8 @@ public:
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    void DoPopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access);
    bool TransferDataToWindow(const EffectSettings &settings) override;

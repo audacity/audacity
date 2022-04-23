@@ -174,7 +174,8 @@ int Effect::ShowClientInterface(
 }
 
 int Effect::ShowHostInterface(wxWindow &parent,
-   const EffectDialogFactory &factory, EffectSettingsAccess &access,
+   const EffectDialogFactory &factory,
+   EffectInstance &instance, EffectSettingsAccess &access,
    bool forceModal)
 {
    if (!IsInteractive())
@@ -197,7 +198,7 @@ int Effect::ShowHostInterface(wxWindow &parent,
    // populate it.  That factory function is called indirectly through a
    // std::function to avoid source code dependency cycles.
    EffectUIClientInterface *const client = this;
-   mHostUIDialog = factory(parent, *this, *client, access);
+   mHostUIDialog = factory(parent, *this, *client, instance, access);
    if (!mHostUIDialog)
       return 0;
 
@@ -284,8 +285,8 @@ bool Effect::LoadFactoryDefaults(EffectSettings &settings) const
 
 // EffectUIClientInterface implementation
 
-std::unique_ptr<EffectUIValidator>
-Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
+std::unique_ptr<EffectUIValidator> Effect::PopulateUI(ShuttleGui &S,
+   EffectInstance &instance, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
    mUIParent = parent;
@@ -293,7 +294,7 @@ Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
 //   LoadUserPreset(CurrentSettingsGroup());
 
    // Let the effect subclass provide its own validator if it wants
-   auto result = PopulateOrExchange(S, access);
+   auto result = PopulateOrExchange(S, instance, access);
 
    mUIParent->SetMinSize(mUIParent->GetSizer()->GetMinSize());
 
@@ -594,8 +595,8 @@ bool Effect::Delegate(Effect &delegate, EffectSettings &settings)
       region, mUIFlags, nullptr, nullptr, nullptr);
 }
 
-std::unique_ptr<EffectUIValidator>
-Effect::PopulateOrExchange(ShuttleGui &, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> Effect::PopulateOrExchange(
+   ShuttleGui &, EffectInstance &, EffectSettingsAccess &)
 {
    return nullptr;
 }

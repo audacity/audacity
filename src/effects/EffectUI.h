@@ -43,10 +43,11 @@ class EffectUIHost final : public wxDialogWrapper
 public:
    // constructors and destructors
    EffectUIHost(wxWindow *parent,
-                AudacityProject &project,
-                EffectPlugin &effect,
-                EffectUIClientInterface &client,
-                EffectSettingsAccess &access);
+       AudacityProject &project,
+       EffectPlugin &effect,
+       EffectUIClientInterface &client,
+       EffectInstance &instance,
+       EffectSettingsAccess &access);
    virtual ~EffectUIHost();
 
    bool TransferDataToWindow() override;
@@ -98,6 +99,8 @@ private:
    wxWindow *mParent;
    EffectPlugin &mEffectUIHost;
    EffectUIClientInterface &mClient;
+   //! @invariant not null
+   const std::shared_ptr<EffectInstance> mpInstance;
    //! @invariant not null
    const EffectPlugin::EffectSettingsAccessPtr mpAccess;
    RealtimeEffectState *mpState{ nullptr };
@@ -151,7 +154,8 @@ namespace  EffectUI {
 
    AUDACITY_DLL_API
    wxDialog *DialogFactory( wxWindow &parent, EffectPlugin &host,
-      EffectUIClientInterface &client, EffectSettingsAccess &access);
+      EffectUIClientInterface &client, EffectInstance &instance,
+      EffectSettingsAccess &access);
 
    /** Run an effect given the plugin ID */
    // Returns true on success.  Will only operate on tracks that

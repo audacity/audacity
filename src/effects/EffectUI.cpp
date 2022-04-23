@@ -160,12 +160,16 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    AudacityProject &project,
    EffectPlugin &effect,
    EffectUIClientInterface &client,
+   EffectInstance &instance,
    EffectSettingsAccess &access)
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
                    wxDefaultPosition, wxDefaultSize,
                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
 , mEffectUIHost{ effect }
 , mClient{ client }
+// Grab a pointer to the instance object,
+// extending its lifetime while this remains:
+, mpInstance{ instance.shared_from_this() }
 // Grab a pointer to the access object,
 // extending its lifetime while this remains:
 , mpAccess{ access.shared_from_this() }
@@ -443,7 +447,7 @@ bool EffectUIHost::Initialize()
 
          // Let the client add things to the panel
          ShuttleGui S1{ uw.get(), eIsCreating };
-         mpValidator = mClient.PopulateUI(S1, *mpAccess);
+         mpValidator = mClient.PopulateUI(S1, *mpInstance, *mpAccess);
          if (!mpValidator)
             return false;
 
@@ -1233,6 +1237,7 @@ void EffectUIHost::CleanupRealtime()
 wxDialog *EffectUI::DialogFactory( wxWindow &parent,
    EffectPlugin &host,
    EffectUIClientInterface &client,
+   EffectInstance &instance,
    EffectSettingsAccess &access)
 {
    // Make sure there is an associated project, whose lifetime will
@@ -1241,16 +1246,11 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
    auto project = FindProjectFromWindow(&parent);
    if ( !project )
       return nullptr;
-
-   Destroy_ptr<EffectUIHost> dlg{
-      safenew EffectUIHost{ &parent, *project, host, client, access } };
-   
+   Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{ &parent,
+      *project, host, client, instance, access } };
    if (dlg->Initialize())
-   {
       // release() is safe because parent will own it
       return dlg.release();
-   }
-   
    return nullptr;
 };
 

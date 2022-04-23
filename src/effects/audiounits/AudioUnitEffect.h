@@ -178,7 +178,8 @@ public:
       const override;
    std::shared_ptr<EffectInstance> DoMakeInstance(EffectSettings &settings);
    std::unique_ptr<EffectUIValidator> PopulateUI(
-      ShuttleGui &S, EffectSettingsAccess &access) override;
+      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool IsGraphicalUI() override;
    bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;

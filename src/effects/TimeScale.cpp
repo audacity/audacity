@@ -149,8 +149,8 @@ bool EffectTimeScale::Process(
    return EffectSBSMS::Process(instance, settings);
 }
 
-std::unique_ptr<EffectUIValidator>
-EffectTimeScale::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> EffectTimeScale::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.AddSpace(0, 5);

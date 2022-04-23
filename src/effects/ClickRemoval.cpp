@@ -273,8 +273,8 @@ bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
    return bResult;
 }
 
-std::unique_ptr<EffectUIValidator>
-EffectClickRemoval::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> EffectClickRemoval::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
    S.SetBorder(10);

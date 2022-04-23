@@ -1390,8 +1390,8 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-std::unique_ptr<EffectUIValidator>
-AudioUnitEffect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
+std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
+   EffectInstance &, EffectSettingsAccess &access)
 {
    // OSStatus result;
 
