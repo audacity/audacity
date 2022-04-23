@@ -282,8 +282,8 @@ bool EffectDistortion::DoLoadFactoryPreset(int id)
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator>
-EffectDistortion::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> EffectDistortion::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    S.AddSpace(0, 5);
    S.StartVerticalLay();

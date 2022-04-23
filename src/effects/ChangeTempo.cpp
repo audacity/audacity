@@ -194,8 +194,8 @@ bool EffectChangeTempo::Process(EffectInstance &, EffectSettings &settings)
    return success;
 }
 
-std::unique_ptr<EffectUIValidator>
-EffectChangeTempo::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> EffectChangeTempo::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    enum { precision = 2 };
 

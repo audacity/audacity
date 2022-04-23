@@ -156,8 +156,8 @@ TranslatableString RatioLabelFormat( int sliderValue, double value )
 
 }
 
-std::unique_ptr<EffectUIValidator>
-EffectCompressor::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> EffectCompressor::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    S.SetBorder(5);
 

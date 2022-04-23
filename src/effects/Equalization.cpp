@@ -677,9 +677,8 @@ bool EffectEqualization::CloseUI()
    return Effect::CloseUI();
 }
 
-std::unique_ptr<EffectUIValidator>
-EffectEqualization::PopulateOrExchange(
-   ShuttleGui & S, EffectSettingsAccess &access)
+std::unique_ptr<EffectUIValidator> EffectEqualization::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
 {
    if ( (S.GetMode() == eIsCreating ) && !IsBatchProcessing() )
       access.ModifySettings([&](EffectSettings &settings){

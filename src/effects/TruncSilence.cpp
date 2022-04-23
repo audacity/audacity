@@ -662,8 +662,8 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
 }
 
 
-std::unique_ptr<EffectUIValidator>
-EffectTruncSilence::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> EffectTruncSilence::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    wxASSERT(nActions == WXSIZEOF(kActionStrings));
 

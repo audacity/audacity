@@ -276,8 +276,8 @@ size_t EffectWahwah::Instance::RealtimeProcess(int group, EffectSettings &settin
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator>
-EffectWahwah::PopulateOrExchange(ShuttleGui& S, EffectSettingsAccess& access)
+std::unique_ptr<EffectUIValidator> EffectWahwah::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);
