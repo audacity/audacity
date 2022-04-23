@@ -982,7 +982,7 @@ UIHandle::Result TimeShiftHandle::Release
       msg = XO("Moved clips to another track");
       consolidate = false;
       for (auto& pair : mClipMoveState.shifters)
-         pair.first->LinkConsistencyCheck();
+         pair.first->LinkConsistencyFix();
    }
    else {
       msg = ( mClipMoveState.hSlideAmount > 0
