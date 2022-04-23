@@ -330,8 +330,8 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
    return !cancel;
 }
 
-std::unique_ptr<EffectUIValidator>
-EffectAutoDuck::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> EffectAutoDuck::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    S.SetBorder(5);
    S.StartVerticalLay(true);

@@ -113,8 +113,9 @@ public:
    std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
       const override;
    struct Validator;
-   std::unique_ptr<EffectUIValidator>
-      PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access) override;
+   std::unique_ptr<EffectUIValidator> PopulateOrExchange(
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
    bool IsGraphicalUI() override;
 
    bool CanExportPresets() override;

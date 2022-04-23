@@ -211,8 +211,8 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-std::unique_ptr<EffectUIValidator>
-EffectNormalize::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> EffectNormalize::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    mCreating = true;
 

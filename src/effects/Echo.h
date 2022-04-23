@@ -54,7 +54,8 @@ public:
 
    // Effect implementation
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access) override;
+      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)
+   override;
 
    struct Validator;
 

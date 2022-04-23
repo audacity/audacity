@@ -1502,8 +1502,8 @@ bool LV2Effect::LoadSettings(
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-std::unique_ptr<EffectUIValidator>
-LV2Effect::PopulateUI(ShuttleGui &S, EffectSettingsAccess &access)
+std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
+   EffectInstance &, EffectSettingsAccess &access)
 {
    auto parent = S.GetParent();
    mParent = parent;

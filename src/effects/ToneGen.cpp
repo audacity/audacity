@@ -270,8 +270,8 @@ void EffectToneGen::PostSet()
 
 // Effect implementation
 
-std::unique_ptr<EffectUIValidator>
-EffectToneGen::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &access)
+std::unique_ptr<EffectUIValidator> EffectToneGen::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
 {
    wxTextCtrl *t;
 
