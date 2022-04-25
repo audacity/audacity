@@ -201,6 +201,27 @@ bool AudioUnitEffect::SupportsAutomation() const
    return supports;
 }
 
+class AudioUnitInstance : public StatefulPerTrackEffect::Instance
+   , public AudioUnitWrapper
+{
+public:
+   AudioUnitInstance(StatefulPerTrackEffect &effect,
+      AudioComponent component, Parameters &parameters);
+   ~AudioUnitInstance() override;
+};
+
+AudioUnitInstance::AudioUnitInstance(StatefulPerTrackEffect &effect,
+   AudioComponent component, Parameters &parameters
+)  : StatefulPerTrackEffect::Instance{ effect }
+   , AudioUnitWrapper{ component, &parameters }
+{
+   CreateAudioUnit();
+}
+
+AudioUnitInstance::~AudioUnitInstance()
+{
+}
+
 bool AudioUnitEffect::InitializeInstance()
 {
    if (!CreateAudioUnit())
@@ -232,7 +253,7 @@ std::shared_ptr<EffectInstance> AudioUnitEffect::DoMakeInstance()
    if (mMaster)
       // This is a slave
       InitializeInstance();
-   return std::make_shared<Instance>(*this);
+   return std::make_shared<AudioUnitInstance>(*this, mComponent, mParameters);
 }
 
 constexpr auto OptionsKey = L"Options";
@@ -284,6 +305,28 @@ bool AudioUnitEffect::InitializePlugin()
       mUIType, FullValue.MSGID().GET() /* Config stores un-localized string */);
 
    return true;
+}
+
+class AudioUnitValidator : public DefaultEffectUIValidator {
+public:
+   AudioUnitValidator(EffectUIClientInterface &effect,
+      EffectSettingsAccess &access, AudioUnitInstance &instance);
+   ~AudioUnitValidator() override;
+private:
+   // The lifetime guarantee is assumed to be provided by the instance.
+   // See contract of PopulateUI
+   AudioUnitInstance &mInstance;
+};
+
+AudioUnitValidator::AudioUnitValidator(EffectUIClientInterface &effect,
+   EffectSettingsAccess &access, AudioUnitInstance &instance
+)  : DefaultEffectUIValidator{ effect, access }
+   , mInstance{ instance }
+{
+}
+
+AudioUnitValidator::~AudioUnitValidator()
+{
 }
 
 bool AudioUnitEffect::MakeListener()
@@ -695,7 +738,7 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
-   EffectInstance &, EffectSettingsAccess &access)
+   EffectInstance &instance, EffectSettingsAccess &access)
 {
    // OSStatus result;
 
@@ -750,11 +793,12 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
    }
 
    if (mpControl)
-   {
       mParent->PushEventHandler(this);
-   }
 
-   return std::make_unique<DefaultEffectUIValidator>(*this, access);
+   return std::make_unique<AudioUnitValidator>(*this, access,
+      // Cast is assumed to succeed because only this effect's own instances
+      // are passed back by the framework
+      dynamic_cast<AudioUnitInstance&>(instance));
 }
 
 bool AudioUnitEffect::IsGraphicalUI()
