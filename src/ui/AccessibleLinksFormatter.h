@@ -20,7 +20,7 @@ class ShuttleGui;
 /*! @brief A class that allows translatable text to have accessible links in it in a way
 *          that is friendly to translators.
 * 
-* This class allows to replace arbitrary placeholders (like %s, %url, {} or anyting of the choice)
+* This class allows to replace arbitrary placeholders (like %s, %url, {} or anything of the choice)
 * with links, that are accessible from the keyboard. 
 * 
 * In case there are multiple placeholders with the same name - they will be replaced in order

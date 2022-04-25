@@ -78,7 +78,7 @@ function( notarize path )
             if ( NOT "${notarization_result}" STREQUAL "success" ) 
                 message(FATAL_ERROR "Notarization failed:\n${result}\n")
             else()
-                message(STATUS "Notarization successfull")
+                message(STATUS "Notarization successful")
             endif()
 
             break()

@@ -32,6 +32,7 @@ public:
    >{};
 
    explicit RealtimeEffectState(const PluginID & id);
+   RealtimeEffectState(const RealtimeEffectState &other);
    ~RealtimeEffectState();
 
    //! May be called with nonempty id at most once in the lifetime of a state
@@ -73,14 +74,24 @@ public:
    std::shared_ptr<EffectSettingsAccess> GetAccess();
 
 private:
+   /*! @name Members that are copied
+    @{
+    */
+
    PluginID mID;
-   wxString mParameters;  // Used only during deserialization
 
    //! Stateless effect object
    const EffectInstanceFactory *mPlugin{};
+   
+   EffectSettings mSettings;
+
+   //! @}
+
+   // Following are not copied
+   wxString mParameters;  // Used only during deserialization
+
    //! Stateful instance made by the plug-in
    std::shared_ptr<EffectInstance> mInstance;
-   EffectSettings mSettings;
 
    struct Access;
    struct AccessState;

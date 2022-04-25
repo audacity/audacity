@@ -124,7 +124,7 @@ Generally, steps 1-5 are only needed the first-time you configure. Then, after y
 
 ### Building with ASIO support on Windows
 
-To enable ASIO support, please select `audacity_has_asio_support=On` in CMake after the intial configuration and then run select **Configure** again as described above. ASIO is only supported on Windows and only for 64-bit builds.
+To enable ASIO support, please select `audacity_has_asio_support=On` in CMake after the initial configuration and then run select **Configure** again as described above. ASIO is only supported on Windows and only for 64-bit builds.
 
 ## macOS
 

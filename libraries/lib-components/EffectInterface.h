@@ -440,6 +440,17 @@ protected:
    size_t mBlockSize{ 0 };
 };
 
+//! Inherit to add a state variable to an EffectInstance subclass
+class COMPONENTS_API EffectInstanceWithSampleRate
+   : public virtual EffectInstance
+{
+public:
+   ~EffectInstanceWithSampleRate() override;
+   void SetSampleRate(double rate) override;
+protected:
+   double mSampleRate{ 0 };
+};
+
 /***************************************************************************//**
 \class EffectInstanceFactory
 *******************************************************************************/
@@ -487,6 +498,9 @@ public:
 class COMPONENTS_API EffectUIValidator /* not final */
 {
 public:
+   EffectUIValidator(
+      EffectUIClientInterface &effect, EffectSettingsAccess &access);
+
    virtual ~EffectUIValidator();
 
    //! Get settings data from the panel; may make error dialogs and return false
@@ -502,14 +516,26 @@ public:
     @return true if successful
     */
    virtual bool UpdateUI();
+
+protected:
+   // Convenience function template for binding event handler functions
+   template<typename EventTag, typename Class, typename Event>
+   void BindTo(
+      wxEvtHandler &src, const EventTag& eventType, void (Class::*pmf)(Event &))
+   {
+      src.Bind(eventType, pmf, static_cast<Class *>(this));
+   }
+
+   EffectUIClientInterface &mEffect;
+   EffectSettingsAccess &mAccess;
 };
 
 /*************************************************************************************//**
 
 \class DefaultEffectUIValidator
 
-\brief Default implementation of EffectUIValidator invokes ValidateUI and CloseUI
-   methods of an EffectUIClientInterface
+\brief Default implementation of EffectUIValidator invokes ValidateUI
+   method of an EffectUIClientInterface
 
  This is a transitional class; it should be eliminated when all effect classes
  define their own associated subclasses of EffectUIValidator, which can hold
@@ -522,22 +548,10 @@ class COMPONENTS_API DefaultEffectUIValidator
    , wxEvtHandler
 {
 public:
-   DefaultEffectUIValidator(
-      EffectUIClientInterface &effect, EffectSettingsAccess &access);
+   using EffectUIValidator::EffectUIValidator;
    ~DefaultEffectUIValidator() override;
    //! Calls mEffect.ValidateUI()
    bool ValidateUI() override;
-protected:
-   // Convenience function template for binding event handler functions
-   template<typename EventTag, typename Class, typename Event>
-   void BindTo(
-      wxEvtHandler &src, const EventTag& eventType, void (Class::*pmf)(Event &))
-   {
-      src.Bind(eventType, pmf, static_cast<Class *>(this));
-   }
-
-   EffectUIClientInterface &mEffect;
-   EffectSettingsAccess &mAccess;
 };
 
 /*************************************************************************************//**
@@ -584,6 +598,7 @@ public:
    virtual void ShowOptions() = 0;
 
 protected:
+   friend EffectUIValidator;
    friend DefaultEffectUIValidator;
    virtual bool ValidateUI(EffectSettings &settings) = 0;
    virtual bool CloseUI() = 0;

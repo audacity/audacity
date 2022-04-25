@@ -26,7 +26,7 @@ static constexpr int ClipSelectionStrokeSize{ 1 };//px
 
 namespace
 {
-   //Helper funciton that takes affordance rectangle as
+   //Helper function that takes affordance rectangle as
    //argument and returns rectangle to be used for title
    //drawings
    wxRect GetAffordanceTitleRect(const wxRect& rect)
@@ -171,7 +171,7 @@ wxString TrackArt::TruncateText(wxDC& dc, const wxString& text, const int maxWid
       auto strWidth = dc.GetTextExtent(str).GetWidth();
       if (strWidth < maxWidth)
          //if left == right (== middle), then exit loop
-         //with right equals to the last knwon index for which
+         //with right equals to the last known index for which
          //strWidth < maxWidth
          left = middle + 1;
       else if (strWidth > maxWidth)

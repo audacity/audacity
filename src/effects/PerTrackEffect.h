@@ -61,7 +61,7 @@ public:
 
       //! Called for destructive, non-realtime effect computation
       //! Default implementation returns zero
-      virtual sampleCount GetLatency();
+      virtual sampleCount GetLatency(const EffectSettings &settings);
 
    protected:
       const PerTrackEffect &mProcessor;

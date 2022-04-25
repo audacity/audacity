@@ -55,7 +55,7 @@ endif()
 
 # Detect, which version of FileDialog to use for
 # We always assume that GTK is used on platforms other than Windows and macOS,
-# as there is no other implementation avalaible now
+# as there is no other implementation available now
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    set( wxIS_MAC on )
 elseif( CMAKE_SYSTEM_NAME MATCHES "Windows" )
@@ -202,8 +202,6 @@ list( APPEND SOURCES
       ProjectFileIO.h
       ProjectFileManager.cpp
       ProjectFileManager.h
-      ProjectHistory.cpp
-      ProjectHistory.h
       ProjectManager.cpp
       ProjectManager.h
       ProjectSelectionManager.cpp
@@ -301,8 +299,6 @@ list( APPEND SOURCES
       UIHandle.h
       TransportUtilities.cpp
       TransportUtilities.h
-      UndoManager.cpp
-      UndoManager.h
       VoiceKey.cpp
       VoiceKey.h
       WaveClip.cpp
@@ -1439,14 +1435,18 @@ set( AUDACITY_LIBRARIES
 # A sub-sequence of what is in libraries/CMakeLists.txt :
    lib-string-utils-interface
    lib-uuid-interface
-   lib-screen-geometry-interface
    lib-project-rate-interface
-   lib-ffmpeg-support-interface
    lib-theme-resources-interface
-   lib-transactions-interface
    lib-sample-track-interface
    lib-module-manager-interface
+   lib-project-history-interface
 )
+
+if (${_OPT}use_ffmpeg)
+   list( APPEND AUDACITY_LIBRARIES
+      lib-ffmpeg-support-interface
+   )
+endif()
 
 if ( ${_OPT}has_networking )
    list( APPEND AUDACITY_LIBRARIES

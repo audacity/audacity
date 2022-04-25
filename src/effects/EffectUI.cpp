@@ -18,7 +18,7 @@
 #include "ConfigInterface.h"
 #include "EffectManager.h"
 #include "PluginManager.h"
-#include "../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../ProjectWindowBase.h"
 #include "../TrackPanelAx.h"
 #include "RealtimeEffectList.h"
@@ -208,7 +208,7 @@ bool EffectUIHost::TransferDataToWindow()
 {
    // Transfer-to takes const reference to settings
    return mEffectUIHost.TransferDataToWindow(mpAccess->Get()) &&
-      //! Do other apperance updates
+      //! Do other appearance updates
       mpValidator->UpdateUI() &&
       //! Do validators
       wxDialogWrapper::TransferDataToWindow();
@@ -911,8 +911,8 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
    mpAccess->ModifySettings([&](EffectSettings &settings){
       mEffectUIHost.GetDefinition()
          .LoadUserPreset(UserPresetsGroup(mUserPresets[preset]), settings);
-      TransferDataToWindow();
    });
+   TransferDataToWindow();
    return;
 }
 
@@ -921,8 +921,8 @@ void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
    mpAccess->ModifySettings([&](EffectSettings &settings){
       mEffectUIHost.GetDefinition()
          .LoadFactoryPreset(evt.GetId() - kFactoryPresetsID, settings);
-      TransferDataToWindow();
    });
+   TransferDataToWindow();
    return;
 }
 
@@ -1029,8 +1029,8 @@ void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 {
    mpAccess->ModifySettings([&](EffectSettings &settings){
       mClient.ImportPresets(settings);
-      TransferDataToWindow();
    });
+   TransferDataToWindow();
    LoadUserPresets();
 
    return;
@@ -1057,8 +1057,8 @@ void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
 {
    mpAccess->ModifySettings([&](EffectSettings &settings){
       mEffectUIHost.GetDefinition().LoadFactoryDefaults(settings);
-      TransferDataToWindow();
    });
+   TransferDataToWindow();
    return;
 }
 

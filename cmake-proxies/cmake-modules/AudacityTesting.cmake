@@ -92,7 +92,7 @@ if( ${_OPT}has_tests )
       elseif( APPLE )
          # We target an old version of macOS, disable std::uncaught_exceptions
          target_compile_definitions( ${test_executable_name} PRIVATE CATCH_CONFIG_NO_CPP17_UNCAUGHT_EXCEPTIONS )
-         # Similar to Windows, but uses DYLD_FALLBACK_LIBRARY_PATH istead of PATH
+         # Similar to Windows, but uses DYLD_FALLBACK_LIBRARY_PATH instead of PATH
          set_tests_properties(
             ${ADD_UNIT_TEST_NAME}
             PROPERTIES
@@ -129,9 +129,10 @@ if( ${_OPT}has_tests )
       )
 
       set_tests_properties(
-         ${ADD_UNIT_TEST_NAME}
+         ${test_name}
          PROPERTIES
             LABELS "journal_tests"
+            TIMEOUT 180
       )
    endfunction()
 else()

@@ -17,7 +17,7 @@
 #include "../toolbars/ToolManager.h"
 #include "../Screenshot.h"
 #include "TempDirectory.h"
-#include "../UndoManager.h"
+#include "UndoManager.h"
 #include "../commands/CommandContext.h"
 #include "../commands/CommandManager.h"
 #include "../effects/EffectManager.h"
@@ -416,6 +416,8 @@ void OnResetConfig(const CommandContext &context)
    gPrefs->Write("/SelectionToolbarMode", 0);
    gPrefs->Flush();
    DoReloadPreferences(project);
+
+   ProjectWindow::OnResetWindow(context);
    ToolManager::OnResetToolBars(context);
 
    // These are necessary to preserve the newly correctly laid out toolbars.

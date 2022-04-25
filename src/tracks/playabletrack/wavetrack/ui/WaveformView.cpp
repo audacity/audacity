@@ -1076,7 +1076,7 @@ static const WaveTrackSubViews::RegisteredFactory key{
 #include "WaveTrackControls.h"
 #include "../../../../widgets/PopupMenuTable.h"
 #include "../../../../ProjectAudioIO.h"
-#include "../../../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
 
 //=============================================================================

@@ -20,11 +20,20 @@ class ShuttleGui;
 
 using Floats = ArrayOf<float>;
 
-class EffectEcho final : public StatefulPerTrackEffect
+
+struct EffectEchoSettings
+{
+   static constexpr double delayDefault = 1.0;
+   static constexpr double decayDefault = 0.5;
+
+   double delay{ delayDefault };
+   double decay{ decayDefault };
+};
+
+class EffectEcho final : public EffectWithSettings<EffectEchoSettings, PerTrackEffect>
 {
 public:
-   static inline EffectEcho *
-   FetchParameters(EffectEcho &e, EffectSettings &) { return &e; }
+   
    static const ComponentInterfaceSymbol Symbol;
 
    EffectEcho();
@@ -42,25 +51,21 @@ public:
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
-   bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
 
    // Effect implementation
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectSettingsAccess &access) override;
 
+   struct Validator;
+
+   struct Instance;
+
+   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings& settings) const;
+
+
 private:
    // EffectEcho implementation
-
-   double delay;
-   double decay;
-   Floats history;
-   size_t histPos;
-   size_t histLen;
+   
 
    const EffectParameterMethods& Parameters() const override;
 
@@ -74,10 +79,10 @@ private:
    >;
 #else
 
-static constexpr EffectParameter Delay{ &EffectEcho::delay,
-   L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f };
-static constexpr EffectParameter Decay{ &EffectEcho::decay,
-   L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f };
+static constexpr EffectParameter Delay{ &EffectEchoSettings::delay,
+   L"Delay",   EffectEchoSettings::delayDefault, 0.001f,  FLT_MAX, 1.0f };
+static constexpr EffectParameter Decay{ &EffectEchoSettings::decay,
+   L"Decay",   EffectEchoSettings::decayDefault, 0.0f,    FLT_MAX, 1.0f };
 
 #endif
 };

@@ -186,7 +186,7 @@ private:
    /// Keeps track of the currently selected label (not same as selection region)
    /// used for navigation between labels
    mutable Index mNavigationIndex{ -1 };
-   /// Index of the current label text beeing edited
+   /// Index of the current label text being edited
    mutable Index mTextEditIndex{ -1 };
 
    mutable wxString mUndoLabel;
@@ -226,7 +226,7 @@ public:
    int GetInitialCursorPosition() const { return mInitialCursorPos; }
 
    /// Sets the label with specified index for editing,
-   /// optionaly selection may be specified with [start, end]
+   /// optionally selection may be specified with [start, end]
    void SetTextSelection(int labelIndex, int start = 1, int end = 1);
    int GetTextEditIndex(AudacityProject& project) const;
    void ResetTextSelection();

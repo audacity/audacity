@@ -3,7 +3,7 @@
  Audacity: A Digital Audio Editor
 
  @file UrlEncode.h
- @brief Declare a function to perfom URL encoding of a string.
+ @brief Declare a function to perform URL encoding of a string.
 
  Dmitry Vedenko
  **********************************************************************/

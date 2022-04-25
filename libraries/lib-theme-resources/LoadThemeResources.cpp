@@ -14,7 +14,7 @@ void ThemeResources::Load()
 {
    // Nothing!
    // This function merely needs to be called somewhere from the application to
-   // gurantee that loading of the dynamic library is not skipped by the linker.
+   // guarantee that loading of the dynamic library is not skipped by the linker.
    // The real work is then done at static initialization time in other files
    // before this function is reached.
 }

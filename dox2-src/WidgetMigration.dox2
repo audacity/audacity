@@ -43,7 +43,7 @@ Some examples of code that is slated for wxWidgets migration:
  
 The migration process is expected to be slow.  It may be several years 
 before we formally offer some of the code to wxWidgets.  We want to 
-contribute mature  well tested code, complete with doucmentation demo 
+contribute mature  well tested code, complete with documentation demo 
 sample code etc.  We  want the code for migration to be of a maturity 
 suitable for inclusion in the default wxWidgets distribution from the 
 start, in the same way that optional sub libraries like the PNG library 

@@ -57,6 +57,22 @@ Paul Licameli split from AudacityProject.cpp
 #include "../images/AudacityLogoAlpha.xpm"
 #endif
 
+namespace {
+   void SaveWindowPreferences(const wxRect& windowRect, const wxRect& normalRect,
+                              bool isMaximized, bool isIconized) {
+      ProjectWindowX.Write(windowRect.GetX());
+      ProjectWindowY.Write(windowRect.GetY());
+      ProjectWindowWidth.Write(windowRect.GetWidth());
+      ProjectWindowHeight.Write(windowRect.GetHeight());
+      ProjectWindowMaximized.Write(isMaximized);
+      ProjectWindowNormalX.Write(normalRect.GetX());
+      ProjectWindowNormalY.Write(normalRect.GetY());
+      ProjectWindowNormalWidth.Write(normalRect.GetWidth());
+      ProjectWindowNormalHeight.Write(normalRect.GetHeight());
+      ProjectWindowIconized.Write(isIconized);
+   }
+}
+
 const int AudacityProjectTimerID = 5200;
 
 static AudacityProject::AttachedObjects::RegisteredFactory sProjectManagerKey {
@@ -124,23 +140,15 @@ void ProjectManager::SaveWindowSize()
       }
       else
          foundIconizedProject =  TRUE;
-
    }
+
    if (validWindowForSaveWindowSize)
    {
       wxRect windowRect = validProject->GetRect();
       wxRect normalRect = validProject->GetNormalizedWindowState();
       bool wndMaximized = validProject->IsMaximized();
-      gPrefs->Write(wxT("/Window/X"), windowRect.GetX());
-      gPrefs->Write(wxT("/Window/Y"), windowRect.GetY());
-      gPrefs->Write(wxT("/Window/Width"), windowRect.GetWidth());
-      gPrefs->Write(wxT("/Window/Height"), windowRect.GetHeight());
-      gPrefs->Write(wxT("/Window/Maximized"), wndMaximized);
-      gPrefs->Write(wxT("/Window/Normal_X"), normalRect.GetX());
-      gPrefs->Write(wxT("/Window/Normal_Y"), normalRect.GetY());
-      gPrefs->Write(wxT("/Window/Normal_Width"), normalRect.GetWidth());
-      gPrefs->Write(wxT("/Window/Normal_Height"), normalRect.GetHeight());
-      gPrefs->Write(wxT("/Window/Iconized"), FALSE);
+
+      SaveWindowPreferences(windowRect, normalRect, wndMaximized, false);
    }
    else
    {
@@ -148,18 +156,10 @@ void ProjectManager::SaveWindowSize()
          validProject = &ProjectWindow::Get( **AllProjects{}.begin() );
          bool wndMaximized = validProject->IsMaximized();
          wxRect normalRect = validProject->GetNormalizedWindowState();
+
          // store only the normal rectangle because the itemized rectangle
          // makes no sense for an opening project window
-         gPrefs->Write(wxT("/Window/X"), normalRect.GetX());
-         gPrefs->Write(wxT("/Window/Y"), normalRect.GetY());
-         gPrefs->Write(wxT("/Window/Width"), normalRect.GetWidth());
-         gPrefs->Write(wxT("/Window/Height"), normalRect.GetHeight());
-         gPrefs->Write(wxT("/Window/Maximized"), wndMaximized);
-         gPrefs->Write(wxT("/Window/Normal_X"), normalRect.GetX());
-         gPrefs->Write(wxT("/Window/Normal_Y"), normalRect.GetY());
-         gPrefs->Write(wxT("/Window/Normal_Width"), normalRect.GetWidth());
-         gPrefs->Write(wxT("/Window/Normal_Height"), normalRect.GetHeight());
-         gPrefs->Write(wxT("/Window/Iconized"), TRUE);
+         SaveWindowPreferences(normalRect, normalRect, wndMaximized, true);
       }
       else {
          // this would be a very strange case that might possibly occur on the Mac
@@ -167,19 +167,9 @@ void ProjectManager::SaveWindowSize()
          // in this case we are going to write only the default values
          wxRect defWndRect;
          GetDefaultWindowRect(&defWndRect);
-         gPrefs->Write(wxT("/Window/X"), defWndRect.GetX());
-         gPrefs->Write(wxT("/Window/Y"), defWndRect.GetY());
-         gPrefs->Write(wxT("/Window/Width"), defWndRect.GetWidth());
-         gPrefs->Write(wxT("/Window/Height"), defWndRect.GetHeight());
-         gPrefs->Write(wxT("/Window/Maximized"), FALSE);
-         gPrefs->Write(wxT("/Window/Normal_X"), defWndRect.GetX());
-         gPrefs->Write(wxT("/Window/Normal_Y"), defWndRect.GetY());
-         gPrefs->Write(wxT("/Window/Normal_Width"), defWndRect.GetWidth());
-         gPrefs->Write(wxT("/Window/Normal_Height"), defWndRect.GetHeight());
-         gPrefs->Write(wxT("/Window/Iconized"), FALSE);
+         SaveWindowPreferences(defWndRect, defWndRect, false, false);
       }
    }
-   gPrefs->Flush();
    sbWindowRectAlreadySaved = true;
 }
 
@@ -223,11 +213,6 @@ void InitProjectWindow( ProjectWindow &window )
    ToolManager::Get( project ).LayoutToolBars();
 
    //
-   // Create the horizontal ruler
-   //
-   auto &ruler = AdornedRulerPanel::Get( project );
-
-   //
    // Create the TrackPanel and the scrollbars
    //
 
@@ -236,14 +221,8 @@ void InitProjectWindow( ProjectWindow &window )
    {
       auto ubs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       ubs->Add( ToolManager::Get( project ).GetTopDock(), 0, wxEXPAND | wxALIGN_TOP );
-      ubs->Add(&ruler, 0, wxEXPAND);
       topPanel->SetSizer(ubs.release());
    }
-
-   // Ensure that the topdock comes before the ruler in the tab order,
-   // irrespective of the order in which they were created.
-   ToolManager::Get(project).GetTopDock()->MoveBeforeInTabOrder(&ruler);
-
 
    wxBoxSizer *bs;
    {
@@ -268,6 +247,11 @@ void InitProjectWindow( ProjectWindow &window )
 
    const auto trackListWindow = window.GetTrackListWindow();
 
+   //
+   // Create the horizontal ruler
+   //
+   auto &ruler = AdornedRulerPanel::Get( project );
+
    bs = static_cast<wxBoxSizer*>(trackListWindow->GetSizer());
 
    auto vsBar = &window.GetVerticalScrollBar();
@@ -289,6 +273,7 @@ void InitProjectWindow( ProjectWindow &window )
          hs->Add(vs.release(), 0, wxEXPAND | wxALIGN_TOP);
       }
 
+      bs->Add(&ruler, 0, wxEXPAND | wxALIGN_TOP);
       bs->Add(hs.release(), 1, wxEXPAND | wxALIGN_LEFT | wxALIGN_TOP);
    }
 

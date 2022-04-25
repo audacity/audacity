@@ -2,7 +2,7 @@
 # or exe/dll/msi files in a directory using a pfx file.
 # If PFX file is not present, script expects a base64 encode certificate
 # in WINDOWS_CERTIFICATE environment variable.
-# Password can be passed using WINDOWS_CERTIFICATE_PASSWORD environmnet variable.
+# Password can be passed using WINDOWS_CERTIFICATE_PASSWORD environment variable.
 # The script only signs previously unsigned files
 
 [CmdletBinding()]

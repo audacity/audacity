@@ -166,6 +166,13 @@ size_t EffectInstanceWithBlockSize::SetBlockSize(size_t maxBlockSize)
    return (mBlockSize = maxBlockSize);
 }
 
+EffectInstanceWithSampleRate::~EffectInstanceWithSampleRate() = default;
+
+void EffectInstanceWithSampleRate::SetSampleRate(double rate)
+{
+   mSampleRate = rate;
+}
+
 EffectInstanceFactory::~EffectInstanceFactory() = default;
 
 int EffectInstanceFactory::GetMidiInCount() const
@@ -178,23 +185,23 @@ int EffectInstanceFactory::GetMidiOutCount() const
    return 0;
 }
 
-EffectUIValidator::~EffectUIValidator() = default;
+EffectUIValidator::EffectUIValidator(
+   EffectUIClientInterface &effect, EffectSettingsAccess &access)
+   : mEffect{effect}
+   , mAccess{access}
+{}
+
+EffectUIValidator::~EffectUIValidator()
+{
+   mEffect.CloseUI();
+}
 
 bool EffectUIValidator::UpdateUI()
 {
    return true;
 }
 
-DefaultEffectUIValidator::DefaultEffectUIValidator(
-   EffectUIClientInterface &effect, EffectSettingsAccess &access)
-   : mEffect{effect}
-   , mAccess{access}
-{}
-
-DefaultEffectUIValidator::~DefaultEffectUIValidator()
-{
-   mEffect.CloseUI();
-}
+DefaultEffectUIValidator::~DefaultEffectUIValidator() = default;
 
 bool DefaultEffectUIValidator::ValidateUI()
 {

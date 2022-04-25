@@ -27,7 +27,7 @@
 #include "../lib-src/header-substitutes/allegro.h"
 
 
-#include "../../../../ProjectHistory.h"
+#include "ProjectHistory.h"
 #include "../../../../SelectionState.h"
 #include "../../../../ProjectSettings.h"
 #include "../../../../RefreshCode.h"
