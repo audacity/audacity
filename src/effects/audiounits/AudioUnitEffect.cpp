@@ -903,6 +903,18 @@ bool AudioUnitEffect::InitializeInstance()
    return MakeListener();
 }
 
+struct AudioUnitEffect::Instance
+   : StatefulPerTrackEffect::Instance
+   , AudioUnitWrapper
+{
+   Instance(AudioUnitEffect &effect)
+      : StatefulPerTrackEffect::Instance{ effect }
+      , AudioUnitWrapper{ effect.mComponent }
+   {
+      CreateAudioUnit();
+   }
+};
+
 std::shared_ptr<EffectInstance>
 AudioUnitEffect::MakeInstance(EffectSettings &settings) const
 {
@@ -966,6 +978,18 @@ bool AudioUnitEffect::InitializePlugin()
    }
    return true;
 }
+
+struct AudioUnitEffect::Validator : DefaultEffectUIValidator {
+   Validator(EffectUIClientInterface &effect, EffectSettingsAccess &access,
+      Instance &instance)
+   : DefaultEffectUIValidator{ effect, access }
+   , mUnit{ instance.mUnit.get() }
+   {}
+
+   // Just a pointer to an AudioUnit.  The lifetime guarantee is assumed to be
+   // provided by the instance.  See contract of PopulateUI
+   const AudioUnit mUnit;
+};
 
 bool AudioUnitEffect::MakeListener()
 {
@@ -1405,7 +1429,7 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 // ============================================================================
 
 std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
-   EffectInstance &, EffectSettingsAccess &access)
+   EffectInstance &instance, EffectSettingsAccess &access)
 {
    // OSStatus result;
 
@@ -1460,11 +1484,10 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
    }
 
    if (mpControl)
-   {
       mParent->PushEventHandler(this);
-   }
 
-   return std::make_unique<DefaultEffectUIValidator>(*this, access);
+   return std::make_unique<Validator>(*this, access,
+      dynamic_cast<AudioUnitEffect::Instance&>(instance));
 }
 
 bool AudioUnitEffect::IsGraphicalUI()

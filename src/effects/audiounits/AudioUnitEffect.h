@@ -289,6 +289,9 @@ private:
    bool BypassEffect(bool bypass);
 
 private:
+   struct Instance;
+   struct Validator;
+
    AudioUnitEffectSettings mSettings;
    //! This function will be rewritten when the effect is really stateless
    AudioUnitEffectSettings &GetSettings(EffectSettings &) const
