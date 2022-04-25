@@ -930,10 +930,7 @@ bool AudioUnitEffect::InitializePlugin()
    // third party effect families that distinguish the notions of plug-in and
    // instance.
 
-   // When AudioUnitEffect implements its own proper Instance class, this
-   // should call CreateAudioUnit() directly and not do the rest of
-   // InitializeInstance.
-   if (!InitializeInstance())
+   if (!CreateAudioUnit())
       return false;
 
    {
