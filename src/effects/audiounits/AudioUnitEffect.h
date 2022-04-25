@@ -35,13 +35,11 @@
 #define AUDIOUNITEFFECTS_FAMILY EffectFamilySymbol{ wxT("AudioUnit"), XO("Audio Unit") }
 class AudioUnitEffect;
 
-using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
-
 class AUControl;
 
 class AudioUnitEffect final
    : public StatefulPerTrackEffect
-   , public AudioUnitWrapper
+   , AudioUnitWrapper
 {
 public:
    using Parameters = PackedArray::Ptr<const AudioUnitParameterID>;
@@ -94,39 +92,15 @@ public:
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;
 
-   sampleCount GetLatency() override;
-   // size_t GetTailSize() const override;
-
-   bool ProcessInitialize(EffectSettings &settings,
-      sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-
-   bool RealtimeInitialize(EffectSettings &settings) override;
-   bool RealtimeAddProcessor(EffectSettings &settings,
-      unsigned numChannels, float sampleRate) override;
-   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
-   bool RealtimeSuspend() override;
-   bool RealtimeResume() override;
-   bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
-      const float *const *inbuf, float *const *outbuf, size_t numSamples)
-      override;
-   bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
-
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
-   bool InitializeInstance();
    bool InitializePlugin();
    bool FullyInitializePlugin();
 
    // EffectUIClientInterface implementation
 
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-   std::shared_ptr<EffectInstance> DoMakeInstance();
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
@@ -143,8 +117,6 @@ public:
    // AudioUnitEffect implementation
    
 private:
-   bool SetRateAndChannels();
-
    TranslatableString Export(
       const AudioUnitEffectSettings &settings, const wxString & path) const;
    TranslatableString Import(
@@ -157,18 +129,6 @@ private:
       const wxString &path, const void *blob, size_t len,
       bool allowEmpty = true) const;
 
-   static OSStatus RenderCallback(void *inRefCon,
-                                  AudioUnitRenderActionFlags *inActionFlags,
-                                  const AudioTimeStamp *inTimeStamp,
-                                  UInt32 inBusNumber,
-                                  UInt32 inNumFrames,
-                                  AudioBufferList *ioData);
-   OSStatus Render(AudioUnitRenderActionFlags *inActionFlags,
-                   const AudioTimeStamp *inTimeStamp,
-                   UInt32 inBusNumber,
-                   UInt32 inNumFrames,
-                   AudioBufferList *ioData);
-
    void GetChannelCounts();
 
    bool MigrateOldConfigFile(
@@ -180,8 +140,6 @@ private:
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
    bool CreatePlain(wxWindow *parent);
 #endif
-
-   bool BypassEffect(bool bypass);
 
 private:
    AudioUnitEffectSettings mSettings;
@@ -199,33 +157,19 @@ private:
    const wxString mName;
    const wxString mVendor;
 
-   AudioUnitCleanup<AudioUnit, AudioUnitUninitialize> mInitialization;
-
    // Initialized in GetChannelCounts()
    unsigned mAudioIns{ 2 };
    unsigned mAudioOuts{ 2 };
 
    bool mInteractive{ false };
-   bool mLatencyDone{ false };
    UInt32 mBlockSize{ 0 };
    Float64 mSampleRate{ 44100.0 };
 
    bool mUseLatency{ true };
 
-   AudioTimeStamp mTimeStamp{};
-
-   PackedArray::Ptr<AudioBufferList> mInputList;
-   PackedArray::Ptr<AudioBufferList> mOutputList;
-
    wxWindow *mParent{};
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
    bool mIsGraphical{ false };
-
-   AudioUnitEffect *const mMaster;     // non-NULL if a slave
-public:
-   //! Whether the master instance is now allocated to a group number
-   bool mRecruited{ false };
-   AudioUnitEffectArray mSlaves;
    mutable bool mInitialFetchDone{ false };
 };
 
