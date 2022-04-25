@@ -255,6 +255,25 @@ bool AudioUnitEffect::InitializePlugin()
    if (!InitializeInstance())
       return false;
 
+   // Determine interactivity
+   mInteractive = (Count(mParameters) > 0);
+   if (!mInteractive) {
+      // Check for a Cocoa UI
+      // This could retrieve a variable-size property, but we only look at
+      // the first element.
+      AudioUnitCocoaViewInfo cocoaViewInfo;
+      mInteractive =
+         !GetFixedSizeProperty(kAudioUnitProperty_CocoaUI, cocoaViewInfo);
+      if (!mInteractive) {
+         // Check for a Carbon UI
+         // This could retrieve a variable sized array but we only need the
+         // first
+         AudioComponentDescription compDesc;
+         mInteractive = !GetFixedSizeProperty(
+            kAudioUnitProperty_GetUIComponentList, compDesc);
+      }
+   }
+
    // Consult preferences
    // Decide mUseLatency, which affects GetLatency(), which is actually used
    // so far only in destructive effect processing
@@ -317,21 +336,6 @@ bool AudioUnitEffect::MakeListener()
       {
          return false;
       }
-   
-      // Check for a Cocoa UI
-      // This could retrieve a variable-size property, but we only look at
-      // the first element.
-      AudioUnitCocoaViewInfo cocoaViewInfo;
-      bool hasCocoa =
-         !GetFixedSizeProperty(kAudioUnitProperty_CocoaUI, cocoaViewInfo);
-
-      // Check for a Carbon UI
-      // This could retrieve a variable sized array but we only need the first
-      AudioComponentDescription compDesc;
-      bool hasCarbon =
-         !GetFixedSizeProperty(kAudioUnitProperty_GetUIComponentList, compDesc);
-
-      mInteractive = (PackedArray::Count(array) > 0) || hasCocoa || hasCarbon;
    }
 
    return true;
