@@ -187,7 +187,6 @@ public:
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
-   bool MakeListener();
    bool InitializeInstance();
    bool InitializePlugin();
 
@@ -257,14 +256,6 @@ private:
                    UInt32 inNumFrames,
                    AudioBufferList *ioData);
 
-   static void EventListenerCallback(void *inCallbackRefCon,
-                                     void *inObject,
-                                     const AudioUnitEvent *inEvent,
-                                     UInt64 inEventHostTime,
-                                     AudioUnitParameterValue inParameterValue);
-   void EventListener(const AudioUnitEvent *inEvent,
-                      AudioUnitParameterValue inParameterValue);
-
    void GetChannelCounts();
 
    bool MigrateOldConfigFile(
@@ -304,7 +295,6 @@ private:
    const wxString mName;
    const wxString mVendor;
 
-   AudioUnitCleanup<AUEventListenerRef, AUListenerDispose> mEventListenerRef;
    AudioUnitCleanup<AudioUnit, AudioUnitUninitialize> mInitialization;
 
    // Initialized in GetChannelCounts()
