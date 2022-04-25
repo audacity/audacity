@@ -41,7 +41,7 @@ class AUControl;
 
 class AudioUnitEffect final
    : public StatefulPerTrackEffect
-   , private AudioUnitWrapper
+   , public AudioUnitWrapper
 {
 public:
    using Parameters = PackedArray::Ptr<const AudioUnitParameterID>;
@@ -117,7 +117,6 @@ public:
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
-   bool MakeListener();
    bool InitializeInstance();
    bool InitializePlugin();
 
@@ -167,14 +166,6 @@ private:
                    UInt32 inNumFrames,
                    AudioBufferList *ioData);
 
-   static void EventListenerCallback(void *inCallbackRefCon,
-                                     void *inObject,
-                                     const AudioUnitEvent *inEvent,
-                                     UInt64 inEventHostTime,
-                                     AudioUnitParameterValue inParameterValue);
-   void EventListener(const AudioUnitEvent *inEvent,
-                      AudioUnitParameterValue inParameterValue);
-
    void GetChannelCounts();
 
    bool MigrateOldConfigFile(
@@ -205,7 +196,6 @@ private:
    const wxString mName;
    const wxString mVendor;
 
-   AudioUnitCleanup<AUEventListenerRef, AUListenerDispose> mEventListenerRef;
    AudioUnitCleanup<AudioUnit, AudioUnitUninitialize> mInitialization;
 
    // Initialized in GetChannelCounts()
@@ -230,8 +220,10 @@ private:
    bool mIsGraphical{ false };
 
    AudioUnitEffect *const mMaster;     // non-NULL if a slave
+public:
    AudioUnitEffectArray mSlaves;
 
+private:
    AUControl *mpControl{};
 };
 

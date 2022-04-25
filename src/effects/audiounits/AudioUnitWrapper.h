@@ -126,6 +126,8 @@ struct AudioUnitWrapper
    bool CreateAudioUnit();
 
    AudioUnit GetAudioUnit() const { return mUnit.get(); }
+   const Parameters &GetParameters() const
+   { return mParameters; }
 
 protected:
    const AudioComponent mComponent;

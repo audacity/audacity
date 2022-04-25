@@ -208,6 +208,12 @@ public:
    AudioUnitInstance(StatefulPerTrackEffect &effect,
       AudioComponent component, Parameters &parameters);
    ~AudioUnitInstance() override;
+
+   static void EventListenerCallback(void *inCallbackRefCon,
+      void *inObject, const AudioUnitEvent *inEvent,
+      UInt64 inEventHostTime, AudioUnitParameterValue inParameterValue);
+   void EventListener(const AudioUnitEvent *inEvent,
+      AudioUnitParameterValue inParameterValue);
 };
 
 AudioUnitInstance::AudioUnitInstance(StatefulPerTrackEffect &effect,
@@ -236,11 +242,7 @@ bool AudioUnitEffect::InitializeInstance()
       kAudioUnitProperty_MaximumFramesPerSlice, mBlockSize))
       // Call failed?  Then supply a default:
       mBlockSize = 512;
-
-   // Is this really needed here or can it be done in MakeInstance()
-   // only?  I think it can, but this is more a conservative change for now,
-   // preserving what SetHost() did
-   return MakeListener();
+   return true;
 }
 
 std::shared_ptr<EffectInstance> AudioUnitEffect::MakeInstance() const
@@ -323,9 +325,15 @@ private:
 
    void Notify();
 
+   using EventListenerPtr =
+      AudioUnitCleanup<AUEventListenerRef, AUListenerDispose>;
+
+   static EventListenerPtr MakeListener(AudioUnitInstance &instance);
+
    // The lifetime guarantee is assumed to be provided by the instance.
    // See contract of PopulateUI
    AudioUnitInstance &mInstance;
+   const EventListenerPtr mEventListenerRef;
    AUControl *const mpControl{};
 };
 
@@ -334,6 +342,7 @@ AudioUnitValidator::AudioUnitValidator(EffectUIClientInterface &effect,
    AUControl *pControl
 )  : EffectUIValidator{ effect, access }
    , mInstance{ instance }
+   , mEventListenerRef{ MakeListener(instance) }
    , mpControl{ pControl }
 {
    // Make the settings of the instance up to date before using it to
@@ -345,59 +354,44 @@ AudioUnitValidator::~AudioUnitValidator()
 {
 }
 
-bool AudioUnitEffect::MakeListener()
+auto AudioUnitValidator::MakeListener(AudioUnitInstance &instance)
+   -> EventListenerPtr
 {
-   if (!mMaster)
-   {
-      // Don't have a master -- so this IS the master.
-      OSStatus result;
-      AUEventListenerRef eventListenerRef{};
-      result = AUEventListenerCreate(AudioUnitEffect::EventListenerCallback,
-                                    this,
-                                    (CFRunLoopRef)GetCFRunLoopFromEventLoop(GetCurrentEventLoop()),
-                                    kCFRunLoopDefaultMode,
-                                    0.0,
-                                    0.0,
-                                    &eventListenerRef);
-      if (result != noErr)
-         return false;
-      mEventListenerRef.reset(eventListenerRef);
+   const auto unit = instance.GetAudioUnit();
+   EventListenerPtr result;
 
-      AudioUnitEvent event;
- 
-      event.mEventType = kAudioUnitEvent_ParameterValueChange;
-      event.mArgument.mParameter.mAudioUnit = mUnit.get();
-      event.mArgument.mParameter.mScope = kAudioUnitScope_Global;
-      event.mArgument.mParameter.mElement = 0;
+   // Register a callback with the audio unit
+   AUEventListenerRef eventListenerRef{};
+   if (AUEventListenerCreate(AudioUnitInstance::EventListenerCallback,
+      &instance,
+      static_cast<CFRunLoopRef>( const_cast<void*>(
+         GetCFRunLoopFromEventLoop(GetCurrentEventLoop()))),
+      kCFRunLoopDefaultMode, 0.0, 0.0, &eventListenerRef))
+      return nullptr;
+   result.reset(eventListenerRef);
 
-      // Retrieve the list of parameters
-      PackedArray::Ptr<AudioUnitParameterID> array;
-      if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
-         return false;
+   // AudioUnitEvent is a struct with a discriminator field and a union
+   AudioUnitEvent event{ kAudioUnitEvent_ParameterValueChange };
+   // Initialize union member -- the ID (second field) reassigned later
+   auto &parameter = event.mArgument.mParameter;
+   parameter = AudioUnitUtils::Parameter{ unit, kAudioUnitScope_Global };
 
-      // Register them as something we're interested in
-      for (const auto &ID : array) {
-         event.mArgument.mParameter.mParameterID = ID;
-         if (AUEventListenerAddEventType(mEventListenerRef.get(), this, &event))
-            return false;
+   // Register each parameter as something we're interested in
+   if (instance.GetParameters())
+      for (const auto &ID : instance.GetParameters()) {
+         parameter.mParameterID = ID;
+         if (AUEventListenerAddEventType(result.get(), &instance, &event))
+            return nullptr;
       }
 
-      event.mEventType = kAudioUnitEvent_PropertyChange;
-      event.mArgument.mProperty.mAudioUnit = mUnit.get();
-      event.mArgument.mProperty.mPropertyID = kAudioUnitProperty_Latency;
-      event.mArgument.mProperty.mScope = kAudioUnitScope_Global;
-      event.mArgument.mProperty.mElement = 0;
+   // Now set up the other union member
+   event = { kAudioUnitEvent_PropertyChange };
+   event.mArgument.mProperty = AudioUnitUtils::Property{
+      unit, kAudioUnitProperty_Latency, kAudioUnitScope_Global };
+   if (AUEventListenerAddEventType(result.get(), &instance, &event))
+      return nullptr;
 
-      result = AUEventListenerAddEventType(mEventListenerRef.get(),
-                                           this,
-                                           &event);
-      if (result != noErr)
-      {
-         return false;
-      }
-   }
-
-   return true;
+   return result;
 }
 
 unsigned AudioUnitEffect::GetAudioInCount() const
@@ -1202,49 +1196,36 @@ OSStatus AudioUnitEffect::RenderCallback(void *inRefCon,
       inTimeStamp, inBusNumber, inNumFrames, ioData);
 }
 
-void AudioUnitEffect::EventListener(const AudioUnitEvent *inEvent,
-                                    AudioUnitParameterValue inParameterValue)
+void AudioUnitInstance::EventListener(const AudioUnitEvent *inEvent,
+   AudioUnitParameterValue inParameterValue)
 {
    // Handle property changes
-   if (inEvent->mEventType == kAudioUnitEvent_PropertyChange)
-   {
+   if (inEvent->mEventType == kAudioUnitEvent_PropertyChange) {
       // Handle latency changes
-      if (inEvent->mArgument.mProperty.mPropertyID == kAudioUnitProperty_Latency)
-      {
+      if (inEvent->mArgument.mProperty.mPropertyID ==
+          kAudioUnitProperty_Latency) {
          // Allow change to be used
          //mLatencyDone = false;
       }
-
       return;
    }
 
    // Only parameter changes at this point
-
-   if (mMaster)
-   {
-      // We're a slave, so just set the parameter
-      AudioUnitSetParameter(mUnit.get(),
+   // Propagate the parameter
+   // TODO store slaves in the instance
+   auto &slaves = static_cast<const AudioUnitEffect&>(GetEffect()).mSlaves;
+   for (auto &worker : slaves)
+      AudioUnitSetParameter(worker->GetAudioUnit(),
          inEvent->mArgument.mParameter.mParameterID,
          kAudioUnitScope_Global, 0, inParameterValue, 0);
-   }
-   else
-   {
-      // We're the master, so propagate 
-      for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-      {
-         mSlaves[i]->EventListener(inEvent, inParameterValue);
-      }
-   }
 }
 
 // static
-void AudioUnitEffect::EventListenerCallback(void *inCallbackRefCon,
-                                            void *inObject,
-                                            const AudioUnitEvent *inEvent,
-                                            UInt64 inEventHostTime,
-                                            AudioUnitParameterValue inParameterValue)
+void AudioUnitInstance::EventListenerCallback(void *inCallbackRefCon,
+   void *inObject, const AudioUnitEvent *inEvent, UInt64 inEventHostTime,
+   AudioUnitParameterValue inParameterValue)
 {
-   static_cast<AudioUnitEffect *>(inCallbackRefCon)
+   static_cast<AudioUnitInstance *>(inCallbackRefCon)
       ->EventListener(inEvent, inParameterValue);
 }
 
