@@ -19,31 +19,134 @@
 
 #include "WXGraphicsContextPainter.h"
 
+#ifdef WIN32
+#  include "graphics/d2d/D2DRenderer.h"
+#endif
+
+#include "WXFontUtils.h"
+
 namespace
 {
-wxGraphicsRenderer* GetRenderer()
+class RendererProvider /* not final */
 {
-   //return wxGraphicsRenderer::GetDefaultRenderer();
-   return wxGraphicsRenderer::GetDirect2DRenderer();
+public:
+   virtual ~RendererProvider() = default;
+
+   virtual std::unique_ptr<Painter> CreatePainterFromWindow(wxWindow& wnd) = 0;
+   virtual std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc) = 0;
+
+   virtual Painter& GetMeasuringPainter() = 0;
+};
+
+class wxGraphicsRendererProvider final : public RendererProvider
+{
+public:
+   wxGraphicsRenderer* GetRenderer() const
+   {
+      return wxGraphicsRenderer::GetDefaultRenderer();
+   }
+
+   std::unique_ptr<Painter>
+   CreatePainterFromWindow(wxWindow& wnd) override
+   {
+      return std::make_unique<WXGraphicsContextPainter>(
+         GetRenderer(), &wnd, wnd.GetFont());
+   }
+
+   std::unique_ptr<Painter>
+   CreatePainterFromDC(wxDC& dc) override
+   {
+      return std::make_unique<WXGraphicsContextPainter>(
+         GetRenderer(), &dc, dc.GetFont());
+   }
+
+   Painter& GetMeasuringPainter() override
+   {
+      if (!mMeasuringPainter)
+      {
+         mMeasuringPainter = std::make_unique<WXGraphicsContextPainter>(
+            GetRenderer(), *wxNORMAL_FONT);
+      }
+
+      return *mMeasuringPainter;
+   }
+
+private:
+   std::unique_ptr<Painter> mMeasuringPainter;
+};
+
+#ifdef WIN32
+class D2DRendererProvider : public RendererProvider
+{
+public:
+   ~D2DRendererProvider()
+   {
+      SharedD2DRenderer().Shutdown();   
+   }
+
+   std::unique_ptr<Painter> CreatePainterFromWindow(wxWindow& wnd) override
+   {
+      return SharedD2DRenderer().CreateHWNDPainter(
+         wnd.GetHWND(), FontInfoFromWXFont(wnd.GetFont()));
+   }
+
+   std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc) override
+   {
+      return SharedD2DRenderer().CreateHDCPainter(
+         dc.GetHDC(), FontInfoFromWXFont(dc.GetFont()));
+   }
+
+   Painter& GetMeasuringPainter() override
+   {
+      if (!mMeasuringPainter)
+         mMeasuringPainter = SharedD2DRenderer().CreateMeasuringPainter(
+            FontInfoFromWXFont(*wxNORMAL_FONT));
+
+      return *mMeasuringPainter;
+   }
+
+private:
+   std::unique_ptr<Painter> mMeasuringPainter;
+};
+#endif
+
+std::unique_ptr<RendererProvider> Provider;
+
+RendererProvider& GetRendererProvider()
+{
+#ifdef WIN32
+   if (Provider == nullptr)
+   {
+      auto& d2dRenderer = SharedD2DRenderer();
+
+      if (d2dRenderer.IsAvailable())
+         Provider = std::make_unique<D2DRendererProvider>();
+   }
+#endif
+
+   if (Provider == nullptr)
+      Provider = std::make_unique<wxGraphicsRendererProvider>();
+
+   return *Provider;
 }
 }
 
 std::unique_ptr<Painter> CreatePainter(wxWindow* wnd)
 {
-   return std::make_unique<WXGraphicsContextPainter>(
-      GetRenderer(), wnd, wnd->GetFont());
+   return GetRendererProvider().CreatePainterFromWindow(*wnd);
 }
 
 std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc)
 {
-   return std::make_unique<WXGraphicsContextPainter>(
-      GetRenderer(), &dc, dc.GetFont());
+   return GetRendererProvider().CreatePainterFromDC(dc);
 }
 
 Painter& GetMeasuringPainter()
 {
-   static auto context = std::make_unique<WXGraphicsContextPainter>(
-      GetRenderer(), *wxNORMAL_FONT);
+   return GetRendererProvider().GetMeasuringPainter();
+}
 
-   return *context;
+void ShutdownRenderingSystem()
+{
+   Provider.reset();
 }

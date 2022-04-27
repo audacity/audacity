@@ -46,21 +46,20 @@ public:
 
    RendererID GetRendererID() const override;
 
-   std::shared_ptr<PainterFont>
-   CreateFont(const std::string_view& faceName, float pixelSize) override;
+   std::shared_ptr<PainterFont> CreateFont(const FontInfo& fontInfo) override;
 
    std::shared_ptr<PainterFont>
    CreateFontFromWX(const wxFont& font);
 
-   std::unique_ptr<PainterImage> CreateImage(
+   std::shared_ptr<PainterImage> CreateImage(
       PainterImageFormat format, uint32_t width, uint32_t height,
       const void* data = nullptr, const void* alphaData = nullptr) override;
 
-   std::unique_ptr<PainterImage> GetSubImage(
-      const PainterImage& image, uint32_t x, uint32_t y, uint32_t width,
-      uint32_t height) override;
+   std::shared_ptr<PainterImage> GetSubImage(
+      const std::shared_ptr<PainterImage>& image, uint32_t x, uint32_t y,
+      uint32_t width, uint32_t height) override;
 
-   std::unique_ptr<PainterImage> CreateDeviceImage(
+   std::shared_ptr<PainterImage> CreateDeviceImage(
       PainterImageFormat format, uint32_t width, uint32_t height) override;
 
    void Flush() override;
@@ -112,8 +111,8 @@ private:
 
    void DoDrawRoundedRect(const Rect& rect, float radius) override;
 
-   void PushPaintTarget(PainterImage& image) override;
-   void PopPaintTarget(PainterImage& image) override;
+   void PushPaintTarget(const std::shared_ptr<PainterImage>& image) override;
+   void PopPaintTarget(const std::shared_ptr<PainterImage>& image) override;
 
    class PaintTargetStack;
 

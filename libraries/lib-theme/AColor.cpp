@@ -145,13 +145,13 @@ namespace
 
       // image slices
 
-      const auto uw0 = bitmap.GetWidth() / 2;
+      const auto uw0 = bitmap->GetWidth() / 2;
       const auto uw1 = 1;
-      const auto uw2 = bitmap.GetWidth() - uw0 - uw1;
+      const auto uw2 = bitmap->GetWidth() - uw0 - uw1;
 
-      const auto vh0 = bitmap.GetHeight() / 2;
+      const auto vh0 = bitmap->GetHeight() / 2;
       const auto vh1 = 1;
-      const auto vh2 = bitmap.GetHeight() - vh1 - vh0;
+      const auto vh2 = bitmap->GetHeight() - vh1 - vh0;
 
       const auto u0 = 0;
       const auto u1 = uw0;
@@ -179,16 +179,16 @@ namespace
       const auto y1 = r.y + yh0;
       const auto y2 = r.y + yh0 + yh1;
 
-      const PainterImage* images[] = {
-         &theTheme.GetPainterImage(painter, bitmapIndex, u0, v0, uw0, vh0),
-         &theTheme.GetPainterImage(painter, bitmapIndex, u1, v0, uw1, vh0),
-         &theTheme.GetPainterImage(painter, bitmapIndex, u2, v0, uw2, vh0),
-         &theTheme.GetPainterImage(painter, bitmapIndex, u0, v1, uw0, vh1),
-         &theTheme.GetPainterImage(painter, bitmapIndex, u1, v1, uw1, vh1),
-         &theTheme.GetPainterImage(painter, bitmapIndex, u2, v1, uw2, vh1),
-         &theTheme.GetPainterImage(painter, bitmapIndex, u0, v2, uw0, vh2),
-         &theTheme.GetPainterImage(painter, bitmapIndex, u1, v2, uw1, vh2),
-         &theTheme.GetPainterImage(painter, bitmapIndex, u2, v2, uw2, vh2),
+      const std::shared_ptr<PainterImage> images[] = {
+         theTheme.GetPainterImage(painter, bitmapIndex, u0, v0, uw0, vh0),
+         theTheme.GetPainterImage(painter, bitmapIndex, u1, v0, uw1, vh0),
+         theTheme.GetPainterImage(painter, bitmapIndex, u2, v0, uw2, vh0),
+         theTheme.GetPainterImage(painter, bitmapIndex, u0, v1, uw0, vh1),
+         theTheme.GetPainterImage(painter, bitmapIndex, u1, v1, uw1, vh1),
+         theTheme.GetPainterImage(painter, bitmapIndex, u2, v1, uw2, vh1),
+         theTheme.GetPainterImage(painter, bitmapIndex, u0, v2, uw0, vh2),
+         theTheme.GetPainterImage(painter, bitmapIndex, u1, v2, uw1, vh2),
+         theTheme.GetPainterImage(painter, bitmapIndex, u2, v2, uw2, vh2),
       };
 
       painter.DrawImage(*images[0], x0, y0, xw0, yh0);
@@ -625,19 +625,19 @@ void AColor::Bevel2(
 {
    const auto bitmatIndex = GetButtonImageIndex(up, bSel, bHighlight);
 
-   const auto& fullImage = theTheme.GetPainterImage(painter, bitmatIndex);
+   auto fullImage = theTheme.GetPainterImage(painter, bitmatIndex);
 
-   int h = std::min<int>(r.height, fullImage.GetHeight());
+   int h = std::min<int>(r.height, fullImage->GetHeight());
    int r2 = r.width - r.width / 2;
 
-   const auto& leftImage =
+   auto leftImage =
       theTheme.GetPainterImage(painter, bitmatIndex, 0, 0, r.width / 2, h);
 
-   const auto& rightImage = theTheme.GetPainterImage(
-      painter, bitmatIndex, fullImage.GetWidth() - r2, 0, r2, h);
+   auto rightImage = theTheme.GetPainterImage(
+      painter, bitmatIndex, fullImage->GetWidth() - r2, 0, r2, h);
 
-   painter.DrawImage(leftImage, r.x, r.y, r.width / 2, h);
-   painter.DrawImage(rightImage, r.x + r.width / 2, r.y, r2, h);
+   painter.DrawImage(*leftImage, r.x, r.y, r.width / 2, h);
+   painter.DrawImage(*rightImage, r.x + r.width / 2, r.y, r2, h);
 }
 
 void AColor::ButtonStretch(

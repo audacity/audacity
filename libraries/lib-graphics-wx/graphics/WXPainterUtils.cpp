@@ -90,19 +90,6 @@ wxBrush wxBrushFromBrush(const Brush& brush) noexcept
              wxNullBrush;
 }
 
-GRAPHICS_WX_API std::shared_ptr<PainterFont>
-FontFromWXFont(Painter& painter, const wxFont& font)
-{
-   if (painter.GetRendererID() == WXGraphicsContextPainterRendererID())
-   {
-      auto& concretePainter = static_cast<WXGraphicsContextPainter&>(painter);
-      return concretePainter.CreateFontFromWX(font);
-   }
-
-   assert(false);
-   return painter.GetDefaultFont();
-}
-
 Rect RectFromWXRect(const wxRect& rect) noexcept
 {
    return Rect {

@@ -60,7 +60,7 @@ unsigned PlayIndicatorOverlayBase::SequenceNumber() const
 namespace {
 // Returns the appropriate bitmap, and panel-relative coordinates for its
 // upper left corner.
-std::pair< Point, const PainterImage& > GetIndicatorBitmap( Painter &painter, AudacityProject &project,
+std::pair< Point, std::shared_ptr<PainterImage> > GetIndicatorBitmap( Painter &painter, AudacityProject &project,
    wxCoord xx, bool playing)
 {
    bool pinned = Scrubber::Get( project ).IsTransportingPinned();
@@ -68,7 +68,8 @@ std::pair< Point, const PainterImage& > GetIndicatorBitmap( Painter &painter, Au
       (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
       (playing ? bmpPlayPointer : bmpRecordPointer)
    );
-   const int IndicatorHalfWidth = bmp.GetWidth() / 2;
+   const int IndicatorHalfWidth = bmp->GetWidth() / 2;
+   
    return { Point { static_cast<float>(xx - IndicatorHalfWidth - 1),
                     static_cast<float>(
                        AdornedRulerPanel::Get(project).GetInnerRect().y) },
@@ -86,7 +87,7 @@ PlayIndicatorOverlayBase::DoGetRectangle(Painter& painter, wxSize size)
       bool rec = gAudioIO->IsCapturing();
       auto pair = GetIndicatorBitmap( painter, *mProject, xx, !rec );
       xx = pair.first.x;
-      width = pair.second.GetWidth();
+      width = pair.second->GetWidth();
    }
 
    // May be excessive height, but little matter
@@ -131,7 +132,7 @@ void PlayIndicatorOverlayBase::Draw(OverlayPanel &panel, Painter &painter)
       wxASSERT(!mIsMaster);
 
       auto pair = GetIndicatorBitmap( painter, *mProject, mLastIndicatorX, !rec );
-      painter.DrawImage( pair.second, pair.first.x, pair.first.y );
+      painter.DrawImage( *pair.second, pair.first.x, pair.first.y );
    }
    else
       wxASSERT(false);

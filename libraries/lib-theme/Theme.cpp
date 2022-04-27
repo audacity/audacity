@@ -180,10 +180,10 @@ class ThemeBase::PainterImageCache final
 {
 public:
    using Cache = std::unordered_map<
-      PainterImageCacheKey, std::unique_ptr<PainterImage>,
+      PainterImageCacheKey, std::shared_ptr<PainterImage>,
       PainterImageCacheKeyHash>;
 
-   const PainterImage& GetImage(
+   std::shared_ptr<PainterImage> GetImage(
       Painter& painter, ThemeSet& set, int index, int x, int y, int w, int h)
    {
       const PainterImageCacheKey key = { index, x, y, w, h };
@@ -193,7 +193,7 @@ public:
       if (it != mCache.end())
       {
          if (painter.GetRendererID() == it->second->GetRendererID())
-            return *it->second;
+            return it->second;
          else
             mCache.clear();
       }
@@ -209,7 +209,7 @@ public:
                     image.GetWidth(), image.GetHeight(), image.GetData(),
                     image.GetAlpha()));
 
-         return *(result.first->second);
+         return result.first->second;
       }
 
       const auto& baseImage = GetImage(painter, set, index, 0, 0, 0, 0);
@@ -217,7 +217,7 @@ public:
       auto result =
          mCache.emplace(key, painter.GetSubImage(baseImage, x, y, w, h));
 
-      return *(result.first->second);
+      return result.first->second;
    }
 
 private:
@@ -1421,10 +1421,15 @@ wxSize  ThemeBase::ImageSize( int iIndex )
    return wxSize( Image.GetWidth(), Image.GetHeight());
 }
 
-const PainterImage& ThemeBase::GetPainterImage(
+std::shared_ptr<PainterImage> ThemeBase::GetPainterImage(
    Painter& painter, int index, int x, int y, int w, int h)
 {
    return mPainterImageCache->GetImage(painter, *mpSet, index, x, y, w, h);
+}
+
+void ThemeBase::ReleasePainterImages()
+{
+   mPainterImageCache.reset();
 }
 
 /// Replaces both the image and the bitmap.

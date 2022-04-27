@@ -16,6 +16,8 @@ set( SOURCES
    graphics/Brush.h
    graphics/Color.cpp
    graphics/Color.h
+   graphics/FontInfo.cpp
+   graphics/FontInfo.h
    graphics/Painter.cpp
    graphics/Painter.h
    graphics/Pen.cpp

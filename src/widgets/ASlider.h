@@ -225,9 +225,9 @@ class AUDACITY_DLL_API LWSlider
 
    bool mIsDragging;
 
-   std::unique_ptr<PainterImage> mBitmap;
-   const PainterImage* mThumbBitmap;
-   const PainterImage* mThumbBitmapHilited;
+   std::shared_ptr<PainterImage> mBitmap;
+   std::shared_ptr<PainterImage> mThumbBitmap;
+   std::shared_ptr<PainterImage> mThumbBitmapHilited;
 
    TranslatableString mName;
 

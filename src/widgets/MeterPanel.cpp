@@ -78,6 +78,7 @@
 #include "graphics/Painter.h"
 #include "graphics/WXColor.h"
 #include "graphics/WXPainterUtils.h"
+#include "graphics/WXFontUtils.h"
 #include "graphics/WXPainterFactory.h"
 #include "CodeConversions.h"
 
@@ -388,12 +389,12 @@ MeterPanel::MeterPanel(AudacityProject *project,
       if(mIsInput)
       {
          //mIcon = NEW wxBitmap(MicMenuNarrow_xpm);
-         mIcon = &theTheme.GetPainterImage(*mPainter, bmpMic);
+         mIcon = theTheme.GetPainterImage(*mPainter, bmpMic);
       }
       else
       {
          //mIcon = NEW wxBitmap(SpeakerMenuNarrow_xpm);
-         mIcon = &theTheme.GetPainterImage(*mPainter, bmpSpeaker);
+         mIcon = theTheme.GetPainterImage(*mPainter, bmpSpeaker);
       }
    }
 
@@ -484,7 +485,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    {
       // Create a NEW one using current size and select into the DC
       mBitmap = mPainter->CreateDeviceImage(PainterImageFormat::RGB888, mWidth, mHeight);
-      auto offscreenHolder = mPainter->PaintOn(*mBitmap);
+      auto offscreenHolder = mPainter->PaintOn(mBitmap);
       auto stateMutator = mPainter->GetStateMutator();
       // Go calculate all of the layout metrics
       HandleLayout();
@@ -511,7 +512,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
          auto stateMutator = mPainter->GetStateMutator();
          
          bool highlight = InIcon();
-         mPainter->DrawImage( theTheme.GetPainterImage(*mPainter, highlight ? 
+         mPainter->DrawImage( *theTheme.GetPainterImage(*mPainter, highlight ? 
             bmpHiliteUpButtonSmall : bmpUpButtonSmall ), 
             mIconRect.x, mIconRect.y );
 

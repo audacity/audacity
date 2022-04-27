@@ -491,11 +491,11 @@ void TrackArt::DrawSyncLockTiles(
 {
    auto& painter = context.painter;
 
-   const auto& syncLockBitmap = theTheme.GetPainterImage(painter, bmpSyncLockSelTile);
+   auto syncLockBitmap = theTheme.GetPainterImage(painter, bmpSyncLockSelTile);
 
    // Grid spacing is a bit smaller than actual image size
-   int gridW = syncLockBitmap.GetWidth() - 6;
-   int gridH = syncLockBitmap.GetHeight() - 8;
+   int gridW = syncLockBitmap->GetWidth() - 6;
+   int gridH = syncLockBitmap->GetHeight() - 8;
 
    // Horizontal position within the grid, modulo its period
    int blockX = (rect.x / gridW) % 5;
@@ -507,7 +507,7 @@ void TrackArt::DrawSyncLockTiles(
    // Check if we're missing an extra column to the left (this can happen
    // because the tiles are bigger than the grid spacing)
    bool extraCol = false;
-   if (syncLockBitmap.GetWidth() - gridW > xOffset) {
+   if (syncLockBitmap->GetWidth() - gridW > xOffset) {
       extraCol = true;
       xOffset += gridW;
       blockX = (blockX - 1) % 5;
@@ -517,7 +517,7 @@ void TrackArt::DrawSyncLockTiles(
 
    int xx = 0;
    while (xx < rect.width) {
-      int width = syncLockBitmap.GetWidth() - xOffset;
+      int width = syncLockBitmap->GetWidth() - xOffset;
       if (xx + width > rect.width)
          width = rect.width - xx;
 
@@ -535,7 +535,7 @@ void TrackArt::DrawSyncLockTiles(
       // Check if we're missing an extra row on top (this can happen because
       // the tiles are bigger than the grid spacing)
       bool extraRow = false;
-      if (syncLockBitmap.GetHeight() - gridH > yOffset) {
+      if (syncLockBitmap->GetHeight() - gridH > yOffset) {
          extraRow = true;
          yOffset += gridH;
          blockY = (blockY - 1) % 5;
@@ -546,7 +546,7 @@ void TrackArt::DrawSyncLockTiles(
       int yy = 0;
       while (yy < rect.height)
       {
-         int height = syncLockBitmap.GetHeight() - yOffset;
+         int height = syncLockBitmap->GetHeight() - yOffset;
          if (yy + height > rect.height)
             height = rect.height - yy;
 
@@ -557,14 +557,14 @@ void TrackArt::DrawSyncLockTiles(
          {
 
             // Do we need to get a sub-bitmap?
-            if (width != syncLockBitmap.GetWidth() || height != syncLockBitmap.GetHeight()) {
+            if (width != syncLockBitmap->GetWidth() || height != syncLockBitmap->GetHeight()) {
                const auto& subSyncLockBitmap = theTheme.GetPainterImage(
                   painter, bmpSyncLockSelTile, xOffset, yOffset, width, height);
 
-               painter.DrawImage(subSyncLockBitmap, rect.x + xx, rect.y + yy);
+               painter.DrawImage(*subSyncLockBitmap, rect.x + xx, rect.y + yy);
             }
             else {
-               painter.DrawImage(syncLockBitmap, rect.x + xx, rect.y + yy);
+               painter.DrawImage(*syncLockBitmap, rect.x + xx, rect.y + yy);
             }
          }
 

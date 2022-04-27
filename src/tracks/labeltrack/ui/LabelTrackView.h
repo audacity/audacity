@@ -128,7 +128,7 @@ public:
       const LabelTrack &track, LabelTrackHit &hit, int x, int y );
 
 private:
-   static const PainterImage& GetGlyph(Painter& painter, int i);
+   static std::shared_ptr<PainterImage> GetGlyph(Painter& painter, int i);
 
    struct Index
    {

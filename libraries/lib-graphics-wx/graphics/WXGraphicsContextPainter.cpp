@@ -19,7 +19,7 @@
 #include "graphics/RendererID.h"
 
 #include "WXPainterUtils.h"
-
+#include "WXFontUtils.h"
 #include "WXColor.h"
 
 namespace
@@ -177,18 +177,18 @@ public:
    PaintTargetStack& operator=(const PaintTargetStack&) = delete;
    PaintTargetStack& operator=(PaintTargetStack&&) = delete;
 
-   void Push(wxGraphicsContextPainterImage& image)
+   void Push(std::shared_ptr<wxGraphicsContextPainterImage> image)
    {
       mPaintTargetsStack.emplace_back(std::make_unique<Surface>(
-         *mRenderer, image.Width, image.Height, image.HasAlpha));
+         *mRenderer, image->Width, image->Height, image->HasAlpha));
    }
 
-   void Pop(wxGraphicsContextPainterImage& image)
+   void Pop(std::shared_ptr<wxGraphicsContextPainterImage> image)
    {     
       auto& currentItem = mPaintTargetsStack.back();
 
       currentItem->GC = {};
-      image.Bitmap = mRenderer->CreateBitmapFromImage(currentItem->Image);
+      image->Bitmap = mRenderer->CreateBitmapFromImage(currentItem->Image);
 
       mPaintTargetsStack.pop_back();
    }
@@ -544,15 +544,9 @@ RendererID WXGraphicsContextPainter::GetRendererID() const
    return rendererId;
 }
 
-std::shared_ptr<PainterFont> WXGraphicsContextPainter::CreateFont(
-   const std::string_view& faceName, float pixelSize)
+std::shared_ptr<PainterFont> WXGraphicsContextPainter::CreateFont(const FontInfo& fontInfo)
 {
-   wxFont font(
-      int(pixelSize), wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
-      wxFONTWEIGHT_NORMAL, false,
-      wxString::FromUTF8(faceName.data(), faceName.size()));
-
-   return CreateFontFromWX(font);
+   return CreateFontFromWX(wxFontFromFontInfo(fontInfo));
 }
 
 std::shared_ptr<PainterFont>
@@ -562,7 +556,7 @@ WXGraphicsContextPainter::CreateFontFromWX(const wxFont& font)
       *this, font);
 }
 
-std::unique_ptr<PainterImage> WXGraphicsContextPainter::CreateImage(
+std::shared_ptr<PainterImage> WXGraphicsContextPainter::CreateImage(
    PainterImageFormat format, uint32_t width, uint32_t height, const void* data, const void* alphaData)
 {
    wxImage image;
@@ -623,22 +617,23 @@ std::unique_ptr<PainterImage> WXGraphicsContextPainter::CreateImage(
       }
    }
 
-   return std::make_unique<wxGraphicsContextPainterImage>(
+   return std::make_shared<wxGraphicsContextPainterImage>(
       *this, mPaintTargetStack->GetRenderer(), image);
 }
 
-std::unique_ptr<PainterImage> WXGraphicsContextPainter::GetSubImage(
-   const PainterImage& image, uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+std::shared_ptr<PainterImage> WXGraphicsContextPainter::GetSubImage(
+   const std::shared_ptr<PainterImage>& image, uint32_t x, uint32_t y,
+   uint32_t width, uint32_t height)
 {
-   if (GetRendererID() != image.GetRendererID())
+   if (GetRendererID() != image->GetRendererID())
       return {};
 
-   return std::make_unique<wxGraphicsContextPainterImage>(
-      *this, static_cast<const wxGraphicsContextPainterImage&>(image), x, y,
+   return std::make_shared<wxGraphicsContextPainterImage>(
+      *this, static_cast<const wxGraphicsContextPainterImage&>(*image), x, y,
       width, height);
 }
 
-std::unique_ptr<PainterImage> WXGraphicsContextPainter::CreateDeviceImage(
+std::shared_ptr<PainterImage> WXGraphicsContextPainter::CreateDeviceImage(
    PainterImageFormat format, uint32_t width, uint32_t height)
 {
    return CreateImage(format, width, height);
@@ -996,15 +991,16 @@ void WXGraphicsContextPainter::DoDrawRoundedRect(const Rect& rect, float radius)
       rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height, radius);
 }
 
-void WXGraphicsContextPainter::PushPaintTarget(PainterImage& image)
+void WXGraphicsContextPainter::PushPaintTarget(
+   const std::shared_ptr<PainterImage>& image)
 {
-   if (image.GetRendererID() != GetRendererID())
+   if (image->GetRendererID() != GetRendererID())
       return;
 
    if (mPaintTargetStack->InPaintEnvent())
       FlushCachedPath();
 
-   mPaintTargetStack->Push(static_cast<wxGraphicsContextPainterImage&>(image));
+   mPaintTargetStack->Push(std::static_pointer_cast<wxGraphicsContextPainterImage>(image));
 
    UpdatePen(GetCurrentPen());
    UpdateBrush(GetCurrentBrush());
@@ -1012,10 +1008,12 @@ void WXGraphicsContextPainter::PushPaintTarget(PainterImage& image)
    UpdateAntiAliasingState(GetAntiAliasingEnabled());
 }
 
-void WXGraphicsContextPainter::PopPaintTarget(PainterImage& image)
+void WXGraphicsContextPainter::PopPaintTarget(
+   const std::shared_ptr<PainterImage>& image)
 {
    FlushCachedPath();
-   mPaintTargetStack->Pop(static_cast<wxGraphicsContextPainterImage&>(image));
+   mPaintTargetStack->Pop(
+      std::static_pointer_cast<wxGraphicsContextPainterImage>(image));
 }
 
 wxGraphicsPath& WXGraphicsContextPainter::GetCachedPath()

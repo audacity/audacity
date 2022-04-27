@@ -43,6 +43,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "graphics/Painter.h"
 #include "graphics/WXColor.h"
 #include "graphics/WXPainterUtils.h"
+#include "graphics/WXFontUtils.h"
 #include "CodeConversions.h"
 
 #include <wx/clipbrd.h>
@@ -597,11 +598,11 @@ void LabelTrackView::DrawGlyphs(
    auto &x1 = ls.x1;
 
    if ((x >= r.x) && (x <= (r.x + r.width)))
-      painter.DrawImage(GetGlyph(painter, GlyphLeft), x - xHalfWidth, yStart);
+      painter.DrawImage(*GetGlyph(painter, GlyphLeft), x - xHalfWidth, yStart);
    // The extra test commented out here would suppress right hand markers
    // when they overlap the left hand marker (e.g. zoomed out) or to the left.
    if((x1 >= r.x) && (x1 <= (r.x+r.width)) /*&& (x1>x+mIconWidth)*/)
-      painter.DrawImage(GetGlyph(painter, GlyphRight), x1-xHalfWidth,yStart);
+      painter.DrawImage(*GetGlyph(painter, GlyphRight), x1-xHalfWidth,yStart);
 }
 
 int LabelTrackView::GetTextFrameHeight()
@@ -2189,8 +2190,7 @@ void LabelTrackView::OnSelectionChange( LabelTrackEvent &e )
        ResetTextSelection();
    }
 }
-
-const PainterImage & LabelTrackView::GetGlyph(Painter& painter, int i)
+std::shared_ptr<PainterImage> LabelTrackView::GetGlyph(Painter& painter, int i)
 {
    return theTheme.GetPainterImage(painter, i + bmpLabelGlyph0);
 }

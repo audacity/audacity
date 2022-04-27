@@ -277,13 +277,13 @@ class AUDACITY_DLL_API MeterPanel final
 
    bool      mLayoutValid;
 
-   std::unique_ptr<PainterImage> mBitmap;
+   std::shared_ptr<PainterImage> mBitmap;
    wxRect    mIconRect;
    wxPoint   mLeftTextPos;
    wxPoint   mRightTextPos;
    wxSize    mLeftSize;
    wxSize    mRightSize;
-   const PainterImage* mIcon;
+   std::shared_ptr<PainterImage> mIcon;
    wxPen     mPen;
    wxPen     mDisabledPen;
    wxPen     mPeakPeakPen;

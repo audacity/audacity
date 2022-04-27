@@ -69,6 +69,7 @@ array of Ruler::Label.
 
 #include "graphics/Painter.h"
 #include "graphics/WXPainterUtils.h"
+#include "graphics/WXFontUtils.h"
 #include "graphics/WXColor.h"
 #include "graphics/WXPainterFactory.h"
 #include "CodeConversions.h"

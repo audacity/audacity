@@ -51,6 +51,7 @@
 #include "WaveClipTrimHandle.h"
 
 #include "graphics/Painter.h"
+#include "graphics/WXFontUtils.h"
 #include "graphics/WXPainterUtils.h"
 
 

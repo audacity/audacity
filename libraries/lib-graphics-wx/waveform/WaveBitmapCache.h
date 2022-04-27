@@ -34,7 +34,7 @@ struct GRAPHICS_WX_API WaveBitmapCacheElement final :
 
    void Dispose() override;
 
-   std::unique_ptr<PainterImage> Bitmap;
+   std::shared_ptr<PainterImage> Bitmap;
    size_t AvailableColumns { 0 };
 };
 

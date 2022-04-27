@@ -49,6 +49,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "graphics/Painter.h"
 #include "graphics/WXPainterUtils.h"
+#include "graphics/WXFontUtils.h"
 #include "graphics/WXColor.h"
 
 // Subscribe to preference changes to update static variables
@@ -464,9 +465,9 @@ void TrackInfo::MinimizeSyncLockDrawFunction
 	
       GetSyncLockHorizontalBounds( rect, syncLockIconRect );
 
-      const auto& syncLockBitmap = theTheme.GetPainterImage(painter, bmpSyncLockIcon);
+      auto syncLockBitmap = theTheme.GetPainterImage(painter, bmpSyncLockIcon);
       // Icon is 12x12 and syncLockIconRect is 16x16.
-      painter.DrawImage(syncLockBitmap,
+      painter.DrawImage(*syncLockBitmap,
                      syncLockIconRect.x + 3,
                      syncLockIconRect.y + 2);
    }

@@ -150,7 +150,7 @@ private:
    float mYStep;
 
    std::unique_ptr<Painter> mPainter;
-   std::unique_ptr<PainterImage> mBitmap;
+   std::shared_ptr<PainterImage> mBitmap;
 
    int mMouseX;
    int mMouseY;

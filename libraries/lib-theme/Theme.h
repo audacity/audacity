@@ -173,8 +173,10 @@ public:
    wxImage  & Image( int iIndex );
    wxSize ImageSize( int iIndex );
 
-   const PainterImage&
+   std::shared_ptr<PainterImage>
    GetPainterImage(Painter& painter, int index, int x = 0, int y = 0, int w = 0, int h = 0);
+
+   void ReleasePainterImages();
 
    void ReplaceImage( int iIndex, wxImage * pImage );
    void RotateImageInto( int iTo, int iFrom, bool bClockwise );

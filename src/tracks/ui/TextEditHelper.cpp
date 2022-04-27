@@ -22,6 +22,7 @@
 #include "graphics/Painter.h"
 #include "graphics/WXPainterFactory.h"
 #include "graphics/WXPainterUtils.h"
+#include "graphics/WXFontUtils.h"
 #include "graphics/WXColor.h"
 #include "CodeConversions.h"
 #include "UTF8Utils.h"

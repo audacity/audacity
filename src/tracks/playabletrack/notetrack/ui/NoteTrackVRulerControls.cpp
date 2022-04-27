@@ -28,6 +28,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "graphics/Painter.h"
 #include "graphics/WXPainterUtils.h"
+#include "graphics/WXFontUtils.h"
 #include "CodeConversions.h"
 
 #include <wx/dc.h>

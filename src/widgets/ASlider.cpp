@@ -67,6 +67,7 @@ or ASlider.
 
 #include "graphics/Painter.h"
 #include "graphics/WXPainterUtils.h"
+#include "graphics/WXFontUtils.h"
 #include "graphics/WXPainterFactory.h"
 #include "graphics/WXColor.h"
 #include "CodeConversions.h"
@@ -680,7 +681,9 @@ void LWSlider::AdjustSize(const wxSize & sz)
 void LWSlider::OnPaint(Painter &painter, bool highlight)
 {
    // The dc will be a paint DC
-   if (!mBitmap || !mThumbBitmap || !mThumbBitmapHilited)
+   if (
+      !mBitmap || !mBitmap->IsValid(painter) || !mThumbBitmap ||
+      !mThumbBitmapHilited)
    {
       DrawToBitmap(painter);
    }
@@ -737,14 +740,14 @@ void LWSlider::DrawToBitmap(Painter & painter)
 {
    // Get correctly oriented thumb.
    if (mOrientation == wxVERTICAL){
-      mThumbBitmap = &theTheme.GetPainterImage(painter, bmpSliderThumbRotated);
+      mThumbBitmap = theTheme.GetPainterImage(painter, bmpSliderThumbRotated);
       mThumbBitmapHilited =
-         &theTheme.GetPainterImage(painter, bmpSliderThumbRotatedHilited);
+         theTheme.GetPainterImage(painter, bmpSliderThumbRotatedHilited);
    }
    else {
-      mThumbBitmap = &theTheme.GetPainterImage(painter, bmpSliderThumb);
+      mThumbBitmap = theTheme.GetPainterImage(painter, bmpSliderThumb);
       mThumbBitmapHilited =
-         &theTheme.GetPainterImage(painter, bmpSliderThumbHilited);
+         theTheme.GetPainterImage(painter, bmpSliderThumbHilited);
    }
 
    // Now the background bitmap
@@ -754,7 +757,7 @@ void LWSlider::DrawToBitmap(Painter & painter)
 
    // Set up the memory DC
    // We draw to it, not the paintDC.
-   auto offscreenHolder = painter.PaintOn(*mBitmap);
+   auto offscreenHolder = painter.PaintOn(mBitmap);
    auto stateMutator = painter.GetStateMutator();
 
    painter.Clear(

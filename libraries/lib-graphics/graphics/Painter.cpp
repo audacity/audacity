@@ -496,7 +496,8 @@ PaintEventHolder Painter::Paint()
    return PaintEventHolder(*this);
 }
 
-PainterOffscreenHolder Painter::PaintOn(PainterImage& image)
+PainterOffscreenHolder
+Painter::PaintOn(const std::shared_ptr<PainterImage>& image)
 {
    return PainterOffscreenHolder(image, *this);
 }
@@ -786,8 +787,23 @@ PainterImage::PainterImage(Painter& painter)
 {
 }
 
+PainterImage::PainterImage(const RendererID& rendererId)
+    : PainterObject(rendererId)
+{
+}
+
+bool PainterImage::IsValid(Painter&) const
+{
+   return true;
+}
+
 PainterFont::PainterFont(Painter& painter)
     : PainterObject(painter)
+{
+}
+
+PainterFont::PainterFont(const RendererID& rendererId)
+    : PainterObject(rendererId)
 {
 }
 
@@ -796,7 +812,8 @@ PainterOffscreenHolder::~PainterOffscreenHolder()
    mPainter.PopPaintTarget(mSurface);
 }
 
-PainterOffscreenHolder::PainterOffscreenHolder(PainterImage& surface, Painter& painter)
+PainterOffscreenHolder::PainterOffscreenHolder(
+   const std::shared_ptr<PainterImage>& surface, Painter& painter)
     : mPainter(painter)
     , mSurface(surface)
     , mStateMutator(painter.GetStateMutator())

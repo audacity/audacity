@@ -33,6 +33,10 @@ set( LIBRARIES
    lib-graphics-wx
 )
 
+if (WIN32)
+   list( APPEND LIBRARIES lib-graphics-d2d )
+endif()
+
 if ( ${_OPT}has_networking )
    list( APPEND LIBRARIES lib-network-manager)
 endif()

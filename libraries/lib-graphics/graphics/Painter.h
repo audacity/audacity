@@ -22,6 +22,7 @@
 #include "RendererID.h"
 
 class Painter;
+class FontInfo;
 
 constexpr Rect NoClippingRect = {
    Point {}, Size { std::numeric_limits<float>::infinity(),
@@ -75,6 +76,7 @@ public:
    virtual Size GetTextSize(const std::string_view& text) const = 0;
 protected:
    PainterFont(Painter& painter);
+   PainterFont(const RendererID& rendererId);
 };
 
 enum class PainterImageFormat
@@ -89,8 +91,11 @@ public:
    virtual uint32_t GetWidth() const = 0;
    virtual uint32_t GetHeight() const = 0;
 
+   virtual bool IsValid(Painter& painter) const;
+
 protected:
    PainterImage(Painter& ptr);
+   PainterImage(const RendererID& rendererId);
 };
 
 class GRAPHICS_API PainterStateMutator final
@@ -200,10 +205,11 @@ public:
    ~PainterOffscreenHolder();
 
 private:
-   PainterOffscreenHolder(PainterImage& surface, Painter& painter);
+   PainterOffscreenHolder(
+      const std::shared_ptr<PainterImage>& surface, Painter& painter);
 
    Painter& mPainter;
-   PainterImage& mSurface;
+   std::shared_ptr<PainterImage> mSurface;
 
    PainterStateMutator mStateMutator;
    PainterClipStateMutator mClipStateMutator;
@@ -282,8 +288,7 @@ public:
    void DrawCircle(Point center, float radius);
    void DrawCircle(float cx, float cy, float radius);
 
-   virtual std::shared_ptr<PainterFont>
-   CreateFont(const std::string_view& faceName, float pixelSize) = 0;
+   virtual std::shared_ptr<PainterFont> CreateFont(const FontInfo& fontInfo) = 0;
    virtual std::shared_ptr<PainterFont> GetDefaultFont() const = 0;
 
    void DrawText(
@@ -358,9 +363,9 @@ public:
 
    PainterPath CreatePath();
 
-   virtual std::unique_ptr<PainterImage> CreateImage(PainterImageFormat format, uint32_t width, uint32_t height, const void* data = nullptr, const void* alphaData = nullptr) = 0;
-   virtual std::unique_ptr<PainterImage> GetSubImage(const PainterImage& image, uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
-   virtual std::unique_ptr<PainterImage> CreateDeviceImage(PainterImageFormat format, uint32_t width, uint32_t height) = 0;
+   virtual std::shared_ptr<PainterImage> CreateImage(PainterImageFormat format, uint32_t width, uint32_t height, const void* data = nullptr, const void* alphaData = nullptr) = 0;
+   virtual std::shared_ptr<PainterImage> GetSubImage(const std::shared_ptr<PainterImage>& image, uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
+   virtual std::shared_ptr<PainterImage> CreateDeviceImage(PainterImageFormat format, uint32_t width, uint32_t height) = 0;
 
    void DrawImage(const PainterImage& image, const Rect& rect);
    void DrawImage(const PainterImage& image, Point topLeft, Size size);
@@ -385,7 +390,7 @@ public:
    virtual void Flush() = 0;
 
    PaintEventHolder Paint();
-   PainterOffscreenHolder PaintOn(PainterImage& image);
+   PainterOffscreenHolder PaintOn(const std::shared_ptr<PainterImage>& image);
 
 protected:
    virtual void BeginPaint() = 0;
@@ -425,8 +430,8 @@ protected:
 
    virtual Size DoGetTextSize(const PainterFont& font, const std::string_view& text) const = 0;
 
-   virtual void PushPaintTarget(PainterImage& image) = 0;
-   virtual void PopPaintTarget(PainterImage& image) = 0;
+   virtual void PushPaintTarget(const std::shared_ptr<PainterImage>& image) = 0;
+   virtual void PopPaintTarget(const std::shared_ptr<PainterImage>& image) = 0;
 
    virtual void DoDrawLinearGradientRect(const Rect& rect, Color from, Color to, LinearGradientDirection direction);
 

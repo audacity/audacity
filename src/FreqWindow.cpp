@@ -88,6 +88,7 @@ the mouse around.
 #include "graphics/Painter.h"
 #include "graphics/WXPainterFactory.h"
 #include "graphics/WXPainterUtils.h"
+#include "graphics/WXFontUtils.h"
 #include "graphics/WXColor.h"
 #include "CodeConversions.h"
 
@@ -674,7 +675,7 @@ void FrequencyPlotDialog::DrawPlot()
    mBitmap = mPainter->CreateDeviceImage(
       PainterImageFormat::RGB888, mPlotRect.width, mPlotRect.height);
 
-   auto offscreenHolder = mPainter->PaintOn(*mBitmap);
+   auto offscreenHolder = mPainter->PaintOn(mBitmap);
    auto stateMutator = mPainter->GetStateMutator();
 
    if (!mData || mDataLen < mWindowSize || mAnalyst->GetProcessedSize() == 0) {
@@ -887,7 +888,7 @@ void FrequencyPlotDialog::PlotPaint(wxPaintEvent & event)
 {
    auto paintEvent = mPainter->Paint();
       
-   if (!mBitmap)
+   if (!mBitmap || !mBitmap->IsValid(*mPainter))
       DrawPlot();
 
    mPainter->Clear(ColorFromWXColor(GetBackgroundColour()));

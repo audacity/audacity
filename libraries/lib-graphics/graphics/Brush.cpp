@@ -10,6 +10,8 @@
 **********************************************************************/
 #include "Brush.h"
 
+#include <algorithm>
+
 const Brush Brush::NoBrush(BrushStyle::None);
 
 Brush::Brush(BrushStyle style)
@@ -82,10 +84,34 @@ const BrushGradientData* Brush::GetGradientData() const noexcept
    return mBrushData.get();
 }
 
+namespace
+{
+bool CompareBrushGradientData(
+   const std::shared_ptr<BrushGradientData>& lhs,
+   const std::shared_ptr<BrushGradientData>& rhs)
+{
+   if (lhs == rhs)
+      return true;
+
+   if (!lhs || !rhs)
+      return false;
+
+   return lhs->firstPoint == rhs->firstPoint &&
+          lhs->secondPoint == rhs->secondPoint &&
+          lhs->stops.size() == rhs->stops.size() &&
+          std::equal(
+             lhs->stops.begin(), lhs->stops.end(), rhs->stops.begin(),
+             rhs->stops.end(),
+             [](BrushGradientStop lhs, BrushGradientStop rhs) {
+                return lhs.position == rhs.position && lhs.color == rhs.color;
+             });
+}
+}
+
 bool operator==(const Brush& lhs, const Brush& rhs) noexcept
 {
    return lhs.mStyle == rhs.mStyle && lhs.mColor == rhs.mColor &&
-          lhs.mBrushData == rhs.mBrushData;
+          CompareBrushGradientData(lhs.mBrushData, rhs.mBrushData);
 }
 
 bool operator!=(const Brush& lhs, const Brush& rhs) noexcept
