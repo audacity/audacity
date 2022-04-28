@@ -183,7 +183,7 @@ class AUDACITY_DLL_API MeterPanel final
    bool IsClipping() const override;
 
    void StartMonitoring();
-   void StopMonitoring();
+   //void StopMonitoring();
 
    // These exist solely for the purpose of resetting the toolbars
    struct State{ bool mSaved, mMonitoring, mActive; };

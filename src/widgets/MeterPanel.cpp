@@ -1882,7 +1882,7 @@ void MeterPanel::StartMonitoring()
 
    auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsMonitoring()){
-      gAudioIO->StopStream();
+      gAudioIO->StopMonitoring();
    } 
 
    if (start && !gAudioIO->IsBusy()){
@@ -1897,13 +1897,6 @@ void MeterPanel::StartMonitoring()
    }
 }
 
-void MeterPanel::StopMonitoring(){
-   mMonitoring = false;
-   auto gAudioIO = AudioIO::Get();
-   if (gAudioIO->IsMonitoring()){
-      gAudioIO->StopStream();
-   } 
-}
 
 void MeterPanel::OnAudioIOStatus(AudioIOEvent evt)
 {

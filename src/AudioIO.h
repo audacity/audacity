@@ -432,6 +432,8 @@ public:
     * the output device in stereo to play the data through */
    void StartMonitoring( const AudioIOStartStreamOptions &options );
 
+   void StopMonitoring();
+
    /** \brief Start recording or playing back audio
     *
     * Allocates buffers for recording and playback, gets the Audio thread to
