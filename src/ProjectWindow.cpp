@@ -36,11 +36,17 @@ Paul Licameli split from AudacityProject.cpp
 #include "widgets/wxPanelWrapper.h"
 #include "widgets/WindowAccessible.h"
 
+#include "ThemedWrappers.h"
+#include "RealtimeEffectPanel.h"
+
 #include <wx/app.h>
 #include <wx/display.h>
 #include <wx/scrolbar.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
+#include <wx/wupdlock.h>
+
+#include "TrackPanel.h"
 
 namespace {
    constexpr int DEFAULT_WINDOW_WIDTH = 1200;
@@ -617,7 +623,7 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    auto container = safenew wxSplitterWindow(this, wxID_ANY,
       wxDefaultPosition,
       wxDefaultSize,
-      wxNO_BORDER | wxSP_LIVE_UPDATE);
+      wxNO_BORDER | wxSP_LIVE_UPDATE | wxSP_THIN_SASH);
    container->Bind(wxEVT_SPLITTER_DOUBLECLICKED, [](wxSplitterEvent& event){
       //"The default behaviour is to unsplit the window"
       event.Veto();//do noting instead
@@ -632,9 +638,16 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
    mTrackListWindow->SetLabel("Main Panel");// Not localized.
    mTrackListWindow->SetLayoutDirection(wxLayout_LeftToRight);
 
-   mEffectsWindow = safenew wxWindow(mContainerWindow, wxID_ANY, wxDefaultPosition, wxSize(250, 20));
-   mEffectsWindow->Hide();//initially hidden
    mContainerWindow->Initialize(mTrackListWindow);
+
+   auto effectsPanel = safenew ThemedWindowWrapper<RealtimeEffectPanel>(mContainerWindow, wxID_ANY, wxDefaultPosition, wxSize(250, 200));
+   effectsPanel->SetBackgroundColorIndex(clrMedium);
+   effectsPanel->Hide();//initially hidden
+   effectsPanel->Bind(wxEVT_CLOSE_WINDOW, [this](wxCloseEvent&)
+   {
+      HideEffectsPanel();
+   });
+   mEffectsWindow = effectsPanel;
 
 #ifdef EXPERIMENTAL_DA2
    mTrackListWindow->SetBackgroundColour(theTheme.Colour( clrMedium ));
@@ -679,6 +692,17 @@ ProjectWindow::ProjectWindow(wxWindow * parent, wxWindowID id,
 
    mThemeChangeSubscription =
       theTheme.Subscribe(*this, &ProjectWindow::OnThemeChange);
+
+   mFocusChangeSubscription = TrackFocus::Get(project)
+      .Subscribe([this](const TrackFocusChangeMessage& msg) {
+         if(mEffectsWindow->IsShown())
+         {
+            auto& project = GetProject();
+            auto& trackFocus = TrackFocus::Get(project);
+            ShowEffectsPanel(project, trackFocus.Get());
+         }
+      });
+
 }
 
 ProjectWindow::~ProjectWindow()
@@ -1882,10 +1906,17 @@ void ProjectWindow::DoZoomFit()
    window.TP_ScrollWindow(start);
 }
 
-void ProjectWindow::ShowEffectsPanel(Track* track)
+void ProjectWindow::ShowEffectsPanel(AudacityProject& project, Track* track)
 {
    if(track == nullptr)
+   {
+      mEffectsWindow->ResetTrack();
       return;
+   }
+
+   wxWindowUpdateLocker freeze(this);
+
+   mEffectsWindow->SetTrack(project, track->shared_from_this());
 
    if(mContainerWindow->GetWindow1() != mEffectsWindow)
    {
@@ -1895,10 +1926,18 @@ void ProjectWindow::ShowEffectsPanel(Track* track)
          mTrackListWindow,
          mEffectsWindow->GetSize().GetWidth());
    }
+   Layout();
 }
 
 void ProjectWindow::HideEffectsPanel()
 {
+   wxWindowUpdateLocker freeze(this);
+
+   if(mContainerWindow->GetWindow2() == nullptr)
+      //only effects panel is present, restore split positions before removing effects panel
+      //Workaround: ::Replace and ::Initialize do not work here...
+      mContainerWindow->SplitVertically(mEffectsWindow, mTrackListWindow);
+
    mContainerWindow->Unsplit(mEffectsWindow);
    Layout();
 }

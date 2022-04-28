@@ -221,6 +221,8 @@ list( APPEND SOURCES
       RefreshCode.h
       ProjectWindows.cpp
       ProjectWindows.h
+      RealtimeEffectPanel.cpp
+      RealtimeEffectPanel.h
       RingBuffer.cpp
       RingBuffer.h
       SampleBlock.cpp

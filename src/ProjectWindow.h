@@ -23,6 +23,7 @@ class Track;
 class wxScrollBar;
 class wxPanel;
 class wxSplitterWindow;
+class RealtimeEffectPanel;
 
 class ProjectWindow;
 void InitProjectWindow( ProjectWindow &window );
@@ -130,8 +131,8 @@ public:
    void ZoomAfterImport(Track *pTrack);
    double GetZoomOfToFit() const;
    void DoZoomFit();
-
-   void ShowEffectsPanel(Track* track = nullptr);
+   
+   void ShowEffectsPanel(AudacityProject& project, Track* track = nullptr);
    void HideEffectsPanel();
 
    void ApplyUpdatedTheme();
@@ -212,7 +213,7 @@ private:
 
    wxPanel *mTopPanel{};
    wxSplitterWindow* mContainerWindow;
-   wxWindow* mEffectsWindow{};
+   RealtimeEffectPanel* mEffectsWindow{};
    wxWindow* mTrackListWindow{};
    
    wxScrollBar *mHsbar{};
@@ -234,6 +235,8 @@ private:
    Observer::Subscription mUndoSubscription
       , mThemeChangeSubscription;
    std::unique_ptr<PlaybackScroller> mPlaybackScroller;
+
+   Observer::Subscription mFocusChangeSubscription;
 
    DECLARE_EVENT_TABLE()
 };
