@@ -106,4 +106,7 @@
        LabelTrackTextSelection: #b7cae2;
                   ClipNameText: #000000;
          ClipNameTextSelection: #b7cae2;
+             DropHintHighlight: #00ff00;
+      EffectListItemBackground: #000000;
+          EffectListItemBorder: #cccccc;
 }

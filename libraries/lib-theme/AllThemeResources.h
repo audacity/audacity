@@ -225,6 +225,18 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpBandWidthCursor, wxImage(32, 32), wxT("BandWidthCursor"));
    DEFINE_IMAGE( bmpSubViewsCursor, wxImage(32, 32), wxT("SubViewsCursor"));
 
+   SET_THEME_FLAGS(  resFlagNewLine  );
+   DEFINE_IMAGE( bmpEffectOn, wxImage( 24, 25 ), wxT("EffectOn"));
+   DEFINE_IMAGE( bmpEffectOff, wxImage( 24, 25 ), wxT("EffectOff"));
+   DEFINE_IMAGE( bmpDragArea, wxImage( 6, 14 ), wxT("DragArea"));
+   DEFINE_IMAGE( bmpEffectSettingsDown, wxImage( 24, 25 ), wxT("EffectSettingsDown"));
+   DEFINE_IMAGE( bmpEffectSettingsNormal, wxImage( 24, 25 ), wxT("EffectSettingsNormal"));
+   DEFINE_IMAGE( bmpEffectSettingsHover, wxImage( 24, 25 ), wxT("EffectSettingsHover"));
+
+   DEFINE_IMAGE( bmpCloseDown, wxImage( 22, 22 ), wxT("CloseDown"));
+   DEFINE_IMAGE( bmpCloseNormal, wxImage( 22, 22 ), wxT("CloseNormal"));
+   DEFINE_IMAGE( bmpCloseHover, wxImage( 22, 22 ), wxT("CloseHover"));
+
    //SET_THEME_FLAGS(  resFlagNewLine  );
 
 // DA: The logo with name xpm has a different width.
@@ -374,3 +386,7 @@ from there.  Audacity will look for a file called "Pause.png".
 
    DEFINE_COLOUR( clrClipNameText,          wxColour(0, 0, 0),       wxT("ClipNameText") );
    DEFINE_COLOUR( clrClipNameTextSelection, wxColour(183, 202, 226), wxT("ClipNameTextSelection") );
+
+   DEFINE_COLOUR( clrDropHintHighlight, wxColour( 71, 140, 247 ), wxT("DropHintHighlight") );
+   DEFINE_COLOUR( clrEffectListItemBackground, wxColour( 60, 60, 60 ), wxT("EffectListItemBackground"));
+   DEFINE_COLOUR( clrEffectListItemBorder, wxColour( 204, 204, 204 ), wxT("EffectListItemBorder"));
