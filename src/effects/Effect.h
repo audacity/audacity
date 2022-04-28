@@ -261,8 +261,10 @@ class AUDACITY_DLL_API Effect /* not final */
 
    static void IncEffectCounter(){ nEffectsDone++;}
 
- protected:
    bool EnableApply(bool enable = true);
+
+ protected:
+   
    bool EnablePreview(bool enable = true);
 
    //! Default implementation returns false
@@ -383,6 +385,9 @@ protected:
    //! This smart pointer tracks the lifetime of the dialog
    wxWeakRef<wxDialog> mHostUIDialog;
    wxWindow       *mUIParent{};
+
+public:
+   wxWindow* GetUIParent() { return mUIParent; }
 
 private:
    wxString GetSavedStateGroup();
