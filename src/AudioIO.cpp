@@ -800,6 +800,9 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
 
 void AudioIO::StopMonitoring()
 {
+   // because otherwise the waiting for acknowledgment of stop, will go on forever
+   mAudioThreadAcknowledge.store(Acknowledge::eStop,  std::memory_order::memory_order_release);
+
    StopStream();
 }
 
