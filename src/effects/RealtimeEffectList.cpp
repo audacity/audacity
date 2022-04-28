@@ -104,9 +104,37 @@ void RealtimeEffectList::RemoveState(RealtimeEffectState &state)
       mStates.erase(found);
 }
 
+size_t RealtimeEffectList::GetStatesCount() const noexcept
+{
+   return mStates.size();
+}
+
+RealtimeEffectState* RealtimeEffectList::GetStateAt(size_t index) noexcept
+{
+   if (index < mStates.size())
+      return mStates[index].get();
+   return nullptr;
+}
+
 void RealtimeEffectList::Swap(size_t index1, size_t index2)
 {
    std::swap(mStates[index1], mStates[index2]);
+}
+
+void RealtimeEffectList::Reorder(size_t fromIndex, size_t toIndex)
+{
+   assert(fromIndex < mStates.size());
+   assert(toIndex < mStates.size());
+   if(fromIndex != toIndex)
+   {
+      size_t iFirst, iMid, iLast;
+      if (toIndex < fromIndex)
+         iFirst = toIndex, iMid = fromIndex, iLast = fromIndex + 1;
+      else
+         iFirst = fromIndex, iMid = fromIndex + 1, iLast = toIndex + 1;
+      auto begin = mStates.begin();
+      std::rotate(begin + iFirst, begin + iMid, begin + iLast);
+   }
 }
 
 const std::string &RealtimeEffectList::XMLTag()

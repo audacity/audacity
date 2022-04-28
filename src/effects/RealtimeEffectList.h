@@ -34,6 +34,9 @@ class RealtimeEffectList final
    RealtimeEffectList &operator=(const RealtimeEffectList &) = delete;
 
 public:
+   
+   using States = std::vector<std::unique_ptr<RealtimeEffectState>>;
+
    RealtimeEffectList();
    virtual ~RealtimeEffectList();
 
@@ -57,9 +60,15 @@ public:
    //! Returns null if the id is nonempty but no such effect was found
    RealtimeEffectState *AddState(const PluginID &id);
    void RemoveState(RealtimeEffectState &state);
+   size_t GetStatesCount() const noexcept;
+   RealtimeEffectState* GetStateAt(size_t index) noexcept;
    void Swap(size_t index1, size_t index2);
-
-   using States = std::vector<std::unique_ptr<RealtimeEffectState>>;
+   /**
+    * \brief Changes effect order in the stack
+    * \param fromIndex Index of the moved effect
+    * \param toIndex Desired position of the moved effect
+    */
+   void Reorder(size_t fromIndex, size_t toIndex);
 
    static const std::string &XMLTag();
    bool HandleXMLTag(
