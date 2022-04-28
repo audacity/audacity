@@ -937,6 +937,9 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          gAudioIO->AILAInitialize();
       #endif
 
+      if (gAudioIO->IsMonitoring())
+         gAudioIO->StopMonitoring();
+
       int token = gAudioIO->StartStream(transportTracks, t0, t1, t1, options);
 
       success = (token != 0);
