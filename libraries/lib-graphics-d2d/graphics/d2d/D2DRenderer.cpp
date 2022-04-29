@@ -237,7 +237,13 @@ public:
       if (d2d1CreateFactory == nullptr)
          return false;
 
-      D2D1_FACTORY_OPTIONS d2d1FactoryOptions { D2D1_DEBUG_LEVEL_INFORMATION };
+      D2D1_FACTORY_OPTIONS d2d1FactoryOptions {
+      #ifdef NDEBUG
+         D2D1_DEBUG_LEVEL_NONE,
+      #else
+         D2D1_DEBUG_LEVEL_INFORMATION
+      #endif
+      };
 
       HRESULT result = d2d1CreateFactory(
          D2D1_FACTORY_TYPE_SINGLE_THREADED, __uuidof(ID2D1Factory),
