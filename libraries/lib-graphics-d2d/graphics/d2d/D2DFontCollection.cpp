@@ -19,6 +19,12 @@ D2DFontCollection::D2DFontCollection(
 {
 }
 
+D2DFontCollection::~D2DFontCollection()
+{
+   for (auto& font : mFontCollection)
+      font.second->ClenupDWriteResources();
+}
+
 std::shared_ptr<D2DFont>
 D2DFontCollection::GetFont(const FontInfo& fontInfo, uint32_t dpi)
 {

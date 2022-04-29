@@ -17,6 +17,7 @@
 #include "D2DRenderer.h"
 #include "D2DRenderTargetResource.h"
 #include "D2DBitmap.h"
+#include "D2DPathGeometry.h"
 
 #include "graphics/Painter.h"
 
@@ -38,6 +39,9 @@ D2D1::Matrix3x2F GetD2DTransform(const Transform& transform) noexcept
 
 D2DRenderTarget::D2DRenderTarget(D2DRenderer& renderer)
     : mRenderer(renderer)
+    , mLinearGradientBrushes([this](const Brush& brush) { return CreateLinearGradientBrush(brush); })
+    , mRendererShutdownSubscription(renderer.Subscribe(
+         [this](const D2DShutdownMessage&) { ReleaseResources(); }))
 {
 }
 
@@ -57,6 +61,20 @@ D2DRenderTarget& D2DRenderTarget::GetRootRenderTarget() noexcept
 ID2D1RenderTarget* D2DRenderTarget::GetD2DRenderTarget() noexcept
 {
    return mRenderTarget.Get();
+}
+
+bool D2DRenderTarget::SetAntialisingEnabled(bool enabled) noexcept
+{
+   if (mAntialiasingEnabled == enabled)
+      return true;
+   
+   mRenderTarget->SetAntialiasMode(
+      false && enabled ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE :
+                D2D1_ANTIALIAS_MODE_ALIASED);
+
+   mAntialiasingEnabled = enabled;
+   
+   return true;
 }
 
 Size D2DRenderTarget::GetSize() const
@@ -130,12 +148,22 @@ void D2DRenderTarget::SetClipRect(const Rect& rect)
    }
 }
 
-void D2DRenderTarget::SetTransform(const Transform& transform) noexcept
+void D2DRenderTarget::SetCurrentTransform(const Transform& transform) noexcept
 {
-   mCurrentD2D1Transform = GetD2DTransform(transform);
+   if (mCurrentTransform != transform)
+   {
+      mCurrentTransform = transform;
+      mCurrentD2D1Transform = GetD2DTransform(transform);
+      mRenderTarget->SetTransform(mCurrentD2D1Transform);
+   }
 }
 
-D2D1::Matrix3x2F D2DRenderTarget::GetTransform() const noexcept
+Transform D2DRenderTarget::GetCurrentTransform() const noexcept
+{
+   return mCurrentTransform;
+}
+
+D2D1::Matrix3x2F D2DRenderTarget::GetCurrentD2DTransform() const noexcept
 {
    return mCurrentD2D1Transform;
 }
@@ -172,14 +200,7 @@ void D2DRenderTarget::SetCurrentBrush(const Brush& brush)
    }
    else if (brush.GetStyle() == BrushStyle::LinearGradient)
    {
-      auto it = std::find_if(
-         mLinearGradientBrushes.begin(), mLinearGradientBrushes.end(),
-         [brush](const auto& pair) { return pair.first == brush; });
-
-      if (it != mLinearGradientBrushes.end())
-         mCurrentD2DBrush = it->second.Get();
-      else
-         mCurrentD2DBrush = CreateLinearGradientBrush(brush);
+      mCurrentD2DBrush = mLinearGradientBrushes.Get(brush).Get();
    }
    else
    {
@@ -231,7 +252,7 @@ ID2D1Brush* D2DRenderTarget::GetCurrentD2DPen() const
 
 void D2DRenderTarget::DrawPolygon(const Point* pts, size_t count)
 {
-   if (count == 1)
+   if (count <= 1)
    {
       return;
    }
@@ -241,14 +262,15 @@ void D2DRenderTarget::DrawPolygon(const Point* pts, size_t count)
    }
    else
    {
-      if (mCurrentD2DBrush != nullptr)
-      {
-         
-      }
+      if (mSharedPath == nullptr)
+         mSharedPath = mRenderer.CreatePathGeometry();
 
-      if (mCurrentPen != Pen::NoPen)
-      {
-      }
+      mSharedPath->MoveTo(pts[0]);
+      for (size_t i = 0; i < count; ++i)
+         mSharedPath->LineTo(pts[i]);
+
+      mSharedPath->EndFigure(true);
+      mSharedPath->Draw(*this);
    }
 }
 
@@ -350,13 +372,17 @@ void D2DRenderTarget::ReleaseResources()
 
    mRenderTargetResources.clear();
 
-   mSolidBrush.Get();
-   mLinearGradientBrushes.clear();
+   mSolidBrush.Reset();
+   mLinearGradientBrushes.Clear();
 
    mCurrentD2DBrush = nullptr;
+
+   mCurrentD2DPen.Reset();
+
+   mRenderTarget.Reset();
 }
 
-ID2D1LinearGradientBrush*
+Microsoft::WRL::ComPtr<ID2D1LinearGradientBrush>
 D2DRenderTarget::CreateLinearGradientBrush(Brush brush)
 {
    auto gradientData = brush.GetGradientData();
@@ -401,9 +427,7 @@ D2DRenderTarget::CreateLinearGradientBrush(Brush brush)
          gradientStopCollection.Get(), linearGradientBrush.GetAddressOf()))
       return nullptr;
 
-   mLinearGradientBrushes.emplace_back(brush, linearGradientBrush);
-
-   return linearGradientBrush.Get();
+   return linearGradientBrush;
 }
 
 void D2DRenderTarget::HandleContextLoss()

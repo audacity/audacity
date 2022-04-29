@@ -60,6 +60,7 @@ bool D2DWindowRenderTarget::IsValid() const
 void D2DWindowRenderTarget::HandleContextLoss()
 {
    CreateRenderTarget();
+   InvalidateRect(mHWND, nullptr, false);
 }
 
 void D2DWindowRenderTarget::CreateRenderTarget()

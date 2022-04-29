@@ -17,7 +17,7 @@ D2DRenderTargetBitmap::D2DRenderTargetBitmap(
    D2DRenderer& renderer, uint32_t width, uint32_t height,
    bool withAlpha)
     : D2DRenderTarget(renderer)
-    , D2DBitmap(renderer.GetRendererID())
+    , D2DBitmap(renderer)
     , mWidth(width)
     , mHeight(height)
     , mHasAlpha(withAlpha)
@@ -145,4 +145,9 @@ void D2DRenderTargetBitmap::DoReleaseResource(D2DRenderTarget& target)
 
    if (it != mRTDependentData.end())
       mRTDependentData.erase(it);
+}
+
+void D2DRenderTargetBitmap::CleanupDirect2DResources()
+{
+   mRTDependentData.clear();
 }

@@ -15,7 +15,7 @@
 #include <algorithm>
 
 D2DSubBitmap::D2DSubBitmap(std::shared_ptr<D2DBitmap> parent, const Rect& rect)
-    : D2DBitmap(parent->GetRendererID())
+    : D2DBitmap(parent->GetRenderer())
     , mParent(std::move(parent))
     , mRect(rect)
 {
@@ -57,12 +57,12 @@ void D2DSubBitmap::DrawFinished(D2DRenderTarget& renderTarget)
 
 uint32_t D2DSubBitmap::GetWidth() const
 {
-   return mParent->GetWidth();
+   return mRect.Size.width;
 }
 
 uint32_t D2DSubBitmap::GetHeight() const
 {
-   return mParent->GetHeight();
+   return mRect.Size.height;
 }
 
 bool D2DSubBitmap::IsValid(Painter& painter) const
@@ -78,4 +78,8 @@ bool D2DSubBitmap::DoAcquireResource(D2DRenderTarget& target)
 void D2DSubBitmap::DoReleaseResource(D2DRenderTarget& target)
 {
    return mParent->ReleaseResource(target);
+}
+
+void D2DSubBitmap::CleanupDirect2DResources()
+{
 }

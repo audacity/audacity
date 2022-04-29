@@ -12,13 +12,16 @@
 
 #include <memory>
 
+#include "D2DTrackedResource.h"
+
 class D2DRenderTarget;
+class D2DRenderer;
 
 class D2DRenderTargetResource /* not final */ :
-    public std::enable_shared_from_this<D2DRenderTargetResource>
+    public D2DTrackedResource
 {
 public:
-   virtual ~D2DRenderTargetResource() = default;
+   explicit D2DRenderTargetResource(D2DRenderer& renderer);
 
    bool AcquireResource(D2DRenderTarget& target);
    void ReleaseResource(D2DRenderTarget& target);

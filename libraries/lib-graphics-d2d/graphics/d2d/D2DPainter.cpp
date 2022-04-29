@@ -16,6 +16,7 @@
 #include "D2DRenderer.h"
 #include "D2DFontCollection.h"
 #include "D2DFont.h"
+#include "D2DPathGeometry.h"
 
 #include "bitmaps/D2DSubBitmap.h"
 #include "bitmaps/D2DRenderTargetBitmap.h"
@@ -142,7 +143,7 @@ void D2DPainter::UpdateTransform(const Transform& transform)
    if (mRenderTargetStack.empty())
       return;
 
-   mRenderTargetStack.back()->SetTransform(transform);
+   mRenderTargetStack.back()->SetCurrentTransform(transform);
 }
 
 void D2DPainter::UpdateClipRect(const Rect& rect)
@@ -155,31 +156,13 @@ void D2DPainter::UpdateClipRect(const Rect& rect)
 
 bool D2DPainter::UpdateAntiAliasingState(bool enabled)
 {
-   return false;
+   if (mRenderTargetStack.empty())
+      return false;
+
+   return mRenderTargetStack.back()->SetAntialisingEnabled(enabled);
 }
 
-void D2DPainter::UpdateFont(const std::shared_ptr<PainterFont>& font)
-{
-}
-
-size_t D2DPainter::BeginPath()
-{
-   return -1;
-}
-
-void D2DPainter::MoveTo(size_t pathIndex, Point pt)
-{
-}
-
-void D2DPainter::LineTo(size_t pathIndex, Point pt)
-{
-}
-
-void D2DPainter::AddRect(size_t pathIndex, const Rect& rect)
-{
-}
-
-void D2DPainter::EndPath(size_t pathIndex)
+void D2DPainter::UpdateFont(const std::shared_ptr<PainterFont>&)
 {
 }
 
@@ -236,18 +219,49 @@ void D2DPainter::DoDrawText(
    Point origin, const PainterFont& font, Brush backgroundBrush,
    const std::string_view& text)
 {
+   if (mRenderTargetStack.empty() || font.GetRendererID() != GetRendererID())
+      return;
+
+   auto& d2dFont = static_cast<const D2DFont&>(font);
+
+   d2dFont.Draw(*mRenderTargetStack.back(), origin, backgroundBrush, text);
 }
 
 void D2DPainter::DoDrawRotatedText(
    Point origin, float angle, const PainterFont& font, Brush backgroundBrush,
    const std::string_view& text)
 {
+   if (mRenderTargetStack.empty() || font.GetRendererID() != GetRendererID())
+      return;
+
+   auto& d2dFont = static_cast<const D2DFont&>(font);
+
+   auto renderTarget = mRenderTargetStack.back();
+   auto d2dRenderTarget = renderTarget->GetD2DRenderTarget();
+   
+   auto currentTransform = renderTarget->GetCurrentD2DTransform();
+
+   const float rad = -static_cast<float>(angle * M_PI / 180.0);
+   const float c = std::cos(rad);
+   const float s = std::sin(rad);
+
+   const D2D1::Matrix3x2F mtx(
+       c * currentTransform.m11 + s * currentTransform.m12,  c * currentTransform.m21 + s * currentTransform.m22,
+      -s * currentTransform.m11 + c * currentTransform.m12, -s * currentTransform.m21 + c * currentTransform.m22,
+      origin.x + currentTransform.dx, origin.y + currentTransform.dy);
+      
+
+   d2dRenderTarget->SetTransform(mtx);
+
+   d2dFont.Draw(*renderTarget, Point {}, backgroundBrush, text);
+
+   d2dRenderTarget->SetTransform(currentTransform);
 }
 
 Size D2DPainter::DoGetTextSize(
    const PainterFont& font, const std::string_view& text) const
 {
-   return {};
+   return font.GetTextSize(text);
 }
 
 void D2DPainter::PushPaintTarget(const std::shared_ptr<PainterImage>& image)
@@ -274,4 +288,18 @@ void D2DPainter::PopPaintTarget(const std::shared_ptr<PainterImage>&)
    
    mRenderTargetStack.back()->EndDraw();
    mRenderTargetStack.pop_back();
+}
+
+std::shared_ptr<PainterPath> D2DPainter::CreatePath()
+{
+   return mRenderer.CreatePathGeometry();
+}
+
+void D2DPainter::DrawPath(const PainterPath& path)
+{
+   if (mRenderTargetStack.empty() || path.GetRendererID() != GetRendererID())
+      return;
+
+   auto& d2dPath = static_cast<const D2DPathGeometry&>(path);
+   d2dPath.Draw(*mRenderTargetStack.back());
 }

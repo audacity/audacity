@@ -22,9 +22,14 @@
 
 #include "graphics/RendererID.h"
 
+#include "GraphicsObjectCache.h"
+
+#include "D2DTrackedResource.h"
+
 class D2DRenderTargetResource;
 class D2DRenderer;
 class D2DBitmap;
+class D2DPathGeometry;
 
 class D2DRenderTarget /* not final */
 {
@@ -34,6 +39,8 @@ public:
 
    D2DRenderTarget& GetRootRenderTarget() noexcept;
    ID2D1RenderTarget* GetD2DRenderTarget() noexcept;
+
+   bool SetAntialisingEnabled(bool enabled) noexcept;
 
    virtual Size GetSize() const;
 
@@ -46,8 +53,9 @@ public:
 
    void SetClipRect(const Rect& rect);
 
-   void SetTransform(const Transform& transform) noexcept;
-   D2D1::Matrix3x2F GetTransform() const noexcept;
+   void SetCurrentTransform(const Transform& transform) noexcept;
+   Transform GetCurrentTransform() const noexcept;
+   D2D1::Matrix3x2F GetCurrentD2DTransform() const noexcept;
 
    void SetCurrentBrush(const Brush& brush);
    Brush GetCurrentBrush() const;
@@ -72,7 +80,8 @@ protected:
    virtual void HandleContextLoss();
    virtual void HandlePostDrawAction(bool successful);
 
-   ID2D1LinearGradientBrush* CreateLinearGradientBrush(Brush brush);
+   Microsoft::WRL::ComPtr<ID2D1LinearGradientBrush>
+   CreateLinearGradientBrush(Brush brush);
 
 private:
    void TrackResource(const std::shared_ptr<D2DRenderTargetResource>& resource);
@@ -90,7 +99,8 @@ private:
    ID2D1Brush* mCurrentD2DBrush { nullptr };
 
    Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> mSolidBrush;
-   using LinearGradientBrushes = std::vector<std::pair<Brush, Microsoft::WRL::ComPtr<ID2D1LinearGradientBrush>>>;
+
+   using LinearGradientBrushes = GraphicsObjectCache<Brush,Microsoft::WRL::ComPtr<ID2D1LinearGradientBrush>, 8, false>;
    LinearGradientBrushes mLinearGradientBrushes;
 
    Pen mCurrentPen { Pen::NoPen };
@@ -98,7 +108,14 @@ private:
 
    D2D1::Matrix3x2F mCurrentD2D1Transform { D2D1::Matrix3x2F::Identity() };
 
+   Transform mCurrentTransform;
+
+   std::shared_ptr<D2DPathGeometry> mSharedPath;
+
+   Observer::Subscription mRendererShutdownSubscription;
+
    bool mHasClipRect { false };
+   bool mAntialiasingEnabled { false };
 
    friend class D2DRenderTargetResource;
 };

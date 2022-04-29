@@ -9,6 +9,8 @@ set( SOURCES
    graphics/d2d/D2DFont.h
    graphics/d2d/D2DFontCollection.cpp
    graphics/d2d/D2DFontCollection.h
+   graphics/d2d/D2DPathGeometry.cpp
+   graphics/d2d/D2DPathGeometry.h
    graphics/d2d/D2DPainter.cpp
    graphics/d2d/D2DPainter.h
    graphics/d2d/D2DRenderer.cpp
@@ -17,6 +19,8 @@ set( SOURCES
    graphics/d2d/D2DRenderTarget.h
    graphics/d2d/D2DRenderTargetResource.cpp
    graphics/d2d/D2DRenderTargetResource.h
+   graphics/d2d/D2DTrackedResource.cpp
+   graphics/d2d/D2DTrackedResource.h
 
    graphics/d2d/bitmaps/D2DRenderTargetBitmap.cpp
    graphics/d2d/bitmaps/D2DRenderTargetBitmap.h
@@ -39,6 +43,7 @@ set( LIBRARIES
       lib-math-interface
       lib-screen-geometry-interface
       lib-track-interface
+      lib-utility-interface
       wxwidgets::base
       wxwidgets::core
 )

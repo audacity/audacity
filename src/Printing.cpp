@@ -81,6 +81,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
       TrackView::GetTotalHeight( *mTracks ) + rulerScreenHeight;
 
    auto painter = CreatePainterFromDC(*dc);
+   auto paintEvent = painter->Paint();
 
    double scale = height / (double)screenTotalHeight;
 

@@ -186,6 +186,8 @@ public:
    std::shared_ptr<PainterImage> GetImage(
       Painter& painter, ThemeSet& set, int index, int x, int y, int w, int h)
    {
+      if (index == bmpHiliteUpButtonSmall)
+         int a = 1;
       const PainterImageCacheKey key = { index, x, y, w, h };
 
       auto it = mCache.find(key);

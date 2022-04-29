@@ -16,12 +16,19 @@
 #include "graphics/Painter.h"
 #include "graphics/FontInfo.h"
 
+#include "GraphicsObjectCache.h"
+
+class D2DRenderTarget;
+
 class D2DFont final : public PainterFont
 {
 public:
    D2DFont(
       const RendererID& rendererId, IDWriteFactory* factory, uint32_t dpi,
       const FontInfo& fontInfo);
+   
+   D2DFont(const D2DFont&) = delete;
+   D2DFont& operator=(const D2DFont&) = delete;
 
    std::string_view GetFace() const override;
 
@@ -33,8 +40,17 @@ public:
 
    bool IsValid() const;
 
+   void Draw(
+      D2DRenderTarget& renderTarget, Point origin, Brush backgroundBrush,
+      const std::string_view& text) const;
+
+   void ClenupDWriteResources();
+
 private:
    void UpdateFontMetrics();
+
+   Microsoft::WRL::ComPtr<IDWriteTextLayout>
+   CreateLayout(const std::string& text) const;
 
    FontInfo mFontInfo;
    Metrics mMetrics;
@@ -42,4 +58,7 @@ private:
    IDWriteFactory* mDWriteFactory;
    
    Microsoft::WRL::ComPtr<IDWriteTextFormat> mTextFormat;
+
+   using LayoutCache = GraphicsObjectCache<std::string, Microsoft::WRL::ComPtr<IDWriteTextLayout>>;
+   mutable LayoutCache mLayoutCache;
 };

@@ -16,13 +16,14 @@
 #include "D2DRenderTargetResource.h"
 
 class D2DRenderTarget;
+class D2DRenderer;
 
 class D2DBitmap /* not final */ :
     public PainterImage,
     public D2DRenderTargetResource
 {
 public:
-   explicit D2DBitmap(const RendererID& rendererId);
+   explicit D2DBitmap(D2DRenderer& renderer);
 
    virtual void DrawBitmap(
       D2DRenderTarget& target, const Rect& targetRect, const Rect& sourceRect) = 0;
@@ -30,46 +31,3 @@ public:
    virtual std::shared_ptr<D2DRenderTarget> GetRenderTarget(D2DRenderTarget& parentRenderTarget) = 0;
    virtual void DrawFinished(D2DRenderTarget& renderTarget) = 0;
 };
-/*
-class D2DBitmap final : public PainterImage, public std::enable_shared_from_this<D2DBitmap>
-{
-public:
-   D2DBitmap(
-      const RendererID& rendererId,
-      const Microsoft::WRL::ComPtr<IWICBitmap>& wicBitmap, bool withAlhpa);
-   
-   D2DBitmap(
-      const RendererID& rendererId, uint32_t width, uint32_t height,
-      bool withAlhpa);
-
-   uint32_t GetWidth() const override;
-   uint32_t GetHeight() const override;
-   bool IsValid() const override;
-
-   ID2D1Bitmap* GetBitmap(ID2D1RenderTarget* renderTarget);
-   ID2D1RenderTarget* GetRenderTarget(ID2D1RenderTarget* renderTarget);
-   
-   void Release(ID2D1RenderTarget* renderTarget);
-
-private:
-   struct RTDependentData final
-   {
-      Microsoft::WRL::ComPtr<ID2D1Bitmap> Bitmap;
-      Microsoft::WRL::ComPtr<ID2D1RenderTarget> RenderTarget; 
-   };
-
-   RTDependentData
-   CreateCompatibleRenderTarget(ID2D1RenderTarget* renderTarget);
-   
-   using RTDependentDataMap = std::map<ID2D1RenderTarget*, RTDependentData>;
-
-   RTDependentDataMap mRTDependentData;
-
-   Microsoft::WRL::ComPtr<IWICBitmap> mWICBitmap;
-
-   uint32_t mWidth { 0 };
-   uint32_t mHeight { 0 };
-   
-   bool mHasAlpha { false };
-};
-*/

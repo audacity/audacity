@@ -12,6 +12,7 @@
 
 #include <memory>
 
+#include "Observer.h"
 #include "graphics/Painter.h"
 #include "graphics/RendererID.h"
 
@@ -20,8 +21,13 @@ class ID2D1StrokeStyle;
 
 class FontInfo;
 class D2DFontCollection;
+class D2DPathGeometry;
+class D2DTrackedResource;
 
-class GRAPHICS_D2D_API D2DRenderer final
+struct D2DShutdownMessage : Observer::Message {}; 
+
+class GRAPHICS_D2D_API D2DRenderer final :
+    public Observer::Publisher<D2DShutdownMessage>
 {
 public:
    D2DRenderer();
@@ -46,7 +52,10 @@ public:
 
    ID2D1StrokeStyle* GetStrokeStyle(const Pen& pen);
 
+   std::shared_ptr<D2DPathGeometry> CreatePathGeometry();
+
 private:
+   
    class D2DRendererImpl;
    std::unique_ptr<D2DRendererImpl> mImpl;
 };

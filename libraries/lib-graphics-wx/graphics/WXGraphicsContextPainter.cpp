@@ -153,6 +153,48 @@ struct wxGraphicsContextPainterFont final : public PainterFont
 
    Metrics FontMetrics;
 };
+
+class wxGraphicsContextPainterPath final : public PainterPath
+{
+public:
+   explicit wxGraphicsContextPainterPath(
+      Painter& painter, wxGraphicsRenderer& renderer)
+       : PainterPath(painter)
+       , mPath(renderer.CreatePath())
+   {
+   }
+   
+   void EndFigure(bool closed) override
+   {
+      if (closed)
+         mPath.CloseSubpath();
+   }
+
+   void DoLineTo(Point pt) override
+   {
+      mPath.AddLineToPoint(pt.x, pt.y);
+   }
+
+   void DoMoveTo(Point pt) override
+   {
+      mPath.MoveToPoint(pt.x, pt.y);
+   }
+
+   void DoAddRect(const Rect& rect) override
+   {
+      mPath.AddRectangle(
+         rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height);
+   }
+
+   void DrawPath(wxGraphicsContext& context) const
+   {
+      context.FillPath(mPath);
+      context.StrokePath(mPath);
+   }
+
+private:
+   wxGraphicsPath mPath;
+};
 }
 
 class WXGraphicsContextPainter::PaintTargetStack final
@@ -736,64 +778,6 @@ bool WXGraphicsContextPainter::UpdateAntiAliasingState(bool enabled)
    return mPaintTargetStack->SetAntialiasing(enabled);
 }
 
-size_t WXGraphicsContextPainter::BeginPath()
-{
-   if (!mPaintTargetStack->InPaintEnvent())
-      return std::numeric_limits<size_t>::max();
-
-   for (size_t i = 0; i < mPaths.size(); ++i)
-   {
-      if (mPaths[i] == nullptr)
-      {
-         mPaths[i] =
-            std::make_unique<wxGraphicsPath>(mPaintTargetStack->GetCurrentContext()->CreatePath());
-
-         return i;
-      }
-   }
-
-   mPaths.emplace_back(std::make_unique<wxGraphicsPath>(mPaintTargetStack->GetCurrentContext()->CreatePath()));
-   return mPaths.size() - 1;
-}
-
-void WXGraphicsContextPainter::MoveTo(size_t pathIndex, Point pt)
-{
-   if (pathIndex >= mPaths.size() || mPaths[pathIndex] == nullptr)
-      return;
-
-   mPaths[pathIndex]->MoveToPoint(pt.x, pt.y);
-}
-
-void WXGraphicsContextPainter::LineTo(size_t pathIndex, Point pt)
-{
-   if (pathIndex >= mPaths.size() || mPaths[pathIndex] == nullptr)
-      return;
-
-   mPaths[pathIndex]->AddLineToPoint(pt.x, pt.y);
-}
-
-void WXGraphicsContextPainter::AddRect(size_t pathIndex, const Rect& rect)
-{
-   if (pathIndex >= mPaths.size() || mPaths[pathIndex] == nullptr)
-      return;
-
-   mPaths[pathIndex]->AddRectangle(
-      rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height);
-}
-
-void WXGraphicsContextPainter::EndPath(size_t pathIndex)
-{
-   if (pathIndex >= mPaths.size() || mPaths[pathIndex] == nullptr)
-      return;
-
-   FlushCachedPath();
-
-   mPaintTargetStack->GetCurrentContext()->FillPath(*mPaths[pathIndex]);
-   mPaintTargetStack->GetCurrentContext()->StrokePath(*mPaths[pathIndex]);
-
-   mPaths[pathIndex] = {};
-}
-
 void WXGraphicsContextPainter::DoDrawPolygon(const Point* pts, size_t count)
 {
    if (!mPaintTargetStack->InPaintEnvent())
@@ -1034,6 +1018,26 @@ void WXGraphicsContextPainter::FlushCachedPath()
 
    mPaintTargetStack->GetCurrentContext()->StrokePath(*mCachedPath);
    mCachedPath.reset();
+}
+
+std::shared_ptr<PainterPath> WXGraphicsContextPainter::CreatePath()
+{
+   return std::make_shared<wxGraphicsContextPainterPath>(
+      *this, mPaintTargetStack->GetRenderer());
+}
+
+void WXGraphicsContextPainter::DrawPath(const PainterPath& path)
+{
+   if (!mPaintTargetStack->InPaintEnvent())
+      return;
+
+   if (path.GetRendererID() != GetRendererID())
+      return;
+   
+   FlushCachedPath();
+
+   static_cast<const wxGraphicsContextPainterPath&>(path).DrawPath(
+      *mPaintTargetStack->GetCurrentContext());
 }
 
 RendererID WXGraphicsContextPainterRendererID()

@@ -13,6 +13,7 @@
 
 D2DWICRenderTarget::D2DWICRenderTarget(D2DWICBitmap& bitmap)
     : D2DRenderTarget(bitmap.GetRenderer())
+    , D2DRenderTargetResource(bitmap.GetRenderer())
     , mOwner(bitmap)
 {
 }
@@ -56,4 +57,8 @@ void D2DWICRenderTarget::DoReleaseResource(D2DRenderTarget& target)
 
    mParentTarget = nullptr;
    mRenderTarget.Reset();
+}
+
+void D2DWICRenderTarget::CleanupDirect2DResources()
+{
 }

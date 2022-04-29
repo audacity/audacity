@@ -35,5 +35,7 @@ private:
    bool DoAcquireResource(D2DRenderTarget& target) override;
    void DoReleaseResource(D2DRenderTarget& target) override;
 
+   void CleanupDirect2DResources() override;
+
    D2DWICBitmap& mOwner;
 };

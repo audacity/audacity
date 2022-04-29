@@ -50,7 +50,7 @@ public:
 
    RendererID GetRendererID() const noexcept;
 protected:
-   explicit PainterObject(Painter& painter);
+   explicit PainterObject(const Painter& painter);
    explicit PainterObject(const RendererID& rendererId);
 
 private:
@@ -62,10 +62,10 @@ class GRAPHICS_API PainterFont /* not final */ : public PainterObject
 public:
    struct Metrics final
    {
-      int32_t Ascent { 0 };
-      int32_t Descent { 0 };
-      int32_t Linegap { 0 };
-      int32_t LineHeight { 0 };
+      float Ascent { 0 };
+      float Descent { 0 };
+      float Linegap { 0 };
+      float LineHeight { 0 };
    };
 
    virtual std::string_view GetFace() const = 0;
@@ -172,11 +172,9 @@ private:
    friend class Painter;
 };
 
-class GRAPHICS_API PainterPath final
+class GRAPHICS_API PainterPath /* not final */ : public PainterObject
 {
 public:
-   virtual ~PainterPath();
-
    void LineTo(float x, float y);
    void LineTo(Point pt);
 
@@ -187,15 +185,17 @@ public:
    void AddRect(Point topLeft, Size size);
    void AddRect(float left, float top, float width, float height);
 
-   Painter& GetPainter() noexcept;
-   const Painter& GetPainter() const noexcept;
+   virtual void EndFigure(bool closed) = 0;
+
+protected:
+   explicit PainterPath(const Painter& painter);
+   explicit PainterPath(const RendererID& painter);
+   
+   virtual void DoLineTo(Point pt) = 0;
+   virtual void DoMoveTo(Point pt) = 0;
+   virtual void DoAddRect(const Rect& rect) = 0;
 
 private:
-   explicit PainterPath(Painter& painter);
-   Painter& mPainter;
-
-   size_t mPathIndex;
-
    friend class Painter;
 };
 
@@ -361,7 +361,8 @@ public:
 
    Size GetTextSize(const std::string_view& text) const;
 
-   PainterPath CreatePath();
+   virtual std::shared_ptr<PainterPath> CreatePath() = 0;
+   virtual void DrawPath(const PainterPath& path) = 0;
 
    virtual std::shared_ptr<PainterImage> CreateImage(PainterImageFormat format, uint32_t width, uint32_t height, const void* data = nullptr, const void* alphaData = nullptr) = 0;
    virtual std::shared_ptr<PainterImage> GetSubImage(const std::shared_ptr<PainterImage>& image, uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
@@ -403,14 +404,6 @@ protected:
    virtual void UpdateClipRect(const Rect& rect) = 0;
    virtual bool UpdateAntiAliasingState(bool enabled) = 0;
    virtual void UpdateFont(const std::shared_ptr<PainterFont>& font) = 0;
-
-   virtual size_t BeginPath() = 0;
-
-   virtual void MoveTo(size_t pathIndex, Point pt) = 0;
-   virtual void LineTo(size_t pathIndex, Point pt) = 0;
-   virtual void AddRect(size_t pathIndex, const Rect& rect) = 0;\
-
-   virtual void EndPath(size_t pathIndex) = 0;
 
    virtual void DoDrawPolygon(const Point* pts, size_t count) = 0;
    virtual void DoDrawLines(const Point* ptr, size_t count) = 0;

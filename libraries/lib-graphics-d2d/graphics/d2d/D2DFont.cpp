@@ -9,6 +9,7 @@
 
 **********************************************************************/
 #include "D2DFont.h"
+#include "D2DRenderTarget.h"
 #include "CodeConversions.h"
 
 namespace
@@ -69,6 +70,7 @@ D2DFont::D2DFont(
     : PainterFont(rendererId)
     , mFontInfo(fontInfo)
     , mDWriteFactory(factory)
+    , mLayoutCache([this](const std::string& str) { return CreateLayout(str); })
 {
    LCID lcid = GetThreadLocale();
    
@@ -107,12 +109,59 @@ PainterFont::Metrics D2DFont::GetFontMetrics() const
 
 Size D2DFont::GetTextSize(const std::string_view& text) const
 {
-   return {};
+   if (text.empty())
+      return { 0, mMetrics.LineHeight };
+   
+   auto layout = mLayoutCache.Get(text);
+
+   if (!layout)
+      return {};
+
+   DWRITE_TEXT_METRICS metrics;
+   
+   if (S_OK != layout->GetMetrics(&metrics))
+      return {};
+
+   return { metrics.width, metrics.height };
 }
 
 bool D2DFont::IsValid() const
 {
    return mTextFormat;
+}
+
+void D2DFont::Draw(
+   D2DRenderTarget& renderTarget, Point origin, Brush backgroundBrush,
+   const std::string_view& text) const
+{
+   auto layout = mLayoutCache.Get(text);
+
+   if (!layout)
+      return;
+   
+   if (backgroundBrush.GetStyle() != BrushStyle::None)
+   {
+      DWRITE_TEXT_METRICS metrics;
+
+      if (S_OK != layout->GetMetrics(&metrics))
+         return;
+      
+      auto textBrush = renderTarget.GetCurrentBrush();
+      renderTarget.SetCurrentBrush(backgroundBrush);
+      renderTarget.DrawRect(Rect { Point { metrics.left, metrics.top },
+                                   Size { metrics.width, metrics.height } });
+      renderTarget.SetCurrentBrush(textBrush);
+   }
+
+   renderTarget.GetD2DRenderTarget()->DrawTextLayout(
+      D2D1::Point2F(origin.x, origin.y), layout.Get(),
+      renderTarget.GetCurrentD2DBrush());
+}
+
+void D2DFont::ClenupDWriteResources()
+{
+   mLayoutCache.Clear();
+   mTextFormat.Reset();
 }
 
 void D2DFont::UpdateFontMetrics()
@@ -186,4 +235,44 @@ void D2DFont::UpdateFontMetrics()
    mMetrics.Descent = metrics.descent * Ratio;
    mMetrics.Linegap = metrics.lineGap * Ratio;
    mMetrics.LineHeight = mMetrics.Ascent + mMetrics.Descent;
+
+   Microsoft::WRL::ComPtr<IDWriteTextLayout> emptyString;
+   result = mDWriteFactory->CreateTextLayout(
+      L"", 0, mTextFormat.Get(), FLT_MAX, FLT_MAX,
+                         emptyString.GetAddressOf());
+
+   if (result != S_OK)
+      return;
+
+   DWRITE_TEXT_METRICS emptyMetrics;
+   result = emptyString->GetMetrics(&emptyMetrics);
+
+   if (result != S_OK)
+      return;
+
+   mMetrics.LineHeight = emptyMetrics.height;
+}
+
+Microsoft::WRL::ComPtr<IDWriteTextLayout>
+D2DFont::CreateLayout(const std::string& text) const
+{   
+   std::wstring wtext = audacity::ToWString(text);
+   
+   Microsoft::WRL::ComPtr<IDWriteTextLayout> layout;
+   auto result = mDWriteFactory->CreateTextLayout(
+      wtext.data(), wtext.length(), mTextFormat.Get(), FLT_MAX, FLT_MAX,
+      layout.GetAddressOf());
+
+   if (S_OK != result)
+      return {};
+
+   const DWRITE_TEXT_RANGE textRange = { 0, (UINT32)wtext.length() };
+
+   if (mFontInfo.GetUnderlined())
+      layout->SetUnderline(true, textRange);
+
+   if (mFontInfo.GetStrikethrough())
+      layout->SetStrikethrough(true, textRange);
+
+   return layout;
 }

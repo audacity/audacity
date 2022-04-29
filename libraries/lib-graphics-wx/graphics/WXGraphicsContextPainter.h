@@ -79,12 +79,6 @@ private:
 
    bool UpdateAntiAliasingState(bool enabled) override;
 
-   size_t BeginPath() override;
-   void MoveTo(size_t pathIndex, Point pt) override;
-   void LineTo(size_t pathIndex, Point pt) override;
-   void AddRect(size_t pathIndex, const Rect& rect) override;
-   void EndPath(size_t pathIndex) override;
-
    void DoDrawPolygon(const Point* pts, size_t count) override;
    void DoDrawLines(const Point* ptr, size_t count) override;
    void DoDrawRect(const Rect& rect) override;
@@ -118,7 +112,6 @@ private:
 
    std::unique_ptr<PaintTargetStack> mPaintTargetStack;
 
-   std::vector<std::unique_ptr<wxGraphicsPath>> mPaths;
    std::vector<wxPoint2DDouble> mPoints;
    std::vector<wxPoint2DDouble> mEndPoints;
    std::shared_ptr<PainterFont> mDefaultFont;
@@ -127,6 +120,11 @@ private:
    // at least on Windows.
    wxGraphicsPath& GetCachedPath();
    void FlushCachedPath();
+
+   std::shared_ptr<PainterPath> CreatePath() override;
+
+   void DrawPath(const PainterPath& path) override;
+
    
    std::unique_ptr<wxGraphicsPath> mCachedPath;
 };

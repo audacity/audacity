@@ -36,6 +36,8 @@ public:
 
    void DoReleaseResource(D2DRenderTarget& target) override;
 
+   void CleanupDirect2DResources() override;
+
 private:
    std::shared_ptr<D2DBitmap> mParent;
    Rect mRect;

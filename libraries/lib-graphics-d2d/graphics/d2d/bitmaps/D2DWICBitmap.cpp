@@ -16,8 +16,7 @@
 D2DWICBitmap::D2DWICBitmap(
    D2DRenderer& renderer,
    const Microsoft::WRL::ComPtr<IWICBitmap>& wicBitmap, bool withAlhpa)
-    : D2DBitmap(renderer.GetRendererID())
-    , mRenderer(renderer)
+    : D2DBitmap(renderer)
     , mWICBitmap(wicBitmap)
     , mHasAlpha(withAlhpa)
 {
@@ -153,4 +152,10 @@ void D2DWICBitmap::DoReleaseResource(D2DRenderTarget& target)
 
    if (it != mRenderTargetResources.end())
       mRenderTargetResources.erase(it);
+}
+
+void D2DWICBitmap::CleanupDirect2DResources()
+{
+   mWICBitmap.Reset();
+   mRenderTargetResources.clear();
 }

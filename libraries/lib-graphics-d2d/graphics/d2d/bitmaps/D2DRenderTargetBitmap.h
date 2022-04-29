@@ -39,6 +39,8 @@ private:
    bool DoAcquireResource(D2DRenderTarget& target) override;
    void DoReleaseResource(D2DRenderTarget& target) override;
 
+   void CleanupDirect2DResources() override;
+
    struct RTDependentData final
    {
       Microsoft::WRL::ComPtr<ID2D1Bitmap> Bitmap;

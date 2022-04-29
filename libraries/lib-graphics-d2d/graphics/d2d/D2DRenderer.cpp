@@ -12,6 +12,7 @@
 
 #include "D2DPainter.h"
 #include "D2DFont.h"
+#include "D2DPathGeometry.h"
 
 #include "graphics/RendererID.h"
 
@@ -92,6 +93,15 @@ public:
    {
    }
 
+   std::shared_ptr<PainterPath> CreatePath() override
+   {
+      return {};
+   }
+
+   void DrawPath(const PainterPath&) override
+   {
+   }
+
 protected:
    void BeginPaint() override
    {
@@ -127,27 +137,6 @@ protected:
    }
 
    void UpdateFont(const std::shared_ptr<PainterFont>&) override
-   {
-   }
-
-   size_t BeginPath() override
-   {
-      return size_t(-1);
-   }
-
-   void MoveTo(size_t, Point) override
-   {
-   }
-
-   void LineTo(size_t, Point) override
-   {
-   }
-
-   void AddRect(size_t, const Rect&) override
-   {
-   }
-
-   void EndPath(size_t) override
    {
    }
 
@@ -231,6 +220,8 @@ public:
          return;
 
       mFontCollection = std::make_unique<D2DFontCollection>(rendererId, mDWriteFactory.Get());
+
+      FillStrokeStyles();
    }
 
    bool CreateD2D1Factory()
@@ -292,7 +283,7 @@ public:
    }
 
    ~D2DRendererImpl()
-   {
+   {      
       if (mWICImagingFactory)
       {
          mWICImagingFactory.Reset();
@@ -307,7 +298,8 @@ public:
       }
 
       if (mDirect2DLibrary != nullptr)
-      {
+      {       
+         mStrokeStyles = {};
          mD2D1Factory.Reset();
          FreeLibrary(mDirect2DLibrary);
       }
@@ -420,11 +412,42 @@ public:
 
       return std::make_shared<D2DWICBitmap>(
          renderer, wicBitmap, format == PainterImageFormat::RGBA8888);
+      ;
    }
 
    ID2D1Factory* GetD2DFactory() const
    {
       return mD2D1Factory.Get();
+   }
+
+   void FillStrokeStyles()
+   {
+      constexpr D2D1_DASH_STYLE dashStyle[] = {
+         D2D1_DASH_STYLE_SOLID, D2D1_DASH_STYLE_SOLID, D2D1_DASH_STYLE_DOT,
+         D2D1_DASH_STYLE_DASH,  D2D1_DASH_STYLE_DASH,  D2D1_DASH_STYLE_DASH_DOT
+      };
+      
+      for (size_t i = 1; i <= size_t(PenStyle::DotDash); ++i)
+      {
+         const D2D1_STROKE_STYLE_PROPERTIES props {
+            D2D1_CAP_STYLE_FLAT,
+            D2D1_CAP_STYLE_FLAT,
+            D2D1_CAP_STYLE_FLAT,
+            D2D1_LINE_JOIN_ROUND,
+            0,
+            dashStyle[i],
+            0.0f
+         };
+
+
+         mD2D1Factory->CreateStrokeStyle(
+            props, nullptr, 0, mStrokeStyles[i].ReleaseAndGetAddressOf());
+      }
+   }
+
+   ID2D1StrokeStyle* GetStrokeStyle(PenStyle style) const
+   {
+      return mStrokeStyles[size_t(style)].Get();
    }
 
 private:
@@ -436,6 +459,10 @@ private:
    Microsoft::WRL::ComPtr<IWICImagingFactory> mWICImagingFactory;
 
    std::unique_ptr<D2DFontCollection> mFontCollection;
+
+   std::array<
+      Microsoft::WRL::ComPtr<ID2D1StrokeStyle>, size_t(PenStyle::DotDash) + 1>
+      mStrokeStyles;
 };
 
 D2DRenderer::D2DRenderer()
@@ -457,7 +484,11 @@ bool D2DRenderer::IsAvailable() const noexcept
 
 void D2DRenderer::Shutdown()
 {
-   mImpl.reset();
+   if (mImpl!= nullptr)
+   {
+      Publish({});
+      mImpl.reset();
+   }
 }
 
 std::unique_ptr<Painter>
@@ -475,7 +506,13 @@ D2DRenderer::CreateHWNDPainter(void* window, const FontInfo& defaultFont)
 std::unique_ptr<Painter>
 D2DRenderer::CreateHDCPainter(void* dc, const FontInfo& defaultFont)
 {
-   return std::unique_ptr<Painter>();
+   auto renderTarget =
+      std::make_shared<D2DDCRenderTarget>(*this, static_cast<HDC>(dc));
+
+   if (!renderTarget->IsValid())
+      return {};
+   
+   return std::make_unique<D2DPainter>(*this, renderTarget, defaultFont);
 }
 
 std::unique_ptr<Painter> D2DRenderer::CreateMeasuringPainter(const FontInfo& defaultFont)
@@ -512,7 +549,12 @@ ID2D1Factory* D2DRenderer::GetD2DFactory() const
 
 ID2D1StrokeStyle* D2DRenderer::GetStrokeStyle(const Pen& pen)
 {
-   return nullptr;
+   return mImpl ? mImpl->GetStrokeStyle(pen.GetStyle()) : nullptr;
+}
+
+std::shared_ptr<D2DPathGeometry> D2DRenderer::CreatePathGeometry()
+{
+   return std::make_shared<D2DPathGeometry>(*this);
 }
 
 D2DRenderer& SharedD2DRenderer()

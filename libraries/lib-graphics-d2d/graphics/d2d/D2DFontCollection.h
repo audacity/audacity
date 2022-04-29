@@ -25,6 +25,8 @@ public:
    D2DFontCollection(
       const RendererID& rendererId, IDWriteFactory* factory);
 
+   ~D2DFontCollection();
+
    std::shared_ptr<D2DFont> GetFont(const FontInfo& fontInfo, uint32_t dpi);
 
 private:

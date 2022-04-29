@@ -348,11 +348,6 @@ Size Painter::GetTextSize(const std::string_view& text) const
    return DoGetTextSize(*GetCurrentFont(), text);
 }
 
-PainterPath Painter::CreatePath()
-{
-   return PainterPath(*this);
-}
-
 void Painter::DrawImage(const PainterImage& image, const Rect& rect)
 {
    DoDrawImage(image, rect, GetImageRect(image));
@@ -710,61 +705,49 @@ const Painter& PainterClipStateMutator::GetPainter() const noexcept
    return mPainter;
 }
 
-PainterPath::PainterPath(Painter& painter)
-    : mPainter(painter)
-    , mPathIndex(painter.BeginPath())
+PainterPath::PainterPath(const Painter& painter)
+    : PainterObject(painter)
 {
 }
 
-PainterPath::~PainterPath()
+PainterPath::PainterPath(const RendererID& rendererID)
+    : PainterObject(rendererID)
 {
-   mPainter.EndPath(mPathIndex);
 }
 
 void PainterPath::LineTo(float x, float y)
 {
-   mPainter.LineTo(mPathIndex, Point { x, y });
+   DoLineTo(Point { x, y });
 }
 
 void PainterPath::LineTo(Point pt)
 {
-   mPainter.LineTo(mPathIndex, pt);
+   DoLineTo(pt);
 }
 
 void PainterPath::MoveTo(float x, float y)
 {
-   mPainter.MoveTo(mPathIndex, Point { x, y });
+   DoMoveTo(Point { x, y });
 }
 
 void PainterPath::MoveTo(Point pt)
 {
-   mPainter.MoveTo(mPathIndex, pt);
+   DoMoveTo(pt);
 }
 
 void PainterPath::AddRect(const Rect& rect)
 {
-   mPainter.AddRect(mPathIndex, rect);
+   DoAddRect(rect);
 }
 
 void PainterPath::AddRect(Point topLeft, Size size)
 {
-   mPainter.AddRect(mPathIndex, Rect { topLeft, size });
+   DoAddRect(Rect { topLeft, size });
 }
 
 void PainterPath::AddRect(float left, float top, float width, float height)
 {
-   mPainter.AddRect(
-      mPathIndex, Rect { Point { left, top }, Size { width, height } });
-}
-
-Painter& PainterPath::GetPainter() noexcept
-{
-   return mPainter;
-}
-
-const Painter& PainterPath::GetPainter() const noexcept
-{
-   return mPainter;
+   DoAddRect(Rect { Point { left, top }, Size { width, height } });
 }
 
 RendererID PainterObject::GetRendererID() const noexcept
@@ -772,7 +755,7 @@ RendererID PainterObject::GetRendererID() const noexcept
    return mRendererID;
 }
 
-PainterObject::PainterObject(Painter& painter)
+PainterObject::PainterObject(const Painter& painter)
     : mRendererID(painter.GetRendererID())
 {
 }
@@ -830,10 +813,10 @@ void Painter::DoDrawLinearGradientRect(
    const Rect& rect, Color from, Color to, LinearGradientDirection direction)
 {
    float fromX = rect.Origin.x;
-   float fromY = rect.Origin.x;
+   float fromY = rect.Origin.y;
 
    float toX = fromX + rect.Size.width;
-   float toY = toX + rect.Size.height;
+   float toY = fromY + rect.Size.height;
 
    switch (direction)
    {

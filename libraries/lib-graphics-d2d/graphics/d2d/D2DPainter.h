@@ -69,16 +69,6 @@ private:
 
    void UpdateFont(const std::shared_ptr<PainterFont>& font) override;
 
-   size_t BeginPath() override;
-
-   void MoveTo(size_t pathIndex, Point pt) override;
-
-   void LineTo(size_t pathIndex, Point pt) override;
-
-   void AddRect(size_t pathIndex, const Rect& rect) override;
-
-   void EndPath(size_t pathIndex) override;
-
    void DoDrawPolygon(const Point* pts, size_t count) override;
 
    void DoDrawLines(const Point* ptr, size_t count) override;
@@ -107,6 +97,10 @@ private:
    void PushPaintTarget(const std::shared_ptr<PainterImage>& image) override;
 
    void PopPaintTarget(const std::shared_ptr<PainterImage>& image) override;
+
+   std::shared_ptr<PainterPath> CreatePath() override;
+
+   void DrawPath(const PainterPath& path) override;
 
    D2DRenderer& mRenderer;
    FontInfo mDefaultFont;

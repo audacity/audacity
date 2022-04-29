@@ -56,8 +56,10 @@ public:
    std::unique_ptr<Painter>
    CreatePainterFromDC(wxDC& dc) override
    {
+      auto font = dc.GetFont();
+      
       return std::make_unique<WXGraphicsContextPainter>(
-         GetRenderer(), &dc, dc.GetFont());
+         GetRenderer(), &dc, font.IsOk() ? font : *wxNORMAL_FONT);
    }
 
    Painter& GetMeasuringPainter() override
@@ -92,8 +94,10 @@ public:
 
    std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc) override
    {
+      auto font = dc.GetFont();
+      
       return SharedD2DRenderer().CreateHDCPainter(
-         dc.GetHDC(), FontInfoFromWXFont(dc.GetFont()));
+         dc.GetHDC(), FontInfoFromWXFont(font.IsOk() ? font : *wxNORMAL_FONT));
    }
 
    Painter& GetMeasuringPainter() override

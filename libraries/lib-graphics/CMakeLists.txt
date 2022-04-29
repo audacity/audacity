@@ -9,6 +9,8 @@ set( SOURCES
    GraphicsDataCache.cpp
    GraphicsDataCache.h
 
+   GraphicsObjectCache.h
+
    PixelSampleMapper.cpp
    PixelSampleMapper.h
 

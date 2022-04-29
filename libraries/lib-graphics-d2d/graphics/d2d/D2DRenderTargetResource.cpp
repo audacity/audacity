@@ -11,13 +11,18 @@
 #include "D2DRenderTargetResource.h"
 #include "D2DRenderTarget.h"
 
+D2DRenderTargetResource::D2DRenderTargetResource(D2DRenderer& renderer)
+    : D2DTrackedResource(renderer)
+{
+}
+
 bool D2DRenderTargetResource::AcquireResource(D2DRenderTarget& target)
 {
    auto& rootTarget = target.GetRootRenderTarget();
    
    if (DoAcquireResource(rootTarget))
    {
-      rootTarget.TrackResource(shared_from_this());
+      rootTarget.TrackResource(GetSharedPtr<D2DRenderTargetResource>());
       return true;
    }
 
