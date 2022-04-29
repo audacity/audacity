@@ -150,7 +150,7 @@ void Track::SetIndex(int index)
    mIndex = index;
 }
 
-void Track::SetLinkType(LinkType linkType)
+void Track::SetLinkType(LinkType linkType, bool completeList)
 {
    auto pList = mList.lock();
    if (pList && !pList->mPendingUpdates.empty()) {
@@ -161,7 +161,7 @@ void Track::SetLinkType(LinkType linkType)
       }
    }
 
-   DoSetLinkType(linkType);
+   DoSetLinkType(linkType, completeList);
 
    if (pList) {
       pList->RecalcPositions(mNode);
@@ -193,7 +193,7 @@ const Track::ChannelGroupData &Track::GetGroupData() const
    return const_cast<Track *>(this)->GetGroupData();
 }
 
-void Track::DoSetLinkType(LinkType linkType)
+void Track::DoSetLinkType(LinkType linkType, bool completeList)
 {
    auto oldType = GetLinkType();
    if (linkType == oldType)
@@ -235,7 +235,8 @@ void Track::DoSetLinkType(LinkType linkType)
       MakeGroupData().mLinkType = linkType;
    }
 
-   assert(LinkConsistencyCheck());
+   // Assertion checks only in a debug build, does not have side effects!
+   assert(LinkConsistencyCheck(completeList));
 }
 
 void Track::SetChannel(ChannelType c) noexcept
@@ -401,50 +402,51 @@ void Track::FinishCopy
    }
 }
 
-bool Track::LinkConsistencyCheck()
+bool Track::LinkConsistencyFix(bool doFix, bool completeList)
 {
    // Sanity checks for linked tracks; unsetting the linked property
    // doesn't fix the problem, but it likely leaves us with orphaned
    // sample blocks instead of much worse problems.
    bool err = false;
-   if (HasLinkedTrack())
-   {
-      auto link = GetLinkedTrack();
-      if (link)
-      {
+   if (completeList && HasLinkedTrack()) {
+      if (auto link = GetLinkedTrack()) {
          // A linked track's partner should never itself be linked
-         if (link->HasLinkedTrack())
-         {
-            wxLogWarning(
-               wxT("Left track %s had linked right track %s with extra right track link.\n   Removing extra link from right track."),
-               GetName(), link->GetName());
+         if (link->HasLinkedTrack()) {
             err = true;
-            link->SetLinkType(LinkType::None);
+            if (doFix) {
+               wxLogWarning(
+                  L"Left track %s had linked right track %s with extra right "
+                   "track link.\n   Removing extra link from right track.",
+                  GetName(), link->GetName());
+               link->SetLinkType(LinkType::None);
+            }
          }
 
          // Channels should be left and right
          if ( !(  (GetChannel() == Track::LeftChannel &&
                      link->GetChannel() == Track::RightChannel) ||
                   (GetChannel() == Track::RightChannel &&
-                     link->GetChannel() == Track::LeftChannel) ) )
-         {
-            wxLogWarning(
-               wxT("Track %s and %s had left/right track links out of order. Setting tracks to not be linked."),
-               GetName(), link->GetName());
+                     link->GetChannel() == Track::LeftChannel) ) ) {
             err = true;
+            if (doFix) {
+               wxLogWarning(
+                  L"Track %s and %s had left/right track links out of order. "
+                   "Setting tracks to not be linked.",
+                  GetName(), link->GetName());
+               SetLinkType(LinkType::None);
+            }
+         }
+      }
+      else {
+         err = true;
+         if (doFix) {
+            wxLogWarning(
+               L"Track %s had link to NULL track. Setting it to not be linked.",
+               GetName());
             SetLinkType(LinkType::None);
          }
       }
-      else
-      {
-         wxLogWarning(
-            wxT("Track %s had link to NULL track. Setting it to not be linked."),
-            GetName());
-         err = true;
-         SetLinkType(LinkType::None);
-      }
    }
-
    return ! err;
 }
 

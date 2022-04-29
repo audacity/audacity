@@ -17,59 +17,81 @@ Let use use EffectEcho as an example.
        Modify FetchParameters: it must now return the address of mSettings, not of the effect
     
        Update pointers-to-members in EffectParameter declarations
+
+       
+
     
    In cpp file:
        Insert sufficient auto& echoSettings = mSettings; (which changes later) and echoSettings. (which won't need more change) to fix compilation
         
-       Remove call to Reset() in constructor
+       Go to the constructor and remove call to
+
+         Parameters().Reset(*this);
+
+       As the initializations it did, now happen in the constructor of EffectEchoSettings because we use in-struct initializers with the same default values as in the EffectParmeters.
         
     
 2) "Define validator"
 
+
     In header file:
-    
-    add line "struct Validator;" in public section
+
+      - you can remove forward declarations like:
+         class wxCheckBox;
+         class wxSlider;
+         class wxSpinCtrl;
+
+      - add line "struct Validator;" in public section
+
+      - if the following is declared, remove it:
+         bool TransferDataToWindow(const EffectSettings &settings) override;
+
 
 
     In cpp file:
-    add class definition in the .cpp with mSettings:
+
+       add class definition in the .cpp with mSettings:
     
-        struct EffectEcho::Validator
-           : DefaultEffectUIValidator
-        {
-           Validator(EffectUIClientInterface& effect,
-              EffectSettingsAccess& access, EffectEchoSettings& settings)
-              : DefaultEffectUIValidator{ effect, access }
-              , mSettings{ settings }
-           {}
-           virtual ~Validator() = default;
-
-           Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
-
-           bool ValidateUI() override;
-           bool UpdateUI() override;
-
-           void PopulateOrExchange(ShuttleGui& S);
-
-           EffectEchoSettings& mSettings;
-        };
-
-
-        bool EffectEcho::Validator::ValidateUI()
-        {
-           mAccess.ModifySettings
-           (
-              [this](EffectSettings& settings)
+           struct EffectEcho::Validator
+              : EffectUIValidator
            {
-              // pass back the modified settings to the MessageBuffer
+              Validator(EffectUIClientInterface& effect,
+                 EffectSettingsAccess& access, EffectEchoSettings& settings)
+                 : EffectUIValidator{ effect, access }
+                 , mSettings{ settings }
+              {}
+              virtual ~Validator() = default;
 
-              // TODO uncomment at last step
-              //EffectEcho::GetSettings(settings) = mSettings;
+              Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
+
+              bool ValidateUI() override;
+              bool UpdateUI() override;
+
+              void PopulateOrExchange(ShuttleGui& S);
+
+              EffectEchoSettings& mSettings;
+           };
+
+
+           bool EffectEcho::Validator::ValidateUI()
+           {
+              mAccess.ModifySettings
+              (
+                 [this](EffectSettings& settings)
+              {
+                 // pass back the modified settings to the MessageBuffer
+
+                 // TODO uncomment at last step
+                 //EffectEcho::GetSettings(settings) = mSettings;
+              }
+              );
+
+              return true;
            }
-           );
 
-           return true;
-        }
+
+        If the effect has an override of ::TransferDataFromWindow():
+        copy its steps into the ValidateUI() function above.
 
 
         bool EffectEcho::Validator::UpdateUI()
@@ -83,7 +105,75 @@ Let use use EffectEcho as an example.
            return true;
         }
 
+
+    - modify PopulateOrExchange to make it belong to the Validator
+      -- remove parameter EffectSettings from it, it is not needed anymore
+      -- it should now return void
+
+    - reimplement Effect::PopulateOrExchange:
     
+        std::unique_ptr<EffectUIValidator>
+        EffectEcho::PopulateOrExchange(ShuttleGui& S, EffectSettingsAccess& access)
+        {
+           // ENABLE AT LAST STEP
+           // auto& settings = access.Get();
+           // auto& myEffSettings = GetSettings(settings);
+
+           // DISABLE AT LAST STEP
+           auto &myEffSettings = mSettings;
+
+           auto& settings = access.Get();
+           auto& myEffSettings = GetSettings(settings);
+           auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+           result->PopulateOrExchange(S);
+           return result;
+        }
+
+
+    ADDITIONAL STEPS for an effect which has explicitly declared Sliders, Textboxes etc.
+
+    - remove DECLARE_EVENT_TABLE();  (in .h)
+
+    - remove the definition of the enum with ID_***  (in .cpp)
+
+    - remove the section BEGIN_EVENT_TABLE... END_EVENT_TABLE (in .cpp)
+
+    - cut (from .h) all declarations of wxWidgets (wxTextCtrl, wxSlider etc.) and paste them in the validator definition (in .cpp)
+    
+    - cut (from .h) all declarations of handlers like void On***Slider, On***Text and paste them in the validator definition (in .cpp)
+      IMPORTANT: at the end of all the handlers, add a call to ValidateUI();
+
+    - in Validator::PopulateOrExchange
+      -- remove the calls to .Id(...) on the ShuttleGui
+      -- just after every creation of a widget, add a line like:
+      
+            BindTo(*mFreqT, wxEVT_TEXT, &Validator::OnFreqText);
+         
+         where: 
+         1st arg is the just created widget
+         2nd arg is either wxEVT_TEXT or wxEVT_SLIDER according to the widget type
+         3rd arg is the handler which is meant to handle events coming from the widget
+
+    - change
+        bool EffectWahwah::TransferDataToWindow(const EffectSettings &)
+      to
+        bool EffectWahwah::Validator::UpdateUI()
+
+      leaving the contents which is there, but adding at the top:
+         
+         // get the settings from the MessageBuffer and write them to our local copy
+         const auto& settings = mAccess.Get();
+
+         // TODO uncomment at last step
+         //mSettings = GetSettings(settings);
+
+    - in each of the control handlers:
+      -- add  Validator:: just after MyEffect:: in the method definition
+      -- place a call to ValidateUI(); at the end
+
+    - there might be calls to Effect::EnableApply.
+      Solve them by casting down to class Effect the Validator's mEffect member.
+
 
 
 3) "Define the instance"
@@ -94,11 +184,13 @@ Let use use EffectEcho as an example.
     
             struct Instance;
 
-            std::shared_ptr<EffectInstance> MakeInstance(EffectSettings& settings) const;
+            std::shared_ptr<EffectInstance> MakeInstance(EffectSettings& settings) const override;
 
         Identify members that represent state - comment them out 
         
-        remove methods: ProcessInitialize, ProcessFinalize, ProcessBlock
+        remove decls of methods: ProcessInitialize, ProcessFinalize, ProcessBlock
+                                 RealtimeInitialize, RealtimeAddProcessor, RealtimeFinalize,  RealtimeProcess
+
 
     In cpp file,
     
@@ -110,7 +202,7 @@ Let use use EffectEcho as an example.
            , public EffectInstanceWithSampleRate
 
         {
-           Instance(const PerTrackEffect& effect)
+           explicit Instance(const PerTrackEffect& effect)
               : PerTrackEffect::Instance{ effect }
            {}
 
@@ -120,9 +212,24 @@ Let use use EffectEcho as an example.
            size_t ProcessBlock(EffectSettings& settings,
               const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
 
-           bool ProcessFinalize(void) override;
+           bool ProcessFinalize(void) override; // not every effect needs this
+           
+           /* you will need these for realtime-capable effects
+           
+           bool RealtimeInitialize(EffectSettings& settings) override;
 
-           << MEMBERS WHICH REPRESENT STATE which you commented out earlier >>
+           bool RealtimeAddProcessor(EffectSettings& settings,
+              unsigned numChannels, float sampleRate) override;
+
+           bool RealtimeFinalize(EffectSettings& settings) noexcept override;
+
+           size_t RealtimeProcess(int group, EffectSettings& settings,
+              const float* const* inbuf, float* const* outbuf, size_t numSamples)
+              override;
+           
+           */
+
+           // << MEMBERS WHICH REPRESENT STATE which you commented out earlier >>
         };
 
 
@@ -137,7 +244,11 @@ Let use use EffectEcho as an example.
     
     - prepending ::Instance where needed
 
-    - adding this at the beginning (may not be needed in all of them)
+    - replacing the lines you added in step 1:
+    
+        auto& echoSettings = mSettings;
+            
+      with this 
     
         // temporary - in the final step this will be replaced by
         // auto& echoSettings = GetSettings(settings);
@@ -165,27 +276,24 @@ Let use use EffectEcho as an example.
     
     - go to ProcessInitialize, ProcessBlock, ProcessFinalize, RealtimeInitialize etc.; remove the downcast and enable the commented out GetSettings
     
-    - go to Validator::ValidateUI and Validator::UpdateUI, remove the commenting out on the commented lines
+    - go to Validator::ValidateUI, uncomment the line //EffectEcho::GetSettings(settings) = mSettings;
+
+    - go to Validator::UpdateUI, uncomment the line //mSettings = GetSettings(settings);
     
     - add const to arg EffectEchoSettings& in the Validator constructor
     
     - turn Validator::mSettings from a reference to a non-reference
+
+    - in the effect's ::PopulateOrExchange, uncomment/comment lines as prescribed
     
-    - modify PopulateOrExchange to make it belong to the Validator
-      -- remove parameter EffectSettings from it, it is not needed anymore
-      -- it should now return void
-      
-    - reimplement Effect::PopulateOrExchange:
-    
-        std::unique_ptr<EffectUIValidator>
-        EffectEcho::PopulateOrExchange(ShuttleGui& S, EffectSettingsAccess& access)
-        {
-           auto& settings = access.Get();
-           auto& myEffSettings = GetSettings(settings);
-           auto result = std::make_unique<Validator>(*this, access, myEffSettings);
-           result->PopulateOrExchange(S);
-           return result;
-        }
+    - in general, settings are not taken anymore from the effect, like in:
+
+         auto& ms = static_cast<const EffectWahwah&>(mProcessor).mSettings;
+
+      but taking them from the passed ones, like so:
+
+         auto& ms = GetSettings(settings);
+
 
 
 Some notes by Paul Licameli:

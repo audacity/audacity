@@ -384,8 +384,18 @@ private:
 public:
    static void FinishCopy (const Track *n, Track *dest);
 
-   // For use when loading a file.  Return true if ok, else make repair
-   virtual bool LinkConsistencyCheck();
+   //! Check consistency of channel groups, and maybe fix it
+   /*!
+    @param doFix whether to make any changes to correct inconsistencies
+    @param completeList whether to assume that the TrackList containing this
+    is completely loaded; if false, skip some of the checks
+    @return true if no inconsistencies were found
+    */
+   virtual bool LinkConsistencyFix(bool doFix = true, bool completeList = true);
+
+   //! Do the non-mutating part of consistency fix only and return status
+   bool LinkConsistencyCheck(bool completeList)
+   { return const_cast<Track*>(this)->LinkConsistencyFix(false, completeList); }
 
    bool HasOwner() const { return static_cast<bool>(GetOwner());}
 
@@ -400,12 +410,18 @@ public:
 
 protected:
    
-   void SetLinkType(LinkType linkType);
+   /*!
+    @param completeList only influences debug build consistency checking
+    */
+   void SetLinkType(LinkType linkType, bool completeList = true);
    void SetChannel(ChannelType c) noexcept;
 
 private:
    ChannelGroupData &MakeGroupData();
-   void DoSetLinkType(LinkType linkType);
+   /*!
+    @param completeList only influences debug build consistency checking
+    */
+   void DoSetLinkType(LinkType linkType, bool completeList = true);
 
    Track* GetLinkedTrack() const;
    //! Returns true for leaders of multichannel groups

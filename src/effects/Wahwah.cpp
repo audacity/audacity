@@ -30,16 +30,6 @@
 #include "../ShuttleGui.h"
 #include "../widgets/valnum.h"
 
-enum
-{
-   ID_Freq = 10000,
-   ID_Phase,
-   ID_Depth,
-   ID_Res,
-   ID_FreqOfs,
-   ID_OutGain
-};
-
 const EffectParameterMethods& EffectWahwah::Parameters() const
 {
    static CapturedParameters<EffectWahwah,
@@ -60,24 +50,131 @@ const ComponentInterfaceSymbol EffectWahwah::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectWahwah > reg; }
 
-BEGIN_EVENT_TABLE(EffectWahwah, wxEvtHandler)
-    EVT_SLIDER(ID_Freq, EffectWahwah::OnFreqSlider)
-    EVT_SLIDER(ID_Phase, EffectWahwah::OnPhaseSlider)
-    EVT_SLIDER(ID_Depth, EffectWahwah::OnDepthSlider)
-    EVT_SLIDER(ID_Res, EffectWahwah::OnResonanceSlider)
-    EVT_SLIDER(ID_FreqOfs, EffectWahwah::OnFreqOffSlider)
-    EVT_SLIDER(ID_OutGain, EffectWahwah::OnGainSlider)
-    EVT_TEXT(ID_Freq, EffectWahwah::OnFreqText)
-    EVT_TEXT(ID_Phase, EffectWahwah::OnPhaseText)
-    EVT_TEXT(ID_Depth, EffectWahwah::OnDepthText)
-    EVT_TEXT(ID_Res, EffectWahwah::OnResonanceText)
-    EVT_TEXT(ID_FreqOfs, EffectWahwah::OnFreqOffText)
-    EVT_TEXT(ID_OutGain, EffectWahwah::OnGainText)
-END_EVENT_TABLE();
+struct EffectWahwah::Validator
+   : EffectUIValidator
+{
+   Validator(EffectUIClientInterface& effect,
+      EffectSettingsAccess& access, const EffectWahwahSettings& settings)
+      : EffectUIValidator{ effect, access }
+      , mSettings{ settings }
+   {}
+   virtual ~Validator() = default;
+
+   Effect& GetEffect() const { return static_cast<Effect&>(mEffect); }
+
+   bool ValidateUI() override;
+   bool UpdateUI() override;
+
+   void PopulateOrExchange(ShuttleGui& S);
+
+   void OnFreqSlider(wxCommandEvent& evt);
+   void OnPhaseSlider(wxCommandEvent& evt);
+   void OnDepthSlider(wxCommandEvent& evt);
+   void OnResonanceSlider(wxCommandEvent& evt);
+   void OnFreqOffSlider(wxCommandEvent& evt);
+   void OnGainSlider(wxCommandEvent& evt);
+
+   void OnFreqText(wxCommandEvent& evt);
+   void OnPhaseText(wxCommandEvent& evt);
+   void OnDepthText(wxCommandEvent& evt);
+   void OnResonanceText(wxCommandEvent& evt);
+   void OnFreqOffText(wxCommandEvent& evt);
+   void OnGainText(wxCommandEvent& evt);
+
+   wxTextCtrl* mFreqT;
+   wxTextCtrl* mPhaseT;
+   wxTextCtrl* mDepthT;
+   wxTextCtrl* mResT;
+   wxTextCtrl* mFreqOfsT;
+   wxTextCtrl* mOutGainT;
+
+   wxSlider* mFreqS;
+   wxSlider* mPhaseS;
+   wxSlider* mDepthS;
+   wxSlider* mResS;
+   wxSlider* mFreqOfsS;
+   wxSlider* mOutGainS;
+
+
+   EffectWahwahSettings mSettings;
+
+   void EnableApplyFromValidate()
+   {
+      Effect& actualEffect = static_cast<Effect&>(mEffect);
+      actualEffect.EnableApply(actualEffect.GetUIParent()->Validate());
+   }
+
+   bool EnableApplyFromTransferDataToWindow()
+   {
+      Effect& actualEffect = static_cast<Effect&>(mEffect);
+      return actualEffect.EnableApply(actualEffect.GetUIParent()->TransferDataFromWindow());
+   }
+};
+
+
+bool EffectWahwah::Validator::ValidateUI()
+{
+   mAccess.ModifySettings
+   (
+      [this](EffectSettings& settings)
+      {
+         // pass back the modified settings to the MessageBuffer
+         GetSettings(settings) = mSettings;
+      }
+   );
+
+   return true;
+}
+
+
+struct EffectWahwah::Instance
+   : public PerTrackEffect::Instance
+   , public EffectInstanceWithBlockSize
+   , public EffectInstanceWithSampleRate
+
+{
+   explicit Instance(const PerTrackEffect& effect)
+      : PerTrackEffect::Instance{ effect }
+   {}
+
+   bool ProcessInitialize(EffectSettings& settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
+
+   size_t ProcessBlock(EffectSettings& settings,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
+
+   //bool ProcessFinalize(void) override;
+
+   bool RealtimeInitialize(EffectSettings& settings) override;
+
+   bool RealtimeAddProcessor(EffectSettings& settings,
+      unsigned numChannels, float sampleRate) override;
+
+   bool RealtimeFinalize(EffectSettings& settings) noexcept override;
+
+   size_t RealtimeProcess(int group, EffectSettings& settings,
+      const float* const* inbuf, float* const* outbuf, size_t numSamples)
+      override;
+
+
+   void InstanceInit(EffectSettings& settings, EffectWahwahState& data, float sampleRate);
+
+   size_t InstanceProcess(EffectSettings& settings, EffectWahwahState& data,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen);
+
+   EffectWahwahState mMaster;
+   std::vector<EffectWahwahState> mSlaves;
+};
+
+
+std::shared_ptr<EffectInstance>
+EffectWahwah::MakeInstance(EffectSettings&) const
+{
+   return std::make_shared<Instance>(*this);
+}
 
 EffectWahwah::EffectWahwah()
 {
-   Parameters().Reset(*this);
    SetLinearEffectFlag(true);
 }
 
@@ -124,10 +221,10 @@ unsigned EffectWahwah::GetAudioOutCount() const
    return 1;
 }
 
-bool EffectWahwah::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames chanMap)
+bool EffectWahwah::Instance::ProcessInitialize(
+   EffectSettings & settings, sampleCount, ChannelNames chanMap)
 {
-   InstanceInit(mMaster, mSampleRate);
+   InstanceInit(settings, mMaster, mSampleRate);
 
    if (chanMap[0] == ChannelNameFrontRight)
    {
@@ -137,13 +234,13 @@ bool EffectWahwah::ProcessInitialize(
    return true;
 }
 
-size_t EffectWahwah::ProcessBlock(EffectSettings &settings,
+size_t EffectWahwah::Instance::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectWahwah::RealtimeInitialize(EffectSettings &)
+bool EffectWahwah::Instance::RealtimeInitialize(EffectSettings &)
 {
    SetBlockSize(512);
 
@@ -152,26 +249,26 @@ bool EffectWahwah::RealtimeInitialize(EffectSettings &)
    return true;
 }
 
-bool EffectWahwah::RealtimeAddProcessor(
+bool EffectWahwah::Instance::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
    EffectWahwahState slave;
 
-   InstanceInit(slave, sampleRate);
+   InstanceInit(settings, slave, sampleRate);
 
    mSlaves.push_back(slave);
 
    return true;
 }
 
-bool EffectWahwah::RealtimeFinalize(EffectSettings &) noexcept
+bool EffectWahwah::Instance::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectWahwah::RealtimeProcess(int group, EffectSettings &settings,
+size_t EffectWahwah::Instance::RealtimeProcess(int group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
@@ -180,8 +277,19 @@ size_t EffectWahwah::RealtimeProcess(int group, EffectSettings &settings,
 // Effect implementation
 
 std::unique_ptr<EffectUIValidator>
-EffectWahwah::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+EffectWahwah::PopulateOrExchange(ShuttleGui& S, EffectSettingsAccess& access)
 {
+   auto& settings = access.Get();
+   auto& myEffSettings = GetSettings(settings);
+   auto result = std::make_unique<Validator>(*this, access, myEffSettings);
+   result->PopulateOrExchange(S);
+   return result;
+}
+
+void EffectWahwah::Validator::PopulateOrExchange(ShuttleGui & S)
+{
+   auto& ms = mSettings;
+
    S.SetBorder(5);
    S.AddSpace(0, 5);
 
@@ -189,95 +297,115 @@ EffectWahwah::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
    {
       S.SetStretchyCol(2);
    
-      mFreqT = S.Id(ID_Freq)
+      mFreqT = S
          .Validator<FloatingPointValidator<double>>(
-            5, &mFreq, NumValidatorStyle::ONE_TRAILING_ZERO, Freq.min, Freq.max)
+            5, &ms.mFreq, NumValidatorStyle::ONE_TRAILING_ZERO, Freq.min, Freq.max)
          .AddTextBox(XXO("LFO Freq&uency (Hz):"), L"", 12);
+      BindTo(*mFreqT, wxEVT_TEXT, &Validator::OnFreqText);
 
-      mFreqS = S.Id(ID_Freq)
+      mFreqS = S
          .Name(XO("LFO frequency in hertz"))
          .Style(wxSL_HORIZONTAL)
          .MinSize( { 100, -1 } )
          .AddSlider( {}, Freq.def * Freq.scale, Freq.max * Freq.scale, Freq.min * Freq.scale);
+      BindTo(*mFreqS, wxEVT_SLIDER, &Validator::OnFreqSlider);
 
-      mPhaseT = S.Id(ID_Phase)
+      mPhaseT = S
          .Validator<FloatingPointValidator<double>>(
-            1, &mPhase, NumValidatorStyle::DEFAULT, Phase.min, Phase.max)
+            1, &ms.mPhase, NumValidatorStyle::DEFAULT, Phase.min, Phase.max)
          .AddTextBox(XXO("LFO Sta&rt Phase (deg.):"), L"", 12);
+      BindTo(*mPhaseT, wxEVT_TEXT, &Validator::OnPhaseText);
 
-      mPhaseS = S.Id(ID_Phase)
+      mPhaseS = S
          .Name(XO("LFO start phase in degrees"))
          .Style(wxSL_HORIZONTAL)
          .MinSize( { 100, -1 } )
          .AddSlider( {}, Phase.def * Phase.scale, Phase.max * Phase.scale, Phase.min * Phase.scale);
       mPhaseS->SetLineSize(10);
+      BindTo(*mPhaseS, wxEVT_SLIDER, &Validator::OnPhaseSlider);
 
-      mDepthT = S.Id(ID_Depth)
+      mDepthT = S
          .Validator<IntegerValidator<int>>(
-            &mDepth, NumValidatorStyle::DEFAULT, Depth.min, Depth.max)
+            &ms.mDepth, NumValidatorStyle::DEFAULT, Depth.min, Depth.max)
          .AddTextBox(XXO("Dept&h (%):"), L"", 12);
+      BindTo(*mDepthT, wxEVT_TEXT, &Validator::OnDepthText);
 
-      mDepthS = S.Id(ID_Depth)
+      mDepthS = S
          .Name(XO("Depth in percent"))
          .Style(wxSL_HORIZONTAL)
          .MinSize( { 100, -1 } )
          .AddSlider( {}, Depth.def * Depth.scale, Depth.max * Depth.scale, Depth.min * Depth.scale);
+      BindTo(*mDepthS, wxEVT_SLIDER, &Validator::OnDepthSlider);
 
-      mResT = S.Id(ID_Res)
+      mResT = S
          .Validator<FloatingPointValidator<double>>(
-            1, &mRes, NumValidatorStyle::DEFAULT, Res.min, Res.max)
+            1, &ms.mRes, NumValidatorStyle::DEFAULT, Res.min, Res.max)
          .AddTextBox(XXO("Reso&nance:"), L"", 12);
+      BindTo(*mResT, wxEVT_TEXT, &Validator::OnResonanceText);
 
-      mResS = S.Id(ID_Res)
+      mResS = S
          .Name(XO("Resonance"))
          .Style(wxSL_HORIZONTAL)
          .MinSize( { 100, -1 } )
          .AddSlider( {}, Res.def * Res.scale, Res.max * Res.scale, Res.min * Res.scale);
+      BindTo(*mResS, wxEVT_SLIDER, &Validator::OnResonanceSlider);
 
-      mFreqOfsT = S.Id(ID_FreqOfs)
+      mFreqOfsT = S
          .Validator<IntegerValidator<int>>(
-            &mFreqOfs, NumValidatorStyle::DEFAULT, FreqOfs.min, FreqOfs.max)
+            &ms.mFreqOfs, NumValidatorStyle::DEFAULT, FreqOfs.min, FreqOfs.max)
          .AddTextBox(XXO("Wah Frequency Offse&t (%):"), L"", 12);
+      BindTo(*mFreqOfsT, wxEVT_TEXT, &Validator::OnFreqOffText);
 
-      mFreqOfsS = S.Id(ID_FreqOfs)
+      mFreqOfsS = S
          .Name(XO("Wah frequency offset in percent"))
          .Style(wxSL_HORIZONTAL)
          .MinSize( { 100, -1 } )
          .AddSlider( {}, FreqOfs.def * FreqOfs.scale, FreqOfs.max * FreqOfs.scale, FreqOfs.min * FreqOfs.scale);
+      BindTo(*mFreqOfsS, wxEVT_SLIDER, &Validator::OnFreqOffSlider);
 
-      mOutGainT = S.Id(ID_OutGain)
+      mOutGainT = S
          .Validator<FloatingPointValidator<double>>(
-            1, &mOutGain, NumValidatorStyle::DEFAULT, OutGain.min, OutGain.max)
+            1, &ms.mOutGain, NumValidatorStyle::DEFAULT, OutGain.min, OutGain.max)
          .AddTextBox(XXO("&Output gain (dB):"), L"", 12);
+      BindTo(*mOutGainT, wxEVT_TEXT, &Validator::OnGainText);
 
-      mOutGainS = S.Id(ID_OutGain)
+      mOutGainS = S
          .Name(XO("Output gain (dB)"))
          .Style(wxSL_HORIZONTAL)
          .MinSize( { 100, -1 } )
          .AddSlider( {}, OutGain.def * OutGain.scale, OutGain.max * OutGain.scale, OutGain.min * OutGain.scale);
+      BindTo(*mOutGainS, wxEVT_SLIDER, &Validator::OnGainSlider);
    }
    S.EndMultiColumn();
-   return nullptr;
 }
 
-bool EffectWahwah::TransferDataToWindow(const EffectSettings &)
+bool EffectWahwah::Validator::UpdateUI()
 {
-   mFreqS->SetValue((int) (mFreq * Freq.scale));
-   mPhaseS->SetValue((int) (mPhase * Phase.scale));
-   mDepthS->SetValue((int) (mDepth * Depth.scale));
-   mResS->SetValue((int) (mRes * Res.scale));
-   mFreqOfsS->SetValue((int) (mFreqOfs * FreqOfs.scale));
-   mOutGainS->SetValue((int) (mOutGain * OutGain.scale));
+   // get the settings from the MessageBuffer and write them to our local copy
+   const auto& settings = mAccess.Get();
 
+   mSettings = GetSettings(settings);
+
+   auto& ms = mSettings;
+
+   mFreqS->SetValue((int)(ms.mFreq * Freq.scale));
+   mPhaseS->SetValue((int)(ms.mPhase * Phase.scale));
+   mDepthS->SetValue((int)(ms.mDepth * Depth.scale));
+   mResS->SetValue((int)(ms.mRes * Res.scale));
+   mFreqOfsS->SetValue((int)(ms.mFreqOfs * FreqOfs.scale));
+   mOutGainS->SetValue((int)(ms.mOutGain * OutGain.scale));
+   
    return true;
 }
 
 // EffectWahwah implementation
 
-void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate)
+void EffectWahwah::Instance::InstanceInit(EffectSettings& settings, EffectWahwahState & data, float sampleRate)
 {
+   auto& ms = GetSettings(settings);
+
    data.samplerate = sampleRate;
-   data.lfoskip = mFreq * 2 * M_PI / sampleRate;
+   data.lfoskip = ms.mFreq * 2 * M_PI / sampleRate;
    data.skipcount = 0;
    data.xn1 = 0;
    data.xn2 = 0;
@@ -290,27 +418,29 @@ void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate)
    data.a1 = 0;
    data.a2 = 0;
 
-   data.depth = mDepth / 100.0;
-   data.freqofs = mFreqOfs / 100.0;
-   data.phase = mPhase * M_PI / 180.0;
-   data.outgain = DB_TO_LINEAR(mOutGain);
+   data.depth = ms.mDepth / 100.0;
+   data.freqofs = ms.mFreqOfs / 100.0;
+   data.phase = ms.mPhase * M_PI / 180.0;
+   data.outgain = DB_TO_LINEAR(ms.mOutGain);
 }
 
-size_t EffectWahwah::InstanceProcess(EffectSettings &settings,
+size_t EffectWahwah::Instance::InstanceProcess(EffectSettings& settings,
    EffectWahwahState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
+   auto& ms = GetSettings(settings);
+   
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
    double frequency, omega, sn, cs, alpha;
    double in, out;
 
-   data.lfoskip = mFreq * 2 * M_PI / data.samplerate;
-   data.depth = mDepth / 100.0;
-   data.freqofs = mFreqOfs / 100.0;
+   data.lfoskip = ms.mFreq * 2 * M_PI / data.samplerate;
+   data.depth = ms.mDepth / 100.0;
+   data.freqofs = ms.mFreqOfs / 100.0;
 
-   data.phase = mPhase * M_PI / 180.0;
-   data.outgain = DB_TO_LINEAR(mOutGain);
+   data.phase = ms.mPhase * M_PI / 180.0;
+   data.outgain = DB_TO_LINEAR(ms.mOutGain);
 
    for (decltype(blockLen) i = 0; i < blockLen; i++)
    {
@@ -324,7 +454,7 @@ size_t EffectWahwah::InstanceProcess(EffectSettings &settings,
          omega = M_PI * frequency;
          sn = sin(omega);
          cs = cos(omega);
-         alpha = sn / (2 * mRes);
+         alpha = sn / (2 * ms.mRes);
          data.b0 = (1 - cs) / 2;
          data.b1 = 1 - cs;
          data.b2 = (1 - cs) / 2;
@@ -345,107 +475,149 @@ size_t EffectWahwah::InstanceProcess(EffectSettings &settings,
    return blockLen;
 }
 
-void EffectWahwah::OnFreqSlider(wxCommandEvent & evt)
+void EffectWahwah::Validator::OnFreqSlider(wxCommandEvent& evt)
 {
-   mFreq = (double) evt.GetInt() / Freq.scale;
+   auto& ms = mSettings;
+
+   ms.mFreq = (double)evt.GetInt() / Freq.scale;
    mFreqT->GetValidator()->TransferToWindow();
-   EnableApply(mUIParent->Validate());
+
+   EnableApplyFromValidate();
+   ValidateUI();
 }
 
-void EffectWahwah::OnPhaseSlider(wxCommandEvent & evt)
+void EffectWahwah::Validator::OnPhaseSlider(wxCommandEvent& evt)
 {
+   auto& ms = mSettings;
+
    int val = ((evt.GetInt() + 5) / 10) * 10; // round to nearest multiple of 10
    val = val > Phase.max * Phase.scale ? Phase.max * Phase.scale : val;
    mPhaseS->SetValue(val);
-   mPhase = (double) val / Phase.scale;
+   ms.mPhase = (double)val / Phase.scale;
    mPhaseT->GetValidator()->TransferToWindow();
-   EnableApply(mUIParent->Validate());
+
+   EnableApplyFromValidate();
+   ValidateUI();
 }
 
-void EffectWahwah::OnDepthSlider(wxCommandEvent & evt)
+void EffectWahwah::Validator::OnDepthSlider(wxCommandEvent& evt)
 {
-   mDepth = evt.GetInt() / Depth.scale;
+   auto& ms = mSettings;
+
+   ms.mDepth = evt.GetInt() / Depth.scale;
    mDepthT->GetValidator()->TransferToWindow();
-   EnableApply(mUIParent->Validate());
+
+   EnableApplyFromValidate();
+   ValidateUI();
 }
 
-void EffectWahwah::OnResonanceSlider(wxCommandEvent & evt)
+void EffectWahwah::Validator::OnResonanceSlider(wxCommandEvent& evt)
 {
-   mRes = (double) evt.GetInt() / Res.scale;
+   auto& ms = mSettings;
+
+   ms.mRes = (double)evt.GetInt() / Res.scale;
    mResT->GetValidator()->TransferToWindow();
-   EnableApply(mUIParent->Validate());
+
+   EnableApplyFromValidate();
+   ValidateUI();
 }
 
-void EffectWahwah::OnFreqOffSlider(wxCommandEvent & evt)
+void EffectWahwah::Validator::OnFreqOffSlider(wxCommandEvent& evt)
 {
-   mFreqOfs = evt.GetInt() / FreqOfs.scale;
+   auto& ms = mSettings;
+
+   ms.mFreqOfs = evt.GetInt() / FreqOfs.scale;
    mFreqOfsT->GetValidator()->TransferToWindow();
-   EnableApply(mUIParent->Validate());
+
+   EnableApplyFromValidate();
+   ValidateUI();
 }
 
-void EffectWahwah::OnGainSlider(wxCommandEvent & evt)
+void EffectWahwah::Validator::OnGainSlider(wxCommandEvent& evt)
 {
-   mOutGain = evt.GetInt() / OutGain.scale;
+   auto& ms = mSettings;
+
+   ms.mOutGain = evt.GetInt() / OutGain.scale;
    mOutGainT->GetValidator()->TransferToWindow();
-   EnableApply(mUIParent->Validate());
+
+   EnableApplyFromValidate();
+   ValidateUI();
 }
 
-void EffectWahwah::OnFreqText(wxCommandEvent & WXUNUSED(evt))
+void EffectWahwah::Validator::OnFreqText(wxCommandEvent& WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   auto& ms = mSettings;
+
+   if (!EnableApplyFromTransferDataToWindow())
    {
       return;
    }
 
-   mFreqS->SetValue((int) (mFreq * Freq.scale));
+   mFreqS->SetValue((int)(ms.mFreq * Freq.scale));
+   ValidateUI();
 }
 
-void EffectWahwah::OnPhaseText(wxCommandEvent & WXUNUSED(evt))
+void EffectWahwah::Validator::OnPhaseText(wxCommandEvent& WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   auto& ms = mSettings;
+
+   if (!EnableApplyFromTransferDataToWindow())
    {
       return;
    }
 
-   mPhaseS->SetValue((int) (mPhase * Phase.scale));
+   mPhaseS->SetValue((int)(ms.mPhase * Phase.scale));
+   ValidateUI();
 }
 
-void EffectWahwah::OnDepthText(wxCommandEvent & WXUNUSED(evt))
+void EffectWahwah::Validator::OnDepthText(wxCommandEvent& WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   auto& ms = mSettings;
+
+   if (!EnableApplyFromTransferDataToWindow())
    {
       return;
    }
 
-   mDepthS->SetValue((int) (mDepth * Depth.scale));
+   mDepthS->SetValue((int)(ms.mDepth * Depth.scale));
+   ValidateUI();
 }
 
-void EffectWahwah::OnResonanceText(wxCommandEvent & WXUNUSED(evt))
+void EffectWahwah::Validator::OnResonanceText(wxCommandEvent& WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   auto& ms = mSettings;
+
+   if (!EnableApplyFromTransferDataToWindow())
    {
       return;
    }
 
-   mResS->SetValue((int) (mRes * Res.scale));
+   mResS->SetValue((int)(ms.mRes * Res.scale));
+   ValidateUI();
 }
 
-void EffectWahwah::OnFreqOffText(wxCommandEvent & WXUNUSED(evt))
+void EffectWahwah::Validator::OnFreqOffText(wxCommandEvent& WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   auto& ms = mSettings;
+
+   if (!EnableApplyFromTransferDataToWindow())
    {
       return;
    }
 
-   mFreqOfsS->SetValue((int) (mFreqOfs * FreqOfs.scale));
+   mFreqOfsS->SetValue((int)(ms.mFreqOfs * FreqOfs.scale));
+   ValidateUI();
 }
 
-void EffectWahwah::OnGainText(wxCommandEvent & WXUNUSED(evt))
+void EffectWahwah::Validator::OnGainText(wxCommandEvent& WXUNUSED(evt))
 {
-   if (!EnableApply(mUIParent->TransferDataFromWindow()))
+   auto& ms = mSettings;
+
+   if (!EnableApplyFromTransferDataToWindow())
    {
       return;
    }
 
-   mOutGainS->SetValue((int) (mOutGain * OutGain.scale));
+   mOutGainS->SetValue((int)(ms.mOutGain * OutGain.scale));
+   ValidateUI();
 }

@@ -112,7 +112,7 @@ private:
    ChannelType GetChannel() const override;
    virtual void SetPanFromChannelType() override;
 
-   bool LinkConsistencyCheck() override;
+   bool LinkConsistencyFix(bool doFix, bool completeList) override;
 
    /** @brief Get the time at which the first clip in the track starts
     *
