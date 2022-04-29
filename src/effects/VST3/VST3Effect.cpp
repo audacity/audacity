@@ -320,7 +320,11 @@ bool VST3Effect::IsDefault() const
 
 bool VST3Effect::SupportsRealtime() const
 {
-   return true;
+   // TODO reenable after achieving statelessness
+   // Also, as with old VST, perhaps only for plug-ins known not to be
+   // just generators
+   return false;
+//   return true;
 }
 
 bool VST3Effect::SupportsAutomation() const

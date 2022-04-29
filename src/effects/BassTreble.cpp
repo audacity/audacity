@@ -108,7 +108,9 @@ EffectType EffectBassTreble::GetType() const
 
 bool EffectBassTreble::SupportsRealtime() const
 {
-   return true;
+   // TODO reenable after achieving statelessness
+   return false;
+//   return true;
 }
 
 unsigned EffectBassTreble::GetAudioInCount() const
