@@ -37,7 +37,7 @@ class AudacityApp final : public wxApp {
  public:
    AudacityApp();
    ~AudacityApp();
-   bool OnInit(void) override;
+   bool OnInit() override;
    bool InitPart2();
    int OnRun() override;
    int OnExit(void) override;
@@ -96,6 +96,8 @@ class AudacityApp final : public wxApp {
 
 
  private:
+   void OnInit0();
+
    std::unique_ptr<CommandHandler> mCmdHandler;
 
    std::unique_ptr<wxSingleInstanceChecker> mChecker;

@@ -1086,23 +1086,9 @@ AudacityApp::~AudacityApp()
 {
 }
 
-// The `main program' equivalent, creating the windows and returning the
-// main frame
-bool AudacityApp::OnInit()
+// Some of the many initialization steps
+void AudacityApp::OnInit0()
 {
-   // JKC: ANSWER-ME: Who actually added the event loop guarantor?
-   // Although 'blame' says Leland, I think it came from a donated patch.
-
-   // PRL:  It was added by LL at 54676a72285ba7ee3a69920e91fa390a71ef10c9 :
-   // "   Ensure OnInit() has an event loop
-   //     And allow events to flow so the splash window updates under GTK"
-   // then mistakenly lost in the merge at
-   // 37168ebbf67ae869ab71a3b5cbbf1d2a48e824aa
-   // then restored at 7687972aa4b2199f0717165235f3ef68ade71e08
-
-   // Ensure we have an event loop during initialization
-   wxEventLoopGuarantor eventLoop;
-
    // Inject basic GUI services behind the facade
    {
       static wxWidgetsBasicUI uiServices;
@@ -1171,7 +1157,10 @@ bool AudacityApp::OnInit()
 
    // AddHandler takes ownership
    wxFileSystem::AddHandler(safenew wxZipFSHandler);
+}
 
+void InitializePathList()
+{
    //
    // Paths: set search path and temp dir path
    //
@@ -1221,7 +1210,7 @@ bool AudacityApp::OnInit()
       FileNames::AddMultiPathsToPathList(pathVar, audacityPathList);
    FileNames::AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
 
-   wxString progPath = wxPathOnly(argv[0]);
+   wxString progPath = wxPathOnly(wxTheApp->argv[0]);
 
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
    // Add the path to modules:
@@ -1255,10 +1244,10 @@ bool AudacityApp::OnInit()
 #else //AUDACITY_NAME
    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.audacity-files"),
       home),
-      audacityPathList)
+      audacityPathList);
    FileNames::AddUniquePathToPathList(FileNames::ModulesDir(),
       audacityPathList);
-   FileNames::AddUniquePathToPathList(installPrefix + L"/share/audacity"),
+   FileNames::AddUniquePathToPathList(installPrefix + L"/share/audacity",
       audacityPathList);
    FileNames::AddUniquePathToPathList(installPrefix + L"/share/doc/audacity",
       audacityPathList);
@@ -1289,7 +1278,7 @@ bool AudacityApp::OnInit()
    // On Mac and Windows systems, use the directory which contains Audacity.
 #ifdef __WXMSW__
    // On Windows, the path to the Audacity program is in argv[0]
-   wxString progPath = wxPathOnly(argv[0]);
+   wxString progPath = wxPathOnly(wxTheApp->argv[0]);
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
    FileNames::AddUniquePathToPathList(progPath + wxT("\\Languages"), audacityPathList);
 
@@ -1301,7 +1290,7 @@ bool AudacityApp::OnInit()
 
 #ifdef __WXMAC__
    // On Mac OS X, the path to the Audacity program is in argv[0]
-   wxString progPath = wxPathOnly(argv[0]);
+   wxString progPath = wxPathOnly(wxTheApp->argv[0]);
 
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
    // If Audacity is a "bundle" package, then the root directory is
@@ -1326,6 +1315,28 @@ bool AudacityApp::OnInit()
 #endif //__WXMAC__
 
    FileNames::SetAudacityPathList( std::move( audacityPathList ) );
+}
+
+// The `main program' equivalent, creating the windows and returning the
+// main frame
+bool AudacityApp::OnInit()
+{
+   // JKC: ANSWER-ME: Who actually added the event loop guarantor?
+   // Although 'blame' says Leland, I think it came from a donated patch.
+
+   // PRL:  It was added by LL at 54676a72285ba7ee3a69920e91fa390a71ef10c9 :
+   // "   Ensure OnInit() has an event loop
+   //     And allow events to flow so the splash window updates under GTK"
+   // then mistakenly lost in the merge at
+   // 37168ebbf67ae869ab71a3b5cbbf1d2a48e824aa
+   // then restored at 7687972aa4b2199f0717165235f3ef68ade71e08
+
+   // Ensure we have an event loop during initialization
+   wxEventLoopGuarantor eventLoop;
+
+   OnInit0();
+
+   InitializePathList();
 
    // Define languages for which we have translations, but that are not yet
    // supported by wxWidgets.
