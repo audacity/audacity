@@ -1738,7 +1738,7 @@ double AudioIO::GetStreamTime()
 
 AudioThread::ExitCode AudioThread::Entry()
 {
-   enum class State { eUndefined, eOnce, eLoopRunning, eDoNothing } lastState = State::eUndefined;
+   enum class State { eUndefined, eOnce, eLoopRunning, eDoNothing, eMonitoring } lastState = State::eUndefined;
 
    AudioIO *gAudioIO;
    while( !TestDestroy() &&
@@ -1782,7 +1782,8 @@ AudioThread::ExitCode AudioThread::Entry()
       }
       else
       {
-         if (lastState == State::eLoopRunning)
+         if (    (lastState == State::eLoopRunning)
+              || (lastState == State::eMonitoring ) )
          {
             // Main thread has told us to stop; (actually: to neither process "once" nor "loop running")
             // acknowledge that we received the order and that no more processing will be done.
@@ -1790,6 +1791,11 @@ AudioThread::ExitCode AudioThread::Entry()
                                                     std::memory_order::memory_order_release);
          }
          lastState = State::eDoNothing;
+
+         if (gAudioIO->IsMonitoring())
+         {
+            lastState = State::eMonitoring;
+         }
       }
 
       gAudioIO->mAudioThreadTrackBufferExchangeLoopActive
