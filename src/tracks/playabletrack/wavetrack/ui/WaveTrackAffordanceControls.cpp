@@ -598,7 +598,7 @@ using namespace MenuTable;
 
 // Register menu items
 
-AttachedItem sAttachment{ wxT("Edit/Other"),
+AttachedItem sAttachment{ wxT("Edit/Clip"),
    ( FinderScope{ findCommandHandler },
       Command( L"RenameClip", XXO("Rename Clip..."),
          &Handler::OnEditClipName, SomeClipIsSelectedFlag(),
