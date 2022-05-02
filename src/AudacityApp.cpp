@@ -1161,14 +1161,16 @@ void AudacityApp::OnInit0()
 
 void InitializePathList()
 {
+   auto &standardPaths = wxStandardPaths::Get();
+   const auto programPath = standardPaths.GetExecutablePath();
+
    //
    // Paths: set search path and temp dir path
    //
    FilePaths audacityPathList;
 
 #ifdef __WXGTK__
-   wxStandardPaths standardPaths = wxStandardPaths::Get();
-   wxString portablePrefix = wxPathOnly(wxPathOnly(standardPaths.GetExecutablePath()));
+   const auto portablePrefix = wxPathOnly(wxPathOnly(programPath));
 
    // Make sure install prefix is set so wxStandardPath resolves paths properly
    if (wxDirExists(portablePrefix + L"/share/audacity")) {
@@ -1210,7 +1212,7 @@ void InitializePathList()
       FileNames::AddMultiPathsToPathList(pathVar, audacityPathList);
    FileNames::AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
 
-   wxString progPath = wxPathOnly(wxTheApp->argv[0]);
+   const auto progPath = wxPathOnly(programPath);
 
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
    // Add the path to modules:
@@ -1277,8 +1279,8 @@ void InitializePathList()
 
    // On Mac and Windows systems, use the directory which contains Audacity.
 #ifdef __WXMSW__
-   // On Windows, the path to the Audacity program is in argv[0]
-   wxString progPath = wxPathOnly(wxTheApp->argv[0]);
+   // On Windows, the path to the Audacity program is programPath
+   const auto progPath = wxPathOnly(programPath);
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
    FileNames::AddUniquePathToPathList(progPath + wxT("\\Languages"), audacityPathList);
 
@@ -1289,8 +1291,8 @@ void InitializePathList()
 #endif //__WXWSW__
 
 #ifdef __WXMAC__
-   // On Mac OS X, the path to the Audacity program is in argv[0]
-   wxString progPath = wxPathOnly(wxTheApp->argv[0]);
+   // On Mac OS X, the path to the Audacity program is programPath
+   const auto progPath = wxPathOnly(programPath);
 
    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
    // If Audacity is a "bundle" package, then the root directory is
