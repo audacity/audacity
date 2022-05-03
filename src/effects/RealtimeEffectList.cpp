@@ -116,11 +116,6 @@ RealtimeEffectState* RealtimeEffectList::GetStateAt(size_t index) noexcept
    return nullptr;
 }
 
-void RealtimeEffectList::Swap(size_t index1, size_t index2)
-{
-   std::swap(mStates[index1], mStates[index2]);
-}
-
 void RealtimeEffectList::Reorder(size_t fromIndex, size_t toIndex)
 {
    assert(fromIndex < mStates.size());
