@@ -32,6 +32,6 @@ public:
 
    void unlock()
    {
-      flag.clear();
+      flag.clear(std::memory_order_release);
    }
 };
