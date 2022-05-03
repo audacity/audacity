@@ -284,3 +284,7 @@ bool FileConfig::DoWriteBinary(const wxString& key, const wxMemoryBuffer& buf)
    return res;
 }
 #endif // wxUSE_BASE64
+
+void FileConfig::Warn()
+{
+}
