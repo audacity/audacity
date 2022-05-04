@@ -18,6 +18,7 @@ used utilities that don't correspond to things in the standard.
 set( SOURCES
    BufferedStreamReader.cpp
    BufferedStreamReader.h
+   CFResources.h
    GlobalVariable.h
    MemoryX.cpp
    MemoryX.h

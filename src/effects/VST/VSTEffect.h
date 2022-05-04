@@ -13,6 +13,7 @@
 #if USE_VST
 
 #include "../StatefulPerTrackEffect.h"
+#include "CFResources.h"
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
@@ -317,12 +318,7 @@ private:
 #if defined(__WXMAC__)
    // These members must be ordered after mModule
 
-   struct BundleDeleter {
-      void operator() (void*) const;
-   };
-   using BundleHandle = std::unique_ptr<
-      __CFBundle, BundleDeleter
-   >;
+   using BundleHandle = CF_ptr<CFBundleRef>;
 
    BundleHandle mBundleRef;
 
