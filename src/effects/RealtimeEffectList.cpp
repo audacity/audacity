@@ -150,10 +150,19 @@ const std::string &RealtimeEffectList::XMLTag()
    return result;
 }
 
+static constexpr auto activeAttribute = "active";
+
 bool RealtimeEffectList::HandleXMLTag(
-   const std::string_view &tag, const AttributesList &)
+   const std::string_view &tag, const AttributesList &attrs)
 {
-   return (tag == XMLTag());
+   if (tag == XMLTag()) {
+      for (auto &[attr, value] : attrs) {
+         if (attr == activeAttribute)
+            SetActive(value.Get<bool>());
+      }
+      return true;
+   }
+   return false;
 }
 
 void RealtimeEffectList::HandleXMLEndTag(const std::string_view &tag)
@@ -185,6 +194,7 @@ void RealtimeEffectList::WriteXML(XMLWriter &xmlFile) const
       return;
 
    xmlFile.StartTag(XMLTag());
+   xmlFile.WriteAttr(activeAttribute, IsActive());
 
    for (const auto & state : mStates)
       state->WriteXML(xmlFile);

@@ -467,6 +467,7 @@ static const auto parametersAttribute = "parameters";
 static const auto parameterAttribute = "parameter";
 static const auto nameAttribute = "name";
 static const auto valueAttribute = "value";
+static constexpr auto activeAttribute = "active";
 
 bool RealtimeEffectState::HandleXMLTag(
    const std::string_view &tag, const AttributesList &attrs)
@@ -475,11 +476,7 @@ bool RealtimeEffectState::HandleXMLTag(
       mParameters.clear();
       mPlugin = nullptr;
       mID.clear();
-
-      for (auto pair : attrs) {
-         auto attr = pair.first;
-         auto value = pair.second;
-
+      for (auto &[attr, value] : attrs) {
          if (attr == idAttribute) {
             SetID(value.ToWString());
             if (!mPlugin) {
@@ -488,8 +485,9 @@ bool RealtimeEffectState::HandleXMLTag(
          }
          else if (attr == versionAttribute) {
          }
+         else if (attr == activeAttribute)
+            mMainSettings.extra.SetActive(value.Get<bool>());
       }
-
       return true;
    }
    else if (tag == parametersAttribute)
@@ -497,19 +495,13 @@ bool RealtimeEffectState::HandleXMLTag(
    else if (tag == parameterAttribute) {
       wxString n;
       wxString v;
-
-      for (auto pair : attrs) {
-         auto attr = pair.first;
-         auto value = pair.second;
-
+      for (auto &[attr, value] : attrs) {
          if (attr == nameAttribute)
             n = value.ToWString();
          else if (attr == valueAttribute)
             v = value.ToWString();
       }
-
       mParameters += wxString::Format(wxT("\"%s=%s\" "), n, v);
-
       return true;
    }
    else
@@ -540,6 +532,9 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
       return;
 
    xmlFile.StartTag(XMLTag());
+   // TODO fix race condition -- function is supposed to be for worker only
+   const auto active = mMainSettings.extra.GetActive();
+   xmlFile.WriteAttr(activeAttribute, active);
    xmlFile.WriteAttr(
       idAttribute, XMLWriter::XMLEsc(PluginManager::GetID(mPlugin)));
    xmlFile.WriteAttr(versionAttribute, XMLWriter::XMLEsc(mPlugin->GetVersion()));
