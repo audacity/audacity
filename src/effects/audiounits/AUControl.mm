@@ -1,8 +1,8 @@
-/**********************************************************************
+/*!********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  AUControl.mm
+  @file AUControl.mm
 
   Leland Lucius
 
@@ -32,6 +32,13 @@
 #endif
 
 #include "MemoryX.h"
+
+class AUControlImpl final : public wxWidgetCocoaImpl
+{
+public :
+   AUControlImpl(wxWindowMac *peer, NSView *view);
+   ~AUControlImpl();
+};
 
 @interface AUView : NSView
 {
@@ -84,8 +91,7 @@
    //       update properly.  But, resize the window and it does.
    //
    //       Again, this is total hackage and I hope to find the real cause soon.
-   if (mRedraw)
-   {
+   if (mRedraw) {
       NSRect viewRect = [mView frame];
       NSRect bogusRect = {};
       [mView setFrameSize:bogusRect.size];
@@ -118,18 +124,6 @@ END_EVENT_TABLE()
 
 AUControl::AUControl()
 {
-   mComponent = NULL;
-   mUnit = NULL;
-
-   mAUView = nil;
-   mView = nil;
-
-   mSettingSize = false;
-
-#if !defined(_LP64)
-   mHIView = NULL;
-   mWindowRef = NULL;
-#endif
 }
 
 AUControl::~AUControl()
@@ -141,16 +135,14 @@ void AUControl::Close()
 {
 #if !defined(_LP64)
 
-   if (mInstance)
-   {
+   if (mInstance) {
       AudioComponentInstanceDispose(mInstance);
       mInstance = nullptr;
    }
 
 #endif
 
-   if (mView)
-   {
+   if (mView) {
       NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
       [center removeObserver:mAUView
                         name:NSViewFrameDidChangeNotification
@@ -160,8 +152,7 @@ void AUControl::Close()
       mView = nullptr;
    }
 
-   if (mAUView)
-   {
+   if (mAUView) {
       [mAUView release];
       mAUView = nullptr;
    }
@@ -175,27 +166,20 @@ bool AUControl::Create(wxWindow *parent, AudioComponent comp, AudioUnit unit, bo
    DontCreatePeer();
 
    if (!wxControl::Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, wxEmptyString))
-   {
       return false;
-   }
 
    mAUView = [AUView alloc];
    if (!mAUView)
-   {
       return false;
-   }
-   [(AUView *)mAUView initWithControl:this];
+   [static_cast<AUView *>(mAUView) initWithControl:this];
    [mAUView retain];
 
-   if (custom)
-   {
+   if (custom) {
       CreateCocoa();
 
 #if !defined(_LP64)
       if (!mView)
-      {
          CreateCarbon();
-      }
 #endif
    }
 
@@ -204,36 +188,28 @@ bool AUControl::Create(wxWindow *parent, AudioComponent comp, AudioUnit unit, bo
        && !mHIView
 #endif
        )
-   {
       CreateGeneric();
-   }
 
    if (!mView
 #if !defined(_LP64)
        && !mHIView
 #endif
        )
-   {
       return false;
-   }
 
-   ((AUView *)mAUView)->mView = mView;
+   static_cast<AUView *>(mAUView)->mView = mView;
 
    // wxWidgets takes ownership so safenew
    SetPeer(safenew AUControlImpl(this, mAUView));
 
 #if !defined(_LP64)
    if (mHIView)
-   {
       CreateCarbonOverlay();
-   }
 #endif
 
    // Must get the size again since SetPeer() could cause it to change
    SetInitialSize(GetMinSize());
-
    MacPostControlCreate(wxDefaultPosition, wxDefaultSize);
-
    return true;
 }
 
@@ -242,52 +218,38 @@ void AUControl::OnSize(wxSizeEvent & evt)
    evt.Skip();
 
    if (mSettingSize)
-   {
       return;
-   }
    auto vr = valueRestorer( mSettingSize, true );
 
    wxSize sz = GetSize();
 
-   if (mView)
-   {
+   if (mView) {
       int mask = [mView autoresizingMask];
 
       NSRect viewFrame = [mAUView frame];
       NSRect viewRect = [mView frame];
 
-      if (mask & (NSViewWidthSizable | NSViewHeightSizable))
-      {
+      if (mask & (NSViewWidthSizable | NSViewHeightSizable)) {
          if (mask & NSViewWidthSizable)
-         {
             viewRect.size.width = sz.GetWidth();
-         }
 
          if (mask & NSViewHeightSizable)
-         {
             viewRect.size.height = sz.GetHeight();
-         }
 
          viewRect.origin.x = 0;
          viewRect.origin.y = 0;
-
          [mView setFrame:viewRect];
       }
-      else
-      {
+      else {
          viewRect.origin.x = abs((viewFrame.size.width - viewRect.size.width) / 2);
          viewRect.origin.y = abs((viewFrame.size.height - viewRect.size.height) / 2);
-
          if (viewRect.origin.x || viewRect.origin.y)
-         {
             [mAUView setFrame:viewRect];
-         }
       }
    }
 
 #if !defined(_LP64)
-   else if (mHIView)
-   {
+   else if (mHIView) {
       HIRect rect;
       HIViewGetFrame(mHIView, &rect);
 
@@ -308,7 +270,6 @@ void AUControl::OnSize(wxSizeEvent & evt)
       mLastMin = wxSize(rect.size.width, rect.size.height);
    }
 #endif
-
    return;
 }
 
@@ -324,22 +285,16 @@ void AUControl::CreateCocoa()
                                      &dataSize,
                                      NULL);
    if (result != noErr)
-   {
       return;
-   }
 
    int cnt = (dataSize - sizeof(CFURLRef)) / sizeof(CFStringRef);
    if (cnt == 0)
-   {
       return;
-   }
 
    ArrayOf<char> buffer{ dataSize };
    auto viewInfo = (AudioUnitCocoaViewInfo *) buffer.get();
    if (viewInfo == NULL)
-   {
       return;
-   }
 
    // Get the view info
    result = AudioUnitGetProperty(mUnit,
@@ -348,51 +303,31 @@ void AUControl::CreateCocoa()
                                  0,
                                  viewInfo,
                                  &dataSize);
-   if (result == noErr)
-   {
+   if (result == noErr) {
       // Looks like the AU has a Cocoa UI, so load the factory class
-      NSURL *bundleLoc = (NSURL *) viewInfo->mCocoaAUViewBundleLocation;
-      NSString *viewClass = (NSString *) viewInfo->mCocoaAUViewClass[0];
-
-      if (bundleLoc != nil && viewClass != nil)
-      {
+      auto bundleLoc =
+         static_cast<NSURL *>(viewInfo->mCocoaAUViewBundleLocation);
+      auto viewClass = static_cast<NSString *>(viewInfo->mCocoaAUViewClass[0]);
+      if (bundleLoc && viewClass)
          // Load the bundle
-         NSBundle *bundle = [NSBundle bundleWithPath:[bundleLoc path]];
-         if (bundle != nil)
-         {
+         if (auto bundle = [NSBundle bundleWithPath:[bundleLoc path]])
             // Load the class from the bundle
-            Class factoryClass = [bundle classNamed:viewClass];
-            if (factoryClass != nil)
-            {      
+            if (auto factoryClass = [bundle classNamed:viewClass])
                // Create an instance of the class
-               id factoryInst = [[[factoryClass alloc] init] autorelease];
-               if (factoryInst != nil)
-               {
-                  // Suggest a reasonable size
-                  NSSize size = {800, 600};
-      
-                  // Create the view
-                  mView = [factoryInst uiViewForAudioUnit:mUnit withSize:size];
-               }
-            }
-         }
-      }
+               if (id factoryInst = [[[factoryClass alloc] init] autorelease])
+                  // Create the view, suggesting a reasonable size
+                  mView = [factoryInst uiViewForAudioUnit:mUnit
+                                                 withSize:NSSize{800, 600}];
 
       if (viewInfo->mCocoaAUViewBundleLocation != nil)
-      {
          CFRelease(viewInfo->mCocoaAUViewBundleLocation);
-      }
 
       for (int i = 0; i < cnt; i++)
-      {
          CFRelease(viewInfo->mCocoaAUViewClass[i]);
-      }
    }
 
    if (!mView)
-   {
       return;
-   }
 
    [mView retain];
 
@@ -401,17 +336,11 @@ void AUControl::CreateCocoa()
               selector:@selector(cocoaViewResized:)
                   name:NSViewFrameDidChangeNotification
                 object:mView];
-
    [mAUView addSubview:mView];
-
    NSSize viewSize = [mView frame].size;
-
    mLastMin = wxSize(viewSize.width, viewSize.height);
-
    SetMinSize(mLastMin);
-
    [mAUView setAutoresizingMask:[mView autoresizingMask]];
-
    return;
 }
 
@@ -421,30 +350,21 @@ void AUControl::CreateGeneric()
    AudioComponentDescription desc;
 
    result = AudioComponentGetDescription(mComponent, &desc);
-   if (result == noErr && desc.componentType == kAudioUnitType_Panner)
-   {
+   if (result == noErr && desc.componentType == kAudioUnitType_Panner) {
       mView = [AUPannerView AUPannerViewWithAudioUnit:mUnit];
       if (mView == nil)
-      {
          return;
-      }
    }
-   else
-   {
+   else {
       // Create a generic AU view
       AUGenericView *view = [AUGenericView alloc];
       if (view == nil)
-      {
          return;
-      }
 
       int flags = AUViewPropertiesDisplayFlag |
                   AUViewParametersDisplayFlag;
-   
       [view initWithAudioUnit:mUnit displayFlags:flags];
-   
-      [view setShowsExpertParameters:YES];  
-
+      [view setShowsExpertParameters:YES];
       mView = view;
    }
 
@@ -455,34 +375,24 @@ void AUControl::CreateGeneric()
               selector:@selector(cocoaViewResized:)
                   name:NSViewFrameDidChangeNotification
                 object:mView];
-
    [mAUView addSubview:mView];
-
    NSSize viewSize = [mView frame].size;
-
    mLastMin = wxSize(viewSize.width, viewSize.height);
-
    SetMinSize(mLastMin);
-
    [mAUView setAutoresizingMask:[mView autoresizingMask]];
-
    return;
 }
 
 void AUControl::CocoaViewResized()
 {
    if (mSettingSize)
-   {
       return;
-   }
    auto vr = valueRestorer( mSettingSize, true );
 
    NSSize viewSize = [mView frame].size;
    NSSize frameSize = [mAUView frame].size;
-
    [mAUView setFrameSize:viewSize];
-
-   SetMinSize(wxSize(viewSize.width, viewSize.height));;
+   SetMinSize(wxSize(viewSize.width, viewSize.height));
 
    int diffW = (viewSize.width - frameSize.width);
    int diffH = (viewSize.height - frameSize.height);
@@ -490,13 +400,11 @@ void AUControl::CocoaViewResized()
    wxWindow *w = wxGetTopLevelParent(this);
 
    wxSize min = w->GetMinSize();
-   if ([mView autoresizingMask] & (NSViewWidthSizable | NSViewHeightSizable))
-   {
+   if ([mView autoresizingMask] & (NSViewWidthSizable | NSViewHeightSizable)) {
       min.x += diffW;
       min.y += diffH;
    }
-   else
-   {
+   else {
       min.x += (viewSize.width - mLastMin.GetWidth());
       min.y += (viewSize.height - mLastMin.GetHeight());
       mLastMin = wxSize(viewSize.width, viewSize.height);;
@@ -512,7 +420,7 @@ void AUControl::CocoaViewResized()
 
 void AUControl::ForceRedraw()
 {
-   ((AUView *)mAUView)->mRedraw = YES;
+   static_cast<AUView *>(mAUView)->mRedraw = YES;
 }
 
 #if !defined(_LP64)
@@ -529,22 +437,16 @@ void AUControl::CreateCarbon()
                                      &dataSize,
                                      NULL);
    if (result != noErr)
-   {
       return;
-   }
 
    int cnt = (dataSize - sizeof(CFURLRef)) / sizeof(CFStringRef);
    if (cnt == 0)
-   {
       return;
-   }
 
    ArrayOf<char> buffer{ dataSize };
    auto compList = (AudioComponentDescription *) buffer.get();
    if (compList == NULL)
-   {
       return;
-   }
 
    // Get the view info
    result = AudioUnitGetProperty(mUnit,
@@ -557,29 +459,24 @@ void AUControl::CreateCarbon()
       return;
 
    // Get the component
-   AudioComponent comp = AudioComponentFindNext(NULL, &compList[0]);
+   AudioComponent comp = AudioComponentFindNext(nullptr, &compList[0]);
 
    // Try to create an instance
    result = AudioComponentInstanceNew(comp, &mInstance);
 
    if (result != noErr)
-   {
       return;
-   }
 
    Rect bounds = { 100, 100, 200, 200 };
-
    result = CreateNewWindow(kOverlayWindowClass,
                             kWindowStandardHandlerAttribute |
                             kWindowCompositingAttribute |
                             kWindowOpaqueForEventsAttribute,
                             &bounds,
                             &mWindowRef);
-   if (result != noErr)
-   {
+   if (result != noErr) {
       AudioComponentInstanceDispose(mInstance);
-      mInstance = NULL;
-
+      mInstance = nullptr;
       return;
    }
 
@@ -589,14 +486,11 @@ void AUControl::CreateCarbon()
    // Find the content view within our window
    HIViewRef content;
    result = HIViewFindByID(root, kHIViewWindowContentID, &content);
-   if (result != noErr)
-   {
+   if (result != noErr) {
       DisposeWindow(mWindowRef);
-      mWindowRef = NULL;
-
+      mWindowRef = nullptr;
       AudioComponentInstanceDispose(mInstance);
-      mInstance = NULL;
-
+      mInstance = nullptr;
       return;
    }
 
@@ -614,14 +508,11 @@ void AUControl::CreateCarbon()
                                       &loc,
                                       &size,
                                       &mHIView);
-   if (result != noErr)
-   {
+   if (result != noErr) {
       DisposeWindow(mWindowRef);
-      mWindowRef = NULL;
-
+      mWindowRef = nullptr;
       AudioComponentInstanceDispose(mInstance);
-      mInstance = NULL;
-
+      mInstance = nullptr;
       return;
    }
 
@@ -644,8 +535,8 @@ void AUControl::CreateCarbon()
                               ControlEventHandlerCallback,
                               GetEventTypeCount(controlEventList),
                               controlEventList,
-                              (void *) this,
-                              NULL);
+                              this,
+                              nullptr);
 
    return;
 }
@@ -679,17 +570,14 @@ void AUControl::CreateCarbonOverlay()
 pascal OSStatus
 AUControl::ControlEventHandlerCallback(EventHandlerCallRef handler, EventRef event, void *data)
 {
-   ((AUControl *) data)->CarbonViewResized();
-
+   static_cast<AUControl *>(data)->CarbonViewResized();
    return eventNotHandledErr;
 }
 
 void AUControl::CarbonViewResized()
 {
    if (mSettingSize)
-   {
       return;
-   }
    auto vr = valueRestorer( mSettingSize, true );
 
    // resize and move window

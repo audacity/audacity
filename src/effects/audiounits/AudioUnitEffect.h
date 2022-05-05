@@ -1,8 +1,8 @@
-/**********************************************************************
+/*!********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  AudioUnitEffect.h
+  @file AudioUnitEffect.h
 
   Dominic Mazzoni
   Leland Lucius
@@ -15,6 +15,7 @@
 #if USE_AUDIO_UNITS
 
 #include "MemoryX.h"
+#include <type_traits>
 #include <vector>
 
 #include <AudioToolbox/AudioUnitUtilities.h>
@@ -25,7 +26,6 @@
 #include "PluginProvider.h"
 #include "PluginInterface.h"
 
-#include "AUControl.h"
 #include <wx/weakref.h>
 
 #define AUDIOUNITEFFECTS_VERSION wxT("1.0.0.0")
@@ -37,6 +37,17 @@ using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 
 class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
+class AUControl;
+
+//! Generates deleters for std::unique_ptr that clean up AU plugin state
+template<typename T, OSStatus(*fn)(T*)> struct AudioUnitCleaner {
+   // Let this have non-void return type, though ~unique_ptr() will ignore it
+   auto operator () (T *p) noexcept { return fn(p); }
+};
+//! RAII for cleaning up AU plugin state
+template<typename Ptr, OSStatus(*fn)(Ptr),
+   typename T = std::remove_pointer_t<Ptr> /* deduced */ >
+using AudioUnitCleanup = std::unique_ptr<T, AudioUnitCleaner<T, fn>>;
 
 class AudioUnitEffect final : public StatefulPerTrackEffect
 {
@@ -114,6 +125,8 @@ public:
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool MakeListener();
+   bool CreateAudioUnit();
+   bool InitializeInstance();
    bool InitializePlugin();
 
    // EffectUIClientInterface implementation
@@ -144,10 +157,6 @@ private:
    TranslatableString Import(const wxString & path);
    void Notify(AudioUnit unit, AudioUnitParameterID parm) const;
 
-   // Realtime
-   unsigned GetChannelCount();
-   void SetChannelCount(unsigned numChannels);
-   
    static OSStatus RenderCallback(void *inRefCon,
                                   AudioUnitRenderActionFlags *inActionFlags,
                                   const AudioTimeStamp *inTimeStamp,
@@ -181,41 +190,39 @@ private:
 
 private:
 
-   PluginPath mPath;
-   wxString mName;
-   wxString mVendor;
-   AudioComponent mComponent;
-   AudioUnit mUnit;
-   bool mUnitInitialized;
+   const PluginPath mPath;
+   const wxString mName;
+   const wxString mVendor;
+   const AudioComponent mComponent;
 
-   bool mSupportsMono;
-   bool mSupportsStereo;
+   // The sequence of these three members matters in the destructor
+   AudioUnitCleanup<AudioUnit, AudioComponentInstanceDispose> mUnit;
+   AudioUnitCleanup<AUEventListenerRef, AUListenerDispose> mEventListenerRef;
+   AudioUnitCleanup<AudioUnit, AudioUnitUninitialize> mInitialization;
 
-   unsigned mAudioIns;
-   unsigned mAudioOuts;
-   bool mInteractive;
-   bool mLatencyDone;
-   UInt32 mBlockSize;
-   double mSampleRate;
+   // Initialized in GetChannelCounts()
+   unsigned mAudioIns{ 2 };
+   unsigned mAudioOuts{ 2 };
 
-   int mBufferSize;
-   bool mUseLatency;
+   bool mInteractive{ false };
+   bool mLatencyDone{ false };
+   UInt32 mBlockSize{ 0 };
+   Float64 mSampleRate{ 44100.0 };
 
-   AudioTimeStamp mTimeStamp;
+   bool mUseLatency{ true };
+
+   AudioTimeStamp mTimeStamp{};
 
    ArrayOf<AudioBufferList> mInputList;
    ArrayOf<AudioBufferList> mOutputList;
 
-   wxWindow *mParent;
+   wxWindow *mParent{};
    wxWeakRef<wxDialog> mDialog;
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
-   bool mIsGraphical;
+   bool mIsGraphical{ false };
 
-   AudioUnitEffect *mMaster;     // non-NULL if a slave
+   AudioUnitEffect *const mMaster;     // non-NULL if a slave
    AudioUnitEffectArray mSlaves;
-   unsigned mNumChannels;
-
-   AUEventListenerRef mEventListenerRef;
 
    AUControl *mpControl{};
 

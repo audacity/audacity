@@ -1114,12 +1114,6 @@ void VSTEffect::ModuleDeleter::operator() (void* p) const
 #endif
 
 #if defined(__WXMAC__)
-void VSTEffect::BundleDeleter::operator() (void* p) const
-{
-   if (p)
-      CFRelease(static_cast<CFBundleRef>(p));
-}
-
 void VSTEffect::ResourceHandle::reset()
 {
    if (mpHandle)
@@ -1987,40 +1981,27 @@ bool VSTEffect::Load()
    // Convert the path to a CFSTring
    wxCFStringRef path(realPath);
 
-   // Convert the path to a URL
-   CFURLRef urlRef =
-      CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-      path,
-      kCFURLPOSIXPathStyle,
-      true);
-   if (urlRef == NULL)
-   {
-      return false;
-   }
-
    // Create the bundle using the URL
-   BundleHandle bundleRef{ CFBundleCreate(kCFAllocatorDefault, urlRef) };
-
-   // Done with the URL
-   CFRelease(urlRef);
+   BundleHandle bundleRef{ CFBundleCreate(kCFAllocatorDefault,
+      // Convert the path to a URL
+      CF_ptr<CFURLRef>{
+         CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
+            path, kCFURLPOSIXPathStyle, true)
+      }.get()
+   )};
 
    // Bail if the bundle wasn't created
    if (!bundleRef)
-   {
       return false;
-   }
 
-   // Retrieve a reference to the executable
-   CFURLRef exeRef = CFBundleCopyExecutableURL(bundleRef.get());
-   if (!exeRef)
-      return false;
 
    // Convert back to path
    UInt8 exePath[PLATFORM_MAX_PATH];
-   Boolean good = CFURLGetFileSystemRepresentation(exeRef, true, exePath, sizeof(exePath));
-
-   // Done with the executable reference
-   CFRelease(exeRef);
+   Boolean good = CFURLGetFileSystemRepresentation(
+      // Retrieve a reference to the executable
+      CF_ptr<CFURLRef>{ CFBundleCopyExecutableURL(bundleRef.get()) }.get(),
+      true, exePath, sizeof(exePath)
+   );
 
    // Bail if we couldn't resolve the executable path
    if (good == FALSE)

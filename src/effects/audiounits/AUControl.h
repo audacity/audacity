@@ -1,20 +1,12 @@
-/**********************************************************************
+/*!********************************************************************
 
   Audacity: A Digital Audio Editor
 
-  AUControl.h
+  @file AUControl.h
 
   Leland Lucius
 
-********************************************************************//**
-
-\class AUControl
-\brief a wxControl with Cocoa/Carbon support
-
-\class AUControlImpl
-\brief a wxWidgetCocoaImpl 
-
-*//********************************************************************/
+**********************************************************************/
 #ifndef AUDACITY_AUCONTROL_H
 #define AUDACITY_AUCONTROL_H
 
@@ -28,13 +20,6 @@
 
 #include <AudioUnit/AudioComponent.h>
 #include <AudioUnit/AudioUnit.h>
-
-class AUControlImpl final : public wxWidgetCocoaImpl
-{
-public :
-   AUControlImpl(wxWindowMac *peer, NSView *view);
-   ~AUControlImpl();
-};
 
 class AUControl final : public wxControl
 {
@@ -60,19 +45,19 @@ public:
 #endif
 
 private:
-   AudioComponent mComponent;
-   AudioUnit mUnit;
+   AudioComponent mComponent{};
+   AudioUnit mUnit{};
 
-   NSView *mAUView;
-   NSView *mView;
+   NSView *mAUView{};
+   NSView *mView{};
 
-   wxSize mLastMin;
-   bool mSettingSize;
+   wxSize mLastMin{};
+   bool mSettingSize{ false };
 
 #if !defined(_LP64)
-   AudioComponentInstance mInstance;
-   WindowRef mWindowRef;
-   HIViewRef mHIView;
+   AudioComponentInstance mInstance{};
+   WindowRef mWindowRef{};
+   HIViewRef mHIView{};
 #endif
 
    DECLARE_EVENT_TABLE()
