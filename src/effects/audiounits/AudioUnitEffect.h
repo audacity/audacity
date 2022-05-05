@@ -60,11 +60,57 @@ template<> struct PackedArrayTraits<AudioBufferList> {
    using iterated_type = element_type;
 };
 
+struct AudioUnitWrapper
+{
+   explicit AudioUnitWrapper(AudioComponent component)
+      : mComponent{ component }
+   {}
+
+   // Supply most often used values as defaults for scope and element
+   template<typename T>
+   OSStatus GetFixedSizeProperty(AudioUnitPropertyID inID, T &property,
+      AudioUnitScope inScope = kAudioUnitScope_Global,
+      AudioUnitElement inElement = 0) const
+   {
+      // Supply mUnit.get() to the non-member function
+      return AudioUnitUtils::GetFixedSizeProperty(mUnit.get(),
+         inID, property, inScope, inElement);
+   }
+
+   // Supply most often used values as defaults for scope and element
+   template<typename T>
+   OSStatus GetVariableSizeProperty(AudioUnitPropertyID inID,
+      PackedArrayPtr<T> &pObject,
+      AudioUnitScope inScope = kAudioUnitScope_Global,
+      AudioUnitElement inElement = 0) const
+   {
+      return AudioUnitUtils::GetVariableSizeProperty(mUnit.get(),
+         inID, pObject, inScope, inElement);
+   }
+
+   template<typename T>
+   OSStatus SetProperty(AudioUnitPropertyID inID, const T &property,
+      AudioUnitScope inScope = kAudioUnitScope_Global,
+      AudioUnitElement inElement = 0) const
+   {
+      // Supply mUnit.get() to the non-member function
+      return AudioUnitUtils::SetProperty(mUnit.get(),
+         inID, property, inScope, inElement);
+   }
+
+   bool CreateAudioUnit();
+
+   const AudioComponent mComponent;
+   AudioUnitCleanup<AudioUnit, AudioComponentInstanceDispose> mUnit;
+};
+
 struct AudioUnitEffectSettings {
    std::unordered_map<wxString, AudioUnitParameterValue> values;
 };
 
-class AudioUnitEffect final : public StatefulPerTrackEffect
+class AudioUnitEffect final
+   : public StatefulPerTrackEffect
+   , private AudioUnitWrapper
 {
 public:
    AudioUnitEffect(const PluginPath & path,
@@ -142,7 +188,6 @@ public:
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool MakeListener();
-   bool CreateAudioUnit();
    bool InitializeInstance();
    bool InitializePlugin();
 
@@ -244,38 +289,6 @@ private:
    bool BypassEffect(bool bypass);
 
 private:
-   // Supply most often used values as defaults for scope and element
-   template<typename T>
-   OSStatus GetFixedSizeProperty(AudioUnitPropertyID inID, T &property,
-      AudioUnitScope inScope = kAudioUnitScope_Global,
-      AudioUnitElement inElement = 0) const
-   {
-      // Supply mUnit.get() to the non-member function
-      return AudioUnitUtils::GetFixedSizeProperty(mUnit.get(),
-         inID, property, inScope, inElement);
-   }
-
-   // Supply most often used values as defaults for scope and element
-   template<typename T>
-   OSStatus GetVariableSizeProperty(AudioUnitPropertyID inID,
-      PackedArrayPtr<T> &pObject,
-      AudioUnitScope inScope = kAudioUnitScope_Global,
-      AudioUnitElement inElement = 0) const
-   {
-      return AudioUnitUtils::GetVariableSizeProperty(mUnit.get(),
-         inID, pObject, inScope, inElement);
-   }
-
-   template<typename T>
-   OSStatus SetProperty(AudioUnitPropertyID inID, const T &property,
-      AudioUnitScope inScope = kAudioUnitScope_Global,
-      AudioUnitElement inElement = 0) const
-   {
-      // Supply mUnit.get() to the non-member function
-      return AudioUnitUtils::SetProperty(mUnit.get(),
-         inID, property, inScope, inElement);
-   }
-   
    AudioUnitEffectSettings mSettings;
    //! This function will be rewritten when the effect is really stateless
    AudioUnitEffectSettings &GetSettings(EffectSettings &) const
@@ -287,10 +300,7 @@ private:
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;
-   const AudioComponent mComponent;
 
-   // The sequence of these three members matters in the destructor
-   AudioUnitCleanup<AudioUnit, AudioComponentInstanceDispose> mUnit;
    AudioUnitCleanup<AUEventListenerRef, AUListenerDispose> mEventListenerRef;
    AudioUnitCleanup<AudioUnit, AudioUnitUninitialize> mInitialization;
 
