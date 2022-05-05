@@ -803,10 +803,10 @@ AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
                                  const wxString & name,
                                  AudioComponent component,
                                  AudioUnitEffect *master)
-   : mPath{ path }
+   : AudioUnitWrapper{ component }
+   , mPath{ path }
    , mName{ name.AfterFirst(wxT(':')).Trim(true).Trim(false) }
    , mVendor{ name.BeforeFirst(wxT(':')).Trim(true).Trim(false) }
-   , mComponent{ component }
    , mMaster{ master }
 {
 }
@@ -944,7 +944,7 @@ bool AudioUnitEffect::SupportsAutomation() const
    return false;
 }
 
-bool AudioUnitEffect::CreateAudioUnit()
+bool AudioUnitWrapper::CreateAudioUnit()
 {
    AudioUnit unit{};
    auto result = AudioComponentInstanceNew(mComponent, &unit);
