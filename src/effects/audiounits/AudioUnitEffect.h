@@ -49,7 +49,26 @@ template<typename Ptr, OSStatus(*fn)(Ptr),
    typename T = std::remove_pointer_t<Ptr> /* deduced */ >
 using AudioUnitCleanup = std::unique_ptr<T, AudioUnitCleaner<T, fn>>;
 
-class AudioUnitEffect final : public StatefulPerTrackEffect
+//! Common base class for AudioUnitEffect and its Instance
+/*!
+ Maintains a smart handle to an AudioUnit (also called AudioComponentInstance)
+ in the SDK and defines some utility functions
+ */
+struct AudioUnitWrapper
+{
+   explicit AudioUnitWrapper(AudioComponent component)
+      : mComponent{ component }
+   {}
+
+   bool CreateAudioUnit();
+
+   const AudioComponent mComponent;
+   AudioUnitCleanup<AudioUnit, AudioComponentInstanceDispose> mUnit;
+};
+
+class AudioUnitEffect final
+   : public StatefulPerTrackEffect
+   , private AudioUnitWrapper
 {
 public:
    AudioUnitEffect(const PluginPath & path,
@@ -125,7 +144,6 @@ public:
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool MakeListener();
-   bool CreateAudioUnit();
    bool InitializeInstance();
    bool InitializePlugin();
 
@@ -193,10 +211,7 @@ private:
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;
-   const AudioComponent mComponent;
 
-   // The sequence of these three members matters in the destructor
-   AudioUnitCleanup<AudioUnit, AudioComponentInstanceDispose> mUnit;
    AudioUnitCleanup<AUEventListenerRef, AUListenerDispose> mEventListenerRef;
    AudioUnitCleanup<AudioUnit, AudioUnitUninitialize> mInitialization;
 
