@@ -870,12 +870,10 @@ BaseItemSharedPtr GenerateMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Generate"), XXO("&Generate"),
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Section( "Manage",
          Command( wxT("ManageGenerators"), XXO("Add / Remove Plug-ins..."),
             FN(OnManageGenerators), AudioIONotBusyFlag() )
       ),
-#endif
 
       Section("RepeatLast",
          // Delayed evaluation:
@@ -938,12 +936,10 @@ BaseItemSharedPtr EffectMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Effect"), XXO("Effe&ct"),
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Section( "Manage",
          Command( wxT("ManageEffects"), XXO("Add / Remove Plug-ins..."),
             FN(OnManageEffects), AudioIONotBusyFlag() )
       ),
-#endif
 
       Section( "RepeatLast",
          // Delayed evaluation:
@@ -1002,12 +998,10 @@ BaseItemSharedPtr AnalyzeMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Analyze"), XXO("&Analyze"),
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Section( "Manage",
          Command( wxT("ManageAnalyzers"), XXO("Add / Remove Plug-ins..."),
             FN(OnManageAnalyzers), AudioIONotBusyFlag() )
       ),
-#endif
 
       Section("RepeatLast",
          // Delayed evaluation:
@@ -1067,13 +1061,10 @@ BaseItemSharedPtr ToolsMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Tools"), XXO("T&ools"),
       Section( "Manage",
-   #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
          Command( wxT("ManageTools"), XXO("Add / Remove Plug-ins..."),
             FN(OnManageTools), AudioIONotBusyFlag() ),
 
          //Separator(),
-
-   #endif
 
          Section( "RepeatLast",
          // Delayed evaluation:

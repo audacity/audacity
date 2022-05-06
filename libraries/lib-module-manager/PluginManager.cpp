@@ -373,14 +373,8 @@ void PluginManager::Initialize(FileConfigFactory factory)
       // Allow the module to auto-register children
       module->AutoRegisterPlugins(*this);
    }
-
-   // And finally check for updates
-#ifndef EXPERIMENTAL_EFFECT_MANAGEMENT
-   CheckForUpdates();
-#else
-   const bool kFast = true;
-   CheckForUpdates( kFast );
-#endif
+   
+   CheckForUpdates(true);
 }
 
 void PluginManager::Terminate()
