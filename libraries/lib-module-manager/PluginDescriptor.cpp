@@ -19,7 +19,28 @@
 
 #include "EffectInterface.h"
 #include "ModuleManager.h"
+#include "XMLWriter.h"
 
+namespace
+{
+   constexpr auto AttrID = "id";
+   constexpr auto AttrPath = "path";
+   constexpr auto AttrName = "name";
+   constexpr auto AttrVendor = "vendor";
+   constexpr auto AttrVersion = "version";
+   constexpr auto AttrEffectFamily = "effect_family";
+   constexpr auto AttrProviderID = "provider";
+
+   constexpr auto AttrType = "type";
+   constexpr auto AttrEnabled = "enabled";
+   constexpr auto AttrValid = "valid";
+
+   constexpr auto AttrEffectType = "effect_type";
+   constexpr auto AttrEffectDefault = "effect_default";
+   constexpr auto AttrEffectRealtime = "effect_realtime";
+   constexpr auto AttrEffectAutomatable = "effect_automatable";
+   constexpr auto AttrEffectInteractive = "effect_interactive";
+}
 
 PluginType PluginDescriptor::GetPluginType() const
 {
@@ -199,6 +220,84 @@ const FileExtensions & PluginDescriptor::GetImporterExtensions()
    const
 {
    return mImporterExtensions;
+}
+
+void PluginDescriptor::WriteXML(XMLWriter& writer) const
+{
+   writer.StartTag(XMLNodeName);
+   writer.WriteAttr(AttrID, GetID());
+   writer.WriteAttr(AttrType, static_cast<int>(GetPluginType()));
+   writer.WriteAttr(AttrEnabled, IsEnabled());
+   writer.WriteAttr(AttrValid, IsValid());
+   writer.WriteAttr(AttrProviderID, GetProviderID());
+   writer.WriteAttr(AttrPath, GetPath());
+   writer.WriteAttr(AttrName, GetSymbol().Internal());
+   writer.WriteAttr(AttrVendor, GetVendor());
+   writer.WriteAttr(AttrVersion, GetUntranslatedVersion());
+   if(GetPluginType() == PluginTypeEffect)
+   {
+      writer.WriteAttr(AttrEffectFamily, GetEffectFamily());
+      writer.WriteAttr(AttrEffectType, GetEffectType());
+      writer.WriteAttr(AttrEffectDefault, IsEffectDefault());
+      writer.WriteAttr(AttrEffectRealtime, IsEffectRealtime());
+      writer.WriteAttr(AttrEffectAutomatable, IsEffectAutomatable());
+      writer.WriteAttr(AttrEffectInteractive, IsEffectInteractive());
+   }
+   writer.EndTag(XMLNodeName);
+}
+
+bool PluginDescriptor::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
+{
+   if(tag == XMLNodeName)
+   {
+      for(auto& p : attrs)
+      {
+         auto key = wxString(p.first.data(), p.first.length());
+         auto& attr = p.second;
+         if(key == AttrType)
+            SetPluginType(static_cast<PluginType>(attr.Get<int>()));
+         else if(key == AttrEffectType)
+            SetEffectType(static_cast<EffectType>(attr.Get<int>()));
+         else if(key == AttrEffectDefault)
+            SetEffectDefault(attr.Get<bool>());
+         else if(key == AttrEffectRealtime)
+            SetEffectRealtime(attr.Get<bool>());
+         else if(key == AttrEffectAutomatable)
+            SetEffectAutomatable(attr.Get<bool>());
+         else if(key == AttrEffectInteractive)
+            SetEffectInteractive(attr.Get<bool>());
+         else if(key == AttrEnabled)
+            SetEnabled(attr.Get<bool>());
+         else if(key == AttrValid)
+            SetValid(attr.Get<bool>());
+         else if(key == AttrID)
+            SetID(attr.ToWString());
+         else if(key == AttrPath)
+            SetPath(attr.ToWString());
+         else if(key == AttrName)
+            SetSymbol(attr.ToWString());
+         else if(key == AttrVendor)
+            SetVendor(attr.ToWString());
+         else if(key == AttrVersion)
+            SetVersion(attr.ToWString());
+         else if(key == AttrEffectFamily)
+            SetEffectFamily(attr.ToWString());
+         else if(key == AttrProviderID)
+            SetProviderID(attr.ToWString());
+      }
+      return true;
+   }
+   return false;
+}
+
+XMLTagHandler* PluginDescriptor::HandleXMLChild(const std::string_view& tag)
+{
+   return nullptr;
+}
+
+void PluginDescriptor::HandleXMLEndTag(const std::string_view& basic_string_view)
+{
+
 }
 
 void PluginDescriptor::SetImporterExtensions( FileExtensions extensions )

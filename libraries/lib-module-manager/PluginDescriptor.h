@@ -12,7 +12,10 @@
 #include <wx/string.h>
 
 #include "PluginInterface.h"
+#include "XMLTagHandler.h"
 #include "wxArrayStringEx.h"
+
+class XMLWriter;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -35,9 +38,11 @@ class PluginDescriptorXMLTagHandler;
 // TODO:  Convert this to multiple derived classes
 //! Represents either a PluginProvider or a loaded plug-in and caches some
 //! information about it
-class MODULE_MANAGER_API PluginDescriptor
+class MODULE_MANAGER_API PluginDescriptor final : public XMLTagHandler
 {
 public:
+
+   static constexpr auto XMLNodeName { "PluginDescriptor" };
 
    PluginType GetPluginType() const;
 
@@ -81,6 +86,12 @@ public:
    const TranslatableString & GetImporterFilterDescription() const;
    const FileExtensions & GetImporterExtensions() const;
 
+   void WriteXML(XMLWriter& writer) const;
+   
+   bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
+   XMLTagHandler* HandleXMLChild(const std::string_view& tag) override;
+   void HandleXMLEndTag(const std::string_view&) override;
+   
    void SetPluginType(PluginType type);
 
    // These should be passed an untranslated value

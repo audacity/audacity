@@ -21,6 +21,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-files-interface
+   lib-xml-interface
    PRIVATE
    wxBase
 )
