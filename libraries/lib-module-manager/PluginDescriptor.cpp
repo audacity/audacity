@@ -20,54 +20,6 @@
 #include "EffectInterface.h"
 #include "ModuleManager.h"
 
-PluginDescriptor::PluginDescriptor()
-{
-   mPluginType = PluginTypeNone;
-   mEnabled = false;
-   mValid = false;
-   mInstance = nullptr;
-
-   mEffectType = EffectTypeNone;
-   mEffectInteractive = false;
-   mEffectDefault = false;
-   mEffectLegacy = false;
-   mEffectRealtime = false;
-   mEffectAutomatable = false;
-}
-
-PluginDescriptor::~PluginDescriptor()
-{
-}
-
-PluginDescriptor &PluginDescriptor::operator =(PluginDescriptor &&) = default;
-
-bool PluginDescriptor::IsLoaded() const
-{
-   return mInstance != nullptr;
-}
-
-ComponentInterface *PluginDescriptor::Load()
-{
-   if (!mInstance)
-   {
-      if (GetPluginType() == PluginTypeModule)
-         mInstance = ModuleManager::Get().CreateProviderInstance(GetID(), GetPath());
-      else
-      {
-         muInstance =
-            ModuleManager::Get().LoadPlugin(GetProviderID(), GetPath());
-         mInstance = muInstance.get();
-      }
-   }
-
-   return mInstance;
-}
-
-void PluginDescriptor::Set(std::unique_ptr<ComponentInterface> instance)
-{
-   muInstance = std::move(instance);
-   mInstance = muInstance.get();
-}
 
 PluginType PluginDescriptor::GetPluginType() const
 {
@@ -94,12 +46,12 @@ const ComponentInterfaceSymbol & PluginDescriptor::GetSymbol() const
    return mSymbol;
 }
 
-wxString PluginDescriptor::GetUntranslatedVersion() const
+const wxString& PluginDescriptor::GetUntranslatedVersion() const
 {
    return mVersion;
 }
 
-wxString PluginDescriptor::GetVendor() const
+const wxString& PluginDescriptor::GetVendor() const
 {
    return mVendor;
 }

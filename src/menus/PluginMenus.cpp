@@ -319,7 +319,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    EffectManager & em = EffectManager::Get();
    for (auto &plugin : pm.EffectsOfType(type)) {
       auto plug = &plugin;
-      if( plug->IsLoaded() && em.IsHidden(plug->GetID()) )
+      if( pm.IsPluginLoaded(plug->GetID()) && em.IsHidden(plug->GetID()) )
          continue;
       if ( !plug->IsEnabled() ){
          ;// don't add to menus!

@@ -39,12 +39,6 @@ class MODULE_MANAGER_API PluginDescriptor
 {
 public:
 
-   PluginDescriptor();
-   PluginDescriptor &operator =(PluginDescriptor &&);
-   virtual ~PluginDescriptor();
-
-   bool IsLoaded() const;
-
    PluginType GetPluginType() const;
 
    // All plugins
@@ -55,10 +49,10 @@ public:
    const PluginPath & GetPath() const;
    const ComponentInterfaceSymbol & GetSymbol() const;
 
-   wxString GetUntranslatedVersion() const;
+   const wxString& GetUntranslatedVersion() const;
    // There is no translated version
 
-   wxString GetVendor() const;
+   const wxString& GetVendor() const;
 
    bool IsEnabled() const;
    bool IsValid() const;
@@ -114,22 +108,10 @@ public:
    void SetImporterExtensions(FileExtensions extensions);
 
 private:
-   
-   friend class PluginManager;
-
-   // Load a plug-in, or locate a PluginProvider
-   ComponentInterface *Load();
-   void Set(std::unique_ptr<ComponentInterface> instance);
 
    // Common
 
-   // Among other purposes, PluginDescriptor acts as the resource handle,
-   // or smart pointer, to a resource created in a plugin library, and is responsible
-   // for a cleanup of this pointer.
-   std::unique_ptr<ComponentInterface> muInstance; // may be null for a module
-   ComponentInterface *mInstance;
-
-   PluginType mPluginType;
+   PluginType mPluginType { PluginTypeNone };
 
    wxString mID;
    PluginPath mPath;
@@ -137,18 +119,18 @@ private:
    wxString mVersion;
    wxString mVendor;
    wxString mProviderID;
-   bool mEnabled;
-   bool mValid;
+   bool mEnabled {false};
+   bool mValid {false};
 
    // Effects
 
    wxString mEffectFamily;
-   EffectType mEffectType;
-   bool mEffectInteractive;
-   bool mEffectDefault;
-   bool mEffectLegacy;
-   bool mEffectRealtime;
-   bool mEffectAutomatable;
+   EffectType mEffectType {EffectTypeNone};
+   bool mEffectInteractive {false};
+   bool mEffectDefault {false};
+   bool mEffectLegacy {false};
+   bool mEffectRealtime {false};
+   bool mEffectAutomatable {false};
 
    // Importers
 

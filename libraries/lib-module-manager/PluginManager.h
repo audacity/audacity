@@ -49,6 +49,7 @@ public:
    bool IsPluginRegistered(
       const PluginPath &path, const TranslatableString *pSymbol) override;
 
+   bool IsPluginLoaded(const wxString& ID) const;
    const PluginID & RegisterPlugin(PluginProvider *provider) override;
    const PluginID & RegisterPlugin(PluginProvider *provider, ComponentInterface *command);
    const PluginID & RegisterPlugin(PluginProvider *provider, EffectDefinitionInterface *effect, int type) override;
@@ -118,7 +119,7 @@ public:
       //! Iterates only enabled and matching effects, with family enabled too
       Iterator(PluginManager &manager, EffectType type);
       bool operator != (int) const {
-         return mIterator != mPm.mPlugins.end();
+         return mIterator != mPm.mRegisteredPlugins.end();
       }
       Iterator &operator ++ ();
       auto &operator *() const { return mIterator->second; }
@@ -200,7 +201,9 @@ private:
    bool mDirty;
    int mCurrentIndex;
 
-   PluginMap mPlugins;
+   PluginMap mRegisteredPlugins;
+   std::map<PluginID, std::unique_ptr<ComponentInterface>> mLoadedInterfaces;
+
 };
 
 // Defining these special names in the low-level PluginManager.h
