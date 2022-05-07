@@ -39,16 +39,6 @@ class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
 class AUControl;
 
-//! Generates deleters for std::unique_ptr that clean up AU plugin state
-template<typename T, OSStatus(*fn)(T*)> struct AudioUnitCleaner {
-   // Let this have non-void return type, though ~unique_ptr() will ignore it
-   auto operator () (T *p) noexcept { return fn(p); }
-};
-//! RAII for cleaning up AU plugin state
-template<typename Ptr, OSStatus(*fn)(Ptr),
-   typename T = std::remove_pointer_t<Ptr> /* deduced */ >
-using AudioUnitCleanup = std::unique_ptr<T, AudioUnitCleaner<T, fn>>;
-
 //! Common base class for AudioUnitEffect and its Instance
 /*!
  Maintains a smart handle to an AudioUnit (also called AudioComponentInstance)
