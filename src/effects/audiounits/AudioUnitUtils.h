@@ -14,6 +14,18 @@
 #include <algorithm>
 #include <AudioUnit/AudioUnit.h>
 
+//! Generates deleters for std::unique_ptr that clean up AU plugin state
+template<typename T, OSStatus(*fn)(T*)> struct AudioUnitCleaner {
+   // Let this have non-void return type, though ~unique_ptr() will ignore it
+   auto operator () (T *p) noexcept { return fn(p); }
+};
+//! RAII for cleaning up AU plugin state
+template<typename Ptr, OSStatus(*fn)(Ptr),
+   typename T = std::remove_pointer_t<Ptr> /* deduced */ >
+using AudioUnitCleanup = std::unique_ptr<T, AudioUnitCleaner<T, fn>>;
+
+/*! @namespace AudioUnitUtils
+ */
 namespace AudioUnitUtils {
    //! Type-erased function to set an AudioUnit property
    OSStatus SetPropertyPtr(AudioUnit unit, AudioUnitPropertyID inID,
@@ -31,6 +43,82 @@ namespace AudioUnitUtils {
       return SetPropertyPtr(unit, inID,
          &property, sizeof(property), inScope, inElement);
    }
+
+   /*! @name Wrappers for SDK structures related to AudioUnits
+
+    Allow the use of convenient, brief aggregate initialization syntax but also
+    future-proofing in the (unlikely) event that fields of the structures are
+    rearranged in the future.  (But if that really happens, then more work
+    would be needed to keep Audacity binarily compatible with different runtime
+    system versions.)
+
+    Each constructor first zero-initializes all fields of the base structure.
+
+    These wrappers can also define convenient destructors as needed to free
+    associated resources, or can abbreviate some constructions by defaulting
+    some fields (such as "out" fields).
+    */
+   //! @{
+
+   struct RenderCallback : AURenderCallbackStruct {
+      RenderCallback(AURenderCallback inProc, void *inProcRefCon)
+      : AURenderCallbackStruct{} {
+         inputProc = inProc;
+         inputProcRefCon = inProcRefCon;
+      }
+   };
+
+   struct ParameterInfo : AudioUnitParameterInfo {
+      ParameterInfo(): AudioUnitParameterInfo{} {}
+      ~ParameterInfo() {
+         if (flags & kAudioUnitParameterFlag_CFNameRelease) {
+            if (flags & kAudioUnitParameterFlag_HasCFNameString)
+               CFRelease(cfNameString);
+            if (flags & kAudioUnitParameterUnit_CustomUnit)
+               CFRelease(unitName);
+         }
+      }
+   };
+
+   struct ParameterNameInfo : AudioUnitParameterNameInfo {
+      ParameterNameInfo(AudioUnitParameterID id, SInt32 desiredLength)
+      : AudioUnitParameterNameInfo{} {
+         inID = id;
+         inDesiredLength = desiredLength;
+      }
+      ~ParameterNameInfo() {
+         CFRelease(outName);
+      }
+   };
+
+   struct UserPreset : AUPreset {
+      UserPreset(CFStringRef name) : AUPreset{} {
+         presetNumber = -1;
+         presetName = name;
+      }
+   };
+
+   struct StreamBasicDescription : AudioStreamBasicDescription {
+      StreamBasicDescription(Float64 sampleRate,
+         AudioFormatID formatID, AudioFormatFlags formatFlags,
+         UInt32 bytesPerPacket, UInt32 framesPerPacket,
+         UInt32 bytesPerFrame, UInt32 channelsPerFrame,
+         UInt32 bitsPerChannel)
+      : AudioStreamBasicDescription{} {
+         mSampleRate = sampleRate;
+         mFormatID = formatID;
+         mFormatFlags = formatFlags;
+         mBytesPerPacket = bytesPerPacket;
+         mFramesPerPacket = framesPerPacket;
+         mBytesPerFrame = bytesPerFrame;
+         mChannelsPerFrame = channelsPerFrame;
+         mBitsPerChannel = bitsPerChannel;
+         // Just padding:
+         // mReserved = 0; // But AudioStreamBasicDescription{} did that
+      }
+   };
+
+   //! @}
 }
 
 #endif

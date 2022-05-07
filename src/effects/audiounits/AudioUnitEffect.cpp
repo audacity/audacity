@@ -98,22 +98,12 @@ BlackList[] =
 // at runtime by scanning an effects parameters to determine if dups are present
 // and, if so, enable the clump and parameter IDs.
 #define USE_EXTENDED_NAMES
-class ParameterInfo
+class ParameterInfo final
 {
 public:
    ParameterInfo()
    {
       info = {};
-   }
-
-   virtual ~ParameterInfo()
-   {
-      if (info.flags & kAudioUnitParameterFlag_CFNameRelease) {
-         if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
-            CFRelease(info.cfNameString);
-         if (info.flags & kAudioUnitParameterUnit_CustomUnit)
-            CFRelease(info.unitName);
-      }
    }
 
    bool Get(AudioUnit mUnit, AudioUnitParameterID parmID)
@@ -176,11 +166,8 @@ public:
       if (info.flags & kAudioUnitParameterFlag_HasClump)
       {
          wxString clumpName;
-
-         struct AudioUnitParameterNameInfoEx : AudioUnitParameterNameInfo {
-            ~AudioUnitParameterNameInfoEx() { CFRelease(outName); }
-         } clumpInfo{
-            info.clumpID, kAudioUnitParameterName_Full, nullptr
+         AudioUnitUtils::ParameterNameInfo clumpInfo{
+            info.clumpID, kAudioUnitParameterName_Full
          };
          dataSize = sizeof(clumpInfo);
 
@@ -1249,7 +1236,7 @@ bool AudioUnitEffect::ProcessInitialize(
       return false;
 
    if (SetProperty(kAudioUnitProperty_SetRenderCallback,
-      AURenderCallbackStruct{ RenderCallback, this },
+      AudioUnitUtils::RenderCallback{ RenderCallback, this },
       kAudioUnitScope_Input)) {
       wxLogError("Setting input render callback failed.\n");
       return false;
@@ -1905,8 +1892,8 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
    wxCFStringRef cfname(wxFileNameFromPath(group));
 
    // Define the preset property and set it in the audio unit
-   if (SetProperty(kAudioUnitProperty_PresentPreset,
-         AUPreset{ -1 /* indicates user preset */, cfname }))
+   if (SetProperty(
+      kAudioUnitProperty_PresentPreset, AudioUnitUtils::UserPreset{ cfname }))
       return false;
 
    // Now retrieve the preset content
@@ -1944,7 +1931,7 @@ bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
 bool AudioUnitEffect::SetRateAndChannels()
 {
    mInitialization.reset();
-   AudioStreamBasicDescription streamFormat{
+   AudioUnitUtils::StreamBasicDescription streamFormat{
       // Float64 mSampleRate;
       mSampleRate,
 
@@ -1969,9 +1956,6 @@ bool AudioUnitEffect::SetRateAndChannels()
 
       // UInt32  mBitsPerChannel;
       sizeof(float) * 8,
-
-      // UInt32  mReserved;
-      0
    };
 
    const struct Info{
@@ -2051,8 +2035,8 @@ TranslatableString AudioUnitEffect::Export(const wxString & path) const
    wxCFStringRef cfname(wxFileName(path).GetName());
 
    // Define the preset property and set it in the audio unit
-   if (SetProperty(kAudioUnitProperty_PresentPreset,
-      AUPreset{ -1 /* indicates user preset */, cfname }))
+   if (SetProperty(
+      kAudioUnitProperty_PresentPreset, AudioUnitUtils::UserPreset{ cfname }))
       return XO("Failed to set preset name");
 
    // Now retrieve the preset content
