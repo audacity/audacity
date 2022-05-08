@@ -20,6 +20,7 @@ RealtimeEffectList::~RealtimeEffectList()
 {
 }
 
+// Deep copy of states
 std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
 {
    auto result = std::make_unique<RealtimeEffectList>();
@@ -87,7 +88,10 @@ RealtimeEffectList::AddState(const PluginID &id)
 {
    auto pState = std::make_shared<RealtimeEffectState>(id);
    if (id.empty() || pState->GetEffect() != nullptr) {
-      mStates.emplace_back(pState);
+      auto shallowCopy = mStates;
+      shallowCopy.emplace_back(pState);
+      // Lock for only a short time
+      (LockGuard{ mLock }, swap(shallowCopy, mStates));
       return pState;
    }
    else
@@ -98,10 +102,14 @@ RealtimeEffectList::AddState(const PluginID &id)
 void RealtimeEffectList::RemoveState(
    const std::shared_ptr<RealtimeEffectState> &pState)
 {
-   auto end = mStates.end(),
-      found = std::find(mStates.begin(), end, pState);
-   if (found != end)
-      mStates.erase(found);
+   auto shallowCopy = mStates;
+   auto end = shallowCopy.end(),
+      found = std::find(shallowCopy.begin(), end, pState);
+   if (found != end) {
+      shallowCopy.erase(found);
+      // Lock for only a short time
+      (LockGuard{ mLock }, swap(shallowCopy, mStates));
+   }
 }
 
 size_t RealtimeEffectList::GetStatesCount() const noexcept
@@ -123,13 +131,17 @@ void RealtimeEffectList::Reorder(size_t fromIndex, size_t toIndex)
    assert(toIndex < mStates.size());
    if(fromIndex != toIndex)
    {
+      auto shallowCopy = mStates;
       size_t iFirst, iMid, iLast;
       if (toIndex < fromIndex)
          iFirst = toIndex, iMid = fromIndex, iLast = fromIndex + 1;
       else
          iFirst = fromIndex, iMid = fromIndex + 1, iLast = toIndex + 1;
-      auto begin = mStates.begin();
+      auto begin = shallowCopy.begin();
       std::rotate(begin + iFirst, begin + iMid, begin + iLast);
+
+      // Lock for only a short time
+      (LockGuard{ mLock }, swap(shallowCopy, mStates));
    }
 }
 
@@ -150,6 +162,8 @@ void RealtimeEffectList::HandleXMLEndTag(const std::string_view &tag)
    if (tag == XMLTag()) {
       // Remove states that fail to load their effects
       auto end = mStates.end();
+      // Assume deserialization is not happening concurrently with realtime
+      // effect processing; don't need a LockGuard
       auto newEnd = std::remove_if( mStates.begin(), end,
          [](const auto &pState){ return pState->GetEffect() == nullptr; });
       mStates.erase(newEnd, end);
