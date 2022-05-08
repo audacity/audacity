@@ -34,8 +34,7 @@ class RealtimeEffectList final
    RealtimeEffectList &operator=(const RealtimeEffectList &) = delete;
 
 public:
-   
-   using States = std::vector<std::unique_ptr<RealtimeEffectState>>;
+   using States = std::vector<std::shared_ptr<RealtimeEffectState>>;
 
    RealtimeEffectList();
    virtual ~RealtimeEffectList();
@@ -58,10 +57,10 @@ public:
    void Visit(StateVisitor func);
 
    //! Returns null if the id is nonempty but no such effect was found
-   RealtimeEffectState *AddState(const PluginID &id);
-   void RemoveState(RealtimeEffectState &state);
+   std::shared_ptr<RealtimeEffectState> AddState(const PluginID &id);
+   void RemoveState(const std::shared_ptr<RealtimeEffectState> &pState);
    size_t GetStatesCount() const noexcept;
-   RealtimeEffectState* GetStateAt(size_t index) noexcept;
+   std::shared_ptr<RealtimeEffectState> GetStateAt(size_t index) noexcept;
    /**
     * \brief Changes effect order in the stack
     * \param fromIndex Index of the moved effect

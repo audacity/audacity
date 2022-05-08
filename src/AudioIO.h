@@ -414,12 +414,12 @@ public:
    static AudioIO *Get();
 
    //! Forwards to RealtimeEffectManager::AddState with proper init scope
-   RealtimeEffectState *AddState(AudacityProject &project,
-      Track *pTrack, const PluginID & id);
+   std::shared_ptr<RealtimeEffectState>
+   AddState(AudacityProject &project, Track *pTrack, const PluginID & id);
 
    //! Forwards to RealtimeEffectManager::RemoveState with proper init scope
    void RemoveState(AudacityProject &project,
-      Track *pTrack, RealtimeEffectState &state);
+      Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState);
 
    RealtimeEffects::SuspensionScope SuspensionScope();
 

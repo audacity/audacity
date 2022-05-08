@@ -25,7 +25,7 @@ std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
    auto result = std::make_unique<RealtimeEffectList>();
    for (auto &pState : mStates)
       result->mStates.push_back(
-         std::make_unique<RealtimeEffectState>(*pState));
+         std::make_shared<RealtimeEffectState>(*pState));
    return result;
 }
 
@@ -82,24 +82,24 @@ void RealtimeEffectList::Visit(StateVisitor func)
       func(*state, !state->IsActive());
 }
 
-RealtimeEffectState *RealtimeEffectList::AddState(const PluginID &id)
+std::shared_ptr<RealtimeEffectState>
+RealtimeEffectList::AddState(const PluginID &id)
 {
-   auto pState = std::make_unique<RealtimeEffectState>(id);
+   auto pState = std::make_shared<RealtimeEffectState>(id);
    if (id.empty() || pState->GetEffect() != nullptr) {
-      auto result = pState.get();
-      mStates.emplace_back(move(pState));
-      return result;
+      mStates.emplace_back(pState);
+      return pState;
    }
    else
       // Effect initialization failed for the id
       return nullptr;
 }
 
-void RealtimeEffectList::RemoveState(RealtimeEffectState &state)
+void RealtimeEffectList::RemoveState(
+   const std::shared_ptr<RealtimeEffectState> &pState)
 {
    auto end = mStates.end(),
-      found = std::find_if(mStates.begin(), end,
-         [&](const auto &item) { return item.get() == &state; } );
+      found = std::find(mStates.begin(), end, pState);
    if (found != end)
       mStates.erase(found);
 }
@@ -109,10 +109,11 @@ size_t RealtimeEffectList::GetStatesCount() const noexcept
    return mStates.size();
 }
 
-RealtimeEffectState* RealtimeEffectList::GetStateAt(size_t index) noexcept
+std::shared_ptr<RealtimeEffectState>
+RealtimeEffectList::GetStateAt(size_t index) noexcept
 {
    if (index < mStates.size())
-      return mStates[index].get();
+      return mStates[index];
    return nullptr;
 }
 
@@ -160,7 +161,7 @@ XMLTagHandler *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
    if (tag == RealtimeEffectState::XMLTag()) {
       auto pState = AddState({});
       assert(pState); // Should succeed always for empty id
-      return pState;
+      return pState.get();
    }
    return nullptr;
 }
