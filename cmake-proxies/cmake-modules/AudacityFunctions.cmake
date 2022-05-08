@@ -262,6 +262,7 @@ function( audacity_append_common_compiler_options var use_pch )
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-type>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=dangling-else>
          $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=return-stack-address>
+         $<$<CXX_COMPILER_ID:AppleClang,Clang>:-Werror=defaulted-function-deleted>
 	      # Yes, CMake will change -D to /D as needed for Windows:
          -DWXINTL_NO_GETTEXT_MACRO
          $<$<CXX_COMPILER_ID:MSVC>:-D_USE_MATH_DEFINES>
