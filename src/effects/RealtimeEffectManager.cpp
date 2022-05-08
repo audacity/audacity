@@ -116,11 +116,11 @@ void RealtimeEffectManager::Suspend()
    std::lock_guard<std::mutex> guard(mLock);
 
    // Already suspended...bail
-   if (mSuspended)
+   if (GetSuspended())
       return;
 
    // Show that we aren't going to be doing anything
-   mSuspended = true;
+   SetSuspended(true);
 
    // And make sure the effects don't either
    VisitAll([](RealtimeEffectState &state, bool){
@@ -134,7 +134,7 @@ void RealtimeEffectManager::Resume() noexcept
    std::lock_guard<std::mutex> guard(mLock);
 
    // Already running...bail
-   if (!mSuspended)
+   if (!GetSuspended())
       return;
 
    // Tell the effects to get ready for more action
@@ -143,20 +143,20 @@ void RealtimeEffectManager::Resume() noexcept
    });
 
    // And we should too
-   mSuspended = false;
+   SetSuspended(false);
 }
 
 //
 // This will be called in a different thread than the main GUI thread.
 //
-void RealtimeEffectManager::ProcessStart()
+void RealtimeEffectManager::ProcessStart(bool suspended)
 {
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   if (!mSuspended)
+   if (!suspended)
    {
       VisitAll([](RealtimeEffectState &state, bool bypassed){
          if (!bypassed)
@@ -166,9 +166,10 @@ void RealtimeEffectManager::ProcessStart()
 }
 
 //
+
 // This will be called in a different thread than the main GUI thread.
 //
-size_t RealtimeEffectManager::Process(Track &track,
+size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    float *const *buffers, float *const *scratch,
    size_t numSamples)
 {
@@ -177,7 +178,7 @@ size_t RealtimeEffectManager::Process(Track &track,
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended, so allow the samples to pass as-is.
-   if (mSuspended)
+   if (suspended)
       return numSamples;
 
    auto chans = mChans[&track];
@@ -238,14 +239,14 @@ size_t RealtimeEffectManager::Process(Track &track,
 //
 // This will be called in a different thread than the main GUI thread.
 //
-void RealtimeEffectManager::ProcessEnd() noexcept
+void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
 {
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   if (!mSuspended)
+   if (!suspended)
    {
       VisitAll([](RealtimeEffectState &state, bool bypassed){
          if (!bypassed)
