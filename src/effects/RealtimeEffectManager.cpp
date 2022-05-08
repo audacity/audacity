@@ -273,8 +273,7 @@ void RealtimeEffectManager::VisitAll(StateVisitor func)
       RealtimeEffectList::Get(*leader).Visit(func);
 }
 
-RealtimeEffectState *
-RealtimeEffectManager::AddState(
+std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    RealtimeEffects::InitializationScope *pScope,
    Track *pTrack, const PluginID & id)
 {
@@ -321,12 +320,12 @@ RealtimeEffectManager::AddState(
       pLeader ? pLeader->shared_from_this() : nullptr
    });
 
-   return &state;
+   return pState;
 }
 
 void RealtimeEffectManager::RemoveState(
    RealtimeEffects::InitializationScope *pScope,
-   Track *pTrack, RealtimeEffectState &state)
+   Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState)
 {
    auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
    RealtimeEffectList &states = pLeader
@@ -344,9 +343,9 @@ void RealtimeEffectManager::RemoveState(
    std::lock_guard<std::mutex> guard(mLock);
 
    if (mActive)
-      state.Finalize();
+      pState->Finalize();
 
-   states.RemoveState(state);
+   states.RemoveState(pState);
 
    Publish({
       RealtimeEffectManagerMessage::Type::EffectRemoved,

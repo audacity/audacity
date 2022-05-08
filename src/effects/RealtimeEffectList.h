@@ -49,8 +49,7 @@ class RealtimeEffectList final
    RealtimeEffectList &operator=(const RealtimeEffectList &) = delete;
 
 public:
-   
-   using States = std::vector<std::unique_ptr<RealtimeEffectState>>;
+   using States = std::vector<std::shared_ptr<RealtimeEffectState>>;
 
    RealtimeEffectList();
    virtual ~RealtimeEffectList();
@@ -74,14 +73,14 @@ public:
 
    //! Returns null if no such effect was found.
    //! Sends Insert message on success.
-   RealtimeEffectState *AddState(const PluginID &id);
+   std::shared_ptr<RealtimeEffectState> AddState(const PluginID &id);
    //! On success sends Remove message.
-   void RemoveState(RealtimeEffectState &state);
+   void RemoveState(const std::shared_ptr<RealtimeEffectState> &pState);
 
    //! Returns total number of effects in this list
    size_t GetStatesCount() const noexcept;
-   //! Returns effect state at given position, does not perform bounds check
-   RealtimeEffectState& GetStateAt(size_t index) noexcept;
+   //! Returns effect state at given position
+   std::shared_ptr<RealtimeEffectState> GetStateAt(size_t index) noexcept;
 
    /**
     * \brief Changes effect position in the stack. Does nothing if fromIndex equal

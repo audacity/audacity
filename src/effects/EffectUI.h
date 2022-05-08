@@ -103,7 +103,7 @@ private:
    const std::shared_ptr<EffectInstance> mpInstance;
    //! @invariant not null
    const EffectPlugin::EffectSettingsAccessPtr mpAccess;
-   RealtimeEffectState *mpState{ nullptr };
+   std::shared_ptr<RealtimeEffectState> mpState{};
    std::unique_ptr<EffectUIValidator> mpValidator;
 
    RegistryPaths mUserPresets;

@@ -71,8 +71,9 @@ public:
     @param id identifies the effect
     @return if null, the given id was not found
     */
-   RealtimeEffectState *AddState(RealtimeEffects::InitializationScope *pScope,
-      Track *pTrack, const PluginID & id);
+   std::shared_ptr<RealtimeEffectState> AddState(
+      RealtimeEffects::InitializationScope *pScope, Track *pTrack,
+      const PluginID & id);
 
    //! Main thread removes a global or per-track effect
    /*!
@@ -82,7 +83,7 @@ public:
     */
    /*! No effect if realtime is active but scope is not supplied */
    void RemoveState(RealtimeEffects::InitializationScope *pScope,
-      Track *pTrack, RealtimeEffectState &state);
+      Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState);
 
 private:
    friend RealtimeEffects::InitializationScope;
