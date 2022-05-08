@@ -97,6 +97,15 @@ private:
    void Finalize() noexcept;
 
    friend RealtimeEffects::ProcessingScope;
+   struct AllListsLock {
+      RealtimeEffectManager *mpManager{};
+      AllListsLock(RealtimeEffectManager *pManager = nullptr);
+      AllListsLock(AllListsLock &&other);
+      AllListsLock& operator= (AllListsLock &&other);
+      void Reset();
+      ~AllListsLock() { Reset(); }
+   };
+
    void ProcessStart();
    /*! @copydoc ProcessScope::Process */
    size_t Process(Track &track,
@@ -193,7 +202,13 @@ private:
 //! Brackets one block of processing in one thread
 class ProcessingScope {
 public:
-   ProcessingScope() {}
+   ProcessingScope()
+   {
+      if (auto pProject = mwProject.lock()) {
+         auto &manager = RealtimeEffectManager::Get(*pProject);
+         mLocks = { &manager };
+      }
+   }
    //! Require a prior InializationScope to ensure correct nesting
    explicit ProcessingScope(InitializationScope &,
       std::weak_ptr<AudacityProject> wProject)
@@ -226,6 +241,7 @@ public:
    }
 
 private:
+   RealtimeEffectManager::AllListsLock mLocks;
    std::weak_ptr<AudacityProject> mwProject;
 };
 }

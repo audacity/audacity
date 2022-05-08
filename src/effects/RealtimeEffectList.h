@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "PluginProvider.h" // for PluginID
+#include "spinlock.h"
 #include "UndoManager.h"
 #include "XMLTagHandler.h"
 #include "Observer.h"
@@ -49,10 +50,13 @@ class RealtimeEffectList final
    RealtimeEffectList &operator=(const RealtimeEffectList &) = delete;
 
 public:
+   using Lock = spinlock;
    using States = std::vector<std::shared_ptr<RealtimeEffectState>>;
 
    RealtimeEffectList();
    virtual ~RealtimeEffectList();
+
+   Lock &GetLock() const { return mLock; }
 
    //! Should be called (for pushing undo states) only from main thread, to
    //! avoid races
@@ -115,6 +119,9 @@ public:
 
 private:
    States mStates;
+
+   using LockGuard = std::lock_guard<Lock>;
+   mutable Lock mLock;
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTLIST_H__

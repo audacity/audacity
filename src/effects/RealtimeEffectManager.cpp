@@ -263,6 +263,48 @@ void RealtimeEffectManager::VisitGroup(Track &leader, StateVisitor func)
    RealtimeEffectList::Get(leader).Visit(func);
 }
 
+RealtimeEffectManager::
+AllListsLock::AllListsLock(RealtimeEffectManager *pManager)
+   : mpManager{ pManager }
+{
+   if (mpManager) {
+      // Paralleling VisitAll
+      RealtimeEffectList::Get(mpManager->mProject).GetLock().lock();
+      // And all track lists
+      for (auto leader : mpManager->mGroupLeaders)
+         RealtimeEffectList::Get(*leader).GetLock().lock();
+   }
+}
+
+RealtimeEffectManager::AllListsLock::AllListsLock(AllListsLock &&other)
+   : mpManager{ other.mpManager }
+{
+   other.mpManager = nullptr;
+}
+
+RealtimeEffectManager::AllListsLock&
+RealtimeEffectManager::AllListsLock::operator =(AllListsLock &&other)
+{
+   if (this != &other) {
+      Reset();
+      mpManager = other.mpManager;
+      other.mpManager = nullptr;
+   }
+   return *this;
+}
+
+void RealtimeEffectManager::AllListsLock::Reset()
+{
+   if (mpManager) {
+      // Paralleling VisitAll
+      RealtimeEffectList::Get(mpManager->mProject).GetLock().unlock();
+      // And all track lists
+      for (auto leader : mpManager->mGroupLeaders)
+         RealtimeEffectList::Get(*leader).GetLock().unlock();
+      mpManager = nullptr;
+   }
+}
+
 void RealtimeEffectManager::VisitAll(StateVisitor func)
 {
    // Call the function for each effect on the master list
