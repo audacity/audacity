@@ -39,6 +39,8 @@ public:
    RealtimeEffectList();
    virtual ~RealtimeEffectList();
 
+   //! Should be called (for pushing undo states) only from main thread, to
+   //! avoid races
    std::unique_ptr<ClientData::Cloneable<>> Clone() const override;
 
    static RealtimeEffectList &Get(AudacityProject &project);
@@ -56,13 +58,20 @@ public:
    //! Apply the function to all states sequentially.
    void Visit(StateVisitor func);
 
+   //! Use only in the main thread
    //! Returns null if the id is nonempty but no such effect was found
    std::shared_ptr<RealtimeEffectState> AddState(const PluginID &id);
+
+   //! Use only in the main thread
    void RemoveState(const std::shared_ptr<RealtimeEffectState> &pState);
+
+   //! Use only in the main thread, to avoid races
    size_t GetStatesCount() const noexcept;
+
+   //! Use only in the main thread, to avoid races
    std::shared_ptr<RealtimeEffectState> GetStateAt(size_t index) noexcept;
    /**
-    * \brief Changes effect order in the stack
+    * \brief Use only in the main thread. Changes effect order in the stack
     * \param fromIndex Index of the moved effect
     * \param toIndex Desired position of the moved effect
     */
@@ -71,8 +80,14 @@ public:
    static const std::string &XMLTag();
    bool HandleXMLTag(
       const std::string_view &tag, const AttributesList &attrs) override;
+
+   //! Use only in the main thread.  May remove a failed state
    void HandleXMLEndTag(const std::string_view &tag) override;
+
+   //! Use only in the main thread.  May add a state while deserializing
    XMLTagHandler *HandleXMLChild(const std::string_view &tag) override;
+
+   //! Use only in the main thread, to avoid races
    void WriteXML(XMLWriter &xmlFile) const;
 
    void RestoreUndoRedoState(AudacityProject &project) noexcept override;
