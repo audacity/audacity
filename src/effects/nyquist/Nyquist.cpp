@@ -1052,12 +1052,13 @@ finish:
 
 int NyquistEffect::ShowHostInterface(
    wxWindow &parent, const EffectDialogFactory &factory,
-   EffectSettingsAccess &access, bool forceModal)
+   EffectInstance &instance, EffectSettingsAccess &access, bool forceModal)
 {
    int res = wxID_APPLY;
    if (!(Effect::TestUIFlags(EffectManager::kRepeatNyquistPrompt) && mIsPrompt)) {
       // Show the normal (prompt or effect) interface
-      res = Effect::ShowHostInterface(parent, factory, access, forceModal);
+      res = Effect::ShowHostInterface(
+         parent, factory, instance, access, forceModal);
    }
 
 
@@ -1076,7 +1077,9 @@ int NyquistEffect::ShowHostInterface(
    effect.SetCommand(mInputCmd);
 
    // Must give effect its own settings to interpret, not those in access
+   // Let's also give it its own instance
    auto newSettings = effect.MakeSettings();
+   auto newInstance = effect.MakeInstance(newSettings);
    auto newAccess = std::make_shared<SimpleEffectSettingsAccess>(newSettings);
 
    if (IsBatchProcessing()) {
@@ -1087,7 +1090,8 @@ int NyquistEffect::ShowHostInterface(
       effect.LoadSettings(cp, newSettings);
 
       // Show the normal (prompt or effect) interface
-      res = effect.ShowHostInterface(parent, factory, *newAccess, forceModal);
+      res = effect.ShowHostInterface(
+         parent, factory, *newInstance, *newAccess, forceModal);
       if (res) {
          CommandParameters cp;
          effect.SaveSettings(newSettings, cp);
@@ -1097,7 +1101,8 @@ int NyquistEffect::ShowHostInterface(
    else {
       if (!factory)
          return 0;
-      res = effect.ShowHostInterface(parent, factory, *newAccess, false );
+      res = effect.ShowHostInterface(
+         parent, factory, *newInstance, *newAccess, false );
       if (!res)
          return 0;
 
@@ -1111,17 +1116,13 @@ int NyquistEffect::ShowHostInterface(
    return res;
 }
 
-std::unique_ptr<EffectUIValidator>
-NyquistEffect::PopulateOrExchange(ShuttleGui & S, EffectSettingsAccess &)
+std::unique_ptr<EffectUIValidator> NyquistEffect::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &)
 {
    if (mIsPrompt)
-   {
       BuildPromptWindow(S);
-   }
    else
-   {
       BuildEffectWindow(S);
-   }
    return nullptr;
 }
 

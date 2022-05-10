@@ -168,7 +168,7 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
    if ( pParent && dialogFactory && pAccess &&
       IsInteractive()) {
       if (!ShowHostInterface(
-         *pParent, dialogFactory, *pAccess, IsBatchProcessing() ) )
+         *pParent, dialogFactory, *pInstance, *pAccess, IsBatchProcessing() ) )
          return false;
       else
          // Retrieve again after the dialog modified settings

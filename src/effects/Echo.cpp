@@ -199,8 +199,8 @@ struct EffectEcho::Validator
 
 
 
-std::unique_ptr<EffectUIValidator>
-EffectEcho::PopulateOrExchange(ShuttleGui& S, EffectSettingsAccess& access)
+std::unique_ptr<EffectUIValidator> EffectEcho::PopulateOrExchange(
+   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access)
 {
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);
