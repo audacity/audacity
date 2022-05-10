@@ -56,8 +56,7 @@ public:
    static RealtimeEffectList &Get(Track &track);
    static const RealtimeEffectList &Get(const Track &track);
 
-   using StateVisitor =
-      std::function<void(RealtimeEffectState &state, bool bypassed)>;
+   using StateVisitor = std::function<void(RealtimeEffectState &state)>;
 
    //! Apply the function to all states sequentially.
    void Visit(StateVisitor func);

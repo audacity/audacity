@@ -80,7 +80,7 @@ const RealtimeEffectList &RealtimeEffectList::Get(const Track &track)
 void RealtimeEffectList::Visit(StateVisitor func)
 {
    for (auto &state : mStates)
-      func(*state, !state->IsActive());
+      func(*state);
 }
 
 std::shared_ptr<RealtimeEffectState>

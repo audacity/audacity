@@ -101,8 +101,7 @@ private:
    RealtimeEffectManager(const RealtimeEffectManager&) = delete;
    RealtimeEffectManager &operator=(const RealtimeEffectManager&) = delete;
 
-   using StateVisitor =
-      std::function<void(RealtimeEffectState &state, bool bypassed)> ;
+   using StateVisitor = std::function<void(RealtimeEffectState &state)> ;
 
    //! Visit the per-project states first, then states for leader if not null
    void VisitGroup(Track &leader, StateVisitor func);

@@ -67,7 +67,7 @@ void RealtimeEffectManager::Initialize(double rate)
    mActive = true;
 
    // Tell each state to get ready for action
-   VisitAll([rate](RealtimeEffectState &state, bool){
+   VisitAll([rate](RealtimeEffectState &state){
       state.Initialize(rate);
    });
 
@@ -85,7 +85,7 @@ void RealtimeEffectManager::AddTrack(Track &track, unsigned chans, float rate)
    mRates.insert({leader, rate});
 
    VisitGroup(*leader,
-      [&](RealtimeEffectState & state, bool) {
+      [&](RealtimeEffectState & state) {
          state.AddTrack(*leader, chans, rate);
       }
    );
@@ -99,7 +99,7 @@ void RealtimeEffectManager::Finalize() noexcept
    // Assume it is now safe to clean up
    mLatency = std::chrono::microseconds(0);
 
-   VisitAll([](RealtimeEffectState &state, bool){ state.Finalize(); });
+   VisitAll([](RealtimeEffectState &state){ state.Finalize(); });
 
    // Reset processor parameters
    mGroupLeaders.clear();
@@ -123,7 +123,7 @@ void RealtimeEffectManager::Suspend()
    SetSuspended(true);
 
    // And make sure the effects don't either
-   VisitAll([](RealtimeEffectState &state, bool){
+   VisitAll([](RealtimeEffectState &state){
       state.Suspend();
    });
 }
@@ -138,7 +138,7 @@ void RealtimeEffectManager::Resume() noexcept
       return;
 
    // Tell the effects to get ready for more action
-   VisitAll([](RealtimeEffectState &state, bool){
+   VisitAll([](RealtimeEffectState &state){
       state.Resume();
    });
 
@@ -158,8 +158,8 @@ void RealtimeEffectManager::ProcessStart(bool suspended)
    // have been suspended.
    if (!suspended)
    {
-      VisitAll([](RealtimeEffectState &state, bool bypassed){
-         if (!bypassed)
+      VisitAll([](RealtimeEffectState &state){
+         if (state.IsActive())
             state.ProcessStart();
       });
    }
@@ -206,9 +206,9 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    // Tracks how many processors were called
    size_t called = 0;
    VisitGroup(track,
-      [&](RealtimeEffectState &state, bool bypassed)
+      [&](RealtimeEffectState &state)
       {
-         if (bypassed)
+         if (!state.IsActive())
             return;
 
          state.Process(track, chans, ibuf, obuf, scratch[chans], numSamples);
@@ -248,8 +248,8 @@ void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
    // have been suspended.
    if (!suspended)
    {
-      VisitAll([](RealtimeEffectState &state, bool bypassed){
-         if (!bypassed)
+      VisitAll([](RealtimeEffectState &state){
+         if (state.IsActive())
             state.ProcessEnd();
       });
    }
