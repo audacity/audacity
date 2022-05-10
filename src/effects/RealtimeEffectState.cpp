@@ -235,15 +235,12 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
 
 bool RealtimeEffectState::Suspend()
 {
-   ++mSuspendCount;
-   return mSuspendCount != 1 || (mInstance && mInstance->RealtimeSuspend());
+   return mInstance && mInstance->RealtimeSuspend();
 }
 
 bool RealtimeEffectState::Resume() noexcept
 {
-   assert(mSuspendCount > 0);
-   --mSuspendCount;
-   return mSuspendCount != 0 || (mInstance && mInstance->RealtimeResume());
+   return mInstance && mInstance->RealtimeResume();
 }
 
 bool RealtimeEffectState::Initialize(double rate)
@@ -342,6 +339,9 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
 bool RealtimeEffectState::ProcessStart(bool running)
 {
    // Get state changes from the main thread
+   // Note that it is only here that the answer of IsActive() may be changed,
+   // and it is important that for each state the answer is unchanging in one
+   // processing scope.
    if (auto pAccessState = TestAccessState())
       pAccessState->WorkerRead();
 
@@ -497,7 +497,7 @@ bool RealtimeEffectState::ProcessEnd(bool running)
 
 bool RealtimeEffectState::IsActive() const noexcept
 {
-   return mSuspendCount == 0;
+   return mWorkerSettings.extra.GetActive();
 }
 
 bool RealtimeEffectState::Finalize() noexcept
