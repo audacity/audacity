@@ -343,6 +343,68 @@ bool VST3Effect::SupportsAutomation() const
    return false;
 }
 
+
+bool VST3Effect::FetchSettings(VST3EffectSettings& settings) const
+{
+   // partly copied from ::SaveSettings + some adaptations made
+
+   if (mEditController == nullptr)
+      return false;
+
+   using namespace Steinberg;
+
+   auto theCount = mEditController->getParameterCount();
+
+   for (int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
+   {
+      Vst::ParameterInfo parameterInfo{ };
+      if (mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
+      {
+         if (parameterInfo.flags & Vst::ParameterInfo::kCanAutomate)
+         {
+
+            Steinberg::Vst::ParamID    key = parameterInfo.id;
+            Steinberg::Vst::ParamValue value = mEditController->getParamNormalized(parameterInfo.id);
+
+            settings.mValues[key] = value;
+         }
+      }
+   }
+
+   return true;
+}
+
+
+bool VST3Effect::StoreSettings(const VST3EffectSettings& settings) const
+{
+   // partly copied from ::LoadSettings + some adaptations made
+
+   using namespace Steinberg;
+
+   if (mComponentHandler == nullptr)
+      return false;
+
+   for (const auto& item : settings.mValues)
+   {
+      const Steinberg::Vst::ParamID& id    = item.first;
+      const Vst::ParamValue&         value = item.second;
+
+      if (mComponentHandler->beginEdit(id) == kResultOk)
+      {
+         auto cleanup = finally([&] {
+            mComponentHandler->endEdit(id);
+         });
+         mComponentHandler->performEdit(id, value);
+      }
+      mEditController->setParamNormalized(id, value);
+   }
+
+   return true;
+}
+
+
+
+
 bool VST3Effect::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {

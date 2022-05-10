@@ -38,6 +38,12 @@ namespace Steinberg
 
 class ParameterChangesProvider;
 
+
+struct VST3EffectSettings
+{
+   std::unordered_map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> mValues;
+};
+
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
@@ -169,4 +175,8 @@ private:
    bool LoadPreset(const wxString& path);
 
    void ReloadUserOptions();
+
+   bool FetchSettings(VST3EffectSettings& settings) const;
+
+   bool StoreSettings(const VST3EffectSettings& settings) const;
 };
