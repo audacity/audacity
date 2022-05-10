@@ -219,6 +219,13 @@ int ExportMultipleDialog::ShowModal()
 
    EnableControls();
 
+   // This is a work around for issue #2909, and ensures that
+   // when the dialog opens, the first control is the focus.
+   // The work around is only needed on Windows.
+#if defined(__WXMSW__)
+   mDir->SetFocus();
+#endif
+
    return wxDialogWrapper::ShowModal();
 }
 
