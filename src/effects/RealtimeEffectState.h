@@ -60,7 +60,10 @@ public:
       size_t numSamples);
    //! Worker thread finishes a batch of samples
    bool ProcessEnd();
+
+   //! To be tested only in the worker thread
    bool IsActive() const noexcept;
+
    //! Main thread cleans up playback
    bool Finalize() noexcept;
 
@@ -101,8 +104,6 @@ private:
 
    size_t mCurrentProcessor{ 0 };
    std::unordered_map<Track *, size_t> mGroups;
-
-   std::atomic<int> mSuspendCount{ 1 };    // Effects are initially suspended
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTSTATE_H__

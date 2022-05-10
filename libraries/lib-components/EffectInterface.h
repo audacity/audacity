@@ -80,9 +80,13 @@ public:
    //! @return value is not negative
    double GetDuration() const { return mDuration; }
    void SetDuration(double value) { mDuration = std::max(0.0, value); }
+
+   bool GetActive() const { return mActive; }
+   void SetActive(bool value) { mActive = value; }
 private:
    NumericFormatSymbol mDurationFormat{};
    double mDuration{}; //!< @invariant non-negative
+   bool mActive{ true };
 };
 
 //! Externalized state of a plug-in

@@ -159,15 +159,14 @@ void RealtimeEffectManager::ProcessStart(bool suspended)
    if (!suspended)
    {
       VisitAll([](RealtimeEffectState &state){
-         if (state.IsActive())
-            state.ProcessStart();
+         state.ProcessStart();
       });
    }
 }
 
 //
 
-// This will be called in a different thread than the main GUI thread.
+// This will be called in a thread other than the main GUI thread.
 //
 size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    float *const *buffers, float *const *scratch,

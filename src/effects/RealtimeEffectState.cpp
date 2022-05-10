@@ -179,15 +179,12 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
 
 bool RealtimeEffectState::Suspend()
 {
-   ++mSuspendCount;
-   return mSuspendCount != 1 || (mInstance && mInstance->RealtimeSuspend());
+   return mInstance && mInstance->RealtimeSuspend();
 }
 
 bool RealtimeEffectState::Resume() noexcept
 {
-   assert(mSuspendCount > 0);
-   --mSuspendCount;
-   return mSuspendCount != 0 || (mInstance && mInstance->RealtimeResume());
+   return mInstance && mInstance->RealtimeResume();
 }
 
 bool RealtimeEffectState::Initialize(double rate)
@@ -275,11 +272,15 @@ bool RealtimeEffectState::ProcessStart()
       return false;
 
    // Get state changes from the main thread
-   // But skip this if we never gave out Access, or it has expired
+   // But skip this if we never gave out Access, or it has expired.
+   // Note that it is only here that the answer of IsActive() may be changed,
+   // and it is important that for each state the answer is unchanging in one
+   // processing scope.
    if (!mwAccess.expired())
       mpAccessState->WorkerRead();
 
-   return mInstance->RealtimeProcessStart(mSettings);
+   return !IsActive() ||
+      mInstance->RealtimeProcessStart(mSettings);
 }
 
 //! Visit the effect processors that were added in AddTrack
@@ -426,7 +427,7 @@ bool RealtimeEffectState::ProcessEnd()
 
 bool RealtimeEffectState::IsActive() const noexcept
 {
-   return mSuspendCount == 0;
+   return mSettings.extra.GetActive();
 }
 
 bool RealtimeEffectState::Finalize() noexcept
