@@ -82,13 +82,13 @@ void RealtimeEffectList::Visit(StateVisitor func)
       func(*state, !state->IsActive());
 }
 
-std::shared_ptr<RealtimeEffectState>
-RealtimeEffectList::AddState(const PluginID &id)
+bool
+RealtimeEffectList::AddState(std::shared_ptr<RealtimeEffectState> pState)
 {
-   auto pState = RealtimeEffectState::make_shared(id);
+   const auto &id = pState->GetID();
    if (pState->GetEffect() != nullptr) {
       auto shallowCopy = mStates;
-      shallowCopy.emplace_back(pState);
+      shallowCopy.emplace_back(move(pState));
       // Lock for only a short time
       (LockGuard{ mLock }, swap(shallowCopy, mStates));
 
@@ -98,10 +98,11 @@ RealtimeEffectList::AddState(const PluginID &id)
          { }
       });
 
-      return pState;
+      return true;
    }
-   // Effect initialization failed for the id
-   return nullptr;
+   else
+      // Effect initialization failed for the id
+      return false;
 }
 
 void RealtimeEffectList::RemoveState(
