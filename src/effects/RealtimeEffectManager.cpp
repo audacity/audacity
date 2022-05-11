@@ -112,27 +112,23 @@ void RealtimeEffectManager::Finalize() noexcept
 
 void RealtimeEffectManager::Suspend()
 {
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
-
    // Already suspended...bail
    if (GetSuspended())
       return;
 
    // Show that we aren't going to be doing anything
+   // (set atomically, before next ProcessingScope)
    SetSuspended(true);
 }
 
 void RealtimeEffectManager::Resume() noexcept
 {
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
-
    // Already running...bail
    if (!GetSuspended())
       return;
 
    // Get ready for more action
+   // (set atomically, before next ProcessingScope)
    SetSuspended(false);
 }
 
@@ -141,9 +137,6 @@ void RealtimeEffectManager::Resume() noexcept
 //
 void RealtimeEffectManager::ProcessStart(bool suspended)
 {
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
-
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
    VisitAll([suspended](RealtimeEffectState &state, bool listIsActive){
@@ -159,9 +152,6 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    float *const *buffers, float *const *scratch,
    size_t numSamples)
 {
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
-
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended, so allow the samples to pass as-is.
    if (suspended)
@@ -227,9 +217,6 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
 //
 void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
 {
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
-
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
    VisitAll([suspended](RealtimeEffectState &state, bool listIsActive){
@@ -314,8 +301,6 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
       else
          return nullptr;
    }
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
 
    auto pState = RealtimeEffectState::make_shared(id);
    auto &state = *pState;
@@ -367,8 +352,6 @@ void RealtimeEffectManager::RemoveState(
       else
          return;
    }
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
 
    // Remove the state from processing (under the lock guard) before finalizing
    states.RemoveState(pState);
@@ -382,7 +365,10 @@ void RealtimeEffectManager::RemoveState(
    });
 }
 
+// Where is this used?
+#if 0
 auto RealtimeEffectManager::GetLatency() const -> Latency
 {
-   return mLatency;
+   return mLatency; // should this be atomic?
 }
+#endif
