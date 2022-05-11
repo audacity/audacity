@@ -350,9 +350,7 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 
-   auto pState = states.AddState(id);
-   if (!pState)
-      return nullptr;
+   auto pState = RealtimeEffectState::make_shared(id);
    auto &state = *pState;
    
    if (mActive)
@@ -372,6 +370,9 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
          state.AddTrack(*leader, chans, rate);
       }
    }
+   bool added = states.AddState(pState);
+   if (!added)
+      return nullptr;
    return pState;
 }
 

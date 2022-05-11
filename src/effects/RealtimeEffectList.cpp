@@ -82,20 +82,20 @@ void RealtimeEffectList::Visit(StateVisitor func)
       func(*state);
 }
 
-std::shared_ptr<RealtimeEffectState>
-RealtimeEffectList::AddState(const PluginID &id)
+bool
+RealtimeEffectList::AddState(const std::shared_ptr<RealtimeEffectState> &pState)
 {
-   auto pState = RealtimeEffectState::make_shared(id);
+   const auto &id = pState->GetID();
    if (id.empty() || pState->GetEffect() != nullptr) {
       auto shallowCopy = mStates;
       shallowCopy.emplace_back(pState);
       // Lock for only a short time
       (LockGuard{ mLock }, swap(shallowCopy, mStates));
-      return pState;
+      return true;
    }
    else
       // Effect initialization failed for the id
-      return nullptr;
+      return false;
 }
 
 void RealtimeEffectList::RemoveState(
@@ -181,8 +181,9 @@ void RealtimeEffectList::HandleXMLEndTag(const std::string_view &tag)
 XMLTagHandler *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
 {
    if (tag == RealtimeEffectState::XMLTag()) {
-      auto pState = AddState({});
-      assert(pState); // Should succeed always for empty id
+      auto pState = RealtimeEffectState::make_shared(PluginID{});
+      auto added = AddState(pState);
+      assert(added); // Should succeed always for empty id
       return pState.get();
    }
    return nullptr;

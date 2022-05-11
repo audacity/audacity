@@ -64,7 +64,7 @@ public:
 
    //! Use only in the main thread
    //! Returns null if the id is nonempty but no such effect was found
-   std::shared_ptr<RealtimeEffectState> AddState(const PluginID &id);
+   bool AddState(const std::shared_ptr<RealtimeEffectState> &pState);
 
    //! Use only in the main thread
    void RemoveState(const std::shared_ptr<RealtimeEffectState> &pState);
