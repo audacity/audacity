@@ -79,7 +79,7 @@ const RealtimeEffectList &RealtimeEffectList::Get(const Track &track)
 void RealtimeEffectList::Visit(StateVisitor func)
 {
    for (auto &state : mStates)
-      func(*state, !state->IsActive());
+      func(*state, IsActive());
 }
 
 bool
@@ -208,6 +208,16 @@ void RealtimeEffectList::RestoreUndoRedoState(AudacityProject &project) noexcept
 {
    // Restore per-project states
    Set(project, shared_from_this());
+}
+
+bool RealtimeEffectList::IsActive() const
+{
+   return mActive.load(std::memory_order_relaxed);
+}
+
+void RealtimeEffectList::SetActive(bool value)
+{
+   (LockGuard{ mLock }, mActive.store(value, std::memory_order_relaxed));
 }
 
 static UndoRedoExtensionRegistry::Entry sEntry {

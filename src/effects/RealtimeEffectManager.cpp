@@ -156,8 +156,8 @@ void RealtimeEffectManager::ProcessStart(bool suspended)
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   VisitAll([suspended](RealtimeEffectState &state, bool bypassed){
-      state.ProcessStart(!suspended && !bypassed);
+   VisitAll([suspended](RealtimeEffectState &state, bool listIsActive){
+      state.ProcessStart(!suspended && listIsActive);
    });
 }
 
@@ -202,9 +202,9 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    // Tracks how many processors were called
    size_t called = 0;
    VisitGroup(track,
-      [&](RealtimeEffectState &state, bool bypassed)
+      [&](RealtimeEffectState &state, bool listIsActive)
       {
-         if (bypassed)
+         if (!(listIsActive && state.IsActive()))
             return;
 
          state.Process(track, chans, ibuf, obuf, scratch[chans], numSamples);
@@ -242,8 +242,8 @@ void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   VisitAll([suspended](RealtimeEffectState &state, bool bypassed){
-      state.ProcessEnd(!suspended && !bypassed);
+   VisitAll([suspended](RealtimeEffectState &state, bool listIsActive){
+      state.ProcessEnd(!suspended && listIsActive);
    });
 }
 

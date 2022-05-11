@@ -339,13 +339,13 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
    return false;
 }
 
-bool RealtimeEffectState::ProcessStart(bool active)
+bool RealtimeEffectState::ProcessStart(bool running)
 {
    // Get state changes from the main thread
    if (auto pAccessState = TestAccessState())
       pAccessState->WorkerRead();
 
-   if (!mInstance || !active)
+   if (!mInstance || !IsActive() || !running)
       return false;
 
    // Assuming we are in a processing scope, use the worker settings
@@ -478,9 +478,9 @@ size_t RealtimeEffectState::Process(Track &track,
    return len;
 }
 
-bool RealtimeEffectState::ProcessEnd(bool active)
+bool RealtimeEffectState::ProcessEnd(bool running)
 {
-   bool result = mInstance && active &&
+   bool result = mInstance && IsActive() && running &&
       // Assuming we are in a processing scope, use the worker settings
       mInstance->RealtimeProcessEnd(mWorkerSettings);
 

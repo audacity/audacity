@@ -55,7 +55,8 @@ public:
    //! Main thread sets up this state before adding it to lists
    bool AddTrack(Track &track, unsigned chans, float rate);
    //! Worker thread begins a batch of samples
-   bool ProcessStart(bool active);
+   /*! @param running means no pause or deactivation of containing list */
+   bool ProcessStart(bool running);
    //! Worker thread processes part of a batch of samples
    size_t Process(Track &track,
       unsigned chans,
@@ -64,7 +65,9 @@ public:
       float *dummybuf, //!< one scratch buffer
       size_t numSamples);
    //! Worker thread finishes a batch of samples
-   bool ProcessEnd(bool active);
+   /*! @param running means no pause or deactivation of containing list */
+   bool ProcessEnd(bool running);
+   //! To be tested only in the worker thread
    bool IsActive() const noexcept;
    //! Main thread cleans up playback
    bool Finalize() noexcept;
