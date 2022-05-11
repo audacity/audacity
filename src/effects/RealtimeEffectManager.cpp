@@ -394,10 +394,11 @@ void RealtimeEffectManager::RemoveState(
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 
+   // Remove the state from processing (under the lock guard) before finalizing
+   states.RemoveState(pState);
+
    if (mActive)
       pState->Finalize();
-
-   states.RemoveState(pState);
 }
 
 auto RealtimeEffectManager::GetLatency() const -> Latency

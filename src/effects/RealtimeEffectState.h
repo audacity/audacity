@@ -34,6 +34,7 @@ public:
 
    explicit RealtimeEffectState(const PluginID & id);
    RealtimeEffectState(const RealtimeEffectState &other);
+   RealtimeEffectState &operator = (const RealtimeEffectState &other) = delete;
    ~RealtimeEffectState();
 
    //! May be called with nonempty id at most once in the lifetime of a state
@@ -88,11 +89,17 @@ private:
    //! Stateless effect object
    const EffectInstanceFactory *mPlugin{};
    
-   NonInterfering<EffectSettings> mSettings;
+   //! Updated immediately by Access::Set
+   NonInterfering<EffectSettings> mMainSettings;
 
    //! @}
 
    // Following are not copied
+
+   //! Updated with delay, but atomically, in the worker thread; skipped by the
+   //! copy constructor so that there isn't a race when pushing an Undo state
+   NonInterfering<EffectSettings> mWorkerSettings;
+
    wxString mParameters;  // Used only during deserialization
 
    //! Stateful instance made by the plug-in
@@ -100,7 +107,7 @@ private:
 
    struct Access;
    struct AccessState;
-   std::shared_ptr<AccessState> mpAccessState; // Destroy before mSettings
+   std::shared_ptr<AccessState> mpAccessState; // Destroy before mWorkerSettings
    std::weak_ptr<EffectSettingsAccess> mwAccess;
 
    size_t mCurrentProcessor{ 0 };
@@ -108,4 +115,3 @@ private:
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTSTATE_H__
-
