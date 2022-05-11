@@ -25,8 +25,7 @@ std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
 {
    auto result = std::make_unique<RealtimeEffectList>();
    for (auto &pState : mStates)
-      result->mStates.push_back(
-         std::make_shared<RealtimeEffectState>(*pState));
+      result->mStates.push_back(RealtimeEffectState::make_shared(*pState));
    return result;
 }
 
@@ -86,7 +85,7 @@ void RealtimeEffectList::Visit(StateVisitor func)
 std::shared_ptr<RealtimeEffectState>
 RealtimeEffectList::AddState(const PluginID &id)
 {
-   auto pState = std::make_shared<RealtimeEffectState>(id);
+   auto pState = RealtimeEffectState::make_shared(id);
    if (pState->GetEffect() != nullptr) {
       auto shallowCopy = mStates;
       shallowCopy.emplace_back(pState);
@@ -185,7 +184,7 @@ bool RealtimeEffectList::HandleXMLTag(
 XMLTagHandler *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
 {
    if (tag == RealtimeEffectState::XMLTag()) {
-      mStates.push_back(std::make_shared<RealtimeEffectState>(PluginID { }));
+      mStates.push_back(RealtimeEffectState::make_shared(PluginID{}));
       return mStates.back().get();
    }
    return nullptr;
