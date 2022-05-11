@@ -12,12 +12,12 @@
 #define __AUDACITY_REALTIMEEFFECTSTATE_H__
 
 #include <atomic>
-#include <memory>
 #include <unordered_map>
 #include <vector>
 #include <cstddef>
 #include "EffectInterface.h"
 #include "GlobalVariable.h"
+#include "MemoryX.h"
 #include "PluginProvider.h" // for PluginID
 #include "XMLTagHandler.h"
 
@@ -25,6 +25,7 @@ class EffectSettingsAccess;
 class Track;
 
 class RealtimeEffectState : public XMLTagHandler
+   , public SharedNonInterfering<RealtimeEffectState>
 {
 public:
    struct AUDACITY_DLL_API EffectFactory : GlobalHook<EffectFactory,
@@ -87,7 +88,7 @@ private:
    //! Stateless effect object
    const EffectInstanceFactory *mPlugin{};
    
-   EffectSettings mSettings;
+   NonInterfering<EffectSettings> mSettings;
 
    //! @}
 

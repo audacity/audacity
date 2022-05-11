@@ -172,7 +172,7 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
       mPlugin = EffectFactory::Call(mID);
       if (mPlugin)
          // Also make EffectSettings
-         mSettings = mPlugin->MakeSettings();
+         mSettings.Set(mPlugin->MakeSettings());
    }
    return mPlugin;
 }
