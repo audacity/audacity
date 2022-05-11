@@ -48,7 +48,7 @@ public:
    bool IsActive() const noexcept;
    void Suspend();
    void Resume() noexcept;
-   Latency GetLatency() const;
+//   Latency GetLatency() const;
 
    //! Main thread appends a global or per-track effect
    /*!
@@ -112,7 +112,6 @@ private:
 
    AudacityProject &mProject;
 
-   std::mutex mLock;
    Latency mLatency{ 0 };
 
    double mRate;
