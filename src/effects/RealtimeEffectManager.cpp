@@ -156,11 +156,11 @@ void RealtimeEffectManager::ProcessStart(bool suspended)
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   if (!suspended)
-   {
+   if (!suspended) {
+      // Visit active lists only, updating activation of individual states
       VisitAll([](RealtimeEffectState &state){
          state.ProcessStart();
-      });
+      }, true);
    }
 }
 
@@ -204,9 +204,9 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    // output of one effect as the input to the next effect
    // Tracks how many processors were called
    size_t called = 0;
+   // Visit active states, of active lists only
    VisitGroup(track,
-      [&](RealtimeEffectState &state)
-      {
+      [&](RealtimeEffectState &state) {
          if (!state.IsActive())
             return;
 
@@ -214,8 +214,7 @@ size_t RealtimeEffectManager::Process(bool suspended, Track &track,
          for (auto i = 0; i < chans; ++i)
             std::swap(ibuf[i], obuf[i]);
          called++;
-      }
-   );
+      }, true);
 
    // Once we're done, we might wind up with the last effect storing its results
    // in the temporary buffers.  If that's the case, we need to copy it over to
@@ -247,20 +246,30 @@ void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
    // have been suspended.
    if (!suspended)
    {
+      // Visit active states, of active lists only
       VisitAll([](RealtimeEffectState &state){
          if (state.IsActive())
             state.ProcessEnd();
-      });
+      }, true);
    }
 }
 
-void RealtimeEffectManager::VisitGroup(Track &leader, StateVisitor func)
+void RealtimeEffectManager::VisitGroup(
+   Track &leader, StateVisitor func, bool activeOnly)
 {
-   // Call the function for each effect on the master list
-   RealtimeEffectList::Get(mProject).Visit(func);
+   {
+      // Call the function for each effect on the master list
+      auto &list = RealtimeEffectList::Get(mProject);
+      if (!activeOnly || list.IsActive())
+         list.Visit(func);
+   }
 
    // Call the function for each effect on the track list
-   RealtimeEffectList::Get(leader).Visit(func);
+   {
+      auto &list = RealtimeEffectList::Get(leader);
+      if (!activeOnly || list.IsActive())
+         list.Visit(func);
+   }
 }
 
 RealtimeEffectManager::
@@ -305,14 +314,21 @@ void RealtimeEffectManager::AllListsLock::Reset()
    }
 }
 
-void RealtimeEffectManager::VisitAll(StateVisitor func)
+void RealtimeEffectManager::VisitAll(StateVisitor func, bool activeOnly)
 {
-   // Call the function for each effect on the master list
-   RealtimeEffectList::Get(mProject).Visit(func);
+   {
+      // Call the function for each effect on the master list
+      auto &list = RealtimeEffectList::Get(mProject);
+      if (!activeOnly || list.IsActive())
+         list.Visit(func);
+   }
 
    // And all track lists
-   for (auto leader : mGroupLeaders)
-      RealtimeEffectList::Get(*leader).Visit(func);
+   for (auto leader : mGroupLeaders) {
+      auto &list = RealtimeEffectList::Get(mProject);
+      if (!activeOnly || list.IsActive())
+         RealtimeEffectList::Get(*leader).Visit(func);
+   }
 }
 
 std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(

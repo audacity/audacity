@@ -104,11 +104,11 @@ private:
    using StateVisitor = std::function<void(RealtimeEffectState &state)> ;
 
    //! Visit the per-project states first, then states for leader if not null
-   void VisitGroup(Track &leader, StateVisitor func);
+   void VisitGroup(Track &leader, StateVisitor func, bool activeOnly = false);
 
    //! Visit the per-project states first, then all tracks from AddTrack
    /*! Tracks are visited in unspecified order */
-   void VisitAll(StateVisitor func);
+   void VisitAll(StateVisitor func, bool activeOnly = false);
 
    AudacityProject &mProject;
 

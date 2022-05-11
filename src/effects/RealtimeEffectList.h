@@ -9,6 +9,7 @@
 #ifndef __AUDACITY_REALTIMEEFFECTLIST_H__
 #define __AUDACITY_REALTIMEEFFECTLIST_H__
 
+#include <atomic>
 #include <vector>
 
 #include "PluginProvider.h" // for PluginID
@@ -95,11 +96,19 @@ public:
 
    void RestoreUndoRedoState(AudacityProject &project) noexcept override;
 
+   //! Non-blocking atomic boolean load
+   bool IsActive() const;
+
+   //! Done under a lock guard
+   void SetActive(bool value);
+
 private:
    States mStates;
 
    using LockGuard = std::lock_guard<Lock>;
    mutable Lock mLock;
+
+   std::atomic<bool> mActive{ true };
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTLIST_H__

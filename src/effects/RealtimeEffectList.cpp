@@ -199,6 +199,16 @@ void RealtimeEffectList::RestoreUndoRedoState(AudacityProject &project) noexcept
    Set(project, shared_from_this());
 }
 
+bool RealtimeEffectList::IsActive() const
+{
+   return mActive.load(std::memory_order_relaxed);
+}
+
+void RealtimeEffectList::SetActive(bool value)
+{
+   (LockGuard{ mLock }, mActive.store(value, std::memory_order_relaxed));
+}
+
 static UndoRedoExtensionRegistry::Entry sEntry {
    [](AudacityProject &project) -> std::shared_ptr<UndoStateExtension> {
       return RealtimeEffectList::Get(project).shared_from_this();
