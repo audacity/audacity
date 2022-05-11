@@ -50,4 +50,7 @@ class XML_API XMLFileReader final {
    Handlers mHandler;
    TranslatableString mErrorStr;
    TranslatableString mLibraryErrorStr;
+
+   //Used for memory allocation optimization purpose
+   AttributesList mCurrentTagAttributes;
 };

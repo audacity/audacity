@@ -12,6 +12,8 @@ set( SOURCES
    ModuleManager.h
    ModuleSettings.cpp
    ModuleSettings.h
+   PluginDescriptor.cpp
+   PluginDescriptor.h
    PluginInterface.cpp
    PluginInterface.h
    PluginManager.cpp
@@ -19,6 +21,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-files-interface
+   lib-xml-interface
    PRIVATE
    wxBase
 )

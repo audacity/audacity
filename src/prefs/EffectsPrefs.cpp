@@ -213,19 +213,6 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-#ifndef EXPERIMENTAL_EFFECT_MANAGEMENT
-   S.StartStatic(XO("Plugin Options"));
-   {
-      S.TieCheckBox(XXO("Check for updated plugins when Audacity starts"),
-                     {wxT("/Plugins/CheckForUpdates"),
-                     true});
-      S.TieCheckBox(XXO("Rescan plugins next time Audacity is started"),
-                     {wxT("/Plugins/Rescan"),
-                     false});
-   }
-   S.EndStatic();
-#endif
-
 #ifdef EXPERIMENTAL_EQ_SSE_THREADED
    S.StartStatic(XO("Instruction Set"));
    {
