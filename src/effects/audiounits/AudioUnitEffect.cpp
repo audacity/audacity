@@ -23,7 +23,6 @@
 #include "ModuleManager.h"
 #include "SampleCount.h"
 #include "ConfigInterface.h"
-#include "CFResources.h"
 
 #include <wx/defs.h>
 #include <wx/base64.h>
@@ -54,9 +53,10 @@
 #include "../../widgets/wxPanelWrapper.h"
 
 //
-// When a plug-ins state is saved to the settings file (as a preset),
-// it can be one of two formats, binary or XML.  In either case, it
-// gets base64 encoded before storing.
+// When a plug-in's state is saved to the settings file (as a preset),
+// it is in binary and gets base64 encoded before storing.
+//
+// When exporting, save as XML without base64 encoding.
 //
 // The advantages of XML format is less chance of failures occurring
 // when exporting.  But, it can take a bit more space per preset int
@@ -98,7 +98,7 @@ BlackList[] =
 // at runtime by scanning an effects parameters to determine if dups are present
 // and, if so, enable the clump and parameter IDs.
 #define USE_EXTENDED_NAMES
-class ParameterInfo
+class ParameterInfo final
 {
 public:
    ParameterInfo()
@@ -106,42 +106,21 @@ public:
       info = {};
    }
 
-   virtual ~ParameterInfo()
-   {
-      if (info.flags & kAudioUnitParameterFlag_CFNameRelease) {
-         if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
-            CFRelease(info.cfNameString);
-         if (info.flags & kAudioUnitParameterUnit_CustomUnit)
-            CFRelease(info.unitName);
-      }
-   }
-
    bool Get(AudioUnit mUnit, AudioUnitParameterID parmID)
    {
-      OSStatus result;
       UInt32 dataSize;
 
       info = {};
-      dataSize = sizeof(info);
-      result = AudioUnitGetProperty(mUnit,
-                                    kAudioUnitProperty_ParameterInfo,
-                                    kAudioUnitScope_Global,
-                                    parmID,
-                                    &info,
-                                    &dataSize);  
-      if (result != noErr)
-      {
+      // Note non-default element parameter, parmID
+      if (AudioUnitUtils::GetFixedSizeProperty(mUnit,
+         kAudioUnitProperty_ParameterInfo, info,
+         kAudioUnitScope_Global, parmID))
          return false;
-      }
 
       if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
-      {
          name = wxCFStringRef::AsString(info.cfNameString);
-      }
       else
-      {
          name = wxString(info.name);
-      }
 
 #if defined(USE_EXTENDED_NAMES)
       // If the parameter has a non-empty name, then the final parameter name will
@@ -176,22 +155,12 @@ public:
       if (info.flags & kAudioUnitParameterFlag_HasClump)
       {
          wxString clumpName;
-
-         struct AudioUnitParameterNameInfoEx : AudioUnitParameterNameInfo {
-            ~AudioUnitParameterNameInfoEx() { CFRelease(outName); }
-         } clumpInfo{
-            info.clumpID, kAudioUnitParameterName_Full, nullptr
+         AudioUnitUtils::ParameterNameInfo clumpInfo{
+            info.clumpID, kAudioUnitParameterName_Full
          };
-         dataSize = sizeof(clumpInfo);
 
-         result = AudioUnitGetProperty(mUnit,
-                                       kAudioUnitProperty_ParameterClumpName,
-                                       kAudioUnitScope_Global,
-                                       0,
-                                       &clumpInfo,
-                                       &dataSize);  
-         if (result == noErr)
-         {
+         if (!AudioUnitUtils::GetFixedSizeProperty(mUnit,
+            kAudioUnitProperty_ParameterClumpName, clumpInfo)) {
             clumpName =  wxCFStringRef::AsString(clumpInfo.outName);
             clumpName.Replace(idBeg, wxT('_'));
             clumpName.Replace(idSep, wxT('_'));
@@ -743,21 +712,22 @@ TranslatableString AudioUnitEffectImportDialog::Import(
       return XO("Unable to read the preset from \"%s\"").Format(fullPath);
    }
 
-   wxString parms = wxBase64Encode(buf.GetData(), len);
-   if (parms.IsEmpty())
-   {
-      return XO("Failed to encode preset from \"%s\"").Format(fullPath);
-   }
+   return mEffect->SaveBlobToConfig(UserPresetsGroup(name),
+      fullPath, buf.GetData(), len, false);
+}
+
+TranslatableString AudioUnitEffect::SaveBlobToConfig(
+   const RegistryPath &group, const wxString &path,
+   const void *blob, size_t len, bool allowEmpty) const
+{
+   // Base64 encode the returned binary property list
+   auto parms = wxBase64Encode(blob, len);
+   if (!allowEmpty && parms.IsEmpty())
+      return XO("Failed to encode preset from \"%s\"").Format(path);
 
    // And write it to the config
-   wxString group = UserPresetsGroup(name);
-   if (!SetConfig(*mEffect,
-      PluginSettings::Private, group, PRESET_KEY,
-      parms))
-   {
+   if (!SetConfig(*this, PluginSettings::Private, group, PRESET_KEY, parms))
       return XO("Unable to store preset in config file");
-   }
-
    return {};
 }
 
@@ -803,10 +773,10 @@ AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
                                  const wxString & name,
                                  AudioComponent component,
                                  AudioUnitEffect *master)
-   : mPath{ path }
+   : AudioUnitWrapper{ component }
+   , mPath{ path }
    , mName{ name.AfterFirst(wxT(':')).Trim(true).Trim(false) }
    , mVendor{ name.BeforeFirst(wxT(':')).Trim(true).Trim(false) }
-   , mComponent{ component }
    , mMaster{ master }
 {
 }
@@ -898,53 +868,20 @@ bool AudioUnitEffect::SupportsRealtime() const
 
 bool AudioUnitEffect::SupportsAutomation() const
 {
-   OSStatus result;
-   UInt32 dataSize;
-   Boolean isWritable;
-
-   result = AudioUnitGetPropertyInfo(mUnit.get(),
-                                     kAudioUnitProperty_ParameterList,
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     &dataSize,
-                                     &isWritable);
-   if (result != noErr)
-   {
+   PackedArrayPtr<AudioUnitParameterID> array;
+   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
-   }
-
-   UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-   ArrayOf<AudioUnitParameterID> array{cnt};
-
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_ParameterList,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 array.get(),
-                                 &dataSize);  
-   if (result != noErr)
-   {
-      return false;
-   }
-
-   for (int i = 0; i < cnt; i++)
-   {
+   for (const auto &ID : array) {
       ParameterInfo pi;
-
-      if (pi.Get(mUnit.get(), array[i]))
-      {
+      if (pi.Get(mUnit.get(), ID))
          if (pi.info.flags & kAudioUnitParameterFlag_IsWritable)
-         {
             // All we need is one
             return true;
-         }
-      }
    }
-
    return false;
 }
 
-bool AudioUnitEffect::CreateAudioUnit()
+bool AudioUnitWrapper::CreateAudioUnit()
 {
    AudioUnit unit{};
    auto result = AudioComponentInstanceNew(mComponent, &unit);
@@ -963,14 +900,10 @@ bool AudioUnitEffect::InitializeInstance()
    SetRateAndChannels();
 
    // Retrieve the desired number of frames per slice
-   UInt32 dataSize = sizeof(mBlockSize);
-   mBlockSize = 512;
-   AudioUnitGetProperty(mUnit.get(),
-                        kAudioUnitProperty_MaximumFramesPerSlice,
-                        kAudioUnitScope_Global,
-                        0,
-                        &mBlockSize,
-                        &dataSize);
+   if (GetFixedSizeProperty(
+      kAudioUnitProperty_MaximumFramesPerSlice, mBlockSize))
+      // Call failed?  Then supply a default:
+      mBlockSize = 512;
 
    // Is this really needed here or can it be done in MakeInstance()
    // only?  I think it can, but this is more a conservative change for now,
@@ -1016,6 +949,7 @@ bool AudioUnitEffect::InitializePlugin()
    if (!InitializeInstance())
       return false;
 
+
    // Consult preferences
    // Decide mUseLatency, which affects GetLatency(), which is actually used
    // so far only in destructive effect processing
@@ -1037,7 +971,6 @@ bool AudioUnitEffect::InitializePlugin()
       SetConfig(*this, PluginSettings::Private,
          FactoryDefaultsGroup(), InitializedKey, true);
    }
-
    return true;
 }
 
@@ -1066,50 +999,16 @@ bool AudioUnitEffect::MakeListener()
       event.mArgument.mParameter.mScope = kAudioUnitScope_Global;
       event.mArgument.mParameter.mElement = 0;
 
-      UInt32 dataSize;
-      Boolean isWritable;
-
       // Retrieve the list of parameters
-      result = AudioUnitGetPropertyInfo(mUnit.get(),
-                                        kAudioUnitProperty_ParameterList,
-                                        kAudioUnitScope_Global,
-                                        0,
-                                        &dataSize,
-                                        &isWritable);
-      if (result != noErr)
-      {
+      PackedArrayPtr<AudioUnitParameterID> array;
+      if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
          return false;
-      }
 
-      // And get them
-      UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-      if (cnt != 0)
-      {
-         ArrayOf<AudioUnitParameterID> array {cnt};
-
-         result = AudioUnitGetProperty(mUnit.get(),
-                                       kAudioUnitProperty_ParameterList,
-                                       kAudioUnitScope_Global,
-                                       0,
-                                       array.get(),
-                                       &dataSize);  
-         if (result != noErr)
-         {
+      // Register them as something we're interested in
+      for (const auto &ID : array) {
+         event.mArgument.mParameter.mParameterID = ID;
+         if (AUEventListenerAddEventType(mEventListenerRef.get(), this, &event))
             return false;
-         }
-
-         // Register them as something we're interested in
-         for (int i = 0; i < cnt; i++)
-         {
-            event.mArgument.mParameter.mParameterID = array[i];
-            result = AUEventListenerAddEventType(mEventListenerRef.get(),
-                                                 this,
-                                                 &event);
-            if (result != noErr)
-            {
-               return false;
-            }
-         }
       }
 
       event.mEventType = kAudioUnitEvent_PropertyChange;
@@ -1125,32 +1024,21 @@ bool AudioUnitEffect::MakeListener()
       {
          return false;
       }
-
-      AudioUnitCocoaViewInfo cocoaViewInfo;
-      dataSize = sizeof(AudioUnitCocoaViewInfo);
    
       // Check for a Cocoa UI
-      result = AudioUnitGetProperty(mUnit.get(),
-                                    kAudioUnitProperty_CocoaUI,
-                                    kAudioUnitScope_Global,
-                                    0,
-                                    &cocoaViewInfo,
-                                    &dataSize);
-
-      bool hasCocoa = result == noErr;
+      // This could retrieve a variable-size property, but we only look at
+      // the first element.
+      AudioUnitCocoaViewInfo cocoaViewInfo;
+      bool hasCocoa =
+         !GetFixedSizeProperty(kAudioUnitProperty_CocoaUI, cocoaViewInfo);
 
       // Check for a Carbon UI
+      // This could retrieve a variable sized array but we only need the first
       AudioComponentDescription compDesc;
-      dataSize = sizeof(compDesc);
-      result = AudioUnitGetProperty(mUnit.get(),
-                                    kAudioUnitProperty_GetUIComponentList,
-                                    kAudioUnitScope_Global,
-                                    0,
-                                    &compDesc,
-                                    &dataSize);
-      bool hasCarbon = result == noErr;
+      bool hasCarbon =
+         !GetFixedSizeProperty(kAudioUnitProperty_GetUIComponentList, compDesc);
 
-      mInteractive = (cnt > 0) || hasCocoa || hasCarbon;
+      mInteractive = (PackedArrayCount(array) > 0) || hasCocoa || hasCarbon;
    }
 
    return true;
@@ -1194,22 +1082,13 @@ size_t AudioUnitEffect::GetBlockSize() const
 sampleCount AudioUnitEffect::GetLatency()
 {
    // Retrieve the latency (can be updated via an event)
-   if (mUseLatency && !mLatencyDone)
-   {
-      mLatencyDone = true;
-
+   if (mUseLatency && !mLatencyDone) {
       Float64 latency = 0.0;
-      UInt32 dataSize = sizeof(latency);
-      AudioUnitGetProperty(mUnit.get(),
-                           kAudioUnitProperty_Latency,
-                           kAudioUnitScope_Global,
-                           0,
-                           &latency,
-                           &dataSize);  
-
-      return sampleCount(latency * mSampleRate);
+      if (!GetFixedSizeProperty(kAudioUnitProperty_Latency, latency)) {
+         mLatencyDone = true;
+         return sampleCount{ latency * mSampleRate };
+      }
    }
-
    return 0;
 }
 
@@ -1219,28 +1098,19 @@ size_t AudioUnitEffect::GetTailSize() const
 {
    // Retrieve the tail time
    Float64 tailTime = 0.0;
-   UInt32 dataSize = sizeof(tailTime);
-   AudioUnitGetProperty(mUnit,
-                        kAudioUnitProperty_TailTime,
-                        kAudioUnitScope_Global,
-                        0,
-                        &tailTime,
-                        &dataSize);  
-
-   return tailTime * mSampleRate;
+   if (!GetFixedSizeProperty(kAudioUnitProperty_TailTime, tailTime))
+      return tailTime * mSampleRate;
+   return 0;
 }
 #endif
 
 bool AudioUnitEffect::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames chanMap)
 {
-   OSStatus result;
-
-   mInputList.reinit(mAudioIns);
-   mInputList[0].mNumberBuffers = mAudioIns;
-   
-   mOutputList.reinit(mAudioOuts);
-   mOutputList[0].mNumberBuffers = mAudioOuts;
+   mInputList =
+      PackedArrayAllocateCount<AudioBufferList>(mAudioIns)(mAudioIns);
+   mOutputList =
+      PackedArrayAllocateCount<AudioBufferList>(mAudioOuts)(mAudioOuts);
 
    memset(&mTimeStamp, 0, sizeof(AudioTimeStamp));
    mTimeStamp.mSampleTime = 0; // This is a double-precision number that should
@@ -1248,33 +1118,22 @@ bool AudioUnitEffect::ProcessInitialize(
    mTimeStamp.mFlags = kAudioTimeStampSampleTimeValid;
 
    if (!SetRateAndChannels())
-   {
       return false;
-   }
 
-   AURenderCallbackStruct callbackStruct;
-   callbackStruct.inputProc = RenderCallback;
-   callbackStruct.inputProcRefCon = this;
-   result = AudioUnitSetProperty(mUnit.get(),
-                                 kAudioUnitProperty_SetRenderCallback,
-                                 kAudioUnitScope_Input,
-                                 0,
-                                 &callbackStruct,
-                                 sizeof(AURenderCallbackStruct));
-   if (result != noErr) {
+   if (SetProperty(kAudioUnitProperty_SetRenderCallback,
+      AudioUnitUtils::RenderCallback{ RenderCallback, this },
+      kAudioUnitScope_Input)) {
       wxLogError("Setting input render callback failed.\n");
       return false;
    }
 
-   result = AudioUnitReset(mUnit.get(), kAudioUnitScope_Global, 0);
-   if (result != noErr)
+   if (AudioUnitReset(mUnit.get(), kAudioUnitScope_Global, 0))
       return false;
 
    if (!BypassEffect(false))
       return false;
 
    mLatencyDone = false;
-
    return true;
 }
 
@@ -1282,26 +1141,24 @@ bool AudioUnitEffect::ProcessFinalize()
 {
    mOutputList.reset();
    mInputList.reset();
-
    return true;
 }
 
 size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   for (size_t i = 0; i < mAudioIns; i++)
-   {
-      mInputList[0].mBuffers[i].mNumberChannels = 1;
-      mInputList[0].mBuffers[i].mData = const_cast<float*>(inBlock[i]);
-      mInputList[0].mBuffers[i].mDataByteSize = sizeof(float) * blockLen;
-   }
+   // mAudioIns and mAudioOuts don't change after plugin initialization,
+   // so ProcessInitialize() made sufficient allocations
+   assert(PackedArrayCount(mInputList) >= mAudioIns);
+   for (size_t i = 0; i < mAudioIns; ++i)
+      mInputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
+         const_cast<float*>(inBlock[i]) };
 
-   for (size_t i = 0; i < mAudioOuts; i++)
-   {
-      mOutputList[0].mBuffers[i].mNumberChannels = 1;
-      mOutputList[0].mBuffers[i].mData = outBlock[i];
-      mOutputList[0].mBuffers[i].mDataByteSize = sizeof(float) * blockLen;
-   }
+   // See previous comment
+   assert(PackedArrayCount(mOutputList) >= mAudioOuts);
+   for (size_t i = 0; i < mAudioOuts; ++i)
+      mOutputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
+         outBlock[i] };
 
    AudioUnitRenderActionFlags flags = 0;
    OSStatus result;
@@ -1432,118 +1289,49 @@ int AudioUnitEffect::ShowClientInterface(
 bool AudioUnitEffect::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {
-   OSStatus result;
-   UInt32 dataSize;
-   Boolean isWritable;
-
-   result = AudioUnitGetPropertyInfo(mUnit.get(),
-                                     kAudioUnitProperty_ParameterList,
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     &dataSize,
-                                     &isWritable);
-   if (result != noErr)
-   {
+   PackedArrayPtr<AudioUnitParameterID> array;
+   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
-   }
-
-   UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-   ArrayOf<AudioUnitParameterID> array {cnt};
-
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_ParameterList,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 array.get(),
-                                 &dataSize);  
-   if (result != noErr)
-   {
-      return false;
-   }
-
-   for (int i = 0; i < cnt; i++)
-   {
+   for (const auto &ID : array) {
       ParameterInfo pi;
-
-      if (!pi.Get(mUnit.get(), array[i]))
-      {
+      if (!pi.Get(mUnit.get(), ID))
          // Probably failed because of invalid parameter which can happen
          // if a plug-in is in a certain mode that doesn't contain the
          // parameter.  In any case, just ignore it.
          continue;
-      }
-
       AudioUnitParameterValue value;
-      result = AudioUnitGetParameter(mUnit.get(), array[i],
-         kAudioUnitScope_Global, 0, &value);
-      if (result != noErr)
-      {
+      if (AudioUnitGetParameter(mUnit.get(), ID, kAudioUnitScope_Global, 0,
+         &value))
          // Probably failed because of invalid parameter which can happen
          // if a plug-in is in a certain mode that doesn't contain the
          // parameter.  In any case, just ignore it.
          continue;
-      }
-
       parms.Write(pi.name, value);
    }
-
    return true;
 }
 
 bool AudioUnitEffect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
-   OSStatus result;
-   UInt32 dataSize;
-   Boolean isWritable;
-
-   result = AudioUnitGetPropertyInfo(mUnit.get(),
-                                     kAudioUnitProperty_ParameterList,
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     &dataSize,
-                                     &isWritable);
-   if (result != noErr)
-   {
+   PackedArrayPtr<AudioUnitParameterID> array;
+   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
-   }
-
-   UInt32 cnt = dataSize / sizeof(AudioUnitParameterID);
-   ArrayOf<AudioUnitParameterID> array {cnt};
-
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_ParameterList,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 array.get(),
-                                 &dataSize);  
-   if (result != noErr)
-   {
-      return false;
-   }
-
-   for (int i = 0; i < cnt; i++)
-   {
+   for (const auto &ID : array) {
       ParameterInfo pi;
-
-      if (!pi.Get(mUnit.get(), array[i]))
-      {
+      if (!pi.Get(mUnit.get(), ID))
          // Probably failed because of invalid parameter which can happen
          // if a plug-in is in a certain mode that doesn't contain the
          // parameter.  In any case, just ignore it.
          continue;
-      }
-
       double d = 0.0;
-      if (parms.Read(pi.name, &d))
-      {
-         AudioUnitParameterValue value = d;
-         AudioUnitSetParameter(mUnit.get(), array[i], kAudioUnitScope_Global,
-            0, value, 0);
-         Notify(mUnit.get(), array[i]);
+      if (parms.Read(pi.name, &d)) {
+         if (AudioUnitSetParameter(mUnit.get(), ID, kAudioUnitScope_Global,
+            0, d, 0))
+            return false;
+         Notify(mUnit.get(), ID);
       }
    }
-
    return true;
 }
 
@@ -1562,36 +1350,19 @@ bool AudioUnitEffect::SaveUserPreset(
 
 bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
 {
-   OSStatus result;
-
    // Retrieve the list of factory presets
    CF_ptr<CFArrayRef> array;
-   UInt32 dataSize = sizeof(CFArrayRef);
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_FactoryPresets,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &array,
-                                 &dataSize);
-   if (result != noErr || id < 0 || id >= CFArrayGetCount(array.get()))
+   if (GetFixedSizeProperty(kAudioUnitProperty_FactoryPresets, array) ||
+       id < 0 || id >= CFArrayGetCount(array.get()))
       return false;
 
-   const AUPreset *preset =
-      static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), id));
-
-   result = AudioUnitSetProperty(mUnit.get(),
-                                 kAudioUnitProperty_PresentPreset,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 preset,
-                                 sizeof(AUPreset));
-   if (result == noErr)
-   {
+   if (!SetProperty(kAudioUnitProperty_PresentPreset,
+      *static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), id)))) {
       // Notify interested parties of change and propagate to slaves
       Notify(mUnit.get(), kAUParameterListener_AnyParameter);
+      return true;
    }
-
-   return result == noErr;
+   return false;
 }
 
 bool AudioUnitEffect::LoadFactoryDefaults(EffectSettings &settings) const
@@ -1603,19 +1374,11 @@ bool AudioUnitEffect::LoadFactoryDefaults(EffectSettings &settings) const
 
 RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 {
-   OSStatus result;
    RegistryPaths presets;
 
    // Retrieve the list of factory presets
    CF_ptr<CFArrayRef> array;
-   UInt32 dataSize = sizeof(CFArrayRef);
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_FactoryPresets,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &array,
-                                 &dataSize);
-   if (result == noErr)
+   if (!GetFixedSizeProperty(kAudioUnitProperty_FactoryPresets, array))
       for (CFIndex i = 0, cnt = CFArrayGetCount(array.get()); i < cnt; ++i)
          presets.push_back(wxCFStringRef::AsString(
             static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), i))
@@ -1854,68 +1617,30 @@ bool AudioUnitEffect::LoadPreset(
    wxString parms;
 
    // Attempt to load old preset parameters and resave using new method
-   if (GetConfig(*this,
-      PluginSettings::Private, group, wxT("Parameters"),
-      parms, wxEmptyString))
-   {
+   if (GetConfig(*this, PluginSettings::Private, group, wxT("Parameters"),
+      parms, wxEmptyString)) {
       CommandParameters eap;
       if (eap.SetParameters(parms))
-      {
          if (LoadSettings(eap, settings))
-         {
             if (SavePreset(group))
-            {
                RemoveConfig(*this, PluginSettings::Private,
                   group, wxT("Parameters"));
-            }
-         }
-      }
       return true;
    }
 
    // Retrieve the preset
-   if (!GetConfig(*this,
-      PluginSettings::Private, group, PRESET_KEY, parms,
-      wxEmptyString))
-   {
+   if (!GetConfig(*this, PluginSettings::Private, group, PRESET_KEY, parms,
+      wxEmptyString)) {
       // Commented "CurrentSettings" gets tried a lot and useless messages appear
       // in the log
       //wxLogError(wxT("Preset key \"%s\" not found in group \"%s\""), PRESET_KEY, group);
       return false;
    }
    
-   // Decode it
-   wxMemoryBuffer buf = wxBase64Decode(parms);
-   size_t bufLen = buf.GetDataLen();
-   if (!bufLen)
-   {
-      wxLogError(wxT("Failed to decode \"%s\" preset"), group);
-      return false;
-   }
-   const uint8_t *bufPtr = static_cast<uint8_t *>(buf.GetData());
-
-   // Create a CFData object that references the decoded preset
-   CF_ptr<CFDataRef> data{
-      CFDataCreateWithBytesNoCopy(kCFAllocatorDefault,
-                                  bufPtr,
-                                  bufLen,
-                                  kCFAllocatorNull)
-   };
-   if (!data) {
-      wxLogError(wxT("Failed to convert \"%s\" preset to internal format"), group);
-      return false;
-   }
-
-   // Convert it back to a property list.
-   CF_ptr<CFPropertyListRef> content{
-      CFPropertyListCreateWithData(kCFAllocatorDefault,
-                                   data.get(),
-                                   kCFPropertyListImmutable,
-                                   NULL,
-                                   NULL)
-   };
-   if (!content) {
-      wxLogError(wxT("Failed to create property list for \"%s\" preset"), group);
+   // Decode it, complementary to what SaveBlobToConfig did
+   auto error = InterpretBlob(group, wxBase64Decode(parms));
+   if (!error.empty()) {
+      wxLogError(error.Debug());
       return false;
    }
 
@@ -1923,91 +1648,65 @@ bool AudioUnitEffect::LoadPreset(
    if (mpControl)
       mpControl->ForceRedraw();
 
-   // Finally, update the properties and parameters
-   OSStatus result;
-   result = AudioUnitSetProperty(mUnit.get(),
-                                 kAudioUnitProperty_ClassInfo,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &content,
-                                 sizeof(content));
-   if (result != noErr) {
-      wxLogError(wxT("Failed to set class info for \"%s\" preset"), group);
-      return false;
-   }
-
    // Notify interested parties of change and propagate to slaves
    Notify(mUnit.get(), kAUParameterListener_AnyParameter);
-
    return true;
+}
+
+TranslatableString AudioUnitEffect::InterpretBlob(
+   const RegistryPath &group, const wxMemoryBuffer &buf) const
+{
+   size_t bufLen = buf.GetDataLen();
+   if (!bufLen)
+      return XO("Failed to decode \"%s\" preset").Format(group);
+
+   // Create a CFData object that references the decoded preset
+   const auto bufPtr = static_cast<const uint8_t *>(buf.GetData());
+   CF_ptr<CFDataRef> data{ CFDataCreateWithBytesNoCopy(kCFAllocatorDefault,
+      bufPtr, bufLen, kCFAllocatorNull)
+   };
+   if (!data)
+      return XO("Failed to convert \"%s\" preset to internal format")
+         .Format(group);
+
+   // Convert it back to a property list
+   CF_ptr<CFPropertyListRef> content{
+      CFPropertyListCreateWithData(kCFAllocatorDefault,
+      data.get(), kCFPropertyListImmutable, nullptr,
+      // TODO might retrieve more error information
+      nullptr)
+   };
+   if (!content)
+      return XO("Failed to create property list for \"%s\" preset")
+         .Format(group);
+
+   // Finally, update the properties and parameters
+   if (SetProperty(kAudioUnitProperty_ClassInfo, content.get()))
+      return XO("Failed to set class info for \"%s\" preset").Format(group);
+   return {};
 }
 
 bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
 {
-   // First set the name of the preset
    wxCFStringRef cfname(wxFileNameFromPath(group));
-
-   // Define the preset property
-   AUPreset preset;
-   preset.presetNumber = -1; // indicates user preset
-   preset.presetName = cfname;
-
-   // And set it in the audio unit
-   AudioUnitSetProperty(mUnit.get(),
-                        kAudioUnitProperty_PresentPreset,
-                        kAudioUnitScope_Global,
-                        0,
-                        &preset,
-                        sizeof(preset));
-
-   // Now retrieve the preset content
-   CF_ptr<CFPropertyListRef> content;
-   UInt32 size = sizeof(content);
-   AudioUnitGetProperty(mUnit.get(),
-                        kAudioUnitProperty_ClassInfo,
-                        kAudioUnitScope_Global,
-                        0,
-                        &content,
-                        &size);
-
-   // And convert it to serialized binary data
-   CF_ptr<CFDataRef> data{
-      CFPropertyListCreateData(kCFAllocatorDefault,
-                               content.get(),
-                               PRESET_FORMAT,
-                               0,
-                               NULL)
-   };
+   const auto &[data, _] = MakeBlob(cfname, true);
    if (!data)
-   {
       return false;
-   }
 
    // Nothing to do if we don't have any data
-   SInt32 length = CFDataGetLength(data.get());
-   if (length)
-   {
-      // Base64 encode the returned binary property list
-      wxString parms = wxBase64Encode(CFDataGetBytePtr(data.get()), length);
-
-      // And write it to the config
-      if (!SetConfig(*this,
-         PluginSettings::Private, group, PRESET_KEY, parms))
-      {
+   if (const auto length = CFDataGetLength(data.get())) {
+      auto error =
+         SaveBlobToConfig(group, {}, CFDataGetBytePtr(data.get()), length);
+      if (!error.empty())
          return false;
-      }
    }
-
    return true;
 }
 
 bool AudioUnitEffect::SetRateAndChannels()
 {
-   OSStatus result;
-
    mInitialization.reset();
-
-   AudioStreamBasicDescription streamFormat {
+   AudioUnitUtils::StreamBasicDescription streamFormat{
       // Float64 mSampleRate;
       mSampleRate,
 
@@ -2028,89 +1727,43 @@ bool AudioUnitEffect::SetRateAndChannels()
       sizeof(float),
 
       // UInt32  mChannelsPerFrame;
-      mAudioIns,
+      0,
 
       // UInt32  mBitsPerChannel;
       sizeof(float) * 8,
-
-      // UInt32  mReserved;
-      0
    };
 
-   result = AudioUnitSetProperty(mUnit.get(),
-                                 kAudioUnitProperty_SampleRate,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &mSampleRate,
-                                 sizeof(Float64));
-   if (result != noErr) {
-      wxLogError("%ls Didn't accept sample rate on global\n",
-         // Exposing internal name only in logging
-         GetSymbol().Internal().wx_str());
-      return false;
-   }
-
-   if (mAudioIns > 0) {
-      result = AudioUnitSetProperty(mUnit.get(),
-                                    kAudioUnitProperty_SampleRate,
-                                    kAudioUnitScope_Input,
-                                    0,
-                                    &mSampleRate,
-                                    sizeof(Float64));
-      if (result != noErr) {
-         wxLogError("%ls Didn't accept sample rate on input\n",
-            // Exposing internal name only in logging
-            GetSymbol().Internal().wx_str());
-         return false;
-      }
-
-      result = AudioUnitSetProperty(mUnit.get(),
-                                    kAudioUnitProperty_StreamFormat,
-                                    kAudioUnitScope_Input,
-                                    0,
-                                    &streamFormat,
-                                    sizeof(AudioStreamBasicDescription));
-      if (result != noErr) {
-         wxLogError("%ls didn't accept stream format on input\n",
-            // Exposing internal name only in logging
-            GetSymbol().Internal().wx_str());
-         return false;
+   const struct Info{
+      unsigned nChannels;
+      AudioUnitScope scope;
+      const char *const msg; // used only in log messages
+   } infos[]{
+      { 1, kAudioUnitScope_Global, "global" },
+      { mAudioIns, kAudioUnitScope_Input, "input" },
+      { mAudioOuts, kAudioUnitScope_Output, "output" },
+   };
+   for (const auto &[nChannels, scope, msg] : infos) {
+      if (nChannels) {
+         if (SetProperty(kAudioUnitProperty_SampleRate, mSampleRate, scope)) {
+            wxLogError("%ls Didn't accept sample rate on %s\n",
+               // Exposing internal name only in logging
+               GetSymbol().Internal().wx_str(), msg);
+            return false;
+         }
+         if (scope != kAudioUnitScope_Global) {
+            streamFormat.mChannelsPerFrame = nChannels;
+            if (SetProperty(kAudioUnitProperty_StreamFormat,
+               streamFormat, scope)) {
+               wxLogError("%ls didn't accept stream format on %s\n",
+                  // Exposing internal name only in logging
+                  GetSymbol().Internal().wx_str(), msg);
+               return false;
+            }
+         }
       }
    }
 
-   if (mAudioOuts > 0)
-   {
-      result = AudioUnitSetProperty(mUnit.get(),
-                                    kAudioUnitProperty_SampleRate,
-                                    kAudioUnitScope_Output,
-                                    0,
-                                    &mSampleRate,
-                                    sizeof(Float64));
-      if (result != noErr) {
-         wxLogError("%ls Didn't accept sample rate on output\n",
-            // Exposing internal name only in logging
-            GetSymbol().Internal().wx_str());
-         return false;
-      }
-   
-      streamFormat.mChannelsPerFrame = mAudioOuts;
-      result = AudioUnitSetProperty(mUnit.get(),
-                                    kAudioUnitProperty_StreamFormat,
-                                    kAudioUnitScope_Output,
-                                    0,
-                                    &streamFormat,
-                                    sizeof(AudioStreamBasicDescription));
-   
-      if (result != noErr) {
-         wxLogError("%ls didn't accept stream format on output\n",
-            // Exposing internal name only in logging
-            GetSymbol().Internal().wx_str());
-         return false;
-      }
-   }
-
-   result = AudioUnitInitialize(mUnit.get());
-   if (result != noErr) {
+   if (AudioUnitInitialize(mUnit.get())) {
       wxLogError("Couldn't initialize audio unit\n");
       return false;
    }
@@ -2121,31 +1774,16 @@ bool AudioUnitEffect::SetRateAndChannels()
 
 bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
 {
-   OSStatus result;
-
    // Retrieve the class state from the source AU
    CF_ptr<CFPropertyListRef> content;
-   UInt32 size = sizeof(content);
-   result = AudioUnitGetProperty(srcUnit,
-                                 kAudioUnitProperty_ClassInfo,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &content,
-                                 &size);
-   if (result != noErr)
+   if (AudioUnitUtils::GetFixedSizeProperty(srcUnit,
+      kAudioUnitProperty_ClassInfo, content))
       return false;
 
    // Set the destination AUs state from the source AU's content
-   result = AudioUnitSetProperty(dstUnit,
-                                 kAudioUnitProperty_ClassInfo,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &content,
-                                 sizeof(content));
-   if (result != noErr)
-   {
+   if (AudioUnitUtils::SetProperty(dstUnit,
+      kAudioUnitProperty_ClassInfo, content))
       return false;
-   }
 
    // Notify interested parties
    Notify(dstUnit, kAUParameterListener_AnyParameter);
@@ -2158,70 +1796,55 @@ TranslatableString AudioUnitEffect::Export(const wxString & path) const
    // Create the file
    wxFFile f(path, wxT("wb"));
    if (!f.IsOpened())
-   {
       return XO("Couldn't open \"%s\"").Format(path);
-   }
 
    // First set the name of the preset
    wxCFStringRef cfname(wxFileName(path).GetName());
 
-   // Define the preset property
-   AUPreset preset;
-   preset.presetNumber = -1; // indicates user preset
-   preset.presetName = cfname;
-
-   // And set it in the audio unit
-   OSStatus result;
-   result = AudioUnitSetProperty(mUnit.get(),
-                                 kAudioUnitProperty_PresentPreset,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &preset,
-                                 sizeof(preset));
-   if (result != noErr)
-   {
-      return XO("Failed to set preset name");
-   }
-
-   // Now retrieve the preset content
-   CF_ptr<CFPropertyListRef> content;
-   UInt32 size = sizeof(content);
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_ClassInfo,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &content,
-                                 &size);
-   if (result)
-      return XO("Failed to retrieve preset content");
-
-   // And convert it to serialized XML data
-   CF_ptr<CFDataRef> data{
-      CFPropertyListCreateData(kCFAllocatorDefault,
-                               content.get(),
-                               kCFPropertyListXMLFormat_v1_0,
-                               0,
-                               NULL)
-   };
-   if (!data)
-      return XO("Failed to convert property list to XML data");
-
-   // Nothing to do if we don't have any data
-   SInt32 length = CFDataGetLength(data.get());
-   if (!length)
-   {
-      return XO("XML data is empty after conversion");
-   }
+   const auto &[data, message] = MakeBlob(cfname, false);
+   if (!data || !message.empty())
+      return message;
 
    // Write XML data
+   auto length = CFDataGetLength(data.get());
    if (f.Write(CFDataGetBytePtr(data.get()), length) != length || f.Error())
-   {
       return XO("Failed to write XML preset to \"%s\"").Format(path);
-   }
 
    f.Close();
-
    return {};
+}
+
+std::pair<CF_ptr<CFDataRef>, TranslatableString>
+AudioUnitEffect::MakeBlob(const wxCFStringRef &cfname, bool binary) const
+{
+   CF_ptr<CFDataRef> data;
+   TranslatableString message;
+
+   // Define the preset property and set it in the audio unit
+   if (SetProperty(
+      kAudioUnitProperty_PresentPreset, AudioUnitUtils::UserPreset{ cfname }))
+      message = XO("Failed to set preset name");
+
+   // Now retrieve the preset content
+   else if (CF_ptr<CFPropertyListRef> content;
+      GetFixedSizeProperty(kAudioUnitProperty_ClassInfo, content))
+      message = XO("Failed to retrieve preset content");
+
+   // And convert it to serialized XML data
+   else if (data.reset(CFPropertyListCreateData(kCFAllocatorDefault,
+         content.get(),
+            (binary ? PRESET_FORMAT : kCFPropertyListXMLFormat_v1_0), 0,
+         // TODO might retrieve more error information
+         nullptr));
+      !data)
+      message = XO("Failed to convert property list to XML data");
+
+   // Nothing to do if we don't have any data
+   else if (auto length = CFDataGetLength(data.get()); length == 0)
+      // Caller might not treat this as error, becauase data is non-null
+      message = XO("XML data is empty after conversion");
+
+   return { move(data), message };
 }
 
 TranslatableString AudioUnitEffect::Import(const wxString & path)
@@ -2229,49 +1852,17 @@ TranslatableString AudioUnitEffect::Import(const wxString & path)
    // Open the preset
    wxFFile f(path, wxT("r"));
    if (!f.IsOpened())
-   {
       return XO("Couldn't open \"%s\"").Format(path);
-   }
 
    // Load it into the buffer
    size_t len = f.Length();
    wxMemoryBuffer buf(len);
    if (f.Read(buf.GetData(), len) != len || f.Error())
-   {
       return XO("Unable to read the preset from \"%s\"").Format(path);
-   }
 
-   // Create a CFData object that references the decoded preset
-   CF_ptr<CFDataRef> data{
-      CFDataCreateWithBytesNoCopy(kCFAllocatorDefault,
-         static_cast<const UInt8 *>(buf.GetData()), len, kCFAllocatorNull)
-   };
-   if (!data)
-   {
-      return XO("Failed to convert preset to internal format");
-   }
-
-   // Convert it back to a property list.
-   CF_ptr<CFPropertyListRef> content{
-      CFPropertyListCreateWithData(kCFAllocatorDefault,
-                                   data.get(),
-                                   kCFPropertyListImmutable,
-                                   NULL,
-                                   NULL)
-   };
-   if (!content)
-      return XO("Failed to create property list for preset");
-
-   // Finally, update the properties and parameters
-   OSStatus result;
-   result = AudioUnitSetProperty(mUnit.get(),
-                                 kAudioUnitProperty_ClassInfo,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &content,
-                                 sizeof(content));
-   if (result != noErr)
-      return XO("Failed to set class info for \"%s\" preset");
+   const auto error = InterpretBlob(path, buf);
+   if (!error.empty())
+      return error;
 
    // Notify interested parties of change and propagate to slaves
    Notify(mUnit.get(), kAUParameterListener_AnyParameter);
@@ -2296,9 +1887,15 @@ OSStatus AudioUnitEffect::Render(AudioUnitRenderActionFlags *inActionFlags,
                                  UInt32 inNumFrames,
                                  AudioBufferList *ioData)
 {
-   for (int i = 0; i < ioData->mNumberBuffers; i++)
-      ioData->mBuffers[i].mData = mInputList[0].mBuffers[i].mData;
-
+   size_t i = 0;
+   auto size =
+      std::min<size_t>(ioData->mNumberBuffers, PackedArrayCount(mInputList));
+   for (; i < size; ++i)
+      ioData->mBuffers[i].mData = mInputList[i].mData;
+   // Some defensive code here just in case SDK requests from us an unexpectedly
+   // large number of buffers:
+   for (; i < ioData->mNumberBuffers; ++i)
+      ioData->mBuffers[i].mData = nullptr;
    return 0;
 }
 
@@ -2362,19 +1959,9 @@ void AudioUnitEffect::EventListenerCallback(void *inCallbackRefCon,
 
 void AudioUnitEffect::GetChannelCounts()
 {
-   Boolean isWritable = 0;
-   UInt32  dataSize = 0;
-   OSStatus result;
-
    // Does AU have channel info
-   result = AudioUnitGetPropertyInfo(mUnit.get(),
-                                     kAudioUnitProperty_SupportedNumChannels,
-                                     kAudioUnitScope_Global,
-                                     0,
-                                     &dataSize,
-                                     &isWritable);
-   if (result)
-   {
+   PackedArrayPtr<AUChannelInfo> info;
+   if (GetVariableSizeProperty(kAudioUnitProperty_SupportedNumChannels, info)) {
       // None supplied.  Apparently all FX type units can do any number of INs
       // and OUTs as long as they are the same number.  In this case, we'll
       // just say stereo.
@@ -2382,25 +1969,6 @@ void AudioUnitEffect::GetChannelCounts()
       // We should probably check to make sure we're dealing with an FX type.
       mAudioIns = 2;
       mAudioOuts = 2;
-      return;
-   }
-
-   ArrayOf<char> buffer{ dataSize };
-   auto info = (AUChannelInfo *) buffer.get();
-
-   // Retrieve the channel info
-   result = AudioUnitGetProperty(mUnit.get(),
-                                 kAudioUnitProperty_SupportedNumChannels,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 info,
-                                 &dataSize);
-   if (result)
-   {
-      // Oh well, not much we can do out this case
-      mAudioIns = 2;
-      mAudioOuts = 2;
-
       return;
    }
 
@@ -2421,98 +1989,66 @@ void AudioUnitEffect::GetChannelCounts()
    mAudioOuts = 2;
 
    // Look only for exact channel constraints
-   for (int i = 0; i < dataSize / sizeof(AUChannelInfo); i++)
-   {
-      AUChannelInfo *ci = &info[i];
-
-      int ic = ci->inChannels;
-      int oc = ci->outChannels;
+   for (auto &ci : info) {
+      int ic = ci.inChannels;
+      int oc = ci.outChannels;
 
       if (ic < 0 && oc >= 0)
-      {
          ic = 2;
-      }
       else if (ic >= 0 && oc < 0)
-      {
          oc = 2;
-      }
-      else if (ic < 0 && oc < 0)
-      {
+      else if (ic < 0 && oc < 0) {
          ic = 2;
          oc = 2;
       }
 
       if (ic == 2 && oc == 2)
-      {
          haves2s = true;
-      }
       else if (ic == 1 && oc == 1)
-      {
          havem2m = true;
-      }   
       else if (ic == 1 && oc == 2)
-      {
          havem2s = true;
-      }
       else if (ic == 2 && oc == 1)
-      {
          haves2m = true;
-      }
       else if (ic == 0 && oc == 2)
-      {
          haven2s = true;
-      }
       else if (ic == 0 && oc == 1)
-      {
          haven2m = true;
-      }
       else if (ic == 1 && oc == 0)
-      {
          havem2n = true;
-      }
       else if (ic == 2 && oc == 0)
-      {
          haves2n = true;
-      }
    }
 
-   if (haves2s)
-   {
+   if (haves2s) {
       mAudioIns = 2;
       mAudioOuts = 2;
    }
-   else if (havem2m)
-   {
+   else if (havem2m) {
       mAudioIns = 1;
       mAudioOuts = 1;
    }
-   else if (havem2s)
-   {
+   else if (havem2s) {
       mAudioIns = 1;
       mAudioOuts = 2;
    }
-   else if (haves2m)
-   {
+   else if (haves2m) {
       mAudioIns = 2;
       mAudioOuts = 1;
    }
-   else if (haven2m)
-   {
+   else if (haven2m) {
       mAudioIns = 0;
       mAudioOuts = 1;
    }
-   else if (haven2s)
-   {
+   else if (haven2s) {
       mAudioIns = 0;
       mAudioOuts = 2;
    }
-   else if (haves2n)
-   {
+   else if (haves2n) {
       mAudioIns = 2;
       mAudioOuts = 0;
    }
-   else if (havem2n)
-   {
+   else if (havem2n) {
       mAudioIns = 1;
       mAudioOuts = 0;
    }
@@ -2522,22 +2058,8 @@ void AudioUnitEffect::GetChannelCounts()
 
 bool AudioUnitEffect::BypassEffect(bool bypass)
 {
-   OSStatus result;
-
    UInt32 value = (bypass ? 1 : 0);
-
-   result = AudioUnitSetProperty(mUnit.get(),
-                                 kAudioUnitProperty_BypassEffect,
-                                 kAudioUnitScope_Global,
-                                 0,
-                                 &value,
-                                 sizeof(value));
-   if (result != noErr)
-   {
-      return false;
-   }
-
-   return true;
+   return !SetProperty(kAudioUnitProperty_BypassEffect, value);
 }
 
 #endif

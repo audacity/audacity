@@ -29,6 +29,7 @@ set( SOURCES
    MemoryStream.h
    Observer.cpp
    Observer.h
+   PackedArray.h
    spinlock.h
    TypedAny.h
 )
