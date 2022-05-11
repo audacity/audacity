@@ -44,12 +44,11 @@ struct EffectReverbSettings
 };
 
 
-class EffectReverb final : public StatefulPerTrackEffect
+class EffectReverb final : public EffectWithSettings<EffectReverbSettings, PerTrackEffect>
 {
 public:
 
-   static inline EffectReverbSettings*
-   FetchParameters(EffectReverb &e, EffectSettings &) { return &e.mSettings; }
+   
    static const ComponentInterfaceSymbol Symbol;
 
    EffectReverb();
@@ -66,7 +65,6 @@ public:
    EffectType GetType() const override;
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-   bool DoLoadFactoryPreset(int id);
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -88,9 +86,7 @@ private:
 
 
 private:
-
-   EffectReverbSettings mSettings;
-
+   
    const EffectParameterMethods& Parameters() const override;
 
 static constexpr EffectParameter RoomSize{ &EffectReverbSettings::mRoomSize,  L"RoomSize",

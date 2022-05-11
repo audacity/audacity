@@ -81,7 +81,7 @@ struct EffectReverb::Validator
    : EffectUIValidator
 {
    Validator(EffectUIClientInterface& effect,
-      EffectSettingsAccess& access, EffectReverbSettings& settings)
+      EffectSettingsAccess& access, const EffectReverbSettings& settings)
       : EffectUIValidator{ effect, access }
       , mSettings{ settings }
    {}
@@ -94,7 +94,7 @@ struct EffectReverb::Validator
 
    void PopulateOrExchange(ShuttleGui& S);
 
-   EffectReverbSettings& mSettings;
+   EffectReverbSettings mSettings;
 
    bool mProcessingEvent = false;
 
@@ -157,8 +157,7 @@ bool EffectReverb::Validator::ValidateUI()
       {
          // pass back the modified settings to the MessageBuffer
 
-         // TODO uncomment at last step
-         //EffectEcho::GetSettings(settings) = mSettings;
+         EffectReverb::GetSettings(settings) = mSettings;
       }
    );
 
@@ -243,12 +242,9 @@ unsigned EffectReverb::GetAudioOutCount() const
 static size_t BLOCK = 16384;
 
 bool EffectReverb::Instance::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames chanMap)
-{
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& rs = static_cast<const EffectReverb&>(mProcessor).mSettings;
+   EffectSettings& settings, sampleCount, ChannelNames chanMap)
+{   
+   auto& rs = GetSettings(settings);   
 
    bool isStereo = false;
    mNumChans = 1;
@@ -291,13 +287,10 @@ bool EffectReverb::Instance::ProcessFinalize()
    return true;
 }
 
-size_t EffectReverb::Instance::ProcessBlock(EffectSettings &,
+size_t EffectReverb::Instance::ProcessBlock(EffectSettings& settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   // temporary - in the final step this will be replaced by
-   // auto& echoSettings = GetSettings(settings);
-   //
-   auto& rs = static_cast<const EffectReverb&>(mProcessor).mSettings;
+   auto& rs = GetSettings(settings);
 
    const float *ichans[2] = {NULL, NULL};
    float *ochans[2] = {NULL, NULL};
@@ -370,20 +363,16 @@ RegistryPaths EffectReverb::GetFactoryPresets() const
    return names;
 }
 
-bool EffectReverb::LoadFactoryPreset(int id, EffectSettings &) const
-{
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<EffectReverb*>(this)->DoLoadFactoryPreset(id);
-}
 
-bool EffectReverb::DoLoadFactoryPreset(int id)
+bool EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
    {
       return false;
    }
 
-   mSettings = FactoryPresets[id].preset;
+   EffectReverb::GetSettings(settings) = FactoryPresets[id].preset;
+
    return true;
 }
 
@@ -391,12 +380,9 @@ bool EffectReverb::DoLoadFactoryPreset(int id)
 std::unique_ptr<EffectUIValidator> EffectReverb::PopulateOrExchange(
    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access)
 {
-   // ENABLE AT LAST STEP
-   // auto& settings = access.Get();
-   // auto& myEffSettings = GetSettings(settings);
+   auto& settings = access.Get();
+   auto& myEffSettings = GetSettings(settings);
 
-   // DISABLE AT LAST STEP
-   auto& myEffSettings = mSettings;
    auto result = std::make_unique<Validator>(*this, access, myEffSettings);
    result->PopulateOrExchange(S);
    return result;
@@ -445,10 +431,7 @@ void EffectReverb::Validator::PopulateOrExchange(ShuttleGui & S)
 bool EffectReverb::Validator::UpdateUI()
 {
    // get the settings from the MessageBuffer and write them to our local copy
-   //const auto& rs = mAccess.Get();
-
-   // TODO uncomment at last step
-   //mSettings = GetSettings(settings);
+   mSettings = GetSettings(mAccess.Get());
 
    auto& rs = mSettings;
 
