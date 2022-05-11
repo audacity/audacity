@@ -36,6 +36,7 @@ public:
 
    explicit RealtimeEffectState(const PluginID & id);
    RealtimeEffectState(const RealtimeEffectState &other);
+   RealtimeEffectState &operator =(const RealtimeEffectState &other) = delete;
    ~RealtimeEffectState();
 
    //! May be called with nonempty id at most once in the lifetime of a state
@@ -51,6 +52,7 @@ public:
 
    //! Main thread sets up for playback
    bool Initialize(double rate);
+   //! Main thread sets up this state before adding it to lists
    bool AddTrack(Track &track, unsigned chans, float rate);
    //! Worker thread begins a batch of samples
    bool ProcessStart();
@@ -103,11 +105,17 @@ private:
    //! Stateless effect object
    const EffectInstanceFactory *mPlugin{};
    
-   NonInterfering<EffectSettings> mSettings;
+   //! Updated immediately by Access::Set
+   NonInterfering<EffectSettings> mMainSettings;
 
    //! @}
 
    // Following are not copied
+
+   //! Updated with delay, but atomically, in the worker thread; skipped by the
+   //! copy constructor so that there isn't a race when pushing an Undo state
+   NonInterfering<EffectSettings> mWorkerSettings;
+
    wxString mParameters;  // Used only during deserialization
 
    //! Stateful instance made by the plug-in
@@ -115,7 +123,7 @@ private:
 
    // This must not be reset to nullptr while a worker thread is running.
    // In fact it is never yet reset to nullptr, before destruction.
-   // Destroy before mSettings:
+   // Destroy before mWorkerSettings:
    AtomicUniquePointer<AccessState> mpAccessState{ nullptr };
    
    size_t mCurrentProcessor{ 0 };
@@ -125,4 +133,3 @@ private:
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTSTATE_H__
-
