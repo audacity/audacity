@@ -166,6 +166,36 @@ bool EffectReverb::Validator::ValidateUI()
 }
 
 
+struct EffectReverb::Instance
+   : public PerTrackEffect::Instance
+   , public EffectInstanceWithBlockSize
+   , public EffectInstanceWithSampleRate
+
+{
+   explicit Instance(const PerTrackEffect& effect)
+      : PerTrackEffect::Instance{ effect }
+   {}
+
+   bool ProcessInitialize(EffectSettings& settings,
+      sampleCount totalLen, ChannelNames chanMap) override;
+
+   size_t ProcessBlock(EffectSettings& settings,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen)  override;
+
+   bool ProcessFinalize(void) override; // not every effect needs this
+
+
+   unsigned mNumChans {};
+   Reverb_priv_t* mP {};
+};
+
+
+std::shared_ptr<EffectInstance>
+EffectReverb::MakeInstance() const
+{
+   return std::make_shared<Instance>(*this);
+}
+
 
 EffectReverb::EffectReverb()
 {
@@ -212,10 +242,13 @@ unsigned EffectReverb::GetAudioOutCount() const
 
 static size_t BLOCK = 16384;
 
-bool EffectReverb::ProcessInitialize(
+bool EffectReverb::Instance::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames chanMap)
 {
-   auto& rs = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& rs = static_cast<const EffectReverb&>(mProcessor).mSettings;
 
    bool isStereo = false;
    mNumChans = 1;
@@ -246,7 +279,7 @@ bool EffectReverb::ProcessInitialize(
    return true;
 }
 
-bool EffectReverb::ProcessFinalize()
+bool EffectReverb::Instance::ProcessFinalize()
 {
    for (unsigned int i = 0; i < mNumChans; i++)
    {
@@ -258,10 +291,13 @@ bool EffectReverb::ProcessFinalize()
    return true;
 }
 
-size_t EffectReverb::ProcessBlock(EffectSettings &,
+size_t EffectReverb::Instance::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
-   auto& rs = mSettings;
+   // temporary - in the final step this will be replaced by
+   // auto& echoSettings = GetSettings(settings);
+   //
+   auto& rs = static_cast<const EffectReverb&>(mProcessor).mSettings;
 
    const float *ichans[2] = {NULL, NULL};
    float *ochans[2] = {NULL, NULL};
