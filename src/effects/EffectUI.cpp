@@ -241,6 +241,7 @@ bool EffectUIHost::TransferDataFromWindow()
          auto &definition = mEffectUIHost.GetDefinition();
          if (definition.GetType() == EffectTypeGenerate) {
             const auto seconds = settings.extra.GetDuration();
+            // Updating of the last-used generator duration in the config
             SetConfig(definition, PluginSettings::Private,
                CurrentSettingsGroup(), EffectSettingsExtra::DurationKey(),
                seconds);
@@ -589,6 +590,9 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
    }
    
    if (!TransferDataFromWindow() ||
+       // This is the main place where there is a side-effect on the config
+       // file to remember the last-used settings of an effect, just before
+       // applying the effect destructively.
        !mEffectUIHost.GetDefinition()
          .SaveUserPreset(CurrentSettingsGroup(), mpAccess->Get()))
       return;

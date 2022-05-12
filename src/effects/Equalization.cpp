@@ -553,6 +553,7 @@ bool EffectEqualization::ValidateUI(EffectSettings &)
    }
    SaveCurves();
 
+   // TODO: just visit these effect settings the default way
    SetConfig(GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup(), wxT("dBMin"), mdBMin);
    SetConfig(GetDefinition(), PluginSettings::Private,
