@@ -891,10 +891,8 @@ struct LadspaEffect::Instance
    std::vector<LADSPA_Handle> mSlaves;
 };
 
-std::shared_ptr<EffectInstance>
-LadspaEffect::MakeInstance(EffectSettings &settings) const
+std::shared_ptr<EffectInstance> LadspaEffect::MakeInstance() const
 {
-   LoadParameters(CurrentSettingsGroup(), settings);
    return std::make_shared<Instance>(*this);
 }
 

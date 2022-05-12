@@ -167,8 +167,7 @@ struct EffectWahwah::Instance
 };
 
 
-std::shared_ptr<EffectInstance>
-EffectWahwah::MakeInstance(EffectSettings&) const
+std::shared_ptr<EffectInstance> EffectWahwah::MakeInstance() const
 {
    return std::make_shared<Instance>(*this);
 }

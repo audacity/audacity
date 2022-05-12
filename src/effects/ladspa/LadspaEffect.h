@@ -109,8 +109,7 @@ public:
    // EffectUIClientInterface implementation
 
    struct Instance;
-   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-      const override;
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
    struct Validator;
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access)

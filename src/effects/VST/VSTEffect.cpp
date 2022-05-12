@@ -1292,14 +1292,12 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
-std::shared_ptr<EffectInstance>
-VSTEffect::MakeInstance(EffectSettings &settings) const
+std::shared_ptr<EffectInstance> VSTEffect::MakeInstance() const
 {
-   return const_cast<VSTEffect*>(this)->DoMakeInstance(settings);
+   return const_cast<VSTEffect*>(this)->DoMakeInstance();
 }
 
-std::shared_ptr<EffectInstance>
-VSTEffect::DoMakeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance> VSTEffect::DoMakeInstance()
 {
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -1307,10 +1305,7 @@ VSTEffect::DoMakeInstance(EffectSettings &settings)
    mUserBlockSize = std::max( 1, userBlockSize );
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
       wxT("UseLatency"), mUseLatency, true);
-
    mBlockSize = mUserBlockSize;
-
-   LoadParameters(CurrentSettingsGroup(), settings);
    return std::make_shared<Instance>(*this);
 }
 

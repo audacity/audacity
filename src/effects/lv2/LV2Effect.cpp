@@ -905,14 +905,12 @@ bool LV2Effect::InitializePlugin()
    return true;
 }
 
-std::shared_ptr<EffectInstance>
-LV2Effect::MakeInstance(EffectSettings &settings) const
+std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 {
-   return const_cast<LV2Effect*>(this)->DoMakeInstance(settings);
+   return const_cast<LV2Effect*>(this)->DoMakeInstance();
 }
 
-std::shared_ptr<EffectInstance>
-LV2Effect::DoMakeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 {
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
@@ -924,8 +922,6 @@ LV2Effect::DoMakeInstance(EffectSettings &settings)
       mUseGUI, true);
 
    mBlockSize = mUserBlockSize;
-
-   LoadParameters(CurrentSettingsGroup(), settings);
 
    lv2_atom_forge_init(&mForge, &mURIDMapFeature);
 

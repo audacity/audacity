@@ -125,8 +125,7 @@ bool Effect::SupportsAutomation() const
    return true;
 }
 
-std::shared_ptr<EffectInstance>
-StatefulEffect::MakeInstance(EffectSettings &settings) const
+std::shared_ptr<EffectInstance> StatefulEffect::MakeInstance() const
 {
    // Cheat with const-cast to return an object that calls through to
    // non-const methods of a stateful effect.

@@ -911,21 +911,16 @@ bool AudioUnitEffect::InitializeInstance()
    return MakeListener();
 }
 
-std::shared_ptr<EffectInstance>
-AudioUnitEffect::MakeInstance(EffectSettings &settings) const
+std::shared_ptr<EffectInstance> AudioUnitEffect::MakeInstance() const
 {
-   return const_cast<AudioUnitEffect*>(this)->DoMakeInstance(settings);
+   return const_cast<AudioUnitEffect*>(this)->DoMakeInstance();
 }
 
-std::shared_ptr<EffectInstance>
-AudioUnitEffect::DoMakeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance> AudioUnitEffect::DoMakeInstance()
 {
    if (mMaster)
       // This is a slave
       InitializeInstance();
-   else
-      // Don't HAVE a master -- this IS the master.
-      LoadPreset(CurrentSettingsGroup(), settings);
    return std::make_shared<Instance>(*this);
 }
 

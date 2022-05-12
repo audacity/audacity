@@ -338,7 +338,7 @@ bool EffectManager::PromptUser(
       if (const auto pSettings = GetDefaultSettings(ID))
          result = effect->ShowHostInterface(
             parent, factory,
-            *effect->MakeInstance(*pSettings), // short-lived object
+            *effect->MakeInstance(), // short-lived object
             *std::make_shared<SimpleEffectSettingsAccess>(*pSettings),
             effect->IsBatchProcessing() ) != 0;
       return result;

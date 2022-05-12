@@ -1080,7 +1080,7 @@ int NyquistEffect::ShowHostInterface(
    // Must give effect its own settings to interpret, not those in access
    // Let's also give it its own instance
    auto newSettings = effect.MakeSettings();
-   auto newInstance = effect.MakeInstance(newSettings);
+   auto newInstance = effect.MakeInstance();
    auto newAccess = std::make_shared<SimpleEffectSettingsAccess>(newSettings);
 
    if (IsBatchProcessing()) {

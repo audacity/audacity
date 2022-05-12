@@ -469,8 +469,7 @@ public:
 
     @param settings may be assumed to have a lifetime enclosing the instance's
     */
-   virtual std::shared_ptr<EffectInstance>
-   MakeInstance(EffectSettings &settings) const = 0;
+   virtual std::shared_ptr<EffectInstance> MakeInstance() const = 0;
 
    //! How many input buffers to allocate at once
    /*!
