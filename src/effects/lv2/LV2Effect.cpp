@@ -925,17 +925,6 @@ LV2Effect::DoMakeInstance(EffectSettings &settings)
 
    mBlockSize = mUserBlockSize;
 
-   bool haveDefaults;
-   GetConfig(*this, PluginSettings::Private,
-      FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
-      false);
-   if (!haveDefaults)
-   {
-      SaveParameters(FactoryDefaultsGroup(), settings);
-      SetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), true);
-   }
-
    LoadParameters(CurrentSettingsGroup(), settings);
 
    lv2_atom_forge_init(&mForge, &mURIDMapFeature);

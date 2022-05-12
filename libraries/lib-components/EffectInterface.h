@@ -606,10 +606,10 @@ protected:
    virtual bool CloseUI() = 0;
 };
 
-//! Component of a configuration key path
+//! Component of a configuration key path, for last-used destructive settings
 COMPONENTS_API const RegistryPath &CurrentSettingsGroup();
 
-//! Component of a configuration key path
+//! Component of a configuration key path, for default state of MakeSettings()
 COMPONENTS_API const RegistryPath &FactoryDefaultsGroup();
 
 //! Compute part of a registry path, given a name which may be empty

@@ -894,17 +894,6 @@ struct LadspaEffect::Instance
 std::shared_ptr<EffectInstance>
 LadspaEffect::MakeInstance(EffectSettings &settings) const
 {
-   bool haveDefaults;
-   GetConfig(*this, PluginSettings::Private,
-      FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
-      false);
-   if (!haveDefaults)
-   {
-      SaveParameters(FactoryDefaultsGroup(), settings);
-      SetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), true);
-   }
-
    LoadParameters(CurrentSettingsGroup(), settings);
    return std::make_shared<Instance>(*this);
 }

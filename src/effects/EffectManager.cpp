@@ -777,16 +777,22 @@ EffectManager::GetEffectAndDefaultSettings(const PluginID & ID)
 }
 
 namespace {
+// Before: settings are as defaulted by `manager.MakeSettings()`
+// Do as needed (once, persistently, when the plug-in is first used): store
+// those default values into the config under "FactoryDefaults" preset
+// After: settings are loaded for the "CurrentSettings" preset
 void InitializePreset(
    EffectSettingsManager &manager, EffectSettings &settings) {
-   bool haveDefaults;
-   GetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
-      wxT("Initialized"), haveDefaults, false);
-   if (!haveDefaults)
-   {
+   // Config key remembering whether we already stored FactoryDefaults
+   constexpr auto InitializedKey = L"Initialized";
+   if (bool haveDefaults{};
+      GetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
+         InitializedKey, haveDefaults, false),
+      !haveDefaults
+   ) {
       manager.SaveUserPreset(FactoryDefaultsGroup(), settings);
       SetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
-         wxT("Initialized"), true);
+         InitializedKey, true);
    }
    manager.LoadUserPreset(CurrentSettingsGroup(), settings);
 }

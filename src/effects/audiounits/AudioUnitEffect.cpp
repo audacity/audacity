@@ -959,18 +959,6 @@ bool AudioUnitEffect::InitializePlugin()
    GetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey,
       mUIType, FullValue.MSGID().GET() /* Config stores un-localized string */);
 
-   // Once, persistently, for each AudioUnitEffect, the first time it is loaded:
-   // Query the instance for parameters and their settings, and save that in
-   // the configuration file as "factory default settings"
-   bool haveDefaults;
-   constexpr auto InitializedKey = L"Initialized";
-   GetConfig(*this, PluginSettings::Private,
-      FactoryDefaultsGroup(), InitializedKey, haveDefaults, false);
-   if (!haveDefaults) {
-      SavePreset(FactoryDefaultsGroup());
-      SetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), InitializedKey, true);
-   }
    return true;
 }
 
