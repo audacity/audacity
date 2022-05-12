@@ -8,12 +8,16 @@ and plug-ins, and preferred settings.
 set( SOURCES
    ConfigInterface.cpp
    ConfigInterface.h
+   PluginIPCUtils.cpp
+   PluginIPCUtils.h
    ModuleManager.cpp
    ModuleManager.h
    ModuleSettings.cpp
    ModuleSettings.h
    PluginDescriptor.cpp
    PluginDescriptor.h
+   PluginHost.cpp
+   PluginHost.h
    PluginInterface.cpp
    PluginInterface.h
    PluginManager.cpp
@@ -22,6 +26,7 @@ set( SOURCES
 set( LIBRARIES
    lib-files-interface
    lib-xml-interface
+   lib-ipc-interface
    PRIVATE
    wxBase
 )
