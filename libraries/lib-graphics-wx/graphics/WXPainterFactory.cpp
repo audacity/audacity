@@ -23,6 +23,8 @@
 #  include "graphics/d2d/D2DRenderer.h"
 #endif
 
+#include "graphics/gl/GLRenderer.h"
+
 #include "WXFontUtils.h"
 
 namespace
@@ -118,6 +120,7 @@ std::unique_ptr<RendererProvider> Provider;
 
 RendererProvider& GetRendererProvider()
 {
+   graphics::gl::GetSharedRenderer();
 #ifdef WIN32
    if (Provider == nullptr)
    {

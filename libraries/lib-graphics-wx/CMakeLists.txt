@@ -24,7 +24,8 @@ set( LIBRARIES
       lib-math-interface
       lib-screen-geometry-interface
       lib-track-interface
-      $<$<PLATFORM_ID:Windows>:lib-graphics-d2d>
+      $<$<PLATFORM_ID:Windows>:lib-graphics-d2d-interface>
+      lib-graphics-gl-interface
       wxwidgets::base
       wxwidgets::core
 )

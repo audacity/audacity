@@ -31,6 +31,7 @@ set( LIBRARIES
    lib-project-history
    lib-graphics
    lib-graphics-wx
+   lib-graphics-gl
 )
 
 if (WIN32)
