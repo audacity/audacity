@@ -188,7 +188,7 @@ bool RealtimeEffectState::Initialize(double rate)
 {
    if (!mPlugin)
       return false;
-   mInstance = mPlugin->MakeInstance(mSettings);
+   mInstance = mPlugin->MakeInstance();
    if (!mInstance)
       return false;
 

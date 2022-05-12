@@ -891,21 +891,8 @@ struct LadspaEffect::Instance
    std::vector<LADSPA_Handle> mSlaves;
 };
 
-std::shared_ptr<EffectInstance>
-LadspaEffect::MakeInstance(EffectSettings &settings) const
+std::shared_ptr<EffectInstance> LadspaEffect::MakeInstance() const
 {
-   bool haveDefaults;
-   GetConfig(*this, PluginSettings::Private,
-      FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
-      false);
-   if (!haveDefaults)
-   {
-      SaveParameters(FactoryDefaultsGroup(), settings);
-      SetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), true);
-   }
-
-   LoadParameters(CurrentSettingsGroup(), settings);
    return std::make_shared<Instance>(*this);
 }
 
@@ -1120,11 +1107,6 @@ RegistryPaths LadspaEffect::GetFactoryPresets() const
 bool LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
 {
    return true;
-}
-
-bool LadspaEffect::LoadFactoryDefaults(EffectSettings &settings) const
-{
-   return LoadParameters(FactoryDefaultsGroup(), settings);
 }
 
 // ============================================================================

@@ -68,8 +68,7 @@ struct EffectEcho::Instance
 
 
 
-std::shared_ptr<EffectInstance>
-EffectEcho::MakeInstance(EffectSettings&) const
+std::shared_ptr<EffectInstance> EffectEcho::MakeInstance() const
 {
    return std::make_shared<Instance>(*this);
 }

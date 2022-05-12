@@ -415,8 +415,7 @@ std::unique_ptr<EffectUIValidator> EffectDtmf::PopulateOrExchange(
    return result;
 }
 
-std::shared_ptr<EffectInstance>
-EffectDtmf::MakeInstance(EffectSettings &settings) const
+std::shared_ptr<EffectInstance> EffectDtmf::MakeInstance() const
 {
    // TODO: don't use Effect::mT0 and Effect::mSampleRate, but use an
    // EffectContext (that class is not yet defined)

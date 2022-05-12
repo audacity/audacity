@@ -469,8 +469,7 @@ public:
 
     @param settings may be assumed to have a lifetime enclosing the instance's
     */
-   virtual std::shared_ptr<EffectInstance>
-   MakeInstance(EffectSettings &settings) const = 0;
+   virtual std::shared_ptr<EffectInstance> MakeInstance() const = 0;
 
    //! How many input buffers to allocate at once
    /*!
@@ -606,10 +605,10 @@ protected:
    virtual bool CloseUI() = 0;
 };
 
-//! Component of a configuration key path
+//! Component of a configuration key path, for last-used destructive settings
 COMPONENTS_API const RegistryPath &CurrentSettingsGroup();
 
-//! Component of a configuration key path
+//! Component of a configuration key path, for default state of MakeSettings()
 COMPONENTS_API const RegistryPath &FactoryDefaultsGroup();
 
 //! Compute part of a registry path, given a name which may be empty

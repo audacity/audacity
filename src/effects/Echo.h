@@ -61,8 +61,7 @@ public:
 
    struct Instance;
 
-   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings& settings) const;
-
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
 
 private:
    // EffectEcho implementation

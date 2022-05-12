@@ -911,21 +911,16 @@ bool AudioUnitEffect::InitializeInstance()
    return MakeListener();
 }
 
-std::shared_ptr<EffectInstance>
-AudioUnitEffect::MakeInstance(EffectSettings &settings) const
+std::shared_ptr<EffectInstance> AudioUnitEffect::MakeInstance() const
 {
-   return const_cast<AudioUnitEffect*>(this)->DoMakeInstance(settings);
+   return const_cast<AudioUnitEffect*>(this)->DoMakeInstance();
 }
 
-std::shared_ptr<EffectInstance>
-AudioUnitEffect::DoMakeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance> AudioUnitEffect::DoMakeInstance()
 {
    if (mMaster)
       // This is a slave
       InitializeInstance();
-   else
-      // Don't HAVE a master -- this IS the master.
-      LoadPreset(CurrentSettingsGroup(), settings);
    return std::make_shared<Instance>(*this);
 }
 
@@ -959,18 +954,6 @@ bool AudioUnitEffect::InitializePlugin()
    GetConfig(*this, PluginSettings::Shared, OptionsKey, UITypeKey,
       mUIType, FullValue.MSGID().GET() /* Config stores un-localized string */);
 
-   // Once, persistently, for each AudioUnitEffect, the first time it is loaded:
-   // Query the instance for parameters and their settings, and save that in
-   // the configuration file as "factory default settings"
-   bool haveDefaults;
-   constexpr auto InitializedKey = L"Initialized";
-   GetConfig(*this, PluginSettings::Private,
-      FactoryDefaultsGroup(), InitializedKey, haveDefaults, false);
-   if (!haveDefaults) {
-      SavePreset(FactoryDefaultsGroup());
-      SetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), InitializedKey, true);
-   }
    return true;
 }
 
@@ -1363,13 +1346,6 @@ bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
       return true;
    }
    return false;
-}
-
-bool AudioUnitEffect::LoadFactoryDefaults(EffectSettings &settings) const
-{
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<AudioUnitEffect*>(this)
-      ->LoadPreset(FactoryDefaultsGroup(), settings);
 }
 
 RegistryPaths AudioUnitEffect::GetFactoryPresets() const

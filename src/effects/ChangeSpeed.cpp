@@ -398,6 +398,7 @@ bool EffectChangeSpeed::TransferDataFromWindow(EffectSettings &)
    double exactPercent = m_PercentChange;
    m_PercentChange = exactPercent;
 
+   // TODO: just visit these effect settings the default way
    SetConfig(GetDefinition(), PluginSettings::Private,
       CurrentSettingsGroup(), wxT("TimeFormat"), mFormat.Internal());
    SetConfig(GetDefinition(), PluginSettings::Private,

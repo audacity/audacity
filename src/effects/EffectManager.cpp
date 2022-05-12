@@ -174,7 +174,7 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
 
    if (auto [edi, pSettings] = GetEffectAndDefaultSettings(ID); edi) {
       effect = &edi->GetDefinition();
-      assert(settings);
+      assert(pSettings); // postcondition
       settings = pSettings;
    }
    else
@@ -250,7 +250,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
 {
    auto pair = GetEffectAndDefaultSettings(ID);
    if (auto effect = pair.first) {
-      assert(pair.second);
+      assert(pair.second); // postcondition
       wxString parms;
 
       effect->SaveSettingsAsString(*pair.second, parms);
@@ -291,6 +291,7 @@ bool EffectManager::SetEffectParameters(
 {
    auto pair = GetEffectAndDefaultSettings(ID);
    if (auto effect = pair.first) {
+      assert(pair.second); // postcondition
       auto &settings = *pair.second;
       CommandParameters eap(params);
 
@@ -334,11 +335,10 @@ bool EffectManager::PromptUser(
    if (auto effect = GetEffect(ID)) {
       //! Show the effect dialog, only so that the user can choose settings,
       //! for instance to define a macro.
-      auto pSettings = GetDefaultSettings(ID);
-      if (pSettings)
+      if (const auto pSettings = GetDefaultSettings(ID))
          result = effect->ShowHostInterface(
             parent, factory,
-            *effect->MakeInstance(*pSettings), // short-lived object
+            *effect->MakeInstance(), // short-lived object
             *std::make_shared<SimpleEffectSettingsAccess>(*pSettings),
             effect->IsBatchProcessing() ) != 0;
       return result;
@@ -777,16 +777,22 @@ EffectManager::GetEffectAndDefaultSettings(const PluginID & ID)
 }
 
 namespace {
+// Before: settings are as defaulted by `manager.MakeSettings()`
+// Do as needed (once, persistently, when the plug-in is first used): store
+// those default values into the config under "FactoryDefaults" preset
+// After: settings are loaded for the "CurrentSettings" preset
 void InitializePreset(
    EffectSettingsManager &manager, EffectSettings &settings) {
-   bool haveDefaults;
-   GetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
-      wxT("Initialized"), haveDefaults, false);
-   if (!haveDefaults)
-   {
+   // Config key remembering whether we already stored FactoryDefaults
+   constexpr auto InitializedKey = L"Initialized";
+   if (bool haveDefaults{};
+      GetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
+         InitializedKey, haveDefaults, false),
+      !haveDefaults
+   ) {
       manager.SaveUserPreset(FactoryDefaultsGroup(), settings);
       SetConfig(manager, PluginSettings::Private, FactoryDefaultsGroup(),
-         wxT("Initialized"), true);
+         InitializedKey, true);
    }
    manager.LoadUserPreset(CurrentSettingsGroup(), settings);
 }

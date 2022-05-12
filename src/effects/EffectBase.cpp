@@ -158,7 +158,7 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
    CountWaveTracks();
 
    // Note: Init may read parameters from preferences
-   auto pInstance = MakeInstance(settings);
+   auto pInstance = MakeInstance();
    if (!pInstance->Init())
       return false;
 
@@ -362,9 +362,7 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       if (!dryOnly)
          // TODO remove this reinitialization of state within the Effect object
          // It is done indirectly via Effect::Instance
-         GuardedCall([&]{ access.ModifySettings([&](EffectSettings &settings){
-            MakeInstance(settings)->Init();
-         }); });
+         MakeInstance()->Init();
 
       // In case any dialog control depends on mT1 or mDuration:
       if ( mUIDialog )
@@ -455,7 +453,7 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       auto vr2 = valueRestorer( mIsPreview, true );
 
       access.ModifySettings([&](EffectSettings &settings){
-         success = MakeInstance(settings)->Process(settings);
+         success = MakeInstance()->Process(settings);
       });
    }
 
