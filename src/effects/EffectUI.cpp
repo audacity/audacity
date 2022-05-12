@@ -1330,7 +1330,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
    em.SetSkipStateFlag( false );
    success = false;
    if (auto effect = em.GetEffect(ID)) {
-      if (auto pSettings = em.GetDefaultSettings(ID)) {
+      if (const auto pSettings = em.GetDefaultSettings(ID)) {
          const auto pAccess =
             std::make_shared<SimpleEffectSettingsAccess>(*pSettings);
          pAccess->ModifySettings([&](EffectSettings &settings){

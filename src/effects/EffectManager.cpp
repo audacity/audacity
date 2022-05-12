@@ -174,7 +174,7 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
 
    if (auto [edi, pSettings] = GetEffectAndDefaultSettings(ID); edi) {
       effect = &edi->GetDefinition();
-      assert(settings);
+      assert(pSettings); // postcondition
       settings = pSettings;
    }
    else
@@ -250,7 +250,7 @@ wxString EffectManager::GetEffectParameters(const PluginID & ID)
 {
    auto pair = GetEffectAndDefaultSettings(ID);
    if (auto effect = pair.first) {
-      assert(pair.second);
+      assert(pair.second); // postcondition
       wxString parms;
 
       effect->SaveSettingsAsString(*pair.second, parms);
@@ -291,6 +291,7 @@ bool EffectManager::SetEffectParameters(
 {
    auto pair = GetEffectAndDefaultSettings(ID);
    if (auto effect = pair.first) {
+      assert(pair.second); // postcondition
       auto &settings = *pair.second;
       CommandParameters eap(params);
 
@@ -334,8 +335,7 @@ bool EffectManager::PromptUser(
    if (auto effect = GetEffect(ID)) {
       //! Show the effect dialog, only so that the user can choose settings,
       //! for instance to define a macro.
-      auto pSettings = GetDefaultSettings(ID);
-      if (pSettings)
+      if (const auto pSettings = GetDefaultSettings(ID))
          result = effect->ShowHostInterface(
             parent, factory,
             *effect->MakeInstance(*pSettings), // short-lived object
