@@ -6,6 +6,8 @@ Maintains persistent data in the configuration file for enablement of modules
 and plug-ins, and preferred settings.
 ]]
 set( SOURCES
+   AsyncPluginValidator.cpp
+   AsyncPluginValidator.h
    ConfigInterface.cpp
    ConfigInterface.h
    PluginIPCUtils.cpp
