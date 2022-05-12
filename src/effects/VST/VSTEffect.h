@@ -131,8 +131,6 @@ class VSTEffect final
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool DoLoadFactoryPreset(int id);
-   bool LoadFactoryDefaults(EffectSettings &settings) const override;
-   bool DoLoadFactoryDefaults(EffectSettings &settings);
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

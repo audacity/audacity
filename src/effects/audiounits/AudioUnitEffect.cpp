@@ -1365,13 +1365,6 @@ bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
    return false;
 }
 
-bool AudioUnitEffect::LoadFactoryDefaults(EffectSettings &settings) const
-{
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<AudioUnitEffect*>(this)
-      ->LoadPreset(FactoryDefaultsGroup(), settings);
-}
-
 RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 {
    RegistryPaths presets;

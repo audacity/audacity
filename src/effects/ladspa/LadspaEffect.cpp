@@ -1122,11 +1122,6 @@ bool LadspaEffect::LoadFactoryPreset(int, EffectSettings &) const
    return true;
 }
 
-bool LadspaEffect::LoadFactoryDefaults(EffectSettings &settings) const
-{
-   return LoadParameters(FactoryDefaultsGroup(), settings);
-}
-
 // ============================================================================
 // EffectUIClientInterface Implementation
 // ============================================================================

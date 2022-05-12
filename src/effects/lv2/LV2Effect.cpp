@@ -1705,22 +1705,6 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
    return state != NULL;
 }
 
-bool LV2Effect::LoadFactoryDefaults(EffectSettings &settings) const
-{
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<LV2Effect*>(this)->DoLoadFactoryDefaults(settings);
-}
-
-bool LV2Effect::DoLoadFactoryDefaults(EffectSettings &settings)
-{
-   if (!LoadParameters(FactoryDefaultsGroup(), settings))
-   {
-      return false;
-   }
-
-   return TransferDataToWindow();
-}
-
 bool LV2Effect::CanExportPresets()
 {
    return false;

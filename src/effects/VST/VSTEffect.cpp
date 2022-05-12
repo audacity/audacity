@@ -1704,24 +1704,6 @@ bool VSTEffect::DoLoadFactoryPreset(int id)
    return true;
 }
 
-bool VSTEffect::LoadFactoryDefaults(EffectSettings &settings) const
-{
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<VSTEffect*>(this)->DoLoadFactoryDefaults(settings);
-}
-
-bool VSTEffect::DoLoadFactoryDefaults(EffectSettings &settings)
-{
-   if (!LoadParameters(FactoryDefaultsGroup(), settings))
-   {
-      return false;
-   }
-
-   RefreshParameters();
-
-   return true;
-}
-
 // ============================================================================
 // EffectUIClientInterface implementation
 // ============================================================================
