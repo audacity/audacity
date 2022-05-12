@@ -18140,7 +18140,7 @@ msgstr "sa:dd:ss + örnekler"
 #. * to '>' if your language uses a '.'.
 #: src/widgets/NumericTextCtrl.cpp
 msgid "0100 h 060 m 060 s+># samples"
-msgstr "0100 sa 060 da 060 sn+>örnek sayısı"
+msgstr "0100 sa 060 da 060 sn+># örnek sayısı"
 
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
