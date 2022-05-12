@@ -276,7 +276,7 @@ void AUControl::OnSize(wxSizeEvent & evt)
 
 void AUControl::CreateCocoa()
 {
-   PackedArrayPtr<AudioUnitCocoaViewInfo> viewInfo;
+   PackedArray::Ptr<AudioUnitCocoaViewInfo> viewInfo;
    if (!AudioUnitUtils::GetVariableSizeProperty(mUnit,
       kAudioUnitProperty_CocoaUI, viewInfo)) {
       // Looks like the AU has a Cocoa UI, so load the factory class
@@ -395,7 +395,7 @@ void AUControl::ForceRedraw()
 
 void AUControl::CreateCarbon()
 {
-   PackedArrayPtr<AudioComponentDescription> compList;
+   PackedArray::Ptr<AudioComponentDescription> compList;
    if (AudioUnitUtils::GetVariableSizeProperty(mUnit,
       kAudioUnitProperty_GetUIComponentList, compList))
       return;

@@ -868,7 +868,7 @@ bool AudioUnitEffect::SupportsRealtime() const
 
 bool AudioUnitEffect::SupportsAutomation() const
 {
-   PackedArrayPtr<AudioUnitParameterID> array;
+   PackedArray::Ptr<AudioUnitParameterID> array;
    if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
    for (const auto &ID : array) {
@@ -983,7 +983,7 @@ bool AudioUnitEffect::MakeListener()
       event.mArgument.mParameter.mElement = 0;
 
       // Retrieve the list of parameters
-      PackedArrayPtr<AudioUnitParameterID> array;
+      PackedArray::Ptr<AudioUnitParameterID> array;
       if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
          return false;
 
@@ -1021,7 +1021,7 @@ bool AudioUnitEffect::MakeListener()
       bool hasCarbon =
          !GetFixedSizeProperty(kAudioUnitProperty_GetUIComponentList, compDesc);
 
-      mInteractive = (PackedArrayCount(array) > 0) || hasCocoa || hasCarbon;
+      mInteractive = (PackedArray::Count(array) > 0) || hasCocoa || hasCarbon;
    }
 
    return true;
@@ -1091,9 +1091,9 @@ bool AudioUnitEffect::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    mInputList =
-      PackedArrayAllocateCount<AudioBufferList>(mAudioIns)(mAudioIns);
+      PackedArray::AllocateCount<AudioBufferList>(mAudioIns)(mAudioIns);
    mOutputList =
-      PackedArrayAllocateCount<AudioBufferList>(mAudioOuts)(mAudioOuts);
+      PackedArray::AllocateCount<AudioBufferList>(mAudioOuts)(mAudioOuts);
 
    memset(&mTimeStamp, 0, sizeof(AudioTimeStamp));
    mTimeStamp.mSampleTime = 0; // This is a double-precision number that should
@@ -1132,13 +1132,13 @@ size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
 {
    // mAudioIns and mAudioOuts don't change after plugin initialization,
    // so ProcessInitialize() made sufficient allocations
-   assert(PackedArrayCount(mInputList) >= mAudioIns);
+   assert(PackedArray::Count(mInputList) >= mAudioIns);
    for (size_t i = 0; i < mAudioIns; ++i)
       mInputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
          const_cast<float*>(inBlock[i]) };
 
    // See previous comment
-   assert(PackedArrayCount(mOutputList) >= mAudioOuts);
+   assert(PackedArray::Count(mOutputList) >= mAudioOuts);
    for (size_t i = 0; i < mAudioOuts; ++i)
       mOutputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
          outBlock[i] };
@@ -1272,7 +1272,7 @@ int AudioUnitEffect::ShowClientInterface(
 bool AudioUnitEffect::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {
-   PackedArrayPtr<AudioUnitParameterID> array;
+   PackedArray::Ptr<AudioUnitParameterID> array;
    if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
    for (const auto &ID : array) {
@@ -1297,7 +1297,7 @@ bool AudioUnitEffect::SaveSettings(
 bool AudioUnitEffect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
-   PackedArrayPtr<AudioUnitParameterID> array;
+   PackedArray::Ptr<AudioUnitParameterID> array;
    if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
    for (const auto &ID : array) {
@@ -1865,7 +1865,7 @@ OSStatus AudioUnitEffect::Render(AudioUnitRenderActionFlags *inActionFlags,
 {
    size_t i = 0;
    auto size =
-      std::min<size_t>(ioData->mNumberBuffers, PackedArrayCount(mInputList));
+      std::min<size_t>(ioData->mNumberBuffers, PackedArray::Count(mInputList));
    for (; i < size; ++i)
       ioData->mBuffers[i].mData = mInputList[i].mData;
    // Some defensive code here just in case SDK requests from us an unexpectedly
@@ -1936,7 +1936,7 @@ void AudioUnitEffect::EventListenerCallback(void *inCallbackRefCon,
 void AudioUnitEffect::GetChannelCounts()
 {
    // Does AU have channel info
-   PackedArrayPtr<AUChannelInfo> info;
+   PackedArray::Ptr<AUChannelInfo> info;
    if (GetVariableSizeProperty(kAudioUnitProperty_SupportedNumChannels, info)) {
       // None supplied.  Apparently all FX type units can do any number of INs
       // and OUTs as long as they are the same number.  In this case, we'll

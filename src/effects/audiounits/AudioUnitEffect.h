@@ -66,7 +66,7 @@ struct AudioUnitWrapper
    // Supply most often used values as defaults for scope and element
    template<typename T>
    OSStatus GetVariableSizeProperty(AudioUnitPropertyID inID,
-      PackedArrayPtr<T> &pObject,
+      PackedArray::Ptr<T> &pObject,
       AudioUnitScope inScope = kAudioUnitScope_Global,
       AudioUnitElement inElement = 0) const
    {
@@ -277,8 +277,8 @@ private:
 
    AudioTimeStamp mTimeStamp{};
 
-   PackedArrayPtr<AudioBufferList> mInputList;
-   PackedArrayPtr<AudioBufferList> mOutputList;
+   PackedArray::Ptr<AudioBufferList> mInputList;
+   PackedArray::Ptr<AudioBufferList> mOutputList;
 
    wxWindow *mParent{};
    wxWeakRef<wxDialog> mDialog;
