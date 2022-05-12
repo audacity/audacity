@@ -86,7 +86,7 @@ private:
    const wxString mLocalFilename;
    const wxString mGlobalFilename;
    const long mStyle;
-   const wxMBConv & mConv;
+   std::unique_ptr<wxMBConv> mConv;
 
    std::unique_ptr<wxFileConfig> mConfig;
 
