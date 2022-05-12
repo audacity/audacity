@@ -190,8 +190,7 @@ template<> struct PackedArray::Traits<AudioBufferList> {
    struct header_type { UInt32 mNumberBuffers; };
    // Overlay the element type with the wrapper type
    using element_type = AudioUnitUtils::Buffer;
-   using iterated_type = element_type;
-   static_assert(sizeof(element_type) == sizeof(AudioBuffer));
+   static constexpr auto array_member = &AudioBufferList::mBuffers;
 };
 
 template<> struct PackedArray::Traits<AudioUnitCocoaViewInfo> {
@@ -205,6 +204,8 @@ template<> struct PackedArray::Traits<AudioUnitCocoaViewInfo> {
       }
    };
    using element_type = CF_ptr<CFStringRef>;
+   static constexpr auto array_member =
+      &AudioUnitCocoaViewInfo::mCocoaAUViewClass;
 };
 
 //! @}
