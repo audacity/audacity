@@ -149,7 +149,12 @@ public:
    const ComponentInterfaceSymbol & GetSymbol(const PluginID & ID);
    ComponentInterface *Load(const PluginID & ID);
 
-   void CheckForUpdates(bool bFast = false);
+   /**
+    * \brief Ensures that all currently registered plugins still exist
+    * and scans for new ones.
+    * \return Array of pairs, first element of which is provider id and the second is module path
+    */
+   std::vector<std::pair<wxString, wxString>> CheckPluginUpdates();
 
    //! Used only by Nyquist Workbench module
    const PluginID & RegisterPlugin(
@@ -165,6 +170,8 @@ private:
    // private! Use Get()
    PluginManager();
    ~PluginManager();
+
+   void InitializePlugins();
 
    void LoadGroup(FileConfig *pRegistry, PluginType type);
    void SaveGroup(FileConfig *pRegistry, PluginType type);

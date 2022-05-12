@@ -44,8 +44,6 @@ AttachedWindows::RegisteredFactory sMacrosWindowKey{
 bool ShowManager(
    PluginManager &pm, wxWindow *parent)
 {
-   pm.CheckForUpdates();
-
    PluginRegistrationDialog dlg(parent);
    return dlg.ShowModal() == wxID_OK;
 }
