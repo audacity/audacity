@@ -190,6 +190,8 @@ list( APPEND SOURCES
       PlaybackSchedule.h
       PluginRegistrationDialog.cpp
       PluginRegistrationDialog.h
+      PluginStartupRegistration.cpp
+      PluginStartupRegistration.h
       Printing.cpp
       Printing.h
       Profiler.cpp

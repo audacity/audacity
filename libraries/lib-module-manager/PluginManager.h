@@ -50,6 +50,8 @@ public:
       const PluginPath &path, const TranslatableString *pSymbol) override;
 
    bool IsPluginLoaded(const wxString& ID) const;
+   
+   void RegisterPlugin(PluginDescriptor&& desc);
    const PluginID & RegisterPlugin(PluginProvider *provider) override;
    const PluginID & RegisterPlugin(PluginProvider *provider, ComponentInterface *command);
    const PluginID & RegisterPlugin(PluginProvider *provider, EffectDefinitionInterface *effect, int type) override;

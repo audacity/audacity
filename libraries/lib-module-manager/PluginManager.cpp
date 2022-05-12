@@ -151,6 +151,11 @@ bool PluginManager::IsPluginLoaded(const wxString& ID) const
    return mLoadedInterfaces.find(ID) != mLoadedInterfaces.end();
 }
 
+void PluginManager::RegisterPlugin(PluginDescriptor&& desc)
+{
+   mRegisteredPlugins[desc.GetID()] = std::move(desc);
+}
+
 const PluginID & PluginManager::RegisterPlugin(PluginProvider *provider)
 {
    PluginDescriptor & plug =
