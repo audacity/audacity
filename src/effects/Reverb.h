@@ -21,6 +21,7 @@ class wxSpinCtrl;
 class ShuttleGui;
 
 struct Reverb_priv_t;
+struct Reverb_priv_ex;
 
 class EffectReverb final : public StatefulPerTrackEffect
 {
@@ -115,14 +116,13 @@ private:
    struct ReverbState
    {
       unsigned mNumChans{};
-      Reverb_priv_t* mP;
+      std::unique_ptr<Reverb_priv_ex[]> mP;
    };
 
    ReverbState mMaster;
    std::vector<ReverbState> mSlaves;
 
    bool InstanceInit(ReverbState& data, ChannelNames chanMap, bool forceStereo);
-   bool InstanceDeinit(ReverbState& data);
 
    size_t InstanceProcess(EffectSettings& settings,
                           ReverbState& data,

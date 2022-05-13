@@ -80,6 +80,17 @@ struct Reverb_priv_t
    float *wet[2];
 };
 
+
+struct Reverb_priv_ex : Reverb_priv_t
+{
+    Reverb_priv_ex() : Reverb_priv_t{} {}
+   ~Reverb_priv_ex()
+   {
+      reverb_delete(&reverb);
+   }
+};
+
+
 //
 // EffectReverb
 //
@@ -175,7 +186,7 @@ bool EffectReverb::InstanceInit(ReverbState& state, ChannelNames chanMap, bool f
       state.mNumChans = 2;
    }
 
-   state.mP = (Reverb_priv_t *) calloc(sizeof(*state.mP), state.mNumChans);
+   state.mP = std::make_unique<Reverb_priv_ex[]>(state.mNumChans);
 
    for (unsigned int i = 0; i < state.mNumChans; i++)
    {
@@ -198,18 +209,6 @@ bool EffectReverb::InstanceInit(ReverbState& state, ChannelNames chanMap, bool f
 
 bool EffectReverb::ProcessFinalize()
 {
-   return InstanceDeinit(mMaster);
-}
-
-bool EffectReverb::InstanceDeinit(ReverbState& state)
-{
-   for (unsigned int i = 0; i < state.mNumChans; i++)
-   {
-      reverb_delete(&state.mP[i].reverb);
-   }
-
-   free(state.mP);
-
    return true;
 }
 
@@ -310,7 +309,7 @@ bool EffectReverb::RealtimeAddProcessor(EffectSettings& settings,
    //
    InstanceInit(slave, /*ChannelNames=*/nullptr, /*forceStereo=*/(numChannels==2) );
 
-   mSlaves.push_back(slave);
+   mSlaves.push_back(std::move(slave));
 
    return true;
 }
