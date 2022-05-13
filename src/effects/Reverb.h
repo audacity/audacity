@@ -97,8 +97,23 @@ private:
 #undef SpinSliderHandlers
 
 private:
-   unsigned mNumChans {};
-   Reverb_priv_t *mP;
+
+   struct ReverbState
+   {
+      unsigned mNumChans{};
+      Reverb_priv_t* mP;
+   };
+
+   ReverbState mMaster;
+   std::vector<ReverbState> mSlaves;
+
+   bool InstanceInit(ReverbState& data, ChannelNames chanMap);
+   bool InstanceDeinit(ReverbState& data);
+
+   size_t InstanceProcess(EffectSettings& settings,
+                          ReverbState& data,
+                          const float* const* inBlock, float* const* outBlock, size_t blockLen);
+
 
    Params mParams;
 
