@@ -160,15 +160,16 @@ static size_t BLOCK = 16384;
 bool EffectReverb::ProcessInitialize(
    EffectSettings& settings, sampleCount, ChannelNames chanMap)
 {
-   return InstanceInit(mMaster, chanMap);
+   return InstanceInit(mMaster, chanMap, /* forceStereo= */ false);
 }
 
 
-bool EffectReverb::InstanceInit(ReverbState& state, ChannelNames chanMap)
+bool EffectReverb::InstanceInit(ReverbState& state, ChannelNames chanMap, bool forceStereo)
 {
    bool isStereo = false;
    state.mNumChans = 1;
-   if (chanMap && chanMap[0] != ChannelNameEOL && chanMap[1] == ChannelNameFrontRight)
+   if (    (chanMap && chanMap[0] != ChannelNameEOL && chanMap[1] == ChannelNameFrontRight)
+        || forceStereo )
    {
       isStereo = true;
       state.mNumChans = 2;
@@ -280,6 +281,56 @@ size_t EffectReverb::InstanceProcess(EffectSettings& settings,
 
    return blockLen;
 }
+
+
+
+
+bool EffectReverb::SupportsRealtime() const
+{
+   return true;
+}
+
+bool EffectReverb::RealtimeInitialize(EffectSettings& settings)
+{
+   SetBlockSize(512);
+
+   mSlaves.clear();
+
+   return true;
+}
+
+
+bool EffectReverb::RealtimeAddProcessor(EffectSettings& settings,
+   unsigned numChannels, float sampleRate)
+{
+   ReverbState slave;
+
+   // The notion of ChannelNames is unavailable here,
+   // so we'll have to force the stereo init, if this is the case
+   //
+   InstanceInit(slave, /*ChannelNames=*/nullptr, /*forceStereo=*/(numChannels==2) );
+
+   mSlaves.push_back(slave);
+
+   return true;
+}
+
+
+bool EffectReverb::RealtimeFinalize(EffectSettings& settings) noexcept
+{
+   mSlaves.clear();
+
+   return true;
+}
+
+size_t EffectReverb::RealtimeProcess(int group, EffectSettings& settings,
+   const float* const* inbuf, float* const* outbuf, size_t numSamples)
+{
+   return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
+}
+
+
+
 
 RegistryPaths EffectReverb::GetFactoryPresets() const
 {
