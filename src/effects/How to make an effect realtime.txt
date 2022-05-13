@@ -1,0 +1,100 @@
+HOW TO MAKE AN EFFECT REALTIME CAPABLE
+====================================================================================================
+
+HEADER (.h)
+
+Add these declarations:
+
+public:
+
+   bool SupportsRealtime() const override;
+
+   bool RealtimeInitialize(EffectSettings &settings) override;
+   
+   bool RealtimeAddProcessor(EffectSettings &settings,
+      unsigned numChannels, float sampleRate) override;
+      
+   bool RealtimeFinalize(EffectSettings &settings) noexcept override;
+   
+   size_t RealtimeProcess(int group,  EffectSettings &settings,
+                          const float *const *inbuf, float *const *outbuf, size_t numSamples) override;
+
+private:
+
+   EffectDistortionState              mMaster;
+   std::vector<EffectDistortionState> mSlaves;
+   
+   void InstanceInit(EffectDistortionState & data, float sampleRate);
+   
+   // the above will be called by both: 
+   // - the destructive process init (::ProcessInitialize)
+   // - the realtime process init (::RealtimeAddProcessor)
+   
+   size_t InstanceProcess(EffectSettings& settings,
+                          EffectDistortionState& data,
+                          const float *const *inBlock, float *const *outBlock, size_t blockLen);
+   
+   // the above will be called by both: 
+   // - the destructive process (::ProcessBlock)
+   // - the realtime process    (::InstanceProcess)
+   
+   
+   
+====================================================================================================
+
+IMPL (.cpp)
+
+Add these implementations:
+
+    bool EffectDistortion::SupportsRealtime() const
+    {
+       return true;
+    }
+
+then something along the lines of:
+
+    bool EffectDistortion::RealtimeInitialize(EffectSettings &)
+    {
+       SetBlockSize(512);
+
+       mSlaves.clear();
+
+       return true;
+    }
+
+    bool EffectDistortion::RealtimeAddProcessor(
+       EffectSettings &, unsigned, float sampleRate)
+    {
+       EffectDistortionState slave;
+
+       InstanceInit(slave, sampleRate);
+
+       mSlaves.push_back(slave);
+
+       return true;
+    }
+
+    bool EffectDistortion::RealtimeFinalize(EffectSettings &) noexcept
+    {
+       mSlaves.clear();
+
+       return true;
+    }
+
+    size_t EffectDistortion::RealtimeProcess(int group, EffectSettings &settings,
+       const float *const *inbuf, float *const *outbuf, size_t numSamples)
+    {
+       return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
+    }
+
+
+
+
+
+
+
+
+
+   
+   
+   
