@@ -441,8 +441,7 @@ public:
       using StatefulEffectBase::Instance::Instance;
       bool Process(EffectSettings &settings) override;
    };
-   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-       const override;
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
 };
 
 // FIXME:

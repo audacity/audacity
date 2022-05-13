@@ -905,14 +905,12 @@ bool LV2Effect::InitializePlugin()
    return true;
 }
 
-std::shared_ptr<EffectInstance>
-LV2Effect::MakeInstance(EffectSettings &settings) const
+std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 {
-   return const_cast<LV2Effect*>(this)->DoMakeInstance(settings);
+   return const_cast<LV2Effect*>(this)->DoMakeInstance();
 }
 
-std::shared_ptr<EffectInstance>
-LV2Effect::DoMakeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 {
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
@@ -924,19 +922,6 @@ LV2Effect::DoMakeInstance(EffectSettings &settings)
       mUseGUI, true);
 
    mBlockSize = mUserBlockSize;
-
-   bool haveDefaults;
-   GetConfig(*this, PluginSettings::Private,
-      FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
-      false);
-   if (!haveDefaults)
-   {
-      SaveParameters(FactoryDefaultsGroup(), settings);
-      SetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), true);
-   }
-
-   LoadParameters(CurrentSettingsGroup(), settings);
 
    lv2_atom_forge_init(&mForge, &mURIDMapFeature);
 
@@ -1703,22 +1688,6 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
    lilv_node_free(preset);
 
    return state != NULL;
-}
-
-bool LV2Effect::LoadFactoryDefaults(EffectSettings &settings) const
-{
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<LV2Effect*>(this)->DoLoadFactoryDefaults(settings);
-}
-
-bool LV2Effect::DoLoadFactoryDefaults(EffectSettings &settings)
-{
-   if (!LoadParameters(FactoryDefaultsGroup(), settings))
-   {
-      return false;
-   }
-
-   return TransferDataToWindow();
 }
 
 bool LV2Effect::CanExportPresets()

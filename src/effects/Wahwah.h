@@ -98,7 +98,7 @@ public:
 
    struct Validator;
    struct Instance;
-   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings&) const override;
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
 
 private:
    // EffectWahwah implementation

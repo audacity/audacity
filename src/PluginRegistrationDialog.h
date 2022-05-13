@@ -25,7 +25,7 @@ class PluginRegistrationDialog final : public wxDialogWrapper
 {
 public:
    // constructors and destructors
-   PluginRegistrationDialog(wxWindow *parent, EffectType type);
+   PluginRegistrationDialog(wxWindow *parent);
 
 private:
    struct ItemData
@@ -62,7 +62,6 @@ private:
    void OnDisable(wxCommandEvent & evt);
 
 private:
-   EffectType mType;
    int mFilter;
 
    wxArrayString mStates;

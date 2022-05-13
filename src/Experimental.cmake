@@ -84,18 +84,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    #RIGHT_ALIGNED_TEXTBOXES
    #VOICE_DETECTION
 
-   # Effect categorisation. Adds support for arranging effects in categories
-   # and displaying those categories as submenus in the Effect menu.
-   # This was a 2008 GSoC project that was making good progress at the half-way point
-   # but then the student didn't contribute after that.  It needs a bit of work to finish it off.
-   # As a minimum, if this is turned on for a release,
-   # it should have an easy mechanism to disable it at run-time, such as a menu item or a pref,
-   # preferably disabled until other work is done.  Martyn 22/12/2008.
-   #
-
-   # JKC Apr 2015, Menu item to manage effects.
-   EFFECT_MANAGEMENT
-
    # Andreas Micheler, 20.Nov 2007:
    # A spectrumLogF-like view mode with notes quantization.
    # Just select the "Find Notes" checkbox in the spectrum prefs

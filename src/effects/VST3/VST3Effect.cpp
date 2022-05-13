@@ -838,18 +838,14 @@ bool VST3Effect::InitializePlugin()
    return true;
 }
    
-std::shared_ptr<EffectInstance>
-VST3Effect::MakeInstance(EffectSettings &settings) const
+std::shared_ptr<EffectInstance> VST3Effect::MakeInstance() const
 {
-   return const_cast<VST3Effect*>(this)->DoMakeInstance(settings);
+   return const_cast<VST3Effect*>(this)->DoMakeInstance();
 }
    
-std::shared_ptr<EffectInstance>
-VST3Effect::DoMakeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance> VST3Effect::DoMakeInstance()
 {
    ReloadUserOptions();
-   if(!LoadUserPreset(CurrentSettingsGroup(), settings))
-      LoadFactoryDefaults(settings);
    return std::make_shared<Instance>(*this);
 }
 

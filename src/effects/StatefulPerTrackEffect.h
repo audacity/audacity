@@ -53,8 +53,7 @@ public:
       }
    };
 
-   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-      const override;
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
 
    size_t SetBlockSize(size_t maxBlockSize) override;
    size_t GetBlockSize() const override;

@@ -66,8 +66,7 @@ public:
    override;
 
    struct Instance;
-   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-      const override;
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
 
 private:
    // EffectDtmf implementation

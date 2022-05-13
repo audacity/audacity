@@ -19,7 +19,7 @@
 #include <vector>
 
 #include <AudioToolbox/AudioUnitUtilities.h>
-#include <AudioUnit/AudioUnit.h>
+#include "AudioUnitUtils.h"
 #include <AudioUnit/AudioUnitProperties.h>
 
 #include "../StatefulPerTrackEffect.h"
@@ -38,18 +38,62 @@ using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 class AudioUnitEffectExportDialog;
 class AudioUnitEffectImportDialog;
 class AUControl;
+class wxCFStringRef;
+class wxMemoryBuffer;
 
-//! Generates deleters for std::unique_ptr that clean up AU plugin state
-template<typename T, OSStatus(*fn)(T*)> struct AudioUnitCleaner {
-   // Let this have non-void return type, though ~unique_ptr() will ignore it
-   auto operator () (T *p) noexcept { return fn(p); }
+//! Common base class for AudioUnitEffect and its Instance
+/*!
+ Maintains a smart handle to an AudioUnit (also called AudioComponentInstance)
+ in the SDK and defines some utility functions
+ */
+struct AudioUnitWrapper
+{
+   explicit AudioUnitWrapper(AudioComponent component)
+      : mComponent{ component }
+   {}
+
+   // Supply most often used values as defaults for scope and element
+   template<typename T>
+   OSStatus GetFixedSizeProperty(AudioUnitPropertyID inID, T &property,
+      AudioUnitScope inScope = kAudioUnitScope_Global,
+      AudioUnitElement inElement = 0) const
+   {
+      // Supply mUnit.get() to the non-member function
+      return AudioUnitUtils::GetFixedSizeProperty(mUnit.get(),
+         inID, property, inScope, inElement);
+   }
+
+   // Supply most often used values as defaults for scope and element
+   template<typename T>
+   OSStatus GetVariableSizeProperty(AudioUnitPropertyID inID,
+      PackedArrayPtr<T> &pObject,
+      AudioUnitScope inScope = kAudioUnitScope_Global,
+      AudioUnitElement inElement = 0) const
+   {
+      return AudioUnitUtils::GetVariableSizeProperty(mUnit.get(),
+         inID, pObject, inScope, inElement);
+   }
+
+   // Supply most often used values as defaults for scope and element
+   template<typename T>
+   OSStatus SetProperty(AudioUnitPropertyID inID, const T &property,
+      AudioUnitScope inScope = kAudioUnitScope_Global,
+      AudioUnitElement inElement = 0) const
+   {
+      // Supply mUnit.get() to the non-member function
+      return AudioUnitUtils::SetProperty(mUnit.get(),
+         inID, property, inScope, inElement);
+   }
+
+   bool CreateAudioUnit();
+
+   const AudioComponent mComponent;
+   AudioUnitCleanup<AudioUnit, AudioComponentInstanceDispose> mUnit;
 };
-//! RAII for cleaning up AU plugin state
-template<typename Ptr, OSStatus(*fn)(Ptr),
-   typename T = std::remove_pointer_t<Ptr> /* deduced */ >
-using AudioUnitCleanup = std::unique_ptr<T, AudioUnitCleaner<T, fn>>;
 
-class AudioUnitEffect final : public StatefulPerTrackEffect
+class AudioUnitEffect final
+   : public StatefulPerTrackEffect
+   , private AudioUnitWrapper
 {
 public:
    AudioUnitEffect(const PluginPath & path,
@@ -87,7 +131,6 @@ public:
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-   bool LoadFactoryDefaults(EffectSettings &settings) const override;
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -125,15 +168,13 @@ public:
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
    bool MakeListener();
-   bool CreateAudioUnit();
    bool InitializeInstance();
    bool InitializePlugin();
 
    // EffectUIClientInterface implementation
 
-   std::shared_ptr<EffectInstance> MakeInstance(EffectSettings &settings)
-      const override;
-   std::shared_ptr<EffectInstance> DoMakeInstance(EffectSettings &settings);
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
+   std::shared_ptr<EffectInstance> DoMakeInstance();
    std::unique_ptr<EffectUIValidator> PopulateUI(
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
@@ -154,8 +195,25 @@ private:
    bool SetRateAndChannels();
 
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
+
+   //! Obtain dump of the setting state of an AudioUnit instance
+   /*!
+    @param binary if false, then produce XML serialization instead; but
+    AudioUnits does not need to be told the format again to reinterpret the blob
+    @return smart pointer to data, and an error message
+    */
+   std::pair<CF_ptr<CFDataRef>, TranslatableString>
+   MakeBlob(const wxCFStringRef &cfname, bool binary) const;
+
    TranslatableString Export(const wxString & path) const;
    TranslatableString Import(const wxString & path);
+   /*!
+    @param path only for formatting error messages
+    @return error message
+    */
+   TranslatableString SaveBlobToConfig(const RegistryPath &group,
+      const wxString &path, const void *blob, size_t len,
+      bool allowEmpty = true) const;
    void Notify(AudioUnit unit, AudioUnitParameterID parm) const;
 
    static OSStatus RenderCallback(void *inRefCon,
@@ -181,6 +239,15 @@ private:
    void GetChannelCounts();
 
    bool LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
+
+   //! Interpret the dump made before by MakeBlob
+   /*!
+    @param group only for formatting error messages
+    @return an error message
+    */
+   TranslatableString InterpretBlob(
+      const wxString &group, const wxMemoryBuffer &buf) const;
+
    bool SavePreset(const RegistryPath & group) const;
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
@@ -190,14 +257,10 @@ private:
    bool BypassEffect(bool bypass);
 
 private:
-
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;
-   const AudioComponent mComponent;
 
-   // The sequence of these three members matters in the destructor
-   AudioUnitCleanup<AudioUnit, AudioComponentInstanceDispose> mUnit;
    AudioUnitCleanup<AUEventListenerRef, AUListenerDispose> mEventListenerRef;
    AudioUnitCleanup<AudioUnit, AudioUnitUninitialize> mInitialization;
 
@@ -214,8 +277,8 @@ private:
 
    AudioTimeStamp mTimeStamp{};
 
-   ArrayOf<AudioBufferList> mInputList;
-   ArrayOf<AudioBufferList> mOutputList;
+   PackedArrayPtr<AudioBufferList> mInputList;
+   PackedArrayPtr<AudioBufferList> mOutputList;
 
    wxWindow *mParent{};
    wxWeakRef<wxDialog> mDialog;

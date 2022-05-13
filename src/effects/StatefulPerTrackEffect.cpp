@@ -44,8 +44,7 @@ sampleCount StatefulPerTrackEffect::Instance::GetLatency(const EffectSettings &)
    return GetEffect().GetLatency();
 }
 
-std::shared_ptr<EffectInstance>
-StatefulPerTrackEffect::MakeInstance(EffectSettings &settings) const
+std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const
 {
    // Cheat with const-cast to return an object that calls through to
    // non-const methods of a stateful effect.

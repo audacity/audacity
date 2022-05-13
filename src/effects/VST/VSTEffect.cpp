@@ -1292,14 +1292,12 @@ bool VSTEffect::InitializePlugin()
    return true;
 }
 
-std::shared_ptr<EffectInstance>
-VSTEffect::MakeInstance(EffectSettings &settings) const
+std::shared_ptr<EffectInstance> VSTEffect::MakeInstance() const
 {
-   return const_cast<VSTEffect*>(this)->DoMakeInstance(settings);
+   return const_cast<VSTEffect*>(this)->DoMakeInstance();
 }
 
-std::shared_ptr<EffectInstance>
-VSTEffect::DoMakeInstance(EffectSettings &settings)
+std::shared_ptr<EffectInstance> VSTEffect::DoMakeInstance()
 {
    int userBlockSize;
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
@@ -1307,21 +1305,7 @@ VSTEffect::DoMakeInstance(EffectSettings &settings)
    mUserBlockSize = std::max( 1, userBlockSize );
    GetConfig(*this, PluginSettings::Shared, wxT("Options"),
       wxT("UseLatency"), mUseLatency, true);
-
    mBlockSize = mUserBlockSize;
-
-   bool haveDefaults;
-   GetConfig(*this, PluginSettings::Private,
-      FactoryDefaultsGroup(), wxT("Initialized"), haveDefaults,
-      false);
-   if (!haveDefaults)
-   {
-      SaveParameters(FactoryDefaultsGroup(), settings);
-      SetConfig(*this, PluginSettings::Private,
-         FactoryDefaultsGroup(), wxT("Initialized"), true);
-   }
-
-   LoadParameters(CurrentSettingsGroup(), settings);
    return std::make_shared<Instance>(*this);
 }
 
@@ -1698,24 +1682,6 @@ bool VSTEffect::LoadFactoryPreset(int id, EffectSettings &) const
 bool VSTEffect::DoLoadFactoryPreset(int id)
 {
    callSetProgram(id);
-
-   RefreshParameters();
-
-   return true;
-}
-
-bool VSTEffect::LoadFactoryDefaults(EffectSettings &settings) const
-{
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<VSTEffect*>(this)->DoLoadFactoryDefaults(settings);
-}
-
-bool VSTEffect::DoLoadFactoryDefaults(EffectSettings &settings)
-{
-   if (!LoadParameters(FactoryDefaultsGroup(), settings))
-   {
-      return false;
-   }
 
    RefreshParameters();
 

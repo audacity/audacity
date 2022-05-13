@@ -42,19 +42,19 @@ AttachedWindows::RegisteredFactory sMacrosWindowKey{
 };
 
 bool ShowManager(
-   PluginManager &pm, wxWindow *parent, EffectType type)
+   PluginManager &pm, wxWindow *parent)
 {
    pm.CheckForUpdates();
 
-   PluginRegistrationDialog dlg(parent, type);
+   PluginRegistrationDialog dlg(parent);
    return dlg.ShowModal() == wxID_OK;
 }
 
-void DoManagePluginsMenu(AudacityProject &project, EffectType type)
+void DoManagePluginsMenu(AudacityProject &project)
 {
    auto &window = GetProjectFrame( project );
    auto &pm = PluginManager::Get();
-   if (ShowManager(pm, &window, type))
+   if (ShowManager(pm, &window))
       MenuCreator::RebuildAllMenuBars();
 }
 
@@ -319,7 +319,7 @@ MenuTable::BaseItemPtrs PopulateEffectsMenu(
    EffectManager & em = EffectManager::Get();
    for (auto &plugin : pm.EffectsOfType(type)) {
       auto plug = &plugin;
-      if( plug->IsLoaded() && em.IsHidden(plug->GetID()) )
+      if( pm.IsPluginLoaded(plug->GetID()) && em.IsHidden(plug->GetID()) )
          continue;
       if ( !plug->IsEnabled() ){
          ;// don't add to menus!
@@ -441,7 +441,7 @@ void OnResetConfig(const CommandContext &context)
 void OnManageGenerators(const CommandContext &context)
 {
    auto &project = context.project;
-   DoManagePluginsMenu(project, EffectTypeGenerate);
+   DoManagePluginsMenu(project);
 }
 
 void OnEffect(const CommandContext &context)
@@ -453,7 +453,7 @@ void OnEffect(const CommandContext &context)
 void OnManageEffects(const CommandContext &context)
 {
    auto &project = context.project;
-   DoManagePluginsMenu(project, EffectTypeProcess);
+   DoManagePluginsMenu(project);
 }
 
 void OnAnalyzer2(wxCommandEvent& evt) { return; }
@@ -529,13 +529,13 @@ void OnRepeatLastTool(const CommandContext& context)
 void OnManageAnalyzers(const CommandContext &context)
 {
    auto &project = context.project;
-   DoManagePluginsMenu(project, EffectTypeAnalyze);
+   DoManagePluginsMenu(project);
 }
 
 void OnManageTools(const CommandContext &context )
 {
    auto &project = context.project;
-   DoManagePluginsMenu(project, EffectTypeTool);
+   DoManagePluginsMenu(project);
 }
 
 void OnManageMacros(const CommandContext &context )
@@ -870,12 +870,10 @@ BaseItemSharedPtr GenerateMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Generate"), XXO("&Generate"),
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Section( "Manage",
          Command( wxT("ManageGenerators"), XXO("Add / Remove Plug-ins..."),
             FN(OnManageGenerators), AudioIONotBusyFlag() )
       ),
-#endif
 
       Section("RepeatLast",
          // Delayed evaluation:
@@ -938,12 +936,10 @@ BaseItemSharedPtr EffectMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Effect"), XXO("Effe&ct"),
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Section( "Manage",
          Command( wxT("ManageEffects"), XXO("Add / Remove Plug-ins..."),
             FN(OnManageEffects), AudioIONotBusyFlag() )
       ),
-#endif
 
       Section( "RepeatLast",
          // Delayed evaluation:
@@ -1002,12 +998,10 @@ BaseItemSharedPtr AnalyzeMenu()
    static BaseItemSharedPtr menu{
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Analyze"), XXO("&Analyze"),
-#ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
       Section( "Manage",
          Command( wxT("ManageAnalyzers"), XXO("Add / Remove Plug-ins..."),
             FN(OnManageAnalyzers), AudioIONotBusyFlag() )
       ),
-#endif
 
       Section("RepeatLast",
          // Delayed evaluation:
@@ -1067,13 +1061,10 @@ BaseItemSharedPtr ToolsMenu()
    ( FinderScope{ findCommandHandler },
    Menu( wxT("Tools"), XXO("T&ools"),
       Section( "Manage",
-   #ifdef EXPERIMENTAL_EFFECT_MANAGEMENT
          Command( wxT("ManageTools"), XXO("Add / Remove Plug-ins..."),
             FN(OnManageTools), AudioIONotBusyFlag() ),
 
          //Separator(),
-
-   #endif
 
          Section( "RepeatLast",
          // Delayed evaluation:

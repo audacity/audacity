@@ -380,14 +380,13 @@ BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialogWrapper)
    EVT_RADIOBUTTON(ID_ShowNew, PluginRegistrationDialog::OnChangedVisibility)
 END_EVENT_TABLE()
 
-PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType type)
+PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent)
 :  wxDialogWrapper(parent,
             wxID_ANY,
             XO("Manage Plug-ins"),
             wxDefaultPosition, wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
-   mType = type;
    mEffects = NULL;
    SetName();
 
