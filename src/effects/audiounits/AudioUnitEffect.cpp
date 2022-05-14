@@ -24,6 +24,7 @@
 #include "SampleCount.h"
 #include "ConfigInterface.h"
 
+#include <optional>
 #include <wx/defs.h>
 #include <wx/base64.h>
 #include <wx/button.h>
@@ -80,75 +81,73 @@
 class AudioUnitWrapper::ParameterInfo final
 {
 public:
-   ParameterInfo()
-   {
-      info = {};
-   }
+   ParameterInfo(AudioUnit mUnit, AudioUnitParameterID parmID);
 
-   bool Get(AudioUnit mUnit, AudioUnitParameterID parmID)
-   {
-      UInt32 dataSize;
+   std::optional<wxString> mName;
+   AudioUnitParameterInfo mInfo{};
+};
 
-      info = {};
-      // Note non-default element parameter, parmID
-      if (AudioUnitUtils::GetFixedSizeProperty(mUnit,
-         kAudioUnitProperty_ParameterInfo, info,
-         kAudioUnitScope_Global, parmID))
-         return false;
-
-      if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
-         name = wxCFStringRef::AsString(info.cfNameString);
-      else
-         name = wxString(info.name);
-
-#if defined(USE_EXTENDED_NAMES)
-      // Parameter name may or may not be present.  The modified name will be:
-      //
-      //    <[ParameterName,]parmID>
-      //
-      // (where the [ ] meta-characters denote optionality)
-      // (And any of the characters < , > in ParameterName are replaced with _)
-      if (!name.empty()) {
-         name.Replace(idBeg, wxT('_'));
-         name.Replace(idSep, wxT('_'));
-         name.Replace(idEnd, wxT('_'));
-         name.Append(idSep);
-      }
-      name = wxString::Format(wxT("%c%s%x%c"), idBeg, name, parmID, idEnd);
-
-      // If the parameter has a clumpID, then the final modified name will be:
-      //
-      //    <[clumpName,]clumpId><[ParameterName,]parmID>
-      //
-      // (And any of the characters < , > in clumpName are replaced with _)
-      if (info.flags & kAudioUnitParameterFlag_HasClump) {
-         wxString clumpName;
-         AudioUnitUtils::ParameterNameInfo clumpInfo{
-            info.clumpID, kAudioUnitParameterName_Full
-         };
-
-         if (!AudioUnitUtils::GetFixedSizeProperty(mUnit,
-            kAudioUnitProperty_ParameterClumpName, clumpInfo)) {
-            clumpName =  wxCFStringRef::AsString(clumpInfo.outName);
-            clumpName.Replace(idBeg, wxT('_'));
-            clumpName.Replace(idSep, wxT('_'));
-            clumpName.Replace(idEnd, wxT('_'));
-            clumpName.Append(idSep);
-         }
-         name = wxString::Format(wxT("%c%s%x%c%s"),
-            idBeg, clumpName, info.clumpID, idEnd, name);
-      }
-#endif
-      return true;
-   }
-
+AudioUnitWrapper::ParameterInfo::ParameterInfo(
+   AudioUnit mUnit, AudioUnitParameterID parmID)
+{
    static constexpr char idBeg = wxT('<');
    static constexpr char idSep = wxT(',');
    static constexpr char idEnd = wxT('>');
 
-   wxString name;
-   AudioUnitParameterInfo info;
-};
+   UInt32 dataSize;
+
+   mInfo = {};
+   // Note non-default element parameter, parmID
+   if (AudioUnitUtils::GetFixedSizeProperty(mUnit,
+      kAudioUnitProperty_ParameterInfo, mInfo,
+      kAudioUnitScope_Global, parmID))
+      return;
+
+   wxString &name = mName.emplace();
+   if (mInfo.flags & kAudioUnitParameterFlag_HasCFNameString)
+      name = wxCFStringRef::AsString(mInfo.cfNameString);
+   else
+      name = wxString(mInfo.name);
+
+#if defined(USE_EXTENDED_NAMES)
+   // Parameter name may or may not be present.  The modified name will be:
+   //
+   //    <[ParameterName,]parmID>
+   //
+   // (where the [ ] meta-characters denote optionality)
+   // (And any of the characters < , > in ParameterName are replaced with _)
+   if (!name.empty()) {
+      name.Replace(idBeg, wxT('_'));
+      name.Replace(idSep, wxT('_'));
+      name.Replace(idEnd, wxT('_'));
+      name.Append(idSep);
+   }
+   name = wxString::Format(wxT("%c%s%x%c"), idBeg, name, parmID, idEnd);
+
+   // If the parameter has a clumpID, then the final modified name will be:
+   //
+   //    <[clumpName,]clumpId><[ParameterName,]parmID>
+   //
+   // (And any of the characters < , > in clumpName are replaced with _)
+   if (mInfo.flags & kAudioUnitParameterFlag_HasClump) {
+      wxString clumpName;
+      AudioUnitUtils::ParameterNameInfo clumpInfo{
+         mInfo.clumpID, kAudioUnitParameterName_Full
+      };
+
+      if (!AudioUnitUtils::GetFixedSizeProperty(mUnit,
+         kAudioUnitProperty_ParameterClumpName, clumpInfo)) {
+         clumpName =  wxCFStringRef::AsString(clumpInfo.outName);
+         clumpName.Replace(idBeg, wxT('_'));
+         clumpName.Replace(idSep, wxT('_'));
+         clumpName.Replace(idEnd, wxT('_'));
+         clumpName.Append(idSep);
+      }
+      name = wxString::Format(wxT("%c%s%x%c%s"),
+         idBeg, clumpName, mInfo.clumpID, idEnd, name);
+   }
+#endif
+}
 
 TranslatableString AudioUnitEffect::SaveBlobToConfig(
    const RegistryPath &group, const wxString &path,
@@ -273,7 +272,7 @@ bool AudioUnitEffect::SupportsAutomation() const
    bool supports = false;
    return ForEachParameter(
    [&supports](const ParameterInfo &pi, AudioUnitParameterID) {
-      if (pi.info.flags & kAudioUnitParameterFlag_IsWritable)
+      if (pi.mInfo.flags & kAudioUnitParameterFlag_IsWritable)
          supports = true;
       // Search only until we find one, that's all we need to know
       return !supports;
@@ -674,14 +673,15 @@ bool AudioUnitEffect::SaveSettings(
    return ForEachParameter(
    [this, &parms](const ParameterInfo &pi, AudioUnitParameterID ID) {
       AudioUnitParameterValue value;
-      if (AudioUnitGetParameter(mUnit.get(), ID, kAudioUnitScope_Global, 0,
-         &value))
+      if (!pi.mName ||
+         AudioUnitGetParameter(
+            mUnit.get(), ID, kAudioUnitScope_Global, 0, &value))
          // Probably failed because of invalid parameter which can happen
          // if a plug-in is in a certain mode that doesn't contain the
          // parameter.  In any case, just ignore it.
          {}
       else
-         parms.Write(pi.name, value);
+         parms.Write(*pi.mName, value);
       return true;
    });
 }
@@ -693,9 +693,11 @@ bool AudioUnitEffect::LoadSettings(
    return ForEachParameter(
    [this, &parms, &success](const ParameterInfo &pi, AudioUnitParameterID ID) {
       double d = 0.0;
-      if (parms.Read(pi.name, &d)) {
-         if (AudioUnitSetParameter(mUnit.get(), ID, kAudioUnitScope_Global,
-            0, d, 0))
+      if (pi.mName &&
+         parms.Read(*pi.mName, &d)
+      ) {
+         if (AudioUnitSetParameter(
+            mUnit.get(), ID, kAudioUnitScope_Global, 0, d, 0))
             success = false;
          else
             Notify(mUnit.get(), ID);
@@ -1070,16 +1072,10 @@ bool AudioUnitWrapper::ForEachParameter(ParameterVisitor visitor) const
    PackedArray::Ptr<AudioUnitParameterID> array;
    if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
-   for (const auto &ID : array) {
-      ParameterInfo pi;
-      if (!pi.Get(mUnit.get(), ID))
-         // Probably failed because of invalid parameter which can happen
-         // if a plug-in is in a certain mode that doesn't contain the
-         // parameter.  In any case, just ignore it.
-         continue;
-      if (!visitor(pi, ID))
+   for (const auto &ID : array)
+      if (ParameterInfo pi{ mUnit.get(), ID };
+         !visitor(pi, ID))
          break;
-   }
    return true;
 }
 
