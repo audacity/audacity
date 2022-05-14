@@ -31,9 +31,16 @@ class TranslatableString;
  */
 struct AudioUnitWrapper
 {
-   explicit AudioUnitWrapper(AudioComponent component)
+   using Parameters = PackedArray::Ptr<const AudioUnitParameterID>;
+
+   /*!
+    @param pParameters if non-null, use those; else, fetch from the AudioUnit
+    */
+   AudioUnitWrapper(AudioComponent component, Parameters *pParameters)
       : mComponent{ component }
-   {}
+      , mParameters{ pParameters ? *pParameters : mOwnParameters }
+   {
+   }
 
    // Supply most often used values as defaults for scope and element
    template<typename T>
@@ -72,8 +79,7 @@ struct AudioUnitWrapper
    //! Return value: if true, continue visiting
    using ParameterVisitor =
       std::function< bool(const ParameterInfo &pi, AudioUnitParameterID ID) >;
-   //! @return false if parameters could not be retrieved at all, else true
-   bool ForEachParameter(ParameterVisitor visitor) const;
+   void ForEachParameter(ParameterVisitor visitor) const;
 
    //! Obtain dump of the setting state of an AudioUnit instance
    /*!
@@ -96,6 +102,9 @@ struct AudioUnitWrapper
 
    const AudioComponent mComponent;
    AudioUnitCleanup<AudioUnit, AudioComponentInstanceDispose> mUnit;
+
+   Parameters mOwnParameters;
+   Parameters &mParameters;
 };
 
 class AudioUnitWrapper::ParameterInfo final

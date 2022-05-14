@@ -93,10 +93,9 @@ TranslatableString AudioUnitEffect::SaveBlobToConfig(
 ///////////////////////////////////////////////////////////////////////////////
 
 AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
-                                 const wxString & name,
-                                 AudioComponent component,
-                                 AudioUnitEffect *master)
-   : AudioUnitWrapper{ component }
+   const wxString & name, AudioComponent component,
+   Parameters *pParameters, AudioUnitEffect *master
+)  : AudioUnitWrapper{ component, pParameters }
    , mPath{ path }
    , mName{ name.AfterFirst(wxT(':')).Trim(true).Trim(false) }
    , mVendor{ name.BeforeFirst(wxT(':')).Trim(true).Trim(false) }
@@ -192,13 +191,14 @@ bool AudioUnitEffect::SupportsRealtime() const
 bool AudioUnitEffect::SupportsAutomation() const
 {
    bool supports = false;
-   return ForEachParameter(
+   ForEachParameter(
    [&supports](const ParameterInfo &pi, AudioUnitParameterID) {
       if (pi.mInfo.flags & kAudioUnitParameterFlag_IsWritable)
          supports = true;
       // Search only until we find one, that's all we need to know
       return !supports;
-   }) && supports;
+   });
+   return supports;
 }
 
 bool AudioUnitEffect::InitializeInstance()
@@ -481,7 +481,8 @@ bool AudioUnitEffect::RealtimeInitialize(EffectSettings &settings)
 bool AudioUnitEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
+   auto slave = std::make_unique<AudioUnitEffect>(
+      mPath, mName, mComponent, &mParameters, this);
    if (!slave->InitializeInstance())
       return false;
 
@@ -583,7 +584,7 @@ int AudioUnitEffect::ShowClientInterface(
 bool AudioUnitEffect::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {
-   return ForEachParameter(
+   ForEachParameter(
    [this, &parms](const ParameterInfo &pi, AudioUnitParameterID ID) {
       AudioUnitParameterValue value;
       if (!pi.mName ||
@@ -597,13 +598,14 @@ bool AudioUnitEffect::SaveSettings(
          parms.Write(*pi.mName, value);
       return true;
    });
+   return true;
 }
 
 bool AudioUnitEffect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
    bool success = true;
-   return ForEachParameter(
+   ForEachParameter(
    [this, &parms, &success](const ParameterInfo &pi, AudioUnitParameterID ID) {
       double d = 0.0;
       if (pi.mName &&
@@ -616,7 +618,8 @@ bool AudioUnitEffect::LoadSettings(
             Notify(mUnit.get(), ID);
       }
       return success;
-   }) && success;
+   });
+   return success;
 }
 
 bool AudioUnitEffect::LoadUserPreset(

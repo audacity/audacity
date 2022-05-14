@@ -44,10 +44,12 @@ class AudioUnitEffect final
    , private AudioUnitWrapper
 {
 public:
+   using Parameters = PackedArray::Ptr<const AudioUnitParameterID>;
+
    AudioUnitEffect(const PluginPath & path,
-                   const wxString & name,
-                   AudioComponent component,
-                   AudioUnitEffect *master = NULL);
+      const wxString & name, AudioComponent component,
+      Parameters *pParameters = nullptr,
+      AudioUnitEffect *master = nullptr);
    virtual ~AudioUnitEffect();
 
    // ComponentInterface implementation

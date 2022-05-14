@@ -113,8 +113,13 @@ bool AudioUnitWrapper::CreateAudioUnit()
 {
    AudioUnit unit{};
    auto result = AudioComponentInstanceNew(mComponent, &unit);
-   if (!result)
+   if (!result) {
       mUnit.reset(unit);
+      if (&mParameters == &mOwnParameters && !mOwnParameters)
+         result = GetVariableSizeProperty(
+            kAudioUnitProperty_ParameterList, mOwnParameters);
+   }
+
    return (!result && unit != nullptr);
 }
 
@@ -151,16 +156,14 @@ TranslatableString AudioUnitWrapper::InterpretBlob(
    return {};
 }
 
-bool AudioUnitWrapper::ForEachParameter(ParameterVisitor visitor) const
+void AudioUnitWrapper::ForEachParameter(ParameterVisitor visitor) const
 {
-   PackedArray::Ptr<AudioUnitParameterID> array;
-   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
-      return false;
-   for (const auto &ID : array)
+   if (!mParameters)
+      return;
+   for (const auto &ID : mParameters)
       if (ParameterInfo pi{ mUnit.get(), ID };
          !visitor(pi, ID))
          break;
-   return true;
 }
 
 std::pair<CF_ptr<CFDataRef>, TranslatableString>
