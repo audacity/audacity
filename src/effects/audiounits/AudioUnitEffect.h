@@ -35,8 +35,6 @@ class AudioUnitEffect;
 
 using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 
-class AudioUnitEffectExportDialog;
-class AudioUnitEffectImportDialog;
 class AUControl;
 class wxCFStringRef;
 class wxMemoryBuffer;
@@ -289,9 +287,6 @@ private:
    AudioUnitEffectArray mSlaves;
 
    AUControl *mpControl{};
-
-   friend class AudioUnitEffectExportDialog;
-   friend class AudioUnitEffectImportDialog;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
