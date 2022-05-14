@@ -116,7 +116,7 @@ struct AudioUnitWrapper
     @param group only for formatting error messages
     @return an error message
     */
-   TranslatableString InterpretBlob(
+   TranslatableString InterpretBlob(AudioUnitEffectSettings &settings,
       const wxString &group, const wxMemoryBuffer &buf) const;
 
    bool FetchSettings(AudioUnitEffectSettings &settings) const;

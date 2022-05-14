@@ -185,6 +185,7 @@ bool AudioUnitWrapper::CreateAudioUnit()
 }
 
 TranslatableString AudioUnitWrapper::InterpretBlob(
+   AudioUnitEffectSettings &settings,
    const RegistryPath &group, const wxMemoryBuffer &buf) const
 {
    size_t bufLen = buf.GetDataLen();
@@ -214,6 +215,10 @@ TranslatableString AudioUnitWrapper::InterpretBlob(
    // Finally, update the properties and parameters
    if (SetProperty(kAudioUnitProperty_ClassInfo, content.get()))
       return XO("Failed to set class info for \"%s\" preset").Format(group);
+
+   // Repopulate the AudioUnitEffectSettings from the change of state in
+   // the AudioUnit
+   FetchSettings(settings);
    return {};
 }
 

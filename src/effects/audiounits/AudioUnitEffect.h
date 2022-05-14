@@ -74,6 +74,8 @@ public:
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+
    bool LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
@@ -147,7 +149,8 @@ private:
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
 
    TranslatableString Export(const wxString & path) const;
-   TranslatableString Import(const wxString & path);
+   TranslatableString Import(
+      AudioUnitEffectSettings &settings, const wxString & path) const;
    /*!
     @param path only for formatting error messages
     @return error message
@@ -180,7 +183,6 @@ private:
    void GetChannelCounts();
 
    bool LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
-
    bool SavePreset(const RegistryPath & group) const;
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
