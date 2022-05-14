@@ -1017,7 +1017,7 @@ bool AudioUnitEffect::LoadPreset(
    return true;
 }
 
-TranslatableString AudioUnitEffect::InterpretBlob(
+TranslatableString AudioUnitWrapper::InterpretBlob(
    const RegistryPath &group, const wxMemoryBuffer &buf) const
 {
    size_t bufLen = buf.GetDataLen();
@@ -1191,7 +1191,7 @@ TranslatableString AudioUnitEffect::Export(const wxString & path) const
 }
 
 std::pair<CF_ptr<CFDataRef>, TranslatableString>
-AudioUnitEffect::MakeBlob(const wxCFStringRef &cfname, bool binary) const
+AudioUnitWrapper::MakeBlob(const wxCFStringRef &cfname, bool binary) const
 {
    CF_ptr<CFDataRef> data;
    TranslatableString message;

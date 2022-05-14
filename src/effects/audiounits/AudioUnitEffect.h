@@ -91,6 +91,23 @@ struct AudioUnitWrapper
    //! @return false if parameters could not be retrieved at all, else true
    bool ForEachParameter(ParameterVisitor visitor) const;
 
+   //! Obtain dump of the setting state of an AudioUnit instance
+   /*!
+    @param binary if false, then produce XML serialization instead; but
+    AudioUnits does not need to be told the format again to reinterpret the blob
+    @return smart pointer to data, and an error message
+    */
+   std::pair<CF_ptr<CFDataRef>, TranslatableString>
+   MakeBlob(const wxCFStringRef &cfname, bool binary) const;
+
+   //! Interpret the dump made before by MakeBlob
+   /*!
+    @param group only for formatting error messages
+    @return an error message
+    */
+   TranslatableString InterpretBlob(
+      const wxString &group, const wxMemoryBuffer &buf) const;
+
    bool CreateAudioUnit();
 
    const AudioComponent mComponent;
@@ -202,15 +219,6 @@ private:
 
    bool CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit);
 
-   //! Obtain dump of the setting state of an AudioUnit instance
-   /*!
-    @param binary if false, then produce XML serialization instead; but
-    AudioUnits does not need to be told the format again to reinterpret the blob
-    @return smart pointer to data, and an error message
-    */
-   std::pair<CF_ptr<CFDataRef>, TranslatableString>
-   MakeBlob(const wxCFStringRef &cfname, bool binary) const;
-
    TranslatableString Export(const wxString & path) const;
    TranslatableString Import(const wxString & path);
    /*!
@@ -245,14 +253,6 @@ private:
    void GetChannelCounts();
 
    bool LoadPreset(const RegistryPath & group, EffectSettings &settings) const;
-
-   //! Interpret the dump made before by MakeBlob
-   /*!
-    @param group only for formatting error messages
-    @return an error message
-    */
-   TranslatableString InterpretBlob(
-      const wxString &group, const wxMemoryBuffer &buf) const;
 
    bool SavePreset(const RegistryPath & group) const;
 
