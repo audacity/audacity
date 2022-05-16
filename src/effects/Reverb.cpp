@@ -67,12 +67,21 @@ struct Reverb_priv_t
    float *wet[2];
 };
 
+struct Reverb_priv_ex : Reverb_priv_t
+{
+   Reverb_priv_ex() : Reverb_priv_t{} {}
+   ~Reverb_priv_ex()
+   {
+      reverb_delete(&reverb);
+   }
+};
 
 struct EffectReverbState
 {
-   unsigned       mNumChans{};
-   Reverb_priv_t* mP{};
+   unsigned                          mNumChans{};
+   std::unique_ptr<Reverb_priv_ex[]> mP{};
 };
+
 
 //
 // EffectReverb
@@ -273,7 +282,7 @@ bool EffectReverb::Instance::InstanceInit(EffectSettings& settings, EffectReverb
       state.mNumChans = 2;
    }
 
-   state.mP = (Reverb_priv_t *) calloc(sizeof(*state.mP), state.mNumChans);
+   state.mP = std::make_unique<Reverb_priv_ex[]>(state.mNumChans);
 
    for (unsigned int i = 0; i < state.mNumChans; i++)
    {
@@ -296,13 +305,6 @@ bool EffectReverb::Instance::InstanceInit(EffectSettings& settings, EffectReverb
 
 bool EffectReverb::Instance::ProcessFinalize()
 {
-   for (unsigned int i = 0; i < mMaster.mNumChans; i++)
-   {
-      reverb_delete(&mMaster.mP[i].reverb);
-   }
-
-   free(mMaster.mP);
-
    return true;
 }
 
