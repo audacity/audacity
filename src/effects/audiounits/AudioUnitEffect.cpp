@@ -233,7 +233,6 @@ bool AudioUnitEffect::InitializeInstance()
       return false;
 
    mSampleRate = 44100;
-   GetChannelCounts();
    SetRateAndChannels();
 
    // Retrieve the desired number of frames per slice
@@ -270,6 +269,8 @@ bool AudioUnitEffect::InitializePlugin()
    // It's not just for implementing EffectInstance.  AudioUnits is unlike other
    // third party effect families that distinguish the notions of plug-in and
    // instance.
+
+   GetChannelCounts();
 
    // When AudioUnitEffect implements its own proper Instance class, this
    // should call CreateAudioUnit() directly and not do the rest of
