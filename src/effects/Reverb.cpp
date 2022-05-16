@@ -67,6 +67,13 @@ struct Reverb_priv_t
    float *wet[2];
 };
 
+
+struct EffectReverbState
+{
+   unsigned       mNumChans{};
+   Reverb_priv_t* mP{};
+};
+
 //
 // EffectReverb
 //
@@ -184,9 +191,15 @@ struct EffectReverb::Instance
    bool ProcessFinalize(void) override; // not every effect needs this
 
 
-   unsigned mNumChans {};
-   Reverb_priv_t* mP {};
+   bool InstanceInit(EffectSettings& settings, EffectReverbState& data, ChannelNames chanMap);
+
+   size_t InstanceProcess(EffectSettings& settings, EffectReverbState& data,
+      const float* const* inBlock, float* const* outBlock, size_t blockLen);
+
+   EffectReverbState mMaster;
+   
 };
+
 
 
 std::shared_ptr<EffectInstance>
@@ -243,22 +256,28 @@ static size_t BLOCK = 16384;
 
 bool EffectReverb::Instance::ProcessInitialize(
    EffectSettings& settings, sampleCount, ChannelNames chanMap)
+{
+   return InstanceInit(settings, mMaster, chanMap);
+}
+
+
+bool EffectReverb::Instance::InstanceInit(EffectSettings& settings, EffectReverbState& state, ChannelNames chanMap)
 {   
    auto& rs = GetSettings(settings);   
 
    bool isStereo = false;
-   mNumChans = 1;
+   state.mNumChans = 1;
    if (chanMap && chanMap[0] != ChannelNameEOL && chanMap[1] == ChannelNameFrontRight)
    {
       isStereo = true;
-      mNumChans = 2;
+      state.mNumChans = 2;
    }
 
-   mP = (Reverb_priv_t *) calloc(sizeof(*mP), mNumChans);
+   state.mP = (Reverb_priv_t *) calloc(sizeof(*state.mP), state.mNumChans);
 
-   for (unsigned int i = 0; i < mNumChans; i++)
+   for (unsigned int i = 0; i < state.mNumChans; i++)
    {
-      reverb_create(&mP[i].reverb,
+      reverb_create(&state.mP[i].reverb,
                     mSampleRate,
                     rs.mWetGain,
                     rs.mRoomSize,
@@ -269,7 +288,7 @@ bool EffectReverb::Instance::ProcessInitialize(
                     rs.mToneLow,
                     rs.mToneHigh,
                     BLOCK,
-                    mP[i].wet);
+                    state.mP[i].wet);
    }
 
    return true;
@@ -277,25 +296,31 @@ bool EffectReverb::Instance::ProcessInitialize(
 
 bool EffectReverb::Instance::ProcessFinalize()
 {
-   for (unsigned int i = 0; i < mNumChans; i++)
+   for (unsigned int i = 0; i < mMaster.mNumChans; i++)
    {
-      reverb_delete(&mP[i].reverb);
+      reverb_delete(&mMaster.mP[i].reverb);
    }
 
-   free(mP);
+   free(mMaster.mP);
 
    return true;
 }
 
 size_t EffectReverb::Instance::ProcessBlock(EffectSettings& settings,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
+   const float* const* inBlock, float* const* outBlock, size_t blockLen)
+{
+   return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
+}
+
+size_t EffectReverb::Instance::InstanceProcess(EffectSettings& settings, EffectReverbState& state,
+   const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
    auto& rs = GetSettings(settings);
 
    const float *ichans[2] = {NULL, NULL};
    float *ochans[2] = {NULL, NULL};
 
-   for (unsigned int c = 0; c < mNumChans; c++)
+   for (unsigned int c = 0; c < state.mNumChans; c++)
    {
       ichans[c] = inBlock[c];
       ochans[c] = outBlock[c];
@@ -308,24 +333,24 @@ size_t EffectReverb::Instance::ProcessBlock(EffectSettings& settings,
    while (remaining)
    {
       auto len = std::min(remaining, decltype(remaining)(BLOCK));
-      for (unsigned int c = 0; c < mNumChans; c++)
+      for (unsigned int c = 0; c < state.mNumChans; c++)
       {
          // Write the input samples to the reverb fifo.  Returned value is the address of the
          // fifo buffer which contains a copy of the input samples.
-         mP[c].dry = (float *) fifo_write(&mP[c].reverb.input_fifo, len, ichans[c]);
-         reverb_process(&mP[c].reverb, len);
+         state.mP[c].dry = (float *) fifo_write(&state.mP[c].reverb.input_fifo, len, ichans[c]);
+         reverb_process(&state.mP[c].reverb, len);
       }
 
-      if (mNumChans == 2)
+      if (state.mNumChans == 2)
       {
          for (decltype(len) i = 0; i < len; i++)
          {
             for (int w = 0; w < 2; w++)
             {
                ochans[w][i] = dryMult *
-                              mP[w].dry[i] +
+                              state.mP[w].dry[i] +
                               0.5 *
-                              (mP[0].wet[w][i] + mP[1].wet[w][i]);
+                              (state.mP[0].wet[w][i] + state.mP[1].wet[w][i]);
             }
          }
       }
@@ -334,14 +359,14 @@ size_t EffectReverb::Instance::ProcessBlock(EffectSettings& settings,
          for (decltype(len) i = 0; i < len; i++)
          {
             ochans[0][i] = dryMult * 
-                           mP[0].dry[i] +
-                           mP[0].wet[0][i];
+                           state.mP[0].dry[i] +
+                           state.mP[0].wet[0][i];
          }
       }
 
       remaining -= len;
 
-      for (unsigned int c = 0; c < mNumChans; c++)
+      for (unsigned int c = 0; c < state.mNumChans; c++)
       {
          ichans[c] += len;
          ochans[c] += len;
