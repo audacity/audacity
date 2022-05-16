@@ -9,6 +9,7 @@
 
 **********************************************************************/
 #ifndef AUDACITY_AUDIOUNIT_EFFECT_H
+#define AUDACITY_AUDIOUNIT_EFFECT_H
 
 
 
@@ -23,7 +24,6 @@
 #include <AudioUnit/AudioUnitProperties.h>
 
 #include "../StatefulPerTrackEffect.h"
-#include "PluginProvider.h"
 #include "PluginInterface.h"
 
 #include <wx/weakref.h>
@@ -35,8 +35,6 @@ class AudioUnitEffect;
 
 using AudioUnitEffectArray = std::vector<std::unique_ptr<AudioUnitEffect>>;
 
-class AudioUnitEffectExportDialog;
-class AudioUnitEffectImportDialog;
 class AUControl;
 class wxCFStringRef;
 class wxMemoryBuffer;
@@ -66,7 +64,7 @@ struct AudioUnitWrapper
    // Supply most often used values as defaults for scope and element
    template<typename T>
    OSStatus GetVariableSizeProperty(AudioUnitPropertyID inID,
-      PackedArrayPtr<T> &pObject,
+      PackedArray::Ptr<T> &pObject,
       AudioUnitScope inScope = kAudioUnitScope_Global,
       AudioUnitElement inElement = 0) const
    {
@@ -277,8 +275,8 @@ private:
 
    AudioTimeStamp mTimeStamp{};
 
-   PackedArrayPtr<AudioBufferList> mInputList;
-   PackedArrayPtr<AudioBufferList> mOutputList;
+   PackedArray::Ptr<AudioBufferList> mInputList;
+   PackedArray::Ptr<AudioBufferList> mOutputList;
 
    wxWindow *mParent{};
    wxWeakRef<wxDialog> mDialog;
@@ -289,59 +287,6 @@ private:
    AudioUnitEffectArray mSlaves;
 
    AUControl *mpControl{};
-
-   friend class AudioUnitEffectExportDialog;
-   friend class AudioUnitEffectImportDialog;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// AudioUnitEffectsModule
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class AudioUnitEffectsModule final : public PluginProvider
-{
-public:
-   AudioUnitEffectsModule();
-   virtual ~AudioUnitEffectsModule();
-
-   // ComponentInterface implementation
-
-   PluginPath GetPath() const override;
-   ComponentInterfaceSymbol GetSymbol() const override;
-   VendorSymbol GetVendor() const override;
-   wxString GetVersion() const override;
-   TranslatableString GetDescription() const override;
-
-   // PluginProvider implementation
-
-   bool Initialize() override;
-   void Terminate() override;
-   EffectFamilySymbol GetOptionalFamilySymbol() override;
-
-   const FileExtensions &GetFileExtensions() override;
-   FilePath InstallPath() override { return {}; }
-
-   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
-   unsigned DiscoverPluginsAtPath(
-      const PluginPath & path, TranslatableString &errMsg,
-      const RegistrationCallback &callback)
-         override;
-
-   bool IsPluginValid(const PluginPath & path, bool bFast) override;
-
-   std::unique_ptr<ComponentInterface>
-      LoadPlugin(const PluginPath & path) override;
-
-   // AudioUnitEffectModule implementation
-
-   void LoadAudioUnitsOfType(OSType inAUType, PluginPaths & effects);
-   AudioComponent FindAudioUnit(const PluginPath & path, wxString & name);
-
-   wxString FromOSType(OSType type);
-   OSType ToOSType(const wxString & type);
 };
 
 #endif

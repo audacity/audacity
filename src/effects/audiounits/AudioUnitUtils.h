@@ -60,17 +60,17 @@ namespace AudioUnitUtils {
    //! and seating the raw pointer result into a smart pointer
    template<typename T>
    OSStatus GetVariableSizeProperty(AudioUnit unit, AudioUnitPropertyID inID,
-      PackedArrayPtr<T> &pObject,
+      PackedArray::Ptr<T> &pObject,
       AudioUnitScope inScope = kAudioUnitScope_Global,
       AudioUnitElement inElement = 0)
    {
       void *p{};
       size_t size{};
       auto result = GetVariableSizePropertyPtr(unit, inID,
-         sizeof(typename PackedArrayTraits<T>::header_type), p, size,
+         sizeof(typename PackedArray::Traits<T>::header_type), p, size,
          inScope, inElement);
       if (!result)
-         // Construct PackedArrayPtr
+         // Construct PackedArray::Ptr
          pObject = {
             static_cast<T*>(p), // the pointer
             size // the size that the deleter must remember
@@ -186,7 +186,7 @@ namespace AudioUnitUtils {
  */
 //! @{
 
-template<> struct PackedArrayTraits<AudioBufferList> {
+template<> struct PackedArray::Traits<AudioBufferList> {
    struct header_type { UInt32 mNumberBuffers; };
    // Overlay the element type with the wrapper type
    using element_type = AudioUnitUtils::Buffer;
@@ -194,7 +194,7 @@ template<> struct PackedArrayTraits<AudioBufferList> {
    static_assert(sizeof(element_type) == sizeof(AudioBuffer));
 };
 
-template<> struct PackedArrayTraits<AudioUnitCocoaViewInfo> {
+template<> struct PackedArray::Traits<AudioUnitCocoaViewInfo> {
    struct header_type {
       CF_ptr<CFURLRef> p1;
 
