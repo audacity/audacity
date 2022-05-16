@@ -148,6 +148,8 @@ list( APPEND SOURCES
       HistoryWindow.cpp
       HistoryWindow.h
       HitTestResult.h
+      IncompatiblePluginsDialog.cpp
+      IncompatiblePluginsDialog.h
       Journal.cpp
       Journal.h
       JournalEvents.cpp
