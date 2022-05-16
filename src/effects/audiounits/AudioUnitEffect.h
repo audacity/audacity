@@ -195,6 +195,8 @@ private:
 
 private:
    AudioUnitEffectSettings mSettings;
+
+public:
    //! This function will be rewritten when the effect is really stateless
    AudioUnitEffectSettings &GetSettings(EffectSettings &) const
       { return const_cast<AudioUnitEffect*>(this)->mSettings; }
@@ -202,6 +204,7 @@ private:
    const AudioUnitEffectSettings &GetSettings(const EffectSettings &) const
       { return mSettings; }
 
+private:
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;

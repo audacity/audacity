@@ -312,7 +312,11 @@ public:
    AudioUnitValidator(EffectUIClientInterface &effect,
       EffectSettingsAccess &access, AudioUnitInstance &instance);
    ~AudioUnitValidator() override;
+
 private:
+   bool FetchSettingsFromInstance(EffectSettings &settings);
+   bool StoreSettingsToInstance(const EffectSettings &settings);
+
    // The lifetime guarantee is assumed to be provided by the instance.
    // See contract of PopulateUI
    AudioUnitInstance &mInstance;
@@ -323,6 +327,9 @@ AudioUnitValidator::AudioUnitValidator(EffectUIClientInterface &effect,
 )  : DefaultEffectUIValidator{ effect, access }
    , mInstance{ instance }
 {
+   // Make the settings of the instance up to date before using it to
+   // build a UI
+   StoreSettingsToInstance(mAccess.Get());
 }
 
 AudioUnitValidator::~AudioUnitValidator()
@@ -685,6 +692,20 @@ bool AudioUnitEffect::TransferDataToWindow(const EffectSettings &settings)
       return true;
    }
    return false;
+}
+
+bool AudioUnitValidator::FetchSettingsFromInstance(EffectSettings &settings)
+{
+   return mInstance.FetchSettings(
+      // Change this when GetSettings becomes a static function
+      static_cast<const AudioUnitEffect&>(mEffect).GetSettings(settings));
+}
+
+bool AudioUnitValidator::StoreSettingsToInstance(const EffectSettings &settings)
+{
+   return mInstance.StoreSettings(
+      // Change this when GetSettings becomes a static function
+      static_cast<const AudioUnitEffect&>(mEffect).GetSettings(settings));
 }
 
 bool AudioUnitEffect::LoadUserPreset(
