@@ -74,8 +74,6 @@ public:
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-
    bool LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
    bool SaveUserPreset(
@@ -131,7 +129,6 @@ public:
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
    bool IsGraphicalUI() override;
-   bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
@@ -157,7 +154,6 @@ private:
    TranslatableString SaveBlobToConfig(const RegistryPath &group,
       const wxString &path, const void *blob, size_t len,
       bool allowEmpty = true) const;
-   void Notify(AudioUnit unit, AudioUnitParameterID parm) const;
 
    static OSStatus RenderCallback(void *inRefCon,
                                   AudioUnitRenderActionFlags *inActionFlags,

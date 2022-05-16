@@ -125,6 +125,9 @@ struct AudioUnitWrapper
 
    bool CreateAudioUnit();
 
+   AudioUnit GetAudioUnit() const { return mUnit.get(); }
+
+protected:
    const AudioComponent mComponent;
    AudioUnitCleanup<AudioUnit, AudioComponentInstanceDispose> mUnit;
 

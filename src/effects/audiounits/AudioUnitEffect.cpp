@@ -307,25 +307,34 @@ bool AudioUnitEffect::InitializePlugin()
    return true;
 }
 
-class AudioUnitValidator : public DefaultEffectUIValidator {
+class AudioUnitValidator : public EffectUIValidator {
 public:
    AudioUnitValidator(EffectUIClientInterface &effect,
-      EffectSettingsAccess &access, AudioUnitInstance &instance);
+      EffectSettingsAccess &access, AudioUnitInstance &instance,
+      AUControl *pControl);
    ~AudioUnitValidator() override;
+
+   bool UpdateUI() override;
+   bool ValidateUI() override;
 
 private:
    bool FetchSettingsFromInstance(EffectSettings &settings);
    bool StoreSettingsToInstance(const EffectSettings &settings);
 
+   void Notify();
+
    // The lifetime guarantee is assumed to be provided by the instance.
    // See contract of PopulateUI
    AudioUnitInstance &mInstance;
+   AUControl *const mpControl{};
 };
 
 AudioUnitValidator::AudioUnitValidator(EffectUIClientInterface &effect,
-   EffectSettingsAccess &access, AudioUnitInstance &instance
-)  : DefaultEffectUIValidator{ effect, access }
+   EffectSettingsAccess &access, AudioUnitInstance &instance,
+   AUControl *pControl
+)  : EffectUIValidator{ effect, access }
    , mInstance{ instance }
+   , mpControl{ pControl }
 {
    // Make the settings of the instance up to date before using it to
    // build a UI
@@ -678,20 +687,34 @@ bool AudioUnitEffect::LoadSettings(
    return true;
 }
 
-bool AudioUnitEffect::TransferDataToWindow(const EffectSettings &settings)
+bool AudioUnitValidator::UpdateUI()
 {
    // Update parameter values in AudioUnit, and propagate to any listeners
-   if (StoreSettings(GetSettings(settings))) {
+   if (StoreSettingsToInstance(mAccess.Get())) {
       // See AUView::viewWillDraw
       if (mpControl)
          mpControl->ForceRedraw();
    
       // This will be the AudioUnit of a stateful instance, not of the effect
-      Notify(mUnit.get(), kAUParameterListener_AnyParameter);
+      Notify();
 
       return true;
    }
    return false;
+}
+
+bool AudioUnitValidator::ValidateUI()
+{
+   mAccess.ModifySettings([this](EffectSettings &settings){
+#if 0
+      // This analogy with other generators doesn't seem to fit AudioUnits
+      // How can we define the control mDuration?
+      if (GetType() == EffectTypeGenerate)
+         settings.extra.SetDuration(mDuration->GetValue());
+#endif
+      FetchSettingsFromInstance(settings);
+   });
+   return true;
 }
 
 bool AudioUnitValidator::FetchSettingsFromInstance(EffectSettings &settings)
@@ -766,7 +789,7 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
    auto parent = S.GetParent();
    mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
    mParent = parent;
-   mpControl = NULL;
+   mpControl = nullptr;
 
    wxPanel *container;
    {
@@ -819,21 +842,12 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
    return std::make_unique<AudioUnitValidator>(*this, access,
       // Cast is assumed to succeed because only this effect's own instances
       // are passed back by the framework
-      dynamic_cast<AudioUnitInstance&>(instance));
+      dynamic_cast<AudioUnitInstance&>(instance), mpControl);
 }
 
 bool AudioUnitEffect::IsGraphicalUI()
 {
    return mUIType != wxT("Plain");
-}
-
-bool AudioUnitEffect::ValidateUI([[maybe_unused]] EffectSettings &settings)
-{
-#if 0
-   if (GetType() == EffectTypeGenerate)
-      settings.extra.SetDuration(mDuration->GetValue());
-#endif
-   return true;
 }
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
@@ -1148,12 +1162,11 @@ TranslatableString AudioUnitEffect::Import(
    return {};
 }
 
-void AudioUnitEffect::Notify(AudioUnit unit, AudioUnitParameterID parm) const
+void AudioUnitValidator::Notify()
 {
-   // Notify any interested parties
    AudioUnitParameter aup = {};
-   aup.mAudioUnit = unit;
-   aup.mParameterID = parm;
+   aup.mAudioUnit = mInstance.GetAudioUnit();
+   aup.mParameterID = kAUParameterListener_AnyParameter;
    aup.mScope = kAudioUnitScope_Global;
    aup.mElement = 0;
    AUParameterListenerNotify(NULL, NULL, &aup);
