@@ -199,14 +199,48 @@ struct EffectReverb::Instance
 
    bool ProcessFinalize(void) override; // not every effect needs this
 
+   // Realtime section
 
-   bool InstanceInit(EffectSettings& settings, EffectReverbState& data, ChannelNames chanMap);
+   bool RealtimeInitialize(EffectSettings& settings) override
+   {
+      SetBlockSize(512);
+      mSlaves.clear();
+      return true;
+   }
+
+   bool RealtimeAddProcessor(EffectSettings& settings,
+      unsigned numChannels, float sampleRate) override
+   {
+      EffectReverbState slave;
+
+      // The notion of ChannelNames is unavailable here,
+      // so we'll have to force the stereo init, if this is the case
+      //
+      InstanceInit(settings, slave, /*ChannelNames=*/nullptr, /*forceStereo=*/(numChannels == 2));
+
+      mSlaves.push_back( std::move(slave) );
+      return true;
+   }
+
+   bool RealtimeFinalize(EffectSettings& settings) noexcept override
+   {
+      mSlaves.clear();
+      return true;
+   }
+
+   size_t RealtimeProcess(int group, EffectSettings& settings,
+      const float* const* inbuf, float* const* outbuf, size_t numSamples) override
+   {
+      return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
+   }
+
+   bool InstanceInit(EffectSettings& settings, EffectReverbState& data, ChannelNames chanMap, bool forceStereo);
 
    size_t InstanceProcess(EffectSettings& settings, EffectReverbState& data,
       const float* const* inBlock, float* const* outBlock, size_t blockLen);
 
    EffectReverbState mMaster;
-   
+   std::vector<EffectReverbState> mSlaves;
 };
 
 
@@ -266,17 +300,19 @@ static size_t BLOCK = 16384;
 bool EffectReverb::Instance::ProcessInitialize(
    EffectSettings& settings, sampleCount, ChannelNames chanMap)
 {
-   return InstanceInit(settings, mMaster, chanMap);
+   return InstanceInit(settings, mMaster, chanMap, /* forceStereo = */ false);
 }
 
 
-bool EffectReverb::Instance::InstanceInit(EffectSettings& settings, EffectReverbState& state, ChannelNames chanMap)
+bool EffectReverb::Instance::InstanceInit(EffectSettings& settings, EffectReverbState& state,
+                                          ChannelNames chanMap, bool forceStereo)
 {   
    auto& rs = GetSettings(settings);   
 
    bool isStereo = false;
    state.mNumChans = 1;
-   if (chanMap && chanMap[0] != ChannelNameEOL && chanMap[1] == ChannelNameFrontRight)
+   if (    (chanMap && chanMap[0] != ChannelNameEOL && chanMap[1] == ChannelNameFrontRight)
+        || forceStereo )
    {
       isStereo = true;
       state.mNumChans = 2;
