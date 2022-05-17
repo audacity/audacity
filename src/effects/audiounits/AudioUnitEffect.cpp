@@ -310,10 +310,17 @@ bool AudioUnitEffect::InitializePlugin()
 }
 
 class AudioUnitValidator : public EffectUIValidator {
+   struct CreateToken{};
 public:
-   AudioUnitValidator(EffectUIClientInterface &effect,
-      EffectSettingsAccess &access, AudioUnitInstance &instance,
-      AUControl *pControl);
+   static std::unique_ptr<EffectUIValidator> Create(
+      EffectUIClientInterface &effect, ShuttleGui &S,
+      const wxString &uiType,
+      EffectInstance &instance, EffectSettingsAccess &access);
+
+   AudioUnitValidator(CreateToken,
+      EffectUIClientInterface &effect, EffectSettingsAccess &access,
+      AudioUnitInstance &instance, AUControl *pControl);
+
    ~AudioUnitValidator() override;
 
    bool UpdateUI() override;
@@ -337,7 +344,8 @@ private:
    AUControl *const mpControl{};
 };
 
-AudioUnitValidator::AudioUnitValidator(EffectUIClientInterface &effect,
+AudioUnitValidator::AudioUnitValidator(CreateToken,
+   EffectUIClientInterface &effect,
    EffectSettingsAccess &access, AudioUnitInstance &instance,
    AUControl *pControl
 )  : EffectUIValidator{ effect, access }
@@ -352,6 +360,8 @@ AudioUnitValidator::AudioUnitValidator(EffectUIClientInterface &effect,
 
 AudioUnitValidator::~AudioUnitValidator()
 {
+   if (mpControl)
+      mpControl->Close();
 }
 
 auto AudioUnitValidator::MakeListener(AudioUnitInstance &instance)
@@ -624,15 +634,12 @@ bool AudioUnitEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 int AudioUnitEffect::ShowClientInterface(
    wxWindow &parent, wxDialog &dialog, bool forceModal)
 {
-   // Remember the dialog with a weak pointer, but don't control its lifetime
-   mDialog = &dialog;
-   if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
-   {
-      mDialog->Show();
+   if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
+      dialog.Show();
       return 0;
    }
 
-   return mDialog->ShowModal();
+   return dialog.ShowModal();
 }
 
 bool AudioUnitEffect::SaveSettings(
@@ -775,53 +782,52 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
+std::unique_ptr<EffectUIValidator> AudioUnitValidator::Create(
+   EffectUIClientInterface &effect, ShuttleGui &S,
+   const wxString &uiType,
    EffectInstance &instance, EffectSettingsAccess &access)
 {
-   // OSStatus result;
+   const auto parent = S.GetParent();
+   // Cast is assumed to succeed because only this effect's own instances
+   // are passed back by the framework
+   auto &myInstance = dynamic_cast<AudioUnitInstance&>(instance);
 
-   auto parent = S.GetParent();
-   mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
-   mParent = parent;
-   mpControl = nullptr;
-
-   wxPanel *container;
+   AUControl *pControl{};
+   wxPanel *container{};
    {
       auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-
-      wxASSERT(mParent); // To justify safenew
-      container = safenew wxPanelWrapper(mParent, wxID_ANY);
+      wxASSERT(parent); // To justify safenew
+      container = safenew wxPanelWrapper(parent, wxID_ANY);
       mainSizer->Add(container, 1, wxEXPAND);
-
-      mParent->SetSizer(mainSizer.release());
+      parent->SetSizer(mainSizer.release());
    }
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
-   if (mUIType == BasicValue.MSGID().GET()) {
+   if (uiType == BasicValue.MSGID().GET()) {
       if (!CreatePlain(mParent))
          return nullptr;
    }
    else
 #endif
    {
-      auto pControl = Destroy_ptr<AUControl>(safenew AUControl);
-      if (!pControl)
-      {
+      auto uControl = Destroy_ptr<AUControl>(safenew AUControl);
+      if (!uControl)
          return nullptr;
-      }
+      pControl = uControl.get();
 
-      if (!pControl->Create(container, mComponent, mUnit.get(),
-         mUIType == FullValue.MSGID().GET()))
+      if (!pControl->Create(container, myInstance.GetComponent(),
+         myInstance.GetAudioUnit(),
+         uiType == FullValue.MSGID().GET()))
          return nullptr;
 
       {
          auto innerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-         innerSizer->Add((mpControl = pControl.release()), 1, wxEXPAND);
+         innerSizer->Add(uControl.release(), 1, wxEXPAND);
          container->SetSizer(innerSizer.release());
       }
 
-      mParent->SetMinSize(wxDefaultSize);
+      parent->SetMinSize(wxDefaultSize);
 
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
@@ -830,13 +836,15 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
 #endif
    }
 
-   if (mpControl)
-      mParent->PushEventHandler(this);
+   return std::make_unique<AudioUnitValidator>(
+      CreateToken{}, effect, access, myInstance, pControl);
+}
 
-   return std::make_unique<AudioUnitValidator>(*this, access,
-      // Cast is assumed to succeed because only this effect's own instances
-      // are passed back by the framework
-      dynamic_cast<AudioUnitInstance&>(instance), mpControl);
+std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
+   EffectInstance &instance, EffectSettingsAccess &access)
+{
+   mParent = S.GetParent();
+   return AudioUnitValidator::Create(*this, S, mUIType, instance, access);
 }
 
 bool AudioUnitEffect::IsGraphicalUI()
@@ -858,18 +866,8 @@ bool AudioUnitEffect::CloseUI()
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(false);
 #endif
-   if (mpControl)
-   {
-      mParent->RemoveEventHandler(this);
-
-      mpControl->Close();
-      mpControl = nullptr;
-   }
 #endif
-
-   mParent = NULL;
-   mDialog = NULL;
-
+   mParent = nullptr;
    return true;
 }
 

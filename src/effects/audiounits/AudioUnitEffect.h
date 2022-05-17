@@ -215,16 +215,12 @@ private:
    PackedArray::Ptr<AudioBufferList> mOutputList;
 
    wxWindow *mParent{};
-   wxWeakRef<wxDialog> mDialog;
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
    bool mIsGraphical{ false };
 
    AudioUnitEffect *const mMaster;     // non-NULL if a slave
 public:
    AudioUnitEffectArray mSlaves;
-
-private:
-   AUControl *mpControl{};
 };
 
 #endif
