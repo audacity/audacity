@@ -586,6 +586,8 @@ list( APPEND SOURCES
          effects/audiounits/AudioUnitInstance.h
          effects/audiounits/AudioUnitUtils.cpp
          effects/audiounits/AudioUnitUtils.h
+         effects/audiounits/AudioUnitValidator.cpp
+         effects/audiounits/AudioUnitValidator.h
          effects/audiounits/AudioUnitWrapper.cpp
          effects/audiounits/AudioUnitWrapper.h
       >
