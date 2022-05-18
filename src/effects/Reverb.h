@@ -69,6 +69,8 @@ public:
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
 
+   bool SupportsRealtime() const override { return true; }
+
    // Effect implementation
 
    std::unique_ptr<EffectUIValidator> PopulateOrExchange(
