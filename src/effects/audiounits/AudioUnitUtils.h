@@ -147,7 +147,8 @@ namespace AudioUnitUtils {
          inDesiredLength = desiredLength;
       }
       ~ParameterNameInfo() {
-         CFRelease(outName);
+         if (outName)
+            CFRelease(outName);
       }
    };
 
