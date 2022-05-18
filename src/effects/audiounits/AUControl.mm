@@ -289,15 +289,15 @@ void AUControl::CreateCocoa()
             // Load the class from the bundle
             if (auto factoryClass = [bundle classNamed:viewClass])
                // Create an instance of the class
-               if (id factoryInst = [[[factoryClass alloc] init] autorelease]) {
+               if (id factoryInst = [[[factoryClass alloc] init] autorelease])
                   // Create the view, suggesting a reasonable size
                   if ((mView = [factoryInst uiViewForAudioUnit:mUnit
                                                  withSize:NSSize{800, 600}]))
                      [mView retain];
-                  else
-                     return;
-               }
    }
+
+   if (!mView)
+      return;
 
    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
    [center addObserver:mAUView
