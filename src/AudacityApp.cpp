@@ -120,6 +120,8 @@ It handles initialization and termination by subclassing wxApp.
 #include "update/UpdateManager.h"
 #include "widgets/wxWidgetsBasicUI.h"
 #include "LogWindow.h"
+#include "PluginStartupRegistration.h"
+#include "IncompatiblePluginsDialog.h"
 
 #ifdef HAS_NETWORKING
 #include "NetworkManager.h"
@@ -1400,6 +1402,19 @@ bool AudacityApp::InitPart2()
       temporarywindow.Show(false);
    }
 
+   //Search for the new plugins
+   std::vector<wxString> failedPlugins;
+   if(!playingJournal)
+   {
+      auto newPlugins = PluginManager::Get().CheckPluginUpdates();
+      if(!newPlugins.empty())
+      {
+         PluginStartupRegistration reg(newPlugins);
+         reg.Run();
+         failedPlugins = reg.GetFailedPlugins();
+      }
+   }
+
    // Must do this before creating the first project, else the early exit path
    // may crash
    if ( !Journal::Begin( FileNames::DataDir() ) )
@@ -1474,6 +1489,12 @@ bool AudacityApp::InitPart2()
             // PRL: Catch any exceptions, don't try this file again, continue to
             // other files.
             SafeMRUOpen(parser->GetParam(i));
+         }
+
+         if(!failedPlugins.empty())
+         {
+            auto dialog = safenew IncompatiblePluginsDialog(GetTopWindow(), wxID_ANY, failedPlugins);
+            dialog->Show();
          }
       }
    } );

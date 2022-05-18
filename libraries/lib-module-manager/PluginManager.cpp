@@ -151,6 +151,11 @@ bool PluginManager::IsPluginLoaded(const wxString& ID) const
    return mLoadedInterfaces.find(ID) != mLoadedInterfaces.end();
 }
 
+void PluginManager::RegisterPlugin(PluginDescriptor&& desc)
+{
+   mRegisteredPlugins[desc.GetID()] = std::move(desc);
+}
+
 const PluginID & PluginManager::RegisterPlugin(PluginProvider *provider)
 {
    PluginDescriptor & plug =
@@ -333,6 +338,29 @@ PluginManager::~PluginManager()
    Terminate();
 }
 
+void PluginManager::InitializePlugins()
+{
+   ModuleManager & mm = ModuleManager::Get();
+
+   // Check all known plugins to ensure they are still valid.
+   for (auto &pair : mRegisteredPlugins) {
+      auto &plug = pair.second;
+      const wxString & plugPath = plug.GetPath();
+      PluginType plugType = plug.GetPluginType();
+      
+      if (plugType != PluginTypeNone && plugType != PluginTypeStub && plugType != PluginTypeModule)
+      {
+         plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugPath, true));
+         if (!plug.IsValid())
+         {
+            plug.SetEnabled(false);
+         }
+      }
+   }
+
+   Save();
+}
+
 // ----------------------------------------------------------------------------
 // PluginManager implementation
 // ----------------------------------------------------------------------------
@@ -374,7 +402,7 @@ void PluginManager::Initialize(FileConfigFactory factory)
       module->AutoRegisterPlugins(*this);
    }
    
-   CheckForUpdates(true);
+   InitializePlugins();
 }
 
 void PluginManager::Terminate()
@@ -964,93 +992,6 @@ void PluginManager::SaveGroup(FileConfig *pRegistry, PluginType type)
    return;
 }
 
-// If bFast is true, do not do a full check.  Just check the ones
-// that are quick to check.  Currently (Feb 2017) just Nyquist
-// and built-ins.
-void PluginManager::CheckForUpdates(bool bFast)
-{
-   ModuleManager & mm = ModuleManager::Get();
-   wxArrayString pathIndex;
-   for (auto &pair : mRegisteredPlugins) {
-      auto &plug = pair.second;
-
-      // Bypass 2.1.0 placeholders...remove this after a few releases past 2.1.0
-      if (plug.GetPluginType() != PluginTypeNone)
-         pathIndex.push_back(plug.GetPath().BeforeFirst(wxT(';')));
-   }
-
-   // Check all known plugins to ensure they are still valid and scan for NEW ones.
-   // 
-   // All NEW plugins get a stub entry created that will remain in place until the
-   // user enables or disables the plugin.
-   //
-   // Because we use the plugins "path" as returned by the providers, we can actually
-   // have multiple providers report the same path since, at this point, they only
-   // know that the path might possibly be one supported by the provider.
-   //
-   // When the user enables the plugin, each provider that reported it will be asked
-   // to register the plugin.
-   for (auto &pair : mRegisteredPlugins) {
-      auto &plug = pair.second;
-      const PluginID & plugID = plug.GetID();
-      const wxString & plugPath = plug.GetPath();
-      PluginType plugType = plug.GetPluginType();
-
-      // Bypass 2.1.0 placeholders...remove this after a few releases past 2.1.0
-      if (plugType == PluginTypeNone)
-      {
-         continue;
-      }
-
-      if ( plugType == PluginTypeModule  )
-      {
-         if( bFast ) 
-         {
-            // Skip modules, when doing a fast refresh/check.
-         } 
-         else if (!mm.IsProviderValid(plugID, plugPath))
-         {
-            plug.SetEnabled(false);
-            plug.SetValid(false);
-         }
-         else
-         {
-            // Collect plugin paths
-            PluginPaths paths;
-            if (auto provider = mm.CreateProviderInstance( plugID, plugPath ) )
-               paths = provider->FindModulePaths( *this );
-            for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
-            {
-               wxString path = paths[i].BeforeFirst(wxT(';'));;
-               if ( ! make_iterator_range( pathIndex ).contains( path ) )
-               {
-                  PluginID ID = plugID + wxT("_") + path;
-                  PluginDescriptor & plug2 = mRegisteredPlugins[ID];  // This will create a NEW descriptor
-                  plug2.SetPluginType(PluginTypeStub);
-                  plug2.SetID(ID);
-                  plug2.SetProviderID(plugID);
-                  plug2.SetPath(path);
-                  plug2.SetEnabled(false);
-                  plug2.SetValid(false);
-               }
-            }
-         }
-      }
-      else if (plugType != PluginTypeNone && plugType != PluginTypeStub)
-      {
-         plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugPath, bFast));
-         if (!plug.IsValid())
-         {
-            plug.SetEnabled(false);
-         }
-      }
-   }
-
-   Save();
-
-   return;
-}
-
 // Here solely for the purpose of Nyquist Workbench until
 // a better solution is devised.
 const PluginID & PluginManager::RegisterPlugin(
@@ -1195,6 +1136,70 @@ ComponentInterface *PluginManager::Load(const PluginID & ID)
       }
    }
    return nullptr;
+}
+
+std::vector<std::pair<wxString, wxString>> PluginManager::CheckPluginUpdates()
+{
+   ModuleManager & mm = ModuleManager::Get();
+   wxArrayString pathIndex;
+   for (auto &pair : mRegisteredPlugins) {
+      auto &plug = pair.second;
+
+      // Bypass 2.1.0 placeholders...remove this after a few releases past 2.1.0
+      if (plug.GetPluginType() != PluginTypeNone)
+         pathIndex.push_back(plug.GetPath().BeforeFirst(wxT(';')));
+   }
+
+   // Scan for NEW ones.
+   //
+   // Because we use the plugins "path" as returned by the providers, we can actually
+   // have multiple providers report the same path since, at this point, they only
+   // know that the path might possibly be one supported by the provider.
+   //
+   // When the user enables the plugin, each provider that reported it will be asked
+   // to register the plugin.
+
+   std::vector<std::pair<wxString, wxString>> newPaths;
+   for (auto &pair : mRegisteredPlugins) {
+      auto &plug = pair.second;
+      const PluginID & plugID = plug.GetID();
+      const wxString & plugPath = plug.GetPath();
+      PluginType plugType = plug.GetPluginType();
+
+      // Bypass 2.1.0 placeholders...remove this after a few releases past 2.1.0
+      if (plugType == PluginTypeNone)
+         continue;
+
+      if ( plugType == PluginTypeModule  )
+      {
+         if (!mm.IsProviderValid(plugID, plugPath))
+         {
+            plug.SetEnabled(false);
+            plug.SetValid(false);
+         }
+         else
+         {
+            if (auto provider = mm.CreateProviderInstance( plugID, plugPath ))
+            {
+               const auto paths = provider->FindModulePaths(*this);
+               for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
+               {
+                  wxString path = paths[i].BeforeFirst(wxT(';'));
+                  if(!make_iterator_range(pathIndex).contains(path))
+                     newPaths.push_back(std::make_pair(plugID, path));
+               }
+            }
+         }
+      }
+      else if (plugType != PluginTypeStub)
+      {
+         plug.SetValid(mm.IsPluginValid(plug.GetProviderID(), plugPath, false));
+         if (!plug.IsValid())
+            plug.SetEnabled(false);
+      }
+   }
+
+   return newPaths;
 }
 
 PluginID PluginManager::GetID(PluginProvider *provider)
