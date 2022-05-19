@@ -22,6 +22,8 @@ Paul Licameli split from TrackInfo.cpp
 
 #include <wx/dc.h>
 
+#include "effects/RealtimeEffectList.h"
+
 using TCPLine = TrackInfo::TCPLine;
 
 namespace {
@@ -113,7 +115,11 @@ void EffectsDrawFunction
   bool sel, bool hit )
 {   
    wxCoord textWidth, textHeight;
-   const auto str = XO("Effects").Translation();
+
+   //may throw, but it's not expected that effects button is available
+   //for tracks that do not allow effect stack
+   auto str = (RealtimeEffectList::Get(*pTrack).GetStatesCount() > 0
+      ? XO("Effects") : XO("Add effects")).Translation();
 
    const auto selected = pTrack ? pTrack->GetSelected() : true;
 

@@ -93,6 +93,8 @@ is time to refresh some aspect of the screen.
 #include <wx/dcclient.h>
 #include <wx/graphics.h>
 
+#include "effects/RealtimeEffectManager.h"
+
 static_assert( kVerticalPadding == kTopMargin + kBottomMargin );
 static_assert( kTrackInfoBtnSize == kAffordancesAreaHeight, "Drag bar is misaligned with the menu button");
 
@@ -320,6 +322,15 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mAudioIOSubscription =
       AudioIO::Get()->Subscribe(*this, &TrackPanel::OnAudioIO);
+
+   mRealtimeEffectManagerSubscription = RealtimeEffectManager::Get(*theProject)
+      .Subscribe([this](const RealtimeEffectManagerMessage& msg)
+      {
+         if(msg.track)
+            //update "effects" button 
+            RefreshTrack(msg.track.get());
+      });
+
    UpdatePrefs();
 }
 

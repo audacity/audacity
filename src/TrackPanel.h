@@ -188,6 +188,7 @@ protected:
       , mAudioIOSubscription
       , mUndoSubscription
       , mFocusChangeSubscription
+      , mRealtimeEffectManagerSubscription
    ;
 
    TrackPanelListener *mListener;
