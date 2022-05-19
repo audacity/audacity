@@ -276,7 +276,7 @@ void AUControl::OnSize(wxSizeEvent & evt)
 
 void AUControl::CreateCocoa()
 {
-   PackedArrayPtr<AudioUnitCocoaViewInfo> viewInfo;
+   PackedArray::Ptr<AudioUnitCocoaViewInfo> viewInfo;
    if (!AudioUnitUtils::GetVariableSizeProperty(mUnit,
       kAudioUnitProperty_CocoaUI, viewInfo)) {
       // Looks like the AU has a Cocoa UI, so load the factory class
@@ -289,15 +289,15 @@ void AUControl::CreateCocoa()
             // Load the class from the bundle
             if (auto factoryClass = [bundle classNamed:viewClass])
                // Create an instance of the class
-               if (id factoryInst = [[[factoryClass alloc] init] autorelease]) {
+               if (id factoryInst = [[[factoryClass alloc] init] autorelease])
                   // Create the view, suggesting a reasonable size
                   if ((mView = [factoryInst uiViewForAudioUnit:mUnit
                                                  withSize:NSSize{800, 600}]))
                      [mView retain];
-                  else
-                     return;
-               }
    }
+
+   if (!mView)
+      return;
 
    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
    [center addObserver:mAUView
@@ -395,7 +395,7 @@ void AUControl::ForceRedraw()
 
 void AUControl::CreateCarbon()
 {
-   PackedArrayPtr<AudioComponentDescription> compList;
+   PackedArray::Ptr<AudioComponentDescription> compList;
    if (AudioUnitUtils::GetVariableSizeProperty(mUnit,
       kAudioUnitProperty_GetUIComponentList, compList))
       return;

@@ -18,9 +18,9 @@
 
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffect.h"
+#include "AudioUnitEffectOptionsDialog.h"
 #include "AudacityException.h"
 #include "AUControl.h"
-#include "ModuleManager.h"
 #include "SampleCount.h"
 #include "ConfigInterface.h"
 
@@ -44,13 +44,11 @@
 #include <wx/settings.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-#include <wx/tokenzr.h>
 
 #include "../../SelectFile.h"
 #include "../../ShuttleGui.h"
 #include "../../widgets/AudacityMessageBox.h"
 #include "../../widgets/valnum.h"
-#include "../../widgets/wxPanelWrapper.h"
 
 //
 // When a plug-in's state is saved to the settings file (as a preset),
@@ -73,25 +71,6 @@
 // Where the presets are located
 #define PRESET_LOCAL_PATH wxT("/Library/Audio/Presets")
 #define PRESET_USER_PATH wxT("~/Library/Audio/Presets")
-
-static const struct
-{
-   OSType componentManufacturer;
-   OSType componentType;
-   OSType componentSubType;
-}
-BlackList[] =
-{
-   { 'appl', 'augn', 'afpl' },   // Apple: AUAudioFilePlayer
-   { 'appl', 'augn', 'sspl' },   // Apple: AUScheduledSoundPlayer
-   { 'appl', 'augn', 'ttsp' },   // Apple: AUSpeechSynthesis
-   { 'appl', 'augn', 'nrcv' },   // Apple: AUNetReceive
-   { 'appl', 'aumx', '3dmx' },   // Apple: AUMixer3D
-   { 'appl', 'aumx', 'mspl' },   // Apple: AUMultiSplitter
-   { 'appl', 'aumx', 'mxcm' },   // Apple: AUMultiChannelMixer
-   { 'appl', 'aumx', 'mxmx' },   // Apple: AUMatrixMixer
-   { 'appl', 'aumx', 'smxr' },   // Apple: AUMixer
-};
 
 // Uncomment to include parameter IDs in the final name.  Only needed if it's
 // discovered that many effects have duplicate names.  It could even be done
@@ -187,535 +166,6 @@ public:
    AudioUnitParameterInfo info;
 };
 
-// ============================================================================
-// Module registration entry point
-//
-// This is the symbol that Audacity looks for when the module is built as a
-// dynamic library.
-//
-// When the module is builtin to Audacity, we use the same function, but it is
-// declared static so as not to clash with other builtin modules.
-// ============================================================================
-DECLARE_PROVIDER_ENTRY(AudacityModule)
-{
-   // Create and register the importer
-   // Trust the module manager not to leak this
-   return safenew AudioUnitEffectsModule();
-}
-
-// ============================================================================
-// Register this as a builtin module
-// ============================================================================
-DECLARE_BUILTIN_PROVIDER(AudioUnitEffectsBuiltin);
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// AudioUnitEffectsModule
-//
-///////////////////////////////////////////////////////////////////////////////
-
-AudioUnitEffectsModule::AudioUnitEffectsModule()
-{
-}
-
-AudioUnitEffectsModule::~AudioUnitEffectsModule()
-{
-}
-
-// ============================================================================
-// ComponentInterface implementation
-// ============================================================================
-
-PluginPath AudioUnitEffectsModule::GetPath() const
-{
-   return {};
-}
-
-ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol() const
-{
-   /* i18n-hint: Audio Unit is the name of an Apple audio software protocol */
-   return XO("Audio Unit Effects");
-}
-
-VendorSymbol AudioUnitEffectsModule::GetVendor() const
-{
-   return XO("The Audacity Team");
-}
-
-wxString AudioUnitEffectsModule::GetVersion() const
-{
-   // This "may" be different if this were to be maintained as a separate DLL
-   return AUDIOUNITEFFECTS_VERSION;
-}
-
-TranslatableString AudioUnitEffectsModule::GetDescription() const
-{
-   return XO("Provides Audio Unit Effects support to Audacity");
-}
-
-// ============================================================================
-// PluginProvider implementation
-// ============================================================================
-
-const FileExtensions &AudioUnitEffectsModule::GetFileExtensions()
-{
-   static FileExtensions result{{ _T("au") }};
-   return result;
-}
-
-bool AudioUnitEffectsModule::Initialize()
-{
-   // Nothing to do here
-   return true;
-}
-
-void AudioUnitEffectsModule::Terminate()
-{
-   // Nothing to do here
-   return;
-}
-
-EffectFamilySymbol AudioUnitEffectsModule::GetOptionalFamilySymbol()
-{
-#if USE_AUDIO_UNITS
-   return AUDIOUNITEFFECTS_FAMILY;
-#else
-   return {};
-#endif
-}
-
-void AudioUnitEffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
-{
-}
-
-PluginPaths AudioUnitEffectsModule::FindModulePaths(PluginManagerInterface &)
-{
-   PluginPaths effects;
-
-   LoadAudioUnitsOfType(kAudioUnitType_Effect, effects);
-   LoadAudioUnitsOfType(kAudioUnitType_Generator, effects);
-   LoadAudioUnitsOfType(kAudioUnitType_Mixer, effects);
-   LoadAudioUnitsOfType(kAudioUnitType_MusicEffect, effects);
-   LoadAudioUnitsOfType(kAudioUnitType_Panner, effects);
-
-   return effects;
-}
-
-unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
-   const PluginPath & path, TranslatableString &errMsg,
-   const RegistrationCallback &callback)
-{
-   errMsg = {};
-   wxString name;
-   AudioComponent component = FindAudioUnit(path, name);
-   if (component == NULL)
-   {
-      errMsg = XO("Could not find component");
-      return 0;
-   }
-
-   AudioUnitEffect effect(path, name, component);
-   if (!effect.InitializePlugin())
-   {
-      // TODO:  Is it worth it to discriminate all the ways SetHost might
-      // return false?
-      errMsg = XO("Could not initialize component");
-      return 0;
-   }
-
-   if (callback)
-   {
-      callback(this, &effect);
-   }
-
-   return 1;
-}
-
-bool AudioUnitEffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
-{
-   if (bFast)
-   {
-      return true;
-   }
-
-   wxString name;
-   return FindAudioUnit(path, name) != NULL;
-}
-
-std::unique_ptr<ComponentInterface>
-AudioUnitEffectsModule::LoadPlugin(const PluginPath & path)
-{
-   // Acquires a resource for the application.
-   if (wxString name; auto component = FindAudioUnit(path, name)) {
-      auto result = std::make_unique<AudioUnitEffect>(path, name, component);
-      result->InitializePlugin();
-      return result;
-   }
-   return nullptr;
-}
-
-// ============================================================================
-// AudioUnitEffectsModule implementation
-// ============================================================================
-
-void AudioUnitEffectsModule::LoadAudioUnitsOfType(OSType inAUType,
-                                                  PluginPaths & effects)
-{
-   AudioComponentDescription desc;
-   AudioComponent component;
-
-   desc.componentType = inAUType;
-   desc.componentSubType = 0;
-   desc.componentManufacturer = 0;
-   desc.componentFlags = 0;
-   desc.componentFlagsMask = 0;
-
-   component = AudioComponentFindNext(NULL, &desc);
-   while (component != NULL)
-   {
-      OSStatus result;
-      AudioComponentDescription found;
-
-      result = AudioComponentGetDescription(component, &found);
-      if (result == noErr)
-      {
-         CFStringRef cfName{};
-         result = AudioComponentCopyName(component, &cfName);
-         CF_ptr<CFStringRef> uName{ cfName };
-         if (result == noErr) {
-            wxString path;
-
-            path.Printf(wxT("%-4.4s/%-4.4s/%-4.4s/%s"),
-                        FromOSType(found.componentManufacturer),
-                        FromOSType(found.componentType),
-                        FromOSType(found.componentSubType),
-                        wxCFStringRef::AsString(cfName));
-
-            for (int i = 0; i < WXSIZEOF(BlackList); ++i) {
-               if (BlackList[i].componentType == found.componentType &&
-                   BlackList[i].componentSubType == found.componentSubType &&
-                   BlackList[i].componentManufacturer ==
-                      found.componentManufacturer) {
-                  wxLogDebug(wxT("Blacklisted AU skipped: %s"), path);
-                  result = !noErr;
-                  break;
-               }
-            }
-            if (result == noErr)
-               effects.push_back(path);
-         }
-      }
-      component = AudioComponentFindNext(component, &desc);
-   }
-}
-
-AudioComponent AudioUnitEffectsModule::FindAudioUnit(const PluginPath & path,
-                                                     wxString & name)
-{
-   wxStringTokenizer tokens(path, wxT("/"));
-
-   AudioComponentDescription desc;
-
-   desc.componentManufacturer = ToOSType(tokens.GetNextToken());
-   desc.componentType = ToOSType(tokens.GetNextToken());
-   desc.componentSubType = ToOSType(tokens.GetNextToken());
-   desc.componentFlags = 0;
-   desc.componentFlagsMask = 0;
-
-   name = tokens.GetNextToken();
-   return AudioComponentFindNext(NULL, &desc);
-}
-
-wxString AudioUnitEffectsModule::FromOSType(OSType type)
-{
-   OSType rev = (type & 0xff000000) >> 24 |
-                (type & 0x00ff0000) >> 8  |
-                (type & 0x0000ff00) << 8  |
-                (type & 0x000000ff) << 24;
-   
-   return wxString::FromUTF8(reinterpret_cast<char *>(&rev), 4);
-}
-
-OSType AudioUnitEffectsModule::ToOSType(const wxString & type)
-{
-   wxCharBuffer buf = type.ToUTF8();
-
-   OSType rev = ((unsigned char)buf.data()[0]) << 24 |
-                ((unsigned char)buf.data()[1]) << 16 |
-                ((unsigned char)buf.data()[2]) << 8 |
-                ((unsigned char)buf.data()[3]);
-
-   return rev;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// AudioUnitEffectOptionsDialog
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class AudioUnitEffectOptionsDialog final : public wxDialogWrapper
-{
-public:
-   AudioUnitEffectOptionsDialog(
-      wxWindow * parent, bool &useLatencey, wxString &uiType);
-   virtual ~AudioUnitEffectOptionsDialog();
-   void PopulateOrExchange(ShuttleGui & S);
-   void OnOk(wxCommandEvent & evt);
-private:
-   bool &mUseLatency;
-   wxString &mUIType;
-   TranslatableString mUITypeString;
-   DECLARE_EVENT_TABLE()
-};
-
-BEGIN_EVENT_TABLE(AudioUnitEffectOptionsDialog, wxDialogWrapper)
-   EVT_BUTTON(wxID_OK, AudioUnitEffectOptionsDialog::OnOk)
-END_EVENT_TABLE()
-
-AudioUnitEffectOptionsDialog::AudioUnitEffectOptionsDialog(
-   wxWindow * parent, bool &useLatency, wxString &uiType)
-: wxDialogWrapper(parent, wxID_ANY, XO("Audio Unit Effect Options"))
-, mUseLatency{ useLatency }
-, mUIType{ uiType }
-// Get the localization of the string for display to the user
-, mUITypeString{ mUIType, {} }
-{
-   ShuttleGui S(this, eIsCreating);
-   PopulateOrExchange(S);
-}
-
-AudioUnitEffectOptionsDialog::~AudioUnitEffectOptionsDialog()
-{
-}
-
-static const auto FullValue = XO("Full");
-static const auto GenericValue = XO("Generic");
-static const auto BasicValue = XO("Basic");
-
-void AudioUnitEffectOptionsDialog::PopulateOrExchange(ShuttleGui & S)
-{
-   S.SetBorder(5);
-   S.StartHorizontalLay(wxEXPAND, 1);
-   {
-      S.StartVerticalLay(false);
-      {
-         S.StartStatic(XO("Latency Compensation"));
-         {
-            S.AddVariableText(XO(
-"As part of their processing, some Audio Unit effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will "
-"notice that small silences have been inserted into the audio. "
-"Enabling this option will provide that compensation, but it may "
-"not work for all Audio Unit effects."),
-               false, 0, 650);
-
-            S.StartHorizontalLay(wxALIGN_LEFT);
-            {
-               S.TieCheckBox(XXO("Enable &compensation"),
-                             mUseLatency);
-            }
-            S.EndHorizontalLay();
-         }
-         S.EndStatic();
-
-         S.StartStatic(XO("User Interface"));
-         {
-            S.AddVariableText(XO(
-"Select \"Full\" to use the graphical interface if supplied by the Audio Unit."
-" Select \"Generic\" to use the system supplied generic interface."
-#if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
-" Select \"Basic\" for a basic text-only interface."
-#endif
-" Reopen the effect for this to take effect."),
-               false, 0, 650);
-
-            S.StartHorizontalLay(wxALIGN_LEFT);
-            {
-               S.TieChoice(XXO("Select &interface"),
-                  mUITypeString,
-                  {
-                     FullValue,
-                     GenericValue,
-#if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
-                     BasicValue,
-#endif
-                  });
-            }
-            S.EndHorizontalLay();
-         }
-         S.EndStatic();
-      }
-      S.EndVerticalLay();
-   }
-   S.EndHorizontalLay();
-   S.AddStandardButtons();
-   Layout();
-   Fit();
-   Center();
-}
-
-void AudioUnitEffectOptionsDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
-{
-   if (!Validate())
-      return;
-
-   // This re-visits the controls, not to create them but to transfer values out
-   ShuttleGui S(this, eIsGettingFromDialog);
-   PopulateOrExchange(S);
-
-   // un-translate the type
-   mUIType = mUITypeString.MSGID().GET();
-   EndModal(wxID_OK);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// AudioUnitEffectImportDialog
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class AudioUnitEffectImportDialog final : public wxDialogWrapper
-{
-public:
-   AudioUnitEffectImportDialog(wxWindow * parent, AudioUnitEffect *effect);
-   virtual ~AudioUnitEffectImportDialog();
-
-   void PopulateOrExchange(ShuttleGui & S);
-   bool HasPresets();
-   TranslatableString Import(const wxString & path, const wxString & name);
-
-   void OnOk(wxCommandEvent & evt);
-
-private:
-   wxWindow *mParent;
-   AudioUnitEffect *mEffect;
-
-   wxListCtrl *mList;
-
-   DECLARE_EVENT_TABLE()
-};
-
-BEGIN_EVENT_TABLE(AudioUnitEffectImportDialog, wxDialogWrapper)
-   EVT_BUTTON(wxID_OK, AudioUnitEffectImportDialog::OnOk)
-END_EVENT_TABLE()
-
-AudioUnitEffectImportDialog::AudioUnitEffectImportDialog(wxWindow * parent, AudioUnitEffect *effect)
-:  wxDialogWrapper(parent, wxID_ANY, XO("Import Audio Unit Presets"))
-{
-   mEffect = effect;
-
-   ShuttleGui S(this, eIsCreating);
-   PopulateOrExchange(S);
-}
-
-AudioUnitEffectImportDialog::~AudioUnitEffectImportDialog()
-{
-}
-
-void AudioUnitEffectImportDialog::PopulateOrExchange(ShuttleGui & S)
-{
-   S.SetBorder(5);
-   S.StartHorizontalLay(wxEXPAND, 1);
-   {
-      S.StartVerticalLay(true);
-      {
-         S.StartStatic(XO("Presets (may select multiple)"));
-         {
-            mList = S.Style(wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
-                       wxLC_NO_SORT_HEADER)
-               .AddListControlReportMode({ XO("Preset"), XO("Location") });
-         }
-         S.EndStatic();
-      }
-      S.EndVerticalLay();
-   }
-   S.EndHorizontalLay();
-
-   S.AddStandardButtons();
-
-   FilePaths presets;
-   wxFileName fn;
-
-   // Generate the local domain path
-   wxString path;
-   path.Printf(wxT("%s/%s/%s"),
-               PRESET_LOCAL_PATH,
-               mEffect->mVendor,
-               mEffect->mName);
-   fn = path;
-   fn.Normalize();
-   
-   // Get all presets in the local domain for this effect
-   wxDir::GetAllFiles(fn.GetFullPath(), &presets, wxT("*.aupreset"));
-
-   // Generate the user domain path
-   path.Printf(wxT("%s/%s/%s"),
-               PRESET_USER_PATH,
-               mEffect->mVendor,
-               mEffect->mName);
-   fn = path;
-   fn.Normalize();
-
-   // Get all presets in the user domain for this effect
-   wxDir::GetAllFiles(fn.GetFullPath(), &presets, wxT("*.aupreset"));
-   
-   presets.Sort();
-
-   for (size_t i = 0, cnt = presets.size(); i < cnt; i++)
-   {
-      fn = presets[i];
-      mList->InsertItem(i, fn.GetName());
-      mList->SetItem(i, 1, fn.GetPath());
-   }
-
-   mList->SetColumnWidth(0, wxLIST_AUTOSIZE);
-   mList->SetColumnWidth(1, wxLIST_AUTOSIZE);
-
-   // Set the list size...with a little extra for good measure
-   wxSize sz = mList->GetBestSize();
-   sz.x += 5;
-   sz.y += 5;
-   mList->SetMinSize(sz);
-
-   Layout();
-   Fit();
-   Center();
-}
-
-bool AudioUnitEffectImportDialog::HasPresets()
-{
-   return mList->GetItemCount() > 0;
-}
-
-TranslatableString AudioUnitEffectImportDialog::Import(
-   const wxString & path, const wxString & name)
-{
-   // Generate the path
-   wxString fullPath;
-   fullPath.Printf(wxT("%s/%s.aupreset"),
-                    path,
-                    name);
-
-   // Open the preset
-   wxFFile f(fullPath, wxT("r"));
-   if (!f.IsOpened())
-   {
-      return XO("Couldn't open \"%s\"").Format(fullPath);
-   }
-
-   // Load it into the buffer
-   size_t len = f.Length();
-   wxMemoryBuffer buf(len);
-   if (f.Read(buf.GetData(), len) != len || f.Error())
-   {
-      return XO("Unable to read the preset from \"%s\"").Format(fullPath);
-   }
-
-   return mEffect->SaveBlobToConfig(UserPresetsGroup(name),
-      fullPath, buf.GetData(), len, false);
-}
-
 TranslatableString AudioUnitEffect::SaveBlobToConfig(
    const RegistryPath &group, const wxString &path,
    const void *blob, size_t len, bool allowEmpty) const
@@ -729,38 +179,6 @@ TranslatableString AudioUnitEffect::SaveBlobToConfig(
    if (!SetConfig(*this, PluginSettings::Private, group, PRESET_KEY, parms))
       return XO("Unable to store preset in config file");
    return {};
-}
-
-void AudioUnitEffectImportDialog::OnOk(wxCommandEvent & evt)
-{
-   evt.Skip();
-   
-   // Import all selected presets
-   long sel = -1;
-   while ((sel = mList->GetNextItem(sel, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) >= 0)
-   {
-      wxListItem item;
-      item.SetId(sel);
-      item.SetColumn(1);
-      item.SetMask(wxLIST_MASK_TEXT);
-      mList->GetItem(item);
-
-      wxString path = item.GetText();
-      wxString name = mList->GetItemText(sel);
-      auto msg = Import(path, name);
-
-      if (!msg.empty())
-      {
-         AudacityMessageBox(
-            XO("Could not import \"%s\" preset\n\n%s").Format(name, msg),
-            XO("Import Audio Unit Presets"),
-            wxOK | wxCENTRE,
-            this);
-         return;
-      }
-   }
-  
-   EndModal(wxID_OK);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -868,7 +286,7 @@ bool AudioUnitEffect::SupportsRealtime() const
 
 bool AudioUnitEffect::SupportsAutomation() const
 {
-   PackedArrayPtr<AudioUnitParameterID> array;
+   PackedArray::Ptr<AudioUnitParameterID> array;
    if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
    for (const auto &ID : array) {
@@ -983,7 +401,7 @@ bool AudioUnitEffect::MakeListener()
       event.mArgument.mParameter.mElement = 0;
 
       // Retrieve the list of parameters
-      PackedArrayPtr<AudioUnitParameterID> array;
+      PackedArray::Ptr<AudioUnitParameterID> array;
       if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
          return false;
 
@@ -1021,7 +439,7 @@ bool AudioUnitEffect::MakeListener()
       bool hasCarbon =
          !GetFixedSizeProperty(kAudioUnitProperty_GetUIComponentList, compDesc);
 
-      mInteractive = (PackedArrayCount(array) > 0) || hasCocoa || hasCarbon;
+      mInteractive = (PackedArray::Count(array) > 0) || hasCocoa || hasCarbon;
    }
 
    return true;
@@ -1091,9 +509,9 @@ bool AudioUnitEffect::ProcessInitialize(
    EffectSettings &, sampleCount, ChannelNames chanMap)
 {
    mInputList =
-      PackedArrayAllocateCount<AudioBufferList>(mAudioIns)(mAudioIns);
+      PackedArray::AllocateCount<AudioBufferList>(mAudioIns)(mAudioIns);
    mOutputList =
-      PackedArrayAllocateCount<AudioBufferList>(mAudioOuts)(mAudioOuts);
+      PackedArray::AllocateCount<AudioBufferList>(mAudioOuts)(mAudioOuts);
 
    memset(&mTimeStamp, 0, sizeof(AudioTimeStamp));
    mTimeStamp.mSampleTime = 0; // This is a double-precision number that should
@@ -1132,13 +550,13 @@ size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
 {
    // mAudioIns and mAudioOuts don't change after plugin initialization,
    // so ProcessInitialize() made sufficient allocations
-   assert(PackedArrayCount(mInputList) >= mAudioIns);
+   assert(PackedArray::Count(mInputList) >= mAudioIns);
    for (size_t i = 0; i < mAudioIns; ++i)
       mInputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
          const_cast<float*>(inBlock[i]) };
 
    // See previous comment
-   assert(PackedArrayCount(mOutputList) >= mAudioOuts);
+   assert(PackedArray::Count(mOutputList) >= mAudioOuts);
    for (size_t i = 0; i < mAudioOuts; ++i)
       mOutputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
          outBlock[i] };
@@ -1272,7 +690,7 @@ int AudioUnitEffect::ShowClientInterface(
 bool AudioUnitEffect::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {
-   PackedArrayPtr<AudioUnitParameterID> array;
+   PackedArray::Ptr<AudioUnitParameterID> array;
    if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
    for (const auto &ID : array) {
@@ -1297,7 +715,7 @@ bool AudioUnitEffect::SaveSettings(
 bool AudioUnitEffect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
-   PackedArrayPtr<AudioUnitParameterID> array;
+   PackedArray::Ptr<AudioUnitParameterID> array;
    if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
       return false;
    for (const auto &ID : array) {
@@ -1865,7 +1283,7 @@ OSStatus AudioUnitEffect::Render(AudioUnitRenderActionFlags *inActionFlags,
 {
    size_t i = 0;
    auto size =
-      std::min<size_t>(ioData->mNumberBuffers, PackedArrayCount(mInputList));
+      std::min<size_t>(ioData->mNumberBuffers, PackedArray::Count(mInputList));
    for (; i < size; ++i)
       ioData->mBuffers[i].mData = mInputList[i].mData;
    // Some defensive code here just in case SDK requests from us an unexpectedly
@@ -1936,7 +1354,7 @@ void AudioUnitEffect::EventListenerCallback(void *inCallbackRefCon,
 void AudioUnitEffect::GetChannelCounts()
 {
    // Does AU have channel info
-   PackedArrayPtr<AUChannelInfo> info;
+   PackedArray::Ptr<AUChannelInfo> info;
    if (GetVariableSizeProperty(kAudioUnitProperty_SupportedNumChannels, info)) {
       // None supplied.  Apparently all FX type units can do any number of INs
       // and OUTs as long as they are the same number.  In this case, we'll

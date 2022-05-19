@@ -34,6 +34,8 @@
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
 
+#define DISABLE_STATE_NEW
+
 class CheckListAx final : public WindowAccessible
 {
 public:
@@ -339,7 +341,9 @@ enum
 {
    STATE_Enabled,
    STATE_Disabled,
+#ifndef DISABLE_STATE_NEW
    STATE_New,
+#endif
 
    STATE_COUNT
 };
@@ -349,7 +353,9 @@ enum
    ID_ShowAll = 10000,
    ID_ShowEnabled,
    ID_ShowDisabled,
+#ifndef DISABLE_STATE_NEW
    ID_ShowNew,
+#endif
    ID_List,
    ID_ClearAll,
    ID_SelectAll,
@@ -377,7 +383,9 @@ BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialogWrapper)
    EVT_RADIOBUTTON(ID_ShowAll, PluginRegistrationDialog::OnChangedVisibility)
    EVT_RADIOBUTTON(ID_ShowEnabled, PluginRegistrationDialog::OnChangedVisibility)
    EVT_RADIOBUTTON(ID_ShowDisabled, PluginRegistrationDialog::OnChangedVisibility)
+#ifndef DISABLE_STATE_NEW
    EVT_RADIOBUTTON(ID_ShowNew, PluginRegistrationDialog::OnChangedVisibility)
+#endif
 END_EVENT_TABLE()
 
 PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent)
@@ -393,7 +401,9 @@ PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent)
    mStates.resize(STATE_COUNT);
    mStates[STATE_Enabled] = _("Enabled");
    mStates[STATE_Disabled] = _("Disabled");
+#ifndef DISABLE_STATE_NEW
    mStates[STATE_New] = _("New");
+#endif
 
    mSortColumn = COL_Name;
    mSortDirection = 1;
@@ -471,6 +481,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
                rb->SetAccessible(safenew WindowAccessible(rb));
 #endif
 
+#ifndef DISABLE_STATE_NEW
                rb = S.Id(ID_ShowNew)
                   /* i18n-hint: Radio button to show just the newly discovered effects */
                   .Name(XO("Show new"))
@@ -479,6 +490,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
 #if wxUSE_ACCESSIBILITY
                // so that name can be set on a standard control
                rb->SetAccessible(safenew WindowAccessible(rb));
+#endif
 #endif
             }
             S.EndHorizontalLay();
@@ -554,10 +566,12 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       {
          wxFileName fname { path };
          item.name = fname.GetName().Trim(false).Trim(true);
+#ifndef DISABLE_STATE_NEW
          if (!item.valid)
          {
             item.state = STATE_New;
          }
+#endif
       }
 
       int x;
@@ -629,12 +643,14 @@ void PluginRegistrationDialog::RegenerateEffectsList(int filter)
       case ID_ShowAll:
          add = true;
          break;
+#ifndef DISABLE_STATE_NEW
       case ID_ShowNew:
          if (item.state == STATE_New)
          {
             add = true;
          }
          break;
+#endif
       case ID_ShowEnabled:
          if (item.state == STATE_Enabled)
          {
@@ -684,12 +700,14 @@ void PluginRegistrationDialog::SetState(int i, bool toggle, bool state)
 
    ItemData *item = (ItemData *) li.m_data;
 
+#ifndef DISABLE_STATE_NEW
    // If changing the state of a "New" (stub) entry, then we mark it as valid
    // since it will either be registered if "Enabled" or ignored if "Disabled".
    if (item->state == STATE_New)
    {
       item->valid = true;
    }
+#endif
 
    if (toggle)
    {
@@ -700,11 +718,14 @@ void PluginRegistrationDialog::SetState(int i, bool toggle, bool state)
       item->state = state;
    }
    
+#ifndef DISABLE_STATE_NEW
    if (mFilter == ID_ShowNew && item->state != STATE_New)
    {
       mEffects->DeleteItem(i);
    }
-   else if (mFilter == ID_ShowDisabled && item->state != STATE_Disabled)
+   else//if
+#endif
+   if (mFilter == ID_ShowDisabled && item->state != STATE_Disabled)
    {
       mEffects->DeleteItem(i);
    }
@@ -945,11 +966,13 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
                   XO("Effect or Command at %s failed to register:\n%s")
                      .Format( path, errMsgs ) );
          }
+#ifndef DISABLE_STATE_NEW
          else if (item.state == STATE_New) {
             for (auto plug : item.plugs)
                plug->SetValid(false);
          }
-         else if (item.state != STATE_New) {
+#endif
+         else {
             for (auto plug : item.plugs) {
                plug->SetEnabled(item.state == STATE_Enabled);
                plug->SetValid(item.valid);
