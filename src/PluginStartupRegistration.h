@@ -48,5 +48,6 @@ public:
 private:
    
    void Stop();
+   void StopWithError(const wxString& msg);
    void ProcessNext();
 };
