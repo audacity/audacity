@@ -18,16 +18,59 @@
 
 namespace PackedArray {
 
+template<typename T> struct Traits;
+
+namespace detail {
+
+//! Primary template of metafunction deducing other things from Traits<T>
+template<typename T, typename = void> struct ExtendedTraits : Traits<T> {
+   using element_type = typename Traits<T>::element_type;
+   using iterated_type = T;
+   static iterated_type *begin(T *p) { return p; }
+   static element_type *element_ptr(T *p) { return p; }
+   static size_t element_offset() { return 0; }
+};
+
+//! Partial specialization used when Traits<T>::array_member is defined
+template<typename T> struct ExtendedTraits<T, std::void_t<decltype(
+   std::declval<T>().*(Traits<T>::array_member)
+)>> : Traits<T> {
+   using element_type = typename Traits<T>::element_type;
+   using member_type = std::remove_reference_t<decltype(
+      std::declval<T>().*(Traits<T>::array_member)
+   )>;
+   // Check restrictions on usage.  The member is expected to have dimension 1
+   static_assert(std::extent_v<member_type> == 1);
+   using iterated_type = std::remove_extent_t<member_type>;
+   // Check that any overlay of a type with a destructor is sensible
+   static_assert(sizeof(iterated_type) == sizeof(element_type));
+
+   static iterated_type *begin(T *p) {
+      return &(p->*(Traits<T>::array_member))[0];
+   }
+   static element_type *element_ptr(T *p) {
+      return reinterpret_cast<element_type*>(begin(p));
+   }
+   static size_t element_offset() {
+      return reinterpret_cast<size_t>(begin(0));
+   }
+};
+
+}
+
 //! Primary template used in Deleter that can be specialized
+/*!
+ Specializations that define a pointer-to-data-member of T called array_member
+ are treated specially
+ */
 template<typename T> struct Traits{
    // Default assumption is that there is no header and no need to overlay
    // the element with a type that performs nontrivial destruction
    struct header_type {};
    using element_type = T;
-   using iterated_type = T;
 };
 
-//! Deleter for a header structure contiguous with an array of elements
+//! Deleter for an array of elements and optional contiguous header structure
 /*!
  @tparam Type is the type pointed to, and an explicit specialization of
  Traits<Type> may redefine the nested types for a non-empty header:
@@ -35,6 +78,8 @@ template<typename T> struct Traits{
    may be non-empty and define a destructor
   - element_type must be such that the last member of Type is Element[1]; may
     define a destructor
+ And Traits<Type> may also define a pointer-to-data-member of T called
+ array_member
  @tparam BaseDeleter manages the main deallocation
  */
 template<typename Type,
@@ -42,23 +87,18 @@ template<typename Type,
 struct Deleter : BaseDeleter<Type> {
    using managed_type = Type;
    using base_type = BaseDeleter<managed_type>;
-   using traits_type = Traits<managed_type>;
+   using traits_type = detail::ExtendedTraits<managed_type>;
    using header_type = typename traits_type::header_type;
    using element_type = typename traits_type::element_type;
-
-   // Check our assumptions about alignments
-   // Imitation of the layout of the managed type.  Be sure to use
-   // empty base class optimization in case header_type is zero-sized.
-   struct Overlay : header_type { element_type elements[1]; };
-   static_assert(sizeof(Overlay) == sizeof(managed_type));
-   // Another sanity check.  Note sizeof() an empty type is nonzero
-   static_assert(offsetof(Overlay, elements) ==
-      std::is_empty_v<header_type> ? 0 : sizeof(header_type));
 
    //! Nontrivial, implicit constructor of the deleter takes a size, which
    //! defaults to 0 to allow default contruction of the unique_ptr
    Deleter(size_t size = 0) noexcept
-      : mCount{ (size - sizeof(header_type)) / sizeof(element_type) } {}
+      : mCount{ size
+         ? (size - traits_type::element_offset()) / sizeof(element_type)
+         : 0
+      }
+   {}
 
    void operator()(Type *p) const noexcept(noexcept(
       (void)std::declval<element_type>().~element_type(),
@@ -67,13 +107,12 @@ struct Deleter : BaseDeleter<Type> {
    )) {
       if (!p)
          return;
-      auto pOverlay = reinterpret_cast<Overlay*>(p);
-      auto pE = pOverlay->elements + mCount;
+      // Do nested deallocations for elements by decreasing subscript
+      auto pE = traits_type::element_ptr(p) + mCount;
       for (auto count = mCount; count--;)
-         // Do nested deallocations for elements by decreasing subscript
          (--pE)->~element_type();
       // Do nested deallocations for main structure
-      pOverlay->~header_type();
+      reinterpret_cast<header_type*>(p)->~header_type();
       // main deallocation
       ((base_type&)*this)(p);
    }
@@ -92,8 +131,7 @@ struct Ptr
    using
       std::unique_ptr<Type, Deleter<Type, BaseDeleter>>::unique_ptr;
 
-   //! Enables subscripting, if Traits<Type>::iterated_type is
-   //! defined.  Does not check for null!
+   //! Enables subscripting.  Does not check for null!
    auto &operator[](size_t ii) const
    {
       return *(begin(*this) + ii);
@@ -107,21 +145,16 @@ inline size_t Count(const Ptr<Type, BaseDeleter> &p)
    return p.get_deleter().GetCount();
 }
 
-//! Enables range-for, if Traits<Type>::iterated_type is defined
+//! Enables range-for
 template<typename Type, template<typename> typename BaseDeleter>
 inline auto begin(const Ptr<Type, BaseDeleter> &p)
 {
-   void *ptr = p.get();
-   using header_type = typename Traits<Type>::header_type;
-   return reinterpret_cast<typename Traits<Type>::iterated_type *>(
-      ptr
-         ? static_cast<char*>(ptr) +
-            (std::is_empty_v<header_type> ? 0 : sizeof(header_type))
-         : nullptr
-   );
+   using traits_type = detail::ExtendedTraits<Type>;
+   auto ptr = p.get();
+   return ptr ? traits_type::begin(ptr) : nullptr;
 }
 
-//! Enables range-for, if Traits<Type>::iterated_type is defined
+//! Enables range-for
 template<typename Type, template<typename> typename BaseDeleter>
 inline auto end(const Ptr<Type, BaseDeleter> &p)
 {
@@ -178,9 +211,9 @@ template<typename Type> auto AllocateBytes(size_t enlarged)
  */
 template<typename Type> auto AllocateCount(size_t count)
 {
-   using header_type = typename Traits<Type>::header_type;
-   size_t bytes = (std::is_empty_v<header_type> ? 0 : sizeof(header_type))
-      + count * sizeof(typename Traits<Type>::element_type);
+   using traits_type = detail::ExtendedTraits<Type>;
+   const auto bytes = traits_type::element_offset()
+      + count * sizeof(typename traits_type::element_type);
    return AllocateBytes<Type>(bytes);
 }
 

@@ -23,9 +23,9 @@ OSStatus AudioUnitUtils::GetFixedSizePropertyPtr(AudioUnit unit,
 }
 
 OSStatus AudioUnitUtils::GetVariableSizePropertyPtr(AudioUnit unit,
-   AudioUnitElement inElement, const size_t minSize,
+   AudioUnitPropertyID inID, const size_t minSize,
    void *&pObject, size_t &size,
-   AudioUnitPropertyID inID, AudioUnitScope inScope)
+   AudioUnitScope inScope, AudioUnitElement inElement)
 {
    size = 0;
 
