@@ -395,8 +395,10 @@ bool DevicePrefs::Commit()
       map = (DeviceSourceMap *) mPlay->GetClientData(
             mPlay->GetSelection());
    }
-   if (map)
+   if (map) {
       AudioIOPlaybackDevice.Write(map->deviceString);
+      AudioIOPlaybackDevice.Commit();
+   }
 
    map = NULL;
    if (mRecord->GetCount() > 0) {
@@ -410,6 +412,11 @@ bool DevicePrefs::Commit()
       else
          AudioIORecordingSource.Reset();
       AudioIORecordChannels.Write(mChannels->GetSelection() + 1);
+
+      AudioIORecordingDevice.Commit();
+      AudioIORecordingSourceIndex.Commit();
+      AudioIORecordingSource.Commit();
+      AudioIORecordChannels.Commit();
    }
 
    return true;
