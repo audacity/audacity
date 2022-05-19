@@ -26,6 +26,8 @@
 #include <wx/wfstream.h>
 #include <wx/utils.h>
 
+#define DISABLE_STATE_NEW
+
 // ============================================================================
 //
 //
@@ -33,8 +35,6 @@
 // ============================================================================
 #if wxUSE_ACCESSIBILITY
 #include "widgets/WindowAccessible.h"
-
-#define DISABLE_STATE_NEW
 
 class CheckListAx final : public WindowAccessible
 {
