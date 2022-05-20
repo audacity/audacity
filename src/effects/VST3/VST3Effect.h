@@ -165,6 +165,8 @@ public:
    bool HasOptions() override;
    void ShowOptions() override;
 
+   EffectSettings MakeSettings() const override;
+
 private:
    void OnEffectWindowResize(wxSizeEvent & evt);
 
@@ -179,4 +181,12 @@ private:
    bool FetchSettings(VST3EffectSettings& settings) const;
 
    bool StoreSettings(const VST3EffectSettings& settings) const;
+
+   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VST3EffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+
 };

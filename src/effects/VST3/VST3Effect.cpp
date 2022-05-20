@@ -431,6 +431,14 @@ bool VST3Effect::SaveSettings(
    return true;
 }
 
+
+EffectSettings VST3Effect::MakeSettings() const
+{
+   auto result = EffectSettings::Make<VST3EffectSettings>();
+   return result;
+}
+
+
 bool VST3Effect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
@@ -461,11 +469,15 @@ bool VST3Effect::LoadSettings(
       } while(parms.GetNextEntry(key, index));
    }
 
+   VST3EffectSettings specificSettings;
+   FetchSettings(specificSettings);
+   GetSettings(settings) = specificSettings;
+
    return true;
 }
 
 bool VST3Effect::LoadUserPreset(
-   const RegistryPath& name, EffectSettings &settings) const
+   const RegistryPath& name, EffectSettings& settings) const
 {
    using namespace Steinberg;
 
@@ -495,6 +507,10 @@ bool VST3Effect::LoadUserPreset(
    }
    SyncParameters(settings);
 
+   VST3EffectSettings specificSettings;
+   FetchSettings(specificSettings);
+   GetSettings(settings) = specificSettings;
+  
    return true;
 }
 
@@ -539,7 +555,7 @@ RegistryPaths VST3Effect::GetFactoryPresets() const
    return mFactoryPresets;
 }
 
-bool VST3Effect::LoadFactoryPreset(int id, EffectSettings &) const
+bool VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    if(id >= 0 && id < mFactoryPresets.size())
    {
@@ -547,10 +563,15 @@ bool VST3Effect::LoadFactoryPreset(int id, EffectSettings &) const
       // To do: externalize state so const_cast isn't needed
       return const_cast<VST3Effect*>(this)->LoadPreset(filename.GetFullPath());
    }
+
+   VST3EffectSettings specificSettings;
+   FetchSettings(specificSettings);
+   GetSettings(settings) = specificSettings;
+
    return true;
 }
 
-bool VST3Effect::LoadFactoryDefaults(EffectSettings &) const
+bool VST3Effect::LoadFactoryDefaults(EffectSettings& settings) const
 {
    using namespace Steinberg;
    if(mComponentHandler == nullptr)
@@ -574,6 +595,10 @@ bool VST3Effect::LoadFactoryDefaults(EffectSettings &) const
          mEditController->setParamNormalized(parameterInfo.id, parameterInfo.defaultNormalizedValue);
       }
    }
+
+   VST3EffectSettings specificSettings;
+   FetchSettings(specificSettings);
+   GetSettings(settings) = specificSettings;
 
    return true;
 }
@@ -1053,7 +1078,7 @@ void VST3Effect::ExportPresets(const EffectSettings &) const
    }
 }
 
-void VST3Effect::ImportPresets(EffectSettings &)
+void VST3Effect::ImportPresets(EffectSettings& settings)
 {
    using namespace Steinberg;
 
@@ -1072,6 +1097,10 @@ void VST3Effect::ImportPresets(EffectSettings &)
       return;
 
    LoadPreset(path);
+
+   VST3EffectSettings specificSettings;
+   FetchSettings(specificSettings);
+   GetSettings(settings) = specificSettings;
 }
 
 bool VST3Effect::HasOptions()
