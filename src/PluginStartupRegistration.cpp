@@ -18,6 +18,7 @@
 #include "PluginManager.h"
 #include "PluginDescriptor.h"
 #include "widgets/ProgressDialog.h"
+#include "widgets/wxWidgetsWindowPlacement.h"
 
 
 PluginStartupRegistration::PluginStartupRegistration(std::vector<std::pair<wxString, wxString>> pluginsToProcess)
@@ -28,8 +29,7 @@ PluginStartupRegistration::PluginStartupRegistration(std::vector<std::pair<wxStr
 
 void PluginStartupRegistration::OnInternalError(const wxString& error)
 {
-   wxLogError(error);
-   Stop();
+   StopWithError(error);
 }
 
 void PluginStartupRegistration::OnPluginFound(const PluginDescriptor& desc)
@@ -77,12 +77,33 @@ void PluginStartupRegistration::Stop()
    PluginManager::Get().Save();
 }
 
+void PluginStartupRegistration::StopWithError(const wxString& msg)
+{
+   //TODO: show error dialog?
+   wxLogError("Plugin registration error: %s", msg);
+   Stop();
+}
+
 void PluginStartupRegistration::ProcessNext()
 {
    if(mCurrentPluginIndex == mPluginsToProcess.size())
+   {
       Stop();
-   else
+      return;
+   }
+
+   try
+   {
       mValidator->Validate(
          mPluginsToProcess[mCurrentPluginIndex].first,
          mPluginsToProcess[mCurrentPluginIndex].second);
+   }
+   catch(std::exception& e)
+   {
+      StopWithError(e.what());
+   }
+   catch(...)
+   {
+      StopWithError("unknown error");
+   }
 }

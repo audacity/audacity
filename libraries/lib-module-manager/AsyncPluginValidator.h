@@ -58,7 +58,7 @@ public:
    /**
     * \brief Each call to Validate should result in appropriate call
     * OnValidationFinished, until then it's not allowed to call this
-    * method again.
+    * method again. May fail with exception.
     * \param providerId ID of the provider that should be used for validation
     * \param pluginPath path to the plugin module
     */
