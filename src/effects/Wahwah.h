@@ -16,7 +16,7 @@
 #ifndef __AUDACITY_EFFECT_WAHWAH__
 #define __AUDACITY_EFFECT_WAHWAH__
 
-#include "StatefulPerTrackEffect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 class ShuttleGui;

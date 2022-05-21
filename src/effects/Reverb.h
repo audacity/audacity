@@ -12,7 +12,7 @@
 #ifndef __AUDACITY_EFFECT_REVERB__
 #define __AUDACITY_EFFECT_REVERB__
 
-#include "StatefulPerTrackEffect.h"
+#include "PerTrackEffect.h"
 #include "../ShuttleAutomation.h"
 
 
