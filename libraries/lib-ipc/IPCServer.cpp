@@ -42,6 +42,10 @@ public:
       addrin.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
       addrin.sin_port = htons(static_cast<u_short>(IPC_TCP_CONNECTION_PORT));
 
+      static const int yes { 1 };
+      if(setsockopt(*mListenSocket, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<const char*>(&yes), sizeof(yes)) == SOCKET_ERROR)
+         throw std::runtime_error("cannot configure listen socket");
+
       if(bind(*mListenSocket, reinterpret_cast<const sockaddr*>(&addrin), sizeof(addrin)) == SOCKET_ERROR)
          throw std::runtime_error("socket bind error");
 

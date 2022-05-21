@@ -69,13 +69,13 @@ public:
            bool isInput,
            const wxString & symbol,
            const wxString & name,
-           const wxString & group)
+           TranslatableString group)
    :  mPort(port),
       mIndex(index),
       mIsInput(isInput),
       mSymbol(symbol),
       mName(name),
-      mGroup(group)
+      mGroup(std::move(group))
    {
    };
    LV2Port(const LV2Port &) = default;
@@ -88,7 +88,7 @@ public:
 
    wxString mSymbol;
    wxString mName;
-   wxString mGroup;
+   TranslatableString mGroup;
 };
 
 class LV2AudioPort : public LV2Port
@@ -99,7 +99,7 @@ public:
                bool isInput,
                const wxString & symbol,
                const wxString & name,
-               const wxString & group)
+               const TranslatableString & group)
    :  LV2Port(port, index, isInput, symbol, name, group)
    {
    }
@@ -115,7 +115,7 @@ public:
                bool isInput,
                const wxString & symbol,
                const wxString & name,
-               const wxString & group)
+               const TranslatableString & group)
    :  LV2Port(port, index, isInput, symbol, name, group)
    {
   
@@ -150,7 +150,7 @@ public:
              bool isInput,
              const wxString & symbol,
              const wxString & name,
-             const wxString & group)
+             const TranslatableString & group)
    :  LV2Port(port, index, isInput, symbol, name, group)
    {
       mMin = 0.0;
@@ -182,7 +182,7 @@ public:
                   bool isInput,
                   const wxString & symbol,
                   const wxString & name,
-                  const wxString & group)
+                  const TranslatableString & group)
    :  LV2Port(port, index, isInput, symbol, name, group)
    {
       mMin = 0.0;
@@ -463,8 +463,8 @@ private:
    unsigned mCVIn;
    unsigned mCVOut;
 
-   std::unordered_map<wxString, std::vector<int>> mGroupMap;
-   wxArrayString mGroups;
+   std::unordered_map<TranslatableString, std::vector<int>> mGroupMap;
+   TranslatableStrings mGroups;
 
    bool mWantsOptionsInterface;
    bool mWantsStateInterface;

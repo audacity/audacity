@@ -635,27 +635,20 @@ bool LV2Effect::InitializePlugin()
       wxString name = LilvString(lilv_port_get_name(mPlug, port), true);
 
       // Get the group to which this port belongs or default to the main group
-      wxString groupName = wxEmptyString;
-      LilvNode *group = lilv_port_get(mPlug, port, node_Group);
-      if (group)
-      {
-         groupName = LilvString(lilv_world_get(gWorld, group, node_Label, NULL), true);
-         if (groupName.empty())
-         {
-            groupName = LilvString(lilv_world_get(gWorld, group, node_Name, NULL), true);
-         }
-
-         if (groupName.empty())
-         {
-            groupName = LilvString(group);
-         }
-
+      TranslatableString groupName{};
+      if (auto group = lilv_port_get(mPlug, port, node_Group)) {
+         auto groupMsg = LilvString(lilv_world_get(
+            gWorld, group, node_Label, NULL), true);
+         if (groupMsg.empty())
+            groupMsg = LilvString(lilv_world_get(
+               gWorld, group, node_Name, NULL), true);
+         if (groupMsg.empty())
+            groupMsg = LilvString(group);
+         groupName = Verbatim(groupMsg);
          lilv_node_free(group);
       }
       else
-      {
-         groupName = _("Effect Settings");
-      }
+         groupName = XO("Effect Settings");
 
       // Get the latency port
       uint32_t latencyIndex = lilv_plugin_get_latency_port_index(mPlug);
@@ -2290,12 +2283,15 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
             innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
          }
 
-         std::sort(mGroups.begin(), mGroups.end());
+         std::sort(mGroups.begin(), mGroups.end(),
+            [](const TranslatableString &a, const TranslatableString &b){
+               return a.Translation() < b.Translation(); });
 
          for (size_t i = 0, groupCount = mGroups.size(); i < groupCount; i++)
          {
-            wxString label = mGroups[i];
-            auto groupSizer = std::make_unique<wxStaticBoxSizer>(wxVERTICAL, w, label);
+            const auto &label = mGroups[i];
+            auto groupSizer = std::make_unique<wxStaticBoxSizer>(
+               wxVERTICAL, w, label.Translation());
 
             auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
             gridSizer->AddGrowableCol(3);

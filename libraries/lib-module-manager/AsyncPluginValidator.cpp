@@ -57,9 +57,8 @@ class AsyncPluginValidator::Impl final :
    {
       auto server = std::make_unique<IPCServer>(*this);
       if(!PluginHost::Start())
-         mDelegate->OnInternalError("Cannot start plugin host");
-      else
-         mServer = std::move(server);
+         throw std::runtime_error("cannot start plugin host process");
+      mServer = std::move(server);
    }
    
    void HandleInternalError(const wxString& msg) noexcept

@@ -14,8 +14,6 @@
 
 *//*******************************************************************/
 
-
-
 #if USE_AUDIO_UNITS
 #include "AudioUnitEffect.h"
 #include "AudioUnitEffectOptionsDialog.h"
@@ -24,6 +22,7 @@
 #include "SampleCount.h"
 #include "ConfigInterface.h"
 
+#include <optional>
 #include <wx/defs.h>
 #include <wx/base64.h>
 #include <wx/button.h>
@@ -72,100 +71,6 @@
 #define PRESET_LOCAL_PATH wxT("/Library/Audio/Presets")
 #define PRESET_USER_PATH wxT("~/Library/Audio/Presets")
 
-// Uncomment to include parameter IDs in the final name.  Only needed if it's
-// discovered that many effects have duplicate names.  It could even be done
-// at runtime by scanning an effects parameters to determine if dups are present
-// and, if so, enable the clump and parameter IDs.
-#define USE_EXTENDED_NAMES
-class ParameterInfo final
-{
-public:
-   ParameterInfo()
-   {
-      info = {};
-   }
-
-   bool Get(AudioUnit mUnit, AudioUnitParameterID parmID)
-   {
-      UInt32 dataSize;
-
-      info = {};
-      // Note non-default element parameter, parmID
-      if (AudioUnitUtils::GetFixedSizeProperty(mUnit,
-         kAudioUnitProperty_ParameterInfo, info,
-         kAudioUnitScope_Global, parmID))
-         return false;
-
-      if (info.flags & kAudioUnitParameterFlag_HasCFNameString)
-         name = wxCFStringRef::AsString(info.cfNameString);
-      else
-         name = wxString(info.name);
-
-#if defined(USE_EXTENDED_NAMES)
-      // If the parameter has a non-empty name, then the final parameter name will
-      // be either:
-      //
-      //    <parmID,ParameterName>
-      //
-      // or (if the name isn't available):
-      //
-      //    <parmID>
-      if (!name.empty())
-      {
-         name.Replace(idBeg, wxT('_'));
-         name.Replace(idSep, wxT('_'));
-         name.Replace(idEnd, wxT('_'));
-         name.Append(idSep);
-      }
-      name = wxString::Format(wxT("%c%s%x%c"),
-                              idBeg,
-                              name,
-                              parmID,
-                              idEnd);
-
-      // If the parameter has a clumpID, then the final parameter name will be
-      // either:
-      //
-      //    <clumpID,clumpName><parmID,ParameterName>
-      //
-      // or (if the clumpName isn't available):
-      //
-      //    <clumpID><parmID,ParameterName>
-      if (info.flags & kAudioUnitParameterFlag_HasClump)
-      {
-         wxString clumpName;
-         AudioUnitUtils::ParameterNameInfo clumpInfo{
-            info.clumpID, kAudioUnitParameterName_Full
-         };
-
-         if (!AudioUnitUtils::GetFixedSizeProperty(mUnit,
-            kAudioUnitProperty_ParameterClumpName, clumpInfo)) {
-            clumpName =  wxCFStringRef::AsString(clumpInfo.outName);
-            clumpName.Replace(idBeg, wxT('_'));
-            clumpName.Replace(idSep, wxT('_'));
-            clumpName.Replace(idEnd, wxT('_'));
-            clumpName.Append(idSep);
-         }
-         name = wxString::Format(wxT("%c%s%x%c%s"),
-                                 idBeg,
-                                 clumpName,
-                                 info.clumpID,
-                                 idEnd,
-                                 name);
-      }
-#endif
-
-      return true;
-   }
-
-   static const char idBeg = wxT('<');
-   static const char idSep = wxT(',');
-   static const char idEnd = wxT('>');
-
-   wxString name;
-   AudioUnitParameterInfo info;
-};
-
 TranslatableString AudioUnitEffect::SaveBlobToConfig(
    const RegistryPath &group, const wxString &path,
    const void *blob, size_t len, bool allowEmpty) const
@@ -188,10 +93,9 @@ TranslatableString AudioUnitEffect::SaveBlobToConfig(
 ///////////////////////////////////////////////////////////////////////////////
 
 AudioUnitEffect::AudioUnitEffect(const PluginPath & path,
-                                 const wxString & name,
-                                 AudioComponent component,
-                                 AudioUnitEffect *master)
-   : AudioUnitWrapper{ component }
+   const wxString & name, AudioComponent component,
+   Parameters *pParameters, AudioUnitEffect *master
+)  : AudioUnitWrapper{ component, pParameters }
    , mPath{ path }
    , mName{ name.AfterFirst(wxT(':')).Trim(true).Trim(false) }
    , mVendor{ name.BeforeFirst(wxT(':')).Trim(true).Trim(false) }
@@ -286,26 +190,15 @@ bool AudioUnitEffect::SupportsRealtime() const
 
 bool AudioUnitEffect::SupportsAutomation() const
 {
-   PackedArray::Ptr<AudioUnitParameterID> array;
-   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
-      return false;
-   for (const auto &ID : array) {
-      ParameterInfo pi;
-      if (pi.Get(mUnit.get(), ID))
-         if (pi.info.flags & kAudioUnitParameterFlag_IsWritable)
-            // All we need is one
-            return true;
-   }
-   return false;
-}
-
-bool AudioUnitWrapper::CreateAudioUnit()
-{
-   AudioUnit unit{};
-   auto result = AudioComponentInstanceNew(mComponent, &unit);
-   if (!result)
-      mUnit.reset(unit);
-   return (!result && unit != nullptr);
+   bool supports = false;
+   ForEachParameter(
+   [&supports](const ParameterInfo &pi, AudioUnitParameterID) {
+      if (pi.mInfo.flags & kAudioUnitParameterFlag_IsWritable)
+         supports = true;
+      // Search only until we find one, that's all we need to know
+      return !supports;
+   });
+   return supports;
 }
 
 bool AudioUnitEffect::InitializeInstance()
@@ -361,7 +254,6 @@ bool AudioUnitEffect::InitializePlugin()
    // InitializeInstance.
    if (!InitializeInstance())
       return false;
-
 
    // Consult preferences
    // Decide mUseLatency, which affects GetLatency(), which is actually used
@@ -588,17 +480,16 @@ bool AudioUnitEffect::RealtimeInitialize(EffectSettings &settings)
 bool AudioUnitEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto slave = std::make_unique<AudioUnitEffect>(mPath, mName, mComponent, this);
+   auto slave = std::make_unique<AudioUnitEffect>(
+      mPath, mName, mComponent, &mParameters, this);
    if (!slave->InitializeInstance())
       return false;
 
    slave->SetBlockSize(mBlockSize);
    slave->SetSampleRate(sampleRate);
 
-   if (!CopyParameters(mUnit.get(), slave->mUnit.get()))
-   {
+   if (!slave->StoreSettings(GetSettings(settings)))
       return false;
-   }
 
    auto pSlave = slave.get();
    mSlaves.push_back(std::move(slave));
@@ -688,52 +579,65 @@ int AudioUnitEffect::ShowClientInterface(
 }
 
 bool AudioUnitEffect::SaveSettings(
-   const EffectSettings &, CommandParameters & parms) const
+   const EffectSettings &settings, CommandParameters & parms) const
 {
-   PackedArray::Ptr<AudioUnitParameterID> array;
-   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
-      return false;
-   for (const auto &ID : array) {
-      ParameterInfo pi;
-      if (!pi.Get(mUnit.get(), ID))
-         // Probably failed because of invalid parameter which can happen
-         // if a plug-in is in a certain mode that doesn't contain the
-         // parameter.  In any case, just ignore it.
-         continue;
-      AudioUnitParameterValue value;
-      if (AudioUnitGetParameter(mUnit.get(), ID, kAudioUnitScope_Global, 0,
-         &value))
-         // Probably failed because of invalid parameter which can happen
-         // if a plug-in is in a certain mode that doesn't contain the
-         // parameter.  In any case, just ignore it.
-         continue;
-      parms.Write(pi.name, value);
-   }
+   auto &map = GetSettings(settings).values;
+   const auto end = map.end();
+
+   // Save settings into CommandParameters
+   // Assume settings is an up-to-date cache of AudioUnit state
+   ForEachParameter([this, &parms, &map, end](
+      const ParameterInfo &pi, AudioUnitParameterID ID
+   ){
+      if (pi.mName) {
+         // Write names, not numbers, as keys in the config file
+         if (auto iter = map.find(ID); iter != end)
+            parms.Write(*pi.mName, iter->second);
+      }
+      return true;
+   });
    return true;
 }
 
 bool AudioUnitEffect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
-   PackedArray::Ptr<AudioUnitParameterID> array;
-   if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
-      return false;
-   for (const auto &ID : array) {
-      ParameterInfo pi;
-      if (!pi.Get(mUnit.get(), ID))
-         // Probably failed because of invalid parameter which can happen
-         // if a plug-in is in a certain mode that doesn't contain the
-         // parameter.  In any case, just ignore it.
-         continue;
-      double d = 0.0;
-      if (parms.Read(pi.name, &d)) {
-         if (AudioUnitSetParameter(mUnit.get(), ID, kAudioUnitScope_Global,
-            0, d, 0))
-            return false;
-         Notify(mUnit.get(), ID);
+   // First clean all settings, in case any are not defined in parms
+   auto &mySettings = GetSettings(settings);
+   mySettings.ResetValues();
+
+   auto &map = mySettings.values;
+   const auto end = map.end();
+
+   // Load settings from CommandParameters
+   ForEachParameter([this, &parms, &map, end](
+      const ParameterInfo &pi, AudioUnitParameterID ID
+   ){
+      if (pi.mName) {
+         double d = 0.0;
+         if (auto iter = map.find(ID);
+             iter != end && parms.Read(*pi.mName, &d))
+            iter->second = d;
       }
-   }
+      return true;
+   });
    return true;
+}
+
+bool AudioUnitEffect::TransferDataToWindow(const EffectSettings &settings)
+{
+   // Update parameter values in AudioUnit, and propagate to any listeners
+   if (StoreSettings(GetSettings(settings))) {
+      // See AUView::viewWillDraw
+      if (mpControl)
+         mpControl->ForceRedraw();
+   
+      // This will be the AudioUnit of a stateful instance, not of the effect
+      Notify(mUnit.get(), kAUParameterListener_AnyParameter);
+
+      return true;
+   }
+   return false;
 }
 
 bool AudioUnitEffect::LoadUserPreset(
@@ -744,12 +648,12 @@ bool AudioUnitEffect::LoadUserPreset(
 }
 
 bool AudioUnitEffect::SaveUserPreset(
-   const RegistryPath & name, const EffectSettings &) const
+   const RegistryPath & name, const EffectSettings &settings) const
 {
-   return SavePreset(name);
+   return SavePreset(name, GetSettings(settings));
 }
 
-bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
+bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    // Retrieve the list of factory presets
    CF_ptr<CFArrayRef> array;
@@ -757,10 +661,12 @@ bool AudioUnitEffect::LoadFactoryPreset(int id, EffectSettings &) const
        id < 0 || id >= CFArrayGetCount(array.get()))
       return false;
 
+   // Mutate the scratch pad AudioUnit in the effect
    if (!SetProperty(kAudioUnitProperty_PresentPreset,
       *static_cast<const AUPreset*>(CFArrayGetValueAtIndex(array.get(), id)))) {
-      // Notify interested parties of change and propagate to slaves
-      Notify(mUnit.get(), kAUParameterListener_AnyParameter);
+      // Repopulate the AudioUnitEffectSettings from the change of state in
+      // the AudioUnit
+      FetchSettings(GetSettings(settings));
       return true;
    }
    return false;
@@ -895,7 +801,7 @@ bool AudioUnitEffect::CanExportPresets()
    return true;
 }
 
-void AudioUnitEffect::ExportPresets(const EffectSettings &) const
+void AudioUnitEffect::ExportPresets(const EffectSettings &settings) const
 {
    // Generate the user domain path
    wxFileName fn;
@@ -905,8 +811,7 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &) const
    fn.Normalize();
    FilePath path = fn.GetFullPath();
 
-   if (!fn.Mkdir(fn.GetFullPath(), 0755, wxPATH_MKDIR_FULL))
-   {
+   if (!fn.Mkdir(fn.GetFullPath(), 0755, wxPATH_MKDIR_FULL)) {
       wxLogError(wxT("Couldn't create the \"%s\" directory"), fn.GetPath());
       return;
    }
@@ -928,22 +833,18 @@ void AudioUnitEffect::ExportPresets(const EffectSettings &) const
 
    // User canceled...
    if (path.empty())
-   {
       return;
-   }
 
-   auto msg = Export(path);
+   auto msg = Export(GetSettings(settings), path);
    if (!msg.empty())
-   {
       AudacityMessageBox(
          XO("Could not export \"%s\" preset\n\n%s").Format(path, msg),
          XO("Export Audio Unit Presets"),
          wxOK | wxCENTRE,
          mParent);
-   }
 }
 
-void AudioUnitEffect::ImportPresets(EffectSettings &)
+void AudioUnitEffect::ImportPresets(EffectSettings &settings)
 {
    // Generate the user domain path
    wxFileName fn;
@@ -959,30 +860,24 @@ void AudioUnitEffect::ImportPresets(EffectSettings &)
    // upon returning from the SelectFile().
    path = SelectFile(FileNames::Operation::_None,
       XO("Import Audio Unit Preset As %s:").Format(fn.GetFullPath()),
-      fn.GetFullPath(),
-      wxEmptyString,
-      wxT("aupreset"),
+      fn.GetFullPath(), wxEmptyString, wxT("aupreset"),
       {
         { XO("Standard Audio Unit preset file"), { wxT("aupreset") }, true },
       },
       wxFD_OPEN | wxRESIZE_BORDER,
-      NULL);
+      nullptr);
 
    // User canceled...
    if (path.empty())
-   {
       return;
-   }
 
-   auto msg = Import(path);
+   auto msg = Import(GetSettings(settings), path);
    if (!msg.empty())
-   {
       AudacityMessageBox(
          XO("Could not import \"%s\" preset\n\n%s").Format(path, msg),
          XO("Import Audio Unit Presets"),
          wxOK | wxCENTRE,
          mParent);
-   }
 }
 
 bool AudioUnitEffect::HasOptions()
@@ -1005,24 +900,34 @@ void AudioUnitEffect::ShowOptions()
 // AudioUnitEffect Implementation
 // ============================================================================
 
-bool AudioUnitEffect::LoadPreset(
+bool AudioUnitEffect::MigrateOldConfigFile(
    const RegistryPath & group, EffectSettings &settings) const
 {
-   wxString parms;
-
+   // Migration of very old format configuration file, should not normally
+   // happen and perhaps this code can be abandoned
    // Attempt to load old preset parameters and resave using new method
-   if (GetConfig(*this, PluginSettings::Private, group, wxT("Parameters"),
-      parms, wxEmptyString)) {
+   constexpr auto oldKey = L"Parameters";
+   wxString parms;
+   if (GetConfig(*this, PluginSettings::Private,
+      group, oldKey, parms, wxEmptyString)) {
       CommandParameters eap;
       if (eap.SetParameters(parms))
          if (LoadSettings(eap, settings))
-            if (SavePreset(group))
-               RemoveConfig(*this, PluginSettings::Private,
-                  group, wxT("Parameters"));
+            if (SavePreset(group, GetSettings(settings)))
+               RemoveConfig(*this, PluginSettings::Private, group, oldKey);
       return true;
    }
+   return false;
+}
+
+bool AudioUnitEffect::LoadPreset(
+   const RegistryPath & group, EffectSettings &settings) const
+{
+   if (MigrateOldConfigFile(group, settings))
+      return true;
 
    // Retrieve the preset
+   wxString parms;
    if (!GetConfig(*this, PluginSettings::Private, group, PRESET_KEY, parms,
       wxEmptyString)) {
       // Commented "CurrentSettings" gets tried a lot and useless messages appear
@@ -1032,58 +937,21 @@ bool AudioUnitEffect::LoadPreset(
    }
    
    // Decode it, complementary to what SaveBlobToConfig did
-   auto error = InterpretBlob(group, wxBase64Decode(parms));
+   auto error =
+      InterpretBlob(GetSettings(settings), group, wxBase64Decode(parms));
    if (!error.empty()) {
       wxLogError(error.Debug());
       return false;
    }
 
-   // See AUView::viewWillDraw
-   if (mpControl)
-      mpControl->ForceRedraw();
-
-   // Notify interested parties of change and propagate to slaves
-   Notify(mUnit.get(), kAUParameterListener_AnyParameter);
    return true;
 }
 
-TranslatableString AudioUnitEffect::InterpretBlob(
-   const RegistryPath &group, const wxMemoryBuffer &buf) const
-{
-   size_t bufLen = buf.GetDataLen();
-   if (!bufLen)
-      return XO("Failed to decode \"%s\" preset").Format(group);
-
-   // Create a CFData object that references the decoded preset
-   const auto bufPtr = static_cast<const uint8_t *>(buf.GetData());
-   CF_ptr<CFDataRef> data{ CFDataCreateWithBytesNoCopy(kCFAllocatorDefault,
-      bufPtr, bufLen, kCFAllocatorNull)
-   };
-   if (!data)
-      return XO("Failed to convert \"%s\" preset to internal format")
-         .Format(group);
-
-   // Convert it back to a property list
-   CF_ptr<CFPropertyListRef> content{
-      CFPropertyListCreateWithData(kCFAllocatorDefault,
-      data.get(), kCFPropertyListImmutable, nullptr,
-      // TODO might retrieve more error information
-      nullptr)
-   };
-   if (!content)
-      return XO("Failed to create property list for \"%s\" preset")
-         .Format(group);
-
-   // Finally, update the properties and parameters
-   if (SetProperty(kAudioUnitProperty_ClassInfo, content.get()))
-      return XO("Failed to set class info for \"%s\" preset").Format(group);
-   return {};
-}
-
-bool AudioUnitEffect::SavePreset(const RegistryPath & group) const
+bool AudioUnitEffect::SavePreset(
+   const RegistryPath & group, const AudioUnitEffectSettings &settings) const
 {
    wxCFStringRef cfname(wxFileNameFromPath(group));
-   const auto &[data, _] = MakeBlob(cfname, true);
+   const auto &[data, _] = MakeBlob(settings, cfname, true);
    if (!data)
       return false;
 
@@ -1166,26 +1034,8 @@ bool AudioUnitEffect::SetRateAndChannels()
    return true;
 }
 
-bool AudioUnitEffect::CopyParameters(AudioUnit srcUnit, AudioUnit dstUnit)
-{
-   // Retrieve the class state from the source AU
-   CF_ptr<CFPropertyListRef> content;
-   if (AudioUnitUtils::GetFixedSizeProperty(srcUnit,
-      kAudioUnitProperty_ClassInfo, content))
-      return false;
-
-   // Set the destination AUs state from the source AU's content
-   if (AudioUnitUtils::SetProperty(dstUnit,
-      kAudioUnitProperty_ClassInfo, content))
-      return false;
-
-   // Notify interested parties
-   Notify(dstUnit, kAUParameterListener_AnyParameter);
-
-   return true;
-}
-
-TranslatableString AudioUnitEffect::Export(const wxString & path) const
+TranslatableString AudioUnitEffect::Export(
+   const AudioUnitEffectSettings &settings, const wxString & path) const
 {
    // Create the file
    wxFFile f(path, wxT("wb"));
@@ -1195,7 +1045,7 @@ TranslatableString AudioUnitEffect::Export(const wxString & path) const
    // First set the name of the preset
    wxCFStringRef cfname(wxFileName(path).GetName());
 
-   const auto &[data, message] = MakeBlob(cfname, false);
+   const auto &[data, message] = MakeBlob(settings, cfname, false);
    if (!data || !message.empty())
       return message;
 
@@ -1208,40 +1058,8 @@ TranslatableString AudioUnitEffect::Export(const wxString & path) const
    return {};
 }
 
-std::pair<CF_ptr<CFDataRef>, TranslatableString>
-AudioUnitEffect::MakeBlob(const wxCFStringRef &cfname, bool binary) const
-{
-   CF_ptr<CFDataRef> data;
-   TranslatableString message;
-
-   // Define the preset property and set it in the audio unit
-   if (SetProperty(
-      kAudioUnitProperty_PresentPreset, AudioUnitUtils::UserPreset{ cfname }))
-      message = XO("Failed to set preset name");
-
-   // Now retrieve the preset content
-   else if (CF_ptr<CFPropertyListRef> content;
-      GetFixedSizeProperty(kAudioUnitProperty_ClassInfo, content))
-      message = XO("Failed to retrieve preset content");
-
-   // And convert it to serialized XML data
-   else if (data.reset(CFPropertyListCreateData(kCFAllocatorDefault,
-         content.get(),
-            (binary ? PRESET_FORMAT : kCFPropertyListXMLFormat_v1_0), 0,
-         // TODO might retrieve more error information
-         nullptr));
-      !data)
-      message = XO("Failed to convert property list to XML data");
-
-   // Nothing to do if we don't have any data
-   else if (auto length = CFDataGetLength(data.get()); length == 0)
-      // Caller might not treat this as error, becauase data is non-null
-      message = XO("XML data is empty after conversion");
-
-   return { move(data), message };
-}
-
-TranslatableString AudioUnitEffect::Import(const wxString & path)
+TranslatableString AudioUnitEffect::Import(
+   AudioUnitEffectSettings &settings, const wxString & path) const
 {
    // Open the preset
    wxFFile f(path, wxT("r"));
@@ -1254,12 +1072,9 @@ TranslatableString AudioUnitEffect::Import(const wxString & path)
    if (f.Read(buf.GetData(), len) != len || f.Error())
       return XO("Unable to read the preset from \"%s\"").Format(path);
 
-   const auto error = InterpretBlob(path, buf);
+   const auto error = InterpretBlob(settings, path, buf);
    if (!error.empty())
       return error;
-
-   // Notify interested parties of change and propagate to slaves
-   Notify(mUnit.get(), kAUParameterListener_AnyParameter);
 
    return {};
 }

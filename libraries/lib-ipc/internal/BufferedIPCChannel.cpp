@@ -26,13 +26,22 @@ BufferedIPCChannel::BufferedIPCChannel()
 BufferedIPCChannel::~BufferedIPCChannel()
 {
    if(mSocket != INVALID_SOCKET)
-      //interrupts any blocking calls
-      CLOSE_SOCKET(mSocket);
+   {
+      //Shut down connection and wake up select
+      //No need to check possible error codes set by this call
+#ifdef _WIN32
+      shutdown(mSocket, SD_BOTH);
+#else
+      shutdown(mSocket, SHUT_RDWR);
+#endif
+      //Make sure all socket IO operations complete before close
+      if(mSendRoutine)
+         mSendRoutine->join();
+      if(mRecvRoutine)
+         mRecvRoutine->join();
 
-   if(mSendRoutine)
-      mSendRoutine->join();
-   if(mRecvRoutine)
-      mRecvRoutine->join();
+      CLOSE_SOCKET(mSocket);
+   }
 }
 
 void BufferedIPCChannel::Send(const void* bytes, size_t length)
@@ -120,7 +129,7 @@ void BufferedIPCChannel::StartConversation(SOCKET socket, IPCChannelStatusCallba
 
          //It may happen so, that "sending" thread sends some data while
          //"reading" thread notifies callback about disconnection. It's
-         //not a big deal since a) sending may fail b) from the client code
+         //not a big deal since a) sending may fail b) from the user code
          //perspective IPCChannel::Send was called before it receives OnDisconnect
          callback.OnDisconnect();
       });
