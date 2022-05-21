@@ -112,7 +112,7 @@ struct Deleter : BaseDeleter<Type> {
       for (auto count = mCount; count--;)
          (--pE)->~element_type();
       // Do nested deallocations for main structure
-      reinterpret_cast<header_type*>(p)->~header_type();
+      reinterpret_cast<const header_type*>(p)->~header_type();
       // main deallocation
       ((base_type&)*this)(p);
    }
