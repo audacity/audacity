@@ -524,13 +524,13 @@ size_t AudioUnitEffect::ProcessBlock(EffectSettings &,
 {
    // mAudioIns and mAudioOuts don't change after plugin initialization,
    // so ProcessInitialize() made sufficient allocations
-   assert(PackedArray::Count(mInputList) >= mAudioIns);
+   assert(Count(mInputList) >= mAudioIns);
    for (size_t i = 0; i < mAudioIns; ++i)
       mInputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
          const_cast<float*>(inBlock[i]) };
 
    // See previous comment
-   assert(PackedArray::Count(mOutputList) >= mAudioOuts);
+   assert(Count(mOutputList) >= mAudioOuts);
    for (size_t i = 0; i < mAudioOuts; ++i)
       mOutputList[i] = { 1, static_cast<UInt32>(sizeof(float) * blockLen),
          outBlock[i] };
@@ -1182,8 +1182,7 @@ OSStatus AudioUnitEffect::Render(AudioUnitRenderActionFlags *inActionFlags,
                                  AudioBufferList *ioData)
 {
    size_t i = 0;
-   auto size =
-      std::min<size_t>(ioData->mNumberBuffers, PackedArray::Count(mInputList));
+   auto size = std::min<size_t>(ioData->mNumberBuffers, Count(mInputList));
    for (; i < size; ++i)
       ioData->mBuffers[i].mData = mInputList[i].mData;
    // Some defensive code here just in case SDK requests from us an unexpectedly
