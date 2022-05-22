@@ -218,6 +218,9 @@ public:
     default-default stored in this object. */
    T ReadWithDefault( const T &defaultValue ) const
    {
+      if ( this->mValid )
+         return this->mCurrentValue;
+
       const auto config = this->GetConfig();
       return config
          ? ( this->mValid = true, this->mCurrentValue =
