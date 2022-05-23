@@ -460,10 +460,7 @@ void GLPainter::DoDrawRotatedText(
       auto size = ftFont.GetTextSize(text);
       DoDrawRect(Rect { {}, size });
    }
-
-   if (text == "Audio Track")
-      int a = 1;
-      
+         
    mRenderer.GetFontRenderer().SetHintingEnabled(!hasRotation);
 
    ftFont.DrawText(mRenderer.GetFontRenderer(), text, mCurrentBrush.GetColor());

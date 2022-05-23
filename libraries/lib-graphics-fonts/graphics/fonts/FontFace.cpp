@@ -109,9 +109,6 @@ public:
 
       if (FT_Set_Pixel_Sizes(mFreeTypeFace, 0, mPixelSize))
          return {}; 
-
-      if (text == "Audio Track")
-         int a = 1;
       
       auto buffer = hb_buffer_create();
 
