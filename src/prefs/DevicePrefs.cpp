@@ -391,6 +391,10 @@ bool DevicePrefs::Commit()
    PopulateOrExchange(S);
    DeviceSourceMap *map = NULL;
 
+   if (mHost->GetCount() > 0) {
+      AudioIOHost.Write(mHost->GetString(mHost->GetSelection()));
+   }
+
    if (mPlay->GetCount() > 0) {
       map = (DeviceSourceMap *) mPlay->GetClientData(
             mPlay->GetSelection());
