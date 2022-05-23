@@ -494,9 +494,7 @@ bool VST3Effect::LoadSettings(
       } while(parms.GetNextEntry(key, index));
    }
 
-   VST3EffectSettings specificSettings;
-   FetchSettings(specificSettings);
-   GetSettings(settings) = specificSettings;
+   FetchSettings(GetSettings(settings));
 
    return true;
 }
@@ -532,9 +530,7 @@ bool VST3Effect::LoadUserPreset(
    }
    SyncParameters(settings);
 
-   VST3EffectSettings specificSettings;
-   FetchSettings(specificSettings);
-   GetSettings(settings) = specificSettings;
+   FetchSettings(GetSettings(settings));
   
    return true;
 }
@@ -589,9 +585,7 @@ bool VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
       return const_cast<VST3Effect*>(this)->LoadPreset(filename.GetFullPath());
    }
 
-   VST3EffectSettings specificSettings;
-   FetchSettings(specificSettings);
-   GetSettings(settings) = specificSettings;
+   FetchSettings(GetSettings(settings));
 
    return true;
 }
@@ -621,9 +615,7 @@ bool VST3Effect::LoadFactoryDefaults(EffectSettings& settings) const
       }
    }
 
-   VST3EffectSettings specificSettings;
-   FetchSettings(specificSettings);
-   GetSettings(settings) = specificSettings;
+   FetchSettings(GetSettings(settings));
 
    return true;
 }
@@ -1123,9 +1115,7 @@ void VST3Effect::ImportPresets(EffectSettings& settings)
 
    LoadPreset(path);
 
-   VST3EffectSettings specificSettings;
-   FetchSettings(specificSettings);
-   GetSettings(settings) = specificSettings;
+   FetchSettings(GetSettings(settings));
 }
 
 bool VST3Effect::HasOptions()
