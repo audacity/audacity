@@ -269,6 +269,7 @@ list( APPEND SOURCES
       Tags.h
       TagsEditor.cpp
       TagsEditor.h
+      ThemedWrappers.h
       TimeDialog.cpp
       TimeDialog.h
       TimeTrack.cpp
