@@ -30,6 +30,7 @@ set( LIBRARIES
    lib-module-manager
    lib-project-history
    lib-graphics
+   lib-graphics-fonts
    lib-graphics-wx
    lib-graphics-gl
 )

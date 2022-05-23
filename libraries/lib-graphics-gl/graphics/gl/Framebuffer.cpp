@@ -49,6 +49,8 @@ void Framebuffer::ReleaseFramebuffer()
    {
       mContext->ReleaseContextResource(
          ContextResourceType::Framebuffer, mFramebuffer);
+      
+      mFramebuffer = 0;
    }
 }
 
@@ -67,14 +69,6 @@ void Framebuffer::Bind(Context& context)
    auto& functions = context.GetFunctions();
 
    functions.BindFramebuffer(GLenum::FRAMEBUFFER, mFramebuffer);
-   
-   functions.Viewport(
-      mFramebufferRect.Origin.x, mFramebufferRect.Origin.y,
-      mFramebufferRect.Size.width, mFramebufferRect.Size.height);
-
-   functions.Scissor(
-      mFramebufferRect.Origin.x, mFramebufferRect.Origin.y,
-      mFramebufferRect.Size.width, mFramebufferRect.Size.height);
 }
 
 void Framebuffer::Unbind(Context& context)

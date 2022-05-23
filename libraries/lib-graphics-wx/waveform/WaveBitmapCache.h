@@ -71,8 +71,8 @@ private:
       }
    } mSelection;
  
-   std::unique_ptr<wxImage> mCachedImage;
    std::unique_ptr<LookupHelper> mLookupHelper;
+   std::vector<uint8_t> mImageBuffer;
 
    const Envelope* mEnvelope { nullptr };
    size_t mEnvelopeVersion { 0 };

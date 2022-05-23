@@ -145,25 +145,11 @@ struct PainterImageCacheKey final
    int Heigth;
 };
 
-size_t CombineHash(size_t seed, size_t v) noexcept
-{
-   // https://www.boost.org/doc/libs/1_35_0/doc/html/boost/hash_combine_id241013.html
-   return seed ^
-          (std::hash<size_t> {}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2));
-}
-
-template<typename ...Args>
-size_t CombineHash(size_t seed, size_t v, Args... args) noexcept
-{
-   return CombineHash(CombineHash(seed, v), args...);
-}
-
 struct PainterImageCacheKeyHash final
 {
    size_t operator()(const PainterImageCacheKey& key) const noexcept
    {
-      return CombineHash(
-         std::hash<size_t> {}(key.Index), key.X, key.Y, key.Width, key.Heigth);
+      return HashCombiner {}(key.Index, key.X, key.Y, key.Width, key.Heigth);
    }
 };
 
@@ -186,8 +172,6 @@ public:
    std::shared_ptr<PainterImage> GetImage(
       Painter& painter, ThemeSet& set, int index, int x, int y, int w, int h)
    {
-      if (index == bmpHiliteUpButtonSmall)
-         int a = 1;
       const PainterImageCacheKey key = { index, x, y, w, h };
 
       auto it = mCache.find(key);

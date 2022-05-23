@@ -271,7 +271,7 @@ void FindFontHeights(
    const auto size = painter.GetTextSize(*painterFont, exampleText);
    const auto metrics = painterFont->GetFontMetrics();
 
-   height = size.height;
+   height = size.height - metrics.Descent;
    lead = metrics.Linegap;
 }
 

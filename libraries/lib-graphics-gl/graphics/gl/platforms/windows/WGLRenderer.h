@@ -22,11 +22,12 @@ public:
    WGLRenderer();
    ~WGLRenderer();
 
-   bool IsSupported() const override;
+   bool IsAvailable() const override;
 
    Context& GetResourceContext() override;
 
    std::unique_ptr<Context> CreateContext(void* window) override;
+   void ContextDestroyed(Context& ctx);
 
    virtual void BeginRendering(Context& context) override;
    virtual void EndRendering() override;

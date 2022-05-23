@@ -24,6 +24,8 @@ set( SOURCES
    graphics/Painter.h
    graphics/Pen.cpp
    graphics/Pen.h
+   graphics/PathTriangulation.cpp
+   graphics/PathTriangulation.h
    graphics/Point.h
    graphics/Rect.h
    graphics/RendererID.cpp

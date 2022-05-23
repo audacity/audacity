@@ -16,9 +16,10 @@
 
 #include "GLFunctions.h"
 
+#include "Observer.h"
+
 namespace graphics::gl
 {
-class GLRenderer;
 class Context;
 
 class VertexBuffer;
@@ -28,20 +29,19 @@ class VertexArray final
 {
 public:
    ~VertexArray();
-
-   bool IsDirty() const noexcept;
-   void PerformUpdate(Context& context);
    
    void Bind(Context& context);
 
 private:
    VertexArray(
-      GLRenderer& renderer, std::vector<VertexBufferPtr> buffers, GLuint vao);
+      Context& context, std::vector<VertexBufferPtr> buffers, GLuint vao);
    
-   GLRenderer& mRenderer;
+   Context& mContext;
 
    std::vector<VertexBufferPtr> mAssignedBuffers;
    GLuint mVertexArray { 0 };
+
+   Observer::Subscription mContextDestroyedSubscription;
 
    friend class VertexArrayBuilder;
 };
@@ -49,7 +49,7 @@ private:
 class VertexArrayBuilder final
 {
 public:
-   explicit VertexArrayBuilder(GLRenderer& renderer);
+   explicit VertexArrayBuilder(Context& context);
    ~VertexArrayBuilder();
 
    std::shared_ptr<VertexArray> Build();
@@ -58,8 +58,10 @@ public:
       GLint componentsCount, GLenum type, GLboolean normalized, GLsizei stride,
       const VertexBufferPtr& buffer, size_t offset);
 
+   VertexArrayBuilder& SetIndexBuffer(const VertexBufferPtr& buffer);
+
 private:
-   GLRenderer& mRenderer;
+   Context& mContext;
    const GLFunctions& mFunctions;
 
    std::vector<VertexBufferPtr> mAssignedBuffers;

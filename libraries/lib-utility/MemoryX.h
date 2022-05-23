@@ -611,4 +611,35 @@ auto RoundUpUnsafe(LType numerator, RType denominator) noexcept
    }
 }
 
+
+template <typename HashType = size_t>
+struct HashCombiner final
+{
+   template <typename T, typename... Args>
+   HashType operator()(const T& value, const Args&... args) const noexcept
+   {
+      const auto seed =
+         static_cast<HashType>(std::hash<std::decay_t<T>> {}(value));
+
+      return this->CombineHash(seed, args...);
+   }
+
+private:
+   template <typename T>
+   HashType CombineHash(HashType seed, const T& v) const noexcept
+   {
+      // https://www.boost.org/doc/libs/1_35_0/doc/html/boost/hash_combine_id241013.html
+      return seed ^ (std::hash<std::decay_t<T>> {}(v) + 0x9e3779b9 +
+                     (seed << 6) + (seed >> 2));
+   }
+
+   template <typename T, typename... Args>
+   HashType
+   CombineHash(HashType seed, const T& v, const Args&... args) const noexcept
+   {
+      seed = this->CombineHash(seed, v);
+      return this->CombineHash(seed, args...);
+   }
+};
+
 #endif // __AUDACITY_MEMORY_X_H__

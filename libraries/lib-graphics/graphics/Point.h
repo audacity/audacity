@@ -12,6 +12,7 @@
 
 #include <cmath>
 #include <type_traits>
+#include <numeric>
 
 template<typename DataType>
 struct PointType final
@@ -83,10 +84,10 @@ struct PointType final
    }
 };
 
-template<typename From, typename To>
+template<typename To, typename From>
 PointType<To> point_cast(PointType<From> point)
 {
-   return { static_cast<To>(point.x), static_cast<From>(point.y) };
+   return { static_cast<To>(point.x), static_cast<To>(point.y) };
 }
 
 template<typename DataType>

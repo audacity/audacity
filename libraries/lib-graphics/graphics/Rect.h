@@ -68,4 +68,11 @@ bool operator!=(
    return !(lhs == rhs);
 }
 
+template <typename To, typename From>
+RectType<To> rect_cast(RectType<From> rect)
+{
+   return { point_cast<To>(rect.Origin), size_cast<To>(rect.Size) };
+}
+
+
 using Rect = RectType<float>;

@@ -15,40 +15,17 @@
 
 #include "MemoryX.h"
 
+#include "wx/log.h"
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#undef ERROR
 
 namespace graphics::gl::platforms::windows
 {
 namespace
 {
-LPCWSTR WindowClassName =
-   L"AudacityWGLWindow-6381EF473EC54DCD886ACFC36775B1E0";
-
-std::string GetSysErrorMessage(unsigned long errorCode)
-{
-   // get error message from system
-   LPTSTR messageBuffer;
-
-   if (
-      ::FormatMessage(
-         FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
-            FORMAT_MESSAGE_IGNORE_INSERTS,
-         NULL, errorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-         (LPTSTR)&messageBuffer, 0, NULL) == 0)
-   {
-      return {};
-   }
-
-   if (messageBuffer == nullptr)
-      return {};
-
-   std::string result = messageBuffer;
-
-   LocalFree(messageBuffer);
-
-   return result;
-}
+LPCWSTR WindowClassName = L"AudacityWGLWindow-6381EF473EC54DCD886ACFC36775B1E0";
 
 constexpr int GL_TRUE = 1;
 constexpr int WGL_DRAW_TO_WINDOW_ARB = 0x2001;
@@ -59,6 +36,8 @@ constexpr int WGL_FULL_ACCELERATION_ARB = 0x2027;
 constexpr int WGL_PIXEL_TYPE_ARB = 0x2013;
 constexpr int WGL_TYPE_RGBA_ARB = 0x202B;
 constexpr int WGL_COLOR_BITS_ARB = 0x2014;
+constexpr int WGL_DEPTH_BITS_ARB = 0x2022;
+constexpr int WGL_STENCIL_BITS_ARB = 0x2023;
 
 constexpr int WGL_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
 constexpr int WGL_CONTEXT_MINOR_VERSION_ARB = 0x2092;
@@ -67,38 +46,44 @@ constexpr int WGL_CONTEXT_CORE_PROFILE_BIT_ARB = 0x0001;
 constexpr int WGL_CONTEXT_FLAGS_ARB = 0x2094;
 constexpr int WGL_CONTEXT_DEBUG_BIT_ARB = 0x0001;
 
+constexpr int WGL_CONTEXT_RELEASE_BEHAVIOR_ARB = 0x2097;
+constexpr int WGL_CONTEXT_RELEASE_BEHAVIOR_NONE_ARB = 0x0000;
 
 using pfnWGLCreateContext = HGLRC(__stdcall*)(HDC);
 using pfnWGLDeleteContext = BOOL(__stdcall*)(HGLRC);
 using pfnWGLMakeCurrent = BOOL(__stdcall*)(HDC, HGLRC);
+using pfnWGLGetCurrentContext = HGLRC(__stdcall*)();
 using pfnWGLGetProcAddress = PROC(__stdcall*)(LPCSTR);
 
-using pfnWGLCreateContextAttribsARB = HGLRC (__stdcall*)(HDC, HGLRC, const int*);
+using pfnWGLSwapIntervalEXT = BOOL(__stdcall*)(int interval);
+using pfnWGLGetSwapIntervalEXT = int (__stdcall*)();
+
+using pfnWGLCreateContextAttribsARB = HGLRC(__stdcall*)(HDC, HGLRC, const int*);
 using pfnWGLChoosePixelFormatARB =
    BOOL(__stdcall*)(HDC, const int*, const FLOAT*, UINT, int*, UINT*);
 
 #ifndef NDEBUG
 
 using GLDEBUGPROCARB = void(__stdcall*)(
-   GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
-   const GLchar* message, const void* userParam);
+   GLDebugSource source, GLDebugType type, GLuint id, GLDebugSeverity severity,
+   GLsizei length, const GLchar* message, const void* userParam);
 
-using pfnGLDebugMessageCallbackARB = void (__stdcall*)(GLDEBUGPROCARB callback, void* userParam);
+using pfnGLDebugMessageCallbackARB =
+   void(__stdcall*)(GLDEBUGPROCARB callback, void* userParam);
 
 #endif // !NDEBUG
 
 struct WGLFunctions final : public GLFunctions
 {
-   WGLFunctions(HMODULE glLib, pfnWGLGetProcAddress WGLGetProcAddress)
+   explicit WGLFunctions(HMODULE glLib)
        : mGLLibrary(glLib)
-       , mWGLGetProcAddress(WGLGetProcAddress)
    {
-      mLoaded = LoadFunctions();
+      LoadWGLFunctions();
    }
 
    void* GetFunctionPointer(const char* name) const override
    {
-      auto wglFunction = mWGLGetProcAddress(name);
+      auto wglFunction = WGLGetProcAddress(name);
 
       if (wglFunction != nullptr)
          return wglFunction;
@@ -111,22 +96,71 @@ struct WGLFunctions final : public GLFunctions
       return mLoaded;
    }
 
+   pfnWGLCreateContext WGLCreateContext { nullptr };
+   pfnWGLDeleteContext WGLDeleteContext { nullptr };
+   pfnWGLMakeCurrent WGLMakeCurrent { nullptr };
+   pfnWGLGetProcAddress WGLGetProcAddress { nullptr };
+   pfnWGLGetCurrentContext WGLGetCurrentContext { nullptr };
+   pfnWGLSwapIntervalEXT WGLSwapIntervalEXT { nullptr };
+   pfnWGLGetSwapIntervalEXT WLGGetSwapIntervalEXT { nullptr };
+
+   bool LoadWGLFunctions()
+   {
+      if (!GetFunction(WGLCreateContext, "wglCreateContext"))
+         return false;
+
+      if (!GetFunction(WGLDeleteContext, "wglDeleteContext"))
+         return false;
+
+      if (!GetFunction(WGLMakeCurrent, "wglMakeCurrent"))
+         return false;
+
+      if (!GetFunction(WGLGetCurrentContext, "wglGetCurrentContext"))
+         return false;
+
+      if (!GetFunction(WGLGetProcAddress, "wglGetProcAddress"))
+         return false;
+
+      return true;
+   }
+
+   bool LoadContextFunctions()
+   {
+      mLoaded = LoadFunctions();
+
+      if (!GetFunction(WGLSwapIntervalEXT, "wglSwapIntervalEXT"))
+         return false;
+
+      if (!GetFunction(WLGGetSwapIntervalEXT, "wglGetSwapIntervalEXT"))
+         return false;
+      
+      return mLoaded;
+   }
+
 private:
+   template <typename Fn> bool GetFunction(Fn& fn, const char* name)
+   {
+      fn = reinterpret_cast<Fn>(GetProcAddress(mGLLibrary, name));
+
+      if (fn == nullptr && WGLGetProcAddress != nullptr)
+         fn = reinterpret_cast<Fn>(WGLGetProcAddress(name));
+
+      return fn != nullptr;
+   }
+
    HMODULE mGLLibrary;
-   pfnWGLGetProcAddress mWGLGetProcAddress;
    bool mLoaded;
 };
-}
+} // namespace
 
 class WGLRenderer::WGLContext : public Context
 {
 public:
    WGLContext(
-      GLFunctions& functions, pfnWGLMakeCurrent makeCurrent,
-      pfnWGLDeleteContext deleteContext, HDC dc, HGLRC glrc, bool ownsContext)
+      WGLRenderer& renderer, WGLFunctions& functions, HDC dc, HGLRC glrc, bool ownsContext)
        : Context(functions)
-       , WGLMakeCurrent(makeCurrent)
-       , WGLDeleteContext(deleteContext)
+       , mRenderer(renderer)
+       , mWGLFunctions(functions)
        , mDC(dc)
        , mGLRC(glrc)
        , mOwnsContext(ownsContext)
@@ -136,29 +170,65 @@ public:
    ~WGLContext()
    {
       Publish(ContextDestroyedMessage {});
+      mRenderer.ContextDestroyed(*this);
+
+      if (mWGLFunctions.WGLGetCurrentContext() == mGLRC)
+         mWGLFunctions.WGLMakeCurrent(nullptr, nullptr);
       
       if (mOwnsContext)
       {
-         WGLDeleteContext(mGLRC);
+         mWGLFunctions.WGLDeleteContext(mGLRC);
          ReleaseDC(WindowFromDC(mDC), mDC);
       }
    }
 
+   Size GetSize() const override
+   {
+      RECT clientRect;
+      GetClientRect(WindowFromDC(mDC), &clientRect);
+
+      return { static_cast<float>(clientRect.right - clientRect.left),
+               static_cast<float>(clientRect.bottom - clientRect.top) };
+   }
+
    void BeginRendering()
    {
-      WGLMakeCurrent(mDC, mGLRC);
+      if (mWGLFunctions.WGLGetCurrentContext() != mGLRC)
+         mWGLFunctions.WGLMakeCurrent(mDC, mGLRC);
 
       mBound = true;
 
+      if (!mInitialized)
+      {
+         if (
+            mWGLFunctions.WLGGetSwapIntervalEXT != nullptr &&
+            mWGLFunctions.WLGGetSwapIntervalEXT() != 0)
+            mWGLFunctions.WGLSwapIntervalEXT(0);
+
+         SetupContext();
+         mInitialized = true;
+      }
+
       ProcessReleaseQueue();
+
+      auto& functions = GetFunctions();
+
+      if (mGPUSync != nullptr)
+      {
+         functions.ClientWaitSync(
+            mGPUSync, static_cast<GLbitfield>(GLenum::SYNC_FLUSH_COMMANDS_BIT),
+            TIMEOUT_IGNORED);
+
+         functions.DeleteSync(mGPUSync);
+      }
+
+      mGPUSync =
+         GetFunctions().FenceSync(GLenum::SYNC_GPU_COMMANDS_COMPLETE, 0);
    }
 
    void EndRendering()
    {
-      mBound = false;
-      
       SwapBuffers(mDC);
-      WGLMakeCurrent(mDC, 0);
    }
 
    void ProcessReleaseQueue() override
@@ -169,21 +239,41 @@ public:
       DoProcessReleaseQueue();
    }
 
-private:
-   pfnWGLMakeCurrent WGLMakeCurrent;
-   pfnWGLDeleteContext WGLDeleteContext;
+   bool IsBound() const noexcept
+   {
+      return mBound;
+   }
 
+   void Unbind() noexcept
+   {
+      mBound = false;
+   }
+
+   void EnsureBound()
+   {
+      if (!mBound || mWGLFunctions.WGLGetCurrentContext() != mGLRC)
+         BeginRendering();
+   }
+
+private:
+   WGLRenderer& mRenderer;
+   WGLFunctions& mWGLFunctions;
    HDC mDC;
    HGLRC mGLRC;
 
+   GLsync mGPUSync { nullptr };
+
    bool mOwnsContext;
    bool mBound { false };
+
+   bool mInitialized { false };
 };
 
 class WGLRenderer::InvisibleWindow final
 {
 public:
-   InvisibleWindow()
+   explicit InvisibleWindow(WGLRenderer& renderer)
+       : mRenderer(renderer)
    {
       WNDCLASSW windowClass = {};
 
@@ -197,7 +287,7 @@ public:
 
       if (!ReCreateWindow())
          return;
-      
+
       if (!LoadOpenGL())
          return;
 
@@ -218,7 +308,7 @@ public:
    ~InvisibleWindow()
    {
       if (mGLContext != nullptr)
-         WGLDeleteContext(mGLContext);
+         mFunctions->WGLDeleteContext(mGLContext);
 
       if (mGLLibrary != nullptr)
          FreeLibrary(mGLLibrary);
@@ -240,18 +330,14 @@ public:
    HGLRC CreateOpenGL3Context(HDC dc, HGLRC baseContext = nullptr)
    {
       const int pixelFormatAttribs[] = {
-         WGL_DRAW_TO_WINDOW_ARB,
-         GL_TRUE,
-         WGL_SUPPORT_OPENGL_ARB,
-         GL_TRUE,
-         WGL_DOUBLE_BUFFER_ARB,
-         GL_TRUE,
-         WGL_ACCELERATION_ARB,
-         WGL_FULL_ACCELERATION_ARB,
-         WGL_PIXEL_TYPE_ARB,
-         WGL_TYPE_RGBA_ARB,
-         WGL_COLOR_BITS_ARB,
-         32,
+         WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
+         WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
+         WGL_DOUBLE_BUFFER_ARB,  GL_TRUE,
+         WGL_ACCELERATION_ARB,   WGL_FULL_ACCELERATION_ARB,
+         WGL_PIXEL_TYPE_ARB,     WGL_TYPE_RGBA_ARB,
+         WGL_COLOR_BITS_ARB,     32,
+         WGL_DEPTH_BITS_ARB,     0,
+         WGL_STENCIL_BITS_ARB,   0,
          0,
       };
 
@@ -269,18 +355,17 @@ public:
       DescribePixelFormat(dc, pixelFormat, sizeof(pfd), &pfd);
 
       if (!SetPixelFormat(dc, pixelFormat, &pfd))
-      {
-         auto str = GetSysErrorMessage(GetLastError());
          return nullptr;
-      }
 
       const int glAttribs[] = {
          WGL_CONTEXT_MAJOR_VERSION_ARB,
          3,
          WGL_CONTEXT_MINOR_VERSION_ARB,
-         0,
+         2,
          WGL_CONTEXT_PROFILE_MASK_ARB,
          WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+         WGL_CONTEXT_RELEASE_BEHAVIOR_ARB,
+         WGL_CONTEXT_RELEASE_BEHAVIOR_NONE_ARB,
 #ifndef NDEBUG
          WGL_CONTEXT_FLAGS_ARB,
          WGL_CONTEXT_DEBUG_BIT_ARB,
@@ -293,15 +378,21 @@ public:
 #ifndef NDEBUG
       if (context != nullptr)
       {
-         WGLMakeCurrent(mDC, context);
+         mFunctions->WGLMakeCurrent(mDC, context);
          auto contextSwitcher =
-            finally([this]() { WGLMakeCurrent(mDC, nullptr); });
+            finally([this]() { mFunctions->WGLMakeCurrent(mDC, nullptr); });
 
-
-         if (GLDebugMessageCallbackARB != nullptr || GetARBFunction(
-                GLDebugMessageCallbackARB, "glDebugMessageCallbackARB"))
+         if (
+            GLDebugMessageCallbackARB != nullptr ||
+            GetARBFunction(
+               GLDebugMessageCallbackARB, "glDebugMessageCallbackARB"))
             GLDebugMessageCallbackARB(DebugCallback, this);
 
+         pfnEnable GLEnable;
+         GetFunction(GLEnable, "glEnable");
+
+         GLEnable(GLenum::DEBUG_OUTPUT);
+         GLEnable(GLenum::DEBUG_OUTPUT_SYNCHRONOUS);
       }
 #endif // !NDEBUG
 
@@ -310,12 +401,11 @@ public:
 
    bool LoadGLFunctions()
    {
-      WGLMakeCurrent(mDC, mGLContext);
+      mFunctions->WGLMakeCurrent(mDC, mGLContext);
       auto contextSwitcher =
-         finally([this]() { WGLMakeCurrent(mDC, nullptr); });
+         finally([this]() { mFunctions->WGLMakeCurrent(mDC, nullptr); });
 
-      mFunctions =
-         std::make_unique<WGLFunctions>(mGLLibrary, WGLGetProcAddress);
+      mFunctions->LoadContextFunctions();
 
       return mFunctions->IsOk();
    }
@@ -323,7 +413,7 @@ public:
    std::unique_ptr<WGLContext> CreateContext(HDC dc, HGLRC glrc)
    {
       return std::make_unique<WGLContext>(
-         *mFunctions, WGLMakeCurrent, WGLDeleteContext, dc,
+         mRenderer, *mFunctions, dc,
          glrc != nullptr ? glrc : CreateOpenGL3Context(dc, mGLContext),
          glrc == nullptr);
    }
@@ -334,17 +424,15 @@ public:
    }
 
 private:
-   template <typename Fn>
-   bool GetFunction(Fn& fn, const char* name)
+   template <typename Fn> bool GetFunction(Fn& fn, const char* name)
    {
       fn = reinterpret_cast<Fn>(GetProcAddress(mGLLibrary, name));
       return fn != nullptr;
    }
 
-   template <typename Fn>
-   bool GetARBFunction(Fn& fn, const char* name)
+   template <typename Fn> bool GetARBFunction(Fn& fn, const char* name)
    {
-      fn = reinterpret_cast<Fn>(WGLGetProcAddress(name));
+      fn = reinterpret_cast<Fn>(mFunctions->WGLGetProcAddress(name));
       return fn != nullptr;
    }
 
@@ -376,17 +464,7 @@ private:
       if (mGLLibrary == nullptr)
          return false;
 
-      if (!GetFunction(WGLCreateContext, "wglCreateContext"))
-         return false;
-
-      if (!GetFunction(WGLDeleteContext, "wglDeleteContext"))
-         return false;
-
-      if (!GetFunction(WGLMakeCurrent, "wglMakeCurrent"))
-         return false;
-
-      if (!GetFunction(WGLGetProcAddress, "wglGetProcAddress"))
-         return false;
+      mFunctions = std::make_unique<WGLFunctions>(mGLLibrary);
 
       return true;
    }
@@ -413,20 +491,22 @@ private:
       if (!SetPixelFormat(mDC, pixelFormatIndex, &pfd))
          return false;
 
-      HGLRC tempContext = WGLCreateContext(mDC);
+      HGLRC tempContext = mFunctions->WGLCreateContext(mDC);
 
       if (tempContext == nullptr)
          return false;
 
-      auto tempContextDeleter =
-         finally([tempContext, this]() { WGLDeleteContext(tempContext); });
+      auto tempContextDeleter = finally(
+         [tempContext, this]() { mFunctions->WGLDeleteContext(tempContext); });
 
-      if (!WGLMakeCurrent(mDC, tempContext))
+      if (!mFunctions->WGLMakeCurrent(mDC, tempContext))
          return false;
 
-      auto contextSwitcher = finally([this]() { WGLMakeCurrent(mDC, nullptr); });
+      auto contextSwitcher =
+         finally([this]() { mFunctions->WGLMakeCurrent(mDC, nullptr); });
 
-      if (!GetARBFunction(WGLCreateContextAttribsARB, "wglCreateContextAttribsARB"))
+      if (!GetARBFunction(
+             WGLCreateContextAttribsARB, "wglCreateContextAttribsARB"))
          return false;
 
       if (!GetARBFunction(WGLChoosePixelFormatARB, "wglChoosePixelFormatARB"))
@@ -437,22 +517,29 @@ private:
 
 private:
 #ifndef NDEBUG
-   static void __stdcall DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
-      GLsizei length, const GLchar *message,
-      const void *userParam)
+   static void __stdcall DebugCallback(
+      GLDebugSource source, GLDebugType type, GLuint id,
+      GLDebugSeverity severity, GLsizei length, const GLchar* message,
+      const void* userParam)
    {
+      //if (severity == GLDebugSeverity::NOTIFICATION)
+      //   return;
+
+      wxLogDebug(
+         "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s",
+         (type == GLDebugType::ERROR ? "** GL ERROR **" : ""), type, severity,
+         message);
+
+      if (type == GLDebugType::ERROR)
+         DebugBreak();
    }
 #endif // !NDEBUG
-
+   WGLRenderer& mRenderer;
+   
    HWND mWindow { nullptr };
    HDC mDC { nullptr };
 
    HMODULE mGLLibrary { nullptr };
-
-   pfnWGLCreateContext WGLCreateContext { nullptr };
-   pfnWGLDeleteContext WGLDeleteContext { nullptr };
-   pfnWGLMakeCurrent WGLMakeCurrent { nullptr };
-   pfnWGLGetProcAddress WGLGetProcAddress { nullptr };
 
    pfnWGLCreateContextAttribsARB WGLCreateContextAttribsARB { nullptr };
    pfnWGLChoosePixelFormatARB WGLChoosePixelFormatARB { nullptr };
@@ -467,7 +554,7 @@ private:
 };
 
 WGLRenderer::WGLRenderer()
-    : mInvisibleWindow(std::make_unique<InvisibleWindow>())
+    : mInvisibleWindow(std::make_unique<InvisibleWindow>(*this))
 {
    if (!mInvisibleWindow->IsOk())
    {
@@ -476,22 +563,25 @@ WGLRenderer::WGLRenderer()
    }
 
    mInvisibleWindowContext = mInvisibleWindow->CreateContextWrapper();
-   mInvisibleWindowContext->BeginRendering();
+   mCurrentContext = mInvisibleWindowContext.get();
+   mCurrentContext->BeginRendering();
 }
 
 WGLRenderer::~WGLRenderer()
 {
 }
 
-bool WGLRenderer::IsSupported() const
+bool WGLRenderer::IsAvailable() const
 {
    return mInvisibleWindow != nullptr;
 }
 
 Context& WGLRenderer::GetResourceContext()
 {
-   return mCurrentContext != nullptr ? *mCurrentContext :
-                                       *mInvisibleWindowContext;
+   if (mCurrentContext == mInvisibleWindowContext.get())
+      mCurrentContext->EnsureBound();
+   
+   return *mCurrentContext;
 }
 
 std::unique_ptr<graphics::gl::Context> WGLRenderer::CreateContext(void* window)
@@ -500,9 +590,28 @@ std::unique_ptr<graphics::gl::Context> WGLRenderer::CreateContext(void* window)
       GetDC(static_cast<HWND>(window)), nullptr);
 }
 
+void WGLRenderer::ContextDestroyed(Context& ctx)
+{
+   if (&ctx == mInvisibleWindowContext.get())
+      return;
+   
+   if (mCurrentContext == &ctx)
+   {
+      mCurrentContext = mInvisibleWindowContext.get();
+      mInvisibleWindowContext->BeginRendering();
+   }
+}
+
 void WGLRenderer::BeginRendering(Context& context)
 {
-   mCurrentContext = static_cast<WGLContext*>(&context);
+   auto wglContext = static_cast<WGLContext*>(&context);
+
+   if (mCurrentContext != nullptr && mCurrentContext != wglContext)
+   {
+      mCurrentContext->Unbind();
+      mCurrentContext = wglContext;
+   }
+   
    mCurrentContext->BeginRendering();
 }
 
@@ -512,9 +621,6 @@ void WGLRenderer::EndRendering()
       return;
 
    mCurrentContext->EndRendering();
-   mCurrentContext = nullptr;
-
-   mInvisibleWindowContext->BeginRendering();
 }
 
 } // namespace graphics::gl::platforms::windows

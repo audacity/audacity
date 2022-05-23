@@ -14,6 +14,16 @@
 #include <string>
 #include <deque>
 
+namespace
+{
+const auto independentId = RegisterRenderer("independent");
+}
+
+GRAPHICS_API RendererID GetRendererIndependentID()
+{
+   return independentId;
+}
+
 RendererID RegisterRenderer(std::string_view name)
 {
    static std::deque<std::string> Renderers;

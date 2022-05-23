@@ -11,11 +11,13 @@
 #pragma once
 
 #include <array>
-#include <memory>
+#include <cstdint>
 #include <vector>
 
 #include "graphics/Color.h"
 #include "GLFunctions.h"
+
+#include "graphics/Rect.h"
 
 #include "Observer.h"
 
@@ -29,6 +31,11 @@ using VertexArrayPtr = std::shared_ptr<VertexArray>;
 
 class Framebuffer;
 using FramebufferPtr = std::shared_ptr<Framebuffer>;
+
+class VertexBuffer;
+
+class Program;
+using ProgramPtr = std::shared_ptr<Program>;
 
 struct ContextDestroyedMessage : Observer::Message {};
 
@@ -45,18 +52,69 @@ public:
    
    explicit Context(GLFunctions& functions);
    virtual ~Context();
+
+   virtual Size GetSize() const = 0;
    
    const GLFunctions& GetFunctions() const;
 
-   virtual void Clear(Color color);
+   virtual void Clear(const Rect& rect, Color color);
+   virtual void Clear();
 
    TexturePtr GetCurrentTexture(uint32_t textureUnitIndex) const;
-   bool BindTexture(const TexturePtr& texture, uint32_t textureUnitIndex);
+   void BindTexture(const TexturePtr& texture, uint32_t textureUnitIndex);
 
    void ResetVertexArrayState();
-   bool BindVertexArray(const VertexArrayPtr& vertexArray);
+   void BindVertexArray(const VertexArrayPtr& vertexArray);
 
    void ReleaseContextResource(ContextResourceType framebuffer, GLuint resourceId);
+
+   void BindBuffer(const VertexBuffer& buffer);
+
+   void BindProgram(const ProgramPtr& program);
+   
+   void BindFramebuffer(const FramebufferPtr& framebuffer);
+
+   void SetClipRect(const Rect& rect);
+   void SetClipRect(const RectType<GLint>& rect);
+   void ResetClipRect();
+
+   void SetClientActiveTexture(uint32_t unit);
+
+   void SetPrimitiveRestartIndex(GLuint index);
+
+   void SetViewport(const RectType<uint32_t> viewport);
+
+   void SetUnpackAlignment(uint32_t alignment);
+   void SetBestUnpackAlignment(uint32_t rowStride);
+
+   class Snapshot final
+   {
+   public:
+      Snapshot() = default;
+      Snapshot(const Snapshot&) = default;
+      Snapshot(Snapshot&&) = default;
+      Snapshot& operator=(const Snapshot&) = default;
+      Snapshot& operator=(Snapshot&&) = default;
+
+      friend bool operator==(const Snapshot& lhs, const Snapshot& rhs);
+      friend bool operator!=(const Snapshot& lhs, const Snapshot& rhs);
+   private:
+      void ApplySnapshot(Context& ctx) const;
+
+      FramebufferPtr mCurrentFramebuffer;      
+      ProgramPtr mCurrentProgram;
+      VertexArrayPtr mCurrentVertexArray;
+      
+      std::array<TexturePtr, 2> mCurrentTexture;
+
+      RectType<GLint> mClipRect;
+      bool mClippingEnabled { false };
+
+      friend class Context;
+   };
+
+   const Snapshot& GetSnapshot() const;
+   void SetSnaphot(const Snapshot& snapshot);
 
 protected:
    virtual void SetupContext();
@@ -67,12 +125,19 @@ private:
    GLFunctions& mFunctions;
 
    Color mClearColor;
-
-   std::array<TexturePtr, 2> mCurrentTexture;
-   GLenum mCurrentClientTexture { GLenum::TEXTURE0 };
-
-   VertexArrayPtr mCurrentVertexArray;
-
+   
+   std::vector<std::pair<GLenum, const VertexBuffer*>> mBufferMappings;
    std::vector<std::pair<ContextResourceType, GLuint>> mReleaseQueue;
+
+   GLenum mCurrentActiveTexture { GLenum::TEXTURE0 };
+
+   Snapshot mCurrentState;
+
+   GLuint mSamplerStateObject { 0 };
+   GLuint mPrimitiveRestartIndex { std::numeric_limits<GLuint>::max() };
+
+   RectType<uint32_t> mViewport;
+
+   uint32_t mUnpackAlignment { 4 };
 }; // class Context;
 } // namespace graphics::gl

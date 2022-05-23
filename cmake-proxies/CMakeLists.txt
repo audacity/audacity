@@ -267,6 +267,29 @@ add_conan_lib(
       portmidi:shared=True
 )
 
+add_conan_lib(
+   freetype
+   freetype/2.11.1
+   REQUIRED
+   PKG_CONFIG "freetype2 >= 2.10"
+   CONAN_OPTIONS
+      freetype:shared=True
+      freetype:with_brotli=False
+)
+
+add_conan_lib(
+   harfbuzz
+   harfbuzz/2.6.8
+   REQUIRED
+   PKG_CONFIG "harfbuzz >= 2.6"
+   CONAN_OPTIONS
+      harfbuzz:shared=True
+      harfbuzz:with_glib=False
+      harfbuzz:with_gdi=False
+      harfbuzz:with_uniscribe=False
+)
+
+
 set_conan_vars_to_parent()
 
 # Required libraries

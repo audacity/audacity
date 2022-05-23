@@ -32,10 +32,9 @@ public:
    void SetUniform(std::string_view name, GLfloat value0, GLfloat value1, GLfloat value2);
    void SetUniform(std::string_view name, GLfloat value0, GLfloat value1, GLfloat value2, GLfloat value3);
 
-   void Bind(Context& context);
-
 private:
-  
+   void Bind(Context& context);
+   
    Program(GLRenderer& renderer, GLuint program);
    GLint GetUniformLocation(std::string_view name);
 
@@ -45,6 +44,7 @@ private:
    std::map<std::string, GLint, std::less<>> mUniformLocations;
 
    friend class ProgramBuilder;
+   friend class Context;
 };
 
 class ProgramBuilder final

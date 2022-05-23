@@ -21,7 +21,29 @@ namespace graphics::gl
 #   define GLAPIENTRY
 #endif
 
-enum class GLenum : uint32_t 
+using GLbitfield = uint32_t;
+using GLuint = uint32_t;
+using GLint = int32_t;
+using GLsizei = int32_t;
+using GLboolean = uint8_t;
+using GLbyte = int8_t;
+using GLshort = int16_t;
+using GLubyte = uint8_t;
+using GLushort = uint16_t;
+using GLfloat = float;
+using GLclampf = float;
+using GLdouble = double;
+using GLclampd = double;
+using GLvoid = void;
+using GLintptr = intptr_t;
+using GLsizeiptr = ptrdiff_t;
+using GLchar = char;
+using GLuint64 = uint64_t;
+
+struct __GLsync;
+using GLsync = __GLsync*;
+
+enum class GLenum : uint32_t
 {
    INVALID = 0x0000,
    // Texture formats
@@ -143,6 +165,7 @@ enum class GLenum : uint32_t
    LINE_STRIP_ADJACENCY = 0x000B,
    TRIANGLES_ADJACENCY = 0x000C,
    TRIANGLE_STRIP_ADJACENCY = 0x000D,
+   PRIMITIVE_RESTART = 0x8F9D,
 
    // Buffers
    ARRAY_BUFFER = 0x8892,
@@ -207,7 +230,7 @@ enum class GLenum : uint32_t
 
    // Textures
    TEXTURE_2D = 0x0DE1,
-   TEXTURE_RECTANGLE = 0x84F5, 
+   TEXTURE_RECTANGLE = 0x84F5,
    TEXTURE0 = 0x84C0,
    TEXTURE1 = 0x84C1,
 
@@ -271,26 +294,54 @@ enum class GLenum : uint32_t
    RG8 = 0x822B,
    RED = 0x1903,
    RG = 0x8227,
+
+   // Synchronization
+   SYNC_FLUSH_COMMANDS_BIT = 0x0001,
+   SYNC_GPU_COMMANDS_COMPLETE = 0x9117,
+   MAX_SERVER_WAIT_TIMEOUT = 0x9111,
+
+   ALREADY_SIGNALED = 0x911A,
+   TIMEOUT_EXPIRED = 0x911B,
+   CONDITION_SATISFIED = 0x911C,
+   SYNC_WAIT_FAILED = 0x911D,
+
+   // Debug
+   DEBUG_OUTPUT_SYNCHRONOUS = 0x8242,
+   DEBUG_OUTPUT = 0x92E0,
 };
 
-using GLbitfield = uint32_t;
-using GLuint = uint32_t;
-using GLint = int32_t;
-using GLsizei = int32_t;
-using GLboolean = uint8_t;
-using GLbyte = int8_t;
-using GLshort = int16_t;
-using GLubyte = uint8_t;
-using GLushort = uint16_t;
-using GLfloat = float;
-using GLclampf = float;
-using GLdouble = double;
-using GLclampd = double;
-using GLvoid = void;
-using GLintptr = intptr_t;
-using GLsizeiptr = ptrdiff_t;
-using GLchar = char;
-using GLuint64 = uint64_t;
+enum class GLDebugSource : uint32_t
+{
+   API = 0x8246,
+   WINDOW_SYSTEM = 0x8247,
+   SHADER_COMPILER = 0x8248,
+   THIRD_PARTY = 0x8249,
+   APPLICATION = 0x824A,
+   OTHER = 0x824B,
+};
+
+enum class GLDebugType : uint32_t
+{
+   ERROR = 0x824C,
+   DEPRECATED_BEHAVIOR = 0x824D,
+   UNDEFINED_BEHAVIOR = 0x824E,
+   PORTABILITY = 0x824F,
+   PERFORMANCE = 0x8250,
+   OTHER = 0x8251,
+   MARKER = 0x8268,
+   PUSH_GROUP = 0x8269,
+   POP_GROUP = 0x826A,
+};
+
+enum class GLDebugSeverity : uint32_t
+{
+   HIGH = 0x9146,
+   MEDIUM = 0x9147,
+   LOW = 0x9148,
+   NOTIFICATION = 0x826B,
+};
+
+constexpr GLuint64 TIMEOUT_IGNORED = 0xFFFFFFFFFFFFFFFFULL;
 
 using pfnClear = void(GLAPIENTRY*)(GLbitfield mask);
 using pfnClearColor = void(GLAPIENTRY*)(
@@ -301,7 +352,9 @@ using pfnColorMask = void(GLAPIENTRY*)(
    GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
 using pfnCullFace = void(GLAPIENTRY*)(GLenum mode);
 using pfnEnable = void(GLAPIENTRY*)(GLenum cap);
+using pfnEnablei = void(GLAPIENTRY*)(GLenum cap, GLuint index);
 using pfnDisable = void(GLAPIENTRY*)(GLenum cap);
+using pfnDisablei = void(GLAPIENTRY*)(GLenum cap, GLuint index);
 using pfnFinish = void(GLAPIENTRY*)(void);
 using pfnFlush = void(GLAPIENTRY*)(void);
 using pfnFrontFace = void(GLAPIENTRY*)(GLenum mode);
@@ -458,38 +511,25 @@ using pfnLinkProgram = void(GLAPIENTRY*)(GLuint program);
 using pfnShaderBinary = void(GLAPIENTRY*)(
    GLsizei n, const GLuint* shaders, GLenum binaryformat, const GLvoid* binary,
    GLsizei length);
-using pfnGetShaderSource = void(GLAPIENTRY*)(
-   GLuint shader, GLsizei bufSize, GLsizei* length, GLchar* source);
-using pfnShaderSource = void(GLAPIENTRY*)(
-   GLuint shader, GLsizei count, const GLchar** string, const GLint* length);
+using pfnGetShaderSource = void(GLAPIENTRY*)(GLuint shader, GLsizei bufSize, GLsizei* length, GLchar* source);
+using pfnShaderSource = void(GLAPIENTRY*)(GLuint shader, GLsizei count, const GLchar** string, const GLint* length);
 using pfnUniform1f = void(GLAPIENTRY*)(GLint location, GLfloat x);
-using pfnUniform1fv =
-   void(GLAPIENTRY*)(GLint location, GLsizei count, const GLfloat* v);
+using pfnUniform1fv = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLfloat* v);
 using pfnUniform1i = void(GLAPIENTRY*)(GLint location, GLint x);
-using pfnUniform1iv =
-   void(GLAPIENTRY*)(GLint location, GLsizei count, const GLint* v);
+using pfnUniform1iv = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLint* v);
 using pfnUniform2f = void(GLAPIENTRY*)(GLint location, GLfloat x, GLfloat y);
-using pfnUniform2fv =
-   void(GLAPIENTRY*)(GLint location, GLsizei count, const GLfloat* v);
+using pfnUniform2fv = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLfloat* v);
 using pfnUniform2i = void(GLAPIENTRY*)(GLint location, GLint x, GLint y);
-using pfnUniform2iv =
-   void(GLAPIENTRY*)(GLint location, GLsizei count, const GLint* v);
-using pfnUniform3f =
-   void(GLAPIENTRY*)(GLint location, GLfloat x, GLfloat y, GLfloat z);
-using pfnUniform3fv =
-   void(GLAPIENTRY*)(GLint location, GLsizei count, const GLfloat* v);
-using pfnUniform3i =
-   void(GLAPIENTRY*)(GLint location, GLint x, GLint y, GLint z);
-using pfnUniform3iv =
-   void(GLAPIENTRY*)(GLint location, GLsizei count, const GLint* v);
+using pfnUniform2iv = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLint* v);
+using pfnUniform3f = void(GLAPIENTRY*)(GLint location, GLfloat x, GLfloat y, GLfloat z);
+using pfnUniform3fv = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLfloat* v);
+using pfnUniform3i = void(GLAPIENTRY*)(GLint location, GLint x, GLint y, GLint z);
+using pfnUniform3iv = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLint* v);
 using pfnUniform4f = void(GLAPIENTRY*)(
    GLint location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
-using pfnUniform4fv =
-   void(GLAPIENTRY*)(GLint location, GLsizei count, const GLfloat* v);
-using pfnUniform4i =
-   void(GLAPIENTRY*)(GLint location, GLint x, GLint y, GLint z, GLint w);
-using pfnUniform4iv =
-   void(GLAPIENTRY*)(GLint location, GLsizei count, const GLint* v);
+using pfnUniform4fv = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLfloat* v);
+using pfnUniform4i = void(GLAPIENTRY*)(GLint location, GLint x, GLint y, GLint z, GLint w);
+using pfnUniform4iv = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLint* v);
 using pfnUniformMatrix2fv = void(GLAPIENTRY*)(
    GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
 using pfnUniformMatrix3fv = void(GLAPIENTRY*)(
@@ -500,28 +540,18 @@ using pfnUseProgram = void(GLAPIENTRY*)(GLuint program);
 using pfnValidateProgram = void(GLAPIENTRY*)(GLuint program);
 using pfnUniform1ui = void(GLAPIENTRY*)(GLint location, GLuint v0);
 using pfnUniform2ui = void(GLAPIENTRY*)(GLint location, GLuint v0, GLuint v1);
-using pfnUniform3ui =
-   void(GLAPIENTRY*)(GLint location, GLuint v0, GLuint v1, GLuint v2);
+using pfnUniform3ui = void(GLAPIENTRY*)(GLint location, GLuint v0, GLuint v1, GLuint v2);
 using pfnUniform4ui = void(GLAPIENTRY*)(
    GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3);
-using pfnUniform1uiv =
-   void(GLAPIENTRY*)(GLint location, GLsizei count, const GLuint* value);
-using pfnUniform2uiv =
-   void(GLAPIENTRY*)(GLint location, GLsizei count, const GLuint* value);
-using pfnUniform3uiv =
-   void(GLAPIENTRY*)(GLint location, GLsizei count, const GLuint* value);
-using pfnUniform4uiv =
-   void(GLAPIENTRY*)(GLint location, GLsizei count, const GLuint* value);
-using pfnGetUniformBlockIndex =
-   GLuint(GLAPIENTRY*)(GLuint program, const GLchar* uniformBlockName);
-using pfnUniformBlockBinding = void(GLAPIENTRY*)(
-   GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding);
-using pfnBindBufferBase =
-   void(GLAPIENTRY*)(GLenum target, GLuint index, GLuint buffer);
-using pfnGetTexImage = void(GLAPIENTRY*)(
-   GLenum target, GLint level, GLenum format, GLenum type, GLvoid* pixels);
-using pfnDiscardFramebuffer = void(GLAPIENTRY*)(
-   GLenum target, GLsizei numAttachments, const GLenum* attachments);
+using pfnUniform1uiv = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLuint* value);
+using pfnUniform2uiv = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLuint* value);
+using pfnUniform3uiv = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLuint* value);
+using pfnUniform4uiv = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLuint* value);
+using pfnGetUniformBlockIndex = GLuint(GLAPIENTRY*)(GLuint program, const GLchar* uniformBlockName);
+using pfnUniformBlockBinding = void(GLAPIENTRY*)(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding);
+using pfnBindBufferBase = void(GLAPIENTRY*)(GLenum target, GLuint index, GLuint buffer);
+using pfnGetTexImage = void(GLAPIENTRY*)(GLenum target, GLint level, GLenum format, GLenum type, GLvoid* pixels);
+using pfnDiscardFramebuffer = void(GLAPIENTRY*)(GLenum target, GLsizei numAttachments, const GLenum* attachments);
 using pfnBlitFramebuffer = void(GLAPIENTRY*)(
    GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0,
    GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
@@ -532,6 +562,13 @@ using pfnUniformMatrix2x4fv = void(GLAPIENTRY*)(GLint location, GLsizei count, G
 using pfnUniformMatrix4x2fv = void(GLAPIENTRY*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
 using pfnUniformMatrix3x4fv = void(GLAPIENTRY*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
 using pfnUniformMatrix4x3fv = void(GLAPIENTRY*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
+
+using pfnClientWaitSync = GLenum(GLAPIENTRY*)(GLsync sync, GLbitfield flags, GLuint64 timeout);
+using pfnFenceSync = GLsync(GLAPIENTRY*)(GLenum condition, GLbitfield flags);
+using pfnDeleteSync = void(GLAPIENTRY*)(GLsync sync);
+using pfnWaitSync = GLenum(GLAPIENTRY*)(GLsync sync, GLbitfield flags, GLuint64 timeout);
+
+using pfnPrimitiveRestartIndex = void(GLAPIENTRY*)(GLuint index);
 
 struct GLFunctions /* not final */
 {
@@ -544,7 +581,9 @@ struct GLFunctions /* not final */
    pfnColorMask ColorMask { nullptr };
    pfnCullFace CullFace { nullptr };
    pfnEnable Enable { nullptr };
+   pfnEnablei Enablei { nullptr };
    pfnDisable Disable { nullptr };
+   pfnDisablei Disablei { nullptr };
    pfnFinish Finish { nullptr };
    pfnFlush Flush { nullptr };
    pfnFrontFace FrontFace { nullptr };
@@ -690,6 +729,13 @@ struct GLFunctions /* not final */
    pfnUniformMatrix4x2fv UniformMatrix4x2fv { nullptr };
    pfnUniformMatrix3x4fv UniformMatrix3x4fv { nullptr };
    pfnUniformMatrix4x3fv UniformMatrix4x3fv { nullptr };
+
+   pfnFenceSync FenceSync { nullptr };
+   pfnDeleteSync DeleteSync { nullptr };
+   pfnClientWaitSync ClientWaitSync { nullptr };
+   pfnWaitSync WaitSync { nullptr };
+
+   pfnPrimitiveRestartIndex PrimitiveRestartIndex { nullptr };
 
 protected:
    virtual void* GetFunctionPointer(const char* name) const = 0;

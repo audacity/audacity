@@ -314,9 +314,6 @@ WaveBitmapCache::SetPaintParameters(const WavePaintParameters& params)
 {
    if (mPaintParamters != params)
    {
-      if (mPaintParamters.Height != params.Height)
-         mCachedImage = {};
-
       mPaintParamters = params;
       mEnvelope = params.AttachedEnvelope;
       mEnvelopeVersion = mEnvelope != nullptr ? mEnvelope->GetVersion() : 0;
@@ -351,8 +348,6 @@ WaveBitmapCache& WaveBitmapCache::SetSelection(
    return *this;
 }
 
-
-
 void WaveBitmapCache::CheckCache(const ZoomInfo&, double, double)
 {
    if (mEnvelope != nullptr && mEnvelopeVersion != mEnvelope->GetVersion())
@@ -368,25 +363,25 @@ bool WaveBitmapCache::InitializeElement(
    if (mPaintParamters.Height == 0)
       return false;
 
-   if (!mCachedImage)
-      mCachedImage =
-         std::make_unique<wxImage>(CacheElementWidth, mPaintParamters.Height);
-
    if (!mLookupHelper->PerformLookup(this, key))
-      return false;
+   {
+      element.Bitmap = mPainter->CreateImage(
+         PainterImageFormat::RGB888, 1, mPaintParamters.Height, nullptr);
+      
+      return true;
+   }
 
    auto sw = FrameStatistics::CreateStopwatch(
       FrameStatistics::SectionID::WaveBitmapCache);
 
-   auto imageData = mCachedImage->GetData();
-
    const auto columnsCount = mLookupHelper->AvailableColumns;
-
+   
    const auto defaultColor = Triplet(mPaintParamters.BlankColor);
 
    const auto height = static_cast<uint32_t>(mPaintParamters.Height);
-
-   auto rowData = imageData;
+   
+   mImageBuffer.reserve(3 * columnsCount * height);
+   auto rowData = mImageBuffer.data();
 
    for (uint32_t row = 0; row < height; ++row)
    {
@@ -408,7 +403,7 @@ bool WaveBitmapCache::InitializeElement(
    element.IsComplete = mLookupHelper->IsComplete;
 
    element.Bitmap = mPainter->CreateImage(
-      PainterImageFormat::RGB888, columnsCount, height, imageData);
+      PainterImageFormat::RGB888, columnsCount, height, mImageBuffer.data());
 
    return true;
 }

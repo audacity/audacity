@@ -21,7 +21,9 @@ bool graphics::gl::GLFunctions::LoadFunctions()
    loaded = GetFunction(ColorMask, "glColorMask", true) || loaded;
    loaded = GetFunction(CullFace, "glCullFace", true) || loaded;
    loaded = GetFunction(Enable, "glEnable", true) || loaded;
+   loaded = GetFunction(Enablei, "glEnablei", true) || loaded;
    loaded = GetFunction(Disable, "glDisable", true) || loaded;
+   loaded = GetFunction(Disablei, "glDisablei", true) || loaded;
    loaded = GetFunction(Finish, "glFinish", true) || loaded;
    loaded = GetFunction(Flush, "glFlush", true) || loaded;
    loaded = GetFunction(FrontFace, "glFrontFace", true) || loaded;
@@ -169,6 +171,10 @@ bool graphics::gl::GLFunctions::LoadFunctions()
    loaded = GetFunction(UniformMatrix4x2fv, "glUniformMatrix4x2fv", true) || loaded;
    loaded = GetFunction(UniformMatrix3x4fv, "glUniformMatrix3x4fv", true) || loaded;
    loaded = GetFunction(UniformMatrix4x3fv, "glUniformMatrix4x3fv", true) || loaded;
-
+   loaded = GetFunction(FenceSync, "glFenceSync", true) || loaded;
+   loaded = GetFunction(DeleteSync, "glDeleteSync", true) || loaded;
+   loaded = GetFunction(ClientWaitSync, "glClientWaitSync", true) || loaded;
+   loaded = GetFunction(WaitSync, "glWaitSync", true) || loaded;
+   loaded = GetFunction(PrimitiveRestartIndex, "glPrimitiveRestartIndex", true) || loaded;
    return loaded;
 }

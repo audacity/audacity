@@ -43,4 +43,5 @@ private:
    GRAPHICS_API friend RendererID RegisterRenderer(std::string_view);
 };
 
+GRAPHICS_API RendererID GetRendererIndependentID();
 GRAPHICS_API RendererID RegisterRenderer(std::string_view name);

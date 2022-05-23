@@ -96,10 +96,10 @@ struct SizeType final
    }
 };
 
-template <typename From, typename To>
+template <typename To, typename From>
 SizeType<To> size_cast(SizeType<From> point)
 {
-   return { static_cast<To>(point.width), static_cast<From>(point.height) };
+   return { static_cast<To>(point.width), static_cast<To>(point.height) };
 }
 
 template <typename DataType>

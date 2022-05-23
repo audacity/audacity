@@ -10,8 +10,21 @@
 **********************************************************************/
 #include "Texture.h"
 
+#include <map>
+
 #include "Context.h"
 #include "GLRenderer.h"
+#include "Framebuffer.h"
+
+template <typename T>
+struct MyGenericImage
+{
+   unsigned int ncols;
+   unsigned int nrows;
+   unsigned int nchannels;
+
+   T* data;
+};
 
 namespace graphics::gl
 {
@@ -25,12 +38,12 @@ RectFromSubRect(const RectType<uint32_t>& parentRect, const RectType<uint32_t>& 
 
    const auto width =
       subRect.Origin.x < parentWidth ?
-         std::max(parentWidth - subRect.Origin.x, subRect.Size.width) :
+         std::min(parentWidth - subRect.Origin.x, subRect.Size.width) :
          0;
 
    const auto height =
       subRect.Origin.y < parentHeight ?
-         std::max(parentHeight - subRect.Origin.y, subRect.Size.height) :
+         std::min(parentHeight - subRect.Origin.y, subRect.Size.height) :
          0;
 
    return { parentRect.Origin + subRect.Origin,
@@ -60,12 +73,18 @@ public:
       if (isStatic)
       {
          auto currrentTexture = context.GetCurrentTexture(1);
+         context.SetClientActiveTexture(1);
 
-         const bool rebound = currrentTexture == nullptr ||
+         const bool rebound = currrentTexture != nullptr &&
                               currrentTexture->mSharedGLObject.get() != this;
 
-         if (rebound)
-            functions.BindTexture(GLenum::TEXTURE_2D, mTextureID);
+         functions.BindTexture(GLenum::TEXTURE_2D, mTextureID);
+
+         if (data != nullptr)
+         {
+            context.SetBestUnpackAlignment(
+               width * (format == PainterImageFormat::RGB888 ? 3 : 4));
+         }
 
          functions.TexImage2D(
             GLenum::TEXTURE_2D, 0,
@@ -95,16 +114,27 @@ public:
          else
             mDataBuffer.resize(size);
       }
+
+      mContextDestroyedSubscription = renderer.Subscribe(
+         [this](RendererDestroyedMessage) { mTextureID = 0; });
    }
 
    ~SharedGLObject()
    {
-      Publish(TextureDestroyedMessage {});
-      
-      auto& functions = mRenderer.GetResourceContext().GetFunctions();
+      DestroyTexture();
+   }
 
-      if (mTextureID != 0)
-         functions.DeleteTextures(1, &mTextureID);
+   void DestroyTexture()
+   {
+      if (mTextureID == 0)
+         return;
+
+      Publish(TextureDestroyedMessage {});
+
+      auto& functions = mRenderer.GetResourceContext().GetFunctions();
+      functions.DeleteTextures(1, &mTextureID);
+
+      mTextureID = 0;
    }
 
    bool IsDirty() const noexcept
@@ -122,7 +152,13 @@ public:
    void PerformUpdate(Context& ctx)
    {
       if (!mDirty)
-         return ;
+         return;
+
+      MyGenericImage<uint8_t> debugggg = {
+         mWidth, mHeight,
+         mFormat == PainterImageFormat::RGB888 ? 3 : 4,
+         const_cast<uint8_t*>(mDataBuffer.data())
+      };
 
       mDirty = false;
 
@@ -143,15 +179,14 @@ public:
          GLenum::UNSIGNED_BYTE, mDataBuffer.data());
    }
 
-   bool Update(
-      GLenum target, const RectType<uint32_t>& rect,
-      const uint8_t* data)
+   TextureCoords
+   Update(GLenum target, const RectType<uint32_t>& rect, const uint8_t* data)
    {
       if (mDataBuffer.empty())
-         return false;
+         return {};
 
       if (rect.Size.width == 0 || rect.Size.height == 0)
-         return true;
+         return {};
 
       const auto bytesPerPixel = mFormat == PainterImageFormat::RGB888 ? 3 : 4;
       const auto outStride = mWidth * bytesPerPixel;
@@ -173,12 +208,64 @@ public:
 
       mDirty = true;
 
-      return true;
+      return GetFlippedTextureCoords(rect);
    }
 
-   FramebufferPtr GetFramebuffer(Context& context)
+   GLuint GetTextureID() const noexcept
    {
-      return {};
+      return mTextureID;
+   }
+
+   TextureCoords GetTextureCoords(const RectType<uint32_t>& rect) const noexcept
+   {
+      auto left = rect.Origin.x;
+      auto right = left + rect.Size.width;
+      auto top = mHeight - rect.Origin.y;
+      auto bottom = top - rect.Size.height;
+
+      constexpr auto multiplier = std::numeric_limits<int16_t>::max();
+
+      return { static_cast<int16_t>(left * multiplier / mWidth),
+               static_cast<int16_t>(top * multiplier / mHeight),
+               static_cast<int16_t>(right * multiplier / mWidth),
+               static_cast<int16_t>(bottom * multiplier / mHeight) };
+   }
+
+   TextureCoords GetFlippedTextureCoords(const RectType<uint32_t>& rect) const noexcept
+   {
+      auto left = rect.Origin.x;
+      auto right = left + rect.Size.width;
+      auto top = rect.Origin.y;
+      auto bottom = top + rect.Size.height;
+
+      constexpr auto multiplier = std::numeric_limits<int16_t>::max();
+
+      return { static_cast<int16_t>(left * multiplier / mWidth),
+               static_cast<int16_t>(top * multiplier / mHeight),
+               static_cast<int16_t>(right * multiplier / mWidth),
+               static_cast<int16_t>(bottom * multiplier / mHeight) };
+   }
+
+   RectType<uint32_t> GetOpenGLRect(RectType<uint32_t> rect) const noexcept
+   {
+      rect.Origin.y = mHeight - rect.Origin.y - rect.Size.height;
+      return rect;
+   }
+
+   std::shared_ptr<Framebuffer>
+   GetCachedFramebuffer(const Context* context) const
+   {
+      auto it = mFramebuffersCache.find(context);
+
+      if (it == mFramebuffersCache.end() || !it->second->IsOk())
+         return {};
+
+      return it->second;
+   }
+
+   void CacheFramebuffer(const Context* context, const std::shared_ptr<Framebuffer>& framebuffer)
+   {
+      mFramebuffersCache[context] = framebuffer;
    }
 
 private:
@@ -189,6 +276,10 @@ private:
    PainterImageFormat mFormat;
    uint32_t mWidth;
    uint32_t mHeight;
+
+   Observer::Subscription mContextDestroyedSubscription;
+
+   std::map<const Context*, std::shared_ptr<Framebuffer>> mFramebuffersCache;
 
    std::vector<uint8_t> mDataBuffer;
    bool mDirty { false };
@@ -217,9 +308,10 @@ Texture::~Texture()
 {
 }
 
-void Texture::Bind(Context& context)
+void Texture::Bind(Context& context, const Texture* texture)
 {
-   mSharedGLObject->Bind(context, GLenum::TEXTURE_2D);
+   if (texture == nullptr || texture->mSharedGLObject != mSharedGLObject)
+      mSharedGLObject->Bind(context, GLenum::TEXTURE_2D);
 }
 
 bool Texture::IsDirty() const
@@ -239,11 +331,11 @@ uint32_t Texture::GetWidth() const
 
 uint32_t Texture::GetHeight() const
 {
-   return mTextureRect.Size.width;
+   return mTextureRect.Size.height;
 }
 
-bool Texture::Update(
-   const RectType<uint32_t>& rect, const void* data)
+Texture::TextureCoords
+Texture::Update(const RectType<uint32_t>& rect, const void* data)
 {
    return mSharedGLObject->Update(
       GLenum::TEXTURE_2D, RectFromSubRect(mTextureRect, rect),
@@ -252,13 +344,36 @@ bool Texture::Update(
 
 FramebufferPtr Texture::GetFramebuffer(Context& context)
 {
-   return mSharedGLObject->GetFramebuffer(context);
+   auto cachedFramebuffer = mSharedGLObject->GetCachedFramebuffer(&context);
+
+   if (cachedFramebuffer != nullptr)
+      return cachedFramebuffer;
+
+   auto rect = mSharedGLObject->GetOpenGLRect(mTextureRect);
+   
+   auto framebuffer = std::shared_ptr<Framebuffer>(new Framebuffer(
+      context, *this, mSharedGLObject->GetTextureID(), GLenum::TEXTURE_2D,
+      mTextureRect));
+
+   if (framebuffer->IsOk())
+   {
+      mSharedGLObject->CacheFramebuffer(&context, framebuffer);
+      return framebuffer;
+   }
+
+   return nullptr;
 }
 
 Observer::Publisher<TextureDestroyedMessage>&
 Texture::GetTextureDestroyedMessagePublisher()
 {
    return *mSharedGLObject;
+}
+
+Texture::TextureCoords
+Texture::GetTextureCoords(const RectType<uint32_t>& rect) const noexcept
+{
+   return mSharedGLObject->GetTextureCoords(RectFromSubRect(mTextureRect, rect));
 }
 
 }

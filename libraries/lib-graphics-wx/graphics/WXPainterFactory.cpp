@@ -79,6 +79,40 @@ private:
    std::unique_ptr<Painter> mMeasuringPainter;
 };
 
+class OpenGLRendererProvider final : public RendererProvider
+{
+public:
+   ~OpenGLRendererProvider()
+   {
+      graphics::gl::ShutdownSharedRenderer();
+   }
+   std::unique_ptr<Painter> CreatePainterFromWindow(wxWindow& wnd) override
+   {
+      return graphics::gl::GetSharedRenderer().CreateWindowPainter(
+         wnd.GetHWND(), FontInfoFromWXFont(wnd.GetFont()));
+   }
+
+   std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc) override
+   {
+      return nullptr;
+   }
+
+   Painter& GetMeasuringPainter() override
+   {
+      if (!mMeasuringPainter)
+      {
+         mMeasuringPainter =
+            graphics::gl::GetSharedRenderer().CreateMeasuringPainter(
+               FontInfoFromWXFont(*wxNORMAL_FONT));
+      }
+
+      return *mMeasuringPainter;
+   }
+
+private:
+   std::unique_ptr<Painter> mMeasuringPainter;
+};
+
 #ifdef WIN32
 class D2DRendererProvider : public RendererProvider
 {
@@ -120,7 +154,14 @@ std::unique_ptr<RendererProvider> Provider;
 
 RendererProvider& GetRendererProvider()
 {
-   graphics::gl::GetSharedRenderer();
+   if (Provider == nullptr)
+   {
+      auto& openGLRenderer = graphics::gl::GetSharedRenderer();
+
+      if (openGLRenderer.IsAvailable())
+         Provider = std::make_unique<OpenGLRendererProvider>();
+   }
+   
 #ifdef WIN32
    if (Provider == nullptr)
    {

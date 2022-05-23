@@ -128,7 +128,7 @@ std::shared_ptr<Program> ProgramBuilder::Build()
       mFunctions.GetProgramiv(mProgram, GLenum::INFO_LOG_LENGTH, &logLength);
       std::string log(logLength + 1, '\0');
 
-      mFunctions.GetShaderInfoLog(mProgram, logLength, &logLength, log.data());
+      mFunctions.GetProgramInfoLog(mProgram, logLength, &logLength, log.data());
 
       mLogString += log + "\n";
 
@@ -151,7 +151,7 @@ const char* ProgramBuilder::GetNullTerminatedString(std::string_view name)
    if (name.empty())
       return "";
 
-   if (name[name.length()] == '\0')
+   if (name.data()[name.length()] == '\0')
       return name.data();
 
    mCacheString = std::string(name);

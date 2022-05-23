@@ -21,26 +21,10 @@ namespace graphics::gl
    
 VertexArray::~VertexArray()
 {
-   if (mVertexArray !=0)
+   if (mVertexArray != 0)
    {
-      mRenderer.GetResourceContext().GetFunctions().DeleteVertexArrays(
+      mContext.GetFunctions().DeleteVertexArrays(
          1, &mVertexArray);
-   }
-}
-
-bool VertexArray::IsDirty() const noexcept
-{
-   return std::any_of(
-      mAssignedBuffers.begin(), mAssignedBuffers.end(),
-      [](const auto& buffer) { return buffer->IsDirty(); });
-}
-
-void VertexArray::PerformUpdate(Context& context)
-{
-   for (auto& buffer : mAssignedBuffers)
-   {
-      if (buffer->IsDirty())
-         buffer->PerformUpdate(context);
    }
 }
 
@@ -50,18 +34,20 @@ void VertexArray::Bind(Context& context)
 }
 
 VertexArray::VertexArray(
-   GLRenderer& renderer, std::vector<VertexBufferPtr> buffers, GLuint vao)
-    : mRenderer(renderer)
+   Context& context, std::vector<VertexBufferPtr> buffers, GLuint vao)
+    : mContext(context)
     , mAssignedBuffers(std::move(buffers))
     , mVertexArray(vao)
+    , mContextDestroyedSubscription(context.Subscribe(
+         [this](ContextDestroyedMessage) { mVertexArray = 0; }))
 {
 }
 
-VertexArrayBuilder::VertexArrayBuilder(GLRenderer& renderer)
-    : mRenderer(renderer)
-    , mFunctions(renderer.GetResourceContext().GetFunctions())
+VertexArrayBuilder::VertexArrayBuilder(Context& context)
+    : mContext(context)
+    , mFunctions(context.GetFunctions())
 {
-   mRenderer.GetResourceContext().ResetVertexArrayState();
+   context.ResetVertexArrayState();
 
    mFunctions.GenVertexArrays(1, &mVertexArray);
    mFunctions.BindVertexArray(mVertexArray);
@@ -70,16 +56,13 @@ VertexArrayBuilder::VertexArrayBuilder(GLRenderer& renderer)
 VertexArrayBuilder::~VertexArrayBuilder()
 {
    if (mVertexArray != 0)
-   {
-      mRenderer.GetResourceContext().GetFunctions().DeleteVertexArrays(
-         1, &mVertexArray);
-   }
+      mFunctions.DeleteVertexArrays(1, &mVertexArray);
 }
 
 std::shared_ptr<VertexArray> VertexArrayBuilder::Build()
 {
    auto vao = std::shared_ptr<VertexArray>(
-      new VertexArray(mRenderer, std::move(mAssignedBuffers), mVertexArray));
+      new VertexArray(mContext, std::move(mAssignedBuffers), mVertexArray));
 
    mVertexArray = 0;
    mCurrentBuffer = {};
@@ -91,22 +74,37 @@ VertexArrayBuilder& VertexArrayBuilder::AddPointer(
    GLint componentsCount, GLenum type, GLboolean normalized, GLsizei stride,
    const VertexBufferPtr& buffer, size_t offset)
 {
-   auto& context = mRenderer.GetResourceContext();
+   if (buffer == nullptr)
+   {
+      ++mAttribIndex;
+      return *this;
+   }
    
    if (mCurrentBuffer != buffer)
    {
       mCurrentBuffer = buffer;
-      mCurrentBuffer->Bind(context, GLenum::ARRAY_BUFFER);
+      mContext.BindBuffer(*buffer);
    }
 
    mFunctions.EnableVertexAttribArray(mAttribIndex);
    
    mFunctions.VertexAttribPointer(
       mAttribIndex, componentsCount, type, normalized, stride,
-      (const void*)offset);
+      reinterpret_cast<const void*>(offset));
 
    ++mAttribIndex;
    
+   return *this;
+}
+VertexArrayBuilder&
+VertexArrayBuilder::SetIndexBuffer(const VertexBufferPtr& buffer)
+{
+   if (buffer == nullptr)
+      return *this;
+   
+   mAssignedBuffers.emplace_back(buffer);
+   buffer->Bind(mContext, GLenum::ELEMENT_ARRAY_BUFFER);
+
    return *this;
 }
 } // namespace graphics::gl

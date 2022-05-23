@@ -681,8 +681,7 @@ void LWSlider::AdjustSize(const wxSize & sz)
 void LWSlider::OnPaint(Painter &painter, bool highlight)
 {
    // The dc will be a paint DC
-   if (
-      !mBitmap || !mBitmap->IsValid(painter) || !mThumbBitmap ||
+   if (!mBitmap || !mBitmap->IsValid(painter) || !mThumbBitmap ||
       !mThumbBitmapHilited)
    {
       DrawToBitmap(painter);
