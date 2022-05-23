@@ -383,6 +383,8 @@ bool VST3Effect::ForEachParameter(ParameterVisitor visitor) const
 
 bool VST3Effect::FetchSettings(VST3EffectSettings& settings) const
 {
+   settings.mValues.clear();
+
    return ForEachParameter(
 
       [&](const ParameterInfo& pi)
