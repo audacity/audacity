@@ -18,6 +18,7 @@
 #include <pluginterfaces/gui/iplugview.h>
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <public.sdk/source/vst/hosting/module.h>
+#include <unordered_map>
 
 #include "../StatefulPerTrackEffect.h"
 #include "internal/ComponentHandler.h"
@@ -188,5 +189,14 @@ private:
       assert(pSettings);
       return *pSettings;
    }
+
+   struct ParameterInfo;
+
+   //! Return value: if true, continue visiting
+   using ParameterVisitor =
+      std::function< bool(const ParameterInfo& pi) >;
+
+   //! @return false if parameters could not be retrieved at all, else true
+   bool ForEachParameter(ParameterVisitor visitor) const;
 
 };

@@ -343,92 +343,117 @@ bool VST3Effect::SupportsAutomation() const
    return false;
 }
 
-
-bool VST3Effect::FetchSettings(VST3EffectSettings& settings) const
+struct VST3Effect::ParameterInfo
 {
-   // partly copied from ::SaveSettings + some adaptations made
+   Steinberg::Vst::ParameterInfo mVstParamInfo;
+};
 
+
+bool VST3Effect::ForEachParameter(ParameterVisitor visitor) const
+{
    if (mEditController == nullptr)
       return false;
 
-   using namespace Steinberg;
-
-   auto theCount = mEditController->getParameterCount();
-
    for (int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
    {
-      Vst::ParameterInfo parameterInfo{ };
-      if (mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
+      ParameterInfo pi;
+
+      Steinberg::Vst::ParameterInfo vstParameterInfo{ };
+      if (mEditController->getParameterInfo(i, vstParameterInfo) == Steinberg::kResultOk)
       {
-         if (parameterInfo.flags & Vst::ParameterInfo::kCanAutomate)
+         if (vstParameterInfo.flags & Steinberg::Vst::ParameterInfo::kCanAutomate)
          {
-
-            Steinberg::Vst::ParamID    key = parameterInfo.id;
-            Steinberg::Vst::ParamValue value = mEditController->getParamNormalized(parameterInfo.id);
-
-            settings.mValues[key] = value;
+            if (!visitor(ParameterInfo{ vstParameterInfo } ))
+               return false;
          }
+         else
+         {
+            return false;
+         }
+      }
+      else
+      {
+         return false;
       }
    }
 
    return true;
+}
+
+
+bool VST3Effect::FetchSettings(VST3EffectSettings& settings) const
+{
+   return ForEachParameter(
+
+      [&](const ParameterInfo& pi)
+      {
+        const auto id = pi.mVstParamInfo.id;
+        settings.mValues[id] = mEditController->getParamNormalized(id);
+        return true;
+      }
+   );
 }
 
 
 bool VST3Effect::StoreSettings(const VST3EffectSettings& settings) const
 {
-   // partly copied from ::LoadSettings + some adaptations made
+   return ForEachParameter(
 
-   using namespace Steinberg;
-
-   if (mComponentHandler == nullptr)
-      return false;
-
-   for (const auto& item : settings.mValues)
-   {
-      const Steinberg::Vst::ParamID& id    = item.first;
-      const Vst::ParamValue&         value = item.second;
-
-      if (mComponentHandler->beginEdit(id) == kResultOk)
+      [&](const ParameterInfo& pi)
       {
-         auto cleanup = finally([&] {
-            mComponentHandler->endEdit(id);
-         });
-         mComponentHandler->performEdit(id, value);
+         if (mComponentHandler == nullptr)
+            return false;
+
+         const auto id = pi.mVstParamInfo.id;
+
+         auto itr = settings.mValues.find(id);
+         if (itr != settings.mValues.end())
+         {
+            const auto& value = itr->second;
+
+            // set the value to the handler at the id
+            if (mComponentHandler->beginEdit(id) == Steinberg::kResultOk)
+            {
+               auto cleanup = finally([&] {
+                  mComponentHandler->endEdit(id);
+               });
+               mComponentHandler->performEdit(id, value);
+            }
+            else
+            {
+               return false;
+            }
+            mEditController->setParamNormalized(id, value);
+
+         }
+         else
+         {
+            return false;
+         }
+
+         return true;
       }
-      mEditController->setParamNormalized(id, value);
-   }
+   );
 
-   return true;
 }
-
-
 
 
 bool VST3Effect::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {
-   if(mEditController == nullptr)
-      return false;
+   return ForEachParameter(
 
-   using namespace Steinberg;
-   
-   for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
-   {
-      Vst::ParameterInfo parameterInfo { };
-      if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
+      [&](const ParameterInfo& pi)
       {
-         if(parameterInfo.flags & Vst::ParameterInfo::kCanAutomate)
-         {
-            parms.Write(
-               VST3Utils::MakeAutomationParameterKey(parameterInfo),
-               mEditController->getParamNormalized(parameterInfo.id)
-            );
-         }
-      }
-   }
+         parms.Write(
+            VST3Utils::MakeAutomationParameterKey(pi.mVstParamInfo),
+            mEditController->getParamNormalized(pi.mVstParamInfo.id)
+         );
 
-   return true;
+         return true;   
+      }
+
+   );
 }
 
 
