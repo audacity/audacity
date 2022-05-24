@@ -359,16 +359,8 @@ bool VST3Effect::ForEachParameter(ParameterVisitor visitor) const
          if (vstParameterInfo.flags & Steinberg::Vst::ParameterInfo::kCanAutomate)
          {
             if (!visitor(ParameterInfo{ vstParameterInfo } ))
-               return false;
+               break;
          }
-         else
-         {
-            return false;
-         }
-      }
-      else
-      {
-         return false;
       }
    }
 
