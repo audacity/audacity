@@ -256,6 +256,30 @@ const IndexType quadIndices[] = { 0, 1, 2, 2, 3, 0 };
 const size_t quadIndicesCount = 6;
 
 const IndexType lineStripQuadIndices[] = { 0, 1, 2, 3 };
+
+bool SimpleIntersects(
+   const Point& p0, const Point& p1, const Point& p2, const Point& p3) noexcept
+{
+   const Point d1 = p1 - p0;
+   const Point d2 = p3 - p2;
+
+   const Point n { -d1.y, d1.x };
+   
+   const float denom = DotProduct(d2, n);
+
+   if (denom == 0.0f)
+      return false;
+
+   const float proj = DotProduct(p0 - p2, n) / denom;
+
+   return proj >= 0 && proj <= 1;
+}
+
+bool IsRect(const Point& p0, const Point& p1, const Point& p2, const Point& p3) noexcept
+{
+   return !SimpleIntersects(p0, p1, p2, p3) &&
+          !SimpleIntersects(p0, p3, p1, p2);
+}
 }
 
 void GLPainter::DoDrawPolygon(const Point* pts, size_t count)
@@ -270,7 +294,8 @@ void GLPainter::DoDrawPolygon(const Point* pts, size_t count)
    {
       DoDrawLines(pts, count);
    }
-   else if (count == 3 || count == 4)
+   else if (
+      count == 3 || (count == 4 && IsRect(pts[0], pts[1], pts[2], pts[3])))
    {
       const Color color = mCurrentBrush.GetColor();
 
