@@ -35,10 +35,7 @@ private:
    {
       Start,
       End,
-      InnerCCW,
-      InnerCW,
-      DegeneratedCCW,
-      DegeneratedCW,
+      Inner
    };
 
    struct PointData final
@@ -46,10 +43,6 @@ private:
       Type pointType { Type::Start };
 
       StrokePoint point;
-      StrokePoint normal;
-
-      float miterUp { 0.0f };
-      float miterDown { 0.0f };
    };
 
    struct PointsRequestResult final
@@ -57,8 +50,6 @@ private:
       StrokePoint prevPoint;
       StrokePoint currentPoint;
       StrokePoint nextPoint;
-
-      float orientation;
    };
 
    void ProcessPoints(float halfWidth, bool closed);
@@ -67,9 +58,6 @@ private:
    PointsRequestResult GetPoints(size_t index) const noexcept;
 
    void EmitVertex(const Pen& pen, StrokePoint point);
-
-   void EmitJoin(const Pen& pen, size_t pointIndex);
-   void EmitDegeneratedJoin(const Pen& pen, size_t pointIndex);
 
    std::vector<PointData> mPoints;
 
