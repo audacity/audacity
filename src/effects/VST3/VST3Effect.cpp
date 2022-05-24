@@ -343,11 +343,6 @@ bool VST3Effect::SupportsAutomation() const
    return false;
 }
 
-struct VST3Effect::ParameterInfo
-{
-   Steinberg::Vst::ParameterInfo mVstParamInfo;
-};
-
 
 bool VST3Effect::ForEachParameter(ParameterVisitor visitor) const
 {
@@ -389,7 +384,7 @@ bool VST3Effect::FetchSettings(VST3EffectSettings& settings) const
 
       [&](const ParameterInfo& pi)
       {
-        const auto id = pi.mVstParamInfo.id;
+        const auto id = pi.id;
         settings.mValues[id] = mEditController->getParamNormalized(id);
         return true;
       }
@@ -406,7 +401,7 @@ bool VST3Effect::StoreSettings(const VST3EffectSettings& settings) const
          if (mComponentHandler == nullptr)
             return false;
 
-         const auto id = pi.mVstParamInfo.id;
+         const auto id = pi.id;
 
          auto itr = settings.mValues.find(id);
          if (itr != settings.mValues.end())
@@ -448,8 +443,8 @@ bool VST3Effect::SaveSettings(
       [&](const ParameterInfo& pi)
       {
          parms.Write(
-            VST3Utils::MakeAutomationParameterKey(pi.mVstParamInfo),
-            mEditController->getParamNormalized(pi.mVstParamInfo.id)
+            VST3Utils::MakeAutomationParameterKey(pi),
+            mEditController->getParamNormalized(pi.id)
          );
 
          return true;   

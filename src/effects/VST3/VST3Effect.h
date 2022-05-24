@@ -207,7 +207,7 @@ private:
    }
    */
 
-   struct ParameterInfo;
+   using ParameterInfo = Steinberg::Vst::ParameterInfo;
 
    //! Return value: if true, continue visiting
    using ParameterVisitor =
