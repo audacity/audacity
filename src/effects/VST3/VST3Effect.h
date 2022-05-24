@@ -183,12 +183,29 @@ private:
 
    bool StoreSettings(const VST3EffectSettings& settings) const;
 
+   VST3EffectSettings mSettings;  // temporary
+
+   //! This function will be rewritten when the effect is really stateless
+   VST3EffectSettings& GetSettings(EffectSettings&) const
+   {
+      return const_cast<VST3Effect*>(this)->mSettings;
+   }
+
+   //! This function will be rewritten when the effect is really stateless
+   const VST3EffectSettings& GetSettings(const EffectSettings&) const
+   {
+      return mSettings;
+   }
+
+   //! This is what ::GetSettings will be when the effect becomes really stateless
+   /*    
    static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
    {
       auto pSettings = settings.cast<VST3EffectSettings>();
       assert(pSettings);
       return *pSettings;
    }
+   */
 
    struct ParameterInfo;
 
