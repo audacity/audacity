@@ -274,6 +274,7 @@ void Context::SetupContext()
    mFunctions.Enable(GLenum::PRIMITIVE_RESTART);
    
    mFunctions.Enablei(GLenum::BLEND, 0);
+   
    mFunctions.BlendFunc(GLenum::SRC_ALPHA, GLenum::ONE_MINUS_SRC_ALPHA);
    mFunctions.BlendEquation(GLenum::FUNC_ADD);
 

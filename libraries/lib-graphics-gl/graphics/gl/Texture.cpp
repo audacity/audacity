@@ -321,6 +321,7 @@ bool Texture::IsDirty() const
 
 void Texture::PerformUpdate(Context& ctx)
 {
+   ctx.BindTexture(shared_from_this(), 1);
    mSharedGLObject->PerformUpdate(ctx);
 }
 

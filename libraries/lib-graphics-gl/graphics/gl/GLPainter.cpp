@@ -364,8 +364,7 @@ void GLPainter::DoDrawRect(const Rect& rect)
    const Point points[] {
       Point { rect.Origin.x, rect.Origin.y },
       Point { rect.Origin.x + rect.Size.width, rect.Origin.y },
-      Point { rect.Origin.x + rect.Size.width,
-              rect.Origin.y + rect.Size.height },
+      Point { rect.Origin.x + rect.Size.width, rect.Origin.y + rect.Size.height },
       Point { rect.Origin.x, rect.Origin.y + rect.Size.height }
    };
    
@@ -374,7 +373,7 @@ void GLPainter::DoDrawRect(const Rect& rect)
 
 void GLPainter::DoDrawRoundedRect(const Rect& rect, float radius)
 {
-   if (!mInPaint || !rect.IsValid() || radius <= 0.0f)
+   if (!mInPaint || !rect.IsValid() || radius < 0.0f)
       return;
 
    Path path;
