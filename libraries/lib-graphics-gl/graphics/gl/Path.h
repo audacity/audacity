@@ -18,6 +18,7 @@
 namespace graphics::gl
 {
 class GLPainter;
+class StrokeGenerator;
 
 class Path final : public PainterPath
 {
@@ -55,22 +56,26 @@ private:
 
    struct Batch final
    {
-      GLenum mode;
-
       size_t firstVertex;
       size_t vertexCount;
 
       size_t polygonIndex;
    };
+
+   struct PolyInfo final
+   {
+      Point LastPoint;
+      size_t PointsCount { 0 };
+    
+      bool Closed { false };
+   };
    
    PathTriangulation mTriangualtion;
    
-   mutable std::vector<Vertex> mPoints;
+   mutable std::vector<Vertex> mVertices;
    std::vector<Batch> mBatches;
+   std::vector<PolyInfo> mPolygons;
+}; // class Path
 
-   Point mFirstFigurePoint;
-   Point mLastFigurePoint;
-   
-   size_t mFigurePoints { 0 };
-};
-}
+} // namespace graphics::gl
+

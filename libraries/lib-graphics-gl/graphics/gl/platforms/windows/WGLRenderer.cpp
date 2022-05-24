@@ -49,6 +49,9 @@ constexpr int WGL_CONTEXT_DEBUG_BIT_ARB = 0x0001;
 constexpr int WGL_CONTEXT_RELEASE_BEHAVIOR_ARB = 0x2097;
 constexpr int WGL_CONTEXT_RELEASE_BEHAVIOR_NONE_ARB = 0x0000;
 
+constexpr int WGL_SAMPLE_BUFFERS_ARB = 0x2041;
+constexpr int WGL_SAMPLES_ARB = 0x2042;
+
 using pfnWGLCreateContext = HGLRC(__stdcall*)(HDC);
 using pfnWGLDeleteContext = BOOL(__stdcall*)(HGLRC);
 using pfnWGLMakeCurrent = BOOL(__stdcall*)(HDC, HGLRC);
@@ -196,6 +199,11 @@ public:
       if (mWGLFunctions.WGLGetCurrentContext() != mGLRC)
          mWGLFunctions.WGLMakeCurrent(mDC, mGLRC);
 
+      const auto pixelsPerInch = GetDeviceCaps(mDC, LOGPIXELSX);
+
+      UpdateScreenProperties(
+         pixelsPerInch, std::max(1.0f, pixelsPerInch / 96.0f));
+
       mBound = true;
 
       if (!mInitialized)
@@ -338,6 +346,10 @@ public:
          WGL_COLOR_BITS_ARB,     32,
          WGL_DEPTH_BITS_ARB,     0,
          WGL_STENCIL_BITS_ARB,   0,
+      #if 0
+         WGL_SAMPLE_BUFFERS_ARB, GL_TRUE,
+         WGL_SAMPLES_ARB,        2,
+      #endif   
          0,
       };
 
@@ -522,8 +534,8 @@ private:
       GLDebugSeverity severity, GLsizei length, const GLchar* message,
       const void* userParam)
    {
-      //if (severity == GLDebugSeverity::NOTIFICATION)
-      //   return;
+      if (severity == GLDebugSeverity::NOTIFICATION)
+         return;
 
       wxLogDebug(
          "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s",

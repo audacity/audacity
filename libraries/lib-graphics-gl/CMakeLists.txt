@@ -25,6 +25,8 @@ set( SOURCES
    graphics/gl/Program.h
    graphics/gl/ProgramLibrary.cpp
    graphics/gl/ProgramLibrary.h
+   graphics/gl/StrokeGenerator.cpp
+   graphics/gl/StrokeGenerator.h
    graphics/gl/Texture.cpp
    graphics/gl/Texture.h
    graphics/gl/VertexArray.cpp

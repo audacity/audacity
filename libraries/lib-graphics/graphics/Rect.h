@@ -21,6 +21,11 @@ struct RectType final
    PointType<DataType> Origin;
    SizeType<DataType> Size;
 
+   bool IsValid() const noexcept
+   {
+      return Size.width > 0 && Size.height > 0;
+   }
+
    bool Contains(PointType<DataType> pt) const noexcept
    {
       return pt.x >= Origin.x && pt.y >= Origin.y &&

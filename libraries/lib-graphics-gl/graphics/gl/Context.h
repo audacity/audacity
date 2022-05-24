@@ -116,10 +116,14 @@ public:
    const Snapshot& GetSnapshot() const;
    void SetSnaphot(const Snapshot& snapshot);
 
+   float GetScaleFactor() const noexcept;
+   uint32_t GetDPI() const noexcept;
+
 protected:
    virtual void SetupContext();
    void DoProcessReleaseQueue();
    virtual void ProcessReleaseQueue() = 0;
+   void UpdateScreenProperties(uint32_t dpi, float scaleFactor) noexcept;
 
 private:
    GLFunctions& mFunctions;
@@ -139,5 +143,8 @@ private:
    RectType<uint32_t> mViewport;
 
    uint32_t mUnpackAlignment { 4 };
+
+   uint32_t mDPI { 96 };
+   float mScaleFactor { 1.0f };
 }; // class Context;
 } // namespace graphics::gl

@@ -305,6 +305,22 @@ void Context::DoProcessReleaseQueue()
    mReleaseQueue.clear();
 }
 
+float Context::GetScaleFactor() const noexcept
+{
+   return mScaleFactor;
+}
+
+uint32_t Context::GetDPI() const noexcept
+{
+   return mDPI;
+}
+
+void Context::UpdateScreenProperties(uint32_t dpi, float scaleFactor) noexcept
+{
+   mDPI = dpi;
+   mScaleFactor = scaleFactor;
+}
+
 const Context::Snapshot& Context::GetSnapshot() const
 {
    return mCurrentState;

@@ -355,7 +355,11 @@ void DrawMinMaxRMS(
    for (auto it = range.begin(); it != range.end(); ++it)
    {
       const auto elementLeftOffset = it.GetLeftOffset();
-      const auto width = it->AvailableColumns - elementLeftOffset;
+      const auto elementRightOffset = it.GetRightOffset();
+      const auto width = it->AvailableColumns - elementLeftOffset - elementRightOffset - 1;
+
+      if (width <= 0)
+         continue;
 
       painter.DrawImage(*it->Bitmap, left, rect.GetTop(), width, height, elementLeftOffset, 0);
 

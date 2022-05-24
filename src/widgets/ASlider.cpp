@@ -802,13 +802,13 @@ void LWSlider::DrawToBitmap(Painter & painter)
    {
       // draw the '-' and the '+'
       // These are drawn with lines, rather tha nwith a font.
-      AColor::UseThemeColour(stateMutator, clrTrackPanelText );
+      AColor::UseThemeColour(stateMutator, clrTrackPanelText);
 
       if (mOrientation == wxHORIZONTAL)
       {
          AColor::Line(painter, mLeftX, mCenterY-10, mLeftX+4, mCenterY-10);
-         AColor::Line(painter, mRightX-5, mCenterY-10, mRightX-1, mCenterY-10);
-         AColor::Line(painter, mRightX-3, mCenterY-12, mRightX-3, mCenterY-8);
+         AColor::Line(painter, mRightX-6, mCenterY-10, mRightX-1, mCenterY-10);
+         AColor::Line(painter, mRightX-3, mCenterY-12, mRightX-3, mCenterY-7);
       }
       else
       {
@@ -817,8 +817,8 @@ void LWSlider::DrawToBitmap(Painter & painter)
          // Draw '+' and '-' only for other vertical sliders.
          if (mStyle != DB_SLIDER)
          {
-            AColor::Line(painter, mCenterX-12, mBottomY-3,  mCenterX-8, mBottomY-3);
-            AColor::Line(painter, mCenterX-12, mTopY+3,     mCenterX-8, mTopY+3);
+            AColor::Line(painter, mCenterX-12, mBottomY-3,  mCenterX-7, mBottomY-3);
+            AColor::Line(painter, mCenterX-12, mTopY+3,     mCenterX-7, mTopY+3);
             AColor::Line(painter, mCenterX-10, mTopY,       mCenterX-10, mTopY+5);
          }
       }

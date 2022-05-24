@@ -165,4 +165,15 @@ auto Distance(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
    return std::sqrt(DotProduct(lhs, rhs));
 }
 
+template <typename DataType>
+auto Normalized(PointType<DataType> pt) noexcept
+{
+   const auto norm = Norm(pt);
+
+   if (norm <= std::numeric_limits<DataType>::epsilon())
+      return pt;
+   
+   return pt / norm;
+}
+
 using Point = PointType<float>;

@@ -20,6 +20,7 @@ class GLRenderer;
 
 class PaintTarget;
 class PaintTargetsStack;
+class StrokeGenerator;
 
 class GLPainter final : public Painter
 {
@@ -101,6 +102,10 @@ public:
 
    void PopPaintTarget(const std::shared_ptr<PainterImage>& image) override;
 
+   StrokeGenerator& GetStrokeGenerator();
+
+   float GetScale() const noexcept;
+
 private:
    GLRenderer& mRenderer;
    Context& mContext;
@@ -116,6 +121,8 @@ private:
 
    Brush mCurrentBrush;
    Pen mCurrentPen;
+
+   std::unique_ptr<StrokeGenerator> mStrokeGenerator;
 
    bool mInPaint { false };
 }; // class GLPainter

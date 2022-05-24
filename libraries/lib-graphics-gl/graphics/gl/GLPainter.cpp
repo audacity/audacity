@@ -24,7 +24,7 @@
 #include "PaintTargetsStack.h"
 
 #include "Path.h"
-
+#include "StrokeGenerator.h"
 
 namespace graphics::gl
 {
@@ -37,6 +37,7 @@ GLPainter::GLPainter(
     , mContext(context)
     , mDefaultFont(fonts::GetFontLibrary().GetFont(defaultFont, 96))
     , mTargetsStack(std::make_unique<PaintTargetsStack>(renderer, context))
+    , mStrokeGenerator(std::make_unique<StrokeGenerator>())
 {
    assert(mDefaultFont != nullptr);
 }
@@ -49,6 +50,7 @@ GLPainter::GLPainter(
     , mOwnedContext(std::move(context))
     , mDefaultFont(fonts::GetFontLibrary().GetFont(defaultFont, 96))
     , mTargetsStack(std::make_unique<PaintTargetsStack>(renderer, mContext))
+    , mStrokeGenerator(std::make_unique<StrokeGenerator>())
 {
    assert(mOwnedContext != nullptr);
    assert(mDefaultFont != nullptr);
@@ -289,13 +291,9 @@ void GLPainter::DoDrawPolygon(const Point* pts, size_t count)
 
       if (mCurrentPen.GetStyle() != PenStyle::None)
       {
-         const Color penColor = mCurrentPen.GetColor();
-
-         for (auto& vert : vertices)
-            vert.addColor = mCurrentPen.GetColor();
-
-         mCurrentPaintTarget->Append(
-            GLenum::LINE_LOOP, vertices, count, lineStripQuadIndices, count);
+         mStrokeGenerator->StartStroke();
+         mStrokeGenerator->AddPoints(pts, count);
+         mStrokeGenerator->EndStroke(*mCurrentPaintTarget, mCurrentPen, true);
       }
    }
    else
@@ -327,23 +325,17 @@ void GLPainter::DoDrawLines(const Point* pts, size_t count)
 
    for (size_t i = 0; i < count / 2; ++i)
    {
-      const Vertex vertices[] = {
-         { pts[2 * i + 0]+ halfPixel, PointType<int16_t> {},
-           Colors::Transparent,
-           penColor },
-         { pts[2 * i + 1] + halfPixel, PointType<int16_t> {},
-           Colors::Transparent,
-           penColor },
-      };
-
-      const IndexType indices[] = { 0, 1 };
-
-      mCurrentPaintTarget->Append(GLenum::LINES, vertices, 2, indices, 2);
+      mStrokeGenerator->StartStroke();
+      mStrokeGenerator->AddPoints(&pts[2 * i], 2);
+      mStrokeGenerator->EndStroke(*mCurrentPaintTarget, mCurrentPen, false);
    }
 }
 
 void GLPainter::DoDrawRect(const Rect& rect)
 {
+   if (!mInPaint || !rect.IsValid())
+      return;
+   
    const Point points[] {
       Point { rect.Origin.x, rect.Origin.y },
       Point { rect.Origin.x + rect.Size.width, rect.Origin.y },
@@ -357,18 +349,17 @@ void GLPainter::DoDrawRect(const Rect& rect)
 
 void GLPainter::DoDrawRoundedRect(const Rect& rect, float radius)
 {
-   if (!mInPaint)
+   if (!mInPaint || !rect.IsValid() || radius <= 0.0f)
       return;
 
    Path path;
    path.AddRoundedRect(rect, radius);
-
    path.Draw(*this, *mCurrentPaintTarget);
 }
 
 void GLPainter::DoDrawEllipse(const Rect& rect)
 {
-   if (!mInPaint)
+   if (!mInPaint || !rect.IsValid())
       return;
    
    Path path;
@@ -492,6 +483,16 @@ void GLPainter::PopPaintTarget(const std::shared_ptr<PainterImage>&)
       return;
 
    mCurrentPaintTarget = mTargetsStack->PopTarget();
+}
+
+StrokeGenerator& GLPainter::GetStrokeGenerator()
+{
+   return *mStrokeGenerator;
+}
+
+float GLPainter::GetScale() const noexcept
+{
+   return mContext.GetScaleFactor();
 }
 
 } // namespace graphics::gl

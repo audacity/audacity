@@ -11,6 +11,7 @@
 #include "Path.h"
 
 #include "GLPainter.h"
+#include "StrokeGenerator.h"
 
 #include <cmath>
 
@@ -21,35 +22,45 @@ extern const RendererID OpenGLRendererID;
 Path::Path()
     : PainterPath(OpenGLRendererID)
 {
+   mPolygons.emplace_back();
 }
 
 void Path::EndFigure(bool closed)
 {
-   if (closed && mFigurePoints > 2)
-      LineTo(mFirstFigurePoint);
+   if (closed && mPolygons.back().PointsCount > 2)
+      mPolygons.back().Closed = true;
+
+   mPolygons.emplace_back();
 }
 
 void Path::DoLineTo(Point pt)
 {
-   if (pt == mLastFigurePoint)
+   if (mPolygons.back().PointsCount == 0)
+   {
+      DoMoveTo(pt);
+      return;
+   }
+   
+   if (pt == mPolygons.back().LastPoint)
       return;
    
    mTriangualtion.LineTo(pt);
 
-   mLastFigurePoint = pt;
-   ++mFigurePoints;
+   mPolygons.back().LastPoint = pt;
+   ++mPolygons.back().PointsCount;
 
    AppendPointToMesh(pt);
 }
 
 void Path::DoMoveTo(Point pt)
 {
+   if (mPolygons.back().PointsCount != 0)
+      EndFigure(false);
+   
    mTriangualtion.MoveTo(pt);
 
-   mFirstFigurePoint = pt;
-   mLastFigurePoint = pt;
-   
-   mFigurePoints = 1;
+   mPolygons.back().LastPoint = pt;
+   mPolygons.back().PointsCount = 1;
 
    AppendPointToMesh(pt);
 }
@@ -65,29 +76,23 @@ void Path::DoAddRect(const Rect& rect)
 
 void Path::Draw(GLPainter& painter, PaintTarget& target) const
 {
-   if (mPoints.empty())
+   if (mVertices.empty())
       return;
    
    if (mBatches.empty())
       const_cast<Path*>(this)->FillBatches();
 
-   std::vector<uint16_t> outlineIndexes;
+   auto pen = painter.GetCurrentPen();
+   auto& stroker = painter.GetStrokeGenerator();
 
    for (const auto& batch : mBatches)
    {
-      if (batch.mode == GLenum::LINE)
+      if (batch.vertexCount == 2)
       {
-         auto pen = painter.GetCurrentPen();
-
-         if (pen.GetStyle() == PenStyle::None)
-            continue;
-
-         SetColor(batch.firstVertex, batch.vertexCount, pen.GetColor());
-
-         const uint16_t indices[] = { 0, 1 };
-
-         target.Append(
-            GLenum::LINE, &mPoints[batch.firstVertex], 2, indices, 2);
+         stroker.StartStroke();
+         stroker.AddPoint(mVertices[batch.firstVertex].pos);
+         stroker.AddPoint(mVertices[batch.firstVertex + 1].pos);
+         stroker.EndStroke(target, pen, false);
       }
       else
       {
@@ -100,25 +105,21 @@ void Path::Draw(GLPainter& painter, PaintTarget& target) const
             const auto& indices = mTriangualtion.GetPolygon(batch.polygonIndex);
 
             target.Append(
-               batch.mode, &mPoints[batch.firstVertex], batch.vertexCount,
+               GLenum::TRIANGLES, &mVertices[batch.firstVertex], batch.vertexCount,
                indices.data(), indices.size());
          }
 
-         auto pen = painter.GetCurrentPen();
-
          if (pen.GetStyle() != PenStyle::None)
-         {
-            SetColor(batch.firstVertex, batch.vertexCount, pen.GetColor());
-
-            outlineIndexes.clear();
-            outlineIndexes.reserve(batch.vertexCount);
-
+         {            
+            stroker.StartStroke();
+            
             for (size_t i = 0; i < batch.vertexCount; ++i)
-               outlineIndexes.push_back(i);
+               stroker.AddPoint(mVertices[batch.firstVertex + i].pos);
 
-            target.Append(
-               GLenum::LINE_STRIP, &mPoints[batch.firstVertex],
-               batch.vertexCount, outlineIndexes.data(), outlineIndexes.size());
+            if (mVertices.size() > 15)
+               int a = 1;
+            
+            stroker.EndStroke(target, pen, mPolygons[batch.polygonIndex].Closed);
          }
       }
    }
@@ -235,30 +236,35 @@ void Path::AddRoundedRect(const Rect& rect, float radius)
       Point { left + radius, top + radius }, radius, radius, float(M_PI_2),
       float(M_PI));
 
+   LineTo(left, top + radius);
    LineTo(left, bottom - radius);
 
    AddEllipseArc(
       Point { left + radius, bottom - radius }, radius, radius, float(M_PI),
       float(M_PI * 3.0 / 2.0));
 
+   LineTo(left + radius, bottom);
    LineTo(right - radius, bottom);
 
    AddEllipseArc(
       Point { right - radius, bottom - radius }, radius, radius,
       float(M_PI * 3.0 / 2.0), float(2.0 * M_PI));
 
+   LineTo(right, bottom - radius);
    LineTo(right, top + radius);
 
    AddEllipseArc(
       Point { right - radius, top + radius }, radius, radius, 0.0f,
       float(M_PI / 2.0));
 
+   LineTo(right - radius, top);
+
    EndFigure(true);
 }
 
 void Path::AppendPointToMesh(Point pt)
 {
-   mPoints.emplace_back(
+   mVertices.emplace_back(
       Vertex { pt, PointType<int16_t> {}, Colors::Transparent, Colors::White });
 }
 
@@ -270,7 +276,6 @@ void Path::FillBatches()
    {
       const auto vertexCount = mTriangualtion.GetPolygonVertexCount(i);
       
-
       if (vertexCount < 2)
       {
          processedVertices += vertexCount;
@@ -279,12 +284,12 @@ void Path::FillBatches()
 
       if (vertexCount == 2)
       {
-         mBatches.emplace_back(Batch { GLenum::LINES, processedVertices, 2, i });
+         mBatches.emplace_back(Batch { processedVertices, 2, i });
       }
       else
       {
          mBatches.emplace_back(
-            Batch { GLenum::TRIANGLES, processedVertices, vertexCount, i });
+            Batch { processedVertices, vertexCount, i });
       }
 
       processedVertices += vertexCount;
@@ -294,7 +299,7 @@ void Path::FillBatches()
 void Path::SetColor(size_t firstIndex, size_t count, Color color) const
 {
    for (size_t i = firstIndex; i < (firstIndex + count); ++i)
-      mPoints[i].addColor = color;
+      mVertices[i].addColor = color;
 }
 
 }
