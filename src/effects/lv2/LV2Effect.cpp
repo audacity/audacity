@@ -1110,7 +1110,8 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
 
    lilv_instance_run(instance, size);
 
-   mProcess->SendResponses();
+   // Main thread consumes responses
+   mProcess->ConsumeResponses();
 
    for (auto & port : mAtomPorts)
    {
@@ -1293,7 +1294,8 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
       }
    }
 
-   slave->SendResponses();
+   // Background thread consumes responses from yet another worker thread
+   slave->ConsumeResponses();
 
    for (auto & port : mAtomPorts)
    {
@@ -3115,7 +3117,6 @@ LV2Wrapper::LV2Wrapper(LV2Effect *effect)
    mWorkerSchedule = {};
    mFreeWheeling = false;
    mLatency = 0.0;
-   mStopWorker = false;
 }
 
 LV2Wrapper::~LV2Wrapper()
@@ -3123,7 +3124,7 @@ LV2Wrapper::~LV2Wrapper()
    if (mInstance) {
       if (mThread.joinable()) {
          mStopWorker = true;
-         mRequests.Post({ 0, NULL });
+         mRequests.Post({ 0, NULL });  // Must do after writing mStopWorker
          mThread.join();
       }
       Deactivate();
@@ -3179,9 +3180,7 @@ LilvInstance *LV2Wrapper::Instantiate(const LilvPlugin *plugin,
    }
 
    if (!mInstance)
-   {
-      return NULL;
-   }
+      return nullptr;
 
    mHandle = lilv_instance_get_handle(mInstance);
 
@@ -3274,29 +3273,24 @@ void LV2Wrapper::ConnectPorts(float **inbuf, float **outbuf)
 {
 }
 
+// Thread body
 void LV2Wrapper::ThreadFunction()
 {
    for (LV2Work work{};
+      // Must test mStopWorker only after reading mRequests
       mRequests.Receive(work) == wxMSGQUEUE_NO_ERROR && !mStopWorker;
    )
       mWorkerInterface->work(mHandle, respond, this, work.size, work.data);
 }
 
-void LV2Wrapper::SendResponses()
+void LV2Wrapper::ConsumeResponses()
 {
-   if (mWorkerInterface)
-   {
-      LV2Work work;
-
+   if (mWorkerInterface) {
+      LV2Work work{};
       while (mResponses.ReceiveTimeout(0, work) == wxMSGQUEUE_NO_ERROR)
-      {
          mWorkerInterface->work_response(mHandle, work.size, work.data);
-      }
-
       if (mWorkerInterface->end_run)
-      {
          mWorkerInterface->end_run(mHandle);
-      }
    }
 }
 
@@ -3311,32 +3305,31 @@ LV2_Worker_Status LV2Wrapper::schedule_work(LV2_Worker_Schedule_Handle handle,
 LV2_Worker_Status LV2Wrapper::ScheduleWork(uint32_t size, const void *data)
 {
    if (mFreeWheeling)
-   {
-      return mWorkerInterface->work(mHandle,
-                                    respond,
-                                    this,
-                                    size,
-                                    data);
+      // Not using another thread
+      return mWorkerInterface->work(mHandle, respond, this, size, data);
+   else {
+      // Put in the queue for the worker thread
+      const auto err = mRequests.Post({ size, data });
+      return (err == wxMSGQUEUE_NO_ERROR)
+         ? LV2_WORKER_SUCCESS : LV2_WORKER_ERR_UNKNOWN;
    }
-
-   mRequests.Post({ size, data });
-
-   return LV2_WORKER_SUCCESS;
 }
 
 // static callback
-LV2_Worker_Status LV2Wrapper::respond(LV2_Worker_Respond_Handle handle,
-                                     uint32_t size,
-                                     const void *data)
+LV2_Worker_Status LV2Wrapper::respond(
+   LV2_Worker_Respond_Handle handle, uint32_t size, const void *data)
 {
-   return ((LV2Wrapper *) handle)->Respond(size, data);
+   return static_cast<LV2Wrapper*>(handle)->Respond(size, data);
 }
 
 LV2_Worker_Status LV2Wrapper::Respond(uint32_t size, const void *data)
 {
-   mResponses.Post({ size, data });
-   return LV2_WORKER_SUCCESS;
+   // Put in the queue, for another thread (if not "freewheeling")
+   // (not necessarily the main thread)
+   const auto err = mResponses.Post({ size, data });
+   return (err == wxMSGQUEUE_NO_ERROR)
+      ? LV2_WORKER_SUCCESS : LV2_WORKER_ERR_UNKNOWN;
 }
 
 #endif
- 
+

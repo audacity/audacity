@@ -569,7 +569,7 @@ inline wxString LilvStringMove(LilvNode *node)
    return str;
 };
 
-class LV2Wrapper
+class LV2Wrapper final
 {
 public:
    struct LV2Work {
@@ -579,45 +579,35 @@ public:
 
 public:
    LV2Wrapper(LV2Effect *effect);
-   virtual ~LV2Wrapper();
-
+   //! May spawn a thread
    LilvInstance *Instantiate(const LilvPlugin *plugin,
                              double sampleRrate,
                              std::vector<std::unique_ptr<LV2_Feature>> & features);
-
+   //! If a thread was started, joins it
+   ~LV2Wrapper();
    void Activate();
    void Deactivate();
 
-   void ThreadFunction();
-
    LilvInstance *GetInstance();
-   
    LV2_Handle GetHandle();
-
    float GetLatency();
-
    void SetFreeWheeling(bool enable);
-
    void SetSampleRate();
-
    void SetBlockSize();
-
    void ConnectPorts(float **inbuf, float **outbuf);
-
-   void SendResponses();
-
+   void ConsumeResponses();
    static LV2_Worker_Status schedule_work(LV2_Worker_Schedule_Handle handle,
                                           uint32_t size,
                                           const void *data);
    LV2_Worker_Status ScheduleWork(uint32_t size, const void *data);
-
    static LV2_Worker_Status respond(LV2_Worker_Respond_Handle handle,
                                     uint32_t size,
                                     const void *data);
-
    LV2_Worker_Status Respond(uint32_t size, const void *data);
 
 private:
+   void ThreadFunction();
+
    std::thread mThread;
 
    LV2Effect *mEffect;
@@ -639,7 +629,11 @@ private:
 
    float mLatency;
    bool mFreeWheeling;
-   bool mStopWorker;
+
+   //! Written by main thread, read by worker, but atomic isn't needed because
+   //! mRequests provides synchronization
+   bool mStopWorker{ false };
+
    bool mActivated{ false };
 };
 
