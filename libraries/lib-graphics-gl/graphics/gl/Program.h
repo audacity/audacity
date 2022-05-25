@@ -13,27 +13,83 @@
 #include <memory>
 #include <string_view>
 #include <map>
+#include <variant>
+#include <vector>
 
 #include "GLFunctions.h"
+#include "graphics/Color.h"
 
 namespace graphics::gl
 {
 class GLRenderer;
 class Context;
 
-class Program final
+class ProgramConstants final
 {
 public:
-   ~Program();
+   enum class UniformSize
+   {
+      Scalar,
+      Vec2,
+      Vec3,
+      Vec4,
+      Mat2,
+      Mat3,
+      Mat4,
+      Mat2x3,
+      Mat3x2,
+      Mat2x4,
+      Mat4x2,
+      Mat3x4,
+      Mat4x3,
 
+      Count
+   };
+
+   void SetUniform(std::string_view name, UniformSize size, GLsizei count, const GLint* data);
+
+   void SetUniform(std::string_view name, UniformSize size, GLsizei count, const GLfloat* data);
+
+   void SetUniform(std::string_view name, GLsizei count, const Color* data);
+   
    void SetUniform(std::string_view name, GLint value);
    void SetUniform(std::string_view name, GLfloat value);
    void SetUniform(std::string_view name, GLfloat value0, GLfloat value1);
    void SetUniform(std::string_view name, GLfloat value0, GLfloat value1, GLfloat value2);
    void SetUniform(std::string_view name, GLfloat value0, GLfloat value1, GLfloat value2, GLfloat value3);
+   void SetUniform(std::string_view name, Color color);
+
+   size_t GetVersion() const noexcept;
 
 private:
-   void Bind(Context& context);
+   using UniformData = std::variant<std::vector<GLint>, std::vector<GLfloat>>;
+   
+   struct Uniform final
+   {
+      std::string name;
+      UniformData data;
+      UniformSize size { UniformSize::Scalar };
+      GLsizei count { 1 };
+   };
+
+   Uniform& GetUniformForUpdate(std::string_view name);
+
+   std::vector<Uniform> mUniforms;
+
+   size_t mVersion { 0 };
+
+   friend class Program;
+};
+
+class Program final
+{
+public:
+   ~Program();
+
+private:
+   void Bind(Context& context, const ProgramConstants* constants);
+
+   void UpdateProgramConstants(Context& context, const ProgramConstants& constants);
    
    Program(GLRenderer& renderer, GLuint program);
    GLint GetUniformLocation(std::string_view name);

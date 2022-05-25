@@ -193,6 +193,7 @@ void StrokeGenerator::EndStroke(
       mIndices.push_back(1);
    }
 
+   paintTarget.SetDefaultShader();
    paintTarget.Append(GLenum::TRIANGLE_STRIP, mVertices.data(), mVertices.size(), mIndices.data(), mIndices.size());
 }
 

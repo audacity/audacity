@@ -37,6 +37,9 @@ class VertexBuffer;
 class Program;
 using ProgramPtr = std::shared_ptr<Program>;
 
+class ProgramConstants;
+using ProgramConstantsPtr = std::shared_ptr<ProgramConstants>;
+
 struct ContextDestroyedMessage : Observer::Message {};
 
 enum class ContextResourceType
@@ -70,7 +73,7 @@ public:
 
    void BindBuffer(const VertexBuffer& buffer);
 
-   void BindProgram(const ProgramPtr& program);
+   void BindProgram(const ProgramPtr& program, const ProgramConstantsPtr& constants);
    
    void BindFramebuffer(const FramebufferPtr& framebuffer);
 
@@ -101,8 +104,12 @@ public:
    private:
       void ApplySnapshot(Context& ctx) const;
 
-      FramebufferPtr mCurrentFramebuffer;      
+      FramebufferPtr mCurrentFramebuffer;
+      
       ProgramPtr mCurrentProgram;
+      ProgramConstantsPtr mProgramConstants;
+      size_t mProgramConstantsVersion { 0 };
+      
       VertexArrayPtr mCurrentVertexArray;
       
       std::array<TexturePtr, 2> mCurrentTexture;

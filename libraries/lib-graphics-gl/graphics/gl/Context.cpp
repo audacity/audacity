@@ -150,14 +150,21 @@ void Context::BindBuffer(const VertexBuffer& buffer)
    }
 }
 
-void Context::BindProgram(const ProgramPtr& program)
+void Context::BindProgram(const ProgramPtr& program, const ProgramConstantsPtr& constants)
 {
-   if (mCurrentState.mCurrentProgram != program)
+   const size_t constantsVersion = constants != nullptr ? constants->GetVersion() : 0;
+   
+   if (
+      mCurrentState.mCurrentProgram != program ||
+      mCurrentState.mProgramConstants != constants ||
+      mCurrentState.mProgramConstantsVersion != constantsVersion)
    {
       mCurrentState.mCurrentProgram = program;
+      mCurrentState.mProgramConstants = constants;
+      mCurrentState.mProgramConstantsVersion = constantsVersion;
 
       if (program != nullptr)
-         program->Bind(*this);
+         program->Bind(*this, constants.get());
       else
          mFunctions.UseProgram(0);
    }
@@ -335,7 +342,7 @@ void Context::SetSnaphot(const Snapshot& snapshot)
 void Context::Snapshot::ApplySnapshot(Context& context) const
 {
    context.BindFramebuffer(mCurrentFramebuffer);
-   context.BindProgram(mCurrentProgram);
+   context.BindProgram(mCurrentProgram, mProgramConstants);
    context.BindVertexArray(mCurrentVertexArray);
 
    for (size_t i = 0; i < mCurrentTexture.size(); ++i)
@@ -351,6 +358,8 @@ bool operator==(const Context::Snapshot& lhs, const Context::Snapshot& rhs)
 {
    return lhs.mCurrentFramebuffer == rhs.mCurrentFramebuffer &&
       lhs.mCurrentProgram == rhs.mCurrentProgram &&
+      lhs.mProgramConstants == rhs.mProgramConstants &&
+      lhs.mProgramConstantsVersion == rhs.mProgramConstantsVersion &&
       lhs.mCurrentVertexArray == rhs.mCurrentVertexArray &&
       lhs.mCurrentTexture == rhs.mCurrentTexture &&
       lhs.mClippingEnabled == rhs.mClippingEnabled &&

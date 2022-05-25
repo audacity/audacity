@@ -306,8 +306,10 @@ void GLPainter::DoDrawPolygon(const Point* pts, size_t count)
          { pts[count - 1], PointType<int16_t> {}, Colors::Transparent, color },
       };
          
-      if (mCurrentBrush.GetStyle() == BrushStyle::Solid)
+      if (mCurrentBrush.GetStyle() != BrushStyle::None)
       {
+         mCurrentPaintTarget->SetupShadersForBrush(mCurrentBrush);
+         
          mCurrentPaintTarget->Append(
             GLenum::TRIANGLES, vertices, count,
             count == 3 ? triIndices : quadIndices,
@@ -429,6 +431,7 @@ void GLPainter::DoDrawImage(
 
    mContext.BindTexture(const_cast<Texture&>(texture).shared_from_this(), 0);
 
+   mCurrentPaintTarget->SetDefaultShader();
    mCurrentPaintTarget->Append(
       GLenum::TRIANGLES, vertices, 4, quadIndices, quadIndicesCount);
 }
@@ -477,7 +480,8 @@ void GLPainter::DoDrawRotatedText(
    }
          
    mRenderer.GetFontRenderer().SetHintingEnabled(!hasRotation);
-
+   
+   mCurrentPaintTarget->SetDefaultShader();
    ftFont.DrawText(mRenderer.GetFontRenderer(), text, mCurrentBrush.GetColor());
 
    mCurrentPaintTarget->SetTransform(mCurrentTransform);

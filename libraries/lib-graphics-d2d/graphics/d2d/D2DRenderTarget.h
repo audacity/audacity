@@ -100,7 +100,7 @@ private:
 
    Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> mSolidBrush;
 
-   using LinearGradientBrushes = GraphicsObjectCache<Brush,Microsoft::WRL::ComPtr<ID2D1LinearGradientBrush>, 8, false>;
+   using LinearGradientBrushes = GraphicsObjectCache<Brush, Microsoft::WRL::ComPtr<ID2D1LinearGradientBrush>, 8, false>;
    LinearGradientBrushes mLinearGradientBrushes;
 
    Pen mCurrentPen { Pen::NoPen };

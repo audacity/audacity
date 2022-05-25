@@ -100,6 +100,8 @@ void Path::Draw(GLPainter& painter, PaintTarget& target) const
 
          if (brush.GetStyle() != BrushStyle::None)
          {
+            target.SetupShadersForBrush(brush);
+            
             SetColor(batch.firstVertex, batch.vertexCount, brush.GetColor());
 
             const auto& indices = mTriangualtion.GetPolygon(batch.polygonIndex);

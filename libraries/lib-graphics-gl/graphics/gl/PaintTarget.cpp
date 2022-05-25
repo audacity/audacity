@@ -20,6 +20,8 @@
 #include "GLFontRenderer.h"
 #include "GLRenderer.h"
 
+#include "GraphicsObjectCache.h"
+
 namespace graphics::gl
 {
 static constexpr size_t VertexBufferSize = 64 * 1024;
@@ -53,6 +55,44 @@ struct Batch final
    {
    }
 };
+
+struct LinearGradientBrush final
+{
+   std::shared_ptr<Program> program;
+   std::shared_ptr<ProgramConstants> constants;
+};
+
+LinearGradientBrush GetLinearGradientBrush(GLRenderer& renderer, const Brush& brush)
+{
+   LinearGradientBrush result;
+   
+   result.constants = std::make_shared<ProgramConstants>();
+
+   auto gradientData = brush.GetGradientData();
+   const auto stopsCount = gradientData->stops.size();
+
+   std::vector<Color> colors;
+   std::vector<float> stops;
+
+   colors.reserve(stopsCount);
+   stops.reserve(stopsCount);
+
+   for (size_t i = 0; i < stopsCount; ++i)
+   {
+      colors.push_back(gradientData->stops[i].color);
+      stops.push_back(gradientData->stops[i].position);
+   }
+
+   result.constants->SetUniform("c_GradientStart", gradientData->firstPoint.x, gradientData->firstPoint.y);
+   result.constants->SetUniform("c_GradientEnd", gradientData->secondPoint.x, gradientData->secondPoint.y);
+
+   result.constants->SetUniform("c_Colors", stopsCount, colors.data());
+   result.constants->SetUniform("c_Stops", ProgramConstants::UniformSize::Scalar, stopsCount, stops.data());
+
+   result.program = renderer.GetProgramLibrary().GetLinearGradientProgram(stopsCount);
+
+   return result;
+}
 } // namespace
 
 class PaintTarget::StreamTarget final
@@ -107,7 +147,8 @@ public:
          mBatches.back().snapshot != mContext.GetSnapshot())
       {
          mBatches.emplace_back(
-            mContext.GetSnapshot(), primitiveMode, mWrittenIndicesCount);
+            mContext.GetSnapshot(), primitiveMode,
+            static_cast<GLsizei>(mWrittenIndicesCount));
       }
       else if (
          primitiveMode == GLenum::LINE_STRIP ||
@@ -197,6 +238,25 @@ private:
    std::vector<Batch> mBatches;
 };
 
+class PaintTarget::GradientBrushesCache final
+{
+public:
+   explicit GradientBrushesCache(GLRenderer& renderer)
+       : mLinearGradientBrushesCache(
+            [&renderer](const Brush& brush)
+            { return GetLinearGradientBrush(renderer, brush); })
+   {
+   }
+   
+   LinearGradientBrush GetBrush(const Brush& brush)
+   {
+      return mLinearGradientBrushesCache.Get(brush);
+   }
+
+private:
+   GraphicsObjectCache<Brush, LinearGradientBrush, 8, false> mLinearGradientBrushesCache;
+};
+
 PaintTarget::~PaintTarget()
 {
 }
@@ -234,6 +294,29 @@ void PaintTarget::SetTransform(const FullTransform& transform)
    mCurrentTransform.mIsFullTransform = true;
 }
 
+void PaintTarget::SetDefaultShader()
+{
+   mContext.BindProgram(mDefaultProgram, nullptr);
+}
+
+void PaintTarget::SetupShadersForBrush(const Brush& brush)
+{
+   if (brush.GetStyle() == BrushStyle::LinearGradient)
+   {
+      if (mGradientBrushesCache == nullptr)
+         mGradientBrushesCache =
+            std::make_unique<GradientBrushesCache>(mRenderer);
+
+      auto gradientBrush = mGradientBrushesCache->GetBrush(brush);
+
+      mContext.BindProgram(gradientBrush.program, gradientBrush.constants);
+   }
+   else
+   {
+      SetDefaultShader();
+   }
+}
+
 PaintTarget::PaintTarget(GLRenderer& renderer, Context& context)
     : mRenderer(renderer)
     , mContext(context)
@@ -249,7 +332,7 @@ void PaintTarget::BeginRendering(
 {
    mContext.SetPrimitiveRestartIndex(PrimitiveRestartIndex);
    mContext.BindFramebuffer(framebuffer);
-   mContext.BindProgram(mDefaultProgram);
+   mContext.BindProgram(mDefaultProgram, nullptr);
 
    if (framebuffer != nullptr)
    {

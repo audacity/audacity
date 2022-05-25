@@ -17,6 +17,7 @@
 #include "graphics/Point.h"
 #include "graphics/Transform.h"
 #include "graphics/Color.h"
+#include "graphics/Brush.h"
 
 #include "GLFunctions.h"
 
@@ -26,7 +27,9 @@ namespace graphics::gl
 class GLRenderer;
 class Context;
 class Framebuffer;
+
 class Program;
+class ProgramConstants;
 
 class VertexArray;
 class VertexBuffer;
@@ -55,6 +58,9 @@ public:
 
    void SetTransform(const Transform& transform);
    void SetTransform(const FullTransform& transform);
+
+   void SetDefaultShader();
+   void SetupShadersForBrush(const Brush& brush);
 
 private:
    explicit PaintTarget(GLRenderer& renderer, Context& context);
@@ -92,6 +98,9 @@ private:
    
    VertexTransform mCurrentTransform;
 
+   class GradientBrushesCache;
+   std::unique_ptr<GradientBrushesCache> mGradientBrushesCache;
+   
    friend class PaintTargetsStack;
 };
 }
