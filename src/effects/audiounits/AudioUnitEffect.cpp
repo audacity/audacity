@@ -201,6 +201,33 @@ bool AudioUnitEffect::SupportsAutomation() const
    return supports;
 }
 
+class AudioUnitInstance : public StatefulPerTrackEffect::Instance
+   , public AudioUnitWrapper
+{
+public:
+   AudioUnitInstance(StatefulPerTrackEffect &effect,
+      AudioComponent component, Parameters &parameters);
+   ~AudioUnitInstance() override;
+
+   static void EventListenerCallback(void *inCallbackRefCon,
+      void *inObject, const AudioUnitEvent *inEvent,
+      UInt64 inEventHostTime, AudioUnitParameterValue inParameterValue);
+   void EventListener(const AudioUnitEvent *inEvent,
+      AudioUnitParameterValue inParameterValue);
+};
+
+AudioUnitInstance::AudioUnitInstance(StatefulPerTrackEffect &effect,
+   AudioComponent component, Parameters &parameters
+)  : StatefulPerTrackEffect::Instance{ effect }
+   , AudioUnitWrapper{ component, &parameters }
+{
+   CreateAudioUnit();
+}
+
+AudioUnitInstance::~AudioUnitInstance()
+{
+}
+
 bool AudioUnitEffect::InitializeInstance()
 {
    if (!CreateAudioUnit())
@@ -215,11 +242,7 @@ bool AudioUnitEffect::InitializeInstance()
       kAudioUnitProperty_MaximumFramesPerSlice, mBlockSize))
       // Call failed?  Then supply a default:
       mBlockSize = 512;
-
-   // Is this really needed here or can it be done in MakeInstance()
-   // only?  I think it can, but this is more a conservative change for now,
-   // preserving what SetHost() did
-   return MakeListener();
+   return true;
 }
 
 std::shared_ptr<EffectInstance> AudioUnitEffect::MakeInstance() const
@@ -232,7 +255,7 @@ std::shared_ptr<EffectInstance> AudioUnitEffect::DoMakeInstance()
    if (mMaster)
       // This is a slave
       InitializeInstance();
-   return std::make_shared<Instance>(*this);
+   return std::make_shared<AudioUnitInstance>(*this, mComponent, mParameters);
 }
 
 constexpr auto OptionsKey = L"Options";
@@ -255,6 +278,25 @@ bool AudioUnitEffect::InitializePlugin()
    if (!InitializeInstance())
       return false;
 
+   // Determine interactivity
+   mInteractive = (Count(mParameters) > 0);
+   if (!mInteractive) {
+      // Check for a Cocoa UI
+      // This could retrieve a variable-size property, but we only look at
+      // the first element.
+      AudioUnitCocoaViewInfo cocoaViewInfo;
+      mInteractive =
+         !GetFixedSizeProperty(kAudioUnitProperty_CocoaUI, cocoaViewInfo);
+      if (!mInteractive) {
+         // Check for a Carbon UI
+         // This could retrieve a variable sized array but we only need the
+         // first
+         AudioComponentDescription compDesc;
+         mInteractive = !GetFixedSizeProperty(
+            kAudioUnitProperty_GetUIComponentList, compDesc);
+      }
+   }
+
    // Consult preferences
    // Decide mUseLatency, which affects GetLatency(), which is actually used
    // so far only in destructive effect processing
@@ -267,74 +309,99 @@ bool AudioUnitEffect::InitializePlugin()
    return true;
 }
 
-bool AudioUnitEffect::MakeListener()
+class AudioUnitValidator : public EffectUIValidator {
+   struct CreateToken{};
+public:
+   static std::unique_ptr<EffectUIValidator> Create(
+      EffectUIClientInterface &effect, ShuttleGui &S,
+      const wxString &uiType,
+      EffectInstance &instance, EffectSettingsAccess &access);
+
+   AudioUnitValidator(CreateToken,
+      EffectUIClientInterface &effect, EffectSettingsAccess &access,
+      AudioUnitInstance &instance, AUControl *pControl);
+
+   ~AudioUnitValidator() override;
+
+   bool UpdateUI() override;
+   bool ValidateUI() override;
+
+private:
+   bool FetchSettingsFromInstance(EffectSettings &settings);
+   bool StoreSettingsToInstance(const EffectSettings &settings);
+
+   void Notify();
+
+   using EventListenerPtr =
+      AudioUnitCleanup<AUEventListenerRef, AUListenerDispose>;
+
+   static EventListenerPtr MakeListener(AudioUnitInstance &instance);
+
+   // The lifetime guarantee is assumed to be provided by the instance.
+   // See contract of PopulateUI
+   AudioUnitInstance &mInstance;
+   const EventListenerPtr mEventListenerRef;
+   AUControl *const mpControl{};
+};
+
+AudioUnitValidator::AudioUnitValidator(CreateToken,
+   EffectUIClientInterface &effect,
+   EffectSettingsAccess &access, AudioUnitInstance &instance,
+   AUControl *pControl
+)  : EffectUIValidator{ effect, access }
+   , mInstance{ instance }
+   , mEventListenerRef{ MakeListener(instance) }
+   , mpControl{ pControl }
 {
-   if (!mMaster)
-   {
-      // Don't have a master -- so this IS the master.
-      OSStatus result;
-      AUEventListenerRef eventListenerRef{};
-      result = AUEventListenerCreate(AudioUnitEffect::EventListenerCallback,
-                                    this,
-                                    (CFRunLoopRef)GetCFRunLoopFromEventLoop(GetCurrentEventLoop()),
-                                    kCFRunLoopDefaultMode,
-                                    0.0,
-                                    0.0,
-                                    &eventListenerRef);
-      if (result != noErr)
-         return false;
-      mEventListenerRef.reset(eventListenerRef);
+   // Make the settings of the instance up to date before using it to
+   // build a UI
+   StoreSettingsToInstance(mAccess.Get());
+}
 
-      AudioUnitEvent event;
- 
-      event.mEventType = kAudioUnitEvent_ParameterValueChange;
-      event.mArgument.mParameter.mAudioUnit = mUnit.get();
-      event.mArgument.mParameter.mScope = kAudioUnitScope_Global;
-      event.mArgument.mParameter.mElement = 0;
+AudioUnitValidator::~AudioUnitValidator()
+{
+   if (mpControl)
+      mpControl->Close();
+}
 
-      // Retrieve the list of parameters
-      PackedArray::Ptr<AudioUnitParameterID> array;
-      if (GetVariableSizeProperty(kAudioUnitProperty_ParameterList, array))
-         return false;
+auto AudioUnitValidator::MakeListener(AudioUnitInstance &instance)
+   -> EventListenerPtr
+{
+   const auto unit = instance.GetAudioUnit();
+   EventListenerPtr result;
 
-      // Register them as something we're interested in
-      for (const auto &ID : array) {
-         event.mArgument.mParameter.mParameterID = ID;
-         if (AUEventListenerAddEventType(mEventListenerRef.get(), this, &event))
-            return false;
+   // Register a callback with the audio unit
+   AUEventListenerRef eventListenerRef{};
+   if (AUEventListenerCreate(AudioUnitInstance::EventListenerCallback,
+      &instance,
+      static_cast<CFRunLoopRef>( const_cast<void*>(
+         GetCFRunLoopFromEventLoop(GetCurrentEventLoop()))),
+      kCFRunLoopDefaultMode, 0.0, 0.0, &eventListenerRef))
+      return nullptr;
+   result.reset(eventListenerRef);
+
+   // AudioUnitEvent is a struct with a discriminator field and a union
+   AudioUnitEvent event{ kAudioUnitEvent_ParameterValueChange };
+   // Initialize union member -- the ID (second field) reassigned later
+   auto &parameter = event.mArgument.mParameter;
+   parameter = AudioUnitUtils::Parameter{ unit, kAudioUnitScope_Global };
+
+   // Register each parameter as something we're interested in
+   if (instance.GetParameters())
+      for (const auto &ID : instance.GetParameters()) {
+         parameter.mParameterID = ID;
+         if (AUEventListenerAddEventType(result.get(), &instance, &event))
+            return nullptr;
       }
 
-      event.mEventType = kAudioUnitEvent_PropertyChange;
-      event.mArgument.mProperty.mAudioUnit = mUnit.get();
-      event.mArgument.mProperty.mPropertyID = kAudioUnitProperty_Latency;
-      event.mArgument.mProperty.mScope = kAudioUnitScope_Global;
-      event.mArgument.mProperty.mElement = 0;
+   // Now set up the other union member
+   event = { kAudioUnitEvent_PropertyChange };
+   event.mArgument.mProperty = AudioUnitUtils::Property{
+      unit, kAudioUnitProperty_Latency, kAudioUnitScope_Global };
+   if (AUEventListenerAddEventType(result.get(), &instance, &event))
+      return nullptr;
 
-      result = AUEventListenerAddEventType(mEventListenerRef.get(),
-                                           this,
-                                           &event);
-      if (result != noErr)
-      {
-         return false;
-      }
-   
-      // Check for a Cocoa UI
-      // This could retrieve a variable-size property, but we only look at
-      // the first element.
-      AudioUnitCocoaViewInfo cocoaViewInfo;
-      bool hasCocoa =
-         !GetFixedSizeProperty(kAudioUnitProperty_CocoaUI, cocoaViewInfo);
-
-      // Check for a Carbon UI
-      // This could retrieve a variable sized array but we only need the first
-      AudioComponentDescription compDesc;
-      bool hasCarbon =
-         !GetFixedSizeProperty(kAudioUnitProperty_GetUIComponentList, compDesc);
-
-      mInteractive = (PackedArray::Count(array) > 0) || hasCocoa || hasCarbon;
-   }
-
-   return true;
+   return result;
 }
 
 unsigned AudioUnitEffect::GetAudioInCount() const
@@ -567,15 +634,12 @@ bool AudioUnitEffect::RealtimeProcessEnd(EffectSettings &) noexcept
 int AudioUnitEffect::ShowClientInterface(
    wxWindow &parent, wxDialog &dialog, bool forceModal)
 {
-   // Remember the dialog with a weak pointer, but don't control its lifetime
-   mDialog = &dialog;
-   if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal)
-   {
-      mDialog->Show();
+   if ((SupportsRealtime() || GetType() == EffectTypeAnalyze) && !forceModal) {
+      dialog.Show();
       return 0;
    }
 
-   return mDialog->ShowModal();
+   return dialog.ShowModal();
 }
 
 bool AudioUnitEffect::SaveSettings(
@@ -624,20 +688,48 @@ bool AudioUnitEffect::LoadSettings(
    return true;
 }
 
-bool AudioUnitEffect::TransferDataToWindow(const EffectSettings &settings)
+bool AudioUnitValidator::UpdateUI()
 {
    // Update parameter values in AudioUnit, and propagate to any listeners
-   if (StoreSettings(GetSettings(settings))) {
+   if (StoreSettingsToInstance(mAccess.Get())) {
       // See AUView::viewWillDraw
       if (mpControl)
          mpControl->ForceRedraw();
    
       // This will be the AudioUnit of a stateful instance, not of the effect
-      Notify(mUnit.get(), kAUParameterListener_AnyParameter);
+      Notify();
 
       return true;
    }
    return false;
+}
+
+bool AudioUnitValidator::ValidateUI()
+{
+   mAccess.ModifySettings([this](EffectSettings &settings){
+#if 0
+      // This analogy with other generators doesn't seem to fit AudioUnits
+      // How can we define the control mDuration?
+      if (GetType() == EffectTypeGenerate)
+         settings.extra.SetDuration(mDuration->GetValue());
+#endif
+      FetchSettingsFromInstance(settings);
+   });
+   return true;
+}
+
+bool AudioUnitValidator::FetchSettingsFromInstance(EffectSettings &settings)
+{
+   return mInstance.FetchSettings(
+      // Change this when GetSettings becomes a static function
+      static_cast<const AudioUnitEffect&>(mEffect).GetSettings(settings));
+}
+
+bool AudioUnitValidator::StoreSettingsToInstance(const EffectSettings &settings)
+{
+   return mInstance.StoreSettings(
+      // Change this when GetSettings becomes a static function
+      static_cast<const AudioUnitEffect&>(mEffect).GetSettings(settings));
 }
 
 bool AudioUnitEffect::LoadUserPreset(
@@ -690,53 +782,52 @@ RegistryPaths AudioUnitEffect::GetFactoryPresets() const
 // EffectUIClientInterface Implementation
 // ============================================================================
 
-std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
-   EffectInstance &, EffectSettingsAccess &access)
+std::unique_ptr<EffectUIValidator> AudioUnitValidator::Create(
+   EffectUIClientInterface &effect, ShuttleGui &S,
+   const wxString &uiType,
+   EffectInstance &instance, EffectSettingsAccess &access)
 {
-   // OSStatus result;
+   const auto parent = S.GetParent();
+   // Cast is assumed to succeed because only this effect's own instances
+   // are passed back by the framework
+   auto &myInstance = dynamic_cast<AudioUnitInstance&>(instance);
 
-   auto parent = S.GetParent();
-   mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
-   mParent = parent;
-   mpControl = NULL;
-
-   wxPanel *container;
+   AUControl *pControl{};
+   wxPanel *container{};
    {
       auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-
-      wxASSERT(mParent); // To justify safenew
-      container = safenew wxPanelWrapper(mParent, wxID_ANY);
+      wxASSERT(parent); // To justify safenew
+      container = safenew wxPanelWrapper(parent, wxID_ANY);
       mainSizer->Add(container, 1, wxEXPAND);
-
-      mParent->SetSizer(mainSizer.release());
+      parent->SetSizer(mainSizer.release());
    }
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
-   if (mUIType == BasicValue.MSGID().GET()) {
+   if (uiType == BasicValue.MSGID().GET()) {
       if (!CreatePlain(mParent))
          return nullptr;
    }
    else
 #endif
    {
-      auto pControl = Destroy_ptr<AUControl>(safenew AUControl);
-      if (!pControl)
-      {
+      auto uControl = Destroy_ptr<AUControl>(safenew AUControl);
+      if (!uControl)
          return nullptr;
-      }
+      pControl = uControl.get();
 
-      if (!pControl->Create(container, mComponent, mUnit.get(),
-         mUIType == FullValue.MSGID().GET()))
+      if (!pControl->Create(container, myInstance.GetComponent(),
+         myInstance.GetAudioUnit(),
+         uiType == FullValue.MSGID().GET()))
          return nullptr;
 
       {
          auto innerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-         innerSizer->Add((mpControl = pControl.release()), 1, wxEXPAND);
+         innerSizer->Add(uControl.release(), 1, wxEXPAND);
          container->SetSizer(innerSizer.release());
       }
 
-      mParent->SetMinSize(wxDefaultSize);
+      parent->SetMinSize(wxDefaultSize);
 
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
@@ -745,26 +836,20 @@ std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
 #endif
    }
 
-   if (mpControl)
-   {
-      mParent->PushEventHandler(this);
-   }
+   return std::make_unique<AudioUnitValidator>(
+      CreateToken{}, effect, access, myInstance, pControl);
+}
 
-   return std::make_unique<DefaultEffectUIValidator>(*this, access);
+std::unique_ptr<EffectUIValidator> AudioUnitEffect::PopulateUI(ShuttleGui &S,
+   EffectInstance &instance, EffectSettingsAccess &access)
+{
+   mParent = S.GetParent();
+   return AudioUnitValidator::Create(*this, S, mUIType, instance, access);
 }
 
 bool AudioUnitEffect::IsGraphicalUI()
 {
    return mUIType != wxT("Plain");
-}
-
-bool AudioUnitEffect::ValidateUI([[maybe_unused]] EffectSettings &settings)
-{
-#if 0
-   if (GetType() == EffectTypeGenerate)
-      settings.extra.SetDuration(mDuration->GetValue());
-#endif
-   return true;
 }
 
 #if defined(HAVE_AUDIOUNIT_BASIC_SUPPORT)
@@ -781,18 +866,8 @@ bool AudioUnitEffect::CloseUI()
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
    wxEventLoop::SetBusyWaiting(false);
 #endif
-   if (mpControl)
-   {
-      mParent->RemoveEventHandler(this);
-
-      mpControl->Close();
-      mpControl = nullptr;
-   }
 #endif
-
-   mParent = NULL;
-   mDialog = NULL;
-
+   mParent = nullptr;
    return true;
 }
 
@@ -1079,12 +1154,11 @@ TranslatableString AudioUnitEffect::Import(
    return {};
 }
 
-void AudioUnitEffect::Notify(AudioUnit unit, AudioUnitParameterID parm) const
+void AudioUnitValidator::Notify()
 {
-   // Notify any interested parties
    AudioUnitParameter aup = {};
-   aup.mAudioUnit = unit;
-   aup.mParameterID = parm;
+   aup.mAudioUnit = mInstance.GetAudioUnit();
+   aup.mParameterID = kAUParameterListener_AnyParameter;
    aup.mScope = kAudioUnitScope_Global;
    aup.mElement = 0;
    AUParameterListenerNotify(NULL, NULL, &aup);
@@ -1120,49 +1194,36 @@ OSStatus AudioUnitEffect::RenderCallback(void *inRefCon,
       inTimeStamp, inBusNumber, inNumFrames, ioData);
 }
 
-void AudioUnitEffect::EventListener(const AudioUnitEvent *inEvent,
-                                    AudioUnitParameterValue inParameterValue)
+void AudioUnitInstance::EventListener(const AudioUnitEvent *inEvent,
+   AudioUnitParameterValue inParameterValue)
 {
    // Handle property changes
-   if (inEvent->mEventType == kAudioUnitEvent_PropertyChange)
-   {
+   if (inEvent->mEventType == kAudioUnitEvent_PropertyChange) {
       // Handle latency changes
-      if (inEvent->mArgument.mProperty.mPropertyID == kAudioUnitProperty_Latency)
-      {
+      if (inEvent->mArgument.mProperty.mPropertyID ==
+          kAudioUnitProperty_Latency) {
          // Allow change to be used
          //mLatencyDone = false;
       }
-
       return;
    }
 
    // Only parameter changes at this point
-
-   if (mMaster)
-   {
-      // We're a slave, so just set the parameter
-      AudioUnitSetParameter(mUnit.get(),
+   // Propagate the parameter
+   // TODO store slaves in the instance
+   auto &slaves = static_cast<const AudioUnitEffect&>(GetEffect()).mSlaves;
+   for (auto &worker : slaves)
+      AudioUnitSetParameter(worker->GetAudioUnit(),
          inEvent->mArgument.mParameter.mParameterID,
          kAudioUnitScope_Global, 0, inParameterValue, 0);
-   }
-   else
-   {
-      // We're the master, so propagate 
-      for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-      {
-         mSlaves[i]->EventListener(inEvent, inParameterValue);
-      }
-   }
 }
 
 // static
-void AudioUnitEffect::EventListenerCallback(void *inCallbackRefCon,
-                                            void *inObject,
-                                            const AudioUnitEvent *inEvent,
-                                            UInt64 inEventHostTime,
-                                            AudioUnitParameterValue inParameterValue)
+void AudioUnitInstance::EventListenerCallback(void *inCallbackRefCon,
+   void *inObject, const AudioUnitEvent *inEvent, UInt64 inEventHostTime,
+   AudioUnitParameterValue inParameterValue)
 {
-   static_cast<AudioUnitEffect *>(inCallbackRefCon)
+   static_cast<AudioUnitInstance *>(inCallbackRefCon)
       ->EventListener(inEvent, inParameterValue);
 }
 
