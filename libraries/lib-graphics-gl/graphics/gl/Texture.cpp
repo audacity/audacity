@@ -16,16 +16,6 @@
 #include "GLRenderer.h"
 #include "Framebuffer.h"
 
-template <typename T>
-struct MyGenericImage
-{
-   unsigned int ncols;
-   unsigned int nrows;
-   unsigned int nchannels;
-
-   T* data;
-};
-
 namespace graphics::gl
 {
 namespace
@@ -153,12 +143,6 @@ public:
    {
       if (!mDirty)
          return;
-
-      MyGenericImage<uint8_t> debugggg = {
-         mWidth, mHeight,
-         mFormat == PainterImageFormat::RGB888 ? 3 : 4,
-         const_cast<uint8_t*>(mDataBuffer.data())
-      };
 
       mDirty = false;
 
