@@ -15,6 +15,7 @@
 #include <wx/dcgraph.h>
 #include <wx/dcmemory.h>
 #include <wx/window.h>
+#include <wx/dcbuffer.h>
 
 #include "graphics/RendererID.h"
 
@@ -28,13 +29,17 @@ auto rendererId = RegisterRenderer("wxGraphicsDefaultRenderer");
 
 struct wxGraphicsContextPainterImage final : public PainterImage
 {
-   wxGraphicsContextPainterImage(Painter& painter, wxGraphicsRenderer& renderer, wxImage& img)
+   wxGraphicsContextPainterImage(
+      Painter& painter, wxGraphicsRenderer& renderer, wxImage& img)
        : PainterImage(painter)
        , Bitmap(renderer.CreateBitmapFromImage(img))
        , Width(img.GetWidth())
        , Height(img.GetHeight())
        , HasAlpha(img.HasAlpha())
    {
+      RendererShutdownSubscription =
+         GetWXGraphicsRendererShutdownPublisher().Subscribe([this](auto)
+                                                            { Bitmap = {}; });
    }
 
    wxGraphicsContextPainterImage(
@@ -47,6 +52,9 @@ struct wxGraphicsContextPainterImage final : public PainterImage
        , Height(height)
        , HasAlpha(rhs.HasAlpha)
    {
+      RendererShutdownSubscription =
+         GetWXGraphicsRendererShutdownPublisher().Subscribe([this](auto)
+                                                            { Bitmap = {}; });
    }
 
    wxGraphicsBitmap Bitmap;
@@ -65,6 +73,8 @@ struct wxGraphicsContextPainterImage final : public PainterImage
    {
       return Height;
    }
+
+   Observer::Subscription RendererShutdownSubscription;
 };
 
 struct wxGraphicsContextPainterFont final : public PainterFont
@@ -85,6 +95,14 @@ struct wxGraphicsContextPainterFont final : public PainterFont
       FontMetrics.Descent = dcMetrics.descent;
       FontMetrics.Linegap = dcMetrics.externalLeading;
       FontMetrics.LineHeight = dcMetrics.height;
+
+      RendererShutdownSubscription =
+         GetWXGraphicsRendererShutdownPublisher().Subscribe([this](auto)
+            {
+               GraphicsFonts.clear();
+               MeasuringContext.reset();
+               Font = {};
+            });
    }
 
    std::string_view GetFace() const override
@@ -152,6 +170,8 @@ struct wxGraphicsContextPainterFont final : public PainterFont
    float FontSize;
 
    Metrics FontMetrics;
+
+   Observer::Subscription RendererShutdownSubscription;
 };
 
 class wxGraphicsContextPainterPath final : public PainterPath
@@ -205,6 +225,7 @@ public:
        , mWindow(window)
        , mDC(nullptr)
    {
+      mWindow->SetBackgroundStyle(wxBG_STYLE_PAINT);
    }
 
    PaintTargetStack(wxGraphicsRenderer* renderer, wxDC* dc)
@@ -365,7 +386,8 @@ private:
    struct Surface final
    {
       Surface(wxGraphicsRenderer& renderer, wxWindow* window)
-          : GC(renderer.CreateContext(window))
+          : BufferedDC(std::make_unique<wxAutoBufferedPaintDC>(window))
+          , GC(renderer.CreateContext(*BufferedDC))
       {
          InitGCState();
       }
@@ -526,6 +548,8 @@ private:
       }
 
       wxImage Image;
+
+      std::unique_ptr<wxAutoBufferedPaintDC> BufferedDC;
       std::unique_ptr<wxGraphicsContext> GC;
 
       Pen CurrentPen { Pen::NoPen };
@@ -811,29 +835,6 @@ void WXGraphicsContextPainter::DoDrawLines(const Point* pts, size_t count)
       path.MoveToPoint(pts[2 * i].x, pts[2 * i].y);
       path.AddLineToPoint(pts[2 * i + 1].x, pts[2 * i + 1].y);
    }
-
-   /* if (count == 2)
-   {
-      mPaintTargetStack->GetCurrentContext()->StrokeLine(pts[0].x, pts[0].y, pts[1].x, pts[1].y);
-   }
-   else
-   {
-      mPoints.reserve(count / 2);
-      mEndPoints.reserve(count / 2);
-
-      for (size_t i = 0; i < count / 2; ++i)
-      {
-         mPoints.emplace_back(wxPoint2DDouble(pts[2 * i].x, pts[2 * i].y));
-         mEndPoints.emplace_back(
-            wxPoint2DDouble(pts[2 * i + 1].x, pts[2 * i + 1].y));
-      }
-
-      mPaintTargetStack->GetCurrentContext()->StrokeLines(
-         mPoints.size(), mPoints.data(), mEndPoints.data());
-
-      mPoints.clear();
-      mEndPoints.clear();
-   }*/
 }
 
 void WXGraphicsContextPainter::DoDrawRect(const Rect& rect)
@@ -1043,4 +1044,10 @@ void WXGraphicsContextPainter::DrawPath(const PainterPath& path)
 RendererID WXGraphicsContextPainterRendererID()
 {
    return rendererId;
+}
+
+WXGraphicsRendererShutdownPublisher& GetWXGraphicsRendererShutdownPublisher()
+{
+   static WXGraphicsRendererShutdownPublisher publisher;
+   return publisher;
 }

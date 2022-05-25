@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "graphics/Painter.h"
+#include "Observer.h"
 
 class wxWindow;
 class wxDC;
@@ -24,6 +25,17 @@ class wxPoint2DDouble;
 class wxFont;
 
 GRAPHICS_WX_API RendererID WXGraphicsContextPainterRendererID();
+
+struct WXGraphicsRendererShutdownMessage : Observer::Message {};
+
+struct GRAPHICS_WX_API WXGraphicsRendererShutdownPublisher :
+    Observer::Publisher<WXGraphicsRendererShutdownMessage>
+{
+   using Publisher::Publish;
+};
+
+GRAPHICS_WX_API WXGraphicsRendererShutdownPublisher&
+GetWXGraphicsRendererShutdownPublisher();
 
 class GRAPHICS_WX_API WXGraphicsContextPainter final : public Painter
 {
