@@ -19,6 +19,7 @@
 #include <vector>
 
 #include "ClientData.h"
+#include "Observer.h"
 #include "PluginProvider.h" // for PluginID
 
 class AudacityProject;
@@ -32,8 +33,21 @@ namespace RealtimeEffects {
    class ProcessingScope;
 }
 
-class AUDACITY_DLL_API RealtimeEffectManager final
-   : public ClientData::Base
+///Posted when effect is being added or removed to/from track or project
+struct RealtimeEffectManagerMessage
+{
+   enum class Type
+   {
+      EffectAdded,
+      EffectRemoved
+   };
+   Type type;
+   std::shared_ptr<Track> track; ///< null, if changes happened in the project scope
+};
+
+class AUDACITY_DLL_API RealtimeEffectManager final :
+   public ClientData::Base,
+   public Observer::Publisher<RealtimeEffectManagerMessage>
 {
 public:
    using Latency = std::chrono::microseconds;

@@ -244,7 +244,7 @@ bool GUIPrefs::Commit()
       theTheme.LoadPreferredTheme();
       theTheme.DeleteUnusedThemes();
    }
-   ThemePrefs::ApplyUpdatedImages();
+   AColor::ApplyUpdatedImages();
 
    return true;
 }

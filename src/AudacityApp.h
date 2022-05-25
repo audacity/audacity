@@ -16,6 +16,7 @@
 
 
 #include "Identifier.h"
+#include "Observer.h"
 #include "Theme.h"
 
 #include <wx/app.h> // to inherit
@@ -87,7 +88,7 @@ class AudacityApp final : public wxApp {
     void AssociateFileTypes();
    #endif
 
-   void SetPreferredSystemAppearance(PreferredSystemAppearance appearance);
+   static void OnThemeChange(struct ThemeChangeMessage);
 
 #ifdef __WXMAC__
    void MacActivateApp();
@@ -97,6 +98,7 @@ class AudacityApp final : public wxApp {
 
  private:
    void OnInit0();
+   Observer::Subscription mThemeChangeSubscription;
 
    std::unique_ptr<CommandHandler> mCmdHandler;
 

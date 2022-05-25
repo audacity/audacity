@@ -124,7 +124,9 @@ EffectType EffectPhaser::GetType() const
 
 bool EffectPhaser::SupportsRealtime() const
 {
-   return true;
+   // TODO reenable after achieving statelessness
+   return false;
+//   return true;
 }
 
 unsigned EffectPhaser::GetAudioInCount() const

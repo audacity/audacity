@@ -185,7 +185,10 @@ bool AudioUnitEffect::IsDefault() const
 
 bool AudioUnitEffect::SupportsRealtime() const
 {
-   return GetType() == EffectTypeProcess;
+   // TODO reenable after achieving statelessness
+   return false;
+
+//   return GetType() == EffectTypeProcess;
 }
 
 bool AudioUnitEffect::SupportsAutomation() const

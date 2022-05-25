@@ -160,6 +160,12 @@ void RealtimeEffectState::SetID(const PluginID & id)
       assert(empty);
 }
 
+const PluginID& RealtimeEffectState::GetID() const noexcept
+{
+   return mID;
+}
+
+
 const EffectInstanceFactory *RealtimeEffectState::GetEffect()
 {
    if (!mPlugin) {

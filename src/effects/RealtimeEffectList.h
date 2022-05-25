@@ -14,12 +14,26 @@
 #include "PluginProvider.h" // for PluginID
 #include "UndoManager.h"
 #include "XMLTagHandler.h"
+#include "Observer.h"
 
 class AudacityProject;
 
 class RealtimeEffectState;
 
 class Track;
+
+struct RealtimeEffectListMessage
+{
+   enum class Type
+   {
+      Insert,///<New effect item was added to the list at srcIndex position
+      Remove,///<Effect item was removed from the list at srcIndex position
+      Move ///<Item position has changed, from srcIndex to dstIndex
+   };
+   Type type;
+   size_t srcIndex;
+   size_t dstIndex;
+};
 
 class RealtimeEffectList final
    // Inheritance from std::enable_shared_from_this must be public
@@ -29,11 +43,15 @@ class RealtimeEffectList final
    , public ClientData::Cloneable<>
    , public UndoStateExtension
    , public XMLTagHandler
+   , public Observer::Publisher<RealtimeEffectListMessage>
 {
    RealtimeEffectList(const RealtimeEffectList &) = delete;
    RealtimeEffectList &operator=(const RealtimeEffectList &) = delete;
 
 public:
+   
+   using States = std::vector<std::unique_ptr<RealtimeEffectState>>;
+
    RealtimeEffectList();
    virtual ~RealtimeEffectList();
 
@@ -54,12 +72,25 @@ public:
    //! Apply the function to all states sequentially.
    void Visit(StateVisitor func);
 
-   //! Returns null if the id is nonempty but no such effect was found
+   //! Returns null if no such effect was found.
+   //! Sends Insert message on success.
    RealtimeEffectState *AddState(const PluginID &id);
+   //! On success sends Remove message.
    void RemoveState(RealtimeEffectState &state);
-   void Swap(size_t index1, size_t index2);
 
-   using States = std::vector<std::unique_ptr<RealtimeEffectState>>;
+   //! Returns total number of effects in this list
+   size_t GetStatesCount() const noexcept;
+   //! Returns effect state at given position, does not perform bounds check
+   RealtimeEffectState& GetStateAt(size_t index) noexcept;
+
+   /**
+    * \brief Changes effect position in the stack. Does nothing if fromIndex equal
+    * toIndex. Otherwise effects between fromIndex(excluding) and toIndex are shifted
+    * towards fromIndex. Sends Move event.
+    * \param fromIndex Index of the moved effect
+    * \param toIndex Final position of the moved effect
+    */
+   void MoveEffect(size_t fromIndex, size_t toIndex);
 
    static const std::string &XMLTag();
    bool HandleXMLTag(

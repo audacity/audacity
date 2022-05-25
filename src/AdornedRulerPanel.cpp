@@ -1301,7 +1301,8 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
    // Delay until after CommandManager has been populated:
    this->CallAfter( &AdornedRulerPanel::UpdatePrefs );
 
-   wxTheApp->Bind(EVT_THEME_CHANGE, &AdornedRulerPanel::OnThemeChange, this);
+   mThemeChangeSubscription =
+      theTheme.Subscribe(*this, &AdornedRulerPanel::OnThemeChange);
 
    // Bind event that updates the play region
    mPlayRegionSubscription = mViewInfo->selectedRegion.Subscribe(
@@ -1620,9 +1621,10 @@ void AdornedRulerPanel::OnLeave(wxMouseEvent& evt)
    });
 }
 
-void AdornedRulerPanel::OnThemeChange(wxCommandEvent& evt)
+void AdornedRulerPanel::OnThemeChange(ThemeChangeMessage message)
 {
-   evt.Skip();
+   if (message.appearance)
+      return;
    ReCreateButtons();
 }
 

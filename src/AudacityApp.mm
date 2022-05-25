@@ -25,15 +25,18 @@ void AudacityApp::MacFinishLaunching()
    [NSApp finishLaunching];
 }
 
-void AudacityApp::SetPreferredSystemAppearance(PreferredSystemAppearance appearance)
+void AudacityApp::OnThemeChange(ThemeChangeMessage message)
 {
+   if (!message.appearance)
+      return;
+
    // This API only works 10.14+
    // Previous versions will always use Light appearance
    if (@available(macOS 10.14, *))
    {
       NSAppearanceName appearanceName;
 
-      switch (appearance)
+      switch (*message.appearance)
       {
          case PreferredSystemAppearance::Light:
             appearanceName = NSAppearanceNameAqua;

@@ -928,7 +928,9 @@ bool VSTEffect::IsDefault() const
 
 bool VSTEffect::SupportsRealtime() const
 {
-   return GetType() == EffectTypeProcess;
+   // TODO reenable after achieving statelessness
+   return false;
+   //return GetType() == EffectTypeProcess;
 }
 
 bool VSTEffect::SupportsAutomation() const
