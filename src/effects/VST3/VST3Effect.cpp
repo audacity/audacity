@@ -53,6 +53,10 @@
 
 namespace {
 
+   // define some shared registry keys
+   constexpr auto processorStateKey  = wxT("ProcessorState");
+   constexpr auto controllerStateKey = wxT("ControllerState");
+
 Steinberg::Vst::IHostApplication& LocalContext()
 {
    static Steinberg::Vst::HostApplication localContext;
@@ -404,22 +408,22 @@ bool VST3Effect::LoadUserPreset(
    using namespace Steinberg;
 
    if(!mEditController)
-      return false;
+      return false;   
 
-   if(!PluginSettings::HasConfigValue(*this, PluginSettings::Private, name, wxT("ProcessorState")))
+   if(!PluginSettings::HasConfigValue(*this, PluginSettings::Private, name, processorStateKey))
       return false;
 
    wxString processorStateStr;
-   if(!GetConfig(*this, PluginSettings::Private, name, wxT("ProcessorState"), processorStateStr, wxEmptyString))
+   if(!GetConfig(*this, PluginSettings::Private, name, processorStateKey, processorStateStr, wxEmptyString))
       return false;
    auto processorState = PresetsBufferStream::fromString(processorStateStr);
    if(mEffectComponent->setState(processorState) != kResultOk)
       return false;
 
-   if(PluginSettings::HasConfigValue(*this, PluginSettings::Private, name, wxT("ProcessorState")))
+   if(PluginSettings::HasConfigValue(*this, PluginSettings::Private, name, controllerStateKey))
    {
       wxString controllerStateStr;
-      if(!GetConfig(*this, PluginSettings::Private, name, wxT("ControllerState"), controllerStateStr, wxEmptyString))
+      if(!GetConfig(*this, PluginSettings::Private, name, controllerStateKey, controllerStateStr, wxEmptyString))
          return false;
       auto controllerState = PresetsBufferStream::fromString(controllerStateStr);
 
@@ -444,11 +448,11 @@ bool VST3Effect::SaveUserPreset(
    if(mEffectComponent->getState(processorState) != kResultOk)
       return false;
 
-   SetConfig(*this, PluginSettings::Private, name, wxT("ProcessorState"), processorState->toString());
+   SetConfig(*this, PluginSettings::Private, name, processorStateKey, processorState->toString());
 
    auto controllerState = owned(safenew PresetsBufferStream);
    if(mEditController->getState(controllerState) == kResultOk)
-      SetConfig(*this, PluginSettings::Private, name, wxT("ControllerState"), controllerState->toString());
+      SetConfig(*this, PluginSettings::Private, name, controllerStateKey, controllerState->toString());
 
    return true;
 }
