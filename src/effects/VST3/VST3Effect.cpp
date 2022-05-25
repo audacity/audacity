@@ -585,24 +585,25 @@ bool VST3Effect::LoadFactoryDefaults(EffectSettings& settings) const
    if(mComponentHandler == nullptr)
       return false;
 
-   for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
-   {
-      Vst::ParameterInfo parameterInfo { };
-      if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
-      {
-         if(parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
-            continue;
+   ForEachParameter(
 
-         if(mComponentHandler->beginEdit(parameterInfo.id) == kResultOk)
+      [&](const ParameterInfo& parameterInfo)
+      {
+         if (parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
+            return true;  // i.e. go on with scanning the parameters
+
+         if (mComponentHandler->beginEdit(parameterInfo.id) == kResultOk)
          {
-            auto cleanup = finally([&]{
+            auto cleanup = finally([&] {
                mComponentHandler->endEdit(parameterInfo.id);
             });
             mComponentHandler->performEdit(parameterInfo.id, parameterInfo.defaultNormalizedValue);
          }
          mEditController->setParamNormalized(parameterInfo.id, parameterInfo.defaultNormalizedValue);
+         return true;
       }
-   }
+
+   );
 
    FetchSettings(GetSettings(settings));
 
