@@ -29,6 +29,7 @@
 
 namespace
 {
+
 class RendererProvider /* not final */
 {
 public:
@@ -43,6 +44,11 @@ public:
 class wxGraphicsRendererProvider final : public RendererProvider
 {
 public:
+   ~wxGraphicsRendererProvider()
+   {
+      GetWXGraphicsRendererShutdownPublisher().Publish({});
+   }
+   
    wxGraphicsRenderer* GetRenderer() const
    {
       return wxGraphicsRenderer::GetDefaultRenderer();
@@ -152,9 +158,20 @@ private:
 
 std::unique_ptr<RendererProvider> Provider;
 
-RendererProvider& GetRendererProvider()
+enum class RendererType
 {
-   if (Provider == nullptr)
+   Auto,
+   D2D,
+   GL,
+   Fallback,
+};
+
+RendererProvider& GetRendererProvider(RendererType type)
+{
+   if (Provider != nullptr)
+      return *Provider;
+   
+   if (Provider == nullptr && (type == RendererType::Auto || type == RendererType::GL))
    {
       auto& openGLRenderer = graphics::gl::GetSharedRenderer();
 
@@ -163,7 +180,7 @@ RendererProvider& GetRendererProvider()
    }
    
 #ifdef WIN32
-   if (Provider == nullptr)
+   if (Provider == nullptr && (type == RendererType::Auto || type == RendererType::D2D))
    {
       auto& d2dRenderer = SharedD2DRenderer();
 
@@ -177,21 +194,27 @@ RendererProvider& GetRendererProvider()
 
    return *Provider;
 }
+
+RendererType GetPreferredRenderType() noexcept
+{
+   return RendererType::Auto;
+}
 }
 
 std::unique_ptr<Painter> CreatePainter(wxWindow* wnd)
 {
-   return GetRendererProvider().CreatePainterFromWindow(*wnd);
+   return GetRendererProvider(GetPreferredRenderType())
+      .CreatePainterFromWindow(*wnd);
 }
 
 std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc)
 {
-   return GetRendererProvider().CreatePainterFromDC(dc);
+   return GetRendererProvider(GetPreferredRenderType()).CreatePainterFromDC(dc);
 }
 
 Painter& GetMeasuringPainter()
 {
-   return GetRendererProvider().GetMeasuringPainter();
+   return GetRendererProvider(GetPreferredRenderType()).GetMeasuringPainter();
 }
 
 void ShutdownRenderingSystem()
