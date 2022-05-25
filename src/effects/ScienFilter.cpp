@@ -768,32 +768,32 @@ void EffectScienFilterPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    Brush bkgndBrush(ColorFromWXColor(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)));
 
    Rect bkgndRect;
-   bkgndRect.Origin.x = 0;
-   bkgndRect.Origin.y = 0;
-   bkgndRect.Size.width = mWidth;
-   bkgndRect.Size.height = mHeight;
+   bkgndRect.origin.x = 0;
+   bkgndRect.origin.y = 0;
+   bkgndRect.size.width = mWidth;
+   bkgndRect.size.height = mHeight;
 
    stateMutator.SetBrush(bkgndBrush);
    stateMutator.SetPen(Pen::NoPen);
    mPainter->DrawRect(bkgndRect);
 
-   bkgndRect.Origin.y = mHeight;
+   bkgndRect.origin.y = mHeight;
    mPainter->DrawRect(bkgndRect);
 
    Rect border;
-   border.Origin.x = 0;
-   border.Origin.y = 0;
-   border.Size.width = mWidth;
-   border.Size.height = mHeight;
+   border.origin.x = 0;
+   border.origin.y = 0;
+   border.size.width = mWidth;
+   border.size.height = mHeight;
 
    stateMutator.SetBrush(Colors::White);
    stateMutator.SetPen(Colors::Black);
    mPainter->DrawRect(border);
 
-   mEnvRect = { static_cast<wxCoord>(border.Origin.x),
-                static_cast<wxCoord>(border.Origin.y),
-                static_cast<wxCoord>(border.Size.width),
-                static_cast<wxCoord>(border.Size.height) };
+   mEnvRect = { static_cast<wxCoord>(border.origin.x),
+                static_cast<wxCoord>(border.origin.y),
+                static_cast<wxCoord>(border.size.width),
+                static_cast<wxCoord>(border.size.height) };
 
    mEnvRect.Deflate(2, 2);
 

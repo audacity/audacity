@@ -23,20 +23,20 @@ namespace
 RectType<uint32_t>
 RectFromSubRect(const RectType<uint32_t>& parentRect, const RectType<uint32_t>& subRect)
 {
-   const auto parentWidth = parentRect.Size.width;
-   const auto parentHeight = parentRect.Size.height;
+   const auto parentWidth = parentRect.size.width;
+   const auto parentHeight = parentRect.size.height;
 
    const auto width =
-      subRect.Origin.x < parentWidth ?
-         std::min(parentWidth - subRect.Origin.x, subRect.Size.width) :
+      subRect.origin.x < parentWidth ?
+         std::min(parentWidth - subRect.origin.x, subRect.size.width) :
          0;
 
    const auto height =
-      subRect.Origin.y < parentHeight ?
-         std::min(parentHeight - subRect.Origin.y, subRect.Size.height) :
+      subRect.origin.y < parentHeight ?
+         std::min(parentHeight - subRect.origin.y, subRect.size.height) :
          0;
 
-   return { parentRect.Origin + subRect.Origin,
+   return { parentRect.origin + subRect.origin,
             SizeType<uint32_t> { width, height } };
 }
 }
@@ -169,20 +169,20 @@ public:
       if (mDataBuffer.empty())
          return {};
 
-      if (rect.Size.width == 0 || rect.Size.height == 0)
+      if (rect.size.width == 0 || rect.size.height == 0)
          return {};
 
       const auto bytesPerPixel = mFormat == PainterImageFormat::RGB888 ? 3 : 4;
       const auto outStride = mWidth * bytesPerPixel;
 
-      uint8_t* outData = mDataBuffer.data() + rect.Origin.y * outStride +
-                         rect.Origin.x * bytesPerPixel;
+      uint8_t* outData = mDataBuffer.data() + rect.origin.y * outStride +
+                         rect.origin.x * bytesPerPixel;
 
       const uint8_t* inData = data;
 
-      const auto inStride = rect.Size.width * bytesPerPixel;
+      const auto inStride = rect.size.width * bytesPerPixel;
 
-      for (uint32_t row = 0; row < rect.Size.height; ++row)
+      for (uint32_t row = 0; row < rect.size.height; ++row)
       {
          std::memcpy(outData, inData, inStride);
 
@@ -202,10 +202,10 @@ public:
 
    TextureCoords GetTextureCoords(const RectType<uint32_t>& rect) const noexcept
    {
-      auto left = rect.Origin.x;
-      auto right = left + rect.Size.width;
-      auto top = mHeight - rect.Origin.y;
-      auto bottom = top - rect.Size.height;
+      auto left = rect.origin.x;
+      auto right = left + rect.size.width;
+      auto top = mHeight - rect.origin.y;
+      auto bottom = top - rect.size.height;
 
       constexpr auto multiplier = std::numeric_limits<int16_t>::max();
 
@@ -217,10 +217,10 @@ public:
 
    TextureCoords GetFlippedTextureCoords(const RectType<uint32_t>& rect) const noexcept
    {
-      auto left = rect.Origin.x;
-      auto right = left + rect.Size.width;
-      auto top = rect.Origin.y;
-      auto bottom = top + rect.Size.height;
+      auto left = rect.origin.x;
+      auto right = left + rect.size.width;
+      auto top = rect.origin.y;
+      auto bottom = top + rect.size.height;
 
       constexpr auto multiplier = std::numeric_limits<int16_t>::max();
 
@@ -232,7 +232,7 @@ public:
 
    RectType<uint32_t> GetOpenGLRect(RectType<uint32_t> rect) const noexcept
    {
-      rect.Origin.y = mHeight - rect.Origin.y - rect.Size.height;
+      rect.origin.y = mHeight - rect.origin.y - rect.size.height;
       return rect;
    }
 
@@ -311,12 +311,12 @@ void Texture::PerformUpdate(Context& ctx)
 
 uint32_t Texture::GetWidth() const
 {
-   return mTextureRect.Size.width;
+   return mTextureRect.size.width;
 }
 
 uint32_t Texture::GetHeight() const
 {
-   return mTextureRect.Size.height;
+   return mTextureRect.size.height;
 }
 
 Texture::TextureCoords

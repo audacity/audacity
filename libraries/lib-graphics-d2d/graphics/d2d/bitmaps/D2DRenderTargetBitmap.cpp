@@ -36,13 +36,13 @@ void D2DRenderTargetBitmap::DrawBitmap(
    if (it == mRTDependentData.end())
       return;
 
-   D2D1_RECT_F d2dTargetRect = { targetRect.Origin.x, targetRect.Origin.y,
-                                 targetRect.Origin.x + targetRect.Size.width,
-                                 targetRect.Origin.y + targetRect.Size.height };
+   D2D1_RECT_F d2dTargetRect = { targetRect.origin.x, targetRect.origin.y,
+                                 targetRect.origin.x + targetRect.size.width,
+                                 targetRect.origin.y + targetRect.size.height };
 
-   D2D1_RECT_F d2dSourceRect = { sourceRect.Origin.x, sourceRect.Origin.y,
-                                 sourceRect.Origin.x + sourceRect.Size.width,
-                                 sourceRect.Origin.y + sourceRect.Size.height };
+   D2D1_RECT_F d2dSourceRect = { sourceRect.origin.x, sourceRect.origin.y,
+                                 sourceRect.origin.x + sourceRect.size.width,
+                                 sourceRect.origin.y + sourceRect.size.height };
 
    const auto brush = target.GetCurrentBrush();
 

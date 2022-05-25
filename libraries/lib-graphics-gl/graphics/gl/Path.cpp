@@ -67,10 +67,10 @@ void Path::DoMoveTo(Point pt)
 
 void Path::DoAddRect(const Rect& rect)
 {
-   MoveTo(rect.Origin);
-   LineTo(rect.Origin.x + rect.Size.width, rect.Origin.y);
-   LineTo(rect.Origin.x + rect.Size.width, rect.Origin.y + rect.Size.height);
-   LineTo(rect.Origin.x, rect.Origin.y + rect.Size.height);
+   MoveTo(rect.origin);
+   LineTo(rect.origin.x + rect.size.width, rect.origin.y);
+   LineTo(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height);
+   LineTo(rect.origin.x, rect.origin.y + rect.size.height);
    EndFigure(true);
 }
 
@@ -217,7 +217,7 @@ void Path::AddRoundedRect(const Rect& rect, float radius)
 
    const float roundedWidth = 2.0f * radius;
 
-   const auto size = rect.Size;
+   const auto size = rect.size;
 
    if (roundedWidth >= size.width)
       radius = size.width / 2.0f;
@@ -227,10 +227,10 @@ void Path::AddRoundedRect(const Rect& rect, float radius)
    if (roundedHeight >= size.height)
       radius = size.height / 2.0f;
 
-   const float left = rect.Origin.x;
-   const float top = rect.Origin.y;
-   const float right = left + rect.Size.width;
-   const float bottom = top + rect.Size.height;
+   const float left = rect.origin.x;
+   const float top = rect.origin.y;
+   const float right = left + rect.size.width;
+   const float bottom = top + rect.size.height;
 
    MoveTo(left + radius, top);
 

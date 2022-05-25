@@ -25,15 +25,15 @@ void D2DSubBitmap::DrawBitmap(
    D2DRenderTarget& target, const Rect& targetRect, const Rect& sourceRect)
 {
    const auto maxAvailableWidth = std::max(
-      0.0f, std::min(GetWidth() - sourceRect.Origin.x, sourceRect.Size.width));
+      0.0f, std::min(GetWidth() - sourceRect.origin.x, sourceRect.size.width));
 
    const auto maxAvailableHeight = std::max(
-      0.0f, std::min(GetHeight() - sourceRect.Origin.y, sourceRect.Size.height));
+      0.0f, std::min(GetHeight() - sourceRect.origin.y, sourceRect.size.height));
    
-   Rect updatedSourceRect { sourceRect.Origin + mRect.Origin,
+   Rect updatedSourceRect { sourceRect.origin + mRect.origin,
                             Size { maxAvailableWidth, maxAvailableHeight } };
 
-   if (updatedSourceRect.Size.IsZero())
+   if (updatedSourceRect.size.IsZero())
       return;
    
    mParent->DrawBitmap(target, targetRect, updatedSourceRect);
@@ -57,12 +57,12 @@ void D2DSubBitmap::DrawFinished(D2DRenderTarget& renderTarget)
 
 uint32_t D2DSubBitmap::GetWidth() const
 {
-   return mRect.Size.width;
+   return mRect.size.width;
 }
 
 uint32_t D2DSubBitmap::GetHeight() const
 {
-   return mRect.Size.height;
+   return mRect.size.height;
 }
 
 bool D2DSubBitmap::IsValid(Painter& painter) const

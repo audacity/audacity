@@ -234,26 +234,26 @@ void Painter::DrawText(
    switch (horizontalAlignement)
    {
    case PainterHorizontalAlignment::Left:
-      origin.x = rect.Origin.x;
+      origin.x = rect.origin.x;
       break;
    case PainterHorizontalAlignment::Center:
-      origin.x = rect.Origin.x + (rect.Size.width - size.width) / 2.0f;
+      origin.x = rect.origin.x + (rect.size.width - size.width) / 2.0f;
       break;
    case PainterHorizontalAlignment::Right:
-      origin.x = rect.Origin.x + (rect.Size.width - size.width);
+      origin.x = rect.origin.x + (rect.size.width - size.width);
       break;
    }
 
    switch (verticalAlignment)
    {
    case PainterVerticalAlignment::Bottom:
-      origin.y = rect.Origin.y + (rect.Size.height - size.height);
+      origin.y = rect.origin.y + (rect.size.height - size.height);
       break;
    case PainterVerticalAlignment::Center:
-      origin.y = rect.Origin.y + (rect.Size.height - size.height) / 2.0;
+      origin.y = rect.origin.y + (rect.size.height - size.height) / 2.0;
       break;
    case PainterVerticalAlignment::Top:
-      origin.y = rect.Origin.y;
+      origin.y = rect.origin.y;
       break;
    }
 
@@ -412,8 +412,8 @@ void Painter::DrawImage(
    const PainterImage& image, const Rect& destRect, Point sourceTopLeft)
 {
    DrawImage(
-      image, destRect.Origin.x, destRect.Origin.y, destRect.Size.width,
-      destRect.Size.height, sourceTopLeft.x, sourceTopLeft.y);
+      image, destRect.origin.x, destRect.origin.y, destRect.size.width,
+      destRect.size.height, sourceTopLeft.x, sourceTopLeft.y);
 }
 
 void Painter::DrawImage(
@@ -812,11 +812,11 @@ PainterOffscreenHolder::PainterOffscreenHolder(
 void Painter::DoDrawLinearGradientRect(
    const Rect& rect, Color from, Color to, LinearGradientDirection direction)
 {
-   float fromX = rect.Origin.x;
-   float fromY = rect.Origin.y;
+   float fromX = rect.origin.x;
+   float fromY = rect.origin.y;
 
-   float toX = fromX + rect.Size.width;
-   float toY = fromY + rect.Size.height;
+   float toX = fromX + rect.size.width;
+   float toY = fromY + rect.size.height;
 
    switch (direction)
    {

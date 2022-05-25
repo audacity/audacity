@@ -364,10 +364,10 @@ void GLPainter::DoDrawRect(const Rect& rect)
       return;
    
    const Point points[] {
-      Point { rect.Origin.x, rect.Origin.y },
-      Point { rect.Origin.x + rect.Size.width, rect.Origin.y },
-      Point { rect.Origin.x + rect.Size.width, rect.Origin.y + rect.Size.height },
-      Point { rect.Origin.x, rect.Origin.y + rect.Size.height }
+      Point { rect.origin.x, rect.origin.y },
+      Point { rect.origin.x + rect.size.width, rect.origin.y },
+      Point { rect.origin.x + rect.size.width, rect.origin.y + rect.size.height },
+      Point { rect.origin.x, rect.origin.y + rect.size.height }
    };
    
    DoDrawPolygon(points, 4);
@@ -390,11 +390,11 @@ void GLPainter::DoDrawEllipse(const Rect& rect)
    
    Path path;
 
-   const float horizontalRadius = rect.Size.width / 2;
-   const float verticalRadius = rect.Size.height / 2;
+   const float horizontalRadius = rect.size.width / 2;
+   const float verticalRadius = rect.size.height / 2;
    
    path.AddEllipse(
-      { rect.Origin.x + horizontalRadius, rect.Origin.y + verticalRadius },
+      { rect.origin.x + horizontalRadius, rect.origin.y + verticalRadius },
       horizontalRadius, verticalRadius, 0.0f, static_cast<float>(2 * M_PI));
 
    path.Draw(*this, *mCurrentPaintTarget);
@@ -410,10 +410,10 @@ void GLPainter::DoDrawImage(
 
    const auto textureRect = texture.GetTextureCoords(rect_cast<uint32_t>(imageRect));
 
-   const Point topLeft     { destRect.Origin.x,                       destRect.Origin.y };
-   const Point topRight    { destRect.Origin.x + destRect.Size.width, destRect.Origin.y };
-   const Point bottomRight { destRect.Origin.x + destRect.Size.width, destRect.Origin.y + destRect.Size.height };
-   const Point bottomLeft  { destRect.Origin.x,                       destRect.Origin.y + destRect.Size.height };
+   const Point topLeft     { destRect.origin.x,                       destRect.origin.y };
+   const Point topRight    { destRect.origin.x + destRect.size.width, destRect.origin.y };
+   const Point bottomRight { destRect.origin.x + destRect.size.width, destRect.origin.y + destRect.size.height };
+   const Point bottomLeft  { destRect.origin.x,                       destRect.origin.y + destRect.size.height };
 
    const PointType<int16_t> uvTopLeft     { textureRect.left,  textureRect.top };
    const PointType<int16_t> uvTopRight    { textureRect.right, textureRect.top};

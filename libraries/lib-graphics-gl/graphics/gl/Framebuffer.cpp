@@ -79,12 +79,12 @@ void Framebuffer::Unbind(Context& context)
 
 uint32_t Framebuffer::GetWidth() const noexcept
 {
-   return mFramebufferRect.Size.width;
+   return mFramebufferRect.size.width;
 }
 
 uint32_t Framebuffer::GetHeight() const noexcept
 {
-   return mFramebufferRect.Size.height;
+   return mFramebufferRect.size.height;
 }
 
 } // namespace graphics::gl

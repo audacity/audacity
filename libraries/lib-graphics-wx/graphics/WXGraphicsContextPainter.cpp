@@ -203,7 +203,7 @@ public:
    void DoAddRect(const Rect& rect) override
    {
       mPath.AddRectangle(
-         rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height);
+         rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
    }
 
    void DrawPath(wxGraphicsContext& context) const
@@ -522,12 +522,12 @@ private:
             GC->ResetClip();
 
             if (
-               std::isfinite(rect.Size.width) &&
-               std::isfinite(rect.Size.height))
+               std::isfinite(rect.size.width) &&
+               std::isfinite(rect.size.height))
             {
                GC->Clip(
-                  rect.Origin.x, rect.Origin.y, rect.Size.width,
-                  rect.Size.height);
+                  rect.origin.x, rect.origin.y, rect.size.width,
+                  rect.size.height);
             }
          }
       }
@@ -718,7 +718,7 @@ void WXGraphicsContextPainter::DoClear(const Rect& rect, Color color)
    UpdateBrush(color);
    
    context->DrawRectangle(
-         rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height);
+         rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
 
    UpdateBrush(GetCurrentBrush());
 
@@ -845,7 +845,7 @@ void WXGraphicsContextPainter::DoDrawRect(const Rect& rect)
    FlushCachedPath();
 
    mPaintTargetStack->GetCurrentContext()->DrawRectangle(
-      rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height);
+      rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
 }
 
 void WXGraphicsContextPainter::DoDrawEllipse(const Rect& rect)
@@ -856,7 +856,7 @@ void WXGraphicsContextPainter::DoDrawEllipse(const Rect& rect)
    FlushCachedPath();
 
    mPaintTargetStack->GetCurrentContext()->DrawEllipse(
-      rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height);
+      rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
 }
 
 void WXGraphicsContextPainter::DoDrawText(
@@ -916,7 +916,7 @@ void WXGraphicsContextPainter::DoDrawImage(
    if (painterImage.GetRendererID() != GetRendererID())
       return;
 
-   if (rect.Size.IsZero() || imageRect.Size.IsZero())
+   if (rect.size.IsZero() || imageRect.size.IsZero())
       return;
    
    FlushCachedPath();
@@ -929,16 +929,16 @@ void WXGraphicsContextPainter::DoDrawImage(
    auto gcImage = image.Bitmap;
 
    if (
-      !imageRect.Origin.IsZero() || uint32_t(imageRect.Size.width) != image.Width ||
-      uint32_t(imageRect.Size.height) != image.Height)
+      !imageRect.origin.IsZero() || uint32_t(imageRect.size.width) != image.Width ||
+      uint32_t(imageRect.size.height) != image.Height)
    {
       gcImage = currentContext->CreateSubBitmap(
-         gcImage, imageRect.Origin.x, imageRect.Origin.y, imageRect.Size.width,
-         imageRect.Size.height);
+         gcImage, imageRect.origin.x, imageRect.origin.y, imageRect.size.width,
+         imageRect.size.height);
    }
    
    currentContext->DrawBitmap(
-      gcImage, rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height);
+      gcImage, rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
 }
 
 std::shared_ptr<PainterFont> WXGraphicsContextPainter::GetDefaultFont() const
@@ -973,7 +973,7 @@ void WXGraphicsContextPainter::DoDrawRoundedRect(const Rect& rect, float radius)
    FlushCachedPath();
 
    mPaintTargetStack->GetCurrentContext()->DrawRoundedRectangle(
-      rect.Origin.x, rect.Origin.y, rect.Size.width, rect.Size.height, radius);
+      rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, radius);
 }
 
 void WXGraphicsContextPainter::PushPaintTarget(

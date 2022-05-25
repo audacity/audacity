@@ -305,8 +305,8 @@ wxRect TrackArt::DrawClipAffordance(
    const auto painterClipRect = painter.GetCurrentClipRect();
 
    const auto clipRect = wxRect(
-      painterClipRect.Origin.x, painterClipRect.Origin.y,
-      painterClipRect.Size.width, painterClipRect.Size.height);
+      painterClipRect.origin.x, painterClipRect.origin.y,
+      painterClipRect.size.width, painterClipRect.size.height);
 
    const bool hasClipRect = painter.HasClipping();
    // Fix #1689: visual glitches appear on attempt to draw a rectangle

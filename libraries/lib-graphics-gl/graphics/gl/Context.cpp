@@ -201,8 +201,8 @@ void Context::SetClipRect(const RectType<GLint>& rect)
       mCurrentState.mClipRect = rect;
       
       mFunctions.Scissor(
-         rect.Origin.x, mViewport.Size.height - rect.Size.height - rect.Origin.y,
-         rect.Size.width, rect.Size.height);
+         rect.origin.x, mViewport.size.height - rect.size.height - rect.origin.y,
+         rect.size.width, rect.size.height);
    }
 }
 
@@ -214,8 +214,8 @@ void Context::ResetClipRect()
       mFunctions.Disable(GLenum::SCISSOR_TEST);
       
       mCurrentState.mClipRect = { {},
-                                  { static_cast<GLint>(mViewport.Size.width),
-                                    static_cast<GLint>(mViewport.Size.height) } };
+                                  { static_cast<GLint>(mViewport.size.width),
+                                    static_cast<GLint>(mViewport.size.height) } };
    }
 }
 
@@ -246,12 +246,12 @@ void Context::SetViewport(const RectType<uint32_t> viewport)
    {
       mViewport = viewport;
       mFunctions.Viewport(
-         viewport.Origin.x, viewport.Origin.y, viewport.Size.width,
-         viewport.Size.height);
+         viewport.origin.x, viewport.origin.y, viewport.size.width,
+         viewport.size.height);
 
       mCurrentState.mClipRect = { {},
-                                  { static_cast<GLint>(viewport.Size.width),
-                                    static_cast<GLint>(viewport.Size.height) } };
+                                  { static_cast<GLint>(viewport.size.width),
+                                    static_cast<GLint>(viewport.size.height) } };
    }
 }
 

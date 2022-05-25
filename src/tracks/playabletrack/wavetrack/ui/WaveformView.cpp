@@ -449,8 +449,8 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context,
       const int tickSize = bigPoints ? 4 : 3;// Bigger ellipses when draggable.
       Rect pr;
 
-      pr.Size.width = tickSize;
-      pr.Size.height = tickSize;
+      pr.size.width = tickSize;
+      pr.size.height = tickSize;
       //different colour when draggable.
       const auto dragsampleBrush = BrushFromWXBrush(artist->dragsampleBrush);
       const auto sampleBrush = BrushFromWXBrush(artist->sampleBrush);
@@ -461,8 +461,8 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context,
 
       for (decltype(slen) s = 0; s < slen; s++) {
          if (ypos[s] >= 0 && ypos[s] < rect.height) {
-            pr.Origin.x = rect.x + xpos[s] - tickSize/2;
-            pr.Origin.y = rect.y + ypos[s] - tickSize/2;
+            pr.origin.x = rect.x + xpos[s] - tickSize/2;
+            pr.origin.y = rect.y + ypos[s] - tickSize/2;
 
             painter.DrawEllipse(pr);
          }

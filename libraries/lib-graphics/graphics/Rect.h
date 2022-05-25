@@ -18,19 +18,19 @@
 template <typename DataType>
 struct RectType final
 {
-   PointType<DataType> Origin;
-   SizeType<DataType> Size;
+   PointType<DataType> origin;
+   SizeType<DataType> size;
 
    bool IsValid() const noexcept
    {
-      return Size.width > 0 && Size.height > 0;
+      return size.width > 0 && size.height > 0;
    }
 
    bool Contains(PointType<DataType> pt) const noexcept
    {
-      return pt.x >= Origin.x && pt.y >= Origin.y &&
-             (pt.x < (Origin.x + Size.width)) &&
-             (pt.y < (Origin.y + Size.height));
+      return pt.x >= origin.x && pt.y >= origin.y &&
+             (pt.x < (origin.x + size.width)) &&
+             (pt.y < (origin.y + size.height));
    }
 };
 
@@ -38,15 +38,15 @@ template<typename DataType>
 RectType<DataType>
 Intersect(RectType<DataType> firstRect, RectType<DataType> secondRect) noexcept
 {
-   if (firstRect.Size.IsZero() || secondRect.Size.IsZero())
+   if (firstRect.size.IsZero() || secondRect.size.IsZero())
       return {};
 
-   const PointType<DataType> p11 = firstRect.Origin;
-   const PointType<DataType> p12 = { firstRect.Origin.x + firstRect.Size.width,
-                                    firstRect.Origin.y + firstRect.Size.height };
-   const PointType<DataType> p21 = secondRect.Origin;
-   const PointType<DataType> p22 = { secondRect.Origin.x + secondRect.Size.width,
-                                     secondRect.Origin.y + secondRect.Size.height };
+   const PointType<DataType> p11 = firstRect.origin;
+   const PointType<DataType> p12 = { firstRect.origin.x + firstRect.size.width,
+                                    firstRect.origin.y + firstRect.size.height };
+   const PointType<DataType> p21 = secondRect.origin;
+   const PointType<DataType> p22 = { secondRect.origin.x + secondRect.size.width,
+                                     secondRect.origin.y + secondRect.size.height };
 
    if (p12.x < p21.x || p11.x > p22.x || p11.y > p22.y || p12.y < p21.y)
       return {};
@@ -63,7 +63,7 @@ Intersect(RectType<DataType> firstRect, RectType<DataType> secondRect) noexcept
 template <typename DataType>
 bool operator==(const RectType<DataType> lhs, const RectType<DataType> rhs) noexcept
 {
-   return lhs.Origin == rhs.Origin && lhs.Size == rhs.Size;
+   return lhs.origin == rhs.origin && lhs.size == rhs.size;
 }
 
 template <typename DataType>
@@ -76,7 +76,7 @@ bool operator!=(
 template <typename To, typename From>
 RectType<To> rect_cast(RectType<From> rect)
 {
-   return { point_cast<To>(rect.Origin), size_cast<To>(rect.Size) };
+   return { point_cast<To>(rect.origin), size_cast<To>(rect.size) };
 }
 
 

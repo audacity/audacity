@@ -122,8 +122,8 @@ void D2DRenderTarget::Clear(const Rect& rect, Color color)
 {
    mRenderTarget->PushAxisAlignedClip(
       D2D1::RectF(
-         rect.Origin.x, rect.Origin.y, rect.Origin.x + rect.Size.width,
-         rect.Origin.y + rect.Size.height),
+         rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width,
+         rect.origin.y + rect.size.height),
       D2D1_ANTIALIAS_MODE_ALIASED);
    
    mRenderTarget->Clear(GetD2DColor(color));
@@ -142,8 +142,8 @@ void D2DRenderTarget::SetClipRect(const Rect& rect)
    {
       mRenderTarget->PushAxisAlignedClip(
          D2D1::RectF(
-            rect.Origin.x, rect.Origin.y, rect.Origin.x + rect.Size.width,
-            rect.Origin.y + rect.Size.height),
+            rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width,
+            rect.origin.y + rect.size.height),
          D2D1_ANTIALIAS_MODE_ALIASED);
    }
 }
@@ -296,8 +296,8 @@ void D2DRenderTarget::DrawLines(const Point* ptr, size_t count)
 void D2DRenderTarget::DrawRect(const Rect& rect)
 {
    const auto d2dRect = D2D1::RectF(
-      rect.Origin.x, rect.Origin.y, rect.Origin.x + rect.Size.width,
-      rect.Origin.y + rect.Size.height);
+      rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width,
+      rect.origin.y + rect.size.height);
    
    if (mCurrentD2DBrush != nullptr)
    {
@@ -315,8 +315,8 @@ void D2DRenderTarget::DrawRect(const Rect& rect)
 void D2DRenderTarget::DrawRoundedRect(const Rect& rect, float radius)
 {
    const auto d2dRect = D2D1::RectF(
-      rect.Origin.x, rect.Origin.y, rect.Origin.x + rect.Size.width,
-      rect.Origin.y + rect.Size.height);
+      rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width,
+      rect.origin.y + rect.size.height);
 
    const D2D1_ROUNDED_RECT d2dRoundedRect { d2dRect, radius, radius };
 
@@ -336,10 +336,10 @@ void D2DRenderTarget::DrawRoundedRect(const Rect& rect, float radius)
 void D2DRenderTarget::DrawEllipse(const Rect& rect)
 {
    const auto center = D2D1::Point2F(
-      rect.Origin.x + rect.Size.width / 2.0f,
-      rect.Origin.y + rect.Size.height / 2.0f);
+      rect.origin.x + rect.size.width / 2.0f,
+      rect.origin.y + rect.size.height / 2.0f);
 
-   const D2D1_ELLIPSE d2dEllipse { center, rect.Size.width, rect.Size.height };
+   const D2D1_ELLIPSE d2dEllipse { center, rect.size.width, rect.size.height };
 
    if (mCurrentD2DBrush != nullptr)
    {

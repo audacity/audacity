@@ -74,13 +74,13 @@ void D2DPathGeometry::DoAddRect(const Rect& rect)
    }
    
    sink->BeginFigure(
-      { rect.Origin.x, rect.Origin.y }, D2D1_FIGURE_BEGIN_FILLED);
+      { rect.origin.x, rect.origin.y }, D2D1_FIGURE_BEGIN_FILLED);
 
-   sink->AddLine({ rect.Origin.x + rect.Size.width, rect.Origin.y });
+   sink->AddLine({ rect.origin.x + rect.size.width, rect.origin.y });
 
-   sink->AddLine({ rect.Origin.x + rect.Size.width, rect.Origin.y + rect.Size.height });
+   sink->AddLine({ rect.origin.x + rect.size.width, rect.origin.y + rect.size.height });
 
-   sink->AddLine({ rect.Origin.x, rect.Origin.y + rect.Size.height });
+   sink->AddLine({ rect.origin.x, rect.origin.y + rect.size.height });
 
    sink->EndFigure(D2D1_FIGURE_END_CLOSED);
 }

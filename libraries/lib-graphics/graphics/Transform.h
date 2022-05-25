@@ -96,7 +96,7 @@ public:
 
    RectType<DataType> Apply(RectType<DataType> rect) const noexcept
    {
-      return { Apply(rect.Origin), Apply(rect.Size) };
+      return { Apply(rect.origin), Apply(rect.size) };
    }
 
    TransformType& Translate(DataType x, DataType y) noexcept
