@@ -11,7 +11,7 @@
 #pragma once
 
 #include <cstddef>
-#include <numeric>
+#include <limits>
 #include <string_view>
 
 class GRAPHICS_API RendererID final

@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <limits>
 #include <numeric>
 #include <utility>
 
