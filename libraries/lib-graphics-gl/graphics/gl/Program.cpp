@@ -22,14 +22,14 @@ namespace graphics::gl
 
 namespace
 {
-using IntFunction    = void(__stdcall*)(GLint location, GLsizei count, const GLint* v);
-using FloatFunction  = void(__stdcall*)(GLint location, GLsizei count, const GLfloat* v);
-using MatrixFunction = void(__stdcall*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
+using IntFunction    = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLint* v);
+using FloatFunction  = void(GLAPIENTRY*)(GLint location, GLsizei count, const GLfloat* v);
+using MatrixFunction = void(GLAPIENTRY*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
 
 struct UniformFunction final
 {
    GLsizei components;
-   
+
    IntFunction intFunction;
    FloatFunction floatFunction;
    MatrixFunction matrixFunction;
@@ -86,7 +86,7 @@ public:
       auto& fns = mFunctions[size_t(size)];
 
       assert(data.size() == fns.components * count);
-     
+
       if (data.size() == fns.components * count)
       {
          if (fns.floatFunction != nullptr)
@@ -110,7 +110,7 @@ size_t GetComponetsCount(ProgramConstants::UniformSize size) noexcept
    return lookup[size_t(size)];
 }
 }
-   
+
 void ProgramConstants::SetUniform(
    std::string_view name, UniformSize size, GLsizei count, const GLint* data)
 {
@@ -231,7 +231,7 @@ ProgramConstants::Uniform& ProgramConstants::GetUniformForUpdate(std::string_vie
 Program::~Program()
 {
    mRenderer.GetResourceContext().GetFunctions().DeleteProgram(mProgram);
-}   
+}
 
 void Program::Bind(Context& context, const ProgramConstants* constants)
 {
@@ -245,7 +245,7 @@ void Program::UpdateProgramConstants(
    Context& context, const ProgramConstants& constants)
 {
    UniformFunctions functions(context.GetFunctions());
-   
+
    for (const auto& uniform : constants.mUniforms)
    {
       Visit ([&functions, &uniform, location = GetUniformLocation(uniform.name)](const auto& type) {
@@ -316,7 +316,7 @@ std::shared_ptr<Program> ProgramBuilder::Build()
       return {};
 
    mFunctions.LinkProgram(mProgram);
-   
+
    GLint linked;
    mFunctions.GetProgramiv(mProgram, GLenum::LINK_STATUS, &linked);
 
@@ -336,7 +336,7 @@ std::shared_ptr<Program> ProgramBuilder::Build()
 
    GLuint program = 0;
    std::swap(program, mProgram);
-   
+
    return std::shared_ptr<Program>(new Program(mRenderer, program));
 }
 
@@ -354,7 +354,7 @@ const char* ProgramBuilder::GetNullTerminatedString(std::string_view name)
       return name.data();
 
    mCacheString = std::string(name);
-   
+
    return mCacheString.c_str();
 }
 
@@ -368,7 +368,7 @@ ProgramBuilder::AddShader(GLenum shaderType, std::string_view shaderSource)
 
    const char* source = shaderSource.data();
    const GLsizei length(shaderSource.length());
-   
+
    mFunctions.ShaderSource(shader, 1, &source, &length);
    mFunctions.CompileShader(shader);
 
@@ -395,7 +395,7 @@ ProgramBuilder::AddShader(GLenum shaderType, std::string_view shaderSource)
    }
 
    mFunctions.DeleteShader(shader);
-   
+
    return *this;
 }
 

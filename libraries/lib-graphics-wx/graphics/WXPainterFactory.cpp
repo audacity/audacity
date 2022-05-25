@@ -48,7 +48,7 @@ public:
    {
       GetWXGraphicsRendererShutdownPublisher().Publish({});
    }
-   
+
    wxGraphicsRenderer* GetRenderer() const
    {
       return wxGraphicsRenderer::GetDefaultRenderer();
@@ -65,7 +65,7 @@ public:
    CreatePainterFromDC(wxDC& dc) override
    {
       auto font = dc.GetFont();
-      
+
       return std::make_unique<WXGraphicsContextPainter>(
          GetRenderer(), &dc, font.IsOk() ? font : *wxNORMAL_FONT);
    }
@@ -95,7 +95,7 @@ public:
    std::unique_ptr<Painter> CreatePainterFromWindow(wxWindow& wnd) override
    {
       return graphics::gl::GetSharedRenderer().CreateWindowPainter(
-         wnd.GetHWND(), FontInfoFromWXFont(wnd.GetFont()));
+         wnd.GetHandle(), FontInfoFromWXFont(wnd.GetFont()));
    }
 
    std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc) override
@@ -125,7 +125,7 @@ class D2DRendererProvider : public RendererProvider
 public:
    ~D2DRendererProvider()
    {
-      SharedD2DRenderer().Shutdown();   
+      SharedD2DRenderer().Shutdown();
    }
 
    std::unique_ptr<Painter> CreatePainterFromWindow(wxWindow& wnd) override
@@ -137,7 +137,7 @@ public:
    std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc) override
    {
       auto font = dc.GetFont();
-      
+
       return SharedD2DRenderer().CreateHDCPainter(
          dc.GetHDC(), FontInfoFromWXFont(font.IsOk() ? font : *wxNORMAL_FONT));
    }
@@ -170,7 +170,7 @@ RendererProvider& GetRendererProvider(RendererType type)
 {
    if (Provider != nullptr)
       return *Provider;
-   
+
    if (Provider == nullptr && (type == RendererType::Auto || type == RendererType::GL))
    {
       auto& openGLRenderer = graphics::gl::GetSharedRenderer();
@@ -178,7 +178,7 @@ RendererProvider& GetRendererProvider(RendererType type)
       if (openGLRenderer.IsAvailable())
          Provider = std::make_unique<OpenGLRendererProvider>();
    }
-   
+
 #ifdef WIN32
    if (Provider == nullptr && (type == RendererType::Auto || type == RendererType::D2D))
    {

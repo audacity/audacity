@@ -10,6 +10,7 @@
 **********************************************************************/
 #include "Texture.h"
 
+#include <cstring>
 #include <map>
 
 #include "Context.h"
@@ -335,7 +336,7 @@ FramebufferPtr Texture::GetFramebuffer(Context& context)
       return cachedFramebuffer;
 
    auto rect = mSharedGLObject->GetOpenGLRect(mTextureRect);
-   
+
    auto framebuffer = std::shared_ptr<Framebuffer>(new Framebuffer(
       context, *this, mSharedGLObject->GetTextureID(), GLenum::TEXTURE_2D,
       mTextureRect));

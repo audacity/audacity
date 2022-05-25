@@ -11,6 +11,7 @@
 #include "GLPainter.h"
 
 #include <cassert>
+#include <cstring>
 
 #include "graphics/fonts/FontLibrary.h"
 #include "graphics/fonts/Font.h"
@@ -89,7 +90,7 @@ void GLPainter::DrawPath(const PainterPath& path)
 {
    if (!mInPaint || path.GetRendererID() != OpenGLRendererID)
       return;
-   
+
    static_cast<const Path&>(path).Draw(*this, *mCurrentPaintTarget);
 }
 
@@ -105,7 +106,7 @@ std::shared_ptr<PainterImage> GLPainter::CreateImage(
       {
          const size_t rowStride = width * 3;
          const size_t mergedDataSize = rowStride * height;
-         
+
          mergedData.reserve(mergedDataSize);
 
          const uint8_t* inputData = static_cast<const uint8_t*>(data);
@@ -134,7 +135,7 @@ std::shared_ptr<PainterImage> GLPainter::CreateImage(
             const uint8_t* dataRow = dataPtr + row * inputDataStride;
             const uint8_t* alphaRow =
                alphaPtr != nullptr ? (alphaPtr + row * width) : nullptr;
-            
+
             for (int32_t col = 0; col < width; ++col)
             {
                *outPtr++ = *dataRow++;
@@ -145,7 +146,7 @@ std::shared_ptr<PainterImage> GLPainter::CreateImage(
          }
       }
    }
-   
+
    return std::make_shared<Texture>(
       mRenderer, width, height, format, true, mergedData.data());
 }
@@ -185,7 +186,7 @@ void GLPainter::BeginPaint()
       return;
 
    mRenderer.BeginRendering(mContext);
-   
+
    mCurrentPaintTarget = mTargetsStack->PushTarget(nullptr);
    mCurrentPaintTarget->SetTransform(GetCurrentTransform());
 
@@ -264,7 +265,7 @@ bool SimpleIntersects(
    const Point d2 = p3 - p2;
 
    const Point n { -d1.y, d1.x };
-   
+
    const float denom = DotProduct(d2, n);
 
    if (denom == 0.0f)
@@ -305,11 +306,11 @@ void GLPainter::DoDrawPolygon(const Point* pts, size_t count)
          { pts[2], PointType<int16_t> {}, Colors::Transparent, color },
          { pts[count - 1], PointType<int16_t> {}, Colors::Transparent, color },
       };
-         
+
       if (mCurrentBrush.GetStyle() != BrushStyle::None)
       {
          mCurrentPaintTarget->SetupShadersForBrush(mCurrentBrush);
-         
+
          mCurrentPaintTarget->Append(
             GLenum::TRIANGLES, vertices, count,
             count == 3 ? triIndices : quadIndices,
@@ -362,14 +363,14 @@ void GLPainter::DoDrawRect(const Rect& rect)
 {
    if (!mInPaint || !rect.IsValid())
       return;
-   
+
    const Point points[] {
       Point { rect.origin.x, rect.origin.y },
       Point { rect.origin.x + rect.size.width, rect.origin.y },
       Point { rect.origin.x + rect.size.width, rect.origin.y + rect.size.height },
       Point { rect.origin.x, rect.origin.y + rect.size.height }
    };
-   
+
    DoDrawPolygon(points, 4);
 }
 
@@ -387,12 +388,12 @@ void GLPainter::DoDrawEllipse(const Rect& rect)
 {
    if (!mInPaint || !rect.IsValid())
       return;
-   
+
    Path path;
 
    const float horizontalRadius = rect.size.width / 2;
    const float verticalRadius = rect.size.height / 2;
-   
+
    path.AddEllipse(
       { rect.origin.x + horizontalRadius, rect.origin.y + verticalRadius },
       horizontalRadius, verticalRadius, 0.0f, static_cast<float>(2 * M_PI));
@@ -478,9 +479,9 @@ void GLPainter::DoDrawRotatedText(
       auto size = ftFont.GetTextSize(text);
       DoDrawRect(Rect { {}, size });
    }
-         
+
    mRenderer.GetFontRenderer().SetHintingEnabled(!hasRotation);
-   
+
    mCurrentPaintTarget->SetDefaultShader();
    ftFont.DrawText(mRenderer.GetFontRenderer(), text, mCurrentBrush.GetColor());
 

@@ -10,6 +10,8 @@
 **********************************************************************/
 #include "WXGraphicsContextPainter.h"
 
+#include <cstring>
+
 #include <wx/graphics.h>
 #include <wx/region.h>
 #include <wx/dcgraph.h>
@@ -159,7 +161,7 @@ struct wxGraphicsContextPainterFont final : public PainterFont
       return GraphicsFonts.emplace(std::make_pair(
          color.GetABGR(), ctx.CreateFont(Font, wxColorFromColor(color)))).first->second;
    }
-      
+
    wxFont Font;
 
    mutable std::unique_ptr<wxGraphicsContext> MeasuringContext;
@@ -183,7 +185,7 @@ public:
        , mPath(renderer.CreatePath())
    {
    }
-   
+
    void EndFigure(bool closed) override
    {
       if (closed)
@@ -247,7 +249,7 @@ public:
    }
 
    void Pop(std::shared_ptr<wxGraphicsContextPainterImage> image)
-   {     
+   {
       auto& currentItem = mPaintTargetsStack.back();
 
       currentItem->GC = {};
@@ -262,7 +264,7 @@ public:
 
       if (!mPaintTargetsStack.empty())
          return false;
-      
+
       if (mWindow)
       {
          mPaintTargetsStack.emplace_back(
@@ -272,7 +274,7 @@ public:
       {
          mPaintTargetsStack.emplace_back(
             std::make_unique<Surface>(*mRenderer, mDC));
-         
+
          mDC = nullptr;
       }
       else
@@ -397,14 +399,14 @@ private:
       {
          InitGCState();
       }
-      
+
       Surface(wxGraphicsRenderer& renderer, uint32_t width, uint32_t height, bool alpha)
           : Image(width, height)
       {
          if (alpha)
          {
             Image.SetAlpha();
-            
+
             std::memset(
                Image.GetAlpha(), 0, Image.GetWidth() * Image.GetHeight());
          }
@@ -418,7 +420,7 @@ private:
       {
          GC->SetPen(wxPenFromPen(CurrentPen));
          GC->SetBrush(wxBrushFromBrush(CurrentBrush));
-         
+
          CurrentAntialiasing =
             GC->SetAntialiasMode(
                CurrentAntialiasing ? wxANTIALIAS_DEFAULT : wxANTIALIAS_NONE) &&
@@ -504,7 +506,7 @@ private:
          if (CurrentTransform != transform)
          {
             CurrentTransform = transform;
-            
+
             const wxGraphicsMatrix mtx = GC->CreateMatrix(
                transform.GetScale().x, 0.0, 0.0, transform.GetScale().y,
                transform.GetTranslation().x, transform.GetTranslation().y);
@@ -554,10 +556,10 @@ private:
 
       Pen CurrentPen { Pen::NoPen };
       Brush CurrentBrush;
-      
+
       std::shared_ptr<wxGraphicsContextPainterFont> CurrentFont;
       Color CurrentTextColor { Colors::Black };
-      
+
       Transform CurrentTransform;
       Rect CurrentClipRect { NoClippingRect };
 
@@ -716,7 +718,7 @@ void WXGraphicsContextPainter::DoClear(const Rect& rect, Color color)
    context->SetCompositionMode(wxCOMPOSITION_SOURCE);
 
    UpdateBrush(color);
-   
+
    context->DrawRectangle(
          rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
 
@@ -874,12 +876,12 @@ void WXGraphicsContextPainter::DoDrawText(
    wxGraphicsContext* currentContext = mPaintTargetStack->GetCurrentContext();
 
    mPaintTargetStack->UpdateFont();
-   
+
    const wxGraphicsBrush bgBrush =
       backgroundBrush.GetStyle() != BrushStyle::None ?
          currentContext->CreateBrush(wxBrushFromBrush(backgroundBrush)) :
          wxNullGraphicsBrush;
-   
+
    currentContext->DrawText(
       wxString::FromUTF8(text.data(), text.size()), origin.x, origin.y, bgBrush);
 }
@@ -918,14 +920,14 @@ void WXGraphicsContextPainter::DoDrawImage(
 
    if (rect.size.IsZero() || imageRect.size.IsZero())
       return;
-   
+
    FlushCachedPath();
 
    wxGraphicsContext* currentContext = mPaintTargetStack->GetCurrentContext();
 
    const auto& image =
       static_cast<const wxGraphicsContextPainterImage&>(painterImage);
-   
+
    auto gcImage = image.Bitmap;
 
    if (
@@ -936,7 +938,7 @@ void WXGraphicsContextPainter::DoDrawImage(
          gcImage, imageRect.origin.x, imageRect.origin.y, imageRect.size.width,
          imageRect.size.height);
    }
-   
+
    currentContext->DrawBitmap(
       gcImage, rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
 }
@@ -1034,7 +1036,7 @@ void WXGraphicsContextPainter::DrawPath(const PainterPath& path)
 
    if (path.GetRendererID() != GetRendererID())
       return;
-   
+
    FlushCachedPath();
 
    static_cast<const wxGraphicsContextPainterPath&>(path).DrawPath(

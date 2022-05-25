@@ -11,6 +11,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
 
 namespace graphics::gl
 {
@@ -743,7 +744,7 @@ protected:
    template<typename Fn>
    bool GetFunction(Fn& fn, const char* name, bool canFail)
    {
-      fn = static_cast<Fn>(GetFunctionPointer(name));
+      fn = reinterpret_cast<Fn>(GetFunctionPointer(name));
       return canFail || fn != nullptr;
    }
 

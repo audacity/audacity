@@ -216,7 +216,6 @@ public:
       return mScale;
    }
 
-   template <typename DataType>
    friend bool operator==(
       const TransformType<DataType> lhs,
       const TransformType<DataType> rhs) noexcept
@@ -224,7 +223,6 @@ public:
       return lhs.mTranslation == rhs.mTranslation && lhs.mScale == rhs.mScale;
    }
 
-   template <typename DataType>
    friend bool operator!=(
       const TransformType<DataType> lhs,
       const TransformType<DataType> rhs) noexcept
@@ -448,7 +446,7 @@ private:
        : mMatrix { { m00, m01, m02 }, { m10, m11, m12 } }
    {
    }
-   
+
    DataType mMatrix[2][3] { { DataType(1), DataType(0), DataType(0) },
                             { DataType(0), DataType(1), DataType(0) } };
 };
