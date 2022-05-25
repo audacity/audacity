@@ -460,7 +460,30 @@ bool VST3Effect::LoadSettings(
 
    if(mComponentHandler == nullptr)
       return false;
-   
+
+#if 0
+   // new version; will be activated as soon as I find a way to reach this method
+   ForEachParameter(
+
+      [&](const ParameterInfo& pi)
+      {
+         const auto id    = pi.id;
+         const auto value = pi.defaultNormalizedValue;
+
+         if (mComponentHandler->beginEdit(id) == kResultOk)
+         {
+            auto cleanup = finally([&] {
+               mComponentHandler->endEdit(id);
+            });
+            mComponentHandler->performEdit(id, value);
+         }
+         mEditController->setParamNormalized(id, value);
+         return true;
+      }
+   );
+
+#else
+
    long index { };
    wxString key;
    if(parms.GetFirstEntry(key, index))
@@ -482,6 +505,8 @@ bool VST3Effect::LoadSettings(
          }
       } while(parms.GetNextEntry(key, index));
    }
+
+#endif
 
    FetchSettings(GetSettings(settings));
 
