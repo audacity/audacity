@@ -90,7 +90,14 @@ namespace
             if((parameterInfo.flags & (Vst::ParameterInfo::kCanAutomate | Vst::ParameterInfo::kIsBypass | Vst::ParameterInfo::kIsReadOnly)) == 0)
                continue;
 
-            sizer->Add(safenew wxStaticText(this, wxID_ANY, VST3Utils::ToWxString(parameterInfo.title)));
+            sizer->Add(safenew wxStaticText(
+               this,
+               wxID_ANY,
+               VST3Utils::ToWxString(parameterInfo.title),
+               wxDefaultPosition,
+               wxDefaultSize,
+               wxALIGN_RIGHT), 0, wxEXPAND
+            );
 
             const auto currentNormalizedValue = editController.getParamNormalized(parameterInfo.id);
 
@@ -99,23 +106,10 @@ namespace
                Vst::String128 displayValue = { 0 };
                editController.getParamStringByValue(parameterInfo.id, parameterInfo.defaultNormalizedValue, displayValue);
                sizer->Add(safenew wxStaticText(this, wxID_ANY, VST3Utils::ToWxString(displayValue)));
+               sizer->AddStretchSpacer();
             }
-            else if(parameterInfo.stepCount == 0)//continuous
-            {
-               const auto ctrlDouble = safenew wxSpinCtrlDouble(this);
-               ctrlDouble->SetRange(
-                  editController.normalizedParamToPlain(parameterInfo.id, 0),
-                  editController.normalizedParamToPlain(parameterInfo.id, 1)
-               );
-               ctrlDouble->SetIncrement((ctrlDouble->GetMax() - ctrlDouble->GetMin()) * 0.01);
-               ctrlDouble->SetValue(editController.normalizedParamToPlain(parameterInfo.id, currentNormalizedValue));
-               
-               ctrlDouble->Bind(wxEVT_SPINCTRLDOUBLE, [this, id = parameterInfo.id](const wxSpinDoubleEvent& event) {
-                  UpdateParameter(id, event.GetValue());
-               });
-               sizer->Add(ctrlDouble, 0, wxEXPAND);
-            }
-            else if(parameterInfo.stepCount == 1)//toggle
+            //toggle
+            else if(parameterInfo.stepCount == 1)
             {
                const auto checkbox = safenew wxCheckBox (this, wxID_ANY, wxEmptyString);
                checkbox->SetValue(currentNormalizedValue != .0);
@@ -124,54 +118,79 @@ namespace
                   UpdateParameter(id, checkbox->GetValue() ? 1. : .0);
                });
                sizer->Add(checkbox, 0, wxEXPAND);
+               sizer->AddStretchSpacer();
             }
-            else if(parameterInfo.stepCount > 0)//discrete range
+            //list
+            else if(parameterInfo.stepCount != 0 && (parameterInfo.flags & Vst::ParameterInfo::kIsList))
             {
-               const auto maxValue = parameterInfo.stepCount;
-               if(parameterInfo.flags & Vst::ParameterInfo::kIsList)
-               {
-                  const auto choice = safenew wxChoice(this, wxID_ANY);
+               const auto choice = safenew wxChoice(this, wxID_ANY);
 
-                  for(auto j = 0; j <= maxValue; ++j)
-                  {
-                     Vst::String128 displayValue = { 0 };
-                     editController.getParamStringByValue(
-                        parameterInfo.id,
-                        editController.plainParamToNormalized(parameterInfo.id, j),
-                        displayValue
-                     );
-                     choice->AppendString(VST3Utils::ToWxString(displayValue));
-                  }
-                  
-                  choice->SetSelection(
-                     static_cast<int>(editController.normalizedParamToPlain(parameterInfo.id, currentNormalizedValue))
-                  );
-                  choice->Bind(wxEVT_CHOICE, [this, id = parameterInfo.id](const wxCommandEvent& event) {
-                     const auto choice = static_cast<wxChoice*>(event.GetEventObject());
-                     UpdateParameter(id, choice->GetSelection());
-                  });
-                  sizer->Add(choice, 0, wxEXPAND);
-               }
-               else
+               for(auto j = 0; j <= parameterInfo.stepCount; ++j)
                {
-                  const auto slider = safenew wxSlider (
-                     this,
-                     wxID_ANY,
-                     static_cast<int>(currentNormalizedValue * maxValue),
-                     0,
-                     maxValue
+                  Vst::String128 displayValue = { 0 };
+                  editController.getParamStringByValue(
+                     parameterInfo.id,
+                     editController.plainParamToNormalized(parameterInfo.id, j),
+                     displayValue
                   );
-                  slider->SetValue(
-                     static_cast<int>(editController.normalizedParamToPlain(parameterInfo.id, currentNormalizedValue))
-                  );
-                  slider->Bind(wxEVT_SLIDER, [this, id = parameterInfo.id](wxCommandEvent& event){
-                     const auto slider = static_cast<wxSlider*>(event.GetEventObject());
-                     UpdateParameter(id, slider->GetValue());
-                  });
-                  sizer->Add(slider, 0, wxEXPAND);
+                  choice->AppendString(VST3Utils::ToWxString(displayValue));
                }
+               
+               choice->SetSelection(
+                  static_cast<int>(editController.normalizedParamToPlain(parameterInfo.id, currentNormalizedValue))
+               );
+               choice->Bind(wxEVT_CHOICE, [this, id = parameterInfo.id](const wxCommandEvent& event) {
+                  const auto choice = static_cast<wxChoice*>(event.GetEventObject());
+                  UpdateParameter(id, choice->GetSelection());
+               });
+               sizer->Add(choice, 0, wxEXPAND);
+               sizer->AddStretchSpacer();
             }
-            sizer->Add(safenew wxStaticText(this, wxID_ANY, VST3Utils::ToWxString(parameterInfo.units)));
+            //continuous
+            else if(parameterInfo.stepCount == 0)
+            {
+               static constexpr auto MaxValue = 100;
+               const auto slider = safenew wxSlider(
+                  this,
+                  wxID_ANY,
+                  static_cast<int>(currentNormalizedValue * MaxValue),
+                  0,
+                  MaxValue);
+               const auto unitsStr = VST3Utils::ToWxString(parameterInfo.units);
+               const auto valueText = safenew wxStaticText(this, wxID_ANY, wxEmptyString);
+               UpdateParameterValueText(valueText, parameterInfo.id, currentNormalizedValue, unitsStr);
+
+               slider->Bind(wxEVT_SLIDER, [this, id = parameterInfo.id, valueText, unitsStr](wxCommandEvent& event) {
+                  const auto slider = static_cast<wxSlider*>(event.GetEventObject());
+                  const auto value = static_cast<Vst::ParamValue>(slider->GetValue()) / static_cast<Vst::ParamValue>(MaxValue);
+                  UpdateParameter(id, value);
+                  UpdateParameterValueText(valueText, id, value, unitsStr);
+               });
+               sizer->Add(slider, 0, wxEXPAND);
+               sizer->Add(valueText);
+            }
+            //discrete
+            else
+            {
+               const auto slider = safenew wxSlider (
+                  this,
+                  wxID_ANY,
+                  static_cast<int>(editController.normalizedParamToPlain(parameterInfo.id, currentNormalizedValue)),
+                  0,
+                  parameterInfo.stepCount
+               );
+               const auto unitsStr = VST3Utils::ToWxString(parameterInfo.units);
+               const auto valueText = safenew wxStaticText(this, wxID_ANY, wxEmptyString);
+               UpdateParameterValueText(valueText, parameterInfo.id, currentNormalizedValue, unitsStr);
+
+               slider->Bind(wxEVT_SLIDER, [this, id = parameterInfo.id, valueText, unitsStr](wxCommandEvent& event){
+                  const auto slider = static_cast<wxSlider*>(event.GetEventObject());
+                  UpdateParameter(id, mEditController->plainParamToNormalized(id, slider->GetValue()));
+                  UpdateParameterValueText(valueText, id, mEditController->getParamNormalized(id), unitsStr);
+               });
+               sizer->Add(slider, 0, wxEXPAND);
+               sizer->Add(valueText);
+            }
          }
 
          SetSizer(sizer.release());
@@ -179,9 +198,21 @@ namespace
 
    private:
 
-      void UpdateParameter(Steinberg::Vst::ParamID id, Steinberg::Vst::ParamValue plainValue)
+
+      void UpdateParameterValueText(wxStaticText* text, Steinberg::Vst::ParamID id, Steinberg::Vst::ParamValue normalizedValue, const wxString& units)
       {
-         const auto normalizedValue = mEditController->plainParamToNormalized(id, plainValue);
+         Steinberg::Vst::String128 str {};
+         Steinberg::Vst::ParameterInfo parameterInfo { };
+
+         mEditController->getParamStringByValue(id, normalizedValue, str);
+         if(units.empty())
+            text->SetLabel(VST3Utils::ToWxString(str));
+         else
+            text->SetLabel(wxString::Format("%s %s", VST3Utils::ToWxString(str), units));
+      }
+
+      void UpdateParameter(Steinberg::Vst::ParamID id, Steinberg::Vst::ParamValue normalizedValue)
+      {
          mEditController->setParamNormalized(id, normalizedValue);
          if(mComponentHandler->beginEdit(id) == Steinberg::kResultOk)
          {
