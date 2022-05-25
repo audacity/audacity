@@ -277,6 +277,13 @@ add_conan_lib(
       freetype:with_brotli=False
 )
 
+if(WIN32)
+   set(HARFBUZZ_WINDOWS_OPTIONS
+      harfbuzz:with_gdi=False
+      harfbuzz:with_uniscribe=False
+   )
+endif()
+
 add_conan_lib(
    harfbuzz
    harfbuzz/2.6.8
@@ -285,8 +292,7 @@ add_conan_lib(
    CONAN_OPTIONS
       harfbuzz:shared=True
       harfbuzz:with_glib=False
-      harfbuzz:with_gdi=False
-      harfbuzz:with_uniscribe=False
+      ${HARFBUZZ_WINDOWS_OPTIONS}
 )
 
 
