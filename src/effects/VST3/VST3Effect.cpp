@@ -41,6 +41,7 @@
 #include "ShuttleGui.h"
 
 #include "VST3Utils.h"
+#include "VST3ParametersWindow.h"
 #include "VST3OptionsDialog.h"
 
 #ifdef __WXMSW__
@@ -882,7 +883,7 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
          auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
          auto controlsRoot = safenew wxWindow(parent, wxID_ANY);
          if(!LoadVSTUI(controlsRoot))
-            VST3Utils::BuildPlainUI(controlsRoot, mEditController, mComponentHandler);
+            VST3ParametersWindow::Setup(*controlsRoot, *mEditController, *mComponentHandler);
          vSizer->Add(controlsRoot);
 
          auto &extra = access.Get().extra;
@@ -909,10 +910,10 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
       }
       else if(!LoadVSTUI(parent))
       {
-         VST3Utils::BuildPlainUI(
-            parent,
-            mEditController,
-            mComponentHandler
+         VST3ParametersWindow::Setup(
+            *parent,
+            *mEditController,
+            *mComponentHandler
          );
       }
 
