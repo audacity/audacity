@@ -265,13 +265,10 @@ namespace {
 void FindFontHeights(
    wxCoord& height, wxCoord& lead, Painter& painter, const wxFont& font)
 {
-   static const char* exampleText = "0.9";   //ignored for height calcs on all platforms
-
    auto painterFont = FontFromWXFont(painter, font);
-   const auto size = painter.GetTextSize(*painterFont, exampleText);
    const auto metrics = painterFont->GetFontMetrics();
 
-   height = size.height - metrics.Descent;
+   height = metrics.Ascent;
    lead = metrics.Linegap;
 }
 

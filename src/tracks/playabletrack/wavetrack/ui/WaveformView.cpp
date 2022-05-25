@@ -352,14 +352,15 @@ void DrawMinMaxRMS(
    auto left = rect.GetLeft() + leftOffset;
    auto height = rect.GetHeight();
 
+   auto clipStateMutator = painter.GetClipStateMutator();
+   clipStateMutator.SetClipRect(RectFromWXRect(rect), false);
+
    for (auto it = range.begin(); it != range.end(); ++it)
    {
       const auto elementLeftOffset = it.GetLeftOffset();
       const auto elementRightOffset = it.GetRightOffset();
-      const auto width = it->AvailableColumns - elementLeftOffset - elementRightOffset - 1;
-
-      if (width <= 0)
-         continue;
+      const auto width = WaveBitmapCache::CacheElementWidth -
+                         elementLeftOffset - elementRightOffset;
 
       painter.DrawImage(*it->Bitmap, left, rect.GetTop(), width, height, elementLeftOffset, 0);
 

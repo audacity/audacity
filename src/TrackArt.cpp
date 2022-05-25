@@ -428,8 +428,8 @@ void TrackArt::DrawClipEdges(Painter& painter, const wxRect& clipRect, bool sele
          painter, clipRect.GetLeft(), clipRect.GetTop(), clipRect.GetLeft(),
          clipRect.GetBottom());
       AColor::Line(
-         painter, clipRect.GetRight(), clipRect.GetTop(), clipRect.GetRight(),
-         clipRect.GetBottom());
+         painter, clipRect.GetRight() + 1, clipRect.GetTop(), clipRect.GetRight() + 1,
+         clipRect.GetBottom() + 1);
    }
 
    if (selected)
