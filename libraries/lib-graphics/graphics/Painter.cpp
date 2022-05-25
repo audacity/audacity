@@ -34,7 +34,7 @@ Brush Painter::GetCurrentBrush() const
    if (mStateStack.empty())
       return {};
 
-   return mStateStack.back().Brush;
+   return mStateStack.back().brush;
 }
 
 Pen Painter::GetCurrentPen() const
@@ -43,7 +43,7 @@ Pen Painter::GetCurrentPen() const
    if (mStateStack.empty())
       return {};
 
-   return mStateStack.back().Pen;
+   return mStateStack.back().pen;
 }
 
 bool Painter::GetAntiAliasingEnabled() const
@@ -52,7 +52,7 @@ bool Painter::GetAntiAliasingEnabled() const
    if (mStateStack.empty())
       return {};
 
-   return mStateStack.back().Antialiasing;
+   return mStateStack.back().antialiasing;
 }
 
 std::shared_ptr<PainterFont> Painter::GetCurrentFont() const
@@ -61,7 +61,7 @@ std::shared_ptr<PainterFont> Painter::GetCurrentFont() const
    if (mStateStack.empty())
       return {};
 
-   auto font = mStateStack.back().Font;
+   auto font = mStateStack.back().font;
 
    return  font != nullptr ? font : GetDefaultFont();
 }
@@ -515,56 +515,56 @@ PainterStateMutator::~PainterStateMutator()
 
       mPainter.UpdatePen(GetPen());
 
-      mPainter.mStateStack.back().Antialiasing =
+      mPainter.mStateStack.back().antialiasing =
          mPainter.UpdateAntiAliasingState(
-            mPainter.mStateStack.back().Antialiasing);
+            mPainter.mStateStack.back().antialiasing);
    }
 }
 
 void PainterStateMutator::SetBrush(const Brush& brush)
 {
-   mPainter.mStateStack.back().Brush = brush;
+   mPainter.mStateStack.back().brush = brush;
    mPainter.UpdateBrush(brush);
 }
 
 Brush PainterStateMutator::GetBrush() const
 {
-   return mPainter.mStateStack.back().Brush;
+   return mPainter.mStateStack.back().brush;
 }
 
 void PainterStateMutator::SetPen(const Pen& pen)
 {
-   mPainter.mStateStack.back().Pen = pen;
+   mPainter.mStateStack.back().pen = pen;
    mPainter.UpdatePen(pen);
 }
 
 Pen PainterStateMutator::GetPen() const
 {
-   return mPainter.mStateStack.back().Pen;
+   return mPainter.mStateStack.back().pen;
 }
 
 void PainterStateMutator::SetAntiAliasingEnabled(bool enabled)
 {
-   mPainter.mStateStack.back().Antialiasing =
+   mPainter.mStateStack.back().antialiasing =
       mPainter.UpdateAntiAliasingState(enabled);
 }
 
 bool PainterStateMutator::GetAntiAliasingEnabled() const
 {
-   return mPainter.mStateStack.back().Antialiasing;
+   return mPainter.mStateStack.back().antialiasing;
 }
 
 void PainterStateMutator::SetFont(std::shared_ptr<PainterFont> font)
 {
-   mPainter.mStateStack.back().Font =
+   mPainter.mStateStack.back().font =
       font != nullptr ? std::move(font) : mPainter.GetDefaultFont();
 
-   mPainter.UpdateFont(mPainter.mStateStack.back().Font);
+   mPainter.UpdateFont(mPainter.mStateStack.back().font);
 }
 
 std::shared_ptr<PainterFont> PainterStateMutator::GetFont() const
 {
-   return mPainter.mStateStack.back().Font;
+   return mPainter.mStateStack.back().font;
 }
 
 Painter& PainterStateMutator::GetPainter() noexcept

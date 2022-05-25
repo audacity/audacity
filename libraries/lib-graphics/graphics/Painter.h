@@ -433,10 +433,10 @@ private:
    
    struct PainterState final
    {
-      Pen Pen { Pen::NoPen };
-      Brush Brush;
-      std::shared_ptr<PainterFont> Font;
-      bool Antialiasing { true };
+      Pen pen { Pen::NoPen };
+      Brush brush;
+      std::shared_ptr<PainterFont> font;
+      bool antialiasing { true };
    };
 
    std::vector<PainterState> mStateStack;
