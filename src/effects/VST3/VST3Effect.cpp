@@ -350,27 +350,18 @@ bool VST3Effect::SupportsAutomation() const
 bool VST3Effect::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {
-   if(mEditController == nullptr)
-      return false;
-
-   using namespace Steinberg;
-   
-   for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
-   {
-      Vst::ParameterInfo parameterInfo { };
-      if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
+   return ForEachParameter
+   (
+      [&](const ParameterInfo& pi)
       {
-         if(parameterInfo.flags & Vst::ParameterInfo::kCanAutomate)
-         {
-            parms.Write(
-               VST3Utils::MakeAutomationParameterKey(parameterInfo),
-               mEditController->getParamNormalized(parameterInfo.id)
-            );
-         }
-      }
-   }
+         parms.Write(
+            VST3Utils::MakeAutomationParameterKey(pi),
+            mEditController->getParamNormalized(pi.id)
+         );
 
-   return true;
+         return true;
+      }
+   );
 }
 
 bool VST3Effect::LoadSettings(
