@@ -978,12 +978,9 @@ void VST3Effect::ExportPresets(const EffectSettings &) const
       );
       return;
    }
+      
 
-   if(!Vst::PresetFile::savePreset(
-      fileStream,
-      FUID::fromTUID (mEffectClassInfo.ID().data()),
-      mEffectComponent.get(),
-      mEditController.get()))
+   if( ! VST3Wrapper::SavePreset(fileStream, FUID::fromTUID(mEffectClassInfo.ID().data())) )
    {
       BasicUI::ShowMessageBox(
          XO("Failed to save VST3 preset to file"),
@@ -1187,11 +1184,8 @@ bool VST3Effect::LoadPreset(const wxString& path)
       return false;
    }
 
-   if(!Vst::PresetFile::loadPreset(
-      fileStream,
-      FUID::fromTUID(mEffectClassInfo.ID().data()),
-      mEffectComponent.get(),
-      mEditController.get()))
+   
+   if( ! VST3Wrapper::LoadPreset(fileStream, FUID::fromTUID(mEffectClassInfo.ID().data())) )
    {
       BasicUI::ShowMessageBox(
          XO("Unable to apply VST3 preset file %s").Format(path),
@@ -1239,4 +1233,32 @@ bool VST3Wrapper::ForEachParameter(ParameterVisitor visitor) const
    }
 
    return true;
+}
+
+
+bool VST3Wrapper::LoadPreset(Steinberg::IBStream* fileStream, const Steinberg::FUID& classID)
+{
+   using namespace Steinberg;
+
+   return Vst::PresetFile::loadPreset
+   (
+      fileStream,
+      FUID::fromTUID(classID),
+      mEffectComponent.get(),
+      mEditController.get()
+   );
+}
+
+
+bool VST3Wrapper::SavePreset(Steinberg::IBStream* fileStream, const Steinberg::FUID& classID) const
+{
+   using namespace Steinberg;
+
+   return Vst::PresetFile::savePreset
+   (
+      fileStream,
+      classID,
+      mEffectComponent.get(),
+      mEditController.get()
+   );
 }

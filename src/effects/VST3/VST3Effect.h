@@ -53,6 +53,10 @@ struct VST3Wrapper
    using ParameterVisitor = std::function< bool(const ParameterInfo& pi) >;
 
    bool ForEachParameter(ParameterVisitor visitor) const;
+
+   bool LoadPreset(Steinberg::IBStream*, const Steinberg::FUID& classID);
+
+   bool SavePreset(Steinberg::IBStream*, const Steinberg::FUID& classID) const;
 };
 
 
