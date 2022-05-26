@@ -100,6 +100,10 @@ struct VST3Wrapper
    //
    bool AtLeastOne(ParameterVisitor visitor) const;
 
-   const std::vector<ParameterInfo>* getParameterInfos() const;   
+   const std::vector<ParameterInfo>* getParameterInfos() const;
+
+   bool LoadPreset(Steinberg::IBStream*, const Steinberg::FUID& classID);
+
+   bool SavePreset(Steinberg::IBStream*, const Steinberg::FUID& classID) const;
 };
 
