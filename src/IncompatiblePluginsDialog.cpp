@@ -73,7 +73,7 @@ void IncompatiblePluginsDialog::SetPlugins(const std::vector<wxString>& plugins)
    mText->SetLabelText(XO(
       "Audacity has found %d incompatible plugins which could "\
       "not be loaded and are disabled. If you wish to enable them, "\
-      "you can do so from \"Manage Plug-Ins\" or  click \"Continue\".")
+      "you can do so from \"Manage Plug-Ins\" or click \"Continue\".")
       .Format(static_cast<int>(plugins.size())).Translation());
    mText->Wrap(GetClientSize().GetWidth() - 80);
 
