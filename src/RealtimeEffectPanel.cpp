@@ -345,10 +345,14 @@ namespace
             return;
          
          auto effectName = mEffectState->GetEffect()->GetName();
-         AudioIO::Get()->RemoveState(*mProject, &*mTrack, *mEffectState);
-         ProjectHistory::Get(*mProject).PushState(
+         //After AudioIO::RemoveState call this will be destroyed
+         auto project = mProject.get();
+         auto trackName = mTrack->GetName();
+
+         AudioIO::Get()->RemoveState(*project, &*mTrack, *mEffectState);
+         ProjectHistory::Get(*project).PushState(
             //i18n-hint: undo history, first parameter - realtime effect name, second - track name
-            XO("'%s' removed from '%s' effect stack").Format(effectName, mTrack->GetName()),
+            XO("'%s' removed from '%s' effect stack").Format(effectName, trackName),
             //i18n-hint: undo history record
             XO("Remove realtime effect")
          );
