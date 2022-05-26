@@ -1217,3 +1217,26 @@ void VST3Effect::ReloadUserOptions()
 
    SetBlockSize(mUserBlockSize);
 }
+
+bool VST3Wrapper::ForEachParameter(ParameterVisitor visitor) const
+{
+   if (mEditController == nullptr)
+      return false;
+
+   for (int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
+   {
+      ParameterInfo pi;
+
+      Steinberg::Vst::ParameterInfo vstParameterInfo{ };
+      if (mEditController->getParameterInfo(i, vstParameterInfo) == Steinberg::kResultOk)
+      {
+         if (vstParameterInfo.flags & Steinberg::Vst::ParameterInfo::kCanAutomate)
+         {
+            if (!visitor(ParameterInfo{ vstParameterInfo }))
+               break;
+         }
+      }
+   }
+
+   return true;
+}

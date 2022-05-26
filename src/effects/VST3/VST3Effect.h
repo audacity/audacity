@@ -41,11 +41,18 @@ class ParameterChangesProvider;
 
 struct VST3Wrapper
 {
-   // For the time being, here we have only members that are needed
+   // For the time being, here we have members that are needed
    // to iterate parameters and extract preset state
    //
    Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
    Steinberg::IPtr<Steinberg::Vst::IComponent>      mEffectComponent;
+
+   using ParameterInfo = Steinberg::Vst::ParameterInfo;
+
+   //! Return value: if true, continue visiting
+   using ParameterVisitor = std::function< bool(const ParameterInfo& pi) >;
+
+   bool ForEachParameter(ParameterVisitor visitor) const;
 };
 
 
