@@ -19,6 +19,7 @@
 #include <wx/log.h>
 #include <wx/menu.h>
 #include <wx/sizer.h>
+#include <wx/stattext.h>
 #include <wx/tooltip.h>
 
 #include "../ActiveProject.h"
@@ -123,12 +124,9 @@ void AudioSetupToolBar::DeinitChildren()
 void AudioSetupToolBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
-   MakeButtonBackgroundsLarge();
+   MakeAudioSetupButton();
 
    DeinitChildren();
-
-   mAudioSetup = MakeButton(this, bmpSetup, bmpSetup, bmpSetup,
-      ID_AUDIO_SETUP_BUTTON, true, XO("Audio Setup"));
 
 #if wxUSE_TOOLTIPS
    RegenerateTooltips();
@@ -153,6 +151,45 @@ void AudioSetupToolBar::Repaint(wxDC* dc)
 #endif
 }
 
+void AudioSetupToolBar::MakeAudioSetupButton()
+{
+   bool bUseAqua = false;
+
+#ifdef EXPERIMENTAL_THEME_PREFS
+   gPrefs->Read(wxT("/GUI/ShowMac"), &bUseAqua, false);
+#endif
+
+#ifdef USE_AQUA_THEME
+   bUseAqua = !bUseAqua;
+#endif
+
+   const auto size = theTheme.ImageSize(bmpRecoloredSetupUpSmall);
+
+   if (bUseAqua) {
+      MakeMacRecoloredImageSize(bmpRecoloredSetupUpSmall, bmpMacUpButtonSmall, size);
+      MakeMacRecoloredImageSize(bmpRecoloredSetupDownSmall, bmpMacDownButtonSmall, size);
+      MakeMacRecoloredImageSize(bmpRecoloredSetupUpHiliteSmall, bmpMacHiliteUpButtonSmall, size);
+      MakeMacRecoloredImageSize(bmpRecoloredSetupHiliteSmall, bmpMacHiliteButtonSmall, size);
+   }
+   else {
+      MakeRecoloredImageSize(bmpRecoloredSetupUpSmall, bmpUpButtonSmall, size);
+      MakeRecoloredImageSize(bmpRecoloredSetupDownSmall, bmpDownButtonSmall, size);
+      MakeRecoloredImageSize(bmpRecoloredSetupUpHiliteSmall, bmpHiliteUpButtonSmall, size);
+      MakeRecoloredImageSize(bmpRecoloredSetupHiliteSmall, bmpHiliteButtonSmall, size);
+   }
+
+   mAudioSetup = MakeButton(this,
+      bmpRecoloredSetupUpSmall, bmpRecoloredSetupDownSmall,
+      bmpRecoloredSetupUpHiliteSmall, bmpRecoloredSetupHiliteSmall,
+      bmpSetup, bmpSetup, bmpSetup,
+      ID_AUDIO_SETUP_BUTTON,
+      wxDefaultPosition,
+      true,
+      theTheme.ImageSize(bmpRecoloredSetupUpSmall));
+
+   mAudioSetup->SetLabel(XO("Audio Setup"));
+}
+
 void AudioSetupToolBar::ArrangeButtons()
 {
    int flags = wxALIGN_CENTER | wxRIGHT;
@@ -166,9 +203,19 @@ void AudioSetupToolBar::ArrangeButtons()
 
    Add((mSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
 
+   auto text = safenew wxStaticText(this, wxID_ANY, "Audio Setup");
+   text->SetBackgroundColour(theTheme.Colour(clrMedium));
+   text->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
+
+   auto vSizer = safenew wxBoxSizer(wxVERTICAL);
+   vSizer->AddSpacer(4);
+   vSizer->Add(mAudioSetup, 0, flags, 2);
+   vSizer->AddSpacer(4);
+   vSizer->Add(text, 0, flags, 2);
+
    // Start with a little extra space
    mSizer->Add(5, 55);
-   mSizer->Add(mAudioSetup, 0, flags, 2);
+   mSizer->Add(vSizer, 1, wxEXPAND);
    mSizer->Add(5, 55);
 
    // Layout the sizer

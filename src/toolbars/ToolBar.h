@@ -200,7 +200,9 @@ public:
    void SetButton(bool down, AButton *button);
 
    static void MakeMacRecoloredImage(teBmps eBmpOut, teBmps eBmpIn);
+   static void MakeMacRecoloredImageSize(teBmps eBmpOut, teBmps eBmpIn, const wxSize& size);
    static void MakeRecoloredImage(teBmps eBmpOut, teBmps eBmpIn);
+   static void MakeRecoloredImageSize(teBmps eBmpOut, teBmps eBmpIn, const wxSize& size);
 
    wxBoxSizer *GetSizer();
 

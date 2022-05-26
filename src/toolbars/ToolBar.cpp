@@ -762,15 +762,27 @@ void ToolBar::Detach( wxSizer *sizer )
    mHSizer->Detach( sizer );
 }
 
-void ToolBar::MakeMacRecoloredImage(teBmps eBmpOut, teBmps eBmpIn )
+void ToolBar::MakeMacRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
 {
    theTheme.ReplaceImage( eBmpOut, &theTheme.Image( eBmpIn ));
+}
+
+void ToolBar::MakeMacRecoloredImageSize(teBmps eBmpOut, teBmps eBmpIn, const wxSize& size)
+{
+   MakeMacRecoloredImage( eBmpOut, eBmpIn );
+   theTheme.Image( eBmpOut ).Rescale( size.GetWidth(), size.GetHeight() );
 }
 
 void ToolBar::MakeRecoloredImage( teBmps eBmpOut, teBmps eBmpIn )
 {
    // Don't recolour the buttons...
    MakeMacRecoloredImage( eBmpOut, eBmpIn );
+}
+
+void ToolBar::MakeRecoloredImageSize(teBmps eBmpOut, teBmps eBmpIn, const wxSize& size)
+{
+   MakeRecoloredImage( eBmpOut, eBmpIn );
+   theTheme.Image( eBmpOut ).Rescale( size.GetWidth(), size.GetHeight() );
 }
 
 void ToolBar:: MakeButtonBackgroundsLarge()

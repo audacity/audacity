@@ -58,6 +58,7 @@ class AudioSetupToolBar final : public ToolBar {
    void SetDevices(const DeviceSourceMap *in, const DeviceSourceMap *out);
    void RegenerateTooltips() override;
 
+   void MakeAudioSetupButton();
    void ArrangeButtons();
 
    std::unique_ptr<wxMenu> CloneMenu(const wxMenu& menu) const;
