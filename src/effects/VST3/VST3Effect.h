@@ -172,6 +172,8 @@ public:
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
    bool LoadFactoryDefaults(EffectSettings &) const override;
 
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
    int GetMidiInCount() const override;

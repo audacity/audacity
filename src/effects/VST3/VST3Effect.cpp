@@ -1212,6 +1212,20 @@ void VST3Effect::ReloadUserOptions()
    SetBlockSize(mUserBlockSize);
 }
 
+
+bool VST3Effect::TransferDataToWindow(const EffectSettings& settings)
+{
+   // Update parameter values in the plugin
+   if (StoreSettings(GetSettings(settings)))
+   {
+      return true;
+   }
+   
+   return false;
+}
+
+
+
 bool VST3Wrapper::ForEachParameter(ParameterVisitor visitor) const
 {
    if (mEditController == nullptr)
