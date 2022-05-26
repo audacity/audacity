@@ -427,6 +427,8 @@ bool VST3Effect::LoadUserPreset(
    }
    SyncParameters(settings);
 
+   FetchSettings(GetSettings(settings));
+
    return true;
 }
 
@@ -471,14 +473,19 @@ RegistryPaths VST3Effect::GetFactoryPresets() const
    return mFactoryPresets;
 }
 
-bool VST3Effect::LoadFactoryPreset(int id, EffectSettings &) const
+bool VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    if(id >= 0 && id < mFactoryPresets.size())
    {
       auto filename = wxFileName(GetFactoryPresetsPath(mEffectClassInfo), mFactoryPresets[id] + ".vstpreset");
       // To do: externalize state so const_cast isn't needed
-      return const_cast<VST3Effect*>(this)->LoadPreset(filename.GetFullPath());
+      const bool res = const_cast<VST3Effect*>(this)->LoadPreset(filename.GetFullPath());
+      FetchSettings(GetSettings(settings));
+      return res;
    }
+
+   FetchSettings(GetSettings(settings));
+
    return true;
 }
 
@@ -955,7 +962,7 @@ void VST3Effect::ExportPresets(const EffectSettings &) const
    }
 }
 
-void VST3Effect::ImportPresets(EffectSettings &)
+void VST3Effect::ImportPresets(EffectSettings& settings)
 {
    using namespace Steinberg;
 
@@ -974,6 +981,8 @@ void VST3Effect::ImportPresets(EffectSettings &)
       return;
 
    LoadPreset(path);
+
+   FetchSettings(GetSettings(settings));
 }
 
 bool VST3Effect::HasOptions()
