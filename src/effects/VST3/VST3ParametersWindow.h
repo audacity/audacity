@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include <unordered_map>
 #include <wx/scrolwin.h>
 #include <pluginterfaces/base/smartpointer.h>
 #include <pluginterfaces/vst/vsttypes.h>
@@ -26,6 +27,7 @@ namespace Steinberg
 }
 
 class wxStaticText;
+class VST3ParameterControl;
 
 /**
  * \brief "Plain" plugin UI, contains a list of parameter controls and values.
@@ -34,6 +36,8 @@ class VST3ParametersWindow : public wxScrolledWindow
 {
    const Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
    const Steinberg::IPtr<Steinberg::Vst::IComponentHandler> mComponentHandler;
+   std::unordered_map<Steinberg::Vst::ParamID, VST3ParameterControl*> mControls;
+   std::unordered_map<Steinberg::Vst::ParamID, VST3ParameterControl*> mLabels;
 public:
 
    /*!
@@ -55,10 +59,14 @@ public:
                       long style = wxScrolledWindowStyle,
                       const wxString& name = wxPanelNameStr);
 
+   //Updates all controls to match current state of the IEditController
+   void ReloadParameters();
+
+   //Updates individual parameter, useful during playback
+   //(to update automated parameters or meters)
+   void UpdateParameter(Steinberg::Vst::ParamID paramId);
+
 private:
-
-   void UpdateParameterValueText(wxStaticText* text, Steinberg::Vst::ParamID id, Steinberg::Vst::ParamValue normalizedValue, const wxString& units);
-
-   void UpdateParameter(Steinberg::Vst::ParamID id, Steinberg::Vst::ParamValue normalizedValue);
    
+   void OnParameterValueChanged(const wxCommandEvent& evt);
 };
