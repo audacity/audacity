@@ -369,30 +369,29 @@ bool VST3Effect::LoadSettings(
 {
    using namespace Steinberg;
 
-   if(mComponentHandler == nullptr)
+   if (mComponentHandler == nullptr)
       return false;
-   
-   long index { };
-   wxString key;
-   if(parms.GetFirstEntry(key, index))
-   {
-      do
+
+   ForEachParameter
+   (
+      [&](const ParameterInfo& pi)
       {
-         Steinberg::Vst::ParamID id;
-         Vst::ParamValue value;
-         if(VST3Utils::ParseAutomationParameterKey(key, id) && parms.Read(key, &value))
+         const auto id = pi.id;
+         const auto value = pi.defaultNormalizedValue;
+
+         if (mComponentHandler->beginEdit(id) == kResultOk)
          {
-            if(mComponentHandler->beginEdit(id) == kResultOk)
-            {
-               auto cleanup = finally([&]{
-                  mComponentHandler->endEdit(id);
-               });
-               mComponentHandler->performEdit(id, value);
-            }
-            mEditController->setParamNormalized(id, value);
+            auto cleanup = finally([&] {
+               mComponentHandler->endEdit(id);
+            });
+            mComponentHandler->performEdit(id, value);
          }
-      } while(parms.GetNextEntry(key, index));
-   }
+         mEditController->setParamNormalized(id, value);
+         return true;
+      }
+   );
+
+   FetchSettings(GetSettings(settings));
 
    return true;
 }
