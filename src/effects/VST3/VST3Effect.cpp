@@ -1262,3 +1262,63 @@ bool VST3Wrapper::SavePreset(Steinberg::IBStream* fileStream, const Steinberg::F
       mEditController.get()
    );
 }
+
+
+bool VST3Wrapper::FetchSettings(VST3EffectSettings& settings) const
+{
+   settings.mValues.clear();
+
+   return ForEachParameter(
+
+      [&](const ParameterInfo& pi)
+   {
+      const auto id = pi.id;
+      settings.mValues[id] = mEditController->getParamNormalized(id);
+      return true;
+   }
+   );
+}
+
+
+bool VST3Wrapper::StoreSettings(const VST3EffectSettings& settings) const
+{
+   return ForEachParameter(
+
+      [&](const ParameterInfo& pi)
+      {
+         if (mComponentHandler == nullptr)
+            return false;
+
+         const auto id = pi.id;
+
+         auto itr = settings.mValues.find(id);
+         if (itr != settings.mValues.end())
+         {
+            const auto& value = itr->second;
+
+            // set the value to the handler at the id
+            if (mComponentHandler->beginEdit(id) == Steinberg::kResultOk)
+            {
+               auto cleanup = finally([&] {
+                  mComponentHandler->endEdit(id);
+               });
+               mComponentHandler->performEdit(id, value);
+            }
+            else
+            {
+               return false;
+            }
+            mEditController->setParamNormalized(id, value);
+
+         }
+         else
+         {
+            return false;
+         }
+
+         return true;
+      }
+   );
+
+}
+
