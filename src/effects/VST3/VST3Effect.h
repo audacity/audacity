@@ -37,6 +37,7 @@ namespace Steinberg
 }
 
 class ParameterChangesProvider;
+class VST3ParametersWindow;
 
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
@@ -58,11 +59,14 @@ class VST3Effect final : public StatefulPerTrackEffect
 
    Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mComponentConnectionProxy;
    Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mControllerConnectionProxy;
+   //Used if provided by the plugin and enabled in the settings
    Steinberg::IPtr<Steinberg::IPlugView> mPlugView;
    Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
    Steinberg::IPtr<internal::ComponentHandler> mComponentHandler;
    wxWindow* mParent { nullptr };
    NumericTextCtrl* mDuration { nullptr };
+   //Used if graphical plugin interface is disabled in the settings, or not provided by the plugin
+   VST3ParametersWindow* mPlainUI { nullptr };
 
    //Holds pending parameter changes to be applied to multiple realtime effects.
    //Not used in the "offline" mode
