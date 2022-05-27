@@ -14,6 +14,7 @@
 
 #include <string>
 #include <pluginterfaces/vst/vsttypes.h>
+#include <pluginterfaces/vst/ivstaudioprocessor.h>
 
 class wxString;
 class wxWindow;
@@ -68,3 +69,14 @@ public:
    //Returns true on success.
    static bool ParseAutomationParameterKey(const wxString& key, Steinberg::Vst::ParamID& paramId);
 };
+
+
+struct VST3Wrapper
+{
+   // For the time being, here we have only members that are needed
+   // to iterate parameters and extract preset state
+   //
+   Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
+   Steinberg::IPtr<Steinberg::Vst::IComponent>      mEffectComponent;
+};
+
