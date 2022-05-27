@@ -37,7 +37,8 @@ void Context::Clear(const Rect& rect, Color color)
    {
       mClearColor = color;
       mFunctions.ClearColor(
-         color.GetRed(), color.GetGreen(), color.GetBlue(), color.GetAlpha());
+         color.GetRed() / 255.0f, color.GetGreen() / 255.0f,
+         color.GetBlue() / 255.0f, color.GetAlpha() / 255.0f);
    }
 
    const bool clippingWasEnabled = mCurrentState.mClippingEnabled;
