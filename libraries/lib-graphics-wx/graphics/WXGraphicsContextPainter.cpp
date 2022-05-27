@@ -316,6 +316,12 @@ public:
          wxDouble width, height;
          ctx->GetSize(&width, &height);
 
+         if (width == 0 && height == 0)
+         {
+            width = mPaintTargetsStack.back()->Image.GetWidth();
+            height = mPaintTargetsStack.back()->Image.GetHeight();
+         }
+
          return { static_cast<float>(width), static_cast<float>(height) };
       }
       else if (mWindow)
