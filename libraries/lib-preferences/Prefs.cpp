@@ -121,6 +121,10 @@ PrefsListener::~PrefsListener()
 {
 }
 
+void PrefsListener::UpdatePrefs()
+{
+}
+
 void PrefsListener::UpdateSelectedPrefs( int )
 {
 }

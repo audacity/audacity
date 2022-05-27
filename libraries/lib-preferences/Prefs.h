@@ -487,6 +487,7 @@ public:
    virtual ~PrefsListener();
 
    // Called when all preferences should be updated.
+   // PrefsListener::UpdatePrefs() is defined, and does nothing
    virtual void UpdatePrefs() = 0;
 
 protected:

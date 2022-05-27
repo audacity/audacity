@@ -1208,9 +1208,7 @@ bool AudacityApp::OnInit()
       PopulatePreferences();
    }
 
-   theTheme.SetOnPreferredSystemAppearanceChanged([this](PreferredSystemAppearance appearance){
-       SetPreferredSystemAppearance(appearance);
-   });
+   mThemeChangeSubscription = theTheme.Subscribe(OnThemeChange);
 
    {
       wxBusyCursor busy;
@@ -2345,7 +2343,7 @@ void AudacityApp::OnMenuExit(wxCommandEvent & event)
 }
 
 #ifndef __WXMAC__
-void AudacityApp::SetPreferredSystemAppearance(PreferredSystemAppearance)
+void AudacityApp::OnThemeChange(ThemeChangeMessage)
 {
    // Currently this is implemented only on macOS
 }

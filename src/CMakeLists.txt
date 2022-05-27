@@ -223,6 +223,8 @@ list( APPEND SOURCES
       RefreshCode.h
       ProjectWindows.cpp
       ProjectWindows.h
+      RealtimeEffectPanel.cpp
+      RealtimeEffectPanel.h
       RingBuffer.cpp
       RingBuffer.h
       SampleBlock.cpp
@@ -271,6 +273,7 @@ list( APPEND SOURCES
       Tags.h
       TagsEditor.cpp
       TagsEditor.h
+      ThemedWrappers.h
       TimeDialog.cpp
       TimeDialog.h
       TimeTrack.cpp

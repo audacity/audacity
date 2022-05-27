@@ -86,7 +86,7 @@ private:
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnLeave(wxMouseEvent &evt);
-   void OnThemeChange(wxCommandEvent& evt);
+   void OnThemeChange(struct ThemeChangeMessage);
    void OnSelectionChange(Observer::Message);
    void DoSelectionChange( const SelectedRegion &selectedRegion );
    bool UpdateRects();
@@ -240,7 +240,8 @@ private:
    std::shared_ptr<ScrubbingCell> mScrubbingCell;
 
    Observer::Subscription mAudioIOSubscription,
-      mPlayRegionSubscription;
+      mPlayRegionSubscription,
+      mThemeChangeSubscription;
 
    // classes implementing subdivision for CellularPanel
    struct Subgroup;

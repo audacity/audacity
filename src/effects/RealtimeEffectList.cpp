@@ -85,14 +85,20 @@ void RealtimeEffectList::Visit(StateVisitor func)
 RealtimeEffectState *RealtimeEffectList::AddState(const PluginID &id)
 {
    auto pState = std::make_unique<RealtimeEffectState>(id);
-   if (id.empty() || pState->GetEffect() != nullptr) {
+   if (pState->GetEffect() != nullptr) {
       auto result = pState.get();
       mStates.emplace_back(move(pState));
+
+      Publisher<RealtimeEffectListMessage>::Publish({
+         RealtimeEffectListMessage::Type::Insert,
+         mStates.size() - 1,
+         { }
+      });
+
       return result;
    }
-   else
-      // Effect initialization failed for the id
-      return nullptr;
+   // Effect initialization failed for the id
+   return nullptr;
 }
 
 void RealtimeEffectList::RemoveState(RealtimeEffectState &state)
@@ -101,12 +107,51 @@ void RealtimeEffectList::RemoveState(RealtimeEffectState &state)
       found = std::find_if(mStates.begin(), end,
          [&](const auto &item) { return item.get() == &state; } );
    if (found != end)
+   {
+      const auto index = std::distance(mStates.begin(), found);
       mStates.erase(found);
+      Publisher<RealtimeEffectListMessage>::Publish({
+         RealtimeEffectListMessage::Type::Remove,
+         static_cast<size_t>(index),
+         { }
+      });
+   }
 }
 
-void RealtimeEffectList::Swap(size_t index1, size_t index2)
+size_t RealtimeEffectList::GetStatesCount() const noexcept
 {
-   std::swap(mStates[index1], mStates[index2]);
+   return mStates.size();
+}
+
+RealtimeEffectState& RealtimeEffectList::GetStateAt(size_t index) noexcept
+{
+   return *mStates[index];
+}
+
+void RealtimeEffectList::MoveEffect(size_t fromIndex, size_t toIndex)
+{
+   assert(fromIndex < mStates.size());
+   assert(toIndex < mStates.size());
+
+   if(fromIndex == toIndex)
+      return;
+   if(fromIndex < toIndex)
+   {
+      const auto first = mStates.begin() + fromIndex;
+      const auto last = mStates.begin() + toIndex + 1;
+      std::rotate(first, first + 1, last);
+   }
+   else
+   {
+      const auto first = mStates.rbegin() + (mStates.size() - (fromIndex + 1));
+      const auto last = mStates.rbegin() + (mStates.size() - toIndex);
+      std::rotate(first, first + 1, last);
+   }
+   Publisher<RealtimeEffectListMessage>::Publish({
+      RealtimeEffectListMessage::Type::Move,
+      fromIndex,
+      toIndex
+   });
 }
 
 const std::string &RealtimeEffectList::XMLTag()
@@ -135,9 +180,8 @@ void RealtimeEffectList::HandleXMLEndTag(const std::string_view &tag)
 XMLTagHandler *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
 {
    if (tag == RealtimeEffectState::XMLTag()) {
-      auto pState = AddState({});
-      assert(pState); // Should succeed always for empty id
-      return pState;
+      mStates.push_back(std::make_unique<RealtimeEffectState>(PluginID { }));
+      return &*mStates.back();
    }
    return nullptr;
 }

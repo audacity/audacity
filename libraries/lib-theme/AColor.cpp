@@ -1257,3 +1257,9 @@ void AColor::PreComputeGradient() {
       }
    }
 }
+
+void AColor::ApplyUpdatedImages()
+{
+   ReInit();
+   theTheme.Publish({});
+}

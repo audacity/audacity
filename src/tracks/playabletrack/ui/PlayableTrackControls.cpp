@@ -26,6 +26,8 @@ Paul Licameli split from TrackInfo.cpp
 
 #include <wx/dc.h>
 
+#include "effects/RealtimeEffectList.h"
+
 using TCPLine = TrackInfo::TCPLine;
 
 namespace {
@@ -120,6 +122,12 @@ void EffectsDrawFunction
   bool sel, bool hit )
 {   
    const auto str = audacity::ToUTF8(XO("Effects").Translation());
+   wxCoord textWidth, textHeight;
+
+   //may throw, but it's not expected that effects button is available
+   //for tracks that do not allow effect stack
+   auto str = (RealtimeEffectList::Get(*pTrack).GetStatesCount() > 0
+      ? XO("Effects") : XO("Add effects")).Translation();
 
    const auto selected = pTrack ? pTrack->GetSelected() : true;
 

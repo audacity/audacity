@@ -128,8 +128,17 @@ namespace AudioUnitUtils {
       }
    };
 
+   struct Parameter : AudioUnitParameter {
+      //! This constructor leaves the parameter ID and element fields as 0
+      Parameter(AudioUnit audioUnit, AudioUnitScope scope)
+      : AudioUnitParameter{} {
+         mAudioUnit = audioUnit;
+         mScope = scope;
+      }
+   };
+
    struct ParameterInfo : AudioUnitParameterInfo {
-      ParameterInfo(): AudioUnitParameterInfo{} {}
+      ParameterInfo() : AudioUnitParameterInfo{} {}
       ~ParameterInfo() {
          if (flags & kAudioUnitParameterFlag_CFNameRelease) {
             if (flags & kAudioUnitParameterFlag_HasCFNameString)
@@ -149,6 +158,17 @@ namespace AudioUnitUtils {
       ~ParameterNameInfo() {
          if (outName)
             CFRelease(outName);
+      }
+   };
+
+   struct Property : AudioUnitProperty {
+      Property(AudioUnit audioUnit, AudioUnitPropertyID propertyID,
+         AudioUnitScope scope)
+      : AudioUnitProperty{} {
+         mAudioUnit = audioUnit;
+         mPropertyID = propertyID;
+         mScope = scope;
+         // Default element to 0
       }
    };
 

@@ -30,14 +30,13 @@
 
 #include <wx/intl.h>
 
+#include "BasicUI.h"
 #include "Project.h"
 #include "SyncLock.h"
 #include "Track.h"
 #include "LabelTrack.h"
 #include "NoteTrack.h"
 #include "TimeTrack.h"
-
-wxDEFINE_EVENT(EVT_TRACK_FOCUS_CHANGE, wxCommandEvent);
 
 TrackPanelAx::TrackPanelAx( AudacityProject &project )
    :
@@ -116,7 +115,10 @@ std::shared_ptr<Track> TrackPanelAx::SetFocus( std::shared_ptr<Track> track )
 
    if ( mFocusedTrack.lock() != track ) {
       mFocusedTrack = track;
-      mProject.QueueEvent( safenew wxCommandEvent{ EVT_TRACK_FOCUS_CHANGE } );
+      BasicUI::CallAfter([wFocus = TrackFocus::Get(mProject).weak_from_this()]{
+         if (auto pFocus = wFocus.lock())
+            pFocus->Publish({});
+      });
    }
    mNumFocusedTrack = TrackNum(track);
 

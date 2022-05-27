@@ -51,7 +51,9 @@ if( ${_OPT}conan_enabled )
     if( DEFINED OLD_CXX )
         set( ENV{CXX} ${OLD_CXX} )
     endif()
-
+    
+    set(ENV{CONAN_REVISIONS_ENABLED} 1)
+     
     conan_add_remote(NAME audacity
         URL ${CONAN_REMOTE}
         VERIFY_SSL True
@@ -63,8 +65,6 @@ if( ${_OPT}conan_enabled )
         VERIFY_SSL True
         INDEX 1
     )
-
-    set(ENV{CONAN_REVISIONS_ENABLED} 1)
 endif()
 
 set( CONAN_BUILD_REQUIRES )

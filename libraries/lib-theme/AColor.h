@@ -150,6 +150,8 @@ class THEME_API AColor {
 
    static void PreComputeGradient();
 
+   static void ApplyUpdatedImages();
+
    // Member variables
 
    static wxBrush lightBrush[2];

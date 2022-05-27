@@ -138,7 +138,7 @@ void AboutDialog::CreateCreditsList()
 
    // The Audacity Team: developers and support
 
-   AddCredit(wxT("Gonzalo Guzmán"), documentationAndSupportFormat, roleTeamMember);
+   AddCredit(wxT("Gonzalo Guzm\u00E1n"), documentationAndSupportFormat, roleTeamMember);
    AddCredit(wxT("Peter Jonas"), developerFormat, roleTeamMember);
    AddCredit(wxT("Martin Keary"), roleTeamMember);
    AddCredit(wxT("Sergey Lapysh"), testerFormat, roleTeamMember);

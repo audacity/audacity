@@ -188,7 +188,9 @@ EffectType EffectDistortion::GetType() const
 
 bool EffectDistortion::SupportsRealtime() const
 {
-   return true;
+   // TODO reenable after achieving statelessness
+   return false;
+//   return true;
 }
 
 unsigned EffectDistortion::GetAudioInCount() const
