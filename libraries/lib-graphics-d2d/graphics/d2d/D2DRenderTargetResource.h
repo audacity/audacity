@@ -14,11 +14,13 @@
 
 #include "D2DTrackedResource.h"
 
+namespace graphics::d2d
+{
+   
 class D2DRenderTarget;
 class D2DRenderer;
 
-class D2DRenderTargetResource /* not final */ :
-    public D2DTrackedResource
+class D2DRenderTargetResource /* not final */ : public D2DTrackedResource
 {
 public:
    explicit D2DRenderTargetResource(D2DRenderer& renderer);
@@ -29,5 +31,6 @@ public:
 protected:
    virtual bool DoAcquireResource(D2DRenderTarget& target) = 0;
    virtual void DoReleaseResource(D2DRenderTarget& target) = 0;
-
 };
+
+} // namespace graphics::d2d

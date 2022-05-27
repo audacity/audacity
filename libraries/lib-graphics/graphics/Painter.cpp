@@ -12,6 +12,9 @@
 
 #include <cassert>
 
+namespace graphics
+{
+
 Painter::Painter()
 {
    mStateStack.emplace_back();
@@ -63,7 +66,7 @@ std::shared_ptr<PainterFont> Painter::GetCurrentFont() const
 
    auto font = mStateStack.back().font;
 
-   return  font != nullptr ? font : GetDefaultFont();
+   return font != nullptr ? font : GetDefaultFont();
 }
 
 PainterTransformMutator Painter::GetTransformMutator()
@@ -221,7 +224,6 @@ void Painter::DrawText(float x, float y, const std::string_view& text)
    DoDrawText(Point { x, y }, *GetCurrentFont(), Brush::NoBrush, text);
 }
 
-
 void Painter::DrawText(
    Rect rect, const PainterFont& font, const std::string_view& text,
    PainterHorizontalAlignment horizontalAlignement,
@@ -266,7 +268,9 @@ void Painter::DrawText(
    PainterHorizontalAlignment horizontalAlignement,
    PainterVerticalAlignment verticalAlignment)
 {
-   DrawText(Rect { origin, size }, font, text, horizontalAlignement, verticalAlignment);
+   DrawText(
+      Rect { origin, size }, font, text, horizontalAlignement,
+      verticalAlignment);
 }
 
 void Painter::DrawText(
@@ -276,8 +280,7 @@ void Painter::DrawText(
    PainterVerticalAlignment verticalAlignment)
 {
    DrawText(
-      Rect { Point { x, y }, Size { w, h } }, font, text,
-      horizontalAlignement,
+      Rect { Point { x, y }, Size { w, h } }, font, text, horizontalAlignement,
       verticalAlignment);
 }
 
@@ -369,15 +372,18 @@ void Painter::DrawImage(
 void Painter::DrawImage(const PainterImage& image, Point topLeft)
 {
    DoDrawImage(
-      image, Rect { topLeft, Size { float(image.GetWidth()), float(image.GetHeight()) } },
+      image,
+      Rect { topLeft,
+             Size { float(image.GetWidth()), float(image.GetHeight()) } },
       GetImageRect(image));
 }
 
-void Painter::DrawImage(
-   const PainterImage& image, float left, float top)
+void Painter::DrawImage(const PainterImage& image, float left, float top)
 {
    DoDrawImage(
-      image, Rect { Point { left, top }, Size { float(image.GetWidth()), float(image.GetHeight()) } },
+      image,
+      Rect { Point { left, top },
+             Size { float(image.GetWidth()), float(image.GetHeight()) } },
       GetImageRect(image));
 }
 
@@ -862,3 +868,5 @@ PaintEventHolder::PaintEventHolder(Painter& painter)
 {
    mPainter.BeginPaint();
 }
+
+} // namespace graphics

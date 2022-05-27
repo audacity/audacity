@@ -31,9 +31,12 @@ class wxBitmap;
 class wxCommandEvent;
 class wxMouseEvent;
 
+namespace graphics
+{
 class Painter;
 class PainterImage;
 class PainterFont;
+} // namespace graphics
 
 constexpr int NUM_GLYPH_CONFIGS = 3;
 constexpr int NUM_GLYPH_HIGHLIGHTS = 4;
@@ -128,7 +131,7 @@ public:
       const LabelTrack &track, LabelTrackHit &hit, int x, int y );
 
 private:
-   static std::shared_ptr<PainterImage> GetGlyph(Painter& painter, int i);
+   static std::shared_ptr<graphics::PainterImage> GetGlyph(graphics::Painter& painter, int i);
 
    struct Index
    {
@@ -180,7 +183,7 @@ public:
    bool CalcCursorX(AudacityProject &project, int * x) const;
 
 private:
-   void CalcHighlightXs(Painter& painter, int* x1, int* x2) const;
+   void CalcHighlightXs(graphics::Painter& painter, int* x1, int* x2) const;
 
 public:
    void ShowContextMenu( AudacityProject &project );
@@ -213,15 +216,15 @@ private:
 
    void ComputeTextPosition(const wxRect & r, int index) const;
    void ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) const;
-   static void DrawLines( Painter & painter, const LabelStruct &ls, const wxRect & r);
-   static void DrawGlyphs( Painter & painter, const LabelStruct &ls, const wxRect & r,
+   static void DrawLines( graphics::Painter & painter, const LabelStruct &ls, const wxRect & r);
+   static void DrawGlyphs( graphics::Painter & painter, const LabelStruct &ls, const wxRect & r,
       int GlyphLeft, int GlyphRight);
    static int GetTextFrameHeight();
-   static void DrawText( Painter & painter, const LabelStruct &ls, const wxRect & r);
-   static void DrawTextBox( Painter & painter, const LabelStruct &ls, const wxRect & r);
-   static void DrawBar(Painter& painter, const LabelStruct& ls, const wxRect& r);
+   static void DrawText( graphics::Painter & painter, const LabelStruct &ls, const wxRect & r);
+   static void DrawTextBox( graphics::Painter & painter, const LabelStruct &ls, const wxRect & r);
+   static void DrawBar(graphics::Painter& painter, const LabelStruct& ls, const wxRect& r);
    static void DrawHighlight(
-      Painter & painter, const LabelStruct &ls, int xPos1, int xPos2, int charHeight);
+      graphics::Painter & painter, const LabelStruct &ls, int xPos1, int xPos2, int charHeight);
 
 public:
    /// convert pixel coordinate to character position in text box
@@ -246,7 +249,7 @@ private:
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
 
-   static void calculateFontHeight(Painter& dc);
+   static void calculateFontHeight(graphics::Painter& dc);
 
    bool IsValidIndex(const Index& index, AudacityProject& project) const;
 
@@ -265,7 +268,7 @@ private:
    std::weak_ptr<LabelTextHandle> mTextHandle;
 
    static wxFont msFont;
-   static std::shared_ptr<PainterFont> msPainterFont;
+   static std::shared_ptr<graphics::PainterFont> msPainterFont;
    // Bug #2571: See explanation in ShowContextMenu()
    int mEditIndex;
 };

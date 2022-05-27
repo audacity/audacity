@@ -14,8 +14,10 @@
 #include <type_traits>
 #include <numeric>
 
-template<typename DataType>
-struct PointType final
+namespace graphics
+{
+
+template <typename DataType> struct PointType final
 {
    DataType x {};
    DataType y {};
@@ -52,8 +54,7 @@ struct PointType final
       return *this;
    }
 
-   template <typename ScaleType>
-   PointType& operator*=(ScaleType scale) noexcept
+   template <typename ScaleType> PointType& operator*=(ScaleType scale) noexcept
    {
       x = static_cast<DataType>(x * scale);
       y = static_cast<DataType>(y * scale);
@@ -61,8 +62,7 @@ struct PointType final
       return *this;
    }
 
-   template <typename ScaleType>
-   PointType& operator/=(ScaleType scale) noexcept
+   template <typename ScaleType> PointType& operator/=(ScaleType scale) noexcept
    {
       x = static_cast<DataType>(x / scale);
       y = static_cast<DataType>(y / scale);
@@ -84,13 +84,13 @@ struct PointType final
    }
 };
 
-template<typename To, typename From>
+template <typename To, typename From>
 PointType<To> point_cast(PointType<From> point)
 {
    return { static_cast<To>(point.x), static_cast<To>(point.y) };
 }
 
-template<typename DataType>
+template <typename DataType>
 bool operator==(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
 {
    return lhs.x == rhs.x && lhs.y == rhs.y;
@@ -103,25 +103,29 @@ bool operator!=(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
 }
 
 template <typename DataType>
-PointType<DataType> operator+(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
+PointType<DataType>
+operator+(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
 {
    return { lhs.x + rhs.x, lhs.y + rhs.y };
 }
 
 template <typename DataType>
-PointType<DataType> operator-(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
+PointType<DataType>
+operator-(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
 {
    return { lhs.x - rhs.x, lhs.y - rhs.y };
 }
 
 template <typename DataType>
-PointType<DataType> operator*(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
+PointType<DataType>
+operator*(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
 {
    return { lhs.x * rhs.x, lhs.y * rhs.y };
 }
 
 template <typename DataType>
-PointType<DataType> operator/(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
+PointType<DataType>
+operator/(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
 {
    return { lhs.x / rhs.x, lhs.y / rhs.y };
 }
@@ -147,33 +151,32 @@ PointType<DataType> operator/(PointType<DataType> lhs, ScaleType rhs) noexcept
             static_cast<DataType>(lhs.y / rhs) };
 }
 
-template<typename DataType>
+template <typename DataType>
 auto DotProduct(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
 {
    return lhs.x * rhs.x + lhs.y * rhs.y;
 }
 
-template <typename DataType>
-auto Norm(PointType<DataType> lhs) noexcept
+template <typename DataType> auto Norm(PointType<DataType> lhs) noexcept
 {
    return std::sqrt(DotProduct(lhs, lhs));
 }
 
-template<typename DataType>
+template <typename DataType>
 auto Distance(PointType<DataType> lhs, PointType<DataType> rhs) noexcept
 {
    return std::sqrt(DotProduct(lhs, rhs));
 }
 
-template <typename DataType>
-auto Normalized(PointType<DataType> pt) noexcept
+template <typename DataType> auto Normalized(PointType<DataType> pt) noexcept
 {
    const auto norm = Norm(pt);
 
    if (norm <= std::numeric_limits<DataType>::epsilon())
       return pt;
-   
+
    return pt / norm;
 }
 
 using Point = PointType<float>;
+} // namespace graphics

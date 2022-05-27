@@ -409,6 +409,8 @@ void BrushHandle::Draw(
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass )
 {
+   using namespace graphics;
+   
    if ( iPass == TrackArtist::PassTracks ) {
       auto& painter = context.painter;
       auto mutator = painter.GetStateMutator();

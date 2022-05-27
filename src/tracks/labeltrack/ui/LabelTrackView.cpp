@@ -52,6 +52,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/frame.h>
 #include <wx/menu.h>
 
+using namespace graphics;
+using namespace graphics::wx;
 
 LabelTrackView::Index::Index()
 :  mIndex(-1),

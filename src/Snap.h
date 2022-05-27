@@ -23,7 +23,11 @@ class AudacityProject;
 class Track;
 class TrackList;
 class ZoomInfo;
+
+namespace graphics
+{
 class Painter;
+}
 
 const int kPixelTolerance = 4;
 
@@ -84,7 +88,7 @@ public:
    static const TranslatableStrings &GetSnapLabels();
 
    // The two coordinates need not be ordered:
-   static void Draw( Painter& painter, wxInt64 snap0, wxInt64 snap1 );
+   static void Draw(graphics::Painter& painter, wxInt64 snap0, wxInt64 snap1);
 
 private:
 

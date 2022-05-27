@@ -25,6 +25,9 @@
 #undef CreateFont
 #endif
 
+namespace graphics::d2d
+{
+
 D2DPainter::D2DPainter(
    D2DRenderer& renderer, std::shared_ptr<D2DRenderTarget> target,
    const FontInfo& defaultFont)
@@ -71,12 +74,12 @@ std::shared_ptr<PainterImage> D2DPainter::CreateImage(
 }
 
 std::shared_ptr<PainterImage> D2DPainter::GetSubImage(
-   const std::shared_ptr<PainterImage>& image, uint32_t x, uint32_t y, uint32_t width,
-   uint32_t height)
+   const std::shared_ptr<PainterImage>& image, uint32_t x, uint32_t y,
+   uint32_t width, uint32_t height)
 {
    if (image->GetRendererID() != GetRendererID())
       return {};
-   
+
    return std::make_shared<D2DSubBitmap>(
       std::static_pointer_cast<D2DBitmap>(image),
       Rect { Point { static_cast<float>(x), static_cast<float>(y) },
@@ -212,7 +215,8 @@ void D2DPainter::DoDrawImage(
    if (mRenderTargetStack.empty() || image.GetRendererID() != GetRendererID())
       return;
 
-   mRenderTargetStack.back()->DrawImage(static_cast<const D2DBitmap&>(image), destRect, imageRect);
+   mRenderTargetStack.back()->DrawImage(
+      static_cast<const D2DBitmap&>(image), destRect, imageRect);
 }
 
 void D2DPainter::DoDrawText(
@@ -238,7 +242,7 @@ void D2DPainter::DoDrawRotatedText(
 
    auto renderTarget = mRenderTargetStack.back();
    auto d2dRenderTarget = renderTarget->GetD2DRenderTarget();
-   
+
    auto currentTransform = renderTarget->GetCurrentD2DTransform();
 
    const float rad = -static_cast<float>(angle * M_PI / 180.0);
@@ -246,10 +250,11 @@ void D2DPainter::DoDrawRotatedText(
    const float s = std::sin(rad);
 
    const D2D1::Matrix3x2F mtx(
-       c * currentTransform.m11 + s * currentTransform.m12,  c * currentTransform.m21 + s * currentTransform.m22,
-      -s * currentTransform.m11 + c * currentTransform.m12, -s * currentTransform.m21 + c * currentTransform.m22,
+      c * currentTransform.m11 + s * currentTransform.m12,
+      c * currentTransform.m21 + s * currentTransform.m22,
+      -s * currentTransform.m11 + c * currentTransform.m12,
+      -s * currentTransform.m21 + c * currentTransform.m22,
       origin.x + currentTransform.dx, origin.y + currentTransform.dy);
-      
 
    d2dRenderTarget->SetTransform(mtx);
 
@@ -285,7 +290,7 @@ void D2DPainter::PopPaintTarget(const std::shared_ptr<PainterImage>&)
 {
    if (mRenderTargetStack.size() <= 1)
       return;
-   
+
    mRenderTargetStack.back()->EndDraw();
    mRenderTargetStack.pop_back();
 }
@@ -303,3 +308,5 @@ void D2DPainter::DrawPath(const PainterPath& path)
    auto& d2dPath = static_cast<const D2DPathGeometry&>(path);
    d2dPath.Draw(*mRenderTargetStack.back());
 }
+
+} // namespace graphics::d2d

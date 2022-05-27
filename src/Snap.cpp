@@ -329,7 +329,7 @@ SnapResults SnapManager::Snap
 
 #include "AColor.h"
 
-void SnapManager::Draw(Painter& painter, wxInt64 snap0, wxInt64 snap1)
+void SnapManager::Draw(graphics::Painter& painter, wxInt64 snap0, wxInt64 snap1)
 {
    auto stateMutator = painter.GetStateMutator();
 

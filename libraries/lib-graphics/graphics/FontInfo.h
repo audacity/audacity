@@ -13,6 +13,9 @@
 #include <string>
 #include <string_view>
 
+namespace graphics
+{
+
 // As defined in the OpenType specification
 enum class FontWeight
 {
@@ -97,3 +100,5 @@ private:
 GRAPHICS_API bool operator==(const FontInfo& lhs, const FontInfo& rhs);
 GRAPHICS_API bool operator!=(const FontInfo& lhs, const FontInfo& rhs);
 GRAPHICS_API bool operator<(const FontInfo& lhs, const FontInfo& rhs);
+
+} // namespace graphics

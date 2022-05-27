@@ -782,6 +782,8 @@ void WaveTrackSubView::DrawBoldBoundaries(
    TrackPanelDrawingContext &context, const WaveTrack *track,
    const wxRect &rect )
 {
+   using namespace graphics::wx;
+   
    auto &painter = context.painter;
    auto stateMutator = painter.GetStateMutator();
    const auto artist = TrackArtist::Get( context );

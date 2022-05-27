@@ -13,15 +13,18 @@
 #include "graphics/d2d/D2DPainter.h"
 #include "graphics/d2d/D2DRenderer.h"
 
+namespace graphics::d2d
+{
+
 D2DRenderTargetBitmap::D2DRenderTargetBitmap(
-   D2DRenderer& renderer, uint32_t width, uint32_t height,
-   bool withAlpha)
+   D2DRenderer& renderer, uint32_t width, uint32_t height, bool withAlpha)
     : D2DRenderTarget(renderer)
     , D2DBitmap(renderer)
     , mWidth(width)
     , mHeight(height)
     , mHasAlpha(withAlpha)
-{}
+{
+}
 
 Size D2DRenderTargetBitmap::GetSize() const
 {
@@ -52,8 +55,7 @@ void D2DRenderTargetBitmap::DrawBitmap(
 
    target.GetD2DRenderTarget()->DrawBitmap(
       it->second.Bitmap.Get(), d2dTargetRect, opacity,
-      D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
-      d2dSourceRect);
+      D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, d2dSourceRect);
 }
 
 std::shared_ptr<D2DRenderTarget>
@@ -66,13 +68,13 @@ D2DRenderTargetBitmap::GetRenderTarget(D2DRenderTarget& parentRenderTarget)
    {
       if (!AcquireResource(parentRenderTarget))
          return {};
-      
+
       it = mRTDependentData.find(rootRenderTarget);
    }
 
    mParentTarget = &parentRenderTarget;
    mRenderTarget = it->second.RenderTarget;
-   
+
    return std::static_pointer_cast<D2DRenderTargetBitmap>(shared_from_this());
 }
 
@@ -120,7 +122,7 @@ bool D2DRenderTargetBitmap::DoAcquireResource(D2DRenderTarget& target)
 
    auto result = target.GetD2DRenderTarget()->CreateCompatibleRenderTarget(
       &desiredSize, nullptr, &pixelFormat, options,
-         renderTarget.GetAddressOf());
+      renderTarget.GetAddressOf());
 
    if (S_OK != result)
       return false;
@@ -151,3 +153,5 @@ void D2DRenderTargetBitmap::CleanupDirect2DResources()
 {
    mRTDependentData.clear();
 }
+
+} // namespace graphics::d2d

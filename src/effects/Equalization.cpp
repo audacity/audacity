@@ -124,6 +124,9 @@
 #include "Equalization48x.h"
 #endif
 
+using namespace graphics;
+using namespace graphics::wx;
+
 enum
 {
    ID_Length = 10000,

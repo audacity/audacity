@@ -21,11 +21,13 @@
 
 #include "graphics/Painter.h"
 
+namespace graphics::d2d
+{
 namespace
 {
 D2D1_COLOR_F GetD2DColor(Color color) noexcept
 {
-   return { color.GetRed() / 255.0f,  color.GetGreen() / 255.0f,
+   return { color.GetRed() / 255.0f, color.GetGreen() / 255.0f,
             color.GetBlue() / 255.0f, color.GetAlpha() / 255.0f };
 }
 
@@ -35,11 +37,12 @@ D2D1::Matrix3x2F GetD2DTransform(const Transform& transform) noexcept
       transform.GetScale().x, 0.0f, 0.0f, transform.GetScale().y,
       transform.GetTranslation().x, transform.GetTranslation().y);
 }
-}
+} // namespace
 
 D2DRenderTarget::D2DRenderTarget(D2DRenderer& renderer)
     : mRenderer(renderer)
-    , mLinearGradientBrushes([this](const Brush& brush) { return CreateLinearGradientBrush(brush); })
+    , mLinearGradientBrushes([this](const Brush& brush)
+                             { return CreateLinearGradientBrush(brush); })
     , mRendererShutdownSubscription(renderer.Subscribe(
          [this](const D2DShutdownMessage&) { ReleaseResources(); }))
 {
@@ -67,13 +70,13 @@ bool D2DRenderTarget::SetAntialisingEnabled(bool enabled) noexcept
 {
    if (mAntialiasingEnabled == enabled)
       return true;
-   
+
    mRenderTarget->SetAntialiasMode(
       false && enabled ? D2D1_ANTIALIAS_MODE_PER_PRIMITIVE :
-                D2D1_ANTIALIAS_MODE_ALIASED);
+                         D2D1_ANTIALIAS_MODE_ALIASED);
 
    mAntialiasingEnabled = enabled;
-   
+
    return true;
 }
 
@@ -81,7 +84,7 @@ Size D2DRenderTarget::GetSize() const
 {
    if (mRenderTarget == nullptr)
       return {};
-   
+
    const auto size = mRenderTarget->GetSize();
    return { size.width, size.height };
 }
@@ -95,7 +98,7 @@ bool D2DRenderTarget::EndDraw()
 {
    if (mHasClipRect)
       SetClipRect(NoClippingRect);
-   
+
    auto result = mRenderTarget->EndDraw();
 
    if (result == D2DERR_RECREATE_TARGET)
@@ -105,7 +108,7 @@ bool D2DRenderTarget::EndDraw()
    }
 
    HandlePostDrawAction(result == S_OK);
-   
+
    return result == S_OK;
 }
 
@@ -125,7 +128,7 @@ void D2DRenderTarget::Clear(const Rect& rect, Color color)
          rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width,
          rect.origin.y + rect.size.height),
       D2D1_ANTIALIAS_MODE_ALIASED);
-   
+
    mRenderTarget->Clear(GetD2DColor(color));
 
    mRenderTarget->PopAxisAlignedClip();
@@ -176,7 +179,7 @@ void D2DRenderTarget::SetCurrentBrush(const Brush& brush)
       return;
 
    mCurrentBrush = brush;
-   
+
    if (brush.GetStyle() == BrushStyle::None)
    {
       mCurrentD2DBrush = nullptr;
@@ -184,7 +187,7 @@ void D2DRenderTarget::SetCurrentBrush(const Brush& brush)
    else if (brush.GetStyle() == BrushStyle::Solid)
    {
       if (mSolidBrush == nullptr)
-      {         
+      {
          if (
             S_OK !=
             mRenderTarget->CreateSolidColorBrush(
@@ -298,7 +301,7 @@ void D2DRenderTarget::DrawRect(const Rect& rect)
    const auto d2dRect = D2D1::RectF(
       rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width,
       rect.origin.y + rect.size.height);
-   
+
    if (mCurrentD2DBrush != nullptr)
    {
       mRenderTarget->FillRectangle(d2dRect, mCurrentD2DBrush);
@@ -421,10 +424,10 @@ D2DRenderTarget::CreateLinearGradientBrush(Brush brush)
    Microsoft::WRL::ComPtr<ID2D1LinearGradientBrush> linearGradientBrush;
 
    if (
-      S_OK !=
-      mRenderTarget->CreateLinearGradientBrush(
-         linearGradientBrushProperties, brushProperties,
-         gradientStopCollection.Get(), linearGradientBrush.GetAddressOf()))
+      S_OK != mRenderTarget->CreateLinearGradientBrush(
+                 linearGradientBrushProperties, brushProperties,
+                 gradientStopCollection.Get(),
+                 linearGradientBrush.GetAddressOf()))
       return nullptr;
 
    return linearGradientBrush;
@@ -443,3 +446,4 @@ void D2DRenderTarget::TrackResource(
 {
    mRenderTargetResources.emplace_back(resource);
 }
+} // namespace graphics::d2d

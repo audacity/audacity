@@ -52,6 +52,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "graphics/WXFontUtils.h"
 #include "graphics/WXColor.h"
 
+using namespace graphics;
+using namespace graphics::wx;
+
 // Subscribe to preference changes to update static variables
 struct Settings : PrefsListener {
    wxString gSoloPref;

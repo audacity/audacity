@@ -13,9 +13,12 @@
 #include "graphics/d2d/render_targets/D2DWICRenderTarget.h"
 #include "graphics/d2d/D2DRenderer.h"
 
+namespace graphics::d2d
+{
+
 D2DWICBitmap::D2DWICBitmap(
-   D2DRenderer& renderer,
-   const Microsoft::WRL::ComPtr<IWICBitmap>& wicBitmap, bool withAlhpa)
+   D2DRenderer& renderer, const Microsoft::WRL::ComPtr<IWICBitmap>& wicBitmap,
+   bool withAlhpa)
     : D2DBitmap(renderer)
     , mWICBitmap(wicBitmap)
     , mHasAlpha(withAlhpa)
@@ -43,7 +46,8 @@ void D2DWICBitmap::DrawBitmap(
    const auto brush = target.GetCurrentBrush();
 
    const float opacity = brush.GetStyle() == BrushStyle::Solid ?
-      brush.GetColor().GetAlpha() / 255.0f : 1.0f;
+                            brush.GetColor().GetAlpha() / 255.0f :
+                            1.0f;
 
    target.GetD2DRenderTarget()->DrawBitmap(
       bitmap, d2dTargetRect, opacity, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
@@ -56,7 +60,7 @@ D2DWICBitmap::GetRenderTarget(D2DRenderTarget& parentRenderTarget)
    if (!mRenderTarget)
       mRenderTarget = std::make_shared<D2DWICRenderTarget>(*this);
 
-   if(mRenderTarget->SetParent(parentRenderTarget))   
+   if (mRenderTarget->SetParent(parentRenderTarget))
       return mRenderTarget;
 
    return nullptr;
@@ -74,12 +78,12 @@ uint32_t D2DWICBitmap::GetWidth() const
 {
    if (mWICBitmap == nullptr)
       return 0;
-   
+
    UINT width, height;
 
    if (S_OK != mWICBitmap->GetSize(&width, &height))
       return 0;
-   
+
    return width;
 }
 
@@ -127,7 +131,7 @@ bool D2DWICBitmap::DoAcquireResource(D2DRenderTarget& target)
 {
    if (mWICBitmap == nullptr)
       return false;
-   
+
    auto d2dRenderTarget = target.GetD2DRenderTarget();
 
    if (d2dRenderTarget == nullptr)
@@ -159,3 +163,5 @@ void D2DWICBitmap::CleanupDirect2DResources()
    mWICBitmap.Reset();
    mRenderTargetResources.clear();
 }
+
+} // namespace graphics::d2d

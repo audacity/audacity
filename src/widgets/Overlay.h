@@ -14,9 +14,13 @@
 #include <utility>
 
 class OverlayPanel;
-class Painter;
 class wxRect;
 class wxSize;
+
+namespace graphics
+{
+class Painter;
+}
 
 /*
 <b>How Audacity Redisplay Works \n
@@ -103,16 +107,16 @@ public:
    virtual unsigned SequenceNumber() const = 0;
 
    // nonvirtual wrapper
-   std::pair<wxRect, bool> GetRectangle(Painter &painter, wxSize size);
+   std::pair<wxRect, bool> GetRectangle(graphics::Painter& painter, wxSize size);
 
    // size passes the dimensions of the backing dc
    // First member of pair is the rectangle that would be erased
    // Second member of pair indicates whether the overlay is out of date
-   virtual std::pair<wxRect, bool> DoGetRectangle(Painter &painter, wxSize size) = 0;
+   virtual std::pair<wxRect, bool> DoGetRectangle(graphics::Painter &painter, wxSize size) = 0;
 
    // Draw; dc.GetSize() tells you the total dimensions, and the panel is supplied
    // as context
-   virtual void Draw(OverlayPanel &panel, Painter &painter) = 0;
+   virtual void Draw(OverlayPanel& panel, graphics::Painter& painter) = 0;
 };
 
 #endif

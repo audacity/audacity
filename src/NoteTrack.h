@@ -60,7 +60,11 @@ using QuantizedTimeAndBeat = std::pair< double, double >;
 
 class StretchHandle;
 class TimeWarper;
+
+namespace graphics
+{
 class Painter;
+}
 
 class AUDACITY_DLL_API NoteTrack final
    : public NoteTrackBase
@@ -87,8 +91,8 @@ public:
    void WarpAndTransposeNotes(double t0, double t1,
                               const TimeWarper &warper, double semitones);
 
-   static void DrawLabelControls
-      ( const NoteTrack *pTrack, Painter & painter, const wxRect &rect,
+   static void DrawLabelControls(
+      const NoteTrack* pTrack, graphics::Painter& painter, const wxRect& rect,
         int highlightedChannel = -1 );
    int FindChannel(const wxRect &rect, int mx, int my);
    bool LabelClick(const wxRect &rect, int x, int y, bool right);

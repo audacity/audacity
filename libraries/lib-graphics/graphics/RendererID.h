@@ -14,18 +14,21 @@
 #include <limits>
 #include <string_view>
 
+namespace graphics
+{
+
 class GRAPHICS_API RendererID final
 {
 public:
    RendererID() = default;
    RendererID(const RendererID&) = default;
    RendererID(RendererID&&) = default;
-   RendererID& operator =(const RendererID&) = default;
-   RendererID& operator =(RendererID&&) = default;
+   RendererID& operator=(const RendererID&) = default;
+   RendererID& operator=(RendererID&&) = default;
 
    bool IsValid() const noexcept;
    std::string_view GetName() const noexcept;
-   
+
    GRAPHICS_API friend bool
    operator==(const RendererID& lhs, const RendererID& rhs) noexcept;
 
@@ -45,3 +48,5 @@ private:
 
 GRAPHICS_API RendererID GetRendererIndependentID();
 GRAPHICS_API RendererID RegisterRenderer(std::string_view name);
+
+} // namespace graphics

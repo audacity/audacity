@@ -28,8 +28,8 @@ public:
 private:
    unsigned SequenceNumber() const override;
    std::pair<wxRect, bool>
-   DoGetRectangle(Painter& painter, wxSize size) override;
-   void Draw(OverlayPanel &panel, Painter &painter) override;
+   DoGetRectangle(graphics::Painter& painter, wxSize size) override;
+   void Draw(OverlayPanel& panel, graphics::Painter& painter) override;
 
    AudacityProject *mProject;
    bool mIsMaster;

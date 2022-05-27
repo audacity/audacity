@@ -75,6 +75,9 @@ or ASlider.
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
 
+using namespace graphics;
+using namespace graphics::wx;
+
 class AUDACITY_DLL_API ASliderAx final : public WindowAccessible
 {
 public:

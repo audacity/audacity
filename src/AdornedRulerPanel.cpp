@@ -67,6 +67,9 @@
 using std::min;
 using std::max;
 
+using namespace graphics;
+using namespace graphics::wx;
+
 //#define SCRUB_ABOVE
 
 #define SELECT_TOLERANCE_PIXEL 4

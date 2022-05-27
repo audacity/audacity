@@ -80,7 +80,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
    int screenTotalHeight =
       TrackView::GetTotalHeight( *mTracks ) + rulerScreenHeight;
 
-   auto painter = CreatePainterFromDC(*dc);
+   auto painter = graphics::wx::CreatePainterFromDC(*dc);
    auto paintEvent = painter->Paint();
 
    double scale = height / (double)screenTotalHeight;
@@ -136,7 +136,7 @@ bool AudacityPrintout::OnPrintPage(int WXUNUSED(page))
       }
 
       auto stateMutator = painter->GetStateMutator();
-      stateMutator.SetPen(Colors::Black);
+      stateMutator.SetPen(graphics::Colors::Black);
       AColor::Line(*painter, 0, y, width, y);
 
       y += trackHeight;

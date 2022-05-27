@@ -12,6 +12,9 @@
 
 #include "D2DFont.h"
 
+namespace graphics::d2d
+{
+
 D2DFontCollection::D2DFontCollection(
    const RendererID& rendererId, IDWriteFactory* factory)
     : mRendererId(rendererId)
@@ -29,7 +32,7 @@ std::shared_ptr<D2DFont>
 D2DFontCollection::GetFont(const FontInfo& fontInfo, uint32_t dpi)
 {
    const auto key = std::make_pair(dpi, fontInfo);
-   
+
    auto it = mFontCollection.find(key);
 
    if (it != mFontCollection.end())
@@ -44,3 +47,5 @@ D2DFontCollection::GetFont(const FontInfo& fontInfo, uint32_t dpi)
 
    return font;
 }
+
+} // namespace graphics::d2d

@@ -35,6 +35,9 @@
 #  undef CreateFont
 #endif
 
+namespace graphics::d2d
+{
+
 namespace
 {
 auto rendererId = RegisterRenderer("Direct2DRenderer");
@@ -42,13 +45,14 @@ auto rendererId = RegisterRenderer("Direct2DRenderer");
 class MeasuringPainter : public Painter
 {
 public:
-   MeasuringPainter(D2DRenderer& renderer, uint32_t dpi, const FontInfo& defaultFont)
+   MeasuringPainter(
+      D2DRenderer& renderer, uint32_t dpi, const FontInfo& defaultFont)
        : mRenderer(renderer)
        , mDefaultFont(defaultFont)
        , mDPI(dpi)
    {
    }
-   
+
    RendererID GetRendererID() const override
    {
       return rendererId;
@@ -70,8 +74,7 @@ public:
    }
 
    std::shared_ptr<PainterImage> CreateImage(
-      PainterImageFormat, uint32_t, uint32_t, const void*,
-      const void*) override
+      PainterImageFormat, uint32_t, uint32_t, const void*, const void*) override
    {
       return {};
    }
@@ -83,8 +86,8 @@ public:
       return {};
    }
 
-   std::shared_ptr<PainterImage> CreateDeviceImage(
-      PainterImageFormat, uint32_t, uint32_t) override
+   std::shared_ptr<PainterImage>
+   CreateDeviceImage(PainterImageFormat, uint32_t, uint32_t) override
    {
       return {};
    }
@@ -160,21 +163,17 @@ protected:
    {
    }
 
-   void DoDrawImage(
-      const PainterImage&, const Rect&,
-      const Rect&) override
+   void DoDrawImage(const PainterImage&, const Rect&, const Rect&) override
    {
    }
 
    void DoDrawText(
-      Point, const PainterFont&, Brush,
-      const std::string_view&) override
+      Point, const PainterFont&, Brush, const std::string_view&) override
    {
    }
 
    void DoDrawRotatedText(
-      Point, float, const PainterFont&, Brush,
-      const std::string_view&) override
+      Point, float, const PainterFont&, Brush, const std::string_view&) override
    {
    }
 
@@ -197,7 +196,7 @@ private:
    FontInfo mDefaultFont;
    uint32_t mDPI;
 };
-}
+} // namespace
 
 class D2DRenderer::D2DRendererImpl final
 {
@@ -206,7 +205,8 @@ public:
       D2D1_FACTORY_TYPE factoryType, REFIID riid,
       const D2D1_FACTORY_OPTIONS* pFactoryOptions, ID2D1Factory** ppIFactory);
 
-   using DWriteCreateFactoryFn = HRESULT(STDAPICALLTYPE*)(DWRITE_FACTORY_TYPE factoryType, REFIID iid, IDWriteFactory** factory);
+   using DWriteCreateFactoryFn = HRESULT(STDAPICALLTYPE*)(
+      DWRITE_FACTORY_TYPE factoryType, REFIID iid, IDWriteFactory** factory);
 
    D2DRendererImpl()
    {
@@ -219,7 +219,8 @@ public:
       if (!CreateWICFactory())
          return;
 
-      mFontCollection = std::make_unique<D2DFontCollection>(rendererId, mDWriteFactory.Get());
+      mFontCollection =
+         std::make_unique<D2DFontCollection>(rendererId, mDWriteFactory.Get());
 
       FillStrokeStyles();
    }
@@ -238,11 +239,11 @@ public:
          return false;
 
       D2D1_FACTORY_OPTIONS d2d1FactoryOptions {
-      #ifdef NDEBUG
+#ifdef NDEBUG
          D2D1_DEBUG_LEVEL_NONE,
-      #else
+#else
          D2D1_DEBUG_LEVEL_INFORMATION
-      #endif
+#endif
       };
 
       HRESULT result = d2d1CreateFactory(
@@ -274,7 +275,7 @@ public:
 
    template <typename T>
    bool CreateInstance(REFCLSID clsid, Microsoft::WRL::ComPtr<T>& ptr)
-   {      
+   {
       HRESULT result = CoCreateInstance(
          clsid, nullptr, CLSCTX_INPROC_SERVER, __uuidof(T),
          reinterpret_cast<void**>(ptr.ReleaseAndGetAddressOf()));
@@ -289,7 +290,7 @@ public:
    }
 
    ~D2DRendererImpl()
-   {      
+   {
       if (mWICImagingFactory)
       {
          mWICImagingFactory.Reset();
@@ -304,7 +305,7 @@ public:
       }
 
       if (mDirect2DLibrary != nullptr)
-      {       
+      {
          mStrokeStyles = {};
          mD2D1Factory.Reset();
          FreeLibrary(mDirect2DLibrary);
@@ -322,9 +323,10 @@ public:
       return *mFontCollection;
    }
 
-   template<bool rgba, bool interleavedAlpha>
+   template <bool rgba, bool interleavedAlpha>
    void CopyData(
-      BYTE* outPtr, uint32_t outStride, uint32_t width, uint32_t height, const uint8_t* data, const uint8_t* alphaData)
+      BYTE* outPtr, uint32_t outStride, uint32_t width, uint32_t height,
+      const uint8_t* data, const uint8_t* alphaData)
    {
       for (uint32_t row = 0; row < height; ++row)
       {
@@ -432,19 +434,16 @@ public:
          D2D1_DASH_STYLE_SOLID, D2D1_DASH_STYLE_SOLID, D2D1_DASH_STYLE_DOT,
          D2D1_DASH_STYLE_DASH,  D2D1_DASH_STYLE_DASH,  D2D1_DASH_STYLE_DASH_DOT
       };
-      
+
       for (size_t i = 1; i <= size_t(PenStyle::DotDash); ++i)
       {
-         const D2D1_STROKE_STYLE_PROPERTIES props {
-            D2D1_CAP_STYLE_FLAT,
-            D2D1_CAP_STYLE_FLAT,
-            D2D1_CAP_STYLE_FLAT,
-            D2D1_LINE_JOIN_ROUND,
-            0,
-            dashStyle[i],
-            0.0f
-         };
-
+         const D2D1_STROKE_STYLE_PROPERTIES props { D2D1_CAP_STYLE_FLAT,
+                                                    D2D1_CAP_STYLE_FLAT,
+                                                    D2D1_CAP_STYLE_FLAT,
+                                                    D2D1_LINE_JOIN_ROUND,
+                                                    0,
+                                                    dashStyle[i],
+                                                    0.0f };
 
          mD2D1Factory->CreateStrokeStyle(
             props, nullptr, 0, mStrokeStyles[i].ReleaseAndGetAddressOf());
@@ -490,7 +489,7 @@ bool D2DRenderer::IsAvailable() const noexcept
 
 void D2DRenderer::Shutdown()
 {
-   if (mImpl!= nullptr)
+   if (mImpl != nullptr)
    {
       Publish({});
       mImpl.reset();
@@ -517,11 +516,12 @@ D2DRenderer::CreateHDCPainter(void* dc, const FontInfo& defaultFont)
 
    if (!renderTarget->IsValid())
       return {};
-   
+
    return std::make_unique<D2DPainter>(*this, renderTarget, defaultFont);
 }
 
-std::unique_ptr<Painter> D2DRenderer::CreateMeasuringPainter(const FontInfo& defaultFont)
+std::unique_ptr<Painter>
+D2DRenderer::CreateMeasuringPainter(const FontInfo& defaultFont)
 {
    return std::make_unique<MeasuringPainter>(*this, 96, defaultFont);
 }
@@ -568,3 +568,5 @@ D2DRenderer& SharedD2DRenderer()
    static D2DRenderer renderer;
    return renderer;
 }
+
+} // namespace graphics::d2d

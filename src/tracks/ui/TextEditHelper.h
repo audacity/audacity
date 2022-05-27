@@ -16,12 +16,16 @@
 #include "UIHandle.h"
 #include <wx/colour.h>
 
-class Painter;
 class wxMouseEvent;
 
 class AudacityProject;
 class TextEditDelegate;
 class Track;
+
+namespace graphics
+{
+class Painter;
+}
 
 //Used as a delegate for TextEditHelper
 class TextEditDelegate
@@ -89,7 +93,7 @@ public:
     bool OnDrag(const wxMouseEvent& event, AudacityProject* project);
     bool OnRelease(const wxMouseEvent& event, AudacityProject* project);
 
-    void Draw(Painter& painter, const wxRect& rect);
+    void Draw(graphics::Painter& painter, const wxRect& rect);
 
     bool CutSelectedText(AudacityProject& project);
     bool CopySelectedText(AudacityProject& project);

@@ -13,6 +13,8 @@
 #include <cmath>
 #include <type_traits>
 
+namespace graphics
+{
 namespace details
 {
 template <typename DataType>
@@ -23,10 +25,9 @@ constexpr DataType GetPositiveSizeValue(DataType value) noexcept
    else
       return value >= DataType {} ? value : -value;
 }
-}
+} // namespace details
 
-template <typename DataType>
-struct SizeType final
+template <typename DataType> struct SizeType final
 {
    DataType width {};
    DataType height {};
@@ -164,3 +165,4 @@ SizeType<DataType> operator/(SizeType<DataType> lhs, ScaleType rhs) noexcept
 }
 
 using Size = SizeType<float>;
+} // namespace graphics

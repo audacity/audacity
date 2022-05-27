@@ -80,6 +80,9 @@ wxBrush AColor::spareBrush;
 wxPen AColor::uglyPen;
 wxBrush AColor::uglyBrush;
 
+using namespace graphics;
+using namespace graphics::wx;
+
 namespace
 {
    //Simplified variation of nine patch scale drawing

@@ -15,8 +15,11 @@
 #include "graphics/RendererID.h"
 #include "Observer.h"
 
+namespace graphics
+{
 class Painter;
 class FontInfo;
+} // namespace graphics
 
 namespace graphics::gl
 {

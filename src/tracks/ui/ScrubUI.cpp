@@ -28,6 +28,9 @@
 
 #include <wx/windowptr.h>
 
+using namespace graphics;
+using namespace graphics::wx;
+
 ///////////////////////////////////////////////////////////////////////////////
 // class ScrubbingOverlay is responsible for drawing the speed numbers
 

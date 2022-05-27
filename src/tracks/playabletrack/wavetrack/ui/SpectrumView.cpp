@@ -397,7 +397,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 #endif
    auto stateMutator = painter.GetStateMutator();
 
-   stateMutator.SetPen(Pen::NoPen);
+   stateMutator.SetPen(graphics::Pen::NoPen);
 
    // We draw directly to a bit image in memory,
    // and then paint this directly to our offscreen
@@ -836,10 +836,10 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    dataHistory.pop_back();
    auto converted = painter.CreateImage(
-      PainterImageFormat::RGB888, image.GetWidth(), image.GetHeight(),
+      graphics::PainterImageFormat::RGB888, image.GetWidth(), image.GetHeight(),
       image.GetData());
 
-   painter.DrawImage(*converted, RectFromWXRect(mid));
+   painter.DrawImage(*converted, graphics::wx::RectFromWXRect(mid));
 
    // Draw clip edges, as also in waveform view, which improves the appearance
    // of split views

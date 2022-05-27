@@ -12,17 +12,21 @@
 #define __AUDACITY_TRACK_PANEL_DRAWING_CONTEXT__
 
 #include <memory>
+#include <wx/mousestate.h> // member variable
 
 class UIHandle;
 using UIHandlePtr = std::shared_ptr<UIHandle>;
 class wxDC;
-class Painter;
 
-#include <wx/mousestate.h> // member variable
+namespace graphics
+{
+class Painter;
+}
+
 
 struct TrackPanelDrawingContext {
    wxDC& hdc;
-   Painter& painter;
+   graphics::Painter& painter;
    UIHandlePtr target;
    wxMouseState lastState;
 

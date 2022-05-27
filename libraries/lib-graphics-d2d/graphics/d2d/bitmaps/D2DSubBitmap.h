@@ -12,6 +12,9 @@
 
 #include "graphics/d2d/D2DBitmap.h"
 
+namespace graphics::d2d
+{
+
 class D2DSubBitmap final : public D2DBitmap
 {
 public:
@@ -42,3 +45,4 @@ private:
    std::shared_ptr<D2DBitmap> mParent;
    Rect mRect;
 };
+} // namespace graphics::d2d

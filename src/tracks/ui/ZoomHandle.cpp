@@ -203,8 +203,8 @@ void ZoomHandle::Draw(
       auto &painter = context.painter;
       auto stateMutator = painter.GetStateMutator();
 
-      stateMutator.SetBrush(Brush::NoBrush);
-      stateMutator.SetPen(PenFromWXPen(*wxBLACK_DASHED_PEN));
+      stateMutator.SetBrush(graphics::Brush::NoBrush);
+      stateMutator.SetPen(graphics::wx::PenFromWXPen(*wxBLACK_DASHED_PEN));
       // Make the top and bottom of the dashed rectangle disappear out of
       // bounds, so that you only see vertical dashed lines.
       painter.DrawRect(

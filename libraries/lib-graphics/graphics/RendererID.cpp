@@ -14,6 +14,9 @@
 #include <string>
 #include <deque>
 
+namespace graphics
+{
+
 namespace
 {
 const auto independentId = RegisterRenderer("independent");
@@ -63,3 +66,5 @@ RendererID::RendererID(std::string_view name, size_t id)
     , mID(id)
 {
 }
+
+} // namespace graphics

@@ -35,6 +35,7 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/app.h>
 #include <wx/frame.h>
 
+using namespace graphics;
 ///////////////////////////////////////////////////////////////////////////////
 NoteTrackControls::~NoteTrackControls()
 {

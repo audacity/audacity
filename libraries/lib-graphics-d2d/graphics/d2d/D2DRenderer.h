@@ -19,12 +19,20 @@
 struct ID2D1Factory;
 class ID2D1StrokeStyle;
 
+namespace graphics
+{
 class FontInfo;
+} // namespace graphics
+
+namespace graphics::d2d
+{
 class D2DFontCollection;
 class D2DPathGeometry;
 class D2DTrackedResource;
 
-struct D2DShutdownMessage : Observer::Message {}; 
+struct D2DShutdownMessage : Observer::Message
+{
+};
 
 class GRAPHICS_D2D_API D2DRenderer final :
     public Observer::Publisher<D2DShutdownMessage>
@@ -36,8 +44,10 @@ public:
    bool IsAvailable() const noexcept;
    void Shutdown();
 
-   std::unique_ptr<Painter> CreateHWNDPainter(void* window, const FontInfo& defaultFont);
-   std::unique_ptr<Painter> CreateHDCPainter(void*  dc, const FontInfo& defaultFont);
+   std::unique_ptr<Painter>
+   CreateHWNDPainter(void* window, const FontInfo& defaultFont);
+   std::unique_ptr<Painter>
+   CreateHDCPainter(void* dc, const FontInfo& defaultFont);
    std::unique_ptr<Painter> CreateMeasuringPainter(const FontInfo& defaultFont);
 
    std::shared_ptr<PainterImage> CreateImage(
@@ -55,9 +65,10 @@ public:
    std::shared_ptr<D2DPathGeometry> CreatePathGeometry();
 
 private:
-   
    class D2DRendererImpl;
    std::unique_ptr<D2DRendererImpl> mImpl;
 };
 
 GRAPHICS_D2D_API D2DRenderer& SharedD2DRenderer();
+
+} // namespace graphics::d2d

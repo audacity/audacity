@@ -15,8 +15,10 @@
 
 #include <algorithm>
 
-template <typename DataType>
-struct RectType final
+namespace graphics
+{
+
+template <typename DataType> struct RectType final
 {
    PointType<DataType> origin;
    SizeType<DataType> size;
@@ -34,7 +36,7 @@ struct RectType final
    }
 };
 
-template<typename DataType>
+template <typename DataType>
 RectType<DataType>
 Intersect(RectType<DataType> firstRect, RectType<DataType> secondRect) noexcept
 {
@@ -43,10 +45,13 @@ Intersect(RectType<DataType> firstRect, RectType<DataType> secondRect) noexcept
 
    const PointType<DataType> p11 = firstRect.origin;
    const PointType<DataType> p12 = { firstRect.origin.x + firstRect.size.width,
-                                    firstRect.origin.y + firstRect.size.height };
+                                     firstRect.origin.y +
+                                        firstRect.size.height };
    const PointType<DataType> p21 = secondRect.origin;
-   const PointType<DataType> p22 = { secondRect.origin.x + secondRect.size.width,
-                                     secondRect.origin.y + secondRect.size.height };
+   const PointType<DataType> p22 = {
+      secondRect.origin.x + secondRect.size.width,
+      secondRect.origin.y + secondRect.size.height
+   };
 
    if (p12.x < p21.x || p11.x > p22.x || p11.y > p22.y || p12.y < p21.y)
       return {};
@@ -61,7 +66,8 @@ Intersect(RectType<DataType> firstRect, RectType<DataType> secondRect) noexcept
 }
 
 template <typename DataType>
-bool operator==(const RectType<DataType> lhs, const RectType<DataType> rhs) noexcept
+bool operator==(
+   const RectType<DataType> lhs, const RectType<DataType> rhs) noexcept
 {
    return lhs.origin == rhs.origin && lhs.size == rhs.size;
 }
@@ -79,5 +85,6 @@ RectType<To> rect_cast(RectType<From> rect)
    return { point_cast<To>(rect.origin), size_cast<To>(rect.size) };
 }
 
-
 using Rect = RectType<float>;
+
+} // namespace graphics

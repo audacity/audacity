@@ -40,7 +40,7 @@ void OverlayPanel::ClearOverlays()
    mOverlays.clear();
 }
 
-void OverlayPanel::DrawOverlays(bool repaint_all, Painter &painter)
+void OverlayPanel::DrawOverlays(bool repaint_all, graphics::Painter& painter)
 {
    if ( !IsShownOnScreen() )
       return;

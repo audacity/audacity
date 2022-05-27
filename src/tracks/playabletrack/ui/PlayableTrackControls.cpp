@@ -30,6 +30,9 @@ Paul Licameli split from TrackInfo.cpp
 
 using TCPLine = TrackInfo::TCPLine;
 
+using namespace graphics;
+using namespace graphics::wx;
+
 namespace {
 
 void GetNarrowMuteHorizontalBounds( const wxRect & rect, wxRect &dest )

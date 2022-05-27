@@ -15,6 +15,8 @@
 #include "graphics/Rect.h"
 #include "graphics/Transform.h"
 
+using namespace graphics;
+
 TEST_CASE("PointTest")
 {
    const Point zero;

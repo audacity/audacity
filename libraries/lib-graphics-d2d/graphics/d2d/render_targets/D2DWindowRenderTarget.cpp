@@ -12,8 +12,10 @@
 
 #include "graphics/d2d/D2DRenderer.h"
 
-D2DWindowRenderTarget::D2DWindowRenderTarget(
-   D2DRenderer& renderer, HWND hwnd)
+namespace graphics::d2d
+{
+   
+D2DWindowRenderTarget::D2DWindowRenderTarget(D2DRenderer& renderer, HWND hwnd)
     : D2DRenderTarget(renderer)
     , mRenderer(renderer)
     , mHWND(hwnd)
@@ -25,7 +27,7 @@ void D2DWindowRenderTarget::BeginDraw()
 {
    if (!mHWNDRenderTarget)
       return;
-   
+
    const auto size = GetD2DSize();
 
    if (size.width != mCurrentSize.width || size.height != mCurrentSize.height)
@@ -77,3 +79,5 @@ void D2DWindowRenderTarget::CreateRenderTarget()
    if (result == S_OK)
       mRenderTarget = mHWNDRenderTarget;
 }
+
+} // namespace graphics::d2d

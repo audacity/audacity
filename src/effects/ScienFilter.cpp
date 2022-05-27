@@ -67,6 +67,9 @@ a graph for EffectScienFilter.
 #include "graphics/WXPainterFactory.h"
 #include "graphics/WXColor.h"
 
+using namespace graphics;
+using namespace graphics::wx;
+
 #if !defined(M_PI)
 #define PI = 3.1415926535897932384626433832795
 #else

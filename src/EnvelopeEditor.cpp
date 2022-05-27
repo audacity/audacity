@@ -26,6 +26,9 @@
 #include "graphics/Painter.h"
 #include "graphics/WXPainterUtils.h"
 
+using namespace graphics;
+using namespace graphics::wx;
+
 namespace {
 void DrawPoint(Painter& painter, const wxRect& r, int x, int y, bool top)
 {

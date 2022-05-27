@@ -12,6 +12,8 @@
 #include "D2DRenderTarget.h"
 #include "CodeConversions.h"
 
+namespace graphics::d2d
+{
 namespace
 {
 DWRITE_FONT_WEIGHT GetDWriteFontWeight(const FontInfo& info) noexcept
@@ -62,7 +64,7 @@ DWRITE_FONT_STRETCH GetDWriteFontStretch(const FontInfo& info) noexcept
       return DWRITE_FONT_STRETCH_NORMAL;
    }
 }
-}
+} // namespace
 
 D2DFont::D2DFont(
    const RendererID& rendererId, IDWriteFactory* factory, uint32_t dpi,
@@ -73,13 +75,13 @@ D2DFont::D2DFont(
     , mLayoutCache([this](const std::string& str) { return CreateLayout(str); })
 {
    LCID lcid = GetThreadLocale();
-   
+
    wchar_t localName[LOCALE_NAME_MAX_LENGTH];
    if (LCIDToLocaleName(lcid, localName, LOCALE_NAME_MAX_LENGTH, 0) == 0)
       return;
 
    const std::wstring faceName = audacity::ToWString(fontInfo.GetFaceName());
-   
+
    HRESULT result = mDWriteFactory->CreateTextFormat(
       faceName.c_str(), nullptr, GetDWriteFontWeight(fontInfo),
       GetDWriteFontStyle(fontInfo), GetDWriteFontStretch(fontInfo),
@@ -111,14 +113,14 @@ Size D2DFont::GetTextSize(const std::string_view& text) const
 {
    if (text.empty())
       return { 0, mMetrics.LineHeight };
-   
+
    auto layout = mLayoutCache.Get(text);
 
    if (!layout)
       return {};
 
    DWRITE_TEXT_METRICS metrics;
-   
+
    if (S_OK != layout->GetMetrics(&metrics))
       return {};
 
@@ -138,14 +140,14 @@ void D2DFont::Draw(
 
    if (!layout)
       return;
-   
+
    if (backgroundBrush.GetStyle() != BrushStyle::None)
    {
       DWRITE_TEXT_METRICS metrics;
 
       if (S_OK != layout->GetMetrics(&metrics))
          return;
-      
+
       auto textBrush = renderTarget.GetCurrentBrush();
       renderTarget.SetCurrentBrush(backgroundBrush);
       renderTarget.DrawRect(Rect { Point { metrics.left, metrics.top },
@@ -170,8 +172,8 @@ void D2DFont::UpdateFontMetrics()
 
    ComPtr<IDWriteFontCollection> fontCollection;
 
-   HRESULT result = mTextFormat->GetFontCollection(
-      fontCollection.GetAddressOf());
+   HRESULT result =
+      mTextFormat->GetFontCollection(fontCollection.GetAddressOf());
 
    if (result != S_OK)
    {
@@ -227,7 +229,7 @@ void D2DFont::UpdateFontMetrics()
    DWRITE_FONT_METRICS metrics;
 
    font->GetMetrics(&metrics);
-   
+
    const float Ratio =
       mTextFormat->GetFontSize() / static_cast<float>(metrics.designUnitsPerEm);
 
@@ -238,8 +240,7 @@ void D2DFont::UpdateFontMetrics()
 
    Microsoft::WRL::ComPtr<IDWriteTextLayout> emptyString;
    result = mDWriteFactory->CreateTextLayout(
-      L"", 0, mTextFormat.Get(), FLT_MAX, FLT_MAX,
-                         emptyString.GetAddressOf());
+      L"", 0, mTextFormat.Get(), FLT_MAX, FLT_MAX, emptyString.GetAddressOf());
 
    if (result != S_OK)
       return;
@@ -255,9 +256,9 @@ void D2DFont::UpdateFontMetrics()
 
 Microsoft::WRL::ComPtr<IDWriteTextLayout>
 D2DFont::CreateLayout(const std::string& text) const
-{   
+{
    std::wstring wtext = audacity::ToWString(text);
-   
+
    Microsoft::WRL::ComPtr<IDWriteTextLayout> layout;
    auto result = mDWriteFactory->CreateTextLayout(
       wtext.data(), wtext.length(), mTextFormat.Get(), FLT_MAX, FLT_MAX,
@@ -276,3 +277,4 @@ D2DFont::CreateLayout(const std::string& text) const
 
    return layout;
 }
+} // namespace graphics::d2d

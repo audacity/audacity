@@ -27,6 +27,9 @@ Paul Licameli split from TrackPanel.cpp
 #include "graphics/Painter.h"
 #include "graphics/WXPainterUtils.h"
 
+using namespace graphics;
+using namespace graphics::wx;
+
 TrackPanelResizerCell::TrackPanelResizerCell(
    const std::shared_ptr<Track> &pTrack )
    : CommonTrackCell{ pTrack }

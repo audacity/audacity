@@ -14,16 +14,23 @@
 #include <cstdint>
 #include <optional>
 
+namespace graphics
+{
+
 struct GRAPHICS_API Color final
 {
 public:
-   constexpr Color() noexcept : mABGR(0) {}
+   constexpr Color() noexcept
+       : mABGR(0)
+   {
+   }
    constexpr Color(const Color&) noexcept = default;
    constexpr Color(Color&&) noexcept = default;
    Color& operator=(const Color&) noexcept = default;
    Color& operator=(Color&&) noexcept = default;
 
-   constexpr Color(uint8_t rr, uint8_t gg, uint8_t bb, uint8_t aa = 255) noexcept
+   constexpr Color(
+      uint8_t rr, uint8_t gg, uint8_t bb, uint8_t aa = 255) noexcept
        : mRed(rr)
        , mGreen(gg)
        , mBlue(bb)
@@ -36,7 +43,8 @@ public:
       return Color(argb);
    }
 
-   static constexpr Color FromFloatRGBA(float r, float g, float b, float a) noexcept
+   static constexpr Color
+   FromFloatRGBA(float r, float g, float b, float a) noexcept
    {
       return Color(
          Color::Scale(255, r), Color::Scale(255, g), Color::Scale(255, b),
@@ -85,8 +93,8 @@ public:
 
    constexpr uint32_t GetRGBA() const noexcept
    {
-      return (uint32_t(mRed) << 24) + (uint32_t(mGreen) << 16) + (uint32_t(mBlue) << 8) +
-             (uint32_t(mAlpha));
+      return (uint32_t(mRed) << 24) + (uint32_t(mGreen) << 16) +
+             (uint32_t(mBlue) << 8) + (uint32_t(mAlpha));
    }
 
    constexpr uint32_t GetABGR() const noexcept
@@ -96,28 +104,29 @@ public:
 
    constexpr uint32_t GetRGB() const noexcept
    {
-      return (uint32_t(mRed) << 16) + (uint32_t(mGreen) << 8) + (uint32_t(mBlue));
+      return (uint32_t(mRed) << 16) + (uint32_t(mGreen) << 8) +
+             (uint32_t(mBlue));
    }
 
    friend constexpr Color operator+(Color lhs, Color rhs) noexcept
    {
       return Color(
-         Add(lhs.mRed, rhs.mRed), Add(lhs.mGreen, rhs.mGreen), Add(lhs.mBlue, rhs.mBlue),
-         Add(lhs.mAlpha, rhs.mAlpha));
+         Add(lhs.mRed, rhs.mRed), Add(lhs.mGreen, rhs.mGreen),
+         Add(lhs.mBlue, rhs.mBlue), Add(lhs.mAlpha, rhs.mAlpha));
    }
 
    friend constexpr Color operator-(Color lhs, Color rhs) noexcept
    {
       return Color(
-         Sub(lhs.mRed, rhs.mRed), Sub(lhs.mGreen, rhs.mGreen), Sub(lhs.mBlue, rhs.mBlue),
-         Sub(lhs.mAlpha, rhs.mAlpha));
+         Sub(lhs.mRed, rhs.mRed), Sub(lhs.mGreen, rhs.mGreen),
+         Sub(lhs.mBlue, rhs.mBlue), Sub(lhs.mAlpha, rhs.mAlpha));
    }
 
    friend constexpr Color operator*(Color lhs, Color rhs) noexcept
    {
       return Color(
-         Mul(lhs.mRed, rhs.mRed), Mul(lhs.mGreen, rhs.mGreen), Mul(lhs.mBlue, rhs.mBlue),
-         Mul(lhs.mAlpha, rhs.mAlpha));
+         Mul(lhs.mRed, rhs.mRed), Mul(lhs.mGreen, rhs.mGreen),
+         Mul(lhs.mBlue, rhs.mBlue), Mul(lhs.mAlpha, rhs.mAlpha));
    }
 
    template <typename ScaleType>
@@ -146,6 +155,7 @@ public:
    {
       return mABGR != rhs.mABGR;
    }
+
 private:
    static constexpr uint8_t Add(uint8_t a, uint8_t b) noexcept
    {
@@ -174,7 +184,8 @@ private:
 
       const auto lerpValue = (a + (b - a) * t);
 
-      const auto roundLerpValue = static_cast<int16_t>(lerpValue + ScaleType(0.5));
+      const auto roundLerpValue =
+         static_cast<int16_t>(lerpValue + ScaleType(0.5));
 
       const auto ui8LerpValue =
          static_cast<uint8_t>(std::max<decltype(roundLerpValue)>(
@@ -198,12 +209,13 @@ private:
    };
 };
 
-
 template <typename ScaleType>
 constexpr Color lerp(Color lhs, Color rhs, ScaleType t)
 {
-   return { Color::Lerp(lhs.mRed, rhs.mRed, t), Color::Lerp(lhs.mGreen, rhs.mGreen, t),
-            Color::Lerp(lhs.mBlue, rhs.mBlue, t), Color::Lerp(lhs.mAlpha, rhs.mAlpha, t) };
+   return { Color::Lerp(lhs.mRed, rhs.mRed, t),
+            Color::Lerp(lhs.mGreen, rhs.mGreen, t),
+            Color::Lerp(lhs.mBlue, rhs.mBlue, t),
+            Color::Lerp(lhs.mAlpha, rhs.mAlpha, t) };
 }
 
 GRAPHICS_API constexpr Color ColorFromRGA(uint32_t rgba) noexcept
@@ -246,4 +258,6 @@ constexpr Color Transparent = ColorFromABGR(0x00000000);
 constexpr Color Red = ColorFromABGR(0xFF0000FF);
 constexpr Color Green = ColorFromABGR(0xFF00FF00);
 constexpr Color Blue = ColorFromABGR(0xFFFF0000);
-}
+} // namespace Colors
+
+} // namespace graphics

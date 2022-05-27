@@ -32,7 +32,7 @@ WavePaintParameters::SetDBParameters(double dbRange, bool dbScale) noexcept
 }
 
 WavePaintParameters&
-WavePaintParameters::SetBlankColor(Color color) noexcept
+WavePaintParameters::SetBlankColor(graphics::Color color) noexcept
 {
    BlankColor = color;
 
@@ -40,28 +40,28 @@ WavePaintParameters::SetBlankColor(Color color) noexcept
 }
 
 WavePaintParameters& WavePaintParameters::SetBackgroundColors(
-   Color normal, Color selected) noexcept
+   graphics::Color normal, graphics::Color selected) noexcept
 {
    BackgroundColors = { normal, selected };
    return *this;
 }
 
-WavePaintParameters&
-WavePaintParameters::SetSampleColors(Color normal, Color selected) noexcept
+WavePaintParameters& WavePaintParameters::SetSampleColors(
+   graphics::Color normal, graphics::Color selected) noexcept
 {
    SampleColors = { normal, selected };
    return *this;
 }
 
-WavePaintParameters&
-WavePaintParameters::SetRMSColors(Color normal, Color selected) noexcept
+WavePaintParameters& WavePaintParameters::SetRMSColors(
+   graphics::Color normal, graphics::Color selected) noexcept
 {
    RMSColors = { normal, selected };
    return *this;
 }
 
 WavePaintParameters& WavePaintParameters::SetClippingColors(
-   Color normal, Color selected) noexcept
+   graphics::Color normal, graphics::Color selected) noexcept
 {
    ClippingColors = { normal, selected };
    return *this;

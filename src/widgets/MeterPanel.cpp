@@ -86,6 +86,9 @@
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
 
+using namespace graphics;
+using namespace graphics::wx;
+
 class MeterAx final : public WindowAccessible
 {
 public:

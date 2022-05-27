@@ -42,8 +42,12 @@ class wxBitmap;
 class wxColour;
 class wxImage;
 class wxPen;
+
+namespace graphics
+{
 class Painter;
 class PainterImage;
+} // namespace graphics
 
 class ChoiceSetting;
 
@@ -182,8 +186,8 @@ public:
    wxImage  & Image( int iIndex );
    wxSize ImageSize( int iIndex );
 
-   std::shared_ptr<PainterImage>
-   GetPainterImage(Painter& painter, int index, int x = 0, int y = 0, int w = 0, int h = 0);
+   std::shared_ptr<graphics::PainterImage>
+   GetPainterImage(graphics::Painter& painter, int index, int x = 0, int y = 0, int w = 0, int h = 0);
 
    void ReleasePainterImages();
 

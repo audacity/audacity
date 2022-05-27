@@ -248,10 +248,11 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
             auto stateMutator = painter.GetStateMutator();
             auto clipStateMutator = painter.GetClipStateMutator();
 
-            clipStateMutator.SetClipRect(RectFromWXRect(rect), false);
+            clipStateMutator.SetClipRect(graphics::wx::RectFromWXRect(rect), false);
 
             //context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
-            stateMutator.SetFont(FontFromWXFont(painter, mClipNameFont));
+            stateMutator.SetFont(
+               graphics::wx::FontFromWXFont(painter, mClipNameFont));
 
             auto px = context.lastState.m_x;
             auto py = context.lastState.m_y;

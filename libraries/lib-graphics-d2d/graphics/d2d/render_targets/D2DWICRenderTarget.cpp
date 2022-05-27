@@ -11,6 +11,9 @@
 #include "D2DWICRenderTarget.h"
 #include "../bitmaps/D2DWICBitmap.h"
 
+namespace graphics::d2d
+{
+
 D2DWICRenderTarget::D2DWICRenderTarget(D2DWICBitmap& bitmap)
     : D2DRenderTarget(bitmap.GetRenderer())
     , D2DRenderTargetResource(bitmap.GetRenderer())
@@ -62,3 +65,5 @@ void D2DWICRenderTarget::DoReleaseResource(D2DRenderTarget& target)
 void D2DWICRenderTarget::CleanupDirect2DResources()
 {
 }
+
+} // namespace graphics::d2d

@@ -14,6 +14,9 @@
 
 #include "Color.h"
 
+namespace graphics
+{
+
 enum class PenStyle
 {
    None,
@@ -59,3 +62,5 @@ private:
    Color mColor { Colors::Black };
    uint32_t mWidth { 1 };
 };
+
+} // namespace graphics

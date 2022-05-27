@@ -18,6 +18,9 @@
 
 #include <map>
 
+namespace graphics::d2d
+{
+
 class D2DWICBitmap;
 
 class D2DWICRenderTarget final :
@@ -31,7 +34,7 @@ public:
 
    virtual void HandlePostDrawAction(bool successful) override;
 
-private: 
+private:
    bool DoAcquireResource(D2DRenderTarget& target) override;
    void DoReleaseResource(D2DRenderTarget& target) override;
 
@@ -39,3 +42,5 @@ private:
 
    D2DWICBitmap& mOwner;
 };
+
+} // namespace graphics::d2d

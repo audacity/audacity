@@ -29,6 +29,9 @@
 #include <wx/app.h>
 #include <wx/dc.h>
 
+using namespace graphics;
+using namespace graphics::wx;
+
 static constexpr int ClipSelectionStrokeSize{ 1 };//px
 
 namespace

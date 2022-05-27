@@ -24,9 +24,14 @@ class wxGraphicsPath;
 class wxPoint2DDouble;
 class wxFont;
 
+namespace graphics::wx
+{
+
 GRAPHICS_WX_API RendererID WXGraphicsContextPainterRendererID();
 
-struct WXGraphicsRendererShutdownMessage : Observer::Message {};
+struct WXGraphicsRendererShutdownMessage : Observer::Message
+{
+};
 
 struct GRAPHICS_WX_API WXGraphicsRendererShutdownPublisher :
     Observer::Publisher<WXGraphicsRendererShutdownMessage>
@@ -41,7 +46,8 @@ class GRAPHICS_WX_API WXGraphicsContextPainter final : public Painter
 {
 public:
    WXGraphicsContextPainter(
-      wxGraphicsRenderer* renderer, wxWindow* window, const wxFont& defaultFont);
+      wxGraphicsRenderer* renderer, wxWindow* window,
+      const wxFont& defaultFont);
    WXGraphicsContextPainter(
       wxGraphicsRenderer* renderer, wxDC* dc, const wxFont& defaultFont);
    WXGraphicsContextPainter(
@@ -51,17 +57,17 @@ public:
 
    WXGraphicsContextPainter(const WXGraphicsContextPainter&) = delete;
    WXGraphicsContextPainter(WXGraphicsContextPainter&&) = delete;
-   WXGraphicsContextPainter& operator =(const WXGraphicsContextPainter&) = delete;
-   WXGraphicsContextPainter& operator =(WXGraphicsContextPainter&&) = delete;
+   WXGraphicsContextPainter&
+   operator=(const WXGraphicsContextPainter&) = delete;
+   WXGraphicsContextPainter& operator=(WXGraphicsContextPainter&&) = delete;
 
-   Size GetSize() const override;   
+   Size GetSize() const override;
 
    RendererID GetRendererID() const override;
 
    std::shared_ptr<PainterFont> CreateFont(const FontInfo& fontInfo) override;
 
-   std::shared_ptr<PainterFont>
-   CreateFontFromWX(const wxFont& font);
+   std::shared_ptr<PainterFont> CreateFontFromWX(const wxFont& font);
 
    std::shared_ptr<PainterImage> CreateImage(
       PainterImageFormat format, uint32_t width, uint32_t height,
@@ -137,6 +143,7 @@ private:
 
    void DrawPath(const PainterPath& path) override;
 
-   
    std::unique_ptr<wxGraphicsPath> mCachedPath;
 };
+
+} // namespace graphics::wx

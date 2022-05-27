@@ -21,6 +21,9 @@
 #include "Transform.h"
 #include "RendererID.h"
 
+namespace graphics
+{
+
 class Painter;
 class FontInfo;
 
@@ -49,6 +52,7 @@ public:
    virtual ~PainterObject() = default;
 
    RendererID GetRendererID() const noexcept;
+
 protected:
    explicit PainterObject(const Painter& painter);
    explicit PainterObject(const RendererID& rendererId);
@@ -74,6 +78,7 @@ public:
    virtual Metrics GetFontMetrics() const = 0;
 
    virtual Size GetTextSize(const std::string_view& text) const = 0;
+
 protected:
    PainterFont(Painter& painter);
    PainterFont(const RendererID& rendererId);
@@ -190,7 +195,7 @@ public:
 protected:
    explicit PainterPath(const Painter& painter);
    explicit PainterPath(const RendererID& painter);
-   
+
    virtual void DoLineTo(Point pt) = 0;
    virtual void DoMoveTo(Point pt) = 0;
    virtual void DoAddRect(const Rect& rect) = 0;
@@ -272,14 +277,21 @@ public:
       TopToBottom,
       BottomToTop
    };
-   
-   void DrawLinearGradientRect(const Rect& rect, Color from, Color to, LinearGradientDirection direction);
-   void DrawLinearGradientRect(Point topLeft, Size size, Color from, Color to, LinearGradientDirection direction);
-   void DrawLinearGradientRect(float left, float top, float width, float height, Color from, Color to, LinearGradientDirection direction);
+
+   void DrawLinearGradientRect(
+      const Rect& rect, Color from, Color to,
+      LinearGradientDirection direction);
+   void DrawLinearGradientRect(
+      Point topLeft, Size size, Color from, Color to,
+      LinearGradientDirection direction);
+   void DrawLinearGradientRect(
+      float left, float top, float width, float height, Color from, Color to,
+      LinearGradientDirection direction);
 
    void DrawRoundedRect(const Rect& rect, float radius);
    void DrawRoundedRect(Point topLeft, Size size, float radius);
-   void DrawRoundedRect(float left, float top, float width, float height, float radius);
+   void DrawRoundedRect(
+      float left, float top, float width, float height, float radius);
 
    void DrawEllipse(const Rect& rect);
    void DrawEllipse(Point topLeft, Size size);
@@ -288,7 +300,8 @@ public:
    void DrawCircle(Point center, float radius);
    void DrawCircle(float cx, float cy, float radius);
 
-   virtual std::shared_ptr<PainterFont> CreateFont(const FontInfo& fontInfo) = 0;
+   virtual std::shared_ptr<PainterFont>
+   CreateFont(const FontInfo& fontInfo) = 0;
    virtual std::shared_ptr<PainterFont> GetDefaultFont() const = 0;
 
    void DrawText(
@@ -297,11 +310,9 @@ public:
    void DrawText(
       float x, float y, const PainterFont& font, const std::string_view& text);
 
-   void DrawText(
-      Point origin, const std::string_view& text);
+   void DrawText(Point origin, const std::string_view& text);
 
-   void DrawText(
-      float x, float y, const std::string_view& text);
+   void DrawText(float x, float y, const std::string_view& text);
 
    void DrawText(
       Rect rect, const PainterFont& font, const std::string_view& text,
@@ -348,46 +359,72 @@ public:
          PainterVerticalAlignment::Top);
 
    void DrawRotatedText(
-      Point origin, float angle, const PainterFont& font, const std::string_view& text);
+      Point origin, float angle, const PainterFont& font,
+      const std::string_view& text);
 
    void DrawRotatedText(
-      float x, float y, float angle, const PainterFont& font, const std::string_view& text);
+      float x, float y, float angle, const PainterFont& font,
+      const std::string_view& text);
 
-   void DrawRotatedText(Point origin, float angle, const std::string_view& text);
-   
-   void DrawRotatedText(float x, float y, float angle, const std::string_view& text);
+   void
+   DrawRotatedText(Point origin, float angle, const std::string_view& text);
 
-   Size GetTextSize(const PainterFont& font, const std::string_view& text) const;
+   void
+   DrawRotatedText(float x, float y, float angle, const std::string_view& text);
+
+   Size
+   GetTextSize(const PainterFont& font, const std::string_view& text) const;
 
    Size GetTextSize(const std::string_view& text) const;
 
    virtual std::shared_ptr<PainterPath> CreatePath() = 0;
    virtual void DrawPath(const PainterPath& path) = 0;
 
-   virtual std::shared_ptr<PainterImage> CreateImage(PainterImageFormat format, uint32_t width, uint32_t height, const void* data = nullptr, const void* alphaData = nullptr) = 0;
-   virtual std::shared_ptr<PainterImage> GetSubImage(const std::shared_ptr<PainterImage>& image, uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
-   virtual std::shared_ptr<PainterImage> CreateDeviceImage(PainterImageFormat format, uint32_t width, uint32_t height) = 0;
+   virtual std::shared_ptr<PainterImage> CreateImage(
+      PainterImageFormat format, uint32_t width, uint32_t height,
+      const void* data = nullptr, const void* alphaData = nullptr) = 0;
+   virtual std::shared_ptr<PainterImage> GetSubImage(
+      const std::shared_ptr<PainterImage>& image, uint32_t x, uint32_t y,
+      uint32_t width, uint32_t height) = 0;
+   virtual std::shared_ptr<PainterImage> CreateDeviceImage(
+      PainterImageFormat format, uint32_t width, uint32_t height) = 0;
 
    void DrawImage(const PainterImage& image, const Rect& rect);
    void DrawImage(const PainterImage& image, Point topLeft, Size size);
-   void DrawImage(const PainterImage& image, float left, float top, float width, float height);
+   void DrawImage(
+      const PainterImage& image, float left, float top, float width,
+      float height);
    void DrawImage(const PainterImage& image, Point topLeft);
    void DrawImage(const PainterImage& image, float left, float top);
 
-   void DrawImage(const PainterImage& image, const Rect& destRect, const Rect& sourceRect);
-   void DrawImage(const PainterImage& image, Point destTopLeft, Size destSize, Point sourceTopLeft, Size sourceSize);
-   void DrawImage(const PainterImage& image, float destLeft, float destTop, float destWidth, float destHeight, float sourceLeft, float sourceTop, float sourceWidth, float sourceHeight);
+   void DrawImage(
+      const PainterImage& image, const Rect& destRect, const Rect& sourceRect);
+   void DrawImage(
+      const PainterImage& image, Point destTopLeft, Size destSize,
+      Point sourceTopLeft, Size sourceSize);
+   void DrawImage(
+      const PainterImage& image, float destLeft, float destTop, float destWidth,
+      float destHeight, float sourceLeft, float sourceTop, float sourceWidth,
+      float sourceHeight);
 
-   void DrawImage(const PainterImage& image, const Rect& destRect, Point sourceTopLeft);
-   void DrawImage(const PainterImage& image, Point destTopLeft, Point sourceTopLeft);
-   void DrawImage(const PainterImage& image, Point destTopLeft, Size destSize, Point sourceTopLeft);
-   void DrawImage(const PainterImage& image, float destLeft, float destTop, float destWidth, float destHeight, float sourceLeft, float sourceTop);
+   void DrawImage(
+      const PainterImage& image, const Rect& destRect, Point sourceTopLeft);
+   void
+   DrawImage(const PainterImage& image, Point destTopLeft, Point sourceTopLeft);
+   void DrawImage(
+      const PainterImage& image, Point destTopLeft, Size destSize,
+      Point sourceTopLeft);
+   void DrawImage(
+      const PainterImage& image, float destLeft, float destTop, float destWidth,
+      float destHeight, float sourceLeft, float sourceTop);
 
    void Clear(Color color = Colors::Transparent);
-   void Clear(float x, float y, float width, float height, Color color = Colors::Transparent);
+   void Clear(
+      float x, float y, float width, float height,
+      Color color = Colors::Transparent);
    void Clear(Point origin, Size size, Color color = Colors::Transparent);
    void Clear(const Rect& rect, Color color = Colors::Transparent);
-   
+
    virtual void Flush() = 0;
 
    PaintEventHolder Paint();
@@ -411,7 +448,9 @@ protected:
    virtual void DoDrawRoundedRect(const Rect& rect, float radius) = 0;
    virtual void DoDrawEllipse(const Rect& rect) = 0;
 
-   virtual void DoDrawImage(const PainterImage& image, const Rect& destRect, const Rect& imageRect) = 0;
+   virtual void DoDrawImage(
+      const PainterImage& image, const Rect& destRect,
+      const Rect& imageRect) = 0;
 
    virtual void DoDrawText(
       Point origin, const PainterFont& font, Brush backgroundBrush,
@@ -421,16 +460,19 @@ protected:
       Point origin, float angle, const PainterFont& font, Brush backgroundBrush,
       const std::string_view& text) = 0;
 
-   virtual Size DoGetTextSize(const PainterFont& font, const std::string_view& text) const = 0;
+   virtual Size DoGetTextSize(
+      const PainterFont& font, const std::string_view& text) const = 0;
 
    virtual void PushPaintTarget(const std::shared_ptr<PainterImage>& image) = 0;
    virtual void PopPaintTarget(const std::shared_ptr<PainterImage>& image) = 0;
 
-   virtual void DoDrawLinearGradientRect(const Rect& rect, Color from, Color to, LinearGradientDirection direction);
+   virtual void DoDrawLinearGradientRect(
+      const Rect& rect, Color from, Color to,
+      LinearGradientDirection direction);
 
 private:
    Rect GetImageRect(const PainterImage& image) const;
-   
+
    struct PainterState final
    {
       Pen pen { Pen::NoPen };
@@ -450,3 +492,4 @@ private:
    friend class PainterOffscreenHolder;
    friend class PaintEventHolder;
 };
+} // namespace graphics

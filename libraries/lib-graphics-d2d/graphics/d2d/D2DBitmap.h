@@ -15,6 +15,9 @@
 #include "graphics/Painter.h"
 #include "D2DRenderTargetResource.h"
 
+namespace graphics::d2d
+{
+
 class D2DRenderTarget;
 class D2DRenderer;
 
@@ -26,8 +29,12 @@ public:
    explicit D2DBitmap(D2DRenderer& renderer);
 
    virtual void DrawBitmap(
-      D2DRenderTarget& target, const Rect& targetRect, const Rect& sourceRect) = 0;
+      D2DRenderTarget& target, const Rect& targetRect,
+      const Rect& sourceRect) = 0;
 
-   virtual std::shared_ptr<D2DRenderTarget> GetRenderTarget(D2DRenderTarget& parentRenderTarget) = 0;
+   virtual std::shared_ptr<D2DRenderTarget>
+   GetRenderTarget(D2DRenderTarget& parentRenderTarget) = 0;
    virtual void DrawFinished(D2DRenderTarget& renderTarget) = 0;
 };
+
+} // namespace graphics::d2d

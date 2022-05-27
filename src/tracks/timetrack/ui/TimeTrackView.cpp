@@ -110,7 +110,7 @@ void DrawHorzRulerAndCurve
     0, 0, envValues.get(), mid.width, 0, zoomInfo );
    
    wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
-   stateMutator.SetPen(PenFromWXPen(pen));
+   stateMutator.SetPen(graphics::wx::PenFromWXPen(pen));
    
    auto rangeLower = track.GetRangeLower(), rangeUpper = track.GetRangeUpper();
    double logLower = log(std::max(1.0e-7, rangeLower)),

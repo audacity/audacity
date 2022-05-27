@@ -77,6 +77,9 @@ array of Ruler::Label.
 using std::min;
 using std::max;
 
+using namespace graphics;
+using namespace graphics::wx;
+
 //wxColour Ruler::mTickColour{ 153, 153, 153 };
 
 //

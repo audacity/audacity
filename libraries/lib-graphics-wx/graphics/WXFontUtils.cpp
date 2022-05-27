@@ -12,9 +12,11 @@
 #include "WXGraphicsContextPainter.h"
 #include "CodeConversions.h"
 
-class Painter;
+namespace graphics::wx
+{
 
-std::shared_ptr<PainterFont> FontFromWXFont(Painter& painter, const wxFont& font)
+std::shared_ptr<PainterFont>
+FontFromWXFont(Painter& painter, const wxFont& font)
 {
    if (painter.GetRendererID() == WXGraphicsContextPainterRendererID())
    {
@@ -45,7 +47,9 @@ FontStyle GetFontStyle(const wxFont& font)
 
 FontInfo FontInfoFromWXFont(const wxFont& font)
 {
-   return FontInfo(audacity::ToUTF8(font.GetFaceName()), font.GetFractionalPointSize())
+   return FontInfo(
+             audacity::ToUTF8(font.GetFaceName()),
+             font.GetFractionalPointSize())
       .SetFontWeight(FontWeight(font.GetWeight()))
       .SetFontStyle(GetFontStyle(font))
       .SetUnderlined(font.GetUnderlined())
@@ -62,3 +66,4 @@ wxFont wxFontFromFontInfo(const FontInfo& fontInfo)
                     .Underlined(fontInfo.GetUnderlined())
                     .Strikethrough(fontInfo.GetStrikethrough()));
 }
+} // namespace graphics::wx

@@ -13,6 +13,9 @@
 
 #include "graphics/d2d/D2DRenderTarget.h"
 
+namespace graphics::d2d
+{
+
 class D2DRenderer;
 
 class D2DDCRenderTarget : public D2DRenderTarget
@@ -41,3 +44,5 @@ private:
 
    Microsoft::WRL::ComPtr<ID2D1DCRenderTarget> mDCRenderTarget;
 };
+
+} // namespace graphics::d2d

@@ -12,10 +12,13 @@
 
 #include "D2DRenderer.h"
 
+namespace graphics::d2d
+{
+
 D2DTrackedResource::D2DTrackedResource(D2DRenderer& renderer)
     : mRenderer(renderer)
-    , mShutdownSubscription(renderer.Subscribe(
-         [this](const D2DShutdownMessage&) { CleanupDirect2DResources(); }))
+    , mShutdownSubscription(renderer.Subscribe([this](const D2DShutdownMessage&)
+                                               { CleanupDirect2DResources(); }))
 {
 }
 
@@ -28,3 +31,5 @@ const D2DRenderer& D2DTrackedResource::GetRenderer() const noexcept
 {
    return mRenderer;
 }
+
+} // namespace graphics::d2d

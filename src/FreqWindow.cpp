@@ -96,6 +96,9 @@ the mouse around.
 #include "widgets/WindowAccessible.h"
 #endif
 
+using namespace graphics;
+using namespace graphics::wx;
+
 #define FrequencyAnalysisTitle XO("Frequency Analysis")
 
 DEFINE_EVENT_TYPE(EVT_FREQWINDOW_RECALC);

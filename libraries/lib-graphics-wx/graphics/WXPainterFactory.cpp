@@ -27,6 +27,9 @@
 
 #include "WXFontUtils.h"
 
+namespace graphics::wx
+{
+
 namespace
 {
 
@@ -54,15 +57,13 @@ public:
       return wxGraphicsRenderer::GetDefaultRenderer();
    }
 
-   std::unique_ptr<Painter>
-   CreatePainterFromWindow(wxWindow& wnd) override
+   std::unique_ptr<Painter> CreatePainterFromWindow(wxWindow& wnd) override
    {
       return std::make_unique<WXGraphicsContextPainter>(
          GetRenderer(), &wnd, wnd.GetFont());
    }
 
-   std::unique_ptr<Painter>
-   CreatePainterFromDC(wxDC& dc) override
+   std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc) override
    {
       auto font = dc.GetFont();
 
@@ -125,12 +126,12 @@ class D2DRendererProvider : public RendererProvider
 public:
    ~D2DRendererProvider()
    {
-      SharedD2DRenderer().Shutdown();
+      d2d::SharedD2DRenderer().Shutdown();
    }
 
    std::unique_ptr<Painter> CreatePainterFromWindow(wxWindow& wnd) override
    {
-      return SharedD2DRenderer().CreateHWNDPainter(
+      return d2d::SharedD2DRenderer().CreateHWNDPainter(
          wnd.GetHWND(), FontInfoFromWXFont(wnd.GetFont()));
    }
 
@@ -138,14 +139,14 @@ public:
    {
       auto font = dc.GetFont();
 
-      return SharedD2DRenderer().CreateHDCPainter(
+      return d2d::SharedD2DRenderer().CreateHDCPainter(
          dc.GetHDC(), FontInfoFromWXFont(font.IsOk() ? font : *wxNORMAL_FONT));
    }
 
    Painter& GetMeasuringPainter() override
    {
       if (!mMeasuringPainter)
-         mMeasuringPainter = SharedD2DRenderer().CreateMeasuringPainter(
+         mMeasuringPainter = d2d::SharedD2DRenderer().CreateMeasuringPainter(
             FontInfoFromWXFont(*wxNORMAL_FONT));
 
       return *mMeasuringPainter;
@@ -171,7 +172,9 @@ RendererProvider& GetRendererProvider(RendererType type)
    if (Provider != nullptr)
       return *Provider;
 
-   if (Provider == nullptr && (type == RendererType::Auto || type == RendererType::GL))
+   if (
+      Provider == nullptr &&
+      (type == RendererType::Auto || type == RendererType::GL))
    {
       auto& openGLRenderer = graphics::gl::GetSharedRenderer();
 
@@ -180,9 +183,11 @@ RendererProvider& GetRendererProvider(RendererType type)
    }
 
 #ifdef WIN32
-   if (Provider == nullptr && (type == RendererType::Auto || type == RendererType::D2D))
+   if (
+      Provider == nullptr &&
+      (type == RendererType::Auto || type == RendererType::D2D))
    {
-      auto& d2dRenderer = SharedD2DRenderer();
+      auto& d2dRenderer = d2d::SharedD2DRenderer();
 
       if (d2dRenderer.IsAvailable())
          Provider = std::make_unique<D2DRendererProvider>();
@@ -199,7 +204,7 @@ RendererType GetPreferredRenderType() noexcept
 {
    return RendererType::Auto;
 }
-}
+} // namespace
 
 std::unique_ptr<Painter> CreatePainter(wxWindow* wnd)
 {
@@ -226,3 +231,5 @@ void ShutdownRenderingSystem()
 {
    Provider.reset();
 }
+
+} // namespace graphics::wx

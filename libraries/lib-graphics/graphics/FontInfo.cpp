@@ -12,6 +12,9 @@
 
 #include <tuple>
 
+namespace graphics
+{
+
 FontInfo::FontInfo(std::string_view faceName, float pointSize)
     : mFaceName(faceName)
     , mPointSize(pointSize)
@@ -104,7 +107,7 @@ auto MakeTuple(const FontInfo& font)
       font.GetFontStyle(), font.GetFontStretch(), font.GetUnderlined(),
       font.GetStrikethrough());
 }
-}
+} // namespace
 
 bool operator==(const FontInfo& lhs, const FontInfo& rhs)
 {
@@ -120,3 +123,5 @@ bool operator<(const FontInfo& lhs, const FontInfo& rhs)
 {
    return MakeTuple(lhs) < MakeTuple(rhs);
 }
+
+} // namespace graphics

@@ -26,6 +26,9 @@
 
 #include "D2DTrackedResource.h"
 
+namespace graphics::d2d
+{
+
 class D2DRenderTargetResource;
 class D2DRenderer;
 class D2DBitmap;
@@ -100,7 +103,8 @@ private:
 
    Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> mSolidBrush;
 
-   using LinearGradientBrushes = GraphicsObjectCache<Brush, Microsoft::WRL::ComPtr<ID2D1LinearGradientBrush>, 8, false>;
+   using LinearGradientBrushes = GraphicsObjectCache<
+      Brush, Microsoft::WRL::ComPtr<ID2D1LinearGradientBrush>, 8, false>;
    LinearGradientBrushes mLinearGradientBrushes;
 
    Pen mCurrentPen { Pen::NoPen };
@@ -119,3 +123,4 @@ private:
 
    friend class D2DRenderTargetResource;
 };
+} // namespace graphics::d2d

@@ -24,8 +24,12 @@ class wxBitmap;
 class wxImage;
 class WaveDataCache;
 class Envelope;
+
+namespace graphics
+{
 class PainterImage;
 class Painter;
+} // namespace graphics
 
 struct GRAPHICS_WX_API WaveBitmapCacheElement final :
     GraphicsDataCacheElementBase
@@ -34,7 +38,7 @@ struct GRAPHICS_WX_API WaveBitmapCacheElement final :
 
    void Dispose() override;
 
-   std::shared_ptr<PainterImage> Bitmap;
+   std::shared_ptr<graphics::PainterImage> Bitmap;
    size_t AvailableColumns { 0 };
 };
 
@@ -47,7 +51,7 @@ public:
 
    WaveBitmapCache& SetPaintParameters(const WavePaintParameters& params);
    WaveBitmapCache& SetSelection(const ZoomInfo& zoomInfo, double t0, double t1);
-   WaveBitmapCache& SetPainter(Painter& painter);
+   WaveBitmapCache& SetPainter(graphics::Painter& painter);
 
 private:
    bool InitializeElement(
@@ -77,6 +81,6 @@ private:
    const Envelope* mEnvelope { nullptr };
    size_t mEnvelopeVersion { 0 };
 
-   Painter* mPainter { nullptr };
-   RendererID mRendererID;
+   graphics::Painter* mPainter { nullptr };
+   graphics::RendererID mRendererID;
 };

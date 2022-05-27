@@ -128,7 +128,7 @@ void NoteTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
         {
             auto stateMutator = context.painter.GetStateMutator();
             auto clipStateMutator = context.painter.GetClipStateMutator();
-            clipStateMutator.SetClipRect(RectFromWXRect(rect), false);
+            clipStateMutator.SetClipRect(graphics::wx::RectFromWXRect(rect), false);
 
             //context.dc.SetTextForeground(theTheme.Colour(clrClipNameText));
             stateMutator.SetFont(context.painter.GetDefaultFont());

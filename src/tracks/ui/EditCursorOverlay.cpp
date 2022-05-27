@@ -23,6 +23,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "graphics/Painter.h"
 
+using namespace graphics;
+
 namespace {
    template < class LOW, class MID, class HIGH >
    bool between_incexc(LOW l, MID m, HIGH h)

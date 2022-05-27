@@ -12,6 +12,9 @@
 
 #include <algorithm>
 
+namespace graphics
+{
+
 const Brush Brush::NoBrush(BrushStyle::None);
 
 Brush::Brush(BrushStyle style)
@@ -31,12 +34,17 @@ Brush::Brush(BrushStyle style, Color color)
 }
 
 Brush::Brush(Point start, Point end, Color startColor, Color endColor)
-    : Brush(start, end, BrushGradientStops({ { 0.0f, startColor }, { 1.0f, endColor } }))
+    : Brush(
+         start, end,
+         BrushGradientStops({ { 0.0f, startColor }, { 1.0f, endColor } }))
 {
 }
 
-Brush::Brush(float startX, float startY, float endX, float endY, Color startColor, Color endColor)
-    : Brush(Point { startX, startY }, Point { endX, endY }, startColor, endColor)
+Brush::Brush(
+   float startX, float startY, float endX, float endY, Color startColor,
+   Color endColor)
+    : Brush(
+         Point { startX, startY }, Point { endX, endY }, startColor, endColor)
 {
 }
 
@@ -51,7 +59,7 @@ Brush::Brush(Point start, Point end, BrushGradientStops stops)
 
 Brush::Brush(
    float startX, float startY, float endX, float endY, BrushGradientStops stops)
-    : Brush(Point { startX, startY }, Point {endX, endY}, std::move(stops))
+    : Brush(Point { startX, startY }, Point { endX, endY }, std::move(stops))
 {
 }
 
@@ -106,7 +114,7 @@ bool CompareBrushGradientData(
                 return lhs.position == rhs.position && lhs.color == rhs.color;
              });
 }
-}
+} // namespace
 
 bool operator==(const Brush& lhs, const Brush& rhs) noexcept
 {
@@ -118,3 +126,5 @@ bool operator!=(const Brush& lhs, const Brush& rhs) noexcept
 {
    return !(lhs == rhs);
 }
+
+} // namespace graphics

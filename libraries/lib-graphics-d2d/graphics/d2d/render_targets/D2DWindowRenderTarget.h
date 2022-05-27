@@ -15,6 +15,9 @@
 
 #include "graphics/d2d/D2DRenderTarget.h"
 
+namespace graphics::d2d
+{
+
 class D2DRenderer;
 
 class D2DWindowRenderTarget : public D2DRenderTarget
@@ -23,7 +26,7 @@ public:
    D2DWindowRenderTarget(D2DRenderer& renderer, HWND hwnd);
 
    void BeginDraw() override;
-   
+
    D2D1_SIZE_U GetD2DSize() const;
 
    Size GetSize() const override;
@@ -35,7 +38,7 @@ protected:
 
 private:
    void CreateRenderTarget();
-   
+
    const D2DRenderer& mRenderer;
    HWND mHWND;
 
@@ -43,3 +46,5 @@ private:
 
    Microsoft::WRL::ComPtr<ID2D1HwndRenderTarget> mHWNDRenderTarget;
 };
+
+} // namespace graphics::d2d

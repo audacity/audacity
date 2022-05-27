@@ -45,7 +45,11 @@ class Envelope;
 class EnvelopeEditor;
 class EqualizationPanel;
 class RulerPanel;
+
+namespace graphics
+{
 class Painter;
+}
 
 using Floats = ArrayOf<float>;
 
@@ -366,7 +370,7 @@ private:
    wxWindow *mParent;
    EffectEqualization *mEffect;
    std::unique_ptr<EnvelopeEditor> mLinEditor, mLogEditor;
-   std::unique_ptr<Painter> mPainter;
+   std::unique_ptr<graphics::Painter> mPainter;
 
    bool mRecalcRequired;
 

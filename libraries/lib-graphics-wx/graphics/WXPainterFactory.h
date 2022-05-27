@@ -12,12 +12,19 @@
 
 #include <memory>
 
-class Painter;
 class wxWindow;
 class wxWindowDC;
 class wxMemoryDC;
 class wxPrinterDC;
 class wxDC;
+
+namespace graphics
+{
+class Painter;
+}
+
+namespace graphics::wx
+{   
 
 GRAPHICS_WX_API std::unique_ptr<Painter> CreatePainter(wxWindow* wnd);
 GRAPHICS_WX_API std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc);
@@ -25,3 +32,5 @@ GRAPHICS_WX_API std::unique_ptr<Painter> CreatePainterFromDC(wxDC& dc);
 GRAPHICS_WX_API Painter& GetMeasuringPainter();
 
 GRAPHICS_WX_API void ShutdownRenderingSystem();
+
+} // namespace graphics::wx

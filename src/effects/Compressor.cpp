@@ -51,6 +51,9 @@
 #include "graphics/WXPainterUtils.h"
 #include "graphics/WXPainterFactory.h"
 
+using namespace graphics;
+using namespace graphics::wx;
+
 enum
 {
    ID_Threshold = 10000,

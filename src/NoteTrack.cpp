@@ -110,6 +110,8 @@ SONFNS(AutoSave)
 
 #endif
 
+using namespace graphics;
+using namespace graphics::wx;
 
 
 static ProjectFileIORegistry::ObjectReaderEntry readerEntry{

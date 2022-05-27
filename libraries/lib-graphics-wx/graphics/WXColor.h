@@ -16,7 +16,12 @@
 class wxPen;
 class wxBrush;
 
+namespace graphics::wx
+{
+
 GRAPHICS_WX_API Color ColorFromWXColor(const wxColour& color) noexcept;
 GRAPHICS_WX_API Color ColorFromWXPen(const wxPen& pen) noexcept;
 GRAPHICS_WX_API Color ColorFromWXBrush(const wxBrush& brush) noexcept;
 GRAPHICS_WX_API wxColour wxColorFromColor(Color color) noexcept;
+
+} // namespace graphics::wx

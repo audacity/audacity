@@ -979,7 +979,7 @@ namespace {
 void SliderDrawFunction
 ( LWSlider *(*Selector)
     (const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow*),
-  Painter &painter, const wxRect &rect, const Track *pTrack,
+   graphics::Painter& painter, const wxRect& rect, const Track* pTrack,
   wxWindow *pParent,
   bool captured, bool highlight )
 {
@@ -1025,8 +1025,9 @@ void GainSliderDrawFunction
       pParent, captured, hit);
 }
 
-void StatusDrawFunction
-   ( const TranslatableString &string, Painter& painter, const wxRect &rect )
+void StatusDrawFunction(
+   const TranslatableString& string, graphics::Painter& painter,
+   const wxRect& rect)
 {
    static const int offset = 3;
    painter.DrawText(rect.x + offset, rect.y, audacity::ToUTF8(string.Translation()));

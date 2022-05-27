@@ -25,6 +25,9 @@
 #include "WXFontUtils.h"
 #include "WXColor.h"
 
+namespace graphics::wx
+{
+
 namespace
 {
 auto rendererId = RegisterRenderer("wxGraphicsDefaultRenderer");
@@ -1059,3 +1062,5 @@ WXGraphicsRendererShutdownPublisher& GetWXGraphicsRendererShutdownPublisher()
    static WXGraphicsRendererShutdownPublisher publisher;
    return publisher;
 }
+
+} // namespace graphics::wx

@@ -14,6 +14,9 @@
 
 #include "Observer.h"
 
+namespace graphics::d2d
+{
+   
 class D2DRenderer;
 
 class D2DTrackedResource /* not final */ :
@@ -23,14 +26,12 @@ public:
    explicit D2DTrackedResource(D2DRenderer& renderer);
    virtual ~D2DTrackedResource() = default;
 
-   template <typename T>
-   std::shared_ptr<T> GetSharedPtr()
+   template <typename T> std::shared_ptr<T> GetSharedPtr()
    {
       return std::static_pointer_cast<T>(shared_from_this());
    }
 
-   template <typename T>
-   std::shared_ptr<const T> GetSharedPtr() const
+   template <typename T> std::shared_ptr<const T> GetSharedPtr() const
    {
       return std::static_pointer_cast<const T>(shared_from_this());
    }
@@ -48,3 +49,5 @@ private:
 
    friend class D2DRenderer;
 };
+
+} // namespace graphics::d2d

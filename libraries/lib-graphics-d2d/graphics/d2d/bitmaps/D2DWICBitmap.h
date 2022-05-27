@@ -19,6 +19,9 @@
 
 #include "../D2DBitmap.h"
 
+namespace graphics::d2d
+{
+   
 class D2DWICRenderTarget;
 class D2DRenderer;
 
@@ -28,7 +31,7 @@ public:
    D2DWICBitmap(
       D2DRenderer& renderer,
       const Microsoft::WRL::ComPtr<IWICBitmap>& wicBitmap, bool withAlhpa);
-   
+
    void DrawBitmap(
       D2DRenderTarget& target, const Rect& targetRect,
       const Rect& sourceRect) override;
@@ -48,7 +51,7 @@ public:
 
 private:
    ID2D1Bitmap* GetBitmap(D2DRenderTarget& target);
-   
+
    bool DoAcquireResource(D2DRenderTarget& target) override;
    void DoReleaseResource(D2DRenderTarget& target) override;
 
@@ -56,7 +59,8 @@ private:
 
    Microsoft::WRL::ComPtr<IWICBitmap> mWICBitmap;
 
-   using RTResourcesMap = std::map<D2DRenderTarget*, Microsoft::WRL::ComPtr<ID2D1Bitmap>>;
+   using RTResourcesMap =
+      std::map<D2DRenderTarget*, Microsoft::WRL::ComPtr<ID2D1Bitmap>>;
 
    RTResourcesMap mRenderTargetResources;
 
@@ -64,3 +68,5 @@ private:
 
    bool mHasAlpha { false };
 };
+
+} // namespace graphics::d2d

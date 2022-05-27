@@ -27,6 +27,9 @@
 #include "CodeConversions.h"
 #include "UTF8Utils.h"
 
+using namespace graphics;
+using namespace graphics::wx;
+
 TextEditDelegate::~TextEditDelegate() = default;
 
 bool TextEditHelper::IsGoodEditKeyCode(int keyCode)

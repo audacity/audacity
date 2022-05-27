@@ -17,6 +17,8 @@
 
 #include <cassert>
 
+namespace graphics::wx
+{
 namespace
 {
 PenStyle GetPenStyle(wxPenStyle style) noexcept
@@ -62,7 +64,7 @@ wxPenStyle GetPenStyle(PenStyle style) noexcept
       return wxPENSTYLE_INVALID;
    }
 }
-}
+} // namespace
 
 GRAPHICS_WX_API Pen PenFromWXPen(const wxPen& pen) noexcept
 {
@@ -97,3 +99,5 @@ Rect RectFromWXRect(const wxRect& rect) noexcept
       Size { static_cast<float>(rect.width), static_cast<float>(rect.height) }
    };
 }
+
+} // namespace graphics::wx

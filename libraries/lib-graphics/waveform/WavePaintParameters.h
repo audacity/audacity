@@ -16,8 +16,8 @@ class Envelope;
 
 struct GRAPHICS_API ColorPair final
 {
-   Color Normal;
-   Color Selected;
+   graphics::Color Normal;
+   graphics::Color Selected;
 
    friend GRAPHICS_API bool
    operator==(const ColorPair& lhs, const ColorPair& rhs) noexcept;
@@ -39,7 +39,7 @@ struct GRAPHICS_API WavePaintParameters final
 
    bool ShowClipping { false };
 
-   Color BlankColor;
+   graphics::Color BlankColor;
 
    ColorPair BackgroundColors;
    ColorPair SampleColors;
@@ -48,11 +48,15 @@ struct GRAPHICS_API WavePaintParameters final
 
    WavePaintParameters& SetDisplayParameters(int height, double zoomMin, double zoomMax, bool showClipping) noexcept;
    WavePaintParameters& SetDBParameters(double dbRange, bool dbScale) noexcept;
-   WavePaintParameters& SetBlankColor(Color color) noexcept;
-   WavePaintParameters& SetBackgroundColors(Color normal, Color selected) noexcept;
-   WavePaintParameters& SetSampleColors(Color normal, Color selected) noexcept;
-   WavePaintParameters& SetRMSColors(Color normal, Color selected) noexcept;
-   WavePaintParameters& SetClippingColors(Color normal, Color selected) noexcept;
+   WavePaintParameters& SetBlankColor(graphics::Color color) noexcept;
+   WavePaintParameters& SetBackgroundColors(
+      graphics::Color normal, graphics::Color selected) noexcept;
+   WavePaintParameters&
+   SetSampleColors(graphics::Color normal, graphics::Color selected) noexcept;
+   WavePaintParameters&
+   SetRMSColors(graphics::Color normal, graphics::Color selected) noexcept;
+   WavePaintParameters&
+   SetClippingColors(graphics::Color normal, graphics::Color selected) noexcept;
    WavePaintParameters& SetEnvelope(const Envelope& envelope) noexcept;
    WavePaintParameters& ResetEnvelope() noexcept;
 

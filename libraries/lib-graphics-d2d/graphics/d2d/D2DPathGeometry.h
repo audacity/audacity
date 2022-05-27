@@ -16,6 +16,9 @@
 #include "graphics/Painter.h"
 #include "D2DTrackedResource.h"
 
+namespace graphics::d2d
+{
+
 class D2DRenderer;
 class D2DRenderTarget;
 
@@ -42,3 +45,5 @@ private:
 
    bool mFigureOpen { false };
 };
+
+} // namespace graphics::d2d

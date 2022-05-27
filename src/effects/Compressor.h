@@ -21,10 +21,14 @@ class wxSlider;
 class wxStaticText;
 class EffectCompressorPanel;
 class ShuttleGui;
-class Painter;
 
 using Floats = ArrayOf<float>;
 using Doubles = ArrayOf<double>;
+
+namespace graphics
+{
+class Painter;
+}
 
 class EffectCompressor final : public EffectTwoPassSimpleMono
 {
@@ -162,7 +166,7 @@ private:
    void OnSize(wxSizeEvent & evt);
 
 private:
-   std::unique_ptr<Painter> mPainter;
+   std::unique_ptr<graphics::Painter> mPainter;
 
    double & threshold;
    double & noiseFloor;

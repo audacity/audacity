@@ -35,7 +35,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "graphics/WXFontUtils.h"
 #include "graphics/WXColor.h"
 
-#include <wx/dc.h>
+using namespace graphics;
+using namespace graphics::wx;
 
 NoteTrackView::NoteTrackView( const std::shared_ptr<Track> &pTrack )
    : CommonTrackView{ pTrack }

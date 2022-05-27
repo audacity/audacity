@@ -12,6 +12,9 @@
 
 #include "graphics/d2d/D2DRenderer.h"
 
+namespace graphics::d2d
+{
+
 D2DDCRenderTarget::D2DDCRenderTarget(D2DRenderer& renderer, HDC dc)
     : D2DRenderTarget(renderer)
     , mRenderer(renderer)
@@ -26,7 +29,7 @@ void D2DDCRenderTarget::BeginDraw()
       return;
 
    const auto size = GetD2DSize();
-   
+
    RECT rect { 0, 0, static_cast<LONG>(size.width),
                static_cast<LONG>(size.height) };
 
@@ -76,14 +79,14 @@ void D2DDCRenderTarget::CreateRenderTarget()
       D2D1_RENDER_TARGET_TYPE_DEFAULT,
       D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE), 0,
       0, D2D1_RENDER_TARGET_USAGE_NONE, D2D1_FEATURE_LEVEL_DEFAULT);
-   
 
    auto result = mRenderer.GetD2DFactory()->CreateDCRenderTarget(
-      &props,
-      mDCRenderTarget.ReleaseAndGetAddressOf());
+      &props, mDCRenderTarget.ReleaseAndGetAddressOf());
 
    if (result != S_OK)
       return;
 
    mRenderTarget = mDCRenderTarget;
 }
+
+} // namespace graphics::d2d

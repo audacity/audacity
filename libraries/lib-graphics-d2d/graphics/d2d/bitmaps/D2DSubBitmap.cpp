@@ -14,6 +14,9 @@
 
 #include <algorithm>
 
+namespace graphics::d2d
+{
+
 D2DSubBitmap::D2DSubBitmap(std::shared_ptr<D2DBitmap> parent, const Rect& rect)
     : D2DBitmap(parent->GetRenderer())
     , mParent(std::move(parent))
@@ -28,14 +31,15 @@ void D2DSubBitmap::DrawBitmap(
       0.0f, std::min(GetWidth() - sourceRect.origin.x, sourceRect.size.width));
 
    const auto maxAvailableHeight = std::max(
-      0.0f, std::min(GetHeight() - sourceRect.origin.y, sourceRect.size.height));
-   
+      0.0f,
+      std::min(GetHeight() - sourceRect.origin.y, sourceRect.size.height));
+
    Rect updatedSourceRect { sourceRect.origin + mRect.origin,
                             Size { maxAvailableWidth, maxAvailableHeight } };
 
    if (updatedSourceRect.size.IsZero())
       return;
-   
+
    mParent->DrawBitmap(target, targetRect, updatedSourceRect);
 }
 
@@ -83,3 +87,5 @@ void D2DSubBitmap::DoReleaseResource(D2DRenderTarget& target)
 void D2DSubBitmap::CleanupDirect2DResources()
 {
 }
+
+} // namespace graphics::d2d

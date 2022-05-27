@@ -13,6 +13,9 @@
 #include "D2DRenderer.h"
 #include "D2DRenderTarget.h"
 
+namespace graphics::d2d
+{
+   
 D2DPathGeometry::D2DPathGeometry(D2DRenderer& renderer)
     : PainterPath(renderer.GetRendererID())
     , D2DTrackedResource(renderer)
@@ -23,7 +26,7 @@ void D2DPathGeometry::EndFigure(bool closed)
 {
    if (!mFigureOpen)
       return;
-   
+
    auto sink = GetSink();
 
    if (sink == nullptr)
@@ -37,7 +40,7 @@ void D2DPathGeometry::DoLineTo(Point pt)
 {
    if (!mFigureOpen)
       return;
-   
+
    auto sink = GetSink();
 
    if (sink == nullptr)
@@ -72,13 +75,14 @@ void D2DPathGeometry::DoAddRect(const Rect& rect)
       sink->EndFigure(D2D1_FIGURE_END_OPEN);
       mFigureOpen = false;
    }
-   
+
    sink->BeginFigure(
       { rect.origin.x, rect.origin.y }, D2D1_FIGURE_BEGIN_FILLED);
 
    sink->AddLine({ rect.origin.x + rect.size.width, rect.origin.y });
 
-   sink->AddLine({ rect.origin.x + rect.size.width, rect.origin.y + rect.size.height });
+   sink->AddLine(
+      { rect.origin.x + rect.size.width, rect.origin.y + rect.size.height });
 
    sink->AddLine({ rect.origin.x, rect.origin.y + rect.size.height });
 
@@ -146,3 +150,5 @@ void D2DPathGeometry::CleanupDirect2DResources()
    mSink.Reset();
    mPathGeometry.Reset();
 }
+
+} // namespace graphics::d2d

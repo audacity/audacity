@@ -14,7 +14,7 @@ Overlay::~Overlay()
 {
 }
 
-std::pair<wxRect, bool> Overlay::GetRectangle(Painter &painter, wxSize size)
+std::pair<wxRect, bool> Overlay::GetRectangle(graphics::Painter &painter, wxSize size)
 {
    auto result = DoGetRectangle(painter, size);
 #ifdef __WXMAC__

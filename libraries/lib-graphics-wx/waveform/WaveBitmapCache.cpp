@@ -33,14 +33,14 @@ struct Triplet final
 {
    Triplet() = default;
 
-   explicit Triplet(Color color)
+   explicit Triplet(graphics::Color color)
        : r(color.GetRed())
        , g(color.GetGreen())
        , b(color.GetBlue())
    {
    }
 
-   void SetColor(Color color)
+   void SetColor(graphics::Color color)
    {
       r = color.GetRed();
       g = color.GetGreen();
@@ -72,7 +72,7 @@ struct ColorFunction final
       return defaultColor;
    }
 
-   void SetStop(size_t index, Color color, uint32_t position)
+   void SetStop(size_t index, graphics::Color color, uint32_t position)
    {
       assert(index < Stops.size());
 
@@ -366,7 +366,8 @@ bool WaveBitmapCache::InitializeElement(
    if (!mLookupHelper->PerformLookup(this, key))
    {
       element.Bitmap = mPainter->CreateImage(
-         PainterImageFormat::RGB888, 1, mPaintParamters.Height, nullptr);
+         graphics::PainterImageFormat::RGB888, 1, mPaintParamters.Height,
+         nullptr);
       
       return true;
    }
@@ -403,12 +404,13 @@ bool WaveBitmapCache::InitializeElement(
    element.IsComplete = mLookupHelper->IsComplete;
 
    element.Bitmap = mPainter->CreateImage(
-      PainterImageFormat::RGB888, columnsCount, height, mImageBuffer.data());
+      graphics::PainterImageFormat::RGB888, columnsCount, height,
+      mImageBuffer.data());
 
    return true;
 }
 
-WaveBitmapCache& WaveBitmapCache::SetPainter(Painter& painter)
+WaveBitmapCache& WaveBitmapCache::SetPainter(graphics::Painter& painter)
 {
    if (mRendererID != painter.GetRendererID())
    {

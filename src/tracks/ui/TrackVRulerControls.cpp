@@ -69,8 +69,8 @@ void TrackVRulerControls::DrawZooming
    auto &painter = context.painter;
    auto stateMutator = painter.GetStateMutator();
 
-   stateMutator.SetBrush(Brush::NoBrush);
-   stateMutator.SetPen(PenFromWXPen(*wxBLACK_DASHED_PEN));
+   stateMutator.SetBrush(graphics::Brush::NoBrush);
+   stateMutator.SetPen(graphics::wx::PenFromWXPen(*wxBLACK_DASHED_PEN));
 
    wxRect rect {
       rect_.x,
@@ -79,7 +79,7 @@ void TrackVRulerControls::DrawZooming
       1 + abs( zoomEnd - zoomStart)
    };
 
-   painter.DrawRect(RectFromWXRect(rect));
+   painter.DrawRect(graphics::wx::RectFromWXRect(rect));
 }
 
 wxRect TrackVRulerControls::ZoomingArea(
@@ -113,10 +113,10 @@ void TrackVRulerControls::Draw(
       // Paint the background
       auto pTrack = FindTrack();
       AColor::MediumTrackInfo(stateMutator, pTrack && pTrack->GetSelected());
-      painter.DrawRect( RectFromWXRect( rect ) );
+      painter.DrawRect(graphics::wx::RectFromWXRect(rect));
       
       // Stroke the left border
-      stateMutator.SetPen(Colors::Black);
+      stateMutator.SetPen(graphics::Colors::Black);
       {
          const auto left = rect.GetLeft();
          AColor::Line( painter, left, rect.GetTop(), left, rect.GetBottom() );

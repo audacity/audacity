@@ -32,6 +32,9 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <algorithm>
 
+using namespace graphics;
+using namespace graphics::wx;
+
 namespace {
    template < class LOW, class MID, class HIGH >
    bool between_incexc(LOW l, MID m, HIGH h)

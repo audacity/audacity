@@ -103,6 +103,9 @@ is time to refresh some aspect of the screen.
 
 #include "effects/RealtimeEffectManager.h"
 
+using namespace graphics;
+using namespace graphics::wx;
+
 static_assert( kVerticalPadding == kTopMargin + kBottomMargin );
 static_assert( kTrackInfoBtnSize == kAffordancesAreaHeight, "Drag bar is misaligned with the menu button");
 

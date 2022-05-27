@@ -17,6 +17,9 @@
 #include "Color.h"
 #include "Point.h"
 
+namespace graphics
+{
+
 enum class BrushStyle
 {
    None,
@@ -56,10 +59,14 @@ public:
    Brush(BrushStyle style, Color color);
 
    Brush(Point start, Point end, Color startColor, Color endColor);
-   Brush(float startX, float startY, float endX, float endY, Color startColor, Color endColor);
+   Brush(
+      float startX, float startY, float endX, float endY, Color startColor,
+      Color endColor);
 
    Brush(Point start, Point end, BrushGradientStops stops);
-   Brush(float startX, float startY, float endX, float endY, BrushGradientStops stops);
+   Brush(
+      float startX, float startY, float endX, float endY,
+      BrushGradientStops stops);
 
    ~Brush();
 
@@ -71,8 +78,10 @@ public:
 
    const BrushGradientData* GetGradientData() const noexcept;
 
-   friend GRAPHICS_API bool operator==(const Brush& lhs, const Brush& rhs) noexcept;
-   friend GRAPHICS_API bool operator!=(const Brush& lhs, const Brush& rhs) noexcept;
+   friend GRAPHICS_API bool
+   operator==(const Brush& lhs, const Brush& rhs) noexcept;
+   friend GRAPHICS_API bool
+   operator!=(const Brush& lhs, const Brush& rhs) noexcept;
 
 private:
    BrushStyle mStyle { BrushStyle::Solid };
@@ -80,3 +89,5 @@ private:
 
    std::shared_ptr<BrushGradientData> mBrushData;
 };
+
+} // namespace graphics

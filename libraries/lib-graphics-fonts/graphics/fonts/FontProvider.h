@@ -14,7 +14,10 @@
 #include <memory>
 #include <vector>
 
+namespace graphics
+{
 class FontInfo;
+}
 
 namespace graphics::fonts
 {

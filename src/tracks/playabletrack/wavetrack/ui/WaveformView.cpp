@@ -45,6 +45,9 @@ Paul Licameli split from WaveTrackView.cpp
 #include <wx/dc.h>
 #include <wx/dcmemory.h>
 
+using namespace graphics;
+using namespace graphics::wx;
+
 static WaveTrackSubView::Type sType{
    WaveTrackViewConstants::Waveform,
    { wxT("Waveform"), XXO("Wa&veform") }

@@ -53,7 +53,10 @@ class TrackPanelListener;
 
 struct TrackPanelDrawingContext;
 
+namespace graphics
+{
 class Painter;
+}
 
 enum class UndoPush : unsigned char;
 
@@ -239,7 +242,7 @@ protected:
 
    void UpdateStatusMessage( const TranslatableString &status ) override;
 
-   std::unique_ptr<Painter> mPainter;
+   std::unique_ptr<graphics::Painter> mPainter;
 };
 
 #endif

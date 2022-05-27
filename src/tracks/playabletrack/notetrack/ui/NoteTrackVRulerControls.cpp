@@ -31,7 +31,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "graphics/WXFontUtils.h"
 #include "CodeConversions.h"
 
-#include <wx/dc.h>
+using namespace graphics;
+using namespace graphics::wx;
 
 ///////////////////////////////////////////////////////////////////////////////
 NoteTrackVRulerControls::~NoteTrackVRulerControls()

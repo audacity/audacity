@@ -31,8 +31,11 @@
 class AudacityProject;
 struct AudioIOEvent;
 
+namespace graphics
+{
 class Painter;
 class PainterImage;
+} // namespace graphics
 
 // Increase this when we add support for multichannel meters
 // (most of the code is already there)
@@ -223,7 +226,7 @@ class AUDACITY_DLL_API MeterPanel final
    void HandleLayout();
    void SetActiveStyle(Style style);
    void SetBarAndClip(int iBar, bool vert);
-   void DrawMeterBar(Painter &painter, MeterBar *meterBar);
+   void DrawMeterBar(graphics::Painter& painter, MeterBar* meterBar);
    void ResetBar(MeterBar *bar, bool resetClipping);
    void RepaintBarsNow();
    wxFont GetFont() const;
@@ -241,7 +244,7 @@ class AUDACITY_DLL_API MeterPanel final
    Observer::Subscription mThemeChangedSubscription;
 
    AudacityProject *mProject;
-   std::unique_ptr<Painter> mPainter;
+   std::unique_ptr<graphics::Painter> mPainter;
 
    MeterUpdateQueue mQueue;
    wxTimer          mTimer;
@@ -278,13 +281,13 @@ class AUDACITY_DLL_API MeterPanel final
 
    bool      mLayoutValid;
 
-   std::shared_ptr<PainterImage> mBitmap;
+   std::shared_ptr<graphics::PainterImage> mBitmap;
    wxRect    mIconRect;
    wxPoint   mLeftTextPos;
    wxPoint   mRightTextPos;
    wxSize    mLeftSize;
    wxSize    mRightSize;
-   std::shared_ptr<PainterImage> mIcon;
+   std::shared_ptr<graphics::PainterImage> mIcon;
    wxPen     mPen;
    wxPen     mDisabledPen;
    wxPen     mPeakPeakPen;

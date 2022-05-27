@@ -10,6 +10,9 @@
 **********************************************************************/
 #include "Pen.h"
 
+namespace graphics
+{
+
 const Pen Pen::NoPen(PenStyle::None);
 
 Pen::Pen(PenStyle style)
@@ -79,3 +82,5 @@ bool operator!=(const Pen& lhs, const Pen& rhs) noexcept
 {
    return !(lhs == rhs);
 }
+
+} // namespace graphics

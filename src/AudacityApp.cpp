@@ -2242,7 +2242,7 @@ int AudacityApp::OnExit()
    PluginManager::Get().Terminate();
 
    theTheme.ReleasePainterImages();
-   ShutdownRenderingSystem();
+   graphics::wx::ShutdownRenderingSystem();
 
    return 0;
 }

@@ -16,6 +16,8 @@
 #include "graphics/RendererID.h"
 #include "graphics/FontInfo.h"
 
+namespace graphics::d2d
+{
 class D2DRenderer;
 class D2DRenderTarget;
 
@@ -33,8 +35,7 @@ private:
 
    Size GetSize() const override;
 
-   std::shared_ptr<PainterFont>
-   CreateFont(const FontInfo& fontInfo) override;
+   std::shared_ptr<PainterFont> CreateFont(const FontInfo& fontInfo) override;
 
    std::shared_ptr<PainterFont> GetDefaultFont() const override;
 
@@ -107,3 +108,5 @@ private:
 
    std::vector<std::shared_ptr<D2DRenderTarget>> mRenderTargetStack;
 };
+
+} // namespace graphics::d2d

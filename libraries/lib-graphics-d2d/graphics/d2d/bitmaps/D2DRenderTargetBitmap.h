@@ -13,11 +13,15 @@
 
 #include <map>
 
+namespace graphics::d2d
+{
+   
 class D2DRenderTargetBitmap final : public D2DRenderTarget, public D2DBitmap
 {
 public:
-   D2DRenderTargetBitmap(D2DRenderer& renderer, uint32_t width, uint32_t height, bool withAlpha);
-   
+   D2DRenderTargetBitmap(
+      D2DRenderer& renderer, uint32_t width, uint32_t height, bool withAlpha);
+
    Size GetSize() const override;
 
    void DrawBitmap(
@@ -54,3 +58,5 @@ private:
    uint32_t mHeight;
    bool mHasAlpha;
 };
+
+} // namespace graphics::d2d
