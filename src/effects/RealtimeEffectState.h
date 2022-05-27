@@ -40,6 +40,7 @@ public:
     Call with empty id is ignored.
     Called by the constructor that takes an id */
    void SetID(const PluginID & id);
+   const PluginID& GetID() const noexcept;
    const EffectInstanceFactory *GetEffect();
 
    bool Suspend();

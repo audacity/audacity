@@ -93,6 +93,8 @@ is time to refresh some aspect of the screen.
 #include <wx/dcclient.h>
 #include <wx/graphics.h>
 
+#include "effects/RealtimeEffectManager.h"
+
 static_assert( kVerticalPadding == kTopMargin + kBottomMargin );
 static_assert( kTrackInfoBtnSize == kAffordancesAreaHeight, "Drag bar is misaligned with the menu button");
 
@@ -312,14 +314,23 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
    auto theProject = GetProject();
    theProject->Bind(
       EVT_PROJECT_SETTINGS_CHANGE, &TrackPanel::OnProjectSettingsChange, this);
-   theProject->Bind(
-      EVT_TRACK_FOCUS_CHANGE, &TrackPanel::OnTrackFocusChange, this );
+   mFocusChangeSubscription = TrackFocus::Get(*theProject)
+      .Subscribe(*this, &TrackPanel::OnTrackFocusChange);
 
    mUndoSubscription = UndoManager::Get(*theProject)
       .Subscribe(*this, &TrackPanel::OnUndoReset);
 
    mAudioIOSubscription =
       AudioIO::Get()->Subscribe(*this, &TrackPanel::OnAudioIO);
+
+   mRealtimeEffectManagerSubscription = RealtimeEffectManager::Get(*theProject)
+      .Subscribe([this](const RealtimeEffectManagerMessage& msg)
+      {
+         if(msg.track)
+            //update "effects" button 
+            RefreshTrack(msg.track.get());
+      });
+
    UpdatePrefs();
 }
 
@@ -1714,12 +1725,8 @@ void TrackPanel::SetFocusedCell()
    KeyboardCapture::Capture(this);
 }
 
-void TrackPanel::OnTrackFocusChange( wxCommandEvent &event )
+void TrackPanel::OnTrackFocusChange(TrackFocusChangeMessage)
 {
-   event.Skip();
-   auto cell = GetFocusedCell();
-
-   if (cell) {
+   if (auto cell = GetFocusedCell())
       Refresh( false );
-   }
 }

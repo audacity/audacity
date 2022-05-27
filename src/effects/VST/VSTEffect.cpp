@@ -360,25 +360,27 @@ unsigned VSTEffectsModule::DiscoverPluginsAtPath(
    const PluginPath & path, TranslatableString &errMsg,
    const RegistrationCallback &callback)
 {
+
    VSTEffect effect(path);
    if(effect.InitializePlugin())
    {
-      const auto effectIDs = effect.GetEffectIDs();
-      if(!effectIDs.empty())
-      {
-         for(auto id : effectIDs)
-         {
-            VSTEffect subeffect(wxString::Format("%s;%d", path, id));
-            if(callback)
-               callback(this, &subeffect);
-         }
-         return effectIDs.size();
-      }
+      auto effectIDs = effect.GetEffectIDs();
+      if(effectIDs.empty())
+         //Each VST plugin path in Audacity should have id(index) part in it
+         effectIDs.push_back(0);
 
-      if(callback)
-         callback(this, &effect);
-      return 1;
+      for(auto id : effectIDs)
+      {
+         //Subsequent VSTEffect::Load may seem like overhead, but we need
+         //to initialize EffectDefinitionInterface part, which includes
+         //properly formatted plugin path
+         VSTEffect subeffect(wxString::Format("%s;%d", path, id), &effect);
+         if(callback)
+            callback(this, &subeffect);
+      }
+      return effectIDs.size();
    }
+   errMsg = XO("Could not load the library");
    return 0;
 }
 
@@ -926,7 +928,9 @@ bool VSTEffect::IsDefault() const
 
 bool VSTEffect::SupportsRealtime() const
 {
-   return GetType() == EffectTypeProcess;
+   // TODO reenable after achieving statelessness
+   return false;
+   //return GetType() == EffectTypeProcess;
 }
 
 bool VSTEffect::SupportsAutomation() const

@@ -41,7 +41,7 @@ class AUControl;
 
 class AudioUnitEffect final
    : public StatefulPerTrackEffect
-   , private AudioUnitWrapper
+   , public AudioUnitWrapper
 {
 public:
    using Parameters = PackedArray::Ptr<const AudioUnitParameterID>;
@@ -73,8 +73,6 @@ public:
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
-
-   bool TransferDataToWindow(const EffectSettings &settings) override;
 
    bool LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
@@ -119,7 +117,6 @@ public:
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
 
-   bool MakeListener();
    bool InitializeInstance();
    bool InitializePlugin();
 
@@ -131,7 +128,6 @@ public:
       ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access)
    override;
    bool IsGraphicalUI() override;
-   bool ValidateUI(EffectSettings &) override;
    bool CloseUI() override;
 
    bool CanExportPresets() override;
@@ -157,7 +153,6 @@ private:
    TranslatableString SaveBlobToConfig(const RegistryPath &group,
       const wxString &path, const void *blob, size_t len,
       bool allowEmpty = true) const;
-   void Notify(AudioUnit unit, AudioUnitParameterID parm) const;
 
    static OSStatus RenderCallback(void *inRefCon,
                                   AudioUnitRenderActionFlags *inActionFlags,
@@ -170,14 +165,6 @@ private:
                    UInt32 inBusNumber,
                    UInt32 inNumFrames,
                    AudioBufferList *ioData);
-
-   static void EventListenerCallback(void *inCallbackRefCon,
-                                     void *inObject,
-                                     const AudioUnitEvent *inEvent,
-                                     UInt64 inEventHostTime,
-                                     AudioUnitParameterValue inParameterValue);
-   void EventListener(const AudioUnitEvent *inEvent,
-                      AudioUnitParameterValue inParameterValue);
 
    void GetChannelCounts();
 
@@ -195,6 +182,8 @@ private:
 
 private:
    AudioUnitEffectSettings mSettings;
+
+public:
    //! This function will be rewritten when the effect is really stateless
    AudioUnitEffectSettings &GetSettings(EffectSettings &) const
       { return const_cast<AudioUnitEffect*>(this)->mSettings; }
@@ -202,11 +191,11 @@ private:
    const AudioUnitEffectSettings &GetSettings(const EffectSettings &) const
       { return mSettings; }
 
+private:
    const PluginPath mPath;
    const wxString mName;
    const wxString mVendor;
 
-   AudioUnitCleanup<AUEventListenerRef, AUListenerDispose> mEventListenerRef;
    AudioUnitCleanup<AudioUnit, AudioUnitUninitialize> mInitialization;
 
    // Initialized in GetChannelCounts()
@@ -226,14 +215,12 @@ private:
    PackedArray::Ptr<AudioBufferList> mOutputList;
 
    wxWindow *mParent{};
-   wxWeakRef<wxDialog> mDialog;
    wxString mUIType; // NOT translated, "Full", "Generic", or "Basic"
    bool mIsGraphical{ false };
 
    AudioUnitEffect *const mMaster;     // non-NULL if a slave
+public:
    AudioUnitEffectArray mSlaves;
-
-   AUControl *mpControl{};
 };
 
 #endif

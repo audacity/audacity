@@ -39,8 +39,6 @@ Provides:
 #include "AColor.h"
 #include "BasicUI.h"
 
-wxDEFINE_EVENT(EVT_THEME_CHANGE, wxCommandEvent);
-
 enum eThemePrefsIds {
    idLoadThemeCache=7000,
    idSaveThemeCache,
@@ -192,7 +190,7 @@ void ThemePrefs::OnLoadThemeComponents(wxCommandEvent & WXUNUSED(event))
 {
    wxBusyCursor busy;
    theTheme.LoadThemeComponents();
-   ApplyUpdatedImages();
+   AColor::ApplyUpdatedImages();
 }
 
 /// Save Theme to multiple png files.
@@ -209,7 +207,7 @@ void ThemePrefs::OnLoadThemeCache(wxCommandEvent & WXUNUSED(event))
 {
    wxBusyCursor busy;
    theTheme.SwitchTheme({});
-   ApplyUpdatedImages();
+   AColor::ApplyUpdatedImages();
 }
 
 /// Save Themes, each to a single png file.
@@ -227,7 +225,7 @@ void ThemePrefs::OnReadThemeInternal(wxCommandEvent & WXUNUSED(event))
 {
    wxBusyCursor busy;
    theTheme.SwitchTheme( theTheme.GetFallbackThemeType() );
-   ApplyUpdatedImages();
+   AColor::ApplyUpdatedImages();
 }
 
 /// Save Theme as C source code.
@@ -240,14 +238,6 @@ void ThemePrefs::OnSaveThemeAsCode(wxCommandEvent & WXUNUSED(event))
    theTheme.WriteImageDefs();// bonus - give them the Defs too.
 }
 
-void ThemePrefs::ApplyUpdatedImages()
-{
-   AColor::ReInit();
-
-   wxCommandEvent e{ EVT_THEME_CHANGE };
-   wxTheApp->SafelyProcessEvent( e );
-}
-
 /// Update the preferences stored on disk.
 bool ThemePrefs::Commit()
 {
@@ -256,7 +246,7 @@ bool ThemePrefs::Commit()
 
    theTheme.LoadPreferredTheme();
    theTheme.DeleteUnusedThemes();
-   ApplyUpdatedImages();
+   AColor::ApplyUpdatedImages();
    return true;
 }
 
@@ -264,7 +254,7 @@ void ThemePrefs::Cancel()
 {
    theTheme.LoadPreferredTheme();
    theTheme.DeleteUnusedThemes();
-   ApplyUpdatedImages();
+   AColor::ApplyUpdatedImages();
 }
 
 #ifdef EXPERIMENTAL_THEME_PREFS

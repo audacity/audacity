@@ -315,6 +315,12 @@ RealtimeEffectManager::AddState(
          state.AddTrack(*leader, chans, rate);
       }
    }
+
+   Publish({
+      RealtimeEffectManagerMessage::Type::EffectAdded,
+      pLeader ? pLeader->shared_from_this() : nullptr
+   });
+
    return &state;
 }
 
@@ -341,6 +347,11 @@ void RealtimeEffectManager::RemoveState(
       state.Finalize();
 
    states.RemoveState(state);
+
+   Publish({
+      RealtimeEffectManagerMessage::Type::EffectRemoved,
+      pLeader ? pLeader->shared_from_this() : nullptr
+   });
 }
 
 auto RealtimeEffectManager::GetLatency() const -> Latency

@@ -481,7 +481,9 @@ bool LV2Effect::IsDefault() const
 
 bool LV2Effect::SupportsRealtime() const
 {
-   return GetType() == EffectTypeProcess;
+   // TODO reenable after achieving statelessness
+   return false;
+//   return GetType() == EffectTypeProcess;
 }
 
 bool LV2Effect::SupportsAutomation() const
