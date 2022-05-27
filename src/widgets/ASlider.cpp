@@ -72,11 +72,12 @@ or ASlider.
 #include "graphics/WXColor.h"
 #include "CodeConversions.h"
 
-#if wxUSE_ACCESSIBILITY
-#include "WindowAccessible.h"
 
 using namespace graphics;
 using namespace graphics::wx;
+
+#if wxUSE_ACCESSIBILITY
+#include "WindowAccessible.h"
 
 class AUDACITY_DLL_API ASliderAx final : public WindowAccessible
 {
@@ -718,7 +719,7 @@ void LWSlider::OnPaint(Painter &painter, bool highlight)
    }
    else
    {
-      // TODO: Don't use pixel-count hack in positioning.  
+      // TODO: Don't use pixel-count hack in positioning.
       painter.DrawImage(
          thumbBitmap, mLeft + thumbOrtho - 5, mTop + thumbPos);
    }
@@ -773,7 +774,7 @@ void LWSlider::DrawToBitmap(Painter & painter)
       AColor::Line(painter, mLeftX, mCenterY, mRightX + 2, mCenterY);
       AColor::Line(painter, mLeftX, mCenterY + 1, mRightX + 2, mCenterY + 1);
    }
-   else 
+   else
    {
       AColor::Line(painter, mCenterX, mTopY, mCenterX, mBottomY + 2);
       AColor::Line(painter, mCenterX + 1, mTopY, mCenterX + 1, mBottomY + 2);
@@ -1099,12 +1100,12 @@ bool LWSlider::DoShowDialog(wxPoint pos)
    if (pos == wxPoint(-1, -1)) {
       dlg.Center();
    }
-   
+
    changed = (dlg.ShowModal() == wxID_OK);
    if( changed )
       value = dlg.Get();
 
-   // We now expect the pop up dialog to be 
+   // We now expect the pop up dialog to be
    // sending updates as we go.
    // So this code is needed to possibly restore the old
    // value, on a cancel.
@@ -1112,7 +1113,7 @@ bool LWSlider::DoShowDialog(wxPoint pos)
       mCurrentValue = value;
       SendUpdate(value);
    }
-   
+
    return changed;
 }
 
@@ -1668,12 +1669,12 @@ void ASlider::OnErase(wxEraseEvent & WXUNUSED(event))
 void ASlider::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    auto paintEvent = mPainter->Paint();
-   
+
    bool highlighted =
       GetClientRect().Contains(
          ScreenToClient(
             ::wxGetMousePosition() ) );
-   
+
    mLWSlider->OnPaint(*mPainter, highlighted);
 
    if ( mSliderIsFocused )

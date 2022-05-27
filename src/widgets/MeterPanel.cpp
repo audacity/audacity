@@ -83,11 +83,12 @@
 #include "graphics/WXPainterFactory.h"
 #include "CodeConversions.h"
 
+using namespace graphics;
+using namespace graphics::wx;
+
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
 
-using namespace graphics;
-using namespace graphics::wx;
 
 class MeterAx final : public WindowAccessible
 {
@@ -358,7 +359,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    wxColour backgroundColour = theTheme.Colour( clrMedium);
    mBkgndBrush = wxBrush(backgroundColour, wxBRUSHSTYLE_SOLID);
    SetBackgroundColour( backgroundColour );
-   
+
    mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxPENSTYLE_SOLID);
    mDisabledPen = wxPen(theTheme.Colour( clrMeterDisabledPen), 1, wxPENSTYLE_SOLID);
 
@@ -386,7 +387,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    // No longer show a difference in the background colour when not monitoring.
    // We have the tip instead.
    mDisabledBkgndBrush = mBkgndBrush;
-   
+
    auto loadIcon = [this](auto) {
       // MixerTrackCluster style has no menu, so
       // disallows SetStyle, so never needs icon.
@@ -489,7 +490,7 @@ void MeterPanel::OnErase(wxEraseEvent & WXUNUSED(event))
 void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
    auto paintEvent = mPainter->Paint();
-   
+
    Color clrText = ColorFromWXColor(theTheme.Colour(clrTrackPanelText));
    Color clrBoxFill = ColorFromWXColor(theTheme.Colour( clrMedium ));
 
@@ -501,7 +502,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       auto stateMutator = mPainter->GetStateMutator();
       // Go calculate all of the layout metrics
       HandleLayout();
-   
+
       // Start with a clean background
       // LLL:  Should research USE_AQUA_THEME usefulness...
 //#ifndef USE_AQUA_THEME
@@ -511,7 +512,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       //   mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
       //}
 #endif
-     
+
       mBkgndBrush.SetColour(GetBackgroundColour());
       stateMutator.SetPen(Pen::NoPen);
       stateMutator.SetBrush(BrushFromWXBrush(mBkgndBrush));
@@ -522,26 +523,26 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       if (mStyle != MixerTrackCluster)
       {
          auto stateMutator = mPainter->GetStateMutator();
-         
+
          bool highlight = InIcon();
-         mPainter->DrawImage( *theTheme.GetPainterImage(*mPainter, highlight ? 
-            bmpHiliteUpButtonSmall : bmpUpButtonSmall ), 
+         mPainter->DrawImage( *theTheme.GetPainterImage(*mPainter, highlight ?
+            bmpHiliteUpButtonSmall : bmpUpButtonSmall ),
             mIconRect.x, mIconRect.y );
 
          mPainter->DrawImage(*mIcon, mIconRect.x, mIconRect.y);
-         
+
          stateMutator.SetFont(FontFromWXFont(*mPainter, GetFont()));
          stateMutator.SetBrush( clrText );
          //dc.SetTextBackground( clrBoxFill );
          mPainter->DrawText(mLeftTextPos.x, mLeftTextPos.y, audacity::ToUTF8(mLeftText));
          mPainter->DrawText(mRightTextPos.x, mRightTextPos.y, audacity::ToUTF8(mRightText));
       }
-   
+
       // Setup the colors for the 3 sections of the meter bars
       Color green(117, 215, 112);
       Color yellow(255, 255, 0);
       Color red(255, 0, 0);
-   
+
       // Bug #2473 - (Sort of) Hack to make text on meters more
       // visible with darker backgrounds. It would be better to have
       // different colors entirely and as part of the theme.
@@ -563,16 +564,16 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       {
          // Give it a recessed look
          AColor::Bevel(*mPainter, false, mBar[i].b);
-   
+
          // Draw the clip indicator bevel
          if (mClip)
          {
             AColor::Bevel(*mPainter, false, mBar[i].rClip);
          }
-   
+
          // Cache bar rect
          wxRect r = mBar[i].r;
-   
+
          if (mGradient)
          {
             // Calculate the size of the two gradient segments of the meter
@@ -588,24 +589,24 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                gradw = (double) r.GetWidth() / 100 * 25;
                gradh = (double) r.GetHeight() / 100 * 25;
             }
-   
+
             if (mBar[i].vert)
             {
                stateMutator.SetPen(Pen::NoPen);
                // Draw the "critical" segment (starts at top of meter and works down)
                r.SetHeight(gradh);
                mPainter->DrawLinearGradientRect(RectFromWXRect(r), red, yellow, Painter::LinearGradientDirection::TopToBottom);
-   
+
                // Draw the "warning" segment
                r.SetTop(r.GetBottom());
                mPainter->DrawLinearGradientRect(
                   RectFromWXRect(r), yellow, green,
                   Painter::LinearGradientDirection::TopToBottom);
-   
+
                // Draw the "safe" segment
                r.SetTop(r.GetBottom());
                r.SetBottom(mBar[i].r.GetBottom());
-               
+
                stateMutator.SetBrush(green);
                mPainter->DrawRect(RectFromWXRect(r));
             }
@@ -616,14 +617,14 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                stateMutator.SetPen(Pen::NoPen);
                stateMutator.SetBrush(green);
                mPainter->DrawRect(RectFromWXRect(r));
-   
+
                // Draw the "warning"  segment
                r.SetLeft(r.GetRight() + 1);
                r.SetWidth(floor(gradw));
                mPainter->DrawLinearGradientRect(
                   RectFromWXRect(r), green, yellow,
                   Painter::LinearGradientDirection::LeftToRight);
-   
+
                // Draw the "critical" segment
                r.SetLeft(r.GetRight() + 1);
                r.SetRight(mBar[i].r.GetRight());
@@ -645,7 +646,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                   if( (i%7)<2 ){
                      AColor::Line( *mPainter, i+r.x, r.y, i+r.x, r.y+r.height );
                   } else {
-                     // The LEDs have triangular ends.  
+                     // The LEDs have triangular ends.
                      // This code shapes the ends.
                      int j = abs( (i%7)-4);
                      AColor::Line( *mPainter, i+r.x, r.y, i+r.x, r.y+j +1);
@@ -712,7 +713,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
          Size Siz = mPainter->GetTextSize( Text );
          const auto descent =
             mPainter->GetCurrentFont()->GetFontMetrics().Descent;
-         
+
          Siz.width += gap;
          Siz.height += gap;
 
@@ -1342,7 +1343,7 @@ void MeterPanel::HandleLayout()
       {
          SetActiveStyle(width > height ? HorizontalStereo : VerticalStereo);
       }
-   
+
       if (mStyle == HorizontalStereoCompact || mStyle == HorizontalStereo)
       {
          SetActiveStyle(height < 50 ? HorizontalStereoCompact : HorizontalStereo);
@@ -1351,7 +1352,7 @@ void MeterPanel::HandleLayout()
       {
          SetActiveStyle(width < 100 ? VerticalStereoCompact : VerticalStereo);
       }
-   
+
       iconWidth = mIcon->GetWidth();
       iconHeight = mIcon->GetHeight();
       if (mLeftSize.GetWidth() == 0)  // Not yet initialized to dc.
@@ -1382,7 +1383,7 @@ void MeterPanel::HandleLayout()
 
       // height is now the entire height of the meter canvas
       height -= top + gap;
- 
+
       // barw is half of the canvas while allowing for a gap between meters
       barw = (width - gap) / 2;
 
@@ -1438,7 +1439,7 @@ void MeterPanel::HandleLayout()
 
       // height is now the entire height of the meter canvas
       height -= top + gap;
- 
+
       // barw is half of the canvas while allowing for a gap between meters
       barw = (width - gap) / 2;
 
@@ -1856,7 +1857,7 @@ void MeterPanel::DrawMeterBar(Painter &painter, MeterBar *bar)
          // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
          wd = (int)(bar->rms * (w - 1) + 0.5);
 
-         // Draw the rms level 
+         // Draw the rms level
          // +1 to include the rms position
          stateMutator.SetPen(Pen::NoPen);
          stateMutator.SetBrush(BrushFromWXBrush(mMeterDisabled ? mDisabledBkgndBrush : mRMSBrush));
@@ -1894,7 +1895,7 @@ void MeterPanel::DrawMeterBar(Painter &painter, MeterBar *bar)
          stateMutator.SetBrush(BrushFromWXBrush(mMeterDisabled ? mDisabledBkgndBrush : mBkgndBrush));
       }
       stateMutator.SetPen(Pen::NoPen);
-      
+
       wxRect r(bar->rClip.GetX() + 1,
                bar->rClip.GetY() + 1,
                bar->rClip.GetWidth() - 1,
@@ -1915,7 +1916,7 @@ void MeterPanel::StartMonitoring()
    auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsMonitoring()){
       gAudioIO->StopStream();
-   } 
+   }
 
    if (start && !gAudioIO->IsBusy()){
       AudacityProject *p = mProject;
@@ -1934,7 +1935,7 @@ void MeterPanel::StopMonitoring(){
    auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsMonitoring()){
       gAudioIO->StopStream();
-   } 
+   }
 }
 
 void MeterPanel::OnAudioIOStatus(AudioIOEvent evt)
@@ -2131,7 +2132,7 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
 
       gPrefs->Flush();
 
-      // Currently, there are 2 playback meters and 2 record meters and any number of 
+      // Currently, there are 2 playback meters and 2 record meters and any number of
       // mixerboard meters, so we have to send out an preferences updated message to
       // ensure they all update themselves.
       PrefsListener::Broadcast(MeterPrefsID());
