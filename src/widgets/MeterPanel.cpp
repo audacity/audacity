@@ -73,6 +73,7 @@
 #include "../widgets/wxWidgetsWindowPlacement.h"
 
 #include "AllThemeResources.h"
+#include "prefs/ThemePrefs.h"
 #include "../widgets/valnum.h"
 
 #include "graphics/Painter.h"
@@ -383,20 +384,28 @@ MeterPanel::MeterPanel(AudacityProject *project,
    // We have the tip instead.
    mDisabledBkgndBrush = mBkgndBrush;
    
-   // MixerTrackCluster style has no menu, so disallows SetStyle, so never needs icon.
-   if (mStyle != MixerTrackCluster)
-   {
-      if(mIsInput)
+   auto loadIcon = [this](auto) {
+      // MixerTrackCluster style has no menu, so
+      // disallows SetStyle, so never needs icon.
+      if (mStyle != MixerTrackCluster)
       {
-         //mIcon = NEW wxBitmap(MicMenuNarrow_xpm);
-         mIcon = theTheme.GetPainterImage(*mPainter, bmpMic);
+         if (mIsInput)
+         {
+            // mIcon = NEW wxBitmap(MicMenuNarrow_xpm);
+            mIcon = theTheme.GetPainterImage(*mPainter, bmpMic);
+         }
+         else
+         {
+            // mIcon = NEW wxBitmap(SpeakerMenuNarrow_xpm);
+            mIcon = theTheme.GetPainterImage(*mPainter, bmpSpeaker);
+         }
       }
-      else
-      {
-         //mIcon = NEW wxBitmap(SpeakerMenuNarrow_xpm);
-         mIcon = theTheme.GetPainterImage(*mPainter, bmpSpeaker);
-      }
-   }
+
+      mBitmap = {};
+   };
+
+   loadIcon(0);
+   mThemeChangedSubscription = theTheme.Subscribe(loadIcon);
 
    mTimer.SetOwner(this, OnMeterUpdateID);
    // TODO: Yikes.  Hard coded sample rate.
@@ -481,7 +490,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    Color clrText = ColorFromWXColor(theTheme.Colour(clrTrackPanelText));
    Color clrBoxFill = ColorFromWXColor(theTheme.Colour( clrMedium ));
 
-   if (mLayoutValid == false || (mStyle == MixerTrackCluster ))
+   if (mBitmap == nullptr || mLayoutValid == false || (mStyle == MixerTrackCluster ))
    {
       // Create a NEW one using current size and select into the DC
       mBitmap = mPainter->CreateDeviceImage(PainterImageFormat::RGB888, mWidth, mHeight);

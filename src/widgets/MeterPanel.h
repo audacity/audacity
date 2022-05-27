@@ -238,6 +238,7 @@ class AUDACITY_DLL_API MeterPanel final
    wxString Key(const wxString & key) const;
 
    Observer::Subscription mSubscription;
+   Observer::Subscription mThemeChangedSubscription;
 
    AudacityProject *mProject;
    std::unique_ptr<Painter> mPainter;
