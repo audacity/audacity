@@ -702,7 +702,7 @@ void LWSlider::OnPaint(Painter &painter, bool highlight)
    // Draw the background.
    // If we are lightweight, this has already been done for us.
    if( mHW ){
-      painter.Clear();
+      painter.Clear(ColorFromWXColor(mParent->GetBackgroundColour()));
    }
 
    painter.DrawImage(*mBitmap, mLeft, mTop);
