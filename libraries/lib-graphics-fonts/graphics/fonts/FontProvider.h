@@ -25,16 +25,20 @@ public:
 
    virtual unsigned long StreamRead(
       unsigned long offset, unsigned char* buffer, unsigned long count) = 0;
+
+   virtual long GetFaceIndex() const = 0;
 };
 
 class GRAPHICS_FONTS_API MemoryFontStream : public FontStream
 {
 public:
    explicit MemoryFontStream(std::vector<unsigned char> data);
-   
+
    unsigned long StreamRead(
       unsigned long offset, unsigned char* buffer,
       unsigned long count) override;
+
+   long GetFaceIndex() const override;
 
 private:
    std::vector<unsigned char> mData;

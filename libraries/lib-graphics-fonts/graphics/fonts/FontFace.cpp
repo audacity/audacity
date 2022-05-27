@@ -69,14 +69,14 @@ public:
    }
 
    HarfbuzzFont(const HarfbuzzFont&) = delete;
-   
+
    HarfbuzzFont(HarfbuzzFont&& rhs) noexcept
    {
       *this = std::move(rhs);
    }
 
    HarfbuzzFont& operator=(const HarfbuzzFont&) = delete;
-   
+
    HarfbuzzFont& operator=(HarfbuzzFont&& rhs) noexcept
    {
       std::swap(mFreeTypeFace, rhs.mFreeTypeFace);
@@ -87,7 +87,7 @@ public:
 
       return *this;
    }
-   
+
    ~HarfbuzzFont()
    {
       if (mFont != nullptr)
@@ -108,8 +108,8 @@ public:
       }
 
       if (FT_Set_Pixel_Sizes(mFreeTypeFace, 0, mPixelSize))
-         return {}; 
-      
+         return {};
+
       auto buffer = hb_buffer_create();
 
       if (buffer == nullptr)
@@ -124,7 +124,7 @@ public:
 
       const uint32_t glyphLength = hb_buffer_get_length(buffer);
       auto info = hb_buffer_get_glyph_infos(buffer, nullptr);
-      
+
       std::vector<TextLayoutSymbol> symbols;
       symbols.reserve(glyphLength);
 
@@ -218,10 +218,10 @@ private:
       if (FT_Load_Glyph(mFreeTypeFace, codePoint, FT_LOAD_FORCE_AUTOHINT))
          return {};
 
-      return { { mFreeTypeFace->glyph->advance.x >> 6,
-                 mFreeTypeFace->glyph->advance.y >> 6 },
-               mFreeTypeFace->glyph->lsb_delta,
-               mFreeTypeFace->glyph->rsb_delta };
+      return { { int(mFreeTypeFace->glyph->advance.x >> 6),
+                 int(mFreeTypeFace->glyph->advance.y >> 6) },
+               int(mFreeTypeFace->glyph->lsb_delta),
+               int(mFreeTypeFace->glyph->rsb_delta) };
    }
 
    FT_Face mFreeTypeFace { nullptr };
@@ -310,7 +310,7 @@ public:
    {
       if (FT_Set_Pixel_Sizes(mFreeTypeFace, 0, pixelSize))
          return {};
-      
+
       const auto charIndex = codepoint;
 
       if (charIndex == 0)
@@ -322,7 +322,7 @@ public:
          flags |= FT_LOAD_FORCE_AUTOHINT;
       else
          flags |= FT_LOAD_NO_HINTING | FT_LOAD_NO_AUTOHINT;
-      
+
       if (FT_Load_Glyph(mFreeTypeFace, charIndex, flags))
          return {};
 
@@ -332,7 +332,7 @@ public:
          return {};
 
       auto doneGlyph = finally([glyph]() { FT_Done_Glyph(glyph); });
-      
+
       if (mFreeTypeFace->glyph->format != FT_GLYPH_FORMAT_BITMAP)
       {
          if (FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, nullptr, true))
@@ -345,14 +345,14 @@ public:
       const auto srcHeight = bitmapGlyph->bitmap.rows;
       const auto tgtWidth = srcWidth + 2;
       const auto tgtHeight = srcHeight + 2;
-      
+
       FontSymbol symbol { std::vector<Color>(tgtWidth * tgtHeight),
                           tgtWidth, tgtHeight,
                           bitmapGlyph->left - 1,
                           bitmapGlyph->top + 1 };
 
       auto src_ptr = bitmapGlyph->bitmap.buffer;
-      
+
       if (bitmapGlyph->bitmap.pixel_mode == FT_PIXEL_MODE_GRAY)
       {
          for (uint32_t row = 0; row < srcHeight; row++)
@@ -371,10 +371,10 @@ public:
             {
                const auto srcByte = src_ptr[col / 8];
                const auto srcBit = col % 8;
-               
+
                const auto alpha =
                   (srcByte & (1 << (7 - srcBit))) == 0 ? 0 : 255;
-               
+
                SetColor(symbol, col, row, Color(255, 255, 255, alpha));
             }
 
@@ -413,7 +413,7 @@ private:
    {
       symbol.bitmap[(row + 1) * symbol.width + (col + 1)] = color;
    }
-   
+
    static unsigned long StreamRead(
       FT_Stream stream, unsigned long offset, unsigned char* buffer,
       unsigned long size)
@@ -427,14 +427,14 @@ private:
       auto face = static_cast<FreeTypeFace*>(stream->descriptor.pointer);
       face->mFontStream = {};
    }
-   
+
    FT_Face mFreeTypeFace { nullptr };
 
    using HarfbuzzFonts = std::unordered_map<uint32_t, HarfbuzzFont>;
    HarfbuzzFonts mHarfbuzzFonts;
 
    std::unique_ptr<FontStream> mFontStream;
-   
+
    FT_StreamRec mFreeTypeStream {};
    FT_Open_Args mFreeTypeOpenArgs {};
 
@@ -468,12 +468,12 @@ FontFace::CreateTextLayout(FontSize fontSize, std::string_view text) const
 {
    if (mFreetypeFace == nullptr)
       return nullptr;
-   
+
    auto hbfont = mFreetypeFace->GetHarfbuzzfont(GetPixelSize(fontSize));
 
    if (hbfont == nullptr)
       return nullptr;
-   
+
    return hbfont->CreateTextLayout(text);
 }
 

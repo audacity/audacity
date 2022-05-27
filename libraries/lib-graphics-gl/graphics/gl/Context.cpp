@@ -21,10 +21,10 @@
 namespace graphics::gl
 {
 
-Context::Context(GLFunctions& functions)
+Context::Context(const GLFunctions& functions)
     : mFunctions(functions)
 {
-  
+
 }
 
 Context::~Context()
@@ -44,7 +44,7 @@ void Context::Clear(const Rect& rect, Color color)
    auto oldRect = mCurrentState.mClipRect;
 
    SetClipRect(rect);
-   
+
    mFunctions.Clear(static_cast<GLbitfield>(GLenum::COLOR_BUFFER_BIT));
 
    if (!clippingWasEnabled)
@@ -82,7 +82,7 @@ void Context::BindTexture(const TexturePtr& texture, uint32_t textureUnitIndex)
       return ;
 
    SetClientActiveTexture(textureUnitIndex);
-   
+
    if (texture != nullptr)
       texture->Bind(*this, mCurrentState.mCurrentTexture[textureUnitIndex].get());
    else
@@ -153,7 +153,7 @@ void Context::BindBuffer(const VertexBuffer& buffer)
 void Context::BindProgram(const ProgramPtr& program, const ProgramConstantsPtr& constants)
 {
    const size_t constantsVersion = constants != nullptr ? constants->GetVersion() : 0;
-   
+
    if (
       mCurrentState.mCurrentProgram != program ||
       mCurrentState.mProgramConstants != constants ||
@@ -189,7 +189,7 @@ void Context::SetClipRect(const Rect& rect)
 }
 
 void Context::SetClipRect(const RectType<GLint>& rect)
-{   
+{
    if (!mCurrentState.mClippingEnabled)
    {
       mCurrentState.mClippingEnabled = true;
@@ -199,7 +199,7 @@ void Context::SetClipRect(const RectType<GLint>& rect)
    if (rect != mCurrentState.mClipRect)
    {
       mCurrentState.mClipRect = rect;
-      
+
       mFunctions.Scissor(
          rect.origin.x, mViewport.size.height - rect.size.height - rect.origin.y,
          rect.size.width, rect.size.height);
@@ -212,7 +212,7 @@ void Context::ResetClipRect()
    {
       mCurrentState.mClippingEnabled = false;
       mFunctions.Disable(GLenum::SCISSOR_TEST);
-      
+
       mCurrentState.mClipRect = { {},
                                   { static_cast<GLint>(mViewport.size.width),
                                     static_cast<GLint>(mViewport.size.height) } };
@@ -279,9 +279,9 @@ void Context::SetBestUnpackAlignment(uint32_t rowStride)
 void Context::SetupContext()
 {
    mFunctions.Enable(GLenum::PRIMITIVE_RESTART);
-   
+
    mFunctions.Enablei(GLenum::BLEND, 0);
-   
+
    mFunctions.BlendFunc(GLenum::SRC_ALPHA, GLenum::ONE_MINUS_SRC_ALPHA);
    mFunctions.BlendEquation(GLenum::FUNC_ADD);
 
@@ -291,7 +291,7 @@ void Context::SetupContext()
    mFunctions.SamplerParameteri(mSamplerStateObject, GLenum::TEXTURE_WRAP_T, static_cast<GLint>(GLenum::CLAMP_TO_EDGE));
    mFunctions.SamplerParameteri(mSamplerStateObject, GLenum::TEXTURE_MIN_FILTER, static_cast<GLint>(GLenum::LINEAR));
    mFunctions.SamplerParameteri(mSamplerStateObject, GLenum::TEXTURE_MAG_FILTER, static_cast<GLint>(GLenum::LINEAR));
-   
+
    mFunctions.BindSampler(0, mSamplerStateObject);
    mFunctions.BindSampler(1, mSamplerStateObject);
 }

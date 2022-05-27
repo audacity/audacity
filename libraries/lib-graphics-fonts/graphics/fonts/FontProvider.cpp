@@ -43,4 +43,10 @@ unsigned long MemoryFontStream::StreamRead(
 
    return count;
 }
+
+long MemoryFontStream::GetFaceIndex() const
+{
+   return 0;
+}
+
 } // namespace graphics::fonts

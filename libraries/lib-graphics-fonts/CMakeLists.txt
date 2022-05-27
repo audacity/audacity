@@ -18,7 +18,14 @@ set( SOURCES
 
    $<$<PLATFORM_ID:Windows>:graphics/fonts/platforms/windows/WindowsFontProvider.cpp>
    $<$<PLATFORM_ID:Windows>:graphics/fonts/platforms/windows/WindowsFontProvider.h>
+
+   $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:graphics/fonts/platforms/linux/LinuxFontProvider.cpp>
+   $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:graphics/fonts/platforms/linux/LinuxFontProvider.h>
 )
+
+if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows" )
+   find_package(Fontconfig REQUIRED)
+endif()
 
 set( LIBRARIES
    PUBLIC
@@ -29,6 +36,7 @@ set( LIBRARIES
       Freetype::Freetype
       harfbuzz::harfbuzz
       wxwidgets::base
+      $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:Fontconfig::Fontconfig>
 )
 
 audacity_library( lib-graphics-fonts "${SOURCES}" "${LIBRARIES}"

@@ -36,7 +36,11 @@ set( SOURCES
 
    $<$<PLATFORM_ID:Windows>:graphics/gl/platforms/windows/WGLRenderer.cpp>
    $<$<PLATFORM_ID:Windows>:graphics/gl/platforms/windows/WGLRenderer.h>
+
+   $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:graphics/gl/platforms/linux/EGLRenderer.cpp>
+   $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:graphics/gl/platforms/linux/EGLRenderer.h>
 )
+
 set( LIBRARIES
    PUBLIC
       lib-graphics-interface
@@ -48,7 +52,16 @@ set( LIBRARIES
       lib-utility-interface
       wxwidgets::base
       wxwidgets::core
+
+      $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:PkgConfig::GLIB>
+      $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:PkgConfig::GTK>
 )
+
+set( DEFINES
+   PRIVATE
+      $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:HAS_EGL_SUPPORT=1>
+)
+
 audacity_library( lib-graphics-gl "${SOURCES}" "${LIBRARIES}"
-   "" ""
+   "${DEFINES}" ""
 )

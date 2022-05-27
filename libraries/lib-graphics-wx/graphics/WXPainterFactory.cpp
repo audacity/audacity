@@ -203,6 +203,11 @@ RendererType GetPreferredRenderType() noexcept
 
 std::unique_ptr<Painter> CreatePainter(wxWindow* wnd)
 {
+   if (wnd == nullptr)
+      return {};
+
+   wnd->SetBackgroundStyle(wxBG_STYLE_PAINT);
+
    return GetRendererProvider(GetPreferredRenderType())
       .CreatePainterFromWindow(*wnd);
 }

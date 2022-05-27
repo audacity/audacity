@@ -742,10 +742,10 @@ protected:
    virtual void* GetFunctionPointer(const char* name) const = 0;
 
    template<typename Fn>
-   bool GetFunction(Fn& fn, const char* name, bool canFail)
+   bool GetFunction(Fn& fn, const char* name, bool required)
    {
       fn = reinterpret_cast<Fn>(GetFunctionPointer(name));
-      return canFail || fn != nullptr;
+      return fn != nullptr || !required;
    }
 
    bool LoadFunctions();

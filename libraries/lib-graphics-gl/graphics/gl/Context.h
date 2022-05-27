@@ -52,12 +52,12 @@ class Context /* not final */ :
 {
 public:
    static constexpr size_t MAX_TEXTURE_UNITS = 2;
-   
-   explicit Context(GLFunctions& functions);
+
+   explicit Context(const GLFunctions& functions);
    virtual ~Context();
 
    virtual Size GetSize() const = 0;
-   
+
    const GLFunctions& GetFunctions() const;
 
    virtual void Clear(const Rect& rect, Color color);
@@ -74,7 +74,7 @@ public:
    void BindBuffer(const VertexBuffer& buffer);
 
    void BindProgram(const ProgramPtr& program, const ProgramConstantsPtr& constants);
-   
+
    void BindFramebuffer(const FramebufferPtr& framebuffer);
 
    void SetClipRect(const Rect& rect);
@@ -105,13 +105,13 @@ public:
       void ApplySnapshot(Context& ctx) const;
 
       FramebufferPtr mCurrentFramebuffer;
-      
+
       ProgramPtr mCurrentProgram;
       ProgramConstantsPtr mProgramConstants;
       size_t mProgramConstantsVersion { 0 };
-      
+
       VertexArrayPtr mCurrentVertexArray;
-      
+
       std::array<TexturePtr, 2> mCurrentTexture;
 
       RectType<GLint> mClipRect;
@@ -133,10 +133,10 @@ protected:
    void UpdateScreenProperties(uint32_t dpi, float scaleFactor) noexcept;
 
 private:
-   GLFunctions& mFunctions;
+   const GLFunctions& mFunctions;
 
    Color mClearColor;
-   
+
    std::vector<std::pair<GLenum, const VertexBuffer*>> mBufferMappings;
    std::vector<std::pair<ContextResourceType, GLuint>> mReleaseQueue;
 

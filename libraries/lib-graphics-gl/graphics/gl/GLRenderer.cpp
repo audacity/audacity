@@ -18,6 +18,8 @@
 
 #ifdef WIN32
 #  include "platforms/windows/WGLRenderer.h"
+#elif defined(HAS_EGL_SUPPORT)
+#  include "platforms/linux/EGLRenderer.h"
 #endif
 
 #include "graphics/fonts/FontLibrary.h"
@@ -33,11 +35,13 @@ std::unique_ptr<GLRenderer> SharedRenderer;
 const RendererID OpenGLRendererID = RegisterRenderer("OpenGL 3.2");
 
 GLRenderer& GetSharedRenderer()
-{   
+{
    if (SharedRenderer == nullptr)
    {
    #ifdef WIN32
       SharedRenderer = std::make_unique<platforms::windows::WGLRenderer>();
+   #elif defined(HAS_EGL_SUPPORT)
+      SharedRenderer = std::make_unique<platforms::linux_like::EGLRenderer>();
    #endif
    }
 
