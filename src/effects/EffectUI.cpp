@@ -665,6 +665,17 @@ void EffectUIHost::OnDebug(wxCommandEvent & evt)
    OnApply(evt);
 }
 
+namespace {
+wxString GetVersionForDisplay(const EffectDefinitionInterface &definition)
+{
+   static const auto specialVersion = XO("n/a");
+   auto result = definition.GetVersion();
+   if (result == specialVersion.MSGID())
+      result = specialVersion.Translation();
+   return result;
+}
+}
+
 void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 {
    wxMenu menu;
@@ -740,7 +751,8 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
       sub->Append(kDummyID, wxString::Format(_("Type: %s"),
          ::wxGetTranslation( definition.GetFamily().Translation() )));
       sub->Append(kDummyID, wxString::Format(_("Name: %s"), definition.GetName().Translation()));
-      sub->Append(kDummyID, wxString::Format(_("Version: %s"), definition.GetVersion()));
+      sub->Append(kDummyID, wxString::Format(_("Version: %s"),
+         GetVersionForDisplay(definition)));
       sub->Append(kDummyID, wxString::Format(_("Vendor: %s"), definition.GetVendor().Translation()));
       sub->Append(kDummyID, wxString::Format(_("Description: %s"), definition.GetDescription().Translation()));
       sub->Bind(wxEVT_MENU, [](auto&){}, kDummyID);

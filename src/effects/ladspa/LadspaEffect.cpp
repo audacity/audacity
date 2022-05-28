@@ -672,7 +672,7 @@ VendorSymbol LadspaEffect::GetVendor() const
 
 wxString LadspaEffect::GetVersion() const
 {
-   return _("n/a");
+   return "n/a";
 }
 
 TranslatableString LadspaEffect::GetDescription() const
