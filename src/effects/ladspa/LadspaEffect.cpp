@@ -371,7 +371,7 @@ LadspaEffectsModule::LoadPlugin(const PluginPath & path)
    wxString realPath = path.BeforeFirst(wxT(';'));
    path.AfterFirst(wxT(';')).ToLong(&index);
    auto result = std::make_unique<LadspaEffect>(realPath, (int)index);
-   result->InitializePlugin();
+   result->FullyInitializePlugin();
    return result;
 }
 
@@ -799,8 +799,6 @@ bool LadspaEffect::InitializePlugin()
    if (!Load())
       return false;
 
-   mUseLatency = LadspaEffect::LoadUseLatency(*this);
-
    mInputPorts.reinit( mData->PortCount );
    mOutputPorts.reinit( mData->PortCount );
    for (unsigned long p = 0; p < mData->PortCount; p++) {
@@ -831,6 +829,18 @@ bool LadspaEffect::InitializePlugin()
          }
       }
    }
+   return true;
+}
+
+bool LadspaEffect::FullyInitializePlugin()
+{
+   if (!InitializePlugin())
+      return false;
+
+   // Reading these values from the config file can't be done in the PluginHost
+   // process but isn't needed only for plugin discovery.
+
+   mUseLatency = LadspaEffect::LoadUseLatency(*this);
    return true;
 }
 
