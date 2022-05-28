@@ -94,7 +94,8 @@ public :
    //       Again, this is total hackage and I hope to find the real cause soon.
    if (mRedraw) {
       NSRect viewRect = [mView frame];
-      NSRect bogusRect = {};
+      NSRect bogusRect = viewRect;
+      ++bogusRect.size.width;
       [mView setFrameSize:bogusRect.size];
       [mView setFrameSize:viewRect.size];
       mRedraw = NO;
