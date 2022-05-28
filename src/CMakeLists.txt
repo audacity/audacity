@@ -9,7 +9,7 @@ message( STATUS "========== Configuring ${TARGET} ==========" )
 # Allow modules to link against the Audacity executable
 set( CMAKE_ENABLE_EXPORTS ON )
 
-add_executable( ${TARGET} )
+add_executable( ${TARGET} export/ExportOpus.cpp)
 add_dependencies( ${TARGET} locale )
 add_dependencies( ${TARGET} nyquist )
 add_dependencies( ${TARGET} plug-ins )
@@ -658,6 +658,10 @@ list( APPEND SOURCES
          export/ExportOGG.cpp
       >
 
+        $<$<AND:$<BOOL:${USE_LIBOPUS}>,$<BOOL:${USE_LIBOPUS}>>:
+        export/ExportOpus.cpp
+        >
+
       # Import
 
       import/FormatClassifier.cpp
@@ -1167,6 +1171,7 @@ list( APPEND LIBRARIES
       $<$<BOOL:${USE_LIBFLAC}>:FLAC::FLAC++>
       $<$<BOOL:${USE_LIBMAD}>:libmad::libmad>
       $<$<BOOL:${USE_LIBOGG}>:Ogg::ogg>
+      $<$<BOOL:${USE_LIBOPUS}>:Opus::opus>
       $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbis>
       $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbisfile>
       $<$<BOOL:${USE_LIBVORBIS}>:Vorbis::vorbisenc>
