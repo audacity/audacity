@@ -1159,6 +1159,7 @@ TranslatableString AudioUnitEffect::Import(
    wxMemoryBuffer buf(len);
    if (f.Read(buf.GetData(), len) != len || f.Error())
       return XO("Unable to read the preset from \"%s\"").Format(path);
+   buf.SetDataLen(len);
 
    const auto error = InterpretBlob(settings, path, buf);
    if (!error.empty())
