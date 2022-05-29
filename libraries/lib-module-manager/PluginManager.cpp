@@ -408,7 +408,6 @@ void PluginManager::Initialize(FileConfigFactory factory)
 void PluginManager::Terminate()
 {
    // Get rid of all non-module(effects?) plugins first
-   auto iter = mRegisteredPlugins.begin();
    for(auto& p : mRegisteredPlugins)
    {
       auto& desc = p.second;

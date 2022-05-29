@@ -671,8 +671,10 @@ bool Effect::EnablePreview(bool enable)
          play->Enable(enable);
          if (SupportsRealtime())
          {
-            rewind->Enable(enable);
-            ffwd->Enable(enable);
+            if (rewind)
+               rewind->Enable(enable);
+            if (ffwd)
+               ffwd->Enable(enable);
          }
       }
    }
