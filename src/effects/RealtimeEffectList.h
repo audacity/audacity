@@ -80,6 +80,9 @@ public:
    //! Use only in the main thread
    //! Returns null if no such effect was found.
    //! Sends Insert message on success.
+   /*!
+    @post result: `!result || result->GetEffect() != nullptr`
+    */
    std::shared_ptr<RealtimeEffectState> AddState(const PluginID &id);
    //! Use only in the main thread
    //! On success sends Remove message.

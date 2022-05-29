@@ -70,6 +70,8 @@ public:
     @param pTrack if null, then state is added to the global list
     @param id identifies the effect
     @return if null, the given id was not found
+
+    @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState> AddState(
       RealtimeEffects::InitializationScope *pScope, Track *pTrack,

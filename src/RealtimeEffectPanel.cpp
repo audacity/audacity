@@ -719,6 +719,7 @@ public:
       if(auto state = AudioIO::Get()->AddState(*mProject, &*mTrack, effectID))
       {
          auto effect = state->GetEffect();
+         assert(effect); // postcondition of AddState
          ProjectHistory::Get(*mProject).PushState(
             //i18n-hint: undo history, first parameter - realtime effect name, second - track name
             XO("'%s' added to the '%s' effect stack").Format(effect->GetName(), mTrack->GetName()),
