@@ -161,7 +161,7 @@ bool PluginDescriptor::IsEffectLegacy() const
 
 bool PluginDescriptor::IsEffectRealtime() const
 {
-   return mEffectRealtime;
+   return mEffectRealtime != EffectDefinitionInterface::RealtimeSince::Never;
 }
 
 bool PluginDescriptor::IsEffectAutomatable() const
@@ -195,6 +195,14 @@ void PluginDescriptor::SetEffectLegacy(bool legacy)
 }
 
 void PluginDescriptor::SetEffectRealtime(bool realtime)
+{
+   mEffectRealtime = realtime
+      ? EffectDefinitionInterface::RealtimeSince::Always
+      : EffectDefinitionInterface::RealtimeSince::Never;
+}
+
+void PluginDescriptor::SetRealtimeSupport(
+   EffectDefinitionInterface::RealtimeSince realtime)
 {
    mEffectRealtime = realtime;
 }
