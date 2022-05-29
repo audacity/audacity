@@ -176,11 +176,13 @@ bool LV2Effect::IsDefault() const
    return false;
 }
 
-bool LV2Effect::SupportsRealtime() const
+auto LV2Effect::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
-   return false;
-//   return GetType() == EffectTypeProcess;
+   return RealtimeSince::Never;
+//   return GetType() == EffectTypeProcess
+//      ? RealtimeSince::Always
+//      : RealtimeSince::Never;
 }
 
 bool LV2Effect::SupportsAutomation() const

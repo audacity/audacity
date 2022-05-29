@@ -182,11 +182,12 @@ bool AudioUnitEffect::IsDefault() const
    return false;
 }
 
-bool AudioUnitEffect::SupportsRealtime() const
+auto AudioUnitEffect::RealtimeSupport() const -> RealtimeSince
 {
-   return true;
-
-//   return GetType() == EffectTypeProcess;
+   return RealtimeSince::Always;
+   // return GetType() == EffectTypeProcess
+      // ? RealtimeSince::Always
+      // : RealtimeSince::Never;
 }
 
 bool AudioUnitEffect::SupportsAutomation() const

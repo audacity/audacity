@@ -85,7 +85,7 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
-   bool SupportsRealtime() const override;
+   RealtimeSince RealtimeSupport() const override;
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;

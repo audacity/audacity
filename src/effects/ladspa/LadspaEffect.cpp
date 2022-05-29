@@ -719,9 +719,11 @@ bool LadspaEffect::IsDefault() const
    return false;
 }
 
-bool LadspaEffect::SupportsRealtime() const
+auto LadspaEffect::RealtimeSupport() const -> RealtimeSince
 {
-   return GetType() != EffectTypeGenerate;
+   return GetType() == EffectTypeGenerate
+      ? RealtimeSince::Never
+      : RealtimeSince::Always;
 }
 
 bool LadspaEffect::SupportsAutomation() const

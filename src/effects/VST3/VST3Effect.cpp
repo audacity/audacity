@@ -320,13 +320,13 @@ bool VST3Effect::IsDefault() const
    return false;
 }
 
-bool VST3Effect::SupportsRealtime() const
+auto VST3Effect::RealtimeSupport() const -> RealtimeSince
 {
    // TODO reenable after achieving statelessness
    // Also, as with old VST, perhaps only for plug-ins known not to be
    // just generators
-   return false;
-//   return true;
+   return RealtimeSince::Never;
+//   return RealtimeSince::Always;
 }
 
 bool VST3Effect::SupportsAutomation() const

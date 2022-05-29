@@ -115,9 +115,9 @@ bool Effect::IsDefault() const
    return true;
 }
 
-bool Effect::SupportsRealtime() const
+auto Effect::RealtimeSupport() const -> RealtimeSince
 {
-   return false;
+   return RealtimeSince::Never;
 }
 
 bool Effect::SupportsAutomation() const
