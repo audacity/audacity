@@ -46,7 +46,6 @@ for shared and private configs - which need to move out.
 
 // Registry has the list of plug ins
 #define REGVERKEY wxString(wxT("/pluginregistryversion"))
-#define REGVERCUR wxString(wxT("1.1"))
 #define REGROOT wxString(wxT("/pluginregistry/"))
 
 // Settings has the values of the plug in settings.
@@ -557,8 +556,7 @@ void PluginManager::Load()
    // TODO: Should also check for a registry file that is newer than
    // what we can understand.
    wxString regver = registry.Read(REGVERKEY);
-   if (regver < REGVERCUR )
-   {
+   if (Regver_lt(regver, "1.1")) {
       // Conversion code here, for when registry version changes.
 
       // We iterate through the effects, possibly updating their info.
@@ -582,7 +580,7 @@ void PluginManager::Load()
          // For 2.3.0 the plugins we distribute have moved around.
          // So we upped the registry version number to 1.1.
          // These particular config edits were originally written to fix Bug 1914.
-         if (regver <= "1.0") {
+         if (Regver_le(regver, "1.0")) {
             // Nyquist prompt is a built-in that has moved to the tools menu.
             if (effectSymbol == NYQUIST_PROMPT_ID) {
                registry.Write(KEY_EFFECTTYPE, "Tool");

@@ -80,6 +80,25 @@ using ConfigConstReference =
 
 }
 
+//! Type of plugin registry version information
+using PluginRegistryVersion = wxString;
+
+MODULE_MANAGER_API
+bool Regver_eq(
+   const PluginRegistryVersion &regver1, const PluginRegistryVersion &regver2);
+
+// Compare registry versions
+MODULE_MANAGER_API
+bool Regver_lt(
+   const PluginRegistryVersion &regver1, const PluginRegistryVersion &regver2);
+
+// Compare registry versions
+inline bool Regver_le(
+   const PluginRegistryVersion &regver1, const PluginRegistryVersion &regver2)
+{
+   return !Regver_lt(regver2, regver1);
+}
+
 class MODULE_MANAGER_API PluginManagerInterface /* not final */
 {
 public:

@@ -226,4 +226,7 @@ private:
 // User-visible name might change in later versions
 #define NYQUIST_PROMPT_NAME XO("Nyquist Prompt")
 
+// Latest version of the plugin registry config
+constexpr auto REGVERCUR = "1.2";
+
 #endif /* __AUDACITY_PLUGINMANAGER_H__ */
