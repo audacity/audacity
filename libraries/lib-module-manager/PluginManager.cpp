@@ -1227,6 +1227,14 @@ PluginID PluginManager::GetID(const EffectDefinitionInterface* effect)
                            effect->GetPath());
 }
 
+Identifier PluginManager::GetEffectNameFromID(const PluginID &ID)
+{
+   auto strings = wxSplit(ID, '_');
+   if (strings.size() == 5)
+      return strings[3];
+   return {};
+}
+
 // This string persists in configuration files
 // So config compatibility will break if it is changed across Audacity versions
 wxString PluginManager::GetPluginTypeString(PluginType type)

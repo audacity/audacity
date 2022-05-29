@@ -338,6 +338,17 @@ namespace
          SetSizer(vSizer.release());
       }
 
+      //! @pre `mEffectState != nullptr`
+      TranslatableString GetEffectName() const
+      {
+         const auto &ID = mEffectState->GetID();
+         auto desc = PluginManager::Get().GetPlugin(ID);
+         return desc
+            ? desc->GetSymbol().Msgid()
+            : XO("%s (missing)")
+               .Format(PluginManager::GetEffectNameFromID(ID).GET());
+      }
+
       void SetEffect(AudacityProject& project,
          const std::shared_ptr<Track>& track,
          const std::shared_ptr<RealtimeEffectState> &pState)
@@ -345,9 +356,10 @@ namespace
          mProject = &project;
          mTrack = track;
          mEffectState = pState;
-         auto desc = PluginManager::Get().GetPlugin(mEffectState->GetID());
-
-         mChangeButton->SetTranslatableLabel(desc->GetSymbol().Msgid());
+         TranslatableString label;
+         if (pState)
+            label = GetEffectName();
+         mChangeButton->SetTranslatableLabel(label);
       }
 
       void RemoveFromList()
@@ -355,7 +367,7 @@ namespace
          if(mProject == nullptr || mEffectState == nullptr)
             return;
          
-         auto effectName = mEffectState->GetEffect()->GetName();
+         auto effectName = GetEffectName();
          //After AudioIO::RemoveState call this will be destroyed
          auto project = mProject.get();
          auto trackName = mTrack->GetName();
@@ -394,7 +406,7 @@ namespace
 
          if (changed)
          {
-            auto effectName = mEffectState->GetEffect()->GetName();
+            auto effectName = GetEffectName();
             ProjectHistory::Get(*mProject).PushState(
                //i18n-hint: undo history, first parameter - realtime effect name, second - track name
                XO("'%s' effect of '%s' modified").Format(effectName, mTrack->GetName()),
