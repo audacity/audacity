@@ -810,11 +810,11 @@ void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
             plug.SetEffectInteractive(boolVal);
 
             // Is it a realtime capable effect and bypass group if not found
-            if (!pRegistry->Read(KEY_EFFECTREALTIME, &boolVal))
+            if (!pRegistry->Read(KEY_EFFECTREALTIME, &strVal))
             {
                continue;
             }
-            plug.SetEffectRealtime(boolVal);
+            plug.DeserializeRealtimeSupport(strVal);
 
             // Does the effect support automation...bypass group if not found
             if (!pRegistry->Read(KEY_EFFECTAUTOMATABLE, &boolVal))
@@ -968,7 +968,7 @@ void PluginManager::SaveGroup(FileConfig *pRegistry, PluginType type)
             pRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamily());
             pRegistry->Write(KEY_EFFECTDEFAULT, plug.IsEffectDefault());
             pRegistry->Write(KEY_EFFECTINTERACTIVE, plug.IsEffectInteractive());
-            pRegistry->Write(KEY_EFFECTREALTIME, plug.IsEffectRealtime());
+            pRegistry->Write(KEY_EFFECTREALTIME, plug.SerializeRealtimeSupport());
             pRegistry->Write(KEY_EFFECTAUTOMATABLE, plug.IsEffectAutomatable());
          }
          break;

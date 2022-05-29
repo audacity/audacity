@@ -112,8 +112,13 @@ public:
    void SetEffectDefault(bool dflt);
    void SetEffectInteractive(bool interactive);
    void SetEffectLegacy(bool legacy);
-   void SetEffectRealtime(bool realtime);
    void SetRealtimeSupport(EffectDefinitionInterface::RealtimeSince realtime);
+
+   //! for serialization
+   wxString SerializeRealtimeSupport() const;
+   //! for deserialization
+   void DeserializeRealtimeSupport(const wxString &value);
+
    void SetEffectAutomatable(bool automatable);
 
    void SetImporterIdentifier(const wxString & identifier);
