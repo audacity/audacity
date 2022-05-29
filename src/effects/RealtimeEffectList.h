@@ -109,9 +109,6 @@ public:
    bool HandleXMLTag(
       const std::string_view &tag, const AttributesList &attrs) override;
 
-   //! Use only in the main thread.  May remove a failed state
-   void HandleXMLEndTag(const std::string_view &tag) override;
-
    //! Use only in the main thread.  May add a state while deserializing
    XMLTagHandler *HandleXMLChild(const std::string_view &tag) override;
 
