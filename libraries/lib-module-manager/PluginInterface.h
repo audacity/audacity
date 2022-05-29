@@ -152,6 +152,9 @@ public:
       const PluginID & ID, const RegistryPath & group) = 0;
    virtual bool RemoveConfig(ConfigurationType type, const PluginID & ID,
       const RegistryPath & group, const RegistryPath & key) = 0;
+
+   //! What is the plugin registry version number now in the file?
+   virtual const PluginRegistryVersion &GetRegistryVersion() const = 0;
 };
 
 #endif // __AUDACITY_PLUGININTERFACE_H__

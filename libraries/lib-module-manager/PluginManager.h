@@ -170,6 +170,10 @@ public:
    //! Save to preferences
    void Save();
 
+   //! What is the plugin registry version number now in the file?
+   //! (Save() updates it)
+   const PluginRegistryVersion &GetRegistryVersion() const override;
+
 private:
    // private! Use Get()
    PluginManager();
@@ -217,6 +221,7 @@ private:
    PluginMap mRegisteredPlugins;
    std::map<PluginID, std::unique_ptr<ComponentInterface>> mLoadedInterfaces;
 
+   PluginRegistryVersion mRegver;
 };
 
 // Defining these special names in the low-level PluginManager.h

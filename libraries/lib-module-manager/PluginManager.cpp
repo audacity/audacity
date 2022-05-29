@@ -555,8 +555,8 @@ void PluginManager::Load()
    // Check for a registry version that we can understand
    // TODO: Should also check for a registry file that is newer than
    // what we can understand.
-   wxString regver = registry.Read(REGVERKEY);
-   if (Regver_lt(regver, "1.1")) {
+   mRegver = registry.Read(REGVERKEY);
+   if (Regver_lt(mRegver, "1.1")) {
       // Conversion code here, for when registry version changes.
 
       // We iterate through the effects, possibly updating their info.
@@ -580,7 +580,7 @@ void PluginManager::Load()
          // For 2.3.0 the plugins we distribute have moved around.
          // So we upped the registry version number to 1.1.
          // These particular config edits were originally written to fix Bug 1914.
-         if (Regver_le(regver, "1.0")) {
+         if (Regver_le(mRegver, "1.0")) {
             // Nyquist prompt is a built-in that has moved to the tools menu.
             if (effectSymbol == NYQUIST_PROMPT_ID) {
                registry.Write(KEY_EFFECTTYPE, "Tool");
@@ -601,7 +601,6 @@ void PluginManager::Load()
          registry.DeleteGroup(groupsToDelete[i]);
       }
       registry.SetPath("");
-      registry.Write(REGVERKEY, REGVERCUR);
       // Updates done.  Make sure we read the updated data later.
       registry.Flush();
    }
@@ -885,9 +884,6 @@ void PluginManager::Save()
    // Clear pluginregistry.cfg (not audacity.cfg)
    registry.DeleteAll();
 
-   // Write the version string
-   registry.Write(REGVERKEY, REGVERCUR);
-
    // Save the individual groups
    SaveGroup(&registry, PluginTypeEffect);
    SaveGroup(&registry, PluginTypeExporter);
@@ -902,8 +898,18 @@ void PluginManager::Save()
    // And now the providers
    SaveGroup(&registry, PluginTypeModule);
 
+   // Write the version string
+   registry.Write(REGVERKEY, REGVERCUR);
+
    // Just to be safe
    registry.Flush();
+
+   mRegver = REGVERCUR;
+}
+
+const PluginRegistryVersion &PluginManager::GetRegistryVersion() const
+{
+   return mRegver;
 }
 
 void PluginManager::SaveGroup(FileConfig *pRegistry, PluginType type)
