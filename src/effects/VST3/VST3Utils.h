@@ -16,6 +16,10 @@
 #include <pluginterfaces/vst/vsttypes.h>
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 
+#include <unordered_map>
+
+struct EffectSettings;
+
 class wxString;
 class wxWindow;
 
@@ -75,6 +79,11 @@ public:
 };
 
 
+struct VST3EffectSettings
+{
+   std::unordered_map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> mValues;
+};
+
 struct VST3Wrapper
 {
    // For the time being, here we have only members that are needed
@@ -105,5 +114,33 @@ struct VST3Wrapper
    bool LoadPreset(Steinberg::IBStream*, const Steinberg::FUID& classID);
 
    bool SavePreset(Steinberg::IBStream*, const Steinberg::FUID& classID) const;
+
+   bool FetchSettings(VST3EffectSettings& settings) const;
+
+   bool StoreSettings(const VST3EffectSettings& settings) const;
+
+   VST3EffectSettings mSettings;  // temporary, until the effect is really stateless
+
+   //! This function will be rewritten when the effect is really stateless
+   VST3EffectSettings& GetSettings(EffectSettings&) const
+   {
+      return const_cast<VST3Wrapper*>(this)->mSettings;
+   }
+
+   //! This function will be rewritten when the effect is really stateless
+   const VST3EffectSettings& GetSettings(const EffectSettings&) const
+   {
+      return mSettings;
+   }
+
+   //! This is what ::GetSettings will be when the effect becomes really stateless
+   /*
+   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VST3EffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+   */
 };
 

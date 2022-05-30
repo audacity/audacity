@@ -12,6 +12,7 @@
 
 #include "VST3Utils.h"
 #include "MemoryX.h"
+#include "EffectInterface.h"
 
 #include <wx/string.h>
 #include <wx/sizer.h>
@@ -330,3 +331,46 @@ bool VST3Wrapper::SavePreset(Steinberg::IBStream* fileStream, const Steinberg::F
    );
 }
 
+
+bool VST3Wrapper::FetchSettings(VST3EffectSettings& settings) const
+{
+   settings.mValues.clear();
+
+   return ForEachParameter(
+
+      [&](const ParameterInfo& pi)
+      {
+         const auto id = pi.id;
+         settings.mValues[id] = mEditController->getParamNormalized(id);
+         return true;
+      }
+   );
+}
+
+
+bool VST3Wrapper::StoreSettings(const VST3EffectSettings& settings) const
+{
+   if (mEditController == nullptr)
+      return false;
+
+   return ForEachParameter
+   (
+      [&](const ParameterInfo& parameterinfo)
+      {
+         auto itr = settings.mValues.find(parameterinfo.id);
+         if (itr != settings.mValues.end())
+         {
+            const auto& value = itr->second;
+
+            mEditController->setParamNormalized(parameterinfo.id, value);
+         }
+         else
+         {
+            return false;
+         }
+
+         return true;
+      }
+   );
+
+}
