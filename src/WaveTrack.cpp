@@ -705,11 +705,13 @@ void WaveTrack::Trim (double t0, double t1)
 
 
 WaveTrack::Holder WaveTrack::EmptyCopy(
-   const SampleBlockFactoryPtr &pFactory ) const
+   const SampleBlockFactoryPtr &pFactory, bool keepLink) const
 {
    auto result = std::make_shared<WaveTrack>( pFactory, mFormat, mRate );
    result->Init(*this);
    result->mpFactory = pFactory ? pFactory : mpFactory;
+   if (!keepLink)
+      result->SetLinkType(LinkType::None);
    return result;
 }
 

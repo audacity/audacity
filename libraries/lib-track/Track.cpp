@@ -219,13 +219,14 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
       // Becoming unlinked
       assert(mpGroupData);
       if (HasLinkedTrack()) {
-         // Make independent copy of group data in the partner, which should
-         // have had none
-         auto partner = GetLinkedTrack();
-         assert(!partner->mpGroupData);
-         partner->mpGroupData =
-            std::make_unique<ChannelGroupData>(*mpGroupData);
-         partner->mpGroupData->mLinkType = LinkType::None;
+         if (auto partner = GetLinkedTrack()) {
+            // Make independent copy of group data in the partner, which should
+            // have had none
+            assert(!partner->mpGroupData);
+            partner->mpGroupData =
+               std::make_unique<ChannelGroupData>(*mpGroupData);
+            partner->mpGroupData->mLinkType = LinkType::None;
+         }
       }
       mpGroupData->mLinkType = LinkType::None;
    }
