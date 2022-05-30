@@ -492,7 +492,6 @@ bool LV2Effect::InitializePlugin()
    AddFeature(LV2_INSTANCE_ACCESS_URI, nullptr);
    mParentFeature = mFeatures.size();
    AddFeature(LV2_UI__parent, nullptr);
-   AddFeature(nullptr, nullptr);
    if (!ValidateFeatures(lilv_plugin_get_uri(mPlug)))
       return false;
 
@@ -1651,13 +1650,19 @@ size_t LV2Effect::AddOption(LV2_URID key, uint32_t size, LV2_URID type, const vo
 
 void LV2Effect::AddFeature(const char *uri, const void *data)
 {
-   mFeatures.emplace_back(uri
-      ? std::make_unique<LV2_Feature>(
-         // This casting to const is innocent
-         // We pass our "virtual function tables" or array of options, which the
-         // library presumably will not change
-         LV2_Feature{ uri, const_cast<void*>(data) })
-      : nullptr);
+   // This casting to const is innocent
+   // We pass our "virtual function tables" or array of options, which the
+   // library presumably will not change
+   mFeatures.emplace_back(LV2_Feature{ uri, const_cast<void*>(data) });
+}
+
+auto LV2Effect::GetFeaturePointers() const -> FeaturePointers
+{
+   FeaturePointers result;
+   for (auto &feature : mFeatures)
+      result.push_back(&feature);
+   result.push_back(nullptr);
+   return result;
 }
 
 bool LV2Effect::ValidateFeatures(const LilvNode *subject)
@@ -1684,7 +1689,7 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, bool required)
          else if (required) {
             const auto end = mFeatures.end();
             supported = (end != std::find_if(mFeatures.begin(), end,
-               [&](auto &pFeature){ return strcmp(pFeature->URI, uri) == 0; }));
+               [&](auto &feature){ return strcmp(feature.URI, uri) == 0; }));
             if (!supported) {
                wxLogError(wxT("%s requires unsupported feature %s"),
                   lilv_node_as_string(lilv_plugin_get_uri(mPlug)), uri);
@@ -1862,7 +1867,7 @@ bool LV2Effect::BuildFancy()
    else
    {
       containerType = nativeType;
-      mFeatures[mParentFeature]->data = mParent->GetHandle();
+      mFeatures[mParentFeature].data = mParent->GetHandle();
 
 #if defined(__WXGTK__)
       // Make sure the parent has a window
@@ -1874,7 +1879,7 @@ bool LV2Effect::BuildFancy()
    }
 
    LilvInstance *instance = mMaster->GetInstance();
-   mFeatures[mInstanceAccessFeature]->data = lilv_instance_get_handle(instance);
+   mFeatures[mInstanceAccessFeature].data = lilv_instance_get_handle(instance);
    mExtensionDataFeature =
       { lilv_instance_get_descriptor(instance)->extension_data };
 
@@ -1908,9 +1913,7 @@ bool LV2Effect::BuildFancy()
    mSuilInstance = suil_instance_new(mSuilHost, this, containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
-      bundlePath, binaryPath,
-      // harmless cast of an array of unique_ptr to array of pointers
-      reinterpret_cast<const LV2_Feature * const *>(mFeatures.data()));
+      bundlePath, binaryPath, GetFeaturePointers().data());
 
    lilv_free(binaryPath);
    lilv_free(bundlePath);
@@ -2896,22 +2899,19 @@ LV2Wrapper::~LV2Wrapper()
    }
 }
 
-LV2Wrapper::LV2Wrapper(LV2Effect &effect,
+LV2Wrapper::LV2Wrapper(const LV2Effect &effect,
    const LilvPlugin *plugin, double sampleRate)
 :  mEffect{ effect }
 {
-   std::vector<std::unique_ptr<LV2_Feature>> &features = mEffect.mFeatures;
-   if (mEffect.mWantsWorkerInterface) {
+   auto features = mEffect.GetFeaturePointers();
+   LV2_Feature tempFeature{ LV2_WORKER__schedule, &mWorkerSchedule };
+   if (mEffect.mWantsWorkerInterface)
+      // Insert another pointer before the null
       // Append a feature to the array, only for the plugin instantiation
       // (features are also used elsewhere to instantiate the UI in the
       // suil_* functions)
       // It informs the plugin how to send work to another thread
-      // Remove terminator
-      features.pop_back();
-      mEffect.AddFeature(LV2_WORKER__schedule, &mWorkerSchedule);
-      // Re-add terminator
-      mEffect.AddFeature(nullptr, nullptr);
-   }
+      features.insert(features.end() - 1, &tempFeature);
 
 #if defined(__WXMSW__)
    // Plugins may have dependencies that need to be loaded from the same path
@@ -2924,22 +2924,11 @@ LV2Wrapper::LV2Wrapper(LV2Effect &effect,
    lilv_free(libPath);
 #endif
 
-   mInstance = lilv_plugin_instantiate(plugin, sampleRate,
-      // harmless cast of an array of unique_ptr to array of pointers
-      reinterpret_cast<LV2_Feature **>(features.data()));
+   mInstance = lilv_plugin_instantiate(plugin, sampleRate, features.data());
 
 #if defined(__WXMSW__)
    SetDllDirectory(nullptr);
 #endif
-
-   if (mEffect.mWantsWorkerInterface) {
-      // Remove terminator
-      features.pop_back();
-      // Remove the worker interface feature
-      features.pop_back();
-      // Re-add terminator
-      mEffect.AddFeature(nullptr, nullptr);
-   }
 
    if (!mInstance)
       return;

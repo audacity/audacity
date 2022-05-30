@@ -392,6 +392,10 @@ private:
     */
    bool CheckOptions(const LilvNode *subject, bool required);
 
+   //! Get vector of pointers to features, whose `.data()` can be passed to lv2
+   using FeaturePointers = std::vector<const LV2_Feature *>;
+   FeaturePointers GetFeaturePointers() const;
+
    void AddFeature(const char *uri, const void *data);
    /*!
     @param subject URI of the host or of the UI identifies a resource in lv2
@@ -554,9 +558,7 @@ private:
    bool mSupportsNominalBlockLength{ false };
    bool mSupportsSampleRate{ false };
 
-   //! Extra indirection to the structs satisfies the interfaces
-   //! of suil_instance_new and lilv_plugin_instantiate
-   std::vector<std::unique_ptr<LV2_Feature>> mFeatures;
+   std::vector<LV2_Feature> mFeatures;
 
    //! Index into m_features
    size_t mInstanceAccessFeature{};
@@ -617,7 +619,8 @@ public:
 
 public:
    //! May spawn a thread
-   LV2Wrapper(LV2Effect &effect, const LilvPlugin *plugin, double sampleRate);
+   LV2Wrapper(const LV2Effect &effect,
+      const LilvPlugin *plugin, double sampleRate);
    //! If a thread was started, joins it
    ~LV2Wrapper();
    void Activate();
@@ -643,7 +646,7 @@ private:
 
    std::thread mThread;
 
-   LV2Effect &mEffect;
+   const LV2Effect &mEffect;
    LilvInstance *mInstance{};
    LV2_Handle mHandle{};
 
