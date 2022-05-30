@@ -55,7 +55,8 @@ namespace
 void FillParameters(
    wxWindow* parent,
    Steinberg::Vst::IEditController* editController,
-   Steinberg::Vst::IComponentHandler* handler)
+   Steinberg::Vst::IComponentHandler* handler,
+   const VST3Wrapper& wrapper)
 {
    using namespace Steinberg;
 
@@ -71,17 +72,16 @@ void FillParameters(
       }
    };
 
-   for(int i = 0, count = editController->getParameterCount(); i < count; ++i)
-   {
-      Vst::ParameterInfo parameterInfo { };
-      if(editController->getParameterInfo(i, parameterInfo) != kResultOk)
-         continue;
+   wrapper.ForEachParameter(
 
-      if(parameterInfo.flags & (Vst::ParameterInfo::kIsHidden | Vst::ParameterInfo::kIsProgramChange))
-         continue;
+   [&](const Vst::ParameterInfo& parameterInfo)
+   {
       
-      if((parameterInfo.flags & (Vst::ParameterInfo::kCanAutomate | Vst::ParameterInfo::kIsBypass | Vst::ParameterInfo::kIsReadOnly)) == 0)
-         continue;
+      if(parameterInfo.flags & (Vst::ParameterInfo::kIsHidden | Vst::ParameterInfo::kIsProgramChange))
+         return true;
+
+      if ((parameterInfo.flags & (Vst::ParameterInfo::kCanAutomate | Vst::ParameterInfo::kIsBypass | Vst::ParameterInfo::kIsReadOnly)) == 0)
+         return true;
 
       gridSizer->Add(safenew wxStaticText(parent, wxID_ANY, VST3Utils::ToWxString(parameterInfo.title)));
 
@@ -166,7 +166,11 @@ void FillParameters(
          }
       }
       gridSizer->Add(safenew wxStaticText(parent, wxID_ANY, VST3Utils::ToWxString(parameterInfo.units)));
+
+      return true;
    }
+   );
+
    parent->SetSizer(gridSizer.release());
 }
 
@@ -175,7 +179,8 @@ void FillParameters(
 void VST3Utils::BuildPlainUI(
    wxWindow* parent,
    Steinberg::Vst::IEditController* editController,
-   Steinberg::Vst::IComponentHandler* handler)
+   Steinberg::Vst::IComponentHandler* handler,
+   const VST3Wrapper& wrapper )
 {
    constexpr int WindowBorder { 5 };
    constexpr int WindowMaxHeight { 450 };
@@ -192,7 +197,7 @@ void VST3Utils::BuildPlainUI(
    auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
    
    mainSizer->Add(scroll, 1, wxEXPAND | wxALL, WindowBorder);
-   FillParameters(scroll, editController, handler);
+   FillParameters(scroll, editController, handler, wrapper);
 
    auto minSize = scroll->GetSizer()->CalcMin() ;
    if(minSize.GetHeight() > (WindowMaxHeight - WindowBorder * 2))
@@ -238,3 +243,62 @@ bool VST3Utils::ParseAutomationParameterKey(const wxString& key, Steinberg::Vst:
    return false;
 
 }
+
+
+const std::vector<VST3Wrapper::ParameterInfo>* VST3Wrapper::getParameterInfos() const
+{
+   if (mParameterInfos.size() == 0)
+   {
+      if (mEditController == nullptr)
+         return nullptr;
+
+      for (int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
+      {
+         Steinberg::Vst::ParameterInfo vstParameterInfo{ };
+         if (mEditController->getParameterInfo(i, vstParameterInfo) == Steinberg::kResultOk)
+         {
+            // Add all parameterinfos, regardless of whether they can be automated or not,
+            // because different flags of them will be checked by different methods.
+            mParameterInfos.push_back(vstParameterInfo);
+         }
+      }
+   }
+
+   return &mParameterInfos;
+}
+
+
+bool VST3Wrapper::ForEachParameter(ParameterVisitor visitor) const
+{
+   const auto pParameterInfos = getParameterInfos();
+   if (pParameterInfos == nullptr)
+      return false;
+ 
+   for (const auto& parameterInfo : *pParameterInfos)
+   {
+      if ( ! visitor(parameterInfo) )
+         break;
+   }
+
+   return true;
+}
+
+
+bool VST3Wrapper::AtLeastOne(ParameterVisitor visitor) const
+{
+   const auto pParameterInfos = getParameterInfos();
+   if (pParameterInfos == nullptr)
+      return false;
+
+   for (const auto& parameterInfo : *pParameterInfos)
+   {
+      if (visitor(parameterInfo))
+      {
+         return true;
+      }
+   }
+
+   return false;
+}
+
+

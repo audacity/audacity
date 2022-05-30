@@ -29,6 +29,8 @@ namespace Steinberg
    }
 }
 
+struct VST3Wrapper;
+
 /**
  * \brief Provides a set of useful functions, used across the Audacity VST3 module
  */
@@ -51,12 +53,14 @@ public:
     * the parameters, and handler is used to update them
     * \param parent Where all parameter controls will be placed (not null)
     * \param editController Effect controller (not null)
-    * \param handler Where to report parameter changes (not null) 
+    * \param handler Where to report parameter changes (not null)
+    * \param wrapper ref, enabling us to visit the parameters
     */
    static void BuildPlainUI(
       wxWindow* parent,
       Steinberg::Vst::IEditController* editController,
-      Steinberg::Vst::IComponentHandler* handler);
+      Steinberg::Vst::IComponentHandler* handler,
+      const VST3Wrapper& wrapper);
 
    static wxString ToWxString(const Steinberg::Vst::TChar* str);
 
@@ -78,5 +82,24 @@ struct VST3Wrapper
    //
    Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
    Steinberg::IPtr<Steinberg::Vst::IComponent>      mEffectComponent;
+
+   using ParameterInfo = Steinberg::Vst::ParameterInfo;
+
+   using ParameterVisitor = std::function< bool(const ParameterInfo& pi) >;
+
+   mutable std::vector<ParameterInfo> mParameterInfos;
+
+   // Visit parameters and keep doing so as long as visitor returns true.
+   //
+   // Return false if the parameters are not yet available
+   //
+   bool ForEachParameter(ParameterVisitor visitor) const;
+
+   // Stop visiting as soon as the visitor returns true, and return true in that case;
+   // otherwise if all visits returned false,  return false.
+   //
+   bool AtLeastOne(ParameterVisitor visitor) const;
+
+   const std::vector<ParameterInfo>* getParameterInfos() const;   
 };
 
