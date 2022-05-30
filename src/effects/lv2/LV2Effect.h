@@ -578,7 +578,7 @@ public:
    };
 
 public:
-   LV2Wrapper(LV2Effect *effect);
+   LV2Wrapper(LV2Effect &effect);
    //! May spawn a thread
    LilvInstance *Instantiate(const LilvPlugin *plugin,
                              double sampleRrate,
@@ -610,7 +610,7 @@ private:
 
    std::thread mThread;
 
-   LV2Effect *mEffect;
+   LV2Effect &mEffect;
    LilvInstance *mInstance;
    LV2_Handle mHandle;
 

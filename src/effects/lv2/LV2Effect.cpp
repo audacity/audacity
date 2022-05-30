@@ -1866,7 +1866,7 @@ bool LV2Effect::CheckOptions(const LilvNode *subject, const LilvNode *predicate,
 
 std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
 {
-   auto wrapper = std::make_unique<LV2Wrapper>(this);
+   auto wrapper = std::make_unique<LV2Wrapper>(*this);
    LilvInstance *instance = wrapper->Instantiate(mPlug, sampleRate, mFeatures);
    if (!instance)
       return nullptr;
@@ -3106,8 +3106,7 @@ void LV2Effect::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
 }
 #endif
 
-LV2Wrapper::LV2Wrapper(LV2Effect *effect)
-:  mEffect(effect)
+LV2Wrapper::LV2Wrapper(LV2Effect &effect) : mEffect(effect)
 {
    mInstance = NULL;
    mHandle = NULL;
@@ -3136,16 +3135,13 @@ LilvInstance *LV2Wrapper::Instantiate(const LilvPlugin *plugin,
                                       double sampleRate,
                                       std::vector<std::unique_ptr<LV2_Feature>> & features)
 {
-   if (mEffect->mWantsWorkerInterface)
-   {
+   if (mEffect.mWantsWorkerInterface) {
       // Remove terminator
       features.pop_back();
-
       mWorkerSchedule.handle = this;
       mWorkerSchedule.schedule_work = LV2Wrapper::schedule_work;
-      mEffect->AddFeature(LV2_WORKER__schedule, &mWorkerSchedule);
-
-      mEffect->AddFeature(NULL, NULL);
+      mEffect.AddFeature(LV2_WORKER__schedule, &mWorkerSchedule);
+      mEffect.AddFeature(nullptr, nullptr);
    }
 
 #if defined(__WXMSW__)
@@ -3167,16 +3163,13 @@ LilvInstance *LV2Wrapper::Instantiate(const LilvPlugin *plugin,
    SetDllDirectory(NULL);
 #endif
 
-   if (mEffect->mWantsWorkerInterface)
-   {
+   if (mEffect.mWantsWorkerInterface) {
       // Remove terminator
       features.pop_back();
-
       // Remove the worker interface feature
       features.pop_back();
-
       // Re-add terminator
-      mEffect->AddFeature(NULL, NULL);
+      mEffect.AddFeature(nullptr, nullptr);
    }
 
    if (!mInstance)
@@ -3193,10 +3186,8 @@ LilvInstance *LV2Wrapper::Instantiate(const LilvPlugin *plugin,
    mWorkerInterface = (LV2_Worker_Interface *)
       lilv_instance_get_extension_data(mInstance, LV2_WORKER__interface);
 
-   if (mEffect->mLatencyPort >= 0)
-   {
-      lilv_instance_connect_port(mInstance, mEffect->mLatencyPort, &mLatency);
-   }
+   if (mEffect.mLatencyPort >= 0)
+      lilv_instance_connect_port(mInstance, mEffect.mLatencyPort, &mLatency);
 
    if (mWorkerInterface)
       mThread = std::thread{
@@ -3244,27 +3235,26 @@ void LV2Wrapper::SetFreeWheeling(bool enable)
 
 void LV2Wrapper::SetSampleRate()
 {
-   if (mEffect->mSupportsSampleRate && mOptionsInterface && mOptionsInterface->set)
-   {
+   if (mEffect.mSupportsSampleRate &&
+      mOptionsInterface && mOptionsInterface->set
+   ){
       LV2_Options_Option options[2] = {};
-
       memcpy(&options,
-             &mEffect->mOptions[mEffect->mSampleRateOption],
-             sizeof(mEffect->mOptions[0]));
-
+         &mEffect.mOptions[mEffect.mSampleRateOption],
+         sizeof(mEffect.mOptions[0]));
       mOptionsInterface->set(mHandle, options);
    }
 }
 
 void LV2Wrapper::SetBlockSize()
 {
-   if (mEffect->mSupportsNominalBlockLength && mOptionsInterface && mOptionsInterface->set)
-   {
+   if (mEffect.mSupportsNominalBlockLength &&
+      mOptionsInterface && mOptionsInterface->set
+   ){
       LV2_Options_Option options[2] = {};
       memcpy(&options,
-               &mEffect->mOptions[mEffect->mBlockSizeOption],
-               sizeof(mEffect->mOptions[0]));
-
+         &mEffect.mOptions[mEffect.mBlockSizeOption],
+         sizeof(mEffect.mOptions[0]));
       mOptionsInterface->set(mHandle, options);
    }
 }
