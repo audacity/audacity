@@ -214,6 +214,15 @@ void Context::SetClipRect(const RectType<GLint>& rect)
       static_cast<GLint>(scaleFactor * rect.size.height)
    } };
 
+   const auto fixOrigin =
+      mCurrentState.mCurrentFramebuffer != nullptr || !HasFlippedY();
+
+   if (fixOrigin)
+   {
+      scaledRect.origin.y =
+         mViewport.size.height - scaledRect.origin.y - scaledRect.size.height;
+   }
+
    SetScreenSpaceClipRect(scaledRect);
 }
 
@@ -225,18 +234,6 @@ void Context::SetScreenSpaceClipRect(RectType<GLint> rect)
       mCurrentState.mClippingEnabled = true;
       mFunctions.Enable(GLenum::SCISSOR_TEST);
    }
-
-   const auto fixOrigin =
-      mCurrentState.mCurrentFramebuffer != nullptr || !HasFlippedY();
-
-   if (fixOrigin)
-   {
-      rect.origin.y =
-         mViewport.size.height - rect.origin.y - rect.size.height;
-   }
-
-   if (rect.origin.x < 0 || rect.origin.y < 0)
-      int a = 1;
 
    if (rect != mCurrentState.mClipRect)
    {
