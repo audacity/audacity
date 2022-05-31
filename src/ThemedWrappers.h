@@ -85,6 +85,7 @@ class ThemedButtonWrapper final :
    public PrefsListener
 {
    Observer::Subscription mThemeChangeSubscription;
+   int mBitmapIndex { -1 };
    int mLabelBitmapIndex { -1 };
    int mPressedBitmapIndex { -1 };
    int mCurrentBitmapIndex { -1 };
@@ -97,6 +98,12 @@ public:
    {
       mThemeChangeSubscription =
          theTheme.Subscribe(*this, &ThemedButtonWrapper::OnThemeChange);
+   }
+
+   void SetBitmapIndex(int index)
+   {
+      mBitmapIndex = index;
+      ButtonBase::SetBitmap(theTheme.Bitmap(mBitmapIndex));
    }
 
    void SetBitmapLabelIndex(int index)
@@ -141,6 +148,8 @@ protected:
    {
       if (message.appearance)
       {
+         if(mBitmapIndex != -1)
+            ButtonBase::SetBitmap(theTheme.Bitmap(mBitmapIndex));
          if(mLabelBitmapIndex != -1)
             ButtonBase::SetBitmapLabel(theTheme.Bitmap(mLabelBitmapIndex));
          if(mPressedBitmapIndex != -1)
