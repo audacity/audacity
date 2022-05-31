@@ -137,6 +137,8 @@ protected:
 
    virtual void BindDefaultFramebuffer();
 private:
+   void SetScreenSpaceClipRect(RectType<GLint> rect);
+
    const GLFunctions& mFunctions;
 
    Color mClearColor;

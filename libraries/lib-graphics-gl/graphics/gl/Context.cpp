@@ -55,13 +55,9 @@ void Context::Clear(const Rect& rect, Color color)
    mFunctions.Clear(static_cast<GLbitfield>(GLenum::COLOR_BUFFER_BIT));
 
    if (!clippingWasEnabled)
-   {
       ResetClipRect();
-   }
    else
-   {
-      SetClipRect(oldRect);
-   }
+      SetScreenSpaceClipRect(oldRect);
 }
 
 void Context::Clear()
@@ -204,12 +200,6 @@ void Context::SetClipRect(const Rect& rect)
 
 void Context::SetClipRect(const RectType<GLint>& rect)
 {
-   if (!mCurrentState.mClippingEnabled)
-   {
-      mCurrentState.mClippingEnabled = true;
-      mFunctions.Enable(GLenum::SCISSOR_TEST);
-   }
-
    const auto scaleFactor = GetScaleFactor();
 
    RectType<GLint> scaledRect { {
@@ -219,24 +209,35 @@ void Context::SetClipRect(const RectType<GLint>& rect)
       static_cast<GLint>(scaleFactor * rect.size.height)
    } };
 
+   SetScreenSpaceClipRect(scaledRect);
+}
+
+void Context::SetScreenSpaceClipRect(RectType<GLint> rect)
+{
+   if (!mCurrentState.mClippingEnabled)
+   {
+      mCurrentState.mClippingEnabled = true;
+      mFunctions.Enable(GLenum::SCISSOR_TEST);
+   }
+
    const auto fixOrigin =
       mCurrentState.mCurrentFramebuffer != nullptr || !HasFlippedY();
 
    if (fixOrigin)
    {
-      scaledRect.origin.y =
-         mViewport.size.height - scaledRect.origin.y - scaledRect.size.height;
+      rect.origin.y =
+         mViewport.size.height - rect.origin.y - rect.size.height;
    }
 
-   if (scaledRect != mCurrentState.mClipRect)
+   if (rect != mCurrentState.mClipRect)
    {
-      mCurrentState.mClipRect = scaledRect;
+      mCurrentState.mClipRect = rect;
 
       mFunctions.Scissor(
-         scaledRect.origin.x,
-         scaledRect.origin.y,
-         scaledRect.size.width,
-         scaledRect.size.height);
+         rect.origin.x,
+         rect.origin.y,
+         rect.size.width,
+         rect.size.height);
    }
 }
 
@@ -422,7 +423,7 @@ void Context::Snapshot::ApplySnapshot(Context& context) const
    if (!mClippingEnabled)
       context.ResetClipRect();
    else
-      context.SetClipRect(mClipRect);
+      context.SetScreenSpaceClipRect(mClipRect);
 }
 
 bool operator==(const Context::Snapshot& lhs, const Context::Snapshot& rhs)
