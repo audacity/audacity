@@ -28,6 +28,8 @@ Framebuffer::Framebuffer(
          }))
     , mFramebufferRect(framebufferRect)
 {
+   auto prevFBO = context.GetCurrentFramebuffer();
+   
    auto& functions = context.GetFunctions();
 
    functions.GenFramebuffers(1, &mFramebuffer);
@@ -41,6 +43,11 @@ Framebuffer::Framebuffer(
       functions.DeleteFramebuffers(1, &mFramebuffer);
       mFramebuffer = 0;
    }
+
+   if (prevFBO != nullptr)
+      functions.BindFramebuffer(GLenum::FRAMEBUFFER, prevFBO->mFramebuffer);
+   else
+      context.BindDefaultFramebuffer();
 }
 
 void Framebuffer::ReleaseFramebuffer()

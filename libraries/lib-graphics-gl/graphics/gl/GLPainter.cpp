@@ -68,7 +68,8 @@ RendererID GLPainter::GetRendererID() const
 
 Size GLPainter::GetSize() const
 {
-   return mContext.GetSize();
+   return mCurrentPaintTarget != nullptr ? mCurrentPaintTarget->GetSize() :
+                                           mContext.GetSize();
 }
 
 std::shared_ptr<PainterFont> GLPainter::CreateFont(const FontInfo& fontInfo)

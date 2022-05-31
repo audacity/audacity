@@ -18,7 +18,7 @@
 #include "Program.h"
 #include "Framebuffer.h"
 
-#define CHECK_ERRORS 1
+#define CHECK_ERRORS 0
 
 #ifdef CHECK_ERRORS
 #include "wx/log.h"
@@ -193,6 +193,11 @@ void Context::BindFramebuffer(const FramebufferPtr& framebuffer)
    }
 }
 
+FramebufferPtr Context::GetCurrentFramebuffer() const
+{
+   return mCurrentState.mCurrentFramebuffer;
+}
+
 void Context::SetClipRect(const Rect& rect)
 {
    SetClipRect(rect_cast<GLint>(rect));
@@ -214,6 +219,7 @@ void Context::SetClipRect(const RectType<GLint>& rect)
 
 void Context::SetScreenSpaceClipRect(RectType<GLint> rect)
 {
+   
    if (!mCurrentState.mClippingEnabled)
    {
       mCurrentState.mClippingEnabled = true;
@@ -228,6 +234,9 @@ void Context::SetScreenSpaceClipRect(RectType<GLint> rect)
       rect.origin.y =
          mViewport.size.height - rect.origin.y - rect.size.height;
    }
+
+   if (rect.origin.x < 0 || rect.origin.y < 0)
+      int a = 1;
 
    if (rect != mCurrentState.mClipRect)
    {
@@ -396,6 +405,11 @@ void Context::CheckErrors() const
 #endif
 }
 
+bool Context::HasFlippedY() const noexcept
+{
+   return false;
+}
+
 void Context::BindDefaultFramebuffer()
 {
    mFunctions.BindFramebuffer(GLenum::FRAMEBUFFER, 0);
@@ -413,8 +427,8 @@ void Context::SetSnaphot(const Snapshot& snapshot)
 
 void Context::Snapshot::ApplySnapshot(Context& context) const
 {
-   context.BindFramebuffer(mCurrentFramebuffer);
    context.BindProgram(mCurrentProgram, mProgramConstants);
+   context.BindFramebuffer(mCurrentFramebuffer);
    context.BindVertexArray(mCurrentVertexArray);
 
    for (size_t i = 0; i < mCurrentTexture.size(); ++i)
@@ -442,9 +456,6 @@ bool operator!=(const Context::Snapshot& lhs, const Context::Snapshot& rhs)
 {
    return !(lhs == rhs);
 }
-bool Context::HasFlippedY() const noexcept
-{
-   return false;
-}
+
 
 } // namespace graphics::gl

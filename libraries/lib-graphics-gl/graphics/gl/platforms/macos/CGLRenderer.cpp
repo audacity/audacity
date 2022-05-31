@@ -157,20 +157,6 @@ public:
 
       ProcessReleaseQueue();
 
-      auto& functions = GetFunctions();
-
-      if (mGPUSync != nullptr)
-      {
-         functions.ClientWaitSync(
-            mGPUSync, static_cast<GLbitfield>(GLenum::SYNC_FLUSH_COMMANDS_BIT),
-            TIMEOUT_IGNORED);
-
-         functions.DeleteSync(mGPUSync);
-      }
-
-      mGPUSync =
-         GetFunctions().FenceSync(GLenum::SYNC_GPU_COMMANDS_COMPLETE, 0);
-
       CheckErrors();
 
       if (mSurface != nullptr)
@@ -210,7 +196,6 @@ private:
 
    std::unique_ptr<ViewSurface> mSurface;
 
-   GLsync mGPUSync { nullptr };
    bool mInitialised { false };
 };
 

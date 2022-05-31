@@ -62,6 +62,8 @@ public:
    void SetDefaultShader();
    void SetupShadersForBrush(const Brush& brush);
 
+   Size GetSize() const noexcept;
+
 private:
    explicit PaintTarget(GLRenderer& renderer, Context& context);
 

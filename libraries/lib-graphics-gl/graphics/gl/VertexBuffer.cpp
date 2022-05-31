@@ -145,7 +145,6 @@ bool VertexBufferStream::Map(Context& context)
 
    const GLbitfield access =
       static_cast<GLbitfield>(GLenum::MAP_WRITE_BIT) |
-      static_cast<GLbitfield>(GLenum::MAP_UNSYNCHRONIZED_BIT) |
       static_cast<GLbitfield>(GLenum::MAP_FLUSH_EXPLICIT_BIT);
 
    mPointer = static_cast<uint8_t*>(functions.MapBufferRange(

@@ -88,9 +88,7 @@ public:
          {
             functions.BindTexture(
                GLenum::TEXTURE_2D,
-               currrentTexture == nullptr ?
-                  0 :
-                  currrentTexture->mSharedGLObject->mTextureID);
+               currrentTexture->mSharedGLObject->mTextureID);
          }
       }
       else

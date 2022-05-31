@@ -330,6 +330,12 @@ void PaintTarget::SetupShadersForBrush(const Brush& brush)
    }
 }
 
+Size PaintTarget::GetSize() const noexcept
+{
+   return { mCurrentTransform.mViewportWidth,
+            mCurrentTransform.mViewportHeight };
+}
+
 PaintTarget::PaintTarget(GLRenderer& renderer, Context& context)
     : mRenderer(renderer)
     , mContext(context)

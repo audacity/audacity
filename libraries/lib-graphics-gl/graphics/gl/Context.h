@@ -76,6 +76,7 @@ public:
    void BindProgram(const ProgramPtr& program, const ProgramConstantsPtr& constants);
 
    void BindFramebuffer(const FramebufferPtr& framebuffer);
+   FramebufferPtr GetCurrentFramebuffer() const;
 
    void SetClipRect(const Rect& rect);
    void SetClipRect(const RectType<GLint>& rect);
@@ -128,14 +129,13 @@ public:
 
    void CheckErrors() const;
 
+   virtual void BindDefaultFramebuffer();
    virtual bool HasFlippedY() const noexcept;
 protected:
    virtual void SetupContext();
    void DoProcessReleaseQueue();
    virtual void ProcessReleaseQueue() = 0;
    void UpdateScreenProperties(uint32_t dpi, float scaleFactor) noexcept;
-
-   virtual void BindDefaultFramebuffer();
 private:
    void SetScreenSpaceClipRect(RectType<GLint> rect);
 

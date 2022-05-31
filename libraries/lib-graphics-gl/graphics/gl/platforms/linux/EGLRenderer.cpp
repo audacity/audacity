@@ -463,20 +463,6 @@ public:
       }
 
       ProcessReleaseQueue();
-
-      auto& functions = GetFunctions();
-
-      if (mGPUSync != nullptr)
-      {
-         functions.ClientWaitSync(
-            mGPUSync, static_cast<GLbitfield>(GLenum::SYNC_FLUSH_COMMANDS_BIT),
-            TIMEOUT_IGNORED);
-
-         functions.DeleteSync(mGPUSync);
-      }
-
-      mGPUSync =
-         GetFunctions().FenceSync(GLenum::SYNC_GPU_COMMANDS_COMPLETE, 0);
    }
 
    void EndRendering()
@@ -540,7 +526,6 @@ private:
 
    EGLSurface mSurface { nullptr };
 
-   GLsync mGPUSync { nullptr };
    bool mInitialized { false };
 }; // class EGLContext
 
