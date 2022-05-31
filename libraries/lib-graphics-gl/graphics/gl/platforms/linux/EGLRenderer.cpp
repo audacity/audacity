@@ -30,6 +30,17 @@
 
 namespace graphics::gl::platforms::linux_like
 {
+namespace
+{
+namespace
+{
+auto registered = ([](){
+                      return RegisterRendererFactory([](){
+                                                        return std::make_unique<EGLRenderer>();
+                                                     });
+                   })();
+}
+}
 
 #define EGLAPIENTRYP
 
