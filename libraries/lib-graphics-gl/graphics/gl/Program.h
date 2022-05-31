@@ -52,7 +52,7 @@ public:
    void SetUniform(std::string_view name, UniformSize size, GLsizei count, const GLfloat* data);
 
    void SetUniform(std::string_view name, GLsizei count, const Color* data);
-   
+
    void SetUniform(std::string_view name, GLint value);
    void SetUniform(std::string_view name, GLfloat value);
    void SetUniform(std::string_view name, GLfloat value0, GLfloat value1);
@@ -64,7 +64,7 @@ public:
 
 private:
    using UniformData = std::variant<std::vector<GLint>, std::vector<GLfloat>>;
-   
+
    struct Uniform final
    {
       std::string name;
@@ -91,7 +91,7 @@ private:
    void Bind(Context& context, const ProgramConstants* constants);
 
    void UpdateProgramConstants(Context& context, const ProgramConstants& constants);
-   
+
    Program(GLRenderer& renderer, GLuint program);
    GLint GetUniformLocation(std::string_view name);
 
@@ -114,6 +114,7 @@ public:
    ProgramBuilder& AddFragmentShader(std::string_view shader);
 
    ProgramBuilder& BindAttributeLocation(std::string_view name, uint32_t index);
+   ProgramBuilder& BindSampler(std::string_view name, uint32_t index);
 
    std::shared_ptr<Program> Build();
 
@@ -121,9 +122,9 @@ public:
 
 private:
    const char* GetNullTerminatedString(std::string_view name);
-   
+
    ProgramBuilder& AddShader(GLenum shaderType, std::string_view shader);
-   
+
    GLRenderer& mRenderer;
    const GLFunctions& mFunctions;
 
@@ -131,6 +132,8 @@ private:
 
    std::string mCacheString;
    std::string mLogString;
+
+   std::vector<std::pair<std::string, uint32_t>> mSamplerBindings;
 };
 
 } // namespace graphics::gl

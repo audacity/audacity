@@ -53,6 +53,7 @@ enum class GLenum : uint32_t
    RGBA = 0x1908,
    LUMINANCE = 0x1909,
    LUMINANCE_ALPHA = 0x190A,
+   BGRA = 0x80E1,
 
    ALPHA8 = 0x803C,
    LUMINANCE8 = 0x8040,
@@ -74,7 +75,7 @@ enum class GLenum : uint32_t
    UNSIGNED_INT = 0x1405,
    FLOAT = 0x1406,
    HALF_FLOAT = 0x140B,
-
+   UNSIGNED_INT_8_8_8_8_REV = 0x8367,
    RAW = 0x0000,
 
    // MISC

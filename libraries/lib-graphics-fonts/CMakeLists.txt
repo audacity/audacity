@@ -19,6 +19,9 @@ set( SOURCES
    $<$<PLATFORM_ID:Windows>:graphics/fonts/platforms/windows/WindowsFontProvider.cpp>
    $<$<PLATFORM_ID:Windows>:graphics/fonts/platforms/windows/WindowsFontProvider.h>
 
+   $<$<PLATFORM_ID:Darwin>:graphics/fonts/platforms/macos/MacosFontProvider.mm>
+   $<$<PLATFORM_ID:Darwin>:graphics/fonts/platforms/macos/MacosFontProvider.h>
+
    $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:graphics/fonts/platforms/linux/LinuxFontProvider.cpp>
    $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:graphics/fonts/platforms/linux/LinuxFontProvider.h>
 )

@@ -334,6 +334,22 @@ std::shared_ptr<Program> ProgramBuilder::Build()
       return {};
    }
 
+   if (!mSamplerBindings.empty())
+   {
+      GLint currentProgram;
+      mFunctions.GetIntegerv(GLenum::CURRENT_PROGRAM, &currentProgram);
+
+      mFunctions.UseProgram(mProgram);
+
+      for(const auto& samplerLocation : mSamplerBindings )
+      {
+         auto loc = mFunctions.GetUniformLocation(mProgram, samplerLocation.first.c_str());
+         mFunctions.Uniform1i(loc, samplerLocation.second);
+      }
+
+      mFunctions.UseProgram(currentProgram);
+   }
+
    GLuint program = 0;
    std::swap(program, mProgram);
 
@@ -396,6 +412,12 @@ ProgramBuilder::AddShader(GLenum shaderType, std::string_view shaderSource)
 
    mFunctions.DeleteShader(shader);
 
+   return *this;
+}
+ProgramBuilder&
+ProgramBuilder::BindSampler(std::string_view name, uint32_t index)
+{
+   mSamplerBindings.emplace_back(GetNullTerminatedString(name), index);
    return *this;
 }
 

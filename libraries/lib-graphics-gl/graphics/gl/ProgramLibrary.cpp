@@ -84,7 +84,7 @@ void main()
 
    for (int i = 0; i < COLORS_COUNT - 1; ++i)
        outColor = mix(outColor, c_Colors[i + 1], smoothstep(c_Stops[i], c_Stops[i + 1], distance));
-   
+
    fragColor = outColor;
 }
 )";
@@ -99,6 +99,7 @@ ProgramFactory factories[] = { [](GLRenderer& renderer) {
                                      .BindAttributeLocation("in_UV", 1)
                                      .BindAttributeLocation("in_MulColor", 2)
                                      .BindAttributeLocation("in_AddColor", 3)
+                                     .BindSampler("s_Texture", 0)
                                      .Build();
                                } };
 }
@@ -128,7 +129,7 @@ ProgramLibrary::GetLinearGradientProgram(size_t stops) const
 {
    if (stops < 2)
       return {};
-   
+
    auto it = mLinearGradientPrograms.find(stops);
 
    if (it != mLinearGradientPrograms.end())

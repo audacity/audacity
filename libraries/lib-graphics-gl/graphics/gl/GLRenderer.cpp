@@ -10,17 +10,10 @@
 **********************************************************************/
 #include "GLRenderer.h"
 
-#include "GLFunctions.h"
 #include "Context.h"
 #include "GLPainter.h"
 #include "ProgramLibrary.h"
 #include "GLFontRenderer.h"
-
-#ifdef WIN32
-#  include "platforms/windows/WGLRenderer.h"
-#elif defined(HAS_EGL_SUPPORT)
-#  include "platforms/linux/EGLRenderer.h"
-#endif
 
 #include "graphics/fonts/FontLibrary.h"
 #include "graphics/fonts/Font.h"
@@ -30,6 +23,14 @@ namespace graphics::gl
 namespace
 {
 std::unique_ptr<GLRenderer> SharedRenderer;
+std::vector<std::function<std::unique_ptr<GLRenderer>()>> RendererFactories;
+}
+
+bool RegisterRendererFactory(std::function<std::unique_ptr<GLRenderer>()> factory)
+{
+   RendererFactories.emplace_back(std::move(factory));
+
+   return true;
 }
 
 const RendererID OpenGLRendererID = RegisterRenderer("OpenGL 3.2");
@@ -38,11 +39,13 @@ GLRenderer& GetSharedRenderer()
 {
    if (SharedRenderer == nullptr)
    {
-   #ifdef WIN32
-      SharedRenderer = std::make_unique<platforms::windows::WGLRenderer>();
-   #elif defined(HAS_EGL_SUPPORT)
-      SharedRenderer = std::make_unique<platforms::linux_like::EGLRenderer>();
-   #endif
+      for(const auto& factory : RendererFactories)
+      {
+         SharedRenderer = factory();
+
+         if (SharedRenderer->IsAvailable())
+            return *SharedRenderer;
+      }
    }
 
    return *SharedRenderer;

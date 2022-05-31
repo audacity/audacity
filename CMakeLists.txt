@@ -82,6 +82,8 @@ cmake_policy( SET CMP0072 NEW )
 # Include file check macros honor ``CMAKE_REQUIRED_LIBRARIES``.
 cmake_policy( SET CMP0075 NEW )
 
+set(PROJECT_LANGUAGES C CXX)
+
 # Definitions that must happen before the project() command
 if( APPLE )
    # CMAKE_HOST_SYSTEM_PROCESSOR is empty before the project() command
@@ -117,6 +119,10 @@ if( APPLE )
 
    # Shouldn't cmake do this???
    string( APPEND CMAKE_CXX_FLAGS " -stdlib=libc++" )
+
+   if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
+      set( PROJECT_LANGUAGES ${PROJECT_LANGUAGES} OBJC OBJCXX )
+   endif()
 endif()
 
 # Add our module path
@@ -154,7 +160,7 @@ endif()
 set( _OPT "audacity_" )
 
 # Our very own project
-project( Audacity )
+project( Audacity LANGUAGES ${PROJECT_LANGUAGES} )
 
 # Load our functions/macros
 include( AudacityFunctions )

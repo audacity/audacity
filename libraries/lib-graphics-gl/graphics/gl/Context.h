@@ -126,12 +126,16 @@ public:
    float GetScaleFactor() const noexcept;
    uint32_t GetDPI() const noexcept;
 
+   void CheckErrors() const;
+
+   virtual bool HasFlippedY() const noexcept;
 protected:
    virtual void SetupContext();
    void DoProcessReleaseQueue();
    virtual void ProcessReleaseQueue() = 0;
    void UpdateScreenProperties(uint32_t dpi, float scaleFactor) noexcept;
 
+   virtual void BindDefaultFramebuffer();
 private:
    const GLFunctions& mFunctions;
 

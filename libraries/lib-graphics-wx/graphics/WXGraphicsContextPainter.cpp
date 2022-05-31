@@ -11,6 +11,7 @@
 #include "WXGraphicsContextPainter.h"
 
 #include <cstring>
+#include <unordered_map>
 
 #include <wx/graphics.h>
 #include <wx/region.h>

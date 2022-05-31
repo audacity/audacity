@@ -18,6 +18,12 @@
 #include "Program.h"
 #include "Framebuffer.h"
 
+#define CHECK_ERRORS 1
+
+#ifdef CHECK_ERRORS
+#include "wx/log.h"
+#endif
+
 namespace graphics::gl
 {
 
@@ -76,9 +82,6 @@ void Context::BindTexture(const TexturePtr& texture, uint32_t textureUnitIndex)
    if (textureUnitIndex >= MAX_TEXTURE_UNITS)
       return ;
 
-   const GLenum targetTextureUnit = static_cast<GLenum>(
-      static_cast<uint32_t>(GLenum::TEXTURE0) + textureUnitIndex);
-
    if (mCurrentState.mCurrentTexture[textureUnitIndex] == texture)
       return ;
 
@@ -90,6 +93,8 @@ void Context::BindTexture(const TexturePtr& texture, uint32_t textureUnitIndex)
       mFunctions.BindTexture(GLenum::TEXTURE_2D, 0);
 
    mCurrentState.mCurrentTexture[textureUnitIndex] = texture;
+
+   CheckErrors();
 }
 
 const GLFunctions& Context::GetFunctions() const
@@ -110,6 +115,8 @@ void Context::BindVertexArray(const VertexArrayPtr& vertexArray)
 
    mCurrentState.mCurrentVertexArray = vertexArray;
    mCurrentState.mCurrentVertexArray->Bind(*this);
+
+   CheckErrors();
 }
 
 void Context::ReleaseContextResource(
@@ -149,6 +156,8 @@ void Context::BindBuffer(const VertexBuffer& buffer)
 
       buffer.Bind(*this);
    }
+
+   CheckErrors();
 }
 
 void Context::BindProgram(const ProgramPtr& program, const ProgramConstantsPtr& constants)
@@ -168,6 +177,8 @@ void Context::BindProgram(const ProgramPtr& program, const ProgramConstantsPtr& 
          program->Bind(*this, constants.get());
       else
          mFunctions.UseProgram(0);
+
+      CheckErrors();
    }
 }
 
@@ -180,7 +191,9 @@ void Context::BindFramebuffer(const FramebufferPtr& framebuffer)
       if (framebuffer != nullptr)
          framebuffer->Bind(*this);
       else
-         mFunctions.BindFramebuffer(GLenum::FRAMEBUFFER, 0);
+         BindDefaultFramebuffer();
+
+      CheckErrors();
    }
 }
 
@@ -197,13 +210,33 @@ void Context::SetClipRect(const RectType<GLint>& rect)
       mFunctions.Enable(GLenum::SCISSOR_TEST);
    }
 
-   if (rect != mCurrentState.mClipRect)
+   const auto scaleFactor = GetScaleFactor();
+
+   RectType<GLint> scaledRect { {
+      static_cast<GLint>(scaleFactor * rect.origin.x),
+      static_cast<GLint>(scaleFactor * rect.origin.y) }, {
+      static_cast<GLint>(scaleFactor * rect.size.width),
+      static_cast<GLint>(scaleFactor * rect.size.height)
+   } };
+
+   const auto fixOrigin =
+      mCurrentState.mCurrentFramebuffer != nullptr || !HasFlippedY();
+
+   if (fixOrigin)
    {
-      mCurrentState.mClipRect = rect;
+      scaledRect.origin.y =
+         mViewport.size.height - scaledRect.origin.y - scaledRect.size.height;
+   }
+
+   if (scaledRect != mCurrentState.mClipRect)
+   {
+      mCurrentState.mClipRect = scaledRect;
 
       mFunctions.Scissor(
-         rect.origin.x, mViewport.size.height - rect.size.height - rect.origin.y,
-         rect.size.width, rect.size.height);
+         scaledRect.origin.x,
+         scaledRect.origin.y,
+         scaledRect.size.width,
+         scaledRect.size.height);
    }
 }
 
@@ -213,10 +246,6 @@ void Context::ResetClipRect()
    {
       mCurrentState.mClippingEnabled = false;
       mFunctions.Disable(GLenum::SCISSOR_TEST);
-
-      mCurrentState.mClipRect = { {},
-                                  { static_cast<GLint>(mViewport.size.width),
-                                    static_cast<GLint>(mViewport.size.height) } };
    }
 }
 
@@ -228,6 +257,7 @@ void Context::SetClientActiveTexture(uint32_t textureUnitIndex)
    if (mCurrentActiveTexture != targetTextureUnit)
    {
       mFunctions.ActiveTexture(targetTextureUnit);
+      CheckErrors();
       mCurrentActiveTexture = targetTextureUnit;
    }
 }
@@ -243,16 +273,24 @@ void Context::SetPrimitiveRestartIndex(GLuint index)
 
 void Context::SetViewport(const RectType<uint32_t> viewport)
 {
-   if (mViewport != viewport)
-   {
-      mViewport = viewport;
-      mFunctions.Viewport(
-         viewport.origin.x, viewport.origin.y, viewport.size.width,
-         viewport.size.height);
+   const auto scaleFactor = GetScaleFactor();
 
-      mCurrentState.mClipRect = { {},
-                                  { static_cast<GLint>(viewport.size.width),
-                                    static_cast<GLint>(viewport.size.height) } };
+   const RectType<GLuint> scaledRect { {
+      static_cast<GLuint>(scaleFactor * viewport.origin.x),
+      static_cast<GLuint>(scaleFactor * viewport.origin.y) }, {
+      static_cast<GLuint>(scaleFactor * viewport.size.width),
+      static_cast<GLuint>(scaleFactor * viewport.size.height)
+   } };
+
+   if (mViewport != scaledRect)
+   {
+      mViewport = scaledRect;
+
+      mFunctions.Viewport(
+         scaledRect.origin.x,
+         scaledRect.origin.y,
+         scaledRect.size.width,
+         scaledRect.size.height);
    }
 }
 
@@ -261,6 +299,7 @@ void Context::SetUnpackAlignment(uint32_t alignment)
    if (mUnpackAlignment != alignment)
    {
       mFunctions.PixelStorei(GLenum::UNPACK_ALIGNMENT, alignment);
+      CheckErrors();
       mUnpackAlignment = alignment;
    }
 }
@@ -281,7 +320,7 @@ void Context::SetupContext()
 {
    mFunctions.Enable(GLenum::PRIMITIVE_RESTART);
 
-   mFunctions.Enablei(GLenum::BLEND, 0);
+   mFunctions.Enable(GLenum::BLEND);
 
    mFunctions.BlendFunc(GLenum::SRC_ALPHA, GLenum::ONE_MINUS_SRC_ALPHA);
    mFunctions.BlendEquation(GLenum::FUNC_ADD);
@@ -295,6 +334,10 @@ void Context::SetupContext()
 
    mFunctions.BindSampler(0, mSamplerStateObject);
    mFunctions.BindSampler(1, mSamplerStateObject);
+
+   mFunctions.ActiveTexture(GLenum::TEXTURE0);
+
+   CheckErrors();
 }
 
 void Context::DoProcessReleaseQueue()
@@ -316,7 +359,9 @@ void Context::DoProcessReleaseQueue()
 
 float Context::GetScaleFactor() const noexcept
 {
-   return mScaleFactor;
+   return mCurrentState.mCurrentFramebuffer != nullptr ?
+      mCurrentState.mCurrentFramebuffer->GetScaleFactor() :
+      mScaleFactor;
 }
 
 uint32_t Context::GetDPI() const noexcept
@@ -326,8 +371,31 @@ uint32_t Context::GetDPI() const noexcept
 
 void Context::UpdateScreenProperties(uint32_t dpi, float scaleFactor) noexcept
 {
-   mDPI = dpi;
-   mScaleFactor = scaleFactor;
+   if (mDPI != dpi)
+   {
+      mDPI = dpi;
+   }
+
+   if (std::abs(mScaleFactor - scaleFactor) > std::numeric_limits<float>::epsilon())
+   {
+      mScaleFactor = scaleFactor;
+   }
+}
+
+void Context::CheckErrors() const
+{
+#if CHECK_ERRORS
+   const auto error = mFunctions.GetError();
+   if (error != GLenum::NO_ERROR)
+   {
+      wxLogDebug("GL error: %d", error);
+   }
+#endif
+}
+
+void Context::BindDefaultFramebuffer()
+{
+   mFunctions.BindFramebuffer(GLenum::FRAMEBUFFER, 0);
 }
 
 const Context::Snapshot& Context::GetSnapshot() const
@@ -370,6 +438,10 @@ bool operator==(const Context::Snapshot& lhs, const Context::Snapshot& rhs)
 bool operator!=(const Context::Snapshot& lhs, const Context::Snapshot& rhs)
 {
    return !(lhs == rhs);
+}
+bool Context::HasFlippedY() const noexcept
+{
+   return false;
 }
 
 } // namespace graphics::gl

@@ -312,7 +312,7 @@ ChooseColorSet( float bin0, float bin1, float selBinLo,
       return AColor::ColorGradientEdge;
    if ((selBinLo < 0 || selBinLo < bin1) && (selBinHi < 0 || selBinHi > bin0))
       return  AColor::ColorGradientTimeAndFrequencySelected;
-   
+
    return  AColor::ColorGradientTimeSelected;
 }
 
@@ -775,7 +775,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
             advanceFreqBinIter(yyToFreqBin(0));
          }
       }
-   
+
       for (int yy = 0; yy < hiddenMid.height; ++yy) {
          if(onBrushTool)
             maybeSelected = false;
@@ -889,21 +889,12 @@ void SpectrumView::Draw(
          FindTrack()->SubstitutePendingChangedTrack());
 
       const auto artist = TrackArtist::Get( context );
-      
-#if defined(__WXMAC__)
-      wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
-      dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
-#endif
 
       auto waveTrackView = GetWaveTrackView().lock();
       wxASSERT(waveTrackView.use_count());
-      
+
       auto seletedClip = waveTrackView->GetSelectedClip().lock();
       DoDraw( context, wt.get(), seletedClip.get(), rect );
-      
-#if defined(__WXMAC__)
-      dc.GetGraphicsContext()->SetAntialiasMode(aamode);
-#endif
    }
    WaveTrackSubView::Draw( context, rect, iPass );
 }

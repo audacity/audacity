@@ -185,6 +185,8 @@ void GLPainter::BeginPaint()
    if (mInPaint)
       return;
 
+   mContext.CheckErrors();
+
    mRenderer.BeginRendering(mContext);
 
    mCurrentPaintTarget = mTargetsStack->PushTarget(nullptr);

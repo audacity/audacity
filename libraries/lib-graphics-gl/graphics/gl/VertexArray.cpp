@@ -18,7 +18,7 @@
 
 namespace graphics::gl
 {
-   
+
 VertexArray::~VertexArray()
 {
    if (mVertexArray != 0)
@@ -51,6 +51,8 @@ VertexArrayBuilder::VertexArrayBuilder(Context& context)
 
    mFunctions.GenVertexArrays(1, &mVertexArray);
    mFunctions.BindVertexArray(mVertexArray);
+
+   context.CheckErrors();
 }
 
 VertexArrayBuilder::~VertexArrayBuilder()
@@ -79,7 +81,7 @@ VertexArrayBuilder& VertexArrayBuilder::AddPointer(
       ++mAttribIndex;
       return *this;
    }
-   
+
    if (mCurrentBuffer != buffer)
    {
       mCurrentBuffer = buffer;
@@ -87,13 +89,17 @@ VertexArrayBuilder& VertexArrayBuilder::AddPointer(
    }
 
    mFunctions.EnableVertexAttribArray(mAttribIndex);
-   
+
+   mContext.CheckErrors();
+
    mFunctions.VertexAttribPointer(
       mAttribIndex, componentsCount, type, normalized, stride,
       reinterpret_cast<const void*>(offset));
 
+   mContext.CheckErrors();
+
    ++mAttribIndex;
-   
+
    return *this;
 }
 VertexArrayBuilder&
@@ -101,9 +107,10 @@ VertexArrayBuilder::SetIndexBuffer(const VertexBufferPtr& buffer)
 {
    if (buffer == nullptr)
       return *this;
-   
+
    mAssignedBuffers.emplace_back(buffer);
    buffer->Bind(mContext, GLenum::ELEMENT_ARRAY_BUFFER);
+   mContext.CheckErrors();
 
    return *this;
 }

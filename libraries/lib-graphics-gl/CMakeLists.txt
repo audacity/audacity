@@ -37,6 +37,11 @@ set( SOURCES
    $<$<PLATFORM_ID:Windows>:graphics/gl/platforms/windows/WGLRenderer.cpp>
    $<$<PLATFORM_ID:Windows>:graphics/gl/platforms/windows/WGLRenderer.h>
 
+   $<$<PLATFORM_ID:Darwin>:graphics/gl/platforms/macos/CGLRenderer.cpp>
+   $<$<PLATFORM_ID:Darwin>:graphics/gl/platforms/macos/CGLRenderer.h>
+   $<$<PLATFORM_ID:Darwin>:graphics/gl/platforms/macos/ViewSurface.mm>
+   $<$<PLATFORM_ID:Darwin>:graphics/gl/platforms/macos/ViewSurface.h>
+
    $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:graphics/gl/platforms/linux/EGLRenderer.cpp>
    $<$<NOT:$<PLATFORM_ID:Windows,Darwin>>:graphics/gl/platforms/linux/EGLRenderer.h>
 )
@@ -65,3 +70,8 @@ set( DEFINES
 audacity_library( lib-graphics-gl "${SOURCES}" "${LIBRARIES}"
    "${DEFINES}" ""
 )
+
+if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
+   find_library(OPENGL_LIBRARY OpenGL)
+   target_link_libraries(lib-graphics-gl PUBLIC "-weak_framework OpenGL")
+endif()

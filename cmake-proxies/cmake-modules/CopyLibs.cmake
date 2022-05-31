@@ -61,14 +61,20 @@ function( gather_libs src )
 
       get_filename_component(dir ${CMAKE_SCRIPT_MODE_FILE} DIRECTORY)
 
-      execute_process( COMMAND  
-         python3 
+      execute_process( COMMAND
+         python3
          "${dir}/../../scripts/build/macOS/fixup_libs.py"
-         -i ${WXWIN} 
-         -o ${DST} 
-         ${src} 
+         -i ${WXWIN}
+         -o ${DST}
+         ${src}
          ECHO_OUTPUT_VARIABLE
+         RESULT_VARIABLE
+              fixup_status
       )
+
+      if(NOT fixup_status EQUAL 0)
+         message(FATAL_ERROR "fixup_status failed with code ${fixup_status}")
+      endif()
    elseif( CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" )
       message(STATUS "Executing LD_LIBRARY_PATH='${WXWIN}' ldd ${src}")
 

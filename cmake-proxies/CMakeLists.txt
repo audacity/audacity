@@ -286,7 +286,7 @@ endif()
 
 add_conan_lib(
    harfbuzz
-   harfbuzz/2.6.8
+   harfbuzz/4.3.0
    REQUIRED
    PKG_CONFIG "harfbuzz >= 2.6"
    CONAN_OPTIONS

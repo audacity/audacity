@@ -3,7 +3,7 @@
 
   Audacity: A Digital Audio Editor
 
-  EGLRenderer.h
+  CGLRenderer.h
 
   Dmitry Vedenko
 
@@ -16,16 +16,17 @@
 #include "graphics/gl/Context.h"
 #include "graphics/gl/GLRenderer.h"
 
-namespace graphics::gl::platforms::linux_like
-{
-class EGLFunctions;
-class EGLContextWrapper;
 
-class EGLRenderer final : public GLRenderer
+namespace graphics::gl::platforms::macocs
+{
+class CGLFunctions;
+class CGLContext;
+
+class CGLRenderer final : public GLRenderer
 {
 public:
-   EGLRenderer();
-   ~EGLRenderer();
+   CGLRenderer();
+   ~CGLRenderer();
 
    bool IsAvailable() const override;
 
@@ -38,11 +39,10 @@ public:
    void EndRendering() override;
 
 private:
-   std::unique_ptr<EGLFunctions> mEGLFunctions;
-   std::unique_ptr<EGLContextWrapper> mEGLContext;
+   std::unique_ptr<CGLFunctions> mCGLFunctions;
+   std::unique_ptr<CGLContext> mCGLContext;
 
-   EGLContextWrapper* mCurrentContext { nullptr };
+   CGLContext* mCurrentContext { nullptr };
 }; // class EGLRenderer
 
-
-} // namespace graphics::gl::platforms::linux_like
+} // namespace graphics::gl::platforms::maocs

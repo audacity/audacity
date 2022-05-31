@@ -35,13 +35,15 @@ public:
    uint32_t GetWidth() const noexcept;
    uint32_t GetHeight() const noexcept;
 
+   float GetScaleFactor() const noexcept;
+
 private:
    Framebuffer(
       Context& context, Texture& texture, GLuint glTexture,
       GLenum textureTarget, const RectType<uint32_t>& framebufferRect);
 
    void ReleaseFramebuffer();
-   
+
    Context* mContext { nullptr };
 
    GLuint mFramebuffer { 0 };

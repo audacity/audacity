@@ -62,4 +62,6 @@ private:
 
 GRAPHICS_GL_API GLRenderer& GetSharedRenderer();
 GRAPHICS_GL_API void ShutdownSharedRenderer();
+
+bool RegisterRendererFactory(std::function<std::unique_ptr<GLRenderer>()> factory);
 }

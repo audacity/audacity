@@ -49,7 +49,7 @@ void Framebuffer::ReleaseFramebuffer()
    {
       mContext->ReleaseContextResource(
          ContextResourceType::Framebuffer, mFramebuffer);
-      
+
       mFramebuffer = 0;
    }
 }
@@ -85,6 +85,11 @@ uint32_t Framebuffer::GetWidth() const noexcept
 uint32_t Framebuffer::GetHeight() const noexcept
 {
    return mFramebufferRect.size.height;
+}
+
+float Framebuffer::GetScaleFactor() const noexcept
+{
+   return 1.0f;
 }
 
 } // namespace graphics::gl

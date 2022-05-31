@@ -28,7 +28,7 @@ VertexBuffer::VertexBuffer(
 {
    auto& context = mRenderer.GetResourceContext();
    auto& functions = context.GetFunctions();
-   
+
    functions.GenBuffers(1, &mBuffer);
 
    context.BindBuffer(*this);
@@ -105,7 +105,7 @@ void VertexBufferStream::Flush(Context& context)
       mParent.GetBufferTarget(), mFirstMappedByte, mOffset - mFirstMappedByte);
 
    functions.UnmapBuffer(mParent.GetBufferTarget());
-   
+
    mPointer = nullptr;
 }
 
@@ -145,14 +145,14 @@ bool VertexBufferStream::Map(Context& context)
 
    const GLbitfield access =
       static_cast<GLbitfield>(GLenum::MAP_WRITE_BIT) |
-      //static_cast<GLbitfield>(GLenum::MAP_UNSYNCHRONIZED_BIT) |
+      static_cast<GLbitfield>(GLenum::MAP_UNSYNCHRONIZED_BIT) |
       static_cast<GLbitfield>(GLenum::MAP_FLUSH_EXPLICIT_BIT);
 
    mPointer = static_cast<uint8_t*>(functions.MapBufferRange(
       mParent.GetBufferTarget(), 0, mSize, access));
 
    mFirstMappedByte = mOffset;
-   
+
    return mPointer != nullptr;
 }
 

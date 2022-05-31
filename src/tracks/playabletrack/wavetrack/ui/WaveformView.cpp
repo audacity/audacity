@@ -843,21 +843,12 @@ void WaveformView::Draw(
       const auto hasSolo = artist->hasSolo;
       bool muted = (hasSolo || wt->GetMute()) &&
       !wt->GetSolo();
-      
-#if defined(__WXMAC__)
-      wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
-      dc.GetGraphicsContext()->SetAntialiasMode(wxANTIALIAS_NONE);
-#endif
-      
+
       auto waveTrackView = GetWaveTrackView().lock();
       wxASSERT(waveTrackView.use_count());
 
       auto selectedClip = waveTrackView->GetSelectedClip().lock();
       DoDraw(context, wt.get(), selectedClip.get(), rect, muted);
-
-#if defined(__WXMAC__)
-      dc.GetGraphicsContext()->SetAntialiasMode(aamode);
-#endif
    }
    WaveTrackSubView::Draw( context, rect, iPass );
 }
@@ -925,7 +916,7 @@ BEGIN_POPUP_MENU(WaveColorMenuTable)
       const auto &track = *static_cast<WaveTrack*>(pData->pTrack);
       auto &project = pData->project;
       bool unsafe = ProjectAudioIO::Get( project ).IsAudioActive();
-      
+
       menu.Check( id, id == me.IdOfWaveColor( track.GetWaveColorIndex() ) );
       menu.Enable( id, !unsafe );
    };

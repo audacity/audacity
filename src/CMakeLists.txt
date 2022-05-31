@@ -1299,6 +1299,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
          effects/VST3/module_mac.mm
          PROPERTIES
             COMPILE_FLAGS "-fobjc-arc"
+            SKIP_PRECOMPILE_HEADERS YES
       )
    endif()
 

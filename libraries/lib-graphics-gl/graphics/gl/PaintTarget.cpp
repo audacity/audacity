@@ -31,13 +31,14 @@ static constexpr size_t MaxIndexCount = VertexBufferSize / sizeof(IndexType);
 
 namespace
 {
+
 struct Batch final
 {
    GLenum primitiveMode { GLenum::TRIANGLES };
 
    GLsizei firstIndex { 0 };
    GLsizei size { 0 };
-   
+
    Context::Snapshot snapshot;
 
    Batch() = default;
@@ -65,7 +66,7 @@ struct LinearGradientBrush final
 LinearGradientBrush GetLinearGradientBrush(GLRenderer& renderer, const Brush& brush)
 {
    LinearGradientBrush result;
-   
+
    result.constants = std::make_shared<ProgramConstants>();
 
    auto gradientData = brush.GetGradientData();
@@ -105,8 +106,12 @@ public:
       mVertexBuffer = std::make_shared<VertexBuffer>(
          renderer, GLenum::ARRAY_BUFFER, VertexBufferSize);
 
+      context.CheckErrors();
+
       mIndexBuffer = std::make_shared<VertexBuffer>(
          renderer, GLenum::ARRAY_BUFFER, VertexBufferSize);
+
+      context.CheckErrors();
 
       mVertexArray =
          VertexArrayBuilder(context)
@@ -123,6 +128,8 @@ public:
                offsetof(Vertex, addColor))
             .SetIndexBuffer(mIndexBuffer)
             .Build();
+
+      context.CheckErrors();
    }
 
    bool CanFit(size_t vertexCount, size_t indexCount) const noexcept
@@ -133,7 +140,7 @@ public:
 
    bool Append(
       const VertexTransform& transform, GLenum primitiveMode, const Vertex* vertices,
-      size_t vertexCount, const IndexType* indices, size_t indexCount, bool renderToTexture)
+      size_t vertexCount, const IndexType* indices, size_t indexCount, bool flipY)
    {
       mContext.BindVertexArray(mVertexArray);
 
@@ -161,7 +168,7 @@ public:
          ++mBatches.back().size;
       }
 
-      const float ymul = renderToTexture ? -1.0f : 1.0f;
+      const float ymul = flipY ? -1.0f : 1.0f;
 
       for (size_t i = 0; i < vertexCount; ++i)
       {
@@ -202,11 +209,17 @@ public:
 
       for (const auto& batch : mBatches)
       {
+         mContext.CheckErrors();
+
          mContext.SetSnaphot(batch.snapshot);
+
+         mContext.CheckErrors();
 
          mContext.GetFunctions().DrawElements(
             batch.primitiveMode, batch.size, GLenum::UNSIGNED_SHORT,
             reinterpret_cast<const void*>(batch.firstIndex * sizeof(IndexType)));
+
+         mContext.CheckErrors();
       }
 
       mBatches.clear();
@@ -229,7 +242,7 @@ private:
 
    std::shared_ptr<VertexBuffer> mVertexBuffer;
    std::shared_ptr<VertexBuffer> mIndexBuffer;
-   
+
    std::shared_ptr<VertexArray> mVertexArray;
 
    size_t mWrittenVerticesCount { 0 };
@@ -247,7 +260,7 @@ public:
             { return GetLinearGradientBrush(renderer, brush); })
    {
    }
-   
+
    LinearGradientBrush GetBrush(const Brush& brush)
    {
       return mLinearGradientBrushesCache.Get(brush);
@@ -267,7 +280,7 @@ bool PaintTarget::Append(
 {
    if (mStreamTargets[mCurrentStreamTargetIndex]->Append(
           mCurrentTransform, primitiveMode, vertices, vertexCount, indices,
-          indexCount, mFramebuffer != nullptr))
+          indexCount, mFramebuffer == nullptr && mContext.HasFlippedY()))
       return true;
 
    mStreamTargets[mCurrentStreamTargetIndex]->FlushBatches();
@@ -321,8 +334,12 @@ PaintTarget::PaintTarget(GLRenderer& renderer, Context& context)
     : mRenderer(renderer)
     , mContext(context)
 {
+   context.CheckErrors();
+
    mDefaultProgram =
       renderer.GetProgramLibrary().GetProgram(ProgramID::Default);
+
+   context.CheckErrors();
 
    mStreamTargets.emplace_back(std::make_unique<StreamTarget>(renderer, context));
 }
@@ -348,10 +365,6 @@ void PaintTarget::BeginRendering(
       mCurrentTransform.mViewportWidth = size.width;
       mCurrentTransform.mViewportHeight = size.height;
    }
-
-   mContext.GetFunctions().Viewport(
-      0, 0, mCurrentTransform.mViewportWidth,
-      mCurrentTransform.mViewportHeight);
 
    mContext.SetViewport(RectType<uint32_t> {
       {},
@@ -397,7 +410,6 @@ void PaintTarget::VertexTransform::SetTransform(const FullTransform& transform)
 
 Vertex PaintTarget::VertexTransform::TransformedVertex(Vertex input, float yMul) const noexcept
 {
-   yMul = 1;
    const auto transformedPoint = mIsFullTransform ? mFullTransform.Apply(input.pos) :
                                       mFastTransform.Apply(input.pos);
 
