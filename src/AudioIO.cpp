@@ -361,7 +361,7 @@ AudioIO::~AudioIO()
    // This causes reentrancy issues during application shutdown
    // wxTheApp->Yield();
 
-   mThread->Delete();
+   mThread->Delete(); // joins the thread
    mThread.reset();
 }
 
@@ -1695,9 +1695,8 @@ AudioThread::ExitCode AudioThread::Entry()
 {
    enum class State { eUndefined, eOnce, eLoopRunning, eDoNothing, eMonitoring } lastState = State::eUndefined;
 
-   AudioIO *gAudioIO;
-   while( !TestDestroy() &&
-      nullptr != ( gAudioIO = AudioIO::Get() ) )
+   AudioIO *const gAudioIO = AudioIO::Get();
+   while (!TestDestroy())
    {
       using Clock = std::chrono::steady_clock;
       auto loopPassStart = Clock::now();
