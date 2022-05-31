@@ -678,6 +678,15 @@ public:
       wxWindowUpdateLocker freeze(this);
       //delete items that were added to the sizer
       mEffectListContainer->GetSizer()->Clear(true);
+
+#ifdef __WXGTK__
+      //Workaround for GTK: if none children were added to the container,
+      //underlying gtk widget size will not be updated, resulting in widget
+      //overlap.
+      if(!mTrack || RealtimeEffectList::Get(*mTrack).GetStatesCount() == 0)
+         mEffectListContainer->Hide();
+#endif
+
       if(mTrack)
       {
          auto& effects = RealtimeEffectList::Get(*mTrack);
@@ -712,6 +721,12 @@ public:
    {
       if(mProject == nullptr)
          return;
+
+#ifdef __WXGTK__
+      // See comment in ReloadEffectsList
+      if(!mEffectListContainer->IsShown())
+         mEffectListContainer->Show();
+#endif
 
       auto row = safenew ThemedWindowWrapper<RealtimeEffectControl>(mEffectListContainer, wxID_ANY);
       row->SetBackgroundColorIndex(clrEffectListItemBackground);
