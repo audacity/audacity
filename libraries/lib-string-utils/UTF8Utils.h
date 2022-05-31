@@ -32,8 +32,14 @@ bool IsLeadingCharacter(T character) noexcept
 template <typename StringType>
 StringType PopLastCharacter(StringType str) noexcept
 {
-   while (!str.empty() && !IsLeadingCharacter(str.back()))
+   while (!str.empty())
+   {
+      const auto lastCharacter = str.back();
       str.pop_back();
+
+      if (IsLeadingCharacter(lastCharacter))
+         break;
+   }
 
    return std::move(str);
 }

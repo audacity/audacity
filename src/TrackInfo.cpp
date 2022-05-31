@@ -345,7 +345,7 @@ void TrackInfo::CloseTitleDrawFunction
 
       // Bug 1660 The 'k' of 'Audio Track' was being truncated.
       // Constant of 32 found by counting pixels on a windows machine.
-      // I believe it's the size of the X close button + the size of the 
+      // I believe it's the size of the X close button + the size of the
       // drop down arrow.
       const int allowableWidth = rect.width - 32;
 
@@ -354,7 +354,7 @@ void TrackInfo::CloseTitleDrawFunction
       while (textSize.width > allowableWidth)
       {
          titleStr = utf8::PopLastCharacter(titleStr);
-         auto textSize = painter.GetTextSize(titleStr);
+         textSize = painter.GetTextSize(titleStr);
       }
 
       // Pop-up triangle
@@ -465,7 +465,7 @@ void TrackInfo::MinimizeSyncLockDrawFunction
    if (syncLockSelected)
    {
       wxRect syncLockIconRect = rect;
-	
+
       GetSyncLockHorizontalBounds( rect, syncLockIconRect );
 
       auto syncLockBitmap = theTheme.GetPainterImage(painter, bmpSyncLockIcon);

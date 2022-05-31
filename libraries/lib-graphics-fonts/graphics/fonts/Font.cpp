@@ -47,8 +47,11 @@ PainterFont::Metrics Font::GetFontMetrics() const
 
 Size Font::GetTextSize(const std::string_view& text) const
 {
+   if (text.empty())
+      return {};
+
    auto layout = GetLayoutCacheForDPI(FontFace::BaseDPI()).Get(text);
-   
+
    return { static_cast<float>(layout->GetWidth()),
             static_cast<float>(layout->GetHeight()) };
 }
@@ -56,6 +59,9 @@ Size Font::GetTextSize(const std::string_view& text) const
 void Font::DrawText(
    FontRenderer& renderer, std::string_view text, Color color) const
 {
+   if(text.empty())
+      return;
+
    renderer.Draw(
       *this, *GetLayoutCacheForDPI(renderer.GetDPI()).Get(text), color);
 }
@@ -89,7 +95,7 @@ Font::CreateTextLayout(uint32_t dpi, std::string text) const
 {
    if (text.empty())
       return mEmptyLayout;
-   
+
    return mFontFace->CreateTextLayout(
       FontSize { mFontInfo.GetPointSize(), dpi }, text);
 }
