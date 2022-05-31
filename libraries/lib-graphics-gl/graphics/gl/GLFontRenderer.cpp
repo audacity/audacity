@@ -229,6 +229,11 @@ void GLFontRenderer::ResetPaintTarget()
    mContext = nullptr;
 }
 
+uint32_t GLFontRenderer::GetDPI() const noexcept
+{
+   return mContext != nullptr ? mContext->GetDPI() : 96;
+}
+
 void GLFontRenderer::Draw(
    const fonts::Font& font, const fonts::TextLayout& layout, Color textColor)
 {
@@ -238,12 +243,18 @@ void GLFontRenderer::Draw(
    auto& symbols = layout.GetSymbols();
 
    auto& fontFace = font.GetFontFace();
-   const auto pixelSize = font.GetPixelSize();
+
+   const fonts::FontSize fontSize { font.GetFontSize(), mContext->GetDPI() };
+
+   const auto pixelSize =
+      fontFace.GetPixelSize(fontSize);
 
    Texture* lastTexture = nullptr;
 
-   const auto metrics = font.GetFontMetrics();
+   const auto metrics = fontFace.GetMetrics(fontSize);
    const auto yoffset = metrics.Ascent;
+
+   const float scaleFactor = mContext->GetScaleFactor();
 
    for (auto symbol : symbols)
    {
@@ -273,10 +284,10 @@ void GLFontRenderer::Draw(
          topLeft + Point { 0.0f, static_cast<float>(cachedSymbol.height) };
 
       const Vertex vertices[] = {
-         { topLeft,     { cachedSymbol.uv.left,  cachedSymbol.uv.top   }, textColor, Colors::Black.WithAlpha(0) },
-         { topRight,    { cachedSymbol.uv.right, cachedSymbol.uv.top   }, textColor, Colors::Black.WithAlpha(0) },
-         { bottomRight, { cachedSymbol.uv.right, cachedSymbol.uv.bottom}, textColor, Colors::Black.WithAlpha(0) },
-         { bottomLeft,  { cachedSymbol.uv.left,  cachedSymbol.uv.bottom}, textColor, Colors::Black.WithAlpha(0) },
+         { scaleFactor * topLeft,     { cachedSymbol.uv.left,  cachedSymbol.uv.top    }, textColor, Colors::Black.WithAlpha(0) },
+         { scaleFactor * topRight,    { cachedSymbol.uv.right, cachedSymbol.uv.top    }, textColor, Colors::Black.WithAlpha(0) },
+         { scaleFactor * bottomRight, { cachedSymbol.uv.right, cachedSymbol.uv.bottom }, textColor, Colors::Black.WithAlpha(0) },
+         { scaleFactor * bottomLeft,  { cachedSymbol.uv.left,  cachedSymbol.uv.bottom }, textColor, Colors::Black.WithAlpha(0) },
       };
 
       const uint16_t indices[] = { 0, 1, 2, 2, 3, 0 };

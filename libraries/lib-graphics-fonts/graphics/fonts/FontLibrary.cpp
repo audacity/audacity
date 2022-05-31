@@ -36,7 +36,7 @@ FontLibrary::~FontLibrary()
 }
 
 std::shared_ptr<Font>
-FontLibrary::GetFont(const FontInfo& fontInfo, uint32_t dpi)
+FontLibrary::GetFont(const FontInfo& fontInfo)
 {
    if (mProvider == nullptr)
    {
@@ -44,21 +44,19 @@ FontLibrary::GetFont(const FontInfo& fontInfo, uint32_t dpi)
       return {};
    }
    
-   const auto fontKey = std::make_pair(dpi, fontInfo);
-
-   auto it = mFonts.find(fontKey);
+   auto it = mFonts.find(fontInfo);
 
    if (it != mFonts.end())
       return it->second;
 
-   auto fontFace = GetFontFace(fontInfo, dpi);
+   auto fontFace = GetFontFace(fontInfo);
 
    if (fontFace == nullptr)
       return {};
 
-   auto font = std::shared_ptr<Font>(new Font(fontInfo, std::move(fontFace), dpi));
+   auto font = std::shared_ptr<Font>(new Font(fontInfo, std::move(fontFace)));
    
-   mFonts.emplace(fontKey, font);
+   mFonts.emplace(fontInfo, font);
 
    return font;
 }
@@ -69,7 +67,7 @@ void FontLibrary::SetFontProvider(std::unique_ptr<FontProvider> fontProvider)
 }
 
 std::shared_ptr<FontFace>
-FontLibrary::GetFontFace(FontInfo fontInfo, uint32_t dpi)
+FontLibrary::GetFontFace(FontInfo fontInfo)
 {
    if (mProvider == nullptr)
    {

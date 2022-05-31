@@ -29,6 +29,8 @@ public:
    void SetCurrentPaintTarget(PaintTarget& paintTarget, Context& context);
    void ResetPaintTarget();
 
+   uint32_t GetDPI() const noexcept override;
+
    void
    Draw(const fonts::Font& font, const fonts::TextLayout& layout, Color textColor) override;
 

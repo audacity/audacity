@@ -17,16 +17,13 @@
 namespace graphics::fonts
 {
 Font::Font(
-   const FontInfo& info, std::shared_ptr<FontFace> face, uint32_t dpi)
+   const FontInfo& info, std::shared_ptr<FontFace> face)
     : PainterFont(GetRendererIndependentID())
     , mFontInfo(info)
     , mFontFace(std::move(face))
-    , mDPI(dpi)
-    , mLayoutCache([this](const std::string& text)
-                   { return CreateTextLayout(text); })
 {
    mEmptyLayout =
-      mFontFace->CreateTextLayout(FontSize { info.GetPointSize(), dpi }, std::string_view());
+      mFontFace->CreateTextLayout(FontSize { info.GetPointSize(), FontFace::BaseDPI() }, std::string_view());
 }
 
 Font::~Font()
@@ -43,24 +40,14 @@ float Font::GetFontSize() const
    return mFontInfo.GetPointSize();
 }
 
-uint32_t Font::GetPixelSize() const noexcept
-{
-   return mFontFace->GetPixelSize(FontSize { mFontInfo.GetPointSize(), mDPI });
-}
-
-uint32_t Font::GetDPI() const noexcept
-{
-   return mDPI;
-}
-
 PainterFont::Metrics Font::GetFontMetrics() const
 {
-   return mFontFace->GetMetrics(FontSize { mFontInfo.GetPointSize(), mDPI });
+   return mFontFace->GetMetrics(FontSize { mFontInfo.GetPointSize(), FontFace::BaseDPI() });
 }
 
 Size Font::GetTextSize(const std::string_view& text) const
 {
-   auto layout = mLayoutCache.Get(text);
+   auto layout = GetLayoutCacheForDPI(FontFace::BaseDPI()).Get(text);
    
    return { static_cast<float>(layout->GetWidth()),
             static_cast<float>(layout->GetHeight()) };
@@ -69,7 +56,8 @@ Size Font::GetTextSize(const std::string_view& text) const
 void Font::DrawText(
    FontRenderer& renderer, std::string_view text, Color color) const
 {
-   renderer.Draw(*this, *mLayoutCache.Get(text), color);
+   renderer.Draw(
+      *this, *GetLayoutCacheForDPI(renderer.GetDPI()).Get(text), color);
 }
 
 FontFace& Font::GetFontFace() noexcept
@@ -82,13 +70,28 @@ const FontFace& Font::GetFontFace() const noexcept
    return *mFontFace;
 }
 
-std::shared_ptr<TextLayout> Font::CreateTextLayout(std::string text) const
+Font::LayoutCache& Font::GetLayoutCacheForDPI(uint32_t dpi) const
+{
+   auto it = mLayoutCache.find(dpi);
+
+   if (it != mLayoutCache.end())
+      return it->second;
+
+   auto result = mLayoutCache.emplace(
+      dpi, LayoutCache([dpi, this](const std::string& key)
+                       { return CreateTextLayout(dpi, key); }));
+
+   return result.first->second;
+}
+
+std::shared_ptr<TextLayout>
+Font::CreateTextLayout(uint32_t dpi, std::string text) const
 {
    if (text.empty())
       return mEmptyLayout;
    
    return mFontFace->CreateTextLayout(
-      FontSize { mFontInfo.GetPointSize(), mDPI }, text);
+      FontSize { mFontInfo.GetPointSize(), dpi }, text);
 }
 
 } // namespace graphics::fonts

@@ -512,4 +512,9 @@ uint32_t FontFace::GetPixelSize(FontSize size) noexcept
    return std::floor(size.pointSize * size.dpi / 72.0);
 }
 
+uint32_t FontFace::BaseDPI() noexcept
+{
+   return 96;
+}
+
 } // namespace graphics::fonts

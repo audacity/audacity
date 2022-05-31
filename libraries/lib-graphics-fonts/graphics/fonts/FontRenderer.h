@@ -25,6 +25,7 @@ class GRAPHICS_FONTS_API FontRenderer /* not final */
 public:
    virtual ~FontRenderer() noexcept;
 
+   virtual uint32_t GetDPI() const noexcept = 0;
    virtual void Draw(const Font& font, const TextLayout& layout, Color textColor) = 0;
 }; // class FontRenderer
 } // namespace graphics::fonts

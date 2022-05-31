@@ -32,7 +32,7 @@ struct RenderingParameters;
 class GRAPHICS_FONTS_API Font final : public PainterFont
 {
 private:
-   Font(const FontInfo& info, std::shared_ptr<FontFace> face, uint32_t dpi);
+   Font(const FontInfo& info, std::shared_ptr<FontFace> face);
    
 public:
    ~Font();
@@ -40,8 +40,6 @@ public:
    std::string_view GetFace() const override;
 
    float GetFontSize() const override;
-   uint32_t GetPixelSize() const noexcept;
-   uint32_t GetDPI() const noexcept;
 
    Metrics GetFontMetrics() const override;
 
@@ -52,16 +50,17 @@ public:
    const FontFace& GetFontFace() const noexcept;
 
 private:
+   using LayoutCache =
+      GraphicsObjectCache<std::string, std::shared_ptr<TextLayout>>;
+   using DPIAwareLayoutCache = std::map<uint32_t, LayoutCache>;
    
-   std::shared_ptr<TextLayout> CreateTextLayout(std::string text) const;
+   LayoutCache& GetLayoutCacheForDPI(uint32_t dpi) const;
+   std::shared_ptr<TextLayout> CreateTextLayout(uint32_t dpi, std::string text) const;
    
    FontInfo mFontInfo;
    std::shared_ptr<FontFace> mFontFace;
-
-   uint32_t mDPI;
    
-   using LayoutCache = GraphicsObjectCache<std::string, std::shared_ptr<TextLayout>>;
-   mutable LayoutCache mLayoutCache;
+   mutable DPIAwareLayoutCache mLayoutCache;
 
    std::shared_ptr<TextLayout> mEmptyLayout;
 

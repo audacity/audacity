@@ -36,7 +36,7 @@ GLPainter::GLPainter(
    GLRenderer& renderer, Context& context, const FontInfo& defaultFont)
     : mRenderer(renderer)
     , mContext(context)
-    , mDefaultFont(fonts::GetFontLibrary().GetFont(defaultFont, 96))
+    , mDefaultFont(fonts::GetFontLibrary().GetFont(defaultFont))
     , mTargetsStack(std::make_unique<PaintTargetsStack>(renderer, context))
     , mStrokeGenerator(std::make_unique<StrokeGenerator>())
 {
@@ -49,7 +49,7 @@ GLPainter::GLPainter(
     : mRenderer(renderer)
     , mContext(*context)
     , mOwnedContext(std::move(context))
-    , mDefaultFont(fonts::GetFontLibrary().GetFont(defaultFont, 96))
+    , mDefaultFont(fonts::GetFontLibrary().GetFont(defaultFont))
     , mTargetsStack(std::make_unique<PaintTargetsStack>(renderer, mContext))
     , mStrokeGenerator(std::make_unique<StrokeGenerator>())
 {
@@ -73,7 +73,7 @@ Size GLPainter::GetSize() const
 
 std::shared_ptr<PainterFont> GLPainter::CreateFont(const FontInfo& fontInfo)
 {
-   return fonts::GetFontLibrary().GetFont(fontInfo, 96);
+   return fonts::GetFontLibrary().GetFont(fontInfo);
 }
 
 std::shared_ptr<PainterFont> GLPainter::GetDefaultFont() const

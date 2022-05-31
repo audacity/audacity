@@ -438,6 +438,7 @@ public:
          }
       }
 
+#if 0
       if(mSurface != nullptr)
       {
          EGLint pixelsPerInch {};
@@ -449,8 +450,9 @@ public:
          else
             pixelsPerInch = static_cast<EGLint>(pixelsPerInch / (EGL_DISPLAY_SCALING * 0.0254f));
 
-         UpdateScreenProperties(pixelsPerInch, std::max(1.0f, pixelsPerInch / 96.0f));
+         UpdateScreenProperties(pixelsPerInch, pixelsPerInch / 96.0f);
       }
+#endif
 
       if (!mInitialized)
       {

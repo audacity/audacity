@@ -61,6 +61,8 @@ public:
 
    static uint32_t GetPixelSize(FontSize size) noexcept;
 
+   static uint32_t BaseDPI() noexcept;
+
 private:
    
    FontInfo mFontInfo;

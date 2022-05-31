@@ -28,15 +28,15 @@ public:
    FontLibrary();
    ~FontLibrary();
 
-   std::shared_ptr<Font> GetFont(const FontInfo& fontInfo, uint32_t dpi);
+   std::shared_ptr<Font> GetFont(const FontInfo& fontInfo);
 
    static void SetFontProvider(std::unique_ptr<FontProvider> fontProvider);
 
 private:
-   std::shared_ptr<FontFace> GetFontFace(FontInfo fontInfo, uint32_t dpi);
+   std::shared_ptr<FontFace> GetFontFace(FontInfo fontInfo);
    
    using FontFacesMap = std::map<FontInfo, std::shared_ptr<FontFace>>;
-   using FontsMap = std::map<std::pair<uint32_t, FontInfo>, std::shared_ptr<Font>>;
+   using FontsMap = std::map<FontInfo, std::shared_ptr<Font>>;
 
    static std::unique_ptr<FontProvider> mProvider;
 
