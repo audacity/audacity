@@ -48,9 +48,7 @@ to the meters.
 *//****************************************************************//**
 
 \class AudioThread
-\brief Defined different on Mac and other platforms (on Mac it does not
-use wxWidgets wxThread), this class sits in a thread loop reading and
-writing audio.
+\brief Sits in a thread loop reading and writing audio.
 
 *//****************************************************************//**
 
@@ -203,54 +201,11 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
 #include <thread>
 
-#ifdef __WXMAC__
-
-// On Mac OS X, it's better not to use the wxThread class.
-// We use our own implementation based on pthreads instead.
-
-#include <pthread.h>
-#include <time.h>
-
-class AudioThread {
- public:
-   typedef int ExitCode;
-   AudioThread() { mDestroy = false; mThread = NULL; }
-   virtual ExitCode Entry();
-   void Create() {}
-   void Delete() {
-      mDestroy = true;
-      pthread_join(mThread, NULL);
-   }
-   bool TestDestroy() { return mDestroy; }
-   void Sleep(int ms) {
-      struct timespec spec;
-      spec.tv_sec = 0;
-      spec.tv_nsec = ms * 1000 * 1000;
-      nanosleep(&spec, NULL);
-   }
-   static void *callback(void *p) {
-      AudioThread *th = (AudioThread *)p;
-      return reinterpret_cast<void *>( th->Entry() );
-   }
-   void Run() {
-      pthread_create(&mThread, NULL, callback, this);
-   }
- private:
-   bool mDestroy;
-   pthread_t mThread;
-};
-
-#else
-
-// The normal wxThread-derived AudioThread class for all other
-// platforms:
 class AudioThread /* not final */ : public wxThread {
  public:
    AudioThread():wxThread(wxTHREAD_JOINABLE) {}
    ExitCode Entry() override;
 };
-
-#endif
 
 //////////////////////////////////////////////////////////////////////
 //
@@ -1046,7 +1001,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       // zeroes.
       mStreamToken = (++mNextStreamToken);
 
-      // This affects the AudioThread (not the portaudio callback).
+      // This affects AudioThread (not the portaudio callback).
       // Probably not needed so urgently before portaudio thread start for usual
       // playback, since our ring buffers have been primed already with 4 sec
       // of audio, but then we might be scrubbing, so do it.

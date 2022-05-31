@@ -23,8 +23,6 @@ class Alg_iterator;
 class NoteTrack;
 using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
-class AudioThread;
-
 // This workaround makes pause and stop work when output is to GarageBand,
 // which seems not to implement the notes-off message correctly.
 #define AUDIO_IO_GB_MIDI_WORKAROUND
