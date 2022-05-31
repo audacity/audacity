@@ -285,7 +285,7 @@ bool VST3Wrapper::ForEachParameter(ParameterVisitor visitor) const
 }
 
 
-bool VST3Wrapper::AtLeastOne(ParameterVisitor visitor) const
+bool VST3Wrapper::AnyOf(ParameterVisitor visitor) const
 {
    const auto pParameterInfos = getParameterInfos();
    if (pParameterInfos == nullptr)

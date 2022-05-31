@@ -331,7 +331,7 @@ bool VST3Effect::SupportsAutomation() const
 {
    using namespace Steinberg;
 
-   return AtLeastOne
+   return AnyOf
    (
       [&](const ParameterInfo& parameterInfo)
       {

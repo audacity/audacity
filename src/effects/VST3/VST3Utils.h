@@ -108,7 +108,7 @@ struct VST3Wrapper
    // Stop visiting as soon as the visitor returns true, and return true in that case;
    // otherwise if all visits returned false,  return false.
    //
-   bool AtLeastOne(ParameterVisitor visitor) const;
+   bool AnyOf(ParameterVisitor visitor) const;
 
    const std::vector<ParameterInfo>* getParameterInfos() const;
 
