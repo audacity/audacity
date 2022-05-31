@@ -180,7 +180,6 @@ void FillParameters(
 
 void VST3Utils::BuildPlainUI(
    wxWindow* parent,
-   Steinberg::Vst::IEditController* editController,
    Steinberg::Vst::IComponentHandler* handler,
    const VST3Wrapper& wrapper )
 {
@@ -199,7 +198,7 @@ void VST3Utils::BuildPlainUI(
    auto mainSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
    
    mainSizer->Add(scroll, 1, wxEXPAND | wxALL, WindowBorder);
-   FillParameters(scroll, editController, handler, wrapper);
+   FillParameters(scroll, wrapper.mEditController, handler, wrapper);
 
    auto minSize = scroll->GetSizer()->CalcMin() ;
    if(minSize.GetHeight() > (WindowMaxHeight - WindowBorder * 2))

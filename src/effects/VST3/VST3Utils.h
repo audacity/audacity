@@ -64,7 +64,6 @@ public:
     */
    static void BuildPlainUI(
       wxWindow* parent,
-      Steinberg::Vst::IEditController* editController,
       Steinberg::Vst::IComponentHandler* handler,
       const VST3Wrapper& wrapper);
 

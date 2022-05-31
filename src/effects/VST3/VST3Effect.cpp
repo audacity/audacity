@@ -844,7 +844,7 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
          auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
          auto controlsRoot = safenew wxWindow(parent, wxID_ANY);
          if(!LoadVSTUI(controlsRoot))
-            VST3Utils::BuildPlainUI(controlsRoot, mEditController, mComponentHandler, *this);
+            VST3Utils::BuildPlainUI(controlsRoot, mComponentHandler, *this);
          vSizer->Add(controlsRoot);
 
          auto &extra = access.Get().extra;
@@ -873,7 +873,6 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
       {
          VST3Utils::BuildPlainUI(
             parent,
-            mEditController,
             mComponentHandler,
             *this
          );
