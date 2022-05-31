@@ -36,6 +36,7 @@ public:
    uint32_t GetHeight() const noexcept;
 
    float GetScaleFactor() const noexcept;
+   uint32_t GetDPI() const noexcept;
 
 private:
    Framebuffer(

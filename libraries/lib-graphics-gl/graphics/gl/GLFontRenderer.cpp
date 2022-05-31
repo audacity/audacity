@@ -83,7 +83,7 @@ struct TextureCacheItem final
    {
       if (currentRow + symbol.height > textureSize)
          return {};
-      
+
       uint32_t col = nextColumn + symbol.width;
 
       if (col > textureSize)
@@ -116,7 +116,7 @@ struct TextureCacheItem final
    std::shared_ptr<Texture> texture;
 
    uint32_t nextColumn { 0 };
-   
+
    uint32_t currentRow { 0 };
    uint32_t nextRow { 0 };
 };
@@ -127,12 +127,12 @@ struct TextureCache final
        : renderer(_renderer)
    {
    }
-   
+
    CachedSymbol Upload(const fonts::FontSymbol& symbol)
    {
       if (textures.empty())
          textures.emplace_back(renderer);
-      
+
       auto cachedSymbol = textures.back().TryUpload(symbol);
 
       if (cachedSymbol.texture != nullptr)
@@ -142,7 +142,7 @@ struct TextureCache final
 
       return textures.back().TryUpload(symbol);
    }
-   
+
    void UpdateGPUCache()
    {
       for (auto& texture : textures)
@@ -151,7 +151,7 @@ struct TextureCache final
             texture.texture->PerformUpdate(renderer.GetResourceContext());
       }
    }
-   
+
    GLRenderer& renderer;
    std::vector<TextureCacheItem> textures;
 };
@@ -171,7 +171,7 @@ public:
    {
       auto key =
          SymbolKey { face.GetLibraryIndex(), pixelSize, codePoint, hinted };
-      
+
       auto it = mSymbols.find(key);
       if (it != mSymbols.end())
          return it->second;
@@ -198,12 +198,12 @@ private:
 
       return mTextureCache.Upload(fontSymbol);
    }
-   
+
    GLRenderer& mRenderer;
 
    using Symbols = std::unordered_map<SymbolKey, CachedSymbol, SymbolKeyHash>;
    Symbols mSymbols;
-   
+
    TextureCache mTextureCache;
 };
 
@@ -254,7 +254,7 @@ void GLFontRenderer::Draw(
    const auto metrics = fontFace.GetMetrics(fontSize);
    const auto yoffset = metrics.Ascent;
 
-   const float scaleFactor = mContext->GetScaleFactor();
+   const float scaleFactor = 1.0f / mContext->GetScaleFactor();
 
    for (auto symbol : symbols)
    {

@@ -366,7 +366,9 @@ float Context::GetScaleFactor() const noexcept
 
 uint32_t Context::GetDPI() const noexcept
 {
-   return mDPI;
+   return mCurrentState.mCurrentFramebuffer != nullptr ?
+             mCurrentState.mCurrentFramebuffer->GetDPI() :
+             mDPI;
 }
 
 void Context::UpdateScreenProperties(uint32_t dpi, float scaleFactor) noexcept

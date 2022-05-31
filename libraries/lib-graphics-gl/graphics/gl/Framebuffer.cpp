@@ -92,4 +92,9 @@ float Framebuffer::GetScaleFactor() const noexcept
    return 1.0f;
 }
 
+uint32_t Framebuffer::GetDPI() const noexcept
+{
+   return 96;
+}
+
 } // namespace graphics::gl
