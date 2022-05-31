@@ -25,6 +25,15 @@ namespace graphics::gl::platforms::windows
 {
 namespace
 {
+namespace
+{
+auto registered = ([](){
+                      return RegisterRendererFactory([](){
+                                                        return std::make_unique<WGLRenderer>();
+                                                     });
+                   })();
+}
+
 LPCWSTR WindowClassName = L"AudacityWGLWindow-6381EF473EC54DCD886ACFC36775B1E0";
 
 constexpr int GL_TRUE = 1;
