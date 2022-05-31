@@ -17,6 +17,8 @@
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 
 #include <unordered_map>
+#include <vector>
+#include <functional>
 
 struct EffectSettings;
 
