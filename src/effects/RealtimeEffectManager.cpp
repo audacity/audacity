@@ -156,13 +156,9 @@ void RealtimeEffectManager::ProcessStart()
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   if (!mSuspended)
-   {
-      VisitAll([](RealtimeEffectState &state, bool bypassed){
-         if (!bypassed)
-            state.ProcessStart();
-      });
-   }
+   VisitAll([this](RealtimeEffectState &state, bool bypassed){
+      state.ProcessStart(!mSuspended && !bypassed);
+   });
 }
 
 //
@@ -245,13 +241,9 @@ void RealtimeEffectManager::ProcessEnd() noexcept
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   if (!mSuspended)
-   {
-      VisitAll([](RealtimeEffectState &state, bool bypassed){
-         if (!bypassed)
-            state.ProcessEnd();
-      });
-   }
+   VisitAll([this](RealtimeEffectState &state, bool bypassed){
+      state.ProcessEnd(!mSuspended && !bypassed);
+   });
 }
 
 void RealtimeEffectManager::VisitGroup(Track &leader, StateVisitor func)

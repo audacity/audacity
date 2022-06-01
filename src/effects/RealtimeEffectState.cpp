@@ -294,14 +294,14 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
    return false;
 }
 
-bool RealtimeEffectState::ProcessStart()
+bool RealtimeEffectState::ProcessStart(bool active)
 {
-   if (!mInstance)
-      return false;
-
    // Get state changes from the main thread
    if (auto pAccessState = TestAccessState())
       pAccessState->WorkerRead();
+
+   if (!mInstance || !active)
+      return false;
 
    // Assuming we are in a processing scope, use the worker settings
    return mInstance->RealtimeProcessStart(mWorkerSettings);
@@ -433,20 +433,19 @@ size_t RealtimeEffectState::Process(Track &track,
    return len;
 }
 
-bool RealtimeEffectState::ProcessEnd()
+bool RealtimeEffectState::ProcessEnd(bool active)
 {
-   if (!mInstance)
-      return false;
+   bool result = mInstance && active &&
+      // Assuming we are in a processing scope, use the worker settings
+      mInstance->RealtimeProcessEnd(mWorkerSettings);
 
-   // Assuming we are in a processing scope, use the worker settings
-   auto result = mInstance->RealtimeProcessEnd(mWorkerSettings);
-   if (result)
+   if (auto pAccessState = TestAccessState())
+      // Always done, regardless of activity
       // Some dialogs require communication back from the processor so that
       // they can update their appearance in idle time, and some plug-in
       // libraries (like lv2) require the host program to mediate the
       // communication
-      if (auto pAccessState = TestAccessState())
-         pAccessState->WorkerWrite();
+      pAccessState->WorkerWrite();
 
    return result;
 }
