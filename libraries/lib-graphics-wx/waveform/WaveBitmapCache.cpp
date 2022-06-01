@@ -135,8 +135,7 @@ struct WaveBitmapCache::LookupHelper final
 
       auto GetRowFromValue =
          [min = cache->mPaintParamters.Min, max = cache->mPaintParamters.Max,
-          height = cache->mPaintParamters.Height,
-          dbRange = cache->mPaintParamters.DBRange](float value)
+          height = cache->mPaintParamters.Height](float value)
       {
          value = (max - value) / (max - min);
          return static_cast<int>(value * (height - 1) + 0.5);
@@ -282,7 +281,7 @@ struct WaveBitmapCache::LookupHelper final
 
    WaveCacheElement::Columns DBRemappedColumns;
 
-   std::array<double, GraphicsDataCacheBase::CacheElementWidth> EnvelopeValues; 
+   std::array<double, GraphicsDataCacheBase::CacheElementWidth> EnvelopeValues;
    WaveCacheElement::Columns EnvRemappedColumns;
 
    size_t AvailableColumns { 0 };
@@ -368,7 +367,7 @@ bool WaveBitmapCache::InitializeElement(
       element.Bitmap = mPainter->CreateImage(
          graphics::PainterImageFormat::RGB888, 1, mPaintParamters.Height,
          nullptr);
-      
+
       return true;
    }
 
@@ -376,11 +375,11 @@ bool WaveBitmapCache::InitializeElement(
       FrameStatistics::SectionID::WaveBitmapCache);
 
    const auto columnsCount = mLookupHelper->AvailableColumns;
-   
+
    const auto defaultColor = Triplet(mPaintParamters.BlankColor);
 
    const auto height = static_cast<uint32_t>(mPaintParamters.Height);
-   
+
    mImageBuffer.reserve(3 * columnsCount * height);
    auto rowData = mImageBuffer.data();
 
@@ -417,7 +416,7 @@ WaveBitmapCache& WaveBitmapCache::SetPainter(graphics::Painter& painter)
       mRendererID = painter.GetRendererID();
       Invalidate();
    }
-   
+
    mPainter = &painter;
 
    return *this;

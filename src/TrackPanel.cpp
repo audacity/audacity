@@ -272,8 +272,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
      mListener( &ProjectWindow::Get( *project ) ),
      mTracks(tracks),
      mRuler(ruler),
-     mTrackArtist(nullptr),
-     mRefreshBacking(false)
+     mTrackArtist(nullptr)
 #ifndef __WXGTK__   //Get rid if this pragma for gtk
 #pragma warning( default: 4355 )
 #endif
@@ -302,7 +301,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mTrackArtist = std::make_unique<TrackArtist>( this );
 
-   mTimeCount = 0;
    mTimer.parent = this;
    // Timer is started after the window is visible
    ProjectWindow::Get( *GetProject() ).Bind(wxEVT_IDLE,
@@ -340,7 +338,7 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
       .Subscribe([this](const RealtimeEffectManagerMessage& msg)
       {
          if(msg.track)
-            //update "effects" button 
+            //update "effects" button
             RefreshTrack(msg.track.get());
       });
 
@@ -414,8 +412,6 @@ void TrackPanel::OnIdle(wxIdleEvent& event)
 /// AS: This gets called on our wx timer events.
 void TrackPanel::OnTimer(wxTimerEvent& )
 {
-   mTimeCount++;
-
    AudacityProject *const p = GetProject();
    auto &window = ProjectWindow::Get( *p );
 
@@ -451,20 +447,6 @@ void TrackPanel::OnTimer(wxTimerEvent& )
 
    Refresh();
    mRuler->Refresh();
-
-   if(IsAudioActive() && gAudioIO->GetNumCaptureChannels()) {
-
-      // Periodically update the display while recording
-
-      if ((mTimeCount % 5) == 0) {
-         // Must tell OnPaint() to recreate the backing bitmap
-         // since we've not done a full refresh.
-         mRefreshBacking = true;
-         Refresh( false );
-      }
-   }
-   if(mTimeCount > 1000)
-      mTimeCount = 0;
 }
 
 void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )
@@ -733,7 +715,7 @@ double TrackPanel::GetMostRecentXPos()
       MostRecentXCoord(), mViewInfo->GetLeftOffset());
 }
 
-void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
+void TrackPanel::RefreshTrack(Track *trk)
 {
    if (!trk)
       return;
@@ -760,10 +742,8 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
 
    wxRect rect(left, top, width, height);
 
-   if( refreshbacking )
-      mRefreshBacking = true;
 
-   Refresh( false, &rect );
+   Refresh( true, &rect );
 }
 
 
@@ -774,19 +754,6 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
 void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,
                          const wxRect *rect /* = NULL */)
 {
-   // Tell OnPaint() to refresh the backing bitmap.
-   //
-   // Originally I had the check within the OnPaint() routine and it
-   // was working fine.  That was until I found that, even though a full
-   // refresh was requested, Windows only set the onscreen portion of a
-   // window as damaged.
-   //
-   // So, if any part of the trackpanel was off the screen, full refreshes
-   // didn't work and the display got corrupted.
-   if( !rect || ( *rect == GetRect() ) )
-   {
-      mRefreshBacking = true;
-   }
    wxWindow::Refresh(eraseBackground, rect);
 
    CallAfter([this]{ CellularPanel::HandleCursorForPresentMouseState(); } );

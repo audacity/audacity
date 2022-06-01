@@ -35,6 +35,9 @@ bool WaveDataCache::InitializeElement(
    const size_t samplesPerColumn =
       static_cast<size_t>(std::max(0.0, GetSampleRate() / key.PixelsPerSecond));
 
+   const size_t elementSamplesCount = samplesPerColumn * WaveDataCache::CacheElementWidth;
+   size_t processedSamples = 0;
+
    const WaveCacheSampleBlock::Type blockType =
       samplesPerColumn >= 64 * 1024 ?
          WaveCacheSampleBlock::Type::MinMaxRMS64k :
@@ -58,6 +61,7 @@ bool WaveDataCache::InitializeElement(
 
          samplesLeft -= summary.SamplesCount;
          firstSample += summary.SamplesCount;
+         processedSamples += summary.SamplesCount;
       }
 
       if (summary.SamplesCount > 0)
@@ -71,16 +75,18 @@ bool WaveDataCache::InitializeElement(
       }
 
       if (samplesLeft != 0)
+      {
+         ++columnIndex;
          break;
+      }
    }
 
    assert(columnIndex <= WaveDataCache::CacheElementWidth);
 
    element.AvailableColumns = columnIndex;
-   element.IsComplete =
-      element.AvailableColumns == WaveDataCache::CacheElementWidth;
+   element.IsComplete = processedSamples == elementSamplesCount;
 
-   return element.AvailableColumns != 0;
+   return processedSamples != 0;
 }
 
 bool WaveCacheSampleBlock::ContainsSample(int64_t sampleIndex) const noexcept
@@ -118,7 +124,7 @@ void processBlock(
       squareSum += rms * rms * blockSize;
    }
 
-   assert(min <= max);
+ // assert(min <= max);
 
    if (max < min)
       int a = 1;

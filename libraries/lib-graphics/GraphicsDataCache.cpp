@@ -255,6 +255,8 @@ GraphicsDataCacheBase::PerformBaseLookup(GraphicsDataCacheKey key)
 {
    auto it = FindKey(key);
 
+   ++mCacheAccessIndex;
+
    if (it != mLookup.end())
    {
       GraphicsDataCacheElementBase* data = it->Data;
@@ -272,8 +274,6 @@ GraphicsDataCacheBase::PerformBaseLookup(GraphicsDataCacheKey key)
    mNewLookupItems.reserve(1);
 
    mNewLookupItems.push_back({ key, nullptr });
-
-   ++mCacheAccessIndex;
 
    LookupElement newElement {
       key,
@@ -299,7 +299,7 @@ GraphicsDataCacheBase::PerformBaseLookup(GraphicsDataCacheKey key)
                return IsKeyLess(sampleRate, lhs.Key, rhs);
          }),
       newElement);
-      
+
    PerformCleanup();
 
    return newElement.Data;

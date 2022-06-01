@@ -73,7 +73,7 @@ class AUDACITY_DLL_API TrackPanel final
    static TrackPanel &Get( AudacityProject &project );
    static const TrackPanel &Get( const AudacityProject &project );
    static void Destroy( AudacityProject &project );
- 
+
    TrackPanel(wxWindow * parent,
               wxWindowID id,
               const wxPoint & pos,
@@ -112,7 +112,7 @@ class AUDACITY_DLL_API TrackPanel final
       (bool eraseBackground = true, const wxRect *rect = (const wxRect *) NULL)
       override;
 
-   void RefreshTrack(Track *trk, bool refreshbacking = true);
+   void RefreshTrack(Track *trk);
 
    void HandlePageUpKey();
    void HandlePageDownKey();
@@ -220,11 +220,6 @@ protected:
      }
      TrackPanel *parent;
    } mTimer;
-
-   int mTimeCount;
-
-   bool mRefreshBacking;
-
 
 protected:
 
