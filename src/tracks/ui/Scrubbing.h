@@ -11,8 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_SCRUBBING__
 #define __AUDACITY_SCRUBBING__
 
-
-
+#include <thread>
 #include <vector>
 #include <wx/longlong.h>
 
@@ -149,10 +148,14 @@ public:
 private:
    void UpdatePrefs() override;
 
+   //! @pre `!mThread.joinable()` (when defined(USE_SCRUB_THREAD))
    void StartPolling();
    void StopPolling();
    void DoScrub(bool seek);
    void OnActivateOrDeactivateApp(wxActivateEvent & event);
+
+   void ScrubPollerThread();
+   void JoinThread();
 
 private:
    int mScrubToken;
@@ -182,8 +185,8 @@ private:
 #ifdef USE_SCRUB_THREAD
    // Course corrections in playback are done in a helper thread, unhindered by
    // the complications of the main event dispatch loop
-   class ScrubPollerThread;
-   ScrubPollerThread *mpThread {};
+   std::thread mThread;
+   std::atomic<bool> mFinishThread{ false };
 #endif
 
    // Other periodic update of the UI must be done in the main thread,

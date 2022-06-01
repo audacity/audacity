@@ -12,7 +12,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "Scrubbing.h"
 
 #include <functional>
-#include <thread>
 
 #include "../../AudioIO.h"
 #include "../../CommonCommandFlags.h"
@@ -138,26 +137,12 @@ namespace {
 
 #ifdef USE_SCRUB_THREAD
 
-class Scrubber::ScrubPollerThread final : public wxThread {
-public:
-   ScrubPollerThread(Scrubber &scrubber)
-      : wxThread { }
-      , mScrubber(scrubber)
-   {}
-   ExitCode Entry() override;
-
-private:
-   Scrubber &mScrubber;
-};
-
-auto Scrubber::ScrubPollerThread::Entry() -> ExitCode
+void Scrubber::ScrubPollerThread()
 {
-   while( !TestDestroy() )
-   {
+   while (!mFinishThread.load(std::memory_order_acquire)) {
       std::this_thread::sleep_for(ScrubPollInterval);
-      mScrubber.ContinueScrubbingPoll();
+      ContinueScrubbingPoll();
    }
-   return 0;
 }
 
 #endif
@@ -232,12 +217,19 @@ Scrubber::Scrubber(AudacityProject *project)
    UpdatePrefs();
 }
 
-Scrubber::~Scrubber()
+void Scrubber::JoinThread()
 {
 #ifdef USE_SCRUB_THREAD
-   if (mpThread)
-      mpThread->Delete();
+   if (mThread.joinable()) {
+      mFinishThread.store(true, std::memory_order_release);
+      mThread.join();
+   }
 #endif
+}
+
+Scrubber::~Scrubber()
+{
+   JoinThread();
 }
 
 static const auto HasWaveDataPred =
@@ -364,6 +356,10 @@ bool Scrubber::MaybeStartScrubbing(wxCoord xx)
       return false;
    if (IsScrubbing())
       return false;
+#ifdef USE_SCRUB_THREAD
+   if (mThread.joinable())
+      return false;
+#endif
    else {
       const auto state = ::wxGetMouseState();
       mDragging = state.LeftIsDown();
@@ -503,6 +499,10 @@ bool Scrubber::StartKeyboardScrubbing(double time0, bool backwards)
 {
    if (HasMark() || AudioIO::Get()->IsBusy())
       return false;
+#ifdef USE_SCRUB_THREAD
+   if (mThread.joinable())
+      return false;
+#endif
    
    mScrubStartPosition = 0;   // so that HasMark() is true
    mSpeedPlaying = false;
@@ -724,10 +724,10 @@ void Scrubber::StartPolling()
    mPaused = false;
    
 #ifdef USE_SCRUB_THREAD
-   // Detached thread is self-deleting, after it receives the Delete() message
-   mpThread = safenew ScrubPollerThread{ *this };
-   mpThread->Create(4096);
-   mpThread->Run();
+   assert(!mThread.joinable());
+   mFinishThread.store(false, std::memory_order_relaxed);
+   mThread = std::thread{
+      std::mem_fn( &Scrubber::ScrubPollerThread ), std::ref(*this) };
 #endif
 
    mPoller->Start( 0.9 *
@@ -739,10 +739,7 @@ void Scrubber::StopPolling()
    mPaused = true;
 
 #ifdef USE_SCRUB_THREAD
-   if (mpThread) {
-      mpThread->Delete();
-      mpThread = nullptr;
-   }
+   JoinThread();
 #endif
    
    mPoller->Stop();

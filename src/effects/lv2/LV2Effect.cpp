@@ -25,6 +25,7 @@
 #include "SampleCount.h"
 
 #include <cmath>
+#include <functional>
 
 #include <wx/button.h>
 #include <wx/checkbox.h>
@@ -3191,17 +3192,11 @@ LV2Wrapper::LV2Wrapper(LV2Effect *effect)
 
 LV2Wrapper::~LV2Wrapper()
 {
-   if (mInstance)
-   {
-      wxThread *thread = GetThread();
-      if (thread && thread->IsAlive())
-      {
+   if (mInstance) {
+      if (mThread.joinable()) {
          mStopWorker = true;
-
-         LV2Work work = {0, NULL};
-         mRequests.Post(work);
-
-         thread->Wait();
+         mRequests.Post({ 0, NULL });
+         mThread.join();
       }
 
       if (mEffect->mActivated)
@@ -3284,13 +3279,9 @@ LilvInstance *LV2Wrapper::Instantiate(const LilvPlugin *plugin,
    }
 
    if (mWorkerInterface)
-   {
-      if (CreateThread() == wxTHREAD_NO_ERROR)
-      {
-         GetThread()->Run();
-      }
-
-   }
+      mThread = std::thread{
+         std::mem_fn( &LV2Wrapper::ThreadFunction ), std::ref(*this)
+      };
 
    return mInstance;
 }
@@ -3346,25 +3337,12 @@ void LV2Wrapper::ConnectPorts(float **inbuf, float **outbuf)
 {
 }
 
-void *LV2Wrapper::Entry()
+void LV2Wrapper::ThreadFunction()
 {
-   LV2Work work;
-
-   while (mRequests.Receive(work) == wxMSGQUEUE_NO_ERROR)
-   {
-      if (mStopWorker)
-      {
-         break;
-      }
-
-      mWorkerInterface->work(mHandle,
-                             respond,
-                             this,
-                             work.size,
-                             work.data);
-   }
-
-   return (void *) 0;
+   for (LV2Work work{};
+      mRequests.Receive(work) == wxMSGQUEUE_NO_ERROR && !mStopWorker;
+   )
+      mWorkerInterface->work(mHandle, respond, this, work.size, work.data);
 }
 
 void LV2Wrapper::SendResponses()
@@ -3404,9 +3382,7 @@ LV2_Worker_Status LV2Wrapper::ScheduleWork(uint32_t size, const void *data)
                                     data);
    }
 
-   LV2Work work = {size, data};
-
-   mRequests.Post(work);
+   mRequests.Post({ size, data });
 
    return LV2_WORKER_SUCCESS;
 }
@@ -3421,10 +3397,7 @@ LV2_Worker_Status LV2Wrapper::respond(LV2_Worker_Respond_Handle handle,
 
 LV2_Worker_Status LV2Wrapper::Respond(uint32_t size, const void *data)
 {
-   LV2Work work = {size, data};
-
-   mResponses.Post(work);
-
+   mResponses.Post({ size, data });
    return LV2_WORKER_SUCCESS;
 }
 
