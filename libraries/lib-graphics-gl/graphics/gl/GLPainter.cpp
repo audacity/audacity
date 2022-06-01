@@ -499,14 +499,21 @@ Size GLPainter::DoGetTextSize(
 
 void GLPainter::PushPaintTarget(const std::shared_ptr<PainterImage>& image)
 {
-   if (!mInPaint || image->GetRendererID() != OpenGLRendererID)
+   if (image->GetRendererID() != OpenGLRendererID)
       return;
+
+   if (!mInPaint)
+   {
+      mRenderer.BeginRendering(mContext);
+      mInPaint = true;
+   }
 
    auto texture = std::static_pointer_cast<Texture>(image);
 
    auto framebuffer = texture->GetFramebuffer(mContext);
 
    mCurrentPaintTarget = mTargetsStack->PushTarget(framebuffer);
+   mCurrentPaintTarget->SetTransform(GetCurrentTransform());
 }
 
 void GLPainter::PopPaintTarget(const std::shared_ptr<PainterImage>&)
@@ -515,6 +522,11 @@ void GLPainter::PopPaintTarget(const std::shared_ptr<PainterImage>&)
       return;
 
    mCurrentPaintTarget = mTargetsStack->PopTarget();
+
+   mInPaint = mCurrentPaintTarget != nullptr;
+
+   if (!mInPaint)
+      mRenderer.EndRendering();
 }
 
 StrokeGenerator& GLPainter::GetStrokeGenerator()
