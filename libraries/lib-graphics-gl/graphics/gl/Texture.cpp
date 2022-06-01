@@ -348,6 +348,11 @@ FramebufferPtr Texture::GetFramebuffer(Context& context)
    return nullptr;
 }
 
+bool Texture::UsesSameObject(const Texture& other) const noexcept
+{
+   return mSharedGLObject.get() == other.mSharedGLObject.get();
+}
+
 Observer::Publisher<TextureDestroyedMessage>&
 Texture::GetTextureDestroyedMessagePublisher()
 {

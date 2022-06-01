@@ -28,10 +28,17 @@ class GLRenderer;
 class Context;
 class Framebuffer;
 
+class Texture;
+using TexturePtr = std::shared_ptr<Texture>;
+
 class Program;
+using ProgramPtr = std::shared_ptr<Program>;
 class ProgramConstants;
+using ProgramConstantsPtr = std::shared_ptr<ProgramConstants>;
 
 class VertexArray;
+using VertexArrayPtr = std::shared_ptr<VertexArray>;
+
 class VertexBuffer;
 
 using IndexType = uint16_t;
@@ -42,7 +49,7 @@ struct Vertex final
 {
    Point pos;
    PointType<int16_t> uv;
-   
+
    Color mulColor;
    Color addColor;
 };
@@ -64,13 +71,19 @@ public:
 
    Size GetSize() const noexcept;
 
+   void SetProgram(const ProgramPtr& program, const ProgramConstantsPtr& constants);
+   void SetVertexArray(const VertexArrayPtr& vertexArray);
+   void SetTexture(const TexturePtr& texture);
+   void EnableClipping(const Rect& rect);
+   void DisableClipping();
+
 private:
    explicit PaintTarget(GLRenderer& renderer, Context& context);
 
    void BeginRendering(const std::shared_ptr<Framebuffer>& framebuffer);
    void EndRendering();
    void RestartRendering();
-   
+
    GLRenderer& mRenderer;
    Context& mContext;
 
@@ -97,12 +110,12 @@ private:
    };
 
    std::shared_ptr<Framebuffer> mFramebuffer;
-   
+
    VertexTransform mCurrentTransform;
 
    class GradientBrushesCache;
    std::unique_ptr<GradientBrushesCache> mGradientBrushesCache;
-   
+
    friend class PaintTargetsStack;
 };
 }

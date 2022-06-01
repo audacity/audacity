@@ -18,7 +18,7 @@
 #include "VertexArray.h"
 #include "Framebuffer.h"
 #include "GLFontRenderer.h"
-#include "GLRenderer.h"
+#include "Texture.h"
 
 #include "GraphicsObjectCache.h"
 
@@ -31,15 +31,28 @@ static constexpr size_t MaxIndexCount = VertexBufferSize / sizeof(IndexType);
 
 namespace
 {
+struct BatchState final
+{
+   ProgramPtr program;
+   ProgramConstantsPtr programConstants;
+   size_t programConstantsVersion { 0 };
+
+   VertexArrayPtr vao;
+
+   TexturePtr texture;
+
+   GLenum primitiveMode { GLenum::TRIANGLES };
+
+   RectType<GLint> clipRect;
+   bool clippingEnabled { false };
+};
 
 struct Batch final
 {
-   GLenum primitiveMode { GLenum::TRIANGLES };
-
    GLsizei firstIndex { 0 };
    GLsizei size { 0 };
 
-   Context::Snapshot snapshot;
+   BatchState state;
 
    Batch() = default;
    Batch(const Batch&) = default;
@@ -47,14 +60,10 @@ struct Batch final
    Batch& operator=(const Batch&) = default;
    Batch& operator=(Batch&&) = default;
 
-   Batch(
-      const Context::Snapshot& _snapshot, GLenum _primitiveMode,
-      GLsizei _firstIndex)
-       : primitiveMode(_primitiveMode)
-       , firstIndex(_firstIndex)
-       , snapshot(_snapshot)
-   {
-   }
+   Batch(const BatchState& _state, GLsizei _firstIndex)
+      : firstIndex(_firstIndex)
+      , state(_state)
+   {}
 };
 
 struct LinearGradientBrush final
@@ -94,6 +103,22 @@ LinearGradientBrush GetLinearGradientBrush(GLRenderer& renderer, const Brush& br
 
    return result;
 }
+
+size_t GetProgramConstantsVersion(const ProgramConstantsPtr& constants)
+{
+   return constants != nullptr ? constants->GetVersion() : 0;
+}
+
+bool IsSameTexture(const TexturePtr& lhs, const TexturePtr& rhs)
+{
+   if (lhs == rhs)
+      return true;
+
+   if (lhs != nullptr && rhs != nullptr)
+      return lhs->UsesSameObject(*rhs);
+
+   return false;
+}
 } // namespace
 
 class PaintTarget::StreamTarget final
@@ -132,6 +157,69 @@ public:
       context.CheckErrors();
    }
 
+   void SetProgram(const ProgramPtr& program, const ProgramConstantsPtr& programConstants)
+   {
+      const auto& prevBatchState = GetLastBatchState();
+
+      if (prevBatchState.program == program &&
+          prevBatchState.programConstants == programConstants &&
+          GetProgramConstantsVersion(prevBatchState.programConstants) ==
+             GetProgramConstantsVersion(programConstants))
+         return;
+
+      auto& newBatchState = GetMutableBatchState();
+
+      newBatchState.program = program;
+      newBatchState.programConstants = programConstants;
+      newBatchState.programConstantsVersion = GetProgramConstantsVersion(programConstants);
+   }
+
+   void SetVertexArray(const VertexArrayPtr& vao)
+   {
+      if (GetLastBatchState().vao == vao)
+         return ;
+
+      GetMutableBatchState().vao = vao;
+   }
+
+   void SetTexture(const TexturePtr& texture)
+   {
+      if (IsSameTexture(GetLastBatchState().texture, texture))
+         return ;
+
+      GetMutableBatchState().texture = texture;
+   }
+
+   void SetPrimitiveMode(GLenum primitiveMode)
+   {
+      if (GetLastBatchState().primitiveMode == primitiveMode)
+         return ;
+
+      GetMutableBatchState().primitiveMode = primitiveMode;
+   }
+
+   void SetClippingEnabled(bool enabled)
+   {
+      if (GetLastBatchState().clippingEnabled == enabled)
+         return ;
+
+      GetMutableBatchState().clippingEnabled = enabled;
+   }
+
+   void SetInitialBatchState(const BatchState& state)
+   {
+      if (mBatches.empty())
+         mBatches.emplace_back(state, 0);
+   }
+
+   void SetClipRect(const RectType<GLint>& clipRect)
+   {
+      if (GetLastBatchState().clipRect == clipRect)
+         return ;
+
+      GetMutableBatchState().clipRect = clipRect;
+   }
+
    bool CanFit(size_t vertexCount, size_t indexCount) const noexcept
    {
       return mWrittenVerticesCount + vertexCount < MaxVertexCount &&
@@ -149,19 +237,13 @@ public:
 
       auto& indexStream = mIndexBuffer->GetStream();
 
-      if (
-         mBatches.empty() || mBatches.back().primitiveMode != primitiveMode ||
-         mBatches.back().snapshot != mContext.GetSnapshot())
-      {
-         mBatches.emplace_back(
-            mContext.GetSnapshot(), primitiveMode,
-            static_cast<GLsizei>(mWrittenIndicesCount));
-      }
-      else if (
+      SetPrimitiveMode(primitiveMode);
+
+      if (mBatches.back().size != 0 && (
          primitiveMode == GLenum::LINE_STRIP ||
          primitiveMode == GLenum::LINE_LOOP ||
          primitiveMode == GLenum::TRIANGLE_STRIP ||
-         primitiveMode == GLenum::TRIANGLE_FAN)
+         primitiveMode == GLenum::TRIANGLE_FAN))
       {
          indexStream.Append<IndexType>(mContext, PrimitiveRestartIndex);
          ++mWrittenIndicesCount;
@@ -211,12 +293,18 @@ public:
       {
          mContext.CheckErrors();
 
-         mContext.SetSnaphot(batch.snapshot);
+         mContext.BindProgram(batch.state.program, batch.state.programConstants);
+         mContext.BindVertexArray(batch.state.vao);
+         mContext.BindTexture(batch.state.texture, 0);
+         if(batch.state.clippingEnabled)
+            mContext.SetClipRect(batch.state.clipRect);
+         else
+            mContext.ResetClipRect();
 
          mContext.CheckErrors();
 
          mContext.GetFunctions().DrawElements(
-            batch.primitiveMode, batch.size, GLenum::UNSIGNED_SHORT,
+            batch.state.primitiveMode, batch.size, GLenum::UNSIGNED_SHORT,
             reinterpret_cast<const void*>(batch.firstIndex * sizeof(IndexType)));
 
          mContext.CheckErrors();
@@ -236,7 +324,30 @@ public:
       mBatches.clear();
    }
 
+   const BatchState& GetLastBatchState()
+   {
+      if (mBatches.empty())
+         GenerateFirstBatch();
+
+      return mBatches.back().state;
+   }
 private:
+   void GenerateFirstBatch()
+   {
+      mBatches.emplace_back();
+      mBatches.back().state.vao = mVertexArray;
+   }
+
+   BatchState& GetMutableBatchState()
+   {
+      if (mBatches.empty())
+         GenerateFirstBatch();
+      else if (mBatches.back().size != 0)
+         mBatches.emplace_back(GetLastBatchState(), mWrittenIndicesCount);
+
+      return mBatches.back().state;
+   }
+
    GLRenderer& mRenderer;
    Context& mContext;
 
@@ -283,12 +394,16 @@ bool PaintTarget::Append(
           indexCount, mFramebuffer == nullptr && mContext.HasFlippedY()))
       return true;
 
+   auto batchState = mStreamTargets[mCurrentStreamTargetIndex]->GetLastBatchState();
+
    mStreamTargets[mCurrentStreamTargetIndex]->FlushBatches();
 
    ++mCurrentStreamTargetIndex;
 
    if (mCurrentStreamTargetIndex == mStreamTargets.size())
       mStreamTargets.emplace_back(std::make_unique<StreamTarget>(mRenderer, mContext));
+
+   mStreamTargets[mCurrentStreamTargetIndex]->SetInitialBatchState(batchState);
 
    return mStreamTargets[mCurrentStreamTargetIndex]->Append(
       mCurrentTransform, primitiveMode, vertices, vertexCount, indices,
@@ -309,7 +424,7 @@ void PaintTarget::SetTransform(const FullTransform& transform)
 
 void PaintTarget::SetDefaultShader()
 {
-   mContext.BindProgram(mDefaultProgram, nullptr);
+   SetProgram(mDefaultProgram, nullptr);
 }
 
 void PaintTarget::SetupShadersForBrush(const Brush& brush)
@@ -322,7 +437,7 @@ void PaintTarget::SetupShadersForBrush(const Brush& brush)
 
       auto gradientBrush = mGradientBrushesCache->GetBrush(brush);
 
-      mContext.BindProgram(gradientBrush.program, gradientBrush.constants);
+      SetProgram(gradientBrush.program, gradientBrush.constants);
    }
    else
    {
@@ -355,7 +470,6 @@ void PaintTarget::BeginRendering(
 {
    mContext.SetPrimitiveRestartIndex(PrimitiveRestartIndex);
    mContext.BindFramebuffer(framebuffer);
-   mContext.BindProgram(mDefaultProgram, nullptr);
 
    if (framebuffer != nullptr)
    {
@@ -383,6 +497,7 @@ void PaintTarget::BeginRendering(
    mFramebuffer = framebuffer;
 
    mRenderer.GetFontRenderer().SetCurrentPaintTarget(*this, mContext);
+   SetProgram(mDefaultProgram, nullptr);
 }
 
 void PaintTarget::EndRendering()
@@ -400,6 +515,33 @@ void PaintTarget::EndRendering()
 void PaintTarget::RestartRendering()
 {
    BeginRendering(mFramebuffer);
+}
+
+void PaintTarget::SetProgram(
+   const ProgramPtr& program, const ProgramConstantsPtr& constants)
+{
+   mStreamTargets[mCurrentStreamTargetIndex]->SetProgram(program, constants);
+}
+
+void PaintTarget::SetVertexArray(const VertexArrayPtr& vertexArray)
+{
+   mStreamTargets[mCurrentStreamTargetIndex]->SetVertexArray(vertexArray);
+}
+
+void PaintTarget::SetTexture(const TexturePtr& texture)
+{
+   mStreamTargets[mCurrentStreamTargetIndex]->SetTexture(texture);
+}
+
+void PaintTarget::EnableClipping(const Rect& rect)
+{
+   mStreamTargets[mCurrentStreamTargetIndex]->SetClipRect(rect_cast<GLint>(rect));
+   mStreamTargets[mCurrentStreamTargetIndex]->SetClippingEnabled(true);
+}
+
+void PaintTarget::DisableClipping()
+{
+   mStreamTargets[mCurrentStreamTargetIndex]->SetClippingEnabled(false);
 }
 
 void PaintTarget::VertexTransform::SetTransform(const Transform& transform)

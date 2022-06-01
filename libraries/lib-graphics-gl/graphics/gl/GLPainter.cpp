@@ -236,13 +236,16 @@ void GLPainter::UpdateTransform(const Transform& transform)
 
 void GLPainter::UpdateClipRect(const Rect& rect)
 {
+   if (!mInPaint)
+      return ;
+
    if (rect == NoClippingRect)
-      mContext.ResetClipRect();
+      mCurrentPaintTarget->DisableClipping();
    else
-      mContext.SetClipRect(rect);
+      mCurrentPaintTarget->EnableClipping(rect);
 }
 
-bool GLPainter::UpdateAntiAliasingState(bool enabled)
+bool GLPainter::UpdateAntiAliasingState(bool)
 {
    return false;
 }
@@ -433,8 +436,7 @@ void GLPainter::DoDrawImage(
    };
 
 
-   mContext.BindTexture(const_cast<Texture&>(texture).shared_from_this(), 0);
-
+   mCurrentPaintTarget->SetTexture(const_cast<Texture&>(texture).shared_from_this());
    mCurrentPaintTarget->SetDefaultShader();
    mCurrentPaintTarget->Append(
       GLenum::TRIANGLES, vertices, 4, quadIndices, quadIndicesCount);

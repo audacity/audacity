@@ -267,7 +267,7 @@ void GLFontRenderer::Draw(
       if (lastTexture != cachedSymbol.texture)
       {
          lastTexture = cachedSymbol.texture;
-         mContext->BindTexture(lastTexture->shared_from_this(), 0);
+         mCurrentPaintTarget->SetTexture(lastTexture->shared_from_this());
       }
 
       const Point topLeft { static_cast<float>(symbol.x + cachedSymbol.left),

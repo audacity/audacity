@@ -28,7 +28,7 @@ class Framebuffer;
 
 using FramebufferPtr = std::shared_ptr<Framebuffer>;
 
-struct TextureDestroyedMessage : Observer::Message {}; 
+struct TextureDestroyedMessage : Observer::Message {};
 
 class Texture /* not final */ :
     public PainterImage,
@@ -66,11 +66,12 @@ public:
 
    Observer::Publisher<TextureDestroyedMessage>&
    GetTextureDestroyedMessagePublisher();
-   
+
    TextureCoords GetTextureCoords(const RectType<uint32_t>& rect) const noexcept;
 
+   bool UsesSameObject(const Texture& other) const noexcept;
 private:
-   
+
    class SharedGLObject;
    std::shared_ptr<SharedGLObject> mSharedGLObject;
 
