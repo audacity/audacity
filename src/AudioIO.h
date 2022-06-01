@@ -21,6 +21,7 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <thread>
 #include <utility>
 #include <wx/atomic.h> // member variable
 
@@ -36,7 +37,6 @@ class RingBuffer;
 class Mixer;
 class RealtimeEffectState;
 class Resample;
-class AudioThread;
 
 class AudacityProject;
 
@@ -259,7 +259,8 @@ public:
    unsigned short mAILALastChangeType;  //0 - no change, 1 - increase change, 2 - decrease change
 #endif
 
-   std::unique_ptr<AudioThread> mThread;
+   std::thread mAudioThread;
+   std::atomic<bool> mFinishAudioThread{ false };
 
    ArrayOf<std::unique_ptr<Resample>> mResample;
    ArrayOf<std::unique_ptr<RingBuffer>> mCaptureBuffers;
@@ -343,8 +344,6 @@ protected:
     (Whether its overriding methods are race-free is not for AudioIO to ensure.)
     */
    std::weak_ptr< AudioIOListener > mListener;
-
-   friend class AudioThread;
 
    bool mUsingAlsa { false };
 
@@ -540,7 +539,7 @@ public:
     */
    double GetStreamTime();
 
-   friend class AudioThread;
+   static void AudioThread(std::atomic<bool> &finish);
 
    static void Init();
    static void Deinit();
