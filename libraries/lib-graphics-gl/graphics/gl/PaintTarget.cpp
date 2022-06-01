@@ -224,8 +224,6 @@ public:
       const VertexTransform& transform, GLenum primitiveMode, const Vertex* vertices,
       size_t vertexCount, const IndexType* indices, size_t indexCount, bool flipY)
    {
-      mContext.BindVertexArray(mVertexArray);
-
       if (!CanFit(vertexCount, indexCount))
          return false;
 
