@@ -157,8 +157,6 @@ public:
 
       ProcessReleaseQueue();
 
-      CheckErrors();
-
       if (mSurface != nullptr)
       {
          mSurface->BeginRendering();
@@ -167,8 +165,6 @@ public:
             static_cast<uint32_t>(96 * mSurface->GetScaleFactor()),
             mSurface->GetScaleFactor());
       }
-
-      CheckErrors();
    }
 
    void EndRendering()

@@ -131,12 +131,8 @@ public:
       mVertexBuffer = std::make_shared<VertexBuffer>(
          renderer, GLenum::ARRAY_BUFFER, VertexBufferSize);
 
-      context.CheckErrors();
-
       mIndexBuffer = std::make_shared<VertexBuffer>(
          renderer, GLenum::ARRAY_BUFFER, VertexBufferSize);
-
-      context.CheckErrors();
 
       mVertexArray =
          VertexArrayBuilder(context)
@@ -153,8 +149,6 @@ public:
                offsetof(Vertex, addColor))
             .SetIndexBuffer(mIndexBuffer)
             .Build();
-
-      context.CheckErrors();
    }
 
    void SetProgram(const ProgramPtr& program, const ProgramConstantsPtr& programConstants)
@@ -291,8 +285,6 @@ public:
 
       for (const auto& batch : mBatches)
       {
-         mContext.CheckErrors();
-
          mContext.BindProgram(batch.state.program, batch.state.programConstants);
          mContext.BindVertexArray(batch.state.vao);
          mContext.BindTexture(batch.state.texture, 0);
@@ -301,13 +293,9 @@ public:
          else
             mContext.ResetClipRect();
 
-         mContext.CheckErrors();
-
          mContext.GetFunctions().DrawElements(
             batch.state.primitiveMode, batch.size, GLenum::UNSIGNED_SHORT,
             reinterpret_cast<const void*>(batch.firstIndex * sizeof(IndexType)));
-
-         mContext.CheckErrors();
       }
 
       mBatches.clear();
@@ -455,12 +443,8 @@ PaintTarget::PaintTarget(GLRenderer& renderer, Context& context)
     : mRenderer(renderer)
     , mContext(context)
 {
-   context.CheckErrors();
-
    mDefaultProgram =
       renderer.GetProgramLibrary().GetProgram(ProgramID::Default);
-
-   context.CheckErrors();
 
    mStreamTargets.emplace_back(std::make_unique<StreamTarget>(renderer, context));
 }

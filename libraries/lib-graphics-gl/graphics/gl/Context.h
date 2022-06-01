@@ -86,7 +86,7 @@ public:
 
    void SetPrimitiveRestartIndex(GLuint index);
 
-   void SetViewport(const RectType<uint32_t> viewport);
+   void SetViewport(const RectType<uint32_t>& viewport);
 
    void SetUnpackAlignment(uint32_t alignment);
    void SetBestUnpackAlignment(uint32_t rowStride);
@@ -126,8 +126,6 @@ public:
 
    float GetScaleFactor() const noexcept;
    uint32_t GetDPI() const noexcept;
-
-   void CheckErrors() const;
 
    virtual void BindDefaultFramebuffer();
    virtual bool HasFlippedY() const noexcept;

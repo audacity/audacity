@@ -18,12 +18,6 @@
 #include "Program.h"
 #include "Framebuffer.h"
 
-#define CHECK_ERRORS 0
-
-#ifdef CHECK_ERRORS
-#include "wx/log.h"
-#endif
-
 namespace graphics::gl
 {
 
@@ -89,8 +83,6 @@ void Context::BindTexture(const TexturePtr& texture, uint32_t textureUnitIndex)
       mFunctions.BindTexture(GLenum::TEXTURE_2D, 0);
 
    mCurrentState.mCurrentTexture[textureUnitIndex] = texture;
-
-   CheckErrors();
 }
 
 const GLFunctions& Context::GetFunctions() const
@@ -111,8 +103,6 @@ void Context::BindVertexArray(const VertexArrayPtr& vertexArray)
 
    mCurrentState.mCurrentVertexArray = vertexArray;
    mCurrentState.mCurrentVertexArray->Bind(*this);
-
-   CheckErrors();
 }
 
 void Context::ReleaseContextResource(
@@ -152,8 +142,6 @@ void Context::BindBuffer(const VertexBuffer& buffer)
 
       buffer.Bind(*this);
    }
-
-   CheckErrors();
 }
 
 void Context::BindProgram(const ProgramPtr& program, const ProgramConstantsPtr& constants)
@@ -173,8 +161,6 @@ void Context::BindProgram(const ProgramPtr& program, const ProgramConstantsPtr& 
          program->Bind(*this, constants.get());
       else
          mFunctions.UseProgram(0);
-
-      CheckErrors();
    }
 }
 
@@ -188,8 +174,6 @@ void Context::BindFramebuffer(const FramebufferPtr& framebuffer)
          framebuffer->Bind(*this);
       else
          BindDefaultFramebuffer();
-
-      CheckErrors();
    }
 }
 
@@ -228,7 +212,7 @@ void Context::SetClipRect(const RectType<GLint>& rect)
 
 void Context::SetScreenSpaceClipRect(RectType<GLint> rect)
 {
-   
+
    if (!mCurrentState.mClippingEnabled)
    {
       mCurrentState.mClippingEnabled = true;
@@ -264,7 +248,6 @@ void Context::SetClientActiveTexture(uint32_t textureUnitIndex)
    if (mCurrentActiveTexture != targetTextureUnit)
    {
       mFunctions.ActiveTexture(targetTextureUnit);
-      CheckErrors();
       mCurrentActiveTexture = targetTextureUnit;
    }
 }
@@ -278,7 +261,7 @@ void Context::SetPrimitiveRestartIndex(GLuint index)
    }
 }
 
-void Context::SetViewport(const RectType<uint32_t> viewport)
+void Context::SetViewport(const RectType<uint32_t>& viewport)
 {
    const auto scaleFactor = GetScaleFactor();
 
@@ -306,7 +289,6 @@ void Context::SetUnpackAlignment(uint32_t alignment)
    if (mUnpackAlignment != alignment)
    {
       mFunctions.PixelStorei(GLenum::UNPACK_ALIGNMENT, alignment);
-      CheckErrors();
       mUnpackAlignment = alignment;
    }
 }
@@ -343,8 +325,6 @@ void Context::SetupContext()
    mFunctions.BindSampler(1, mSamplerStateObject);
 
    mFunctions.ActiveTexture(GLenum::TEXTURE0);
-
-   CheckErrors();
 }
 
 void Context::DoProcessReleaseQueue()
@@ -389,17 +369,6 @@ void Context::UpdateScreenProperties(uint32_t dpi, float scaleFactor) noexcept
    {
       mScaleFactor = scaleFactor;
    }
-}
-
-void Context::CheckErrors() const
-{
-#if CHECK_ERRORS
-   const auto error = mFunctions.GetError();
-   if (error != GLenum::NO_ERROR)
-   {
-      wxLogDebug("GL error: %d", error);
-   }
-#endif
 }
 
 bool Context::HasFlippedY() const noexcept
