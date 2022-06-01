@@ -662,7 +662,9 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       stateMutator.SetBrush(clrText);
       // Draw the ruler
 #ifndef EXPERIMENTAL_DA
-      mRuler.Draw(*mPainter);
+      // DV: mRuler is drawn on-screen below.
+      // Drawing it off-screen too causes problems on macOS
+      //mRuler.Draw(*mPainter);
 #endif
    }
    auto stateMutator = mPainter->GetStateMutator();
