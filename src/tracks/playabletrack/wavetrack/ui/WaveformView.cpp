@@ -358,9 +358,6 @@ void DrawMinMaxRMS(
    auto clipStateMutator = painter.GetClipStateMutator();
    clipStateMutator.SetClipRect(RectFromWXRect(rect), false);
 
-   auto painterStateMutator = painter.GetStateMutator();
-   painterStateMutator.SetBrush(Brush::NoBrush);
-
    for (auto it = range.begin(); it != range.end(); ++it)
    {
       const auto elementLeftOffset = it.GetLeftOffset();
@@ -371,13 +368,6 @@ void DrawMinMaxRMS(
       const auto drawableWidth = std::min<int32_t>(width, it->Bitmap->GetWidth() - elementLeftOffset);
 
       painter.DrawImage(*it->Bitmap, left, rect.GetTop(), drawableWidth, height, elementLeftOffset, 0);
-
-      painterStateMutator.SetPen(Colors::Green);
-      painter.DrawLine(left + drawableWidth, rect.GetTop(),
-                       left + drawableWidth, rect.GetBottom());
-
-      painterStateMutator.SetPen(Colors::Red);
-      painter.DrawRect(left, rect.GetTop(), width, height);
 
       left += width;
    }

@@ -200,10 +200,13 @@ public:
       GetMutableBatchState().clippingEnabled = enabled;
    }
 
-   void SetInitialBatchState(const BatchState& state)
+   void CopyInitialBatchState(const BatchState& state)
    {
       if (mBatches.empty())
+      {
          mBatches.emplace_back(state, 0);
+         mBatches.back().state.vao = mVertexArray;
+      }
    }
 
    void SetClipRect(const RectType<GLint>& clipRect)
@@ -389,7 +392,7 @@ bool PaintTarget::Append(
    if (mCurrentStreamTargetIndex == mStreamTargets.size())
       mStreamTargets.emplace_back(std::make_unique<StreamTarget>(mRenderer, mContext));
 
-   mStreamTargets[mCurrentStreamTargetIndex]->SetInitialBatchState(batchState);
+   mStreamTargets[mCurrentStreamTargetIndex]->CopyInitialBatchState(batchState);
 
    return mStreamTargets[mCurrentStreamTargetIndex]->Append(
       mCurrentTransform, primitiveMode, vertices, vertexCount, indices,
