@@ -18,6 +18,7 @@
 
 #include <vector>
 #include <functional>
+#include <unordered_map>
 
 class wxString;
 class wxWindow;
