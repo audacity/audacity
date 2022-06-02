@@ -27,6 +27,8 @@
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackViewConstants.h"
 
+#include <wx/time.h>
+
 // private helper classes and functions
 namespace {
 

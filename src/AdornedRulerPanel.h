@@ -87,7 +87,7 @@ private:
    void DoIdle();
    void OnIdle( wxIdleEvent &evt );
    void OnAudioStartStop(AudioIOEvent);
-   void OnPaint(wxPaintEvent &evt);
+   void HandlePaintEvent(wxPaintEvent &evt) override;
    void OnSize(wxSizeEvent &evt);
    void OnLeave(wxMouseEvent &evt);
    void OnThemeChange(struct ThemeChangeMessage);

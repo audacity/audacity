@@ -35,6 +35,8 @@ public:
    void AddOverlay( const std::weak_ptr<Overlay> &pOverlay );
    void ClearOverlays();
 
+   void EnqueueRepaintIfRequired(bool repaint_all, graphics::Painter& painter);
+
    // Erases and redraws to the client area the overlays that have
    // been previously added with AddOverlay(). If "repaint_all" is
    // true, all overlays will be erased and re-drawn. Otherwise, only

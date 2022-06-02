@@ -35,12 +35,6 @@
   Note that with stereo tracks there will be one TrackInfo
   being used by two wavetracks.
 
-*//*****************************************************************//**
-
-\class TrackPanel::AudacityTimer
-\brief Timer class dedicated to informing the TrackPanel that it
-is time to refresh some aspect of the screen.
-
 *//*****************************************************************/
 
 
@@ -182,10 +176,6 @@ BEGIN_EVENT_TABLE(TrackPanel, CellularPanel)
     EVT_MOUSE_EVENTS(TrackPanel::OnMouseEvent)
     EVT_KEY_DOWN(TrackPanel::OnKeyDown)
 
-    EVT_PAINT(TrackPanel::OnPaint)
-
-    EVT_TIMER(wxID_ANY, TrackPanel::OnTimer)
-
     EVT_SIZE(TrackPanel::OnSize)
 
 END_EVENT_TABLE()
@@ -301,8 +291,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
    mTrackArtist = std::make_unique<TrackArtist>( this );
 
-   mTimer.parent = this;
-   // Timer is started after the window is visible
    ProjectWindow::Get( *GetProject() ).Bind(wxEVT_IDLE,
       &TrackPanel::OnIdle, this);
 
@@ -348,8 +336,6 @@ TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
 
 TrackPanel::~TrackPanel()
 {
-   mTimer.Stop();
-
    // This can happen if a label is being edited and the user presses
    // ALT+F4 or Command+Q
    if (HasCapture())
@@ -392,61 +378,44 @@ void TrackPanel::OnSize( wxSizeEvent &evt )
 void TrackPanel::OnIdle(wxIdleEvent& event)
 {
    event.Skip();
-   // The window must be ready when the timer fires (#1401)
-   if (IsShownOnScreen())
-   {
-      mTimer.Start(std::chrono::milliseconds{kTimerInterval}.count(), FALSE);
 
-      // Timer is started, we don't need the event anymore
-      GetProjectFrame( *GetProject() ).Unbind(wxEVT_IDLE,
-         &TrackPanel::OnIdle, this);
-   }
-   else
-   {
-      // Get another idle event, wx only guarantees we get one
-      // event after "some other normal events occur"
-      event.RequestMore();
-   }
-}
+   if (!IsShownOnScreen())
+      return;
+   
+   AudacityProject* const p = GetProject();
+   auto& window = ProjectWindow::Get(*p);
 
-/// AS: This gets called on our wx timer events.
-void TrackPanel::OnTimer(wxTimerEvent& )
-{
-   AudacityProject *const p = GetProject();
-   auto &window = ProjectWindow::Get( *p );
-
-   auto &projectAudioIO = ProjectAudioIO::Get( *p );
+   auto& projectAudioIO = ProjectAudioIO::Get(*p);
    auto gAudioIO = AudioIO::Get();
 
    // Check whether we were playing or recording, but the stream has stopped.
-   if (projectAudioIO.GetAudioIOToken()>0 && !IsAudioActive())
+   if (projectAudioIO.GetAudioIOToken() > 0 && !IsAudioActive())
    {
-      //the stream may have been started up after this one finished (by some other project)
-      //in that case reset the buttons don't stop the stream
-      auto &projectAudioManager = ProjectAudioManager::Get( *p );
+      // the stream may have been started up after this one finished (by some
+      // other project) in that case reset the buttons don't stop the stream
+      auto& projectAudioManager = ProjectAudioManager::Get(*p);
       projectAudioManager.Stop(!gAudioIO->IsStreamActive());
    }
 
    // Next, check to see if we were playing or recording
    // audio, but now Audio I/O is completely finished.
-   if (projectAudioIO.GetAudioIOToken()>0 &&
-         !gAudioIO->IsAudioTokenActive(projectAudioIO.GetAudioIOToken()))
+   if (
+      projectAudioIO.GetAudioIOToken() > 0 &&
+      !gAudioIO->IsAudioTokenActive(projectAudioIO.GetAudioIOToken()))
    {
       projectAudioIO.SetAudioIOToken(0);
       window.RedrawProject();
    }
-   if (mLastDrawnSelectedRegion != mViewInfo->selectedRegion) {
+   if (mLastDrawnSelectedRegion != mViewInfo->selectedRegion)
+   {
       UpdateSelectionDisplay();
    }
 
    // Notify listeners for timer ticks
    window.GetPlaybackScroller().OnTimer();
 
-   //DrawOverlays(false, *mPainter);
-   //mRuler->DrawOverlays(false, *mPainter);
-
-   Refresh();
-   mRuler->Refresh();
+   EnqueueRepaintIfRequired(false, *mPainter);
+   mRuler->EnqueueRepaintIfRequired(false, *mPainter);
 }
 
 void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )
@@ -471,7 +440,7 @@ void TrackPanel::OnUndoReset(UndoRedoMessage message)
 
 /// AS: OnPaint( ) is called during the normal course of
 ///  completing a repaint operation.
-void TrackPanel::OnPaint(wxPaintEvent & /* event */)
+void TrackPanel::HandlePaintEvent(wxPaintEvent & /* event */)
 {
    mLastDrawnSelectedRegion = mViewInfo->selectedRegion;
 
@@ -682,16 +651,6 @@ void TrackPanel::OnKeyDown(wxKeyEvent & event)
 
 void TrackPanel::OnMouseEvent(wxMouseEvent & event)
 {
-   if (event.LeftDown()) {
-      // wxTimers seem to be a little unreliable, so this
-      // "primes" it to make sure it keeps going for a while...
-
-      // When this timer fires, we call TrackPanel::OnTimer and
-      // possibly update the screen for offscreen scrolling.
-      mTimer.Stop();
-      mTimer.Start(std::chrono::milliseconds{kTimerInterval}.count(), FALSE);
-   }
-
 
    if (event.ButtonUp()) {
       //EnsureVisible should be called after processing the up-click.

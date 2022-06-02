@@ -45,6 +45,8 @@ namespace {
    enum { IndicatorMediumWidth = 13 };
 }
 
+static constexpr auto kTimerInterval = std::chrono::milliseconds { 50 };
+
 PlayIndicatorOverlayBase::PlayIndicatorOverlayBase(AudacityProject *project, bool isMaster)
 : mProject(project)
 , mIsMaster(isMaster)

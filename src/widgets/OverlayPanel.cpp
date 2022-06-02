@@ -40,26 +40,18 @@ void OverlayPanel::ClearOverlays()
    mOverlays.clear();
 }
 
-void OverlayPanel::DrawOverlays(bool repaint_all, graphics::Painter& painter)
+void OverlayPanel::EnqueueRepaintIfRequired(
+   bool repaint_all, graphics::Painter& painter)
 {
-   if ( !IsShownOnScreen() )
+   if (!IsShownOnScreen())
       return;
-
-   size_t n_pairs = mOverlays.size();
-
-   using Pair = std::pair<wxRect, bool /*out of date?*/>;
-   std::vector< Pair > pairs;
-   pairs.reserve(n_pairs);
 
    // First...
    Compress();
    // ... then assume pointers are not expired
 
    // Find out the rectangles and outdatedness for each overlay
-   wxSize size(GetBackingDC().GetSize());
-   for (const auto& pOverlay : mOverlays)
-      pairs.push_back( pOverlay.lock()->GetRectangle(painter, size) );
-
+   const wxSize size(GetSize());
    // See what requires redrawing.  If repainting, all.
    // If not, then whatever is outdated, and whatever will be damaged by
    // undrawing.
@@ -70,44 +62,34 @@ void OverlayPanel::DrawOverlays(bool repaint_all, graphics::Painter& painter)
    // But first, a quick exit test.
    bool some_overlays_need_repainting =
       repaint_all ||
-      std::any_of( pairs.begin(), pairs.end(),
-         []( const Pair &pair ){ return pair.second; } );
+      std::any_of(
+         mOverlays.begin(), mOverlays.end(),
+         [&painter, size](const auto& overlay)
+         { return overlay.lock()->GetRectangle(painter, size).second; });
 
-   if (!some_overlays_need_repainting) {
-     // This function (OverlayPanel::DrawOverlays()) is called at
-     // fairly high frequency through a timer in TrackPanel. In case
-     // there is nothing to do, we exit early because creating the
-     // wxClientDC below is expensive, at least on Linux.
-     return;
+   if (!some_overlays_need_repainting)
+   {
+      // This function (OverlayPanel::DrawOverlays()) is called at
+      // fairly high frequency through a timer in TrackPanel. In case
+      // there is nothing to do, we exit early because creating the
+      // wxClientDC below is expensive, at least on Linux.
+      return;
    }
 
-   if (!repaint_all) {
-      // For each overlay that needs update, any other overlay whose
-      // rectangle intersects it will also need update.
-      bool done;
-      do {
-         done = true;
-         for (size_t ii = 0; ii < n_pairs - 1; ++ii) {
-            for (size_t jj = ii + 1; jj < n_pairs; ++jj) {
-               if (pairs[ii].second != pairs[jj].second &&
-                   pairs[ii].first.Intersects(pairs[jj].first)) {
-                  done = false;
-                  pairs[ii].second = pairs[jj].second = true;
-               }
-            }
-         }
-      } while (!done);
-   }
+   RequestRefresh();
+}
 
-   // Draw
-   auto it2 = pairs.begin();
-   for (auto pOverlay : mOverlays) {
-      if (repaint_all || it2->second) {
-         // Guarantee a clean state of the dc each pass:
-         pOverlay.lock()->Draw(*this, painter);
-      }
-      ++it2;
-   }
+void OverlayPanel::DrawOverlays(bool repaint_all, graphics::Painter& painter)
+{
+   if ( !IsShownOnScreen() )
+      return;
+
+   // First...
+   Compress();
+   // ... then assume pointers are not expired
+
+   for (auto& weakOverlay : mOverlays)
+      weakOverlay.lock()->Draw(*this, painter);
 }
 
 void OverlayPanel::Compress()

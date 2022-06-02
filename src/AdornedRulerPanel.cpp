@@ -685,7 +685,6 @@ enum {
 
 BEGIN_EVENT_TABLE(AdornedRulerPanel, CellularPanel)
    EVT_IDLE( AdornedRulerPanel::OnIdle )
-   EVT_PAINT(AdornedRulerPanel::OnPaint)
    EVT_SIZE(AdornedRulerPanel::OnSize)
    EVT_LEAVE_WINDOW(AdornedRulerPanel::OnLeave)
 
@@ -1530,7 +1529,7 @@ void AdornedRulerPanel::DoIdle()
    if (changed)
       // Cause ruler redraw anyway, because we may be zooming or scrolling,
       // showing or hiding the scrub bar, etc.
-      Refresh();
+      RequestRefresh();
 }
 
 void AdornedRulerPanel::OnAudioStartStop(AudioIOEvent evt)
@@ -1557,7 +1556,7 @@ void AdornedRulerPanel::OnAudioStartStop(AudioIOEvent evt)
       DoSelectionChange( mViewInfo->selectedRegion );
 }
 
-void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
+void AdornedRulerPanel::HandlePaintEvent(wxPaintEvent & WXUNUSED(evt))
 {
    auto paintEvent = mPainter.Paint();
 
