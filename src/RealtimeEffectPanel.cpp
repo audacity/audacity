@@ -12,11 +12,11 @@
 
 #include <wx/sizer.h>
 #include <wx/button.h>
-#include <wx/tglbtn.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
 #include <wx/menu.h>
 #include <wx/wupdlock.h>
+#include <wx/bmpbuttn.h>
 
 #ifdef __WXMSW__
 #include <wx/dcbuffer.h>
@@ -267,7 +267,7 @@ namespace
       RealtimeEffectState* mEffectState{nullptr};
 
       ThemedButtonWrapper<wxButton>* mChangeButton{nullptr};
-      wxToggleButton* mEnableButton{nullptr};
+      wxButton* mEnableButton{nullptr};
 
    public:
       RealtimeEffectControl(wxWindow* parent,
@@ -285,48 +285,35 @@ namespace
          auto sizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
 
          //On/off button
-         auto enableButton = safenew ThemedButtonWrapper<wxToggleButton>(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-         enableButton->SetBitmapLabelIndex(bmpEffectOff);
-         enableButton->SetBitmapPressedIndex(bmpEffectOn);
+         auto enableButton = safenew ThemedButtonWrapper<wxBitmapButton>(this, wxID_ANY, wxBitmap{}, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+         enableButton->SetBitmapIndex(bmpEffectOff);
          enableButton->SetBackgroundColorIndex(clrEffectListItemBackground);
-         enableButton->SetMinSize(enableButton->GetBitmapLabel().GetSize());
-         enableButton->Bind(wxEVT_TOGGLEBUTTON, &RealtimeEffectControl::OnEnableButtonClicked, this);
+         enableButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnEnableButtonClicked, this);
          mEnableButton = enableButton;
 
          //Central button with effect name
          mChangeButton = safenew ThemedButtonWrapper<wxButton>(this, wxID_ANY);
-         mChangeButton->SetMinSize(mEnableButton->GetMinSize());
          mChangeButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnChangeButtonClicked, this);
 
          //Show effect settings
-         auto optionsButton = safenew ThemedButtonWrapper<wxButton>(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-         optionsButton->SetBitmapLabelIndex(bmpEffectSettingsNormal);
+         auto optionsButton = safenew ThemedButtonWrapper<wxBitmapButton>(this, wxID_ANY, wxBitmap{}, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+         optionsButton->SetBitmapIndex(bmpEffectSettingsNormal);
          optionsButton->SetBitmapPressedIndex(bmpEffectSettingsDown);
          optionsButton->SetBitmapCurrentIndex(bmpEffectSettingsHover);
          optionsButton->SetBackgroundColorIndex(clrEffectListItemBackground);
-         optionsButton->SetMinSize(optionsButton->GetBitmapLabel().GetSize());
          optionsButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnOptionsClicked, this);
          
          auto dragArea = safenew wxStaticBitmap(this, wxID_ANY, theTheme.Bitmap(bmpDragArea));
          dragArea->Disable();
-         sizer->Add(
-            dragArea,
-            wxSizerFlags().Center().Border(wxLEFT, 5)
-         );
-         sizer->Add(
-            mEnableButton,
-            wxSizerFlags().Center().Border(wxLEFT, 5)
-         );
-         sizer->Add(
-            mChangeButton,
-            wxSizerFlags().Center().Border(wxLEFT, 5).Proportion(1)
-         );
-         sizer->Add(
-            optionsButton,
-            wxSizerFlags().Center().Border(wxLEFT | wxRIGHT, 5)
-         );
+         sizer->Add(dragArea, 0, wxLEFT | wxCENTER, 5);
+         sizer->Add(mEnableButton, 0, wxLEFT | wxCENTER, 5);
+         sizer->Add(mChangeButton, 1, wxLEFT | wxCENTER, 5);
+         sizer->Add(optionsButton, 0, wxLEFT | wxRIGHT | wxCENTER, 5);
 
-         SetSizer(sizer.release());
+         auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+         vSizer->Add(sizer.release(), 0, wxUP | wxDOWN | wxEXPAND, 10);
+
+         SetSizer(vSizer.release());
       }
 
       void SetEffect(AudacityProject& project, const std::shared_ptr<Track>& track, RealtimeEffectState* state)
@@ -345,10 +332,14 @@ namespace
             return;
          
          auto effectName = mEffectState->GetEffect()->GetName();
-         AudioIO::Get()->RemoveState(*mProject, &*mTrack, *mEffectState);
-         ProjectHistory::Get(*mProject).PushState(
+         //After AudioIO::RemoveState call this will be destroyed
+         auto project = mProject.get();
+         auto trackName = mTrack->GetName();
+
+         AudioIO::Get()->RemoveState(*project, &*mTrack, *mEffectState);
+         ProjectHistory::Get(*project).PushState(
             //i18n-hint: undo history, first parameter - realtime effect name, second - track name
-            XO("'%s' removed from '%s' effect stack").Format(effectName, mTrack->GetName()),
+            XO("'%s' removed from '%s' effect stack").Format(effectName, trackName),
             //i18n-hint: undo history record
             XO("Remove realtime effect")
          );
@@ -531,7 +522,6 @@ public:
       auto rootSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
       auto addEffect = safenew ThemedButtonWrapper<wxButton>(this, wxID_ANY);
-      addEffect->SetMinSize(wxSize(180, 30));
       addEffect->SetTranslatableLabel(XO("Add new effect"));
       addEffect->Bind(wxEVT_BUTTON, &RealtimeEffectListWindow::OnAddEffectClicked, this);
       mAddEffect = addEffect;
@@ -547,8 +537,8 @@ public:
       dropHintLine->SetBackgroundColorIndex(clrDropHintHighlight);
       dropHintLine->Hide();
 
-      rootSizer->Add(mEffectListContainer, 0, wxEXPAND);
-      rootSizer->Add(addEffect, 0, wxALIGN_CENTER | wxALL, 10);
+      rootSizer->Add(mEffectListContainer, 0, wxEXPAND | wxBOTTOM, 10);
+      rootSizer->Add(addEffect, 0, wxLEFT | wxRIGHT | wxEXPAND, 30);
 
       SetSizer(rootSizer.release());
 
@@ -674,6 +664,15 @@ public:
       wxWindowUpdateLocker freeze(this);
       //delete items that were added to the sizer
       mEffectListContainer->GetSizer()->Clear(true);
+
+#ifdef __WXGTK__
+      //Workaround for GTK: if none children were added to the container,
+      //underlying gtk widget size will not be updated, resulting in widget
+      //overlap.
+      if(!mTrack || RealtimeEffectList::Get(*mTrack).GetStatesCount() == 0)
+         mEffectListContainer->Hide();
+#endif
+
       if(mTrack)
       {
          auto& effects = RealtimeEffectList::Get(*mTrack);
@@ -709,10 +708,15 @@ public:
       if(mProject == nullptr)
          return;
 
+#ifdef __WXGTK__
+      // See comment in ReloadEffectsList
+      if(!mEffectListContainer->IsShown())
+         mEffectListContainer->Show();
+#endif
+
       auto row = safenew ThemedWindowWrapper<RealtimeEffectControl>(mEffectListContainer, wxID_ANY);
       row->SetBackgroundColorIndex(clrEffectListItemBackground);
       row->SetEffect(*mProject, mTrack, &state);
-      row->SetMinSize(wxSize { 20, 50 });
       mEffectListContainer->GetSizer()->Insert(index, row, 0, wxEXPAND);
    }
 };
@@ -728,11 +732,9 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
    header->SetBackgroundColorIndex(clrMedium);
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-      auto toggleEffects = safenew ThemedButtonWrapper<wxToggleButton>(header, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-      toggleEffects->SetBitmapLabelIndex(bmpEffectOff);
-      toggleEffects->SetBitmapPressedIndex(bmpEffectOn);
+      auto toggleEffects = safenew ThemedButtonWrapper<wxBitmapButton>(header, wxID_ANY, wxBitmap{}, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+      toggleEffects->SetBitmapIndex(bmpEffectOff);
       toggleEffects->SetBackgroundColorIndex(clrMedium);
-      toggleEffects->SetMinSize(toggleEffects->GetBitmapLabel().GetSize());
       mToggleEffects = toggleEffects;
 
       hSizer->Add(toggleEffects, 0, wxSTRETCH_NOT | wxALIGN_CENTER | wxLEFT, 5);
@@ -753,12 +755,11 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
 
          hSizer->Add(vSizer.release(), 1, wxEXPAND | wxALL, 10);
       }
-      auto close = safenew ThemedButtonWrapper<wxButton>(header, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
+      auto close = safenew ThemedButtonWrapper<wxBitmapButton>(header, wxID_ANY, wxBitmap{}, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
       close->SetBitmapLabelIndex(bmpCloseNormal);
       close->SetBitmapPressedIndex(bmpCloseDown);
       close->SetBitmapCurrentIndex(bmpCloseHover);
       close->SetBackgroundColorIndex(clrMedium);
-      close->SetMinSize(close->GetBitmapLabel().GetSize());
 
       close->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { Close(); });
       
