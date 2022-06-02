@@ -712,7 +712,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       for( size_t i = 0, cnt = texts.size(); i < cnt; i++ )
       {
          auto Text = audacity::ToUTF8( wxT(" ") + texts[i] + wxT(" ") );
-         Size Siz = mPainter->GetTextSize( Text );
+         Size Siz = mPainter->GetTextSize(Text, !mBar[0].vert);
          const auto descent =
             mPainter->GetCurrentFont()->GetFontMetrics().Descent;
 
