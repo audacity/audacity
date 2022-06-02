@@ -33,6 +33,10 @@ depends=(zlib
    libpng
    libjpeg-turbo
    libsm
+   harfbuzz
+   freetype2
+   fontconfig
+   mesa
 )
 
 makedepends=(
@@ -87,6 +91,8 @@ build() {
         -D audacity_use_wxwidgets=local # wxWidgets 3.1 is not available
 
         -D audacity_use_sbsms=local # sbsms is only available in AUR
+
+        -D audacity_has_vst3=no
     )
 
     sourceDir=$(echo audacity-sources-*/)

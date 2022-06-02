@@ -2,7 +2,7 @@ Source: audacity
 Section: sound
 Priority: optional
 Maintainer:
-Uploaders: 
+Uploaders:
 Standards-Version: 4.5.0
 Build-Depends: cmake,
                debhelper-compat (= 12),
@@ -43,6 +43,10 @@ Build-Depends: cmake,
                libtwolame-dev,
                libpng-dev,
                libjpeg-turbo8-dev
+               libharfbuzz-dev
+               libfreetype6-dev
+               libfontconfig-dev
+               libegl1-mesa-dev
 Homepage: https://www.audacityteam.org/
 Rules-Requires-Root: no
 
@@ -51,4 +55,4 @@ Architecture: amd64
 Depends: ${misc:Depends},
          ${shlibs:Depends}
 Description: Audacity is a multi-track audio editor for Linux/Unix, MacOS and
- Windows.  
+ Windows.

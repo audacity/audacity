@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 build_deps=(
-   fedora-packager 
+   fedora-packager
    @development-tools
    cmake
    gettext-devel
@@ -48,8 +48,12 @@ deps=(
    sratom-devel
    suil-devel
    flac-devel
+   harfbuzz-devel
+   freetype-devel
+   fontconfig-devel
+   mesa-devel
 )
 
 dnf install -y \
    "${build_deps[@]}" \
-   "${deps[@]}" 
+   "${deps[@]}"

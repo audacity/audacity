@@ -57,6 +57,10 @@ BuildRequires: sord-devel >= 0.16.4
 BuildRequires: sratom-devel >= 0.6.4
 BuildRequires: suil-devel  >= 0.10.6
 BuildRequires: flac-devel
+BuildRequires: harfbuzz-devel
+BuildRequires: freetype-devel
+BuildRequires: fontconfig-devel
+BuildRequires: mesa-devel
 
 Requires:      portaudio%{?_isa} >= 19-16
 
