@@ -165,21 +165,25 @@ jobs:
           arch: x32
           generator: Visual Studio 16 2019
           postfix: '-msvc2019'
+          windows_sdk: '10.0.18362'
         - name: Windows MSVC 2019 (x86_64)
           os: windows-2019
           arch: x64
           generator: Visual Studio 16 2019
           postfix: '-msvc2019'
+          windows_sdk: '10.0.18362'
         - name: Windows MSVC 2022 (x86)
           os: windows-2022
           arch: x32
           generator: Visual Studio 17 2022
           postfix: '-msvc2022'
+          windows_sdk: '10.0.22000'
         - name: Windows MSVC 2022 (x86_64)
           os: windows-2022
           arch: x64
           generator: Visual Studio 17 2022
           postfix: '-msvc2022'
+          windows_sdk: '10.0.22000'
     steps:
     - name: Checkout Audacity
       uses: actions/checkout@v2
@@ -195,7 +199,9 @@ jobs:
         build_type: ${{ env.BUILD_TYPE }}
         configuration_types: ${{ env.CONFIGURATION_TYPES }}
         build_level: $${{ env.BUILD_LEVEL }}
-        cmake_options: ${{ env.CONFIGURE_CMAKE_OPTIONS }}
+        cmake_options: |
+          ${{ env.CONFIGURE_CMAKE_OPTIONS }}
+          -DCMAKE_SYSTEM_VERSION=${{ matrix.config.windows_sdk }}
         windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
         windows_certificate_password: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
     - name: Build
