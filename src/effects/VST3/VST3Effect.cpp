@@ -978,11 +978,7 @@ void VST3Effect::ExportPresets(const EffectSettings &) const
       return;
    }
 
-   if(!Vst::PresetFile::savePreset(
-      fileStream,
-      FUID::fromTUID (mEffectClassInfo.ID().data()),
-      mEffectComponent.get(),
-      mEditController.get()))
+   if ( ! VST3Wrapper::SavePreset(fileStream, FUID::fromTUID(mEffectClassInfo.ID().data())) )
    {
       BasicUI::ShowMessageBox(
          XO("Failed to save VST3 preset to file"),
@@ -1186,11 +1182,7 @@ bool VST3Effect::LoadPreset(const wxString& path)
       return false;
    }
 
-   if(!Vst::PresetFile::loadPreset(
-      fileStream,
-      FUID::fromTUID(mEffectClassInfo.ID().data()),
-      mEffectComponent.get(),
-      mEditController.get()))
+   if ( ! VST3Wrapper::LoadPreset(fileStream, FUID::fromTUID(mEffectClassInfo.ID().data())) )
    {
       BasicUI::ShowMessageBox(
          XO("Unable to apply VST3 preset file %s").Format(path),

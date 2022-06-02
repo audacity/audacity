@@ -17,6 +17,7 @@
 
 #include <pluginterfaces/vst/ivsteditcontroller.h>
 #include <pluginterfaces/vst/ivstparameterchanges.h>
+#include <public.sdk/source/vst/vstpresetfile.h>
 
 wxString VST3Utils::MakePluginPathString(const wxString& modulePath, const std::string& effectUIDString)
 {
@@ -120,5 +121,33 @@ bool VST3Wrapper::AnyOf(ParameterVisitor visitor) const
    }
 
    return false;
+}
+
+
+bool VST3Wrapper::LoadPreset(Steinberg::IBStream* fileStream, const Steinberg::FUID& classID)
+{
+   using namespace Steinberg;
+
+   return Vst::PresetFile::loadPreset
+   (
+      fileStream,
+      classID,
+      mEffectComponent.get(),
+      mEditController.get()
+   );
+}
+
+
+bool VST3Wrapper::SavePreset(Steinberg::IBStream* fileStream, const Steinberg::FUID& classID) const
+{
+   using namespace Steinberg;
+
+   return Vst::PresetFile::savePreset
+   (
+      fileStream,
+      classID,
+      mEffectComponent.get(),
+      mEditController.get()
+   );
 }
 
