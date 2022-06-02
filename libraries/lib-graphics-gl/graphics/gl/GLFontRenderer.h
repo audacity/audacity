@@ -30,6 +30,7 @@ public:
    void ResetPaintTarget();
 
    uint32_t GetDPI() const noexcept override;
+   bool IsHinted() const noexcept override;
 
    void
    Draw(const fonts::Font& font, const fonts::TextLayout& layout, Color textColor) override;

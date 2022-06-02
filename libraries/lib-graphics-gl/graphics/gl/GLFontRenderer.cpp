@@ -234,6 +234,11 @@ uint32_t GLFontRenderer::GetDPI() const noexcept
    return mContext != nullptr ? mContext->GetDPI() : 96;
 }
 
+bool GLFontRenderer::IsHinted() const noexcept
+{
+   return mHintingEnabled;
+}
+
 void GLFontRenderer::Draw(
    const fonts::Font& font, const fonts::TextLayout& layout, Color textColor)
 {

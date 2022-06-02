@@ -458,30 +458,32 @@ void GLPainter::DoDrawRotatedText(
       return;
 
    const bool hasRotation = std::abs(angle) >= std::numeric_limits<float>::epsilon();
+      
+   auto& ftFont = static_cast<const fonts::Font&>(font);
+   auto size = ftFont.GetTextSize(text, !hasRotation);
 
    if (hasRotation)
    {
       auto transform = FullTransform(mCurrentTransform)
                           .Transform(FullTransform::Translation(origin))
-                          .Transform(FullTransform::Rotation(angle));
+                          .Transform(FullTransform::Rotation(
+                             -static_cast<float>(angle * M_PI / 180.0)));
 
       mCurrentPaintTarget->SetTransform(transform);
    }
    else
    {
+      if (IsRectClipped(origin, size))
+         return;
+      
       auto transform = mCurrentTransform.Transformed(
          Transform::Translation(std::round(origin.x), std::round(origin.y)));
 
       mCurrentPaintTarget->SetTransform(transform);
    }
 
-   auto& ftFont = static_cast<const fonts::Font&>(font);
-
    if (backgroundBrush.GetStyle() != BrushStyle::None)
-   {
-      auto size = ftFont.GetTextSize(text);
       DoDrawRect(Rect { {}, size });
-   }
 
    mRenderer.GetFontRenderer().SetHintingEnabled(!hasRotation);
 
@@ -492,9 +494,9 @@ void GLPainter::DoDrawRotatedText(
 }
 
 Size GLPainter::DoGetTextSize(
-   const PainterFont& font, const std::string_view& text) const
+   const PainterFont& font, const std::string_view& text, bool gridFitted) const
 {
-   return font.GetTextSize(text);
+   return font.GetTextSize(text, gridFitted);
 }
 
 void GLPainter::PushPaintTarget(const std::shared_ptr<PainterImage>& image)

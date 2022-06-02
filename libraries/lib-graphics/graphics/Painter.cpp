@@ -104,12 +104,34 @@ bool Painter::HasClipping() const noexcept
 
 void Painter::DrawPolygon(const Point* pts, size_t count)
 {
+   if (count == 0)
+      return;
+
+   AABB box;
+
+   for (size_t i = 0; i < count; i++)
+      box.Expand(pts[i]);
+
+   if (IsRectClipped(box))
+      return;
+   
    DoDrawPolygon(pts, count);
 }
 
-void Painter::DrawLines(const Point* ptr, size_t count)
+void Painter::DrawLines(const Point* pts, size_t count)
 {
-   DoDrawLines(ptr, count);
+   if (count == 0)
+      return;
+
+   AABB box;
+
+   for (size_t i = 0; i < count; i++)
+      box.Expand(pts[i]);
+
+   if (IsRectClipped(box))
+      return;
+   
+   DoDrawLines(pts, count);
 }
 
 void Painter::DrawLine(Point start, Point end)
@@ -125,22 +147,34 @@ void Painter::DrawLine(float sx, float sy, float ex, float ey)
 
 void Painter::DrawRect(const Rect& rect)
 {
+   if (IsRectClipped(rect))
+      return;
+      
    DoDrawRect(rect);
 }
 
 void Painter::DrawRect(Point topLeft, Size size)
 {
+   if (IsRectClipped(topLeft, size))
+      return;
+   
    DoDrawRect(Rect { topLeft, size });
 }
 
 void Painter::DrawRect(float left, float top, float width, float height)
 {
+   if (IsRectClipped(left, top, width, height))
+      return;
+   
    DrawRect(Point { left, top }, Size { width, height });
 }
 
 void Painter::DrawLinearGradientRect(
    const Rect& rect, Color from, Color to, LinearGradientDirection direction)
 {
+   if (IsRectClipped(rect))
+      return;
+   
    DoDrawLinearGradientRect(rect, from, to, direction);
 }
 
@@ -148,6 +182,9 @@ void Painter::DrawLinearGradientRect(
    Point topLeft, Size size, Color from, Color to,
    LinearGradientDirection direction)
 {
+   if (IsRectClipped(topLeft, size))
+      return;
+   
    DoDrawLinearGradientRect(Rect { topLeft, size }, from, to, direction);
 }
 
@@ -155,6 +192,9 @@ void Painter::DrawLinearGradientRect(
    float left, float top, float width, float height, Color from, Color to,
    LinearGradientDirection direction)
 {
+   if (IsRectClipped(left, top, width, height))
+      return;
+   
    DoDrawLinearGradientRect(
       Rect { Point { left, top }, Size { width, height } }, from, to,
       direction);
@@ -162,32 +202,50 @@ void Painter::DrawLinearGradientRect(
 
 void Painter::DrawRoundedRect(const Rect& rect, float radius)
 {
+   if (IsRectClipped(rect))
+      return;
+   
    DoDrawRoundedRect(rect, radius);
 }
 
 void Painter::DrawRoundedRect(Point topLeft, Size size, float radius)
 {
+   if (IsRectClipped(topLeft, size))
+      return;
+   
    DoDrawRoundedRect(Rect { topLeft, size }, radius);
 }
 
 void Painter::DrawRoundedRect(
    float left, float top, float width, float height, float radius)
 {
+   if (IsRectClipped(left, top, width, height))
+      return;
+   
    DrawRoundedRect(Point { left, top }, Size { width, height }, radius);
 }
 
 void Painter::DrawEllipse(const Rect& rect)
 {
+   if (IsRectClipped(rect))
+      return;
+   
    DoDrawEllipse(rect);
 }
 
 void Painter::DrawEllipse(Point topLeft, Size size)
 {
+   if (IsRectClipped(topLeft, size))
+      return;
+   
    DoDrawEllipse(Rect { topLeft, size });
 }
 
 void Painter::DrawEllipse(float left, float top, float width, float height)
 {
+   if (IsRectClipped(left, top, width, height))
+      return;
+   
    DrawEllipse(Point { left, top }, Size { width, height });
 }
 
@@ -341,14 +399,16 @@ void Painter::DrawRotatedText(
 }
 
 Size Painter::GetTextSize(
-   const PainterFont& font, const std::string_view& text) const
+   const PainterFont& font, const std::string_view& text,
+   bool gridFitted) const
 {
-   return DoGetTextSize(font, text);
+   return DoGetTextSize(font, text, gridFitted);
 }
 
-Size Painter::GetTextSize(const std::string_view& text) const
+Size Painter::GetTextSize(
+   const std::string_view& text, bool gridFitted) const
 {
-   return DoGetTextSize(*GetCurrentFont(), text);
+   return DoGetTextSize(*GetCurrentFont(), text, gridFitted);
 }
 
 void Painter::DrawImage(const PainterImage& image, const Rect& rect)
@@ -364,6 +424,9 @@ void Painter::DrawImage(const PainterImage& image, Point topLeft, Size size)
 void Painter::DrawImage(
    const PainterImage& image, float left, float top, float width, float height)
 {
+   if (IsRectClipped(left, top, width, height))
+      return;
+
    DoDrawImage(
       image, Rect { Point { left, top }, Size { width, height } },
       GetImageRect(image));
@@ -371,6 +434,9 @@ void Painter::DrawImage(
 
 void Painter::DrawImage(const PainterImage& image, Point topLeft)
 {
+   if (IsRectClipped(topLeft.x, topLeft.y, image.GetWidth(), image.GetHeight()))
+      return;
+
    DoDrawImage(
       image,
       Rect { topLeft,
@@ -380,6 +446,9 @@ void Painter::DrawImage(const PainterImage& image, Point topLeft)
 
 void Painter::DrawImage(const PainterImage& image, float left, float top)
 {
+   if (IsRectClipped(left, top, image.GetWidth(), image.GetHeight()))
+      return;
+   
    DoDrawImage(
       image,
       Rect { Point { left, top },
@@ -390,6 +459,9 @@ void Painter::DrawImage(const PainterImage& image, float left, float top)
 void Painter::DrawImage(
    const PainterImage& image, const Rect& destRect, const Rect& sourceRect)
 {
+   if (IsRectClipped(destRect))
+      return;
+   
    DoDrawImage(image, destRect, sourceRect);
 }
 
@@ -397,6 +469,9 @@ void Painter::DrawImage(
    const PainterImage& image, Point destTopLeft, Size destSize,
    Point sourceTopLeft, Size sourceSize)
 {
+   if (IsRectClipped(destTopLeft, destSize))
+      return;
+   
    DoDrawImage(
       image, Rect { destTopLeft, destSize },
       Rect { sourceTopLeft, sourceSize });
@@ -407,6 +482,9 @@ void Painter::DrawImage(
    float destHeight, float sourceLeft, float sourceTop, float sourceWidth,
    float sourceHeight)
 {
+   if (IsRectClipped(destLeft, destTop, destWidth, destHeight))
+      return;
+   
    DoDrawImage(
       image,
       Rect { Point { destLeft, destTop }, Size { destWidth, destHeight } },
@@ -417,6 +495,9 @@ void Painter::DrawImage(
 void Painter::DrawImage(
    const PainterImage& image, const Rect& destRect, Point sourceTopLeft)
 {
+   if (IsRectClipped(destRect))
+      return;
+
    DrawImage(
       image, destRect.origin.x, destRect.origin.y, destRect.size.width,
       destRect.size.height, sourceTopLeft.x, sourceTopLeft.y);
@@ -436,6 +517,10 @@ void Painter::DrawImage(
       sourceHeight <= std::numeric_limits<float>::epsilon())
       return;
 
+   
+   if (IsRectClipped(destTopLeft.x, destTopLeft.y, sourceWidth, sourceHeight))
+      return;
+
    DrawImage(
       image, destTopLeft.x, destTopLeft.y, sourceWidth, sourceHeight,
       sourceTopLeft.x, sourceTopLeft.y, sourceWidth, sourceHeight);
@@ -445,6 +530,9 @@ void Painter::DrawImage(
    const PainterImage& image, Point destTopLeft, Size destSize,
    Point sourceTopLeft)
 {
+   if (IsRectClipped(destTopLeft, destSize))
+      return;
+   
    DrawImage(
       image, destTopLeft.x, destTopLeft.y, destSize.width, destSize.height,
       sourceTopLeft.x, sourceTopLeft.y);
@@ -463,6 +551,10 @@ void Painter::DrawImage(
    if (
       sourceWidth < std::numeric_limits<float>::epsilon() ||
       sourceHeight <= std::numeric_limits<float>::epsilon())
+      return;
+
+   
+   if (IsRectClipped(destLeft, destTop, sourceWidth, sourceHeight))
       return;
 
    DrawImage(
@@ -850,6 +942,35 @@ void Painter::DoDrawLinearGradientRect(
    UpdateBrush(brush);
    DoDrawRect(rect);
    UpdateBrush(GetCurrentBrush());
+}
+
+bool Painter::IsRectClipped(float x, float y, float width, float height) const
+{
+   return IsRectClipped(Rect { Point { x, y }, Size { width, height } });
+}
+
+bool Painter::IsRectClipped(Point point, Size size)
+{
+   return IsRectClipped(AABB(Rect { point, size }));
+}
+
+bool Painter::IsRectClipped(const Rect& rect) const noexcept
+{
+   return IsRectClipped(AABB(rect));
+}
+
+bool Painter::IsRectClipped(const AABB& aabb) const noexcept
+{
+   const auto clipRect = GetCurrentClipRect();
+   const auto transform = GetCurrentTransform();
+   
+   const AABB transformedAABB { transform.Apply(aabb.topLeft),
+                          transform.Apply(aabb.bottomRight) };
+   
+   if (clipRect != NoClippingRect)
+      return !transformedAABB.Intersects(clipRect);
+   else
+      return !transformedAABB.Intersects(Rect { Point {}, GetSize() });
 }
 
 Rect Painter::GetImageRect(const PainterImage& image) const

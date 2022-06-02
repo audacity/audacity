@@ -264,9 +264,9 @@ void D2DPainter::DoDrawRotatedText(
 }
 
 Size D2DPainter::DoGetTextSize(
-   const PainterFont& font, const std::string_view& text) const
+   const PainterFont& font, const std::string_view& text, bool gridFitted) const
 {
-   return font.GetTextSize(text);
+   return font.GetTextSize(text, gridFitted);
 }
 
 void D2DPainter::PushPaintTarget(const std::shared_ptr<PainterImage>& image)

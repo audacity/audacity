@@ -126,7 +126,8 @@ struct wxGraphicsContextPainterFont final : public PainterFont
       return FontMetrics;
    }
 
-   Size GetTextSize(const std::string_view& text) const override
+   Size GetTextSize(
+      const std::string_view& text, bool) const override
    {
       return GetTextSize(nullptr, text);
    }
@@ -959,7 +960,7 @@ std::shared_ptr<PainterFont> WXGraphicsContextPainter::GetDefaultFont() const
 }
 
 Size WXGraphicsContextPainter::DoGetTextSize(
-   const PainterFont& font, const std::string_view& text) const
+   const PainterFont& font, const std::string_view& text, bool) const
 {
    if (font.GetRendererID() != GetRendererID())
        font.GetTextSize(text);

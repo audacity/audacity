@@ -99,7 +99,7 @@ public:
       return mFont != nullptr;
    }
 
-   std::shared_ptr<TextLayout> CreateTextLayout(std::string_view text) const
+   std::shared_ptr<TextLayout> CreateTextLayout(std::string_view text, bool hinted) const
    {
       if (text.empty())
       {
@@ -133,7 +133,7 @@ public:
 
       for (uint32_t symbolIndex = 0; symbolIndex < glyphLength; ++symbolIndex)
       {
-         const auto metrics = GetCachedMetrics(info[symbolIndex].codepoint);
+         const auto metrics = GetCachedMetrics(info[symbolIndex].codepoint, hinted);
 
          symbols.emplace_back(TextLayoutSymbol {
             info[symbolIndex].codepoint, info[symbolIndex].cluster, currentX, currentY });
@@ -150,7 +150,7 @@ public:
                   &kerning);
             }
 
-            const auto secondSymbolMetrics = GetCachedMetrics(info[symbolIndex + 1].codepoint);
+            const auto secondSymbolMetrics = GetCachedMetrics(info[symbolIndex + 1].codepoint, hinted);
 
             const int delta = metrics.rsb - secondSymbolMetrics.lsb;
 
@@ -194,28 +194,35 @@ private:
       int32_t rsb { 0 };
    };
 
-   GlyphMetrics GetCachedMetrics(hb_codepoint_t codePoint) const
+   GlyphMetrics GetCachedMetrics(hb_codepoint_t codePoint, bool hinted) const
    {
-      auto it = mGlyphMetrics.find(codePoint);
+      auto& metricsCache = mGlyphMetrics[hinted ? 0 : 1];
+      
+      auto it = metricsCache.find(codePoint);
 
-      if (it != mGlyphMetrics.end())
+      if (it != metricsCache.end())
          return it->second;
 
-      auto metrics = ComputeMetrics(codePoint);
+      auto metrics = ComputeMetrics(codePoint, hinted);
 
-      mGlyphMetrics.emplace(codePoint, metrics);
+      metricsCache.emplace(codePoint, metrics);
 
       return metrics;
    }
 
-   GlyphMetrics ComputeMetrics(hb_codepoint_t codePoint) const noexcept
+   GlyphMetrics ComputeMetrics(hb_codepoint_t codePoint, bool hinted) const noexcept
    {
       if (codePoint == 0)
          return {};
 
       FT_Int32 flags = FT_LOAD_RENDER;
 
-      if (FT_Load_Glyph(mFreeTypeFace, codePoint, FT_LOAD_FORCE_AUTOHINT))
+      if (hinted)
+         flags |= FT_LOAD_FORCE_AUTOHINT;
+      else
+         flags |= FT_LOAD_NO_HINTING | FT_LOAD_NO_AUTOHINT;
+
+      if (FT_Load_Glyph(mFreeTypeFace, codePoint, flags))
          return {};
 
       return { { int(mFreeTypeFace->glyph->advance.x >> 6),
@@ -232,7 +239,7 @@ private:
    uint32_t mMaxSymbolWidth { 0 };
 
 
-   mutable std::unordered_map<hb_codepoint_t, GlyphMetrics> mGlyphMetrics;
+   mutable std::unordered_map<hb_codepoint_t, GlyphMetrics> mGlyphMetrics[2];
 };
 } // namespace
 
@@ -464,7 +471,7 @@ FontFace::~FontFace()
 }
 
 std::shared_ptr<TextLayout>
-FontFace::CreateTextLayout(FontSize fontSize, std::string_view text) const
+FontFace::CreateTextLayout(FontSize fontSize, std::string_view text, bool hinted) const
 {
    if (mFreetypeFace == nullptr)
       return nullptr;
@@ -474,7 +481,7 @@ FontFace::CreateTextLayout(FontSize fontSize, std::string_view text) const
    if (hbfont == nullptr)
       return nullptr;
 
-   return hbfont->CreateTextLayout(text);
+   return hbfont->CreateTextLayout(text, hinted);
 }
 
 FontSymbol FontFace::GetFontSymbol(uint32_t pixelSize, uint32_t codepoint, bool hinted) const

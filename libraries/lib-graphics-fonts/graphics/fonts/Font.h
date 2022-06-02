@@ -43,7 +43,7 @@ public:
 
    Metrics GetFontMetrics() const override;
 
-   Size GetTextSize(const std::string_view& text) const override;
+   Size GetTextSize(const std::string_view& text, bool gridFitted = true) const override;
    void DrawText(FontRenderer& renderer, std::string_view text, Color color) const;
 
    FontFace& GetFontFace() noexcept;
@@ -54,13 +54,13 @@ private:
       GraphicsObjectCache<std::string, std::shared_ptr<TextLayout>>;
    using DPIAwareLayoutCache = std::map<uint32_t, LayoutCache>;
    
-   LayoutCache& GetLayoutCacheForDPI(uint32_t dpi) const;
-   std::shared_ptr<TextLayout> CreateTextLayout(uint32_t dpi, std::string text) const;
+   LayoutCache& GetLayoutCacheForDPI(uint32_t dpi, bool hinted) const;
+   std::shared_ptr<TextLayout> CreateTextLayout(uint32_t dpi, std::string text, bool hinted) const;
    
    FontInfo mFontInfo;
    std::shared_ptr<FontFace> mFontFace;
    
-   mutable DPIAwareLayoutCache mLayoutCache;
+   mutable DPIAwareLayoutCache mLayoutCaches[2];
 
    std::shared_ptr<TextLayout> mEmptyLayout;
 

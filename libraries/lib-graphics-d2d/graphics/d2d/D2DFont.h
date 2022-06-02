@@ -39,7 +39,7 @@ public:
 
    Metrics GetFontMetrics() const override;
 
-   Size GetTextSize(const std::string_view& text) const override;
+   Size GetTextSize(const std::string_view& text, bool gridFitted) const override;
 
    bool IsValid() const;
 

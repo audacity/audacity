@@ -46,7 +46,7 @@ class GRAPHICS_FONTS_API FontFace final
 public:
    ~FontFace();
 
-   std::shared_ptr<TextLayout> CreateTextLayout(FontSize fontSize, std::string_view text) const;
+   std::shared_ptr<TextLayout> CreateTextLayout(FontSize fontSize, std::string_view text, bool hinted) const;
    FontSymbol GetFontSymbol(uint32_t pixelSize, uint32_t codepoint, bool hinted) const;
 
    float GetPointSize() const noexcept;

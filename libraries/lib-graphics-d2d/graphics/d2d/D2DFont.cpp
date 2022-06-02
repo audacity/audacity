@@ -109,7 +109,7 @@ PainterFont::Metrics D2DFont::GetFontMetrics() const
    return mMetrics;
 }
 
-Size D2DFont::GetTextSize(const std::string_view& text) const
+Size D2DFont::GetTextSize(const std::string_view& text, bool) const
 {
    if (text.empty())
       return { 0, mMetrics.LineHeight };

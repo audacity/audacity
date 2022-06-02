@@ -117,7 +117,8 @@ private:
    std::shared_ptr<PainterFont> GetDefaultFont() const override;
 
    Size DoGetTextSize(
-      const PainterFont& font, const std::string_view& text) const override;
+      const PainterFont& font, const std::string_view& text,
+      bool gridFitted) const override;
 
    void UpdateFont(const std::shared_ptr<PainterFont>& font) override;
 

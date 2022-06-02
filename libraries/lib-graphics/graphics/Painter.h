@@ -77,7 +77,7 @@ public:
 
    virtual Metrics GetFontMetrics() const = 0;
 
-   virtual Size GetTextSize(const std::string_view& text) const = 0;
+   virtual Size GetTextSize(const std::string_view& text, bool gridFitted = true) const = 0;
 
 protected:
    PainterFont(Painter& painter);
@@ -372,10 +372,11 @@ public:
    void
    DrawRotatedText(float x, float y, float angle, const std::string_view& text);
 
-   Size
-   GetTextSize(const PainterFont& font, const std::string_view& text) const;
+   Size GetTextSize(
+      const PainterFont& font, const std::string_view& text,
+      bool gridFitted = true) const;
 
-   Size GetTextSize(const std::string_view& text) const;
+   Size GetTextSize(const std::string_view& text, bool gridFitted = true) const;
 
    virtual std::shared_ptr<PainterPath> CreatePath() = 0;
    virtual void DrawPath(const PainterPath& path) = 0;
@@ -430,6 +431,11 @@ public:
    PaintEventHolder Paint();
    PainterOffscreenHolder PaintOn(const std::shared_ptr<PainterImage>& image);
 
+   bool IsRectClipped(float x, float y, float width, float height) const;
+   bool IsRectClipped(Point point, Size size);
+   bool IsRectClipped(const Rect& rect) const noexcept;
+   bool IsRectClipped(const AABB& aabb) const noexcept;
+
 protected:
    virtual void BeginPaint() = 0;
    virtual void EndPaint() = 0;
@@ -461,7 +467,8 @@ protected:
       const std::string_view& text) = 0;
 
    virtual Size DoGetTextSize(
-      const PainterFont& font, const std::string_view& text) const = 0;
+      const PainterFont& font, const std::string_view& text,
+      bool gridFitted) const = 0;
 
    virtual void PushPaintTarget(const std::shared_ptr<PainterImage>& image) = 0;
    virtual void PopPaintTarget(const std::shared_ptr<PainterImage>& image) = 0;
