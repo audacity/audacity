@@ -263,6 +263,11 @@ void CellularPanel::HandleCursorForPresentMouseState(bool doHit)
    // Remap the position
    state.SetPosition(this->ScreenToClient(state.GetPosition()));
 
+   auto rect = GetClientRect();
+
+   if (!rect.Contains(state.GetPosition()))
+      return;
+
    HandleMotion( state, doHit );
 }
 

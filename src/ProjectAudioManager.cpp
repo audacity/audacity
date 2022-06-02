@@ -502,7 +502,7 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
    auto &projectAudioManager = *this;
    bool canStop = projectAudioManager.CanStopAudioStream();
 
-   if ( !canStop )
+   if ( !canStop || projectAudioManager.Stopping() )
       return;
 
    if(project) {

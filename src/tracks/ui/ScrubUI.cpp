@@ -147,7 +147,7 @@ void ScrubbingOverlay::OnTimer(Observer::Message)
          return;
       }
       else
-         ruler.DrawBothOverlays();
+         ruler.RequestFullRefresh();
    }
 
    if (!scrubber.ShouldDrawScrubSpeed()) {

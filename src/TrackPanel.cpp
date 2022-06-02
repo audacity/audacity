@@ -348,7 +348,7 @@ void TrackPanel::UpdatePrefs()
    // frequencies may have been changed.
    UpdateVRulers();
 
-   Refresh();
+   RequestRefresh();
 }
 
 /// Gets the pointer to the AudacityProject that
@@ -423,7 +423,7 @@ void TrackPanel::OnProjectSettingsChange( wxCommandEvent &event )
    event.Skip();
    switch ( static_cast<ProjectSettings::EventCode>( event.GetInt() ) ) {
    case ProjectSettings::ChangedSyncLock:
-      Refresh(false);
+      RequestRefresh();
       break;
    default:
       break;
@@ -434,7 +434,7 @@ void TrackPanel::OnUndoReset(UndoRedoMessage message)
 {
    if (message.type == UndoRedoMessage::Reset) {
       TrackFocus::Get( *GetProject() ).Set( nullptr );
-      Refresh( false );
+      RequestRefresh();
    }
 }
 
@@ -474,26 +474,25 @@ void TrackPanel::ProcessUIHandleResult
    (TrackPanelCell *pClickedCell, TrackPanelCell *pLatestCell,
     UIHandle::Result refreshResult)
 {
-   const auto panel = this;
-   auto pLatestTrack = FindTrack( pLatestCell ).get();
+   auto pLatestTrack = FindTrack( pLatestCell );
 
    // This precaution checks that the track is not only nonnull, but also
    // really owned by the track list
    auto pClickedTrack = GetTracks()->Lock(
       std::weak_ptr<Track>{ FindTrack( pClickedCell ) }
-   ).get();
+   );
 
    // TODO:  make a finer distinction between refreshing the track control area,
    // and the waveform area.  As it is, redraw both whenever you must redraw either.
 
    // Copy data from the underlying tracks to the pending tracks that are
    // really displayed
-   TrackList::Get( *panel->GetProject() ).UpdatePendingTracks();
+   TrackList::Get( *GetProject() ).UpdatePendingTracks();
 
    using namespace RefreshCode;
 
    if (refreshResult & DestroyedCell) {
-      panel->UpdateViewIfNoTracks();
+      UpdateViewIfNoTracks();
       // Beware stale pointer!
       if (pLatestTrack == pClickedTrack)
          pLatestTrack = NULL;
@@ -501,11 +500,11 @@ void TrackPanel::ProcessUIHandleResult
    }
 
    if (pClickedTrack && (refreshResult & RefreshCode::UpdateVRuler))
-      panel->UpdateVRuler(pClickedTrack);
+      UpdateVRuler(pClickedTrack.get());
 
    if (refreshResult & RefreshCode::DrawOverlays) {
-      panel->Refresh();
-      mRuler->Refresh();
+      RequestRefresh();
+      mRuler->RequestRefresh();
    }
 
    // Refresh all if told to do so, or if told to refresh a track that
@@ -516,22 +515,22 @@ void TrackPanel::ProcessUIHandleResult
        || ((refreshResult & RefreshLatestCell) && !pLatestTrack));
 
    if (refreshAll)
-      panel->Refresh();
+      RequestRefresh();
    else {
       if (refreshResult & RefreshCell)
-         panel->RefreshTrack(pClickedTrack);
+         RefreshTrack(pClickedTrack.get());
       if (refreshResult & RefreshLatestCell)
-         panel->RefreshTrack(pLatestTrack);
+         RefreshTrack(pLatestTrack.get());
    }
 
    if (refreshResult & FixScrollbars)
-      panel->MakeParentRedrawScrollbars();
+      MakeParentRedrawScrollbars();
 
    if (refreshResult & Resize)
-      panel->GetListener()->TP_HandleResize();
+      GetListener()->TP_HandleResize();
 
    if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack) {
-      TrackFocus::Get(*GetProject()).Set(pClickedTrack);
+      TrackFocus::Get(*GetProject()).Set(pClickedTrack.get());
       pClickedTrack->EnsureVisible();
    }
 }
@@ -565,7 +564,7 @@ void TrackPanel::UpdateSelectionDisplay()
 {
    // Full refresh since the label area may need to indicate
    // newly selected tracks.
-   Refresh(false);
+   RequestRefresh();
 
    // Make sure the ruler follows suit.
    mRuler->DrawSelection();
@@ -701,8 +700,7 @@ void TrackPanel::RefreshTrack(Track *trk)
 
    wxRect rect(left, top, width, height);
 
-
-   Refresh( true, &rect );
+   RequestRefresh();
 }
 
 

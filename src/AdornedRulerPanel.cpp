@@ -1529,7 +1529,7 @@ void AdornedRulerPanel::DoIdle()
    if (changed)
       // Cause ruler redraw anyway, because we may be zooming or scrolling,
       // showing or hiding the scrub bar, etc.
-      RequestRefresh();
+      RequestFullRefresh();
 }
 
 void AdornedRulerPanel::OnAudioStartStop(AudioIOEvent evt)
@@ -1625,7 +1625,7 @@ void AdornedRulerPanel::OnLeave(wxMouseEvent& evt)
 {
    evt.Skip();
    CallAfter([this]{
-      DrawBothOverlays();
+      RequestFullRefresh();
    });
 }
 
@@ -2157,16 +2157,18 @@ bool AdornedRulerPanel::SetPanelSize()
       return false;
 }
 
-void AdornedRulerPanel::DrawBothOverlays()
+void AdornedRulerPanel::RequestFullRefresh()
 {
    auto pCellularPanel =
       dynamic_cast<CellularPanel*>( &GetProjectPanel( *GetProject() ) );
+   
    if ( !pCellularPanel ) {
       wxASSERT( false );
    }
    else
-      pCellularPanel->Refresh();
-   Refresh();
+      pCellularPanel->RequestRefresh();
+   
+   RequestRefresh();
 }
 
 void AdornedRulerPanel::UpdateButtonStates()
@@ -2468,7 +2470,9 @@ void AdornedRulerPanel::DoDrawMarks(Painter& painter, bool /*text */)
 
 void AdornedRulerPanel::DrawSelection()
 {
-   Refresh();
+   // DrawSelection is called from the TrackPanel,
+   // so no need to additionally refresh it
+   RequestRefresh();
 }
 
 wxRect AdornedRulerPanel::PlayRegionRectangle() const
@@ -2792,10 +2796,8 @@ void AdornedRulerPanel::SetFocusedCell()
 void AdornedRulerPanel::ProcessUIHandleResult(
    TrackPanelCell *, TrackPanelCell *, unsigned refreshResult)
 {
-   if (refreshResult & RefreshCode::RefreshAll)
-      Refresh(); // Overlays will be repainted too
-   else if (refreshResult & RefreshCode::DrawOverlays)
-      DrawBothOverlays(); // cheaper redrawing of guidelines only
+   if (refreshResult & (RefreshCode::DrawOverlays | RefreshCode::RefreshAll))
+      RequestFullRefresh(); // cheaper redrawing of guidelines only
 }
 
 void AdornedRulerPanel::UpdateStatusMessage( const TranslatableString &message )

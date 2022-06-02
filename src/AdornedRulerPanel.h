@@ -80,7 +80,7 @@ public:
    //void OnToggleScrubRulerFromMenu(wxCommandEvent& );
    bool SetPanelSize();
    
-   void DrawBothOverlays();
+   void RequestFullRefresh();
 
 
 private:
