@@ -15,7 +15,7 @@
 
 class Track;
 
-class wxToggleButton;
+class wxButton;
 class wxStaticText;
 
 class RealtimeEffectListWindow;
@@ -28,7 +28,7 @@ class AudacityProject;
  */
 class RealtimeEffectPanel : public wxWindow
 {
-   wxToggleButton* mToggleEffects{nullptr};
+   wxButton* mToggleEffects{nullptr};
    wxStaticText* mTrackTitle {nullptr};
    RealtimeEffectListWindow* mEffectList{nullptr};
 public:

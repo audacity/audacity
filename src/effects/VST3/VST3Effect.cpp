@@ -41,6 +41,7 @@
 #include "ShuttleGui.h"
 
 #include "VST3Utils.h"
+#include "VST3ParametersWindow.h"
 #include "VST3OptionsDialog.h"
 
 #ifdef __WXMSW__
@@ -50,6 +51,7 @@
 #endif
 
 #include "ConfigInterface.h"
+#include "VST3ParametersWindow.h"
 
 namespace {
 
@@ -403,6 +405,9 @@ bool VST3Effect::LoadSettings(
       } while(parms.GetNextEntry(key, index));
    }
 
+   if(mPlainUI != nullptr)
+      mPlainUI->ReloadParameters();
+
    return true;
 }
 
@@ -435,7 +440,11 @@ bool VST3Effect::LoadUserPreset(
          mEditController->setState(controllerState) != kResultOk)
          return false;
    }
+
    SyncParameters(settings);
+
+   if(mPlainUI != nullptr)
+      mPlainUI->ReloadParameters();
 
    return true;
 }
@@ -516,6 +525,9 @@ bool VST3Effect::LoadFactoryDefaults(EffectSettings &) const
          mEditController->setParamNormalized(parameterInfo.id, parameterInfo.defaultNormalizedValue);
       }
    }
+   
+   if(mPlainUI != nullptr)
+      mPlainUI->ReloadParameters();
 
    return true;
 }
@@ -882,7 +894,7 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
          auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
          auto controlsRoot = safenew wxWindow(parent, wxID_ANY);
          if(!LoadVSTUI(controlsRoot))
-            VST3Utils::BuildPlainUI(controlsRoot, mEditController, mComponentHandler);
+            mPlainUI = VST3ParametersWindow::Setup(*controlsRoot, *mEditController, *mComponentHandler);
          vSizer->Add(controlsRoot);
 
          auto &extra = access.Get().extra;
@@ -909,10 +921,10 @@ std::unique_ptr<EffectUIValidator> VST3Effect::PopulateUI(ShuttleGui& S,
       }
       else if(!LoadVSTUI(parent))
       {
-         VST3Utils::BuildPlainUI(
-            parent,
-            mEditController,
-            mComponentHandler
+         mPlainUI = VST3ParametersWindow::Setup(
+            *parent,
+            *mEditController,
+            *mComponentHandler
          );
       }
 
@@ -930,6 +942,7 @@ bool VST3Effect::ValidateUI(EffectSettings &settings)
 
 bool VST3Effect::CloseUI()
 {
+   mPlainUI = nullptr;
    mParent = nullptr;
    if(mPlugView)
    {
@@ -1201,6 +1214,9 @@ bool VST3Effect::LoadPreset(const wxString& path)
       );
       return false;
    }
+
+   if(mPlainUI != nullptr)
+      mPlainUI->ReloadParameters();
 
    return true;
 }

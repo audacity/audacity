@@ -17,11 +17,11 @@
 
 class wxArrayString;
 
+#include <thread>
 #include <vector>
 
 #include <wx/event.h> // to inherit
 #include <wx/msgqueue.h>
-#include <wx/thread.h>
 #include <wx/timer.h>
 #include <wx/weakref.h>
 
@@ -573,14 +573,13 @@ inline wxString LilvString(LilvNode *node, bool free)
    return str;
 };
 
-class LV2Wrapper : public wxThreadHelper
+class LV2Wrapper
 {
 public:
-   typedef struct LV2Work
-   {
-      uint32_t size;
-      const void *data;
-   } LV2Work;
+   struct LV2Work {
+      uint32_t size{};
+      const void *data{};
+   };
 
 public:
    LV2Wrapper(LV2Effect *effect);
@@ -590,7 +589,7 @@ public:
                              double sampleRrate,
                              std::vector<std::unique_ptr<LV2_Feature>> & features);
 
-   void *Entry();
+   void ThreadFunction();
 
    LilvInstance *GetInstance();
    
@@ -620,6 +619,8 @@ public:
    LV2_Worker_Status Respond(uint32_t size, const void *data);
 
 private:
+   std::thread mThread;
+
    LV2Effect *mEffect;
    LilvInstance *mInstance;
    LV2_Handle mHandle;

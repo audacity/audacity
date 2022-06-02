@@ -47,13 +47,6 @@ to the meters.
 
 *//****************************************************************//**
 
-\class AudioThread
-\brief Defined different on Mac and other platforms (on Mac it does not
-use wxWidgets wxThread), this class sits in a thread loop reading and
-writing audio.
-
-*//****************************************************************//**
-
 \class AudioIOListener
 \brief Monitors record play start/stop and new sample blocks.  Has
 callbacks for these events.
@@ -197,63 +190,6 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
 //////////////////////////////////////////////////////////////////////
 //
-//     class AudioThread - declaration and glue code
-//
-//////////////////////////////////////////////////////////////////////
-
-#include <thread>
-
-#ifdef __WXMAC__
-
-// On Mac OS X, it's better not to use the wxThread class.
-// We use our own implementation based on pthreads instead.
-
-#include <pthread.h>
-#include <time.h>
-
-class AudioThread {
- public:
-   typedef int ExitCode;
-   AudioThread() { mDestroy = false; mThread = NULL; }
-   virtual ExitCode Entry();
-   void Create() {}
-   void Delete() {
-      mDestroy = true;
-      pthread_join(mThread, NULL);
-   }
-   bool TestDestroy() { return mDestroy; }
-   void Sleep(int ms) {
-      struct timespec spec;
-      spec.tv_sec = 0;
-      spec.tv_nsec = ms * 1000 * 1000;
-      nanosleep(&spec, NULL);
-   }
-   static void *callback(void *p) {
-      AudioThread *th = (AudioThread *)p;
-      return reinterpret_cast<void *>( th->Entry() );
-   }
-   void Run() {
-      pthread_create(&mThread, NULL, callback, this);
-   }
- private:
-   bool mDestroy;
-   pthread_t mThread;
-};
-
-#else
-
-// The normal wxThread-derived AudioThread class for all other
-// platforms:
-class AudioThread /* not final */ : public wxThread {
- public:
-   AudioThread():wxThread(wxTHREAD_JOINABLE) {}
-   ExitCode Entry() override;
-};
-
-#endif
-
-//////////////////////////////////////////////////////////////////////
-//
 //     UI Thread Context
 //
 //////////////////////////////////////////////////////////////////////
@@ -261,7 +197,6 @@ class AudioThread /* not final */ : public wxThread {
 void AudioIO::Init()
 {
    ugAudioIO.reset(safenew AudioIO());
-   Get()->mThread->Run();
 
    // Make sure device prefs are initialized
    if (gPrefs->Read(wxT("AudioIO/RecordingDevice"), wxT("")).empty()) {
@@ -360,10 +295,6 @@ AudioIO::AudioIO()
       // but any attempt to play or record will simply fail.
    }
 
-   // Start thread
-   mThread = std::make_unique<AudioThread>();
-   mThread->Create();
-
 #if defined(USE_PORTMIXER)
    mPortMixer = NULL;
    mPreviousHWPlaythrough = -1.0;
@@ -376,6 +307,9 @@ AudioIO::AudioIO()
    SetMixerOutputVol(AudioIOPlaybackVolume.Read());
 
    mLastPlaybackTimeMillis = 0;
+
+   // Start thread
+   mAudioThread = std::thread(AudioThread, ref(mFinishAudioThread));
 }
 
 AudioIO::~AudioIO()
@@ -406,8 +340,8 @@ AudioIO::~AudioIO()
    // This causes reentrancy issues during application shutdown
    // wxTheApp->Yield();
 
-   mThread->Delete();
-   mThread.reset();
+   mFinishAudioThread.store(true, std::memory_order_release);
+   mAudioThread.join();
 }
 
 RealtimeEffectState *AudioIO::AddState(AudacityProject &project,
@@ -1046,7 +980,7 @@ int AudioIO::StartStream(const TransportTracks &tracks,
       // zeroes.
       mStreamToken = (++mNextStreamToken);
 
-      // This affects the AudioThread (not the portaudio callback).
+      // This affects AudioThread (not the portaudio callback).
       // Probably not needed so urgently before portaudio thread start for usual
       // playback, since our ring buffers have been primed already with 4 sec
       // of audio, but then we might be scrubbing, so do it.
@@ -1736,14 +1670,12 @@ double AudioIO::GetStreamTime()
 //
 //////////////////////////////////////////////////////////////////////
 
-AudioThread::ExitCode AudioThread::Entry()
+//! Sits in a thread loop reading and writing audio.
+void AudioIO::AudioThread(std::atomic<bool> &finish)
 {
    enum class State { eUndefined, eOnce, eLoopRunning, eDoNothing, eMonitoring } lastState = State::eUndefined;
-
-   AudioIO *gAudioIO;
-   while( !TestDestroy() &&
-      nullptr != ( gAudioIO = AudioIO::Get() ) )
-   {
+   AudioIO *const gAudioIO = AudioIO::Get();
+   while (!finish.load(std::memory_order_acquire)) {
       using Clock = std::chrono::steady_clock;
       auto loopPassStart = Clock::now();
       auto &schedule = gAudioIO->mPlaybackSchedule;
@@ -1803,8 +1735,6 @@ AudioThread::ExitCode AudioThread::Entry()
 
       std::this_thread::sleep_until( loopPassStart + interval );
    }
-
-   return 0;
 }
 
 
