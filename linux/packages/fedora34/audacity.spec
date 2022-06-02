@@ -60,7 +60,7 @@ BuildRequires: flac-devel
 BuildRequires: harfbuzz-devel
 BuildRequires: freetype-devel
 BuildRequires: fontconfig-devel
-BuildRequires: mesa-devel
+BuildRequires: mesa-libEGL-devel
 
 Requires:      portaudio%{?_isa} >= 19-16
 

@@ -51,7 +51,7 @@ deps=(
    harfbuzz-devel
    freetype-devel
    fontconfig-devel
-   mesa-devel
+   mesa-libEGL-devel
 )
 
 dnf install -y \
