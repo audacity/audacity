@@ -568,10 +568,6 @@ public:
 
       Bind(EVT_MOVABLE_CONTROL_DRAG_STARTED, [dropHintLine](const MovableControlEvent& event)
       {
-         dropHintLine->Show();
-         dropHintLine->Raise();
-         //Make it zero-sized until first EVT_MOVABLE_CONTROL_DRAG_POSITION is triggered
-         dropHintLine->SetSize({0, 0});
          if(auto window = dynamic_cast<wxWindow*>(event.GetEventObject()))
             window->Raise();
       });
@@ -585,12 +581,20 @@ public:
          if(event.GetSourceIndex() == event.GetTargetIndex())
          {
             //do not display hint line if position didn't change
-            dropHintLine->SetSize({0, 0});
+            dropHintLine->Hide();
             return;
          }
 
+         if(!dropHintLine->IsShown())
+         {
+            dropHintLine->Show();
+            dropHintLine->Raise();
+            if(auto window = dynamic_cast<wxWindow*>(event.GetEventObject()))
+               window->Raise();
+         }
+
          auto item = sizer->GetItem(event.GetTargetIndex());
-         dropHintLine->SetSize(item->GetSize().x, 3);
+         dropHintLine->SetSize(item->GetSize().x, DropHintLineHeight);
 
          if(event.GetTargetIndex() > event.GetSourceIndex())
             dropHintLine->SetPosition(item->GetRect().GetBottomLeft() - wxPoint(0, DropHintLineHeight));
@@ -652,6 +656,11 @@ public:
          auto sizer = mEffectListContainer->GetSizer();
          auto item = sizer->GetItem(msg.srcIndex)->GetWindow();
          item->Destroy();
+#ifdef __WXGTK__
+         // See comment in ReloadEffectsList
+         if(sizer->IsEmpty())
+            mEffectListContainer->Hide();
+#endif
       }
       Layout();
    }
@@ -690,9 +699,8 @@ public:
       mEffectListContainer->GetSizer()->Clear(true);
 
 #ifdef __WXGTK__
-      //Workaround for GTK: if none children were added to the container,
-      //underlying gtk widget size will not be updated, resulting in widget
-      //overlap.
+      //Workaround for GTK: Underlying GTK widget does not update
+      //its size when wxWindow size is set to zero
       if(!mTrack || RealtimeEffectList::Get(*mTrack).GetStatesCount() == 0)
          mEffectListContainer->Hide();
 #endif
