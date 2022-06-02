@@ -17,6 +17,8 @@
 #include <wx/dcmemory.h>
 #include <wx/dcprint.h>
 
+#include <wx/log.h>
+
 #include "WXGraphicsContextPainter.h"
 
 #ifdef WIN32
@@ -172,6 +174,9 @@ RendererProvider& GetRendererProvider(RendererType type)
    if (Provider != nullptr)
       return *Provider;
 
+   if (type == RendererType::Auto)
+      wxLogInfo("Selecting rendering engine...");
+
    if (
       Provider == nullptr &&
       (type == RendererType::Auto || type == RendererType::GL))
@@ -179,7 +184,10 @@ RendererProvider& GetRendererProvider(RendererType type)
       auto& openGLRenderer = graphics::gl::GetSharedRenderer();
 
       if (openGLRenderer.IsAvailable())
+      {
          Provider = std::make_unique<OpenGLRendererProvider>();
+         wxLogInfo("Using OpenGL rendering engine.");
+      }
    }
 
 #ifdef WIN32
@@ -190,12 +198,18 @@ RendererProvider& GetRendererProvider(RendererType type)
       auto& d2dRenderer = d2d::SharedD2DRenderer();
 
       if (d2dRenderer.IsAvailable())
+      {
          Provider = std::make_unique<D2DRendererProvider>();
+         wxLogInfo("Using Direct2D rendering engine.");
+      }
    }
 #endif
 
    if (Provider == nullptr)
+   {
       Provider = std::make_unique<wxGraphicsRendererProvider>();
+      wxLogInfo("Using wxWidgets rendering engine.");
+   }
 
    return *Provider;
 }
