@@ -69,6 +69,8 @@ public:
    bool SupportsRealtime() const override;
    bool SupportsAutomation() const override;
 
+   EffectSettings MakeSettings() const override;
+
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
    bool LoadSettings(
@@ -222,6 +224,7 @@ private:
    AudioUnitEffect *const mMaster;     // non-NULL if a slave
 public:
    AudioUnitEffectArray mSlaves;
+   mutable bool mInitialFetchDone{ false };
 };
 
 #endif

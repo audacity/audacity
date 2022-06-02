@@ -658,6 +658,17 @@ int AudioUnitEffect::ShowClientInterface(
    return dialog.ShowModal();
 }
 
+EffectSettings AudioUnitEffect::MakeSettings() const
+{
+   auto result = StatefulPerTrackEffect::MakeSettings();
+   // Cause initial population of the map stored in the stateful effect
+   if (!mInitialFetchDone) {
+      FetchSettings(GetSettings(result));
+      mInitialFetchDone = true;
+   }
+   return result;
+}
+
 bool AudioUnitEffect::SaveSettings(
    const EffectSettings &settings, CommandParameters & parms) const
 {
