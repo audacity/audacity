@@ -42,10 +42,10 @@ Build-Depends: cmake,
                libsoundtouch-dev,
                libtwolame-dev,
                libpng-dev,
-               libjpeg-turbo8-dev
-               libharfbuzz-dev
-               libfreetype6-dev
-               libfontconfig-dev
+               libjpeg-turbo8-dev,
+               libharfbuzz-dev,
+               libfreetype6-dev,
+               libfontconfig-dev,
                libegl1-mesa-dev
 Homepage: https://www.audacityteam.org/
 Rules-Requires-Root: no

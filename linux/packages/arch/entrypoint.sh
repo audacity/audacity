@@ -6,7 +6,7 @@ cp -v /work_dir/*.tar.gz ./
 
 ls -la .
 
-sources=$(ls ./audacity-sources-*)
+sources=$(ls audacity-sources-*)
 version=$(echo ${sources} | sed -e 's/audacity-sources-//g' -e 's/.tar.gz//g' -e 's/-/./g' -e 's/\.[0-9]\++/.r/g')
 
 echo "Audacity version: ${version}"

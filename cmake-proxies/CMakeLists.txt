@@ -272,6 +272,7 @@ add_conan_lib(
    freetype/2.11.1
    REQUIRED
    PKG_CONFIG "freetype2 >= 2.10"
+   INTERFACE_NAME Freetype::Freetype
    CONAN_OPTIONS
       freetype:shared=True
       freetype:with_brotli=False
