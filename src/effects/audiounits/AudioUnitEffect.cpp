@@ -299,6 +299,16 @@ bool AudioUnitEffect::InitializePlugin()
             kAudioUnitProperty_GetUIComponentList, compDesc);
       }
    }
+   return true;
+}
+
+bool AudioUnitEffect::FullyInitializePlugin()
+{
+   if (!InitializePlugin())
+      return false;
+
+   // Reading these values from the config file can't be done in the PluginHost
+   // process but isn't needed only for plugin discovery.
 
    // Consult preferences
    // Decide mUseLatency, which affects GetLatency(), which is actually used
