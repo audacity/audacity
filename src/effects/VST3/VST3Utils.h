@@ -16,6 +16,9 @@
 #include <string>
 #include <public.sdk/source/vst/hosting/module.h>
 
+#include <vector>
+#include <functional>
+
 class wxString;
 class wxWindow;
 
@@ -53,11 +56,14 @@ public:
    //a human-readable form.
    static wxString MakeAutomationParameterKey(const Steinberg::Vst::ParameterInfo& info);
 
-   //Attempts to extract a unique VST3 parameter id from the key.
-   //Returns true on success.
-   static bool ParseAutomationParameterKey(const wxString& key, Steinberg::Vst::ParamID& paramId);
 };
 
+struct EffectSettings;
+
+struct VST3EffectSettings
+{
+   std::unordered_map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> mValues;
+};
 
 struct VST3Wrapper
 {
@@ -77,5 +83,65 @@ struct VST3Wrapper
    //
    Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
    Steinberg::IPtr<Steinberg::Vst::IComponent>      mEffectComponent;
+
+   using ParameterInfo = Steinberg::Vst::ParameterInfo;
+
+   using ParameterVisitor = std::function< bool(const ParameterInfo& pi) >;
+
+   //! Visit parameters and keep doing so as long as visitor returns true.
+   //
+   // @return false if the parameters are not yet available
+   //
+   bool ForEachParameter(ParameterVisitor visitor) const;
+
+   //! Stop visiting as soon as the visitor returns true
+   //
+   // @return true  as soon as a visit returns true
+   // @return false if none of the visits returned true
+   //
+   bool AnyOf(ParameterVisitor visitor) const;
+
+   //! Return a pointer to the cached parameterinfos
+   //
+   // @return nullptr if the plugin could not be fully intialized
+   //
+   const std::vector<ParameterInfo>* getParameterInfos() const;
+
+   bool LoadPreset(Steinberg::IBStream*, const Steinberg::FUID& classID);
+
+   bool SavePreset(Steinberg::IBStream*, const Steinberg::FUID& classID) const;
+
+   bool FetchSettings(VST3EffectSettings& settings) const;
+
+   bool StoreSettings(const VST3EffectSettings& settings) const;
+
+   VST3EffectSettings mSettings;  // temporary, until the effect is really stateless
+
+   //! This function will be rewritten when the effect is really stateless
+   VST3EffectSettings& GetSettings(EffectSettings&) const
+   {
+      return const_cast<VST3Wrapper*>(this)->mSettings;
+   }
+
+   //! This function will be rewritten when the effect is really stateless
+   const VST3EffectSettings& GetSettings(const EffectSettings&) const
+   {
+      return mSettings;
+   }
+
+   //! This is what ::GetSettings will be when the effect becomes really stateless
+   /*
+   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VST3EffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+   */
+
+private:
+
+   //! made mutable because it is cached once on demand
+   mutable std::vector<ParameterInfo> mParameterInfos;
 };
 

@@ -332,48 +332,39 @@ bool VST3Effect::SupportsRealtime() const
 
 bool VST3Effect::SupportsAutomation() const
 {
-   if(mEditController == nullptr)
-      return false;
-
    using namespace Steinberg;
-   
-   for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
-   {
-      Vst::ParameterInfo parameterInfo { };
-      if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
-      {
-         if(parameterInfo.flags & Vst::ParameterInfo::kCanAutomate)
-            return true;
-      }
-   }
 
-   return false;
+   return AnyOf
+   (
+      [&](const ParameterInfo& parameterInfo)
+      {
+         return (parameterInfo.flags & Vst::ParameterInfo::kCanAutomate);
+      }
+   );
 }
 
 bool VST3Effect::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {
-   if(mEditController == nullptr)
+   if (mEditController == nullptr)
       return false;
 
    using namespace Steinberg;
-   
-   for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
-   {
-      Vst::ParameterInfo parameterInfo { };
-      if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
+
+   return ForEachParameter
+   (
+      [&](const ParameterInfo& parameterInfo)
       {
-         if(parameterInfo.flags & Vst::ParameterInfo::kCanAutomate)
+         if (parameterInfo.flags & Vst::ParameterInfo::kCanAutomate)
          {
             parms.Write(
                VST3Utils::MakeAutomationParameterKey(parameterInfo),
                mEditController->getParamNormalized(parameterInfo.id)
             );
          }
+         return true;
       }
-   }
-
-   return true;
+   );
 }
 
 bool VST3Effect::LoadSettings(
@@ -381,30 +372,29 @@ bool VST3Effect::LoadSettings(
 {
    using namespace Steinberg;
 
-   if(mComponentHandler == nullptr)
-      return false;
-   
-   long index { };
-   wxString key;
-   if(parms.GetFirstEntry(key, index))
-   {
-      do
+   ForEachParameter
+   (
+      [&](const ParameterInfo& parameterInfo)
       {
-         Steinberg::Vst::ParamID id;
+         const wxString key = VST3Utils::MakeAutomationParameterKey(parameterInfo);
          Vst::ParamValue value;
-         if(VST3Utils::ParseAutomationParameterKey(key, id) && parms.Read(key, &value))
+
+         if (parms.Read(VST3Utils::MakeAutomationParameterKey(parameterInfo), &value))
          {
-            if(mComponentHandler->beginEdit(id) == kResultOk)
+            const auto id = parameterInfo.id;
+            if (mComponentHandler->beginEdit(id) == kResultOk)
             {
-               auto cleanup = finally([&]{
+               auto cleanup = finally([&] {
                   mComponentHandler->endEdit(id);
                });
                mComponentHandler->performEdit(id, value);
             }
             mEditController->setParamNormalized(id, value);
          }
-      } while(parms.GetNextEntry(key, index));
-   }
+
+         return true;
+      }
+   );
 
    if(mPlainUI != nullptr)
       mPlainUI->ReloadParameters();
@@ -505,32 +495,28 @@ bool VST3Effect::LoadFactoryPreset(int id, EffectSettings &) const
 bool VST3Effect::LoadFactoryDefaults(EffectSettings &) const
 {
    using namespace Steinberg;
-   if(mComponentHandler == nullptr)
+   if (mComponentHandler == nullptr)
       return false;
 
-   for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
-   {
-      Vst::ParameterInfo parameterInfo { };
-      if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
+   return ForEachParameter
+   (
+      [&](const ParameterInfo& parameterInfo)
       {
-         if(parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
-            continue;
+         if (parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
+            return true;
 
-         if(mComponentHandler->beginEdit(parameterInfo.id) == kResultOk)
+         if (mComponentHandler->beginEdit(parameterInfo.id) == kResultOk)
          {
-            auto cleanup = finally([&]{
+            auto cleanup = finally([&] {
                mComponentHandler->endEdit(parameterInfo.id);
             });
             mComponentHandler->performEdit(parameterInfo.id, parameterInfo.defaultNormalizedValue);
          }
          mEditController->setParamNormalized(parameterInfo.id, parameterInfo.defaultNormalizedValue);
-      }
-   }
-   
-   if(mPlainUI != nullptr)
-      mPlainUI->ReloadParameters();
 
-   return true;
+         return true;
+      }
+   );
 }
 
 namespace
@@ -1162,23 +1148,23 @@ void VST3Effect::SyncParameters(EffectSettings &) const
 {
    using namespace Steinberg;
 
-   if(mComponentHandler != nullptr)
+   if (mComponentHandler != nullptr)
    {
-      for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
-      {
-         Vst::ParameterInfo parameterInfo { };
-         if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
-         {
-            if(parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
-               continue;
+      ForEachParameter
+      (
+        [&](const ParameterInfo& parameterInfo)
+        {
+           if (parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
+            return true;
 
-            if(mComponentHandler->beginEdit(parameterInfo.id) == kResultOk)
+            if (mComponentHandler->beginEdit(parameterInfo.id) == kResultOk)
             {
-               auto cleanup = finally([&]{ mComponentHandler->endEdit(parameterInfo.id); });
+               auto cleanup = finally([&] { mComponentHandler->endEdit(parameterInfo.id); });
                mComponentHandler->performEdit(parameterInfo.id, mEditController->getParamNormalized(parameterInfo.id));
             }
+            return true;
          }
-      }
+      );
    }
 }
 
