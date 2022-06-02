@@ -184,7 +184,7 @@ EffectFamilySymbol VST3Effect::GetFamilySymbol()
 }
 
 VST3Effect::VST3Effect(const VST3Effect& other)
-   : mModule(other.mModule), mEffectClassInfo(other.mEffectClassInfo)
+   : VST3Wrapper(other.mModule, other.mEffectClassInfo)
 {
    mUseLatency = other.mUseLatency;
    mUserBlockSize = other.mUserBlockSize;
@@ -215,7 +215,8 @@ VST3Effect::~VST3Effect()
 VST3Effect::VST3Effect(
    std::shared_ptr<VST3::Hosting::Module> module, 
    VST3::Hosting::ClassInfo effectClassInfo)
-   : mModule(std::move(module)), mEffectClassInfo(std::move(effectClassInfo))
+
+   : VST3Wrapper(std::move(module), effectClassInfo)
 {
    using namespace Steinberg;
    Initialize();

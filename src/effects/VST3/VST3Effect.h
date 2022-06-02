@@ -24,6 +24,8 @@
 
 #include "SampleCount.h"
 
+#include "VST3Utils.h"
+
 class NumericTextCtrl;
 
 namespace Steinberg
@@ -42,17 +44,12 @@ class VST3ParametersWindow;
 /**
  * \brief Objects of this class connect Audacity with VST3 effects
  */
-class VST3Effect final : public StatefulPerTrackEffect
+class VST3Effect final : public StatefulPerTrackEffect, private VST3Wrapper
 {
-   //Keep strong reference to a module while effect is alive
-   std::shared_ptr<VST3::Hosting::Module> mModule;
-
    //Following fields are unique to each effect instance
-
-   Steinberg::IPtr<Steinberg::Vst::IComponent> mEffectComponent;
+   
    Steinberg::IPtr<Steinberg::Vst::IAudioProcessor> mAudioProcessor;
    Steinberg::Vst::ProcessSetup mSetup;
-   const VST3::Hosting::ClassInfo mEffectClassInfo;
 
    //Since all of the realtime processors share same presets, following
    //fields are only initialized and assigned in the global effect instance
@@ -61,7 +58,7 @@ class VST3Effect final : public StatefulPerTrackEffect
    Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mControllerConnectionProxy;
    //Used if provided by the plugin and enabled in the settings
    Steinberg::IPtr<Steinberg::IPlugView> mPlugView;
-   Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
+   
    Steinberg::IPtr<internal::ComponentHandler> mComponentHandler;
    wxWindow* mParent { nullptr };
    NumericTextCtrl* mDuration { nullptr };
