@@ -25,16 +25,22 @@ if ($process.ExitCode -ne 0) {
    $logDir = "$env:APPDATA\audacity"
    Write-Host "Audacity exited with an error, gathering data from $logDir"
 
-   if (Test-Path -Path "$logDir\audacity.cfg" ) {
-      Get-Content -Path "$logDir\audacity.cfg" | Out-Default
+   if (Test-Path -Path "$logDir\journallog.txt" ) {
+      Get-Content -Path "$logDir\journallog.txt" | Out-Default
    } else {
-      Write-Host "No audacity.cfg file found"
+      Write-Host "No journallog.cfg file found"
    }
 
    if (Test-Path -Path "$logDir\lastlog.txt" ) {
       Get-Content -Path "$logDir\lastlog.txt" | Out-Default
    } else {
       Write-Host "No lastlog.txt file found"
+   }
+
+   if (Test-Path -Path "$logDir\audacity.cfg" ) {
+      Get-Content -Path "$logDir\audacity.cfg" | Out-Default
+   } else {
+      Write-Host "No audacity.cfg file found"
    }
 
    exit 1

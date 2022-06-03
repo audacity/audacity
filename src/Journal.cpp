@@ -20,10 +20,13 @@
 #include <algorithm>
 #include <wx/app.h>
 #include <wx/filename.h>
-#include <wx/log.h>
+
+#include <string>
+#include <string_view>
 
 #include "MemoryX.h"
 #include "Prefs.h"
+#include "FileNames.h"
 
 namespace Journal {
 
@@ -39,14 +42,89 @@ int sLineNumber = -1;
 
 BoolSetting JournalEnabled{ L"/Journal/Enabled", false };
 
+class JournalLogger final
+{
+public:
+   JournalLogger()
+   {
+      wxFileName logFile(FileNames::DataDir(), wxT("journallog.txt"));
+      mLogFile.Open(logFile.GetFullPath(wxPATH_NATIVE), L"w");
+   }
+   void WriteString(std::string_view str)
+   {
+      mLogFile.Write(str.data(), str.size());
+   }
+
+   void FinalizeMessge()
+   {
+      mLogFile.Write("\n");
+      mLogFile.Flush();
+   }
+
+private:
+   wxFFile mLogFile;
+};
+
+JournalLogger& GetLogger()
+{
+   static JournalLogger logger;
+   return logger;
+}
+
+std::string ToString(const wxString& str)
+{
+   return str.ToStdString();
+}
+
+template<typename T>
+std::string ToString(const T& arg)
+{
+   return std::to_string(arg);
+}
+
+template<typename... Args>
+void Log( std::string_view message, const Args... args )
+{
+   if (message.empty())
+      return;
+
+   constexpr auto n = sizeof...(Args);
+   
+   std::string strings[n];
+   std::size_t i = 0;
+   ((strings[i++] = ToString(args)), ...);
+   i = 0;
+
+   auto& logger = GetLogger();
+   
+   while (!message.empty())
+   {
+      const auto placeholderPos = message.find("{}");
+
+      if (placeholderPos == std::string_view::npos || i == n)
+      {
+         logger.WriteString(message);
+         break;
+      }
+
+      std::string_view arg = strings[i++];
+
+      logger.WriteString(message.substr(0, placeholderPos));
+      logger.WriteString(arg);
+
+      message = message.substr(placeholderPos + 2);
+   }
+
+   logger.FinalizeMessge();
+}
+
 inline void NextIn()
 {
    if ( !sFileIn.Eof() ) {
       sLine = sFileIn.GetNextLine();
       ++sLineNumber;
 
-      wxLogInfo(
-         "Journal: line %d is '%s'", sLineNumber, sLine.ToStdString().c_str());
+      Log("Journal: line {} is '{}'", sLineNumber, sLine);
    }
 }
 
@@ -110,7 +188,7 @@ SyncException::SyncException(const wxString& string)
    // If the exception is ever constructed, cause nonzero program exit code
    SetError();
 
-   wxLogError("Journal sync failed: %s", string.ToStdString().c_str());
+   Log("Journal sync failed: {}", string);
 }
 
 SyncException::~SyncException() {}
@@ -153,7 +231,7 @@ bool Begin( const FilePath &dataDir )
       sFileIn.Open( path );
       if (!sFileIn.IsOpened())
       {
-         wxLogError("Journal: failed to open journal file \"%s\"", path.ToStdString().c_str());
+         Log("Journal: failed to open journal file \"{}\"", path);
          SetError();
       }
       else {
@@ -166,8 +244,7 @@ bool Begin( const FilePath &dataDir )
          if (!(tokens.size() == 2 && tokens[0] == VersionToken &&
                VersionCheck(tokens[1])))
          {
-            wxLogError("Journal: invalid journal version: \"%s\"",
-               tokens[1].ToStdString().c_str());
+            Log("Journal: invalid journal version: \"{}\"", tokens[1]);
             SetError();
          }
       }
