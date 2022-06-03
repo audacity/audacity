@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <wx/app.h>
 #include <wx/filename.h>
+#include <wx/ffile.h>
 
 #include <string>
 #include <string_view>
