@@ -142,7 +142,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    ChoiceSetting LanguageSetting{ wxT("/Locale/Language"),
       { ByColumns, mLangNames, mLangCodes }
    };
-   ChoiceSetting DBSetting{ DecibelScaleCutoff.GetPath(),
+   ChoiceSetting DBSetting{ DecibelScaleCutoff,
       { ByColumns, mRangeChoices, mRangeCodes },
       mDefaultRangeIndex
    };

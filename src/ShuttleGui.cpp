@@ -2038,7 +2038,7 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(const TranslatableString &Prompt,
       defaultIndex = -1;
 
    ChoiceSetting choiceSetting{
-      Setting.GetPath(),
+      Setting,
       {
          ByColumns,
          Choices,

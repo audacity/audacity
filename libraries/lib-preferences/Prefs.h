@@ -63,6 +63,11 @@ extern int gMenusDirty;
 struct ByColumns_t{};
 extern PREFERENCES_API ByColumns_t ByColumns;
 
+struct SettingPath {
+   RegistryPath mPath;
+   operator const RegistryPath &() const { return mPath; }
+};
+
 //! Base class for settings objects.  It holds a configuration key path.
 /* The constructors are non-explicit for convenience */
 class PREFERENCES_API SettingBase
@@ -74,14 +79,14 @@ public:
 
    wxConfigBase *GetConfig() const;
 
-   const wxString &GetPath() const { return mPath; }
+   const SettingPath &GetPath() const { return mPath; }
 
    //! Delete the key if present, and return true iff it was.
    bool Delete();
 
 protected:
    SettingBase( const SettingBase& ) = default;
-   const RegistryPath mPath;
+   const SettingPath mPath;
 };
 
 class TransactionalSettingBase : public SettingBase
@@ -135,8 +140,8 @@ public:
    bool Commit();
 };
 
-/*! @brief Class template adds an in-memory cache of a value to SettingBase
- and support for SettingTransaction
+/*! @brief Class template adds an in-memory cache of a value to
+ TransactionalSettingBase and support for SettingTransaction
  */
 template< typename T >
 class CachingSettingBase : public TransactionalSettingBase
@@ -359,18 +364,28 @@ private:
 class PREFERENCES_API ChoiceSetting
 {
 public:
-   ChoiceSetting(
-      const SettingBase &key,
-      EnumValueSymbols symbols,
-      long defaultSymbol = -1
-   )
+   //! Disallow construction from the GetPath() of another SettingBase object;
+   //! instead require that object to be passed as reference to the next ctor
+   ChoiceSetting(const SettingPath &, EnumValueSymbols, long = -1) = delete;
+
+   //! @pre `defaultSymbol < static_cast<long>(mSymbols.size())`
+   ChoiceSetting(TransactionalSettingBase &key, EnumValueSymbols symbols,
+      long defaultSymbol = -1)
       : mKey{ key.GetPath() }
-
-      , mSymbols{ std::move( symbols ) }
-
+      , mSymbols{ move(symbols) }
       , mDefaultSymbol{ defaultSymbol }
    {
-      wxASSERT( defaultSymbol < (long)mSymbols.size() );
+      assert(defaultSymbol < static_cast<long>(mSymbols.size()));
+   }
+
+   //! @pre `defaultSymbol < static_cast<long>(symbols.size())`
+   ChoiceSetting(const SettingBase &key, EnumValueSymbols symbols,
+      long defaultSymbol = -1)
+      : mKey{ key.GetPath() }
+      , mSymbols{ move(symbols) }
+      , mDefaultSymbol{ defaultSymbol }
+   {
+      assert(defaultSymbol < static_cast<long>(mSymbols.size()));
    }
 
    const wxString &Key() const { return mKey; }
@@ -386,6 +401,7 @@ public:
 
    bool Write( const wxString &value ); // you flush gPrefs afterward
 
+   //! @pre `defaultSymbol < static_cast<long>(GetSymbols().size())`
    void SetDefault( long value );
 
 protected:
@@ -406,17 +422,23 @@ protected:
 /// (generally not equal to their table positions),
 /// and optionally an old preference key path that stored integer codes, to be
 /// migrated into one that stores internal string values instead
-class PREFERENCES_API EnumSettingBase : public ChoiceSetting
-{
+class PREFERENCES_API EnumSettingBase : public ChoiceSetting {
 public:
+   //! @pre `intValues.size() == symbols.size()`
+   template<typename Key>
    EnumSettingBase(
-      const SettingBase &key,
+      Key &&key, // moved string, or lvalue reference to another Setting
       EnumValueSymbols symbols,
       long defaultSymbol,
 
       std::vector<int> intValues, // must have same size as symbols
       const wxString &oldKey = {}
-   );
+   )  : ChoiceSetting{ std::forward<Key>(key), move(symbols), defaultSymbol }
+      , mIntValues{ move(intValues) }
+      , mOldKey{ oldKey }
+   {
+      assert (mIntValues.size() == mSymbols.size());
+   }
 
 protected:
 
@@ -444,19 +466,17 @@ class EnumSetting : public EnumSettingBase
 {
 public:
 
+   //! @pre `intValues.size() == symbols.size()`
+   template<typename Key>
    EnumSetting(
-      const SettingBase &key,
+      Key &&key, // moved string, or lvalue reference to another Setting
       EnumValueSymbols symbols,
       long defaultSymbol,
 
       std::vector< Enum > values, // must have same size as symbols
       const wxString &oldKey = {}
-   )
-      : EnumSettingBase{
-         key, symbols, defaultSymbol,
-         { values.begin(), values.end() },
-         oldKey
-      }
+   )  : EnumSettingBase{ std::forward<Key>(key), move(symbols), defaultSymbol,
+         { values.begin(), values.end() }, oldKey }
    {}
 
    // Wrap ReadInt() and ReadIntWithDefault() and WriteInt()
