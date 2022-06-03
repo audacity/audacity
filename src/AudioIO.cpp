@@ -196,7 +196,9 @@ int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
 
 void AudioIO::Init()
 {
-   ugAudioIO.reset(safenew AudioIO());
+   auto pAudioIO = safenew AudioIO();
+   ugAudioIO.reset(pAudioIO);
+   pAudioIO->StartThread();
 
    // Make sure device prefs are initialized
    if (gPrefs->Read(wxT("AudioIO/RecordingDevice"), wxT("")).empty()) {
@@ -307,8 +309,10 @@ AudioIO::AudioIO()
    SetMixerOutputVol(AudioIOPlaybackVolume.Read());
 
    mLastPlaybackTimeMillis = 0;
+}
 
-   // Start thread
+void AudioIO::StartThread()
+{
    mAudioThread = std::thread(AudioThread, ref(mFinishAudioThread));
 }
 

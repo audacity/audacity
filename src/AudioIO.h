@@ -407,6 +407,7 @@ class AUDACITY_DLL_API AudioIO final
 
    AudioIO();
    ~AudioIO();
+   void StartThread();
 
 public:
    // This might return null during application startup or shutdown
