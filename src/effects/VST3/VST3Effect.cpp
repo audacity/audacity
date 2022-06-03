@@ -396,8 +396,6 @@ bool VST3Effect::LoadSettings(
       }
    );
 
-   if(mPlainUI != nullptr)
-      mPlainUI->ReloadParameters();
 
    return true;
 }
@@ -431,11 +429,6 @@ bool VST3Effect::LoadUserPreset(
          mEditController->setState(controllerState) != kResultOk)
          return false;
    }
-
-   SyncParameters(settings);
-
-   if(mPlainUI != nullptr)
-      mPlainUI->ReloadParameters();
 
    return true;
 }
@@ -1193,9 +1186,6 @@ bool VST3Effect::LoadPreset(const wxString& path)
       return false;
    }
 
-   if(mPlainUI != nullptr)
-      mPlainUI->ReloadParameters();
-
    return true;
 }
 
@@ -1210,4 +1200,55 @@ void VST3Effect::ReloadUserOptions()
       wxT("UseLatency"), mUseLatency, true);
 
    SetBlockSize(mUserBlockSize);
+}
+
+
+bool VST3Effect::TransferDataToWindow(const EffectSettings& settings)
+{
+   const auto vst3Settings = GetSettings(settings);
+
+   const bool scanOK = ForEachParameter(
+
+      [&](const ParameterInfo& pi)
+      {
+         if (mComponentHandler == nullptr)
+            return false;
+
+         const auto id = pi.id;
+
+         auto itr = vst3Settings.mValues.find(id);
+         if (itr != vst3Settings.mValues.end())
+         {
+            const auto& value = itr->second;
+
+            // set the value to the handler at the id
+            if (mComponentHandler->beginEdit(id) == Steinberg::kResultOk)
+            {
+               auto cleanup = finally([&] {
+                  mComponentHandler->endEdit(id);
+               });
+               mComponentHandler->performEdit(id, value);
+            }
+            else
+            {
+               return false;
+            }
+         }
+         else
+         {
+            return false;
+         }
+
+         return true;
+      }
+
+   );
+
+   EffectSettings dummySettings;
+   SyncParameters(dummySettings);
+
+   if (mPlainUI != nullptr)
+      mPlainUI->ReloadParameters();
+
+   return scanOK;
 }
