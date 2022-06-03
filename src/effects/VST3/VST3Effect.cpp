@@ -485,32 +485,6 @@ bool VST3Effect::LoadFactoryPreset(int id, EffectSettings &) const
    return true;
 }
 
-bool VST3Effect::LoadFactoryDefaults(EffectSettings &) const
-{
-   using namespace Steinberg;
-   if (mComponentHandler == nullptr)
-      return false;
-
-   return ForEachParameter
-   (
-      [&](const ParameterInfo& parameterInfo)
-      {
-         if (parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
-            return true;
-
-         if (mComponentHandler->beginEdit(parameterInfo.id) == kResultOk)
-         {
-            auto cleanup = finally([&] {
-               mComponentHandler->endEdit(parameterInfo.id);
-            });
-            mComponentHandler->performEdit(parameterInfo.id, parameterInfo.defaultNormalizedValue);
-         }
-         mEditController->setParamNormalized(parameterInfo.id, parameterInfo.defaultNormalizedValue);
-
-         return true;
-      }
-   );
-}
 
 namespace
 {
