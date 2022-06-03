@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <wx/app.h>
 #include <wx/filename.h>
+#include <wx/log.h>
 
 #include "MemoryX.h"
 #include "Prefs.h"
@@ -43,6 +44,9 @@ inline void NextIn()
    if ( !sFileIn.Eof() ) {
       sLine = sFileIn.GetNextLine();
       ++sLineNumber;
+
+      wxLogInfo(
+         "Journal: line %d is '%s'", sLineNumber, sLine.ToStdString().c_str());
    }
 }
 
@@ -101,10 +105,12 @@ bool VersionCheck( const wxString &value )
 
 }
 
-SyncException::SyncException()
+SyncException::SyncException(const wxString& string)
 {
    // If the exception is ever constructed, cause nonzero program exit code
    SetError();
+
+   wxLogError("Journal sync failed: %s", string.ToStdString().c_str());
 }
 
 SyncException::~SyncException() {}
@@ -145,20 +151,25 @@ bool Begin( const FilePath &dataDir )
       fName.MakeAbsolute( dataDir );
       const auto path = fName.GetFullPath();
       sFileIn.Open( path );
-      if ( !sFileIn.IsOpened() )
+      if (!sFileIn.IsOpened())
+      {
+         wxLogError("Journal: failed to open journal file \"%s\"", path.ToStdString().c_str());
          SetError();
+      }
       else {
          sLine = sFileIn.GetFirstLine();
          sLineNumber = 0;
          
          auto tokens = PeekTokens();
          NextIn();
-         if( !(
-            tokens.size() == 2 &&
-            tokens[0] == VersionToken &&
-            VersionCheck( tokens[1] )
-         ) )
+         
+         if (!(tokens.size() == 2 && tokens[0] == VersionToken &&
+               VersionCheck(tokens[1])))
+         {
+            wxLogError("Journal: invalid journal version: \"%s\"",
+               tokens[1].ToStdString().c_str());
             SetError();
+         }
       }
    }
 
@@ -196,7 +207,7 @@ wxArrayStringEx GetTokens()
       NextIn();
       return result;
    }
-   throw SyncException{};
+   throw SyncException("unexpected end of stream");
 }
 
 bool Dispatch()
@@ -217,12 +228,14 @@ bool Dispatch()
    auto &table = GetDictionary();
    auto &name = words[0];
    auto iter = table.find( name );
-   if ( iter == table.end() )
-      throw SyncException{};
+   if (iter == table.end())
+      throw SyncException(
+         wxString::Format("unknown command: %s", name.ToStdString().c_str()));
 
    // Pass all the fields including the command name to the function
-   if ( !iter->second( words ) )
-      throw SyncException{};
+   if (!iter->second(words))
+      throw SyncException(wxString::Format(
+         "command '%s' has failed", wxJoin(words, ',').ToStdString().c_str()));
 
    return true;
 }
@@ -233,8 +246,13 @@ void Sync( const wxString &string )
       if ( IsRecording() )
          Output( string );
       if ( IsReplaying() ) {
-         if ( sFileIn.Eof() || sLine != string )
-            throw SyncException{};
+         if (sFileIn.Eof() || sLine != string)
+         {
+            throw SyncException(wxString::Format(
+               "sync failed. Expected '%s', got '%s'",
+               string.ToStdString().c_str(), sLine.ToStdString().c_str()));
+         }
+         
          NextIn();
       }
    }
@@ -275,7 +293,9 @@ int IfNotPlaying(
          }
          catch ( const std::exception& ) {}
       }
-      throw SyncException{};
+      
+      throw SyncException(wxString::Format(
+         "unexpected tokens: %s", wxJoin(tokens, ',').ToStdString().c_str()));
    }
     else {
       auto result = action ? action() : 0;

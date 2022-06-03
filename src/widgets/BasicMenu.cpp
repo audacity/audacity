@@ -199,7 +199,9 @@ void ReplayPopup( wxMenu *theMenu )
    }
 
    // Replay did not find all as expected
-   throw Journal::SyncException{};
+   throw Journal::SyncException(wxString::Format(
+      "PopuMenu has failed to invoke %s",
+      wxJoin(fields, ',').ToStdString().c_str()));
 }
 
 }

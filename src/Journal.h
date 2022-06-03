@@ -86,7 +86,7 @@ namespace Journal
    //\brief thrown when playback of a journal doesn't match the recording
    class SyncException : public AudacityException {
    public:
-      SyncException();
+      explicit SyncException(const wxString& message);
       ~SyncException() override;
 
       // The delayed handler action forces the program to quit gracefully,
