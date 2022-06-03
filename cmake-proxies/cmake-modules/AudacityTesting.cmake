@@ -122,6 +122,12 @@ if( ${_OPT}has_tests )
          # On macOS CMake will generate a placeholder that CTest fails to handle correctly,
          # so we have to setup the path manually
          set( audacity_target "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/Audacity.app/Contents/MacOS/Audacity" )
+      elseif (WIN32)
+         set( audacity_target
+            powershell
+               -ExecutionPolicy Bypass
+               -File "${CMAKE_SOURCE_DIR}/tests/journals/test_runner.ps1"
+               "$<TARGET_FILE:Audacity>" )
       else()
          set( audacity_target "$<TARGET_FILE:Audacity>" )
       endif()
