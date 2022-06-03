@@ -104,6 +104,7 @@ public:
    int ShowClientInterface(
       wxWindow &parent, wxDialog &dialog, bool forceModal) override;
    bool InitializePlugin();
+   bool FullyInitializePlugin();
    bool InitializeControls(LadspaEffectSettings &settings) const;
 
    // EffectUIClientInterface implementation

@@ -119,6 +119,7 @@ public:
 
    bool InitializeInstance();
    bool InitializePlugin();
+   bool FullyInitializePlugin();
 
    // EffectUIClientInterface implementation
 
