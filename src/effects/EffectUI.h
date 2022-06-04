@@ -42,12 +42,9 @@ class EffectUIHost final : public wxDialogWrapper
 {
 public:
    // constructors and destructors
-   EffectUIHost(wxWindow *parent,
-       AudacityProject &project,
-       EffectPlugin &effect,
-       EffectUIClientInterface &client,
-       EffectInstance &instance,
-       EffectSettingsAccess &access);
+   EffectUIHost(wxWindow *parent, AudacityProject &project,
+      EffectPlugin &effect, EffectUIClientInterface &client,
+      EffectInstance &instance, EffectSettingsAccess &access);
    virtual ~EffectUIHost();
 
    bool TransferDataToWindow() override;
@@ -96,7 +93,7 @@ private:
    Observer::Subscription mSubscription;
 
    AudacityProject &mProject;
-   wxWindow *mParent;
+   wxWindow *const mParent;
    EffectPlugin &mEffectUIHost;
    EffectUIClientInterface &mClient;
    //! @invariant not null
@@ -107,35 +104,35 @@ private:
    std::unique_ptr<EffectUIValidator> mpValidator;
 
    RegistryPaths mUserPresets;
-   bool mInitialized;
-   bool mSupportsRealtime;
-   bool mIsGUI;
-   bool mIsBatch;
+   bool mInitialized{ false };
+   const bool mSupportsRealtime;
+   bool mIsGUI{};
+   bool mIsBatch{};
 
-   wxButton *mApplyBtn;
-   wxButton *mCloseBtn;
-   wxButton *mMenuBtn;
-   wxButton *mPlayBtn;
-   wxButton *mRewindBtn;
-   wxButton *mFFwdBtn;
-   wxCheckBox *mEnableCb;
+   wxButton *mApplyBtn{};
+   wxButton *mCloseBtn{};
+   wxButton *mMenuBtn{};
+   wxButton *mPlayBtn{};
+   wxButton *mRewindBtn{};
+   wxButton *mFFwdBtn{};
+   wxCheckBox *mEnableCb{};
 
-   wxButton *mEnableToggleBtn;
-   wxButton *mPlayToggleBtn;
+   wxButton *mEnableToggleBtn{};
+   wxButton *mPlayToggleBtn{};
 
    wxBitmap mPlayBM;
    wxBitmap mPlayDisabledBM;
    wxBitmap mStopBM;
    wxBitmap mStopDisabledBM;
 
-   bool mEnabled;
+   bool mEnabled{ true };
 
-   bool mDisableTransport;
-   bool mPlaying;
-   bool mCapturing;
+   bool mDisableTransport{ false };
+   bool mPlaying{};
+   bool mCapturing{};
 
    SelectedRegion mRegion;
-   double mPlayPos;
+   double mPlayPos{ 0.0 };
 
    bool mDismissed{};
    std::optional<RealtimeEffects::SuspensionScope> mSuspensionScope;

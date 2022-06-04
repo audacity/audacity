@@ -157,10 +157,8 @@ EVT_MENU_RANGE(kFactoryPresetsID, kFactoryPresetsID + 999, EffectUIHost::OnFacto
 END_EVENT_TABLE()
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
-   AudacityProject &project,
-   EffectPlugin &effect,
-   EffectUIClientInterface &client,
-   EffectInstance &instance,
+   AudacityProject &project, EffectPlugin &effect,
+   EffectUIClientInterface &client, EffectInstance &instance,
    EffectSettingsAccess &access)
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
                    wxDefaultPosition, wxDefaultSize,
@@ -174,6 +172,8 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 // extending its lifetime while this remains:
 , mpAccess{ access.shared_from_this() }
 , mProject{ project }
+, mParent{ parent }
+, mSupportsRealtime{ mEffectUIHost.GetDefinition().SupportsRealtime() }
 {
 #if defined(__WXMAC__)
    // Make sure the effect window actually floats above the main window
@@ -185,18 +185,6 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    // This style causes Validate() and TransferDataFromWindow() to visit
    // sub-windows recursively, applying any wxValidators
    SetExtraStyle(GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
-   
-   mParent = parent;
-   mClient = client;
-   
-   mInitialized = false;
-   mSupportsRealtime = false;
-   
-   mDisableTransport = false;
-   
-   mEnabled = true;
-   
-   mPlayPos = 0.0;
 }
 
 EffectUIHost::~EffectUIHost()
@@ -286,7 +274,6 @@ int EffectUIHost::ShowModal()
 
 wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
 {
-   mSupportsRealtime = mEffectUIHost.GetDefinition().SupportsRealtime();
    mIsGUI = mClient.IsGraphicalUI();
    mIsBatch = mEffectUIHost.IsBatchProcessing();
 
