@@ -1593,7 +1593,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton()
 }
 
 /// Call this before any TieRadioButton calls.
-void ShuttleGuiBase::StartRadioButtonGroup( const ChoiceSetting &Setting )
+void ShuttleGuiBase::StartRadioButtonGroup(ChoiceSetting &Setting)
 {
    mRadioSymbols = Setting.GetSymbols();
 
@@ -1969,9 +1969,8 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
 ///   @param Setting            Encapsulates setting name, internal and visible
 ///                             choice strings, and a designation of one of
 ///                             those as default.
-wxChoice *ShuttleGuiBase::TieChoice(
-   const TranslatableString &Prompt,
-   const ChoiceSetting &choiceSetting )
+wxChoice *ShuttleGuiBase::TieChoice(const TranslatableString &Prompt,
+   ChoiceSetting &choiceSetting)
 {
    // Do this to force any needed migrations first
    choiceSetting.Read();
@@ -2048,7 +2047,7 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(const TranslatableString &Prompt,
       defaultIndex
    };
 
-   return ShuttleGuiBase::TieChoice( Prompt, choiceSetting );
+   return ShuttleGuiBase::TieChoice(Prompt, choiceSetting);
 }
 
 //------------------------------------------------------------------//

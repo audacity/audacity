@@ -127,6 +127,10 @@ void DevicePrefs::GetNamesAndLabels()
 
 void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
 {
+   ChoiceSetting HostSetting{
+      AudioIOHost,
+      { ByColumns, mHostNames, mHostLabels }
+   };
    S.SetBorder(2);
    S.StartScroller();
 
@@ -136,12 +140,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartMultiColumn(2);
       {
          S.Id(HostID);
-         mHost = S.TieChoice( XXO("&Host:"),
-            {
-               AudioIOHost,
-               { ByColumns, mHostNames, mHostLabels }
-            }
-         );
+         mHost = S.TieChoice( XXO("&Host:"), HostSetting);
 
          S.AddPrompt(XXO("Using:"));
          S.AddFixedText( Verbatim(wxSafeConvertMB2WX(Pa_GetVersionText() ) ) );

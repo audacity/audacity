@@ -139,6 +139,14 @@ ChoiceSetting GUIManualLocation{
 
 void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 {
+   ChoiceSetting LanguageSetting{ wxT("/Locale/Language"),
+      { ByColumns, mLangNames, mLangCodes }
+   };
+   ChoiceSetting DBSetting{ DecibelScaleCutoff.GetPath(),
+      { ByColumns, mRangeChoices, mRangeCodes },
+      mDefaultRangeIndex
+   };
+
    S.SetBorder(2);
    S.StartScroller();
 
@@ -146,25 +154,10 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartMultiColumn(2);
       {
-
-         S.TieChoice( XXO("&Language:"),
-            {
-               wxT("/Locale/Language"),
-               { ByColumns, mLangNames, mLangCodes }
-            }
-         );
-
+         S.TieChoice( XXO("&Language:"), LanguageSetting);
          S.TieChoice( XXO("Location of &Manual:"), GUIManualLocation);
-
          S.TieChoice( XXO("Th&eme:"), GUITheme());
-
-         S.TieChoice( XXO("Meter dB &range:"),
-            {
-               DecibelScaleCutoff.GetPath(),
-               { ByColumns, mRangeChoices, mRangeCodes },
-               mDefaultRangeIndex
-            }
-         );
+         S.TieChoice( XXO("Meter dB &range:"), DBSetting);
       }
       S.EndMultiColumn();
 

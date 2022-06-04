@@ -386,8 +386,7 @@ public:
    wxPanel * StartInvisiblePanel();
    void EndInvisiblePanel();
 
-   // SettingName is a key in Preferences.
-   void StartRadioButtonGroup( const ChoiceSetting &Setting );
+   void StartRadioButtonGroup(ChoiceSetting &Setting);
    void EndRadioButtonGroup();
 
    bool DoStep( int iStep );
@@ -447,9 +446,8 @@ public:
       const TranslatableString &Prompt,
       const BoolSetting &Setting);
 
-   virtual wxChoice *TieChoice(
-      const TranslatableString &Prompt,
-      const ChoiceSetting &choiceSetting );
+   virtual wxChoice *TieChoice(const TranslatableString &Prompt,
+      ChoiceSetting &choiceSetting);
 
    // This overload presents what is really a numerical setting as a choice among
    // commonly used values, but the choice is not necessarily exhaustive.

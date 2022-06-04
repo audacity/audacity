@@ -220,9 +220,8 @@ public:
       const TranslatableString &Prompt,
       const BoolSetting &Setting) override;
 
-   wxChoice *TieChoice(
-      const TranslatableString &Prompt,
-      const ChoiceSetting &choiceSetting ) override;
+   wxChoice *TieChoice(const TranslatableString &Prompt,
+      ChoiceSetting &choiceSetting) override;
 
    wxChoice * TieNumberAsChoice(const TranslatableString &Prompt,
       IntSetting &Setting,
@@ -290,9 +289,8 @@ wxCheckBox * ShuttleGuiGetDefinition::TieCheckBoxOnRight(
    return ShuttleGui::TieCheckBoxOnRight( Prompt, Setting );
 }
 
-wxChoice * ShuttleGuiGetDefinition::TieChoice(
-   const TranslatableString &Prompt,
-   const ChoiceSetting &choiceSetting  )
+wxChoice * ShuttleGuiGetDefinition::TieChoice(const TranslatableString &Prompt,
+   ChoiceSetting &choiceSetting)
 {
    StartStruct();
    AddItem( choiceSetting.Key(), "id" );
