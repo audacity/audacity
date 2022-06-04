@@ -2009,9 +2009,8 @@ wxChoice *ShuttleGuiBase::TieChoice(
 ///   @param Choices            An array of choices that appear on screen.
 ///   @param pInternalChoices   The corresponding values (as an integer array)
 ///                             if null, then use 0, 1, 2, ...
-wxChoice * ShuttleGuiBase::TieNumberAsChoice(
-   const TranslatableString &Prompt,
-   const IntSetting & Setting,
+wxChoice * ShuttleGuiBase::TieNumberAsChoice(const TranslatableString &Prompt,
+   IntSetting &Setting,
    const TranslatableStrings & Choices,
    const std::vector<int> * pInternalChoices,
    int iNoMatchSelector)

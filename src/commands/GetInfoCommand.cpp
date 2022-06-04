@@ -224,11 +224,10 @@ public:
       const TranslatableString &Prompt,
       const ChoiceSetting &choiceSetting ) override;
 
-   wxChoice * TieNumberAsChoice(
-      const TranslatableString &Prompt,
-      const IntSetting &Setting,
+   wxChoice * TieNumberAsChoice(const TranslatableString &Prompt,
+      IntSetting &Setting,
       const TranslatableStrings & Choices,
-      const std::vector<int> * pInternalChoices, int iNoMatchSelector ) override;
+      const std::vector<int> * pInternalChoices, int iNoMatchSelector) override;
 
    wxTextCtrl * TieTextBox(
       const TranslatableString &Prompt,
@@ -312,7 +311,7 @@ wxChoice * ShuttleGuiGetDefinition::TieChoice(
 
 wxChoice * ShuttleGuiGetDefinition::TieNumberAsChoice(
    const TranslatableString &Prompt,
-   const IntSetting &Setting,
+   IntSetting &Setting,
    const TranslatableStrings & Choices,
    const std::vector<int> * pInternalChoices, int iNoMatchSelector)
 {

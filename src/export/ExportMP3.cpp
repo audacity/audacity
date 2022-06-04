@@ -403,9 +403,11 @@ void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
                      break;
                }
 
+               IntSetting Setting{ L"/FileFormats/MP3Bitrate", defrate };
+
                mRate = S.Id(ID_QUALITY).TieNumberAsChoice(
                   XXO("Quality"),
-                  { wxT("/FileFormats/MP3Bitrate"), defrate },
+                  Setting,
                   *choices,
                   codes
                );

@@ -456,12 +456,11 @@ public:
    // This behaves just like the previous for building dialogs, but the
    // behavior is different when the call is intercepted for purposes of
    // emitting scripting information about Preferences.
-   virtual wxChoice * TieNumberAsChoice(
-      const TranslatableString &Prompt,
-      const IntSetting &Setting,
+   virtual wxChoice * TieNumberAsChoice(const TranslatableString &Prompt,
+      IntSetting &Setting,
       const TranslatableStrings & Choices,
       const std::vector<int> * pInternalChoices = nullptr,
-      int iNoMatchSelector = 0 );
+      int iNoMatchSelector = 0);
 
    virtual wxTextCtrl * TieTextBox(
       const TranslatableString &Prompt,
