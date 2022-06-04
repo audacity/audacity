@@ -212,9 +212,6 @@ public:
       AudioComponent component, Parameters &parameters);
    ~AudioUnitInstance() override;
 
-   static void EventListenerCallback(void *inCallbackRefCon,
-      void *inObject, const AudioUnitEvent *inEvent,
-      UInt64 inEventHostTime, AudioUnitParameterValue inParameterValue);
    void EventListener(const AudioUnitEvent *inEvent,
       AudioUnitParameterValue inParameterValue);
 };
@@ -340,6 +337,11 @@ public:
    bool ValidateUI() override;
 
 private:
+   static void EventListenerCallback(void *inCallbackRefCon,
+      void *inObject, const AudioUnitEvent *inEvent,
+      UInt64 inEventHostTime, AudioUnitParameterValue inParameterValue);
+   void EventListener(const AudioUnitEvent *inEvent,
+      AudioUnitParameterValue inParameterValue);
    bool FetchSettingsFromInstance(EffectSettings &settings);
    bool StoreSettingsToInstance(const EffectSettings &settings);
 
@@ -348,7 +350,7 @@ private:
    using EventListenerPtr =
       AudioUnitCleanup<AUEventListenerRef, AUListenerDispose>;
 
-   static EventListenerPtr MakeListener(AudioUnitInstance &instance);
+   EventListenerPtr MakeListener();
 
    // The lifetime guarantee is assumed to be provided by the instance.
    // See contract of PopulateUI
@@ -363,7 +365,7 @@ AudioUnitValidator::AudioUnitValidator(CreateToken,
    AUControl *pControl
 )  : EffectUIValidator{ effect, access }
    , mInstance{ instance }
-   , mEventListenerRef{ MakeListener(instance) }
+   , mEventListenerRef{ MakeListener() }
    , mpControl{ pControl }
 {
    // Make the settings of the instance up to date before using it to
@@ -377,16 +379,16 @@ AudioUnitValidator::~AudioUnitValidator()
       mpControl->Close();
 }
 
-auto AudioUnitValidator::MakeListener(AudioUnitInstance &instance)
+auto AudioUnitValidator::MakeListener()
    -> EventListenerPtr
 {
-   const auto unit = instance.GetAudioUnit();
+   const auto unit = mInstance.GetAudioUnit();
    EventListenerPtr result;
 
    // Register a callback with the audio unit
    AUEventListenerRef eventListenerRef{};
-   if (AUEventListenerCreate(AudioUnitInstance::EventListenerCallback,
-      &instance,
+   if (AUEventListenerCreate(AudioUnitValidator::EventListenerCallback,
+      this,
       static_cast<CFRunLoopRef>( const_cast<void*>(
          GetCFRunLoopFromEventLoop(GetCurrentEventLoop()))),
       kCFRunLoopDefaultMode, 0.0, 0.0, &eventListenerRef))
@@ -400,10 +402,10 @@ auto AudioUnitValidator::MakeListener(AudioUnitInstance &instance)
    parameter = AudioUnitUtils::Parameter{ unit, kAudioUnitScope_Global };
 
    // Register each parameter as something we're interested in
-   if (instance.GetParameters())
-      for (const auto &ID : instance.GetParameters()) {
+   if (auto &parameters = mInstance.GetParameters())
+      for (const auto &ID : parameters) {
          parameter.mParameterID = ID;
-         if (AUEventListenerAddEventType(result.get(), &instance, &event))
+         if (AUEventListenerAddEventType(result.get(), this, &event))
             return nullptr;
       }
 
@@ -411,7 +413,7 @@ auto AudioUnitValidator::MakeListener(AudioUnitInstance &instance)
    event = { kAudioUnitEvent_PropertyChange };
    event.mArgument.mProperty = AudioUnitUtils::Property{
       unit, kAudioUnitProperty_Latency, kAudioUnitScope_Global };
-   if (AUEventListenerAddEventType(result.get(), &instance, &event))
+   if (AUEventListenerAddEventType(result.get(), this, &event))
       return nullptr;
 
    return result;
@@ -1237,21 +1239,43 @@ void AudioUnitInstance::EventListener(const AudioUnitEvent *inEvent,
    }
 
    // Only parameter changes at this point
+   const auto parameterStorer = [inParameterValue,
+      ID = inEvent->mArgument.mParameter.mParameterID
+   ](AudioUnit pUnit){
+      AudioUnitSetParameter(pUnit, ID,
+         kAudioUnitScope_Global, 0, inParameterValue, 0);
+   };
+
+   // Save the parameter change in the instance, so it can be
+   // fetched into Settings, used to initialize any new slave's state
+   // This is like StoreSettings but for just one setting
+   parameterStorer(GetAudioUnit());
+
    // Propagate the parameter
    // TODO store slaves in the instance
-   auto &slaves = static_cast<const AudioUnitEffect&>(GetEffect()).mSlaves;
+   auto &slaves =
+      static_cast<const AudioUnitEffect&>(GetEffect()).mSlaves;
    for (auto &worker : slaves)
-      AudioUnitSetParameter(worker->GetAudioUnit(),
-         inEvent->mArgument.mParameter.mParameterID,
-         kAudioUnitScope_Global, 0, inParameterValue, 0);
+      parameterStorer(worker->GetAudioUnit());
+}
+
+void AudioUnitValidator::EventListener(const AudioUnitEvent *inEvent,
+   AudioUnitParameterValue inParameterValue)
+{
+   // Modify the instance and its workers
+   mInstance.EventListener(inEvent, inParameterValue);
+   // Fetch changed settings and send them to the framework
+   // (Maybe we need a way to fetch just one changed setting, but this is
+   // the easy way to write it)
+   ValidateUI();
 }
 
 // static
-void AudioUnitInstance::EventListenerCallback(void *inCallbackRefCon,
+void AudioUnitValidator::EventListenerCallback(void *inCallbackRefCon,
    void *inObject, const AudioUnitEvent *inEvent, UInt64 inEventHostTime,
    AudioUnitParameterValue inParameterValue)
 {
-   static_cast<AudioUnitInstance *>(inCallbackRefCon)
+   static_cast<AudioUnitValidator *>(inCallbackRefCon)
       ->EventListener(inEvent, inParameterValue);
 }
 
