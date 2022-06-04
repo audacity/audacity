@@ -368,6 +368,10 @@ bool ChoiceSetting::Write( const wxString &value )
 
    auto result = gPrefs->Write( mKey, value );
    mMigrated = true;
+
+   if (mpOtherSettings)
+      mpOtherSettings->Invalidate();
+
    return result;
 }
 

@@ -1993,7 +1993,7 @@ wxChoice *ShuttleGuiBase::TieChoice(const TranslatableString &Prompt,
    if( DoStep(1) ) TempIndex = TranslateToIndex( TempStr, InternalChoices ); // To an index
    if( DoStep(2) ) pChoice = TieChoice( Prompt, TempIndex, Choices );
    if( DoStep(3) ) TempStr = TranslateFromIndex( TempIndex, InternalChoices ); // To a string
-   if( DoStep(3) ) DoDataShuttle( SettingName, WrappedRef ); // Put into Prefs.
+   if( DoStep(3) ) choiceSetting.Write(TempStr); // Put into Prefs.
    return pChoice;
 }
 
@@ -2023,7 +2023,6 @@ wxChoice * ShuttleGuiBase::TieNumberAsChoice(const TranslatableString &Prompt,
    else
       for ( int ii = 0; ii < (int)Choices.size(); ++ii )
          InternalChoices.push_back( fn( ii ) );
-
 
    const auto Default = Setting.GetDefault();
 

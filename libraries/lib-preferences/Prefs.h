@@ -97,6 +97,7 @@ public:
    //! @return true iff successful
    virtual bool Commit() = 0;
    virtual void Rollback() noexcept = 0;
+   virtual void Invalidate() = 0;
 };
 
 //! Makes temporary changes to preferences, then rolls them back at destruction
@@ -157,7 +158,8 @@ protected:
    mutable bool mValid{false};
 };
 
-//! Class template adds default value, read, and write methods to CachingSetingBase
+//! Class template adds default value, read, and write methods to
+//! CachingSetingBase and generates TransactionalSettingBase virtual functions
 template< typename T >
 class Setting : public CachingSettingBase< T >
 {
@@ -274,6 +276,11 @@ public:
       return DoWrite();
    }
 
+   void Invalidate() override
+   {
+      this->mValid = false;
+   }
+
    void Rollback() noexcept override
    {
       this->mCurrentValue = this->mPreviousValue;
@@ -373,6 +380,7 @@ public:
       long defaultSymbol = -1)
       : mKey{ key.GetPath() }
       , mSymbols{ move(symbols) }
+      , mpOtherSettings{ &key }
       , mDefaultSymbol{ defaultSymbol }
    {
       assert(defaultSymbol < static_cast<long>(mSymbols.size()));
@@ -409,8 +417,8 @@ protected:
    virtual void Migrate( wxString& );
 
    const wxString mKey;
-
    const EnumValueSymbols mSymbols;
+   TransactionalSettingBase *const mpOtherSettings{};
 
    // stores an internal value
    mutable bool mMigrated { false };
