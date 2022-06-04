@@ -218,11 +218,19 @@ public:
     default-default stored in this object. */
    T ReadWithDefault( const T &defaultValue ) const
    {
+      if (this->mValid)
+         return this->mCurrentValue;
       const auto config = this->GetConfig();
-      return config
-         ? ( this->mValid = true, this->mCurrentValue =
-               config->ReadObject( this->mPath, defaultValue ) )
-         : T{};
+      if (config) {
+         this->mCurrentValue =
+            config->ReadObject(this->mPath, defaultValue);
+         // If config file contains a value that agrees with the default, we
+         // can't detect that, so assume invalidity still
+         this->mValid = (this->mCurrentValue != defaultValue);
+         return this->mCurrentValue;
+      }
+      else
+         return T{};
    }
 
    //! Write value to config and return true if successful
