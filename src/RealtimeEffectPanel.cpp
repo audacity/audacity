@@ -290,6 +290,7 @@ namespace
 
       ThemedButtonWrapper<wxButton>* mChangeButton{nullptr};
       wxButton* mEnableButton{nullptr};
+      wxWindow *mOptionsButton{};
 
    public:
       RealtimeEffectControl(wxWindow* parent,
@@ -331,6 +332,7 @@ namespace
          sizer->Add(mEnableButton, 0, wxLEFT | wxCENTER, 5);
          sizer->Add(mChangeButton, 1, wxLEFT | wxCENTER, 5);
          sizer->Add(optionsButton, 0, wxLEFT | wxRIGHT | wxCENTER, 5);
+         mOptionsButton = optionsButton;
 
          auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
          vSizer->Add(sizer.release(), 0, wxUP | wxDOWN | wxEXPAND, 10);
@@ -338,11 +340,16 @@ namespace
          SetSizer(vSizer.release());
       }
 
+      static const PluginDescriptor *GetPlugin(const PluginID &ID) {
+         auto desc = PluginManager::Get().GetPlugin(ID);
+         return desc;
+      }
+      
       //! @pre `mEffectState != nullptr`
       TranslatableString GetEffectName() const
       {
          const auto &ID = mEffectState->GetID();
-         auto desc = PluginManager::Get().GetPlugin(ID);
+         const auto desc = GetPlugin(ID);
          return desc
             ? desc->GetSymbol().Msgid()
             : XO("%s (missing)")
@@ -360,6 +367,8 @@ namespace
          if (pState)
             label = GetEffectName();
          mChangeButton->SetTranslatableLabel(label);
+         if (mOptionsButton)
+            mOptionsButton->Enable(pState && GetPlugin(pState->GetID()));
       }
 
       void RemoveFromList()
