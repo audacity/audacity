@@ -91,7 +91,8 @@ private:
 
    //! Main thread begins to define a set of tracks for playback
    void Initialize(double rate);
-   //! Main thread adds one track (passing the first of one or more channels)
+   //! Main thread adds one track (passing the first of one or more
+   //! channels), still before playback
    void AddTrack(Track &track, unsigned chans, float rate);
    //! Main thread cleans up after playback
    void Finalize() noexcept;
@@ -135,7 +136,10 @@ private:
    std::atomic<bool> mSuspended{ true };
    std::atomic<bool> mActive{ false };
 
+   // This member is mutated only by Initialize(), AddTrack(), Finalize()
+   // which are to be called only while there is no playback
    std::vector<Track *> mGroupLeaders; //!< all are non-null
+
    std::unordered_map<Track *, unsigned> mChans;
    std::unordered_map<Track *, double> mRates;
 };
