@@ -129,6 +129,9 @@ public:
    virtual const EffectSettings &Get() = 0;
    virtual void Set(EffectSettings &&settings) = 0;
 
+   //! @return whether this and the other give access to the same settings
+   virtual bool IsSameAs(const EffectSettingsAccess &other) const = 0;
+
    //! Do a correct read-modify-write of settings
    /*!
     @param function takes EffectSettings & and its return is ignored.
@@ -152,6 +155,7 @@ public:
    ~SimpleEffectSettingsAccess() override;
    const EffectSettings &Get() override;
    void Set(EffectSettings &&settings) override;
+   bool IsSameAs(const EffectSettingsAccess &other) const override;
 private:
    EffectSettings &mSettings;
 };
