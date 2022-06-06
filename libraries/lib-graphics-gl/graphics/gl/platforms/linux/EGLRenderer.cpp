@@ -15,6 +15,7 @@
 
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
+
 #ifdef GDK_WINDOWING_X11
 #   include <gdk/gdkx.h>
 #   ifndef GDK_IS_X11_DISPLAY
@@ -26,6 +27,9 @@
 #endif
 #ifdef GDK_WINDOWING_WAYLAND
 #   include <gdk/gdkwayland.h>
+#   include <wayland-client.h>
+#   include <wayland-client-protocol.h>
+#   include <wayland-egl.h>
 #endif
 
 namespace graphics::gl::platforms::linux_like
@@ -454,6 +458,24 @@ public:
       }
 #endif
 
+#ifdef GDK_WINDOWING_WAYLAND
+      auto window = gtk_widget_get_window(mWidget);
+
+      if (window != nullptr && GDK_IS_WAYLAND_WINDOW(window))
+      {
+         GtkAllocation allocation;
+         gtk_widget_get_allocation(mWidget, &allocation);
+         
+         if (mWLWidth != allocation.width || mWLHeight != allocation.height)
+         {
+            wl_egl_window_resize(mWaylandWindow, allocation.width, allocation.height, 0, 0);
+
+            mWLWidth = allocation.width;
+            mWLHeight = allocation.height;
+         }
+      }
+#endif
+
       if (!mInitialized)
       {
          mFunctions.SwapInterval(mDisplay, 0);
@@ -489,10 +511,16 @@ public:
 #ifdef GDK_WINDOWING_WAYLAND
       if (GDK_IS_WAYLAND_WINDOW(window))
       {
+         GtkAllocation allocation;
+         gtk_widget_get_allocation(mWidget, &allocation);
+
          auto wlSurface = gdk_wayland_window_get_wl_surface(window);
-         mWaylandWindow = wl_egl_window_get_egl_window(wlSurface);
+         mWaylandWindow = wl_egl_window_create(wlSurface, allocation.width, allocation.height);
          mSurface = mFunctions.CreateWindowSurface(
-            mDisplay, mConfig, reinterpret_cast<EGLNativeDisplayType>(mWaylandWindow, nullptr));
+            mDisplay, mConfig, mWaylandWindow, nullptr);
+
+         mWLWidth = allocation.width;
+         mWLHeight = allocation.height;
       }
 #endif
 #ifdef GDK_WINDOWING_X11
@@ -522,6 +550,8 @@ private:
    EGLContext mParentContext { nullptr };
 #ifdef GDK_WINDOWING_WAYLAND
    struct wl_egl_window *mWaylandWindow { nullptr };
+   int mWLWidth { 0 };
+   int mWLHeight { 0 };
 #endif
 
    EGLSurface mSurface { nullptr };
