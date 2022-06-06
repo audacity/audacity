@@ -52,6 +52,7 @@ public:
 
    int ShowModal() override;
 
+   void InitializeRealtime();
    bool Initialize();
 
 private:
@@ -86,7 +87,6 @@ private:
    wxBitmap CreateBitmap(const char * const xpm[], bool up, bool pusher);
    void LoadUserPresets();
 
-   void InitializeRealtime();
    void CleanupRealtime();
 
 private:
@@ -127,7 +127,7 @@ private:
 
    bool mEnabled{ true };
 
-   bool mDisableTransport{ false };
+   bool mDisableTransport{ true };
    bool mPlaying{};
    bool mCapturing{};
 

@@ -411,13 +411,6 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
 
 bool EffectUIHost::Initialize()
 {
-   {
-      auto gAudioIO = AudioIO::Get();
-      mDisableTransport = !gAudioIO->IsAvailable(mProject);
-      mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
-      mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
-   }
-
    // Build a "host" dialog, framing a panel that the client fills in.
    // The frame includes buttons to preview, apply, load and save presets, etc.
    EffectPanel *w {};
@@ -487,8 +480,6 @@ bool EffectUIHost::Initialize()
    (!mIsGUI ? w : FindWindow(wxID_APPLY))->SetFocus();
 
    LoadUserPresets();
-
-   InitializeRealtime();
 
    SetMinSize(GetSize());
    return true;
@@ -863,51 +854,36 @@ void EffectUIHost::OnFFwd(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnPlayback(AudioIOEvent evt)
 {
-   if (evt.on)
-   {
+   if (evt.on) {
       if (evt.pProject != &mProject)
-      {
          mDisableTransport = true;
-      }
       else
-      {
          mPlaying = true;
-      }
    }
-   else
-   {
+   else {
       mDisableTransport = false;
       mPlaying = false;
    }
    
-   if (mPlaying)
-   {
+   if (mPlaying) {
       mRegion = ViewInfo::Get( mProject ).selectedRegion;
       mPlayPos = mRegion.t0();
    }
-   
    UpdateControls();
 }
 
 void EffectUIHost::OnCapture(AudioIOEvent evt)
 {
-   if (evt.on)
-   {
+   if (evt.on) {
       if (evt.pProject != &mProject)
-      {
          mDisableTransport = true;
-      }
       else
-      {
          mCapturing = true;
-      }
    }
-   else
-   {
+   else {
       mDisableTransport = false;
       mCapturing = false;
    }
-   
    UpdateControls();
 }
 
@@ -1195,6 +1171,13 @@ void EffectUIHost::LoadUserPresets()
 
 void EffectUIHost::InitializeRealtime()
 {
+   {
+      auto gAudioIO = AudioIO::Get();
+      mDisableTransport = !gAudioIO->IsAvailable(mProject);
+      mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
+      mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
+   }
+
    if (mSupportsRealtime && !mInitialized) {
       mpState =
          AudioIO::Get()->AddState(mProject, nullptr, GetID(mEffectUIHost));
@@ -1253,6 +1236,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
       return nullptr;
    Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{ &parent,
       *project, host, client, instance, access } };
+   dlg->InitializeRealtime();
    if (dlg->Initialize())
       // release() is safe because parent will own it
       return dlg.release();
