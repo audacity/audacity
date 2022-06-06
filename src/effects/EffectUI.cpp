@@ -156,6 +156,50 @@ EVT_MENU_RANGE(kDeletePresetID, kDeletePresetID + 999, EffectUIHost::OnDeletePre
 EVT_MENU_RANGE(kFactoryPresetsID, kFactoryPresetsID + 999, EffectUIHost::OnFactoryPreset)
 END_EVENT_TABLE()
 
+namespace {
+//! Decorate an EffectSettingsAccess with a `Set` that replicates changes
+//! into a second EffectSettingsAccess, while that one still exists
+/*! Name inspired by `man 1 tee` */
+class EffectSettingsAccessTee : public EffectSettingsAccess {
+public:
+   EffectSettingsAccessTee(EffectSettingsAccess &main,
+      const std::shared_ptr<EffectSettingsAccess> &pSide = {});
+   const EffectSettings &Get() override;
+   void Set(EffectSettings &&settings) override;
+   bool IsSameAs(const EffectSettingsAccess &other) const override;
+private:
+   //! @invariant not null
+   const std::shared_ptr<EffectSettingsAccess> mpMain;
+   const std::weak_ptr<EffectSettingsAccess> mwSide;
+};
+}
+
+EffectSettingsAccessTee::EffectSettingsAccessTee(
+   EffectSettingsAccess &main,
+   const std::shared_ptr<EffectSettingsAccess> &pSide
+)  : mpMain{ main.shared_from_this() } //! Guarantee lifetime of main
+   , mwSide{ pSide } //! Do not control lifetime of side
+{
+}
+
+const EffectSettings &EffectSettingsAccessTee::Get() {
+   return mpMain->Get();
+}
+
+void EffectSettingsAccessTee::Set(EffectSettings &&settings) {
+   // Move a copy of the given settings into the side
+   if (auto pSide = mwSide.lock())
+      pSide->Set(EffectSettings{ settings });
+   // Move the given settings through
+   mpMain->Set(std::move(settings));
+}
+
+bool EffectSettingsAccessTee::IsSameAs(
+   const EffectSettingsAccess &other) const
+{
+   return mpMain->IsSameAs(other);
+}
+
 EffectUIHost::EffectUIHost(wxWindow *parent,
    AudacityProject &project, EffectPlugin &effect,
    EffectUIClientInterface &client, EffectInstance &instance,
