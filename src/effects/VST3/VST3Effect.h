@@ -168,7 +168,7 @@ private:
 
    void SyncParameters(EffectSettings &) const;
 
-   bool LoadPreset(const wxString& path);
+   bool LoadPreset(const wxString& path, EffectSettings& settings);
 
    void ReloadUserOptions();
 };
