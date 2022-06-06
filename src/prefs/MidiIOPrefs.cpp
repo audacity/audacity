@@ -130,7 +130,11 @@ void MidiIOPrefs::GetNamesAndLabels() {
    }
 }
 
-void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
+void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S )
+{
+   ChoiceSetting Setting{ L"/MidiIO/Host",
+      { ByColumns, mHostNames, mHostLabels }
+   };
 
    S.SetBorder(2);
    S.StartScroller();
@@ -142,12 +146,7 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S ) {
       {
          S.Id(HostID);
          /* i18n-hint: (noun) */
-         mHost = S.TieChoice( XXO("&Host:"),
-            {
-               wxT("/MidiIO/Host"),
-               { ByColumns, mHostNames, mHostLabels }
-            }
-         );
+         mHost = S.TieChoice(XXO("&Host:"), Setting);
 
          S.AddPrompt(XXO("Using: PortMidi"));
       }

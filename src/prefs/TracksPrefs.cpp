@@ -144,7 +144,7 @@ public:
    }
 };
 
-static TracksViewModeEnumSetting viewModeSetting()
+static TracksViewModeEnumSetting ViewModeSetting()
 {
    // Do a delayed computation, so that registration of sub-view types completes
    // first
@@ -168,7 +168,7 @@ static TracksViewModeEnumSetting viewModeSetting()
 
 WaveTrackViewConstants::Display TracksPrefs::ViewModeChoice()
 {
-   return viewModeSetting().ReadEnum();
+   return ViewModeSetting().ReadEnum();
 }
 
 WaveformSettings::ScaleTypeValues TracksPrefs::WaveformScaleChoice()
@@ -314,6 +314,8 @@ void TracksPrefs::Populate()
 
 void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 {
+   auto viewModeSetting = ViewModeSetting();
+
    S.SetBorder(2);
    S.StartScroller();
 
@@ -353,7 +355,7 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
 
          S.TieChoice(XXO("Default &view mode:"),
-                     viewModeSetting() );
+                     viewModeSetting );
 
          S.TieChoice(XXO("Default Waveform scale:"),
                      waveformScaleSetting );

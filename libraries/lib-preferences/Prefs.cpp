@@ -368,34 +368,16 @@ bool ChoiceSetting::Write( const wxString &value )
 
    auto result = gPrefs->Write( mKey, value );
    mMigrated = true;
+
+   if (mpOtherSettings)
+      mpOtherSettings->Invalidate();
+
    return result;
-}
-
-EnumSettingBase::EnumSettingBase(
-   const SettingBase &key,
-   EnumValueSymbols symbols,
-   long defaultSymbol,
-
-   std::vector<int> intValues, // must have same size as symbols
-   const wxString &oldKey
-)
-   : ChoiceSetting{ key, std::move( symbols ), defaultSymbol }
-   , mIntValues{ std::move( intValues ) }
-   , mOldKey{ oldKey }
-{
-   auto size = mSymbols.size();
-   if( mIntValues.size() != size ) {
-      wxASSERT( false );
-      mIntValues.resize( size );
-   }
 }
 
 void ChoiceSetting::SetDefault( long value )
 {
-   if ( value < (long)mSymbols.size() )
-      mDefaultSymbol = value;
-   else
-      wxASSERT( false );
+   mDefaultSymbol = value;
 }
 
 int EnumSettingBase::ReadInt() const

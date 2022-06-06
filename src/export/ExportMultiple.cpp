@@ -224,6 +224,16 @@ int ExportMultipleDialog::ShowModal()
 
 void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
 {
+   ChoiceSetting NumberingSetting{
+      wxT("/Export/TrackNameWithOrWithoutNumbers"),
+      {
+         { wxT("labelTrack"), XXO("Using Label/Track Name") },
+         { wxT("numberBefore"), XXO("Numbering before Label/Track Name") },
+         { wxT("numberAfter"), XXO("Numbering after File name prefix") },
+      },
+      0 // labelTrack
+   };
+
    wxString name = mProject->GetProjectName();
    wxString defaultFormat = gPrefs->Read(wxT("/Export/Format"), wxT("WAV"));
 
@@ -254,6 +264,14 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
       }
    }
 
+   ChoiceSetting FormatSetting{ wxT("/Export/MultipleFormat"),
+      {
+         ByColumns,
+         visibleFormats,
+         formats
+      },
+      mFilterIndex
+   };
 
    // Bug 1304: Set the default file path.  It's used if none stored in config.
    auto DefaultPath = FileNames::FindDefaultPath(FileNames::Operation::Export);
@@ -282,15 +300,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
 
             mFormat = S.Id(FormatID)
                .TieChoice( XXO("Format:"),
-               {
-                  wxT("/Export/MultipleFormat"),
-                  {
-                     ByColumns,
-                     visibleFormats,
-                     formats
-                  },
-                  mFilterIndex
-               }
+               FormatSetting
             );
             S.AddVariableText( {}, false);
             S.AddVariableText( {}, false);
@@ -386,15 +396,7 @@ void ExportMultipleDialog::PopulateOrExchange(ShuttleGui& S)
          // on the Mac, VoiceOver will announce as radio buttons.
          S.StartPanel();
          {
-            S.StartRadioButtonGroup({
-               wxT("/Export/TrackNameWithOrWithoutNumbers"),
-               {
-                  { wxT("labelTrack"), XXO("Using Label/Track Name") },
-                  { wxT("numberBefore"), XXO("Numbering before Label/Track Name") },
-                  { wxT("numberAfter"), XXO("Numbering after File name prefix") },
-               },
-               0 // labelTrack
-            });
+            S.StartRadioButtonGroup(NumberingSetting);
             {
                mByName = S.Id(ByNameID).TieRadioButton();
 
