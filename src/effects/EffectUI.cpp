@@ -1205,7 +1205,7 @@ void EffectUIHost::InitializeRealtime()
          UndoPush::NONE
       );
        */
-      AudioIO::Get()->Subscribe([this](AudioIOEvent event){
+      mSubscription = AudioIO::Get()->Subscribe([this](AudioIOEvent event){
          switch (event.type) {
          case AudioIOEvent::PLAYBACK:
             OnPlayback(event); break;
@@ -1222,6 +1222,7 @@ void EffectUIHost::InitializeRealtime()
 
 void EffectUIHost::CleanupRealtime()
 {
+   mSubscription.Reset();
    if (mSupportsRealtime && mInitialized) {
       if (mpState) {
          AudioIO::Get()->RemoveState(mProject, nullptr, mpState);

@@ -137,7 +137,7 @@ public:
 
     @pre `callback != nullptr`
     */
-   Subscription Subscribe(Callback callback);
+   [[nodiscard]] Subscription Subscribe(Callback callback);
 
    //! Overload of Subscribe takes an object and pointer-to-member-function
    template<typename Object, typename Return, typename... Args>
