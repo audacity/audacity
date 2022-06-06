@@ -100,7 +100,8 @@ private:
    //! @invariant not null
    const std::shared_ptr<EffectInstance> mpInstance;
    //! @invariant not null
-   const EffectPlugin::EffectSettingsAccessPtr mpAccess;
+   const EffectPlugin::EffectSettingsAccessPtr mpGivenAccess;
+   EffectPlugin::EffectSettingsAccessPtr mpAccess;
    std::shared_ptr<RealtimeEffectState> mpState{};
    std::unique_ptr<EffectUIValidator> mpValidator;
 

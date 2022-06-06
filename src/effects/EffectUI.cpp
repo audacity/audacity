@@ -23,6 +23,7 @@
 #include "../TrackPanelAx.h"
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectManager.h"
+#include "RealtimeEffectState.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 
 static PluginID GetID(EffectPlugin &effect)
@@ -215,7 +216,8 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 , mpInstance{ instance.shared_from_this() }
 // Grab a pointer to the access object,
 // extending its lifetime while this remains:
-, mpAccess{ access.shared_from_this() }
+, mpGivenAccess{ access.shared_from_this() }
+, mpAccess{ mpGivenAccess }
 , mpState{ pPriorState }
 , mProject{ project }
 , mParent{ parent }
@@ -1227,6 +1229,13 @@ void EffectUIHost::InitializeRealtime()
    if (mSupportsRealtime && !mInitialized) {
       mpState =
          AudioIO::Get()->AddState(mProject, nullptr, GetID(mEffectUIHost));
+      if (mpState) {
+         auto pAccess = mpState->GetAccess();
+         if (!(pAccess->IsSameAs(*mpAccess)))
+            // Decorate the given access object
+            mpAccess = std::make_shared<EffectSettingsAccessTee>(
+               *pAccess, mpAccess);
+      }
       /*
       ProjectHistory::Get(mProject).PushState(
          XO("Added %s effect").Format(mpState->GetEffect()->GetName()),
