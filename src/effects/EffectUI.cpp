@@ -159,7 +159,8 @@ END_EVENT_TABLE()
 EffectUIHost::EffectUIHost(wxWindow *parent,
    AudacityProject &project, EffectPlugin &effect,
    EffectUIClientInterface &client, EffectInstance &instance,
-   EffectSettingsAccess &access)
+   EffectSettingsAccess &access,
+   const std::shared_ptr<RealtimeEffectState> &pPriorState)
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
                    wxDefaultPosition, wxDefaultSize,
                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
@@ -171,6 +172,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 // Grab a pointer to the access object,
 // extending its lifetime while this remains:
 , mpAccess{ access.shared_from_this() }
+, mpState{ pPriorState }
 , mProject{ project }
 , mParent{ parent }
 , mSupportsRealtime{ mEffectUIHost.GetDefinition().SupportsRealtime() }
@@ -1241,7 +1243,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
       // release() is safe because parent will own it
       return dlg.release();
    return nullptr;
-};
+}
 
 #include "PluginManager.h"
 #include "ProjectRate.h"

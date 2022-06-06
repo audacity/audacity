@@ -42,6 +42,28 @@
 
 namespace
 {
+   auto DialogFactory(
+      const std::shared_ptr<RealtimeEffectState> &pEffectState
+   ){
+      return [=](wxWindow &parent,
+         EffectPlugin &host, EffectUIClientInterface &client,
+         EffectInstance &instance, EffectSettingsAccess &access)
+         -> wxDialog *
+      {
+         // Make sure there is an associated project, whose lifetime will
+         // govern the lifetime of the dialog
+         if (auto project = FindProjectFromWindow(&parent)) {
+            if (Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{
+                  &parent, *project, host, client, instance, access,
+                  pEffectState } }
+               ; dlg->Initialize()
+            )  // release() is safe because parent will own it
+               return dlg.release();
+         }
+         return nullptr;
+      };
+   }
+
    //fwd
    class RealtimeEffectControl;
    PluginID ShowSelectEffectMenu(wxWindow* parent, RealtimeEffectControl* currentEffectControl = nullptr);
@@ -366,7 +388,7 @@ namespace
          // the necessary inter-thread communication of settings changes
          // if play is in progress
          bool changed = effectPlugin->ShowHostInterface(
-            ProjectWindow::Get( *mProject), EffectUI::DialogFactory,
+            ProjectWindow::Get( *mProject), DialogFactory(mEffectState),
             *effectPlugin->MakeInstance(), // short-lived object
             *access, true );
 

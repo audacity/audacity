@@ -44,7 +44,8 @@ public:
    // constructors and destructors
    EffectUIHost(wxWindow *parent, AudacityProject &project,
       EffectPlugin &effect, EffectUIClientInterface &client,
-      EffectInstance &instance, EffectSettingsAccess &access);
+      EffectInstance &instance, EffectSettingsAccess &access,
+      const std::shared_ptr<RealtimeEffectState> &pPriorState = {});
    virtual ~EffectUIHost();
 
    bool TransferDataToWindow() override;
