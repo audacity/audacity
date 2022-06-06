@@ -4,8 +4,8 @@ export TZ=Europe/London
 ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 build_deps=(
-   build-essential 
-   fakeroot 
+   build-essential
+   fakeroot
    devscripts
    gcc
    g++
@@ -56,9 +56,13 @@ deps=(
    libtwolame-dev
    libpng-dev
    libjpeg-turbo8-dev
+   libharfbuzz-dev
+   libfreetype6-dev
+   libfontconfig-dev
+   libegl1-mesa-dev
 )
 
 apt-get update
 apt-get install -y \
    "${build_deps[@]}" \
-   "${deps[@]}" 
+   "${deps[@]}"
