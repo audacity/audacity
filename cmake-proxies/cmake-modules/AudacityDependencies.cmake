@@ -1,11 +1,15 @@
 # Load Conan
 
 if ( ${_OPT}conan_allow_prebuilt_binaries )
-    set( CONAN_BUILD_MODE BUILD missing )
     set( CONAN_REMOTE https://artifactory.audacityteam.org/artifactory/api/conan/audacity-binaries )
 else()
-    set( CONAN_BUILD_MODE BUILD all )
     set( CONAN_REMOTE https://artifactory.audacityteam.org/artifactory/api/conan/audacity-recipes )
+endif()
+
+if( ${_OPT}conan_force_build_dependencies )
+   set( CONAN_BUILD_MODE BUILD all )
+else()
+   set( CONAN_BUILD_MODE BUILD missing )
 endif()
 
 if( ${_OPT}conan_enabled )
@@ -47,9 +51,9 @@ if( ${_OPT}conan_enabled )
     if( DEFINED OLD_CXX )
         set( ENV{CXX} ${OLD_CXX} )
     endif()
-    
+
     set(ENV{CONAN_REVISIONS_ENABLED} 1)
-     
+
     conan_add_remote(NAME audacity
         URL ${CONAN_REMOTE}
         VERIFY_SSL True
@@ -307,7 +311,6 @@ function ( _conan_install build_type )
         ${CONAN_BUILD_MODE}
         PROFILE_BUILD audacity_build
         SETTINGS_HOST ${settings}
-        #REMOTE audacity
    )
 endfunction()
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# Usage prepare_offline_environment.sh cmake-options... 
+# Usage prepare_offline_environment.sh cmake-options...
 
 set -euxo pipefail
 
-packageName="audacity-offline-dependencies"
+packageName="audacity-dependencies-3.2.0"
 scriptLocation=$(dirname "$(readlink -f "$0")")
 audacityLocation=$(readlink -f "$scriptLocation/../..")
 resultsLocation=$(pwd)
@@ -30,13 +30,13 @@ popd
 
 # Cache all Conan dependencies
 
-mkdir -p temp 
+mkdir -p temp
 
 pushd temp
     python3 -m venv conan_env
 
     source conan_env/bin/activate
-    pip3 install --no-index --find-links "$packageLocation/pip_cache" conan 
+    pip3 install --no-index --find-links "$packageLocation/pip_cache" conan
 
     export CONAN_USER_HOME="$packageLocation/conan_home"
     mkdir -p $CONAN_USER_HOME
@@ -51,7 +51,7 @@ pushd temp
 
     cmake ${@} $audacityLocation
 
-    conan remove "*" --src --builds --packages --force 
+    conan remove "*" --src --builds --packages --force
 popd
 
 rm -R temp
