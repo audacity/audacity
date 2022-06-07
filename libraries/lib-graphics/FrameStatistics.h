@@ -88,9 +88,10 @@ public:
       Duration mLastDuration {};
       Duration mMinDuration { std::numeric_limits<Duration::rep>::max() };
       Duration mMaxDuration { std::numeric_limits<Duration::rep>::min() };
+      Duration mAvgAccum {};
       Duration mAvgDuration {};
 
-      Duration mFilteringKernel[KERNEL_SIZE];
+      Duration mFilteringKernel[KERNEL_SIZE] {};
       size_t mNextIndex { 0 };
       size_t mKernelItems { 0 };
 
