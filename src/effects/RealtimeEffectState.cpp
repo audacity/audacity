@@ -131,6 +131,15 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
          if (auto pAccessState = pState->GetAccessState())
             pAccessState->MainWrite(std::move(settings));
    }
+   bool IsSameAs(const EffectSettingsAccess &other) const override {
+      if (auto pOther = dynamic_cast<const Access*>(&other)) {
+         auto &mine = mwState;
+         auto &theirs = pOther->mwState;
+         auto less = std::owner_less{};
+         return !(less(mine, theirs) || less(theirs, mine));
+      }
+      return false;
+   }
    std::weak_ptr<RealtimeEffectState> mwState;
 };
 

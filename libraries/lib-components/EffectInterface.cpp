@@ -28,6 +28,15 @@ void SimpleEffectSettingsAccess::Set(EffectSettings &&settings)
    mSettings = std::move(settings);
 }
 
+bool SimpleEffectSettingsAccess::IsSameAs(
+   const EffectSettingsAccess &other) const
+{
+   if (auto pOther =
+      dynamic_cast<const SimpleEffectSettingsAccess*>(&other))
+      return &this->mSettings == &pOther->mSettings;
+   return false;
+}
+
 Identifier EffectDefinitionInterface::GetSquashedName(const Identifier &ident)
 {
    // Get rid of leading and trailing white space

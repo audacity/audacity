@@ -75,6 +75,9 @@ public:
 
    //! Expose access so a dialog can be connected to this state
    //! To be called by the main thread only
+   /*!
+    @post result: `result != nullptr`
+    */
    std::shared_ptr<EffectSettingsAccess> GetAccess();
 
 private:
