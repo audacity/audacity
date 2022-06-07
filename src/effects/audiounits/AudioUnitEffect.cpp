@@ -632,10 +632,12 @@ bool AudioUnitEffect::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t AudioUnitEffect::RealtimeProcess(int group, EffectSettings &settings,
+size_t AudioUnitEffect::RealtimeProcess(size_t group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
+   if (group >= mSlaves.size())
+      return 0;
    return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
 }
 

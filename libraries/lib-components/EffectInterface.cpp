@@ -142,7 +142,7 @@ bool EffectInstance::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t EffectInstance::RealtimeProcess(int, EffectSettings &,
+size_t EffectInstance::RealtimeProcess(size_t, EffectSettings &,
    const float *const *, float *const *, size_t)
 {
    return 0;

@@ -411,7 +411,7 @@ public:
     @return success
     Default implementation does nothing, returns 0
     */
-   virtual size_t RealtimeProcess(int group, EffectSettings &settings,
+   virtual size_t RealtimeProcess(size_t group, EffectSettings &settings,
       const float *const *inBuf, float *const *outBuf, size_t numSamples);
 
    //! settings can be updated to let a dialog change appearance at idle

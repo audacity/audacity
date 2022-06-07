@@ -159,7 +159,7 @@ class VSTEffect final
    bool RealtimeSuspend() override;
    bool RealtimeResume() noexcept override;
    bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(int group,  EffectSettings &settings,
+   size_t RealtimeProcess(size_t group,  EffectSettings &settings,
       const float *const *inbuf, float *const *outbuf, size_t numSamples)
       override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;

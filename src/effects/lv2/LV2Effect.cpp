@@ -1297,10 +1297,11 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t LV2Effect::RealtimeProcess(int group, EffectSettings &,
+size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-   wxASSERT(group >= 0 && group < (int) mSlaves.size());
+   if (group >= mSlaves.size())
+      return 0;
    wxASSERT(numSamples <= (size_t) mBlockSize);
 
    if (group < 0 || group >= (int) mSlaves.size())
