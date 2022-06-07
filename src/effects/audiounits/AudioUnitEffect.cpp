@@ -674,21 +674,12 @@ EffectSettings AudioUnitEffect::MakeSettings() const
 bool AudioUnitEffect::SaveSettings(
    const EffectSettings &settings, CommandParameters & parms) const
 {
-   auto &map = GetSettings(settings).values;
-   const auto end = map.end();
-
    // Save settings into CommandParameters
-   // Assume settings is an up-to-date cache of AudioUnit state
-   ForEachParameter([this, &parms, &map, end](
-      const ParameterInfo &pi, AudioUnitParameterID ID
-   ){
-      if (pi.mName) {
+   // Iterate the map only, not using any AudioUnit handles
+   for (auto &[ID, pPair] : GetSettings(settings).values)
+      if (pPair)
          // Write names, not numbers, as keys in the config file
-         if (auto iter = map.find(ID); iter != end)
-            parms.Write(*pi.mName, iter->second);
-      }
-      return true;
-   });
+         parms.Write(pPair->first, pPair->second);
    return true;
 }
 
@@ -698,22 +689,19 @@ bool AudioUnitEffect::LoadSettings(
    // First clean all settings, in case any are not defined in parms
    auto &mySettings = GetSettings(settings);
    mySettings.ResetValues();
-
    auto &map = mySettings.values;
-   const auto end = map.end();
 
    // Load settings from CommandParameters
-   ForEachParameter([this, &parms, &map, end](
-      const ParameterInfo &pi, AudioUnitParameterID ID
-   ){
-      if (pi.mName) {
-         double d = 0.0;
-         if (auto iter = map.find(ID);
-             iter != end && parms.Read(*pi.mName, &d))
-            iter->second = d;
-      }
-      return true;
-   });
+   // Iterate the config only, not using any AudioUnit handles
+   if (auto [index, key, value] = std::tuple(
+         0L, wxString{}, AudioUnitParameterValue{})
+       ; parms.GetFirstEntry(key, index)
+   ) do {
+      if (auto pKey = ParameterInfo::ParseKey(key)
+         ; pKey && parms.Read(key, value)
+      )
+         map[*pKey].emplace(key, value);
+   } while(parms.GetNextEntry(key, index));
    return true;
 }
 

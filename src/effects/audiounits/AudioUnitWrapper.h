@@ -28,10 +28,10 @@ class TranslatableString;
 //! This works as a cached copy of state stored in an AudioUnit, but can also
 //! outlive it
 struct AudioUnitEffectSettings {
-   // Hash from numerical perameter IDs (should we assume they are small
-   // integers?) to floating point values
-   using Map =
-      std::unordered_map<AudioUnitParameterID, AudioUnitParameterValue>;
+   // Hash from numerical perameter IDs (not always a small initial segment
+   // of the integers) to optional pairs of floating point values and names
+   using Pair = std::pair<wxString, AudioUnitParameterValue>;
+   using Map = std::unordered_map<AudioUnitParameterID, std::optional<Pair>>;
    Map values;
 
    AudioUnitEffectSettings() = default;
