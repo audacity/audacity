@@ -141,10 +141,19 @@ protected:
 class AudioUnitWrapper::ParameterInfo final
 {
 public:
+   //! Make a structure holding a key for the config file and a value
    ParameterInfo(AudioUnit mUnit, AudioUnitParameterID parmID);
+   //! Recover the parameter ID from the key, if well formed
+   static std::optional<AudioUnitParameterID> ParseKey(const wxString &key);
 
    std::optional<wxString> mName;
    AudioUnitParameterInfo mInfo{};
+
+private:
+   // constants
+   static constexpr char idBeg = wxT('<');
+   static constexpr char idSep = wxT(',');
+   static constexpr char idEnd = wxT('>');
 };
 
 #endif

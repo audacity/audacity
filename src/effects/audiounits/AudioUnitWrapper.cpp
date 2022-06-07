@@ -50,10 +50,6 @@
 AudioUnitWrapper::ParameterInfo::ParameterInfo(
    AudioUnit mUnit, AudioUnitParameterID parmID)
 {
-   static constexpr char idBeg = wxT('<');
-   static constexpr char idSep = wxT(',');
-   static constexpr char idEnd = wxT('>');
-
    UInt32 dataSize;
 
    mInfo = {};
@@ -107,6 +103,28 @@ AudioUnitWrapper::ParameterInfo::ParameterInfo(
          idBeg, clumpName, mInfo.clumpID, idEnd, name);
    }
 #endif
+}
+
+std::optional<AudioUnitParameterID>
+AudioUnitWrapper::ParameterInfo::ParseKey(const wxString &key)
+{
+   // This is not a complete validation of the format of the key
+   const auto npos = wxString::npos;
+   constexpr char chars[]{ idSep, idBeg, '0' };
+   // Scan left for , or <
+   if (auto index = key.find_last_of(chars); index != npos) {
+      ++index;
+      // Scan right for >
+      if (const auto index2 = key.find(idEnd, index)
+         ; index2 != npos && index2 > index
+      ){
+         // Interpret as hex
+         if (long value{}
+             ; key.substr(index, index2 - index).ToLong(&value, 16))
+            return value;
+      }
+   }
+   return {};
 }
 
 bool AudioUnitWrapper::FetchSettings(AudioUnitEffectSettings &settings) const
