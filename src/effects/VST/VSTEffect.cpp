@@ -1106,8 +1106,7 @@ bool VSTEffect::RealtimeInitialize(EffectSettings &settings)
 bool VSTEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
-   mSlaves.push_back(std::make_unique<VSTEffect>(mPath, this));
-   VSTEffect *const slave = mSlaves.back().get();
+   auto slave = std::make_unique<VSTEffect>(mPath, this);
 
    slave->SetBlockSize(mBlockSize);
    slave->SetChannelCount(numChannels);
@@ -1137,7 +1136,11 @@ bool VSTEffect::RealtimeAddProcessor(
       callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
    }
 
-   return slave->ProcessInitialize(settings, 0, nullptr);
+   if (!slave->ProcessInitialize(settings, 0, nullptr))
+      return false;
+
+   mSlaves.emplace_back(move(slave));
+   return true;
 }
 
 bool VSTEffect::RealtimeFinalize(EffectSettings &) noexcept

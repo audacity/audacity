@@ -571,10 +571,11 @@ bool AudioUnitEffect::RealtimeAddProcessor(
    if (!slave->StoreSettings(GetSettings(settings)))
       return false;
 
-   auto pSlave = slave.get();
-   mSlaves.push_back(std::move(slave));
+   if (!slave->ProcessInitialize(settings, 0, nullptr))
+      return false;
 
-   return pSlave->ProcessInitialize(settings, 0, nullptr);
+   mSlaves.push_back(std::move(slave));
+   return true;
 }
 
 bool AudioUnitEffect::RealtimeFinalize(EffectSettings &) noexcept
