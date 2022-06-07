@@ -3,7 +3,7 @@
 
   Audacity: A Digital Audio Editor
 
-  FrameStatisticsDialog.h
+  FrameStatisticsDialog.cpp
 
   Dmitry Vedenko
 
@@ -124,7 +124,7 @@ private:
          section.Max->SetLabel(L"n/a");
          section.Avg->SetLabel(L"n/a");
       }
-      
+
       section.Events->SetLabel(std::to_string(profilerSection.GetEventsCount()));
 
       section.Dirty = false;

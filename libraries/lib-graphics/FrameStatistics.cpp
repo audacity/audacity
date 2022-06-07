@@ -66,11 +66,15 @@ size_t FrameStatistics::Section::GetEventsCount() const noexcept
 void FrameStatistics::Section::AddEvent(Duration duration) noexcept
 {
    ++mEventsCount;
+
    mLastDuration = duration;
 
    mMinDuration = std::min(mMinDuration, duration);
    mMaxDuration = std::max(mMaxDuration, duration);
 
+   // Kernel is initialized with zeroes
+   mAvgAccum = mAvgAccum - mFilteringKernel[mNextIndex] + duration;
+   
    mFilteringKernel[mNextIndex] = duration;
 
    mNextIndex = (mNextIndex + 1) % KERNEL_SIZE;
@@ -78,10 +82,7 @@ void FrameStatistics::Section::AddEvent(Duration duration) noexcept
    if (mKernelItems < KERNEL_SIZE)
       ++mKernelItems;
 
-   mAvgDuration =
-      std::accumulate(
-         mFilteringKernel, mFilteringKernel + mKernelItems, Duration {}) /
-      mKernelItems;
+   mAvgDuration = mAvgAccum / mKernelItems;
 }
 
 FrameStatistics::Stopwatch
