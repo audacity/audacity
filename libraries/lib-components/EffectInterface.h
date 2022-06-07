@@ -257,6 +257,7 @@ public:
 
    //! Store settings as keys and values
    /*!
+    The override may assume `parms` is initially empty
     @return true on success
     */
    virtual bool SaveSettings(
