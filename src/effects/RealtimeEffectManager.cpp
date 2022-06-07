@@ -263,6 +263,48 @@ void RealtimeEffectManager::VisitGroup(Track &leader, StateVisitor func)
    RealtimeEffectList::Get(leader).Visit(func);
 }
 
+RealtimeEffectManager::
+AllListsLock::AllListsLock(RealtimeEffectManager *pManager)
+   : mpManager{ pManager }
+{
+   if (mpManager) {
+      // Paralleling VisitAll
+      RealtimeEffectList::Get(mpManager->mProject).GetLock().lock();
+      // And all track lists
+      for (auto leader : mpManager->mGroupLeaders)
+         RealtimeEffectList::Get(*leader).GetLock().lock();
+   }
+}
+
+RealtimeEffectManager::AllListsLock::AllListsLock(AllListsLock &&other)
+   : mpManager{ other.mpManager }
+{
+   other.mpManager = nullptr;
+}
+
+RealtimeEffectManager::AllListsLock&
+RealtimeEffectManager::AllListsLock::operator =(AllListsLock &&other)
+{
+   if (this != &other) {
+      Reset();
+      mpManager = other.mpManager;
+      other.mpManager = nullptr;
+   }
+   return *this;
+}
+
+void RealtimeEffectManager::AllListsLock::Reset()
+{
+   if (mpManager) {
+      // Paralleling VisitAll
+      RealtimeEffectList::Get(mpManager->mProject).GetLock().unlock();
+      // And all track lists
+      for (auto leader : mpManager->mGroupLeaders)
+         RealtimeEffectList::Get(*leader).GetLock().unlock();
+      mpManager = nullptr;
+   }
+}
+
 void RealtimeEffectManager::VisitAll(StateVisitor func)
 {
    // Call the function for each effect on the master list
@@ -273,8 +315,7 @@ void RealtimeEffectManager::VisitAll(StateVisitor func)
       RealtimeEffectList::Get(*leader).Visit(func);
 }
 
-RealtimeEffectState *
-RealtimeEffectManager::AddState(
+std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    RealtimeEffects::InitializationScope *pScope,
    Track *pTrack, const PluginID & id)
 {
@@ -321,12 +362,12 @@ RealtimeEffectManager::AddState(
       pLeader ? pLeader->shared_from_this() : nullptr
    });
 
-   return &state;
+   return pState;
 }
 
 void RealtimeEffectManager::RemoveState(
    RealtimeEffects::InitializationScope *pScope,
-   Track *pTrack, RealtimeEffectState &state)
+   Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState)
 {
    auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
    RealtimeEffectList &states = pLeader
@@ -344,9 +385,9 @@ void RealtimeEffectManager::RemoveState(
    std::lock_guard<std::mutex> guard(mLock);
 
    if (mActive)
-      state.Finalize();
+      pState->Finalize();
 
-   states.RemoveState(state);
+   states.RemoveState(pState);
 
    Publish({
       RealtimeEffectManagerMessage::Type::EffectRemoved,

@@ -21,9 +21,6 @@ public:
       : mEffect{effect}
       , mSettings{settings}
    {
-   }
-
-   void Initialize(const EffectSettings &settings) {
       // Initialize each message buffer with two copies of settings
       mChannelToMain.Write(ToMainSlot{settings});
       mChannelToMain.Write(ToMainSlot{settings});
@@ -115,23 +112,26 @@ private:
 //! Main thread's interface to inter-thread communication of changes of settings
 struct RealtimeEffectState::Access final : EffectSettingsAccess {
    Access() = default;
-   explicit Access(std::weak_ptr<AccessState> wState)
-      : mwState{ move(wState) } {}
+   explicit Access(RealtimeEffectState &state)
+      : mwState{ state.weak_from_this() }
+   {
+   }
    ~Access() override = default;
    const EffectSettings &Get() override {
-      if (auto pState = mwState.lock())
-         return pState->MainRead();
-      else {
-         // Non-modal dialog may have outlived the RealtimeEffectState
-         static EffectSettings empty;
-         return empty;
+      if (auto pState = mwState.lock()) {
+         if (auto pAccessState = pState->GetAccessState())
+            return pAccessState->MainRead();
       }
+      // Non-modal dialog may have outlived the RealtimeEffectState
+      static EffectSettings empty;
+      return empty;
    }
    void Set(EffectSettings &&settings) override {
       if (auto pState = mwState.lock())
-         pState->MainWrite(std::move(settings));
+         if (auto pAccessState = pState->GetAccessState())
+            pAccessState->MainWrite(std::move(settings));
    }
-   std::weak_ptr<AccessState> mwState;
+   std::weak_ptr<RealtimeEffectState> mwState;
 };
 
 RealtimeEffectState::RealtimeEffectState(const PluginID & id)
@@ -275,9 +275,8 @@ bool RealtimeEffectState::ProcessStart()
       return false;
 
    // Get state changes from the main thread
-   // But skip this if we never gave out Access, or it has expired
-   if (!mwAccess.expired())
-      mpAccessState->WorkerRead();
+   if (auto pAccessState = TestAccessState())
+      pAccessState->WorkerRead();
 
    return mInstance->RealtimeProcessStart(mSettings);
 }
@@ -413,13 +412,13 @@ bool RealtimeEffectState::ProcessEnd()
       return false;
 
    auto result = mInstance->RealtimeProcessEnd(mSettings);
-   if (result && !mwAccess.expired())
+   if (result)
       // Some dialogs require communication back from the processor so that
       // they can update their appearance in idle time, and some plug-in
       // libraries (like lv2) require the host program to mediate the
       // communication
-      // But skip this if we never gave out Access, or it has expired
-      mpAccessState->WorkerWrite();
+      if (auto pAccessState = TestAccessState())
+         pAccessState->WorkerWrite();
 
    return result;
 }
@@ -562,14 +561,9 @@ std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
       // Effect not found!  Return a dummy
       return std::make_shared<Access>();
 
-   // Initialize once in the lifetime of `this`
-   if (!mpAccessState)
-      mpAccessState = std::make_unique<AccessState>(*mPlugin, mSettings);
-
-   // Reinitialize
-   mpAccessState->Initialize(mSettings);
-
-   auto result = std::make_shared<Access>(mpAccessState);
-   mwAccess = result;
-   return result;
+   // Only the main thread assigns to the atomic pointer, here and
+   // once only in the lifetime of the state
+   if (!GetAccessState())
+      mpAccessState.emplace(*mPlugin, mSettings);
+   return std::make_shared<Access>(*this);
 }

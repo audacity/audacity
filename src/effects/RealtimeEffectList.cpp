@@ -20,12 +20,13 @@ RealtimeEffectList::~RealtimeEffectList()
 {
 }
 
+// Deep copy of states
 std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
 {
    auto result = std::make_unique<RealtimeEffectList>();
    for (auto &pState : mStates)
       result->mStates.push_back(
-         std::make_unique<RealtimeEffectState>(*pState));
+         std::make_shared<RealtimeEffectState>(*pState));
    return result;
 }
 
@@ -82,12 +83,15 @@ void RealtimeEffectList::Visit(StateVisitor func)
       func(*state, !state->IsActive());
 }
 
-RealtimeEffectState *RealtimeEffectList::AddState(const PluginID &id)
+std::shared_ptr<RealtimeEffectState>
+RealtimeEffectList::AddState(const PluginID &id)
 {
-   auto pState = std::make_unique<RealtimeEffectState>(id);
+   auto pState = std::make_shared<RealtimeEffectState>(id);
    if (pState->GetEffect() != nullptr) {
-      auto result = pState.get();
-      mStates.emplace_back(move(pState));
+      auto shallowCopy = mStates;
+      shallowCopy.emplace_back(pState);
+      // Lock for only a short time
+      (LockGuard{ mLock }, swap(shallowCopy, mStates));
 
       Publisher<RealtimeEffectListMessage>::Publish({
          RealtimeEffectListMessage::Type::Insert,
@@ -95,21 +99,26 @@ RealtimeEffectState *RealtimeEffectList::AddState(const PluginID &id)
          { }
       });
 
-      return result;
+      return pState;
    }
    // Effect initialization failed for the id
    return nullptr;
 }
 
-void RealtimeEffectList::RemoveState(RealtimeEffectState &state)
+void RealtimeEffectList::RemoveState(
+   const std::shared_ptr<RealtimeEffectState> &pState)
 {
-   auto end = mStates.end(),
-      found = std::find_if(mStates.begin(), end,
-         [&](const auto &item) { return item.get() == &state; } );
+   auto shallowCopy = mStates;
+   auto end = shallowCopy.end(),
+      found = std::find(shallowCopy.begin(), end, pState);
    if (found != end)
    {
-      const auto index = std::distance(mStates.begin(), found);
-      mStates.erase(found);
+      const auto index = std::distance(shallowCopy.begin(), found);
+      shallowCopy.erase(found);
+
+      // Lock for only a short time
+      (LockGuard{ mLock }, swap(shallowCopy, mStates));
+
       Publisher<RealtimeEffectListMessage>::Publish({
          RealtimeEffectListMessage::Type::Remove,
          static_cast<size_t>(index),
@@ -123,9 +132,12 @@ size_t RealtimeEffectList::GetStatesCount() const noexcept
    return mStates.size();
 }
 
-RealtimeEffectState& RealtimeEffectList::GetStateAt(size_t index) noexcept
+std::shared_ptr<RealtimeEffectState>
+RealtimeEffectList::GetStateAt(size_t index) noexcept
 {
-   return *mStates[index];
+   if (index < mStates.size())
+      return mStates[index];
+   return nullptr;
 }
 
 void RealtimeEffectList::MoveEffect(size_t fromIndex, size_t toIndex)
@@ -133,20 +145,24 @@ void RealtimeEffectList::MoveEffect(size_t fromIndex, size_t toIndex)
    assert(fromIndex < mStates.size());
    assert(toIndex < mStates.size());
 
+   auto shallowCopy = mStates;
    if(fromIndex == toIndex)
       return;
    if(fromIndex < toIndex)
    {
-      const auto first = mStates.begin() + fromIndex;
-      const auto last = mStates.begin() + toIndex + 1;
+      const auto first = shallowCopy.begin() + fromIndex;
+      const auto last = shallowCopy.begin() + toIndex + 1;
       std::rotate(first, first + 1, last);
    }
    else
    {
-      const auto first = mStates.rbegin() + (mStates.size() - (fromIndex + 1));
-      const auto last = mStates.rbegin() + (mStates.size() - toIndex);
+      const auto first = shallowCopy.rbegin() + (shallowCopy.size() - (fromIndex + 1));
+      const auto last = shallowCopy.rbegin() + (shallowCopy.size() - toIndex);
       std::rotate(first, first + 1, last);
    }
+   // Lock for only a short time
+   (LockGuard{ mLock }, swap(shallowCopy, mStates));
+
    Publisher<RealtimeEffectListMessage>::Publish({
       RealtimeEffectListMessage::Type::Move,
       fromIndex,
@@ -171,6 +187,8 @@ void RealtimeEffectList::HandleXMLEndTag(const std::string_view &tag)
    if (tag == XMLTag()) {
       // Remove states that fail to load their effects
       auto end = mStates.end();
+      // Assume deserialization is not happening concurrently with realtime
+      // effect processing; don't need a LockGuard
       auto newEnd = std::remove_if( mStates.begin(), end,
          [](const auto &pState){ return pState->GetEffect() == nullptr; });
       mStates.erase(newEnd, end);
@@ -180,8 +198,8 @@ void RealtimeEffectList::HandleXMLEndTag(const std::string_view &tag)
 XMLTagHandler *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
 {
    if (tag == RealtimeEffectState::XMLTag()) {
-      mStates.push_back(std::make_unique<RealtimeEffectState>(PluginID { }));
-      return &*mStates.back();
+      mStates.push_back(std::make_shared<RealtimeEffectState>(PluginID { }));
+      return mStates.back().get();
    }
    return nullptr;
 }

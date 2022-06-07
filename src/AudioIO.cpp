@@ -348,8 +348,8 @@ AudioIO::~AudioIO()
    mAudioThread.join();
 }
 
-RealtimeEffectState *AudioIO::AddState(AudacityProject &project,
-   Track *pTrack, const PluginID & id)
+std::shared_ptr<RealtimeEffectState>
+AudioIO::AddState(AudacityProject &project, Track *pTrack, const PluginID & id)
 {
    RealtimeEffects::InitializationScope *pInit = nullptr;
    if (mpTransportState)
@@ -359,13 +359,13 @@ RealtimeEffectState *AudioIO::AddState(AudacityProject &project,
 }
 
 void AudioIO::RemoveState(AudacityProject &project,
-   Track *pTrack, RealtimeEffectState &state)
+   Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState)
 {
    RealtimeEffects::InitializationScope *pInit = nullptr;
    if (mpTransportState)
       if (auto pProject = GetOwningProject(); pProject.get() == &project)
          pInit = &*mpTransportState->mpRealtimeInitialization;
-   RealtimeEffectManager::Get(project).RemoveState(pInit, pTrack, state);
+   RealtimeEffectManager::Get(project).RemoveState(pInit, pTrack, pState);
 }
 
 RealtimeEffects::SuspensionScope AudioIO::SuspensionScope()

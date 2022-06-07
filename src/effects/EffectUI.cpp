@@ -1237,7 +1237,8 @@ void EffectUIHost::CleanupRealtime()
 {
    if (mSupportsRealtime && mInitialized) {
       if (mpState) {
-         AudioIO::Get()->RemoveState(mProject, nullptr, *mpState);
+         AudioIO::Get()->RemoveState(mProject, nullptr, mpState);
+         mpState.reset();
       /*
          ProjectHistory::Get(mProject).PushState(
             XO("Removed %s effect").Format(mpState->GetEffect()->GetName()),

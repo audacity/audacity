@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "PluginProvider.h" // for PluginID
+#include "spinlock.h"
 #include "UndoManager.h"
 #include "XMLTagHandler.h"
 #include "Observer.h"
@@ -49,12 +50,16 @@ class RealtimeEffectList final
    RealtimeEffectList &operator=(const RealtimeEffectList &) = delete;
 
 public:
-   
-   using States = std::vector<std::unique_ptr<RealtimeEffectState>>;
+   using Lock = spinlock;
+   using States = std::vector<std::shared_ptr<RealtimeEffectState>>;
 
    RealtimeEffectList();
    virtual ~RealtimeEffectList();
 
+   Lock &GetLock() const { return mLock; }
+
+   //! Should be called (for pushing undo states) only from main thread, to
+   //! avoid races
    std::unique_ptr<ClientData::Cloneable<>> Clone() const override;
 
    static RealtimeEffectList &Get(AudacityProject &project);
@@ -72,21 +77,26 @@ public:
    //! Apply the function to all states sequentially.
    void Visit(StateVisitor func);
 
+   //! Use only in the main thread
    //! Returns null if no such effect was found.
    //! Sends Insert message on success.
-   RealtimeEffectState *AddState(const PluginID &id);
+   std::shared_ptr<RealtimeEffectState> AddState(const PluginID &id);
+   //! Use only in the main thread
    //! On success sends Remove message.
-   void RemoveState(RealtimeEffectState &state);
+   void RemoveState(const std::shared_ptr<RealtimeEffectState> &pState);
 
+   //! Use only in the main thread, to avoid races
    //! Returns total number of effects in this list
    size_t GetStatesCount() const noexcept;
-   //! Returns effect state at given position, does not perform bounds check
-   RealtimeEffectState& GetStateAt(size_t index) noexcept;
+   //! Returns effect state at given position
+   //! Use only in the main thread, to avoid races
+   std::shared_ptr<RealtimeEffectState> GetStateAt(size_t index) noexcept;
 
    /**
-    * \brief Changes effect position in the stack. Does nothing if fromIndex equal
-    * toIndex. Otherwise effects between fromIndex(excluding) and toIndex are shifted
-    * towards fromIndex. Sends Move event.
+    * \brief Use only in the main thread. Changes effect order in the stack.
+    * Does nothing if fromIndex equals toIndex. Otherwise effects between
+    * fromIndex (exclusive) and toIndex are shifted towards fromIndex.
+    * Sends Move event.
     * \param fromIndex Index of the moved effect
     * \param toIndex Final position of the moved effect
     */
@@ -95,14 +105,23 @@ public:
    static const std::string &XMLTag();
    bool HandleXMLTag(
       const std::string_view &tag, const AttributesList &attrs) override;
+
+   //! Use only in the main thread.  May remove a failed state
    void HandleXMLEndTag(const std::string_view &tag) override;
+
+   //! Use only in the main thread.  May add a state while deserializing
    XMLTagHandler *HandleXMLChild(const std::string_view &tag) override;
+
+   //! Use only in the main thread, to avoid races
    void WriteXML(XMLWriter &xmlFile) const;
 
    void RestoreUndoRedoState(AudacityProject &project) noexcept override;
 
 private:
    States mStates;
+
+   using LockGuard = std::lock_guard<Lock>;
+   mutable Lock mLock;
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTLIST_H__
