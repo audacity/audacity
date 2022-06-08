@@ -176,6 +176,11 @@ cmd_option( ${_OPT}conan_allow_prebuilt_binaries
             On
 )
 
+cmd_option( ${_OPT}conan_force_build_dependencies
+            "Force Conan to rebuild the dependencies every time"
+            Off
+)
+
 # Allow user to globally set the library preference
 cmd_option( ${_OPT}lib_preference
             "Library preference [system (if available), local]"

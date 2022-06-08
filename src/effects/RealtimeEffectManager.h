@@ -71,8 +71,9 @@ public:
     @param id identifies the effect
     @return if null, the given id was not found
     */
-   RealtimeEffectState *AddState(RealtimeEffects::InitializationScope *pScope,
-      Track *pTrack, const PluginID & id);
+   std::shared_ptr<RealtimeEffectState> AddState(
+      RealtimeEffects::InitializationScope *pScope, Track *pTrack,
+      const PluginID & id);
 
    //! Main thread removes a global or per-track effect
    /*!
@@ -82,7 +83,7 @@ public:
     */
    /*! No effect if realtime is active but scope is not supplied */
    void RemoveState(RealtimeEffects::InitializationScope *pScope,
-      Track *pTrack, RealtimeEffectState &state);
+      Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState);
 
 private:
    friend RealtimeEffects::InitializationScope;
@@ -90,12 +91,22 @@ private:
 
    //! Main thread begins to define a set of tracks for playback
    void Initialize(double rate);
-   //! Main thread adds one track (passing the first of one or more channels)
+   //! Main thread adds one track (passing the first of one or more
+   //! channels), still before playback
    void AddTrack(Track &track, unsigned chans, float rate);
    //! Main thread cleans up after playback
    void Finalize() noexcept;
 
    friend RealtimeEffects::ProcessingScope;
+   struct AllListsLock {
+      RealtimeEffectManager *mpManager{};
+      AllListsLock(RealtimeEffectManager *pManager = nullptr);
+      AllListsLock(AllListsLock &&other);
+      AllListsLock& operator= (AllListsLock &&other);
+      void Reset();
+      ~AllListsLock() { Reset(); }
+   };
+
    void ProcessStart();
    /*! @copydoc ProcessScope::Process */
    size_t Process(Track &track,
@@ -125,7 +136,10 @@ private:
    std::atomic<bool> mSuspended{ true };
    std::atomic<bool> mActive{ false };
 
+   // This member is mutated only by Initialize(), AddTrack(), Finalize()
+   // which are to be called only while there is no playback
    std::vector<Track *> mGroupLeaders; //!< all are non-null
+
    std::unordered_map<Track *, unsigned> mChans;
    std::unordered_map<Track *, double> mRates;
 };
@@ -192,7 +206,13 @@ private:
 //! Brackets one block of processing in one thread
 class ProcessingScope {
 public:
-   ProcessingScope() {}
+   ProcessingScope()
+   {
+      if (auto pProject = mwProject.lock()) {
+         auto &manager = RealtimeEffectManager::Get(*pProject);
+         mLocks = { &manager };
+      }
+   }
    //! Require a prior InializationScope to ensure correct nesting
    explicit ProcessingScope(InitializationScope &,
       std::weak_ptr<AudacityProject> wProject)
@@ -225,6 +245,7 @@ public:
    }
 
 private:
+   RealtimeEffectManager::AllListsLock mLocks;
    std::weak_ptr<AudacityProject> mwProject;
 };
 }

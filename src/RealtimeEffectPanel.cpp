@@ -42,6 +42,28 @@
 
 namespace
 {
+   auto DialogFactory(
+      const std::shared_ptr<RealtimeEffectState> &pEffectState
+   ){
+      return [=](wxWindow &parent,
+         EffectPlugin &host, EffectUIClientInterface &client,
+         EffectInstance &instance, EffectSettingsAccess &access)
+         -> wxDialog *
+      {
+         // Make sure there is an associated project, whose lifetime will
+         // govern the lifetime of the dialog
+         if (auto project = FindProjectFromWindow(&parent)) {
+            if (Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{
+                  &parent, *project, host, client, instance, access,
+                  pEffectState } }
+               ; dlg->Initialize()
+            )  // release() is safe because parent will own it
+               return dlg.release();
+         }
+         return nullptr;
+      };
+   }
+
    //fwd
    class RealtimeEffectControl;
    PluginID ShowSelectEffectMenu(wxWindow* parent, RealtimeEffectControl* currentEffectControl = nullptr);
@@ -264,7 +286,7 @@ namespace
    {
       wxWeakRef<AudacityProject> mProject;
       std::shared_ptr<Track> mTrack;
-      RealtimeEffectState* mEffectState{nullptr};
+      std::shared_ptr<RealtimeEffectState> mEffectState;
 
       ThemedButtonWrapper<wxButton>* mChangeButton{nullptr};
       wxButton* mEnableButton{nullptr};
@@ -316,11 +338,13 @@ namespace
          SetSizer(vSizer.release());
       }
 
-      void SetEffect(AudacityProject& project, const std::shared_ptr<Track>& track, RealtimeEffectState* state)
+      void SetEffect(AudacityProject& project,
+         const std::shared_ptr<Track>& track,
+         const std::shared_ptr<RealtimeEffectState> &pState)
       {
          mProject = &project;
          mTrack = track;
-         mEffectState = state;
+         mEffectState = pState;
          auto desc = PluginManager::Get().GetPlugin(mEffectState->GetID());
 
          mChangeButton->SetTranslatableLabel(desc->GetSymbol().Msgid());
@@ -336,7 +360,7 @@ namespace
          auto project = mProject.get();
          auto trackName = mTrack->GetName();
 
-         AudioIO::Get()->RemoveState(*project, &*mTrack, *mEffectState);
+         AudioIO::Get()->RemoveState(*project, &*mTrack, mEffectState);
          ProjectHistory::Get(*project).PushState(
             //i18n-hint: undo history, first parameter - realtime effect name, second - track name
             XO("'%s' removed from '%s' effect stack").Format(effectName, trackName),
@@ -364,7 +388,7 @@ namespace
          // the necessary inter-thread communication of settings changes
          // if play is in progress
          bool changed = effectPlugin->ShowHostInterface(
-            ProjectWindow::Get( *mProject), EffectUI::DialogFactory,
+            ProjectWindow::Get( *mProject), DialogFactory(mEffectState),
             *effectPlugin->MakeInstance(), // short-lived object
             *access, true );
 
@@ -703,7 +727,8 @@ public:
       }
    }
 
-   void InsertEffectRow(size_t index, RealtimeEffectState& state)
+   void InsertEffectRow(size_t index,
+      const std::shared_ptr<RealtimeEffectState> &pState)
    {
       if(mProject == nullptr)
          return;
@@ -716,7 +741,7 @@ public:
 
       auto row = safenew ThemedWindowWrapper<RealtimeEffectControl>(mEffectListContainer, wxID_ANY);
       row->SetBackgroundColorIndex(clrEffectListItemBackground);
-      row->SetEffect(*mProject, mTrack, &state);
+      row->SetEffect(*mProject, mTrack, pState);
       mEffectListContainer->GetSizer()->Insert(index, row, 0, wxEXPAND);
    }
 };

@@ -24,7 +24,9 @@
 class EffectSettingsAccess;
 class Track;
 
-class RealtimeEffectState : public XMLTagHandler
+class RealtimeEffectState
+   : public XMLTagHandler
+   , public std::enable_shared_from_this<RealtimeEffectState>
 {
 public:
    struct AUDACITY_DLL_API EffectFactory : GlobalHook<EffectFactory,
@@ -71,10 +73,26 @@ public:
    XMLTagHandler *HandleXMLChild(const std::string_view &tag) override;
    void WriteXML(XMLWriter &xmlFile);
 
-   // Expose access so a dialog can be connected to this state
+   //! Expose access so a dialog can be connected to this state
+   //! To be called by the main thread only
+   /*!
+    @post result: `result != nullptr`
+    */
    std::shared_ptr<EffectSettingsAccess> GetAccess();
 
 private:
+   struct Access;
+   struct AccessState;
+
+   AccessState *GetAccessState() const
+   {
+      return mpAccessState.load(std::memory_order_relaxed);
+   }
+   AccessState *TestAccessState() const
+   {
+      return mpAccessState.load(std::memory_order_acquire);
+   }
+
    /*! @name Members that are copied
     @{
     */
@@ -94,11 +112,11 @@ private:
    //! Stateful instance made by the plug-in
    std::shared_ptr<EffectInstance> mInstance;
 
-   struct Access;
-   struct AccessState;
-   std::shared_ptr<AccessState> mpAccessState; // Destroy before mSettings
-   std::weak_ptr<EffectSettingsAccess> mwAccess;
-
+   // This must not be reset to nullptr while a worker thread is running.
+   // In fact it is never yet reset to nullptr, before destruction.
+   // Destroy before mSettings:
+   AtomicUniquePointer<AccessState> mpAccessState{ nullptr };
+   
    size_t mCurrentProcessor{ 0 };
    std::unordered_map<Track *, size_t> mGroups;
 

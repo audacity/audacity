@@ -23,6 +23,7 @@
 #include "../TrackPanelAx.h"
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectManager.h"
+#include "RealtimeEffectState.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
 
 static PluginID GetID(EffectPlugin &effect)
@@ -156,12 +157,55 @@ EVT_MENU_RANGE(kDeletePresetID, kDeletePresetID + 999, EffectUIHost::OnDeletePre
 EVT_MENU_RANGE(kFactoryPresetsID, kFactoryPresetsID + 999, EffectUIHost::OnFactoryPreset)
 END_EVENT_TABLE()
 
+namespace {
+//! Decorate an EffectSettingsAccess with a `Set` that replicates changes
+//! into a second EffectSettingsAccess, while that one still exists
+/*! Name inspired by `man 1 tee` */
+class EffectSettingsAccessTee : public EffectSettingsAccess {
+public:
+   EffectSettingsAccessTee(EffectSettingsAccess &main,
+      const std::shared_ptr<EffectSettingsAccess> &pSide = {});
+   const EffectSettings &Get() override;
+   void Set(EffectSettings &&settings) override;
+   bool IsSameAs(const EffectSettingsAccess &other) const override;
+private:
+   //! @invariant not null
+   const std::shared_ptr<EffectSettingsAccess> mpMain;
+   const std::weak_ptr<EffectSettingsAccess> mwSide;
+};
+}
+
+EffectSettingsAccessTee::EffectSettingsAccessTee(
+   EffectSettingsAccess &main,
+   const std::shared_ptr<EffectSettingsAccess> &pSide
+)  : mpMain{ main.shared_from_this() } //! Guarantee lifetime of main
+   , mwSide{ pSide } //! Do not control lifetime of side
+{
+}
+
+const EffectSettings &EffectSettingsAccessTee::Get() {
+   return mpMain->Get();
+}
+
+void EffectSettingsAccessTee::Set(EffectSettings &&settings) {
+   // Move a copy of the given settings into the side
+   if (auto pSide = mwSide.lock())
+      pSide->Set(EffectSettings{ settings });
+   // Move the given settings through
+   mpMain->Set(std::move(settings));
+}
+
+bool EffectSettingsAccessTee::IsSameAs(
+   const EffectSettingsAccess &other) const
+{
+   return mpMain->IsSameAs(other);
+}
+
 EffectUIHost::EffectUIHost(wxWindow *parent,
-   AudacityProject &project,
-   EffectPlugin &effect,
-   EffectUIClientInterface &client,
-   EffectInstance &instance,
-   EffectSettingsAccess &access)
+   AudacityProject &project, EffectPlugin &effect,
+   EffectUIClientInterface &client, EffectInstance &instance,
+   EffectSettingsAccess &access,
+   const std::shared_ptr<RealtimeEffectState> &pPriorState)
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
                    wxDefaultPosition, wxDefaultSize,
                    wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMINIMIZE_BOX | wxMAXIMIZE_BOX)
@@ -172,8 +216,12 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 , mpInstance{ instance.shared_from_this() }
 // Grab a pointer to the access object,
 // extending its lifetime while this remains:
-, mpAccess{ access.shared_from_this() }
+, mpGivenAccess{ access.shared_from_this() }
+, mpAccess{ mpGivenAccess }
+, mpState{ pPriorState }
 , mProject{ project }
+, mParent{ parent }
+, mSupportsRealtime{ mEffectUIHost.GetDefinition().SupportsRealtime() }
 {
 #if defined(__WXMAC__)
    // Make sure the effect window actually floats above the main window
@@ -185,18 +233,6 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    // This style causes Validate() and TransferDataFromWindow() to visit
    // sub-windows recursively, applying any wxValidators
    SetExtraStyle(GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY);
-   
-   mParent = parent;
-   mClient = client;
-   
-   mInitialized = false;
-   mSupportsRealtime = false;
-   
-   mDisableTransport = false;
-   
-   mEnabled = true;
-   
-   mPlayPos = 0.0;
 }
 
 EffectUIHost::~EffectUIHost()
@@ -286,7 +322,6 @@ int EffectUIHost::ShowModal()
 
 wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
 {
-   mSupportsRealtime = mEffectUIHost.GetDefinition().SupportsRealtime();
    mIsGUI = mClient.IsGraphicalUI();
    mIsBatch = mEffectUIHost.IsBatchProcessing();
 
@@ -424,13 +459,6 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
 
 bool EffectUIHost::Initialize()
 {
-   {
-      auto gAudioIO = AudioIO::Get();
-      mDisableTransport = !gAudioIO->IsAvailable(mProject);
-      mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
-      mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
-   }
-
    // Build a "host" dialog, framing a panel that the client fills in.
    // The frame includes buttons to preview, apply, load and save presets, etc.
    EffectPanel *w {};
@@ -500,8 +528,6 @@ bool EffectUIHost::Initialize()
    (!mIsGUI ? w : FindWindow(wxID_APPLY))->SetFocus();
 
    LoadUserPresets();
-
-   InitializeRealtime();
 
    SetMinSize(GetSize());
    return true;
@@ -876,51 +902,36 @@ void EffectUIHost::OnFFwd(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnPlayback(AudioIOEvent evt)
 {
-   if (evt.on)
-   {
+   if (evt.on) {
       if (evt.pProject != &mProject)
-      {
          mDisableTransport = true;
-      }
       else
-      {
          mPlaying = true;
-      }
    }
-   else
-   {
+   else {
       mDisableTransport = false;
       mPlaying = false;
    }
    
-   if (mPlaying)
-   {
+   if (mPlaying) {
       mRegion = ViewInfo::Get( mProject ).selectedRegion;
       mPlayPos = mRegion.t0();
    }
-   
    UpdateControls();
 }
 
 void EffectUIHost::OnCapture(AudioIOEvent evt)
 {
-   if (evt.on)
-   {
+   if (evt.on) {
       if (evt.pProject != &mProject)
-      {
          mDisableTransport = true;
-      }
       else
-      {
          mCapturing = true;
-      }
    }
-   else
-   {
+   else {
       mDisableTransport = false;
       mCapturing = false;
    }
-   
    UpdateControls();
 }
 
@@ -1208,9 +1219,23 @@ void EffectUIHost::LoadUserPresets()
 
 void EffectUIHost::InitializeRealtime()
 {
+   {
+      auto gAudioIO = AudioIO::Get();
+      mDisableTransport = !gAudioIO->IsAvailable(mProject);
+      mPlaying = gAudioIO->IsStreamActive(); // not exactly right, but will suffice
+      mCapturing = gAudioIO->IsStreamActive() && gAudioIO->GetNumCaptureChannels() > 0 && !gAudioIO->IsMonitoring();
+   }
+
    if (mSupportsRealtime && !mInitialized) {
       mpState =
          AudioIO::Get()->AddState(mProject, nullptr, GetID(mEffectUIHost));
+      if (mpState) {
+         auto pAccess = mpState->GetAccess();
+         if (!(pAccess->IsSameAs(*mpAccess)))
+            // Decorate the given access object
+            mpAccess = std::make_shared<EffectSettingsAccessTee>(
+               *pAccess, mpAccess);
+      }
       /*
       ProjectHistory::Get(mProject).PushState(
          XO("Added %s effect").Format(mpState->GetEffect()->GetName()),
@@ -1218,7 +1243,7 @@ void EffectUIHost::InitializeRealtime()
          UndoPush::NONE
       );
        */
-      AudioIO::Get()->Subscribe([this](AudioIOEvent event){
+      mSubscription = AudioIO::Get()->Subscribe([this](AudioIOEvent event){
          switch (event.type) {
          case AudioIOEvent::PLAYBACK:
             OnPlayback(event); break;
@@ -1235,9 +1260,11 @@ void EffectUIHost::InitializeRealtime()
 
 void EffectUIHost::CleanupRealtime()
 {
+   mSubscription.Reset();
    if (mSupportsRealtime && mInitialized) {
       if (mpState) {
-         AudioIO::Get()->RemoveState(mProject, nullptr, *mpState);
+         AudioIO::Get()->RemoveState(mProject, nullptr, mpState);
+         mpState.reset();
       /*
          ProjectHistory::Get(mProject).PushState(
             XO("Removed %s effect").Format(mpState->GetEffect()->GetName()),
@@ -1264,11 +1291,12 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
       return nullptr;
    Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{ &parent,
       *project, host, client, instance, access } };
+   dlg->InitializeRealtime();
    if (dlg->Initialize())
       // release() is safe because parent will own it
       return dlg.release();
    return nullptr;
-};
+}
 
 #include "PluginManager.h"
 #include "ProjectRate.h"
