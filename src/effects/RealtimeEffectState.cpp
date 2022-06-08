@@ -229,7 +229,7 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
    auto ochans = chans;
    auto gchans = chans;
 
-   mGroups[&track] = mCurrentProcessor;
+   auto first = mCurrentProcessor;
 
    const auto numAudioIn = mPlugin->GetAudioInCount();
    const auto numAudioOut = mPlugin->GetAudioOutCount();
@@ -271,11 +271,17 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
       }
 
       // Add a NEW processor
-      mInstance->RealtimeAddProcessor(mSettings, gchans, rate);
-      mCurrentProcessor++;
+      if (mInstance->RealtimeAddProcessor(mSettings, gchans, rate))
+         mCurrentProcessor++;
+      else
+         break;
    }
 
-   return true;
+   if (mCurrentProcessor > first) {
+      mGroups[&track] = first;
+      return true;
+   }
+   return false;
 }
 
 bool RealtimeEffectState::ProcessStart()

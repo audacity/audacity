@@ -86,10 +86,12 @@ bool StatefulEffectBase::Instance::RealtimeProcessStart(EffectSettings &settings
    return GetEffect().RealtimeProcessStart(settings);
 }
 
-size_t StatefulEffectBase::Instance::RealtimeProcess(int group, EffectSettings &settings,
+size_t StatefulEffectBase::Instance::RealtimeProcess(size_t group,
+   EffectSettings &settings,
    const float *const *inBuf, float *const *outBuf, size_t numSamples)
 {
-   return GetEffect().RealtimeProcess(group, settings, inBuf, outBuf, numSamples);
+   return GetEffect()
+      .RealtimeProcess(group, settings, inBuf, outBuf, numSamples);
 }
 
 bool StatefulEffectBase::Instance::RealtimeProcessEnd(EffectSettings &settings) noexcept
@@ -154,7 +156,8 @@ bool StatefulEffectBase::RealtimeProcessStart(EffectSettings &settings)
    return true;
 }
 
-size_t StatefulEffectBase::RealtimeProcess(int group, EffectSettings &settings,
+size_t StatefulEffectBase::RealtimeProcess(size_t group,
+   EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    return 0;

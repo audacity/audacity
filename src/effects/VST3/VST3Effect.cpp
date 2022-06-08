@@ -822,9 +822,11 @@ bool VST3Effect::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t VST3Effect::RealtimeProcess(int group, EffectSettings &,
+size_t VST3Effect::RealtimeProcess(size_t group, EffectSettings &,
    const float* const* inBuf, float* const* outBuf, size_t numSamples)
 {
+   if (group >= mRealtimeGroupProcessors.size())
+      return 0;
    auto& effect = mRealtimeGroupProcessors[group];
    return VST3ProcessBlock(effect->mEffectComponent.get(), effect->mSetup, inBuf, outBuf, numSamples, mPendingChanges.get());
 }
