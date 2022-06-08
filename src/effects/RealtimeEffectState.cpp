@@ -10,9 +10,13 @@
 
 #include "RealtimeEffectState.h"
 
+#include "AudioIOBase.h"
 #include "EffectInterface.h"
 #include "MessageBuffer.h"
 #include "PluginManager.h"
+
+#include <chrono>
+#include <thread>
 
 //! Mediator of two-way inter-thread communication of changes of settings
 class RealtimeEffectState::AccessState : public NonInterferingBase {
@@ -38,6 +42,12 @@ public:
       // Main thread may simply swap new content into place
       mChannelFromMain.Write(std::move(settings));
    }
+   const EffectSettings &MainWriteThrough(const EffectSettings &settings) {
+      // Send a copy of settings for worker to update from later
+      MainWrite(EffectSettings{ settings });
+      // Main thread assumes worker isn't processing and bypasses the echo
+      return (mMainThreadCache = settings);
+   }
 
    struct EffectAndSettings{
       const EffectSettingsManager &effect; const EffectSettings &settings; };
@@ -49,6 +59,8 @@ public:
       // Worker thread avoids memory allocation.  It copies the contents of any
       mChannelToMain.Write(EffectAndSettings{ mEffect, mWorkerSettings });
    }
+
+   EffectSettings mLastSettings;
 
 private:
    struct ToMainSlot {
@@ -120,8 +132,33 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    ~Access() override = default;
    const EffectSettings &Get() override {
       if (auto pState = mwState.lock()) {
-         if (auto pAccessState = pState->GetAccessState())
-            return pAccessState->MainRead();
+         if (auto pAccessState = pState->GetAccessState()) {
+            auto &lastSettings = pAccessState->mLastSettings;
+            const EffectSettings *pResult{};
+            do {
+               pResult = &pAccessState->MainRead();
+               if (pResult->extra.GetCounter() ==
+                   lastSettings.extra.GetCounter()) {
+                  // Echo is completed
+                  break;
+               }
+               else if (auto pAudioIO = AudioIOBase::Get()
+                  ; !(pAudioIO && pAudioIO->IsStreamActive())
+               ){
+                  // not relying on the other thread to make progress
+                  // and no fear of data races
+                  pResult = &pAccessState->MainWriteThrough(lastSettings);
+                  break;
+               }
+               else {
+                  using namespace std::chrono;
+                  std::this_thread::sleep_for(50ms);
+               }
+            } while( true );
+            assert(pResult); // It was surely assigned non-null
+            pState->mMainSettings.Set(*pResult); // Update the state
+            return *pResult;
+         }
       }
       // Non-modal dialog may have outlived the RealtimeEffectState
       static EffectSettings empty;
@@ -129,8 +166,15 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    }
    void Set(EffectSettings &&settings) override {
       if (auto pState = mwState.lock())
-         if (auto pAccessState = pState->GetAccessState())
-            pAccessState->MainWrite(std::move(settings));
+         if (auto pAccessState = pState->GetAccessState()) {
+            auto &lastSettings = pAccessState->mLastSettings;
+            auto lastCounter = lastSettings.extra.GetCounter();
+            settings.extra.SetCounter(++lastCounter);
+            // move to remember values here
+            lastSettings = std::move(settings);
+            // move a copy to there
+            pAccessState->MainWrite(EffectSettings{ lastSettings });
+         }
    }
    bool IsSameAs(const EffectSettingsAccess &other) const override {
       if (auto pOther = dynamic_cast<const Access*>(&other)) {
@@ -141,6 +185,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       }
       return false;
    }
+   //! Store no state here but this weak pointer, so `IsSameAs` isn't lying
    std::weak_ptr<RealtimeEffectState> mwState;
 };
 
