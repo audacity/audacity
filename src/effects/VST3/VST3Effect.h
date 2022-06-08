@@ -56,7 +56,7 @@ class VST3Effect final : public StatefulPerTrackEffect, private VST3Wrapper
    Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mControllerConnectionProxy;
    //Used if provided by the plugin and enabled in the settings
    Steinberg::IPtr<Steinberg::IPlugView> mPlugView;
-   
+   Steinberg::IPtr<Steinberg::IPlugFrame> mPlugFrame;
    Steinberg::IPtr<internal::ComponentHandler> mComponentHandler;
    wxWindow* mParent { nullptr };
    NumericTextCtrl* mDuration { nullptr };

@@ -873,6 +873,7 @@ bool VST3Effect::CloseUI()
       mPlugView->setFrame(nullptr);
       mPlugView->removed();
       mPlugView = nullptr;
+      mPlugFrame = nullptr;
       return true;
    }
    return false;
@@ -1071,6 +1072,7 @@ bool VST3Effect::LoadVSTUI(wxWindow* parent)
          return false;
 
       mPlugView = view;
+      mPlugFrame = plugFrame;
 
       return true;
 #endif
