@@ -774,7 +774,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
       {
          auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-         auto headerText = safenew ThemedWindowWrapper<wxStaticText>(header, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
+         auto headerText = safenew ThemedWindowWrapper<wxStaticText>(header, wxID_ANY, wxEmptyString);
          headerText->SetFont(wxFont(wxFontInfo().Bold()));
          headerText->SetTranslatableLabel(XO("Realtime Effects"));
          headerText->SetForegroundColorIndex(clrTrackPanelText);
@@ -807,7 +807,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
    vSizer->Add(effectList, 1, wxEXPAND);
    mEffectList = effectList;
 
-   SetSizer(vSizer.release());
+   SetSizerAndFit(vSizer.release());
 }
 
 void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_ptr<Track>& track)
