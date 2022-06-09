@@ -364,7 +364,7 @@ auto MakeAddGroupItems(const EffectsMenuGroups& list, CommandFlag batchflags, Co
          std::vector<CommandFlag> groupFlags;
          
          auto srcNames = p.second;
-         std::sort(srcNames.begin(), srcNames.end(), [](const auto a, const auto b) { return a.Translation() < b.Translation(); });
+         std::sort(srcNames.begin(), srcNames.end(), TranslationLess);
 
          for(auto& name : srcNames)
          {

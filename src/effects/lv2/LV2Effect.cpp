@@ -2286,9 +2286,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
             innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
          }
 
-         std::sort(mGroups.begin(), mGroups.end(),
-            [](const TranslatableString &a, const TranslatableString &b){
-               return a.Translation() < b.Translation(); });
+         std::sort(mGroups.begin(), mGroups.end(), TranslationLess);
 
          for (size_t i = 0, groupCount = mGroups.size(); i < groupCount; i++)
          {

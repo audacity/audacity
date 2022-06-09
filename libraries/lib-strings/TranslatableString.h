@@ -321,4 +321,11 @@ inline Sink &operator <<( Sink &sink, const TranslatableString &str )
 inline TranslatableString Verbatim( wxString str )
 { return TranslatableString( std::move( str ) ); }
 
+//! A commonly needed sort comparator, which depends on the language setting
+inline bool TranslationLess(
+   const TranslatableString &a, const TranslatableString &b)
+{
+   return a.Translation() < b.Translation();
+}
+
 #endif
