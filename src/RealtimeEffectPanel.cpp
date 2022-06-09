@@ -17,6 +17,7 @@
 #include <wx/menu.h>
 #include <wx/wupdlock.h>
 #include <wx/bmpbuttn.h>
+#include <wx/hyperlink.h>
 
 #ifdef __WXMSW__
 #include <wx/dcbuffer.h>
@@ -524,6 +525,8 @@ class RealtimeEffectListWindow : public wxScrolledWindow
    wxWeakRef<AudacityProject> mProject;
    std::shared_ptr<Track> mTrack;
    wxButton* mAddEffect{nullptr};
+   wxStaticText* mAddEffectHint{nullptr};
+   wxWindow* mAddEffectTutorialLink{nullptr};
    wxWindow* mEffectListContainer{nullptr};
 
    Observer::Subscription mEffectListItemMovedSubscription;
@@ -537,6 +540,7 @@ public:
                      const wxString& name = wxPanelNameStr)
       : wxScrolledWindow(parent, winid, pos, size, style, name)
    {
+      Bind(wxEVT_SIZE, &RealtimeEffectListWindow::OnSizeChanged, this);
 #ifdef __WXMSW__
       //Fixes flickering on redraw
       wxScrolledWindow::SetDoubleBuffered(true);
@@ -547,6 +551,17 @@ public:
       addEffect->SetTranslatableLabel(XO("Add effect"));
       addEffect->Bind(wxEVT_BUTTON, &RealtimeEffectListWindow::OnAddEffectClicked, this);
       mAddEffect = addEffect;
+
+      auto addEffectHint = safenew ThemedWindowWrapper<wxStaticText>(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE);
+      //Workaround: text is set in the OnSizeChange
+      addEffectHint->SetForegroundColorIndex(clrTrackPanelText);
+      mAddEffectHint = addEffectHint;
+
+      //TODO: set link
+      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(this, wxID_ANY, wxEmptyString, wxEmptyString);
+      //i18n-hint: Hyperlink to the effects stack panel tutorial video
+      addEffectTutorialLink->SetTranslatableLabel(XO("Watch video"));
+      mAddEffectTutorialLink = addEffectTutorialLink;
 
       auto effectListContainer = safenew ThemedWindowWrapper<wxWindow>(this, wxID_ANY);
       effectListContainer->SetBackgroundColorIndex(clrMedium);
@@ -560,7 +575,9 @@ public:
       dropHintLine->Hide();
 
       rootSizer->Add(mEffectListContainer, 0, wxEXPAND | wxBOTTOM, 10);
-      rootSizer->Add(addEffect, 0, wxLEFT | wxRIGHT | wxEXPAND, 30);
+      rootSizer->Add(addEffect, 0, wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, 20);
+      rootSizer->Add(addEffectHint, 0, wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, 20);
+      rootSizer->Add(addEffectTutorialLink, 0, wxLEFT | wxRIGHT | wxEXPAND, 20);
 
       SetSizer(rootSizer.release());
 
@@ -625,6 +642,22 @@ public:
          }
       });
       SetScrollRate(0, 20);
+   }
+
+   void OnSizeChanged(wxSizeEvent& event)
+   {
+      if(auto sizerItem = GetSizer()->GetItem(mAddEffectHint))
+      {
+         //We need to wrap the text whenever panel width changes and adjust widget height
+         //so that text is fully visible, but there is no height-for-width layout algorithm
+         //in wxWidgets yet, so for now we just do it manually
+
+         //Restore original text, because 'Wrap' will replace it with wrapped one
+         mAddEffectHint->SetLabel(_("Realtime effects are non-destructive and can be changed at any time."));
+         mAddEffectHint->Wrap(GetClientSize().x - sizerItem->GetBorder() * 2);
+         mAddEffectHint->InvalidateBestSize();
+      }
+      event.Skip();
    }
 
    void OnEffectListItemChange(const RealtimeEffectListMessage& msg)
