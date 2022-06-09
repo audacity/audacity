@@ -173,8 +173,6 @@ namespace
          if(auto parent = GetParent())
          {
             wxWindowUpdateLocker freeze(this);
-            parent->Layout();
-
             PostDragEvent(parent, EVT_MOVABLE_CONTROL_DRAG_FINISHED);
          }
          mDragging = false;
@@ -662,7 +660,7 @@ public:
             mEffectListContainer->Hide();
 #endif
       }
-      Layout();
+      SendSizeEventToParent();
    }
 
    void ResetTrack()
@@ -712,7 +710,7 @@ public:
             InsertEffectRow(i, effects.GetStateAt(i));
       }
       mAddEffect->Enable(!!mTrack);
-      Layout();
+      SendSizeEventToParent();
    }
 
    void OnAddEffectClicked(const wxCommandEvent& event)
