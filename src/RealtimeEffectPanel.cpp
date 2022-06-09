@@ -403,6 +403,8 @@ namespace
             return;
          }
          auto access = mEffectState->GetAccess();
+         // Copy settings
+         auto initialSettings = access->Get();
          auto cleanup = EffectManager::Get().SetBatchProcessing(ID);
 
          // Like the call in EffectManager::PromptUser, but access causes
@@ -423,6 +425,10 @@ namespace
                XO("Modify realtime effect")
          );
          }
+         else
+            // Dialog was cancelled.
+            // Reverse any temporary changes made to the state
+            access->Set(std::move(initialSettings));
       }
 
       void OnChangeButtonClicked(wxCommandEvent& event)
