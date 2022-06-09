@@ -546,7 +546,7 @@ public:
       auto rootSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
       auto addEffect = safenew ThemedButtonWrapper<wxButton>(this, wxID_ANY);
-      addEffect->SetTranslatableLabel(XO("Add new effect"));
+      addEffect->SetTranslatableLabel(XO("Add effect"));
       addEffect->Bind(wxEVT_BUTTON, &RealtimeEffectListWindow::OnAddEffectClicked, this);
       mAddEffect = addEffect;
 
