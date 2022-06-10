@@ -78,12 +78,13 @@ public:
    void Visit(StateVisitor func);
 
    //! Use only in the main thread
-   //! Returns null if no such effect was found.
+   //! Returns true for success.
    //! Sends Insert message on success.
    /*!
-    @post result: `!result || result->GetEffect() != nullptr`
+    @post result: `!result || pState->GetEffect() != nullptr`
     */
-   std::shared_ptr<RealtimeEffectState> AddState(const PluginID &id);
+   bool AddState(std::shared_ptr<RealtimeEffectState> pState);
+
    //! Use only in the main thread
    //! On success sends Remove message.
    void RemoveState(const std::shared_ptr<RealtimeEffectState> &pState);

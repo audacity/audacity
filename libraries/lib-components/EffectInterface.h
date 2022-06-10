@@ -80,9 +80,16 @@ public:
    //! @return value is not negative
    double GetDuration() const { return mDuration; }
    void SetDuration(double value) { mDuration = std::max(0.0, value); }
+
+   //! Versioning counter for detecting echo from worker thread;
+   //! it does not need a large range of values
+   using Counter = unsigned char;
+   Counter GetCounter() const { return mCounter; }
+   void SetCounter(Counter value) { mCounter = value; }
 private:
    NumericFormatSymbol mDurationFormat{};
    double mDuration{}; //!< @invariant non-negative
+   Counter mCounter{ 0 };
 };
 
 //! Externalized state of a plug-in

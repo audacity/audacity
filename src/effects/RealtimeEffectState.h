@@ -12,12 +12,12 @@
 #define __AUDACITY_REALTIMEEFFECTSTATE_H__
 
 #include <atomic>
-#include <memory>
 #include <unordered_map>
 #include <vector>
 #include <cstddef>
 #include "EffectInterface.h"
 #include "GlobalVariable.h"
+#include "MemoryX.h"
 #include "PluginProvider.h" // for PluginID
 #include "XMLTagHandler.h"
 
@@ -27,6 +27,7 @@ class Track;
 class RealtimeEffectState
    : public XMLTagHandler
    , public std::enable_shared_from_this<RealtimeEffectState>
+   , public SharedNonInterfering<RealtimeEffectState>
 {
 public:
    struct AUDACITY_DLL_API EffectFactory : GlobalHook<EffectFactory,
@@ -35,6 +36,7 @@ public:
 
    explicit RealtimeEffectState(const PluginID & id);
    RealtimeEffectState(const RealtimeEffectState &other);
+   RealtimeEffectState &operator =(const RealtimeEffectState &other) = delete;
    ~RealtimeEffectState();
 
    //! May be called with nonempty id at most once in the lifetime of a state
@@ -50,9 +52,10 @@ public:
 
    //! Main thread sets up for playback
    bool Initialize(double rate);
+   //! Main thread sets up this state before adding it to lists
    bool AddTrack(Track &track, unsigned chans, float rate);
    //! Worker thread begins a batch of samples
-   bool ProcessStart();
+   bool ProcessStart(bool active);
    //! Worker thread processes part of a batch of samples
    size_t Process(Track &track,
       unsigned chans,
@@ -61,7 +64,7 @@ public:
       float *dummybuf, //!< one scratch buffer
       size_t numSamples);
    //! Worker thread finishes a batch of samples
-   bool ProcessEnd();
+   bool ProcessEnd(bool active);
    bool IsActive() const noexcept;
    //! Main thread cleans up playback
    bool Finalize() noexcept;
@@ -102,11 +105,17 @@ private:
    //! Stateless effect object
    const EffectInstanceFactory *mPlugin{};
    
-   EffectSettings mSettings;
+   //! Updated immediately by Access::Set
+   NonInterfering<EffectSettings> mMainSettings;
 
    //! @}
 
    // Following are not copied
+
+   //! Updated with delay, but atomically, in the worker thread; skipped by the
+   //! copy constructor so that there isn't a race when pushing an Undo state
+   NonInterfering<EffectSettings> mWorkerSettings;
+
    wxString mParameters;  // Used only during deserialization
 
    //! Stateful instance made by the plug-in
@@ -114,7 +123,7 @@ private:
 
    // This must not be reset to nullptr while a worker thread is running.
    // In fact it is never yet reset to nullptr, before destruction.
-   // Destroy before mSettings:
+   // Destroy before mWorkerSettings:
    AtomicUniquePointer<AccessState> mpAccessState{ nullptr };
    
    size_t mCurrentProcessor{ 0 };
@@ -124,4 +133,3 @@ private:
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTSTATE_H__
-

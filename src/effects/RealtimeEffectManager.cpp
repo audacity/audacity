@@ -156,13 +156,9 @@ void RealtimeEffectManager::ProcessStart()
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   if (!mSuspended)
-   {
-      VisitAll([](RealtimeEffectState &state, bool bypassed){
-         if (!bypassed)
-            state.ProcessStart();
-      });
-   }
+   VisitAll([this](RealtimeEffectState &state, bool bypassed){
+      state.ProcessStart(!mSuspended && !bypassed);
+   });
 }
 
 //
@@ -245,13 +241,9 @@ void RealtimeEffectManager::ProcessEnd() noexcept
 
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   if (!mSuspended)
-   {
-      VisitAll([](RealtimeEffectState &state, bool bypassed){
-         if (!bypassed)
-            state.ProcessEnd();
-      });
-   }
+   VisitAll([this](RealtimeEffectState &state, bool bypassed){
+      state.ProcessEnd(!mSuspended && !bypassed);
+   });
 }
 
 void RealtimeEffectManager::VisitGroup(Track &leader, StateVisitor func)
@@ -334,9 +326,7 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 
-   auto pState = states.AddState(id);
-   if (!pState)
-      return nullptr;
+   auto pState = RealtimeEffectState::make_shared(id);
    auto &state = *pState;
    
    if (mActive)
@@ -356,6 +346,11 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
          state.AddTrack(*leader, chans, rate);
       }
    }
+
+   // Only now add the completed state to the list, under a lock guard
+   bool added = states.AddState(pState);
+   if (!added)
+      return nullptr;
 
    Publish({
       RealtimeEffectManagerMessage::Type::EffectAdded,
@@ -384,10 +379,11 @@ void RealtimeEffectManager::RemoveState(
    // Protect...
    std::lock_guard<std::mutex> guard(mLock);
 
+   // Remove the state from processing (under the lock guard) before finalizing
+   states.RemoveState(pState);
+
    if (mActive)
       pState->Finalize();
-
-   states.RemoveState(pState);
 
    Publish({
       RealtimeEffectManagerMessage::Type::EffectRemoved,
