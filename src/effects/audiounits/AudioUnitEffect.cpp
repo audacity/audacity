@@ -610,24 +610,17 @@ bool AudioUnitEffect::RealtimeSuspend()
    return true;
 }
 
-bool AudioUnitEffect::RealtimeResume() noexcept
+bool AudioUnitEffect::RealtimeResume()
 {
-return GuardedCall<bool>([&]{
    if (!BypassEffect(false))
-   {
       return false;
-   }
 
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
-   {
-      if (!mSlaves[i]->BypassEffect(false))
-      {
+   for (auto &slave: mSlaves) {
+      if (!slave->BypassEffect(false))
          return false;
-      }
    }
 
    return true;
-});
 }
 
 bool AudioUnitEffect::RealtimeProcessStart(EffectSettings &)

@@ -410,7 +410,7 @@ public:
     @return success
     Default implementation does nothing, returns true
     */
-   virtual bool RealtimeResume() noexcept;
+   virtual bool RealtimeResume();
 
    //! settings are possibly changed, since last call, by an asynchronous dialog
    /*!

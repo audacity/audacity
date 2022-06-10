@@ -76,7 +76,7 @@ bool StatefulEffectBase::Instance::RealtimeSuspend()
    return GetEffect().RealtimeSuspend();
 }
 
-bool StatefulEffectBase::Instance::RealtimeResume() noexcept
+bool StatefulEffectBase::Instance::RealtimeResume()
 {
    return GetEffect().RealtimeResume();
 }
@@ -146,7 +146,7 @@ bool StatefulEffectBase::RealtimeSuspend()
    return true;
 }
 
-bool StatefulEffectBase::RealtimeResume() noexcept
+bool StatefulEffectBase::RealtimeResume()
 {
    return true;
 }

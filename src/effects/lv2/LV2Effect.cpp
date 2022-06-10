@@ -1200,7 +1200,7 @@ bool LV2Effect::RealtimeSuspend()
    return true;
 }
 
-bool LV2Effect::RealtimeResume() noexcept
+bool LV2Effect::RealtimeResume()
 {
    mPositionSpeed = 1.0;
    mPositionFrame = 0.0;

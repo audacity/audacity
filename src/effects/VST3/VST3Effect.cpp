@@ -802,14 +802,11 @@ bool VST3Effect::RealtimeSuspend()
    return true;
 }
 
-bool VST3Effect::RealtimeResume() noexcept
+bool VST3Effect::RealtimeResume()
 {
-   return GuardedCall<bool>([this]()
-   {
-      for(auto& effect : mRealtimeGroupProcessors)
-         effect->mAudioProcessor->setProcessing(true);
-      return true;
-   });
+   for(auto& effect : mRealtimeGroupProcessors)
+      effect->mAudioProcessor->setProcessing(true);
+   return true;
 }
 
 bool VST3Effect::RealtimeProcessStart(EffectSettings &)
