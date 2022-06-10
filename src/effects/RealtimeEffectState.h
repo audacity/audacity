@@ -47,9 +47,6 @@ public:
    const PluginID& GetID() const noexcept;
    const EffectInstanceFactory *GetEffect();
 
-   bool Suspend();
-   bool Resume() noexcept;
-
    //! Main thread sets up for playback
    bool Initialize(double rate);
    //! Main thread sets up this state before adding it to lists
@@ -68,7 +65,7 @@ public:
    /*! @param running means no pause or deactivation of containing list */
    bool ProcessEnd(bool running);
 
-   //! To be tested only in the worker thread
+   //! Test only in the worker thread, or else when there is no processing
    bool IsActive() const noexcept;
 
    //! Main thread cleans up playback
@@ -133,6 +130,8 @@ private:
    
    size_t mCurrentProcessor{ 0 };
    std::unordered_map<Track *, size_t> mGroups;
+
+   bool mLastActive{};
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTSTATE_H__

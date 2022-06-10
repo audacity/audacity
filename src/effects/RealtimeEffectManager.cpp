@@ -121,11 +121,6 @@ void RealtimeEffectManager::Suspend()
 
    // Show that we aren't going to be doing anything
    SetSuspended(true);
-
-   // And make sure the effects don't either
-   VisitAll([](RealtimeEffectState &state, bool){
-      state.Suspend();
-   });
 }
 
 void RealtimeEffectManager::Resume() noexcept
@@ -137,12 +132,7 @@ void RealtimeEffectManager::Resume() noexcept
    if (!GetSuspended())
       return;
 
-   // Tell the effects to get ready for more action
-   VisitAll([](RealtimeEffectState &state, bool){
-      state.Resume();
-   });
-
-   // And we should too
+   // Get ready for more action
    SetSuspended(false);
 }
 

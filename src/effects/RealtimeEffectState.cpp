@@ -233,20 +233,11 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
    return mPlugin;
 }
 
-bool RealtimeEffectState::Suspend()
-{
-   return mInstance && mInstance->RealtimeSuspend();
-}
-
-bool RealtimeEffectState::Resume() noexcept
-{
-   return mInstance && mInstance->RealtimeResume();
-}
-
 bool RealtimeEffectState::Initialize(double rate)
 {
    //! copying settings in the main thread while worker isn't yet running
    mWorkerSettings = mMainSettings;
+   mLastActive = IsActive();
 
    if (!mPlugin)
       return false;
@@ -344,8 +335,21 @@ bool RealtimeEffectState::ProcessStart(bool running)
    // processing scope.
    if (auto pAccessState = TestAccessState())
       pAccessState->WorkerRead();
+   
+   // Detect transitions of activity state
+   bool active = IsActive() && running;
+   if (active != mLastActive) {
+      if (mInstance) {
+         bool success = active
+            ? mInstance->RealtimeResume()
+            : mInstance->RealtimeSuspend();
+         if (!success)
+            return false;
+      }
+      mLastActive = active;
+   }
 
-   if (!mInstance || !IsActive() || !running)
+   if (!mInstance || !active)
       return false;
 
    // Assuming we are in a processing scope, use the worker settings
