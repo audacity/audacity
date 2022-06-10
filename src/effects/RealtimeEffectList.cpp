@@ -182,19 +182,6 @@ bool RealtimeEffectList::HandleXMLTag(
    return (tag == XMLTag());
 }
 
-void RealtimeEffectList::HandleXMLEndTag(const std::string_view &tag)
-{
-   if (tag == XMLTag()) {
-      // Remove states that fail to load their effects
-      auto end = mStates.end();
-      // Assume deserialization is not happening concurrently with realtime
-      // effect processing; don't need a LockGuard
-      auto newEnd = std::remove_if( mStates.begin(), end,
-         [](const auto &pState){ return pState->GetEffect() == nullptr; });
-      mStates.erase(newEnd, end);
-   }
-}
-
 XMLTagHandler *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
 {
    if (tag == RealtimeEffectState::XMLTag()) {

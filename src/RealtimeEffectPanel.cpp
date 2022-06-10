@@ -290,6 +290,7 @@ namespace
 
       ThemedButtonWrapper<wxButton>* mChangeButton{nullptr};
       wxButton* mEnableButton{nullptr};
+      wxWindow *mOptionsButton{};
 
    public:
       RealtimeEffectControl(wxWindow* parent,
@@ -331,11 +332,28 @@ namespace
          sizer->Add(mEnableButton, 0, wxLEFT | wxCENTER, 5);
          sizer->Add(mChangeButton, 1, wxLEFT | wxCENTER, 5);
          sizer->Add(optionsButton, 0, wxLEFT | wxRIGHT | wxCENTER, 5);
+         mOptionsButton = optionsButton;
 
          auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
          vSizer->Add(sizer.release(), 0, wxUP | wxDOWN | wxEXPAND, 10);
 
          SetSizer(vSizer.release());
+      }
+
+      static const PluginDescriptor *GetPlugin(const PluginID &ID) {
+         auto desc = PluginManager::Get().GetPlugin(ID);
+         return desc;
+      }
+      
+      //! @pre `mEffectState != nullptr`
+      TranslatableString GetEffectName() const
+      {
+         const auto &ID = mEffectState->GetID();
+         const auto desc = GetPlugin(ID);
+         return desc
+            ? desc->GetSymbol().Msgid()
+            : XO("%s (missing)")
+               .Format(PluginManager::GetEffectNameFromID(ID).GET());
       }
 
       void SetEffect(AudacityProject& project,
@@ -345,9 +363,12 @@ namespace
          mProject = &project;
          mTrack = track;
          mEffectState = pState;
-         auto desc = PluginManager::Get().GetPlugin(mEffectState->GetID());
-
-         mChangeButton->SetTranslatableLabel(desc->GetSymbol().Msgid());
+         TranslatableString label;
+         if (pState)
+            label = GetEffectName();
+         mChangeButton->SetTranslatableLabel(label);
+         if (mOptionsButton)
+            mOptionsButton->Enable(pState && GetPlugin(pState->GetID()));
       }
 
       void RemoveFromList()
@@ -355,7 +376,7 @@ namespace
          if(mProject == nullptr || mEffectState == nullptr)
             return;
          
-         auto effectName = mEffectState->GetEffect()->GetName();
+         auto effectName = GetEffectName();
          //After AudioIO::RemoveState call this will be destroyed
          auto project = mProject.get();
          auto trackName = mTrack->GetName();
@@ -394,7 +415,7 @@ namespace
 
          if (changed)
          {
-            auto effectName = mEffectState->GetEffect()->GetName();
+            auto effectName = GetEffectName();
             ProjectHistory::Get(*mProject).PushState(
                //i18n-hint: undo history, first parameter - realtime effect name, second - track name
                XO("'%s' effect of '%s' modified").Format(effectName, mTrack->GetName()),
@@ -719,6 +740,7 @@ public:
       if(auto state = AudioIO::Get()->AddState(*mProject, &*mTrack, effectID))
       {
          auto effect = state->GetEffect();
+         assert(effect); // postcondition of AddState
          ProjectHistory::Get(*mProject).PushState(
             //i18n-hint: undo history, first parameter - realtime effect name, second - track name
             XO("'%s' added to the '%s' effect stack").Format(effect->GetName(), mTrack->GetName()),

@@ -80,6 +80,9 @@ public:
    //! Use only in the main thread
    //! Returns null if no such effect was found.
    //! Sends Insert message on success.
+   /*!
+    @post result: `!result || result->GetEffect() != nullptr`
+    */
    std::shared_ptr<RealtimeEffectState> AddState(const PluginID &id);
    //! Use only in the main thread
    //! On success sends Remove message.
@@ -105,9 +108,6 @@ public:
    static const std::string &XMLTag();
    bool HandleXMLTag(
       const std::string_view &tag, const AttributesList &attrs) override;
-
-   //! Use only in the main thread.  May remove a failed state
-   void HandleXMLEndTag(const std::string_view &tag) override;
 
    //! Use only in the main thread.  May add a state while deserializing
    XMLTagHandler *HandleXMLChild(const std::string_view &tag) override;

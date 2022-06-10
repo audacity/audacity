@@ -414,6 +414,9 @@ public:
    static AudioIO *Get();
 
    //! Forwards to RealtimeEffectManager::AddState with proper init scope
+   /*!
+    @post result: `!result || result->GetEffect() != nullptr`
+    */
    std::shared_ptr<RealtimeEffectState>
    AddState(AudacityProject &project, Track *pTrack, const PluginID & id);
 
