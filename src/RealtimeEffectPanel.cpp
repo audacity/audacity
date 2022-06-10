@@ -287,6 +287,7 @@ namespace
       wxWeakRef<AudacityProject> mProject;
       std::shared_ptr<Track> mTrack;
       std::shared_ptr<RealtimeEffectState> mEffectState;
+      std::shared_ptr<EffectSettingsAccess> mSettingsAccess;
 
       ThemedButtonWrapper<wxButton>* mChangeButton{nullptr};
       wxButton* mEnableButton{nullptr};
@@ -309,10 +310,23 @@ namespace
 
          //On/off button
          auto enableButton = safenew ThemedButtonWrapper<wxBitmapButton>(this, wxID_ANY, wxBitmap{}, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-         enableButton->SetBitmapIndex(bmpEffectOff);
+         enableButton->SetBitmapIndex(bmpEffectOn);
          enableButton->SetBackgroundColorIndex(clrEffectListItemBackground);
          enableButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnEnableButtonClicked, this);
          mEnableButton = enableButton;
+
+         enableButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+            auto pButton =
+               static_cast<ThemedButtonWrapper<wxBitmapButton>*>(mEnableButton);
+            auto index = pButton->GetBitmapIndex();
+            bool wasEnabled = (index == bmpEffectOn);
+            if (mSettingsAccess) {
+               mSettingsAccess->ModifySettings([&](EffectSettings &settings){
+                  settings.extra.SetActive(!wasEnabled);
+               });
+            }
+            pButton->SetBitmapIndex(wasEnabled ? bmpEffectOff : bmpEffectOn);
+         });
 
          //Central button with effect name
          mChangeButton = safenew ThemedButtonWrapper<wxButton>(this, wxID_ANY);
@@ -364,8 +378,12 @@ namespace
          mTrack = track;
          mEffectState = pState;
          TranslatableString label;
-         if (pState)
+         if (pState) {
             label = GetEffectName();
+            mSettingsAccess = pState->GetAccess();
+         }
+         else
+            mSettingsAccess.reset();
          mChangeButton->SetTranslatableLabel(label);
          if (mOptionsButton)
             mOptionsButton->Enable(pState && GetPlugin(pState->GetID()));
