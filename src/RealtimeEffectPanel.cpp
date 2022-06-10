@@ -728,6 +728,12 @@ public:
       }
    }
 
+   void EnableEffects(bool enable)
+   {
+      if (mTrack)
+         RealtimeEffectList::Get(*mTrack).SetActive(enable);
+   }
+
    void ReloadEffectsList()
    {
       wxWindowUpdateLocker freeze(this);
@@ -804,10 +810,21 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
       auto toggleEffects = safenew ThemedButtonWrapper<wxBitmapButton>(header, wxID_ANY, wxBitmap{}, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-      toggleEffects->SetBitmapIndex(bmpEffectOff);
+      toggleEffects->SetBitmapIndex(bmpEffectOn);
       toggleEffects->SetBackgroundColorIndex(clrMedium);
       mToggleEffects = toggleEffects;
 
+      toggleEffects->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+         auto pButton =
+            static_cast<ThemedButtonWrapper<wxBitmapButton>*>(mToggleEffects);
+         auto index = pButton->GetBitmapIndex();
+         bool wasEnabled = (index == bmpEffectOn);
+         if (mEffectList) {
+            mEffectList->EnableEffects(!wasEnabled);
+         }
+         pButton->SetBitmapIndex(wasEnabled ? bmpEffectOff : bmpEffectOn);
+      });
+   
       hSizer->Add(toggleEffects, 0, wxSTRETCH_NOT | wxALIGN_CENTER | wxLEFT, 5);
       {
          auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
