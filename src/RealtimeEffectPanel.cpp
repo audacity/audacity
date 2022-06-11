@@ -558,7 +558,7 @@ public:
       mAddEffectHint = addEffectHint;
 
       //TODO: set link
-      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(this, wxID_ANY, wxEmptyString, wxEmptyString);
+      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(this, wxID_ANY, "x", "https://www.audacityteam.org");
       //i18n-hint: Hyperlink to the effects stack panel tutorial video
       addEffectTutorialLink->SetTranslatableLabel(XO("Watch video"));
       mAddEffectTutorialLink = addEffectTutorialLink;
