@@ -33,6 +33,23 @@ xargs xgettext \
 --package-version='3.0.3' \
 --msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
 --add-location=file -L Lisp -j -o audacity.pot 
+echo ";; Adding resource files to audacity.pot"
+for path in ../res ; do 
+   find $path -name \*.xml 
+done | \
+sed -E 's/\.\.\///g' |\
+xargs xgettext \
+--its=res.its \
+--no-wrap \
+--default-domain=audacity \
+--directory=.. \
+--add-location=file  \
+--copyright-holder='Audacity Team' \
+--package-name="audacity" \
+--package-version='3.0.3' \
+--msgid-bugs-address="audacity-translation@lists.sourceforge.net" \
+-j -o audacity.pot 
+
 if test "${AUDACITY_ONLY_POT:-}" = 'y'; then
     return 0
 fi

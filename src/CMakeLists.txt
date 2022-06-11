@@ -1410,6 +1410,14 @@ else()
    target_link_libraries(findlib ${CMAKE_DL_LIBS})
 endif()
 
+add_custom_command(
+   TARGET
+      ${TARGET} POST_BUILD
+   COMMAND
+      ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/res" "${_DEST}/res"
+)
+
+
 if(CRASH_REPORT_URL)
     list(APPEND DEFINES PRIVATE -DCRASH_REPORT_URL="${CRASH_REPORT_URL}")
 endif()
