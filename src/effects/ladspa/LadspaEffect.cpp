@@ -882,7 +882,7 @@ struct LadspaEffect::Instance
       EffectSettings &settings, unsigned numChannels, float sampleRate)
    override;
    bool RealtimeSuspend() override;
-   bool RealtimeResume() noexcept override;
+   bool RealtimeResume() override;
    bool RealtimeProcessStart(EffectSettings &settings) override;
    size_t RealtimeProcess(size_t group, EffectSettings &settings,
       const float *const *inBuf, float *const *outBuf, size_t numSamples)
@@ -1017,7 +1017,7 @@ bool LadspaEffect::Instance::RealtimeSuspend()
    return true;
 }
 
-bool LadspaEffect::Instance::RealtimeResume() noexcept
+bool LadspaEffect::Instance::RealtimeResume()
 {
    return true;
 }

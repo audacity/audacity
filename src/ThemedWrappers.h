@@ -100,6 +100,11 @@ public:
          theTheme.Subscribe(*this, &ThemedButtonWrapper::OnThemeChange);
    }
 
+   int GetBitmapIndex() const
+   {
+      return mBitmapIndex;
+   }
+
    void SetBitmapIndex(int index)
    {
       mBitmapIndex = index;

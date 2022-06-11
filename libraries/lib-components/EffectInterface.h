@@ -86,10 +86,14 @@ public:
    using Counter = unsigned char;
    Counter GetCounter() const { return mCounter; }
    void SetCounter(Counter value) { mCounter = value; }
+
+   bool GetActive() const { return mActive; }
+   void SetActive(bool value) { mActive = value; }
 private:
    NumericFormatSymbol mDurationFormat{};
    double mDuration{}; //!< @invariant non-negative
    Counter mCounter{ 0 };
+   bool mActive{ true };
 };
 
 //! Externalized state of a plug-in
@@ -406,7 +410,7 @@ public:
     @return success
     Default implementation does nothing, returns true
     */
-   virtual bool RealtimeResume() noexcept;
+   virtual bool RealtimeResume();
 
    //! settings are possibly changed, since last call, by an asynchronous dialog
    /*!

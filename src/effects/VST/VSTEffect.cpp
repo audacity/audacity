@@ -1164,16 +1164,14 @@ bool VSTEffect::RealtimeSuspend()
    return true;
 }
 
-bool VSTEffect::RealtimeResume() noexcept
+bool VSTEffect::RealtimeResume()
 {
-return GuardedCall<bool>([&]{
    PowerOn();
 
    for (const auto &slave : mSlaves)
       slave->PowerOn();
 
    return true;
-});
 }
 
 bool VSTEffect::RealtimeProcessStart(EffectSettings &)

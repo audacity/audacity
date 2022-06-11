@@ -132,7 +132,7 @@ bool EffectInstance::RealtimeSuspend()
    return true;
 }
 
-bool EffectInstance::RealtimeResume() noexcept
+bool EffectInstance::RealtimeResume()
 {
    return true;
 }

@@ -47,15 +47,15 @@ public:
    const PluginID& GetID() const noexcept;
    const EffectInstanceFactory *GetEffect();
 
-   bool Suspend();
-   bool Resume() noexcept;
-
+   bool EnsureInstance(double rate);
+   
    //! Main thread sets up for playback
    bool Initialize(double rate);
    //! Main thread sets up this state before adding it to lists
    bool AddTrack(Track &track, unsigned chans, float rate);
    //! Worker thread begins a batch of samples
-   bool ProcessStart(bool active);
+   /*! @param running means no pause or deactivation of containing list */
+   bool ProcessStart(bool running);
    //! Worker thread processes part of a batch of samples
    size_t Process(Track &track,
       unsigned chans,
@@ -64,8 +64,12 @@ public:
       float *dummybuf, //!< one scratch buffer
       size_t numSamples);
    //! Worker thread finishes a batch of samples
-   bool ProcessEnd(bool active);
+   /*! @param running means no pause or deactivation of containing list */
+   bool ProcessEnd(bool running);
+
+   //! Test only in the worker thread, or else when there is no processing
    bool IsActive() const noexcept;
+
    //! Main thread cleans up playback
    bool Finalize() noexcept;
 
@@ -129,7 +133,7 @@ private:
    size_t mCurrentProcessor{ 0 };
    std::unordered_map<Track *, size_t> mGroups;
 
-   std::atomic<int> mSuspendCount{ 1 };    // Effects are initially suspended
+   bool mLastActive{};
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTSTATE_H__

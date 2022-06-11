@@ -79,7 +79,7 @@ const RealtimeEffectList &RealtimeEffectList::Get(const Track &track)
 void RealtimeEffectList::Visit(StateVisitor func)
 {
    for (auto &state : mStates)
-      func(*state, !state->IsActive());
+      func(*state, IsActive());
 }
 
 bool
@@ -176,10 +176,19 @@ const std::string &RealtimeEffectList::XMLTag()
    return result;
 }
 
+static constexpr auto activeAttribute = "active";
+
 bool RealtimeEffectList::HandleXMLTag(
-   const std::string_view &tag, const AttributesList &)
+   const std::string_view &tag, const AttributesList &attrs)
 {
-   return (tag == XMLTag());
+   if (tag == XMLTag()) {
+      for (auto &[attr, value] : attrs) {
+         if (attr == activeAttribute)
+            SetActive(value.Get<bool>());
+      }
+      return true;
+   }
+   return false;
 }
 
 XMLTagHandler *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
@@ -197,6 +206,7 @@ void RealtimeEffectList::WriteXML(XMLWriter &xmlFile) const
       return;
 
    xmlFile.StartTag(XMLTag());
+   xmlFile.WriteAttr(activeAttribute, IsActive());
 
    for (const auto & state : mStates)
       state->WriteXML(xmlFile);
@@ -208,6 +218,16 @@ void RealtimeEffectList::RestoreUndoRedoState(AudacityProject &project) noexcept
 {
    // Restore per-project states
    Set(project, shared_from_this());
+}
+
+bool RealtimeEffectList::IsActive() const
+{
+   return mActive.load(std::memory_order_relaxed);
+}
+
+void RealtimeEffectList::SetActive(bool value)
+{
+   (LockGuard{ mLock }, mActive.store(value, std::memory_order_relaxed));
 }
 
 static UndoRedoExtensionRegistry::Entry sEntry {

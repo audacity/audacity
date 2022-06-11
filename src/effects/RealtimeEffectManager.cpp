@@ -112,68 +112,49 @@ void RealtimeEffectManager::Finalize() noexcept
 
 void RealtimeEffectManager::Suspend()
 {
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
-
    // Already suspended...bail
-   if (mSuspended)
+   if (GetSuspended())
       return;
 
    // Show that we aren't going to be doing anything
-   mSuspended = true;
-
-   // And make sure the effects don't either
-   VisitAll([](RealtimeEffectState &state, bool){
-      state.Suspend();
-   });
+   // (set atomically, before next ProcessingScope)
+   SetSuspended(true);
 }
 
 void RealtimeEffectManager::Resume() noexcept
 {
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
-
    // Already running...bail
-   if (!mSuspended)
+   if (!GetSuspended())
       return;
 
-   // Tell the effects to get ready for more action
-   VisitAll([](RealtimeEffectState &state, bool){
-      state.Resume();
-   });
-
-   // And we should too
-   mSuspended = false;
+   // Get ready for more action
+   // (set atomically, before next ProcessingScope)
+   SetSuspended(false);
 }
 
 //
 // This will be called in a different thread than the main GUI thread.
 //
-void RealtimeEffectManager::ProcessStart()
+void RealtimeEffectManager::ProcessStart(bool suspended)
 {
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
-
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   VisitAll([this](RealtimeEffectState &state, bool bypassed){
-      state.ProcessStart(!mSuspended && !bypassed);
+   VisitAll([suspended](RealtimeEffectState &state, bool listIsActive){
+      state.ProcessStart(!suspended && listIsActive);
    });
 }
 
 //
-// This will be called in a different thread than the main GUI thread.
+
+// This will be called in a thread other than the main GUI thread.
 //
-size_t RealtimeEffectManager::Process(Track &track,
+size_t RealtimeEffectManager::Process(bool suspended, Track &track,
    float *const *buffers, float *const *scratch,
    size_t numSamples)
 {
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
-
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended, so allow the samples to pass as-is.
-   if (mSuspended)
+   if (suspended)
       return numSamples;
 
    auto chans = mChans[&track];
@@ -201,9 +182,9 @@ size_t RealtimeEffectManager::Process(Track &track,
    // Tracks how many processors were called
    size_t called = 0;
    VisitGroup(track,
-      [&](RealtimeEffectState &state, bool bypassed)
+      [&](RealtimeEffectState &state, bool listIsActive)
       {
-         if (bypassed)
+         if (!(listIsActive && state.IsActive()))
             return;
 
          state.Process(track, chans, ibuf, obuf, scratch[chans], numSamples);
@@ -234,15 +215,12 @@ size_t RealtimeEffectManager::Process(Track &track,
 //
 // This will be called in a different thread than the main GUI thread.
 //
-void RealtimeEffectManager::ProcessEnd() noexcept
+void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
 {
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
-
    // Can be suspended because of the audio stream being paused or because effects
    // have been suspended.
-   VisitAll([this](RealtimeEffectState &state, bool bypassed){
-      state.ProcessEnd(!mSuspended && !bypassed);
+   VisitAll([suspended](RealtimeEffectState &state, bool listIsActive){
+      state.ProcessEnd(!suspended && listIsActive);
    });
 }
 
@@ -323,8 +301,6 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
       else
          return nullptr;
    }
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
 
    auto pState = RealtimeEffectState::make_shared(id);
    auto &state = *pState;
@@ -376,8 +352,6 @@ void RealtimeEffectManager::RemoveState(
       else
          return;
    }
-   // Protect...
-   std::lock_guard<std::mutex> guard(mLock);
 
    // Remove the state from processing (under the lock guard) before finalizing
    states.RemoveState(pState);
@@ -391,7 +365,10 @@ void RealtimeEffectManager::RemoveState(
    });
 }
 
+// Where is this used?
+#if 0
 auto RealtimeEffectManager::GetLatency() const -> Latency
 {
-   return mLatency;
+   return mLatency; // should this be atomic?
 }
+#endif
