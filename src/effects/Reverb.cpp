@@ -149,6 +149,8 @@ struct EffectReverb::Validator
 
 #undef SpinSliderHandlers
 
+   void OnCheckbox(wxCommandEvent &evt);
+
 };
 
 
@@ -487,7 +489,8 @@ void EffectReverb::Validator::PopulateOrExchange(ShuttleGui & S)
    S.StartHorizontalLay(wxCENTER, false);
    {
       mWetOnlyC =
-      S.AddCheckBox(XXO("Wet O&nly"), WetOnly.def);      
+      S.AddCheckBox(XXO("Wet O&nly"), WetOnly.def);
+      BindTo(*mWetOnlyC, wxEVT_CHECKBOX, &Validator::OnCheckbox);
    }
    S.EndHorizontalLay();
 
@@ -550,5 +553,9 @@ SpinSliderHandlers(WetGain)
 SpinSliderHandlers(DryGain)
 SpinSliderHandlers(StereoWidth)
 
-#undef SpinSliderHandlers
+void EffectReverb::Validator::OnCheckbox(wxCommandEvent &evt)
+{
+   ValidateUI();
+}
 
+#undef SpinSliderHandlers
