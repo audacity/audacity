@@ -1606,5 +1606,6 @@ static WaveTrackIORegistry::ObjectReaderEntry waveTrackAccessor {
 
 static WaveTrackIORegistry::ObjectWriterEntry waveTrackWriter {
 [](const WaveTrack &track, auto &xmlFile) {
-   RealtimeEffectList::Get(track).WriteXML(xmlFile);
+   if (track.IsLeader())
+      RealtimeEffectList::Get(track).WriteXML(xmlFile);
 } };
