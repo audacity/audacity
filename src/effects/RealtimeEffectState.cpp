@@ -233,35 +233,45 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
    return mPlugin;
 }
 
+bool RealtimeEffectState::EnsureInstance(double rate)
+{
+   if (!mInstance) {
+      //! copying settings in the main thread while worker isn't yet running
+      mWorkerSettings = mMainSettings;
+      mLastActive = IsActive();
+      
+      mInstance = mPlugin->MakeInstance();
+      if (!mInstance)
+         return false;
+      
+      mInstance->SetSampleRate(rate);
+      
+      // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
+      // number was important
+      mInstance->SetBlockSize(512);
+      
+      return mInstance->RealtimeInitialize(mMainSettings);
+   }
+   mInstance->SetSampleRate(rate);
+   return true;
+}
+
 bool RealtimeEffectState::Initialize(double rate)
 {
-   //! copying settings in the main thread while worker isn't yet running
-   mWorkerSettings = mMainSettings;
-   mLastActive = IsActive();
-
    if (!mPlugin)
-      return false;
-   mInstance = mPlugin->MakeInstance();
-   if (!mInstance)
       return false;
 
    mCurrentProcessor = 0;
    mGroups.clear();
-   mInstance->SetSampleRate(rate);
-
-   // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
-   // number was important
-   mInstance->SetBlockSize(512);
-
-   return mInstance->RealtimeInitialize(mMainSettings);
+   return EnsureInstance(rate);
 }
 
 //! Set up processors to be visited repeatedly in Process.
 /*! The iteration over channels in AddTrack and Process must be the same */
 bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
 {
-   // First update worker settings, assuming we are not in a processing scope
-   mWorkerSettings = mMainSettings;
+   if (!EnsureInstance(rate))
+      return false;
 
    if (!mPlugin || !mInstance)
       return false;

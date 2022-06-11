@@ -47,6 +47,8 @@ public:
    const PluginID& GetID() const noexcept;
    const EffectInstanceFactory *GetEffect();
 
+   bool EnsureInstance(double rate);
+   
    //! Main thread sets up for playback
    bool Initialize(double rate);
    //! Main thread sets up this state before adding it to lists
