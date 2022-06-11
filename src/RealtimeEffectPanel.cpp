@@ -17,6 +17,7 @@
 #include <wx/menu.h>
 #include <wx/wupdlock.h>
 #include <wx/bmpbuttn.h>
+#include <wx/hyperlink.h>
 
 #ifdef __WXMSW__
 #include <wx/dcbuffer.h>
@@ -173,8 +174,6 @@ namespace
          if(auto parent = GetParent())
          {
             wxWindowUpdateLocker freeze(this);
-            parent->Layout();
-
             PostDragEvent(parent, EVT_MOVABLE_CONTROL_DRAG_FINISHED);
          }
          mDragging = false;
@@ -571,6 +570,8 @@ class RealtimeEffectListWindow : public wxScrolledWindow
    wxWeakRef<AudacityProject> mProject;
    std::shared_ptr<Track> mTrack;
    wxButton* mAddEffect{nullptr};
+   wxStaticText* mAddEffectHint{nullptr};
+   wxWindow* mAddEffectTutorialLink{nullptr};
    wxWindow* mEffectListContainer{nullptr};
 
    Observer::Subscription mEffectListItemMovedSubscription;
@@ -584,6 +585,7 @@ public:
                      const wxString& name = wxPanelNameStr)
       : wxScrolledWindow(parent, winid, pos, size, style, name)
    {
+      Bind(wxEVT_SIZE, &RealtimeEffectListWindow::OnSizeChanged, this);
 #ifdef __WXMSW__
       //Fixes flickering on redraw
       wxScrolledWindow::SetDoubleBuffered(true);
@@ -591,9 +593,20 @@ public:
       auto rootSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
       auto addEffect = safenew ThemedButtonWrapper<wxButton>(this, wxID_ANY);
-      addEffect->SetTranslatableLabel(XO("Add new effect"));
+      addEffect->SetTranslatableLabel(XO("Add effect"));
       addEffect->Bind(wxEVT_BUTTON, &RealtimeEffectListWindow::OnAddEffectClicked, this);
       mAddEffect = addEffect;
+
+      auto addEffectHint = safenew ThemedWindowWrapper<wxStaticText>(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE);
+      //Workaround: text is set in the OnSizeChange
+      addEffectHint->SetForegroundColorIndex(clrTrackPanelText);
+      mAddEffectHint = addEffectHint;
+
+      //TODO: set link
+      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(this, wxID_ANY, "x", "https://www.audacityteam.org");
+      //i18n-hint: Hyperlink to the effects stack panel tutorial video
+      addEffectTutorialLink->SetTranslatableLabel(XO("Watch video"));
+      mAddEffectTutorialLink = addEffectTutorialLink;
 
       auto effectListContainer = safenew ThemedWindowWrapper<wxWindow>(this, wxID_ANY);
       effectListContainer->SetBackgroundColorIndex(clrMedium);
@@ -607,16 +620,14 @@ public:
       dropHintLine->Hide();
 
       rootSizer->Add(mEffectListContainer, 0, wxEXPAND | wxBOTTOM, 10);
-      rootSizer->Add(addEffect, 0, wxLEFT | wxRIGHT | wxEXPAND, 30);
+      rootSizer->Add(addEffect, 0, wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, 20);
+      rootSizer->Add(addEffectHint, 0, wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, 20);
+      rootSizer->Add(addEffectTutorialLink, 0, wxLEFT | wxRIGHT | wxEXPAND, 20);
 
       SetSizer(rootSizer.release());
 
       Bind(EVT_MOVABLE_CONTROL_DRAG_STARTED, [dropHintLine](const MovableControlEvent& event)
       {
-         dropHintLine->Show();
-         dropHintLine->Raise();
-         //Make it zero-sized until first EVT_MOVABLE_CONTROL_DRAG_POSITION is triggered
-         dropHintLine->SetSize({0, 0});
          if(auto window = dynamic_cast<wxWindow*>(event.GetEventObject()))
             window->Raise();
       });
@@ -630,12 +641,20 @@ public:
          if(event.GetSourceIndex() == event.GetTargetIndex())
          {
             //do not display hint line if position didn't change
-            dropHintLine->SetSize({0, 0});
+            dropHintLine->Hide();
             return;
          }
 
+         if(!dropHintLine->IsShown())
+         {
+            dropHintLine->Show();
+            dropHintLine->Raise();
+            if(auto window = dynamic_cast<wxWindow*>(event.GetEventObject()))
+               window->Raise();
+         }
+
          auto item = sizer->GetItem(event.GetTargetIndex());
-         dropHintLine->SetSize(item->GetSize().x, 3);
+         dropHintLine->SetSize(item->GetSize().x, DropHintLineHeight);
 
          if(event.GetTargetIndex() > event.GetSourceIndex())
             dropHintLine->SetPosition(item->GetRect().GetBottomLeft() - wxPoint(0, DropHintLineHeight));
@@ -670,6 +689,22 @@ public:
       SetScrollRate(0, 20);
    }
 
+   void OnSizeChanged(wxSizeEvent& event)
+   {
+      if(auto sizerItem = GetSizer()->GetItem(mAddEffectHint))
+      {
+         //We need to wrap the text whenever panel width changes and adjust widget height
+         //so that text is fully visible, but there is no height-for-width layout algorithm
+         //in wxWidgets yet, so for now we just do it manually
+
+         //Restore original text, because 'Wrap' will replace it with wrapped one
+         mAddEffectHint->SetLabel(_("Realtime effects are non-destructive and can be changed at any time."));
+         mAddEffectHint->Wrap(GetClientSize().x - sizerItem->GetBorder() * 2);
+         mAddEffectHint->InvalidateBestSize();
+      }
+      event.Skip();
+   }
+
    void OnEffectListItemChange(const RealtimeEffectListMessage& msg)
    {
       wxWindowUpdateLocker freeze(this);
@@ -697,8 +732,13 @@ public:
          auto sizer = mEffectListContainer->GetSizer();
          auto item = sizer->GetItem(msg.srcIndex)->GetWindow();
          item->Destroy();
+#ifdef __WXGTK__
+         // See comment in ReloadEffectsList
+         if(sizer->IsEmpty())
+            mEffectListContainer->Hide();
+#endif
       }
-      Layout();
+      SendSizeEventToParent();
    }
 
    void ResetTrack()
@@ -741,9 +781,8 @@ public:
       mEffectListContainer->GetSizer()->Clear(true);
 
 #ifdef __WXGTK__
-      //Workaround for GTK: if none children were added to the container,
-      //underlying gtk widget size will not be updated, resulting in widget
-      //overlap.
+      //Workaround for GTK: Underlying GTK widget does not update
+      //its size when wxWindow size is set to zero
       if(!mTrack || RealtimeEffectList::Get(*mTrack).GetStatesCount() == 0)
          mEffectListContainer->Hide();
 #endif
@@ -755,7 +794,7 @@ public:
             InsertEffectRow(i, effects.GetStateAt(i));
       }
       mAddEffect->Enable(!!mTrack);
-      Layout();
+      SendSizeEventToParent();
    }
 
    void OnAddEffectClicked(const wxCommandEvent& event)
@@ -829,7 +868,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
       {
          auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-         auto headerText = safenew ThemedWindowWrapper<wxStaticText>(header, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
+         auto headerText = safenew ThemedWindowWrapper<wxStaticText>(header, wxID_ANY, wxEmptyString);
          headerText->SetFont(wxFont(wxFontInfo().Bold()));
          headerText->SetTranslatableLabel(XO("Realtime Effects"));
          headerText->SetForegroundColorIndex(clrTrackPanelText);
@@ -862,7 +901,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
    vSizer->Add(effectList, 1, wxEXPAND);
    mEffectList = effectList;
 
-   SetSizer(vSizer.release());
+   SetSizerAndFit(vSizer.release());
 }
 
 void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_ptr<Track>& track)
