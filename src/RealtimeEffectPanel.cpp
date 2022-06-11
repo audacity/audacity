@@ -708,6 +708,21 @@ public:
 
    void OnEffectListItemChange(const RealtimeEffectListMessage& msg)
    {
+      const auto insertItem = [this, &msg](){
+         auto& effects = RealtimeEffectList::Get(*mTrack);
+         InsertEffectRow(msg.srcIndex, effects.GetStateAt(msg.srcIndex));
+      };
+      const auto removeItem = [this, &msg](){
+         auto sizer = mEffectListContainer->GetSizer();
+         auto item = sizer->GetItem(msg.srcIndex)->GetWindow();
+         item->Destroy();
+#ifdef __WXGTK__
+         // See comment in ReloadEffectsList
+         if(sizer->IsEmpty())
+            mEffectListContainer->Hide();
+#endif
+      };
+
       wxWindowUpdateLocker freeze(this);
       if(msg.type == RealtimeEffectListMessage::Type::Move)
       {
@@ -725,19 +740,16 @@ public:
       }
       else if(msg.type == RealtimeEffectListMessage::Type::Insert)
       {
-         auto& effects = RealtimeEffectList::Get(*mTrack);
-         InsertEffectRow(msg.srcIndex, effects.GetStateAt(msg.srcIndex));
+         insertItem();
+      }
+      else if(msg.type == RealtimeEffectListMessage::Type::Replace)
+      {
+         removeItem();
+         insertItem();
       }
       else if(msg.type == RealtimeEffectListMessage::Type::Remove)
       {
-         auto sizer = mEffectListContainer->GetSizer();
-         auto item = sizer->GetItem(msg.srcIndex)->GetWindow();
-         item->Destroy();
-#ifdef __WXGTK__
-         // See comment in ReloadEffectsList
-         if(sizer->IsEmpty())
-            mEffectListContainer->Hide();
-#endif
+         removeItem();
       }
       SendSizeEventToParent();
    }

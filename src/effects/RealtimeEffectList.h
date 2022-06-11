@@ -29,6 +29,7 @@ struct RealtimeEffectListMessage
    enum class Type
    {
       Insert,///<New effect item was added to the list at srcIndex position
+      Replace,///<Effect item was replaced with a new item at srcIndex position
       Remove,///<Effect item was removed from the list at srcIndex position
       Move ///<Item position has changed, from srcIndex to dstIndex
    };
@@ -92,6 +93,14 @@ public:
     @post result: `!result || pState->GetEffect() != nullptr`
     */
    bool AddState(std::shared_ptr<RealtimeEffectState> pState);
+
+   //! Use only in the main thread
+   //! Returns true for success.
+   //! Sends Insert message on success.
+   /*!
+    @post result: `!result || pState->GetEffect() != nullptr`
+    */
+   bool ReplaceState(size_t index, std::shared_ptr<RealtimeEffectState> pState);
 
    //! Use only in the main thread
    //! On success sends Remove message.
