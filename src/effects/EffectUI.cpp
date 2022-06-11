@@ -1234,7 +1234,7 @@ void EffectUIHost::InitializeRealtime()
          if (!(pAccess->IsSameAs(*mpAccess)))
             // Decorate the given access object
             mpAccess = std::make_shared<EffectSettingsAccessTee>(
-               *pAccess, mpAccess);
+               *mpAccess, pAccess);
       }
       /*
       ProjectHistory::Get(mProject).PushState(
