@@ -57,6 +57,8 @@ public:
    static const RealtimeEffectManager & Get(const AudacityProject &project);
 
    // Realtime effect processing
+
+   //! To be called only from main thread
    bool IsActive() const noexcept;
    void Suspend();
    void Resume() noexcept;
@@ -156,7 +158,7 @@ private:
    void SetSuspended(bool value)
       { mSuspended.store(value, std::memory_order_relaxed); }
 
-   std::atomic<bool> mActive{ false };
+   bool mActive{ false };
 
    // This member is mutated only by Initialize(), AddTrack(), Finalize()
    // which are to be called only while there is no playback
