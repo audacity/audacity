@@ -69,7 +69,7 @@ void RealtimeEffectManager::Initialize(
    });
 
    // Leave suspended state
-   Resume();
+   SetSuspended(false);
 }
 
 void RealtimeEffectManager::AddTrack(
@@ -93,7 +93,7 @@ void RealtimeEffectManager::AddTrack(
 void RealtimeEffectManager::Finalize() noexcept
 {
    // Reenter suspended state
-   Suspend();
+   SetSuspended(true);
 
    // Assume it is now safe to clean up
    mLatency = std::chrono::microseconds(0);
@@ -107,28 +107,6 @@ void RealtimeEffectManager::Finalize() noexcept
 
    // No longer active
    mActive = false;
-}
-
-void RealtimeEffectManager::Suspend()
-{
-   // Already suspended...bail
-   if (GetSuspended())
-      return;
-
-   // Show that we aren't going to be doing anything
-   // (set atomically, before next ProcessingScope)
-   SetSuspended(true);
-}
-
-void RealtimeEffectManager::Resume() noexcept
-{
-   // Already running...bail
-   if (!GetSuspended())
-      return;
-
-   // Get ready for more action
-   // (set atomically, before next ProcessingScope)
-   SetSuspended(false);
 }
 
 //

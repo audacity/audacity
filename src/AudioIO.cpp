@@ -367,14 +367,6 @@ void AudioIO::RemoveState(AudacityProject &project,
    RealtimeEffectManager::Get(project).RemoveState(pInit, pTrack, pState);
 }
 
-RealtimeEffects::SuspensionScope AudioIO::SuspensionScope()
-{
-   if (mpTransportState && mpTransportState->mpRealtimeInitialization)
-      return RealtimeEffects::SuspensionScope{
-         *mpTransportState->mpRealtimeInitialization, mOwningProject };
-   return {};
-}
-
 void AudioIO::SetMixer(int inputSource, float recordVolume,
                        float playbackVolume)
 {
@@ -1567,11 +1559,10 @@ void AudioIO::SetPaused(bool state)
    if (state != IsPaused())
    {
       if (auto pOwningProject = mOwningProject.lock()) {
+         // The realtime effects manager may remain "active" but becomes
+         // "suspended" or "resumed".
          auto &em = RealtimeEffectManager::Get(*pOwningProject);
-         if (state)
-            em.Suspend();
-         else
-            em.Resume();
+         em.SetSuspended(state);
       }
    }
 

@@ -55,7 +55,6 @@ typedef int PaError;
 
 namespace RealtimeEffects {
    class ProcessingScope;
-   class SuspensionScope;
 }
 
 bool ValidateDeviceNames();
@@ -426,8 +425,6 @@ public:
    //! Forwards to RealtimeEffectManager::RemoveState with proper init scope
    void RemoveState(AudacityProject &project,
       Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState);
-
-   RealtimeEffects::SuspensionScope SuspensionScope();
 
    /** \brief Start up Portaudio for capture and recording as needed for
     * input monitoring and software playthrough only

@@ -468,6 +468,9 @@ wxPanel *EffectUIHost::BuildButtonBar(wxWindow *parent)
 
 bool EffectUIHost::Initialize()
 {
+   // Put the checkbox for realtime into the correct initial state
+   mEnabled = !RealtimeEffectManager::Get(mProject).GetSuspended();
+
    // Build a "host" dialog, framing a panel that the client fills in.
    // The frame includes buttons to preview, apply, load and save presets, etc.
    EffectPanel *w {};
@@ -580,14 +583,9 @@ void EffectUIHost::OnPaint(wxPaintEvent & WXUNUSED(evt))
 void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
 {
    DoCancel();
-   
    CleanupRealtime();
-   
    Hide();
-
-   mSuspensionScope.reset();
    mpValidator.reset();
-
    Destroy();
 #if wxDEBUG_LEVEL
    mClosed = true;
@@ -805,13 +803,9 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
 
 void EffectUIHost::OnEnable(wxCommandEvent & WXUNUSED(evt))
 {
-   mEnabled = mEnableCb->GetValue();
-   
-   if (mEnabled)
-      mSuspensionScope.reset();
-   else
-      mSuspensionScope.emplace(AudioIO::Get()->SuspensionScope());
-
+   // Change the suspension state of realtime processing, though it remains
+   // "active."
+   RealtimeEffectManager::Get(mProject).SetSuspended(!mEnableCb->GetValue());
    UpdateControls();
 }
 
