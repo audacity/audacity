@@ -271,14 +271,6 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
       ? RealtimeEffectList::Get(*pLeader)
       : RealtimeEffectList::Get(mProject);
 
-   std::optional<RealtimeEffects::SuspensionScope> myScope;
-   if (mActive) {
-      if (pScope)
-         myScope.emplace(*pScope, mProject.weak_from_this());
-      else
-         return nullptr;
-   }
-
    auto pState = RealtimeEffectState::make_shared(id);
    auto &state = *pState;
    
@@ -324,14 +316,6 @@ void RealtimeEffectManager::RemoveState(
    RealtimeEffectList &states = pLeader
       ? RealtimeEffectList::Get(*pLeader)
       : RealtimeEffectList::Get(mProject);
-
-   std::optional<RealtimeEffects::SuspensionScope> myScope;
-   if (mActive) {
-      if (pScope)
-         myScope.emplace(*pScope, mProject.weak_from_this());
-      else
-         return;
-   }
 
    // Remove the state from processing (under the lock guard) before finalizing
    states.RemoveState(pState);
