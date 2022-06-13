@@ -138,7 +138,7 @@ bool AudioUnitWrapper::FetchSettings(AudioUnitEffectSettings &settings) const
       // you choose 10 bands; the values for bands 10 ... 30 are undefined
       // but the parameter IDs are known
       auto &slot = settings.values[ID];
-      slot = {};
+      slot.reset();
       AudioUnitParameterValue value;
       if (!pi.mName ||
          AudioUnitGetParameter(
@@ -148,7 +148,7 @@ bool AudioUnitWrapper::FetchSettings(AudioUnitEffectSettings &settings) const
             // parameter.  In any case, just ignore it.
          }
       else
-         slot.emplace(*pi.mName, value);
+         slot.emplace(settings.Intern(*pi.mName), value);
       return true;
    });
    return true;

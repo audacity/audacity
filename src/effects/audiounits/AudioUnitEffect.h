@@ -71,6 +71,7 @@ public:
 
    bool SaveSettings(
       const EffectSettings &settings, CommandParameters & parms) const override;
+   //! May allocate memory, so should be called only in the main thread
    bool LoadSettings(
       const CommandParameters & parms, EffectSettings &settings) const override;
 
