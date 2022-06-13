@@ -339,6 +339,13 @@ void RealtimeEffectManager::RemoveState(
    });
 }
 
+std::optional<size_t> RealtimeEffectManager::FindState(
+   Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState) const
+{
+   auto [_, states] = FindStates(mProject, pTrack);
+   return states.FindState(pState);
+}
+
 // Where is this used?
 #if 0
 auto RealtimeEffectManager::GetLatency() const -> Latency

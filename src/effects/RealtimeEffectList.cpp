@@ -148,6 +148,17 @@ void RealtimeEffectList::RemoveState(
    }
 }
 
+std::optional<size_t> RealtimeEffectList::FindState(
+   const std::shared_ptr<RealtimeEffectState> &pState) const
+{
+   const auto begin = mStates.begin()
+      , end = mStates.end()
+      , iter = std::find(begin, end, pState);
+   if (iter == end)
+      return {};
+   return std::distance(begin, iter);
+}
+
 size_t RealtimeEffectList::GetStatesCount() const noexcept
 {
    return mStates.size();

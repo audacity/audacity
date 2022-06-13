@@ -15,6 +15,7 @@
 #include <chrono>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <unordered_map>
 #include <vector>
 
@@ -98,6 +99,10 @@ public:
    /*! No effect if realtime is active but scope is not supplied */
    void RemoveState(RealtimeEffects::InitializationScope *pScope,
       Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState);
+
+   //! Report the position of a state in the global or a per-track list
+   std::optional<size_t> FindState(
+      Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState) const;
 
    bool GetSuspended() const
       { return mSuspended.load(std::memory_order_relaxed); }
