@@ -14,7 +14,6 @@
 
 #include "AudacityException.h"
 
-#include "Base64.h"
 
 #include "BasicUI.h"
 #include "widgets/wxWidgetsWindowPlacement.h"
@@ -27,7 +26,6 @@
 #include <pluginterfaces/vst/ivsteditcontroller.h>
 #include <pluginterfaces/vst/ivstprocesscontext.h>
 #include <public.sdk/source/vst/hosting/hostclasses.h>
-#include <public.sdk/source/vst/vstpresetfile.h>
 
 #include "internal/ComponentHandler.h"
 #include "internal/ParameterChanges.h"
@@ -65,28 +63,6 @@ Steinberg::Vst::IHostApplication& LocalContext()
    return localContext;
 }
 
-class PresetsBufferStream : public Steinberg::Vst::BufferStream
-{
-public:
-
-   static Steinberg::IPtr<PresetsBufferStream> fromString(const wxString& str)
-   {
-      Steinberg::Buffer buffer(str.size() / 4 * 3);
-      auto len = Base64::Decode(str, buffer);
-      wxASSERT(len <= buffer.getSize());
-      buffer.setSize(len);
-
-      auto result = owned(safenew PresetsBufferStream);
-      result->mBuffer.take(buffer);
-      return result;
-   }
-
-   wxString toString() const
-   {
-      return Base64::Encode(mBuffer, mBuffer.getSize());
-   }
-
-};
 
 void ActivateDefaultBuses(Steinberg::Vst::IComponent* component, const Steinberg::Vst::MediaType mediaType, const Steinberg::Vst::BusDirection direction, bool state)
 {

@@ -15,6 +15,9 @@
 #include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <string>
 #include <public.sdk/source/vst/hosting/module.h>
+#include <public.sdk/source/vst/vstpresetfile.h>
+
+#include <optional>
 
 class wxString;
 class wxWindow;
@@ -58,6 +61,23 @@ public:
    static bool ParseAutomationParameterKey(const wxString& key, Steinberg::Vst::ParamID& paramId);
 };
 
+class PresetsBufferStream : public Steinberg::Vst::BufferStream
+{
+public:
+
+   static Steinberg::IPtr<PresetsBufferStream> fromString(const wxString& str);
+
+   wxString toString() const;
+};
+
+struct EffectSettings;
+struct VST3EffectSettings
+{
+   // states as saved by IComponent::getState
+   std::optional<std::string> mProcessorStateStr;
+   std::optional<std::string> mControllerStateStr;
+};
+
 
 struct VST3Wrapper
 {
@@ -76,6 +96,33 @@ struct VST3Wrapper
    // to iterate parameters and extract preset state
    //
    Steinberg::IPtr<Steinberg::Vst::IComponent>      mEffectComponent;
-   Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;   
+   Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
+
+   bool FetchSettings(      VST3EffectSettings& settings) const;
+   bool StoreSettings(const VST3EffectSettings& settings) const;
+
+   VST3EffectSettings mSettings;  // temporary, until the effect is really stateless
+
+   //! This function will be rewritten when the effect is really stateless
+   VST3EffectSettings& GetSettings(EffectSettings&) const
+   {
+      return const_cast<VST3Wrapper*>(this)->mSettings;
+   }
+
+   //! This function will be rewritten when the effect is really stateless
+   const VST3EffectSettings& GetSettings(const EffectSettings&) const
+   {
+      return mSettings;
+   }
+
+   //! This is what ::GetSettings will be when the effect becomes really stateless
+   /*
+   static inline VST3EffectSettings& GetSettings(EffectSettings& settings)
+   {
+      auto pSettings = settings.cast<VST3EffectSettings>();
+      assert(pSettings);
+      return *pSettings;
+   }
+   */
 };
 
