@@ -100,6 +100,10 @@ public:
 private:
    friend RealtimeEffects::InitializationScope;
 
+   std::shared_ptr<RealtimeEffectState>
+   MakeNewState(RealtimeEffects::InitializationScope *pScope,
+      Track *pLeader, const PluginID &id);
+
    //! Main thread begins to define a set of tracks for playback
    void Initialize(RealtimeEffects::InitializationScope &scope,
       double sampleRate);

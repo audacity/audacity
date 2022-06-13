@@ -240,49 +240,62 @@ void RealtimeEffectManager::AllListsLock::Reset()
    }
 }
 
-std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
+std::shared_ptr<RealtimeEffectState>
+RealtimeEffectManager::MakeNewState(
    RealtimeEffects::InitializationScope *pScope,
-   Track *pTrack, const PluginID & id)
+   Track *pLeader, const PluginID &id)
 {
-   auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
-   RealtimeEffectList &states = pLeader
-      ? RealtimeEffectList::Get(*pLeader)
-      : RealtimeEffectList::Get(mProject);
-
-   auto pState = RealtimeEffectState::make_shared(id);
-   auto &state = *pState;
-   
-   if (pScope && mActive)
-   {
+   if (!pScope && mActive)
+      return nullptr;
+   auto pNewState = RealtimeEffectState::make_shared(id);
+   auto &state = *pNewState;
+   if (pScope && mActive) {
       // Adding a state while playback is in-flight
       auto pInstance = state.Initialize(pScope->mSampleRate);
       pScope->mInstances.push_back(pInstance);
-
       for (auto &leader : mGroupLeaders) {
          // Add all tracks to a per-project state, but add only the same track
          // to a state in the per-track list
          if (pLeader && pLeader != leader)
             continue;
-
          auto chans = mChans[leader];
          auto rate = mRates[leader];
-
          auto pInstance2 = state.AddTrack(*leader, chans, rate);
          if (pInstance2 != pInstance)
             pScope->mInstances.push_back(pInstance2);
       }
    }
+   return pNewState;
+}
 
-   // Only now add the completed state to the list, under a lock guard
-   bool added = states.AddState(pState);
-   if (!added)
+namespace {
+std::pair<Track *, RealtimeEffectList &>
+FindStates(AudacityProject &project, Track *pTrack) {
+   auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
+   return { pLeader,
+      pLeader
+         ? RealtimeEffectList::Get(*pLeader)
+         : RealtimeEffectList::Get(project)
+   };
+}
+}
+
+std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
+   RealtimeEffects::InitializationScope *pScope,
+   Track *pTrack, const PluginID & id)
+{
+   auto [pLeader, states] = FindStates(mProject, pTrack);
+   auto pState = MakeNewState(pScope, pTrack, id);
+   if (!pState)
       return nullptr;
 
+   // Only now add the completed state to the list, under a lock guard
+   if (!states.AddState(pState))
+      return nullptr;
    Publish({
       RealtimeEffectManagerMessage::Type::EffectAdded,
       pLeader ? pLeader->shared_from_this() : nullptr
    });
-
    return pState;
 }
 
@@ -290,17 +303,12 @@ void RealtimeEffectManager::RemoveState(
    RealtimeEffects::InitializationScope *pScope,
    Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState)
 {
-   auto pLeader = pTrack ? *TrackList::Channels(pTrack).begin() : nullptr;
-   RealtimeEffectList &states = pLeader
-      ? RealtimeEffectList::Get(*pLeader)
-      : RealtimeEffectList::Get(mProject);
+   auto [pLeader, states] = FindStates(mProject, pTrack);
 
    // Remove the state from processing (under the lock guard) before finalizing
    states.RemoveState(pState);
-
    if (mActive)
       pState->Finalize();
-
    Publish({
       RealtimeEffectManagerMessage::Type::EffectRemoved,
       pLeader ? pLeader->shared_from_this() : nullptr
