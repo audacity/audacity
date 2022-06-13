@@ -325,6 +325,8 @@ namespace
                mSettingsAccess->Flush();
             }
             pButton->SetBitmapIndex(wasEnabled ? bmpEffectOff : bmpEffectOn);
+            if (mProject)
+               ProjectHistory::Get(*mProject).ModifyState(false);
          });
 
          //Central button with effect name
