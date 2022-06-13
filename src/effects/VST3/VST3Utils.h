@@ -12,8 +12,9 @@
 
 #pragma once
 
+#include <pluginterfaces/vst/ivstaudioprocessor.h>
 #include <string>
-#include <pluginterfaces/vst/vsttypes.h>
+#include <public.sdk/source/vst/hosting/module.h>
 
 class wxString;
 class wxWindow;
@@ -56,3 +57,25 @@ public:
    //Returns true on success.
    static bool ParseAutomationParameterKey(const wxString& key, Steinberg::Vst::ParamID& paramId);
 };
+
+
+struct VST3Wrapper
+{
+   VST3Wrapper(std::shared_ptr<VST3::Hosting::Module> module, VST3::Hosting::ClassInfo effectClassInfo)
+      : mModule(std::move(module)),
+        mEffectClassInfo(std::move(effectClassInfo))
+   {}
+
+   // Keep strong reference to a module; this because it has to be destroyed in the destructor of this class,
+   // otherwise the destruction of mEditController and mEffectComponent would trigger a memory fault.
+   std::shared_ptr<VST3::Hosting::Module> mModule;
+
+   const VST3::Hosting::ClassInfo mEffectClassInfo;
+
+   // For the time being, here we have only members that are needed
+   // to iterate parameters and extract preset state
+   //
+   Steinberg::IPtr<Steinberg::Vst::IComponent>      mEffectComponent;
+   Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;   
+};
+
