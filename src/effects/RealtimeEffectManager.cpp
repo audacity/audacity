@@ -299,6 +299,30 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    return pState;
 }
 
+std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::ReplaceState(
+   RealtimeEffects::InitializationScope *pScope,
+   Track *pTrack, size_t index, const PluginID & id)
+{
+   auto [pLeader, states] = FindStates(mProject, pTrack);
+   auto pOldState = states.GetStateAt(index);
+   if (!pOldState)
+      return nullptr;
+   auto pNewState = MakeNewState(pScope, pTrack, id);
+   if (!pNewState)
+      return nullptr;
+
+   // Only now swap the completed state into the list, under a lock guard
+   if (!states.ReplaceState(index, pNewState))
+      return nullptr;
+   if (mActive)
+      pOldState->Finalize();
+   Publish({
+      RealtimeEffectManagerMessage::Type::EffectReplaced,
+      pLeader ? pLeader->shared_from_this() : nullptr
+   });
+   return pNewState;
+}
+
 void RealtimeEffectManager::RemoveState(
    RealtimeEffects::InitializationScope *pScope,
    Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState)

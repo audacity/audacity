@@ -36,6 +36,7 @@ struct RealtimeEffectManagerMessage
    enum class Type
    {
       EffectAdded,
+      EffectReplaced,
       EffectRemoved
    };
    Type type;
@@ -73,6 +74,20 @@ public:
    std::shared_ptr<RealtimeEffectState> AddState(
       RealtimeEffects::InitializationScope *pScope, Track *pTrack,
       const PluginID & id);
+
+   //! Main thread replaces a global or per-track effect
+   /*!
+    @param pScope if realtime is active but scope is absent, there is no effect
+    @param pTrack if null, then state is added to the global list
+    @param index position in the list to replace; no effect if out of range
+    @param id identifies the effect
+    @return if null, the given id was not found and the old state remains
+
+    @post result: `!result || result->GetEffect() != nullptr`
+    */
+   std::shared_ptr<RealtimeEffectState> ReplaceState(
+      RealtimeEffects::InitializationScope *pScope, Track *pTrack,
+      size_t index, const PluginID & id);
 
    //! Main thread removes a global or per-track effect
    /*!

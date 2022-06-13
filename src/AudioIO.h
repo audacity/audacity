@@ -422,6 +422,14 @@ public:
    std::shared_ptr<RealtimeEffectState>
    AddState(AudacityProject &project, Track *pTrack, const PluginID & id);
 
+   //! Forwards to RealtimeEffectManager::ReplaceState with proper init scope
+   /*!
+    @post result: `!result || result->GetEffect() != nullptr`
+    */
+   std::shared_ptr<RealtimeEffectState>
+   ReplaceState(AudacityProject &project,
+      Track *pTrack, size_t index, const PluginID & id);
+
    //! Forwards to RealtimeEffectManager::RemoveState with proper init scope
    void RemoveState(AudacityProject &project,
       Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState);

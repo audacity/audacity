@@ -357,6 +357,18 @@ AudioIO::AddState(AudacityProject &project, Track *pTrack, const PluginID & id)
    return RealtimeEffectManager::Get(project).AddState(pInit, pTrack, id);
 }
 
+std::shared_ptr<RealtimeEffectState>
+AudioIO::ReplaceState(AudacityProject &project,
+   Track *pTrack, size_t index, const PluginID & id)
+{
+   RealtimeEffects::InitializationScope *pInit = nullptr;
+   if (mpTransportState)
+      if (auto pProject = GetOwningProject(); pProject.get() == &project)
+         pInit = &*mpTransportState->mpRealtimeInitialization;
+   return RealtimeEffectManager::Get(project)
+      .ReplaceState(pInit, pTrack, index, id);
+}
+
 void AudioIO::RemoveState(AudacityProject &project,
    Track *pTrack, const std::shared_ptr<RealtimeEffectState> &pState)
 {
