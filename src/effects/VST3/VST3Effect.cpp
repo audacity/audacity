@@ -1150,6 +1150,16 @@ void VST3Effect::ReloadUserOptions()
    SetBlockSize(mUserBlockSize);
 }
 
+EffectSettings VST3Effect::MakeSettings() const
+{
+   auto result = StatefulPerTrackEffect::MakeSettings();
+   // Cause initial population of the map stored in the stateful effect
+   if (!mInitialFetchDone) {
+      FetchSettings(GetSettings(result));
+      mInitialFetchDone = true;
+   }
+   return result;
+}
 
 bool VST3Effect::TransferDataToWindow(const EffectSettings& settings)
 {

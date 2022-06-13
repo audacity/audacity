@@ -79,7 +79,9 @@ class VST3Effect final : public StatefulPerTrackEffect, private VST3Wrapper
 
 
    void Initialize();
-   
+
+   mutable bool mInitialFetchDone{ false };
+
 public:
 
    static EffectFamilySymbol GetFamilySymbol();
@@ -157,6 +159,7 @@ public:
    bool HasOptions() override;
    void ShowOptions() override;
 
+   EffectSettings MakeSettings() const override;
 
    bool TransferDataToWindow(const EffectSettings& settings) override;
 
