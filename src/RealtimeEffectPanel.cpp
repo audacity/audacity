@@ -458,11 +458,40 @@ namespace
 
       void OnChangeButtonClicked(wxCommandEvent& event)
       {
+         if(!mTrack || mProject == nullptr)
+            return;
          if(mEffectState == nullptr)
             return;//not initialized
 
-         ShowSelectEffectMenu(mChangeButton, this);
-         //TODO: replace effect
+         const auto effectID = ShowSelectEffectMenu(mChangeButton, this);
+         if(effectID.empty())
+            return;
+
+         auto &em = RealtimeEffectManager::Get(*mProject);
+         auto oIndex = em.FindState(&*mTrack, mEffectState);
+         if (!oIndex)
+            return;
+
+         auto oldName = GetEffectName();
+         auto &project = *mProject;
+         auto trackName = mTrack->GetName();
+         if (auto state = AudioIO::Get()
+            ->ReplaceState(project, &*mTrack, *oIndex, effectID)
+         ){
+            // Message subscription took care of updating the button text
+            // and destroyed `this`!
+            auto effect = state->GetEffect();
+            assert(effect); // postcondition of ReplaceState
+            ProjectHistory::Get(project).PushState(
+               /*i18n-hint: undo history,
+                first and second parameters - realtime effect names
+                */
+               XO("Replaced %s with %s")
+                  .Format(oldName, effect->GetName()),
+               /*! i18n-hint: undo history record
+                first parameter - realtime effect name */
+               XO("Replace %s").Format(oldName));
+         }
       }
 
       void OnPaint(wxPaintEvent&)
