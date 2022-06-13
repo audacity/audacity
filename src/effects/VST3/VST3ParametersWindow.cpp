@@ -164,13 +164,14 @@ namespace
 
       VST3ToggleParameter(wxWindow *parent,
                wxWindowID id,
+               const wxString& label,
                Steinberg::Vst::ParamID paramId,
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize,
-               long style = 0,
+               long style = wxALIGN_RIGHT,
                const wxValidator& validator = wxDefaultValidator,
                const wxString& name = wxCheckBoxNameStr)
-      : wxCheckBox(parent, id, wxEmptyString, pos, size, style, validator, name)
+      : wxCheckBox(parent, id, label, pos, size, style, validator, name)
       , VST3ParameterControl(paramId) { }
 
       void UpdateValue(Steinberg::Vst::IEditController& editController) override
@@ -213,14 +214,15 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
       if((parameterInfo.flags & (Vst::ParameterInfo::kCanAutomate | Vst::ParameterInfo::kIsBypass | Vst::ParameterInfo::kIsReadOnly)) == 0)
          continue;
 
-      sizer->Add(safenew wxStaticText(
-         this,
-         wxID_ANY,
-         VST3Utils::ToWxString(parameterInfo.title),
-         wxDefaultPosition,
-         wxDefaultSize,
-         wxALIGN_RIGHT), 0, wxEXPAND
-      );
+      if (parameterInfo.stepCount != 1)      // not a toggle
+         sizer->Add(safenew wxStaticText(
+            this,
+            wxID_ANY,
+            VST3Utils::ToWxString(parameterInfo.title),
+            wxDefaultPosition,
+            wxDefaultSize,
+            wxALIGN_RIGHT), 0, wxEXPAND
+         );
       
       if(parameterInfo.flags & Vst::ParameterInfo::kIsReadOnly)
       {
@@ -239,10 +241,12 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
       //toggle
       else if(parameterInfo.stepCount == 1)
       {
-         const auto toggle = safenew VST3ToggleParameter (this, wxID_ANY, parameterInfo.id);
+         const auto toggle = safenew VST3ToggleParameter (this, wxID_ANY,
+            VST3Utils::ToWxString(parameterInfo.title), parameterInfo.id);
          toggle->UpdateValue(editController);
          toggle->Bind(wxEVT_CHECKBOX, &VST3ParametersWindow::OnParameterValueChanged, this);
          sizer->Add(toggle, 0, wxEXPAND);
+         sizer->AddStretchSpacer();
          sizer->AddStretchSpacer();
 
          mControls[parameterInfo.id] = toggle;
