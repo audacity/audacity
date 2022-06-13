@@ -327,66 +327,50 @@ bool VST3Effect::SupportsAutomation() const
 }
 
 bool VST3Effect::SaveSettings(
-   const EffectSettings &, CommandParameters & parms) const
+   const EffectSettings& settings, CommandParameters& parms) const
 {
-   if(mEditController == nullptr)
-      return false;
+   const auto& vst3Settings = GetSettings(settings);
 
-   using namespace Steinberg;
-   
-   for(int i = 0, count = mEditController->getParameterCount(); i < count; ++i)
-   {
-      Vst::ParameterInfo parameterInfo { };
-      if(mEditController->getParameterInfo(i, parameterInfo) == kResultOk)
-      {
-         if(parameterInfo.flags & Vst::ParameterInfo::kCanAutomate)
-         {
-            parms.Write(
-               VST3Utils::MakeAutomationParameterKey(parameterInfo),
-               mEditController->getParamNormalized(parameterInfo.id)
-            );
-         }
-      }
-   }
+   if (vst3Settings.mProcessorStateStr)
+      parms.Write( processorStateKey,  wxString( *vst3Settings.mProcessorStateStr )  );
+
+   if (vst3Settings.mControllerStateStr)
+      parms.Write( controllerStateKey, wxString( *vst3Settings.mControllerStateStr) );
 
    return true;
 }
 
 bool VST3Effect::LoadSettings(
-   const CommandParameters & parms, EffectSettings &settings) const
+   const CommandParameters& parms, EffectSettings& settings) const
 {
-   using namespace Steinberg;
+   auto& vst3Settings = GetSettings(settings);
 
-   if(mComponentHandler == nullptr)
-      return false;
-   
-   long index { };
-   wxString key;
-   if(parms.GetFirstEntry(key, index))
+   wxString tmpString;
+
+   if (parms.Read(processorStateKey, &tmpString))
    {
-      do
-      {
-         Steinberg::Vst::ParamID id;
-         Vst::ParamValue value;
-         if(VST3Utils::ParseAutomationParameterKey(key, id) && parms.Read(key, &value))
-         {
-            if(mComponentHandler->beginEdit(id) == kResultOk)
-            {
-               auto cleanup = finally([&]{
-                  mComponentHandler->endEdit(id);
-               });
-               mComponentHandler->performEdit(id, value);
-            }
-            mEditController->setParamNormalized(id, value);
-         }
-      } while(parms.GetNextEntry(key, index));
-   }   
+      vst3Settings.mProcessorStateStr = tmpString;
+   }
+   else
+   {
+      vst3Settings.mProcessorStateStr = std::nullopt;
+   }
 
+
+   if (parms.Read(controllerStateKey, &tmpString))
+   {
+      vst3Settings.mControllerStateStr = tmpString;
+   }
+   else
+   {
+      vst3Settings.mControllerStateStr = std::nullopt;
+   }
+   
    return true;
 }
 
 bool VST3Effect::LoadUserPreset(
-   const RegistryPath& name, EffectSettings &settings) const
+   const RegistryPath& name, EffectSettings& settings) const
 {
    using namespace Steinberg;
 
@@ -414,6 +398,8 @@ bool VST3Effect::LoadUserPreset(
          mEditController->setState(controllerState) != kResultOk)
          return false;
    }
+
+   FetchSettings(GetSettings(settings));
 
    return true;
 }
@@ -459,13 +445,13 @@ RegistryPaths VST3Effect::GetFactoryPresets() const
    return mFactoryPresets;
 }
 
-bool VST3Effect::LoadFactoryPreset(int id, EffectSettings &) const
+bool VST3Effect::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    if(id >= 0 && id < mFactoryPresets.size())
    {
       auto filename = wxFileName(GetFactoryPresetsPath(mEffectClassInfo), mFactoryPresets[id] + ".vstpreset");
       // To do: externalize state so const_cast isn't needed
-      return const_cast<VST3Effect*>(this)->LoadPreset(filename.GetFullPath());
+      return const_cast<VST3Effect*>(this)->LoadPreset(filename.GetFullPath(), settings);
    }
    return true;
 }
@@ -871,6 +857,9 @@ bool VST3Effect::ValidateUI(EffectSettings &settings)
 {
    if (mDuration != nullptr)
       settings.extra.SetDuration(mDuration->GetValue());
+
+   FetchSettings(GetSettings(settings));
+
    return true;
 }
 
@@ -938,7 +927,7 @@ void VST3Effect::ExportPresets(const EffectSettings &) const
    }
 }
 
-void VST3Effect::ImportPresets(EffectSettings &)
+void VST3Effect::ImportPresets(EffectSettings& settings)
 {
    using namespace Steinberg;
 
@@ -956,7 +945,7 @@ void VST3Effect::ImportPresets(EffectSettings &)
    if(path.empty())
       return;
 
-   LoadPreset(path);
+   LoadPreset(path, settings);
 }
 
 bool VST3Effect::HasOptions()
@@ -1112,7 +1101,7 @@ void VST3Effect::SyncParameters() const
    }
 }
 
-bool VST3Effect::LoadPreset(const wxString& path)
+bool VST3Effect::LoadPreset(const wxString& path, EffectSettings& settings)
 {
    using namespace Steinberg;
 
@@ -1142,6 +1131,8 @@ bool VST3Effect::LoadPreset(const wxString& path)
    }
 
    
+
+   FetchSettings(GetSettings(settings));
 
    return true;
 }
