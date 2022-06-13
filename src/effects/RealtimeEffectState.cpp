@@ -520,6 +520,7 @@ bool RealtimeEffectState::Finalize() noexcept
    mMainSettings = mWorkerSettings;
 
    mGroups.clear();
+   mCurrentProcessor = 0;
 
    if (!mInstance)
       return false;
