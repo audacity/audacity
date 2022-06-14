@@ -1163,19 +1163,20 @@ bool AudioIO::AllocateBuffers(
                mixTracks.push_back(mPlaybackTracks[i]);
 
                double startTime, endTime;
-               if (make_iterator_range(tracks.prerollTracks)
-                      .contains(mPlaybackTracks[i])) {
-                  // Stop playing this track after pre-roll
+               if (!tracks.prerollTracks.empty())
                   startTime = mPlaybackSchedule.mT0;
+               else
+                  startTime = t0;
+
+               if (make_iterator_range(tracks.prerollTracks)
+                  .contains(mPlaybackTracks[i]))
+                  // Stop playing this track after pre-roll
                   endTime = t0;
-               }
-               else {
+               else
                   // Pass t1 -- not mT1 as may have been adjusted for latency
                   // -- so that overdub recording stops playing back samples
                   // at the right time, though transport may continue to record
-                  startTime = t0;
                   endTime = t1;
-               }
 
                mPlaybackMixers[i] = std::make_unique<Mixer>
                   (mixTracks,
