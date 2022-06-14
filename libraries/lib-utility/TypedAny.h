@@ -12,6 +12,7 @@
 #define __AUDACITY_TYPED_ANY__
 
 #include <any>
+#include <type_traits>
 #include <utility>
 
 namespace audacity {
@@ -22,9 +23,18 @@ namespace audacity {
  */
 template<typename Tag> class TypedAny
 {
+   // Define a trait of argument packs
+   // Primary template:
+   template<typename... Args> struct Good_args : std::true_type{};
+   // Partial specialization:
+   template<typename Arg> struct Good_args<Arg> : std::bool_constant<
+      !std::is_same_v<Tag, std::remove_const_t< std::remove_reference_t<Arg> > >
+   >{};
 public:
    //! Constructor with arguments just as for std::any, but it is explicit
-   template<typename... Args>
+   template<typename... Args,
+      typename restriction = std::enable_if_t< Good_args<Args...>::value, void >
+   >
    explicit TypedAny(Args &&... args)
       : mAny(std::forward<Args>(args)...)
    {}
