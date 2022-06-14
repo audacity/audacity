@@ -18,7 +18,7 @@ class OtoolRunner:
             fullpath = os.path.join(path, file)
             if os.path.exists(fullpath):
                 return fullpath
-        
+
         return None
 
     def run(self, file):
@@ -52,7 +52,7 @@ class OtoolRunner:
                                     'name': name,
                                     'path': path
                                 })
-        
+
         with subprocess.Popen(['otool', '-l', file], stdout=subprocess.PIPE) as p:
             lines = [line.decode('utf-8').strip() for line in p.stdout.readlines()]
             for line_index in range(len(lines)):
@@ -61,9 +61,9 @@ class OtoolRunner:
                     if rpath_match:
                         rpath = rpath_match.group(1)
                         result['rpath'].append(rpath)
-                
+
                 line_index = line_index + 1
-            
+
         cache[file] = result
         return result
 
@@ -74,9 +74,9 @@ def parse_args():
     }
 
     argsCount = len(sys.argv)
-    
+
     argIndex = 1
-    
+
     while argIndex < argsCount:
         value = sys.argv[argIndex]
         argIndex = argIndex + 1
@@ -103,7 +103,7 @@ def collect_dependencies(runner, input_file):
 
         if file in files:
             continue
-            
+
         result = runner.run(file)
         files[file] = result
 
@@ -116,7 +116,7 @@ def collect_dependencies(runner, input_file):
 def add_rpath(file, rpath):
     if rpath in file['rpath']:
         return []
-    
+
     return ['-add_rpath', rpath]
 
 
@@ -139,7 +139,7 @@ for path in files:
         print("Copying {} -> {}".format(path, target_path))
         shutil.copy2(path, target_path, follow_symlinks=True)
         path = target_path
-    
+
     install_name_tool = [
         'install_name_tool',
     ]
@@ -154,10 +154,24 @@ for path in files:
 
     if len(install_name_tool) > 1:
         install_name_tool = install_name_tool + \
-        add_rpath(file, '@executable_path/../Frameworks') + \
-        add_rpath(file, '@loader_path')
+            add_rpath(file, '@executable_path/../Frameworks') + \
+            add_rpath(file, '@loader_path')
 
         install_name_tool.append(path)
 
-        print("Patching {}".format(path));
-        subprocess.check_call(install_name_tool)
+        print("Patching {}".format(path))
+
+        try:
+            subprocess.run(install_name_tool, capture_output=True, check=True, text=True)
+        except subprocess.CalledProcessError as err:
+            print(f'=========\ninstall_name_tool failed with code {err.returncode}\n\tstdout: {err.stdout}\n\tstderr: {err.stderr}\n=========')
+            if err.returncode == -9:
+                print("install_name_tool was killed. Retrying with x86_64 architecture...")
+                install_name_tool = ["arch", "-arch", "x86_64"] + install_name_tool
+                try:
+                    subprocess.run(install_name_tool, capture_output=True, check=True, text=True)
+                except subprocess.CalledProcessError as inner_err:
+                    print(f'=========\ninstall_name_tool failed with code {inner_err.returncode}\n\tstdout: {inner_err.stdout}\n\tstderr: {inner_err.stderr}\n=========')
+                    exit(1)
+            else:
+                exit(1)
