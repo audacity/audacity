@@ -137,9 +137,10 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
             const EffectSettings *pResult{};
             do {
                pResult = &pAccessState->MainRead();
-               if (pResult->extra.GetCounter() ==
+               if (!lastSettings.has_value() ||
+                   pResult->extra.GetCounter() ==
                    lastSettings.extra.GetCounter()) {
-                  // Echo is completed
+                  // First-time Get(), or else, echo is completed
                   break;
                }
                else if (auto pAudioIO = AudioIOBase::Get()
