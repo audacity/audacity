@@ -869,6 +869,43 @@ AButton * ToolBar::MakeButton(wxWindow *parent,
    return button;
 }
 
+// This is a convenience function that allows for button creation in
+// MakeButtons() with fewer arguments
+/// @param parent            Parent window for the button.
+/// @param eEnabledUp        Background for when button is Up.
+/// @param eEnabledDown      Background for when button is Down.
+/// @param eDisabled         Foreground when disabled.
+/// @param id                Windows Id.
+/// @param processdownevents true iff button handles down events.
+/// @param label             Button label
+AButton * ToolBar::MakeButton(ToolBar *parent,
+                              teBmps eEnabledUp,
+                              teBmps eEnabledDown,
+                              teBmps eDisabled,
+                              int id,
+                              bool processdownevents,
+                              const TranslatableString &label)
+{
+   AButton *r = ToolBar::MakeButton(parent,
+      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,
+      eEnabledUp, eEnabledDown, eDisabled,
+      wxWindowID( id ),
+      wxDefaultPosition, processdownevents,
+      theTheme.ImageSize( bmpRecoloredUpLarge ));
+   r->SetLabel( label );
+   enum {
+      deflation =
+#ifdef __WXMAC__
+      6
+#else
+      12
+#endif
+   };
+   r->SetFocusRect( r->GetClientRect().Deflate( deflation, deflation ) );
+
+   return r;
+}
+
 //static
 void ToolBar::MakeAlternateImages(AButton &button, int idx,
                                   teBmps eUp,

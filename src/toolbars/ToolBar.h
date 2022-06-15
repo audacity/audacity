@@ -163,6 +163,16 @@ public:
                        bool processdownevents,
                        wxSize size);
 
+
+   static
+   AButton *MakeButton(ToolBar *parent,
+                       teBmps eEnabledUp,
+                       teBmps eEnabledDown,
+                       teBmps eDisabled,
+                       int id,
+                       bool processdownevents,
+                       const TranslatableString &label);
+
    static
    void MakeAlternateImages(AButton &button, int idx,
                             teBmps eUp,
