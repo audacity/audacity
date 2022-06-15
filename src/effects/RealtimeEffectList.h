@@ -9,6 +9,7 @@
 #ifndef __AUDACITY_REALTIMEEFFECTLIST_H__
 #define __AUDACITY_REALTIMEEFFECTLIST_H__
 
+#include <atomic>
 #include <vector>
 
 #include "PluginProvider.h" // for PluginID
@@ -72,15 +73,19 @@ public:
    static const RealtimeEffectList &Get(const Track &track);
 
    using StateVisitor =
-      std::function<void(RealtimeEffectState &state, bool bypassed)>;
+      std::function<void(RealtimeEffectState &state, bool listIsActive)>;
 
    //! Apply the function to all states sequentially.
    void Visit(StateVisitor func);
 
    //! Use only in the main thread
-   //! Returns null if no such effect was found.
+   //! Returns true for success.
    //! Sends Insert message on success.
-   std::shared_ptr<RealtimeEffectState> AddState(const PluginID &id);
+   /*!
+    @post result: `!result || pState->GetEffect() != nullptr`
+    */
+   bool AddState(std::shared_ptr<RealtimeEffectState> pState);
+
    //! Use only in the main thread
    //! On success sends Remove message.
    void RemoveState(const std::shared_ptr<RealtimeEffectState> &pState);
@@ -106,9 +111,6 @@ public:
    bool HandleXMLTag(
       const std::string_view &tag, const AttributesList &attrs) override;
 
-   //! Use only in the main thread.  May remove a failed state
-   void HandleXMLEndTag(const std::string_view &tag) override;
-
    //! Use only in the main thread.  May add a state while deserializing
    XMLTagHandler *HandleXMLChild(const std::string_view &tag) override;
 
@@ -117,11 +119,19 @@ public:
 
    void RestoreUndoRedoState(AudacityProject &project) noexcept override;
 
+   //! Non-blocking atomic boolean load
+   bool IsActive() const;
+
+   //! Done by main thread only, under a lock guard
+   void SetActive(bool value);
+
 private:
    States mStates;
 
    using LockGuard = std::lock_guard<Lock>;
    mutable Lock mLock;
+
+   std::atomic<bool> mActive{ true };
 };
 
 #endif // __AUDACITY_REALTIMEEFFECTLIST_H__

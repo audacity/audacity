@@ -67,7 +67,7 @@ BEGIN_EVENT_TABLE(DeviceToolBar, ToolBar)
    EVT_COMMAND(wxID_ANY, EVT_CAPTURE_KEY, DeviceToolBar::OnCaptureKey)
 END_EVENT_TABLE()
 
-static int DeviceToolbarPrefsID()
+int DeviceToolbarPrefsID()
 {
    static int value = wxNewId();
    return value;
@@ -286,7 +286,7 @@ void DeviceToolBar::UpdatePrefs()
    }
 
    devName = AudioIOPlaybackDevice.Read();
-   sourceName = gPrefs->Read(wxT("/AudioIO/PlaybackSource"), wxT(""));
+   sourceName = AudioIOPlaybackSource.Read();
    if (sourceName.empty())
       desc = devName;
    else
@@ -602,9 +602,9 @@ void DeviceToolBar::SetDevices(const DeviceSourceMap *in, const DeviceSourceMap 
    if (out) {
       AudioIOPlaybackDevice.Write(out->deviceString);
       if (out->totalSources >= 1) {
-         gPrefs->Write(wxT("/AudioIO/PlaybackSource"), out->sourceString);
+         AudioIOPlaybackSource.Write(out->sourceString);
       } else {
-         gPrefs->Write(wxT("/AudioIO/PlaybackSource"), wxT(""));
+         AudioIOPlaybackSource.Reset();
       }
       gPrefs->Flush();
    }

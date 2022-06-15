@@ -74,6 +74,7 @@ ChoiceSetting EffectsGroupBy{
          XO("Sorted by Type and Effect Name") ,
          XO("Grouped by Publisher") ,
          XO("Grouped by Type") ,
+         XO("Default")
       },
       {
          wxT("sortby:name") ,
@@ -81,9 +82,10 @@ ChoiceSetting EffectsGroupBy{
          wxT("sortby:type:name") ,
          wxT("groupby:publisher") ,
          wxT("groupby:type") ,
+         wxT("default")
       }
    },
-   0 // "sortby:name"
+   5 // "default"
 };
 
 namespace {

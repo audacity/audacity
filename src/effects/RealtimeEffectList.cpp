@@ -25,8 +25,7 @@ std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
 {
    auto result = std::make_unique<RealtimeEffectList>();
    for (auto &pState : mStates)
-      result->mStates.push_back(
-         std::make_shared<RealtimeEffectState>(*pState));
+      result->mStates.push_back(RealtimeEffectState::make_shared(*pState));
    return result;
 }
 
@@ -80,16 +79,16 @@ const RealtimeEffectList &RealtimeEffectList::Get(const Track &track)
 void RealtimeEffectList::Visit(StateVisitor func)
 {
    for (auto &state : mStates)
-      func(*state, !state->IsActive());
+      func(*state, IsActive());
 }
 
-std::shared_ptr<RealtimeEffectState>
-RealtimeEffectList::AddState(const PluginID &id)
+bool
+RealtimeEffectList::AddState(std::shared_ptr<RealtimeEffectState> pState)
 {
-   auto pState = std::make_shared<RealtimeEffectState>(id);
+   const auto &id = pState->GetID();
    if (pState->GetEffect() != nullptr) {
       auto shallowCopy = mStates;
-      shallowCopy.emplace_back(pState);
+      shallowCopy.emplace_back(move(pState));
       // Lock for only a short time
       (LockGuard{ mLock }, swap(shallowCopy, mStates));
 
@@ -99,10 +98,11 @@ RealtimeEffectList::AddState(const PluginID &id)
          { }
       });
 
-      return pState;
+      return true;
    }
-   // Effect initialization failed for the id
-   return nullptr;
+   else
+      // Effect initialization failed for the id
+      return false;
 }
 
 void RealtimeEffectList::RemoveState(
@@ -176,29 +176,25 @@ const std::string &RealtimeEffectList::XMLTag()
    return result;
 }
 
-bool RealtimeEffectList::HandleXMLTag(
-   const std::string_view &tag, const AttributesList &)
-{
-   return (tag == XMLTag());
-}
+static constexpr auto activeAttribute = "active";
 
-void RealtimeEffectList::HandleXMLEndTag(const std::string_view &tag)
+bool RealtimeEffectList::HandleXMLTag(
+   const std::string_view &tag, const AttributesList &attrs)
 {
    if (tag == XMLTag()) {
-      // Remove states that fail to load their effects
-      auto end = mStates.end();
-      // Assume deserialization is not happening concurrently with realtime
-      // effect processing; don't need a LockGuard
-      auto newEnd = std::remove_if( mStates.begin(), end,
-         [](const auto &pState){ return pState->GetEffect() == nullptr; });
-      mStates.erase(newEnd, end);
+      for (auto &[attr, value] : attrs) {
+         if (attr == activeAttribute)
+            SetActive(value.Get<bool>());
+      }
+      return true;
    }
+   return false;
 }
 
 XMLTagHandler *RealtimeEffectList::HandleXMLChild(const std::string_view &tag)
 {
    if (tag == RealtimeEffectState::XMLTag()) {
-      mStates.push_back(std::make_shared<RealtimeEffectState>(PluginID { }));
+      mStates.push_back(RealtimeEffectState::make_shared(PluginID{}));
       return mStates.back().get();
    }
    return nullptr;
@@ -210,6 +206,7 @@ void RealtimeEffectList::WriteXML(XMLWriter &xmlFile) const
       return;
 
    xmlFile.StartTag(XMLTag());
+   xmlFile.WriteAttr(activeAttribute, IsActive());
 
    for (const auto & state : mStates)
       state->WriteXML(xmlFile);
@@ -221,6 +218,16 @@ void RealtimeEffectList::RestoreUndoRedoState(AudacityProject &project) noexcept
 {
    // Restore per-project states
    Set(project, shared_from_this());
+}
+
+bool RealtimeEffectList::IsActive() const
+{
+   return mActive.load(std::memory_order_relaxed);
+}
+
+void RealtimeEffectList::SetActive(bool value)
+{
+   (LockGuard{ mLock }, mActive.store(value, std::memory_order_relaxed));
 }
 
 static UndoRedoExtensionRegistry::Entry sEntry {

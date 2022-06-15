@@ -17,6 +17,7 @@
 #include <wx/menu.h>
 #include <wx/wupdlock.h>
 #include <wx/bmpbuttn.h>
+#include <wx/hyperlink.h>
 
 #ifdef __WXMSW__
 #include <wx/dcbuffer.h>
@@ -173,8 +174,6 @@ namespace
          if(auto parent = GetParent())
          {
             wxWindowUpdateLocker freeze(this);
-            parent->Layout();
-
             PostDragEvent(parent, EVT_MOVABLE_CONTROL_DRAG_FINISHED);
          }
          mDragging = false;
@@ -287,9 +286,11 @@ namespace
       wxWeakRef<AudacityProject> mProject;
       std::shared_ptr<Track> mTrack;
       std::shared_ptr<RealtimeEffectState> mEffectState;
+      std::shared_ptr<EffectSettingsAccess> mSettingsAccess;
 
       ThemedButtonWrapper<wxButton>* mChangeButton{nullptr};
       wxButton* mEnableButton{nullptr};
+      wxWindow *mOptionsButton{};
 
    public:
       RealtimeEffectControl(wxWindow* parent,
@@ -308,10 +309,23 @@ namespace
 
          //On/off button
          auto enableButton = safenew ThemedButtonWrapper<wxBitmapButton>(this, wxID_ANY, wxBitmap{}, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-         enableButton->SetBitmapIndex(bmpEffectOff);
+         enableButton->SetBitmapIndex(bmpEffectOn);
          enableButton->SetBackgroundColorIndex(clrEffectListItemBackground);
          enableButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnEnableButtonClicked, this);
          mEnableButton = enableButton;
+
+         enableButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+            auto pButton =
+               static_cast<ThemedButtonWrapper<wxBitmapButton>*>(mEnableButton);
+            auto index = pButton->GetBitmapIndex();
+            bool wasEnabled = (index == bmpEffectOn);
+            if (mSettingsAccess) {
+               mSettingsAccess->ModifySettings([&](EffectSettings &settings){
+                  settings.extra.SetActive(!wasEnabled);
+               });
+            }
+            pButton->SetBitmapIndex(wasEnabled ? bmpEffectOff : bmpEffectOn);
+         });
 
          //Central button with effect name
          mChangeButton = safenew ThemedButtonWrapper<wxButton>(this, wxID_ANY);
@@ -331,11 +345,28 @@ namespace
          sizer->Add(mEnableButton, 0, wxLEFT | wxCENTER, 5);
          sizer->Add(mChangeButton, 1, wxLEFT | wxCENTER, 5);
          sizer->Add(optionsButton, 0, wxLEFT | wxRIGHT | wxCENTER, 5);
+         mOptionsButton = optionsButton;
 
          auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
          vSizer->Add(sizer.release(), 0, wxUP | wxDOWN | wxEXPAND, 10);
 
          SetSizer(vSizer.release());
+      }
+
+      static const PluginDescriptor *GetPlugin(const PluginID &ID) {
+         auto desc = PluginManager::Get().GetPlugin(ID);
+         return desc;
+      }
+      
+      //! @pre `mEffectState != nullptr`
+      TranslatableString GetEffectName() const
+      {
+         const auto &ID = mEffectState->GetID();
+         const auto desc = GetPlugin(ID);
+         return desc
+            ? desc->GetSymbol().Msgid()
+            : XO("%s (missing)")
+               .Format(PluginManager::GetEffectNameFromID(ID).GET());
       }
 
       void SetEffect(AudacityProject& project,
@@ -345,9 +376,16 @@ namespace
          mProject = &project;
          mTrack = track;
          mEffectState = pState;
-         auto desc = PluginManager::Get().GetPlugin(mEffectState->GetID());
-
-         mChangeButton->SetTranslatableLabel(desc->GetSymbol().Msgid());
+         TranslatableString label;
+         if (pState) {
+            label = GetEffectName();
+            mSettingsAccess = pState->GetAccess();
+         }
+         else
+            mSettingsAccess.reset();
+         mChangeButton->SetTranslatableLabel(label);
+         if (mOptionsButton)
+            mOptionsButton->Enable(pState && GetPlugin(pState->GetID()));
       }
 
       void RemoveFromList()
@@ -355,7 +393,7 @@ namespace
          if(mProject == nullptr || mEffectState == nullptr)
             return;
          
-         auto effectName = mEffectState->GetEffect()->GetName();
+         auto effectName = GetEffectName();
          //After AudioIO::RemoveState call this will be destroyed
          auto project = mProject.get();
          auto trackName = mTrack->GetName();
@@ -382,6 +420,8 @@ namespace
             return;
          }
          auto access = mEffectState->GetAccess();
+         // Copy settings
+         auto initialSettings = access->Get();
          auto cleanup = EffectManager::Get().SetBatchProcessing(ID);
 
          // Like the call in EffectManager::PromptUser, but access causes
@@ -394,7 +434,7 @@ namespace
 
          if (changed)
          {
-            auto effectName = mEffectState->GetEffect()->GetName();
+            auto effectName = GetEffectName();
             ProjectHistory::Get(*mProject).PushState(
                //i18n-hint: undo history, first parameter - realtime effect name, second - track name
                XO("'%s' effect of '%s' modified").Format(effectName, mTrack->GetName()),
@@ -402,6 +442,10 @@ namespace
                XO("Modify realtime effect")
          );
          }
+         else
+            // Dialog was cancelled.
+            // Reverse any temporary changes made to the state
+            access->Set(std::move(initialSettings));
       }
 
       void OnChangeButtonClicked(wxCommandEvent& event)
@@ -526,6 +570,8 @@ class RealtimeEffectListWindow : public wxScrolledWindow
    wxWeakRef<AudacityProject> mProject;
    std::shared_ptr<Track> mTrack;
    wxButton* mAddEffect{nullptr};
+   wxStaticText* mAddEffectHint{nullptr};
+   wxWindow* mAddEffectTutorialLink{nullptr};
    wxWindow* mEffectListContainer{nullptr};
 
    Observer::Subscription mEffectListItemMovedSubscription;
@@ -539,6 +585,7 @@ public:
                      const wxString& name = wxPanelNameStr)
       : wxScrolledWindow(parent, winid, pos, size, style, name)
    {
+      Bind(wxEVT_SIZE, &RealtimeEffectListWindow::OnSizeChanged, this);
 #ifdef __WXMSW__
       //Fixes flickering on redraw
       wxScrolledWindow::SetDoubleBuffered(true);
@@ -546,9 +593,20 @@ public:
       auto rootSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
       auto addEffect = safenew ThemedButtonWrapper<wxButton>(this, wxID_ANY);
-      addEffect->SetTranslatableLabel(XO("Add new effect"));
+      addEffect->SetTranslatableLabel(XO("Add effect"));
       addEffect->Bind(wxEVT_BUTTON, &RealtimeEffectListWindow::OnAddEffectClicked, this);
       mAddEffect = addEffect;
+
+      auto addEffectHint = safenew ThemedWindowWrapper<wxStaticText>(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_NO_AUTORESIZE);
+      //Workaround: text is set in the OnSizeChange
+      addEffectHint->SetForegroundColorIndex(clrTrackPanelText);
+      mAddEffectHint = addEffectHint;
+
+      //TODO: set link
+      auto addEffectTutorialLink = safenew ThemedWindowWrapper<wxHyperlinkCtrl>(this, wxID_ANY, "x", "https://www.audacityteam.org");
+      //i18n-hint: Hyperlink to the effects stack panel tutorial video
+      addEffectTutorialLink->SetTranslatableLabel(XO("Watch video"));
+      mAddEffectTutorialLink = addEffectTutorialLink;
 
       auto effectListContainer = safenew ThemedWindowWrapper<wxWindow>(this, wxID_ANY);
       effectListContainer->SetBackgroundColorIndex(clrMedium);
@@ -562,16 +620,14 @@ public:
       dropHintLine->Hide();
 
       rootSizer->Add(mEffectListContainer, 0, wxEXPAND | wxBOTTOM, 10);
-      rootSizer->Add(addEffect, 0, wxLEFT | wxRIGHT | wxEXPAND, 30);
+      rootSizer->Add(addEffect, 0, wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, 20);
+      rootSizer->Add(addEffectHint, 0, wxLEFT | wxRIGHT | wxBOTTOM | wxEXPAND, 20);
+      rootSizer->Add(addEffectTutorialLink, 0, wxLEFT | wxRIGHT | wxEXPAND, 20);
 
       SetSizer(rootSizer.release());
 
       Bind(EVT_MOVABLE_CONTROL_DRAG_STARTED, [dropHintLine](const MovableControlEvent& event)
       {
-         dropHintLine->Show();
-         dropHintLine->Raise();
-         //Make it zero-sized until first EVT_MOVABLE_CONTROL_DRAG_POSITION is triggered
-         dropHintLine->SetSize({0, 0});
          if(auto window = dynamic_cast<wxWindow*>(event.GetEventObject()))
             window->Raise();
       });
@@ -585,12 +641,20 @@ public:
          if(event.GetSourceIndex() == event.GetTargetIndex())
          {
             //do not display hint line if position didn't change
-            dropHintLine->SetSize({0, 0});
+            dropHintLine->Hide();
             return;
          }
 
+         if(!dropHintLine->IsShown())
+         {
+            dropHintLine->Show();
+            dropHintLine->Raise();
+            if(auto window = dynamic_cast<wxWindow*>(event.GetEventObject()))
+               window->Raise();
+         }
+
          auto item = sizer->GetItem(event.GetTargetIndex());
-         dropHintLine->SetSize(item->GetSize().x, 3);
+         dropHintLine->SetSize(item->GetSize().x, DropHintLineHeight);
 
          if(event.GetTargetIndex() > event.GetSourceIndex())
             dropHintLine->SetPosition(item->GetRect().GetBottomLeft() - wxPoint(0, DropHintLineHeight));
@@ -625,6 +689,22 @@ public:
       SetScrollRate(0, 20);
    }
 
+   void OnSizeChanged(wxSizeEvent& event)
+   {
+      if(auto sizerItem = GetSizer()->GetItem(mAddEffectHint))
+      {
+         //We need to wrap the text whenever panel width changes and adjust widget height
+         //so that text is fully visible, but there is no height-for-width layout algorithm
+         //in wxWidgets yet, so for now we just do it manually
+
+         //Restore original text, because 'Wrap' will replace it with wrapped one
+         mAddEffectHint->SetLabel(_("Realtime effects are non-destructive and can be changed at any time."));
+         mAddEffectHint->Wrap(GetClientSize().x - sizerItem->GetBorder() * 2);
+         mAddEffectHint->InvalidateBestSize();
+      }
+      event.Skip();
+   }
+
    void OnEffectListItemChange(const RealtimeEffectListMessage& msg)
    {
       wxWindowUpdateLocker freeze(this);
@@ -652,8 +732,13 @@ public:
          auto sizer = mEffectListContainer->GetSizer();
          auto item = sizer->GetItem(msg.srcIndex)->GetWindow();
          item->Destroy();
+#ifdef __WXGTK__
+         // See comment in ReloadEffectsList
+         if(sizer->IsEmpty())
+            mEffectListContainer->Hide();
+#endif
       }
-      Layout();
+      SendSizeEventToParent();
    }
 
    void ResetTrack()
@@ -683,6 +768,12 @@ public:
       }
    }
 
+   void EnableEffects(bool enable)
+   {
+      if (mTrack)
+         RealtimeEffectList::Get(*mTrack).SetActive(enable);
+   }
+
    void ReloadEffectsList()
    {
       wxWindowUpdateLocker freeze(this);
@@ -690,9 +781,8 @@ public:
       mEffectListContainer->GetSizer()->Clear(true);
 
 #ifdef __WXGTK__
-      //Workaround for GTK: if none children were added to the container,
-      //underlying gtk widget size will not be updated, resulting in widget
-      //overlap.
+      //Workaround for GTK: Underlying GTK widget does not update
+      //its size when wxWindow size is set to zero
       if(!mTrack || RealtimeEffectList::Get(*mTrack).GetStatesCount() == 0)
          mEffectListContainer->Hide();
 #endif
@@ -704,7 +794,7 @@ public:
             InsertEffectRow(i, effects.GetStateAt(i));
       }
       mAddEffect->Enable(!!mTrack);
-      Layout();
+      SendSizeEventToParent();
    }
 
    void OnAddEffectClicked(const wxCommandEvent& event)
@@ -719,6 +809,7 @@ public:
       if(auto state = AudioIO::Get()->AddState(*mProject, &*mTrack, effectID))
       {
          auto effect = state->GetEffect();
+         assert(effect); // postcondition of AddState
          ProjectHistory::Get(*mProject).PushState(
             //i18n-hint: undo history, first parameter - realtime effect name, second - track name
             XO("'%s' added to the '%s' effect stack").Format(effect->GetName(), mTrack->GetName()),
@@ -758,15 +849,26 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
       auto toggleEffects = safenew ThemedButtonWrapper<wxBitmapButton>(header, wxID_ANY, wxBitmap{}, wxDefaultPosition, wxDefaultSize, wxNO_BORDER);
-      toggleEffects->SetBitmapIndex(bmpEffectOff);
+      toggleEffects->SetBitmapIndex(bmpEffectOn);
       toggleEffects->SetBackgroundColorIndex(clrMedium);
       mToggleEffects = toggleEffects;
 
+      toggleEffects->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) {
+         auto pButton =
+            static_cast<ThemedButtonWrapper<wxBitmapButton>*>(mToggleEffects);
+         auto index = pButton->GetBitmapIndex();
+         bool wasEnabled = (index == bmpEffectOn);
+         if (mEffectList) {
+            mEffectList->EnableEffects(!wasEnabled);
+         }
+         pButton->SetBitmapIndex(wasEnabled ? bmpEffectOff : bmpEffectOn);
+      });
+   
       hSizer->Add(toggleEffects, 0, wxSTRETCH_NOT | wxALIGN_CENTER | wxLEFT, 5);
       {
          auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
 
-         auto headerText = safenew ThemedWindowWrapper<wxStaticText>(header, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
+         auto headerText = safenew ThemedWindowWrapper<wxStaticText>(header, wxID_ANY, wxEmptyString);
          headerText->SetFont(wxFont(wxFontInfo().Bold()));
          headerText->SetTranslatableLabel(XO("Realtime Effects"));
          headerText->SetForegroundColorIndex(clrTrackPanelText);
@@ -799,7 +901,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(wxWindow* parent, wxWindowID id, const 
    vSizer->Add(effectList, 1, wxEXPAND);
    mEffectList = effectList;
 
-   SetSizer(vSizer.release());
+   SetSizerAndFit(vSizer.release());
 }
 
 void RealtimeEffectPanel::SetTrack(AudacityProject& project, const std::shared_ptr<Track>& track)

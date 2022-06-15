@@ -1230,11 +1230,11 @@ void EffectUIHost::InitializeRealtime()
       mpState =
          AudioIO::Get()->AddState(mProject, nullptr, GetID(mEffectUIHost));
       if (mpState) {
-         auto pAccess = mpState->GetAccess();
-         if (!(pAccess->IsSameAs(*mpAccess)))
+         mpAccess2 = mpState->GetAccess();
+         if (!(mpAccess2->IsSameAs(*mpAccess)))
             // Decorate the given access object
             mpAccess = std::make_shared<EffectSettingsAccessTee>(
-               *pAccess, mpAccess);
+               *mpAccess, mpAccess2);
       }
       /*
       ProjectHistory::Get(mProject).PushState(
@@ -1606,5 +1606,6 @@ static WaveTrackIORegistry::ObjectReaderEntry waveTrackAccessor {
 
 static WaveTrackIORegistry::ObjectWriterEntry waveTrackWriter {
 [](const WaveTrack &track, auto &xmlFile) {
-   RealtimeEffectList::Get(track).WriteXML(xmlFile);
+   if (track.IsLeader())
+      RealtimeEffectList::Get(track).WriteXML(xmlFile);
 } };

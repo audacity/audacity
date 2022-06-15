@@ -802,14 +802,11 @@ bool VST3Effect::RealtimeSuspend()
    return true;
 }
 
-bool VST3Effect::RealtimeResume() noexcept
+bool VST3Effect::RealtimeResume()
 {
-   return GuardedCall<bool>([this]()
-   {
-      for(auto& effect : mRealtimeGroupProcessors)
-         effect->mAudioProcessor->setProcessing(true);
-      return true;
-   });
+   for(auto& effect : mRealtimeGroupProcessors)
+      effect->mAudioProcessor->setProcessing(true);
+   return true;
 }
 
 bool VST3Effect::RealtimeProcessStart(EffectSettings &)
@@ -822,9 +819,11 @@ bool VST3Effect::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t VST3Effect::RealtimeProcess(int group, EffectSettings &,
+size_t VST3Effect::RealtimeProcess(size_t group, EffectSettings &,
    const float* const* inBuf, float* const* outBuf, size_t numSamples)
 {
+   if (group >= mRealtimeGroupProcessors.size())
+      return 0;
    auto& effect = mRealtimeGroupProcessors[group];
    return VST3ProcessBlock(effect->mEffectComponent.get(), effect->mSetup, inBuf, outBuf, numSamples, mPendingChanges.get());
 }

@@ -50,10 +50,6 @@
 AudioUnitWrapper::ParameterInfo::ParameterInfo(
    AudioUnit mUnit, AudioUnitParameterID parmID)
 {
-   static constexpr char idBeg = wxT('<');
-   static constexpr char idSep = wxT(',');
-   static constexpr char idEnd = wxT('>');
-
    UInt32 dataSize;
 
    mInfo = {};
@@ -109,26 +105,50 @@ AudioUnitWrapper::ParameterInfo::ParameterInfo(
 #endif
 }
 
+std::optional<AudioUnitParameterID>
+AudioUnitWrapper::ParameterInfo::ParseKey(const wxString &key)
+{
+   // This is not a complete validation of the format of the key
+   const auto npos = wxString::npos;
+   constexpr char chars[]{ idSep, idBeg, '0' };
+   // Scan left for , or <
+   if (auto index = key.find_last_of(chars); index != npos) {
+      ++index;
+      // Scan right for >
+      if (const auto index2 = key.find(idEnd, index)
+         ; index2 != npos && index2 > index
+      ){
+         // Interpret as hex
+         if (long value{}
+             ; key.substr(index, index2 - index).ToLong(&value, 16))
+            return value;
+      }
+   }
+   return {};
+}
+
 bool AudioUnitWrapper::FetchSettings(AudioUnitEffectSettings &settings) const
 {
-   // Fetch Settings values from the AudioUnit into AudioUnitEffectSettings,
+   // Fetch values from the AudioUnit into AudioUnitEffectSettings,
    // keeping the cache up-to-date after state changes in the AudioUnit
-
-   // First zero out all values, in case any parameters are not retrievable
-   settings.ResetValues();
-
    ForEachParameter(
    [this, &settings](const ParameterInfo &pi, AudioUnitParameterID ID) {
+      // Always make a slot, even for parameter IDs that are known but
+      // not gettable from the instance now.  Example:  AUGraphicEQ when
+      // you choose 10 bands; the values for bands 10 ... 30 are undefined
+      // but the parameter IDs are known
+      auto &slot = settings.values[ID];
+      slot = {};
       AudioUnitParameterValue value;
       if (!pi.mName ||
          AudioUnitGetParameter(
-            mUnit.get(), ID, kAudioUnitScope_Global, 0, &value))
-         // Probably failed because of invalid parameter which can happen
-         // if a plug-in is in a certain mode that doesn't contain the
-         // parameter.  In any case, just ignore it.
-         {}
+            mUnit.get(), ID, kAudioUnitScope_Global, 0, &value)) {
+            // Probably failed because of invalid parameter which can happen
+            // if a plug-in is in a certain mode that doesn't contain the
+            // parameter.  In any case, just ignore it.
+         }
       else
-         settings.values[ID] = value;
+         slot.emplace(*pi.mName, value);
       return true;
    });
    return true;
@@ -147,26 +167,33 @@ bool AudioUnitWrapper::StoreSettings(
 
    // Update parameter values in the AudioUnit from const
    // AudioUnitEffectSettings
-   ForEachParameter(
-   [this, &settings](const ParameterInfo &pi, AudioUnitParameterID ID)
-   {
-      if (pi.mName) {
-         if (auto iter = settings.values.find(ID);
-             iter != settings.values.end()) {
-            if (AudioUnitSetParameter(mUnit.get(), ID,
-               kAudioUnitScope_Global, 0, iter->second, 0)) {
-               // Probably failed because of invalid parameter which can happen
-               // if a plug-in is in a certain mode that doesn't contain the
-               // parameter.  In any case, just ignore it.
+   // Allow two passes; because sometimes the re-assignability of one parameter
+   // depends on first doing it for another parameter, but the other is later
+   // in the iteration.  For instance, for AUGraphicEQ, parameter ID 10000
+   // (decimal) determines 10 or 31 bands, but while the effect is still set
+   // for 10, then assignment to the last 21 sliders fails.
+   for (auto pass : {0, 1}) {
+      ForEachParameter([ this, &settings
+      ] (const ParameterInfo &pi, AudioUnitParameterID ID) {
+         if (pi.mName) {
+            if (auto iter = settings.values.find(ID);
+               iter != settings.values.end() && iter->second.has_value()
+            ){
+               if (AudioUnitSetParameter(mUnit.get(), ID,
+                  kAudioUnitScope_Global, 0, iter->second->second, 0)) {
+                  // Probably failed because of an invalid parameter when
+                  // a plug-in is in a certain mode that doesn't contain
+                  // the parameter.
+               }
+            }
+            else {
+               // Leave parameters that are in the AudioUnit, but not known in
+               // settings, unchanged
             }
          }
-         else
-            // Leave parameters that are in the AudioUnit, but not known in
-            // settings, unchanged
-            {}
-      }
-      return true;
-   });
+         return true;
+      });
+   }
    return true;
 }
 

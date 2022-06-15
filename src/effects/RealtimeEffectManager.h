@@ -62,7 +62,7 @@ public:
    bool IsActive() const noexcept;
    void Suspend();
    void Resume() noexcept;
-   Latency GetLatency() const;
+//   Latency GetLatency() const;
 
    //! Main thread appends a global or per-track effect
    /*!
@@ -70,6 +70,8 @@ public:
     @param pTrack if null, then state is added to the global list
     @param id identifies the effect
     @return if null, the given id was not found
+
+    @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState> AddState(
       RealtimeEffects::InitializationScope *pScope, Track *pTrack,
@@ -107,17 +109,17 @@ private:
       ~AllListsLock() { Reset(); }
    };
 
-   void ProcessStart();
+   void ProcessStart(bool suspended);
    /*! @copydoc ProcessScope::Process */
-   size_t Process(Track &track,
+   size_t Process(bool suspended, Track &track,
       float *const *buffers, float *const *scratch, size_t numSamples);
-   void ProcessEnd() noexcept;
+   void ProcessEnd(bool suspended) noexcept;
 
    RealtimeEffectManager(const RealtimeEffectManager&) = delete;
    RealtimeEffectManager &operator=(const RealtimeEffectManager&) = delete;
 
    using StateVisitor =
-      std::function<void(RealtimeEffectState &state, bool bypassed)> ;
+      std::function<void(RealtimeEffectState &state, bool listIsActive)> ;
 
    //! Visit the per-project states first, then states for leader if not null
    void VisitGroup(Track &leader, StateVisitor func);
@@ -128,12 +130,16 @@ private:
 
    AudacityProject &mProject;
 
-   std::mutex mLock;
    Latency mLatency{ 0 };
 
    double mRate;
 
    std::atomic<bool> mSuspended{ true };
+   bool GetSuspended() const
+      { return mSuspended.load(std::memory_order_relaxed); }
+   void SetSuspended(bool value)
+      { mSuspended.store(value, std::memory_order_relaxed); }
+
    std::atomic<bool> mActive{ false };
 
    // This member is mutated only by Initialize(), AddTrack(), Finalize()
@@ -185,7 +191,7 @@ public:
    {
       if (auto pProject = mwProject.lock()) {
          auto &manager = RealtimeEffectManager::Get(*pProject);
-         if (!manager.mSuspended)
+         if (!manager.GetSuspended())
             manager.Suspend();
          else
             mwProject.reset();
@@ -211,6 +217,7 @@ public:
       if (auto pProject = mwProject.lock()) {
          auto &manager = RealtimeEffectManager::Get(*pProject);
          mLocks = { &manager };
+         mSuspended = manager.GetSuspended();
       }
    }
    //! Require a prior InializationScope to ensure correct nesting
@@ -219,14 +226,14 @@ public:
       : mwProject{ move(wProject) }
    {
       if (auto pProject = mwProject.lock())
-         RealtimeEffectManager::Get(*pProject).ProcessStart();
+         RealtimeEffectManager::Get(*pProject).ProcessStart(mSuspended);
    }
    ProcessingScope( ProcessingScope &&other ) = default;
    ProcessingScope& operator=( ProcessingScope &&other ) = default;
    ~ProcessingScope()
    {
       if (auto pProject = mwProject.lock())
-         RealtimeEffectManager::Get(*pProject).ProcessEnd();
+         RealtimeEffectManager::Get(*pProject).ProcessEnd(mSuspended);
    }
 
    size_t Process(Track &track,
@@ -239,7 +246,7 @@ public:
    {
       if (auto pProject = mwProject.lock())
          return RealtimeEffectManager::Get(*pProject)
-            .Process(track, buffers, scratch, numSamples);
+            .Process(mSuspended, track, buffers, scratch, numSamples);
       else
          return numSamples; // consider them trivially processed
    }
@@ -247,6 +254,7 @@ public:
 private:
    RealtimeEffectManager::AllListsLock mLocks;
    std::weak_ptr<AudacityProject> mwProject;
+   bool mSuspended{};
 };
 }
 

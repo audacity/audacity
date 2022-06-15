@@ -165,9 +165,11 @@ bool EffectBassTreble::RealtimeFinalize(EffectSettings &) noexcept
    return true;
 }
 
-size_t EffectBassTreble::RealtimeProcess(int group, EffectSettings &settings,
+size_t EffectBassTreble::RealtimeProcess(size_t group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
+   if (group >= mSlaves.size())
+      return 0;
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
 

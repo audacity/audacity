@@ -80,9 +80,20 @@ public:
    //! @return value is not negative
    double GetDuration() const { return mDuration; }
    void SetDuration(double value) { mDuration = std::max(0.0, value); }
+
+   //! Versioning counter for detecting echo from worker thread;
+   //! it does not need a large range of values
+   using Counter = unsigned char;
+   Counter GetCounter() const { return mCounter; }
+   void SetCounter(Counter value) { mCounter = value; }
+
+   bool GetActive() const { return mActive; }
+   void SetActive(bool value) { mActive = value; }
 private:
    NumericFormatSymbol mDurationFormat{};
    double mDuration{}; //!< @invariant non-negative
+   Counter mCounter{ 0 };
+   bool mActive{ true };
 };
 
 //! Externalized state of a plug-in
@@ -257,6 +268,7 @@ public:
 
    //! Store settings as keys and values
    /*!
+    The override may assume `parms` is initially empty
     @return true on success
     */
    virtual bool SaveSettings(
@@ -398,7 +410,7 @@ public:
     @return success
     Default implementation does nothing, returns true
     */
-   virtual bool RealtimeResume() noexcept;
+   virtual bool RealtimeResume();
 
    //! settings are possibly changed, since last call, by an asynchronous dialog
    /*!
@@ -411,7 +423,7 @@ public:
     @return success
     Default implementation does nothing, returns 0
     */
-   virtual size_t RealtimeProcess(int group, EffectSettings &settings,
+   virtual size_t RealtimeProcess(size_t group, EffectSettings &settings,
       const float *const *inBuf, float *const *outBuf, size_t numSamples);
 
    //! settings can be updated to let a dialog change appearance at idle

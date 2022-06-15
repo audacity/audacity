@@ -882,9 +882,9 @@ struct LadspaEffect::Instance
       EffectSettings &settings, unsigned numChannels, float sampleRate)
    override;
    bool RealtimeSuspend() override;
-   bool RealtimeResume() noexcept override;
+   bool RealtimeResume() override;
    bool RealtimeProcessStart(EffectSettings &settings) override;
-   size_t RealtimeProcess(int group, EffectSettings &settings,
+   size_t RealtimeProcess(size_t group, EffectSettings &settings,
       const float *const *inBuf, float *const *outBuf, size_t numSamples)
    override;
    bool RealtimeProcessEnd(EffectSettings &settings) noexcept override;
@@ -1017,7 +1017,7 @@ bool LadspaEffect::Instance::RealtimeSuspend()
    return true;
 }
 
-bool LadspaEffect::Instance::RealtimeResume() noexcept
+bool LadspaEffect::Instance::RealtimeResume()
 {
    return true;
 }
@@ -1027,9 +1027,12 @@ bool LadspaEffect::Instance::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t LadspaEffect::Instance::RealtimeProcess(int group, EffectSettings &,
+size_t LadspaEffect::Instance::RealtimeProcess(size_t group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
+   if (group >= mSlaves.size())
+      return 0;
+
    auto &effect = GetEffect();
    for (unsigned i = 0; i < effect.mAudioIns; ++i)
       effect.mData->connect_port(mSlaves[group], effect.mInputPorts[i],

@@ -486,6 +486,27 @@ NonInterferingBase {
 #endif
 };
 
+//! Workaround for std::make_shared not working on macOs with over-alignment
+/*!
+ Defines a static member function to use as an alternative to that in std::
+ */
+template<typename T> // CRTP
+struct SharedNonInterfering : NonInterferingBase
+{
+   template<typename... Args>
+   static std::shared_ptr<T> make_shared(Args &&...args)
+   {
+      return std::
+#ifdef __APPLE__
+         // shared_ptr must be constructed from unique_ptr on Mac
+         make_unique
+#else
+         make_shared
+#endif
+                    <T>(std::forward<Args>(args)...);
+   }
+};
+
 /*! Given a structure type T, derive a structure with sufficient padding so that there is not false sharing of
  cache lines between successive elements of an array of those structures.
  */
@@ -494,6 +515,18 @@ template< typename T > struct NonInterfering
    , T
 {
    using T::T;
+
+   //! Allow assignment from default-aligned base type
+   void Set(const T &other)
+   {
+      T::operator =(other);
+   }
+
+   //! Allow assignment from default-aligned base type
+   void Set(T &&other)
+   {
+      T::operator =(std::move(other));
+   }
 };
 
 // These macros are used widely, so declared here.

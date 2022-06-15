@@ -1106,8 +1106,7 @@ bool VSTEffect::RealtimeInitialize(EffectSettings &settings)
 bool VSTEffect::RealtimeAddProcessor(
    EffectSettings &settings, unsigned numChannels, float sampleRate)
 {
-   mSlaves.push_back(std::make_unique<VSTEffect>(mPath, this));
-   VSTEffect *const slave = mSlaves.back().get();
+   auto slave = std::make_unique<VSTEffect>(mPath, this);
 
    slave->SetBlockSize(mBlockSize);
    slave->SetChannelCount(numChannels);
@@ -1137,7 +1136,11 @@ bool VSTEffect::RealtimeAddProcessor(
       callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
    }
 
-   return slave->ProcessInitialize(settings, 0, nullptr);
+   if (!slave->ProcessInitialize(settings, 0, nullptr))
+      return false;
+
+   mSlaves.emplace_back(move(slave));
+   return true;
 }
 
 bool VSTEffect::RealtimeFinalize(EffectSettings &) noexcept
@@ -1161,16 +1164,14 @@ bool VSTEffect::RealtimeSuspend()
    return true;
 }
 
-bool VSTEffect::RealtimeResume() noexcept
+bool VSTEffect::RealtimeResume()
 {
-return GuardedCall<bool>([&]{
    PowerOn();
 
    for (const auto &slave : mSlaves)
       slave->PowerOn();
 
    return true;
-});
 }
 
 bool VSTEffect::RealtimeProcessStart(EffectSettings &)
@@ -1178,10 +1179,12 @@ bool VSTEffect::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t VSTEffect::RealtimeProcess(int group, EffectSettings &settings,
+size_t VSTEffect::RealtimeProcess(size_t group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
+   if (group >= mSlaves.size())
+      return 0;
    return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
 }
 

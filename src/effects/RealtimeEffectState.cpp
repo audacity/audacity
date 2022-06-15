@@ -10,22 +10,27 @@
 
 #include "RealtimeEffectState.h"
 
+#include "AudioIOBase.h"
 #include "EffectInterface.h"
 #include "MessageBuffer.h"
 #include "PluginManager.h"
 
+#include <chrono>
+#include <thread>
+
 //! Mediator of two-way inter-thread communication of changes of settings
 class RealtimeEffectState::AccessState : public NonInterferingBase {
 public:
-   AccessState(const EffectSettingsManager &effect, EffectSettings &settings)
-      : mEffect{effect}
-      , mSettings{settings}
+   AccessState(const EffectSettingsManager &effect,
+      EffectSettings &mainSettings, EffectSettings &workerSettings)
+      : mEffect{ effect }
+      , mWorkerSettings{ workerSettings }
    {
       // Initialize each message buffer with two copies of settings
-      mChannelToMain.Write(ToMainSlot{settings});
-      mChannelToMain.Write(ToMainSlot{settings});
-      mChannelFromMain.Write(FromMainSlot{settings});
-      mChannelFromMain.Write(FromMainSlot{settings});
+      mChannelToMain.Write(ToMainSlot{ mainSettings });
+      mChannelToMain.Write(ToMainSlot{ mainSettings });
+      mChannelFromMain.Write(FromMainSlot{ mainSettings });
+      mChannelFromMain.Write(FromMainSlot{ mainSettings });
    }
 
    const EffectSettings &MainRead() {
@@ -37,17 +42,25 @@ public:
       // Main thread may simply swap new content into place
       mChannelFromMain.Write(std::move(settings));
    }
+   const EffectSettings &MainWriteThrough(const EffectSettings &settings) {
+      // Send a copy of settings for worker to update from later
+      MainWrite(EffectSettings{ settings });
+      // Main thread assumes worker isn't processing and bypasses the echo
+      return (mMainThreadCache = settings);
+   }
 
    struct EffectAndSettings{
       const EffectSettingsManager &effect; const EffectSettings &settings; };
    void WorkerRead() {
       // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelFromMain.Read<FromMainSlot::Reader>(mEffect, mSettings);
+      mChannelFromMain.Read<FromMainSlot::Reader>(mEffect, mWorkerSettings);
    }
    void WorkerWrite() {
       // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelToMain.Write(EffectAndSettings{mEffect, mSettings});
+      mChannelToMain.Write(EffectAndSettings{ mEffect, mWorkerSettings });
    }
+
+   EffectSettings mLastSettings;
 
 private:
    struct ToMainSlot {
@@ -105,7 +118,7 @@ private:
    MessageBuffer<FromMainSlot> mChannelFromMain;
 
    const EffectSettingsManager &mEffect;
-   EffectSettings &mSettings;
+   EffectSettings &mWorkerSettings;
    EffectSettings mMainThreadCache;
 };
 
@@ -119,8 +132,33 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    ~Access() override = default;
    const EffectSettings &Get() override {
       if (auto pState = mwState.lock()) {
-         if (auto pAccessState = pState->GetAccessState())
-            return pAccessState->MainRead();
+         if (auto pAccessState = pState->GetAccessState()) {
+            auto &lastSettings = pAccessState->mLastSettings;
+            const EffectSettings *pResult{};
+            do {
+               pResult = &pAccessState->MainRead();
+               if (pResult->extra.GetCounter() ==
+                   lastSettings.extra.GetCounter()) {
+                  // Echo is completed
+                  break;
+               }
+               else if (auto pAudioIO = AudioIOBase::Get()
+                  ; !(pAudioIO && pAudioIO->IsStreamActive())
+               ){
+                  // not relying on the other thread to make progress
+                  // and no fear of data races
+                  pResult = &pAccessState->MainWriteThrough(lastSettings);
+                  break;
+               }
+               else {
+                  using namespace std::chrono;
+                  std::this_thread::sleep_for(50ms);
+               }
+            } while( true );
+            assert(pResult); // It was surely assigned non-null
+            pState->mMainSettings.Set(*pResult); // Update the state
+            return *pResult;
+         }
       }
       // Non-modal dialog may have outlived the RealtimeEffectState
       static EffectSettings empty;
@@ -128,8 +166,15 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
    }
    void Set(EffectSettings &&settings) override {
       if (auto pState = mwState.lock())
-         if (auto pAccessState = pState->GetAccessState())
-            pAccessState->MainWrite(std::move(settings));
+         if (auto pAccessState = pState->GetAccessState()) {
+            auto &lastSettings = pAccessState->mLastSettings;
+            auto lastCounter = lastSettings.extra.GetCounter();
+            settings.extra.SetCounter(++lastCounter);
+            // move to remember values here
+            lastSettings = std::move(settings);
+            // move a copy to there
+            pAccessState->MainWrite(EffectSettings{ lastSettings });
+         }
    }
    bool IsSameAs(const EffectSettingsAccess &other) const override {
       if (auto pOther = dynamic_cast<const Access*>(&other)) {
@@ -140,6 +185,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       }
       return false;
    }
+   //! Store no state here but this weak pointer, so `IsSameAs` isn't lying
    std::weak_ptr<RealtimeEffectState> mwState;
 };
 
@@ -151,8 +197,9 @@ RealtimeEffectState::RealtimeEffectState(const PluginID & id)
 RealtimeEffectState::RealtimeEffectState(const RealtimeEffectState &other)
   : mID{ other.mID }
   , mPlugin{ other.mPlugin }
-  , mSettings{ other.mSettings }
+  , mMainSettings{ other.mMainSettings }
 {
+   // Do not copy mWorkerSettings
 }
 
 RealtimeEffectState::~RealtimeEffectState() = default;
@@ -181,47 +228,51 @@ const EffectInstanceFactory *RealtimeEffectState::GetEffect()
       mPlugin = EffectFactory::Call(mID);
       if (mPlugin)
          // Also make EffectSettings
-         mSettings = mPlugin->MakeSettings();
+         mMainSettings.Set(mPlugin->MakeSettings());
    }
    return mPlugin;
 }
 
-bool RealtimeEffectState::Suspend()
+bool RealtimeEffectState::EnsureInstance(double rate)
 {
-   ++mSuspendCount;
-   return mSuspendCount != 1 || (mInstance && mInstance->RealtimeSuspend());
-}
-
-bool RealtimeEffectState::Resume() noexcept
-{
-   assert(mSuspendCount > 0);
-   --mSuspendCount;
-   return mSuspendCount != 0 || (mInstance && mInstance->RealtimeResume());
+   if (!mInstance) {
+      //! copying settings in the main thread while worker isn't yet running
+      mWorkerSettings = mMainSettings;
+      mLastActive = IsActive();
+      
+      mInstance = mPlugin->MakeInstance();
+      if (!mInstance)
+         return false;
+      
+      mInstance->SetSampleRate(rate);
+      
+      // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
+      // number was important
+      mInstance->SetBlockSize(512);
+      
+      return mInstance->RealtimeInitialize(mMainSettings);
+   }
+   mInstance->SetSampleRate(rate);
+   return true;
 }
 
 bool RealtimeEffectState::Initialize(double rate)
 {
    if (!mPlugin)
       return false;
-   mInstance = mPlugin->MakeInstance();
-   if (!mInstance)
-      return false;
 
    mCurrentProcessor = 0;
    mGroups.clear();
-   mInstance->SetSampleRate(rate);
-
-   // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
-   // number was important
-   mInstance->SetBlockSize(512);
-
-   return mInstance->RealtimeInitialize(mSettings);
+   return EnsureInstance(rate);
 }
 
 //! Set up processors to be visited repeatedly in Process.
 /*! The iteration over channels in AddTrack and Process must be the same */
 bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
 {
+   if (!EnsureInstance(rate))
+      return false;
+
    if (!mPlugin || !mInstance)
       return false;
 
@@ -229,7 +280,7 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
    auto ochans = chans;
    auto gchans = chans;
 
-   mGroups[&track] = mCurrentProcessor;
+   auto first = mCurrentProcessor;
 
    const auto numAudioIn = mPlugin->GetAudioInCount();
    const auto numAudioOut = mPlugin->GetAudioOutCount();
@@ -271,23 +322,48 @@ bool RealtimeEffectState::AddTrack(Track &track, unsigned chans, float rate)
       }
 
       // Add a NEW processor
-      mInstance->RealtimeAddProcessor(mSettings, gchans, rate);
-      mCurrentProcessor++;
+      // Pass reference to worker settings, not main -- such as, for connecting
+      // Ladspa ports to the proper addresses.
+      if (mInstance->RealtimeAddProcessor(mWorkerSettings, gchans, rate))
+         mCurrentProcessor++;
+      else
+         break;
    }
 
-   return true;
+   if (mCurrentProcessor > first) {
+      mGroups[&track] = first;
+      return true;
+   }
+   return false;
 }
 
-bool RealtimeEffectState::ProcessStart()
+bool RealtimeEffectState::ProcessStart(bool running)
 {
-   if (!mInstance)
-      return false;
-
    // Get state changes from the main thread
+   // Note that it is only here that the answer of IsActive() may be changed,
+   // and it is important that for each state the answer is unchanging in one
+   // processing scope.
    if (auto pAccessState = TestAccessState())
       pAccessState->WorkerRead();
+   
+   // Detect transitions of activity state
+   bool active = IsActive() && running;
+   if (active != mLastActive) {
+      if (mInstance) {
+         bool success = active
+            ? mInstance->RealtimeResume()
+            : mInstance->RealtimeSuspend();
+         if (!success)
+            return false;
+      }
+      mLastActive = active;
+   }
 
-   return mInstance->RealtimeProcessStart(mSettings);
+   if (!mInstance || !active)
+      return false;
+
+   // Assuming we are in a processing scope, use the worker settings
+   return mInstance->RealtimeProcessStart(mWorkerSettings);
 }
 
 //! Visit the effect processors that were added in AddTrack
@@ -396,8 +472,9 @@ size_t RealtimeEffectState::Process(Track &track,
       for (decltype(numSamples) block = 0; block < numSamples; block += blockSize)
       {
          auto cnt = std::min(numSamples - block, blockSize);
+         // Assuming we are in a processing scope, use the worker settings
          len += mInstance->RealtimeProcess(processor,
-            mSettings, clientIn, clientOut, cnt);
+            mWorkerSettings, clientIn, clientOut, cnt);
 
          for (size_t i = 0 ; i < numAudioIn; i++)
          {
@@ -415,36 +492,40 @@ size_t RealtimeEffectState::Process(Track &track,
    return len;
 }
 
-bool RealtimeEffectState::ProcessEnd()
+bool RealtimeEffectState::ProcessEnd(bool running)
 {
-   if (!mInstance)
-      return false;
+   bool result = mInstance && IsActive() && running &&
+      // Assuming we are in a processing scope, use the worker settings
+      mInstance->RealtimeProcessEnd(mWorkerSettings);
 
-   auto result = mInstance->RealtimeProcessEnd(mSettings);
-   if (result)
+   if (auto pAccessState = TestAccessState())
+      // Always done, regardless of activity
       // Some dialogs require communication back from the processor so that
       // they can update their appearance in idle time, and some plug-in
       // libraries (like lv2) require the host program to mediate the
       // communication
-      if (auto pAccessState = TestAccessState())
-         pAccessState->WorkerWrite();
+      pAccessState->WorkerWrite();
 
    return result;
 }
 
 bool RealtimeEffectState::IsActive() const noexcept
 {
-   return mSuspendCount == 0;
+   return mWorkerSettings.extra.GetActive();
 }
 
 bool RealtimeEffectState::Finalize() noexcept
 {
+   // This is the main thread cleaning up a state not now used in processing
+   mMainSettings = mWorkerSettings;
+
    mGroups.clear();
+   mCurrentProcessor = 0;
 
    if (!mInstance)
       return false;
 
-   auto result = mInstance->RealtimeFinalize(mSettings);
+   auto result = mInstance->RealtimeFinalize(mMainSettings);
    mInstance.reset();
    return result;
 }
@@ -461,6 +542,7 @@ static const auto parametersAttribute = "parameters";
 static const auto parameterAttribute = "parameter";
 static const auto nameAttribute = "name";
 static const auto valueAttribute = "value";
+static constexpr auto activeAttribute = "active";
 
 bool RealtimeEffectState::HandleXMLTag(
    const std::string_view &tag, const AttributesList &attrs)
@@ -469,11 +551,7 @@ bool RealtimeEffectState::HandleXMLTag(
       mParameters.clear();
       mPlugin = nullptr;
       mID.clear();
-
-      for (auto pair : attrs) {
-         auto attr = pair.first;
-         auto value = pair.second;
-
+      for (auto &[attr, value] : attrs) {
          if (attr == idAttribute) {
             SetID(value.ToWString());
             if (!mPlugin) {
@@ -482,8 +560,9 @@ bool RealtimeEffectState::HandleXMLTag(
          }
          else if (attr == versionAttribute) {
          }
+         else if (attr == activeAttribute)
+            mMainSettings.extra.SetActive(value.Get<bool>());
       }
-
       return true;
    }
    else if (tag == parametersAttribute)
@@ -491,19 +570,13 @@ bool RealtimeEffectState::HandleXMLTag(
    else if (tag == parameterAttribute) {
       wxString n;
       wxString v;
-
-      for (auto pair : attrs) {
-         auto attr = pair.first;
-         auto value = pair.second;
-
+      for (auto &[attr, value] : attrs) {
          if (attr == nameAttribute)
             n = value.ToWString();
          else if (attr == valueAttribute)
             v = value.ToWString();
       }
-
       mParameters += wxString::Format(wxT("\"%s=%s\" "), n, v);
-
       return true;
    }
    else
@@ -515,7 +588,7 @@ void RealtimeEffectState::HandleXMLEndTag(const std::string_view &tag)
    if (tag == XMLTag()) {
       if (mPlugin && !mParameters.empty()) {
          CommandParameters parms(mParameters);
-         mPlugin->LoadSettings(parms, mSettings);
+         mPlugin->LoadSettings(parms, mMainSettings);
       }
       mParameters.clear();
    }
@@ -534,12 +607,14 @@ void RealtimeEffectState::WriteXML(XMLWriter &xmlFile)
       return;
 
    xmlFile.StartTag(XMLTag());
+   const auto active = mMainSettings.extra.GetActive();
+   xmlFile.WriteAttr(activeAttribute, active);
    xmlFile.WriteAttr(
       idAttribute, XMLWriter::XMLEsc(PluginManager::GetID(mPlugin)));
    xmlFile.WriteAttr(versionAttribute, XMLWriter::XMLEsc(mPlugin->GetVersion()));
 
    CommandParameters cmdParms;
-   if (mPlugin->SaveSettings(mSettings, cmdParms)) {
+   if (mPlugin->SaveSettings(mMainSettings, cmdParms)) {
       xmlFile.StartTag(parametersAttribute);
 
       wxString entryName;
@@ -573,6 +648,6 @@ std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
    // Only the main thread assigns to the atomic pointer, here and
    // once only in the lifetime of the state
    if (!GetAccessState())
-      mpAccessState.emplace(*mPlugin, mSettings);
+      mpAccessState.emplace(*mPlugin, mMainSettings, mWorkerSettings);
    return std::make_shared<Access>(*this);
 }

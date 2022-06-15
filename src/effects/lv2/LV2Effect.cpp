@@ -1200,7 +1200,7 @@ bool LV2Effect::RealtimeSuspend()
    return true;
 }
 
-bool LV2Effect::RealtimeResume() noexcept
+bool LV2Effect::RealtimeResume()
 {
    mPositionSpeed = 1.0;
    mPositionFrame = 0.0;
@@ -1297,10 +1297,11 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
    return true;
 }
 
-size_t LV2Effect::RealtimeProcess(int group, EffectSettings &,
+size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
-   wxASSERT(group >= 0 && group < (int) mSlaves.size());
+   if (group >= mSlaves.size())
+      return 0;
    wxASSERT(numSamples <= (size_t) mBlockSize);
 
    if (group < 0 || group >= (int) mSlaves.size())
@@ -2286,9 +2287,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
             innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
          }
 
-         std::sort(mGroups.begin(), mGroups.end(),
-            [](const TranslatableString &a, const TranslatableString &b){
-               return a.Translation() < b.Translation(); });
+         std::sort(mGroups.begin(), mGroups.end(), TranslationLess);
 
          for (size_t i = 0, groupCount = mGroups.size(); i < groupCount; i++)
          {
