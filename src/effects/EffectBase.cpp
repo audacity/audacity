@@ -157,10 +157,8 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
 #endif
    CountWaveTracks();
 
-   // Note: Init may read parameters from preferences
-   auto pInstance = MakeInstance();
-   if (!(pInstance && pInstance->Init()))
-      return false;
+   // Allow the dialog factory to fill this in, but it might not
+   std::shared_ptr<EffectInstance> pInstance;
 
    // Prompting will be bypassed when applying an effect that has already
    // been configured, e.g. repeating the last effect on a different selection.
@@ -170,10 +168,23 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
       if (!ShowHostInterface(
          *pParent, dialogFactory, pInstance, *pAccess, IsBatchProcessing() ) )
          return false;
+      else if (!pInstance)
+         return false;
       else
          // Retrieve again after the dialog modified settings
          settings = pAccess->Get();
    }
+
+   if (!pInstance) {
+      // Path that skipped the dialog factory -- effect may be non-interactive
+      // or this is batch mode processing or repeat of last effect with stored
+      // settings.
+      pInstance = MakeInstance();
+      // Note: Init may read parameters from preferences
+      if (!pInstance || !pInstance->Init())
+         return false;
+   }
+
 
    // If the dialog was shown, then it has been closed without errors or
    // cancellation, and any change of duration has been saved in the config file

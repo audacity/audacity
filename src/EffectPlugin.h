@@ -29,6 +29,10 @@ class EffectPlugin;
 
 //! Type of function that creates a dialog for an effect
 /*! The dialog may be modal or non-modal */
+   /*
+    @param[out] pInstance may construct
+    (and then must call Init() with success), or leave null for failure
+    */
 using EffectDialogFactory = std::function< wxDialog* (
    wxWindow &parent, EffectPlugin &, EffectUIClientInterface &,
    std::shared_ptr<EffectInstance> &,

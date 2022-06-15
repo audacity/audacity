@@ -1069,7 +1069,7 @@ int NyquistEffect::ShowHostInterface(
 
    // We're done if the user clicked "Close", we are not the Nyquist Prompt,
    // or the program currently loaded into the prompt doesn't have a UI.
-   if (!res || !mIsPrompt || mControls.size() == 0)
+   if (!res || !mIsPrompt || mControls.size() == 0 || !pInstance)
       return res;
 
    // Nyquist prompt was OK, but gave us some magic ;control comments to
@@ -1115,6 +1115,9 @@ int NyquistEffect::ShowHostInterface(
          nyquistSettings.proxyDebug = this->mDebug;
       });
    }
+   if (!pNewInstance)
+      // Propagate the failure from nested ShowHostInterface
+      pInstance.reset();
    return res;
 }
 

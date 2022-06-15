@@ -333,7 +333,7 @@ bool EffectManager::PromptUser(
 {
    bool result = false;
    if (auto effect = GetEffect(ID)) {
-      auto pInstance = effect->MakeInstance(); // short-lived object
+      std::shared_ptr<EffectInstance> pInstance;
       //! Show the effect dialog, only so that the user can choose settings,
       //! for instance to define a macro.
       if (const auto pSettings = GetDefaultSettings(ID))

@@ -424,8 +424,7 @@ namespace
          auto initialSettings = access->Get();
          auto cleanup = EffectManager::Get().SetBatchProcessing(ID);
 
-         std::shared_ptr<EffectInstance> pInstance =
-            effectPlugin->MakeInstance(); // short-lived object
+         std::shared_ptr<EffectInstance> pInstance;
 
          // Like the call in EffectManager::PromptUser, but access causes
          // the necessary inter-thread communication of settings changes

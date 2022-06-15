@@ -42,9 +42,14 @@ class EffectUIHost final : public wxDialogWrapper
 {
 public:
    // constructors and destructors
+   /*
+    @param[out] pInstance may construct
+    (and then must call Init() with success), or leave null for failure
+    */
    EffectUIHost(wxWindow *parent, AudacityProject &project,
       EffectPlugin &effect, EffectUIClientInterface &client,
-      std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
+      std::shared_ptr<EffectInstance> &pInstance,
+      EffectSettingsAccess &access,
       const std::shared_ptr<RealtimeEffectState> &pPriorState = {});
    virtual ~EffectUIHost();
 
@@ -53,10 +58,11 @@ public:
 
    int ShowModal() override;
 
-   void InitializeRealtime();
    bool Initialize();
 
 private:
+   std::shared_ptr<EffectInstance> InitializeInstance();
+
    wxPanel *BuildButtonBar( wxWindow *parent );
 
    void OnInitDialog(wxInitDialogEvent & evt);
@@ -97,8 +103,6 @@ private:
    wxWindow *const mParent;
    EffectPlugin &mEffectUIHost;
    EffectUIClientInterface &mClient;
-   //! @invariant not null
-   const std::shared_ptr<EffectInstance> mpInstance;
    //! @invariant not null
    const EffectPlugin::EffectSettingsAccessPtr mpGivenAccess;
    EffectPlugin::EffectSettingsAccessPtr mpAccess;
@@ -144,6 +148,8 @@ private:
    // Used only in an assertion
    bool mClosed{ false };
 #endif
+
+   const std::shared_ptr<EffectInstance> mpInstance;
 
    DECLARE_EVENT_TABLE()
 };
