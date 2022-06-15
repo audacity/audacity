@@ -461,9 +461,6 @@ bool LV2Effect::InitializePlugin()
    // Set up some "objects" for lv2 with "virtual functions" (C-style)
    // To be set up later when making a dialog:
    mExtensionDataFeature = {};
-   mExternalUIHost = { LV2Effect::ui_closed,
-      lilv_node_as_string( LilvNodePtr{ lilv_plugin_get_name(mPlug) }.get() )
-   };
 
    // Construct null-terminated array of "features" describing our capabilities
    // to lv2, and validate

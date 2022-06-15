@@ -546,7 +546,10 @@ private:
    // Not const, filled in when making a dialog
    LV2_Extension_Data_Feature mExtensionDataFeature{};
 
-   LV2_External_UI_Host mExternalUIHost{};
+   const LilvNodePtr mHumanId{ lilv_plugin_get_name(mPlug) };
+   const LV2_External_UI_Host mExternalUIHost{
+      LV2Effect::ui_closed, lilv_node_as_string(mHumanId.get()) };
+
    LV2_External_UI_Widget* mExternalWidget{};
    bool mExternalUIClosed{ false };
 
