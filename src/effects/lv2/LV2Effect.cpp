@@ -717,7 +717,7 @@ bool LV2Effect::InitializePlugin()
 
    // Determine available extensions
    mWantsOptionsInterface = false;
-   mWantsWorkerInterface = false;
+   mSuppliesWorkerInterface = false;
    mWantsStateInterface = false;
    if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(mPlug) }) {
       LILV_FOREACH(nodes, i, extdata.get()) {
@@ -726,7 +726,7 @@ bool LV2Effect::InitializePlugin()
          if (strcmp(uri, LV2_OPTIONS__interface) == 0)
             mWantsOptionsInterface = true;
          else if (strcmp(uri, LV2_WORKER__interface) == 0)
-            mWantsWorkerInterface = true;
+            mSuppliesWorkerInterface = true;
          else if (strcmp(uri, LV2_STATE__interface) == 0)
             mWantsStateInterface = true;
       }
@@ -1528,6 +1528,22 @@ auto LV2FeaturesList::GetFeaturePointers() const -> FeaturePointers
       result.push_back(&feature);
    result.push_back(nullptr);
    return result;
+}
+
+const LV2_Options_Option *LV2FeaturesList::NominalBlockLengthOption() const
+{
+   if (mSupportsNominalBlockLength)
+      return &mOptions[mBlockSizeOption];
+   else
+      return nullptr;
+}
+
+const LV2_Options_Option *LV2FeaturesList::SampleRateOption() const
+{
+   if (mSupportsSampleRate)
+      return &mOptions[mSampleRateOption];
+   else
+      return nullptr;
 }
 
 bool LV2Effect::ValidateFeatures(const LilvNode *subject)
@@ -2730,7 +2746,7 @@ LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList,
 {
    auto features = mFeaturesList.GetFeaturePointers();
    LV2_Feature tempFeature{ LV2_WORKER__schedule, &mWorkerSchedule };
-   if (mFeaturesList.mWantsWorkerInterface)
+   if (mFeaturesList.SuppliesWorkerInterface())
       // Insert another pointer before the null
       // Append a feature to the array, only for the plugin instantiation
       // (features are also used elsewhere to instantiate the UI in the
@@ -2765,8 +2781,8 @@ LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList,
       lilv_instance_get_extension_data(mInstance.get(), LV2_STATE__interface));
    mWorkerInterface = static_cast<const LV2_Worker_Interface *>(
       lilv_instance_get_extension_data(mInstance.get(), LV2_WORKER__interface));
-   if (mFeaturesList.mLatencyPort >= 0)
-      lilv_instance_connect_port(mInstance.get(), mFeaturesList.mLatencyPort, &mLatency);
+   if (mFeaturesList.LatencyPort() >= 0)
+      lilv_instance_connect_port(mInstance.get(), mFeaturesList.LatencyPort(), &mLatency);
    if (mWorkerInterface)
       mThread = std::thread{
          std::mem_fn( &LV2Wrapper::ThreadFunction ), std::ref(*this)
@@ -2812,22 +2828,20 @@ void LV2Wrapper::SetFreeWheeling(bool enable)
 
 void LV2Wrapper::SetSampleRate()
 {
-   if (mFeaturesList.mSupportsSampleRate &&
-      mOptionsInterface && mOptionsInterface->set
+   if (auto pOption = mFeaturesList.SampleRateOption()
+      ; pOption && mOptionsInterface && mOptionsInterface->set
    ){
-      LV2_Options_Option options[2]{
-         mFeaturesList.mOptions[mFeaturesList.mSampleRateOption], {} };
+      LV2_Options_Option options[2]{ *pOption, {} };
       mOptionsInterface->set(mHandle, options);
    }
 }
 
 void LV2Wrapper::SetBlockSize()
 {
-   if (mFeaturesList.mSupportsNominalBlockLength &&
-      mOptionsInterface && mOptionsInterface->set
+   if (auto pOption = mFeaturesList.NominalBlockLengthOption()
+      ; pOption && mOptionsInterface && mOptionsInterface->set
    ){
-      LV2_Options_Option options[2]{
-         mFeaturesList.mOptions[mFeaturesList.mBlockSizeOption], {} };
+      LV2_Options_Option options[2]{ *pOption, {} };
       mOptionsInterface->set(mHandle, options);
    }
 }

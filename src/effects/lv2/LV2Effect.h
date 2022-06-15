@@ -254,11 +254,23 @@ class LV2Wrapper;
 // Define a reasonable default sequence size in bytes
 #define DEFAULT_SEQSIZE 8192
 
-struct LV2FeaturesList {
+class LV2FeaturesList {
+public:
    //! Get vector of pointers to features, whose `.data()` can be passed to lv2
    using FeaturePointers = std::vector<const LV2_Feature *>;
    FeaturePointers GetFeaturePointers() const;
 
+   //! @return whether our host should reciprocally supply the
+   //! LV2_Worker_Schedule interface to the plug-in
+   bool SuppliesWorkerInterface() const { return mSuppliesWorkerInterface; }
+   //! @return may be null
+   const LV2_Options_Option *NominalBlockLengthOption() const;
+   //! @return may be null
+   const LV2_Options_Option *SampleRateOption() const;
+   //! @return a port number, or a negative
+   int LatencyPort() const { return mLatencyPort; }
+
+protected:
    std::vector<LV2_Options_Option> mOptions;
    size_t mSampleRateOption{};
    size_t mBlockSizeOption{};
@@ -267,7 +279,7 @@ struct LV2FeaturesList {
 
    int mLatencyPort{ -1 };
 
-   bool mWantsWorkerInterface{ false };
+   bool mSuppliesWorkerInterface{ false };
    bool mSupportsNominalBlockLength{ false };
    bool mSupportsSampleRate{ false };
 };
