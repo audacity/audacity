@@ -256,6 +256,11 @@ bool RealtimeEffectState::EnsureInstance(double rate)
    return true;
 }
 
+std::shared_ptr<EffectInstance> RealtimeEffectState::GetInstance() const
+{
+   return mInstance;
+}
+
 bool RealtimeEffectState::Initialize(double rate)
 {
    if (!mPlugin)

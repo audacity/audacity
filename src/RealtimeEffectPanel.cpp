@@ -424,13 +424,18 @@ namespace
          auto initialSettings = access->Get();
          auto cleanup = EffectManager::Get().SetBatchProcessing(ID);
 
+         // Find the right instance to connect to the dialog
+         auto pInstance = mEffectState->GetInstance();
+         if (!pInstance)
+            // Make a short-lived instance
+            pInstance = effectPlugin->MakeInstance();
+
          // Like the call in EffectManager::PromptUser, but access causes
          // the necessary inter-thread communication of settings changes
          // if play is in progress
          bool changed = effectPlugin->ShowHostInterface(
             ProjectWindow::Get( *mProject), DialogFactory(mEffectState),
-            *effectPlugin->MakeInstance(), // short-lived object
-            *access, true );
+            *pInstance, *access, true );
 
          if (changed)
          {

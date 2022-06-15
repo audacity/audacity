@@ -47,7 +47,9 @@ public:
    const PluginID& GetID() const noexcept;
    const EffectInstanceFactory *GetEffect();
 
-   bool EnsureInstance(double rate);
+   //! Expose a pointer to the state's instance if it exists.
+   /*! The state ceases to refer to the instance in `RealtimeFinalize` */
+   std::shared_ptr<EffectInstance> GetInstance() const;
    
    //! Main thread sets up for playback
    bool Initialize(double rate);
@@ -88,6 +90,8 @@ public:
    std::shared_ptr<EffectSettingsAccess> GetAccess();
 
 private:
+   bool EnsureInstance(double rate);
+
    struct Access;
    struct AccessState;
 
