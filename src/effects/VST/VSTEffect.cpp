@@ -2118,7 +2118,7 @@ void VSTEffect::SetString(int opcode, const wxString & str, int index)
    callDispatcher(opcode, index, 0, buf, 0.0);
 }
 
-intptr_t VSTEffect::callDispatcher(int opcode,
+intptr_t VSTEffectWrapper::callDispatcher(int opcode,
                                    int index, intptr_t value, void *ptr, float opt)
 {
    // Needed since we might be in the dispatcher when the timer pops
@@ -2126,11 +2126,11 @@ intptr_t VSTEffect::callDispatcher(int opcode,
    return mAEffect->dispatcher(mAEffect, opcode, index, value, ptr, opt);
 }
 
-intptr_t VSTEffect::constCallDispatcher(int opcode,
+intptr_t VSTEffectWrapper::constCallDispatcher(int opcode,
    int index, intptr_t value, void *ptr, float opt) const
 {
    // Assume we are passed a read-only dispatcher function code
-   return const_cast<VSTEffect*>(this)
+   return const_cast<VSTEffectWrapper*>(this)
       ->callDispatcher(opcode, index, value, ptr, opt);
 }
 
