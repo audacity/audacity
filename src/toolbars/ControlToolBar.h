@@ -84,13 +84,6 @@ class AUDACITY_DLL_API ControlToolBar final : public ToolBar {
  private:
    void UpdateStatusBar();
 
-   static AButton *MakeButton(
-      ControlToolBar *pBar,
-      teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-      int id,
-      bool processdownevents,
-      const TranslatableString &label);
-
    static
    void MakeAlternateImages(AButton &button, int idx,
                             teBmps eEnabledUp,

@@ -518,7 +518,8 @@ static struct DefaultConfigEntry {
    { TransportBarID,         NoBarID,                NoBarID                },
    { ToolsBarID,             TransportBarID,         NoBarID                },
    { EditBarID,              ToolsBarID,             NoBarID                },
-   { RecordMeterBarID,       EditBarID,              NoBarID                },
+   { AudioSetupBarID,        EditBarID,              NoBarID                },
+   { RecordMeterBarID,       AudioSetupBarID,        NoBarID                },
    { MixerBarID,             RecordMeterBarID,       NoBarID                },
    { PlayMeterBarID,         NoBarID,                TransportBarID         },
 

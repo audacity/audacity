@@ -56,4 +56,6 @@ class DevicePrefs final : public PrefsPanel
    DECLARE_EVENT_TABLE()
 };
 
+PrefsPanel *DevicePrefsFactory(wxWindow *parent, wxWindowID winid, AudacityProject *);
+
 #endif

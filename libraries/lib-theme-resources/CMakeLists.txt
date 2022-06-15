@@ -85,6 +85,7 @@ set( IMAGE_LIST
    ScrubDisabled.png
    Seek.png
    SeekDisabled.png
+   Setup.png
    Silence.png
    SilenceDisabled.png
    SliderThumb.png
