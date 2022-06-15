@@ -254,7 +254,26 @@ class LV2Wrapper;
 // Define a reasonable default sequence size in bytes
 #define DEFAULT_SEQSIZE 8192
 
+struct LV2FeaturesList {
+   //! Get vector of pointers to features, whose `.data()` can be passed to lv2
+   using FeaturePointers = std::vector<const LV2_Feature *>;
+   FeaturePointers GetFeaturePointers() const;
+
+   std::vector<LV2_Options_Option> mOptions;
+   size_t mSampleRateOption{};
+   size_t mBlockSizeOption{};
+
+   std::vector<LV2_Feature> mFeatures;
+
+   int mLatencyPort{ -1 };
+
+   bool mWantsWorkerInterface{ false };
+   bool mSupportsNominalBlockLength{ false };
+   bool mSupportsSampleRate{ false };
+};
+
 class LV2Effect final : public StatefulPerTrackEffect
+   , public LV2FeaturesList
 {
 public:
    LV2Effect(const LilvPlugin *plug);
@@ -392,10 +411,6 @@ private:
     */
    bool CheckOptions(const LilvNode *subject, bool required);
 
-   //! Get vector of pointers to features, whose `.data()` can be passed to lv2
-   using FeaturePointers = std::vector<const LV2_Feature *>;
-   FeaturePointers GetFeaturePointers() const;
-
    void AddFeature(const char *uri, const void *data);
    /*!
     @param subject URI of the host or of the UI identifies a resource in lv2
@@ -500,11 +515,9 @@ private:
 
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };
-   bool mWantsWorkerInterface{ false };
    bool mNoResize{ false };
 
    bool mUseLatency{ false };
-   int mLatencyPort{ -1 };
    bool mLatencyDone{ false };
    bool mRolling{ false };
 
@@ -554,14 +567,6 @@ private:
    bool mExternalUIClosed{ false };
 
    LV2_Atom_Forge mForge{};
-   
-   std::vector<LV2_Options_Option> mOptions;
-   size_t mBlockSizeOption{};
-   size_t mSampleRateOption{};
-   bool mSupportsNominalBlockLength{ false };
-   bool mSupportsSampleRate{ false };
-
-   std::vector<LV2_Feature> mFeatures;
 
    //! Index into m_features
    size_t mInstanceAccessFeature{};
@@ -622,7 +627,7 @@ public:
 
 public:
    //! May spawn a thread
-   LV2Wrapper(const LV2Effect &effect,
+   LV2Wrapper(const LV2FeaturesList &featuresList,
       const LilvPlugin *plugin, double sampleRate);
    //! If a thread was started, joins it
    ~LV2Wrapper();
@@ -649,7 +654,7 @@ private:
 
    std::thread mThread;
 
-   const LV2Effect &mEffect;
+   const LV2FeaturesList &mFeaturesList;
    LilvInstancePtr mInstance;
    LV2_Handle mHandle{};
 

@@ -1521,7 +1521,7 @@ void LV2Effect::AddFeature(const char *uri, const void *data)
    mFeatures.emplace_back(LV2_Feature{ uri, const_cast<void*>(data) });
 }
 
-auto LV2Effect::GetFeaturePointers() const -> FeaturePointers
+auto LV2FeaturesList::GetFeaturePointers() const -> FeaturePointers
 {
    FeaturePointers result;
    for (auto &feature : mFeatures)
@@ -2724,13 +2724,13 @@ LV2Wrapper::~LV2Wrapper()
    }
 }
 
-LV2Wrapper::LV2Wrapper(const LV2Effect &effect,
+LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList,
    const LilvPlugin *plugin, double sampleRate)
-:  mEffect{ effect }
+:  mFeaturesList{ featuresList }
 {
-   auto features = mEffect.GetFeaturePointers();
+   auto features = mFeaturesList.GetFeaturePointers();
    LV2_Feature tempFeature{ LV2_WORKER__schedule, &mWorkerSchedule };
-   if (mEffect.mWantsWorkerInterface)
+   if (mFeaturesList.mWantsWorkerInterface)
       // Insert another pointer before the null
       // Append a feature to the array, only for the plugin instantiation
       // (features are also used elsewhere to instantiate the UI in the
@@ -2765,8 +2765,8 @@ LV2Wrapper::LV2Wrapper(const LV2Effect &effect,
       lilv_instance_get_extension_data(mInstance.get(), LV2_STATE__interface));
    mWorkerInterface = static_cast<const LV2_Worker_Interface *>(
       lilv_instance_get_extension_data(mInstance.get(), LV2_WORKER__interface));
-   if (mEffect.mLatencyPort >= 0)
-      lilv_instance_connect_port(mInstance.get(), mEffect.mLatencyPort, &mLatency);
+   if (mFeaturesList.mLatencyPort >= 0)
+      lilv_instance_connect_port(mInstance.get(), mFeaturesList.mLatencyPort, &mLatency);
    if (mWorkerInterface)
       mThread = std::thread{
          std::mem_fn( &LV2Wrapper::ThreadFunction ), std::ref(*this)
@@ -2812,22 +2812,22 @@ void LV2Wrapper::SetFreeWheeling(bool enable)
 
 void LV2Wrapper::SetSampleRate()
 {
-   if (mEffect.mSupportsSampleRate &&
+   if (mFeaturesList.mSupportsSampleRate &&
       mOptionsInterface && mOptionsInterface->set
    ){
       LV2_Options_Option options[2]{
-         mEffect.mOptions[mEffect.mSampleRateOption], {} };
+         mFeaturesList.mOptions[mFeaturesList.mSampleRateOption], {} };
       mOptionsInterface->set(mHandle, options);
    }
 }
 
 void LV2Wrapper::SetBlockSize()
 {
-   if (mEffect.mSupportsNominalBlockLength &&
+   if (mFeaturesList.mSupportsNominalBlockLength &&
       mOptionsInterface && mOptionsInterface->set
    ){
       LV2_Options_Option options[2]{
-         mEffect.mOptions[mEffect.mBlockSizeOption], {} };
+         mFeaturesList.mOptions[mFeaturesList.mBlockSizeOption], {} };
       mOptionsInterface->set(mHandle, options);
    }
 }
