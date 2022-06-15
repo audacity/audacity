@@ -644,9 +644,11 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
       << wxT("<table>");   // start table of file formats supported
 
 
-   #ifdef USE_LIBMAD
+   #if defined(USE_LIBMAD)
    /* i18n-hint: This is what the library (libmad) does - imports MP3 files */
    AddBuildinfoRow(&informationStr, wxT("libmad"), XO("MP3 Importing"), enabled);
+   #elif defined(USE_LIBID3TAG)
+   AddBuildinfoRow(&informationStr, wxT("libmpg123"), XO("MP3 Importing"), enabled);
    #else
    AddBuildinfoRow(&informationStr, wxT("libmad"), XO("MP3 Importing"), disabled);
    #endif

@@ -52,6 +52,7 @@ deps=(
    freetype-devel
    fontconfig-devel
    mesa-libEGL-devel
+   mpg123-devel
 )
 
 dnf install -y \

@@ -60,6 +60,7 @@ deps=(
    libfreetype6-dev
    libfontconfig-dev
    libegl1-mesa-dev
+   libmpg123-dev
 )
 
 apt-get update
