@@ -73,6 +73,19 @@ typedef SInt16 CFBundleRefNum;
 #endif
 #endif
 
+struct VSTEffectWrapper : public VSTEffectLink
+{
+   AEffect* mAEffect = nullptr;
+
+   intptr_t callDispatcher(int opcode, int index,
+      intptr_t value, void* ptr, float opt) override;
+
+   intptr_t constCallDispatcher(int opcode, int index,
+      intptr_t value, void* ptr, float opt) const;
+
+   wxCRIT_SECT_DECLARE_MEMBER(mDispatcherLock);
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // VSTEffect
@@ -92,8 +105,8 @@ DECLARE_LOCAL_EVENT_TYPE(EVT_UPDATEDISPLAY, -1);
 ///////////////////////////////////////////////////////////////////////////////
 class VSTEffect final
    : public StatefulPerTrackEffect
-   , public XMLTagHandler
-   , public VSTEffectLink
+   , public VSTEffectWrapper
+   , public XMLTagHandler   
 {
  public:
    VSTEffect(const PluginPath & path, VSTEffect *master = NULL);
@@ -267,10 +280,7 @@ private:
 
    // VST methods
 
-   intptr_t callDispatcher(int opcode, int index,
-                           intptr_t value, void *ptr, float opt) override;
-   intptr_t constCallDispatcher(int opcode, int index,
-                           intptr_t value, void *ptr, float opt) const;
+   
    void callProcessReplacing(
       const float *const *inputs, float *const *outputs, int sampleframes);
    void callSetParameter(int index, float value);
@@ -342,7 +352,6 @@ private:
    ResourceHandle mResource;
 #endif
 
-   AEffect *mAEffect;
 
    VstTimeInfo mTimeInfo;
 
@@ -356,7 +365,7 @@ private:
    bool mWantsIdle;
    bool mWantsEditIdle;
 
-   wxCRIT_SECT_DECLARE_MEMBER(mDispatcherLock);
+   
 
    std::unique_ptr<VSTEffectTimer> mTimer;
    int mTimerGuard;
