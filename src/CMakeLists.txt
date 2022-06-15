@@ -706,7 +706,7 @@ list( APPEND SOURCES
       >
 
       $<$<BOOL:${USE_LIBMAD}>:
-         import/ImportMP3.cpp
+         import/ImportMP3_MAD.cpp
       >
 
       $<$<AND:$<BOOL:${USE_LIBOGG}>,$<BOOL:${USE_LIBVORBIS}>>:
