@@ -787,6 +787,8 @@ list( APPEND SOURCES
 
       # Toolbars
 
+      toolbars/AudioSetupToolBar.cpp
+      toolbars/AudioSetupToolBar.h
       toolbars/ControlToolBar.cpp
       toolbars/ControlToolBar.h
       toolbars/DeviceToolBar.cpp

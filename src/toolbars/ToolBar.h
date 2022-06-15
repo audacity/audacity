@@ -83,6 +83,7 @@ enum ToolBarID
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    SpectralSelectionBarID,
 #endif
+   AudioSetupBarID,
    TimeBarID,
    ToolBarCount
 };
