@@ -71,6 +71,8 @@ private:
    bool BypassEffect(bool bypass);
 
 private:
+   //! Whether the master instance is now allocated to a group number
+   bool mRecruited{ false };
    std::vector<std::unique_ptr<AudioUnitInstance>> mSlaves;
 
    AudioUnitCleanup<AudioUnit, AudioUnitUninitialize> mInitialization;

@@ -164,9 +164,18 @@ bool AudioUnitInstance::RealtimeAddProcessor(
    EffectSettings &settings, unsigned, float sampleRate)
 {
    auto &effect = static_cast<const PerTrackEffect&>(mProcessor);
-   auto slave = std::make_unique<AudioUnitInstance>(effect,
-      mComponent, mParameters, mIdentifier,
-      mAudioIns, mAudioOuts, mUseLatency);
+   AudioUnitInstance *slave = this;
+   std::unique_ptr<AudioUnitInstance> uSlave;
+   if (!mRecruited)
+      // Assign self to the first processor
+      mRecruited = true;
+   else {
+      // Assign another instance with independent state to other processors
+      uSlave = std::make_unique<AudioUnitInstance>(effect,
+         mComponent, mParameters, mIdentifier,
+         mAudioIns, mAudioOuts, mUseLatency);
+      slave = uSlave.get();
+   }
 
    slave->SetBlockSize(mBlockSize);
    slave->SetSampleRate(sampleRate);
@@ -177,7 +186,8 @@ bool AudioUnitInstance::RealtimeAddProcessor(
    if (!slave->ProcessInitialize(settings, 0, nullptr))
       return false;
 
-   mSlaves.push_back(std::move(slave));
+   if (uSlave)
+      mSlaves.push_back(move(uSlave));
    return true;
 }
 
@@ -187,6 +197,7 @@ return GuardedCall<bool>([&]{
    for (auto &pSlave : mSlaves)
       pSlave->ProcessFinalize();
    mSlaves.clear();
+   mRecruited = false;
    return ProcessFinalize();
 });
 }
@@ -223,9 +234,18 @@ AudioUnitInstance::RealtimeProcess(size_t group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    wxASSERT(numSamples <= mBlockSize);
-   if (group >= mSlaves.size())
+   // Interpret the group number consistently with RealtimeAddProcessor
+   if (!mRecruited)
       return 0;
-   return mSlaves[group]->ProcessBlock(settings, inbuf, outbuf, numSamples);
+   AudioUnitInstance *pSlave{};
+   if (group == 0)
+      pSlave = this;
+   else if (group - 1 < mSlaves.size())
+      pSlave = mSlaves[group - 1].get();
+   if (pSlave)
+      return pSlave->ProcessBlock(settings, inbuf, outbuf, numSamples);
+   else
+      return 0;
 }
 
 bool AudioUnitInstance::RealtimeProcessEnd(EffectSettings &) noexcept
