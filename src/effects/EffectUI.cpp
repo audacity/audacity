@@ -203,7 +203,7 @@ bool EffectSettingsAccessTee::IsSameAs(
 
 EffectUIHost::EffectUIHost(wxWindow *parent,
    AudacityProject &project, EffectPlugin &effect,
-   EffectUIClientInterface &client, EffectInstance &instance,
+   EffectUIClientInterface &client, std::shared_ptr<EffectInstance> &pInstance,
    EffectSettingsAccess &access,
    const std::shared_ptr<RealtimeEffectState> &pPriorState)
 :  wxDialogWrapper(parent, wxID_ANY, effect.GetDefinition().GetName(),
@@ -213,7 +213,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
 , mClient{ client }
 // Grab a pointer to the instance object,
 // extending its lifetime while this remains:
-, mpInstance{ instance.shared_from_this() }
+, mpInstance{ pInstance }
 // Grab a pointer to the access object,
 // extending its lifetime while this remains:
 , mpGivenAccess{ access.shared_from_this() }
@@ -1280,7 +1280,7 @@ void EffectUIHost::CleanupRealtime()
 wxDialog *EffectUI::DialogFactory( wxWindow &parent,
    EffectPlugin &host,
    EffectUIClientInterface &client,
-   EffectInstance &instance,
+   std::shared_ptr<EffectInstance> &pInstance,
    EffectSettingsAccess &access)
 {
    // Make sure there is an associated project, whose lifetime will
@@ -1290,7 +1290,7 @@ wxDialog *EffectUI::DialogFactory( wxWindow &parent,
    if ( !project )
       return nullptr;
    Destroy_ptr<EffectUIHost> dlg{ safenew EffectUIHost{ &parent,
-      *project, host, client, instance, access } };
+      *project, host, client, pInstance, access } };
    dlg->InitializeRealtime();
    if (dlg->Initialize())
       // release() is safe because parent will own it

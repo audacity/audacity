@@ -159,7 +159,7 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
 
    // Note: Init may read parameters from preferences
    auto pInstance = MakeInstance();
-   if (!pInstance->Init())
+   if (!(pInstance && pInstance->Init()))
       return false;
 
    // Prompting will be bypassed when applying an effect that has already
@@ -168,7 +168,7 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
    if ( pParent && dialogFactory && pAccess &&
       IsInteractive()) {
       if (!ShowHostInterface(
-         *pParent, dialogFactory, *pInstance, *pAccess, IsBatchProcessing() ) )
+         *pParent, dialogFactory, pInstance, *pAccess, IsBatchProcessing() ) )
          return false;
       else
          // Retrieve again after the dialog modified settings
@@ -191,6 +191,7 @@ bool EffectBase::DoEffect(EffectSettings &settings, double projectRate,
       );
       auto vr = valueRestorer( mProgress, progress.get() );
 
+      assert(pInstance); // null check above
       returnVal = pInstance->Process(settings);
    }
 
@@ -362,7 +363,8 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       if (!dryOnly)
          // TODO remove this reinitialization of state within the Effect object
          // It is done indirectly via Effect::Instance
-         MakeInstance()->Init();
+         if (auto pInstance = MakeInstance())
+            pInstance->Init();
 
       // In case any dialog control depends on mT1 or mDuration:
       if ( mUIDialog )
@@ -453,7 +455,9 @@ void EffectBase::Preview(EffectSettingsAccess &access, bool dryOnly)
       auto vr2 = valueRestorer( mIsPreview, true );
 
       access.ModifySettings([&](EffectSettings &settings){
-         success = MakeInstance()->Process(settings);
+         // Preview of non-realtime effect
+         auto pInstance = MakeInstance();
+         success = pInstance && pInstance->Process(settings);
       });
    }
 

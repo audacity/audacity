@@ -445,7 +445,7 @@ EffectType EffectNoiseReduction::GetType() const
  the framework for managing settings of other effects. */
 int EffectNoiseReduction::ShowHostInterface(
    wxWindow &parent, const EffectDialogFactory &,
-   EffectInstance &, EffectSettingsAccess &access,
+   std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
 {
    // to do: use forceModal correctly

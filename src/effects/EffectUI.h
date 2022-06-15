@@ -44,7 +44,7 @@ public:
    // constructors and destructors
    EffectUIHost(wxWindow *parent, AudacityProject &project,
       EffectPlugin &effect, EffectUIClientInterface &client,
-      EffectInstance &instance, EffectSettingsAccess &access,
+      std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
       const std::shared_ptr<RealtimeEffectState> &pPriorState = {});
    virtual ~EffectUIHost();
 
@@ -154,7 +154,8 @@ namespace  EffectUI {
 
    AUDACITY_DLL_API
    wxDialog *DialogFactory( wxWindow &parent, EffectPlugin &host,
-      EffectUIClientInterface &client, EffectInstance &instance,
+      EffectUIClientInterface &client,
+      std::shared_ptr<EffectInstance> &pInstance,
       EffectSettingsAccess &access);
 
    /** Run an effect given the plugin ID */

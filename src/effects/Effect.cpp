@@ -174,7 +174,7 @@ int Effect::ShowClientInterface(
 
 int Effect::ShowHostInterface(wxWindow &parent,
    const EffectDialogFactory &factory,
-   EffectInstance &instance, EffectSettingsAccess &access,
+   std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
    bool forceModal)
 {
    if (!IsInteractive())
@@ -197,7 +197,7 @@ int Effect::ShowHostInterface(wxWindow &parent,
    // populate it.  That factory function is called indirectly through a
    // std::function to avoid source code dependency cycles.
    EffectUIClientInterface *const client = this;
-   mHostUIDialog = factory(parent, *this, *client, instance, access);
+   mHostUIDialog = factory(parent, *this, *client, pInstance, access);
    if (!mHostUIDialog)
       return 0;
 
