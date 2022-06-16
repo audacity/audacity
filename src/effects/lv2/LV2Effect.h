@@ -198,8 +198,6 @@ public:
       mSampleRate = false;
       mEnumeration = false;
       mLogarithmic = false;
-      mCtrl.button = NULL;
-      mText = NULL;
    };
  
    wxString mUnits;
@@ -233,17 +231,6 @@ public:
             break;
       return s;
    }
-
-   // UI
-   wxTextCtrl *mText;
-   union
-   {
-      wxButton *button;
-      wxCheckBox *checkbox;
-      wxChoice *choice;
-      LV2EffectMeter *meter;
-      wxSlider *slider;
-   } mCtrl;
 };
 using LV2ControlPortPtr = std::shared_ptr<LV2ControlPort>;
 using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
@@ -345,6 +332,8 @@ public:
    // LV2Effect implementation
 
 private:
+   struct PlainUIControl;
+
    bool LoadParameters(const RegistryPath & group, EffectSettings &settings);
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
@@ -366,7 +355,7 @@ private:
    bool BuildPlain(EffectSettingsAccess &access);
 
    bool TransferDataToWindow() /* not override */;
-   void SetSlider(const LV2ControlPortPtr & port);
+   void SetSlider(const LV2ControlPortPtr & port, const PlainUIControl &ctrl);
 
    void OnTrigger(wxCommandEvent & evt);
    void OnToggle(wxCommandEvent & evt);
@@ -486,6 +475,21 @@ private:
    //! Index into m_features
    size_t mParentFeature{};
    LV2_Feature *mWorkerScheduleFeature{};
+
+   // UI
+   struct PlainUIControl {
+      wxTextCtrl *mText{};
+      //! Discriminate this union according to corresponding port's properties
+      union {
+         wxButton *button;
+         wxCheckBox *checkbox;
+         wxChoice *choice;
+         LV2EffectMeter *meter;
+         wxSlider *slider;
+      };
+   };
+   //! Array in correspondence with the control ports
+   std::vector<PlainUIControl> mPlainUIControls;
 
    SuilHostPtr mSuilHost;
    SuilInstancePtr mSuilInstance;

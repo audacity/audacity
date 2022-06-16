@@ -1262,32 +1262,24 @@ bool LV2Effect::CloseUI()
 #endif
 
    mParent->RemoveEventHandler(this);
-
-   if (mSuilInstance)
-   {
-      if (mNativeWin)
-      {
+   if (mSuilInstance) {
+      if (mNativeWin) {
          mNativeWin->Destroy();
-         mNativeWin = NULL;
+         mNativeWin = nullptr;
       }
-
       mUIIdleInterface = nullptr;
       mUIShowInterface = nullptr;
       mExternalWidget = nullptr;
-
       mSuilInstance.reset();
    }
-
    mSuilHost.reset();
-
    mMaster.reset();
-
-   mParent = NULL;
-   mDialog = NULL;
+   mParent = nullptr;
+   mDialog = nullptr;
 
    // Restore initial state
    mExtensionDataFeature = {};
-
+   mPlainUIControls.clear();
    return true;
 }
 
@@ -1710,6 +1702,8 @@ bool LV2Effect::BuildFancy()
 
 bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 {
+   mPlainUIControls.resize(mControlPorts.size());
+
    int numCols = 5;
    wxSizer *innerSizer;
 
@@ -1753,6 +1747,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
          auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
          gridSizer->AddGrowableCol(3);
          for (auto & p : mGroupMap[label]) { auto & port = mControlPorts[p];
+            auto &ctrl = mPlainUIControls[p];
             auto labelText = port->mName;
             if (!port->mUnits.empty())
                labelText += XO("(%s)").Format(port->mUnits).Translation();
@@ -1764,7 +1759,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                assert(w); // To justify safenew
                auto b = safenew wxButton(w, ID_Triggers + p, labelText);
                gridSizer->Add(b, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-               port->mCtrl.button = b;
+               ctrl.button = b;
 
                gridSizer->Add(1, 1, 0);
                gridSizer->Add(1, 1, 0);
@@ -1784,7 +1779,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                c->SetName(labelText);
                c->SetValue(port->mVal > 0);
                gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-               port->mCtrl.checkbox = c;
+               ctrl.checkbox = c;
 
                gridSizer->Add(1, 1, 0);
                gridSizer->Add(1, 1, 0);
@@ -1800,7 +1795,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                c->Append(port->mScaleLabels);
                c->SetSelection(s);
                gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-               port->mCtrl.choice = c;
+               ctrl.choice = c;
 
                gridSizer->Add(1, 1, 0);
                gridSizer->Add(1, 1, 0);
@@ -1813,7 +1808,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 
                auto m = safenew LV2EffectMeter(w, port);
                gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
-               port->mCtrl.meter = m;
+               ctrl.meter = m;
 
                gridSizer->Add(1, 1, 0);
             }
@@ -1822,7 +1817,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                auto t = safenew wxTextCtrl(w, ID_Texts + p, wxT(""));
                t->SetName(labelText);
                gridSizer->Add(t, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-               port->mText = t;
+               ctrl.mText = t;
                auto rate = port->mSampleRate ? mSampleRate : 1.0f;
                port->mLo = port->mMin * rate;
                port->mHi = port->mMax * rate;
@@ -1865,7 +1860,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                   0, 0, 1000, wxDefaultPosition, { 150, -1 });
                s->SetName(labelText);
                gridSizer->Add(s, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
-               port->mCtrl.slider = s;
+               ctrl.slider = s;
 
                // ... and optional upper-bound static text
                if (port->mHasHi) {
@@ -1941,14 +1936,13 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
    mParent->SetMinSize(w->GetMinSize());
 
    TransferDataToWindow();
-
    return true;
 }
 
 bool LV2Effect::TransferDataToWindow()
 {
-   if (mUseGUI)
-   {
+   if (mUseGUI) {
+      // fancy UI
       if (mSuilInstance)
          for (auto & port : mControlPorts)
             if (port->mIsInput)
@@ -1957,57 +1951,41 @@ bool LV2Effect::TransferDataToWindow()
       return true;
    }
 
-   for (auto & group : mGroups)
-   {
+   // else plain UI
+   // Visiting controls in same sequence as their creation
+   for (auto & group : mGroups) {
       const auto & params = mGroupMap[group];
-      for (auto & param : params)
-      {
-         auto & port = mControlPorts[param];
-
+      for (auto & param : params) { auto & port = mControlPorts[param];
+         auto &ctrl = mPlainUIControls[param];
          if (port->mTrigger)
-         {
             continue;
-         }
-
-         if (port->mToggle)
-         {
-            port->mCtrl.checkbox->SetValue(port->mVal > 0);
-         }
+         else if (port->mToggle)
+            ctrl.checkbox->SetValue(port->mVal > 0);
          else if (port->mEnumeration)      // Check before integer
-         {
-            auto s = port->Discretize(port->mVal);
-            port->mCtrl.choice->SetSelection(s);
-         }
-         else if (port->mIsInput)
-         {
-            port->mTmp = port->mVal * (port->mSampleRate ? mSampleRate : 1.0);
-            SetSlider(port);
+            ctrl.choice->SetSelection(port->Discretize(port->mVal));
+         else if (port->mIsInput) {
+            port->mTmp = port->mVal * (port->mSampleRate ? mSampleRate : 1.0f);
+            SetSlider(port, ctrl);
          }
       }
    }
-
    if (mParent && !mParent->TransferDataToWindow())
-   {
       return false;
-   }
-
    return true;
 }
 
-void LV2Effect::SetSlider(const LV2ControlPortPtr & port)
+void LV2Effect::SetSlider(
+   const LV2ControlPortPtr & port, const PlainUIControl &ctrl)
 {
    float lo = port->mLo;
    float hi = port->mHi;
    float val = port->mTmp;
-
-   if (port->mLogarithmic)
-   {
+   if (port->mLogarithmic) {
       lo = logf(lo);
       hi = logf(hi);
       val = logf(val);
    }
-
-   port->mCtrl.slider->SetValue(lrintf((val - lo) / (hi - lo) * 1000.0));
+   ctrl.slider->SetValue(lrintf((val - lo) / (hi - lo) * 1000.0));
 }
 
 void LV2Effect::OnTrigger(wxCommandEvent &evt)
@@ -2033,38 +2011,30 @@ void LV2Effect::OnChoice(wxCommandEvent &evt)
 
 void LV2Effect::OnText(wxCommandEvent &evt)
 {
-   auto & port = mControlPorts[evt.GetId() - ID_Texts];
-
-   if (port->mText->GetValidator()->TransferFromWindow())
-   {
+   size_t idx = evt.GetId() - ID_Texts;
+   auto & port = mControlPorts[idx];
+   auto & ctrl = mPlainUIControls[idx];
+   if (ctrl.mText->GetValidator()->TransferFromWindow()) {
       port->mVal = port->mSampleRate ? port->mTmp / mSampleRate : port->mTmp;
-
-      SetSlider(port);
+      SetSlider(port, ctrl);
    }
 }
 
 void LV2Effect::OnSlider(wxCommandEvent &evt)
 {
-   auto & port = mControlPorts[evt.GetId() - ID_Sliders];
-
+   size_t idx = evt.GetId() - ID_Sliders;
+   auto & port = mControlPorts[idx];
    float lo = port->mLo;
    float hi = port->mHi;
-
-   if (port->mLogarithmic)
-   {
+   if (port->mLogarithmic) {
       lo = logf(lo);
       hi = logf(hi);
    }
-
    port->mTmp = (((float) evt.GetInt()) / 1000.0) * (hi - lo) + lo;
+   port->mTmp = std::clamp(port->mTmp, lo, hi);
    port->mTmp = port->mLogarithmic ? expf(port->mTmp) : port->mTmp;
-
-   port->mTmp = port->mTmp < port->mLo ? port->mLo : port->mTmp;
-   port->mTmp = port->mTmp > port->mHi ? port->mHi : port->mTmp;
-
    port->mVal = port->mSampleRate ? port->mTmp / mSampleRate : port->mTmp;
-
-   port->mText->GetValidator()->TransferToWindow();
+   mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
 }
 
 void LV2Effect::OnTimer(wxTimerEvent &evt)
