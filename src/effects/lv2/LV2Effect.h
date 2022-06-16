@@ -256,6 +256,8 @@ class LV2Wrapper;
 
 class LV2FeaturesList {
 public:
+   explicit LV2FeaturesList(const LilvPlugin *plug);
+
    //! Get vector of pointers to features, whose `.data()` can be passed to lv2
    using FeaturePointers = std::vector<const LV2_Feature *>;
    FeaturePointers GetFeaturePointers() const;
@@ -270,7 +272,39 @@ public:
    //! @return a port number, or a negative
    int LatencyPort() const { return mLatencyPort; }
 
+   size_t AddOption(LV2_URID, uint32_t size, LV2_URID, const void *value);
+
+   /*!
+    @param subject URI of a plugin
+    @return whether all required features of subject are supported
+    */
+   bool ValidateOptions(const LilvNode *subject);
+
+   /*!
+    @param subject URI of a plugin
+    @param required whether to check required or optional features of subject
+    @return true only if `!required` or else all checked features are supported
+    */
+   bool CheckOptions(const LilvNode *subject, bool required);
+
+   void AddFeature(const char *uri, const void *data);
+
+   /*!
+    @param subject URI of the host or of the UI identifies a resource in lv2
+    @return whether all required features of subject are supported
+    */
+   bool ValidateFeatures(const LilvNode *subject);
+
+   /*!
+    @param subject URI of the host or of the UI identifies a resource in lv2
+    @param required whether to check required or optional features of subject
+    @return true only if `!required` or else all checked features are supported
+    */
+   bool CheckFeatures(const LilvNode *subject, bool required);
+
 protected:
+   const LilvPlugin *const mPlug;
+
    // lv2 functions require a pointer to non-const in places, but presumably
    // have no need to mutate the members of this structure
    LV2_URID_Map *URIDMapFeature() const
@@ -288,7 +322,6 @@ protected:
    // This object contains C-style virtual function tables that we fill in
    const LV2_URID_Map mURIDMapFeature{ this, LV2FeaturesList::urid_map };
 
-
    // Declare local URI map
    LV2Symbols::URIDMap mURIDMap;
 
@@ -303,6 +336,8 @@ protected:
    bool mSuppliesWorkerInterface{ false };
    bool mSupportsNominalBlockLength{ false };
    bool mSupportsSampleRate{ false };
+
+   bool mNoResize{ false };
 };
 
 class LV2Effect final : public StatefulPerTrackEffect
@@ -422,32 +457,6 @@ private:
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 
-   size_t AddOption(LV2_URID, uint32_t size, LV2_URID, const void *value);
-   /*!
-    @param subject URI of a plugin
-    @return whether all required features of subject are supported
-    */
-   bool ValidateOptions(const LilvNode *subject);
-   /*!
-    @param subject URI of a plugin
-    @param required whether to check required or optional features of subject
-    @return true only if `!required` or else all checked features are supported
-    */
-   bool CheckOptions(const LilvNode *subject, bool required);
-
-   void AddFeature(const char *uri, const void *data);
-   /*!
-    @param subject URI of the host or of the UI identifies a resource in lv2
-    @return whether all required features of subject are supported
-    */
-   bool ValidateFeatures(const LilvNode *subject);
-   /*!
-    @param subject URI of the host or of the UI identifies a resource in lv2
-    @param required whether to check required or optional features of subject
-    @return true only if `!required` or else all checked features are supported
-    */
-   bool CheckFeatures(const LilvNode *subject, bool required);
-
    bool BuildFancy();
    bool BuildPlain(EffectSettingsAccess &access);
 
@@ -498,9 +507,6 @@ private:
                      uint32_t type);
 
 private:
- 
-   const LilvPlugin *const mPlug;
-
    float mSampleRate{ 44100 };
    size_t mBlockSize{ DEFAULT_BLOCKSIZE };
    int mSeqSize{ DEFAULT_SEQSIZE };
@@ -531,7 +537,6 @@ private:
 
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };
-   bool mNoResize{ false };
 
    bool mUseLatency{ false };
    bool mLatencyDone{ false };

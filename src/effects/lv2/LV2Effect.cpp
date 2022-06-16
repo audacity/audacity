@@ -347,7 +347,7 @@ BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
    EVT_IDLE(LV2Effect::OnIdle)
 END_EVENT_TABLE()
 
-LV2Effect::LV2Effect(const LilvPlugin *plug) : mPlug{ plug }
+LV2Effect::LV2Effect(const LilvPlugin *plug) : LV2FeaturesList{ plug }
 {
 }
 
@@ -440,6 +440,10 @@ bool LV2Effect::SupportsRealtime() const
 bool LV2Effect::SupportsAutomation() const
 {
    return true;
+}
+
+LV2FeaturesList::LV2FeaturesList(const LilvPlugin *plug) : mPlug{ plug }
+{
 }
 
 bool LV2Effect::InitializePlugin()
@@ -1502,7 +1506,8 @@ bool LV2Effect::SaveParameters(
       PluginSettings::Private, group, wxT("Parameters"), parms);
 }
 
-size_t LV2Effect::AddOption(LV2_URID key, uint32_t size, LV2_URID type, const void *value)
+size_t LV2FeaturesList::AddOption(
+   LV2_URID key, uint32_t size, LV2_URID type, const void *value)
 {
    int ndx = mOptions.size();
    if (key != 0)
@@ -1513,7 +1518,7 @@ size_t LV2Effect::AddOption(LV2_URID key, uint32_t size, LV2_URID type, const vo
    return ndx;
 }
 
-void LV2Effect::AddFeature(const char *uri, const void *data)
+void LV2FeaturesList::AddFeature(const char *uri, const void *data)
 {
    // This casting to const is innocent
    // We pass our "virtual function tables" or array of options, which the
@@ -1546,12 +1551,12 @@ const LV2_Options_Option *LV2FeaturesList::SampleRateOption() const
       return nullptr;
 }
 
-bool LV2Effect::ValidateFeatures(const LilvNode *subject)
+bool LV2FeaturesList::ValidateFeatures(const LilvNode *subject)
 {
    return CheckFeatures(subject, true) && CheckFeatures(subject, false);
 }
 
-bool LV2Effect::CheckFeatures(const LilvNode *subject, bool required)
+bool LV2FeaturesList::CheckFeatures(const LilvNode *subject, bool required)
 {
    using namespace LV2Symbols;
    bool supported = true;
@@ -1582,12 +1587,12 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, bool required)
    return supported;
 }
 
-bool LV2Effect::ValidateOptions(const LilvNode *subject)
+bool LV2FeaturesList::ValidateOptions(const LilvNode *subject)
 {
    return CheckOptions(subject, true) && CheckOptions(subject, false);
 }
 
-bool LV2Effect::CheckOptions(const LilvNode *subject, bool required)
+bool LV2FeaturesList::CheckOptions(const LilvNode *subject, bool required)
 {
    using namespace LV2Symbols;
    bool supported = true;
