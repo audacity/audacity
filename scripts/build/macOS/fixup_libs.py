@@ -21,6 +21,9 @@ class OtoolRunner:
 
         return None
 
+    def _is_system_lib(self, path):
+        return path.startswith('/System/Library/') or path.startswith('/usr/lib/')
+
     def run(self, file):
         if file in self.cache:
             return self.cache[file]
@@ -41,7 +44,7 @@ class OtoolRunner:
                 m = re.match(r'\s+(.*)\s+\(', line)
                 if m:
                     lib_line = m.group(1)
-                    if lib_line.startswith('@') or not pathlib.Path(lib_line).is_absolute():
+                    if lib_line.startswith('@') or not self._is_system_lib(lib_line):
                         name = lib_line.split('/')[-1]
 
                         if name != fileName:
