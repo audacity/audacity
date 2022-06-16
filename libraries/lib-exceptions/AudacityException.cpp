@@ -87,7 +87,7 @@ void MessageBoxException::DelayedHandlerAction()
       // displays its message.  We assume that multiple messages have a
       // common cause such as exhaustion of disk space so that the others
       // give the user no useful added information.
-      
+
       using namespace BasicUI;
       if ( wxAtomicDec( sOutstandingMessages ) == 0 ) {
          if (exceptionType != ExceptionType::Internal
