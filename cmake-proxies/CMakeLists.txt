@@ -144,10 +144,13 @@ add_conan_lib(
 )
 
 add_conan_lib(
-   Wavpack
+   WavPack
    wavpack/5.4.0
-   OPTION_NAME Wavpack
+   OPTION_NAME wavpack
    ALLOW_FIND_PACKAGE
+   PKG_CONFIG "wavpack >= 5.2.0"
+   CONAN_OPTIONS
+      wavpack:shared=True
 )
 
 add_conan_lib(

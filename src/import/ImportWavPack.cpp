@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
   Audacity(R) is copyright (c) 1999-2021 Audacity Team.
-  License: GPL-v2-or-later.  See License.txt.
+  SPDX-License-Identifier: GPL-2.0-or-later.  See License.txt.
 
   ImportWavPack.cpp
 
@@ -47,7 +47,7 @@ static Importer::RegisteredUnusableImportPlugin registered
 #else
 
 extern "C" {
-#include<wavpack.h>
+#include<wavpack/wavpack.h>
 }
 
 

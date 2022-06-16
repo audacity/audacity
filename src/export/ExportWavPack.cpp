@@ -1,13 +1,12 @@
 /**********************************************************************
 
+   SPDX-License-Identifier: GPL-2.0-or-later
+
    Audacity: A Digital Audio Editor
 
    ExportWavPack.cpp
 
    Subhradeep Chakraborty
-
-   This program is distributed under the GNU General Public License, version 2.
-   A copy of this license is included with this source.
 
    Based on ExportOGG.cpp, ExportMP2.cpp by:
    Joshua Haberman
@@ -23,7 +22,7 @@
 #include "Prefs.h"
 #include "Mix.h"
 
-#include <wavpack.h>
+#include <wavpack/wavpack.h>
 #include <wx/log.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -150,6 +149,8 @@ void ExportWavPackOptions::PopulateOrExchange(ShuttleGui & S)
 {
    bool hybridMode = false;
    bool createCorrectionFile = false;
+   IntSetting QualitySetting{ L"/FileFormats/WavPackEncodeQuality", 1 };
+   IntSetting BitrateSetting{ L"/FileFormats/WavPackBitrate", 160 };
 
    gPrefs->Read(wxT("/FileFormats/WavPackHybridMode"), &hybridMode, 0);
    gPrefs->Read(wxT("/FileFormats/WavPackCreateCorrectionFile"), &createCorrectionFile, 0);
@@ -163,8 +164,7 @@ void ExportWavPackOptions::PopulateOrExchange(ShuttleGui & S)
          {
             S.TieNumberAsChoice(
                XXO("Quality"),
-               {wxT("/FileFormats/WavPackEncodeQuality"),
-                1},
+               QualitySetting,
                ExportQualityNames,
                &ExportQualityValues
             );
@@ -174,8 +174,7 @@ void ExportWavPackOptions::PopulateOrExchange(ShuttleGui & S)
 
             mBitRate = S.Disable(!hybridMode).TieNumberAsChoice(
                XXO("Bit Rate:"),
-               {wxT("/FileFormats/WavPackBitrate"),
-                160},
+               BitrateSetting,
                BitRateNames,
                &BitRateValues
             );
