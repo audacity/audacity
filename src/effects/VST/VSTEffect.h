@@ -84,6 +84,23 @@ struct VSTEffectWrapper : public VSTEffectLink
       intptr_t value, void* ptr, float opt) const;
 
    wxCRIT_SECT_DECLARE_MEMBER(mDispatcherLock);
+
+   float callGetParameter(int index) const;
+
+   int      GetString(wxString& outstr, int opcode, int index = 0) const;
+   wxString GetString(int opcode, int index = 0) const;
+
+   struct ParameterInfo
+   {
+      int      mID;
+      wxString mName;
+   };
+
+   //! @return true  continue visiting
+   //! @return false stop     visiting
+   using ParameterVisitor = std::function< bool(const ParameterInfo& pi) >;
+
+   void ForEachParameter(ParameterVisitor visitor) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -273,9 +290,8 @@ private:
    void Automate(int index, float value);
    void PowerOn();
    void PowerOff();
-
-   int GetString(wxString & outstr, int opcode, int index = 0) const;
-   wxString GetString(int opcode, int index = 0) const;
+      
+   
    void SetString(int opcode, const wxString & str, int index = 0);
 
    // VST methods
@@ -283,8 +299,7 @@ private:
    
    void callProcessReplacing(
       const float *const *inputs, float *const *outputs, int sampleframes);
-   void callSetParameter(int index, float value);
-   float callGetParameter(int index) const;
+   void callSetParameter(int index, float value);   
    void callSetProgram(int index);
    void callSetChunk(bool isPgm, int len, void *buf);
    void callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *info);
