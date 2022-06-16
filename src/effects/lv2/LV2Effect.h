@@ -64,104 +64,65 @@ class NumericTextCtrl;
 
 // DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
 
-class LV2Port
-{
+//! Immutable description of an LV2 port
+class LV2Port {
 public:
-   LV2Port(const LilvPort *port,
-           int index,
-           bool isInput,
-           const wxString & symbol,
-           const wxString & name,
-           TranslatableString group)
-   :  mPort(port),
-      mIndex(index),
-      mIsInput(isInput),
-      mSymbol(symbol),
-      mName(name),
-      mGroup(std::move(group))
-   {
-   };
-   LV2Port(const LV2Port &) = default;
-   LV2Port &operator = (const LV2Port &) = default;
-
-   const LilvPort *mPort;
-
-   uint32_t mIndex;
-   bool mIsInput;
-
-   wxString mSymbol;
-   wxString mName;
-   TranslatableString mGroup;
+   LV2Port(const LilvPort *port, int index, bool isInput,
+      const wxString &symbol, const wxString &name,
+      const TranslatableString &group
+   )  : mPort(port), mIndex(index), mIsInput(isInput)
+      , mSymbol(symbol), mName(name), mGroup(group)
+   {}
+   const LilvPort *const mPort;
+   const uint32_t mIndex;
+   const bool mIsInput;
+   const wxString mSymbol;
+   const wxString mName;
+   const TranslatableString mGroup;
 };
 
-class LV2AudioPort : public LV2Port
-{
+//! Immutable description of an LV2 Audio port
+class LV2AudioPort final : public LV2Port {
 public:
-   LV2AudioPort(const LilvPort *port,
-               int index,
-               bool isInput,
-               const wxString & symbol,
-               const wxString & name,
-               const TranslatableString & group)
-   :  LV2Port(port, index, isInput, symbol, name, group)
-   {
-   }
+   using LV2Port::LV2Port;
 };
 using LV2AudioPortPtr = std::shared_ptr<LV2AudioPort>;
 using LV2AudioPortArray = std::vector<LV2AudioPortPtr>;
 
-class LV2AtomPort : public LV2Port
-{
+class LV2AtomPort final : public LV2Port {
 public:
-   LV2AtomPort(const LilvPort *port,
-               int index,
-               bool isInput,
-               const wxString & symbol,
-               const wxString & name,
-               const TranslatableString & group)
-   :  LV2Port(port, index, isInput, symbol, name, group)
-   {
-  
-      mIsMidi = false;
-      mWantsPosition = false;
-      mMinimumSize = 1024;
-   }
-   virtual ~LV2AtomPort() = default;
-
-   uint32_t mMinimumSize;
-   bool mIsMidi;
-   bool mWantsPosition;
-
+   LV2AtomPort(const LilvPort *port, int index, bool isInput,
+      const wxString & symbol, const wxString & name,
+      const TranslatableString & group,
+      uint32_t minimumSize, bool isMidi, bool wantsPosition
+   )  : LV2Port{ port, index, isInput, symbol, name, group }
+      , mMinimumSize{ minimumSize }
+      , mIsMidi{ isMidi }
+      , mWantsPosition{ wantsPosition }
+   {}
+   const uint32_t mMinimumSize;
+   const bool mIsMidi;
+   const bool mWantsPosition;
+   const Lilv_ptr<ZixRing, zix_ring_free> mRing{ zix_ring_new(mMinimumSize) };
    std::vector<uint8_t> mBuffer;
-   Lilv_ptr<ZixRing, zix_ring_free> mRing;
 };
 using LV2AtomPortPtr = std::shared_ptr<LV2AtomPort>;
 using LV2AtomPortArray = std::vector<LV2AtomPortPtr>;
 
-class LV2CVPort : public LV2Port
-{
+class LV2CVPort final : public LV2Port {
 public:
-   LV2CVPort(const LilvPort *port,
-             int index,
-             bool isInput,
-             const wxString & symbol,
-             const wxString & name,
-             const TranslatableString & group)
-   :  LV2Port(port, index, isInput, symbol, name, group)
-   {
-      mMin = 0.0;
-      mMax = 1.0;
-      mDef = 0.0;
-      mHasLo = false;
-      mHasHi = false;
-   };
-
-   float mMin;
-   float mMax;
-   float mDef;
-   bool mHasLo;
-   bool mHasHi;
-
+   LV2CVPort(const LilvPort *port, int index, bool isInput,
+      const wxString & symbol, const wxString & name,
+      const TranslatableString & group,
+      float min, float max, float def, bool hasLo, bool hasHi
+   )  : LV2Port(port, index, isInput, symbol, name, group)
+      , mMin{ min }, mMax{ max }, mDef{ def }, mHasLo{ hasLo }, mHasHi{ hasHi }
+   {}
+   const float mMin;
+   const float mMax;
+   const float mDef;
+   const bool mHasLo;
+   const bool mHasHi;
    Floats mBuffer;
 };
 using LV2CVPortPtr = std::shared_ptr<LV2CVPort>;
@@ -170,58 +131,51 @@ using LV2CVPortArray = std::vector<LV2CVPortPtr>;
 class LV2EffectMeter;
 
 /** A structure that contains information about a single LV2 plugin port. */
-class LV2ControlPort : public LV2Port
+class LV2ControlPort final : public LV2Port
 {
 public:
-   LV2ControlPort(const LilvPort *port,
-                  int index,
-                  bool isInput,
-                  const wxString & symbol,
-                  const wxString & name,
-                  const TranslatableString & group)
-   :  LV2Port(port, index, isInput, symbol, name, group)
-   {
-      mMin = 0.0;
-      mMax = 0.0;
-      mDef = 0.0;
-      mVal = 0.0;
-      mLst = 0.0;
-      mTmp = 0.0;
-      mDmy = 0.0;
-      mLo = 0.0;
-      mHi = 0.0;
-      mHasLo = false;
-      mHasHi = false;
-      mToggle = false;
-      mTrigger = false;
-      mInteger = false;
-      mSampleRate = false;
-      mEnumeration = false;
-      mLogarithmic = false;
-   };
+   LV2ControlPort(const LilvPort *port, int index, bool isInput,
+      const wxString & symbol, const wxString & name,
+      const TranslatableString & group,
+      std::vector<double> scaleValues, wxArrayString scaleLabels,
+      const wxString &units,
+      float min, float max, float def, bool hasLo, bool hasHi,
+      bool toggle, bool enumeration, bool integer, bool sampleRate,
+      bool trigger, bool logarithmic
+   )  : LV2Port{ port, index, isInput, symbol, name, group }
+      , mScaleValues{ move(scaleValues) }
+      , mScaleLabels{ std::move(scaleLabels) }
+      , mUnits{ units }
+      , mMin{ min }, mMax{ max }, mDef{ def }
+      , mHasLo{ hasLo }, mHasHi{ hasHi }
+      , mToggle{ toggle }, mEnumeration{ enumeration }, mInteger{ integer }
+      , mSampleRate{ sampleRate }
+      , mTrigger{ trigger }, mLogarithmic{ logarithmic }
+   {}
  
-   wxString mUnits;
-   float mMin;
-   float mMax;
-   float mDef;
-   float mVal;
-   float mLst;
-   float mTmp;
-   float mDmy;
-   float mLo;
-   float mHi;
-   bool mHasLo;
-   bool mHasHi;
-   bool mToggle;
-   bool mTrigger;
-   bool mInteger;
-   bool mSampleRate;
-   bool mEnumeration;
-   bool mLogarithmic;
-
    // ScalePoints
-   std::vector<double> mScaleValues;
-   wxArrayString mScaleLabels;
+   const std::vector<double> mScaleValues;
+   const wxArrayString mScaleLabels;
+
+   const wxString mUnits;
+   const float mMin;
+   const float mMax;
+   const float mDef;
+   const bool mHasLo;
+   const bool mHasHi;
+   const bool mToggle;
+   const bool mEnumeration;
+   const bool mInteger;
+   const bool mSampleRate;
+   const bool mTrigger;
+   const bool mLogarithmic;
+
+   float mLst{ 0.0 };
+   float mTmp{ 0.0 };
+   float mLo{ 0.0 };
+   float mHi{ 0.0 };
+   float mVal{ 0.0 };
+   float mDmy{ 0.0 };
 
    //! Map a real number to one of the scale points
    size_t Discretize(float value) const {

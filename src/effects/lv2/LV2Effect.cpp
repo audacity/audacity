@@ -525,103 +525,101 @@ bool LV2Effect::InitializePlugin()
             mGroups.push_back(groupName);
          mGroupMap[groupName].push_back(mControlPorts.size());
 
-         mControlPorts.push_back(std::make_shared<LV2ControlPort>(
-            port, index, isInput, symbol, name, groupName));
-         const auto controlPort = mControlPorts.back();
-
+         wxString units;
          // Get any unit descriptor
          if (LilvNodePtr unit{ lilv_port_get(mPlug, port, node_Unit) })
             // Really should use lilv_world_get_symbol()
-            if(LilvNodePtr symbol{ lilv_world_get_symbol(gWorld, unit.get()) })
-               controlPort->mUnits = LilvString(symbol.get());
+            if (LilvNodePtr symbol{ lilv_world_get_symbol(gWorld, unit.get()) })
+               units = LilvString(symbol.get());
+
+         // Collect the value and range info
+         bool hasLo = !std::isnan(minimumVals[i]);
+         bool hasHi = !std::isnan(maximumVals[i]);
+         float min = hasLo ? minimumVals[i] : 0.0f;
+         float max = hasHi ? maximumVals[i] : 1.0f;
+         float def = !std::isnan(defaultVals[i])
+            ? defaultVals[i]
+            : hasLo
+               ? min
+               : hasHi
+                  ? max
+                  : 0.0f;
+   
+         // Figure out the type of port we have
+         bool toggle = isInput &&
+            lilv_port_has_property(mPlug, port, node_Toggled);
+         bool enumeration = isInput &&
+            lilv_port_has_property(mPlug, port, node_Enumeration);
+         bool integer = isInput &&
+            lilv_port_has_property(mPlug, port, node_Integer);
+         bool sampleRate = isInput &&
+            lilv_port_has_property(mPlug, port, node_SampleRate);
+         // Trigger properties can be combined with other types, but it
+         // seems mostly to be combined with toggle.  So, we turn the
+         // checkbox into a button.
+         bool trigger = isInput &&
+            lilv_port_has_property(mPlug, port, node_Trigger);
+         // We'll make the slider logarithmic
+         bool logarithmic = isInput &&
+            lilv_port_has_property(mPlug, port, node_Logarithmic);
 
          // Get the scale points
+         std::vector<double> scaleValues;
+         wxArrayString scaleLabels;
          {
             LilvScalePointsPtr points{
                lilv_port_get_scale_points(mPlug, port) };
             LILV_FOREACH(scale_points, j, points.get()) {
                const auto point = lilv_scale_points_get(points.get(), j);
-               controlPort->mScaleValues.push_back(
+               scaleValues.push_back(
                   lilv_node_as_float(lilv_scale_point_get_value(point)));
-               controlPort->mScaleLabels.push_back(
+               scaleLabels.push_back(
                   LilvString(lilv_scale_point_get_label(point)));
             }
          }
 
-         // Collect the value and range info
-         controlPort->mHasLo = !std::isnan(minimumVals[i]);
-         controlPort->mHasHi = !std::isnan(maximumVals[i]);
-         controlPort->mMin = controlPort->mHasLo ? minimumVals[i] : 0.0;
-         controlPort->mMax = controlPort->mHasHi ? maximumVals[i] : 1.0;
+         mControlPorts.push_back(std::make_shared<LV2ControlPort>(
+            port, index, isInput, symbol, name, groupName,
+            move(scaleValues), std::move(scaleLabels), units,
+            min, max, def, hasLo, hasHi,
+            toggle, enumeration, integer, sampleRate,
+            trigger, logarithmic));
+         const auto controlPort = mControlPorts.back();
+
          controlPort->mLo = controlPort->mMin;
          controlPort->mHi = controlPort->mMax;
-         controlPort->mDef = !std::isnan(defaultVals[i])
-            ? defaultVals[i]
-            : controlPort->mHasLo
-                 ? controlPort->mLo
-                 : controlPort->mHasHi
-                    ? controlPort->mHi
-                    : 0.0;
          controlPort->mVal = controlPort->mDef;
          controlPort->mLst = controlPort->mVal;
 
          // Figure out the type of port we have
-         if (isInput) {
-            if (lilv_port_has_property(mPlug, port, node_Toggled))
-               controlPort->mToggle = true;
-            else if (lilv_port_has_property(mPlug, port, node_Enumeration))
-               controlPort->mEnumeration = true;
-            else if (lilv_port_has_property(mPlug, port, node_Integer))
-               controlPort->mInteger = true;
-            else if (lilv_port_has_property(mPlug, port, node_SampleRate))
-               controlPort->mSampleRate = true;
-
-            // Trigger properties can be combined with other types, but it
-            // seems mostly to be combined with toggle.  So, we turn the
-            // checkbox into a button.
-            if (lilv_port_has_property(mPlug, port, node_Trigger))
-               controlPort->mTrigger = true;
-
-            // We'll make the slider logarithmic
-            if (lilv_port_has_property(mPlug, port, node_Logarithmic))
-               controlPort->mLogarithmic = true;
-
-            if (lilv_port_has_property(mPlug, port, node_Enumeration))
-               controlPort->mEnumeration = true;
-
+         if (isInput)
             mControlPortMap[controlPort->mIndex] = controlPort;
-         }
          else if (controlPort->mIndex == latencyIndex)
             mLatencyPort = i;
       }
       // Check for atom ports
       else if (lilv_port_is_a(mPlug, port, node_AtomPort)) {
-         mAtomPorts.push_back(std::make_shared<LV2AtomPort>(
-            port, index, isInput, symbol, name, groupName));
-         const auto atomPort = mAtomPorts.back();
-
-         atomPort->mMinimumSize = 8192;
+         uint32_t minimumSize = 8192;
          if (LilvNodePtr min{ lilv_port_get(mPlug, port, node_MinimumSize) }
             ; lilv_node_is_int(min.get())
          ){
             if (auto value = lilv_node_as_int(min.get())
                ; value > 0
             )
-               atomPort->mMinimumSize =
-                  std::max<uint32_t>(atomPort->mMinimumSize, value);
+               minimumSize = std::max<uint32_t>(minimumSize, value);
          }
+         bool wantsPosition =
+            lilv_port_supports_event(mPlug, port, node_Position);
+         bool isMidi = lilv_port_supports_event(mPlug, port, node_MidiEvent);
+         if (isMidi)
+            (isInput ? mMidiIn : mMidiOut) += 1;
+         mAtomPorts.push_back(std::make_shared<LV2AtomPort>(
+            port, index, isInput, symbol, name, groupName,
+            minimumSize, isMidi, wantsPosition));
+         const auto atomPort = mAtomPorts.back();
 
          atomPort->mBuffer.resize(atomPort->mMinimumSize);
-         atomPort->mRing.reset(zix_ring_new(atomPort->mMinimumSize));
          zix_ring_mlock(atomPort->mRing.get());
-
-         if (lilv_port_supports_event(mPlug, port, node_Position))
-            atomPort->mWantsPosition = true;
-
-         if (lilv_port_supports_event(mPlug, port, node_MidiEvent)) {
-            atomPort->mIsMidi = true;
-            (isInput ? mMidiIn : mMidiOut) += 1;
-         }
 
          bool isControl = lilv_node_equals(designation.get(), node_Control);
          if (isInput) {
@@ -633,25 +631,25 @@ bool LV2Effect::InitializePlugin()
       }
       // Check for CV ports
       else if (lilv_port_is_a(mPlug, port, node_CVPort)) {
-         mCVPorts.push_back(std::make_shared<LV2CVPort>(
-            port, index, isInput, symbol, name, groupName));
-         const auto cvPort = mCVPorts.back();
-      
          // Collect the value and range info
-         if (!std::isnan(minimumVals[i])) {
-            cvPort->mHasLo = true;
-            cvPort->mMin = minimumVals[i];
-         }
-         if (!std::isnan(maximumVals[i])) {
-            cvPort->mHasHi = true;
-            cvPort->mMax = maximumVals[i];
-         }
+         float min = 0;
+         float max = 1;
+         float def = 0;
+         bool hasLo = false;
+         bool hasHi = false;
+         if (!std::isnan(minimumVals[i]))
+            hasLo = true, min = minimumVals[i];
+         if (!std::isnan(maximumVals[i]))
+            hasHi = true, max = maximumVals[i];
          if (!std::isnan(defaultVals[i]))
-            cvPort->mDef = defaultVals[i];
-         else if (cvPort->mHasLo)
-            cvPort->mDef = cvPort->mMin;
-         else if (cvPort->mHasHi)
-            cvPort->mDef = cvPort->mMax;
+            def = defaultVals[i];
+         else if (hasLo)
+            def = min;
+         else if (hasHi)
+            def = max;
+         mCVPorts.push_back(std::make_shared<LV2CVPort>(
+            port, index, isInput, symbol, name, groupName,
+            min, max, def, hasLo, hasHi));
       }
    }
    }
