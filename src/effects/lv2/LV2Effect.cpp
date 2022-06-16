@@ -1713,283 +1713,224 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
    int numCols = 5;
    wxSizer *innerSizer;
 
-   wxASSERT(mParent); // To justify safenew
-   wxScrolledWindow *const w = safenew 
-      wxScrolledWindow(mParent,
-                       wxID_ANY,
-                       wxDefaultPosition,
-                       wxDefaultSize,
-                       wxVSCROLL | wxTAB_TRAVERSAL);
+   assert(mParent); // To justify safenew
+   const auto w = safenew wxScrolledWindow(mParent,
+      wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL | wxTAB_TRAVERSAL);
 
    {
       auto outerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
       w->SetScrollRate(0, 20);
-
       // This fools NVDA into not saying "Panel" when the dialog gets focus
       w->SetName(wxT("\a"));
       w->SetLabel(wxT("\a"));
-
       outerSizer->Add(w, 1, wxEXPAND);
 
-      {
-         auto uInnerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-         innerSizer = uInnerSizer.get();
+      auto uInnerSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      innerSizer = uInnerSizer.get();
 
-         if (GetType() == EffectTypeGenerate)
-         {
-            // Add the length control
-            auto groupSizer = std::make_unique<wxStaticBoxSizer>(wxVERTICAL, w, _("Generator"));
-
-            auto sizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-
-            wxWindow *item = safenew wxStaticText(w, 0, _("&Duration:"));
-            sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
-            auto &extra = access.Get().extra;
-            mDuration = safenew
-               NumericTextCtrl(w, ID_Duration,
-                               NumericConverter::TIME,
-                               extra.GetDurationFormat(),
-                               extra.GetDuration(),
-                               mSampleRate,
-                               NumericTextCtrl::Options {}
-            .AutoPos(true));
-            mDuration->SetName( XO("Duration") );
-            sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
-
-            groupSizer->Add(sizer.release(), 0, wxALIGN_CENTER | wxALL, 5);
-            innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
-         }
-
-         std::sort(mGroups.begin(), mGroups.end(), TranslationLess);
-
-         for (size_t i = 0, groupCount = mGroups.size(); i < groupCount; i++)
-         {
-            const auto &label = mGroups[i];
-            auto groupSizer = std::make_unique<wxStaticBoxSizer>(
-               wxVERTICAL, w, label.Translation());
-
-            auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
-            gridSizer->AddGrowableCol(3);
-
-            for (auto & p : mGroupMap[mGroups[i]])
-            {
-               auto & port = mControlPorts[p];
-
-               if (port->mNotOnGui)
-               {
-                  continue;
-               }
-
-               wxString labelText = port->mName;
-               if (!port->mUnits.empty())
-               {
-                  labelText += wxT(" (") + port->mUnits + wxT(")");
-               }
-
-               if (port->mTrigger)
-               {
-                  gridSizer->Add(1, 1, 0);
-
-                  wxASSERT(w); // To justify safenew
-                  wxButton *b = safenew wxButton(w, ID_Triggers + p, labelText);
-                  gridSizer->Add(b, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-                  port->mCtrl.button = b;
-
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-                  continue;
-               }
-
-               wxWindow *item = safenew wxStaticText(w, wxID_ANY, labelText + wxT(":"),
-                                                     wxDefaultPosition, wxDefaultSize,
-                                                     wxALIGN_RIGHT);
-               gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-
-               if (port->mToggle)
-               {
-                  wxCheckBox *c = safenew wxCheckBox(w, ID_Toggles + p, wxT(""));
-                  c->SetName(labelText);
-                  c->SetValue(port->mVal > 0);
-                  gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-                  port->mCtrl.checkbox = c;
-
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-               }
-               else if (port->mEnumeration)      // Check before integer
-               {
-                  auto s = port->Discretize(port->mVal);
-                  wxChoice *c = safenew wxChoice(w, ID_Choices + p);
-                  c->SetName(labelText);
-                  c->Append(port->mScaleLabels);
-                  c->SetSelection(s);
-                  gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-                  port->mCtrl.choice = c;
-
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-               }
-               else if (!port->mIsInput)
-               {
-                  gridSizer->Add(1, 1, 0);
-                  gridSizer->Add(1, 1, 0);
-
-                  LV2EffectMeter *m = safenew LV2EffectMeter(w, port);
-                  gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
-                  port->mCtrl.meter = m;
-
-                  gridSizer->Add(1, 1, 0);
-               }
-               else
-               {
-                  wxTextCtrl *t = safenew wxTextCtrl(w, ID_Texts + p, wxT(""));
-                  t->SetName(labelText);
-                  gridSizer->Add(t, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-                  port->mText = t;
-
-                  float rate = port->mSampleRate ? mSampleRate : 1.0;
-
-                  port->mLo = port->mMin * rate;
-                  port->mHi = port->mMax * rate;
-                  port->mTmp = port->mVal * rate;
-
-                  if (port->mInteger)
-                  {
-                     IntegerValidator<float> vld(&port->mTmp);
-                     vld.SetRange(port->mLo, port->mHi);
-                     t->SetValidator(vld);
-                  }
-                  else
-                  {
-                     FloatingPointValidator<float> vld(6, &port->mTmp);
-                     vld.SetRange(port->mLo, port->mHi);
-
-                     // Set number of decimal places
-                     float range = port->mHi - port->mLo;
-                     auto style = range < 10
-                                  ? NumValidatorStyle::THREE_TRAILING_ZEROES
-                                  : range < 100
-                                    ? NumValidatorStyle::TWO_TRAILING_ZEROES
-                                    : NumValidatorStyle::ONE_TRAILING_ZERO;
-                     vld.SetStyle(style);
-
-                     t->SetValidator(vld);
-                  }
-
-                  if (port->mHasLo)
-                  {
-                     wxString str;
-                     if (port->mInteger || port->mSampleRate)
-                     {
-                        str.Printf(wxT("%d"), (int) lrintf(port->mLo));
-                     }
-                     else
-                     {
-                        str = Internat::ToDisplayString(port->mLo);
-                     }
-                     item = safenew wxStaticText(w, wxID_ANY, str);
-                     gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-                  }
-                  else
-                  {
-                     gridSizer->Add(1, 1, 0);
-                  }
-
-                  wxSlider *s = safenew wxSliderWrapper(w, ID_Sliders + p,
-                                                        0, 0, 1000,
-                                                        wxDefaultPosition,
-                                                        wxSize(150, -1));
-                  s->SetName(labelText);
-                  gridSizer->Add(s, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
-                  port->mCtrl.slider = s;
-
-                  if (port->mHasHi)
-                  {
-                     wxString str;
-                     if (port->mInteger || port->mSampleRate)
-                     {
-                        str.Printf(wxT("%d"), (int) lrintf(port->mHi));
-                     }
-                     else
-                     {
-                        str = Internat::ToDisplayString(port->mHi);
-                     }
-                     item = safenew wxStaticText(w, wxID_ANY, str);
-                     gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-                  }
-                  else
-                  {
-                     gridSizer->Add(1, 1, 0);
-                  }
-               }
-            }
-
-            groupSizer->Add(gridSizer.release(), 1, wxEXPAND | wxALL, 5);
-            innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
-         }
-
-         innerSizer->Layout();
-
-         // Calculate the maximum width of all columns (bypass Generator sizer)
-         std::vector<int> widths(numCols);
-
-         size_t cnt = innerSizer->GetChildren().GetCount();
-         for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; i++)
-         {
-            wxSizer *groupSizer = innerSizer->GetItem(i)->GetSizer();
-            wxFlexGridSizer *gridSizer = (wxFlexGridSizer *) groupSizer->GetItem((size_t) 0)->GetSizer();
-
-            size_t items = gridSizer->GetChildren().GetCount();
-            int cols = gridSizer->GetCols();
-
-            for (size_t j = 0; j < items; j++)
-            {
-               wxSizerItem *item = gridSizer->GetItem(j);
-               widths[j % cols] = wxMax(widths[j % cols], item->GetSize().GetWidth());
-            }
-         }
-
-         // Set each column in all of the groups to the same width.
-         for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; i++)
-         {
-            wxSizer *groupSizer = innerSizer->GetItem(i)->GetSizer();
-            wxFlexGridSizer *gridSizer = (wxFlexGridSizer *) groupSizer->GetItem((size_t) 0)->GetSizer();
-
-            size_t items = gridSizer->GetChildren().GetCount();
-            int cols = gridSizer->GetCols();
-
-            for (size_t j = 0; j < items; j++)
-            {
-               wxSizerItem *item = gridSizer->GetItem(j);
-
-               int flags = item->GetFlag();
-               if (flags & wxEXPAND)
-               {
-                  continue;
-               }
-
-               if (flags & wxALIGN_RIGHT)
-               {
-                  flags = (flags & ~wxALL) | wxLEFT;
-               }
-               else
-               {
-                  flags = (flags & ~wxALL) | wxRIGHT;
-               }
-               item->SetFlag(flags);
-
-               item->SetBorder(widths[j % cols] - item->GetMinSize().GetWidth());
-            }
-         }
-
-         w->SetSizer(uInnerSizer.release());
+      // Add the duration control, if a generator
+      if (GetType() == EffectTypeGenerate) {
+         auto sizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
+         auto item = safenew wxStaticText(w, 0, _("&Duration:"));
+         sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
+         auto &extra = access.Get().extra;
+         mDuration = safenew NumericTextCtrl(w, ID_Duration,
+            NumericConverter::TIME, extra.GetDurationFormat(),
+            extra.GetDuration(), mSampleRate,
+            NumericTextCtrl::Options{}.AutoPos(true));
+         mDuration->SetName( XO("Duration") );
+         sizer->Add(mDuration, 0, wxALIGN_CENTER | wxALL, 5);
+         auto groupSizer =
+            std::make_unique<wxStaticBoxSizer>(wxVERTICAL, w, _("Generator"));
+         groupSizer->Add(sizer.release(), 0, wxALIGN_CENTER | wxALL, 5);
+         innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
       }
 
+      // Make other controls, grouped into static boxes that are named
+      // according to certain control port metadata
+      std::sort(mGroups.begin(), mGroups.end(), TranslationLess);
+      for (auto &label: mGroups) {
+         auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
+         gridSizer->AddGrowableCol(3);
+         for (auto & p : mGroupMap[label]) { auto & port = mControlPorts[p];
+            auto labelText = port->mName;
+            if (!port->mUnits.empty())
+               labelText += wxT(" (") + port->mUnits + wxT(")");
+
+            // A "trigger" port gets a row with just a pushbutton
+            if (port->mTrigger) {
+               gridSizer->Add(1, 1, 0);
+
+               assert(w); // To justify safenew
+               auto b = safenew wxButton(w, ID_Triggers + p, labelText);
+               gridSizer->Add(b, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               port->mCtrl.button = b;
+
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+               continue;
+            }
+
+            // Any other kind of port gets a name text...
+            auto item = safenew wxStaticText(w, wxID_ANY, labelText + wxT(":"),
+               wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
+            gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+
+            // ... then appropriate controls and static texts in other columns
+            if (port->mToggle) {
+               // Toggle port gets a checkbox
+               auto c = safenew wxCheckBox(w, ID_Toggles + p, wxT(""));
+               c->SetName(labelText);
+               c->SetValue(port->mVal > 0);
+               gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               port->mCtrl.checkbox = c;
+
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+            }
+            else if (port->mEnumeration) {
+               // Enumeration port gets a choice control
+               // Discretize the value (all ports hold a float value) to
+               // determine the intial selection
+               auto s = port->Discretize(port->mVal);
+               auto c = safenew wxChoice(w, ID_Choices + p);
+               c->SetName(labelText);
+               c->Append(port->mScaleLabels);
+               c->SetSelection(s);
+               gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               port->mCtrl.choice = c;
+
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+            }
+            else if (!port->mIsInput) {
+               // Real-valued output gets a meter control
+               gridSizer->Add(1, 1, 0);
+               gridSizer->Add(1, 1, 0);
+
+               auto m = safenew LV2EffectMeter(w, port);
+               gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
+               port->mCtrl.meter = m;
+
+               gridSizer->Add(1, 1, 0);
+            }
+            else {
+               // Numerical input gets a text input, with a validator...
+               auto t = safenew wxTextCtrl(w, ID_Texts + p, wxT(""));
+               t->SetName(labelText);
+               gridSizer->Add(t, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               port->mText = t;
+               auto rate = port->mSampleRate ? mSampleRate : 1.0f;
+               port->mLo = port->mMin * rate;
+               port->mHi = port->mMax * rate;
+               port->mTmp = port->mVal * rate;
+               if (port->mInteger) {
+                  IntegerValidator<float> vld(&port->mTmp);
+                  vld.SetRange(port->mLo, port->mHi);
+                  t->SetValidator(vld);
+               }
+               else {
+                  FloatingPointValidator<float> vld(6, &port->mTmp);
+                  vld.SetRange(port->mLo, port->mHi);
+
+                  // Set number of decimal places
+                  float range = port->mHi - port->mLo;
+                  auto style = range < 10
+                     ? NumValidatorStyle::THREE_TRAILING_ZEROES
+                     : range < 100
+                        ? NumValidatorStyle::TWO_TRAILING_ZEROES
+                        : NumValidatorStyle::ONE_TRAILING_ZERO;
+                  vld.SetStyle(style);
+                  t->SetValidator(vld);
+               }
+
+               // ... optional lower-bound static text ...
+               if (port->mHasLo) {
+                  wxString str;
+                  if (port->mInteger || port->mSampleRate)
+                     str.Printf(wxT("%d"), (int) lrintf(port->mLo));
+                  else
+                     str = Internat::ToDisplayString(port->mLo);
+                  item = safenew wxStaticText(w, wxID_ANY, str);
+                  gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
+               }
+               else
+                  gridSizer->Add(1, 1, 0);
+
+               // ... a slider ...
+               auto s = safenew wxSliderWrapper(w, ID_Sliders + p,
+                  0, 0, 1000, wxDefaultPosition, { 150, -1 });
+               s->SetName(labelText);
+               gridSizer->Add(s, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
+               port->mCtrl.slider = s;
+
+               // ... and optional upper-bound static text
+               if (port->mHasHi) {
+                  wxString str;
+                  if (port->mInteger || port->mSampleRate)
+                     str.Printf(wxT("%d"), (int) lrintf(port->mHi));
+                  else
+                     str = Internat::ToDisplayString(port->mHi);
+                  item = safenew wxStaticText(w, wxID_ANY, str);
+                  gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+               }
+               else
+                  gridSizer->Add(1, 1, 0);
+            }
+         }
+
+         auto groupSizer = std::make_unique<wxStaticBoxSizer>(
+            wxVERTICAL, w, label.Translation());
+         groupSizer->Add(gridSizer.release(), 1, wxEXPAND | wxALL, 5);
+         innerSizer->Add(groupSizer.release(), 0, wxEXPAND | wxALL, 5);
+      }
+
+      innerSizer->Layout();
+
+      //! Function to revisit the controls just added above
+      auto VisitCells = [&, cnt = innerSizer->GetChildren().GetCount()](auto f){
+         for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; ++i) {
+            // For each group (skipping duration) visit the grid sizer
+            auto groupSizer = innerSizer->GetItem(i)->GetSizer();
+            auto gridSizer = static_cast<wxFlexGridSizer *>(
+               groupSizer->GetItem(size_t{0})->GetSizer());
+            auto items = gridSizer->GetChildren().GetCount();
+            size_t cols = gridSizer->GetCols();
+            for (size_t j = 0; j < items; ++j) {
+               // For each grid item
+               auto item = gridSizer->GetItem(j);
+               f(item, j, cols);
+            }
+         }
+      };
+
+      // Calculate the maximum width of all columns (bypass Generator sizer)
+      std::vector<int> widths(numCols);
+      VisitCells([&](wxSizerItem *item, size_t j, size_t cols){
+         auto &width = widths[j % cols];
+         width = std::max(width, item->GetSize().GetWidth());
+      });
+
+      // Set each column in all of the groups to the same width.
+      VisitCells([&](wxSizerItem *item, size_t j, size_t cols){
+         int flags = item->GetFlag();
+         if (flags & wxEXPAND)
+            return;
+         if (flags & wxALIGN_RIGHT)
+            flags = (flags & ~wxALL) | wxLEFT;
+         else
+            flags = (flags & ~wxALL) | wxRIGHT;
+         item->SetFlag(flags);
+         item->SetBorder(widths[j % cols] - item->GetMinSize().GetWidth());
+      });
+
+      w->SetSizer(uInnerSizer.release());
+
       mParent->SetSizer(outerSizer.release());
-   }
+   } // scope of unique_ptrs of sizers
 
    // Try to give the window a sensible default/minimum size
    wxSize sz1 = innerSizer->GetMinSize();

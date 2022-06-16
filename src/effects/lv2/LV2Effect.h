@@ -198,7 +198,6 @@ public:
       mSampleRate = false;
       mEnumeration = false;
       mLogarithmic = false;
-      mNotOnGui = false;
       mCtrl.button = NULL;
       mText = NULL;
    };
@@ -221,7 +220,6 @@ public:
    bool mSampleRate;
    bool mEnumeration;
    bool mLogarithmic;
-   bool mNotOnGui;
 
    // ScalePoints
    std::vector<double> mScaleValues;
