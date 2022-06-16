@@ -616,18 +616,17 @@ bool LV2Effect::InitializePlugin()
          mAtomPorts.push_back(std::make_shared<LV2AtomPort>(
             port, index, isInput, symbol, name, groupName,
             minimumSize, isMidi, wantsPosition));
-         const auto atomPort = mAtomPorts.back();
-
-         atomPort->mBuffer.resize(atomPort->mMinimumSize);
-         zix_ring_mlock(atomPort->mRing.get());
+         mAtomPortStates
+            .push_back(std::make_shared<LV2AtomPortState>(mAtomPorts.back()));
+         const auto &atomPortState = mAtomPortStates.back();
 
          bool isControl = lilv_node_equals(designation.get(), node_Control);
          if (isInput) {
             if (!mControlIn || isControl)
-               mControlIn = atomPort;
+               mControlIn = atomPortState;
          }
          else if (!mControlOut || isControl)
-            mControlOut = atomPort;
+            mControlOut = atomPortState;
       }
       // Check for CV ports
       else if (lilv_port_is_a(mPlug, port, node_CVPort)) {
@@ -809,24 +808,16 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    // to the master once all slaves have run.
    //
    // In addition, reset the output Atom ports.
-   for (auto & port : mAtomPorts)
-   {
-      uint8_t *buf = port->mBuffer.data();
-
-      if (port->mIsInput)
-      {
-         lv2_atom_forge_set_buffer(&mForge,
-                                   buf,
-                                   port->mBuffer.size());
-
+   for (auto & state : mAtomPortStates) {
+      auto &port = state->mpPort;
+      const auto buf = state->mBuffer.data();
+      if (port->mIsInput) {
+         lv2_atom_forge_set_buffer(&mForge, buf, state->mBuffer.size());
          LV2_Atom_Forge_Frame seqFrame;
-         LV2_Atom_Sequence *seq = ( LV2_Atom_Sequence *)
-            lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0);
-
-         if (port->mWantsPosition)
-         {
+         const auto seq = reinterpret_cast<LV2_Atom_Sequence *>(
+            lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0));
+         if (port->mWantsPosition) {
             lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-
             LV2_Atom_Forge_Frame posFrame;
             lv2_atom_forge_object(&mForge, &posFrame, 0, urid_Position);
             lv2_atom_forge_key(&mForge, urid_Speed);
@@ -835,37 +826,28 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
             lv2_atom_forge_long(&mForge, mPositionFrame);
             lv2_atom_forge_pop(&mForge, &posFrame);
          }
-
-         const auto ring = port->mRing.get();
+         const auto ring = state->mRing.get();
          LV2_Atom atom;
-         while (zix_ring_read(ring, &atom, sizeof(atom)))
-         {
-            if (mForge.offset + sizeof(LV2_Atom_Event) + atom.size < mForge.size)
-            {
+         while (zix_ring_read(ring, &atom, sizeof(atom))) {
+            if (mForge.offset + sizeof(LV2_Atom_Event) + atom.size
+               < mForge.size
+            ){
                lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-
                lv2_atom_forge_write(&mForge, &atom, sizeof(atom));
                zix_ring_read(ring, &mForge.buf[mForge.offset], atom.size);
                mForge.offset += atom.size;
                seq->atom.size += atom.size;
             }
-            else
-            {
+            else {
                zix_ring_skip(ring, atom.size);
                wxLogError(wxT("LV2 sequence buffer overflow"));
             }
          }
-
          lv2_atom_forge_pop(&mForge, &seqFrame);
       }
-      else
-      {
-         port->mBuffer.resize(port->mMinimumSize);
-         *(( LV2_Atom *) buf) =
-         {
-            port->mMinimumSize,
-            urid_Chunk
-         };
+      else {
+         state->mBuffer.resize(port->mMinimumSize);
+         *reinterpret_cast<LV2_Atom*>(buf) = { port->mMinimumSize, urid_Chunk };
       }
    }
 
@@ -874,13 +856,11 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    // Main thread consumes responses
    mProcess->ConsumeResponses();
 
-   for (auto & port : mAtomPorts)
-   {
-      if (!port->mIsInput)
-      {
-         port->mBuffer.resize(port->mMinimumSize);
-
-         LV2_Atom *chunk = ( LV2_Atom *) port->mBuffer.data();
+   for (auto & state : mAtomPortStates) {
+      auto &port = state->mpPort;
+      if (!port->mIsInput) {
+         state->mBuffer.resize(port->mMinimumSize);
+         auto chunk = reinterpret_cast<LV2_Atom *>(state->mBuffer.data());
          chunk->size = port->mMinimumSize;
          chunk->type = urid_Chunk;
       }
@@ -945,24 +925,16 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
    // to the master once all slaves have run.
    //
    // In addition, reset the output Atom ports.
-   for (auto & port : mAtomPorts)
-   {
-      uint8_t *buf = port->mBuffer.data();
-
-      if (port->mIsInput)
-      {
-         lv2_atom_forge_set_buffer(&mForge,
-                                   buf,
-                                   port->mBuffer.size());
-
+   for (auto & state : mAtomPortStates) {
+      auto &port = state->mpPort;
+      const auto buf = state->mBuffer.data();
+      if (port->mIsInput) {
+         lv2_atom_forge_set_buffer(&mForge, buf, state->mBuffer.size());
          LV2_Atom_Forge_Frame seqFrame;
-         LV2_Atom_Sequence *seq = (LV2_Atom_Sequence *)
-            lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0);
-
-         if (port->mWantsPosition)
-         {
+         const auto seq = reinterpret_cast<LV2_Atom_Sequence *>(
+            lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0));
+         if (port->mWantsPosition) {
             lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-
             LV2_Atom_Forge_Frame posFrame;
             lv2_atom_forge_object(&mForge, &posFrame, 0, urid_Position);
             lv2_atom_forge_key(&mForge, urid_Speed);
@@ -971,43 +943,35 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
             lv2_atom_forge_long(&mForge, mPositionFrame);
             lv2_atom_forge_pop(&mForge, &posFrame);
          }
-
-         const auto ring = port->mRing.get();
+         const auto ring = state->mRing.get();
          LV2_Atom atom;
-         while (zix_ring_read(ring, &atom, sizeof(atom)))
-         {
-            if (mForge.offset + sizeof(LV2_Atom_Event) + atom.size < mForge.size)
-            {
+         while (zix_ring_read(ring, &atom, sizeof(atom))) {
+            if (mForge.offset + sizeof(LV2_Atom_Event) + atom.size
+               < mForge.size
+            ){
                lv2_atom_forge_frame_time(&mForge, mPositionFrame);
-
                lv2_atom_forge_write(&mForge, &atom, sizeof(atom));
                zix_ring_read(ring, &mForge.buf[mForge.offset], atom.size);
                mForge.offset += atom.size;
                seq->atom.size += atom.size;
             }
-            else
-            {
+            else {
                zix_ring_skip(ring, atom.size);
                wxLogError(wxT("LV2 sequence buffer overflow"));
             }
          }
          lv2_atom_forge_pop(&mForge, &seqFrame);
 #if 0
-         LV2_ATOM_SEQUENCE_FOREACH(seq, ev)
-         {
-            LV2_Atom_Object *o = (LV2_Atom_Object *) &ev->body;
+         LV2_ATOM_SEQUENCE_FOREACH(seq, ev) {
+            auto o = reinterpret_cast<LV2_Atom_Object *>(&ev->body);
             wxLogDebug(wxT("ev = %lld ev.size %d ev.type %d"), ev->time.frames, ev->body.size, ev->body.type);
          }
 #endif
       }
-      else
-      {
-         port->mBuffer.resize(port->mMinimumSize);
-         *((LV2_Atom *) buf) =
-         {
-            port->mMinimumSize,
-            urid_Chunk
-         };
+      else {
+         state->mBuffer.resize(port->mMinimumSize);
+         *reinterpret_cast<LV2_Atom *>(buf) =
+            { port->mMinimumSize, urid_Chunk };
       }
    }
 
@@ -1058,24 +1022,19 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
    // Background thread consumes responses from yet another worker thread
    slave->ConsumeResponses();
 
-   for (auto & port : mAtomPorts)
-   {
-      uint8_t *buf = port->mBuffer.data();
-
-      if (!port->mIsInput)
-      {
-         port->mBuffer.resize(port->mMinimumSize);
-
-         LV2_Atom *chunk = ( LV2_Atom *) buf;
+   for (auto & state : mAtomPortStates) {
+      auto &port = state->mpPort;
+      auto buf = state->mBuffer.data();
+      if (!port->mIsInput) {
+         state->mBuffer.resize(port->mMinimumSize);
+         auto chunk = reinterpret_cast<LV2_Atom *>(buf);
          chunk->size = port->mMinimumSize;
          chunk->type = LV2Symbols::urid_Chunk;
       }
    }
 
    if (group == 0)
-   {
       mPositionFrame += numSamples;
-   }
 
    return numSamples;
 }
@@ -1089,16 +1048,13 @@ return GuardedCall<bool>([&]{
       return true;
    }
 
-   for (auto & port : mAtomPorts)
-   {
-      if (!port->mIsInput)
-      {
-         const auto ring = port->mRing.get();
-
-         LV2_ATOM_SEQUENCE_FOREACH((LV2_Atom_Sequence *) port->mBuffer.data(), ev)
-         {
+   for (auto & state : mAtomPortStates) {
+      if (!state->mpPort->mIsInput) {
+         const auto ring = state->mRing.get();
+         LV2_ATOM_SEQUENCE_FOREACH(
+            reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.data()), ev
+         )
             zix_ring_write(ring, &ev->body, ev->body.size + sizeof(LV2_Atom));
-         }
       }
    }
 
@@ -1457,8 +1413,9 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
          !port->mIsInput && mMaster ? &port->mDmy : &port->mVal);
 
    // Connect all atom ports
-   for (auto & port : mAtomPorts)
-      lilv_instance_connect_port(instance, port->mIndex, port->mBuffer.data());
+   for (auto & state : mAtomPortStates)
+      lilv_instance_connect_port(instance,
+         state->mpPort->mIndex, state->mBuffer.data());
 
    // We don't fully support CV ports, so connect them to dummy buffers for now.
    for (auto & port : mCVPorts)
@@ -1469,13 +1426,13 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
    lilv_instance_activate(instance);
    lilv_instance_deactivate(instance);
 
-   for (auto & port : mAtomPorts)
-      if (!port->mIsInput)
+   for (auto & state : mAtomPortStates)
+      if (!state->mpPort->mIsInput)
          LV2_ATOM_SEQUENCE_FOREACH(
-            reinterpret_cast<LV2_Atom_Sequence *>(port->mBuffer.data()), ev) {
-            zix_ring_write(port->mRing.get(),
+            reinterpret_cast<LV2_Atom_Sequence *>(state->mBuffer.data()), ev
+         )
+            zix_ring_write(state->mRing.get(),
                &ev->body, ev->body.size + sizeof(LV2_Atom));
-         }
 
    return wrapper;
 }
@@ -2075,32 +2032,24 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       }
    }
 
-   if (mControlOut)
-   {
+   if (mControlOut) {
       const auto ring = mControlOut->mRing.get();
-
-      LV2_Atom *atom = (LV2_Atom *) malloc(mControlOut->mMinimumSize);
-      if (atom)
-      {
-         while (zix_ring_read(ring, atom, sizeof(LV2_Atom)))
-         {
-            uint32_t size = lv2_atom_total_size(atom);
-
-            if (size < mControlOut->mMinimumSize)
-            {
-               zix_ring_read(ring,
-                  LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
-               suil_instance_port_event(mSuilInstance.get(),
-                  mControlOut->mIndex, size,
-                  LV2Symbols::urid_EventTransfer, atom);
-            }
-            else
-            {
-               zix_ring_skip(ring, atom->size);
-               wxLogError(wxT("LV2 sequence buffer overflow"));
-            }
+      const auto minimumSize = mControlOut->mpPort->mMinimumSize;
+      const auto space = std::make_unique<char[]>(minimumSize);
+      auto atom = reinterpret_cast<LV2_Atom*>(space.get());
+      while (zix_ring_read(ring, atom, sizeof(LV2_Atom))) {
+         uint32_t size = lv2_atom_total_size(atom);
+         if (size < minimumSize) {
+            zix_ring_read(ring,
+               LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
+            suil_instance_port_event(mSuilInstance.get(),
+               mControlOut->mpPort->mIndex, size,
+               LV2Symbols::urid_EventTransfer, atom);
          }
-         free(atom);
+         else {
+            zix_ring_skip(ring, atom->size);
+            wxLogError(wxT("LV2 sequence buffer overflow"));
+         }
       }
    }
 
@@ -2235,7 +2184,7 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
    }
    // Handle event transfers
    else if (protocol == LV2Symbols::urid_EventTransfer) {
-      if (mControlIn && port_index == mControlIn->mIndex)
+      if (mControlIn && port_index == mControlIn->mpPort->mIndex)
          zix_ring_write(mControlIn->mRing.get(), buffer, buffer_size);
    }
 }

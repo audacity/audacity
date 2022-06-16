@@ -89,6 +89,7 @@ public:
 using LV2AudioPortPtr = std::shared_ptr<LV2AudioPort>;
 using LV2AudioPortArray = std::vector<LV2AudioPortPtr>;
 
+//! Immutable description of an LV2 Atom port
 class LV2AtomPort final : public LV2Port {
 public:
    LV2AtomPort(const LilvPort *port, int index, bool isInput,
@@ -103,11 +104,27 @@ public:
    const uint32_t mMinimumSize;
    const bool mIsMidi;
    const bool mWantsPosition;
-   const Lilv_ptr<ZixRing, zix_ring_free> mRing{ zix_ring_new(mMinimumSize) };
-   std::vector<uint8_t> mBuffer;
 };
 using LV2AtomPortPtr = std::shared_ptr<LV2AtomPort>;
 using LV2AtomPortArray = std::vector<LV2AtomPortPtr>;
+
+//! State of an instance of an LV2 Atom port
+struct LV2AtomPortState final {
+   //! @pre `pPort != nullptr`
+   explicit LV2AtomPortState(LV2AtomPortPtr pPort)
+      : mpPort{ move(pPort) }
+      , mRing{ zix_ring_new(mpPort->mMinimumSize) }
+      , mBuffer( mpPort->mMinimumSize )
+   {
+      assert(mpPort);
+      zix_ring_mlock(mRing.get());
+   }
+   const LV2AtomPortPtr mpPort;
+   const Lilv_ptr<ZixRing, zix_ring_free> mRing;
+   std::vector<uint8_t> mBuffer;
+};
+using LV2AtomPortStatePtr = std::shared_ptr<LV2AtomPortState>;
+using LV2AtomPortStateArray = std::vector<LV2AtomPortStatePtr>;
 
 class LV2CVPort final : public LV2Port {
 public:
@@ -365,8 +382,10 @@ private:
    unsigned mAudioOut{ 0 };
 
    LV2AtomPortArray mAtomPorts;
-   LV2AtomPortPtr mControlIn;
-   LV2AtomPortPtr mControlOut;
+   LV2AtomPortStateArray mAtomPortStates;
+
+   LV2AtomPortStatePtr mControlIn;
+   LV2AtomPortStatePtr mControlOut;
    unsigned mMidiIn{ 0 };
    unsigned mMidiOut{ 0 };
 
