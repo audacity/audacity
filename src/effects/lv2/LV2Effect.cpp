@@ -1755,7 +1755,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
          for (auto & p : mGroupMap[label]) { auto & port = mControlPorts[p];
             auto labelText = port->mName;
             if (!port->mUnits.empty())
-               labelText += wxT(" (") + port->mUnits + wxT(")");
+               labelText += XO("(%s)").Format(port->mUnits).Translation();
 
             // A "trigger" port gets a row with just a pushbutton
             if (port->mTrigger) {
