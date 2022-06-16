@@ -261,6 +261,10 @@ public:
    //! @return success
    bool InitializeOptions();
 
+   //! To be called after InitializeOptions()
+   //! @return success
+   bool InitializeFeatures();
+
    //! Get vector of pointers to features, whose `.data()` can be passed to lv2
    using FeaturePointers = std::vector<const LV2_Feature *>;
    FeaturePointers GetFeaturePointers() const;
@@ -326,8 +330,17 @@ protected:
    static const char *urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid);
    const char *URID_Unmap(LV2_URID urid);
 
-   // This object contains C-style virtual function tables that we fill in
+   static int log_printf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, ...);
+   static int log_vprintf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, va_list ap);
+   int LogVPrintf(LV2_URID type, const char *fmt, va_list ap);
+
+   // These objects contain C-style virtual function tables that we fill in
+   const LV2_URI_Map_Feature mUriMapFeature{
+      this, LV2FeaturesList::uri_to_id }; // Features we support
    const LV2_URID_Map mURIDMapFeature{ this, LV2FeaturesList::urid_map };
+   const LV2_URID_Unmap mURIDUnmapFeature{ this, LV2FeaturesList::urid_unmap };
+   const LV2_Log_Log mLogFeature{
+      this, LV2FeaturesList::log_printf, LV2FeaturesList::log_vprintf };
 
    // Declare local URI map
    LV2Symbols::URIDMap mURIDMap;
@@ -461,10 +474,6 @@ private:
    static void ui_closed(LV2UI_Controller controller);
    void UIClosed();
 
-   static int log_printf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, ...);
-   static int log_vprintf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, va_list ap);
-   int LogVPrintf(LV2_URID type, const char *fmt, va_list ap);
-
 #if defined(__WXGTK__)
    static void size_request(GtkWidget *widget, GtkRequisition *requisition, LV2Effect *win);
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
@@ -576,13 +585,7 @@ private:
    bool mUseGUI{};
 
    // These objects contain C-style virtual function tables that we fill in
-   const LV2_URI_Map_Feature mUriMapFeature{
-      this, LV2Effect::uri_to_id }; // Features we support
-   const LV2_URID_Unmap mURIDUnmapFeature{ this, LV2Effect::urid_unmap };
    const LV2UI_Resize mUIResizeFeature{ this, LV2Effect::ui_resize };
-   const LV2_Log_Log mLogFeature{
-      this, LV2Effect::log_printf, LV2Effect::log_vprintf };
-
    // Not const, filled in when making a dialog
    LV2_Extension_Data_Feature mExtensionDataFeature{};
 

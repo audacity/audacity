@@ -490,17 +490,8 @@ bool LV2FeaturesList::InitializeOptions()
    return true;
 }
 
-bool LV2Effect::InitializePlugin()
+bool LV2FeaturesList::InitializeFeatures()
 {
-   using namespace LV2Symbols;
-
-   if (!LV2FeaturesList::InitializeOptions())
-      return false;
-
-   // Set up some "objects" for lv2 with "virtual functions" (C-style)
-   // To be set up later when making a dialog:
-   mExtensionDataFeature = {};
-
    // Construct null-terminated array of "features" describing our capabilities
    // to lv2, and validate
    AddFeature(LV2_UI__noUserResize, nullptr);
@@ -513,18 +504,34 @@ bool LV2Effect::InitializePlugin()
    AddFeature(LV2_URI_MAP_URI, &mUriMapFeature);
    AddFeature(LV2_URID__map, &mURIDMapFeature);
    AddFeature(LV2_URID__unmap, &mURIDUnmapFeature);
-   AddFeature(LV2_UI__resize, &mUIResizeFeature);
-   AddFeature(LV2_DATA_ACCESS_URI, &mExtensionDataFeature);
    AddFeature(LV2_LOG__log, &mLogFeature);
-   AddFeature(LV2_EXTERNAL_UI__Host, &mExternalUIHost);
-   AddFeature(LV2_EXTERNAL_UI_DEPRECATED_URI, &mExternalUIHost);
    // Some plugins specify this as a feature
    AddFeature(LV2_EXTERNAL_UI__Widget, nullptr);
+   AddFeature(LV2_UI__parent, nullptr);
+
+   return true;
+}
+
+bool LV2Effect::InitializePlugin()
+{
+   using namespace LV2Symbols;
+
+   // To be set up later when making a dialog:
+   mExtensionDataFeature = {};
+
+   if (!LV2FeaturesList::InitializeOptions() ||
+      !LV2FeaturesList::InitializeFeatures()
+   )
+      return false;
+
+   AddFeature(LV2_UI__resize, &mUIResizeFeature);
+   AddFeature(LV2_DATA_ACCESS_URI, &mExtensionDataFeature);
+   AddFeature(LV2_EXTERNAL_UI__Host, &mExternalUIHost);
+   AddFeature(LV2_EXTERNAL_UI_DEPRECATED_URI, &mExternalUIHost);
    // Two features must be filled in later
    mInstanceAccessFeature = mFeatures.size();
    AddFeature(LV2_INSTANCE_ACCESS_URI, nullptr);
    mParentFeature = mFeatures.size();
-   AddFeature(LV2_UI__parent, nullptr);
    if (!ValidateFeatures(lilv_plugin_get_uri(mPlug)))
       return false;
 
@@ -2504,13 +2511,13 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
 uint32_t LV2FeaturesList::uri_to_id(
    LV2_URI_Map_Callback_Data callback_data, const char *, const char *uri)
 {
-   return static_cast<LV2Effect *>(callback_data)->URID_Map(uri);
+   return static_cast<LV2FeaturesList *>(callback_data)->URID_Map(uri);
 }
 
 // static callback
 LV2_URID LV2FeaturesList::urid_map(LV2_URID_Map_Handle handle, const char *uri)
 {
-   return static_cast<LV2Effect *>(handle)->URID_Map(uri);
+   return static_cast<LV2FeaturesList *>(handle)->URID_Map(uri);
 }
 
 LV2_URID LV2FeaturesList::URID_Map(const char *uri)
@@ -2530,7 +2537,7 @@ LV2_URID LV2FeaturesList::URID_Map(const char *uri)
 // static callback
 const char *LV2FeaturesList::urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid)
 {
-   return static_cast<LV2Effect *>(handle)->URID_Unmap(urid);
+   return static_cast<LV2FeaturesList *>(handle)->URID_Unmap(urid);
 }
 
 const char *LV2FeaturesList::URID_Unmap(LV2_URID urid)
@@ -2549,27 +2556,27 @@ const char *LV2FeaturesList::URID_Unmap(LV2_URID urid)
 }
 
 // static callback
-int LV2Effect::log_printf(
+int LV2FeaturesList::log_printf(
    LV2_Log_Handle handle, LV2_URID type, const char *fmt, ...)
 {
    va_list ap;
    int len;
 
    va_start(ap, fmt);
-   len = static_cast<LV2Effect *>(handle)->LogVPrintf(type, fmt, ap);
+   len = static_cast<LV2FeaturesList *>(handle)->LogVPrintf(type, fmt, ap);
    va_end(ap);
 
    return len;
 }
 
 // static callback
-int LV2Effect::log_vprintf(
+int LV2FeaturesList::log_vprintf(
    LV2_Log_Handle handle, LV2_URID type, const char *fmt, va_list ap)
 {
-   return static_cast<LV2Effect *>(handle)->LogVPrintf(type, fmt, ap);
+   return static_cast<LV2FeaturesList *>(handle)->LogVPrintf(type, fmt, ap);
 }
 
-int LV2Effect::LogVPrintf(LV2_URID type, const char *fmt, va_list ap)
+int LV2FeaturesList::LogVPrintf(LV2_URID type, const char *fmt, va_list ap)
 {
    using namespace LV2Symbols;
    long level = wxLOG_Error;
