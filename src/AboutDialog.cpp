@@ -611,9 +611,18 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
          wxT(INSTALL_PREFIX));
 #endif
 
+   // Location of cache
+   AddBuildinfoRow(&informationStr, XO("Cache folder:"), \
+      FileNames::CacheDir());
    // Location of settings
    AddBuildinfoRow(&informationStr, XO("Settings folder:"), \
+      FileNames::ConfigDir());
+   // Location of data
+   AddBuildinfoRow(&informationStr, XO("Data folder:"), \
       FileNames::DataDir());
+   // Location of data
+   AddBuildinfoRow(&informationStr, XO("State folder:"), \
+      FileNames::StateDir());
 
    informationStr << wxT("</table>\n"); // end of build info table
 

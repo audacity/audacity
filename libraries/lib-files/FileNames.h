@@ -109,12 +109,28 @@ namespace FileNames
       FilePaths &otherNames, wxFileName &newName);
 
    FILES_API wxString LowerCaseAppNameInPath( const wxString & dirIn);
+
+   /** \brief Audacity user cache directory
+    *
+    * Where audacity keeps its cache squirreled away, by default ~/.cache/audacity/
+    * on Unix, Application Data/Audacity on windows system */
+   FILES_API FilePath CacheDir();
+   /** \brief Audacity user config directory
+    *
+    * Where audacity keeps its settigns squirreled away, by default ~/.config/audacity/
+    * on Unix, Application Data/Audacity on windows system */
+   FILES_API FilePath ConfigDir();
    /** \brief Audacity user data directory
     *
-    * Where audacity keeps its settings and other user data squirreled away,
-    * by default ~/.audacity-data/ on Unix, Application Data/Audacity on
-    * windows system */
+    * Where audacity keeps its user data squirreled away, by default ~/.local/share/audacity/
+    * on Unix, Application Data/Audacity on windows system */
    FILES_API FilePath DataDir();
+   /** \brief Audacity user state directory
+    *
+    * Where audacity keeps its user state squirreled away, by default ~/.local/state/audacity/
+    * on Unix, Application Data/Audacity on windows system */
+   FILES_API FilePath StateDir();
+
    FILES_API FilePath ResourcesDir();
    FILES_API FilePath HtmlHelpDir();
    FILES_API FilePath HtmlHelpIndexFile(bool quick);
