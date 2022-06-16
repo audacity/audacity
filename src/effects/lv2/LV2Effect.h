@@ -47,6 +47,13 @@ class wxArrayString;
 
 #include <unordered_map>
 
+using LilvInstancePtr = Lilv_ptr<LilvInstance, lilv_instance_free>;
+using LilvNodesPtr = Lilv_ptr<LilvNodes, lilv_nodes_free>;
+using LilvScalePointsPtr = Lilv_ptr<LilvScalePoints, lilv_scale_points_free>;
+using LilvUIsPtr = Lilv_ptr<LilvUIs, lilv_uis_free>;
+using SuilHostPtr = Lilv_ptr<SuilHost, suil_host_free>;
+using SuilInstancePtr = Lilv_ptr<SuilInstance, suil_instance_free>;
+
 // We use deprecated LV2 interfaces to remain compatible with older
 // plug-ins, so disable warnings
 LV2_DISABLE_DEPRECATION_WARNINGS
@@ -126,22 +133,15 @@ public:
       mIsMidi = false;
       mWantsPosition = false;
       mMinimumSize = 1024;
-      mRing = NULL;
    }
-   virtual ~LV2AtomPort()
-   {
-      if (mRing)
-      {
-         zix_ring_free(mRing);
-      }
-   }
+   virtual ~LV2AtomPort() = default;
 
    uint32_t mMinimumSize;
    bool mIsMidi;
    bool mWantsPosition;
 
    std::vector<uint8_t> mBuffer;
-   ZixRing *mRing;
+   Lilv_ptr<ZixRing, zix_ring_free> mRing;
 };
 using LV2AtomPortPtr = std::shared_ptr<LV2AtomPort>;
 using LV2AtomPortArray = std::vector<LV2AtomPortPtr>;
@@ -546,7 +546,10 @@ private:
    // Not const, filled in when making a dialog
    LV2_Extension_Data_Feature mExtensionDataFeature{};
 
-   LV2_External_UI_Host mExternalUIHost{};
+   const LilvNodePtr mHumanId{ lilv_plugin_get_name(mPlug) };
+   const LV2_External_UI_Host mExternalUIHost{
+      LV2Effect::ui_closed, lilv_node_as_string(mHumanId.get()) };
+
    LV2_External_UI_Widget* mExternalWidget{};
    bool mExternalUIClosed{ false };
 
@@ -566,8 +569,8 @@ private:
    size_t mParentFeature{};
    LV2_Feature *mWorkerScheduleFeature{};
 
-   SuilHost *mSuilHost{};
-   SuilInstance *mSuilInstance{};
+   SuilHostPtr mSuilHost;
+   SuilInstancePtr mSuilInstance;
 
    NativeWindow *mNativeWin{};
    wxSize mNativeWinInitialSize{ wxDefaultSize };
@@ -604,8 +607,8 @@ inline wxString LilvString(const LilvNode *node)
 //! Name suggests C++ move semantics applied to `node`, but only C types used
 inline wxString LilvStringMove(LilvNode *node)
 {
+   LilvNodePtr temp{ node };
    wxString str = LilvString(node);
-   lilv_node_free(node);
    return str;
 };
 
@@ -647,7 +650,7 @@ private:
    std::thread mThread;
 
    const LV2Effect &mEffect;
-   LilvInstance *mInstance{};
+   LilvInstancePtr mInstance;
    LV2_Handle mHandle{};
 
    wxMessageQueue<LV2Work> mRequests;

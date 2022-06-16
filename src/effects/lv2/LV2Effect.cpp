@@ -69,6 +69,9 @@
 // Define a maximum block size in number of samples (not bytes)
 #define DEFAULT_BLOCKSIZE 1048576
 
+static inline void free_chars (char *p) { lilv_free(p); }
+using LilvCharsPtr = Lilv_ptr<char, free_chars>;
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // LV2EffectMeter
@@ -461,12 +464,6 @@ bool LV2Effect::InitializePlugin()
    // Set up some "objects" for lv2 with "virtual functions" (C-style)
    // To be set up later when making a dialog:
    mExtensionDataFeature = {};
-   {
-      LilvNode *pluginName = lilv_plugin_get_name(mPlug);
-      mExternalUIHost = {
-         LV2Effect::ui_closed, lilv_node_as_string(pluginName) };
-      lilv_node_free(pluginName);
-   }
 
    // Construct null-terminated array of "features" describing our capabilities
    // to lv2, and validate
@@ -496,25 +493,23 @@ bool LV2Effect::InitializePlugin()
       return false;
 
    // Adjust the values in the block size features according to the plugin
-   if (auto minLength = lilv_world_get(
-      gWorld, lilv_plugin_get_uri(mPlug), node_MinBlockLength, nullptr)
-      ; lilv_node_is_int(minLength)
+   if (LilvNodePtr minLength{ lilv_world_get(gWorld,
+         lilv_plugin_get_uri(mPlug), node_MinBlockLength, nullptr) }
+      ; lilv_node_is_int(minLength.get())
    ){
-      if (auto value = lilv_node_as_int(minLength)
+      if (auto value = lilv_node_as_int(minLength.get())
          ; value >= 0
       )
          mMinBlockSize = std::max<size_t>(mMinBlockSize, value);
-      lilv_node_free(minLength);
    }
-   if (auto maxLength = lilv_world_get(
-      gWorld, lilv_plugin_get_uri(mPlug), node_MaxBlockLength, nullptr)
-      ; lilv_node_is_int(maxLength)
+   if (LilvNodePtr maxLength{ lilv_world_get(gWorld,
+         lilv_plugin_get_uri(mPlug), node_MaxBlockLength, nullptr) }
+      ; lilv_node_is_int(maxLength.get())
    ){
-      if (auto value = lilv_node_as_int(maxLength)
+      if (auto value = lilv_node_as_int(maxLength.get())
          ; value >= 1
       )
          mMaxBlockSize = std::min<size_t>(mMaxBlockSize, value);
-      lilv_node_free(maxLength);
    }
    mMaxBlockSize = std::max(mMaxBlockSize, mMinBlockSize);
 
@@ -549,18 +544,17 @@ bool LV2Effect::InitializePlugin()
 
       // Get the group to which this port belongs or default to the main group
       TranslatableString groupName{};
-      if (const auto group = lilv_port_get(mPlug, port, node_Group)) {
+      if (LilvNodePtr group{ lilv_port_get(mPlug, port, node_Group) }) {
          // lilv.h does not say whether return of lilv_world_get() needs to
          // be freed, but that is easily seen to be so from source
          auto groupMsg = LilvStringMove(
-            lilv_world_get(gWorld, group, node_Label, nullptr));
+            lilv_world_get(gWorld, group.get(), node_Label, nullptr));
          if (groupMsg.empty())
             groupMsg = LilvStringMove(
-               lilv_world_get(gWorld, group, node_Name, nullptr));
+               lilv_world_get(gWorld, group.get(), node_Name, nullptr));
          if (groupMsg.empty())
-            groupMsg = LilvString(group);
+            groupMsg = LilvString(group.get());
          groupName = Verbatim(groupMsg);
-         lilv_node_free(group);
       }
       else
          groupName = XO("Effect Settings");
@@ -569,7 +563,7 @@ bool LV2Effect::InitializePlugin()
       const auto latencyIndex = lilv_plugin_get_latency_port_index(mPlug);
 
       // Get the ports designation (must be freed)
-      const auto designation = lilv_port_get(mPlug, port, node_Designation);
+      LilvNodePtr designation{ lilv_port_get(mPlug, port, node_Designation) };
 
       // Check for audio ports
       if (lilv_port_is_a(mPlug, port, node_AudioPort)) {
@@ -589,23 +583,23 @@ bool LV2Effect::InitializePlugin()
          const auto controlPort = mControlPorts.back();
 
          // Get any unit descriptor
-         if (const auto unit = lilv_port_get(mPlug, port, node_Unit)) {
+         if (LilvNodePtr unit{ lilv_port_get(mPlug, port, node_Unit) })
             // Really should use lilv_world_get_symbol()
-            if (const auto symbol = lilv_world_get_symbol(gWorld, unit)) {
-               controlPort->mUnits = LilvString(symbol);
-               lilv_node_free(symbol);
-            }
-            lilv_node_free(unit);
-         }
+            if(LilvNodePtr symbol{ lilv_world_get_symbol(gWorld, unit.get()) })
+               controlPort->mUnits = LilvString(symbol.get());
 
          // Get the scale points
-         const auto points = lilv_port_get_scale_points(mPlug, port);
-         LILV_FOREACH(scale_points, j, points) {
-            const auto point = lilv_scale_points_get(points, j);
-            controlPort->mScaleValues.push_back(lilv_node_as_float(lilv_scale_point_get_value(point)));
-            controlPort->mScaleLabels.push_back(LilvString(lilv_scale_point_get_label(point)));
+         {
+            LilvScalePointsPtr points{
+               lilv_port_get_scale_points(mPlug, port) };
+            LILV_FOREACH(scale_points, j, points.get()) {
+               const auto point = lilv_scale_points_get(points.get(), j);
+               controlPort->mScaleValues.push_back(
+                  lilv_node_as_float(lilv_scale_point_get_value(point)));
+               controlPort->mScaleLabels.push_back(
+                  LilvString(lilv_scale_point_get_label(point)));
+            }
          }
-         lilv_scale_points_free(points);
 
          // Collect the value and range info
          controlPort->mHasLo = !std::isnan(minimumVals[i]);
@@ -660,20 +654,19 @@ bool LV2Effect::InitializePlugin()
          const auto atomPort = mAtomPorts.back();
 
          atomPort->mMinimumSize = 8192;
-         if (const auto min = lilv_port_get(mPlug, port, node_MinimumSize)
-            ; lilv_node_is_int(min)
+         if (LilvNodePtr min{ lilv_port_get(mPlug, port, node_MinimumSize) }
+            ; lilv_node_is_int(min.get())
          ){
-            if (auto value = lilv_node_as_int(min)
+            if (auto value = lilv_node_as_int(min.get())
                ; value > 0
             )
                atomPort->mMinimumSize =
                   std::max<uint32_t>(atomPort->mMinimumSize, value);
-            lilv_node_free(min);
          }
 
          atomPort->mBuffer.resize(atomPort->mMinimumSize);
-         atomPort->mRing = zix_ring_new(atomPort->mMinimumSize);
-         zix_ring_mlock(atomPort->mRing);
+         atomPort->mRing.reset(zix_ring_new(atomPort->mMinimumSize));
+         zix_ring_mlock(atomPort->mRing.get());
 
          if (lilv_port_supports_event(mPlug, port, node_Position))
             atomPort->mWantsPosition = true;
@@ -683,7 +676,7 @@ bool LV2Effect::InitializePlugin()
             (isInput ? mMidiIn : mMidiOut) += 1;
          }
 
-         bool isControl = lilv_node_equals(designation, node_Control);
+         bool isControl = lilv_node_equals(designation.get(), node_Control);
          if (isInput) {
             if (!mControlIn || isControl)
                mControlIn = atomPort;
@@ -713,10 +706,6 @@ bool LV2Effect::InitializePlugin()
          else if (cvPort->mHasHi)
             cvPort->mDef = cvPort->mMax;
       }
-
-      // Free the designation node
-      if (designation)
-         lilv_node_free(designation);
    }
    }
 
@@ -730,9 +719,9 @@ bool LV2Effect::InitializePlugin()
    mWantsOptionsInterface = false;
    mWantsWorkerInterface = false;
    mWantsStateInterface = false;
-   if (const auto extdata = lilv_plugin_get_extension_data(mPlug)) {
-      LILV_FOREACH(nodes, i, extdata) {
-         const auto node = lilv_nodes_get(extdata, i);
+   if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(mPlug) }) {
+      LILV_FOREACH(nodes, i, extdata.get()) {
+         const auto node = lilv_nodes_get(extdata.get(), i);
          const auto uri = lilv_node_as_string(node);
          if (strcmp(uri, LV2_OPTIONS__interface) == 0)
             mWantsOptionsInterface = true;
@@ -741,7 +730,6 @@ bool LV2Effect::InitializePlugin()
          else if (strcmp(uri, LV2_STATE__interface) == 0)
             mWantsStateInterface = true;
       }
-      lilv_nodes_free(extdata);
    }
 
    return true;
@@ -906,7 +894,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
             lv2_atom_forge_pop(&mForge, &posFrame);
          }
 
-         ZixRing *ring = port->mRing;
+         const auto ring = port->mRing.get();
          LV2_Atom atom;
          while (zix_ring_read(ring, &atom, sizeof(atom)))
          {
@@ -1042,7 +1030,7 @@ bool LV2Effect::RealtimeProcessStart(EffectSettings &)
             lv2_atom_forge_pop(&mForge, &posFrame);
          }
 
-         ZixRing *ring = port->mRing;
+         const auto ring = port->mRing.get();
          LV2_Atom atom;
          while (zix_ring_read(ring, &atom, sizeof(atom)))
          {
@@ -1163,7 +1151,7 @@ return GuardedCall<bool>([&]{
    {
       if (!port->mIsInput)
       {
-         ZixRing *ring = port->mRing;
+         const auto ring = port->mRing.get();
 
          LV2_ATOM_SEQUENCE_FOREACH((LV2_Atom_Sequence *) port->mBuffer.data(), ev)
          {
@@ -1272,8 +1260,8 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 
    mParent->PushEventHandler(this);
 
-   mSuilHost = NULL;
-   mSuilInstance = NULL;
+   mSuilHost.reset();
+   mSuilInstance.reset();
 
    mMaster = InitInstance(mSampleRate);
    if (!mMaster) {
@@ -1339,19 +1327,14 @@ bool LV2Effect::CloseUI()
          mNativeWin = NULL;
       }
 
-      mUIIdleInterface = NULL;
-      mUIShowInterface = NULL;
-      mExternalWidget = NULL;
+      mUIIdleInterface = nullptr;
+      mUIShowInterface = nullptr;
+      mExternalWidget = nullptr;
 
-      suil_instance_free(mSuilInstance);
-      mSuilInstance = NULL;
+      mSuilInstance.reset();
    }
 
-   if (mSuilHost)
-   {
-      suil_host_free(mSuilHost);
-      mSuilHost = NULL;
-   }
+   mSuilHost.reset();
 
    mMaster.reset();
 
@@ -1392,37 +1375,25 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
 {
    using namespace LV2Symbols;
    if (mFactoryPresetsLoaded)
-   {
       return mFactoryPresetNames;
-   }
 
-   LilvNodes *presets = lilv_plugin_get_related(mPlug, node_Preset);
-   if (presets)
-   {
-      LILV_FOREACH(nodes, i, presets)
-      {
-         const LilvNode *preset = lilv_nodes_get(presets, i);
+   if (LilvNodesPtr presets{ lilv_plugin_get_related(mPlug, node_Preset) }) {
+      LILV_FOREACH(nodes, i, presets.get()) {
+         const auto preset = lilv_nodes_get(presets.get(), i);
 
          mFactoryPresetUris.push_back(LilvString(preset));
 
          lilv_world_load_resource(gWorld, preset);
 
-         LilvNodes *labels = lilv_world_find_nodes(gWorld, preset, node_Label, NULL);
-         if (labels)
-         {
-            const LilvNode *label = lilv_nodes_get_first(labels);
-
+         if (LilvNodesPtr labels{ lilv_world_find_nodes(gWorld, preset,
+            node_Label, nullptr) }) {
+            const auto label = lilv_nodes_get_first(labels.get());
             mFactoryPresetNames.push_back(LilvString(label));
-
-            lilv_nodes_free(labels);
          }
          else
-         {
-            mFactoryPresetNames.push_back(LilvString(preset).AfterLast(wxT('#')));
-         }
+            mFactoryPresetNames.push_back(
+               LilvString(preset).AfterLast(wxT('#')));
       }
-
-      lilv_nodes_free(presets);
    }
 
    mFactoryPresetsLoaded = true;
@@ -1444,25 +1415,20 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
       return false;
    }
 
-   LilvNode *preset = lilv_new_uri(gWorld, mFactoryPresetUris[id].ToUTF8());
+   LilvNodePtr preset{ lilv_new_uri(gWorld, mFactoryPresetUris[id].ToUTF8()) };
    if (!preset)
-   {
       return false;
-   }
 
-   LilvState *state =
-      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset);
-   if (state)
-   {
+   using LilvStatePtr = Lilv_ptr<LilvState, lilv_state_free>;
+   if (LilvStatePtr state{
+      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get()) } ) {
       lilv_state_restore(
-         state, mMaster->GetInstance(), set_value_func, this, 0, nullptr);
-      lilv_state_free(state);
+         state.get(), mMaster->GetInstance(), set_value_func, this, 0, nullptr);
       TransferDataToWindow();
+      return true;
    }
-
-   lilv_node_free(preset);
-
-   return state != NULL;
+   else
+      return false;
 }
 
 bool LV2Effect::CanExportPresets()
@@ -1574,10 +1540,10 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, bool required)
    using namespace LV2Symbols;
    bool supported = true;
    auto predicate = required ? node_RequiredFeature : node_OptionalFeature;
-   auto nodes = lilv_world_find_nodes(gWorld, subject, predicate, nullptr);
-   if (nodes) {
-      LILV_FOREACH(nodes, i, nodes) {
-         const auto node = lilv_nodes_get(nodes, i);
+   if (LilvNodesPtr nodes{
+      lilv_world_find_nodes(gWorld, subject, predicate, nullptr) }) {
+      LILV_FOREACH(nodes, i, nodes.get()) {
+         const auto node = lilv_nodes_get(nodes.get(), i);
          const auto uri = lilv_node_as_string(node);
          if ((strcmp(uri, LV2_UI__noUserResize) == 0) ||
              (strcmp(uri, LV2_UI__fixedSize) == 0))
@@ -1596,7 +1562,6 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, bool required)
             }
          }
       }
-      lilv_nodes_free(nodes);
    }
    return supported;
 }
@@ -1612,11 +1577,10 @@ bool LV2Effect::CheckOptions(const LilvNode *subject, bool required)
    bool supported = true;
    const auto predicate =
       required ? node_RequiredOption : node_SupportedOption;
-   LilvNodes *nodes =
-      lilv_world_find_nodes(gWorld, subject, predicate, nullptr);
-   if (nodes) {
-      LILV_FOREACH(nodes, i, nodes) {
-         const auto node = lilv_nodes_get(nodes, i);
+   if (LilvNodesPtr nodes{
+      lilv_world_find_nodes(gWorld, subject, predicate, nullptr) }) {
+      LILV_FOREACH(nodes, i, nodes.get()) {
+         const auto node = lilv_nodes_get(nodes.get(), i);
          const auto uri = lilv_node_as_string(node);
          const auto urid = URID_Map(uri);
          if (urid == urid_NominalBlockLength)
@@ -1634,7 +1598,6 @@ bool LV2Effect::CheckOptions(const LilvNode *subject, bool required)
             }
          }
       }
-      lilv_nodes_free(nodes);
    }
    return supported;
 }
@@ -1676,7 +1639,7 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
       if (!port->mIsInput)
          LV2_ATOM_SEQUENCE_FOREACH(
             reinterpret_cast<LV2_Atom_Sequence *>(port->mBuffer.data()), ev) {
-            zix_ring_write(port->mRing,
+            zix_ring_write(port->mRing.get(),
                &ev->body, ev->body.size + sizeof(LV2_Atom));
          }
 
@@ -1699,40 +1662,29 @@ bool LV2Effect::BuildFancy()
 #endif
 
    // Determine if the plugin has a supported UI
-   const LilvUI *ui = NULL;
-   const LilvNode *uiType = NULL;
-   LilvUIs *uis = lilv_plugin_get_uis(mPlug);
-   if (uis)
-   {
-      LilvNode *containerType = lilv_new_uri(gWorld, nativeType);
-      if (containerType)
-      {
-         LILV_FOREACH(uis, iter, uis)
-         {
-            ui = lilv_uis_get(uis, iter);
-            if (lilv_ui_is_supported(ui, suil_ui_supported, containerType, &uiType))
-            {
+   const LilvUI *ui = nullptr;
+   const LilvNode *uiType = nullptr;
+   LilvUIsPtr uis{ lilv_plugin_get_uis(mPlug) };
+   if (uis) {
+      if (LilvNodePtr containerType{ lilv_new_uri(gWorld, nativeType) }) {
+         LILV_FOREACH(uis, iter, uis.get()) {
+            ui = lilv_uis_get(uis.get(), iter);
+            if (lilv_ui_is_supported(ui,
+               suil_ui_supported, containerType.get(), &uiType))
                break;
-            }
-            if (lilv_ui_is_a(ui, node_Gtk) || lilv_ui_is_a(ui, node_Gtk3))
-            {
+            if (lilv_ui_is_a(ui, node_Gtk) || lilv_ui_is_a(ui, node_Gtk3)) {
                uiType = node_Gtk;
                break;
             }
-
-            ui = NULL;
+            ui = nullptr;
          }
-
-         lilv_node_free(containerType);
       }
    }
 
    // Check for other supported UIs
-   if (ui == NULL)
-   {
-      LILV_FOREACH(uis, iter, uis)
-      {
-         ui = lilv_uis_get(uis, iter);
+   if (!ui && uis) {
+      LILV_FOREACH(uis, iter, uis.get()) {
+         ui = lilv_uis_get(uis.get(), iter);
          if (lilv_ui_is_a(ui, node_ExternalUI) || lilv_ui_is_a(ui, node_ExternalUIOld))
          {
             uiType = node_ExternalUI;
@@ -1744,18 +1696,12 @@ bool LV2Effect::BuildFancy()
 
    // No usable UI found
    if (ui == NULL)
-   {
-      lilv_uis_free(uis);
       return false;
-   }
 
    const LilvNode *uinode = lilv_ui_get_uri(ui);
    lilv_world_load_resource(gWorld, uinode);
    if (!ValidateFeatures(uinode))
-   {
-      lilv_uis_free(uis);
       return false;
-   }
 
    const char *containerType;
 
@@ -1787,36 +1733,33 @@ bool LV2Effect::BuildFancy()
    mNativeWinLastSize = wxDefaultSize;
 
    // Create the suil host
-   mSuilHost = suil_host_new(LV2Effect::suil_port_write_func,
-                             LV2Effect::suil_port_index_func,
-                             NULL,
-                             NULL);
+   mSuilHost.reset(suil_host_new(LV2Effect::suil_port_write_func,
+      LV2Effect::suil_port_index_func, nullptr, nullptr));
    if (!mSuilHost)
-   {
-      lilv_uis_free(uis);
       return false;
-   }
 
 #if defined(__WXMSW__)
    // Plugins may have dependencies that need to be loaded from the same path
    // as the main DLL, so add this plugin's path to the DLL search order.
-   char *libPath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), NULL);
-   wxString path = wxPathOnly(libPath);
+   LilvCharsPtr libPath{
+      lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)),
+      nullptr)
+   };
+   const auto path = wxPathOnly(libPath.get());
    SetDllDirectory(path.c_str());
-   lilv_free(libPath);
 #endif
 
-   char *bundlePath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui)), NULL);
-   char *binaryPath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), NULL);
+   LilvCharsPtr bundlePath{
+      lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui)), nullptr)
+   };
+   LilvCharsPtr binaryPath{
+      lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), nullptr)
+   };
 
-   mSuilInstance = suil_instance_new(mSuilHost, this, containerType,
+   mSuilInstance.reset(suil_instance_new(mSuilHost.get(), this, containerType,
       lilv_node_as_uri(lilv_plugin_get_uri(mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
-      bundlePath, binaryPath, GetFeaturePointers().data());
-
-   lilv_free(binaryPath);
-   lilv_free(bundlePath);
-   lilv_uis_free(uis);
+      bundlePath.get(), binaryPath.get(), GetFeaturePointers().data()));
 
    // Bail if the instance (no compatible UI) couldn't be created
    if (!mSuilInstance)
@@ -1825,8 +1768,7 @@ bool LV2Effect::BuildFancy()
       SetDllDirectory(NULL);
 #endif
 
-      suil_host_free(mSuilHost);
-      mSuilHost = NULL;
+      mSuilHost.reset();
 
       return false;
    }
@@ -1835,7 +1777,8 @@ bool LV2Effect::BuildFancy()
    {
       mParent->SetMinSize(wxDefaultSize);
 
-      mExternalWidget = (LV2_External_UI_Widget *) suil_instance_get_widget(mSuilInstance);
+      mExternalWidget = static_cast<LV2_External_UI_Widget *>(
+         suil_instance_get_widget(mSuilInstance.get()));
       mTimer.SetOwner(this, ID_TIMER);
       mTimer.Start(20);
 
@@ -1843,7 +1786,8 @@ bool LV2Effect::BuildFancy()
    }
    else
    {
-      WXWidget widget = (WXWidget) suil_instance_get_widget(mSuilInstance);
+      const auto widget = static_cast<WXWidget>(
+         suil_instance_get_widget(mSuilInstance.get()));
 
 #if defined(__WXGTK__)
       // Needed by some plugins (e.g., Invada) to ensure the display is fully
@@ -1889,19 +1833,16 @@ bool LV2Effect::BuildFancy()
       }
 
       if (!si)
-      {
-         lilv_uis_free(uis);
          return false;
-      }
 
       mParent->SetSizerAndFit(vs.release());
    }
 
-   mUIIdleInterface = (LV2UI_Idle_Interface *)
-      suil_instance_extension_data(mSuilInstance, LV2_UI__idleInterface);
+   mUIIdleInterface = static_cast<const LV2UI_Idle_Interface *>(
+      suil_instance_extension_data(mSuilInstance.get(), LV2_UI__idleInterface));
 
-   mUIShowInterface = (LV2UI_Show_Interface *)
-      suil_instance_extension_data(mSuilInstance, LV2_UI__showInterface);
+   mUIShowInterface = static_cast<const LV2UI_Show_Interface *>(
+      suil_instance_extension_data(mSuilInstance.get(), LV2_UI__showInterface));
 
    if (mUIShowInterface)
    {
@@ -2237,20 +2178,10 @@ bool LV2Effect::TransferDataToWindow()
    if (mUseGUI)
    {
       if (mSuilInstance)
-      {
          for (auto & port : mControlPorts)
-         {
             if (port->mIsInput)
-            {
-               suil_instance_port_event(mSuilInstance,
-                                        port->mIndex,
-                                        sizeof(float),
-                                        0,
-                                        &port->mVal);
-            }
-         }
-      }
-
+               suil_instance_port_event(mSuilInstance.get(),
+                  port->mIndex, sizeof(float), 0, &port->mVal);
       return true;
    }
 
@@ -2405,7 +2336,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
 
    if (mUIIdleInterface)
    {
-      SuilHandle handle = suil_instance_get_handle(mSuilInstance);
+      const auto handle = suil_instance_get_handle(mSuilInstance.get());
       if (mUIIdleInterface->idle(handle))
       {
          if (mUIShowInterface)
@@ -2419,7 +2350,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
 
    if (mControlOut)
    {
-      ZixRing *ring = mControlOut->mRing;
+      const auto ring = mControlOut->mRing.get();
 
       LV2_Atom *atom = (LV2_Atom *) malloc(mControlOut->mMinimumSize);
       if (atom)
@@ -2430,12 +2361,11 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
 
             if (size < mControlOut->mMinimumSize)
             {
-               zix_ring_read(ring, LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
-               suil_instance_port_event(mSuilInstance,
-                                        mControlOut->mIndex,
-                                        size,
-                                        LV2Symbols::urid_EventTransfer,
-                                        atom);
+               zix_ring_read(ring,
+                  LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
+               suil_instance_port_event(mSuilInstance.get(),
+                  mControlOut->mIndex, size,
+                  LV2Symbols::urid_EventTransfer, atom);
             }
             else
             {
@@ -2452,11 +2382,8 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       // Let UI know that a port's value has changed
       if (port->mVal != port->mLst)
       {
-         suil_instance_port_event(mSuilInstance,
-                                  port->mIndex,
-                                  sizeof(port->mVal),
-                                  0,
-                                  &port->mVal);
+         suil_instance_port_event(mSuilInstance.get(),
+            port->mIndex, sizeof(port->mVal), 0, &port->mVal);
          port->mLst = port->mVal;
       }
    }
@@ -2674,7 +2601,7 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
    // Handle event transfers
    else if (protocol == LV2Symbols::urid_EventTransfer) {
       if (mControlIn && port_index == mControlIn->mIndex)
-         zix_ring_write(mControlIn->mRing, buffer, buffer_size);
+         zix_ring_write(mControlIn->mRing.get(), buffer, buffer_size);
    }
 }
 
@@ -2794,7 +2721,6 @@ LV2Wrapper::~LV2Wrapper()
          mThread.join();
       }
       Deactivate();
-      lilv_instance_free(mInstance);
    }
 }
 
@@ -2817,13 +2743,13 @@ LV2Wrapper::LV2Wrapper(const LV2Effect &effect,
    // as the main DLL, so add this plugin's path to the DLL search order.
    const auto libNode = lilv_plugin_get_library_uri(plugin);
    const auto libUri = lilv_node_as_uri(libNode);
-   const auto libPath = lilv_file_uri_parse(libUri, nullptr);
-   const auto path = wxPathOnly(libPath);
+   LilvCharsPtr libPath{ lilv_file_uri_parse(libUri, nullptr) };
+   const auto path = wxPathOnly(libPath.get());
    SetDllDirectory(path.c_str());
-   lilv_free(libPath);
 #endif
 
-   mInstance = lilv_plugin_instantiate(plugin, sampleRate, features.data());
+   mInstance.reset(
+      lilv_plugin_instantiate(plugin, sampleRate, features.data()));
 
 #if defined(__WXMSW__)
    SetDllDirectory(nullptr);
@@ -2832,15 +2758,15 @@ LV2Wrapper::LV2Wrapper(const LV2Effect &effect,
    if (!mInstance)
       return;
 
-   mHandle = lilv_instance_get_handle(mInstance);
+   mHandle = lilv_instance_get_handle(mInstance.get());
    mOptionsInterface = static_cast<const LV2_Options_Interface *>(
-      lilv_instance_get_extension_data(mInstance, LV2_OPTIONS__interface));
+      lilv_instance_get_extension_data(mInstance.get(), LV2_OPTIONS__interface));
    mStateInterface = static_cast<const LV2_State_Interface *>(
-      lilv_instance_get_extension_data(mInstance, LV2_STATE__interface));
+      lilv_instance_get_extension_data(mInstance.get(), LV2_STATE__interface));
    mWorkerInterface = static_cast<const LV2_Worker_Interface *>(
-      lilv_instance_get_extension_data(mInstance, LV2_WORKER__interface));
+      lilv_instance_get_extension_data(mInstance.get(), LV2_WORKER__interface));
    if (mEffect.mLatencyPort >= 0)
-      lilv_instance_connect_port(mInstance, mEffect.mLatencyPort, &mLatency);
+      lilv_instance_connect_port(mInstance.get(), mEffect.mLatencyPort, &mLatency);
    if (mWorkerInterface)
       mThread = std::thread{
          std::mem_fn( &LV2Wrapper::ThreadFunction ), std::ref(*this)
@@ -2865,7 +2791,7 @@ void LV2Wrapper::Deactivate()
 
 LilvInstance *LV2Wrapper::GetInstance() const
 {
-   return mInstance;
+   return mInstance.get();
 }
 
 LV2_Handle LV2Wrapper::GetHandle() const
