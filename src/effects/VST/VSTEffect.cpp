@@ -2116,7 +2116,7 @@ void VSTEffect::SetBufferDelay(int samples)
    return;
 }
 
-int VSTEffect::GetString(wxString & outstr, int opcode, int index) const
+int VSTEffectWrapper::GetString(wxString & outstr, int opcode, int index) const
 {
    char buf[256];
 
@@ -2130,7 +2130,7 @@ int VSTEffect::GetString(wxString & outstr, int opcode, int index) const
    return 0;
 }
 
-wxString VSTEffect::GetString(int opcode, int index) const
+wxString VSTEffectWrapper::GetString(int opcode, int index) const
 {
    wxString str;
 
@@ -2171,7 +2171,7 @@ void VSTEffect::callProcessReplacing(const float *const *inputs,
       const_cast<float**>(outputs), sampleframes);
 }
 
-float VSTEffect::callGetParameter(int index) const
+float VSTEffectWrapper::callGetParameter(int index) const
 {
    return mAEffect->getParameter(mAEffect, index);
 }
@@ -3440,5 +3440,18 @@ XMLTagHandler *VSTEffect::HandleXMLChild(const std::string_view& tag)
 
    return NULL;
 }
+
+
+void VSTEffectWrapper::ForEachParameter(ParameterVisitor visitor) const
+{
+   for (int i = 0; i < mAEffect->numParams; i++)
+   {
+      ParameterInfo pi{ i, GetString(effGetParamName, i) };
+
+      if (!visitor(pi))
+         break;
+   }
+}
+
 
 #endif // USE_VST
