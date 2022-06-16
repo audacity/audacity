@@ -227,6 +227,15 @@ public:
    std::vector<double> mScaleValues;
    wxArrayString mScaleLabels;
 
+   //! Map a real number to one of the scale points
+   size_t Discretize(float value) const {
+      auto s = mScaleValues.size();
+      for (; s > 0 && --s;)
+         if (value >= mScaleValues[s])
+            break;
+      return s;
+   }
+
    // UI
    wxTextCtrl *mText;
    union

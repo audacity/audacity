@@ -1820,20 +1820,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                }
                else if (port->mEnumeration)      // Check before integer
                {
-                  int s;
-                  for (s = (int) port->mScaleValues.size() - 1; s >= 0; s--)
-                  {
-                     if (port->mVal >= port->mScaleValues[s])
-                     {
-                        break;
-                     }
-                  }
-
-                  if (s < 0)
-                  {
-                     s = 0;
-                  }
-
+                  auto s = port->Discretize(port->mVal);
                   wxChoice *c = safenew wxChoice(w, ID_Choices + p);
                   c->SetName(labelText);
                   c->Append(port->mScaleLabels);
@@ -2047,20 +2034,7 @@ bool LV2Effect::TransferDataToWindow()
          }
          else if (port->mEnumeration)      // Check before integer
          {
-            int s;
-            for (s = (int) port->mScaleValues.size() - 1; s >= 0; s--)
-            {
-               if (port->mVal >= port->mScaleValues[s])
-               {
-                  break;
-               }
-            }
-
-            if (s < 0)
-            {
-               s = 0;
-            }
-
+            auto s = port->Discretize(port->mVal);
             port->mCtrl.choice->SetSelection(s);
          }
          else if (port->mIsInput)
