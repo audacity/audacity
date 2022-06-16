@@ -2198,7 +2198,7 @@ void VSTEffect::callSetProgram(int index)
    callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 }
 
-void VSTEffect::callSetChunk(bool isPgm, int len, void *buf)
+void VSTEffectWrapper::callSetChunkB(bool isPgm, int len, void *buf)
 {
    VstPatchChunkInfo info;
 
@@ -2208,10 +2208,10 @@ void VSTEffect::callSetChunk(bool isPgm, int len, void *buf)
    info.pluginVersion = mAEffect->version;
    info.numElements = isPgm ? mAEffect->numParams : mAEffect->numPrograms;
 
-   callSetChunk(isPgm, len, buf, &info);
+   callSetChunkB(isPgm, len, buf, &info);
 }
 
-void VSTEffect::callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *info)
+void VSTEffectWrapper::callSetChunkB(bool isPgm, int len, void *buf, VstPatchChunkInfo *info)
 {
    if (isPgm)
    {
@@ -2234,9 +2234,24 @@ void VSTEffect::callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *
    callDispatcher(effSetChunk, isPgm ? 1 : 0, len, buf, 0.0);
    callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
 
-   for (const auto &slave : mSlaves)
-      slave->callSetChunk(isPgm, len, buf, info);
 }
+
+
+void VSTEffect::callSetChunk(bool isPgm, int len, void* buf)
+{
+   callSetChunkB(isPgm, len, buf);
+}
+
+void VSTEffect::callSetChunk(bool isPgm, int len, void* buf, VstPatchChunkInfo* info)
+{
+   callSetChunkB(isPgm, len, buf, info);
+
+   for (const auto& slave : mSlaves)
+      slave->callSetChunkB(isPgm, len, buf, info);
+}
+
+
+
 
 void VSTEffect::RemoveHandler()
 {
@@ -3451,6 +3466,95 @@ void VSTEffectWrapper::ForEachParameter(ParameterVisitor visitor) const
       if (!visitor(pi))
          break;
    }
+}
+
+
+bool VSTEffectWrapper::FetchSettings(VSTEffectSettings& vst3settings) const
+{
+   // Get the fallback ID-value parameters
+   ForEachParameter
+   (
+      [&](const ParameterInfo& pi)
+      {
+         float val = callGetParameter(pi.mID);
+         vst3settings.mParamsMap[pi.mName] = val;
+         return true;
+      }
+   );
+
+   // These are here to be checked against for compatibility later
+   vst3settings.mVersion   = mAEffect->version;
+   vst3settings.mUniqueID  = mAEffect->uniqueID;
+   vst3settings.mNumParams = mAEffect->numParams;
+
+   // Get the chunk (if supported)
+   vst3settings.mChunk = std::nullopt;
+   if (mAEffect->flags & effFlagsProgramChunks)
+   {
+      void* chunk = NULL;
+      int clen = (int)constCallDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
+      if (clen > 0)
+      {
+         vst3settings.mChunk = Base64::Encode(chunk, clen);
+      }
+   }
+
+   return true;
+}
+
+
+bool VSTEffectWrapper::StoreSettings(const VSTEffectSettings& vst3settings)
+{
+   // First, make sure settings are compatibile with the plugin
+   if ((vst3settings.mUniqueID  != mAEffect->uniqueID)   ||
+       (vst3settings.mVersion   != mAEffect->version)    ||
+       (vst3settings.mNumParams != mAEffect->numParams)      )
+   {
+      return false;
+   }
+
+
+   // Try using the chunk first (if available)
+   if (vst3settings.mChunk)
+   {
+      ArrayOf<char> buf{ vst3settings.mChunk->length() / 4 * 3 };
+
+      int len = Base64::Decode(*vst3settings.mChunk, buf.get());
+      if (len)
+      {
+         VstPatchChunkInfo info = { 1, mAEffect->uniqueID, mAEffect->version, mAEffect->numParams, "" };
+
+         callSetChunkB(true, len, buf.get(), &info);
+         return true;
+      }         
+   }
+
+
+   // Chunk unavailable / decoding it did not work? fall back to param ID-value pairs
+   const auto vstVersion = constCallDispatcher(effGetVstVersion, 0, 0, NULL, 0);
+
+   ForEachParameter
+   (
+      [&](const ParameterInfo& pi)
+      {
+         const auto itr = vst3settings.mParamsMap.find(pi.mName);
+         if (itr != vst3settings.mParamsMap.end())
+         {
+            const float& value = itr->second;
+
+            // this is basically a copy of VSTEffect::callSetParameter,
+            // minus the recursive calls to the slaves            
+            if (vstVersion == 0 || constCallDispatcher(effCanBeAutomated, 0, pi.mID, NULL, 0.0))
+            {
+               mAEffect->setParameter(mAEffect, pi.mID, value);
+            }
+         }
+         return true;
+      }
+   );
+   
+
+   return false;
 }
 
 

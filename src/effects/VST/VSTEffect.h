@@ -21,6 +21,9 @@
 #include "XMLTagHandler.h"
 #include <wx/weakref.h>
 
+#include <unordered_map>
+#include <optional>
+
 class wxSizerItem;
 class wxSlider;
 class wxStaticText;
@@ -73,7 +76,28 @@ typedef SInt16 CFBundleRefNum;
 #endif
 #endif
 
-struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
+struct VSTEffectSettings, public XMLTagHandler
+{
+   // These are saved in the Config and checked against when loading a preset, to make sure
+   // that we are loading a Config  which is compatible.
+   //
+   int32_t mUniqueID;
+   int32_t mVersion;
+   int32_t mNumParams;
+
+   // When loading a preset, the preferred way is to use the chunk; when not present in
+   // the Config or failing to load, we fall back to loading single parameters (ID, value) pairs.
+   //
+   // It looks like a plugin might not support this (if their effFlagsProgramChunks bit is off)
+   // this is why it is made optional.
+   //
+   std::optional<wxString> mChunk;
+
+   // Fallback data used when the chunk is not available.
+   std::unordered_map<wxString, double> mParamsMap;
+};
+
+struct VSTEffectWrapper : public VSTEffectLink
 {
    AEffect* mAEffect = nullptr;
 
@@ -87,13 +111,16 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
 
    float callGetParameter(int index) const;
 
+   void callSetChunkB(bool isPgm, int len, void* buf);
+   void callSetChunkB(bool isPgm, int len, void* buf, VstPatchChunkInfo* info);
+
    int      GetString(wxString& outstr, int opcode, int index = 0) const;
    wxString GetString(int opcode, int index = 0) const;
 
    struct ParameterInfo
    {
       int      mID;
-      wxString mName;
+      wxString mName;      
    };
 
    //! @return true  continue visiting
@@ -101,7 +128,13 @@ struct VSTEffectWrapper : public VSTEffectLink, public XMLTagHandler
    using ParameterVisitor = std::function< bool(const ParameterInfo& pi) >;
 
    void ForEachParameter(ParameterVisitor visitor) const;
+
+   bool FetchSettings(VSTEffectSettings& vst3Settings) const;
+
+   bool StoreSettings(const VSTEffectSettings& vst3settings);
 };
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //
