@@ -267,6 +267,10 @@ public:
 
    //! @return whether our host should reciprocally supply the
    //! LV2_Worker_Schedule interface to the plug-in
+   static bool SuppliesWorkerInterface(const LilvPlugin *plug);
+
+   //! @return whether our host should reciprocally supply the
+   //! LV2_Worker_Schedule interface to the plug-in
    bool SuppliesWorkerInterface() const { return mSuppliesWorkerInterface; }
    //! @return may be null
    const LV2_Options_Option *NominalBlockLengthOption() const;
@@ -343,7 +347,7 @@ protected:
 
    int mLatencyPort{ -1 };
 
-   bool mSuppliesWorkerInterface{ false };
+   const bool mSuppliesWorkerInterface;
    bool mSupportsNominalBlockLength{ false };
    bool mSupportsSampleRate{ false };
 

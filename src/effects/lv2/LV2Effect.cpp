@@ -443,6 +443,7 @@ bool LV2Effect::SupportsAutomation() const
 }
 
 LV2FeaturesList::LV2FeaturesList(const LilvPlugin *plug) : mPlug{ plug }
+   , mSuppliesWorkerInterface{ SuppliesWorkerInterface(plug) }
 {
 }
 
@@ -731,7 +732,6 @@ bool LV2Effect::InitializePlugin()
 
    // Determine available extensions
    mWantsOptionsInterface = false;
-   mSuppliesWorkerInterface = false;
    mWantsStateInterface = false;
    if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(mPlug) }) {
       LILV_FOREACH(nodes, i, extdata.get()) {
@@ -739,14 +739,26 @@ bool LV2Effect::InitializePlugin()
          const auto uri = lilv_node_as_string(node);
          if (strcmp(uri, LV2_OPTIONS__interface) == 0)
             mWantsOptionsInterface = true;
-         else if (strcmp(uri, LV2_WORKER__interface) == 0)
-            mSuppliesWorkerInterface = true;
          else if (strcmp(uri, LV2_STATE__interface) == 0)
             mWantsStateInterface = true;
       }
    }
 
    return true;
+}
+
+bool LV2FeaturesList::SuppliesWorkerInterface(const LilvPlugin *plug)
+{
+   bool result = false;
+   if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(plug) }) {
+      LILV_FOREACH(nodes, i, extdata.get()) {
+         const auto node = lilv_nodes_get(extdata.get(), i);
+         const auto uri = lilv_node_as_string(node);
+         if (strcmp(uri, LV2_WORKER__interface) == 0)
+            result = true;
+      }
+   }
+   return result;
 }
 
 std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
