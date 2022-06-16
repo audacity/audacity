@@ -271,6 +271,27 @@ public:
    int LatencyPort() const { return mLatencyPort; }
 
 protected:
+   // lv2 functions require a pointer to non-const in places, but presumably
+   // have no need to mutate the members of this structure
+   LV2_URID_Map *URIDMapFeature() const
+   { return const_cast<LV2_URID_Map*>(&mURIDMapFeature); }
+
+   static uint32_t uri_to_id(LV2_URI_Map_Callback_Data callback_data,
+                             const char *map,
+                             const char *uri);
+   static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
+   LV2_URID URID_Map(const char *uri);
+
+   static const char *urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid);
+   const char *URID_Unmap(LV2_URID urid);
+
+   // This object contains C-style virtual function tables that we fill in
+   const LV2_URID_Map mURIDMapFeature{ this, LV2FeaturesList::urid_map };
+
+
+   // Declare local URI map
+   LV2Symbols::URIDMap mURIDMap;
+
    std::vector<LV2_Options_Option> mOptions;
    size_t mSampleRateOption{};
    size_t mBlockSizeOption{};
@@ -386,15 +407,6 @@ private:
 
    std::unique_ptr<LV2Wrapper> InitInstance(float sampleRate);
 
-   static uint32_t uri_to_id(LV2_URI_Map_Callback_Data callback_data,
-                             const char *map,
-                             const char *uri);
-   static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
-   LV2_URID URID_Map(const char *uri);
-
-   static const char *urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid);
-   const char *URID_Unmap(LV2_URID urid);
-
    static int ui_resize(LV2UI_Feature_Handle handle, int width, int height);
    int UIResize(int width, int height);
 
@@ -485,16 +497,8 @@ private:
                      uint32_t size,
                      uint32_t type);
 
-   // lv2 functions require a pointer to non-const in places, but presumably
-   // have no need to mutate the members of this structure
-   LV2_URID_Map *URIDMapFeature() const
-   { return const_cast<LV2_URID_Map*>(&mURIDMapFeature); }
-
 private:
  
-   // Declare local URI map
-   LV2Symbols::URIDMap mURIDMap;
-
    const LilvPlugin *const mPlug;
 
    float mSampleRate{ 44100 };
@@ -562,7 +566,6 @@ private:
    // These objects contain C-style virtual function tables that we fill in
    const LV2_URI_Map_Feature mUriMapFeature{
       this, LV2Effect::uri_to_id }; // Features we support
-   const LV2_URID_Map mURIDMapFeature{ this, LV2Effect::urid_map };
    const LV2_URID_Unmap mURIDUnmapFeature{ this, LV2Effect::urid_unmap };
    const LV2UI_Resize mUIResizeFeature{ this, LV2Effect::ui_resize };
    const LV2_Log_Log mLogFeature{

@@ -2474,19 +2474,19 @@ void LV2Effect::OnSize(wxSizeEvent & evt)
 // ============================================================================
 
 // static callback
-uint32_t LV2Effect::uri_to_id(
+uint32_t LV2FeaturesList::uri_to_id(
    LV2_URI_Map_Callback_Data callback_data, const char *, const char *uri)
 {
    return static_cast<LV2Effect *>(callback_data)->URID_Map(uri);
 }
 
 // static callback
-LV2_URID LV2Effect::urid_map(LV2_URID_Map_Handle handle, const char *uri)
+LV2_URID LV2FeaturesList::urid_map(LV2_URID_Map_Handle handle, const char *uri)
 {
    return static_cast<LV2Effect *>(handle)->URID_Map(uri);
 }
 
-LV2_URID LV2Effect::URID_Map(const char *uri)
+LV2_URID LV2FeaturesList::URID_Map(const char *uri)
 {
    using namespace LV2Symbols;
    // Map global URIs to lower indices
@@ -2501,12 +2501,12 @@ LV2_URID LV2Effect::URID_Map(const char *uri)
 }
 
 // static callback
-const char *LV2Effect::urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid)
+const char *LV2FeaturesList::urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid)
 {
    return static_cast<LV2Effect *>(handle)->URID_Unmap(urid);
 }
 
-const char *LV2Effect::URID_Unmap(LV2_URID urid)
+const char *LV2FeaturesList::URID_Unmap(LV2_URID urid)
 {
    using namespace LV2Symbols;
    if (urid > 0) {
