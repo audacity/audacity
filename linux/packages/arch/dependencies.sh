@@ -40,6 +40,7 @@ deps=(
    freetype2
    fontconfig
    mesa
+   mpg123
 )
 
 pacman -Syu --noconfirm \

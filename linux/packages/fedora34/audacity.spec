@@ -61,6 +61,7 @@ BuildRequires: harfbuzz-devel
 BuildRequires: freetype-devel
 BuildRequires: fontconfig-devel
 BuildRequires: mesa-libEGL-devel
+BuildRequires: mpg123-devel
 
 Requires:      portaudio%{?_isa} >= 19-16
 

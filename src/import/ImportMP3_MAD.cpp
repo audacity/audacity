@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  ImportMP3.cpp
+  ImportMP3_MAD.cpp
 
   Joshua Haberman
   Leland Lucius
@@ -474,7 +474,7 @@ void MP3ImportFileHandle::CheckLyrics()
       size_t len = offset - pos;
 
       // Ensure file is positioned to start of (possible) lyrics
-      if (mFile.Seek(pos, wxFromStart) == wxInvalidOffset || mFile.Error())  
+      if (mFile.Seek(pos, wxFromStart) == wxInvalidOffset || mFile.Error())
       {
          return;
       }
@@ -500,7 +500,7 @@ void MP3ImportFileHandle::CheckLyrics()
    else if (memcmp(mInputBuffer, "LYRICS200", 9) == 0)
    {
       // Ensure file is positioned to start of (possible) lyrics
-      if (mFile.Seek(-15, wxFromCurrent) == wxInvalidOffset || mFile.Error())  
+      if (mFile.Seek(-15, wxFromCurrent) == wxInvalidOffset || mFile.Error())
       {
          return;
       }
@@ -562,7 +562,7 @@ void MP3ImportFileHandle::CheckID3V2Tags(bool atEnd)
 bool MP3ImportFileHandle::CheckMP3()
 {
    wxFileOffset savedPos = mFilePos;
-   
+
    // Ensure file is positioned to start of 1st mp3 frame
    if (mFile.Seek(mFilePos, wxFromStart) == wxInvalidOffset || mFile.Error())
    {
@@ -817,7 +817,7 @@ void MP3ImportFileHandle::LoadID3(Tags *tags)
          ustr = id3_field_getstrings(&frame->fields[1], 0);
       }
 
-      // Convert the value 
+      // Convert the value
       if (ustr)
       {
          v = toString(ustr);
