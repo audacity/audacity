@@ -446,7 +446,7 @@ LV2FeaturesList::LV2FeaturesList(const LilvPlugin *plug) : mPlug{ plug }
 {
 }
 
-bool LV2Effect::InitializePlugin()
+bool LV2FeaturesList::InitializeOptions()
 {
    using namespace LV2Symbols;
 
@@ -463,6 +463,37 @@ bool LV2Effect::InitializePlugin()
       sizeof(mSampleRate), urid_Float, &mSampleRate);
    AddOption(0, 0, 0, nullptr);
    if (!ValidateOptions(lilv_plugin_get_uri(mPlug)))
+      return false;
+
+   // Adjust the values in the block size features according to the plugin
+   if (LilvNodePtr minLength{ lilv_world_get(gWorld,
+         lilv_plugin_get_uri(mPlug), node_MinBlockLength, nullptr) }
+      ; lilv_node_is_int(minLength.get())
+   ){
+      if (auto value = lilv_node_as_int(minLength.get())
+         ; value >= 0
+      )
+         mMinBlockSize = std::max<size_t>(mMinBlockSize, value);
+   }
+   if (LilvNodePtr maxLength{ lilv_world_get(gWorld,
+         lilv_plugin_get_uri(mPlug), node_MaxBlockLength, nullptr) }
+      ; lilv_node_is_int(maxLength.get())
+   ){
+      if (auto value = lilv_node_as_int(maxLength.get())
+         ; value >= 1
+      )
+         mMaxBlockSize = std::min<size_t>(mMaxBlockSize, value);
+   }
+   mMaxBlockSize = std::max(mMaxBlockSize, mMinBlockSize);
+
+   return true;
+}
+
+bool LV2Effect::InitializePlugin()
+{
+   using namespace LV2Symbols;
+
+   if (!LV2FeaturesList::InitializeOptions())
       return false;
 
    // Set up some "objects" for lv2 with "virtual functions" (C-style)
@@ -495,27 +526,6 @@ bool LV2Effect::InitializePlugin()
    AddFeature(LV2_UI__parent, nullptr);
    if (!ValidateFeatures(lilv_plugin_get_uri(mPlug)))
       return false;
-
-   // Adjust the values in the block size features according to the plugin
-   if (LilvNodePtr minLength{ lilv_world_get(gWorld,
-         lilv_plugin_get_uri(mPlug), node_MinBlockLength, nullptr) }
-      ; lilv_node_is_int(minLength.get())
-   ){
-      if (auto value = lilv_node_as_int(minLength.get())
-         ; value >= 0
-      )
-         mMinBlockSize = std::max<size_t>(mMinBlockSize, value);
-   }
-   if (LilvNodePtr maxLength{ lilv_world_get(gWorld,
-         lilv_plugin_get_uri(mPlug), node_MaxBlockLength, nullptr) }
-      ; lilv_node_is_int(maxLength.get())
-   ){
-      if (auto value = lilv_node_as_int(maxLength.get())
-         ; value >= 1
-      )
-         mMaxBlockSize = std::min<size_t>(mMaxBlockSize, value);
-   }
-   mMaxBlockSize = std::max(mMaxBlockSize, mMinBlockSize);
 
    // Collect information in mAudioPorts, mControlPorts, mAtomPorts, mCVPorts
    {

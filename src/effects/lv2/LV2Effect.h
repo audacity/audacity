@@ -254,9 +254,12 @@ class LV2Wrapper;
 // Define a reasonable default sequence size in bytes
 #define DEFAULT_SEQSIZE 8192
 
-class LV2FeaturesList {
+class LV2FeaturesList : public StatefulPerTrackEffect {
 public:
    explicit LV2FeaturesList(const LilvPlugin *plug);
+
+   //! @return success
+   bool InitializeOptions();
 
    //! Get vector of pointers to features, whose `.data()` can be passed to lv2
    using FeaturePointers = std::vector<const LV2_Feature *>;
@@ -331,6 +334,13 @@ protected:
 
    std::vector<LV2_Feature> mFeatures;
 
+   float mSampleRate{ 44100 };
+   size_t mBlockSize{ DEFAULT_BLOCKSIZE };
+   int mSeqSize{ DEFAULT_SEQSIZE };
+
+   size_t mMinBlockSize{ 1 };
+   size_t mMaxBlockSize{ mBlockSize };
+
    int mLatencyPort{ -1 };
 
    bool mSuppliesWorkerInterface{ false };
@@ -340,8 +350,7 @@ protected:
    bool mNoResize{ false };
 };
 
-class LV2Effect final : public StatefulPerTrackEffect
-   , public LV2FeaturesList
+class LV2Effect final : public LV2FeaturesList
 {
 public:
    LV2Effect(const LilvPlugin *plug);
@@ -507,12 +516,6 @@ private:
                      uint32_t type);
 
 private:
-   float mSampleRate{ 44100 };
-   size_t mBlockSize{ DEFAULT_BLOCKSIZE };
-   int mSeqSize{ DEFAULT_SEQSIZE };
-
-   size_t mMinBlockSize{ 1 };
-   size_t mMaxBlockSize{ mBlockSize };
    size_t mUserBlockSize{ mBlockSize };
 
    std::unordered_map<uint32_t, LV2ControlPortPtr> mControlPortMap;
