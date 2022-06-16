@@ -173,10 +173,10 @@ inline SimpleGuard< void > MakeSimpleGuard() noexcept { return {}; }
 
 /*!
   Executes a given function (typically a lamba), in any thread.
- 
+
   If there is any exception, can invoke another given function as handler, which may rethrow that or
   another exception, but usually just returns the value for the GuardedCall.
- 
+
   If AudacityException is handled, then it queues up a delayed handler action for execution later in
   the event loop at idle time, on the main thread; typically this informs the user of the error.
 
@@ -218,7 +218,9 @@ noexcept(
 {
    try { return body(); }
    catch ( AudacityException &e ) {
-
+   #ifndef UNCAUGHT_EXCEPTIONS_UNAVAILABLE
+      const auto uncaughtExceptionsCount = std::uncaught_exceptions();
+   #endif  
       auto end = finally( [&]()
       noexcept(noexcept(
          std::function<void(AudacityException*)>{
@@ -226,7 +228,11 @@ noexcept(
          // At this point, e is the "current" exception, but not "uncaught"
          // unless it was rethrown by handler.  handler might also throw some
          // other exception object.
+      #ifdef UNCAUGHT_EXCEPTIONS_UNAVAILABLE
          if (!std::uncaught_exception()) {
+      #else         
+         if (uncaughtExceptionsCount >= std::uncaught_exceptions()) {
+      #endif      
             auto pException = std::current_exception(); // This points to e
             AudacityException::EnqueueAction(
                pException, std::move(delayedHandler));
