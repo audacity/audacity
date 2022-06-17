@@ -114,7 +114,6 @@ public:
       const RegistryPath & name, const EffectSettings &settings) const override;
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-   bool LoadFactoryDefaults(EffectSettings &) const override;
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
