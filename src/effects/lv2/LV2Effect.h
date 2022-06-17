@@ -199,10 +199,6 @@ public:
    const bool mTrigger;
    const bool mLogarithmic;
 
-   float mLst{ 0.0 };
-   float mTmp{ 0.0 };
-   float mLo{ 0.0 };
-   float mHi{ 0.0 };
    float mVal{ 0.0 };
 
    //! Map a real number to one of the scale points
@@ -216,6 +212,27 @@ public:
 };
 using LV2ControlPortPtr = std::shared_ptr<LV2ControlPort>;
 using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
+
+//! State of an instance of an LV2 Control port
+struct LV2ControlPortState final {
+   //! @pre `pPort != nullptr`
+   explicit LV2ControlPortState(LV2ControlPortPtr pPort)
+      : mpPort{ move(pPort) }
+   {
+      assert(mpPort);
+   }
+   const LV2ControlPortPtr mpPort;
+   //! Value of mTmp last seen by idle-time updater
+   float mLst{ 0.0 };
+   //! Value of UI control, as scaled by sample rate if that is required
+   float mTmp{ 0.0 };
+   //! Lower bound, as scaled by sample rate if that is required
+   float mLo{ 0.0 };
+   //! Upper bound, as scaled by sample rate if that is required
+   float mHi{ 0.0 };
+};
+//! No need yet for extra indirection
+using LV2ControlPortStateArray = std::vector<LV2ControlPortState>;
 
 class LV2Wrapper;
 
@@ -337,7 +354,7 @@ private:
    bool BuildPlain(EffectSettingsAccess &access);
 
    bool TransferDataToWindow(const EffectSettings &settings) override;
-   void SetSlider(const LV2ControlPortPtr & port, const PlainUIControl &ctrl);
+   void SetSlider(const LV2ControlPortState &state, const PlainUIControl &ctrl);
 
    void OnTrigger(wxCommandEvent & evt);
    void OnToggle(wxCommandEvent & evt);
@@ -387,6 +404,7 @@ private:
 
    std::unordered_map<uint32_t, LV2ControlPortPtr> mControlPortMap;
    LV2ControlPortArray mControlPorts;
+   LV2ControlPortStateArray mControlPortStates;
 
    LV2AudioPortArray mAudioPorts;
    unsigned mAudioIn{ 0 };

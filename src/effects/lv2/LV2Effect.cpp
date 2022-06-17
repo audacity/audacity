@@ -584,12 +584,14 @@ bool LV2Effect::InitializePlugin()
             min, max, def, hasLo, hasHi,
             toggle, enumeration, integer, sampleRate,
             trigger, logarithmic));
-         const auto controlPort = mControlPorts.back();
+         const auto &controlPort = mControlPorts.back();
+         mControlPortStates.emplace_back(controlPort);
+         auto &state = mControlPortStates.back();
 
-         controlPort->mLo = controlPort->mMin;
-         controlPort->mHi = controlPort->mMax;
+         state.mLo = controlPort->mMin;
+         state.mHi = controlPort->mMax;
          controlPort->mVal = controlPort->mDef;
-         controlPort->mLst = controlPort->mVal;
+         state.mLst = controlPort->mVal;
 
          // Figure out the type of port we have
          if (isInput)
@@ -1681,7 +1683,9 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
       for (auto &label: mGroups) {
          auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
          gridSizer->AddGrowableCol(3);
-         for (auto & p : mGroupMap[label]) { auto & port = mControlPorts[p];
+         for (auto & p : mGroupMap[label]) {
+            auto &state = mControlPortStates[p];
+            auto &port = state.mpPort;
             auto &ctrl = mPlainUIControls[p];
             auto labelText = port->mName;
             if (!port->mUnits.empty())
@@ -1754,20 +1758,20 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                gridSizer->Add(t, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                ctrl.mText = t;
                auto rate = port->mSampleRate ? mSampleRate : 1.0f;
-               port->mLo = port->mMin * rate;
-               port->mHi = port->mMax * rate;
-               port->mTmp = port->mVal * rate;
+               state.mLo = port->mMin * rate;
+               state.mHi = port->mMax * rate;
+               state.mTmp = port->mVal * rate;
                if (port->mInteger) {
-                  IntegerValidator<float> vld(&port->mTmp);
-                  vld.SetRange(port->mLo, port->mHi);
+                  IntegerValidator<float> vld(&state.mTmp);
+                  vld.SetRange(state.mLo, state.mHi);
                   t->SetValidator(vld);
                }
                else {
-                  FloatingPointValidator<float> vld(6, &port->mTmp);
-                  vld.SetRange(port->mLo, port->mHi);
+                  FloatingPointValidator<float> vld(6, &state.mTmp);
+                  vld.SetRange(state.mLo, state.mHi);
 
                   // Set number of decimal places
-                  float range = port->mHi - port->mLo;
+                  float range = state.mHi - state.mLo;
                   auto style = range < 10
                      ? NumValidatorStyle::THREE_TRAILING_ZEROES
                      : range < 100
@@ -1781,9 +1785,9 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                if (port->mHasLo) {
                   wxString str;
                   if (port->mInteger || port->mSampleRate)
-                     str.Printf(wxT("%d"), (int) lrintf(port->mLo));
+                     str.Printf(wxT("%d"), (int) lrintf(state.mLo));
                   else
-                     str = Internat::ToDisplayString(port->mLo);
+                     str = Internat::ToDisplayString(state.mLo);
                   item = safenew wxStaticText(w, wxID_ANY, str);
                   gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
                }
@@ -1801,9 +1805,9 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                if (port->mHasHi) {
                   wxString str;
                   if (port->mInteger || port->mSampleRate)
-                     str.Printf(wxT("%d"), (int) lrintf(port->mHi));
+                     str.Printf(wxT("%d"), (int) lrintf(state.mHi));
                   else
-                     str = Internat::ToDisplayString(port->mHi);
+                     str = Internat::ToDisplayString(state.mHi);
                   item = safenew wxStaticText(w, wxID_ANY, str);
                   gridSizer->Add(item, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                }
@@ -1876,9 +1880,11 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 
 bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 {
-   for (auto & port : mControlPorts)
+   for (auto & state : mControlPortStates) {
+      auto &port = state.mpPort;
       if (port->mIsInput)
-         port->mTmp = port->mVal * (port->mSampleRate ? mSampleRate : 1.0);
+         state.mTmp = port->mVal * (port->mSampleRate ? mSampleRate : 1.0);
+   }
 
    if (mUseGUI) {
       // fancy UI
@@ -1894,7 +1900,8 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    // Visiting controls in same sequence as their creation
    for (auto & group : mGroups) {
       const auto & params = mGroupMap[group];
-      for (auto & param : params) { auto & port = mControlPorts[param];
+      for (auto & param : params) { auto & state = mControlPortStates[param];
+         auto &port = state.mpPort;
          auto &ctrl = mPlainUIControls[param];
          if (port->mTrigger)
             continue;
@@ -1903,8 +1910,8 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
          else if (port->mEnumeration)      // Check before integer
             ctrl.choice->SetSelection(port->Discretize(port->mVal));
          else if (port->mIsInput) {
-            port->mTmp = port->mVal * (port->mSampleRate ? mSampleRate : 1.0f);
-            SetSlider(port, ctrl);
+            state.mTmp = port->mVal * (port->mSampleRate ? mSampleRate : 1.0f);
+            SetSlider(state, ctrl);
          }
       }
    }
@@ -1914,12 +1921,12 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 }
 
 void LV2Effect::SetSlider(
-   const LV2ControlPortPtr & port, const PlainUIControl &ctrl)
+   const LV2ControlPortState &state, const PlainUIControl &ctrl)
 {
-   float lo = port->mLo;
-   float hi = port->mHi;
-   float val = port->mTmp;
-   if (port->mLogarithmic) {
+   float lo = state.mLo;
+   float hi = state.mHi;
+   float val = state.mTmp;
+   if (state.mpPort->mLogarithmic) {
       lo = logf(lo);
       hi = logf(hi);
       val = logf(val);
@@ -1951,28 +1958,30 @@ void LV2Effect::OnChoice(wxCommandEvent &evt)
 void LV2Effect::OnText(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Texts;
-   auto & port = mControlPorts[idx];
+   auto &state = mControlPortStates[idx];
+   auto &port = state.mpPort;
    auto & ctrl = mPlainUIControls[idx];
    if (ctrl.mText->GetValidator()->TransferFromWindow()) {
-      port->mVal = port->mSampleRate ? port->mTmp / mSampleRate : port->mTmp;
-      SetSlider(port, ctrl);
+      port->mVal = port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+      SetSlider(state, ctrl);
    }
 }
 
 void LV2Effect::OnSlider(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Sliders;
-   auto & port = mControlPorts[idx];
-   float lo = port->mLo;
-   float hi = port->mHi;
+   auto &state = mControlPortStates[idx];
+   auto &port = state.mpPort;
+   float lo = state.mLo;
+   float hi = state.mHi;
    if (port->mLogarithmic) {
       lo = logf(lo);
       hi = logf(hi);
    }
-   port->mTmp = (((float) evt.GetInt()) / 1000.0) * (hi - lo) + lo;
-   port->mTmp = std::clamp(port->mTmp, lo, hi);
-   port->mTmp = port->mLogarithmic ? expf(port->mTmp) : port->mTmp;
-   port->mVal = port->mSampleRate ? port->mTmp / mSampleRate : port->mTmp;
+   state.mTmp = (((float) evt.GetInt()) / 1000.0) * (hi - lo) + lo;
+   state.mTmp = std::clamp(state.mTmp, lo, hi);
+   state.mTmp = port->mLogarithmic ? expf(state.mTmp) : state.mTmp;
+   port->mVal = port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
    mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
 }
 
@@ -2037,14 +2046,13 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       }
    }
 
-   for (auto & port : mControlPorts)
-   {
+   for (auto &state : mControlPortStates) {
+      auto &port = state.mpPort;
       // Let UI know that a port's value has changed
-      if (port->mVal != port->mLst)
-      {
+      if (port->mVal != state.mLst) {
          suil_instance_port_event(mSuilInstance.get(),
             port->mIndex, sizeof(port->mVal), 0, &port->mVal);
-         port->mLst = port->mVal;
+         state.mLst = port->mVal;
       }
    }
 }
