@@ -233,49 +233,76 @@ void FinishPreferences()
    }
 }
 
-SettingScope *SettingScope::sCurrent = nullptr;
+namespace
+{
+std::vector<SettingScope*> sScopes;
+}
 
 SettingScope::SettingScope()
 {
-   if ( sCurrent )
-      // nesting of transactions is not supported
-      wxASSERT( false );
-   else
-      sCurrent = this;
+   sScopes.push_back(this);
 }
 
 SettingScope::~SettingScope() noexcept
 {
-   if ( sCurrent == this ) {
-      if ( !mCommitted )
-         for ( auto pSetting : mPending )
-            pSetting->Rollback();
-      sCurrent = nullptr;
-   }
+   // Settings can be scoped only on stack
+   // so it should be safe to assume that sScopes.top() == this;
+   assert(!sScopes.empty() && sScopes.back() == this);
+
+   if (sScopes.empty() || sScopes.back() != this)
+      return;
+
+   if (!mCommitted)
+      for (auto pSetting : mPending)
+         pSetting->Rollback();
+
+   sScopes.pop_back();
 }
 
 // static
 auto SettingScope::Add( TransactionalSettingBase &setting ) -> AddResult
 {
-   if ( !sCurrent || sCurrent->mCommitted )
+   if ( sScopes.empty() || sScopes.back()->mCommitted )
       return NotAdded;
-   return sCurrent->mPending.insert( &setting ).second
-      ? Added
-      : PreviouslyAdded;
+
+   const bool inserted = sScopes.back()->mPending.insert(&setting).second;
+
+   if (inserted)
+   {
+      setting.EnterTransaction(sScopes.size());
+
+      // We need to introduce this setting into all
+      // previous scopes that do not yet contain it.
+      for (auto it = sScopes.rbegin() + 1; it != sScopes.rend(); ++it)
+      {
+         if ((*it)->mPending.find(&setting) != (*it)->mPending.end())
+            break;
+         
+         (*it)->mPending.insert(&setting);
+      }
+   }
+   
+   return inserted ? Added : PreviouslyAdded;
 }
 
 bool SettingTransaction::Commit()
 {
-   if ( sCurrent == this && !mCommitted ) {
+   if (sScopes.empty() || sScopes.back() != this)
+      return false;
+   
+   if ( !mCommitted ) {
       for ( auto pSetting : mPending )
          if ( !pSetting->Commit() )
             return false;
-      if ( gPrefs->Flush() ) {
+      
+      if (sScopes.size() > 1 || gPrefs->Flush())
+      {
          mPending.clear();
          mCommitted = true;
          return true;
       }
    }
+   
    return false;
 }
 
