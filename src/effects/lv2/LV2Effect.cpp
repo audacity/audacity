@@ -22,6 +22,7 @@
 #endif
 
 #include "LV2Effect.h"
+#include "LV2EffectMeter.h"
 #include "SampleCount.h"
 
 #include <cmath>
@@ -30,7 +31,6 @@
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/dcbuffer.h>
 #include <wx/dialog.h>
 #include <wx/log.h>
 #include <wx/msgqueue.h>
@@ -66,98 +66,6 @@
 
 static inline void free_chars (char *p) { lilv_free(p); }
 using LilvCharsPtr = Lilv_ptr<char, free_chars>;
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// LV2EffectMeter
-//
-///////////////////////////////////////////////////////////////////////////////
-
-//! UI widget that watches a floating point location and then updates a bar
-class LV2EffectMeter final : public wxWindow
-{
-public:
-   LV2EffectMeter(wxWindow *parent,
-      const LV2ControlPortPtr ctrl, const float &value);
-   virtual ~LV2EffectMeter();
-
-private:
-   void OnErase(wxEraseEvent &evt);
-   void OnPaint(wxPaintEvent &evt);
-   void OnIdle(wxIdleEvent &evt);
-   void OnSize(wxSizeEvent &evt);
-
-private:
-   const LV2ControlPortPtr mControlPort;
-   const float &mValue;
-   float mLastValue;
-
-   DECLARE_EVENT_TABLE()
-};
-
-BEGIN_EVENT_TABLE(LV2EffectMeter, wxWindow)
-   EVT_IDLE(LV2EffectMeter::OnIdle)
-   EVT_ERASE_BACKGROUND(LV2EffectMeter::OnErase)
-   EVT_PAINT(LV2EffectMeter::OnPaint)
-   EVT_SIZE(LV2EffectMeter::OnSize)
-END_EVENT_TABLE()
-
-LV2EffectMeter::LV2EffectMeter(
-   wxWindow *parent, const LV2ControlPortPtr port, const float &value
-)  : wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-      wxDEFAULT_CONTROL_BORDER)
-   , mControlPort(port)
-   , mValue{ value }
-{
-   mLastValue = -value;
-   SetBackgroundColour(*wxWHITE);
-}
-
-LV2EffectMeter::~LV2EffectMeter()
-{
-}
-
-void LV2EffectMeter::OnIdle(wxIdleEvent &evt)
-{
-   evt.Skip();
-   if (mLastValue != mValue)
-      Refresh(false);
-}
-
-void LV2EffectMeter::OnErase(wxEraseEvent &WXUNUSED(evt))
-{
-   // Just ignore it to prevent flashing
-}
-
-void LV2EffectMeter::OnPaint(wxPaintEvent &WXUNUSED(evt))
-{
-   std::unique_ptr<wxDC> dc {wxAutoBufferedPaintDCFactory(this)};
-
-   // Cache some metrics
-   wxRect r = GetClientRect();
-   wxCoord x = r.GetLeft();
-   wxCoord y = r.GetTop();
-   wxCoord w = r.GetWidth();
-   wxCoord h = r.GetHeight();
-
-   // These use unscaled value, min, and max
-   float val = std::clamp(mValue, mControlPort->mMin, mControlPort->mMax)
-      - mControlPort->mMin;
-
-   // Setup for erasing the background
-   dc->SetPen(*wxTRANSPARENT_PEN);
-   dc->SetBrush(wxColour(100, 100, 220));
-
-   dc->Clear();
-   dc->DrawRectangle(x, y, (w * (val / fabs(mControlPort->mMax - mControlPort->mMin))), h);
-
-   mLastValue = mValue;
-}
-
-void LV2EffectMeter::OnSize(wxSizeEvent &WXUNUSED(evt))
-{
-   Refresh(false);
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
