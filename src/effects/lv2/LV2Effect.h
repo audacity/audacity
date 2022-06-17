@@ -204,7 +204,6 @@ public:
    float mLo{ 0.0 };
    float mHi{ 0.0 };
    float mVal{ 0.0 };
-   float mDmy{ 0.0 };
 
    //! Map a real number to one of the scale points
    size_t Discretize(float value) const {

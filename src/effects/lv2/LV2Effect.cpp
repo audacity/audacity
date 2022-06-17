@@ -1395,6 +1395,8 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
    wrapper->SetBlockSize();
    wrapper->SetSampleRate();
 
+   static float blackHole;
+
    // Connect all control ports
    for (auto & port : mControlPorts)
       // If it's not an input port and master has already been created
@@ -1403,7 +1405,7 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
       //
       // Otherwise, connect it to the real value field.
       lilv_instance_connect_port(instance, port->mIndex,
-         !port->mIsInput && mMaster ? &port->mDmy : &port->mVal);
+         !port->mIsInput && mMaster ? &blackHole : &port->mVal);
 
    // Connect all atom ports
    for (auto & state : mAtomPortStates)
