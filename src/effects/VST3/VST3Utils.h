@@ -101,6 +101,10 @@ struct VST3Wrapper
    bool FetchSettings(      VST3EffectSettings& settings) const;
    bool StoreSettings(const VST3EffectSettings& settings) const;
 
+   bool LoadPreset(Steinberg::IBStream* fileStream);
+   bool SavePreset(Steinberg::IBStream* fileStream) const;
+
+
    VST3EffectSettings mSettings;  // temporary, until the effect is really stateless
 
    //! This function will be rewritten when the effect is really stateless

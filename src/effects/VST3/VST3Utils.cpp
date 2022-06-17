@@ -151,3 +151,31 @@ bool VST3Wrapper::StoreSettings(const VST3EffectSettings& vst3settings) const
 
    return true;
 }
+
+
+bool VST3Wrapper::LoadPreset(Steinberg::IBStream* fileStream)
+{
+   using namespace Steinberg;
+
+   return Vst::PresetFile::loadPreset
+   (
+      fileStream,
+      FUID::fromTUID(mEffectClassInfo.ID().data()),
+      mEffectComponent.get(),
+      mEditController.get()
+   );
+}
+
+
+bool VST3Wrapper::SavePreset(Steinberg::IBStream* fileStream) const
+{
+   using namespace Steinberg;
+
+   return Vst::PresetFile::savePreset
+   (
+      fileStream,
+      FUID::fromTUID(mEffectClassInfo.ID().data()),
+      mEffectComponent.get(),
+      mEditController.get()
+   );
+}
