@@ -28,19 +28,15 @@ class wxArrayString;
 
 #include "lv2/atom/forge.h"
 #include "lv2/data-access/data-access.h"
-#include "lv2/log/log.h"
-#include "lv2/options/options.h"
 #include "lv2/state/state.h"
-#include "lv2/uri-map/uri-map.h"
 #include "lv2/worker/worker.h"
 #include <suil/suil.h>
 #include "lv2_external_ui.h"
 
-#include "../StatefulPerTrackEffect.h"
+#include "LV2FeaturesList.h"
 #include "../../ShuttleGui.h"
 #include "SampleFormat.h"
 
-#include "LV2Symbols.h"
 #include "NativeWindow.h"
 
 #include "zix/ring.h"
@@ -48,7 +44,6 @@ class wxArrayString;
 #include <unordered_map>
 
 using LilvInstancePtr = Lilv_ptr<LilvInstance, lilv_instance_free>;
-using LilvNodesPtr = Lilv_ptr<LilvNodes, lilv_nodes_free>;
 using LilvScalePointsPtr = Lilv_ptr<LilvScalePoints, lilv_scale_points_free>;
 using LilvUIsPtr = Lilv_ptr<LilvUIs, lilv_uis_free>;
 using SuilHostPtr = Lilv_ptr<SuilHost, suil_host_free>;
@@ -68,9 +63,6 @@ class NumericTextCtrl;
 #define LV2EFFECTS_FAMILY XO("LV2")
 
 // DECLARE_LOCAL_EVENT_TYPE(EVT_SIZEWINDOW, -1);
-
-// Define a maximum block size in number of samples (not bytes)
-#define DEFAULT_BLOCKSIZE 1048576
 
 class LV2Port
 {
@@ -251,10 +243,7 @@ using LV2ControlPortArray = std::vector<LV2ControlPortPtr>;
 
 class LV2Wrapper;
 
-// Define a reasonable default sequence size in bytes
-#define DEFAULT_SEQSIZE 8192
-
-class LV2Effect final : public StatefulPerTrackEffect
+class LV2Effect final : public LV2FeaturesList
 {
 public:
    LV2Effect(const LilvPlugin *plug);
@@ -355,59 +344,16 @@ private:
 
    std::unique_ptr<LV2Wrapper> InitInstance(float sampleRate);
 
-   static uint32_t uri_to_id(LV2_URI_Map_Callback_Data callback_data,
-                             const char *map,
-                             const char *uri);
-   static LV2_URID urid_map(LV2_URID_Map_Handle handle, const char *uri);
-   LV2_URID URID_Map(const char *uri);
-
-   static const char *urid_unmap(LV2_URID_Unmap_Handle handle, LV2_URID urid);
-   const char *URID_Unmap(LV2_URID urid);
-
    static int ui_resize(LV2UI_Feature_Handle handle, int width, int height);
    int UIResize(int width, int height);
 
    static void ui_closed(LV2UI_Controller controller);
    void UIClosed();
 
-   static int log_printf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, ...);
-   static int log_vprintf(LV2_Log_Handle handle, LV2_URID type, const char *fmt, va_list ap);
-   int LogVPrintf(LV2_URID type, const char *fmt, va_list ap);
-
 #if defined(__WXGTK__)
    static void size_request(GtkWidget *widget, GtkRequisition *requisition, LV2Effect *win);
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
-
-   size_t AddOption(LV2_URID, uint32_t size, LV2_URID, const void *value);
-   /*!
-    @param subject URI of a plugin
-    @return whether all required features of subject are supported
-    */
-   bool ValidateOptions(const LilvNode *subject);
-   /*!
-    @param subject URI of a plugin
-    @param required whether to check required or optional features of subject
-    @return true only if `!required` or else all checked features are supported
-    */
-   bool CheckOptions(const LilvNode *subject, bool required);
-
-   //! Get vector of pointers to features, whose `.data()` can be passed to lv2
-   using FeaturePointers = std::vector<const LV2_Feature *>;
-   FeaturePointers GetFeaturePointers() const;
-
-   void AddFeature(const char *uri, const void *data);
-   /*!
-    @param subject URI of the host or of the UI identifies a resource in lv2
-    @return whether all required features of subject are supported
-    */
-   bool ValidateFeatures(const LilvNode *subject);
-   /*!
-    @param subject URI of the host or of the UI identifies a resource in lv2
-    @param required whether to check required or optional features of subject
-    @return true only if `!required` or else all checked features are supported
-    */
-   bool CheckFeatures(const LilvNode *subject, bool required);
 
    bool BuildFancy();
    bool BuildPlain(EffectSettingsAccess &access);
@@ -458,24 +404,7 @@ private:
                      uint32_t size,
                      uint32_t type);
 
-   // lv2 functions require a pointer to non-const in places, but presumably
-   // have no need to mutate the members of this structure
-   LV2_URID_Map *URIDMapFeature() const
-   { return const_cast<LV2_URID_Map*>(&mURIDMapFeature); }
-
 private:
- 
-   // Declare local URI map
-   LV2Symbols::URIDMap mURIDMap;
-
-   const LilvPlugin *const mPlug;
-
-   float mSampleRate{ 44100 };
-   size_t mBlockSize{ DEFAULT_BLOCKSIZE };
-   int mSeqSize{ DEFAULT_SEQSIZE };
-
-   size_t mMinBlockSize{ 1 };
-   size_t mMaxBlockSize{ mBlockSize };
    size_t mUserBlockSize{ mBlockSize };
 
    std::unordered_map<uint32_t, LV2ControlPortPtr> mControlPortMap;
@@ -500,11 +429,8 @@ private:
 
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };
-   bool mWantsWorkerInterface{ false };
-   bool mNoResize{ false };
 
    bool mUseLatency{ false };
-   int mLatencyPort{ -1 };
    bool mLatencyDone{ false };
    bool mRolling{ false };
 
@@ -535,14 +461,7 @@ private:
    bool mUseGUI{};
 
    // These objects contain C-style virtual function tables that we fill in
-   const LV2_URI_Map_Feature mUriMapFeature{
-      this, LV2Effect::uri_to_id }; // Features we support
-   const LV2_URID_Map mURIDMapFeature{ this, LV2Effect::urid_map };
-   const LV2_URID_Unmap mURIDUnmapFeature{ this, LV2Effect::urid_unmap };
    const LV2UI_Resize mUIResizeFeature{ this, LV2Effect::ui_resize };
-   const LV2_Log_Log mLogFeature{
-      this, LV2Effect::log_printf, LV2Effect::log_vprintf };
-
    // Not const, filled in when making a dialog
    LV2_Extension_Data_Feature mExtensionDataFeature{};
 
@@ -554,14 +473,6 @@ private:
    bool mExternalUIClosed{ false };
 
    LV2_Atom_Forge mForge{};
-   
-   std::vector<LV2_Options_Option> mOptions;
-   size_t mBlockSizeOption{};
-   size_t mSampleRateOption{};
-   bool mSupportsNominalBlockLength{ false };
-   bool mSupportsSampleRate{ false };
-
-   std::vector<LV2_Feature> mFeatures;
 
    //! Index into m_features
    size_t mInstanceAccessFeature{};
@@ -622,7 +533,7 @@ public:
 
 public:
    //! May spawn a thread
-   LV2Wrapper(const LV2Effect &effect,
+   LV2Wrapper(const LV2FeaturesList &featuresList,
       const LilvPlugin *plugin, double sampleRate);
    //! If a thread was started, joins it
    ~LV2Wrapper();
@@ -649,7 +560,7 @@ private:
 
    std::thread mThread;
 
-   const LV2Effect &mEffect;
+   const LV2FeaturesList &mFeaturesList;
    LilvInstancePtr mInstance;
    LV2_Handle mHandle{};
 
