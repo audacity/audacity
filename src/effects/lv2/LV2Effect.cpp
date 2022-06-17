@@ -590,7 +590,7 @@ bool LV2Effect::InitializePlugin()
 
          // Figure out the type of port we have
          if (isInput)
-            mControlPortMap[controlPort->mIndex] = controlPort;
+            mControlPortMap[controlPort->mIndex] = mControlPorts.size() - 1;
          else if (controlPort->mIndex == latencyIndex)
             mLatencyPort = i;
       }
@@ -2164,7 +2164,7 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
    if (protocol == 0 && buffer_size == sizeof(float)) {
       if (auto it = mControlPortMap.find(port_index);
          it != mControlPortMap.end())
-         it->second->mVal = *static_cast<const float *>(buffer);
+         mControlPorts[it->second]->mVal = *static_cast<const float *>(buffer);
    }
    // Handle event transfers
    else if (protocol == LV2Symbols::urid_EventTransfer) {

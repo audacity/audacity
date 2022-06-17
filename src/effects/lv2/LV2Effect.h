@@ -403,7 +403,9 @@ private:
 private:
    size_t mUserBlockSize{ mBlockSize };
 
-   std::unordered_map<uint32_t, LV2ControlPortPtr> mControlPortMap;
+   //! Mapping from index number among all ports, to position
+   //! among the control ports only
+   std::unordered_map<uint32_t, size_t> mControlPortMap;
    LV2ControlPortArray mControlPorts;
    LV2ControlPortStateArray mControlPortStates;
 
