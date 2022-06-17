@@ -73,10 +73,12 @@ using LilvCharsPtr = Lilv_ptr<char, free_chars>;
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+//! UI widget that watches a floating point location and then updates a bar
 class LV2EffectMeter final : public wxWindow
 {
 public:
-   LV2EffectMeter(wxWindow *parent, const LV2ControlPortPtr ctrl);
+   LV2EffectMeter(wxWindow *parent,
+      const LV2ControlPortPtr ctrl, const float &value);
    virtual ~LV2EffectMeter();
 
 private:
@@ -87,6 +89,7 @@ private:
 
 private:
    const LV2ControlPortPtr mControlPort;
+   const float &mValue;
    float mLastValue;
 
    DECLARE_EVENT_TABLE()
@@ -99,12 +102,14 @@ BEGIN_EVENT_TABLE(LV2EffectMeter, wxWindow)
    EVT_SIZE(LV2EffectMeter::OnSize)
 END_EVENT_TABLE()
 
-LV2EffectMeter::LV2EffectMeter(wxWindow *parent, const LV2ControlPortPtr port)
-:  wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxDEFAULT_CONTROL_BORDER),
-   mControlPort(port)
+LV2EffectMeter::LV2EffectMeter(
+   wxWindow *parent, const LV2ControlPortPtr port, const float &value
+)  : wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+      wxDEFAULT_CONTROL_BORDER)
+   , mControlPort(port)
+   , mValue{ value }
 {
-   mLastValue = -mControlPort->mVal;
-
+   mLastValue = -value;
    SetBackgroundColour(*wxWHITE);
 }
 
@@ -115,10 +120,8 @@ LV2EffectMeter::~LV2EffectMeter()
 void LV2EffectMeter::OnIdle(wxIdleEvent &evt)
 {
    evt.Skip();
-   if (mLastValue != mControlPort->mVal)
-   {
+   if (mLastValue != mValue)
       Refresh(false);
-   }
 }
 
 void LV2EffectMeter::OnErase(wxEraseEvent &WXUNUSED(evt))
@@ -138,16 +141,8 @@ void LV2EffectMeter::OnPaint(wxPaintEvent &WXUNUSED(evt))
    wxCoord h = r.GetHeight();
 
    // These use unscaled value, min, and max
-   float val = mControlPort->mVal;
-   if (val > mControlPort->mMax)
-   {
-      val = mControlPort->mMax;
-   }
-   if (val < mControlPort->mMin)
-   {
-      val = mControlPort->mMin;
-   }
-   val -= mControlPort->mMin;
+   float val = std::clamp(mValue, mControlPort->mMin, mControlPort->mMax)
+      - mControlPort->mMin;
 
    // Setup for erasing the background
    dc->SetPen(*wxTRANSPARENT_PEN);
@@ -156,7 +151,7 @@ void LV2EffectMeter::OnPaint(wxPaintEvent &WXUNUSED(evt))
    dc->Clear();
    dc->DrawRectangle(x, y, (w * (val / fabs(mControlPort->mMax - mControlPort->mMin))), h);
 
-   mLastValue = mControlPort->mVal;
+   mLastValue = mValue;
 }
 
 void LV2EffectMeter::OnSize(wxSizeEvent &WXUNUSED(evt))
@@ -1745,7 +1740,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                gridSizer->Add(1, 1, 0);
                gridSizer->Add(1, 1, 0);
 
-               auto m = safenew LV2EffectMeter(w, port);
+               auto m = safenew LV2EffectMeter(w, port, port->mVal);
                gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
                ctrl.meter = m;
 
