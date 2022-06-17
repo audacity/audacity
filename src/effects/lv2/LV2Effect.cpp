@@ -1102,37 +1102,24 @@ bool LV2Effect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
    // First pass validates values
-   for (auto & port : mControlPorts)
-   {
-      if (port->mIsInput)
-      {
+   for (auto & port : mControlPorts) {
+      if (port->mIsInput) {
          double d = 0.0;
          if (!parms.Read(port->mName, &d))
-         {
             return false;
-         }
-
          // Use unscaled range here
          if (d < port->mMin || d > port->mMax)
-         {
             return false;
-         }
       }
    }
 
    // Second pass actually sets the values
-   for (auto & port : mControlPorts)
-   {
-      if (port->mIsInput)
-      {
+   for (auto & port : mControlPorts) {
+      if (port->mIsInput) {
          double d = 0.0;
          if (!parms.Read(port->mName, &d))
-         {
             return false;
-         }
-
          port->mVal = d;
-         port->mTmp = port->mVal * (port->mSampleRate ? mSampleRate : 1.0);
       }
    }
 
@@ -1175,7 +1162,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
 
    if (mUseGUI)
    {
-      mUseGUI = BuildFancy();
+      mUseGUI = BuildFancy(access.Get());
    }
 
    if (!mUseGUI)
@@ -1241,11 +1228,8 @@ bool LV2Effect::DoLoadUserPreset(
    const RegistryPath &name, EffectSettings &settings)
 {
    if (!LoadParameters(name, settings))
-   {
       return false;
-   }
-
-   return TransferDataToWindow();
+   return true;
 }
 
 bool LV2Effect::SaveUserPreset(
@@ -1307,7 +1291,6 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
       lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get()) } ) {
       lilv_state_restore(
          state.get(), mMaster->GetInstance(), set_value_func, this, 0, nullptr);
-      TransferDataToWindow();
       return true;
    }
    else
@@ -1433,7 +1416,7 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
    return wrapper;
 }
 
-bool LV2Effect::BuildFancy()
+bool LV2Effect::BuildFancy(const EffectSettings &settings)
 {
    using namespace LV2Symbols;
    // Set the native UI type
@@ -1636,7 +1619,7 @@ bool LV2Effect::BuildFancy()
 //      mUIShowInterface->show(suil_instance_get_handle(mSuilInstance));
    }
 
-   TransferDataToWindow();
+   TransferDataToWindow(settings);
 
 #ifdef __WXMAC__
 #ifdef __WX_EVTLOOP_BUSY_WAITING__
@@ -1653,6 +1636,7 @@ bool LV2Effect::BuildFancy()
 
 bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 {
+   auto &settings = access.Get();
    mPlainUIControls.resize(mControlPorts.size());
 
    int numCols = 5;
@@ -1678,7 +1662,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
          auto sizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
          auto item = safenew wxStaticText(w, 0, _("&Duration:"));
          sizer->Add(item, 0, wxALIGN_CENTER | wxALL, 5);
-         auto &extra = access.Get().extra;
+         auto &extra = settings.extra;
          mDuration = safenew NumericTextCtrl(w, ID_Duration,
             NumericConverter::TIME, extra.GetDurationFormat(),
             extra.GetDuration(), mSampleRate,
@@ -1886,12 +1870,16 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
    // And let the parent reduce to the NEW minimum if possible
    mParent->SetMinSize(w->GetMinSize());
 
-   TransferDataToWindow();
+   TransferDataToWindow(settings);
    return true;
 }
 
-bool LV2Effect::TransferDataToWindow()
+bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 {
+   for (auto & port : mControlPorts)
+      if (port->mIsInput)
+         port->mTmp = port->mVal * (port->mSampleRate ? mSampleRate : 1.0);
+
    if (mUseGUI) {
       // fancy UI
       if (mSuilInstance)

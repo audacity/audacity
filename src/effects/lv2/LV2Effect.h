@@ -333,10 +333,10 @@ private:
    void SizeRequest(GtkWidget *widget, GtkRequisition *requisition);
 #endif
 
-   bool BuildFancy();
+   bool BuildFancy(const EffectSettings &settings);
    bool BuildPlain(EffectSettingsAccess &access);
 
-   bool TransferDataToWindow() /* not override */;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
    void SetSlider(const LV2ControlPortPtr & port, const PlainUIControl &ctrl);
 
    void OnTrigger(wxCommandEvent & evt);
