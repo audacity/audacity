@@ -159,7 +159,7 @@ using LV2CVPortStateArray = std::vector<LV2CVPortState>;
 
 class LV2EffectMeter;
 
-/** A structure that contains information about a single LV2 plugin port. */
+//! Immutable description of an LV2 control port
 class LV2ControlPort final : public LV2Port
 {
 public:
@@ -199,8 +199,6 @@ public:
    const bool mTrigger;
    const bool mLogarithmic;
 
-   float mVal{ 0.0 };
-
    //! Map a real number to one of the scale points
    size_t Discretize(float value) const {
       auto s = mScaleValues.size();
@@ -235,6 +233,11 @@ struct LV2ControlPortState final {
 using LV2ControlPortStateArray = std::vector<LV2ControlPortState>;
 
 class LV2Wrapper;
+
+struct LV2EffectSettings {
+   //! vector of values in correspondence with the control ports
+   std::vector<float> values;
+};
 
 class LV2Effect final : public LV2FeaturesList
 {
@@ -408,6 +411,18 @@ private:
    std::unordered_map<uint32_t, size_t> mControlPortMap;
    LV2ControlPortArray mControlPorts;
    LV2ControlPortStateArray mControlPortStates;
+   LV2EffectSettings mSettings;
+
+   //! This ignores its argument while we transition to statelessness
+   //! but will later be rewritten as a static member function
+   LV2EffectSettings &GetSettings(EffectSettings &) const {
+      return const_cast<LV2EffectSettings &>(mSettings);
+   }
+   //! This ignores its argument while we transition to statelessness
+   //! but will later be rewritten as a static member function
+   const LV2EffectSettings &GetSettings(const EffectSettings &) const {
+      return mSettings;
+   }
 
    LV2AudioPortArray mAudioPorts;
    unsigned mAudioIn{ 0 };

@@ -582,11 +582,12 @@ bool LV2Effect::InitializePlugin()
          const auto &controlPort = mControlPorts.back();
          mControlPortStates.emplace_back(controlPort);
          auto &state = mControlPortStates.back();
+         auto &value = mSettings.values.emplace_back();
 
          state.mLo = controlPort->mMin;
          state.mHi = controlPort->mMax;
-         controlPort->mVal = controlPort->mDef;
-         state.mLst = controlPort->mVal;
+         value = controlPort->mDef;
+         state.mLst = value;
 
          // Figure out the type of port we have
          if (isInput)
@@ -1079,19 +1080,16 @@ int LV2Effect::ShowClientInterface(
 }
 
 bool LV2Effect::SaveSettings(
-   const EffectSettings &, CommandParameters & parms) const
+   const EffectSettings &settings, CommandParameters & parms) const
 {
-   for (auto & port : mControlPorts)
-   {
+   auto &values = GetSettings(settings).values;
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
       if (port->mIsInput)
-      {
-         if (!parms.Write(port->mName, port->mVal))
-         {
+         if (!parms.Write(port->mName, values[index]))
             return false;
-         }
-      }
+      ++index;
    }
-
    return true;
 }
 
@@ -1111,13 +1109,16 @@ bool LV2Effect::LoadSettings(
    }
 
    // Second pass actually sets the values
+   auto &values = GetSettings(settings).values;
+   size_t index = 0;
    for (auto & port : mControlPorts) {
       if (port->mIsInput) {
          double d = 0.0;
          if (!parms.Read(port->mName, &d))
             return false;
-         port->mVal = d;
+         values[index] = d;
       }
+      ++index;
    }
 
    return true;
@@ -1362,7 +1363,7 @@ bool LV2Effect::SaveParameters(
 }
 
 std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
-   const EffectSettings &, float sampleRate)
+   const EffectSettings &settings, float sampleRate)
 {
    auto wrapper = std::make_unique<LV2Wrapper>(*this, mPlug, sampleRate);
    auto instance = wrapper->GetInstance();
@@ -1375,14 +1376,23 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
    static float blackHole;
 
    // Connect all control ports
-   for (auto & port : mControlPorts)
+   auto &values = GetSettings(settings).values;
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
       // If it's not an input port and master has already been created
       // then connect the port to a dummy field since slave output port
       // values are unwanted as the master values will be used.
       //
       // Otherwise, connect it to the real value field.
       lilv_instance_connect_port(instance, port->mIndex,
-         !port->mIsInput && mMaster ? &blackHole : &port->mVal);
+         !port->mIsInput && mMaster
+            ? &blackHole
+            // Treat settings slot corresponding to an output port as mutable
+            // Otherwise those for input ports must still pass to the library
+            // as nominal pointers to non-const
+            : &const_cast<float&>(values[index]));
+      ++index;
+   }
 
    // Connect all atom ports
    for (auto & state : mAtomPortStates)
@@ -1631,6 +1641,7 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
 bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 {
    auto &settings = access.Get();
+   auto &values = GetSettings(settings).values;
    mPlainUIControls.resize(mControlPorts.size());
 
    int numCols = 5;
@@ -1679,6 +1690,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
             auto &state = mControlPortStates[p];
             auto &port = state.mpPort;
             auto &ctrl = mPlainUIControls[p];
+            const auto &value = values[p];
             auto labelText = port->mName;
             if (!port->mUnits.empty())
                labelText += XO("(%s)").Format(port->mUnits).Translation();
@@ -1708,7 +1720,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                // Toggle port gets a checkbox
                auto c = safenew wxCheckBox(w, ID_Toggles + p, wxT(""));
                c->SetName(labelText);
-               c->SetValue(port->mVal > 0);
+               c->SetValue(value > 0);
                gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                ctrl.checkbox = c;
 
@@ -1720,7 +1732,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                // Enumeration port gets a choice control
                // Discretize the value (all ports hold a float value) to
                // determine the intial selection
-               auto s = port->Discretize(port->mVal);
+               auto s = port->Discretize(value);
                auto c = safenew wxChoice(w, ID_Choices + p);
                c->SetName(labelText);
                c->Append(port->mScaleLabels);
@@ -1737,7 +1749,8 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                gridSizer->Add(1, 1, 0);
                gridSizer->Add(1, 1, 0);
 
-               auto m = safenew LV2EffectMeter(w, port, port->mVal);
+               //! Captures a const reference to value!
+               auto m = safenew LV2EffectMeter(w, port, value);
                gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
                ctrl.meter = m;
 
@@ -1752,7 +1765,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
                auto rate = port->mSampleRate ? mSampleRate : 1.0f;
                state.mLo = port->mMin * rate;
                state.mHi = port->mMax * rate;
-               state.mTmp = port->mVal * rate;
+               state.mTmp = value * rate;
                if (port->mInteger) {
                   IntegerValidator<float> vld(&state.mTmp);
                   vld.SetRange(state.mLo, state.mHi);
@@ -1872,19 +1885,28 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 
 bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 {
-   for (auto & state : mControlPortStates) {
-      auto &port = state.mpPort;
-      if (port->mIsInput)
-         state.mTmp = port->mVal * (port->mSampleRate ? mSampleRate : 1.0);
+   auto &values = GetSettings(settings).values;
+   {
+      size_t index = 0; for (auto & state : mControlPortStates) {
+         auto &port = state.mpPort;
+         if (port->mIsInput)
+            state.mTmp =
+               values[index] * (port->mSampleRate ? mSampleRate : 1.0);
+         ++index;
+      }
    }
 
    if (mUseGUI) {
       // fancy UI
-      if (mSuilInstance)
-         for (auto & port : mControlPorts)
+      if (mSuilInstance) {
+         size_t index = 0;
+         for (auto & port : mControlPorts) {
             if (port->mIsInput)
                suil_instance_port_event(mSuilInstance.get(),
-                  port->mIndex, sizeof(float), 0, &port->mVal);
+                  port->mIndex, sizeof(float), 0, &values[index]);
+            ++index;
+         }
+      }
       return true;
    }
 
@@ -1895,14 +1917,15 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
       for (auto & param : params) { auto & state = mControlPortStates[param];
          auto &port = state.mpPort;
          auto &ctrl = mPlainUIControls[param];
+         auto &value = values[param];
          if (port->mTrigger)
             continue;
          else if (port->mToggle)
-            ctrl.checkbox->SetValue(port->mVal > 0);
+            ctrl.checkbox->SetValue(value > 0);
          else if (port->mEnumeration)      // Check before integer
-            ctrl.choice->SetSelection(port->Discretize(port->mVal));
+            ctrl.choice->SetSelection(port->Discretize(value));
          else if (port->mIsInput) {
-            state.mTmp = port->mVal * (port->mSampleRate ? mSampleRate : 1.0f);
+            state.mTmp = value * (port->mSampleRate ? mSampleRate : 1.0f);
             SetSlider(state, ctrl);
          }
       }
@@ -1928,23 +1951,23 @@ void LV2Effect::SetSlider(
 
 void LV2Effect::OnTrigger(wxCommandEvent &evt)
 {
-   auto & port = mControlPorts[evt.GetId() - ID_Triggers];
-
-   port->mVal = port->mDef;
+   size_t idx = evt.GetId() - ID_Triggers;
+   auto & port = mControlPorts[idx];
+   mSettings.values[idx] = port->mDef;
 }
 
 void LV2Effect::OnToggle(wxCommandEvent &evt)
 {
-   auto & port = mControlPorts[evt.GetId() - ID_Toggles];
-
-   port->mVal = evt.GetInt() ? 1.0 : 0.0;
+   size_t idx = evt.GetId() - ID_Toggles;
+   auto & port = mControlPorts[idx];
+   mSettings.values[idx] = evt.GetInt() ? 1.0 : 0.0;
 }
 
 void LV2Effect::OnChoice(wxCommandEvent &evt)
 {
-   auto & port = mControlPorts[evt.GetId() - ID_Choices];
-
-   port->mVal = port->mScaleValues[evt.GetInt()];
+   size_t idx = evt.GetId() - ID_Choices;
+   auto & port = mControlPorts[idx];
+   mSettings.values[idx] = port->mScaleValues[evt.GetInt()];
 }
 
 void LV2Effect::OnText(wxCommandEvent &evt)
@@ -1954,7 +1977,8 @@ void LV2Effect::OnText(wxCommandEvent &evt)
    auto &port = state.mpPort;
    auto & ctrl = mPlainUIControls[idx];
    if (ctrl.mText->GetValidator()->TransferFromWindow()) {
-      port->mVal = port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+      mSettings.values[idx] =
+         port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
       SetSlider(state, ctrl);
    }
 }
@@ -1973,7 +1997,8 @@ void LV2Effect::OnSlider(wxCommandEvent &evt)
    state.mTmp = (((float) evt.GetInt()) / 1000.0) * (hi - lo) + lo;
    state.mTmp = std::clamp(state.mTmp, lo, hi);
    state.mTmp = port->mLogarithmic ? expf(state.mTmp) : state.mTmp;
-   port->mVal = port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
+   mSettings.values[idx] =
+      port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
    mPlainUIControls[idx].mText->GetValidator()->TransferToWindow();
 }
 
@@ -1990,28 +2015,20 @@ void LV2Effect::OnTimer(wxTimerEvent &evt)
 void LV2Effect::OnIdle(wxIdleEvent &evt)
 {
    evt.Skip();
-
    if (!mSuilInstance)
-   {
       return;
-   }
 
-   if (mExternalUIClosed)
-   {
+   if (mExternalUIClosed) {
       mExternalUIClosed = false;
       mDialog->Close();
       return;
    }
 
-   if (mUIIdleInterface)
-   {
+   if (mUIIdleInterface) {
       const auto handle = suil_instance_get_handle(mSuilInstance.get());
-      if (mUIIdleInterface->idle(handle))
-      {
+      if (mUIIdleInterface->idle(handle)) {
          if (mUIShowInterface)
-         {
             mUIShowInterface->hide(handle);
-         }
          mDialog->Close();
          return;
       }
@@ -2038,14 +2055,17 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       }
    }
 
+   size_t index = 0;
    for (auto &state : mControlPortStates) {
       auto &port = state.mpPort;
+      const auto &value = mSettings.values[index];
       // Let UI know that a port's value has changed
-      if (port->mVal != state.mLst) {
+      if (value != state.mLst) {
          suil_instance_port_event(mSuilInstance.get(),
-            port->mIndex, sizeof(port->mVal), 0, &port->mVal);
-         state.mLst = port->mVal;
+            port->mIndex, sizeof(value), 0, &value);
+         state.mLst = value;
       }
+      ++index;
    }
 }
 
@@ -2164,7 +2184,7 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
    if (protocol == 0 && buffer_size == sizeof(float)) {
       if (auto it = mControlPortMap.find(port_index);
          it != mControlPortMap.end())
-         mControlPorts[it->second]->mVal = *static_cast<const float *>(buffer);
+         mSettings.values[it->second] = *static_cast<const float *>(buffer);
    }
    // Handle event transfers
    else if (protocol == LV2Symbols::urid_EventTransfer) {
@@ -2192,6 +2212,7 @@ uint32_t LV2Effect::SuilPortIndex(const char *port_symbol)
 }
 
 // static callback
+// This function isn't used?
 const void *LV2Effect::get_value_func(
    const char *port_symbol, void *user_data, uint32_t *size, uint32_t *type)
 {
@@ -2203,12 +2224,15 @@ const void *LV2Effect::GetPortValue(
    const char *port_symbol, uint32_t *size, uint32_t *type)
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
-   for (auto & port : mControlPorts)
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
       if (port->mSymbol == symbol) {
          *size = sizeof(float);
          *type = LV2Symbols::urid_Float;
-         return &port->mVal;
+         return &mSettings.values[index];
       }
+      ++index;
+   }
    *size = 0;
    *type = 0;
    return nullptr;
@@ -2227,21 +2251,25 @@ void LV2Effect::SetPortValue(
    const char *port_symbol, const void *value, uint32_t size, uint32_t type)
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
-   for (auto & port : mControlPorts)
+   size_t index = 0;
+   for (auto & port : mControlPorts) {
       if (port->mSymbol == symbol) {
+         auto &dst = mSettings.values[index];
          using namespace LV2Symbols;
          if (type == urid_Bool && size == sizeof(bool))
-            port->mVal = *static_cast<const bool *>(value) ? 1.0f : 0.0f;
+            dst = *static_cast<const bool *>(value) ? 1.0f : 0.0f;
          else if (type == urid_Double && size == sizeof(double))
-            port->mVal = *static_cast<const double *>(value);
+            dst = *static_cast<const double *>(value);
          else if (type == urid_Float && size == sizeof(float))
-            port->mVal = *static_cast<const float *>(value);
+            dst = *static_cast<const float *>(value);
          else if (type == urid_Int && size == sizeof(int32_t))
-            port->mVal = *static_cast<const int32_t *>(value);
+            dst = *static_cast<const int32_t *>(value);
          else if (type == urid_Long && size == sizeof(int64_t))
-            port->mVal = *static_cast<const int64_t *>(value);
+            dst = *static_cast<const int64_t *>(value);
          break;
       }
+      ++index;
+   }
 }
 
 #if defined(__WXGTK__)
