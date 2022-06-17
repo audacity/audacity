@@ -126,6 +126,7 @@ struct LV2AtomPortState final {
 using LV2AtomPortStatePtr = std::shared_ptr<LV2AtomPortState>;
 using LV2AtomPortStateArray = std::vector<LV2AtomPortStatePtr>;
 
+//! Immutable description of an LV2 CV port (control data signal at sample rate)
 class LV2CVPort final : public LV2Port {
 public:
    LV2CVPort(const LilvPort *port, int index, bool isInput,
@@ -140,10 +141,21 @@ public:
    const float mDef;
    const bool mHasLo;
    const bool mHasHi;
-   Floats mBuffer;
 };
 using LV2CVPortPtr = std::shared_ptr<LV2CVPort>;
 using LV2CVPortArray = std::vector<LV2CVPortPtr>;
+
+//! State of an instance of an LV2 CV port
+struct LV2CVPortState final {
+   //! @pre `pPort != nullptr`
+   explicit LV2CVPortState(LV2CVPortPtr pPort) : mpPort{ move(pPort) } {
+      assert(mpPort);
+   }
+   const LV2CVPortPtr mpPort;
+   Floats mBuffer;
+};
+//! No need yet for extra indirection
+using LV2CVPortStateArray = std::vector<LV2CVPortState>;
 
 class LV2EffectMeter;
 
@@ -390,6 +402,7 @@ private:
    unsigned mMidiOut{ 0 };
 
    LV2CVPortArray mCVPorts;
+   LV2CVPortStateArray mCVPortStates;
    unsigned mCVIn;
    unsigned mCVOut;
 

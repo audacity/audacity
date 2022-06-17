@@ -649,6 +649,7 @@ bool LV2Effect::InitializePlugin()
          mCVPorts.push_back(std::make_shared<LV2CVPort>(
             port, index, isInput, symbol, name, groupName,
             min, max, def, hasLo, hasHi));
+         mCVPortStates.emplace_back(mCVPorts.back());
       }
    }
    }
@@ -764,19 +765,11 @@ bool LV2Effect::ProcessInitialize(
 {
    mProcess = InitInstance(mSampleRate);
    if (!mProcess)
-   {
       return false;
-   }
-
-   for (auto & port : mCVPorts)
-   {
-      port->mBuffer.reinit((unsigned) mBlockSize, port->mIsInput);
-   }
-
+   for (auto & state : mCVPortStates)
+      state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
    mProcess->Activate();
-
    mLatencyDone = false;
-
    return true;
 }
 
@@ -871,8 +864,8 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
 
 bool LV2Effect::RealtimeInitialize(EffectSettings &)
 {
-   for (auto & port : mCVPorts)
-      port->mBuffer.reinit((unsigned) mBlockSize, port->mIsInput);
+   for (auto & state : mCVPortStates)
+      state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
    return true;
 }
 
@@ -880,8 +873,8 @@ bool LV2Effect::RealtimeFinalize(EffectSettings &) noexcept
 {
 return GuardedCall<bool>([&]{
    mSlaves.clear();
-   for (auto & port : mCVPorts)
-      port->mBuffer.reset();
+   for (auto & state : mCVPortStates)
+      state.mBuffer.reset();
    return true;
 });
 }
@@ -1418,8 +1411,9 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
          state->mpPort->mIndex, state->mBuffer.data());
 
    // We don't fully support CV ports, so connect them to dummy buffers for now.
-   for (auto & port : mCVPorts)
-      lilv_instance_connect_port(instance, port->mIndex, port->mBuffer.get());
+   for (auto & state : mCVPortStates)
+      lilv_instance_connect_port(instance, state.mpPort->mIndex,
+         state.mBuffer.get());
 
    // Give plugin a chance to initialize.  The SWH plugins (like AllPass) need
    // this before it can be safely deleted.
