@@ -758,9 +758,9 @@ sampleCount LV2Effect::GetLatency()
 }
 
 bool LV2Effect::ProcessInitialize(
-   EffectSettings &, sampleCount, ChannelNames chanMap)
+   EffectSettings &settings, sampleCount, ChannelNames chanMap)
 {
-   mProcess = InitInstance(mSampleRate);
+   mProcess = InitInstance(settings, mSampleRate);
    if (!mProcess)
       return false;
    for (auto & state : mCVPortStates)
@@ -877,9 +877,9 @@ return GuardedCall<bool>([&]{
 }
 
 bool LV2Effect::RealtimeAddProcessor(
-   EffectSettings &, unsigned, float sampleRate)
+   EffectSettings &settings, unsigned, float sampleRate)
 {
-   auto pInstance = InitInstance(sampleRate);
+   auto pInstance = InitInstance(settings, sampleRate);
    if (!pInstance)
       return false;
    pInstance->Activate();
@@ -1130,6 +1130,7 @@ bool LV2Effect::LoadSettings(
 std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    EffectInstance &, EffectSettingsAccess &access)
 {
+   auto &settings = access.Get();
    auto parent = S.GetParent();
    mParent = parent;
 
@@ -1138,7 +1139,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    mSuilHost.reset();
    mSuilInstance.reset();
 
-   mMaster = InitInstance(mSampleRate);
+   mMaster = InitInstance(settings, mSampleRate);
    if (!mMaster) {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return nullptr;
@@ -1153,17 +1154,12 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    // Until I figure out where to put the "Duration" control in the
    // graphical editor, force usage of plain editor.
    if (GetType() == EffectTypeGenerate)
-   {
       mUseGUI = false;
-   }
 
    if (mUseGUI)
-   {
-      mUseGUI = BuildFancy(access.Get());
-   }
+      mUseGUI = BuildFancy(settings);
 
-   if (!mUseGUI)
-   {
+   if (!mUseGUI) {
       if (!BuildPlain(access))
          return nullptr;
    }
@@ -1365,7 +1361,8 @@ bool LV2Effect::SaveParameters(
       PluginSettings::Private, group, wxT("Parameters"), parms);
 }
 
-std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(float sampleRate)
+std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
+   const EffectSettings &, float sampleRate)
 {
    auto wrapper = std::make_unique<LV2Wrapper>(*this, mPlug, sampleRate);
    auto instance = wrapper->GetInstance();

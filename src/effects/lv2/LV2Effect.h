@@ -337,7 +337,8 @@ private:
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
-   std::unique_ptr<LV2Wrapper> InitInstance(float sampleRate);
+   std::unique_ptr<LV2Wrapper>
+   InitInstance(const EffectSettings &settings, float sampleRate);
 
    static int ui_resize(LV2UI_Feature_Handle handle, int width, int height);
    int UIResize(int width, int height);
