@@ -407,10 +407,14 @@ namespace
 
          AudioIO::Get()->RemoveState(*project, &*mTrack, mEffectState);
          ProjectHistory::Get(*project).PushState(
-            //i18n-hint: undo history, first parameter - realtime effect name, second - track name
-            XO("'%s' removed from '%s' effect stack").Format(effectName, trackName),
-            //i18n-hint: undo history record
-            XO("Remove realtime effect")
+            /*! i18n-hint: undo history record
+             first parameter - realtime effect name
+             second parameter - track name
+             */
+            XO("Removed %s from %s").Format(effectName, trackName),
+            /*! i18n-hint: undo history record
+             first parameter - realtime effect name */
+            XO("Remove %s").Format(effectName)
          );
       }
       
@@ -444,10 +448,14 @@ namespace
          {
             auto effectName = GetEffectName();
             ProjectHistory::Get(*mProject).PushState(
-               //i18n-hint: undo history, first parameter - realtime effect name, second - track name
-               XO("'%s' effect of '%s' modified").Format(effectName, mTrack->GetName()),
-               //i18n-hint: undo history record
-               XO("Modify realtime effect")
+               /*! i18n-hint: undo history record
+                first parameter - realtime effect name
+                second parameter - track name
+                */
+               XO("Changed %s in %s").Format(effectName, mTrack->GetName()),
+               /*! i18n-hint: undo history record
+                first parameter - realtime effect name */
+               XO("Change %s").Format(effectName)
          );
          }
          else
@@ -703,12 +711,24 @@ public:
          const auto to = event.GetTargetIndex();
          if(from != to)
          {
+            auto effectName =
+               effectList.GetStateAt(from)->GetEffect()->GetName();
+            bool up = (to < from);
             effectList.MoveEffect(from, to);
             ProjectHistory::Get(*mProject).PushState(
-               //i18n-hint: undo history, first parameter - track name, second - old position, third - new position
-               XO("'%s' effects reorder %d->%d").Format(mTrack->GetName(), from + 1, to + 1),
-               //i18n-hint: undo history record
-               XO("Realtime effect reorder"), UndoPush::CONSOLIDATE);
+               (up
+                  /*! i18n-hint: undo history record
+                   first parameter - realtime effect name
+                   second parameter - track name
+                   */
+                  ? XO("Moved %s up in %s")
+                  /*! i18n-hint: undo history record
+                   first parameter - realtime effect name
+                   second parameter - track name
+                   */
+                  : XO("Moved %s down in %s"))
+                  .Format(effectName, mTrack->GetName()),
+               XO("Change effect order"), UndoPush::CONSOLIDATE);
          }
          else
          {
@@ -852,11 +872,15 @@ public:
       {
          auto effect = state->GetEffect();
          assert(effect); // postcondition of AddState
+         const auto effectName = effect->GetName();
          ProjectHistory::Get(*mProject).PushState(
-            //i18n-hint: undo history, first parameter - realtime effect name, second - track name
-            XO("'%s' added to the '%s' effect stack").Format(effect->GetName(), mTrack->GetName()),
+            /*! i18n-hint: undo history record
+             first parameter - realtime effect name
+             second parameter - track name
+             */
+            XO("Added %s to %s").Format(effectName, mTrack->GetName()),
             //i18n-hint: undo history record
-            XO("Add realtime effect"));
+            XO("Add %s").Format(effectName));
       }
    }
 
