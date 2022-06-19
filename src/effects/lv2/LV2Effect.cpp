@@ -1038,8 +1038,10 @@ bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
    }){
       auto &mySettings = GetSettings(settings);
       SetValueData data{ *this, mySettings };
-      lilv_state_restore(state.get(), mMaster->GetInstance(),
-         set_value_func, &data, 0, nullptr);
+      // Get the control port values from the state into settings
+      lilv_state_emit_port_values(state.get(), set_value_func, &data);
+      // Save the state, for whatever might not be contained in port values
+      mySettings.mpState = move(state);
       return true;
    }
    else
@@ -1630,7 +1632,18 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 
 bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 {
-   auto &values = GetSettings(settings).values;
+   auto &mySettings = GetSettings(settings);
+
+   if (mMaster && mySettings.mpState) {
+      // Maybe there are other important side effects on the instance besides
+      // changes of port values
+      lilv_state_restore(mySettings.mpState.get(), mMaster->GetInstance(),
+         nullptr, nullptr, 0, nullptr);
+      // Destroy the short lived carrier of preset state
+      mySettings.mpState.reset();
+   }
+
+   auto &values = mySettings.values;
    {
       size_t index = 0; for (auto & state : mControlPortStates) {
          auto &port = state.mpPort;

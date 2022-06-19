@@ -68,6 +68,8 @@ class LV2Wrapper;
 struct LV2EffectSettings {
    //! vector of values in correspondence with the control ports
    std::vector<float> values;
+   //! Result of last load of a preset; may be null
+   mutable std::shared_ptr<const LilvState> mpState;
 };
 
 class LV2Effect final : public LV2FeaturesList
