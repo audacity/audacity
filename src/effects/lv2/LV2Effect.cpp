@@ -82,19 +82,12 @@ bool SetUseGUI(EffectDefinitionInterface &effect, bool useGUI);
 /*!
  @}
 */
-}
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// LV2EffectSettingsDialog
-//
-///////////////////////////////////////////////////////////////////////////////
-
-class LV2EffectSettingsDialog final : public wxDialogWrapper
+class Dialog final : public wxDialogWrapper
 {
 public:
-   LV2EffectSettingsDialog(wxWindow *parent, EffectDefinitionInterface &effect);
-   virtual ~LV2EffectSettingsDialog();
+   Dialog(wxWindow *parent, EffectDefinitionInterface &effect);
+   virtual ~Dialog();
 
    void PopulateOrExchange(ShuttleGui &S);
 
@@ -108,6 +101,7 @@ private:
 
    DECLARE_EVENT_TABLE()
 };
+}
 
 static constexpr auto SettingsStr = L"Settings";
 static constexpr auto BufferSizeStr = L"BufferSize";
@@ -168,11 +162,11 @@ bool LV2Preferences::SetUseGUI(
    return SetSetting(effect, UseGUIStr, useGUI);
 }
 
-BEGIN_EVENT_TABLE(LV2EffectSettingsDialog, wxDialogWrapper)
-   EVT_BUTTON(wxID_OK, LV2EffectSettingsDialog::OnOk)
+BEGIN_EVENT_TABLE(LV2Preferences::Dialog, wxDialogWrapper)
+   EVT_BUTTON(wxID_OK, LV2Preferences::Dialog::OnOk)
 END_EVENT_TABLE()
 
-LV2EffectSettingsDialog::LV2EffectSettingsDialog(
+LV2Preferences::Dialog::Dialog(
    wxWindow *parent, EffectDefinitionInterface &effect)
 :  wxDialogWrapper(parent, wxID_ANY, XO("LV2 Effect Settings"))
 , mEffect{ effect }
@@ -185,11 +179,11 @@ LV2EffectSettingsDialog::LV2EffectSettingsDialog(
    PopulateOrExchange(S);
 }
 
-LV2EffectSettingsDialog::~LV2EffectSettingsDialog()
+LV2Preferences::Dialog::~Dialog()
 {
 }
 
-void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
+void LV2Preferences::Dialog::PopulateOrExchange(ShuttleGui &S)
 {
    S.SetBorder(5);
    S.StartHorizontalLay(wxEXPAND, 1);
@@ -270,7 +264,7 @@ void LV2EffectSettingsDialog::PopulateOrExchange(ShuttleGui &S)
    Center();
 }
 
-void LV2EffectSettingsDialog::OnOk(wxCommandEvent &WXUNUSED(evt))
+void LV2Preferences::Dialog::OnOk(wxCommandEvent &WXUNUSED(evt))
 {
    if (!Validate())
    {
@@ -1282,7 +1276,7 @@ bool LV2Effect::HasOptions()
 
 void LV2Effect::ShowOptions()
 {
-   LV2EffectSettingsDialog{ mParent, *this }.ShowModal();
+   LV2Preferences::Dialog{ mParent, *this }.ShowModal();
 }
 
 // ============================================================================
