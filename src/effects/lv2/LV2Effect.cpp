@@ -67,6 +67,23 @@
 static inline void free_chars (char *p) { lilv_free(p); }
 using LilvCharsPtr = Lilv_ptr<char, free_chars>;
 
+namespace LV2Preferences {
+/*! @name Persistent settings that can apply to any LV2 effect
+ @{
+ */
+bool GetBufferSize(EffectDefinitionInterface &effect, int &bufferSize);
+bool SetBufferSize(EffectDefinitionInterface &effect, int bufferSize);
+
+bool GetUseLatency(EffectDefinitionInterface &effect, bool &useLatency);
+bool SetUseLatency(EffectDefinitionInterface &effect, bool useLatency);
+
+bool GetUseGUI(EffectDefinitionInterface &effect, bool &useGUI);
+bool SetUseGUI(EffectDefinitionInterface &effect, bool useGUI);
+/*!
+ @}
+*/
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // LV2EffectSettingsDialog
@@ -92,6 +109,65 @@ private:
    DECLARE_EVENT_TABLE()
 };
 
+static constexpr auto SettingsStr = L"Settings";
+static constexpr auto BufferSizeStr = L"BufferSize";
+static constexpr auto UseLatencyStr = L"UseLatency";
+static constexpr auto UseGUIStr = L"UseGUI";
+
+namespace {
+template<typename T>
+bool GetSetting(EffectDefinitionInterface &effect, const wchar_t *path,
+   T& var, const T &defaultValue)
+{
+   return GetConfig(effect, PluginSettings::Shared, SettingsStr, path,
+      var, defaultValue);
+}
+
+template<typename T>
+bool SetSetting(EffectDefinitionInterface &effect, const wchar_t *path,
+   const T& value)
+{
+   return SetConfig(effect, PluginSettings::Shared, SettingsStr, path,
+      value);
+}
+}
+
+bool LV2Preferences::GetBufferSize(
+   EffectDefinitionInterface &effect, int &bufferSize)
+{
+   return GetSetting(effect, BufferSizeStr, bufferSize, 8192);
+}
+
+bool LV2Preferences::SetBufferSize(
+   EffectDefinitionInterface &effect, int bufferSize)
+{
+   return SetSetting(effect, BufferSizeStr, bufferSize);
+}
+
+bool LV2Preferences::GetUseLatency(
+   EffectDefinitionInterface &effect, bool &useLatency)
+{
+   return GetSetting(effect, UseLatencyStr, useLatency, true);
+}
+
+bool LV2Preferences::SetUseLatency(
+   EffectDefinitionInterface &effect, bool useLatency)
+{
+   return SetSetting(effect, UseLatencyStr, useLatency);
+}
+
+bool LV2Preferences::GetUseGUI(
+   EffectDefinitionInterface &effect, bool &useGUI)
+{
+   return GetSetting(effect, UseGUIStr, useGUI, true);
+}
+
+bool LV2Preferences::SetUseGUI(
+   EffectDefinitionInterface &effect, bool useGUI)
+{
+   return SetSetting(effect, UseGUIStr, useGUI);
+}
+
 BEGIN_EVENT_TABLE(LV2EffectSettingsDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, LV2EffectSettingsDialog::OnOk)
 END_EVENT_TABLE()
@@ -101,13 +177,10 @@ LV2EffectSettingsDialog::LV2EffectSettingsDialog(
 :  wxDialogWrapper(parent, wxID_ANY, XO("LV2 Effect Settings"))
 , mEffect{ effect }
 {
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("BufferSize"), mBufferSize, 8192);
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseLatency"), mUseLatency, true);
-   GetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseGUI"), mUseGUI, true);
-
+   using namespace LV2Preferences;
+   GetBufferSize(mEffect, mBufferSize);
+   GetUseLatency(mEffect, mUseLatency);
+   GetUseGUI(mEffect, mUseGUI);
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
 }
@@ -207,12 +280,10 @@ void LV2EffectSettingsDialog::OnOk(wxCommandEvent &WXUNUSED(evt))
    ShuttleGui S(this, eIsGettingFromDialog);
    PopulateOrExchange(S);
 
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("BufferSize"), mBufferSize);
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseLatency"), mUseLatency);
-   SetConfig(mEffect, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseGUI"), mUseGUI);
+   using namespace LV2Preferences;
+   SetBufferSize(mEffect, mBufferSize);
+   SetUseLatency(mEffect, mUseLatency);
+   SetUseGUI(mEffect, mUseGUI);
 
    EndModal(wxID_OK);
 }
@@ -591,18 +662,13 @@ std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const
 std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 {
    int userBlockSize;
-   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-      wxT("BufferSize"), userBlockSize, 8192);
+   LV2Preferences::GetBufferSize(*this, userBlockSize);
    mUserBlockSize = std::max(1, userBlockSize);
    mBlockSize = mUserBlockSize;
 
-   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-      wxT("UseLatency"), mUseLatency, true);
-   GetConfig(*this, PluginSettings::Shared, wxT("Settings"), wxT("UseGUI"),
-      mUseGUI, true);
-
+   LV2Preferences::GetUseLatency(*this, mUseLatency);
+   LV2Preferences::GetUseGUI(*this, mUseGUI);
    lv2_atom_forge_init(&mForge, URIDMapFeature());
-
    return std::make_shared<Instance>(*this);
 }
 
@@ -1055,10 +1121,7 @@ std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    }
 
    // Determine if the GUI editor is supposed to be used or not
-   GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-                          wxT("UseGUI"),
-                          mUseGUI,
-                          true);
+   LV2Preferences::GetUseGUI(*this, mUseGUI);
 
    // Until I figure out where to put the "Duration" control in the
    // graphical editor, force usage of plain editor.
@@ -1219,17 +1282,7 @@ bool LV2Effect::HasOptions()
 
 void LV2Effect::ShowOptions()
 {
-   LV2EffectSettingsDialog dlg(mParent, *this);
-   if (dlg.ShowModal() == wxID_OK)
-   {
-      // Reinitialize configuration settings
-      int userBlockSize;
-      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-         wxT("BufferSize"), userBlockSize, DEFAULT_BLOCKSIZE);
-      mUserBlockSize = std::max(1, userBlockSize);
-      GetConfig(*this, PluginSettings::Shared, wxT("Settings"),
-         wxT("UseLatency"), mUseLatency, true);
-   }
+   LV2EffectSettingsDialog{ mParent, *this }.ShowModal();
 }
 
 // ============================================================================
