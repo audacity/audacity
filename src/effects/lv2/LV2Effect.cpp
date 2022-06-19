@@ -1011,19 +1011,22 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
    return mFactoryPresetNames;
 }
 
-bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &) const
+namespace {
+struct SetValueData { const LV2Effect &effect; LV2EffectSettings &settings; };
+void set_value_func(
+   const char *port_symbol, void *user_data,
+   const void *value, uint32_t size, uint32_t type)
 {
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<LV2Effect*>(this)->DoLoadFactoryPreset(id);
+   auto &[effect, settings] = *static_cast<SetValueData*>(user_data);
+   effect.SetPortValue(settings, port_symbol, value, size, type);
+}
 }
 
-bool LV2Effect::DoLoadFactoryPreset(int id)
+bool LV2Effect::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    using namespace LV2Symbols;
    if (id < 0 || id >= (int) mFactoryPresetUris.size())
-   {
       return false;
-   }
 
    LilvNodePtr preset{ lilv_new_uri(gWorld, mFactoryPresetUris[id].ToUTF8()) };
    if (!preset)
@@ -1031,9 +1034,12 @@ bool LV2Effect::DoLoadFactoryPreset(int id)
 
    using LilvStatePtr = Lilv_ptr<LilvState, lilv_state_free>;
    if (LilvStatePtr state{
-      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get()) } ) {
-      lilv_state_restore(
-         state.get(), mMaster->GetInstance(), set_value_func, this, 0, nullptr);
+      lilv_state_new_from_world(gWorld, URIDMapFeature(), preset.get())
+   }){
+      auto &mySettings = GetSettings(settings);
+      SetValueData data{ *this, mySettings };
+      lilv_state_restore(state.get(), mMaster->GetInstance(),
+         set_value_func, &data, 0, nullptr);
       return true;
    }
    else
@@ -1977,23 +1983,15 @@ const void *LV2Effect::GetPortValue(
    return nullptr;
 }
 
-// static callback
-void LV2Effect::set_value_func(
-   const char *port_symbol, void *user_data,
-   const void *value, uint32_t size, uint32_t type)
-{
-   static_cast<LV2Effect *>(user_data)
-      ->SetPortValue(port_symbol, value, size, type);
-}
-
-void LV2Effect::SetPortValue(
+void LV2Effect::SetPortValue(LV2EffectSettings &settings,
    const char *port_symbol, const void *value, uint32_t size, uint32_t type)
+const
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
    size_t index = 0;
    for (auto & port : mControlPorts) {
       if (port->mSymbol == symbol) {
-         auto &dst = mSettings.values[index];
+         auto &dst = settings.values[index];
          using namespace LV2Symbols;
          if (type == urid_Bool && size == sizeof(bool))
             dst = *static_cast<const bool *>(value) ? 1.0f : 0.0f;

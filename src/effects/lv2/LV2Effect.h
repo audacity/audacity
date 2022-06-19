@@ -106,7 +106,6 @@ public:
 
    RegistryPaths GetFactoryPresets() const override;
    bool LoadFactoryPreset(int id, EffectSettings &settings) const override;
-   bool DoLoadFactoryPreset(int id);
 
    unsigned GetAudioInCount() const override;
    unsigned GetAudioOutCount() const override;
@@ -224,15 +223,9 @@ private:
                             uint32_t *size,
                             uint32_t *type);
 
-   static void set_value_func(const char *port_symbol,
-                              void *user_data,
-                              const void *value,
-                              uint32_t size,
-                              uint32_t type);
-   void SetPortValue(const char *port_symbol,
-                     const void *value,
-                     uint32_t size,
-                     uint32_t type);
+public:
+   void SetPortValue(LV2EffectSettings &settings, const char *port_symbol,
+      const void *value, uint32_t size, uint32_t type) const;
 
 private:
    size_t mUserBlockSize{ mBlockSize };
