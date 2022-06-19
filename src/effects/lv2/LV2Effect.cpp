@@ -308,23 +308,19 @@ sampleCount LV2Effect::GetLatency()
    return 0;
 }
 
+// Start of destructive processing path
 bool LV2Effect::ProcessInitialize(EffectSettings &settings,
    double sampleRate, sampleCount, ChannelNames chanMap)
 {
-   mProcess = LV2Wrapper::Create(*this,
-      mPorts, mPortStates, GetSettings(settings), sampleRate, false);
-   if (!mProcess)
+   if (!mMaster)
+      mMaster = LV2Wrapper::Create(*this,
+         mPorts, mPortStates, GetSettings(settings), sampleRate, false);
+   if (!mMaster)
       return false;
    for (auto & state : mPortStates.mCVPortStates)
       state.mBuffer.reinit(mBlockSize, state.mpPort->mIsInput);
-   mProcess->Activate();
+   mMaster->Activate();
    mLatencyDone = false;
-   return true;
-}
-
-bool LV2Effect::ProcessFinalize()
-{
-   mProcess.reset();
    return true;
 }
 
@@ -334,7 +330,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    using namespace LV2Symbols;
    wxASSERT(size <= ( size_t) mBlockSize);
 
-   const auto instance = &mProcess->GetInstance();
+   const auto instance = &mMaster->GetInstance();
 
    int i = 0;
    int o = 0;
@@ -349,7 +345,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
    lilv_instance_run(instance, size);
 
    // Main thread consumes responses
-   mProcess->ConsumeResponses();
+   mMaster->ConsumeResponses();
 
    for (auto & state : mPortStates.mAtomPortStates)
       state->ResetForInstanceOutput();
@@ -548,6 +544,8 @@ bool LV2Effect::LoadSettings(
 // EffectUIClientInterface Implementation
 // ============================================================================
 
+// May come here before destructive processing
+// Or maybe not (if you "Repeat Last Effect")
 std::unique_ptr<EffectUIValidator> LV2Effect::PopulateUI(ShuttleGui &S,
    EffectInstance &, EffectSettingsAccess &access)
 {

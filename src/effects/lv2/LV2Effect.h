@@ -106,7 +106,6 @@ public:
 
    bool ProcessInitialize(EffectSettings &settings, double sampleRate,
       sampleCount totalLen, ChannelNames chanMap) override;
-   bool ProcessFinalize() override;
    size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
@@ -228,10 +227,8 @@ private:
    bool mLatencyDone{ false };
    bool mRolling{ false };
 
-   //! Holds lv2 library state needed for the user interface
+   //! Holds lv2 library state for UI or for destructive processing
    std::unique_ptr<LV2Wrapper> mMaster;
-   //! Holds lv2 library state for destructive processing
-   std::unique_ptr<LV2Wrapper> mProcess;
    //! Each holds lv2 library state for realtime processing of one track
    std::vector<std::unique_ptr<LV2Wrapper>> mSlaves;
 
