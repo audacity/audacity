@@ -217,15 +217,10 @@ private:
                                     const char *port_symbol);
    uint32_t SuilPortIndex(const char *port_symbol);
 
-   static const void *get_value_func(const char *port_symbol,
-                                     void *user_data,
-                                     uint32_t *size,
-                                     uint32_t *type);
-   const void *GetPortValue(const char *port_symbol,
-                            uint32_t *size,
-                            uint32_t *type);
-
 public:
+   const void *GetPortValue(const LV2EffectSettings &settings,
+      const char *port_symbol, uint32_t *size, uint32_t *type) const;
+
    void SetPortValue(LV2EffectSettings &settings, const char *port_symbol,
       const void *value, uint32_t size, uint32_t type) const;
 

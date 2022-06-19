@@ -1097,6 +1097,11 @@ bool LV2Effect::LoadParameters(
 bool LV2Effect::SaveParameters(
    const RegistryPath &group, const EffectSettings &settings) const
 {
+   // PRL: This function just dumps the several control port values to the
+   // config files.  Should it be reimplemented with
+   // lilv_state_new_from_instance to capture -- I don't know what -- other
+   // important state?
+
    CommandParameters eap;
    if (!SaveSettings(settings, eap))
       return false;
@@ -1969,17 +1974,22 @@ uint32_t LV2Effect::SuilPortIndex(const char *port_symbol)
    return LV2UI_INVALID_PORT_INDEX;
 }
 
-// static callback
-// This function isn't used?
-const void *LV2Effect::get_value_func(
+namespace {
+struct GetValueData {
+   const LV2Effect &effect; const LV2EffectSettings &settings;
+};
+//! This function isn't used yet, but if we ever need to call
+//! lilv_state_new_from_instance, we will give it this callback
+const void *get_value_func(
    const char *port_symbol, void *user_data, uint32_t *size, uint32_t *type)
 {
-   return static_cast<LV2Effect *>(user_data)
-      ->GetPortValue(port_symbol, size, type);
+   auto &[effect, settings] = *static_cast<GetValueData*>(user_data);
+   return effect.GetPortValue(settings, port_symbol, size, type);
+}
 }
 
-const void *LV2Effect::GetPortValue(
-   const char *port_symbol, uint32_t *size, uint32_t *type)
+const void *LV2Effect::GetPortValue(const LV2EffectSettings &settings,
+   const char *port_symbol, uint32_t *size, uint32_t *type) const
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
    size_t index = 0;
@@ -1987,7 +1997,7 @@ const void *LV2Effect::GetPortValue(
       if (port->mSymbol == symbol) {
          *size = sizeof(float);
          *type = LV2Symbols::urid_Float;
-         return &mSettings.values[index];
+         return &settings.values[index];
       }
       ++index;
    }
