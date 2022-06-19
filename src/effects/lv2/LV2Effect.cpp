@@ -963,16 +963,7 @@ bool LV2Effect::CloseUI()
 bool LV2Effect::LoadUserPreset(
    const RegistryPath &name, EffectSettings &settings) const
 {
-   // To do: externalize state so const_cast isn't needed
-   return const_cast<LV2Effect*>(this)->DoLoadUserPreset(name, settings);
-}
-
-bool LV2Effect::DoLoadUserPreset(
-   const RegistryPath &name, EffectSettings &settings)
-{
-   if (!LoadParameters(name, settings))
-      return false;
-   return true;
+   return LoadParameters(name, settings);
 }
 
 bool LV2Effect::SaveUserPreset(
@@ -1076,21 +1067,15 @@ void LV2Effect::ShowOptions()
 // ============================================================================
 
 bool LV2Effect::LoadParameters(
-   const RegistryPath &group, EffectSettings &settings)
+   const RegistryPath &group, EffectSettings &settings) const
 {
    wxString parms;
    if (!GetConfig(*this,
       PluginSettings::Private, group, wxT("Parameters"), parms, wxEmptyString))
-   {
       return false;
-   }
-
    CommandParameters eap;
    if (!eap.SetParameters(parms))
-   {
       return false;
-   }
-
    return LoadSettings(eap, settings);
 }
 

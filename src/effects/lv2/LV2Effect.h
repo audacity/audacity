@@ -102,7 +102,6 @@ public:
 
    bool LoadUserPreset(
       const RegistryPath & name, EffectSettings &settings) const override;
-   bool DoLoadUserPreset(const RegistryPath & name, EffectSettings &settings);
    bool SaveUserPreset(
       const RegistryPath & name, const EffectSettings &settings) const override;
 
@@ -168,7 +167,8 @@ public:
 private:
    struct PlainUIControl;
 
-   bool LoadParameters(const RegistryPath & group, EffectSettings &settings);
+   bool LoadParameters(
+      const RegistryPath & group, EffectSettings &settings) const;
    bool SaveParameters(
       const RegistryPath & group, const EffectSettings &settings) const;
 
