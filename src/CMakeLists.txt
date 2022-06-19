@@ -607,6 +607,8 @@ list( APPEND SOURCES
          effects/lv2/LV2FeaturesList.h
          effects/lv2/LV2Ports.cpp
          effects/lv2/LV2Ports.h
+         effects/lv2/LV2Preferences.cpp
+         effects/lv2/LV2Preferences.h
          effects/lv2/LV2Symbols.cpp
          effects/lv2/LV2Symbols.h
          effects/lv2/LV2Utils.h
