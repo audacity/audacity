@@ -288,6 +288,8 @@ class VSTEffect final
 
    void OnTimer();
 
+   EffectSettings MakeSettings() const override;
+
 private:
    // Plugin loading and unloading
    bool Load();
@@ -472,6 +474,8 @@ private:
    DECLARE_EVENT_TABLE()
 
    friend class VSTEffectsModule;
+
+   mutable bool mInitialFetchDone{ false };
 };
 
 class VSTEffectsModule final : public PluginProvider
