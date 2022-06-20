@@ -476,6 +476,12 @@ private:
    friend class VSTEffectsModule;
 
    mutable bool mInitialFetchDone{ false };
+
+   // Set the handle with the given CommandParameters
+   bool StoreCommandParameters(const CommandParameters& parms);
+
+   // Read parameters from the handle and write them into the passed CommandParameters
+   bool FetchCommandParameters(CommandParameters& parms) const;
 };
 
 class VSTEffectsModule final : public PluginProvider

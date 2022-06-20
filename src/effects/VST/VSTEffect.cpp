@@ -1230,8 +1230,9 @@ int VSTEffect::ShowClientInterface(
    return mDialog->ShowModal();
 }
 
-bool VSTEffect::SaveSettings(
-   const EffectSettings &, CommandParameters & parms) const
+
+// This used to be ::SaveSettings
+bool VSTEffect::FetchCommandParameters(CommandParameters& parms) const
 {
    for (int i = 0; i < mAEffect->numParams; i++)
    {
@@ -1251,8 +1252,9 @@ bool VSTEffect::SaveSettings(
    return true;
 }
 
-bool VSTEffect::LoadSettings(
-   const CommandParameters & parms, EffectSettings &settings) const
+// This used to be ::LoadSettings
+bool VSTEffect::StoreCommandParameters(
+   const CommandParameters & parms)
 {
    constCallDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
    for (int i = 0; i < mAEffect->numParams; i++)
@@ -1280,6 +1282,49 @@ bool VSTEffect::LoadSettings(
 
    return true;
 }
+
+
+bool VSTEffect::SaveSettings(const EffectSettings& settings, CommandParameters& parms) const
+{
+   const VSTEffectSettings& vstSettings = GetSettings(settings);
+
+   for (const auto& item : vstSettings.mParamsMap)
+   {
+      const wxString& name  = item.first;
+      const float&    value = item.second;
+
+      if (!parms.Write(name, value))
+      {
+         return false;
+      }
+   }
+
+   return true;
+}
+
+bool VSTEffect::LoadSettings(const CommandParameters& parms, EffectSettings& settings) const
+{
+   VSTEffectSettings& vstSettings = GetSettings(settings);
+   vstSettings.mParamsMap.clear();
+
+   long index{};
+   wxString key;
+   float value;
+   if (parms.GetFirstEntry(key, index))
+   {
+      do
+      {
+         if (parms.Read(key, value))
+            vstSettings.mParamsMap[key] = value;
+         else
+            return false;
+
+      } while (parms.GetNextEntry(key, index));
+   }
+
+   return true;
+}
+
 
 bool VSTEffect::LoadUserPreset(
    const RegistryPath & name, EffectSettings &settings) const
@@ -1932,7 +1977,7 @@ bool VSTEffect::LoadParameters(
       return false;
    }
 
-   return LoadSettings(eap, settings);
+   return StoreCommandParameters(eap);
 }
 
 bool VSTEffect::SaveParameters(
@@ -1960,7 +2005,7 @@ bool VSTEffect::SaveParameters(
    }
 
    CommandParameters eap;
-   if (!SaveSettings(settings, eap))
+   if (!FetchCommandParameters(eap))
    {
       return false;
    }
