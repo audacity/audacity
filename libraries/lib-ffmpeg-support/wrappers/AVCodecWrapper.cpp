@@ -12,14 +12,9 @@
 
 #include "FFmpegFunctions.h"
 
-AVCodecWrapper::AVCodecWrapper(AVCodec* wrapped) noexcept
+AVCodecWrapper::AVCodecWrapper(const AVCodec* wrapped) noexcept
     : mAVCodec(wrapped)
 {
-}
-
-AVCodec* AVCodecWrapper::GetWrappedValue() noexcept
-{
-   return mAVCodec;
 }
 
 const AVCodec* AVCodecWrapper::GetWrappedValue() const noexcept

@@ -42,29 +42,39 @@ if (${_OPT}use_ffmpeg)
 
       impl/FFmpegLog.h
 
+      impl/ffmpeg-2.3.6-single-header.h
+      impl/avutil/52/avconfig.h
       impl/avcodec/55/AVCodecIDLookup.cpp
       impl/avcodec/55/AVCodecImpl.cpp
+      impl/avformat/55/AVFormatImpl.cpp
+      impl/avutil/52/AVUtilImpl.cpp
 
+      impl/ffmpeg-3.4.8-single-header.h
+      impl/avutil/55/avconfig.h
       impl/avcodec/57/AVCodecIDLookup.cpp
       impl/avcodec/57/AVCodecImpl.cpp
+      impl/avformat/57/AVFormatImpl.cpp
+      impl/avutil/55/AVUtilImpl.cpp
 
+      impl/ffmpeg-4.2.4-single-header.h
+      impl/avutil/56/avconfig.h
       impl/avcodec/58/AVCodecIDLookup.cpp
       impl/avcodec/58/AVCodecImpl.cpp
-
-      impl/avcodec/AVCodecFunctionsLoader.cpp
-      impl/avcodec/AVCodecFunctionsLoader.h
-
-      impl/avformat/55/AVFormatImpl.cpp
-      impl/avformat/57/AVFormatImpl.cpp
       impl/avformat/58/AVFormatImpl.cpp
-
-      impl/avformat/AVFormatFunctionsLoader.cpp
-      impl/avformat/AVFormatFunctionsLoader.h
-
-      impl/avutil/52/AVUtilImpl.cpp
-      impl/avutil/55/AVUtilImpl.cpp
       impl/avutil/56/AVUtilImpl.cpp
 
+      impl/ffmpeg-5.0.1-single-header.h
+      impl/avutil/57/avconfig.h
+      impl/avcodec/59/AVCodecIDLookup.cpp
+      impl/avcodec/59/AVCodecImpl.cpp
+      impl/avformat/59/AVFormatImpl.cpp
+      impl/avutil/57/AVUtilImpl.cpp
+
+      # Loaders
+      impl/avcodec/AVCodecFunctionsLoader.cpp
+      impl/avcodec/AVCodecFunctionsLoader.h
+      impl/avformat/AVFormatFunctionsLoader.cpp
+      impl/avformat/AVFormatFunctionsLoader.h
       impl/avutil/AVUtilFunctionsLoader.cpp
       impl/avutil/AVUtilFunctionsLoader.h
 
@@ -80,11 +90,8 @@ if (${_OPT}use_ffmpeg)
       impl/avformat/AVStreamWrapperImpl.inl
       impl/avutil/AVFrameWrapperImpl.inl
       impl/avutil/FFmpegLogImpl.inl
-      impl/ffmpeg-2.3.6-single-header.h
-      impl/ffmpeg-4.2.4-single-header.h
-      impl/avutil/52/avconfig.h
-      impl/avutil/56/avconfig.h
    )
+
    set( LIBRARIES
       PRIVATE
       wxBase

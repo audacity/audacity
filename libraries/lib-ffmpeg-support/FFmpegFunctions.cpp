@@ -208,7 +208,8 @@ struct FFmpegFunctions::Private final
              functions.AVUtilVersion.Major, UtilFactories))
          return false;
 
-      functions.avcodec_register_all();
+      if (functions.avcodec_register_all)
+         functions.avcodec_register_all();
 
       if (functions.av_register_all)
          functions.av_register_all();
@@ -346,9 +347,9 @@ FFmpegFunctions::CreateAVFormatContext() const
 }
 
 std::unique_ptr<AVStreamWrapper>
-FFmpegFunctions::CreateAVStreamWrapper(AVStream* stream) const
+FFmpegFunctions::CreateAVStreamWrapper(AVStream* stream, bool forEncoding) const
 {
-   return mPrivate->FormatFactories.CreateAVStreamWrapper(*this, stream);
+   return mPrivate->FormatFactories.CreateAVStreamWrapper(*this, stream, forEncoding);
 }
 
 std::unique_ptr<AVPacketWrapper> FFmpegFunctions::CreateAVPacketWrapper() const
@@ -379,7 +380,7 @@ std::unique_ptr<AVOutputFormatWrapper> FFmpegFunctions::GuessOutputFormat(
 
 std::unique_ptr<AVOutputFormatWrapper>
 FFmpegFunctions::CreateAVOutputFormatWrapper(
-   AVOutputFormat* outputFormat) const
+   const AVOutputFormat* outputFormat) const
 {
    return mPrivate->FormatFactories.CreateAVOutputFormatWrapper(outputFormat);
 }
@@ -398,7 +399,7 @@ FFmpegFunctions::CreateDecoder(AVCodecIDFwd codecID) const
 std::unique_ptr<AVCodecWrapper>
 FFmpegFunctions::CreateEncoder(AVCodecIDFwd codecID) const
 {
-   AVCodec* codec = avcodec_find_encoder(codecID);
+   auto codec = avcodec_find_encoder(codecID);
 
    if (codec == nullptr)
       return {};
@@ -409,7 +410,7 @@ FFmpegFunctions::CreateEncoder(AVCodecIDFwd codecID) const
 std::unique_ptr<AVCodecWrapper>
 FFmpegFunctions::CreateEncoder(const char* name) const
 {
-   AVCodec* codec = avcodec_find_encoder_by_name(name);
+   auto codec = avcodec_find_encoder_by_name(name);
 
    if (codec == nullptr)
       return {};
@@ -435,32 +436,92 @@ FFmpegFunctions::CreateAVCodecContextWrapperFromCodec(
       *this, std::move(codec));
 }
 
-std::unique_ptr<AVOutputFormatWrapper>
-FFmpegFunctions::GetNextOutputFormat(const AVOutputFormatWrapper* fmt) const
+const std::vector<const AVOutputFormatWrapper*>&
+FFmpegFunctions::GetOutputFormats() const
 {
-   AVOutputFormat* outputFormat =
-      av_oformat_next(fmt != nullptr ? fmt->GetWrappedValue() : nullptr);
+   if (mOutputFormats.empty())
+      const_cast<FFmpegFunctions*>(this)->FillOuptutFormatsList();
 
-   if (outputFormat == nullptr)
-      return {};
-
-   return mPrivate->FormatFactories.CreateAVOutputFormatWrapper(outputFormat);
+   return mOutputFormatPointers;
 }
 
-std::unique_ptr<AVCodecWrapper>
-FFmpegFunctions::GetNextCodec(const AVCodecWrapper* codec) const
+const std::vector<const AVCodecWrapper*>& FFmpegFunctions::GetCodecs() const
 {
-   AVCodec* nextCodec =
-      av_codec_next(codec != nullptr ? codec->GetWrappedValue() : nullptr);
+   if (mCodecs.empty())
+      const_cast<FFmpegFunctions*>(this)->FillCodecsList();
 
-   if (nextCodec == nullptr)
-      return {};
-
-   return mPrivate->CodecFactories.CreateAVCodecWrapper(nextCodec);
+   return mCodecPointers;
 }
 
 std::unique_ptr<AVFifoBufferWrapper>
 FFmpegFunctions::CreateFifoBuffer(int size) const
 {
    return std::make_unique<AVFifoBufferWrapper>(*this, size);
+}
+
+void FFmpegFunctions::FillCodecsList()
+{
+   mCodecs.clear();
+   mCodecPointers.clear();
+
+   if (av_codec_iterate != nullptr)
+   {
+      const AVCodec* currentCodec = nullptr;
+      void* i = 0;
+      
+      while ((currentCodec = av_codec_iterate(&i)))
+      {
+         mCodecs.emplace_back(
+            mPrivate->CodecFactories.CreateAVCodecWrapper(currentCodec));
+      }
+   }
+   else if (av_codec_next != nullptr)
+   {
+      AVCodec* currentCodec = nullptr;
+
+      while ((currentCodec = av_codec_next(currentCodec)) != nullptr)
+      {
+         mCodecs.emplace_back(
+            mPrivate->CodecFactories.CreateAVCodecWrapper(currentCodec));
+      }
+   }
+
+   mCodecPointers.reserve(mCodecs.size());
+
+   for (const auto& codec : mCodecs)
+      mCodecPointers.emplace_back(codec.get());
+}
+
+void FFmpegFunctions::FillOuptutFormatsList()
+{
+   mOutputFormats.clear();
+   mOutputFormatPointers.clear();
+
+   if (av_muxer_iterate != nullptr)
+   {
+      const AVOutputFormat* currentFormat = nullptr;
+      void* i = 0;
+
+      while ((currentFormat = av_muxer_iterate(&i)))
+      {
+         mOutputFormats.emplace_back(
+            mPrivate->FormatFactories.CreateAVOutputFormatWrapper(
+               currentFormat));
+      }
+   }
+   else if (av_oformat_next != nullptr)
+   {
+      AVOutputFormat* currentFormat = nullptr;
+
+      while ((currentFormat = av_oformat_next(currentFormat)) != nullptr)
+      {
+         mOutputFormats.emplace_back(
+            mPrivate->FormatFactories.CreateAVOutputFormatWrapper(currentFormat));
+      }
+   }
+
+   mOutputFormatPointers.reserve(mOutputFormats.size());
+
+   for (const auto& format : mOutputFormats)
+      mOutputFormatPointers.emplace_back(format.get());
 }

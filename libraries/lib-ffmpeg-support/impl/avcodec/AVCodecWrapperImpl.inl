@@ -11,7 +11,7 @@ class AVCodecWrapperImpl : public AVCodecWrapper
 {
 public:
    explicit
-   AVCodecWrapperImpl(AVCodec* wrapped) noexcept
+   AVCodecWrapperImpl(const AVCodec* wrapped) noexcept
       : AVCodecWrapper(wrapped)
    {
    }
@@ -116,7 +116,7 @@ public:
    }
 };
 
-std::unique_ptr<AVCodecWrapper>CreateAVCodecWrapper(AVCodec* obj)
+std::unique_ptr<AVCodecWrapper>CreateAVCodecWrapper(const AVCodec* obj)
 {
    return std::make_unique<AVCodecWrapperImpl>(obj);
 }
