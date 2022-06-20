@@ -1103,7 +1103,8 @@ bool LV2Effect::SaveParameters(
 std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
    const EffectSettings &settings, float sampleRate)
 {
-   auto wrapper = std::make_unique<LV2Wrapper>(*this, mPlug, sampleRate);
+   auto wrapper =
+      std::make_unique<LV2Wrapper>(*this, mLatencyPort, mPlug, sampleRate);
    auto instance = wrapper->GetInstance();
    if (!instance)
       return nullptr;
@@ -2066,7 +2067,7 @@ LV2Wrapper::~LV2Wrapper()
    }
 }
 
-LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList,
+LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList, int latencyPort,
    const LilvPlugin &plugin, double sampleRate)
 :  mFeaturesList{ featuresList }
 {
@@ -2107,8 +2108,8 @@ LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList,
       lilv_instance_get_extension_data(mInstance.get(), LV2_STATE__interface));
    mWorkerInterface = static_cast<const LV2_Worker_Interface *>(
       lilv_instance_get_extension_data(mInstance.get(), LV2_WORKER__interface));
-   if (mFeaturesList.LatencyPort() >= 0)
-      lilv_instance_connect_port(mInstance.get(), mFeaturesList.LatencyPort(), &mLatency);
+   if (latencyPort >= 0)
+      lilv_instance_connect_port(mInstance.get(), latencyPort, &mLatency);
    if (mWorkerInterface)
       mThread = std::thread{
          std::mem_fn( &LV2Wrapper::ThreadFunction ), std::ref(*this)

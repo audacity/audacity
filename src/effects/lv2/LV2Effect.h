@@ -369,7 +369,7 @@ public:
 
 public:
    //! May spawn a thread
-   LV2Wrapper(const LV2FeaturesList &featuresList,
+   LV2Wrapper(const LV2FeaturesList &featuresList, int latencyPort,
       const LilvPlugin &plugin, double sampleRate);
    //! If a thread was started, joins it
    ~LV2Wrapper();

@@ -55,8 +55,6 @@ public:
    const LV2_Options_Option *NominalBlockLengthOption() const;
    //! @return may be null
    const LV2_Options_Option *SampleRateOption() const;
-   //! @return a port number, or a negative
-   int LatencyPort() const { return mLatencyPort; }
 
    size_t AddOption(LV2_URID, uint32_t size, LV2_URID, const void *value);
 
