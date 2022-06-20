@@ -94,7 +94,7 @@ BEGIN_EVENT_TABLE(LV2Effect, wxEvtHandler)
    EVT_IDLE(LV2Effect::OnIdle)
 END_EVENT_TABLE()
 
-LV2Effect::LV2Effect(const LilvPlugin *plug) : LV2FeaturesList{ plug }
+LV2Effect::LV2Effect(const LilvPlugin &plug) : LV2FeaturesList{ plug }
 {
 }
 
@@ -108,17 +108,17 @@ LV2Effect::~LV2Effect()
 
 PluginPath LV2Effect::GetPath() const
 {
-   return LilvString(lilv_plugin_get_uri(mPlug));
+   return LilvString(lilv_plugin_get_uri(&mPlug));
 }
 
 ComponentInterfaceSymbol LV2Effect::GetSymbol() const
 {
-   return LilvStringMove(lilv_plugin_get_name(mPlug));
+   return LilvStringMove(lilv_plugin_get_name(&mPlug));
 }
 
 VendorSymbol LV2Effect::GetVendor() const
 {
-   wxString vendor = LilvStringMove(lilv_plugin_get_author_name(mPlug));
+   wxString vendor = LilvStringMove(lilv_plugin_get_author_name(&mPlug));
 
    if (vendor.empty())
    {
@@ -209,28 +209,29 @@ bool LV2Effect::InitializePlugin()
    mInstanceAccessFeature = mFeatures.size();
    AddFeature(LV2_INSTANCE_ACCESS_URI, nullptr);
    mParentFeature = mFeatures.size();
-   if (!ValidateFeatures(lilv_plugin_get_uri(mPlug)))
+   if (!ValidateFeatures(lilv_plugin_get_uri(&mPlug)))
       return false;
 
    // Collect information in mAudioPorts, mControlPorts, mAtomPorts, mCVPorts
    {
+   auto &plug = mPlug;
    // Retrieve the port ranges for all ports (some values may be NaN)
-   auto numPorts = lilv_plugin_get_num_ports(mPlug);
+   auto numPorts = lilv_plugin_get_num_ports(&plug);
    Floats minimumVals {numPorts};
    Floats maximumVals {numPorts};
    Floats defaultVals {numPorts};
-   lilv_plugin_get_port_ranges_float(mPlug,
+   lilv_plugin_get_port_ranges_float(&plug,
       minimumVals.get(), maximumVals.get(), defaultVals.get());
 
    for (size_t i = 0; i < numPorts; ++i) {
-      const auto port = lilv_plugin_get_port_by_index(mPlug, i);
-      int index = lilv_port_get_index(mPlug, port);
+      const auto port = lilv_plugin_get_port_by_index(&plug, i);
+      int index = lilv_port_get_index(&plug, port);
 
       // It must be input or output, anything else is bogus
       bool isInput;
-      if (lilv_port_is_a(mPlug, port, node_InputPort))
+      if (lilv_port_is_a(&plug, port, node_InputPort))
          isInput = true;
-      else if (lilv_port_is_a(mPlug, port, node_OutputPort))
+      else if (lilv_port_is_a(&plug, port, node_OutputPort))
          isInput = false;
       else {
          assert(false);
@@ -238,12 +239,12 @@ bool LV2Effect::InitializePlugin()
       }
 
       // Get the port name and symbol
-      const auto symbol = LilvString(lilv_port_get_symbol(mPlug, port));
-      const auto name = LilvStringMove(lilv_port_get_name(mPlug, port));
+      const auto symbol = LilvString(lilv_port_get_symbol(&plug, port));
+      const auto name = LilvStringMove(lilv_port_get_name(&plug, port));
 
       // Get the group to which this port belongs or default to the main group
       TranslatableString groupName{};
-      if (LilvNodePtr group{ lilv_port_get(mPlug, port, node_Group) }) {
+      if (LilvNodePtr group{ lilv_port_get(&plug, port, node_Group) }) {
          // lilv.h does not say whether return of lilv_world_get() needs to
          // be freed, but that is easily seen to be so from source
          auto groupMsg = LilvStringMove(
@@ -259,19 +260,19 @@ bool LV2Effect::InitializePlugin()
          groupName = XO("Effect Settings");
 
       // Get the latency port
-      const auto latencyIndex = lilv_plugin_get_latency_port_index(mPlug);
+      const auto latencyIndex = lilv_plugin_get_latency_port_index(&plug);
 
       // Get the ports designation (must be freed)
-      LilvNodePtr designation{ lilv_port_get(mPlug, port, node_Designation) };
+      LilvNodePtr designation{ lilv_port_get(&plug, port, node_Designation) };
 
       // Check for audio ports
-      if (lilv_port_is_a(mPlug, port, node_AudioPort)) {
+      if (lilv_port_is_a(&plug, port, node_AudioPort)) {
          mAudioPorts.push_back(std::make_shared<LV2AudioPort>(
             port, index, isInput, symbol, name, groupName));
          isInput ? mAudioIn++ : mAudioOut++;
       }
       // Check for Control ports
-      else if (lilv_port_is_a(mPlug, port, node_ControlPort)) {
+      else if (lilv_port_is_a(&plug, port, node_ControlPort)) {
          // Add group if not previously done
          if (mGroupMap.find(groupName) == mGroupMap.end())
             mGroups.push_back(groupName);
@@ -279,7 +280,7 @@ bool LV2Effect::InitializePlugin()
 
          wxString units;
          // Get any unit descriptor
-         if (LilvNodePtr unit{ lilv_port_get(mPlug, port, node_Unit) })
+         if (LilvNodePtr unit{ lilv_port_get(&plug, port, node_Unit) })
             // Really should use lilv_world_get_symbol()
             if (LilvNodePtr symbol{ lilv_world_get_symbol(gWorld, unit.get()) })
                units = LilvString(symbol.get());
@@ -299,28 +300,28 @@ bool LV2Effect::InitializePlugin()
    
          // Figure out the type of port we have
          bool toggle = isInput &&
-            lilv_port_has_property(mPlug, port, node_Toggled);
+            lilv_port_has_property(&plug, port, node_Toggled);
          bool enumeration = isInput &&
-            lilv_port_has_property(mPlug, port, node_Enumeration);
+            lilv_port_has_property(&plug, port, node_Enumeration);
          bool integer = isInput &&
-            lilv_port_has_property(mPlug, port, node_Integer);
+            lilv_port_has_property(&plug, port, node_Integer);
          bool sampleRate = isInput &&
-            lilv_port_has_property(mPlug, port, node_SampleRate);
+            lilv_port_has_property(&plug, port, node_SampleRate);
          // Trigger properties can be combined with other types, but it
          // seems mostly to be combined with toggle.  So, we turn the
          // checkbox into a button.
          bool trigger = isInput &&
-            lilv_port_has_property(mPlug, port, node_Trigger);
+            lilv_port_has_property(&plug, port, node_Trigger);
          // We'll make the slider logarithmic
          bool logarithmic = isInput &&
-            lilv_port_has_property(mPlug, port, node_Logarithmic);
+            lilv_port_has_property(&plug, port, node_Logarithmic);
 
          // Get the scale points
          std::vector<double> scaleValues;
          wxArrayString scaleLabels;
          {
             LilvScalePointsPtr points{
-               lilv_port_get_scale_points(mPlug, port) };
+               lilv_port_get_scale_points(&plug, port) };
             LILV_FOREACH(scale_points, j, points.get()) {
                const auto point = lilv_scale_points_get(points.get(), j);
                scaleValues.push_back(
@@ -353,9 +354,9 @@ bool LV2Effect::InitializePlugin()
             mLatencyPort = i;
       }
       // Check for atom ports
-      else if (lilv_port_is_a(mPlug, port, node_AtomPort)) {
+      else if (lilv_port_is_a(&plug, port, node_AtomPort)) {
          uint32_t minimumSize = 8192;
-         if (LilvNodePtr min{ lilv_port_get(mPlug, port, node_MinimumSize) }
+         if (LilvNodePtr min{ lilv_port_get(&plug, port, node_MinimumSize) }
             ; lilv_node_is_int(min.get())
          ){
             if (auto value = lilv_node_as_int(min.get())
@@ -364,8 +365,8 @@ bool LV2Effect::InitializePlugin()
                minimumSize = std::max<uint32_t>(minimumSize, value);
          }
          bool wantsPosition =
-            lilv_port_supports_event(mPlug, port, node_Position);
-         bool isMidi = lilv_port_supports_event(mPlug, port, node_MidiEvent);
+            lilv_port_supports_event(&plug, port, node_Position);
+         bool isMidi = lilv_port_supports_event(&plug, port, node_MidiEvent);
          if (isMidi)
             (isInput ? mMidiIn : mMidiOut) += 1;
          mAtomPorts.push_back(std::make_shared<LV2AtomPort>(
@@ -384,7 +385,7 @@ bool LV2Effect::InitializePlugin()
             mControlOut = atomPortState;
       }
       // Check for CV ports
-      else if (lilv_port_is_a(mPlug, port, node_CVPort)) {
+      else if (lilv_port_is_a(&plug, port, node_CVPort)) {
          // Collect the value and range info
          float min = 0;
          float max = 1;
@@ -418,7 +419,7 @@ bool LV2Effect::InitializePlugin()
    // Determine available extensions
    mWantsOptionsInterface = false;
    mWantsStateInterface = false;
-   if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(mPlug) }) {
+   if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(&mPlug) }) {
       LILV_FOREACH(nodes, i, extdata.get()) {
          const auto node = lilv_nodes_get(extdata.get(), i);
          const auto uri = lilv_node_as_string(node);
@@ -978,7 +979,7 @@ RegistryPaths LV2Effect::GetFactoryPresets() const
    if (mFactoryPresetsLoaded)
       return mFactoryPresetNames;
 
-   if (LilvNodesPtr presets{ lilv_plugin_get_related(mPlug, node_Preset) }) {
+   if (LilvNodesPtr presets{ lilv_plugin_get_related(&mPlug, node_Preset) }) {
       LILV_FOREACH(nodes, i, presets.get()) {
          const auto preset = lilv_nodes_get(presets.get(), i);
 
@@ -1175,7 +1176,7 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
    // Determine if the plugin has a supported UI
    const LilvUI *ui = nullptr;
    const LilvNode *uiType = nullptr;
-   LilvUIsPtr uis{ lilv_plugin_get_uis(mPlug) };
+   LilvUIsPtr uis{ lilv_plugin_get_uis(&mPlug) };
    if (uis) {
       if (LilvNodePtr containerType{ lilv_new_uri(gWorld, nativeType) }) {
          LILV_FOREACH(uis, iter, uis.get()) {
@@ -1268,7 +1269,7 @@ bool LV2Effect::BuildFancy(const EffectSettings &settings)
    };
 
    mSuilInstance.reset(suil_instance_new(mSuilHost.get(), this, containerType,
-      lilv_node_as_uri(lilv_plugin_get_uri(mPlug)),
+      lilv_node_as_uri(lilv_plugin_get_uri(&mPlug)),
       lilv_node_as_uri(lilv_ui_get_uri(ui)), lilv_node_as_uri(uiType),
       bundlePath.get(), binaryPath.get(), GetFeaturePointers().data()));
 
@@ -1950,11 +1951,11 @@ uint32_t LV2Effect::suil_port_index_func(
 
 uint32_t LV2Effect::SuilPortIndex(const char *port_symbol)
 {
-   for (size_t i = 0, cnt = lilv_plugin_get_num_ports(mPlug); i < cnt; ++i) {
-      const auto port = lilv_plugin_get_port_by_index(mPlug, i);
+   for (size_t i = 0, cnt = lilv_plugin_get_num_ports(&mPlug); i < cnt; ++i) {
+      const auto port = lilv_plugin_get_port_by_index(&mPlug, i);
       if (strcmp(port_symbol,
-            lilv_node_as_string(lilv_port_get_symbol(mPlug, port))) == 0)
-         return lilv_port_get_index(mPlug, port);
+            lilv_node_as_string(lilv_port_get_symbol(&mPlug, port))) == 0)
+         return lilv_port_get_index(&mPlug, port);
    }
    return LV2UI_INVALID_PORT_INDEX;
 }
@@ -2066,7 +2067,7 @@ LV2Wrapper::~LV2Wrapper()
 }
 
 LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList,
-   const LilvPlugin *plugin, double sampleRate)
+   const LilvPlugin &plugin, double sampleRate)
 :  mFeaturesList{ featuresList }
 {
    auto features = mFeaturesList.GetFeaturePointers();
@@ -2082,7 +2083,7 @@ LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList,
 #if defined(__WXMSW__)
    // Plugins may have dependencies that need to be loaded from the same path
    // as the main DLL, so add this plugin's path to the DLL search order.
-   const auto libNode = lilv_plugin_get_library_uri(plugin);
+   const auto libNode = lilv_plugin_get_library_uri(&plugin);
    const auto libUri = lilv_node_as_uri(libNode);
    LilvCharsPtr libPath{ lilv_file_uri_parse(libUri, nullptr) };
    const auto path = wxPathOnly(libPath.get());
@@ -2090,7 +2091,7 @@ LV2Wrapper::LV2Wrapper(const LV2FeaturesList &featuresList,
 #endif
 
    mInstance.reset(
-      lilv_plugin_instantiate(plugin, sampleRate, features.data()));
+      lilv_plugin_instantiate(&plugin, sampleRate, features.data()));
 
 #if defined(__WXMSW__)
    SetDllDirectory(nullptr);

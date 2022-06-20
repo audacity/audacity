@@ -75,7 +75,7 @@ struct LV2EffectSettings {
 class LV2Effect final : public LV2FeaturesList
 {
 public:
-   LV2Effect(const LilvPlugin *plug);
+   LV2Effect(const LilvPlugin &plug);
    virtual ~LV2Effect();
 
    // ComponentInterface implementation
@@ -303,7 +303,7 @@ private:
    // Not const, filled in when making a dialog
    LV2_Extension_Data_Feature mExtensionDataFeature{};
 
-   const LilvNodePtr mHumanId{ lilv_plugin_get_name(mPlug) };
+   const LilvNodePtr mHumanId{ lilv_plugin_get_name(&mPlug) };
    const LV2_External_UI_Host mExternalUIHost{
       LV2Effect::ui_closed, lilv_node_as_string(mHumanId.get()) };
 
@@ -370,7 +370,7 @@ public:
 public:
    //! May spawn a thread
    LV2Wrapper(const LV2FeaturesList &featuresList,
-      const LilvPlugin *plugin, double sampleRate);
+      const LilvPlugin &plugin, double sampleRate);
    //! If a thread was started, joins it
    ~LV2Wrapper();
    void Activate();
