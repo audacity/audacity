@@ -331,22 +331,13 @@ bool LV2Effect::InitializePlugin()
             }
          }
 
-         mControlPorts.push_back(std::make_shared<LV2ControlPort>(
-            port, index, isInput, symbol, name, groupName,
-            move(scaleValues), std::move(scaleLabels), units,
-            min, max, def, hasLo, hasHi,
-            toggle, enumeration, integer, sampleRate,
-            trigger, logarithmic));
-         const auto &controlPort = mControlPorts.back();
-         mControlPortStates.emplace_back(controlPort);
-         auto &state = mControlPortStates.back();
-         auto &value = mSettings.values.emplace_back();
-
-         state.mLo = controlPort->mMin;
-         state.mHi = controlPort->mMax;
-         value = controlPort->mDef;
-         state.mLst = value;
-
+         const auto &controlPort = mControlPorts.emplace_back(
+            std::make_shared<LV2ControlPort>(
+               port, index, isInput, symbol, name, groupName,
+               move(scaleValues), std::move(scaleLabels), units,
+               min, max, def, hasLo, hasHi,
+               toggle, enumeration, integer, sampleRate,
+               trigger, logarithmic));
          // Figure out the type of port we have
          if (isInput)
             mControlPortMap[controlPort->mIndex] = mControlPorts.size() - 1;
@@ -372,17 +363,13 @@ bool LV2Effect::InitializePlugin()
          mAtomPorts.push_back(std::make_shared<LV2AtomPort>(
             port, index, isInput, symbol, name, groupName,
             minimumSize, isMidi, wantsPosition));
-         mAtomPortStates
-            .push_back(std::make_shared<LV2AtomPortState>(mAtomPorts.back()));
-         const auto &atomPortState = mAtomPortStates.back();
-
          bool isControl = lilv_node_equals(designation.get(), node_Control);
          if (isInput) {
-            if (!mControlIn || isControl)
-               mControlIn = atomPortState;
+            if (!mControlInIdx || isControl)
+               mControlInIdx = mAtomPorts.size() - 1;
          }
-         else if (!mControlOut || isControl)
-            mControlOut = atomPortState;
+         else if (!mControlOutIdx || isControl)
+            mControlOutIdx = mAtomPorts.size() - 1;
       }
       // Check for CV ports
       else if (lilv_port_is_a(&plug, port, node_CVPort)) {
@@ -405,17 +392,14 @@ bool LV2Effect::InitializePlugin()
          mCVPorts.push_back(std::make_shared<LV2CVPort>(
             port, index, isInput, symbol, name, groupName,
             min, max, def, hasLo, hasHi));
-         mCVPortStates.emplace_back(mCVPorts.back());
       }
    }
    }
 
-   // Ignore control designation if one of them is missing
-   if ((mControlIn && !mControlOut) || (!mControlIn && mControlOut)) {
-      mControlIn.reset();
-      mControlOut.reset();
-   }
-
+   InitializePortStates();
+   InitializePortUIStates();
+   InitializeSettings(mSettings);
+   
    // Determine available extensions
    mWantsOptionsInterface = false;
    mWantsStateInterface = false;
@@ -431,6 +415,40 @@ bool LV2Effect::InitializePlugin()
    }
 
    return true;
+}
+
+void LV2Effect::InitializePortStates()
+{
+   for (auto &atomPort : mAtomPorts)
+      mAtomPortStates.emplace_back(
+         std::make_shared<LV2AtomPortState>(atomPort));
+
+   for (auto &cvPort : mCVPorts)
+      mCVPortStates.emplace_back(cvPort);
+}
+
+void LV2Effect::InitializePortUIStates()
+{
+   // Ignore control designation if one of them is missing
+   if (mControlInIdx && mControlOutIdx) {
+      mControlIn = mAtomPortStates[*mControlInIdx];
+      mControlOut = mAtomPortStates[*mControlOutIdx];
+   }
+
+   for (auto &controlPort : mControlPorts) {
+      auto &state = mControlPortStates.emplace_back(controlPort);
+      state.mLo = controlPort->mMin;
+      state.mHi = controlPort->mMax;
+      state.mLst = controlPort->mDef;
+   }
+}
+
+void LV2Effect::InitializeSettings(LV2EffectSettings &settings)
+{
+   for (auto &controlPort : mControlPorts) {
+      auto &value = settings.values.emplace_back();
+      value = controlPort->mDef;
+   }
 }
 
 std::shared_ptr<EffectInstance> LV2Effect::MakeInstance() const

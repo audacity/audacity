@@ -17,6 +17,7 @@
 
 class wxArrayString;
 
+#include <optional>
 #include <thread>
 #include <vector>
 
@@ -165,6 +166,10 @@ public:
    // LV2Effect implementation
 
 private:
+   void InitializePortStates();
+   void InitializePortUIStates();
+   void InitializeSettings(LV2EffectSettings &settings);
+
    struct PlainUIControl;
 
    bool LoadParameters(
@@ -250,6 +255,9 @@ private:
    unsigned mAudioOut{ 0 };
 
    LV2AtomPortArray mAtomPorts;
+   std::optional<size_t> mControlInIdx{};
+   std::optional<size_t> mControlOutIdx{};
+
    LV2AtomPortStateArray mAtomPortStates;
 
    LV2AtomPortStatePtr mControlIn;
