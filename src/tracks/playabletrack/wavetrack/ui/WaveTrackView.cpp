@@ -842,7 +842,7 @@ auto WaveTrackSubView::GetMenuItems(
          { L"Split", XO("Split Clip") },
          { L"TrackMute", XO("Mute/Unmute Track") },
          {},
-         { L"RenameClip", XO("Rename clip...") },
+         { L"RenameClip", XO("Rename Clip...") },
       };
    else
       return {
