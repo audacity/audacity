@@ -166,6 +166,7 @@ public:
    // LV2Effect implementation
 
 private:
+   void CollectPorts();
    void InitializePortStates();
    void InitializePortUIStates();
    void InitializeSettings(LV2EffectSettings &settings);

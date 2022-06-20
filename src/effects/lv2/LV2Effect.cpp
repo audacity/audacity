@@ -191,8 +191,6 @@ bool LV2Effect::SupportsAutomation() const
 
 bool LV2Effect::InitializePlugin()
 {
-   using namespace LV2Symbols;
-
    // To be set up later when making a dialog:
    mExtensionDataFeature = {};
 
@@ -212,9 +210,33 @@ bool LV2Effect::InitializePlugin()
    if (!ValidateFeatures(lilv_plugin_get_uri(&mPlug)))
       return false;
 
-   // Collect information in mAudioPorts, mControlPorts, mAtomPorts, mCVPorts
-   {
+   // Determine available extensions
+   mWantsOptionsInterface = false;
+   mWantsStateInterface = false;
+   if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(&mPlug) }) {
+      LILV_FOREACH(nodes, i, extdata.get()) {
+         const auto node = lilv_nodes_get(extdata.get(), i);
+         const auto uri = lilv_node_as_string(node);
+         if (strcmp(uri, LV2_OPTIONS__interface) == 0)
+            mWantsOptionsInterface = true;
+         else if (strcmp(uri, LV2_STATE__interface) == 0)
+            mWantsStateInterface = true;
+      }
+   }
+
+   CollectPorts();
+   InitializePortStates();
+   InitializePortUIStates();
+   InitializeSettings(mSettings);
+   return true;
+}
+
+void LV2Effect::CollectPorts()
+{
    auto &plug = mPlug;
+   using namespace LV2Symbols;
+
+   // Collect information in mAudioPorts, mControlPorts, mAtomPorts, mCVPorts
    // Retrieve the port ranges for all ports (some values may be NaN)
    auto numPorts = lilv_plugin_get_num_ports(&plug);
    Floats minimumVals {numPorts};
@@ -235,7 +257,7 @@ bool LV2Effect::InitializePlugin()
          isInput = false;
       else {
          assert(false);
-         return false;
+         continue;
       }
 
       // Get the port name and symbol
@@ -394,27 +416,6 @@ bool LV2Effect::InitializePlugin()
             min, max, def, hasLo, hasHi));
       }
    }
-   }
-
-   InitializePortStates();
-   InitializePortUIStates();
-   InitializeSettings(mSettings);
-   
-   // Determine available extensions
-   mWantsOptionsInterface = false;
-   mWantsStateInterface = false;
-   if (LilvNodesPtr extdata{ lilv_plugin_get_extension_data(&mPlug) }) {
-      LILV_FOREACH(nodes, i, extdata.get()) {
-         const auto node = lilv_nodes_get(extdata.get(), i);
-         const auto uri = lilv_node_as_string(node);
-         if (strcmp(uri, LV2_OPTIONS__interface) == 0)
-            mWantsOptionsInterface = true;
-         else if (strcmp(uri, LV2_STATE__interface) == 0)
-            mWantsStateInterface = true;
-      }
-   }
-
-   return true;
 }
 
 void LV2Effect::InitializePortStates()
