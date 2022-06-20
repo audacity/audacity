@@ -169,7 +169,7 @@ EffectFamilySymbol LV2Effect::GetFamily() const
 
 bool LV2Effect::IsInteractive() const
 {
-   return mControlPorts.size() != 0;
+   return mPorts.mControlPorts.size() != 0;
 }
 
 bool LV2Effect::IsDefault() const
@@ -224,16 +224,14 @@ bool LV2Effect::InitializePlugin()
       }
    }
 
-   CollectPorts();
-   InitializePortStates();
-   InitializePortUIStates();
-   InitializeSettings(mSettings);
+   InitializePortStates(mPorts);
+   InitializePortUIStates(mPorts);
+   InitializeSettings(mPorts, mSettings);
    return true;
 }
 
-void LV2Effect::CollectPorts()
+LV2Ports::LV2Ports(const LilvPlugin &plug)
 {
-   auto &plug = mPlug;
    using namespace LV2Symbols;
 
    // Collect information in mAudioPorts, mControlPorts, mAtomPorts, mCVPorts
@@ -295,9 +293,10 @@ void LV2Effect::CollectPorts()
       }
       // Check for Control ports
       else if (lilv_port_is_a(&plug, port, node_ControlPort)) {
-         // Add group if not previously done
+         // Add group if not previously done...
          if (mGroupMap.find(groupName) == mGroupMap.end())
             mGroups.push_back(groupName);
+         // ... That maintains the postcondition, after this:
          mGroupMap[groupName].push_back(mControlPorts.size());
 
          wxString units;
@@ -418,25 +417,25 @@ void LV2Effect::CollectPorts()
    }
 }
 
-void LV2Effect::InitializePortStates()
+void LV2Effect::InitializePortStates(const LV2Ports &ports)
 {
-   for (auto &atomPort : mAtomPorts)
+   for (auto &atomPort : ports.mAtomPorts)
       mAtomPortStates.emplace_back(
          std::make_shared<LV2AtomPortState>(atomPort));
 
-   for (auto &cvPort : mCVPorts)
+   for (auto &cvPort : ports.mCVPorts)
       mCVPortStates.emplace_back(cvPort);
 }
 
-void LV2Effect::InitializePortUIStates()
+void LV2Effect::InitializePortUIStates(const LV2Ports &ports)
 {
    // Ignore control designation if one of them is missing
-   if (mControlInIdx && mControlOutIdx) {
-      mControlIn = mAtomPortStates[*mControlInIdx];
-      mControlOut = mAtomPortStates[*mControlOutIdx];
+   if (ports.mControlInIdx && ports.mControlOutIdx) {
+      mControlIn = mAtomPortStates[*ports.mControlInIdx];
+      mControlOut = mAtomPortStates[*ports.mControlOutIdx];
    }
 
-   for (auto &controlPort : mControlPorts) {
+   for (auto &controlPort : ports.mControlPorts) {
       auto &state = mControlPortStates.emplace_back(controlPort);
       state.mLo = controlPort->mMin;
       state.mHi = controlPort->mMax;
@@ -444,9 +443,10 @@ void LV2Effect::InitializePortUIStates()
    }
 }
 
-void LV2Effect::InitializeSettings(LV2EffectSettings &settings)
+void LV2Effect::InitializeSettings(
+   const LV2Ports &ports, LV2EffectSettings &settings)
 {
-   for (auto &controlPort : mControlPorts) {
+   for (auto &controlPort : ports.mControlPorts) {
       auto &value = settings.values.emplace_back();
       value = controlPort->mDef;
    }
@@ -472,22 +472,22 @@ std::shared_ptr<EffectInstance> LV2Effect::DoMakeInstance()
 
 unsigned LV2Effect::GetAudioInCount() const
 {
-   return mAudioIn;
+   return mPorts.mAudioIn;
 }
 
 unsigned LV2Effect::GetAudioOutCount() const
 {
-   return mAudioOut;
+   return mPorts.mAudioOut;
 }
 
 int LV2Effect::GetMidiInCount() const
 {
-   return mMidiIn;
+   return mPorts.mMidiIn;
 }
 
 int LV2Effect::GetMidiOutCount() const
 {
-   return mMidiOut;
+   return mPorts.mMidiOut;
 }
 
 void LV2Effect::SetSampleRate(double rate)
@@ -523,7 +523,7 @@ size_t LV2Effect::GetBlockSize() const
 
 sampleCount LV2Effect::GetLatency()
 {
-   if (mUseLatency && mLatencyPort >= 0 && !mLatencyDone) {
+   if (mUseLatency && mPorts.mLatencyPort >= 0 && !mLatencyDone) {
       mLatencyDone = true;
       return sampleCount(mMaster->GetLatency());
    }
@@ -559,7 +559,7 @@ size_t LV2Effect::ProcessBlock(EffectSettings &,
 
    int i = 0;
    int o = 0;
-   for (auto & port : mAudioPorts)
+   for (auto & port : mPorts.mAudioPorts)
    {
       lilv_instance_connect_port(instance,
          port->mIndex,
@@ -758,7 +758,7 @@ size_t LV2Effect::RealtimeProcess(size_t group, EffectSettings &,
 
    int i = 0;
    int o = 0;
-   for (auto & port : mAudioPorts)
+   for (auto & port : mPorts.mAudioPorts)
    {
       lilv_instance_connect_port(instance,
          port->mIndex,
@@ -856,7 +856,7 @@ bool LV2Effect::SaveSettings(
 {
    auto &values = GetSettings(settings).values;
    size_t index = 0;
-   for (auto & port : mControlPorts) {
+   for (auto & port : mPorts.mControlPorts) {
       if (port->mIsInput)
          if (!parms.Write(port->mName, values[index]))
             return false;
@@ -869,7 +869,7 @@ bool LV2Effect::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
    // First pass validates values
-   for (auto & port : mControlPorts) {
+   for (auto & port : mPorts.mControlPorts) {
       if (port->mIsInput) {
          double d = 0.0;
          if (!parms.Read(port->mName, &d))
@@ -883,7 +883,7 @@ bool LV2Effect::LoadSettings(
    // Second pass actually sets the values
    auto &values = GetSettings(settings).values;
    size_t index = 0;
-   for (auto & port : mControlPorts) {
+   for (auto & port : mPorts.mControlPorts) {
       if (port->mIsInput) {
          double d = 0.0;
          if (!parms.Read(port->mName, &d))
@@ -1122,8 +1122,8 @@ bool LV2Effect::SaveParameters(
 std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
    const EffectSettings &settings, float sampleRate)
 {
-   auto wrapper =
-      std::make_unique<LV2Wrapper>(*this, mLatencyPort, mPlug, sampleRate);
+   auto wrapper = std::make_unique<LV2Wrapper>(
+      *this, mPorts.mLatencyPort, mPlug, sampleRate);
    auto instance = wrapper->GetInstance();
    if (!instance)
       return nullptr;
@@ -1136,7 +1136,7 @@ std::unique_ptr<LV2Wrapper> LV2Effect::InitInstance(
    // Connect all control ports
    auto &values = GetSettings(settings).values;
    size_t index = 0;
-   for (auto & port : mControlPorts) {
+   for (auto & port : mPorts.mControlPorts) {
       // If it's not an input port and master has already been created
       // then connect the port to a dummy field since slave output port
       // values are unwanted as the master values will be used.
@@ -1400,7 +1400,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 {
    auto &settings = access.Get();
    auto &values = GetSettings(settings).values;
-   mPlainUIControls.resize(mControlPorts.size());
+   mPlainUIControls.resize(mPorts.mControlPorts.size());
 
    int numCols = 5;
    wxSizer *innerSizer;
@@ -1440,11 +1440,12 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
 
       // Make other controls, grouped into static boxes that are named
       // according to certain control port metadata
-      std::sort(mGroups.begin(), mGroups.end(), TranslationLess);
-      for (auto &label: mGroups) {
+      auto groups = mPorts.mGroups; // mutable copy
+      std::sort(groups.begin(), groups.end(), TranslationLess);
+      for (auto &label: groups) {
          auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
          gridSizer->AddGrowableCol(3);
-         for (auto & p : mGroupMap[label]) {
+         for (auto & p : mPorts.mGroupMap.at(label)) /* won't throw */ {
             auto &state = mControlPortStates[p];
             auto &port = state.mpPort;
             auto &ctrl = mPlainUIControls[p];
@@ -1669,7 +1670,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
       // fancy UI
       if (mSuilInstance) {
          size_t index = 0;
-         for (auto & port : mControlPorts) {
+         for (auto & port : mPorts.mControlPorts) {
             if (port->mIsInput)
                suil_instance_port_event(mSuilInstance.get(),
                   port->mIndex, sizeof(float), 0, &values[index]);
@@ -1680,9 +1681,9 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    }
 
    // else plain UI
-   // Visiting controls in same sequence as their creation
-   for (auto & group : mGroups) {
-      const auto & params = mGroupMap[group];
+   // Visiting controls by groups
+   for (auto & group : mPorts.mGroups) {
+      const auto & params = mPorts.mGroupMap.at(group); /* won't throw */
       for (auto & param : params) { auto & state = mControlPortStates[param];
          auto &port = state.mpPort;
          auto &ctrl = mPlainUIControls[param];
@@ -1721,21 +1722,21 @@ void LV2Effect::SetSlider(
 void LV2Effect::OnTrigger(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Triggers;
-   auto & port = mControlPorts[idx];
+   auto & port = mPorts.mControlPorts[idx];
    mSettings.values[idx] = port->mDef;
 }
 
 void LV2Effect::OnToggle(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Toggles;
-   auto & port = mControlPorts[idx];
+   auto & port = mPorts.mControlPorts[idx];
    mSettings.values[idx] = evt.GetInt() ? 1.0 : 0.0;
 }
 
 void LV2Effect::OnChoice(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Choices;
-   auto & port = mControlPorts[idx];
+   auto & port = mPorts.mControlPorts[idx];
    mSettings.values[idx] = port->mScaleValues[evt.GetInt()];
 }
 
@@ -1951,8 +1952,8 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
 {
    // Handle implicit floats
    if (protocol == 0 && buffer_size == sizeof(float)) {
-      if (auto it = mControlPortMap.find(port_index);
-         it != mControlPortMap.end())
+      if (auto it = mPorts.mControlPortMap.find(port_index);
+         it != mPorts.mControlPortMap.end())
          mSettings.values[it->second] = *static_cast<const float *>(buffer);
    }
    // Handle event transfers
@@ -1999,7 +2000,7 @@ const void *LV2Effect::GetPortValue(const LV2EffectSettings &settings,
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
    size_t index = 0;
-   for (auto & port : mControlPorts) {
+   for (auto & port : mPorts.mControlPorts) {
       if (port->mSymbol == symbol) {
          *size = sizeof(float);
          *type = LV2Symbols::urid_Float;
@@ -2018,7 +2019,7 @@ const
 {
    wxString symbol = wxString::FromUTF8(port_symbol);
    size_t index = 0;
-   for (auto & port : mControlPorts) {
+   for (auto & port : mPorts.mControlPorts) {
       if (port->mSymbol == symbol) {
          auto &dst = settings.values[index];
          using namespace LV2Symbols;

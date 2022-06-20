@@ -131,8 +131,6 @@ protected:
    size_t mMinBlockSize{ 1 };
    size_t mMaxBlockSize{ mBlockSize };
 
-   int mLatencyPort{ -1 };
-
    const bool mSuppliesWorkerInterface;
    bool mSupportsNominalBlockLength{ false };
    bool mSupportsSampleRate{ false };

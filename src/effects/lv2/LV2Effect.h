@@ -73,6 +73,32 @@ struct LV2EffectSettings {
    mutable std::shared_ptr<const LilvState> mpState;
 };
 
+class LV2Ports {
+public:
+   //! @post every member of `mGroups` occurs as a key in `mGroupMap`
+   explicit LV2Ports(const LilvPlugin &plug);
+
+   LV2AudioPortArray mAudioPorts;
+   unsigned mAudioIn{ 0 };
+   unsigned mAudioOut{ 0 };
+
+   LV2AtomPortArray mAtomPorts;
+   std::optional<size_t> mControlInIdx{};
+   std::optional<size_t> mControlOutIdx{};
+   unsigned mMidiIn{ 0 };
+   unsigned mMidiOut{ 0 };
+
+   LV2CVPortArray mCVPorts;
+
+   LV2ControlPortArray mControlPorts;
+   TranslatableStrings mGroups;
+   std::unordered_map<TranslatableString, std::vector<int>> mGroupMap;
+   //! Mapping from index number among all ports, to position
+   //! among the control ports only
+   std::unordered_map<uint32_t, size_t> mControlPortMap;
+   int mLatencyPort{ -1 };
+};
+
 class LV2Effect final : public LV2FeaturesList
 {
 public:
@@ -166,10 +192,9 @@ public:
    // LV2Effect implementation
 
 private:
-   void CollectPorts();
-   void InitializePortStates();
-   void InitializePortUIStates();
-   void InitializeSettings(LV2EffectSettings &settings);
+   void InitializePortStates(const LV2Ports &ports);
+   void InitializePortUIStates(const LV2Ports &ports);
+   void InitializeSettings(const LV2Ports &ports, LV2EffectSettings &settings);
 
    struct PlainUIControl;
 
@@ -231,12 +256,10 @@ public:
       const void *value, uint32_t size, uint32_t type) const;
 
 private:
+   const LV2Ports mPorts{ mPlug };
+
    size_t mUserBlockSize{ mBlockSize };
 
-   //! Mapping from index number among all ports, to position
-   //! among the control ports only
-   std::unordered_map<uint32_t, size_t> mControlPortMap;
-   LV2ControlPortArray mControlPorts;
    LV2ControlPortStateArray mControlPortStates;
    LV2EffectSettings mSettings;
 
@@ -251,28 +274,14 @@ private:
       return mSettings;
    }
 
-   LV2AudioPortArray mAudioPorts;
-   unsigned mAudioIn{ 0 };
-   unsigned mAudioOut{ 0 };
-
-   LV2AtomPortArray mAtomPorts;
-   std::optional<size_t> mControlInIdx{};
-   std::optional<size_t> mControlOutIdx{};
-
    LV2AtomPortStateArray mAtomPortStates;
 
    LV2AtomPortStatePtr mControlIn;
    LV2AtomPortStatePtr mControlOut;
-   unsigned mMidiIn{ 0 };
-   unsigned mMidiOut{ 0 };
 
-   LV2CVPortArray mCVPorts;
    LV2CVPortStateArray mCVPortStates;
    unsigned mCVIn;
    unsigned mCVOut;
-
-   std::unordered_map<TranslatableString, std::vector<int>> mGroupMap;
-   TranslatableStrings mGroups;
 
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };
