@@ -106,6 +106,14 @@ public:
    LV2CVPortStateArray mCVPortStates;
 };
 
+class LV2PortUIStates {
+public:
+   LV2PortUIStates(const LV2PortStates &states, const LV2Ports &ports);
+   LV2AtomPortStatePtr mControlIn;
+   LV2AtomPortStatePtr mControlOut;
+   LV2ControlPortStateArray mControlPortStates;
+};
+
 class LV2Effect final : public LV2FeaturesList
 {
 public:
@@ -199,8 +207,6 @@ public:
    // LV2Effect implementation
 
 private:
-   void InitializePortUIStates(
-      const LV2PortStates &portStates, const LV2Ports &ports);
    void InitializeSettings(const LV2Ports &ports, LV2EffectSettings &settings);
 
    struct PlainUIControl;
@@ -265,10 +271,10 @@ public:
 private:
    const LV2Ports mPorts{ mPlug };
    LV2PortStates mPortStates{ mPorts };
+   LV2PortUIStates mPortUIStates{ mPortStates, mPorts };
 
    size_t mUserBlockSize{ mBlockSize };
 
-   LV2ControlPortStateArray mControlPortStates;
    LV2EffectSettings mSettings;
 
    //! This ignores its argument while we transition to statelessness
@@ -281,9 +287,6 @@ private:
    const LV2EffectSettings &GetSettings(const EffectSettings &) const {
       return mSettings;
    }
-
-   LV2AtomPortStatePtr mControlIn;
-   LV2AtomPortStatePtr mControlOut;
 
    bool mWantsOptionsInterface{ false };
    bool mWantsStateInterface{ false };

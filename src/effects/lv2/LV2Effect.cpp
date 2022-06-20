@@ -224,7 +224,6 @@ bool LV2Effect::InitializePlugin()
       }
    }
 
-   InitializePortUIStates(mPortStates, mPorts);
    InitializeSettings(mPorts, mSettings);
    return true;
 }
@@ -426,7 +425,7 @@ LV2PortStates::LV2PortStates(const LV2Ports &ports)
       mCVPortStates.emplace_back(cvPort);
 }
 
-void LV2Effect::InitializePortUIStates(
+LV2PortUIStates::LV2PortUIStates(
    const LV2PortStates &portStates, const LV2Ports &ports)
 {
    // Ignore control designation if one of them is missing
@@ -1446,7 +1445,7 @@ bool LV2Effect::BuildPlain(EffectSettingsAccess &access)
          auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
          gridSizer->AddGrowableCol(3);
          for (auto & p : mPorts.mGroupMap.at(label)) /* won't throw */ {
-            auto &state = mControlPortStates[p];
+            auto &state = mPortUIStates.mControlPortStates[p];
             auto &port = state.mpPort;
             auto &ctrl = mPlainUIControls[p];
             const auto &value = values[p];
@@ -1657,7 +1656,7 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
 
    auto &values = mySettings.values;
    {
-      size_t index = 0; for (auto & state : mControlPortStates) {
+      size_t index = 0; for (auto & state : mPortUIStates.mControlPortStates) {
          auto &port = state.mpPort;
          if (port->mIsInput)
             state.mTmp =
@@ -1684,7 +1683,8 @@ bool LV2Effect::TransferDataToWindow(const EffectSettings &settings)
    // Visiting controls by groups
    for (auto & group : mPorts.mGroups) {
       const auto & params = mPorts.mGroupMap.at(group); /* won't throw */
-      for (auto & param : params) { auto & state = mControlPortStates[param];
+      for (auto & param : params) {
+         auto &state = mPortUIStates.mControlPortStates[param];
          auto &port = state.mpPort;
          auto &ctrl = mPlainUIControls[param];
          auto &value = values[param];
@@ -1743,9 +1743,9 @@ void LV2Effect::OnChoice(wxCommandEvent &evt)
 void LV2Effect::OnText(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Texts;
-   auto &state = mControlPortStates[idx];
+   auto &state = mPortUIStates.mControlPortStates[idx];
    auto &port = state.mpPort;
-   auto & ctrl = mPlainUIControls[idx];
+   auto &ctrl = mPlainUIControls[idx];
    if (ctrl.mText->GetValidator()->TransferFromWindow()) {
       mSettings.values[idx] =
          port->mSampleRate ? state.mTmp / mSampleRate : state.mTmp;
@@ -1756,7 +1756,7 @@ void LV2Effect::OnText(wxCommandEvent &evt)
 void LV2Effect::OnSlider(wxCommandEvent &evt)
 {
    size_t idx = evt.GetId() - ID_Sliders;
-   auto &state = mControlPortStates[idx];
+   auto &state = mPortUIStates.mControlPortStates[idx];
    auto &port = state.mpPort;
    float lo = state.mLo;
    float hi = state.mHi;
@@ -1804,9 +1804,9 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
       }
    }
 
-   if (mControlOut) {
-      const auto ring = mControlOut->mRing.get();
-      const auto minimumSize = mControlOut->mpPort->mMinimumSize;
+   if (auto &atomState = mPortUIStates.mControlOut) {
+      const auto ring = atomState->mRing.get();
+      const auto minimumSize = atomState->mpPort->mMinimumSize;
       const auto space = std::make_unique<char[]>(minimumSize);
       auto atom = reinterpret_cast<LV2_Atom*>(space.get());
       while (zix_ring_read(ring, atom, sizeof(LV2_Atom))) {
@@ -1815,7 +1815,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
             zix_ring_read(ring,
                LV2_ATOM_CONTENTS(LV2_Atom, atom), atom->size);
             suil_instance_port_event(mSuilInstance.get(),
-               mControlOut->mpPort->mIndex, size,
+               atomState->mpPort->mIndex, size,
                LV2Symbols::urid_EventTransfer, atom);
          }
          else {
@@ -1826,7 +1826,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
    }
 
    size_t index = 0;
-   for (auto &state : mControlPortStates) {
+   for (auto &state : mPortUIStates.mControlPortStates) {
       auto &port = state.mpPort;
       const auto &value = mSettings.values[index];
       // Let UI know that a port's value has changed
@@ -1958,8 +1958,9 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
    }
    // Handle event transfers
    else if (protocol == LV2Symbols::urid_EventTransfer) {
-      if (mControlIn && port_index == mControlIn->mpPort->mIndex)
-         zix_ring_write(mControlIn->mRing.get(), buffer, buffer_size);
+      auto &atomPortState = mPortUIStates.mControlIn;
+      if (atomPortState && port_index == atomPortState->mpPort->mIndex)
+         zix_ring_write(atomPortState->mRing.get(), buffer, buffer_size);
    }
 }
 
